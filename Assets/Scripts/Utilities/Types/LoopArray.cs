@@ -1,44 +1,26 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class LoopArray<T>
+public class LoopArray<T> : IEnumerator<T>, IEnumerable<T>
 {
     private readonly T[] _array;
-    private readonly int _default = 0, _count = 0;
-    private int _cursor = 0;
+    private T _current;
+    private readonly int _count = 0;
+    private int _cursor = 0, _countCurrent;
 
     public int Count => _count;
     public int Cursor { get => _cursor; set => _cursor = value; }
 
-    public T Default => _array[_cursor = _default];
-    public T Forward
-    {
-        get
-        {
-           if(++_cursor >= _count) _cursor = 0;
-
-            return _array[_cursor];
-        }
-    }
-    public T Back
-    {
-        get
-        {
-            if (--_cursor < 0) _cursor = _count - 1;
-
-            return _array[_cursor];
-        }
-    }
-
-    public T Rand => _array[_cursor = Random.Range(0, _count)];
+    object IEnumerator.Current => _current;
+    public T Current => _current;
+    public T Next => _current = _array[_cursor = (_cursor + 1) % _count];
+    public T Rand => _current = _array[_cursor = Random.Range(0, _count)];
 
     public LoopArray(T[] array)
     {
-        _count = array.Length;
-        _array = new T[_count];
-
+        _count = _countCurrent = array.Length;
         _array = array;
-        //for(int i = 0; i < _count; i++)
-        //    _array[i] = array[i];
     }
 
     public void SetCursor(T obj)
@@ -51,5 +33,26 @@ public class LoopArray<T>
                 return;
             }
         }
+    }
+
+    public int SetRandCursor() => _cursor = Random.Range(0, _count);
+
+    public bool MoveNext()
+    {
+        if (--_countCurrent < 0)
+            return false;
+
+        _current = _array[_cursor];
+        _cursor = (_cursor + 1) % _count;
+        return true;
+    }
+    public void Reset() => _countCurrent = _count;
+    public void Dispose() { }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public IEnumerator<T> GetEnumerator()
+    {
+        _countCurrent = _count;
+        return this;
     }
 }

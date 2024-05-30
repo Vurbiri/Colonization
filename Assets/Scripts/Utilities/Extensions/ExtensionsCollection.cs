@@ -3,9 +3,10 @@ using UnityEngine;
 
 public static class ExtensionsCollection
 {
-    public static int Left<T>(this T[] self, int index) => (index == 0 ? self.Length : index) - 1;
-    public static int Right<T>(this T[] self, int index) => (index + 1) % self.Length;
-    public static int Next<T>(this T[] self, int index) => self.Right(index);
+    public static int LeftIndex<T>(this T[] self, int index) => (index == 0 ? self.Length : index) - 1;
+    public static int RightIndex<T>(this T[] self, int index) => (index + 1) % self.Length;
+    public static int NextIndex<T>(this T[] self, int index) => (index + 1) % self.Length;
+    public static T Next<T>(this T[] self, int index) => self[(index + 1) % self.Length];
 
     public static Vector2 ToVector2(this float[] self)
     {

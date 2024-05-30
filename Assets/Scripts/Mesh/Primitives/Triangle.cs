@@ -22,8 +22,8 @@ public class Triangle
 
         Vector3 Normal(int i)
         {
-            Vector3 sr = Vertices[Vertices.Right(i)] - Vertices[i];
-            Vector3 sl = Vertices[Vertices.Left(i)] - Vertices[i];
+            Vector3 sr = Vertices[Vertices.RightIndex(i)] - Vertices[i];
+            Vector3 sl = Vertices[Vertices.LeftIndex(i)] - Vertices[i];
             return Vector3.Cross(sr, sl).normalized;
         }
     }
@@ -34,7 +34,7 @@ public class Triangle
         Vector3[] perimeter = Polygon.VerticesPolygon(new(sideSize, 0f, sideSize)).OffsetSelf(offset);
         Vector3 center = (new Vector3(0, height, 0)) + offset;
         for (int i = 0; i < sideCount; i++)
-            triangles[i] = new(perimeter[i], perimeter[perimeter.Next(i)], center);
+            triangles[i] = new(perimeter[i], perimeter.Next(i), center);
         return triangles;
     }
 }

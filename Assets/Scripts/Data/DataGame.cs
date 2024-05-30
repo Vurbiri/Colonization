@@ -10,8 +10,6 @@ public class DataGame : ASingleton<DataGame>
     [SerializeField] private string _keySave = "gmd";
     [Space]
     [SerializeField] private int _minJewel = 14;
-    [SerializeField] private int _maxJewel = 38;
-    [SerializeField] private int _minJewelEndGame = 24;
     [Space]
     [SerializeField] private int _hintStart = 3;
     [SerializeField] private int _hintPerScore = 500;
@@ -19,7 +17,6 @@ public class DataGame : ASingleton<DataGame>
     private GameSave _data;
     private bool _isNewRecord = false;
     private long _maxAddHint;
-    private readonly LoopArray<LevelType> _types = new(Enum<LevelType>.GetValues());
 
     public bool IsNewGame => _data.modeStart == GameModeStart.New;
     public bool IsRecord => _data.score > _data.maxScore;
@@ -39,7 +36,6 @@ public class DataGame : ASingleton<DataGame>
         if (!result)
             _data = new(_minJewel, _hintStart);
 
-        _types.SetCursor(_data.type);
         _isNewRecord = _data.score > _data.maxScore;
         _maxAddHint = _data.score / _hintPerScore;
 
@@ -96,7 +92,6 @@ public class DataGame : ASingleton<DataGame>
         _data.Reset(_minJewel, _hintStart);
 
         _isNewRecord = false;
-        _types.SetCursor(_data.type);
         _maxAddHint = 0;
         Save();
 
@@ -106,17 +101,7 @@ public class DataGame : ASingleton<DataGame>
 
     private void CalkTypeAndCountJewel()
     {
-        int count = _minJewel + (_data.level >> 2);
 
-        if (count > _maxJewel)
-        {
-            _data.type = _types.Rand;
-            _data.countJewel = Random.Range(_minJewelEndGame, _maxJewel) + ((_data.type == LevelType.One || _data.type == LevelType.Two) ? _data.type == LevelType.One ? 2 : 0 : -1);
-            return;
-        }
-
-        _data.countJewel = count;
-        _data.type = _types.Forward;
     }
 
     #region Nested Classe
