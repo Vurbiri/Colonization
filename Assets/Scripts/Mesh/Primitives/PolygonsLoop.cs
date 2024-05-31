@@ -20,7 +20,7 @@ public class PolygonsLoop
             int i, n;
             for (i = 0; i < externalVectors.Length; i++)
             {
-                n = externalVectors.NextIndex(i);
+                n = externalVectors.RightIndex(i);
                 _polygons.Add(new(externalVectors[i], externalVectors[n], internalVectors[n], internalVectors[i]));
             }
         }

@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 //[DefaultExecutionOrder(-1)]
 public class DataGame : ASingleton<DataGame>
@@ -104,7 +103,7 @@ public class DataGame : ASingleton<DataGame>
 
     }
 
-    #region Nested Classe
+    #region Nested Class
     //***********************************
     private class GameSave
     {
@@ -112,8 +111,6 @@ public class DataGame : ASingleton<DataGame>
         public GameModeStart modeStart = GameModeStart.New;
         [JsonProperty("lvl")]
         public int level = 1;
-        [JsonProperty("ltp")]
-        public LevelType type;
         [JsonProperty("hnt")]
         public int hint = 3;
         [JsonProperty("cnt")]
@@ -152,7 +149,6 @@ public class DataGame : ASingleton<DataGame>
         {
             modeStart = GameModeStart.New;
             level = 1;
-            type = LevelType.One;
             this.hint = hint;
             this.countJewel = countJewel;
             score = 0;

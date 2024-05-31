@@ -17,6 +17,31 @@ public static class ExtensionsVector
     public static float[] ToArray(this Vector3 self) => new[] { self.x, self.y, self.z };
     public static float[] ToArray(this Vector2 self) => new[] { self.x, self.y };
 
+    public static Vector2 ToVector2(this float[] self)
+    {
+        Vector2 vector = Vector2.zero;
+        for (int i = 0; i < self.Length; i++)
+        {
+            if (i == 2)
+                break;
+
+            vector[i] = self[i];
+        }
+        return vector;
+    }
+    public static Vector3 ToVector3(this float[] self)
+    {
+        Vector3 vector = Vector3.zero;
+        for (int i = 0; i < self.Length; i++)
+        {
+            if (i == 3)
+                break;
+
+            vector[i] = self[i];
+        }
+        return vector;
+    }
+
 
     public static bool IsBetween(this Vector2Int self, Vector2Int a, Vector2Int b) =>
         ((self.x == a.x && self.x == b.x) && ((a.y < b.y && a.y <= self.y && self.y <= b.y) || (a.y > b.y && b.y <= self.y && self.y <= a.y))) ||

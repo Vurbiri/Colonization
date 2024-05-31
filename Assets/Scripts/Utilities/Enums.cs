@@ -22,19 +22,24 @@ public enum MessageType : byte
     FatalError
 }
 
-public enum LevelType : byte
-{
-    One,
-    Two,
-    TwoToOne,
-    OneToTwo
-}
-
 public enum GameModeStart : byte
 {
     New,
     Continue
 }
+
+public enum SurfaceType : byte
+{
+    None,
+    Gate,
+    Water,
+    Ground01,
+    Ground02,
+    Ground03,
+    Ground04,
+    Ground05
+}
+
 
 public static class ExtensionsEnum
 {
