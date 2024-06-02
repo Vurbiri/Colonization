@@ -1,67 +1,60 @@
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 
 [ExecuteInEditMode]
-[RequireComponent (typeof(MeshRenderer))] 
-public class Hexagon : MonoBehaviour
+[RequireComponent (typeof(SphereCollider))] 
+public class Hexagon : MonoBehaviour, ISelectable
 {
+    [SerializeField] private MeshRenderer _thisRenderer;
     [SerializeField] private TMP_Text _idText;
     
-    public Vector2Int Key => _key;
-    public HashSet<Crossroad> Crossroad => _crossroad;
+    public Key Key { get; private set; }
+    public bool IsGate => _surface == SurfaceType.Gate;
+    public bool IsWater => _surface == SurfaceType.Water;
+    public HashSet<Crossroad> Crossroads => _crossroads;
+    public HashSet<Hexagon> Near => _neighbors;
 
-    private Vector2Int _key = Vector2Int.zero;
+    public readonly static Key[] near = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
+
+    #region private
     private int _id = -1;
-    private Vector2 _offset;
+    private SurfaceType _surface;
 
-    private readonly HashSet<Crossroad> _crossroad = new(COUNT);
-    private readonly List<Hexagon> _neighbors = new(COUNT);
-    private SurfaceScriptable _surface;
-
-    private Transform _thisTransform;
-    private MeshRenderer _thisRenderer;
+    private readonly HashSet<Crossroad> _crossroads = new(COUNT);
+    private readonly HashSet<Hexagon> _neighbors = new(COUNT);
 
     private const int COUNT = 6;
 #if UNITY_EDITOR
     private const string NAME = "Hexagon_";
 #endif
+    #endregion
 
-    private void Awake()
+    public void Initialize(Key key, SurfaceScriptable surface, int id)
     {
-        _thisTransform = transform;
-        _thisRenderer = GetComponent<MeshRenderer>();  
-    }
+        Key = key;
 
-    public void Initialize(Vector2 offset, SurfaceScriptable surface, int id)
-    {
         _id = id;
-        _idText.text = id.ToString();
+        _idText.text = _id.ToString();
 
-        _surface = surface;
+        _surface = surface.Type;
         _thisRenderer.sharedMaterial = surface.Material;
 
-        Vector3 position = _thisTransform.localPosition;
-
-        _offset = offset;
-        _key.x = Mathf.RoundToInt(2f * position.x / _offset.x);
-        _key.y = Mathf.RoundToInt(position.z / _offset.y);
 
 #if UNITY_EDITOR
-        gameObject.name = NAME + _id + "__" + _key.ToString();
+        gameObject.name = NAME + _id + "__" + key.ToString();
 #endif
     }
 
-    public void AddCrossroad(Crossroad crossroad) => _crossroad.Add(crossroad);
-    public void RemoveCrossroad(Crossroad crossroad) => _crossroad.Remove(crossroad);
-
-    public void AddNeighbor(Hexagon hex) => _neighbors.Add(hex);
-
-    public void SetNewPosition(Vector2Int index)
+    public void Select()
     {
-        _key = index;
-        _thisTransform.localPosition = new(_offset.x * 0.5f * index.x, 0, _offset.y * index.y);
+
+        Debug.Log(gameObject.name);
     }
 
+    //public void SetNewPosition(Vector2Int index)
+    //{
+    //    _key = index;
+    //    _thisTransform.localPosition = new(_offset.x * 0.5f * index.x, 0, _offset.y * index.y);
+    //}
 }

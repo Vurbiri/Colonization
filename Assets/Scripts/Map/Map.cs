@@ -9,8 +9,8 @@ public class Map : MonoBehaviour
     [SerializeField] private Surfaces _surfaces;
     [Space]
     [SerializeField] private float _sizeHex = 20f;
-    [SerializeField] private int _circleMax = 5;
-    [SerializeField] private int _chance = 11;
+    [SerializeField, Range(3, 8)] private int _circleMax = 5;
+    [SerializeField, Range(0, 100)] private int _chance = 11;
     [Space]
     [SerializeField] private Hexagon _prefabHex;
     [SerializeField] private Transform _containerHex;
@@ -18,30 +18,31 @@ public class Map : MonoBehaviour
     [SerializeField] private Crossroad _prefabCrossroad;
     [SerializeField] private Transform _containerCrossroad;
 
+    public event Action<Crossroad> EventSelectedCrossroad;
+
+    #region private
     private float _radiusHexMap;
     private Vector2 _offsetHex, _offsetCross;
 
-    #region Dictionary
-    private Dictionary<Vector2Int, Hexagon> _mapHex;
-    private Dictionary<Vector2Int, Crossroad> _mapCross;
+    private Dictionary<Key, Hexagon> _mapHex;
+    private Dictionary<Key, Crossroad> _mapCross;
     #endregion
 
     #region Constants
-    private const int HEX_SIDE = 6;
+    private const int HEX_SIDE = 6, ID_GATE = 13;
 
-    public const float COS_00 = 1f, COS_30 = 0.8660254f, COS_60 = 0.5f, COS_90 = 0f;
-    public const float SIN_00 = COS_90, SIN_30 = COS_60, SIN_60 = COS_30, SIN_90 = COS_00;
+    private const float COS_00 = 1f, COS_30 = 0.8660254f, COS_60 = 0.5f, COS_90 = 0f;
+    private const float SIN_00 = COS_90, SIN_30 = COS_60, SIN_60 = COS_30, SIN_90 = COS_00;
 
-    public readonly float[] CosHexMap = { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60 };
-    public readonly float[] SinHexMap = { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 };
+    private readonly float[] CosHexMap = { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60 };
+    private readonly float[] SinHexMap = { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 };
 
-    public readonly float[] CosCross = { COS_30, COS_90, -COS_30, -COS_30, -COS_90, COS_30 };
-    public readonly float[] SinCross = { SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90, -SIN_30 };
+    private readonly float[] CosCross = { COS_30, COS_90, -COS_30, -COS_30, -COS_90, COS_30 };
+    private readonly float[] SinCross = { SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90, -SIN_30 };
 
     private readonly Vector3[] _positionsCross = new Vector3[HEX_SIDE];
-    private readonly Vector2Int[] _near = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
 
-    private readonly int[] _numbers = { 2, 3, 4, 5, 6, 8, 9, 10, 11, 12};
+    private readonly int[] _numbers = { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15};
     #endregion
 
     private void Awake()
@@ -54,41 +55,44 @@ public class Map : MonoBehaviour
         for (int i = 0; i < HEX_SIDE; i++)
             _positionsCross[i] = new Vector3(radiusPoint * CosCross[i], 0, radiusPoint * SinCross[i]);
 
-        //Debug.Log($"Count: {((3 * HEX_SIDE * _circleMax * _circleMax) >> 1) + HEX_SIDE}");
+        //Debug.Log($"Count calk: {((HEX_SIDE * _circleMax * (_circleMax + 1)) >> 1) + 1}");
+        //Debug.Log($"Count calk: {HEX_SIDE * _circleMax * _circleMax}");
         _mapHex = new(((HEX_SIDE * _circleMax * (_circleMax + 1)) >> 1) + 1);
-        _mapCross = new(((3 * HEX_SIDE * _circleMax * _circleMax) >> 1) + HEX_SIDE);
+        _mapCross = new(HEX_SIDE * _circleMax * _circleMax);
 
-        _surfaces.grounds.Shuffle();
+        Clear();
+        Generate();
     }
 
     [Button]
-    public void Generate()
+    public void Create()
     {
         Awake();
+    }
 
-        Clear();
-
+    public void Generate()
+    {
         CreateMap();
 
-        SetupCrossroads();
+        CrossroadSetup();
         HexagonsNeighbors();
 
-        #region Local: CreateMap(), SetupCrossroads(), SetupHexagons()
+        #region Local: CreateMap(), CrossroadSetup(), HexagonsNeighbors()
         //=================================
         void CreateMap()
         {
-            int circle = 0, chance, id = 7;
+            int circle = 0;
+            bool isWater = false, isLastCircle = circle == _circleMax;
             Vector3 position, positionNext, distance;
             float radius;
 
-            SurfaceScriptable type = _surfaces.gate;
-            Queue<int> numGround = null, numWater = null;
-            Queue<SurfaceScriptable> surfaces = new(_surfaces.grounds);
+            ShuffleLoopArray<int> numGround = new(_numbers), numWater = new(_numbers);
+            ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.grounds);
 
-            CreateHexagon(Vector3.zero, type, id);
-            while (circle++ < _circleMax)
+            CreateHexagon(Vector3.zero, (_surfaces.gate, ID_GATE));
+            while (!isLastCircle)
             {
-                chance = _chance * circle;
+                isLastCircle = ++circle == _circleMax;
                 radius = _radiusHexMap * circle;
 
                 positionNext = new(radius * CosHexMap[0], 0f, radius * SinHexMap[0]);
@@ -99,109 +103,80 @@ public class Map : MonoBehaviour
                     distance = (positionNext - position) / circle;
 
                     for (int j = 0; j < circle; j++)
-                    {
-                        InitQueueInt(ref numGround);
-                        InitQueueInt(ref numWater);
-
-                        if (surfaces.Count == 0)
-                        {
-                            _surfaces.grounds.Shuffle();
-                            surfaces = new(_surfaces.grounds);
-                        }
-
-                        if (circle == _circleMax || URandom.IsTrue(chance))
-                        {
-                            type = _surfaces.water;
-                            id = numWater.Dequeue();
-                            
-                            Debug.Log("w");
-                        }
-                        else
-                        {
-                            type = surfaces.Dequeue();
-                            id = numGround.Dequeue();
-
-                            Debug.Log("g");
-                        }
-
-                        CreateHexagon(position + distance * j, type, id);
-                    }
+                        CreateHexagon(position + distance * j, SetTypeAndId(j));// ÍÓÌÅÐÀÖÈß ÕÅÊÑÎÂ????
                 }
             }
 
-            #region Local: CreateHexagon(...), CreateCrossroad(...), InitQueueInt(...)
+            #region Local: SetTypeAndId(...), CreateHexagon(...), CreateCrossroad(...), InitQueueInt(...)
             //=================================
-            void CreateHexagon(Vector3 position, SurfaceScriptable surface, int idHex)
+            (SurfaceScriptable, int) SetTypeAndId(int x)
             {
-                Hexagon hex = Instantiate(_prefabHex, position, Quaternion.identity, _containerHex);
-                hex.Initialize(_offsetHex, surface, idHex);
-                _mapHex.Add(hex.Key, hex);
+                isWater = isLastCircle || (!isWater && x != 0 && URandom.IsTrue(_chance));
 
+                return isWater ? (_surfaces.water, numWater.Value) : (surfaces.Value, numGround.Value);
+            }
+            //=================================
+            void CreateHexagon(Vector3 position, (SurfaceScriptable surface, int id) type)
+            {
+                Key key = Key.FromVectorsRate(position, _offsetHex);
+                Hexagon hex = Instantiate(_prefabHex, position, Quaternion.identity, _containerHex);
+                hex.Initialize(key, type.surface, type.id);
+                _mapHex.Add(key, hex);
+                
                 CreateCrossroad(position, hex);
             }
             //=================================
             void CreateCrossroad(Vector3 position, Hexagon hex)
             {
                 Crossroad cross;
-                Vector2Int key = Vector2Int.zero;
+                Key key;
                 Vector3 positionCross;
                 for (int i = 0; i < HEX_SIDE; i++)
                 {
                     positionCross = _positionsCross[i] + position;
 
-                    key.x = Mathf.RoundToInt(positionCross.x / _offsetCross.x);
-                    key.y = Mathf.RoundToInt(positionCross.z / _offsetCross.y);
+                    key = Key.FromVectors(positionCross, _offsetCross);
 
                     if (!_mapCross.TryGetValue(key, out cross))
                     {
+                        if (circle == _circleMax)
+                            continue;
+
                         cross = Instantiate(_prefabCrossroad, positionCross, Quaternion.identity, _containerCrossroad);
-                        cross.Initialize(key);
+                        cross.Initialize(key, SelectCrossroad);
                         _mapCross.Add(key, cross);
                     }
 
-                    cross.AddHexagon(hex);
-                    hex.AddCrossroad(cross);
-                }
-            }
-            //=================================
-            void InitQueueInt(ref Queue<int> queue)
-            {
-                if (queue == null || queue.Count == 0)
-                {
-                    _numbers.Shuffle();
-                    queue = new(_numbers);
+                    cross.Hexagons.Add(hex);
+                    hex.Crossroads.Add(cross);
                 }
             }
             #endregion
         }
         //=================================
-        void SetupCrossroads()
+        void CrossroadSetup()
         {
-            List<Crossroad> removable = new();
-
             foreach (var cross in _mapCross.Values)
-                if (!cross.Setup())
-                    removable.Add(cross);
-
-            foreach (var cross in removable)
-            {
-                _mapCross.Remove(cross.Key);
-                DestroyImmediate(cross.gameObject);
-            }
+                cross.Setup();
         }
         //=================================
         void HexagonsNeighbors()
         {
             Hexagon hexagon;
+            HashSet<Hexagon> near;
             foreach (var hex in _mapHex.Values)
             {
-                foreach (var offset in _near)
+                near = hex.Near;
+                foreach (var offset in Hexagon.near)
                     if (_mapHex.TryGetValue(hex.Key + offset, out hexagon))
-                        hex.AddNeighbor(hexagon);
+                        near.Add(hexagon);
             }
         }
         #endregion
     }
+
+
+    private void SelectCrossroad(Crossroad cross) => EventSelectedCrossroad?.Invoke(cross);
 
 #if UNITY_EDITOR
     [Button]
@@ -220,7 +195,6 @@ public class Map : MonoBehaviour
     [Serializable]
     private struct Surfaces
     {
-        public SurfaceScriptable none;
         public SurfaceScriptable gate;
         public SurfaceScriptable water;
         public SurfaceScriptable[] grounds;

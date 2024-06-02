@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bd3e162ac6b0ba47986eced37a393a4, type: 3}
   m_Name: Surface_G05
   m_EditorClassIdentifier: 
-  _type: 7
+  _type: 6
   _material: {fileID: 2100000, guid: 78295906de63d06478c6e7662726c9f9, type: 2}

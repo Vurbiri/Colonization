@@ -28,9 +28,17 @@ public enum GameModeStart : byte
     Continue
 }
 
+public enum Player : sbyte
+{
+    None = -1,
+    Human,
+    AI_01,
+    AI_02,
+    AI_03
+}
+
 public enum SurfaceType : byte
 {
-    None,
     Gate,
     Water,
     Ground01,
@@ -39,7 +47,12 @@ public enum SurfaceType : byte
     Ground04,
     Ground05
 }
-
+public enum RoadType : byte 
+{ 
+    None,
+    Start,
+    End
+}
 
 public static class ExtensionsEnum
 {

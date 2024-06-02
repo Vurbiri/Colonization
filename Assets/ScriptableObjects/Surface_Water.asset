@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bd3e162ac6b0ba47986eced37a393a4, type: 3}
   m_Name: Surface_Water
   m_EditorClassIdentifier: 
-  _type: 2
+  _type: 1
   _material: {fileID: 2100000, guid: 1aa84cca0b248784fbd07356c6f61f86, type: 2}

@@ -8,24 +8,32 @@ public static class ExtensionsCollection
    
     public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
 
-    public static void Shuffle<T>(this IList<T> self)
-    {
-        for (int i = self.Count - 1, j; i > 0; i--)
-        {
-            j = Random.Range(0, i + 1);
-            (self[j], self[i]) = (self[i], self[j]);
-        }
-    }
-
     public static T GetValue<T>(this IEnumerable<T> self, int index)
     {
         IEnumerator<T> enumerator = self.GetEnumerator();
         enumerator.Reset();
         for (int i = 0; i <= index; i++)
             enumerator.MoveNext();
-        
+
         return enumerator.Current;
     }
+
+
+    public static void Fill<T>(this IList<T> self, T value = default)
+    {
+        for (int i = 0; i < self.Count; i++)
+            self[i] = value;
+    }
+
+    public static void Shuffle<T>(this IList<T> self)
+    {
+        for (int i = self.Count - 1, j; i > 0; i--)
+        {
+            j = Random.Range(0, i);
+            (self[j], self[i]) = (self[i], self[j]);
+        }
+    }
+
 
     public static bool BinaryContains<T>(this List<T> self, T item) => self.BinarySearch(item) >= 0;
 

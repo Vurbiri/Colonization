@@ -23,4 +23,6 @@ public class Return<T> where T : class
         Result = result;
         Value = value;
     }
+
+    public override string ToString() => Value.ToString();
 }

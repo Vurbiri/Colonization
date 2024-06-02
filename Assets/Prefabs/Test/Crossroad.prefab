@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 8848314609235780651}
   - component: {fileID: 1133423376153867474}
   - component: {fileID: 7753975760188031238}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Crossroad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8848314609235780651
 Transform:
@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d0c15a9355cec44aa0e946c2da2f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _radius: 1.75
 --- !u!135 &7753975760188031238
 SphereCollider:
   m_ObjectHideFlags: 0
