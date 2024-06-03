@@ -2,6 +2,9 @@ using UnityEngine;
 
 public static class ExtensionsVector
 {
+    public static Vector3 ResetY(this Vector3 self) => new(self.x, 0f, self.z);
+
+
     public static Vector2 Offset(this Vector2 self, float value) => self + value * Vector2.one;
     public static Vector3[] OffsetSelf(this Vector3[] self, Vector3 value)
     {
@@ -11,7 +14,7 @@ public static class ExtensionsVector
         return self;
     }
 
-    public static Vector2 To2D(this Vector3 self) => new(self.x, self.z);
+    public static Vector2 To2D(this Vector3 self) => new(self.x, self.y);
     public static Vector3 To3D(this Vector2 self, float z = 0) => new(self.x, z, self.y);
 
     public static float[] ToArray(this Vector3 self) => new[] { self.x, self.y, self.z };

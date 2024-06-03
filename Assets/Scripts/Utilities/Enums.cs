@@ -47,12 +47,7 @@ public enum SurfaceType : byte
     Ground04,
     Ground05
 }
-public enum RoadType : byte 
-{ 
-    None,
-    Start,
-    End
-}
+
 
 public static class ExtensionsEnum
 {

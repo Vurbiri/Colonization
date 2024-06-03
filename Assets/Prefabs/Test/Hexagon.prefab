@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3885037424239413603}
   - component: {fileID: 1334033936671246162}
-  - component: {fileID: 4204064724729208910}
+  - component: {fileID: 8734530714538533476}
   m_Layer: 7
   m_Name: Hexagon
   m_TagString: Untagged
@@ -49,8 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _thisRenderer: {fileID: 1394830759387021219}
   _idText: {fileID: 4203516390703220402}
---- !u!135 &4204064724729208910
-SphereCollider:
+--- !u!64 &8734530714538533476
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -67,9 +67,10 @@ SphereCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 8
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4575734979276873811, guid: 96f041643583d9e4cbcc4748b6a03667, type: 3}
 --- !u!1 &6979386230880495742
 GameObject:
   m_ObjectHideFlags: 0

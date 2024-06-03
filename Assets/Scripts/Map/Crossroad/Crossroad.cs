@@ -13,12 +13,12 @@ public class Crossroad : MonoBehaviour, ISelectable
     public Vector3 Position { get; private set; }
     public bool IsGate => _isGate;
     public bool IsWater => _isWater;
-    public List<Hexagon> Hexagons => _hexagons;
+    public HashSet<Road> Roads => _roads;
 
-    public Key _key;
+    private Key _key;
     private bool _isGate = false, _isWater = true;
     private readonly List<Hexagon> _hexagons = new(COUNT);
-    private readonly Dictionary<Crossroad, Road> _neighbors = new(COUNT);
+    private readonly HashSet<Road> _roads = new(COUNT);
 
     private Action<Crossroad> actionSelect;
 
@@ -39,38 +39,14 @@ public class Crossroad : MonoBehaviour, ISelectable
 #endif
     }
 
-    public void Setup()
-    {
-        HashSet<Crossroad> set;
-        Hexagon current, next = _hexagons[0];
+    public void AddHexagon(Hexagon hex)
+    { 
+        _hexagons.Add(hex);
 
-        for (int i = 0; i < COUNT; i++)
-        {
-            current = next;
-            next = _hexagons.Next(i);
-
-            _isGate = _isGate || current.IsGate;
-            _isWater = _isWater && current.IsWater;
-
-            set = new(current.Crossroads);
-            set.Remove(this);
-            set.IntersectWith(next.Crossroads);
-
-            if(set.Count > 0) 
-                _neighbors.Add(set.First(), new(current.IsWater && next.IsWater));
-        }
+        _isGate = _isGate || hex.IsGate;
+        _isWater = _isWater && hex.IsWater;
     }
 
-    public void RoadAdd(Crossroad cross, Player player)
-    {
-        Road road = _neighbors[cross];
-        road.type = RoadType.Start;
-        road.owner = player;
-
-        road = cross._neighbors[this];
-        road.type = RoadType.End;
-        road.owner = player;
-    }
 
     public void Select()
     {
@@ -79,36 +55,14 @@ public class Crossroad : MonoBehaviour, ISelectable
 
         string s = $"{gameObject.name}, water: {_isWater}, gate {_isGate}\n";
         //foreach (var hexagon in _hexagons)
-        //    s += hexagon.gameObject.name + " | ";
-        foreach (var neighbor in _neighbors)
-            s += neighbor.Value.isWater + " | ";
-        Debug.Log(s);
+        //    s += hexagon.IsWater + " | ";
+        //foreach (var road in _roads)
+        //    s += road + " | ";
+        //Debug.Log(s);
     }
 
-    #region Nested: Surfaces
-    //***********************************
-    [Serializable]
-    private class Road
-    {
-        public RoadType type;
-        public Player owner;
-        public readonly bool isWater;
 
-        public Road(RoadType type, Player owner, bool isWater)
-        {
-            this.type = type;
-            this.owner = owner;
-            this.isWater = isWater;
-        }
 
-        public Road(bool isWater)
-        {
-            type = RoadType.None;
-            owner = Player.None;
-            this.isWater = isWater;
-        }
-    }
-    #endregion
 
 #if UNITY_EDITOR
     public void OnDrawGizmos()

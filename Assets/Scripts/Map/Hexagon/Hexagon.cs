@@ -3,13 +3,14 @@ using TMPro;
 using UnityEngine;
 
 [ExecuteInEditMode]
-[RequireComponent (typeof(SphereCollider))] 
+[RequireComponent(typeof(Collider))]
 public class Hexagon : MonoBehaviour, ISelectable
 {
     [SerializeField] private MeshRenderer _thisRenderer;
     [SerializeField] private TMP_Text _idText;
-    
-    public Key Key { get; private set; }
+
+    public Key Key => _key;
+    public int Id => _id;
     public bool IsGate => _surface == SurfaceType.Gate;
     public bool IsWater => _surface == SurfaceType.Water;
     public HashSet<Crossroad> Crossroads => _crossroads;
@@ -19,6 +20,7 @@ public class Hexagon : MonoBehaviour, ISelectable
 
     #region private
     private int _id = -1;
+    private Key _key;
     private SurfaceType _surface;
 
     private readonly HashSet<Crossroad> _crossroads = new(COUNT);
@@ -32,8 +34,7 @@ public class Hexagon : MonoBehaviour, ISelectable
 
     public void Initialize(Key key, SurfaceScriptable surface, int id)
     {
-        Key = key;
-
+        _key = key;
         _id = id;
         _idText.text = _id.ToString();
 
@@ -46,11 +47,29 @@ public class Hexagon : MonoBehaviour, ISelectable
 #endif
     }
 
+    public bool AddNeighbor(Hexagon hex, bool notCreateRoad, out Road road)
+    {
+        _neighbors.Add(hex);
+
+        road = null;
+        if (notCreateRoad) 
+            return false;
+
+        HashSet<Crossroad> cross = new(_crossroads);
+        cross.IntersectWith(hex._crossroads);
+
+        road = Road.Create(cross, this, hex);
+
+        return road != null;
+    }
+
     public void Select()
     {
 
-        Debug.Log(gameObject.name);
+        Debug.Log($"{gameObject.name}, water: {IsWater}, gate {IsGate}\n");
     }
+
+    public static KeyDouble operator &(Hexagon a, Hexagon b) => a._key & b._key;
 
     //public void SetNewPosition(Vector2Int index)
     //{
