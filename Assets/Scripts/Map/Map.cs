@@ -18,6 +18,9 @@ public class Map : MonoBehaviour
     [SerializeField] private Crossroad _prefabCrossroad;
     [SerializeField] private Transform _containerCrossroad;
 
+    public int Circle => _circleMax;
+    public float SizeHex => _radiusHexMap;
+
     public event Action<Crossroad> EventSelectCrossroad;
 
     #region private

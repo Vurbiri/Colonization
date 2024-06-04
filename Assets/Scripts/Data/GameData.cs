@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 //[DefaultExecutionOrder(-1)]
-public class DataGame : ASingleton<DataGame>
+public class GameData : ASingleton<GameData>
 {
     [Space]
     [SerializeField] private string _keySave = "gmd";

@@ -28,7 +28,7 @@ public class Banners : ASingleton<Banners>
     public void Initialize()
     {
         CanvasScaler scaler = GetComponent<CanvasScaler>();
-        if (SettingsGame.InstanceF.IsDesktop)
+        if (SettingsData.InstanceF.IsDesktop)
         {
             FontSize = _fontSizeDesktop;
             scaler.referenceResolution = _resolutionDesktop;

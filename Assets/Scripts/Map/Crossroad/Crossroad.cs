@@ -58,7 +58,7 @@ public class Crossroad : MonoBehaviour, ISelectable
         //    s += hexagon.IsWater + " | ";
         //foreach (var road in _roads)
         //    s += road + " | ";
-        //Debug.Log(s);
+        Debug.Log(s);
     }
 
 

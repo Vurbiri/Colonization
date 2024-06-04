@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class ExtensionsVector
 {
-    public static Vector3 ResetY(this Vector3 self) => new(self.x, 0f, self.z);
+    public static Vector3 ResetY(this Vector3 self) => new Vector3(self.x, 0f, self.z).normalized;
 
 
     public static Vector2 Offset(this Vector2 self, float value) => self + value * Vector2.one;

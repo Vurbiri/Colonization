@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SettingsGame : ASingleton<SettingsGame>
+public class SettingsData : ASingleton<SettingsData>
 {
     [Space]
     [SerializeField] private int _qualityDesktop = 1;

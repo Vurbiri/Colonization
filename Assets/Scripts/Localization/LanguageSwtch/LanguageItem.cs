@@ -12,13 +12,13 @@ public class LanguageItem : MonoBehaviour
     private bool _isSave;
     private int _id = -1;
     private Localization _localization;
-    private SettingsGame _settings;
+    private SettingsData _settings;
     
     private void Awake()
     {
         _toggle = GetComponent<Toggle>();
         _localization = Localization.InstanceF;
-        _settings = SettingsGame.InstanceF;
+        _settings = SettingsData.InstanceF;
     }
 
     public void Setup(Localization.LanguageType languageType, ToggleGroup toggleGroup, bool isSave) 
