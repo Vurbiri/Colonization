@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
 public class CameraController : MonoBehaviour
@@ -13,7 +12,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _accelerationMove = 2f;
     [SerializeField] private float _dampingMove = 12.5f;
     [Header("Movement Target")]
-    [SerializeField, Range(0.05f, 0.5f)] private float _smoothTime = 0.3f;
+    [SerializeField, Range(0.05f,1f)] private float _smoothTime = 0.3f;
+    [SerializeField, Range(0.01f, 0.5f)] private float _sqrVelocityMin = 0.3f;
     [Header("Zoom")]
     [SerializeField] private float _speedZoom = 4f;
     [SerializeField] private float _heightZoomMin = 100f;
@@ -22,136 +22,108 @@ public class CameraController : MonoBehaviour
     [Header("Rotation")]
     [SerializeField] private float _speedRotation = 2f;
     [Header("Edge")]
-    [SerializeField, Range(0.001f, 0.1f)] private float _edgeLeft = 0.05f;
+    [SerializeField, Range(0.001f, 0.1f)] private float _edge = 0.05f;
+    [SerializeField] private bool _isEdgeMove;
 
+    private Camera _camera;
     private Transform _cameraTransform, _thisTransform;
 
     private InputControlAction.CameraActions _cameraActions;
-    private InputAction _actionMove, _actionZoom;
     private Coroutine _coroutineMove, _coroutineMoveTarget, _coroutineZoom;
 
-    private float _speedMove, _zoomDirection, _edgeRight;
+    private float _speedMove, _heightZoom, _edgeRight;
     private Vector2 _moveDirection;
+    private Vector3 _targetPosition;
     private Bounds _bounds;
-
-    public Map Map => _map;
-
-    public event Action EventStartChangeCamera;
-    public event Action EventEndChangeCamera;
 
     private void Awake()
     {
         _thisTransform = transform;
-        _cameraTransform = Camera.main.transform;
+        _camera = Camera.main;
+        _cameraTransform = _camera.transform;
+        _heightZoom = _cameraTransform.position.y;
 
-        _edgeRight = 1f - _edgeLeft;
+        _edgeRight = 1f - _edge;
     }
 
     private void Start()
     {
         _cameraActions = InputController.InstanceF.CameraActions;
 
-        _actionMove = _cameraActions.Move;
-        _actionZoom = _cameraActions.Zoom;
+        _cameraActions.Move.performed += OnMove;
+        _cameraActions.Move.canceled += OnCancelMove;
 
-        _actionMove.started += OnStartMove;
-        _actionMove.performed += OnPerformMove;
-        _actionMove.canceled += OnCancelMove;
+        _cameraActions.Zoom.performed += OnZoom;
 
-        _actionZoom.started += OnStartZoom;
-        _actionZoom.performed += OnPerformZoom;
-        _actionZoom.canceled += OnCancelZoom;
+        _cameraActions.Rotate.performed += OnRotate;
 
-        _cameraActions.Rotate.performed += OnPerformRotate;
-        _cameraActions.Rotate.canceled += OnCancelRotate;
+        _cameraActions.Position.performed += OnPosition;
 
-        _cameraActions.Position.performed += OnPerformPosition;
-
-        _map.EventSelectCrossroad += MoveTarget;
-
+        _map.EventSelectCrossroad += MoveToCrossroad;
 
         float size = _map.SizeHex * _map.Circle * 2f;
         _bounds = new Bounds(Vector3.zero, new(size, 5f, size));
-        Debug.Log(_bounds);
 
         _cameraTransform.LookAt(_thisTransform);
     }
 
 
-    private void OnStartMove(CallbackContext ctx)
-    {
-        if (_coroutineMove != null)
-            StopCoroutine(_coroutineMove);
-
-        OnPerformMove(ctx);
-        _coroutineMove = StartCoroutine(Move_Coroutine());
-
-    }
     private IEnumerator Move_Coroutine()
     {
-        Vector3 direction = Vector3.zero;
-
-        EventStartChangeCamera?.Invoke();
+        Vector3 direction = _moveDirection.x * _cameraTransform.right.ResetY() + _moveDirection.y * _cameraTransform.forward.ResetY(); 
 
         while (_moveDirection.sqrMagnitude > 0.1f)
         {
             yield return _coroutineMoveTarget;
 
             _speedMove = _speedMove < _speedMoveMax ? _speedMove + Time.deltaTime * _accelerationMove : _speedMoveMax;
-            direction = _moveDirection.x * _cameraTransform.right.ResetY() + _moveDirection.y * _cameraTransform.forward.ResetY();
             _thisTransform.position = _bounds.ClosestPoint(_thisTransform.position + _speedMove * Time.deltaTime * direction);
         }
 
-        while(_speedMove > 0f && _coroutineMoveTarget == null)
+        while (_speedMove > 0f && _coroutineMoveTarget == null)
         {
             _speedMove -= Time.deltaTime * _dampingMove;
             _thisTransform.position += _speedMove * Time.deltaTime * direction;
             yield return null;
         }
+
         _speedMove = 0f;
         _coroutineMove = null;
-
-        EventEndChangeCamera?.Invoke();
     }
-    private void OnPerformMove(CallbackContext ctx) => _moveDirection = ctx.ReadValue<Vector2>();
+    private void OnMove(CallbackContext ctx)
+    {
+        if (_coroutineMove != null)
+            StopCoroutine(_coroutineMove);
+
+        _moveDirection = ctx.ReadValue<Vector2>();
+        _coroutineMove = StartCoroutine(Move_Coroutine());
+
+    }
     private void OnCancelMove(CallbackContext ctx) => _moveDirection = Vector2.zero;
 
-    private void MoveTarget(Crossroad cross)
+    private void MoveToCrossroad(Crossroad cross)
     {
-        if (_coroutineMoveTarget != null)
-            StopCoroutine(_coroutineMoveTarget);
-
-        _coroutineMoveTarget = StartCoroutine(MoveTarget_Coroutine());
-
-        #region Local: MoveTarget_Coroutine()
-        //=================================
-        IEnumerator MoveTarget_Coroutine()
-        {
-            EventStartChangeCamera?.Invoke();
-
-            Vector3 target = cross.Position, velocity = Vector3.zero;
-            do
-            {
-                _thisTransform.position = Vector3.SmoothDamp(_thisTransform.position, target, ref velocity, 0.1f);
-                yield return null;
-            }
-            while (velocity.sqrMagnitude > 0.1f);
-
-            //_thisTransform.position = target;
-
-            _coroutineMoveTarget = null;
-
-            EventEndChangeCamera?.Invoke();
-        }
-        #endregion
+        _targetPosition = cross.Position;
+        _coroutineMoveTarget ??= StartCoroutine(MoveTarget_Coroutine());
     }
 
-    private void OnStartZoom(CallbackContext ctx)
+    private IEnumerator MoveTarget_Coroutine()
     {
-        //if (_coroutineZoom != null)
-        //    StopCoroutine(_coroutineZoom);
+        Vector3 velocity = Vector3.zero;
+        do
+        {
+            _thisTransform.position = Vector3.SmoothDamp(_thisTransform.position, _targetPosition, ref velocity, _smoothTime);
+            yield return null;
+        }
+        while (velocity.sqrMagnitude > _sqrVelocityMin);
 
-        OnPerformZoom(ctx);
+        _thisTransform.position = _targetPosition;
+        _coroutineMoveTarget = null;
+    }
+
+    private void OnZoom(CallbackContext ctx)
+    {
+        _heightZoom = Mathf.Clamp(_heightZoom + ctx.ReadValue<float>() * _steepZoomRate, _heightZoomMin, _heightZoomMax); ;
         _coroutineZoom ??= StartCoroutine(Zoom_Coroutine());
 
         #region Local: Zoom_Coroutine()
@@ -159,43 +131,36 @@ public class CameraController : MonoBehaviour
         IEnumerator Zoom_Coroutine()
         {
             Vector3 position = _cameraTransform.localPosition;
-            float height = position.y;
             do
             {
-                height = Mathf.Clamp(height + _zoomDirection, _heightZoomMin, _heightZoomMax);
-                position.y = Mathf.Lerp(position.y, height, Time.deltaTime * _speedZoom);
+                position.y = Mathf.Lerp(position.y, _heightZoom, Time.deltaTime * _speedZoom);
                 _cameraTransform.localPosition = position;
                 _cameraTransform.LookAt(_thisTransform);
 
                 yield return null;
-
-                EventEndChangeCamera?.Invoke();
             }
-            while (Mathf.Abs(height - position.y) > 10f);
+            while (Mathf.Abs(_heightZoom - position.y) > 5f);
 
             _coroutineZoom = null;
         }
         #endregion
     }
-    private void OnPerformZoom(CallbackContext ctx) => _zoomDirection = ctx.ReadValue<float>() * _steepZoomRate;
-    private void OnCancelZoom(CallbackContext ctx) => _zoomDirection = 0f;
 
 
-    private void OnPerformRotate(CallbackContext ctx)
+
+    private void OnRotate(CallbackContext ctx)
     {
         _thisTransform.rotation *= Quaternion.Euler(Vector3.up * ctx.ReadValue<float>() * _speedRotation);
     }
-    private void OnCancelRotate(CallbackContext ctx)
-    {
-        EventEndChangeCamera?.Invoke();
-    }
 
-    private void OnPerformPosition(CallbackContext ctx)
+    private void OnPosition(CallbackContext ctx)
     {
+        if (!_isEdgeMove) return;
+
         Vector2 position = ctx.ReadValue<Vector2>();
 
-        _moveDirection.x = position.x < Screen.width * _edgeLeft ? -1 : position.x > Screen.width * _edgeRight ? 1 : 0;
-        _moveDirection.y = position.y < Screen.height * _edgeLeft ? -1 : position.y > Screen.height * _edgeRight ? 1 : 0;
+        _moveDirection.x = position.x < Screen.width * _edge ? -1 : position.x > Screen.width * _edgeRight ? 1 : 0;
+        _moveDirection.y = position.y < Screen.height * _edge ? -1 : position.y > Screen.height * _edgeRight ? 1 : 0;
 
         if(_coroutineMove == null && _moveDirection.sqrMagnitude > 0f)
             _coroutineMove = StartCoroutine(Move_Coroutine());
@@ -206,12 +171,9 @@ public class CameraController : MonoBehaviour
         if (InputController.Instance == null)
             return;
 
-        _actionMove.started -= OnStartMove;
-        _actionMove.performed -= OnPerformMove;
-        _actionMove.canceled -= OnCancelMove;
+        _cameraActions.Move.performed -= OnMove;
+        _cameraActions.Move.canceled -= OnCancelMove;
 
-        _actionZoom.started -= OnStartZoom;
-        _actionZoom.performed -= OnPerformZoom;
-        _actionZoom.canceled -= OnCancelZoom;
+        _cameraActions.Zoom.performed -= OnZoom;
     }
 }

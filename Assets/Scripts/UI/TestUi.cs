@@ -1,92 +1,74 @@
-using System.Collections.Generic;
 using UnityEngine;
-
 
 public class TestUi : MonoBehaviour
 {
-    [SerializeField] private CameraController _cameraController;
+    [SerializeField] private Map _map;
     [SerializeField] private RectTransform _imageTransform;
     [SerializeField] private RectTransform[] _roads;
 
     private RectTransform _thisTransform;
-    private Map _map;
     private Camera _camera;
+    private Transform _cameraTransform;
     private Vector2 _localPoint;
+    private Vector3 _lastCameraPosition;
     private Crossroad _crossCurrent;
-    private List<RectTransform> _roadsCurrent;
-
-    private Vector2 _size;
-    private Vector2[] _sizes = new Vector2[3];
+    private int _countCurrent;
 
     private void Awake()
     {
         _thisTransform = GetComponent<RectTransform>();
         _camera = Camera.main;
+        _cameraTransform = _camera.transform;
 
-        _cameraController.EventStartChangeCamera += OffUI;
-        _cameraController.EventEndChangeCamera += SetUI;
-
-        _map = _cameraController.Map;
         _map.EventSelectCrossroad += OnSelectCrossroad;
 
-        _roadsCurrent = new (_roads.Length);
-
         _imageTransform.gameObject.SetActive(false);
-
-        for (int i = 0; i < _roads.Length; i++)
-        {
-            _roads[i].gameObject.SetActive(false);
-            _sizes[i] = _roads[i].sizeDelta;
-        }
-
-        _size = _imageTransform.sizeDelta;
+        foreach (var road in _roads)
+            road.gameObject.SetActive(false);
     }
 
     private void OnSelectCrossroad(Crossroad cross)
     {
         _crossCurrent = cross;
+        _countCurrent = cross.Roads.Count;
 
+        SetPositionUI();
+        LookAtCamera();
 
-        //for(int i = cross.Roads.Count - 1; i < _roads.Length; i++)
-        //    _roads[i].gameObject.SetActive(false);
-
-        //SetUI();
-    }
-
-    private void OffUI()
-    {
-        _imageTransform.gameObject.SetActive(false);
+        _imageTransform.gameObject.SetActive(true);
 
         for (int i = 0; i < _roads.Length; i++)
-            _roads[i].gameObject.SetActive(false);
+            _roads[i].gameObject.SetActive(i < _countCurrent);
     }
 
-    private void SetUI()
+    private void LookAtCamera()
     {
-        if (_crossCurrent == null)
-            return;
+        _imageTransform.LookAt(_cameraTransform);
+        for (int i = 0; i < _roads.Length; i++)
+            _roads[i].LookAt(_cameraTransform);
+    }
 
-        float ratioSize = _camera.transform.position.y / 250f;
-
+    private void SetPositionUI()
+    {
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(_crossCurrent.Position), _camera, out _localPoint))
-        {
             _imageTransform.anchoredPosition = _localPoint;
-            _imageTransform.sizeDelta = _size / ratioSize;
-            _imageTransform.gameObject.SetActive(true);
-            
-        }
 
         int i = 0;
         foreach (var road in _crossCurrent.Roads)
         {
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(road.Position), _camera, out _localPoint))
-            {
                 _roads[i].anchoredPosition = _localPoint;
-                _roads[i].sizeDelta = _sizes[i] / ratioSize;
-                _roads[i].gameObject.SetActive(true);
-            }
 
             i++;
         }
+
+        _lastCameraPosition = _cameraTransform.position;
+    }
+
+    private void Update()
+    {
+        if (_crossCurrent == null || _lastCameraPosition == _cameraTransform.position) return;
+
+        LookAtCamera();
     }
 }

@@ -1,24 +1,24 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 
 [DefaultExecutionOrder(-1)]
 public class InputController : ASingleton<InputController>
 {
+    [Space]
+    [SerializeField] private LayerMask _layerLeft;
+    [SerializeField] private LayerMask _layerRight;
+    [Space]
+    [SerializeField] private float _distance = 900f;
+
 
     public InputControlAction.CameraActions CameraActions => _inputActions.Camera;
 
-
-    public event Action EventStartCameraMove;
-    public event Action EventStopCameraMove;
-
     private InputControlAction _inputActions;
-    private InputAction _actionMove;
-
-    private Vector2 _cameraMove;
+    private Camera _camera;
+    private Ray _ray;
+    private RaycastHit _hit;
+    private ISelectable _obj;
 
     protected override void Awake()
     {
@@ -26,22 +26,31 @@ public class InputController : ASingleton<InputController>
         base.Awake();
 
         _inputActions = new();
-        _actionMove = _inputActions.Camera.Move;
+        _camera = Camera.main;
     }
 
     private void Start()
     {
         _inputActions.Enable();
 
-        _actionMove.started += _ => EventStartCameraMove?.Invoke();
-        _actionMove.performed += ctx => _cameraMove = ctx.ReadValue<Vector2>();
-        _actionMove.canceled += _ => EventStopCameraMove?.Invoke();
+        _inputActions.Gameplay.LeftClick.performed += OnLeftClick;
+        _inputActions.Gameplay.RightClick.performed += OnRightClick;
     }
 
     public void EnableGameplayMap()
     {
-        _inputActions.General.Enable();
+        _inputActions.Gameplay.Enable();
         _inputActions.Camera.Enable();
+    }
+
+    private void OnLeftClick(CallbackContext ctx) => Click(ctx.ReadValue<Vector2>(), _layerLeft);
+    private void OnRightClick(CallbackContext ctx) => Click(ctx.ReadValue<Vector2>(), _layerRight);
+
+    private void Click(Vector2 mousePosition, LayerMask layer)
+    {
+        _ray = _camera.ScreenPointToRay(mousePosition);
+        if (Physics.Raycast(_ray, out _hit, _distance, layer.value) && _hit.collider.TryGetComponent(out _obj))
+            _obj.Select();
     }
 
     private void OnDisable() => _inputActions.Disable();

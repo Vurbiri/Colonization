@@ -65,11 +65,11 @@ public class Crossroad : MonoBehaviour, ISelectable
 
 
 #if UNITY_EDITOR
-    public void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(transform.position, _radius);
-    }
+    //public void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawSphere(transform.position, _radius);
+    //}
 #endif
 }
 
