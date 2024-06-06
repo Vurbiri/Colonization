@@ -2,13 +2,13 @@ using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static CONST;
 
 //[ExecuteInEditMode]
 public class Map : MonoBehaviour
 {
     [SerializeField] private Surfaces _surfaces;
     [Space]
-    [SerializeField] private float _sizeHex = 20f;
     [SerializeField, Range(3, 8)] private int _circleMax = 5;
     [SerializeField, Range(0, 100)] private int _chance = 11;
     [Space]
@@ -19,45 +19,28 @@ public class Map : MonoBehaviour
     [SerializeField] private Transform _containerCrossroad;
 
     public int Circle => _circleMax;
-    public float SizeHex => _radiusHexMap;
+    public float SizeHex => HEX_SIZE;
 
     public event Action<Crossroad> EventSelectCrossroad;
 
     #region private
-    private float _radiusHexMap;
     private Vector2 _offsetHex, _offsetCross;
 
     private Dictionary<Key, Hexagon> _hexagons;
     private Dictionary<Key, Crossroad> _crossroads;
     private Dictionary<KeyDouble, Road> _roads;
-    #endregion
-
-    #region Constants
-    private const int HEX_SIDE = 6, ID_GATE = 13;
-
-    private const float COS_00 = 1f, COS_30 = 0.8660254f, COS_60 = 0.5f, COS_90 = 0f;
-    private const float SIN_00 = COS_90, SIN_30 = COS_60, SIN_60 = COS_30, SIN_90 = COS_00;
-
-    private readonly float[] CosHexMap = { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60 };
-    private readonly float[] SinHexMap = { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 };
-
-    private readonly float[] CosCross = { COS_30, COS_90, -COS_30, -COS_30, -COS_90, COS_30 };
-    private readonly float[] SinCross = { SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90, -SIN_30 };
 
     private readonly Vector3[] _positionsCross = new Vector3[HEX_SIDE];
-
-    private readonly int[] _numbers = { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15};
     #endregion
 
     private void Awake()
     {
-        _radiusHexMap = _sizeHex * COS_30;
-        _offsetHex = new(_radiusHexMap, _radiusHexMap * SIN_60);
+        _offsetHex = new(HEX_SIZE, HEX_SIZE * SIN_60);
 
-        float radiusPoint = _sizeHex * 0.5f;
+        float radiusPoint = HEX_DIAMETER * 0.5f;
         _offsetCross = new(radiusPoint * COS_30, radiusPoint * SIN_30);
         for (int i = 0; i < HEX_SIDE; i++)
-            _positionsCross[i] = new Vector3(radiusPoint * CosCross[i], 0, radiusPoint * SinCross[i]);
+            _positionsCross[i] = new Vector3(radiusPoint * COS_CROSS[i], 0, radiusPoint * SIN_CROSS[i]);
 
         //Debug.Log($"Count calk: {((HEX_SIDE * _circleMax * (_circleMax + 1)) >> 1) + 1}");
         //Debug.Log($"Count calk: {HEX_SIDE * _circleMax * _circleMax}");
@@ -90,20 +73,20 @@ public class Map : MonoBehaviour
             Vector3 position, positionNext, direction;
             float radius;
 
-            ShuffleLoopArray<int> numGround = new(_numbers), numWater = new(_numbers);
+            ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);
             ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.grounds);
 
             CreateHexagon(Vector3.zero, (_surfaces.gate, ID_GATE));
             while (!isLastCircle)
             {
                 isLastCircle = ++circle == _circleMax;
-                radius = _radiusHexMap * circle;
+                radius = HEX_SIZE * circle;
 
-                positionNext = new(radius * CosHexMap[0], 0f, radius * SinHexMap[0]);
+                positionNext = new(radius * COS_HEX_MAP[0], 0f, radius * SIN_HEX_MAP[0]);
                 for (int i = 0; i < HEX_SIDE; i++)
                 {
                     position = positionNext;
-                    positionNext = new(radius * CosHexMap.Next(i), 0f, radius * SinHexMap.Next(i));
+                    positionNext = new(radius * COS_HEX_MAP.Next(i), 0f, radius * SIN_HEX_MAP.Next(i));
                     direction = (positionNext - position) / circle;
 
                     for (int j = 0; j < circle; j++)
@@ -164,7 +147,7 @@ public class Map : MonoBehaviour
             Road road;
             foreach (var hex in _hexagons.Values)
             {
-                foreach (var offset in Hexagon.near)
+                foreach (var offset in HEX_NEAR)
                 {
                     if (_hexagons.TryGetValue(hex.Key + offset, out hexAdd))
                     {

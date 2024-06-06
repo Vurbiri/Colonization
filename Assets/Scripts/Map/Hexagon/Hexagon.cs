@@ -3,11 +3,13 @@ using TMPro;
 using UnityEngine;
 
 [ExecuteInEditMode]
-[RequireComponent(typeof(Collider))]
+//[RequireComponent(typeof(Collider))]
 public class Hexagon : MonoBehaviour, ISelectable
 {
     [SerializeField] private MeshRenderer _thisRenderer;
     [SerializeField] private TMP_Text _idText;
+    [Space]
+    [SerializeField] private HexagonRoad _prefabHexRoad;
 
     public Key Key => _key;
     public int Id => _id;
@@ -16,17 +18,14 @@ public class Hexagon : MonoBehaviour, ISelectable
     public HashSet<Crossroad> Crossroads => _crossroads;
     public HashSet<Hexagon> Near => _neighbors;
 
-    public readonly static Key[] near = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
-
     #region private
     private int _id = -1;
     private Key _key;
     private SurfaceType _surface;
 
-    private readonly HashSet<Crossroad> _crossroads = new(COUNT);
-    private readonly HashSet<Hexagon> _neighbors = new(COUNT);
+    private readonly HashSet<Crossroad> _crossroads = new(CONST.HEX_SIDE);
+    private readonly HashSet<Hexagon> _neighbors = new(CONST.HEX_SIDE);
 
-    private const int COUNT = 6;
 #if UNITY_EDITOR
     private const string NAME = "Hexagon_";
 #endif
@@ -61,6 +60,14 @@ public class Hexagon : MonoBehaviour, ISelectable
         road = Road.Create(cross, this, hex);
 
         return road != null;
+    }
+
+    public void BuildRoad(Player owner, Key key)
+    {
+        if (IsWater)
+            return;
+
+        Instantiate(_prefabHexRoad, transform).Initialize(key);
     }
 
     public void Select()

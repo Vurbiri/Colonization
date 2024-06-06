@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Key : IEquatable<Key>
 {
@@ -36,10 +38,10 @@ public class Key : IEquatable<Key>
     public override int GetHashCode() => HashCode.Combine(_x, _y);
 
     public static Key operator +(Key a, Key b) => new(a._x + b._x, a._y + b._y);
+    public static Key operator -(Key a, Key b) => new(a._x - b._x, a._y - b._y);
     public static KeyDouble operator &(Key a, Key b) => new(a, b);
 
     public static bool operator ==(Key lhs, Key rhs) => (lhs is null && rhs is null) || (lhs is not null && rhs is not null && lhs._x == rhs._x && lhs._y == rhs._y);
     public static bool operator !=(Key lhs, Key rhs) => !(lhs == rhs);
-
     public override string ToString() => $"({_x}, {_y})";
 }

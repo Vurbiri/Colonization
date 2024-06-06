@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
     private float _speedMove, _heightZoom, _edgeRight;
     private Vector2 _moveDirection;
     private Vector3 _targetPosition;
-    private Bounds _bounds;
+    private SphereBounds _bounds;
 
     private void Awake()
     {
@@ -53,43 +53,19 @@ public class CameraController : MonoBehaviour
         _cameraActions.Move.performed += OnMove;
         _cameraActions.Move.canceled += OnCancelMove;
 
-        _cameraActions.Zoom.performed += OnZoom;
-
         _cameraActions.Rotate.performed += OnRotate;
 
         _cameraActions.Position.performed += OnPosition;
 
+        _cameraActions.Zoom.performed += OnZoom;
+
         _map.EventSelectCrossroad += MoveToCrossroad;
 
-        float size = _map.SizeHex * _map.Circle * 2f;
-        _bounds = new Bounds(Vector3.zero, new(size, 5f, size));
+        _bounds = new(_map.SizeHex * _map.Circle);
 
         _cameraTransform.LookAt(_thisTransform);
     }
 
-
-    private IEnumerator Move_Coroutine()
-    {
-        Vector3 direction = _moveDirection.x * _cameraTransform.right.ResetY() + _moveDirection.y * _cameraTransform.forward.ResetY(); 
-
-        while (_moveDirection.sqrMagnitude > 0.1f)
-        {
-            yield return _coroutineMoveTarget;
-
-            _speedMove = _speedMove < _speedMoveMax ? _speedMove + Time.deltaTime * _accelerationMove : _speedMoveMax;
-            _thisTransform.position = _bounds.ClosestPoint(_thisTransform.position + _speedMove * Time.deltaTime * direction);
-        }
-
-        while (_speedMove > 0f && _coroutineMoveTarget == null)
-        {
-            _speedMove -= Time.deltaTime * _dampingMove;
-            _thisTransform.position += _speedMove * Time.deltaTime * direction;
-            yield return null;
-        }
-
-        _speedMove = 0f;
-        _coroutineMove = null;
-    }
     private void OnMove(CallbackContext ctx)
     {
         if (_coroutineMove != null)
@@ -107,19 +83,30 @@ public class CameraController : MonoBehaviour
         _coroutineMoveTarget ??= StartCoroutine(MoveTarget_Coroutine());
     }
 
-    private IEnumerator MoveTarget_Coroutine()
+    private void OnRotate(CallbackContext ctx)
     {
-        Vector3 velocity = Vector3.zero;
-        do
+        if (_coroutineMove != null)
         {
-            _thisTransform.position = Vector3.SmoothDamp(_thisTransform.position, _targetPosition, ref velocity, _smoothTime);
-            yield return null;
+            StopCoroutine(_coroutineMove);
+            _coroutineMove = null;
         }
-        while (velocity.sqrMagnitude > _sqrVelocityMin);
 
-        _thisTransform.position = _targetPosition;
-        _coroutineMoveTarget = null;
+        _thisTransform.rotation *= Quaternion.Euler(0f, _speedRotation * ctx.ReadValue<float>(), 0f);
     }
+
+    private void OnPosition(CallbackContext ctx)
+    {
+        if (!_isEdgeMove) return;
+
+        Vector2 position = ctx.ReadValue<Vector2>();
+
+        _moveDirection.x = position.x > 0 && position.x < Screen.width * _edge ? -1 : position.x < Screen.width && position.x > Screen.width * _edgeRight ? 1 : 0;
+        _moveDirection.y = position.y > 0 && position.y < Screen.height * _edge ? -1 : position.y < Screen.height && position.y > Screen.height * _edgeRight ? 1 : 0;
+
+        if (_coroutineMove == null && _moveDirection.sqrMagnitude > 0f)
+            _coroutineMove = StartCoroutine(Move_Coroutine());
+    }
+
 
     private void OnZoom(CallbackContext ctx)
     {
@@ -139,31 +126,51 @@ public class CameraController : MonoBehaviour
 
                 yield return null;
             }
-            while (Mathf.Abs(_heightZoom - position.y) > 5f);
+            while (Mathf.Abs(_heightZoom - position.y) > _speedZoom);
 
             _coroutineZoom = null;
         }
         #endregion
     }
 
-
-
-    private void OnRotate(CallbackContext ctx)
+    private IEnumerator Move_Coroutine()
     {
-        _thisTransform.rotation *= Quaternion.Euler(Vector3.up * ctx.ReadValue<float>() * _speedRotation);
+        Vector3 direction = _moveDirection.x * _cameraTransform.right.ResetY() + _moveDirection.y * _cameraTransform.forward.ResetY(); 
+
+        while (_moveDirection.sqrMagnitude > 0.1f)
+        {
+            yield return _coroutineMoveTarget;
+
+            _speedMove = _speedMove < _speedMoveMax ? _speedMove + Time.deltaTime * _accelerationMove : _speedMoveMax;
+            Move();
+        }
+
+        while (_speedMove > 0f && _coroutineMoveTarget == null)
+        {
+            _speedMove -= Time.deltaTime * _dampingMove;
+            Move();
+            yield return null;
+        }
+
+        _speedMove = 0f;
+        _coroutineMove = null;
+        
+        //=================================
+        void Move() => _thisTransform.position = _bounds.ClosestPoint(_thisTransform.position + _speedMove * Time.deltaTime * direction);
     }
-
-    private void OnPosition(CallbackContext ctx)
+    
+    private IEnumerator MoveTarget_Coroutine()
     {
-        if (!_isEdgeMove) return;
+        Vector3 velocity = Vector3.zero;
+        do
+        {
+            _thisTransform.position = Vector3.SmoothDamp(_thisTransform.position, _targetPosition, ref velocity, _smoothTime);
+            yield return null;
+        }
+        while (velocity.sqrMagnitude > _sqrVelocityMin);
 
-        Vector2 position = ctx.ReadValue<Vector2>();
-
-        _moveDirection.x = position.x < Screen.width * _edge ? -1 : position.x > Screen.width * _edgeRight ? 1 : 0;
-        _moveDirection.y = position.y < Screen.height * _edge ? -1 : position.y > Screen.height * _edgeRight ? 1 : 0;
-
-        if(_coroutineMove == null && _moveDirection.sqrMagnitude > 0f)
-            _coroutineMove = StartCoroutine(Move_Coroutine());
+        //_thisTransform.position = _targetPosition;
+        _coroutineMoveTarget = null;
     }
 
     private void OnDisable()
@@ -175,5 +182,11 @@ public class CameraController : MonoBehaviour
         _cameraActions.Move.canceled -= OnCancelMove;
 
         _cameraActions.Zoom.performed -= OnZoom;
+
+        _cameraActions.Rotate.performed -= OnRotate;
+
+        _cameraActions.Position.performed -= OnPosition;
+
+        _map.EventSelectCrossroad -= MoveToCrossroad;
     }
 }

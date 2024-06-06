@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -50,7 +49,8 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public void Select()
     {
-        actionSelect(this);
+        if(!_isWater)
+            actionSelect(this);
 
 
         string s = $"{gameObject.name}, water: {_isWater}, gate {_isGate}\n";

@@ -49,6 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _thisRenderer: {fileID: 1394830759387021219}
   _idText: {fileID: 4203516390703220402}
+  _prefabHexRoad: {fileID: 6906274421885871350, guid: 339bacd61d1a23d4191de9f4bae3b0c0,
+    type: 3}
 --- !u!64 &8734530714538533476
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -66,7 +68,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -121,6 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5842a208733f43749ba5360b182ea352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _angleX: 90
 --- !u!23 &790877160829811247
 MeshRenderer:
   m_ObjectHideFlags: 0
