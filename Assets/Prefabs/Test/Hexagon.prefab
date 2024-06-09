@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3885037424239413603}
   - component: {fileID: 1334033936671246162}
   - component: {fileID: 8734530714538533476}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Hexagon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,8 +49,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _thisRenderer: {fileID: 1394830759387021219}
   _idText: {fileID: 4203516390703220402}
-  _prefabHexRoad: {fileID: 6906274421885871350, guid: 339bacd61d1a23d4191de9f4bae3b0c0,
-    type: 3}
 --- !u!64 &8734530714538533476
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -68,7 +66,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30

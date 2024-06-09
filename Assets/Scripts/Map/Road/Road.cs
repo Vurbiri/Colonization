@@ -1,19 +1,23 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Road 
 {
     public KeyDouble Key => _key;
     public Vector3 Position => _middle;
-    public Player Owner => _owner;
+    public PlayerType Owner => _owner;
+
+    public Crossroad CrossA => _crossA;
+    public Crossroad CrossB => _crossB;
 
     private Crossroad _crossA, _crossB;
     private Hexagon _hexA, _hexB;
-    private Player _owner;
+    private PlayerType _owner;
     private KeyDouble _key;
     private Vector3 _middle;
-    
-    private Road(Hexagon hexA, Hexagon hexB, Crossroad crossA, Crossroad crossB, Player owner)
+    private Func<Vector3, Vector3, bool> _actionBuildRoad;
+
+    public Road(Hexagon hexA, Hexagon hexB, Crossroad crossA, Crossroad crossB, Func<Vector3, Vector3, bool> actionBuildRoad, PlayerType owner = PlayerType.None)
     {
         _key = hexA & hexB;
         _hexA = hexA; _hexB = hexB;
@@ -24,34 +28,17 @@ public class Road
         
         _owner = owner;
 
+        _actionBuildRoad = actionBuildRoad;
+
         _middle = (_crossA.Position + _crossB.Position) * 0.5f;
     }
 
-    public void Build(Player owner)
+    public void Build(PlayerType owner)
     {
-        _owner = owner;
-
-        _hexA.BuildRoad(owner, _key.B_A);
-        _hexB.BuildRoad(owner, _key.A_B);
-    }
-
-    public static Road Create(HashSet<Crossroad> crossroads, Hexagon hexA, Hexagon hexB, Player owner = Player.None)
-    {
-        if (crossroads.Count != 2 || (hexA.IsWater && hexB.IsWater))
-            return null;
-
-        Crossroad crossA, crossB;
-        IEnumerator<Crossroad> enumerator = crossroads.GetEnumerator();
-        enumerator.MoveNext();
-        crossA = enumerator.Current;
-        if (crossA.IsWater) 
-            return null;
-        enumerator.MoveNext();
-        crossB = enumerator.Current;
-        if (crossB.IsWater)
-            return null;
-
-        return new(hexA, hexB, crossA, crossB, owner);
+        if (_owner != PlayerType.None) return;
+        
+        if(_actionBuildRoad(_crossA.Position, _crossB.Position))
+            _owner = owner;
     }
 
     public override string ToString() => $"({_hexA.Id}, {_hexB.Id})";

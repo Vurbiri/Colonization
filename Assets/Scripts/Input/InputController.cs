@@ -33,7 +33,7 @@ public class InputController : ASingleton<InputController>
     {
         _inputActions.Enable();
 
-        //_inputActions.Gameplay.LeftClick.performed += OnLeftClick;
+        _inputActions.Gameplay.LeftClick.performed += OnLeftClick;
         _inputActions.Gameplay.RightClick.performed += OnRightClick;
     }
 

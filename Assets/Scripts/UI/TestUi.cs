@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class TestUi : MonoBehaviour
 {
-    [SerializeField] private Map _map;
+    [SerializeField] private Crossroads _crossroads;
     [SerializeField] private RectTransform _imageTransform;
     [SerializeField] private Button[] _roadButtons;
 
@@ -17,7 +17,7 @@ public class TestUi : MonoBehaviour
 
     private RectTransform[] _roadTransforms = new RectTransform[COUNT_ROADS];
 
-    private readonly Quaternion _angleX90 = Quaternion.Euler(-90f, 0f, 0f);
+    private readonly Quaternion _angleX180 = Quaternion.Euler(180f, 0f, 0f);
     private const int COUNT_ROADS = 3;
 
     private void Awake()
@@ -26,11 +26,10 @@ public class TestUi : MonoBehaviour
         _camera = Camera.main;
         _cameraTransform = _camera.transform;
 
-        _map.EventSelectCrossroad += OnSelectCrossroad;
-
-        _imageTransform.gameObject.SetActive(false);
+        _crossroads.EventSelectCrossroad += OnSelectCrossroad;
 
         Button button;
+        _imageTransform.gameObject.SetActive(false);
         for (int i = 0; i < COUNT_ROADS; i++)
         {
             button = _roadButtons[i];
@@ -47,17 +46,24 @@ public class TestUi : MonoBehaviour
         SetPositionUI();
         LookAtCamera();
 
-        _imageTransform.gameObject.SetActive(true);
-
-        int i = 0;
+        int i = 0; Button button;
         foreach (var road in _crossCurrent.Roads)
         {
-            _roadTransforms[i].gameObject.SetActive(i < _countCurrent);
+            button = _roadButtons[i];
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => OnClick(road));
+            button.interactable = road.Owner == PlayerType.None;
 
-             _roadButtons[i].onClick.AddListener(() => OnClick(road));
-             _roadButtons[i].interactable = road.Owner == Player.None;
+            _roadTransforms[i].gameObject.SetActive(true);
 
             i++;
+        }
+        _imageTransform.gameObject.SetActive(true);
+
+        for(; i < COUNT_ROADS; i++)
+        {
+            _roadButtons[i].onClick.RemoveAllListeners();
+            _roadTransforms[i].gameObject.SetActive(false);
         }
 
         #region Local: Zoom_Coroutine()
@@ -65,14 +71,11 @@ public class TestUi : MonoBehaviour
         void OnClick(Road road)
         {
            
-            road.Build(Player.Human);
+            road.Build(PlayerType.Human);
 
             _imageTransform.gameObject.SetActive(false);
-            for (int i = 0; i < COUNT_ROADS; i++)
-            {
-                _roadButtons[i].onClick.RemoveAllListeners();
+            for (int i = 0; i < _countCurrent; i++)
                 _roadTransforms[i].gameObject.SetActive(false);
-            }
 
             _crossCurrent = null;
             _countCurrent = 0;
@@ -82,9 +85,15 @@ public class TestUi : MonoBehaviour
 
     private void LookAtCamera()
     {
-        _imageTransform.localRotation = _cameraTransform.rotation * _angleX90;
+        _imageTransform.LookAt(_cameraTransform);
+        _imageTransform.localRotation *= _angleX180;
         for (int i = 0; i < _countCurrent; i++)
-            _roadTransforms[i].localRotation = _cameraTransform.rotation * _angleX90;
+        {
+            _roadTransforms[i].LookAt(_cameraTransform);
+            _roadTransforms[i].localRotation *= _angleX180;
+        }
+
+        _lastCameraPosition = _cameraTransform.position;
     }
 
     private void SetPositionUI()
@@ -100,8 +109,6 @@ public class TestUi : MonoBehaviour
 
             i++;
         }
-
-        _lastCameraPosition = _cameraTransform.position;
     }
 
     private void Update()

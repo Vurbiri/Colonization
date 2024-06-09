@@ -2,21 +2,19 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-[ExecuteInEditMode]
-//[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Collider))]
 public class Hexagon : MonoBehaviour, ISelectable
 {
     [SerializeField] private MeshRenderer _thisRenderer;
     [SerializeField] private TMP_Text _idText;
-    [Space]
-    [SerializeField] private HexagonRoad _prefabHexRoad;
-
+    
     public Key Key => _key;
     public int Id => _id;
     public bool IsGate => _surface == SurfaceType.Gate;
     public bool IsWater => _surface == SurfaceType.Water;
     public HashSet<Crossroad> Crossroads => _crossroads;
-    public HashSet<Hexagon> Near => _neighbors;
+    public HashSet<Hexagon> Neighbors => _neighbors;
+
 
     #region private
     private int _id = -1;
@@ -40,34 +38,13 @@ public class Hexagon : MonoBehaviour, ISelectable
         _surface = surface.Type;
         _thisRenderer.sharedMaterial = surface.Material;
 
+        if (IsWater)
+            transform.localPosition -= new Vector3(0f, 3.25f, 0f);
+
 
 #if UNITY_EDITOR
         gameObject.name = NAME + _id + "__" + key.ToString();
 #endif
-    }
-
-    public bool AddNeighbor(Hexagon hex, bool notCreateRoad, out Road road)
-    {
-        _neighbors.Add(hex);
-
-        road = null;
-        if (notCreateRoad) 
-            return false;
-
-        HashSet<Crossroad> cross = new(_crossroads);
-        cross.IntersectWith(hex._crossroads);
-
-        road = Road.Create(cross, this, hex);
-
-        return road != null;
-    }
-
-    public void BuildRoad(Player owner, Key key)
-    {
-        if (IsWater)
-            return;
-
-        Instantiate(_prefabHexRoad, transform).Initialize(key);
     }
 
     public void Select()

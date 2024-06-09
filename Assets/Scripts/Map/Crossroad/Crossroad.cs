@@ -19,7 +19,7 @@ public class Crossroad : MonoBehaviour, ISelectable
     private readonly List<Hexagon> _hexagons = new(COUNT);
     private readonly HashSet<Road> _roads = new(COUNT);
 
-    private Action<Crossroad> actionSelect;
+    private Action<Crossroad> _actionSelect;
 
     private const int COUNT = 3;
 #if UNITY_EDITOR
@@ -30,7 +30,7 @@ public class Crossroad : MonoBehaviour, ISelectable
     {
         _key = key;
         Position = transform.position;
-        actionSelect = action;
+        _actionSelect = action;
         GetComponent<SphereCollider>().radius = _radius;
 
 #if UNITY_EDITOR
@@ -46,23 +46,11 @@ public class Crossroad : MonoBehaviour, ISelectable
         _isWater = _isWater && hex.IsWater;
     }
 
-
     public void Select()
     {
         if(!_isWater)
-            actionSelect(this);
-
-
-        string s = $"{gameObject.name}, water: {_isWater}, gate {_isGate}\n";
-        //foreach (var hexagon in _hexagons)
-        //    s += hexagon.IsWater + " | ";
-        //foreach (var road in _roads)
-        //    s += road + " | ";
-        Debug.Log(s);
+            _actionSelect(this);
     }
-
-
-
 
 #if UNITY_EDITOR
     //public void OnDrawGizmos()

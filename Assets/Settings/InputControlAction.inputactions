@@ -300,6 +300,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "LeftClick",
+                    "type": "Value",
+                    "id": "f7a1bb73-946f-481a-9d35-39c206c7d08a",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -333,6 +342,39 @@
                     "processors": "",
                     "groups": "KeyboardAndMouse",
                     "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "LeftButton",
+                    "id": "a9ef3363-671e-4b5f-8d85-e78d8fd5cfb8",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftClick",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "0337a296-cd9d-42ca-873d-de4b4335c4e4",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardAndMouse",
+                    "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "1bf95f9d-f9e2-4ec7-a876-50f0735c3d92",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardAndMouse",
+                    "action": "LeftClick",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

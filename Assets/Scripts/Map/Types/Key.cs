@@ -1,8 +1,6 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Key : IEquatable<Key>
 {
@@ -18,19 +16,11 @@ public class Key : IEquatable<Key>
     {
         _x = x; _y = y;
     }
-    public Key(Vector3 v3, Vector2 v2)
+    public Key(float x, float y)
     {
-        _x = Mathf.RoundToInt(v3.x / v2.x);
-        _y = Mathf.RoundToInt(v3.z / v2.y);
+        _x = Mathf.RoundToInt(x);
+        _y = Mathf.RoundToInt(y);
     }
-    public Key(Vector3 v3, Vector2 v2, float f)
-    {
-        _x = Mathf.RoundToInt(f * v3.x / v2.x);
-        _y = Mathf.RoundToInt(v3.z / v2.y);
-    }
-
-    public static Key FromVectors(Vector3 v3, Vector2 v2) => new(v3, v2);
-    public static Key FromVectorsRate(Vector3 v3, Vector2 v2) => new(v3, v2, 2f);
 
     public bool Equals(Key other) => this == other;
     public override bool Equals(object obj) => obj as Key  == this;
@@ -41,7 +31,7 @@ public class Key : IEquatable<Key>
     public static Key operator -(Key a, Key b) => new(a._x - b._x, a._y - b._y);
     public static KeyDouble operator &(Key a, Key b) => new(a, b);
 
-    public static bool operator ==(Key lhs, Key rhs) => (lhs is null && rhs is null) || (lhs is not null && rhs is not null && lhs._x == rhs._x && lhs._y == rhs._y);
-    public static bool operator !=(Key lhs, Key rhs) => !(lhs == rhs);
+    public static bool operator ==(Key a, Key b) => (a is null && b is null) || (a is not null && b is not null && a._x == b._x && a._y == b._y);
+    public static bool operator !=(Key a, Key b) => !(a == b);
     public override string ToString() => $"({_x}, {_y})";
 }

@@ -59,7 +59,7 @@ public class CameraController : MonoBehaviour
 
         _cameraActions.Zoom.performed += OnZoom;
 
-        _map.EventSelectCrossroad += MoveToCrossroad;
+        _map.EventSelect += MoveToCrossroad;
 
         _bounds = new(_map.SizeHex * _map.Circle);
 
@@ -77,9 +77,9 @@ public class CameraController : MonoBehaviour
     }
     private void OnCancelMove(CallbackContext ctx) => _moveDirection = Vector2.zero;
 
-    private void MoveToCrossroad(Crossroad cross)
+    private void MoveToCrossroad(Vector3 position)
     {
-        _targetPosition = cross.Position;
+        _targetPosition = position;
         _coroutineMoveTarget ??= StartCoroutine(MoveTarget_Coroutine());
     }
 
@@ -110,7 +110,7 @@ public class CameraController : MonoBehaviour
 
     private void OnZoom(CallbackContext ctx)
     {
-        _heightZoom = Mathf.Clamp(_heightZoom + ctx.ReadValue<float>() * _steepZoomRate, _heightZoomMin, _heightZoomMax); ;
+        _heightZoom = Mathf.Clamp(_heightZoom - ctx.ReadValue<float>() * _steepZoomRate, _heightZoomMin, _heightZoomMax); ;
         _coroutineZoom ??= StartCoroutine(Zoom_Coroutine());
 
         #region Local: Zoom_Coroutine()
@@ -187,6 +187,6 @@ public class CameraController : MonoBehaviour
 
         _cameraActions.Position.performed -= OnPosition;
 
-        _map.EventSelectCrossroad -= MoveToCrossroad;
+        _map.EventSelect -= MoveToCrossroad;
     }
 }
