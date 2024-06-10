@@ -7,6 +7,14 @@ public static class ExtensionsCollection
     public static int RightIndex<T>(this IReadOnlyList<T> self, int index) => (index + 1) % self.Count;
    
     public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
+    public static T Rand<T>(this IReadOnlyList<T> self) => self[Random.Range(0, self.Count)];
+
+    public static T[] ToArray<T>(this ICollection<T> self)
+    {
+        T[] arr = new T[self.Count];
+        self.CopyTo(arr, 0);
+        return arr;
+    }
 
     public static T GetValue<T>(this IEnumerable<T> self, int index)
     {
@@ -43,7 +51,7 @@ public static class ExtensionsCollection
         return obj;
     }
 
-    public static T Rand<T>(this IReadOnlyList<T> self) => self[Random.Range(0, self.Count)];
+    
 
     public static bool IsCorrect<T>(this T[,] self, Vector2Int index) => index.x >= 0 && index.x < self.GetLength(0) && index.y >= 0 && index.y < self.GetLength(1);
 }

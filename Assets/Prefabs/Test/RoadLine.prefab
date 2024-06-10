@@ -53,6 +53,7 @@ MonoBehaviour:
   _lengthFluctuation: {x: 0.85, y: 1.15}
   _textureScaleMin: {x: 0.5, y: 0.4}
   _textureScaleMax: {x: 0.9, y: 1}
+  _alpha: 0.01
 --- !u!1 &8372387192008587222
 GameObject:
   m_ObjectHideFlags: 0
@@ -68,7 +69,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1596100865727502171
 Transform:
@@ -182,7 +183,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 4
     numCornerVertices: 3
-    numCapVertices: 0
+    numCapVertices: 3
     alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}

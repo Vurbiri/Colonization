@@ -11,6 +11,8 @@ public class Hexagons : MonoBehaviour
     private Dictionary<Key, Hexagon> _hexagons;
     private Vector2 _offset;
 
+    private readonly Key[] _near = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
+
     public void Initialize(int circleMax)
     {
         //Debug.Log($"Count Hexagons calk: {((HEX_SIDE * circleMax * (circleMax + 1)) >> 1) + 1}");
@@ -34,7 +36,7 @@ public class Hexagons : MonoBehaviour
         Hexagon hexAdd;
         foreach (var hex in _hexagons.Values)
         {
-            foreach (var offset in HEX_NEAR)
+            foreach (var offset in _near)
             {
                 if (_hexagons.TryGetValue(hex.Key + offset, out hexAdd))
                 {

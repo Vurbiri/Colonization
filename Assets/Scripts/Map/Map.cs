@@ -1,5 +1,6 @@
 using NaughtyAttributes;
 using System;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using static CONST;
 
@@ -19,6 +20,9 @@ public class Map : MonoBehaviour
     public float SizeHex => HEX_SIZE;
 
     public event Action<Vector3> EventSelect;
+
+    private readonly float[] COS_HEX_MAP = { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60 };
+    private readonly float[] SIN_HEX_MAP = { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 };
 
     private void Awake()
     {

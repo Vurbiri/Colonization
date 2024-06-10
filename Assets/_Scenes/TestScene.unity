@@ -122,6 +122,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &118956329
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 118956331}
+  - component: {fileID: 118956330}
+  m_Layer: 3
+  m_Name: Players
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!114 &118956330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118956329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a40e284d0a746249a4363952e6be458, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isNotDestroying: 1
+  _colors: {fileID: 11400000, guid: a4bd672545f56a1449ce99cbe56b96b2, type: 2}
+--- !u!4 &118956331
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118956329}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &146792176
 GameObject:
   m_ObjectHideFlags: 0
@@ -1075,6 +1121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _crossroads: {fileID: 1829909683}
+  _roads: {fileID: 1906245667}
   _imageTransform: {fileID: 1197386101}
   _roadButtons:
   - {fileID: 717766554}
@@ -1204,37 +1251,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1197386100}
   m_CullTransparentMesh: 1
---- !u!1 &1334391452
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1334391453}
-  m_Layer: 0
-  m_Name: GameUI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1334391453
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1334391452}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1629463685
 GameObject:
   m_ObjectHideFlags: 0
@@ -1273,7 +1289,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 286d0460b538f18459dca9a9eb2e34ef, type: 2}
     - {fileID: 11400000, guid: fb1677dbd00e8174f8280ff5bd1c1963, type: 2}
     - {fileID: 11400000, guid: e3b96aa18137802489b4eda13176a589, type: 2}
-  _circleMax: 5
+  _circleMax: 4
   _chance: 36
   _hexagons: {fileID: 167528444}
   _crossroads: {fileID: 1829909683}
@@ -1522,7 +1538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f0f07260ab16b419b2a7ba51131874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefabRoadGraphic: {fileID: 6906274421885871350, guid: cf39c66548e81544697a3c0926558d5b,
+  _prefabRoadLine: {fileID: 6906274421885871350, guid: cf39c66548e81544697a3c0926558d5b,
     type: 3}
 --- !u!1 &2115225253
 GameObject:
@@ -1632,9 +1648,9 @@ SceneRoots:
   m_Roots:
   - {fileID: 240874893}
   - {fileID: 410087041}
-  - {fileID: 1334391453}
   - {fileID: 2115225257}
   - {fileID: 1629463687}
   - {fileID: 832575519}
   - {fileID: 257417808}
   - {fileID: 249953236}
+  - {fileID: 118956331}

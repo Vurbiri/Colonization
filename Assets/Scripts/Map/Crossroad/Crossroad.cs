@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 [RequireComponent(typeof(SphereCollider))]
 public class Crossroad : MonoBehaviour, ISelectable
 {
@@ -46,11 +45,31 @@ public class Crossroad : MonoBehaviour, ISelectable
         _isWater = _isWater && hex.IsWater;
     }
 
+    public bool CanRoadsBuilt(PlayerType type)
+    {
+        foreach (var road in _roads)
+            if (road.Owner == type)
+                return !_isWater;
+
+        return false;
+    }
+
+    public bool IsFullOwned(Road owned)
+    {
+        bool full = true;
+        foreach (var road in _roads)
+            full = full && road.Owner == owned.Owner;
+
+        return full;
+    }
+
     public void Select()
     {
         if(!_isWater)
             _actionSelect(this);
     }
+
+    public override string ToString() => $"{_key}";
 
 #if UNITY_EDITOR
     //public void OnDrawGizmos()

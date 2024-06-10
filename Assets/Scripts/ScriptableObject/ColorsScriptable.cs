@@ -6,5 +6,6 @@ public class ColorsScriptable : ScriptableObject
     [SerializeField] private Color[] _colors;
 
     public int Count => _colors.Length;
+    public Color Rand => _colors.Rand();
     public Color this[int index] => _colors[index];
 }

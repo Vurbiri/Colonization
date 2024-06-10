@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class RoadLine : MonoBehaviour
@@ -13,80 +13,142 @@ public class RoadLine : MonoBehaviour
     [Space]
     [SerializeField] private Vector2 _textureScaleMin = new(0.75f, 0.5f);
     [SerializeField] private Vector2 _textureScaleMax = new(1.25f, 1f);
+    [Space]
+    [SerializeField] private float _alpha = 0.01f;
 
-    private readonly List<Vector3> _points = new();
-    private Vector3 _start, _end;
+    private readonly SimpleLinkedList<Vector3> _points = new();
+    private Vector3 _first, _last;
     private Vector2 _textureScale;
     private float _textureScaleX;
+    private int _countSegments = 0;
 
-
-    private void Awake()
+    public void Initialize(Vector3 start, Vector3 end, Color color)
     {
-        transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        Initialize(start, color);
+        start.y = end.y = _offsetY;
+        CreateLine(start, end);
     }
 
-    public void Initialize(Vector3 start, Vector3 end)
+    public void Initialize(Vector3 start, Color color)
     {
-        start.y = end.y = _offsetY;
+        start.y = _offsetY;
 
         _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
         _textureScale = URandom.Vector2(_textureScaleMin, _textureScaleMax);
         _textureScaleX = _textureScale.x;
 
-        var alphas = new GradientAlphaKey[4];
-        alphas[0] = new(0.0f, 0.0f);
-        alphas[1] = new(1.0f, 0.01f);
-        alphas[2] = new(1.0f, 0.99f);
-        alphas[3] = new(0.0f, 1.0f);
-        var gradient = new Gradient();
-        gradient.SetKeys(_roadRenderer.colorGradient.colorKeys, alphas);
+        Gradient gradient = new();
+        GradientAlphaKey[] alphas = { new(1.0f, 0.0f),new(1.0f, _alpha), new(1.0f, 1f - _alpha), new(0.0f, 1.0f)};
+        GradientColorKey[] colors = { new(color, 0.0f), new(color, 1.0f) };
+        gradient.SetKeys(colors, alphas);
         _roadRenderer.colorGradient = gradient;
 
         _points.Add(start);
-        _start = start;
-
-        CreateLine(start, end);
+        _last = _first = start;
     }
 
-    public bool TryAdd(Vector3 start, Vector3 end)
+    public bool TryAdd(Vector3 start, Vector3 end, bool notAlphaEnd)
     {
         start.y = end.y = _offsetY;
 
-        if (_start != start && _start != end && _end != start && _end != end)
+        if (start != _first && start != _last)
             return false;
 
-        if(_start == end)
+        if (_points.Count > 1)
         {
-            ListReverse();
-            StartEndReverse();
-        }
-        else if (_start == start)
-        {
-            ListReverse();
-        }
-        else if (_end == end)
-        {
-            StartEndReverse();
+            if(start == _first)
+            {
+                _points.ModeFirst = true;
+                SetGradient(0);
+            }
+            else 
+            {
+                _points.ModeLast = true;
+                SetGradient(^1);
+            }
+            
+            _textureScale.x += _textureScaleX;
         }
 
-        _textureScale.x += _textureScaleX;
         CreateLine(start, end);
 
         return true;
 
-        #region Local: ListReverse(), StartEndReverse()
+        #region Local: SetGradient()
         //=================================
-        void ListReverse()
+        void SetGradient(Index index)
         {
-            _points.Reverse();
-            _start = _end;
+            Gradient gradient = new();
+            var alphas = _roadRenderer.colorGradient.alphaKeys;
+            alphas[index].alpha = notAlphaEnd ? 1.0f : 0.0f;
+            gradient.SetKeys(_roadRenderer.colorGradient.colorKeys, alphas);
+            _roadRenderer.colorGradient = gradient;
+        }
+        #endregion
+    }
+
+    public RoadLine Combining(RoadLine other)
+    {
+        if (_points.Count < other._points.Count)
+            return other.Combining(this);
+
+        if (_first != other._first && _last != other._last && _first != other._last && _last != other._first)
+            return null;
+
+        var alphas = _roadRenderer.colorGradient.alphaKeys;
+        var alphasOther = other._roadRenderer.colorGradient.alphaKeys;
+
+        if (other._first == _last)
+        {
+            _points.AddFirstToLast(other._points);
+            SetGradient(alphas[0].alpha, alphasOther[^1].alpha);
+        }
+        else if(other._last == _first)
+        {
+            _points.AddLastToFirst(other._points);
+            SetGradient(alphasOther[0].alpha, alphas[^1].alpha);
+        }
+        else if (_first == other._first)
+        {
+            _points.AddFirstToFirst(other._points);
+            SetGradient(alphasOther[^1].alpha, alphas[^1].alpha);
+        }
+        else //if (_last == other._last)
+        {
+            _points.AddLastToLast(other._points);
+            SetGradient(alphas[0].alpha, alphasOther[0].alpha);
+        }
+
+        SetTextureScale();
+
+        _first = _points.First;
+        _last = _points.Last;
+
+        _roadRenderer.positionCount = _points.Count;
+        _roadRenderer.SetPositions(_points.ToArray());
+
+        return other;
+
+        #region Local: SetTextureScale(), SetGradient(...)
+        //=================================
+        void SetTextureScale()
+        {
+            _countSegments += other._countSegments;
+            _textureScale = _textureScale + other._textureScale;
+            _textureScale.y *= 0.5f;
+            _textureScaleX = _textureScale.x /= _countSegments;
+            _textureScale.x += _textureScaleX * (_countSegments - 1);
+
+            _roadRenderer.textureScale = _textureScale;
         }
         //=================================
-        void StartEndReverse()
+        void SetGradient(float alfaFirst, float alfaLast)
         {
-            _end = start;
-            start = end;
-            end = _end;
+            Gradient gradient = new();
+            alphas[0].alpha = alfaFirst;
+            alphas[^1].alpha = alfaLast;
+            gradient.SetKeys(_roadRenderer.colorGradient.colorKeys, alphas);
+            _roadRenderer.colorGradient = gradient;
         }
         #endregion
     }
@@ -105,7 +167,11 @@ public class RoadLine : MonoBehaviour
             _points.Add(start);
         }
         _points.Add(end);
-        _end = end;
+
+        _first = _points.First;
+        _last = _points.Last;
+
+        _countSegments++;
 
         _roadRenderer.textureScale = _textureScale;
         _roadRenderer.positionCount = _points.Count;

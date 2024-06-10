@@ -7,12 +7,15 @@ public class Crossroads : MonoBehaviour
 {
     [SerializeField] private Crossroad _prefabCrossroad;
 
+    public event Action<Crossroad> EventSelectCrossroad;
+
     private Transform _thisTransform;
     private Vector2 _offset;
     private Dictionary<Key, Crossroad> _crossroads;
     private readonly Vector3[] _positionsCross = new Vector3[HEX_SIDE];
 
-    public event Action<Crossroad> EventSelectCrossroad;
+    private readonly float[] COS_CROSS = { COS_30, COS_90, -COS_30, -COS_30, -COS_90, COS_30 };
+    private readonly float[] SIN_CROSS = { SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90, -SIN_30 };
 
     public void Initialize(int circleMax)
     {
