@@ -11,12 +11,12 @@ public class Crossroad : MonoBehaviour, ISelectable
     public Vector3 Position { get; private set; }
     public bool IsGate => _isGate;
     public bool IsWater => _isWater;
-    public HashSet<Road> Roads => _roads;
+    public HashSet<CrossroadLink> Links => _links;
 
     private Key _key;
     private bool _isGate = false, _isWater = true;
     private readonly List<Hexagon> _hexagons = new(COUNT);
-    private readonly HashSet<Road> _roads = new(COUNT);
+    private readonly HashSet<CrossroadLink> _links = new(COUNT);
 
     private Action<Crossroad> _actionSelect;
 
@@ -47,18 +47,18 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public bool CanRoadsBuilt(PlayerType type)
     {
-        foreach (var road in _roads)
+        foreach (var road in _links)
             if (road.Owner == type)
                 return !_isWater;
 
         return false;
     }
 
-    public bool IsFullOwned(Road owned)
+    public bool IsFullOwned(PlayerType owned)
     {
-        bool full = true;
-        foreach (var road in _roads)
-            full = full && road.Owner == owned.Owner;
+        bool full = _links.Count > 0;
+        foreach (var road in _links)
+            full = full && road.Owner == owned;
 
         return full;
     }

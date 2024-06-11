@@ -55,18 +55,18 @@ public class TestUi : MonoBehaviour
         if (cross.CanRoadsBuilt(_players.Current.Type) || !_built)
         {
             _crossCurrent = cross;
-            _countCurrent = cross.Roads.Count;
+            _countCurrent = cross.Links.Count;
 
             SetPositionUI();
             LookAtCamera();
 
             Button button;
-            foreach (var road in _crossCurrent.Roads)
+            foreach (var link in _crossCurrent.Links)
             {
                 button = _roadButtons[i];
                 button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(() => OnClick(road));
-                button.interactable = road.Owner == PlayerType.None;
+                button.onClick.AddListener(() => OnClick(link));
+                button.interactable = link.Owner == PlayerType.None;
 
                 _roadButtonsGraphic[i].color = _players.Current.Color;
                 _roadButtonsTransform[i].gameObject.SetActive(true);
@@ -82,11 +82,11 @@ public class TestUi : MonoBehaviour
             _roadButtonsTransform[i].gameObject.SetActive(false);
         }
 
-        #region Local: Zoom_Coroutine()
+        #region Local: OnClick()
         //=================================
-        void OnClick(Road road)
+        void OnClick(CrossroadLink road)
         {
-            _built = true;
+            //_built = true;
 
             road.SetStart(_crossCurrent);
             _roads.BuildRoad(road, _players.Current);
@@ -120,9 +120,9 @@ public class TestUi : MonoBehaviour
             _imageTransform.anchoredPosition = _localPoint;
 
         int i = 0;
-        foreach (var road in _crossCurrent.Roads)
+        foreach (var link in _crossCurrent.Links)
         {
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(road.Position), _camera, out _localPoint))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(link.Position), _camera, out _localPoint))
                 _roadButtonsTransform[i].anchoredPosition = _localPoint;
 
             i++;

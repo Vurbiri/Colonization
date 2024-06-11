@@ -1,62 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static CONST;
 
 public class Roads : MonoBehaviour
 {
     [Space]
-    [SerializeField] private RoadLine _prefabRoadLine;
+    [SerializeField] private Road _prefabRoad;
 
     private Transform _thisTransform;
-    private Dictionary<KeyDouble, Road> _roads;
-    private List<List<RoadLine>> _roadLineLists = new(Players.PLAYERS_MAX);
-    private List<RoadLine> _currentRoadLines;
+    private List<List<Road>> _roadsLists = new(Players.PLAYERS_MAX);
 
-    public void Initialize(int circleMax)
+    public void Initialize()
     {
-        //Debug.Log($"Count Roads calk: {HEX_SIDE * circleMax * (circleMax - 1)}");
-        _roads = new(HEX_SIDE * circleMax * (circleMax - 1));
         _thisTransform = transform;
 
         for (int i = 0; i < Players.PLAYERS_MAX; i++)
-            _roadLineLists.Add(new());
+            _roadsLists.Add(new());
     }
 
-    public void CreateRoad(Hexagon hexA, Hexagon hexB)
+    public void BuildRoad(CrossroadLink link, Player player)
     {
-        KeyDouble key = hexA & hexB; //?????
-        if (_roads.ContainsKey(key) || (hexA.IsWater && hexB.IsWater))
-            return;
+        List<Road> currentRoads = _roadsLists[player.Id];
 
-        HashSet<Crossroad> cross = new(hexA.Crossroads);
-        cross.IntersectWith(hexB.Crossroads);
-        if(cross.Count != 2)
-            return;
-
-        Crossroad crossA, crossB;
-        IEnumerator<Crossroad> enumerator = cross.GetEnumerator();
-        crossA = GetCrossroad();
-        crossB = GetCrossroad();
-
-        _roads.Add(key, new(key, crossA, crossB));
-
-        #region Local: GetCrossroad()
-        //=================================
-        Crossroad GetCrossroad()
-        {
-            enumerator.MoveNext();
-            return enumerator.Current;
-        }
-        #endregion
-    }
-
-    public void BuildRoad(Road road, Player player)
-    {
-        Vector3 start = road.Start.Position, end = road.End.Position;
-        _currentRoadLines = _roadLineLists[player.Id];
-
-        road.Owner = player.Type;
+        link.Owner = player.Type;
 
         if (!AddRoadLine())
             NewRoadLine();
@@ -67,37 +33,36 @@ public class Roads : MonoBehaviour
         //=================================
         bool AddRoadLine()
         {
-            foreach (var line in _currentRoadLines)
-                if (line.TryAdd(start, end, road.End.IsFullOwned(road)))
+            foreach (var line in currentRoads)
+                if (line.TryAdd(link.Start, link.End))
                     return true;
 
             return false;
         }
         void NewRoadLine()
         {
-            RoadLine roadLine;
-            roadLine = Instantiate(_prefabRoadLine, transform);
-            roadLine.Initialize(start, end, player.Color);
-            _currentRoadLines.Add(roadLine);
+            Road roadLine;
+            roadLine = Instantiate(_prefabRoad, transform);
+            roadLine.Initialize(link.Start, link.End, player);
+            currentRoads.Add(roadLine);
         }
         IEnumerator CombiningRoadLine_Coroutine()
         {
             yield return null;
-            RoadLine roadLine;
-            for (int i = _currentRoadLines.Count - 1; i > 0; i--)
+            Road roadLine;
+            for (int i = currentRoads.Count - 1; i > 0; i--)
             {
                 for (int j = i - 1; j >= 0; j--)
                 {
-                    roadLine = _currentRoadLines[i].Combining(_currentRoadLines[j]);
+                    roadLine = currentRoads[i].Union(currentRoads[j]);
                     if (roadLine != null)
                     {
-                        _currentRoadLines.Remove(roadLine);
+                        currentRoads.Remove(roadLine);
                         Destroy(roadLine.gameObject);
                         StartCoroutine(CombiningRoadLine_Coroutine());
                         yield break;
                     }
                 }
-                yield return null;
             }
         }
         #endregion

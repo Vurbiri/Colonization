@@ -1,6 +1,5 @@
 using NaughtyAttributes;
 using System;
-using System.Collections.ObjectModel;
 using UnityEngine;
 using static CONST;
 
@@ -28,7 +27,7 @@ public class Map : MonoBehaviour
     {
         _hexagons.Initialize(_circleMax);
         _crossroads.Initialize(_circleMax);
-        _roads.Initialize(_circleMax);
+        _roads.Initialize();
 
         _crossroads.EventSelectCrossroad += (c) => EventSelect?.Invoke(c.Position);
 
@@ -39,7 +38,9 @@ public class Map : MonoBehaviour
     {
         CreateMap();
 
-        _hexagons.HexagonsNeighbors(_roads.CreateRoad);
+        _hexagons.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
+
+        _hexagons.SetMesh();
 
         #region Local: CreateMap()
         //=================================

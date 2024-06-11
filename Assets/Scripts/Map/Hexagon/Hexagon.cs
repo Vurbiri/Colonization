@@ -15,7 +15,6 @@ public class Hexagon : MonoBehaviour, ISelectable
     public HashSet<Crossroad> Crossroads => _crossroads;
     public HashSet<Hexagon> Neighbors => _neighbors;
 
-
     #region private
     private int _id = -1;
     private Key _key;

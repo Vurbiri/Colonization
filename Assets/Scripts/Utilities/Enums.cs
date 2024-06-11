@@ -28,6 +28,12 @@ public enum GameModeStart : byte
     Continue
 }
 
+public enum AddMode : byte
+{
+    Last,
+    First
+}
+
 public enum PlayerType : sbyte
 {
     None = -1,

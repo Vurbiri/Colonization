@@ -12,21 +12,16 @@ public class Crossroads : MonoBehaviour
     private Transform _thisTransform;
     private Vector2 _offset;
     private Dictionary<Key, Crossroad> _crossroads;
-    private readonly Vector3[] _positionsCross = new Vector3[HEX_SIDE];
-
-    private readonly float[] COS_CROSS = { COS_30, COS_90, -COS_30, -COS_30, -COS_90, COS_30 };
-    private readonly float[] SIN_CROSS = { SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90, -SIN_30 };
+    private Dictionary<KeyDouble, CrossroadLink> _crossLinks;
 
     public void Initialize(int circleMax)
     {
         //Debug.Log($"Count Crossroads calk: {HEX_SIDE * circleMax * circleMax}");
         _crossroads = new(HEX_SIDE * circleMax * circleMax);
-        
-        float radiusPoint = HEX_DIAMETER * 0.5f;
-        _offset = new(radiusPoint * COS_30, radiusPoint * SIN_30);
-        for (int i = 0; i < HEX_SIDE; i++)
-            _positionsCross[i] = new Vector3(radiusPoint * COS_CROSS[i], 0, radiusPoint * SIN_CROSS[i]);
+        //Debug.Log($"Count Roads calk: {HEX_SIDE * circleMax * (circleMax - 1)}");
+        _crossLinks = new(HEX_SIDE * circleMax * (circleMax - 1));
 
+        _offset = new(HEX_RADIUS * COS_30, HEX_RADIUS * SIN_30);
         _thisTransform = transform;
     }
 
@@ -37,7 +32,7 @@ public class Crossroads : MonoBehaviour
         Vector3 positionCross;
         for (int i = 0; i < HEX_SIDE; i++)
         {
-            positionCross = _positionsCross[i] + position;
+            positionCross = POS_HEX_VERTICES[i] + position;
 
             key = new(2f * positionCross.x / _offset.x, positionCross.z / _offset.y);
 
@@ -54,6 +49,34 @@ public class Crossroads : MonoBehaviour
             cross.AddHexagon(hex);
             hex.Crossroads.Add(cross);
         }
+    }
+
+    public void CreateCrossroadLink(Hexagon hexA, Hexagon hexB)
+    {
+        KeyDouble key = hexA & hexB; //?????
+        if (_crossLinks.ContainsKey(key) || (hexA.IsWater && hexB.IsWater))
+            return;
+
+        HashSet<Crossroad> cross = new(hexA.Crossroads);
+        cross.IntersectWith(hexB.Crossroads);
+        if (cross.Count != 2)
+            return;
+
+        Crossroad crossA, crossB;
+        IEnumerator<Crossroad> enumerator = cross.GetEnumerator();
+        crossA = GetCrossroad();
+        crossB = GetCrossroad();
+
+        _crossLinks.Add(key, new(key, crossA, crossB));
+
+        #region Local: GetCrossroad()
+        //=================================
+        Crossroad GetCrossroad()
+        {
+            enumerator.MoveNext();
+            return enumerator.Current;
+        }
+        #endregion
     }
 
     private void SelectCrossroad(Crossroad cross)

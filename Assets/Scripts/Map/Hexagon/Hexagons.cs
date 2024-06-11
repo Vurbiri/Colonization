@@ -6,6 +6,8 @@ using static CONST;
 public class Hexagons : MonoBehaviour
 {
     [SerializeField] private Hexagon _prefabHex;
+    [Space]
+    [SerializeField] private HexagonsMesh _hexagonsMesh;
 
     private Transform _thisTransform;
     private Dictionary<Key, Hexagon> _hexagons;
@@ -19,6 +21,8 @@ public class Hexagons : MonoBehaviour
         _hexagons = new(((HEX_SIDE * circleMax * (circleMax + 1)) >> 1) + 1);
         _offset = new(HEX_SIZE, HEX_SIZE * SIN_60);
         _thisTransform = transform;
+
+        _hexagonsMesh.Initialize(circleMax);
     }
 
     public Hexagon CreateHexagon(Vector3 position, (SurfaceScriptable surface, int id) type)
@@ -28,8 +32,13 @@ public class Hexagons : MonoBehaviour
         hex.Initialize(key, type.surface, type.id);
         _hexagons.Add(key, hex);
 
+        if(type.surface.Type != SurfaceType.Water)
+            _hexagonsMesh.AddHexagon(position);
+
         return hex;
     }
+
+    public void SetMesh() => _hexagonsMesh.SetMesh();
 
     public void HexagonsNeighbors(Action<Hexagon, Hexagon> actionCreateRoad)
     {
