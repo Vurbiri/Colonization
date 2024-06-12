@@ -32,7 +32,7 @@ public class Crossroads : MonoBehaviour
         Vector3 positionCross;
         for (int i = 0; i < HEX_SIDE; i++)
         {
-            positionCross = POS_HEX_VERTICES[i] + position;
+            positionCross = HEX_VERTICES[i] + position;
 
             key = new(2f * positionCross.x / _offset.x, positionCross.z / _offset.y);
 
@@ -51,16 +51,16 @@ public class Crossroads : MonoBehaviour
         }
     }
 
-    public void CreateCrossroadLink(Hexagon hexA, Hexagon hexB)
+    public bool CreateCrossroadLink(Hexagon hexA, Hexagon hexB)
     {
         KeyDouble key = hexA & hexB; //?????
         if (_crossLinks.ContainsKey(key) || (hexA.IsWater && hexB.IsWater))
-            return;
+            return false;
 
         HashSet<Crossroad> cross = new(hexA.Crossroads);
         cross.IntersectWith(hexB.Crossroads);
         if (cross.Count != 2)
-            return;
+            return false;
 
         Crossroad crossA, crossB;
         IEnumerator<Crossroad> enumerator = cross.GetEnumerator();
@@ -68,6 +68,8 @@ public class Crossroads : MonoBehaviour
         crossB = GetCrossroad();
 
         _crossLinks.Add(key, new(key, crossA, crossB));
+
+        return true;
 
         #region Local: GetCrossroad()
         //=================================

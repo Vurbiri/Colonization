@@ -14,7 +14,7 @@ public class Player
 
     public Player(int id, int idColor)
     {
-        _type = id.ToEnum<PlayerType>();
+        _type = (PlayerType)id;
         _id = id;
         _idColor = idColor;
         _color = Color.white;
@@ -22,7 +22,7 @@ public class Player
 
     public Player(int id, Color color)
     {
-        _type = id.ToEnum<PlayerType>();
+        _type = (PlayerType)id;
         _id = id;
         _idColor = -1;
         _color = color;

@@ -22,8 +22,8 @@ public class Key : IEquatable<Key>
         _y = Mathf.RoundToInt(y);
     }
 
-    public bool Equals(Key other) => this == other;
-    public override bool Equals(object obj) => obj as Key  == this;
+    public bool Equals(Key other) => other is not null && _x == other._x && _y == other._y;
+    public override bool Equals(object obj) => Equals(obj as Key);
 
     public override int GetHashCode() => HashCode.Combine(_x, _y);
 
@@ -31,7 +31,7 @@ public class Key : IEquatable<Key>
     public static Key operator -(Key a, Key b) => new(a._x - b._x, a._y - b._y);
     public static KeyDouble operator &(Key a, Key b) => new(a, b);
 
-    public static bool operator ==(Key a, Key b) => (a is null && b is null) || (a is not null && b is not null && a._x == b._x && a._y == b._y);
+    public static bool operator ==(Key a, Key b) => (a is null && b is null) || (a is not null && a.Equals(b));
     public static bool operator !=(Key a, Key b) => !(a == b);
     public override string ToString() => $"({_x}, {_y})";
 }

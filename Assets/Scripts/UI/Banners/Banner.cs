@@ -39,7 +39,7 @@ public class Banner : APooledObject<Banner>
     {
         _isThrough = isThrough;
         _text.text = message;
-        _image.color = _banners.Colors[messageType.ToInt()];
+        _image.color = _banners.Colors[(int)messageType];
 
         Activate();
         _coroutine = StartCoroutine(TimeShow());

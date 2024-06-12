@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 0
   _material: {fileID: 2100000, guid: 9ade66a783d46794dba32830eed7e143, type: 2}
+  _color:
+    serializedVersion: 2
+    rgba: 4278246912

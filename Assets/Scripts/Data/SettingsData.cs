@@ -59,13 +59,13 @@ public class SettingsData : ASingleton<SettingsData>
 
     public void SetVolume(AudioType type, float volume) => _volumes[type].Volume = volume;
 
-    public float GetVolume(AudioType type) => _profileCurrent.volumes[type.ToInt()];
+    public float GetVolume(AudioType type) => _profileCurrent.volumes[(int)type];
 
     public void Save(Action<bool> callback = null)
     {
         _profileCurrent.idLang = _localization.CurrentId;
         foreach (var type in Enum<AudioType>.GetValues())
-            _profileCurrent.volumes[type.ToInt()] = _volumes[type].Volume;
+            _profileCurrent.volumes[(int)type] = _volumes[type].Volume;
 
         StartCoroutine(Storage.Save_Coroutine(_profileCurrent.key, _profileCurrent, callback));
     }
@@ -100,7 +100,7 @@ public class SettingsData : ASingleton<SettingsData>
     {
         _localization.SwitchLanguage(_profileCurrent.idLang);
         foreach (var type in Enum<AudioType>.GetValues())
-            _volumes[type].Volume = _profileCurrent.volumes[type.ToInt()];
+            _volumes[type].Volume = _profileCurrent.volumes[(int)type];
     }
 
     #region Nested Classe

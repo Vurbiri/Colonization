@@ -53,7 +53,7 @@ MonoBehaviour:
   _lengthFluctuation: {x: 0.85, y: 1.15}
   _textureScaleMin: {x: 0.6, y: 0.4}
   _textureScaleMax: {x: 0.9, y: 1}
-  _alphaTime: 0.01
+  _alphaTime: 0.05
 --- !u!1 &8372387192008587222
 GameObject:
   m_ObjectHideFlags: 0

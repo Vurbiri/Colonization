@@ -32,27 +32,47 @@ public class Hexagons : MonoBehaviour
         hex.Initialize(key, type.surface, type.id);
         _hexagons.Add(key, hex);
 
-        if(type.surface.Type != SurfaceType.Water)
-            _hexagonsMesh.AddHexagon(position);
+        _hexagonsMesh.AddHexagon(key, position, type.surface.Color, type.surface.Type != SurfaceType.Water);
 
         return hex;
     }
 
     public void SetMesh() => _hexagonsMesh.SetMesh();
 
-    public void HexagonsNeighbors(Action<Hexagon, Hexagon> actionCreateRoad)
+    public void HexagonsNeighbors(Func<Hexagon, Hexagon, bool> actionCreateRoad)
     {
         Hexagon hexAdd;
+        Vertex[][] verticesNear;
+        int side;
         foreach (var hex in _hexagons.Values)
         {
+            verticesNear = new Vertex[HEX_SIDE][];
+            side = 0;
             foreach (var offset in _near)
             {
                 if (_hexagons.TryGetValue(hex.Key + offset, out hexAdd))
                 {
                     hex.Neighbors.Add(hexAdd);
                     actionCreateRoad(hex, hexAdd);
+                    if(!hex.IsWater)
+                        verticesNear[side] = _hexagonsMesh.GetVertexSide(hex.Key, hexAdd.Key, side);
                 }
+                side++;
             }
+
+            string s = hex.Key.ToString() + ": ";
+
+            foreach (var vertex in verticesNear)
+            {
+                if (vertex == null)
+                    s += "null - ";
+                else
+                    s += " FULL - ";
+            }
+
+            Debug.Log(s);
+
+            _hexagonsMesh.SetVertexSides(hex.Key, verticesNear);
         }
     }
 

@@ -20,9 +20,6 @@ public class Map : MonoBehaviour
 
     public event Action<Vector3> EventSelect;
 
-    private readonly float[] COS_HEX_MAP = { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60 };
-    private readonly float[] SIN_HEX_MAP = { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 };
-
     private void Awake()
     {
         _hexagons.Initialize(_circleMax);
@@ -49,7 +46,6 @@ public class Map : MonoBehaviour
             int circle = 0;
             bool isWater = false, isLastCircle = circle == _circleMax;
             Vector3 position, positionNext, direction, current;
-            float radius;
 
             ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);// Õ”Ã≈–¿÷»ﬂ ’≈ —Œ¬????
             ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.grounds);
@@ -59,13 +55,11 @@ public class Map : MonoBehaviour
             while (!isLastCircle)
             {
                 isLastCircle = ++circle == _circleMax;
-                radius = HEX_SIZE * circle;
-
-                positionNext = new(radius * COS_HEX_MAP[0], 0f, radius * SIN_HEX_MAP[0]);
+                positionNext = HEX_DIRECTION[0] * circle;
                 for (int i = 0; i < HEX_SIDE; i++)
                 {
                     position = positionNext;
-                    positionNext = new(radius * COS_HEX_MAP.Next(i), 0f, radius * SIN_HEX_MAP.Next(i));
+                    positionNext = HEX_DIRECTION.Next(i) * circle;
                     direction = (positionNext - position) / circle;
 
                     for (int j = 0; j < circle; j++)

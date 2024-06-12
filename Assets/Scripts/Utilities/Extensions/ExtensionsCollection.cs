@@ -9,6 +9,12 @@ public static class ExtensionsCollection
     public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
     public static T Rand<T>(this IReadOnlyList<T> self) => self[Random.Range(0, self.Count)];
 
+    public static void Fill<T>(this IList<T> self, T value = default)
+    {
+        for (int i = 0; i < self.Count; i++)
+            self[i] = value;
+    }
+
     public static T[] ToArray<T>(this ICollection<T> self)
     {
         T[] arr = new T[self.Count];
@@ -27,11 +33,7 @@ public static class ExtensionsCollection
     }
 
 
-    public static void Fill<T>(this IList<T> self, T value = default)
-    {
-        for (int i = 0; i < self.Count; i++)
-            self[i] = value;
-    }
+    
 
     public static void Shuffle<T>(this IList<T> self)
     {
