@@ -7,12 +7,10 @@ public class Triangle
 
     public Vertex[] Vertices { get; } = new Vertex[COUNT_VERTICES];
 
-    public Triangle(Vertex v1, Vertex v2, Vertex v3) => Vertices = new Vertex[] { v1, v2, v3};
+    public Triangle(params Vertex[] vertices) => vertices.CopyTo(Vertices, 0);
 
-    public Triangle(Vector3[] vertices, Color32 color)
+    public Triangle(Color32 color, params Vector3[] vertices)
     {
-        Vertices = new Vertex[COUNT_VERTICES];
-
         for (int index = 0; index < COUNT_VERTICES; index++)
             Vertices[index] = new(vertices[index], Normal(index), color);
 
@@ -26,11 +24,5 @@ public class Triangle
         }
         #endregion
     }
-    public Triangle(Vertex[] vertices)
-    {
-        Vertices = new Vertex[COUNT_VERTICES];
-        vertices.CopyTo(Vertices, 0);
-    }
-    
 
 }

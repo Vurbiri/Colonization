@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Hexagon : MonoBehaviour, ISelectable
 {
-    [SerializeField] private MeshRenderer _thisRenderer;
     [SerializeField] private TMP_Text _idText;
     
     public Key Key => _key;
@@ -35,7 +34,6 @@ public class Hexagon : MonoBehaviour, ISelectable
         _idText.text = _id.ToString();
 
         _surface = surface.Type;
-        _thisRenderer.sharedMaterial = surface.Material;
 
         if (IsWater)
             transform.localPosition -= new Vector3(0f, 3.25f, 0f);

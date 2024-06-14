@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Vertex : IEquatable<Vertex>
 {
@@ -17,6 +18,8 @@ public class Vertex : IEquatable<Vertex>
         _normal = normal;
         _color = color;
     }
+
+    public Vector3 OffsetPosition(Vector3 offset) => _position + offset;
 
     public bool Equals(Vertex other) => other is not null && _position == other._position && _normal == other._normal && _color.Equals(other._color);
     public override bool Equals(object obj) => Equals(obj as Vertex);

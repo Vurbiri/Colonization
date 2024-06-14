@@ -32,47 +32,44 @@ public class Hexagons : MonoBehaviour
         hex.Initialize(key, type.surface, type.id);
         _hexagons.Add(key, hex);
 
-        _hexagonsMesh.AddHexagon(key, position, type.surface.Color, type.surface.Type != SurfaceType.Water);
+        _hexagonsMesh.AddHexagon(key, position, type.surface.Color, hex.IsWater);
 
         return hex;
     }
 
     public void SetMesh() => _hexagonsMesh.SetMesh();
 
-    public void HexagonsNeighbors(Func<Hexagon, Hexagon, bool> actionCreateRoad)
+    public void HexagonsNeighbors(Action<Hexagon, Hexagon> actionCreateRoad)
     {
         Hexagon hexAdd;
-        Vertex[][] verticesNear;
-        int side;
+        Vertex[][] verticesNear = null;
+        bool[] waterNear = null;
+        int side = 0;
         foreach (var hex in _hexagons.Values)
         {
-            verticesNear = new Vertex[HEX_SIDE][];
-            side = 0;
+            if (!hex.IsWater)
+            {
+                verticesNear = new Vertex[HEX_SIDE][];
+                waterNear = new bool[HEX_SIDE];
+                side = 0;
+            }
             foreach (var offset in _near)
             {
                 if (_hexagons.TryGetValue(hex.Key + offset, out hexAdd))
                 {
                     hex.Neighbors.Add(hexAdd);
                     actionCreateRoad(hex, hexAdd);
-                    if(!hex.IsWater)
+                    if (!hex.IsWater)
+                    {
                         verticesNear[side] = _hexagonsMesh.GetVertexSide(hex.Key, hexAdd.Key, side);
+                        waterNear[side] = hexAdd.IsWater;
+                    }
                 }
                 side++;
             }
 
-            string s = hex.Key.ToString() + ": ";
-
-            foreach (var vertex in verticesNear)
-            {
-                if (vertex == null)
-                    s += "null - ";
-                else
-                    s += " FULL - ";
-            }
-
-            Debug.Log(s);
-
-            _hexagonsMesh.SetVertexSides(hex.Key, verticesNear);
+            if (!hex.IsWater)
+                _hexagonsMesh.SetVertexSides(hex.Key, verticesNear, waterNear);
         }
     }
 

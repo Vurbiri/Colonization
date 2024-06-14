@@ -20,7 +20,9 @@ public static class CONST
     public const float HEX_HEIGHT = HEX_SIZE * 0.5f;
 
     public static readonly ReadOnlyCollection<Vector3> HEX_VERTICES;
-    public static readonly ReadOnlyCollection<Vector3> HEX_DIRECTION;
+    public static readonly ReadOnlyCollection<Vector3> VERTEX_DIRECTIONS;
+    public static readonly ReadOnlyCollection<Vector3> HEX_SIDES;
+    public static readonly ReadOnlyCollection<Vector3> SIDE_DIRECTIONS;
 
     public const int ID_GATE = 13;
     public static readonly ReadOnlyCollection<int> NUMBERS = new((new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 }));
@@ -31,17 +33,28 @@ public static class CONST
         float[] SIN_HEX = { -SIN_30, SIN_30, SIN_90,  SIN_30, -SIN_30, -SIN_90 };
 
         Vector3[] positions = new Vector3[HEX_SIDE];
+        Vector3[] directions = new Vector3[HEX_SIDE];
+
         for (int i = 0; i < HEX_SIDE; i++)
-            positions[i] = new Vector3(HEX_RADIUS * COS_HEX[i], 0, HEX_RADIUS * SIN_HEX[i]);
+        {
+            directions[i] = new Vector3(COS_HEX[i], 0, SIN_HEX[i]);
+            positions[i] = HEX_RADIUS * directions[i];
+        }
+        VERTEX_DIRECTIONS = new(directions);
         HEX_VERTICES = new(positions);
 
         COS_HEX = new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60,  COS_60 };
         SIN_HEX = new float[] { SIN_00, SIN_60,  SIN_60, -SIN_00, -SIN_60, -SIN_60 };
 
+        directions = new Vector3[HEX_SIDE];
         positions = new Vector3[HEX_SIDE];
         for (int i = 0; i < HEX_SIDE; i++)
-            positions[i] = new Vector3(HEX_SIZE * COS_HEX[i], 0, HEX_SIZE * SIN_HEX[i]);
-        HEX_DIRECTION = new(positions);
+        {
+            directions[i] = new Vector3(COS_HEX[i], 0, SIN_HEX[i]);
+            positions[i] = HEX_SIZE * directions[i];
+        }
+        SIDE_DIRECTIONS = new(directions);
+        HEX_SIDES = new(positions);
     }
 
     //public static readonly ReadOnlyCollection<float> COS_HEX = new((new float[] { COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 }));

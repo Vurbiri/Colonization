@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roadRenderer: {fileID: 1634477485002050712}
-  _widthRoad: 1.2
+  _widthRoad: 1.05
   _rangeCount: {x: 2, y: 5}
   _offsetY: 0.05
   _rateWave: {x: 0.5, y: 0.9}
@@ -182,7 +182,7 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 3
       m_NumAlphaKeys: 4
-    numCornerVertices: 3
+    numCornerVertices: 4
     numCapVertices: 3
     alignment: 1
     textureMode: 0

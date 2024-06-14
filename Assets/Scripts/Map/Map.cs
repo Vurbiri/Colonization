@@ -55,11 +55,11 @@ public class Map : MonoBehaviour
             while (!isLastCircle)
             {
                 isLastCircle = ++circle == _circleMax;
-                positionNext = HEX_DIRECTION[0] * circle;
+                positionNext = HEX_SIDES[0] * circle;
                 for (int i = 0; i < HEX_SIDE; i++)
                 {
                     position = positionNext;
-                    positionNext = HEX_DIRECTION.Next(i) * circle;
+                    positionNext = HEX_SIDES.Next(i) * circle;
                     direction = (positionNext - position) / circle;
 
                     for (int j = 0; j < circle; j++)

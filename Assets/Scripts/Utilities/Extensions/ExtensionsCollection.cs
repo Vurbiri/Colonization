@@ -5,7 +5,8 @@ public static class ExtensionsCollection
 {
     public static int LeftIndex<T>(this IReadOnlyList<T> self, int index) => (index == 0 ? self.Count : index) - 1;
     public static int RightIndex<T>(this IReadOnlyList<T> self, int index) => (index + 1) % self.Count;
-   
+
+    public static T Prev<T>(this IReadOnlyList<T> self, int index) => self[(index == 0 ? self.Count : index) - 1];
     public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
     public static T Rand<T>(this IReadOnlyList<T> self) => self[Random.Range(0, self.Count)];
 

@@ -62,7 +62,7 @@ public class CustomMesh
         _triangles.AddRange(triangles);
     }
 
-    public virtual Mesh ToMesh()
+    public virtual Mesh ToMesh(bool isTangents = false)
     {
         int count = _vertices.Count;
         Vector3[] vertices = new Vector3[count], normals = new Vector3[count];
@@ -86,7 +86,8 @@ public class CustomMesh
             uv = _UVs.ToArray(),
         };
 
-        //mesh.RecalculateTangents();
+        if(isTangents)
+            mesh.RecalculateTangents();
         mesh.RecalculateBounds();
         mesh.Optimize();
         return mesh;

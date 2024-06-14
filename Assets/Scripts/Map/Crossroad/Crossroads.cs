@@ -51,16 +51,16 @@ public class Crossroads : MonoBehaviour
         }
     }
 
-    public bool CreateCrossroadLink(Hexagon hexA, Hexagon hexB)
+    public void CreateCrossroadLink(Hexagon hexA, Hexagon hexB)
     {
         KeyDouble key = hexA & hexB; //?????
         if (_crossLinks.ContainsKey(key) || (hexA.IsWater && hexB.IsWater))
-            return false;
+            return;
 
         HashSet<Crossroad> cross = new(hexA.Crossroads);
         cross.IntersectWith(hexB.Crossroads);
         if (cross.Count != 2)
-            return false;
+            return;
 
         Crossroad crossA, crossB;
         IEnumerator<Crossroad> enumerator = cross.GetEnumerator();
@@ -68,8 +68,6 @@ public class Crossroads : MonoBehaviour
         crossB = GetCrossroad();
 
         _crossLinks.Add(key, new(key, crossA, crossB));
-
-        return true;
 
         #region Local: GetCrossroad()
         //=================================
