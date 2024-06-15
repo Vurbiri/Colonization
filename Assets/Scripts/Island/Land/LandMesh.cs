@@ -1,16 +1,16 @@
 using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-public class HexagonsMesh : MonoBehaviour
+public class LandMesh : MonoBehaviour
 {
     [SerializeField] private string _name = "MapMesh";
     [Space]
     [SerializeField] private bool _isTangents = false;
+    [SerializeField, Range(0.5f, 1.5f)] private float _rateTiling = 1.05f;
     [Space]
-    [SerializeField, Range(0.5f, 0.99f)] private float _rateCellBase = 0.85f;
+    [SerializeField, Range(0.5f, 0.99f)] private float _rateCellBaseLand = 0.8f;
     [SerializeField, Range(0.5f, 0.99f)] private float _rateCellBaseWater = 0.9f;
     [Space]
     [SerializeField] private Vector2 _coastSize = new(0.7f, 0.3f);
@@ -24,21 +24,23 @@ public class HexagonsMesh : MonoBehaviour
     private MeshFilter _thisMeshFilter;
     private CustomMesh _customMesh;
 
-    private Dictionary<Key, HexagonMeshCell> _hexagons;
+    private Dictionary<Key, HexagonMesh> _hexagons;
 
     public void Initialize(int circleMax)
     {
         _thisMeshFilter = GetComponent<MeshFilter>();
         _hexagons = new(((CONST.HEX_SIDE * circleMax * (circleMax + 1)) >> 1) + 1);
-        _customMesh = new(_name, 2f * (circleMax - 1) * (CONST.HEX_DIAMETER * 1.1f) * Vector2.one);
+        _customMesh = new(_name, (2f * circleMax * CONST.HEX_SIZE) * Vector2.one);
 
-        HexagonMeshCell.CoastSize = _coastSize;
-        HexagonMeshCell.CoastSteps = _coastSteps;
+        GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTiling * circleMax);
+
+        HexagonMesh.CoastSize = _coastSize;
+        HexagonMesh.CoastSteps = _coastSteps;
     }
 
     public void AddHexagon(Key key, Vector3 position, Color32 color, bool isWater)
     {
-        HexagonMeshCell hex = new(position, color, isWater ? _rateCellBaseWater : _rateCellBase, !isWater);
+        HexagonMesh hex = new(position, color, isWater ? _rateCellBaseWater : _rateCellBaseLand, !isWater);
         _hexagons.Add(key, hex);
         _customMesh.AddPrimitive(hex);
     }

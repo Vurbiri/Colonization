@@ -54,7 +54,7 @@ public class Crossroads : MonoBehaviour
     public void CreateCrossroadLink(Hexagon hexA, Hexagon hexB)
     {
         KeyDouble key = hexA & hexB; //?????
-        if (_crossLinks.ContainsKey(key) || (hexA.IsWater && hexB.IsWater))
+        if (_crossLinks.ContainsKey(key) || (hexA.IsWater && hexB.IsWater) || (hexA.IsGate || hexB.IsGate))
             return;
 
         HashSet<Crossroad> cross = new(hexA.Crossroads);

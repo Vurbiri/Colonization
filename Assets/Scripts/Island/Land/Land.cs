@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using static CONST;
 
-public class Hexagons : MonoBehaviour
+public class Land : MonoBehaviour
 {
     [SerializeField] private Hexagon _prefabHex;
     [Space]
-    [SerializeField] private HexagonsMesh _hexagonsMesh;
+    [SerializeField] private LandMesh _landMesh;
 
     private Transform _thisTransform;
     private Dictionary<Key, Hexagon> _hexagons;
@@ -22,7 +22,7 @@ public class Hexagons : MonoBehaviour
         _offset = new(HEX_SIZE, HEX_SIZE * SIN_60);
         _thisTransform = transform;
 
-        _hexagonsMesh.Initialize(circleMax);
+        _landMesh.Initialize(circleMax);
     }
 
     public Hexagon CreateHexagon(Vector3 position, (SurfaceScriptable surface, int id) type)
@@ -32,12 +32,12 @@ public class Hexagons : MonoBehaviour
         hex.Initialize(key, type.surface, type.id);
         _hexagons.Add(key, hex);
 
-        _hexagonsMesh.AddHexagon(key, position, type.surface.Color, hex.IsWater);
+        _landMesh.AddHexagon(key, position, type.surface.Color, hex.IsWater);
 
         return hex;
     }
 
-    public void SetMesh() => _hexagonsMesh.SetMesh();
+    public void SetMesh() => _landMesh.SetMesh();
 
     public void HexagonsNeighbors(Action<Hexagon, Hexagon> actionCreateRoad)
     {
@@ -61,7 +61,7 @@ public class Hexagons : MonoBehaviour
                     actionCreateRoad(hex, hexAdd);
                     if (!hex.IsWater)
                     {
-                        verticesNear[side] = _hexagonsMesh.GetVertexSide(hex.Key, hexAdd.Key, side);
+                        verticesNear[side] = _landMesh.GetVertexSide(hex.Key, hexAdd.Key, side);
                         waterNear[side] = hexAdd.IsWater;
                     }
                 }
@@ -69,7 +69,7 @@ public class Hexagons : MonoBehaviour
             }
 
             if (!hex.IsWater)
-                _hexagonsMesh.SetVertexSides(hex.Key, verticesNear, waterNear);
+                _landMesh.SetVertexSides(hex.Key, verticesNear, waterNear);
         }
     }
 

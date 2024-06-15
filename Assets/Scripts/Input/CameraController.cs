@@ -5,7 +5,7 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private Map _map;
+    [SerializeField] private Island _island;
     [Space]
     [Header("Movement")]
     [SerializeField] private float _speedMoveMax = 25f;
@@ -59,9 +59,9 @@ public class CameraController : MonoBehaviour
 
         _cameraActions.Zoom.performed += OnZoom;
 
-        _map.EventSelect += MoveToCrossroad;
+        _island.EventSelect += MoveToCrossroad;
 
-        _bounds = new(_map.SizeHex * _map.Circle);
+        _bounds = new(_island.SizeHex * _island.Circle);
 
         _cameraTransform.LookAt(_thisTransform);
     }
@@ -187,6 +187,6 @@ public class CameraController : MonoBehaviour
 
         _cameraActions.Position.performed -= OnPosition;
 
-        _map.EventSelect -= MoveToCrossroad;
+        _island.EventSelect -= MoveToCrossroad;
     }
 }

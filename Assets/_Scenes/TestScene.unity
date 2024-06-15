@@ -305,12 +305,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 167528443}
-  - component: {fileID: 167528444}
+  - component: {fileID: 167528448}
   - component: {fileID: 167528445}
   - component: {fileID: 167528447}
   - component: {fileID: 167528446}
   m_Layer: 6
-  m_Name: Hexagons
+  m_Name: Land
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -331,21 +331,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1629463687}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &167528444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 167528442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7d5ec0c8d3fca249b83d7516318e95b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prefabHex: {fileID: 1334033936671246162, guid: ca671548d7664b14aa7bd3d8a4ec59e3,
-    type: 3}
-  _hexagonsMesh: {fileID: 167528445}
 --- !u!114 &167528445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,7 +345,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: MapMesh
   _isTangents: 0
-  _rateCellBase: 0.8
+  _rateTiling: 1.05
+  _rateCellBaseLand: 0.8
   _rateCellBaseWater: 0.9
   _coastSize: {x: 0.7, y: 0.3}
   _coastSteps: 5
@@ -416,6 +402,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 167528442}
   m_Mesh: {fileID: 4300000, guid: b03fcda193b45c34dbcadfe5c4db316e, type: 2}
+--- !u!114 &167528448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167528442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc7940818424cb8438dad8aae80d2fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefabHex: {fileID: 1334033936671246162, guid: ca671548d7664b14aa7bd3d8a4ec59e3,
+    type: 3}
+  _landMesh: {fileID: 167528445}
 --- !u!1 &240874892
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,7 +462,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a47839a85795f4d89fb573ed422209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _map: {fileID: 1629463686}
+  _island: {fileID: 1629463688}
   _speedMoveMax: 50
   _accelerationMove: 25
   _dampingMove: 75
@@ -1440,7 +1441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1629463687}
-  - component: {fileID: 1629463686}
+  - component: {fileID: 1629463688}
   m_Layer: 3
   m_Name: Island
   m_TagString: Untagged
@@ -1448,32 +1449,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!114 &1629463686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1629463685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb3dd73c9a820c0478a9aaaf16828088, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _surfaces:
-    gate: {fileID: 11400000, guid: 6e40efc977376864d8bcb1df3942b724, type: 2}
-    water: {fileID: 11400000, guid: fa24b06781364c94c84b01ef7c77f464, type: 2}
-    grounds:
-    - {fileID: 11400000, guid: 24c241d1b99cf704ba5ddd3b2685ffd9, type: 2}
-    - {fileID: 11400000, guid: daff9718c5fb3a047b5a6734d0754949, type: 2}
-    - {fileID: 11400000, guid: 286d0460b538f18459dca9a9eb2e34ef, type: 2}
-    - {fileID: 11400000, guid: fb1677dbd00e8174f8280ff5bd1c1963, type: 2}
-    - {fileID: 11400000, guid: e3b96aa18137802489b4eda13176a589, type: 2}
-  _circleMax: 4
-  _chance: 36
-  _hexagons: {fileID: 167528444}
-  _crossroads: {fileID: 1829909683}
-  _roads: {fileID: 1906245667}
 --- !u!4 &1629463687
 Transform:
   m_ObjectHideFlags: 0
@@ -1493,6 +1468,32 @@ Transform:
   - {fileID: 1411571978}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1629463688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629463685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 513aa5fc000464b40a14280808730b02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _surfaces:
+    gate: {fileID: 11400000, guid: 6e40efc977376864d8bcb1df3942b724, type: 2}
+    water: {fileID: 11400000, guid: fa24b06781364c94c84b01ef7c77f464, type: 2}
+    grounds:
+    - {fileID: 11400000, guid: 24c241d1b99cf704ba5ddd3b2685ffd9, type: 2}
+    - {fileID: 11400000, guid: daff9718c5fb3a047b5a6734d0754949, type: 2}
+    - {fileID: 11400000, guid: 286d0460b538f18459dca9a9eb2e34ef, type: 2}
+    - {fileID: 11400000, guid: fb1677dbd00e8174f8280ff5bd1c1963, type: 2}
+    - {fileID: 11400000, guid: e3b96aa18137802489b4eda13176a589, type: 2}
+  _circleMax: 4
+  _chance: 36
+  _land: {fileID: 167528448}
+  _crossroads: {fileID: 1829909683}
+  _roads: {fileID: 1906245667}
 --- !u!1 &1750018451
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,14 +4,14 @@ using UnityEngine;
 using static CONST;
 
 //[ExecuteInEditMode]
-public class Map : MonoBehaviour
+public class Island : MonoBehaviour
 {
     [SerializeField] private Surfaces _surfaces;
     [Space]
     [SerializeField, Range(3, 8)] private int _circleMax = 5;
     [SerializeField, Range(0, 100)] private int _chance = 11;
     [Space]
-    [SerializeField] private Hexagons _hexagons;
+    [SerializeField] private Land _land;
     [SerializeField] private Crossroads _crossroads;
     [SerializeField] private Roads _roads;
   
@@ -22,7 +22,7 @@ public class Map : MonoBehaviour
 
     private void Awake()
     {
-        _hexagons.Initialize(_circleMax);
+        _land.Initialize(_circleMax);
         _crossroads.Initialize(_circleMax);
         _roads.Initialize();
 
@@ -33,11 +33,12 @@ public class Map : MonoBehaviour
 
     public void Generate()
     {
+       
         CreateMap();
 
-        _hexagons.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
+        _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
 
-        _hexagons.SetMesh();
+        _land.SetMesh();
 
         #region Local: CreateMap()
         //=================================
@@ -50,7 +51,7 @@ public class Map : MonoBehaviour
             ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);// Õ”Ã≈–¿÷»ﬂ ’≈ —Œ¬????
             ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.grounds);
 
-            Hexagon hex = _hexagons.CreateHexagon(Vector3.zero, (_surfaces.gate, ID_GATE));
+            Hexagon hex = _land.CreateHexagon(Vector3.zero, (_surfaces.gate, ID_GATE));
             _crossroads.CreateCrossroad(Vector3.zero, hex, false);
             while (!isLastCircle)
             {
@@ -65,7 +66,7 @@ public class Map : MonoBehaviour
                     for (int j = 0; j < circle; j++)
                     {
                         current = position + direction * j;
-                        hex = _hexagons.CreateHexagon(current, SetTypeAndId(j));// Õ”Ã≈–¿÷»ﬂ ’≈ —Œ¬????
+                        hex = _land.CreateHexagon(current, SetTypeAndId(j));// Õ”Ã≈–¿÷»ﬂ ’≈ —Œ¬????
                         _crossroads.CreateCrossroad(current, hex, circle == _circleMax);
                     }
                 }
@@ -89,7 +90,7 @@ public class Map : MonoBehaviour
     [Button]
     private void Clear()
     {
-        _hexagons.Clear();
+        _land.Clear();
         _crossroads.Clear();
         _roads.Clear();
     }

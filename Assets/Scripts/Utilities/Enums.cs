@@ -42,6 +42,13 @@ public enum PlayerType
     AI_03
 }
 
+public enum CrossroadType
+{
+    None,
+    Up,
+    Down
+}
+
 public enum SurfaceType
 {
     Ground01,

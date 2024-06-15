@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Surface_G04
   m_EditorClassIdentifier: 
   _type: 3
-  _material: {fileID: 2100000, guid: 0eae5ad6bfd851e48a29dfc0727ee76c, type: 2}
   _color:
     serializedVersion: 2
-    rgba: 4278230016
+    rgba: 4278228480

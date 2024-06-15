@@ -19,8 +19,8 @@ public class CrossroadLink
         _key = key;
 
         _start = crossA; _end = crossB;
-        _start.Links.Add(this);
-        _end.Links.Add(this);
+        _start.AddCrossroadLink(this);
+        _end.AddCrossroadLink(this);
         
         _owner = owner;
 
@@ -31,6 +31,20 @@ public class CrossroadLink
     {
         if(_start != cross)
             (_start, _end) = (_end, _start);
+    }
+
+    public CrossroadType GetCrossroadType(Crossroad cross)
+    {
+        Vector3 direction = cross == _start ? _end.Position - _start.Position : _start.Position - _end.Position;
+        int index = 0;
+        foreach (var v in CONST.HEX_VERTICES)
+        {
+            if (v == direction)
+                return (CrossroadType)(index % 2 + 1);
+            index++;
+        }
+
+        return CrossroadType.None;
     }
 
     public override string ToString() => $"({_key})";

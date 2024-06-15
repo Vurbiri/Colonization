@@ -86,9 +86,6 @@ public class Road : MonoBehaviour
         if (!(_crossroads.Union(other._crossroads) && _points.Union(other._points)))
             return null;
 
-        Debug.Log(s1 + _crossroads.Count);
-        Debug.Log(s2 + _points.Count);
-
         _textureScale = _textureScale + other._textureScale;
         _textureScale.y *= 0.5f;
         _textureScaleX = _textureScale.x / (_crossroads.Count - 1);

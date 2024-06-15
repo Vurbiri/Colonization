@@ -2,19 +2,22 @@ using UnityEngine;
 
 public class BoundUV
 {
-    private readonly Rect _bound;
+    private readonly Vector2 _size;
+    private readonly Vector2 _sizeHalf;
 
-    public BoundUV(Vector2 size) => _bound = new(size * 0.5f, size);
+    public BoundUV(Vector2 size)
+    {
+        _size = size;
+        _sizeHalf = size * 0.5f;
+    }
 
     public Vector2 ConvertToUV(Vector3 vertex)
     {
         Vector2 uv = new()
         {
-            x = (vertex.x + _bound.xMin) / _bound.width,
-            y = (vertex.z + _bound.yMin) / _bound.height,
+            x = (vertex.x + _sizeHalf.x) / _size.x,
+            y = (vertex.z + _sizeHalf.y) / _size.y,
         };
         return uv;
     }
-
-    //public static implicit operator BoundUV(Rect bound) => new(bound);
 }

@@ -86,7 +86,7 @@ public class TestUi : MonoBehaviour
         //=================================
         void OnClick(CrossroadLink road)
         {
-            //_built = true;
+            _built = true;
 
             road.SetStart(_crossCurrent);
             _roads.BuildRoad(road, _players.Current);
