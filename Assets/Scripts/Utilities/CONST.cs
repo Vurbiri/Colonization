@@ -13,7 +13,8 @@ public static class CONST
     public const float SIN_60 = COS_30;
     public const float SIN_90 = COS_00;
 
-    public const int   HEX_SIDE = 6;
+    public const int   COUNT_SIDES = 6;
+    public const int   COUNT_VERTICES = 6;
     public const float HEX_DIAMETER = 22f;
     public const float HEX_RADIUS = HEX_DIAMETER * 0.5f;
     public const float HEX_SIZE = HEX_DIAMETER * COS_30;
@@ -32,10 +33,10 @@ public static class CONST
         float[] COS_HEX = {  COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 };
         float[] SIN_HEX = { -SIN_30, SIN_30, SIN_90,  SIN_30, -SIN_30, -SIN_90 };
 
-        Vector3[] positions = new Vector3[HEX_SIDE];
-        Vector3[] directions = new Vector3[HEX_SIDE];
+        Vector3[] positions = new Vector3[COUNT_VERTICES];
+        Vector3[] directions = new Vector3[COUNT_VERTICES];
 
-        for (int i = 0; i < HEX_SIDE; i++)
+        for (int i = 0; i < COUNT_VERTICES; i++)
         {
             directions[i] = new Vector3(COS_HEX[i], 0, SIN_HEX[i]);
             positions[i] = HEX_RADIUS * directions[i];
@@ -46,9 +47,9 @@ public static class CONST
         COS_HEX = new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60,  COS_60 };
         SIN_HEX = new float[] { SIN_00, SIN_60,  SIN_60, -SIN_00, -SIN_60, -SIN_60 };
 
-        directions = new Vector3[HEX_SIDE];
-        positions = new Vector3[HEX_SIDE];
-        for (int i = 0; i < HEX_SIDE; i++)
+        directions = new Vector3[COUNT_SIDES];
+        positions = new Vector3[COUNT_SIDES];
+        for (int i = 0; i < COUNT_SIDES; i++)
         {
             directions[i] = new Vector3(COS_HEX[i], 0, SIN_HEX[i]);
             positions[i] = HEX_SIZE * directions[i];

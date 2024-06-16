@@ -22,12 +22,12 @@ public class Road : MonoBehaviour
     private Vector2 _textureScale;
     private float _textureScaleX;
 
-    public void Initialize(Crossroad start, Crossroad end, Player player)
+    public void Initialize(Crossroad start, Crossroad end, PlayerType type, Color color)
     {
-        _owner = player.Type;
+        _owner = type;
         _crossroads.Add(start, end);
 
-        InitializeLineRenderer(start.Position, player.Color);
+        InitializeLineRenderer(start.Position, color);
 
         CreateLine(start.Position, end.Position);
 
@@ -93,6 +93,16 @@ public class Road : MonoBehaviour
         SetLineRenderer();
 
         return other;
+    }
+
+    public Key[] GetKeyCrossroads()
+    {
+        Key[] keys = new Key[_crossroads.Count];
+        int i = 0;
+        foreach (var crossroad in _crossroads)
+            keys[i++] = crossroad.Key;
+        
+        return keys;
     }
 
     private void CreateLine(Vector3 start, Vector3 end)

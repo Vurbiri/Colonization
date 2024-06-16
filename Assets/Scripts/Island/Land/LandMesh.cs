@@ -21,21 +21,26 @@ public class LandMesh : MonoBehaviour
     [SerializeField] private string _path = "Assets/Import/";
 #endif
 
+    public float WaterLevel => _waterLevel;
+
     private MeshFilter _thisMeshFilter;
     private CustomMesh _customMesh;
-
     private Dictionary<Key, HexagonMesh> _hexagons;
+    private float _waterLevel;
 
     public void Initialize(int circleMax)
     {
         _thisMeshFilter = GetComponent<MeshFilter>();
-        _hexagons = new(((CONST.HEX_SIDE * circleMax * (circleMax + 1)) >> 1) + 1);
+        _hexagons = new(((CONST.COUNT_SIDES * circleMax * (circleMax + 1)) >> 1) + 1);
         _customMesh = new(_name, (2f * circleMax * CONST.HEX_SIZE) * Vector2.one);
 
         GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTiling * circleMax);
 
         HexagonMesh.CoastSize = _coastSize;
         HexagonMesh.CoastSteps = _coastSteps;
+
+        for (int i = 0; i < _coastSteps; i++)
+            _waterLevel -= _coastSize[i % 2];
     }
 
     public void AddHexagon(Key key, Vector3 position, Color32 color, bool isWater)
@@ -48,7 +53,7 @@ public class LandMesh : MonoBehaviour
     public Vertex[] GetVertexSide(Key key, Key neighbors, int side)
     {
         _hexagons[key].Visit(side);
-        return _hexagons[neighbors].GetVertexSide((side + 3) % CONST.HEX_SIDE);
+        return _hexagons[neighbors].GetVertexSide((side + 3) % CONST.COUNT_SIDES);
     }
 
     public void SetVertexSides(Key key, Vertex[][] verticesNear, bool[] waterNear) => _customMesh.AddTriangles(_hexagons[key].CreateBorder(verticesNear, waterNear));

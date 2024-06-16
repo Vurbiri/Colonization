@@ -12,14 +12,13 @@ public class Crossroads : MonoBehaviour
     private Transform _thisTransform;
     private Vector2 _offset;
     private Dictionary<Key, Crossroad> _crossroads;
-    private Dictionary<KeyDouble, CrossroadLink> _crossLinks;
 
     public void Initialize(int circleMax)
     {
         //Debug.Log($"Count Crossroads calk: {HEX_SIDE * circleMax * circleMax}");
-        _crossroads = new(HEX_SIDE * circleMax * circleMax);
+        _crossroads = new(COUNT_SIDES * circleMax * circleMax);
         //Debug.Log($"Count Roads calk: {HEX_SIDE * circleMax * (circleMax - 1)}");
-        _crossLinks = new(HEX_SIDE * circleMax * (circleMax - 1));
+        //_crossLinks = new(COUNT_SIDES * circleMax * (circleMax - 1));
 
         _offset = new(HEX_RADIUS * COS_30, HEX_RADIUS * SIN_30);
         _thisTransform = transform;
@@ -30,7 +29,7 @@ public class Crossroads : MonoBehaviour
         Crossroad cross;
         Key key;
         Vector3 positionCross;
-        for (int i = 0; i < HEX_SIDE; i++)
+        for (int i = 0; i < COUNT_SIDES; i++)
         {
             positionCross = HEX_VERTICES[i] + position;
 
@@ -53,8 +52,7 @@ public class Crossroads : MonoBehaviour
 
     public void CreateCrossroadLink(Hexagon hexA, Hexagon hexB)
     {
-        KeyDouble key = hexA & hexB; //?????
-        if (_crossLinks.ContainsKey(key) || (hexA.IsWater && hexB.IsWater) || (hexA.IsGate || hexB.IsGate))
+        if ((hexA.IsWater && hexB.IsWater) || (hexA.IsGate || hexB.IsGate))
             return;
 
         HashSet<Crossroad> cross = new(hexA.Crossroads);
@@ -67,7 +65,7 @@ public class Crossroads : MonoBehaviour
         crossA = GetCrossroad();
         crossB = GetCrossroad();
 
-        _crossLinks.Add(key, new(key, crossA, crossB));
+        new CrossroadLink(crossA, crossB);
 
         #region Local: GetCrossroad()
         //=================================
@@ -77,6 +75,12 @@ public class Crossroads : MonoBehaviour
             return enumerator.Current;
         }
         #endregion
+    }
+
+    public void Setup()
+    {
+        foreach (var crossroad in _crossroads.Values)
+            crossroad.Setup();
     }
 
     private void SelectCrossroad(Crossroad cross)

@@ -19,15 +19,13 @@ public class Hexagon : MonoBehaviour, ISelectable
     private Key _key;
     private SurfaceType _surface;
 
-    private readonly HashSet<Crossroad> _crossroads = new(CONST.HEX_SIDE);
-    private readonly HashSet<Hexagon> _neighbors = new(CONST.HEX_SIDE);
+    private readonly HashSet<Crossroad> _crossroads = new(CONST.COUNT_SIDES);
+    private readonly HashSet<Hexagon> _neighbors = new(CONST.COUNT_SIDES);
 
-#if UNITY_EDITOR
     private const string NAME = "Hexagon_";
-#endif
     #endregion
 
-    public void Initialize(Key key, SurfaceScriptable surface, int id)
+    public void Initialize(Key key, SurfaceScriptable surface, float waterLevel, int id)
     {
         _key = key;
         _id = id;
@@ -35,13 +33,10 @@ public class Hexagon : MonoBehaviour, ISelectable
 
         _surface = surface.Type;
 
+        name = NAME + _id + "__" + key.ToString();
+
         if (IsWater)
-            transform.localPosition -= new Vector3(0f, 3.25f, 0f);
-
-
-#if UNITY_EDITOR
-        gameObject.name = NAME + _id + "__" + key.ToString();
-#endif
+            transform.localPosition += new Vector3(0f, waterLevel, 0f);
     }
 
     public void Select()
@@ -50,7 +45,7 @@ public class Hexagon : MonoBehaviour, ISelectable
         Debug.Log($"{gameObject.name}, water: {IsWater}, gate {IsGate}\n");
     }
 
-    public static KeyDouble operator &(Hexagon a, Hexagon b) => a._key & b._key;
+    
 
     //public void SetNewPosition(Vector2Int index)
     //{

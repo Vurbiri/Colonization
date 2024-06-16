@@ -1,4 +1,3 @@
-using NaughtyAttributes;
 using System;
 using UnityEngine;
 using static CONST;
@@ -13,8 +12,10 @@ public class Island : MonoBehaviour
     [Space]
     [SerializeField] private Land _land;
     [SerializeField] private Crossroads _crossroads;
-    [SerializeField] private Roads _roads;
-  
+    [Space]
+    [SerializeField] private Roads _roadsPrefab;
+    [SerializeField] private Transform _roadsContainer;
+
     public int Circle => _circleMax;
     public float SizeHex => HEX_SIZE;
 
@@ -22,9 +23,10 @@ public class Island : MonoBehaviour
 
     private void Awake()
     {
+        Players.InstanceF.SetIsland(this);
+        
         _land.Initialize(_circleMax);
         _crossroads.Initialize(_circleMax);
-        _roads.Initialize();
 
         _crossroads.EventSelectCrossroad += (c) => EventSelect?.Invoke(c.Position);
 
@@ -34,15 +36,16 @@ public class Island : MonoBehaviour
     public void Generate()
     {
        
-        CreateMap();
+        CreateIsland();
 
         _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
+        //_crossroads.Setup();
 
         _land.SetMesh();
 
-        #region Local: CreateMap()
+        #region Local: CreateIsland()
         //=================================
-        void CreateMap()
+        void CreateIsland()
         {
             int circle = 0;
             bool isWater = false, isLastCircle = circle == _circleMax;
@@ -57,7 +60,7 @@ public class Island : MonoBehaviour
             {
                 isLastCircle = ++circle == _circleMax;
                 positionNext = HEX_SIDES[0] * circle;
-                for (int i = 0; i < HEX_SIDE; i++)
+                for (int i = 0; i < COUNT_SIDES; i++)
                 {
                     position = positionNext;
                     positionNext = HEX_SIDES.Next(i) * circle;
@@ -85,20 +88,12 @@ public class Island : MonoBehaviour
         #endregion
     }
 
+    public Roads GetRoads() => Instantiate(_roadsPrefab, _roadsContainer);
 
-#if UNITY_EDITOR
-    [Button]
-    private void Clear()
-    {
-        _land.Clear();
-        _crossroads.Clear();
-        _roads.Clear();
-    }
-#endif
 
-    #region Nested: Surfaces
-    //***********************************
-    [Serializable]
+#region Nested: Surfaces
+//***********************************
+[Serializable]
     private struct Surfaces
     {
         public SurfaceScriptable gate;

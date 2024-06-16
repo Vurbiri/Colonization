@@ -10,7 +10,7 @@ public class Players : ASingleton<Players>
 
     private int _currentIndex;
     private Player _current;
-    private Player[] _players = new Player[PLAYERS_MAX];
+    private readonly Player[] _players = new Player[PLAYERS_MAX];
 
     public const int PLAYERS_MAX = 4;
     
@@ -23,5 +23,11 @@ public class Players : ASingleton<Players>
 
         _currentIndex = Random.Range(0, PLAYERS_MAX);
         _current = _players[_currentIndex];
+    }
+
+    public void SetIsland(Island island)
+    {
+        for (int i = 0; i < PLAYERS_MAX; i++)
+            _players[i].SetRoads(island.GetRoads());
     }
 }

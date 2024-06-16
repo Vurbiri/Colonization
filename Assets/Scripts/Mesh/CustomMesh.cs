@@ -6,7 +6,6 @@ public class CustomMesh
     private readonly string _name;
     private readonly List<Vertex> _vertices = new();
     private readonly List<int> _triangles = new();
-    private readonly List<Vector2> _UVs = new();
     private readonly BoundUV _boundsUV;
    
     public CustomMesh(string name, Vector2 sizeBound)
@@ -41,7 +40,7 @@ public class CustomMesh
             if (!isNotAddVertex)
             {
                 _vertices.Add(vertex);
-                _UVs.Add(_boundsUV.ConvertToUV(vertex.Position));
+                vertex.UV = _boundsUV.ConvertToUV(vertex.UV);
             }
             _triangles.Add(vIndex);
         }
@@ -54,7 +53,6 @@ public class CustomMesh
 
         int verticesCount = _vertices.Count;
         _vertices.AddRange(mesh._vertices);
-        _UVs.AddRange(mesh._UVs);
 
         List<int> triangles = new(mesh._triangles.Count);
         foreach (var v in mesh._triangles)
@@ -67,6 +65,7 @@ public class CustomMesh
         int count = _vertices.Count;
         Vector3[] vertices = new Vector3[count], normals = new Vector3[count];
         Color32[] colors = new Color32[count];
+        Vector2[] uv = new Vector2[count];
         Vertex vertex;
         for(int i = 0; i < count; i++)
         {
@@ -74,6 +73,7 @@ public class CustomMesh
             vertices[i] = vertex.Position;
             normals[i] = vertex.Normal;
             colors[i] = vertex.Color;
+            uv[i] = vertex.UV;
         }
 
         Mesh mesh = new()
@@ -82,14 +82,14 @@ public class CustomMesh
             vertices = vertices,
             normals = normals,
             colors32 = colors,
+            uv = uv,
             triangles = _triangles.ToArray(),
-            uv = _UVs.ToArray(),
         };
 
         if(isTangents)
             mesh.RecalculateTangents();
         mesh.RecalculateBounds();
-        mesh.Optimize();
+        //mesh.Optimize();
         return mesh;
     }
 }

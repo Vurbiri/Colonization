@@ -8,9 +8,16 @@
         },
         {
             "m_Id": "850ab5724ea44fe1931b20764ea07d1d"
+        },
+        {
+            "m_Id": "68ee3ecbf60d4e44bb1e629dda31a7c3"
         }
     ],
-    "m_Keywords": [],
+    "m_Keywords": [
+        {
+            "m_Id": "1bee74e0aaf4454b9ce016783b89cfae"
+        }
+    ],
     "m_Dropdowns": [],
     "m_CategoryData": [
         {
@@ -568,6 +575,12 @@
         },
         {
             "m_Id": "850ab5724ea44fe1931b20764ea07d1d"
+        },
+        {
+            "m_Id": "68ee3ecbf60d4e44bb1e629dda31a7c3"
+        },
+        {
+            "m_Id": "1bee74e0aaf4454b9ce016783b89cfae"
         }
     ]
 }
@@ -843,6 +856,47 @@
         "z": 0.0,
         "w": 0.0
     }
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
+    "m_ObjectId": "1bee74e0aaf4454b9ce016783b89cfae",
+    "m_Guid": {
+        "m_GuidSerialized": "ba7737e6-b22d-4652-a234-69af048d819d"
+    },
+    "m_Name": "Enum",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Enum",
+    "m_DefaultReferenceName": "_ENUM",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_KeywordType": 1,
+    "m_KeywordDefinition": 0,
+    "m_KeywordScope": 0,
+    "m_KeywordStages": 63,
+    "m_Entries": [
+        {
+            "id": 1,
+            "displayName": "A",
+            "referenceName": "A"
+        },
+        {
+            "id": 2,
+            "displayName": "B",
+            "referenceName": "B"
+        },
+        {
+            "id": 3,
+            "displayName": "C",
+            "referenceName": "C"
+        }
+    ],
+    "m_Value": 0,
+    "m_IsEditable": true
 }
 
 {
@@ -1416,6 +1470,34 @@
         "y": 0.0,
         "z": 0.0,
         "w": 0.0
+    }
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "68ee3ecbf60d4e44bb1e629dda31a7c3",
+    "m_Guid": {
+        "m_GuidSerialized": "19824c66-6012-455f-b7cd-ee2c6a80bf88"
+    },
+    "m_Name": "Float",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Float",
+    "m_DefaultReferenceName": "_Float",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.0,
+    "m_FloatType": 3,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
     }
 }
 

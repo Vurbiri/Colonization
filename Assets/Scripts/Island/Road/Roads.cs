@@ -4,25 +4,28 @@ using UnityEngine;
 
 public class Roads : MonoBehaviour
 {
-    [Space]
     [SerializeField] private Road _prefabRoad;
 
     private Transform _thisTransform;
-    private List<List<Road>> _roadsLists = new(Players.PLAYERS_MAX);
+    private PlayerType _type;
+    private Color _color;
+    private readonly List<Road> _roadsLists = new();
 
-    public void Initialize()
+    private const string NAME = "Roads_";
+
+    public Roads Initialize(PlayerType type, Color color)
     {
         _thisTransform = transform;
+        _type = type;
+        _color = color;
+        name = NAME + type;
 
-        for (int i = 0; i < Players.PLAYERS_MAX; i++)
-            _roadsLists.Add(new());
+        return this;
     }
 
-    public void BuildRoad(CrossroadLink link, Player player)
+    public void BuildRoad(CrossroadLink link)
     {
-        List<Road> currentRoads = _roadsLists[player.Id];
-
-        link.Owner = player.Type;
+        link.RoadBuilt(_type);
 
         if (!AddRoadLine())
             NewRoadLine();
@@ -33,7 +36,7 @@ public class Roads : MonoBehaviour
         //=================================
         bool AddRoadLine()
         {
-            foreach (var line in currentRoads)
+            foreach (var line in _roadsLists)
                 if (line.TryAdd(link.Start, link.End))
                     return true;
 
@@ -42,22 +45,22 @@ public class Roads : MonoBehaviour
         void NewRoadLine()
         {
             Road roadLine;
-            roadLine = Instantiate(_prefabRoad, transform);
-            roadLine.Initialize(link.Start, link.End, player);
-            currentRoads.Add(roadLine);
+            roadLine = Instantiate(_prefabRoad, _thisTransform);
+            roadLine.Initialize(link.Start, link.End, _type, _color);
+            _roadsLists.Add(roadLine);
         }
         IEnumerator CombiningRoadLine_Coroutine()
         {
             yield return null;
             Road roadLine;
-            for (int i = currentRoads.Count - 1; i > 0; i--)
+            for (int i = _roadsLists.Count - 1; i > 0; i--)
             {
                 for (int j = i - 1; j >= 0; j--)
                 {
-                    roadLine = currentRoads[i].Union(currentRoads[j]);
+                    roadLine = _roadsLists[i].Union(_roadsLists[j]);
                     if (roadLine != null)
                     {
-                        currentRoads.Remove(roadLine);
+                        _roadsLists.Remove(roadLine);
                         Destroy(roadLine.gameObject);
                         StartCoroutine(CombiningRoadLine_Coroutine());
                         yield break;
@@ -67,19 +70,4 @@ public class Roads : MonoBehaviour
         }
         #endregion
     }
-
-#if UNITY_EDITOR
-    public void Clear()
-    {
-        while (_thisTransform.childCount > 0)
-            DestroyImmediate(_thisTransform.GetChild(0).gameObject);
-    }
-
-    //public void OnDrawGizmosSelected()
-    //{
-    //    Gizmos.color = Color.red;
-    //    foreach(var road in _roads.Values) 
-    //    Gizmos.DrawLine(road.CrossA.Position, road.CrossB.Position);
-    //}
-#endif
 }

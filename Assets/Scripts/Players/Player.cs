@@ -12,6 +12,8 @@ public class Player
     private readonly int _idColor;
     private readonly Color _color;
 
+    private Roads _roads;
+
     public Player(int id, int idColor)
     {
         _type = (PlayerType)id;
@@ -28,6 +30,9 @@ public class Player
         _color = color;
 
     }
+
+    public void SetRoads(Roads roads) => _roads = roads.Initialize(_type, _color);
+    public void BuildRoad(CrossroadLink link) => _roads.BuildRoad(link);
 
     public override string ToString() => $"Player: {_type}";
 }

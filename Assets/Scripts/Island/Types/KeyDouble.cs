@@ -7,10 +7,6 @@ public class KeyDouble : IEquatable<KeyDouble>
     public Key A => _a;
     [JsonProperty("b")]
     public Key B => _b;
-    [JsonIgnore]
-    public Key A_B => _a - _b;
-    [JsonIgnore]
-    public Key B_A => _b - _a;
 
     private readonly Key _a, _b;
 

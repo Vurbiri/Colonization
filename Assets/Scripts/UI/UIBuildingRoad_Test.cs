@@ -1,10 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TestUi : MonoBehaviour
+public class UIBuildingRoad_Test : MonoBehaviour
 {
     [SerializeField] private Crossroads _crossroads;
-    [SerializeField] private Roads _roads;
     [Space]
     [SerializeField] private RectTransform _imageTransform;
     [SerializeField] private Button[] _roadButtons;
@@ -73,10 +72,10 @@ public class TestUi : MonoBehaviour
 
                 i++;
             }
-            _imageTransform.gameObject.SetActive(true);
         }
 
-        for(; i < COUNT_ROADS; i++)
+        _imageTransform.gameObject.SetActive(i > 0);
+        for (; i < COUNT_ROADS; i++)
         {
             _roadButtons[i].onClick.RemoveAllListeners();
             _roadButtonsTransform[i].gameObject.SetActive(false);
@@ -84,12 +83,12 @@ public class TestUi : MonoBehaviour
 
         #region Local: OnClick()
         //=================================
-        void OnClick(CrossroadLink road)
+        void OnClick(CrossroadLink link)
         {
             _built = true;
 
-            road.SetStart(_crossCurrent);
-            _roads.BuildRoad(road, _players.Current);
+            link.SetStart(_crossCurrent);
+            _players.Current.BuildRoad(link);
 
             _imageTransform.gameObject.SetActive(false);
             for (int i = 0; i < _countCurrent; i++)

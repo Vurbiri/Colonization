@@ -80,10 +80,10 @@ Material:
     - _Distortion: 0.05
     - _DstBlend: 0
     - _FROM_TEXTURE: 1
-    - _Gate_Brightness: 0.1
+    - _Gate_Brightness: 0.125
     - _Gate_Distortion: 0.11
     - _Gate_Metallic: 0.05
-    - _Gate_Normal: 0.375
+    - _Gate_Normal: 0.3
     - _Gate_Rate_Tiling: 0.32
     - _Gate_Smoothness: 0.75
     - _Gate_Speed: 0.025

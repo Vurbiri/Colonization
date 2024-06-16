@@ -20,4 +20,14 @@ public class BoundUV
         };
         return uv;
     }
+
+    public Vector2 ConvertToUV(Vector2 vertex)
+    {
+        Vector2 uv = new()
+        {
+            x = (vertex.x + _sizeHalf.x) / _size.x,
+            y = (vertex.y + _sizeHalf.y) / _size.y,
+        };
+        return uv;
+    }
 }

@@ -6,6 +6,8 @@
 Shader "TextMeshPro/Mobile/Distance Field Overlay" {
 
 Properties {
+	[Enum(ZTest)]_ZTest ("ZTest", Float) = 8
+	
 	[HDR]_FaceColor		("Face Color", Color) = (1,1,1,1)
 	_FaceDilate			("Face Dilate", Range(-1,1)) = 0
 
@@ -51,6 +53,7 @@ Properties {
 
 	_CullMode			("Cull Mode", Float) = 0
 	_ColorMask			("Color Mask", Float) = 15
+	
 }
 
 SubShader {
@@ -75,7 +78,7 @@ SubShader {
 	ZWrite Off
 	Lighting Off
 	Fog { Mode Off }
-	ZTest Always
+	ZTest [_ZTest]
 	Blend One OneMinusSrcAlpha
 	ColorMask [_ColorMask]
 

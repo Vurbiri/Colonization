@@ -13,12 +13,12 @@ public class Land : MonoBehaviour
     private Dictionary<Key, Hexagon> _hexagons;
     private Vector2 _offset;
 
-    private readonly Key[] _near = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
+    private static readonly Key[] _near = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
 
     public void Initialize(int circleMax)
     {
         //Debug.Log($"Count Hexagons calk: {((HEX_SIDE * circleMax * (circleMax + 1)) >> 1) + 1}");
-        _hexagons = new(((HEX_SIDE * circleMax * (circleMax + 1)) >> 1) + 1);
+        _hexagons = new(((COUNT_SIDES * circleMax * (circleMax + 1)) >> 1) + 1);
         _offset = new(HEX_SIZE, HEX_SIZE * SIN_60);
         _thisTransform = transform;
 
@@ -29,9 +29,9 @@ public class Land : MonoBehaviour
     {
         Key key = new(2f * position.x / _offset.x, position.z / _offset.y); 
         Hexagon hex = Instantiate(_prefabHex, position, Quaternion.identity, _thisTransform);
-        hex.Initialize(key, type.surface, type.id);
+        hex.Initialize(key, type.surface, _landMesh.WaterLevel, type.id);
+        
         _hexagons.Add(key, hex);
-
         _landMesh.AddHexagon(key, position, type.surface.Color, hex.IsWater);
 
         return hex;
@@ -39,7 +39,7 @@ public class Land : MonoBehaviour
 
     public void SetMesh() => _landMesh.SetMesh();
 
-    public void HexagonsNeighbors(Action<Hexagon, Hexagon> actionCreateRoad)
+    public void HexagonsNeighbors(Action<Hexagon, Hexagon> actionCreateLink)
     {
         Hexagon hexAdd;
         Vertex[][] verticesNear = null;
@@ -49,8 +49,8 @@ public class Land : MonoBehaviour
         {
             if (!hex.IsWater)
             {
-                verticesNear = new Vertex[HEX_SIDE][];
-                waterNear = new bool[HEX_SIDE];
+                verticesNear = new Vertex[COUNT_SIDES][];
+                waterNear = new bool[COUNT_SIDES];
                 side = 0;
             }
             foreach (var offset in _near)
@@ -58,7 +58,7 @@ public class Land : MonoBehaviour
                 if (_hexagons.TryGetValue(hex.Key + offset, out hexAdd))
                 {
                     hex.Neighbors.Add(hexAdd);
-                    actionCreateRoad(hex, hexAdd);
+                    actionCreateLink(hex, hexAdd);
                     if (!hex.IsWater)
                     {
                         verticesNear[side] = _landMesh.GetVertexSide(hex.Key, hexAdd.Key, side);
@@ -72,12 +72,4 @@ public class Land : MonoBehaviour
                 _landMesh.SetVertexSides(hex.Key, verticesNear, waterNear);
         }
     }
-
-#if UNITY_EDITOR
-    public void Clear()
-    {
-        while (_thisTransform.childCount > 0)
-            DestroyImmediate(_thisTransform.GetChild(0).gameObject);
-    }
-#endif
 }

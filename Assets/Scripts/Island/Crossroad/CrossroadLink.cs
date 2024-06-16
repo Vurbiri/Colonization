@@ -3,6 +3,7 @@ using UnityEngine;
 public class CrossroadLink 
 {
     public KeyDouble Key => _key;
+    public LinkType Type => _type;
     public Vector3 Position => _middle;
     public PlayerType Owner {get => _owner; set => _owner = value; }
 
@@ -10,20 +11,24 @@ public class CrossroadLink
     public Crossroad End => _end;
 
     private Crossroad _start, _end;
+    private readonly LinkType _type;
     private PlayerType _owner;
     private readonly KeyDouble _key;
     private readonly Vector3 _middle;
 
-    public CrossroadLink(KeyDouble key, Crossroad crossA, Crossroad crossB, PlayerType owner = PlayerType.None)
+    public CrossroadLink(Crossroad crossA, Crossroad crossB, PlayerType owner = PlayerType.None)
     {
-        _key = key;
-
         _start = crossA; _end = crossB;
-        _start.AddCrossroadLink(this);
-        _end.AddCrossroadLink(this);
         
-        _owner = owner;
+        Key offset = _end - _start;
 
+        _type = offset;
+        if (!((_start.Type == CrossroadType.None ? _start.AddLink(offset, this) : _start.AddLink(this))
+            && (_end.Type  == CrossroadType.None ? _end.AddLink(-offset, this)  : _end.AddLink(this))))
+            return;
+
+        _key = _start & _end;
+        _owner = owner;
         _middle = (_start.Position + _end.Position) * 0.5f;
     }
 
@@ -33,19 +38,12 @@ public class CrossroadLink
             (_start, _end) = (_end, _start);
     }
 
-    public CrossroadType GetCrossroadType(Crossroad cross)
+    public void RoadBuilt(PlayerType owner)
     {
-        Vector3 direction = cross == _start ? _end.Position - _start.Position : _start.Position - _end.Position;
-        int index = 0;
-        foreach (var v in CONST.HEX_VERTICES)
-        {
-            if (v == direction)
-                return (CrossroadType)(index % 2 + 1);
-            index++;
-        }
-
-        return CrossroadType.None;
+        _owner = owner;
+        _start.RoadBuilt();
+        _end.RoadBuilt();
     }
 
-    public override string ToString() => $"({_key})";
+    public override string ToString() => $"({_type}: {_key})";
 }

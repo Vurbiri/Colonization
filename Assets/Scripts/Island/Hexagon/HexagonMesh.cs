@@ -16,13 +16,13 @@ public class HexagonMesh : IPrimitive
     private static int _coastSteps = 5;
 
     private readonly List<Triangle> _triangles = new();
-    private readonly Vertex[] _verticesBase = new Vertex[HEX_SIDE];
-    private readonly bool[] _visits = new bool[HEX_SIDE];
+    private readonly Vertex[] _verticesBase = new Vertex[COUNT_SIDES];
+    private readonly bool[] _visits = new bool[COUNT_SIDES];
 
     public HexagonMesh(Vector3 position, Color32 color, float sizeRate, bool isCreate)
     {
         int i;
-        for (i = 0; i < HEX_SIDE; i++)
+        for (i = 0; i < COUNT_SIDES; i++)
             _verticesBase[i] = new (HEX_VERTICES[i] * sizeRate + position, NORMAL, color);
 
         if(!isCreate)
@@ -49,12 +49,12 @@ public class HexagonMesh : IPrimitive
     public List<Triangle> CreateBorder(Vertex[][] verticesNear, bool[] waterNear)
     {
         List<Triangle> triangles = new();
-        List<Vector3>[,] coastPositions = new List<Vector3>[HEX_SIDE, 2];
+        List<Vector3>[,] coastPositions = new List<Vector3>[COUNT_SIDES, 2];
         Vertex[] verticesSide, verticesSideNext = verticesNear[0];
         bool isWater, isWaterNext = waterNear[0];
         int indexNext;
 
-        for (int index = 0; index < HEX_SIDE; index++)
+        for (int index = 0; index < COUNT_SIDES; index++)
         {
             indexNext = verticesNear.RightIndex(index);
 

@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public enum AudioType
 {
@@ -42,11 +43,18 @@ public enum PlayerType
     AI_03
 }
 
+public enum LinkType
+{
+    NE_SW,
+    SE_NW,
+    S_N, 
+}
+
 public enum CrossroadType
 {
-    None,
     Up,
-    Down
+    Down,
+    None
 }
 
 public enum SurfaceType
@@ -65,3 +73,6 @@ public class Enum<T> where T : Enum
     public static int Count => Enum.GetNames(typeof(T)).Length;
     public static T[] GetValues() => (T[])Enum.GetValues(typeof(T));
 }
+
+
+
