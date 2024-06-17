@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using UnityEngine;
 
 public static class ExtensionsCollection
@@ -23,8 +25,11 @@ public static class ExtensionsCollection
         return arr;
     }
 
-    public static T GetValue<T>(this IEnumerable<T> self, int index)
+    public static T GetValue<T>(this ICollection<T> self, int index)
     {
+        if (index < 0 || index >= self.Count)
+            throw new System.IndexOutOfRangeException();
+
         IEnumerator<T> enumerator = self.GetEnumerator();
         enumerator.Reset();
         for (int i = 0; i <= index; i++)

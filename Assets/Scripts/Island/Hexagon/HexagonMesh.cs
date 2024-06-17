@@ -104,8 +104,75 @@ public class HexagonMesh : IPrimitive
             for(int i = 0; i < _coastSteps; i++)
                 coastPosition.Add(coastPosition[i] + (_coastOffset * _coastSize[i % 2] + direct * _coastSize[(i + 1) % 2]));
 
+            coastPosition.Add(coastPosition[^1] + (_coastOffset + direct) * 5);
+
             return coastPosition;
         }
         #endregion
     }
+
+    //public List<Triangle> CreateBorder2(Vertex[][] verticesNear, bool[] waterNear)
+    //{
+    //    List<Triangle> triangles = new();
+    //    List<Vector3>[,] coastPositions = new List<Vector3>[COUNT_SIDES, 2];
+    //    Vertex[] verticesSide, verticesSideNext = verticesNear[0];
+    //    Vector3 vertexDirection = Vector3.zero;
+    //    bool isWater, isWaterNext = waterNear[0];
+    //    int indexNext;
+
+    //    for (int index = 0; index < COUNT_SIDES; index++)
+    //    {
+    //        indexNext = verticesNear.RightIndex(index);
+
+    //        verticesSide = verticesSideNext;
+    //        verticesSideNext = verticesNear[indexNext];
+
+    //        isWater = isWaterNext;
+    //        isWaterNext = waterNear[indexNext];
+
+    //        if (verticesSide == null)
+    //            continue;
+
+    //        triangles.AddRange(Polygon.Create(verticesSide[0], _verticesBase[index], _verticesBase[indexNext], verticesSide[1]));
+
+    //        if (isWater)
+    //        {
+    //            vertexDirection = VERTEX_DIRECTIONS[indexNext];
+    //            coastPositions[index, 0] ??= CreateCoast(verticesSide[0], waterNear.Prev(index) ? VERTEX_DIRECTIONS[index] : vertexDirection);
+    //            coastPositions[index, 1] ??= CreateCoast(verticesSide[1], isWaterNext ? vertexDirection : VERTEX_DIRECTIONS[index]);
+
+    //            triangles.AddRange(PolygonChain.Create(verticesSide[0].Color, coastPositions[index, 0], coastPositions[index, 1]));
+    //        }
+
+    //        if (verticesSideNext == null)
+    //            continue;
+
+    //        triangles.Add(new(_verticesBase[indexNext], verticesSideNext[0], verticesSide[1]));
+
+    //        if (isWater && isWaterNext)
+    //        {
+    //            coastPositions[indexNext, 0] ??= CreateCoast(verticesSideNext[0], vertexDirection);
+
+    //            triangles.AddRange(PolygonChain.Create(verticesSide[0].Color, coastPositions[index, 1], coastPositions[indexNext, 0]));
+    //        }
+    //    }
+
+    //    return triangles;
+
+    //    #region Local: CreateCoast()
+    //    //=================================
+    //    List<Vector3> CreateCoast(Vertex vertex, Vector3 direct)
+    //    {
+    //        List<Vector3> coastPosition = new(2)
+    //        {
+    //            vertex.Position
+    //        };
+
+    //        for (int i = 0; i < _coastSteps; i++)
+    //            coastPosition.Add(coastPosition[i] + (_coastOffset * _coastSize[i % 2] + direct * _coastSize[(i + 1) % 2]));
+
+    //        return coastPosition;
+    //    }
+    //    #endregion
+    //}
 }

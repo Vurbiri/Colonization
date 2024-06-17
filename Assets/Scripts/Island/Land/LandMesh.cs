@@ -41,6 +41,8 @@ public class LandMesh : MonoBehaviour
 
         for (int i = 0; i < _coastSteps; i++)
             _waterLevel -= _coastSize[i % 2];
+
+        Debug.Log(_waterLevel);
     }
 
     public void AddHexagon(Key key, Vector3 position, Color32 color, bool isWater)

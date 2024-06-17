@@ -39,7 +39,7 @@ public class Island : MonoBehaviour
         CreateIsland();
 
         _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
-        //_crossroads.Setup();
+        _crossroads.Setup();
 
         _land.SetMesh();
 

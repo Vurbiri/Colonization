@@ -7,11 +7,13 @@ public class CustomMesh
     private readonly List<Vertex> _vertices = new();
     private readonly List<int> _triangles = new();
     private readonly BoundUV _boundsUV;
-   
-    public CustomMesh(string name, Vector2 sizeBound)
+    private readonly bool _convertUV;
+
+    public CustomMesh(string name, Vector2 sizeBound, bool convertUV = true)
     {
         _name = name;
         _boundsUV = new(sizeBound);
+        _convertUV = convertUV;
     }
 
     public void AddPrimitive(IPrimitive primitive) => AddTriangles(primitive.Triangles);
@@ -40,24 +42,11 @@ public class CustomMesh
             if (!isNotAddVertex)
             {
                 _vertices.Add(vertex);
-                vertex.UV = _boundsUV.ConvertToUV(vertex.UV);
+                if(_convertUV)
+                    vertex.UV = _boundsUV.ConvertToUV(vertex.UV);
             }
             _triangles.Add(vIndex);
         }
-    }
-
-    public void AddCustomMesh(CustomMesh mesh)
-    {
-        if (mesh == null)
-            return;
-
-        int verticesCount = _vertices.Count;
-        _vertices.AddRange(mesh._vertices);
-
-        List<int> triangles = new(mesh._triangles.Count);
-        foreach (var v in mesh._triangles)
-            triangles.Add(v + verticesCount);
-        _triangles.AddRange(triangles);
     }
 
     public virtual Mesh ToMesh(bool isTangents = false)

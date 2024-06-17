@@ -19,18 +19,17 @@ public class CrossroadLink
     public CrossroadLink(Crossroad crossA, Crossroad crossB, PlayerType owner = PlayerType.None)
     {
         _start = crossA; _end = crossB;
-        
-        Key offset = _end - _start;
+        _type = _end - _start;
 
-        _type = offset;
-        if (!((_start.Type == CrossroadType.None ? _start.AddLink(offset, this) : _start.AddLink(this))
-            && (_end.Type  == CrossroadType.None ? _end.AddLink(-offset, this)  : _end.AddLink(this))))
+        if (!(_start.AddLink(_type, this) && _end.AddLink(_type, this)))
             return;
 
         _key = _start & _end;
         _owner = owner;
         _middle = (_start.Position + _end.Position) * 0.5f;
     }
+
+    public CrossroadType GetCrossroadType(Crossroad cross) => _start == cross ? _end - _start : _start - _end;
 
     public void SetStart(Crossroad cross)
     {

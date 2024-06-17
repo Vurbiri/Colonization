@@ -14,7 +14,7 @@ public class Crossroad : MonoBehaviour, ISelectable
     public Vector3 Position { get; private set; }
     public bool IsGate => _isGate;
     public bool IsWater => _isWater;
-    public Dictionary<LinkType, CrossroadLink>.ValueCollection Links => _links.Values;
+    public ICollection<CrossroadLink> Links => _links.Values;
 
     private Key _key;
     private bool _isGate = false, _isWater = true;
@@ -34,14 +34,22 @@ public class Crossroad : MonoBehaviour, ISelectable
         Position = transform.position;
         _actionSelect = action;
         GetComponent<SphereCollider>().radius = _radiusCollider;
-        _mark.SetActive(false);
 
         name = NAME + Key.ToString();
     }
 
     public void Setup()
     {
-        
+        if (_links.Count == 0)
+            return;
+
+        foreach (var link in _links.Values)
+        {
+            _type = link.GetCrossroadType(this);
+            break;
+        }
+
+        _mark.Setup(_type, _links.Keys);
     }
 
     public void AddHexagon(Hexagon hex)
@@ -55,17 +63,7 @@ public class Crossroad : MonoBehaviour, ISelectable
         _isWater = _waterCount == _hexagons.Count;
     }
 
-    public bool AddLink(CrossroadType type, CrossroadLink link)
-    {
-        if(!AddLink(link))
-            return false;
-
-        _type = type;
-        _mark.Setup(_type);
-
-        return true;
-    }
-    public bool AddLink(CrossroadLink link) => _links.TryAdd(link.Type, link);
+    public bool AddLink(LinkType type, CrossroadLink link) => _links.TryAdd(type, link);
 
     public bool CanRoadsBuilt(PlayerType type)
     {
