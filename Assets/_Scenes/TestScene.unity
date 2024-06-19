@@ -222,6 +222,7 @@ MonoBehaviour:
   _rateCellBaseWater: 0.9
   _coastSize: {x: 0.7, y: 0.3}
   _coastSteps: 5
+  _finalBevelSize: 5.25
   _nameFile: 001
   _path: Assets/Import/
 --- !u!23 &167528446
@@ -427,7 +428,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -8, z: 0}
-  m_LocalScale: {x: 320, y: 200, z: 1}
+  m_LocalScale: {x: 500, y: 500, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1629463687}
@@ -1411,7 +1412,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -2, z: 0}
-  m_LocalScale: {x: 320, y: 200, z: 1}
+  m_LocalScale: {x: 500, y: 500, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1629463687}

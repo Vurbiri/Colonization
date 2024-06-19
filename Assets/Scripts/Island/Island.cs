@@ -7,7 +7,7 @@ public class Island : MonoBehaviour
 {
     [SerializeField] private Surfaces _surfaces;
     [Space]
-    [SerializeField, Range(3, 8)] private int _circleMax = 5;
+    [SerializeField, Range(3, 6)] private int _circleMax = 5;
     [SerializeField, Range(0, 100)] private int _chance = 11;
     [Space]
     [SerializeField] private Land _land;

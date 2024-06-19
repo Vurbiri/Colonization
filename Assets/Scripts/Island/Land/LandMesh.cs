@@ -15,6 +15,7 @@ public class LandMesh : MonoBehaviour
     [Space]
     [SerializeField] private Vector2 _coastSize = new(0.7f, 0.3f);
     [SerializeField, Range(3, 9)] private int _coastSteps = 5;
+    [SerializeField, Range(3f, 8f)] private float _finalBevelSize = 5.25f;
 #if UNITY_EDITOR
     [Space]
     [SerializeField] private string _nameFile = "001";
@@ -38,6 +39,7 @@ public class LandMesh : MonoBehaviour
 
         HexagonMesh.CoastSize = _coastSize;
         HexagonMesh.CoastSteps = _coastSteps;
+        HexagonMesh.FinalBevelSize = _finalBevelSize;
 
         for (int i = 0; i < _coastSteps; i++)
             _waterLevel -= _coastSize[i % 2];
