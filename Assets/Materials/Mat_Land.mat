@@ -70,23 +70,23 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _Brightness: 0.11
+    - _Brightness: 0.1
     - _CastShadows: 0
     - _Coast_Brightness: 0.095
     - _Coast_Strenght: 0.2
-    - _Coast_Strenght_Noise: 0.2
+    - _Coast_Strenght_Noise: 0.3
     - _Cull: 2
     - _Density: 400
     - _Distortion: 0.05
     - _DstBlend: 0
     - _FROM_TEXTURE: 1
-    - _Gate_Brightness: 0.125
+    - _Gate_Brightness: 0.672
     - _Gate_Distortion: 0.11
     - _Gate_Metallic: 0.05
-    - _Gate_Normal: 0.3
+    - _Gate_Normal: 0.1
     - _Gate_Rate_Tiling: 0.32
     - _Gate_Smoothness: 0.75
-    - _Gate_Speed: 0.025
+    - _Gate_Speed: 0.0203
     - _Ground_Strenght_Noise: 0.2
     - _Metallic: 0
     - _NOIS_FROM_TEXTURE: 0
@@ -95,7 +95,7 @@ Material:
     - _Nois_Brightness: 0.1
     - _Nois_Coast: -3.44
     - _Noise_Coast: 0.17
-    - _Normal_Strenght: 0.2
+    - _Normal_Strenght: 0.175
     - _PULSE: 0
     - _Pulse: 0.195
     - _QueueControl: 0
@@ -117,7 +117,7 @@ Material:
     - _Base: {r: 0, g: 0.03921569, b: 0, a: 1}
     - _Coast: {r: 1, g: 0.9254902, b: 0.22745098, a: 1}
     - _Gate: {r: 0.20392157, g: 0.050980393, b: 0, a: 1}
-    - _Gate_A: {r: 0.20392157, g: 0.050980393, b: 0, a: 1}
-    - _Gate_B: {r: 0.8235294, g: 0.7490196, b: 0, a: 1}
+    - _Gate_A: {r: 0.4, g: 0, b: 0, a: 1}
+    - _Gate_B: {r: 0.039215688, g: 0.039215688, b: 0.078431375, a: 1}
     - _Ground: {r: 0.3607843, g: 1, b: 0.1568628, a: 1}
   m_BuildTextureStacks: []
