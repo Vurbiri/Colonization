@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class LandMesh : MonoBehaviour
 {
-    [SerializeField] private string _name = "MapMesh";
+    [SerializeField] private string _name = "LandMesh";
     [Space]
     [SerializeField] private bool _isTangents = false;
     [SerializeField, Range(0.5f, 1.5f)] private float _rateTiling = 1.05f;
@@ -16,6 +16,8 @@ public class LandMesh : MonoBehaviour
     [SerializeField] private Vector2 _coastSize = new(0.7f, 0.3f);
     [SerializeField, Range(3, 9)] private int _coastSteps = 5;
     [SerializeField, Range(3f, 8f)] private float _finalBevelSize = 5.25f;
+    [Space]
+    [SerializeField] private Transform _waterTransform;
 #if UNITY_EDITOR
     [Space]
     [SerializeField] private string _nameFile = "001";
@@ -41,10 +43,10 @@ public class LandMesh : MonoBehaviour
         HexagonMesh.CoastSteps = _coastSteps;
         HexagonMesh.FinalBevelSize = _finalBevelSize;
 
-        for (int i = 0; i < _coastSteps; i++)
-            _waterLevel -= _coastSize[i % 2];
+        int step = _coastSteps / 2;
+        _waterLevel = -(_coastSize.x * (_coastSteps - step) + _coastSize.y * step);
 
-        Debug.Log(_waterLevel);
+        _waterTransform.localPosition = new(0f, _waterLevel, 0f);
     }
 
     public void AddHexagon(Key key, Vector3 position, Color32 color, bool isWater)

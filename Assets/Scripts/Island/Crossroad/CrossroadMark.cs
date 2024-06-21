@@ -15,7 +15,6 @@ public class CrossroadMark : MonoBehaviour
             billboard.SetActive(false);
     }
 
-
     public void Setup(CrossroadType type, ICollection<LinkType> linkTypes)
     {
         _graphicObject.SetActive(true);

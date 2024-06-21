@@ -20,7 +20,7 @@ public class Crossroad : MonoBehaviour, ISelectable
     private bool _isGate = false, _isWater = true;
     private readonly List<Hexagon> _hexagons = new(COUNT);
     private readonly Dictionary<LinkType, CrossroadLink> _links = new(COUNT);
-    private int _waterCount = 0;
+    private int _waterCount = 0, _countFreeLink = 0;
     private CrossroadType _type = CrossroadType.None;
 
     private Action<Crossroad> _actionSelect;
@@ -40,7 +40,9 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public void Setup()
     {
-        if (_links.Count == 0)
+        _countFreeLink = _links.Count;
+
+        if (_countFreeLink == 0)
             return;
 
         foreach (var link in _links.Values)
@@ -67,6 +69,9 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public bool CanRoadsBuilt(PlayerType type)
     {
+        if (_countFreeLink <= 0)
+            return false;
+
         foreach (var link in _links.Values)
             if (link.Owner == type)
                 return !_isWater;
@@ -76,14 +81,21 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public bool IsFullOwned(PlayerType owned)
     {
-        bool full = _links.Count > 1;
+        if(_countFreeLink > 0 || _links.Count == 0)
+            return false;
+        
+        bool full = true;
         foreach (var link in _links.Values)
             full = full && link.Owner == owned;
 
         return full;
     }
 
-    public void RoadBuilt() => _mark.SetActive(false);
+    public void RoadBuilt()
+    {
+        _countFreeLink--;
+        _mark.SetActive(false);
+    }
 
     public void Select()
     {

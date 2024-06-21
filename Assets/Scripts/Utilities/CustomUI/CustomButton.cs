@@ -4,11 +4,23 @@ using UnityEngine.UI;
 [AddComponentMenu("UICustom/Button", 30)]
 public class CustomButton : Button
 {
+    [SerializeField] private GameObject _interactableIcon;
     [SerializeField] private bool _alfaCollider = false;
     [SerializeField, Range(0.01f,1f)] private float _threshold = 0.1f;
     [SerializeField] private Graphic[] _targetGraphics;
 
     public Graphic[] TargetGraphics => _targetGraphics;
+
+    public new bool interactable 
+    { 
+        get => base.interactable; 
+        set 
+        { 
+            base.interactable = value; 
+            if(_interactableIcon != null)
+                _interactableIcon.SetActive(!value);
+        } 
+    }
 
     protected override void Start()
     {
@@ -17,14 +29,9 @@ public class CustomButton : Button
         if (_targetGraphics.Length > 0)
             targetGraphic = _targetGraphics[0];
 
-        AlfaCollider();
-    }
-
-    protected void AlfaCollider()
-    {
-        Image image = targetGraphic as Image;
-        if (image != null && image.sprite != null && image.sprite.texture.isReadable)
-            image.alphaHitTestMinimumThreshold = !_alfaCollider ? _threshold : 0f;
+        Image img = image;
+        if (img != null && img.sprite != null && img.sprite.texture.isReadable)
+            img.alphaHitTestMinimumThreshold = !_alfaCollider ? _threshold : 0f;
     }
 
     protected override void DoStateTransition(SelectionState state, bool instant)

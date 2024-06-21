@@ -6,6 +6,8 @@ public class Roads : MonoBehaviour
 {
     [SerializeField] private Road _prefabRoad;
 
+    public bool IsEmpty => _roadsLists.Count == 0;
+
     private Transform _thisTransform;
     private PlayerType _type;
     private Color _color;

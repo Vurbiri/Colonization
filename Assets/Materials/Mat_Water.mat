@@ -64,21 +64,23 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.65
+    - _Alpha: 0.603
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _CastShadows: 0
     - _Cull: 2
+    - _Delta_Distance: 0.16
+    - _Delta_Height: 0.3
     - _DepthDistance: 4
     - _Depth_Distance: 3.53
-    - _Distance: 2.75
+    - _Distance: 3
     - _DstBlend: 10
     - _Float: 3.1
     - _Float_1: 4
     - _Gravity: 1
-    - _Metalic: 0.5
+    - _Metalic: 0.067
     - _Normal_Strength: 0.0072
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -86,15 +88,16 @@ Material:
     - _Smoothness: 1
     - _Speed: 0.55
     - _SrcBlend: 1
+    - _Start_Height: -2.75
     - _Surf_Brightness: 0.844
     - _Surf_Density: 0.92
-    - _Surf_Foam_Density: 0.92
+    - _Surf_Foam_Density: 0.2
     - _Surf_Foam_Speed: 16
-    - _Surf_Wave_Speed: 0.275
-    - _Surf_Wave_Strength: 0.047
+    - _Surf_Wave_Speed: 1.6
+    - _Surf_Wave_Strength: 0.054
     - _Surface: 1
     - _Tiling: 16
-    - _Tiling_Rate: 4
+    - _Tiling_Rate: 3.9
     - _Water_Tiling: 5
     - _WaveA_Density: 45.2
     - _WaveA_Speed: 0.78
@@ -105,15 +108,15 @@ Material:
     - _WaveLenght: 1
     - _Wave_Height: 1
     - _Wave_Lenght: 20.2
-    - _Wave_Speed: 9.52
+    - _Wave_Speed: 1.22
     - _WorkflowMode: 1
     - _ZTest: 4
     - _ZWrite: 0
     - _ZWriteControl: 0
     m_Colors:
-    - _Color: {r: 0.09803922, g: 0.09803922, b: 1, a: 1}
+    - _Color: {r: 0.08627451, g: 0.08627451, b: 0.5882353, a: 1}
     - _Color_1: {r: 0, g: 0, b: 1, a: 1}
-    - _Color_Foam: {r: 0.78431374, g: 1, b: 0.9019608, a: 1}
+    - _Color_Foam: {r: 0.7372549, g: 1, b: 0.9019608, a: 1}
     - _Color_Surf: {r: 0.9803922, g: 0.9803922, b: 1, a: 1}
     - _DirectionA: {r: 1, g: 0.1, b: 0, a: 0}
     - _DirectionA_1: {r: 1, g: 0.1, b: 0, a: 0}

@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 [CustomEditor(typeof(CustomButton), true), CanEditMultipleObjects]
 public class CustomButtonEditor : ASelectableCustomEditor

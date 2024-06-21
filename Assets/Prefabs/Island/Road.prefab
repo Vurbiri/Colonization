@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roadRenderer: {fileID: 1634477485002050712}
-  _widthRoad: 1.15
+  _widthRoad: 1
   _rangeCount: {x: 2, y: 5}
   _offsetY: 0.05
   _rateWave: {x: 0.5, y: 0.9}

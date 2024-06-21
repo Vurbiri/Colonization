@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 public abstract class ASelectableCustomEditor : Editor
 {
+    protected SerializedProperty _interactableIconProperty;
     protected SerializedProperty _alfaColliderProperty;
     protected SerializedProperty _thresholdProperty;
     protected SerializedProperty _targetGraphicsProperty;
@@ -40,6 +41,7 @@ public abstract class ASelectableCustomEditor : Editor
 
     protected virtual void OnEnable()
     {
+        _interactableIconProperty = serializedObject.FindProperty("_interactableIcon");
         _alfaColliderProperty = serializedObject.FindProperty("_alfaCollider");
         _thresholdProperty = serializedObject.FindProperty("_threshold");
         _targetGraphicsProperty = serializedObject.FindProperty("_targetGraphics");
@@ -104,6 +106,11 @@ public abstract class ASelectableCustomEditor : Editor
     {
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(m_InteractableProperty);
+        EditorGUILayout.PropertyField(_interactableIconProperty);
+        GameObject go = _interactableIconProperty.objectReferenceValue as GameObject;
+        if(go != null)
+            go.SetActive(!m_InteractableProperty.boolValue);
+        EditorGUILayout.Space();
         EditorGUILayout.PropertyField(m_TransitionProperty);
         EditorGUI.indentLevel++;
     }

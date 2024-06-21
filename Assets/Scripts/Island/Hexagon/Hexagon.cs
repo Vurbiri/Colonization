@@ -36,7 +36,10 @@ public class Hexagon : MonoBehaviour, ISelectable
         name = NAME + _id + "__" + key.ToString();
 
         if (IsWater)
+        {
             transform.localPosition += new Vector3(0f, waterLevel, 0f);
+            GetComponent<Collider>().enabled = false;
+        }
     }
 
     public void Select()

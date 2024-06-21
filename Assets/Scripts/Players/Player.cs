@@ -7,6 +7,8 @@ public class Player
     public int IdColor => _idColor;
     public Color Color => _color;
 
+    public bool IsBuildRoad => _roads.IsEmpty;
+
     private readonly PlayerType _type;
     private readonly int _id;
     private readonly int _idColor;
@@ -14,21 +16,12 @@ public class Player
 
     private Roads _roads;
 
-    public Player(int id, int idColor)
+    public Player(PlayerType type, int id, Color color, int idColor)
     {
-        _type = (PlayerType)id;
+        _type = type;
         _id = id;
         _idColor = idColor;
-        _color = Color.white;
-    }
-
-    public Player(int id, Color color)
-    {
-        _type = (PlayerType)id;
-        _id = id;
-        _idColor = -1;
         _color = color;
-
     }
 
     public void SetRoads(Roads roads) => _roads = roads.Initialize(_type, _color);

@@ -95,7 +95,7 @@ Material:
     - _Nois_Brightness: 0.1
     - _Nois_Coast: -3.44
     - _Noise_Coast: 0.17
-    - _Normal_Strenght: 0.175
+    - _Normal_Strenght: 0.17
     - _PULSE: 0
     - _Pulse: 0.195
     - _QueueControl: 0

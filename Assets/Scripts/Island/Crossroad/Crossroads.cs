@@ -87,12 +87,4 @@ public class Crossroads : MonoBehaviour
     {
         EventSelectCrossroad?.Invoke(cross);
     }
-
-#if UNITY_EDITOR
-    public void Clear()
-    {
-        while (_thisTransform.childCount > 0)
-            DestroyImmediate(_thisTransform.GetChild(0).gameObject);
-    }
-#endif
 }
