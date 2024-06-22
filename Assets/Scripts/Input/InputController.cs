@@ -1,7 +1,6 @@
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 
-
 [DefaultExecutionOrder(-1)]
 public class InputController : ASingleton<InputController>
 {
@@ -10,7 +9,6 @@ public class InputController : ASingleton<InputController>
     [SerializeField] private LayerMask _layerRight;
     [Space]
     [SerializeField] private float _distance = 900f;
-
 
     public InputControlAction.CameraActions CameraActions => _inputActions.Camera;
 
@@ -53,6 +51,6 @@ public class InputController : ASingleton<InputController>
             _obj.Select();
     }
 
-    private void OnDisable() => _inputActions.Disable();
+    private void OnDisable() => _inputActions?.Disable();
 }
 

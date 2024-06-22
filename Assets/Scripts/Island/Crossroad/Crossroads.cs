@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static CONST;
@@ -6,8 +5,6 @@ using static CONST;
 public class Crossroads : MonoBehaviour
 {
     [SerializeField] private Crossroad _prefabCrossroad;
-
-    public event Action<Crossroad> EventSelectCrossroad;
 
     private Transform _thisTransform;
     private Vector2 _offset;
@@ -41,7 +38,7 @@ public class Crossroads : MonoBehaviour
                     continue;
 
                 cross = Instantiate(_prefabCrossroad, positionCross, Quaternion.identity, _thisTransform);
-                cross.Initialize(key, SelectCrossroad);
+                cross.Initialize(key);
                 _crossroads.Add(key, cross);
             }
 
@@ -81,10 +78,5 @@ public class Crossroads : MonoBehaviour
     {
         foreach (var crossroad in _crossroads.Values)
             crossroad.Setup();
-    }
-
-    private void SelectCrossroad(Crossroad cross)
-    {
-        EventSelectCrossroad?.Invoke(cross);
     }
 }

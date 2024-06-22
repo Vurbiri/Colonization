@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class ExtensionsCollection
@@ -9,6 +10,7 @@ public static class ExtensionsCollection
     public static T Prev<T>(this IReadOnlyList<T> self, int index) => self[(index == 0 ? self.Count : index) - 1];
     public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
     public static T Rand<T>(this IReadOnlyList<T> self) => self[Random.Range(0, self.Count)];
+    public static T Rand<T>(this IReadOnlyList<T> self, int startIndex) => self[Random.Range(startIndex, self.Count)];
 
     public static void Fill<T>(this IList<T> self, T value = default)
     {
@@ -23,6 +25,17 @@ public static class ExtensionsCollection
         return arr;
     }
 
+    public static T First<T>(this ICollection<T> self)
+    {
+        if (self.Count == 0)
+            throw new System.IndexOutOfRangeException();
+
+        IEnumerator<T> enumerator = self.GetEnumerator();
+        enumerator.MoveNext();
+
+        return enumerator.Current;
+    }
+
     public static T GetValue<T>(this ICollection<T> self, int index)
     {
         if (index < 0 || index >= self.Count)
@@ -35,9 +48,6 @@ public static class ExtensionsCollection
 
         return enumerator.Current;
     }
-
-
-    
 
     public static void Shuffle<T>(this IList<T> self)
     {

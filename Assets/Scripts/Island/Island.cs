@@ -19,16 +19,12 @@ public class Island : MonoBehaviour
     public int Circle => _circleMax;
     public float SizeHex => HEX_SIZE;
 
-    public event Action<Vector3> EventSelect;
-
     private void Awake()
     {
         Players.InstanceF.SetIsland(this);
         
         _land.Initialize(_circleMax);
         _crossroads.Initialize(_circleMax);
-
-        _crossroads.EventSelectCrossroad += (c) => EventSelect?.Invoke(c.Position);
 
         Generate();
     }

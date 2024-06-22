@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class BuildingRoadsMenu : MonoBehaviour
 {
-    [SerializeField] private Button _buttonBack;
-    [SerializeField] private CustomButton[] _roadButtons;
+    [SerializeField] private CmButton _buttonBack;
+    [SerializeField] private CmButton[] _roadButtons;
 
     private Players _players;
     private RectTransform _thisTransform;
@@ -28,7 +28,7 @@ public class BuildingRoadsMenu : MonoBehaviour
 
         _buttonBack.onClick.AddListener(OnBack);
 
-        CustomButton button;
+        CmButton button;
         for (int i = 0; i < COUNT_ROADS; i++)
         {
             button = _roadButtons[i];
@@ -52,7 +52,7 @@ public class BuildingRoadsMenu : MonoBehaviour
     {
         _currentCrossroad = cross;
 
-        CustomButton button; int i = 0;
+        CmButton button; int i = 0;
         foreach (var link in cross.Links)
         {
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(link.Position), _camera, out _localPoint))
@@ -86,6 +86,7 @@ public class BuildingRoadsMenu : MonoBehaviour
             link.SetStart(cross);
             _players.Current.BuildRoad(link);
 
+            _currentCrossroad = null;
             gameObject.SetActive(false);
         }
         #endregion
@@ -95,7 +96,7 @@ public class BuildingRoadsMenu : MonoBehaviour
 
     private void Update()
     {
-        if (_lastCameraPosition == _cameraTransform.position)
+        if (_currentCrossroad == null || _lastCameraPosition == _cameraTransform.position)
             return;
 
         int i = 0;
