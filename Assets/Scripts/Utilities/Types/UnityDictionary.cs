@@ -70,7 +70,7 @@ public class UnityDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISeriali
 
     public void DeleteList()
     {
-        _elements?.Clear();
+        _elements.Clear();
         _elements = null;
     }
 

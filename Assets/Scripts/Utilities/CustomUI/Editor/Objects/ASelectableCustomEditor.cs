@@ -8,8 +8,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CustomEditor(typeof(CmSelectable), true), CanEditMultipleObjects]
-public class CmSelectableEditor : Editor
+public abstract class ASelectableCustomEditor : Editor
 {
     protected SerializedProperty _interactableIconProperty;
     protected SerializedProperty _alfaColliderProperty;
@@ -29,7 +28,7 @@ public class CmSelectableEditor : Editor
     protected AnimBool m_ShowSpriteTrasition = new();
     protected AnimBool m_ShowAnimTransition = new();
 
-    protected static List<CmSelectableEditor> s_Editors = new();
+    protected static List<ASelectableCustomEditor> s_Editors = new();
 
     protected static bool s_ShowNavigation = false;
 

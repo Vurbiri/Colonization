@@ -26,7 +26,6 @@ public class CameraController : MonoBehaviour
     [SerializeField] private bool _isEdgeMove;
 
     private Camera _camera;
-    private EventBus _eventBus;
     private Transform _cameraTransform, _thisTransform;
 
     private InputControlAction.CameraActions _cameraActions;
@@ -49,8 +48,7 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        _cameraActions = InputController.Instance.CameraActions;
-        _eventBus = EventBus.Instance;
+        _cameraActions = InputController.InstanceF.CameraActions;
 
         _cameraActions.Move.performed += OnMove;
         _cameraActions.Move.canceled += OnCancelMove;
@@ -61,7 +59,7 @@ public class CameraController : MonoBehaviour
 
         _cameraActions.Zoom.performed += OnZoom;
 
-        _eventBus.EventCrossroadSelect += MoveToCrossroad;
+        _island.EventSelect += MoveToCrossroad;
 
         _bounds = new(_island.SizeHex * _island.Circle);
 
@@ -79,9 +77,9 @@ public class CameraController : MonoBehaviour
     }
     private void OnCancelMove(CallbackContext ctx) => _moveDirection = Vector2.zero;
 
-    private void MoveToCrossroad(Crossroad crossroad)
+    private void MoveToCrossroad(Vector3 position)
     {
-        _targetPosition = crossroad.Position;
+        _targetPosition = position;
         _coroutineMoveTarget ??= StartCoroutine(MoveTarget_Coroutine());
     }
 
@@ -177,9 +175,6 @@ public class CameraController : MonoBehaviour
 
     private void OnDisable()
     {
-        if (EventBus.Instance != null)
-            _eventBus.EventCrossroadSelect -= MoveToCrossroad;
-
         if (InputController.Instance == null)
             return;
 
@@ -191,5 +186,7 @@ public class CameraController : MonoBehaviour
         _cameraActions.Rotate.performed -= OnRotate;
 
         _cameraActions.Position.performed -= OnPosition;
+
+        _island.EventSelect -= MoveToCrossroad;
     }
 }

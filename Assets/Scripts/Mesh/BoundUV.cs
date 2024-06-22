@@ -11,6 +11,16 @@ public class BoundUV
         _sizeHalf = size * 0.5f;
     }
 
+    public Vector2 ConvertToUV(Vector3 vertex)
+    {
+        Vector2 uv = new()
+        {
+            x = (vertex.x + _sizeHalf.x) / _size.x,
+            y = (vertex.z + _sizeHalf.y) / _size.y,
+        };
+        return uv;
+    }
+
     public Vector2 ConvertToUV(Vector2 vertex)
     {
         Vector2 uv = new()

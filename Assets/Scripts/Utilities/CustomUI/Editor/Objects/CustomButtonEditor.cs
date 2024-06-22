@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(CmButton), true), CanEditMultipleObjects]
-public class CmButtonEditor : CmSelectableEditor
+[CustomEditor(typeof(CustomButton), true), CanEditMultipleObjects]
+public class CustomButtonEditor : ASelectableCustomEditor
 {
     private SerializedProperty m_OnClickProperty;
 

@@ -8,11 +8,12 @@ public class Players : ASingleton<Players>
     [SerializeField] private ColorsScriptable _colors;
 
     public Player Current => _current;
-    public Player this[int index] => _players[(PlayerType)index];
+    public Player this[int index] => _players[_playerTypes[index]];
     public Player this[PlayerType index] => _players[index];
 
     private Player _current;
     private readonly Dictionary<PlayerType, Player> _players = new(PLAYERS_MAX);
+    private readonly PlayerType[] _playerTypes = Enum<PlayerType>.GetValues();
 
     public const int PLAYERS_MAX = 4;
     
@@ -23,12 +24,12 @@ public class Players : ASingleton<Players>
         PlayerType type; int idColor;
         for (int i = 0; i < PLAYERS_MAX; i++)
         {
-            type = (PlayerType)i;
+            type = _playerTypes[i];
             idColor = Random.Range(0, _colors.Count);
             _players[type] = new(type, i, _colors[idColor], idColor);
         }
 
-        _current = _players[Enum<PlayerType>.Rand(0, PLAYERS_MAX)];
+        _current = _players[_playerTypes.Rand()];
     }
 
     public void SetIsland(Island island)
