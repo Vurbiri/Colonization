@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class BuildingMainMenu : MonoBehaviour
 {
-    [SerializeField] private Button _buttonClose;
-    [SerializeField] private CustomButton _buttonRoads;
+    [SerializeField] private CmButton _buttonClose;
+    [SerializeField] private CmButton _buttonRoads;
 
     private Players _players;
     private Crossroad _currentCrossroad;

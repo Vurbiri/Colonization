@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 public enum AudioType
 {
@@ -68,11 +67,27 @@ public enum SurfaceType
     Gate
 }
 
+public enum BuildingType
+{
+    None,
+    Shrine,
+    Camp,
+    Watchtower,
+    Castle,
+    Stronghold,
+
+}
+
 public class Enum<T> where T : Enum
 {
     public static int Count => Enum.GetNames(typeof(T)).Length;
     public static T[] GetValues() => (T[])Enum.GetValues(typeof(T));
+    public static T Rand(int minInclusive, int maxExclusive) => UnityEngine.Random.Range(minInclusive, maxExclusive).ToEnum<T>();
 }
 
-
+public static class ExtensionsEnum
+{
+    public static int ToInt<T>(this T self) where T : Enum => Convert.ToInt32(self);
+    public static T ToEnum<T>(this int self) where T : Enum => (T)Enum.ToObject(typeof(T), self);
+}
 

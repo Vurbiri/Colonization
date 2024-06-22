@@ -4,13 +4,10 @@ public class BuildingMenus : MonoBehaviour
 {
     [SerializeField] private RectTransform _canvasTransform;
     [Space]
-    [SerializeField] private Crossroads _crossroads;
-    [Space]
     [SerializeField] private BuildingMainMenu _mainMenu;
     [SerializeField] private BuildingRoadsMenu _roadsMenu;
 
     private RectTransform _thisTransform;
-   
     private Camera _camera;
     private Vector2 _localPoint;
 
@@ -19,7 +16,7 @@ public class BuildingMenus : MonoBehaviour
         _thisTransform = GetComponent<RectTransform>();
         _camera = Camera.main;
 
-        _crossroads.EventSelectCrossroad += OnSelectCrossroad;
+        EventBus.Instance.EventCrossroadSelect += OnSelectCrossroad;
 
         _mainMenu.Initialize(_roadsMenu);
         _roadsMenu.Initialize(_mainMenu);
