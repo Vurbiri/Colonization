@@ -10,8 +10,8 @@ public class Island : MonoBehaviour
     [SerializeField, Range(3, 6)] private int _circleMax = 5;
     [SerializeField, Range(0, 100)] private int _chance = 11;
     [Space]
-    [SerializeField] private Land _land;
-    [SerializeField] private Crossroads _crossroads;
+    [SerializeField, GetComponentInChildren] private Land _land;
+    [SerializeField, GetComponentInChildren] private Crossroads _crossroads;
     [Space]
     [SerializeField] private Roads _roadsPrefab;
     [SerializeField] private Transform _roadsContainer;

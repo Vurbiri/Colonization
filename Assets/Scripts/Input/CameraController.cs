@@ -5,7 +5,7 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private Island _island;
+    [SerializeField, FindObjectOfType] private Island _island;
     [Space]
     [Header("Movement")]
     [SerializeField] private float _speedMoveMax = 25f;

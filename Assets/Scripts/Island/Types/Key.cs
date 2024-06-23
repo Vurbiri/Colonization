@@ -25,8 +25,8 @@ public class Key : IEquatable<Key>
         _y = Mathf.RoundToInt(y);
     }
 
-    public static implicit operator LinkType(Key key) => (LinkType)(_crossroadIndexesOffset.IndexOf(key) % 3);
-    public static implicit operator CrossroadType(Key key) => (CrossroadType)(_crossroadIndexesOffset.IndexOf(key) % 2);
+    public static explicit operator LinkType(Key key) => (LinkType)(_crossroadIndexesOffset.IndexOf(key) % 3);
+    public static explicit operator CityDirection(Key key) => (CityDirection)(_crossroadIndexesOffset.IndexOf(key) % 2);
 
     public bool Equals(Key other) => other is not null && _x == other._x && _y == other._y;
     public override bool Equals(object obj) => Equals(obj as Key);

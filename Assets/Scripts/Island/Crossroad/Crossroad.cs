@@ -5,13 +5,11 @@ using UnityEngine;
 public class Crossroad : MonoBehaviour, ISelectable
 {
     [SerializeField] private CrossroadMark _mark;
-    [Space]
-    [SerializeField] private ABuilding _building;
+    [Space, GetComponentInChildren]
+    [SerializeField] private ACity _city;
 
     public Key Key => _key;
-    public CrossroadType Type => _type;
     public Vector3 Position { get; private set; }
-    public bool IsWater => _isWater;
     public ICollection<CrossroadLink> Links => _links.Values;
 
     private Key _key;
@@ -21,7 +19,6 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     private bool _isWater = true;
     private int _countFreeLink = 0;
-    private CrossroadType _type = CrossroadType.None;
 
     private SphereCollider _collider;
     private EventBus _eventBus;
@@ -35,7 +32,7 @@ public class Crossroad : MonoBehaviour, ISelectable
         _eventBus.EventCrossroadMarkShow += (show) => _mark.IsShow = show;
 
         _collider = GetComponent<SphereCollider>();
-        _collider.radius = _building.Radius;
+        _collider.radius = _city.Radius;
 
         _key = key;
         Position = transform.position;
@@ -45,23 +42,20 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public void Setup()
     {
-        _building.Setup();
-        
-        _countFreeLink = _links.Count;
+        CityDirection dir;
 
-        if (_countFreeLink == 0)
-            return;
+        if (_links.Count == 0)
+            dir = CityDirection.None;
+        else
+            dir = _links.Values.First().GetDirection(this);
 
-        _type = _links.Values.First().GetCrossroadType(this);
-
-        _mark.Setup(_type, _links.Keys);
+        _city.Setup(dir, _links.Keys);
     }
 
     public void AddHexagon(Hexagon hex)
     {
         _hexagons.Add(hex);
-        
-        _isWater = _building.SetHexagon(hex, _hexagons.Count);
+        _isWater = _city.SetHexagon(hex, _hexagons.Count);
     }
 
     public bool AddLink(LinkType type, CrossroadLink link) => _links.TryAdd(type, link);
@@ -90,7 +84,7 @@ public class Crossroad : MonoBehaviour, ISelectable
         return full;
     }
 
-    public void RoadBuilt()
+    public void RoadBuilt(LinkType type)
     {
         _countFreeLink--;
         _mark.IsActive = _countFreeLink > 0;

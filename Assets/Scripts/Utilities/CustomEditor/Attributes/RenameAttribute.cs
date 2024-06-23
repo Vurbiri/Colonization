@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(AttributeTargets.Field)]
 public class RenameAttribute : PropertyAttribute
 {
     public string Name { get; private set; }

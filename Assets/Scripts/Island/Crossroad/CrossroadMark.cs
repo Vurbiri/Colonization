@@ -22,12 +22,12 @@ public class CrossroadMark : MonoBehaviour
             billboard.SetActive(false);
     }
 
-    public void Setup(CrossroadType type, ICollection<LinkType> linkTypes)
+    public void Setup(CityDirection type, ICollection<LinkType> linkTypes)
     {
         foreach (var linkType in linkTypes)
             _billboards[linkType].SetActive(true);
 
-        if (type == CrossroadType.Up)
+        if (type == CityDirection.Up)
             transform.rotation *= Quaternion.Euler(0, 180, 0);
         else
             transform.rotation *= Quaternion.identity;

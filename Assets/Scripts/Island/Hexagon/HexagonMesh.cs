@@ -97,7 +97,7 @@ public class HexagonMesh : IPrimitive
 
         #region Local: CreateCoast()
         //=================================
-        List<Vector3> CreateCoast(Vertex vertex, Vector3 direction)
+        static List<Vector3> CreateCoast(Vertex vertex, Vector3 direction)
         {
             List<Vector3> positions = new(2)
             {

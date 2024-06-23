@@ -55,6 +55,12 @@ public class UnityDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISeriali
 
     public void OnBeforeSerialize() { }
 
+    public void DeleteList()
+    {
+        _elements?.Clear();
+        _elements = null;
+    }
+
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
         int i = 0;
@@ -66,12 +72,6 @@ public class UnityDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISeriali
             array[i] = pair;
             ++i;
         }
-    }
-
-    public void DeleteList()
-    {
-        _elements?.Clear();
-        _elements = null;
     }
 
     #region Nested: KeyValue
@@ -125,13 +125,13 @@ public class UnityDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISeriali
 
     //public void OnBeforeSerialize()
     //{
-    //if (_dictionary == null)
-    //    return;
+    //    if (_dictionary == null)
+    //        return;
 
-    //_elements = new(_dictionary.Count);
+    //    _elements = new(_dictionary.Count);
 
-    //foreach (var kv in _dictionary)
-    //    _elements.Add(kv);
+    //    foreach (var kv in _dictionary)
+    //        _elements.Add(kv);
     //}
     #endregion
 }

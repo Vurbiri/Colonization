@@ -19,7 +19,7 @@ public class CrossroadLink
     public CrossroadLink(Crossroad crossA, Crossroad crossB, PlayerType owner = PlayerType.None)
     {
         _start = crossA; _end = crossB;
-        _type = _end - _start;
+        _type = (LinkType)(_end - _start);
 
         if (!(_start.AddLink(_type, this) && _end.AddLink(_type, this)))
             return;
@@ -29,7 +29,7 @@ public class CrossroadLink
         _middle = (_start.Position + _end.Position) * 0.5f;
     }
 
-    public CrossroadType GetCrossroadType(Crossroad cross) => _start == cross ? _end - _start : _start - _end;
+    public CityDirection GetDirection(Crossroad cross) => (CityDirection)(_start == cross ? _end - _start : _start - _end);
 
     public void SetStart(Crossroad cross)
     {
@@ -40,8 +40,8 @@ public class CrossroadLink
     public void RoadBuilt(PlayerType owner)
     {
         _owner = owner;
-        _start.RoadBuilt();
-        _end.RoadBuilt();
+        _start.RoadBuilt(_type);
+        _end.RoadBuilt(_type);
     }
 
     public override string ToString() => $"({_type}: {_key})";

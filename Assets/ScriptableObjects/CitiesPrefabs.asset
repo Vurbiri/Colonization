@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fd09d7ca71f9a742bb5b83c71656d53, type: 3}
-  m_Name: BuildingPrefabs
+  m_Script: {fileID: 11500000, guid: c854d64145cbe764da6b8bd3b18307ff, type: 3}
+  m_Name: CitiesPrefabs
   m_EditorClassIdentifier: 
-  _prefabs: []
+  _prefabs:
+  - {fileID: 4248780417304649036, guid: 431792d8a4e03554791a195e230adaa9, type: 3}
+  - {fileID: 1049411121952962565, guid: fbdc4ec1f33354847be58c14d2dc8b85, type: 3}

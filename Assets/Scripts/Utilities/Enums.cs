@@ -42,20 +42,6 @@ public enum PlayerType
     AI_03
 }
 
-public enum LinkType
-{
-    NE_SW,
-    SE_NW,
-    S_N, 
-}
-
-public enum CrossroadType
-{
-    Up,
-    Down,
-    None
-}
-
 public enum SurfaceType
 {
     Ground01,
@@ -67,15 +53,28 @@ public enum SurfaceType
     Gate
 }
 
-public enum BuildingType
+public enum LinkType
 {
-    None,
+    DR_UL,
+    DL_UR,
+    DD_UU, 
+}
+
+public enum CityDirection
+{
+    Up,
+    Down,
+    None
+}
+
+public enum CityType
+{
+    Signpost = -1,
     Shrine,
     Camp,
     Watchtower,
     Castle,
-    Stronghold,
-
+    Stronghold
 }
 
 public class Enum<T> where T : Enum
@@ -88,6 +87,7 @@ public class Enum<T> where T : Enum
 public static class ExtensionsEnum
 {
     public static int ToInt<T>(this T self) where T : Enum => Convert.ToInt32(self);
+    public static int ToInt<T>(this T self, int offset) where T : Enum => Convert.ToInt32(self) + offset;
     public static T ToEnum<T>(this int self) where T : Enum => (T)Enum.ToObject(typeof(T), self);
 }
 
