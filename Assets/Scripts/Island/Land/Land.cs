@@ -27,7 +27,7 @@ public class Land : MonoBehaviour
 
     public Hexagon CreateHexagon(Vector3 position, (SurfaceScriptable surface, int id) type)
     {
-        Key key = new(2f * position.x / _offset.x, position.z / _offset.y); 
+        Key key = PositionToKey(position); 
         Hexagon hex = Instantiate(_prefabHex, position, Quaternion.identity, _thisTransform);
         hex.Initialize(key, type.surface, _landMesh.WaterLevel, type.id);
         
@@ -35,6 +35,19 @@ public class Land : MonoBehaviour
         _landMesh.AddHexagon(key, position, type.surface.Color, hex.IsWater);
 
         return hex;
+    }
+
+    public bool IsWaterNearby(Vector3 position)
+    {
+        Hexagon hex;
+        Key key = PositionToKey(position);
+        foreach (var offset in _near)
+        {
+            if (_hexagons.TryGetValue(key + offset, out hex))
+                if(hex.IsWater)
+                    return true;
+        }
+        return false;
     }
 
     public void SetMesh() => _landMesh.SetMesh();
@@ -72,4 +85,6 @@ public class Land : MonoBehaviour
                 _landMesh.SetVertexSides(hex.Key, verticesNear, waterNear);
         }
     }
+
+    private Key PositionToKey(Vector3 position) => new(2f * position.x / _offset.x, position.z / _offset.y);
 }

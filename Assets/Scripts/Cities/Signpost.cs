@@ -7,6 +7,7 @@ public class Signpost : ACity
     [SerializeField] private CitiesScriptable _prefabs;
 
     public override CityType Type => CityType.Signpost;
+    public override PlayerType Owner => PlayerType.None;
 
     public override bool Setup(CityDirection type, ICollection<LinkType> linkTypes)
     {

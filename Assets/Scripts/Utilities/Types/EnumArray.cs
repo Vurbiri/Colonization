@@ -3,27 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IEnumHashSetValue<TKey> where TKey : Enum
-{
-    public TKey Type { get; }
-}
-
 [Serializable]
-public class EnumHashSet<TKey, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue>
+public class EnumArray<TKey, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue>
     where TKey : Enum
-    where TValue : class, IEnumHashSetValue<TKey>
+    where TValue : class, ITypeValueEnum<TKey>
 {
     [SerializeField] private TValue[] _values;
 
     public int Count => _capacity;
     public int Filled => _count;
 
+    public IEnumerator<TKey> Types => new EnumArrayKeysEnumerator(this);
     public TValue this[TKey key] => _values[key.ToInt(_offset)];
 
     private readonly int _offset, _capacity;
     private int _count;
 
-    public EnumHashSet()
+    public EnumArray()
     {
         TKey[] keys = Enum<TKey>.GetValues();
         int min = Int32.MaxValue;
@@ -38,13 +34,19 @@ public class EnumHashSet<TKey, TValue> : ISerializationCallbackReceiver, IEnumer
         _count = 0;
     }
 
+    public EnumArray(IEnumerable<TValue> collection) : this()
+    {
+        foreach (TValue value in collection)
+            TryAdd(value);
+    }
+
     public void Add(TValue value)
     {
         int index = value.Type.ToInt(_offset);
 
         if (_values[index] != null)
         {
-            Debug.LogError($"Объект типа {value.Type} был уже добавлен!");
+            Debug.LogError($"Объект типа {value.Type} уже был добавлен!");
             return;
         }
 
@@ -102,13 +104,13 @@ public class EnumHashSet<TKey, TValue> : ISerializationCallbackReceiver, IEnumer
                 _count++;
     }
 
-    public IEnumerator<TValue> GetEnumerator() => new EnumHashSetEnumerator(this);
+    public IEnumerator<TValue> GetEnumerator() => new EnumArrayEnumerator(this);
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 
-    #region Nested class: EnumHashSetEnumerator
+    #region Nested classes: EnumArrayEnumerator, EnumArrayKeysEnumerator
     //***********************************
-    public class EnumHashSetEnumerator : IEnumerator<TValue>
+    public class EnumArrayEnumerator : IEnumerator<TValue>
     {
         private readonly TValue[] _values;
         private int _capacity, _cursor = -1;
@@ -117,7 +119,7 @@ public class EnumHashSet<TKey, TValue> : ISerializationCallbackReceiver, IEnumer
         public TValue Current => _current;
         object IEnumerator.Current => _current;
 
-        public EnumHashSetEnumerator(EnumHashSet<TKey, TValue> parent)
+        public EnumArrayEnumerator(EnumArray<TKey, TValue> parent)
         {
             _values = parent._values;
             _capacity = parent._capacity;
@@ -129,6 +131,42 @@ public class EnumHashSet<TKey, TValue> : ISerializationCallbackReceiver, IEnumer
                 return false;
 
             _current = _values[_cursor];
+
+            if (_current == null)
+                return MoveNext();
+
+            return true;
+        }
+
+        public void Reset()
+        {
+            _cursor = -1;
+        }
+
+        public void Dispose() { }
+    }
+    //***********************************
+    public class EnumArrayKeysEnumerator : IEnumerator<TKey>
+    {
+        private readonly TValue[] _values;
+        private int _capacity, _cursor = -1;
+        private TKey _current;
+
+        public TKey Current => _current;
+        object IEnumerator.Current => _current;
+
+        public EnumArrayKeysEnumerator(EnumArray<TKey, TValue> parent)
+        {
+            _values = parent._values;
+            _capacity = parent._capacity;
+        }
+
+        public bool MoveNext()
+        {
+            if (++_cursor >= _capacity)
+                return false;
+
+            _current = _values[_cursor].Type;
 
             if (_current == null)
                 return MoveNext();

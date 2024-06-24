@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using static CONST;
 
@@ -15,6 +16,10 @@ public class Island : MonoBehaviour
     [Space]
     [SerializeField] private Roads _roadsPrefab;
     [SerializeField] private Transform _roadsContainer;
+
+    [Space]
+    [GetComponentsInChildren]
+    [SerializeField] private List<Transform> _tests;
 
     public int Circle => _circleMax;
     public float SizeHex => HEX_SIZE;
@@ -43,7 +48,7 @@ public class Island : MonoBehaviour
         //=================================
         void CreateIsland()
         {
-            int circle = 0;
+            int circle = 0, chance;
             bool isWater = false, isLastCircle = circle == _circleMax;
             Vector3 position, positionNext, direction, current;
 
@@ -55,6 +60,7 @@ public class Island : MonoBehaviour
             while (!isLastCircle)
             {
                 isLastCircle = ++circle == _circleMax;
+                chance = _chance * circle / (_circleMax - 1);
                 positionNext = HEX_SIDES[0] * circle;
                 for (int i = 0; i < COUNT_SIDES; i++)
                 {
@@ -75,7 +81,7 @@ public class Island : MonoBehaviour
             //=================================
             (SurfaceScriptable, int) SetTypeAndId(int x)
             {
-                isWater = isLastCircle || (!isWater && x != 0 && URandom.IsTrue(_chance));
+                isWater = isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(current) || URandom.IsTrue(chance)));
 
                 return isWater ? (_surfaces.water, numWater.Value) : (surfaces.Value, numGround.Value);// ÍÓÌÅÐÀÖÈß ÕÅÊÑÎÂ????
             }

@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ACity : MonoBehaviour, IComparable<ACity>, IEnumHashSetValue<CityType>
+public abstract class ACity : MonoBehaviour, IComparable<ACity>, ITypeValueEnum<CityType>
 {
     [SerializeField] private float _radiusCollider = 1.75f;
     [Space]
     [SerializeField] protected ACity _prefabNextUpgrade;
 
     public abstract CityType Type { get; }
+    public abstract PlayerType Owner { get; }
     public bool IsUpgrade => _isUpgrade;
     public float Radius => _radiusCollider;
 
