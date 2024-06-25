@@ -1,68 +1,61 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
-public abstract class ACity : MonoBehaviour, IComparable<ACity>, ITypeValueEnum<CityType>
+public abstract class ACity : MonoBehaviour, IComparable<ACity>, IValueTypeEnum<CityType>
 {
-    [SerializeField] private float _radiusCollider = 1.75f;
+    [GetComponentInChildren]
+    [SerializeField] protected ACityGraphic _graphic;
     [Space]
     [SerializeField] protected ACity _prefabNextUpgrade;
+    [Space]
+    [SerializeField] private float _radiusCollider = 1.75f;
 
     public abstract CityType Type { get; }
-    public abstract PlayerType Owner { get; }
-    public bool IsUpgrade => _isUpgrade;
+    public virtual PlayerType Owner => _owner;
+    public virtual bool IsUpgrade => true;
     public float Radius => _radiusCollider;
 
-    protected bool _isGate = false, _isUpgrade = false;
+    protected bool _isGate = false;
     protected int _waterCount = 0;
+    protected PlayerType _owner;
 
-    public virtual bool Setup(CityDirection direction, ICollection<LinkType> linkTypes)
-    {
+    public virtual void Initialize() => _graphic.Initialize();
 
-        if (direction == CityDirection.None) 
-            return false;
+    public virtual bool Setup() => _waterCount < Crossroad.COUNT;
 
-        if (direction == CityDirection.Up)
-            transform.rotation *= Quaternion.Euler(0, 180, 0);
-        else
-            transform.rotation *= Quaternion.identity;
-
-        return true;
-    }
-
-    public bool SetHexagon(Hexagon hex, int count)
+    public void SetHexagon(Hexagon hex)
     {
         _isGate = _isGate || hex.IsGate;
 
         if (hex.IsWater)
             _waterCount++;
-
-        return !(_isUpgrade =_waterCount < count);
     }
 
-    public bool Upgrade(ICollection<LinkType> linkTypes, out ACity city)
-    {
-        if(!_isUpgrade)
-        {
-            city = this;
-            return false;
-        }
+    public virtual void AddLink(LinkType type) => _graphic.AddLink(type);
 
-        city = Instantiate(_prefabNextUpgrade, Vector3.zero, transform.localRotation, transform.parent);
-        city.Upgrade(this);
+    public virtual void RoadBuilt(LinkType type, int countFreeLink) => _graphic.RoadBuilt(type, countFreeLink);
+
+    public virtual bool Upgrade(PlayerType owner, IEnumerable<LinkType> linkTypes, out ACity city)
+    {
+        Transform thisTransform = transform;
+        city = Instantiate(_prefabNextUpgrade, thisTransform.position, Quaternion.identity, thisTransform.parent);
+        city.Upgrade(owner, this);
 
         Destroy(gameObject);
 
         return true;
     }
-
-    public abstract void RoadBuilt(LinkType type, int countFreeLink);
-
-    protected virtual void Upgrade(ACity city)
+    
+    protected virtual void Upgrade(PlayerType owner, ACity city)
     {
+        _owner = owner;
         _isGate = city._isGate;
         _waterCount = city._waterCount;
     }
+
+    public virtual void Show(bool isShow) {}
 
     public int CompareTo(ACity other) => Type.CompareTo(other.Type);
 }

@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bfa44ec14425246a6e257cc928f936, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _showId: 0
   _idText: {fileID: 4203516390703220402}
 --- !u!64 &8734530714538533476
 MeshCollider:
@@ -87,7 +88,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7437326874281945977
 RectTransform:
   m_ObjectHideFlags: 0

@@ -3,8 +3,10 @@ using UnityEngine;
 
 public abstract class ACityGraphic : MonoBehaviour
 {
-    //[SerializeField] protected EnumArray<LinkType, GameObject> _billboards;
+    [SerializeField] protected EnumArray<LinkType, ACityGraphicSide> _graphicSide;
 
+    public abstract void Initialize();
 
-    public abstract void Setup(ICollection<LinkType> linkTypes);
+    public abstract void AddLink(LinkType type);
+    public abstract void RoadBuilt(LinkType type, int countFreeLink);
 }

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 
 public enum AudioType
 {
@@ -58,13 +59,6 @@ public enum LinkType
     DR_UL,
     DL_UR,
     DD_UU, 
-}
-
-public enum CityDirection
-{
-    Up,
-    Down,
-    None
 }
 
 public enum CityType

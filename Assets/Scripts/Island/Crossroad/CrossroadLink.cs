@@ -1,15 +1,16 @@
 using UnityEngine;
 
-public class CrossroadLink 
+public class CrossroadLink : IValueTypeEnum<LinkType>
 {
     public KeyDouble Key => _key;
     public LinkType Type => _type;
     public Vector3 Position => _middle;
     public PlayerType Owner {get => _owner; set => _owner = value; }
+    public bool IsNotCities => _start.CityType == CityType.Signpost && _end.CityType == CityType.Signpost;
 
     public Crossroad Start => _start;
     public Crossroad End => _end;
-
+   
     private Crossroad _start, _end;
     private readonly LinkType _type;
     private PlayerType _owner;
@@ -21,15 +22,13 @@ public class CrossroadLink
         _start = crossA; _end = crossB;
         _type = (LinkType)(_end - _start);
 
-        if (!(_start.AddLink(_type, this) && _end.AddLink(_type, this)))
+        if (!(_start.AddLink(this) && _end.AddLink(this)))
             return;
 
         _key = _start & _end;
         _owner = owner;
         _middle = (_start.Position + _end.Position) * 0.5f;
     }
-
-    public CityDirection GetDirection(Crossroad cross) => (CityDirection)(_start == cross ? _end - _start : _start - _end);
 
     public void SetStart(Crossroad cross)
     {

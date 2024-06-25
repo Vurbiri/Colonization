@@ -27,7 +27,7 @@ public class Land : MonoBehaviour
 
     public Hexagon CreateHexagon(Vector3 position, (SurfaceScriptable surface, int id) type)
     {
-        Key key = PositionToKey(position); 
+        Key key = PositionToKey(position);
         Hexagon hex = Instantiate(_prefabHex, position, Quaternion.identity, _thisTransform);
         hex.Initialize(key, type.surface, _landMesh.WaterLevel, type.id);
         

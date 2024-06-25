@@ -1,35 +1,34 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
 public class Crossroad : MonoBehaviour, ISelectable
 {
-    [SerializeField] private CrossroadMark _mark;
-    [Space, GetComponentInChildren]
     [SerializeField] private ACity _city;
 
     public Key Key => _key;
     public Vector3 Position { get; private set; }
-    public ICollection<CrossroadLink> Links => _links.Values;
+    public CityType CityType => _city.Type;
+    public IEnumerable<CrossroadLink> Links => _links;
 
     private Key _key;
     
     private readonly List<Hexagon> _hexagons = new(COUNT);
-    private readonly Dictionary<LinkType, CrossroadLink> _links = new(COUNT);
+    private readonly EnumArray<LinkType, CrossroadLink> _links = new();
 
-    private bool _isWater = true;
     private int _countFreeLink = 0;
 
     private SphereCollider _collider;
     private EventBus _eventBus;
 
-    private const int COUNT = 3;
+    public const int COUNT = 3;
     private const string NAME = "Crossroad_";
 
     public void Initialize(Key key)
     {
         _eventBus = EventBus.InstanceF;
-        _eventBus.EventCrossroadMarkShow += (show) => _mark.IsShow = show;
+        _eventBus.EventCrossroadMarkShow += Show;
 
         _collider = GetComponent<SphereCollider>();
         _collider.radius = _city.Radius;
@@ -37,69 +36,106 @@ public class Crossroad : MonoBehaviour, ISelectable
         _key = key;
         Position = transform.position;
 
+        _city.Initialize();
+
         name = NAME + Key.ToString();
     }
 
-    public void Setup()
+    public bool AddHexagon(Hexagon hexagon)
     {
-        CityDirection dir;
+        _city.SetHexagon(hexagon);
 
-        if (_links.Count == 0)
-            dir = CityDirection.None;
-        else
-            dir = _links.Values.First().GetDirection(this);
+        if (_hexagons.Count < (COUNT - 1) || _city.Setup())
+        {
+            _hexagons.Add(hexagon);
+            return true;
+        }
 
-        _city.Setup(dir, _links.Keys);
+        Destroy(gameObject);
+        return false;
     }
 
-    public void AddHexagon(Hexagon hex)
+    public bool AddLink(CrossroadLink link)
     {
-        _hexagons.Add(hex);
-        _isWater = _city.SetHexagon(hex, _hexagons.Count);
+        if (_links.TryAdd(link))
+        {
+            _countFreeLink++;
+            _city.AddLink(link.Type);
+            return true;
+        }
+        return false;
     }
 
-    public bool AddLink(LinkType type, CrossroadLink link) => _links.TryAdd(type, link);
-
-    public bool CanRoadsBuilt(PlayerType type)
+    public bool IsRoadConnect(PlayerType type)
     {
-        if (_countFreeLink <= 0)
-            return false;
-
-        foreach (var link in _links.Values)
+        foreach (var link in _links)
             if (link.Owner == type)
-                return !_isWater;
+                return true;
 
         return false;
     }
 
+    public bool IsNotCitiesNearby()
+    {
+        foreach (var link in _links)
+            if (!link.IsNotCities)
+                return false;
+
+        return true;
+    }
+
+    public bool CanCityUpgrade(PlayerType type) => _city.Owner == type;
+
+    public bool Upgrade(PlayerType type)
+    {
+        if (_city.Upgrade(type, _links.Types, out _city))
+        {
+            _collider.radius = _city.Radius;
+            return true;
+        }
+        return false;
+    }
+
+    public bool CanRoadBuilt(PlayerType type)
+    {
+        if (_countFreeLink <= 0)
+            return false;
+
+        if(_city.Owner == type)
+            return true;
+
+        return IsRoadConnect(type);
+    }
+    
     public bool IsFullOwned(PlayerType owned)
     {
         if(_countFreeLink > 0 || _links.Count <= 1)
             return false;
-        
-        bool full = true;
-        foreach (var link in _links.Values)
-            full = full && link.Owner == owned;
 
-        return full;
+        foreach (var link in _links)
+            if (link.Owner != owned)
+                return false;
+
+        return true;
     }
 
-    public void RoadBuilt(LinkType type)
-    {
-        _countFreeLink--;
-        _mark.IsActive = _countFreeLink > 0;
-    }
-
-    public void Select()
-    {
-        if(!_isWater)
-            _eventBus.TriggerCrossroadSelect(this);
-    }
+    public void RoadBuilt(LinkType type) => _city.RoadBuilt(type, --_countFreeLink);
+    
+    public void Select() => _eventBus.TriggerCrossroadSelect(this);
 
     public static KeyDouble operator &(Crossroad a, Crossroad b) => a._key & b._key;
     public static Key operator -(Crossroad a, Crossroad b) => a._key - b._key;
 
     public override string ToString() => $"{_key}";
+
+    private void Show(bool show) => _city.Show(show);
+
+    private void OnDestroy()
+    {
+        _eventBus.EventCrossroadMarkShow -= Show;
+        foreach (var hex in _hexagons)
+            hex.Crossroads.Remove(this);
+    }
 
 }
 

@@ -10,6 +10,8 @@ public class Crossroads : MonoBehaviour
     private Vector2 _offset;
     private Dictionary<Key, Crossroad> _crossroads;
 
+    private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
+
     public void Initialize(int circleMax)
     {
         //Debug.Log($"Count Crossroads calk: {HEX_SIDE * circleMax * circleMax}");
@@ -21,7 +23,7 @@ public class Crossroads : MonoBehaviour
         _thisTransform = transform;
     }
 
-    public void CreateCrossroad(Vector3 position, Hexagon hex, bool isCircleMax)
+    public void CreateCrossroad(Vector3 position, Hexagon hex, bool isLastCircle)
     {
         Crossroad cross;
         Key key;
@@ -34,16 +36,18 @@ public class Crossroads : MonoBehaviour
 
             if (!_crossroads.TryGetValue(key, out cross))
             {
-                if (isCircleMax)
+                if (isLastCircle)
                     continue;
 
-                cross = Instantiate(_prefabCrossroad, positionCross, Quaternion.identity, _thisTransform);
+                cross = Instantiate(_prefabCrossroad, positionCross, i % 2 == 0 ? ANGLE_180 : ANGLE_0, _thisTransform);
                 cross.Initialize(key);
-                _crossroads.Add(key, cross);
+                  _crossroads.Add(key, cross);
             }
 
-            cross.AddHexagon(hex);
-            hex.Crossroads.Add(cross);
+            if(cross.AddHexagon(hex))
+                hex.Crossroads.Add(cross);
+            else
+                _crossroads.Remove(key);
         }
     }
 
@@ -72,11 +76,5 @@ public class Crossroads : MonoBehaviour
             return enumerator.Current;
         }
         #endregion
-    }
-
-    public void Setup()
-    {
-        foreach (var crossroad in _crossroads.Values)
-            crossroad.Setup();
     }
 }

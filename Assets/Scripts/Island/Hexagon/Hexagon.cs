@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Hexagon : MonoBehaviour, ISelectable
 {
+    [SerializeField] private bool _showId = true;
     [SerializeField] private TMP_Text _idText;
     
     public Key Key => _key;
@@ -30,6 +31,7 @@ public class Hexagon : MonoBehaviour, ISelectable
         _key = key;
         _id = id;
         _idText.text = _id.ToString();
+        _idText.gameObject.SetActive(_showId);
 
         _surface = surface.Type;
 
@@ -47,12 +49,4 @@ public class Hexagon : MonoBehaviour, ISelectable
 
         Debug.Log($"{gameObject.name}, water: {IsWater}, gate {IsGate}\n");
     }
-
-    
-
-    //public void SetNewPosition(Vector2Int index)
-    //{
-    //    _key = index;
-    //    _thisTransform.localPosition = new(_offset.x * 0.5f * index.x, 0, _offset.y * index.y);
-    //}
 }

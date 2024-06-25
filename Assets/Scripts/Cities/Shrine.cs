@@ -1,14 +1,13 @@
-
+using System.Collections.Generic;
 
 public class Shrine : ACity
 {
     public override CityType Type => CityType.Shrine;
-    public override PlayerType Owner => _owner;
+    public override bool IsUpgrade => false;
 
-    protected PlayerType _owner;
-
-    public override void RoadBuilt(LinkType type, int countFreeLink)
+    public override bool Upgrade(PlayerType owner, IEnumerable<LinkType> linkTypes, out ACity city)
     {
-
+        city = this;
+        return false;
     }
 }

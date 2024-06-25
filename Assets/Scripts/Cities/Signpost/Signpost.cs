@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Signpost : ACity
@@ -9,18 +8,15 @@ public class Signpost : ACity
     public override CityType Type => CityType.Signpost;
     public override PlayerType Owner => PlayerType.None;
 
-    public override bool Setup(CityDirection type, ICollection<LinkType> linkTypes)
+    public override bool Setup()
     {
-        if(!base.Setup(type, linkTypes))
+        if (!base.Setup())
             return false;
 
         _prefabNextUpgrade = _isGate ? _prefabs[CityType.Shrine] : _prefabs[CityType.Camp];
-        
+        _graphic.gameObject.SetActive(true);
         return true;
     }
 
-    public override void RoadBuilt(LinkType type, int countFreeLink)
-    {
-
-    }
+    public override void Show(bool isShow) => _graphic.gameObject.SetActive(isShow);
 }

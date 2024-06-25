@@ -17,10 +17,6 @@ public class Island : MonoBehaviour
     [SerializeField] private Roads _roadsPrefab;
     [SerializeField] private Transform _roadsContainer;
 
-    [Space]
-    [GetComponentsInChildren]
-    [SerializeField] private List<Transform> _tests;
-
     public int Circle => _circleMax;
     public float SizeHex => HEX_SIZE;
 
@@ -36,11 +32,9 @@ public class Island : MonoBehaviour
 
     public void Generate()
     {
-       
         CreateIsland();
 
         _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
-        _crossroads.Setup();
 
         _land.SetMesh();
 
@@ -72,7 +66,7 @@ public class Island : MonoBehaviour
                     {
                         current = position + direction * j;
                         hex = _land.CreateHexagon(current, SetTypeAndId(j));// Õ”Ã≈–¿÷»ﬂ ’≈ —Œ¬????
-                        _crossroads.CreateCrossroad(current, hex, circle == _circleMax);
+                        _crossroads.CreateCrossroad(current, hex, isLastCircle);
                     }
                 }
             }

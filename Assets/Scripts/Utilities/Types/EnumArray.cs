@@ -4,34 +4,51 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class EnumArray<TKey, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue>
-    where TKey : Enum
-    where TValue : class, ITypeValueEnum<TKey>
+public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnlyList<TValue>
+    where TType : Enum
+    where TValue : class, IValueTypeEnum<TType>
 {
     [SerializeField] private TValue[] _values;
 
-    public int Count => _capacity;
-    public int Filled => _count;
+    public int Count => _count;
+    public int Capacity => _capacity;
 
-    public IEnumerator<TKey> Types => new EnumArrayKeysEnumerator(this);
-    public TValue this[TKey key] => _values[key.ToInt(_offset)];
+    public IEnumerable<TType> Types => _typesEnumerable;
+
+    public TValue this[TType type] => _values[type.ToInt(_offset)];
+    public TValue this[int index]
+    {
+        get 
+        {
+            foreach(TValue value in this)
+                if(index-- == 0)
+                    return value;
+
+            throw new IndexOutOfRangeException();
+        }
+    }
 
     private readonly int _offset, _capacity;
     private int _count;
+    private readonly EnumArrayKeysEnumerable _typesEnumerable;
 
     public EnumArray()
     {
-        TKey[] keys = Enum<TKey>.GetValues();
-        int min = Int32.MaxValue;
+        int min = Int32.MaxValue, max = Int32.MinValue, key;
 
-        foreach (TKey key in keys)
-            min = Mathf.Min(min, key.ToInt());
+        foreach (TType item in Enum<TType>.GetValues())
+        {
+            key = item.ToInt();
+            min = key < min ? key : min;
+            max = key > max ? key : max;
+        }
 
         _offset = -min;
-        _capacity = keys.Length;
-        _values = new TValue[_capacity];
-
+        _capacity = max - min + 1;
         _count = 0;
+
+        _values = new TValue[_capacity];
+        _typesEnumerable = new(this);
     }
 
     public EnumArray(IEnumerable<TValue> collection) : this()
@@ -64,6 +81,15 @@ public class EnumArray<TKey, TValue> : ISerializationCallbackReceiver, IEnumerab
         _values[index] = value;
         _count++;
         return true;
+    }
+
+    public TValue First()
+    {
+        for(int i = 0; i < _capacity; i++)
+            if (_values[i] != null)
+                return _values[i];
+        
+        return null;
     }
 
     public void OnBeforeSerialize() 
@@ -119,7 +145,7 @@ public class EnumArray<TKey, TValue> : ISerializationCallbackReceiver, IEnumerab
         public TValue Current => _current;
         object IEnumerator.Current => _current;
 
-        public EnumArrayEnumerator(EnumArray<TKey, TValue> parent)
+        public EnumArrayEnumerator(EnumArray<TType, TValue> parent)
         {
             _values = parent._values;
             _capacity = parent._capacity;
@@ -146,16 +172,26 @@ public class EnumArray<TKey, TValue> : ISerializationCallbackReceiver, IEnumerab
         public void Dispose() { }
     }
     //***********************************
-    public class EnumArrayKeysEnumerator : IEnumerator<TKey>
+    public class EnumArrayKeysEnumerable : IEnumerable<TType>
+    {
+        private readonly EnumArray<TType, TValue> _parent;
+
+        public EnumArrayKeysEnumerable(EnumArray<TType, TValue> parent) => _parent = parent;
+
+        public IEnumerator<TType> GetEnumerator() => new EnumArrayKeysEnumerator(_parent);
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+    //***********************************
+    public class EnumArrayKeysEnumerator : IEnumerator<TType>
     {
         private readonly TValue[] _values;
         private int _capacity, _cursor = -1;
-        private TKey _current;
+        private TType _current;
 
-        public TKey Current => _current;
+        public TType Current => _current;
         object IEnumerator.Current => _current;
 
-        public EnumArrayKeysEnumerator(EnumArray<TKey, TValue> parent)
+        public EnumArrayKeysEnumerator(EnumArray<TType, TValue> parent)
         {
             _values = parent._values;
             _capacity = parent._capacity;
