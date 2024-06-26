@@ -24,7 +24,7 @@ public class BuildingMainMenu : MonoBehaviour
         void OnCity()
         {
             gameObject.SetActive(false);
-            _players.Current.BuildCity(_currentCrossroad);
+            _players.Current.CityUpgrade(_currentCrossroad);
         }
         void OnRoads()
         {
@@ -40,7 +40,7 @@ public class BuildingMainMenu : MonoBehaviour
         _currentCrossroad = crossroad;
 
         _buttonCity.targetGraphic.color = player.Color;
-        _buttonCity.interactable = player.CanCityBuilt(crossroad);
+        _buttonCity.interactable = player.CanCityUpgrade(crossroad);
 
         _buttonRoads.targetGraphic.color = player.Color;
         _buttonRoads.interactable = player.CanRoadBuilt(crossroad);

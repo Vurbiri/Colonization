@@ -13,7 +13,7 @@ public class GetComponentsInChildrenAttributeDrawer : AGetComponentAttributeDraw
         Color prevColor = GUI.color;
         Type typeProperty = fieldInfo.FieldType;
 
-        if (typeProperty.IsArray || typeProperty.GetInterface(nameof(ICollection)) != null)
+        if (typeProperty.IsArray || typeProperty.GetInterface(nameof(IList)) != null)
         {
             _attribute = attribute as GetComponentsInChildrenAttribute;
 
@@ -34,11 +34,9 @@ public class GetComponentsInChildrenAttributeDrawer : AGetComponentAttributeDraw
         else
         {
             GUI.color = Color.red;
-            var box = new Rect(position.x, position.y, position.width - 100, position.height);
-            var field = new Rect(position.x + box.width + 10, position.y, 90, position.height);
 
-            EditorGUI.PropertyField(box, property, label);
-            EditorGUI.HelpBox(field, "Not array", UnityEditor.MessageType.Error);
+            EditorGUILayout.PropertyField(property, label);
+            EditorGUILayout.HelpBox("Not array", UnityEditor.MessageType.Error);
         }
         
         GUI.color = prevColor;

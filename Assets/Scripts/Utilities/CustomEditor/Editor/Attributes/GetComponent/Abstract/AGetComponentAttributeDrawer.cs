@@ -18,7 +18,10 @@ public abstract class AGetComponentAttributeDrawer : PropertyDrawer
         }
 
         if (IsPropertyError(property, typeProperty))
+        {
             GUI.color = colorNull;
+            //Debug.LogWarningFormat(property.serializedObject.targetObject, $"Объекту <b>{property.serializedObject.targetObject.name}</b> не назначено поле <b>{fieldInfo.Name}</b> ({typeProperty.Name}).");
+        }
 
         EditorGUI.PropertyField(position, property, label);
 

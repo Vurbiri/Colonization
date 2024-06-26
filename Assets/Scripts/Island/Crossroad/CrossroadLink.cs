@@ -43,5 +43,7 @@ public class CrossroadLink : IValueTypeEnum<LinkType>
         _end.RoadBuilt(_type);
     }
 
+    public Crossroad Other(Crossroad crossroad) => crossroad == _start ? _end : _start;
+
     public override string ToString() => $"({_type}: {_key})";
 }

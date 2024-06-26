@@ -1,12 +1,16 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class ACityGraphic : MonoBehaviour
 {
-    [SerializeField] protected EnumArray<LinkType, ACityGraphicSide> _graphicSide;
+    [SerializeField] protected EnumArray<LinkType, ACityGraphicSide> _graphicSides;
 
-    public abstract void Initialize();
+    public virtual void Initialize()
+    {
+        foreach(var side in _graphicSides)
+            side.Initialize();
+    }
 
-    public abstract void AddLink(LinkType type);
-    public abstract void RoadBuilt(LinkType type, int countFreeLink);
+    public virtual void AddLink(LinkType type) => _graphicSides[type].gameObject.SetActive(true);
+
+    public virtual void RoadBuilt(LinkType type) => _graphicSides[type].RoadBuilt();
 }

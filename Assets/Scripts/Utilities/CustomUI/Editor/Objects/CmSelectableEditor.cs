@@ -364,17 +364,4 @@ public class CmSelectableEditor : Editor
         return dir;
     }
 
-    #region Original
-    //protected virtual void GraphicsPropertiesGUI()
-    //{
-    //    Graphic graphic = m_TargetGraphicProperty.objectReferenceValue as Graphic;
-    //    if (graphic == null)
-    //        graphic = (target as Selectable).GetComponent<Graphic>();
-
-    //    if (_transition == Selectable.Transition.ColorTint || _transition == Selectable.Transition.SpriteSwap)
-    //        EditorGUILayout.PropertyField(m_TargetGraphicProperty);
-
-    //    GraphicsHelpBoxGUI(graphic);
-    //}
-    #endregion
 }

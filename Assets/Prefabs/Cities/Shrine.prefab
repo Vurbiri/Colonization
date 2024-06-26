@@ -44,5 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9d354ec2d07a8e44aff4c89dd61650b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _graphic: {fileID: 0}
+  _prefabNextUpgrade: {fileID: 4248780417304649036}
   _radiusCollider: 1.75
-  _prefabNextUpgrade: {fileID: 0}

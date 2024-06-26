@@ -127,8 +127,8 @@ public class Road : MonoBehaviour
 
     private void SetLineRenderer()
     {
-        _gradient.AlphaFirst = _crossroads.First.IsFullOwned(_owner) ? 1f : 0f;
-        _gradient.AlphaLast = _crossroads.Last.IsFullOwned(_owner) ? 1f : 0f;
+        _gradient.AlphaFirst = _crossroads.First.IsFullyOwned(_owner) ? 1f : 0f;
+        _gradient.AlphaLast = _crossroads.Last.IsFullyOwned(_owner) ? 1f : 0f;
         _gradient.SetKeys();
 
         _textureScale.x = _textureScaleX * (_crossroads.Count - 1);

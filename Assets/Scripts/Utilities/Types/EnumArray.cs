@@ -125,14 +125,13 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnl
     public void OnAfterDeserialize() 
     {
         _count = 0;
-        for (int i = 0; i < _capacity; i++)
+        for (int i = 0; i < _values.Length; i++)
             if (_values[i] != null)
                 _count++;
     }
 
     public IEnumerator<TValue> GetEnumerator() => new EnumArrayEnumerator(this);
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
 
     #region Nested classes: EnumArrayEnumerator, EnumArrayKeysEnumerator
     //***********************************
@@ -219,3 +218,4 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnl
     }
     #endregion
 }
+

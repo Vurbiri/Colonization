@@ -13,5 +13,11 @@ MonoBehaviour:
   m_Name: CitiesPrefabs
   m_EditorClassIdentifier: 
   _prefabs:
-  - {fileID: 4248780417304649036, guid: 431792d8a4e03554791a195e230adaa9, type: 3}
-  - {fileID: 1049411121952962565, guid: fbdc4ec1f33354847be58c14d2dc8b85, type: 3}
+    _values:
+    - {fileID: 2191662151257243773, guid: 1af00c5b8c8307742a17e2c7c0748c35, type: 3}
+    - {fileID: 4248780417304649036, guid: 431792d8a4e03554791a195e230adaa9, type: 3}
+    - {fileID: 1049411121952962565, guid: fbdc4ec1f33354847be58c14d2dc8b85, type: 3}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+  _prefabsCount: 0

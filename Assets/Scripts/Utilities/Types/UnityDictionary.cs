@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class UnityDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISerializationCallbackReceiver
 {
-    [SerializeField] List<KeyValue> _elements;
+    [SerializeField] List<KeyValue> _values;
     private Dictionary<TKey, TValue> _dictionary;
 
     public TValue this[TKey key] { get => _dictionary[key]; set => _dictionary[key] = value; }
@@ -44,12 +44,12 @@ public class UnityDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISeriali
 
     public void OnAfterDeserialize()
     {
-        if (_elements == null)
+        if (_values == null)
             return;
 
-        _dictionary = new(_elements.Count);
+        _dictionary = new(_values.Count);
 
-        foreach (var kv in _elements)
+        foreach (var kv in _values)
             _dictionary.TryAdd(kv.key, kv.value);
     }
 
@@ -57,8 +57,8 @@ public class UnityDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ISeriali
 
     public void DeleteList()
     {
-        _elements?.Clear();
-        _elements = null;
+        _values?.Clear();
+        _values = null;
     }
 
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)

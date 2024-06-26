@@ -14,7 +14,7 @@ public class Player
     private readonly Color _color;
 
     private Roads _roads;
-    private List<Crossroad> _cities = new();
+    private HashSet<Crossroad> _cities = new();
 
     public Player(PlayerType type, int id, Color color, int idColor)
     {
@@ -31,17 +31,19 @@ public class Player
         return crossroad.CanRoadBuilt(_type);
     }
 
-    public bool CanCityBuilt(Crossroad crossroad)
+    public bool CanCityUpgrade(Crossroad crossroad)
     {
-        if (!crossroad.IsNotCitiesNearby())
+        if (!crossroad.CanCityUpgrade(_type))
             return false;
         
         return _cities.Count == 0 || crossroad.IsRoadConnect(_type);
     }
-    public void BuildCity(Crossroad crossroad)
+    public void CityUpgrade(Crossroad crossroad)
     {
-        if(crossroad.Upgrade(_type))
+        if (crossroad.Upgrade(_type))
+        {
             _cities.Add(crossroad);
+        }
     }
 
     public override string ToString() => $"Player: {_type}";

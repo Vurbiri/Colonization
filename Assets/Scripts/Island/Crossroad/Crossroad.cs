@@ -10,6 +10,7 @@ public class Crossroad : MonoBehaviour, ISelectable
     public Key Key => _key;
     public Vector3 Position { get; private set; }
     public CityType CityType => _city.Type;
+    public bool IsUpgrade => _city.IsUpgrade;
     public IEnumerable<CrossroadLink> Links => _links;
 
     private Key _key;
@@ -68,6 +69,9 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public bool IsRoadConnect(PlayerType type)
     {
+        if(_city.Owner == type)
+            return true;
+
         foreach (var link in _links)
             if (link.Owner == type)
                 return true;
@@ -75,39 +79,32 @@ public class Crossroad : MonoBehaviour, ISelectable
         return false;
     }
 
-    public bool IsNotCitiesNearby()
+    public bool CanCityUpgrade(PlayerType type)
     {
+        if(_city.Owner != PlayerType.None)
+            return _city.Owner == type && _city.IsUpgrade;
+        
         foreach (var link in _links)
-            if (!link.IsNotCities)
+            if (link.Other(this)._city.Owner != PlayerType.None)
                 return false;
 
-        return true;
+        return _city.IsUpgrade;
     }
-
-    public bool CanCityUpgrade(PlayerType type) => _city.Owner == type;
 
     public bool Upgrade(PlayerType type)
     {
-        if (_city.Upgrade(type, _links.Types, out _city))
+        if (_city.Upgrade(type, _links, out _city))
         {
+            _eventBus.EventCrossroadMarkShow -= Show;
             _collider.radius = _city.Radius;
             return true;
         }
         return false;
     }
 
-    public bool CanRoadBuilt(PlayerType type)
-    {
-        if (_countFreeLink <= 0)
-            return false;
+    public bool CanRoadBuilt(PlayerType type) => _countFreeLink > 0 && (_city.Owner == type || IsRoadConnect(type));
 
-        if(_city.Owner == type)
-            return true;
-
-        return IsRoadConnect(type);
-    }
-    
-    public bool IsFullOwned(PlayerType owned)
+    public bool IsFullyOwned(PlayerType owned)
     {
         if(_countFreeLink > 0 || _links.Count <= 1)
             return false;
@@ -119,14 +116,14 @@ public class Crossroad : MonoBehaviour, ISelectable
         return true;
     }
 
-    public void RoadBuilt(LinkType type) => _city.RoadBuilt(type, --_countFreeLink);
+    public void RoadBuilt(LinkType type)
+    {
+        _countFreeLink--;
+        _city.AddRoad(type);
+    }
     
     public void Select() => _eventBus.TriggerCrossroadSelect(this);
 
-    public static KeyDouble operator &(Crossroad a, Crossroad b) => a._key & b._key;
-    public static Key operator -(Crossroad a, Crossroad b) => a._key - b._key;
-
-    public override string ToString() => $"{_key}";
 
     private void Show(bool show) => _city.Show(show);
 
@@ -136,6 +133,10 @@ public class Crossroad : MonoBehaviour, ISelectable
         foreach (var hex in _hexagons)
             hex.Crossroads.Remove(this);
     }
+
+    public override string ToString() => $"{_key}";
+    public static KeyDouble operator &(Crossroad a, Crossroad b) => a._key & b._key;
+    public static Key operator -(Crossroad a, Crossroad b) => a._key - b._key;
 
 }
 

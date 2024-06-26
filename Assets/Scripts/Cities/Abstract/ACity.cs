@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public abstract class ACity : MonoBehaviour, IComparable<ACity>, IValueTypeEnum<CityType>
 {
@@ -35,24 +34,36 @@ public abstract class ACity : MonoBehaviour, IComparable<ACity>, IValueTypeEnum<
 
     public virtual void AddLink(LinkType type) => _graphic.AddLink(type);
 
-    public virtual void RoadBuilt(LinkType type, int countFreeLink) => _graphic.RoadBuilt(type, countFreeLink);
+    public virtual void AddRoad(LinkType type) => _graphic.RoadBuilt(type);
 
-    public virtual bool Upgrade(PlayerType owner, IEnumerable<LinkType> linkTypes, out ACity city)
+    public virtual bool Upgrade(PlayerType owner, IEnumerable<CrossroadLink> links, out ACity city)
     {
-        Transform thisTransform = transform;
-        city = Instantiate(_prefabNextUpgrade, thisTransform.position, Quaternion.identity, thisTransform.parent);
-        city.Upgrade(owner, this);
+        if(!IsUpgrade || _owner != owner)
+        {
+            city = this;
+            return false;
+        }
+        
+        city = Instantiate(_prefabNextUpgrade, transform.parent);
+        city.Initialize();
+        city.CopyingData(links, this);
 
         Destroy(gameObject);
-
         return true;
     }
     
-    protected virtual void Upgrade(PlayerType owner, ACity city)
+    protected virtual void CopyingData(IEnumerable<CrossroadLink> links, ACity city)
     {
-        _owner = owner;
+        _owner = city._owner;
         _isGate = city._isGate;
         _waterCount = city._waterCount;
+
+        foreach (CrossroadLink link in links)
+        {
+            AddLink(link.Type);
+            if(link.Owner != PlayerType.None)
+                AddRoad(link.Type);
+        }
     }
 
     public virtual void Show(bool isShow) {}

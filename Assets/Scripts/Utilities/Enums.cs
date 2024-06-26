@@ -63,7 +63,7 @@ public enum LinkType
 
 public enum CityType
 {
-    Signpost = -1,
+    Signpost,
     Shrine,
     Camp,
     Watchtower,
@@ -75,6 +75,7 @@ public class Enum<T> where T : Enum
 {
     public static int Count => Enum.GetNames(typeof(T)).Length;
     public static T[] GetValues() => (T[])Enum.GetValues(typeof(T));
+    public static string[] GetNames() => Enum.GetNames(typeof(T));
     public static T Rand(int minInclusive, int maxExclusive) => UnityEngine.Random.Range(minInclusive, maxExclusive).ToEnum<T>();
 }
 
