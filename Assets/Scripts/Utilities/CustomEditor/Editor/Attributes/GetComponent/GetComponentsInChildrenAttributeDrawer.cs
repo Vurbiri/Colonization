@@ -78,7 +78,4 @@ public class GetComponentsInChildrenAttributeDrawer : AGetComponentAttributeDraw
         while (property.arraySize > count)
             property.DeleteArrayElementAtIndex(count);
     }
-
-
-    
 }

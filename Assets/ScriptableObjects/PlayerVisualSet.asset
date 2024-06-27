@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 135add38439aba941bee585b8293a18c, type: 3}
-  m_Name: ColorsSet
+  m_Name: PlayerVisualSet
   m_EditorClassIdentifier: 
   _colors:
   - {r: 0.6666667, g: 0.45490196, b: 0.8, a: 1}
@@ -19,3 +19,5 @@ MonoBehaviour:
   - {r: 0.3764706, g: 0.21176471, b: 0.68235296, a: 1}
   - {r: 0.87058824, g: 0.90588236, b: 1, a: 1}
   - {r: 0.6392157, g: 0.8862745, b: 0.078431375, a: 1}
+  _defaultColor: {r: 0.5254902, g: 0.5254902, b: 0.54509807, a: 1}
+  _defaultMaterial: {fileID: 2100000, guid: 362033406985cc4419a73b51903b9224, type: 2}

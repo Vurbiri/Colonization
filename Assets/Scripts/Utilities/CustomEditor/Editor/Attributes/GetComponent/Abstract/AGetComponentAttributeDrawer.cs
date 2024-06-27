@@ -25,7 +25,6 @@ public abstract class AGetComponentAttributeDrawer : PropertyDrawer
 
         EditorGUI.PropertyField(position, property, label);
 
-        //property.serializedObject.ApplyModifiedProperties();
         GUI.color = prevColor;
     }
 
@@ -37,17 +36,7 @@ public abstract class AGetComponentAttributeDrawer : PropertyDrawer
         if (value == null)
             return false;
 
-        Type typeValue = value.GetType();
-        
-        while (typeValue != null)
-        {
-            if (typeValue == typeProperty)
-                return true;
-
-            typeValue = typeValue.BaseType;
-        }
-
-        return false;
+        return value.GetType().Is(typeProperty);
     }
 
     protected abstract void SetProperty(SerializedProperty property, GameObject gameObject, Type type);

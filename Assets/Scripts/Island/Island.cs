@@ -22,12 +22,18 @@ public class Island : MonoBehaviour
 
     private void Awake()
     {
-        Players.InstanceF.SetIsland(this);
+        Players.InstanceF.LoadIsland(this);
         
         _land.Initialize(_circleMax);
         _crossroads.Initialize(_circleMax);
 
         Generate();
+    }
+
+    private void OnDestroy()
+    {
+        if(Players.Instance != null)
+            Players.Instance.DestroyIsland(this);
     }
 
     public void Generate()
@@ -87,9 +93,9 @@ public class Island : MonoBehaviour
     public Roads GetRoads() => Instantiate(_roadsPrefab, _roadsContainer);
 
 
-#region Nested: Surfaces
-//***********************************
-[Serializable]
+    #region Nested: Surfaces
+    //***********************************
+    [Serializable]
     private struct Surfaces
     {
         public SurfaceScriptable gate;

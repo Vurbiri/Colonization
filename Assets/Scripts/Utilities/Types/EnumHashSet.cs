@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnlyList<TValue>
+public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadOnlyList<TValue>
     where TType : Enum
     where TValue : class, IValueTypeEnum<TType>
 {
@@ -12,16 +12,17 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnl
 
     public int Count => _count;
     public int Capacity => _capacity;
+    public bool NotMinus => _notMinus;
 
     public IEnumerable<TType> Types => _typesEnumerable;
 
     public TValue this[TType type] => _values[type.ToInt(_offset)];
     public TValue this[int index]
     {
-        get 
+        get
         {
-            foreach(TValue value in this)
-                if(index-- == 0)
+            foreach (TValue value in this)
+                if (index-- == 0)
                     return value;
 
             throw new IndexOutOfRangeException();
@@ -30,15 +31,21 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnl
 
     private readonly int _offset, _capacity;
     private int _count;
-    private readonly EnumArrayKeysEnumerable _typesEnumerable;
+    private readonly bool _notMinus;
+    private readonly EnumHashSetKeysEnumerable _typesEnumerable;
 
-    public EnumArray()
+    public EnumHashSet() : this(false) { }
+
+    public EnumHashSet(bool notMinus)
     {
+        _notMinus = notMinus;
         int min = Int32.MaxValue, max = Int32.MinValue, key;
 
         foreach (TType item in Enum<TType>.GetValues())
         {
             key = item.ToInt();
+            if (notMinus && key < 0)
+                continue;
             min = key < min ? key : min;
             max = key > max ? key : max;
         }
@@ -51,24 +58,18 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnl
         _typesEnumerable = new(this);
     }
 
-    public EnumArray(IEnumerable<TValue> collection) : this()
+    public EnumHashSet(IEnumerable<TValue> collection, bool notMinus = false) : this(notMinus)
     {
         foreach (TValue value in collection)
-            TryAdd(value);
+            Add(value);
     }
 
     public void Add(TValue value)
     {
-        int index = value.Type.ToInt(_offset);
-
-        if (_values[index] != null)
-        {
-            Debug.LogError($"Объект типа {value.Type} уже был добавлен!");
+        if (TryAdd(value))
             return;
-        }
 
-        _values[value.Type.ToInt(_offset)] = value;
-        _count++;
+        Debug.LogError($"Объект типа {value.Type} уже был добавлен!");
     }
 
     public bool TryAdd(TValue value)
@@ -81,15 +82,6 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnl
         _values[index] = value;
         _count++;
         return true;
-    }
-
-    public TValue First()
-    {
-        for(int i = 0; i < _capacity; i++)
-            if (_values[i] != null)
-                return _values[i];
-        
-        return null;
     }
 
     public void OnBeforeSerialize() 
@@ -130,12 +122,12 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnl
                 _count++;
     }
 
-    public IEnumerator<TValue> GetEnumerator() => new EnumArrayEnumerator(this);
+    public IEnumerator<TValue> GetEnumerator() => new EnumHashSetEnumerator(this);
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    #region Nested classes: EnumArrayEnumerator, EnumArrayKeysEnumerator
+    #region Nested classes: EnumHashSetEnumerator, EnumHashSetKeysEnumerable, EnumHashSetKeysEnumerator
     //***********************************
-    public class EnumArrayEnumerator : IEnumerator<TValue>
+    public class EnumHashSetEnumerator : IEnumerator<TValue>
     {
         private readonly TValue[] _values;
         private int _capacity, _cursor = -1;
@@ -144,7 +136,7 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnl
         public TValue Current => _current;
         object IEnumerator.Current => _current;
 
-        public EnumArrayEnumerator(EnumArray<TType, TValue> parent)
+        public EnumHashSetEnumerator(EnumHashSet<TType, TValue> parent)
         {
             _values = parent._values;
             _capacity = parent._capacity;
@@ -171,17 +163,17 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnl
         public void Dispose() { }
     }
     //***********************************
-    public class EnumArrayKeysEnumerable : IEnumerable<TType>
+    public class EnumHashSetKeysEnumerable : IEnumerable<TType>
     {
-        private readonly EnumArray<TType, TValue> _parent;
+        private readonly EnumHashSet<TType, TValue> _parent;
 
-        public EnumArrayKeysEnumerable(EnumArray<TType, TValue> parent) => _parent = parent;
+        public EnumHashSetKeysEnumerable(EnumHashSet<TType, TValue> parent) => _parent = parent;
 
-        public IEnumerator<TType> GetEnumerator() => new EnumArrayKeysEnumerator(_parent);
+        public IEnumerator<TType> GetEnumerator() => new EnumHashSetKeysEnumerator(_parent);
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
     //***********************************
-    public class EnumArrayKeysEnumerator : IEnumerator<TType>
+    public class EnumHashSetKeysEnumerator : IEnumerator<TType>
     {
         private readonly TValue[] _values;
         private int _capacity, _cursor = -1;
@@ -190,7 +182,7 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IReadOnl
         public TType Current => _current;
         object IEnumerator.Current => _current;
 
-        public EnumArrayKeysEnumerator(EnumArray<TType, TValue> parent)
+        public EnumHashSetKeysEnumerator(EnumHashSet<TType, TValue> parent)
         {
             _values = parent._values;
             _capacity = parent._capacity;

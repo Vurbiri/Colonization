@@ -10,7 +10,7 @@ public class Crossroads : MonoBehaviour
     private Vector2 _offset;
     private Dictionary<Key, Crossroad> _crossroads;
 
-    private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
+    private static readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
 
     public void Initialize(int circleMax)
     {

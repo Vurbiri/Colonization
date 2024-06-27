@@ -11,5 +11,7 @@ public abstract class ACityGraphicSide : MonoBehaviour, IValueTypeEnum<LinkType>
         gameObject.SetActive(false);
     }
 
+    public virtual void AddLink() => gameObject.SetActive(true);
+
     public abstract void RoadBuilt();
 }

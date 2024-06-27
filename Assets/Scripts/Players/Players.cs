@@ -1,18 +1,17 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 [DefaultExecutionOrder(-1)]
 public class Players : ASingleton<Players>
 {
     [Space]
-    [SerializeField] private ColorsScriptable _colors;
+    [SerializeField] private PlayerVisualSetScriptable _visualSet;
 
     public Player Current => _current;
-    public Player this[int index] => _players[(PlayerType)index];
-    public Player this[PlayerType index] => _players[index];
+    public Player this[PlayerType type] => _players[type];
+    public PlayerVisualSetScriptable VisualSet => _visualSet;
 
     private Player _current;
-    private readonly Dictionary<PlayerType, Player> _players = new(PLAYERS_MAX);
+    private readonly EnumHashSet<PlayerType, Player> _players = new(true);
 
     public const int PLAYERS_MAX = 4;
     
@@ -20,20 +19,28 @@ public class Players : ASingleton<Players>
     {
         base.Awake();
 
-        PlayerType type; int idColor;
+        int[] idVisuals = _visualSet.RandIds(PLAYERS_MAX);
+        PlayerType type; int idVisual;
         for (int i = 0; i < PLAYERS_MAX; i++)
         {
             type = (PlayerType)i;
-            idColor = Random.Range(0, _colors.Count);
-            _players[type] = new(type, i, _colors[idColor], idColor);
+            idVisual = idVisuals[i];
+            _players.Add(new(type, _visualSet.Get(idVisual), this));
         }
 
-        _current = _players[Enum<PlayerType>.Rand(0, PLAYERS_MAX)];
+        RandomPlayer();
     }
 
-    public void SetIsland(Island island)
+    public void RandomPlayer() => _current = _players[Enum<PlayerType>.Rand(0, PLAYERS_MAX)]; // test
+
+    public void LoadIsland(Island island)
     {
-        for (int i = 0; i < PLAYERS_MAX; i++)
-            this[i].SetRoads(island.GetRoads());
+        foreach (Player player in _players)
+            player.SetRoads(island.GetRoads());
+    }
+
+    public void DestroyIsland(Island island)
+    {
+        
     }
 }

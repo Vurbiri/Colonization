@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
 public class Crossroad : MonoBehaviour, ISelectable
 {
-    [SerializeField] private ACity _city;
+    [SerializeField] private City _city;
 
     public Key Key => _key;
     public Vector3 Position { get; private set; }
@@ -16,7 +17,7 @@ public class Crossroad : MonoBehaviour, ISelectable
     private Key _key;
     
     private readonly List<Hexagon> _hexagons = new(COUNT);
-    private readonly EnumArray<LinkType, CrossroadLink> _links = new();
+    private readonly EnumHashSet<LinkType, CrossroadLink> _links = new();
 
     private int _countFreeLink = 0;
 
@@ -25,6 +26,7 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public const int COUNT = 3;
     private const string NAME = "Crossroad_";
+    private static readonly HashSet<CityType> notRuleOne = new() { CityType.Shrine };
 
     public void Initialize(Key key)
     {
@@ -69,7 +71,7 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public bool IsRoadConnect(PlayerType type)
     {
-        if(_city.Owner == type)
+        if (_city.Owner == type)
             return true;
 
         foreach (var link in _links)
@@ -81,19 +83,25 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public bool CanCityUpgrade(PlayerType type)
     {
-        if(_city.Owner != PlayerType.None)
-            return _city.Owner == type && _city.IsUpgrade;
-        
+        if (!_city.IsUpgrade)
+            return false;
+
+        if (_city.Owner != PlayerType.None)
+            return _city.Owner == type;
+
+        if (notRuleOne.Contains(_city.TypeNext))
+            return true;
+
         foreach (var link in _links)
             if (link.Other(this)._city.Owner != PlayerType.None)
                 return false;
 
-        return _city.IsUpgrade;
+        return true;
     }
 
-    public bool Upgrade(PlayerType type)
+    public bool Build(PlayerType type, Material material)
     {
-        if (_city.Upgrade(type, _links, out _city))
+        if (_city.Build(type, material, _links, out _city))
         {
             _eventBus.EventCrossroadMarkShow -= Show;
             _collider.radius = _city.Radius;
@@ -101,8 +109,20 @@ public class Crossroad : MonoBehaviour, ISelectable
         }
         return false;
     }
+    public bool Upgrade()
+    {
+        if (_city.Upgrade(_links, out _city))
+        {
+            _collider.radius = _city.Radius;
+            return true;
+        }
+        return false;
+    }
 
-    public bool CanRoadBuilt(PlayerType type) => _countFreeLink > 0 && (_city.Owner == type || IsRoadConnect(type));
+    public bool CanRoadBuilt(PlayerType type)
+    {
+        return _countFreeLink > 0 && IsRoadConnect(type);
+    }
 
     public bool IsFullyOwned(PlayerType owned)
     {

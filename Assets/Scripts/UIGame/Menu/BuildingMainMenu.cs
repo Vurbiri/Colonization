@@ -5,7 +5,7 @@ public class BuildingMainMenu : MonoBehaviour
     [SerializeField] private CmButton _buttonClose;
     [SerializeField] private CmButton _buttonCity;
     [SerializeField] private CmButton _buttonRoads;
-
+    
     private Players _players;
     private Crossroad _currentCrossroad;
 
@@ -37,12 +37,13 @@ public class BuildingMainMenu : MonoBehaviour
     public void Open(Crossroad crossroad)
     {
         Player player = _players.Current;
+        Color color = player.Color;
         _currentCrossroad = crossroad;
 
-        _buttonCity.targetGraphic.color = player.Color;
+        _buttonCity.targetGraphic.color = color;
         _buttonCity.interactable = player.CanCityUpgrade(crossroad);
 
-        _buttonRoads.targetGraphic.color = player.Color;
+        _buttonRoads.targetGraphic.color = color;
         _buttonRoads.interactable = player.CanRoadBuilt(crossroad);
 
         gameObject.SetActive(true);

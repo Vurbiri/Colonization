@@ -51,6 +51,7 @@ public class BuildingRoadsMenu : MonoBehaviour
     public void Open(Crossroad cross)
     {
         _currentCrossroad = cross;
+        Color currentColor = _players.Current.Color;
 
         CmButton button; int i = 0;
         foreach (var link in cross.Links)
@@ -62,7 +63,7 @@ public class BuildingRoadsMenu : MonoBehaviour
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => OnClick(link));
             button.interactable = link.Owner == PlayerType.None;
-            _roadButtonsGraphic[i].color = button.interactable ? _players.Current.Color : _players[link.Owner].Color;
+            _roadButtonsGraphic[i].color = button.interactable ? currentColor : _players[link.Owner].Color;
             
             button.gameObject.SetActive(true);
 

@@ -1,33 +1,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player
+public class Player : IValueTypeEnum<PlayerType>
 {
     public PlayerType Type => _type;
-    public int Id => _id;
-    public int IdColor => _idColor;
-    public Color Color => _color;
+    public Color Color => _visual.color;
+    public Material Material => _visual.material;
 
     private readonly PlayerType _type;
-    private readonly int _id;
-    private readonly int _idColor;
-    private readonly Color _color;
+    private readonly PlayerVisual _visual;
 
     private Roads _roads;
-    private HashSet<Crossroad> _cities = new();
+    private readonly HashSet<Crossroad> _cities = new();
 
-    public Player(PlayerType type, int id, Color color, int idColor)
+    Players _players; // test
+
+    public Player(PlayerType type, PlayerVisual visual, Players players)
     {
         _type = type;
-        _id = id;
-        _idColor = idColor;
-        _color = color;
+        _visual = visual;
+        _players = players;// test
     }
 
-    public void SetRoads(Roads roads) => _roads = roads.Initialize(_type, _color);
+    public void SetRoads(Roads roads) => _roads = roads.Initialize(_type, _visual.color);
     public void BuildRoad(CrossroadLink link) => _roads.BuildRoad(link);
     public bool CanRoadBuilt(Crossroad crossroad)
     {
+        
         return crossroad.CanRoadBuilt(_type);
     }
 
@@ -40,10 +39,23 @@ public class Player
     }
     public void CityUpgrade(Crossroad crossroad)
     {
-        if (crossroad.Upgrade(_type))
+        if (_cities.Contains(crossroad))
         {
-            _cities.Add(crossroad);
+            if (crossroad.Upgrade())
+            {
+               
+            }
+            
         }
+        else
+        {
+            if (crossroad.Build(_type, _visual.material))
+            {
+                _cities.Add(crossroad);
+            }
+        }
+
+        _players.RandomPlayer();
     }
 
     public override string ToString() => $"Player: {_type}";

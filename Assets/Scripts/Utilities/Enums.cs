@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 
 public enum AudioType
 {
@@ -68,7 +67,7 @@ public enum CityType
     Camp,
     Watchtower,
     Castle,
-    Stronghold
+    //Stronghold
 }
 
 public class Enum<T> where T : Enum
