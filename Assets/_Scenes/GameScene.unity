@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
-  _colors: {fileID: 11400000, guid: a4bd672545f56a1449ce99cbe56b96b2, type: 2}
+  _visualSet: {fileID: 11400000, guid: a4bd672545f56a1449ce99cbe56b96b2, type: 2}
 --- !u!4 &118956331
 Transform:
   m_ObjectHideFlags: 0
@@ -423,7 +423,7 @@ MonoBehaviour:
   _steepZoomRate: 0.1
   _speedRotation: 0.2
   _edge: 0.05
-  _isEdgeMove: 1
+  _isEdgeMove: 0
 --- !u!1 &249953234
 GameObject:
   m_ObjectHideFlags: 0

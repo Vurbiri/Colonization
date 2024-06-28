@@ -30,13 +30,8 @@ public class Player : IValueTypeEnum<PlayerType>
         return crossroad.CanRoadBuilt(_type);
     }
 
-    public bool CanCityUpgrade(Crossroad crossroad)
-    {
-        if (!crossroad.CanCityUpgrade(_type))
-            return false;
-        
-        return _cities.Count == 0 || crossroad.IsRoadConnect(_type);
-    }
+    public bool CanCityUpgrade(Crossroad crossroad) => crossroad.CanCityUpgrade(_type);
+
     public void CityUpgrade(Crossroad crossroad)
     {
         if (_cities.Contains(crossroad))
@@ -49,7 +44,7 @@ public class Player : IValueTypeEnum<PlayerType>
         }
         else
         {
-            if (crossroad.Build(_type, _visual.material))
+            if (crossroad.Build(_type))
             {
                 _cities.Add(crossroad);
             }

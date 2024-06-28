@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3329172951344111265}
   - component: {fileID: 7403028498206416420}
   m_Layer: 6
-  m_Name: Capsule
+  m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -230,7 +230,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8017634675871892384}
   - component: {fileID: 3659079365088140821}
-  - component: {fileID: 6354969531385025659}
   m_Layer: 6
   m_Name: Graphic
   m_TagString: Untagged
@@ -274,50 +273,12 @@ MonoBehaviour:
     - {fileID: 1927413396097202519}
     - {fileID: 2389061915862947993}
     - {fileID: 2002949774476480777}
-  _renderersSetMaterial:
-  - {fileID: 7403028498206416420}
---- !u!23 &6354969531385025659
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 570308999637090527}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
+    _count: 3
+    _countMax: 3
+  _renderersSetupGroups:
+  - _idMaterial: 0
+    _renderers:
+    - {fileID: 7403028498206416420}
 --- !u!1 &1212777737651873097
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,6 +830,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 0
+  _renderersSetupGroup:
+    _idMaterial: 0
+    _renderers:
+    - {fileID: 2014521485636937912}
+    - {fileID: 8959302430458373231}
+    - {fileID: 6120570979975515919}
   _openGate: {fileID: 6038401013372940795}
   _closeGate: {fileID: 1212777737651873097}
 --- !u!1 &5047129003091208242
@@ -918,6 +885,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 2
+  _renderersSetupGroup:
+    _idMaterial: 0
+    _renderers:
+    - {fileID: 6321670999463933939}
+    - {fileID: 5250100014707916769}
+    - {fileID: 132188528604866671}
   _openGate: {fileID: 3958411562436503315}
   _closeGate: {fileID: 6910554687922890935}
 --- !u!1 &5050977474844670478
@@ -1072,6 +1045,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 1
+  _renderersSetupGroup:
+    _idMaterial: 0
+    _renderers:
+    - {fileID: 4030509294464935328}
+    - {fileID: 6760323577374357425}
+    - {fileID: 3903412996788266356}
   _openGate: {fileID: 8701739798408744663}
   _closeGate: {fileID: 6658228375532851676}
 --- !u!1 &6038401013372940795

@@ -66,7 +66,7 @@ public class Crossroads : MonoBehaviour
         crossA = GetCrossroad();
         crossB = GetCrossroad();
 
-        new CrossroadLink(crossA, crossB);
+        new CrossroadLink(crossA, crossB, hexA.IsWater || hexB.IsWater);
 
         #region Local: GetCrossroad()
         //=================================

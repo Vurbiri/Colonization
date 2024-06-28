@@ -67,6 +67,7 @@ public enum CityType
     Camp,
     Watchtower,
     Castle,
+    Berth,
     //Stronghold
 }
 

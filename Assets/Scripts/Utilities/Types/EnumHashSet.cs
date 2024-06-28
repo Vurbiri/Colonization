@@ -4,50 +4,36 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadOnlyList<TValue>
-    where TType : Enum
-    where TValue : class, IValueTypeEnum<TType>
+public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadOnlyCollection<TValue>
+       where TType : Enum
+       where TValue : class, IValueTypeEnum<TType>
 {
     [SerializeField] private TValue[] _values;
+    [SerializeField] private int _count;
+    [SerializeField] private int _countMax;
 
     public int Count => _count;
+    public int CountMax => _countMax;
     public int Capacity => _capacity;
-    public bool NotMinus => _notMinus;
 
     public IEnumerable<TType> Types => _typesEnumerable;
-
     public TValue this[TType type] => _values[type.ToInt(_offset)];
-    public TValue this[int index]
-    {
-        get
-        {
-            foreach (TValue value in this)
-                if (index-- == 0)
-                    return value;
-
-            throw new IndexOutOfRangeException();
-        }
-    }
 
     private readonly int _offset, _capacity;
-    private int _count;
-    private readonly bool _notMinus;
     private readonly EnumHashSetKeysEnumerable _typesEnumerable;
 
-    public EnumHashSet() : this(false) { }
-
-    public EnumHashSet(bool notMinus)
+    public EnumHashSet()
     {
-        _notMinus = notMinus;
         int min = Int32.MaxValue, max = Int32.MinValue, key;
-
+        _countMax = 0;
         foreach (TType item in Enum<TType>.GetValues())
         {
             key = item.ToInt();
-            if (notMinus && key < 0)
-                continue;
+            if (key < 0) continue;
+
             min = key < min ? key : min;
             max = key > max ? key : max;
+            _countMax++;
         }
 
         _offset = -min;
@@ -58,7 +44,7 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadO
         _typesEnumerable = new(this);
     }
 
-    public EnumHashSet(IEnumerable<TValue> collection, bool notMinus = false) : this(notMinus)
+    public EnumHashSet(IEnumerable<TValue> collection) : this()
     {
         foreach (TValue value in collection)
             Add(value);
@@ -84,12 +70,36 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadO
         return true;
     }
 
+    public void Remove(TType type) => _values[type.ToInt(_offset)] = null;
+
+    public TValue First()
+    {
+        TValue value = null;
+
+        for (int i = 0; i < _capacity; i++)
+        {
+            value = _values[i];
+            if (value != null)
+                return value;
+        }
+        return value;
+    }
+
+    public TValue GetValue(int index)
+    {
+        foreach (TValue value in this)
+            if (index-- == 0)
+                return value;
+
+        throw new IndexOutOfRangeException();
+    }
+
     public void OnBeforeSerialize() 
     {
         if(_values.Length != _capacity)
             Array.Resize(ref _values, _capacity);
 
-        TValue value;
+        TValue value; _count = 0;
         for (int index, i = 0; i < _capacity; i++)
         {
             value = _values[i];
@@ -107,20 +117,22 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadO
 
             index = value.Type.ToInt(_offset);
             if (index == i)
+            {
+                _count++;
                 continue;
+            }
 
             (_values[i], _values[index]) = (_values[index], _values[i]);
             i--;
         }
+
+        List<TType> types = new(Enum<TType>.GetValues());
+        types.RemoveAll((t) => t.ToInt() < 0);
+
+        _countMax = types.Count;
     }
 
-    public void OnAfterDeserialize() 
-    {
-        _count = 0;
-        for (int i = 0; i < _values.Length; i++)
-            if (_values[i] != null)
-                _count++;
-    }
+    public void OnAfterDeserialize() { }
 
     public IEnumerator<TValue> GetEnumerator() => new EnumHashSetEnumerator(this);
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

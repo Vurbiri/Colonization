@@ -4,39 +4,34 @@ using UnityEngine;
 
 public abstract class AGetComponentAttributeDrawer : PropertyDrawer
 {
-    protected static Color colorNull = new(1f, 0.6f, 0f, 1f);
+    private const float BUTTON_SIZE = 35f, BUTTON_POS = BUTTON_SIZE * 1.1f;
+    private const string BUTTON_TEXT = "Set";
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         Type typeProperty = fieldInfo.FieldType;
-        Color prevColor = GUI.color;
 
-        if (!Application.isPlaying && IsPropertySet(property, typeProperty))
+        if (!Application.isPlaying && DrawButton())
         {
             MonoBehaviour mono = property.serializedObject.targetObject as MonoBehaviour;
             SetProperty(property, mono.gameObject, typeProperty);
         }
 
-        if (IsPropertyError(property, typeProperty))
-        {
-            GUI.color = colorNull;
-            //Debug.LogWarningFormat(property.serializedObject.targetObject, $"Объекту <b>{property.serializedObject.targetObject.name}</b> не назначено поле <b>{fieldInfo.Name}</b> ({typeProperty.Name}).");
-        }
-
         EditorGUI.PropertyField(position, property, label);
 
-        GUI.color = prevColor;
-    }
+        #region Local: DrawButton()
+        //=================================
+        bool DrawButton()
+        {
+            Rect positionButton = position;
 
-    protected virtual bool IsPropertySet(SerializedProperty property, Type typeProperty) => !IsValidValue(property.objectReferenceValue, typeProperty);
-    protected virtual bool IsPropertyError(SerializedProperty property, Type typeProperty) => !IsValidValue(property.objectReferenceValue, typeProperty);
+            position.width -= BUTTON_POS;
+            positionButton.x = EditorGUIUtility.currentViewWidth - BUTTON_POS;
+            positionButton.width = BUTTON_SIZE;
 
-    protected virtual bool IsValidValue(UnityEngine.Object value, Type typeProperty)
-    {
-        if (value == null)
-            return false;
-
-        return value.GetType().Is(typeProperty);
+            return GUI.Button(positionButton, BUTTON_TEXT.ToUpper());
+        }
+        #endregion
     }
 
     protected abstract void SetProperty(SerializedProperty property, GameObject gameObject, Type type);

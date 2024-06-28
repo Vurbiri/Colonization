@@ -6,8 +6,8 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(EnumHashSet<,>))]
 public class EnumHashSetDrawer : PropertyDrawer
 {
-    private const float Y_SPACE = 2f, BUTTON_SIZE = 125f, LABEL_SIZE = 100f;
-    private const string NAME_PROPERTY = "_values", LABEL_EMPTY = "-----";
+    private const float Y_SPACE = 2f, BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
+    private const string NAME_ARRAY = "_values", NAME_COUNT = "_count", NAME_COUNT_MAX = "_countMax", LABEL_EMPTY = "-----";
     private const string BUTTON_CHILD = "Set children", BUTTON_PREF = "Set prefabs", BUTTON_CLEAR = "Clear";
     private static readonly Color colorNull = new(1f, 0.65f, 0f, 1f);
 
@@ -19,15 +19,15 @@ public class EnumHashSetDrawer : PropertyDrawer
         Color prevColor = GUI.color;
         Rect startPosition = position;
         Type typeKey = fieldInfo.FieldType.GetGenericArguments()[0], typeValue = fieldInfo.FieldType.GetGenericArguments()[1];
-        SerializedProperty propertyValues = property.FindPropertyRelative(NAME_PROPERTY);
-        int countCurrent = 0, count = propertyValues.arraySize;
+        SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
+        int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue, countMax = property.FindPropertyRelative(NAME_COUNT_MAX).intValue, count = propertyValues.arraySize;
         
         EditorGUI.BeginProperty(position, label, property);
 
         if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
         {
             SerializedProperty propertyCurrent, propertyNull = null;
-            string[] Names = Enum.GetNames(fieldInfo.FieldType.GetGenericArguments()[0]);
+            string[] names = Enum.GetNames(typeKey);
 
             EditorGUI.indentLevel++;
             for (int i = 0; i < count; i++)
@@ -35,8 +35,7 @@ public class EnumHashSetDrawer : PropertyDrawer
                 propertyCurrent = propertyValues.GetArrayElementAtIndex(i);
                 if (propertyCurrent.objectReferenceValue != null)
                 {
-                    countCurrent++;
-                    DrawField(propertyCurrent, Names[i]);
+                    DrawField(propertyCurrent, names[i]);
                     continue;
                 }
                 
@@ -46,21 +45,19 @@ public class EnumHashSetDrawer : PropertyDrawer
                 DrawField(propertyNull, LABEL_EMPTY);
             EditorGUI.indentLevel--;
 
-            if (!Application.isPlaying && typeValue.Is(typeof(Component)))
+            if (!Application.isPlaying)
             {
-                if (property.serializedObject.targetObject is MonoBehaviour && DrawButton(BUTTON_CHILD))
-                    GetComponentsInChildren(property.serializedObject.targetObject as MonoBehaviour);
-                if (DrawButton(BUTTON_PREF))
-                    LoadAssets();
+                if (typeValue.Is(typeof(Component)))
+                {
+                    if (property.serializedObject.targetObject is MonoBehaviour && DrawButton(BUTTON_CHILD, 1))
+                        GetComponentsInChildren(property.serializedObject.targetObject as MonoBehaviour);
+                    if (DrawButton(BUTTON_PREF, 0))
+                        LoadAssets();
+                }
+           
+                if (DrawButton(BUTTON_CLEAR, 2))
+                    Clear();
             }
-            if (DrawButton(BUTTON_CLEAR))
-                Clear();
-        }
-        else
-        {
-            for (int i = 0; i < count; i++)
-                if (propertyValues.GetArrayElementAtIndex(i).objectReferenceValue != null)
-                    countCurrent++;
         }
         DrawLabelCount();
 
@@ -87,19 +84,23 @@ public class EnumHashSetDrawer : PropertyDrawer
             startPosition.x = EditorGUIUtility.currentViewWidth - LABEL_SIZE - 20f;
             startPosition.width = LABEL_SIZE;
 
-            if (countCurrent < count)
+            if (countCurrent < countMax)
                 GUI.color = colorNull;
-            EditorGUI.LabelField(startPosition, $"{countCurrent} / {count}", style);
+            EditorGUI.LabelField(startPosition, $"{countCurrent} / {countMax}", style);
             GUI.color = prevColor;
         }
         //=================================
-        bool DrawButton(string text)
+        bool DrawButton(string text, int spot)
         {
-            position.height += Y_SPACE;
-            position.y += position.height + Y_SPACE * 2f;
-            position.x = (EditorGUIUtility.currentViewWidth - BUTTON_SIZE) * 0.5f;
-            position.width = BUTTON_SIZE;
-            return GUI.Button(position, text.ToUpper());
+            Rect positionButton = position;
+            float viewWidth = EditorGUIUtility.currentViewWidth;
+
+            positionButton.height += Y_SPACE;
+            positionButton.y += positionButton.height + Y_SPACE * 2f;
+            positionButton.x = viewWidth * (BUTTON_RATE_POS * (0.5f + spot) - BUTTON_RATE_SIZE * 0.5f);
+            positionButton.width = viewWidth * BUTTON_RATE_SIZE;
+
+            return GUI.Button(positionButton, text.ToUpper());
         }
         //=================================
         void GetComponentsInChildren(MonoBehaviour mono)
@@ -138,36 +139,41 @@ public class EnumHashSetDrawer : PropertyDrawer
             for (int index = 0; index < count; index++)
                 propertyValues.GetArrayElementAtIndex(index).objectReferenceValue = null;
         }
-        #endregion
+        //Array GetEnum()
+        //{
+        //    Array arr = Enum.GetValues(typeKey);
+        //    SerializedProperty propertyFlag = property.FindPropertyRelative(NAME_FLAG);
 
+        //    if (!propertyFlag.boolValue)
+        //    {
+        //        Array.Sort(arr);
+        //        return arr;
+        //    }
+
+        //    Array arrNotMinus = Array.CreateInstance(typeKey, count);
+        //    for (int i = 0; i < count; i++)
+        //        arrNotMinus.SetValue(arr.GetValue(i), i);
+
+        //    return arrNotMinus;
+        //}
+        #endregion
     }
 
-    private const float BUTTON_RATE = 1.3f;
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         float rate = 1.01f;
-        int countNull = 0;
+        
         if (property.isExpanded)
         {
-            SerializedProperty propertyValues = property.FindPropertyRelative(NAME_PROPERTY);
-            for (int i = 0; i < propertyValues.arraySize; i++)
-            {
-                if (propertyValues.GetArrayElementAtIndex(i).objectReferenceValue != null)
-                    rate += 1f;
-                else if (countNull == 0)
-                    countNull++;
-            }
+            int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue;
+            rate += countCurrent;
+            if(countCurrent < property.FindPropertyRelative(NAME_COUNT_MAX).intValue)
+                rate += 1f;
 
-            Type typeValue = fieldInfo.FieldType.GetGenericArguments()[1];
-            if (!Application.isPlaying && typeValue.Is(typeof(Component)))
-            {
-                if (property.serializedObject.targetObject is MonoBehaviour)
-                    rate += BUTTON_RATE;
-                rate += BUTTON_RATE;
-            }
-            rate += BUTTON_RATE;
+            if (!Application.isPlaying)
+                rate += 1.3f;
         }
 
-        return (EditorGUIUtility.singleLineHeight + Y_SPACE) * (rate + countNull);
+        return (EditorGUIUtility.singleLineHeight + Y_SPACE) * rate;
     }
 }

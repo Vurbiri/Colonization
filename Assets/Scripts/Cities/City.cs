@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class City : MonoBehaviour, IValueTypeEnum<CityType>
@@ -19,13 +18,10 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
     public float Radius => _radiusCollider;
 
     protected bool _isGate = false;
-    private int _waterCount = 0;
+    protected int _waterCount = 0;
     protected PlayerType _owner = PlayerType.None;
 
-    public virtual void Initialize()
-    {
-        _graphic.Initialize();
-    }
+    public virtual void Initialize() => _graphic.Initialize();
 
     public virtual bool Setup() => _waterCount < Crossroad.COUNT;
 
@@ -39,20 +35,21 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
 
     public virtual void AddLink(LinkType type) => _graphic.AddLink(type);
 
-    public virtual void AddRoad(LinkType type) => _graphic.RoadBuilt(type);
+    public virtual void AddRoad(LinkType type, PlayerType owner) => _graphic.RoadBuilt(type, owner);
 
-    public virtual bool Build(PlayerType owner, Material material, IEnumerable<CrossroadLink> links, out City city)
+    public virtual bool Build(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, out City city)
     {
         city = this;
         return false;
     }
 
-    public virtual bool Upgrade(IEnumerable<CrossroadLink> links, out City city)
+    public virtual bool Upgrade(EnumHashSet<LinkType, CrossroadLink> links, out City city)
     {
         if (_isUpgrade)
         {
             city = Instantiate(_prefabNextUpgrade, transform.parent);
-            city.CopyingData(links, this);
+            city.CopyingData(this);
+            city._graphic.Upgrade(links);
 
             Destroy(gameObject);
             return true;
@@ -62,20 +59,11 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
         return false;
     }
     
-    protected virtual void CopyingData(IEnumerable<CrossroadLink> links, City city)
+    protected virtual void CopyingData(City city)
     {
         _owner = city._owner;
         _isGate = city._isGate;
         _waterCount = city._waterCount;
-
-        _graphic.Upgrade(city._graphic);
-
-        foreach (CrossroadLink link in links)
-        {
-            AddLink(link.Type);
-            if(link.Owner != PlayerType.None)
-                AddRoad(link.Type);
-        }
     }
 
     public virtual void Show(bool isShow) {}

@@ -2,33 +2,40 @@ using UnityEngine;
 
 public class CityGraphic : MonoBehaviour
 {
-    [SerializeField] protected EnumHashSet<LinkType, ACityGraphicSide> _graphicSides;
+    [SerializeField] protected EnumHashSet<LinkType, CityGraphicSide> _graphicSides;
     [Space]
-    [SerializeField] protected Renderer[] _renderersSetMaterial;
+    [SerializeField] protected RendererSetupGroup[] _renderersSetupGroups;
 
-    private Material _material;
+    protected Players _players;
 
     public virtual void Initialize()
     {
-        foreach(var side in _graphicSides)
+        _players = Players.Instance;
+
+        foreach (var side in _graphicSides)
             side.Initialize();
     }
 
-    public virtual void Upgrade(CityGraphic graphic)
+    public virtual void Upgrade(EnumHashSet<LinkType, CrossroadLink> links)
     {
         Initialize();
-        SetMaterial(graphic._material);
-    }
 
-    public virtual void SetMaterial(Material material)
-    {
-        _material = material;
+        Material material = _players.Current.Material;
+        foreach (var group in _renderersSetupGroups)
+            group.SetMaterial(material);
 
-        foreach (var renderer in _renderersSetMaterial)
-            renderer.sharedMaterial = material;
+        LinkType type; PlayerType owner;
+        foreach (var link in links)
+        {
+            type = link.Type; owner = link.Owner;
+            AddLink(type);
+            if (owner != PlayerType.None)
+                RoadBuilt(type, owner);
+        }
     }
 
     public virtual void AddLink(LinkType type) => _graphicSides[type].AddLink();
 
-    public virtual void RoadBuilt(LinkType type) => _graphicSides[type].RoadBuilt();
+    public virtual void RoadBuilt(LinkType type, PlayerType owner) => _graphicSides[type].RoadBuilt(_players[owner].Material);
+
 }

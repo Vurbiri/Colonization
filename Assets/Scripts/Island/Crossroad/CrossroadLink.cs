@@ -4,6 +4,7 @@ public class CrossroadLink : IValueTypeEnum<LinkType>
 {
     public KeyDouble Key => _key;
     public LinkType Type => _type;
+    public bool IsWater => _isWater;
     public Vector3 Position => _middle;
     public PlayerType Owner {get => _owner; set => _owner = value; }
     public bool IsNotCities => _start.CityType == CityType.Signpost && _end.CityType == CityType.Signpost;
@@ -12,12 +13,13 @@ public class CrossroadLink : IValueTypeEnum<LinkType>
     public Crossroad End => _end;
    
     private Crossroad _start, _end;
-    private readonly LinkType _type;
     private PlayerType _owner;
+    private readonly LinkType _type;
+    private readonly bool _isWater;
     private readonly KeyDouble _key;
     private readonly Vector3 _middle;
 
-    public CrossroadLink(Crossroad crossA, Crossroad crossB, PlayerType owner = PlayerType.None)
+    public CrossroadLink(Crossroad crossA, Crossroad crossB, bool isWater)
     {
         _start = crossA; _end = crossB;
         _type = (LinkType)(_end - _start);
@@ -26,7 +28,8 @@ public class CrossroadLink : IValueTypeEnum<LinkType>
             return;
 
         _key = _start & _end;
-        _owner = owner;
+        _isWater = isWater;
+        _owner = PlayerType.None;
         _middle = (_start.Position + _end.Position) * 0.5f;
     }
 
@@ -39,8 +42,8 @@ public class CrossroadLink : IValueTypeEnum<LinkType>
     public void RoadBuilt(PlayerType owner)
     {
         _owner = owner;
-        _start.RoadBuilt(_type);
-        _end.RoadBuilt(_type);
+        _start.RoadBuilt(_type, owner);
+        _end.RoadBuilt(_type, owner);
     }
 
     public Crossroad Other(Crossroad crossroad) => crossroad == _start ? _end : _start;

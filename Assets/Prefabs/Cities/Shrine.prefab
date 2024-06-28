@@ -410,8 +410,8 @@ Transform:
   m_GameObject: {fileID: 2816912880236788611}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -4}
-  m_LocalScale: {x: 1, y: 2, z: 5}
+  m_LocalPosition: {x: 0, y: 1, z: -3}
+  m_LocalScale: {x: 1, y: 2, z: 3.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4835433693491372399}
@@ -513,6 +513,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 1
+  _renderersSetupGroup:
+    _idMaterial: 0
+    _renderers:
+    - {fileID: 9129267475550776027}
   _wall: {fileID: 8409362983037923065}
   _cross: {fileID: 6589290118664356749}
 --- !u!1 &4010279176716407513
@@ -542,8 +546,8 @@ Transform:
   m_GameObject: {fileID: 4010279176716407513}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -4}
-  m_LocalScale: {x: 1, y: 2, z: 5}
+  m_LocalPosition: {x: 0, y: 1, z: -3}
+  m_LocalScale: {x: 1, y: 2, z: 3.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8628346061733992516}
@@ -645,6 +649,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 0
+  _renderersSetupGroup:
+    _idMaterial: 0
+    _renderers:
+    - {fileID: 9158422178642597354}
   _wall: {fileID: 2816912880236788611}
   _cross: {fileID: 7380520249844895584}
 --- !u!1 &5850782310781462847
@@ -694,6 +702,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 2
+  _renderersSetupGroup:
+    _idMaterial: 0
+    _renderers:
+    - {fileID: 9087372638788739622}
   _wall: {fileID: 4010279176716407513}
   _cross: {fileID: 1976887324219882385}
 --- !u!1 &6589290118664356749
@@ -832,13 +844,18 @@ MonoBehaviour:
     - {fileID: 6435181555954718735}
     - {fileID: 3302493319584680873}
     - {fileID: 8934100416292037681}
-  _renderersSetMaterial:
-  - {fileID: 6341964142503673299}
-  - {fileID: 7257017339931049926}
-  - {fileID: 8729643920224047529}
-  - {fileID: 6316866095865511251}
-  - {fileID: 2952822255356901724}
-  - {fileID: 1167501965942887823}
+  _renderersSetupGroups:
+  - _idMaterial: 0
+    _renderers:
+    - {fileID: 6341964142503673299}
+    - {fileID: 6316866095865511251}
+    - {fileID: 7257017339931049926}
+    - {fileID: 2952822255356901724}
+    - {fileID: 8729643920224047529}
+    - {fileID: 1167501965942887823}
+    - {fileID: 9087372638788739622}
+    - {fileID: 9158422178642597354}
+    - {fileID: 9129267475550776027}
 --- !u!1 &7380520249844895584
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,8 +967,8 @@ Transform:
   m_GameObject: {fileID: 8409362983037923065}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -4}
-  m_LocalScale: {x: 1, y: 2, z: 5}
+  m_LocalPosition: {x: 0, y: 1, z: -3}
+  m_LocalScale: {x: 1, y: 2, z: 3.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3949661404811524864}

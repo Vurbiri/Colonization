@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ShrineSide : ACityGraphicSide
+public class ShrineSide : CityGraphicSide
 {
     [SerializeField] private GameObject _wall;
     [SerializeField] private GameObject _cross;
@@ -17,5 +17,5 @@ public class ShrineSide : ACityGraphicSide
         _cross.SetActive(true);
     }
 
-    public override void RoadBuilt() { }
+    public override void RoadBuilt(Material material) { }
 }

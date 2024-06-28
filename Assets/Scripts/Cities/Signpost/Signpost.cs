@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Signpost : City
@@ -12,15 +11,21 @@ public class Signpost : City
             return false;
 
         _owner = PlayerType.None;
-        _prefabNextUpgrade = _isGate ? _prefabs[CityType.Shrine] : _prefabs[CityType.Camp];
+
+        if (_isGate)
+            _prefabNextUpgrade = _prefabs[CityType.Shrine];
+        else if (_waterCount > 0)
+            _prefabNextUpgrade = _prefabs[CityType.Berth];
+        else
+            _prefabNextUpgrade = _prefabs[CityType.Camp];
+
         _graphic.gameObject.SetActive(true);
         return true;
     }
 
-    public override bool Build(PlayerType owner, Material material, IEnumerable<CrossroadLink> links, out City city)
+    public override bool Build(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, out City city)
     {
         _owner = owner;
-        _graphic.SetMaterial(material);
         if(Upgrade(links, out city))
             return true;
 

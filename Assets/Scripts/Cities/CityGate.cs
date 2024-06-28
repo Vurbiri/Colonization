@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CityGate : ACityGraphicSide
+public class CityGate : CityGraphicSide
 {
     [SerializeField] private GameObject _openGate;
     [SerializeField] private GameObject _closeGate;
@@ -13,9 +13,11 @@ public class CityGate : ACityGraphicSide
         _closeGate.SetActive(true);
     }
 
-    public override void RoadBuilt() 
+    public override void RoadBuilt(Material material) 
     {
         _openGate.SetActive(true);
         _closeGate.SetActive(false);
+
+        base.RoadBuilt(material);
     }
 }

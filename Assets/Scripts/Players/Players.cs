@@ -11,7 +11,7 @@ public class Players : ASingleton<Players>
     public PlayerVisualSetScriptable VisualSet => _visualSet;
 
     private Player _current;
-    private readonly EnumHashSet<PlayerType, Player> _players = new(true);
+    private readonly EnumHashSet<PlayerType, Player> _players = new();
 
     public const int PLAYERS_MAX = 4;
     

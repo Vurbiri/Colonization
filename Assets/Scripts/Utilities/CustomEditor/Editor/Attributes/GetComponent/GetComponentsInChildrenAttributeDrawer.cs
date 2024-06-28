@@ -4,78 +4,56 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(GetComponentsInChildrenAttribute))]
-public class GetComponentsInChildrenAttributeDrawer : AGetComponentAttributeDrawer
+public class GetComponentsInChildrenAttributeDrawer : PropertyDrawer
 {
-    private GetComponentsInChildrenAttribute _attribute;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        Color prevColor = GUI.color;
         Type typeProperty = fieldInfo.FieldType;
 
         if (typeProperty.IsArray || typeProperty.GetInterface(nameof(IList)) != null)
         {
-            _attribute = attribute as GetComponentsInChildrenAttribute;
-
-            SerializedProperty propArray = property.serializedObject.FindProperty(fieldInfo.Name);
-            typeProperty = typeProperty.IsArray ? typeProperty.GetElementType() : typeProperty.GetGenericArguments()[_attribute.IndexGeneric];
-
-            if (!Application.isPlaying && IsPropertySet(propArray, typeProperty))
-            {
-                MonoBehaviour mono = property.serializedObject.targetObject as MonoBehaviour;
-                SetProperty(propArray, mono.gameObject, typeProperty);
-            }
-
-            if (IsPropertyError(propArray, typeProperty))
-                GUI.color = colorNull;
-
+            SerializedProperty propArray = FindArray();
             EditorGUI.PropertyField(position, property, label);
+
+            if (!Application.isPlaying && propArray.arraySize <= 1 && GUILayout.Button("GetComponentsInChildren"))
+            {
+                GetComponentsInChildrenAttribute attributeGCIC = attribute as GetComponentsInChildrenAttribute;
+                typeProperty = typeProperty.IsArray ? typeProperty.GetElementType() : typeProperty.GetGenericArguments()[attributeGCIC.IndexGeneric];
+                MonoBehaviour mono = property.serializedObject.targetObject as MonoBehaviour;
+                SetPropertyArray(propArray, mono.gameObject.GetComponentsInChildren(typeProperty, attributeGCIC.IncludeInactive));
+            }
         }
         else
         {
-            GUI.color = Color.red;
-
             EditorGUILayout.PropertyField(property, label);
             EditorGUILayout.HelpBox("Not array", UnityEditor.MessageType.Error);
         }
-        
-        GUI.color = prevColor;
-    }
 
-    protected override bool IsPropertySet(SerializedProperty property, Type typeProperty)
-    {
-        for (int i = 0; i < property.arraySize; i++)
-            if (IsValidValue(property.GetArrayElementAtIndex(i).objectReferenceValue, typeProperty))
-                return false;
 
-        return true;
-    }
+        #region Local: FindArray()
+        //=================================
+        SerializedProperty FindArray()
+        {
+            SerializedProperty iterator = property.serializedObject.GetIterator();
+            while (iterator.name != fieldInfo.Name && iterator.Next(true)) ;
 
-    protected override bool IsPropertyError(SerializedProperty property, Type typeProperty)
-    {
-        for (int i = 0; i < property.arraySize; i++)
-            if (!IsValidValue(property.GetArrayElementAtIndex(i).objectReferenceValue, typeProperty))
-                return true;
+            return iterator;
+        }
+        //=================================
+        void SetPropertyArray(SerializedProperty property, UnityEngine.Object[] array)
+        {
+            int count = array.Length;
 
-        return false;
-    }
+            while (property.arraySize < count)
+                property.InsertArrayElementAtIndex(property.arraySize);
 
-    protected override void SetProperty(SerializedProperty property, GameObject gameObject, Type type)
-    {
-        SetPropertyArray(property, gameObject.GetComponentsInChildren(type, _attribute.IncludeInactive));
-    }
+            for (int index = 0; index < count; index++)
+                property.GetArrayElementAtIndex(index).objectReferenceValue = array[index];
 
-    protected void SetPropertyArray(SerializedProperty property, UnityEngine.Object[] array)
-    {
-        int count = array.Length;
-
-        while (property.arraySize < count)
-            property.InsertArrayElementAtIndex(property.arraySize);
-
-        for (int index = 0; index < count; index++)
-            property.GetArrayElementAtIndex(index).objectReferenceValue = array[index];
-
-        while (property.arraySize > count)
-            property.DeleteArrayElementAtIndex(count);
+            while (property.arraySize > count)
+                property.DeleteArrayElementAtIndex(count);
+        }
+        #endregion
     }
 }

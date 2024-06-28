@@ -26,7 +26,7 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public const int COUNT = 3;
     private const string NAME = "Crossroad_";
-    private static readonly HashSet<CityType> notRuleOne = new() { CityType.Shrine };
+    //private static readonly HashSet<CityType> notRuleOne = new() { CityType.Shrine, CityType.Berth };
 
     public void Initialize(Key key)
     {
@@ -89,19 +89,45 @@ public class Crossroad : MonoBehaviour, ISelectable
         if (_city.Owner != PlayerType.None)
             return _city.Owner == type;
 
-        if (notRuleOne.Contains(_city.TypeNext))
+        CityType typeNext = _city.TypeNext;
+        if (typeNext == CityType.Shrine)
             return true;
 
-        foreach (var link in _links)
-            if (link.Other(this)._city.Owner != PlayerType.None)
-                return false;
+        if (typeNext == CityType.Berth)
+            return BerthCheck();
 
-        return true;
+        return NeighborCheck();
+
+        #region Local: BerthCheck(), NeighborCheck()
+        //=================================
+        bool BerthCheck()
+        {
+            foreach (var link in _links)
+            {
+                if (link.Other(this)._city.Type == CityType.Berth)
+                    return false;
+            }
+            return true;
+        }
+        //=================================
+        bool NeighborCheck()
+        {
+            City neighbor;
+            foreach (var link in _links)
+            {
+                neighbor = link.Other(this)._city;
+                if (neighbor.Type != CityType.Berth && neighbor.Owner != PlayerType.None)
+                    return false;
+            }
+
+            return IsRoadConnect(type);
+        }
+        #endregion
     }
 
-    public bool Build(PlayerType type, Material material)
+    public bool Build(PlayerType type)
     {
-        if (_city.Build(type, material, _links, out _city))
+        if (_city.Build(type, _links, out _city))
         {
             _eventBus.EventCrossroadMarkShow -= Show;
             _collider.radius = _city.Radius;
@@ -136,10 +162,10 @@ public class Crossroad : MonoBehaviour, ISelectable
         return true;
     }
 
-    public void RoadBuilt(LinkType type)
+    public void RoadBuilt(LinkType type, PlayerType owned)
     {
         _countFreeLink--;
-        _city.AddRoad(type);
+        _city.AddRoad(type, owned);
     }
     
     public void Select() => _eventBus.TriggerCrossroadSelect(this);
