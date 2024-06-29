@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using static CONST;
 
@@ -8,7 +7,7 @@ public class Island : MonoBehaviour
 {
     [SerializeField] private Surfaces _surfaces;
     [Space]
-    [SerializeField, Range(3, 6)] private int _circleMax = 5;
+    [SerializeField, Range(4, 6)] private int _circleMax = 5;
     [SerializeField, Range(0, 100)] private int _chance = 11;
     [Space]
     [SerializeField, GetComponentInChildren] private Land _land;
@@ -52,7 +51,7 @@ public class Island : MonoBehaviour
             bool isWater = false, isLastCircle = circle == _circleMax;
             Vector3 position, positionNext, direction, current;
 
-            ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);// Õ”Ã≈–¿÷»ﬂ ’≈ —Œ¬????
+            ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);
             ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.grounds);
 
             Hexagon hex = _land.CreateHexagon(Vector3.zero, (_surfaces.gate, ID_GATE));
@@ -60,7 +59,7 @@ public class Island : MonoBehaviour
             while (!isLastCircle)
             {
                 isLastCircle = ++circle == _circleMax;
-                chance = _chance * circle / (_circleMax - 1);
+                chance = _chance * (circle - ((_circleMax - 1) >> 1)) / ((_circleMax - 1) >> 1);
                 positionNext = HEX_SIDES[0] * circle;
                 for (int i = 0; i < COUNT_SIDES; i++)
                 {
@@ -71,7 +70,7 @@ public class Island : MonoBehaviour
                     for (int j = 0; j < circle; j++)
                     {
                         current = position + direction * j;
-                        hex = _land.CreateHexagon(current, SetTypeAndId(j));// Õ”Ã≈–¿÷»ﬂ ’≈ —Œ¬????
+                        hex = _land.CreateHexagon(current, SetTypeAndId(j));
                         _crossroads.CreateCrossroad(current, hex, isLastCircle);
                     }
                 }
@@ -83,7 +82,7 @@ public class Island : MonoBehaviour
             {
                 isWater = isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(current) || URandom.IsTrue(chance)));
 
-                return isWater ? (_surfaces.water, numWater.Value) : (surfaces.Value, numGround.Value);// Õ”Ã≈–¿÷»ﬂ ’≈ —Œ¬????
+                return isWater ? (_surfaces.water, numWater.Value) : (surfaces.Value, numGround.Value);
             }
             #endregion
         }

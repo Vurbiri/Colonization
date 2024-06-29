@@ -54,7 +54,7 @@ public class Land : MonoBehaviour
 
     public void HexagonsNeighbors(Action<Hexagon, Hexagon> actionCreateLink)
     {
-        Hexagon hexAdd;
+        Hexagon neighbor;
         Vertex[][] verticesNear = null;
         bool[] waterNear = null;
         int side = 0;
@@ -68,14 +68,14 @@ public class Land : MonoBehaviour
             }
             foreach (var offset in _near)
             {
-                if (_hexagons.TryGetValue(hex.Key + offset, out hexAdd))
+                if (_hexagons.TryGetValue(hex.Key + offset, out neighbor))
                 {
-                    hex.Neighbors.Add(hexAdd);
-                    actionCreateLink(hex, hexAdd);
+                    hex.NeighborAdd(neighbor);
+                    actionCreateLink(hex, neighbor);
                     if (!hex.IsWater)
                     {
-                        verticesNear[side] = _landMesh.GetVertexSide(hex.Key, hexAdd.Key, side);
-                        waterNear[side] = hexAdd.IsWater;
+                        verticesNear[side] = _landMesh.GetVertexSide(hex.Key, neighbor.Key, side);
+                        waterNear[side] = neighbor.IsWater;
                     }
                 }
                 side++;

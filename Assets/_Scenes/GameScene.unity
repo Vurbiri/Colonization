@@ -152,6 +152,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
+  _startResources:
+    _values: 04000000040000000400000004000000040000000400000004000000
   _visualSet: {fileID: 11400000, guid: a4bd672545f56a1449ce99cbe56b96b2, type: 2}
 --- !u!4 &118956331
 Transform:
@@ -350,7 +352,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 167528442}
-  m_Mesh: {fileID: 4300000, guid: 34fcefac58469d8468693ff869bf5f37, type: 2}
+  m_Mesh: {fileID: 4300000, guid: da75fffc3db5c0f4ca42f24dcc6b42dc, type: 2}
 --- !u!114 &167528448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -423,7 +425,7 @@ MonoBehaviour:
   _steepZoomRate: 0.1
   _speedRotation: 0.2
   _edge: 0.05
-  _isEdgeMove: 0
+  _isEdgeMove: 1
 --- !u!1 &249953234
 GameObject:
   m_ObjectHideFlags: 0
@@ -1594,7 +1596,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: fb1677dbd00e8174f8280ff5bd1c1963, type: 2}
     - {fileID: 11400000, guid: e3b96aa18137802489b4eda13176a589, type: 2}
   _circleMax: 4
-  _chance: 35
+  _chance: 33
   _land: {fileID: 167528448}
   _crossroads: {fileID: 1829909683}
   _roadsPrefab: {fileID: 8182378917549708823, guid: bd24c09b2bd69704a8b9e26d2f63cdef,

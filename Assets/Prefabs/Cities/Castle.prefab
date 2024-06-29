@@ -536,10 +536,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08b32d25663bfaa4a9bb64ca545c13ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 4
+  _type: 6
   _isUpgrade: 0
   _graphic: {fileID: 3659079365088140821}
-  _prefabNextUpgrade: {fileID: 3967751348314251287}
+  _prefabUpgrade: {fileID: 3967751348314251287}
   _radiusCollider: 3.25
 --- !u!1 &3266610708225575082
 GameObject:

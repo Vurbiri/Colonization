@@ -10,7 +10,7 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public Key Key => _key;
     public Vector3 Position { get; private set; }
-    public CityType CityType => _city.Type;
+    public PlayerType Owner => _city.Owner;
     public bool IsUpgrade => _city.IsUpgrade;
     public IEnumerable<CrossroadLink> Links => _links;
 
@@ -20,13 +20,16 @@ public class Crossroad : MonoBehaviour, ISelectable
     private readonly EnumHashSet<LinkType, CrossroadLink> _links = new();
 
     private int _countFreeLink = 0;
+    private bool _isGate = false;
+    private int _waterCount = 0;
+    private CityType _cityBuild;
 
     private SphereCollider _collider;
     private EventBus _eventBus;
 
     public const int COUNT = 3;
     private const string NAME = "Crossroad_";
-    //private static readonly HashSet<CityType> notRuleOne = new() { CityType.Shrine, CityType.Berth };
+    private static readonly HashSet<CityType> notRuleTwo = new() { CityType.Shrine, CityType.Berth, CityType.Port };
 
     public void Initialize(Key key)
     {
@@ -46,11 +49,24 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public bool AddHexagon(Hexagon hexagon)
     {
-        _city.SetHexagon(hexagon);
+        _isGate = _isGate || hexagon.IsGate;
 
-        if (_hexagons.Count < (COUNT - 1) || _city.Setup())
+        if (hexagon.IsWater)
+            _waterCount++;
+
+        if (_hexagons.Count < (COUNT - 1) || _waterCount < COUNT)
         {
             _hexagons.Add(hexagon);
+
+            if (_isGate)
+                _cityBuild = CityType.Shrine;
+            else if (_waterCount == 1)
+                _cityBuild = CityType.Berth;
+            else if (_waterCount == 2)
+                _cityBuild = CityType.Port;
+            else
+                _cityBuild = CityType.Camp;
+
             return true;
         }
 
@@ -89,24 +105,21 @@ public class Crossroad : MonoBehaviour, ISelectable
         if (_city.Owner != PlayerType.None)
             return _city.Owner == type;
 
-        CityType typeNext = _city.TypeNext;
-        if (typeNext == CityType.Shrine)
-            return true;
-
-        if (typeNext == CityType.Berth)
-            return BerthCheck();
-
-        return NeighborCheck();
+        return _cityBuild switch
+        {
+            CityType.Shrine => true,
+            CityType.Berth  => WaterCheck(),
+            CityType.Port   => WaterCheck(),
+            _               => NeighborCheck()
+        };
 
         #region Local: BerthCheck(), NeighborCheck()
         //=================================
-        bool BerthCheck()
+        bool WaterCheck()
         {
-            foreach (var link in _links)
-            {
-                if (link.Other(this)._city.Type == CityType.Berth)
+            foreach (var hex in _hexagons)
+                if (hex.IsWaterBusy())
                     return false;
-            }
             return true;
         }
         //=================================
@@ -116,7 +129,7 @@ public class Crossroad : MonoBehaviour, ISelectable
             foreach (var link in _links)
             {
                 neighbor = link.Other(this)._city;
-                if (neighbor.Type != CityType.Berth && neighbor.Owner != PlayerType.None)
+                if (!notRuleTwo.Contains(neighbor.Type) && neighbor.Owner != PlayerType.None)
                     return false;
             }
 
@@ -125,9 +138,9 @@ public class Crossroad : MonoBehaviour, ISelectable
         #endregion
     }
 
-    public bool Build(PlayerType type)
+    public bool Build(PlayerType playerType)
     {
-        if (_city.Build(type, _links, out _city))
+        if (_city.Build(_cityBuild, playerType, _links, out _city))
         {
             _eventBus.EventCrossroadMarkShow -= Show;
             _collider.radius = _city.Radius;
@@ -152,8 +165,11 @@ public class Crossroad : MonoBehaviour, ISelectable
 
     public bool IsFullyOwned(PlayerType owned)
     {
-        if(_countFreeLink > 0 || _links.Count <= 1)
+        if(_links.Count <= 1)
             return false;
+
+        if (_countFreeLink > 0)
+            return _city.Owner == owned;
 
         foreach (var link in _links)
             if (link.Owner != owned)
@@ -177,7 +193,7 @@ public class Crossroad : MonoBehaviour, ISelectable
     {
         _eventBus.EventCrossroadMarkShow -= Show;
         foreach (var hex in _hexagons)
-            hex.Crossroads.Remove(this);
+            hex.CrossroadRemove(this);
     }
 
     public override string ToString() => $"{_key}";

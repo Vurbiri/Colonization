@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BerthGraphic : CityGraphic
+public class WaterGraphic : CityGraphic
 {
     
     private static readonly Quaternion angle0 = Quaternion.identity, angle180 = Quaternion.Euler(0f, 180f, 0f);
@@ -44,7 +44,7 @@ public class BerthGraphic : CityGraphic
         void ActiveSide(CityGraphicSide side)
         {
             side.AddLink();
-            side.RoadBuilt(material);
+            side.SetMaterial(material);
         }
         #endregion
     }

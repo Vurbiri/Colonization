@@ -12,5 +12,5 @@ public class CityGraphicSide : MonoBehaviour, IValueTypeEnum<LinkType>
 
     public virtual void AddLink() => gameObject.SetActive(true);
 
-    public virtual void RoadBuilt(Material material) => _renderersSetupGroup.SetMaterial(material);
+    public virtual void SetMaterial(Material material) => _renderersSetupGroup.SetMaterial(material);
 }

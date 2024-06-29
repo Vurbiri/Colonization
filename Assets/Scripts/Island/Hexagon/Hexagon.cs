@@ -10,15 +10,14 @@ public class Hexagon : MonoBehaviour, ISelectable
     
     public Key Key => _key;
     public int Id => _id;
-    public bool IsGate => _surface == SurfaceType.Gate;
-    public bool IsWater => _surface == SurfaceType.Water;
-    public HashSet<Crossroad> Crossroads => _crossroads;
-    public HashSet<Hexagon> Neighbors => _neighbors;
+    public bool IsGate => _isGate;
+    public bool IsWater => _isWater;
 
     #region private
     private int _id = -1;
     private Key _key;
-    private SurfaceType _surface;
+    private Resource _surface;
+    bool _isGate, _isWater;
 
     private readonly HashSet<Crossroad> _crossroads = new(CONST.COUNT_SIDES);
     private readonly HashSet<Hexagon> _neighbors = new(CONST.COUNT_SIDES);
@@ -34,6 +33,8 @@ public class Hexagon : MonoBehaviour, ISelectable
         _idText.gameObject.SetActive(_showId);
 
         _surface = surface.Type;
+        _isGate = _surface == Resource.Gate;
+        _isWater = _surface == Resource.Water;
 
         name = NAME + _id + "__" + key.ToString();
 
@@ -42,6 +43,29 @@ public class Hexagon : MonoBehaviour, ISelectable
             transform.localPosition += new Vector3(0f, waterLevel, 0f);
             GetComponent<Collider>().enabled = false;
         }
+    }
+
+    public void NeighborAdd(Hexagon neighbor) => _neighbors.Add(neighbor);
+
+    public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
+    public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
+
+    public bool IntersectWith(Hexagon other, out HashSet<Crossroad> set)
+    {
+        set = new(_crossroads);
+        set.IntersectWith(other._crossroads);
+        return set.Count == 2;
+    }
+
+    public bool IsWaterBusy()
+    {
+        if(!_isWater) return false;
+
+        foreach(var crossroad in _crossroads)
+            if(crossroad.Owner != PlayerType.None)
+                return true;
+
+        return false;
     }
 
     public void Select()

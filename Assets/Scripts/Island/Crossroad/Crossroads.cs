@@ -45,7 +45,7 @@ public class Crossroads : MonoBehaviour
             }
 
             if(cross.AddHexagon(hex))
-                hex.Crossroads.Add(cross);
+                hex.CrossroadAdd(cross);
             else
                 _crossroads.Remove(key);
         }
@@ -53,12 +53,7 @@ public class Crossroads : MonoBehaviour
 
     public void CreateCrossroadLink(Hexagon hexA, Hexagon hexB)
     {
-        if ((hexA.IsWater && hexB.IsWater) || (hexA.IsGate || hexB.IsGate))
-            return;
-
-        HashSet<Crossroad> cross = new(hexA.Crossroads);
-        cross.IntersectWith(hexB.Crossroads);
-        if (cross.Count != 2)
+        if ((hexA.IsWater && hexB.IsWater) || (hexA.IsGate || hexB.IsGate) || !hexA.IntersectWith(hexB, out HashSet<Crossroad> cross))
             return;
 
         Crossroad crossA, crossB;

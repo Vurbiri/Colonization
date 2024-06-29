@@ -16,6 +16,4 @@ public class ShrineSide : CityGraphicSide
         _wall.SetActive(false);
         _cross.SetActive(true);
     }
-
-    public override void RoadBuilt(Material material) { }
 }

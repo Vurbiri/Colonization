@@ -7,7 +7,6 @@ public class CrossroadLink : IValueTypeEnum<LinkType>
     public bool IsWater => _isWater;
     public Vector3 Position => _middle;
     public PlayerType Owner {get => _owner; set => _owner = value; }
-    public bool IsNotCities => _start.CityType == CityType.Signpost && _end.CityType == CityType.Signpost;
 
     public Crossroad Start => _start;
     public Crossroad End => _end;

@@ -32,10 +32,10 @@ public class ShuffleLoopArray<T>
     public ShuffleLoopArray(IList<T> array)
     {
         _count = array.Count;
-
         _array = new T[_count];
 
-        for (int i = 0, j; i < _count; i++)
+        _array[0] = array[0];
+        for (int i = 1, j; i < _count; i++)
         {
             _array[i] = array[i];
 

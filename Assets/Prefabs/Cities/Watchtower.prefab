@@ -534,10 +534,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08b32d25663bfaa4a9bb64ca545c13ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 3
+  _type: 5
   _isUpgrade: 1
   _graphic: {fileID: 3659079365088140821}
-  _prefabNextUpgrade: {fileID: 3967751348314251287, guid: 2dec78f2b7d0ba449947cdf1a727587c,
+  _prefabUpgrade: {fileID: 3967751348314251287, guid: 2dec78f2b7d0ba449947cdf1a727587c,
     type: 3}
   _radiusCollider: 3
 --- !u!1 &3266610708225575082

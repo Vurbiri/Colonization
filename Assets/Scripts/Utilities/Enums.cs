@@ -42,7 +42,7 @@ public enum PlayerType
     AI_03
 }
 
-public enum SurfaceType
+public enum Resource
 {
     Ground01,
     Ground02,
@@ -64,10 +64,12 @@ public enum CityType
 {
     Signpost,
     Shrine,
+    Berth,
+    Port,
     Camp,
     Watchtower,
     Castle,
-    Berth,
+    
     //Stronghold
 }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 public class Players : ASingleton<Players>
 {
     [Space]
+    [SerializeField] private Currencies _startResources;
+    [Space]
     [SerializeField] private PlayerVisualSetScriptable _visualSet;
 
     public Player Current => _current;

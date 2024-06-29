@@ -13,11 +13,11 @@ public class CityGate : CityGraphicSide
         _closeGate.SetActive(true);
     }
 
-    public override void RoadBuilt(Material material) 
+    public override void SetMaterial(Material material) 
     {
         _openGate.SetActive(true);
         _closeGate.SetActive(false);
 
-        base.RoadBuilt(material);
+        base.SetMaterial(material);
     }
 }

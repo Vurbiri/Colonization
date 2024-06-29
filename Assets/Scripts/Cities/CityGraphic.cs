@@ -36,6 +36,6 @@ public class CityGraphic : MonoBehaviour
 
     public virtual void AddLink(LinkType type) => _graphicSides[type].AddLink();
 
-    public virtual void RoadBuilt(LinkType type, PlayerType owner) => _graphicSides[type].RoadBuilt(_players[owner].Material);
+    public virtual void RoadBuilt(LinkType type, PlayerType owner) => _graphicSides[type].SetMaterial(_players[owner].Material);
 
 }

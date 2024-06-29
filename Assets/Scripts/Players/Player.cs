@@ -50,7 +50,7 @@ public class Player : IValueTypeEnum<PlayerType>
             }
         }
 
-        _players.RandomPlayer();
+        //_players.RandomPlayer();
     }
 
     public override string ToString() => $"Player: {_type}";
