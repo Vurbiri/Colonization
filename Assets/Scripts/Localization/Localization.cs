@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-//[DefaultExecutionOrder(-2)]
+[DefaultExecutionOrder(-2)]
 public partial class Localization : ASingleton<Localization>
 {
     [SerializeField] private string _path = "Languages";
@@ -14,7 +14,13 @@ public partial class Localization : ASingleton<Localization>
     public LanguageType[] Languages { get; private set; }
     public int CurrentId { get; private set; } = -1;
 
-    public event Action EventSwitchLanguage;
+    public event Action<Localization> EventSwitchLanguage;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        Initialize();
+    }
 
     public bool Initialize()
     {
@@ -84,7 +90,7 @@ public partial class Localization : ASingleton<Localization>
         {
             CurrentId = type.Id;
             _language = new(d.Value, new StringComparer());
-            EventSwitchLanguage?.Invoke();
+            EventSwitchLanguage?.Invoke(this);
         }
 
         return d.Result;

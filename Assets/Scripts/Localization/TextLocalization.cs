@@ -11,11 +11,12 @@ public class TextLocalization : MonoBehaviour
     {
         Text = GetComponent<TMP_Text>();
         _key = string.IsNullOrEmpty(key) ? Text.text : key;
-        SetText();
+
+        SetText(Localization.Instance);
         Localization.Instance.EventSwitchLanguage += SetText;
     }
 
-    protected virtual void SetText() => Text.text = Localization.Instance.GetText(_key);
+    protected virtual void SetText(Localization localization) => Text.text = localization.GetText(_key);
 
     private void OnDestroy()
     {

@@ -43,7 +43,7 @@ public class LanguageItem : MonoBehaviour
         if(_isSave) _settings.Save();
     }
 
-    private void OnSwitchLanguage() => _toggle.SetIsOnWithoutNotify(_localization.CurrentId == _id);
+    private void OnSwitchLanguage(Localization localization) => _toggle.SetIsOnWithoutNotify(localization.CurrentId == _id);
 
     private void OnDestroy()
     {

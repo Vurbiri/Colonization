@@ -124,6 +124,9 @@ MonoBehaviour:
   _targetGraphics:
   - {fileID: 9109065201723784572}
   - {fileID: 3568774632626465036}
+  _hint: {fileID: 0}
+  _delay: 1
+  _key: WarningAuthorization
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []

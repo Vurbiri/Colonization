@@ -13,16 +13,19 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
     [SerializeField] private float _radiusCollider = 1.75f;
 
     public CityType Type => _type;
+    public CityGroup Group => _group;
     public CityType TypeNext => _prefabUpgrade._type;
     public PlayerType Owner => _owner;
     public bool IsUpgrade => _isUpgrade;
     public float Radius => _radiusCollider;
 
     protected PlayerType _owner;
+    protected CityGroup _group;
 
     public virtual void Initialize()
     {
         _owner = PlayerType.None;
+        _group = _type.ToGroup();
 
         _graphic.Initialize();
     }
@@ -57,6 +60,8 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
     protected virtual void CopyingData(City city)
     {
         _owner = city._owner;
+
+        _group = _type.ToGroup();
     }
 
     public virtual void Show(bool isShow) {}

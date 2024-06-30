@@ -1,12 +1,19 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CmSelectable : Selectable
 {
     [SerializeField] private GameObject _interactableIcon;
+
     [SerializeField] private bool _alfaCollider = false;
     [SerializeField, Range(0.01f, 1f)] private float _threshold = 0.1f;
+
     [SerializeField] private Graphic[] _targetGraphics;
+
+    [SerializeField] private Hint _hint;
+    [SerializeField, Range(0.1f, 5f)] private float _delay = 1f;
+    [SerializeField] private string _key;
 
     public Graphic[] TargetGraphics => _targetGraphics;
 
@@ -26,21 +33,27 @@ public class CmSelectable : Selectable
         base.Start();
 
         if (_targetGraphics.Length > 0)
+        {
             targetGraphic = _targetGraphics[0];
+        }
+        else if (targetGraphic != null)
+        {
+            _targetGraphics = new Graphic[1];
+            _targetGraphics[0] = targetGraphic;
+        }
 
-        Image img = image;
-        if (img != null && img.sprite != null && img.sprite.texture.isReadable)
-            img.alphaHitTestMinimumThreshold = !_alfaCollider ? _threshold : 0f;
+        if (image != null && image.sprite != null && image.sprite.texture.isReadable)
+            image.alphaHitTestMinimumThreshold = !_alfaCollider ? _threshold : 0f;
     }
 
     protected override void DoStateTransition(SelectionState state, bool instant)
     {
+
         if (transition != Transition.ColorTint)
         {
             base.DoStateTransition(state, instant);
             return;
         }
-
 
         if (!gameObject.activeInHierarchy || _targetGraphics == null)
             return;
@@ -51,7 +64,8 @@ public class CmSelectable : Selectable
             SelectionState.Highlighted => colors.highlightedColor,
             SelectionState.Selected => colors.selectedColor,
             SelectionState.Pressed => colors.pressedColor,
-            _ => colors.disabledColor,
+            SelectionState.Disabled => colors.disabledColor,
+            _ => Color.black
         };
 
         foreach (Graphic graphic in _targetGraphics)
@@ -67,5 +81,35 @@ public class CmSelectable : Selectable
             targetGraphic.CrossFadeColor(targetColor, instant ? 0f : colors.fadeDuration, true, true);
         }
         #endregion
+    }
+
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        base.OnPointerEnter(eventData);
+
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+            return;
+#endif
+
+
+        if (_hint == null)
+            return;
+
+        _hint.SetKey(_key);
+        _hint.Show(_delay);
+    }
+
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        base .OnPointerExit(eventData);
+
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+            return;
+#endif
+
+        if (_hint != null)
+            _hint.Hide();
     }
 }

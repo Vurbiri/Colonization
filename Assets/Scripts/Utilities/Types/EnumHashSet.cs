@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadOnlyCollection<TValue>
+public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue>
        where TType : Enum
        where TValue : class, IValueTypeEnum<TType>
 {
@@ -85,6 +85,22 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadO
         return value;
     }
 
+    public TValue Next(TType type)
+    {
+        TValue value;
+        int index = type.ToInt(_offset), start = index;
+        do
+        {
+            index = ++index % _capacity;
+            value = _values[index];
+            if (value != null)
+                return value;
+        }
+        while (index != start);
+
+        return value;
+    }
+
     public TValue GetValue(int index)
     {
         foreach (TValue value in this)
@@ -134,45 +150,17 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadO
 
     public void OnAfterDeserialize() { }
 
-    public IEnumerator<TValue> GetEnumerator() => new EnumHashSetEnumerator(this);
+    public IEnumerator<TValue> GetEnumerator() => new EnumHashSetValueEnumerator(this);
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    #region Nested classes: EnumHashSetEnumerator, EnumHashSetKeysEnumerable, EnumHashSetKeysEnumerator
+    #region Nested classes: EnumHashSetValueEnumerator, EnumHashSetKeysEnumerable, EnumHashSetKeysEnumerator, AEnumHashSetEnumerator
     //***********************************
-    public class EnumHashSetEnumerator : IEnumerator<TValue>
+    public class EnumHashSetValueEnumerator : AEnumHashSetEnumerator, IEnumerator<TValue>
     {
-        private readonly TValue[] _values;
-        private int _capacity, _cursor = -1;
-        private TValue _current;
+        public TValue Current => _currentValue;
+        object IEnumerator.Current => _currentValue;
 
-        public TValue Current => _current;
-        object IEnumerator.Current => _current;
-
-        public EnumHashSetEnumerator(EnumHashSet<TType, TValue> parent)
-        {
-            _values = parent._values;
-            _capacity = parent._capacity;
-        }
-
-        public bool MoveNext()
-        {
-            if (++_cursor >= _capacity)
-                return false;
-
-            _current = _values[_cursor];
-
-            if (_current == null)
-                return MoveNext();
-
-            return true;
-        }
-
-        public void Reset()
-        {
-            _cursor = -1;
-        }
-
-        public void Dispose() { }
+        public EnumHashSetValueEnumerator(EnumHashSet<TType, TValue> parent) : base(parent) { }
     }
     //***********************************
     public class EnumHashSetKeysEnumerable : IEnumerable<TType>
@@ -185,16 +173,22 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadO
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
     //***********************************
-    public class EnumHashSetKeysEnumerator : IEnumerator<TType>
+    public class EnumHashSetKeysEnumerator : AEnumHashSetEnumerator, IEnumerator<TType>
+    {
+        public TType Current => _currentType;
+        object IEnumerator.Current => _currentType;
+
+        public EnumHashSetKeysEnumerator(EnumHashSet<TType, TValue> parent) : base(parent) { }
+    }
+    //***********************************
+    public abstract class AEnumHashSetEnumerator
     {
         private readonly TValue[] _values;
         private int _capacity, _cursor = -1;
-        private TType _current;
+        protected TType _currentType;
+        protected TValue _currentValue;
 
-        public TType Current => _current;
-        object IEnumerator.Current => _current;
-
-        public EnumHashSetKeysEnumerator(EnumHashSet<TType, TValue> parent)
+        public AEnumHashSetEnumerator(EnumHashSet<TType, TValue> parent)
         {
             _values = parent._values;
             _capacity = parent._capacity;
@@ -205,18 +199,16 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IReadO
             if (++_cursor >= _capacity)
                 return false;
 
-            _current = _values[_cursor].Type;
+            _currentValue = _values[_cursor];
+            _currentType = _currentValue.Type;
 
-            if (_current == null)
+            if (_currentValue == null)
                 return MoveNext();
 
             return true;
         }
 
-        public void Reset()
-        {
-            _cursor = -1;
-        }
+        public void Reset() => _cursor = -1;
 
         public void Dispose() { }
     }

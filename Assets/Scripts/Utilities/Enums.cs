@@ -60,12 +60,26 @@ public enum LinkType
     DD_UU, 
 }
 
+public enum CityGroup
+{
+    None = -1,
+    Ground01,
+    Ground02,
+    Ground03,
+    Ground04,
+    Ground05,
+    Water,
+    Gate
+}
+
 public enum CityType
 {
     Signpost,
     Shrine,
+
     Berth,
     Port,
+
     Camp,
     Watchtower,
     Castle,
@@ -86,5 +100,13 @@ public static class ExtensionsEnum
     public static int ToInt<T>(this T self) where T : Enum => Convert.ToInt32(self);
     public static int ToInt<T>(this T self, int offset) where T : Enum => Convert.ToInt32(self) + offset;
     public static T ToEnum<T>(this int self) where T : Enum => (T)Enum.ToObject(typeof(T), self);
+
+    public static CityGroup ToGroup(this CityType self) => self switch
+    {
+        CityType.Signpost => CityGroup.None,
+        CityType.Shrine => CityGroup.Gate,
+        CityType.Camp or CityType.Watchtower or CityType.Castle => CityGroup.Ground01,
+        _ => throw new ArgumentOutOfRangeException(nameof(self), $"Не ожидаемое значение CityType: {self}"),
+    };
 }
 
