@@ -16,5 +16,7 @@ public class Signpost : City
         return false;
     }
 
+    public override bool CanBuy(Currencies cash, CityType type) => _prefabs[type].CanBuy(cash, type);
+
     public override void Show(bool isShow) => _graphic.gameObject.SetActive(isShow);
 }

@@ -1,25 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BuildingRoadsMenu : MonoBehaviour
+public class CrossroadRoadsMenu : ACrossroadMenu
 {
     [SerializeField] private CmButton _buttonBack;
     [SerializeField] private CmButton[] _roadButtons;
 
-    private Players _players;
     private RectTransform _thisTransform;
     private Camera _camera;
     private Transform _cameraTransform;
     private Vector3 _lastCameraPosition;
     private Vector2 _localPoint;
-    private Crossroad _currentCrossroad;
 
     private readonly RectTransform[] _roadButtonsTransform = new RectTransform[COUNT_ROADS];
     private readonly Graphic[] _roadButtonsGraphic = new Graphic[COUNT_ROADS];
 
     private const int COUNT_ROADS = 3;
 
-    public void Initialize(BuildingMainMenu mainMenu)
+    public override void Initialize(ACrossroadMenu mainMenu)
     {
         _thisTransform = GetComponent<RectTransform>();
         _players = Players.Instance;
@@ -48,13 +46,13 @@ public class BuildingRoadsMenu : MonoBehaviour
         #endregion
     }
 
-    public void Open(Crossroad cross)
+    public override void Open(Crossroad crossroad)
     {
-        _currentCrossroad = cross;
+        _currentCrossroad = crossroad;
         Color currentColor = _players.Current.Color;
 
         CmButton button; int i = 0;
-        foreach (var link in cross.Links)
+        foreach (var link in crossroad.Links)
         {
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(link.Position), _camera, out _localPoint))
                 _roadButtonsTransform[i].anchoredPosition = _localPoint;
@@ -84,7 +82,7 @@ public class BuildingRoadsMenu : MonoBehaviour
         //=================================
         void OnClick(CrossroadLink link)
         {
-            link.SetStart(cross);
+            link.SetStart(crossroad);
             _players.Current.BuildRoad(link);
 
             _currentCrossroad = null;
@@ -92,8 +90,6 @@ public class BuildingRoadsMenu : MonoBehaviour
         }
         #endregion
     }
-
-    public void Close() => gameObject.SetActive(false);
 
     private void Update()
     {

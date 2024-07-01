@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class BuildingMenus : MonoBehaviour
+public class CrossroadMenus : MonoBehaviour
 {
     [SerializeField] private RectTransform _canvasTransform;
     [Space]
-    [SerializeField] private BuildingMainMenu _mainMenu;
-    [SerializeField] private BuildingRoadsMenu _roadsMenu;
+    [SerializeField] private CrossroadMainMenu _mainMenu;
+    [SerializeField] private CrossroadRoadsMenu _roadsMenu;
 
     private RectTransform _thisTransform;
     private Camera _camera;
@@ -26,7 +26,6 @@ public class BuildingMenus : MonoBehaviour
         //=================================
         void OnSelectCrossroad(Crossroad crossroad)
         {
-            //_mainMenu.Close();
             _roadsMenu.Close();
 
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasTransform, _camera.WorldToScreenPoint(crossroad.Position), _camera, out _localPoint))

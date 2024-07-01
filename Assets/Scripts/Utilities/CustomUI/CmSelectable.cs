@@ -16,6 +16,9 @@ public class CmSelectable : Selectable
     [SerializeField] private string _key;
 
     public Graphic[] TargetGraphics => _targetGraphics;
+    public string HintKey {get => _key; set => _key = value; }
+
+    private bool _isShowingHint;
 
     public new bool interactable
     {
@@ -31,6 +34,8 @@ public class CmSelectable : Selectable
     protected override void Start()
     {
         base.Start();
+
+        _isShowingHint = false;
 
         if (_targetGraphics.Length > 0)
         {
@@ -87,29 +92,32 @@ public class CmSelectable : Selectable
     {
         base.OnPointerEnter(eventData);
 
-#if UNITY_EDITOR
-        if (!Application.isPlaying)
-            return;
-#endif
-
-
-        if (_hint == null)
+        if (_hint == null || _isShowingHint)
             return;
 
         _hint.SetKey(_key);
-        _hint.Show(_delay);
+        _isShowingHint = _hint.Show(_delay);
     }
 
     public override void OnPointerExit(PointerEventData eventData)
     {
         base .OnPointerExit(eventData);
 
-#if UNITY_EDITOR
-        if (!Application.isPlaying)
-            return;
-#endif
+        HideHint();
+    }
 
-        if (_hint != null)
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        HideHint();
+    }
+
+    private void HideHint()
+    {
+        if (_hint != null && _isShowingHint)
+        {
             _hint.Hide();
+            _isShowingHint = false;
+        }
     }
 }

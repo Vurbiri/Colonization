@@ -1,15 +1,12 @@
 using UnityEngine;
 
-public class BuildingMainMenu : MonoBehaviour
+public class CrossroadMainMenu : ACrossroadMenu
 {
     [SerializeField] private CmButton _buttonClose;
     [SerializeField] private CmButton _buttonCity;
     [SerializeField] private CmButton _buttonRoads;
-    
-    private Players _players;
-    private Crossroad _currentCrossroad;
 
-    public void Initialize(BuildingRoadsMenu roadsMenu)
+    public override void Initialize(ACrossroadMenu roadsMenu)
     {
         _players = Players.Instance;
 
@@ -34,7 +31,7 @@ public class BuildingMainMenu : MonoBehaviour
         #endregion
     }
 
-    public void Open(Crossroad crossroad)
+    public override void Open(Crossroad crossroad)
     {
         Player player = _players.Current;
         Color color = player.Color;
@@ -48,9 +45,4 @@ public class BuildingMainMenu : MonoBehaviour
 
         gameObject.SetActive(true);
     }
-
-    public void Open() => gameObject.SetActive(true);
-
-    public void Close() => gameObject.SetActive(false);
-
 }

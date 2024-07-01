@@ -27,7 +27,7 @@ public class Players : ASingleton<Players>
         {
             type = (PlayerType)i;
             idVisual = idVisuals[i];
-            _players.Add(new(type, _visualSet.Get(idVisual), this));
+            _players.Add(new(type, _visualSet.Get(idVisual), new(_startResources),this));
         }
 
         RandomPlayer();

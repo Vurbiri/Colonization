@@ -38,13 +38,14 @@ public class Hint : MonoBehaviour
         //Localization.Instance.EventSwitchLanguage += SetHint;
     }
 
-    public void Show() => Show(_timeDelay);
-    public void Show(float timeDelay)
+    public bool Show() => Show(_timeDelay);
+    public bool Show(float timeDelay)
     {
-        if (_coroutineShow != null || string.IsNullOrEmpty(_key))
-            return;
+        if(string.IsNullOrEmpty(_key))
+            return false;
 
-        _coroutineShow = StartCoroutine(Show_Coroutine());
+        _coroutineShow ??= StartCoroutine(Show_Coroutine());
+        return true;
 
         #region Local: OnBack()
         //=================================

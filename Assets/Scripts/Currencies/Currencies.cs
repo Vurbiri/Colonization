@@ -28,6 +28,12 @@ public class Currencies : ISerializationCallbackReceiver, IReadOnlyList<int>
             _values[i] = other._values[i];
     }
 
+    public void Pay(Currencies cost)
+    {
+        for (int i = 0; i < _count; i++)
+            _values[i] -= cost._values[i];
+    }
+
     public static bool operator >(Currencies left, Currencies right) => !(left <= right);
     public static bool operator <(Currencies left, Currencies right) => !(left >= right);
     public static bool operator >=(Currencies left, Currencies right)
@@ -44,6 +50,7 @@ public class Currencies : ISerializationCallbackReceiver, IReadOnlyList<int>
                 return false;
         return true;
     }
+    
     
     public void OnBeforeSerialize()
     {

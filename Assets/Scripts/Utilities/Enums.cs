@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public enum AudioType
 {
@@ -63,12 +65,21 @@ public enum LinkType
 public enum CityGroup
 {
     None = -1,
-    Ground01,
-    Ground02,
-    Ground03,
+    Military,
+    Economy,
+    Industry,
     Ground04,
     Ground05,
     Water,
+    Gate
+}
+
+public enum CityBuildType
+{
+    None,
+    City,
+    Berth,
+    Port,
     Gate
 }
 
@@ -80,11 +91,17 @@ public enum CityType
     Berth,
     Port,
 
-    Camp,
     Watchtower,
+    Barracks,
     Castle,
-    
-    //Stronghold
+
+    Store,
+    Warehouse,
+    Exchange,
+
+    Workshop,
+    Forge,
+    Manufactory
 }
 
 public class Enum<T> where T : Enum
@@ -101,12 +118,24 @@ public static class ExtensionsEnum
     public static int ToInt<T>(this T self, int offset) where T : Enum => Convert.ToInt32(self) + offset;
     public static T ToEnum<T>(this int self) where T : Enum => (T)Enum.ToObject(typeof(T), self);
 
+    public static string ToKeyWord<T>(this int self) where T : Enum => nameof(T) + self.ToString();
     public static CityGroup ToGroup(this CityType self) => self switch
     {
-        CityType.Signpost => CityGroup.None,
-        CityType.Shrine => CityGroup.Gate,
-        CityType.Camp or CityType.Watchtower or CityType.Castle => CityGroup.Ground01,
-        _ => throw new ArgumentOutOfRangeException(nameof(self), $"Не ожидаемое значение CityType: {self}"),
+        CityType.Signpost                                           => CityGroup.None,
+        CityType.Shrine                                             => CityGroup.Gate,
+        CityType.Berth or CityType.Port                             => CityGroup.Water,
+        CityType.Watchtower or CityType.Barracks or CityType.Castle => CityGroup.Military,
+        CityType.Store or CityType.Warehouse or CityType.Exchange   => CityGroup.Economy,
+        CityType.Workshop or CityType.Forge or CityType.Manufactory => CityGroup.Industry,
+        _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение CityType: {self}"),
+    };
+
+    public static CityType ToCityType(this CityBuildType self) => self switch
+    {
+        CityBuildType.Berth => CityType.Berth,
+        CityBuildType.Port => CityType.Port,
+        CityBuildType.Gate => CityType.Shrine,
+        _ => throw new ArgumentOutOfRangeException("ToCityType", $"Неожидаемое значение CityBuildType: {self}"),
     };
 }
 

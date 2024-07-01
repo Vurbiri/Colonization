@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 2744202511205449753}
   - component: {fileID: 7572611051565682255}
   m_Layer: 3
-  m_Name: Shrine
+  m_Name: 1_Shrine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -295,7 +295,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 1
+  _level: 1
   _isUpgrade: 0
+  _cost:
+    _values: 00000000000000000000000000000000000000000000000000000000
   _graphic: {fileID: 6386822419443867694}
   _prefabUpgrade: {fileID: 7572611051565682255}
   _radiusCollider: 1.75

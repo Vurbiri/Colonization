@@ -5,8 +5,9 @@ using UnityEngine;
 public class Roads : MonoBehaviour
 {
     [SerializeField] private Road _prefabRoad;
+    [SerializeField] private Currencies _cost;
 
-    public bool IsEmpty => _roadsLists.Count == 0;
+    public Currencies Cost => _cost;
 
     private Transform _thisTransform;
     private PlayerType _type;

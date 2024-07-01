@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
@@ -11,7 +9,7 @@ public class Crossroad : MonoBehaviour, ISelectable
     public Key Key => _key;
     public Vector3 Position { get; private set; }
     public PlayerType Owner => _city.Owner;
-    public bool IsUpgrade => _city.IsUpgrade;
+    public CityBuildType CityBuildType => _cityBuild;
     public IEnumerable<CrossroadLink> Links => _links;
 
     private Key _key;
@@ -22,14 +20,15 @@ public class Crossroad : MonoBehaviour, ISelectable
     private int _countFreeLink = 0;
     private bool _isGate = false;
     private int _waterCount = 0;
-    private CityType _cityBuild;
+    private CityBuildType _cityBuild;
 
     private SphereCollider _collider;
     private EventBus _eventBus;
 
-    public const int COUNT = 3;
+    private const int COUNT = 3;
     private const string NAME = "Crossroad_";
     private static readonly HashSet<CityType> notRuleTwo = new() { CityType.Shrine, CityType.Berth, CityType.Port };
+    private static readonly CityType[] buildCity = { CityType.Watchtower, CityType.Store, CityType.Workshop };
 
     public void Initialize(Key key)
     {
@@ -59,13 +58,13 @@ public class Crossroad : MonoBehaviour, ISelectable
             _hexagons.Add(hexagon);
 
             if (_isGate)
-                _cityBuild = CityType.Shrine;
+                _cityBuild = CityBuildType.Gate;
             else if (_waterCount == 1)
-                _cityBuild = CityType.Berth;
+                _cityBuild = CityBuildType.Berth;
             else if (_waterCount == 2)
-                _cityBuild = CityType.Port;
+                _cityBuild = CityBuildType.Port;
             else
-                _cityBuild = CityType.Camp;
+                _cityBuild = CityBuildType.City;
 
             return true;
         }
@@ -97,26 +96,24 @@ public class Crossroad : MonoBehaviour, ISelectable
         return false;
     }
 
-    public bool CanCityUpgrade(PlayerType type)
+    public bool CanCityBuild(PlayerType type, Currencies cash)
     {
-        if (!_city.IsUpgrade)
-            return false;
-
-        if (_city.Owner != PlayerType.None)
-            return _city.Owner == type;
-
-        return _cityBuild switch
+        return _city.IsUpgrade && _city.Owner == PlayerType.None && _cityBuild switch
         {
-            CityType.Shrine => true,
-            CityType.Berth  => WaterCheck(),
-            CityType.Port   => WaterCheck(),
-            _               => NeighborCheck()
+            CityBuildType.Gate => _city.CanBuy(cash, CityType.Shrine),
+            CityBuildType.Berth => WaterCheck(CityType.Berth),
+            CityBuildType.Port => WaterCheck(CityType.Port),
+            CityBuildType.City => NeighborCheck(),
+            _ => false
         };
 
         #region Local: BerthCheck(), NeighborCheck()
         //=================================
-        bool WaterCheck()
+        bool WaterCheck(CityType cityType)
         {
+            if(!_city.CanBuy(cash, cityType))
+                return false;
+            
             foreach (var hex in _hexagons)
                 if (hex.IsWaterBusy())
                     return false;
@@ -125,6 +122,10 @@ public class Crossroad : MonoBehaviour, ISelectable
         //=================================
         bool NeighborCheck()
         {
+            foreach (var cityType in buildCity)
+                if (!_city.CanBuy(cash, cityType))
+                    return false;
+
             City neighbor;
             foreach (var link in _links)
             {
@@ -138,12 +139,15 @@ public class Crossroad : MonoBehaviour, ISelectable
         #endregion
     }
 
-    public bool Build(PlayerType playerType)
+    public bool CanCityUpgrade(PlayerType type, Currencies cash) => _city.IsUpgrade && _city.Owner == type && _city.CanBuyUpgrade(cash);
+
+    public bool Build(PlayerType playerType, CityType type)
     {
-        if (_city.Build(_cityBuild, playerType, _links, out _city))
+        if (_city.Build(type, playerType, _links, out _city))
         {
             _eventBus.EventCrossroadMarkShow -= Show;
             _collider.radius = _city.Radius;
+            _cityBuild = CityBuildType.None;
             return true;
         }
         return false;
