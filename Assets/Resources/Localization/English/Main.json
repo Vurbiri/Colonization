@@ -1,7 +1,4 @@
 {
-  "Id": "1",
-  "CodeISO639_1": "en",
-
   "Colonization": "Colonization",
 
   "Settings": "Settings",
@@ -23,6 +20,9 @@
   "Player": "Player",
   "Guest": "Guest",
   "Anonym": "Anonym",
+
+  "Close": "Close",
+  "Back": "Back",
 
   "Menu": "Menu",
   "GameOver": "Game over",

@@ -5,8 +5,8 @@ using UnityEngine;
 
 [Serializable]
 public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue>
-       where TType : Enum
-       where TValue : class, IValueTypeEnum<TType>
+                                          where TType : Enum
+                                          where TValue : class, IValueTypeEnum<TType>
 {
     [SerializeField] private TValue[] _values;
     [SerializeField] private int _count;
@@ -200,10 +200,11 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IEnume
                 return false;
 
             _currentValue = _values[_cursor];
-            _currentType = _currentValue.Type;
 
             if (_currentValue == null)
                 return MoveNext();
+
+            _currentType = _currentValue.Type;
 
             return true;
         }

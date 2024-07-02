@@ -10,7 +10,5 @@ public class FindObjectOfTypeAttributeDrawer : AGetComponentAttributeDrawer
         FindObjectOfTypeAttribute attr = attribute as FindObjectOfTypeAttribute;
 
         property.objectReferenceValue = UnityEngine.Object.FindObjectOfType(type, attr.IncludeInactive);
-
-        Debug.Log(property.objectReferenceValue);
     }
 }

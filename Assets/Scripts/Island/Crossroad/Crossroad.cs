@@ -58,13 +58,13 @@ public class Crossroad : MonoBehaviour, ISelectable
             _hexagons.Add(hexagon);
 
             if (_isGate)
-                _cityBuild = CityBuildType.Gate;
+                _cityBuild = CityBuildType.Shrine;
             else if (_waterCount == 1)
                 _cityBuild = CityBuildType.Berth;
             else if (_waterCount == 2)
                 _cityBuild = CityBuildType.Port;
             else
-                _cityBuild = CityBuildType.City;
+                _cityBuild = CityBuildType.Build;
 
             return true;
         }
@@ -84,6 +84,94 @@ public class Crossroad : MonoBehaviour, ISelectable
         return false;
     }
 
+
+    public bool CanBuild(CityType type, Currencies cash)
+    {
+        return _cityBuild.ToCityType() == type && type switch
+        {
+            CityType.Shrine => _city.CanBuyBuilding(type, cash),
+            CityType.Berth => WaterCheck(type),
+            CityType.Port => WaterCheck(type),
+            _ => false
+        };
+
+        #region Local: WaterCheck(...), NeighborCheck()
+        //=================================
+        bool WaterCheck(CityType cityType)
+        {
+            if (!_city.CanBuyBuilding(cityType, cash))
+                return false;
+
+            foreach (var hex in _hexagons)
+                if (hex.IsWaterBusy())
+                    return false;
+            return true;
+        }
+        #endregion
+    }
+
+
+    public bool CanCityBuild(PlayerType owner, Currencies cash)
+    {
+
+        return _cityBuild == CityBuildType.Build && NeighborCheck();
+
+        #region Local: NeighborCheck()
+        //=================================
+        bool NeighborCheck()
+        {
+            if (!CanBuyAny()) return false;
+
+            City neighbor;
+            foreach (var link in _links)
+            {
+                neighbor = link.Other(this)._city;
+                if (!notRuleTwo.Contains(neighbor.Type) && neighbor.Owner != PlayerType.None)
+                    return false;
+            }
+            return IsRoadConnect(owner);
+
+            #region Local: CanBuy()
+            //=================================
+            bool CanBuyAny()
+            {
+                foreach (var cityType in buildCity)
+                    if (_city.CanBuyBuilding(cityType, cash))
+                        return true;
+                return false;
+            }
+            #endregion
+        }
+        #endregion
+    }
+    public bool CanBuyCity(CityType type, Currencies cash) => _city.CanBuyBuilding(type, cash);
+    public bool Build(PlayerType playerType, CityType type, out Currencies cost)
+    {
+        if (_city.Build(type, playerType, _links, out _city))
+        {
+            _eventBus.EventCrossroadMarkShow -= Show;
+            cost = _city.Cost;
+            _collider.radius = _city.Radius;
+            _cityBuild = CityBuildType.Upgrade;
+            return true;
+        }
+        cost = null;
+        return false;
+    }
+
+    public bool CanCityUpgrade(Player player) => _city.CanBuyUpgrade(player.Type, player.Resources);
+    public bool Upgrade(out Currencies cost)
+    {
+        if (_city.Upgrade(_links, out _city))
+        {
+            cost = _city.Cost;
+            _collider.radius = _city.Radius;
+            return true;
+        }
+        cost = null;
+        return false;
+    }
+
     public bool IsRoadConnect(PlayerType type)
     {
         if (_city.Owner == type)
@@ -93,72 +181,6 @@ public class Crossroad : MonoBehaviour, ISelectable
             if (link.Owner == type)
                 return true;
 
-        return false;
-    }
-
-    public bool CanCityBuild(PlayerType type, Currencies cash)
-    {
-        return _city.IsUpgrade && _city.Owner == PlayerType.None && _cityBuild switch
-        {
-            CityBuildType.Gate => _city.CanBuy(cash, CityType.Shrine),
-            CityBuildType.Berth => WaterCheck(CityType.Berth),
-            CityBuildType.Port => WaterCheck(CityType.Port),
-            CityBuildType.City => NeighborCheck(),
-            _ => false
-        };
-
-        #region Local: BerthCheck(), NeighborCheck()
-        //=================================
-        bool WaterCheck(CityType cityType)
-        {
-            if(!_city.CanBuy(cash, cityType))
-                return false;
-            
-            foreach (var hex in _hexagons)
-                if (hex.IsWaterBusy())
-                    return false;
-            return true;
-        }
-        //=================================
-        bool NeighborCheck()
-        {
-            foreach (var cityType in buildCity)
-                if (!_city.CanBuy(cash, cityType))
-                    return false;
-
-            City neighbor;
-            foreach (var link in _links)
-            {
-                neighbor = link.Other(this)._city;
-                if (!notRuleTwo.Contains(neighbor.Type) && neighbor.Owner != PlayerType.None)
-                    return false;
-            }
-
-            return IsRoadConnect(type);
-        }
-        #endregion
-    }
-
-    public bool CanCityUpgrade(PlayerType type, Currencies cash) => _city.IsUpgrade && _city.Owner == type && _city.CanBuyUpgrade(cash);
-
-    public bool Build(PlayerType playerType, CityType type)
-    {
-        if (_city.Build(type, playerType, _links, out _city))
-        {
-            _eventBus.EventCrossroadMarkShow -= Show;
-            _collider.radius = _city.Radius;
-            _cityBuild = CityBuildType.None;
-            return true;
-        }
-        return false;
-    }
-    public bool Upgrade()
-    {
-        if (_city.Upgrade(_links, out _city))
-        {
-            _collider.radius = _city.Radius;
-            return true;
-        }
         return false;
     }
 
@@ -189,7 +211,6 @@ public class Crossroad : MonoBehaviour, ISelectable
     }
     
     public void Select() => _eventBus.TriggerCrossroadSelect(this);
-
 
     private void Show(bool show) => _city.Show(show);
 

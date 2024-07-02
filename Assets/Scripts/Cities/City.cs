@@ -4,7 +4,7 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
 {
     [SerializeField] private CityType _type;
     [SerializeField, Range(0,3)] private int _level;
-    [SerializeField] private bool _isUpgrade = true;
+    [SerializeField] protected bool _isUpgrade = true;
     [SerializeField] protected Currencies _cost;
     [Space, GetComponentInChildren]
     [SerializeField] protected CityGraphic _graphic;
@@ -65,8 +65,8 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
         _group = _type.ToGroup();
     }
 
-    public bool CanBuyUpgrade(Currencies cash) => _isUpgrade && _prefabUpgrade._cost <= cash;
-    public virtual bool CanBuy(Currencies cash, CityType type) => _isUpgrade && type == _type && _cost <= cash;
-
+    public virtual bool CanBuyBuilding(CityType type, Currencies cash) => _type == type && _cost <= cash;
+    public bool CanBuyUpgrade(PlayerType owner, Currencies cash) => _isUpgrade && _owner == owner && _prefabUpgrade._cost <= cash;
+    
     public virtual void Show(bool isShow) {}
 }

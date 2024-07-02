@@ -1,0 +1,29 @@
+{
+	"Roads": "Дороги",
+	"Road": "Дорога",
+
+	"Build": "Построить",
+	"Upgrade": "Улучшить",
+
+	"Shrine": "Святилище",
+
+	"Berth": "Причал",
+	"Port": "Порт",
+
+	"Watchtower": "Сторожевая башня",
+	"Barracks": "Казарма",
+	"Castle": "Замок",
+
+	"Store": "Лавка",
+	"Warehouse": "Склад",
+	"Exchange": "Биржа",
+
+	"Workshop": "Мастерская",
+	"Forge": "Кузница",
+	"Manufactory": "Мануфактура",
+
+	"Military": "Армия",
+	"Economy": "Экономика",
+	"Industry": "Ремесло"
+
+}

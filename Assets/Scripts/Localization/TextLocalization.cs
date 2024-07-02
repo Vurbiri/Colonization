@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(TMP_Text))]
 public class TextLocalization : MonoBehaviour
 {
+    [SerializeField] protected TextFiles _file;
+
     public TMP_Text Text {get; protected set;}
     protected string _key;    
 
@@ -16,7 +18,7 @@ public class TextLocalization : MonoBehaviour
         Localization.Instance.EventSwitchLanguage += SetText;
     }
 
-    protected virtual void SetText(Localization localization) => Text.text = localization.GetText(_key);
+    protected virtual void SetText(Localization localization) => Text.text = localization.GetText(_file, _key);
 
     private void OnDestroy()
     {

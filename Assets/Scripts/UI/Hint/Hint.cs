@@ -13,13 +13,16 @@ public class Hint : MonoBehaviour
     [SerializeField] private float _padding = 1.1f;
     
     private string _key;
+    private TextFiles _file;
+    private Localization _localization;
     private Graphic _background;
     private RectTransform _transformBack, _transformText;
     private Coroutine _coroutineShow;
     private float _alfaBack, _alfaText;
 
-    private void Awake()
+    private void Start()
     {
+        _localization = Localization.Instance;
         _background = GetComponent<Graphic>();
         _transformBack = GetComponent<RectTransform>();
         _transformText = _hint.rectTransform;
@@ -31,19 +34,14 @@ public class Hint : MonoBehaviour
         _hint.CrossFadeAlpha(0f, 0f, true);
     }
 
-    public void SetKey(string key = null)
+    public bool Show(TextFiles file, string key)
     {
-        _key = key;
-        SetHint(Localization.Instance);
-        //Localization.Instance.EventSwitchLanguage += SetHint;
+        _file = file; _key = key;
+        return SetHint() && Show();
     }
 
-    public bool Show() => Show(_timeDelay);
-    public bool Show(float timeDelay)
+    public bool Show()
     {
-        if(string.IsNullOrEmpty(_key))
-            return false;
-
         _coroutineShow ??= StartCoroutine(Show_Coroutine());
         return true;
 
@@ -51,7 +49,7 @@ public class Hint : MonoBehaviour
         //=================================
         IEnumerator Show_Coroutine()
         {
-            yield return new WaitForSecondsRealtime(timeDelay);
+            yield return new WaitForSecondsRealtime(_timeDelay);
             _background.CrossFadeAlpha(_alfaBack, _fadeDuration, true);
             _hint.CrossFadeAlpha(_alfaText, _fadeDuration, true);
             _coroutineShow = null;
@@ -71,14 +69,17 @@ public class Hint : MonoBehaviour
         _hint.CrossFadeAlpha(0f, _fadeDuration, true);
     }
 
-    private void SetHint(Localization localization)
+    private bool SetHint()
     {
+        if (string.IsNullOrEmpty(_key))
+            return false;
+
         bool active = gameObject.activeSelf;
         gameObject.SetActive(true);
 
         _hint.enableWordWrapping = false;
 
-        _hint.text = localization.GetText(_key);
+        _hint.text = _localization.GetText(_file, _key);
         _hint.ForceMeshUpdate();
 
         Vector2 size = _hint.textBounds.size;
@@ -96,12 +97,7 @@ public class Hint : MonoBehaviour
         _transformBack.sizeDelta = size + Vector2.one * _padding;
 
         gameObject.SetActive(active);
+
+        return true;
     }
-
-    //private void OnDestroy()
-    //{
-    //    if (Localization.Instance != null)
-    //        Localization.Instance.EventSwitchLanguage -= SetHint;
-    //}
-
 }

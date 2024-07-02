@@ -5,7 +5,6 @@ public abstract class ACrossroadMenu : MonoBehaviour
     protected Players _players;
     protected Crossroad _currentCrossroad;
 
-    public abstract void Initialize(ACrossroadMenu menu);
     public abstract void Open(Crossroad crossroad);
 
     public void Open() => gameObject.SetActive(true);

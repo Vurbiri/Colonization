@@ -3,53 +3,33 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(Currencies))]
-public class CurrenciesDrawer : PropertyDrawer
+public class CurrenciesDrawer : EnumArrayDrawer
 {
-    private const float Y_SPACE = 2f, BUTTON_RATE_POS = 1.1f, BUTTON_CLEAR_SIZE = 60f, BUTTON_PLUSMINUS_SIZE = 20f;
-    private const string NAME_ARRAY = "_values", BUTTON_CLEAR = "Clear", BUTTON_PLUS = "+", BUTTON_MINUS = "-";
+    private const float BUTTON_RATE_POS = 1.1f, BUTTON_CLEAR_SIZE = 60f, BUTTON_PLUSMINUS_SIZE = 20f;
+    private const string BUTTON_CLEAR = "Clear", BUTTON_PLUS = "+", BUTTON_MINUS = "-";
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        position.height = EditorGUIUtility.singleLineHeight;
+        base.OnGUI(position, property, label);
 
-        EditorGUI.BeginProperty(position, label, property);
-
-        if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
+        if (property.isExpanded)
         {
-            SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
-            int count = propertyValues.arraySize;
-            string[] names = Enum.GetNames(typeof(Resource));
-
-            EditorGUI.indentLevel++;
-            for (int i = 0; i < count; i++)
-                DrawField(propertyValues.GetArrayElementAtIndex(i), names[i]);
-            EditorGUI.indentLevel--;
-
             if (!Application.isPlaying)
             {
                 if (DrawButton(BUTTON_CLEAR, BUTTON_CLEAR_SIZE, BUTTON_CLEAR_SIZE))
-                    Clear(propertyValues, count);
+                    Clear();
                 if (DrawButton(BUTTON_MINUS, BUTTON_PLUSMINUS_SIZE, BUTTON_CLEAR_SIZE + BUTTON_PLUSMINUS_SIZE))
-                    Add(propertyValues, count, -1);
+                    Add(-1);
                 if (DrawButton(BUTTON_PLUS, BUTTON_PLUSMINUS_SIZE, BUTTON_CLEAR_SIZE + BUTTON_PLUSMINUS_SIZE * 2f))
-                    Add(propertyValues, count, 1);
+                    Add(1);
             }
         }
 
-        EditorGUI.EndProperty();
-
-        #region Local: DrawField(...), DrawButton(...), Clear(...), Add(...)
-        //=================================
-        void DrawField(SerializedProperty prop, string name)
-        {
-            position.y += position.height + Y_SPACE;
-            EditorGUI.PropertyField(position, prop, new GUIContent(name));
-        }
-        //=================================
+        #region Local: DrawButton(...), Clear(...), Add(...)
         //=================================
         bool DrawButton(string text, float size, float offset)
         {
-            Rect positionButton = position;
+            Rect positionButton = _position;
             float viewWidth = EditorGUIUtility.currentViewWidth;
 
             positionButton.height += Y_SPACE;
@@ -60,36 +40,33 @@ public class CurrenciesDrawer : PropertyDrawer
             return GUI.Button(positionButton, text.ToUpper());
         }
         //=================================
-        void Clear(SerializedProperty prop, int c)
+        void Clear()
         {
-            for (int index = 0; index < c; index++)
-                prop.GetArrayElementAtIndex(index).intValue = 0;
+            for (int index = 0; index < _count; index++)
+                _propertyValues.GetArrayElementAtIndex(index).intValue = 0;
         }
         //=================================
-        void Add(SerializedProperty prop, int c, int add)
+        void Add(int add)
         {
-            for (int index = 0; index < c; index++)
+            for (int index = 0; index < _count; index++)
             {
-                if ((prop.GetArrayElementAtIndex(index).intValue += add) < 0)
-                    prop.GetArrayElementAtIndex(index).intValue = 0;
+                if ((_propertyValues.GetArrayElementAtIndex(index).intValue += add) < 0)
+                    _propertyValues.GetArrayElementAtIndex(index).intValue = 0;
             }
         }
-
         #endregion
     }
 
+    protected override Type GetTypeEnum() => typeof(Resource);
+
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        float rate = 1.01f;
+        float rate = 0;
 
         if (property.isExpanded)
-        {
-            rate += property.FindPropertyRelative(NAME_ARRAY).arraySize;
             if (!Application.isPlaying)
                 rate += 1.35f;
-        }
 
-
-        return (EditorGUIUtility.singleLineHeight + Y_SPACE) * rate;
+        return  base.GetPropertyHeight(property, label) + (EditorGUIUtility.singleLineHeight + Y_SPACE) * rate;
     }
 }

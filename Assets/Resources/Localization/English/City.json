@@ -1,0 +1,28 @@
+{
+  "Roads": "Roads",
+  "Road": "Road",
+
+  "Build": "Build",
+  "Upgrade": "Upgrade",
+
+  "Shrine": "Shrine",
+
+  "Berth": "Berth",
+  "Port": "Port",
+
+  "Watchtower": "Watchtower",
+  "Barracks": "Barracks",
+  "Castle": "Castle",
+
+  "Store": "Store",
+  "Warehouse": "Warehouse",
+  "Exchange": "Exchange",
+
+  "Workshop": "Workshop",
+  "Forge": "Forge",
+  "Manufactory": "Manufactory",
+
+  "Military": "Military",
+  "Economy": "Economy",
+  "Industry": "Industry"
+}

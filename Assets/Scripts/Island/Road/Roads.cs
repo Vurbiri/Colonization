@@ -26,16 +26,14 @@ public class Roads : MonoBehaviour
         return this;
     }
 
-    public void BuildRoad(CrossroadLink link)
+    public void Build(CrossroadLink link)
     {
         link.RoadBuilt(_type);
 
         if (!AddRoadLine())
             NewRoadLine();
 
-        StartCoroutine(CombiningRoadLine_Coroutine());
-
-        #region Local: AddRoadLine(), NewRoadLine(), CombiningRoadLine_Coroutine()
+        #region Local: AddRoadLine(), NewRoadLine()
         //=================================
         bool AddRoadLine()
         {
@@ -45,6 +43,7 @@ public class Roads : MonoBehaviour
 
             return false;
         }
+        //=================================
         void NewRoadLine()
         {
             Road roadLine;
@@ -52,7 +51,18 @@ public class Roads : MonoBehaviour
             roadLine.Initialize(link.Start, link.End, _type, _color);
             _roadsLists.Add(roadLine);
         }
-        IEnumerator CombiningRoadLine_Coroutine()
+        #endregion
+    }
+
+    public void BuildAndUnion(CrossroadLink link)
+    {
+        Build(link);
+
+        StartCoroutine(TryUnion_Coroutine());
+
+        #region Local: Combine_Coroutine()
+        //=================================
+        IEnumerator TryUnion_Coroutine()
         {
             yield return null;
             Road roadLine;
@@ -65,7 +75,7 @@ public class Roads : MonoBehaviour
                     {
                         _roadsLists.Remove(roadLine);
                         Destroy(roadLine.gameObject);
-                        StartCoroutine(CombiningRoadLine_Coroutine());
+                        StartCoroutine(TryUnion_Coroutine());
                         yield break;
                     }
                 }

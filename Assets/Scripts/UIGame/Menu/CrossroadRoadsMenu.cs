@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CrossroadRoadsMenu : ACrossroadMenu
+public class CrossroadRoadsMenu : ACrossroadBuildMenu
 {
-    [SerializeField] private CmButton _buttonBack;
     [SerializeField] private CmButton[] _roadButtons;
 
     private RectTransform _thisTransform;
@@ -12,38 +11,28 @@ public class CrossroadRoadsMenu : ACrossroadMenu
     private Vector3 _lastCameraPosition;
     private Vector2 _localPoint;
 
-    private readonly RectTransform[] _roadButtonsTransform = new RectTransform[COUNT_ROADS];
-    private readonly Graphic[] _roadButtonsGraphic = new Graphic[COUNT_ROADS];
+    private readonly RectTransform[] _buttonsTransform = new RectTransform[COUNT_ROADS];
+    private readonly Graphic[] _buttonsGraphic = new Graphic[COUNT_ROADS];
 
     private const int COUNT_ROADS = 3;
 
     public override void Initialize(ACrossroadMenu mainMenu)
     {
+        base.Initialize(mainMenu);
+        
         _thisTransform = GetComponent<RectTransform>();
-        _players = Players.Instance;
         _camera = Camera.main;
         _cameraTransform = Camera.main.transform;
-
-        _buttonBack.onClick.AddListener(OnBack);
 
         CmButton button;
         for (int i = 0; i < COUNT_ROADS; i++)
         {
             button = _roadButtons[i];
-            _roadButtonsTransform[i] = button.GetComponent<RectTransform>();
-            _roadButtonsGraphic[i] = button.targetGraphic;
+            _buttonsTransform[i] = button.GetComponent<RectTransform>();
+            _buttonsGraphic[i] = button.targetGraphic;
         }
 
         gameObject.SetActive(false);
-
-        #region Local: OnBack()
-        //=================================
-        void OnBack()
-        {
-            gameObject.SetActive(false);
-            mainMenu.Open();
-        }
-        #endregion
     }
 
     public override void Open(Crossroad crossroad)
@@ -55,13 +44,13 @@ public class CrossroadRoadsMenu : ACrossroadMenu
         foreach (var link in crossroad.Links)
         {
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(link.Position), _camera, out _localPoint))
-                _roadButtonsTransform[i].anchoredPosition = _localPoint;
+                _buttonsTransform[i].anchoredPosition = _localPoint;
 
             button = _roadButtons[i];
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => OnClick(link));
             button.interactable = link.Owner == PlayerType.None;
-            _roadButtonsGraphic[i].color = button.interactable ? currentColor : _players[link.Owner].Color;
+            _buttonsGraphic[i].color = button.interactable ? currentColor : _players[link.Owner].Color;
             
             button.gameObject.SetActive(true);
 
@@ -82,7 +71,7 @@ public class CrossroadRoadsMenu : ACrossroadMenu
         //=================================
         void OnClick(CrossroadLink link)
         {
-            link.SetStart(crossroad);
+            link.SetStart(_currentCrossroad);
             _players.Current.BuildRoad(link);
 
             _currentCrossroad = null;
@@ -100,7 +89,7 @@ public class CrossroadRoadsMenu : ACrossroadMenu
         foreach (var link in _currentCrossroad.Links)
         {
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(link.Position), _camera, out _localPoint))
-                _roadButtonsTransform[i].anchoredPosition = _localPoint;
+                _buttonsTransform[i].anchoredPosition = _localPoint;
 
             i++;
         }

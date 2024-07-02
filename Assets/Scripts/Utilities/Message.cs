@@ -1,6 +1,9 @@
 
 public static class Message
 {
+    private static readonly TextFiles FILE = TextFiles.Main;
+
+
     public static void Log(string msg)=> UtilityJS.Log(msg);
     public static void Error(string msg) => UtilityJS.Error(msg);
 
@@ -10,7 +13,7 @@ public static class Message
     }
     public static void BannerKey(string key, MessageType type = MessageType.Normal, float time = 5f, bool isThrough = true)
     {
-        Banners.Instance.Message(Localization.Instance.GetText(key), type, time, isThrough);
+        Banners.Instance.Message(Localization.Instance.GetText(FILE, key), type, time, isThrough);
     }
     //public static void BannerKeyFormat(string key, object value, MessageType type = MessageType.Normal, int time = 5000, bool isThrough = true)
     //{

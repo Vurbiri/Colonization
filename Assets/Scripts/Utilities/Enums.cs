@@ -1,6 +1,11 @@
 using System;
-using System.Collections.Generic;
-using UnityEngine;
+
+public enum TextFiles
+{
+    Main,
+    City,
+}
+
 
 public enum AudioType
 {
@@ -77,10 +82,11 @@ public enum CityGroup
 public enum CityBuildType
 {
     None,
-    City,
     Berth,
     Port,
-    Gate
+    Shrine,
+    Build,
+    Upgrade
 }
 
 public enum CityType
@@ -118,7 +124,6 @@ public static class ExtensionsEnum
     public static int ToInt<T>(this T self, int offset) where T : Enum => Convert.ToInt32(self) + offset;
     public static T ToEnum<T>(this int self) where T : Enum => (T)Enum.ToObject(typeof(T), self);
 
-    public static string ToKeyWord<T>(this int self) where T : Enum => nameof(T) + self.ToString();
     public static CityGroup ToGroup(this CityType self) => self switch
     {
         CityType.Signpost                                           => CityGroup.None,
@@ -134,7 +139,7 @@ public static class ExtensionsEnum
     {
         CityBuildType.Berth => CityType.Berth,
         CityBuildType.Port => CityType.Port,
-        CityBuildType.Gate => CityType.Shrine,
+        CityBuildType.Shrine => CityType.Shrine,
         _ => throw new ArgumentOutOfRangeException("ToCityType", $"Неожидаемое значение CityBuildType: {self}"),
     };
 }

@@ -6,15 +6,23 @@ using UnityEngine;
 [DefaultExecutionOrder(-2)]
 public partial class Localization : ASingleton<Localization>
 {
-    [SerializeField] private string _path = "Languages";
+    [SerializeField] private string _folder = "Localization";
+    [SerializeField] private string _languagesFile = "Languages";
     [SerializeField] private string _defaultLang = "ru";
+    [SerializeField] private EnumArray<TextFiles, bool> _loadFiles;
 
-    private Dictionary<string, string> _language = new();
-
-    public LanguageType[] Languages { get; private set; }
-    public int CurrentId { get; private set; } = -1;
+    public IEnumerable<LanguageType> Languages => _languages;
+    public int CurrentId => _currentLanguage == null ? -1 : _currentLanguage.Id;
 
     public event Action<Localization> EventSwitchLanguage;
+
+    private readonly string[] _nameFiles = Enum<TextFiles>.GetNames();
+    private Dictionary<string, string>[] _text;
+    private LanguageType[] _languages;
+    private int _countFiles;
+    private LanguageType _currentLanguage;
+
+    private const string BANNER = "Banner", SLASH = @"/";
 
     protected override void Awake()
     {
@@ -24,10 +32,15 @@ public partial class Localization : ASingleton<Localization>
 
     public bool Initialize()
     {
-        Return<LanguageType[]> lt = StorageResources.LoadFromJson<LanguageType[]>(_path);
+        if(_folder.IndexOf(SLASH) < 0)
+            _folder += SLASH;
+
+        Return<LanguageType[]> lt = StorageResources.LoadFromJson<LanguageType[]>(_folder + _languagesFile);
         if (lt.Result)
         {
-            Languages = lt.Value;
+            _countFiles = _nameFiles.Length;
+            _text = new Dictionary<string, string>[_countFiles];
+            _languages = lt.Value;
             return SwitchLanguage(_defaultLang);
         }
 
@@ -51,6 +64,18 @@ public partial class Localization : ASingleton<Localization>
         return false;  
     }
 
+    public bool LoadFile(TextFiles file)
+    {
+        int id = (int)file;
+        return _loadFiles[id] || (_loadFiles[id] = LoadingFile(id, _currentLanguage));
+    }
+    public void UnloadFile(TextFiles file)
+    {
+        int id = (int)file;
+        _text[id] = null;
+        _loadFiles[id] = false;
+    }
+
     public bool SwitchLanguage(string codeISO639_1)
     {
         if (TryIdFromCode(codeISO639_1, out int id))
@@ -61,7 +86,7 @@ public partial class Localization : ASingleton<Localization>
 
     public bool SwitchLanguage(int id)
     {
-        if (CurrentId == id) return true;
+        if (_currentLanguage != null && _currentLanguage.Id == id) return true;
 
         foreach (LanguageType language in Languages)
             if (language.Id == id)
@@ -70,55 +95,83 @@ public partial class Localization : ASingleton<Localization>
         return false;
     }
 
-    public string GetText(string key)
+    public string GetText(TextFiles file, string key) => GetText(idFile: (int)file, key);
+    public string GetText(int idFile, string key)
     {
-        if (_language.TryGetValue(key, out string str))
+        if (_text[idFile] != null && _text[idFile].TryGetValue(key, out string str))
             return str;
 
-        return "ERROR! " + key;
+        return $"ERROR! File:[{(TextFiles)idFile}] Key: [{key}]";
     }
 
-    //public string GetTextFormat(string key, params object[] args) => string.Format(GetText(key), args);
-    //public string GetTextFormat(string key, object arg0, object arg1, object arg2) => string.Format(GetText(key), arg0, arg1, arg2);
-    //public string GetTextFormat(string key, object arg0, object arg1) => string.Format(GetText(key), arg0, arg1);
-    public string GetTextFormat(string key, object arg0) => string.Format(GetText(key), arg0);
+    public string GetTextFormat(TextFiles file, string key, params object[] args) => string.Format(GetText(idFile: (int)file, key), args);
+    public string GetTextFormat(TextFiles file, string key, object arg0, object arg1, object arg2) => string.Format(GetText(idFile: (int)file, key), arg0, arg1, arg2);
+    public string GetTextFormat(TextFiles file, string key, object arg0, object arg1) => string.Format(GetText(idFile: (int)file, key), arg0, arg1);
+    public string GetTextFormat(TextFiles file, string key, object arg0) => string.Format(GetText(idFile: (int)file, key), arg0);
 
     private bool SetLanguage(LanguageType type)
     {
-        Return<Dictionary<string, string>> d = StorageResources.LoadFromJson<Dictionary<string, string>>(type.File);
-        if (d.Result)
+        for (int i = 0; i < _countFiles; i++)
         {
-            CurrentId = type.Id;
-            _language = new(d.Value, new StringComparer());
-            EventSwitchLanguage?.Invoke(this);
+            if (!_loadFiles[i])
+                continue;
+
+            if (!LoadingFile(i, type))
+                return false;
         }
 
-        return d.Result;
+        _currentLanguage = type;
+        EventSwitchLanguage?.Invoke(this);
+        return true;
     }
 
-    #region Nested Òlasses: LanguageType, StringComparer
+    private bool LoadingFile(int idFile, LanguageType type)
+    {
+        string path = _folder + type.Folder + _nameFiles[idFile];
+        Return<Dictionary<string, string>> load = StorageResources.LoadFromJson<Dictionary<string, string>>(path);
+        if (!load.Result)
+        {
+            Message.Error($"--- Œ¯Ë·Í‡ Á‡„ÛÁÍË Ù‡ÈÎ‡: {path} ---");
+            return false;
+        }
+
+        Dictionary<string, string> current = _text[idFile];
+        if (current == null)
+        {
+            _text[idFile] = new(load.Value, new StringComparer());
+        }
+        else
+        {
+            foreach (var item in load.Value)
+                current[item.Key] = item.Value;
+        }
+        return true;
+    }
+
+    #region Nested: LanguageType, StringComparer
+     //***********************************************************
     public class LanguageType
     {
-        public int Id { get; private set; }
-        public string CodeISO639_1 { get; private set; }
-        public string Name { get; private set; }
-        public string File { get; private set; }
+        public int Id { get; }
+        public string CodeISO639_1 { get; }
+        public string Name { get; }
+        public string Folder { get; }
         [JsonIgnore]
-        public Sprite Sprite { get; private set; }
-        [JsonIgnore]
-        private const string _pathBanner = "Banners/";
+        public Sprite Sprite { get; }
 
         [JsonConstructor]
-        public LanguageType(int id, string codeISO639_1, string name, string file)
+        public LanguageType(int id, string codeISO639_1, string name, string folder)
         {
             Id = id;
             CodeISO639_1 = codeISO639_1;
             Name = name;
-            File = file;
-            Sprite = Resources.Load<Sprite>(_pathBanner + File);
+            Folder = folder;
+            if (folder.IndexOf(SLASH) < 0)
+                Folder = folder += SLASH;
+            Sprite = Resources.Load<Sprite>(folder + BANNER);
         }
     }
-
+    //***********************************************************
     public class StringComparer : IEqualityComparer<string>
     {
         public bool Equals(string str1, string str2)

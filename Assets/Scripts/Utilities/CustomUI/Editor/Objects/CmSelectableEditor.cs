@@ -15,9 +15,6 @@ public class CmSelectableEditor : Editor
     protected SerializedProperty _alfaColliderProperty;
     protected SerializedProperty _thresholdProperty;
     protected SerializedProperty _targetGraphicsProperty;
-    protected SerializedProperty _hintProperty;
-    protected SerializedProperty _hintDelayProperty;
-    protected SerializedProperty _hintKeyProperty;
     protected SerializedProperty m_Script;
     protected SerializedProperty m_InteractableProperty;
     protected SerializedProperty m_TransitionProperty;
@@ -49,9 +46,6 @@ public class CmSelectableEditor : Editor
         _alfaColliderProperty       = serializedObject.FindProperty("_alfaCollider");
         _thresholdProperty          = serializedObject.FindProperty("_threshold");
         _targetGraphicsProperty     = serializedObject.FindProperty("_targetGraphics");
-        _hintProperty               = serializedObject.FindProperty("_hint");
-        _hintDelayProperty          = serializedObject.FindProperty("_delay");
-        _hintKeyProperty            = serializedObject.FindProperty("_key");
         m_Script                    = serializedObject.FindProperty("m_Script");
         m_InteractableProperty      = serializedObject.FindProperty("m_Interactable");
         m_TransitionProperty        = serializedObject.FindProperty("m_Transition");
@@ -117,15 +111,6 @@ public class CmSelectableEditor : Editor
         GameObject go = _interactableIconProperty.objectReferenceValue as GameObject;
         if(go != null)
             go.SetActive(!m_InteractableProperty.boolValue);
-        
-        if(_hintProperty.isExpanded = EditorGUILayout.Foldout(_hintProperty.isExpanded, _hintProperty.displayName))
-        {
-            EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(_hintProperty);
-            EditorGUILayout.PropertyField(_hintDelayProperty);
-            EditorGUILayout.PropertyField(_hintKeyProperty);
-            EditorGUI.indentLevel--;
-        }
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(m_TransitionProperty);
         EditorGUI.indentLevel++;

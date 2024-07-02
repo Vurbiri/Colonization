@@ -6,6 +6,7 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(EnumHashSet<,>))]
 public class EnumHashSetDrawer : PropertyDrawer
 {
+    private const int INDEX_TYPE = 0, INDEX_VALUE = 1;
     private const float Y_SPACE = 2f, BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
     private const string NAME_ARRAY = "_values", NAME_COUNT = "_count", NAME_COUNT_MAX = "_countMax", LABEL_EMPTY = "-----";
     private const string BUTTON_CHILD = "Set children", BUTTON_PREF = "Set prefabs", BUTTON_CLEAR = "Clear";
@@ -18,7 +19,7 @@ public class EnumHashSetDrawer : PropertyDrawer
 
         Color prevColor = GUI.color;
         Rect startPosition = position;
-        Type typeKey = fieldInfo.FieldType.GetGenericArguments()[0], typeValue = fieldInfo.FieldType.GetGenericArguments()[1];
+        Type typeKey = fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE], typeValue = fieldInfo.FieldType.GetGenericArguments()[INDEX_VALUE];
         SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
         int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue, countMax = property.FindPropertyRelative(NAME_COUNT_MAX).intValue, count = propertyValues.arraySize;
         

@@ -11,14 +11,12 @@ public class CmSelectable : Selectable
 
     [SerializeField] private Graphic[] _targetGraphics;
 
-    [SerializeField] private Hint _hint;
-    [SerializeField, Range(0.1f, 5f)] private float _delay = 1f;
-    [SerializeField] private string _key;
+    
 
     public Graphic[] TargetGraphics => _targetGraphics;
-    public string HintKey {get => _key; set => _key = value; }
+    
 
-    private bool _isShowingHint;
+    
 
     public new bool interactable
     {
@@ -34,8 +32,6 @@ public class CmSelectable : Selectable
     protected override void Start()
     {
         base.Start();
-
-        _isShowingHint = false;
 
         if (_targetGraphics.Length > 0)
         {
@@ -86,38 +82,5 @@ public class CmSelectable : Selectable
             targetGraphic.CrossFadeColor(targetColor, instant ? 0f : colors.fadeDuration, true, true);
         }
         #endregion
-    }
-
-    public override void OnPointerEnter(PointerEventData eventData)
-    {
-        base.OnPointerEnter(eventData);
-
-        if (_hint == null || _isShowingHint)
-            return;
-
-        _hint.SetKey(_key);
-        _isShowingHint = _hint.Show(_delay);
-    }
-
-    public override void OnPointerExit(PointerEventData eventData)
-    {
-        base .OnPointerExit(eventData);
-
-        HideHint();
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        HideHint();
-    }
-
-    private void HideHint()
-    {
-        if (_hint != null && _isShowingHint)
-        {
-            _hint.Hide();
-            _isShowingHint = false;
-        }
     }
 }
