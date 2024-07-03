@@ -113,7 +113,7 @@ public class EnumHashSetDrawer : PropertyDrawer
         //=================================
         void LoadAssets()
         {
-            string[] guids = AssetDatabase.FindAssets($"t:Prefab", new[] { "Assets" });
+            string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" });
             string path;
             UnityEngine.Object obj;
             List<UnityEngine.Object> list = new();

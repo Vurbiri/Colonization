@@ -709,6 +709,7 @@ MonoBehaviour:
   _isUpgrade: 1
   _cost:
     _values: 00000000000000000000000000000000000000000000000000000000
+    _amount: 0
   _graphic: {fileID: 3659079365088140821}
   _prefabUpgrade: {fileID: 3967751348314251287, guid: d8347800949353549b1344d5a0a97025,
     type: 3}

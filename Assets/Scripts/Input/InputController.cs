@@ -2,7 +2,7 @@ using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 
 [DefaultExecutionOrder(-1)]
-public class InputController : ASingleton<InputController>
+public class InputController :MonoBehaviour
 {
     [Space]
     [SerializeField] private LayerMask _layerLeft;
@@ -18,11 +18,8 @@ public class InputController : ASingleton<InputController>
     private RaycastHit _hit;
     private ISelectable _obj;
 
-    protected override void Awake()
+    private void Awake()
     {
-        _isNotDestroying = false;
-        base.Awake();
-
         _inputActions = new();
         _camera = Camera.main;
     }

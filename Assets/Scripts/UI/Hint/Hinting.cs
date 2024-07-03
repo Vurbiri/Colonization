@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class Hinting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField, FindObjectOfType] private Hint _hint;
+    [SerializeField, FindObject] private Hint _hint;
     [SerializeField] private string _key;
     [SerializeField] private TextFiles _file;
 

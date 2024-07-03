@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public class Crossroad : MonoBehaviour, ISelectable
 {
+    [GetComponentInChildren]
     [SerializeField] private City _city;
 
     public Key Key => _key;
@@ -95,7 +96,7 @@ public class Crossroad : MonoBehaviour, ISelectable
             _ => false
         };
 
-        #region Local: WaterCheck(...), NeighborCheck()
+        #region Local: WaterCheck(...)
         //=================================
         bool WaterCheck(CityType cityType)
         {

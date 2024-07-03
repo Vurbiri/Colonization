@@ -101,7 +101,7 @@ public class CrossroadMainMenu : ACrossroadMenu
             _buttonCity.interactable = crossroad.CanBuild(cityType, player.Resources);
             _buttonCity.onClick.AddListener(OnBuild);
 
-            #region Local: OnUpgrade()
+            #region Local: OnBuild()
             //=================================
             void OnBuild()
             {

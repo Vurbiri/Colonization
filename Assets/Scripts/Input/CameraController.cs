@@ -5,7 +5,7 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField, FindObjectOfType] private Island _island;
+    [SerializeField] private InputController _inputController;
     [Space]
     [Header("Movement")]
     [SerializeField] private float _speedMoveMax = 25f;
@@ -49,7 +49,7 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        _cameraActions = InputController.Instance.CameraActions;
+        _cameraActions = _inputController.CameraActions;
         _eventBus = EventBus.Instance;
 
         _cameraActions.Move.performed += OnMove;
@@ -63,7 +63,7 @@ public class CameraController : MonoBehaviour
 
         _eventBus.EventCrossroadSelect += MoveToCrossroad;
 
-        _bounds = new(_island.SizeHex * _island.Circle);
+        _bounds = new(CONST.HEX_SIZE * GameSettingsData.Instance.CircleMax);
 
         _cameraTransform.LookAt(_thisTransform);
     }
@@ -179,9 +179,6 @@ public class CameraController : MonoBehaviour
     {
         if (EventBus.Instance != null)
             _eventBus.EventCrossroadSelect -= MoveToCrossroad;
-
-        if (InputController.Instance == null)
-            return;
 
         _cameraActions.Move.performed -= OnMove;
         _cameraActions.Move.canceled -= OnCancelMove;

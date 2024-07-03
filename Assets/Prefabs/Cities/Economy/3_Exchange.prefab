@@ -547,6 +547,7 @@ MonoBehaviour:
   _isUpgrade: 0
   _cost:
     _values: 00000000000000000000000000000000000000000000000000000000
+    _amount: 0
   _graphic: {fileID: 3659079365088140821}
   _prefabUpgrade: {fileID: 3967751348314251287}
   _radiusCollider: 3.25

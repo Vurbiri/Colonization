@@ -1,7 +1,8 @@
 using System;
+using UnityEngine;
 
-[AttributeUsage(AttributeTargets.Field)]
-public class GetComponentInParentAttribute : GetComponentInChildrenAttribute
+[AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+public class GetComponentInParentAttribute : PropertyAttribute
 {
     
 }

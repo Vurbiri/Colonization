@@ -9,7 +9,7 @@ public class GetComponentInParentAttributeDrawer : AGetComponentAttributeDrawer
     {
         GetComponentInParentAttribute attr = attribute as GetComponentInParentAttribute;
 
-        property.objectReferenceValue = gameObject.GetComponentInParent(type, attr.IncludeInactive);
+        property.objectReferenceValue = gameObject.transform.parent.GetComponent(type);
 
         Debug.Log("GetComponentInParentAttribute");
     }

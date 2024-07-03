@@ -3,7 +3,7 @@ using UnityEngine;
 public class City : MonoBehaviour, IValueTypeEnum<CityType>
 {
     [SerializeField] private CityType _type;
-    [SerializeField, Range(0,3)] private int _level;
+    [SerializeField, Range(0, 3)] private int _level;
     [SerializeField] protected bool _isUpgrade = true;
     [SerializeField] protected Currencies _cost;
     [Space, GetComponentInChildren]
@@ -23,6 +23,9 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
 
     protected PlayerType _owner = PlayerType.None;
     protected CityGroup _group;
+
+    //TEST
+    public void SetCost() => _cost.Rand(_level);
 
     public virtual void Initialize()
     {

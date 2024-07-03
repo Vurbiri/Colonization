@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _city: {fileID: 1116298956642379694}
+  _test: {fileID: 8433342843341052234}
 --- !u!135 &7753975760188031238
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -131,6 +132,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Signpost
       objectReference: {fileID: 0}
+    - target: {fileID: 2108915051364042507, guid: 1af00c5b8c8307742a17e2c7c0748c35,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7033440127244616615, guid: 1af00c5b8c8307742a17e2c7c0748c35,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -152,5 +163,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 99fba604c7f336b4197d03c9860f8483, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8433342843341052234 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7214478821229641369, guid: 1af00c5b8c8307742a17e2c7c0748c35,
+    type: 3}
+  m_PrefabInstance: {fileID: 1231658502071887827}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a911692b2e5615429cac741701894da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

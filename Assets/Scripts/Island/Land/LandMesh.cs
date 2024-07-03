@@ -1,4 +1,5 @@
 using NaughtyAttributes;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -67,6 +68,16 @@ public class LandMesh : MonoBehaviour
     public void SetMesh()
     {
         _thisMeshFilter.sharedMesh = _customMesh.ToMesh(_isTangents);
+        _customMesh = null;
+        _hexagons = null;
+    }
+    public IEnumerator SetMeshOptimize_Coroutine()
+    {
+        _thisMeshFilter.sharedMesh = _customMesh.ToMesh(_isTangents);
+
+        yield return null;
+
+        _thisMeshFilter.sharedMesh.Optimize();
         _customMesh = null;
         _hexagons = null;
     }

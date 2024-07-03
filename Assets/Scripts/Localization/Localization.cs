@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(-2)]
+//[DefaultExecutionOrder(-2)]
 public partial class Localization : ASingleton<Localization>
 {
     [SerializeField] private string _folder = "Localization";
@@ -23,12 +23,6 @@ public partial class Localization : ASingleton<Localization>
     private LanguageType _currentLanguage;
 
     private const string BANNER = "Banner", SLASH = @"/";
-
-    protected override void Awake()
-    {
-        base.Awake();
-        Initialize();
-    }
 
     public bool Initialize()
     {
@@ -101,7 +95,9 @@ public partial class Localization : ASingleton<Localization>
         if (_text[idFile] != null && _text[idFile].TryGetValue(key, out string str))
             return str;
 
-        return $"ERROR! File:[{(TextFiles)idFile}] Key: [{key}]";
+        string msg = $"ERROR! File:[{(TextFiles)idFile} : {_text[idFile] != null}] Key: [{key} : {_text[idFile]?.ContainsKey(key)}]";
+        Message.Log(msg);
+        return msg;
     }
 
     public string GetTextFormat(TextFiles file, string key, params object[] args) => string.Format(GetText(idFile: (int)file, key), args);

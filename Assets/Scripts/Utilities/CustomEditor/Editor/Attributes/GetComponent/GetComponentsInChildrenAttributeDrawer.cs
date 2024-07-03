@@ -19,9 +19,9 @@ public class GetComponentsInChildrenAttributeDrawer : PropertyDrawer
             if (!Application.isPlaying && propArray.arraySize <= 1 && GUILayout.Button("GetComponentsInChildren"))
             {
                 GetComponentsInChildrenAttribute attributeGCIC = attribute as GetComponentsInChildrenAttribute;
-                typeProperty = typeProperty.IsArray ? typeProperty.GetElementType() : typeProperty.GetGenericArguments()[attributeGCIC.IndexGeneric];
+                typeProperty = typeProperty.IsArray ? typeProperty.GetElementType() : typeProperty.GetGenericArguments()[attributeGCIC.indexGeneric];
                 MonoBehaviour mono = property.serializedObject.targetObject as MonoBehaviour;
-                SetPropertyArray(propArray, mono.gameObject.GetComponentsInChildren(typeProperty, attributeGCIC.IncludeInactive));
+                SetPropertyArray(propArray, mono.gameObject.GetComponentsInChildren(typeProperty, attributeGCIC.includeInactive));
             }
         }
         else

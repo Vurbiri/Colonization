@@ -273,7 +273,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
   _startResources:
-    _values: 07000000070000000700000007000000070000000700000007000000
+    _values: 05000000050000000500000005000000050000000500000005000000
+    _amount: 35
   _visualSet: {fileID: 11400000, guid: a4bd672545f56a1449ce99cbe56b96b2, type: 2}
 --- !u!4 &118956331
 Transform:
@@ -803,7 +804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a47839a85795f4d89fb573ed422209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _island: {fileID: 1629463688}
+  _inputController: {fileID: 249953235}
   _speedMoveMax: 50
   _accelerationMove: 25
   _dampingMove: 75
@@ -845,7 +846,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13d1ff3e3f342424daf0bf32f9783c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isNotDestroying: 0
   _layerLeft:
     serializedVersion: 2
     m_Bits: 128
@@ -1695,6 +1695,54 @@ Transform:
   - {fileID: 1712360517}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &909355227
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 909355229}
+  - component: {fileID: 909355228}
+  m_Layer: 3
+  m_Name: GameSettings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!114 &909355228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 909355227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4faf9d96d5bd7746ab942e34badd4b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isNotDestroying: 1
+  _keySave: gmd
+  _circleMax: 4
+  _chanceWater: 33
+--- !u!4 &909355229
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 909355227}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &994699372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2159,6 +2207,53 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7674c0eab78bf164aa8eff38d28f91de, type: 3}
+--- !u!1 &1275861619
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1275861621}
+  - component: {fileID: 1275861620}
+  m_Layer: 3
+  m_Name: Game
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!114 &1275861620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275861619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243020d5950e90842910eb1dc970ade9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inputController: {fileID: 249953235}
+  _island: {fileID: 1629463688}
+  _prefabs: {fileID: 11400000, guid: b335d97e8aa5c804ebe9bb0876c2e0ca, type: 2}
+--- !u!4 &1275861621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275861619}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1411571977
 GameObject:
   m_ObjectHideFlags: 0
@@ -2671,8 +2766,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 286d0460b538f18459dca9a9eb2e34ef, type: 2}
     - {fileID: 11400000, guid: fb1677dbd00e8174f8280ff5bd1c1963, type: 2}
     - {fileID: 11400000, guid: e3b96aa18137802489b4eda13176a589, type: 2}
-  _circleMax: 4
-  _chance: 33
   _land: {fileID: 167528448}
   _crossroads: {fileID: 1829909683}
   _roadsPrefab: {fileID: 8182378917549708823, guid: bd24c09b2bd69704a8b9e26d2f63cdef,
@@ -3617,7 +3710,9 @@ SceneRoots:
   - {fileID: 1629463687}
   - {fileID: 832575519}
   - {fileID: 257417808}
-  - {fileID: 1159026068}
   - {fileID: 2087523885}
   - {fileID: 249953236}
   - {fileID: 118956331}
+  - {fileID: 1159026068}
+  - {fileID: 909355229}
+  - {fileID: 1275861621}
