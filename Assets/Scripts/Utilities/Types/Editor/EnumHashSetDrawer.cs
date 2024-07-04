@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 [CustomPropertyDrawer(typeof(EnumHashSet<,>))]
 public class EnumHashSetDrawer : PropertyDrawer
@@ -50,10 +51,10 @@ public class EnumHashSetDrawer : PropertyDrawer
             {
                 if (typeValue.Is(typeof(Component)))
                 {
-                    if (property.serializedObject.targetObject is MonoBehaviour && DrawButton(BUTTON_CHILD, 1))
-                        GetComponentsInChildren(property.serializedObject.targetObject as MonoBehaviour);
+                    if (property.serializedObject.targetObject is Component && DrawButton(BUTTON_CHILD, 1))
+                        GetComponentsInChildren(property.serializedObject.targetObject as Component);
                     if (DrawButton(BUTTON_PREF, 0))
-                        LoadAssets();
+                        LoadPrefabs();
                 }
            
                 if (DrawButton(BUTTON_CLEAR, 2))
@@ -104,19 +105,36 @@ public class EnumHashSetDrawer : PropertyDrawer
             return GUI.Button(positionButton, text.ToUpper());
         }
         //=================================
-        void GetComponentsInChildren(MonoBehaviour mono)
+        void GetComponentsInChildren(Component component)
         {
-            UnityEngine.Object[] array = mono.GetComponentsInChildren(fieldInfo.FieldType.GetGenericArguments()[1]);
+            List<Object> list = new();
 
-            SetValues(array);
+            Find(component.transform);
+            SetValues(list);
+
+            #region Local: Find(...)
+            //=================================
+            void Find(Transform parent)
+            {
+                Object obj;
+                foreach (Transform child in parent)
+                {
+                    obj = child.GetComponent(typeValue);
+                    if (obj != null)
+                        list.Add(obj);
+
+                    Find(child);
+                }
+            }
+            #endregion
         }
         //=================================
-        void LoadAssets()
+        void LoadPrefabs()
         {
             string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" });
             string path;
-            UnityEngine.Object obj;
-            List<UnityEngine.Object> list = new();
+            Object obj;
+            List<Object> list = new();
 
             foreach (var guid in guids)
             {
@@ -129,7 +147,7 @@ public class EnumHashSetDrawer : PropertyDrawer
             SetValues(list);
         }
         //=================================
-        void SetValues( IReadOnlyList<UnityEngine.Object> array)
+        void SetValues( IReadOnlyList<Object> array)
         {
             for (int index = 0; index < array.Count; index++)
                 propertyValues.GetArrayElementAtIndex(index % count).objectReferenceValue = array[index];

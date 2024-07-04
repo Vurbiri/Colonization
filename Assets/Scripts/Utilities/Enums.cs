@@ -51,11 +51,11 @@ public enum PlayerType
 
 public enum Resource
 {
-    Ground01,
-    Ground02,
-    Ground03,
-    Ground04,
-    Ground05,
+    Land01,
+    Land02,
+    Land03,
+    Land04,
+    Land05,
     Water,
     Gate
 }
@@ -69,14 +69,14 @@ public enum LinkType
 
 public enum CityGroup
 {
-    None = -1,
+    Signpost = -1,
     Military,
     Economy,
     Industry,
-    Ground04,
-    Ground05,
+    Magic,
+    Politics,
     Water,
-    Gate
+    Shrine
 }
 
 public enum CityBuildType
@@ -107,7 +107,15 @@ public enum CityType
 
     Workshop,
     Forge,
-    Manufactory
+    Manufactory,
+
+    Library,
+    MageTower,
+    University,
+
+    TownHall,
+    Police,
+    Magistrate
 }
 
 public class Enum<T> where T : Enum
@@ -126,12 +134,14 @@ public static class ExtensionsEnum
 
     public static CityGroup ToGroup(this CityType self) => self switch
     {
-        CityType.Signpost                                           => CityGroup.None,
-        CityType.Shrine                                             => CityGroup.Gate,
-        CityType.Berth or CityType.Port                             => CityGroup.Water,
-        CityType.Watchtower or CityType.Barracks or CityType.Castle => CityGroup.Military,
-        CityType.Store or CityType.Warehouse or CityType.Exchange   => CityGroup.Economy,
-        CityType.Workshop or CityType.Forge or CityType.Manufactory => CityGroup.Industry,
+        CityType.Signpost                                             => CityGroup.Signpost,
+        CityType.Shrine                                               => CityGroup.Shrine,
+        CityType.Berth or CityType.Port                               => CityGroup.Water,
+        CityType.Watchtower or CityType.Barracks or CityType.Castle   => CityGroup.Military,
+        CityType.Store or CityType.Warehouse or CityType.Exchange     => CityGroup.Economy,
+        CityType.Workshop or CityType.Forge or CityType.Manufactory   => CityGroup.Industry,
+        CityType.Library or CityType.MageTower or CityType.University => CityGroup.Magic,
+        CityType.TownHall or CityType.Police or CityType.Magistrate   => CityGroup.Politics,
         _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение CityType: {self}"),
     };
 

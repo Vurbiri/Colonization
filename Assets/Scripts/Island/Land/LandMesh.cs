@@ -6,10 +6,9 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class LandMesh : MonoBehaviour
 {
-    [SerializeField] private string _name = "LandMesh";
+    [SerializeField] private string _nameMesh = "LandMesh";
     [Space]
-    [SerializeField] private bool _isTangents = false;
-    [SerializeField, Range(0.5f, 1.5f)] private float _rateTiling = 1.05f;
+    [SerializeField, Range(0.5f, 1.5f)] private float _rateTilingMaterial = 1.05f;
     [Space]
     [SerializeField, Range(0.5f, 0.99f)] private float _rateCellBaseLand = 0.8f;
     [SerializeField, Range(0.5f, 0.99f)] private float _rateCellBaseWater = 0.9f;
@@ -36,9 +35,9 @@ public class LandMesh : MonoBehaviour
     {
         _thisMeshFilter = GetComponent<MeshFilter>();
         _hexagons = new(((CONST.COUNT_SIDES * circleMax * (circleMax + 1)) >> 1) + 1);
-        _customMesh = new(_name, (2f * circleMax * CONST.HEX_SIZE) * Vector2.one);
+        _customMesh = new(_nameMesh, (2f * circleMax * CONST.HEX_SIZE) * Vector2.one);
 
-        GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTiling * circleMax);
+        GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTilingMaterial * circleMax);
 
         HexagonMesh.CoastSize = _coastSize;
         HexagonMesh.CoastSteps = _coastSteps;
@@ -67,13 +66,13 @@ public class LandMesh : MonoBehaviour
 
     public void SetMesh()
     {
-        _thisMeshFilter.sharedMesh = _customMesh.ToMesh(_isTangents);
+        _thisMeshFilter.sharedMesh = _customMesh.ToMesh();
         _customMesh = null;
         _hexagons = null;
     }
     public IEnumerator SetMeshOptimize_Coroutine()
     {
-        _thisMeshFilter.sharedMesh = _customMesh.ToMesh(_isTangents);
+        _thisMeshFilter.sharedMesh = _customMesh.ToMesh();
 
         yield return null;
 
@@ -84,6 +83,6 @@ public class LandMesh : MonoBehaviour
 
 #if UNITY_EDITOR
     [Button]
-    private void SaveMesh() => UnityEditor.AssetDatabase.CreateAsset(_thisMeshFilter.sharedMesh, _path + _name + "_" + _nameFile + ".mesh");
+    private void SaveMesh() => UnityEditor.AssetDatabase.CreateAsset(_thisMeshFilter.sharedMesh, _path + _nameMesh + "_" + _nameFile + ".mesh");
 #endif
 }

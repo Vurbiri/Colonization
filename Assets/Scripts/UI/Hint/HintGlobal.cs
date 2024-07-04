@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Graphic))]
-public class Hint : MonoBehaviour
+public class HintGlobal : MonoBehaviour
 {
     [SerializeField, GetComponentInChildren] private TMP_Text _hint;
     [SerializeField, Range(0f, 5f)] private float _timeDelay = 1f;
@@ -12,8 +12,6 @@ public class Hint : MonoBehaviour
     [SerializeField] private float _maxWidth = 100f;
     [SerializeField] private float _padding = 1.1f;
     
-    private string _key;
-    private TextFiles _file;
     private Localization _localization;
     private Graphic _background;
     private RectTransform _transformBack, _transformText;
@@ -36,14 +34,29 @@ public class Hint : MonoBehaviour
 
     public bool Show(TextFiles file, string key)
     {
-        _file = file; _key = key;
-        return SetHint() && Show();
+        if (string.IsNullOrEmpty(key))
+            return false;
+
+        SetHint(_localization.GetText(file, key));
+        Show();
+
+        return true; 
     }
 
-    public bool Show()
+    public bool Show(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return false;
+
+        SetHint(text);
+        Show();
+
+        return true;
+    }
+
+    private void Show()
     {
         _coroutineShow ??= StartCoroutine(Show_Coroutine());
-        return true;
 
         #region Local: OnBack()
         //=================================
@@ -69,17 +82,14 @@ public class Hint : MonoBehaviour
         _hint.CrossFadeAlpha(0f, _fadeDuration, true);
     }
 
-    private bool SetHint()
+    private void SetHint(string text)
     {
-        if (string.IsNullOrEmpty(_key))
-            return false;
-
         bool active = gameObject.activeSelf;
         gameObject.SetActive(true);
 
         _hint.enableWordWrapping = false;
 
-        _hint.text = _localization.GetText(_file, _key);
+        _hint.text = text;
         _hint.ForceMeshUpdate();
 
         Vector2 size = _hint.textBounds.size;
@@ -97,7 +107,5 @@ public class Hint : MonoBehaviour
         _transformBack.sizeDelta = size + Vector2.one * _padding;
 
         gameObject.SetActive(active);
-
-        return true;
     }
 }

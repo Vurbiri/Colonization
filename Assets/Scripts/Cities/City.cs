@@ -39,7 +39,7 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
 
     public virtual void AddRoad(LinkType type, PlayerType owner) => _graphic.RoadBuilt(type, owner);
 
-    public virtual bool Build(CityType type, PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, out City city)
+    public virtual bool Build(City prefab, PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, out City city)
     {
         city = this;
         return false;
@@ -68,7 +68,6 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
         _group = _type.ToGroup();
     }
 
-    public virtual bool CanBuyBuilding(CityType type, Currencies cash) => _type == type && _cost <= cash;
     public bool CanBuyUpgrade(PlayerType owner, Currencies cash) => _isUpgrade && _owner == owner && _prefabUpgrade._cost <= cash;
     
     public virtual void Show(bool isShow) {}

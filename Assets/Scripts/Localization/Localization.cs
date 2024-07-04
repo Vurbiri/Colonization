@@ -14,7 +14,8 @@ public partial class Localization : ASingleton<Localization>
     public IEnumerable<LanguageType> Languages => _languages;
     public int CurrentId => _currentLanguage == null ? -1 : _currentLanguage.Id;
 
-    public event Action<Localization> EventSwitchLanguage;
+    //public event Action<Localization> EventSwitchLanguage;
+    public event Action EventSwitchLanguage;
 
     private readonly string[] _nameFiles = Enum<TextFiles>.GetNames();
     private Dictionary<string, string>[] _text;
@@ -90,6 +91,7 @@ public partial class Localization : ASingleton<Localization>
     }
 
     public string GetText(TextFiles file, string key) => GetText(idFile: (int)file, key);
+    public string GetText(TextFiles file, object obj) => GetText(idFile: (int)file, obj.ToString());
     public string GetText(int idFile, string key)
     {
         if (_text[idFile] != null && _text[idFile].TryGetValue(key, out string str))
@@ -117,7 +119,7 @@ public partial class Localization : ASingleton<Localization>
         }
 
         _currentLanguage = type;
-        EventSwitchLanguage?.Invoke(this);
+        EventSwitchLanguage?.Invoke();
         return true;
     }
 

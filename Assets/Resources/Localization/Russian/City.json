@@ -1,6 +1,7 @@
 {
 	"Roads": "Дороги",
 	"Road": "Дорога",
+	"BuildRoad": "Построить дорогу",
 
 	"Build": "Основать поселение",
 	"Upgrade": "Улучшить",
@@ -22,8 +23,17 @@
 	"Forge": "Кузница",
 	"Manufactory": "Мануфактура",
 
+	"Library": "Библиотека",
+	"MageTower": "Башня мага",
+	"University": "Университет",
+
+	"TownHall": "Ратуша",
+	"Police": "Тайная полиция",
+	"Magistrate": "Магистрат",
+
 	"Military": "Армия",
 	"Economy": "Экономика",
-	"Industry": "Ремесло"
-
+	"Industry": "Ремесло",
+	"Magic": "Магия",
+	"Politics": "Политика"
 }

@@ -6,10 +6,13 @@ using UnityEngine;
 public class CitiesScriptable : ScriptableObject, IEnumerable<City>
 {
     [SerializeField] private EnumHashSet<CityType, City> _prefabs;
+    [Space]
+    [SerializeField] private CityType[] _buildTypes;
 
     public City this[CityType type] => _prefabs[type];
     public int Count => _prefabs.Count;
     public int Capacity => _prefabs.Capacity;
+    public IEnumerable<CityType> BuildTypes => _buildTypes;
 
     public object Current => throw new System.NotImplementedException();
 

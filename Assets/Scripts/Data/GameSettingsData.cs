@@ -71,7 +71,7 @@ public class GameSettingsData : ASingleton<GameSettingsData>
         EventChangeScore?.Invoke(0);
     }
 
-    #region Nested Class
+    #region Nested: GameSave
     //***********************************
     private class GameSave
     {

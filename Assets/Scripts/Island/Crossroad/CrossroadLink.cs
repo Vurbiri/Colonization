@@ -18,10 +18,12 @@ public class CrossroadLink : IValueTypeEnum<LinkType>
     private readonly KeyDouble _key;
     private readonly Vector3 _middle;
 
+    private static readonly Key[] NEAR_CROSS = { new(2, -1), new(2, 1), new(0, 2), new(-2, 1), new(-2, -1), new(0, -2) };
+
     public CrossroadLink(Crossroad crossA, Crossroad crossB, bool isWater)
     {
         _start = crossA; _end = crossB;
-        _type = (LinkType)(_end - _start);
+        _type = ToLinkType(_end - _start);
 
         if (!(_start.AddLink(this) && _end.AddLink(this)))
             return;
@@ -30,6 +32,10 @@ public class CrossroadLink : IValueTypeEnum<LinkType>
         _isWater = isWater;
         _owner = PlayerType.None;
         _middle = (_start.Position + _end.Position) * 0.5f;
+
+        // Local: ToLinkType(..)
+        //=================================
+        LinkType ToLinkType(Key key) => (LinkType)(System.Array.IndexOf(NEAR_CROSS, key) % 3);
     }
 
     public void SetStart(Crossroad cross)
@@ -47,5 +53,6 @@ public class CrossroadLink : IValueTypeEnum<LinkType>
 
     public Crossroad Other(Crossroad crossroad) => crossroad == _start ? _end : _start;
 
+    
     public override string ToString() => $"({_type}: {_key})";
 }

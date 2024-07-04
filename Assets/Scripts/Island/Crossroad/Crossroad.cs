@@ -6,11 +6,14 @@ public class Crossroad : MonoBehaviour, ISelectable
 {
     [GetComponentInChildren]
     [SerializeField] private City _city;
+    [Space]
+    [SerializeField] private CitiesScriptable _prefabs;
 
     public Key Key => _key;
     public Vector3 Position { get; private set; }
     public PlayerType Owner => _city.Owner;
     public CityBuildType CityBuildType => _cityBuild;
+    public CityType CityUpgradeType => _city.TypeNext;
     public IEnumerable<CrossroadLink> Links => _links;
 
     private Key _key;
@@ -29,7 +32,6 @@ public class Crossroad : MonoBehaviour, ISelectable
     private const int COUNT = 3;
     private const string NAME = "Crossroad_";
     private static readonly HashSet<CityType> notRuleTwo = new() { CityType.Shrine, CityType.Berth, CityType.Port };
-    private static readonly CityType[] buildCity = { CityType.Watchtower, CityType.Store, CityType.Workshop };
 
     public void Initialize(Key key)
     {
@@ -90,7 +92,7 @@ public class Crossroad : MonoBehaviour, ISelectable
     {
         return _cityBuild.ToCityType() == type && type switch
         {
-            CityType.Shrine => _city.CanBuyBuilding(type, cash),
+            CityType.Shrine => _prefabs[type].Cost <= cash,
             CityType.Berth => WaterCheck(type),
             CityType.Port => WaterCheck(type),
             _ => false
@@ -100,7 +102,7 @@ public class Crossroad : MonoBehaviour, ISelectable
         //=================================
         bool WaterCheck(CityType cityType)
         {
-            if (!_city.CanBuyBuilding(cityType, cash))
+            if (_prefabs[type].Cost > cash)
                 return false;
 
             foreach (var hex in _hexagons)
@@ -136,8 +138,8 @@ public class Crossroad : MonoBehaviour, ISelectable
             //=================================
             bool CanBuyAny()
             {
-                foreach (var cityType in buildCity)
-                    if (_city.CanBuyBuilding(cityType, cash))
+                foreach (var cityType in _prefabs.BuildTypes)
+                    if (CanBuyCity(cityType, cash))
                         return true;
                 return false;
             }
@@ -145,10 +147,10 @@ public class Crossroad : MonoBehaviour, ISelectable
         }
         #endregion
     }
-    public bool CanBuyCity(CityType type, Currencies cash) => _city.CanBuyBuilding(type, cash);
+    public bool CanBuyCity(CityType type, Currencies cash) => _prefabs[type].Cost <= cash;
     public bool Build(PlayerType playerType, CityType type, out Currencies cost)
     {
-        if (_city.Build(type, playerType, _links, out _city))
+        if (_city.Build(_prefabs[type], playerType, _links, out _city))
         {
             _eventBus.EventCrossroadMarkShow -= Show;
             cost = _city.Cost;

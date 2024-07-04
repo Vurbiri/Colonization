@@ -12,5 +12,5 @@ public class TextFormatLocalization : TextLocalization
         Setup(Text.text);
     }
 
-    protected override void SetText(Localization localization) => Text.text = string.Format(localization.GetText(_file, _key), _value);
+    protected override void SetText() => Text.text = string.Format(_localization.GetText(_file, _key), _value);
 }

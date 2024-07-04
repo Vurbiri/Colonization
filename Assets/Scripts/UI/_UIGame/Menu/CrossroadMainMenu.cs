@@ -1,25 +1,18 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CrossroadMainMenu : ACrossroadMenu
 {
     [SerializeField] private CmButton _buttonClose;
-    [SerializeField] private CmButton _buttonCity;
+    [SerializeField] private ButtonBuildUniversal _buttonUniversal;
     [SerializeField] private CmButton _buttonRoads;
-    [Space]
-    [SerializeField] private Image _buttonCityIcon;
-    [SerializeField] private UnityDictionary<CityBuildType, Sprite> _citySprites;
 
     private ACrossroadBuildMenu _buildMenu;
-    private Hinting _buttonHinting;
 
     public void Initialize(ACrossroadBuildMenu roadsMenu, ACrossroadBuildMenu buildMenu)
     {
         _players = Players.Instance;
 
         _buildMenu = buildMenu;
-
-        _buttonHinting = _buttonCity.GetComponent<Hinting>();
 
         _buttonClose.onClick.AddListener(() => gameObject.SetActive(false));
         _buttonRoads.onClick.AddListener(OnRoads);
@@ -46,19 +39,12 @@ public class CrossroadMainMenu : ACrossroadMenu
         _buttonRoads.targetGraphic.color = color;
         _buttonRoads.interactable = player.CanRoadBuilt(crossroad);
 
-        _buttonCity.targetGraphic.color = color;
-        _buttonCityIcon.sprite = _citySprites[cityBuildType];
-        _buttonHinting.Key = cityBuildType.ToString();
-        _buttonCity.onClick.RemoveAllListeners();
-
+        _buttonUniversal.Setup(crossroad, color);
         switch (cityBuildType)
         {
-            case CityBuildType.Build     : ToMenuBuild(); break;
-            case CityBuildType.Upgrade  : CityUpgrade(); break;
-            case CityBuildType.Berth:
-            case CityBuildType.Port:
-            case CityBuildType.Shrine     : CityBuild(cityBuildType.ToCityType()); break;
-
+            case CityBuildType.Build : ToMenuBuild(); break;
+            case CityBuildType.Upgrade : CityUpgrade(); break;
+            case CityBuildType.Berth or CityBuildType.Port or CityBuildType.Shrine: CityBuild(cityBuildType.ToCityType()); break;
             default : break;
         }
 
@@ -68,8 +54,8 @@ public class CrossroadMainMenu : ACrossroadMenu
         //=================================
         void ToMenuBuild()
         {
-            _buttonCity.interactable = crossroad.CanCityBuild(player.Type, player.Resources);
-            _buttonCity.onClick.AddListener(ToMenu);
+            _buttonUniversal.Interactable = crossroad.CanCityBuild(player.Type, player.Resources);
+            _buttonUniversal.AddListener(ToMenu);
 
             #region Local: ToMenu()
             //=================================
@@ -83,8 +69,8 @@ public class CrossroadMainMenu : ACrossroadMenu
         //=================================
         void CityUpgrade()
         {
-            _buttonCity.interactable = crossroad.CanCityUpgrade(player);
-            _buttonCity.onClick.AddListener(OnUpgrade);
+            _buttonUniversal.Interactable = crossroad.CanCityUpgrade(player);
+            _buttonUniversal.AddListener(OnUpgrade);
 
             #region Local: OnUpgrade()
             //=================================
@@ -98,8 +84,8 @@ public class CrossroadMainMenu : ACrossroadMenu
         //=================================
         void CityBuild(CityType cityType)
         {
-            _buttonCity.interactable = crossroad.CanBuild(cityType, player.Resources);
-            _buttonCity.onClick.AddListener(OnBuild);
+            _buttonUniversal.Interactable = crossroad.CanBuild(cityType, player.Resources);
+            _buttonUniversal.AddListener(OnBuild);
 
             #region Local: OnBuild()
             //=================================

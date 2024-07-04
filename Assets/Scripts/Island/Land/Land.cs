@@ -14,7 +14,19 @@ public class Land : MonoBehaviour
     private Dictionary<Key, Hexagon> _hexagons;
     private Vector2 _offset;
 
-    private static readonly Key[] _near = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
+    private static readonly Key[] NEAR = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
+    private static readonly Key[] NEAR_TWO = new Key[COUNT_SIDES << 1];
+
+    static Land()
+    {
+        Key key;
+        for (int i = 0, j = 0; i < COUNT_SIDES; i++, j = i << 1)
+        {
+            key = NEAR[i];
+            NEAR_TWO[j]   = key + key;
+            NEAR_TWO[++j] = key + NEAR.Next(i);
+        }
+    }
 
     public void Initialize(int circleMax)
     {
@@ -42,7 +54,7 @@ public class Land : MonoBehaviour
     {
         Hexagon hex;
         Key key = PositionToKey(position);
-        foreach (var offset in _near)
+        foreach (var offset in NEAR)
         {
             if (_hexagons.TryGetValue(key + offset, out hex))
                 if(hex.IsWater)
@@ -68,7 +80,7 @@ public class Land : MonoBehaviour
                 waterNear = new bool[COUNT_SIDES];
                 side = 0;
             }
-            foreach (var offset in _near)
+            foreach (var offset in NEAR)
             {
                 if (_hexagons.TryGetValue(hex.Key + offset, out neighbor))
                 {

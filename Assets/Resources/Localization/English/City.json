@@ -1,9 +1,10 @@
 {
   "Roads": "Roads",
   "Road": "Road",
+  "BuildRoad": "Build a road",
 
-  "Build": "Establish settlement",
-  "Upgrade": "Upgrade",
+  "Build": "Establish a settlement",
+  "Upgrade": "Upgrade to",
 
   "Shrine": "Shrine",
 
@@ -22,7 +23,18 @@
   "Forge": "Forge",
   "Manufactory": "Manufactory",
 
+  "Library": "Library",
+  "MageTower": "Mage tower",
+  "University": "University",
+
+  "TownHall": "Town hall",
+  "Police": "Secret police",
+  "Magistrate": "Town council",
+
   "Military": "Military",
   "Economy": "Economy",
-  "Industry": "Industry"
+  "Industry": "Industry",
+  "Magic": "Magic",
+  "Politics": "Politics"
+
 }

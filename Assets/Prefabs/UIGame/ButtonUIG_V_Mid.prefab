@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 401596274815800599, guid: 7674c0eab78bf164aa8eff38d28f91de,
         type: 3}
       propertyPath: m_Name
-      value: ButtonUIG_Mid
+      value: ButtonUIG_V_Mid
       objectReference: {fileID: 0}
     - target: {fileID: 3568774632626465036, guid: 7674c0eab78bf164aa8eff38d28f91de,
         type: 3}

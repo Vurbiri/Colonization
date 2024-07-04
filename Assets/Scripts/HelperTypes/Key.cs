@@ -12,8 +12,6 @@ public class Key : IEquatable<Key>
 
     private readonly int _x, _y;
 
-    private static readonly List<Key> _crossroadIndexesOffset = new(6) { new(2, -1), new(2, 1), new(0, 2), new(-2, 1), new(-2, -1), new(0, -2) };
-
     [JsonConstructor]
     public Key(int x, int y)
     {
@@ -24,8 +22,6 @@ public class Key : IEquatable<Key>
         _x = Mathf.RoundToInt(x);
         _y = Mathf.RoundToInt(y);
     }
-
-    public static explicit operator LinkType(Key key) => (LinkType)(_crossroadIndexesOffset.IndexOf(key) % 3);
 
     public bool Equals(Key other) => other is not null && _x == other._x && _y == other._y;
     public override bool Equals(object obj) => Equals(obj as Key);
