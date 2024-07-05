@@ -1,22 +1,23 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider))]
 public class Hexagon : MonoBehaviour, ISelectable
 {
-    [SerializeField] private bool _showId = true;
     [SerializeField] private TMP_Text _idText;
     
     public Key Key => _key;
     public int Id => _id;
     public bool IsGate => _isGate;
     public bool IsWater => _isWater;
+    public CurrencyType Currency => _currency;
 
     #region private
     private int _id = -1;
     private Key _key;
-    private Resource _surface;
+    private CurrencyType _currency;
     bool _isGate, _isWater;
 
     private readonly HashSet<Crossroad> _crossroads = new(CONST.COUNT_SIDES);
@@ -25,18 +26,19 @@ public class Hexagon : MonoBehaviour, ISelectable
     private const string NAME = "Hexagon_";
     #endregion
 
-    public void Initialize(Key key, SurfaceScriptable surface, float waterLevel, int id)
+    public void Initialize(HexagonData data, float waterLevel)
     {
-        _key = key;
-        _id = id;
+        _key = data.key;
+        _id = data.Id;
         _idText.text = _id.ToString();
-        _idText.gameObject.SetActive(_showId);
 
-        _surface = surface.Type;
-        _isGate = _surface == Resource.Gate;
-        _isWater = _surface == Resource.Water;
+        _currency = data.Type;
+        _isGate = _currency == CurrencyType.Gate;
+        _isWater = _currency == CurrencyType.Water;
 
-        name = NAME + _id + "__" + key.ToString();
+        EventBus.Instance.EventHexagonIdShow += _idText.gameObject.SetActive;
+
+        name = NAME + _id + "__" + _key.ToString();
 
         if (IsWater)
         {
@@ -70,7 +72,7 @@ public class Hexagon : MonoBehaviour, ISelectable
 
     public void Select()
     {
-
         Debug.Log($"{gameObject.name}, water: {IsWater}, gate {IsGate}\n");
     }
+
 }

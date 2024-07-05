@@ -52,7 +52,8 @@ public class CrossroadLink : IValueTypeEnum<LinkType>
     }
 
     public Crossroad Other(Crossroad crossroad) => crossroad == _start ? _end : _start;
-
     
+    public bool Contains(CrossroadData data) => data.Key == _start.Key || data.Key == _end.Key;
+
     public override string ToString() => $"({_type}: {_key})";
 }

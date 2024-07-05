@@ -6,11 +6,9 @@ using UnityEngine;
 public class SettingsData : ASingleton<SettingsData>
 {
     [Space]
-    [SerializeField] private int _qualityDesktop = 1;
-    [SerializeField] private Profile _profileDesktop = new();
+    [SerializeField] private string _keySave = "std";
     [Space]
-    [SerializeField] private int _qualityMobile = 0;
-    [SerializeField] private Profile _profileMobile = new();
+    [SerializeField] private Profile _profileDefault = new();
     [Space]
     [SerializeField] private float _audioMinValue = 0.0f;
     [SerializeField] private float _audioMaxValue = 1.0f;
@@ -21,9 +19,8 @@ public class SettingsData : ASingleton<SettingsData>
 
     public float MinValue => _audioMinValue;
     public float MaxValue => _audioMaxValue;
+    public bool IsFirstStart { get; set; } = true;
 
-    public bool IsDesktop { get; private set; } = true;
-    
     private YandexSDK _ysdk;
     private Localization _localization;
     private readonly Dictionary<AudioType, IVolume> _volumes = new(Enum<AudioType>.Count);
@@ -32,19 +29,11 @@ public class SettingsData : ASingleton<SettingsData>
     {
         base.Awake();
 
-        IsDesktop = !UtilityJS.IsMobile;
-
         _ysdk = YandexSDK.InstanceF;
         _localization = Localization.InstanceF;
 
         _volumes[AudioType.Music] = MusicSingleton.InstanceF;
         _volumes[AudioType.SFX] = SoundSingleton.InstanceF;
-    }
-
-    public void SetPlatform()
-    {
-        if (_ysdk.IsPlayer)
-            IsDesktop = _ysdk.IsDesktop;
     }
 
     public bool Initialize(bool isLoad)
@@ -64,14 +53,15 @@ public class SettingsData : ASingleton<SettingsData>
     public void Save(Action<bool> callback = null)
     {
         _profileCurrent.idLang = _localization.CurrentId;
-        foreach (var type in Enum<AudioType>.GetValues())
+        _profileCurrent.quality = QualitySettings.GetQualityLevel();
+        foreach (var type in Enum<AudioType>.Values)
             _profileCurrent.volumes[(int)type] = _volumes[type].Volume;
 
-        StartCoroutine(Storage.Save_Coroutine(_profileCurrent.key, _profileCurrent, callback));
+        StartCoroutine(Storage.Save_Coroutine(_keySave, _profileCurrent, callback));
     }
     private bool Load()
     {
-        Return<Profile> data = Storage.Load<Profile>(_profileCurrent.key);
+        Return<Profile> data = Storage.Load<Profile>(_keySave);
         if (data.Result)
             _profileCurrent.Copy(data.Value);
 
@@ -88,8 +78,7 @@ public class SettingsData : ASingleton<SettingsData>
 
     private void DefaultProfile()
     {
-        QualitySettings.SetQualityLevel(IsDesktop ? _qualityDesktop : _qualityMobile);
-        _profileCurrent = (IsDesktop ? _profileDesktop : _profileMobile).Clone();
+        _profileCurrent = _profileDefault.Clone();
 
         if (_ysdk.IsInitialize)
             if (_localization.TryIdFromCode(_ysdk.Lang, out int id))
@@ -99,26 +88,29 @@ public class SettingsData : ASingleton<SettingsData>
     private void Apply()
     {
         _localization.SwitchLanguage(_profileCurrent.idLang);
-        foreach (var type in Enum<AudioType>.GetValues())
+        QualitySettings.SetQualityLevel(_profileCurrent.quality);
+        foreach (var type in Enum<AudioType>.Values)
             _volumes[type].Volume = _profileCurrent.volumes[(int)type];
     }
 
-    #region Nested Classe
+    #region Nested: Profile
+    //*******************************************************
     [System.Serializable]
     private class Profile
     {
-        [JsonIgnore]
-        public string key = "std";
-        [JsonProperty("ilg")]
+        [JsonProperty("lg")]
         public int idLang = 1;
-        [JsonProperty("vls")]
+        [JsonProperty("qt")]
+        public int quality = 2;
+        [JsonProperty("vl")]
         public float[] volumes = { 0.6f, 0.6f };
 
         [JsonConstructor]
-        public Profile(int idLang, float[] volumes)
+        public Profile(int idLang, int quality, float[] volumes)
         {
             this.idLang = idLang;
-            this.volumes = (float[])volumes.Clone();
+            this.quality = quality;
+            volumes.CopyTo(this.volumes, 0);
         }
 
         public Profile() { }
@@ -128,13 +120,11 @@ public class SettingsData : ASingleton<SettingsData>
             if (profile == null) return;
 
             idLang = profile.idLang;
+            quality = profile.quality;
             profile.volumes.CopyTo(volumes, 0);
         }
 
-        public Profile Clone()
-        {
-            return new(idLang, volumes) { key = key };
-        }
+        public Profile Clone() => new(idLang, quality, volumes);
 
     }
     #endregion

@@ -83,4 +83,15 @@ public class Roads : MonoBehaviour
         }
         #endregion
     }
+
+    public Key[][] GetCrossroadsKey()
+    {
+        int count = _roadsLists.Count;
+        Key[][] keys = new Key[count][];
+        
+        for (int i = 0; i < count; i++)
+            keys[i] = _roadsLists[i].GetCrossroadsKey();
+
+        return keys;
+    }
 }

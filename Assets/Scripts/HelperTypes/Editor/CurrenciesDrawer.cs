@@ -78,7 +78,7 @@ public class CurrenciesDrawer : EnumArrayDrawer
         #endregion
     }
 
-    protected override Type GetTypeEnum() => typeof(Resource);
+    protected override Type GetTypeEnum() => typeof(CurrencyType);
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {

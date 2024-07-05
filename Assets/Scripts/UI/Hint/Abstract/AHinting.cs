@@ -15,7 +15,7 @@ public abstract class AHinting : MonoBehaviour, IPointerEnterHandler, IPointerEx
     protected string _text;
     protected Localization _localization;
 
-    protected virtual void Start()
+    public virtual void Initialize()
     {
         _thisSelectable = GetComponent<Selectable>();
         _localization = Localization.Instance;

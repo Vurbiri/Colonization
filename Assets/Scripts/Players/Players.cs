@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(-1)]
+//[DefaultExecutionOrder(-1)]
 public class Players : ASingleton<Players>, IEnumerable<Player>
 {
     [Space]
@@ -17,28 +17,28 @@ public class Players : ASingleton<Players>, IEnumerable<Player>
     private Player _current;
     private readonly EnumHashSet<PlayerType, Player> _players = new();
 
-    public const int PLAYERS_MAX = 4;
-
-    public void Create()
-    {
-        int[] idVisuals = _visualSet.RandIds(PLAYERS_MAX);
-        PlayerType type; int idVisual;
-        for (int i = 0; i < PLAYERS_MAX; i++)
-        {
-            type = (PlayerType)i;
-            idVisual = idVisuals[i];
-            _players.Add(new(type, _visualSet.Get(idVisual), new(_startResources), this));
-        }
-
-        RandomPlayer();
-    }
-
-    public void RandomPlayer() => _current = _players[Enum<PlayerType>.Rand(0, PLAYERS_MAX)]; // test
+    public const int MAX = 4;
 
     public void StartGame(Island island)
     {
-        foreach (Player player in _players)
-            player.SetRoads(island.GetRoads());
+        int[] idVisuals = _visualSet.RandIds(MAX);
+        PlayerType type; int idVisual;
+        for (int i = 0; i < MAX; i++)
+        {
+            type = (PlayerType)i;
+            idVisual = idVisuals[i];
+            _players.Add(new(type, _visualSet.Get(idVisual), new(_startResources), island.GetRoads()));
+        }
+
+        _current = _players[Enum<PlayerType>.Rand(0, MAX)];
+    }
+
+    public void Next() => _current = _players.Next(_current.Type);
+
+    public void Receipt(int hexId)
+    {
+        foreach(Player player in _players)
+            player.Receipt(hexId);
     }
 
     public void DestroyGame()

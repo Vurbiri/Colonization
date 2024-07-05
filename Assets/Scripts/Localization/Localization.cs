@@ -17,7 +17,7 @@ public partial class Localization : ASingleton<Localization>
     //public event Action<Localization> EventSwitchLanguage;
     public event Action EventSwitchLanguage;
 
-    private readonly string[] _nameFiles = Enum<TextFiles>.GetNames();
+    private readonly string[] _nameFiles = Enum<TextFiles>.Names;
     private Dictionary<string, string>[] _text;
     private LanguageType[] _languages;
     private int _countFiles;

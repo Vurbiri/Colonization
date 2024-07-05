@@ -9,4 +9,7 @@ public class EventBus : ASingleton<EventBus>
 
     public event Action<bool> EventCrossroadMarkShow;
     public void TriggerCrossroadMarkShow(bool show) => EventCrossroadMarkShow?.Invoke(show);
+
+    public event Action<bool> EventHexagonIdShow;
+    public void TriggerHexagonIdShow(bool show) => EventHexagonIdShow?.Invoke(show);
 }

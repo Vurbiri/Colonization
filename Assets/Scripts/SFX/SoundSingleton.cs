@@ -3,15 +3,15 @@ using UnityEngine;
 public class SoundSingleton : ASingleton<SoundSingleton>, IVolume
 {
     [Space]
-    [SerializeField] private AudioClip _clipNewLevel;
-    [SerializeField] private AudioClip _clipLevelComplete;
-    [SerializeField] private AudioClip _clipHint;
-    [SerializeField] private AudioClip _clipTurn;
-    [SerializeField] private AudioClip _clipLaser;
-    [SerializeField] private AudioClip _clipLaserOff;
-    [SerializeField] private AudioClip _clipLaserFalling;
-    [SerializeField] private AudioClip _clipCheat;
-    [SerializeField] private AudioClip _clipMenu;
+    //[SerializeField] private AudioClip _clipNewLevel;
+    //[SerializeField] private AudioClip _clipLevelComplete;
+    //[SerializeField] private AudioClip _clipHint;
+    //[SerializeField] private AudioClip _clipTurn;
+    //[SerializeField] private AudioClip _clipLaser;
+    //[SerializeField] private AudioClip _clipLaserOff;
+    //[SerializeField] private AudioClip _clipLaserFalling;
+    //[SerializeField] private AudioClip _clipCheat;
+    //[SerializeField] private AudioClip _clipMenu;
 
     private AudioSource _thisAudio;
 
@@ -33,15 +33,15 @@ public class SoundSingleton : ASingleton<SoundSingleton>, IVolume
         _thisAudio = GetComponent<AudioSource>();
     }
 
-    public void PlayNewLevel() => Play(_clipNewLevel);
-    public void PlayLevelComplete() => Play(_clipLevelComplete);
-    public void PlayHint() => Play(_clipHint);
-    public void PlayTurn() => Play(_clipTurn);
-    public void PlayLaser() => Play(_clipLaser);
-    public void PlayLaserOff() => Play(_clipLaserOff);
-    public void PlayLaserFalling() => Play(_clipLaserFalling);
-    public void PlayCheat() => Play(_clipCheat);
-    public void PlayMenu() => Play(_clipMenu);
+    //public void PlayNewLevel() => Play(_clipNewLevel);
+    //public void PlayLevelComplete() => Play(_clipLevelComplete);
+    //public void PlayHint() => Play(_clipHint);
+    //public void PlayTurn() => Play(_clipTurn);
+    //public void PlayLaser() => Play(_clipLaser);
+    //public void PlayLaserOff() => Play(_clipLaserOff);
+    //public void PlayLaserFalling() => Play(_clipLaserFalling);
+    //public void PlayCheat() => Play(_clipCheat);
+    //public void PlayMenu() => Play(_clipMenu);
 
     private void Play(AudioClip clip)
     {

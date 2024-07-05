@@ -43,4 +43,5 @@ public class ShuffleLoopArray<T>
             (_array[j], _array[i]) = (_array[i], _array[j]);
         }
     }
+
 }

@@ -17,6 +17,8 @@ public class CrossroadMainMenu : ACrossroadMenu
         _buttonClose.onClick.AddListener(() => gameObject.SetActive(false));
         _buttonRoads.onClick.AddListener(OnRoads);
 
+        _buttonUniversal.Initialize();
+
         gameObject.SetActive(false);
 
         #region Local: OnRoads()
@@ -33,7 +35,7 @@ public class CrossroadMainMenu : ACrossroadMenu
     {
         Player player = _players.Current;
         Color color = player.Color;
-        CityBuildType cityBuildType = crossroad.CityBuildType;
+        CityBuildType cityBuildType = crossroad.BuildType;
         _currentCrossroad = crossroad;
         
         _buttonRoads.targetGraphic.color = color;

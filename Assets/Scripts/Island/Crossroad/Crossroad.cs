@@ -12,12 +12,13 @@ public class Crossroad : MonoBehaviour, ISelectable
     public Key Key => _key;
     public Vector3 Position { get; private set; }
     public PlayerType Owner => _city.Owner;
-    public CityBuildType CityBuildType => _cityBuild;
-    public CityType CityUpgradeType => _city.TypeNext;
+    public CityBuildType BuildType => _cityBuild;
+    public CityType UpgradeType => _city.TypeNext;
     public IEnumerable<CrossroadLink> Links => _links;
 
     private Key _key;
-    
+    private CrossroadData _data;
+
     private readonly List<Hexagon> _hexagons = new(COUNT);
     private readonly EnumHashSet<LinkType, CrossroadLink> _links = new();
 
@@ -43,6 +44,7 @@ public class Crossroad : MonoBehaviour, ISelectable
 
         _key = key;
         Position = transform.position;
+        _data = new(key, CityType.Signpost);
 
         _city.Initialize();
 
@@ -112,11 +114,8 @@ public class Crossroad : MonoBehaviour, ISelectable
         }
         #endregion
     }
-
-
     public bool CanCityBuild(PlayerType owner, Currencies cash)
     {
-
         return _cityBuild == CityBuildType.Build && NeighborCheck();
 
         #region Local: NeighborCheck()
@@ -148,16 +147,29 @@ public class Crossroad : MonoBehaviour, ISelectable
         #endregion
     }
     public bool CanBuyCity(CityType type, Currencies cash) => _prefabs[type].Cost <= cash;
-    public bool Build(PlayerType playerType, CityType type, out Currencies cost)
+    public bool Build(PlayerType playerType, CityType type)
     {
         if (_city.Build(_prefabs[type], playerType, _links, out _city))
         {
             _eventBus.EventCrossroadMarkShow -= Show;
-            cost = _city.Cost;
             _collider.radius = _city.Radius;
             _cityBuild = CityBuildType.Upgrade;
+
+            _data.Owner = playerType;
+            _data.Type = type;
+
             return true;
         }
+        return false;
+    }
+    public bool Build(PlayerType playerType, CityType type, out Currencies cost)
+    {
+        if (Build(playerType, type))
+        {
+            cost = _city.Cost;
+            return true;
+        }
+
         cost = null;
         return false;
     }
@@ -169,6 +181,7 @@ public class Crossroad : MonoBehaviour, ISelectable
         {
             cost = _city.Cost;
             _collider.radius = _city.Radius;
+            _data.Type = _city.Type;
             return true;
         }
         cost = null;
@@ -212,7 +225,19 @@ public class Crossroad : MonoBehaviour, ISelectable
         _countFreeLink--;
         _city.AddRoad(type, owned);
     }
-    
+
+    public Currencies Profit(int idHex)
+    {
+        Currencies profit = new();
+        foreach (var hex in _hexagons)
+            if (hex.Id == idHex)
+                profit.Add(hex.Currency, _city.Level);
+
+        return profit;
+    }
+
+    public CrossroadData GetData() => _data;
+
     public void Select() => _eventBus.TriggerCrossroadSelect(this);
 
     private void Show(bool show) => _city.Show(show);

@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using static UnityEngine.UI.CanvasScaler;
 
 public class Banners : ASingleton<Banners>
 {
@@ -12,37 +10,15 @@ public class Banners : ASingleton<Banners>
     [Space]
     [SerializeField] private Color[] _colors;
     [Header("Desktop")]
-    [SerializeField] private float _fontSizeDesktop = 14;
-    [SerializeField] private Vector2 _resolutionDesktop = new(1600, 1000);
-    [SerializeField] private ScreenMatchMode _matchModeDesktop = ScreenMatchMode.Expand;
-    [Header("Mobile")]
-    [SerializeField] private float _fontSizeMobile = 14;
-    [SerializeField] private Vector2 _resolutionMobile = new(1000, 1600);
-    [SerializeField] private ScreenMatchMode _matchModeMobile = ScreenMatchMode.Expand;
+    [SerializeField] private float _fontSize = 14;
    
     private Pool<Banner> _banners;
 
     public Color[] Colors => _colors;
-    public float FontSize { get; private set; }
+    public float FontSize => _fontSize;
 
     public void Initialize()
     {
-        CanvasScaler scaler = GetComponent<CanvasScaler>();
-        if (SettingsData.InstanceF.IsDesktop)
-        {
-            FontSize = _fontSizeDesktop;
-            scaler.referenceResolution = _resolutionDesktop;
-            scaler.screenMatchMode = _matchModeDesktop;
-        }
-        else
-        {
-            FontSize = _fontSizeMobile;
-            scaler.referenceResolution = _resolutionMobile;
-            scaler.screenMatchMode = _matchModeMobile;
-        }
-
-        Canvas.ForceUpdateCanvases();
-
         _banners = new(_prefab, _repository, _sizePool);
     }
 

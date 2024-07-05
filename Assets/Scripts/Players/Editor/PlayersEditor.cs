@@ -4,8 +4,7 @@ using UnityEngine;
 [CustomEditor(typeof(Players), true)]
 public class PlayersEditor : Editor
 {
-    //private readonly bool[] _opens = new bool[4];
-    private readonly string[] _names = Enum<Resource>.GetNames();
+    private readonly string[] _names = Enum<CurrencyType>.Names;
 
     public override void OnInspectorGUI()
     {

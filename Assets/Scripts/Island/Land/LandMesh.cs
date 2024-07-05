@@ -31,10 +31,10 @@ public class LandMesh : MonoBehaviour
     private Dictionary<Key, HexagonMesh> _hexagons;
     private float _waterLevel;
 
-    public void Initialize(int circleMax)
+    public void Initialize(int circleMax, int count)
     {
         _thisMeshFilter = GetComponent<MeshFilter>();
-        _hexagons = new(((CONST.COUNT_SIDES * circleMax * (circleMax + 1)) >> 1) + 1);
+        _hexagons = new(count);
         _customMesh = new(_nameMesh, (2f * circleMax * CONST.HEX_SIZE) * Vector2.one);
 
         GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTilingMaterial * circleMax);

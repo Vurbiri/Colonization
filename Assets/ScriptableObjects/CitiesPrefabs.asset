@@ -35,3 +35,4 @@ MonoBehaviour:
     - {fileID: 3967751348314251287, guid: 6ea5c4e33d1b71b4e9e4594d769aae80, type: 3}
     _count: 19
     _countMax: 19
+  _buildTypes: 04000000070000000a0000000d00000010000000

@@ -95,7 +95,7 @@ public class Road : MonoBehaviour
         return other;
     }
 
-    public Key[] GetKeyCrossroads()
+    public Key[] GetCrossroadsKey()
     {
         Key[] keys = new Key[_crossroads.Count];
         int i = 0;

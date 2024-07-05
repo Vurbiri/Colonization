@@ -18,6 +18,7 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
     public CityType TypeNext => _prefabUpgrade._type;
     public PlayerType Owner => _owner;
     public Currencies Cost => _cost;
+    public int Level => _level;
     public bool IsUpgrade => _isUpgrade;
     public float Radius => _radiusCollider;
 

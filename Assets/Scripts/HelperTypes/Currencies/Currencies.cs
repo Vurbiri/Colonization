@@ -1,16 +1,20 @@
+using Newtonsoft.Json;
 using UnityEngine;
 
 [System.Serializable]
-public class Currencies : EnumArray<Resource, int>
+public class Currencies : EnumArray<CurrencyType, int>
 {
-    [SerializeField] private int _amount;
+    [SerializeField]
+    private int _amount;
+    [JsonIgnore]
     public int Amount => _amount;
     
-    public override int this[Resource type] { get => _values[(int)type]; set => Add(type, value); }
+    public override int this[CurrencyType type] { get => _values[(int)type]; set => Add(type, value); }
     public override int this[int index] { get => _values[index]; set => Add(index, value); }
 
-    public Currencies() : base() => _amount = 0;
+    [JsonConstructor]
     public Currencies(Currencies other) => CopyFrom(other);
+    public Currencies() : base() => _amount = 0;
 
     public void CopyFrom(Currencies other)
     {
@@ -18,6 +22,14 @@ public class Currencies : EnumArray<Resource, int>
             _values[i] = other._values[i];
 
         _amount = other._amount;
+    }
+
+    public void AddFrom(Currencies other)
+    {
+        for (int i = 0; i < _count; i++)
+            _values[i] += other._values[i];
+
+        _amount += other._amount;
     }
 
     //TEST
@@ -28,23 +40,20 @@ public class Currencies : EnumArray<Resource, int>
             Add(i, Random.Range(0, max + 1));
 
     }
-    //TEST
+
     public void Clear()
     {
         for (int i = 0; i < _count; i++)
             _values[i] = 0;
-
         _amount = 0;
-
     }
-
 
     public void Add(int id, int value)
     {
         _values[id] += value;
         _amount += value;
     }
-    public void Add(Resource type, int value) => Add(id : (int)type, value);
+    public void Add(CurrencyType type, int value) => Add(id : (int)type, value);
 
     public void Pay(Currencies cost)
     {
@@ -84,5 +93,14 @@ public class Currencies : EnumArray<Resource, int>
         _amount = 0;
         for (int i = 0; i < _count; i++)
             _amount += _values[i];
+    }
+
+    public override string ToString()
+    {
+        string str ="{ ";
+        foreach (var type in Enum<CurrencyType>.Values)
+            str += $"({type} [{_values[(int)type]}]) ";
+        str += "}";
+        return str;
     }
 }

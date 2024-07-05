@@ -9,6 +9,6 @@ public class TestMarkCrossToggle : MonoBehaviour
         EventBus eventBus = EventBus.Instance;
 
         eventBus.TriggerCrossroadMarkShow(toggle.isOn);
-        toggle.onValueChanged.AddListener((b) => eventBus.TriggerCrossroadMarkShow(b));
+        toggle.onValueChanged.AddListener(eventBus.TriggerCrossroadMarkShow);
     }
 }

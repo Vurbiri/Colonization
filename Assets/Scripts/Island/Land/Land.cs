@@ -28,32 +28,33 @@ public class Land : MonoBehaviour
         }
     }
 
-    public void Initialize(int circleMax)
+    public void Initialize(int circleMax, int count)
     {
-        //Debug.Log($"Count Hexagons calk: {((HEX_SIDE * circleMax * (circleMax + 1)) >> 1) + 1}");
-        _hexagons = new(((COUNT_SIDES * circleMax * (circleMax + 1)) >> 1) + 1);
+        _hexagons = new(count);
         _offset = new(HEX_SIZE, HEX_SIZE * SIN_60);
         _thisTransform = transform;
 
-        _landMesh.Initialize(circleMax);
+        _landMesh.Initialize(circleMax, count);
     }
 
-    public Hexagon CreateHexagon(Vector3 position, (SurfaceScriptable surface, int id) type)
+    public Key PositionToKey(Vector3 position) => new(2f * position.x / _offset.x, position.z / _offset.y);
+    public Vector3 KeyToPosition(Key key) => new(0.5f * _offset.x * key.X, 0f, _offset.y * key.Y);
+
+    public Hexagon CreateHexagon(HexagonData data)
     {
-        Key key = PositionToKey(position);
-        Hexagon hex = Instantiate(_prefabHex, position, Quaternion.identity, _thisTransform);
-        hex.Initialize(key, type.surface, _landMesh.WaterLevel, type.id);
+        Key key = data.key;
+        Hexagon hex = Instantiate(_prefabHex, data.Position, Quaternion.identity, _thisTransform);
+        hex.Initialize(data, _landMesh.WaterLevel);
         
         _hexagons.Add(key, hex);
-        _landMesh.AddHexagon(key, position, type.surface.Color, hex.IsWater);
+        _landMesh.AddHexagon(key, data.Position, data.Surface.Color, hex.IsWater);
 
         return hex;
     }
 
-    public bool IsWaterNearby(Vector3 position)
+    public bool IsWaterNearby(Key key)
     {
         Hexagon hex;
-        Key key = PositionToKey(position);
         foreach (var offset in NEAR)
         {
             if (_hexagons.TryGetValue(key + offset, out hex))
@@ -99,6 +100,4 @@ public class Land : MonoBehaviour
                 _landMesh.SetVertexSides(hex.Key, verticesNear, waterNear);
         }
     }
-
-    private Key PositionToKey(Vector3 position) => new(2f * position.x / _offset.x, position.z / _offset.y);
 }

@@ -17,7 +17,6 @@ public class Crossroads : MonoBehaviour
         //Debug.Log($"Count Crossroads calk: {HEX_SIDE * circleMax * circleMax}");
         _crossroads = new(COUNT_SIDES * circleMax * circleMax);
         //Debug.Log($"Count Roads calk: {HEX_SIDE * circleMax * (circleMax - 1)}");
-        //_crossLinks = new(COUNT_SIDES * circleMax * (circleMax - 1));
 
         _offset = new(HEX_RADIUS * COS_30, HEX_RADIUS * SIN_30);
         _thisTransform = transform;

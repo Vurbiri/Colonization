@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Key : IEquatable<Key>
@@ -9,8 +8,11 @@ public class Key : IEquatable<Key>
     public int X => _x;
     [JsonProperty("y")]
     public int Y => _y;
+    [JsonIgnore]
+    public static Key Zero => _zero;
 
     private readonly int _x, _y;
+    private static readonly Key _zero = new(0, 0);
 
     [JsonConstructor]
     public Key(int x, int y)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -10,7 +11,7 @@ public class EnumHashSetDrawer : PropertyDrawer
     private const int INDEX_TYPE = 0, INDEX_VALUE = 1;
     private const float Y_SPACE = 2f, BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
     private const string NAME_ARRAY = "_values", NAME_COUNT = "_count", NAME_COUNT_MAX = "_countMax", LABEL_EMPTY = "-----";
-    private const string BUTTON_CHILD = "Set children", BUTTON_PREF = "Set prefabs", BUTTON_CLEAR = "Clear";
+    private const string BUTTON_CHILD = "Set children", BUTTON_ASSET = "Set assets", BUTTON_CLEAR = "Clear";
     private static readonly Color colorNull = new(1f, 0.65f, 0f, 1f);
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -49,12 +50,12 @@ public class EnumHashSetDrawer : PropertyDrawer
 
             if (!Application.isPlaying)
             {
-                if (typeValue.Is(typeof(Component)))
+                if (typeValue.Is(typeof(Object)))
                 {
                     if (property.serializedObject.targetObject is Component && DrawButton(BUTTON_CHILD, 1))
                         GetComponentsInChildren(property.serializedObject.targetObject as Component);
-                    if (DrawButton(BUTTON_PREF, 0))
-                        LoadPrefabs();
+                    if (DrawButton(BUTTON_ASSET, 0))
+                        SetValues(typeValue.Is(typeof(MonoBehaviour)) ? LoadPrefabs() : LoadAssets());
                 }
            
                 if (DrawButton(BUTTON_CLEAR, 2))
@@ -129,7 +130,7 @@ public class EnumHashSetDrawer : PropertyDrawer
             #endregion
         }
         //=================================
-        void LoadPrefabs()
+        List<Object> LoadPrefabs()
         {
             string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" });
             string path;
@@ -143,8 +144,22 @@ public class EnumHashSetDrawer : PropertyDrawer
                 if (obj != null) 
                     list.Add(obj);
             }
+            return list;
+        }
+        //=================================
+        List<Object> LoadAssets()
+        {
+            string[] guids = AssetDatabase.FindAssets($"t:{typeValue.Name}", new[] { "Assets" });
+            Object obj;
+            List<Object> list = new();
 
-            SetValues(list);
+            foreach (var guid in guids)
+            {
+                obj = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid));
+                //if (obj.GetType().Is(typeValue))
+                list.Add(obj);
+            }
+            return list;
         }
         //=================================
         void SetValues( IReadOnlyList<Object> array)

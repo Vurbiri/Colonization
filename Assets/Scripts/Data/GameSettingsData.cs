@@ -2,11 +2,11 @@ using Newtonsoft.Json;
 using System;
 using UnityEngine;
 
-[DefaultExecutionOrder(-2)]
+//[DefaultExecutionOrder(-2)]
 public class GameSettingsData : ASingleton<GameSettingsData>
 {
     [Space]
-    [SerializeField] private string _keySave = "gmd";
+    [SerializeField] private string _keySave = "gsd";
     [Space]
     [SerializeField, Range(4, 6)] private int _circleMax = 5;
     [SerializeField, Range(0, 100)] private int _chanceWater = 33;
@@ -20,18 +20,9 @@ public class GameSettingsData : ASingleton<GameSettingsData>
     public bool IsRecord => _data.score > _data.maxScore;
     public int Score { get => _data.score; private set { _data.score = value; EventChangeScore?.Invoke(value); } }
     public int MaxScore { get => _data.maxScore; private set { _data.maxScore = value; EventChangeMaxScore?.Invoke(value); } }
-    public bool IsFirstStart { get; set; } = true;
-
+    
     public event Action<int> EventChangeScore;
     public event Action<int> EventChangeMaxScore;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        
-        Localization.InstanceF.Initialize();
-        Initialize(false);
-    }
 
     public bool Initialize(bool isLoad)
     {

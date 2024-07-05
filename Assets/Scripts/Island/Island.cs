@@ -1,12 +1,14 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static CONST;
 
 //[ExecuteInEditMode]
 public class Island : MonoBehaviour
 {
-    [SerializeField] private Surfaces _surfaces;
+    [SerializeField] private string _keySave = "isl";
+    [Space]
+    [SerializeField] private EnumHashSet<CurrencyType, SurfaceScriptable> _surfaces;
     [Space]
     [SerializeField, GetComponentInChildren] private Land _land;
     [SerializeField, GetComponentInChildren] private Crossroads _crossroads;
@@ -21,7 +23,7 @@ public class Island : MonoBehaviour
         _circleMax = circleMax;
         _chanceWater = chanceWater;
         
-        _land.Initialize(circleMax);
+        _land.Initialize(circleMax, CalkMaxHexagons(_circleMax) + 1);
         _crossroads.Initialize(circleMax);
     }
 
@@ -41,16 +43,39 @@ public class Island : MonoBehaviour
         yield return StartCoroutine(_land.SetMeshOptimize_Coroutine());
     }
 
+    public WaitResult<bool> Load_Wait()
+    {
+        WaitResult<bool> waitResult = new();
+        StartCoroutine(Load_Coroutine());
+        return waitResult;
+
+        #region Local: Load_Coroutine(...)
+        //=================================
+        IEnumerator Load_Coroutine()
+        {
+            if(!LoadIsland())
+                waitResult.SetResult(false);
+            yield return null;
+            _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
+            yield return null;
+            yield return StartCoroutine(_land.SetMeshOptimize_Coroutine());
+            waitResult.SetResult(true);
+        }
+        #endregion
+    }
+
     private void CreateIsland()
     {
         int circle = 0, chance;
         bool isWater = false, isLastCircle = circle == _circleMax;
         Vector3 position, positionNext, direction, current;
 
+        HexagonData hexData;
+        List<HexagonData> hexagonsData = new(CalkMaxHexagons(_circleMax));
         ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);
-        ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.grounds);
+        ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.GetRange(CurrencyType.Land01, CurrencyType.Land05));
 
-        Hexagon hex = _land.CreateHexagon(Vector3.zero, (_surfaces.gate, ID_GATE));
+        Hexagon hex = _land.CreateHexagon(new( Key.Zero, ID_GATE, Vector3.zero, _surfaces[CurrencyType.Gate]));
         _crossroads.CreateCrossroad(Vector3.zero, hex, false);
         while (!isLastCircle)
         {
@@ -66,34 +91,53 @@ public class Island : MonoBehaviour
                 for (int j = 0; j < circle; j++)
                 {
                     current = position + direction * j;
-                    hex = _land.CreateHexagon(current, SetTypeAndId(j));
+                    hexagonsData.Add(hexData = GetHexagonData(j));
+                    hex = _land.CreateHexagon(hexData);
                     _crossroads.CreateCrossroad(current, hex, isLastCircle);
                 }
             }
         }
 
-        #region Local: SetTypeAndId(...)
-        //=================================
-        (SurfaceScriptable, int) SetTypeAndId(int x)
-        {
-            isWater = isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(current) || URandom.IsTrue(chance)));
+        //StartCoroutine(Storage.Save_Coroutine(_keySave, hexagonsData));
 
-            return isWater ? (_surfaces.water, numWater.Value) : (surfaces.Value, numGround.Value);
+        #region Local: GetHexagonData(...)
+        //=================================
+        HexagonData GetHexagonData(int x)
+        {
+            Key keyHex = _land.PositionToKey(current);
+            isWater = isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(keyHex) || URandom.IsTrue(chance)));
+
+            return isWater ? new(keyHex, numWater.Value, current, _surfaces[CurrencyType.Water]) : new(keyHex, numGround.Value, current, surfaces.Value);
         }
         #endregion
     }
 
+    private bool LoadIsland()
+    {
+        Return<List<HexagonData>> loading = Storage.Load<List<HexagonData>>(_keySave);
+        if(!loading.Result)
+            return false;
+
+        List<HexagonData> hexagonsData = loading.Value;
+        int lastHexagons = CalkMaxHexagons(_circleMax - 1);
+        Debug.Log(lastHexagons);
+
+        Hexagon hex = _land.CreateHexagon(new(Key.Zero, ID_GATE, Vector3.zero, _surfaces[CurrencyType.Gate]));
+        _crossroads.CreateCrossroad(Vector3.zero, hex, false);
+
+        foreach(HexagonData data in hexagonsData)
+        {
+            data.Surface = _surfaces[data.Type];
+            data.Position = _land.KeyToPosition(data.key);
+
+            hex = _land.CreateHexagon(data);
+            _crossroads.CreateCrossroad(data.Position, hex, --lastHexagons < 0);
+        }
+
+        return true;
+    }
+
     public Roads GetRoads() => Instantiate(_roadsPrefab, _roadsContainer);
 
-
-    #region Nested: Surfaces
-    //***********************************
-    [Serializable]
-    private struct Surfaces
-    {
-        public SurfaceScriptable gate;
-        public SurfaceScriptable water;
-        public SurfaceScriptable[] grounds;
-    }
-    #endregion
+    private int CalkMaxHexagons(int circleMax) => ((COUNT_SIDES * circleMax * (circleMax + 1)) >> 1);
 }

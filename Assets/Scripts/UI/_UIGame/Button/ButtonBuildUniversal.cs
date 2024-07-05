@@ -20,11 +20,11 @@ public class ButtonBuildUniversal : AHinting
     private Graphic _buttonGraphic;
     private Func<string> getText;
 
-    protected override void Start()
+    public override void Initialize()
     {
         getText = GetTextSimple;
 
-        base.Start();
+        base.Initialize();
 
         _button = _thisSelectable as CmButton;
         _buttonGraphic = _button.targetGraphic;
@@ -34,7 +34,7 @@ public class ButtonBuildUniversal : AHinting
 
     public void Setup(Crossroad crossroad, Color color)
     {
-        CityBuildType cityBuildType = crossroad.CityBuildType;
+        CityBuildType cityBuildType = crossroad.BuildType;
 
         _buttonGraphic.color = color;
         _buttonIcon.sprite = _citySprites[cityBuildType];
@@ -43,7 +43,7 @@ public class ButtonBuildUniversal : AHinting
         _keyGroup = cityBuildType.ToString();
         if (cityBuildType == CityBuildType.Upgrade)
         {
-            _keyType = crossroad.CityUpgradeType.ToString();
+            _keyType = crossroad.UpgradeType.ToString();
             getText = GetTextFormat;
         }
         else

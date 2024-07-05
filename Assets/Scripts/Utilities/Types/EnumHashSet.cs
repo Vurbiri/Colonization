@@ -26,7 +26,7 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IEnume
     {
         int min = Int32.MaxValue, max = Int32.MinValue, key;
         _countMax = 0;
-        foreach (TType item in Enum<TType>.GetValues())
+        foreach (TType item in Enum<TType>.Values)
         {
             key = item.ToInt();
             if (key < 0) continue;
@@ -110,6 +110,22 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IEnume
         throw new IndexOutOfRangeException();
     }
 
+    public List<TValue> GetRange(TType typeStart, TType typeEnd)
+    {
+        int start = typeStart.ToInt(_offset), end = typeEnd.ToInt(_offset);
+        List<TValue> values = new(end - start + 1);
+        TValue value = null;
+
+        for (int i = start; i <= end; i++)
+        {
+            value = _values[i];
+            if (value != null)
+                values.Add(value);
+        }
+
+        return values;
+    }
+
     public void OnBeforeSerialize() 
     {
         if(_values.Length != _capacity)
@@ -142,7 +158,7 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IEnume
             i--;
         }
 
-        List<TType> types = new(Enum<TType>.GetValues());
+        List<TType> types = new(Enum<TType>.Values);
         types.RemoveAll((t) => t.ToInt() < 0);
 
         _countMax = types.Count;
