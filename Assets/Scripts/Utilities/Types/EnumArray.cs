@@ -4,14 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
+[Serializable, JsonArray]
 public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue> 
                                         where TType : Enum where TValue : struct
 {
-    [JsonProperty("v")]
     [SerializeField] protected TValue[] _values;
 
-    [JsonIgnore]
     public int Count => _count;
 
     public virtual TValue this[TType type] { get => _values[type.ToInt()]; set => _values[type.ToInt()] = value; }

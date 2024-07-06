@@ -19,6 +19,8 @@ public abstract class ASaveLoadJsonTo
         return Return<T>.Empty;
     }
 
+    public bool ContainsKey(string key) => _saved.ContainsKey(key);
+
     public abstract IEnumerator Save_Coroutine(string key, object data, Action<bool> callback);
     protected virtual bool SaveToMemory(string key, object data)
     {

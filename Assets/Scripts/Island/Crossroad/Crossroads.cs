@@ -71,4 +71,6 @@ public class Crossroads : MonoBehaviour
         }
         #endregion
     }
+
+    public Crossroad GetCrossroad(Key key) => _crossroads[key];
 }

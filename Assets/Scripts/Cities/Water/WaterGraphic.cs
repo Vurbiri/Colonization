@@ -2,14 +2,13 @@ using UnityEngine;
 
 public class WaterGraphic : CityGraphic
 {
-    
     private static readonly Quaternion angle0 = Quaternion.identity, angle180 = Quaternion.Euler(0f, 180f, 0f);
 
-    public override void Upgrade(EnumHashSet<LinkType, CrossroadLink> links)
+    public override void Upgrade(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
     {
         Initialize();
 
-        Material material = _players.Current.Material;
+        Material material = _players[owner].Material;
 
         if(links.Count == 3)
         {

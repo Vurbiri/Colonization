@@ -17,7 +17,7 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IEnume
     public int Capacity => _capacity;
 
     public IEnumerable<TType> Types => _typesEnumerable;
-    public TValue this[TType type] => _values[type.ToInt(_offset)];
+    public TValue this[TType type] { get => _values[type.ToInt(_offset)]; set => Replace(value); }
 
     private readonly int _offset, _capacity;
     private readonly EnumHashSetKeysEnumerable _typesEnumerable;
@@ -68,6 +68,16 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IEnume
         _values[index] = value;
         _count++;
         return true;
+    }
+
+    public void Replace(TValue value)
+    {
+        int index = value.Type.ToInt(_offset);
+
+        if (_values[index] == null)
+            _count++;
+
+        _values[value.Type.ToInt(_offset)] = value;
     }
 
     public void Remove(TType type) => _values[type.ToInt(_offset)] = null;

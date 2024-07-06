@@ -16,6 +16,8 @@ public class Island : MonoBehaviour
     [SerializeField] private Roads _roadsPrefab;
     [SerializeField] private Transform _roadsContainer;
 
+    public Crossroads Crossroads => _crossroads;
+
     private int _circleMax, _chanceWater;
 
     public void Initialize(int circleMax, int chanceWater)
@@ -25,13 +27,6 @@ public class Island : MonoBehaviour
         
         _land.Initialize(circleMax, CalkMaxHexagons(_circleMax) + 1);
         _crossroads.Initialize(circleMax);
-    }
-
-    public void Generate()
-    {
-        CreateIsland();
-        _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
-        _land.SetMesh();
     }
 
     public IEnumerator Generate_Coroutine()
@@ -55,10 +50,12 @@ public class Island : MonoBehaviour
         {
             if(!LoadIsland())
                 waitResult.SetResult(false);
+
             yield return null;
             _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
             yield return null;
             yield return StartCoroutine(_land.SetMeshOptimize_Coroutine());
+            
             waitResult.SetResult(true);
         }
         #endregion
@@ -98,7 +95,7 @@ public class Island : MonoBehaviour
             }
         }
 
-        //StartCoroutine(Storage.Save_Coroutine(_keySave, hexagonsData));
+        StartCoroutine(Storage.Save_Coroutine(_keySave, hexagonsData));
 
         #region Local: GetHexagonData(...)
         //=================================
@@ -114,13 +111,15 @@ public class Island : MonoBehaviour
 
     private bool LoadIsland()
     {
+        if(!Storage.ContainsKey(_keySave))
+            return false;
+
         Return<List<HexagonData>> loading = Storage.Load<List<HexagonData>>(_keySave);
         if(!loading.Result)
             return false;
 
         List<HexagonData> hexagonsData = loading.Value;
         int lastHexagons = CalkMaxHexagons(_circleMax - 1);
-        Debug.Log(lastHexagons);
 
         Hexagon hex = _land.CreateHexagon(new(Key.Zero, ID_GATE, Vector3.zero, _surfaces[CurrencyType.Gate]));
         _crossroads.CreateCrossroad(Vector3.zero, hex, false);
@@ -128,7 +127,7 @@ public class Island : MonoBehaviour
         foreach(HexagonData data in hexagonsData)
         {
             data.Surface = _surfaces[data.Type];
-            data.Position = _land.KeyToPosition(data.key);
+            data.Position = _land.KeyToPosition(data.Key);
 
             hex = _land.CreateHexagon(data);
             _crossroads.CreateCrossroad(data.Position, hex, --lastHexagons < 0);

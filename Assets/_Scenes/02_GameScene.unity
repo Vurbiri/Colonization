@@ -2487,6 +2487,7 @@ MonoBehaviour:
   _inputController: {fileID: 249953235}
   _island: {fileID: 1629463688}
   _dices: {fileID: 1187299216}
+  _load: 1
   _prefabs: {fileID: 11400000, guid: b335d97e8aa5c804ebe9bb0876c2e0ca, type: 2}
 --- !u!4 &1275861621
 Transform:
@@ -3101,6 +3102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 513aa5fc000464b40a14280808730b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _keySave: isl
   _surfaces:
     _values:
     - {fileID: 11400000, guid: 24c241d1b99cf704ba5ddd3b2685ffd9, type: 2}

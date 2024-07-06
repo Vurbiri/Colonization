@@ -1,14 +1,17 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Key : IEquatable<Key>
+[JsonObject(MemberSerialization.OptIn)]
+public class Key : IEquatable<Key>, IEnumerable<int>
 {
     [JsonProperty("x")]
     public int X => _x;
     [JsonProperty("y")]
     public int Y => _y;
-    [JsonIgnore]
+
     public static Key Zero => _zero;
 
     private readonly int _x, _y;
@@ -38,4 +41,12 @@ public class Key : IEquatable<Key>
     public static bool operator ==(Key a, Key b) => (a is null && b is null) || (a is not null && a.Equals(b));
     public static bool operator !=(Key a, Key b) => !(a == b);
     public override string ToString() => $"({_x}, {_y})";
+
+    public IEnumerator<int> GetEnumerator()
+    {
+        yield return _x;
+        yield return _y;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

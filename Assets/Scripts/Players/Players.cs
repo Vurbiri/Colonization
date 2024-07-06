@@ -27,7 +27,22 @@ public class Players : ASingleton<Players>, IEnumerable<Player>
         {
             type = (PlayerType)i;
             idVisual = idVisuals[i];
-            _players.Add(new(type, _visualSet.Get(idVisual), new(_startResources), island.GetRoads()));
+            _players.Replace(new(type, _visualSet.Get(idVisual), new(_startResources), island.GetRoads()));
+        }
+
+        _current = _players[Enum<PlayerType>.Rand(0, MAX)];
+    }
+
+    public void LoadGame(Island island)
+    {
+        int[] idVisuals = _visualSet.RandIds(MAX);
+        PlayerType type; int idVisual;
+
+        for (int i = 0; i < MAX; i++)
+        {
+            type = (PlayerType)i;
+            idVisual = idVisuals[i];
+            _players.Replace(Player.Load(type, _visualSet.Get(idVisual), island.GetRoads(), island.Crossroads, _startResources));
         }
 
         _current = _players[Enum<PlayerType>.Rand(0, MAX)];
@@ -43,7 +58,7 @@ public class Players : ASingleton<Players>, IEnumerable<Player>
 
     public void DestroyGame()
     {
-        
+
     }
 
     public IEnumerator<Player> GetEnumerator() => _players.GetEnumerator();

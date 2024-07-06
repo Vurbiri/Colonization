@@ -28,11 +28,9 @@ public class Hexagon : MonoBehaviour, ISelectable
 
     public void Initialize(HexagonData data, float waterLevel)
     {
-        _key = data.key;
-        _id = data.Id;
+        data.SetValues(out _key, out _id, out _currency);
         _idText.text = _id.ToString();
 
-        _currency = data.Type;
         _isGate = _currency == CurrencyType.Gate;
         _isWater = _currency == CurrencyType.Water;
 

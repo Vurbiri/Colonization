@@ -7,8 +7,9 @@ public class Game : MonoBehaviour
     [SerializeField] private InputController _inputController;
     [SerializeField] private Island _island;
     [SerializeField] private Dices _dices;
-    [Space]
-    [SerializeField] private CitiesScriptable _prefabs; //test
+    [Space]//test
+    [SerializeField] private bool _load;
+    [SerializeField] private CitiesScriptable _prefabs; 
 
     private GameSettingsData _gameSettings;
     private Players _players;
@@ -30,11 +31,22 @@ public class Game : MonoBehaviour
     private IEnumerator Start()
     {
         _island.Initialize(_gameSettings.CircleMax, _gameSettings.ChanceWater);
-        _players.StartGame(_island);
+        
         _gameSettings.StartGame();
 
-        yield return StartCoroutine(_island.Generate_Coroutine());
-        //yield return _island.Load_Wait();
+        if(_load)
+        {
+            WaitResult<bool> waitResult = _island.Load_Wait();
+            yield return waitResult;
+            if(!waitResult.Result)
+                yield return StartCoroutine(_island.Generate_Coroutine());
+            _players.LoadGame(_island);
+        }
+        else 
+        {
+            yield return StartCoroutine(_island.Generate_Coroutine());
+            _players.StartGame(_island);
+        }
     }
 
     public void EndTurnPlayer()

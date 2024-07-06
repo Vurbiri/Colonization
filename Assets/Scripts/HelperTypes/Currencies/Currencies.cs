@@ -1,19 +1,28 @@
 using Newtonsoft.Json;
 using UnityEngine;
 
-[System.Serializable]
+[System.Serializable, JsonArray]
 public class Currencies : EnumArray<CurrencyType, int>
 {
-    [SerializeField]
-    private int _amount;
-    [JsonIgnore]
+    [SerializeField] private int _amount;
     public int Amount => _amount;
     
     public override int this[CurrencyType type] { get => _values[(int)type]; set => Add(type, value); }
     public override int this[int index] { get => _values[index]; set => Add(index, value); }
 
     [JsonConstructor]
-    public Currencies(Currencies other) => CopyFrom(other);
+    public Currencies(int[] array) : this()
+    {
+        int value, count = _count < array.Length ? _count : array.Length;
+
+        for (int i = 0; i < count; i++)
+        {
+            value = array[i];
+            _values[i] = value;
+            _amount += value;
+        }
+    }
+    public Currencies(Currencies other) : this() => CopyFrom(other);
     public Currencies() : base() => _amount = 0;
 
     public void CopyFrom(Currencies other)

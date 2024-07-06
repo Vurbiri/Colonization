@@ -1,43 +1,47 @@
 using Newtonsoft.Json;
 using UnityEngine;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class HexagonData
 {
-    [JsonProperty("x")]
-    public int X => _key.X;
-    [JsonProperty("y")]
-    public int Y => _key.Y;
+    [JsonProperty("k")]
+    public Key Key => _key;
     [JsonProperty("i")]
-    public int Id { get; }
+    public int Id => _id;
     [JsonProperty("t")]
     public CurrencyType Type => _type;
-    [JsonIgnore]
-    public Key key => _key;
-    [JsonIgnore]
-    public SurfaceScriptable Surface { get => _surface; set => _surface = value; }
-    [JsonIgnore]
-    public Vector3 Position { get => _position; set => _position = value; }
-    
 
+    public SurfaceScriptable Surface { get => _surface; set => _surface = value; }
+    public Vector3 Position { get => _position; set => _position = value; }
+
+    private readonly Key _key;
+    private readonly int _id;
     private SurfaceScriptable _surface;
     private Vector3 _position;
     private readonly CurrencyType _type;
-    private readonly Key _key;
+    
 
     [JsonConstructor]
-    public HexagonData(int x, int y, int id, CurrencyType type)
+    public HexagonData(Key k, int i, CurrencyType t)
     {
-        _key = new(x, y);
-        Id = id;
-        _type = type;
+        _key = k;
+        _id = i;
+        _type = t;
     }
 
     public HexagonData(Key key, int id, Vector3 position, SurfaceScriptable surface)
     {
         _key = key;
-        Id = id;
+        _id = id;
         _position = position;
         _surface = surface;
         _type = surface.Type;
+    }
+
+    public void SetValues(out Key key, out int id, out CurrencyType type)
+    {
+        key = _key;
+        id = _id;
+        type = _type;
     }
 }

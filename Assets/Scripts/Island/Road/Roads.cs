@@ -57,32 +57,10 @@ public class Roads : MonoBehaviour
     public void BuildAndUnion(CrossroadLink link)
     {
         Build(link);
-
         StartCoroutine(TryUnion_Coroutine());
-
-        #region Local: Combine_Coroutine()
-        //=================================
-        IEnumerator TryUnion_Coroutine()
-        {
-            yield return null;
-            Road roadLine;
-            for (int i = _roadsLists.Count - 1; i > 0; i--)
-            {
-                for (int j = i - 1; j >= 0; j--)
-                {
-                    roadLine = _roadsLists[i].Union(_roadsLists[j]);
-                    if (roadLine != null)
-                    {
-                        _roadsLists.Remove(roadLine);
-                        Destroy(roadLine.gameObject);
-                        StartCoroutine(TryUnion_Coroutine());
-                        yield break;
-                    }
-                }
-            }
-        }
-        #endregion
     }
+
+    public void TryUnion() => StartCoroutine(TryUnion_Coroutine());
 
     public Key[][] GetCrossroadsKey()
     {
@@ -93,5 +71,25 @@ public class Roads : MonoBehaviour
             keys[i] = _roadsLists[i].GetCrossroadsKey();
 
         return keys;
+    }
+
+    private IEnumerator TryUnion_Coroutine()
+    {
+        yield return null;
+        Road roadLine;
+        for (int i = _roadsLists.Count - 1; i > 0; i--)
+        {
+            for (int j = i - 1; j >= 0; j--)
+            {
+                roadLine = _roadsLists[i].Union(_roadsLists[j]);
+                if (roadLine != null)
+                {
+                    _roadsLists.Remove(roadLine);
+                    Destroy(roadLine.gameObject);
+                    StartCoroutine(TryUnion_Coroutine());
+                    yield break;
+                }
+            }
+        }
     }
 }

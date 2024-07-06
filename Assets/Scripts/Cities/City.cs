@@ -52,7 +52,7 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
         {
             city = Instantiate(_prefabUpgrade, transform.parent);
             city.CopyingData(this);
-            city._graphic.Upgrade(links);
+            city._graphic.Upgrade(_owner, links);
 
             Destroy(gameObject);
             return true;

@@ -1,7 +1,8 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SphereCollider))]
+[RequireComponent(typeof(SphereCollider)), JsonObject(MemberSerialization.OptIn)]
 public class Crossroad : MonoBehaviour, ISelectable
 {
     [GetComponentInChildren]
@@ -9,15 +10,17 @@ public class Crossroad : MonoBehaviour, ISelectable
     [Space]
     [SerializeField] private CitiesScriptable _prefabs;
 
+    [JsonProperty(JP_KEY)]
     public Key Key => _key;
-    public Vector3 Position { get; private set; }
+    [JsonProperty(JP_TYPE)]
+    public CityType Type => _city.Type;
     public PlayerType Owner => _city.Owner;
     public CityBuildType BuildType => _cityBuild;
     public CityType UpgradeType => _city.TypeNext;
     public IEnumerable<CrossroadLink> Links => _links;
+    public Vector3 Position { get; private set; }
 
     private Key _key;
-    private CrossroadData _data;
 
     private readonly List<Hexagon> _hexagons = new(COUNT);
     private readonly EnumHashSet<LinkType, CrossroadLink> _links = new();
@@ -33,6 +36,7 @@ public class Crossroad : MonoBehaviour, ISelectable
     private const int COUNT = 3;
     private const string NAME = "Crossroad_";
     private static readonly HashSet<CityType> notRuleTwo = new() { CityType.Shrine, CityType.Berth, CityType.Port };
+    public const string JP_KEY = "k", JP_TYPE = "t";
 
     public void Initialize(Key key)
     {
@@ -44,7 +48,6 @@ public class Crossroad : MonoBehaviour, ISelectable
 
         _key = key;
         Position = transform.position;
-        _data = new(key, CityType.Signpost);
 
         _city.Initialize();
 
@@ -154,10 +157,7 @@ public class Crossroad : MonoBehaviour, ISelectable
             _eventBus.EventCrossroadMarkShow -= Show;
             _collider.radius = _city.Radius;
             _cityBuild = CityBuildType.Upgrade;
-
-            _data.Owner = playerType;
-            _data.Type = type;
-
+            Debug.Log(_key);
             return true;
         }
         return false;
@@ -181,7 +181,6 @@ public class Crossroad : MonoBehaviour, ISelectable
         {
             cost = _city.Cost;
             _collider.radius = _city.Radius;
-            _data.Type = _city.Type;
             return true;
         }
         cost = null;
@@ -235,8 +234,6 @@ public class Crossroad : MonoBehaviour, ISelectable
 
         return profit;
     }
-
-    public CrossroadData GetData() => _data;
 
     public void Select() => _eventBus.TriggerCrossroadSelect(this);
 

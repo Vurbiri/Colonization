@@ -16,15 +16,15 @@ public class CityGraphic : MonoBehaviour
             side.Initialize();
     }
 
-    public virtual void Upgrade(EnumHashSet<LinkType, CrossroadLink> links)
+    public virtual void Upgrade(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
     {
         Initialize();
 
-        Material material = _players.Current.Material;
+        Material material = _players[owner].Material;
         foreach (var group in _renderersSetupGroups)
             group.SetMaterial(material);
 
-        LinkType type; PlayerType owner;
+        LinkType type; 
         foreach (var link in links)
         {
             type = link.Type; owner = link.Owner;
