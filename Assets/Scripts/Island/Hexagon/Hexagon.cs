@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider))]
 public class Hexagon : MonoBehaviour, ISelectable
@@ -12,12 +11,12 @@ public class Hexagon : MonoBehaviour, ISelectable
     public int Id => _id;
     public bool IsGate => _isGate;
     public bool IsWater => _isWater;
-    public CurrencyType Currency => _currency;
+    public CurrencyType Currency => _surface.GetCurrency();
 
     #region private
     private int _id = -1;
     private Key _key;
-    private CurrencyType _currency;
+    private SurfaceScriptable _surface;
     bool _isGate, _isWater;
 
     private readonly HashSet<Crossroad> _crossroads = new(CONST.COUNT_SIDES);
@@ -28,11 +27,11 @@ public class Hexagon : MonoBehaviour, ISelectable
 
     public void Initialize(HexagonData data, float waterLevel)
     {
-        data.SetValues(out _key, out _id, out _currency);
+        (_key, _id, _surface) = data.GetValues();
         _idText.text = _id.ToString();
 
-        _isGate = _currency == CurrencyType.Gate;
-        _isWater = _currency == CurrencyType.Water;
+        _isGate = _surface.IsGate;
+        _isWater = _surface.IsWater;
 
         EventBus.Instance.EventHexagonIdShow += _idText.gameObject.SetActive;
 

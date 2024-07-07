@@ -23,11 +23,14 @@ public class Players : ASingleton<Players>, IEnumerable<Player>
     {
         int[] idVisuals = _visualSet.RandIds(MAX);
         PlayerType type; int idVisual;
+        Player player;
         for (int i = 0; i < MAX; i++)
         {
             type = (PlayerType)i;
             idVisual = idVisuals[i];
-            _players.Replace(new(type, _visualSet.Get(idVisual), new(_startResources), island.GetRoads()));
+            player = new(type, _visualSet.Get(idVisual), new(_startResources), island.GetRoads());
+            _players.Replace(player);
+            StartCoroutine(player.Save_Coroutine(i == MAX - 1));
         }
 
         _current = _players[Enum<PlayerType>.Rand(0, MAX)];
@@ -42,8 +45,11 @@ public class Players : ASingleton<Players>, IEnumerable<Player>
         {
             type = (PlayerType)i;
             idVisual = idVisuals[i];
-            _players.Replace(Player.Load(type, _visualSet.Get(idVisual), island.GetRoads(), island.Crossroads, _startResources));
+            _players.Replace(new(type, _visualSet.Get(idVisual), island.GetRoads()));
         }
+
+        foreach (var player in _players)
+            player.Load(island.Crossroads, _startResources);
 
         _current = _players[Enum<PlayerType>.Rand(0, MAX)];
     }

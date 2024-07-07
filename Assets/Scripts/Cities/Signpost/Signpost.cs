@@ -4,7 +4,6 @@ public class Signpost : City
 {
     public override bool Build(City prefab, PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, out City city)
     {
-        Debug.Log(owner);
         _prefabUpgrade = prefab;
         _owner = owner;
         if(Upgrade(links, out city))

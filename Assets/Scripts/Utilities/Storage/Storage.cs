@@ -37,7 +37,7 @@ public static class Storage
         #endregion
     }
     public static IEnumerator Initialize_Coroutine(string key, Action<bool> callback) => service.Initialize_Coroutine(key, callback);
-    public static IEnumerator Save_Coroutine(string key, object data, Action<bool> callback = null) => service.Save_Coroutine(key, data, callback);
+    public static IEnumerator Save_Coroutine(string key, object data, bool toFile = true, Action<bool> callback = null) => service.Save_Coroutine(key, data, toFile, callback);
     public static Return<T> Load<T>(string key) where T : class => service.Load<T>(key);
     public static bool ContainsKey(string key) => service.ContainsKey(key);
 

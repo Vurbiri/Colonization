@@ -8,6 +8,7 @@ public static class ExtensionsCollection
 
     public static T Prev<T>(this IReadOnlyList<T> self, int index) => self[(index == 0 ? self.Count : index) - 1];
     public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
+    
     public static T Rand<T>(this IReadOnlyList<T> self) => self[Random.Range(0, self.Count)];
     public static T Rand<T>(this IReadOnlyList<T> self, int startIndex) => self[Random.Range(startIndex, self.Count)];
     

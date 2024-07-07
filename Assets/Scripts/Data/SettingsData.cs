@@ -57,7 +57,7 @@ public class SettingsData : ASingleton<SettingsData>
         foreach (var type in Enum<AudioType>.Values)
             _profileCurrent.volumes[(int)type] = _volumes[type].Volume;
 
-        StartCoroutine(Storage.Save_Coroutine(_keySave, _profileCurrent, callback));
+        StartCoroutine(Storage.Save_Coroutine(_keySave, _profileCurrent, true, callback));
     }
     private bool Load()
     {

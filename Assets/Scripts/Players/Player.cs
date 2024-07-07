@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build.Content;
 using UnityEngine;
+using static Crossroad;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class Player : IValueTypeEnum<PlayerType>
@@ -13,7 +13,7 @@ public class Player : IValueTypeEnum<PlayerType>
     public Currencies Resources => _resources;
 
     [JsonProperty(JP_RES)]
-    private readonly Currencies _resources;
+    private Currencies _resources;
     [JsonProperty(JP_ROAD)]
     private Key[][] _roadsKey;
     [JsonProperty(JP_CITY)]
@@ -25,25 +25,34 @@ public class Player : IValueTypeEnum<PlayerType>
 
     private const string JP_RES = "r", JP_ROAD = "k", JP_CITY = "c";
 
-    public Player(PlayerType type, PlayerVisual visual, Currencies resources, Roads roads)
+    public Player(PlayerType type, PlayerVisual visual, Currencies resources, Roads roads) : this(type, visual, roads) => _resources = resources;
+    public Player(PlayerType type, PlayerVisual visual, Roads roads)
     {
         _type = type;
         _visual = visual;
-        _resources = resources;
         _roads = roads.Initialize(_type, _visual.color);
 
     }
-
-    private Player(PlayerType type, PlayerVisual visual, Roads roads, Crossroads crossroads, PlayerLoadData data)
+    public IEnumerator Save_Coroutine(bool saveToFile = true)
     {
-        _type = type;
-        _visual = visual;
-        _resources = new(data.resources);
-        _roads = roads.Initialize(_type, _visual.color);
+        _roadsKey = _roads.GetCrossroadsKey();
+        return Storage.Save_Coroutine(_type.ToString(), this, saveToFile, _ => _roadsKey = null);
+    }
 
-        CreateRoads();
-        CreateCities();
+    public void Load(Crossroads crossroads, Currencies resources)
+    {
+        PlayerLoadData data;
+        Return<PlayerLoadData> loading = Storage.Load<PlayerLoadData>(_type.ToString());
+        if (loading.Result)
+        {
+            data = loading.Value;
+            _resources = new(data.resources);
+            CreateRoads();
+            CreateCities();
+            return;
+        }
 
+        _resources = new(resources);
 
         #region Local: CreateRoad(...)
         //=================================
@@ -51,10 +60,9 @@ public class Player : IValueTypeEnum<PlayerType>
         {
             if (data.roadsKey == null)
                 return;
-            
+
             foreach (var k in data.roadsKey)
                 CreateRoad(k);
-            _roads.TryUnion();
         }
         //=================================
         void CreateCities()
@@ -62,28 +70,31 @@ public class Player : IValueTypeEnum<PlayerType>
             if (data.cities == null)
                 return;
 
-            Debug.Log(data.cities.Length);
+            CrossroadLoadData loadData = new();
             Crossroad crossroad;
-            foreach (var city in data.cities)
+            foreach (var arr in data.cities)
             {
-                crossroad = crossroads.GetCrossroad(city.key);
-                Debug.Log(crossroad);
-                if (crossroad.Build(type, city.type))
+                loadData.SetValues(arr);
+                crossroad = crossroads.GetCrossroad(loadData.key);
+                if (crossroad.Build(_type, loadData.type))
                     _cities.Add(crossroad);
             }
+
+            _roads.SetRoadsEndings();
         }
         //=================================
-        void CreateRoad(Key[] keys)
+        void CreateRoad(int[][] keys)
         {
             int count = keys.Length;
             if (count < 2) return;
 
-            Crossroad start = crossroads.GetCrossroad(keys[0]);
+            Key key = new();
+            Crossroad start = crossroads.GetCrossroad(key.SetValues(keys[0]));
             for (int i = 1; i < count; i++)
             {
                 foreach (var link in start.Links)
                 {
-                    if(link.Contains(keys[i]))
+                    if (link.Contains(key.SetValues(keys[i])))
                     {
                         link.SetStart(start);
                         start = link.End;
@@ -124,25 +135,6 @@ public class Player : IValueTypeEnum<PlayerType>
             _resources.Pay(cost);
     }
 
-    public IEnumerator Save_Coroutine()
-    {
-        _roadsKey = _roads.GetCrossroadsKey();
-        return Storage.Save_Coroutine(_type.ToString(), this, _ => _roadsKey = null);
-    }
-
-    public static Player Load(PlayerType type, PlayerVisual visual, Roads roads, Crossroads crossroad, Currencies resources)
-    {
-        if (Storage.ContainsKey(type.ToString()))
-        {
-            Return<PlayerLoadData> loading = Storage.Load<PlayerLoadData>(type.ToString());
-            if (loading.Result)
-                return new(type, visual, roads, crossroad, loading.Value);
-        }
-
-        return new(type, visual, new(resources), roads);
-    }
-
-
     public override string ToString() => $"Player: {_type}";
 
 
@@ -153,12 +145,12 @@ public class Player : IValueTypeEnum<PlayerType>
         [JsonProperty(JP_RES)]
         public int[] resources;
         [JsonProperty(JP_ROAD)]
-        public Key[][] roadsKey;
+        public int[][][] roadsKey;
         [JsonProperty(JP_CITY)]
-        public CrossroadLoadData[] cities;
+        public int[][] cities;
 
         [JsonConstructor]
-        public PlayerLoadData(int[] r, Key[][] k, CrossroadLoadData[] c)
+        public PlayerLoadData(int[] r, int[][][] k, int[][] c)
         {
             resources = r;
             roadsKey = k;

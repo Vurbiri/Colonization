@@ -4,20 +4,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[JsonObject(MemberSerialization.OptIn)]
+//[JsonObject(MemberSerialization.OptIn)]
+[JsonArray]
 public class Key : IEquatable<Key>, IEnumerable<int>
 {
-    [JsonProperty("x")]
     public int X => _x;
-    [JsonProperty("y")]
     public int Y => _y;
 
-    public static Key Zero => _zero;
+    private int _x, _y;
 
-    private readonly int _x, _y;
-    private static readonly Key _zero = new(0, 0);
-
-    [JsonConstructor]
+    public Key()
+    {
+        _x = 0; _y = 0;
+    }
     public Key(int x, int y)
     {
         _x = x; _y = y;
@@ -28,6 +27,25 @@ public class Key : IEquatable<Key>, IEnumerable<int>
         _y = Mathf.RoundToInt(y);
     }
 
+    public Key SetValues(int x, int y)
+    {
+        _x = x; _y = y;
+
+        return this;
+    }
+    public Key SetValues(int[] arr)
+    {
+        _x = arr[0];
+        _y = arr[1];
+
+        return this;
+    }
+    public IEnumerator<int> GetEnumerator()
+    {
+        yield return _x;
+        yield return _y;
+    }
+
     public bool Equals(Key other) => other is not null && _x == other._x && _y == other._y;
     public override bool Equals(object obj) => Equals(obj as Key);
 
@@ -36,17 +54,12 @@ public class Key : IEquatable<Key>, IEnumerable<int>
     public static Key operator +(Key a, Key b) => new(a._x + b._x, a._y + b._y);
     public static Key operator -(Key a, Key b) => new(a._x - b._x, a._y - b._y);
     public static Key operator -(Key a) => new(-a._x, -a._y);
-    public static KeyDouble operator &(Key a, Key b) => new(a, b);
 
     public static bool operator ==(Key a, Key b) => (a is null && b is null) || (a is not null && a.Equals(b));
     public static bool operator !=(Key a, Key b) => !(a == b);
     public override string ToString() => $"({_x}, {_y})";
 
-    public IEnumerator<int> GetEnumerator()
-    {
-        yield return _x;
-        yield return _y;
-    }
+    
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

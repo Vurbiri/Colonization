@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class JsonToCookies : ASaveLoadJsonTo
 {
-    private string _key;
-
     public override bool IsValid => UtilityJS.IsCookies();
 
     public override IEnumerator Initialize_Coroutine(string key, Action<bool> callback)
@@ -39,29 +37,20 @@ public class JsonToCookies : ASaveLoadJsonTo
         callback?.Invoke(false);
     }
 
-    public override IEnumerator Save_Coroutine(string key, object data, Action<bool> callback)
+    protected override WaitResult<bool> SaveToFile_Wait()
     {
-        bool result = SaveToMemory(key, data);
-        if (!result)
-        {
-            callback?.Invoke(false);
-            yield break;
-        }
+        WaitResult<bool> waitResult = new();
 
         try
         {
-            string json = Serialize(_saved);
-            result = UtilityJS.SetCookies(_key, json);
-
+            waitResult.SetResult(UtilityJS.SetCookies(_key, Serialize(_saved)));
         }
         catch (Exception ex)
         {
-            result = false;
+            waitResult.SetResult(false);
             Message.Log(ex.Message);
         }
-        finally
-        {
-            callback?.Invoke(result);
-        }
+
+        return waitResult;
     }
 }

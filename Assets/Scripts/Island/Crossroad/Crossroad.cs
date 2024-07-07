@@ -1,18 +1,18 @@
 using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SphereCollider)), JsonObject(MemberSerialization.OptIn)]
-public class Crossroad : MonoBehaviour, ISelectable
+[JsonArray]
+[RequireComponent(typeof(SphereCollider))]
+public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
 {
     [GetComponentInChildren]
     [SerializeField] private City _city;
     [Space]
     [SerializeField] private CitiesScriptable _prefabs;
 
-    [JsonProperty(JP_KEY)]
     public Key Key => _key;
-    [JsonProperty(JP_TYPE)]
     public CityType Type => _city.Type;
     public PlayerType Owner => _city.Owner;
     public CityBuildType BuildType => _cityBuild;
@@ -36,7 +36,6 @@ public class Crossroad : MonoBehaviour, ISelectable
     private const int COUNT = 3;
     private const string NAME = "Crossroad_";
     private static readonly HashSet<CityType> notRuleTwo = new() { CityType.Shrine, CityType.Berth, CityType.Port };
-    public const string JP_KEY = "k", JP_TYPE = "t";
 
     public void Initialize(Key key)
     {
@@ -93,21 +92,21 @@ public class Crossroad : MonoBehaviour, ISelectable
     }
 
 
-    public bool CanBuild(CityType type, Currencies cash)
+    public bool CanBuild(PlayerType owner, CityType type, Currencies cash)
     {
         return _cityBuild.ToCityType() == type && type switch
         {
-            CityType.Shrine => _prefabs[type].Cost <= cash,
-            CityType.Berth => WaterCheck(type),
-            CityType.Port => WaterCheck(type),
+            CityType.Shrine => _prefabs[type].Cost <= cash && IsRoadConnect(owner),
+            CityType.Berth => WaterCheck(),
+            CityType.Port => WaterCheck(),
             _ => false
         };
 
         #region Local: WaterCheck(...)
         //=================================
-        bool WaterCheck(CityType cityType)
+        bool WaterCheck()
         {
-            if (_prefabs[type].Cost > cash)
+            if (_prefabs[type].Cost > cash || (_countFreeLink == 0 && !IsRoadConnect(owner)))
                 return false;
 
             foreach (var hex in _hexagons)
@@ -157,7 +156,6 @@ public class Crossroad : MonoBehaviour, ISelectable
             _eventBus.EventCrossroadMarkShow -= Show;
             _collider.radius = _city.Radius;
             _cityBuild = CityBuildType.Upgrade;
-            Debug.Log(_key);
             return true;
         }
         return false;
@@ -247,8 +245,29 @@ public class Crossroad : MonoBehaviour, ISelectable
     }
 
     public override string ToString() => $"{_key}";
-    public static KeyDouble operator &(Crossroad a, Crossroad b) => a._key & b._key;
     public static Key operator -(Crossroad a, Crossroad b) => a._key - b._key;
 
+    public IEnumerator<int> GetEnumerator()
+    {
+        yield return _key.X;
+        yield return _key.Y;
+        yield return (int)_city.Type;
+    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    #region Nested: CrossroadLoadData
+    //***********************************
+    public class CrossroadLoadData
+    {
+        public Key key = new();
+        public CityType type;
+
+        public void SetValues(int[] arr)
+        {
+            key.SetValues(arr[0], arr[1]);
+            type = (CityType)arr[2];
+        }
+    }
+    #endregion
 }
 

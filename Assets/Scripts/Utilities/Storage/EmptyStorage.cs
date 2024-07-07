@@ -11,9 +11,11 @@ public class EmptyStorage : ASaveLoadJsonTo
         return null;
     }
     public override Return<T> Load<T>(string key) => Return<T>.Empty;
-    public override IEnumerator Save_Coroutine(string key, object data, Action<bool> callback)
-    { 
-        callback?.Invoke(false);
-        return null;
+
+    protected override WaitResult<bool> SaveToFile_Wait()
+    {
+        WaitResult<bool> waitResult = new();
+        waitResult.SetResult(false);
+        return waitResult;
     }
 }

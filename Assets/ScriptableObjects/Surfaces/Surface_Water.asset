@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Surface_Water
   m_EditorClassIdentifier: 
   _type: 5
-  _material: {fileID: 2100000, guid: 1aa84cca0b248784fbd07356c6f61f86, type: 2}
   _color:
     serializedVersion: 2
     rgba: 4294901760
+  _profit: 0000000001000000020000000300000004000000

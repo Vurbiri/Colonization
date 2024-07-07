@@ -22,7 +22,7 @@ public enum LinkType
     DD_UU,
 }
 
-public enum CurrencyType
+public enum SurfaceType
 {
     Land01,
     Land02,
@@ -30,6 +30,16 @@ public enum CurrencyType
     Land04,
     Land05,
     Water,
+    Gate
+}
+
+public enum CurrencyType
+{
+    Land01,
+    Land02,
+    Land03,
+    Land04,
+    Land05,
     Gate
 }
 

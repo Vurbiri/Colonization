@@ -38,15 +38,15 @@ public class Game : MonoBehaviour
         {
             WaitResult<bool> waitResult = _island.Load_Wait();
             yield return waitResult;
-            if(!waitResult.Result)
-                yield return StartCoroutine(_island.Generate_Coroutine());
-            _players.LoadGame(_island);
+            if (waitResult.Result)
+            {
+                _players.LoadGame(_island);
+                yield break;
+            }
         }
-        else 
-        {
-            yield return StartCoroutine(_island.Generate_Coroutine());
-            _players.StartGame(_island);
-        }
+
+        yield return StartCoroutine(_island.Generate_Coroutine(false));
+        _players.StartGame(_island);
     }
 
     public void EndTurnPlayer()

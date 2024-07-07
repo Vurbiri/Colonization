@@ -86,7 +86,7 @@ public class CrossroadMainMenu : ACrossroadMenu
         //=================================
         void CityBuild(CityType cityType)
         {
-            _buttonUniversal.Interactable = crossroad.CanBuild(cityType, player.Resources);
+            _buttonUniversal.Interactable = crossroad.CanBuild(player.Type, cityType, player.Resources);
             _buttonUniversal.AddListener(OnBuild);
 
             #region Local: OnBuild()

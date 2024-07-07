@@ -73,6 +73,12 @@ public class Roads : MonoBehaviour
         return keys;
     }
 
+    public void SetRoadsEndings()
+    {
+        foreach (var road in _roadsLists)
+            road.SetGradient();
+    }
+
     private IEnumerator TryUnion_Coroutine()
     {
         yield return null;

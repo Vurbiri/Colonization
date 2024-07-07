@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class JsonToYandex : ASaveLoadJsonTo
 {
-    private string _key;
     private readonly YandexSDK _ysdk;
 
     public override bool IsValid => _ysdk.IsLogOn;
@@ -40,25 +39,5 @@ public class JsonToYandex : ASaveLoadJsonTo
         callback?.Invoke(false);
     }
 
-    public override IEnumerator Save_Coroutine(string key, object data, Action<bool> callback)
-    {
-        bool result = SaveToMemory(key, data);
-        if (!(result && _dictModified))
-        {
-            callback?.Invoke(false);
-            yield break;
-        }
-
-        yield return SaveToFileCoroutine();
-
-        #region Local Function
-        IEnumerator SaveToFileCoroutine()
-        {
-            WaitResult<bool> waitResult;
-            yield return (waitResult = _ysdk.Save(_key, Serialize(_saved)));
-            _dictModified = !waitResult.Result;
-            callback?.Invoke(waitResult.Result);
-        }
-        #endregion
-    }
+    protected override WaitResult<bool> SaveToFile_Wait() => _ysdk.Save(_key, Serialize(_saved));
 }

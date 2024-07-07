@@ -43,14 +43,14 @@ public class GameSettingsData : ASingleton<GameSettingsData>
 
         return data.Result;
     }
-    public void Save(Action<bool> callback = null) => StartCoroutine(Storage.Save_Coroutine(_keySave, _data, callback));
+    public void Save(bool saveToFile, Action<bool> callback = null) => StartCoroutine(Storage.Save_Coroutine(_keySave, _data, saveToFile, callback));
 
     public void StartGame()
     {
         _data.modeStart = GameModeStart.Continue;
     }
         
-    public void ResetGame()
+    public void ResetGame(bool saveToFile)
     {
         if (IsRecord)
             MaxScore = Score;
@@ -58,7 +58,7 @@ public class GameSettingsData : ASingleton<GameSettingsData>
         _data.Reset(_circleMax);
 
         _isNewRecord = false;
-        Save();
+        Save(saveToFile);
         EventChangeScore?.Invoke(0);
     }
 
@@ -66,7 +66,7 @@ public class GameSettingsData : ASingleton<GameSettingsData>
     //***********************************
     private class GameSave
     {
-        [JsonProperty("gms")]
+        [JsonProperty("gs")]
         public GameModeStart modeStart = GameModeStart.New;
         [JsonProperty("cm")]
         public int circleMax = 4;

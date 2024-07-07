@@ -1,6 +1,9 @@
 Shader "TextMeshPro/Distance Field Overlay" {
 
 Properties {
+
+	[Enum(ZTest)]_ZTest ("ZTest", Float) = 8
+
 	_FaceTex			("Face Texture", 2D) = "white" {}
 	_FaceUVSpeedX		("Face UV Speed X", Range(-5, 5)) = 0.0
 	_FaceUVSpeedY		("Face UV Speed Y", Range(-5, 5)) = 0.0
@@ -106,7 +109,7 @@ SubShader {
 	ZWrite Off
 	Lighting Off
 	Fog { Mode Off }
-	ZTest Always
+	ZTest [_ZTest]
 	Blend One OneMinusSrcAlpha
 	ColorMask [_ColorMask]
 

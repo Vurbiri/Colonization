@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build.Content;
 
 public class JsonToLocalStorage : ASaveLoadJsonTo
 {
-    private string _key;
 
     public override bool IsValid => UtilityJS.IsStorage();
 
@@ -40,29 +40,20 @@ public class JsonToLocalStorage : ASaveLoadJsonTo
         callback?.Invoke(false);
     }
 
-    public override IEnumerator Save_Coroutine(string key, object data, Action<bool> callback)
+    protected override WaitResult<bool> SaveToFile_Wait()
     {
-        bool result = SaveToMemory(key, data);
-        if (!result)
-        {
-            callback?.Invoke(false);
-            yield break;
-        }
+        WaitResult<bool> waitResult = new();
 
         try
         {
-            string json = Serialize(_saved);
-            result = UtilityJS.SetStorage(_key, json);
-
+            waitResult.SetResult(UtilityJS.SetStorage(_key, Serialize(_saved)));
         }
         catch (Exception ex)
         {
-            result = false;
+            waitResult.SetResult(false);
             Message.Log(ex.Message);
         }
-        finally
-        {
-            callback?.Invoke(result);
-        }
+
+        return waitResult;
     }
 }
