@@ -16,4 +16,6 @@ public static class ExtensionsColor
         self.a = alpha;
         return self;
     }
+
+    public static void SetRandMono(this ref Color self, Vector2 range) => self.r = self.g = self.b = URandom.Range(range);
 }

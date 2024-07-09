@@ -5,8 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Hexagon : MonoBehaviour, ISelectable
 {
-    [SerializeField] private TMP_Text _idText;
-    
+    [SerializeField, GetComponentInChildren] private TMP_Text _idText;
+    [Space]
+    [SerializeField, GetComponentInChildren] private MeshFilter _meshFilter;
+    [SerializeField, GetComponentInChildren] private MeshRenderer _meshRenderer;
+    [Space]
+    [SerializeField, GetComponent] private Collider _collider;
+
     public Key Key => _key;
     public int Id => _id;
     public bool IsGate => _isGate;
@@ -37,11 +42,24 @@ public class Hexagon : MonoBehaviour, ISelectable
 
         name = NAME + _id + "__" + _key.ToString();
 
+
+        Transform transformGraphics = _meshRenderer.transform;
         if (IsWater)
         {
-            transform.localPosition += new Vector3(0f, waterLevel, 0f);
-            GetComponent<Collider>().enabled = false;
+            transformGraphics.localPosition += new Vector3(0f, waterLevel, 0f);
+            _collider.enabled = false;
         }
+
+        if (_surface.MeshCount <= 0)
+        {
+            _meshRenderer.gameObject.SetActive(false);
+            return;
+        }
+
+        _meshRenderer.gameObject.isStatic = _surface.IsStatic;
+        _meshFilter.sharedMesh = _surface.Mesh;
+        _meshRenderer.material = _surface.Material;
+        transformGraphics.localRotation *= CONST.ROTATIONS.Rand();
     }
 
     public void NeighborAdd(Hexagon neighbor) => _neighbors.Add(neighbor);

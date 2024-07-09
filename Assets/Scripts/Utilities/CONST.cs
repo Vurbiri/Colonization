@@ -25,6 +25,8 @@ public static class CONST
     public static readonly ReadOnlyCollection<Vector3> HEX_SIDES;
     public static readonly ReadOnlyCollection<Vector3> SIDE_DIRECTIONS;
 
+    public static readonly ReadOnlyCollection<Quaternion> ROTATIONS;
+
     public const int ID_GATE = 13;
     public static readonly ReadOnlyCollection<int> NUMBERS = new((new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 }));
 
@@ -58,6 +60,15 @@ public static class CONST
         }
         SIDE_DIRECTIONS = new(directions);
         HEX_SIDES = new(positions);
+
+        Quaternion[] quaternions = new Quaternion[COUNT_SIDES];
+        float angle = 0f;
+        for(int i = 0; i < COUNT_SIDES; i++)
+        {
+            quaternions[i] = Quaternion.Euler(0f, angle, 0f);
+            angle += 60f;
+        }
+        ROTATIONS = new(quaternions);
     }
 
     //public static readonly ReadOnlyCollection<float> COS_HEX = new((new float[] { COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 }));

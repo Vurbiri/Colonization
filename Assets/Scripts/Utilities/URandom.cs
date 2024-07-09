@@ -8,4 +8,5 @@ public static class URandom
 
     public static float Range(Vector2 min_max) => Random.Range(min_max.x, min_max.y);
     public static int Range(Vector2Int min_max) => Random.Range(min_max.x, min_max.y);
+    public static int RangeIn(Vector2Int min_max) => Random.Range(min_max.x, min_max.y + 1);
 }

@@ -28,7 +28,7 @@ public enum SurfaceType
     Land02,
     Land03,
     Land04,
-    Land05,
+    Forest,
     Water,
     Gate
 }
@@ -39,7 +39,7 @@ public enum CurrencyType
     Land02,
     Land03,
     Land04,
-    Land05,
+    Wood,
     Gate
 }
 

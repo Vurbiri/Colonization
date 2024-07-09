@@ -80,7 +80,7 @@ public class Island : MonoBehaviour
         HexagonData hexData;
         List<HexagonData> hexagonsData = new(CalkMaxHexagons(_circleMax));
         ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);
-        ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.GetRange(SurfaceType.Land01, SurfaceType.Land05));
+        ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.GetRange(SurfaceType.Land01, SurfaceType.Forest));
 
         Hexagon hex = _land.CreateHexagon(new(new(), ID_GATE, Vector3.zero, _surfaces[SurfaceType.Gate]));
         _crossroads.CreateCrossroad(Vector3.zero, hex, false);

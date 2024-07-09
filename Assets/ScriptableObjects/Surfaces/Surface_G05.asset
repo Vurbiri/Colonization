@@ -15,5 +15,11 @@ MonoBehaviour:
   _type: 4
   _color:
     serializedVersion: 2
-    rgba: 4278222080
+    rgba: 4278215680
   _profit: 04000000
+  _meshes:
+  - {fileID: 4300000, guid: 26fa4993b8e9a424bb38d44ba6e97d8f, type: 2}
+  - {fileID: 4300000, guid: d1b40fcaf9ca501458aa8905eeab9159, type: 2}
+  - {fileID: 4300000, guid: b16ffcbd4dc794341829aeba1e836b03, type: 2}
+  - {fileID: 4300000, guid: 2fa7f547c229ff94f8d71b6043ab5387, type: 2}
+  _material: {fileID: 2100000, guid: e88237a74b4597449a141098dee546ef, type: 2}

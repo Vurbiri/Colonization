@@ -64,7 +64,6 @@ public class Land : MonoBehaviour
         return false;
     }
 
-    public void SetMesh() => _landMesh.SetMesh();
     public IEnumerator SetMeshOptimize_Coroutine() => _landMesh.SetMeshOptimize_Coroutine();
 
     public void HexagonsNeighbors(Action<Hexagon, Hexagon> actionCreateLink)

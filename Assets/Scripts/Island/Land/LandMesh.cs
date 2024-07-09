@@ -64,12 +64,6 @@ public class LandMesh : MonoBehaviour
 
     public void SetVertexSides(Key key, Vertex[][] verticesNear, bool[] waterNear) => _customMesh.AddTriangles(_hexagons[key].CreateBorder(verticesNear, waterNear));
 
-    public void SetMesh()
-    {
-        _thisMeshFilter.sharedMesh = _customMesh.ToMesh();
-        _customMesh = null;
-        _hexagons = null;
-    }
     public IEnumerator SetMeshOptimize_Coroutine()
     {
         _thisMeshFilter.sharedMesh = _customMesh.ToMesh();
