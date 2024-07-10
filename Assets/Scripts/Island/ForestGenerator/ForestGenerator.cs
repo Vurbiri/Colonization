@@ -55,7 +55,7 @@ public class ForestGenerator : MonoBehaviour
         //    float max = HEX_HEIGHT * _ratioSize, b = HEX_RADIUS * _ratioSize, k = -0.5f * b / max;
         //    x = Mathf.Abs(x);
         //    y = Mathf.Abs(y);
-        //    if (x > max || y > k * x + b || y > max)
+        //    if (x > max || y > k * x + b)
         //        return false;
 
         //    return true;
@@ -66,13 +66,13 @@ public class ForestGenerator : MonoBehaviour
     [Button]
     public void SaveMesh() => UnityEditor.AssetDatabase.CreateAsset(GetComponent<MeshFilter>().sharedMesh, _path + NAME_MESH + "_" + _nameSuffixFile + ".mesh");
 
-    #region Nested: Profile
+    #region Nested: Spruce
     //*******************************************************
     [System.Serializable]
     private class Spruce
     {
-        [SerializeField, Range(1f, 3f)] private float _heightBase = 1.25f;
-        [SerializeField, Range(0.5f, 2f)] private float _radiusBase = 1.1f;
+        [SerializeField, Range(1f, 3f)] private float _heightBase = 1.55f;
+        [SerializeField, Range(0.5f, 2f)] private float _radiusBase = 1.11f;
         [Space]
         [SerializeField, MinMaxSlider(0.5f, 1.5f)] private Vector2 _sizeRatioRange = new(0.65f, 1.15f);
         [SerializeField, Range(0.1f, 1f)] private float _sizeRatioBorder = 0.88f;

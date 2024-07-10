@@ -46,12 +46,6 @@
             "m_Id": "246af80b34484c25af653ca9fa26e60a"
         },
         {
-            "m_Id": "8b8bf3c6197746fb8c8cfaa8ff95a39d"
-        },
-        {
-            "m_Id": "f827d2a93a2a45ae944eebb93032a905"
-        },
-        {
             "m_Id": "5a78e9f2dace47068c36510202df502a"
         },
         {
@@ -132,20 +126,6 @@
             },
             "m_InputSlot": {
                 "m_Node": {
-                    "m_Id": "8b8bf3c6197746fb8c8cfaa8ff95a39d"
-                },
-                "m_SlotId": 0
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
-                    "m_Id": "f827d2a93a2a45ae944eebb93032a905"
-                },
-                "m_SlotId": 0
-            },
-            "m_InputSlot": {
-                "m_Node": {
                     "m_Id": "5a78e9f2dace47068c36510202df502a"
                 },
                 "m_SlotId": 1
@@ -166,9 +146,6 @@
             },
             {
                 "m_Id": "a4c2161c9b07458fae56cc73e2dac01a"
-            },
-            {
-                "m_Id": "8b8bf3c6197746fb8c8cfaa8ff95a39d"
             }
         ]
     },
@@ -295,9 +272,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -274.0,
-            "y": -49.000003814697269,
-            "width": 118.00001525878906,
+            "x": -515.0000610351563,
+            "y": 283.0,
+            "width": 118.00006103515625,
             "height": 94.0
         }
     },
@@ -314,21 +291,6 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "2aa6acfa5f944601ac6f783cc544b6cb",
-    "m_Id": 0,
-    "m_DisplayName": "Out",
-    "m_SlotType": 1,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "Out",
-    "m_StageCapability": 2,
-    "m_Value": 0.0,
-    "m_DefaultValue": 0.0,
-    "m_Labels": []
 }
 
 {
@@ -774,40 +736,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
-    "m_ObjectId": "8b8bf3c6197746fb8c8cfaa8ff95a39d",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "VertexDescription.CustomInterpolator",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 0.0,
-            "height": 0.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "bdda63b4e48e4bc48cc5e906e77e8842"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_SerializedDescriptor": "VertexDescription.RatioColor#1"
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicValueMaterialSlot",
     "m_ObjectId": "90f2128dfa014e279a844880db369e1f",
     "m_Id": 2,
@@ -1070,21 +998,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "bdda63b4e48e4bc48cc5e906e77e8842",
-    "m_Id": 0,
-    "m_DisplayName": "RatioColor",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "RatioColor",
-    "m_StageCapability": 1,
-    "m_Value": 0.0,
-    "m_DefaultValue": 0.0,
-    "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
     "m_ObjectId": "cadcc2a48db446bf8fde73199128c4c8",
     "m_Id": 0,
@@ -1147,10 +1060,10 @@
         "m_Expanded": false,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -144.0,
-            "y": -49.000003814697269,
-            "width": 119.00005340576172,
-            "height": 76.99999237060547
+            "x": -385.0000305175781,
+            "y": 283.0,
+            "width": 119.0,
+            "height": 77.00003051757813
         }
     },
     "m_Slots": [
@@ -1364,41 +1277,6 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "SurfaceDescription.BaseColor"
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.CustomInterpolatorNode",
-    "m_ObjectId": "f827d2a93a2a45ae944eebb93032a905",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "RatioColor (Custom Interpolator)",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": -497.0000305175781,
-            "y": 283.0,
-            "width": 231.0,
-            "height": 94.00003051757813
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "2aa6acfa5f944601ac6f783cc544b6cb"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": false,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "customBlockNodeName": "RatioColor",
-    "serializedType": 1
 }
 
 {

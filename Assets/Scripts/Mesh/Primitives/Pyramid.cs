@@ -7,7 +7,7 @@ public class Pyramid : IPrimitive
 
     public Pyramid(Color32 color, Vector3 position, float radius, float height, float radOffset, int countBase)
     {
-        Vector3 peakPoints = position + new Vector3(0f, height, 0f);
+        Vector3 peakPoint = position + new Vector3(0f, height, 0f);
         Vector3[] basePoints = new Vector3[countBase];
         float step = CONST.TAU / countBase, angle;
 
@@ -19,7 +19,7 @@ public class Pyramid : IPrimitive
 
         Triangle[] triangles = new Triangle[countBase];
         for (int i = 0; i < countBase; i++)
-            triangles[i] = new(color, new Vector3[] { basePoints.Next(i), basePoints[i], peakPoints });
+            triangles[i] = new(color, new Vector3[] { basePoints.Next(i), basePoints[i], peakPoint });
 
         Triangles = triangles;
     }

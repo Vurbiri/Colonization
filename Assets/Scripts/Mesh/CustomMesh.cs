@@ -81,7 +81,7 @@ public class CustomMesh
         };
 
         mesh.RecalculateBounds();
-        mesh.RecalculateTangents();
+        //mesh.RecalculateTangents();
         //mesh.Optimize();
         return mesh;
     }
