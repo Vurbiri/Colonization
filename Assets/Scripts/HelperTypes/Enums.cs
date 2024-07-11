@@ -24,7 +24,7 @@ public enum LinkType
 
 public enum SurfaceType
 {
-    Land01,
+    Village,
     Land02,
     Land03,
     Land04,
@@ -35,7 +35,7 @@ public enum SurfaceType
 
 public enum CurrencyType
 {
-    Land01,
+    Food,
     Land02,
     Land03,
     Land04,
@@ -78,7 +78,7 @@ public enum CityType
     Castle,
 
     Store,
-    Warehouse,
+    Bank,
     Exchange,
 
     Workshop,
@@ -103,7 +103,7 @@ public static class ExtensionsEnumsGame
         CityType.Shrine => CityGroup.Shrine,
         CityType.Berth or CityType.Port => CityGroup.Water,
         CityType.Watchtower or CityType.Barracks or CityType.Castle => CityGroup.Military,
-        CityType.Store or CityType.Warehouse or CityType.Exchange => CityGroup.Economy,
+        CityType.Store or CityType.Bank or CityType.Exchange => CityGroup.Economy,
         CityType.Workshop or CityType.Forge or CityType.Manufactory => CityGroup.Industry,
         CityType.Library or CityType.MageTower or CityType.University => CityGroup.Magic,
         CityType.TownHall or CityType.Police or CityType.Magistrate => CityGroup.Politics,

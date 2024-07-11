@@ -2,6 +2,8 @@ using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MeshCreated;
+
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class LandMesh : MonoBehaviour

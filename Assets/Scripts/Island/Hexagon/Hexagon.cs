@@ -38,28 +38,18 @@ public class Hexagon : MonoBehaviour, ISelectable
         _isGate = _surface.IsGate;
         _isWater = _surface.IsWater;
 
+        _collider.enabled = !_isWater;
+
         EventBus.Instance.EventHexagonIdShow += _idText.gameObject.SetActive;
 
         name = NAME + _id + "__" + _key.ToString();
 
-
-        Transform transformGraphics = _meshRenderer.transform;
-        if (IsWater)
-        {
-            transformGraphics.localPosition += new Vector3(0f, waterLevel, 0f);
-            _collider.enabled = false;
-        }
-
-        if (_surface.MeshCount <= 0)
-        {
-            _meshRenderer.gameObject.SetActive(false);
+        if (_surface.Prefab == null)
             return;
-        }
 
-        _meshRenderer.gameObject.isStatic = _surface.IsStatic;
-        _meshFilter.sharedMesh = _surface.Mesh;
-        _meshRenderer.material = _surface.Material;
-        transformGraphics.localRotation *= CONST.ROTATIONS.Rand();
+        ASurface graphics = Instantiate(_surface.Prefab, transform);
+        graphics.Initialize(_isWater ? waterLevel : 0f);
+
     }
 
     public void NeighborAdd(Hexagon neighbor) => _neighbors.Add(neighbor);

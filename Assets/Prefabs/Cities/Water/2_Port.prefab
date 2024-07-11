@@ -367,10 +367,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 3
-  _level: 2
+  _level: 1
   _isUpgrade: 0
   _cost:
-    _values: 00000000000000000000000000000000000000000000000000000000
+    _values: 000000000000000000000000000000000000000000000000
+    _amount: 0
   _graphic: {fileID: 3891647716865701757}
   _prefabUpgrade: {fileID: 4582707197380014598}
   _radiusCollider: 3

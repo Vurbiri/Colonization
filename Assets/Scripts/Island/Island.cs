@@ -31,7 +31,7 @@ public class Island : MonoBehaviour
 
     public IEnumerator Generate_Coroutine(bool saveToFile)
     {
-        CreateIsland(saveToFile);
+        yield return StartCoroutine(CreateIsland_Coroutine(saveToFile));
         yield return null;
         _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
         yield return null;
@@ -60,7 +60,7 @@ public class Island : MonoBehaviour
             for (int i = values.Length - 1; i >= 0; i--)
                 hexagonsData[i] = new(values[i]);
 
-            LoadIsland(hexagonsData);
+            yield return StartCoroutine(LoadIsland_Coroutine(hexagonsData));
             yield return null;
             _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
             yield return null;
@@ -71,7 +71,7 @@ public class Island : MonoBehaviour
         #endregion
     }
 
-    private void CreateIsland(bool saveToFile)
+    private IEnumerator CreateIsland_Coroutine(bool saveToFile)
     {
         int circle = 0, chance;
         bool isWater = false, isLastCircle = circle == _circleMax;
@@ -80,7 +80,7 @@ public class Island : MonoBehaviour
         HexagonData hexData;
         List<HexagonData> hexagonsData = new(CalkMaxHexagons(_circleMax));
         ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);
-        ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.GetRange(SurfaceType.Land01, SurfaceType.Forest));
+        ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.GetRange(SurfaceType.Village, SurfaceType.Forest));
 
         Hexagon hex = _land.CreateHexagon(new(new(), ID_GATE, Vector3.zero, _surfaces[SurfaceType.Gate]));
         _crossroads.CreateCrossroad(Vector3.zero, hex, false);
@@ -101,9 +101,14 @@ public class Island : MonoBehaviour
                     hexagonsData.Add(hexData = GetHexagonData(j));
                     hex = _land.CreateHexagon(hexData);
                     _crossroads.CreateCrossroad(current, hex, isLastCircle);
+
+                    if(!isWater)
+                        yield return null;
                 }
             }
         }
+
+        yield return null;
 
         StartCoroutine(Storage.Save_Coroutine(_keySave, hexagonsData, saveToFile));
 
@@ -119,7 +124,7 @@ public class Island : MonoBehaviour
         #endregion
     }
 
-    private void LoadIsland(HexagonData[] hexagonsData)
+    private IEnumerator LoadIsland_Coroutine(HexagonData[] hexagonsData)
     {
         int lastHexagons = CalkMaxHexagons(_circleMax - 1);
 
@@ -133,6 +138,9 @@ public class Island : MonoBehaviour
 
             hex = _land.CreateHexagon(data);
             _crossroads.CreateCrossroad(data.Position, hex, --lastHexagons < 0);
+
+            if (!data.Surface.IsWater)
+                yield return null;
         }
     }
 
