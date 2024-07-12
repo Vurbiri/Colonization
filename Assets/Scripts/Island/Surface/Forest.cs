@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Forest : ASurface
+public class Forest : ASurfaceCreated
 {
     public override void Initialize()
     {

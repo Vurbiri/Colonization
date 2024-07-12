@@ -17,5 +17,5 @@ public static class ExtensionsColor
         return self;
     }
 
-    public static void SetRandMono(this ref Color self, Vector2 range) => self.r = self.g = self.b = URandom.Range(range);
+    public static void SetRandMono(this ref Color32 self, Vector2Int range) => self.r = self.g = self.b = (byte)URandom.RangeIn(range);
 }

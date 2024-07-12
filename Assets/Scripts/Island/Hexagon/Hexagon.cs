@@ -48,7 +48,7 @@ public class Hexagon : MonoBehaviour, ISelectable
             return;
 
         ASurface graphics = Instantiate(_surface.Prefab, transform);
-        graphics.Initialize(_isWater ? waterLevel : 0f);
+        graphics.Initialize();
 
     }
 

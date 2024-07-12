@@ -11,7 +11,6 @@ public class ForestGenerator : ASurfaceGenerator
     [Space]
     [SerializeField] private Spruce _spruce;
 
-    private const float PI = Mathf.PI;
     private const string NAME_MESH = "ForestMesh_";
     private static int ID = 0;
 
@@ -56,7 +55,7 @@ public class ForestGenerator : ASurfaceGenerator
         [SerializeField, Range(0.5f, 2f)] private float _radiusBase = 1.11f;
         [Space]
         [SerializeField] private Vector2 _sizeRatioRange = new(0.65f, 1.15f);
-        [SerializeField, Range(0.1f, 1f)] private float _sizeRatioBorder = 0.88f;
+        [SerializeField, Range(0, 100)] private int _chanceForSmall = 38;
         [Space]
         [SerializeField] private Vector2Int _countVertexRange = new(5, 6);
         [SerializeField] private bool _allBranches = false;
@@ -64,11 +63,11 @@ public class ForestGenerator : ASurfaceGenerator
         [SerializeField, Range(0.5f, 1f)] private float _ratioNextPos = 0.75f;
         [SerializeField] private Vector2 _ratioNextSizeRange = new(0.68f, 0.72f);
         [Space]
-        [SerializeField] private Vector2 _colorRange = new(0.5f, 1f);
+        [SerializeField] private Vector2Int _colorRange = new(122, 255);
 
         public float RadiusAvg => (_sizeRatioRange.x + _sizeRatioRange.y) * 0.5f * _radiusBase;
 
-        private Color _color = Color.white;
+        private Color32 _color = new(255, 255, 255, 255);
         private Pyramid[] _pyramids;
         private float _sizeRatio, _height, _radius;
         private int _countVertex, _countPyramids;
@@ -80,7 +79,7 @@ public class ForestGenerator : ASurfaceGenerator
             _color.SetRandMono(_colorRange);
             _sizeRatio = URandom.Range(_sizeRatioRange);
             _countVertex = URandom.RangeIn(_countVertexRange);
-            _countPyramids = _sizeRatio < _sizeRatioBorder && URandom.IsTrue() ? MIN_COUNT : MAX_COUNT;
+            _countPyramids = URandom.IsTrue(_chanceForSmall) ? MIN_COUNT : MAX_COUNT;
             _height = _heightBase * _sizeRatio;
             _radius = _radiusBase * _sizeRatio;
 

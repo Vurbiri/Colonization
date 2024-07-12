@@ -30,7 +30,8 @@ public static class CONST
     public const int ID_GATE = 13;
     public static readonly ReadOnlyCollection<int> NUMBERS = new((new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 }));
 
-    public const float TAU = 2f * Mathf.PI;
+    public const float PI = Mathf.PI;
+    public const float TAU = 2f * PI;
 
     static CONST()
     {

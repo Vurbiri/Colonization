@@ -64,7 +64,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 126
   m_IsActive: 1
 --- !u!4 &208208406684448704
 Transform:
@@ -105,7 +105,7 @@ MonoBehaviour:
     _allBranches: 0
     _ratioNextPos: 0.75
     _ratioNextSizeRange: {x: 0.68, y: 0.72}
-    _colorRange: {x: 0.5, y: 1}
+    _colorRange: {x: 122, y: 255}
 --- !u!33 &856847065228579926
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -125,9 +125,9 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
+  m_StaticShadowCaster: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0

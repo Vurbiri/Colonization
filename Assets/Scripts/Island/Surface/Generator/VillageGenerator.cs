@@ -20,15 +20,15 @@ public class VillageGenerator : ASurfaceGenerator
         float sizeSqr = size * size, step = size * _density, offset = step * _ratioOffset;
         float height = -size, width, x, z;
 
-        CustomMesh customMesh = new(NAME_MESH + (ID++), HEX_SIZE * Vector2.one);
+        CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
 
         while (height < size)
         {
             width = -size;
             while (width < size)
             {
-                x = width + Random.Range(-offset, offset);
-                z = height + Random.Range(-offset, offset);
+                x = width + URandom.Range(offset);
+                z = height + URandom.Range(offset);
 
                 if (x * x + z * z < sizeSqr && !(z > size - step && (x > -step && x < step)))
                     customMesh.AddTriangles(_hut.Create(new(x, 0f, z)));
@@ -44,7 +44,7 @@ public class VillageGenerator : ASurfaceGenerator
         mesh.sharedMesh.Optimize();
     }
 
-    #region Nested: Hut
+    #region Nested: Hut, Color32Range
     //*******************************************************
     [System.Serializable]
     private class Hut
@@ -56,38 +56,37 @@ public class VillageGenerator : ASurfaceGenerator
         [Space]
         [SerializeField, Range(0, 100)] private int _chanceTwoFloor = 16;
         [Space]
-        [SerializeField] private ColorRange _colorWall;
-        [SerializeField] private ColorRange _colorRoof;
-        [SerializeField] private ColorRange _colorRoofWall;
+        [SerializeField] private Color32Range _colorWall;
+        [SerializeField] private Color32Range _colorRoof;
+        [SerializeField] private Color32Range _colorRoofWall;
 
         List<Triangle> _triangles;
         Vector3[] _baseBottom, _baseTop = new Vector3[4], roofA, roofB;
-        Vector3 _roofPointA, _roofPointB, _position;
-        float _angle, _cos, _sin, _x, _z, _heightWall;
+        Vector3 _roofPointA, _roofPointB;
+        Quaternion _rotation;
+        float _x, _z, _heightWall;
+
+        private const int COUNT_TRIANGLES = 14;
+        private static readonly Vector2[] uvRoofWall = { new(0.01f, 0.01f), new(1f, 0.01f), new(0.5f, 0.7f) };
 
         public List<Triangle> Create(Vector3 position)
         {
-            _triangles = new(14);
+            _triangles = new(COUNT_TRIANGLES);
             _colorWall.Rand(); _colorRoof.Rand(); _colorRoofWall.Rand();
 
-            _angle = Random.Range(0, Mathf.PI);
-            _cos = Mathf.Cos(_angle); _sin = Mathf.Sin(_angle);
             _x = URandom.Range(_baseHalfSizeWidth); _z = URandom.Range(_baseHalfSizeLength);
 
             _baseBottom = new Vector3[] { new(_x, 0f, _z), new(-_x, 0f, _z), new(-_x, 0f, -_z), new(_x, 0f, -_z) };
              _heightWall = URandom.Range(_heightWallRange) * (URandom.IsTrue(_chanceTwoFloor) ? 2f : 1f);
 
+            _rotation = Quaternion.Euler(0f, Random.Range(0, 180), 0f);
             for (int i = 0; i < 4; i++)
             {
-                _position = _baseBottom[i];
-                _baseBottom[i].x = _position.x * _cos - _position.z * _sin;
-                _baseBottom[i].z = _position.x * _sin + _position.z * _cos;
-
-                _baseTop[i] = _baseBottom[i] += position;
+                _baseTop[i] = _baseBottom[i] = _rotation * _baseBottom[i] + position;
                 _baseTop[i].y = _heightWall;
             }
 
-            _triangles.AddRange(PolygonChain.Create(_colorWall.color, _baseBottom, _baseTop, true));
+            _triangles.AddRange(PolygonChain.CreateUV(_colorWall.color, _baseBottom, _baseTop, true));
 
             _roofPointA = (_baseTop[0] + _baseTop[1]) * 0.5f;
             _roofPointA.y += URandom.Range(_heightRoofRange);
@@ -97,23 +96,23 @@ public class VillageGenerator : ASurfaceGenerator
             roofA = new Vector3[] { _baseTop[0], _roofPointA, _baseTop[1] };
             roofB = new Vector3[] { _baseTop[3], _roofPointB, _baseTop[2] };
 
-            _triangles.AddRange(PolygonChain.Create(_colorRoof.color, roofA, roofB));
-            _triangles.Add(new(_colorRoofWall.color, roofA));
-            _triangles.Add(new(_colorRoofWall.color, _baseTop[2], _roofPointB, _baseTop[3]));
+            _triangles.AddRange(PolygonChain.CreateUV(_colorRoof.color, roofA, roofB));
+            _triangles.Add(new(_colorRoofWall.color, uvRoofWall, roofA));
+            _triangles.Add(new(_colorRoofWall.color, uvRoofWall, _baseTop[2], _roofPointB, _baseTop[3]));
 
             return _triangles;
         }
     }
     //*******************************************************
     [System.Serializable]
-    private class ColorRange
+    private class Color32Range
     {
         [SerializeField, Range(0,2)] private int _idComponent;
-        [SerializeField] private Vector2 _colorRange = new(0.5f, 1f);
+        [SerializeField] private Vector2Int _colorRange = new(122, 255);
 
-        /*[NonSerialized]*/ public Color color = Color.black;
+        [NonSerialized] public Color32 color = new(0, 0, 0, 255);
 
-        public void Rand() => color[_idComponent] = URandom.Range(_colorRange);
+        public void Rand() => color[_idComponent] = (byte)URandom.RangeIn(_colorRange);
     }
     #endregion
 }

@@ -21,9 +21,10 @@ namespace MeshCreated
 
             Triangle[] triangles = new Triangle[countBase];
             for (int i = 0; i < countBase; i++)
-                triangles[i] = new(color, new Vector3[] { basePoints.Next(i), basePoints[i], peakPoint });
+                triangles[i] = new(color, basePoints.Next(i), basePoints[i], peakPoint);
 
             Triangles = triangles;
         }
+
     }
 }

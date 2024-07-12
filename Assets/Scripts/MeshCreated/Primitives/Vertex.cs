@@ -23,6 +23,14 @@ namespace MeshCreated
             _uv = position.To2D();
         }
 
+        public Vertex(Vector3 position, Vector3 normal, Color32 color, Vector2 uv)
+        {
+            _position = position;
+            _normal = normal;
+            _color = color;
+            _uv = uv;
+        }
+
         public Vertex(Vector3 position, Vector3 normal)
         {
             _position = position;
