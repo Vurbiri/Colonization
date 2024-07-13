@@ -6,8 +6,5 @@ public static class URandom
 
     public static Vector2 Vector2(Vector2 minInclusive, Vector2 maxInclusive) => new(Random.Range(minInclusive.x, maxInclusive.x), Random.Range(minInclusive.y, maxInclusive.y));
 
-    public static float Range(float min_max) => Random.Range(-min_max, min_max);
-    public static float Range(Vector2 min_max) => Random.Range(min_max.x, min_max.y);
-    public static int Range(Vector2Int min_max) => Random.Range(min_max.x, min_max.y);
-    public static int RangeIn(Vector2Int min_max) => Random.Range(min_max.x, min_max.y + 1);
+    public static float RangeZero(float max) => Random.Range(0f, max);
 }

@@ -26,18 +26,30 @@ namespace MeshCreated
             List<Triangle> triangles = new(count << 1);
 
             for (int i = 0; i < count; i++)
-                triangles.AddRange(Polygon.Create(color, chainB[i], chainB.Next(i), chainA.Next(i), chainA[i]));
+                triangles.AddRange(Polygon.Create(color, chainA[i], chainB[i], chainB.Next(i), chainA.Next(i)));
 
             return triangles;
         }
-
         public static List<Triangle> CreateUV(Color32 color, IReadOnlyList<Vector3> chainA, IReadOnlyList<Vector3> chainB, bool loop = false)
         {
             int count = chainA.Count - (loop ? 0 : 1);
             List<Triangle> triangles = new(count << 1);
 
             for (int i = 0; i < count; i++)
-                triangles.AddRange(Polygon.CreateUV(color, chainB[i], chainB.Next(i), chainA.Next(i), chainA[i]));
+                triangles.AddRange(Polygon.CreateUV(color, chainA[i], chainB[i], chainB.Next(i), chainA.Next(i)));
+
+            return triangles;
+        }
+        public static List<Triangle> CreateUV(Color32 color, IReadOnlyList<Vector3> chainA, IReadOnlyList<Vector3> chainB,
+                                                                     IReadOnlyList<Vector2> uvA, IReadOnlyList<Vector2> uvB, bool loop = false)
+        {
+            int count = chainA.Count - (loop ? 0 : 1);
+            List<Triangle> triangles = new(count << 1);
+
+            for (int i = 0; i < count; i++)
+                triangles.AddRange(Polygon.CreateUV(color,
+                                                               chainA[i], chainB[i], chainB.Next(i), chainA.Next(i),
+                                                               uvA[i], uvB[i], uvB.Next(i), uvA.Next(i)));
 
             return triangles;
         }
@@ -48,7 +60,7 @@ namespace MeshCreated
             List<Triangle> triangles = new(count << 1);
 
             for (int i = 0; i < count; i++)
-                triangles.AddRange(Polygon.CreateBarycentric(color, chainB[i], chainB.Next(i), chainA.Next(i), chainA[i]));
+                triangles.AddRange(Polygon.CreateBarycentric(color, chainA[i], chainB[i], chainB.Next(i), chainA.Next(i)));
 
             return triangles;
         }
@@ -58,7 +70,20 @@ namespace MeshCreated
             List<Triangle> triangles = new(count << 1);
 
             for (int i = 0; i < count; i++)
-                triangles.AddRange(Polygon.CreateBarycentricUV(color, chainB[i], chainB.Next(i), chainA.Next(i), chainA[i]));
+                triangles.AddRange(Polygon.CreateBarycentricUV(color, chainA[i], chainB[i], chainB.Next(i), chainA.Next(i)));
+
+            return triangles;
+        }
+        public static List<Triangle> CreateBarycentricUV(byte color, IReadOnlyList<Vector3> chainA, IReadOnlyList<Vector3> chainB,
+                                                                     IReadOnlyList<Vector2> uvA, IReadOnlyList<Vector2> uvB, bool loop = false)
+        {
+            int count = chainA.Count - (loop ? 0 : 1);
+            List<Triangle> triangles = new(count << 1);
+
+            for (int i = 0; i < count; i++)
+                triangles.AddRange(Polygon.CreateBarycentricUV(color,
+                                                               chainA[i], chainB[i], chainB.Next(i), chainA.Next(i),
+                                                               uvA[i], uvB[i], uvB.Next(i), uvA.Next(i)));
 
             return triangles;
         }

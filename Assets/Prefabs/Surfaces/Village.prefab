@@ -235,8 +235,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d9b1005e9808334c84cd13acbdae7cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _density: 0.31
-  _ratioOffset: 0.26
+  _density: 0.32
+  _ratioOffset: 0.22
   _hut:
     _baseHalfSizeWidth: {x: 0.25, y: 0.5}
     _baseHalfSizeLength: {x: 0.4, y: 0.6}
@@ -245,13 +245,19 @@ MonoBehaviour:
     _chanceTwoFloor: 16
     _colorWall:
       _idComponent: 2
-      _colorRange: {x: 178, y: 255}
+      _colorRange:
+        _min: 178
+        _max: 255
     _colorRoof:
       _idComponent: 1
-      _colorRange: {x: 102, y: 255}
+      _colorRange:
+        _min: 102
+        _max: 255
     _colorRoofWall:
       _idComponent: 0
-      _colorRange: {x: 204, y: 255}
+      _colorRange:
+        _min: 204
+        _max: 255
 --- !u!33 &8414659971373218935
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -349,7 +355,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _generator: {fileID: 6951835121162521879}
-  _ratioSize: 0.77
+  _ratioSize: 0.75
+  _offsetAngle: 15
   _windmillMesh: {fileID: 4350017619185367284}
   _windmillAnimator: {fileID: 8230735774235252612}
   _windmillMeshes:

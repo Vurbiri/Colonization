@@ -28,7 +28,7 @@ namespace MeshCreated
             #endregion
         }
 
-        public Triangle(Color32 color, Vector2[] uvs, params Vector3[] vertices)
+        public Triangle(Color32 color, Vector3[] vertices, Vector2[] uvs)
         {
             for (int index = 0; index < COUNT_VERTICES; index++)
                 Vertices[index] = new(vertices[index], Normal(index), color, uvs[index]);
@@ -60,7 +60,7 @@ namespace MeshCreated
             #endregion
         }
 
-        public Triangle(Color32[] colors, Vector2[] uvs, params Vector3[] vertices)
+        public Triangle(Color32[] colors, Vector3[] vertices, Vector2[] uvs)
         {
             for (int index = 0; index < COUNT_VERTICES; index++)
                 Vertices[index] = new(vertices[index], Normal(index), colors[index], uvs[index]);
@@ -95,7 +95,7 @@ namespace MeshCreated
             #endregion
         }
 
-        public Triangle(byte color, Vector2[] uvs, params Vector3[] vertices)
+        public Triangle(byte color, Vector3[] vertices, Vector2[] uvs)
         {
             for (int index = 0; index < COUNT_VERTICES; index++)
             {
