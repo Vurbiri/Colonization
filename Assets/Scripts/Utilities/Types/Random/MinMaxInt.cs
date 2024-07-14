@@ -6,8 +6,8 @@ public struct MinMaxInt
     [SerializeField] private int _min;
     [SerializeField] private int _max;
 
-    public int Rand => Random.Range(_min, _max);
-    public int RandIn => Random.Range(_min, _max + 1);
+    public readonly int Roll => Random.Range(_min, _max + 1);
+    public readonly int RollMoreAvg => Random.Range((_min + _max) >> 1, _max + 1);
 
     public MinMaxInt(int min, int max)
     {
@@ -23,4 +23,6 @@ public struct MinMaxInt
 
     public static MinMaxInt operator *(int value, MinMaxInt mm) => new(mm._min * value, mm._max * value);
     public static MinMaxInt operator *(MinMaxInt mm, int value) => new(mm._min * value, mm._max * value);
+
+    public override string ToString() => $"(min: {_min}, max: {_max})";
 }

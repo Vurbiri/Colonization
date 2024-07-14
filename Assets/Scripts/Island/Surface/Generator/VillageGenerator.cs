@@ -17,7 +17,7 @@ public class VillageGenerator : ASurfaceGenerator
     public override IEnumerator Generate_Coroutine(float size)
     {
         float sizeSqr = size * size, step = size * _density;
-        MinusPlusRange offset = step * _ratioOffset;
+        MinusPlus offset = step * _ratioOffset;
         float height = -size, width, x, z;
 
         CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
@@ -27,8 +27,8 @@ public class VillageGenerator : ASurfaceGenerator
             width = -size;
             while (width < size)
             {
-                x = width + offset.Rand;
-                z = height + offset.Rand;
+                x = width + offset.Roll;
+                z = height + offset.Roll;
 
                 if (x * x + z * z < sizeSqr && !(z > size - step && (x > -step && x < step)))
                     customMesh.AddTriangles(_hut.Create(new(x, 0f, z)));
@@ -54,7 +54,7 @@ public class VillageGenerator : ASurfaceGenerator
         [SerializeField] private MinMax _heightWallRange = new(0.5f, 0.6f);
         [SerializeField] private MinMax _heightRoofRange = new(0.225f, 0.33f);
         [Space]
-        [SerializeField, Range(0, 100)] private int _chanceTwoFloor = 16;
+        [SerializeField] private Chance _chanceTwoFloor = 16;
         [Space]
         [SerializeField] private Color32Range _colorWall;
         [SerializeField] private Color32Range _colorRoof;
@@ -74,10 +74,10 @@ public class VillageGenerator : ASurfaceGenerator
             _triangles = new(COUNT_TRIANGLES);
             _colorWall.Rand(); _colorRoof.Rand(); _colorRoofWall.Rand();
 
-            _x = _baseHalfSizeWidth.Rand; _z = _baseHalfSizeLength.Rand;
+            _x = _baseHalfSizeWidth.Roll; _z = _baseHalfSizeLength.Roll;
 
             _baseBottom = new Vector3[] { new(_x, 0f, _z), new(-_x, 0f, _z), new(-_x, 0f, -_z), new(_x, 0f, -_z) };
-             _heightWall = _heightWallRange.Rand * (URandom.IsTrue(_chanceTwoFloor) ? 2f : 1f);
+             _heightWall = _heightWallRange.Roll * _chanceTwoFloor.Select(2f, 1f);
 
             _rotation = Quaternion.Euler(0f, Random.Range(0, 180), 0f);
             for (int i = 0; i < 4; i++)
@@ -89,9 +89,9 @@ public class VillageGenerator : ASurfaceGenerator
             _triangles.AddRange(PolygonChain.CreateUV(_colorWall.color, _baseBottom, _baseTop, true));
 
             _roofPointA = (_baseTop[0] + _baseTop[1]) * 0.5f;
-            _roofPointA.y += _heightRoofRange.Rand;
+            _roofPointA.y += _heightRoofRange.Roll;
             _roofPointB = (_baseTop[2] + _baseTop[3]) * 0.5f;
-            _roofPointB.y += _heightRoofRange.Rand;
+            _roofPointB.y += _heightRoofRange.Roll;
 
             roofA = new Vector3[] { _baseTop[0], _roofPointA, _baseTop[1] };
             roofB = new Vector3[] { _baseTop[3], _roofPointB, _baseTop[2] };
@@ -114,7 +114,7 @@ public class VillageGenerator : ASurfaceGenerator
 
         [NonSerialized] public Color32 color = new(0, 0, 0, 255);
 
-        public void Rand() => color[_idComponent] = (byte)_colorRange.RandIn;
+        public void Rand() => color[_idComponent] = (byte)_colorRange.Roll;
     }
     #endregion
 }

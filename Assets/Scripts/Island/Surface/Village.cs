@@ -4,7 +4,7 @@ using UnityEngine;
 public class Village : ASurfaceCreated
 {
     [Space]
-    [SerializeField] private MinusPlusRange _offsetAngle = 15f;
+    [SerializeField] private MinusPlus _offsetAngle = 15f;
     [Space]
     [SerializeField] private MeshFilter _windmillMesh;
     [SerializeField, GetComponentInChildren] private Animator _windmillAnimator;
@@ -20,7 +20,7 @@ public class Village : ASurfaceCreated
     {
         float size = CONST.HEX_HEIGHT * _ratioSize;
 
-        transform.localRotation = Quaternion.Euler(0f, _offsetAngle.Rand + 60f * Random.Range(0, 6) + 30f, 0f);
+        transform.localRotation = Quaternion.Euler(0f, _offsetAngle.Roll + 60f * Random.Range(0, 6) + 30f, 0f);
         StartCoroutine(_generator.Generate_Coroutine(size));
 
         _windmillMesh.sharedMesh = _windmillMeshes.Rand();
@@ -32,7 +32,7 @@ public class Village : ASurfaceCreated
         //=================================
         IEnumerator WindmillPlay_Coroutine()
         {
-            yield return new WaitForSeconds(_windmillPlayRange.Rand);
+            yield return new WaitForSeconds(_windmillPlayRange.Roll);
             _windmillAnimator.SetTrigger(NAME_ANIM_PARAMETER);
             _windmillAnimator.speed = 1f + Random.Range(-_windmillSpeedAnimRange, _windmillSpeedAnimRange);
         }

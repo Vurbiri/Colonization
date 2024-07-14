@@ -35,8 +35,3 @@ public class MinMaxDrawer : PropertyDrawer
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => EditorGUIUtility.singleLineHeight;
 }
 
-[CustomPropertyDrawer(typeof(MinMaxInt))]
-public class MinMaxIntDrawer : MinMaxDrawer
-{
-
-}

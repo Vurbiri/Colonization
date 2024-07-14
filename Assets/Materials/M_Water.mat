@@ -85,7 +85,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 0
-    - _Smoothness: 1
+    - _Smoothness: 0.6
     - _Speed: 0.55
     - _SrcBlend: 1
     - _Start_Height: -2.75
@@ -114,10 +114,10 @@ Material:
     - _ZWrite: 0
     - _ZWriteControl: 0
     m_Colors:
-    - _Color: {r: 0.08627451, g: 0.08627451, b: 0.5882353, a: 1}
+    - _Color: {r: 0.08627451, g: 0.08627451, b: 0.54901963, a: 1}
     - _Color_1: {r: 0, g: 0, b: 1, a: 1}
     - _Color_Foam: {r: 0.7372549, g: 1, b: 0.9019608, a: 1}
-    - _Color_Surf: {r: 0.9803922, g: 0.9803922, b: 1, a: 1}
+    - _Color_Surf: {r: 0.9607843, g: 0.9607843, b: 1, a: 1}
     - _DirectionA: {r: 1, g: 0.1, b: 0, a: 0}
     - _DirectionA_1: {r: 1, g: 0.1, b: 0, a: 0}
     - _DirectionB: {r: -0.1, g: -0.9, b: 0, a: 0}

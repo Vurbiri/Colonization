@@ -26,7 +26,7 @@ public enum SurfaceType
 {
     Village,
     Land02,
-    Land03,
+    Crystals,
     Land04,
     Forest,
     Water,
@@ -37,7 +37,7 @@ public enum CurrencyType
 {
     Food,
     Land02,
-    Land03,
+    Mana,
     Land04,
     Wood,
     Gate

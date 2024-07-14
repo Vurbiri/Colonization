@@ -18,7 +18,8 @@ public class Island : MonoBehaviour
 
     public Crossroads Crossroads => _crossroads;
 
-    private int _circleMax, _chanceWater;
+    private int _circleMax;
+    private Chance _chanceWater;
 
     public void Initialize(int circleMax, int chanceWater)
     {
@@ -73,7 +74,8 @@ public class Island : MonoBehaviour
 
     private IEnumerator CreateIsland_Coroutine(bool saveToFile)
     {
-        int circle = 0, chance;
+        int circle = 0;
+        Chance chance;
         bool isWater = false, isLastCircle = circle == _circleMax;
         Vector3 position, positionNext, direction, current;
 
@@ -87,7 +89,7 @@ public class Island : MonoBehaviour
         while (!isLastCircle)
         {
             isLastCircle = ++circle == _circleMax;
-            chance = _chanceWater * (circle - ((_circleMax - 1) >> 1)) / ((_circleMax - 1) >> 1);
+            chance = _chanceWater * ((circle - ((_circleMax - 1) >> 1)) / ((_circleMax - 1) >> 1));
             positionNext = HEX_SIDES[0] * circle;
             for (int i = 0; i < COUNT_SIDES; i++)
             {
@@ -117,7 +119,7 @@ public class Island : MonoBehaviour
         HexagonData GetHexagonData(int x)
         {
             Key keyHex = _land.PositionToKey(current);
-            isWater = isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(keyHex) || URandom.IsTrue(chance)));
+            isWater = isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(keyHex) || chance.Roll));
 
             return isWater ? new(keyHex, numWater.Value, current, _surfaces[SurfaceType.Water]) : new(keyHex, numGround.Value, current, surfaces.Value);
         }

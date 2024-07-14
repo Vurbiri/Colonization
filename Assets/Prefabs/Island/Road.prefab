@@ -47,10 +47,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _roadRenderer: {fileID: 1634477485002050712}
   _widthRoad: 1
-  _rangeCount: {x: 2, y: 5}
+  _rangeCount:
+    _min: 2
+    _max: 4
   _offsetY: 0.05
-  _rateWave: {x: 0.5, y: 0.9}
-  _lengthFluctuation: {x: 0.85, y: 1.15}
+  _rateWave:
+    _min: 0.5
+    _max: 0.9
+  _lengthFluctuation:
+    _min: 0.85
+    _max: 1.15
   _textureScaleMin: {x: 0.6, y: 0.4}
   _textureScaleMax: {x: 0.9, y: 1}
   _alphaTime: 0.05

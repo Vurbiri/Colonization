@@ -5,7 +5,7 @@ public class Road : MonoBehaviour
     [SerializeField] private LineRenderer _roadRenderer;
     [Space]
     [SerializeField] private float _widthRoad = 1.1f;
-    [SerializeField] private MinMaxInt _rangeCount = new(2, 5);
+    [SerializeField] private MinMaxInt _rangeCount = new(2, 4);
     [SerializeField] private float _offsetY = 0.05f;
     [SerializeField] private MinMax _rateWave = new(0.5f, 0.9f);
     [SerializeField] private MinMax _lengthFluctuation = new(0.85f, 1.15f);
@@ -109,15 +109,15 @@ public class Road : MonoBehaviour
     {
         start.y = end.y = _offsetY;
 
-        int count = _rangeCount.Rand;
+        int count = _rangeCount.Roll;
         MinMax wave = _widthRoad / count * _rateWave;
         Vector3 step = (end - start) / (count + 1), offsetSide = Vector3.Cross(Vector3.up, step.normalized);
-        float sign = URandom.IsTrue() ? 1f : -1f, signStep = -1f;
+        float sign = Chance.Rolling() ? 1f : -1f, signStep = -1f;
 
         for (int i = 0; i < count; i++)
         {
             sign *= signStep;
-            start += _lengthFluctuation.Rand * step + wave.Rand * sign * offsetSide;
+            start += _lengthFluctuation.Roll * step + wave.Roll * sign * offsetSide;
             _points.Add(start);
         }
         _points.Add(end);

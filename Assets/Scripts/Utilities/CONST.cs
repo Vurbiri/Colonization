@@ -25,6 +25,11 @@ public static class CONST
     public static readonly ReadOnlyCollection<Vector3> HEX_SIDES;
     public static readonly ReadOnlyCollection<Vector3> SIDE_DIRECTIONS;
 
+    public static readonly ReadOnlyCollection<float> COS_HEX;
+    public static readonly ReadOnlyCollection<float> SIN_HEX;
+    public static readonly ReadOnlyCollection<float> COS_HEX_DIRECT;
+    public static readonly ReadOnlyCollection<float> SIN_HEX_DIRECT;
+
     public static readonly ReadOnlyCollection<Quaternion> ROTATIONS;
 
     public const int ID_GATE = 13;
@@ -35,28 +40,32 @@ public static class CONST
 
     static CONST()
     {
-        float[] COS_HEX = {  COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 };
-        float[] SIN_HEX = { -SIN_30, SIN_30, SIN_90,  SIN_30, -SIN_30, -SIN_90 };
+        float[] COS_H = {  COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 };
+        float[] SIN_H = { -SIN_30, SIN_30, SIN_90,  SIN_30, -SIN_30, -SIN_90 };
+        COS_HEX = new(COS_H);
+        SIN_HEX = new(SIN_H);
 
         Vector3[] positions = new Vector3[COUNT_VERTICES];
         Vector3[] directions = new Vector3[COUNT_VERTICES];
 
         for (int i = 0; i < COUNT_VERTICES; i++)
         {
-            directions[i] = new Vector3(COS_HEX[i], 0, SIN_HEX[i]);
+            directions[i] = new Vector3(COS_H[i], 0, SIN_H[i]);
             positions[i] = HEX_RADIUS * directions[i];
         }
         VERTEX_DIRECTIONS = new(directions);
         HEX_VERTICES = new(positions);
 
-        COS_HEX = new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60,  COS_60 };
-        SIN_HEX = new float[] { SIN_00, SIN_60,  SIN_60, -SIN_00, -SIN_60, -SIN_60 };
+        COS_H = new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60,  COS_60 };
+        SIN_H = new float[] { SIN_00, SIN_60,  SIN_60, -SIN_00, -SIN_60, -SIN_60 };
+        COS_HEX_DIRECT = new(COS_H);
+        SIN_HEX_DIRECT = new(SIN_H);
 
         directions = new Vector3[COUNT_SIDES];
         positions = new Vector3[COUNT_SIDES];
         for (int i = 0; i < COUNT_SIDES; i++)
         {
-            directions[i] = new Vector3(COS_HEX[i], 0, SIN_HEX[i]);
+            directions[i] = new Vector3(COS_H[i], 0, SIN_H[i]);
             positions[i] = HEX_SIZE * directions[i];
         }
         SIDE_DIRECTIONS = new(directions);
@@ -71,10 +80,5 @@ public static class CONST
         }
         ROTATIONS = new(quaternions);
     }
-
-    //public static readonly ReadOnlyCollection<float> COS_HEX = new((new float[] { COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 }));
-    //public static readonly ReadOnlyCollection<float> SIN_HEX = new((new float[] { -SIN_30, SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90 }));
-
-    //public static readonly ReadOnlyCollection<float> COS_HEX_DIRECT = new((new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60 }));
-    //public static readonly ReadOnlyCollection<float> SIN_HEX_DIRECT = new((new float[] { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 }));
+   
 }
