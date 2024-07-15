@@ -1,5 +1,4 @@
 using MeshCreated;
-using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +8,7 @@ public class CrystalFieldGenerator : ASurfaceGenerator
 {
     [Space]
     [SerializeField, Range(0.01f, 0.5f)] private float _offsetY = 0.125f;
-    [SerializeField, Range(0.1f, 0.3f)] private float _ratioOffsetXZ = 0.2f;
+    [SerializeField, Range(0.1f, 0.3f)] private float _ratioOffsetXZ = 0.15f;
     [Space]
     [SerializeField] private Druse _druse;
 
@@ -41,68 +40,11 @@ public class CrystalFieldGenerator : ASurfaceGenerator
             yield return null;
         }
 
-        //radius *= 0.5f;
-
-        //for (int i = 0; i < COUNT_DRUSE; i++)
-        //{
-        //    x = COS_HEX[i] * (radius + offsetRadius.Roll);
-        //    z = SIN_HEX[i] * (radius + offsetRadius.Roll);
-
-        //    foreach (var crystal in _druse.Create(new(x, -_offsetY, z)))
-        //        customMesh.AddTriangles(crystal);
-
-        //    yield return null;
-        //}
-
         MeshFilter mesh = GetComponent<MeshFilter>();
         mesh.sharedMesh = customMesh.ToMesh();
         yield return null;
         mesh.sharedMesh.Optimize();
     }
-
-    [Button]
-    public void Generate()
-    {
-        CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
-
-        float radius = HEX_HEIGHT * 0.55f;
-
-        MinusPlus offsetRadius = radius * _ratioOffsetXZ;
-
-        foreach (var crystal in _druse.Create(new(offsetRadius.Roll, -_offsetY, offsetRadius.Roll)))
-            customMesh.AddTriangles(crystal);
-
-        float x, z;
-        for (int i = 0; i < COUNT_DRUSE; i++)
-        {
-            x = COS_HEX_DIRECT[i] * (radius + offsetRadius.Roll);
-            z = SIN_HEX_DIRECT[i] * (radius + offsetRadius.Roll);
-
-            foreach (var crystal in _druse.Create(new(x, -_offsetY, z)))
-                customMesh.AddTriangles(crystal);
-        }
-
-        radius *= 0.5f;
-
-        for (int i = 0; i < COUNT_DRUSE; i++)
-        {
-            x = COS_HEX[i] * (radius + offsetRadius.Roll);
-            z = SIN_HEX[i] * (radius + offsetRadius.Roll);
-
-            foreach (var crystal in _druse.Create(new(x, -_offsetY, z)))
-                customMesh.AddTriangles(crystal);
-        }
-
-
-        MeshFilter mesh = GetComponent<MeshFilter>();
-        mesh.sharedMesh = customMesh.ToMesh();
-    }
-
-#if UNITY_EDITOR
-    [Button]
-    private void SaveMesh() => UnityEditor.AssetDatabase.CreateAsset(GetComponent<MeshFilter>().sharedMesh, "Assets/Import/3D/" + NAME_MESH + "_" + ID + ".mesh");
-#endif
-
 
     #region Nested: Druse, Cristal
     //*******************************************************
@@ -162,7 +104,7 @@ public class CrystalFieldGenerator : ASurfaceGenerator
         [Space]
         [SerializeField, Range(0.1f, 0.9f)] private float _ratioRadiusBottom = 0.75f;
         [Space]
-        [SerializeField] private MinMax _heightRange = new(1.75f, 2.75f);
+        [SerializeField] private MinMax _heightRange = new(1.5f, 2.8f);
         [SerializeField] private MinMax _radiusRange = new(0.325f, 0.425f);
         [SerializeField] private MinMax _ratioPartRange = new(0.8f, 0.95f);
         [Space]
