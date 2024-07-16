@@ -19,11 +19,6 @@ namespace MeshCreated
         }
 
         public void AddPrimitive(IPrimitive primitive) => AddTriangles(primitive.Triangles);
-        public void AddPrimitives(IEnumerable<IPrimitive> primitives)
-        {
-            foreach (var pr in primitives)
-                AddTriangles(pr.Triangles);
-        }
         public void AddTriangles(IEnumerable<Triangle> triangles)
         {
             foreach (var tr in triangles)

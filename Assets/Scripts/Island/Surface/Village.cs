@@ -4,7 +4,7 @@ using UnityEngine;
 public class Village : ASurfaceCreated
 {
     [Space]
-    [SerializeField] private MinusPlus _offsetAngle = 15f;
+    [SerializeField] private RMFloat _offsetAngle = 15f;
     [Space]
     [SerializeField] private MeshFilter _windmillMesh;
     [SerializeField, GetComponentInChildren] private Animator _windmillAnimator;
@@ -12,7 +12,7 @@ public class Village : ASurfaceCreated
     [SerializeField] private Mesh[] _windmillMeshes;
     [SerializeField] private float _windmillOffsetDistance = 0.6f;
     [SerializeField] private float _windmillSpeedAnimRange = 0.2f;
-    [SerializeField] private MinMax _windmillPlayRange = new(0.2f, 1.22f);
+    [SerializeField] private RFloat _windmillPlayRange = new(0.2f, 1.22f);
 
     private const string NAME_ANIM_PARAMETER = "Play";
 
@@ -20,7 +20,7 @@ public class Village : ASurfaceCreated
     {
         float size = CONST.HEX_HEIGHT * _ratioSize;
 
-        transform.localRotation = Quaternion.Euler(0f, _offsetAngle.Roll + 60f * Random.Range(0, 6) + 30f, 0f);
+        transform.localRotation = Quaternion.Euler(0f, _offsetAngle + 60f * Random.Range(0, 6) + 30f, 0f);
         StartCoroutine(_generator.Generate_Coroutine(size));
 
         _windmillMesh.sharedMesh = _windmillMeshes.Rand();
@@ -32,7 +32,7 @@ public class Village : ASurfaceCreated
         //=================================
         IEnumerator WindmillPlay_Coroutine()
         {
-            yield return new WaitForSeconds(_windmillPlayRange.Roll);
+            yield return new WaitForSeconds(_windmillPlayRange);
             _windmillAnimator.SetTrigger(NAME_ANIM_PARAMETER);
             _windmillAnimator.speed = 1f + Random.Range(-_windmillSpeedAnimRange, _windmillSpeedAnimRange);
         }

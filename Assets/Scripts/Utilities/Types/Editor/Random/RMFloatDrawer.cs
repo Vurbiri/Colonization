@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomPropertyDrawer(typeof(MinusPlus))]
-public class MinusPlusDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(RMFloat))]
+public class RMFloatDrawer : PropertyDrawer
 {
     private const float OFFSET_SIZE_LABEL = 20f, SIZE_VALUE = 85f, SIZE_SPACE = 5f;
     private const string NAME_VALUE = "_value";

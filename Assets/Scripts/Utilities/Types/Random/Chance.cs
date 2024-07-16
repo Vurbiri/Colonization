@@ -17,6 +17,7 @@ public struct Chance
     public static implicit operator Chance(int value) => new(value);
     public static explicit operator int(Chance chance) => chance._value;
 
+
     public static Chance operator *(int value, Chance chance) => new(chance._value * value);
     public static Chance operator *(Chance chance, int value) => new(chance._value * value);
 

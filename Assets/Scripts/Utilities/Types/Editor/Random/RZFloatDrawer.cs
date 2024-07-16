@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomPropertyDrawer(typeof(ZeroRange))]
-public class ZeroRangeDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(RZFloat))]
+public class RZFloatDrawer : PropertyDrawer
 {
     private const float OFFSET_SIZE_LABEL = 20f, SIZE_VALUE = 85f, SIZE_SPACE = 5f;
     private const string NAME_VALUE = "_value";

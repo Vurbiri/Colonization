@@ -17,5 +17,5 @@ public static class ExtensionsColor
         return self;
     }
 
-    public static void SetRandMono(this ref Color32 self, MinMaxInt range) => self.r = self.g = self.b = (byte)range.Roll;
+    public static void SetRandMono(this ref Color32 self, RInt range) => self.r = self.g = self.b = (byte)range;
 }

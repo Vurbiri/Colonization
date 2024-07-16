@@ -1,12 +1,11 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomPropertyDrawer(typeof(MinMax))]
-public class MinMaxDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(RFloat))]
+public class RFloatDrawer : PropertyDrawer
 {
     private const float OFFSET_SIZE_LABEL = 20f, SIZE_VALUE = 85f, SIZE_SPACE = 5f;
     private const string NAME_MIN = "_min", NAME_MAX = "_max";
-
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
