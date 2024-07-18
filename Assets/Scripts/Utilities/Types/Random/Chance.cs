@@ -17,11 +17,12 @@ public struct Chance
     public static implicit operator Chance(int value) => new(value);
     public static explicit operator int(Chance chance) => chance._value;
 
+    public static implicit operator bool(Chance chance) => chance._value > 0 && (chance._value >= 100 || Random.Range(0, 100) < chance._value);
 
     public static Chance operator *(int value, Chance chance) => new(chance._value * value);
     public static Chance operator *(Chance chance, int value) => new(chance._value * value);
 
     public static Chance operator /(Chance chance, int value) => new(chance._value / value);
 
-    public override string ToString() => _value.ToString();
+    public readonly override string ToString() => _value.ToString();
 }

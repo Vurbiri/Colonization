@@ -46,7 +46,7 @@ public class Land : MonoBehaviour
         Key key = data.Key;
         Hexagon hex = Instantiate(_prefabHex, data.Position, Quaternion.identity, _thisTransform);
         hex.Initialize(data, _landMesh.WaterLevel);
-        
+
         _hexagons.Add(key, hex);
         _landMesh.AddHexagon(key, data.Position, data.Surface.Color, hex.IsWater);
 

@@ -24,6 +24,8 @@ public class ForestGenerator : ASurfaceGenerator
         float x, z;
 
         customMesh.AddTriangles(_spruce.Create(new(step * _offsetRange, _offsetY, step * _offsetRange)));
+        yield return null;
+
         while (radius < size)
         {
             angle = 0f;

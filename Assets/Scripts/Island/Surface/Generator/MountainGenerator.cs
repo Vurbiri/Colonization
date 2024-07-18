@@ -1,51 +1,69 @@
 using MeshCreated;
-using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static CONST;
 
 [RequireComponent(typeof(MeshFilter))]
-public class MountainGenerator : MonoBehaviour
+public class MountainGenerator : ASurfaceGenerator
 {
-    [SerializeField, Range(0.5f, 3.5f)] private float _density = 1.9f;
-    [SerializeField] private RMFloat _offsetRange = 0.1f;
+    [SerializeField, Range(0.5f, 1f)] private float _density = 0.9f;
+    
+    [Header("First")]
+    [SerializeField] private float _ratioHeightFirst = 1.4f;
+    [SerializeField] private float _ratioRadiusFirst = 0.7f;
+    [SerializeField] private RMFloat _ratioOffsetRangeFirst = 0.25f;
+    [Header("Other")]
+    [SerializeField] private int _countCircle = 3;
+    [SerializeField] private Chance _chanceRockLast = 40;
+    [SerializeField] private float _stepRatioHeight = 0.5f;
+    [SerializeField] private float _stepRatioRadius = 0.8f;
     [Space, Space]
     [SerializeField] private Rock _rock;
 
     private const string NAME_MESH = "MountainMesh_";
     private static int ID = 0;
 
-    [Button]
-    public void Generate()
+    public override IEnumerator Generate_Coroutine(float size)
     {
-        float size = HEX_HEIGHT * 0.8f;
         CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
 
-        float step = _rock.RadiusAvg * _density, radius = step, ratio = 1.2f;
-        float angle, angleStep;
-        float x, z;
+        _rock.Radius = size * (_stepRatioRadius - 1f) / (Mathf.Pow(_stepRatioRadius, _countCircle) - 1f);
 
-        customMesh.AddTriangles(_rock.Create(new(step * _offsetRange, 0f, step * _offsetRange), ratio));
-        while (ratio > 0.6f)
+        float ratioHeight = 1f, ratioRadius = 1f;
+        float radiusAvg = _rock.RadiusAvg * _density, step = radiusAvg, radius = step; ;
+        float angle, angleStep, angleOffset;
+        bool isHigh = true;
+
+        customMesh.AddTriangles(_rock.Create(new(step * _ratioOffsetRangeFirst, 0f, step * _ratioOffsetRangeFirst), isHigh, _ratioHeightFirst, _ratioRadiusFirst));
+        yield return null;
+
+        for (int i = 1; i <= _countCircle; i++)
         {
-            ratio = 1f - radius / size;
-            angle = 0f;
-            angleStep = step / radius;
-            while (angle < TAU)
+            angleStep = 2f * _density * step / radius;
+            angleOffset = RZFloat.Rolling(angleStep);
+            angle = TAU + angleOffset;
+            while (angle > angleStep)
             {
-                x = Mathf.Cos(angle) * radius + step * _offsetRange;
-                z = Mathf.Sin(angle) * radius + step * _offsetRange;
-                customMesh.AddTriangles(_rock.Create(new(x, 0f, z), ratio));
-                angle += angleStep;
+                if (i < _countCircle || _chanceRockLast)
+                {
+                    customMesh.AddTriangles(_rock.Create(new(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius), isHigh, ratioHeight, ratioRadius));
+                    yield return null;
+                }
+                angle -= angleStep;
+                isHigh = !isHigh;
             }
 
-            step = _rock.RadiusAvg * _density * ratio;
+            ratioHeight *= _stepRatioHeight;
+            ratioRadius *= _stepRatioRadius;
+            step = radiusAvg * ratioRadius;
             radius += step;
         }
 
         MeshFilter mesh = GetComponent<MeshFilter>();
         mesh.sharedMesh = customMesh.ToMesh();
+        yield return null;
+        mesh.sharedMesh.Optimize();
     }
 
     #region Nested: Rock
@@ -55,40 +73,37 @@ public class MountainGenerator : MonoBehaviour
     {
         [SerializeField] private RInt _countVertexRange = new(5, 6);
         [Space]
-        [SerializeField] private RFloat _heightRange = new(1.5f, 2.8f);
-        [SerializeField] private RFloat _radiusRange = new(1f, 2f);
+        [SerializeField] private RFloat _heightRangeHigh = new(2.7f, 2.9f);
+        [SerializeField] private RFloat _heightRangeLow = new(2.3f, 2.4f);
         [Space]
-        [SerializeField] private RMFloat _tiltRange = 15f;
-        [SerializeField] private RFloat _ratioOffsetRange = new(0.05f, 0.1f);
+        [SerializeField] private RFloat _ratioRadiusRange = new(0.9f, 1f);
         [Space]
-        [SerializeField] private RInt _colorCrystalRange = new(125, 255);
+        [SerializeField] private RFloat _ratioOffsetRange = new(0.075f, 0.15f);
+        [Space]
+        [SerializeField] private byte _color = 144;
 
         public float RadiusAvg => _radiusRange.Avg;
+        public float Radius { set => _radiusRange = new(_ratioRadiusRange, value); }
 
         private List<Triangle> _triangles;
+        private RFloat _radiusRange;
         private Vector3[] _bottom, _top;
         private Vector3 _positionTop;
-        private Quaternion _tilt;
         private float _x, _z, _height, _radius;
         private float _angle, _stepAngle;
         private RMFloat _offsetSide;
         private int _countVertex;
-        private byte _color;
 
         private static readonly Vector2[] UV_PICK = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
         private static readonly Color32[] BARYCENTRIC_COLORS = { new(255, 0, 0, 255), new(0, 255, 0, 255), new(255, 255, 255, 255) };
 
-        public List<Triangle> Create(Vector3 position, float ratio)
+        public List<Triangle> Create(Vector3 position, bool isHigh, float ratioHeight, float ratioRadius)
         {
             _countVertex = _countVertexRange;
             _triangles = new(_countVertex * 3);
 
-            _color = (byte)_colorCrystalRange;
-            for (int i = 0; i < 3; i++)
-                BARYCENTRIC_COLORS[i].a = _color;
-
-            _height = _heightRange * ratio;
-            _radius = _radiusRange * ratio;
+            _height = ratioHeight * (isHigh ? _heightRangeHigh : _heightRangeLow);
+            _radius = _radiusRange * ratioRadius;
             _offsetSide = _radius * _ratioOffsetRange;
 
             _stepAngle = TAU / _countVertex;
@@ -98,14 +113,13 @@ public class MountainGenerator : MonoBehaviour
             _top = new Vector3[_countVertex];
 
             _positionTop = new( position.x, position.y + _height, position.z);
-            _tilt = Quaternion.Euler(_tiltRange, 0f, _tiltRange);
             for (int i = 0; i < _countVertex; i++)
             {
                 _x = Mathf.Cos(_angle) * _radius + _offsetSide;
                 _z = Mathf.Sin(_angle) * _radius + _offsetSide;
 
                 _bottom[i] = new Vector3(_x, 0f, _z) + position;
-                _top[i] = _tilt * new Vector3(_x, 0f, _z) + _positionTop;
+                _top[i] = new Vector3(_x, 0f, _z) + _positionTop;
 
                 _angle += _stepAngle;
             }

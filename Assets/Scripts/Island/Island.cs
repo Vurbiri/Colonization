@@ -119,7 +119,7 @@ public class Island : MonoBehaviour
         HexagonData GetHexagonData(int x)
         {
             Key keyHex = _land.PositionToKey(current);
-            isWater = isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(keyHex) || chance.Roll));
+            isWater = isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(keyHex) || chance));
 
             return isWater ? new(keyHex, numWater.Value, current, _surfaces[SurfaceType.Water]) : new(keyHex, numGround.Value, current, surfaces.Value);
         }

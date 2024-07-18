@@ -110,7 +110,7 @@ public class Road : MonoBehaviour
         start.y = end.y = _offsetY;
 
         int count = _rangeCount;
-        RFloat wave =  _rateWave.Ratio(_widthRoad / count);
+        RFloat wave =  new(_rateWave, _widthRoad / count);
         Vector3 step = (end - start) / (count + 1), offsetSide = Vector3.Cross(Vector3.up, step.normalized);
         float sign = Chance.Rolling() ? 1f : -1f, signStep = -1f;
 

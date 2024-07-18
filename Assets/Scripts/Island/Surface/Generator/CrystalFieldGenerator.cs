@@ -25,7 +25,6 @@ public class CrystalFieldGenerator : ASurfaceGenerator
 
         foreach (var crystal in _druse.Create(new(offsetRadius, -_offsetY, offsetRadius)))
             customMesh.AddTriangles(crystal);
-
         yield return null;
 
         float x, z;
