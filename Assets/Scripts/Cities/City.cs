@@ -7,7 +7,7 @@ public class City : MonoBehaviour, IValueTypeEnum<CityType>
     [SerializeField] protected bool _isUpgrade = true;
     [SerializeField] protected Currencies _cost;
     [Space, GetComponentInChildren]
-    [SerializeField] protected CityGraphic _graphic;
+    [SerializeField] protected ACityGraphic _graphic;
     [Space]
     [SerializeField] protected City _prefabUpgrade;
     [Space]

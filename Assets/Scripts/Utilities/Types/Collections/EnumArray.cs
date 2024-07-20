@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 [Serializable, JsonArray]
 public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue> 
@@ -21,6 +22,16 @@ public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IEnumera
     {
         _count = Enum<TType>.Count;
         _values = new TValue[_count];
+    }
+
+    public EnumArray(IReadOnlyList<TValue> collection)
+    {
+        _count = Enum<TType>.Count;
+        _values = new TValue[_count];
+
+        int count = _count <= collection.Count ? _count : collection.Count;
+        for (int i = 0; i < count; i++) 
+            _values[i] = collection[i];
     }
 
     public virtual void OnBeforeSerialize()

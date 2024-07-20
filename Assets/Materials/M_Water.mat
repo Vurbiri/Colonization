@@ -72,7 +72,7 @@ Material:
     - _CastShadows: 0
     - _Cull: 2
     - _Delta_Distance: 0.16
-    - _Delta_Height: 0.3
+    - _Delta_Height: 0.15
     - _DepthDistance: 4
     - _Depth_Distance: 3.53
     - _Distance: 3

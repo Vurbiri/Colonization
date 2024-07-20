@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CityGraphic : MonoBehaviour
+public class CityGraphicSides : ACityGraphic
 {
     [SerializeField] protected EnumHashSet<LinkType, CityGraphicSide> _graphicSides;
     [Space]
@@ -8,7 +8,7 @@ public class CityGraphic : MonoBehaviour
 
     protected Players _players;
 
-    public virtual void Initialize()
+    public override void Initialize()
     {
         _players = Players.Instance;
 
@@ -16,7 +16,7 @@ public class CityGraphic : MonoBehaviour
             side.Initialize();
     }
 
-    public virtual void Upgrade(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
+    public override void Upgrade(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
     {
         Initialize();
 
@@ -34,8 +34,8 @@ public class CityGraphic : MonoBehaviour
         }
     }
 
-    public virtual void AddLink(LinkType type) => _graphicSides[type].AddLink();
+    public override void AddLink(LinkType type) => _graphicSides[type].AddLink();
 
-    public virtual void RoadBuilt(LinkType type, PlayerType owner) => _graphicSides[type].SetMaterial(_players[owner].Material);
+    public override void RoadBuilt(LinkType type, PlayerType owner) => _graphicSides[type].SetMaterial(_players[owner].Material);
 
 }

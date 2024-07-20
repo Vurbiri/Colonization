@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ShrineGraphic : CityGraphic
+public class ShrineGraphic : CityGraphicSides
 {
     public override void Upgrade(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
     {

@@ -95,6 +95,14 @@ public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IEnume
         return value;
     }
 
+    public int FirstEmptyIndex()
+    {
+        for (int i = 0; i < _capacity; i++)
+            if (_values[i] == null)
+                return i;
+        return -1;
+    }
+
     public TValue Next(TType type)
     {
         TValue value;

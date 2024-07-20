@@ -25,7 +25,7 @@ public enum LinkType
 public enum SurfaceType
 {
     Village,
-    Land02,
+    Plain,
     Crystals,
     Mountain,
     Forest,

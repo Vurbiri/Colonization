@@ -48,6 +48,8 @@ public class LandMesh : MonoBehaviour
         int step = _coastSteps / 2;
         _waterLevel = -(_coastSize.x * (_coastSteps - step) + _coastSize.y * step);
 
+        Debug.Log(_waterLevel);
+
         _waterTransform.localPosition = new(0f, _waterLevel, 0f);
     }
 

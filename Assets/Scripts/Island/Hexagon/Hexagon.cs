@@ -49,7 +49,6 @@ public class Hexagon : MonoBehaviour, ISelectable
 
         ASurface graphics = Instantiate(_surface.Prefab, transform);
         graphics.Initialize();
-
     }
 
     public void NeighborAdd(Hexagon neighbor) => _neighbors.Add(neighbor);
@@ -77,6 +76,9 @@ public class Hexagon : MonoBehaviour, ISelectable
 
     public void Select()
     {
+        if (_isWater || _isGate) return;
+
+
         Debug.Log($"{gameObject.name}, water: {IsWater}, gate {IsGate}\n");
     }
 

@@ -1,51 +1,40 @@
 using UnityEngine;
 
-public class WaterGraphic : CityGraphic
+[RequireComponent (typeof(MeshRenderer))]
+public class WaterGraphic : ACityGraphic
 {
-    private static readonly Quaternion angle0 = Quaternion.identity, angle180 = Quaternion.Euler(0f, 180f, 0f);
+    [SerializeField] private int _idMaterial;
+
+    private static readonly EnumArray<LinkType, Quaternion> angles = new(
+        new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, 240f, 0f), Quaternion.Euler(0f, 0f, 0f) });
+    private static readonly EnumArray<LinkType, Quaternion> anglesMirror = new(
+        new Quaternion[] { Quaternion.Euler(0f, 300, 0f), Quaternion.Euler(0f, 60f, 0f), Quaternion.Euler(0f, 180f, 0f) });
+
+    public override void Initialize() { }
+
 
     public override void Upgrade(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
     {
-        Initialize();
+        MeshRenderer renderer = GetComponent<MeshRenderer>();
+        Material[] materials = renderer.sharedMaterials;
+        materials[_idMaterial] = Players.Instance[owner].Material; 
+        renderer.sharedMaterials = materials;
 
-        Material material = _players[owner].Material;
-
-        if(links.Count == 3)
+        if (links.Count == 3)
         {
             foreach (var link in links)
             {
-                if (link.IsWater)
-                    DestroySide(link.Type);
-                else
-                    ActiveSide(_graphicSides[link.Type]);
+                if (!link.IsWater)
+                {
+                    transform.localRotation = anglesMirror[link.Type];
+                    break;
+                }
             }
-
-            transform.localRotation = angle180;
         }
         else
         {
-            foreach (var link in links)
-                DestroySide(link.Type);
-
-            ActiveSide(_graphicSides.First());
-
-            transform.localRotation = angle0;
+            transform.localRotation = angles[links.FirstEmptyIndex()];
         }
-
-        #region Local: DestroySide(...), ActiveSide(...)
-        //=================================
-        void DestroySide(LinkType type)
-        {
-            Destroy(_graphicSides[type].gameObject);
-            _graphicSides.Remove(type);
-        }
-        //=================================
-        void ActiveSide(CityGraphicSide side)
-        {
-            side.AddLink();
-            side.SetMaterial(material);
-        }
-        #endregion
     }
 
     public override void AddLink(LinkType type) {}

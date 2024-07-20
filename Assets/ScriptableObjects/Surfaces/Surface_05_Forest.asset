@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 231167a6fdd41f44b8cb8dc6b11da90a, type: 3}
-  m_Name: Surface_G01
+  m_Name: Surface_05_Forest
   m_EditorClassIdentifier: 
-  _type: 0
+  _type: 4
   _color:
     serializedVersion: 2
-    rgba: 4279887360
-  _profit: 00000000
-  _prefabSurface: {fileID: 1732233364198889968, guid: 3f3cf50413cd071448743df4204e5000,
+    rgba: 4278215680
+  _profit: 04000000
+  _prefabSurface: {fileID: 5861556639769474217, guid: 169a11737ead5aa499995e64c893d5e3,
     type: 3}
