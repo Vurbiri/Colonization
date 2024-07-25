@@ -2,21 +2,22 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 [JsonArray]
 [RequireComponent(typeof(SphereCollider))]
 public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
 {
     [GetComponentInChildren]
-    [SerializeField] private City _city;
+    [SerializeField] private AEdifice _edifice;
     [Space]
-    [SerializeField] private CitiesScriptable _prefabs;
+    [SerializeField] private EdificesScriptable _prefabs;
 
     public Key Key => _key;
-    public CityType Type => _city.Type;
-    public PlayerType Owner => _city.Owner;
-    public CityBuildType BuildType => _cityBuild;
-    public CityType UpgradeType => _city.TypeNext;
+    public EdificeType Type => _edifice.Type;
+    public PlayerType Owner => _edifice.Owner;
+    //public EdificeBuildType BuildType => _cityBuild;
+    public EdificeType UpgradeType => _edifice.TypeNext;
     public IEnumerable<CrossroadLink> Links => _links;
     public Vector3 Position { get; private set; }
 
@@ -28,14 +29,14 @@ public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
     private int _countFreeLink = 0;
     private bool _isGate = false;
     private int _waterCount = 0;
-    private CityBuildType _cityBuild;
+    //private EdificeBuildType _cityBuild;
 
     private SphereCollider _collider;
     private EventBus _eventBus;
 
     private const int COUNT = 3;
     private const string NAME = "Crossroad_";
-    private static readonly HashSet<CityType> notRuleTwo = new() { CityType.Shrine, CityType.Berth, CityType.Port };
+    private static readonly HashSet<EdificeType> notRuleTwo = new() { EdificeType.Shrine, EdificeType.PortOne, EdificeType.PortTwo };
 
     public void Initialize(Key key)
     {
@@ -43,12 +44,12 @@ public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
         _eventBus.EventCrossroadMarkShow += Show;
 
         _collider = GetComponent<SphereCollider>();
-        _collider.radius = _city.Radius;
+        _collider.radius = _edifice.Radius;
 
         _key = key;
         Position = transform.position;
 
-        _city.Initialize();
+        _edifice.Initialize();
 
         name = NAME + Key.ToString();
     }
@@ -64,14 +65,8 @@ public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
         {
             _hexagons.Add(hexagon);
 
-            if (_isGate)
-                _cityBuild = CityBuildType.Shrine;
-            else if (_waterCount == 1)
-                _cityBuild = CityBuildType.Berth;
-            else if (_waterCount == 2)
-                _cityBuild = CityBuildType.Port;
-            else
-                _cityBuild = CityBuildType.Build;
+            if (_hexagons.Count == COUNT)
+                _edifice.Setup(_prefabs[_waterCount switch { 0 when _isGate =>  EdificeType.Shrine, 0 when !_isGate => EdificeType.Town, 1 => EdificeType.PortOne, 2 => EdificeType.PortTwo, _ => EdificeType.None }]);
 
             return true;
         }
@@ -85,86 +80,30 @@ public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
         if (_links.TryAdd(link))
         {
             _countFreeLink++;
-            _city.AddLink(link.Type);
+            _edifice.AddLink(link.Type);
             return true;
         }
         return false;
     }
 
 
-    public bool CanBuild(PlayerType owner, CityType type, Currencies cash)
+    
+    public bool CanBuyCity(EdificeType type, Currencies cash) => _prefabs[type].Cost <= cash;
+    public bool Build(PlayerType playerType, EdificeType type)
     {
-        return _cityBuild.ToCityType() == type && type switch
-        {
-            CityType.Shrine => _prefabs[type].Cost <= cash && IsRoadConnect(owner),
-            CityType.Berth => WaterCheck(),
-            CityType.Port => WaterCheck(),
-            _ => false
-        };
-
-        #region Local: WaterCheck(...)
-        //=================================
-        bool WaterCheck()
-        {
-            if (_prefabs[type].Cost > cash || (_countFreeLink == 0 && !IsRoadConnect(owner)))
-                return false;
-
-            foreach (var hex in _hexagons)
-                if (hex.IsWaterBusy())
-                    return false;
-            return true;
-        }
-        #endregion
-    }
-    public bool CanCityBuild(PlayerType owner, Currencies cash)
-    {
-        return _cityBuild == CityBuildType.Build && NeighborCheck();
-
-        #region Local: NeighborCheck()
-        //=================================
-        bool NeighborCheck()
-        {
-            if (!CanBuyAny()) return false;
-
-            City neighbor;
-            foreach (var link in _links)
-            {
-                neighbor = link.Other(this)._city;
-                if (!notRuleTwo.Contains(neighbor.Type) && neighbor.Owner != PlayerType.None)
-                    return false;
-            }
-            return IsRoadConnect(owner);
-
-            #region Local: CanBuy()
-            //=================================
-            bool CanBuyAny()
-            {
-                foreach (var cityType in _prefabs.BuildTypes)
-                    if (CanBuyCity(cityType, cash))
-                        return true;
-                return false;
-            }
-            #endregion
-        }
-        #endregion
-    }
-    public bool CanBuyCity(CityType type, Currencies cash) => _prefabs[type].Cost <= cash;
-    public bool Build(PlayerType playerType, CityType type)
-    {
-        if (_city.Build(_prefabs[type], playerType, _links, out _city))
+        if (_edifice.Build(_prefabs[type], playerType, _links, out _edifice))
         {
             _eventBus.EventCrossroadMarkShow -= Show;
-            _collider.radius = _city.Radius;
-            _cityBuild = CityBuildType.Upgrade;
+            _collider.radius = _edifice.Radius;
             return true;
         }
         return false;
     }
-    public bool Build(PlayerType playerType, CityType type, out Currencies cost)
+    public bool Build(PlayerType playerType, EdificeType type, out Currencies cost)
     {
         if (Build(playerType, type))
         {
-            cost = _city.Cost;
+            cost = _edifice.Cost;
             return true;
         }
 
@@ -172,13 +111,54 @@ public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
         return false;
     }
 
-    public bool CanCityUpgrade(Player player) => _city.CanBuyUpgrade(player.Type, player.Resources);
-    public bool Upgrade(out Currencies cost)
+    public bool CanCityUpgrade(Player player)
     {
-        if (_city.Upgrade(_links, out _city))
+        PlayerType owner = player.Type;
+
+        if (!_edifice.CanBuyUpgrade(owner, player.Resources))
+            return false;
+
+        return _edifice.TypeNext.ToGroup() switch
         {
-            cost = _city.Cost;
-            _collider.radius = _city.Radius;
+            EdificeGroup.Shrine => IsRoadConnect(owner),
+            EdificeGroup.Water => WaterCheck(),
+            EdificeGroup.Urban => NeighborCheck(),
+            _ => false
+        };
+
+        #region Local: WaterCheck(), NeighborCheck()
+        //=================================
+        bool WaterCheck()
+        {
+            if (_countFreeLink == 0 && !IsRoadConnect(owner))
+                return false;
+
+            foreach (var hex in _hexagons)
+                if (hex.IsWaterOccupied())
+                    return false;
+            
+            return true;
+        }
+        //=================================
+        bool NeighborCheck()
+        {
+            AEdifice neighbor;
+            foreach (var link in _links)
+            {
+                neighbor = link.Other(this)._edifice;
+                if (neighbor.Group == EdificeGroup.Urban && neighbor.Owner != PlayerType.None)
+                    return false;
+            }
+            return IsRoadConnect(owner);
+        }
+        #endregion
+    }
+    public bool Upgrade(PlayerType playerType, out Currencies cost)
+    {
+        if (_edifice.Upgrade(playerType, _links, out _edifice))
+        {
+            cost = _edifice.Cost;
+            _collider.radius = _edifice.Radius;
             return true;
         }
         cost = null;
@@ -187,7 +167,7 @@ public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
 
     public bool IsRoadConnect(PlayerType type)
     {
-        if (_city.Owner == type)
+        if (_edifice.Owner == type)
             return true;
 
         foreach (var link in _links)
@@ -208,7 +188,7 @@ public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
             return false;
 
         if (_countFreeLink > 0)
-            return _city.Owner == owned;
+            return _edifice.Owner == owned;
 
         foreach (var link in _links)
             if (link.Owner != owned)
@@ -220,22 +200,23 @@ public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
     public void RoadBuilt(LinkType type, PlayerType owned)
     {
         _countFreeLink--;
-        _city.AddRoad(type, owned);
+        _edifice.AddRoad(type, owned);
     }
 
     public Currencies Profit(int idHex)
     {
+        Debug.Log("TEST");
         Currencies profit = new();
         foreach (var hex in _hexagons)
             if (hex.Id == idHex)
-                profit.Add(hex.Currency, _city.Level);
+                profit.Add(hex.Currency, _edifice.Level);
 
         return profit;
     }
 
     public void Select() => _eventBus.TriggerCrossroadSelect(this);
 
-    private void Show(bool show) => _city.Show(show);
+    private void Show(bool show) => _edifice.Show(show);
 
     private void OnDestroy()
     {
@@ -251,7 +232,7 @@ public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
     {
         yield return _key.X;
         yield return _key.Y;
-        yield return (int)_city.Type;
+        yield return (int)_edifice.Type;
     }
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -260,12 +241,12 @@ public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
     public class CrossroadLoadData
     {
         public Key key = new();
-        public CityType type;
+        public EdificeType type;
 
         public void SetValues(int[] arr)
         {
             key.SetValues(arr[0], arr[1]);
-            type = (CityType)arr[2];
+            type = (EdificeType)arr[2];
         }
     }
     #endregion

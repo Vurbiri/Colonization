@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d0c15a9355cec44aa0e946c2da2f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _city: {fileID: 1116298956642379694}
-  _prefabs: {fileID: 11400000, guid: b335d97e8aa5c804ebe9bb0876c2e0ca, type: 2}
+  _edifice: {fileID: 1116298956642379694}
+  _prefabs: {fileID: 11400000, guid: 350efcf2501ea334bbdaadbca7266d53, type: 2}
 --- !u!135 &7753975760188031238
 SphereCollider:
   m_ObjectHideFlags: 0

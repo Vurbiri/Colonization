@@ -121,18 +121,13 @@ public class Player : IValueTypeEnum<PlayerType>
     }
     public bool CanRoadBuilt(Crossroad crossroad) => _resources >= _roads.Cost && crossroad.CanRoadBuilt(_type);
 
-    public void CityBuild(Crossroad crossroad, CityType type)
+    public void CityUpgrade(Crossroad crossroad)
     {
-        if(!_cities.Contains(crossroad) && crossroad.Build(_type, type, out Currencies cost))
+        if (crossroad.Upgrade(_type, out Currencies cost))
         {
             _cities.Add(crossroad);
             _resources.Pay(cost);
         }
-    }
-    public void CityUpgrade(Crossroad crossroad)
-    {
-        if (_cities.Contains(crossroad) && crossroad.Upgrade(out Currencies cost))
-            _resources.Pay(cost);
     }
 
     public override string ToString() => $"Player: {_type}";

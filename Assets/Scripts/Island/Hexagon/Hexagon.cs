@@ -63,7 +63,7 @@ public class Hexagon : MonoBehaviour, ISelectable
         return set.Count == 2;
     }
 
-    public bool IsWaterBusy()
+    public bool IsWaterOccupied()
     {
         if(!_isWater) return false;
 

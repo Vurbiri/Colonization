@@ -3,33 +3,17 @@
 	"Road": "Дорога",
 	"BuildRoad": "Построить дорогу",
 
-	"Build": "Основать поселение",
+	"Build": "Построить",
 	"Upgrade": "Улучшить",
 
 	"Shrine": "Святилище",
 
-	"Berth": "Причал",
-	"Port": "Порт",
+	"PortOne": "Малый порт",
+	"PortTwo": "Порт",
 
-	"Watchtower": "Сторожевая башня",
-	"Barracks": "Казарма",
-	"Castle": "Замок",
-
-	"Store": "Лавка",
-	"Bank": "Банк",
-	"Exchange": "Биржа",
-
-	"Workshop": "Мастерская",
-	"Forge": "Кузница",
-	"Manufactory": "Мануфактура",
-
-	"Library": "Библиотека",
-	"MageTower": "Башня мага",
-	"University": "Университет",
-
-	"TownHall": "Ратуша",
-	"Police": "Тайная полиция",
-	"Magistrate": "Магистрат",
+	"Town": "Поселение",
+	"City": "Город",
+	"Capital": "Столица",
 
 	"Military": "Армия",
 	"Economy": "Экономика",

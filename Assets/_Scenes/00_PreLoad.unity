@@ -255,8 +255,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isNotDestroying: 1
   _startResources:
-    _values: 05000000050000000500000005000000050000000500000005000000
-    _amount: 35
+    _values: 050000000500000005000000050000000500000005000000
+    _amount: 30
   _visualSet: {fileID: 11400000, guid: a4bd672545f56a1449ce99cbe56b96b2, type: 2}
 --- !u!4 &118956331
 Transform:
@@ -521,7 +521,7 @@ MonoBehaviour:
   _isNotDestroying: 1
   _keySave: gsd
   _circleMax: 4
-  _chanceWater: 33
+  _chanceWater: 36
 --- !u!4 &523976399
 Transform:
   m_ObjectHideFlags: 0

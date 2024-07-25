@@ -75,8 +75,7 @@ public class Island : MonoBehaviour
     private IEnumerator CreateIsland_Coroutine(bool saveToFile)
     {
         int circle = 0;
-        Chance chance;
-        bool isWater = false, isLastCircle = circle == _circleMax;
+        bool isWater = false, isWaterPossible, isLastCircle = circle == _circleMax;
         Vector3 position, positionNext, direction, current;
 
         HexagonData hexData;
@@ -89,7 +88,8 @@ public class Island : MonoBehaviour
         while (!isLastCircle)
         {
             isLastCircle = ++circle == _circleMax;
-            chance = _chanceWater * ((circle - ((_circleMax - 1) >> 1)) / ((_circleMax - 1) >> 1));
+            isWaterPossible = isLastCircle || (circle >= (_circleMax - 1));
+
             positionNext = HEX_SIDES[0] * circle;
             for (int i = 0; i < COUNT_SIDES; i++)
             {
@@ -104,8 +104,7 @@ public class Island : MonoBehaviour
                     hex = _land.CreateHexagon(hexData);
                     _crossroads.CreateCrossroad(current, hex, isLastCircle);
 
-                    if(!isWater)
-                        yield return null;
+                    yield return null;
                 }
             }
         }
@@ -119,7 +118,7 @@ public class Island : MonoBehaviour
         HexagonData GetHexagonData(int x)
         {
             Key keyHex = _land.PositionToKey(current);
-            isWater = isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(keyHex) || chance));
+            isWater = isWaterPossible && (isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(keyHex) || _chanceWater)));
 
             return isWater ? new(keyHex, numWater.Value, current, _surfaces[SurfaceType.Water]) : new(keyHex, numGround.Value, current, surfaces.Value);
         }
@@ -141,8 +140,7 @@ public class Island : MonoBehaviour
             hex = _land.CreateHexagon(data);
             _crossroads.CreateCrossroad(data.Position, hex, --lastHexagons < 0);
 
-            if (!data.Surface.IsWater)
-                yield return null;
+            yield return null;
         }
     }
 

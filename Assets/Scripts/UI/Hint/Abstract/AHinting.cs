@@ -28,7 +28,7 @@ public abstract class AHinting : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        if (_isShowingHint || _hint == null || !_thisSelectable.interactable)
+        if (_isShowingHint || _hint == null)
             return;
 
         _isShowingHint = _hint.Show(_text);

@@ -6,7 +6,6 @@ public class CrossroadMenus : MonoBehaviour
     [Space]
     [SerializeField, GetComponentInChildren] private CrossroadMainMenu _mainMenu;
     [SerializeField, GetComponentInChildren] private CrossroadRoadsMenu _roadsMenu;
-    [SerializeField, GetComponentInChildren] private CrossroadBuildingMenu _buildMenu;
 
     private RectTransform _thisTransform;
     private Camera _camera;
@@ -19,16 +18,14 @@ public class CrossroadMenus : MonoBehaviour
 
         EventBus.Instance.EventCrossroadSelect += OnSelectCrossroad;
 
-        _mainMenu.Initialize(_roadsMenu, _buildMenu);
+        _mainMenu.Initialize(_roadsMenu);
         _roadsMenu.Initialize(_mainMenu);
-        _buildMenu.Initialize(_mainMenu);
 
         #region Local: OnSelectCrossroad()
         //=================================
         void OnSelectCrossroad(Crossroad crossroad)
         {
             _roadsMenu.Close();
-            _buildMenu.Close();
 
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasTransform, _camera.WorldToScreenPoint(crossroad.Position), _camera, out _localPoint))
                 _thisTransform.anchoredPosition = _localPoint;

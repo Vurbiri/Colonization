@@ -3,33 +3,17 @@
   "Road": "Road",
   "BuildRoad": "Build a road",
 
-  "Build": "Establish a settlement",
+  "Build": "Build",
   "Upgrade": "Upgrade to",
 
   "Shrine": "Shrine",
 
-  "Berth": "Berth",
-  "Port": "Port",
+  "PortOne": "Small port",
+  "PortTwo": "Port",
 
-  "Watchtower": "Watchtower",
-  "Barracks": "Barracks",
-  "Castle": "Castle",
-
-  "Store": "Store",
-  "Bank": "Bank",
-  "Exchange": "Exchange",
-
-  "Workshop": "Workshop",
-  "Forge": "Forge",
-  "Manufactory": "Manufactory",
-
-  "Library": "Library",
-  "MageTower": "Mage tower",
-  "University": "University",
-
-  "TownHall": "Town hall",
-  "Police": "Secret police",
-  "Magistrate": "Town council",
+  "Town": "Town",
+  "City": "City",
+  "Capital": "Capital",
 
   "Military": "Military",
   "Economy": "Economy",

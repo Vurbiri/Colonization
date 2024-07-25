@@ -9,7 +9,7 @@ public class Game : MonoBehaviour
     [SerializeField] private Dices _dices;
     [Space]//test
     [SerializeField] private bool _load;
-    [SerializeField] private CitiesScriptable _prefabs; 
+    [SerializeField] private EdificesScriptable _prefabs; 
 
     private GameSettingsData _gameSettings;
     private Players _players;
@@ -24,7 +24,7 @@ public class Game : MonoBehaviour
         _eventBus = EventBus.Instance;
 
         Debug.Log("TEST");
-        foreach (City c in _prefabs)
+        foreach (AEdifice c in _prefabs)
             c.SetCost();
     }
 
@@ -67,7 +67,8 @@ public class Game : MonoBehaviour
         if (Players.Instance != null)
             _players.DestroyGame();
 
-        foreach (City c in _prefabs)
+        Debug.Log("TEST");
+        foreach (AEdifice c in _prefabs)
             c.Cost.Clear();
     }
 }

@@ -43,79 +43,54 @@ public enum CurrencyType
     Gate
 }
 
-public enum CityGroup
-{
-    Signpost = -1,
-    Military,
-    Economy,
-    Industry,
-    Magic,
-    Politics,
-    Water,
-    Shrine
-}
-
-public enum CityBuildType
+public enum EdificeGroup
 {
     None,
-    Berth,
-    Port,
     Shrine,
+    Water,
+    Urban
+}
+
+public enum EdificeBuildType
+{
+    None,
     Build,
     Upgrade
 }
 
-public enum CityType
+public enum EdificeType
 {
-    Signpost,
+    None,
+
     Shrine,
 
-    Berth,
-    Port,
+    PortOne,
+    PortTwo,
 
-    Watchtower,
-    Barracks,
-    Castle,
-
-    Store,
-    Bank,
-    Exchange,
-
-    Workshop,
-    Forge,
-    Manufactory,
-
-    Library,
-    MageTower,
-    University,
-
-    TownHall,
-    Police,
-    Magistrate
+    Town,
+    City,
+    Capital
 }
+
 
 public static class ExtensionsEnumsGame
 {
 
-    public static CityGroup ToGroup(this CityType self) => self switch
+    public static EdificeGroup ToGroup(this EdificeType self) => self switch
     {
-        CityType.Signpost => CityGroup.Signpost,
-        CityType.Shrine => CityGroup.Shrine,
-        CityType.Berth or CityType.Port => CityGroup.Water,
-        CityType.Watchtower or CityType.Barracks or CityType.Castle => CityGroup.Military,
-        CityType.Store or CityType.Bank or CityType.Exchange => CityGroup.Economy,
-        CityType.Workshop or CityType.Forge or CityType.Manufactory => CityGroup.Industry,
-        CityType.Library or CityType.MageTower or CityType.University => CityGroup.Magic,
-        CityType.TownHall or CityType.Police or CityType.Magistrate => CityGroup.Politics,
+        EdificeType.None => EdificeGroup.None,
+        EdificeType.Shrine => EdificeGroup.Shrine,
+        EdificeType.PortOne or EdificeType.PortTwo => EdificeGroup.Water,
+        EdificeType.Town or EdificeType.City or EdificeType.Capital => EdificeGroup.Urban,
         _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение CityType: {self}"),
     };
 
-    public static CityType ToCityType(this CityBuildType self) => self switch
+    public static EdificeBuildType ToBuildType(this EdificeType self) => self switch
     {
-        CityBuildType.Berth => CityType.Berth,
-        CityBuildType.Port => CityType.Port,
-        CityBuildType.Shrine => CityType.Shrine,
-        _ => throw new ArgumentOutOfRangeException("ToCityType", $"Неожидаемое значение CityBuildType: {self}"),
+        EdificeType.None => EdificeBuildType.None,
+        EdificeType.Shrine or EdificeType.PortOne or EdificeType.PortTwo or EdificeType.Town => EdificeBuildType.Build,
+        EdificeType.City or EdificeType.Capital => EdificeBuildType.Upgrade,
+        _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение CityType: {self}"),
     };
 }
 

@@ -3,11 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
 
 [Serializable, JsonArray]
 public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue> 
-                                        where TType : Enum where TValue : struct
+                                        where TType : Enum// where TValue : struct
 {
     [SerializeField] protected TValue[] _values;
 
