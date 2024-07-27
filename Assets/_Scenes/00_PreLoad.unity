@@ -824,7 +824,7 @@ GameObject:
   - component: {fileID: 1307781868}
   - component: {fileID: 1307781867}
   m_Layer: 3
-  m_Name: LoadingPreGame
+  m_Name: GameEntryPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -844,7 +844,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keySave: CLN
   _loadScene:
-    _nextScene: 1
+    _scene: 1
   _logOnPanel: {fileID: 1694782730}
 --- !u!4 &1307781868
 Transform:
