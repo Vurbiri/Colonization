@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -68,7 +67,7 @@ namespace Vurbiri.Colonization
 
         public IEnumerator SetMeshOptimize_Coroutine() => _landMesh.SetMeshOptimize_Coroutine();
 
-        public void HexagonsNeighbors(Action<Hexagon, Hexagon> actionCreateLink)
+        public void HexagonsNeighbors()
         {
             Hexagon neighbor;
             Vertex[][] verticesNear = null;
@@ -86,8 +85,8 @@ namespace Vurbiri.Colonization
                 {
                     if (_hexagons.TryGetValue(hex.Key + offset, out neighbor))
                     {
-                        hex.NeighborAdd(neighbor);
-                        actionCreateLink(hex, neighbor);
+                        hex.NeighborAddAndCreateCrossroadLink(neighbor);
+
                         if (!hex.IsWater)
                         {
                             verticesNear[side] = _landMesh.GetVertexSide(hex.Key, neighbor.Key, side);

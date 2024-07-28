@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Vurbiri.Colonization.Crossroad;
+using static Vurbiri.Colonization.JSON_KEYS;
 
 namespace Vurbiri.Colonization
 {
@@ -14,18 +14,16 @@ namespace Vurbiri.Colonization
         public Material Material => _visual.material;
         public Currencies Resources => _resources;
 
-        [JsonProperty(JP_RES)]
+        [JsonProperty(P_RESURSES)]
         private Currencies _resources;
-        [JsonProperty(JP_ROAD)]
+        [JsonProperty(P_ROADS)]
         private Key[][] _roadsKey;
-        [JsonProperty(JP_CITY)]
+        [JsonProperty(P_ENDIFICES)]
         private readonly HashSet<Crossroad> _cities = new();
 
         private readonly PlayerType _type;
         private readonly PlayerVisual _visual;
         private readonly Roads _roads;
-
-        private const string JP_RES = "r", JP_ROAD = "k", JP_CITY = "c";
 
         public Player(PlayerType type, PlayerVisual visual, Currencies resources, Roads roads) : this(type, visual, roads) => _resources = resources;
         public Player(PlayerType type, PlayerVisual visual, Roads roads)
@@ -78,7 +76,7 @@ namespace Vurbiri.Colonization
                 {
                     loadData.SetValues(arr);
                     crossroad = crossroads.GetCrossroad(loadData.key);
-                    if (crossroad.Build(_type, loadData.type))
+                    if (crossroad.Build(_type, loadData.type, loadData.isWall))
                         _cities.Add(crossroad);
                 }
 
@@ -115,21 +113,26 @@ namespace Vurbiri.Colonization
                 _resources.AddFrom(city.Profit(hexId));
         }
 
-        public void BuildRoad(CrossroadLink link)
+        public bool CanRoadBuy() => _resources >= _roads.Cost;
+        public void RoadBuild(CrossroadLink link)
         {
             _roads.BuildAndUnion(link);
             _resources.Pay(_roads.Cost);
-
         }
-        public bool CanRoadBuilt(Crossroad crossroad) => _resources >= _roads.Cost && crossroad.CanRoadBuilt(_type);
 
-        public void CityUpgrade(Crossroad crossroad)
+        public void CrossroadUpgrade(Crossroad crossroad)
         {
-            if (crossroad.Upgrade(_type, out Currencies cost))
+            if (crossroad.UpgradeBuy(_type, out Currencies cost))
             {
                 _cities.Add(crossroad);
                 _resources.Pay(cost);
             }
+        }
+
+        public void CrossroadWall(Crossroad crossroad)
+        {
+            if (crossroad.WallBuy(_type, out Currencies cost))
+                _resources.Pay(cost);
         }
 
         public override string ToString() => $"Player: {_type}";
@@ -137,13 +140,14 @@ namespace Vurbiri.Colonization
 
         #region Nested: PlayerLoadData
         //***********************************
+        [JsonObject(MemberSerialization.OptIn)]
         private class PlayerLoadData
         {
-            [JsonProperty(JP_RES)]
+            [JsonProperty(P_RESURSES)]
             public int[] resources;
-            [JsonProperty(JP_ROAD)]
+            [JsonProperty(P_ROADS)]
             public int[][][] roadsKey;
-            [JsonProperty(JP_CITY)]
+            [JsonProperty(P_ENDIFICES)]
             public int[][] cities;
 
             [JsonConstructor]

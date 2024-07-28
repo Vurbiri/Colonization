@@ -4,6 +4,7 @@ namespace Vurbiri.Colonization
 {
     public class Road : MonoBehaviour
     {
+        [GetComponentInChildren]
         [SerializeField] private LineRenderer _roadRenderer;
         [Space]
         [SerializeField] private float _widthRoad = 1.1f;

@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
+using static Vurbiri.Colonization.JSON_KEYS;
 
 namespace Vurbiri.Colonization
 {
@@ -68,13 +69,13 @@ namespace Vurbiri.Colonization
         //***********************************
         private class GameSave
         {
-            [JsonProperty("gs")]
+            [JsonProperty(G_MODE)]
             public GameModeStart modeStart = GameModeStart.New;
-            [JsonProperty("cm")]
+            [JsonProperty(G_CIRCLES)]
             public int circleMax = 4;
-            [JsonProperty("sc")]
+            [JsonProperty(G_SCORE)]
             public int score = 0;
-            [JsonProperty("ms")]
+            [JsonProperty(G_MAX_SCORE)]
             public int maxScore = 0;
 
             [JsonConstructor]

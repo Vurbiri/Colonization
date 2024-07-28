@@ -1,11 +1,21 @@
-
 namespace Vurbiri.Colonization
 {
     public class Signpost : AEdifice
     {
-        public override bool Build(AEdifice prefab, PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, out AEdifice city)
+        public override void Setup(AEdifice edifice, EnumHashSet<LinkType, CrossroadLink> links)
+        {
+            _graphic.Initialize(_owner, links);
+
+            _prefabUpgrade = edifice;
+            _typeNext = edifice.Type;
+            _groupNext = edifice.Group;
+            _isUpgrade = true;
+        }
+
+        public override bool Build(AEdifice prefab, PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, bool isWall, out AEdifice city)
         {
             _prefabUpgrade = prefab;
+            _isWall = isWall;
             return Upgrade(owner, links, out city);
         }
 
@@ -19,19 +29,9 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public override void Setup(AEdifice edifice)
-        {
-            _prefabUpgrade = edifice;
-            _typeNext = edifice.Type;
-            _groupNext = edifice.Group;
-            _isUpgrade = true;
-        }
+        public override bool CanUpgrade(PlayerType owner) => base.CanUpgrade(PlayerType.None);
 
-        public override bool CanBuyUpgrade(PlayerType owner, Currencies cash) => base.CanBuyUpgrade(PlayerType.None, cash);
-
-        public override void AddLink(LinkType type) => _graphic.AddLink(type);
-
-        public override void AddRoad(LinkType type, PlayerType owner) => _graphic.RoadBuilt(type, owner);
+        public override void AddRoad(LinkType type, PlayerType owner) => _graphic.AddRoad(type, owner);
 
         public override void Show(bool isShow) => _graphic.gameObject.SetActive(isShow);
     }

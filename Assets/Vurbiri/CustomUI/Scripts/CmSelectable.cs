@@ -6,29 +6,24 @@ namespace Vurbiri.UI
     public class CmSelectable : Selectable
     {
         [SerializeField] private GameObject _interactableIcon;
-
         [SerializeField] private bool _alfaCollider = false;
         [SerializeField, Range(0.01f, 1f)] private float _threshold = 0.1f;
-
         [SerializeField] private Graphic[] _targetGraphics;
-
-
 
         public Graphic[] TargetGraphics => _targetGraphics;
 
-
-
-
-        public new bool interactable
+        public bool Interactable
         {
-            get => base.interactable;
+            get => interactable;
             set
             {
-                base.interactable = value;
+                interactable = value;
                 if (_interactableIcon != null)
                     _interactableIcon.SetActive(!value);
             }
         }
+
+        public void SetActive(bool active) => gameObject.SetActive(active);
 
         protected override void Start()
         {
@@ -85,4 +80,6 @@ namespace Vurbiri.UI
             #endregion
         }
     }
+
+    
 }

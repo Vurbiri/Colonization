@@ -6,13 +6,12 @@ namespace Vurbiri.Colonization
     [System.Serializable, JsonArray]
     public class Currencies : EnumArray<CurrencyType, int>
     {
-        [SerializeField] private int _amount;
+        [SerializeField] protected int _amount;
         public int Amount => _amount;
 
         public override int this[CurrencyType type] { get => _values[(int)type]; set => Add(type, value); }
         public override int this[int index] { get => _values[index]; set => Add(index, value); }
 
-        [JsonConstructor]
         public Currencies(int[] array) : this()
         {
             int value, count = _count < array.Length ? _count : array.Length;
@@ -24,7 +23,13 @@ namespace Vurbiri.Colonization
                 _amount += value;
             }
         }
-        public Currencies(Currencies other) : this() => CopyFrom(other);
+        public Currencies(Currencies other) : this()
+        {
+            for (int i = 0; i < _count; i++)
+                _values[i] = other._values[i];
+
+            _amount = other._amount;
+        }
         public Currencies() : base() => _amount = 0;
 
         public void CopyFrom(Currencies other)

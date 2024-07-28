@@ -52,28 +52,6 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void CreateCrossroadLink(Hexagon hexA, Hexagon hexB)
-        {
-            if ((hexA.IsWater && hexB.IsWater) || (hexA.IsGate || hexB.IsGate) || !hexA.IntersectWith(hexB, out HashSet<Crossroad> cross))
-                return;
-
-            Crossroad crossA, crossB;
-            IEnumerator<Crossroad> enumerator = cross.GetEnumerator();
-            crossA = GetCrossroad();
-            crossB = GetCrossroad();
-
-            new CrossroadLink(crossA, crossB, hexA.IsWater || hexB.IsWater);
-
-            #region Local: GetCrossroad()
-            //=================================
-            Crossroad GetCrossroad()
-            {
-                enumerator.MoveNext();
-                return enumerator.Current;
-            }
-            #endregion
-        }
-
         public Crossroad GetCrossroad(Key key) => _crossroads[key];
     }
 }

@@ -15,9 +15,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private EdificesScriptable _prefabs;
 
         public Key Key => _key;
-        public EdificeType Type => _edifice.Type;
-        public PlayerType Owner => _edifice.Owner;
-        //public EdificeBuildType BuildType => _cityBuild;
+        public bool IsOccupied => _edifice.IsOccupied;
         public EdificeType UpgradeType => _edifice.TypeNext;
         public IEnumerable<CrossroadLink> Links => _links;
         public Vector3 Position { get; private set; }
@@ -27,17 +25,14 @@ namespace Vurbiri.Colonization
         private readonly List<Hexagon> _hexagons = new(COUNT);
         private readonly EnumHashSet<LinkType, CrossroadLink> _links = new();
 
-        private int _countFreeLink = 0;
+        private int _countFreeLink = 0, _countWater = 0;
         private bool _isGate = false;
-        private int _waterCount = 0;
-        //private EdificeBuildType _cityBuild;
 
         private SphereCollider _collider;
         private EventBus _eventBus;
 
         private const int COUNT = 3;
         private const string NAME = "Crossroad_";
-        private static readonly HashSet<EdificeType> notRuleTwo = new() { EdificeType.Shrine, EdificeType.PortOne, EdificeType.PortTwo };
 
         public void Initialize(Key key)
         {
@@ -50,8 +45,6 @@ namespace Vurbiri.Colonization
             _key = key;
             Position = transform.position;
 
-            _edifice.Initialize();
-
             name = NAME + Key.ToString();
         }
 
@@ -60,14 +53,14 @@ namespace Vurbiri.Colonization
             _isGate = _isGate || hexagon.IsGate;
 
             if (hexagon.IsWater)
-                _waterCount++;
+                _countWater++;
 
-            if (_hexagons.Count < (COUNT - 1) || _waterCount < COUNT)
+            if (_hexagons.Count < (COUNT - 1) || _countWater < COUNT)
             {
                 _hexagons.Add(hexagon);
 
                 if (_hexagons.Count == COUNT)
-                    _edifice.Setup(_prefabs[_waterCount switch { 0 when _isGate => EdificeType.Shrine, 0 when !_isGate => EdificeType.Town, 1 => EdificeType.PortOne, 2 => EdificeType.PortTwo, _ => EdificeType.None }]);
+                    _countFreeLink = _countWater <= 1 ? _isGate ? 1 : 3 : 2;
 
                 return true;
             }
@@ -78,21 +71,18 @@ namespace Vurbiri.Colonization
 
         public bool AddLink(CrossroadLink link)
         {
-            if (_links.TryAdd(link))
-            {
-                _countFreeLink++;
-                _edifice.AddLink(link.Type);
-                return true;
-            }
-            return false;
+            if (!_links.TryAdd(link))
+                return false;
+
+            if (_countFreeLink == _links.Count)
+                _edifice.Setup(_prefabs[_countWater switch { 0 when _isGate => EdificeType.Shrine, 0 when !_isGate => EdificeType.Town, 1 => EdificeType.PortOne, 2 => EdificeType.PortTwo, _ => EdificeType.None }], _links);
+
+            return true;
         }
 
-
-
-        public bool CanBuyCity(EdificeType type, Currencies cash) => _prefabs[type].Cost <= cash;
-        public bool Build(PlayerType playerType, EdificeType type)
+        public bool Build(PlayerType playerType, EdificeType type, bool isWall)
         {
-            if (_edifice.Build(_prefabs[type], playerType, _links, out _edifice))
+            if (_edifice.Build(_prefabs[type], playerType, _links, isWall, out _edifice))
             {
                 _eventBus.EventCrossroadMarkShow -= Show;
                 _collider.radius = _edifice.Radius;
@@ -100,23 +90,11 @@ namespace Vurbiri.Colonization
             }
             return false;
         }
-        public bool Build(PlayerType playerType, EdificeType type, out Currencies cost)
+
+        public bool CanUpgradeBuy(Currencies cash) => _edifice.CanUpgradeBuy(cash);
+        public bool CanUpgrade(PlayerType owner)
         {
-            if (Build(playerType, type))
-            {
-                cost = _edifice.Cost;
-                return true;
-            }
-
-            cost = null;
-            return false;
-        }
-
-        public bool CanCityUpgrade(Player player)
-        {
-            PlayerType owner = player.Type;
-
-            if (!_edifice.CanBuyUpgrade(owner, player.Resources))
+            if (!_edifice.CanUpgrade(owner))
                 return false;
 
             return _edifice.GroupNext switch
@@ -147,24 +125,29 @@ namespace Vurbiri.Colonization
                 foreach (var link in _links)
                 {
                     neighbor = link.Other(this)._edifice;
-                    if (neighbor.Group == EdificeGroup.Urban && neighbor.Owner != PlayerType.None)
+                    if (neighbor.Group == EdificeGroup.Urban && neighbor.IsOccupied)
                         return false;
                 }
                 return IsRoadConnect(owner);
             }
             #endregion
         }
-        public bool Upgrade(PlayerType playerType, out Currencies cost)
+        public bool UpgradeBuy(PlayerType playerType, out Currencies cost)
         {
             if (_edifice.Upgrade(playerType, _links, out _edifice))
             {
                 cost = _edifice.Cost;
+                _eventBus.EventCrossroadMarkShow -= Show;
                 _collider.radius = _edifice.Radius;
                 return true;
             }
             cost = null;
             return false;
         }
+
+        public virtual bool CanWallBuild(PlayerType owner) => _edifice.CanWallBuild(owner);
+        public virtual bool CanWallBuy(Currencies cash) => _edifice.CanWallBuy(cash);
+        public bool WallBuy(PlayerType playerType, out Currencies cost) => _edifice.WallBuild(playerType, _links, out cost);
 
         public bool IsRoadConnect(PlayerType type)
         {
@@ -178,10 +161,7 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public bool CanRoadBuilt(PlayerType type)
-        {
-            return _countFreeLink > 0 && IsRoadConnect(type);
-        }
+        public bool CanRoadBuild(PlayerType type) => _countFreeLink > 0 && IsRoadConnect(type);
 
         public bool IsFullyOwned(PlayerType owned)
         {
@@ -234,23 +214,11 @@ namespace Vurbiri.Colonization
             yield return _key.X;
             yield return _key.Y;
             yield return (int)_edifice.Type;
+            yield return _edifice.IsWall ? 1 : 0;
+            yield break;
         }
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        #region Nested: CrossroadLoadData
-        //***********************************
-        public class CrossroadLoadData
-        {
-            public Key key = new();
-            public EdificeType type;
-
-            public void SetValues(int[] arr)
-            {
-                key.SetValues(arr[0], arr[1]);
-                type = (EdificeType)arr[2];
-            }
-        }
-        #endregion
     }
 }
 

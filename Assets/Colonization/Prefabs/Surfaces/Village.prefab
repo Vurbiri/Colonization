@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _density: 0.32
-  _ratioOffset: 0.215
+  _ratioOffset: 0.21
   _hut:
     _baseHalfSizeWidth:
       _min: 0.25
@@ -364,7 +364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _generator: {fileID: 6951835121162521879}
-  _ratioSize: 0.75
+  _ratioSize: 0.7
   _offsetAngle:
     _value: 15
   _windmillMeshFilter: {fileID: 4350017619185367284}

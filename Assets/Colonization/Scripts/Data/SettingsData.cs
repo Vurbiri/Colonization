@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Vurbiri.Colonization.JSON_KEYS;
 
 namespace Vurbiri.Colonization
 {
@@ -98,13 +99,14 @@ namespace Vurbiri.Colonization
         #region Nested: Profile
         //*******************************************************
         [System.Serializable]
+        [JsonObject(MemberSerialization.OptIn)]
         private class Profile
         {
-            [JsonProperty("lg")]
+            [JsonProperty(S_LANG)]
             public int idLang = 1;
-            [JsonProperty("qt")]
+            [JsonProperty(S_QUALITY)]
             public int quality = 2;
-            [JsonProperty("vl")]
+            [JsonProperty(S_VOLUMES)]
             public float[] volumes = { 0.6f, 0.6f };
 
             [JsonConstructor]

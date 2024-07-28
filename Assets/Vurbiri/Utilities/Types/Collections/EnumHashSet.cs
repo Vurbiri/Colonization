@@ -52,12 +52,14 @@ namespace Vurbiri
                 Add(value);
         }
 
+        public bool ContainsKey(TType type) => _values[type.ToInt(_offset)] != null;
+        public bool Contains(TValue value) => _values[value.Type.ToInt(_offset)] != null;
+
         public void Add(TValue value)
         {
-            if (TryAdd(value))
-                return;
+            if (TryAdd(value)) return;
 
-            Debug.LogError($"Объект типа {value.Type} уже был добавлен!");
+            throw new Exception($"Объект типа {value.Type} уже был добавлен.");
         }
 
         public bool TryAdd(TValue value)
@@ -79,10 +81,20 @@ namespace Vurbiri
             if (_values[index] == null)
                 _count++;
 
-            _values[value.Type.ToInt(_offset)] = value;
+            _values[index] = value;
         }
 
-        public void Remove(TType type) => _values[type.ToInt(_offset)] = null;
+        public bool Remove(TType type)
+        {
+            int index = type.ToInt(_offset);
+
+            if (_values[index] == null)
+                return false;
+
+            _values[index] = null;
+            _count--;
+            return true;
+        }
 
         public TValue First()
         {
@@ -134,7 +146,7 @@ namespace Vurbiri
         {
             int start = typeStart.ToInt(_offset), end = typeEnd.ToInt(_offset);
             List<TValue> values = new(end - start + 1);
-            TValue value = null;
+            TValue value;
 
             for (int i = start; i <= end; i++)
             {
@@ -146,6 +158,7 @@ namespace Vurbiri
             return values;
         }
 
+        #region ISerializationCallbackReceiver
         public void OnBeforeSerialize()
         {
             if (_values.Length != _capacity)
@@ -185,6 +198,7 @@ namespace Vurbiri
         }
 
         public void OnAfterDeserialize() { }
+        #endregion
 
         public IEnumerator<TValue> GetEnumerator() => new EnumHashSetValueEnumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

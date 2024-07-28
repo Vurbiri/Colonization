@@ -53,24 +53,26 @@ namespace Vurbiri.Colonization
             graphics.Initialize();
         }
 
-        public void NeighborAdd(Hexagon neighbor) => _neighbors.Add(neighbor);
+        public void NeighborAddAndCreateCrossroadLink(Hexagon neighbor)
+        {
+            if (_neighbors.Add(neighbor) && !(_isWater && neighbor._isWater) && !(_isGate || neighbor._isGate))
+            {
+                HashSet<Crossroad> set = new(_crossroads);
+                set.IntersectWith(neighbor._crossroads);
+                if (set.Count == 2)
+                    new CrossroadLink(set.ToArray(), _isWater || neighbor._isWater);
+            }
+        }
 
         public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
         public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
-
-        public bool IntersectWith(Hexagon other, out HashSet<Crossroad> set)
-        {
-            set = new(_crossroads);
-            set.IntersectWith(other._crossroads);
-            return set.Count == 2;
-        }
 
         public bool IsWaterOccupied()
         {
             if (!_isWater) return false;
 
             foreach (var crossroad in _crossroads)
-                if (crossroad.Owner != PlayerType.None)
+                if (crossroad.IsOccupied)
                     return true;
 
             return false;

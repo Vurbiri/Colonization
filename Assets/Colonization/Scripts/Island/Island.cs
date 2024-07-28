@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization
         {
             yield return StartCoroutine(CreateIsland_Coroutine(saveToFile));
             yield return null;
-            _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
+            _land.HexagonsNeighbors();
             yield return null;
             yield return StartCoroutine(_land.SetMeshOptimize_Coroutine());
         }
@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization
 
                 yield return StartCoroutine(LoadIsland_Coroutine(hexagonsData));
                 yield return null;
-                _land.HexagonsNeighbors(_crossroads.CreateCrossroadLink);
+                _land.HexagonsNeighbors();
                 yield return null;
                 yield return StartCoroutine(_land.SetMeshOptimize_Coroutine());
 

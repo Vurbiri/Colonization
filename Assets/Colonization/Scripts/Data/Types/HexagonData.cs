@@ -28,13 +28,13 @@ namespace Vurbiri.Colonization
             _surface = surface;
             _type = surface.Type;
         }
-
         public HexagonData(int[] arr)
         {
             _key = new(arr[0], arr[1]);
             _id = arr[2];
             _type = (SurfaceType)arr[3];
         }
+
         public IEnumerator<int> GetEnumerator()
         {
             yield return _key.X;

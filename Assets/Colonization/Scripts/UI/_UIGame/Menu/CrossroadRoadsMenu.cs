@@ -52,8 +52,8 @@ namespace Vurbiri.Colonization.UI
                 button = _roadButtons[i];
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() => OnClick(link));
-                button.interactable = link.Owner == PlayerType.None;
-                _buttonsGraphic[i].color = button.interactable ? currentColor : _players[link.Owner].Color;
+                button.Interactable = link.Owner == PlayerType.None;
+                _buttonsGraphic[i].color = button.Interactable ? currentColor : _players[link.Owner].Color;
 
                 button.gameObject.SetActive(true);
 
@@ -75,7 +75,7 @@ namespace Vurbiri.Colonization.UI
             void OnClick(CrossroadLink link)
             {
                 link.SetStart(_currentCrossroad);
-                _players.Current.BuildRoad(link);
+                _players.Current.RoadBuild(link);
 
                 _currentCrossroad = null;
                 gameObject.SetActive(false);

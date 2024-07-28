@@ -67,10 +67,6 @@ namespace Vurbiri.Colonization
         {
             if (Players.Instance != null)
                 _players.DestroyGame();
-
-            Debug.Log("TEST");
-            foreach (AEdifice c in _prefabs)
-                c.Cost.Clear();
         }
     }
 }

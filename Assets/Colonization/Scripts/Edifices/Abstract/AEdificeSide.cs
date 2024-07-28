@@ -7,13 +7,13 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private LinkType _type;
         [Space]
-        [SerializeField] protected int _idMaterial;
+        [SerializeField, Range(0, 5)] protected int _idMaterial;
 
         public LinkType Type => _type;
 
-        public virtual void SetActive(bool active) => gameObject.SetActive(active);
+        public void SetActive(bool active) => gameObject.SetActive(active);
 
-        public virtual void SetMaterial(Material material)
+        public virtual void AddRoad(Material material)
         {
             GetComponent<MeshRenderer>().SetSharedMaterial(material, _idMaterial);
         }

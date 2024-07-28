@@ -20,9 +20,9 @@ namespace Vurbiri.Colonization
 
         private static readonly Key[] NEAR_CROSS = { new(2, -1), new(2, 1), new(0, 2), new(-2, 1), new(-2, -1), new(0, -2) };
 
-        public CrossroadLink(Crossroad crossA, Crossroad crossB, bool isWater)
+        public CrossroadLink(Crossroad[] arr, bool isWater)
         {
-            _start = crossA; _end = crossB;
+            _start = arr[0]; _end = arr[1];
             _type = ToLinkType(_end - _start);
 
             if (!(_start.AddLink(this) && _end.AddLink(this)))

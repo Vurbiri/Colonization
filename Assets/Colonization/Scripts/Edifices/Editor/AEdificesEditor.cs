@@ -29,30 +29,8 @@ namespace Vurbiri.Colonization
 
         public override void OnInspectorGUI()
         {
-            EdificeType type = _edifice.Type;
-            EdificeGroup group = type.ToGroup();
+            EdificeGroup group = _edifice.Type.ToGroup();
             GUIStyle style = new(EditorStyles.boldLabel);
-
-            if (!Application.isPlaying)
-            {
-                serializedObject.Update();
-
-                _groupProperty.enumValueIndex = (int)group;
-                _isBuildWallProperty.boolValue = group == EdificeGroup.Urban;
-
-                AEdifice next = _prefabUpgradeProperty.objectReferenceValue as AEdifice;
-                if (_isUpgradeProperty.boolValue = next != null)
-                {
-                    _typeNextProperty.enumValueIndex = (int)next.Type;
-                    _groupNextProperty.enumValueIndex = (int)next.Group;
-                }
-                else
-                {
-                    _typeNextProperty.enumValueIndex = 0;
-                    _groupNextProperty.enumValueIndex = 0;
-                }
-                serializedObject.ApplyModifiedProperties();
-            }
 
             base.OnInspectorGUI();
 
