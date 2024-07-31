@@ -5,7 +5,7 @@ namespace Vurbiri
     [System.Serializable]
     public struct Chance
     {
-        [SerializeField, Range(0, 100)] private int _value;
+        [SerializeField] private int _value;
 
         public readonly bool Roll => _value > 0 && (_value >= 100 || Random.Range(0, 100) < _value);
 

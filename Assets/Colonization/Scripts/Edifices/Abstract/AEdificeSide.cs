@@ -11,7 +11,10 @@ namespace Vurbiri.Colonization
 
         public LinkType Type => _type;
 
-        public void SetActive(bool active) => gameObject.SetActive(active);
+        public virtual void SetActive(bool active)
+        {
+            gameObject.SetActive(active);
+        }
 
         public virtual void AddRoad(Material material)
         {

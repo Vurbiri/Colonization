@@ -21,7 +21,7 @@ namespace Vurbiri.UI
         }
 
         [MenuItem("GameObject/UI Custom/Button", false, 77)]
-        public static void CreateFromMenu(MenuCommand command) => CreateUtility.FromPrefab("CButton", "Button", command.context as GameObject);
+        public static void CreateFromMenu(MenuCommand command) => CreateUtility.FromPrefab("CmButton", "Button", command.context as GameObject);
 
     }
 }

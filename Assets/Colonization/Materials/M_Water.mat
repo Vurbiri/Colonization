@@ -13,11 +13,13 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ALPHAPREMULTIPLY_ON
+  - _ENVIRONMENTREFLECTIONS_OFF
+  - _GLOSSYREFLECTIONS_OFF
   - _RECEIVE_SHADOWS_OFF
+  - _SPECULARHIGHLIGHTS_OFF
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
-  m_LightmapFlags: 2
+  m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -68,7 +70,7 @@ Material:
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
-    - _BlendModePreserveSpecular: 1
+    - _BlendModePreserveSpecular: 0
     - _CastShadows: 0
     - _Cull: 2
     - _Delta_Distance: 0.16
@@ -77,17 +79,21 @@ Material:
     - _Depth_Distance: 3.53
     - _Distance: 3
     - _DstBlend: 10
+    - _ENVIRONMENTREFLECTIONS_OFF: 1
     - _Float: 3.1
     - _Float_1: 4
+    - _GLOSSYREFLECTIONS_OFF: 1
     - _Gravity: 1
     - _Metalic: 0.067
+    - _Metallic: 0
     - _Normal_Strength: 0.0072
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 0
+    - _SPECULARHIGHLIGHTS_OFF: 1
     - _Smoothness: 0.6
     - _Speed: 0.55
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _Start_Height: -2.75
     - _Surf_Brightness: 0.844
     - _Surf_Density: 0.92
@@ -122,6 +128,7 @@ Material:
     - _DirectionA_1: {r: 1, g: 0.1, b: 0, a: 0}
     - _DirectionB: {r: -0.1, g: -0.9, b: 0, a: 0}
     - _Foam_Density: {r: 0.9, g: 2.25, b: 0, a: 0}
+    - _Specular: {r: 0.9411765, g: 0.9411765, b: 1, a: 1}
     - _Surf_DirectionA: {r: -1, g: 7, b: 0, a: 0}
     - _Surf_DirectionB: {r: 1, g: -2, b: 0, a: 0}
     - _Water_Brightness: {r: 0.6, g: 0.77, b: 0, a: 0}

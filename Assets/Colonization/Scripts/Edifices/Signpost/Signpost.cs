@@ -29,8 +29,6 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public override bool CanUpgrade(PlayerType owner) => base.CanUpgrade(PlayerType.None);
-
         public override void AddRoad(LinkType type, PlayerType owner) => _graphic.AddRoad(type, owner);
 
         public override void Show(bool isShow) => _graphic.gameObject.SetActive(isShow);

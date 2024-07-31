@@ -21,6 +21,8 @@ namespace Vurbiri.UI
         {
             _thisSelectable = GetComponent<Selectable>();
             _localization = Localization.Instance;
+            if (_hint == null)
+                _hint = FindAnyObjectByType<HintGlobal>();
 
             SetText();
             _localization.EventSwitchLanguage += SetText;
@@ -30,10 +32,8 @@ namespace Vurbiri.UI
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
-            if (_isShowingHint || _hint == null)
-                return;
-
-            _isShowingHint = _hint.Show(_text);
+            if (!_isShowingHint)
+                _isShowingHint = _hint.Show(_text);
         }
         public void OnPointerExit(PointerEventData eventData) => HideHint();
 
@@ -41,11 +41,8 @@ namespace Vurbiri.UI
 
         private void HideHint()
         {
-            if (_hint != null && _isShowingHint)
-            {
-                _hint.Hide();
-                _isShowingHint = false;
-            }
+            if (_isShowingHint)
+                _isShowingHint = !_hint.Hide();
         }
 
         private void OnDestroy()

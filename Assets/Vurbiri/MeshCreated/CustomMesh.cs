@@ -51,7 +51,7 @@ namespace Vurbiri
             }
         }
 
-        public virtual UnityEngine.Mesh ToMesh()
+        public virtual UnityEngine.Mesh ToMesh(bool recalculateTangents = false)
         {
             int count = _vertices.Count;
             Vector3[] vertices = new Vector3[count], normals = new Vector3[count];
@@ -78,7 +78,7 @@ namespace Vurbiri
             };
 
             mesh.RecalculateBounds();
-            //mesh.RecalculateTangents();
+            if (recalculateTangents) mesh.RecalculateTangents();
             //mesh.Optimize();
             return mesh;
         }

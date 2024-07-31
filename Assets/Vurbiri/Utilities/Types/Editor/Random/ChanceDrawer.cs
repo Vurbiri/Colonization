@@ -10,8 +10,10 @@ namespace Vurbiri
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
+
             EditorGUI.BeginProperty(position, label, property);
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(NAME_VALUE), label);
+            valueProperty.intValue = EditorGUI.IntSlider(position, label, valueProperty.intValue, 0, 100);
             EditorGUI.EndProperty();
         }
     }

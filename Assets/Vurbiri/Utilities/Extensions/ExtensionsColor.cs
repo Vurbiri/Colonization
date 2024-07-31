@@ -19,6 +19,5 @@ namespace Vurbiri
             return self;
         }
 
-        public static void SetRandMono(this ref Color32 self, RInt range) => self.r = self.g = self.b = (byte)range;
     }
 }

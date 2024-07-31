@@ -83,9 +83,6 @@ namespace Vurbiri.Colonization
             if (_points.Count < other._points.Count)
                 return other.Union(this);
 
-            string s1 = $"{_crossroads.Count} + {other._crossroads.Count - 1} = ";
-            string s2 = $"{_points.Count} + {other._points.Count - 1} = ";
-
             if (!(_crossroads.Union(other._crossroads) && _points.Union(other._points)))
                 return null;
 

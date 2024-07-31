@@ -9,9 +9,6 @@ namespace Vurbiri.Colonization
     {
         [SerializeField, GetComponentInChildren] private TMP_Text _idText;
         [Space]
-        [SerializeField, GetComponentInChildren] private MeshFilter _meshFilter;
-        [SerializeField, GetComponentInChildren] private MeshRenderer _meshRenderer;
-        [Space]
         [SerializeField, GetComponent] private Collider _collider;
 
         public Key Key => _key;

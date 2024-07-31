@@ -8,17 +8,12 @@ namespace Vurbiri.Colonization
     [RequireComponent(typeof(MeshFilter))]
     public class MountainGenerator : ASurfaceGenerator
     {
-        [SerializeField, Range(0.5f, 1f)] private float _density = 0.9f;
-
-        [Header("First")]
-        [SerializeField] private float _ratioHeightFirst = 1.4f;
-        [SerializeField] private float _ratioRadiusFirst = 0.7f;
-        [SerializeField] private RMFloat _ratioOffsetRangeFirst = 0.25f;
-        [Header("Other")]
+        [SerializeField, Range(0.5f, 1.5f)] private float _density = 0.9f;
+        [Space]
         [SerializeField] private int _countCircle = 3;
-        [SerializeField] private Chance _chanceRockLast = 40;
-        [SerializeField] private float _stepRatioHeight = 0.5f;
+        [SerializeField, Range(50, 100)] private int _ratioChanceRock = 88;
         [SerializeField] private float _stepRatioRadius = 0.8f;
+        [SerializeField] private float _ratioOffset = 0.25f;
         [Space, Space]
         [SerializeField] private Rock _rock;
 
@@ -32,39 +27,46 @@ namespace Vurbiri.Colonization
             _rock.Radius = size * (_stepRatioRadius - 1f) / (Mathf.Pow(_stepRatioRadius, _countCircle) - 1f);
 
             float ratioHeight = 1f, ratioRadius = 1f;
-            float radiusAvg = _rock.RadiusAvg * _density, step = radiusAvg, radius = step; ;
+            float radiusAvg = _rock.RadiusAvg * _density, step = radiusAvg, radius = step;
             float angle, angleStep, angleOffset;
-            bool isHigh = true;
+            bool isHigh = Chance.Rolling();
+            Chance chance;
+            RMFloat offset = step * _ratioOffset;
 
-            customMesh.AddTriangles(_rock.Create(new(step * _ratioOffsetRangeFirst, 0f, step * _ratioOffsetRangeFirst), isHigh, _ratioHeightFirst, _ratioRadiusFirst));
-            yield return null;
-
-            for (int i = 1; i <= _countCircle; i++)
+            for (int i = 0; i < _countCircle; i++)
             {
                 angleStep = 2f * _density * step / radius;
                 angleOffset = RZFloat.Rolling(angleStep);
                 angle = TAU + angleOffset;
+                chance = ((_countCircle << 1) - i) * _ratioChanceRock / (_countCircle << 1);
+
                 while (angle > angleStep)
                 {
-                    if (i < _countCircle || _chanceRockLast)
+                    if (chance)
                     {
-                        customMesh.AddTriangles(_rock.Create(new(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius), isHigh, ratioHeight, ratioRadius));
+                        customMesh.AddTriangles(_rock.Create(new(GetX(), 0f, GetZ()), isHigh, ratioHeight, ratioRadius));
+                        isHigh = !isHigh;
                         yield return null;
                     }
                     angle -= angleStep;
-                    isHigh = !isHigh;
                 }
 
-                ratioHeight *= _stepRatioHeight;
                 ratioRadius *= _stepRatioRadius;
                 step = radiusAvg * ratioRadius;
                 radius += step;
+                offset = step * _ratioOffset;
             }
 
             MeshFilter mesh = GetComponent<MeshFilter>();
             mesh.sharedMesh = customMesh.ToMesh();
             yield return null;
             mesh.sharedMesh.Optimize();
+
+            #region Local: GetX(), GetZ()
+            //=================================
+            float GetX() => Mathf.Cos(angle) * radius + offset;
+            float GetZ() => Mathf.Sin(angle) * radius + offset;
+            #endregion
         }
 
         #region Nested: Rock

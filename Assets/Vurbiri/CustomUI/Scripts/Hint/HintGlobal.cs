@@ -10,15 +10,17 @@ namespace Vurbiri.UI
     {
         [SerializeField, GetComponentInChildren] private TMP_Text _hint;
         [SerializeField, Range(0f, 5f)] private float _timeDelay = 1f;
-        [SerializeField, Range(0f, 1f)] private float _fadeDuration = 0.2f;
-        [SerializeField] private float _maxWidth = 100f;
-        [SerializeField] private float _padding = 1.1f;
+        [SerializeField, Range(1f, 20f)] private float _fadeSpeed = 5f;
+        [SerializeField] private float _maxWidth = 400f;
+        [SerializeField] private Vector2 _padding = new(15f, 15f);
 
         private Localization _localization;
         private Graphic _background;
         private RectTransform _transformBack, _transformText;
         private Coroutine _coroutineShow;
         private float _alfaBack, _alfaText;
+        private float _fadeDurationBack, _fadeDurationText;
+        private Vector2 _size;
 
         private void Start()
         {
@@ -27,11 +29,15 @@ namespace Vurbiri.UI
             _transformBack = GetComponent<RectTransform>();
             _transformText = _hint.rectTransform;
 
+            _hint.overflowMode = TextOverflowModes.Overflow;
+
             _alfaBack = _background.color.a;
             _alfaText = _hint.color.a;
 
-            _background.CrossFadeAlpha(0f, 0f, true);
-            _hint.CrossFadeAlpha(0f, 0f, true);
+            _fadeDurationBack = _alfaBack / _fadeSpeed;
+            _fadeDurationText = _alfaText / _fadeSpeed;
+
+            AlphaReset();
         }
 
         public bool Show(TextFiles file, string key)
@@ -58,21 +64,23 @@ namespace Vurbiri.UI
 
         private void Show()
         {
+            AlphaReset();
+
             _coroutineShow ??= StartCoroutine(Show_Coroutine());
 
-            #region Local: OnBack()
+            #region Local: Show_Coroutine()
             //=================================
             IEnumerator Show_Coroutine()
             {
                 yield return new WaitForSecondsRealtime(_timeDelay);
-                _background.CrossFadeAlpha(_alfaBack, _fadeDuration, true);
-                _hint.CrossFadeAlpha(_alfaText, _fadeDuration, true);
+                _background.CrossFadeAlpha(_alfaBack, _fadeDurationBack, true);
+                _hint.CrossFadeAlpha(_alfaText, _fadeDurationText, true);
                 _coroutineShow = null;
             }
             #endregion
         }
 
-        public void Hide()
+        public bool Hide()
         {
             if (_coroutineShow != null)
             {
@@ -80,35 +88,41 @@ namespace Vurbiri.UI
                 _coroutineShow = null;
             }
 
-            _background.CrossFadeAlpha(0f, _fadeDuration, true);
-            _hint.CrossFadeAlpha(0f, _fadeDuration, true);
+            _background.CrossFadeAlpha(0f, _fadeDurationBack, true);
+            _hint.CrossFadeAlpha(0f, _fadeDurationText, true);
+            return true;
         }
 
         private void SetHint(string text)
         {
-            bool active = gameObject.activeSelf;
-            gameObject.SetActive(true);
-
             _hint.enableWordWrapping = false;
-
             _hint.text = text;
             _hint.ForceMeshUpdate();
 
-            Vector2 size = _hint.textBounds.size;
+            _size = _hint.textBounds.size;
 
-            if (size.x > _maxWidth)
+            if (_size.x > _maxWidth)
             {
-                _transformText.sizeDelta = new(_maxWidth, size.y);
+                _size.x = _maxWidth;
+                _transformText.sizeDelta = _size;
 
                 _hint.enableWordWrapping = true;
                 _hint.ForceMeshUpdate();
 
-                size = _hint.textBounds.size;
+                _size = _hint.textBounds.size;
             }
-            _transformText.sizeDelta = size;
-            _transformBack.sizeDelta = size + Vector2.one * _padding;
 
-            gameObject.SetActive(active);
+            _transformText.sizeDelta = _size;
+            _transformBack.sizeDelta = _size + _padding;
+
+            //_transformText.ForceUpdateRectTransforms();
+            //_transformBack.ForceUpdateRectTransforms();
+        }
+
+        private void AlphaReset()
+        {
+            _background.CrossFadeAlpha(0f, 0f, true);
+            _hint.CrossFadeAlpha(0f, 0f, true);
         }
     }
 }

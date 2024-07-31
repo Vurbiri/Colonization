@@ -24,6 +24,7 @@ namespace Vurbiri.Colonization
         public EdificeType TypeNext => _typeNext;
         public EdificeGroup GroupNext => _groupNext;
         public PlayerType Owner => _owner;
+        public bool IsUpgrade => _isUpgrade;
         public bool IsOccupied => _owner != PlayerType.None;
         public Currencies Cost => _cost;
         public int Level => _level;
@@ -76,7 +77,6 @@ namespace Vurbiri.Colonization
             return _isBuildWall;
         }
 
-        public virtual bool CanUpgrade(PlayerType owner) => _isUpgrade && _owner == owner;
         public virtual bool CanUpgradeBuy(Currencies cash) => _isUpgrade && _prefabUpgrade._cost <= cash;
 
         public virtual bool CanWallBuild(PlayerType owner) => _isBuildWall && _owner == owner;

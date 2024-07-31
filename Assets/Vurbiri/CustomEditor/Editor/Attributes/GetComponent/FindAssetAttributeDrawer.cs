@@ -6,7 +6,7 @@ namespace Vurbiri
     [CustomPropertyDrawer(typeof(FindAssetAttribute))]
     public class FindAssetAttributeDrawer : AGetComponentAttributeDrawer
     {
-        private static readonly string PREFAB_TYPE = "t:Prefab";
+        private const string PREFAB_TYPE = "t:Prefab";
         private static readonly string[] PATH = { "Assets" };
 
         protected override void SetProperty(SerializedProperty property, GameObject gameObject, System.Type type)

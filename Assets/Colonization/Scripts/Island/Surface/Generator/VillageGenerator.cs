@@ -43,6 +43,7 @@ namespace Vurbiri.Colonization
             mesh.sharedMesh = customMesh.ToMesh();
             yield return null;
             mesh.sharedMesh.Optimize();
+            StaticBatchingUtility.Combine(gameObject);
         }
 
         #region Nested: Hut, Color32Range

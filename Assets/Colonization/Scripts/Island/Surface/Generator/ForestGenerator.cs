@@ -48,6 +48,7 @@ namespace Vurbiri.Colonization
             mesh.sharedMesh = customMesh.ToMesh();
             yield return null;
             mesh.sharedMesh.Optimize();
+            
         }
 
         #region Nested: Spruce
@@ -70,7 +71,7 @@ namespace Vurbiri.Colonization
 
             public float RadiusAvg => _sizeRatioRange.Avg * _radiusBase;
 
-            private Color32 _color = new(255, 255, 255, 255);
+            private Color32 _color = new(255, 0, 0, 255);
             private List<Triangle> _triangles;
             private Vector3 _peakPoint;
             private Vector3[] _basePoints;
@@ -82,7 +83,7 @@ namespace Vurbiri.Colonization
 
             public List<Triangle> Create(Vector3 position)
             {
-                _color.SetRandMono(_colorRange);
+                _color.r = (byte)_colorRange;
                 _sizeRatio = _sizeRatioRange;
                 _countBranches = _chanceSmall.Select(MIN_COUNT, MAX_COUNT);
                 _height = _heightBase * _sizeRatio;

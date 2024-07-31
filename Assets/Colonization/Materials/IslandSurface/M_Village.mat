@@ -21,12 +21,15 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Village
-  m_Shader: {fileID: -6465566751694194690, guid: 4e413f0513061594e97d0a39bd3a3cd3,
+  m_Shader: {fileID: -6465566751694194690, guid: 8d859d019a9d3a544b7932adb501031f,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _ENVIRONMENTREFLECTIONS_OFF
+  - _GLOSSYREFLECTIONS_OFF
   - _RECEIVE_SHADOWS_OFF
+  - _SPECULARHIGHLIGHTS_OFF
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -64,6 +67,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask_Texture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -111,17 +118,27 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
+    - _ENVIRONMENTREFLECTIONS_OFF: 1
     - _EnvironmentReflections: 1
+    - _GLOSSYREFLECTIONS_OFF: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _MASK: 0
     - _Metallic: 0
+    - _MetallicBlue: 0
+    - _MetallicGreen: 0
+    - _MetallicRed: 0.2
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 0
+    - _SPECULARHIGHLIGHTS_OFF: 1
     - _Smoothness: 0.5
+    - _SmoothnessBlue: 0.5
+    - _SmoothnessGreen: 0.1
+    - _SmoothnessRed: 0.2
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

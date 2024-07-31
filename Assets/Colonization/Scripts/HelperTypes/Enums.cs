@@ -62,6 +62,8 @@ namespace Vurbiri.Colonization
 
         PortOne,
         PortTwo,
+        LighthouseOne,
+        LighthouseTwo,
 
         Town,
         City,
@@ -75,7 +77,7 @@ namespace Vurbiri.Colonization
         {
             EdificeType.None => EdificeGroup.None,
             EdificeType.Shrine => EdificeGroup.Shrine,
-            EdificeType.PortOne or EdificeType.PortTwo => EdificeGroup.Water,
+            EdificeType.PortOne or EdificeType.PortTwo or EdificeType.LighthouseOne or EdificeType.LighthouseTwo=> EdificeGroup.Water,
             EdificeType.Town or EdificeType.City or EdificeType.Capital => EdificeGroup.Urban,
             _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение CityType: {self}"),
         };

@@ -94,16 +94,14 @@ namespace Vurbiri.Colonization
         public bool CanUpgradeBuy(Currencies cash) => _edifice.CanUpgradeBuy(cash);
         public bool CanUpgrade(PlayerType owner)
         {
-            if (!_edifice.CanUpgrade(owner))
-                return false;
-
-            return _edifice.GroupNext switch
-            {
-                EdificeGroup.Shrine => IsRoadConnect(owner),
-                EdificeGroup.Water => WaterCheck(),
-                EdificeGroup.Urban => NeighborCheck(),
-                _ => false
-            };
+            return _edifice.IsUpgrade && (_edifice.Owner == owner ||
+            _edifice.GroupNext switch
+                {
+                    EdificeGroup.Shrine => IsRoadConnect(owner),
+                    EdificeGroup.Water => WaterCheck(),
+                    EdificeGroup.Urban => NeighborCheck(),
+                    _ => false
+                });
 
             #region Local: WaterCheck(), NeighborCheck()
             //=================================
