@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 231167a6fdd41f44b8cb8dc6b11da90a, type: 3}
-  m_Name: Surface_01_Village
+  m_Script: {fileID: 11500000, guid: 9da8d66040cdcea4cb4e91be093836a2, type: 3}
+  m_Name: Palette_MH_Windmill_Blades
   m_EditorClassIdentifier: 
-  _type: 0
-  _color:
-    serializedVersion: 2
-    rgba: 4278235904
-  _profit: 00000000
-  _prefabSurface: {fileID: 1732233364198889968, guid: 3f3cf50413cd071448743df4204e5000,
-    type: 3}
+  colors:
+  - {r: 0.52156866, g: 0.36862746, b: 0.25882354, a: 1}
+  - {r: 0.29803923, g: 0.0627451, b: 0, a: 1}

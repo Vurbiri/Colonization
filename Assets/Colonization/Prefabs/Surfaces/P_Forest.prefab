@@ -97,6 +97,12 @@ MonoBehaviour:
   _density: 2
   _offsetRange:
     _value: 0.3
+  _colorRange:
+    _color:
+      serializedVersion: 2
+      rgba: 4279657755
+    _range: 0.5
+    _isAlphaRandom: 0
   _spruce:
     _countVertexRange:
       _min: 5
@@ -112,9 +118,6 @@ MonoBehaviour:
     _ratioNextSizeRange:
       _min: 0.68
       _max: 0.72
-    _colorRange:
-      _min: 122
-      _max: 255
 --- !u!33 &856847065228579926
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -143,7 +146,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e88237a74b4597449a141098dee546ef, type: 2}
+  - {fileID: 2100000, guid: 22576d8a38464e54784114f6d9accd7b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

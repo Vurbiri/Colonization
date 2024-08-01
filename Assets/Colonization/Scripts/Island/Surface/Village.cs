@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private MeshFilter _windmillMeshFilter;
         [SerializeField, GetComponentInChildren] private Animator _windmillAnimator;
         [Space]
-        [SerializeField] private Mesh[] _windmillMeshes;
+        [SerializeField] private Mesh _altWindmillMesh;
         [SerializeField] private float _windmillOffsetDistance = 0.6f;
         [SerializeField] private float _windmillSpeedAnimRange = 0.2f;
         [SerializeField] private RFloat _windmillPlayRange = new(0.2f, 1.22f);
@@ -25,7 +25,8 @@ namespace Vurbiri.Colonization
             transform.localRotation = Quaternion.Euler(0f, _offsetAngle + 60f * Random.Range(0, 6) + 30f, 0f);
             StartCoroutine(_generator.Generate_Coroutine(size));
 
-            _windmillMeshFilter.sharedMesh = _windmillMeshes.Rand();
+            if(Chance.Rolling())
+                _windmillMeshFilter.sharedMesh = _altWindmillMesh;
             _windmillMeshFilter.transform.localPosition = new(0f, 0f, size - _windmillOffsetDistance);
 
             StartCoroutine(WindmillPlay_Coroutine());

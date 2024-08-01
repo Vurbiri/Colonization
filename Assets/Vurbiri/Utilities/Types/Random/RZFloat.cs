@@ -12,7 +12,6 @@ namespace Vurbiri
         public RZFloat(float value) => _value = value;
 
         public static float Rolling(float value) => Random.Range(0f, value);
-        public static int Rolling(int value) => Random.Range(0, value);
 
         public static implicit operator RZFloat(float value) => new(value);
         public static implicit operator float(RZFloat mp) => Random.Range(0f, mp._value);

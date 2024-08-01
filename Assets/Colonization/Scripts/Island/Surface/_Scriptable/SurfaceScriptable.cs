@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    [CreateAssetMenu(fileName = "Surface_", menuName = "Colonization/Surface", order = 51)]
+    [CreateAssetMenu(fileName = "Surface_", menuName = "Vurbiri/Colonization/Surface", order = 51)]
     public class SurfaceScriptable : ScriptableObject, IValueTypeEnum<SurfaceType>
     {
         [SerializeField] private SurfaceType _type;

@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,7 +53,7 @@ namespace Vurbiri
             }
         }
 
-        public virtual UnityEngine.Mesh ToMesh(bool recalculateTangents = false)
+        public Mesh ToMesh(bool tangents = false)
         {
             int count = _vertices.Count;
             Vector3[] vertices = new Vector3[count], normals = new Vector3[count];
@@ -67,7 +69,7 @@ namespace Vurbiri
                 uv[i] = vertex.UV;
             }
 
-            UnityEngine.Mesh mesh = new()
+            Mesh mesh = new()
             {
                 name = _name,
                 vertices = vertices,
@@ -78,9 +80,24 @@ namespace Vurbiri
             };
 
             mesh.RecalculateBounds();
-            if (recalculateTangents) mesh.RecalculateTangents();
-            //mesh.Optimize();
+            if (tangents) mesh.RecalculateTangents();
+
             return mesh;
+        }
+
+        public IEnumerator ToMesh_Coroutine(Action<Mesh> callback, bool tangents = false, bool isReadable = false, bool isOptimize = true)
+        {
+            Mesh mesh = ToMesh(tangents);
+            yield return null;
+            if (isOptimize) 
+                mesh.Optimize();
+            yield return null;
+            if (!isReadable)
+                mesh.UploadMeshData(true);
+            yield return null;
+            callback?.Invoke(mesh);
+
+            yield break;
         }
     }
 }

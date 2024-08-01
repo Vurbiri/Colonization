@@ -57,10 +57,7 @@ namespace Vurbiri.Colonization
                 offset = step * _ratioOffset;
             }
 
-            MeshFilter mesh = GetComponent<MeshFilter>();
-            mesh.sharedMesh = customMesh.ToMesh();
-            yield return null;
-            mesh.sharedMesh.Optimize();
+            yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
 
             #region Local: GetX(), GetZ()
             //=================================

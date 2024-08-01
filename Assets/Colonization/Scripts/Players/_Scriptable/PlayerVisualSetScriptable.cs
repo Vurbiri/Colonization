@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "PlayerVisualSet", menuName = "Colonization/PlayerVisualSet", order = 51)]
+[CreateAssetMenu(fileName = "PlayerVisualSet", menuName = "Vurbiri/Colonization/PlayerVisualSet", order = 51)]
 public class PlayerVisualSetScriptable : ScriptableObject
 {
     [SerializeField] private Color[] _colors;

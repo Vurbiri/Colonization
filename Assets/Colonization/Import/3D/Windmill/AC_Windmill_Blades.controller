@@ -32,7 +32,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Windmill_Blades
+  m_Name: AC_Windmill_Blades
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Play

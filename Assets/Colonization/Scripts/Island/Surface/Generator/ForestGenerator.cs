@@ -10,6 +10,8 @@ namespace Vurbiri.Colonization
         [SerializeField, Range(0.01f, 0.3f)] private float _offsetY = 0.1f;
         [SerializeField, Range(1f, 3.5f)] private float _density = 1.9f;
         [SerializeField] private RMFloat _offsetRange = 0.3f;
+        [Space]
+        [SerializeField] private RColor32 _colorRange;
         [Space, Space]
         [SerializeField] private Spruce _spruce;
 
@@ -24,7 +26,7 @@ namespace Vurbiri.Colonization
             RMFloat offsetAngle;
             float x, z;
 
-            customMesh.AddTriangles(_spruce.Create(new(step * _offsetRange, _offsetY, step * _offsetRange)));
+            customMesh.AddTriangles(_spruce.Create(new(step * _offsetRange, _offsetY, step * _offsetRange), _colorRange.Roll));
             yield return null;
 
             while (radius < size)
@@ -36,7 +38,7 @@ namespace Vurbiri.Colonization
                 {
                     x = Mathf.Cos(angle + offsetAngle) * radius + step * _offsetRange;
                     z = Mathf.Sin(angle + offsetAngle) * radius + step * _offsetRange;
-                    customMesh.AddTriangles(_spruce.Create(new(x, _offsetY, z)));
+                    customMesh.AddTriangles(_spruce.Create(new(x, _offsetY, z), _colorRange.Roll));
                     angle += angleStep;
                 }
 
@@ -44,11 +46,8 @@ namespace Vurbiri.Colonization
                 yield return null;
             }
 
-            MeshFilter mesh = GetComponent<MeshFilter>();
-            mesh.sharedMesh = customMesh.ToMesh();
-            yield return null;
-            mesh.sharedMesh.Optimize();
-            
+            yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
+
         }
 
         #region Nested: Spruce
@@ -66,12 +65,9 @@ namespace Vurbiri.Colonization
             [Space]
             [SerializeField, Range(0.5f, 1f)] private float _ratioNextPos = 0.75f;
             [SerializeField] private RFloat _ratioNextSizeRange = new(0.68f, 0.72f);
-            [Space]
-            [SerializeField] private RInt _colorRange = new(122, 255);
 
             public float RadiusAvg => _sizeRatioRange.Avg * _radiusBase;
 
-            private Color32 _color = new(255, 0, 0, 255);
             private List<Triangle> _triangles;
             private Vector3 _peakPoint;
             private Vector3[] _basePoints;
@@ -81,9 +77,8 @@ namespace Vurbiri.Colonization
 
             private const int MIN_COUNT = 3, MAX_COUNT = 4;
 
-            public List<Triangle> Create(Vector3 position)
+            public List<Triangle> Create(Vector3 position, Color32 color)
             {
-                _color.r = (byte)_colorRange;
                 _sizeRatio = _sizeRatioRange;
                 _countBranches = _chanceSmall.Select(MIN_COUNT, MAX_COUNT);
                 _height = _heightBase * _sizeRatio;
@@ -118,7 +113,7 @@ namespace Vurbiri.Colonization
                     }
 
                     for (int i = 0; i < countBase; i++)
-                        _triangles.Add(new(_color, _basePoints.Next(i), _basePoints[i], _peakPoint));
+                        _triangles.Add(new(color, _basePoints.Next(i), _basePoints[i], _peakPoint));
                 }
                 #endregion
             }

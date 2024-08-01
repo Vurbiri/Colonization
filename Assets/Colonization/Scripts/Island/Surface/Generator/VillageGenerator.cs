@@ -39,11 +39,7 @@ namespace Vurbiri.Colonization
                 yield return null;
             }
 
-            MeshFilter mesh = GetComponent<MeshFilter>();
-            mesh.sharedMesh = customMesh.ToMesh();
-            yield return null;
-            mesh.sharedMesh.Optimize();
-            StaticBatchingUtility.Combine(gameObject);
+            yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
         }
 
         #region Nested: Hut, Color32Range
@@ -58,9 +54,9 @@ namespace Vurbiri.Colonization
             [Space]
             [SerializeField] private Chance _chanceTwoFloor = 16;
             [Space]
-            [SerializeField] private Color32Range _colorWall;
-            [SerializeField] private Color32Range _colorRoof;
-            [SerializeField] private Color32Range _colorRoofWall;
+            [SerializeField] private RColor32 _colorWall;
+            [SerializeField] private RColor32 _colorRoof;
+            [SerializeField] private RColor32 _colorRoofWall;
 
             private List<Triangle> _triangles;
             private Vector3[] _baseBottom;
@@ -78,7 +74,7 @@ namespace Vurbiri.Colonization
             public List<Triangle> Create(Vector3 position)
             {
                 _triangles = new(COUNT_TRIANGLES);
-                _colorWall.Rand(); _colorRoof.Rand(); _colorRoofWall.Rand();
+                _colorWall.Rolling(); _colorRoof.Rolling(); _colorRoofWall.Rolling();
 
                 _x = _baseHalfSizeWidth; _z = _baseHalfSizeLength;
 
@@ -92,7 +88,7 @@ namespace Vurbiri.Colonization
                     _baseTop[i].y = _heightWall;
                 }
 
-                _triangles.AddRange(PolygonChain.CreateUV(_colorWall.color, _baseBottom, _baseTop, true));
+                _triangles.AddRange(PolygonChain.CreateUV(_colorWall, _baseBottom, _baseTop, true));
 
                 _roofPointA = (_baseTop[0] + _baseTop[1]) * 0.5f;
                 _roofPointA.y += _heightRoofRange;
@@ -102,11 +98,11 @@ namespace Vurbiri.Colonization
                 roofA = new Vector3[] { _baseTop[0], _roofPointA, _baseTop[1] };
                 roofB = new Vector3[] { _baseTop[3], _roofPointB, _baseTop[2] };
 
-                _triangles.AddRange(PolygonChain.CreateUV(_colorRoof.color, roofA, roofB));
+                _triangles.AddRange(PolygonChain.CreateUV(_colorRoof, roofA, roofB));
 
                 (roofB[0], roofB[2]) = (roofB[2], roofB[0]);
-                _triangles.Add(new(_colorRoofWall.color, roofA, UV_ROOF_WALL));
-                _triangles.Add(new(_colorRoofWall.color, roofB, UV_ROOF_WALL));
+                _triangles.Add(new(_colorRoofWall, roofA, UV_ROOF_WALL));
+                _triangles.Add(new(_colorRoofWall, roofB, UV_ROOF_WALL));
 
                 return _triangles;
             }

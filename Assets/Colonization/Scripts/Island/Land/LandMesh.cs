@@ -68,11 +68,8 @@ namespace Vurbiri.Colonization
 
         public IEnumerator SetMeshOptimize_Coroutine()
         {
-            _thisMeshFilter.sharedMesh = _customMesh.ToMesh(true);
+            yield return StartCoroutine(_customMesh.ToMesh_Coroutine(m => _thisMeshFilter.sharedMesh = m, true));
 
-            yield return null;
-
-            _thisMeshFilter.sharedMesh.Optimize();
             _customMesh = null;
             _hexagons = null;
         }
