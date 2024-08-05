@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(GetComponentsInChildrenAttribute))]
-    public class GetComponentsInChildrenAttributeDrawer : PropertyDrawer
+    internal class GetComponentsInChildrenAttributeDrawer : PropertyDrawer
     {
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

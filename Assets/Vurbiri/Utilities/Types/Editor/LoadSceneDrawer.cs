@@ -1,8 +1,9 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(LoadScene))]
     public class LoadSceneDrawer : PropertyDrawer

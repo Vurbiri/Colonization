@@ -1,20 +1,11 @@
 using UnityEditor;
-using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(UnityDictionary<,>))]
-    public class UnityDictionaryDrawer : PropertyDrawer
+    public class UnityDictionaryDrawer : AValueDrawer
     {
-        private const string NAME_PROPERTY = "_values";
-
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            SerializedProperty propertyValues = property.FindPropertyRelative(NAME_PROPERTY);
-
-            EditorGUI.BeginProperty(position, label, property);
-            EditorGUILayout.PropertyField(propertyValues, label);
-            EditorGUI.EndProperty();
-        }
+        protected override string NameValue => "_values";
     }
 }

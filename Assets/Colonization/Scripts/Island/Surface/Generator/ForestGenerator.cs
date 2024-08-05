@@ -12,21 +12,22 @@ namespace Vurbiri.Colonization
         [SerializeField] private RMFloat _offsetRange = 0.3f;
         [Space]
         [SerializeField] private RColor32 _colorRange;
-        [Space, Space]
+        [SerializeField] private Vector2Specular _specular = new(0f, 0.1f);
+        [Space]
         [SerializeField] private Spruce _spruce;
 
-        private const string NAME_MESH = "ForestMesh_";
+        private const string NAME_MESH = "MH_Forest_";
         private static int ID = 0;
 
         public override IEnumerator Generate_Coroutine(float size)
         {
-            CustomMesh customMesh = new(NAME_MESH + (ID++), HEX_DIAMETER_IN * Vector2.one);
+            CustomMesh customMesh = new(NAME_MESH + (ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
             float step = _spruce.RadiusAvg * _density, radius = step;
             float angle, angleStep;
             RMFloat offsetAngle;
             float x, z;
 
-            customMesh.AddTriangles(_spruce.Create(new(step * _offsetRange, _offsetY, step * _offsetRange), _colorRange.Roll));
+            customMesh.AddTriangles(_spruce.Create(new(step * _offsetRange, _offsetY, step * _offsetRange), _colorRange.Roll, _specular));
             yield return null;
 
             while (radius < size)
@@ -38,7 +39,7 @@ namespace Vurbiri.Colonization
                 {
                     x = Mathf.Cos(angle + offsetAngle) * radius + step * _offsetRange;
                     z = Mathf.Sin(angle + offsetAngle) * radius + step * _offsetRange;
-                    customMesh.AddTriangles(_spruce.Create(new(x, _offsetY, z), _colorRange.Roll));
+                    customMesh.AddTriangles(_spruce.Create(new(x, _offsetY, z), _colorRange.Roll, _specular));
                     angle += angleStep;
                 }
 
@@ -47,7 +48,6 @@ namespace Vurbiri.Colonization
             }
 
             yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
-
         }
 
         #region Nested: Spruce
@@ -77,7 +77,7 @@ namespace Vurbiri.Colonization
 
             private const int MIN_COUNT = 3, MAX_COUNT = 4;
 
-            public List<Triangle> Create(Vector3 position, Color32 color)
+            public List<Triangle> Create(Vector3 position, Color32 color, Vector2 uv)
             {
                 _sizeRatio = _sizeRatioRange;
                 _countBranches = _chanceSmall.Select(MIN_COUNT, MAX_COUNT);
@@ -113,7 +113,7 @@ namespace Vurbiri.Colonization
                     }
 
                     for (int i = 0; i < countBase; i++)
-                        _triangles.Add(new(color, _basePoints.Next(i), _basePoints[i], _peakPoint));
+                        _triangles.Add(new(color, uv, _basePoints.Next(i), _basePoints[i], _peakPoint));
                 }
                 #endregion
             }

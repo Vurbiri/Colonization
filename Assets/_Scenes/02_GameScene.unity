@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8bf15f4100564c46b9169a701aa524d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nameMesh: LandMesh
+  _nameMesh: MH_Land
   _rateTilingMaterial: 1.05
   _rateCellBaseLand: 0.8
   _rateCellBaseWater: 0.9

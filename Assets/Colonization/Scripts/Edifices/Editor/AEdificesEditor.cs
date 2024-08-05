@@ -1,7 +1,8 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri.Colonization;
 
-namespace Vurbiri.Colonization
+namespace VurbiriEditor.Colonization
 {
 
     [CustomEditor(typeof(AEdifice), true), CanEditMultipleObjects]

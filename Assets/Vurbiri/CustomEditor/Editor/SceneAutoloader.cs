@@ -1,12 +1,13 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using static VurbiriEditor.CONST;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
-    public class SceneAutoloader : EditorWindow
+    internal class SceneAutoloader : EditorWindow
     {
-        private const string NAME = "Scene Autoloader", MENU = "Window/Vurbiri/" + NAME;
+        private const string NAME = "Scene Autoloader", MENU = MENU_PATH + NAME;
         private const string SCENE_TYPE = "t:Scene";
         private const string LABEL_SCENE = "Start scene", LABEL_SAVE = "Save scene", LABEL_PATH = "Path";
         private const string KEY_SCENE = "MSA_StartScene", KEY_SAVE = "MSA_SaveScene", KEY_PATH = "MSA_Path";
@@ -26,8 +27,7 @@ namespace Vurbiri
         [MenuItem(MENU)]
         private static void ShowWindow()
         {
-            var wnd = GetWindow<SceneAutoloader>();
-            wnd.titleContent = new GUIContent(NAME);
+            GetWindow<SceneAutoloader>(NAME);
         }
 
         private void OnGUI()

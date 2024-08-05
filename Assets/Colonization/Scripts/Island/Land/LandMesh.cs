@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class LandMesh : MonoBehaviour
     {
-        [SerializeField] private string _nameMesh = "LandMesh";
+        [SerializeField] private string _nameMesh = "MH_Land";
         [Space]
         [SerializeField, Range(0.5f, 1.5f)] private float _rateTilingMaterial = 1.05f;
         [Space]

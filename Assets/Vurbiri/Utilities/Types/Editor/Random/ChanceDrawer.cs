@@ -1,7 +1,8 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(Chance))]
     public class ChanceDrawer : PropertyDrawer

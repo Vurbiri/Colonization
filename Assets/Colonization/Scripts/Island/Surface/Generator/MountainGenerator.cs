@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
         [Space, Space]
         [SerializeField] private Rock _rock;
 
-        private const string NAME_MESH = "MountainMesh_";
+        private const string NAME_MESH = "MH_Mountain_";
         private static int ID = 0;
 
         public override IEnumerator Generate_Coroutine(float size)
@@ -123,10 +123,10 @@ namespace Vurbiri.Colonization
 
                     _angle += _stepAngle;
                 }
-                _triangles.AddRange(PolygonChain.CreateBarycentricUV(_color, _bottom, _top, true));
+                _triangles.AddRange(PolygonChain.CreateBarycentric(_color, _bottom, _top, true));
 
                 for (int i = 0; i < _countVertex; i++)
-                    _triangles.Add(new(BARYCENTRIC_COLORS, new Vector3[] { _top.Next(i), _top[i], _positionTop }, UV_PICK));
+                    _triangles.Add(new(BARYCENTRIC_COLORS, UV_PICK, _top.Next(i), _top[i], _positionTop ));
 
                 return _triangles;
             }

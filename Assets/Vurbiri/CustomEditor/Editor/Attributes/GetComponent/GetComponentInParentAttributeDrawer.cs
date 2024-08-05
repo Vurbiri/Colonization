@@ -1,11 +1,12 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(GetComponentInParentAttribute))]
-    public class GetComponentInParentAttributeDrawer : AGetComponentAttributeDrawer
+    internal class GetComponentInParentAttributeDrawer : AGetComponentAttributeDrawer
     {
         protected override void SetProperty(SerializedProperty property, GameObject gameObject, Type type)
         {

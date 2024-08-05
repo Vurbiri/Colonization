@@ -1,18 +1,11 @@
 using UnityEditor;
-using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(ReactiveValue<>))]
-    public class ReactiveValueDrawer : PropertyDrawer
+    public class ReactiveValueDrawer : AValueDrawer
     {
-        private const string NAME_VALUE = "_value";
-
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            EditorGUI.BeginProperty(position, label, property);
-            EditorGUI.PropertyField(position, property.FindPropertyRelative(NAME_VALUE), label);
-            EditorGUI.EndProperty();
-        }
+        
     }
 }

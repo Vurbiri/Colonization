@@ -15,6 +15,14 @@ namespace Vurbiri
         private readonly Color32 _color;
         private Vector2 _uv;
 
+        public Vertex(Vector3 position, Vector3 normal)
+        {
+            _position = position;
+            _normal = normal;
+            _color = default;
+            _uv = position.To2D();
+        }
+
         public Vertex(Vector3 position, Vector3 normal, Color32 color)
         {
             _position = position;
@@ -29,14 +37,6 @@ namespace Vurbiri
             _normal = normal;
             _color = color;
             _uv = uv;
-        }
-
-        public Vertex(Vector3 position, Vector3 normal)
-        {
-            _position = position;
-            _normal = normal;
-            _color = default;
-            _uv = position.To2D();
         }
 
         public Vertex Offset(Vector3 direct) => new(_position + direct, _normal, _color);

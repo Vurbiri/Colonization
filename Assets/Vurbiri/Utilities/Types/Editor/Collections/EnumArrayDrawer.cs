@@ -1,8 +1,9 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(EnumArray<,>))]
     public class EnumArrayDrawer : PropertyDrawer

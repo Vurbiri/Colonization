@@ -1,10 +1,11 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(FindObjectAttribute))]
-    public class FindObjectAttributeDrawer : AGetComponentAttributeDrawer
+    internal class FindObjectAttributeDrawer : AGetComponentAttributeDrawer
     {
         protected override void SetProperty(SerializedProperty property, GameObject gameObject, System.Type type)
         {

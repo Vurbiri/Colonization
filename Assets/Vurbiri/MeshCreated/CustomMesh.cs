@@ -89,7 +89,7 @@ namespace Vurbiri
         {
             Mesh mesh = ToMesh(tangents);
             yield return null;
-            if (isOptimize) 
+            if (isOptimize)
                 mesh.Optimize();
             yield return null;
             if (!isReadable)
@@ -99,5 +99,7 @@ namespace Vurbiri
 
             yield break;
         }
+
+        
     }
 }

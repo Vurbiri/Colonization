@@ -1,10 +1,11 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(RenameAttribute))]
-    public class RenameAttributeDrawer : PropertyDrawer
+    internal class RenameAttributeDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

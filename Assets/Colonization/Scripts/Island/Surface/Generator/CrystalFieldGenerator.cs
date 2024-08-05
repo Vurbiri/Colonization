@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
         private const int COUNT_DRUSE = 6;
 
-        private const string NAME_MESH = "CrystalFieldMesh_";
+        private const string NAME_MESH = "MH_CrystalField_";
         private static int ID = 0;
 
         public override IEnumerator Generate_Coroutine(float radius)
@@ -152,11 +152,11 @@ namespace Vurbiri.Colonization
 
                     _angle += _stepAngle;
                 }
-                _triangles.AddRange(PolygonChain.CreateBarycentricUV(color, _baseBottom, _baseTop, true));
+                _triangles.AddRange(PolygonChain.CreateBarycentric(color, _baseBottom, _baseTop, true));
 
                 _pick = rotation * new Vector3(_offsetSide, _height, _offsetSide) + position;
                 for (int i = 0; i < _countVertex; i++)
-                    _triangles.Add(new(color, new Vector3[] { _baseTop.Next(i), _baseTop[i], _pick }, UV_PICK));
+                    _triangles.Add(new(color, UV_PICK, _baseTop.Next(i), _baseTop[i], _pick));
 
 
                 return _triangles;

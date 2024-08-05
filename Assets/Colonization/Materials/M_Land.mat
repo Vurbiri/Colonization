@@ -77,7 +77,7 @@ Material:
     - _CastShadows: 0
     - _Coast_Brightness: 0.095
     - _Coast_Strenght: 0.2
-    - _Coast_Strenght_Noise: 0.666
+    - _Coast_Strenght_Noise: 0.371
     - _Cull: 2
     - _Density: 400
     - _Distortion: 0.05

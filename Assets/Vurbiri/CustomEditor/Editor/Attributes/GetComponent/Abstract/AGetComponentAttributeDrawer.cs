@@ -2,9 +2,9 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
-    public abstract class AGetComponentAttributeDrawer : PropertyDrawer
+    internal abstract class AGetComponentAttributeDrawer : PropertyDrawer
     {
         private const float BUTTON_SIZE = 35f, BUTTON_POS = BUTTON_SIZE * 1.1f;
         private const string BUTTON_TEXT = "Set";

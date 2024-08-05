@@ -1,7 +1,8 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(RFloat))]
     public class RFloatDrawer : PropertyDrawer

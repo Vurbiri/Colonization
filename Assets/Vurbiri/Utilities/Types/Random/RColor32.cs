@@ -43,6 +43,6 @@ namespace Vurbiri
             _rand = new(1f - _range, 1f);
         }
 
-        
+        public override string ToString() => _currentColor.ToString();
     }
 }

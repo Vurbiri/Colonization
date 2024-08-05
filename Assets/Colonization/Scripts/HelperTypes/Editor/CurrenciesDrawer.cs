@@ -1,8 +1,9 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using Vurbiri.Colonization;
 
-namespace Vurbiri.Colonization
+namespace VurbiriEditor.Colonization
 {
     [CustomPropertyDrawer(typeof(Currencies))]
     public class CurrenciesDrawer : EnumArrayDrawer

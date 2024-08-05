@@ -1,7 +1,9 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
+using Vurbiri.Colonization;
 
-namespace Vurbiri.Colonization
+namespace VurbiriEditor.Colonization
 {
     [CustomEditor(typeof(Players), true)]
     public class PlayersEditor : Editor

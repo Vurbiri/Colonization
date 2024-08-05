@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Vurbiri
@@ -25,6 +26,25 @@ namespace Vurbiri
             T[] arr = new T[self.Count];
             self.CopyTo(arr, 0);
             return arr;
+        }
+
+        public static void Resize<T>(this List<T> self, int size) where T : new()
+        {
+            int count = self.Count;
+
+            if (size == count)
+                return;
+
+            if (size > count)
+            {
+                if (size > self.Capacity)
+                    self.Capacity = size;
+                self.AddRange(Enumerable.Repeat<T>(new(), size - count));
+                return;
+            }
+
+            if (size < count)
+                self.RemoveRange(size, count - size);
         }
 
         public static T First<T>(this ICollection<T> self)

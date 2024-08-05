@@ -9,9 +9,10 @@ namespace Vurbiri.Colonization
     {
         [SerializeField, Range(0.05f, 1f)] private float _density = 0.33f;
         [SerializeField, Range(0.05f, 1f)] private float _ratioOffset = 0.2f;
+        
         [SerializeField] private Hut _hut;
 
-        private const string NAME_MESH = "VillageMesh_";
+        private const string NAME_MESH = "MH_Village_";
         private static int ID = 0;
 
         public override IEnumerator Generate_Coroutine(float size)
@@ -42,81 +43,86 @@ namespace Vurbiri.Colonization
             yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
         }
 
-        #region Nested: Hut, Color32Range
+        #region Nested: Hut, MeshMaterial
         //*******************************************************
         [System.Serializable]
         private class Hut
         {
+            [SerializeField] private float _startHeight = -0.05f;
             [SerializeField] private RFloat _baseHalfSizeWidth = new(0.25f, 0.5f);
             [SerializeField] private RFloat _baseHalfSizeLength = new(0.4f, 0.6f);
+            [SerializeField] private RFloat _heightFoundationRange = new(0.1f, 0.15f);
             [SerializeField] private RFloat _heightWallRange = new(0.5f, 0.6f);
             [SerializeField] private RFloat _heightRoofRange = new(0.225f, 0.33f);
             [Space]
-            [SerializeField] private Chance _chanceTwoFloor = 16;
+            [SerializeField] private MeshMaterial _base;
+            [SerializeField] private MeshMaterial _wall;
+            [SerializeField] private MeshMaterial _roof;
+            [SerializeField] private MeshMaterial _roofWall;
             [Space]
-            [SerializeField] private RColor32 _colorWall;
-            [SerializeField] private RColor32 _colorRoof;
-            [SerializeField] private RColor32 _colorRoofWall;
+            [SerializeField] private Chance _chanceTwoFloor = 16;
 
             private List<Triangle> _triangles;
             private Vector3[] _baseBottom;
-            private readonly Vector3[] _baseTop = new Vector3[4];
-            private Vector3[] roofA;
-            private Vector3[] roofB;
+            private readonly Vector3[] _foundation = new Vector3[4];
+            private readonly Vector3[] _wallTop = new Vector3[4];
+            private Vector3[] _roofA, _roofB;
             private Vector3 _roofPointA, _roofPointB;
             private Quaternion _rotation;
             private readonly RZFloat _rotationYRange = 180f;
-            private float _x, _z, _heightWall;
+            private float _x, _z, _heightWall, _heightFoundation;
 
-            private const int COUNT_TRIANGLES = 14;
-            private static readonly Vector2[] UV_ROOF_WALL = { new(0.01f, 0.01f), new(1f, 0.01f), new(0.5f, 0.7f) };
+            private const int COUNT_TRIANGLES = 22;
+           // private static readonly Vector2[] UV_ROOF_WALL = { new(0.01f, 0.01f), new(1f, 0.01f), new(0.5f, 0.7f) };
 
             public List<Triangle> Create(Vector3 position)
             {
                 _triangles = new(COUNT_TRIANGLES);
-                _colorWall.Rolling(); _colorRoof.Rolling(); _colorRoofWall.Rolling();
 
-                _x = _baseHalfSizeWidth; _z = _baseHalfSizeLength;
+                _base.Roll(); _wall.Roll(); _roof.Roll(); _roofWall.Roll();
 
-                _baseBottom = new Vector3[] { new(_x, 0f, _z), new(-_x, 0f, _z), new(-_x, 0f, -_z), new(_x, 0f, -_z) };
+               _x = _baseHalfSizeWidth; _z = _baseHalfSizeLength;
+
+                _baseBottom = new Vector3[] { new(_x, _startHeight, _z), new(-_x, _startHeight, _z), new(-_x, _startHeight, -_z), new(_x, _startHeight, -_z) };
+                _heightFoundation = _heightFoundationRange;
                 _heightWall = _heightWallRange * _chanceTwoFloor.Select(2f, 1f);
 
                 _rotation = Quaternion.Euler(0f, _rotationYRange, 0f);
                 for (int i = 0; i < 4; i++)
                 {
-                    _baseTop[i] = _baseBottom[i] = _rotation * _baseBottom[i] + position;
-                    _baseTop[i].y = _heightWall;
+                    _foundation[i] = _wallTop[i] = _baseBottom[i] = _rotation * _baseBottom[i] + position;
+                    _foundation[i].y = _heightFoundation;
+                    _wallTop[i].y = _heightWall;
                 }
 
-                _triangles.AddRange(PolygonChain.CreateUV(_colorWall, _baseBottom, _baseTop, true));
+                _triangles.AddRange(PolygonChain.Create(_base.color, _base.specular, _baseBottom, _foundation, true));
+                _triangles.AddRange(PolygonChain.Create(_wall.color, _wall.specular, _foundation, _wallTop, true));
 
-                _roofPointA = (_baseTop[0] + _baseTop[1]) * 0.5f;
+                _roofPointA = (_wallTop[0] + _wallTop[1]) * 0.5f;
                 _roofPointA.y += _heightRoofRange;
-                _roofPointB = (_baseTop[2] + _baseTop[3]) * 0.5f;
+                _roofPointB = (_wallTop[2] + _wallTop[3]) * 0.5f;
                 _roofPointB.y += _heightRoofRange;
 
-                roofA = new Vector3[] { _baseTop[0], _roofPointA, _baseTop[1] };
-                roofB = new Vector3[] { _baseTop[3], _roofPointB, _baseTop[2] };
+                _roofA = new Vector3[] { _wallTop[0], _roofPointA, _wallTop[1] };
+                _roofB = new Vector3[] { _wallTop[3], _roofPointB, _wallTop[2] };
 
-                _triangles.AddRange(PolygonChain.CreateUV(_colorRoof, roofA, roofB));
+                _triangles.AddRange(PolygonChain.Create(_roof.color, _roof.specular, _roofA, _roofB));
 
-                (roofB[0], roofB[2]) = (roofB[2], roofB[0]);
-                _triangles.Add(new(_colorRoofWall, roofA, UV_ROOF_WALL));
-                _triangles.Add(new(_colorRoofWall, roofB, UV_ROOF_WALL));
+                (_roofB[0], _roofB[2]) = (_roofB[2], _roofB[0]);
+                _triangles.Add(new(_roofWall.color, _roofWall.specular, _roofA));
+                _triangles.Add(new(_roofWall.color, _roofWall.specular, _roofB));
 
                 return _triangles;
             }
         }
         //*******************************************************
         [System.Serializable]
-        private class Color32Range
+        private class MeshMaterial
         {
-            [SerializeField, Range(0, 2)] private int _idComponent;
-            [SerializeField] private RInt _colorRange = new(122, 255);
+            public RColor32 color;
+            public Vector2Specular specular;
 
-            [NonSerialized] public Color32 color = new(0, 0, 0, 255);
-
-            public void Rand() => color[_idComponent] = (byte)_colorRange;
+            public void Roll() => color.Rolling();
         }
         #endregion
     }

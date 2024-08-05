@@ -1,10 +1,11 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(FindAssetAttribute))]
-    public class FindAssetAttributeDrawer : AGetComponentAttributeDrawer
+    internal class FindAssetAttributeDrawer : AGetComponentAttributeDrawer
     {
         private const string PREFAB_TYPE = "t:Prefab";
         private static readonly string[] PATH = { "Assets" };

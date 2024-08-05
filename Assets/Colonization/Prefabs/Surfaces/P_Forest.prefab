@@ -103,6 +103,8 @@ MonoBehaviour:
       rgba: 4279657755
     _range: 0.5
     _isAlphaRandom: 0
+  _specular:
+    _value: {x: 0, y: 0.1}
   _spruce:
     _countVertexRange:
       _min: 5

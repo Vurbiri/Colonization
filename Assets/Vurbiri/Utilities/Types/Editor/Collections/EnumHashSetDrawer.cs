@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 using Object = UnityEngine.Object;
 
-namespace Vurbiri
+namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(EnumHashSet<,>))]
     public class EnumHashSetDrawer : PropertyDrawer
