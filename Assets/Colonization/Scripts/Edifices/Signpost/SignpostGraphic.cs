@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Vurbiri.Colonization
 {
     public class SignpostGraphic : AEdificeSidesGraphic
@@ -11,7 +9,7 @@ namespace Vurbiri.Colonization
             foreach (var side in _graphicSides)
                 side.SetActive(links.ContainsKey(side.Type));
 
-            StaticBatchingUtility.Combine(gameObject);
+            //StaticBatchingUtility.Combine(gameObject);
         }
     }
 }

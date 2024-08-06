@@ -54,7 +54,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 570308999637090527}
-  m_Mesh: {fileID: 4300000, guid: 04d9a5a7bf3972f4da1d330756cee8d7, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 7d0ec8ef8a4e14a4b8bce2f4719a94c2, type: 2}
 --- !u!23 &1849427971867805805
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 4010732691776821691}
   - component: {fileID: 3095173265798923172}
   m_Layer: 3
-  m_Name: P_1_PortTwo
+  m_Name: P_2_LighthouseTwo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143,17 +143,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2acf64d5c00b89a48b2d4428d4f50099, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 3
+  _type: 5
   _group: 2
-  _level: 1
-  _isUpgrade: 1
+  _level: 2
+  _isUpgrade: 0
   _isBuildWall: 0
   _cost:
     _values: 000000000000000000000000000000000000000000000000
     _amount: 0
-  _prefabUpgrade: {fileID: 3095173265798923172, guid: 8d8dad426f4301f4d98acef123737497,
-    type: 3}
-  _typeNext: 5
-  _groupNext: 2
+  _prefabUpgrade: {fileID: 0}
+  _typeNext: 0
+  _groupNext: 0
   _radiusCollider: 1.75
   _graphic: {fileID: 3229061198751439673}

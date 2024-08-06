@@ -79,6 +79,14 @@ namespace VurbiriEditor.ReColoringVertex
             _materialFromMesh = null;
         }
 
+        public void Sort()
+        {
+            if (_vertexMaterials == null)
+                return;
+
+            _vertexMaterials.Sort();
+        }
+
         public void NameFromColor()
         {
             if (_vertexMaterials == null)

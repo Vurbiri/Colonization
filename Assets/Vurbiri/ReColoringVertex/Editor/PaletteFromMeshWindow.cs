@@ -7,7 +7,6 @@ using static VurbiriEditor.CONST;
 
 namespace VurbiriEditor.ReColoringVertex
 {
-
     using static CONST;
 
     internal class PaletteFromMeshWindow : EditorWindow
@@ -17,7 +16,7 @@ namespace VurbiriEditor.ReColoringVertex
 
         private const string NAME = "Palette from mesh";
         private const string BUTTON_OVERRIDE = "Override", BUTTON_APPEND = "Append";
-        private static readonly GUIContent caption = new(NAME);
+        private static readonly GUIContent NAME_CONTENT = new(NAME);
 
         private const int MAX_MATERIALS = 25;
         private const string KEY_X = "PFM_X", KEY_Y = "PFM_Y", KEY_W = "PFM_Width", KEY_H = "PFM_Height";
@@ -34,7 +33,7 @@ namespace VurbiriEditor.ReColoringVertex
             _styleMesh = new(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter };
 
             minSize = wndMinSize;
-            titleContent = caption;
+            titleContent = NAME_CONTENT;
 
             if (EditorPrefs.HasKey(KEY_X) && EditorPrefs.HasKey(KEY_Y) && EditorPrefs.HasKey(KEY_W) && EditorPrefs.HasKey(KEY_H))
                 position = new(EditorPrefs.GetFloat(KEY_X), EditorPrefs.GetFloat(KEY_Y), EditorPrefs.GetFloat(KEY_W), EditorPrefs.GetFloat(KEY_H));

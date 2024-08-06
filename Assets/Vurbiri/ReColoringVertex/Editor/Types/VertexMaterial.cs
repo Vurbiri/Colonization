@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 namespace VurbiriEditor.ReColoringVertex
 {
     [System.Serializable]
-    internal class VertexMaterial
+    internal class VertexMaterial : IComparable<VertexMaterial>
     {
         public string name;
         public Color colorMesh;
@@ -59,6 +60,18 @@ namespace VurbiriEditor.ReColoringVertex
             isOpen = isEditValue;
         }
 
+        public VertexMaterial(Color colorMesh, Color colorReplace, Vector2 specular)
+        {
+            NameFromColor(colorReplace);
+            this.colorMesh = colorMesh;
+            this.colorReplace = colorReplace;
+            this.specular = specular;
+            isInfoMode = false;
+            isEditValue = true;
+            isEditName = false;
+            isOpen = true;
+        }
+
         public VertexMaterial(Color colorReplace, Vector2 specular)
         {
             NameFromColor(colorReplace);
@@ -79,12 +92,12 @@ namespace VurbiriEditor.ReColoringVertex
             isInfoMode = true;
         }
 
-        public void Update(Color colorMesh, bool isEditName, bool isEditValue, bool isInfoMode)
+        public void Update(Color colorMesh, bool isEditName, bool isEditValue)
         {
             this.colorMesh = colorMesh;
             this.isEditName = isEditName;
             this.isEditValue = isEditValue;
-            this.isInfoMode = isInfoMode;
+            this.isInfoMode = false;
         }
 
         public bool ReplaceEquals(VertexMaterial material) => colorReplace == material.colorReplace && specular == material.specular;
@@ -102,6 +115,23 @@ namespace VurbiriEditor.ReColoringVertex
             specular = material.specular;
             isEditName = material.isEditName;
             isOpen = true;
+        }
+
+        public int CompareTo(VertexMaterial vm)
+        {
+            float[] self = new float[3];
+            float[] other = new float[3];
+
+            Color.RGBToHSV(colorReplace, out self[0], out self[1], out self[2]);
+            Color.RGBToHSV(vm.colorReplace, out other[0], out other[1], out other[2]);
+
+            for (int i = 0; i < 3; i++)
+                if (!Mathf.Approximately(self[i], other[i])) return self[i].CompareTo(other[i]);
+
+            for (int i = 0; i < 2; i ++)
+                if (!Mathf.Approximately(specular[i], vm.specular[i])) return specular[i].CompareTo(vm.specular[i]);
+            
+            return 0;
         }
     }
 }

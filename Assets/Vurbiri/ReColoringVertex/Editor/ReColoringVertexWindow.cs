@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -20,23 +21,20 @@ namespace VurbiriEditor.ReColoringVertex
 
         private const string KEY_IS_SAVE = "CV_IsSave", KEY_MESH_PATH = "CV_MeshPath", KEY_EDIT_NAMES = "CV_EditNames";
         private const string KEY_X = "CV_X", KEY_Y = "CV_Y", KEY_W = "CV_Width", KEY_H = "CV_Height";
-
         #endregion
 
         #region Varibles
-        private static Mesh currentMesh;
-        private static PaletteVertexScriptable currentPalette;
+        private Mesh currentMesh;
+        private PaletteVertexScriptable currentPalette;
 
-        private static bool isInvert = false;
-        private static string nameMesh;
+        private bool isInvert = false;
+        private string nameMesh;
 
-        private static int vertexCount, subMeshCount, colorsCount;
-        private static ListVertexMaterials[] listData;
+        private int vertexCount, subMeshCount, colorsCount;
+        private ListVertexMaterials[] listData;
 
-        private Mesh _tempMesh;
-        private PaletteVertexScriptable _tempPalette;
         private Vector2 _scrollPos;
-        private bool _isSavePalette = true, _isEditName = false;
+        private bool _isSavePalette = true, _isEditName = false, _isEditedMesh = false;
         private string _saveFolder = "Assets/";
         #endregion
 
@@ -81,23 +79,15 @@ namespace VurbiriEditor.ReColoringVertex
 
         private void OnGUI()
         {
-            if (Application.isPlaying) return;
+            if (Application.isPlaying)
+            {
+                Close();
+                return;
+            }
 
             BeginWindows();
 
             DrawTop();
-
-            if (_tempPalette != currentPalette)
-            {
-                currentPalette = _tempPalette;
-                SetPalette();
-            }
-            if (_tempMesh != currentMesh)
-            {
-                currentMesh = _tempMesh;
-                Selection.activeObject = currentMesh;
-                SetVertexesData();
-            }
 
             if (currentMesh == null || listData == null)
             {
@@ -111,37 +101,23 @@ namespace VurbiriEditor.ReColoringVertex
 
             EndWindows();
 
-            #region Local: Update(), FindPallete(), DrawTop(), DrawColorsMesh(),  DrawBottom()
-            //=================================
-            void SetVertexesData()
-            {
-                if (currentMesh != null)
-                {
-                    subMeshCount = currentMesh.subMeshCount;
-                    FindPalette(NamePaletteFromMesh);
-                    CreateColorsData();
-                }
-            }
-            //=================================
-            void FindPalette(string name)
-            {
-                foreach (var palette in Resources.FindObjectsOfTypeAll<PaletteVertexScriptable>())
-                {
-                    if (palette.name == name)
-                    {
-                        currentPalette = palette;
-                        return;
-                    }
-                }
-            }
+            #region Local: DrawTop(), DrawColorsMesh(),  DrawBottom()
             //=================================
             void DrawTop()
             {
                 EditorGUILayout.Space(SPACE_WND);
 
                 EditorGUILayout.LabelField(LABEL_PALETTE_PATH, PALETTE_PATH, EditorStyles.boldLabel);
-                _tempPalette = EditorGUILayout.ObjectField(LABEL_PALETTE, currentPalette, typePalette, false) as PaletteVertexScriptable;
-                _tempMesh = EditorGUILayout.ObjectField(LABEL_MESH, currentMesh, typeMesh, false) as Mesh;
+                SetPalette(EditorGUILayout.ObjectField(LABEL_PALETTE, currentPalette, typePalette, false) as PaletteVertexScriptable);
+                if (GUILayout.Button("Show palette"))
+                {
+                    var wnd = GetWindow<PaletteWindow>(/*true*/);
+                    wnd.SetPalette(currentPalette);
+                    FocusWindowIfItsOpen<ReColoringVertexWindow>();
+                }
+                    
+                EditorGUILayout.Space();
+                CreateColorsData(EditorGUILayout.ObjectField(LABEL_MESH, currentMesh, typeMesh, false) as Mesh);
 
                 EditorGUILayout.Space();
             }
@@ -150,7 +126,7 @@ namespace VurbiriEditor.ReColoringVertex
             {
                 _isEditName = EditorGUILayout.ToggleLeft(LABEL_EDIT_NAMES, _isEditName);
                 if (GUILayout.Button(LABEL_RELOAD_BUTTON))
-                    SetVertexesData();
+                    CreateColorsData(currentMesh, true);
                 EditorGUILayout.Space();
 
                 EditorGUILayout.BeginVertical(GUI.skin.window);
@@ -187,17 +163,29 @@ namespace VurbiriEditor.ReColoringVertex
             #endregion
         }
 
-        private void CreateColorsData()
+        private void CreateColorsData(Mesh m, bool isReload = false)
         {
+            if (!isReload && currentMesh == m)
+                return;
+
+            currentMesh = m;
+
             if (currentMesh == null)
                 return;
 
-            nameMesh = PREFIX_MESH.Concat(currentMesh.name);
+            FindPalette(NamePaletteFromMesh);
+            Selection.activeObject = currentMesh;
+            subMeshCount = currentMesh.subMeshCount;
+            nameMesh = currentMesh.name;
+
+            if(!(_isEditedMesh = nameMesh.StartsWith(PREFIX_MESH)))
+                nameMesh = PREFIX_MESH.Concat(nameMesh);
 
             Color[] colors = currentMesh.colors;
+            Vector2[] uvs = currentMesh.uv;
             vertexCount = colors.Length;
 
-            if (vertexCount <= 0)
+            if (vertexCount <= 0 || vertexCount != uvs.Length)
             {
                 listData = null;
                 return;
@@ -235,15 +223,37 @@ namespace VurbiriEditor.ReColoringVertex
 
                 if (currentPalette != null && currentPalette.Count > colorsCount)
                     listVert.Add(currentColor, currentPalette[colorsCount], vertex);
+                else if(_isEditedMesh)
+                    listVert.Add(currentColor, uvs[vertex], vertex);
                 else
                     listVert.Add(currentColor, vertex);
 
                 colorsCount++;
             }
+            #region Local: FindPalette(...)
+            //=================================
+            void FindPalette(string name)
+            {
+                foreach (var palette in Resources.FindObjectsOfTypeAll<PaletteVertexScriptable>())
+                {
+                    Debug.Log(palette.name);
+                    if (palette.name == name)
+                    {
+                        currentPalette = palette;
+                        return;
+                    }
+                }
+            }
+            #endregion
         }
 
-        private void SetPalette()
+        private void SetPalette(PaletteVertexScriptable plt)
         {
+            if(plt == currentPalette)
+                return;
+
+            currentPalette = plt;
+            
             if (currentMesh == null || currentPalette == null || listData == null)
                 return;
 
@@ -298,6 +308,7 @@ namespace VurbiriEditor.ReColoringVertex
 
             Debug.Log($"Mesh is saved: {path}");
 
+            FocusWindowIfItsOpen<ReColoringVertexWindow>();
             //EditorUtility.FocusProjectWindow();
             //Selection.activeObject = newMesh;
 

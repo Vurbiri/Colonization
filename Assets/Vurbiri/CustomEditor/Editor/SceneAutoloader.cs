@@ -27,7 +27,7 @@ namespace VurbiriEditor
         [MenuItem(MENU)]
         private static void ShowWindow()
         {
-            GetWindow<SceneAutoloader>(NAME);
+            GetWindow<SceneAutoloader>(true, NAME);
         }
 
         private void OnGUI()
@@ -56,6 +56,9 @@ namespace VurbiriEditor
 
         private static void UpdateListOfScenes()
         {
+            if (!AssetDatabase.IsValidFolder(arrPaths[0]))
+                return;
+
             guids = AssetDatabase.FindAssets(SCENE_TYPE, arrPaths);
 
             countScenes = guids.Length;

@@ -16,34 +16,10 @@ MonoBehaviour:
   _materialFromMesh: {fileID: 0}
   _isInvertSubMeshes: 0
   _vertexMaterials:
-  - name: '[210, 219, 208]'
+  - name: '[65, 32, 16]'
     colorMesh: {r: 0, g: 0, b: 0, a: 1}
-    colorReplace: {r: 0.8235294, g: 0.85882354, b: 0.8156863, a: 1}
-    specular: {x: 0, y: 0.2}
-    isInfoMode: 1
-    isEditValue: 1
-    isEditName: 0
-    isOpen: 1
-  - name: '[139, 140, 122]'
-    colorMesh: {r: 0, g: 0, b: 0, a: 1}
-    colorReplace: {r: 0.54509807, g: 0.54901963, b: 0.47843137, a: 1}
-    specular: {x: 0, y: 0.1}
-    isInfoMode: 1
-    isEditValue: 1
-    isEditName: 0
-    isOpen: 1
-  - name: '[255, 255, 255]'
-    colorMesh: {r: 0, g: 0, b: 0, a: 1}
-    colorReplace: {r: 1, g: 1, b: 1, a: 1}
-    specular: {x: 0, y: 0}
-    isInfoMode: 1
-    isEditValue: 1
-    isEditName: 0
-    isOpen: 1
-  - name: '[173, 181, 172]'
-    colorMesh: {r: 0, g: 0, b: 0, a: 1}
-    colorReplace: {r: 0.6784314, g: 0.70980394, b: 0.6745098, a: 1}
-    specular: {x: 0, y: 0.1}
+    colorReplace: {r: 0.25490198, g: 0.1254902, b: 0.0627451, a: 1}
+    specular: {x: 0, y: 0.3}
     isInfoMode: 1
     isEditValue: 1
     isEditName: 0
@@ -56,10 +32,50 @@ MonoBehaviour:
     isEditValue: 1
     isEditName: 0
     isOpen: 1
-  - name: '[65, 32, 16]'
+  - name: '[101, 50, 25]'
     colorMesh: {r: 0, g: 0, b: 0, a: 1}
-    colorReplace: {r: 0.25490198, g: 0.1254902, b: 0.0627451, a: 1}
-    specular: {x: 0, y: 0.3}
+    colorReplace: {r: 0.39607844, g: 0.19607843, b: 0.09803922, a: 1}
+    specular: {x: 0.85, y: 0.5}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: '[133, 94, 66]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.52156866, g: 0.36862746, b: 0.25882354, a: 1}
+    specular: {x: 0, y: 0.1}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: '[179, 115, 69]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.7019608, g: 0.4509804, b: 0.27058825, a: 1}
+    specular: {x: 0.95, y: 0.7}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: '[251, 225, 185]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.9843137, g: 0.88235295, b: 0.7254902, a: 1}
+    specular: {x: 0, y: 0.1}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: '[255, 236, 58]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 1, g: 0.9254902, b: 0.22745098, a: 1}
+    specular: {x: 0, y: 1}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: '[139, 140, 122]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.54509807, g: 0.54901963, b: 0.47843137, a: 1}
+    specular: {x: 0, y: 0.1}
     isInfoMode: 1
     isEditValue: 1
     isEditName: 0
@@ -72,18 +88,26 @@ MonoBehaviour:
     isEditValue: 1
     isEditName: 0
     isOpen: 1
-  - name: '[133, 94, 66]'
+  - name: '[210, 219, 208]'
     colorMesh: {r: 0, g: 0, b: 0, a: 1}
-    colorReplace: {r: 0.52156866, g: 0.36862746, b: 0.25882354, a: 1}
-    specular: {x: 0, y: 0.12}
+    colorReplace: {r: 0.8235294, g: 0.85882354, b: 0.8156863, a: 1}
+    specular: {x: 0, y: 0.2}
     isInfoMode: 1
     isEditValue: 1
     isEditName: 0
     isOpen: 1
-  - name: '[255, 236, 58]'
+  - name: '[173, 181, 172]'
     colorMesh: {r: 0, g: 0, b: 0, a: 1}
-    colorReplace: {r: 1, g: 0.9254902, b: 0.22745098, a: 1}
-    specular: {x: 0, y: 1}
+    colorReplace: {r: 0.6784314, g: 0.70980394, b: 0.6745098, a: 1}
+    specular: {x: 0, y: 0.1}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: '[52, 47, 52]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.20392157, g: 0.18431373, b: 0.20392157, a: 1}
+    specular: {x: 0, y: 0.1}
     isInfoMode: 1
     isEditValue: 1
     isEditName: 0

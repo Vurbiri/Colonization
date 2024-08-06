@@ -17,15 +17,14 @@ namespace VurbiriEditor.ReColoringVertex
         private SerializedObject _this;
 
         private GUIContent _labelContent;
-        private bool _isEdit = true, _isInfoMode = false;
+        private bool _isEdit = true;
         private Color _colorGUI;
 
         public bool IsEdit => _isEdit;
 
-        public ListVertexMaterials Initialize(int id, bool isInfoMode = false)
+        public ListVertexMaterials Initialize(int id)
         {
             _labelContent = new($"{LABEL_FOLDOUT} {id}");
-            _isInfoMode = isInfoMode;
 
             _colorGUI = GUI.color;
 
@@ -45,7 +44,7 @@ namespace VurbiriEditor.ReColoringVertex
                 _vertexMaterial.Resize(_colorsVertexes.Count);
 
             for (int i = 0; i < _vertexMaterial.Count; i++)
-                _vertexMaterial[i].Update(_colorsVertexes[i], isEditName, _isEdit, _isInfoMode);
+                _vertexMaterial[i].Update(_colorsVertexes[i], isEditName, _isEdit);
 
             _this.Update();
 
@@ -63,6 +62,12 @@ namespace VurbiriEditor.ReColoringVertex
         {
             _colorsVertexes.Add(new(colorMesh, index));
             _vertexMaterial.Add(new(colorMesh));
+        }
+
+        public void Add(Color colorMesh, Vector2 uv, int index)
+        {
+            _colorsVertexes.Add(new(colorMesh, index));
+            _vertexMaterial.Add(new(colorMesh, colorMesh, uv));
         }
 
         public void Add(Color colorMesh, VertexMaterial material, int index)

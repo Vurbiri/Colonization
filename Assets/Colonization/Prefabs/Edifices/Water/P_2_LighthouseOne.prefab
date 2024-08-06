@@ -155,5 +155,5 @@ MonoBehaviour:
   _prefabUpgrade: {fileID: 0}
   _typeNext: 0
   _groupNext: 0
-  _radiusCollider: 1.75
+  _radiusCollider: 2.5
   _graphic: {fileID: 7865600154351631845}

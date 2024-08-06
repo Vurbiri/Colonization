@@ -9,7 +9,7 @@ namespace VurbiriEditor.ReColoringVertex
     internal class PaletteVertexScriptableEditor : Editor
     {
         public const string LABEL_IS_MODIFY = " Get VertexMaterials from mesh", LABEL_GET_BUTTON = "GET";
-        public const string LABEL_NAME_BUTTON = "Names from colors", LABEL_CLEAR_BUTTON = "Clear names";
+        public const string LABEL_SORT_BUTTON = "Sort", LABEL_NAME_BUTTON = "Names from colors", LABEL_CLEAR_BUTTON = "Clear names";
 
         protected SerializedProperty _isModifyProperty;
         protected SerializedProperty _materialFromMeshProperty;
@@ -59,6 +59,8 @@ namespace VurbiriEditor.ReColoringVertex
             _isInvertSubMeshesProperty.boolValue = EditorGUILayout.Toggle(LABEL_IS_INVERT, _isInvertSubMeshesProperty.boolValue);
             EditorGUILayout.Space();
             EditorGUILayout.PropertyField(_vertexMaterialsProperty);
+            if (GUILayout.Button(LABEL_SORT_BUTTON))
+                _palette.Sort();
             EditorGUILayout.Space();
             _isEditNameProperty.boolValue = EditorGUILayout.ToggleLeft(LABEL_EDIT_NAMES, _isEditNameProperty.boolValue);
             EditorGUILayout.Space();

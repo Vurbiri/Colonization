@@ -258,7 +258,7 @@ MonoBehaviour:
       color:
         _color:
           serializedVersion: 2
-          rgba: 4283124555
+          rgba: 4281610036
         _range: 0.1
         _isAlphaRandom: 0
       specular:
@@ -276,11 +276,11 @@ MonoBehaviour:
       color:
         _color:
           serializedVersion: 2
-          rgba: 4282539653
-        _range: 0.5
+          rgba: 4281562040
+        _range: 0.6
         _isAlphaRandom: 0
       specular:
-        _value: {x: 0, y: 0.3}
+        _value: {x: 0, y: 0.2}
     _roofWall:
       color:
         _color:
