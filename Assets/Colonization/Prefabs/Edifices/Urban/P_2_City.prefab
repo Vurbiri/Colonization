@@ -143,17 +143,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f395e166a9893447a5fe024c662f057, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 5
+  _type: 7
   _group: 3
   _level: 2
   _isUpgrade: 1
   _isBuildWall: 1
   _cost:
-    _values: 000000000000000000000000000000000000000000000000
-    _amount: 0
+    _values: 010000000200000002000000010000000100000002000000
+    _amount: 9
   _prefabUpgrade: {fileID: 4167249404102491042, guid: 7e733fa8b834ab246acdbe20945693e7,
     type: 3}
-  _typeNext: 6
+  _typeNext: 8
   _groupNext: 3
   _radiusCollider: 3
   _graphic: {fileID: 5873289198157121800}

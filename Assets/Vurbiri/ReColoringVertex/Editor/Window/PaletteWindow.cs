@@ -15,7 +15,7 @@ namespace VurbiriEditor.ReColoringVertex
 
         private Vector2 _scrollPos;
 
-        private PaletteVertexScriptable _reference, _referenceTemp;
+        private PaletteVertexScriptable _reference;
         private SerializedProperty _property;
         private SerializedObject _palette;
 
@@ -82,8 +82,12 @@ namespace VurbiriEditor.ReColoringVertex
                 return;
             }
 
+            _reference.IsEditName = false;
+            _reference.IsOpen = true;
+
             _palette = new(_reference);
             _property = _palette?.FindProperty(NAME_PROPERTY);
+            _palette.Update();
         }
     }
 }

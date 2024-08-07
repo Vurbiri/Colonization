@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da8d66040cdcea4cb4e91be093836a2, type: 3}
+  m_Name: Palette_Shrine
+  m_EditorClassIdentifier: 
+  _isModify: 0
+  _materialFromMesh: {fileID: 0}
+  _isInvertSubMeshes: 1
+  _vertexMaterials:
+  - name: '[38, 37, 81]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.14901961, g: 0.14509805, b: 0.31764707, a: 1}
+    specular: {x: 0.95, y: 0.8}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: '[235, 235, 255]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.92156863, g: 0.92156863, b: 1, a: 1}
+    specular: {x: 0.25, y: 0.95}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: '[184, 184, 33]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.72156864, g: 0.72156864, b: 0.07058824, a: 1}
+    specular: {x: 0.95, y: 0.7}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: '[255, 255, 255]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 1, g: 1, b: 1, a: 1}
+    specular: {x: 0, y: 0}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  _isEditName: 0

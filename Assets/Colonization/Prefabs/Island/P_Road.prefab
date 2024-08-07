@@ -46,11 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roadRenderer: {fileID: 1634477485002050712}
-  _widthRoad: 0.9
+  _widthRoad: 0.85
   _rangeCount:
     _min: 2
     _max: 4
-  _offsetY: 0.05
+  _offsetY: 0.025
   _rateWave:
     _min: 0.5
     _max: 0.9

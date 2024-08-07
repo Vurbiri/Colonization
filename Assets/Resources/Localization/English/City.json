@@ -6,10 +6,12 @@
   "Build": "Build",
   "Upgrade": "Upgrade to",
 
-  "Shrine": "Shrine",
+  "Shrine": "Magic flame",
 
   "PortOne": "Small port",
   "PortTwo": "Port",
+  "LighthouseOne": "Small lighthouse",
+  "LighthouseTwo": "Lighthouse",
 
   "Town": "Town",
   "City": "City",

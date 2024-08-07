@@ -17,7 +17,7 @@ namespace VurbiriEditor.ReColoringVertex
         private const string LABEL_PALETTE_PATH = "Path to palettes:";
         private const string LABEL_MESH_BUTTON = "Save mesh as...", LABEL_RELOAD_BUTTON = "Reload";
 
-        private const string DEFOULT_PALETTE = "Palette_Default", PREFIX_PALETTE = "Palette_", PREFIX_MESH = "MH_";
+        private const string PREFIX_PALETTE = "Palette_", PREFIX_MESH = "MH_";
 
         private const string KEY_IS_SAVE = "CV_IsSave", KEY_MESH_PATH = "CV_MeshPath", KEY_EDIT_NAMES = "CV_EditNames";
         private const string KEY_X = "CV_X", KEY_Y = "CV_Y", KEY_W = "CV_Width", KEY_H = "CV_Height";
@@ -60,9 +60,6 @@ namespace VurbiriEditor.ReColoringVertex
 
             if (EditorPrefs.HasKey(KEY_X) && EditorPrefs.HasKey(KEY_Y) && EditorPrefs.HasKey(KEY_W) && EditorPrefs.HasKey(KEY_H))
                 position = new(EditorPrefs.GetFloat(KEY_X), EditorPrefs.GetFloat(KEY_Y), EditorPrefs.GetFloat(KEY_W), EditorPrefs.GetFloat(KEY_H));
-
-            if (currentPalette == null)
-                currentPalette = Resources.Load<PaletteVertexScriptable>(DEFOULT_PALETTE);
         }
 
         private void OnDisable()
@@ -191,7 +188,6 @@ namespace VurbiriEditor.ReColoringVertex
                 return;
             }
 
-            isInvert = currentPalette != null && currentPalette.IsInvert && subMeshCount > 1;
 
             HashSet<int>[] subMeshes = new HashSet<int>[subMeshCount];
             listData = new ListVertexMaterials[subMeshCount];
@@ -230,6 +226,9 @@ namespace VurbiriEditor.ReColoringVertex
 
                 colorsCount++;
             }
+
+            isInvert = subMeshCount > 1 && (currentPalette != null && currentPalette.IsInvert || listData[0].Count > 1);
+
             #region Local: FindPalette(...)
             //=================================
             void FindPalette(string name)

@@ -9,7 +9,6 @@ namespace Vurbiri
             for (int i = 0; i < 3; i++)
                 self[i] = Mathf.Clamp01(self[i] * brightness);
 
-            self.a = 1f;
             return self;
         }
 

@@ -544,7 +544,7 @@ MonoBehaviour:
   _smoothTime: 0.35
   _sqrVelocityMin: 0.2
   _speedZoom: 4
-  _heightZoomMin: 65
+  _heightZoomMin: 55
   _heightZoomMax: 350
   _steepZoomRate: 0.1
   _speedRotation: 0.2
@@ -2531,11 +2531,11 @@ MonoBehaviour:
   _edificeSprites:
     _values:
     - {fileID: 0}
-    - {fileID: 21300000, guid: 990ac6bacfa045645b7f34cb120770f8, type: 3}
+    - {fileID: 21300000, guid: 2100b184ca036e442a767cd4c7ef9e95, type: 3}
     - {fileID: 21300000, guid: a395e48629ad15d41a2b80eb3e09d766, type: 3}
     - {fileID: 21300000, guid: adcaedb1b2adf2845964e7af4df978f6, type: 3}
-    - {fileID: 21300000, guid: a395e48629ad15d41a2b80eb3e09d766, type: 3}
-    - {fileID: 21300000, guid: adcaedb1b2adf2845964e7af4df978f6, type: 3}
+    - {fileID: 21300000, guid: 7ab3b3140e5e11341a649198548bc398, type: 3}
+    - {fileID: 21300000, guid: bf4b37acd1a8b47488dee24807afdf53, type: 3}
     - {fileID: 21300000, guid: b8396816d8d19a647afafa31936c662a, type: 3}
     - {fileID: 21300000, guid: 476a0b0b857ca594c96cdf9f0a5a99e9, type: 3}
     - {fileID: 21300000, guid: 5be9da9b6783f1e49a9926ebe423c4dc, type: 3}

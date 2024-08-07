@@ -12,14 +12,15 @@ namespace VurbiriEditor.ReColoringVertex
         [SerializeField] private Mesh _materialFromMesh;
 
         [SerializeField] private bool _isInvertSubMeshes = false;
-        [SerializeField] private List<VertexMaterial> _vertexMaterials;
+        [SerializeField] private List<VertexMaterial> _vertexMaterials = new();
         [SerializeField] private bool _isEditName = true;
 
         public VertexMaterial this[int index] { get => _vertexMaterials[index]; set => _vertexMaterials[index] = value; }
         public int Count => _vertexMaterials.Count;
 
         public bool IsInvert => _isInvertSubMeshes;
-        public bool IsEditName => _isEditName;
+        public bool IsEditName {get => _isEditName; set => _vertexMaterials.ForEach(v => v.isEditName = _isEditName = value); }
+        public bool IsOpen {set => _vertexMaterials.ForEach(v => v.isOpen = value); }
 
         public void Initialize(string name, bool isInvert, bool isEditName, int count)
         {

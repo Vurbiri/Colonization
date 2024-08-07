@@ -17,7 +17,7 @@ namespace VurbiriEditor.ReColoringVertex
         private SerializedObject _this;
 
         private GUIContent _labelContent;
-        private bool _isEdit = true;
+        private bool _isEdit = false;
         private Color _colorGUI;
 
         public bool IsEdit => _isEdit;
@@ -62,18 +62,24 @@ namespace VurbiriEditor.ReColoringVertex
         {
             _colorsVertexes.Add(new(colorMesh, index));
             _vertexMaterial.Add(new(colorMesh));
+
+            _isEdit = _colorsVertexes.Count > 1;
         }
 
         public void Add(Color colorMesh, Vector2 uv, int index)
         {
             _colorsVertexes.Add(new(colorMesh, index));
             _vertexMaterial.Add(new(colorMesh, colorMesh, uv));
+
+            _isEdit = _colorsVertexes.Count > 1;
         }
 
         public void Add(Color colorMesh, VertexMaterial material, int index)
         {
             _colorsVertexes.Add(new(colorMesh, index));
             _vertexMaterial.Add(new(colorMesh, material));
+
+            _isEdit = _colorsVertexes.Count > 1;
         }
 
         public bool TryInsert(Color colorMesh, int vertex)

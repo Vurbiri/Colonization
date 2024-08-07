@@ -4,11 +4,10 @@ Shader "UI/Default ZTest"
 {
     Properties
     {
-        [Enum(ZTest)]_ZTest("ZTest", Float) = 8
-
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
 
+        [Enum(ZTest)]_ZTest("ZTest", Float) = 8
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
         _StencilOp ("Stencil Operation", Float) = 0

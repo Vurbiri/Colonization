@@ -6,10 +6,12 @@
 	"Build": "Построить",
 	"Upgrade": "Улучшить",
 
-	"Shrine": "Святилище",
+	"Shrine": "Магическое пламя",
 
 	"PortOne": "Малый порт",
 	"PortTwo": "Порт",
+	"LighthouseOne": "Малый маяк",
+	"LighthouseTwo": "Маяк",
 
 	"Town": "Поселение",
 	"City": "Город",

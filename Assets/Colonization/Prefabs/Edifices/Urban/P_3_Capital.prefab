@@ -143,14 +143,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f395e166a9893447a5fe024c662f057, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 6
+  _type: 8
   _group: 3
   _level: 3
   _isUpgrade: 0
   _isBuildWall: 1
   _cost:
-    _values: 000000000000000000000000000000000000000000000000
-    _amount: 0
+    _values: 000000000100000003000000020000000100000001000000
+    _amount: 8
   _prefabUpgrade: {fileID: 0}
   _typeNext: 0
   _groupNext: 0
