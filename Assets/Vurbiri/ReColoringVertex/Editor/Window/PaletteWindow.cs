@@ -64,7 +64,6 @@ namespace VurbiriEditor.ReColoringVertex
                 _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
 
                 EditorGUILayout.PropertyField(_property);
-                //_palette.Update();
 
                 EditorGUILayout.EndScrollView();
                 EditorGUILayout.EndVertical();

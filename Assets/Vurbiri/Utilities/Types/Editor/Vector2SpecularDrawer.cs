@@ -18,7 +18,7 @@ namespace VurbiriEditor
             SerializedProperty vectorProperty = property.FindPropertyRelative(NAME_VALUE);
             Vector2 vector = vectorProperty.vector2Value;
 
-            EditorGUI.BeginProperty(position, label, property);
+            label = EditorGUI.BeginProperty(position, label, property);
 
             if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
             {

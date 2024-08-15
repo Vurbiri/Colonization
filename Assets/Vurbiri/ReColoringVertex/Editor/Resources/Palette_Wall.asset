@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da8d66040cdcea4cb4e91be093836a2, type: 3}
+  m_Name: Palette_Wall
+  m_EditorClassIdentifier: 
+  _isModify: 0
+  _materialFromMesh: {fileID: 0}
+  _isInvertSubMeshes: 1
+  _vertexMaterials:
+  - name: "\u0414\u0435\u0440\u0435\u0432\u043E"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.25490198, g: 0.1254902, b: 0.0627451, a: 1}
+    specular: {x: 0, y: 0.3}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0421\u0442\u0435\u043D\u0430"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.6, g: 0.6, b: 0.5731844, a: 1}
+    specular: {x: 0, y: 0.2}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u041E\u043A\u043D\u043E"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0, g: 0, b: 0, a: 1}
+    specular: {x: 0, y: 0}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0411\u0430\u0448\u043D\u044F"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.55, g: 0.55, b: 0.5248366, a: 1}
+    specular: {x: 0, y: 0.2}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: '[255, 255, 255]'
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 1, g: 1, b: 1, a: 1}
+    specular: {x: 0, y: 0}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  _isEditName: 0

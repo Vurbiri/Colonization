@@ -29,7 +29,7 @@ namespace VurbiriEditor.ReColoringVertex
             
             Vector2 vector = vectorProperty.vector2Value;
 
-            EditorGUI.BeginProperty(position, label, property);
+            label = EditorGUI.BeginProperty(position, label, property);
 
             if (isEditName)
             {

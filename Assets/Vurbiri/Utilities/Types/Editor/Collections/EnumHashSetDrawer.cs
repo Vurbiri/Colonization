@@ -27,7 +27,7 @@ namespace VurbiriEditor
             SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
             int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue, countMax = property.FindPropertyRelative(NAME_COUNT_MAX).intValue, count = propertyValues.arraySize;
 
-            EditorGUI.BeginProperty(position, label, property);
+            label = EditorGUI.BeginProperty(position, label, property);
 
             if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
             {

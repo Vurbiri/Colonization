@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
             {
                 Road roadLine;
                 roadLine = Instantiate(_prefabRoad, _thisTransform);
-                roadLine.Initialize(link.Start, link.End, _type, _color);
+                roadLine.Create(link.Start, link.End, _type, _color);
                 _roadsLists.Add(roadLine);
             }
             #endregion

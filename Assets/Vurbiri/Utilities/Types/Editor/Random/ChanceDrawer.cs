@@ -13,7 +13,7 @@ namespace VurbiriEditor
         {
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
 
-            EditorGUI.BeginProperty(position, label, property);
+            label = EditorGUI.BeginProperty(position, label, property);
             valueProperty.intValue = EditorGUI.IntSlider(position, label, valueProperty.intValue, 0, 100);
             EditorGUI.EndProperty();
         }

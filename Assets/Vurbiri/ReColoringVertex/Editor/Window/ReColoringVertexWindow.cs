@@ -12,7 +12,7 @@ namespace VurbiriEditor.ReColoringVertex
     internal class ReColoringVertexWindow : EditorWindow
     {
         #region Consts
-        private const string NAME = "ReColoring Vertex", MENU = MENU_PATH + NAME;
+        private const string NAME = "ReColoring Vertex", MENU = MENU_PATH + NAME, C_MENU = "Assets/" + NAME;
         private const string LABEL_PALETTE = "Palette", LABEL_MESH = "Mesh", LABEL_IS_SAVE = "Save palette for mesh";
         private const string LABEL_PALETTE_PATH = "Path to palettes:";
         private const string LABEL_MESH_BUTTON = "Save mesh as...", LABEL_RELOAD_BUTTON = "Reload";
@@ -45,6 +45,20 @@ namespace VurbiriEditor.ReColoringVertex
         {
             GetWindow<ReColoringVertexWindow>(true, NAME).minSize = wndMinSize;
         }
+
+        [MenuItem(C_MENU, false, 71)]
+        private static void ShowContextWindow()
+        {
+            if(Selection.activeObject is Mesh mesh)
+            {
+                var wnd = GetWindow<ReColoringVertexWindow>(true, NAME);
+                wnd.minSize = wndMinSize;
+                wnd.CreateColorsData(mesh);
+            }
+        }
+
+        [MenuItem(C_MENU, true, 71)]
+        private static bool CheckContextMenu() => Selection.activeObject is Mesh;
 
         #region OnEnable/OnDisable
         private void OnEnable()
@@ -160,18 +174,19 @@ namespace VurbiriEditor.ReColoringVertex
             #endregion
         }
 
-        private void CreateColorsData(Mesh m, bool isReload = false)
+        public void CreateColorsData(Mesh mesh, bool isReload = false)
         {
-            if (!isReload && currentMesh == m)
+            if (!isReload && currentMesh == mesh)
                 return;
 
-            currentMesh = m;
+            currentMesh = mesh;
 
             if (currentMesh == null)
                 return;
 
             FindPalette(NamePaletteFromMesh);
             Selection.activeObject = currentMesh;
+
             subMeshCount = currentMesh.subMeshCount;
             nameMesh = currentMesh.name;
 
@@ -182,7 +197,7 @@ namespace VurbiriEditor.ReColoringVertex
             Vector2[] uvs = currentMesh.uv;
             vertexCount = colors.Length;
 
-            if (vertexCount <= 0 || vertexCount != uvs.Length)
+            if (vertexCount == 0 || vertexCount != uvs.Length)
             {
                 listData = null;
                 return;
@@ -233,15 +248,10 @@ namespace VurbiriEditor.ReColoringVertex
             //=================================
             void FindPalette(string name)
             {
-                foreach (var palette in Resources.FindObjectsOfTypeAll<PaletteVertexScriptable>())
-                {
-                    Debug.Log(palette.name);
-                    if (palette.name == name)
-                    {
-                        currentPalette = palette;
-                        return;
-                    }
-                }
+                var palette = Resources.Load<PaletteVertexScriptable>(name);
+
+                if (palette != null)
+                    currentPalette = palette;
             }
             #endregion
         }

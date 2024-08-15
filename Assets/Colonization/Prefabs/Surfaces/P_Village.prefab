@@ -235,34 +235,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d9b1005e9808334c84cd13acbdae7cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _density: 0.35
-  _ratioOffset: 0.18
+  _density: 0.39
+  _ratioOffset: 0.17
   _hut:
     _startHeight: -0.1
     _baseHalfSizeWidth:
-      _min: 0.25
+      _min: 0.4
       _max: 0.5
     _baseHalfSizeLength:
-      _min: 0.4
-      _max: 0.6
-    _heightFoundationRange:
-      _min: 0.125
-      _max: 0.175
-    _heightWallRange:
       _min: 0.5
-      _max: 0.6
-    _heightRoofRange:
-      _min: 0.225
-      _max: 0.33
+      _max: 0.725
+    _heightRange:
+      _min: 1.1
+      _max: 1.3
+    _ratioFoundationRange:
+      _min: 0.12
+      _max: 0.15
+    _ratioWallRange:
+      _min: 0.7
+      _max: 0.8
+    _ratioWindow: 0.45
+    _halfSizeWindow: {x: 0, y: 0.115, z: 0.16}
+    _heightDoor: 0.725
+    _halfWidthDoor: 0.17
+    _rotationYRange:
+      _value: 360
     _base:
       color:
         _color:
           serializedVersion: 2
-          rgba: 4281610036
+          rgba: 4279511379
         _range: 0.1
         _isAlphaRandom: 0
       specular:
-        _value: {x: 0, y: 0.5}
+        _value: {x: 0, y: 0.2}
     _wall:
       color:
         _color:
@@ -276,11 +282,11 @@ MonoBehaviour:
       color:
         _color:
           serializedVersion: 2
-          rgba: 4281562040
+          rgba: 4278229176
         _range: 0.6
         _isAlphaRandom: 0
       specular:
-        _value: {x: 0, y: 0.2}
+        _value: {x: 0, y: 0.1}
     _roofWall:
       color:
         _color:
@@ -290,8 +296,24 @@ MonoBehaviour:
         _isAlphaRandom: 0
       specular:
         _value: {x: 0, y: 0}
-    _chanceTwoFloor:
-      _value: 16
+    _doorMaterial:
+      color:
+        _color:
+          serializedVersion: 2
+          rgba: 4282342016
+        _range: 0.4
+        _isAlphaRandom: 0
+      specular:
+        _value: {x: 0, y: 0.2}
+    _blackMaterial:
+      color:
+        _color:
+          serializedVersion: 2
+          rgba: 4278190080
+        _range: 0
+        _isAlphaRandom: 0
+      specular:
+        _value: {x: 0, y: 0}
 --- !u!33 &8414659971373218935
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -389,7 +411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _generator: {fileID: 6951835121162521879}
-  _ratioSize: 0.6
+  _ratioSize: 0.65
   _offsetAngle:
     _value: 15
   _windmillMeshFilter: {fileID: 4350017619185367284}

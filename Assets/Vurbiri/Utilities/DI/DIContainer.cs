@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri
 {
-    public class DIContainer
+    public class DIContainer : IDisposable
     {
         private readonly DIContainer _parent;
         private readonly Dictionary<DIKey, IDIRegistration> _registration = new();
@@ -43,10 +43,10 @@ namespace Vurbiri
             }
             finally
             {
-                _registration.Remove(key);
+                _hashRequests.Remove(key);
             }
 
-            throw new Exception($"Зависимость с тегом {key.tag} типа {key.type.FullName} не найдена.");
+            throw new Exception($"Элемент с тегом {key.tag} типа {key.type.FullName} не найдена.");
         }
 
         private void Register<T>(DIKey key, Func<DIContainer, T> factory, bool isSingleton) where T : class
@@ -57,9 +57,15 @@ namespace Vurbiri
             _registration[key] = new DIRegistration<T>(factory, isSingleton, this);
         }
 
+        public void Dispose()
+        {
+           foreach(var reg in _registration.Values)
+                reg.Dispose();
+        }
+
         #region Nested: IDIRegistration, DIRegistration<T>, DIKey
         //***********************************
-        private interface IDIRegistration { }
+        private interface IDIRegistration : IDisposable { }
         //***********************************
         private class DIRegistration<T> : IDIRegistration where T : class
         {
@@ -83,6 +89,12 @@ namespace Vurbiri
             }
 
             public T Resolve(DIContainer container) => _isSingleton ? _instance : _factory(container);
+
+            public void Dispose()
+            {
+                if(_instance is IDisposable disposable)
+                    disposable.Dispose();
+            }
         }
         //***********************************
         private class DIKey : IEquatable<DIKey>

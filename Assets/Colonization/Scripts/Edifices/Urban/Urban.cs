@@ -11,6 +11,18 @@ namespace Vurbiri.Colonization
         {
             base.Setup(edifice, links);
 
+            if (_type == EdificeType.Camp)
+            {
+                foreach (var link in links)
+                {
+                    if (link.Owner == _owner)
+                    {
+                        _graphic.transform.localRotation = CONST.LINK_ROTATIONS[link.Type];
+                        break;
+                    }
+                }
+            }
+
             if (_isWall)
                 _wall.Build(_owner, links);
             else

@@ -2,16 +2,18 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Vurbiri.Colonization.JSON_KEYS;
 
 namespace Vurbiri.Colonization
 {
+    using static JSON_KEYS;
+
     [JsonObject(MemberSerialization.OptIn)]
     public class Player : IValueTypeEnum<PlayerType>
     {
         public PlayerType Type => _type;
         public Color Color => _visual.color;
-        public Material Material => _visual.material;
+        public Material MaterialLit => _visual.materialLit;
+        public Material MaterialUnlit => _visual.materialUnlit;
         public Currencies Resources => _resources;
 
         [JsonProperty(P_RESURSES)]

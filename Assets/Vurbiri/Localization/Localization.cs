@@ -29,19 +29,16 @@ namespace Vurbiri
 
         public bool Initialize()
         {
-            if (_folder.IndexOf(SLASH) < 0)
-                _folder += SLASH;
+            if (!_folder.EndsWith(SLASH))
+                _folder = _folder.Concat(SLASH);
 
-            Return<LanguageType[]> lt = StorageResources.LoadFromJson<LanguageType[]>(_folder + _languagesFile);
-            if (lt.Result)
-            {
-                _countFiles = _nameFiles.Length;
-                _text = new Dictionary<string, string>[_countFiles];
-                _languages = lt.Value;
-                return SwitchLanguage(_defaultLang);
-            }
+            if (!LoadFromJson(_folder.Concat(_languagesFile), out LanguageType[] lt))
+                return false;
 
-            return false;
+            _countFiles = _nameFiles.Length;
+            _text = new Dictionary<string, string>[_countFiles];
+            _languages = lt;
+            return SwitchLanguage(_defaultLang);
         }
 
         public bool TryIdFromCode(string codeISO639_1, out int id)
@@ -127,25 +124,38 @@ namespace Vurbiri
 
         private bool LoadingFile(int idFile, LanguageType type)
         {
-            string path = _folder + type.Folder + _nameFiles[idFile];
-            Return<Dictionary<string, string>> load = StorageResources.LoadFromJson<Dictionary<string, string>>(path);
-            if (!load.Result)
-            {
-                Message.Error($"--- Ошибка загрузки файла: {path} ---");
+            string path = _folder.Concat(type.Folder, _nameFiles[idFile]);
+            if (!LoadFromJson(path, out Dictionary<string, string> load))
                 return false;
-            }
 
-            Dictionary<string, string> current = _text[idFile];
+            var current = _text[idFile];
             if (current == null)
             {
-                _text[idFile] = new(load.Value, new StringComparer());
+                _text[idFile] = new(load, new StringComparer());
+                return true;
             }
-            else
-            {
-                foreach (var item in load.Value)
-                    current[item.Key] = item.Value;
-            }
+
+            foreach (var item in load)
+                current[item.Key] = item.Value;
+
             return true;
+        }
+
+        private bool LoadFromJson<T>(string path, out T resource) where T : class
+        {
+            try
+            {
+                var textAsset = Resources.Load<TextAsset>(path);
+                resource = JsonConvert.DeserializeObject<T>(textAsset.text);
+                Resources.UnloadAsset(textAsset);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Message.Error($"--- Ошибка загрузки файла локализации: {path} ---\n".Concat(ex.Message));
+                resource = null;
+                return false;
+            }
         }
 
         #region Nested: LanguageType, StringComparer
@@ -165,10 +175,10 @@ namespace Vurbiri
                 Id = id;
                 CodeISO639_1 = codeISO639_1;
                 Name = name;
+                if (!folder.EndsWith(SLASH))
+                    folder = folder.Concat(SLASH);
                 Folder = folder;
-                if (folder.IndexOf(SLASH) < 0)
-                    Folder = folder += SLASH;
-                Sprite = Resources.Load<Sprite>(folder + BANNER);
+                Sprite = Resources.Load<Sprite>(folder.Concat(BANNER));
             }
         }
         //***********************************************************

@@ -2,12 +2,15 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
+    [RequireComponent(typeof(MeshFilter))]
     public class WallGate : AEdificeSide
     {
-        public override void AddRoad(Material material)
+        [Space]
+        [SerializeField] private Mesh _meshGateOpen;
+
+        public void AddRoad()
         {
-            GetComponent<MeshRenderer>().SetSharedMaterial(material, _idMaterial);
-            gameObject.SetActive(true);
+            GetComponent<MeshFilter>().sharedMesh = _meshGateOpen;
         }
     }
 }

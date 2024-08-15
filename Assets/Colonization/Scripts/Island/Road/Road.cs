@@ -13,8 +13,8 @@ namespace Vurbiri.Colonization
         [SerializeField] private RFloat _rateWave = new(0.5f, 0.9f);
         [SerializeField] private RFloat _lengthFluctuation = new(0.85f, 1.15f);
         [Space]
-        [SerializeField] private Vector2 _textureScaleMin = new(0.6f, 0.4f);
-        [SerializeField] private Vector2 _textureScaleMax = new(0.9f, 1f);
+        [SerializeField] private RFloat _textureXRange = new(0.6f, 0.9f);
+        [SerializeField] private RFloat _textureYRange = new(0.4f, 1f);
         [Space]
         [SerializeField] private float _alphaTime = 0.01f;
 
@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
         private Vector2 _textureScale;
         private float _textureScaleX;
 
-        public void Initialize(Crossroad start, Crossroad end, PlayerType type, Color color)
+        public void Create(Crossroad start, Crossroad end, PlayerType type, Color color)
         {
             _owner = type;
             _crossroads.Add(start, end);
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
             void InitializeLineRenderer(Vector3 start, Color color)
             {
                 _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
-                _textureScale = URandom.Vector2(_textureScaleMin, _textureScaleMax);
+                _textureScale = new Vector2(_textureXRange, _textureYRange);
                 _textureScaleX = _textureScale.x;
 
                 _gradient = new(_roadRenderer, _alphaTime, color);
@@ -67,13 +67,13 @@ namespace Vurbiri.Colonization
             void AddFirst()
             {
                 _crossroads.AddFirst(end);
-                _points.Mode = AddMode.First;
+                _points.Mode = LinkListMode.First;
             }
             //=================================
             void AddLast()
             {
                 _crossroads.AddLast(end);
-                _points.Mode = AddMode.Last;
+                _points.Mode = LinkListMode.Last;
             }
             #endregion
         }
@@ -112,7 +112,7 @@ namespace Vurbiri.Colonization
             int count = _rangeCount;
             RFloat wave = new(_rateWave, _widthRoad / count);
             Vector3 step = (end - start) / (count + 1), offsetSide = Vector3.Cross(Vector3.up, step.normalized);
-            float sign = Chance.Rolling() ? 1f : -1f, signStep = -1f;
+            float sign = Chance.Select(1f, -1f), signStep = -1f;
 
             for (int i = 0; i < count; i++)
             {

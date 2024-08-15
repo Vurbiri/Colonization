@@ -22,6 +22,7 @@ namespace Vurbiri
 
         public static Triangle[] Create(Color32 color, Vector3 lb, Vector3 lt, Vector3 rt, Vector3 rb) => new Triangle[] { new(color, lb, lt, rt), new(color, lb, rt, rb) };
         public static Triangle[] Create(Color32 color, Vector2 uv, Vector3 lb, Vector3 lt, Vector3 rt, Vector3 rb) => new Triangle[] { new(color, uv, lb, lt, rt), new(color, uv, lb, rt, rb) };
+        public static Triangle[] Create(Color32 color, Vector2 uv, params Vector3[] p) => new Triangle[] { new(color, uv, p[0..3]), new(color, uv, p[0], p[2], p[3]) };
 
         public static Triangle[] CreateUV(Color32 color, Vector3 lb, Vector3 lt, Vector3 rt, Vector3 rb)
             => new Triangle[] { new(color, UV_A, lb, lt, rt), new(color, UV_B, lb, rt, rb) };

@@ -75,7 +75,7 @@ namespace Vurbiri.Colonization
                 return false;
 
             if (_countFreeLink == _links.Count)
-                _edifice.Setup(_prefabs[_countWater switch { 0 when _isGate => EdificeType.Shrine, 0 when !_isGate => EdificeType.Town, 1 => EdificeType.PortOne, 2 => EdificeType.PortTwo, _ => EdificeType.None }], _links);
+                _edifice.Setup(_prefabs[_countWater switch { 0 when _isGate => EdificeType.Shrine, 0 when !_isGate => EdificeType.Camp, 1 => EdificeType.PortOne, 2 => EdificeType.PortTwo, _ => EdificeType.None }], _links);
 
             return true;
         }

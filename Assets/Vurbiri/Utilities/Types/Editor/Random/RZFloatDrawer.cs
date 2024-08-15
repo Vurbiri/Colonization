@@ -33,9 +33,9 @@ namespace VurbiriEditor
 
             sizeZero.width = sizeValue.width = SIZE_VALUE;
 
-            EditorGUI.BeginProperty(position, label, property);
-            EditorGUI.LabelField(sizeLabel, label);
+            label = EditorGUI.BeginProperty(position, label, property);
 
+            EditorGUI.LabelField(sizeLabel, label);
             EditorGUI.FloatField(sizeZero, 0f);
             valueProperty.floatValue = EditorGUI.FloatField(sizeValue, valueProperty.floatValue);
 

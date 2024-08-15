@@ -3,7 +3,7 @@ using System;
 namespace Vurbiri.Colonization
 {
 
-    public enum AddMode
+    public enum LinkListMode
     {
         First,
         Last
@@ -65,8 +65,8 @@ namespace Vurbiri.Colonization
         LighthouseOne,
         LighthouseTwo,
 
+        Camp,
         Town,
-        City,
         Capital
     }
 
@@ -78,7 +78,7 @@ namespace Vurbiri.Colonization
             EdificeType.None => EdificeGroup.None,
             EdificeType.Shrine => EdificeGroup.Shrine,
             EdificeType.PortOne or EdificeType.PortTwo or EdificeType.LighthouseOne or EdificeType.LighthouseTwo=> EdificeGroup.Water,
-            EdificeType.Town or EdificeType.City or EdificeType.Capital => EdificeGroup.Urban,
+            EdificeType.Camp or EdificeType.Town or EdificeType.Capital => EdificeGroup.Urban,
             _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение CityType: {self}"),
         };
 

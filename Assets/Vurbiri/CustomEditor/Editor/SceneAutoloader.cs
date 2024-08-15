@@ -36,7 +36,7 @@ namespace VurbiriEditor
                 return;
 
             EditorGUILayout.Space(12);
-            _path = EditorGUILayout.TextField(LABEL_PATH, arrPaths[0]);
+            _path = EditorGUILayout.DelayedTextField(LABEL_PATH, arrPaths[0]);
             _startSceneTemp = EditorGUILayout.IntPopup(LABEL_SCENE, startScene, nameScenes, idScenes);
             EditorGUILayout.Space(12);
             saveScene = EditorGUILayout.Toggle(LABEL_SAVE, saveScene);

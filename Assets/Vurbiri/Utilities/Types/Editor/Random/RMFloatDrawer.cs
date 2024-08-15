@@ -23,7 +23,7 @@ namespace VurbiriEditor
             sizePlus.x = sizeLabel.width + SIZE_VALUE + SIZE_SPACE;
             sizeMinus.width = sizePlus.width = SIZE_VALUE;
 
-            EditorGUI.BeginProperty(position, label, property);
+            label = EditorGUI.BeginProperty(position, label, property);
             EditorGUI.LabelField(sizeLabel, label);
             valueProperty.floatValue = -EditorGUI.FloatField(sizeMinus, -valueProperty.floatValue);
             valueProperty.floatValue = EditorGUI.FloatField(sizePlus, valueProperty.floatValue);

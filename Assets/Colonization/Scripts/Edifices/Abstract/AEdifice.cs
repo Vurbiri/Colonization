@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
 {
     public abstract class AEdifice : MonoBehaviour, IValueTypeEnum<EdificeType>, ISerializationCallbackReceiver
     {
-        [SerializeField] private EdificeType _type;
+        [SerializeField] protected EdificeType _type;
         [SerializeField, Hide] private EdificeGroup _group;
         [SerializeField, Range(0, 3)] private int _level;
         [SerializeField, Hide] protected bool _isUpgrade;
@@ -47,6 +47,7 @@ namespace Vurbiri.Colonization
             _owner = edifice._owner;
             _isWall = edifice._isWall;
 
+            _graphic.transform.localRotation = edifice._graphic.transform.localRotation;
             _graphic.Initialize(_owner, links);
         }
 

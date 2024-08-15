@@ -9,18 +9,19 @@ namespace Vurbiri.Colonization
         public T First => _first.value;
         public T Last => _last.value;
 
-        public AddMode Mode { get => _addMode; set { _addMode = value; _actionAdd = _addMode == AddMode.Last ? AddLast : AddFirst; } }
+        public LinkListMode Mode { get => _addMode; set { _addMode = value; _actionAdd = _addMode == LinkListMode.Last ? AddLast : AddFirst; } }
         public int Count => _count;
 
         private int _count;
         private LinkListNode _first, _last;
-        private AddMode _addMode;
+        private LinkListMode _addMode;
         private Action<T> _actionAdd;
 
         public LinkList()
         {
-            _addMode = AddMode.Last;
+            _addMode = LinkListMode.Last;
             _actionAdd = AddLast;
+            _count = 0;
         }
 
         public void AddLast(T value)

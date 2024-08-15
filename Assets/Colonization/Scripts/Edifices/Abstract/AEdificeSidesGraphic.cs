@@ -2,13 +2,10 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class AEdificeSidesGraphic : AEdificeGraphic
+    public abstract class AEdificeSidesGraphic<T> : AEdificeGraphic where T : AEdificeSide 
     {
         [Space]
-        [SerializeField] protected EnumHashSet<LinkType, AEdificeSide> _graphicSides;
+        [SerializeField] protected EnumHashSet<LinkType, T> _graphicSides;
 
-        protected Players _players;
-
-        public override void AddRoad(LinkType type, PlayerType owner) => _graphicSides[type].AddRoad(_players[owner].Material);
     }
 }

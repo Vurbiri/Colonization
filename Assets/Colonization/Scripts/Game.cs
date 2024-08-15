@@ -24,9 +24,9 @@ namespace Vurbiri.Colonization
             _players = Players.Instance;
             _eventBus = EventBus.Instance;
 
-            Debug.Log("TEST");
-            foreach (AEdifice c in _prefabs)
-                c.SetCost();
+            //Debug.Log("TEST");
+            //foreach (AEdifice c in _prefabs)
+            //    c.SetCost();
         }
 
         private IEnumerator Start()
@@ -67,6 +67,10 @@ namespace Vurbiri.Colonization
         {
             if (Players.Instance != null)
                 _players.DestroyGame();
+
+            Debug.Log("TEST");
+            foreach (AEdifice c in _prefabs)
+                c.Cost.Clear();
         }
     }
 }

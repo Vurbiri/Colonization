@@ -16,6 +16,9 @@ namespace Vurbiri
 
         public static bool Rolling(int value = 50) => value > 0 && (value >= 100 || Random.Range(0, 100) < value);
 
+        public static float Select(float trueValue, float falseValue, int value = 50) => (value > 0 && (value >= 100 || Random.Range(0, 100) < value)) ? trueValue : falseValue;
+        public static int Select(int trueValue, int falseValue, int value = 50) => (value > 0 && (value >= 100 || Random.Range(0, 100) < value)) ? trueValue : falseValue;
+
         public static implicit operator Chance(int value) => new(value);
         public static explicit operator int(Chance chance) => chance._value;
 

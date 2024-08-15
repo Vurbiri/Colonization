@@ -1,0 +1,155 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da8d66040cdcea4cb4e91be093836a2, type: 3}
+  m_Name: Palette_Capital
+  m_EditorClassIdentifier: 
+  _isModify: 0
+  _materialFromMesh: {fileID: 0}
+  _isInvertSubMeshes: 1
+  _vertexMaterials:
+  - name: "\u0421\u0442\u0435\u043D\u0430 \u0434\u043E\u043C\u0430"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.7671233, g: 0.8, b: 0.75981736, a: 1}
+    specular: {x: 0, y: 0.2}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u041A\u0440\u044B\u0448\u0430"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.8666667, g: 0.1882353, b: 0.1882353, a: 1}
+    specular: {x: 0.7, y: 0.7}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u041E\u043A\u043D\u0430"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0, g: 0.08627451, b: 1, a: 1}
+    specular: {x: 0.5, y: 1}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0414\u0435\u0440\u0435\u0432\u043E"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.25490198, g: 0.1254902, b: 0.0627451, a: 1}
+    specular: {x: 0, y: 0.3}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0421\u0442\u0443\u043F\u0435\u043D\u044C\u043A\u0438"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.3488364, g: 0.36200002, b: 0.34554547, a: 1}
+    specular: {x: 0, y: 0.2}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0417\u043E\u043B\u043E\u0442\u043E"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 1, g: 0.84313726, b: 0, a: 1}
+    specular: {x: 1, y: 0.9}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0414\u0432\u0435\u0440\u044C"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.52156866, g: 0.36862746, b: 0.25882354, a: 1}
+    specular: {x: 0, y: 0.2}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0422\u0440\u0443\u0431\u0430"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.6313726, g: 0, b: 0, a: 1}
+    specular: {x: 0, y: 0.2}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0427\u0435\u0440\u043D\u044B\u0439"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0, g: 0, b: 0, a: 1}
+    specular: {x: 0, y: 0}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0422\u0435\u043D\u0442"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.5019608, g: 0.41960785, b: 0.16470589, a: 1}
+    specular: {x: 0, y: 0.1}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0422\u0430\u0432\u0430\u0440 - \u043A\u0440"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 1, g: 0, b: 0, a: 1}
+    specular: {x: 0, y: 0}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0422\u0430\u0432\u0430\u0440 \u0437\u0435\u043B"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0, g: 0.4901961, b: 0, a: 1}
+    specular: {x: 0, y: 0}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0422\u0430\u0432\u0430\u0440 \u0436\u0435\u043B\u0442"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.8784314, g: 0.89411765, b: 0, a: 1}
+    specular: {x: 0, y: 0}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0414\u0432\u0435\u0440\u044C"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.6784314, g: 0.64705884, b: 0.5294118, a: 1}
+    specular: {x: 0, y: 0.2}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0420\u0430\u043C\u0430"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.262, g: 0.18517293, b: 0.13001505, a: 1}
+    specular: {x: 0, y: 0.3}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u041F\u043B\u043E\u0449\u0430\u0434\u044C"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 0.7372549, g: 0.7372549, b: 0.7372549, a: 1}
+    specular: {x: 0, y: 0.4}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  - name: "\u0418\u0433\u0440\u043E\u043A"
+    colorMesh: {r: 0, g: 0, b: 0, a: 1}
+    colorReplace: {r: 1, g: 1, b: 1, a: 1}
+    specular: {x: 0, y: 0}
+    isInfoMode: 1
+    isEditValue: 1
+    isEditName: 0
+    isOpen: 1
+  _isEditName: 0

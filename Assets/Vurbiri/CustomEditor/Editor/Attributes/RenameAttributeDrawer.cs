@@ -9,10 +9,11 @@ namespace VurbiriEditor
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            label.text = ((RenameAttribute)attribute).Name;
+            label = EditorGUI.BeginProperty(position, label, property);
 
-            EditorGUI.BeginProperty(position, label, property);
+            label.text = ((RenameAttribute)attribute).Name;
             EditorGUI.PropertyField(position, property, label);
+
             EditorGUI.EndProperty();
         }
     }

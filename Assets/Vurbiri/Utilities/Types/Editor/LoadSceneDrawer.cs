@@ -23,7 +23,7 @@ namespace VurbiriEditor
                 idScenes[i] = i;
             }
 
-            EditorGUI.BeginProperty(position, label, property);
+            label = EditorGUI.BeginProperty(position, label, property);
             sceneProperty.intValue = EditorGUI.IntPopup(position, label.text, sceneProperty.intValue, nameScenes, idScenes);
             EditorGUI.EndProperty();
         }

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         {
             Player player = Players.Instance[owner];
 
-            GetComponent<MeshRenderer>().SetSharedMaterial(player.Material, _idMaterial);
+            GetComponent<MeshRenderer>().SetSharedMaterial(player.MaterialUnlit, _idMaterial);
 
             MainModule main = _pillarFlame.main;
             Color color = player.Color.SetAlpha(_alfa);

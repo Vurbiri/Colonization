@@ -8,7 +8,7 @@ namespace Vurbiri
 {
     [Serializable, JsonArray]
     public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue>
-                                        where TType : Enum// where TValue : struct
+                                        where TType : Enum
     {
         [SerializeField] protected TValue[] _values;
 
@@ -48,5 +48,7 @@ namespace Vurbiri
                 yield return _values[i];
         }
         IEnumerator IEnumerable.GetEnumerator() => _values.GetEnumerator();
+
+        public static implicit operator EnumArray<TType, TValue>(TValue[] value) => new(value);
     }
 }

@@ -22,6 +22,7 @@ namespace Vurbiri.Colonization
             float height = -size, width, x, z;
 
             CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
+            _hut.Initialize();
 
             while (height < size)
             {
@@ -48,44 +49,76 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Hut
         {
-            [SerializeField] private float _startHeight = -0.05f;
-            [SerializeField] private RFloat _baseHalfSizeWidth = new(0.25f, 0.5f);
-            [SerializeField] private RFloat _baseHalfSizeLength = new(0.4f, 0.6f);
-            [SerializeField] private RFloat _heightFoundationRange = new(0.1f, 0.15f);
-            [SerializeField] private RFloat _heightWallRange = new(0.5f, 0.6f);
-            [SerializeField] private RFloat _heightRoofRange = new(0.225f, 0.33f);
+            [SerializeField] private float _startHeight = -0.1f;
+            [SerializeField] private RFloat _baseHalfSizeWidth = new(0.4f, 6f);
+            [SerializeField] private RFloat _baseHalfSizeLength = new(0.25f, 0.5f);
+            [SerializeField] private RFloat _heightRange = new(0.75f, 1f);
+            [SerializeField] private RFloat _ratioFoundationRange = new(0.09f, 0.11f);
+            [SerializeField] private RFloat _ratioWallRange = new(0.7f, 0.8f);
+            [Space]
+            [SerializeField] private float _ratioWindow = 0.5f;
+            [SerializeField] private Vector3 _halfSizeWindow = new(0f, 0.1f, 0.125f);
+            [Space]
+            [SerializeField] private float _heightDoor = 0.5f;
+            [SerializeField] private float _halfWidthDoor = 0.075f;
+            [Space]
+            [SerializeField] private RZFloat _rotationYRange = 180f;
             [Space]
             [SerializeField] private MeshMaterial _base;
             [SerializeField] private MeshMaterial _wall;
             [SerializeField] private MeshMaterial _roof;
             [SerializeField] private MeshMaterial _roofWall;
-            [Space]
-            [SerializeField] private Chance _chanceTwoFloor = 16;
+            [SerializeField] private MeshMaterial _doorMaterial;
+            [SerializeField] private MeshMaterial _blackMaterial;
 
             private List<Triangle> _triangles;
             private Vector3[] _baseBottom;
             private readonly Vector3[] _foundation = new Vector3[4];
             private readonly Vector3[] _wallTop = new Vector3[4];
+            private readonly Vector3[] _windowBase = new Vector3[4];
+            private readonly Vector3[] _windowA = new Vector3[4], _windowB = new Vector3[4];
+            private Vector3 _windowOffsetA, _windowOffsetB;
+            private Vector3[] _doorBase;
+            private readonly Vector3[] _door = new Vector3[4];
             private Vector3[] _roofA, _roofB;
             private Vector3 _roofPointA, _roofPointB;
             private Quaternion _rotation;
-            private readonly RZFloat _rotationYRange = 180f;
-            private float _x, _z, _heightWall, _heightFoundation;
+            
+            private float _x, _z, _height, _heightWall, _heightFoundation;
 
-            private const int COUNT_TRIANGLES = 22;
-           // private static readonly Vector2[] UV_ROOF_WALL = { new(0.01f, 0.01f), new(1f, 0.01f), new(0.5f, 0.7f) };
+            private const int COUNT_TRIANGLES = 28;
+            private const float OFFSET = 0.001f;
+
+            public void Initialize()
+            {
+                _doorBase = new Vector3[] 
+                       { new(_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, 0f, 0f), new(_halfWidthDoor, 0f, 0f) };
+
+                _windowBase[0] = _halfSizeWindow;
+                _halfSizeWindow.z *= -1f;
+                _windowBase[1] = _halfSizeWindow;
+                _halfSizeWindow.y *= -1f;
+                _windowBase[2] = _halfSizeWindow;
+                _halfSizeWindow.z *= -1f;
+                _windowBase[3] = _halfSizeWindow;
+
+            }
 
             public List<Triangle> Create(Vector3 position)
             {
                 _triangles = new(COUNT_TRIANGLES);
 
-                _base.Roll(); _wall.Roll(); _roof.Roll(); _roofWall.Roll();
+                _base.Roll(); _wall.Roll(); _roof.Roll(); _roofWall.Roll(); _doorMaterial.Roll();
 
-               _x = _baseHalfSizeWidth; _z = _baseHalfSizeLength;
+                _x = _baseHalfSizeWidth; _z = _baseHalfSizeLength;
 
                 _baseBottom = new Vector3[] { new(_x, _startHeight, _z), new(-_x, _startHeight, _z), new(-_x, _startHeight, -_z), new(_x, _startHeight, -_z) };
-                _heightFoundation = _heightFoundationRange;
-                _heightWall = _heightWallRange * _chanceTwoFloor.Select(2f, 1f);
+                _height = _heightRange;
+                _heightFoundation = _height * _ratioFoundationRange;
+                _heightWall = _height * _ratioWallRange;
+
+                _windowOffsetA = _windowOffsetB = new(_x + OFFSET, _height * _ratioWindow, 0f);
+                _windowOffsetA.x *= -1f;
 
                 _rotation = Quaternion.Euler(0f, _rotationYRange, 0f);
                 for (int i = 0; i < 4; i++)
@@ -93,15 +126,25 @@ namespace Vurbiri.Colonization
                     _foundation[i] = _wallTop[i] = _baseBottom[i] = _rotation * _baseBottom[i] + position;
                     _foundation[i].y = _heightFoundation;
                     _wallTop[i].y = _heightWall;
+
+                    _windowA[i] = _rotation * (_windowBase[i] + _windowOffsetA) + position;
+                    _windowB[3 - i] = _rotation * (_windowBase[i] + _windowOffsetB) + position;
+
+                    _doorBase[i].z = _z + OFFSET;
+                    _door[i] = _rotation * _doorBase[i] + position;
                 }
 
                 _triangles.AddRange(PolygonChain.Create(_base.color, _base.specular, _baseBottom, _foundation, true));
                 _triangles.AddRange(PolygonChain.Create(_wall.color, _wall.specular, _foundation, _wallTop, true));
 
+                _triangles.AddRange(Polygon.Create(_blackMaterial.color, _blackMaterial.specular, _windowA));
+                _triangles.AddRange(Polygon.Create(_blackMaterial.color, _blackMaterial.specular, _windowB));
+
+                _triangles.AddRange(Polygon.Create(_doorMaterial.color, _doorMaterial.specular, _door));
+
                 _roofPointA = (_wallTop[0] + _wallTop[1]) * 0.5f;
-                _roofPointA.y += _heightRoofRange;
                 _roofPointB = (_wallTop[2] + _wallTop[3]) * 0.5f;
-                _roofPointB.y += _heightRoofRange;
+                _roofPointA.y  =_roofPointB.y = _height;
 
                 _roofA = new Vector3[] { _wallTop[0], _roofPointA, _wallTop[1] };
                 _roofB = new Vector3[] { _wallTop[3], _roofPointB, _wallTop[2] };

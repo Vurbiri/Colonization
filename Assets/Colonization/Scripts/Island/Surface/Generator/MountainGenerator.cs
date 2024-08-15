@@ -73,6 +73,7 @@ namespace Vurbiri.Colonization
         {
             [SerializeField] private RInt _countVertexRange = new(5, 6);
             [Space]
+            [SerializeField] private float _startHeight = -0.1f;
             [SerializeField] private RFloat _heightRangeHigh = new(2.7f, 2.9f);
             [SerializeField] private RFloat _heightRangeLow = new(2.3f, 2.4f);
             [Space]
@@ -118,7 +119,7 @@ namespace Vurbiri.Colonization
                     _x = Mathf.Cos(_angle) * _radius + _offsetSide;
                     _z = Mathf.Sin(_angle) * _radius + _offsetSide;
 
-                    _bottom[i] = new Vector3(_x, 0f, _z) + position;
+                    _bottom[i] = new Vector3(_x, _startHeight, _z) + position;
                     _top[i] = new Vector3(_x, 0f, _z) + _positionTop;
 
                     _angle += _stepAngle;

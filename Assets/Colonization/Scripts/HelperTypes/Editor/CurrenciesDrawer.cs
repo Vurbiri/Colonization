@@ -13,15 +13,16 @@ namespace VurbiriEditor.Colonization
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUI.BeginProperty(position, label, property);
+            label = EditorGUI.BeginProperty(position, label, property);
 
             base.OnGUI(position, property, label);
 
             DrawLabelCount(position, property.FindPropertyRelative(NAME_AMOUNT).intValue);
 
+            EditorGUI.EndProperty();
+
             _position.height += Y_SPACE;
             _position.y += _position.height + Y_SPACE;
-
 
             if (property.isExpanded)
             {
@@ -35,8 +36,6 @@ namespace VurbiriEditor.Colonization
                         Add(1);
                 }
             }
-
-            EditorGUI.EndProperty();
 
             #region Local: DrawLabelCount(), DrawButton(...), Clear(...), Add(...)
             //=================================

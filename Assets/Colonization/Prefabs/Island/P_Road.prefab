@@ -50,15 +50,19 @@ MonoBehaviour:
   _rangeCount:
     _min: 2
     _max: 4
-  _offsetY: 0.025
+  _offsetY: 0.0125
   _rateWave:
     _min: 0.5
     _max: 0.9
   _lengthFluctuation:
     _min: 0.85
     _max: 1.15
-  _textureScaleMin: {x: 0.6, y: 0.4}
-  _textureScaleMax: {x: 0.9, y: 1}
+  _textureXRange:
+    _min: 0.6
+    _max: 0.9
+  _textureYRange:
+    _min: 0.4
+    _max: 1
   _alphaTime: 0.05
 --- !u!1 &8372387192008587222
 GameObject:
