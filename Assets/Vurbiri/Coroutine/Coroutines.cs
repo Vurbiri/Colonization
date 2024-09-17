@@ -7,7 +7,7 @@ namespace Vurbiri
     {
         private const string NAME = @"[Coroutine for {0}]";
         
-        public static Coroutines Create(string nameParent, bool isDontDestroy = true)
+        public static Coroutines Create(string nameParent, bool isDontDestroy = false)
         {
             GameObject go = new(string.Format(NAME, nameParent));
 

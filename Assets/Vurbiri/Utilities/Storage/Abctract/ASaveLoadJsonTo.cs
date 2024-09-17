@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -71,7 +72,21 @@ namespace Vurbiri
 
         protected abstract WaitResult<bool> SaveToFile_Wait();
 
-        protected string Serialize(object obj) => Storage.Serialize(obj);
-        protected Return<T> Deserialize<T>(string json) where T : class => Storage.Deserialize<T>(json);
+        protected string Serialize(object obj) => JsonConvert.SerializeObject(obj);
+
+        protected Return<T> Deserialize<T>(string json) where T : class
+        {
+            Return<T> result = Return<T>.Empty;
+            try
+            {
+                result = new(JsonConvert.DeserializeObject<T>(json));
+            }
+            catch (Exception ex)
+            {
+                Message.Log(ex.Message);
+            }
+
+            return result;
+        }
     }
 }

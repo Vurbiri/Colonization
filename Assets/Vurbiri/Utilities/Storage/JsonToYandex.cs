@@ -12,7 +12,7 @@ namespace Vurbiri
 
         public JsonToYandex()
         {
-            _ysdk = YandexSDK.InstanceF;
+            _ysdk = YandexSDK.Instance;
         }
 
         public override IEnumerator Initialize_Coroutine(string key, Action<bool> callback)

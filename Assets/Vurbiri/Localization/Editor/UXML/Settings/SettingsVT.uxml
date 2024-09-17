@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="flex-grow: 1; border-left-color: rgba(0, 0, 101, 0); border-right-color: rgba(0, 0, 101, 0); border-top-color: rgba(0, 0, 101, 0); border-bottom-color: rgba(0, 0, 101, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; -unity-background-scale-mode: stretch-to-fill; background-color: rgba(0, 0, 0, 0); align-self: auto; justify-content: center; align-items: center; min-height: 130px; max-height: 130px; height: 130px;">
+        <ui:TextField picking-mode="Ignore" label="Folder Path" binding-path="_folderPath" name="FolderPath" readonly="true" style="min-width: 60%;" />
+        <ui:TextField picking-mode="Ignore" label="Folder" binding-path="_folder" name="Folder" readonly="true" style="min-width: 60%;" />
+        <ui:TextField picking-mode="Ignore" label="File Path" binding-path="_filePath" name="FilePath" readonly="true" style="min-width: 60%;" />
+        <ui:TextField picking-mode="Ignore" label="Languages File" binding-path="_languagesFile" name="LanguagesFile" readonly="true" style="min-width: 60%;" />
+        <ui:VisualElement style="flex-grow: 1; min-height: 40px; max-height: 35px; height: 35px; min-width: 100%; align-items: center; justify-content: center; align-self: center;">
+            <ui:Button text="SET" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LanguagesFileButton" style="width: 60px; max-width: 60px; min-width: 60px; min-height: 22px; max-height: 22px; height: 22px; font-size: 12px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; align-self: auto; min-width: 100%; background-color: rgb(66, 66, 66);">
+        <uie:PropertyField binding-path="_loadFiles" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -273,8 +273,8 @@ MonoBehaviour:
       color:
         _color:
           serializedVersion: 2
-          rgba: 4291289566
-        _range: 0.3
+          rgba: 4292083689
+        _range: 0.15
         _isAlphaRandom: 0
       specular:
         _value: {x: 0, y: 0.1}

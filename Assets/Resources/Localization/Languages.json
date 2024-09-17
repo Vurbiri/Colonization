@@ -1,14 +1,1 @@
-[
-  {
-    "Id": 0,
-    "CodeISO639_1": "ru",
-    "Name": "РУССКИЙ",
-    "Folder": "Russian"
-  },
-  {
-    "Id": 1,
-    "CodeISO639_1": "en",
-    "Name": "ENGLISH",
-    "Folder": "English"
-  }
-]
+[{"Id":0,"Code":"ru","Name":"Русский","Folder":"Russian","SpriteName":"Banner"},{"Id":1,"Code":"en","Name":"English","Folder":"English","SpriteName":"Banner"}]

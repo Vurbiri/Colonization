@@ -4,7 +4,7 @@ namespace VurbiriEditor
 {
     internal static class CONST
     {
-        public const string MENU_PATH = "Tools/";
+        public const string MENU_PATH = "Vurbiri/";
 
         public const string LABEL_COLOR = "Color";
         

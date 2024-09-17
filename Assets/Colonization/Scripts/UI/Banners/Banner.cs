@@ -21,7 +21,7 @@ namespace Vurbiri
         {
             base.Initialize();
 
-            _banners = Banners.InstanceF;
+            _banners = Banners.Instance;
             _image = GetComponent<Image>();
             HorizontalLayoutGroup layoutGroup = GetComponent<HorizontalLayoutGroup>();
 

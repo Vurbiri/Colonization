@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Vurbiri.Localization;
 
 namespace Vurbiri.Colonization
 {
@@ -19,9 +20,9 @@ namespace Vurbiri.Colonization
 
             _loadScene.Start();
 
-            YandexSDK ysdk = YandexSDK.InstanceF;
-            Localization localization = Localization.InstanceF;
-            SettingsData settings = SettingsData.InstanceF;
+            YandexSDK ysdk = YandexSDK.Instance;
+            Language localization = Language.Instance;
+            SettingsData settings = SettingsData.Instance;
 
 
             if (!localization.Initialize())
@@ -68,7 +69,7 @@ namespace Vurbiri.Colonization
             IEnumerator CreateStorages_Coroutine()
             {
                 if (!Storage.StoragesCreate())
-                    Message.Log(localization.GetText(TextFiles.Main, "ErrorStorage"));
+                    Message.Log(localization.GetText(Files.Main, "ErrorStorage"));
 
                 yield return StartCoroutine(InitializeStorages_Coroutine());
 
@@ -89,7 +90,7 @@ namespace Vurbiri.Colonization
                         bool result = false;
 
                         result = settings.Initialize(load) || result;
-                        result = GameSettingsData.InstanceF.Initialize(load) || result;
+                        result = GameSettingsData.Instance.Initialize(load) || result;
                         return result;
                     }
                     #endregion

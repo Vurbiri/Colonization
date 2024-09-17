@@ -17,12 +17,23 @@ namespace Vurbiri
         public virtual TValue this[TType type] { get => _values[type.ToInt()]; set => _values[type.ToInt()] = value; }
         public virtual TValue this[int index] { get => _values[index]; set => _values[index] = value; }
 
+        public IReadOnlyList<TValue> Values => _values;
+
         protected readonly int _count;
 
         public EnumArray()
         {
             _count = Enum<TType>.Count;
             _values = new TValue[_count];
+        }
+
+        public EnumArray(TValue defaultValue)
+        {
+            _count = Enum<TType>.Count;
+            _values = new TValue[_count];
+
+            for (int i = 0; i < _count; i++)
+                _values[i] = defaultValue;
         }
 
         public EnumArray(IReadOnlyList<TValue> collection)

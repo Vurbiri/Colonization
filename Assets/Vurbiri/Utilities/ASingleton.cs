@@ -9,9 +9,8 @@ namespace Vurbiri
 
         [SerializeField] protected bool _isNotDestroying = true;
 
-        public static T InstanceF => GetInstance(false);
-        public static T InstanceFC => GetInstance(true);
-        public static T Instance => _instance;
+        public static T Instance => GetInstance(false);
+        public static T InstanceC => GetInstance(true);
 
         protected virtual void Awake()
         {

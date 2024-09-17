@@ -1,13 +1,6 @@
 using System;
 namespace Vurbiri
 {
-    public enum TextFiles
-    {
-        Main,
-        City,
-    }
-
-
     public enum AudioType
     {
         Music,

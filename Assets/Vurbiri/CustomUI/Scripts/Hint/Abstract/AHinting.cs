@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Vurbiri.Localization;
 
 namespace Vurbiri.UI
 {
@@ -8,19 +9,19 @@ namespace Vurbiri.UI
     public abstract class AHinting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField, FindObject] private HintGlobal _hint;
-        [SerializeField] protected TextFiles _file;
+        [SerializeField] protected Files _file;
 
         public bool IsShowingHint => _isShowingHint;
 
         private bool _isShowingHint = false;
         protected Selectable _thisSelectable;
         protected string _text;
-        protected Localization _localization;
+        protected Language _localization;
 
         public virtual void Initialize()
         {
             _thisSelectable = GetComponent<Selectable>();
-            _localization = Localization.Instance;
+            _localization = Language.Instance;
             if (_hint == null)
                 _hint = FindAnyObjectByType<HintGlobal>();
 

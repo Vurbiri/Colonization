@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Localization;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -14,7 +15,7 @@ namespace Vurbiri.Colonization.UI
             base.Awake();
 
             allowSwitchOff = false;
-            foreach (var item in Localization.Instance.Languages)
+            foreach (var item in Language.Instance.Languages)
                 Instantiate(_langPrefab, transform).Setup(item, this, _isSave);
         }
     }

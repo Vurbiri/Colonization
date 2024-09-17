@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
 
         public IEnumerator TryLogOnCoroutine()
         {
-            _ysdk = YandexSDK.InstanceF;
+            _ysdk = YandexSDK.Instance;
 
             _waitLogOn = new();
             gameObject.SetActive(true);

@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Localization;
 using static Vurbiri.Colonization.JSON_KEYS;
 
 namespace Vurbiri.Colonization
@@ -25,18 +26,18 @@ namespace Vurbiri.Colonization
         public bool IsFirstStart { get; set; } = true;
 
         private YandexSDK _ysdk;
-        private Localization _localization;
+        private Language _localization;
         private readonly Dictionary<AudioType, IVolume> _volumes = new(Enum<AudioType>.Count);
 
         protected override void Awake()
         {
             base.Awake();
 
-            _ysdk = YandexSDK.InstanceF;
-            _localization = Localization.InstanceF;
+            _ysdk = YandexSDK.Instance;
+            _localization = Language.Instance;
 
-            _volumes[AudioType.Music] = MusicSingleton.InstanceF;
-            _volumes[AudioType.SFX] = SoundSingleton.InstanceF;
+            _volumes[AudioType.Music] = MusicSingleton.Instance;
+            _volumes[AudioType.SFX] = SoundSingleton.Instance;
         }
 
         public bool Initialize(bool isLoad)

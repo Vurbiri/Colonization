@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization
 
         public void Initialize(Key key)
         {
-            _eventBus = EventBus.InstanceF;
+            _eventBus = EventBus.Instance;
             _eventBus.EventCrossroadMarkShow += Show;
 
             _collider = GetComponent<SphereCollider>();

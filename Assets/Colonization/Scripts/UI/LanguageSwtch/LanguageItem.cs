@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Localization;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -13,17 +14,17 @@ namespace Vurbiri.Colonization.UI
         private Toggle _toggle;
         private bool _isSave;
         private int _id = -1;
-        private Localization _localization;
+        private Language _localization;
         private SettingsData _settings;
 
         private void Awake()
         {
             _toggle = GetComponent<Toggle>();
-            _localization = Localization.InstanceF;
-            _settings = SettingsData.InstanceF;
+            _localization = Language.Instance;
+            _settings = SettingsData.Instance;
         }
 
-        public void Setup(Localization.LanguageType languageType, ToggleGroup toggleGroup, bool isSave)
+        public void Setup(LanguageType languageType, ToggleGroup toggleGroup, bool isSave)
         {
 
             _icon.sprite = languageType.Sprite;
@@ -49,8 +50,8 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            if (Localization.Instance != null)
-                Localization.Instance.EventSwitchLanguage -= OnSwitchLanguage;
+            if (Language.Instance != null)
+                Language.Instance.EventSwitchLanguage -= OnSwitchLanguage;
         }
     }
 }

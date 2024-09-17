@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Localization;
 
 namespace Vurbiri.UI
 {
@@ -14,7 +15,7 @@ namespace Vurbiri.UI
         [SerializeField] private float _maxWidth = 400f;
         [SerializeField] private Vector2 _padding = new(15f, 15f);
 
-        private Localization _localization;
+        private Language _localization;
         private Graphic _background;
         private RectTransform _transformBack, _transformText;
         private Coroutine _coroutineShow;
@@ -24,7 +25,7 @@ namespace Vurbiri.UI
 
         private void Start()
         {
-            _localization = Localization.Instance;
+            _localization = Language.Instance;
             _background = GetComponent<Graphic>();
             _transformBack = GetComponent<RectTransform>();
             _transformText = _hint.rectTransform;
@@ -40,7 +41,7 @@ namespace Vurbiri.UI
             AlphaReset();
         }
 
-        public bool Show(TextFiles file, string key)
+        public bool Show(Files file, string key)
         {
             if (string.IsNullOrEmpty(key))
                 return false;
