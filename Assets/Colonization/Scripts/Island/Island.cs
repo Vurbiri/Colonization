@@ -1,19 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
-    //[ExecuteInEditMode]
+    using static CONST;
+
     public class Island : MonoBehaviour
     {
         [SerializeField] private string _keySave = "isl";
         [Space]
         [SerializeField] private EnumHashSet<SurfaceType, SurfaceScriptable> _surfaces;
         [Space]
-        [SerializeField, GetComponentInChildren] private Land _land;
-        [SerializeField, GetComponentInChildren] private Crossroads _crossroads;
+        [SerializeField] private Land _land;
+        [SerializeField] private Crossroads _crossroads;
         [Space]
         [SerializeField] private Roads _roadsPrefab;
         [SerializeField] private Transform _roadsContainer;
@@ -51,14 +51,12 @@ namespace Vurbiri.Colonization
             //=================================
             IEnumerator Load_Coroutine()
             {
-                Return<int[][]> loading = Storage.Load<int[][]>(_keySave);
-                if (!loading.Result)
+                if (!Storage.TryLoad(_keySave, out int[][] values))
                 {
                     waitResult.SetResult(false);
                     yield break;
                 }
 
-                int[][] values = loading.Value;
                 HexagonData[] hexagonsData = new HexagonData[values.Length];
                 for (int i = values.Length - 1; i >= 0; i--)
                     hexagonsData[i] = new(values[i]);
@@ -149,5 +147,13 @@ namespace Vurbiri.Colonization
         public Roads GetRoads() => Instantiate(_roadsPrefab, _roadsContainer);
 
         private int CalkMaxHexagons(int circleMax) => ((HEX_COUNT_SIDES * circleMax * (circleMax + 1)) >> 1);
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            _land = GetComponentInChildren<Land>();
+            _crossroads = GetComponentInChildren<Crossroads>();
+        }
+#endif
     }
 }

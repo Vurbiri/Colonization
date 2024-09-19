@@ -33,7 +33,6 @@ namespace Vurbiri.Colonization
             _type = type;
             _visual = visual;
             _roads = roads.Initialize(_type, _visual.color);
-
         }
         public IEnumerator Save_Coroutine(bool saveToFile = true)
         {
@@ -43,11 +42,8 @@ namespace Vurbiri.Colonization
 
         public void Load(Crossroads crossroads, Currencies resources)
         {
-            PlayerLoadData data;
-            Return<PlayerLoadData> loading = Storage.Load<PlayerLoadData>(_type.ToString());
-            if (loading.Result)
+            if (Storage.TryLoad(_type.ToString(), out PlayerLoadData data))
             {
-                data = loading.Value;
                 _resources = new(data.resources);
                 CreateRoads();
                 CreateCities();
@@ -56,7 +52,7 @@ namespace Vurbiri.Colonization
 
             _resources = new(resources);
 
-            #region Local: CreateRoad(...)
+            #region Local: CreateRoads(), CreateCities(), CreateRoad(...)
             //=================================
             void CreateRoads()
             {

@@ -51,6 +51,7 @@ namespace Vurbiri.Colonization
         //TEST
         public void Rand(int max)
         {
+            Debug.Log("TEST");
             Clear();
             for (int i = 0; i < _count; i++)
                 Add(i, Random.Range(0, max + 1));

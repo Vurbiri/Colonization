@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization
     [RequireComponent(typeof(SphereCollider))]
     public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
     {
-        [GetComponentInChildren]
         [SerializeField] private AEdifice _edifice;
         [Space]
         [SerializeField] private EdificesScriptable _prefabs;
@@ -217,6 +216,12 @@ namespace Vurbiri.Colonization
         }
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            _edifice = GetComponentInChildren<AEdifice>();
+        }
+#endif
     }
 }
 

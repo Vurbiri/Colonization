@@ -19,7 +19,7 @@ namespace Vurbiri.Localization.Editors
         {
             SettingsScriptable settings = ProjectSettingsScriptable.GetOrCreateSelf().CurrentSettings;
 
-            if (settings == null || !LoadResourceFromJson(Path.Combine(settings.Folder, settings.LanguageFile), out _languageTypes))
+            if (settings == null || !LoadObjectFromResourceJson(Path.Combine(settings.Folder, settings.LanguageFile), out _languageTypes))
                 return;
 
             _languageTypes.Sort();

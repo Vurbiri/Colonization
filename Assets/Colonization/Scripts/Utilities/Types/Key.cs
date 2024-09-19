@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//[JsonObject(MemberSerialization.OptIn)]
 [JsonArray]
 public class Key : IEquatable<Key>, IEnumerable<int>
 {
@@ -58,8 +57,6 @@ public class Key : IEquatable<Key>, IEnumerable<int>
     public static bool operator ==(Key a, Key b) => (a is null && b is null) || (a is not null && a.Equals(b));
     public static bool operator !=(Key a, Key b) => !(a == b);
     public override string ToString() => $"({_x}, {_y})";
-
-    
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

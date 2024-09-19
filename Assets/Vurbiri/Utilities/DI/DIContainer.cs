@@ -54,7 +54,7 @@ namespace Vurbiri
             if (_registration.ContainsKey(key))
                 throw new Exception($"Фабрика с тегом {key.tag} типа {key.type.FullName} уже зарегистрирована.");
 
-            _registration[key] = new DIRegistration<T>(factory, isSingleton, this);
+            _registration[key] = new DIRegistration<T>(factory, isSingleton);
         }
 
         public void Dispose()
@@ -73,12 +73,10 @@ namespace Vurbiri
             private readonly bool _isSingleton;
             private readonly T _instance;
 
-            public DIRegistration(Func<DIContainer, T> factory, bool isSingleton, DIContainer container)
+            public DIRegistration(Func<DIContainer, T> factory, bool isSingleton)
             {
                 _factory = factory;
                 _isSingleton = isSingleton;
-                if (isSingleton)
-                    _instance = _factory(container);
             }
 
             public DIRegistration(T instance)
@@ -88,7 +86,7 @@ namespace Vurbiri
                 _instance = instance;
             }
 
-            public T Resolve(DIContainer container) => _isSingleton ? _instance : _factory(container);
+            public T Resolve(DIContainer container) => _isSingleton && _instance != null ? _instance : _factory(container);
 
             public void Dispose()
             {

@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
 
         public bool Initialize(bool isLoad)
         {
-            bool result = isLoad && Load();
+            bool result = isLoad && Storage.TryLoad(_keySave, out _data);
             if (!result)
                 _data = new(_circleMax);
 
@@ -38,14 +38,6 @@ namespace Vurbiri.Colonization
             return result;
         }
 
-        private bool Load()
-        {
-            Return<GameSave> data = Storage.Load<GameSave>(_keySave);
-            if (data.Result)
-                _data = data.Value;
-
-            return data.Result;
-        }
         public void Save(bool saveToFile, Action<bool> callback = null) => StartCoroutine(Storage.Save_Coroutine(_keySave, _data, saveToFile, callback));
 
         public void StartGame()

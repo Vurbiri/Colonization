@@ -12,7 +12,6 @@ namespace Vurbiri.Localization.Editors
             var provider = new SettingsProvider(PROJECT_MENU, SettingsScope.Project)
             {
                 label = PROJECT_LABEL,
-                keywords = new[] { FOLDER, FILE_LANG },
                 activateHandler = (searchContext, rootElement)
                                 => rootElement.Add(ProjectSettingsEditor.GetVisualElement(ProjectSettingsScriptable.GetSerializedSelf()))
             };

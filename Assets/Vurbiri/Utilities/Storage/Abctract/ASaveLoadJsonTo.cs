@@ -22,6 +22,14 @@ namespace Vurbiri
 
             return Return<T>.Empty;
         }
+
+        public virtual bool TryLoad<T>(string key, out T value) where T : class
+        {
+            Return<T> result = Load<T>(key);
+            value = result.Value;
+            return result.Result;
+        }
+
         public IEnumerator Save_Coroutine(string key, object data, bool toFile, Action<bool> callback)
         {
             bool result = SaveToMemory();

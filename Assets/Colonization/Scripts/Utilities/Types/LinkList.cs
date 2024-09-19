@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Colonization
 {
+    public enum LinkListMode
+    {
+        First,
+        Last
+    }
+
     public class LinkList<T> : IReadOnlyCollection<T>, IEnumerable<T>
     {
         public T First => _first.value;

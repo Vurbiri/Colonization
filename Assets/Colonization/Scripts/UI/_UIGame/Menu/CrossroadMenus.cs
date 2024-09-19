@@ -6,8 +6,8 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private RectTransform _canvasTransform;
         [Space]
-        [SerializeField, GetComponentInChildren] private CrossroadMainMenu _mainMenu;
-        [SerializeField, GetComponentInChildren] private CrossroadRoadsMenu _roadsMenu;
+        [SerializeField] private CrossroadMainMenu _mainMenu;
+        [SerializeField] private CrossroadRoadsMenu _roadsMenu;
 
         private RectTransform _thisTransform;
         private Camera _camera;
@@ -36,5 +36,13 @@ namespace Vurbiri.Colonization.UI
             }
             #endregion
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            _mainMenu = GetComponentInChildren<CrossroadMainMenu>();
+            _roadsMenu = GetComponentInChildren<CrossroadRoadsMenu>();
+        }
+#endif
     }
 }

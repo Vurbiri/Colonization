@@ -11,13 +11,11 @@ namespace Vurbiri
 
         public Chance(int value = 50) => _value = value;
 
-        public readonly float Select(float trueValue, float falseValue) => (_value > 0 && (_value >= 100 || Random.Range(0, 100) < _value)) ? trueValue : falseValue;
-        public readonly int Select(int trueValue, int falseValue) => (_value > 0 && (_value >= 100 || Random.Range(0, 100) < _value)) ? trueValue : falseValue;
+        public readonly T Select<T>(T trueValue, T falseValue) => (_value > 0 && (_value >= 100 || Random.Range(0, 100) < _value)) ? trueValue : falseValue;
 
         public static bool Rolling(int value = 50) => value > 0 && (value >= 100 || Random.Range(0, 100) < value);
 
-        public static float Select(float trueValue, float falseValue, int value = 50) => (value > 0 && (value >= 100 || Random.Range(0, 100) < value)) ? trueValue : falseValue;
-        public static int Select(int trueValue, int falseValue, int value = 50) => (value > 0 && (value >= 100 || Random.Range(0, 100) < value)) ? trueValue : falseValue;
+        public static T Select<T>(T trueValue, T falseValue, int value = 50) => (value > 0 && (value >= 100 || Random.Range(0, 100) < value)) ? trueValue : falseValue;
 
         public static implicit operator Chance(int value) => new(value);
         public static explicit operator int(Chance chance) => chance._value;

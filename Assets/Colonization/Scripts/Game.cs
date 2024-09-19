@@ -31,6 +31,7 @@ namespace Vurbiri.Colonization
 
         private IEnumerator Start()
         {
+           
             _island.Initialize(_gameSettings.CircleMax, _gameSettings.ChanceWater);
 
             _gameSettings.StartGame();

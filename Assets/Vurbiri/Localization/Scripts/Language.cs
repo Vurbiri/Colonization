@@ -32,7 +32,7 @@ namespace Vurbiri.Localization
             _folder = settings.Folder;
             _loadFiles = new(settings.LoadFiles);
 
-            if (!LoadResourceFromJson(Path.Combine(_folder, settings.LanguageFile), out _languages))
+            if (!LoadObjectFromResourceJson(Path.Combine(_folder, settings.LanguageFile), out _languages))
                 return false;
 
             foreach (var language in _languages) 
@@ -128,7 +128,7 @@ namespace Vurbiri.Localization
 
         private bool LoadingFile(int idFile, LanguageType type)
         {
-            if (!LoadResourceFromJson(Path.Combine(_folder, type.Folder, _nameFiles[idFile]), out Dictionary<string, string> load))
+            if (!LoadObjectFromResourceJson(Path.Combine(_folder, type.Folder, _nameFiles[idFile]), out Dictionary<string, string> load))
                 return false;
 
             var current = _text[idFile];

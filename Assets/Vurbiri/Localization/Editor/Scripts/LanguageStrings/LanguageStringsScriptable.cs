@@ -27,7 +27,7 @@ namespace Vurbiri.Localization.Editors
         public void Initialize()
         {
             _settings = ProjectSettingsScriptable.GetOrCreateSelf().CurrentSettings;
-            LoadResourceFromJson(Path.Combine(_settings.Folder, _settings.LanguageFile), out _languages);
+            LoadObjectFromResourceJson(Path.Combine(_settings.Folder, _settings.LanguageFile), out _languages);
             _count = _languages.Length;
             _names = new string[_count];
             for (int i = 0; i < _count; i++)
@@ -77,7 +77,7 @@ namespace Vurbiri.Localization.Editors
             {
                 path = Path.Combine(_settings.FolderPath, _languages[i].Folder, _file.ToString()).Concat(JSON_EXP);
                 if (File.Exists(path))
-                    LoadResourceFromJson(Path.Combine(_settings.Folder, _languages[i].Folder, _file.ToString()), out strings[i]);
+                    LoadObjectFromResourceJson(Path.Combine(_settings.Folder, _languages[i].Folder, _file.ToString()), out strings[i]);
                 else
                     strings[i] = new();
 

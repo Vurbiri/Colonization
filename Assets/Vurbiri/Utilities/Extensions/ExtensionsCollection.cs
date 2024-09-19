@@ -80,17 +80,21 @@ namespace Vurbiri
             }
         }
 
-
-        public static bool BinaryContains<T>(this List<T> self, T item) => self.BinarySearch(item) >= 0;
-
         public static T Pop<T>(this IList<T> self)
         {
             T obj = self[^1]; self.RemoveAt(self.Count - 1);
             return obj;
         }
 
+        public static bool IsCorrectIndex<T>(this T[,] self, Vector2Int index) => index.x >= 0 && index.x < self.GetLength(0) && index.y >= 0 && index.y < self.GetLength(1);
 
+        public static bool TryAdd<T>(this ISet<T> self, T value)
+        {
+            if(self.Contains(value))
+                return false;
 
-        public static bool IsCorrect<T>(this T[,] self, Vector2Int index) => index.x >= 0 && index.x < self.GetLength(0) && index.y >= 0 && index.y < self.GetLength(1);
+            self.Add(value);
+            return true;
+        }
     }
 }

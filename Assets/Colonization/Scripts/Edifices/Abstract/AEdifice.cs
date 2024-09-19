@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
         [SerializeField, Hide] protected EdificeType _typeNext;
         [SerializeField, Hide] protected EdificeGroup _groupNext;
         [SerializeField, Range(1f, 5f)] private float _radiusCollider = 1.75f;
-        [Space, GetComponentInChildren]
+        [Space]
         [SerializeField] protected AEdificeGraphic _graphic;
 
         public EdificeType Type => _type;
@@ -107,5 +107,13 @@ namespace Vurbiri.Colonization
 
         public void OnAfterDeserialize() { }
         #endregion
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            _graphic = GetComponentInChildren<AEdificeGraphic>();
+        }
+#endif
+
     }
 }

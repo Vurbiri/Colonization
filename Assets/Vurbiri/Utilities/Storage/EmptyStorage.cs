@@ -13,6 +13,12 @@ namespace Vurbiri
             return null;
         }
         public override Return<T> Load<T>(string key) => Return<T>.Empty;
+        
+        public override bool TryLoad<T>(string key, out T value) where T : class
+        {
+            value = null;
+            return false;
+        }
 
         protected override WaitResult<bool> SaveToFile_Wait()
         {

@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Foldout text="Foldout" name="Foldout" style="flex-shrink: 0;">
+        <ui:VisualElement style="flex-grow: 0; padding-top: 6px; padding-right: 6px; padding-bottom: 6px; padding-left: 6px; justify-content: space-around; align-items: stretch; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); align-self: stretch; background-color: rgb(56, 56, 56);">
+            <ui:IntegerField label="Id" value="42" name="Id" binding-path="_id" />
+            <ui:TextField picking-mode="Ignore" label="Name" binding-path="_name" name="Name" class="unity-property-field" />
+            <ui:EnumField label="Target Object" type="Vurbiri.Colonization.TargetObjectPerk, Assembly-CSharp" binding-path="_target" />
+            <ui:EnumField label="Target Ability" type="Vurbiri.Colonization.AbilityType, Assembly-CSharp" binding-path="_ability" />
+            <ui:SliderInt label="Value" high-value="10" binding-path="_value" show-input-field="true" />
+            <uie:PropertyField binding-path="_chance" />
+            <ui:VisualElement style="flex-grow: 0; align-self: stretch; border-left-color: rgb(77, 77, 77); border-right-color: rgb(77, 77, 77); border-top-color: rgb(77, 77, 77); border-bottom-color: rgb(77, 77, 77); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; justify-content: center; align-items: stretch; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px;">
+                <uie:PropertyField binding-path="_cost" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:Foldout>
+</ui:UXML>

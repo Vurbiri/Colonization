@@ -44,7 +44,7 @@ namespace Vurbiri.Localization.Editors
             //=================================
             void LoadLangs()
             {
-                if (!LoadResourceFromJson(LANGS, out Lang[] arr))
+                if (!LoadObjectFromResourceJson(LANGS, out Lang[] arr))
                     return;
 
                 int count = arr.Length;
