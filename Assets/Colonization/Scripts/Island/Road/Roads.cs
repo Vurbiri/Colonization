@@ -9,14 +9,16 @@ namespace Vurbiri.Colonization
         [SerializeField] private Road _prefabRoad;
         [SerializeField] private Currencies _cost;
 
-        public Currencies Cost => _cost;
-
         private Transform _thisTransform;
         private PlayerType _type;
         private Color _color;
         private readonly List<Road> _roadsLists = new();
+        private int _count = 0;
 
         private const string NAME = "Roads_";
+
+        public Currencies Cost => _cost;
+        public int Count => _count;
 
         public Roads Initialize(PlayerType type, Color color)
         {
@@ -31,6 +33,7 @@ namespace Vurbiri.Colonization
         public void Build(CrossroadLink link)
         {
             link.RoadBuilt(_type);
+            _count++;
 
             if (!AddRoadLine())
                 NewRoadLine();

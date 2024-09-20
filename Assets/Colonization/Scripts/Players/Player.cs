@@ -21,19 +21,29 @@ namespace Vurbiri.Colonization
         [JsonProperty(P_ROADS)]
         private Key[][] _roadsKey;
         [JsonProperty(P_ENDIFICES)]
-        private readonly HashSet<Crossroad> _cities = new();
+        private readonly Dictionary<EdificeGroup, HashSet<Crossroad>> _edifices = new();
 
         private readonly PlayerType _type;
         private readonly PlayerVisual _visual;
         private readonly Roads _roads;
+        private readonly Dictionary<AbilityType, Ability> _abilities;
 
-        public Player(PlayerType type, PlayerVisual visual, Currencies resources, Roads roads) : this(type, visual, roads) => _resources = resources;
-        public Player(PlayerType type, PlayerVisual visual, Roads roads)
+        public Player(PlayerType type, PlayerVisual visual, Currencies resources, Roads roads, PlayerAbilitiesScriptable abilities) : this(type, visual, roads, abilities) => _resources = resources;
+        public Player(PlayerType type, PlayerVisual visual, Roads roads, PlayerAbilitiesScriptable abilities)
         {
             _type = type;
             _visual = visual;
             _roads = roads.Initialize(_type, _visual.color);
+                        
+            _edifices[EdificeGroup.Urban] = new();
+            _edifices[EdificeGroup.Port] = new();
+            _edifices[EdificeGroup.Shrine] = new();
+
+            _abilities = new(abilities.Count);
+            foreach (var ability in abilities)
+                _abilities[ability.Type] = new(ability);
         }
+
         public IEnumerator Save_Coroutine(bool saveToFile = true)
         {
             _roadsKey = _roads.GetCrossroadsKey();
@@ -65,17 +75,20 @@ namespace Vurbiri.Colonization
             //=================================
             void CreateCities()
             {
-                if (data.cities == null)
+                if (data.edifices == null)
                     return;
 
                 CrossroadLoadData loadData = new();
                 Crossroad crossroad;
-                foreach (var arr in data.cities)
+                foreach (var dict in data.edifices)
                 {
-                    loadData.SetValues(arr);
-                    crossroad = crossroads.GetCrossroad(loadData.key);
-                    if (crossroad.Build(_type, loadData.type, loadData.isWall))
-                        _cities.Add(crossroad);
+                    foreach (var arr in dict.Value)
+                    {
+                        loadData.SetValues(arr);
+                        crossroad = crossroads.GetCrossroad(loadData.key);
+                        if (crossroad.Build(_type, loadData.type, loadData.isWall))
+                            _edifices[dict.Key].Add(crossroad);
+                    }
                 }
 
                 _roads.SetRoadsEndings();
@@ -105,36 +118,47 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public void Receipt(int hexId)
+        public void Profit(int hexId, Currencies freeGroundRes)
         {
-            foreach (var city in _cities)
-                _resources.AddFrom(city.Profit(hexId));
+            if (IsAbility(AbilityType.IsFreeGroundRes))
+                _resources.AddFrom(freeGroundRes);
+
+            //foreach (var city in _edifices)
+            //    _resources.AddFrom(city.Profit(hexId));
         }
 
-        public bool CanRoadBuy() => _resources >= _roads.Cost;
-        public void RoadBuild(CrossroadLink link)
+        public bool CanCrossroadUpgrade(Crossroad crossroad)
         {
-            _roads.BuildAndUnion(link);
-            _resources.Pay(_roads.Cost);
+            EdificeGroup upgradeGroup = crossroad.UpgradeGroup;
+            return (crossroad.Group != EdificeGroup.None || IsAbility(upgradeGroup.ToAbilityType(), _edifices[upgradeGroup].Count)) && crossroad.CanUpgrade(_type);
         }
-
-        public void CrossroadUpgrade(Crossroad crossroad)
+        public void CrossroadUpgradeBuy(Crossroad crossroad)
         {
             if (crossroad.UpgradeBuy(_type, out Currencies cost))
             {
-                _cities.Add(crossroad);
+                _edifices[crossroad.Group].Add(crossroad);
                 _resources.Pay(cost);
             }
         }
 
-        public void CrossroadWall(Crossroad crossroad)
+        public bool CanWallBuild(Crossroad crossroad) => IsAbility(AbilityType.IsWall) && crossroad.CanWallBuild(_type);
+        public void CrossroadWallBuy(Crossroad crossroad)
         {
             if (crossroad.WallBuy(_type, out Currencies cost))
                 _resources.Pay(cost);
         }
 
-        public override string ToString() => $"Player: {_type}";
+        public bool CanRoadBuild(Crossroad crossroad) => IsAbility(AbilityType.MaxRoads, _roads.Count) && crossroad.CanRoadBuild(_type);
+        public bool CanRoadBuy() => _resources >= _roads.Cost;
+        public void RoadBuy(CrossroadLink link)
+        {
+            _roads.BuildAndUnion(link);
+            _resources.Pay(_roads.Cost);
+        }
 
+        public override string ToString() => $"Player: {_type}";
+        
+        private bool IsAbility(AbilityType abilityType, int value = 0) => _abilities.TryGetValue(abilityType, out var ability) && ability.CurrentValue > value;
 
         #region Nested: PlayerLoadData
         //***********************************
@@ -146,14 +170,14 @@ namespace Vurbiri.Colonization
             [JsonProperty(P_ROADS)]
             public int[][][] roadsKey;
             [JsonProperty(P_ENDIFICES)]
-            public int[][] cities;
+            public Dictionary<EdificeGroup, int[][]> edifices;
 
             [JsonConstructor]
-            public PlayerLoadData(int[] r, int[][][] k, int[][] c)
+            public PlayerLoadData(int[] r, int[][][] k, Dictionary<EdificeGroup, int[][]> e)
             {
                 resources = r;
                 roadsKey = k;
-                cities = c;
+                edifices = e;
             }
         }
         #endregion

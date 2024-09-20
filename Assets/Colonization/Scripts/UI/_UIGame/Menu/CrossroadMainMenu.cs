@@ -29,13 +29,13 @@ namespace Vurbiri.Colonization.UI
             void OnUpgrade()
             {
                 gameObject.SetActive(false);
-                _playerCurrent.CrossroadUpgrade(_currentCrossroad);
+                _playerCurrent.CrossroadUpgradeBuy(_currentCrossroad);
             }
             //=================================
             void OnWall()
             {
                 gameObject.SetActive(false);
-                _playerCurrent.CrossroadWall(_currentCrossroad);
+                _playerCurrent.CrossroadWallBuy(_currentCrossroad);
             }
             //=================================
             void OnRoads()
@@ -53,16 +53,14 @@ namespace Vurbiri.Colonization.UI
             _currentCrossroad = crossroad;
 
             Color color = _playerCurrent.Color;
-            PlayerType type = _playerCurrent.Type;
-            bool isActive;
 
-            if (isActive = ButtonSetup(_buttonUpgrade.Button, crossroad.CanUpgrade(type), crossroad.CanUpgradeBuy(_playerCurrent.Resources)))
+            if (ButtonSetup(_buttonUpgrade.Button, _playerCurrent.CanCrossroadUpgrade(crossroad), crossroad.CanUpgradeBuy(_playerCurrent.Resources)))
                 _buttonUpgrade.SetupHint(crossroad.UpgradeType);
 
-            isActive = ButtonSetup(_buttonWall, crossroad.CanWallBuild(type), crossroad.CanWallBuy(_playerCurrent.Resources)) || isActive;
-            isActive = ButtonSetup(_buttonRoads, crossroad.CanRoadBuild(type), _playerCurrent.CanRoadBuy()) || isActive;
+            ButtonSetup(_buttonWall, _playerCurrent.CanWallBuild(crossroad), crossroad.CanWallBuy(_playerCurrent.Resources));
+            ButtonSetup(_buttonRoads, _playerCurrent.CanRoadBuild(crossroad), _playerCurrent.CanRoadBuy());
 
-            gameObject.SetActive(isActive);
+            gameObject.SetActive(true);
 
             #region Local: ButtonSetup(...)
             //=================================

@@ -18,10 +18,11 @@ namespace Vurbiri.Colonization
         [SerializeField] private Roads _roadsPrefab;
         [SerializeField] private Transform _roadsContainer;
 
-        public Crossroads Crossroads => _crossroads;
-
         private int _circleMax;
         private Chance _chanceWater;
+
+        public Crossroads Crossroads => _crossroads;
+        public Land Land => _land;
 
         public void Initialize(int circleMax, int chanceWater)
         {

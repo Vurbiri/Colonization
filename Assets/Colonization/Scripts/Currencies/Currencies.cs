@@ -1,16 +1,24 @@
 using Newtonsoft.Json;
+using System;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
     [System.Serializable, JsonArray]
-    public class Currencies : EnumArray<CurrencyType, int>
+    public class Currencies : EnumArray<CurrencyType, int>, IReactiveValue<Currencies>
     {
         [SerializeField] protected int _amount;
         public int Amount => _amount;
 
         public override int this[CurrencyType type] { get => _values[(int)type]; set => Add(type, value); }
         public override int this[int index] { get => _values[index]; set => Add(index, value); }
+
+        private Action<Currencies> EventCurrenciesChange;
+        event Action<Currencies> IReactiveValue<Currencies>.EventValueChange
+        {
+            add { EventCurrenciesChange += value; }
+            remove { EventCurrenciesChange -= value; }
+        }
 
         public Currencies(int[] array) : this()
         {
@@ -31,13 +39,15 @@ namespace Vurbiri.Colonization
             _amount = other._amount;
         }
         public Currencies() : base() => _amount = 0;
-
+        
         public void CopyFrom(Currencies other)
         {
             for (int i = 0; i < _count; i++)
                 _values[i] = other._values[i];
 
             _amount = other._amount;
+
+            EventCurrenciesChange?.Invoke(this);
         }
 
         public void AddFrom(Currencies other)
@@ -46,6 +56,8 @@ namespace Vurbiri.Colonization
                 _values[i] += other._values[i];
 
             _amount += other._amount;
+
+            EventCurrenciesChange?.Invoke(this);
         }
 
         //TEST
@@ -54,7 +66,7 @@ namespace Vurbiri.Colonization
             Debug.Log("TEST");
             Clear();
             for (int i = 0; i < _count; i++)
-                Add(i, Random.Range(0, max + 1));
+                Add(i, UnityEngine.Random.Range(0, max + 1));
 
         }
 
@@ -63,12 +75,16 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < _count; i++)
                 _values[i] = 0;
             _amount = 0;
+
+            EventCurrenciesChange?.Invoke(this);
         }
 
         public void Add(int id, int value)
         {
             _values[id] += value;
             _amount += value;
+
+            EventCurrenciesChange?.Invoke(this);
         }
         public void Add(CurrencyType type, int value) => Add(id: (int)type, value);
 
@@ -78,6 +94,8 @@ namespace Vurbiri.Colonization
                 _values[i] -= cost._values[i];
 
             _amount -= cost._amount;
+
+            EventCurrenciesChange?.Invoke(this);
         }
 
         public static bool operator >(Currencies left, Currencies right) => !(left <= right);
@@ -110,15 +128,6 @@ namespace Vurbiri.Colonization
             _amount = 0;
             for (int i = 0; i < _count; i++)
                 _amount += _values[i];
-        }
-
-        public override string ToString()
-        {
-            string str = "{ ";
-            foreach (var type in Enum<CurrencyType>.Values)
-                str += $"({type} [{_values[(int)type]}]) ";
-            str += "}";
-            return str;
         }
     }
 }

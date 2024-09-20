@@ -4,20 +4,19 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    //[DefaultExecutionOrder(-1)]
     public class Players : ASingleton<Players>, IEnumerable<Player>
     {
         [Space]
         [SerializeField] private Currencies _startResources;
         [Space]
+        [SerializeField] private PlayerAbilitiesScriptable _abilities;
         [SerializeField] private PlayerVisualSetScriptable _visualSet;
-
-        public Player Current => _current;
-        public Player this[PlayerType type] => _players[type];
-        public PlayerVisualSetScriptable VisualSet => _visualSet;
 
         private Player _current;
         private readonly EnumHashSet<PlayerType, Player> _players = new();
+        
+        public Player Current => _current;
+        public Player this[PlayerType type] => _players[type];
 
         public const int MAX = 4;
 
@@ -30,7 +29,7 @@ namespace Vurbiri.Colonization
             {
                 type = (PlayerType)i;
                 idVisual = idVisuals[i];
-                player = new(type, _visualSet.Get(idVisual), new(_startResources), island.GetRoads());
+                player = new(type, _visualSet.Get(idVisual), new(_startResources), island.GetRoads(), _abilities);
                 _players.Replace(player);
                 StartCoroutine(player.Save_Coroutine(i == MAX - 1));
             }
@@ -47,7 +46,7 @@ namespace Vurbiri.Colonization
             {
                 type = (PlayerType)i;
                 idVisual = idVisuals[i];
-                _players.Replace(new(type, _visualSet.Get(idVisual), island.GetRoads()));
+                _players.Replace(new(type, _visualSet.Get(idVisual), island.GetRoads(), _abilities));
             }
 
             foreach (var player in _players)
@@ -58,10 +57,10 @@ namespace Vurbiri.Colonization
 
         public void Next() => _current = _players.Next(_current.Type);
 
-        public void Receipt(int hexId)
+        public void Profit(int hexId, Currencies freeGroundRes)
         {
             foreach (Player player in _players)
-                player.Receipt(hexId);
+                player.Profit(hexId, freeGroundRes);
         }
 
         public void DestroyGame()

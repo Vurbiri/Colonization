@@ -3,7 +3,7 @@ namespace Vurbiri.Colonization
     public enum SurfaceType
     {
         Village,
-        Plain,
+        Field,
         Crystals,
         Mountain,
         Forest,

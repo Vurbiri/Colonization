@@ -87,14 +87,5 @@ namespace Vurbiri
         }
 
         public static bool IsCorrectIndex<T>(this T[,] self, Vector2Int index) => index.x >= 0 && index.x < self.GetLength(0) && index.y >= 0 && index.y < self.GetLength(1);
-
-        public static bool TryAdd<T>(this ISet<T> self, T value)
-        {
-            if(self.Contains(value))
-                return false;
-
-            self.Add(value);
-            return true;
-        }
     }
 }

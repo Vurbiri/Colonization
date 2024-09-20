@@ -15,7 +15,10 @@ namespace Vurbiri.Colonization
 
         public Key Key => _key;
         public bool IsOccupied => _edifice.IsOccupied;
+        public EdificeType Type => _edifice.Type;
+        public EdificeGroup Group => _edifice.Group;
         public EdificeType UpgradeType => _edifice.TypeNext;
+        public EdificeGroup UpgradeGroup => _edifice.GroupNext;
         public IEnumerable<CrossroadLink> Links => _links;
         public Vector3 Position { get; private set; }
 
@@ -90,17 +93,16 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public bool CanUpgradeBuy(Currencies cash) => _edifice.CanUpgradeBuy(cash);
         public bool CanUpgrade(PlayerType owner)
         {
             return _edifice.IsUpgrade && (_edifice.Owner == owner ||
             _edifice.GroupNext switch
-                {
-                    EdificeGroup.Shrine => IsRoadConnect(owner),
-                    EdificeGroup.Water => WaterCheck(),
-                    EdificeGroup.Urban => NeighborCheck(),
-                    _ => false
-                });
+            {
+                EdificeGroup.Shrine => IsRoadConnect(owner),
+                EdificeGroup.Port => WaterCheck(),
+                EdificeGroup.Urban => NeighborCheck(),
+                _ => false
+            });
 
             #region Local: WaterCheck(), NeighborCheck()
             //=================================
@@ -129,6 +131,7 @@ namespace Vurbiri.Colonization
             }
             #endregion
         }
+        public bool CanUpgradeBuy(Currencies cash) => _edifice.CanUpgradeBuy(cash);
         public bool UpgradeBuy(PlayerType playerType, out Currencies cost)
         {
             if (_edifice.Upgrade(playerType, _links, out _edifice))
@@ -142,23 +145,17 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public virtual bool CanWallBuild(PlayerType owner) => _edifice.CanWallBuild(owner);
-        public virtual bool CanWallBuy(Currencies cash) => _edifice.CanWallBuy(cash);
+        public bool CanWallBuild(PlayerType owner) => _edifice.CanWallBuild(owner);
+        public bool CanWallBuy(Currencies cash) => _edifice.CanWallBuy(cash);
         public bool WallBuy(PlayerType playerType, out Currencies cost) => _edifice.WallBuild(playerType, _links, out cost);
 
-        public bool IsRoadConnect(PlayerType type)
-        {
-            if (_edifice.Owner == type)
-                return true;
-
-            foreach (var link in _links)
-                if (link.Owner == type)
-                    return true;
-
-            return false;
-        }
 
         public bool CanRoadBuild(PlayerType type) => _countFreeLink > 0 && IsRoadConnect(type);
+        public void RoadBuilt(LinkType type, PlayerType owned)
+        {
+            _countFreeLink--;
+            _edifice.AddRoad(type, owned);
+        }
 
         public bool IsFullyOwned(PlayerType owned)
         {
@@ -174,13 +171,18 @@ namespace Vurbiri.Colonization
 
             return true;
         }
-
-        public void RoadBuilt(LinkType type, PlayerType owned)
+        public bool IsRoadConnect(PlayerType type)
         {
-            _countFreeLink--;
-            _edifice.AddRoad(type, owned);
-        }
+            if (_edifice.Owner == type)
+                return true;
 
+            foreach (var link in _links)
+                if (link.Owner == type)
+                    return true;
+
+            return false;
+        }
+        
         public Currencies Profit(int idHex)
         {
             Debug.Log("TEST");

@@ -545,8 +545,8 @@ MonoBehaviour:
   _smoothTime: 0.35
   _sqrVelocityMin: 0.2
   _speedZoom: 4
-  _heightZoomMin: 60
-  _heightZoomMax: 350
+  _heightZoomMin: 55
+  _heightZoomMax: 400
   _steepZoomRate: 0.1
   _speedRotation: 0.2
   _edge: 0.05
@@ -2006,7 +2006,7 @@ MonoBehaviour:
   _inputController: {fileID: 249953235}
   _island: {fileID: 1629463688}
   _dices: {fileID: 1187299216}
-  _load: 0
+  _load: 1
   _prefabs: {fileID: 11400000, guid: 350efcf2501ea334bbdaadbca7266d53, type: 2}
 --- !u!4 &1275861621
 Transform:

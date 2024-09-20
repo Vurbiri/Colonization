@@ -4,7 +4,7 @@ using Vurbiri;
 
 namespace VurbiriEditor
 {
-    [CustomPropertyDrawer(typeof(ReactiveValue<>))]
+    [CustomPropertyDrawer(typeof(AReactiveValue<>))]
     public class ReactiveValueDrawer : PropertyDrawer
     {
         private const string NAME_VALUE = "_value";

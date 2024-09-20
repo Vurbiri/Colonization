@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -7,6 +8,8 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private Perk[] _perks;
 
-        
+        public IReadOnlyList<IPerk> Perks => _perks;
+        public IReadOnlyList<IPerkUI> PerksUI => _perks;
+
     }
 }

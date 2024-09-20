@@ -258,6 +258,7 @@ MonoBehaviour:
   _startResources:
     _values: 050000000500000005000000050000000500000005000000
     _amount: 30
+  _abilities: {fileID: 11400000, guid: 46dfaa974bda8024db388edaa2f1de74, type: 2}
   _visualSet: {fileID: 11400000, guid: a4bd672545f56a1449ce99cbe56b96b2, type: 2}
 --- !u!4 &118956331
 Transform:

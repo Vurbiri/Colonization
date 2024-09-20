@@ -12,120 +12,192 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e65522a6cb904bd479b8e36ac41484bf, type: 3}
   m_Name: LanguageStrings
   m_EditorClassIdentifier: 
-  _file: 1
-  _loadFile: City
+  _file: 0
+  _loadFile: Main
   _strings:
-  - _key: Roads
+  - _key: Colonization
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u0414\u043E\u0440\u043E\u0433\u0438"
+      text: "\u041A\u043E\u043B\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F"
     - name: English (English)
-      text: Roads
-  - _key: Road
+      text: Colonization
+  - _key: Settings
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u0414\u043E\u0440\u043E\u0433\u0430"
+      text: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438"
     - name: English (English)
-      text: Road
-  - _key: BuildRoad
+      text: Settings
+  - _key: Music
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u041F\u043E\u0441\u0442\u0440\u043E\u0438\u0442\u044C \u0434\u043E\u0440\u043E\u0433\u0443"
+      text: "\u041C\u0443\u0437\u044B\u043A\u0430"
     - name: English (English)
-      text: Build a road
-  - _key: Build
+      text: Music
+  - _key: SFX
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u041F\u043E\u0441\u0442\u0440\u043E\u0438\u0442\u044C"
+      text: "\u0417\u0432\u0443\u043A\u0438"
     - name: English (English)
-      text: Build
-  - _key: Upgrade
+      text: Sound
+  - _key: Score
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u0423\u043B\u0443\u0447\u0448\u0438\u0442\u044C"
+      text: "\u0421\u0447\u0435\u0442"
     - name: English (English)
-      text: Upgrade to
-  - _key: Shrine
+      text: Score
+  - _key: MScore
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u041C\u0430\u0433\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u043F\u043B\u0430\u043C\u044F"
+      text: "\u0420\u0435\u043A\u043E\u0440\u0434"
     - name: English (English)
-      text: Magic flame
-  - _key: PortOne
+      text: Best
+  - _key: Game
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u041C\u0430\u043B\u044B\u0439 \u043F\u0440\u0438\u0447\u0430\u043B"
+      text: "\u0418\u0433\u0440\u0430"
     - name: English (English)
-      text: Small port
-  - _key: PortTwo
+      text: Game
+  - _key: Start
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u041F\u0440\u0438\u0447\u0430\u043B"
+      text: "\u0421\u0442\u0430\u0440\u0442"
     - name: English (English)
-      text: Port
-  - _key: LighthouseOne
+      text: Start
+  - _key: New
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u041C\u0430\u043B\u044B\u0439 \u043C\u0430\u044F\u043A"
+      text: "\u041D\u043E\u0432\u0430\u044F"
     - name: English (English)
-      text: Small lighthouse
-  - _key: LighthouseTwo
+      text: New
+  - _key: Continue
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u041C\u0430\u044F\u043A"
+      text: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C"
     - name: English (English)
-      text: Lighthouse
-  - _key: Camp
+      text: Continue
+  - _key: Authorization
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u041B\u0430\u0433\u0435\u0440\u044C"
+      text: "A\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u044F"
     - name: English (English)
-      text: Camp
-  - _key: Town
+      text: Authorization
+  - _key: Rank
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u0413\u043E\u0440\u043E\u0434"
+      text: "\u041C\u0435\u0441\u0442\u043E"
     - name: English (English)
-      text: Town
-  - _key: Capital
+      text: Rank
+  - _key: Player
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u0421\u0442\u043E\u043B\u0438\u0446\u0430"
+      text: "\u0418\u0433\u0440\u043E\u043A"
     - name: English (English)
-      text: Capital
-  - _key: Wall
+      text: Player
+  - _key: Guest
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u0421\u0442\u0435\u043D\u0430"
+      text: "\u0413\u043E\u0441\u0442\u044C"
     - name: English (English)
-      text: Wall
-  - _key: Military
+      text: Guest
+  - _key: Anonym
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u0410\u0440\u043C\u0438\u044F"
+      text: "\u0410\u043D\u043E\u043D\u0438\u043C"
     - name: English (English)
-      text: Military
-  - _key: Economy
+      text: Anonym
+  - _key: Close
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u042D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0430"
+      text: "\u0417\u0430\u043A\u0440\u044B\u0442\u044C"
     - name: English (English)
-      text: Economy
-  - _key: Industry
+      text: Close
+  - _key: Back
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u0420\u0435\u043C\u0435\u0441\u043B\u043E"
+      text: "\u041D\u0430\u0437\u0430\u0434"
     - name: English (English)
-      text: Industry
-  - _key: Magic
+      text: Back
+  - _key: Menu
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u041C\u0430\u0433\u0438\u044F"
+      text: "\u041C\u0435\u043D\u044E"
     - name: English (English)
-      text: Magic
-  - _key: Politics
+      text: Menu
+  - _key: GameOver
     _values:
     - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
-      text: "\u041F\u043E\u043B\u0438\u0442\u0438\u043A\u0430"
+      text: "\u041A\u043E\u043D\u0435\u0446 \u0438\u0433\u0440\u044B"
     - name: English (English)
-      text: Politics
+      text: Game over
+  - _key: Empty
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: "\u041F\u0443\u0441\u0442\u043E"
+    - name: English (English)
+      text: Empty
+  - _key: Error
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: 
+    - name: English (English)
+      text: '!ERROR!'
+  - _key: ErrorLogon
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: "\u0410\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u044F \u043F\u0440\u043E\u0448\u043B\u0430
+        \u043D\u0435\u0443\u0434\u0430\u0447\u043D\u043E"
+    - name: English (English)
+      text: Authorization failed
+  - _key: ErrorStorage
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: "\u041E\u0448\u0438\u0431\u043A\u0430! \u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435
+        \u043F\u0440\u043E\u0433\u0440\u0435\u0441\u0441\u0430 \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E!"
+    - name: English (English)
+      text: Error! Saving progress is not available!
+  - _key: ErrorSave
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: "\u041E\u0448\u0438\u0431\u043A\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u044F!"
+    - name: English (English)
+      text: Save error!
+  - _key: GoodSaveSettings
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B"
+    - name: English (English)
+      text: Settings is saved
+  - _key: GoodSave
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: "\u0418\u0433\u0440\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0430"
+    - name: English (English)
+      text: Game is saved
+  - _key: WarningAuthorization
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: "\u0411\u0435\u0437 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u0438
+        \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B \u043E\u0431\u043B\u0430\u0447\u043D\u043E\u0435
+        \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435, \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u044F
+        \u0438 \u0442\u0430\u0431\u043B\u0438\u0446\u0430 \u043B\u0438\u0434\u0435\u0440\u043E\u0432"
+    - name: English (English)
+      text: Cloud save, personalization and leaderboard are not available without
+        authorization
+  - _key: Leaderboard
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: "\u0418\u0441\u043A\u0430\u0442\u0435\u043B\u0438"
+    - name: English (English)
+      text: Seekers
+  - _key: Help
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: "\u0421\u043F\u0440\u0430\u0432\u043A\u0430"
+    - name: English (English)
+      text: Help
+  - _key: Control
+    _values:
+    - name: "Russian (\u0420\u0443\u0441\u0441\u043A\u0438\u0439)"
+      text: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435"
+    - name: English (English)
+      text: Control

@@ -100,5 +100,19 @@ namespace Vurbiri.Colonization
                     _landMesh.SetVertexSides(hex.Key, verticesNear, waterNear);
             }
         }
+
+        public Currencies GetFreeGroundResource(int id)
+        {
+            Currencies res = new();
+            foreach (var hex in _hexagons.Values)
+            {
+                if (hex.IsWater || hex.IsGate || hex.Id != id || hex.IsOccupied())
+                    continue;
+
+                res.Add(hex.Currency, 1);
+            }
+
+            return res;
+        }
     }
 }

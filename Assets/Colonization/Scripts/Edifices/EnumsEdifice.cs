@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
     {
         None,
         Shrine,
-        Water,
+        Port,
         Urban
     }
 
@@ -32,9 +32,18 @@ namespace Vurbiri.Colonization
         {
             EdificeType.None => EdificeGroup.None,
             EdificeType.Shrine => EdificeGroup.Shrine,
-            EdificeType.PortOne or EdificeType.PortTwo or EdificeType.LighthouseOne or EdificeType.LighthouseTwo => EdificeGroup.Water,
+            EdificeType.PortOne or EdificeType.PortTwo or EdificeType.LighthouseOne or EdificeType.LighthouseTwo => EdificeGroup.Port,
             EdificeType.Camp or EdificeType.Town or EdificeType.Capital => EdificeGroup.Urban,
-            _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение CityType: {self}"),
+            _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение EdificeType: {self}"),
+        };
+
+        public static AbilityType ToAbilityType(this EdificeGroup self) => self switch
+        {
+            EdificeGroup.None => AbilityType.None,
+            EdificeGroup.Shrine => AbilityType.MaxShrine,
+            EdificeGroup.Port => AbilityType.MaxPort,
+            EdificeGroup.Urban => AbilityType.MaxUrban,
+            _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение EdificeGroup: {self}"),
         };
 
     }

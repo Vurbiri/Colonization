@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
 
             int roll = _dices.Roll();
             Debug.Log("ROLL: " + roll);
-            _players.Receipt(roll);
+            _players.Profit(roll, _island.Land.GetFreeGroundResource(roll));
         }
 
         private void OnDestroy()

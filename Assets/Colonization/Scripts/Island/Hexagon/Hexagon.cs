@@ -64,10 +64,10 @@ namespace Vurbiri.Colonization
         public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
         public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
 
-        public bool IsWaterOccupied()
-        {
-            if (!_isWater) return false;
+        public bool IsWaterOccupied() => _isWater && IsOccupied();
 
+        public bool IsOccupied()
+        {
             foreach (var crossroad in _crossroads)
                 if (crossroad.IsOccupied)
                     return true;

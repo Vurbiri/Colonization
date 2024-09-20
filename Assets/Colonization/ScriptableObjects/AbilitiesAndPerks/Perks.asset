@@ -14,22 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _perks:
   - _id: 0
-    _name: 77
-    _target: 0
-    _ability: 0
-    _value: 0
-    _chance:
-      _value: 0
-    _cost:
-      _values: 000000000000000000000000000000000000000000000000
-      _amount: 0
-  - _id: 1
-    _name: 666
+    _level: 1
+    _keyName: MaxCamp
+    _keyDescription: MaxCampDesc
     _target: 0
     _ability: 1
     _value: 1
     _chance:
-      _value: 0
+      _value: 100
+    _cost:
+      _values: 000000000000000000000000000000000000000000000000
+      _amount: 0
+  - _id: 1
+    _level: 0
+    _keyName: 
+    _keyDescription: 
+    _target: 0
+    _ability: 1
+    _value: 1
+    _chance:
+      _value: 100
     _cost:
       _values: 000000000000000000000000000000000000000000000000
       _amount: 0

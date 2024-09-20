@@ -2,8 +2,8 @@ namespace Vurbiri.Colonization
 {
     public enum CurrencyType
     {
+        Gold,
         Food,
-        Land02,
         Mana,
         Ore,
         Wood,

@@ -11,14 +11,6 @@ namespace VurbiriEditor.Colonization
         [SerializeField] private VisualTreeAsset _treeAssetList;
         [SerializeField] private VisualTreeAsset _treeAssetItem;
 
-
-        protected SerializedProperty _perksProperty;
-
-        protected virtual void OnEnable()
-        {
-            _perksProperty = serializedObject.FindProperty("_perks");
-        }
-
         public override VisualElement CreateInspectorGUI()
         {
             SerializedProperty perksProperty = serializedObject.FindProperty("_perks");
@@ -33,7 +25,7 @@ namespace VurbiriEditor.Colonization
 
             return root;
 
-            #region Local: LoadLangs(), MakeItem(), OnItemIndexChanged(...)
+            #region Local: MakeItem(), UpdateId()
             //=================================
             VisualElement MakeItem()
             {
@@ -53,10 +45,9 @@ namespace VurbiriEditor.Colonization
             //=================================
             void UpdateId()
             {
-                //base.OnInspectorGUI();
                 serializedObject.Update();
-                for (int i = 0; i < _perksProperty.arraySize; i++)
-                    _perksProperty.GetArrayElementAtIndex(i).FindPropertyRelative("_id").intValue = i;
+                for (int i = 0; i < perksProperty.arraySize; i++)
+                    perksProperty.GetArrayElementAtIndex(i).FindPropertyRelative("_id").intValue = i;
                 serializedObject.ApplyModifiedProperties();
             }
             #endregion
