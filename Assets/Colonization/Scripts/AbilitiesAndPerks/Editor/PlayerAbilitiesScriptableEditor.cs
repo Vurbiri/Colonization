@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 namespace Vurbiri.Colonization
 {
     [CustomEditor(typeof(PlayerAbilitiesScriptable), true), CanEditMultipleObjects]
-    public class PlayerAbilitiesScriptableEditor : Editor
+    internal class PlayerAbilitiesScriptableEditor : Editor
     {
         [SerializeField] private VisualTreeAsset _treeAssetList;
         [SerializeField] private VisualTreeAsset _treeAssetItem;

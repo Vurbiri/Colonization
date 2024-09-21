@@ -183,15 +183,20 @@ namespace Vurbiri.Colonization
             return false;
         }
         
-        public Currencies Profit(int idHex)
+        public Currencies Profit(int idHex, int ratio = 1)
         {
-            Debug.Log("TEST");
             Currencies profit = new();
             foreach (var hex in _hexagons)
                 if (hex.Id == idHex)
-                    profit.Add(hex.Currency, _edifice.Level);
+                    profit.Add(hex.Currency, _edifice.Profit * ratio);
 
             return profit;
+        }
+
+        public bool IsNotEnemy()
+        {
+            Debug.LogWarning("Реализовать Crossroad.IsNotEnemy");
+            return false;
         }
 
         public void Select() => _eventBus.TriggerCrossroadSelect(this);

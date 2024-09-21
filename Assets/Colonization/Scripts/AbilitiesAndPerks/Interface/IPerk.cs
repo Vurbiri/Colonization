@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
         public TargetObjectPerk TargetObject { get; }
         public AbilityType TargetAbility { get; }
         public Currencies Cost { get; }
-
+        public bool IsPermanent { get; }
         // public string Value { get; }
 
         public int Apply(int value);

@@ -16,6 +16,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private float _windmillSpeedAnimRange = 0.2f;
         [SerializeField] private RFloat _windmillPlayRange = new(0.2f, 1.22f);
 
+        private static Chance chanceAltMesh = new(50);
         private const string NAME_ANIM_PARAMETER = "Play";
 
         public override void Initialize()
@@ -25,7 +26,7 @@ namespace Vurbiri.Colonization
             transform.localRotation = Quaternion.Euler(0f, _offsetAngle + 60f * Random.Range(0, 6) + 30f, 0f);
             StartCoroutine(_generator.Generate_Coroutine(size));
 
-            if(Chance.Rolling())
+            if(chanceAltMesh.Roll)
                 _windmillMeshFilter.sharedMesh = _altWindmillMesh;
             _windmillMeshFilter.transform.localPosition = new(0f, 0f, size - _windmillOffsetDistance);
 

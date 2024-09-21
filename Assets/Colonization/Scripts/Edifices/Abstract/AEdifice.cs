@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] protected EdificeType _type;
         [SerializeField, Hide] private EdificeGroup _group;
-        [SerializeField, Range(0, 3)] private int _level;
+        [SerializeField, Range(0, 3)] private int _profit;
         [SerializeField, Hide] protected bool _isUpgrade;
         [SerializeField, Hide] protected bool _isBuildWall;
         [SerializeField] protected Currencies _cost;
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
         public bool IsUpgrade => _isUpgrade;
         public bool IsOccupied => _owner != PlayerType.None;
         public Currencies Cost => _cost;
-        public int Level => _level;
+        public int Profit => _profit;
         public bool IsBuildWall => _isBuildWall;
         public bool IsWall => _isWall;
         public float Radius => _radiusCollider;
@@ -38,8 +38,8 @@ namespace Vurbiri.Colonization
         //TEST
         public void SetCost()
         {
-            Debug.Log("TEST");
-            _cost.Rand(_level);
+            Debug.Log("TEST (AEdifice)");
+            _cost.Rand(_profit);
         }
 
         public virtual void Setup(AEdifice edifice, EnumHashSet<LinkType, CrossroadLink> links)

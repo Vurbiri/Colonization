@@ -145,7 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 2
   _group: 2
-  _level: 1
+  _profit: 1
   _isUpgrade: 1
   _isBuildWall: 0
   _cost:

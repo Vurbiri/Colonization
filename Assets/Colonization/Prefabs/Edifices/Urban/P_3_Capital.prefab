@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 8
   _group: 3
-  _level: 3
+  _profit: 3
   _isUpgrade: 0
   _isBuildWall: 1
   _cost:

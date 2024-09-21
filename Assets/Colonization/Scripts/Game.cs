@@ -31,7 +31,6 @@ namespace Vurbiri.Colonization
 
         private IEnumerator Start()
         {
-           
             _island.Initialize(_gameSettings.CircleMax, _gameSettings.ChanceWater);
 
             _gameSettings.StartGame();
@@ -69,7 +68,7 @@ namespace Vurbiri.Colonization
             if (Players.Instance != null)
                 _players.DestroyGame();
 
-            Debug.Log("TEST");
+            Debug.Log("TEST (Game)");
             foreach (AEdifice c in _prefabs)
                 c.Cost.Clear();
         }

@@ -13,12 +13,12 @@ namespace Vurbiri.Localization
         [SerializeField] private string _folder = FOLDER;
         [SerializeField] private string _filePath = FILE_PATH;
         [SerializeField] private string _languagesFile = FILE_LANG;
-        [SerializeField] private EnumArray<Files, bool> _loadFiles = new(true);
+        [SerializeField] private EnumArray<Files, bool> _startLoadFiles = new(true);
 
         public string FolderPath => _folderPath;
         public string Folder => _folder;
         public string FilePath => _filePath;
         public string LanguageFile => _languagesFile;
-        public IReadOnlyList<bool> LoadFiles => _loadFiles.Values;
+        public IReadOnlyList<bool> LoadFiles => _startLoadFiles.Values;
     }
 }

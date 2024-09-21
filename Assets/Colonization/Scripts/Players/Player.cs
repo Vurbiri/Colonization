@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
@@ -15,9 +16,12 @@ namespace Vurbiri.Colonization
         public Material MaterialLit => _visual.materialLit;
         public Material MaterialUnlit => _visual.materialUnlit;
         public Currencies Resources => _resources;
+        public AReactive<Currencies> ExchangeRate => _exchangeRate;
 
         [JsonProperty(P_RESURSES)]
         private Currencies _resources;
+        [JsonProperty(P_BLOOD)]
+        private ReactiveValue<int> _blood;
         [JsonProperty(P_ROADS)]
         private Key[][] _roadsKey;
         [JsonProperty(P_ENDIFICES)]
@@ -27,12 +31,14 @@ namespace Vurbiri.Colonization
         private readonly PlayerVisual _visual;
         private readonly Roads _roads;
         private readonly Dictionary<AbilityType, Ability> _abilities;
+        private readonly Currencies _exchangeRate;
 
         public Player(PlayerType type, PlayerVisual visual, Currencies resources, Roads roads, PlayerAbilitiesScriptable abilities) : this(type, visual, roads, abilities) => _resources = resources;
         public Player(PlayerType type, PlayerVisual visual, Roads roads, PlayerAbilitiesScriptable abilities)
         {
             _type = type;
             _visual = visual;
+            _blood = 0;
             _roads = roads.Initialize(_type, _visual.color);
                         
             _edifices[EdificeGroup.Urban] = new();
@@ -55,6 +61,7 @@ namespace Vurbiri.Colonization
             if (Storage.TryLoad(_type.ToString(), out PlayerLoadData data))
             {
                 _resources = new(data.resources);
+                _blood = data.blood;
                 CreateRoads();
                 CreateCities();
                 return;
@@ -120,11 +127,47 @@ namespace Vurbiri.Colonization
 
         public void Profit(int hexId, Currencies freeGroundRes)
         {
+            int shrineCount = _edifices[EdificeGroup.Shrine].Count, shrineMaxRes = AbilityValue(AbilityType.ShrineMaxRes);
+
+            for (int i = 0; i < shrineCount; i++)
+                _blood.Value += AbilityValue(AbilityType.ShrinePassiveProfit);
+            _blood.Value = Mathf.Clamp(_blood.Value, 0, shrineMaxRes);
+
+            if (hexId == CONST.ID_GATE)
+            {
+                _blood.Value = Mathf.Clamp(_blood.Value + AbilityValue(AbilityType.ShrineProfit) * shrineCount, 0, shrineMaxRes);
+                return;
+            }
+
             if (IsAbility(AbilityType.IsFreeGroundRes))
                 _resources.AddFrom(freeGroundRes);
 
-            //foreach (var city in _edifices)
-            //    _resources.AddFrom(city.Profit(hexId));
+            foreach (var port in _edifices[EdificeGroup.Port])
+                _resources.AddFrom(port.Profit(hexId, AbilityValue(AbilityType.PortsRatioRes)));
+
+            Currencies profit;
+            foreach (var urban in _edifices[EdificeGroup.Urban])
+            {
+                profit = urban.Profit(hexId);
+                if (profit.Amount == 0 && urban.IsNotEnemy())
+                    profit.RandomAdd(AbilityValue(AbilityType.CompensationRes));
+                _resources.AddFrom(profit);
+            }
+        }
+
+        public void UpdateExchangeRate()
+        {
+            if(!_abilities.TryGetValue(AbilityType.ExchangeRate, out var ability))
+            {
+                Debug.LogError("Не найдена абилка ExchangeRate");
+                return;
+            }
+            
+            Currencies newRate = new();
+            for (int i = 0; i < newRate.Count; i++)
+                newRate[i] = ability.NextValue;
+
+            _exchangeRate.SetFrom(newRate);
         }
 
         public bool CanCrossroadUpgrade(Crossroad crossroad)
@@ -157,8 +200,18 @@ namespace Vurbiri.Colonization
         }
 
         public override string ToString() => $"Player: {_type}";
-        
-        private bool IsAbility(AbilityType abilityType, int value = 0) => _abilities.TryGetValue(abilityType, out var ability) && ability.CurrentValue > value;
+
+        private bool IsAbility(AbilityType abilityType, int value = 0) => AbilityValue(abilityType) > value;
+        private int AbilityValue(AbilityType abilityType)
+        {
+            if (!_abilities.TryGetValue(abilityType, out var ability))
+            {
+                Debug.LogError("Не найдена абилка {abilityType}");
+                return 0;
+            }
+
+            return ability.NextValue;
+        }
 
         #region Nested: PlayerLoadData
         //***********************************
@@ -167,17 +220,20 @@ namespace Vurbiri.Colonization
         {
             [JsonProperty(P_RESURSES)]
             public int[] resources;
+            [JsonProperty(P_BLOOD)]
+            public ReactiveValue<int> blood;
             [JsonProperty(P_ROADS)]
             public int[][][] roadsKey;
             [JsonProperty(P_ENDIFICES)]
             public Dictionary<EdificeGroup, int[][]> edifices;
 
             [JsonConstructor]
-            public PlayerLoadData(int[] r, int[][][] k, Dictionary<EdificeGroup, int[][]> e)
+            public PlayerLoadData(int[] re, ReactiveValue<int> bl, int[][][] ro, Dictionary<EdificeGroup, int[][]> en)
             {
-                resources = r;
-                roadsKey = k;
-                edifices = e;
+                resources = re;
+                blood = bl;
+                roadsKey = ro;
+                edifices = en;
             }
         }
         #endregion

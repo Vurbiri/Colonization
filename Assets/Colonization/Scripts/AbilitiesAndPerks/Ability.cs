@@ -1,48 +1,71 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
     [Serializable]
-    public class Ability : AReactiveValue<Ability>
+    public class Ability : AReactive<int>
     {
         [SerializeField] private AbilityType _type;
         [SerializeField] private int _baseValue;
 
         private int _currentValue;
-        private readonly HashSet<IPerk> _perks;
+        private readonly HashSet<IPerk> _permanentPerks;
+        private readonly HashSet<IPerk> _randomPerks;
 
         public AbilityType Type => _type;
-        public int CurrentValue  => _currentValue;
-        public int NewCurrentValue { get { Update();  return _currentValue; } }
+        public int CurrentValue => _currentValue;
+        public int NextValue 
+        { 
+            get 
+            { 
+                if(_randomPerks.Count == 0)
+                    return _currentValue;
+
+                int newValue = _currentValue;
+                foreach(IPerk perk in _randomPerks)
+                    newValue = perk.Apply(newValue);
+
+                return newValue;
+            } 
+        }
 
         public Ability(Ability ability)
         {
             _type = ability._type;
             _baseValue = _currentValue = ability._baseValue;
-            _perks = new();
+            _permanentPerks = new();
+            _randomPerks = new();
         }
 
         public bool TryAddPerk(IPerk perk)
         {
-            if(_perks.Add(perk))
+            if (perk.IsPermanent)
             {
-                _currentValue = perk.Apply(_currentValue);
-                EventValueChange?.Invoke(this);
-                return true;
+                if (_permanentPerks.Add(perk))
+                {
+                    _currentValue = perk.Apply(_currentValue);
+                    EventThisChange?.Invoke(_currentValue);
+                    return true;
+                }
+
+                return false;
             }
 
-            return false;
+            return _randomPerks.Add(perk);
         }
 
-        private void Update()
-        {
-            _currentValue = _baseValue;
-            foreach(IPerk perk in _perks)
-                _currentValue = perk.Apply(_currentValue);
+        protected override void Callback(Action<int> action) => action(_currentValue);
 
-            EventValueChange?.Invoke(this);
-        }
+        //private void Update()
+        //{
+        //    _currentValue = _baseValue;
+        //    foreach(IPerk perk in _permanentPerks)
+        //        _currentValue = perk.Apply(_currentValue);
+
+        //    EventThisChange?.Invoke(this);
+        //}
     }
 }

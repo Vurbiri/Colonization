@@ -21,11 +21,21 @@ MonoBehaviour:
     _baseValue: 6
   - _type: 4
     _baseValue: 15
-  - _type: 5
-    _baseValue: 5
   - _type: 6
-    _baseValue: 25
+    _baseValue: 20
   - _type: 7
     _baseValue: 4
   - _type: 8
     _baseValue: 0
+  - _type: 9
+    _baseValue: 0
+  - _type: 10
+    _baseValue: 1
+  - _type: 11
+    _baseValue: 7
+  - _type: 12
+    _baseValue: 2
+  - _type: 13
+    _baseValue: 0
+  - _type: 100
+    _baseValue: 5

@@ -6,7 +6,7 @@ using Vurbiri.Colonization;
 namespace VurbiriEditor.Colonization
 {
     [CustomEditor(typeof(PerksScriptable), true), CanEditMultipleObjects]
-    public class PerksScriptableEditor : Editor
+    internal class PerksScriptableEditor : Editor
     {
         [SerializeField] private VisualTreeAsset _treeAssetList;
         [SerializeField] private VisualTreeAsset _treeAssetItem;

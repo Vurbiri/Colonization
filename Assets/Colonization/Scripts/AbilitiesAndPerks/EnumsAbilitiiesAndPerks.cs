@@ -14,11 +14,17 @@ namespace Vurbiri.Colonization
         MaxUrban = 2,
         MaxShrine = 3,
         MaxRoads = 4,
-        MaxWarrior = 5,
+        IsWall = 5,
         MaxResources = 6,
         ExchangeRate = 7,
-        IsWall = 8,
-        IsFreeGroundRes = 10,
+        IsFreeGroundRes = 8,
+        CompensationRes = 9,
+        PortsRatioRes = 10,
+        ShrineMaxRes = 11,
+        ShrineProfit = 12,
+        ShrinePassiveProfit = 13,
+        MaxWarrior = 100,
+
 
         #endregion
 

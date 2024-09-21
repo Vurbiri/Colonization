@@ -1,28 +1,30 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Reactive;
+using Random = UnityEngine.Random;
 
 namespace Vurbiri.Colonization
 {
-    [System.Serializable, JsonArray]
-    public class Currencies : EnumArray<CurrencyType, int>, IReactiveValue<Currencies>
+    [Serializable, JsonArray]
+    public class Currencies : AReactive<Currencies>, ISerializationCallbackReceiver, IEnumerable<int>
     {
-        [SerializeField] protected int _amount;
+        [SerializeField] private int[] _values;
+        [SerializeField] private int _amount;
+        protected int _count;
+
+        public int Count => _count;
         public int Amount => _amount;
+        public IReadOnlyList<int> Values => _values;
 
-        public override int this[CurrencyType type] { get => _values[(int)type]; set => Add(type, value); }
-        public override int this[int index] { get => _values[index]; set => Add(index, value); }
+        public int this[CurrencyType type] { get => _values[(int)type]; set => Set(type, value); }
+        public int this[int index] { get => _values[index]; set => Set(index, value); }
 
-        private Action<Currencies> EventCurrenciesChange;
-        event Action<Currencies> IReactiveValue<Currencies>.EventValueChange
+        public Currencies(IReadOnlyList<int> array) : this()
         {
-            add { EventCurrenciesChange += value; }
-            remove { EventCurrenciesChange -= value; }
-        }
-
-        public Currencies(int[] array) : this()
-        {
-            int value, count = _count < array.Length ? _count : array.Length;
+            int value, count = _count < array.Count ? _count : array.Count;
 
             for (int i = 0; i < count; i++)
             {
@@ -38,55 +40,90 @@ namespace Vurbiri.Colonization
 
             _amount = other._amount;
         }
-        public Currencies() : base() => _amount = 0;
-        
-        public void CopyFrom(Currencies other)
+        public Currencies()
+        {
+            _count = Enum<CurrencyType>.Count;
+            _values = new int[_count];
+            _amount = 0;
+        }
+
+        //TEST
+        public void Rand(int max)
+        {
+            Debug.Log("TEST (Currencies)");
+            for (int i = 0; i < _count; i++)
+                Set(i, UnityEngine.Random.Range(0, max + 1));
+        }
+
+        public void Set(int index, int value)
+        {
+            _amount -= _values[index];
+            _amount += value;
+
+            _values[index] = value;
+
+            EventThisChange?.Invoke(this);
+        }
+        public void Set(CurrencyType type, int value) => Set(index: (int)type, value);
+
+        public void SetFrom(IReadOnlyList<int> array)
+        {
+            int value, count = _count < array.Count ? _count : array.Count;
+
+            for (int i = 0; i < count; i++)
+            {
+                value = array[i];
+                _values[i] = value;
+                _amount += value;
+            }
+
+            EventThisChange?.Invoke(this);
+        }
+        public void SetFrom(Currencies other)
         {
             for (int i = 0; i < _count; i++)
                 _values[i] = other._values[i];
 
             _amount = other._amount;
 
-            EventCurrenciesChange?.Invoke(this);
+            EventThisChange?.Invoke(this);
+        }
+
+        public void Add(int index, int value)
+        {
+            if (value == 0)
+                return;
+
+            _values[index] += value;
+            _amount += value;
+
+            EventThisChange?.Invoke(this);
+        }
+        public void Add(CurrencyType type, int value) => Add(index: (int)type, value);
+
+        public void RandomAdd(int value)
+        {
+            if (value == 0)
+                return;
+
+            _values[Random.Range(0, _count)] += value;
+            _amount += value;
+
+            EventThisChange?.Invoke(this);
         }
 
         public void AddFrom(Currencies other)
         {
+            if (other._amount == 0)
+                return;
+            
             for (int i = 0; i < _count; i++)
                 _values[i] += other._values[i];
 
             _amount += other._amount;
 
-            EventCurrenciesChange?.Invoke(this);
+            EventThisChange?.Invoke(this);
         }
-
-        //TEST
-        public void Rand(int max)
-        {
-            Debug.Log("TEST");
-            Clear();
-            for (int i = 0; i < _count; i++)
-                Add(i, UnityEngine.Random.Range(0, max + 1));
-
-        }
-
-        public void Clear()
-        {
-            for (int i = 0; i < _count; i++)
-                _values[i] = 0;
-            _amount = 0;
-
-            EventCurrenciesChange?.Invoke(this);
-        }
-
-        public void Add(int id, int value)
-        {
-            _values[id] += value;
-            _amount += value;
-
-            EventCurrenciesChange?.Invoke(this);
-        }
-        public void Add(CurrencyType type, int value) => Add(id: (int)type, value);
 
         public void Pay(Currencies cost)
         {
@@ -95,7 +132,16 @@ namespace Vurbiri.Colonization
 
             _amount -= cost._amount;
 
-            EventCurrenciesChange?.Invoke(this);
+            EventThisChange?.Invoke(this);
+        }
+
+        public void Clear()
+        {
+            for (int i = 0; i < _count; i++)
+                _values[i] = 0;
+            _amount = 0;
+
+            EventThisChange?.Invoke(this);
         }
 
         public static bool operator >(Currencies left, Currencies right) => !(left <= right);
@@ -121,13 +167,26 @@ namespace Vurbiri.Colonization
             return true;
         }
 
-        public override void OnBeforeSerialize()
+        public void OnBeforeSerialize()
         {
-            base.OnBeforeSerialize();
+            _count = Enum<CurrencyType>.Count;
+            if (_values.Length != _count)
+                Array.Resize(ref _values, _count);
 
             _amount = 0;
             for (int i = 0; i < _count; i++)
                 _amount += _values[i];
         }
+
+        public void OnAfterDeserialize() { }
+
+        public IEnumerator<int> GetEnumerator()
+        {
+            for (int i = 0; i < _count; i++)
+                yield return _values[i];
+        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        protected override void Callback(Action<Currencies> action) => action(this);
     }
 }

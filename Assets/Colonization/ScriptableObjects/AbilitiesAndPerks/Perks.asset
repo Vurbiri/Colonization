@@ -15,10 +15,10 @@ MonoBehaviour:
   _perks:
   - _id: 0
     _level: 1
-    _keyName: MaxCamp
+    _keyName: MaxUrban
     _keyDescription: MaxCampDesc
     _target: 0
-    _ability: 1
+    _ability: 2
     _value: 1
     _chance:
       _value: 100

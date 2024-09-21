@@ -15,7 +15,8 @@ MonoBehaviour:
   _type: 2
   _color:
     serializedVersion: 2
-    rgba: 4278234880
-  _profit: 02000000
+    rgba: 4278231040
+  _profits: 02000000
+  _profit: 2
   _prefabSurface: {fileID: 570643178874674022, guid: 01c407cd3c6395f458e94fec552faa71,
     type: 3}

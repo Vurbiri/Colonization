@@ -9,6 +9,6 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="VisualElement" style="flex-grow: 1; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; align-self: auto; min-width: 100%; background-color: rgb(66, 66, 66);">
-        <uie:PropertyField binding-path="_loadFiles" />
+        <uie:PropertyField binding-path="_startLoadFiles" />
     </ui:VisualElement>
 </ui:UXML>

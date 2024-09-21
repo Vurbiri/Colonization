@@ -6,7 +6,6 @@ namespace Vurbiri.Colonization
         Food,
         Mana,
         Ore,
-        Wood,
-        Gate
+        Wood
     }
 }

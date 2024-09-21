@@ -23,7 +23,8 @@ namespace Vurbiri.Colonization
         public TargetObjectPerk TargetObject => _target;
         public AbilityType TargetAbility => _ability;
         public Currencies Cost => _cost;
+        public bool IsPermanent => _chance == 100;
        
-        public int Apply(int value) => value += _chance.Select(_value, 0);
+        public int Apply(int value) => value += _chance == 100 ? _value : _chance.Select(_value, 0);
     }
 }

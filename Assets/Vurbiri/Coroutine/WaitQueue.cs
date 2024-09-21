@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Vurbiri
         private readonly Queue<IEnumerator> _coroutines = new();
         private readonly MonoBehaviour _monoBehaviour;
         private IEnumerator _currentCoroutine = null;
+        private Action finalAction;
 
         public override bool keepWaiting => _currentCoroutine != null;
 
@@ -16,10 +18,15 @@ namespace Vurbiri
         {
             _monoBehaviour = monoBehaviour;
         }
+        public WaitQueue(MonoBehaviour monoBehaviour, Action finalAction)
+        {
+            _monoBehaviour = monoBehaviour;
+            this.finalAction = finalAction;
+        }
         public WaitQueue(MonoBehaviour monoBehaviour, IEnumerator coroutine)
         {
             _monoBehaviour = monoBehaviour;
-            Add(coroutine);
+            _monoBehaviour.StartCoroutine(AddCoroutine(coroutine));
         }
 
         public void StopAndClear()
@@ -43,13 +50,14 @@ namespace Vurbiri
         {
             _coroutines.Enqueue(coroutine);
 
-            if (keepWaiting)
+            if (_currentCoroutine != null)
                 yield break;
 
             while (_coroutines.Count > 0)
                 yield return _currentCoroutine = _coroutines.Dequeue();
 
             _currentCoroutine = null;
+            finalAction?.Invoke();
         }
     }
 }
