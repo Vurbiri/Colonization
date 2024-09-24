@@ -21,6 +21,8 @@ MonoBehaviour:
     _baseValue: 6
   - _type: 4
     _baseValue: 15
+  - _type: 5
+    _baseValue: 0
   - _type: 6
     _baseValue: 20
   - _type: 7

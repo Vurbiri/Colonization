@@ -199,6 +199,26 @@ namespace Vurbiri.Colonization
             _resources.Pay(_roads.Cost);
         }
 
+        public bool PerkBuy(IPerk perk)
+        {
+            if (perk.TargetObject == TargetObjectPerk.Player)
+            {
+                if (!_abilities.TryGetValue(perk.TargetAbility, out var ability))
+                {
+                    Debug.LogError($"Не найдена абилка {perk.TargetAbility}");
+                    return false;
+                }
+
+                if (ability.TryAddPerk(perk))
+                {
+                    _resources.Pay(perk.Cost);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public override string ToString() => $"Player: {_type}";
 
         private bool IsAbility(AbilityType abilityType, int value = 0) => AbilityValue(abilityType) > value;
@@ -206,7 +226,7 @@ namespace Vurbiri.Colonization
         {
             if (!_abilities.TryGetValue(abilityType, out var ability))
             {
-                Debug.LogError("Не найдена абилка {abilityType}");
+                Debug.LogError($"Не найдена абилка {abilityType}");
                 return 0;
             }
 

@@ -36,7 +36,6 @@ namespace Vurbiri.Reactive
 
         public void Unsubscribe(Action<T> action) => EventValueChange -= action;
 
-
         public static implicit operator ReactiveValue<T>(T value) => new(value);
     }
 }
