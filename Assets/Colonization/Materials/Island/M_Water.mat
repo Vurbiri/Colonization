@@ -16,6 +16,7 @@ Material:
   - _ENVIRONMENTREFLECTIONS_OFF
   - _GLOSSYREFLECTIONS_OFF
   - _RECEIVE_SHADOWS_OFF
+  - _SPECULARHIGHLIGHTS_OFF
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 0
@@ -89,7 +90,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 0
-    - _SPECULARHIGHLIGHTS_OFF: 0
+    - _SPECULARHIGHLIGHTS_OFF: 1
     - _Smoothness: 0.6
     - _Speed: 0.55
     - _SrcBlend: 5
