@@ -5,7 +5,6 @@ namespace Vurbiri.Colonization
         None = -1,
         Human,
         AI_01,
-        AI_02,
-        AI_03
+        AI_02
     }
 }

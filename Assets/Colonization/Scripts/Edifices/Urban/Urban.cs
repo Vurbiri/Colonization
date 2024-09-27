@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
 {
     public class Urban : AEdifice
     {
-        [Space, GetComponentInChildren]
+        [Space]
         [SerializeField] private Wall _wall;
 
         public override void Setup(AEdifice edifice, EnumHashSet<LinkType, CrossroadLink> links)
@@ -55,5 +55,12 @@ namespace Vurbiri.Colonization
             if(_isWall)
                 _wall.AddRoad(type, owner);
         }
+
+#if UNITY_EDITOR
+        protected void OnValidate()
+        {
+            _wall ??= GetComponentInChildren<Wall>();
+        }
+#endif
     }
 }

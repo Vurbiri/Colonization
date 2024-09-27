@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
+    using static CONST;
+
     public class Game : MonoBehaviour
     {
         [SerializeField] private InputController _inputController;
@@ -55,7 +57,7 @@ namespace Vurbiri.Colonization
             StartCoroutine(_players.Current.Save_Coroutine());
             _players.Next();
 
-            if ((_player = ++_player % Players.MAX) == 0)
+            if ((_player = ++_player % MAX_PLAYERS) == 0)
                 _turn++;
 
             int roll = _dices.Roll();

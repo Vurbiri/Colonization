@@ -5,6 +5,8 @@ namespace Vurbiri.Colonization
 {
     public static class CONST
     {
+        public const int MAX_PLAYERS = 3;
+
         public const float PI = Mathf.PI;
         public const float TAU = 2f * PI;
 

@@ -91,7 +91,7 @@ namespace Vurbiri.Colonization
         public void OnBeforeSerialize()
         {
             _group = _type.ToGroup();
-            _isBuildWall = _group == EdificeGroup.Urban;
+            _isBuildWall = _group == EdificeGroup.Urban && _type != EdificeType.Camp;
             
             if(_isUpgrade = _prefabUpgrade != null)
             {

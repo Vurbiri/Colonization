@@ -52,7 +52,7 @@ MonoBehaviour:
   _isUpgrade: 0
   _isBuildWall: 1
   _cost:
-    _values: 000000000000000000000000000000000000000000000000
+    _values: 0000000000000000000000000000000000000000
     _amount: 0
   _prefabUpgrade: {fileID: 0}
   _typeNext: 0
@@ -166,6 +166,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4010732691776821691}
     m_Modifications:
+    - target: {fileID: 398764818171404101, guid: acc47af621b277e46bf3f6fe1118d8e7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329163842745758919, guid: acc47af621b277e46bf3f6fe1118d8e7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1508921492936656949, guid: acc47af621b277e46bf3f6fe1118d8e7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2249022877884821029, guid: acc47af621b277e46bf3f6fe1118d8e7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7488960541537213276, guid: acc47af621b277e46bf3f6fe1118d8e7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -224,7 +244,7 @@ PrefabInstance:
     - target: {fileID: 8600268879927539492, guid: acc47af621b277e46bf3f6fe1118d8e7,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -85,7 +85,7 @@ namespace Vurbiri
             return mesh;
         }
 
-        public IEnumerator ToMesh_Coroutine(Action<Mesh> callback, bool tangents = false, bool isReadable = false, bool isOptimize = true)
+        public IEnumerator ToMesh_Coroutine(Action<Mesh> callback, bool tangents = false, bool isOptimize = true, bool isReadable = false)
         {
             Mesh mesh = ToMesh(tangents);
             yield return null;

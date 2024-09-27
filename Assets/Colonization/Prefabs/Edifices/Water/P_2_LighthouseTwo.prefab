@@ -149,7 +149,7 @@ MonoBehaviour:
   _isUpgrade: 0
   _isBuildWall: 0
   _cost:
-    _values: 000000000000000000000000000000000000000000000000
+    _values: 0000000000000000000000000000000000000000
     _amount: 0
   _prefabUpgrade: {fileID: 0}
   _typeNext: 0

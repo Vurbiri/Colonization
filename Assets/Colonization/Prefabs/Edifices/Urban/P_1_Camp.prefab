@@ -50,9 +50,9 @@ MonoBehaviour:
   _group: 3
   _profit: 1
   _isUpgrade: 1
-  _isBuildWall: 1
+  _isBuildWall: 0
   _cost:
-    _values: 000000000000000000000000000000000000000000000000
+    _values: 0000000000000000000000000000000000000000
     _amount: 0
   _prefabUpgrade: {fileID: 4167249404102491042, guid: fbdc4ec1f33354847be58c14d2dc8b85,
     type: 3}
