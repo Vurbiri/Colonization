@@ -9,11 +9,13 @@ public class PlayerVisualSetScriptable : ScriptableObject
     [Space]
     [SerializeField] private Material _defaultMaterialLit;
     [SerializeField] private Material _defaultMaterialUnlit;
+    [Space]
+    [SerializeField] private Material _defaultMaterialActor;
 
     public int Count => _colors.Length;
     public Color[] Colors => _colors;
 
-    public PlayerVisual Get(int id) => new(id, _colors[id], new (_defaultMaterialLit), new(_defaultMaterialUnlit));
+    public PlayerVisual Get(int id) => new(id, _colors[id], new (_defaultMaterialLit), new(_defaultMaterialUnlit), new(_defaultMaterialActor));
 
     public int[] GetIds(int count, int start = 0)
     {

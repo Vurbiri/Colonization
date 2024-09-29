@@ -75,7 +75,7 @@ namespace Vurbiri.Localization.Editors
             int idMaxLength = -1, maxLength = -1;
             for (int i = 0; i < _count; i++)
             {
-                path = Path.Combine(_settings.FolderPath, _languages[i].Folder, _file.ToString()).Concat(JSON_EXP);
+                path = Application.dataPath.Concat(Path.Combine(_settings.FolderPath, _languages[i].Folder, _file.ToString()), JSON_EXP);
                 if (File.Exists(path))
                     LoadObjectFromResourceJson(Path.Combine(_settings.Folder, _languages[i].Folder, _file.ToString()), out strings[i]);
                 else
@@ -133,7 +133,7 @@ namespace Vurbiri.Localization.Editors
             string path;
             for (int i = 0; i < _count; i++)
             {
-                path = Path.Combine(_settings.FolderPath, _languages[i].Folder, _file.ToString()).Concat(JSON_EXP);
+                path = Application.dataPath.Concat(Path.Combine(_settings.FolderPath, _languages[i].Folder, _file.ToString()), JSON_EXP);
                 if (!File.Exists(path))
                     new FileInfo(path).Directory.Create();
                 

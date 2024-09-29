@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8549a7e1d3e5c234480ad2caed38c755, type: 3}
   m_Name: LocalizationSettings
   m_EditorClassIdentifier: 
-  _folderPath: Assets/Resources/Localization
+  _folderPath: /Resources/Localization
   _folder: Localization
-  _filePath: Assets/Resources/Localization/Languages.json
+  _filePath: /Resources/Localization/Languages.json
   _languagesFile: Languages
-  _loadFiles:
-    _values: 010100
+  _startLoadFiles:
+    _values: 0101

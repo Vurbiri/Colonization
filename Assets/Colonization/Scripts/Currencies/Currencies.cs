@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private int[] _values;
         [SerializeField] private int _amount;
-        protected int _count;
+        private int _count;
 
         public int Count => _count;
         public int Amount => _amount;

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 961223d80d1629d43bef354badc3141d, type: 3}
+  m_Name: CurrenciesIcons
+  m_EditorClassIdentifier: 
+  _icons:
+    _values:
+    - _icon: {fileID: 21300000, guid: f01a958e00ae88f489be190e79cab074, type: 3}
+      _color: {r: 0.72156864, g: 0.4509804, b: 0.2, a: 1}
+    - _icon: {fileID: 21300000, guid: 64c7a45a05c6f0148ba9f9b0f176e841, type: 3}
+      _color: {r: 1, g: 0.8431373, b: 0, a: 1}
+    - _icon: {fileID: 21300000, guid: dea818e4fcf52f7448b4c8090cf18d92, type: 3}
+      _color: {r: 0.33333334, g: 0.29411766, b: 1, a: 1}
+    - _icon: {fileID: 21300000, guid: 5112b58858f1a5842bb22ec03b4172e1, type: 3}
+      _color: {r: 0.27450982, g: 0.27450982, b: 0.27450982, a: 1}
+    - _icon: {fileID: 21300000, guid: 084ae59864775274b8e8750728d2574a, type: 3}
+      _color: {r: 0.2627451, g: 0.3529412, b: 0.16862746, a: 1}
+  _blood:
+    _icon: {fileID: 21300000, guid: 28072df6a7e20004abcc99eccabe51cf, type: 3}
+    _color: {r: 0.4, g: 0, b: 0, a: 1}
+  _path: Assets/Colonization/Import/UI/IconCurrencies/IconCurrency_Atlas.asset

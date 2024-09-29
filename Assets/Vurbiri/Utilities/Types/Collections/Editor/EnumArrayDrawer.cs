@@ -44,6 +44,18 @@ namespace VurbiriEditor
             {
                 position.y += position.height + Y_SPACE;
                 EditorGUI.PropertyField(position, prop, new GUIContent(name));
+                if (prop.hasVisibleChildren)
+                {
+                    int count = prop.Copy().CountInProperty() - 1;
+                    EditorGUI.indentLevel++;
+                    while (prop.NextVisible(true) && count > 0)
+                    {
+                        position.y += position.height + Y_SPACE;
+                        EditorGUI.PropertyField(position, prop, new GUIContent(prop.displayName));
+                        count--;
+                    }
+                    EditorGUI.indentLevel--;
+                }
             }
             //=================================
             #endregion
@@ -56,8 +68,13 @@ namespace VurbiriEditor
             float rate = 1.01f;
 
             if (property.isExpanded)
-                rate += property.FindPropertyRelative(NAME_ARRAY).arraySize;
-
+            {
+                _propertyValues = property.FindPropertyRelative(NAME_ARRAY);
+                _count = _propertyValues.arraySize;
+                for (int i = 0; i < _count; i++)
+                    rate += _propertyValues.GetArrayElementAtIndex(i).CountInProperty();
+            }
+            
             return (EditorGUIUtility.singleLineHeight + Y_SPACE) * rate;
         }
     }

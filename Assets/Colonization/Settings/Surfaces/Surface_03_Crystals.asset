@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 231167a6fdd41f44b8cb8dc6b11da90a, type: 3}
+  m_Name: Surface_03_Crystals
+  m_EditorClassIdentifier: 
+  _type: 2
+  _color:
+    serializedVersion: 2
+    rgba: 4278230528
+  _profits: 02000000
+  _prefabSurface: {fileID: 570643178874674022, guid: 01c407cd3c6395f458e94fec552faa71,
+    type: 3}

@@ -87,6 +87,7 @@ namespace Vurbiri.Colonization
 
         public virtual void Show(bool isShow) { }
 
+
         #region ISerializationCallbackReceiver
         public void OnBeforeSerialize()
         {

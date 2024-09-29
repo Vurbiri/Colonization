@@ -45,9 +45,7 @@ namespace Vurbiri.Localization.Editors
                 languagesFile.value = Path.GetFileNameWithoutExtension(result);
                 folder.value = Directory.GetParent(result).Name;
 
-                string[] subPaths = result.Split(ASSET_FOLDER);
-
-                filePath.value = ASSET_FOLDER.Concat(subPaths.Last());
+                filePath.value = result.Split(ASSET_FOLDER).Last();
                 folderPath.value = Path.GetDirectoryName(filePath.value).Replace('\\', '/');
             }
             #endregion

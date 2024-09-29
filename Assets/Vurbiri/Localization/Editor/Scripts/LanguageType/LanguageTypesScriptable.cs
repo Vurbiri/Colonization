@@ -27,7 +27,8 @@ namespace Vurbiri.Localization.Editors
 
         public void Save()
         {
-            File.WriteAllText(ProjectSettingsScriptable.GetOrCreateSelf().CurrentSettings.FilePath, JsonConvert.SerializeObject(_languageTypes));
+            string path = Application.dataPath.Concat(ProjectSettingsScriptable.GetOrCreateSelf().CurrentSettings.FilePath);
+            File.WriteAllText(path, JsonConvert.SerializeObject(_languageTypes));
             AssetDatabase.Refresh();
             AssetDatabase.SaveAssets();
         }
