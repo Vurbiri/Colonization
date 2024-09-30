@@ -1,6 +1,6 @@
 using UnityEditor;
 using UnityEngine;
-using static VurbiriEditor.CONST;
+using static VurbiriEditor.CONST_EDITOR;
 
 namespace VurbiriEditor.ReColoringVertex
 {

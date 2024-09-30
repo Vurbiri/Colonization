@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
                 if (_permanentPerks.Add(perk))
                 {
                     _currentValue = perk.Apply(_currentValue);
-                    EventThisChange?.Invoke(_currentValue);
+                    ActionThisChange?.Invoke(_currentValue);
                     return true;
                 }
 

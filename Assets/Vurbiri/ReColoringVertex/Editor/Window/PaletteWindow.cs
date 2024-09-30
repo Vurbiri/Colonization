@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace VurbiriEditor.ReColoringVertex
 {
-    using static CONST;
+    using static CONST_RCV;
 
     [EditorWindowTitle(icon = "Assets/Vurbiri/ReColoringVertex/Editor/Icons/IconEditorPalette.png", title = NAME)]
     internal class PaletteWindow : EditorWindow

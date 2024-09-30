@@ -17,17 +17,23 @@ namespace Vurbiri.Localization.Editors
         [SerializeField] private string _loadFile = string.Empty;
         [SerializeField] private List<LanguageRecord> _strings;
 
-        private SettingsScriptable _settings;
         private LanguageType[] _languages;
         private string[] _names;
         private int _count;
+        private string _folderPath, _folder, _languageFile;
 
         public string LoadFile => _loadFile;
 
         public void Initialize()
         {
-            _settings = ProjectSettingsScriptable.GetOrCreateSelf().CurrentSettings;
-            LoadObjectFromResourceJson(Path.Combine(_settings.Folder, _settings.LanguageFile), out _languages);
+            using (SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings())
+            {
+                _folderPath = settings.FolderPath;
+                _folder = settings.Folder;
+                _languageFile = settings.LanguageFile;
+            }
+
+            LoadObjectFromResourceJson(Path.Combine(_folder, _languageFile), out _languages);
             _count = _languages.Length;
             _names = new string[_count];
             for (int i = 0; i < _count; i++)
@@ -36,7 +42,6 @@ namespace Vurbiri.Localization.Editors
 
         public void Uninitialized()
         {
-            _settings = null;
             _languages = null;
             _count = -1;
             _names = null;
@@ -75,9 +80,9 @@ namespace Vurbiri.Localization.Editors
             int idMaxLength = -1, maxLength = -1;
             for (int i = 0; i < _count; i++)
             {
-                path = Application.dataPath.Concat(Path.Combine(_settings.FolderPath, _languages[i].Folder, _file.ToString()), JSON_EXP);
+                path = Application.dataPath.Concat(Path.Combine(_folderPath, _languages[i].Folder, _file.ToString()), JSON_EXP);
                 if (File.Exists(path))
-                    LoadObjectFromResourceJson(Path.Combine(_settings.Folder, _languages[i].Folder, _file.ToString()), out strings[i]);
+                    LoadObjectFromResourceJson(Path.Combine(_folder, _languages[i].Folder, _file.ToString()), out strings[i]);
                 else
                     strings[i] = new();
 
@@ -133,7 +138,7 @@ namespace Vurbiri.Localization.Editors
             string path;
             for (int i = 0; i < _count; i++)
             {
-                path = Application.dataPath.Concat(Path.Combine(_settings.FolderPath, _languages[i].Folder, _file.ToString()), JSON_EXP);
+                path = Application.dataPath.Concat(Path.Combine(_folderPath, _languages[i].Folder, _file.ToString()), JSON_EXP);
                 if (!File.Exists(path))
                     new FileInfo(path).Directory.Create();
                 

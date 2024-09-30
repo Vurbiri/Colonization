@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Vurbiri.Localization;
 
 namespace Vurbiri.UI
 {
@@ -8,12 +9,12 @@ namespace Vurbiri.UI
     {
         private float _value = 0;
 
-        public void Setup(float value)
+        public void Setup(float value, string key = null)
         {
             _value = value;
-            Setup(Text.text);
+            Setup(key);
         }
 
-        protected override void SetText() => Text.text = string.Format(_localization.GetText(_file, _key), _value);
+        protected override void SetText(Language localization) => _text.text = localization.GetTextFormat(_file, _key, _value);
     }
 }

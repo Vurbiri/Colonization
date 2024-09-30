@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using static VurbiriEditor.CONST;
+using static VurbiriEditor.CONST_EDITOR;
 
 namespace VurbiriEditor.ReColoringVertex
 {
-    using static CONST;
+    using static CONST_RCV;
 
     internal class PaletteFromMeshWindow : EditorWindow
     {

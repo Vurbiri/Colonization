@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
 
             _values[index] = value;
 
-            EventThisChange?.Invoke(this);
+            ActionThisChange?.Invoke(this);
         }
         public void Set(CurrencyType type, int value) => Set(index: (int)type, value);
 
@@ -77,7 +77,7 @@ namespace Vurbiri.Colonization
                 _amount += value;
             }
 
-            EventThisChange?.Invoke(this);
+            ActionThisChange?.Invoke(this);
         }
         public void SetFrom(Currencies other)
         {
@@ -86,7 +86,7 @@ namespace Vurbiri.Colonization
 
             _amount = other._amount;
 
-            EventThisChange?.Invoke(this);
+            ActionThisChange?.Invoke(this);
         }
 
         public void Add(int index, int value)
@@ -97,7 +97,7 @@ namespace Vurbiri.Colonization
             _values[index] += value;
             _amount += value;
 
-            EventThisChange?.Invoke(this);
+            ActionThisChange?.Invoke(this);
         }
         public void Add(CurrencyType type, int value) => Add(index: (int)type, value);
 
@@ -109,7 +109,7 @@ namespace Vurbiri.Colonization
             _values[Random.Range(0, _count)] += value;
             _amount += value;
 
-            EventThisChange?.Invoke(this);
+            ActionThisChange?.Invoke(this);
         }
 
         public void AddFrom(Currencies other)
@@ -122,7 +122,7 @@ namespace Vurbiri.Colonization
 
             _amount += other._amount;
 
-            EventThisChange?.Invoke(this);
+            ActionThisChange?.Invoke(this);
         }
 
         public void Pay(Currencies cost)
@@ -132,7 +132,7 @@ namespace Vurbiri.Colonization
 
             _amount -= cost._amount;
 
-            EventThisChange?.Invoke(this);
+            ActionThisChange?.Invoke(this);
         }
 
         public void Clear()
@@ -141,8 +141,10 @@ namespace Vurbiri.Colonization
                 _values[i] = 0;
             _amount = 0;
 
-            EventThisChange?.Invoke(this);
+            ActionThisChange?.Invoke(this);
         }
+
+        protected override void Callback(Action<Currencies> action) => action(this);
 
         public static bool operator >(Currencies left, Currencies right) => !(left <= right);
         public static bool operator <(Currencies left, Currencies right) => !(left >= right);
@@ -187,6 +189,6 @@ namespace Vurbiri.Colonization
         }
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        protected override void Callback(Action<Currencies> action) => action(this);
+        
     }
 }

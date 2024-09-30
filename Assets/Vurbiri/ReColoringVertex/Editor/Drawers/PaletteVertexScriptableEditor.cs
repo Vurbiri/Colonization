@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace VurbiriEditor.ReColoringVertex
 {
-    using static CONST;
+    using static CONST_RCV;
 
     [CustomEditor(typeof(PaletteVertexScriptable), true), CanEditMultipleObjects]
     internal class PaletteVertexScriptableEditor : Editor

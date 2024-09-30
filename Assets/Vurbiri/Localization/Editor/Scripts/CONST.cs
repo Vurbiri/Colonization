@@ -1,6 +1,6 @@
 namespace Vurbiri.Localization.Editors
 {
-    using GLOBAL_CONST = Vurbiri.Localization.CONST;
+    using GLOBAL_CONST = Vurbiri.Localization.CONST_L;
 
     public class CONST
     {

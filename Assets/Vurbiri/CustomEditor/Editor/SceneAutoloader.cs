@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using static VurbiriEditor.CONST;
+using static VurbiriEditor.CONST_EDITOR;
 
 namespace VurbiriEditor
 {

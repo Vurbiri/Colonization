@@ -4,7 +4,7 @@ using Vurbiri;
 
 namespace VurbiriEditor
 {
-    using static CONST;
+    using static CONST_EDITOR;
 
     [CustomPropertyDrawer(typeof(Vector2Specular))]
     public class Vector2SpecularDrawer : PropertyDrawer

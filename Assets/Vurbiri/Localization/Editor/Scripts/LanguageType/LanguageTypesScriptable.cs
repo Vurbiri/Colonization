@@ -17,18 +17,18 @@ namespace Vurbiri.Localization.Editors
 
         public void Load()
         {
-            SettingsScriptable settings = ProjectSettingsScriptable.GetOrCreateSelf().CurrentSettings;
-
-            if (settings == null || !LoadObjectFromResourceJson(Path.Combine(settings.Folder, settings.LanguageFile), out _languageTypes))
-                return;
-
-            _languageTypes.Sort();
+            using SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings();
+            if (settings != null && LoadObjectFromResourceJson(Path.Combine(settings.Folder, settings.LanguageFile), out _languageTypes))
+                _languageTypes.Sort();
         }
 
         public void Save()
         {
-            string path = Application.dataPath.Concat(ProjectSettingsScriptable.GetOrCreateSelf().CurrentSettings.FilePath);
-            File.WriteAllText(path, JsonConvert.SerializeObject(_languageTypes));
+            using (SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings())
+            {
+                string path = Application.dataPath.Concat(settings.FilePath);
+                File.WriteAllText(path, JsonConvert.SerializeObject(_languageTypes));
+            }
             AssetDatabase.Refresh();
             AssetDatabase.SaveAssets();
         }

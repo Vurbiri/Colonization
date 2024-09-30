@@ -7,7 +7,7 @@ using Vurbiri;
 
 namespace VurbiriEditor.ReColoringVertex
 {
-    using static CONST;
+    using static CONST_RCV;
 
     internal class ReColoringVertexWindow : EditorWindow
     {
@@ -122,7 +122,7 @@ namespace VurbiriEditor.ReColoringVertex
                 SetPalette(EditorGUILayout.ObjectField(LABEL_PALETTE, _currentPalette, typePalette, false) as PaletteVertexScriptable);
                 if (GUILayout.Button("Show palette"))
                 {
-                    var wnd = GetWindow<PaletteWindow>(/*true*/);
+                    var wnd = GetWindow<PaletteWindow>();
                     wnd.SetPalette(_currentPalette);
                     FocusWindowIfItsOpen<ReColoringVertexWindow>();
                 }

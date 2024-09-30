@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Vurbiri.Localization;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
@@ -16,20 +17,18 @@ namespace Vurbiri.UI
         private bool _isShowingHint = false;
         protected Selectable _thisSelectable;
         protected string _text;
-        protected Language _localization;
+        protected Unsubscriber<Language> _subscribe;
 
         public virtual void Initialize()
         {
             _thisSelectable = GetComponent<Selectable>();
-            _localization = Language.Instance;
             if (_hint == null)
                 _hint = FindAnyObjectByType<HintGlobal>();
 
-            SetText();
-            _localization.EventSwitchLanguage += SetText;
+            _subscribe = Language.Subscribing(SetText);
         }
 
-        protected abstract void SetText();
+        protected abstract void SetText(Language localization);
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
@@ -48,8 +47,7 @@ namespace Vurbiri.UI
 
         private void OnDestroy()
         {
-            if (_localization != null)
-                _localization.EventSwitchLanguage -= SetText;
+            _subscribe?.Unsubscribe();
         }
     }
 }

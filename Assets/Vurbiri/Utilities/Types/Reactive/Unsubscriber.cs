@@ -4,15 +4,20 @@ namespace Vurbiri.Reactive
 {
     public class Unsubscriber<T>
     {
-        private readonly IReactive<T> _reactiveValue;
-        private readonly Action<T> _listener;
+        private IReactive<T> _reactive;
+        private Action<T> _listener;
 
         public Unsubscriber(IReactive<T> reactiveValue, Action<T> listener)
         {
-            _reactiveValue = reactiveValue;
+            _reactive = reactiveValue;
             _listener = listener;
         }
 
-        public void Unsubscribe() => _reactiveValue.Unsubscribe(_listener);
+        public void Unsubscribe()
+        {
+            _reactive?.Unsubscribe(_listener);
+            _reactive = null;
+            _listener = null;
+        }
     }
 }

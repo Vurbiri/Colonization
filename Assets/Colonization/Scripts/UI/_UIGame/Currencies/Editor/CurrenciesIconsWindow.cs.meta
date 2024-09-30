@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: c4fb95772d1b16b4786dbed33fb839f7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - _currenciesIcons: {fileID: 11400000, guid: 7eb8c541cf4518d488dcfc389b2fc7ed, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

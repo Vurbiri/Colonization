@@ -20,13 +20,12 @@ namespace Vurbiri.Colonization
 
             _loadScene.Start();
 
+            if (!Language.IsValid)
+                Message.Error("Error loading Localization!");
+
             YandexSDK ysdk = YandexSDK.Instance;
             Language localization = Language.Instance;
             SettingsData settings = SettingsData.Instance;
-
-
-            if (!localization.Initialize())
-                Message.Error("Error loading Localization!");
 
             yield return StartCoroutine(InitializeYSDK_Coroutine());
 
@@ -82,16 +81,16 @@ namespace Vurbiri.Colonization
 
                     Message.Log(waitReturn.Return ? "Storage initialize" : "Storage not initialize");
 
-                    settings.IsFirstStart = !Load(waitReturn.Return);
+                    Load(waitReturn.Return);
 
                     #region Local Functions
-                    bool Load(bool load)
+                    void Load(bool load)
                     {
                         bool result = false;
-
                         result = settings.Initialize(load) || result;
                         result = GameSettingsData.Instance.Initialize(load) || result;
-                        return result;
+
+                        settings.IsFirstStart = !result;
                     }
                     #endregion
                 }

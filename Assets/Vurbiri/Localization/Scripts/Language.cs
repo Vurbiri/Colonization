@@ -1,58 +1,67 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Vurbiri.Reactive;
 using static Vurbiri.Storage;
 
 namespace Vurbiri.Localization
 {
-    //[DefaultExecutionOrder(-2)]
-    public class Language : ASingleton<Language>
+    public class Language : AReactive<Language>
     {
-        private string _folder;
-        private EnumArray<Files, bool> _loadFiles;
+        private static readonly Language _instance;
+
+        private readonly bool _isValid;
+        private readonly string _folder;
+        private readonly EnumArray<Files, bool> _loadFiles;
+        private readonly string[] _nameFiles = Enum<Files>.Names;
+        private readonly Dictionary<string, string>[] _text;
+        private readonly LanguageType[] _languages;
+        private readonly int _countFiles;
+        private LanguageType _currentLanguage;
+
+        public static Language Instance => _instance;
+        public static bool IsValid => _instance != null && _instance._isValid;
 
         public IEnumerable<LanguageType> Languages => _languages;
         public int CurrentId => _currentLanguage == null ? -1 : _currentLanguage.Id;
 
-        public event Action EventSwitchLanguage;
 
-        private readonly string[] _nameFiles = Enum<Files>.Names;
-        private Dictionary<string, string>[] _text;
-        private LanguageType[] _languages;
-        private int _countFiles;
-        private LanguageType _currentLanguage;
+        static Language() => _instance ??= new Language();
 
-        public bool Initialize()
+        public static Unsubscriber<Language> Subscribing(Action<Language> action, bool calling = true) => _instance?.Subscribe(action, calling);
+
+        private Language()
         {
-            SettingsScriptable settings = ProjectSettingsScriptable.GetOrCreateSelf().CurrentSettings;
-
-            if (settings == null)
-                return false;
+            _isValid = false;
+            
+            using SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings();
+            if (settings == null) return;
 
             _folder = settings.Folder;
             _loadFiles = new(settings.LoadFiles);
+            string path = Path.Combine(_folder, settings.LanguageFile);
 
-            if (!LoadObjectFromResourceJson(Path.Combine(_folder, settings.LanguageFile), out _languages))
-                return false;
+            if (!LoadObjectFromResourceJson(path, out _languages))
+                return;
 
-            foreach (var language in _languages) 
-                if (!language.LoadSprite(_folder)) 
-                    return false;
-            
+            foreach (var language in _languages)
+                if (!language.LoadSprite(_folder))
+                    return;
+
             _countFiles = _nameFiles.Length;
             _text = new Dictionary<string, string>[_countFiles];
-            return true;
+            _isValid = true;
         }
 
-        public bool TryIdFromCode(string codeISO639_1, out int id)
+        public bool TryIdFromCode(string code, out int id)
         {
             id = -1;
-            if (string.IsNullOrEmpty(codeISO639_1))
+            if (string.IsNullOrEmpty(code))
                 return false;
 
             foreach (LanguageType language in Languages)
             {
-                if (language.Code.ToLowerInvariant() == codeISO639_1.ToLowerInvariant())
+                if (language.Code.ToLowerInvariant() == code.ToLowerInvariant())
                 {
                     id = language.Id;
                     return true;
@@ -74,9 +83,9 @@ namespace Vurbiri.Localization
             _loadFiles[id] = false;
         }
 
-        public bool SwitchLanguage(string codeISO639_1)
+        public bool SwitchLanguage(string code)
         {
-            if (TryIdFromCode(codeISO639_1, out int id))
+            if (TryIdFromCode(code, out int id))
                 return SwitchLanguage(id);
 
             return false;
@@ -122,7 +131,7 @@ namespace Vurbiri.Localization
             }
 
             _currentLanguage = type;
-            EventSwitchLanguage?.Invoke();
+            ActionThisChange?.Invoke(this);
             return true;
         }
 
@@ -143,6 +152,8 @@ namespace Vurbiri.Localization
 
             return true;
         }
+
+        protected override void Callback(Action<Language> action) => action(this);
 
         #region Nested: StringComparer
         //***********************************************************

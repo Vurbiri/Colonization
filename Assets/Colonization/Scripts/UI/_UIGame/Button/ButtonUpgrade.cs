@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Localization;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -15,14 +16,16 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private EnumArray<EdificeType, Sprite> _edificeSprites;
 
-        public CmButton Button => _button;
-
         private CmButton _button;
+        private Language _localization;
+        
+        public CmButton Button => _button;
 
         public override void Initialize()
         {
             base.Initialize();
             _button = _thisSelectable as CmButton;
+            _localization = Language.Instance;
         }
 
         public void SetupHint(EdificeType type)
@@ -30,13 +33,13 @@ namespace Vurbiri.Colonization.UI
             _buttonIcon.sprite = _edificeSprites[type];
 
             _keyType = type.ToString();
-            _text = GetTextFormat();
+            _text = GetTextFormat(_localization);
         }
 
         public void AddListener(UnityEngine.Events.UnityAction action) => _button.onClick.AddListener(action);
 
-        protected override void SetText() => _text = GetTextFormat();
+        protected override void SetText(Language localization) => _text = GetTextFormat(localization);
 
-        private string GetTextFormat() => string.Format(_format, _localization.GetText(_file, _keyType));
+        private string GetTextFormat(Language localization) => string.Format(_format, localization.GetText(_file, _keyType));
     }
 }

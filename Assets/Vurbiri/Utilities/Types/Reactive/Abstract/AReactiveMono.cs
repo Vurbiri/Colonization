@@ -3,21 +3,16 @@ using UnityEngine;
 
 namespace Vurbiri.Reactive
 {
-    public abstract class AReactiveMono<T> : MonoBehaviour, IReactive<T> where T : AReactiveMono<T>
+    public abstract class AReactiveMono<T> : MonoBehaviour, IReactive<T>
     {
         protected Action<T> EventThisChange;
 
-        public Unsubscriber<T> Subscribe(Action<T> action)
+        public Unsubscriber<T> Subscribe(Action<T> action, bool calling = true)
         {
+            EventThisChange -= action;
             EventThisChange += action;
-            Callback(action);
-
-            return new(this, action);
-        }
-        public Unsubscriber<T> Subscribe(Action<T> action, bool calling)
-        {
-            EventThisChange += action;
-            if (calling) Callback(action);
+            if (calling && action != null) 
+                Callback(action);
 
             return new(this, action);
         }
