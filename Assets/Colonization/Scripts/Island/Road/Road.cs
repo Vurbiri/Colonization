@@ -4,7 +4,6 @@ namespace Vurbiri.Colonization
 {
     public class Road : MonoBehaviour
     {
-        [GetComponentInChildren]
         [SerializeField] private LineRenderer _roadRenderer;
         [Space]
         [SerializeField] private float _widthRoad = 1.1f;
@@ -142,6 +141,14 @@ namespace Vurbiri.Colonization
             _roadRenderer.positionCount = _points.Count;
             _roadRenderer.SetPositions(_points.ToArray());
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if(_roadRenderer == null)
+                _roadRenderer = GetComponentInChildren<LineRenderer>();
+        }
+#endif
 
         #region Nested class: GradientLine
         private class GradientLine

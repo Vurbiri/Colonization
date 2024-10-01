@@ -53,5 +53,13 @@ namespace Vurbiri.Colonization
         }
 
         public Crossroad GetCrossroad(Key key) => _crossroads[key];
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_prefabCrossroad == null)
+                _prefabCrossroad = VurbiriEditor.Utility.FindAnyPrefab<Crossroad>();
+        }
+#endif
     }
 }

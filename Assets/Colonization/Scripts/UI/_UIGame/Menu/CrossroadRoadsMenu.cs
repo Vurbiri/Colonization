@@ -6,10 +6,10 @@ namespace Vurbiri.Colonization.UI
 {
     public class CrossroadRoadsMenu : ACrossroadBuildMenu
     {
+        [SerializeField] private Camera _camera;
         [SerializeField] private CmButton[] _roadButtons;
 
         private RectTransform _thisTransform;
-        private Camera _camera;
         private Transform _cameraTransform;
         private Vector3 _lastCameraPosition;
         private Vector2 _localPoint;
@@ -24,8 +24,9 @@ namespace Vurbiri.Colonization.UI
             base.Initialize(mainMenu);
 
             _thisTransform = GetComponent<RectTransform>();
-            _camera = Camera.main;
-            _cameraTransform = Camera.main.transform;
+            if (_camera == null)
+                _camera = Camera.main;
+            _cameraTransform = _camera.transform;
 
             CmButton button;
             for (int i = 0; i < COUNT_ROADS; i++)
@@ -98,5 +99,13 @@ namespace Vurbiri.Colonization.UI
             }
             _lastCameraPosition = _cameraTransform.position;
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_camera == null)
+                _camera = Camera.main;
+        }
+#endif
     }
 }

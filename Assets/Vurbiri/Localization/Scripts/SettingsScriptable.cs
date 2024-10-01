@@ -6,10 +6,8 @@ namespace Vurbiri.Localization
 {
     using static CONST_L;
 
-    //[CreateAssetMenu(fileName = "LocalizationSettings", menuName = "Vurbiri/Localization/Settings", order = 51)]
     public class SettingsScriptable : ScriptableObject, IDisposable
     {
-        
         [SerializeField] private string _folderPath = FOLDER_PATH;
         [SerializeField] private string _folder = FOLDER;
         [SerializeField] private string _filePath = FILE_PATH;
@@ -24,7 +22,6 @@ namespace Vurbiri.Localization
 
         public void Dispose()
         {
-            Debug.Log($"Dispose {name}");
             Resources.UnloadAsset(this);
         }
     }

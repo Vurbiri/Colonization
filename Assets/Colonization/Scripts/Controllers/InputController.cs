@@ -9,6 +9,8 @@ namespace Vurbiri.Colonization
     public class InputController : MonoBehaviour
     {
         [Space]
+        [SerializeField] private Camera _camera;
+        [Space]
         [SerializeField] private LayerMask _layerLeft;
         [SerializeField] private LayerMask _layerRight;
         [Space]
@@ -17,7 +19,6 @@ namespace Vurbiri.Colonization
         public InputControlAction.CameraActions CameraActions => _inputActions.Camera;
 
         private InputControlAction _inputActions;
-        private Camera _camera;
         private Ray _ray;
         private RaycastHit _hit;
         private ISelectable _obj;
@@ -25,7 +26,8 @@ namespace Vurbiri.Colonization
         private void Awake()
         {
             _inputActions = new();
-            _camera = Camera.main;
+            if (_camera == null)
+                _camera = Camera.main;
         }
 
         private void Start()
@@ -53,6 +55,14 @@ namespace Vurbiri.Colonization
         }
 
         private void OnDisable() => _inputActions?.Disable();
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_camera == null)
+                _camera = Camera.main;
+        }
+#endif
     }
 }
 

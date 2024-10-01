@@ -325,7 +325,7 @@ namespace VurbiriEditor.ReColoringVertex
             //=================================
             bool SetPath(out string path)
             {
-                path = EditorUtility.SaveFilePanelInProject("Save mesh", _nameMesh, MESH_EXP, "", _saveFolder);
+                path = UnityEditor.EditorUtility.SaveFilePanelInProject("Save mesh", _nameMesh, MESH_EXP, "", _saveFolder);
 
                 if (string.IsNullOrEmpty(path))
                     return false;

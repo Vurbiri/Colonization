@@ -41,6 +41,8 @@ namespace Vurbiri.Colonization
             }
 
             yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
+
+            Destroy(this);
         }
 
         #region Nested: Druse, Cristal

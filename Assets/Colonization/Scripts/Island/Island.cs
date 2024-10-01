@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
             yield return null;
             _land.HexagonsNeighbors();
             yield return null;
-            yield return StartCoroutine(_land.SetMeshOptimize_Coroutine());
+            yield return StartCoroutine(_land.SetMesh_Coroutine());
         }
 
         public WaitResult<bool> Load_Wait()
@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
                 yield return null;
                 _land.HexagonsNeighbors();
                 yield return null;
-                yield return StartCoroutine(_land.SetMeshOptimize_Coroutine());
+                yield return StartCoroutine(_land.SetMesh_Coroutine());
 
                 waitResult.SetResult(true);
             }
@@ -152,8 +152,12 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            _land = GetComponentInChildren<Land>();
-            _crossroads = GetComponentInChildren<Crossroads>();
+            if (_land == null)
+                _land = GetComponentInChildren<Land>();
+            if (_crossroads == null)
+                _crossroads = GetComponentInChildren<Crossroads>();
+            if (_roadsPrefab == null)
+                _roadsPrefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
         }
 #endif
     }

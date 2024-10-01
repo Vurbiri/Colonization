@@ -4,19 +4,20 @@ namespace Vurbiri.Colonization.UI
 {
     public class CrossroadMenus : MonoBehaviour
     {
+        [SerializeField] private Camera _camera;
         [SerializeField] private RectTransform _canvasTransform;
         [Space]
         [SerializeField] private CrossroadMainMenu _mainMenu;
         [SerializeField] private CrossroadRoadsMenu _roadsMenu;
 
         private RectTransform _thisTransform;
-        private Camera _camera;
         private Vector2 _localPoint;
 
         private void Start()
         {
             _thisTransform = GetComponent<RectTransform>();
-            _camera = Camera.main;
+            if (_camera == null)
+                _camera = Camera.main;
 
             EventBus.Instance.EventCrossroadSelect += OnSelectCrossroad;
 
@@ -40,8 +41,12 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            _mainMenu = GetComponentInChildren<CrossroadMainMenu>();
-            _roadsMenu = GetComponentInChildren<CrossroadRoadsMenu>();
+            if (_mainMenu == null)
+                _mainMenu = GetComponentInChildren<CrossroadMainMenu>();
+            if (_roadsMenu == null)
+                _roadsMenu = GetComponentInChildren<CrossroadRoadsMenu>();
+            if (_camera == null)
+                _camera = Camera.main;
         }
 #endif
     }

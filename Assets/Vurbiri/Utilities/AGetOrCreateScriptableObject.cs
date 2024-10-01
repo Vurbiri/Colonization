@@ -1,11 +1,15 @@
 using System;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Vurbiri
 {
     public abstract class AGetOrCreateScriptableObject<T> : ScriptableObject, IDisposable where T : ScriptableObject
     {
+
+#if UNITY_EDITOR
         protected static T GetOrCreateSelf(string assetName, string assetPath)
         {
             var self = Resources.Load<T>(assetName);
@@ -17,10 +21,10 @@ namespace Vurbiri
             }
             return self;
         }
+#endif
 
         public virtual void Dispose()
         {
-            Debug.Log($"Dispose {name}");
             Resources.UnloadAsset(this);
         }
     }

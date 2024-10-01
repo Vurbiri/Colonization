@@ -24,9 +24,10 @@ namespace Vurbiri.Colonization
             }
 
             if (_isWall)
-                _wall.Build(_owner, links);
-            else
-                _wall.Hide();
+            {
+                _wall = Instantiate(_wall, transform);
+                _wall.Initialize(_owner, links);
+            }
 
             _isBuildWall = _isBuildWall && !_isWall;
         }
@@ -35,7 +36,8 @@ namespace Vurbiri.Colonization
         {
             if (_isBuildWall && _owner == owner)
             {
-                _wall.Build(_owner, links);
+                _wall = Instantiate(_wall, transform);
+                _wall.Initialize(_owner, links);
                 _isWall = true;
                 _isBuildWall = false;
                 cost = _wall.Cost;
@@ -46,20 +48,19 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public override bool CanWallBuy(Currencies cash) => _isBuildWall && _wall.Cost <= cash;
+        public override bool CanWallBuy(Currencies cash) => _isBuildWall && _wall != null && _wall.Cost <= cash;
 
         public override void AddRoad(LinkType type, PlayerType owner)
         {
-            _graphic.AddRoad(type, owner);
-            
-            if(_isWall)
+            if(_isWall && _wall != null)
                 _wall.AddRoad(type, owner);
         }
 
 #if UNITY_EDITOR
         protected void OnValidate()
         {
-            _wall ??= GetComponentInChildren<Wall>();
+            if(_isBuildWall && _wall == null)
+                _wall = VurbiriEditor.Utility.FindAnyPrefab<Wall>();
         }
 #endif
     }

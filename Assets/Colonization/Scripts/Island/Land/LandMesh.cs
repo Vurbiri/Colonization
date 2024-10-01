@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
 
         public void SetVertexSides(Key key, Vertex[][] verticesNear, bool[] waterNear) => _customMesh.AddTriangles(_hexagons[key].CreateBorder(verticesNear, waterNear));
 
-        public IEnumerator SetMeshOptimize_Coroutine()
+        public IEnumerator SetMesh_Coroutine()
         {
             yield return StartCoroutine(_customMesh.ToMesh_Coroutine(m => _thisMeshFilter.sharedMesh = m));
 

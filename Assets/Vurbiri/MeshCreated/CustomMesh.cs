@@ -99,7 +99,5 @@ namespace Vurbiri
 
             yield break;
         }
-
-        
     }
 }

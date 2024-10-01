@@ -7,6 +7,7 @@ namespace Vurbiri.Colonization
 {
     public class CameraController : MonoBehaviour
     {
+        [SerializeField] private Camera _camera;
         [SerializeField] private InputController _inputController;
         [Space]
         [Header("Movement")]
@@ -27,7 +28,7 @@ namespace Vurbiri.Colonization
         [SerializeField, Range(0.001f, 0.1f)] private float _edge = 0.05f;
         [SerializeField] private bool _isEdgeMove;
 
-        private Camera _camera;
+       
         private EventBus _eventBus;
         private Transform _cameraTransform, _thisTransform;
 
@@ -41,8 +42,13 @@ namespace Vurbiri.Colonization
 
         private void Awake()
         {
+            if(_camera == null)
+                _camera = GetComponentInChildren<Camera>();
+            if (_inputController == null)
+                _inputController = FindAnyObjectByType<InputController>();
+
             _thisTransform = transform;
-            _camera = Camera.main;
+            
             _cameraTransform = _camera.transform;
             _heightZoom = _cameraTransform.position.y;
 
@@ -191,5 +197,15 @@ namespace Vurbiri.Colonization
 
             _cameraActions.Position.performed -= OnPosition;
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_camera == null)
+                _camera = GetComponentInChildren<Camera>();
+            if (_inputController == null)
+                _inputController = FindAnyObjectByType<InputController>();
+        }
+#endif
     }
 }

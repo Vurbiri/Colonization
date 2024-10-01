@@ -1,22 +1,36 @@
 using UnityEngine;
 
-public class LookAtCamera : MonoBehaviour
+namespace Vurbiri.Colonization.UI
 {
-    private Transform _thisTransform, _cameraTransform;
-    private Vector3 _lastCameraPosition;
-
-    private void Awake()
+    public class LookAtCamera : MonoBehaviour
     {
-        _thisTransform = transform;
-        _cameraTransform = Camera.main.transform;
-    }
+        [SerializeField] private Transform _cameraTransform;
 
-    private void Update()
-    {
-        if (_lastCameraPosition == _cameraTransform.position) 
-            return;
+        private Transform _thisTransform;
+        private Vector3 _lastCameraPosition;
 
-        _lastCameraPosition = _cameraTransform.position;
-        _thisTransform.rotation = Quaternion.LookRotation(_cameraTransform.forward, Vector3.up);
+        private void Awake()
+        {
+            _thisTransform = transform;
+            if (_cameraTransform == null)
+                _cameraTransform = Camera.main.transform;
+        }
+
+        private void Update()
+        {
+            if (_lastCameraPosition == _cameraTransform.position)
+                return;
+
+            _lastCameraPosition = _cameraTransform.position;
+            _thisTransform.rotation = Quaternion.LookRotation(_cameraTransform.forward, Vector3.up);
+        }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_cameraTransform == null)
+                _cameraTransform = Camera.main.transform;
+        }
+#endif
     }
 }

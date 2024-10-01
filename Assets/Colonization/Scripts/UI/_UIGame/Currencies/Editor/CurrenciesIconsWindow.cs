@@ -97,7 +97,7 @@ namespace VurbiriEditor.Colonization
 
             byte[] bytes = ImageConversion.EncodeArrayToPNG(atlas.ToArray(), graphicsFormat, (uint)width, (uint)height);
 
-            string path = EditorUtility.SaveFilePanel("", DEFAULT_PATH, DEFAULT_NAME, EXP);
+            string path = UnityEditor.EditorUtility.SaveFilePanel("", DEFAULT_PATH, DEFAULT_NAME, EXP);
 
             if (string.IsNullOrEmpty(path))
                 return;

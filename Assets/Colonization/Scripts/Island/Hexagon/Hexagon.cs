@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization
 {
     [RequireComponent(typeof(Collider))]
     public class Hexagon : MonoBehaviour, ISelectable
     {
-        [SerializeField, GetComponentInChildren] private TMP_Text _idText;
+        [SerializeField] private TMP_Text _idText;
+        [SerializeField] private TextRotation _textRotation;
         [Space]
-        [SerializeField, GetComponent] private Collider _collider;
+        [SerializeField] private Collider _collider;
 
         public Key Key => _key;
         public int Id => _id;
@@ -29,10 +31,11 @@ namespace Vurbiri.Colonization
         private const string NAME = "Hexagon_";
         #endregion
 
-        public void Initialize(HexagonData data, float waterLevel)
+        public void Initialize(HexagonData data, float waterLevel, Transform cameraTransform)
         {
             (_key, _id, _surface) = data.GetValues();
             _idText.text = _id.ToString();
+            _textRotation.Initialize(cameraTransform);
 
             _isGate = _surface.IsGate;
             _isWater = _surface.IsWater;
@@ -82,5 +85,18 @@ namespace Vurbiri.Colonization
 
             Debug.Log($"{gameObject.name}, water: {IsWater}, gate {IsGate}\n");
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_idText == null)
+                _idText = GetComponentInChildren<TMP_Text>();
+            if (_textRotation == null)
+                _textRotation = GetComponentInChildren<TextRotation>();
+            if (_collider == null)
+                _collider = GetComponent<Collider>();
+
+        }
+#endif
     }
 }

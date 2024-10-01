@@ -1,8 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ASurface : MonoBehaviour
+namespace Vurbiri.Colonization
 {
-    public abstract void Initialize();
+    public abstract class ASurface : MonoBehaviour
+    {
+        public virtual void Initialize()
+        {
+            Destroy(this);
+        }
+    }
 }

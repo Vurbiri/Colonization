@@ -39,9 +39,8 @@ namespace Vurbiri.Localization
 
             _folder = settings.Folder;
             _loadFiles = new(settings.LoadFiles);
-            string path = Path.Combine(_folder, settings.LanguageFile);
 
-            if (!LoadObjectFromResourceJson(path, out _languages))
+            if (!LoadObjectFromResourceJson(Path.Combine(_folder, settings.LanguageFile), out _languages))
                 return;
 
             foreach (var language in _languages)

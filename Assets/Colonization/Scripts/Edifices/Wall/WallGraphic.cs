@@ -9,12 +9,9 @@ namespace Vurbiri.Colonization
             GetComponent<MeshRenderer>().SetSharedMaterial(Players.Instance[owner].MaterialUnlit, _idMaterial);
 
             foreach (var link in links)
-            {
-                if(link.Owner != PlayerType.None)
-                    _graphicSides[link.Type].AddRoad();
-            }
+                _graphicSides[link.Type].Open(link.Owner != PlayerType.None);
         }
 
-        public override void AddRoad(LinkType type, PlayerType owner) => _graphicSides[type].AddRoad();
+        public override void AddRoad(LinkType type, PlayerType owner) => _graphicSides[type].Open(true);
     }
 }

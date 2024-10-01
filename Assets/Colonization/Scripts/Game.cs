@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -50,6 +51,8 @@ namespace Vurbiri.Colonization
 
             yield return StartCoroutine(_island.Generate_Coroutine(false));
             _players.StartGame(_island);
+
+            GC.Collect();
         }
 
         public void EndTurnPlayer()

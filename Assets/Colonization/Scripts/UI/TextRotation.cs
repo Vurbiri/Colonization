@@ -1,29 +1,32 @@
 using UnityEngine;
 
-public class TextRotation : MonoBehaviour
+namespace Vurbiri.Colonization.UI
 {
-    [SerializeField] private float _angleX = 90f;
-    
-    private Transform _cameraTransform, _thisTransform;
-    private Quaternion _lastCameraRotation;
-
-    private void Start()
+    [RequireComponent(typeof(Renderer))]
+    public class TextRotation : MonoBehaviour
     {
-        _thisTransform = transform;
-        _cameraTransform = Camera.main.transform.parent.transform;
-        SetRotation();
-    }
+        [SerializeField] private float _angleX = 90f;
 
-    private void Update()
-    {
-        if (_lastCameraRotation == _cameraTransform.rotation) return;
+        private Transform _thisTransform, _cameraTransform;
+        private Quaternion _lastCameraRotation;
+        private Renderer _thisRenderer;
 
-        SetRotation();
-    }
+        public void Initialize(Transform cameraTransform)
+        {
+            _thisTransform = transform;
+            _thisRenderer = GetComponent<Renderer>();
+            _cameraTransform = cameraTransform;
+            _lastCameraRotation = Quaternion.identity;
 
-    private void SetRotation()
-    {
-        _lastCameraRotation = _cameraTransform.rotation;
-        _thisTransform.localRotation = Quaternion.Euler(_angleX, _lastCameraRotation.eulerAngles.y, 0f);
+        }
+
+        private void Update()
+        {
+            if (!_thisRenderer.isVisible && _lastCameraRotation == _cameraTransform.rotation) 
+                return;
+
+            _lastCameraRotation = _cameraTransform.rotation;
+            _thisTransform.localRotation = Quaternion.Euler(_angleX, _lastCameraRotation.eulerAngles.y, 0f);
+        }
     }
 }

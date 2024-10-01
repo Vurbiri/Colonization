@@ -1,5 +1,6 @@
-
-public class Fangs : ASurface
+namespace Vurbiri.Colonization
 {
-    public override void Initialize() { }
+    public class Fangs : ASurface
+    {
+    }
 }

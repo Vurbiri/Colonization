@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization
 {
     public class Land : MonoBehaviour
     {
+        [SerializeField] private Transform _cameraTransform;
+        [Space]
         [SerializeField] private Hexagon _prefabHex;
         [Space]
         [SerializeField] private LandMesh _landMesh;
@@ -45,7 +47,7 @@ namespace Vurbiri.Colonization
         {
             Key key = data.Key;
             Hexagon hex = Instantiate(_prefabHex, data.Position, Quaternion.identity, _thisTransform);
-            hex.Initialize(data, _landMesh.WaterLevel);
+            hex.Initialize(data, _landMesh.WaterLevel, _cameraTransform);
 
             _hexagons.Add(key, hex);
             _landMesh.AddHexagon(key, data.Position, data.Surface.Color, hex.IsWater);
@@ -65,7 +67,17 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public IEnumerator SetMeshOptimize_Coroutine() => _landMesh.SetMeshOptimize_Coroutine();
+        public IEnumerator SetMesh_Coroutine()
+        {
+            yield return StartCoroutine(_landMesh.SetMesh_Coroutine());
+
+            Destroy(_landMesh);
+            _landMesh = null;
+
+            yield return null;
+
+            
+        }
 
         public void HexagonsNeighbors()
         {
@@ -111,8 +123,20 @@ namespace Vurbiri.Colonization
 
                 res.Add(hex.Currency, 1);
             }
-
+            
             return res;
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_cameraTransform == null)
+                _cameraTransform = Camera.main.transform;
+            if(_landMesh == null)
+                _landMesh = GetComponent<LandMesh>();
+            if (_prefabHex == null)
+                _prefabHex = VurbiriEditor.Utility.FindAnyPrefab<Hexagon>();
+        }
+#endif
     }
 }

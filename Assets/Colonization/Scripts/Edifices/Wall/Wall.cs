@@ -5,12 +5,12 @@ namespace Vurbiri.Colonization
     public class Wall : MonoBehaviour
     {
         [SerializeField] private Currencies _cost;
-        [Space, GetComponentInChildren]
+        [Space]
         [SerializeField] private WallGraphic _graphic;
 
         public Currencies Cost => _cost;
 
-        public virtual void Build(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
+        public void Initialize(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
         {
             gameObject.SetActive(true);
             _graphic.Initialize(owner, links);
@@ -18,6 +18,13 @@ namespace Vurbiri.Colonization
 
         public void AddRoad(LinkType type, PlayerType owner) => _graphic.AddRoad(type, owner);
 
-        public void Hide() => gameObject.SetActive(false);
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_graphic == null)
+                _graphic = GetComponentInChildren<WallGraphic>();
+        }
+#endif
     }
 }

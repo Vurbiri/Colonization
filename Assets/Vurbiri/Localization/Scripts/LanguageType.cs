@@ -42,7 +42,7 @@ namespace Vurbiri.Localization
             }
             catch (Exception ex)
             {
-                Message.Error($"--- Ошибка загрузки флага ---\n".Concat(ex.Message));
+                Message.Error($"--- Ошибка загрузки спрайта{_spriteName} для локализации {_name} / {_folder}  ---\n".Concat(ex.Message));
                 return false;
             }
         }

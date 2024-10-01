@@ -75,7 +75,7 @@ namespace Vurbiri
             }
             catch (Exception ex)
             {
-                Message.Error($"--- Ошибка загрузки: {path} ---\n".Concat(ex.Message));
+                Message.Error($"--- Ошибка загрузки объекта {typeof(T).Name} по пути {path} ---\n".Concat(ex.Message));
                 obj = null;
                 return false;
             }

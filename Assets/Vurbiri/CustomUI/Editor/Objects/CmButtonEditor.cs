@@ -1,7 +1,8 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri.UI;
 
-namespace Vurbiri.UI
+namespace VurbiriEditor.UI
 {
     [CustomEditor(typeof(CmButton), true), CanEditMultipleObjects]
     public class CmButtonEditor : CmSelectableEditor
@@ -21,7 +22,7 @@ namespace Vurbiri.UI
         }
 
         [MenuItem("GameObject/UI Custom/Button", false, 77)]
-        public static void CreateFromMenu(MenuCommand command) => CreateUtility.FromPrefab("CmButton", "Button", command.context as GameObject);
+        public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromPrefab("CmButton", "Button", command.context as GameObject);
 
     }
 }
