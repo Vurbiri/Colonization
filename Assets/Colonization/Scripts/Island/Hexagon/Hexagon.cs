@@ -17,10 +17,13 @@ namespace Vurbiri.Colonization
         public int Id => _id;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
+        public bool IsGround => !_isWater && !_isGate;
+        public bool IsWaterOccupied => _isWater && IsOccupied();
+        public bool IsGroundOccupied => !_isWater && !_isGate && IsOccupied();
         public CurrencyType Currency => _surface.GetCurrency();
 
         #region private
-        private int _id = -1;
+        private int _id;
         private Key _key;
         private SurfaceScriptable _surface;
         private bool _isGate, _isWater;
@@ -44,13 +47,11 @@ namespace Vurbiri.Colonization
 
             EventBus.Instance.EventHexagonIdShow += _idText.gameObject.SetActive;
 
-            name = NAME + _id + "__" + _key.ToString();
+            _surface.Create(transform);
 
-            if (_surface.Prefab == null)
-                return;
-
-            ASurface graphics = Instantiate(_surface.Prefab, transform);
-            graphics.Initialize();
+#if UNITY_EDITOR
+            name = NAME.Concat(_key, "__", _id);
+#endif
         }
 
         public void NeighborAddAndCreateCrossroadLink(Hexagon neighbor)
@@ -67,7 +68,7 @@ namespace Vurbiri.Colonization
         public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
         public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
 
-        public bool IsWaterOccupied() => _isWater && IsOccupied();
+        
 
         public bool IsOccupied()
         {

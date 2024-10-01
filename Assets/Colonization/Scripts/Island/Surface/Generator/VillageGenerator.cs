@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.CreatingMesh;
 
 namespace Vurbiri.Colonization
 {
@@ -33,12 +34,14 @@ namespace Vurbiri.Colonization
                     z = height + offset;
                     // ↓ место для мельницы ↓
                     if (x * x + z * z < sizeSqr && !(z > size - step && (x > -step && x < step)))
+                    {
                         customMesh.AddTriangles(_hut.Create(new(x, 0f, z)));
+                        yield return null;
+                    }
 
                     width += step;
                 }
                 height += step;
-                yield return null;
             }
 
             yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));

@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
         public Player Current => _current;
         public Player this[PlayerType type] => _players[type];
 
-        public void StartGame(Island island)
+        public void StartGame(IslandCreator island)
         {
             int[] idVisuals = _visualSet.RandIds(MAX_PLAYERS);
             PlayerType type; int idVisual;
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
             _current = _players[Enum<PlayerType>.Rand(0, MAX_PLAYERS)];
         }
 
-        public void LoadGame(Island island)
+        public void LoadGame(IslandCreator island)
         {
             int[] idVisuals = _visualSet.RandIds(MAX_PLAYERS);
             PlayerType type; int idVisual;

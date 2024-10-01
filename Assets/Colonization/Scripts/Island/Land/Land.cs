@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Vurbiri.Colonization.CONST;
+using Vurbiri.CreatingMesh;
 
 namespace Vurbiri.Colonization
 {
+    using static CONST;
+
     public class Land : MonoBehaviour
     {
         [SerializeField] private Transform _cameraTransform;
@@ -15,29 +17,45 @@ namespace Vurbiri.Colonization
 
         private Transform _thisTransform;
         private Dictionary<Key, Hexagon> _hexagons;
+        private Dictionary<int, List<Key>> _hexagonsIdForKey;
         private Vector2 _offset;
 
-        private static readonly Key[] NEAR = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
-        private static readonly Key[] NEAR_TWO = new Key[HEX_COUNT_SIDES << 1];
-
-        static Land()
-        {
-            Key key;
-            for (int i = 0, j = 0; i < HEX_COUNT_SIDES; i++, j = i << 1)
-            {
-                key = NEAR[i];
-                NEAR_TWO[j] = key + key;
-                NEAR_TWO[++j] = key + NEAR.Next(i);
-            }
-        }
+        private readonly Key[] NEAR = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
+        private readonly Key[] NEAR_TWO = new Key[HEX_COUNT_SIDES << 1];
 
         public void Initialize(int circleMax, int count)
         {
+            CalkNearTwo();
+            InitializeHexagonsIdForKey();
             _hexagons = new(count);
             _offset = new(HEX_DIAMETER_IN, HEX_DIAMETER_IN * SIN_60);
             _thisTransform = transform;
 
             _landMesh.Initialize(circleMax, count);
+
+            #region Local: CalkNearTwo();
+            //================================================
+            void CalkNearTwo()
+            {
+                Key key;
+                for (int i = 0, j = 0; i < HEX_COUNT_SIDES; i++, j = i << 1)
+                {
+                    key = NEAR[i];
+                    NEAR_TWO[j] = key + key;
+                    NEAR_TWO[++j] = key + NEAR.Next(i);
+                }
+            }
+            //================================================
+            void InitializeHexagonsIdForKey()
+            {
+                int capacity = count / NUMBERS.Count + 1;
+
+                _hexagonsIdForKey = new(NUMBERS.Count + 1);
+                foreach (int i in NUMBERS)
+                    _hexagonsIdForKey[i] = new List<Key>(capacity);
+                _hexagonsIdForKey[ID_GATE] = new List<Key>(1);
+            }
+            #endregion
         }
 
         public Key PositionToKey(Vector3 position) => new(2f * position.x / _offset.x, position.z / _offset.y);
@@ -50,6 +68,8 @@ namespace Vurbiri.Colonization
             hex.Initialize(data, _landMesh.WaterLevel, _cameraTransform);
 
             _hexagons.Add(key, hex);
+            _hexagonsIdForKey[data.Id].Add(key);
+ 
             _landMesh.AddHexagon(key, data.Position, data.Surface.Color, hex.IsWater);
 
             return hex;
@@ -75,13 +95,10 @@ namespace Vurbiri.Colonization
             _landMesh = null;
 
             yield return null;
-
-            
         }
 
         public void HexagonsNeighbors()
         {
-            Hexagon neighbor;
             Vertex[][] verticesNear = null;
             bool[] waterNear = null;
             int side = 0;
@@ -95,7 +112,7 @@ namespace Vurbiri.Colonization
                 }
                 foreach (var offset in NEAR)
                 {
-                    if (_hexagons.TryGetValue(hex.Key + offset, out neighbor))
+                    if (_hexagons.TryGetValue(hex.Key + offset, out Hexagon neighbor))
                     {
                         hex.NeighborAddAndCreateCrossroadLink(neighbor);
 
@@ -116,12 +133,12 @@ namespace Vurbiri.Colonization
         public Currencies GetFreeGroundResource(int id)
         {
             Currencies res = new();
-            foreach (var hex in _hexagons.Values)
+            Hexagon hex;
+            foreach (var key in _hexagonsIdForKey[id])
             {
-                if (hex.IsWater || hex.IsGate || hex.Id != id || hex.IsOccupied())
-                    continue;
-
-                res.Add(hex.Currency, 1);
+                hex = _hexagons[key];
+                if (!hex.IsGroundOccupied)
+                    res.Increment(hex.Currency);
             }
             
             return res;

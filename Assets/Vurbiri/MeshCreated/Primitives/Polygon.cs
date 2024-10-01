@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.CreatingMesh
 {
     public class Polygon : IPrimitive
     {

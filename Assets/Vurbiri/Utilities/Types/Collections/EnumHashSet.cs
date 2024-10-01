@@ -12,10 +12,8 @@ namespace Vurbiri
     {
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;
-        [SerializeField] private int _countMax;
 
         public int Count => _count;
-        public int CountMax => _countMax;
         public int Capacity => _capacity;
 
         public IEnumerable<TType> Types => _typesEnumerable;
@@ -27,7 +25,6 @@ namespace Vurbiri
         public EnumHashSet()
         {
             int min = Int32.MaxValue, max = Int32.MinValue, key;
-            _countMax = 0;
             foreach (TType item in Enum<TType>.Values)
             {
                 key = item.ToInt();
@@ -35,7 +32,6 @@ namespace Vurbiri
 
                 min = key < min ? key : min;
                 max = key > max ? key : max;
-                _countMax++;
             }
 
             _offset = -min;
@@ -161,6 +157,9 @@ namespace Vurbiri
         #region ISerializationCallbackReceiver
         public void OnBeforeSerialize()
         {
+            if (Application.isPlaying)
+                return;
+
             if (_values.Length != _capacity)
                 Array.Resize(ref _values, _capacity);
 
@@ -190,11 +189,6 @@ namespace Vurbiri
                 (_values[i], _values[index]) = (_values[index], _values[i]);
                 i--;
             }
-
-            List<TType> types = new(Enum<TType>.Values);
-            types.RemoveAll((t) => t.ToInt() < 0);
-
-            _countMax = types.Count;
         }
 
         public void OnAfterDeserialize() { }
@@ -202,6 +196,41 @@ namespace Vurbiri
 
         public IEnumerator<TValue> GetEnumerator() => new EnumHashSetValueEnumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+#if UNITY_EDITOR
+        public void OnValidate()
+        {
+            if (_values.Length != _capacity)
+                Array.Resize(ref _values, _capacity);
+
+            TValue value; _count = 0;
+            for (int index, i = 0; i < _capacity; i++)
+            {
+                value = _values[i];
+                if (value == null)
+                    continue;
+
+                for (int j = i + 1; j < _capacity; j++)
+                {
+                    if (_values[j] == null)
+                        continue;
+
+                    if (value.Type.Equals(_values[j].Type))
+                        _values[j] = null;
+                }
+
+                index = value.Type.ToInt(_offset);
+                if (index == i)
+                {
+                    _count++;
+                    continue;
+                }
+
+                (_values[i], _values[index]) = (_values[index], _values[i]);
+                i--;
+            }
+        }
+#endif
 
         #region Nested classes: EnumHashSetValueEnumerator, EnumHashSetKeysEnumerable, EnumHashSetKeysEnumerator, AEnumHashSetEnumerator
         //***********************************

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.CreatingMesh;
 
 namespace Vurbiri
 {
@@ -45,9 +46,9 @@ namespace Vurbiri
                 }
                 if (!isNotAddVertex)
                 {
-                    _vertices.Add(vertex);
                     if (_convertUV)
                         vertex.UV = _boundsUV.ConvertToUV(vertex.UV);
+                    _vertices.Add(vertex);
                 }
                 _triangles.Add(vIndex);
             }

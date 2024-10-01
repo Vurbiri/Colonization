@@ -12,19 +12,16 @@ namespace Vurbiri.Colonization
         private Vector2 _offset;
         private Dictionary<Key, Crossroad> _crossroads;
 
-        private static readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
+        private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
 
         public void Initialize(int circleMax)
         {
-            //Debug.Log($"Count Crossroads calk: {HEX_SIDE * circleMax * circleMax}");
             _crossroads = new(HEX_COUNT_SIDES * circleMax * circleMax);
-            //Debug.Log($"Count Roads calk: {HEX_SIDE * circleMax * (circleMax - 1)}");
-
             _offset = new(HEX_RADIUS_OUT * COS_30, HEX_RADIUS_OUT * SIN_30);
             _thisTransform = transform;
         }
 
-        public void CreateCrossroad(Vector3 position, Hexagon hex, bool isLastCircle)
+        public void CreateCrossroads(Vector3 position, Hexagon hex, bool isLastCircle)
         {
             Crossroad cross;
             Key key;

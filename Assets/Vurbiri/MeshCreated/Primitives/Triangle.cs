@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.CreatingMesh
 {
     public class Triangle
     {
@@ -18,81 +18,31 @@ namespace Vurbiri
         public Triangle(Color32 color, params Vector3[] vertices)
         {
             for (int index = 0; index < COUNT_VERTICES; index++)
-                _vertices[index] = new(vertices[index], Normal(index), color);
-
-            #region Local: Normal()
-            //=================================
-            Vector3 Normal(int i)
-            {
-                Vector3 sr = vertices[vertices.RightIndex(i)] - vertices[i];
-                Vector3 sl = vertices[vertices.LeftIndex(i)] - vertices[i];
-                return Vector3.Cross(sr, sl).normalized;
-            }
-            #endregion
+                _vertices[index] = new(vertices[index], Normal(vertices, index), color);
         }
 
         public Triangle(Color32 color, Vector2 uv, params Vector3[] vertices)
         {
             for (int index = 0; index < COUNT_VERTICES; index++)
-                _vertices[index] = new(vertices[index], Normal(index), color, uv);
-
-            #region Local: Normal()
-            //=================================
-            Vector3 Normal(int i)
-            {
-                Vector3 sr = vertices[vertices.RightIndex(i)] - vertices[i];
-                Vector3 sl = vertices[vertices.LeftIndex(i)] - vertices[i];
-                return Vector3.Cross(sr, sl).normalized;
-            }
-            #endregion
+                _vertices[index] = new(vertices[index], Normal(vertices, index), color, uv);
         }
 
         public Triangle(Color32 color, Vector2[] uvs, params Vector3[] vertices)
         {
             for (int index = 0; index < COUNT_VERTICES; index++)
-                _vertices[index] = new(vertices[index], Normal(index), color, uvs[index]);
-
-            #region Local: Normal()
-            //=================================
-            Vector3 Normal(int i)
-            {
-                Vector3 sr = vertices[vertices.RightIndex(i)] - vertices[i];
-                Vector3 sl = vertices[vertices.LeftIndex(i)] - vertices[i];
-                return Vector3.Cross(sr, sl).normalized;
-            }
-            #endregion
+                _vertices[index] = new(vertices[index], Normal(vertices, index), color, uvs[index]);
         }
 
         public Triangle(Color32[] colors, params Vector3[] vertices)
         {
             for (int index = 0; index < COUNT_VERTICES; index++)
-                _vertices[index] = new(vertices[index], Normal(index), colors[index]);
-
-            #region Local: Normal()
-            //=================================
-            Vector3 Normal(int i)
-            {
-                Vector3 sr = vertices[vertices.RightIndex(i)] - vertices[i];
-                Vector3 sl = vertices[vertices.LeftIndex(i)] - vertices[i];
-                return Vector3.Cross(sr, sl).normalized;
-            }
-            #endregion
+                _vertices[index] = new(vertices[index], Normal(vertices, index), colors[index]);
         }
 
         public Triangle(Color32[] colors, Vector2[] uvs, params Vector3[] vertices)
         {
             for (int index = 0; index < COUNT_VERTICES; index++)
-                _vertices[index] = new(vertices[index], Normal(index), colors[index], uvs[index]);
-
-            #region Local: Normal()
-            //=================================
-            Vector3 Normal(int i)
-            {
-                Vector3 sr = vertices[vertices.RightIndex(i)] - vertices[i];
-                Vector3 sl = vertices[vertices.LeftIndex(i)] - vertices[i];
-                return Vector3.Cross(sr, sl).normalized;
-            }
-            #endregion
+                _vertices[index] = new(vertices[index], Normal(vertices, index), colors[index], uvs[index]);
         }
 
         public Triangle(byte color, Vector2[] uvs, params Vector3[] vertices)
@@ -100,18 +50,15 @@ namespace Vurbiri
             for (int index = 0; index < COUNT_VERTICES; index++)
             {
                 BARYCENTRIC_COLORS[index].a = color;
-                _vertices[index] = new(vertices[index], Normal(index), BARYCENTRIC_COLORS[index], uvs[index]);
+                _vertices[index] = new(vertices[index], Normal(vertices, index), BARYCENTRIC_COLORS[index], uvs[index]);
             }
+        }
 
-            #region Local: Normal()
-            //=================================
-            Vector3 Normal(int i)
-            {
-                Vector3 sr = vertices[vertices.RightIndex(i)] - vertices[i];
-                Vector3 sl = vertices[vertices.LeftIndex(i)] - vertices[i];
-                return Vector3.Cross(sr, sl).normalized;
-            }
-            #endregion
+        private Vector3 Normal(Vector3[] vertices, int i)
+        {
+            Vector3 sr = vertices[vertices.RightIndex(i)] - vertices[i];
+            Vector3 sl = vertices[vertices.LeftIndex(i)] - vertices[i];
+            return Vector3.Cross(sr, sl).normalized;
         }
 
     }

@@ -35,12 +35,12 @@ namespace Vurbiri.Colonization
             link.RoadBuilt(_type);
             _count++;
 
-            if (!AddRoadLine())
-                NewRoadLine();
+            if (!AddRoadLine(link))
+                NewRoadLine(link);
 
             #region Local: AddRoadLine(), NewRoadLine()
             //=================================
-            bool AddRoadLine()
+            bool AddRoadLine(CrossroadLink link)
             {
                 foreach (var line in _roadsLists)
                     if (line.TryAdd(link.Start, link.End))
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
                 return false;
             }
             //=================================
-            void NewRoadLine()
+            void NewRoadLine(CrossroadLink link)
             {
                 Road roadLine;
                 roadLine = Instantiate(_prefabRoad, _thisTransform);
@@ -67,10 +67,10 @@ namespace Vurbiri.Colonization
 
         public void TryUnion() => StartCoroutine(TryUnion_Coroutine());
 
-        public Key[][] GetCrossroadsKey()
+        public int[][][] GetCrossroadsKey()
         {
             int count = _roadsLists.Count;
-            Key[][] keys = new Key[count][];
+            int[][][] keys = new int[count][][];
 
             for (int i = 0; i < count; i++)
                 keys[i] = _roadsLists[i].GetCrossroadsKey();

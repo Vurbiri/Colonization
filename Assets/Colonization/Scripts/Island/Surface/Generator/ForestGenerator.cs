@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.CreatingMesh;
 using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
@@ -41,6 +42,7 @@ namespace Vurbiri.Colonization
                     z = Mathf.Sin(angle + offsetAngle) * radius + step * _offsetRange;
                     customMesh.AddTriangles(_spruce.Create(new(x, _offsetY, z), _colorRange.Roll, _specular));
                     angle += angleStep;
+                    yield return null;
                 }
 
                 radius += step;
@@ -88,7 +90,7 @@ namespace Vurbiri.Colonization
 
                 for (int i = 0; i < _countBranches; i++)
                 {
-                    BranchCreate(_countVertexRange);
+                    BranchCreate(_countVertexRange, position, color, uv);
 
                     position.y += _height * _ratioNextPos;
                     _height *= _ratioNextSizeRange;
@@ -99,7 +101,7 @@ namespace Vurbiri.Colonization
 
                 #region Local: BranchCreate()
                 //=================================
-                void BranchCreate(int countBase)
+                void BranchCreate(int countBase, Vector3 position, Color32 color, Vector2 uv)
                 {
                     _peakPoint = position + new Vector3(0f, _height, 0f);
                     _basePoints = new Vector3[countBase];

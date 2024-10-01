@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
         [JsonProperty(P_BLOOD)]
         private ReactiveValue<int> _blood;
         [JsonProperty(P_ROADS)]
-        private Key[][] _roadsKey;
+        private int[][][] _roadsKey;
         [JsonProperty(P_ENDIFICES)]
         private readonly Dictionary<EdificeGroup, HashSet<Crossroad>> _edifices = new();
 
@@ -62,8 +62,8 @@ namespace Vurbiri.Colonization
             {
                 _resources = new(data.resources);
                 _blood = data.blood;
-                CreateRoads();
-                CreateCities();
+                CreateRoads(data);
+                CreateCities(data);
                 return;
             }
 
@@ -71,7 +71,7 @@ namespace Vurbiri.Colonization
 
             #region Local: CreateRoads(), CreateCities(), CreateRoad(...)
             //=================================
-            void CreateRoads()
+            void CreateRoads(PlayerLoadData data)
             {
                 if (data.roadsKey == null)
                     return;
@@ -80,7 +80,7 @@ namespace Vurbiri.Colonization
                     CreateRoad(k);
             }
             //=================================
-            void CreateCities()
+            void CreateCities(PlayerLoadData data)
             {
                 if (data.edifices == null)
                     return;
@@ -106,8 +106,8 @@ namespace Vurbiri.Colonization
                 int count = keys.Length;
                 if (count < 2) return;
 
-                Key key = new();
-                Crossroad start = crossroads.GetCrossroad(key.SetValues(keys[0]));
+                Key key = new(keys[0]);
+                Crossroad start = crossroads.GetCrossroad(key);
                 for (int i = 1; i < count; i++)
                 {
                     foreach (var link in start.Links)

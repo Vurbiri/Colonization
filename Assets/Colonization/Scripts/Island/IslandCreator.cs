@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public class Island : MonoBehaviour
+    public class IslandCreator : MonoBehaviour
     {
         [SerializeField] private string _keySave = "isl";
         [Space]
@@ -45,16 +45,17 @@ namespace Vurbiri.Colonization
         public WaitResult<bool> Load_Wait()
         {
             WaitResult<bool> waitResult = new();
-            StartCoroutine(Load_Coroutine());
+            StartCoroutine(Load_Coroutine(waitResult));
             return waitResult;
 
             #region Local: Load_Coroutine(...)
             //=================================
-            IEnumerator Load_Coroutine()
+            IEnumerator Load_Coroutine(WaitResult<bool> waitResult)
             {
                 if (!Storage.TryLoad(_keySave, out int[][] values))
                 {
                     waitResult.SetResult(false);
+                    Message.Error("Не удалось загрузить HexagonData");
                     yield break;
                 }
 
@@ -77,15 +78,17 @@ namespace Vurbiri.Colonization
         {
             int circle = 0;
             bool isWater = false, isWaterPossible, isLastCircle = circle == _circleMax;
-            Vector3 position, positionNext, direction, current;
+            Vector3 position, positionNext, direction, positionCurrent;
 
             HexagonData hexData;
+            Key keyHex;
             List<HexagonData> hexagonsData = new(CalkMaxHexagons(_circleMax));
             ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);
             ShuffleLoopArray<SurfaceScriptable> surfaces = new(_surfaces.GetRange(SurfaceType.Village, SurfaceType.Forest));
 
             Hexagon hex = _land.CreateHexagon(new(new(), ID_GATE, Vector3.zero, _surfaces[SurfaceType.Gate]));
-            _crossroads.CreateCrossroad(Vector3.zero, hex, false);
+            _crossroads.CreateCrossroads(Vector3.zero, hex, false);
+
             while (!isLastCircle)
             {
                 isLastCircle = ++circle == _circleMax;
@@ -100,10 +103,14 @@ namespace Vurbiri.Colonization
 
                     for (int j = 0; j < circle; j++)
                     {
-                        current = position + direction * j;
-                        hexagonsData.Add(hexData = GetHexagonData(j));
+                        positionCurrent = position + direction * j;
+                        keyHex = _land.PositionToKey(positionCurrent);
+                        isWater = isWaterPossible && (isLastCircle || (!isWater && j != 0 && (_land.IsWaterNearby(keyHex) || _chanceWater)));
+                        hexData = isWater ? new(keyHex, numWater.Value, positionCurrent, _surfaces[SurfaceType.Water]) :
+                                            new(keyHex, numGround.Value, positionCurrent, surfaces.Value);
+                        hexagonsData.Add(hexData);
                         hex = _land.CreateHexagon(hexData);
-                        _crossroads.CreateCrossroad(current, hex, isLastCircle);
+                        _crossroads.CreateCrossroads(positionCurrent, hex, isLastCircle);
 
                         yield return null;
                     }
@@ -113,17 +120,6 @@ namespace Vurbiri.Colonization
             yield return null;
 
             StartCoroutine(Storage.Save_Coroutine(_keySave, hexagonsData, saveToFile));
-
-            #region Local: GetHexagonData(...)
-            //=================================
-            HexagonData GetHexagonData(int x)
-            {
-                Key keyHex = _land.PositionToKey(current);
-                isWater = isWaterPossible && (isLastCircle || (!isWater && x != 0 && (_land.IsWaterNearby(keyHex) || _chanceWater)));
-
-                return isWater ? new(keyHex, numWater.Value, current, _surfaces[SurfaceType.Water]) : new(keyHex, numGround.Value, current, surfaces.Value);
-            }
-            #endregion
         }
 
         private IEnumerator LoadIsland_Coroutine(HexagonData[] hexagonsData)
@@ -131,7 +127,7 @@ namespace Vurbiri.Colonization
             int lastHexagons = CalkMaxHexagons(_circleMax - 1);
 
             Hexagon hex = _land.CreateHexagon(new(new(), ID_GATE, Vector3.zero, _surfaces[SurfaceType.Gate]));
-            _crossroads.CreateCrossroad(Vector3.zero, hex, false);
+            _crossroads.CreateCrossroads(Vector3.zero, hex, false);
 
             foreach (HexagonData data in hexagonsData)
             {
@@ -139,7 +135,7 @@ namespace Vurbiri.Colonization
                 data.Position = _land.KeyToPosition(data.Key);
 
                 hex = _land.CreateHexagon(data);
-                _crossroads.CreateCrossroad(data.Position, hex, --lastHexagons < 0);
+                _crossroads.CreateCrossroads(data.Position, hex, --lastHexagons < 0);
 
                 yield return null;
             }

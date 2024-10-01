@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
     public class Game : MonoBehaviour
     {
         [SerializeField] private InputController _inputController;
-        [SerializeField] private Island _island;
+        [SerializeField] private IslandCreator _island;
         [SerializeField] private Dices _dices;
         [Space] //test
         [SerializeField] private bool _load;
@@ -43,16 +43,28 @@ namespace Vurbiri.Colonization
                 WaitResult<bool> waitResult = _island.Load_Wait();
                 yield return waitResult;
                 if (waitResult.Result)
-                {
                     _players.LoadGame(_island);
-                    yield break;
-                }
+            }
+            else
+            {
+                yield return StartCoroutine(_island.Generate_Coroutine(false));
+                _players.StartGame(_island);
             }
 
-            yield return StartCoroutine(_island.Generate_Coroutine(false));
-            _players.StartGame(_island);
+            Destroy(_island);
+
+            yield return null;
 
             GC.Collect();
+
+            for (int i = 0; i < 15; i ++)
+                yield return null;
+
+            GC.Collect();
+
+            yield return null;
+
+            Debug.Log("Start");
         }
 
         public void EndTurnPlayer()

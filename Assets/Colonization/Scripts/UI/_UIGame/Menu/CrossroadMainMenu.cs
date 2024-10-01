@@ -52,8 +52,6 @@ namespace Vurbiri.Colonization.UI
             _playerCurrent = _players.Current;
             _currentCrossroad = crossroad;
 
-            Color color = _playerCurrent.Color;
-
             if (ButtonSetup(_buttonUpgrade.Button, _playerCurrent.CanCrossroadUpgrade(crossroad), crossroad.CanUpgradeBuy(_playerCurrent.Resources)))
                 _buttonUpgrade.SetupHint(crossroad.UpgradeType);
 
@@ -70,7 +68,7 @@ namespace Vurbiri.Colonization.UI
 
                 if (isEnable)
                 {
-                    button.targetGraphic.color = color;
+                    button.targetGraphic.color = _playerCurrent.Color;
                     button.Interactable = isInteractable;
                 }
                                 

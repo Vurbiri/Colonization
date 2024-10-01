@@ -61,21 +61,21 @@ namespace Vurbiri.Colonization
         public bool Union(LinkList<T> other)
         {
             if (_last.EqualsValue(other._first))
-                AddFirstToLast();
+                AddFirstToLast(other);
             else if (_first.EqualsValue(other._last))
-                AddLastToFirst();
+                AddLastToFirst(other);
             else if (_first.EqualsValue(other._first))
-                AddFirstToFirst();
+                AddFirstToFirst(other);
             else if (_last.EqualsValue(other._last))
-                AddLastToLast();
+                AddLastToLast(other);
             else
                 return false;
 
             return true;
 
-            #region Local: AddFirstToLast(), AddLastToFirst(), AddFirstToFirst(), AddLastToLast()
+            #region Local: AddFirstToLast(...), AddLastToFirst(...), AddFirstToFirst(...), AddLastToLast(...)
             //=================================
-            void AddFirstToLast()
+            void AddFirstToLast(LinkList<T> other)
             {
                 _last.next = other._first.next;
                 other._first.next.prev = _last;
@@ -83,7 +83,7 @@ namespace Vurbiri.Colonization
                 _count += other._count - 1;
             }
             //=================================
-            void AddLastToFirst()
+            void AddLastToFirst(LinkList<T> other)
             {
                 _first.prev = other._last.prev;
                 other._last.prev.next = _first;
@@ -91,16 +91,16 @@ namespace Vurbiri.Colonization
                 _count += other._count - 1;
             }
             //=================================
-            void AddFirstToFirst()
+            void AddFirstToFirst(LinkList<T> other)
             {
                 other.Reverse();
-                AddLastToFirst();
+                AddLastToFirst(other);
             }
             //=================================
-            void AddLastToLast()
+            void AddLastToLast(LinkList<T> other)
             {
                 other.Reverse();
-                AddFirstToLast();
+                AddFirstToLast(other);
             }
             #endregion
         }

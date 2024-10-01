@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Vurbiri
+namespace Vurbiri.CreatingMesh
 {
     public interface IPrimitive
     {

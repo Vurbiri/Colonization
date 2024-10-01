@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.CreatingMesh;
 using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
@@ -102,9 +103,9 @@ namespace Vurbiri.Colonization
             static List<Vector3> CreateCoast(Vertex vertex, Vector3 direction)
             {
                 List<Vector3> positions = new(2)
-            {
-                vertex.Position
-            };
+                {
+                    vertex.Position
+                };
 
                 for (int i = 0; i < _coastSteps; i++)
                     positions.Add(positions[i] + (DOWN * _coastSize[i % 2] + direction * _coastSize[(i + 1) % 2]));

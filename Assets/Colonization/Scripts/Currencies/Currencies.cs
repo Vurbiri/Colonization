@@ -89,6 +89,15 @@ namespace Vurbiri.Colonization
             ActionThisChange?.Invoke(this);
         }
 
+        public void Increment(int index)
+        {
+            ++_values[index];
+            ++_amount;
+
+            ActionThisChange?.Invoke(this);
+        }
+        public void Increment(CurrencyType type) => Increment(index: (int)type);
+
         public void Add(int index, int value)
         {
             if (value == 0)
@@ -171,6 +180,9 @@ namespace Vurbiri.Colonization
 
         public void OnBeforeSerialize()
         {
+            if (Application.isPlaying)
+                return;
+
             _count = Enum<CurrencyType>.Count;
             if (_values.Length != _count)
                 Array.Resize(ref _values, _count);

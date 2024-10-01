@@ -1,21 +1,13 @@
-using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[JsonArray]
-public class Key : IEquatable<Key>, IEnumerable<int>
+public struct Key : IEquatable<Key>
 {
-    public int X => _x;
-    public int Y => _y;
+    public readonly int X => _x;
+    public readonly int Y => _y;
 
     private int _x, _y;
 
-    public Key()
-    {
-        _x = 0; _y = 0;
-    }
     public Key(int x, int y)
     {
         _x = x; _y = y;
@@ -24,6 +16,11 @@ public class Key : IEquatable<Key>, IEnumerable<int>
     {
         _x = Mathf.RoundToInt(x);
         _y = Mathf.RoundToInt(y);
+    }
+    public Key(int[] arr)
+    {
+        _x = arr[0];
+        _y = arr[1];
     }
 
     public Key SetValues(int x, int y)
@@ -39,24 +36,19 @@ public class Key : IEquatable<Key>, IEnumerable<int>
 
         return this;
     }
-    public IEnumerator<int> GetEnumerator()
-    {
-        yield return _x;
-        yield return _y;
-    }
 
-    public bool Equals(Key other) => other is not null && _x == other._x && _y == other._y;
-    public override bool Equals(object obj) => Equals(obj as Key);
+    public readonly int[] ToArray() => new int[] { _x, _y };
 
-    public override int GetHashCode() => HashCode.Combine(_x, _y);
+    public readonly bool Equals(Key other) => _x == other._x && _y == other._y;
+    public override readonly bool Equals(object obj) => obj is Key key && Equals(key);
+
+    public override readonly int GetHashCode() => HashCode.Combine(_x, _y);
 
     public static Key operator +(Key a, Key b) => new(a._x + b._x, a._y + b._y);
     public static Key operator -(Key a, Key b) => new(a._x - b._x, a._y - b._y);
     public static Key operator -(Key a) => new(-a._x, -a._y);
 
-    public static bool operator ==(Key a, Key b) => (a is null && b is null) || (a is not null && a.Equals(b));
-    public static bool operator !=(Key a, Key b) => !(a == b);
-    public override string ToString() => $"({_x}, {_y})";
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public static bool operator ==(Key a, Key b) => a._x == b._x && a._y == b._y;
+    public static bool operator !=(Key a, Key b) => a._x != b._x || a._y != b._y;
+    public override readonly string ToString() => $"({_x}, {_y})";
 }

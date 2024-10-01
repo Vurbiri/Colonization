@@ -91,6 +91,9 @@ namespace Vurbiri.Colonization
         #region ISerializationCallbackReceiver
         public void OnBeforeSerialize()
         {
+            if (Application.isPlaying)
+                return;
+
             _group = _type.ToGroup();
             _isBuildWall = _group == EdificeGroup.Urban && _type != EdificeType.Camp;
             

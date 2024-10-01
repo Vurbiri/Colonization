@@ -1,5 +1,7 @@
-public static partial class UtilityJS
+namespace Vurbiri
 {
+    public static partial class UtilityJS
+    {
 #if !UNITY_EDITOR
     public static bool IsMobile => IsMobileUnityJS();
 
@@ -14,4 +16,5 @@ public static partial class UtilityJS
     public static string GetCookies(string key) => GetCookiesJS(key);
     public static bool IsCookies() => IsCookiesJS();
 #endif
+    }
 }

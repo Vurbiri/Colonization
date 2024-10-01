@@ -12,9 +12,11 @@ namespace VurbiriEditor
     {
         private const int INDEX_TYPE = 0, INDEX_VALUE = 1;
         private const float Y_SPACE = 2f, BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
-        private const string NAME_ARRAY = "_values", NAME_COUNT = "_count", NAME_COUNT_MAX = "_countMax", LABEL_EMPTY = "-----";
+        private const string NAME_ARRAY = "_values", NAME_COUNT = "_count", LABEL_EMPTY = "-----";
         private const string BUTTON_CHILD = "Set children", BUTTON_ASSET = "Set assets", BUTTON_CLEAR = "Clear";
         private static readonly Color colorNull = new(1f, 0.65f, 0f, 1f);
+
+        private int _countMax = 0;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -25,7 +27,7 @@ namespace VurbiriEditor
             Rect startPosition = position;
             Type typeKey = fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE], typeValue = fieldInfo.FieldType.GetGenericArguments()[INDEX_VALUE];
             SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
-            int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue, countMax = property.FindPropertyRelative(NAME_COUNT_MAX).intValue, count = propertyValues.arraySize;
+            int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue, count = propertyValues.arraySize;
 
             label = EditorGUI.BeginProperty(position, label, property);
 
@@ -86,12 +88,18 @@ namespace VurbiriEditor
                     alignment = TextAnchor.MiddleRight
                 };
 
+                _countMax = 0;
+                Array values = Enum.GetValues(typeKey);
+                foreach (var value in values)
+                    if ((int)value >= 0)
+                        _countMax++;
+
                 startPosition.x = EditorGUIUtility.currentViewWidth - LABEL_SIZE - 20f;
                 startPosition.width = LABEL_SIZE;
 
-                if (countCurrent < countMax)
+                if (countCurrent < _countMax)
                     GUI.color = colorNull;
-                EditorGUI.LabelField(startPosition, $"{countCurrent} / {countMax}", style);
+                EditorGUI.LabelField(startPosition, $"{countCurrent} / {_countMax}", style);
                 GUI.color = prevColor;
             }
             //=================================
@@ -202,8 +210,8 @@ namespace VurbiriEditor
             if (property.isExpanded)
             {
                 int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue;
-                rate += countCurrent;
-                if (countCurrent < property.FindPropertyRelative(NAME_COUNT_MAX).intValue)
+                rate += countCurrent + 1;
+                if (countCurrent < _countMax)
                     rate += 1f;
 
                 if (!Application.isPlaying)

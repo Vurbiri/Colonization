@@ -46,6 +46,9 @@ namespace Vurbiri
 
         public virtual void OnBeforeSerialize()
         {
+            if (Application.isPlaying)
+                return;
+
             _count = Enum<TType>.Count;
             if (_values.Length != _count)
                 Array.Resize(ref _values, _count);

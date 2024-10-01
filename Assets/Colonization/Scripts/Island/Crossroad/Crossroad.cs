@@ -47,7 +47,9 @@ namespace Vurbiri.Colonization
             _key = key;
             Position = transform.position;
 
-            name = NAME + Key.ToString();
+#if UNITY_EDITOR
+            name = NAME.Concat(Key.ToString());
+#endif
         }
 
         public bool AddHexagon(Hexagon hexagon)
@@ -100,7 +102,7 @@ namespace Vurbiri.Colonization
             {
                 EdificeGroup.Shrine => IsRoadConnect(owner),
                 EdificeGroup.Port => WaterCheck(),
-                EdificeGroup.Urban => NeighborCheck(),
+                EdificeGroup.Urban => NeighborCheck(owner),
                 _ => false
             });
 
@@ -112,13 +114,13 @@ namespace Vurbiri.Colonization
                     return false;
 
                 foreach (var hex in _hexagons)
-                    if (hex.IsWaterOccupied())
+                    if (hex.IsWaterOccupied)
                         return false;
 
                 return true;
             }
             //=================================
-            bool NeighborCheck()
+            bool NeighborCheck(PlayerType owner)
             {
                 AEdifice neighbor;
                 foreach (var link in _links)
@@ -210,7 +212,6 @@ namespace Vurbiri.Colonization
                 hex.CrossroadRemove(this);
         }
 
-        public override string ToString() => $"{_key}";
         public static Key operator -(Crossroad a, Crossroad b) => a._key - b._key;
 
         public IEnumerator<int> GetEnumerator()
@@ -226,7 +227,8 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            _edifice = GetComponentInChildren<AEdifice>();
+            if(_edifice == null)
+                _edifice = GetComponentInChildren<AEdifice>();
         }
 #endif
     }

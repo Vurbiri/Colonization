@@ -28,12 +28,12 @@ namespace Vurbiri.Colonization
                 _windmillMeshFilter.sharedMesh = _altWindmillMesh;
             _windmillMeshFilter.transform.localPosition = new(0f, 0f, size - _windmillOffsetDistance);
 
-            StartCoroutine(Initialize_Coroutine());
+            StartCoroutine(Initialize_Coroutine(size));
             StartCoroutine(WindmillPlay_Coroutine());
 
             #region Local: Initialize_Coroutine(), WindmillPlay_Coroutine()
             //=================================
-            IEnumerator Initialize_Coroutine()
+            IEnumerator Initialize_Coroutine(float size)
             {
                 yield return StartCoroutine(_generator.Generate_Coroutine(size));
 

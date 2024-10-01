@@ -17,10 +17,13 @@ namespace Vurbiri.Colonization
         public Color32 Color => _color;
         public bool IsWater => _type == SurfaceType.Water;
         public bool IsGate => _type == SurfaceType.Gate;
-        public ASurface Prefab => _prefabSurface;
 
         public CurrencyType GetCurrency() => _profits.Rand();
 
-        public void OnAfterDeserialize() { }
+        public void Create(Transform parent) 
+        {
+            if (_prefabSurface != null)
+                Instantiate(_prefabSurface, parent).Initialize();
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
             _waitLogOn = new();
             gameObject.SetActive(true);
 
-            WaitResult<bool> waitResult;
+            
             bool resultAuthorization = false;
             while (true)
             {
@@ -37,6 +37,8 @@ namespace Vurbiri.Colonization
             IEnumerator AuthorizationCoroutine()
             {
                 ///Message.BannersClear();
+
+                WaitResult<bool> waitResult;
 
                 if (!_ysdk.IsPlayer)
                 {

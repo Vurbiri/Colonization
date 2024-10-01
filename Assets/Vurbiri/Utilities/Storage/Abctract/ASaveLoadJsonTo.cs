@@ -32,7 +32,7 @@ namespace Vurbiri
 
         public IEnumerator Save_Coroutine(string key, object data, bool toFile, Action<bool> callback)
         {
-            bool result = SaveToMemory();
+            bool result = SaveToMemory(data);
             if (!toFile || !(result && _dictModified))
             {
                 callback?.Invoke(result);
@@ -43,7 +43,7 @@ namespace Vurbiri
 
             #region Local: SaveToMemory(), SaveToFile_Coroutine()
             //======================================
-            bool SaveToMemory()
+            bool SaveToMemory(object data)
             {
                 try
                 {
@@ -69,9 +69,8 @@ namespace Vurbiri
                 WaitResult<bool> waitResult = SaveToFile_Wait();
                 yield return waitResult;
 
-                result = waitResult.Result;
-                _dictModified = !result;
-                callback?.Invoke(result);
+                _dictModified = !waitResult.Result;
+                callback?.Invoke(waitResult.Result);
             }
             #endregion
         }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.CreatingMesh;
 using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
@@ -32,6 +33,7 @@ namespace Vurbiri.Colonization
             bool isHigh = Chance.Rolling();
             Chance chance;
             RMFloat offset = step * _ratioOffset;
+            Vector3 position;
 
             for (int i = 0; i < _countCircle; i++)
             {
@@ -44,7 +46,8 @@ namespace Vurbiri.Colonization
                 {
                     if (chance)
                     {
-                        customMesh.AddTriangles(_rock.Create(new(GetX(), 0f, GetZ()), isHigh, ratioHeight, ratioRadius));
+                        position = new(Mathf.Cos(angle) * radius + offset, 0f, Mathf.Sin(angle) * radius + offset);
+                        customMesh.AddTriangles( _rock.Create(position, isHigh, ratioHeight, ratioRadius));
                         isHigh = !isHigh;
                         yield return null;
                     }
@@ -59,11 +62,6 @@ namespace Vurbiri.Colonization
 
             yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
 
-            #region Local: GetX(), GetZ()
-            //=================================
-            float GetX() => Mathf.Cos(angle) * radius + offset;
-            float GetZ() => Mathf.Sin(angle) * radius + offset;
-            #endregion
         }
 
         #region Nested: Rock

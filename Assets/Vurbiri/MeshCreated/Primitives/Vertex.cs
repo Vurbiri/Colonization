@@ -1,14 +1,14 @@
 using System;
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.CreatingMesh
 {
-    public class Vertex : IEquatable<Vertex>
+    public struct Vertex : IEquatable<Vertex>
     {
-        public Vector3 Position => _position;
-        public Vector3 Normal => _normal;
-        public Color32 Color => _color;
-        public Vector2 UV { get => _uv; set => _uv = value; }
+        public readonly Vector3 Position => _position;
+        public readonly Vector3 Normal => _normal;
+        public readonly Color32 Color => _color;
+        public Vector2 UV { readonly get => _uv; set => _uv = value; }
 
         private readonly Vector3 _position;
         private readonly Vector3 _normal;
@@ -39,15 +39,15 @@ namespace Vurbiri
             _uv = uv;
         }
 
-        public Vertex Offset(Vector3 direct) => new(_position + direct, _normal, _color);
+        public readonly Vertex Offset(Vector3 direct) => new(_position + direct, _normal, _color);
 
-        public bool Equals(Vertex other) => other is not null && _position == other._position && _normal == other._normal && _color.Equals(other._color);
-        public override bool Equals(object obj) => Equals(obj as Vertex);
+        public readonly bool Equals(Vertex other) => _position == other._position && _normal == other._normal && _color.Equals(other._color);
+        public override readonly bool Equals(object obj) => obj is Vertex vertex && Equals(vertex);
 
-        public override int GetHashCode() => HashCode.Combine(_position, _normal, _color);
+        public override readonly int GetHashCode() => HashCode.Combine(_position, _normal, _color);
 
-        public static bool operator ==(Vertex a, Vertex b) => (a is null && b is null) || (a is not null && a.Equals(b));
-        public static bool operator !=(Vertex a, Vertex b) => !(a == b);
+        public static bool operator ==(Vertex a, Vertex b) => a._position == b._position && a._normal == b._normal && a._color.Equals(b._color);
+        public static bool operator !=(Vertex a, Vertex b) => a._position != b._position || a._normal != b._normal || !a._color.Equals(b._color);
 
         public override string ToString() => $"({_position}, {_normal}, {_color})";
     }

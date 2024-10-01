@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.CreatingMesh;
 using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
@@ -26,6 +27,7 @@ namespace Vurbiri.Colonization
 
             foreach (var crystal in _druse.Create(new(offsetRadius, -_offsetY, offsetRadius)))
                 customMesh.AddTriangles(crystal);
+
             yield return null;
 
             float x, z;
@@ -35,14 +37,13 @@ namespace Vurbiri.Colonization
                 z = SIN_HEX_DIRECT[i] * radius + offsetRadius;
 
                 foreach (var crystal in _druse.Create(new(x, -_offsetY, z)))
+                {
                     customMesh.AddTriangles(crystal);
-
-                yield return null;
+                    yield return null;
+                }
             }
 
             yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
-
-            Destroy(this);
         }
 
         #region Nested: Druse, Cristal
@@ -91,7 +92,6 @@ namespace Vurbiri.Colonization
                     _triangles[i] = _crystals.Create(position, Quaternion.Euler(_angleXRange, _angleY, _angleZRange), _colorCrystal, false);
                 }
 
-
                 return _triangles;
             }
         }
@@ -108,7 +108,6 @@ namespace Vurbiri.Colonization
             [SerializeField] private RFloat _ratioPartRange = new(0.8f, 0.95f);
             [Space]
             [SerializeField] private RFloat _ratioOffsetRange = new(0.16f, 0.32f);
-
 
             private List<Triangle> _triangles;
             private Vector3[] _baseBottom, _baseTop;
@@ -160,9 +159,7 @@ namespace Vurbiri.Colonization
                 for (int i = 0; i < _countVertex; i++)
                     _triangles.Add(new(color, UV_PICK, _baseTop.Next(i), _baseTop[i], _pick));
 
-
                 return _triangles;
-
             }
         }
         #endregion

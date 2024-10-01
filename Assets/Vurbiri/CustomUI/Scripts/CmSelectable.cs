@@ -66,11 +66,11 @@ namespace Vurbiri.UI
             };
 
             foreach (Graphic graphic in _targetGraphics)
-                StartColorTween(graphic);
+                StartColorTween(graphic, instant);
 
             #region Local: StartColorTween(...)
             //=================================
-            void StartColorTween(Graphic targetGraphic)
+            void StartColorTween(Graphic targetGraphic, bool instant)
             {
                 if (targetGraphic == null)
                     return;

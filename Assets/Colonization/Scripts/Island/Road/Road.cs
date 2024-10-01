@@ -52,9 +52,9 @@ namespace Vurbiri.Colonization
         public bool TryAdd(Crossroad start, Crossroad end)
         {
             if (start == _crossroads.First)
-                AddFirst();
+                AddFirst(end);
             else if (start == _crossroads.Last)
-                AddLast();
+                AddLast(end);
             else
                 return false;
 
@@ -63,13 +63,13 @@ namespace Vurbiri.Colonization
             return true;
             #region Local: AddFirst(), AddLast()
             //=================================
-            void AddFirst()
+            void AddFirst(Crossroad end)
             {
                 _crossroads.AddFirst(end);
                 _points.Mode = LinkListMode.First;
             }
             //=================================
-            void AddLast()
+            void AddLast(Crossroad end)
             {
                 _crossroads.AddLast(end);
                 _points.Mode = LinkListMode.Last;
@@ -94,12 +94,12 @@ namespace Vurbiri.Colonization
             return other;
         }
 
-        public Key[] GetCrossroadsKey()
+        public int[][] GetCrossroadsKey()
         {
-            Key[] keys = new Key[_crossroads.Count];
+            int[][] keys = new int[_crossroads.Count][];
             int i = 0;
             foreach (var crossroad in _crossroads)
-                keys[i++] = crossroad.Key;
+                keys[i++] = crossroad.Key.ToArray();
 
             return keys;
         }

@@ -1,6 +1,6 @@
 using System;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri
 {
     public partial class YMoney
     {
