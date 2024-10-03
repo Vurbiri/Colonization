@@ -1,21 +1,19 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    [Serializable]
-    public class Ability : AReactive<int>
+    public class Ability : AReactive<int>, IValueTypeEnum<PlayerAbilityType>
     {
-        [SerializeField] private AbilityType _type;
-        [SerializeField] private int _baseValue;
+        private readonly PlayerAbilityType _type;
+        private readonly int _baseValue;
 
         private int _currentValue;
         private readonly HashSet<IPerk> _permanentPerks;
         private readonly HashSet<IPerk> _randomPerks;
 
-        public AbilityType Type => _type;
+        public PlayerAbilityType Type => _type;
         public int CurrentValue => _currentValue;
         public int NextValue 
         { 
@@ -30,6 +28,14 @@ namespace Vurbiri.Colonization
 
                 return newValue;
             } 
+        }
+
+        public Ability(PlayerAbilityType type, int baseValue)
+        {
+            _type = type;
+            _baseValue = _currentValue = baseValue;
+            _permanentPerks = new();
+            _randomPerks = new();
         }
 
         public Ability(Ability ability)

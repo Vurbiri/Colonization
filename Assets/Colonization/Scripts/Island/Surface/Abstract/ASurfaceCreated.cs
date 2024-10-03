@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -21,6 +22,10 @@ namespace Vurbiri.Colonization
 
                 Destroy(_generator);
                 Destroy(this);
+
+                yield return null;
+
+                GC.Collect();
             }
             #endregion
         }

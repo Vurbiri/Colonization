@@ -34,16 +34,16 @@ namespace Vurbiri.Colonization
             EdificeType.Shrine => EdificeGroup.Shrine,
             EdificeType.PortOne or EdificeType.PortTwo or EdificeType.LighthouseOne or EdificeType.LighthouseTwo => EdificeGroup.Port,
             EdificeType.Camp or EdificeType.Town or EdificeType.Capital => EdificeGroup.Urban,
-            _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение EdificeType: {self}"),
+            _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение EdificeType - {self} в ToGroup()"),
         };
 
-        public static AbilityType ToAbilityType(this EdificeGroup self) => self switch
+        public static PlayerAbilityType ToAbilityType(this EdificeGroup self) => self switch
         {
-            EdificeGroup.None => AbilityType.None,
-            EdificeGroup.Shrine => AbilityType.MaxShrine,
-            EdificeGroup.Port => AbilityType.MaxPort,
-            EdificeGroup.Urban => AbilityType.MaxUrban,
-            _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение EdificeGroup: {self}"),
+            EdificeGroup.None => PlayerAbilityType.None,
+            EdificeGroup.Shrine => PlayerAbilityType.MaxShrine,
+            EdificeGroup.Port => PlayerAbilityType.MaxPort,
+            EdificeGroup.Urban => PlayerAbilityType.MaxUrban,
+            _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение EdificeGroup - {self} в ToAbilityType()"),
         };
 
     }

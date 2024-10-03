@@ -9,7 +9,10 @@ using Random = UnityEngine.Random;
 namespace Vurbiri.Colonization
 {
     [Serializable, JsonArray]
-    public class Currencies : AReactive<Currencies>, ISerializationCallbackReceiver, IEnumerable<int>
+    public class Currencies : AReactive<Currencies>, IEnumerable<int>
+#if UNITY_EDITOR
+        , ISerializationCallbackReceiver
+#endif 
     {
         [SerializeField] private int[] _values;
         [SerializeField] private int _amount;
@@ -178,6 +181,15 @@ namespace Vurbiri.Colonization
             return true;
         }
 
+        public IEnumerator<int> GetEnumerator()
+        {
+            for (int i = 0; i < _count; i++)
+                yield return _values[i];
+        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        #region ISerializationCallbackReceiver
+#if UNITY_EDITOR
         public void OnBeforeSerialize()
         {
             if (Application.isPlaying)
@@ -193,14 +205,7 @@ namespace Vurbiri.Colonization
         }
 
         public void OnAfterDeserialize() { }
-
-        public IEnumerator<int> GetEnumerator()
-        {
-            for (int i = 0; i < _count; i++)
-                yield return _values[i];
-        }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        
+#endif
+        #endregion
     }
 }

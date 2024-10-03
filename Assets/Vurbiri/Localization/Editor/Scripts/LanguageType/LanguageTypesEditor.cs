@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using VurbiriEditors;
 using static Vurbiri.Storage;
 
 namespace Vurbiri.Localization.Editors

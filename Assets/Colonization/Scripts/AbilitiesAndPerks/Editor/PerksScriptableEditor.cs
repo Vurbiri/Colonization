@@ -2,11 +2,12 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri.Colonization;
+using VurbiriEditors;
 
 namespace VurbiriEditor.Colonization
 {
     [CustomEditor(typeof(PerksScriptable), true), CanEditMultipleObjects]
-    internal class PerksScriptableEditor : Editor
+    internal class PerksScriptableEditor : AEditorGetVE<PerksScriptableEditor>
     {
         [SerializeField] private VisualTreeAsset _treeAssetList;
         [SerializeField] private VisualTreeAsset _treeAssetItem;

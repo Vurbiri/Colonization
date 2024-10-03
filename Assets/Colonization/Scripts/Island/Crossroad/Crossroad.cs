@@ -15,6 +15,7 @@ namespace Vurbiri.Colonization
 
         public Key Key => _key;
         public bool IsOccupied => _edifice.IsOccupied;
+        public bool IsUpgrade => _edifice.IsUpgrade;
         public EdificeType Type => _edifice.Type;
         public EdificeGroup Group => _edifice.Group;
         public EdificeType UpgradeType => _edifice.TypeNext;

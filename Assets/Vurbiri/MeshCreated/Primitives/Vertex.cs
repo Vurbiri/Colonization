@@ -49,6 +49,6 @@ namespace Vurbiri.CreatingMesh
         public static bool operator ==(Vertex a, Vertex b) => a._position == b._position && a._normal == b._normal && a._color.Equals(b._color);
         public static bool operator !=(Vertex a, Vertex b) => a._position != b._position || a._normal != b._normal || !a._color.Equals(b._color);
 
-        public override string ToString() => $"({_position}, {_normal}, {_color})";
+        public override readonly string ToString() => $"({_position}, {_normal}, {_color})";
     }
 }

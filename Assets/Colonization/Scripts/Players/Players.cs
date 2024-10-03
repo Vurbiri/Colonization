@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
             }
 
             foreach (var player in _players)
-                player.Load(island.Crossroads, _startResources);
+                player.Load(island.Crossroads);
 
             _current = _players[Enum<PlayerType>.Rand(0, MAX_PLAYERS)];
         }

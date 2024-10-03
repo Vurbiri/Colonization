@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class AEdifice : MonoBehaviour, IValueTypeEnum<EdificeType>, ISerializationCallbackReceiver
+    public abstract class AEdifice : MonoBehaviour, IValueTypeEnum<EdificeType>
+#if UNITY_EDITOR
+        , ISerializationCallbackReceiver
+#endif
     {
         [SerializeField] protected EdificeType _type;
         [SerializeField, Hide] private EdificeGroup _group;
@@ -89,6 +92,7 @@ namespace Vurbiri.Colonization
 
 
         #region ISerializationCallbackReceiver
+#if UNITY_EDITOR
         public void OnBeforeSerialize()
         {
             if (Application.isPlaying)
@@ -110,6 +114,7 @@ namespace Vurbiri.Colonization
         }
 
         public void OnAfterDeserialize() { }
+#endif
         #endregion
 
 #if UNITY_EDITOR

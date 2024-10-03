@@ -70,7 +70,7 @@ namespace Vurbiri.Colonization
 
             public float RadiusAvg => _sizeRatioRange.Avg * _radiusBase;
 
-            private List<Triangle> _triangles;
+            private readonly List<Triangle> _triangles = new(MAX_COUNT * 7);
             private Vector3 _peakPoint;
             private Vector3[] _basePoints;
             private float _sizeRatio, _height, _radius;
@@ -86,7 +86,9 @@ namespace Vurbiri.Colonization
                 _height = _heightBase * _sizeRatio;
                 _radius = _radiusBase * _sizeRatio;
 
-                _triangles = new(_countBranches * _countVertexRange.Max);
+                _triangles.Clear();
+                //_triangles.Capacity = _countBranches * _countVertexRange.Max;
+                //_triangles = new(_countBranches * _countVertexRange.Max);
 
                 for (int i = 0; i < _countBranches; i++)
                 {

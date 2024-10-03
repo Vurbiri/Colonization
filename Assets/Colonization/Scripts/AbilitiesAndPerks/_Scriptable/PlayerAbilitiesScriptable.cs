@@ -1,18 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
     [CreateAssetMenu(fileName = "PlayerAbilities", menuName = "Vurbiri/Colonization/PlayerAbilities", order = 51)]
-    public class PlayerAbilitiesScriptable : ScriptableObject, IEnumerable<Ability>
+    public class PlayerAbilitiesScriptable : ScriptableObject
     {
-        [SerializeField] private List<Ability> _abilities;
+        [SerializeField] private EnumArray<PlayerAbilityType, int> _abilities;
 
         public int Count => _abilities.Count;
 
-        public IEnumerator<Ability> GetEnumerator() => _abilities.GetEnumerator();
+        public EnumHashSet<PlayerAbilityType, Ability> GetAbilities()
+        {
+            EnumHashSet<PlayerAbilityType, Ability> set = new();
+            PlayerAbilityType[] types = Enum<PlayerAbilityType>.Values;
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            foreach (PlayerAbilityType type in types)
+                set.Add(new(type, _abilities[type]));
+
+            return set;
+        }
     }
 }

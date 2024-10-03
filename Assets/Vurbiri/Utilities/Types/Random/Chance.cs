@@ -8,16 +8,17 @@ namespace Vurbiri
         [SerializeField] private int _value;
         
         private int _negentropy;
+        private const int MAX_CHANCE = 100;
 
         public bool Roll
         {
             get
             {
                 _negentropy += _value;
-                if (_negentropy <= 0 || (_negentropy < 100 && Random.Range(0, 100) >= _negentropy))
+                if (_negentropy <= 0 || (_negentropy < MAX_CHANCE && Random.Range(0, MAX_CHANCE) >= _negentropy))
                     return false;
 
-                _negentropy -= 100;
+                _negentropy -= MAX_CHANCE;
                 return true;
             }
         }
@@ -26,9 +27,9 @@ namespace Vurbiri
         {
             _value = value;
             if (_value < 0) _value = 0;
-            if (_value > 100) _value = 100;
+            if (_value > MAX_CHANCE) _value = MAX_CHANCE;
 
-            _negentropy = new System.Random().Next(100);
+            _negentropy = new System.Random().Next(MAX_CHANCE);
         }
 
         public T Select<T>(T trueValue, T falseValue) => Roll ? trueValue : falseValue;
@@ -39,13 +40,15 @@ namespace Vurbiri
 
         public void OnBeforeSerialize()
         {
+#if UNITY_EDITOR
             if (_value < 0) _value = 0;
-            if (_value > 100) _value = 100;
+            if (_value > MAX_CHANCE) _value = MAX_CHANCE;
+#endif
         }
 
         public void OnAfterDeserialize()
         {
-            _negentropy = new System.Random().Next(100);
+            _negentropy = new System.Random().Next(MAX_CHANCE);
         }
 
         public static implicit operator Chance(int value) => new(value);

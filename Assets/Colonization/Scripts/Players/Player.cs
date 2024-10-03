@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
         private readonly PlayerType _type;
         private readonly PlayerVisual _visual;
         private readonly Roads _roads;
-        private readonly Dictionary<AbilityType, Ability> _abilities;
+        private readonly EnumHashSet<PlayerAbilityType, Ability> _abilities;
         private readonly Currencies _exchangeRate;
 
         public Player(PlayerType type, PlayerVisual visual, Currencies resources, Roads roads, PlayerAbilitiesScriptable abilities) : this(type, visual, roads, abilities) => _resources = resources;
@@ -41,13 +41,10 @@ namespace Vurbiri.Colonization
             _blood = 0;
             _roads = roads.Initialize(_type, _visual.color);
                         
-            _edifices[EdificeGroup.Urban] = new();
-            _edifices[EdificeGroup.Port] = new();
-            _edifices[EdificeGroup.Shrine] = new();
+            foreach (var group in Enum<EdificeGroup>.Values)
+                _edifices[group] = new();
 
-            _abilities = new(abilities.Count);
-            foreach (var ability in abilities)
-                _abilities[ability.Type] = new(ability);
+            _abilities = abilities.GetAbilities();
         }
 
         public IEnumerator Save_Coroutine(bool saveToFile = true)
@@ -56,7 +53,7 @@ namespace Vurbiri.Colonization
             return Storage.Save_Coroutine(_type.ToString(), this, saveToFile, _ => _roadsKey = null);
         }
 
-        public void Load(Crossroads crossroads, Currencies resources)
+        public void Load(Crossroads crossroads)
         {
             if (Storage.TryLoad(_type.ToString(), out PlayerLoadData data))
             {
@@ -66,8 +63,6 @@ namespace Vurbiri.Colonization
                 CreateCities(data);
                 return;
             }
-
-            _resources = new(resources);
 
             #region Local: CreateRoads(), CreateCities(), CreateRoad(...)
             //=================================
@@ -127,37 +122,37 @@ namespace Vurbiri.Colonization
 
         public void Profit(int hexId, Currencies freeGroundRes)
         {
-            int shrineCount = _edifices[EdificeGroup.Shrine].Count, shrineMaxRes = AbilityValue(AbilityType.ShrineMaxRes);
+            int shrineCount = _edifices[EdificeGroup.Shrine].Count, shrineMaxRes = AbilityValue(PlayerAbilityType.ShrineMaxRes);
 
             for (int i = 0; i < shrineCount; i++)
-                _blood.Value += AbilityValue(AbilityType.ShrinePassiveProfit);
+                _blood.Value += AbilityValue(PlayerAbilityType.ShrinePassiveProfit);
             _blood.Value = Mathf.Clamp(_blood.Value, 0, shrineMaxRes);
 
             if (hexId == CONST.ID_GATE)
             {
-                _blood.Value = Mathf.Clamp(_blood.Value + AbilityValue(AbilityType.ShrineProfit) * shrineCount, 0, shrineMaxRes);
+                _blood.Value = Mathf.Clamp(_blood.Value + AbilityValue(PlayerAbilityType.ShrineProfit) * shrineCount, 0, shrineMaxRes);
                 return;
             }
 
-            if (IsAbility(AbilityType.IsFreeGroundRes))
+            if (IsAbility(PlayerAbilityType.IsFreeGroundRes))
                 _resources.AddFrom(freeGroundRes);
 
             foreach (var port in _edifices[EdificeGroup.Port])
-                _resources.AddFrom(port.Profit(hexId, AbilityValue(AbilityType.PortsRatioRes)));
+                _resources.AddFrom(port.Profit(hexId, AbilityValue(PlayerAbilityType.PortsRatioRes)));
 
             Currencies profit;
             foreach (var urban in _edifices[EdificeGroup.Urban])
             {
                 profit = urban.Profit(hexId);
                 if (profit.Amount == 0 && urban.IsNotEnemy())
-                    profit.RandomAdd(AbilityValue(AbilityType.CompensationRes));
+                    profit.RandomAdd(AbilityValue(PlayerAbilityType.CompensationRes));
                 _resources.AddFrom(profit);
             }
         }
 
         public void UpdateExchangeRate()
         {
-            if(!_abilities.TryGetValue(AbilityType.ExchangeRate, out var ability))
+            if(!_abilities.TryGetValue((int)PlayerAbilityType.ExchangeRate, out var ability))
             {
                 Debug.LogError("Не найдена абилка ExchangeRate");
                 return;
@@ -184,14 +179,14 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public bool CanWallBuild(Crossroad crossroad) => IsAbility(AbilityType.IsWall) && crossroad.CanWallBuild(_type);
+        public bool CanWallBuild(Crossroad crossroad) => IsAbility(PlayerAbilityType.IsWall) && crossroad.CanWallBuild(_type);
         public void CrossroadWallBuy(Crossroad crossroad)
         {
             if (crossroad.WallBuy(_type, out Currencies cost))
                 _resources.Pay(cost);
         }
 
-        public bool CanRoadBuild(Crossroad crossroad) => IsAbility(AbilityType.MaxRoads, _roads.Count) && crossroad.CanRoadBuild(_type);
+        public bool CanRoadBuild(Crossroad crossroad) => IsAbility(PlayerAbilityType.MaxRoads, _roads.Count) && crossroad.CanRoadBuild(_type);
         public bool CanRoadBuy() => _resources >= _roads.Cost;
         public void RoadBuy(CrossroadLink link)
         {
@@ -203,7 +198,7 @@ namespace Vurbiri.Colonization
         {
             if (perk.TargetObject == TargetObjectPerk.Player)
             {
-                if (!_abilities.TryGetValue(perk.TargetAbility, out var ability))
+                if (!_abilities.TryGetValue((int)perk.TargetAbility, out var ability))
                 {
                     Debug.LogError($"Не найдена абилка {perk.TargetAbility}");
                     return false;
@@ -221,10 +216,10 @@ namespace Vurbiri.Colonization
 
         public override string ToString() => $"Player: {_type}";
 
-        private bool IsAbility(AbilityType abilityType, int value = 0) => AbilityValue(abilityType) > value;
-        private int AbilityValue(AbilityType abilityType)
+        private bool IsAbility(PlayerAbilityType abilityType, int value = 0) => AbilityValue(abilityType) > value;
+        private int AbilityValue(PlayerAbilityType abilityType)
         {
-            if (!_abilities.TryGetValue(abilityType, out var ability))
+            if (!_abilities.TryGetValue((int)abilityType, out var ability))
             {
                 Debug.LogError($"Не найдена абилка {abilityType}");
                 return 0;

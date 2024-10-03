@@ -53,10 +53,6 @@ namespace Vurbiri.Colonization
 
             Destroy(_island);
 
-            yield return null;
-
-            GC.Collect();
-
             for (int i = 0; i < 15; i ++)
                 yield return null;
 
@@ -64,7 +60,7 @@ namespace Vurbiri.Colonization
 
             yield return null;
 
-            Debug.Log("Start");
+            UnityEngine.Debug.Log("Start");
         }
 
         public void EndTurnPlayer()
@@ -76,7 +72,7 @@ namespace Vurbiri.Colonization
                 _turn++;
 
             int roll = _dices.Roll();
-            Debug.Log("ROLL: " + roll);
+            UnityEngine.Debug.Log("ROLL: " + roll);
             _players.Profit(roll, _island.Land.GetFreeGroundResource(roll));
         }
 
@@ -85,7 +81,7 @@ namespace Vurbiri.Colonization
             if (Players.Instance != null)
                 _players.DestroyGame();
 
-            Debug.Log("TEST (Game)");
+            UnityEngine.Debug.Log("TEST (Game)");
             foreach (AEdifice c in _prefabs)
                 c.Cost.Clear();
         }

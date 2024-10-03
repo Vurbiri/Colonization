@@ -7,7 +7,11 @@ using UnityEngine;
 namespace Vurbiri
 {
     [Serializable, JsonArray]
-    public class EnumArray<TType, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue> where TType : Enum
+    public class EnumArray<TType, TValue> : IEnumerable<TValue>
+#if UNITY_EDITOR
+        , ISerializationCallbackReceiver
+#endif 
+         where TType : Enum
     {
         [SerializeField] protected TValue[] _values;
         protected int _count;
@@ -44,6 +48,17 @@ namespace Vurbiri
                 _values[i] = collection[i];
         }
 
+        public IEnumerator<TValue> GetEnumerator()
+        {
+            for (int i = 0; i < _count; i++)
+                yield return _values[i];
+        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public static implicit operator EnumArray<TType, TValue>(TValue[] value) => new(value);
+
+        #region ISerializationCallbackReceiver
+#if UNITY_EDITOR
         public virtual void OnBeforeSerialize()
         {
             if (Application.isPlaying)
@@ -54,14 +69,7 @@ namespace Vurbiri
                 Array.Resize(ref _values, _count);
         }
         public void OnAfterDeserialize() { }
-
-        public IEnumerator<TValue> GetEnumerator()
-        {
-            for (int i = 0; i < _count; i++)
-                yield return _values[i];
-        }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public static implicit operator EnumArray<TType, TValue>(TValue[] value) => new(value);
+#endif
+        #endregion
     }
 }

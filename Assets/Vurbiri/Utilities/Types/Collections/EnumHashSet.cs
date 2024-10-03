@@ -6,9 +6,11 @@ using UnityEngine;
 namespace Vurbiri
 {
     [Serializable]
-    public class EnumHashSet<TType, TValue> : ISerializationCallbackReceiver, IEnumerable<TValue>
-                                          where TType : Enum
-                                          where TValue : class, IValueTypeEnum<TType>
+    public class EnumHashSet<TType, TValue> :
+#if UNITY_EDITOR
+        ISerializationCallbackReceiver,
+#endif
+        IEnumerable<TValue> where TType : Enum where TValue : class, IValueTypeEnum<TType>
     {
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;
@@ -138,6 +140,22 @@ namespace Vurbiri
             throw new IndexOutOfRangeException();
         }
 
+        public bool TryGetValue(int index, out TValue value)
+        {
+            foreach (TValue v in this)
+            {
+                if (index-- == 0)
+                {
+                    value = v;
+                    return v != null;
+                }
+            }
+
+            throw new IndexOutOfRangeException();
+        }
+
+        public bool TryGetValue(TType type, out TValue value) => TryGetValue(index: type.ToInt(), out value);
+
         public List<TValue> GetRange(TType typeStart, TType typeEnd)
         {
             int start = typeStart.ToInt(_offset), end = typeEnd.ToInt(_offset);
@@ -155,6 +173,7 @@ namespace Vurbiri
         }
 
         #region ISerializationCallbackReceiver
+#if UNITY_EDITOR
         public void OnBeforeSerialize()
         {
             if (Application.isPlaying)
@@ -192,7 +211,9 @@ namespace Vurbiri
         }
 
         public void OnAfterDeserialize() { }
+#endif
         #endregion
+
 
         public IEnumerator<TValue> GetEnumerator() => new EnumHashSetValueEnumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

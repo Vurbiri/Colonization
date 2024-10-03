@@ -39,6 +39,10 @@ namespace Vurbiri.Colonization
 
                 Destroy(_generator);
                 Destroy(this);
+
+                yield return null;
+
+                System.GC.Collect();
             }
             //=================================
             IEnumerator WindmillPlay_Coroutine()

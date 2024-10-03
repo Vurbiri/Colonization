@@ -31,16 +31,17 @@ namespace Vurbiri.Colonization
             yield return null;
 
             float x, z;
-            for (int i = 0; i < COUNT_DRUSE; i++)
+            for (int k = 0; k < COUNT_DRUSE; k++)
             {
-                x = COS_HEX_DIRECT[i] * radius + offsetRadius;
-                z = SIN_HEX_DIRECT[i] * radius + offsetRadius;
+                x = COS_HEX_DIRECT[k] * radius + offsetRadius;
+                z = SIN_HEX_DIRECT[k] * radius + offsetRadius;
 
                 foreach (var crystal in _druse.Create(new(x, -_offsetY, z)))
                 {
                     customMesh.AddTriangles(crystal);
                     yield return null;
                 }
+
             }
 
             yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
