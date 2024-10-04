@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    [Serializable]
+    [Serializable, JsonArray]
     public class IdHashSet<TId, TValue> :
 #if UNITY_EDITOR
         ISerializationCallbackReceiver,
@@ -14,16 +15,15 @@ namespace Vurbiri
     {
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;
+        private readonly int _capacity;
+        private readonly IdHashSetIdsEnumerable _typesEnumerable;
 
         public int Count => _count;
         public int Capacity => _capacity;
 
-        public IEnumerable<int> CurrentIds => _typesEnumerable;
+        public IEnumerable<Id<TId>> CurrentIds => _typesEnumerable;
         public TValue this[int id] { get => _values[id]; set => Replace(value); }
-        public TValue this[Id<TId> id] { get => _values[id]; set => Replace(value); }
-
-        private readonly int _capacity;
-        private readonly IdHashSetIdsEnumerable _typesEnumerable;
+        public TValue this[Id<TId> id] { get => _values[id.ToInt]; set => Replace(value); }
 
         public IdHashSet()
         {
@@ -41,11 +41,12 @@ namespace Vurbiri
         }
 
         public bool ContainsKey(int id) => _values[id] != null;
-        public bool Contains(TValue value) => _values[value.Id] != null;
+        public bool ContainsKey(Id<TId> id) => _values[id.ToInt] != null;
+        public bool Contains(TValue value) => _values[value.Id.ToInt] != null;
 
         public bool TryAdd(TValue value)
         {
-            int index = value.Id;
+            int index = value.Id.ToInt;
 
             if (_values[index] != null)
                 return false;
@@ -64,7 +65,7 @@ namespace Vurbiri
 
         public void Replace(TValue value)
         {
-            int index = value.Id;
+            int index = value.Id.ToInt;
 
             if (_values[index] == null)
                 _count++;
@@ -108,6 +109,7 @@ namespace Vurbiri
             }
             throw new IndexOutOfRangeException(GetType().Name, null);
         }
+        public bool TryGetValue(Id<TId> id, out TValue value) => TryGetValue(id.ToInt, out value);
 
         public List<TValue> GetRange(int start, int end)
         {
@@ -137,19 +139,19 @@ namespace Vurbiri
             public IdHashSetValueEnumerator(IdHashSet<TId, TValue> parent) : base(parent) { }
         }
         //***********************************
-        public class IdHashSetIdsEnumerable : IEnumerable<int>
+        public class IdHashSetIdsEnumerable : IEnumerable<Id<TId>>
         {
             private readonly IdHashSet<TId, TValue> _parent;
 
             public IdHashSetIdsEnumerable(IdHashSet<TId, TValue> parent) => _parent = parent;
 
-            public IEnumerator<int> GetEnumerator() => new IdHashSetIdsEnumerator(_parent);
+            public IEnumerator<Id<TId>> GetEnumerator() => new IdHashSetIdsEnumerator(_parent);
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
         //***********************************
-        public class IdHashSetIdsEnumerator : AIdHashSetEnumerator, IEnumerator<int>
+        public class IdHashSetIdsEnumerator : AIdHashSetEnumerator, IEnumerator<Id<TId>>
         {
-            public int Current => _currentId;
+            public Id<TId> Current => _currentId;
             object IEnumerator.Current => _currentId;
 
             public IdHashSetIdsEnumerator(IdHashSet<TId, TValue> parent) : base(parent) { }
@@ -160,7 +162,7 @@ namespace Vurbiri
             private readonly TValue[] _values;
             private readonly int _capacity;
             private int _cursor = -1;
-            protected int _currentId;
+            protected Id<TId> _currentId;
             protected TValue _currentValue;
 
             public AIdHashSetEnumerator(IdHashSet<TId, TValue> parent)
@@ -216,7 +218,7 @@ namespace Vurbiri
                         _values[j] = null;
                 }
 
-                index = value.Id;
+                index = value.Id.ToInt;
                 if (index == i)
                 {
                     _count++;

@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.UI
             _localization = Language.Instance;
         }
 
-        public void SetupHint(IdEdifice type)
+        public void SetupHint(EdificeId type)
         {
             //_buttonIcon.sprite = _edificeSprites[type];
             Debug.Log("!!!!!!!!!!!!!!!!!!!");

@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private string _keySave = "isl";
         [Space]
-        [SerializeField] private EnumHashSet<SurfaceType, SurfaceScriptable> _surfaces;
+        [SerializeField] private IdHashSet<SurfaceType, SurfaceScriptable> _surfaces;
         [Space]
         [SerializeField] private Land _land;
         [SerializeField] private Crossroads _crossroads;
@@ -131,7 +131,7 @@ namespace Vurbiri.Colonization
 
             foreach (HexagonData data in hexagonsData)
             {
-                data.Surface = _surfaces[data.Type];
+                data.Surface = _surfaces[data.SurfaceId];
                 data.Position = _land.KeyToPosition(data.Key);
 
                 hex = _land.CreateHexagon(data);

@@ -9,16 +9,7 @@ namespace Vurbiri.Colonization
     internal class PlayerAbilitiesScriptableEditor : AEditorGetVE<PlayerAbilitiesScriptableEditor>
     {
         [SerializeField] private VisualTreeAsset _treeAssetList;
-        //[SerializeField] private VisualTreeAsset _treeAssetItem;
 
-        public override VisualElement CreateInspectorGUI()
-        {
-            VisualElement root = _treeAssetList.CloneTree();
-
-            //var list = root.Q<ListView>("Abilities");
-            //list.makeItem = _treeAssetItem.CloneTree;
-
-            return root;
-        }
+        public override VisualElement CreateInspectorGUI() => _treeAssetList.CloneTree();
     }
 }

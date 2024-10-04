@@ -4,17 +4,16 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class Ability : AReactive<int>, IValueId<IdPlayerAbility>
+    public class Ability : AReactive<int>, IValueId<PlayerAbilityId>
     {
-        private readonly int _id;
+        private readonly Id<PlayerAbilityId> _id;
         private readonly int _baseValue;
 
         private int _currentValue;
-        private readonly HashSet<IPerk> _permanentPerks;
-        private readonly HashSet<IPerk> _randomPerks;
+        private readonly HashSet<IPerk<PlayerAbilityId>> _permanentPerks;
+        private readonly HashSet<IPerk<PlayerAbilityId>> _randomPerks;
 
-        public Id<IdPlayerAbility> Id => _id;
-        public int IdInt => _id;
+        public Id<PlayerAbilityId> Id => _id;
         public int CurrentValue => _currentValue;
         public int NextValue 
         { 
@@ -24,7 +23,7 @@ namespace Vurbiri.Colonization
                     return _currentValue;
 
                 int newValue = _currentValue;
-                foreach(IPerk perk in _randomPerks)
+                foreach(IPerk<PlayerAbilityId> perk in _randomPerks)
                     newValue = perk.Apply(newValue);
 
                 return newValue;
@@ -33,7 +32,7 @@ namespace Vurbiri.Colonization
 
         public Ability(int id, int baseValue)
         {
-            _id = id;
+            _id = new(id);
             _baseValue = _currentValue = baseValue;
             _permanentPerks = new();
             _randomPerks = new();
@@ -47,7 +46,7 @@ namespace Vurbiri.Colonization
             _randomPerks = new();
         }
 
-        public bool TryAddPerk(IPerk perk)
+        public bool TryAddPerk(IPerk<PlayerAbilityId> perk)
         {
             if (perk.IsPermanent)
             {

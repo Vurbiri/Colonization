@@ -10,13 +10,12 @@ namespace Vurbiri.Colonization
 
         private static Chance chanceAltMesh = new(50);
 
-        public override void Initialize(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
+        public override void Initialize(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links)
         {
             if(chanceAltMesh.Roll)
                 GetComponent<MeshFilter>().sharedMesh = _altMesh;
             
             base.Initialize(owner, links);
-
         }
     }
 }

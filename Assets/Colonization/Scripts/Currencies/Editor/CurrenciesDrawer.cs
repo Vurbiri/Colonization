@@ -6,7 +6,7 @@ using Vurbiri.Colonization;
 namespace VurbiriEditor.Colonization
 {
     [CustomPropertyDrawer(typeof(Currencies))]
-    public class CurrenciesDrawer : EnumArrayDrawer
+    public class CurrenciesDrawer : IdArrayDrawer
     {
         private const float BUTTON_RATE_POS = 1.1f, BUTTON_CLEAR_SIZE = 60f, BUTTON_PLUSMINUS_SIZE = 20f, LABEL_SIZE = 100f;
         private const string NAME_AMOUNT = "_amount", BUTTON_CLEAR = "Clear", BUTTON_PLUS = "+", BUTTON_MINUS = "-";
@@ -80,7 +80,7 @@ namespace VurbiriEditor.Colonization
             #endregion
         }
 
-        protected override Type GetTypeEnum() => typeof(CurrencyType);
+        protected override Type GetTypeId() => typeof(CurrencyId);
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {

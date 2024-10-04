@@ -5,18 +5,18 @@ namespace Vurbiri.Colonization.UI
     [CreateAssetMenu(fileName = "CurrenciesIcons", menuName = "Vurbiri/Colonization/CurrenciesIcons", order = 51)]
     public class CurrenciesIconsScriptable : ScriptableObject
     {
-        [SerializeField] private EnumArray<CurrencyType, CurrencyIcon> _icons;
+        [SerializeField] private IdArray<CurrencyId, CurrencyIcon> _icons;
         [Space]
         [SerializeField] private CurrencyIcon _blood;
 
         public CurrencyIcon this[int index] => _icons[index];
-        public CurrencyIcon this[CurrencyType type] => _icons[(int) type];
+        public CurrencyIcon this[Id<CurrencyId> id] => _icons[id.ToInt];
 
         public CurrencyIcon Blood => _blood;
 
 
 #if UNITY_EDITOR
-        public EnumArray<CurrencyType, CurrencyIcon> Icons => _icons;
+        public IdArray<CurrencyId, CurrencyIcon> Icons => _icons;
 #endif
     }
 }

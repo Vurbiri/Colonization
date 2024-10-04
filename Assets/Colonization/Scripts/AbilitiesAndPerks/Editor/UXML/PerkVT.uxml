@@ -5,8 +5,8 @@
             <ui:SliderInt label="Level" high-value="3" binding-path="_level" show-input-field="true" low-value="1" />
             <ui:TextField picking-mode="Ignore" label="Key Name" binding-path="_keyName" name="Name" class="unity-property-field" />
             <ui:TextField picking-mode="Ignore" label="Key Description" binding-path="_keyDescription" />
-            <ui:EnumField label="Target Object" type="Vurbiri.Colonization.TargetObjectPerk, Assembly-CSharp" binding-path="_target" />
-            <ui:EnumField label="Target Ability" type="Vurbiri.Colonization.AbilityType, Assembly-CSharp" binding-path="_ability" />
+            <uie:PropertyField binding-path="_target" label="Target Object" />
+            <uie:PropertyField binding-path="_ability" label="Target Ability" />
             <ui:SliderInt label="Value" high-value="10" binding-path="_value" show-input-field="true" />
             <uie:PropertyField binding-path="_chance" />
             <ui:VisualElement style="flex-grow: 0; align-self: stretch; border-left-color: rgb(77, 77, 77); border-right-color: rgb(77, 77, 77); border-top-color: rgb(77, 77, 77); border-bottom-color: rgb(77, 77, 77); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; justify-content: center; align-items: stretch; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px;">

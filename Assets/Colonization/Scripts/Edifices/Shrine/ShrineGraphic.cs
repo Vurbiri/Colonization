@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         [SerializeField, Range(0f, 1f)] private float _alfa = 0.85f;
         [SerializeField, Range(0f, 1f)] private float _brightness = 0.75f;
 
-        public override void Initialize(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
+        public override void Initialize(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links)
         {
             Player player = Players.Instance[owner];
 

@@ -3,29 +3,26 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class AEdifice : MonoBehaviour, IValueId<IdEdifice>
-#if UNITY_EDITOR
-        , ISerializationCallbackReceiver
-#endif
+    public abstract class AEdifice : MonoBehaviour, IValueId<EdificeId>
     {
-        [SerializeField] protected Id<IdEdifice> _id;
-        [SerializeField, Hide] private int _idGroup;
+        [SerializeField] protected Id<EdificeId> _id;
+        [SerializeField, Hide] private int _groupId;
         [SerializeField, Range(0, 3)] private int _profit;
         [SerializeField, Hide] protected bool _isUpgrade;
         [SerializeField, Hide] protected bool _isBuildWall;
         [SerializeField] protected Currencies _cost;
         [Space]
         [SerializeField] protected AEdifice _prefabUpgrade;
-        [SerializeField, Hide] protected int _idNext;
-        [SerializeField, Hide] protected int _idGroupNext;
+        [SerializeField, Hide] protected int _nextId;
+        [SerializeField, Hide] protected int _nextGroupId;
         [SerializeField, Range(1f, 5f)] private float _radiusCollider = 1.75f;
         [Space]
         [SerializeField] protected AEdificeGraphic _graphic;
 
-        public Id<IdEdifice> Id => _id;
-        public int IdGroup => _idGroup;
-        public int IdNext => _idNext;
-        public int IdGroupNext => _idGroupNext;
+        public Id<EdificeId> Id => _id;
+        public int GroupId => _groupId;
+        public int NextId => _nextId;
+        public int NextGroupId => _nextGroupId;
         public PlayerType Owner => _owner;
         public bool IsUpgrade => _isUpgrade;
         public bool IsOccupied => _owner != PlayerType.None;
@@ -45,7 +42,7 @@ namespace Vurbiri.Colonization
             _cost.Rand(_profit);
         }
 
-        public virtual void Setup(AEdifice edifice, EnumHashSet<LinkType, CrossroadLink> links)
+        public virtual void Setup(AEdifice edifice, IdHashSet<LinkId, CrossroadLink> links)
         {
             _owner = edifice._owner;
             _isWall = edifice._isWall;
@@ -54,13 +51,13 @@ namespace Vurbiri.Colonization
             _graphic.Initialize(_owner, links);
         }
 
-        public virtual bool Build(AEdifice prefab, PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, bool isWall, out AEdifice edifice)
+        public virtual bool Build(AEdifice prefab, PlayerType owner, IdHashSet<LinkId, CrossroadLink> links, bool isWall, out AEdifice edifice)
         {
             edifice = this;
             return false;
         }
 
-        public virtual bool Upgrade(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, out AEdifice edifice)
+        public virtual bool Upgrade(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links, out AEdifice edifice)
         {
             if (_isUpgrade && _owner == owner)
             {
@@ -75,7 +72,7 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public virtual bool WallBuild(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, out Currencies cost)
+        public virtual bool WallBuild(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links, out Currencies cost)
         {
             cost = null;
             return _isBuildWall;
@@ -86,40 +83,28 @@ namespace Vurbiri.Colonization
         public virtual bool CanWallBuild(PlayerType owner) => _isBuildWall && _owner == owner;
         public virtual bool CanWallBuy(Currencies cash) => _isBuildWall;
 
-        public virtual void AddRoad(LinkType type, PlayerType owner) { }
+        public virtual void AddRoad(Id<LinkId> linkId, PlayerType owner) { }
 
         public virtual void Show(bool isShow) { }
 
-
-        #region ISerializationCallbackReceiver
 #if UNITY_EDITOR
-        public void OnBeforeSerialize()
+        protected virtual void OnValidate()
         {
-            if (Application.isPlaying)
-                return;
+            _groupId = EdificeId.ToGroup(_id.ToInt);
+            _isBuildWall = _groupId == EdificeGroupId.Urban && _id != EdificeId.Camp;
 
-            _idGroup = IdEdifice.ToGroup(_id);
-            _isBuildWall = _idGroup == IdEdificeGroup.Urban && _id != IdEdifice.Camp;
-            
-            if(_isUpgrade = _prefabUpgrade != null)
+            if (_isUpgrade = _prefabUpgrade != null)
             {
-                _idNext = _prefabUpgrade._id;
-                _idGroupNext = _prefabUpgrade._idGroup;
+                _nextId = _prefabUpgrade._id.ToInt;
+                _nextGroupId = _prefabUpgrade._groupId;
             }
             else
             {
-                _idNext = IdEdifice.None;
-                _idGroupNext = IdEdificeGroup.None;
+                _nextId = EdificeId.None;
+                _nextGroupId = EdificeGroupId.None;
             }
-        }
 
-        public void OnAfterDeserialize() { }
-#endif
-        #endregion
 
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
             _graphic = GetComponentInChildren<AEdificeGraphic>();
         }
 #endif

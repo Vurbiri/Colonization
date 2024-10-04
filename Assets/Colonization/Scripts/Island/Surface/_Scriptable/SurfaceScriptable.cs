@@ -3,22 +3,23 @@ using UnityEngine;
 namespace Vurbiri.Colonization
 {
     [CreateAssetMenu(fileName = "Surface_", menuName = "Vurbiri/Colonization/Surface", order = 51)]
-    public class SurfaceScriptable : ScriptableObject, IValueTypeEnum<SurfaceType>
+    public class SurfaceScriptable : ScriptableObject, IValueId<SurfaceType>
     {
-        [SerializeField] private SurfaceType _type;
+        [SerializeField] private Id<SurfaceType> _id;
         [SerializeField] private Color32 _color;
         [Space]
-        [SerializeField] private CurrencyType[] _profits;
+        [SerializeField] private bool _isProfit = true;
+        [SerializeField] private Id<CurrencyId>[] _profits;
         [Space]
         [SerializeField] private ASurface _prefabSurface;
 
-
-        public SurfaceType Type => _type;
+        public Id<SurfaceType> Id => _id;
         public Color32 Color => _color;
-        public bool IsWater => _type == SurfaceType.Water;
-        public bool IsGate => _type == SurfaceType.Gate;
+        public bool IsWater => _id == SurfaceType.Water;
+        public bool IsGate => _id == SurfaceType.Gate;
+        public bool IsProfit => _isProfit;
 
-        public CurrencyType GetCurrency() => _profits.Rand();
+        public Id<CurrencyId> GetCurrency() => _profits.Rand();
 
         public void Create(Transform parent) 
         {

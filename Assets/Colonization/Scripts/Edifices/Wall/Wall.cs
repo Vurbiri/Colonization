@@ -10,13 +10,13 @@ namespace Vurbiri.Colonization
 
         public Currencies Cost => _cost;
 
-        public void Initialize(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links)
+        public void Initialize(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links)
         {
             gameObject.SetActive(true);
             _graphic.Initialize(owner, links);
         }
 
-        public void AddRoad(LinkType type, PlayerType owner) => _graphic.AddRoad(type, owner);
+        public void AddRoad(Id<LinkId> linkId, PlayerType owner) => _graphic.AddRoad(linkId, owner);
 
 
 #if UNITY_EDITOR

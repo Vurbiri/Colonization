@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -6,7 +7,7 @@ using Vurbiri;
 namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(IdArray<,>))]
-    internal class IdArrayDrawer : ADrawerGetConstFieldName
+    public class IdArrayDrawer : ADrawerGetConstFieldName
     {
         private const int INDEX_TYPE = 0;
         protected const float Y_SPACE = 2f;
@@ -26,7 +27,7 @@ namespace VurbiriEditor
             {
                 _propertyValues = property.FindPropertyRelative(NAME_ARRAY);
                 _count = _propertyValues.arraySize;
-                List<string> names = GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
+                List<string> names = GetNames();
 
                 EditorGUI.indentLevel++;
                 for (int i = 0; i < _count; i++)
@@ -60,6 +61,8 @@ namespace VurbiriEditor
             //=================================
             #endregion
         }
+
+        protected override Type GetTypeId() => fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE];
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {

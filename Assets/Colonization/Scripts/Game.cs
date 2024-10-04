@@ -27,6 +27,7 @@ namespace Vurbiri.Colonization
             _players = Players.Instance;
             _eventBus = EventBus.Instance;
 
+
             //Debug.Log("TEST");
             //foreach (AEdifice c in _prefabs)
             //    c.SetCost();

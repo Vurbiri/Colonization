@@ -28,7 +28,7 @@ namespace VurbiriEditor
             Type typeValue = fieldInfo.FieldType.GetGenericArguments()[INDEX_VALUE];
             SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
             int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue, count = propertyValues.arraySize;
-            List<string> names = GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
+            List<string> names = GetNames();
             _countMax = names.Count;
 
             label = EditorGUI.BeginProperty(position, label, property);
@@ -180,6 +180,8 @@ namespace VurbiriEditor
             }
             #endregion
         }
+
+        protected override Type GetTypeId() => fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE];
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {

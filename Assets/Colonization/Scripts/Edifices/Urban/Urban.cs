@@ -7,17 +7,17 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private Wall _wall;
 
-        public override void Setup(AEdifice edifice, EnumHashSet<LinkType, CrossroadLink> links)
+        public override void Setup(AEdifice edifice, IdHashSet<LinkId, CrossroadLink> links)
         {
             base.Setup(edifice, links);
 
-            if (_id == IdEdifice.Camp)
+            if (_id == EdificeId.Camp)
             {
                 foreach (var link in links)
                 {
                     if (link.Owner == _owner)
                     {
-                        _graphic.transform.localRotation = CONST.LINK_ROTATIONS[link.Type];
+                        _graphic.transform.localRotation = CONST.LINK_ROTATIONS[link.Id];
                         break;
                     }
                 }
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
             _isBuildWall = _isBuildWall && !_isWall;
         }
 
-        public override bool WallBuild(PlayerType owner, EnumHashSet<LinkType, CrossroadLink> links, out Currencies cost)
+        public override bool WallBuild(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links, out Currencies cost)
         {
             if (_isBuildWall && _owner == owner)
             {
@@ -50,15 +50,17 @@ namespace Vurbiri.Colonization
 
         public override bool CanWallBuy(Currencies cash) => _isBuildWall && _wall != null && _wall.Cost <= cash;
 
-        public override void AddRoad(LinkType type, PlayerType owner)
+        public override void AddRoad(Id<LinkId> linkId, PlayerType owner)
         {
             if(_isWall && _wall != null)
-                _wall.AddRoad(type, owner);
+                _wall.AddRoad(linkId, owner);
         }
 
 #if UNITY_EDITOR
-        protected void OnValidate()
+        protected override void OnValidate()
         {
+            base.OnValidate();
+            
             if(_isBuildWall && _wall == null)
                 _wall = VurbiriEditor.Utility.FindAnyPrefab<Wall>();
         }

@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
         public int Amount => _amount;
         public IReadOnlyList<int> Values => _values;
 
-        public int this[CurrencyType type] { get => _values[(int)type]; set => Set(type, value); }
+        public int this[Id<CurrencyId> id] { get => _values[id.ToInt]; set => Set(id, value); }
         public int this[int index] { get => _values[index]; set => Set(index, value); }
 
         public Currencies(IReadOnlyList<int> array) : this()
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
         }
         public Currencies()
         {
-            _count = Enum<CurrencyType>.Count;
+            _count = CurrencyId.Count;
             _values = new int[_count];
             _amount = 0;
         }
@@ -67,7 +67,7 @@ namespace Vurbiri.Colonization
 
             ActionThisChange?.Invoke(this);
         }
-        public void Set(CurrencyType type, int value) => Set(index: (int)type, value);
+        public void Set(Id<CurrencyId> id, int value) => Set(id.ToInt, value);
 
         public void SetFrom(IReadOnlyList<int> array)
         {
@@ -99,7 +99,7 @@ namespace Vurbiri.Colonization
 
             ActionThisChange?.Invoke(this);
         }
-        public void Increment(CurrencyType type) => Increment(index: (int)type);
+        public void Increment(Id<CurrencyId> id) => Increment(id.ToInt);
 
         public void Add(int index, int value)
         {
@@ -111,7 +111,7 @@ namespace Vurbiri.Colonization
 
             ActionThisChange?.Invoke(this);
         }
-        public void Add(CurrencyType type, int value) => Add(index: (int)type, value);
+        public void Add(Id<CurrencyId> id, int value) => Add(id.ToInt, value);
 
         public void RandomAdd(int value)
         {
@@ -143,6 +143,27 @@ namespace Vurbiri.Colonization
                 _values[i] -= cost._values[i];
 
             _amount -= cost._amount;
+
+            ActionThisChange?.Invoke(this);
+        }
+
+        public void Clamp(int max)
+        {
+            if (_amount <= max)
+                return;
+
+            int index;
+            while(_amount > max)
+            {
+                index = Random.Range(0, _count);
+                if (_values[index] > 0)
+                {
+                    _values[index]--;
+                    _amount--;
+
+                    //ActionThisChange?.Invoke(this);
+                }
+            }
 
             ActionThisChange?.Invoke(this);
         }
@@ -195,7 +216,7 @@ namespace Vurbiri.Colonization
             if (Application.isPlaying)
                 return;
 
-            _count = Enum<CurrencyType>.Count;
+            _count = CurrencyId.Count;
             if (_values.Length != _count)
                 Array.Resize(ref _values, _count);
 

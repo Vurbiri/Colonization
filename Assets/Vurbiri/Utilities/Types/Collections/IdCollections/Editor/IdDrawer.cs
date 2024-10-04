@@ -15,34 +15,39 @@ namespace VurbiriEditor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
-
             var v = GetNamesAndValues();
 
             label = EditorGUI.BeginProperty(position, label, property);
-            valueProperty.intValue = EditorGUI.IntPopup(position, label.text, valueProperty.intValue, v.strings, v.ints, EditorStyles.popup);
+            valueProperty.intValue = EditorGUI.IntPopup(position, label.text, valueProperty.intValue, v.names, v.values, EditorStyles.popup);
             EditorGUI.EndProperty();
 
             #region Local GetNamesAndValues()
             //=====================================================
-            (string[] strings, int[] ints) GetNamesAndValues()
+            (string[] names, int[] values) GetNamesAndValues()
             {
                 Type t_attribute = typeof(NotIdAttribute), t_int = typeof(int);
-                FieldInfo[] fields = fieldInfo.FieldType.GetGenericArguments()[0].GetFields(BindingFlags.Public | BindingFlags.Static);
+                Type t_field = fieldInfo.FieldType;
+                if(t_field.IsArray)
+                    t_field = t_field.GetElementType();
+                //if(t_field.IsGenericType)
+                t_field = t_field.GetGenericArguments()[0];
+
+                FieldInfo[] fields = t_field.GetFields(BindingFlags.Public | BindingFlags.Static);
                 
                 int count = fields.Length;
-                List<string> strings = new(count);
-                List<int> ints = new(count);
+                List<string> names = new(count);
+                List<int> values = new(count);
 
                 foreach (FieldInfo field in fields)
                 {
                     if (field.GetCustomAttributes(t_attribute, false).Length > 0 || field.FieldType != t_int || !field.IsLiteral)
                         continue;
 
-                    strings.Add(field.Name);
-                    ints.Add((int)field.GetValue(null));
+                    names.Add(field.Name);
+                    values.Add((int)field.GetValue(null));
                 }
 
-                return (strings.ToArray(), ints.ToArray());
+                return (names.ToArray(), values.ToArray());
             }
             #endregion 
         }

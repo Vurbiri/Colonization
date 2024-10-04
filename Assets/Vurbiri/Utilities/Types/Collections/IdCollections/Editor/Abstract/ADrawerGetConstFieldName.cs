@@ -6,11 +6,11 @@ using Vurbiri;
 
 namespace VurbiriEditor
 {
-    internal class ADrawerGetConstFieldName : PropertyDrawer
+    public abstract class ADrawerGetConstFieldName : PropertyDrawer
     {
-
-        protected List<string> GetNames(Type type)
+        protected List<string> GetNames()
         {
+            Type type = GetTypeId();
             Type t_attribute = typeof(NotIdAttribute), t_int = typeof(int);
             FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
 
@@ -27,5 +27,7 @@ namespace VurbiriEditor
 
             return strings;
         }
+
+        protected abstract Type GetTypeId();
     }
 }

@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
     public abstract class AEdificeSidesGraphic<T> : AEdificeGraphic where T : AEdificeSide 
     {
         [Space]
-        [SerializeField] protected EnumHashSet<LinkType, T> _graphicSides;
+        [SerializeField] protected IdHashSet<LinkId, T> _graphicSides;
 
     }
 }

@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
     [CreateAssetMenu(fileName = "EdificesPrefabs", menuName = "Vurbiri/Colonization/EdificesPrefabs", order = 51)]
     public class EdificesScriptable : ScriptableObject, IEnumerable<AEdifice>
     {
-        [SerializeField] private IdHashSet<IdEdifice, AEdifice> _prefabs;
+        [SerializeField] private IdHashSet<EdificeId, AEdifice> _prefabs;
 
         public AEdifice this[int id] => _prefabs[id];
 

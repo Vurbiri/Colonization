@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
         private readonly PlayerType _type;
         private readonly PlayerVisual _visual;
         private readonly Roads _roads;
-        private readonly IdHashSet<IdPlayerAbility, Ability> _abilities;
+        private readonly AbilitySet<PlayerAbilityId> _abilities;
         private readonly Currencies _exchangeRate;
 
         public Player(PlayerType type, PlayerVisual visual, Currencies resources, Roads roads, PlayerAbilitiesScriptable abilities) : this(type, visual, roads, abilities) => _resources = resources;
@@ -122,42 +122,39 @@ namespace Vurbiri.Colonization
 
         public void Profit(int hexId, Currencies freeGroundRes)
         {
-            int shrineCount = _edifices[IdEdificeGroup.Shrine].Count, shrineMaxRes = AbilityValue(IdPlayerAbility.ShrineMaxRes);
+            int shrineCount = _edifices[EdificeGroupId.Shrine].Count, shrineMaxRes = _abilities.GetValue(PlayerAbilityId.ShrineMaxRes);
 
             for (int i = 0; i < shrineCount; i++)
-                _blood.Value += AbilityValue(IdPlayerAbility.ShrinePassiveProfit);
+                _blood.Value += _abilities.GetValue(PlayerAbilityId.ShrinePassiveProfit);
             _blood.Value = Mathf.Clamp(_blood.Value, 0, shrineMaxRes);
 
             if (hexId == CONST.ID_GATE)
             {
-                _blood.Value = Mathf.Clamp(_blood.Value + AbilityValue(IdPlayerAbility.ShrineProfit) * shrineCount, 0, shrineMaxRes);
+                _blood.Value = Mathf.Clamp(_blood.Value + _abilities.GetValue(PlayerAbilityId.ShrineProfit) * shrineCount, 0, shrineMaxRes);
+                _resources.Clamp(_abilities.GetValue(PlayerAbilityId.MaxResources));
                 return;
             }
 
-            if (IsAbility(IdPlayerAbility.IsFreeGroundRes))
+            if (_abilities.IsMore(PlayerAbilityId.IsFreeGroundRes))
                 _resources.AddFrom(freeGroundRes);
 
-            foreach (var port in _edifices[IdEdificeGroup.Port])
-                _resources.AddFrom(port.Profit(hexId, AbilityValue(IdPlayerAbility.PortsRatioRes)));
+            foreach (var port in _edifices[EdificeGroupId.Port])
+                _resources.AddFrom(port.Profit(hexId, _abilities.GetValue(PlayerAbilityId.PortsRatioRes)));
 
             Currencies profit;
-            foreach (var urban in _edifices[IdEdificeGroup.Urban])
+            foreach (var urban in _edifices[EdificeGroupId.Urban])
             {
                 profit = urban.Profit(hexId);
                 if (profit.Amount == 0 && urban.IsNotEnemy())
-                    profit.RandomAdd(AbilityValue(IdPlayerAbility.CompensationRes));
+                    profit.RandomAdd(_abilities.GetValue(PlayerAbilityId.CompensationRes));
                 _resources.AddFrom(profit);
             }
         }
 
         public void UpdateExchangeRate()
         {
-            if(!_abilities.TryGetValue(IdPlayerAbility.ExchangeRate, out var ability))
-            {
-                Debug.LogError("Не найдена абилка ExchangeRate");
-                return;
-            }
-            
+            Ability ability = _abilities[PlayerAbilityId.ExchangeRate];
+
             Currencies newRate = new();
             for (int i = 0; i < newRate.Count; i++)
                 newRate[i] = ability.NextValue;
@@ -167,26 +164,27 @@ namespace Vurbiri.Colonization
 
         public bool CanCrossroadUpgrade(Crossroad crossroad)
         {
-            int upgradeGroup = crossroad.IdUpgradeGroup;
-            return (crossroad.IdGroup != IdEdificeGroup.None || IsAbility(IdEdificeGroup.ToIdAbility(upgradeGroup), _edifices[upgradeGroup].Count)) && crossroad.CanUpgrade(_type);
+            int upgradeGroup = crossroad.NextGroupId;
+            return (crossroad.GroupId != EdificeGroupId.None || _abilities.IsMore(EdificeGroupId.ToIdAbility(upgradeGroup), _edifices[upgradeGroup].Count)) 
+                   && crossroad.CanUpgrade(_type);
         }
         public void CrossroadUpgradeBuy(Crossroad crossroad)
         {
             if (crossroad.UpgradeBuy(_type, out Currencies cost))
             {
-                _edifices[crossroad.IdGroup].Add(crossroad);
+                _edifices[crossroad.GroupId].Add(crossroad);
                 _resources.Pay(cost);
             }
         }
 
-        public bool CanWallBuild(Crossroad crossroad) => IsAbility(IdPlayerAbility.IsWall) && crossroad.CanWallBuild(_type);
+        public bool CanWallBuild(Crossroad crossroad) => _abilities.IsMore(PlayerAbilityId.IsWall) && crossroad.CanWallBuild(_type);
         public void CrossroadWallBuy(Crossroad crossroad)
         {
             if (crossroad.WallBuy(_type, out Currencies cost))
                 _resources.Pay(cost);
         }
 
-        public bool CanRoadBuild(Crossroad crossroad) => IsAbility(IdPlayerAbility.MaxRoads, _roads.Count) && crossroad.CanRoadBuild(_type);
+        public bool CanRoadBuild(Crossroad crossroad) => _abilities.IsMore(PlayerAbilityId.MaxRoads, _roads.Count) && crossroad.CanRoadBuild(_type);
         public bool CanRoadBuy() => _resources >= _roads.Cost;
         public void RoadBuy(CrossroadLink link)
         {
@@ -194,21 +192,12 @@ namespace Vurbiri.Colonization
             _resources.Pay(_roads.Cost);
         }
 
-        public bool PerkBuy(IPerk perk)
+        public bool PerkBuy(IPerk<PlayerAbilityId> perk)
         {
-            if (perk.TargetObject == IdTargetObjectPerk.Player)
+            if (perk.TargetObject == TargetOfPerkId.Player && _abilities.TryAddPerk(perk))
             {
-                if (!_abilities.TryGetValue((int)perk.TargetAbility, out var ability))
-                {
-                    Debug.LogError($"Не найдена абилка {perk.TargetAbility}");
-                    return false;
-                }
-
-                if (ability.TryAddPerk(perk))
-                {
-                    _resources.Pay(perk.Cost);
-                    return true;
-                }
+                _resources.Pay(perk.Cost);
+                return true;
             }
 
             return false;
@@ -216,17 +205,6 @@ namespace Vurbiri.Colonization
 
         public override string ToString() => $"Player: {_type}";
 
-        private bool IsAbility(int idAbility, int value = 0) => AbilityValue(idAbility) > value;
-        private int AbilityValue(int idAbility)
-        {
-            if (!_abilities.TryGetValue(idAbility, out var ability))
-            {
-                Debug.LogError($"Не найдена абилка {idAbility}");
-                return 0;
-            }
-
-            return ability.NextValue;
-        }
 
         #region Nested: PlayerLoadData
         //***********************************

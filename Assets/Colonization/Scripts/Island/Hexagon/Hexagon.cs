@@ -20,7 +20,8 @@ namespace Vurbiri.Colonization
         public bool IsGround => !_isWater && !_isGate;
         public bool IsWaterOccupied => _isWater && IsOccupied();
         public bool IsGroundOccupied => !_isWater && !_isGate && IsOccupied();
-        public CurrencyType Currency => _surface.GetCurrency();
+        public bool IsProfit => _surface.IsProfit;
+        public Id<CurrencyId> Currency => _surface.GetCurrency();
 
         #region private
         private int _id;

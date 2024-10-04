@@ -42,8 +42,9 @@ namespace Vurbiri.Colonization
         public const int ID_GATE = 13;
         public static readonly ReadOnlyCollection<int> NUMBERS = new((new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 }));
 
-        public static readonly EnumArray<LinkType, Quaternion> LINK_ROTATIONS 
+        public static readonly IdArray<LinkId, Quaternion> LINK_ROTATIONS 
             = new (new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, -120f, 0f), Quaternion.Euler(0f, 0f, 0f) });
+
 
         static CONST()
         {

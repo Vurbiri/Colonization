@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public class CrossroadLink : IValueTypeEnum<LinkType>
+    public class CrossroadLink : IValueId<LinkId>
     {
-        public LinkType Type => _type;
+        public Id<LinkId> Id => _id;
         public bool IsWater => _isWater;
         public Vector3 Position => _middle;
         public PlayerType Owner { get => _owner; set => _owner = value; }
@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
 
         private Crossroad _start, _end;
         private PlayerType _owner;
-        private readonly LinkType _type;
+        private readonly Id<LinkId> _id;
         private readonly bool _isWater;
         private readonly Vector3 _middle;
 
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
         public CrossroadLink(Crossroad[] arr, bool isWater)
         {
             _start = arr[0]; _end = arr[1];
-            _type = ToLinkType(_end - _start);
+            _id = ToLinkType(_end - _start);
 
             if (!(_start.AddLink(this) && _end.AddLink(this)))
                 return;
@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
 
             // Local: ToLinkType(..)
             //=================================
-            LinkType ToLinkType(Key key) => (LinkType)(System.Array.IndexOf(NEAR_CROSS, key) % 3);
+            Id<LinkId> ToLinkType(Key key) => new(System.Array.IndexOf(NEAR_CROSS, key) % 3);
         }
 
         public void SetStart(Crossroad cross)
@@ -46,14 +46,14 @@ namespace Vurbiri.Colonization
         public void RoadBuilt(PlayerType owner)
         {
             _owner = owner;
-            _start.RoadBuilt(_type, owner);
-            _end.RoadBuilt(_type, owner);
+            _start.RoadBuilt(_id, owner);
+            _end.RoadBuilt(_id, owner);
         }
 
         public Crossroad Other(Crossroad crossroad) => crossroad == _start ? _end : _start;
 
         public bool Contains(Key key) => key == _start.Key || key == _end.Key;
 
-        public override string ToString() => $"({_type}: [{_start.Key} -> {_end.Key}])";
+        public override string ToString() => $"({_id}: [{_start.Key} -> {_end.Key}])";
     }
 }
