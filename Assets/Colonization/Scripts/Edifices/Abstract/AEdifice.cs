@@ -3,29 +3,29 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class AEdifice : MonoBehaviour, IValueTypeEnum<EdificeType>
+    public abstract class AEdifice : MonoBehaviour, IValueId<IdEdifice>
 #if UNITY_EDITOR
         , ISerializationCallbackReceiver
 #endif
     {
-        [SerializeField] protected EdificeType _type;
-        [SerializeField, Hide] private EdificeGroup _group;
+        [SerializeField] protected Id<IdEdifice> _id;
+        [SerializeField, Hide] private int _idGroup;
         [SerializeField, Range(0, 3)] private int _profit;
         [SerializeField, Hide] protected bool _isUpgrade;
         [SerializeField, Hide] protected bool _isBuildWall;
         [SerializeField] protected Currencies _cost;
         [Space]
         [SerializeField] protected AEdifice _prefabUpgrade;
-        [SerializeField, Hide] protected EdificeType _typeNext;
-        [SerializeField, Hide] protected EdificeGroup _groupNext;
+        [SerializeField, Hide] protected int _idNext;
+        [SerializeField, Hide] protected int _idGroupNext;
         [SerializeField, Range(1f, 5f)] private float _radiusCollider = 1.75f;
         [Space]
         [SerializeField] protected AEdificeGraphic _graphic;
 
-        public EdificeType Type => _type;
-        public EdificeGroup Group => _group;
-        public EdificeType TypeNext => _typeNext;
-        public EdificeGroup GroupNext => _groupNext;
+        public Id<IdEdifice> Id => _id;
+        public int IdGroup => _idGroup;
+        public int IdNext => _idNext;
+        public int IdGroupNext => _idGroupNext;
         public PlayerType Owner => _owner;
         public bool IsUpgrade => _isUpgrade;
         public bool IsOccupied => _owner != PlayerType.None;
@@ -98,18 +98,18 @@ namespace Vurbiri.Colonization
             if (Application.isPlaying)
                 return;
 
-            _group = _type.ToGroup();
-            _isBuildWall = _group == EdificeGroup.Urban && _type != EdificeType.Camp;
+            _idGroup = IdEdifice.ToGroup(_id);
+            _isBuildWall = _idGroup == IdEdificeGroup.Urban && _id != IdEdifice.Camp;
             
             if(_isUpgrade = _prefabUpgrade != null)
             {
-                _typeNext = _prefabUpgrade._type;
-                _groupNext = _prefabUpgrade._group;
+                _idNext = _prefabUpgrade._id;
+                _idGroupNext = _prefabUpgrade._idGroup;
             }
             else
             {
-                _typeNext = EdificeType.None;
-                _groupNext = EdificeGroup.None;
+                _idNext = IdEdifice.None;
+                _idGroupNext = IdEdificeGroup.None;
             }
         }
 

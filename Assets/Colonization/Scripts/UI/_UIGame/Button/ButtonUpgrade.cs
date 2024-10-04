@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Image _buttonIcon;
         [Space]
-        [SerializeField] private EnumArray<EdificeType, Sprite> _edificeSprites;
+        //[SerializeField] private EnumArray<EdificeType, Sprite> _edificeSprites;
 
         private CmButton _button;
         private Language _localization;
@@ -28,9 +28,10 @@ namespace Vurbiri.Colonization.UI
             _localization = Language.Instance;
         }
 
-        public void SetupHint(EdificeType type)
+        public void SetupHint(IdEdifice type)
         {
-            _buttonIcon.sprite = _edificeSprites[type];
+            //_buttonIcon.sprite = _edificeSprites[type];
+            Debug.Log("!!!!!!!!!!!!!!!!!!!");
 
             _keyType = type.ToString();
             _text = GetTextFormat(_localization);

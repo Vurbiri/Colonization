@@ -4,8 +4,8 @@ namespace Vurbiri.Colonization
     {
         public int Id { get; }
         public int Level { get; }
-        public TargetObjectPerk TargetObject { get; }
-        public PlayerAbilityType TargetAbility { get; }
+        public Id<IdTargetObjectPerk> TargetObject { get; }
+        public Id<IdPlayerAbility> TargetAbility { get; }
         public Currencies Cost { get; }
         public bool IsPermanent { get; }
         // public string Value { get; }

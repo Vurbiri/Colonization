@@ -183,23 +183,6 @@ namespace VurbiriEditor
                 for (int index = 0; index < count; index++)
                     propertyValues.GetArrayElementAtIndex(index).objectReferenceValue = null;
             }
-            //Array GetEnum()
-            //{
-            //    Array arr = Enum.GetValues(typeKey);
-            //    SerializedProperty propertyFlag = property.FindPropertyRelative(NAME_FLAG);
-
-            //    if (!propertyFlag.boolValue)
-            //    {
-            //        Array.Sort(arr);
-            //        return arr;
-            //    }
-
-            //    Array arrNotMinus = Array.CreateInstance(typeKey, count);
-            //    for (int i = 0; i < count; i++)
-            //        arrNotMinus.SetValue(arr.GetValue(i), i);
-
-            //    return arrNotMinus;
-            //}
             #endregion
         }
 

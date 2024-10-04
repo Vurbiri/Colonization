@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         {
             base.Setup(edifice, links);
 
-            if (_type == EdificeType.Camp)
+            if (_id == IdEdifice.Camp)
             {
                 foreach (var link in links)
                 {

@@ -7,8 +7,8 @@ namespace Vurbiri.Colonization
             _graphic.Initialize(_owner, links);
 
             _prefabUpgrade = edifice;
-            _typeNext = edifice.Type;
-            _groupNext = edifice.Group;
+            _idNext = edifice.Id;
+            _idGroupNext = edifice.IdGroup;
             _isUpgrade = true;
         }
 

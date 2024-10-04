@@ -218,40 +218,6 @@ namespace Vurbiri
         public IEnumerator<TValue> GetEnumerator() => new EnumHashSetValueEnumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-#if UNITY_EDITOR
-        public void OnValidate()
-        {
-            if (_values.Length != _capacity)
-                Array.Resize(ref _values, _capacity);
-
-            TValue value; _count = 0;
-            for (int index, i = 0; i < _capacity; i++)
-            {
-                value = _values[i];
-                if (value == null)
-                    continue;
-
-                for (int j = i + 1; j < _capacity; j++)
-                {
-                    if (_values[j] == null)
-                        continue;
-
-                    if (value.Type.Equals(_values[j].Type))
-                        _values[j] = null;
-                }
-
-                index = value.Type.ToInt(_offset);
-                if (index == i)
-                {
-                    _count++;
-                    continue;
-                }
-
-                (_values[i], _values[index]) = (_values[index], _values[i]);
-                i--;
-            }
-        }
-#endif
 
         #region Nested classes: EnumHashSetValueEnumerator, EnumHashSetKeysEnumerable, EnumHashSetKeysEnumerator, AEnumHashSetEnumerator
         //***********************************

@@ -10,8 +10,8 @@ namespace Vurbiri.Colonization
         [SerializeField] private int _level;
         [SerializeField] private string _keyName;
         [SerializeField] private string _keyDescription;
-        [SerializeField] private TargetObjectPerk _target;
-        [SerializeField] private PlayerAbilityType _ability;
+        [SerializeField] private Id<IdTargetObjectPerk> _target;
+        [SerializeField] private Id<IdPlayerAbility> _ability;
         [SerializeField] private int _value;
         [SerializeField] private Chance _chance;
         [SerializeField] private Currencies _cost;
@@ -20,11 +20,11 @@ namespace Vurbiri.Colonization
         public int Level => _level;
         public string KeyName => _keyName;
         public string KeyDescription => _keyDescription;
-        public TargetObjectPerk TargetObject => _target;
-        public PlayerAbilityType TargetAbility => _ability;
+        public Id<IdTargetObjectPerk> TargetObject => _target;
+        public Id<IdPlayerAbility> TargetAbility => _ability;
         public Currencies Cost => _cost;
         public bool IsPermanent => _chance == 100;
        
-        public int Apply(int value) => value += _chance == 100 ? _value : _chance.Select(_value, 0);
+        public int Apply(int value) => value + (_chance == 100 ? _value : _chance.Select(_value, 0));
     }
 }

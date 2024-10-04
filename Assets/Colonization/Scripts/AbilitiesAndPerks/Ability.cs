@@ -4,16 +4,17 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class Ability : AReactive<int>, IValueTypeEnum<PlayerAbilityType>
+    public class Ability : AReactive<int>, IValueId<IdPlayerAbility>
     {
-        private readonly PlayerAbilityType _type;
+        private readonly int _id;
         private readonly int _baseValue;
 
         private int _currentValue;
         private readonly HashSet<IPerk> _permanentPerks;
         private readonly HashSet<IPerk> _randomPerks;
 
-        public PlayerAbilityType Type => _type;
+        public Id<IdPlayerAbility> Id => _id;
+        public int IdInt => _id;
         public int CurrentValue => _currentValue;
         public int NextValue 
         { 
@@ -30,9 +31,9 @@ namespace Vurbiri.Colonization
             } 
         }
 
-        public Ability(PlayerAbilityType type, int baseValue)
+        public Ability(int id, int baseValue)
         {
-            _type = type;
+            _id = id;
             _baseValue = _currentValue = baseValue;
             _permanentPerks = new();
             _randomPerks = new();
@@ -40,7 +41,7 @@ namespace Vurbiri.Colonization
 
         public Ability(Ability ability)
         {
-            _type = ability._type;
+            _id = ability._id;
             _baseValue = _currentValue = ability._baseValue;
             _permanentPerks = new();
             _randomPerks = new();
