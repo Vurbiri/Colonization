@@ -11,7 +11,7 @@ namespace Vurbiri
 #if UNITY_EDITOR
         ISerializationCallbackReceiver,
 #endif
-        IEnumerable<TValue> where TId : AIdType<TId> where TValue : class, IValueId<TId>
+        IReadOnlyList<TValue> where TId : AIdType<TId> where TValue : class, IValueId<TId>
     {
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;

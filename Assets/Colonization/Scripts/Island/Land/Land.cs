@@ -133,14 +133,10 @@ namespace Vurbiri.Colonization
         public Currencies GetFreeGroundResource(int id)
         {
             Currencies res = new();
-            Hexagon hex;
             foreach (var key in _hexagonsIdForKey[id])
-            {
-                hex = _hexagons[key];
-                if (!hex.IsGroundOccupied)
-                    res.Increment(hex.Currency);
-            }
-            
+                if (_hexagons[key].TryGetFreeGroundResource(out int currencyId))
+                    res.Increment(currencyId);
+
             return res;
         }
 

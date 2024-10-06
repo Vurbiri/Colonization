@@ -11,7 +11,7 @@ namespace Vurbiri
 #if UNITY_EDITOR
         ISerializationCallbackReceiver,
 #endif
-        IEnumerable<TValue> where TId : AIdType<TId>
+        IReadOnlyList<TValue> where TId : AIdType<TId>
     {
         [SerializeField] protected TValue[] _values;
         protected int _count;
@@ -20,8 +20,6 @@ namespace Vurbiri
 
         public virtual TValue this[Id<TId> id] { get => _values[id.ToInt]; set => _values[id.ToInt] = value; }
         public virtual TValue this[int index] { get => _values[index]; set => _values[index] = value; }
-
-        public IReadOnlyList<TValue> Values => _values;
 
         public IdArray()
         {

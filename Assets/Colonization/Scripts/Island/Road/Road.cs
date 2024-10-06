@@ -19,14 +19,14 @@ namespace Vurbiri.Colonization
 
         private readonly LinkList<Crossroad> _crossroads = new();
         private readonly LinkList<Vector3> _points = new();
-        private PlayerType _owner;
+        private Id<PlayerId> _owner;
         private GradientLine _gradient;
         private Vector2 _textureScale;
         private float _textureScaleX;
 
-        public void Create(Crossroad start, Crossroad end, PlayerType type, Color color)
+        public void Create(Crossroad start, Crossroad end, Id<PlayerId> playerId, Color color)
         {
-            _owner = type;
+            _owner = playerId;
             _crossroads.Add(start, end);
 
             InitializeLineRenderer(start.Position, color);

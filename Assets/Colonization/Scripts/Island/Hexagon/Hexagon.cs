@@ -1,27 +1,19 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization
 {
     [RequireComponent(typeof(Collider))]
     public class Hexagon : MonoBehaviour, ISelectable
     {
-        [SerializeField] private TMP_Text _idText;
-        [SerializeField] private TextRotation _textRotation;
+        [SerializeField] private HexagonCaption _hexagonCaption;
         [Space]
         [SerializeField] private Collider _collider;
 
         public Key Key => _key;
-        public int Id => _id;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
-        public bool IsGround => !_isWater && !_isGate;
         public bool IsWaterOccupied => _isWater && IsOccupied();
-        public bool IsGroundOccupied => !_isWater && !_isGate && IsOccupied();
-        public bool IsProfit => _surface.IsProfit;
-        public Id<CurrencyId> Currency => _surface.GetCurrency();
 
         #region private
         private int _id;
@@ -38,15 +30,15 @@ namespace Vurbiri.Colonization
         public void Initialize(HexagonData data, float waterLevel, Transform cameraTransform)
         {
             (_key, _id, _surface) = data.GetValues();
-            _idText.text = _id.ToString();
-            _textRotation.Initialize(cameraTransform);
+
+            _hexagonCaption.Initialize(cameraTransform, _id, _surface.Currencies);
 
             _isGate = _surface.IsGate;
             _isWater = _surface.IsWater;
 
             _collider.enabled = !_isWater;
 
-            EventBus.Instance.EventHexagonIdShow += _idText.gameObject.SetActive;
+            EventBus.Instance.EventHexagonIdShow += _hexagonCaption.gameObject.SetActive;
 
             _surface.Create(transform);
 
@@ -69,7 +61,17 @@ namespace Vurbiri.Colonization
         public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
         public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
 
-        
+        public bool TryGetProfit(int hexId, out int currencyId)
+        {
+            currencyId = CurrencyId.Blood;
+            return !_isGate && hexId == _id && (currencyId = _surface.GetCurrency()) != CurrencyId.Blood;
+        }
+
+        public bool TryGetFreeGroundResource(out int currencyId)
+        {
+            currencyId = CurrencyId.Blood;
+            return !_isWater && !_isGate && !IsOccupied() && (currencyId = _surface.GetCurrency()) != CurrencyId.Blood;
+        }
 
         public bool IsOccupied()
         {
@@ -91,10 +93,8 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_idText == null)
-                _idText = GetComponentInChildren<TMP_Text>();
-            if (_textRotation == null)
-                _textRotation = GetComponentInChildren<TextRotation>();
+            if (_hexagonCaption == null)
+                _hexagonCaption = GetComponentInChildren<HexagonCaption>();
             if (_collider == null)
                 _collider = GetComponent<Collider>();
 

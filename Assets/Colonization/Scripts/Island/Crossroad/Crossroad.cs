@@ -85,9 +85,9 @@ namespace Vurbiri.Colonization
             return true;
         }
 
-        public bool Build(PlayerType playerType, int id, bool isWall)
+        public bool Build(Id<PlayerId> playerId, int id, bool isWall)
         {
-            if (_edifice.Build(_prefabs[id], playerType, _links, isWall, out _edifice))
+            if (_edifice.Build(_prefabs[id], playerId, _links, isWall, out _edifice))
             {
                 _eventBus.EventCrossroadMarkShow -= Show;
                 _collider.radius = _edifice.Radius;
@@ -96,14 +96,14 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public bool CanUpgrade(PlayerType owner)
+        public bool CanUpgrade(Id<PlayerId> playerId)
         {
-            return _edifice.IsUpgrade && (_edifice.Owner == owner ||
+            return _edifice.IsUpgrade && (_edifice.Owner == playerId ||
             _edifice.NextGroupId switch
             {
-                EdificeGroupId.Shrine => IsRoadConnect(owner),
+                EdificeGroupId.Shrine => IsRoadConnect(playerId),
                 EdificeGroupId.Port => WaterCheck(),
-                EdificeGroupId.Urban => NeighborCheck(owner),
+                EdificeGroupId.Urban => NeighborCheck(playerId),
                 _ => false
             });
 
@@ -111,7 +111,7 @@ namespace Vurbiri.Colonization
             //=================================
             bool WaterCheck()
             {
-                if (_countFreeLink == 0 && !IsRoadConnect(owner))
+                if (_countFreeLink == 0 && !IsRoadConnect(playerId))
                     return false;
 
                 foreach (var hex in _hexagons)
@@ -121,7 +121,7 @@ namespace Vurbiri.Colonization
                 return true;
             }
             //=================================
-            bool NeighborCheck(PlayerType owner)
+            bool NeighborCheck(Id<PlayerId> playerId)
             {
                 AEdifice neighbor;
                 foreach (var link in _links)
@@ -130,14 +130,14 @@ namespace Vurbiri.Colonization
                     if (neighbor.GroupId == EdificeGroupId.Urban && neighbor.IsOccupied)
                         return false;
                 }
-                return IsRoadConnect(owner);
+                return IsRoadConnect(playerId);
             }
             #endregion
         }
         public bool CanUpgradeBuy(Currencies cash) => _edifice.CanUpgradeBuy(cash);
-        public bool UpgradeBuy(PlayerType playerType, out Currencies cost)
+        public bool UpgradeBuy(Id<PlayerId> playerId, out Currencies cost)
         {
-            if (_edifice.Upgrade(playerType, _links, out _edifice))
+            if (_edifice.Upgrade(playerId, _links, out _edifice))
             {
                 cost = _edifice.Cost;
                 _eventBus.EventCrossroadMarkShow -= Show;
@@ -148,39 +148,39 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public bool CanWallBuild(PlayerType owner) => _edifice.CanWallBuild(owner);
+        public bool CanWallBuild(Id<PlayerId> playerId) => _edifice.CanWallBuild(playerId);
         public bool CanWallBuy(Currencies cash) => _edifice.CanWallBuy(cash);
-        public bool WallBuy(PlayerType playerType, out Currencies cost) => _edifice.WallBuild(playerType, _links, out cost);
+        public bool WallBuy(Id<PlayerId> playerId, out Currencies cost) => _edifice.WallBuild(playerId, _links, out cost);
 
 
-        public bool CanRoadBuild(PlayerType type) => _countFreeLink > 0 && IsRoadConnect(type);
-        public void RoadBuilt(Id<LinkId> id, PlayerType owned)
+        public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
+        public void RoadBuilt(Id<LinkId> id, Id<PlayerId> playerId)
         {
             _countFreeLink--;
-            _edifice.AddRoad(id, owned);
+            _edifice.AddRoad(id, playerId);
         }
 
-        public bool IsFullyOwned(PlayerType owned)
+        public bool IsFullyOwned(Id<PlayerId> playerId)
         {
             if (_links.Count <= 1)
                 return false;
 
             if (_countFreeLink > 0)
-                return _edifice.Owner == owned;
+                return _edifice.Owner == playerId;
 
             foreach (var link in _links)
-                if (link.Owner != owned)
+                if (link.Owner != playerId)
                     return false;
 
             return true;
         }
-        public bool IsRoadConnect(PlayerType type)
+        public bool IsRoadConnect(Id<PlayerId> playerId)
         {
-            if (_edifice.Owner == type)
+            if (_edifice.Owner == playerId)
                 return true;
 
             foreach (var link in _links)
-                if (link.Owner == type)
+                if (link.Owner == playerId)
                     return true;
 
             return false;
@@ -190,8 +190,8 @@ namespace Vurbiri.Colonization
         {
             Currencies profit = new();
             foreach (var hex in _hexagons)
-                if (hex.Id == idHex && hex.IsProfit)
-                    profit.Add(hex.Currency, _edifice.Profit * ratio);
+                if (hex.TryGetProfit(idHex, out int currencyId))
+                    profit.Add(currencyId, _edifice.Profit * ratio);
 
             return profit;
         }

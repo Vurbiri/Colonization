@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization.UI
                 button = _roadButtons[i];
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() => OnClick(link));
-                button.Interactable = link.Owner == PlayerType.None;
+                button.Interactable = link.Owner == PlayerId.None;
                 _buttonsGraphic[i].color = button.Interactable ? currentColor : _players[link.Owner].Color;
 
                 button.gameObject.SetActive(true);

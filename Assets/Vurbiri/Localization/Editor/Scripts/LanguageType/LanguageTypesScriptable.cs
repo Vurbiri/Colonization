@@ -56,5 +56,13 @@ namespace Vurbiri.Localization.Editors
 
         public static LanguageTypesScriptable GetOrCreateSelf() => GetOrCreateSelf(LANG_TYPES_NAME, LANG_TYPES_PATH);
         public static SerializedObject GetSerializedSelf() => new(GetOrCreateSelf(LANG_TYPES_NAME, LANG_TYPES_PATH));
+
+#if UNITY_EDITOR
+        public void EmptyMethod()
+        {
+            if (_auto)
+                Debug.Log("Чтобы в консоль не ругалась");
+        }
+#endif
     }
 }

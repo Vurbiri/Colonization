@@ -105,11 +105,14 @@ namespace VurbiriEditor.Colonization
             File.WriteAllBytes(path, bytes);
             AssetDatabase.Refresh();
             AssetDatabase.SaveAssets();
+
+            foreach(var bm in bitmaps)
+                bm.Dispose();
         }
 
         #region Nested: CurrencyBitmap
         //*******************************************************
-        private class CurrencyBitmap
+        private class CurrencyBitmap : System.IDisposable
         {
             private const int BYTE = byte.MaxValue, COMPONENT_COUNT = 4;
 
@@ -165,6 +168,11 @@ namespace VurbiriEditor.Colonization
                     c[i] = Mathf.RoundToInt(color[i] * BYTE);
 
                 return Color.FromArgb(c[3], c[0], c[1], c[2]);
+            }
+
+            public void Dispose()
+            {
+                _bitmap.Dispose();
             }
         }
 

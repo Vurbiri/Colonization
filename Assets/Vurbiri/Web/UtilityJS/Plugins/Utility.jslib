@@ -14,7 +14,9 @@ var UtilityPlugin =
         try {
             var sKey = UTF8ToString(key);
             var dt = UTF8ToString(data);
-            window.localStorage.setItem(sKey, btoa(dt));
+            var sv = btoa(dt);
+            console.log("=== Save size:" + sv.length);
+            window.localStorage.setItem(sKey, sv);
             console.log("++ SetStorage  ++");
             return true;
         }

@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private Currencies _cost;
 
         private Transform _thisTransform;
-        private PlayerType _type;
+        private Id<PlayerId> _id;
         private Color _color;
         private readonly List<Road> _roadsLists = new();
         private int _count = 0;
@@ -20,19 +20,22 @@ namespace Vurbiri.Colonization
         public Currencies Cost => _cost;
         public int Count => _count;
 
-        public Roads Initialize(PlayerType type, Color color)
+        public Roads Initialize(Id<PlayerId> id, Color color)
         {
             _thisTransform = transform;
-            _type = type;
+            _id = id;
             _color = color;
-            name = NAME + type;
+
+#if UNITY_EDITOR
+            name = NAME + PlayerId.Names[id.ToInt];
+#endif
 
             return this;
         }
 
         public void Build(CrossroadLink link)
         {
-            link.RoadBuilt(_type);
+            link.RoadBuilt(_id);
             _count++;
 
             if (!AddRoadLine(link))
@@ -53,7 +56,7 @@ namespace Vurbiri.Colonization
             {
                 Road roadLine;
                 roadLine = Instantiate(_prefabRoad, _thisTransform);
-                roadLine.Create(link.Start, link.End, _type, _color);
+                roadLine.Create(link.Start, link.End, _id, _color);
                 _roadsLists.Add(roadLine);
             }
             #endregion

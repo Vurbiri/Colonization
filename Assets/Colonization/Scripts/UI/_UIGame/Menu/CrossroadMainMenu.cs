@@ -52,11 +52,9 @@ namespace Vurbiri.Colonization.UI
             _playerCurrent = _players.Current;
             _currentCrossroad = crossroad;
 
-            Debug.Log("!!!!!!!!!!!!!!!!!!!");
-            //if (ButtonSetup(_buttonUpgrade.Button, _playerCurrent.CanCrossroadUpgrade(crossroad), crossroad.CanUpgradeBuy(_playerCurrent.Resources)))
-            //    _buttonUpgrade.SetupHint(crossroad.IdUpgrade);
+            if (ButtonSetup(_buttonUpgrade.Button, _playerCurrent.CanCrossroadUpgrade(crossroad), crossroad.CanUpgradeBuy(_playerCurrent.Resources)))
+                _buttonUpgrade.SetupHint(crossroad.IdUpgrade);
 
-            ButtonSetup(_buttonUpgrade.Button, _playerCurrent.CanCrossroadUpgrade(crossroad), crossroad.CanUpgradeBuy(_playerCurrent.Resources));
             ButtonSetup(_buttonWall, _playerCurrent.CanWallBuild(crossroad), crossroad.CanWallBuy(_playerCurrent.Resources));
             ButtonSetup(_buttonRoads, _playerCurrent.CanRoadBuild(crossroad), _playerCurrent.CanRoadBuy());
 

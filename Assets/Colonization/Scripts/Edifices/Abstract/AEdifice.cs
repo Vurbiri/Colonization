@@ -23,16 +23,16 @@ namespace Vurbiri.Colonization
         public int GroupId => _groupId;
         public int NextId => _nextId;
         public int NextGroupId => _nextGroupId;
-        public PlayerType Owner => _owner;
+        public Id<PlayerId> Owner => _owner;
         public bool IsUpgrade => _isUpgrade;
-        public bool IsOccupied => _owner != PlayerType.None;
+        public bool IsOccupied => _owner != PlayerId.None;
         public Currencies Cost => _cost;
         public int Profit => _profit;
         public bool IsBuildWall => _isBuildWall;
         public bool IsWall => _isWall;
         public float Radius => _radiusCollider;
 
-        protected PlayerType _owner = PlayerType.None;
+        protected Id<PlayerId> _owner = PlayerId.None;
         protected bool _isWall = false;
 
         //TEST
@@ -51,13 +51,13 @@ namespace Vurbiri.Colonization
             _graphic.Initialize(_owner, links);
         }
 
-        public virtual bool Build(AEdifice prefab, PlayerType owner, IdHashSet<LinkId, CrossroadLink> links, bool isWall, out AEdifice edifice)
+        public virtual bool Build(AEdifice prefab, Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, bool isWall, out AEdifice edifice)
         {
             edifice = this;
             return false;
         }
 
-        public virtual bool Upgrade(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links, out AEdifice edifice)
+        public virtual bool Upgrade(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, out AEdifice edifice)
         {
             if (_isUpgrade && _owner == owner)
             {
@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public virtual bool WallBuild(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links, out Currencies cost)
+        public virtual bool WallBuild(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, out Currencies cost)
         {
             cost = null;
             return _isBuildWall;
@@ -80,10 +80,10 @@ namespace Vurbiri.Colonization
 
         public virtual bool CanUpgradeBuy(Currencies cash) => _isUpgrade && _prefabUpgrade._cost <= cash;
 
-        public virtual bool CanWallBuild(PlayerType owner) => _isBuildWall && _owner == owner;
+        public virtual bool CanWallBuild(Id<PlayerId> owner) => _isBuildWall && _owner == owner;
         public virtual bool CanWallBuy(Currencies cash) => _isBuildWall;
 
-        public virtual void AddRoad(Id<LinkId> linkId, PlayerType owner) { }
+        public virtual void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) { }
 
         public virtual void Show(bool isShow) { }
 

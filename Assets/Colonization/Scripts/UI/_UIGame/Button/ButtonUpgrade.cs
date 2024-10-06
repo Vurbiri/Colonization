@@ -10,15 +10,15 @@ namespace Vurbiri.Colonization.UI
     {
         [Space]
         [SerializeField] private string _keyType = "Shrine";
-        [SerializeField, Multiline] private string _format = "<align=\"center\"><b>{0}</b>\r\n";
+        [SerializeField, Multiline] private string _format = "<align=\"center\">{0}\r\n";
         [Space]
         [SerializeField] private Image _buttonIcon;
         [Space]
-        //[SerializeField] private EnumArray<EdificeType, Sprite> _edificeSprites;
+        [SerializeField] private IdArray<EdificeId, View> _edificeView;
 
         private CmButton _button;
         private Language _localization;
-        
+
         public CmButton Button => _button;
 
         public override void Initialize()
@@ -28,12 +28,13 @@ namespace Vurbiri.Colonization.UI
             _localization = Language.Instance;
         }
 
-        public void SetupHint(EdificeId type)
+        public void SetupHint(int edificeId)
         {
-            //_buttonIcon.sprite = _edificeSprites[type];
-            Debug.Log("!!!!!!!!!!!!!!!!!!!");
+            View view = _edificeView[edificeId];
 
-            _keyType = type.ToString();
+            _buttonIcon.sprite = view.sprite;
+            _keyType = view.key;
+
             _text = GetTextFormat(_localization);
         }
 
@@ -42,5 +43,26 @@ namespace Vurbiri.Colonization.UI
         protected override void SetText(Language localization) => _text = GetTextFormat(localization);
 
         private string GetTextFormat(Language localization) => string.Format(_format, localization.GetText(_file, _keyType));
+
+#if UNITY_EDITOR
+        protected virtual void OnValidate()
+        {
+            for (int i = 0; i < EdificeId.Count; i++)
+            {
+                if(string.IsNullOrEmpty(_edificeView[i].key))
+                _edificeView[i].key = EdificeId.Names[i];
+            }
+        }
+#endif
+
+        #region Nested: Profile
+        //*******************************************************
+        [System.Serializable]
+        private class View
+        {
+            public Sprite sprite;
+            public string key;
+        }
+        #endregion
     }
 }

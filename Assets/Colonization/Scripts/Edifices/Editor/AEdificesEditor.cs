@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 using Vurbiri.Colonization;
 
 namespace VurbiriEditor.Colonization
@@ -43,14 +44,14 @@ namespace VurbiriEditor.Colonization
             EditorGUILayout.TextField(_nextIdProperty.displayName, (EdificeId.Names[_nextIdProperty.intValue]).ToString(), style);
             EditorGUILayout.TextField(_nextGroupIdProperty.displayName, (EdificeGroupId.Names[_nextGroupIdProperty.intValue]).ToString(), style);
 
-            PlayerType player = _edifice.Owner;
-            if (Application.isPlaying && player != PlayerType.None && Players.Instance != null)
+            Id<PlayerId> player = _edifice.Owner;
+            if (Application.isPlaying && player != PlayerId.None && Players.Instance != null)
             {
                 Color prevColor = GUI.color;
                 GUI.color = Players.Instance[player].Color;
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-                EditorGUILayout.TextField("Owner", _edifice.Owner.ToString(), style);
+                EditorGUILayout.TextField("Owner", PlayerId.Names[player.ToInt], style);
                 GUI.color = prevColor;
             }
         }

@@ -9,9 +9,9 @@ namespace Vurbiri.Colonization
     using static JSON_KEYS;
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class Player : IValueTypeEnum<PlayerType>
+    public class Player : IValueId<PlayerId>
     {
-        public PlayerType Type => _type;
+        public Id<PlayerId> Id => _id;
         public Color Color => _visual.color;
         public Material MaterialLit => _visual.materialLit;
         public Material MaterialUnlit => _visual.materialUnlit;
@@ -25,24 +25,27 @@ namespace Vurbiri.Colonization
         [JsonProperty(P_ROADS)]
         private int[][][] _roadsKey;
         [JsonProperty(P_ENDIFICES)]
-        private readonly Dictionary<int, HashSet<Crossroad>> _edifices = new();
+        private readonly HashSet<Crossroad>[] _edifices;
 
-        private readonly PlayerType _type;
+        private readonly Id<PlayerId> _id;
         private readonly PlayerVisual _visual;
         private readonly Roads _roads;
         private readonly AbilitySet<PlayerAbilityId> _abilities;
         private readonly Currencies _exchangeRate;
 
-        public Player(PlayerType type, PlayerVisual visual, Currencies resources, Roads roads, PlayerAbilitiesScriptable abilities) : this(type, visual, roads, abilities) => _resources = resources;
-        public Player(PlayerType type, PlayerVisual visual, Roads roads, PlayerAbilitiesScriptable abilities)
+        public Player(Id<PlayerId> playerId, PlayerVisual visual, Currencies resources, Roads roads, PlayerAbilitiesScriptable abilities) 
+                     : this(playerId, visual, roads, abilities) => _resources = resources;
+        public Player(Id<PlayerId> playerId, PlayerVisual visual, Roads roads, PlayerAbilitiesScriptable abilities)
         {
-            _type = type;
+            _id = playerId;
             _visual = visual;
             _blood = 0;
-            _roads = roads.Initialize(_type, _visual.color);
-                        
-            //for(int i = 0; i < EdificeGroup.Count; i++)
-            //    _edifices[i] = new();
+            _roads = roads.Initialize(_id, _visual.color);
+
+            int groupCount = EdificeGroupId.Count;
+            _edifices = new HashSet<Crossroad>[groupCount];
+            for (int i = 0; i < groupCount; i++)
+                _edifices[i] = new();
 
             _abilities = abilities.GetAbilities();
         }
@@ -50,12 +53,12 @@ namespace Vurbiri.Colonization
         public IEnumerator Save_Coroutine(bool saveToFile = true)
         {
             _roadsKey = _roads.GetCrossroadsKey();
-            return Storage.Save_Coroutine(_type.ToString(), this, saveToFile, _ => _roadsKey = null);
+            return Storage.Save_Coroutine(_id.ToString(), this, saveToFile, _ => _roadsKey = null);
         }
 
         public void Load(Crossroads crossroads)
         {
-            if (Storage.TryLoad(_type.ToString(), out PlayerLoadData data))
+            if (Storage.TryLoad(_id.ToString(), out PlayerLoadData data))
             {
                 _resources = new(data.resources);
                 _blood = data.blood;
@@ -82,14 +85,14 @@ namespace Vurbiri.Colonization
 
                 CrossroadLoadData loadData = new();
                 Crossroad crossroad;
-                foreach (var dict in data.edifices)
+                for(int i = 0; i < EdificeGroupId.Count; i++)
                 {
-                    foreach (var arr in dict.Value)
+                    foreach (var arr in data.edifices[i])
                     {
                         loadData.SetValues(arr);
                         crossroad = crossroads.GetCrossroad(loadData.key);
-                        if (crossroad.Build(_type, loadData.id, loadData.isWall))
-                            _edifices[dict.Key].Add(crossroad);
+                        if (crossroad.Build(_id, loadData.id, loadData.isWall))
+                            _edifices[i].Add(crossroad);
                     }
                 }
 
@@ -153,7 +156,7 @@ namespace Vurbiri.Colonization
 
         public void UpdateExchangeRate()
         {
-            Ability ability = _abilities[PlayerAbilityId.ExchangeRate];
+            PlayerAbility ability = _abilities[PlayerAbilityId.ExchangeRate];
 
             Currencies newRate = new();
             for (int i = 0; i < newRate.Count; i++)
@@ -166,25 +169,25 @@ namespace Vurbiri.Colonization
         {
             int upgradeGroup = crossroad.NextGroupId;
             return (crossroad.GroupId != EdificeGroupId.None || _abilities.IsMore(EdificeGroupId.ToIdAbility(upgradeGroup), _edifices[upgradeGroup].Count)) 
-                   && crossroad.CanUpgrade(_type);
+                   && crossroad.CanUpgrade(_id);
         }
         public void CrossroadUpgradeBuy(Crossroad crossroad)
         {
-            if (crossroad.UpgradeBuy(_type, out Currencies cost))
+            if (crossroad.UpgradeBuy(_id, out Currencies cost))
             {
                 _edifices[crossroad.GroupId].Add(crossroad);
                 _resources.Pay(cost);
             }
         }
 
-        public bool CanWallBuild(Crossroad crossroad) => _abilities.IsMore(PlayerAbilityId.IsWall) && crossroad.CanWallBuild(_type);
+        public bool CanWallBuild(Crossroad crossroad) => _abilities.IsMore(PlayerAbilityId.IsWall) && crossroad.CanWallBuild(_id);
         public void CrossroadWallBuy(Crossroad crossroad)
         {
-            if (crossroad.WallBuy(_type, out Currencies cost))
+            if (crossroad.WallBuy(_id, out Currencies cost))
                 _resources.Pay(cost);
         }
 
-        public bool CanRoadBuild(Crossroad crossroad) => _abilities.IsMore(PlayerAbilityId.MaxRoads, _roads.Count) && crossroad.CanRoadBuild(_type);
+        public bool CanRoadBuild(Crossroad crossroad) => _abilities.IsMore(PlayerAbilityId.MaxRoads, _roads.Count) && crossroad.CanRoadBuild(_id);
         public bool CanRoadBuy() => _resources >= _roads.Cost;
         public void RoadBuy(CrossroadLink link)
         {
@@ -203,7 +206,7 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public override string ToString() => $"Player: {_type}";
+        public override string ToString() => $"Player: {_id}";
 
 
         #region Nested: PlayerLoadData
@@ -218,10 +221,10 @@ namespace Vurbiri.Colonization
             [JsonProperty(P_ROADS)]
             public int[][][] roadsKey;
             [JsonProperty(P_ENDIFICES)]
-            public Dictionary<int, int[][]> edifices;
+            public int[][][] edifices;
 
             [JsonConstructor]
-            public PlayerLoadData(int[] re, ReactiveValue<int> bl, int[][][] ro, Dictionary<int, int[][]> en)
+            public PlayerLoadData(int[] re, ReactiveValue<int> bl, int[][][] ro, int[][][] en)
             {
                 resources = re;
                 blood = bl;

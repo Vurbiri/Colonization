@@ -4,13 +4,13 @@ namespace Vurbiri.Colonization
 {
     public class UrbanGraphic : AEdificeGraphic
     {
-        public override void Initialize(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links)
+        public override void Initialize(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {
-            GetComponent<MeshRenderer>().SetSharedMaterial(Players.Instance[owner].MaterialLit, _idMaterial);
+            GetComponent<MeshRenderer>().SetSharedMaterial(Players.Instance[playerId].MaterialLit, _idMaterial);
 
             foreach (var link in links)
             {
-                if (link.Owner == owner)
+                if (link.Owner == playerId)
                 {
                     transform.localRotation = CONST.LINK_ROTATIONS[link.Id];
                     return;

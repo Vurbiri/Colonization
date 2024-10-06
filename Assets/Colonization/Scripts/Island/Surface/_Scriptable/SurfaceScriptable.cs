@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -8,7 +9,6 @@ namespace Vurbiri.Colonization
         [SerializeField] private Id<SurfaceType> _id;
         [SerializeField] private Color32 _color;
         [Space]
-        [SerializeField] private bool _isProfit = true;
         [SerializeField] private Id<CurrencyId>[] _profits;
         [Space]
         [SerializeField] private ASurface _prefabSurface;
@@ -17,9 +17,18 @@ namespace Vurbiri.Colonization
         public Color32 Color => _color;
         public bool IsWater => _id == SurfaceType.Water;
         public bool IsGate => _id == SurfaceType.Gate;
-        public bool IsProfit => _isProfit;
+        public IReadOnlyList<Id<CurrencyId>> Currencies => _profits;
 
-        public Id<CurrencyId> GetCurrency() => _profits.Rand();
+        public int GetCurrency()
+        {
+            if(_profits.Length == 1)
+                return _profits[0].ToInt;
+
+            if (_profits.Length > 1)
+                return _profits.Rand().ToInt;
+
+            return CurrencyId.Blood;
+        }
 
         public void Create(Transform parent) 
         {

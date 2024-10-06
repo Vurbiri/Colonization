@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
     {
         private Players _players;
 
-        public override void Initialize(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links)
+        public override void Initialize(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {
             _players = Players.Instance;
 
@@ -12,6 +12,6 @@ namespace Vurbiri.Colonization
                 side.SetActive(links.ContainsKey(side.Id));
         }
 
-        public override void AddRoad(Id<LinkId> linkId, PlayerType owner) => _graphicSides[linkId].AddRoad(_players[owner].MaterialUnlit);
+        public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) => _graphicSides[linkId].AddRoad(_players[playerId].MaterialUnlit);
     }
 }

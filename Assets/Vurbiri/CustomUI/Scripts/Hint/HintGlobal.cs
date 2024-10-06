@@ -9,7 +9,7 @@ namespace Vurbiri.UI
     [RequireComponent(typeof(Graphic))]
     public class HintGlobal : MonoBehaviour
     {
-        [SerializeField, GetComponentInChildren] private TMP_Text _hint;
+        [SerializeField] private TMP_Text _hint;
         [SerializeField, Range(0f, 5f)] private float _timeDelay = 1f;
         [SerializeField, Range(1f, 20f)] private float _fadeSpeed = 5f;
         [SerializeField] private float _maxWidth = 400f;
@@ -125,5 +125,13 @@ namespace Vurbiri.UI
             _background.CrossFadeAlpha(0f, 0f, true);
             _hint.CrossFadeAlpha(0f, 0f, true);
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            _hint ??= GetComponentInChildren<TMP_Text>();
+        }
+
+#endif
     }
 }

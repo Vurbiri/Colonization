@@ -8,9 +8,9 @@ namespace Vurbiri.Colonization
         private static readonly IdArray<LinkId, Quaternion> angles = new(
             new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, 240f, 0f), Quaternion.Euler(0f, 0f, 0f) });
 
-        public override void Initialize(PlayerType owner, IdHashSet<LinkId, CrossroadLink> links)
+        public override void Initialize(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {
-            base.Initialize(owner, links);
+            base.Initialize(playerId, links);
 
             transform.localRotation = angles[links.FirstEmptyIndex()];
         }

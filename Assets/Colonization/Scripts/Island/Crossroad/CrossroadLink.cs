@@ -7,13 +7,13 @@ namespace Vurbiri.Colonization
         public Id<LinkId> Id => _id;
         public bool IsWater => _isWater;
         public Vector3 Position => _middle;
-        public PlayerType Owner { get => _owner; set => _owner = value; }
+        public Id<PlayerId> Owner { get => _owner; set => _owner = value; }
 
         public Crossroad Start => _start;
         public Crossroad End => _end;
 
         private Crossroad _start, _end;
-        private PlayerType _owner;
+        private Id<PlayerId> _owner;
         private readonly Id<LinkId> _id;
         private readonly bool _isWater;
         private readonly Vector3 _middle;
@@ -29,12 +29,12 @@ namespace Vurbiri.Colonization
                 return;
 
             _isWater = isWater;
-            _owner = PlayerType.None;
+            _owner = PlayerId.None;
             _middle = (_start.Position + _end.Position) * 0.5f;
 
             // Local: ToLinkType(..)
             //=================================
-            Id<LinkId> ToLinkType(Key key) => new(System.Array.IndexOf(NEAR_CROSS, key) % 3);
+            static Id<LinkId> ToLinkType(Key key) => new(System.Array.IndexOf(NEAR_CROSS, key) % 3);
         }
 
         public void SetStart(Crossroad cross)
@@ -43,11 +43,11 @@ namespace Vurbiri.Colonization
                 (_start, _end) = (_end, _start);
         }
 
-        public void RoadBuilt(PlayerType owner)
+        public void RoadBuilt(Id<PlayerId> playerId)
         {
-            _owner = owner;
-            _start.RoadBuilt(_id, owner);
-            _end.RoadBuilt(_id, owner);
+            _owner = playerId;
+            _start.RoadBuilt(_id, playerId);
+            _end.RoadBuilt(_id, playerId);
         }
 
         public Crossroad Other(Crossroad crossroad) => crossroad == _start ? _end : _start;

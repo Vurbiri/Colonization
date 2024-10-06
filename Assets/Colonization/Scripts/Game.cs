@@ -14,6 +14,7 @@ namespace Vurbiri.Colonization
         [Space] //test
         [SerializeField] private bool _load;
         [SerializeField] private EdificesScriptable _prefabs;
+        [SerializeField] private Id<PlayerId> _id;
 
         private GameSettingsData _gameSettings;
         private Players _players;
@@ -54,6 +55,8 @@ namespace Vurbiri.Colonization
 
             Destroy(_island);
 
+            _eventBus.TriggerEndSceneCreate();
+
             for (int i = 0; i < 15; i ++)
                 yield return null;
 
@@ -74,7 +77,11 @@ namespace Vurbiri.Colonization
 
             int roll = _dices.Roll();
             UnityEngine.Debug.Log("ROLL: " + roll);
-            _players.Profit(roll, _island.Land.GetFreeGroundResource(roll));
+            Currencies free = null;
+            if (roll != ID_GATE)
+                free = _island.Land.GetFreeGroundResource(roll);
+
+            _players.Profit(roll, free);
         }
 
         private void OnDestroy()
