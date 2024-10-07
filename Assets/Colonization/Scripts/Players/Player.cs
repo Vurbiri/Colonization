@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
         public Material MaterialLit => _visual.materialLit;
         public Material MaterialUnlit => _visual.materialUnlit;
         public Currencies Resources => _resources;
-        public AReactive<Currencies> ExchangeRate => _exchangeRate;
+        public Currencies ExchangeRate => _exchangeRate;
 
         [JsonProperty(P_RESURSES)]
         private Currencies _resources;
@@ -134,7 +134,7 @@ namespace Vurbiri.Colonization
             if (hexId == CONST.ID_GATE)
             {
                 _blood.Value = Mathf.Clamp(_blood.Value + _abilities.GetValue(PlayerAbilityId.ShrineProfit) * shrineCount, 0, shrineMaxRes);
-                _resources.Clamp(_abilities.GetValue(PlayerAbilityId.MaxResources));
+                _resources.ClampMain(_abilities.GetValue(PlayerAbilityId.MaxResources));
                 return;
             }
 
@@ -149,17 +149,17 @@ namespace Vurbiri.Colonization
             {
                 profit = urban.Profit(hexId);
                 if (profit.Amount == 0 && urban.IsNotEnemy())
-                    profit.RandomAdd(_abilities.GetValue(PlayerAbilityId.CompensationRes));
+                    profit.RandomMainAdd(_abilities.GetValue(PlayerAbilityId.CompensationRes));
                 _resources.AddFrom(profit);
             }
         }
 
         public void UpdateExchangeRate()
         {
-            PlayerAbility ability = _abilities[PlayerAbilityId.ExchangeRate];
+            Ability<PlayerAbilityId> ability = _abilities[PlayerAbilityId.ExchangeRate];
 
             Currencies newRate = new();
-            for (int i = 0; i < newRate.Count; i++)
+            for (int i = 0; i < newRate.CountMain; i++)
                 newRate[i] = ability.NextValue;
 
             _exchangeRate.SetFrom(newRate);

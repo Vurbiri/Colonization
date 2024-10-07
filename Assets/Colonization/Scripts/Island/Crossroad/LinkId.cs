@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
         public const int DL_UR = 1;
         public const int DD_UU = 2;
 
-        static LinkId() { RunConstructor(); }
+        static LinkId() => RunConstructor();
         private LinkId() { }
     }
 }

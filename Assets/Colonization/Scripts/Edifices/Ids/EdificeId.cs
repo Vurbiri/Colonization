@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
         public const int Town = 7;
         public const int Capital = 8;
 
-        static EdificeId() { RunConstructor(); }
+        static EdificeId() => RunConstructor();
         private EdificeId() { }
 
         public static int ToGroup(int id) => id switch

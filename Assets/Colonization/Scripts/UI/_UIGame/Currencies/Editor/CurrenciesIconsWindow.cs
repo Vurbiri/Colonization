@@ -17,7 +17,7 @@ namespace VurbiriEditor.Colonization
     {
         #region Consts
         private const string NAME = "Currencies Icons", MENU = MENU_PATH + NAME;
-        private const string PROPERTY_ICONS = "_icons", PROPERTY_BLOOD = "_blood";
+        private const string PROPERTY_ICONS = "_icons";
         private const string BUTTON_NAME = "Create Atlas";
         private const string DEFAULT_PATH = "Assets/TextMesh Pro/Sprites/";
         private const string DEFAULT_NAME = "IconCurrency_Atlas";
@@ -27,7 +27,7 @@ namespace VurbiriEditor.Colonization
         [SerializeField] private CurrenciesIconsScriptable _currenciesIcons;
 
         private SerializedObject _serializedObject;
-        private SerializedProperty _iconsProperty, _bloodProperty;
+        private SerializedProperty _iconsProperty;
 
         public static readonly Vector2 wndMinSize = new(450f, 450f);
 
@@ -44,7 +44,6 @@ namespace VurbiriEditor.Colonization
 
             _serializedObject = new(_currenciesIcons);
             _iconsProperty = _serializedObject.FindProperty(PROPERTY_ICONS);
-            _bloodProperty = _serializedObject.FindProperty(PROPERTY_BLOOD);
         }
 
         private void OnGUI()
@@ -57,7 +56,6 @@ namespace VurbiriEditor.Colonization
 
             EditorGUILayout.Space(SPACE_WND);
             EditorGUILayout.PropertyField(_iconsProperty);
-            EditorGUILayout.PropertyField(_bloodProperty);
             EditorGUILayout.Space(SPACE_WND);
             if (!Application.isPlaying && GUILayout.Button(BUTTON_NAME))
                 CreateAtlas();
@@ -69,12 +67,11 @@ namespace VurbiriEditor.Colonization
 
         private void CreateAtlas()
         {
-            int iconsCount = _currenciesIcons.Icons.Count + 1, ids = iconsCount;
+            int iconsCount = _currenciesIcons.Icons.Count, ids = iconsCount;
 
             List<CurrencyBitmap> bitmaps = new(iconsCount);
             foreach (var icon in _currenciesIcons.Icons)
                 bitmaps.Add(new(icon, --ids));
-            bitmaps.Add(new(_currenciesIcons.Blood, --ids));
 
             Task[] tasks = new Task[iconsCount];
             for (int i = 0; i < iconsCount; i++)

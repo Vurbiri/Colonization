@@ -6,13 +6,9 @@ namespace Vurbiri.Colonization.UI
     public class CurrenciesIconsScriptable : ScriptableObject
     {
         [SerializeField] private IdArray<CurrencyId, CurrencyIcon> _icons;
-        [Space]
-        [SerializeField] private CurrencyIcon _blood;
 
         public CurrencyIcon this[int index] => _icons[index];
         public CurrencyIcon this[Id<CurrencyId> id] => _icons[id.ToInt];
-
-        public CurrencyIcon Blood => _blood;
 
 
 #if UNITY_EDITOR

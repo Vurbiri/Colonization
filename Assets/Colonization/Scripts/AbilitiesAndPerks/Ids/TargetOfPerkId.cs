@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
     {
         public const int Player = 0;
 
-        static TargetOfPerkId() { RunConstructor(); }
+        static TargetOfPerkId() => RunConstructor();
         private TargetOfPerkId() { }
     }
 }

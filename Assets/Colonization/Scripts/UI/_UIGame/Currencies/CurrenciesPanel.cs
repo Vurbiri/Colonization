@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Reactive;
 
@@ -14,8 +15,8 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private RectTransform _thisRectTransform;
 
-        private IdArray<CurrencyId, CurrencyUI> _currenciesUI = new();
-        private Unsubscriber<Currencies> _unsubscriber;
+        private readonly IdArray<CurrencyId, CurrencyUI> _currenciesUI = new();
+        private readonly List<Unsubscriber<int>> _unsubscribers = new(CurrencyId.Count + 2);
 
         private void Start()
         {
@@ -31,7 +32,7 @@ namespace Vurbiri.Colonization.UI
             Vector3 pos = new((curSize.x - offset) / 2f, size.y / 2f, 0f);
             Debug.Log(pos);
             offset = curSize.x + _space;
-            for (int i = 0; i < CurrencyId.Count; i++)
+            for (int i = 0; i < CurrencyId.Count - 1; i++)
             {
                 _currenciesUI[i] = Instantiate(_currencyUIPrefab, _thisRectTransform).Initialize(i, pos);
                 pos.x += offset;
@@ -43,19 +44,17 @@ namespace Vurbiri.Colonization.UI
             void OnEndSceneCreate()
             {
                 EventBus.Instance.EventEndSceneCreate -= OnEndSceneCreate;
-                _unsubscriber = Players.Instance[_playerId].Resources.Subscribe(OnCurrenciesChange);
+                Currencies curr = Players.Instance[_playerId].Resources;
+                for (int i = 0; i < curr.CountMain; i++)
+                    _unsubscribers.Add(curr.Subscribe(i, _currenciesUI[i].SetValue));
             }
         }
 
-        private void OnCurrenciesChange(Currencies curr)
-        {
-            for (int i = 0; i < CurrencyId.Count; i++)
-                _currenciesUI[i].SetValue(curr[i]);
-        }
 
         private void OnDestroy()
         {
-            _unsubscriber?.Unsubscribe();
+            foreach (var unsubscriber in _unsubscribers)
+                unsubscriber?.Unsubscribe();
         }
 
 #if UNITY_EDITOR

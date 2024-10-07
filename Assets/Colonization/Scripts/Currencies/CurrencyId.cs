@@ -7,10 +7,12 @@ namespace Vurbiri.Colonization
         public const int Mana = 2;
         public const int Ore  = 3;
         public const int Wood = 4;
-        [HideAllNextIds]
         public const int Blood = 5;
 
-        static CurrencyId() { RunConstructor(); }
+        static CurrencyId()
+        {
+            RunConstructor();
+        }
         private CurrencyId() { }
     }
 }

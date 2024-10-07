@@ -4,16 +4,16 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class AAbility<T> : AReactive<int>, IValueId<T> where T : AAbilityId<T>
+    public class Ability<TId> : AReactive<int>, IValueId<TId> where TId : AAbilityId<TId>
     {
-        private readonly Id<T> _id;
+        private readonly Id<TId> _id;
         private readonly int _baseValue;
 
         private int _currentValue;
-        private readonly HashSet<IPerk<T>> _permanentPerks;
-        private readonly HashSet<IPerk<T>> _randomPerks;
+        private readonly HashSet<IPerk<TId>> _permanentPerks;
+        private readonly HashSet<IPerk<TId>> _randomPerks;
 
-        public Id<T> Id => _id;
+        public Id<TId> Id => _id;
         public int CurrentValue => _currentValue;
         public int NextValue
         {
@@ -23,14 +23,14 @@ namespace Vurbiri.Colonization
                     return _currentValue;
 
                 int newValue = _currentValue;
-                foreach (IPerk<T> perk in _randomPerks)
+                foreach (IPerk<TId> perk in _randomPerks)
                     newValue = perk.Apply(newValue);
 
                 return newValue;
             }
         }
 
-        public AAbility(Id<T> id, int baseValue)
+        public Ability(Id<TId> id, int baseValue)
         {
             _id = id;
             _baseValue = _currentValue = baseValue;
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
             _randomPerks = new();
         }
 
-        public AAbility(AAbility<T> ability)
+        public Ability(Ability<TId> ability)
         {
             _id = ability._id;
             _baseValue = _currentValue = ability._baseValue;
@@ -46,14 +46,14 @@ namespace Vurbiri.Colonization
             _randomPerks = new();
         }
 
-        public bool TryAddPerk(IPerk<T> perk)
+        public bool TryAddPerk(IPerk<TId> perk)
         {
             if (perk.IsPermanent)
             {
                 if (_permanentPerks.Add(perk))
                 {
                     _currentValue = perk.Apply(_currentValue);
-                    ActionThisChange?.Invoke(_currentValue);
+                    ActionValueChange?.Invoke(_currentValue);
                     return true;
                 }
 

@@ -25,8 +25,7 @@ namespace VurbiriEditor
             //=====================================================
             (string[] names, int[] values) GetNamesAndValues()
             {
-                bool hide = false;
-                Type t_attribute = typeof(HideAllNextIdsAttribute), t_int = typeof(int);
+                Type t_attribute = typeof(NotIdAttribute), t_int = typeof(int);
                 Type t_field = fieldInfo.FieldType;
                 if(t_field.IsArray)
                     t_field = t_field.GetElementType();
@@ -39,21 +38,20 @@ namespace VurbiriEditor
                 List<string> names = new(count);
                 List<int> values = new(count);
                 string name;
+                int value;
 
                 foreach (FieldInfo field in fields)
                 {
-                    if (field.FieldType != t_int || !field.IsLiteral)
+                    if (field.FieldType != t_int || !field.IsLiteral || field.GetCustomAttributes(t_attribute, false).Length > 0)
                         continue;
 
                     name = field.Name;
-                    if (hide || field.GetCustomAttributes(t_attribute, false).Length > 0)
-                    {
-                        hide = true;
-                        name = $"!{name}!";
-                    }
+                    value = (int)field.GetValue(null);
+                    if (value < 0)
+                        name = $"-{name}-";
 
                     names.Add(name);
-                    values.Add((int)field.GetValue(null));
+                    values.Add(value);
                 }
 
                 return (names.ToArray(), values.ToArray());

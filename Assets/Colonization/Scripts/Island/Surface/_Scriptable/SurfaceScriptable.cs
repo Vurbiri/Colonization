@@ -24,10 +24,7 @@ namespace Vurbiri.Colonization
             if(_profits.Length == 1)
                 return _profits[0].ToInt;
 
-            if (_profits.Length > 1)
-                return _profits.Rand().ToInt;
-
-            return CurrencyId.Blood;
+            return _profits.Rand().ToInt;
         }
 
         public void Create(Transform parent) 

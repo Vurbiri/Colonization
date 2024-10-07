@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         public const int Water      = 5;
         public const int Gate       = 6;
 
-        static SurfaceType() { RunConstructor(); }
+        static SurfaceType() => RunConstructor();
         private SurfaceType() { }
     }
 }

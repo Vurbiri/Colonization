@@ -130,7 +130,7 @@ namespace Vurbiri.Localization
             }
 
             _currentLanguage = type;
-            ActionThisChange?.Invoke(this);
+            ActionValueChange?.Invoke(this);
             return true;
         }
 
