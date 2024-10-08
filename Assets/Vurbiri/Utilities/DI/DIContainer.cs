@@ -6,55 +6,51 @@ namespace Vurbiri
     public class DIContainer : IDisposable
     {
         private readonly DIContainer _parent;
-        private readonly Dictionary<DIKey, IDIRegistration> _registration = new();
+        private readonly Dictionary<DIKey, IDIRegistrationPrivate> _registration = new();
         private readonly HashSet<DIKey> _hashRequests = new();
 
         public DIContainer(DIContainer parent) => _parent = parent;
 
-        public void RegisterSingleton<T>(Func<DIContainer, T> factory, string tag = null) where T : class => Register(new(tag, typeof(T)), factory, true);
-
-        public void RegisterTransient<T>(Func<DIContainer, T> factory, string tag = null) where T : class => Register(new(tag, typeof(T)), factory, false);
-
-        public void RegisterInstance<T>(T instance, string tag = null) where T : class
+        public IDIRegistration Register<T>(Func<DIContainer, T> factory, bool isSingleton = true, int id = 0) where T : class
         {
-            DIKey key = new(tag, typeof(T));
+            DIKey key = new(typeof(T), id);
+            var registration = new DIRegistration<T>(factory, isSingleton);
 
-            if (_registration.ContainsKey(key))
-                throw new Exception($"Экземпляр с тегом {key.tag} типа {key.type.FullName} уже зарегистрирован.");
+            if (!_registration.TryAdd(key, registration))
+                throw new Exception($"{key.type.FullName} (id = {key.id}) уже зарегистрирован.");
 
-            _registration[key] = new DIRegistration<T>(instance);
+            return registration;
         }
 
-        public T Resolve<T>(string tag = null) where T : class => Resolve<T>(new DIKey(tag, typeof(T)));
-
-        private T Resolve<T>(DIKey key) where T : class
+        public void RegisterInstance<T>(T instance, int id = 0) where T : class
         {
-            if (_hashRequests.Contains(key))
-                throw new Exception($"Циклическая зависимость с тегом {key.tag} типа {key.type.FullName}.");
+            DIKey key = new(typeof(T), id);
 
-            _hashRequests.Add(key);
+            if (!_registration.TryAdd(key, new DIRegistration<T>(instance)))
+                throw new Exception($"Экземпляр {key.type.FullName} (id = {key.id}) уже зарегистрирован.");
+        }
+
+        public T Get<T>(int id = 0) where T : class => Get<T>(new DIKey(typeof(T), id));
+
+        private T Get<T>(DIKey key) where T : class
+        {
+            if (!_hashRequests.Add(key))
+                throw new Exception($"Цикличная зависимость у {key.type.FullName} (id = {key.id}).");
+
             try
             {
                 if (_registration.TryGetValue(key, out var registration))
-                    return ((DIRegistration<T>)registration).Resolve(this);
+                    return ((DIRegistration<T>)registration).Get(this);
 
                 if (_parent != null)
-                    return _parent.Resolve<T>(key);
+                    return _parent.Get<T>(key);
             }
             finally
             {
                 _hashRequests.Remove(key);
             }
 
-            throw new Exception($"Элемент с тегом {key.tag} типа {key.type.FullName} не найдена.");
-        }
-
-        private void Register<T>(DIKey key, Func<DIContainer, T> factory, bool isSingleton) where T : class
-        {
-            if (_registration.ContainsKey(key))
-                throw new Exception($"Фабрика с тегом {key.tag} типа {key.type.FullName} уже зарегистрирована.");
-
-            _registration[key] = new DIRegistration<T>(factory, isSingleton);
+            throw new Exception($"{key.type.FullName} (id = {key.id}) не найден.");
         }
 
         public void Dispose()
@@ -65,49 +61,85 @@ namespace Vurbiri
 
         #region Nested: IDIRegistration, DIRegistration<T>, DIKey
         //***********************************
-        private interface IDIRegistration : IDisposable { }
+        public interface IDIRegistration
+        {
+            public IDIRegistration IsSingleton();
+
+            public void Instantiate(DIContainer container);
+        }
         //***********************************
-        private class DIRegistration<T> : IDIRegistration where T : class
+        private interface IDIRegistrationPrivate : IDIRegistration, IDisposable { }
+        //***********************************
+        private class DIRegistration<T> : IDIRegistrationPrivate where T : class
         {
             private readonly Func<DIContainer, T> _factory;
-            private readonly bool _isSingleton;
-            private readonly T _instance;
+            private T _instance;
+
+            public Func<DIContainer, T> Get;
 
             public DIRegistration(Func<DIContainer, T> factory, bool isSingleton)
             {
                 _factory = factory;
-                _isSingleton = isSingleton;
+                if (isSingleton)
+                    Get = GetSingleton;
+                else
+                    Get = factory;
             }
 
             public DIRegistration(T instance)
             {
                 _factory = null;
-                _isSingleton = true;
                 _instance = instance;
+                Get = GetInstance;
             }
 
-            public T Resolve(DIContainer container) => _isSingleton && _instance != null ? _instance : _factory(container);
+            public void Instantiate(DIContainer container)
+            {
+                if (_instance == null)
+                {
+                    _instance = _factory(container);
+                    Get = GetInstance;
+                }
+            }
+
+            public IDIRegistration IsSingleton()
+            {
+                Get = GetSingleton;
+                return this;
+            }
 
             public void Dispose()
             {
                 if(_instance is IDisposable disposable)
                     disposable.Dispose();
             }
+
+            private T GetSingleton(DIContainer container)
+            {
+                if (_instance == null)
+                {
+                    _instance = _factory(container);
+                    Get = GetInstance;
+                }
+
+                return _instance;
+            }
+            private T GetInstance(DIContainer container) => _instance;
         }
         //***********************************
         private class DIKey : IEquatable<DIKey>
         {
-            public readonly string tag;
             public readonly Type type;
+            public readonly int id;
 
-            public DIKey(string tag, Type type)
+            public DIKey(Type type, int id)
             {
-                this.tag = tag;
                 this.type = type;
+                this.id = id;
             }
 
-            public override int GetHashCode() => HashCode.Combine(tag, type);
-            public bool Equals(DIKey other) => other is not null && tag == other.tag && type == other.type;
+            public override int GetHashCode() => HashCode.Combine(id, type);
+            public bool Equals(DIKey other) => other is not null && id == other.id && type == other.type;
             public override bool Equals(object obj) => Equals(obj as DIKey);
         }
         #endregion

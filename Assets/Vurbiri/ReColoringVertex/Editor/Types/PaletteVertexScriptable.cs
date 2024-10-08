@@ -22,7 +22,7 @@ namespace VurbiriEditor.ReColoringVertex
         public bool IsEditName {get => _isEditName; set => _vertexMaterials.ForEach(v => v.isEditName = _isEditName = value); }
         public bool IsOpen {set => _vertexMaterials.ForEach(v => v.isOpen = value); }
 
-        public void Initialize(string name, bool isInvert, bool isEditName, int count)
+        public void Init(string name, bool isInvert, bool isEditName, int count)
         {
             this.name = name;
             _isInvertSubMeshes = isInvert;

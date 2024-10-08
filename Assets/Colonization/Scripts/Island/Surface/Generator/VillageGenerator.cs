@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             float height = -size, width, x, z;
 
             CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
-            _hut.Initialize();
+            _hut.Init();
 
             while (height < size)
             {
@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization
             private const int COUNT_TRIANGLES = 28;
             private const float OFFSET = 0.001f;
 
-            public void Initialize()
+            public void Init()
             {
                 _doorBase = new Vector3[] 
                        { new(_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, 0f, 0f), new(_halfWidthDoor, 0f, 0f) };

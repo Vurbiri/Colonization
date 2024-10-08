@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField, Range(0, 5)] protected int _idMaterial;
 
-        public virtual void Initialize(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links)
+        public virtual void Init(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links)
         {
             GetComponent<MeshRenderer>().SetSharedMaterial(Players.Instance[owner].MaterialLit, _idMaterial);
         }

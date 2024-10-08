@@ -9,9 +9,9 @@ namespace Vurbiri.Colonization
     public class Players : ASingleton<Players>, IEnumerable<Player>
     {
         [Space]
-        [SerializeField] private Currencies _startResources;
+        [SerializeField] private CurrenciesLite _startResources;
         [Space]
-        [SerializeField] private PlayerAbilitiesScriptable _abilities;
+        [SerializeField] private PlayerStatesScriptable _abilities;
         [SerializeField] private PlayerVisualSetScriptable _visualSet;
 
         private Player _current;
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization
 
         public void Next() => _current = _players.Next(_current.Id.ToInt);
 
-        public void Profit(int hexId, Currencies freeGroundRes)
+        public void Profit(int hexId, ACurrencies freeGroundRes)
         {
             foreach (Player player in _players)
                 player.Profit(hexId, freeGroundRes);

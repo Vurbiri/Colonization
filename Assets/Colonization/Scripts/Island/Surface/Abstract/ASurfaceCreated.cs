@@ -10,13 +10,13 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField, Range(0.1f, 1f)] protected float _ratioSize = 0.8f;
 
-        public override void Initialize()
+        public override void Init()
         {
-            StartCoroutine(Initialize_Coroutine());
+            StartCoroutine(Init_Coroutine());
 
-            #region Local: Initialize_Coroutine()
+            #region Local: Init_Coroutine()
             //=================================
-            IEnumerator Initialize_Coroutine()
+            IEnumerator Init_Coroutine()
             {
                 yield return StartCoroutine(_generator.Generate_Coroutine(CONST.HEX_RADIUS_IN * _ratioSize));
 

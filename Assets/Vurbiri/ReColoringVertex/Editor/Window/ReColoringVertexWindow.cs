@@ -209,7 +209,7 @@ namespace VurbiriEditor.ReColoringVertex
 
             for (int i = 0; i < _subMeshCount; i++)
             {
-                _listData[i] = CreateInstance<ListVertexMaterials>().Initialize(i);
+                _listData[i] = CreateInstance<ListVertexMaterials>().Init(i);
                 subMeshes[i] = new(_currentMesh.GetTriangles(i));
             }
 
@@ -339,7 +339,7 @@ namespace VurbiriEditor.ReColoringVertex
             void SavePalette()
             {
                 _currentPalette = CreateInstance<PaletteVertexScriptable>();
-                _currentPalette.Initialize(NamePaletteFromMesh, _isInvert, _isEditName, _colorsCount);
+                _currentPalette.Init(NamePaletteFromMesh, _isInvert, _isEditName, _colorsCount);
 
                 foreach (var lisData in _listData)
                     foreach (var data in lisData)

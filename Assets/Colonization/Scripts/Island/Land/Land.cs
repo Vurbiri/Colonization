@@ -23,15 +23,15 @@ namespace Vurbiri.Colonization
         private readonly Key[] NEAR = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
         private readonly Key[] NEAR_TWO = new Key[HEX_COUNT_SIDES << 1];
 
-        public void Initialize(int circleMax, int count)
+        public void Init(int circleMax, int count)
         {
             CalkNearTwo();
-            InitializeHexagonsIdForKey();
+            InitHexagonsIdForKey();
             _hexagons = new(count);
             _offset = new(HEX_DIAMETER_IN, HEX_DIAMETER_IN * SIN_60);
             _thisTransform = transform;
 
-            _landMesh.Initialize(circleMax, count);
+            _landMesh.Init(circleMax, count);
 
             #region Local: CalkNearTwo();
             //================================================
@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization
                 }
             }
             //================================================
-            void InitializeHexagonsIdForKey()
+            void InitHexagonsIdForKey()
             {
                 int capacity = count / NUMBERS.Count + 1;
 
@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization
         {
             Key key = data.Key;
             Hexagon hex = Instantiate(_prefabHex, data.Position, Quaternion.identity, _thisTransform);
-            hex.Initialize(data, _landMesh.WaterLevel, _cameraTransform);
+            hex.Init(data, _landMesh.WaterLevel, _cameraTransform);
 
             _hexagons.Add(key, hex);
             _hexagonsIdForKey[data.Id].Add(key);
@@ -130,9 +130,9 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Currencies GetFreeGroundResource(int id)
+        public CurrenciesLite GetFreeGroundResource(int id)
         {
-            Currencies res = new();
+            CurrenciesLite res = new();
             foreach (var key in _hexagonsIdForKey[id])
                 if (_hexagons[key].TryGetFreeGroundResource(out int currencyId))
                     res.Increment(currencyId);

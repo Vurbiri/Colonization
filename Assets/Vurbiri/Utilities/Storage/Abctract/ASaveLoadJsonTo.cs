@@ -13,7 +13,7 @@ namespace Vurbiri
 
         public abstract bool IsValid { get; }
 
-        public abstract IEnumerator Initialize_Coroutine(string key, Action<bool> callback);
+        public abstract IEnumerator Init_Coroutine(string key, Action<bool> callback);
 
         public virtual Return<T> Load<T>(string key) where T : class
         {

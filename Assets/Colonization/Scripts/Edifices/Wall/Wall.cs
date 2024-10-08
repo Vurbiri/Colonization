@@ -4,16 +4,16 @@ namespace Vurbiri.Colonization
 {
     public class Wall : MonoBehaviour
     {
-        [SerializeField] private Currencies _cost;
+        [SerializeField] private CurrenciesLite _cost;
         [Space]
         [SerializeField] private WallGraphic _graphic;
 
-        public Currencies Cost => _cost;
+        public CurrenciesLite Cost => _cost;
 
-        public void Initialize(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
+        public void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {
             gameObject.SetActive(true);
-            _graphic.Initialize(playerId, links);
+            _graphic.Init(playerId, links);
         }
 
         public void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) => _graphic.AddRoad(linkId, playerId);

@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
         private const int COUNT = 3;
         private const string NAME = "Crossroad_";
 
-        public void Initialize(Key key)
+        public void Init(Key key)
         {
             _eventBus = EventBus.Instance;
             _eventBus.EventCrossroadMarkShow += Show;
@@ -134,8 +134,8 @@ namespace Vurbiri.Colonization
             }
             #endregion
         }
-        public bool CanUpgradeBuy(Currencies cash) => _edifice.CanUpgradeBuy(cash);
-        public bool UpgradeBuy(Id<PlayerId> playerId, out Currencies cost)
+        public bool CanUpgradeBuy(ACurrencies cash) => _edifice.CanUpgradeBuy(cash);
+        public bool UpgradeBuy(Id<PlayerId> playerId, out ACurrencies cost)
         {
             if (_edifice.Upgrade(playerId, _links, out _edifice))
             {
@@ -149,8 +149,8 @@ namespace Vurbiri.Colonization
         }
 
         public bool CanWallBuild(Id<PlayerId> playerId) => _edifice.CanWallBuild(playerId);
-        public bool CanWallBuy(Currencies cash) => _edifice.CanWallBuy(cash);
-        public bool WallBuy(Id<PlayerId> playerId, out Currencies cost) => _edifice.WallBuild(playerId, _links, out cost);
+        public bool CanWallBuy(ACurrencies cash) => _edifice.CanWallBuy(cash);
+        public bool WallBuy(Id<PlayerId> playerId, out ACurrencies cost) => _edifice.WallBuild(playerId, _links, out cost);
 
 
         public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
@@ -186,9 +186,9 @@ namespace Vurbiri.Colonization
             return false;
         }
         
-        public Currencies Profit(int idHex, int ratio = 1)
+        public CurrenciesLite Profit(int idHex, int ratio = 1)
         {
-            Currencies profit = new();
+            CurrenciesLite profit = new();
             foreach (var hex in _hexagons)
                 if (hex.TryGetProfit(idHex, out int currencyId))
                     profit.Add(currencyId, _edifice.Profit * ratio);

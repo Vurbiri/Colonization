@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -6,7 +7,7 @@ using Vurbiri.Localization;
 
 namespace Vurbiri.UI
 {
-    [RequireComponent(typeof(Graphic))]
+    [RequireComponent(typeof(Graphic), typeof(CanvasGroup))]
     public class HintGlobal : MonoBehaviour
     {
         [SerializeField] private TMP_Text _hint;
@@ -16,29 +17,21 @@ namespace Vurbiri.UI
         [SerializeField] private Vector2 _padding = new(15f, 15f);
 
         private Language _localization;
-        private Graphic _background;
+        private CanvasGroup _thisCanvasGroup;
         private RectTransform _transformBack, _transformText;
-        private Coroutine _coroutineShow;
-        private float _alfaBack, _alfaText;
-        private float _fadeDurationBack, _fadeDurationText;
+        private Coroutine _coroutineShow, _coroutineHide;
         private Vector2 _size;
 
         private void Start()
         {
             _localization = Language.Instance;
-            _background = GetComponent<Graphic>();
+            _thisCanvasGroup = GetComponent<CanvasGroup>();
             _transformBack = GetComponent<RectTransform>();
             _transformText = _hint.rectTransform;
 
             _hint.overflowMode = TextOverflowModes.Overflow;
 
-            _alfaBack = _background.color.a;
-            _alfaText = _hint.color.a;
-
-            _fadeDurationBack = _alfaBack / _fadeSpeed;
-            _fadeDurationText = _alfaText / _fadeSpeed;
-
-            AlphaReset();
+            _thisCanvasGroup.alpha = 0f;
         }
 
         public bool Show(Files file, string key)
@@ -65,8 +58,6 @@ namespace Vurbiri.UI
 
         private void Show()
         {
-            AlphaReset();
-
             _coroutineShow ??= StartCoroutine(Show_Coroutine());
 
             #region Local: Show_Coroutine()
@@ -74,8 +65,21 @@ namespace Vurbiri.UI
             IEnumerator Show_Coroutine()
             {
                 yield return new WaitForSecondsRealtime(_timeDelay);
-                _background.CrossFadeAlpha(_alfaBack, _fadeDurationBack, true);
-                _hint.CrossFadeAlpha(_alfaText, _fadeDurationText, true);
+                
+                if (_coroutineHide != null)
+                {
+                    StopCoroutine(_coroutineHide);
+                    _coroutineHide = null;
+                }
+
+                float alpha = _thisCanvasGroup.alpha;
+                while (alpha < 1f)
+                {
+                    _thisCanvasGroup.alpha = alpha += Time.unscaledDeltaTime * _fadeSpeed;
+                    yield return null;
+                }
+
+                _thisCanvasGroup.alpha = 1f;
                 _coroutineShow = null;
             }
             #endregion
@@ -89,9 +93,25 @@ namespace Vurbiri.UI
                 _coroutineShow = null;
             }
 
-            _background.CrossFadeAlpha(0f, _fadeDurationBack, true);
-            _hint.CrossFadeAlpha(0f, _fadeDurationText, true);
+            _coroutineHide ??= StartCoroutine(Hide_Coroutine());
+
             return true;
+
+            #region Local: Hide_Coroutine()
+            //=================================
+            IEnumerator Hide_Coroutine()
+            {
+                float alpha = _thisCanvasGroup.alpha;
+                while (alpha > 0f)
+                {
+                    _thisCanvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _fadeSpeed;
+                    yield return null;
+                }
+
+                _thisCanvasGroup.alpha = 0f;
+                _coroutineHide = null;
+            }
+            #endregion
         }
 
         private void SetHint(string text)
@@ -118,12 +138,6 @@ namespace Vurbiri.UI
 
             //_transformText.ForceUpdateRectTransforms();
             //_transformBack.ForceUpdateRectTransforms();
-        }
-
-        private void AlphaReset()
-        {
-            _background.CrossFadeAlpha(0f, 0f, true);
-            _hint.CrossFadeAlpha(0f, 0f, true);
         }
 
 #if UNITY_EDITOR

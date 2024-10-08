@@ -37,7 +37,7 @@ namespace Vurbiri
             }
             #endregion
         }
-        public static IEnumerator Initialize_Coroutine(string key, Action<bool> callback) => service.Initialize_Coroutine(key, callback);
+        public static IEnumerator Init_Coroutine(string key, Action<bool> callback) => service.Init_Coroutine(key, callback);
         public static IEnumerator Save_Coroutine(string key, object data, bool toFile = true, Action<bool> callback = null) => service.Save_Coroutine(key, data, toFile, callback);
         public static Return<T> Load<T>(string key) where T : class => service.Load<T>(key);
         public static bool TryLoad<T>(string key, out T value) where T : class => service.TryLoad<T>(key, out value);

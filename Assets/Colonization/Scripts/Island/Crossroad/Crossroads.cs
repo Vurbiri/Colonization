@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
 
         private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
 
-        public void Initialize(int circleMax)
+        public void Init(int circleMax)
         {
             _crossroads = new(HEX_COUNT_SIDES * circleMax * circleMax);
             _offset = new(HEX_RADIUS_OUT * COS_30, HEX_RADIUS_OUT * SIN_30);
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
                         continue;
 
                     cross = Instantiate(_prefabCrossroad, positionCross, i % 2 == 0 ? ANGLE_180 : ANGLE_0, _thisTransform);
-                    cross.Initialize(key);
+                    cross.Init(key);
                     _crossroads.Add(key, cross);
                 }
 

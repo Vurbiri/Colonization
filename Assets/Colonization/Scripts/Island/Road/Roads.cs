@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
     public class Roads : MonoBehaviour
     {
         [SerializeField] private Road _prefabRoad;
-        [SerializeField] private Currencies _cost;
+        [SerializeField] private CurrenciesLite _cost;
 
         private Transform _thisTransform;
         private Id<PlayerId> _id;
@@ -17,10 +17,10 @@ namespace Vurbiri.Colonization
 
         private const string NAME = "Roads_";
 
-        public Currencies Cost => _cost;
+        public CurrenciesLite Cost => _cost;
         public int Count => _count;
 
-        public Roads Initialize(Id<PlayerId> id, Color color)
+        public Roads Init(Id<PlayerId> id, Color color)
         {
             _thisTransform = transform;
             _id = id;

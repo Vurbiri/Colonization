@@ -19,7 +19,7 @@ namespace Vurbiri
         public Color[] Colors => _colors;
         public float FontSize => _fontSize;
 
-        public void Initialize()
+        public void Init()
         {
             _banners = new(_prefab, _repository, _sizePool);
         }

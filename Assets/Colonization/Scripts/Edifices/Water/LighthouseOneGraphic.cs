@@ -10,12 +10,12 @@ namespace Vurbiri.Colonization
 
         private static Chance chanceAltMesh = new(50);
 
-        public override void Initialize(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
+        public override void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {
             if(chanceAltMesh.Roll)
                 GetComponent<MeshFilter>().sharedMesh = _altMesh;
             
-            base.Initialize(playerId, links);
+            base.Init(playerId, links);
         }
     }
 }

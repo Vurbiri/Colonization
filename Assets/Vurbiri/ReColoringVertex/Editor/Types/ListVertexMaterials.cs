@@ -22,7 +22,7 @@ namespace VurbiriEditor.ReColoringVertex
 
         public bool IsEdit => _isEdit;
 
-        public ListVertexMaterials Initialize(int id)
+        public ListVertexMaterials Init(int id)
         {
             _labelContent = new($"{LABEL_FOLDOUT} {id}");
 

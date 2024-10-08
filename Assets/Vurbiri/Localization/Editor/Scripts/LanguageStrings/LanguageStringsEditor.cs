@@ -13,7 +13,7 @@ namespace Vurbiri.Localization.Editors
         public override VisualElement CreateInspectorGUI()
         {
             var strings = LanguageStringsScriptable.GetOrCreateSelf();
-            strings.Initialize();
+            strings.Init();
 
             VisualElement root = _treeAsset.CloneTree();
 

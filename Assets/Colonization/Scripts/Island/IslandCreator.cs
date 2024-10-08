@@ -24,13 +24,13 @@ namespace Vurbiri.Colonization
         public Crossroads Crossroads => _crossroads;
         public Land Land => _land;
 
-        public void Initialize(int circleMax, int chanceWater)
+        public void Init(int circleMax, int chanceWater)
         {
             _circleMax = circleMax;
             _chanceWater = chanceWater;
 
-            _land.Initialize(circleMax, CalkMaxHexagons(_circleMax) + 1);
-            _crossroads.Initialize(circleMax);
+            _land.Init(circleMax, CalkMaxHexagons(_circleMax) + 1);
+            _crossroads.Init(circleMax);
         }
 
         public IEnumerator Generate_Coroutine(bool saveToFile)

@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         [SerializeField, Range(0, 3)] private int _profit;
         [SerializeField, Hide] protected bool _isUpgrade;
         [SerializeField, Hide] protected bool _isBuildWall;
-        [SerializeField] protected Currencies _cost;
+        [SerializeField] protected CurrenciesLite _cost;
         [Space]
         [SerializeField] protected AEdifice _prefabUpgrade;
         [SerializeField, Hide] protected int _nextId;
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
         public Id<PlayerId> Owner => _owner;
         public bool IsUpgrade => _isUpgrade;
         public bool IsOccupied => _owner != PlayerId.None;
-        public Currencies Cost => _cost;
+        public CurrenciesLite Cost => _cost;
         public int Profit => _profit;
         public bool IsBuildWall => _isBuildWall;
         public bool IsWall => _isWall;
@@ -35,20 +35,13 @@ namespace Vurbiri.Colonization
         protected Id<PlayerId> _owner = PlayerId.None;
         protected bool _isWall = false;
 
-        //TEST
-        public void SetCost()
-        {
-            Debug.Log("TEST (AEdifice)");
-            _cost.Rand(_profit);
-        }
-
-        public virtual void Setup(AEdifice edifice, IdHashSet<LinkId, CrossroadLink> links)
+         public virtual void Setup(AEdifice edifice, IdHashSet<LinkId, CrossroadLink> links)
         {
             _owner = edifice._owner;
             _isWall = edifice._isWall;
 
             _graphic.transform.localRotation = edifice._graphic.transform.localRotation;
-            _graphic.Initialize(_owner, links);
+            _graphic.Init(_owner, links);
         }
 
         public virtual bool Build(AEdifice prefab, Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, bool isWall, out AEdifice edifice)
@@ -72,16 +65,16 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public virtual bool WallBuild(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, out Currencies cost)
+        public virtual bool WallBuild(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, out ACurrencies cost)
         {
             cost = null;
             return _isBuildWall;
         }
 
-        public virtual bool CanUpgradeBuy(Currencies cash) => _isUpgrade && _prefabUpgrade._cost <= cash;
+        public virtual bool CanUpgradeBuy(ACurrencies cash) => _isUpgrade && cash >= _prefabUpgrade._cost;
 
         public virtual bool CanWallBuild(Id<PlayerId> owner) => _isBuildWall && _owner == owner;
-        public virtual bool CanWallBuy(Currencies cash) => _isBuildWall;
+        public virtual bool CanWallBuy(ACurrencies cash) => _isBuildWall;
 
         public virtual void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) { }
 

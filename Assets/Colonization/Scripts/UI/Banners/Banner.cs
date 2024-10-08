@@ -17,9 +17,9 @@ namespace Vurbiri
         private Coroutine _coroutine;
         private bool _isThrough;
 
-        public override void Initialize()
+        public override void Init()
         {
-            base.Initialize();
+            base.Init();
 
             _banners = Banners.Instance;
             _image = GetComponent<Image>();

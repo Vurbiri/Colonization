@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private CmButton _buttonBack;
 
-        public virtual void Initialize(ACrossroadMenu mainMenu)
+        public virtual void Init(ACrossroadMenu mainMenu)
         {
             _players = Players.Instance;
 

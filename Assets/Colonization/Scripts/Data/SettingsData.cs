@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
             _volumes[AudioType.SFX] = SoundSingleton.Instance;
         }
 
-        public bool Initialize(bool isLoad)
+        public bool Init(bool isLoad)
         {
             DefaultProfile();
 

@@ -15,7 +15,7 @@ namespace Vurbiri
             _ysdk = YandexSDK.Instance;
         }
 
-        public override IEnumerator Initialize_Coroutine(string key, Action<bool> callback)
+        public override IEnumerator Init_Coroutine(string key, Action<bool> callback)
         {
             _key = key;
 

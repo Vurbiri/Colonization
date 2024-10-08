@@ -55,7 +55,7 @@ namespace Vurbiri
         protected virtual T CreateObject()
         {
             T gameObject = Object.Instantiate(_prefab, _repository);
-            gameObject.Initialize();
+            gameObject.Init();
             gameObject.EventDeactivate += OnDeactivate;
             return gameObject;
         }

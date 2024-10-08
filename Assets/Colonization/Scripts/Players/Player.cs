@@ -15,13 +15,11 @@ namespace Vurbiri.Colonization
         public Color Color => _visual.color;
         public Material MaterialLit => _visual.materialLit;
         public Material MaterialUnlit => _visual.materialUnlit;
-        public Currencies Resources => _resources;
-        public Currencies ExchangeRate => _exchangeRate;
+        public AReadOnlyCurrenciesReactive Resources => _resources;
+        public IReactiveSubValues<int, CurrencyId> ExchangeRate => _exchangeRate;
 
         [JsonProperty(P_RESURSES)]
         private Currencies _resources;
-        [JsonProperty(P_BLOOD)]
-        private ReactiveValue<int> _blood;
         [JsonProperty(P_ROADS)]
         private int[][][] _roadsKey;
         [JsonProperty(P_ENDIFICES)]
@@ -30,24 +28,23 @@ namespace Vurbiri.Colonization
         private readonly Id<PlayerId> _id;
         private readonly PlayerVisual _visual;
         private readonly Roads _roads;
-        private readonly AbilitySet<PlayerAbilityId> _abilities;
-        private readonly Currencies _exchangeRate;
+        private readonly StatesSet<PlayerStateId> _states;
+        private readonly Currencies _exchangeRate = new();
 
-        public Player(Id<PlayerId> playerId, PlayerVisual visual, Currencies resources, Roads roads, PlayerAbilitiesScriptable abilities) 
-                     : this(playerId, visual, roads, abilities) => _resources = resources;
-        public Player(Id<PlayerId> playerId, PlayerVisual visual, Roads roads, PlayerAbilitiesScriptable abilities)
+        public Player(Id<PlayerId> playerId, PlayerVisual visual, Currencies resources, Roads roads, PlayerStatesScriptable states) 
+                     : this(playerId, visual, roads, states) => _resources = resources;
+        public Player(Id<PlayerId> playerId, PlayerVisual visual, Roads roads, PlayerStatesScriptable states)
         {
             _id = playerId;
             _visual = visual;
-            _blood = 0;
-            _roads = roads.Initialize(_id, _visual.color);
+            _roads = roads.Init(_id, _visual.color);
 
             int groupCount = EdificeGroupId.Count;
             _edifices = new HashSet<Crossroad>[groupCount];
             for (int i = 0; i < groupCount; i++)
                 _edifices[i] = new();
 
-            _abilities = abilities.GetAbilities();
+            _states = states.GetAbilities();
         }
 
         public IEnumerator Save_Coroutine(bool saveToFile = true)
@@ -61,7 +58,6 @@ namespace Vurbiri.Colonization
             if (Storage.TryLoad(_id.ToString(), out PlayerLoadData data))
             {
                 _resources = new(data.resources);
-                _blood = data.blood;
                 CreateRoads(data);
                 CreateCities(data);
                 return;
@@ -123,71 +119,67 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public void Profit(int hexId, Currencies freeGroundRes)
+        public void Profit(int hexId, ACurrencies freeGroundRes)
         {
-            int shrineCount = _edifices[EdificeGroupId.Shrine].Count, shrineMaxRes = _abilities.GetValue(PlayerAbilityId.ShrineMaxRes);
+            int shrineCount = _edifices[EdificeGroupId.Shrine].Count, shrineMaxRes = _states.GetValue(PlayerStateId.ShrineMaxRes);
 
-            for (int i = 0; i < shrineCount; i++)
-                _blood.Value += _abilities.GetValue(PlayerAbilityId.ShrinePassiveProfit);
-            _blood.Value = Mathf.Clamp(_blood.Value, 0, shrineMaxRes);
+            _resources.AddAndClampToBlood(_states.GetValue(PlayerStateId.ShrinePassiveProfit) * shrineCount, shrineMaxRes);
 
             if (hexId == CONST.ID_GATE)
             {
-                _blood.Value = Mathf.Clamp(_blood.Value + _abilities.GetValue(PlayerAbilityId.ShrineProfit) * shrineCount, 0, shrineMaxRes);
-                _resources.ClampMain(_abilities.GetValue(PlayerAbilityId.MaxResources));
+                _resources.AddAndClampToBlood(_states.GetValue(PlayerStateId.ShrineProfit) * shrineCount, shrineMaxRes);
+                _resources.ClampMain(_states.GetValue(PlayerStateId.MaxResources));
                 return;
             }
 
-            if (_abilities.IsMore(PlayerAbilityId.IsFreeGroundRes))
+            if (_states.IsMore(PlayerStateId.IsFreeGroundRes) && freeGroundRes != null)
                 _resources.AddFrom(freeGroundRes);
 
             foreach (var port in _edifices[EdificeGroupId.Port])
-                _resources.AddFrom(port.Profit(hexId, _abilities.GetValue(PlayerAbilityId.PortsRatioRes)));
+                _resources.AddFrom(port.Profit(hexId, _states.GetValue(PlayerStateId.PortsRatioRes)));
 
-            Currencies profit;
+            CurrenciesLite profit;
             foreach (var urban in _edifices[EdificeGroupId.Urban])
             {
                 profit = urban.Profit(hexId);
                 if (profit.Amount == 0 && urban.IsNotEnemy())
-                    profit.RandomMainAdd(_abilities.GetValue(PlayerAbilityId.CompensationRes));
+                    profit.RandomMainAdd(_states.GetValue(PlayerStateId.CompensationRes));
                 _resources.AddFrom(profit);
             }
         }
 
         public void UpdateExchangeRate()
         {
-            Ability<PlayerAbilityId> ability = _abilities[PlayerAbilityId.ExchangeRate];
+            State<PlayerStateId> ability = _states[PlayerStateId.ExchangeRate];
 
-            Currencies newRate = new();
-            for (int i = 0; i < newRate.CountMain; i++)
-                newRate[i] = ability.NextValue;
+            for (int i = 0; i < CurrencyId.CountMain; i++)
+                _exchangeRate.Set(i, ability.NextValue);
 
-            _exchangeRate.SetFrom(newRate);
         }
 
         public bool CanCrossroadUpgrade(Crossroad crossroad)
         {
             int upgradeGroup = crossroad.NextGroupId;
-            return (crossroad.GroupId != EdificeGroupId.None || _abilities.IsMore(EdificeGroupId.ToIdAbility(upgradeGroup), _edifices[upgradeGroup].Count)) 
+            return (crossroad.GroupId != EdificeGroupId.None || _states.IsMore(EdificeGroupId.ToIdAbility(upgradeGroup), _edifices[upgradeGroup].Count)) 
                    && crossroad.CanUpgrade(_id);
         }
         public void CrossroadUpgradeBuy(Crossroad crossroad)
         {
-            if (crossroad.UpgradeBuy(_id, out Currencies cost))
+            if (crossroad.UpgradeBuy(_id, out ACurrencies cost))
             {
                 _edifices[crossroad.GroupId].Add(crossroad);
                 _resources.Pay(cost);
             }
         }
 
-        public bool CanWallBuild(Crossroad crossroad) => _abilities.IsMore(PlayerAbilityId.IsWall) && crossroad.CanWallBuild(_id);
+        public bool CanWallBuild(Crossroad crossroad) => _states.IsMore(PlayerStateId.IsWall) && crossroad.CanWallBuild(_id);
         public void CrossroadWallBuy(Crossroad crossroad)
         {
-            if (crossroad.WallBuy(_id, out Currencies cost))
+            if (crossroad.WallBuy(_id, out ACurrencies cost))
                 _resources.Pay(cost);
         }
 
-        public bool CanRoadBuild(Crossroad crossroad) => _abilities.IsMore(PlayerAbilityId.MaxRoads, _roads.Count) && crossroad.CanRoadBuild(_id);
+        public bool CanRoadBuild(Crossroad crossroad) => _states.IsMore(PlayerStateId.MaxRoads, _roads.Count) && crossroad.CanRoadBuild(_id);
         public bool CanRoadBuy() => _resources >= _roads.Cost;
         public void RoadBuy(CrossroadLink link)
         {
@@ -195,9 +187,9 @@ namespace Vurbiri.Colonization
             _resources.Pay(_roads.Cost);
         }
 
-        public bool PerkBuy(IPerk<PlayerAbilityId> perk)
+        public bool PerkBuy(IPerk<PlayerStateId> perk)
         {
-            if (perk.TargetObject == TargetOfPerkId.Player && _abilities.TryAddPerk(perk))
+            if (perk.TargetObject == TargetOfPerkId.Player && _states.TryAddPerk(perk))
             {
                 _resources.Pay(perk.Cost);
                 return true;
@@ -216,18 +208,15 @@ namespace Vurbiri.Colonization
         {
             [JsonProperty(P_RESURSES)]
             public int[] resources;
-            [JsonProperty(P_BLOOD)]
-            public ReactiveValue<int> blood;
             [JsonProperty(P_ROADS)]
             public int[][][] roadsKey;
             [JsonProperty(P_ENDIFICES)]
             public int[][][] edifices;
 
             [JsonConstructor]
-            public PlayerLoadData(int[] re, ReactiveValue<int> bl, int[][][] ro, int[][][] en)
+            public PlayerLoadData(int[] re, int[][][] ro, int[][][] en)
             {
                 resources = re;
-                blood = bl;
                 roadsKey = ro;
                 edifices = en;
             }

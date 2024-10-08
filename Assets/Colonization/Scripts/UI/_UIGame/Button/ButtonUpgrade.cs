@@ -21,9 +21,9 @@ namespace Vurbiri.Colonization.UI
 
         public CmButton Button => _button;
 
-        public override void Initialize()
+        public override void Init()
         {
-            base.Initialize();
+            base.Init();
             _button = _thisSelectable as CmButton;
             _localization = Language.Instance;
         }

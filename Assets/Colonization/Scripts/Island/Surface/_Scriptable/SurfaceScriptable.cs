@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
         public void Create(Transform parent) 
         {
             if (_prefabSurface != null)
-                Instantiate(_prefabSurface, parent).Initialize();
+                Instantiate(_prefabSurface, parent).Init();
         }
     }
 }

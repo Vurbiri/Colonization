@@ -19,9 +19,9 @@ namespace Vurbiri.Colonization.UI
 
         private const int COUNT_ROADS = 3;
 
-        public override void Initialize(ACrossroadMenu mainMenu)
+        public override void Init(ACrossroadMenu mainMenu)
         {
-            base.Initialize(mainMenu);
+            base.Init(mainMenu);
 
             _thisTransform = GetComponent<RectTransform>();
             if (_camera == null)

@@ -9,7 +9,7 @@ namespace Vurbiri.UI
 
         public string Key { get => _key; set { _key = value; SetText(Language.Instance); } }
 
-        private void Start() => Initialize();
+        private void Start() => Init();
 
         protected override void SetText(Language localization) => _text = localization.GetText(_file, _key);
     }

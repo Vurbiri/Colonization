@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
@@ -15,6 +16,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private bool _load;
         [SerializeField] private EdificesScriptable _prefabs;
         [SerializeField] private Id<PlayerId> _id;
+        [SerializeField] private LoadingScreen _screen;
 
         private GameSettingsData _gameSettings;
         private Players _players;
@@ -24,6 +26,8 @@ namespace Vurbiri.Colonization
 
         private void Awake()
         {
+            _screen.Init(true);
+
             _gameSettings = GameSettingsData.Instance;
             _players = Players.Instance;
             _eventBus = EventBus.Instance;
@@ -35,7 +39,7 @@ namespace Vurbiri.Colonization
 
         private IEnumerator Start()
         {
-            _island.Initialize(_gameSettings.CircleMax, _gameSettings.ChanceWater);
+            _island.Init(_gameSettings.CircleMax, _gameSettings.ChanceWater);
 
             _gameSettings.StartGame();
 
@@ -61,6 +65,8 @@ namespace Vurbiri.Colonization
 
             GC.Collect();
 
+            _screen.SmoothOff();
+
             yield return null;
 
             UnityEngine.Debug.Log("Start");
@@ -76,7 +82,7 @@ namespace Vurbiri.Colonization
 
             int roll = _dices.Roll();
             UnityEngine.Debug.Log("ROLL: " + roll);
-            Currencies free = null;
+            ACurrencies free = null;
             if (roll != ID_GATE)
                 free = _island.Land.GetFreeGroundResource(roll);
 
@@ -87,10 +93,6 @@ namespace Vurbiri.Colonization
         {
             if (Players.Instance != null)
                 _players.DestroyGame();
-
-            UnityEngine.Debug.Log("TEST (Game)");
-            foreach (AEdifice c in _prefabs)
-                c.Cost.Clear();
         }
     }
 }

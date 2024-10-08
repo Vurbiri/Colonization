@@ -12,14 +12,14 @@ namespace Vurbiri.Colonization.UI
         
         private Player _playerCurrent;
 
-        public void Initialize(ACrossroadBuildMenu roadsMenu)
+        public void Init(ACrossroadBuildMenu roadsMenu)
         {
             _players = Players.Instance;
 
             _buttonClose.onClick.AddListener(() => gameObject.SetActive(false));
             _buttonRoads.onClick.AddListener(OnRoads);
             _buttonWall.onClick.AddListener(OnWall);
-            _buttonUpgrade.Initialize();
+            _buttonUpgrade.Init();
             _buttonUpgrade.AddListener(OnUpgrade);
 
             gameObject.SetActive(false);

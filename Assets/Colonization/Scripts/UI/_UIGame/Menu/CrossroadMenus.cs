@@ -21,8 +21,8 @@ namespace Vurbiri.Colonization.UI
 
             EventBus.Instance.EventCrossroadSelect += OnSelectCrossroad;
 
-            _mainMenu.Initialize(_roadsMenu);
-            _roadsMenu.Initialize(_mainMenu);
+            _mainMenu.Init(_roadsMenu);
+            _roadsMenu.Init(_mainMenu);
 
             #region Local: OnSelectCrossroad()
             //=================================

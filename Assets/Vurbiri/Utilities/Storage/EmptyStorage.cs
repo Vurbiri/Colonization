@@ -7,7 +7,7 @@ namespace Vurbiri
     {
         public override bool IsValid => true;
 
-        public override IEnumerator Initialize_Coroutine(string key, Action<bool> callback)
+        public override IEnumerator Init_Coroutine(string key, Action<bool> callback)
         {
             callback?.Invoke(false);
             return null;

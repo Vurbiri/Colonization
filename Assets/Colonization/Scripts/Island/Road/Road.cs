@@ -29,13 +29,13 @@ namespace Vurbiri.Colonization
             _owner = playerId;
             _crossroads.Add(start, end);
 
-            InitializeLineRenderer(start.Position, color);
+            InitLineRenderer(start.Position, color);
 
             CreateLine(start.Position, end.Position);
 
-            #region Local: InitializeLineRenderer(...)
+            #region Local: InitLineRenderer(...)
             //=================================
-            void InitializeLineRenderer(Vector3 start, Color color)
+            void InitLineRenderer(Vector3 start, Color color)
             {
                 _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
                 _textureScale = new Vector2(_textureXRange, _textureYRange);

@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
             Language localization = Language.Instance;
             SettingsData settings = SettingsData.Instance;
 
-            yield return StartCoroutine(InitializeYSDK_Coroutine());
+            yield return StartCoroutine(InitYSDK_Coroutine());
 
             //Banners.InstanceF.Initialize();
 
@@ -43,9 +43,9 @@ namespace Vurbiri.Colonization
             //Message.Log("End LoadingPreGame");
             _loadScene.End();
 
-            #region Local: InitializeYSDK_Coroutine(), CreateStorages_Coroutine()
+            #region Local: InitYSDK_Coroutine(), CreateStorages_Coroutine()
             //==========================================
-            IEnumerator InitializeYSDK_Coroutine()
+            IEnumerator InitYSDK_Coroutine()
             {
                 WaitResult<bool> waitResult;
 
@@ -70,14 +70,14 @@ namespace Vurbiri.Colonization
                 if (!Storage.StoragesCreate())
                     Message.Log(localization.GetText(Files.Main, "ErrorStorage"));
 
-                yield return StartCoroutine(InitializeStorages_Coroutine());
+                yield return StartCoroutine(InitStorages_Coroutine());
 
-                #region Local: nitializeStorages_Coroutin
+                #region Local: InitStorages_Coroutine()
                 //==========================================
-                IEnumerator InitializeStorages_Coroutine()
+                IEnumerator InitStorages_Coroutine()
                 {
                     WaitReturnData<bool> waitReturn = new(this);
-                    yield return waitReturn.Start(Storage.Initialize_Coroutine, _keySave);
+                    yield return waitReturn.Start(Storage.Init_Coroutine, _keySave);
 
                     Message.Log(waitReturn.Return ? "Storage initialize" : "Storage not initialize");
 
@@ -87,8 +87,8 @@ namespace Vurbiri.Colonization
                     void Load(bool load)
                     {
                         bool result = false;
-                        result = settings.Initialize(load) || result;
-                        result = GameSettingsData.Instance.Initialize(load) || result;
+                        result = settings.Init(load) || result;
+                        result = GameSettingsData.Instance.Init(load) || result;
 
                         settings.IsFirstStart = !result;
                     }

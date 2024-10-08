@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
 {
     public class UrbanGraphic : AEdificeGraphic
     {
-        public override void Initialize(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
+        public override void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {
             GetComponent<MeshRenderer>().SetSharedMaterial(Players.Instance[playerId].MaterialLit, _idMaterial);
 

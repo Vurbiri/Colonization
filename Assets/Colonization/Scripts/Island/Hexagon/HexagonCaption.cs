@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
         private Transform _thisTransform, _cameraTransform;
         private Quaternion _lastCameraRotation;
 
-        public void Initialize(Transform cameraTransform, int id, IReadOnlyList<Id<CurrencyId>> spritesIds)
+        public void Init(Transform cameraTransform, int id, IReadOnlyList<Id<CurrencyId>> spritesIds)
         {
             _thisTransform = transform;
             _cameraTransform = cameraTransform;

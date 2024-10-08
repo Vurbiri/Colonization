@@ -19,7 +19,7 @@ namespace Vurbiri.UI
         protected string _text;
         protected Unsubscriber<Language> _subscribe;
 
-        public virtual void Initialize()
+        public virtual void Init()
         {
             _thisSelectable = GetComponent<Selectable>();
             if (_hint == null)

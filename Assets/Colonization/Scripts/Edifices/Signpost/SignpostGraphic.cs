@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
     {
         private Players _players;
 
-        public override void Initialize(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
+        public override void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {
             _players = Players.Instance;
 

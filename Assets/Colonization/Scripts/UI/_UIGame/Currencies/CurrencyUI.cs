@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
 
         public Vector2  Size => _thisRectTransform.sizeDelta;
         
-        public CurrencyUI Initialize(int id, Vector3 position)
+        public CurrencyUI Init(int id, Vector3 position)
         {
             _iconTMP.text = string.Format(TAG_SPRITE, id);
             _thisRectTransform.transform.localPosition = position;

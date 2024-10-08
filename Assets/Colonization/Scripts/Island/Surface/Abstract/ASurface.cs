@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
 {
     public abstract class ASurface : MonoBehaviour
     {
-        public virtual void Initialize()
+        public virtual void Init()
         {
             Destroy(this);
         }

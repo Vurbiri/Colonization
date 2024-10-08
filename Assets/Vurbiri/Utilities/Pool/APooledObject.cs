@@ -10,7 +10,7 @@ namespace Vurbiri
 
         protected void Activate() => gameObject.SetActive(true);
 
-        public virtual void Initialize()
+        public virtual void Init()
         {
             _thisTransform = transform;
             gameObject.SetActive(false);

@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
         public event Action<int> EventChangeScore;
         public event Action<int> EventChangeMaxScore;
 
-        public bool Initialize(bool isLoad)
+        public bool Init(bool isLoad)
         {
             bool result = isLoad && Storage.TryLoad(_keySave, out _data);
             if (!result)

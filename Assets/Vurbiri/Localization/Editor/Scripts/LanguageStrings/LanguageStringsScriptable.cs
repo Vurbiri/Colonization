@@ -24,7 +24,7 @@ namespace Vurbiri.Localization.Editors
 
         public string LoadFile => _loadFile;
 
-        public void Initialize()
+        public void Init()
         {
             using (SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings())
             {
@@ -40,7 +40,7 @@ namespace Vurbiri.Localization.Editors
                 _names[i] = _languages[i].Folder.Concat(" (", _languages[i].Name, ")");
         }
 
-        public void Uninitialized()
+        public void UnInit()
         {
             _languages = null;
             _count = -1;

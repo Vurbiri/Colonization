@@ -14,10 +14,10 @@ namespace Vurbiri.Colonization
 
         public static int ToIdAbility(int id) => id switch
         {
-            None => PlayerAbilityId.None,
-            Shrine => PlayerAbilityId.MaxShrine,
-            Port => PlayerAbilityId.MaxPort,
-            Urban => PlayerAbilityId.MaxUrban,
+            None => PlayerStateId.None,
+            Shrine => PlayerStateId.MaxShrine,
+            Port => PlayerStateId.MaxPort,
+            Urban => PlayerStateId.MaxUrban,
             _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение EdificeGroup - {id} в ToAbilityType()"),
         };
     }

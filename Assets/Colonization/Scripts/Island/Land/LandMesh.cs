@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
         private Dictionary<Key, HexagonMesh> _hexagons;
         private float _waterLevel;
 
-        public void Initialize(int circleMax, int count)
+        public void Init(int circleMax, int count)
         {
             _thisMeshFilter = GetComponent<MeshFilter>();
             _hexagons = new(count);

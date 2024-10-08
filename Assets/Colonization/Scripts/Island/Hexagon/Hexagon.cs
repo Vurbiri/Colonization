@@ -27,11 +27,11 @@ namespace Vurbiri.Colonization
         private const string NAME = "Hexagon_";
         #endregion
 
-        public void Initialize(HexagonData data, float waterLevel, Transform cameraTransform)
+        public void Init(HexagonData data, float waterLevel, Transform cameraTransform)
         {
             (_key, _id, _surface) = data.GetValues();
 
-            _hexagonCaption.Initialize(cameraTransform, _id, _surface.Currencies);
+            _hexagonCaption.Init(cameraTransform, _id, _surface.Currencies);
 
             _isGate = _surface.IsGate;
             _isWater = _surface.IsWater;

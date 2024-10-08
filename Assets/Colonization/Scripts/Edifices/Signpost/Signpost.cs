@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
     {
         public override void Setup(AEdifice edifice, IdHashSet<LinkId, CrossroadLink> links)
         {
-            _graphic.Initialize(_owner, links);
+            _graphic.Init(_owner, links);
 
             _prefabUpgrade = edifice;
             _nextId = edifice.Id.ToInt;
