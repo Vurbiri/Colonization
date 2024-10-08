@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
                 return;
             
             for (int i = 0; i < _countAll; i++)
-                _amount += _values[Random.Range(0, _countMain)].Add(other[i]);
+                _amount += _values[i].Add(other[i]);
 
             ActionAmountChange?.Invoke(_amount);
         }
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
         public void Pay(ACurrencies cost)
         {
             for (int i = 0; i < _countAll; i++)
-                _amount += _values[Random.Range(0, _countMain)].Add(-cost[i]);
+                _amount += _values[i].Add(-cost[i]);
 
             ActionAmountChange?.Invoke(_amount);
         }

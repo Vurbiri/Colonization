@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
@@ -8,7 +9,8 @@ namespace Vurbiri.Colonization
         private readonly State<TId>[] _states;
         private readonly int _count;
 
-        public State<TId> this[Id<TId> id] => _states[id.ToInt];
+        public IReadOnlyReactiveValue<int> this[int index] => _states[index];
+        public IReadOnlyReactiveValue<int> this[Id<TId> id] => _states[id.ToInt];
 
         public StatesSet(IdArray<TId, int> states)
         {
@@ -20,6 +22,8 @@ namespace Vurbiri.Colonization
         }
 
         public bool IsMore(Id<TId> stateId, int value = 0) => _states[stateId.ToInt].NextValue > value;
+
+        public State<TId> GetState(Id<TId> stateId) => _states[stateId.ToInt];
 
         public int GetValue(Id<TId> stateId) => _states[stateId.ToInt].NextValue;
 

@@ -143,11 +143,9 @@ namespace Vurbiri.Colonization
         {
             protected int _value;
 
-            public int Value { get => _value; protected set => ActionValueChange?.Invoke(_value = value); }
+            public override int Value { get => _value; protected set => ActionValueChange?.Invoke(_value = value); }
 
             public ACurrency(int value) => _value = value;
-
-            protected override void Callback(Action<int> action) => action(_value);
 
             public abstract int Set(int value);
             public abstract int Add(int value);

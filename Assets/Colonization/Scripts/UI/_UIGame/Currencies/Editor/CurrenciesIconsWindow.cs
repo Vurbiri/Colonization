@@ -29,7 +29,7 @@ namespace VurbiriEditor.Colonization
         private SerializedObject _serializedObject;
         private SerializedProperty _iconsProperty;
 
-        public static readonly Vector2 wndMinSize = new(450f, 450f);
+        public static readonly Vector2 wndMinSize = new(350f, 350f);
 
         [MenuItem(MENU)]
         private static void ShowWindow()

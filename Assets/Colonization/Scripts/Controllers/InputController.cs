@@ -34,8 +34,16 @@ namespace Vurbiri.Colonization
         {
             _inputActions.Enable();
 
+            DisableGameplayMap();
+
             _inputActions.Gameplay.LeftClick.performed += OnLeftClick;
             _inputActions.Gameplay.RightClick.performed += OnRightClick;
+        }
+
+        public void DisableGameplayMap()
+        {
+            _inputActions.Gameplay.Disable();
+            _inputActions.Camera.Disable();
         }
 
         public void EnableGameplayMap()

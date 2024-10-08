@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -8,55 +6,71 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private Id<PlayerId> _playerId;
         [Space]
-        [SerializeField] private CurrencyUI _currencyUIPrefab;
+        [SerializeField] private Currency _currencyUIPrefab;
+        [SerializeField] private Amount _amountUI;
+        [SerializeField] private Blood _bloodUI;
         [Space]
         [SerializeField] private Vector2 _padding = new(17f, 17f);
         [SerializeField] private float _space = 15f;
         [Space]
+        [SerializeField, Range(0.1f, 2f)] private float _scale = 1f;
+        [Space]
+        [SerializeField] private Vector3 _offsetPopup = Vector3.up * 100f;
+        [Space]
         [SerializeField] private RectTransform _thisRectTransform;
 
-        private readonly IdArray<CurrencyId, CurrencyUI> _currenciesUI = new();
-        private readonly List<Unsubscriber<int>> _unsubscribers = new(CurrencyId.Count + 2);
+        private readonly IdArray<CurrencyId, Currency> _currenciesUI = new();
 
         private void Start()
         {
-            Vector2 curSize = _currencyUIPrefab.Size;
-            float offset = curSize.x * 5f + _space * 4f;
+            Vector2 cSize = _currencyUIPrefab.Size, aSize = _amountUI.Size, bSize = _bloodUI.Size;
+            float offset = cSize.x * 5f + aSize.x + bSize.x + _space * 7f;
             Vector2 size = new()
             {
-                y = curSize.y + _padding.y * 2f,
+                y = Mathf.Max(Mathf.Max(cSize.y, aSize.y), bSize.y) + _padding.y * 2f,
                 x = offset + _padding.x * 2f
             };
 
             _thisRectTransform.sizeDelta = size;
 
-            Vector3 pos = new((curSize.x - offset) / 2f, size.y / 2f, 0f);
+            Vector2 pivot = _thisRectTransform.pivot;
+            float posX = cSize.x * 0.5f + _padding.x * (1f - 2f * pivot.x) - offset * pivot.x;
+            Vector3 pos = new(posX, size.y * (0.5f - pivot.y), 0f);
 
-            offset = curSize.x + _space;
+            offset = cSize.x + _space;
             for (int i = 0; i < CurrencyId.CountMain; i++)
             {
-                _currenciesUI[i] = Instantiate(_currencyUIPrefab, _thisRectTransform).Init(i, pos);
+                _currenciesUI[i] = Instantiate(_currencyUIPrefab, _thisRectTransform).Init(i, pos, _offsetPopup);
                 pos.x += offset;
             }
 
-            EventBus.Instance.EventEndSceneCreate += OnEndSceneCreate;
+            pos.x -= (cSize.x - aSize.x) * 0.5f;
+            _amountUI = Instantiate(_amountUI, _thisRectTransform).Init(pos);
 
-            //Local
-            // ===========================================
-            void OnEndSceneCreate()
-            {
-                EventBus.Instance.EventEndSceneCreate -= OnEndSceneCreate;
-                var curr = Players.Instance[_playerId].Resources;
-                for (int i = 0; i < CurrencyId.CountMain; i++)
-                    _unsubscribers.Add(curr.Subscribe(i, _currenciesUI[i].SetValue));
-            }
+            pos.x += (bSize.x + aSize.x) * 0.5f + _space * 2f;
+            _bloodUI = Instantiate(_bloodUI, _thisRectTransform).Init(pos, _offsetPopup);
+
+            //transform.localScale = Vector3.one * _scale;
+
+            EventBus.Instance.EventEndSceneCreate += OnEndSceneCreate;
         }
 
-
-        private void OnDestroy()
+        private void OnEndSceneCreate()
         {
-            foreach (var unsubscriber in _unsubscribers)
-                unsubscriber?.Unsubscribe();
+            EventBus.Instance.EventEndSceneCreate -= OnEndSceneCreate;
+            Player player = Players.Instance[_playerId];
+            var curr = player.Resources;
+            Currency currency;
+            for (int i = 0; i < CurrencyId.CountMain; i++)
+            {
+                currency = _currenciesUI[i];
+                currency.Unsubscriber = curr.Subscribe(i, currency.SetValue);
+            }
+
+            _amountUI.SetReactive(curr, player.GetStateReactive(PlayerStateId.MaxResources));
+            _bloodUI.SetReactive(curr, player.GetStateReactive(PlayerStateId.ShrineMaxRes));
+
+            Destroy(this);
         }
 
 #if UNITY_EDITOR

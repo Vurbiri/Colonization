@@ -65,11 +65,10 @@ namespace Vurbiri.Colonization
 
             GC.Collect();
 
-            _screen.SmoothOff();
+            yield return _screen.SmoothOff_Wait();
 
-            yield return null;
+            _inputController.EnableGameplayMap();
 
-            UnityEngine.Debug.Log("Start");
         }
 
         public void EndTurnPlayer()

@@ -121,6 +121,9 @@ namespace Vurbiri.Colonization
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
+            hexId = 13;
+
+
             int shrineCount = _edifices[EdificeGroupId.Shrine].Count, shrineMaxRes = _states.GetValue(PlayerStateId.ShrineMaxRes);
 
             _resources.AddAndClampToBlood(_states.GetValue(PlayerStateId.ShrinePassiveProfit) * shrineCount, shrineMaxRes);
@@ -150,12 +153,14 @@ namespace Vurbiri.Colonization
 
         public void UpdateExchangeRate()
         {
-            State<PlayerStateId> ability = _states[PlayerStateId.ExchangeRate];
+            State<PlayerStateId> state = _states.GetState(PlayerStateId.ExchangeRate);
 
             for (int i = 0; i < CurrencyId.CountMain; i++)
-                _exchangeRate.Set(i, ability.NextValue);
+                _exchangeRate.Set(i, state.NextValue);
 
         }
+
+        public IReadOnlyReactiveValue<int> GetStateReactive(Id<PlayerStateId> id) => _states[id];
 
         public bool CanCrossroadUpgrade(Crossroad crossroad)
         {

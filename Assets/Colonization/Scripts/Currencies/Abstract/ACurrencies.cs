@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -15,8 +16,7 @@ namespace Vurbiri.Colonization
 
         public abstract int this[int index] { get; }
         public abstract int this[Id<CurrencyId> id] { get; }
-
-        
+                
         public static bool operator >=(ACurrencies left, ACurrencies right)
         {
             if (left._amount < right._amount)
@@ -36,6 +36,15 @@ namespace Vurbiri.Colonization
         }
         //public static bool operator >(ACurrencies left, ACurrencies right) => !(left <= right);
         //public static bool operator <(ACurrencies left, ACurrencies right) => !(left >= right);
+
+        public override string ToString()
+        {
+            StringBuilder sb = new(85);
+            for (int i = 0; i < _countAll; i++)
+                sb.Append($"{i} = {this[i]} | ");
+            sb.Append($" Amount: {_amount}");
+            return sb.ToString();
+        }
 
     }
 }

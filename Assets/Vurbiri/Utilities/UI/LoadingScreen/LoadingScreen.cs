@@ -1,117 +1,114 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Vurbiri.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class LoadingScreen : MonoBehaviour
     {
-        [SerializeField] private float _speedSmooth = 1f;
-        [Header("Индикатор"), Space]
-        [SerializeField] private Image _indicatorSprite;
+        [SerializeField, Range(0.1f, 2f)] private float _speedSmooth = 0.5f;
         [Space]
-        [SerializeField] private Color _startColor = Color.white;
-        [SerializeField] private Color _endColor = Color.gray;
-        [SerializeField] private float _ratioSpeedFlashes = 1.5f;
+        [SerializeField] private GameObject _indicatorImage;
 
-        private Coroutine _coroutineSmooth, _coroutineIndicator;
+        private Coroutine _coroutineSmooth;
         private CanvasGroup _thisCanvasGroup;
         private GameObject _self;
+        private bool _isOn;
 
         public void Init(bool isOn)
         {
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _self = gameObject;
+            _isOn = _self.activeSelf;
 
-            if (isOn) On();
-            else Off();
-
+            TurnOnOf(isOn);
         }
 
-        public void On()
+        public void TurnOnOf(bool isOn)
         {
-            _self.SetActive(true);
-            _thisCanvasGroup.alpha = 1f;
-            _coroutineIndicator ??= StartCoroutine(IndicatorFlashes_Coroutine());
+            _isOn = isOn;
 
+            _thisCanvasGroup.alpha = isOn ? 1f : 0f;
+            _indicatorImage.SetActive(isOn);
+            _self.SetActive(isOn);
         }
-        public void Off()
+
+        public WaitActivate SmoothOn_Wait()
         {
-            _thisCanvasGroup.alpha = 0f;
-            if (_coroutineIndicator != null)
+            WaitActivate wait = new();
+
+            if(_isOn)
             {
-                StopCoroutine(_coroutineIndicator);
-                _coroutineIndicator = null;
+                wait.Activate();
+                return wait;
             }
-            _self.SetActive(false);
-        }
 
-        public void SmoothOn()
-        {
+            _isOn = true;
             _self.SetActive(true);
             if (_coroutineSmooth != null)
                 StopCoroutine(_coroutineSmooth);
 
             _coroutineSmooth = StartCoroutine(SmoothOn_Coroutine());
 
+            return wait;
+
             #region Local: SmoothOn_Coroutine()
             //=================================
             IEnumerator SmoothOn_Coroutine()
             {
-                _coroutineIndicator ??= StartCoroutine(IndicatorFlashes_Coroutine());
 
                 float alpha = _thisCanvasGroup.alpha;
-                while (alpha < 1f)
+                while (alpha < 0.98f)
                 {
                     _thisCanvasGroup.alpha = alpha += Time.unscaledDeltaTime * _speedSmooth;
                     yield return null;
                 }
 
+                _indicatorImage.SetActive(true);
                 _thisCanvasGroup.alpha = 1f;
                 _coroutineSmooth = null;
+                wait.Activate();
             }
             #endregion
         }
 
-        public void SmoothOff()
+        public WaitActivate SmoothOff_Wait()
         {
+            WaitActivate wait = new();
+
+            if (!_isOn)
+            {
+                wait.Activate();
+                return wait;
+            }
+
+            _isOn = false;
+            _indicatorImage.SetActive(false);
             if (_coroutineSmooth != null)
                 StopCoroutine(_coroutineSmooth);
 
             _coroutineSmooth = StartCoroutine(SmoothOff_Coroutine());
+
+            return wait;
 
             #region Local: SmoothOff_Coroutine()
             //=================================
             IEnumerator SmoothOff_Coroutine()
             {
                 float alpha = _thisCanvasGroup.alpha;
-                while (alpha > 0f)
+                while (alpha > 0.12f)
                 {
                     _thisCanvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _speedSmooth;
                     yield return null;
                 }
 
                 _thisCanvasGroup.alpha = 0f;
-
-                if (_coroutineIndicator != null)
-                    StopCoroutine(_coroutineIndicator);
-
-                _coroutineIndicator = null;
                 _coroutineSmooth = null;
 
+                wait.Activate();
                 _self.SetActive(false);
             }
             #endregion
-        }
-
-        private IEnumerator IndicatorFlashes_Coroutine()
-        {
-            while (true)
-            {
-                _indicatorSprite.color = Color.Lerp(_startColor, _endColor, Mathf.PingPong(Time.time * _ratioSpeedFlashes, 1));
-                yield return null;
-            }
         }
     }
 }

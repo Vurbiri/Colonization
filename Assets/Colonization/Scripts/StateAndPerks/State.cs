@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Vurbiri.Reactive;
 
@@ -14,7 +13,7 @@ namespace Vurbiri.Colonization
         private readonly HashSet<IPerk<TId>> _randomPerks;
 
         public Id<TId> Id => _id;
-        public int CurrentValue => _currentValue;
+        public override int Value { get => _currentValue; protected set { } }
         public int NextValue
         {
             get
@@ -29,7 +28,7 @@ namespace Vurbiri.Colonization
                 return newValue;
             }
         }
-
+        
         public State(Id<TId> id, int baseValue)
         {
             _id = id;
@@ -63,6 +62,5 @@ namespace Vurbiri.Colonization
             return _randomPerks.Add(perk);
         }
 
-        protected override void Callback(Action<int> action) => action(_currentValue);
     }
 }

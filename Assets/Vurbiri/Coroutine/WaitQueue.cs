@@ -10,7 +10,7 @@ namespace Vurbiri
         private readonly Queue<IEnumerator> _coroutines = new();
         private readonly MonoBehaviour _monoBehaviour;
         private IEnumerator _currentCoroutine = null;
-        private Action finalAction;
+        private readonly Action finalAction;
 
         public override bool keepWaiting => _currentCoroutine != null;
 
@@ -29,7 +29,7 @@ namespace Vurbiri
             _monoBehaviour.StartCoroutine(AddCoroutine(coroutine));
         }
 
-        public void StopAndClear()
+        public void StopAndClear(bool isRunFinalAction)
         {
             if (_currentCoroutine != null)
             {
@@ -38,6 +38,9 @@ namespace Vurbiri
             }
 
             _coroutines.Clear();
+
+            if(isRunFinalAction)
+                finalAction?.Invoke();
         }
 
         public WaitQueue Add(IEnumerator coroutine)

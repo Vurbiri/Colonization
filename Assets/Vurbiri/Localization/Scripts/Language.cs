@@ -6,7 +6,7 @@ using static Vurbiri.Storage;
 
 namespace Vurbiri.Localization
 {
-    public class Language : AReactive<Language>
+    public class Language : IReactive<Language>
     {
         private static readonly Language _instance;
 
@@ -19,16 +19,28 @@ namespace Vurbiri.Localization
         private readonly int _countFiles;
         private LanguageType _currentLanguage;
 
+        private Action<Language> ActionValueChange;
+
         public static Language Instance => _instance;
         public static bool IsValid => _instance != null && _instance._isValid;
 
         public IEnumerable<LanguageType> Languages => _languages;
         public int CurrentId => _currentLanguage == null ? -1 : _currentLanguage.Id;
 
-
         static Language() => _instance ??= new Language();
 
         public static Unsubscriber<Language> Subscribing(Action<Language> action, bool calling = true) => _instance?.Subscribe(action, calling);
+        public Unsubscriber<Language> Subscribe(Action<Language> action, bool calling)
+        {
+            ActionValueChange -= action;
+            ActionValueChange += action;
+            if (calling && action != null)
+                action(this);
+
+            return new(this, action);
+        }
+        public static void Unsubscribing(Action<Language> action) => _instance?.Unsubscribe(action);
+        public void Unsubscribe(Action<Language> action) => ActionValueChange -= action;
 
         private Language()
         {
@@ -151,8 +163,6 @@ namespace Vurbiri.Localization
 
             return true;
         }
-
-        protected override void Callback(Action<Language> action) => action(this);
 
         #region Nested: StringComparer
         //***********************************************************
