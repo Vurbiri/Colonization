@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization.UI
             _currentCrossroad = crossroad;
 
             if (ButtonSetup(_buttonUpgrade.Button, _playerCurrent.CanCrossroadUpgrade(crossroad), crossroad.CanUpgradeBuy(_playerCurrent.Resources)))
-                _buttonUpgrade.SetupHint(crossroad.IdUpgrade);
+                _buttonUpgrade.SetupHint(crossroad.IdUpgrade, _playerCurrent.Resources, crossroad.CostUpgrade);
 
             ButtonSetup(_buttonWall, _playerCurrent.CanWallBuild(crossroad), crossroad.CanWallBuy(_playerCurrent.Resources));
             ButtonSetup(_buttonRoads, _playerCurrent.CanRoadBuild(crossroad), _playerCurrent.CanRoadBuy());

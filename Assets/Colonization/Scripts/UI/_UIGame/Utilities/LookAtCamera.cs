@@ -12,8 +12,6 @@ namespace Vurbiri.Colonization.UI
         private void Awake()
         {
             _thisTransform = transform;
-            if (_cameraTransform == null)
-                _cameraTransform = Camera.main.transform;
         }
 
         private void Update()

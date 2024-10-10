@@ -20,6 +20,7 @@ namespace Vurbiri.Colonization
         public int GroupId => _edifice.GroupId;
         public int IdUpgrade => _edifice.NextId;
         public int NextGroupId => _edifice.NextGroupId;
+        public ACurrencies CostUpgrade => _edifice.CostUpgrade;
         public IEnumerable<CrossroadLink> Links => _links;
         public Vector3 Position { get; private set; }
 

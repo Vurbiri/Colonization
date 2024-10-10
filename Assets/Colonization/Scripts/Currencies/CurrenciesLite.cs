@@ -12,10 +12,14 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] protected int[] _values = new int[CurrencyId.CountAll];
 
+
         public override int Amount { get => _amount;  protected set => _amount = value; }
 
         public override int this[int index] { get => _values[index]; }
         public override int this[Id<CurrencyId> id] { get => _values[id.ToInt]; }
+
+        public static CurrenciesLite Empty => _empty;
+        private static readonly CurrenciesLite _empty = new();
 
         public void Increment(int index)
         {

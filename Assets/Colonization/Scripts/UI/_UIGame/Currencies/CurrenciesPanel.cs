@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -7,78 +8,59 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Id<PlayerId> _playerId;
         [Space]
         [SerializeField] private Currency _currencyUIPrefab;
-        [SerializeField] private Amount _amountUI;
-        [SerializeField] private Blood _bloodUI;
+        [SerializeField] private Amount _amountUIPrefab;
+        [SerializeField] private Blood _bloodUIPrefab;
         [Space]
         [SerializeField] private Vector2 _padding = new(17f, 17f);
         [SerializeField] private float _space = 15f;
+        [SerializeField] private float _transparency = 0.84f;
         [Space]
-        [SerializeField, Range(0.1f, 2f)] private float _scale = 1f;
-        [Space]
-        [SerializeField] private Vector3 _offsetPopup = Vector3.up * 100f;
-        [Space]
-        [SerializeField] private RectTransform _thisRectTransform;
-
-        private readonly IdArray<CurrencyId, Currency> _currenciesUI = new();
+        [SerializeField] private Direction2 _directionPopup;
 
         private void Start()
         {
-            Vector2 cSize = _currencyUIPrefab.Size, aSize = _amountUI.Size, bSize = _bloodUI.Size;
+            EventBus.Instance.EventEndSceneCreate += Create;
+        }
+
+        private void Create()
+        {
+            RectTransform thisRectTransform = GetComponent<RectTransform>();
+
+            Player player = Players.Instance[_playerId];
+            var curr = player.Resources;
+            
+            GetComponent<Image>().color = player.Color.SetAlpha(_transparency);
+
+            Vector2 cSize = _currencyUIPrefab.Size, aSize = _amountUIPrefab.Size, bSize = _bloodUIPrefab.Size;
             float offset = cSize.x * 5f + aSize.x + bSize.x + _space * 7f;
+
             Vector2 size = new()
             {
                 y = Mathf.Max(Mathf.Max(cSize.y, aSize.y), bSize.y) + _padding.y * 2f,
                 x = offset + _padding.x * 2f
             };
+            thisRectTransform.sizeDelta = size;
 
-            _thisRectTransform.sizeDelta = size;
-
-            Vector2 pivot = _thisRectTransform.pivot;
-            float posX = cSize.x * 0.5f + _padding.x * (1f - 2f * pivot.x) - offset * pivot.x;
-            Vector3 pos = new(posX, size.y * (0.5f - pivot.y), 0f);
+            Vector2 pivot = thisRectTransform.pivot;
+            float posX = cSize.x * 0.5f + _padding.x - size.x * pivot.x;
+            float posY = size.y * (0.5f - pivot.y);
+            Vector3 pos = new(posX, posY, 0f);
 
             offset = cSize.x + _space;
             for (int i = 0; i < CurrencyId.CountMain; i++)
             {
-                _currenciesUI[i] = Instantiate(_currencyUIPrefab, _thisRectTransform).Init(i, pos, _offsetPopup);
+                Instantiate(_currencyUIPrefab, thisRectTransform).Init(i, pos, curr, _directionPopup);
                 pos.x += offset;
             }
 
             pos.x -= (cSize.x - aSize.x) * 0.5f;
-            _amountUI = Instantiate(_amountUI, _thisRectTransform).Init(pos);
+            Instantiate(_amountUIPrefab, thisRectTransform).Init(pos, curr, player.GetStateReactive(PlayerStateId.MaxResources));
 
             pos.x += (bSize.x + aSize.x) * 0.5f + _space * 2f;
-            _bloodUI = Instantiate(_bloodUI, _thisRectTransform).Init(pos, _offsetPopup);
-
-            //transform.localScale = Vector3.one * _scale;
-
-            EventBus.Instance.EventEndSceneCreate += OnEndSceneCreate;
-        }
-
-        private void OnEndSceneCreate()
-        {
-            EventBus.Instance.EventEndSceneCreate -= OnEndSceneCreate;
-            Player player = Players.Instance[_playerId];
-            var curr = player.Resources;
-            Currency currency;
-            for (int i = 0; i < CurrencyId.CountMain; i++)
-            {
-                currency = _currenciesUI[i];
-                currency.Unsubscriber = curr.Subscribe(i, currency.SetValue);
-            }
-
-            _amountUI.SetReactive(curr, player.GetStateReactive(PlayerStateId.MaxResources));
-            _bloodUI.SetReactive(curr, player.GetStateReactive(PlayerStateId.ShrineMaxRes));
-
+            Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, curr, player.GetStateReactive(PlayerStateId.ShrineMaxRes), _directionPopup);
+            
+            EventBus.Instance.EventEndSceneCreate -= Create;
             Destroy(this);
         }
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (_thisRectTransform == null)
-                _thisRectTransform = GetComponent<RectTransform>();
-        }
-#endif
     }
 }

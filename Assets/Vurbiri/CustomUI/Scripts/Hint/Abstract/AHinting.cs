@@ -1,31 +1,27 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Vurbiri.Localization;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-    [RequireComponent(typeof(Selectable))]
     public abstract class AHinting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        [SerializeField, FindObject] private HintGlobal _hint;
+        [SerializeField] private HintGlobal _hint;
         [SerializeField] protected Files _file;
+        [SerializeField] protected Vector3 _offset;
 
         public bool IsShowingHint => _isShowingHint;
 
         private bool _isShowingHint = false;
-        protected Selectable _thisSelectable;
+        protected Transform _thisTransform;
         protected string _text;
-        protected Unsubscriber<Language> _subscribe;
+        protected Unsubscriber<Language> _unsubscriber;
 
         public virtual void Init()
         {
-            _thisSelectable = GetComponent<Selectable>();
-            if (_hint == null)
-                _hint = FindAnyObjectByType<HintGlobal>();
-
-            _subscribe = Language.Subscribing(SetText);
+            _thisTransform = transform;
+            _unsubscriber = Language.Subscribing(SetText);
         }
 
         protected abstract void SetText(Language localization);
@@ -33,7 +29,7 @@ namespace Vurbiri.UI
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
             if (!_isShowingHint)
-                _isShowingHint = _hint.Show(_text);
+                _isShowingHint = _hint.Show(_text, _thisTransform.localPosition + _offset);
         }
         public void OnPointerExit(PointerEventData eventData) => HideHint();
 
@@ -47,7 +43,15 @@ namespace Vurbiri.UI
 
         private void OnDestroy()
         {
-            _subscribe?.Unsubscribe();
+            _unsubscriber?.Unsubscribe();
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_hint == null)
+                _hint = FindAnyObjectByType<HintGlobal>();
+        }
+#endif
     }
 }

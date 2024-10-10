@@ -7,10 +7,12 @@ using Vurbiri.Localization;
 
 namespace Vurbiri.UI
 {
-    [RequireComponent(typeof(Graphic), typeof(CanvasGroup))]
+    [RequireComponent(typeof(CanvasGroup))]
     public class HintGlobal : MonoBehaviour
     {
+        [SerializeField] private RectTransform _backTransform;
         [SerializeField] private TMP_Text _hint;
+        [Space]
         [SerializeField, Range(0f, 5f)] private float _timeDelay = 1f;
         [SerializeField, Range(1f, 20f)] private float _fadeSpeed = 5f;
         [SerializeField] private float _maxWidth = 400f;
@@ -18,71 +20,67 @@ namespace Vurbiri.UI
 
         private Language _localization;
         private CanvasGroup _thisCanvasGroup;
-        private RectTransform _transformBack, _transformText;
+        private RectTransform _textTransform;
         private Coroutine _coroutineShow, _coroutineHide;
         private Vector2 _size;
+        private Transform _parent;
 
         private void Start()
         {
             _localization = Language.Instance;
             _thisCanvasGroup = GetComponent<CanvasGroup>();
-            _transformBack = GetComponent<RectTransform>();
-            _transformText = _hint.rectTransform;
+            _textTransform = _hint.rectTransform;
 
             _hint.overflowMode = TextOverflowModes.Overflow;
 
             _thisCanvasGroup.alpha = 0f;
         }
 
-        public bool Show(Files file, string key)
+        public bool Show(Files file, string key, Vector3 position)
         {
             if (string.IsNullOrEmpty(key))
                 return false;
-
-            SetHint(_localization.GetText(file, key));
-            Show();
+            
+            _coroutineShow ??= StartCoroutine(Show_Coroutine(_localization.GetText(file, key), position));
 
             return true;
         }
 
-        public bool Show(string text)
+        public bool Show(string text, Vector3 position)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text) || !gameObject.activeInHierarchy)
                 return false;
 
-            SetHint(text);
-            Show();
+            if (_coroutineShow != null)
+                StopCoroutine(_coroutineShow);
+
+            _coroutineShow = StartCoroutine(Show_Coroutine(text, position));
 
             return true;
         }
 
-        private void Show()
+        private IEnumerator Show_Coroutine(string text, Vector3 position)
         {
-            _coroutineShow ??= StartCoroutine(Show_Coroutine());
+            yield return new WaitForSecondsRealtime(_timeDelay);
 
-            #region Local: Show_Coroutine()
-            //=================================
-            IEnumerator Show_Coroutine()
+            if (_coroutineHide != null)
             {
-                yield return new WaitForSecondsRealtime(_timeDelay);
-                
-                if (_coroutineHide != null)
-                {
-                    StopCoroutine(_coroutineHide);
-                    _coroutineHide = null;
-                }
-
-                float alpha = _thisCanvasGroup.alpha;
-                while (alpha < 1f)
-                {
-                    _thisCanvasGroup.alpha = alpha += Time.unscaledDeltaTime * _fadeSpeed;
-                    yield return null;
-                }
-
-                _thisCanvasGroup.alpha = 1f;
-                _coroutineShow = null;
+                StopCoroutine(_coroutineHide);
+                _coroutineHide = null;
             }
-            #endregion
+
+            _backTransform.localPosition = position;
+            SetHint(text);
+
+            float alpha = _thisCanvasGroup.alpha;
+            while (alpha < 1f)
+            {
+                _thisCanvasGroup.alpha = alpha += Time.unscaledDeltaTime * _fadeSpeed;
+                yield return null;
+            }
+
+            _thisCanvasGroup.alpha = 1f;
+            _coroutineShow = null;
         }
 
         public bool Hide()
@@ -125,7 +123,7 @@ namespace Vurbiri.UI
             if (_size.x > _maxWidth)
             {
                 _size.x = _maxWidth;
-                _transformText.sizeDelta = _size;
+                _backTransform.sizeDelta = _size;
 
                 _hint.enableWordWrapping = true;
                 _hint.ForceMeshUpdate();
@@ -133,8 +131,8 @@ namespace Vurbiri.UI
                 _size = _hint.textBounds.size;
             }
 
-            _transformText.sizeDelta = _size;
-            _transformBack.sizeDelta = _size + _padding;
+            _textTransform.sizeDelta = _size;
+            _backTransform.sizeDelta = _size + _padding;
 
             //_transformText.ForceUpdateRectTransforms();
             //_transformBack.ForceUpdateRectTransforms();
@@ -143,9 +141,12 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            _hint ??= GetComponentInChildren<TMP_Text>();
-        }
+            if (_backTransform == null)
+                _backTransform = GetComponentInChildren<Image>().rectTransform;
 
+            if (_hint == null)
+                _hint = GetComponentInChildren<TMP_Text>();
+        }
 #endif
     }
 }

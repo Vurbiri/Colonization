@@ -12,6 +12,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Color _colorPlus = Color.green;
         [SerializeField] private Color _colorMinus = Color.red;
         [Space]
+        [SerializeField] private float _distance = 100f;
+        [Space]
         [SerializeField, Range(0.05f, 1f)] private float _minAlpha = 0.25f;
         [SerializeField, Range(0.05f, 1f)] private float _startHide = 0.67f;
 
@@ -24,14 +26,14 @@ namespace Vurbiri.Colonization.UI
         private WaitQueue _queue;
         private GameObject _self;
 
-        public void Init(Vector3 offset)
+        public void Init(Vector3 direction)
         {
             _thisTMP = GetComponent<TMP_Text>();
             _thisTransform = transform;
             _self = gameObject;
 
             _positionStart = _thisTransform.localPosition;
-            _positionEnd = _positionStart + offset;
+            _positionEnd = _positionStart + direction * _distance;
 
             _colorPlusEnd = _colorPlus;
             _colorMinusEnd = _colorMinus;

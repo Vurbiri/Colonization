@@ -12,6 +12,8 @@ namespace Vurbiri
             return self;
         }
 
+        public static string ToHex(this Color32 self) => $"#{self.r:X2}{self.g:X2}{self.b:X2}";
+
         public static Color SetAlpha(this Color self, float alpha)
         {
             self.a = alpha;

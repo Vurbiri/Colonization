@@ -17,17 +17,16 @@ namespace Vurbiri.Colonization.UI
         private Unsubscriber<int> _unsubscriber;
         
         public Vector2 Size => _thisRectTransform.sizeDelta;
-        public Unsubscriber<int> Unsubscriber { set => _unsubscriber = value; }
 
-        public Currency Init(int id, Vector3 position, Vector3 offsetPopup)
+        public void Init(int id, Vector3 position, AReadOnlyCurrenciesReactive count, Vector3 offsetPopup)
         {
             _popup.Init(offsetPopup);
             _iconTMP.text = string.Format(TAG_SPRITE, id);
-            _thisRectTransform.transform.localPosition = position;
-            return this;
+            _thisRectTransform.localPosition = position;
+            _unsubscriber = count.Subscribe(id, SetValue);
         }
 
-        public void SetValue(int count)
+        private void SetValue(int count)
         {
             _popup.Run(count);
             _countTMP.text = count.ToString();

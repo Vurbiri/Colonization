@@ -27,6 +27,7 @@ namespace Vurbiri.Colonization
         public bool IsUpgrade => _isUpgrade;
         public bool IsOccupied => _owner != PlayerId.None;
         public CurrenciesLite Cost => _cost;
+        public CurrenciesLite CostUpgrade => _isUpgrade ? _prefabUpgrade.Cost : CurrenciesLite.Empty;
         public int Profit => _profit;
         public bool IsBuildWall => _isBuildWall;
         public bool IsWall => _isWall;

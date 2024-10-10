@@ -16,15 +16,11 @@ namespace Vurbiri.Colonization.UI
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
-        public Blood Init(Vector3 position, Vector3 offsetPopup)
+        public void Init(Vector3 position, AReadOnlyCurrenciesReactive count, IReadOnlyReactiveValue<int> max, Vector3 offsetPopup)
         {
             _popup.Init(offsetPopup);
-            _thisRectTransform.transform.localPosition = position;
-            return this;
-        }
+            _thisRectTransform.localPosition = position;
 
-        public void SetReactive(AReadOnlyCurrenciesReactive count, IReadOnlyReactiveValue<int> max)
-        {
             _unsubCount = count.Subscribe(CurrencyId.Blood, SetValue);
             _unsubMax = max.Subscribe((v) => _maxTMP.text = v.ToString());
         }

@@ -19,14 +19,10 @@ namespace Vurbiri.Colonization
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
-        public Amount Init(Vector3 position)
+        public void Init(Vector3 position, AReadOnlyCurrenciesReactive amount, IReadOnlyReactiveValue<int> max)
         {
-            _thisRectTransform.transform.localPosition = position;
-            return this;
-        }
+            _thisRectTransform.localPosition = position;
 
-        public void SetReactive(AReadOnlyCurrenciesReactive amount, IReadOnlyReactiveValue<int> max)
-        {
             _reactiveAmount = amount;
             _reactiveMax = max;
 

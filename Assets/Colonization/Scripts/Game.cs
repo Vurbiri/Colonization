@@ -18,6 +18,8 @@ namespace Vurbiri.Colonization
         [SerializeField] private Id<PlayerId> _id;
         [SerializeField] private LoadingScreen _screen;
 
+        public Direction3 test;
+
         private GameSettingsData _gameSettings;
         private Players _players;
         private EventBus _eventBus;
