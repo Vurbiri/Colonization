@@ -13,11 +13,13 @@ namespace Vurbiri.Reactive
             _listener = listener;
         }
 
-        public void Unsubscribe()
+        public Unsubscriber<T> Unsubscribe()
         {
             _reactive?.Unsubscribe(_listener);
             _reactive = null;
             _listener = null;
+
+            return null;
         }
     }
 }

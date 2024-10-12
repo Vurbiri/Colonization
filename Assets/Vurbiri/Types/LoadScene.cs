@@ -20,13 +20,12 @@ namespace Vurbiri
             return _asyncOperation;
         }
 
-        public void End()
+        public AsyncOperation End()
         {
-            if (_asyncOperation == null)
-                return;
+            if (_asyncOperation != null)
+                _asyncOperation.allowSceneActivation = true;
 
-            _asyncOperation.allowSceneActivation = true;
-            _asyncOperation = null;
+            return _asyncOperation;
         }
     }
 }

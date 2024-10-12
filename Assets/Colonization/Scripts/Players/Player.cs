@@ -16,6 +16,7 @@ namespace Vurbiri.Colonization
         public Material MaterialLit => _visual.materialLit;
         public Material MaterialUnlit => _visual.materialUnlit;
         public AReadOnlyCurrenciesReactive Resources => _resources;
+        public ACurrencies RoadCost => _roads.Cost;
         public IReactiveSubValues<int, CurrencyId> ExchangeRate => _exchangeRate;
 
         [JsonProperty(P_RESURSES)]
@@ -55,7 +56,7 @@ namespace Vurbiri.Colonization
 
         public void Load(Crossroads crossroads)
         {
-            if (Storage.TryLoad(_id.ToString(), out PlayerLoadData data))
+            if (Storage.TryGet(_id.ToString(), out PlayerLoadData data))
             {
                 _resources = new(data.resources);
                 CreateRoads(data);

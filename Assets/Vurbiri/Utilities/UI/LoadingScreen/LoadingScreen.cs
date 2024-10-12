@@ -15,13 +15,17 @@ namespace Vurbiri.UI
         private GameObject _self;
         private bool _isOn;
 
-        public void Init(bool isOn)
+        public LoadingScreen Init(bool isOn)
         {
+            DontDestroyOnLoad(gameObject);
+            
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _self = gameObject;
             _isOn = _self.activeSelf;
 
             TurnOnOf(isOn);
+
+            return this;
         }
 
         public void TurnOnOf(bool isOn)
@@ -96,7 +100,7 @@ namespace Vurbiri.UI
             IEnumerator SmoothOff_Coroutine()
             {
                 float alpha = _thisCanvasGroup.alpha;
-                while (alpha > 0.12f)
+                while (alpha > 0.15f)
                 {
                     _thisCanvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _speedSmooth;
                     yield return null;

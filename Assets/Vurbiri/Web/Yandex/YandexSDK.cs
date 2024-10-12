@@ -1,23 +1,20 @@
 using UnityEngine;
 
 #if !UNITY_EDITOR
-using System;
 using System.Collections;
 #endif
 
 namespace Vurbiri
 {
-    public partial class YandexSDK : ASingleton<YandexSDK>
+    public partial class YandexSDK : MonoBehaviour
     {
         [Space]
-        [SerializeField] private string _lbName = "lbFindLoner";
+        [SerializeField] private string _lbName = "lbColonization";
     }
 
 #if !UNITY_EDITOR
-
-    public partial class YandexSDK : ASingleton<YandexSDK>
+    public partial class YandexSDK
     {
-
         public bool IsInitialize => IsInitializeJS();
         public bool IsPlayer => IsPlayerJS();
         public bool IsLogOn => IsLogOnJS();
@@ -29,7 +26,7 @@ namespace Vurbiri
         public string GetPlayerAvatarURL(AvatarSize size) => GetPlayerAvatarURLJS(size.ToString().ToLower());
         public string Lang => GetLangJS();
 
-        public WaitResult<bool> InitYsdk() => WaitResult(ref _waitEndInitYsdk, InitYsdkJS);
+        private WaitResult<bool> InitYsdk() => WaitResult(ref _waitEndInitYsdk, InitYsdkJS);
         public void LoadingAPI_Ready() => ReadyJS();
         public WaitResult<bool> InitPlayer() => WaitResult(ref _waitEndInitPlayer, InitPlayerJS);
 
@@ -51,7 +48,7 @@ namespace Vurbiri
                 if (string.IsNullOrEmpty(json))
                     wait.SetResult(Return<PlayerRecord>.Empty);
                 else
-                    wait.SetResult(Storage.Deserialize<PlayerRecord>(json));
+                    wait.SetResult(Deserialize<PlayerRecord>(json));
             }
             #endregion
         }
@@ -73,7 +70,7 @@ namespace Vurbiri
                 if (string.IsNullOrEmpty(json))
                     wait.SetResult(Return<Leaderboard>.Empty);
                 else
-                    wait.SetResult(Storage.Deserialize<Leaderboard>(json));
+                    wait.SetResult(Deserialize<Leaderboard>(json));
             }
             #endregion
         }
@@ -86,40 +83,6 @@ namespace Vurbiri
 
         public WaitResult<bool> CanShortcut() => WaitResult(ref _waitEndCanShortcut, CanShortcutJS);
         public WaitResult<bool> CreateShortcut() => WaitResult(ref _waitEndCreateShortcut, CreateShortcutJS);
-
-        //public async UniTask<bool> TrySetScore(long points)
-        //{
-        //    if (!IsLeaderboard || points <= 0)
-        //        return false;
-
-        //    var player = await GetPlayerResult();
-        //    if (!player.Result)
-        //        return false;
-
-        //    if (player.Value.Score >= points)
-        //        return false;
-
-        //    return await SetScore(points);
-        //}
-
-        private WaitResult<T> WaitResult<T>(ref WaitResult<T> completion, Action action)
-        {
-            completion = completion.Delete();
-            action();
-            return completion;
-        }
-        private WaitResult<T> WaitResult<T, U>(ref WaitResult<T> completion, Action<U> action, U value)
-        {
-            completion = completion.Delete();
-            action(value);
-            return completion;
-        }
-        private WaitResult<T> WaitResult<T, U, V>(ref WaitResult<T> completion, Action<U, V> action, U value1, V value2)
-        {
-            completion = completion.Delete();
-            action(value1, value2);
-            return completion;
-        }
     }
 #endif
 }

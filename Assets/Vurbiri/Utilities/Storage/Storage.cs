@@ -11,36 +11,36 @@ namespace Vurbiri
     {
         private static ASaveLoadJsonTo service;
 
-        public static bool StoragesCreate()
+        public static bool StoragesCreate(IReadOnlyDIContainer container)
         {
-            if (Create<JsonToYandex>())
+            if (Create<JsonToYandex>(container))
                 return true;
 
-            if (Create<JsonToLocalStorage>())
+            if (Create<JsonToLocalStorage>(container))
                 return true;
 
-            if (Create<JsonToCookies>())
+            if (Create<JsonToCookies>(container))
                 return true;
 
-            Create<EmptyStorage>();
+            Create<EmptyStorage>(container);
             return false;
 
             #region Local: Create<T>()
             // =====================
-            static bool Create<T>() where T : ASaveLoadJsonTo, new()
+            static bool Create<T>(IReadOnlyDIContainer container) where T : ASaveLoadJsonTo, new()
             {
                 if (service != null && typeof(T) == service.GetType())
                     return true;
 
                 service = new T();
-                return service.IsValid;
+                return service.Init(container);
             }
             #endregion
         }
-        public static IEnumerator Init_Coroutine(string key, Action<bool> callback) => service.Init_Coroutine(key, callback);
+        public static IEnumerator Load_Coroutine(string key, Action<bool> callback) => service.Load_Coroutine(key, callback);
         public static IEnumerator Save_Coroutine(string key, object data, bool toFile = true, Action<bool> callback = null) => service.Save_Coroutine(key, data, toFile, callback);
-        public static Return<T> Load<T>(string key) where T : class => service.Load<T>(key);
-        public static bool TryLoad<T>(string key, out T value) where T : class => service.TryLoad<T>(key, out value);
+        public static Return<T> Get<T>(string key) where T : class => service.Get<T>(key);
+        public static bool TryGet<T>(string key, out T value) where T : class => service.TryGet<T>(key, out value);
         public static bool ContainsKey(string key) => service.ContainsKey(key);
                 
         public static IEnumerator TryLoadTextureWeb_Coroutine(string url, Action<Return<Texture>> callback)

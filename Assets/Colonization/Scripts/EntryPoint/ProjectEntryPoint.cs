@@ -4,70 +4,63 @@ using Vurbiri.Localization;
 
 namespace Vurbiri.Colonization
 {
-    public class ProjectEntryPoint : MonoBehaviour
+    public class ProjectEntryPoint : AProjectEntryPoint
     {
-        [SerializeField] private string _keySave = "CLN";
         [Space]
-        [SerializeField] private LoadScene _loadScene;
-        [Space]
-        [SerializeField, FindObject(true)] private LogOnPanel _logOnPanel;
+        [SerializeField] private YandexSDK _ysdk;
 
-        private void Start() => StartCoroutine(LoadingCoroutine());
+        private void Start()
+        {
+            StartCoroutine(Run_Coroutine());
+        }
 
-        private IEnumerator LoadingCoroutine()
+        private IEnumerator Run_Coroutine()
+        {
+            _startScene.Start();
+
+            _container.AddInstance(_ysdk);
+
+            yield return StartCoroutine(Init_Coroutine());
+
+            yield return _startScene.End();
+
+            FindAndRunScene();
+        }
+
+        private IEnumerator Init_Coroutine()
         {
             //Message.Log("Start LoadingPreGame");
 
-            _loadScene.Start();
-
+            Language localization = Language.Instance;
             if (!Language.IsValid)
                 Message.Error("Error loading Localization!");
 
-            YandexSDK ysdk = YandexSDK.Instance;
-            Language localization = Language.Instance;
             SettingsData settings = SettingsData.Instance;
 
-            yield return StartCoroutine(InitYSDK_Coroutine());
+            yield return StartCoroutine(_ysdk.Init_Coroutine());
 
             //Banners.InstanceF.Initialize();
 
             yield return StartCoroutine(CreateStorages_Coroutine());
 
-            //if (!ysdk.IsLogOn)
-            //{
-            //    yield return StartCoroutine(_logOnPanel.TryLogOnCoroutine());
-            //    if (ysdk.IsLogOn)
-            //        yield return StartCoroutine(CreateStoragesCoroutine());
-            //}
+            if (!_ysdk.IsLogOn)
+            {
+                _loadingScreen.SmoothOff_Wait();
+                LogOnPanel logOnPanel = FindAnyObjectByType<LogOnPanel>();
+                yield return StartCoroutine(logOnPanel.TryLogOn_Coroutine(_ysdk));
+                yield return _loadingScreen.SmoothOn_Wait();
+                if (_ysdk.IsLogOn)
+                    yield return StartCoroutine(CreateStorages_Coroutine());
+            }
 
             //Message.Log("End LoadingPreGame");
-            _loadScene.End();
+            _startScene.End();
 
-            #region Local: InitYSDK_Coroutine(), CreateStorages_Coroutine()
-            //==========================================
-            IEnumerator InitYSDK_Coroutine()
-            {
-                WaitResult<bool> waitResult;
-
-                yield return (waitResult = ysdk.InitYsdk());
-                if (!waitResult.Result)
-                {
-                    Message.Log("YandexSDK - initialization error!");
-                    yield break;
-                }
-
-                yield return (waitResult = ysdk.InitPlayer());
-                if (!waitResult.Result)
-                    Message.Log("Player - initialization error!");
-
-                yield return (waitResult = ysdk.InitLeaderboards());
-                if (!waitResult.Result)
-                    Message.Log("Leaderboards - initialization error!");
-            }
+            #region Local: CreateStorages_Coroutine()
             //==========================================
             IEnumerator CreateStorages_Coroutine()
             {
-                if (!Storage.StoragesCreate())
+                if (!Storage.StoragesCreate(_container))
                     Message.Log(localization.GetText(Files.Main, "ErrorStorage"));
 
                 yield return StartCoroutine(InitStorages_Coroutine());
@@ -77,7 +70,7 @@ namespace Vurbiri.Colonization
                 IEnumerator InitStorages_Coroutine()
                 {
                     WaitReturnData<bool> waitReturn = new(this);
-                    yield return waitReturn.Start(Storage.Init_Coroutine, _keySave);
+                    yield return waitReturn.Start(Storage.Load_Coroutine, _keySave);
 
                     Message.Log(waitReturn.Return ? "Storage initialize" : "Storage not initialize");
 
@@ -87,7 +80,7 @@ namespace Vurbiri.Colonization
                     void Load(bool load)
                     {
                         bool result = false;
-                        result = settings.Init(load) || result;
+                        result = settings.Init(_container, load) || result;
                         result = GameSettingsData.Instance.Init(load) || result;
 
                         settings.IsFirstStart = !result;
@@ -100,5 +93,13 @@ namespace Vurbiri.Colonization
         }
 
         //private void OnDisable() => YandexSDK.Instance.LoadingAPI_Ready();
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if(_ysdk == null )
+                _ysdk = FindAnyObjectByType<YandexSDK>();
+        }
+#endif
     }
 }

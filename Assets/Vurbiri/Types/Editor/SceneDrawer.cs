@@ -5,8 +5,9 @@ using Vurbiri;
 
 namespace VurbiriEditor
 {
+    [CustomPropertyDrawer(typeof(SceneId))]
     [CustomPropertyDrawer(typeof(LoadScene))]
-    public class LoadSceneDrawer : PropertyDrawer
+    public class SceneDrawer : PropertyDrawer
     {
         private const string NAME_VALUE = "_scene";
 

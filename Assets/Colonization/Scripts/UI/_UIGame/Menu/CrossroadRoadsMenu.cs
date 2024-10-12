@@ -1,21 +1,19 @@
 using UnityEngine;
-using UnityEngine.UI;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
     public class CrossroadRoadsMenu : ACrossroadBuildMenu
     {
         [SerializeField] private Camera _camera;
-        [SerializeField] private CmButton[] _roadButtons;
+        [SerializeField] private ButtonBuild[] _roadButtons;
 
         private RectTransform _thisTransform;
         private Transform _cameraTransform;
         private Vector3 _lastCameraPosition;
         private Vector2 _localPoint;
+        private Id<PlayerId> _none = new(PlayerId.None);
 
         private readonly RectTransform[] _buttonsTransform = new RectTransform[COUNT_ROADS];
-        private readonly Graphic[] _buttonsGraphic = new Graphic[COUNT_ROADS];
 
         private const int COUNT_ROADS = 3;
 
@@ -24,16 +22,14 @@ namespace Vurbiri.Colonization.UI
             base.Init(mainMenu);
 
             _thisTransform = GetComponent<RectTransform>();
-            if (_camera == null)
-                _camera = Camera.main;
             _cameraTransform = _camera.transform;
 
-            CmButton button;
+            ButtonBuild button;
             for (int i = 0; i < COUNT_ROADS; i++)
             {
                 button = _roadButtons[i];
+                button.Init();
                 _buttonsTransform[i] = button.GetComponent<RectTransform>();
-                _buttonsGraphic[i] = button.targetGraphic;
             }
 
             gameObject.SetActive(false);
@@ -42,30 +38,32 @@ namespace Vurbiri.Colonization.UI
         public override void Open(Crossroad crossroad)
         {
             _currentCrossroad = crossroad;
-            Color currentColor = _players.Current.Color;
+            Player currentPlayer = _players.Current;
+            Color currentColor = currentPlayer.Color;
 
-            CmButton button; int i = 0;
+            bool isOwner;
+            ButtonBuild button; int i = 0;
             foreach (var link in crossroad.Links)
             {
                 if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(link.Position), _camera, out _localPoint))
                     _buttonsTransform[i].anchoredPosition = _localPoint;
 
                 button = _roadButtons[i];
-                button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(() => OnClick(link));
-                button.Interactable = link.Owner == PlayerId.None;
-                _buttonsGraphic[i].color = button.Interactable ? currentColor : _players[link.Owner].Color;
+                button.RemoveAllListeners();
+                button.AddListener(() => OnClick(link));
+                button.Button.interactable = isOwner = link.Owner == _none;
+                button.TargetGraphic.color = isOwner ? currentColor : _players[link.Owner].Color;
+                button.SetupHint(currentPlayer.Resources, currentPlayer.RoadCost);
 
-                button.gameObject.SetActive(true);
-
+                button.SetActive(true);
                 i++;
             }
 
             for (; i < COUNT_ROADS; i++)
             {
                 button = _roadButtons[i];
-                button.onClick.RemoveAllListeners();
-                button.gameObject.SetActive(false);
+                button.RemoveAllListeners();
+                button.SetActive(false);
             }
 
             _lastCameraPosition = _cameraTransform.position;

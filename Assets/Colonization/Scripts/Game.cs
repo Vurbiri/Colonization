@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public class Game : MonoBehaviour
+    public class Game : ASceneEntryPoint
     {
         [SerializeField] private InputController _inputController;
         [SerializeField] private IslandCreator _island;
@@ -16,19 +16,18 @@ namespace Vurbiri.Colonization
         [SerializeField] private bool _load;
         [SerializeField] private EdificesScriptable _prefabs;
         [SerializeField] private Id<PlayerId> _id;
-        [SerializeField] private LoadingScreen _screen;
 
         public Direction3 test;
 
         private GameSettingsData _gameSettings;
         private Players _players;
         private EventBus _eventBus;
+        private LoadingScreen _screen;
 
         private int _player = 0, _turn = 1;
 
         private void Awake()
         {
-            _screen.Init(true);
 
             _gameSettings = GameSettingsData.Instance;
             _players = Players.Instance;
@@ -39,7 +38,13 @@ namespace Vurbiri.Colonization
             //    c.SetCost();
         }
 
-        private IEnumerator Start()
+        public override void Run(IReadOnlyDIContainer projectContainer)
+        {
+            _screen = projectContainer.Get<LoadingScreen>();
+            StartCoroutine(Run_Coroutine());
+        }
+
+        private IEnumerator Run_Coroutine()
         {
             _island.Init(_gameSettings.CircleMax, _gameSettings.ChanceWater);
 
@@ -95,5 +100,7 @@ namespace Vurbiri.Colonization
             if (Players.Instance != null)
                 _players.DestroyGame();
         }
+
+        
     }
 }

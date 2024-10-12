@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,6 @@ namespace Vurbiri.UI
         [SerializeField, Range(0.1f, 2f)] private float _speed = 0.5f;
         
         private Image _thisImage;
-        private float _fill;
 
         private void Awake()
         {
@@ -18,19 +18,33 @@ namespace Vurbiri.UI
 
         private void OnEnable()
         {
-            _thisImage.fillClockwise = true;
-            _thisImage.fillAmount = _fill = 0f;
-            _speed = Mathf.Abs(_speed);        
+            StartCoroutine(Turn_Coroutine());
         }
 
-        private void Update()
+        private IEnumerator Turn_Coroutine()
         {
-            _thisImage.fillAmount = _fill += Time.unscaledDeltaTime * _speed;
+            float fill;
 
-            if (_fill <= 0f || _fill >= 1f)
+            while (true)
             {
-                _thisImage.fillClockwise = !_thisImage.fillClockwise;
-                _speed *= -1f;
+                fill = 0f;
+                _thisImage.fillClockwise = true;
+
+                while (fill < 1f)
+                {
+                    _thisImage.fillAmount = fill += Time.unscaledDeltaTime * _speed;
+                    yield return null;
+                   
+                }
+
+                fill = 1f;
+                _thisImage.fillClockwise = false;
+
+                while (fill > 0f)
+                {
+                    _thisImage.fillAmount = fill -= Time.unscaledDeltaTime * _speed;
+                    yield return null;
+                }
             }
         }
     }

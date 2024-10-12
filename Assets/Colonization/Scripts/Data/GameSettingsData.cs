@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
 
         public bool Init(bool isLoad)
         {
-            bool result = isLoad && Storage.TryLoad(_keySave, out _data);
+            bool result = isLoad && Storage.TryGet(_keySave, out _data);
             if (!result)
                 _data = new(_circleMax);
 

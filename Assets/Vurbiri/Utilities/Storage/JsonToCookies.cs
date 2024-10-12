@@ -8,7 +8,9 @@ namespace Vurbiri
     {
         public override bool IsValid => UtilityJS.IsCookies();
 
-        public override IEnumerator Init_Coroutine(string key, Action<bool> callback)
+        public override bool Init(IReadOnlyDIContainer container) => UtilityJS.IsCookies();
+
+        public override IEnumerator Load_Coroutine(string key, Action<bool> callback)
         {
             _key = key;
 

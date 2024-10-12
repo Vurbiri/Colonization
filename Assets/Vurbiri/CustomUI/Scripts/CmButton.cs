@@ -18,7 +18,7 @@ namespace Vurbiri.UI
 
         [FormerlySerializedAs("onClick")]
         [SerializeField]
-        private ButtonClickedEvent m_OnClick = new ButtonClickedEvent();
+        private ButtonClickedEvent m_OnClick = new();
 
         protected CmButton()
         { }

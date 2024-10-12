@@ -6,10 +6,11 @@ namespace Vurbiri
 {
     public class JsonToLocalStorage : ASaveLoadJsonTo
     {
-
         public override bool IsValid => UtilityJS.IsStorage();
 
-        public override IEnumerator Init_Coroutine(string key, Action<bool> callback)
+        public override bool Init(IReadOnlyDIContainer container) => UtilityJS.IsStorage();
+
+        public override IEnumerator Load_Coroutine(string key, Action<bool> callback)
         {
             _key = key;
 

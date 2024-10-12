@@ -8,22 +8,22 @@ namespace Vurbiri.Colonization
         private WaitResult<bool> _waitLogOn;
         private YandexSDK _ysdk;
 
-        public IEnumerator TryLogOnCoroutine()
+        public IEnumerator TryLogOn_Coroutine(YandexSDK ysdk)
         {
-            _ysdk = YandexSDK.Instance;
-
-            _waitLogOn = new();
             gameObject.SetActive(true);
 
+            _ysdk = ysdk;
+            _waitLogOn = new();
             
             bool resultAuthorization = false;
             while (true)
             {
                 yield return _waitLogOn;
+
                 if (!_waitLogOn.Result)
                     break;
 
-                yield return StartCoroutine(AuthorizationCoroutine());
+                yield return StartCoroutine(ysdk.Authorization_Coroutine((b) => resultAuthorization = b));
                 if (resultAuthorization)
                     break;
 
@@ -32,41 +32,6 @@ namespace Vurbiri.Colonization
             }
 
             gameObject.SetActive(false);
-
-            #region Local Function
-            IEnumerator AuthorizationCoroutine()
-            {
-                ///Message.BannersClear();
-
-                WaitResult<bool> waitResult;
-
-                if (!_ysdk.IsPlayer)
-                {
-                    yield return (waitResult = _ysdk.InitPlayer());
-                    if (!waitResult.Result)
-                    {
-                        resultAuthorization = false;
-                        yield break;
-                    }
-                }
-
-                if (!_ysdk.IsLogOn)
-                {
-                    yield return (waitResult = _ysdk.LogOn());
-                    if (!waitResult.Result)
-                    {
-                        resultAuthorization = false;
-                        yield break;
-                    }
-                }
-
-                if (!_ysdk.IsLeaderboard)
-                    yield return _ysdk.InitLeaderboards();
-
-                resultAuthorization = true;
-
-            }
-            #endregion
         }
 
         public void OnGuest()

@@ -29,19 +29,15 @@ namespace Vurbiri.Colonization
         private Language _localization;
         private readonly Dictionary<AudioType, IVolume> _volumes = new(Enum<AudioType>.Count);
 
-        protected override void Awake()
+        public bool Init(IReadOnlyDIContainer container, bool isLoad)
         {
-            base.Awake();
-
-            _ysdk = YandexSDK.Instance;
+            _ysdk = container.Get<YandexSDK>();
             _localization = Language.Instance;
 
             _volumes[AudioType.Music] = MusicSingleton.Instance;
             _volumes[AudioType.SFX] = SoundSingleton.Instance;
-        }
 
-        public bool Init(bool isLoad)
-        {
+
             DefaultProfile();
 
             bool result = isLoad && Load();
@@ -65,7 +61,7 @@ namespace Vurbiri.Colonization
         }
         private bool Load()
         {
-            Return<Profile> data = Storage.Load<Profile>(_keySave);
+            Return<Profile> data = Storage.Get<Profile>(_keySave);
             if (data.Result)
                 _profileCurrent.Copy(data.Value);
 

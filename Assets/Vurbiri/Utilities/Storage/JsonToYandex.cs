@@ -6,16 +6,17 @@ namespace Vurbiri
 {
     public class JsonToYandex : ASaveLoadJsonTo
     {
-        private readonly YandexSDK _ysdk;
+        private YandexSDK _ysdk;
 
         public override bool IsValid => _ysdk.IsLogOn;
 
-        public JsonToYandex()
+        public override bool Init(IReadOnlyDIContainer container)
         {
-            _ysdk = YandexSDK.Instance;
+            _ysdk = container.Get<YandexSDK>();
+            return _ysdk.IsLogOn;
         }
 
-        public override IEnumerator Init_Coroutine(string key, Action<bool> callback)
+        public override IEnumerator Load_Coroutine(string key, Action<bool> callback)
         {
             _key = key;
 

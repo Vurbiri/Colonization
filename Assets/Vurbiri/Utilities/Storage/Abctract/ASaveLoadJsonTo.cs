@@ -13,9 +13,11 @@ namespace Vurbiri
 
         public abstract bool IsValid { get; }
 
-        public abstract IEnumerator Init_Coroutine(string key, Action<bool> callback);
+        public abstract bool Init(IReadOnlyDIContainer container);
 
-        public virtual Return<T> Load<T>(string key) where T : class
+        public abstract IEnumerator Load_Coroutine(string key, Action<bool> callback);
+
+        public virtual Return<T> Get<T>(string key) where T : class
         {
             if (_saved.TryGetValue(key, out string json))
                 return Deserialize<T>(json);
@@ -23,9 +25,9 @@ namespace Vurbiri
             return Return<T>.Empty;
         }
 
-        public virtual bool TryLoad<T>(string key, out T value) where T : class
+        public virtual bool TryGet<T>(string key, out T value) where T : class
         {
-            Return<T> result = Load<T>(key);
+            Return<T> result = Get<T>(key);
             value = result.Value;
             return result.Result;
         }

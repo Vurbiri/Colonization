@@ -7,14 +7,16 @@ namespace Vurbiri
     {
         public override bool IsValid => true;
 
-        public override IEnumerator Init_Coroutine(string key, Action<bool> callback)
+        public override bool Init(IReadOnlyDIContainer container) => true;
+
+        public override IEnumerator Load_Coroutine(string key, Action<bool> callback)
         {
             callback?.Invoke(false);
             return null;
         }
-        public override Return<T> Load<T>(string key) => Return<T>.Empty;
+        public override Return<T> Get<T>(string key) => Return<T>.Empty;
         
-        public override bool TryLoad<T>(string key, out T value) where T : class
+        public override bool TryGet<T>(string key, out T value) where T : class
         {
             value = null;
             return false;

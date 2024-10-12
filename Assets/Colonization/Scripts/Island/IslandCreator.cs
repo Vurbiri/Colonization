@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization
             //=================================
             IEnumerator Load_Coroutine(WaitResult<bool> waitResult)
             {
-                if (!Storage.TryLoad(_keySave, out int[][] values))
+                if (!Storage.TryGet(_keySave, out int[][] values))
                 {
                     waitResult.SetResult(false);
                     Message.Error("Не удалось загрузить HexagonData");

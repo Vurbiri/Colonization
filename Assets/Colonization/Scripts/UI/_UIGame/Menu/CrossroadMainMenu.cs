@@ -6,9 +6,9 @@ namespace Vurbiri.Colonization.UI
     public class CrossroadMainMenu : ACrossroadMenu
     {
         [SerializeField] private CmButton _buttonClose;
-        [SerializeField] private ButtonUpgrade _buttonUpgrade;
-        [SerializeField] private CmButton _buttonWall;
-        [SerializeField] private CmButton _buttonRoads;
+        [SerializeField] private ButtonBuildEdifice _buttonUpgrade;
+        [SerializeField] private ButtonBuild _buttonWall;
+        [SerializeField] private ButtonBuild _buttonRoads;
         
         private Player _playerCurrent;
 
@@ -17,8 +17,10 @@ namespace Vurbiri.Colonization.UI
             _players = Players.Instance;
 
             _buttonClose.onClick.AddListener(() => gameObject.SetActive(false));
-            _buttonRoads.onClick.AddListener(OnRoads);
-            _buttonWall.onClick.AddListener(OnWall);
+            _buttonRoads.Init();
+            _buttonRoads.AddListener(OnRoads);
+            _buttonWall.Init();
+            _buttonWall.AddListener(OnWall);
             _buttonUpgrade.Init();
             _buttonUpgrade.AddListener(OnUpgrade);
 
@@ -52,23 +54,26 @@ namespace Vurbiri.Colonization.UI
             _playerCurrent = _players.Current;
             _currentCrossroad = crossroad;
 
-            if (ButtonSetup(_buttonUpgrade.Button, _playerCurrent.CanCrossroadUpgrade(crossroad), crossroad.CanUpgradeBuy(_playerCurrent.Resources)))
+            if (ButtonSetup(_buttonUpgrade, _playerCurrent.CanCrossroadUpgrade(crossroad), crossroad.CanUpgradeBuy(_playerCurrent.Resources)))
                 _buttonUpgrade.SetupHint(crossroad.IdUpgrade, _playerCurrent.Resources, crossroad.CostUpgrade);
 
-            ButtonSetup(_buttonWall, _playerCurrent.CanWallBuild(crossroad), crossroad.CanWallBuy(_playerCurrent.Resources));
-            ButtonSetup(_buttonRoads, _playerCurrent.CanRoadBuild(crossroad), _playerCurrent.CanRoadBuy());
+            if (ButtonSetup(_buttonWall, _playerCurrent.CanWallBuild(crossroad), crossroad.CanWallBuy(_playerCurrent.Resources)))
+                _buttonWall.SetupHint(_playerCurrent.Resources, crossroad.CostUpgrade);
+
+            if(ButtonSetup(_buttonRoads, _playerCurrent.CanRoadBuild(crossroad), _playerCurrent.CanRoadBuy()))
+                _buttonRoads.SetupHint(_playerCurrent.Resources, _playerCurrent.RoadCost);
 
             gameObject.SetActive(true);
 
             #region Local: ButtonSetup(...)
             //=================================
-            bool ButtonSetup(CmButton button, bool isEnable, bool isInteractable)
+            bool ButtonSetup(AButtonBuild button, bool isEnable, bool isInteractable)
             {
                 button.SetActive(isEnable);
 
                 if (isEnable)
                 {
-                    button.targetGraphic.color = _playerCurrent.Color;
+                    button.TargetGraphic.color = _playerCurrent.Color;
                     button.Interactable = isInteractable;
                 }
                                 
