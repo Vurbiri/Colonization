@@ -6,6 +6,8 @@ using Vurbiri.CreatingMesh;
 
 namespace Vurbiri.Colonization
 {
+    using static CONST;
+
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class LandMesh : MonoBehaviour
     {
@@ -34,13 +36,13 @@ namespace Vurbiri.Colonization
         private Dictionary<Key, HexagonMesh> _hexagons;
         private float _waterLevel;
 
-        public void Init(int circleMax, int count)
+        public void Init(int count)
         {
             _thisMeshFilter = GetComponent<MeshFilter>();
             _hexagons = new(count);
-            _customMesh = new(_nameMesh, (2f * circleMax * CONST.HEX_DIAMETER_IN) * Vector2.one);
+            _customMesh = new(_nameMesh, (2f * MAX_CIRCLES * CONST.HEX_DIAMETER_IN) * Vector2.one);
 
-            GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTilingMaterial * circleMax);
+            GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTilingMaterial * MAX_CIRCLES);
 
             HexagonMesh.CoastSize = _coastSize;
             HexagonMesh.CoastSteps = _coastSteps;

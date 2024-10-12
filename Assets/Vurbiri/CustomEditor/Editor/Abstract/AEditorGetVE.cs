@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace VurbiriEditors
+namespace VurbiriEditor
 {
     public abstract class AEditorGetVE<T> : Editor where T : Editor
     {

@@ -9,7 +9,7 @@ namespace VurbiriEditor.Colonization
     [CustomPropertyDrawer(typeof(CurrenciesLite))]
     public class CurrenciesLiteDrawer : ADrawerGetConstFieldName
     {
-        private const float Y_SPACE = 2f, BUTTON_RATE_POS = 1.1f, BUTTON_CLEAR_SIZE = 60f, BUTTON_PLUSMINUS_SIZE = 20f, LABEL_SIZE = 100f;
+        private const float Y_SPACE = 2f, BUTTON_RATE_POS = 1.1f, BUTTON_OFFSET = 10f, BUTTON_CLEAR_SIZE = 60f, BUTTON_PLUSMINUS_SIZE = 20f, LABEL_SIZE = 100f;
         private const string NAME_ARRAY = "_values", NAME_AMOUNT = "_amount", BUTTON_CLEAR = "Clear", BUTTON_PLUS = "+", BUTTON_MINUS = "-";
         private readonly Color[] colors = { new(0.72f, 0.6f, 0f, 1f), Color.yellow, Color.blue, Color.gray, Color.green, Color.red };
 
@@ -49,11 +49,11 @@ namespace VurbiriEditor.Colonization
                     _position.height += Y_SPACE;
                     _position.y += _position.height + Y_SPACE * 2f;
 
-                    if (DrawButton(BUTTON_CLEAR, BUTTON_CLEAR_SIZE, BUTTON_CLEAR_SIZE))
+                    if (DrawButton(BUTTON_CLEAR, BUTTON_CLEAR_SIZE, BUTTON_CLEAR_SIZE + BUTTON_OFFSET))
                         Clear(propertyValues, count);
-                    if (DrawButton(BUTTON_MINUS, BUTTON_PLUSMINUS_SIZE, BUTTON_CLEAR_SIZE + BUTTON_PLUSMINUS_SIZE))
+                    if (DrawButton(BUTTON_MINUS, BUTTON_PLUSMINUS_SIZE, BUTTON_CLEAR_SIZE + BUTTON_PLUSMINUS_SIZE + BUTTON_OFFSET))
                         Add(propertyValues, count, -1);
-                    if (DrawButton(BUTTON_PLUS, BUTTON_PLUSMINUS_SIZE, BUTTON_CLEAR_SIZE + BUTTON_PLUSMINUS_SIZE * 2f))
+                    if (DrawButton(BUTTON_PLUS, BUTTON_PLUSMINUS_SIZE, BUTTON_CLEAR_SIZE + BUTTON_PLUSMINUS_SIZE * 2f + BUTTON_OFFSET))
                         Add(propertyValues, count, 1);
                 }
             }

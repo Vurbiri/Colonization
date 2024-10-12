@@ -20,9 +20,8 @@ namespace Vurbiri.Colonization
         public Player Current => _current;
         public Player this[Id<PlayerId> id] => _players[id];
 
-        public void StartGame(IslandCreator island)
+        public void StartGame(IslandCreator island, int[] idVisuals)
         {
-            int[] idVisuals = _visualSet.RandIds(MAX_PLAYERS);
             int idVisual;
             Player player;
             for (int i = 0; i < MAX_PLAYERS; i++)
@@ -36,11 +35,9 @@ namespace Vurbiri.Colonization
             _current = _players[0];
         }
 
-        public void LoadGame(IslandCreator island)
+        public void LoadGame(IslandCreator island, int[] idVisuals)
         {
-            int[] idVisuals = _visualSet.RandIds(MAX_PLAYERS);
             int idVisual;
-
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 idVisual = idVisuals[i];

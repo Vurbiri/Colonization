@@ -33,14 +33,14 @@ namespace Vurbiri.Colonization
         private bool _isGate = false;
 
         private SphereCollider _collider;
-        private EventBus _eventBus;
+        private GameplayEventBus _eventBus;
 
         private const int COUNT = 3;
         private const string NAME = "Crossroad_";
 
         public void Init(Key key)
         {
-            _eventBus = EventBus.Instance;
+            _eventBus = SceneServices.Get<GameplayEventBus>();
             _eventBus.EventCrossroadMarkShow += Show;
 
             _collider = GetComponent<SphereCollider>();

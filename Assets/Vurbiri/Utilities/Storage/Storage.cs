@@ -7,11 +7,13 @@ using static UnityEngine.Networking.UnityWebRequest;
 
 namespace Vurbiri
 {
-    public static class Storage
+    public class Storage : IStorageService
     {
-        private static ASaveLoadJsonTo service;
+        private IStorageService _service;
 
-        public static bool StoragesCreate(IReadOnlyDIContainer container)
+        public bool IsValid => _service != null && _service.IsValid; 
+
+        public bool Init(IReadOnlyDIContainer container)
         {
             if (Create<JsonToYandex>(container))
                 return true;
@@ -27,21 +29,20 @@ namespace Vurbiri
 
             #region Local: Create<T>()
             // =====================
-            static bool Create<T>(IReadOnlyDIContainer container) where T : ASaveLoadJsonTo, new()
+            bool Create<T>(IReadOnlyDIContainer container) where T : IStorageService, new()
             {
-                if (service != null && typeof(T) == service.GetType())
+                if (_service != null && typeof(T) == _service.GetType())
                     return true;
 
-                service = new T();
-                return service.Init(container);
+                _service = new T();
+                return _service.Init(container);
             }
             #endregion
         }
-        public static IEnumerator Load_Coroutine(string key, Action<bool> callback) => service.Load_Coroutine(key, callback);
-        public static IEnumerator Save_Coroutine(string key, object data, bool toFile = true, Action<bool> callback = null) => service.Save_Coroutine(key, data, toFile, callback);
-        public static Return<T> Get<T>(string key) where T : class => service.Get<T>(key);
-        public static bool TryGet<T>(string key, out T value) where T : class => service.TryGet<T>(key, out value);
-        public static bool ContainsKey(string key) => service.ContainsKey(key);
+        public IEnumerator Load_Coroutine(string key, Action<bool> callback) => _service.Load_Coroutine(key, callback);
+        public IEnumerator Save_Coroutine(string key, object data, bool toFile = true, Action<bool> callback = null) => _service.Save_Coroutine(key, data, toFile, callback);
+        public Return<T> Get<T>(string key) where T : class => _service.Get<T>(key);
+        public bool TryGet<T>(string key, out T value) where T : class => _service.TryGet<T>(key, out value);
                 
         public static IEnumerator TryLoadTextureWeb_Coroutine(string url, Action<Return<Texture>> callback)
         {

@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
         private void Start()
         {
             Toggle toggle = GetComponent<Toggle>();
-            EventBus eventBus = EventBus.Instance;
+            GameplayEventBus eventBus = SceneServices.Get<GameplayEventBus>();
 
             eventBus.TriggerCrossroadMarkShow(toggle.isOn);
             toggle.onValueChanged.AddListener(eventBus.TriggerCrossroadMarkShow);

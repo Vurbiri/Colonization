@@ -5,23 +5,26 @@ using Vurbiri.UI;
 
 namespace Vurbiri
 {
-    public class AProjectEntryPoint : MonoBehaviour
+    public class AProjectEntryPoint : AClosedSingleton<AProjectEntryPoint>
     {
-        [SerializeField] protected string _keySave = "CLN";
-        [Space]
-        [SerializeField] protected LoadScene _startScene;
         [SerializeField] private SceneId _emptyScene;
         [Space]
         [SerializeField] protected LoadingScreen _loadingScreen;
 
-        protected DIContainer _container = new(null);
+        protected DIContainer _servicesContainer = new(null);
+        protected DIContainer _dataContainer = new(null);
+        protected DIContainer _objectsContainer = new(null);
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             DontDestroyOnLoad(gameObject);
 
+            _servicesContainer.AddInstance(Coroutines.Create("CoroutinesRunner", true));
             _loadingScreen.Init(true);
-            _container.AddInstance(_loadingScreen);
+            _objectsContainer.AddInstance(_loadingScreen);
+            
         }
 
         protected IEnumerator LoadScene(int sceneId)
@@ -38,11 +41,9 @@ namespace Vurbiri
 
         protected void FindAndRunScene()
         {
-            ASceneEntryPoint scene = FindAnyObjectByType<ASceneEntryPoint>();
-            if (scene == null)
-                throw new System.Exception("Точка входа на сцену не найдена");
+            ASceneEntryPoint scene = ASceneEntryPoint.Instance;
 
-            scene.Run(_container);
+            scene.Enter(new(_servicesContainer, _dataContainer, _objectsContainer));
         }
 
 #if UNITY_EDITOR

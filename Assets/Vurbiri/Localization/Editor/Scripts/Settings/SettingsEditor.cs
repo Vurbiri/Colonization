@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using VurbiriEditors;
+using VurbiriEditor;
 
 namespace Vurbiri.Localization.Editors
 {

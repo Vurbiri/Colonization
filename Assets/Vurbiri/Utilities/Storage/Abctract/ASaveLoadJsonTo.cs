@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri
 {
-    public abstract class ASaveLoadJsonTo
+    public abstract class ASaveLoadJsonTo : IStorageService
     {
         protected Dictionary<string, string> _saved = null;
         protected string _key;

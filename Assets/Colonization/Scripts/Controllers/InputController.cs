@@ -1,20 +1,16 @@
+using System;
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 
 
 namespace Vurbiri.Colonization
 {
-
-    [DefaultExecutionOrder(-1)]
-    public class InputController : MonoBehaviour
+    public class InputController : IDisposable
     {
-        [Space]
-        [SerializeField] private Camera _camera;
-        [Space]
-        [SerializeField] private LayerMask _layerLeft;
-        [SerializeField] private LayerMask _layerRight;
-        [Space]
-        [SerializeField] private float _distance = 900f;
+        private readonly Camera _camera;
+        private LayerMask _layerLeft;
+        private LayerMask _layerRight;
+        private readonly float _distance = 900f;
 
         public InputControlAction.CameraActions CameraActions => _inputActions.Camera;
 
@@ -23,15 +19,14 @@ namespace Vurbiri.Colonization
         private RaycastHit _hit;
         private ISelectable _obj;
 
-        private void Awake()
+        public InputController(Camera camera, Settings settings)
         {
-            _inputActions = new();
-            if (_camera == null)
-                _camera = Camera.main;
-        }
+            _camera = camera;
+            _layerLeft = settings.layerLeft;
+            _layerRight = settings.layerRight;
+            _distance = settings.distance;
 
-        private void Start()
-        {
+            _inputActions = new();
             _inputActions.Enable();
 
             DisableGameplayMap();
@@ -62,15 +57,19 @@ namespace Vurbiri.Colonization
                 _obj.Select();
         }
 
-        private void OnDisable() => _inputActions?.Disable();
+        public void Dispose() => _inputActions?.Disable();
 
-#if UNITY_EDITOR
-        private void OnValidate()
+        #region Nested: GameplayData
+        //***********************************
+        [Serializable]
+        public class Settings
         {
-            if (_camera == null)
-                _camera = Camera.main;
+            public LayerMask layerLeft;
+            public LayerMask layerRight;
+            [Space]
+            public float distance = 900f;
         }
-#endif
+        #endregion
     }
 }
 

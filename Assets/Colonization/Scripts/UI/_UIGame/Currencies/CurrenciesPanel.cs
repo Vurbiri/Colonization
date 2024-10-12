@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.UI
 
         private void Start()
         {
-            EventBus.Instance.EventEndSceneCreate += Create;
+            SceneServices.Get<GameplayEventBus>().EventEndSceneCreate += Create;
         }
 
         private void Create()
@@ -58,8 +58,8 @@ namespace Vurbiri.Colonization.UI
 
             pos.x += (bSize.x + aSize.x) * 0.5f + _space * 2f;
             Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, curr, player.GetStateReactive(PlayerStateId.ShrineMaxRes), _directionPopup);
-            
-            EventBus.Instance.EventEndSceneCreate -= Create;
+
+            SceneServices.Get<GameplayEventBus>().EventEndSceneCreate -= Create;
             Destroy(this);
         }
     }

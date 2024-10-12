@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 
-using NaughtyAttributes;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -9,40 +8,25 @@ namespace Vurbiri
 {
     public partial class YandexSDK
     {
-        [Space]
-        [SerializeField] private string _playerName = "Best of the Best";
-        [SerializeField] private bool _isDesktop = true;
-        [SerializeField] private bool _isLogOn = true;
-        [SerializeField, Dropdown("GetLangValues")] private string _lang = "ru";
-        [SerializeField] private bool _isInitialize = true;
-        [SerializeField] private bool _isLeaderboard = true;
-        [SerializeField] private bool _isPlayer = true;
+        private readonly bool _isInitialize = true;
+        private readonly bool _isLeaderboard = true;
+        private readonly bool _isPlayer = true;
 
-        private DropdownList<string> GetLangValues()
-        {
-            return new DropdownList<string>()
-        {
-            { "Русский",  "ru" },
-            { "English",  "en" }
-        };
-        }
-
-        public bool IsDesktop => _isDesktop;
-
-        public bool IsInitialize => _isInitialize;
+        public bool IsDesktop = true;
+        public bool IsInitialize = true;
+        public string PlayerName = "Best of the Best";
+        public bool IsLogOn = true;
+        public string Lang = "ru";
         public bool IsPlayer => IsInitialize && _isPlayer;
         public bool IsLeaderboard => IsLogOn && _isLeaderboard;
-        public string PlayerName => _playerName;
-        public bool IsLogOn => _isLogOn;
-        public string Lang => _lang;
 
         public WaitResult<bool> InitYsdk() => new(_isInitialize);
         public void LoadingAPI_Ready() { }
         public WaitResult<bool> InitPlayer() => new(_isPlayer);
         public WaitResult<bool> LogOn()
         {
-            _isLogOn = true;
-            return new(_isLogOn); ;
+            IsLogOn = true;
+            return new(IsLogOn); ;
         }
         public WaitResult<bool> InitLeaderboards() => new(IsLeaderboard);
         public string GetPlayerAvatarURL(AvatarSize size) => string.Empty;
@@ -111,11 +95,11 @@ namespace Vurbiri
             return new(string.Empty);
         }
 
-        public WaitResult<bool> CanReview() => new(_isLogOn);
+        public WaitResult<bool> CanReview() => new(IsLogOn);
         public WaitResult<bool> RequestReview() => new(true);
 
-        public WaitResult<bool> CanShortcut() => new(_isLogOn);
-        public WaitResult<bool> CreateShortcut() => new(_isLogOn);
+        public WaitResult<bool> CanShortcut() => new(IsLogOn);
+        public WaitResult<bool> CreateShortcut() => new(IsLogOn);
 
     }
 }

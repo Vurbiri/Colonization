@@ -1,26 +1,27 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri
 {
-    public class Coroutines : MonoBehaviour
+    public class Coroutines : MonoBehaviour, IDisposable
     {
-        private const string NAME = @"[Coroutine for {0}]";
+        private const string NAME = @"[{0}]";
         
-        public static Coroutines Create(string nameParent, bool isDontDestroy)
+        public static Coroutines Create(string name, bool isDontDestroy)
         {
-            GameObject go = new(string.Format(NAME, nameParent));
+            GameObject go = new(string.Format(NAME, name));
 
             if (isDontDestroy)
                 DontDestroyOnLoad(go);
 
-            return go.GetComponent<Coroutines>();
+            return go.AddComponent<Coroutines>();
         }
 
         public Coroutine Run(IEnumerator routine) => StartCoroutine(routine);
 
         public void Stop(Coroutine routine) => StopCoroutine(routine);
 
-        public void Destroy() => Destroy(gameObject);
+        public void Dispose() => Destroy(gameObject);
     }
 }

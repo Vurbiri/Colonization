@@ -26,6 +26,7 @@ namespace Vurbiri.Colonization
         [JsonProperty(P_ENDIFICES)]
         private readonly HashSet<Crossroad>[] _edifices;
 
+        private readonly IStorageService _storage;
         private readonly Id<PlayerId> _id;
         private readonly PlayerVisual _visual;
         private readonly Roads _roads;
@@ -46,17 +47,18 @@ namespace Vurbiri.Colonization
                 _edifices[i] = new();
 
             _states = states.GetAbilities();
+            _storage = SceneServices.Get<IStorageService>();
         }
 
         public IEnumerator Save_Coroutine(bool saveToFile = true)
         {
             _roadsKey = _roads.GetCrossroadsKey();
-            return Storage.Save_Coroutine(_id.ToString(), this, saveToFile, _ => _roadsKey = null);
+            return _storage.Save_Coroutine(_id.ToString(), this, saveToFile, _ => _roadsKey = null);
         }
 
         public void Load(Crossroads crossroads)
         {
-            if (Storage.TryGet(_id.ToString(), out PlayerLoadData data))
+            if (_storage.TryGet(_id.ToString(), out PlayerLoadData data))
             {
                 _resources = new(data.resources);
                 CreateRoads(data);

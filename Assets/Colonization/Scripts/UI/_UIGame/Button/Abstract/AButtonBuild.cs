@@ -55,7 +55,6 @@ namespace Vurbiri.Colonization.UI
                 sb.Append(SPACE);
             }
 
-            Debug.Log($"{sb.Length}");
             _text = sb.ToString();
         }
 

@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using VurbiriEditors;
+using VurbiriEditor;
 
 namespace Vurbiri.Localization.Editors
 {

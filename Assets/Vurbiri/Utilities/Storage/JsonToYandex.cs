@@ -8,7 +8,7 @@ namespace Vurbiri
     {
         private YandexSDK _ysdk;
 
-        public override bool IsValid => _ysdk.IsLogOn;
+        public override bool IsValid => _ysdk != null && _ysdk.IsLogOn;
 
         public override bool Init(IReadOnlyDIContainer container)
         {

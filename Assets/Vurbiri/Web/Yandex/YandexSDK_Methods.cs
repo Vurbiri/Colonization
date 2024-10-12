@@ -8,8 +8,6 @@ namespace Vurbiri
     {
         public IEnumerator Init_Coroutine()
         {
-            DontDestroyOnLoad(gameObject);
-
             WaitResult<bool> waitResult;
 
             yield return (waitResult = InitYsdk());

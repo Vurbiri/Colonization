@@ -25,13 +25,15 @@ namespace Vurbiri.Colonization
         public float MaxValue => _audioMaxValue;
         public bool IsFirstStart { get; set; } = true;
 
+        private IStorageService _storage;
         private YandexSDK _ysdk;
         private Language _localization;
         private readonly Dictionary<AudioType, IVolume> _volumes = new(Enum<AudioType>.Count);
 
-        public bool Init(IReadOnlyDIContainer container, bool isLoad)
+        public bool Init(IReadOnlyDIContainer container)
         {
             _ysdk = container.Get<YandexSDK>();
+            _storage = container.Get<IStorageService>();
             _localization = Language.Instance;
 
             _volumes[AudioType.Music] = MusicSingleton.Instance;
@@ -40,7 +42,7 @@ namespace Vurbiri.Colonization
 
             DefaultProfile();
 
-            bool result = isLoad && Load();
+            bool result = Load();
             Apply();
 
             return result;
@@ -57,11 +59,11 @@ namespace Vurbiri.Colonization
             foreach (var type in Enum<AudioType>.Values)
                 _profileCurrent.volumes[(int)type] = _volumes[type].Volume;
 
-            StartCoroutine(Storage.Save_Coroutine(_keySave, _profileCurrent, true, callback));
+            StartCoroutine(_storage.Save_Coroutine(_keySave, _profileCurrent, true, callback));
         }
         private bool Load()
         {
-            Return<Profile> data = Storage.Get<Profile>(_keySave);
+            Return<Profile> data = _storage.Get<Profile>(_keySave);
             if (data.Result)
                 _profileCurrent.Copy(data.Value);
 

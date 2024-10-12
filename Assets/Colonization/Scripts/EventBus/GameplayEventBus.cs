@@ -1,10 +1,8 @@
 using System;
-using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    [DefaultExecutionOrder(-1)]
-    public class EventBus : ASingleton<EventBus>
+    public class GameplayEventBus
     {
         public event Action<Crossroad> EventCrossroadSelect;
         public void TriggerCrossroadSelect(Crossroad crossroad) => EventCrossroadSelect?.Invoke(crossroad);

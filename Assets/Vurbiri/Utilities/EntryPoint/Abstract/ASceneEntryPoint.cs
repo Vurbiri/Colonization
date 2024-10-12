@@ -1,9 +1,13 @@
-using UnityEngine;
-
 namespace Vurbiri
 {
-    public abstract class ASceneEntryPoint : MonoBehaviour
+    public abstract class ASceneEntryPoint : ASingleton<ASceneEntryPoint>
     {
-        public abstract void Run(IReadOnlyDIContainer projectContainer);
+        public abstract void Enter(SceneContainers containers);
+
+        protected override void Awake()
+        {
+            _isNotDestroying = false;
+            base.Awake();
+        }
     }
 }

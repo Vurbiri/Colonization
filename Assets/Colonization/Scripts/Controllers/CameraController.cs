@@ -7,9 +7,6 @@ namespace Vurbiri.Colonization
 {
     public class CameraController : MonoBehaviour
     {
-        [SerializeField] private Camera _camera;
-        [SerializeField] private InputController _inputController;
-        [Space]
         [Header("Movement")]
         [SerializeField] private float _speedMoveMax = 25f;
         [SerializeField] private float _accelerationMove = 2f;
@@ -28,8 +25,8 @@ namespace Vurbiri.Colonization
         [SerializeField, Range(0.001f, 0.1f)] private float _edge = 0.05f;
         [SerializeField] private bool _isEdgeMove;
 
-       
-        private EventBus _eventBus;
+        private Camera _camera;
+        private GameplayEventBus _eventBus;
         private Transform _cameraTransform, _thisTransform;
 
         private InputControlAction.CameraActions _cameraActions;
@@ -40,12 +37,9 @@ namespace Vurbiri.Colonization
         private Vector3 _targetPosition;
         private SphereBounds _bounds;
 
-        private void Awake()
+        public void Init(Camera camera, InputControlAction.CameraActions cameraActions)
         {
-            if(_camera == null)
-                _camera = GetComponentInChildren<Camera>();
-            if (_inputController == null)
-                _inputController = FindAnyObjectByType<InputController>();
+            _camera = camera;
 
             _thisTransform = transform;
             
@@ -53,12 +47,9 @@ namespace Vurbiri.Colonization
             _heightZoom = _cameraTransform.position.y;
 
             _edgeRight = 1f - _edge;
-        }
 
-        private void Start()
-        {
-            _cameraActions = _inputController.CameraActions;
-            _eventBus = EventBus.Instance;
+            _cameraActions = cameraActions;
+            _eventBus = SceneServices.Get<GameplayEventBus>();
 
             _cameraActions.Move.performed += OnMove;
             _cameraActions.Move.canceled += OnCancelMove;
@@ -71,7 +62,7 @@ namespace Vurbiri.Colonization
 
             _eventBus.EventCrossroadSelect += MoveToCrossroad;
 
-            _bounds = new(CONST.HEX_DIAMETER_IN * GameSettingsData.Instance.CircleMax);
+            _bounds = new(CONST.HEX_DIAMETER_IN * CONST.MAX_CIRCLES);
 
             _cameraTransform.LookAt(_thisTransform);
         }
@@ -185,8 +176,7 @@ namespace Vurbiri.Colonization
 
         private void OnDisable()
         {
-            if (EventBus.Instance != null)
-                _eventBus.EventCrossroadSelect -= MoveToCrossroad;
+            _eventBus.EventCrossroadSelect -= MoveToCrossroad;
 
             _cameraActions.Move.performed -= OnMove;
             _cameraActions.Move.canceled -= OnCancelMove;
@@ -203,8 +193,6 @@ namespace Vurbiri.Colonization
         {
             if (_camera == null)
                 _camera = GetComponentInChildren<Camera>();
-            if (_inputController == null)
-                _inputController = FindAnyObjectByType<InputController>();
         }
 #endif
     }

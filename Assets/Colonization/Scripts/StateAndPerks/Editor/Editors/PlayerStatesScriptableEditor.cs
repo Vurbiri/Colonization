@@ -1,11 +1,10 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using VurbiriEditors;
 
-namespace Vurbiri.Colonization
+namespace VurbiriEditor.Colonization
 {
-    [CustomEditor(typeof(PlayerStatesScriptable), true), CanEditMultipleObjects]
+    [CustomEditor(typeof(Vurbiri.Colonization.PlayerStatesScriptable), true), CanEditMultipleObjects]
     internal class PlayerStatesScriptableEditor : AEditorGetVE<PlayerStatesScriptableEditor>
     {
         [SerializeField] private VisualTreeAsset _treeAssetList;

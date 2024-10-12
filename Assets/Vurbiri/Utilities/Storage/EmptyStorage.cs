@@ -5,7 +5,7 @@ namespace Vurbiri
 {
     public class EmptyStorage : ASaveLoadJsonTo
     {
-        public override bool IsValid => true;
+        public override bool IsValid => false;
 
         public override bool Init(IReadOnlyDIContainer container) => true;
 

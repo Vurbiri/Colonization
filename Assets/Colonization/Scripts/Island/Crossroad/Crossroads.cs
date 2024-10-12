@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
+    using static CONST;
+
     public class Crossroads : MonoBehaviour
     {
         [SerializeField] private Crossroad _prefabCrossroad;
@@ -14,9 +15,9 @@ namespace Vurbiri.Colonization
 
         private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
 
-        public void Init(int circleMax)
+        public void Init()
         {
-            _crossroads = new(HEX_COUNT_SIDES * circleMax * circleMax);
+            _crossroads = new(HEX_COUNT_SIDES * MAX_CIRCLES * MAX_CIRCLES);
             _offset = new(HEX_RADIUS_OUT * COS_30, HEX_RADIUS_OUT * SIN_30);
             _thisTransform = transform;
         }

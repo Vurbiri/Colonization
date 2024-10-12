@@ -4,22 +4,22 @@ namespace Vurbiri.Colonization.UI
 {
     public class ContextMenusWorld : MonoBehaviour
     {
-        [SerializeField] private Camera _camera;
         [SerializeField] private RectTransform _canvasTransform;
         [Space]
         [SerializeField] private CrossroadMainMenu _crossroadMenu;
         [SerializeField] private CrossroadRoadsMenu _roadsMenu;
 
+        private Camera _camera;
         private RectTransform _thisTransform;
         private Vector2 _localPoint;
 
-        private void Start()
+        public void Init(Camera camera, GameplayEventBus eventBus)
         {
-            _thisTransform = GetComponent<RectTransform>();
-            if (_camera == null)
-                _camera = Camera.main;
+            _camera = camera;
 
-            EventBus.Instance.EventCrossroadSelect += OnSelectCrossroad;
+            _thisTransform = GetComponent<RectTransform>();
+
+            eventBus.EventCrossroadSelect += OnSelectCrossroad;
 
             _crossroadMenu.Init(_roadsMenu);
             _roadsMenu.Init(_crossroadMenu);
@@ -45,8 +45,6 @@ namespace Vurbiri.Colonization.UI
                 _crossroadMenu = GetComponentInChildren<CrossroadMainMenu>();
             if (_roadsMenu == null)
                 _roadsMenu = GetComponentInChildren<CrossroadRoadsMenu>();
-            if (_camera == null)
-                _camera = Camera.main;
         }
 #endif
     }

@@ -20,6 +20,7 @@ namespace Vurbiri.Colonization
         private Key _key;
         private SurfaceScriptable _surface;
         private bool _isGate, _isWater;
+        private GameplayEventBus _eventBus;
 
         private readonly HashSet<Crossroad> _crossroads = new(CONST.HEX_COUNT_SIDES);
         private readonly HashSet<Hexagon> _neighbors = new(CONST.HEX_COUNT_SIDES);
@@ -38,7 +39,8 @@ namespace Vurbiri.Colonization
 
             _collider.enabled = !_isWater;
 
-            EventBus.Instance.EventHexagonIdShow += _hexagonCaption.gameObject.SetActive;
+            _eventBus = SceneServices.Get<GameplayEventBus>();
+            _eventBus.EventHexagonIdShow += _hexagonCaption.gameObject.SetActive;
 
             _surface.Create(transform);
 
@@ -88,6 +90,11 @@ namespace Vurbiri.Colonization
 
 
             Debug.Log($"{gameObject.name}, water: {IsWater}, gate {IsGate}\n");
+        }
+
+        private void OnDestroy()
+        {
+            _eventBus.EventCrossroadMarkShow -= _hexagonCaption.gameObject.SetActive;
         }
 
 #if UNITY_EDITOR

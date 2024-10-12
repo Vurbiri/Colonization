@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
         private readonly Key[] NEAR = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
         private readonly Key[] NEAR_TWO = new Key[HEX_COUNT_SIDES << 1];
 
-        public void Init(int circleMax, int count)
+        public void Init(int count)
         {
             CalkNearTwo();
             InitHexagonsIdForKey();
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
             _offset = new(HEX_DIAMETER_IN, HEX_DIAMETER_IN * SIN_60);
             _thisTransform = transform;
 
-            _landMesh.Init(circleMax, count);
+            _landMesh.Init(count);
 
             #region Local: CalkNearTwo();
             //================================================

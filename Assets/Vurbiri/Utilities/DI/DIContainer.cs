@@ -6,12 +6,12 @@ namespace Vurbiri
     public class DIContainer : IReadOnlyDIContainer, IDisposable
     {
         private readonly IReadOnlyDIContainer _parent;
-        private readonly Dictionary<DIKey, IDIRegistrationPrivate> _registration = new();
+        private readonly Dictionary<DIKey, IDIRegistrationDisposable> _registration = new();
         private readonly HashSet<DIKey> _hashRequests = new();
 
         public DIContainer(IReadOnlyDIContainer parent) => _parent = parent;
 
-        public IDIRegistration Add<T>(Func<DIContainer, T> factory, bool isSingleton = true, int id = 0) where T : class
+        public IDIRegistration AddFactory<T>(Func<DIContainer, T> factory, bool isSingleton = true, int id = 0) where T : class
         {
             DIKey key = new(typeof(T), id);
             var registration = new DIRegistration<T>(factory, isSingleton);
@@ -37,7 +37,7 @@ namespace Vurbiri
         public T Get<T>(DIKey key) where T : class
         {
             if (!_hashRequests.Add(key))
-                throw new Exception($"Цикличная зависимость у {key.Type.FullName} (id = {key.Id}).");
+                throw new Exception($"Цикличная зависимость.");
 
             try
             {
@@ -70,9 +70,9 @@ namespace Vurbiri
             public void Instantiate(DIContainer container);
         }
         //***********************************
-        protected interface IDIRegistrationPrivate : IDIRegistration, IDisposable { }
+        protected interface IDIRegistrationDisposable : IDIRegistration, IDisposable { }
         //***********************************
-        protected class DIRegistration<T> : IDIRegistrationPrivate where T : class
+        protected class DIRegistration<T> : IDIRegistrationDisposable where T : class
         {
             private readonly Func<DIContainer, T> _factory;
             private T _instance;

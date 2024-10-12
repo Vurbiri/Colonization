@@ -1,15 +1,20 @@
-using UnityEngine;
-
 #if !UNITY_EDITOR
 using System.Collections;
 #endif
 
 namespace Vurbiri
 {
-    public partial class YandexSDK : MonoBehaviour
+    public partial class YandexSDK
     {
-        [Space]
-        [SerializeField] private string _lbName = "lbColonization";
+        private readonly string _lbName = "lbColonization";
+        private readonly Coroutines _coroutines;
+
+        public YandexSDK(IReadOnlyDIContainer container, string lbName = null)
+        {
+            _coroutines = container.Get<Coroutines>();
+            if(!string.IsNullOrEmpty(lbName))
+                _lbName = lbName;
+        }
     }
 
 #if !UNITY_EDITOR
@@ -36,11 +41,12 @@ namespace Vurbiri
         public WaitResult<Return<PlayerRecord>> GetPlayerResult() 
         {
             WaitResult<Return<PlayerRecord>> wait = new();
-            StartCoroutine(GetPlayerResultCoroutine());
+            _coroutines.Run(GetPlayerResult_Coroutine());
             return wait;
 
-            #region Local Function
-            IEnumerator GetPlayerResultCoroutine()
+            #region Local: GetPlayerResult_Coroutine()
+            //============================================
+            IEnumerator GetPlayerResult_Coroutine()
             {
                 yield return WaitResult(ref _waitEndGetPlayerResult, GetPlayerResultJS, _lbName);
                 string json = _waitEndGetPlayerResult.Result;
@@ -56,7 +62,7 @@ namespace Vurbiri
         public WaitResult<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 1, AvatarSize size = AvatarSize.Medium)
         {
             WaitResult<Return<Leaderboard>> wait = new();
-            StartCoroutine(GetLeaderboardCoroutine());
+            _coroutines.Run(GetLeaderboardCoroutine());
             return wait;
 
             #region Local Function
