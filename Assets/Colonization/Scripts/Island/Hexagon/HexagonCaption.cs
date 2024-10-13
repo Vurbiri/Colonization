@@ -20,10 +20,10 @@ namespace Vurbiri.Colonization
         private Transform _thisTransform, _cameraTransform;
         private Quaternion _lastCameraRotation;
 
-        public void Init(Transform cameraTransform, int id, IReadOnlyList<Id<CurrencyId>> spritesIds)
+        public void Init(int id, IReadOnlyList<Id<CurrencyId>> spritesIds)
         {
             _thisTransform = transform;
-            _cameraTransform = cameraTransform;
+            _cameraTransform = SceneObjects.Get<Camera>().transform;
             _lastCameraRotation = Quaternion.identity;
 
             StringBuilder sb = new(TAG_SPRITE_LENGTH * spritesIds.Count);

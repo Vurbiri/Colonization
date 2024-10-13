@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Localization;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -16,17 +17,17 @@ namespace Vurbiri.Colonization.UI
         private int _id = -1;
         private Language _localization;
         private SettingsData _settings;
+        private Unsubscriber<Language> _unsubscriber;
 
         private void Awake()
         {
             _toggle = GetComponent<Toggle>();
-            _localization = Language.Instance;
-            _settings = SettingsData.Instance;
+            _localization = SceneServices.Get<Language>();
+            _settings = SceneServices.Get<SettingsData>();
         }
 
         public void Setup(LanguageType languageType, ToggleGroup toggleGroup, bool isSave)
         {
-
             _icon.sprite = languageType.Sprite;
             _name.text = languageType.Name;
             _id = languageType.Id;
@@ -35,7 +36,7 @@ namespace Vurbiri.Colonization.UI
             _toggle.SetIsOnWithoutNotify(_localization.CurrentId == _id);
             _toggle.group = toggleGroup;
             _toggle.onValueChanged.AddListener(OnSelect);
-            _localization.Subscribe(OnSwitchLanguage, false);
+            _unsubscriber = _localization.Subscribe(OnSwitchLanguage, false);
         }
 
         private void OnSelect(bool isOn)
@@ -43,15 +44,15 @@ namespace Vurbiri.Colonization.UI
             if (!isOn) return;
 
             _localization.SwitchLanguage(_id);
-            if (_isSave) _settings.Save();
+            if (_isSave) 
+                StartCoroutine(_settings.Save_Coroutine());
         }
 
         private void OnSwitchLanguage(Language localization) => _toggle.SetIsOnWithoutNotify(localization.CurrentId == _id);
 
         private void OnDestroy()
         {
-            if (_localization != null)
-                _localization.Unsubscribe(OnSwitchLanguage);
+            _unsubscriber?.Unsubscribe();
         }
     }
 }

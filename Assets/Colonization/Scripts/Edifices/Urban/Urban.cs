@@ -30,6 +30,8 @@ namespace Vurbiri.Colonization
             }
 
             _isBuildWall = _isBuildWall && !_isWall;
+
+            SetCost();
         }
 
         public override bool WallBuild(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links, out ACurrencies cost)
@@ -40,7 +42,7 @@ namespace Vurbiri.Colonization
                 _wall.Init(_owner, links);
                 _isWall = true;
                 _isBuildWall = false;
-                cost = _wall.Cost;
+                cost = _costWall;
                 return true;
             }
 
@@ -48,7 +50,7 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public override bool CanWallBuy(ACurrencies cash) => _isBuildWall && _wall != null && cash >= _wall.Cost;
+        public override bool CanWallBuy(ACurrencies cash) => _isBuildWall && _wall != null && cash >= _costWall;
 
         public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> owner)
         {

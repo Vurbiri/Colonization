@@ -13,17 +13,7 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private EdificesScriptable _prefabs;
 
-        public Key Key => _key;
-        public bool IsOccupied => _edifice.IsOccupied;
-        public bool IsUpgrade => _edifice.IsUpgrade;
-        public int EdificeId => _edifice.Id.ToInt;
-        public int GroupId => _edifice.GroupId;
-        public int IdUpgrade => _edifice.NextId;
-        public int NextGroupId => _edifice.NextGroupId;
-        public ACurrencies CostUpgrade => _edifice.CostUpgrade;
-        public IEnumerable<CrossroadLink> Links => _links;
-        public Vector3 Position { get; private set; }
-
+        #region private
         private Key _key;
 
         private readonly List<Hexagon> _hexagons = new(COUNT);
@@ -36,12 +26,24 @@ namespace Vurbiri.Colonization
         private GameplayEventBus _eventBus;
 
         private const int COUNT = 3;
+#if UNITY_EDITOR
         private const string NAME = "Crossroad_";
+#endif
+        #endregion
+
+        public Key Key => _key;
+        public bool IsOccupied => _edifice.IsOccupied;
+        public int GroupId => _edifice.GroupId;
+        public int IdUpgrade => _edifice.NextId;
+        public int NextGroupId => _edifice.NextGroupId;
+        public IEnumerable<CrossroadLink> Links => _links;
+        public Vector3 Position { get; private set; }
 
         public void Init(Key key)
         {
             _eventBus = SceneServices.Get<GameplayEventBus>();
             _eventBus.EventCrossroadMarkShow += Show;
+            _eventBus.EventEndSceneCreate += ClearResources;
 
             _collider = GetComponent<SphereCollider>();
             _collider.radius = _edifice.Radius;
@@ -138,9 +140,8 @@ namespace Vurbiri.Colonization
         public bool CanUpgradeBuy(ACurrencies cash) => _edifice.CanUpgradeBuy(cash);
         public bool UpgradeBuy(Id<PlayerId> playerId, out ACurrencies cost)
         {
-            if (_edifice.Upgrade(playerId, _links, out _edifice))
+            if (_edifice.Upgrade(playerId, _links, out _edifice, out cost))
             {
-                cost = _edifice.Cost;
                 _eventBus.EventCrossroadMarkShow -= Show;
                 _collider.radius = _edifice.Radius;
                 return true;
@@ -207,9 +208,17 @@ namespace Vurbiri.Colonization
 
         private void Show(bool show) => _edifice.Show(show);
 
+        private void ClearResources()
+        {
+            _prefabs = null;
+            _edifice.ClearResources();
+        }
+
         private void OnDestroy()
         {
             _eventBus.EventCrossroadMarkShow -= Show;
+            _eventBus.EventEndSceneCreate -= ClearResources;
+
             foreach (var hex in _hexagons)
                 hex.CrossroadRemove(this);
         }

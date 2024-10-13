@@ -10,7 +10,8 @@ namespace Vurbiri.Colonization
         [SerializeField, Range(0, 3)] private int _profit;
         [SerializeField, Hide] protected bool _isUpgrade;
         [SerializeField, Hide] protected bool _isBuildWall;
-        [SerializeField] protected CurrenciesLite _cost;
+        [Space]
+        [SerializeField] protected PricesScriptable _prices;
         [Space]
         [SerializeField] protected AEdifice _prefabUpgrade;
         [SerializeField, Hide] protected int _nextId;
@@ -19,6 +20,11 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] protected AEdificeGraphic _graphic;
 
+        protected ACurrencies _costUpgrade;
+        protected ACurrencies _costWall;
+        protected Id<PlayerId> _owner = PlayerId.None;
+        protected bool _isWall = false;
+
         public Id<EdificeId> Id => _id;
         public int GroupId => _groupId;
         public int NextId => _nextId;
@@ -26,20 +32,16 @@ namespace Vurbiri.Colonization
         public Id<PlayerId> Owner => _owner;
         public bool IsUpgrade => _isUpgrade;
         public bool IsOccupied => _owner != PlayerId.None;
-        public CurrenciesLite Cost => _cost;
-        public CurrenciesLite CostUpgrade => _isUpgrade ? _prefabUpgrade.Cost : CurrenciesLite.Empty;
         public int Profit => _profit;
-        public bool IsBuildWall => _isBuildWall;
         public bool IsWall => _isWall;
         public float Radius => _radiusCollider;
 
-        protected Id<PlayerId> _owner = PlayerId.None;
-        protected bool _isWall = false;
-
-         public virtual void Setup(AEdifice edifice, IdHashSet<LinkId, CrossroadLink> links)
+        public virtual void Setup(AEdifice edifice, IdHashSet<LinkId, CrossroadLink> links)
         {
             _owner = edifice._owner;
             _isWall = edifice._isWall;
+
+            SetCost();
 
             _graphic.transform.localRotation = edifice._graphic.transform.localRotation;
             _graphic.Init(_owner, links);
@@ -51,10 +53,11 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public virtual bool Upgrade(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, out AEdifice edifice)
+        public virtual bool Upgrade(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, out AEdifice edifice, out ACurrencies cost)
         {
             if (_isUpgrade && _owner == owner)
             {
+                cost = _costUpgrade;
                 edifice = Instantiate(_prefabUpgrade, transform.parent);
                 edifice.Setup(this, links);
 
@@ -62,6 +65,7 @@ namespace Vurbiri.Colonization
                 return true;
             }
 
+            cost = CurrenciesLite.Empty;
             edifice = this;
             return false;
         }
@@ -72,7 +76,7 @@ namespace Vurbiri.Colonization
             return _isBuildWall;
         }
 
-        public virtual bool CanUpgradeBuy(ACurrencies cash) => _isUpgrade && cash >= _prefabUpgrade._cost;
+        public virtual bool CanUpgradeBuy(ACurrencies cash) => _isUpgrade && cash >= _costUpgrade;
 
         public virtual bool CanWallBuild(Id<PlayerId> owner) => _isBuildWall && _owner == owner;
         public virtual bool CanWallBuy(ACurrencies cash) => _isBuildWall;
@@ -81,9 +85,24 @@ namespace Vurbiri.Colonization
 
         public virtual void Show(bool isShow) { }
 
+        public virtual void ClearResources()
+        {
+            _prices = null;
+        }
+
+        protected void SetCost()
+        {
+            _costUpgrade = _isUpgrade ? _prices.Edifices[_nextId] : CurrenciesLite.Empty;
+            _costWall = _isBuildWall ? _prices.Wall : CurrenciesLite.Empty;
+        }
+
 #if UNITY_EDITOR
         protected virtual void OnValidate()
         {
+            if (_prices == null)
+                _prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
+
+
             _groupId = EdificeId.ToGroup(_id.ToInt);
             _isBuildWall = _groupId == EdificeGroupId.Urban && _id != EdificeId.Camp;
 
@@ -97,7 +116,6 @@ namespace Vurbiri.Colonization
                 _nextId = EdificeId.None;
                 _nextGroupId = EdificeGroupId.None;
             }
-
 
             _graphic = GetComponentInChildren<AEdificeGraphic>();
         }

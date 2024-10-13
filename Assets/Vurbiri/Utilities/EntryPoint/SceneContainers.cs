@@ -21,9 +21,9 @@ namespace Vurbiri
 
         public void Dispose()
         {
-            //_sceneServices.Dispose();
-            //_sceneData.Dispose();
-            //_sceneObjects.Dispose();
+            _sceneServices.Dispose();
+            _sceneData.Dispose();
+            _sceneObjects.Dispose();
         }
     }
 }

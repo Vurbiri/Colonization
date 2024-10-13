@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -7,18 +8,15 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private CurrenciesLite _playersDefault;
         [SerializeField] private CurrenciesLite _roads;
+        [SerializeField] private CurrenciesLite _wall;
+        [SerializeField] private IdArray<EdificeId, CurrenciesLite> _edifices;
 
-        [SerializeField] private CurrenciesLite _portOne;
-        [SerializeField] private CurrenciesLite _portTwo;
-        [SerializeField] private CurrenciesLite _lighthouseOne;
-        [SerializeField] private CurrenciesLite _lighthouseTwo;
+        public CurrenciesLite this[int index] { get => _edifices[index]; }
+        public CurrenciesLite this[Id<EdificeId> id] { get => _edifices[id]; }
 
-        public CurrenciesLite PlayersDefault => _playersDefault;
-        public CurrenciesLite Roads => _roads;
-
-        public CurrenciesLite PortOne => _portOne;
-        public CurrenciesLite PortTwo => _portTwo;
-        public CurrenciesLite LighthouseOne => _lighthouseOne;
-        public CurrenciesLite LighthouseTwo => _lighthouseTwo;
+        public ACurrencies PlayersDefault => _playersDefault;
+        public ACurrencies Road => _roads;
+        public ACurrencies Wall => _wall;
+        public IReadOnlyList<ACurrencies> Edifices => _edifices;
     }
 }

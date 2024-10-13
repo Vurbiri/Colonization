@@ -5,7 +5,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
-    [DefaultExecutionOrder(-1)]
+    [DefaultExecutionOrder(-10)]
     public class GameplayEntryPoint : ASceneEntryPoint
     {
         private DIContainer _services;
@@ -24,12 +24,16 @@ namespace Vurbiri.Colonization
             var initData = GetComponent<GameplayInitializationData>();
 
             _objects.AddInstance(initData.cameraMain);
+            _objects.AddFactory(new RoadsFactory(initData.road.prefab, initData.road.container).Create);
+
+            Debug.Log("Enter");
 
             StartCoroutine(Enter_Coroutine(initData, eventBus));
         }
 
         private IEnumerator Enter_Coroutine(GameplayInitializationData initData, GameplayEventBus eventBus)
         {
+
             InputController inputController = new(initData.cameraMain, initData.inputControllerSettings);
             _services.AddInstance(inputController);
 
@@ -39,6 +43,9 @@ namespace Vurbiri.Colonization
             var islandCreator = initData.islandCreator;
             Players players = Players.Instance;
 
+            _objects.AddInstance(islandCreator.Land);
+            _objects.AddInstance(islandCreator.Crossroads);
+
             islandCreator.Init(settings.ChanceWater);
 
             if (initData.isLoad)
@@ -46,25 +53,29 @@ namespace Vurbiri.Colonization
                 WaitResult<bool> waitResult = islandCreator.Load_Wait();
                 yield return waitResult;
                 if (waitResult.Result)
-                    players.LoadGame(islandCreator, settings.VisualPlayersIds);
+                    players.LoadGame(settings.VisualPlayersIds, islandCreator.Crossroads);
             }
             else
             {
                 yield return StartCoroutine(islandCreator.Generate_Coroutine(false));
-                players.StartGame(islandCreator, settings.VisualPlayersIds);
+                players.StartGame(settings.VisualPlayersIds);
             }
-
-            Destroy(islandCreator);
-
-            eventBus.TriggerEndSceneCreate();
 
             initData.contextMenusWorld.Init(initData.cameraMain, eventBus);
 
+            Destroy(islandCreator);
             Destroy(initData);
+
+            eventBus.TriggerEndSceneCreate();
 
             for (int i = 0; i < 15; i++)
                 yield return null;
 
+
+            _objects.Remove<Roads>();
+
+            Resources.UnloadUnusedAssets();
+            yield return null;
             GC.Collect();
 
             yield return _objects.Get<LoadingScreen>().SmoothOff_Wait();

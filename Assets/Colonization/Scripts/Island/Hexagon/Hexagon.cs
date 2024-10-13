@@ -10,11 +10,6 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private Collider _collider;
 
-        public Key Key => _key;
-        public bool IsGate => _isGate;
-        public bool IsWater => _isWater;
-        public bool IsWaterOccupied => _isWater && IsOccupied();
-
         #region private
         private int _id;
         private Key _key;
@@ -25,14 +20,21 @@ namespace Vurbiri.Colonization
         private readonly HashSet<Crossroad> _crossroads = new(CONST.HEX_COUNT_SIDES);
         private readonly HashSet<Hexagon> _neighbors = new(CONST.HEX_COUNT_SIDES);
 
+#if UNITY_EDITOR
         private const string NAME = "Hexagon_";
+#endif
         #endregion
 
-        public void Init(HexagonData data, float waterLevel, Transform cameraTransform)
+        public Key Key => _key;
+        public bool IsGate => _isGate;
+        public bool IsWater => _isWater;
+        public bool IsWaterOccupied => _isWater && IsOccupied();
+
+        public void Init(HexagonData data)
         {
             (_key, _id, _surface) = data.GetValues();
 
-            _hexagonCaption.Init(cameraTransform, _id, _surface.Currencies);
+            _hexagonCaption.Init(_id, _surface.Currencies);
 
             _isGate = _surface.IsGate;
             _isWater = _surface.IsWater;

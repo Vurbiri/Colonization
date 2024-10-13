@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using Vurbiri.UI;
 
@@ -9,7 +10,9 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ButtonBuildEdifice _buttonUpgrade;
         [SerializeField] private ButtonBuild _buttonWall;
         [SerializeField] private ButtonBuild _buttonRoads;
-        
+        [Space]
+        [SerializeField] protected PricesScriptable _prices;
+
         private Player _playerCurrent;
 
         public void Init(ACrossroadBuildMenu roadsMenu)
@@ -55,13 +58,13 @@ namespace Vurbiri.Colonization.UI
             _currentCrossroad = crossroad;
 
             if (ButtonSetup(_buttonUpgrade, _playerCurrent.CanCrossroadUpgrade(crossroad), crossroad.CanUpgradeBuy(_playerCurrent.Resources)))
-                _buttonUpgrade.SetupHint(crossroad.IdUpgrade, _playerCurrent.Resources, crossroad.CostUpgrade);
+                _buttonUpgrade.SetupHint(crossroad.IdUpgrade, _playerCurrent.Resources, _prices.Edifices);
 
             if (ButtonSetup(_buttonWall, _playerCurrent.CanWallBuild(crossroad), crossroad.CanWallBuy(_playerCurrent.Resources)))
-                _buttonWall.SetupHint(_playerCurrent.Resources, crossroad.CostUpgrade);
+                _buttonWall.SetupHint(_playerCurrent.Resources, _prices.Wall);
 
             if(ButtonSetup(_buttonRoads, _playerCurrent.CanRoadBuild(crossroad), _playerCurrent.CanRoadBuy()))
-                _buttonRoads.SetupHint(_playerCurrent.Resources, _playerCurrent.RoadCost);
+                _buttonRoads.SetupHint(_playerCurrent.Resources, _prices.Road);
 
             gameObject.SetActive(true);
 
@@ -81,5 +84,13 @@ namespace Vurbiri.Colonization.UI
             }
             #endregion
         }
+
+#if UNITY_EDITOR
+        protected virtual void OnValidate()
+        {
+            if (_prices == null)
+                _prices = AssetDatabase.LoadAssetAtPath<PricesScriptable>(AssetDatabase.GetAssetPath(7670));
+        }
+#endif
     }
 }

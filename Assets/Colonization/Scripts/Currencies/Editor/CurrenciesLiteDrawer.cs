@@ -9,7 +9,9 @@ namespace VurbiriEditor.Colonization
     [CustomPropertyDrawer(typeof(CurrenciesLite))]
     public class CurrenciesLiteDrawer : ADrawerGetConstFieldName
     {
-        private const float Y_SPACE = 2f, BUTTON_RATE_POS = 1.1f, BUTTON_OFFSET = 10f, BUTTON_CLEAR_SIZE = 60f, BUTTON_PLUSMINUS_SIZE = 20f, LABEL_SIZE = 100f;
+        private const int MAX_VALUE = 20;
+        private const float Y_SPACE = 2f, BUTTON_RATE_POS = 1.1f, BUTTON_OFFSET = 10f, BUTTON_CLEAR_SIZE = 60f, BUTTON_PLUSMINUS_SIZE = 20f;
+        private const float LABEL_SIZE = 100f, LABEL_OFFSET = 15f;
         private const string NAME_ARRAY = "_values", NAME_AMOUNT = "_amount", BUTTON_CLEAR = "Clear", BUTTON_PLUS = "+", BUTTON_MINUS = "-";
         private readonly Color[] colors = { new(0.72f, 0.6f, 0f, 1f), Color.yellow, Color.blue, Color.gray, Color.green, Color.red };
 
@@ -38,7 +40,7 @@ namespace VurbiriEditor.Colonization
                     GUI.color = colors[i];
                     propertyElement = propertyValues.GetArrayElementAtIndex(i);
                     position.y += position.height + Y_SPACE;
-                    propertyElement.intValue = EditorGUI.IntSlider(position, names[i], propertyElement.intValue, 0, 25);
+                    propertyElement.intValue = EditorGUI.IntSlider(position, names[i], propertyElement.intValue, 0, MAX_VALUE);
                 }
                 EditorGUI.indentLevel--;
                 GUI.color = prevColor;
@@ -70,7 +72,7 @@ namespace VurbiriEditor.Colonization
                 };
 
                 pos.height = EditorGUIUtility.singleLineHeight;
-                pos.x = EditorGUIUtility.currentViewWidth - LABEL_SIZE - 10f;
+                pos.x = EditorGUIUtility.currentViewWidth - LABEL_SIZE - LABEL_OFFSET;
                 pos.width = LABEL_SIZE;
 
                 EditorGUI.LabelField(pos, $"Amount: {value}", style);

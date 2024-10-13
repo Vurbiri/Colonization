@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
 
         public void Dispose() => _inputActions?.Disable();
 
-        #region Nested: GameplayData
+        #region Nested: Settings
         //***********************************
         [Serializable]
         public class Settings

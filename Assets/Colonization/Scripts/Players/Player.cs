@@ -33,13 +33,13 @@ namespace Vurbiri.Colonization
         private readonly StatesSet<PlayerStateId> _states;
         private readonly Currencies _exchangeRate = new();
 
-        public Player(Id<PlayerId> playerId, PlayerVisual visual, Currencies resources, Roads roads, PlayerStatesScriptable states) 
-                     : this(playerId, visual, roads, states) => _resources = resources;
-        public Player(Id<PlayerId> playerId, PlayerVisual visual, Roads roads, PlayerStatesScriptable states)
+        public Player(Id<PlayerId> playerId, PlayerVisual visual, Currencies resources, PlayerStatesScriptable states) 
+                     : this(playerId, visual, states) => _resources = resources;
+        public Player(Id<PlayerId> playerId, PlayerVisual visual, PlayerStatesScriptable states)
         {
             _id = playerId;
             _visual = visual;
-            _roads = roads.Init(_id, _visual.color);
+            _roads = SceneObjects.Get<Roads>().Init(_id, _visual.color);
 
             int groupCount = EdificeGroupId.Count;
             _edifices = new HashSet<Crossroad>[groupCount];

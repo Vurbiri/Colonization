@@ -46,6 +46,23 @@ namespace VurbiriEditor
             return list;
         }
 
+        public static T FindAnyScriptable<T>() where T : ScriptableObject
+        {
+            string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", new[] { "Assets" });
+            string path;
+            T obj;
+
+            foreach (var guid in guids)
+            {
+                path = AssetDatabase.GUIDToAssetPath(guid);
+                obj = AssetDatabase.LoadAssetAtPath<T>(path);
+                if (obj != null)
+                    return obj;
+            }
+
+            return default;
+        }
+
         public static void CreateFromPrefab(string path, string name, GameObject parent) => Place(GameObject.Instantiate(Resources.Load(path)) as GameObject, parent, name);
 
         public static GameObject CreateObject(string name, GameObject parent, params Type[] types)

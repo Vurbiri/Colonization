@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization
         [SerializeField] private Crossroad _prefabCrossroad;
 
         private Transform _thisTransform;
-        private Vector2 _offset;
         private Dictionary<Key, Crossroad> _crossroads;
 
         private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
@@ -18,7 +17,6 @@ namespace Vurbiri.Colonization
         public void Init()
         {
             _crossroads = new(HEX_COUNT_SIDES * MAX_CIRCLES * MAX_CIRCLES);
-            _offset = new(HEX_RADIUS_OUT * COS_30, HEX_RADIUS_OUT * SIN_30);
             _thisTransform = transform;
         }
 
@@ -31,7 +29,7 @@ namespace Vurbiri.Colonization
             {
                 positionCross = HEX_VERTICES[i] + position;
 
-                key = new(2f * positionCross.x / _offset.x, positionCross.z / _offset.y);
+                key = positionCross.CrossPositionToKey();
 
                 if (!_crossroads.TryGetValue(key, out cross))
                 {

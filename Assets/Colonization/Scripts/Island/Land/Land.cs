@@ -9,8 +9,6 @@ namespace Vurbiri.Colonization
 
     public class Land : MonoBehaviour
     {
-        [SerializeField] private Transform _cameraTransform;
-        [Space]
         [SerializeField] private Hexagon _prefabHex;
         [Space]
         [SerializeField] private LandMesh _landMesh;
@@ -18,7 +16,6 @@ namespace Vurbiri.Colonization
         private Transform _thisTransform;
         private Dictionary<Key, Hexagon> _hexagons;
         private Dictionary<int, List<Key>> _hexagonsIdForKey;
-        private Vector2 _offset;
 
         private readonly Key[] NEAR = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
         private readonly Key[] NEAR_TWO = new Key[HEX_COUNT_SIDES << 1];
@@ -28,7 +25,6 @@ namespace Vurbiri.Colonization
             CalkNearTwo();
             InitHexagonsIdForKey();
             _hexagons = new(count);
-            _offset = new(HEX_DIAMETER_IN, HEX_DIAMETER_IN * SIN_60);
             _thisTransform = transform;
 
             _landMesh.Init(count);
@@ -58,14 +54,11 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public Key PositionToKey(Vector3 position) => new(2f * position.x / _offset.x, position.z / _offset.y);
-        public Vector3 KeyToPosition(Key key) => new(0.5f * _offset.x * key.X, 0f, _offset.y * key.Y);
-
         public Hexagon CreateHexagon(HexagonData data)
         {
             Key key = data.Key;
             Hexagon hex = Instantiate(_prefabHex, data.Position, Quaternion.identity, _thisTransform);
-            hex.Init(data, _landMesh.WaterLevel, _cameraTransform);
+            hex.Init(data);
 
             _hexagons.Add(key, hex);
             _hexagonsIdForKey[data.Id].Add(key);
@@ -143,8 +136,6 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_cameraTransform == null)
-                _cameraTransform = Camera.main.transform;
             if(_landMesh == null)
                 _landMesh = GetComponent<LandMesh>();
             if (_prefabHex == null)

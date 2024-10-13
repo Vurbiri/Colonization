@@ -29,8 +29,6 @@ namespace Vurbiri.Colonization
         [SerializeField] private string _path = "Assets/Import/";
 #endif
 
-        public float WaterLevel => _waterLevel;
-
         private MeshFilter _thisMeshFilter;
         private CustomMesh _customMesh;
         private Dictionary<Key, HexagonMesh> _hexagons;
@@ -50,7 +48,6 @@ namespace Vurbiri.Colonization
 
             int step = _coastSteps / 2;
             _waterLevel = -(_coastSize.x * (_coastSteps - step) + _coastSize.y * step);
-
             _waterTransform.localPosition = new(0f, _waterLevel, 0f);
         }
 

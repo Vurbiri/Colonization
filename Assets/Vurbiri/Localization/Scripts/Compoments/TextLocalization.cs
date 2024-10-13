@@ -23,7 +23,7 @@ namespace Vurbiri.UI
 
             _key = string.IsNullOrEmpty(key) ? _text.text : key;
 
-            _subscribe = Language.Subscribing(SetText);
+            _subscribe = SceneServices.Get<Language>().Subscribe(SetText);
         }
 
         protected virtual void SetText(Language localization) => _text.text = localization.GetText(_file, _key);

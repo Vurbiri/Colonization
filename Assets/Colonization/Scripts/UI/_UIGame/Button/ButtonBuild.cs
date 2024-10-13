@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         public override void Init()
         {
             base.Init();
-            _unsubscriber = Language.Subscribing(SetText);
+            _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }
 
         public void SetupHint(ACurrencies cash, ACurrencies cost) => SetTextHint(_caption, cash, cost);

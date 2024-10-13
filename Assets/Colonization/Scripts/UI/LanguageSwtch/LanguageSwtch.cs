@@ -15,7 +15,8 @@ namespace Vurbiri.Colonization.UI
             base.Awake();
 
             allowSwitchOff = false;
-            foreach (var item in Language.Instance.Languages)
+            var languages = SceneServices.Get<Language>().Languages;
+            foreach (var item in languages)
                 Instantiate(_langPrefab, transform).Setup(item, this, _isSave);
         }
     }

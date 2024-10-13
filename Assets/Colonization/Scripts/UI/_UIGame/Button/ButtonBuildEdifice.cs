@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Localization;
@@ -18,15 +19,15 @@ namespace Vurbiri.Colonization.UI
         public override void Init()
         {
             base.Init();
-            _localization = Language.Instance;
+            _localization = SceneServices.Get<Language>();
         }
 
-        public void SetupHint(int edificeId, ACurrencies cash, ACurrencies cost)
+        public void SetupHint(int edificeId, ACurrencies cash, IReadOnlyList<ACurrencies> costs)
         {
             View view = _edificeView[edificeId];
 
             _buttonIcon.sprite = view.sprite;
-            SetTextHint(_localization.GetText(_file, view.key), cash, cost);
+            SetTextHint(_localization.GetText(_file, view.key), cash, costs[edificeId]);
         }
         
 

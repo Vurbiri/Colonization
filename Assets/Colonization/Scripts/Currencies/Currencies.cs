@@ -51,8 +51,12 @@ namespace Vurbiri.Colonization
             if (_amount <= max)
                 return;
 
-            while(_amount > max)
-                _amount += _values[Random.Range(0, _countMain)].DecrementNotMessage();
+            int index = Random.Range(0, _countMain);
+            while (_amount > max)
+            {
+                _amount += _values[index].DecrementNotMessage();
+                index = ++index % _countMain;
+            }
 
             for (int i = 0; i < _countMain; i++)
                 _values[i].SendMessage();

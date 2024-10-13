@@ -11,24 +11,40 @@ namespace Vurbiri.Colonization
         [Space]
         public InputController.Settings inputControllerSettings;
         [Space]
+        public RoadsSetup road;
+        [Space]
         //test
         public bool isLoad;
         public Id<PlayerId> id;
 
+
+        #region Nested: Settings
+        //***********************************
+        [System.Serializable]
+        public class RoadsSetup
+        {
+            public Roads prefab;
+            public Transform container;
+        }
+        #endregion
+
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (islandCreator == null)
-                islandCreator = FindAnyObjectByType<IslandCreator>();
-
             if (cameraMain == null)
                 cameraMain = FindAnyObjectByType<Camera>();
+
+            if (islandCreator == null)
+                islandCreator = FindAnyObjectByType<IslandCreator>();
 
             if (cameraController == null)
                 cameraController = FindAnyObjectByType<CameraController>();
 
             if (contextMenusWorld == null)
                 contextMenusWorld = FindAnyObjectByType<UI.ContextMenusWorld>();
+
+            if (road.prefab == null)
+                road.prefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
         }
 #endif
     }

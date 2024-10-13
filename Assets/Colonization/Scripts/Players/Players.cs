@@ -20,14 +20,14 @@ namespace Vurbiri.Colonization
         public Player Current => _current;
         public Player this[Id<PlayerId> id] => _players[id];
 
-        public void StartGame(IslandCreator island, int[] idVisuals)
+        public void StartGame(int[] idVisuals)
         {
             int idVisual;
             Player player;
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 idVisual = idVisuals[i];
-                player = new(i, _visualSet.Get(idVisual), new(_startResources), island.GetRoads(), _abilities);
+                player = new(i, _visualSet.Get(idVisual), new(_startResources), _abilities);
                 _players.Replace(player);
                 StartCoroutine(player.Save_Coroutine(i == MAX_PLAYERS - 1));
             }
@@ -35,17 +35,17 @@ namespace Vurbiri.Colonization
             _current = _players[0];
         }
 
-        public void LoadGame(IslandCreator island, int[] idVisuals)
+        public void LoadGame(int[] idVisuals, Crossroads crossroads)
         {
             int idVisual;
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 idVisual = idVisuals[i];
-                _players.Replace(new(i, _visualSet.Get(idVisual), island.GetRoads(), _abilities));
+                _players.Replace(new(i, _visualSet.Get(idVisual), _abilities));
             }
 
             foreach (var player in _players)
-                player.Load(island.Crossroads);
+                player.Load(crossroads);
 
             _current = _players[0];
         }

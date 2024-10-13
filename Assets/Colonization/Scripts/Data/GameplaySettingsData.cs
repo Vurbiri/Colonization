@@ -1,14 +1,13 @@
 using Newtonsoft.Json;
 using System;
+using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    using static CONST;
     using static JSON_KEYS;
 
     public class GameplaySettingsData
     {
-        private readonly string _keySave = "gsd";
         private readonly Coroutines _coroutines;
         private readonly IStorageService _storage;
         private readonly GameplayData _data;
@@ -22,17 +21,16 @@ namespace Vurbiri.Colonization
 
         public event Action<int> EventChangeMaxScore;
 
-        public GameplaySettingsData(IReadOnlyDIContainer container, string keySave, int chanceWater)
+        public GameplaySettingsData(IReadOnlyDIContainer container, Settings settings)
         {
-            _keySave = keySave;
-            _coroutines = container.Get<Coroutines>();
+              _coroutines = container.Get<Coroutines>();
             _storage = container.Get<IStorageService>();
 
-            if (!_storage.TryGet(_keySave, out _data))
-                _data = new(chanceWater);
+            if (!_storage.TryGet(SAVE_KEYS.GAMEPLAY_SETTINGS, out _data))
+                _data = new(settings.chanceWater);
         }
 
-        public void Save(bool saveToFile, Action<bool> callback = null) => _coroutines.Run(_storage.Save_Coroutine(_keySave, _data, saveToFile, callback));
+        public void Save(bool saveToFile, Action<bool> callback = null) => _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.GAMEPLAY_SETTINGS, _data, saveToFile, callback));
 
         public void StartGame()
         {
@@ -50,7 +48,7 @@ namespace Vurbiri.Colonization
             Save(saveToFile);
         }
 
-        #region Nested: GameplayData
+        #region Nested: GameplayData, Settings
         //***********************************
         [JsonObject(MemberSerialization.OptIn)]
         private class GameplayData
@@ -81,8 +79,8 @@ namespace Vurbiri.Colonization
                 this.chanceWater = chanceWater;
                 maxScore = 0;
 
-                visualPlayers = new int[MAX_PLAYERS];
-                for (int i = 0; i < MAX_PLAYERS; i++)
+                visualPlayers = new int[CONST.MAX_PLAYERS];
+                for (int i = 0; i < CONST.MAX_PLAYERS; i++)
                     visualPlayers[i] = i;
 
                 isFirstStart = true;
@@ -92,6 +90,12 @@ namespace Vurbiri.Colonization
             {
                 modeStart = GameModeStart.New;
             }
+        }
+        //***********************************
+        [Serializable]
+        public class Settings
+        {
+            [Range(0, 100)] public int chanceWater = 33;
         }
         #endregion
     }

@@ -1,84 +1,83 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Localization;
-using static Vurbiri.Colonization.JSON_KEYS;
 
 namespace Vurbiri.Colonization
 {
-    public class SettingsData : ASingleton<SettingsData>
+    using static JSON_KEYS;
+
+    public class SettingsData
     {
-        [Space]
-        [SerializeField] private string _keySave = "std";
-        [Space]
-        [SerializeField] private Profile _profileDefault = new();
-        [Space]
-        [SerializeField] private float _audioMinValue = 0.0f;
-        [SerializeField] private float _audioMaxValue = 1.0f;
-        //[SerializeField] private float _audioMinValue = 0.01f;
-        //[SerializeField] private float _audioMaxValue = 1.5845f;
+        private readonly float _audioMinValue = 0.0f;
+        private readonly float _audioMaxValue = 1.0f;
+        //private float _audioMinValue = 0.01f;
+        //private float _audioMaxValue = 1.5845f;
 
         private Profile _profileCurrent = null;
+        private readonly Profile _profileDefault;
 
         public float MinValue => _audioMinValue;
         public float MaxValue => _audioMaxValue;
         public bool IsFirstStart { get; set; } = true;
 
-        private IStorageService _storage;
-        private YandexSDK _ysdk;
-        private Language _localization;
+        private readonly IStorageService _storage;
+        private readonly YandexSDK _ysdk;
+        private readonly Language _localization;
         private readonly Dictionary<AudioType, IVolume> _volumes = new(Enum<AudioType>.Count);
 
-        public bool Init(IReadOnlyDIContainer container)
+        public SettingsData(IReadOnlyDIContainer container, Profile defaultProfile)
         {
+            _profileDefault = defaultProfile;
+
             _ysdk = container.Get<YandexSDK>();
             _storage = container.Get<IStorageService>();
-            _localization = Language.Instance;
+            _localization = container.Get<Language>();
 
             _volumes[AudioType.Music] = MusicSingleton.Instance;
             _volumes[AudioType.SFX] = SoundSingleton.Instance;
 
-
-            DefaultProfile();
-
-            bool result = Load();
+            SetDefaultProfile();
+            Load();
             Apply();
-
-            return result;
         }
 
         public void SetVolume(AudioType type, float volume) => _volumes[type].Volume = volume;
 
         public float GetVolume(AudioType type) => _profileCurrent.volumes[(int)type];
 
-        public void Save(Action<bool> callback = null)
+        public IEnumerator Save_Coroutine(Action<bool> callback = null)
         {
             _profileCurrent.idLang = _localization.CurrentId;
             _profileCurrent.quality = QualitySettings.GetQualityLevel();
             foreach (var type in Enum<AudioType>.Values)
                 _profileCurrent.volumes[(int)type] = _volumes[type].Volume;
 
-            StartCoroutine(_storage.Save_Coroutine(_keySave, _profileCurrent, true, callback));
-        }
-        private bool Load()
-        {
-            Return<Profile> data = _storage.Get<Profile>(_keySave);
-            if (data.Result)
-                _profileCurrent.Copy(data.Value);
-
-            return data.Result;
+            return _storage.Save_Coroutine(SAVE_KEYS.SETTINGS, _profileCurrent, true, callback);
         }
 
         public void Cancel()
         {
             if (!Load())
-                DefaultProfile();
+                SetDefaultProfile();
 
             Apply();
         }
 
-        private void DefaultProfile()
+        private bool Load()
+        {
+            if (_storage.TryGet(SAVE_KEYS.PROJECT, out Profile data))
+            {
+                _profileCurrent.Copy(data);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void SetDefaultProfile()
         {
             _profileCurrent = _profileDefault.Clone();
 
@@ -99,7 +98,7 @@ namespace Vurbiri.Colonization
         //*******************************************************
         [System.Serializable]
         [JsonObject(MemberSerialization.OptIn)]
-        private class Profile
+        public class Profile
         {
             [JsonProperty(S_LANG)]
             public int idLang = 1;

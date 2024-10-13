@@ -9,6 +9,8 @@ namespace Vurbiri
         [SerializeField] private int _scene;
         private AsyncOperation _asyncOperation = null;
 
+        public LoadScene(int scene) => _scene = scene;
+
         public AsyncOperation Start(bool allowSceneActivation = false)
         {
             if (_asyncOperation == null)

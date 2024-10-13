@@ -16,7 +16,7 @@ namespace Vurbiri.UI
         public override void Init()
         {
             _thisTransform = transform;
-            _unsubscriber = Language.Subscribing(SetText);
+            _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }
 
         private void SetText(Language localization) => _text = localization.GetText(_file, _key);

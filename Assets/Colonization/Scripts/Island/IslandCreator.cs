@@ -14,9 +14,6 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private Land _land;
         [SerializeField] private Crossroads _crossroads;
-        [Space]
-        [SerializeField] private Roads _roadsPrefab;
-        [SerializeField] private Transform _roadsContainer;
 
         private Chance _chanceWater;
         private IStorageService _storage;
@@ -104,10 +101,13 @@ namespace Vurbiri.Colonization
                     for (int j = 0; j < circle; j++)
                     {
                         positionCurrent = position + direction * j;
-                        keyHex = _land.PositionToKey(positionCurrent);
+
+                        keyHex = positionCurrent.HexPositionToKey();
                         isWater = isWaterPossible && (isLastCircle || (!isWater && j != 0 && (_land.IsWaterNearby(keyHex) || _chanceWater)));
+                        
                         hexData = isWater ? new(keyHex, numWater.Value, positionCurrent, _surfaces[SurfaceType.Water]) :
                                             new(keyHex, numGround.Value, positionCurrent, surfaces.Value);
+
                         hexagonsData.Add(hexData);
                         hex = _land.CreateHexagon(hexData);
                         _crossroads.CreateCrossroads(positionCurrent, hex, isLastCircle);
@@ -132,7 +132,6 @@ namespace Vurbiri.Colonization
             foreach (HexagonData data in hexagonsData)
             {
                 data.Surface = _surfaces[data.SurfaceId];
-                data.Position = _land.KeyToPosition(data.Key);
 
                 hex = _land.CreateHexagon(data);
                 _crossroads.CreateCrossroads(data.Position, hex, --lastHexagons < 0);
@@ -140,8 +139,6 @@ namespace Vurbiri.Colonization
                 yield return null;
             }
         }
-
-        public Roads GetRoads() => Instantiate(_roadsPrefab, _roadsContainer);
 
         private int CalkMaxHexagons(int circleMax) => ((HEX_COUNT_SIDES * circleMax * (circleMax + 1)) >> 1);
 
@@ -152,8 +149,6 @@ namespace Vurbiri.Colonization
                 _land = GetComponentInChildren<Land>();
             if (_crossroads == null)
                 _crossroads = GetComponentInChildren<Crossroads>();
-            if (_roadsPrefab == null)
-                _roadsPrefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
         }
 #endif
     }

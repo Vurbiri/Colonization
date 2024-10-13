@@ -12,12 +12,12 @@ namespace Vurbiri.Colonization
         public int Id => _id;
         public Id<SurfaceType> SurfaceId => _surfaceId;
         public SurfaceScriptable Surface { get => _surface; set => _surface = value; }
-        public Vector3 Position { get => _position; set => _position = value; }
+        public Vector3 Position { get => _position; }
 
         private readonly Key _key;
         private readonly int _id;
         private SurfaceScriptable _surface;
-        private Vector3 _position;
+        private readonly Vector3 _position;
         private readonly Id<SurfaceType> _surfaceId;
 
         public HexagonData(Key key, int id, Vector3 position, SurfaceScriptable surface)
@@ -33,6 +33,7 @@ namespace Vurbiri.Colonization
             _key = new(arr[0], arr[1]);
             _id = arr[2];
             _surfaceId = arr[3];
+            _position = _key.HexKeyToPosition();
         }
 
         public IEnumerator<int> GetEnumerator()

@@ -9,12 +9,13 @@ namespace Vurbiri.Colonization
         [SerializeField] private Dices _dices;
 
         private Players _players;
+        private Land _land;
 
         private int _player = 0, _turn = 1;
 
         protected void Awake()
         {
-
+            _land = SceneObjects.Get<Land>();
             _players = Players.Instance;
 
             //Debug.Log("TEST");

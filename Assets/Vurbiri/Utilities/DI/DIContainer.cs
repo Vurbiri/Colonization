@@ -11,10 +11,10 @@ namespace Vurbiri
 
         public DIContainer(IReadOnlyDIContainer parent) => _parent = parent;
 
-        public IDIRegistration AddFactory<T>(Func<DIContainer, T> factory, bool isSingleton = true, int id = 0) where T : class
+        public IDIRegistration AddFactory<T>(Func<DIContainer, T> factory, int id = 0) where T : class
         {
             DIKey key = new(typeof(T), id);
-            var registration = new DIRegistration<T>(factory, isSingleton);
+            var registration = new DIRegistration<T>(factory);
 
             if (!_registration.TryAdd(key, registration))
                 throw new Exception($"{key.Type.FullName} (id = {key.Id}) уже добавлен.");
@@ -74,34 +74,25 @@ namespace Vurbiri
         //***********************************
         protected class DIRegistration<T> : IDIRegistrationDisposable where T : class
         {
-            private readonly Func<DIContainer, T> _factory;
             private T _instance;
 
             public Func<DIContainer, T> Get;
 
-            public DIRegistration(Func<DIContainer, T> factory, bool isSingleton)
+            public DIRegistration(Func<DIContainer, T> factory)
             {
-                _factory = factory;
-                if (isSingleton)
-                    Get = GetSingleton;
-                else
-                    Get = factory;
+                Get = factory;
             }
 
             public DIRegistration(T instance)
             {
-                _factory = null;
-                _instance = instance;
+                 _instance = instance;
                 Get = GetInstance;
             }
 
             public void Instantiate(DIContainer container)
             {
-                if (_instance == null)
-                {
-                    _instance = _factory(container);
-                    Get = GetInstance;
-                }
+                _instance ??= Get(container);
+                Get = GetInstance;
             }
 
             public void Dispose()
@@ -110,16 +101,6 @@ namespace Vurbiri
                     disposable.Dispose();
             }
 
-            private T GetSingleton(DIContainer container)
-            {
-                if (_instance == null)
-                {
-                    _instance = _factory(container);
-                    Get = GetInstance;
-                }
-
-                return _instance;
-            }
             private T GetInstance(DIContainer container) => _instance;
         }
         //***********************************

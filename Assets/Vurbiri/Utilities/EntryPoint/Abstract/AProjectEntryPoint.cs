@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Vurbiri.Localization;
 using Vurbiri.UI;
 
 namespace Vurbiri
@@ -21,29 +22,26 @@ namespace Vurbiri
 
             DontDestroyOnLoad(gameObject);
 
+            ASceneEntryPoint.EventLoad += EnterScene;
+
             _servicesContainer.AddInstance(Coroutines.Create("CoroutinesRunner", true));
+            _servicesContainer.AddInstance(Language.Create());
             _loadingScreen.Init(true);
             _objectsContainer.AddInstance(_loadingScreen);
             
         }
 
-        protected IEnumerator LoadScene(int sceneId)
+        protected IEnumerator LoadScene_Coroutine(int sceneId)
         {
             _loadingScreen.TurnOnOf(true);
 
             yield return SceneManager.LoadSceneAsync(_emptyScene);
-            yield return SceneManager.LoadSceneAsync(sceneId);
-
-            yield return null;
-
-            FindAndRunScene();
+            SceneManager.LoadSceneAsync(sceneId);
         }
 
-        protected void FindAndRunScene()
+        protected void EnterScene(ASceneEntryPoint sceneEntryPoint)
         {
-            ASceneEntryPoint scene = ASceneEntryPoint.Instance;
-
-            scene.Enter(new(_servicesContainer, _dataContainer, _objectsContainer));
+            sceneEntryPoint.Enter(new(_servicesContainer, _dataContainer, _objectsContainer));
         }
 
 #if UNITY_EDITOR

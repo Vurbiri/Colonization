@@ -10,19 +10,21 @@ namespace Vurbiri.Colonization
             _nextId = edifice.Id.ToInt;
             _nextGroupId = edifice.GroupId;
             _isUpgrade = true;
+
+            SetCost();
         }
 
         public override bool Build(AEdifice prefab, Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links, bool isWall, out AEdifice city)
         {
             _prefabUpgrade = prefab;
             _isWall = isWall;
-            return Upgrade(playerId, links, out city);
+            return Upgrade(playerId, links, out city, out _);
         }
 
-        public override bool Upgrade(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links, out AEdifice city)
+        public override bool Upgrade(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links, out AEdifice city, out ACurrencies cost)
         {
             _owner = playerId;
-            if (base.Upgrade(playerId, links, out city))
+            if (base.Upgrade(playerId, links, out city, out cost))
                 return true;
 
             _owner = PlayerId.None;

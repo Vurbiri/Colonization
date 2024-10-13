@@ -4,11 +4,8 @@ namespace Vurbiri.Colonization
 {
     public class Wall : MonoBehaviour
     {
-        [SerializeField] private CurrenciesLite _cost;
         [Space]
         [SerializeField] private WallGraphic _graphic;
-
-        public CurrenciesLite Cost => _cost;
 
         public void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {

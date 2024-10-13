@@ -47,8 +47,7 @@ namespace VurbiriEditor
 
                     name = field.Name;
                     value = (int)field.GetValue(null);
-                    if (value < 0)
-                        name = $"-{name}-";
+                    name = $"{name} ({value})";
 
                     names.Add(name);
                     values.Add(value);

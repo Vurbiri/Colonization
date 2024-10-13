@@ -27,7 +27,7 @@ namespace Vurbiri.UI
 
         private void Start()
         {
-            _localization = Language.Instance;
+            _localization = SceneServices.Get<Language>();
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _textTransform = _hint.rectTransform;
 

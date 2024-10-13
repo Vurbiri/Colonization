@@ -8,7 +8,7 @@ namespace Vurbiri.Localization
 {
     public class Language : IReactive<Language>
     {
-        private static readonly Language _instance;
+        private static Language _instance;
 
         private readonly bool _isValid;
         private readonly string _folder;
@@ -21,26 +21,10 @@ namespace Vurbiri.Localization
 
         private Action<Language> ActionValueChange;
 
-        public static Language Instance => _instance;
         public static bool IsValid => _instance != null && _instance._isValid;
 
         public IEnumerable<LanguageType> Languages => _languages;
         public int CurrentId => _currentLanguage == null ? -1 : _currentLanguage.Id;
-
-        static Language() => _instance ??= new Language();
-
-        public static Unsubscriber<Language> Subscribing(Action<Language> action, bool calling = true) => _instance?.Subscribe(action, calling);
-        public Unsubscriber<Language> Subscribe(Action<Language> action, bool calling)
-        {
-            ActionValueChange -= action;
-            ActionValueChange += action;
-            if (calling && action != null)
-                action(this);
-
-            return new(this, action);
-        }
-        public static void Unsubscribing(Action<Language> action) => _instance?.Unsubscribe(action);
-        public void Unsubscribe(Action<Language> action) => ActionValueChange -= action;
 
         private Language()
         {
@@ -63,6 +47,19 @@ namespace Vurbiri.Localization
             _text = new Dictionary<string, string>[_countFiles];
             _isValid = true;
         }
+
+        public static Language Create() => _instance ??= new Language();
+
+        public Unsubscriber<Language> Subscribe(Action<Language> action, bool calling = true)
+        {
+            ActionValueChange -= action;
+            ActionValueChange += action;
+            if (calling && action != null)
+                action(this);
+
+            return new(this, action);
+        }
+        public void Unsubscribe(Action<Language> action) => ActionValueChange -= action;
 
         public bool TryIdFromCode(string code, out int id)
         {
