@@ -2,7 +2,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri.Colonization;
-using VurbiriEditor;
 
 namespace VurbiriEditor.Colonization
 {
@@ -12,7 +11,7 @@ namespace VurbiriEditor.Colonization
         [SerializeField] private VisualTreeAsset _treeAssetList;
         [SerializeField] private VisualTreeAsset _treeAssetItem;
 
-        public override VisualElement CreateInspectorGUI()
+        protected override VisualElement Create(SerializedObject serializedObject)
         {
             SerializedProperty perksProperty = serializedObject.FindProperty("_perks");
             VisualElement root = _treeAssetList.CloneTree();
@@ -22,7 +21,6 @@ namespace VurbiriEditor.Colonization
             list.itemIndexChanged += (x,y) => UpdateId();
             list.itemsAdded += (e) => UpdateId();
             list.itemsRemoved += (e) => UpdateId();
-
 
             return root;
 

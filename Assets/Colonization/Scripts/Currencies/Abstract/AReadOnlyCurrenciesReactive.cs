@@ -70,10 +70,8 @@ namespace Vurbiri.Colonization
         //*******************************************************
         protected class CurrencyMain : ACurrency
         {
-
             public CurrencyMain() : base(0) { }
             public CurrencyMain(int value) : base(value) { }
-
 
             public override int Set(int value)
             {
@@ -104,7 +102,6 @@ namespace Vurbiri.Colonization
                 _value = --_value;
                 return -1;
             }
-
         }
         //*******************************************************
         protected class CurrencyBlood : ACurrency
@@ -158,6 +155,6 @@ namespace Vurbiri.Colonization
 
             public static explicit operator int(ACurrency currency) => currency._value;
         }
-            #endregion
+        #endregion
      }
 }

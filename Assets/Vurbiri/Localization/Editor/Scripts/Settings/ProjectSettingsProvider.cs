@@ -13,7 +13,7 @@ namespace Vurbiri.Localization.Editors
             {
                 label = PROJECT_LABEL,
                 activateHandler = (searchContext, rootElement)
-                                => rootElement.Add(ProjectSettingsEditor.GetVisualElement(ProjectSettingsScriptable.GetSerializedSelf()))
+                                => rootElement.Add(ProjectSettingsEditor.BindAndGetVisualElement(ProjectSettingsScriptable.GetSerializedSelf()))
             };
 
             return provider;

@@ -4,17 +4,17 @@ using UnityEngine.SceneManagement;
 using Vurbiri.Localization;
 using Vurbiri.UI;
 
-namespace Vurbiri
+namespace Vurbiri.EntryPoint
 {
     public class AProjectEntryPoint : AClosedSingleton<AProjectEntryPoint>
     {
         [SerializeField] private SceneId _emptyScene;
-        [Space]
-        [SerializeField] protected LoadingScreen _loadingScreen;
 
         protected DIContainer _servicesContainer = new(null);
         protected DIContainer _dataContainer = new(null);
         protected DIContainer _objectsContainer = new(null);
+
+        protected LoadingScreen _loadingScreen;
 
         protected override void Awake()
         {
@@ -24,11 +24,10 @@ namespace Vurbiri
 
             ASceneEntryPoint.EventLoad += EnterScene;
 
-            _servicesContainer.AddInstance(Coroutines.Create("CoroutinesRunner", true));
+            _servicesContainer.AddInstance(Coroutines.Create("ProjectCoroutines", true));
             _servicesContainer.AddInstance(Language.Create());
-            _loadingScreen.Init(true);
-            _objectsContainer.AddInstance(_loadingScreen);
-            
+
+            _loadingScreen = _objectsContainer.AddInstance(LoadingScreen.Create());
         }
 
         protected IEnumerator LoadScene_Coroutine(int sceneId)
@@ -48,7 +47,7 @@ namespace Vurbiri
         private void OnValidate()
         {
             if (_loadingScreen == null)
-                _loadingScreen = FindAnyObjectByType<LoadingScreen>();
+                _loadingScreen = VurbiriEditor.Utility.FindAnyPrefab<LoadingScreen>();
         }
 #endif
     }

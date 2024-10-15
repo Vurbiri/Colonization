@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-    public class SurfaceType : AIdType<SurfaceType>
+    public class SurfaceId : AIdType<SurfaceId>
     {
         public const int Village    = 0;
         public const int Field      = 1;
@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         public const int Water      = 5;
         public const int Gate       = 6;
 
-        static SurfaceType() => RunConstructor();
-        private SurfaceType() { }
+        static SurfaceId() => RunConstructor();
+        private SurfaceId() { }
     }
 }

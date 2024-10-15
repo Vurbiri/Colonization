@@ -10,7 +10,7 @@ namespace Vurbiri
         private readonly int _count;
         private int _cursor = 0;
 
-        public T Value
+        public T Next
         {
             get
             {
@@ -31,7 +31,7 @@ namespace Vurbiri
             }
         }
 
-        public ShuffleLoopArray(IList<T> array)
+        public ShuffleLoopArray(IReadOnlyList<T> array)
         {
             _count = array.Count;
             _array = new T[_count];

@@ -14,15 +14,13 @@ namespace VurbiriEditor
         public static T FindAnyPrefab<T>() where T : MonoBehaviour
         {
             string[] guids = AssetDatabase.FindAssets($"t:Prefab", new[] { "Assets" });
-            string path;
-            T obj;
 
+            string path; T obj;
             foreach (var guid in guids)
             {
                 path = AssetDatabase.GUIDToAssetPath(guid);
                 obj = (AssetDatabase.LoadMainAssetAtPath(path) as GameObject).GetComponent<T>();
-                if (obj != null)
-                    return obj;
+                if (obj != null) return obj;
             }
 
             return default;
@@ -31,16 +29,14 @@ namespace VurbiriEditor
         public static List<T> FindPrefabs<T>() where T : MonoBehaviour
         {
             string[] guids = AssetDatabase.FindAssets($"t:Prefab", new[] { "Assets" });
-            string path;
-            T obj;
+            
             List<T> list = new();
-
+            string path; T obj;
             foreach (var guid in guids)
             {
                 path = AssetDatabase.GUIDToAssetPath(guid);
                 obj = (AssetDatabase.LoadMainAssetAtPath(path) as GameObject).GetComponent<T>();
-                if (obj != null)
-                    list.Add(obj);
+                if (obj != null) list.Add(obj);
             }
 
             return list;
@@ -49,15 +45,13 @@ namespace VurbiriEditor
         public static T FindAnyScriptable<T>() where T : ScriptableObject
         {
             string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", new[] { "Assets" });
-            string path;
-            T obj;
 
+            string path; T obj;
             foreach (var guid in guids)
             {
                 path = AssetDatabase.GUIDToAssetPath(guid);
                 obj = AssetDatabase.LoadAssetAtPath<T>(path);
-                if (obj != null)
-                    return obj;
+                if (obj != null) return obj;
             }
 
             return default;

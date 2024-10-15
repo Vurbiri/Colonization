@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
             _roadsContainer = roadsContainer;
         }
 
-        public Roads Create(DIContainer container) => Object.Instantiate(_roadsPrefab, _roadsContainer.transform, false);
+        public Roads Create() => Object.Instantiate(_roadsPrefab, _roadsContainer.transform, false);
 
     }
 }

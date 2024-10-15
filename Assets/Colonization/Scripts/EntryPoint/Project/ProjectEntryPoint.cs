@@ -1,4 +1,5 @@
 using System.Collections;
+using Vurbiri.EntryPoint;
 using Vurbiri.Localization;
 
 namespace Vurbiri.Colonization
@@ -19,7 +20,7 @@ namespace Vurbiri.Colonization
 
             yield return StartCoroutine(Init_Coroutine(data));
 
-            Destroy(data);
+            data.Dispose();
 
             loadScene.End();
         }
@@ -40,7 +41,7 @@ namespace Vurbiri.Colonization
             yield return StartCoroutine(CreateStorages_Coroutine(data.defaultProfile));
             yield return StartCoroutine(YandexIsLogOn_Coroutine(ysdk, data.logOnPanel, data.defaultProfile));
 
-            _dataContainer.AddInstance<GameplaySettingsData>(new(_servicesContainer, data.gameplayDefaultData));
+            _dataContainer.AddInstance<GameplaySettingsData>(new(_servicesContainer));
 
             //Message.Log("End LoadingPreGame");
         }
@@ -48,8 +49,7 @@ namespace Vurbiri.Colonization
         private IEnumerator CreateStorages_Coroutine(SettingsData.Profile defaultProfile)
         {
             _servicesContainer.Remove<IStorageService>();
-            IStorageService storage = new Storage();
-            _servicesContainer.AddInstance(storage);
+            var storage = _servicesContainer.AddInstance<IStorageService>(new Storage());
 
             if (storage.Init(_servicesContainer))
             {

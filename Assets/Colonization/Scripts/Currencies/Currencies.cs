@@ -73,7 +73,7 @@ namespace Vurbiri.Colonization
 
         public IEnumerator<int> GetEnumerator()
         {
-            for (int i = 0; i < _countMain; i++)
+            for (int i = 0; i < _countAll; i++)
                 yield return _values[i].Value;
         }
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

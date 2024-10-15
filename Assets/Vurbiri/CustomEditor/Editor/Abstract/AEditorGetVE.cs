@@ -4,15 +4,20 @@ using UnityEngine.UIElements;
 
 namespace VurbiriEditor
 {
-    public abstract class AEditorGetVE<T> : Editor where T : Editor
+    public abstract class AEditorGetVE<T> : Editor where T : AEditorGetVE<T>
     {
-        public static VisualElement GetVisualElement(SerializedObject serializedObject)
+        public new VisualElement CreateInspectorGUI() => Create(serializedObject);
+
+        protected abstract VisualElement Create(SerializedObject serializedObject);
+
+        public static VisualElement BindAndGetVisualElement(SerializedObject serializedObject)
         {
-            VisualElement element = CreateInstance<T>().CreateInspectorGUI();
+            VisualElement element = CreateInstance<T>().Create(serializedObject);
             element.Bind(serializedObject);
             return element;
         }
 
-        public static VisualElement GetVisualElement() => CreateInstance<T>().CreateInspectorGUI();
+        public static VisualElement GetVisualElement(SerializedObject serializedObject) => CreateInstance<T>().Create(serializedObject);
+        public static VisualElement GetVisualElement() => CreateInstance<T>().Create(null);
     }
 }

@@ -9,6 +9,6 @@ namespace VurbiriEditor.Colonization
     {
         [SerializeField] private VisualTreeAsset _treeAssetList;
 
-        public override VisualElement CreateInspectorGUI() => _treeAssetList.CloneTree();
+        protected override VisualElement Create(SerializedObject serializedObject) => _treeAssetList.CloneTree();
     }
 }

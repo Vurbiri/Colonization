@@ -15,7 +15,15 @@ namespace Vurbiri.UI
         private GameObject _self;
         private bool _isOn;
 
-        public LoadingScreen Init(bool isOn)
+        private const string PATH_TO_LOADING_SCREEN = "LoadingScreenCanvas";
+
+        public static LoadingScreen Create()
+        {
+            LoadingScreen loadingScreen = Resources.Load<LoadingScreen>(PATH_TO_LOADING_SCREEN);
+            return Instantiate(loadingScreen).Init();
+        }
+
+        private LoadingScreen Init()
         {
             DontDestroyOnLoad(gameObject);
             
@@ -23,7 +31,7 @@ namespace Vurbiri.UI
             _self = gameObject;
             _isOn = _self.activeSelf;
 
-            TurnOnOf(isOn);
+            TurnOnOf(true);
 
             return this;
         }

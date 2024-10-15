@@ -3,20 +3,16 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    [RequireComponent(typeof(Collider))]
+    //[RequireComponent(typeof(Collider))]
     public class Hexagon : MonoBehaviour, ISelectable
     {
         [SerializeField] private HexagonCaption _hexagonCaption;
-        [Space]
-        [SerializeField] private Collider _collider;
 
         #region private
-        private int _id;
-        private Key _key;
-        private SurfaceScriptable _surface;
+        private HexData _data;
+        private AProfit _profit;
         private bool _isGate, _isWater;
-        private GameplayEventBus _eventBus;
-
+ 
         private readonly HashSet<Crossroad> _crossroads = new(CONST.HEX_COUNT_SIDES);
         private readonly HashSet<Hexagon> _neighbors = new(CONST.HEX_COUNT_SIDES);
 
@@ -25,29 +21,34 @@ namespace Vurbiri.Colonization
 #endif
         #endregion
 
-        public Key Key => _key;
+        public Key Key => _data.key;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
         public bool IsWaterOccupied => _isWater && IsOccupied();
 
-        public void Init(HexagonData data)
+        public void Init(HexData data, GameplayEventBus eventBus)
         {
-            (_key, _id, _surface) = data.GetValues();
+            _data = data;
+            var surface = data.surface;
 
-            _hexagonCaption.Init(_id, _surface.Currencies);
+            var profits = surface.Currencies;
+            _profit = profits.Count == 1 ? new ProfitSingle(profits[0]) : new ProfitArray(profits);
 
-            _isGate = _surface.IsGate;
-            _isWater = _surface.IsWater;
+            _isGate = surface.IsGate;
+            _isWater = surface.IsWater;
 
-            _collider.enabled = !_isWater;
+            if (_isWater || _isGate)
+                Destroy(GetComponent<Collider>());
 
-            _eventBus = SceneServices.Get<GameplayEventBus>();
-            _eventBus.EventHexagonIdShow += _hexagonCaption.gameObject.SetActive;
 
-            _surface.Create(transform);
+            _hexagonCaption.Init(data.id, surface.Currencies);
+
+            eventBus.EventHexagonIdShow += _hexagonCaption.gameObject.SetActive;
+
+            surface.Create(transform);
 
 #if UNITY_EDITOR
-            name = NAME.Concat(_key, "__", _id);
+            name = NAME.Concat(data.key, "__", data.id);
 #endif
         }
 
@@ -68,13 +69,13 @@ namespace Vurbiri.Colonization
         public bool TryGetProfit(int hexId, out int currencyId)
         {
             currencyId = CurrencyId.Blood;
-            return !_isGate && hexId == _id && (currencyId = _surface.GetCurrency()) != CurrencyId.Blood;
+            return !_isGate && hexId == _data.id && (currencyId = _profit.Get) != CurrencyId.Blood;
         }
 
         public bool TryGetFreeGroundResource(out int currencyId)
         {
             currencyId = CurrencyId.Blood;
-            return !_isWater && !_isGate && !IsOccupied() && (currencyId = _surface.GetCurrency()) != CurrencyId.Blood;
+            return !_isWater && !_isGate && !IsOccupied() && (currencyId = _profit.Get) != CurrencyId.Blood;
         }
 
         public bool IsOccupied()
@@ -88,25 +89,49 @@ namespace Vurbiri.Colonization
 
         public void Select()
         {
-            if (_isWater || _isGate) return;
-
-
             Debug.Log($"{gameObject.name}, water: {IsWater}, gate {IsGate}\n");
         }
 
-        private void OnDestroy()
+        //private void OnDestroy()
+        //{
+        //    _eventBus.EventCrossroadMarkShow -= _hexagonCaption.gameObject.SetActive;
+        //}
+
+        #region Nested: AProfit, ProfitSingle, ProfitArray
+        //***********************************
+        private abstract class AProfit
         {
-            _eventBus.EventCrossroadMarkShow -= _hexagonCaption.gameObject.SetActive;
+            public abstract int Get { get; }
+            public abstract Id<CurrencyId> GetId { get; }
         }
+        //***********************************
+        private class ProfitSingle : AProfit 
+        {
+            private readonly Id<CurrencyId> _profit;
+
+            public ProfitSingle(Id<CurrencyId> profit) => _profit = profit;
+
+            public override int Get => _profit.ToInt;
+            public override Id<CurrencyId> GetId => _profit;
+        }
+        //***********************************
+        private class ProfitArray : AProfit
+        {
+            private readonly IReadOnlyList<Id<CurrencyId>> _profits;
+
+            public ProfitArray(IReadOnlyList<Id<CurrencyId>> profits) => _profits = profits;
+
+            public override int Get => _profits.Rand().ToInt;
+            public override Id<CurrencyId> GetId => _profits.Rand();
+        }
+        //***********************************
+        #endregion
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
             if (_hexagonCaption == null)
                 _hexagonCaption = GetComponentInChildren<HexagonCaption>();
-            if (_collider == null)
-                _collider = GetComponent<Collider>();
-
         }
 #endif
     }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public class ProjectInitializationData : MonoBehaviour
+    public class ProjectInitializationData : MonoBehaviourDisposable
     {
         public LoadScene startScene;
         [Space]
@@ -11,8 +11,7 @@ namespace Vurbiri.Colonization
         public string leaderboardName = "lbColonization";
         [Space]
         public SettingsData.Profile defaultProfile;
-        [Space]
-        public GameplaySettingsData.Settings gameplayDefaultData;
+
 
 #if UNITY_EDITOR
         private void OnValidate()

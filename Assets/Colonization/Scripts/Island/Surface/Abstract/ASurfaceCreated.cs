@@ -13,21 +13,18 @@ namespace Vurbiri.Colonization
         public override void Init()
         {
             StartCoroutine(Init_Coroutine());
+        }
 
-            #region Local: Init_Coroutine()
-            //=================================
-            IEnumerator Init_Coroutine()
-            {
-                yield return StartCoroutine(_generator.Generate_Coroutine(CONST.HEX_RADIUS_IN * _ratioSize));
+        protected IEnumerator Init_Coroutine()
+        {
+            yield return StartCoroutine(_generator.Generate_Coroutine(CONST.HEX_RADIUS_IN * _ratioSize));
 
-                Destroy(_generator);
-                Destroy(this);
+            _generator.Dispose();
+            Destroy(this);
 
-                yield return null;
+            yield return null;
 
-                GC.Collect();
-            }
-            #endregion
+            GC.Collect();
         }
 
 #if UNITY_EDITOR

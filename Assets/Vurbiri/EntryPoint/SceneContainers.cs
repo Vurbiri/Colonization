@@ -1,6 +1,6 @@
 using System;
 
-namespace Vurbiri
+namespace Vurbiri.EntryPoint
 {
     public class SceneContainers : IDisposable
     {

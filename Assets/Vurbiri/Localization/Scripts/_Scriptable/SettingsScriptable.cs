@@ -20,9 +20,6 @@ namespace Vurbiri.Localization
         public string LanguageFile => _languagesFile;
         public IReadOnlyList<bool> LoadFiles => _startLoadFiles.Values;
 
-        public void Dispose()
-        {
-            Resources.UnloadAsset(this);
-        }
+        public void Dispose() => Resources.UnloadAsset(this);
     }
 }

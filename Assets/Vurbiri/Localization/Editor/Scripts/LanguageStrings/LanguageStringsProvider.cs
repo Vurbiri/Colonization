@@ -15,7 +15,7 @@ namespace Vurbiri.Localization.Editors
             {
                 label = STR_PROJECT_LABEL,
                 activateHandler = (searchContext, rootElement)
-                                => rootElement.Add(LanguageStringsEditor.GetVisualElement(new(strings))),
+                                => rootElement.Add(LanguageStringsEditor.BindAndGetVisualElement(new(strings))),
                 deactivateHandler = strings.UnInit
             };
 

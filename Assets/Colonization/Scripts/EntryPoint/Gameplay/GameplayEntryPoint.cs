@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Vurbiri.EntryPoint;
+using Vurbiri.Localization;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
@@ -18,13 +20,18 @@ namespace Vurbiri.Colonization
             _data = containers.Data;
             _objects = containers.Objects;
 
-            GameplayEventBus eventBus = new();
-            _services.AddInstance(eventBus);
+            var language = _services.Get<Language>();
+            language.LoadFile(Files.Main);
+            language.LoadFile(Files.Gameplay);
+
+            _services.AddInstance(Coroutines.Create("SceneCoroutines", true));
+
+            var eventBus = _services.AddInstance(new GameplayEventBus());
 
             var initData = GetComponent<GameplayInitializationData>();
 
             _objects.AddInstance(initData.cameraMain);
-            _objects.AddFactory(new RoadsFactory(initData.road.prefab, initData.road.container).Create);
+            _objects.AddFactory(_ => new RoadsFactory(initData.road.prefab, initData.road.container).Create());
 
             Debug.Log("Enter");
 
@@ -33,44 +40,45 @@ namespace Vurbiri.Colonization
 
         private IEnumerator Enter_Coroutine(GameplayInitializationData initData, GameplayEventBus eventBus)
         {
-
-            InputController inputController = new(initData.cameraMain, initData.inputControllerSettings);
-            _services.AddInstance(inputController);
+            var inputController = _services.AddInstance(new InputController(initData.cameraMain, initData.inputControllerSettings));
 
             initData.cameraController.Init(initData.cameraMain, inputController.CameraActions);
 
-            var settings = _data.Get<GameplaySettingsData>();
+            var gameplaySettings = _data.Get<GameplaySettingsData>();
             var islandCreator = initData.islandCreator;
             Players players = Players.Instance;
 
             _objects.AddInstance(islandCreator.Land);
             _objects.AddInstance(islandCreator.Crossroads);
+            var hexagonsData = _data.AddInstance(new HexagonsData(_services, initData.surfaces, initData.isLoad));
 
-            islandCreator.Init(settings.ChanceWater);
-
+            islandCreator.Init();
             if (initData.isLoad)
             {
-                WaitResult<bool> waitResult = islandCreator.Load_Wait();
-                yield return waitResult;
-                if (waitResult.Result)
-                    players.LoadGame(settings.VisualPlayersIds, islandCreator.Crossroads);
+                yield return StartCoroutine(islandCreator.Load_Coroutine(hexagonsData));
+                players.LoadGame(gameplaySettings.VisualPlayersIds, islandCreator.Crossroads);
             }
             else
             {
-                yield return StartCoroutine(islandCreator.Generate_Coroutine(false));
-                players.StartGame(settings.VisualPlayersIds);
+                yield return StartCoroutine(islandCreator.Generate_Coroutine(hexagonsData));
+                players.StartGame(gameplaySettings.VisualPlayersIds);
+                hexagonsData.Save(true);
             }
 
             initData.contextMenusWorld.Init(initData.cameraMain, eventBus);
 
-            Destroy(islandCreator);
-            Destroy(initData);
+            islandCreator.Dispose();
+            initData.Dispose();
+
+            yield return null;
+
+            hexagonsData.UnloadSurfaces();
+
 
             eventBus.TriggerEndSceneCreate();
 
             for (int i = 0; i < 15; i++)
                 yield return null;
-
 
             _objects.Remove<Roads>();
 
@@ -82,7 +90,7 @@ namespace Vurbiri.Colonization
 
             inputController.EnableGameplayMap();
 
-            settings.StartGame();
+            gameplaySettings.StartGame();
         }
     }
 }

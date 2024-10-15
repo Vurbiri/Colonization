@@ -13,6 +13,7 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private LandMesh _landMesh;
 
+        private GameplayEventBus _eventBus;
         private Transform _thisTransform;
         private Dictionary<Key, Hexagon> _hexagons;
         private Dictionary<int, List<Key>> _hexagonsIdForKey;
@@ -20,16 +21,17 @@ namespace Vurbiri.Colonization
         private readonly Key[] NEAR = { new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
         private readonly Key[] NEAR_TWO = new Key[HEX_COUNT_SIDES << 1];
 
-        public void Init(int count)
+        public void Init()
         {
             CalkNearTwo();
             InitHexagonsIdForKey();
-            _hexagons = new(count);
+            _hexagons = new(MAX_HEXAGONS);
             _thisTransform = transform;
+            _eventBus = SceneServices.Get<GameplayEventBus>();
 
-            _landMesh.Init(count);
+            _landMesh.Init();
 
-            #region Local: CalkNearTwo();
+            #region Local: CalkNearTwo(), InitHexagonsIdForKey();
             //================================================
             void CalkNearTwo()
             {
@@ -44,7 +46,7 @@ namespace Vurbiri.Colonization
             //================================================
             void InitHexagonsIdForKey()
             {
-                int capacity = count / NUMBERS.Count + 1;
+                int capacity = MAX_HEXAGONS / NUMBERS.Count + 1;
 
                 _hexagonsIdForKey = new(NUMBERS.Count + 1);
                 foreach (int i in NUMBERS)
@@ -54,16 +56,17 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public Hexagon CreateHexagon(HexagonData data)
+        public Hexagon CreateHexagon(HexData data)
         {
-            Key key = data.Key;
-            Hexagon hex = Instantiate(_prefabHex, data.Position, Quaternion.identity, _thisTransform);
-            hex.Init(data);
+            Key key = data.key;
+            Hexagon hex = Instantiate(_prefabHex, data.position, Quaternion.identity, _thisTransform);
+            hex.Init(data, _eventBus);
 
             _hexagons.Add(key, hex);
-            _hexagonsIdForKey[data.Id].Add(key);
+            _hexagonsIdForKey[data.id].Add(key);
  
-            _landMesh.AddHexagon(key, data.Position, data.Surface.Color, hex.IsWater);
+            _landMesh.AddHexagon(key, data.position, data.surface.Color, hex.IsWater);
+            data.surface = null;
 
             return hex;
         }

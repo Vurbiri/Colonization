@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public class GameplayInitializationData : MonoBehaviour
+    public class GameplayInitializationData : MonoBehaviourDisposable
     {
         public Camera cameraMain;
         public IslandCreator islandCreator;
@@ -13,7 +13,8 @@ namespace Vurbiri.Colonization
         [Space]
         public RoadsSetup road;
         [Space]
-        //test
+        public SurfacesScriptable surfaces;
+        [Header("TEST")]
         public bool isLoad;
         public Id<PlayerId> id;
 
@@ -45,6 +46,9 @@ namespace Vurbiri.Colonization
 
             if (road.prefab == null)
                 road.prefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
+
+            //if (surfaces == null)
+            //    surfaces = VurbiriEditor.Utility.FindAnyScriptable<SurfacesScriptable>();
         }
 #endif
     }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.EntryPoint
 {
     [DefaultExecutionOrder(-10)]
     public abstract class ASceneEntryPoint : MonoBehaviour

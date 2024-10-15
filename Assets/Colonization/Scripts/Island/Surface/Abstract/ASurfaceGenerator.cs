@@ -1,8 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter))]
-public abstract class ASurfaceGenerator : MonoBehaviour
+namespace Vurbiri.Colonization
 {
-    public abstract IEnumerator Generate_Coroutine(float size);
+    [RequireComponent(typeof(MeshFilter))]
+    public abstract class ASurfaceGenerator : MonoBehaviourDisposable
+    {
+        public abstract IEnumerator Generate_Coroutine(float size);
+    }
 }

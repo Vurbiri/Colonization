@@ -33,7 +33,6 @@ namespace Vurbiri.Colonization
 
             _currencyText.text = sb.ToString();
             _idText.text = id.ToString();
-
         }
 
         private void Update()

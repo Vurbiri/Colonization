@@ -30,7 +30,7 @@ namespace VurbiriEditor.Colonization
                 return;
             }
 
-            rootVisualElement.Add(PricesScriptableEditor.GetVisualElement(new(_prices)));
+            rootVisualElement.Add(PricesScriptableEditor.BindAndGetVisualElement(new(_prices)));
         }
     }
 }

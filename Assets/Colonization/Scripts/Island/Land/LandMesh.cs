@@ -1,4 +1,3 @@
-using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,21 +22,16 @@ namespace Vurbiri.Colonization
         [SerializeField, Range(3f, 8f)] private float _finalBevelSize = 5.25f;
         [Space]
         [SerializeField] private Transform _waterTransform;
-#if UNITY_EDITOR
-        [Space]
-        [SerializeField] private string _nameFile = "001";
-        [SerializeField] private string _path = "Assets/Import/";
-#endif
 
         private MeshFilter _thisMeshFilter;
         private CustomMesh _customMesh;
         private Dictionary<Key, HexagonMesh> _hexagons;
         private float _waterLevel;
 
-        public void Init(int count)
+        public void Init()
         {
             _thisMeshFilter = GetComponent<MeshFilter>();
-            _hexagons = new(count);
+            _hexagons = new(MAX_HEXAGONS);
             _customMesh = new(_nameMesh, (2f * MAX_CIRCLES * CONST.HEX_DIAMETER_IN) * Vector2.one);
 
             GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTilingMaterial * MAX_CIRCLES);
@@ -73,10 +67,5 @@ namespace Vurbiri.Colonization
             _customMesh = null;
             _hexagons = null;
         }
-
-#if UNITY_EDITOR
-        [Button]
-        private void SaveMesh() => UnityEditor.AssetDatabase.CreateAsset(_thisMeshFilter.sharedMesh, _path + _nameMesh + "_" + _nameFile + ".mesh");
-#endif
     }
 }

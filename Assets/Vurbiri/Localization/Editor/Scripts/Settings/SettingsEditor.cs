@@ -14,7 +14,7 @@ namespace Vurbiri.Localization.Editors
     {
         [SerializeField] private VisualTreeAsset _treeAsset;
 
-        public override VisualElement CreateInspectorGUI()
+        protected override VisualElement Create(SerializedObject serializedObject)
         {
             VisualElement root = new();
             _treeAsset.CloneTree(root);
