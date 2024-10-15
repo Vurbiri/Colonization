@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
     [JsonArray]
     public class HexData : IEnumerable<int>
     {
-        private readonly Id<SurfaceId> _surfaceId;
+        private readonly int _surfaceId;
 
         public readonly Key key;
         public readonly int id;
@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
             this.id = id;
             this.position = position;
             this.surface = surface;
-            _surfaceId = surface.Id;
+            _surfaceId = surface.Id.ToInt;
         }
         public HexData(int[] array, SurfacesScriptable surfaces)
         {
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
             yield return key.X;
             yield return key.Y;
             yield return id;
-            yield return _surfaceId.ToInt;
+            yield return _surfaceId;
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

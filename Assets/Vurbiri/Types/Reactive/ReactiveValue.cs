@@ -13,7 +13,7 @@ namespace Vurbiri.Reactive
 
         protected Action<T> ActionValueChange;
 
-        public T Value { get => _value; set { if(!_value.Equals(value)) { _value = value; ActionValueChange?.Invoke(value); } } }
+        public T Value { get => _value; set { if(!_value.Equals(value)) { _value = value; ActionValueChange?.Invoke(_value); } } }
 
         public ReactiveValue() => _value = default;
         [JsonConstructor]
@@ -28,6 +28,17 @@ namespace Vurbiri.Reactive
 
             return new(this, action);
         }
+
+        public void Next(T value)
+        {
+            if (_value.Equals(value))
+                return;
+
+            _value = value; 
+            ActionValueChange?.Invoke(_value);
+        }
+
+        public void Signal() => ActionValueChange?.Invoke(_value);
 
         public void Unsubscribe(Action<T> action) => ActionValueChange -= action;
 

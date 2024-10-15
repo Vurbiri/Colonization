@@ -8,8 +8,6 @@ namespace Vurbiri.Localization
 {
     public class Language : IReactive<Language>
     {
-        private static Language _instance;
-
         private readonly bool _isValid;
         private readonly string _folder;
         private readonly EnumArray<Files, bool> _loadFiles;
@@ -21,12 +19,12 @@ namespace Vurbiri.Localization
 
         private Action<Language> ActionValueChange;
 
-        public static bool IsValid => _instance != null && _instance._isValid;
+        public bool IsValid => _isValid;
 
         public IEnumerable<LanguageType> Languages => _languages;
         public int CurrentId => _currentLanguage == null ? -1 : _currentLanguage.Id;
 
-        private Language()
+        public Language()
         {
             _isValid = false;
             
@@ -47,8 +45,6 @@ namespace Vurbiri.Localization
             _text = new Dictionary<string, string>[_countFiles];
             _isValid = true;
         }
-
-        public static Language Create() => _instance ??= new Language();
 
         public Unsubscriber<Language> Subscribe(Action<Language> action, bool calling = true)
         {

@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private CurrenciesLite _startResources;
         [Space]
-        [SerializeField] private PlayerStatesScriptable _abilities;
+        [SerializeField] private PlayerStatesScriptable _states;
         [SerializeField] private PlayerVisualSetScriptable _visualSet;
 
         private Player _current;
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 idVisual = idVisuals[i];
-                player = new(i, _visualSet.Get(idVisual), new(_startResources), _abilities);
+                player = new(i, _visualSet.Get(idVisual), new(_startResources), _states);
                 _players.Replace(player);
                 StartCoroutine(player.Save_Coroutine(i == MAX_PLAYERS - 1));
             }
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 idVisual = idVisuals[i];
-                _players.Replace(new(i, _visualSet.Get(idVisual), _abilities));
+                _players.Replace(new(i, _visualSet.Get(idVisual), _states));
             }
 
             foreach (var player in _players)

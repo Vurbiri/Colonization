@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
         private Currencies _resources;
         [JsonProperty(P_ROADS)]
         private int[][][] _roadsKey;
-        [JsonProperty(P_ENDIFICES)]
+        [JsonProperty(P_CROSSROADS)]
         private readonly HashSet<Crossroad>[] _edifices;
 
         private readonly IStorageService _storage;
@@ -189,8 +189,9 @@ namespace Vurbiri.Colonization
 
         public bool CanRoadBuild(Crossroad crossroad) => _states.IsMore(PlayerStateId.MaxRoads, _roads.Count) && crossroad.CanRoadBuild(_id);
         public bool CanRoadBuy() => _resources >= _roads.Cost;
-        public void RoadBuy(CrossroadLink link)
+        public void RoadBuy(Crossroad crossroad, CrossroadLink link)
         {
+            link.SetStart(crossroad);
             _roads.BuildAndUnion(link);
             _resources.Pay(_roads.Cost);
         }
@@ -218,7 +219,7 @@ namespace Vurbiri.Colonization
             public int[] resources;
             [JsonProperty(P_ROADS)]
             public int[][][] roadsKey;
-            [JsonProperty(P_ENDIFICES)]
+            [JsonProperty(P_CROSSROADS)]
             public int[][][] edifices;
 
             [JsonConstructor]

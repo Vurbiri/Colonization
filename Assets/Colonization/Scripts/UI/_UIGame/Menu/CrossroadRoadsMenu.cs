@@ -73,8 +73,7 @@ namespace Vurbiri.Colonization.UI
             //=================================
             void OnClick(CrossroadLink link)
             {
-                link.SetStart(_currentCrossroad);
-                _players.Current.RoadBuy(link);
+                _players.Current.RoadBuy(_currentCrossroad, link);
 
                 _currentCrossroad = null;
                 gameObject.SetActive(false);

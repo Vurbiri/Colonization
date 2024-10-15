@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Vurbiri.Localization;
 using Vurbiri.UI;
 
 namespace Vurbiri.EntryPoint
@@ -22,14 +21,17 @@ namespace Vurbiri.EntryPoint
 
             DontDestroyOnLoad(gameObject);
 
-            ASceneEntryPoint.EventLoad += EnterScene;
+            ASceneEntryPoint.EventLoading += EnterScene;
 
-            _servicesContainer.AddInstance(Coroutines.Create("ProjectCoroutines", true));
-            _servicesContainer.AddInstance(Language.Create());
-
+            _servicesContainer.AddInstance(Coroutines.Create("Coroutines", true));
             _loadingScreen = _objectsContainer.AddInstance(LoadingScreen.Create());
         }
 
+        protected void LoadScene(SceneId sceneId)
+        {
+            gameObject.SetActive(true);
+            StartCoroutine(LoadScene_Coroutine(sceneId));
+        }
         protected IEnumerator LoadScene_Coroutine(int sceneId)
         {
             _loadingScreen.TurnOnOf(true);
@@ -40,15 +42,8 @@ namespace Vurbiri.EntryPoint
 
         protected void EnterScene(ASceneEntryPoint sceneEntryPoint)
         {
-            sceneEntryPoint.Enter(new(_servicesContainer, _dataContainer, _objectsContainer));
+            sceneEntryPoint.Enter(new(_servicesContainer, _dataContainer, _objectsContainer)).Subscribe(LoadScene, false);
+            gameObject.SetActive(false);
         }
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (_loadingScreen == null)
-                _loadingScreen = VurbiriEditor.Utility.FindAnyPrefab<LoadingScreen>();
-        }
-#endif
     }
 }

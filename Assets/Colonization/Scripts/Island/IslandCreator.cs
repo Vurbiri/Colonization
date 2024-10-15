@@ -15,15 +15,18 @@ namespace Vurbiri.Colonization
         public Crossroads Crossroads => _crossroads;
         public Land Land => _land;
 
-        public void Init()
+        public IEnumerator Create_Coroutine(HexagonsData hexagonsData, bool isLoad)
         {
             _land.Init();
             _crossroads.Init();
-        }
 
-        public IEnumerator Generate_Coroutine(HexagonsData hexagonsData)
-        {
-            yield return StartCoroutine(Create_Coroutine(hexagonsData));
+            yield return null;
+
+            if (isLoad)
+                yield return StartCoroutine(Load_Coroutine(hexagonsData));
+            else
+                yield return StartCoroutine(Generate_Coroutine(hexagonsData));
+            
             yield return StartCoroutine(Setup_Coroutine());
         }
 
@@ -38,19 +41,9 @@ namespace Vurbiri.Colonization
 
                 yield return null;
             }
-
-            yield return StartCoroutine(Setup_Coroutine());
         }
 
-        private IEnumerator Setup_Coroutine()
-        {
-            yield return null;
-            _land.HexagonsNeighbors();
-            yield return null;
-            yield return StartCoroutine(_land.SetMesh_Coroutine());
-        }
-
-        private IEnumerator Create_Coroutine(HexagonsData hexagonsData)
+        private IEnumerator Generate_Coroutine(HexagonsData hexagonsData)
         {
             SurfacesScriptable surfaces = hexagonsData.Surfaces;
 
@@ -98,6 +91,16 @@ namespace Vurbiri.Colonization
                     }
                 }
             }
+
+            hexagonsData.Save(false);
+        }
+
+        private IEnumerator Setup_Coroutine()
+        {
+            yield return null;
+            _land.HexagonsNeighbors();
+            yield return null;
+            yield return StartCoroutine(_land.SetMesh_Coroutine());
         }
 
 

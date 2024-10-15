@@ -1,9 +1,6 @@
-using System;
-using UnityEngine;
-
 namespace Vurbiri
 {
-    public class MonoBehaviourDisposable : MonoBehaviour, IDisposable
+    public class MonoBehaviourDisposable : UnityEngine.MonoBehaviour, System.IDisposable
     {
         public virtual void Dispose()
         {

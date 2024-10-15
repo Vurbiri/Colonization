@@ -1,12 +1,17 @@
+using Newtonsoft.Json;
 using System;
 using UnityEngine;
 
+[JsonObject(MemberSerialization.OptIn)]
 public struct Key : IEquatable<Key>
 {
     public readonly int X => _x;
     public readonly int Y => _y;
 
-    private int _x, _y;
+    [JsonProperty("x")]
+    private int _x;
+    [JsonProperty("y")]
+    private int _y;
 
     public Key(int x, int y)
     {

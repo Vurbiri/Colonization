@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Vurbiri.Colonization
 {
     [CreateAssetMenu(fileName = "Surfaces", menuName = "Vurbiri/Colonization/Surfaces Array", order = 51)]
-    public class SurfacesScriptable : ScriptableObject, System.IDisposable
+    public class SurfacesScriptable : ScriptableObjectDisposable
     {
         [SerializeField] private IdHashSet<SurfaceId, SurfaceScriptable> _surfaces;
 
@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
 
         public List<SurfaceScriptable> GetRange(int start, int end) => _surfaces.GetRange(start, end);
 
-        public void Dispose()
+        public override void Dispose()
         {
             foreach (var surface in _surfaces)
                 surface.Dispose();

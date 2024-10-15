@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
         {
             //Message.Log("Start LoadingPreGame");
 
-            if (!Language.IsValid)
+            if (!_servicesContainer.AddInstance(new Language()).IsValid)
                 Message.Error("Error loading Localization!");
 
             YandexSDK ysdk = new(_servicesContainer, data.leaderboardName);
@@ -73,7 +73,5 @@ namespace Vurbiri.Colonization
                     yield return StartCoroutine(CreateStorages_Coroutine(defaultProfile));
             }
         }
-
-        //private void OnDisable() => YandexSDK.Instance.LoadingAPI_Ready();
     }
 }

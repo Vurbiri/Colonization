@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization
     [JsonArray]
     public class Currencies : AReadOnlyCurrenciesReactive, IEnumerable<int>
     {
+        [JsonConstructor]
         public Currencies(IReadOnlyList<int> array) : base(array) { }
         public Currencies(ACurrencies other) : base(other) { }
         public Currencies() : base() { }

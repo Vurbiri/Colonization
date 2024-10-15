@@ -33,9 +33,11 @@ namespace Vurbiri.Colonization
 
         public Key Key => _key;
         public bool IsOccupied => _edifice.IsOccupied;
+        public int Id => _edifice.Id.ToInt;
         public int GroupId => _edifice.GroupId;
-        public int IdUpgrade => _edifice.NextId;
+        public int NextId => _edifice.NextId;
         public int NextGroupId => _edifice.NextGroupId;
+        public bool IsWall => _edifice.IsWall;
         public IEnumerable<CrossroadLink> Links => _links;
         public Vector3 Position { get; private set; }
 

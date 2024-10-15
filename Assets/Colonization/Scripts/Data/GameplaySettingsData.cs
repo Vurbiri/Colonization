@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization
             public GameModeStart modeStart = GameModeStart.New;
             [JsonProperty(G_MAX_SCORE)]
             public int maxScore = 0;
-            [JsonProperty(G_VISUAL_PLAYERS)]
+            [JsonProperty(G_VISUAL_PLAYER_IDS)]
             public int[] visualPlayers;
 
             public bool isFirstStart = true;

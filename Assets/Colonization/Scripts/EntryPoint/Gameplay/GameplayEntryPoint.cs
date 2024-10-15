@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Vurbiri.EntryPoint;
 using Vurbiri.Localization;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
@@ -10,87 +11,159 @@ namespace Vurbiri.Colonization
     [DefaultExecutionOrder(-10)]
     public class GameplayEntryPoint : ASceneEntryPoint
     {
+        [Space]
+        [SerializeField] private Camera _cameraMain;
+        [Space]
+        [SerializeField] private LocalizationFiles _localizationFiles;
+        [Space]
+        [SerializeField] private IslandCreator _islandCreator;
+        [SerializeField] private CameraController _cameraController;
+        [SerializeField] private UI.ContextMenusWorld _contextMenusWorld;
+        [Space]
+        [SerializeField] private InputController.Settings _inputControllerSettings;
+        [Space]
+        [SerializeField] private RoadsSetup _roads;
+        [Space]
+        [SerializeField] private SurfacesScriptable _surfaces;
+
+        [Header("TEST")]
+        [SerializeField] private bool isLoad;
+        [SerializeField] private Id<PlayerId> id;
+
         private DIContainer _services;
         private DIContainer _data;
         private DIContainer _objects;
+        private GameplaySettingsData _gameplaySettings;
+        private GameplayEventBus _eventBus;
 
-        public override void Enter(SceneContainers containers)
+        public override IReactive<SceneId> Enter(SceneContainers containers)
         {
             _services = containers.Services;
             _data = containers.Data;
             _objects = containers.Objects;
 
-            var language = _services.Get<Language>();
-            language.LoadFile(Files.Main);
-            language.LoadFile(Files.Gameplay);
+            _gameplaySettings = _data.Get<GameplaySettingsData>();
+            _eventBus = _services.AddInstance(new GameplayEventBus());
 
-            _services.AddInstance(Coroutines.Create("SceneCoroutines", true));
+            SetupLocalizationFiles();
 
-            var eventBus = _services.AddInstance(new GameplayEventBus());
+            _objects.AddInstance(_cameraMain);
+            
+            StartCoroutine(Enter_Coroutine());
 
-            var initData = GetComponent<GameplayInitializationData>();
-
-            _objects.AddInstance(initData.cameraMain);
-            _objects.AddFactory(_ => new RoadsFactory(initData.road.prefab, initData.road.container).Create());
-
-            Debug.Log("Enter");
-
-            StartCoroutine(Enter_Coroutine(initData, eventBus));
+            return _defaultNextScene;
         }
 
-        private IEnumerator Enter_Coroutine(GameplayInitializationData initData, GameplayEventBus eventBus)
+        private void SetupLocalizationFiles()
         {
-            var inputController = _services.AddInstance(new InputController(initData.cameraMain, initData.inputControllerSettings));
+            var language = _services.Get<Language>();
+            
+            foreach (var file in _localizationFiles.unloads)
+                language.UnloadFile(file);
 
-            initData.cameraController.Init(initData.cameraMain, inputController.CameraActions);
+            foreach (var file in _localizationFiles.loads)
+                language.LoadFile(file);
+        }
 
-            var gameplaySettings = _data.Get<GameplaySettingsData>();
-            var islandCreator = initData.islandCreator;
+        private IEnumerator Enter_Coroutine()
+        {
+            yield return StartCoroutine(CreateIsland_Coroutine());
+
+            _contextMenusWorld.Init(_cameraMain, _eventBus);
+
+            StartCoroutine(Final_Coroutine());
+        }
+
+        private IEnumerator CreateIsland_Coroutine()
+        {
+            _objects.AddFactory(_ => new RoadsFactory(_roads.prefab, _roads.container).Create());
+
             Players players = Players.Instance;
 
-            _objects.AddInstance(islandCreator.Land);
-            _objects.AddInstance(islandCreator.Crossroads);
-            var hexagonsData = _data.AddInstance(new HexagonsData(_services, initData.surfaces, initData.isLoad));
+            _objects.AddInstance(_islandCreator.Land);
+            _objects.AddInstance(_islandCreator.Crossroads);
+            var hexagonsData = _data.AddInstance(new HexagonsData(_services, _surfaces, isLoad));
+            _surfaces = null;
 
-            islandCreator.Init();
-            if (initData.isLoad)
+            yield return StartCoroutine(_islandCreator.Create_Coroutine(hexagonsData, isLoad));
+
+            if (isLoad)
             {
-                yield return StartCoroutine(islandCreator.Load_Coroutine(hexagonsData));
-                players.LoadGame(gameplaySettings.VisualPlayersIds, islandCreator.Crossroads);
+                players.LoadGame(_gameplaySettings.VisualPlayersIds, _islandCreator.Crossroads);
             }
             else
             {
-                yield return StartCoroutine(islandCreator.Generate_Coroutine(hexagonsData));
-                players.StartGame(gameplaySettings.VisualPlayersIds);
-                hexagonsData.Save(true);
+                players.StartGame(_gameplaySettings.VisualPlayersIds);
             }
-
-            initData.contextMenusWorld.Init(initData.cameraMain, eventBus);
-
-            islandCreator.Dispose();
-            initData.Dispose();
 
             yield return null;
 
+            _objects.Remove<Roads>();
             hexagonsData.UnloadSurfaces();
 
+            _islandCreator.Dispose();
+        }
 
-            eventBus.TriggerEndSceneCreate();
+        private IEnumerator Final_Coroutine()
+        {
+            var inputController = _services.AddInstance(new InputController(_cameraMain, _inputControllerSettings));
+            _cameraController.Init(_cameraMain, inputController.CameraActions);
 
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 16; i++)
                 yield return null;
-
-            _objects.Remove<Roads>();
 
             Resources.UnloadUnusedAssets();
             yield return null;
             GC.Collect();
 
+            _gameplaySettings.StartGame();
+            _eventBus.TriggerEndSceneCreate();
+
             yield return _objects.Get<LoadingScreen>().SmoothOff_Wait();
 
             inputController.EnableGameplayMap();
 
-            gameplaySettings.StartGame();
+            Destroy(gameObject);
         }
+
+        #region Nested: Settings, LocalizationFiles
+        //***********************************
+        [System.Serializable]
+        private class RoadsSetup
+        {
+            public Roads prefab;
+            public Transform container;
+        }
+        //***********************************
+        [System.Serializable]
+        private class LocalizationFiles
+        {
+            public Files[] unloads;
+            public Files[] loads;
+        }
+        #endregion
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_cameraMain == null)
+                _cameraMain = FindAnyObjectByType<Camera>();
+
+            if (_islandCreator == null)
+                _islandCreator = FindAnyObjectByType<IslandCreator>();
+
+            if (_cameraController == null)
+                _cameraController = FindAnyObjectByType<CameraController>();
+
+            if (_contextMenusWorld == null)
+                _contextMenusWorld = FindAnyObjectByType<UI.ContextMenusWorld>();
+
+            if (_roads.prefab == null)
+                _roads.prefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
+
+            //if (surfaces == null)
+            //    surfaces = VurbiriEditor.Utility.FindAnyScriptable<SurfacesScriptable>();
+        }
+#endif
     }
 }
