@@ -10,7 +10,7 @@ namespace Vurbiri.Localization.Editors
     {
         [SerializeField] private VisualTreeAsset _treeAsset;
 
-        protected override VisualElement Create(SerializedObject serializedObject)
+        public override VisualElement CreateInspectorGUI()
         {
             var strings = LanguageStringsScriptable.GetOrCreateSelf();
             strings.Init();
@@ -18,7 +18,7 @@ namespace Vurbiri.Localization.Editors
             VisualElement root = _treeAsset.CloneTree();
 
             var list = root.Q<ListView>("Strings");
-            list.makeItem = LanguageRecordEditor.GetVisualElement;
+            list.makeItem = LanguageRecordEditor.CreateInstanceAndGetVisualElement;
             list.headerTitle = strings.LoadFile;
             list.itemsAdded += strings.OnAdded;
 

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
 
         public virtual void Init(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links)
         {
-            GetComponent<MeshRenderer>().SetSharedMaterial(Players.Instance[owner].MaterialLit, _idMaterial);
+            GetComponent<MeshRenderer>().SetSharedMaterial(SceneObjects.Get<Players>()[owner].MaterialLit, _idMaterial);
         }
 
         public virtual void AddRoad(Id<LinkId> linkId, Id<PlayerId> owner) { }

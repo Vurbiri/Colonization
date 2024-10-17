@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Localization;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Data
 {
     using static JSON_KEYS;
 

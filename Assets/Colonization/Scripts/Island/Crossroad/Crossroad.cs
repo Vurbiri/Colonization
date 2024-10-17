@@ -1,13 +1,10 @@
-using Newtonsoft.Json;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    [JsonArray]
     [RequireComponent(typeof(SphereCollider))]
-    public class Crossroad : MonoBehaviour, ISelectable, IEnumerable<int>
+    public class Crossroad : MonoBehaviour, ISelectable
     {
         [SerializeField] private AEdifice _edifice;
         [Space]
@@ -45,7 +42,7 @@ namespace Vurbiri.Colonization
         {
             _eventBus = SceneServices.Get<GameplayEventBus>();
             _eventBus.EventCrossroadMarkShow += Show;
-            _eventBus.EventEndSceneCreate += ClearResources;
+            _eventBus.EventEndSceneCreation += ClearResources;
 
             _collider = GetComponent<SphereCollider>();
             _collider.radius = _edifice.Radius;
@@ -90,7 +87,7 @@ namespace Vurbiri.Colonization
             return true;
         }
 
-        public bool Build(Id<PlayerId> playerId, int id, bool isWall)
+        public bool Build(int playerId, int id, bool isWall)
         {
             if (_edifice.Build(_prefabs[id], playerId, _links, isWall, out _edifice))
             {
@@ -219,7 +216,7 @@ namespace Vurbiri.Colonization
         private void OnDestroy()
         {
             _eventBus.EventCrossroadMarkShow -= Show;
-            _eventBus.EventEndSceneCreate -= ClearResources;
+            _eventBus.EventEndSceneCreation -= ClearResources;
 
             foreach (var hex in _hexagons)
                 hex.CrossroadRemove(this);
@@ -227,15 +224,8 @@ namespace Vurbiri.Colonization
 
         public static Key operator -(Crossroad a, Crossroad b) => a._key - b._key;
 
-        public IEnumerator<int> GetEnumerator()
-        {
-            yield return _key.X;
-            yield return _key.Y;
-            yield return _edifice.Id.ToInt;
-            yield return _edifice.IsWall ? 1 : 0;
-            yield break;
-        }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public int[] ToArray() => new int[] { _key.X, _key.Y, _edifice.Id.ToInt, _edifice.IsWall ? 1 : 0 };
+
 
 #if UNITY_EDITOR
         private void OnValidate()

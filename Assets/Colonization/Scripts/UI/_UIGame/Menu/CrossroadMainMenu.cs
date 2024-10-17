@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(ACrossroadBuildMenu roadsMenu)
         {
-            _players = Players.Instance;
+            _players = SceneObjects.Get<Players>();
 
             _buttonClose.onClick.AddListener(() => gameObject.SetActive(false));
             _buttonRoads.Init();

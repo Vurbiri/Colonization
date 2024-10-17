@@ -14,7 +14,7 @@ namespace VurbiriEditor.Colonization
 
         [SerializeField] private PricesScriptable _prices;
 
-        public static readonly Vector2 wndMinSize = new(325f, 400f);
+        private static readonly Vector2 wndMinSize = new(325f, 400f);
 
         [MenuItem(MENU)]
         private static void ShowWindow()
@@ -30,7 +30,7 @@ namespace VurbiriEditor.Colonization
                 return;
             }
 
-            rootVisualElement.Add(PricesScriptableEditor.BindAndGetVisualElement(new(_prices)));
+            rootVisualElement.Add(PricesScriptableEditor.BindAndGetVisualElement(_prices));
         }
     }
 }

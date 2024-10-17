@@ -1,23 +1,30 @@
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace VurbiriEditor
 {
     public abstract class AEditorGetVE<T> : Editor where T : AEditorGetVE<T>
     {
-        public new VisualElement CreateInspectorGUI() => Create(serializedObject);
+        private static Editor _self;
 
-        protected abstract VisualElement Create(SerializedObject serializedObject);
-
-        public static VisualElement BindAndGetVisualElement(SerializedObject serializedObject)
+        protected VisualElement CreateDefaultInspectorGUI()
         {
-            VisualElement element = CreateInstance<T>().Create(serializedObject);
-            element.Bind(serializedObject);
+            IMGUIContainer defaultInspector = new(() => DrawDefaultInspector());
+            VisualElement root = new();
+            root.Add(defaultInspector);
+            return root;
+        }
+
+        public static VisualElement BindAndGetVisualElement(Object obj)
+        {
+            CreateCachedEditor(obj, typeof(T), ref _self);
+            VisualElement element = _self.CreateInspectorGUI();
+            element.Bind(_self.serializedObject);
             return element;
         }
 
-        public static VisualElement GetVisualElement(SerializedObject serializedObject) => CreateInstance<T>().Create(serializedObject);
-        public static VisualElement GetVisualElement() => CreateInstance<T>().Create(null);
+        public static VisualElement CreateInstanceAndGetVisualElement() => CreateInstance<T>().CreateInspectorGUI();
     }
 }

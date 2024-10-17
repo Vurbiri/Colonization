@@ -4,4 +4,10 @@ namespace Vurbiri.Reactive
     {
         public T Value { get; }
     }
+
+    public interface IReadOnlyReactiveValue<TA, TB> : IReactive<TA, TB>
+    {
+        public TA ValueA { get; }
+        public TB ValueB { get; }
+    }
 }

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
 
         public virtual void Init(ACrossroadMenu mainMenu)
         {
-            _players = Players.Instance;
+            _players = SceneObjects.Get<Players>();
 
             _buttonBack.onClick.AddListener(OnBack);
 

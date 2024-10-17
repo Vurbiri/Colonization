@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Vurbiri.Colonization.Data;
 using Vurbiri.EntryPoint;
 using Vurbiri.Localization;
 using Vurbiri.Reactive;
@@ -11,20 +12,29 @@ namespace Vurbiri.Colonization
     [DefaultExecutionOrder(-10)]
     public class GameplayEntryPoint : ASceneEntryPoint
     {
+        [Header("Scene objects")]
+        [SerializeField] private Game _game;
         [Space]
-        [SerializeField] private Camera _cameraMain;
-        [Space]
-        [SerializeField] private LocalizationFiles _localizationFiles;
+        [SerializeField] private Camera _cameraMain; 
         [Space]
         [SerializeField] private IslandCreator _islandCreator;
         [SerializeField] private CameraController _cameraController;
         [SerializeField] private UI.ContextMenusWorld _contextMenusWorld;
         [Space]
+        [Header("Init data for classes")]
+        [Space]
+        [SerializeField] private LocalizationFiles _localizationFiles;
+        [Space]
         [SerializeField] private InputController.Settings _inputControllerSettings;
         [Space]
         [SerializeField] private RoadsSetup _roads;
         [Space]
+        [Header("ScriptableObjects")]
         [SerializeField] private SurfacesScriptable _surfaces;
+        [Space]
+        [SerializeField] private PricesScriptable _prices;
+        [SerializeField] private PlayerStatesScriptable _states;
+        [SerializeField] private PlayerVisualSetScriptable _visualSet;
 
         [Header("TEST")]
         [SerializeField] private bool isLoad;
@@ -33,6 +43,7 @@ namespace Vurbiri.Colonization
         private DIContainer _services;
         private DIContainer _data;
         private DIContainer _objects;
+        private Players _players;
         private GameplaySettingsData _gameplaySettings;
         private GameplayEventBus _eventBus;
 
@@ -44,6 +55,7 @@ namespace Vurbiri.Colonization
 
             _gameplaySettings = _data.Get<GameplaySettingsData>();
             _eventBus = _services.AddInstance(new GameplayEventBus());
+            _players = _objects.AddInstance(new Players(_states, _visualSet, _gameplaySettings.Visualds, new RoadsFactory(_roads.prefab, _roads.container)));
 
             SetupLocalizationFiles();
 
@@ -76,10 +88,6 @@ namespace Vurbiri.Colonization
 
         private IEnumerator CreateIsland_Coroutine()
         {
-            _objects.AddFactory(_ => new RoadsFactory(_roads.prefab, _roads.container).Create());
-
-            Players players = Players.Instance;
-
             _objects.AddInstance(_islandCreator.Land);
             _objects.AddInstance(_islandCreator.Crossroads);
             var hexagonsData = _data.AddInstance(new HexagonsData(_services, _surfaces, isLoad));
@@ -87,14 +95,9 @@ namespace Vurbiri.Colonization
 
             yield return StartCoroutine(_islandCreator.Create_Coroutine(hexagonsData, isLoad));
 
-            if (isLoad)
-            {
-                players.LoadGame(_gameplaySettings.VisualPlayersIds, _islandCreator.Crossroads);
-            }
-            else
-            {
-                players.StartGame(_gameplaySettings.VisualPlayersIds);
-            }
+            Debug.Log("SetData");
+            _players.SetData(_services, _prices, _islandCreator.Crossroads, isLoad);
+            Debug.Log("SetData End");
 
             yield return null;
 
@@ -116,8 +119,9 @@ namespace Vurbiri.Colonization
             yield return null;
             GC.Collect();
 
+            _game.Init();
             _gameplaySettings.StartGame();
-            _eventBus.TriggerEndSceneCreate();
+            _eventBus.TriggerEndSceneCreation();
 
             yield return _objects.Get<LoadingScreen>().SmoothOff_Wait();
 

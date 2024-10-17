@@ -13,7 +13,7 @@ namespace VurbiriEditor.Colonization
 
         private const string NAME_PROPERTY = "_edifices", NAME_ARRAY = "_values";
 
-        protected override VisualElement Create(SerializedObject serializedObject)
+        public override VisualElement CreateInspectorGUI()
         {
             SerializedProperty propertyValues = serializedObject.FindProperty(NAME_PROPERTY).FindPropertyRelative(NAME_ARRAY);
 

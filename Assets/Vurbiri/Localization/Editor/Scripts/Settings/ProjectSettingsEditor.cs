@@ -13,7 +13,7 @@ namespace Vurbiri.Localization.Editors
     {
         [SerializeField] private VisualTreeAsset _treeAsset;
 
-        protected override VisualElement Create(SerializedObject serializedObject)
+        public override VisualElement CreateInspectorGUI()
         {
             VisualElement root = _treeAsset.CloneTree();
 
@@ -35,7 +35,7 @@ namespace Vurbiri.Localization.Editors
 
                 if (changeEvent.newValue is SettingsScriptable st)
                 {
-                    visualSettings.Add(SettingsEditor.BindAndGetVisualElement(new(st)));
+                    visualSettings.Add(SettingsEditor.BindAndGetVisualElement(st));
                     visualSettings.visible = true;
                 }
                 else

@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Data
 {
     [JsonArray]
     public class CrossroadData : IEnumerable<int>
@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
             this.edificeId = edificeId;
             this.isWall = isWall;
         }
-
+        [JsonConstructor]
         public CrossroadData(int[] array)
         {
             if (array.Length != 4)

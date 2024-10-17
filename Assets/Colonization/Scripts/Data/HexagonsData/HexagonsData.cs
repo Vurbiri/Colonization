@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Data
 {
     using static CONST;
 

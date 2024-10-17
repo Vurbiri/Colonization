@@ -14,6 +14,8 @@ namespace Vurbiri.Colonization
 
         private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
 
+        public Crossroad this[Key key] => _crossroads[key];
+
         public void Init()
         {
             _crossroads = new(HEX_COUNT_SIDES * MAX_CIRCLES * MAX_CIRCLES);
@@ -47,8 +49,6 @@ namespace Vurbiri.Colonization
                     _crossroads.Remove(key);
             }
         }
-
-        public Crossroad GetCrossroad(Key key) => _crossroads[key];
 
 #if UNITY_EDITOR
         private void OnValidate()

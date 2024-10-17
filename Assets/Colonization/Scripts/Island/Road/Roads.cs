@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,8 @@ namespace Vurbiri.Colonization
 
         public ACurrencies Cost => _cost;
         public int Count => _count;
+
+        public event Action<int[][][]> EventChangeValue;
 
         public Roads Init(Id<PlayerId> id, Color color)
         {
@@ -75,8 +78,6 @@ namespace Vurbiri.Colonization
             StartCoroutine(TryUnion_Coroutine());
         }
 
-        public void TryUnion() => StartCoroutine(TryUnion_Coroutine());
-
         public int[][][] GetCrossroadsKey()
         {
             int count = _roadsLists.Count;
@@ -112,6 +113,8 @@ namespace Vurbiri.Colonization
                     }
                 }
             }
+
+            EventChangeValue?.Invoke(GetCrossroadsKey());
         }
 
 #if UNITY_EDITOR

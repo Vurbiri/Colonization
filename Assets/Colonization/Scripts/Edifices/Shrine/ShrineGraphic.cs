@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
 
         public override void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {
-            Player player = Players.Instance[playerId];
+            Player player = SceneObjects.Get<Players>()[playerId];
 
             GetComponent<MeshRenderer>().SetSharedMaterial(player.MaterialUnlit, _idMaterial);
 

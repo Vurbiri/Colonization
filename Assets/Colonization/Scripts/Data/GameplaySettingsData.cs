@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Data
 {
     using static JSON_KEYS;
 
@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
 
         public bool IsNewGame => _data.modeStart == GameModeStart.New;
         public int MaxScore { get => _data.maxScore; private set { _data.maxScore = value; EventChangeMaxScore?.Invoke(value); } }
-        public int[] VisualPlayersIds => _data.visualPlayers;
+        public int[] Visualds => _data.visualPlayers;
 
         public bool IsFirstStart => _data.isFirstStart;
 

@@ -13,19 +13,15 @@ namespace Vurbiri.Colonization
 
         private int _player = 0, _turn = 1;
 
-        protected void Awake()
+        public void Init()
         {
             _land = SceneObjects.Get<Land>();
-            _players = Players.Instance;
-
-            //Debug.Log("TEST");
-            //foreach (AEdifice c in _prefabs)
-            //    c.SetCost();
+            _players = SceneObjects.Get<Players>();
         }
 
         public void EndTurnPlayer()
         {
-            StartCoroutine(_players.Current.Save_Coroutine());
+            _players.Save();
             _players.Next();
 
             if ((_player = ++_player % MAX_PLAYERS) == 0)
@@ -34,18 +30,10 @@ namespace Vurbiri.Colonization
             int roll = _dices.Roll();
             UnityEngine.Debug.Log("ROLL: " + roll);
             ACurrencies free = null;
-            //if (roll != ID_GATE)
-            //    free = _island.Land.GetFreeGroundResource(roll);
+            if (roll != ID_GATE)
+                free = _land.GetFreeGroundResource(roll);
 
             _players.Profit(roll, free);
         }
-
-        protected void OnDestroy()
-        {
-            if (Players.Instance != null)
-                _players.DestroyGame();
-        }
-
-        
     }
 }

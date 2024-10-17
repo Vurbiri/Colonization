@@ -19,15 +19,15 @@ namespace Vurbiri.Colonization.UI
 
         private void Start()
         {
-            SceneServices.Get<GameplayEventBus>().EventEndSceneCreate += Create;
+            SceneServices.Get<GameplayEventBus>().EventEndSceneCreation += Create;
         }
 
         private void Create()
         {
             RectTransform thisRectTransform = GetComponent<RectTransform>();
 
-            Player player = Players.Instance[_playerId];
-            var curr = player.Resources;
+            Player player = SceneObjects.Get<Players>()[_playerId];
+            var currencies = player.Resources;
             
             GetComponent<Image>().color = player.Color.SetAlpha(_transparency);
 
@@ -49,17 +49,17 @@ namespace Vurbiri.Colonization.UI
             offset = cSize.x + _space;
             for (int i = 0; i < CurrencyId.CountMain; i++)
             {
-                Instantiate(_currencyUIPrefab, thisRectTransform).Init(i, pos, curr, _directionPopup);
+                Instantiate(_currencyUIPrefab, thisRectTransform).Init(i, pos, currencies, _directionPopup);
                 pos.x += offset;
             }
 
             pos.x -= (cSize.x - aSize.x) * 0.5f;
-            Instantiate(_amountUIPrefab, thisRectTransform).Init(pos, curr, player.GetStateReactive(PlayerStateId.MaxResources));
+            Instantiate(_amountUIPrefab, thisRectTransform).Init(pos, currencies, player.GetStateReactive(PlayerStateId.MaxResources));
 
             pos.x += (bSize.x + aSize.x) * 0.5f + _space * 2f;
-            Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, curr, player.GetStateReactive(PlayerStateId.ShrineMaxRes), _directionPopup);
+            Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, currencies, player.GetStateReactive(PlayerStateId.ShrineMaxRes), _directionPopup);
 
-            SceneServices.Get<GameplayEventBus>().EventEndSceneCreate -= Create;
+            SceneServices.Get<GameplayEventBus>().EventEndSceneCreation -= Create;
             Destroy(this);
         }
     }

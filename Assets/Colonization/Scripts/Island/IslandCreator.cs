@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization
 {
@@ -92,7 +93,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            hexagonsData.Save(false);
+            hexagonsData.Save(true);
         }
 
         private IEnumerator Setup_Coroutine()

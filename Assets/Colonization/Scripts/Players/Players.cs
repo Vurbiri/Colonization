@@ -1,54 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
+using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public class Players : ASingleton<Players>, IEnumerable<Player>
+    public class Players
     {
-        [Space]
-        [SerializeField] private CurrenciesLite _startResources;
-        [Space]
-        [SerializeField] private PlayerStatesScriptable _states;
-        [SerializeField] private PlayerVisualSetScriptable _visualSet;
-
         private Player _current;
         private readonly IdHashSet<PlayerId, Player> _players = new();
-        
+        private PlayersData _playersData;
+        private Roads[] _roads = new Roads[MAX_PLAYERS];
+
         public Player Current => _current;
         public Player this[Id<PlayerId> id] => _players[id];
 
-        public void StartGame(int[] idVisuals)
+        public Players(PlayerStatesScriptable states, PlayerVisualSetScriptable visualSet, int[] visualIds, RoadsFactory roadsFactory)
         {
-            int idVisual;
             Player player;
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
-                idVisual = idVisuals[i];
-                player = new(i, _visualSet.Get(idVisual), new(_startResources), _states);
-                _players.Replace(player);
-                StartCoroutine(player.Save_Coroutine(i == MAX_PLAYERS - 1));
+                player = new(i, visualSet.Get(visualIds[i]), states.GetAbilities(), _roads[i] = roadsFactory.Create());
+                _players.Add(player);
             }
 
             _current = _players[0];
         }
 
-        public void LoadGame(int[] idVisuals, Crossroads crossroads)
+        public void SetData(IReadOnlyDIContainer container, PricesScriptable prices, Crossroads crossroads, bool isLoading)
         {
-            int idVisual;
+            if (isLoading)
+                _playersData = new(container, crossroads, _roads);
+            else
+                _playersData = new(container, prices, _roads);
+
             for (int i = 0; i < MAX_PLAYERS; i++)
-            {
-                idVisual = idVisuals[i];
-                _players.Replace(new(i, _visualSet.Get(idVisual), _states));
-            }
+                _players[i].SetData(_playersData[i]);
 
-            foreach (var player in _players)
-                player.Load(crossroads);
+            _roads = null;
 
-            _current = _players[0];
+            _playersData.Save(true);
         }
+
+        public void Save(bool saveToFile = true, Action<bool> callback = null) => _playersData.Save(saveToFile, callback);
 
         public void Next() => _current = _players.Next(_current.Id.ToInt);
 
@@ -57,13 +51,5 @@ namespace Vurbiri.Colonization
             foreach (Player player in _players)
                 player.Profit(hexId, freeGroundRes);
         }
-
-        public void DestroyGame()
-        {
-
-        }
-
-        public IEnumerator<Player> GetEnumerator() => _players.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => _players.GetEnumerator();
     }
 }

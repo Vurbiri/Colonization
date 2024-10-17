@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
     {
         public override void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {
-            GetComponent<MeshRenderer>().SetSharedMaterial(Players.Instance[playerId].MaterialUnlit, _idMaterial);
+            GetComponent<MeshRenderer>().SetSharedMaterial(SceneObjects.Get<Players>()[playerId].MaterialUnlit, _idMaterial);
 
             foreach (var link in links)
                 _graphicSides[link.Id].Open(link.Owner != PlayerId.None);

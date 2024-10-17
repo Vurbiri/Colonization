@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
 
         public override void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
         {
-            _players = Players.Instance;
+            _players = SceneObjects.Get<Players>();
 
             foreach (var side in _graphicSides)
                 side.SetActive(links.ContainsKey(side.Id));

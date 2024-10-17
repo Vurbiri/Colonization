@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Colonization.Data;
 using Vurbiri.Localization;
 using Vurbiri.Reactive;
 

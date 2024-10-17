@@ -14,34 +14,29 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private RectTransform _thisRectTransform;
 
-        private AReadOnlyCurrenciesReactive _reactiveAmount;
-        private IReadOnlyReactiveValue<int> _reactiveMax;
+        private ReactiveCombination<int, int> _reactiveAmountMax;
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
-        public void Init(Vector3 position, AReadOnlyCurrenciesReactive amount, IReadOnlyReactiveValue<int> max)
+        public void Init(Vector3 position, IReactive<int> amount, IReactive<int> max)
         {
             _thisRectTransform.localPosition = position;
 
-            _reactiveAmount = amount;
-            _reactiveMax = max;
-
-            amount.Subscribe(SetAmount, false);
-            max.Subscribe(SetAmount);
+            _reactiveAmountMax = new(amount, max);
+            _reactiveAmountMax.Subscribe(SetAmountMax);
         }
 
-        private void SetAmount(int value)
+        private void SetAmountMax(int amount, int max)
         {
-            _amountTMP.text = _reactiveAmount.Amount.ToString();
-            _maxTMP.text = _reactiveMax.Value.ToString();
+            _amountTMP.text = amount.ToString();
+            _maxTMP.text = max.ToString();
 
-            _amountTMP.color = _reactiveAmount.Amount > _reactiveMax.Value ? _colorOver : _colorNormal;
+            _amountTMP.color = amount > max ? _colorOver : _colorNormal;
         }
 
         private void OnDestroy()
         {
-            _reactiveAmount?.Unsubscribe(SetAmount);
-            _reactiveMax?.Unsubscribe(SetAmount);
+            _reactiveAmountMax.Dispose();
         }
 
 

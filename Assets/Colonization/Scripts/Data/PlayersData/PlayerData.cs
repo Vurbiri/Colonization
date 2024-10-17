@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Data
 {
     using static JSON_KEYS;
 
@@ -13,22 +13,32 @@ namespace Vurbiri.Colonization
         [JsonProperty(P_CROSSROADS)]
         public readonly CrossroadsData crossroads;
         [JsonProperty(P_ROADS)]
-        public readonly RoadData roads;
+        public readonly RoadsData roads;
         [JsonProperty(P_PERKS)]
         public readonly HashSet<int> perks;
 
-        public PlayerData(ACurrencies currencies) 
+        public IEnumerable<Crossroad> Ports => crossroads.values[EdificeGroupId.Port].Values;
+        public IEnumerable<Crossroad> Urbans => crossroads.values[EdificeGroupId.Urban].Values;
+
+        public PlayerData(ACurrencies currencies, Roads roads) 
         {
             resources = new(currencies);
+            crossroads = new();
+            this.roads = new(roads);
+            perks = new();
         }
 
-        [JsonConstructor]
-        public PlayerData(int[] resources, int[][] crossroads, int[] roads, HashSet<int> perks) 
-        { 
-            this.resources = new(resources);
-            this.crossroads = new(crossroads);
-            this.roads = new(roads);
-            this.perks = perks;
+        internal PlayerData(int playerId, PlayerLoadData data, Crossroads crossroads, Roads roads)
+        {
+            this.resources = new(data.resources);
+            this.crossroads = new(playerId, data.crossroads, crossroads);
+            this.roads = new(data.roads, roads, crossroads);
+            this.perks = new(data.perks);
         }
+
+
+        public void EdificeAdd(Crossroad crossroad) => crossroads.values[crossroad.GroupId][crossroad.Key] = crossroad;
+        public int EdificeCount(int edificeGroupId) => crossroads.values[edificeGroupId].Count;
+
     }
 }

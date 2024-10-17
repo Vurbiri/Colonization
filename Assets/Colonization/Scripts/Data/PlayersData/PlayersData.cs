@@ -1,17 +1,46 @@
-namespace Vurbiri.Colonization
+using System;
+
+namespace Vurbiri.Colonization.Data
 {
     using static CONST;
 
+
     public class PlayersData
     {
-        private readonly PlayerData[] _playersData;
+        private readonly PlayerData[] _values;
 
-        public PlayersData(PricesScriptable prices)
+        private readonly Coroutines _coroutines;
+        private readonly IStorageService _storage;
+
+        public PlayerData this[int index] => _values[index];
+
+        public PlayersData(IReadOnlyDIContainer container, Crossroads crossroads, Roads[] roads)
         {
-            _playersData = new PlayerData[MAX_PLAYERS];
+            _values = new PlayerData[MAX_PLAYERS];
+
+            _coroutines = container.Get<Coroutines>();
+            _storage = container.Get<IStorageService>();
+
+            if(_storage.TryGet(SAVE_KEYS.PLAYERS, out PlayerLoadData[] LoadValues))
+            {
+                for(int i = 0; i < LoadValues.Length; i++)
+                    _values[i] = new(i, LoadValues[i], crossroads, roads[i]);
+            }
+
+        }
+
+        public PlayersData(IReadOnlyDIContainer container, PricesScriptable prices, Roads[] roads)
+        {
+            _values = new PlayerData[MAX_PLAYERS];
+
+            _coroutines = container.Get<Coroutines>();
+            _storage = container.Get<IStorageService>();
 
             for (int i = 0; i < MAX_PLAYERS; i++)
-                _playersData[i] = new(prices.PlayersDefault);
+                _values[i] = new(prices.PlayersDefault, roads[i]);
         }
+
+        public void Save(bool saveToFile, Action<bool> callback = null)
+                    => _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.PLAYERS, _values, saveToFile, callback));
     }
 }
