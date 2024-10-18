@@ -10,34 +10,32 @@ namespace Vurbiri.Colonization
         private Player _current;
         private readonly IdHashSet<PlayerId, Player> _players = new();
         private PlayersData _playersData;
-        private Roads[] _roads = new Roads[MAX_PLAYERS];
 
         public Player Current => _current;
         public Player this[Id<PlayerId> id] => _players[id];
 
-        public Players(PlayerStatesScriptable states, PlayerVisualSetScriptable visualSet, int[] visualIds, RoadsFactory roadsFactory)
+        public Players(PlayerStatesScriptable states, PlayerVisualSetScriptable visualSet, int[] visualIds)
         {
             Player player;
             for (int i = 0; i < MAX_PLAYERS; i++)
             {
-                player = new(i, visualSet.Get(visualIds[i]), states.GetAbilities(), _roads[i] = roadsFactory.Create());
+                player = new(i, visualSet.Get(visualIds[i]), states.GetAbilities());
                 _players.Add(player);
             }
 
             _current = _players[0];
         }
 
-        public void SetData(IReadOnlyDIContainer container, PricesScriptable prices, Crossroads crossroads, bool isLoading)
+        public void Setup(IReadOnlyDIContainer container, PricesScriptable prices, Crossroads crossroads, RoadsFactory roadsFactory, bool isLoading)
         {
-            if (isLoading)
-                _playersData = new(container, crossroads, _roads);
-            else
-                _playersData = new(container, prices, _roads);
+            Roads[] roads = new Roads[MAX_PLAYERS];
+            for (int i = 0; i < MAX_PLAYERS; i++)
+                roads[i] = roadsFactory.Create().Init(i, _players[i].Color);
+
+            _playersData = new(container, prices, roads, crossroads, isLoading);
 
             for (int i = 0; i < MAX_PLAYERS; i++)
                 _players[i].SetData(_playersData[i]);
-
-            _roads = null;
 
             _playersData.Save(true);
         }

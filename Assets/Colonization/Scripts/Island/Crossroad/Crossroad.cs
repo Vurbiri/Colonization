@@ -136,23 +136,19 @@ namespace Vurbiri.Colonization
             }
             #endregion
         }
-        public bool CanUpgradeBuy(ACurrencies cash) => _edifice.CanUpgradeBuy(cash);
-        public bool UpgradeBuy(Id<PlayerId> playerId, out ACurrencies cost)
+        public bool UpgradeBuy(Id<PlayerId> playerId)
         {
-            if (_edifice.Upgrade(playerId, _links, out _edifice, out cost))
+            if (_edifice.Upgrade(playerId, _links, out _edifice))
             {
                 _eventBus.EventCrossroadMarkShow -= Show;
                 _collider.radius = _edifice.Radius;
                 return true;
             }
-            cost = null;
             return false;
         }
 
         public bool CanWallBuild(Id<PlayerId> playerId) => _edifice.CanWallBuild(playerId);
-        public bool CanWallBuy(ACurrencies cash) => _edifice.CanWallBuy(cash);
-        public bool WallBuy(Id<PlayerId> playerId, out ACurrencies cost) => _edifice.WallBuild(playerId, _links, out cost);
-
+        public bool WallBuy(Id<PlayerId> playerId) => _edifice.WallBuild(playerId, _links);
 
         public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
         public void RoadBuilt(Id<LinkId> id, Id<PlayerId> playerId)
@@ -210,7 +206,6 @@ namespace Vurbiri.Colonization
         private void ClearResources()
         {
             _prefabs = null;
-            _edifice.ClearResources();
         }
 
         private void OnDestroy()
@@ -225,7 +220,6 @@ namespace Vurbiri.Colonization
         public static Key operator -(Crossroad a, Crossroad b) => a._key - b._key;
 
         public int[] ToArray() => new int[] { _key.X, _key.Y, _edifice.Id.ToInt, _edifice.IsWall ? 1 : 0 };
-
 
 #if UNITY_EDITOR
         private void OnValidate()

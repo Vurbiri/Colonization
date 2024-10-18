@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Vurbiri.Colonization.Data;
 using Vurbiri.EntryPoint;
 using Vurbiri.Localization;
 using Vurbiri.Reactive;
@@ -9,6 +8,9 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
+    using Controllers;
+    using Data;
+
     [DefaultExecutionOrder(-10)]
     public class GameplayEntryPoint : ASceneEntryPoint
     {
@@ -53,9 +55,11 @@ namespace Vurbiri.Colonization
             _data = containers.Data;
             _objects = containers.Objects;
 
+            _objects.Get<LoadingScreen>().TurnOnOf(false);
+
             _gameplaySettings = _data.Get<GameplaySettingsData>();
             _eventBus = _services.AddInstance(new GameplayEventBus());
-            _players = _objects.AddInstance(new Players(_states, _visualSet, _gameplaySettings.Visualds, new RoadsFactory(_roads.prefab, _roads.container)));
+            _players = _objects.AddInstance(new Players(_states, _visualSet, _gameplaySettings.Visualds));
 
             SetupLocalizationFiles();
 
@@ -81,7 +85,7 @@ namespace Vurbiri.Colonization
         {
             yield return StartCoroutine(CreateIsland_Coroutine());
 
-            _contextMenusWorld.Init(_cameraMain, _eventBus);
+            _contextMenusWorld.Init(_cameraMain, _prices, _eventBus);
 
             StartCoroutine(Final_Coroutine());
         }
@@ -95,9 +99,7 @@ namespace Vurbiri.Colonization
 
             yield return StartCoroutine(_islandCreator.Create_Coroutine(hexagonsData, isLoad));
 
-            Debug.Log("SetData");
-            _players.SetData(_services, _prices, _islandCreator.Crossroads, isLoad);
-            Debug.Log("SetData End");
+            _players.Setup(_services, _prices, _islandCreator.Crossroads, new RoadsFactory(_roads.prefab, _roads.container), isLoad);
 
             yield return null;
 

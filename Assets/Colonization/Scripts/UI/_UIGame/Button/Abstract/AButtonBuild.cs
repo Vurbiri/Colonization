@@ -37,6 +37,8 @@ namespace Vurbiri.Colonization.UI
 
         protected void SetTextHint(string caption, ACurrencies cash, ACurrencies cost)
         {
+            _button.Interactable = cash >= cost;
+
             StringBuilder sb = new(cost.Amount > 0 ? 200 : 50);
             sb.Append(caption);
             sb.Append(NEW_LINE);

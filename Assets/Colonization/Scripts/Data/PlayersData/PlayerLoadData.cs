@@ -8,8 +8,8 @@ namespace Vurbiri.Colonization.Data
     {
         [JsonProperty(P_RESURSES)]
         public int[] resources;
-        [JsonProperty(P_CROSSROADS)]
-        public int[][] crossroads;
+        [JsonProperty(P_EDIFICES)]
+        public int[][] edifices;
         [JsonProperty(P_ROADS)]
         public int[][][] roads;
         [JsonProperty(P_PERKS)]

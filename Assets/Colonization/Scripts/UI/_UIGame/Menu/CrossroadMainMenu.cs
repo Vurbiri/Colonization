@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 using Vurbiri.UI;
 
@@ -10,14 +9,16 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ButtonBuildEdifice _buttonUpgrade;
         [SerializeField] private ButtonBuild _buttonWall;
         [SerializeField] private ButtonBuild _buttonRoads;
-        [Space]
-        [SerializeField] protected PricesScriptable _prices;
+
+        private PricesScriptable _prices;
 
         private Player _playerCurrent;
 
-        public void Init(ACrossroadBuildMenu roadsMenu)
+        public void Init(ACrossroadMenu roadsMenu, PricesScriptable prices)
         {
             _players = SceneObjects.Get<Players>();
+
+            _prices = prices;
 
             _buttonClose.onClick.AddListener(() => gameObject.SetActive(false));
             _buttonRoads.Init();
@@ -34,13 +35,13 @@ namespace Vurbiri.Colonization.UI
             void OnUpgrade()
             {
                 gameObject.SetActive(false);
-                _playerCurrent.CrossroadUpgradeBuy(_currentCrossroad);
+                _playerCurrent.EdificeUpgradeBuy(_currentCrossroad);
             }
             //=================================
             void OnWall()
             {
                 gameObject.SetActive(false);
-                _playerCurrent.CrossroadWallBuy(_currentCrossroad);
+                _playerCurrent.EdificeWallBuy(_currentCrossroad);
             }
             //=================================
             void OnRoads()
@@ -57,29 +58,26 @@ namespace Vurbiri.Colonization.UI
             _playerCurrent = _players.Current;
             _currentCrossroad = crossroad;
 
-            if (ButtonSetup(_buttonUpgrade, _playerCurrent.CanCrossroadUpgrade(crossroad), crossroad.CanUpgradeBuy(_playerCurrent.Resources)))
+            if (ButtonSetup(_buttonUpgrade, _playerCurrent.CanEdificeUpgrade(crossroad)))
                 _buttonUpgrade.SetupHint(crossroad.NextId, _playerCurrent.Resources, _prices.Edifices);
 
-            if (ButtonSetup(_buttonWall, _playerCurrent.CanWallBuild(crossroad), crossroad.CanWallBuy(_playerCurrent.Resources)))
+            if (ButtonSetup(_buttonWall, _playerCurrent.CanWallBuild(crossroad)))
                 _buttonWall.SetupHint(_playerCurrent.Resources, _prices.Wall);
 
-            if(ButtonSetup(_buttonRoads, _playerCurrent.CanRoadBuild(crossroad), _playerCurrent.CanRoadBuy()))
+            if(ButtonSetup(_buttonRoads, _playerCurrent.CanRoadBuild(crossroad)))
                 _buttonRoads.SetupHint(_playerCurrent.Resources, _prices.Road);
 
             gameObject.SetActive(true);
 
             #region Local: ButtonSetup(...)
             //=================================
-            bool ButtonSetup(AButtonBuild button, bool isEnable, bool isInteractable)
+            bool ButtonSetup(AButtonBuild button, bool isEnable)
             {
                 button.SetActive(isEnable);
 
                 if (isEnable)
-                {
                     button.TargetGraphic.color = _playerCurrent.Color;
-                    button.Interactable = isInteractable;
-                }
-                                
+
                 return isEnable;
             }
             #endregion
@@ -89,7 +87,7 @@ namespace Vurbiri.Colonization.UI
         protected virtual void OnValidate()
         {
             if (_prices == null)
-                _prices = AssetDatabase.LoadAssetAtPath<PricesScriptable>(AssetDatabase.GetAssetPath(7670));
+                _prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
         }
 #endif
     }

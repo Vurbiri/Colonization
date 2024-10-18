@@ -11,8 +11,6 @@ namespace Vurbiri.Colonization
         [SerializeField, Hide] protected bool _isUpgrade;
         [SerializeField, Hide] protected bool _isBuildWall;
         [Space]
-        [SerializeField] protected PricesScriptable _prices;
-        [Space]
         [SerializeField] protected AEdifice _prefabUpgrade;
         [SerializeField, Hide] protected int _nextId;
         [SerializeField, Hide] protected int _nextGroupId;
@@ -20,8 +18,6 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] protected AEdificeGraphic _graphic;
 
-        protected ACurrencies _costUpgrade;
-        protected ACurrencies _costWall;
         protected Id<PlayerId> _owner = PlayerId.None;
         protected bool _isWall = false;
 
@@ -41,8 +37,6 @@ namespace Vurbiri.Colonization
             _owner = edifice._owner;
             _isWall = edifice._isWall;
 
-            SetCost();
-
             _graphic.transform.localRotation = edifice._graphic.transform.localRotation;
             _graphic.Init(_owner, links);
         }
@@ -53,11 +47,10 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public virtual bool Upgrade(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, out AEdifice edifice, out ACurrencies cost)
+        public virtual bool Upgrade(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, out AEdifice edifice)
         {
             if (_isUpgrade && _owner == owner)
             {
-                cost = _costUpgrade;
                 edifice = Instantiate(_prefabUpgrade, transform.parent);
                 edifice.Setup(this, links);
 
@@ -65,44 +58,25 @@ namespace Vurbiri.Colonization
                 return true;
             }
 
-            cost = CurrenciesLite.Empty;
             edifice = this;
             return false;
         }
 
-        public virtual bool WallBuild(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, out ACurrencies cost)
+        public virtual bool WallBuild(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links)
         {
-            cost = null;
             return _isBuildWall;
         }
 
-        public virtual bool CanUpgradeBuy(ACurrencies cash) => _isUpgrade && cash >= _costUpgrade;
-
         public virtual bool CanWallBuild(Id<PlayerId> owner) => _isBuildWall && _owner == owner;
-        public virtual bool CanWallBuy(ACurrencies cash) => _isBuildWall;
 
         public virtual void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) { }
 
         public virtual void Show(bool isShow) { }
 
-        public virtual void ClearResources()
-        {
-            _prices = null;
-        }
-
-        protected void SetCost()
-        {
-            _costUpgrade = _isUpgrade ? _prices.Edifices[_nextId] : CurrenciesLite.Empty;
-            _costWall = _isBuildWall ? _prices.Wall : CurrenciesLite.Empty;
-        }
 
 #if UNITY_EDITOR
         protected virtual void OnValidate()
         {
-            if (_prices == null)
-                _prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
-
-
             _groupId = EdificeId.ToGroup(_id.ToInt);
             _isBuildWall = _groupId == EdificeGroupId.Urban && _id != EdificeId.Camp;
 
@@ -120,6 +94,5 @@ namespace Vurbiri.Colonization
             _graphic = GetComponentInChildren<AEdificeGraphic>();
         }
 #endif
-
     }
 }

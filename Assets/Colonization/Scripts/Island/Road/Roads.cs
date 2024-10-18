@@ -1,11 +1,12 @@
-using System;
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public class Roads : MonoBehaviour
+    [JsonArray]
+    public class Roads : MonoBehaviour, IEnumerable<int[][]>
     {
         [SerializeField] private Road _prefabRoad;
         [SerializeField] private PricesScriptable _prices;
@@ -26,8 +27,6 @@ namespace Vurbiri.Colonization
         public ACurrencies Cost => _cost;
         public int Count => _count;
 
-        public event Action<int[][][]> EventChangeValue;
-
         public Roads Init(Id<PlayerId> id, Color color)
         {
             _thisTransform = transform;
@@ -41,6 +40,40 @@ namespace Vurbiri.Colonization
             name = NAME + PlayerId.Names[id.ToInt - PlayerId.Min];
 #endif
             return this;
+        }
+
+        public Roads Restoration(int[][][] array, Crossroads crossroads)
+        {
+            foreach (var keys in array)
+                CreateRoad(keys, crossroads);
+
+            SetRoadsEndings();
+            return this;
+
+            #region Local: CreateRoad(...)
+            //=================================
+            void CreateRoad(int[][] keys, Crossroads crossroads)
+            {
+                int count = keys.Length;
+                if (count < 2) return;
+
+                Key key = new(keys[0]);
+                Crossroad start = crossroads[key];
+                for (int i = 1; i < count; i++)
+                {
+                    foreach (var link in start.Links)
+                    {
+                        if (link.Contains(key.SetValues(keys[i])))
+                        {
+                            link.SetStart(start);
+                            start = link.End;
+                            Build(link);
+                            break;
+                        }
+                    }
+                }
+            }
+            #endregion
         }
 
         public void Build(CrossroadLink link)
@@ -78,18 +111,18 @@ namespace Vurbiri.Colonization
             StartCoroutine(TryUnion_Coroutine());
         }
 
-        public int[][][] GetCrossroadsKey()
+        public int[][][] ToArray()
         {
             int count = _roadsLists.Count;
             int[][][] keys = new int[count][][];
 
             for (int i = 0; i < count; i++)
-                keys[i] = _roadsLists[i].GetCrossroadsKey();
+                keys[i] = _roadsLists[i].ToArray();
 
             return keys;
         }
 
-        public void SetRoadsEndings()
+        private void SetRoadsEndings()
         {
             foreach (var road in _roadsLists)
                 road.SetGradient();
@@ -113,9 +146,15 @@ namespace Vurbiri.Colonization
                     }
                 }
             }
-
-            EventChangeValue?.Invoke(GetCrossroadsKey());
         }
+
+        public IEnumerator<int[][]> GetEnumerator()
+        {
+            int count = _roadsLists.Count;
+            for (int i = 0; i < count; i++)
+                yield return _roadsLists[i].ToArray();
+        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 #if UNITY_EDITOR
         protected virtual void OnValidate()

@@ -94,7 +94,7 @@ namespace Vurbiri.Colonization
             return other;
         }
 
-        public int[][] GetCrossroadsKey()
+        public int[][] ToArray()
         {
             int[][] keys = new int[_crossroads.Count][];
             int i = 0;

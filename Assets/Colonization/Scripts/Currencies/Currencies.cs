@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
         }
         public void Add(Id<CurrencyId> id, int value) => Add(id.ToInt, value);
         
-        public void AddAndClampToBlood(int value, int max) => Amount += _values[CurrencyId.Blood].AddAndClamp(value, max);
+        public void AddAndClampBlood(int value, int max) => Amount += _values[CurrencyId.Blood].AddAndClamp(value, max);
 
         public void AddFrom(ACurrencies other)
         {

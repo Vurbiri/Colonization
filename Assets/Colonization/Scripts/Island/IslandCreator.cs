@@ -93,7 +93,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            hexagonsData.Save(true);
+            hexagonsData.Save(false);
         }
 
         private IEnumerator Setup_Coroutine()

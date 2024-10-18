@@ -1,10 +1,13 @@
 using UnityEngine;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class CrossroadRoadsMenu : ACrossroadBuildMenu
+    public class CrossroadRoadsMenu : ACrossroadMenu
     {
         [SerializeField] private Camera _camera;
+        [Space]
+        [SerializeField] private CmButton _buttonBack;
         [SerializeField] private ButtonBuild[] _roadButtons;
 
         private RectTransform _thisTransform;
@@ -12,14 +15,19 @@ namespace Vurbiri.Colonization.UI
         private Vector3 _lastCameraPosition;
         private Vector2 _localPoint;
         private Id<PlayerId> _none = new(PlayerId.None);
+        private ACurrencies _roadCost;
 
         private readonly RectTransform[] _buttonsTransform = new RectTransform[COUNT_ROADS];
 
         private const int COUNT_ROADS = 3;
 
-        public override void Init(ACrossroadMenu mainMenu)
+        public void Init(ACrossroadMenu mainMenu, ACurrencies roadCost)
         {
-            base.Init(mainMenu);
+            _players = SceneObjects.Get<Players>();
+
+            _buttonBack.onClick.AddListener(OnBack);
+
+            _roadCost = roadCost;
 
             _thisTransform = GetComponent<RectTransform>();
             _cameraTransform = _camera.transform;
@@ -33,6 +41,15 @@ namespace Vurbiri.Colonization.UI
             }
 
             gameObject.SetActive(false);
+
+            #region Local: OnBack()
+            //=================================
+            void OnBack()
+            {
+                gameObject.SetActive(false);
+                mainMenu.Open();
+            }
+            #endregion
         }
 
         public override void Open(Crossroad crossroad)
@@ -53,7 +70,7 @@ namespace Vurbiri.Colonization.UI
                 button.AddListener(() => OnClick(link));
                 button.Button.interactable = isOwner = link.Owner == _none;
                 button.TargetGraphic.color = isOwner ? currentColor : _players[link.Owner].Color;
-                button.SetupHint(currentPlayer.Resources, currentPlayer.RoadCost);
+                button.SetupHint(currentPlayer.Resources, _roadCost);
 
                 button.SetActive(true);
                 i++;

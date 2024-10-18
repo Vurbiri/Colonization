@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
         private RectTransform _thisTransform;
         private Vector2 _localPoint;
 
-        public void Init(Camera camera, GameplayEventBus eventBus)
+        public void Init(Camera camera, PricesScriptable prices, GameplayEventBus eventBus)
         {
             _camera = camera;
 
@@ -21,8 +21,8 @@ namespace Vurbiri.Colonization.UI
 
             eventBus.EventCrossroadSelect += OnSelectCrossroad;
 
-            _crossroadMenu.Init(_roadsMenu);
-            _roadsMenu.Init(_crossroadMenu);
+            _crossroadMenu.Init(_roadsMenu, prices);
+            _roadsMenu.Init(_crossroadMenu, prices.Road);
 
             #region Local: OnSelectCrossroad()
             //=================================

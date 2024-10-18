@@ -3,7 +3,7 @@ using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Controllers
 {
     public class InputController : IDisposable
     {

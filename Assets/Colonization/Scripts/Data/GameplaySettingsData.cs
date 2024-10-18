@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization.Data
             Save(saveToFile);
         }
 
-        #region Nested: GameplayData, Settings
+        #region Nested: GameplayData
         //***********************************
         [JsonObject(MemberSerialization.OptIn)]
         private class GameplayData

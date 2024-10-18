@@ -10,35 +10,62 @@ namespace Vurbiri.Colonization.Data
     {
         [JsonProperty(P_RESURSES)]
         public readonly Currencies resources;
-        [JsonProperty(P_CROSSROADS)]
-        public readonly CrossroadsData crossroads;
+        [JsonProperty(P_EDIFICES)]
+        private readonly EdificesData _edifices;
         [JsonProperty(P_ROADS)]
-        public readonly RoadsData roads;
+        private readonly Roads _roads;
         [JsonProperty(P_PERKS)]
-        public readonly HashSet<int> perks;
+        private readonly HashSet<int> _perks;
 
-        public IEnumerable<Crossroad> Ports => crossroads.values[EdificeGroupId.Port].Values;
-        public IEnumerable<Crossroad> Urbans => crossroads.values[EdificeGroupId.Urban].Values;
+        private readonly PricesScriptable _prices;
 
-        public PlayerData(ACurrencies currencies, Roads roads) 
+        public IEnumerable<Crossroad> Ports => _edifices.values[EdificeGroupId.Port].Values;
+        public IEnumerable<Crossroad> Urbans => _edifices.values[EdificeGroupId.Urban].Values;
+
+        public int RoadsCount => _roads.Count;
+
+        public PlayerData(PricesScriptable prices, Roads roads) 
         {
-            resources = new(currencies);
-            crossroads = new();
-            this.roads = new(roads);
-            perks = new();
+            resources = new(prices.PlayersDefault);
+            _edifices = new();
+            _roads = roads;
+            _perks = new();
+
+            _prices = prices;
         }
 
-        internal PlayerData(int playerId, PlayerLoadData data, Crossroads crossroads, Roads roads)
+        internal PlayerData(int playerId, PricesScriptable prices, PlayerLoadData data, Crossroads crossroads, Roads roads)
         {
-            this.resources = new(data.resources);
-            this.crossroads = new(playerId, data.crossroads, crossroads);
-            this.roads = new(data.roads, roads, crossroads);
-            this.perks = new(data.perks);
+            resources = new(data.resources);
+            _edifices = new(playerId, data.edifices, crossroads);
+            _roads = roads.Restoration(data.roads, crossroads);
+            _perks = new(data.perks);
+
+            _prices = prices;
         }
 
+        public void AddResourcesFrom(ACurrencies other) => resources.AddFrom(other);
+        public void AddAndClampBlood(int value, int max) => resources.AddAndClampBlood(value, max);
+        public void ClampMainResources(int max) => resources.ClampMain(max);
 
-        public void EdificeAdd(Crossroad crossroad) => crossroads.values[crossroad.GroupId][crossroad.Key] = crossroad;
-        public int EdificeCount(int edificeGroupId) => crossroads.values[edificeGroupId].Count;
+        public void EdificeUpgradeBuy(Crossroad crossroad)
+        {
+            _edifices.values[crossroad.GroupId][crossroad.Key] = crossroad;
+            resources.Pay(_prices.Edifices[crossroad.Id]);
+        }
+
+        public void EdificeWallBuy()
+        {
+            resources.Pay(_prices.Wall);
+        }
+
+        public void RoadBuy(CrossroadLink link)
+        {
+            _roads.BuildAndUnion(link);
+            resources.Pay(_prices.Road);
+        }
+
+        public int EdificeCount(int edificeGroupId) => _edifices.values[edificeGroupId].Count;
 
     }
 }

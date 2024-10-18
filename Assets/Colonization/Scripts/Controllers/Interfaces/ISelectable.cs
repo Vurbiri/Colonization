@@ -1,4 +1,7 @@
-public interface ISelectable
+namespace Vurbiri.Colonization
 {
-    public void Select();
+    public interface ISelectable
+    {
+        public void Select();
+    }
 }
