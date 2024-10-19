@@ -6,14 +6,14 @@ namespace Vurbiri
     public class DIContainer : IReadOnlyDIContainer, IDisposable
     {
         private readonly IReadOnlyDIContainer _parent;
-        private readonly Dictionary<DIKey, IDIRegistration> _registration = new();
-        private readonly HashSet<DIKey> _hashRequests = new();
+        private readonly Dictionary<TypeIdKey, IDIRegistration> _registration = new();
+        private readonly HashSet<TypeIdKey> _hashRequests = new();
 
         public DIContainer(IReadOnlyDIContainer parent) => _parent = parent;
 
         public IDIRegistration<T> AddFactory<T>(Func<DIContainer, T> factory, int id = 0) where T : class
         {
-            DIKey key = new(typeof(T), id);
+            TypeIdKey key = new(typeof(T), id);
             DIRegistration<T> registration = new(factory);
 
             if (!_registration.TryAdd(key, registration))
@@ -24,7 +24,7 @@ namespace Vurbiri
 
         public T AddInstance<T>(T instance, int id = 0) where T : class
         {
-            DIKey key = new(typeof(T), id);
+            TypeIdKey key = new(typeof(T), id);
 
             if (!_registration.TryAdd(key, new DIRegistration<T>(instance)))
                 throw new Exception($"Экземпляр {key.Type.FullName} (id = {key.Id}) уже добавлен.");
@@ -34,7 +34,7 @@ namespace Vurbiri
 
         public bool Remove<T>(int id = 0) where T : class
         {
-            DIKey key = new(typeof(T), id);
+            TypeIdKey key = new(typeof(T), id);
 
             if (_registration.TryGetValue(key, out var registration))
             {
@@ -45,9 +45,9 @@ namespace Vurbiri
             return false;
         }
 
-        public T Get<T>(int id = 0) where T : class => Get<T>(new DIKey(typeof(T), id));
+        public T Get<T>(int id = 0) where T : class => Get<T>(new TypeIdKey(typeof(T), id));
 
-        public T Get<T>(DIKey key) where T : class
+        public T Get<T>(TypeIdKey key) where T : class
         {
             if (!_hashRequests.Add(key))
                 throw new Exception($"Цикличная зависимость.");

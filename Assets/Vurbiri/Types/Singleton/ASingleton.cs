@@ -14,7 +14,7 @@ namespace Vurbiri
             {
                 if (_instance == null && !_isQuit)
                 {
-                    T[] instances = FindObjectsOfType<T>();
+                    T[] instances = FindObjectsByType<T>(FindObjectsSortMode.None);
                     int instancesCount = instances.Length;
 
                     if (instancesCount > 0)

@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private TMP_Text _countTMP;
         [SerializeField] private TMP_Text _maxTMP;
-        [SerializeField] private CurrencyPopUP _popup;
+        [SerializeField] private CurrencyWidget _popup;
         [Space]
         [SerializeField] private RectTransform _thisRectTransform;
 

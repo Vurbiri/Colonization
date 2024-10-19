@@ -4,41 +4,43 @@ using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.Controllers
 {
-    public class ZoomState : AStateController
+    public partial class CameraController
     {
-        private readonly Camera _camera;
-        private readonly Transform _cameraTransform;
-        private readonly float _speedZoom = 4f;
-
-        internal ZoomState(StateMachine fsm, CameraController controller, Camera camera, float speedZoom)
-            : base(fsm, controller)
+        private class ZoomState : AStateController
         {
-            _camera = camera;
-            _cameraTransform = _camera.transform;
+            private readonly Camera _camera;
+            private readonly Transform _cameraTransform;
+            private readonly float _speedZoom = 4f;
 
-            _speedZoom = speedZoom;
-        }
-
-        public override void Enter()
-        {
-            base.Enter();
-            _coroutine = _controller.StartCoroutine(Zoom_Coroutine());
-        }
-        private IEnumerator Zoom_Coroutine()
-        {
-            Vector3 position = _cameraTransform.localPosition;
-            do
+            public ZoomState(CameraController controller, Camera camera) : base(controller)
             {
-                position.y = Mathf.Lerp(position.y, _controller._heightZoom, Time.deltaTime * _speedZoom);
-                _cameraTransform.localPosition = position;
-                _cameraTransform.LookAt(_controllerTransform);
+                _camera = camera;
+                _cameraTransform = _camera.transform;
 
-                yield return null;
+                _speedZoom = controller._speedZoom;
             }
-            while (Mathf.Abs(_controller._heightZoom - position.y) > _speedZoom);
 
-            _coroutine = null;
-            _fsm.SetState<IdleState>();
+            public override void Enter()
+            {
+                base.Enter();
+                _coroutine = _controller.StartCoroutine(Zoom_Coroutine());
+            }
+            private IEnumerator Zoom_Coroutine()
+            {
+                Vector3 position = _cameraTransform.localPosition;
+                do
+                {
+                    position.y = Mathf.Lerp(position.y, _controller._heightZoom, Time.deltaTime * _speedZoom);
+                    _cameraTransform.localPosition = position;
+                    _cameraTransform.LookAt(_controllerTransform);
+
+                    yield return null;
+                }
+                while (Mathf.Abs(_controller._heightZoom - position.y) > _speedZoom);
+
+                _coroutine = null;
+                _fsm.SetState<EmptyState>();
+            }
         }
     }
 }

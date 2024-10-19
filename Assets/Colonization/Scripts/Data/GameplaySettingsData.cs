@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Data
 
         public bool IsNewGame => _data.modeStart == GameModeStart.New;
         public int MaxScore { get => _data.maxScore; private set { _data.maxScore = value; EventChangeMaxScore?.Invoke(value); } }
-        public int[] Visualds => _data.visualPlayers;
+        public int[] VisualIds => _data.visualPlayers;
 
         public bool IsFirstStart => _data.isFirstStart;
 

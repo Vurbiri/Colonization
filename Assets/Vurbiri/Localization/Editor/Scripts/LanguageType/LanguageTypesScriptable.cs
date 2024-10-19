@@ -31,38 +31,19 @@ namespace Vurbiri.Localization.Editors
             AssetDatabase.SaveAssets();
         }
 
-        public void RefreshId()
+        public static LanguageTypesScriptable GetOrCreateSelf() => GetOrCreateSelf(LANG_TYPES_NAME, LANG_TYPES_PATH);
+        public static SerializedObject GetSerializedSelf() => new(GetOrCreateSelf(LANG_TYPES_NAME, LANG_TYPES_PATH));
+
+        private void OnValidate()
         {
             for (int i = 0; i < _languageTypes.Count; i++)
                 _languageTypes[i].Id = i;
         }
 
-        public void SetId(int id) => _languageTypes[id].Id = id;
-
-        public void OnAdded(IEnumerable<int> indexes)
-        {
-            foreach (int index in indexes)
-                _languageTypes[index].Id = index;
-        }
-
-        public void OnRemoved(IEnumerable<int> indexes)
-        {
-            foreach (int index in indexes)
-            {
-                for (int i = index + 1; i < _languageTypes.Count; i++)
-                    _languageTypes[i].Id = i - 1;
-            }
-        }
-
-        public static LanguageTypesScriptable GetOrCreateSelf() => GetOrCreateSelf(LANG_TYPES_NAME, LANG_TYPES_PATH);
-        public static SerializedObject GetSerializedSelf() => new(GetOrCreateSelf(LANG_TYPES_NAME, LANG_TYPES_PATH));
-
-#if UNITY_EDITOR
         public void EmptyMethod()
         {
             if (_auto)
                 Debug.Log("Чтобы в консоль не ругалась");
         }
-#endif
     }
 }

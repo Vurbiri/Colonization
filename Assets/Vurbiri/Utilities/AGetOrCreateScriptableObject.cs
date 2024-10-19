@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -6,9 +5,8 @@ using UnityEditor;
 
 namespace Vurbiri
 {
-    public abstract class AGetOrCreateScriptableObject<T> : ScriptableObject, IDisposable where T : ScriptableObject
+    public abstract class AGetOrCreateScriptableObject<T> : ScriptableObjectDisposable where T : ScriptableObject
     {
-
 #if UNITY_EDITOR
         protected static T GetOrCreateSelf(string assetName, string assetPath)
         {
@@ -22,10 +20,5 @@ namespace Vurbiri
             return self;
         }
 #endif
-
-        public virtual void Dispose()
-        {
-            Resources.UnloadAsset(this);
-        }
     }
 }

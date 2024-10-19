@@ -39,15 +39,18 @@ namespace Vurbiri.Colonization
         [SerializeField] private PlayerVisualSetScriptable _visualSet;
 
         [Header("TEST")]
-        [SerializeField] private bool isLoad;
+        [SerializeField] private bool _isLoad;
         [SerializeField] private Id<PlayerId> id;
 
         private DIContainer _services;
         private DIContainer _data;
         private DIContainer _objects;
+
         private Players _players;
         private GameplaySettingsData _gameplaySettings;
         private GameplayEventBus _eventBus;
+        private InputController _inputController;
+        private HexagonsData _hexagonsData;
 
         public override IReactive<SceneId> Enter(SceneContainers containers)
         {
@@ -55,65 +58,85 @@ namespace Vurbiri.Colonization
             _data = containers.Data;
             _objects = containers.Objects;
 
+            _gameplaySettings = _data.Get<GameplaySettingsData>();
+
             _objects.Get<LoadingScreen>().TurnOnOf(false);
 
-            _gameplaySettings = _data.Get<GameplaySettingsData>();
-            _eventBus = _services.AddInstance(new GameplayEventBus());
-            _players = _objects.AddInstance(new Players(_states, _visualSet, _gameplaySettings.Visualds));
+            FillingContainers();
 
             SetupLocalizationFiles();
 
-            _objects.AddInstance(_cameraMain);
-            
             StartCoroutine(Enter_Coroutine());
 
             return _defaultNextScene;
-        }
 
-        private void SetupLocalizationFiles()
-        {
-            var language = _services.Get<Language>();
-            
-            foreach (var file in _localizationFiles.unloads)
-                language.UnloadFile(file);
+            #region Local: WaterCheck(), SetupLocalizationFiles()
+            //=================================
+            void FillingContainers()
+            {
+                _services.AddInstance(Coroutines.Create("Gameplay Coroutines"));
+                _eventBus = _services.AddInstance(new GameplayEventBus());
+                _inputController = _services.AddInstance(new InputController(_cameraMain, _inputControllerSettings));
+                _hexagonsData = _data.AddInstance(new HexagonsData(_services, _surfaces, _isLoad));
+                _players = _objects.AddInstance(new Players(_states, _visualSet, _gameplaySettings.VisualIds));
 
-            foreach (var file in _localizationFiles.loads)
-                language.LoadFile(file);
+                _objects.AddInstance(_cameraMain);
+                _objects.AddInstance(_islandCreator.Land);
+                _objects.AddInstance(_islandCreator.Crossroads);
+
+                _states = null; Resources.UnloadAsset(_states);
+                _visualSet = null; Resources.UnloadAsset(_visualSet);
+            }
+            //=================================
+            void SetupLocalizationFiles()
+            {
+                var language = _services.Get<Language>();
+
+                foreach (var file in _localizationFiles.unloads)
+                    language.UnloadFile(file);
+
+                foreach (var file in _localizationFiles.loads)
+                    language.LoadFile(file);
+            }
+            #endregion
         }
 
         private IEnumerator Enter_Coroutine()
         {
             yield return StartCoroutine(CreateIsland_Coroutine());
 
-            _contextMenusWorld.Init(_cameraMain, _prices, _eventBus);
+            yield return StartCoroutine(InitObjects_Coroutine());
 
             StartCoroutine(Final_Coroutine());
         }
 
         private IEnumerator CreateIsland_Coroutine()
         {
-            _objects.AddInstance(_islandCreator.Land);
-            _objects.AddInstance(_islandCreator.Crossroads);
-            var hexagonsData = _data.AddInstance(new HexagonsData(_services, _surfaces, isLoad));
-            _surfaces = null;
-
-            yield return StartCoroutine(_islandCreator.Create_Coroutine(hexagonsData, isLoad));
-
-            _players.Setup(_services, _prices, _islandCreator.Crossroads, new RoadsFactory(_roads.prefab, _roads.container), isLoad);
+            yield return StartCoroutine(_islandCreator.Create_Coroutine(_hexagonsData, _isLoad));
 
             yield return null;
 
-            _objects.Remove<Roads>();
-            hexagonsData.UnloadSurfaces();
-
+            _surfaces = null;
+            _hexagonsData.UnloadSurfaces();
             _islandCreator.Dispose();
+
+            yield return null;
+        }
+
+        private IEnumerator InitObjects_Coroutine()
+        {
+            _players.Setup(_services, _prices, _islandCreator.Crossroads, new RoadsFactory(_roads.prefab, _roads.container), _isLoad);
+
+            yield return null;
+
+            _cameraController.Init(_cameraMain, _inputController.CameraActions);
+            _contextMenusWorld.Init(_cameraMain, _prices, _eventBus);
+
+            _objects.Remove<Roads>();
         }
 
         private IEnumerator Final_Coroutine()
         {
-            var inputController = _services.AddInstance(new InputController(_cameraMain, _inputControllerSettings));
-            _cameraController.Init(_cameraMain, inputController.CameraActions);
-
             for (int i = 0; i < 16; i++)
                 yield return null;
 
@@ -127,7 +150,7 @@ namespace Vurbiri.Colonization
 
             yield return _objects.Get<LoadingScreen>().SmoothOff_Wait();
 
-            inputController.EnableGameplayMap();
+            _inputController.EnableGameplayMap();
 
             Destroy(gameObject);
         }

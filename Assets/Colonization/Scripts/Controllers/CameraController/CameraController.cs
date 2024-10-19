@@ -5,7 +5,7 @@ using static UnityEngine.InputSystem.InputAction;
 
 namespace Vurbiri.Colonization.Controllers
 {
-    public class CameraController : MonoBehaviour
+    public partial class CameraController : MonoBehaviour
     {
         [SerializeField] private Movement _movement;
         [SerializeField] private MovementToTarget _movementTo;
@@ -25,11 +25,12 @@ namespace Vurbiri.Colonization.Controllers
 
         private Transform _thisTransform;
         private readonly StateMachine _machine = new();
+        private readonly Type _typeMoveToTargetState = typeof(MoveToTargetState);
         private float _edgeRight;
 
-        internal float _speedMove, _heightZoom;
-        internal Vector2 _moveDirection;
-        internal Vector3 _targetPosition;
+        private float _heightZoom;
+        private Vector2 _moveDirection;
+        private Vector3 _targetPosition;
 
         public void Init(Camera camera, InputControlAction.CameraActions cameraActions)
         {
@@ -40,21 +41,15 @@ namespace Vurbiri.Colonization.Controllers
             _cameraActions = cameraActions;
             _eventBus = SceneServices.Get<GameplayEventBus>();
 
-            InitStateMachine(camera);
+            _machine.AddState(new MoveState(this, camera));
+            _machine.AddState(new MoveToTargetState(this));
+            _machine.AddState(new ZoomState(this, camera));
 
             Subscribe();
 
             camera.transform.LookAt(_thisTransform);
 
-            #region Local: InitStateMachine(...), Subscribe()
-            //=================================
-            void InitStateMachine(Camera camera)
-            {
-                _machine.Init(new IdleState(_machine));
-                _machine.AddState(new MoveState(_machine, this, camera, _movement));
-                _machine.AddState(new MoveToTargetState(_machine, this, _movementTo));
-                _machine.AddState(new ZoomState(_machine, this, camera, _speedZoom));
-            }
+            #region Local: Subscribe()
             //=================================
             void Subscribe()
             {
@@ -70,7 +65,7 @@ namespace Vurbiri.Colonization.Controllers
 
         private void OnMove(CallbackContext ctx)
         {
-            if (_machine.CurrentState.GetType() == typeof(MoveToTargetState))
+            if (_machine.CurrentState == _typeMoveToTargetState)
                 return;
 
             _moveDirection = ctx.ReadValue<Vector2>();
@@ -112,7 +107,9 @@ namespace Vurbiri.Colonization.Controllers
 
         private void OnDisable()
         {
-            _eventBus.EventCrossroadSelect -= OnMoveToCrossroad;
+            if(_eventBus != null)
+                _eventBus.EventCrossroadSelect -= OnMoveToCrossroad;
+
             _cameraActions.Move.performed -= OnMove;
             _cameraActions.Move.canceled -= OnCancelMove;
             _cameraActions.Zoom.performed -= OnZoom;

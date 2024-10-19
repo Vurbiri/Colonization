@@ -10,6 +10,5 @@ namespace Vurbiri.Colonization
 
         public IReadOnlyList<IPerk<PlayerStateId>> Perks => _perks;
         public IReadOnlyList<IPerkUI> PerksUI => _perks;
-
     }
 }

@@ -23,7 +23,7 @@ namespace Vurbiri.EntryPoint
 
             ASceneEntryPoint.EventLoading += EnterScene;
 
-            _servicesContainer.AddInstance(Coroutines.Create("Coroutines", true));
+            _servicesContainer.AddInstance(Coroutines.Create("Project Coroutines", true));
             _loadingScreen = _objectsContainer.AddInstance(LoadingScreen.Create());
         }
 

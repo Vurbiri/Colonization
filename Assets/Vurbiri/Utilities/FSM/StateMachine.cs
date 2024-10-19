@@ -10,13 +10,22 @@ namespace Vurbiri.FSM
 
         public AState CurrentState => _currentState;
 
+        public StateMachine() : this(new EmptyState()) { }
+
+        public StateMachine(AState startState)
+        {
+            _states.Add(startState.GetType(), startState);
+
+            _currentState = startState;
+            _currentState.Enter();
+        }
+
         public void Init(AState startState)
         {
             _states.Add(startState.GetType(), startState);
 
             _currentState = startState;
             _currentState.Enter();
-            
         }
 
         public void AddState(AState state) => _states.Add(state.GetType(), state);
@@ -54,12 +63,10 @@ namespace Vurbiri.FSM
 
         public void SetState(AState newState)
         {
-            Type type = newState.GetType();
-
-            _states.TryAdd(type, newState);
-
-            if (type == _currentState.GetType())
+            if (newState.GetType() == _currentState.GetType())
                 return;
+
+            _states.TryAdd(newState.GetType(), newState);
 
             _currentState.Exit();
             _currentState = newState;

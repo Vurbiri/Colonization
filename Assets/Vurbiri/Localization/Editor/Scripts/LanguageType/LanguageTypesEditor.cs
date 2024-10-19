@@ -31,12 +31,8 @@ namespace Vurbiri.Localization.Editors
 
             var list = root.Q<ListView>("Types");
             list.makeItem = MakeItem;
-            list.itemIndexChanged += OnItemIndexChanged;
-            list.itemsAdded += language.OnAdded;
-            list.itemsRemoved += language.OnRemoved;
 
             root.Q<Button>("Load").clicked += language.Load;
-            root.Q<Button>("Refresh").clicked += language.RefreshId;
             root.Q<Button>("Save").clicked += language.Save;
 
             return root;
@@ -99,12 +95,6 @@ namespace Vurbiri.Localization.Editors
                     }
                 }
                 #endregion
-            }
-            //=================================
-            void OnItemIndexChanged(int oldId, int newId)
-            {
-                language.SetId(oldId);
-                language.SetId(newId);
             }
             //=================================
             #endregion

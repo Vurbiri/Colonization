@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization
         private readonly int _baseValue;
 
         private int _currentValue;
-        private readonly HashSet<IPerk<TId>> _permanentPerks;
         private readonly HashSet<IPerk<TId>> _randomPerks;
 
         public Id<TId> Id => _id;
@@ -33,33 +32,24 @@ namespace Vurbiri.Colonization
         {
             _id = id;
             _baseValue = _currentValue = baseValue;
-            _permanentPerks = new();
             _randomPerks = new();
         }
 
-        public State(State<TId> ability)
+        public State(State<TId> state)
         {
-            _id = ability._id;
-            _baseValue = _currentValue = ability._baseValue;
-            _permanentPerks = new();
+            _id = state._id;
+            _baseValue = _currentValue = state._baseValue;
             _randomPerks = new();
         }
 
         public bool TryAddPerk(IPerk<TId> perk)
         {
-            if (perk.IsPermanent)
-            {
-                if (_permanentPerks.Add(perk))
-                {
-                    _currentValue = perk.Apply(_currentValue);
-                    ActionValueChange?.Invoke(_currentValue);
-                    return true;
-                }
+            if (!perk.IsPermanent)
+                return _randomPerks.Add(perk);
 
-                return false;
-            }
-
-            return _randomPerks.Add(perk);
+            _currentValue = perk.Apply(_currentValue);
+            ActionValueChange?.Invoke(_currentValue);
+            return true;
         }
 
     }

@@ -4,39 +4,39 @@ using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.Controllers
 {
-    public class MoveToTargetState : AStateController
+    public partial class CameraController
     {
-        private readonly float _smoothTime = 0.35f;
-        private readonly float _sqrVelocityMin = 0.2f;
-
-        private Vector3 TargetPosition => _controller._targetPosition;
-
-        internal MoveToTargetState(StateMachine fsm, CameraController controller, CameraController.MovementToTarget movement) : base(fsm, controller)
+        private class MoveToTargetState : AStateController
         {
-            _smoothTime = movement.smoothTime;
-            _sqrVelocityMin = movement.sqrVelocityMin;
-        }
+            private readonly float _smoothTime = 0.35f;
+            private readonly float _sqrVelocityMin = 0.2f;
 
-        public override void Enter()
-        {
-            base.Enter();
-            _coroutine = _controller.StartCoroutine(MoveToTarget_Coroutine());
-        }
-
-        private IEnumerator MoveToTarget_Coroutine()
-        {
-            Vector3 velocity = Vector3.zero;
-            do
+            public MoveToTargetState(CameraController controller) : base(controller)
             {
-                _controllerTransform.position = Vector3.SmoothDamp(_controllerTransform.position, TargetPosition, ref velocity, _smoothTime);
-                yield return null;
+                _smoothTime = controller._movementTo.smoothTime;
+                _sqrVelocityMin = controller._movementTo.sqrVelocityMin;
             }
-            while (velocity.sqrMagnitude > _sqrVelocityMin);
 
-            _controllerTransform.position = TargetPosition;
-            _coroutine = null;
+            public override void Enter()
+            {
+                base.Enter();
+                _coroutine = _controller.StartCoroutine(MoveToTarget_Coroutine());
+            }
 
-            _fsm.SetState<IdleState>();
+            private IEnumerator MoveToTarget_Coroutine()
+            {
+                Vector3 velocity = Vector3.zero;
+                do
+                {
+                    _controllerTransform.position = Vector3.SmoothDamp(_controllerTransform.position, _controller._targetPosition, ref velocity, _smoothTime);
+                    yield return null;
+                }
+                while (velocity.sqrMagnitude > _sqrVelocityMin);
+
+                _coroutine = null;
+
+                _fsm.SetState<EmptyState>();
+            }
         }
     }
 }
