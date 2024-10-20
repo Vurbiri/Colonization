@@ -130,7 +130,7 @@ namespace Vurbiri.Colonization
             yield return null;
 
             _cameraController.Init(_cameraMain, _inputController.CameraActions);
-            _contextMenusWorld.Init(_cameraMain, _prices, _eventBus);
+            _contextMenusWorld.Init(_players, _cameraMain, _prices, _eventBus);
 
             _objects.Remove<Roads>();
         }

@@ -26,13 +26,13 @@ namespace Vurbiri.Colonization
             _current = _players[0];
         }
 
-        public void Setup(IReadOnlyDIContainer container, PricesScriptable prices, Crossroads crossroads, RoadsFactory roadsFactory, bool isLoading)
+        public void Setup(IReadOnlyDIContainer services, PricesScriptable prices, Crossroads crossroads, RoadsFactory roadsFactory, bool isLoading)
         {
             Roads[] roads = new Roads[MAX_PLAYERS];
             for (int i = 0; i < MAX_PLAYERS; i++)
                 roads[i] = roadsFactory.Create().Init(i, _players[i].Color);
 
-            _playersData = new(container, prices, roads, crossroads, isLoading);
+            _playersData = new(services, prices, roads, crossroads, isLoading);
 
             for (int i = 0; i < MAX_PLAYERS; i++)
                 _players[i].SetData(_playersData[i]);

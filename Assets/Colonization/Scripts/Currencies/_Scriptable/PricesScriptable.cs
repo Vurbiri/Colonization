@@ -10,13 +10,12 @@ namespace Vurbiri.Colonization
         [SerializeField] private CurrenciesLite _roads;
         [SerializeField] private CurrenciesLite _wall;
         [SerializeField] private IdArray<EdificeId, CurrenciesLite> _edifices;
-
-        public CurrenciesLite this[int index] { get => _edifices[index]; }
-        public CurrenciesLite this[Id<EdificeId> id] { get => _edifices[id]; }
+        [SerializeField] private IdArray<WarriorsId, CurrenciesLite> _warriors;
 
         public ACurrencies PlayersDefault => _playersDefault;
         public ACurrencies Road => _roads;
         public ACurrencies Wall => _wall;
         public IReadOnlyList<ACurrencies> Edifices => _edifices;
+        public IReadOnlyList<ACurrencies> Warriors => _warriors;
     }
 }

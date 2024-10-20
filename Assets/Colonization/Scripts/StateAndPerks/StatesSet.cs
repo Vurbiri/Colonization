@@ -21,7 +21,10 @@ namespace Vurbiri.Colonization
                 _states[i] = new State<TId>(i, states[i]);
         }
 
-        public bool IsMore(Id<TId> stateId, int value = 0) => _states[stateId.ToInt].NextValue > value;
+        public bool IsGreater(Id<TId> stateId, int value) => _states[stateId.ToInt].NextValue > value;
+        public bool IsLess(Id<TId> stateId, int value) => _states[stateId.ToInt].NextValue < value;
+
+        public bool IsTrue(Id<TId> stateId) => _states[stateId.ToInt].NextValue > 0;
 
         public State<TId> GetState(Id<TId> stateId) => _states[stateId.ToInt];
 

@@ -129,14 +129,14 @@ namespace Vurbiri.Colonization
                 foreach (var link in _links)
                 {
                     neighbor = link.Other(this)._edifice;
-                    if (neighbor.GroupId == EdificeGroupId.Urban && neighbor.IsOccupied)
+                    if (neighbor.IsUrban)
                         return false;
                 }
                 return IsRoadConnect(playerId);
             }
             #endregion
         }
-        public bool UpgradeBuy(Id<PlayerId> playerId)
+        public bool BuyUpgrade(Id<PlayerId> playerId)
         {
             if (_edifice.Upgrade(playerId, _links, out _edifice))
             {
@@ -147,8 +147,10 @@ namespace Vurbiri.Colonization
             return false;
         }
 
+        public bool CanHiringWarriors(Id<PlayerId> playerId) => _edifice.CanHiringWarriors(playerId);
+
         public bool CanWallBuild(Id<PlayerId> playerId) => _edifice.CanWallBuild(playerId);
-        public bool WallBuy(Id<PlayerId> playerId) => _edifice.WallBuild(playerId, _links);
+        public bool BuyWall(Id<PlayerId> playerId) => _edifice.WallBuild(playerId, _links);
 
         public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
         public void RoadBuilt(Id<LinkId> id, Id<PlayerId> playerId)

@@ -12,22 +12,24 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Image _buttonIcon;
         [Space]
-        [SerializeField] private IdArray<EdificeId, View> _edificeView;
+        [SerializeField] private IdArray<EdificeId, ButtonView> _edificeView;
 
         private Language _localization;
+        private IReadOnlyList<ACurrencies> _edificePrices;
 
-        public override void Init()
+        public void Init(IReadOnlyList<ACurrencies> edificePrices)
         {
             base.Init();
+            _edificePrices = edificePrices;
             _localization = SceneServices.Get<Language>();
         }
 
-        public void SetupHint(int edificeId, ACurrencies cash, IReadOnlyList<ACurrencies> costs)
+        public void SetupHint(int edificeId, ACurrencies cash)
         {
-            View view = _edificeView[edificeId];
+            ButtonView view = _edificeView[edificeId];
 
             _buttonIcon.sprite = view.sprite;
-            SetTextHint(_localization.GetText(_file, view.key), cash, costs[edificeId]);
+            SetTextHint(_localization.GetText(_file, view.keyHint), cash, _edificePrices[edificeId]);
         }
         
 
@@ -36,20 +38,10 @@ namespace Vurbiri.Colonization.UI
         {
             for (int i = 0; i < EdificeId.Count; i++)
             {
-                if(string.IsNullOrEmpty(_edificeView[i].key))
-                _edificeView[i].key = EdificeId.Names[i];
+                if(string.IsNullOrEmpty(_edificeView[i].keyHint))
+                _edificeView[i].keyHint = EdificeId.Names[i];
             }
         }
 #endif
-
-        #region Nested: View
-        //*******************************************************
-        [System.Serializable]
-        private class View
-        {
-            public Sprite sprite;
-            public string key;
-        }
-        #endregion
     }
 }

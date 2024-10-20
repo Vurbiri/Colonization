@@ -23,6 +23,7 @@ namespace Vurbiri.Colonization.Data
         public IEnumerable<Crossroad> Urbans => _edifices.values[EdificeGroupId.Urban].Values;
 
         public int RoadsCount => _roads.Count;
+        public int WarriorsCount => 0;
 
         public PlayerData(PricesScriptable prices, Roads roads) 
         {
@@ -48,18 +49,18 @@ namespace Vurbiri.Colonization.Data
         public void AddAndClampBlood(int value, int max) => resources.AddAndClampBlood(value, max);
         public void ClampMainResources(int max) => resources.ClampMain(max);
 
-        public void EdificeUpgradeBuy(Crossroad crossroad)
+        public void BuyEdificeUpgrade(Crossroad crossroad)
         {
             _edifices.values[crossroad.GroupId][crossroad.Key] = crossroad;
             resources.Pay(_prices.Edifices[crossroad.Id]);
         }
 
-        public void EdificeWallBuy()
+        public void BuyWall()
         {
             resources.Pay(_prices.Wall);
         }
 
-        public void RoadBuy(CrossroadLink link)
+        public void BuyRoad(CrossroadLink link)
         {
             _roads.BuildAndUnion(link);
             resources.Pay(_prices.Road);

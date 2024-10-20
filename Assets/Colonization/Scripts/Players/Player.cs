@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization
         public Color Color => _visual.color;
         public Material MaterialLit => _visual.materialLit;
         public Material MaterialUnlit => _visual.materialUnlit;
+        public Material MaterialWarriors => _visual.materialWarriors;
         public AReadOnlyCurrenciesReactive Resources => _data.resources;
         public IReactiveSubValues<int, CurrencyId> ExchangeRate => _exchangeRate;
 
@@ -46,7 +47,7 @@ namespace Vurbiri.Colonization
                 return;
             }
 
-            if (_states.IsMore(PlayerStateId.IsFreeGroundRes) && freeGroundRes != null)
+            if (_states.IsTrue(PlayerStateId.IsFreeGroundRes) && freeGroundRes != null)
                 _data.AddResourcesFrom(freeGroundRes);
 
             foreach (var crossroad in _data.Ports)
@@ -77,30 +78,33 @@ namespace Vurbiri.Colonization
         {
             int upgradeGroup = crossroad.NextGroupId;
             return (crossroad.GroupId != EdificeGroupId.None 
-                                        || _states.IsMore(EdificeGroupId.ToIdAbility(upgradeGroup), _data.EdificeCount(upgradeGroup))) 
+                                        || _states.IsGreater(EdificeGroupId.ToIdAbility(upgradeGroup), _data.EdificeCount(upgradeGroup))) 
                                         && crossroad.CanUpgrade(_id);
         }
-        public void EdificeUpgradeBuy(Crossroad crossroad)
+        public void BuyEdificeUpgrade(Crossroad crossroad)
         {
-            if (crossroad.UpgradeBuy(_id))
-                _data.EdificeUpgradeBuy(crossroad);
+            if (crossroad.BuyUpgrade(_id))
+                _data.BuyEdificeUpgrade(crossroad);
         }
 
-        public bool CanWallBuild(Crossroad crossroad) => _states.IsMore(PlayerStateId.IsWall) && crossroad.CanWallBuild(_id);
-        public void EdificeWallBuy(Crossroad crossroad)
+        public bool CanHiringWarriors(Crossroad crossroad) => _states.IsGreater(PlayerStateId.MaxWarrior, _data.WarriorsCount) && crossroad.CanHiringWarriors(_id);
+        public void HireWarriors(int id, Crossroad crossroad) {}
+
+        public bool CanWallBuild(Crossroad crossroad) => _states.IsTrue(PlayerStateId.IsWall) && crossroad.CanWallBuild(_id);
+        public void BuyWall(Crossroad crossroad)
         {
-            if (crossroad.WallBuy(_id))
-                _data.EdificeWallBuy();
+            if (crossroad.BuyWall(_id))
+                _data.BuyWall();
         }
 
-        public bool CanRoadBuild(Crossroad crossroad) => _states.IsMore(PlayerStateId.MaxRoads, _data.RoadsCount) && crossroad.CanRoadBuild(_id);
-        public void RoadBuy(Crossroad crossroad, CrossroadLink link)
+        public bool CanRoadBuild(Crossroad crossroad) => _states.IsGreater(PlayerStateId.MaxRoads, _data.RoadsCount) && crossroad.CanRoadBuild(_id);
+        public void BuyRoad(Crossroad crossroad, CrossroadLink link)
         {
             link.SetStart(crossroad);
-            _data.RoadBuy(link);
+            _data.BuyRoad(link);
         }
 
-        public bool PerkBuy(IPerk<PlayerStateId> perk)
+        public bool BuyPerk(IPerk<PlayerStateId> perk)
         {
             if (perk.TargetObject == TargetOfPerkId.Player && _states.TryAddPerk(perk))
             {

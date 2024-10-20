@@ -15,19 +15,18 @@ namespace Vurbiri.Colonization.UI
         private Vector3 _lastCameraPosition;
         private Vector2 _localPoint;
         private Id<PlayerId> _none = new(PlayerId.None);
-        private ACurrencies _roadCost;
-
+        private CrossroadMainMenu _mainMen;
         private readonly RectTransform[] _buttonsTransform = new RectTransform[COUNT_ROADS];
-
+        
         private const int COUNT_ROADS = 3;
 
-        public void Init(ACrossroadMenu mainMenu, ACurrencies roadCost)
+        public void Init(CrossroadMainMenu mainMenu, Players players, Camera camera, ACurrencies roadCost)
         {
-            _players = SceneObjects.Get<Players>();
+            _mainMen = mainMenu;
+            _players = players;
+            _camera = camera;
 
             _buttonBack.onClick.AddListener(OnBack);
-
-            _roadCost = roadCost;
 
             _thisTransform = GetComponent<RectTransform>();
             _cameraTransform = _camera.transform;
@@ -36,18 +35,18 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < COUNT_ROADS; i++)
             {
                 button = _roadButtons[i];
-                button.Init();
+                button.Init(roadCost);
                 _buttonsTransform[i] = button.GetComponent<RectTransform>();
             }
 
-            gameObject.SetActive(false);
+            _thisGO.SetActive(false);
 
             #region Local: OnBack()
             //=================================
             void OnBack()
             {
-                gameObject.SetActive(false);
-                mainMenu.Open();
+                _thisGO.SetActive(false);
+                _mainMen.Open();
             }
             #endregion
         }
@@ -69,8 +68,8 @@ namespace Vurbiri.Colonization.UI
                 button.RemoveAllListeners();
                 button.AddListener(() => OnClick(link));
                 button.Button.interactable = isOwner = link.Owner == _none;
-                button.TargetGraphic.color = isOwner ? currentColor : _players[link.Owner].Color;
-                button.SetupHint(currentPlayer.Resources, _roadCost);
+                button.Color = isOwner ? currentColor : _players[link.Owner].Color;
+                button.SetupHint(currentPlayer.Resources);
 
                 button.SetActive(true);
                 i++;
@@ -84,16 +83,17 @@ namespace Vurbiri.Colonization.UI
             }
 
             _lastCameraPosition = _cameraTransform.position;
-            gameObject.SetActive(true);
+
+            _thisGO.SetActive(true);
 
             #region Local: OnClick()
             //=================================
             void OnClick(CrossroadLink link)
             {
-                _players.Current.RoadBuy(_currentCrossroad, link);
+                _players.Current.BuyRoad(_currentCrossroad, link);
 
                 _currentCrossroad = null;
-                gameObject.SetActive(false);
+                _thisGO.SetActive(false);
             }
             #endregion
         }
@@ -113,13 +113,5 @@ namespace Vurbiri.Colonization.UI
             }
             _lastCameraPosition = _cameraTransform.position;
         }
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (_camera == null)
-                _camera = Camera.main;
-        }
-#endif
     }
 }

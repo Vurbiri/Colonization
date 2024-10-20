@@ -28,6 +28,7 @@ namespace Vurbiri.Colonization
         public Id<PlayerId> Owner => _owner;
         public bool IsUpgrade => _isUpgrade;
         public bool IsOccupied => _owner != PlayerId.None;
+        public bool IsUrban => _owner != PlayerId.None && _groupId == EdificeGroupId.Urban;
         public int Profit => _profit;
         public bool IsWall => _isWall;
         public float Radius => _radiusCollider;
@@ -62,12 +63,11 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public virtual bool WallBuild(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links)
-        {
-            return _isBuildWall;
-        }
+        public bool CanHiringWarriors(Id<PlayerId> owner) => _owner == owner && _groupId == EdificeGroupId.Port;
 
-        public virtual bool CanWallBuild(Id<PlayerId> owner) => _isBuildWall && _owner == owner;
+        public bool CanWallBuild(Id<PlayerId> owner) => _isBuildWall && _owner == owner;
+
+        public virtual bool WallBuild(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links) => _isBuildWall;
 
         public virtual void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) { }
 

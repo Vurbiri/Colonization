@@ -3,92 +3,82 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class CrossroadMainMenu : ACrossroadMenu
+    public class CrossroadMainMenu : ACrossroadMenuBuild
     {
         [SerializeField] private CmButton _buttonClose;
         [SerializeField] private ButtonBuildEdifice _buttonUpgrade;
+        [SerializeField] private CmButton _buttonHiring;
         [SerializeField] private ButtonBuild _buttonWall;
         [SerializeField] private ButtonBuild _buttonRoads;
 
-        private PricesScriptable _prices;
+        private CrossroadRoadsMenu _roadsMenu;
+        private CrossroadWarriorsMenu _warriorsMenu;
 
-        private Player _playerCurrent;
-
-        public void Init(ACrossroadMenu roadsMenu, PricesScriptable prices)
+        public void Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, Players players, PricesScriptable prices)
         {
-            _players = SceneObjects.Get<Players>();
-
-            _prices = prices;
+            _roadsMenu = roadsMenu;
+            _warriorsMenu = warriorsMenu;
+            _players = players;
 
             _buttonClose.onClick.AddListener(() => gameObject.SetActive(false));
-            _buttonRoads.Init();
+            _buttonHiring.onClick.AddListener(OnHiring);
+
+            _buttonRoads.Init(prices.Road);
             _buttonRoads.AddListener(OnRoads);
-            _buttonWall.Init();
+
+            _buttonWall.Init(prices.Wall);
             _buttonWall.AddListener(OnWall);
-            _buttonUpgrade.Init();
+
+            _buttonUpgrade.Init(prices.Edifices);
             _buttonUpgrade.AddListener(OnUpgrade);
 
-            gameObject.SetActive(false);
+            _thisGO.SetActive(false);
 
             #region Local: OnUpgrade(), OnWall(), OnRoads()
             //=================================
             void OnUpgrade()
             {
-                gameObject.SetActive(false);
-                _playerCurrent.EdificeUpgradeBuy(_currentCrossroad);
+                _thisGO.SetActive(false);
+                _playerCurrent.BuyEdificeUpgrade(_currentCrossroad);
             }
             //=================================
             void OnWall()
             {
-                gameObject.SetActive(false);
-                _playerCurrent.EdificeWallBuy(_currentCrossroad);
+                _thisGO.SetActive(false);
+                _playerCurrent.BuyWall(_currentCrossroad);
             }
             //=================================
             void OnRoads()
             {
-                gameObject.SetActive(false);
-                roadsMenu.Open(_currentCrossroad);
+                _thisGO.SetActive(false);
+                _roadsMenu.Open(_currentCrossroad);
             }
-            
+            //=================================
+            void OnHiring()
+            {
+                _thisGO.SetActive(false);
+                _warriorsMenu.Open(_currentCrossroad);
+            }
             #endregion
         }
 
         public override void Open(Crossroad crossroad)
         {
-            _playerCurrent = _players.Current;
-            _currentCrossroad = crossroad;
+            base.Open(crossroad);
+
+            _buttonHiring.SetActive(_playerCurrent.CanHiringWarriors(crossroad));
+            _buttonHiring.targetGraphic.color = _currentColor;
 
             if (ButtonSetup(_buttonUpgrade, _playerCurrent.CanEdificeUpgrade(crossroad)))
-                _buttonUpgrade.SetupHint(crossroad.NextId, _playerCurrent.Resources, _prices.Edifices);
+                _buttonUpgrade.SetupHint(crossroad.NextId, _playerCurrent.Resources);
 
             if (ButtonSetup(_buttonWall, _playerCurrent.CanWallBuild(crossroad)))
-                _buttonWall.SetupHint(_playerCurrent.Resources, _prices.Wall);
+                _buttonWall.SetupHint(_playerCurrent.Resources);
 
             if(ButtonSetup(_buttonRoads, _playerCurrent.CanRoadBuild(crossroad)))
-                _buttonRoads.SetupHint(_playerCurrent.Resources, _prices.Road);
+                _buttonRoads.SetupHint(_playerCurrent.Resources);
 
-            gameObject.SetActive(true);
-
-            #region Local: ButtonSetup(...)
-            //=================================
-            bool ButtonSetup(AButtonBuild button, bool isEnable)
-            {
-                button.SetActive(isEnable);
-
-                if (isEnable)
-                    button.TargetGraphic.color = _playerCurrent.Color;
-
-                return isEnable;
-            }
-            #endregion
+            _thisGO.SetActive(true);
         }
-
-#if UNITY_EDITOR
-        protected virtual void OnValidate()
-        {
-            if (_prices == null)
-                _prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
-        }
-#endif
     }
 }

@@ -16,17 +16,13 @@ namespace Vurbiri.Colonization.UI
         protected CmButton _button;
         private CmButton.ButtonClickedEvent _buttonClicked;
         private Graphic _targetGraphic;
-        private GameObject _self;
         private string _hexColorPlus, _hexColorMinus;
 
         public CmButton Button => _button;
-        public Graphic TargetGraphic => _targetGraphic;
-        public bool Interactable { set => _button.Interactable = value; }
+        public Color Color { set => _targetGraphic.color = value; }
 
-        public override void Init()
+        protected virtual void Init()
         {
-            _thisTransform = transform;
-            _self = gameObject;
             _button = GetComponent<CmButton>();
             _buttonClicked = _button.onClick;
             _targetGraphic = _button.targetGraphic;
@@ -63,6 +59,6 @@ namespace Vurbiri.Colonization.UI
         public void AddListener(UnityEngine.Events.UnityAction action) => _buttonClicked.AddListener(action);
         public void RemoveAllListeners() => _buttonClicked.RemoveAllListeners();
 
-        public void SetActive(bool active) => _self.SetActive(active);
+        public void SetActive(bool active) => gameObject.SetActive(active);
     }
 }
