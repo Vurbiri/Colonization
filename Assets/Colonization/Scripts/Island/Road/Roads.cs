@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
 
             
 #if UNITY_EDITOR
-            name = NAME + PlayerId.Names[id.ToInt - PlayerId.Min];
+            name = NAME + PlayerId.Names[id.Value - PlayerId.Min];
 #endif
             return this;
         }

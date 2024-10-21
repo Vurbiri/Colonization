@@ -23,7 +23,7 @@ namespace Vurbiri
 
         public IEnumerable<Id<TId>> CurrentIds => _typesEnumerable;
         public TValue this[int id] { get => _values[id]; set => Replace(value); }
-        public TValue this[Id<TId> id] { get => _values[id.ToInt]; set => Replace(value); }
+        public TValue this[Id<TId> id] { get => _values[id.Value]; set => Replace(value); }
 
         public IdHashSet()
         {
@@ -41,12 +41,12 @@ namespace Vurbiri
         }
 
         public bool ContainsKey(int id) => _values[id] != null;
-        public bool ContainsKey(Id<TId> id) => _values[id.ToInt] != null;
-        public bool Contains(TValue value) => _values[value.Id.ToInt] != null;
+        public bool ContainsKey(Id<TId> id) => _values[id.Value] != null;
+        public bool Contains(TValue value) => _values[value.Id.Value] != null;
 
         public bool TryAdd(TValue value)
         {
-            int index = value.Id.ToInt;
+            int index = value.Id.Value;
 
             if (_values[index] != null)
                 return false;
@@ -65,7 +65,7 @@ namespace Vurbiri
 
         public void Replace(TValue value)
         {
-            int index = value.Id.ToInt;
+            int index = value.Id.Value;
 
             if (_values[index] == null)
                 _count++;
@@ -109,7 +109,7 @@ namespace Vurbiri
             }
             throw new IndexOutOfRangeException(GetType().Name, null);
         }
-        public bool TryGetValue(Id<TId> id, out TValue value) => TryGetValue(id.ToInt, out value);
+        public bool TryGetValue(Id<TId> id, out TValue value) => TryGetValue(id.Value, out value);
 
         public List<TValue> GetRange(int start, int end)
         {
@@ -218,7 +218,7 @@ namespace Vurbiri
                         _values[j] = null;
                 }
 
-                index = value.Id.ToInt;
+                index = value.Id.Value;
                 if (index == i)
                 {
                     _count++;

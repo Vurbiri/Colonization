@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private CurrenciesLite _roads;
         [SerializeField] private CurrenciesLite _wall;
         [SerializeField] private IdArray<EdificeId, CurrenciesLite> _edifices;
-        [SerializeField] private IdArray<WarriorsId, CurrenciesLite> _warriors;
+        [SerializeField] private IdArray<WarriorId, CurrenciesLite> _warriors;
 
         public ACurrencies PlayersDefault => _playersDefault;
         public ACurrencies Road => _roads;

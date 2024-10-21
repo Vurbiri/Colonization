@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,17 +13,22 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Color32 _colorPlus = Color.green;
         [SerializeField] private Color32 _colorMinus = Color.red;
+        [Space]
+        [SerializeField, Range(0.05f, 0.5f)] private float _space = 0.1f;
 
         protected CmButton _button;
-        private CmButton.ButtonClickedEvent _buttonClicked;
-        private Graphic _targetGraphic;
+        protected CmButton.ButtonClickedEvent _buttonClicked;
+        protected Graphic _targetGraphic;
         private string _hexColorPlus, _hexColorMinus;
 
-        public CmButton Button => _button;
-        public Color Color { set => _targetGraphic.color = value; }
+        private const int MIN_SIZE = 64, MAX_SIZE = 256;
 
-        protected virtual void Init()
+        public Vector3 LocalPosition { set => _thisTransform.localPosition = value; }
+
+        protected virtual void Init(Vector3 localPosition)
         {
+            _thisTransform.localPosition = localPosition;
+
             _button = GetComponent<CmButton>();
             _buttonClicked = _button.onClick;
             _targetGraphic = _button.targetGraphic;
@@ -33,11 +39,10 @@ namespace Vurbiri.Colonization.UI
 
         protected void SetTextHint(string caption, ACurrencies cash, ACurrencies cost)
         {
-            _button.Interactable = cash >= cost;
-
-            StringBuilder sb = new(cost.Amount > 0 ? 200 : 50);
+            StringBuilder sb = new(cost.Amount > 0 ? MAX_SIZE : MIN_SIZE);
             sb.Append(caption);
             sb.Append(NEW_LINE);
+            sb.AppendFormat(CultureInfo.InvariantCulture, TAG_SPACE, _space);
 
             int costV;
             for (int i = 0; i < CurrencyId.CountMain; i++)
@@ -52,13 +57,11 @@ namespace Vurbiri.Colonization.UI
                 sb.Append(costV.ToString());
                 sb.Append(SPACE);
             }
+            sb.Append(TAG_SPACE_OFF);
 
             _text = sb.ToString();
         }
 
         public void AddListener(UnityEngine.Events.UnityAction action) => _buttonClicked.AddListener(action);
-        public void RemoveAllListeners() => _buttonClicked.RemoveAllListeners();
-
-        public void SetActive(bool active) => gameObject.SetActive(active);
     }
 }

@@ -9,7 +9,7 @@ namespace Vurbiri
     {
         [SerializeField, JsonProperty("id")]
         private int _id;
-        public readonly int ToInt => _id;
+        public readonly int Value => _id;
 
         [JsonConstructor]
         public Id(int id)

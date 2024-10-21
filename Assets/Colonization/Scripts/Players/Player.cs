@@ -98,10 +98,9 @@ namespace Vurbiri.Colonization
         }
 
         public bool CanRoadBuild(Crossroad crossroad) => _states.IsGreater(PlayerStateId.MaxRoads, _data.RoadsCount) && crossroad.CanRoadBuild(_id);
-        public void BuyRoad(Crossroad crossroad, CrossroadLink link)
+        public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
         {
-            link.SetStart(crossroad);
-            _data.BuyRoad(link);
+            _data.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
         }
 
         public bool BuyPerk(IPerk<PlayerStateId> perk)

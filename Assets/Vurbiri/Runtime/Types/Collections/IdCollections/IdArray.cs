@@ -18,7 +18,7 @@ namespace Vurbiri
 
         public int Count => _count;
 
-        public virtual TValue this[Id<TId> id] { get => _values[id.ToInt]; set => _values[id.ToInt] = value; }
+        public virtual TValue this[Id<TId> id] { get => _values[id.Value]; set => _values[id.Value] = value; }
         public virtual TValue this[int index] { get => _values[index]; set => _values[index] = value; }
 
         public IdArray()

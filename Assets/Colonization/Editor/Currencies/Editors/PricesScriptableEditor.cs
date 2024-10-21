@@ -26,9 +26,9 @@ namespace VurbiriEditor.Colonization
 
             propertyValues = serializedObject.FindProperty(NAME_WARRIORS).FindPropertyRelative(NAME_ARRAY);
 
-            for (int i = 0; i < WarriorsId.Count; i++)
+            for (int i = 0; i < WarriorId.Count; i++)
             {
-                root.Q<PropertyField>(WarriorsId.Names[i]).BindProperty(propertyValues.GetArrayElementAtIndex(i));
+                root.Q<PropertyField>(WarriorId.Names[i]).BindProperty(propertyValues.GetArrayElementAtIndex(i));
             }
 
             return root;

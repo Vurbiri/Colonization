@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization
 
         public void Save(bool saveToFile = true, Action<bool> callback = null) => _playersData.Save(saveToFile, callback);
 
-        public void Next() => _current = _players.Next(_current.Id.ToInt);
+        public void Next() => _current = _players.Next(_current.Id.Value);
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {

@@ -30,12 +30,12 @@ namespace Vurbiri.Colonization
 
         public Key Key => _key;
         public bool IsOccupied => _edifice.IsOccupied;
-        public int Id => _edifice.Id.ToInt;
+        public int Id => _edifice.Id.Value;
         public int GroupId => _edifice.GroupId;
         public int NextId => _edifice.NextId;
         public int NextGroupId => _edifice.NextGroupId;
         public bool IsWall => _edifice.IsWall;
-        public IEnumerable<CrossroadLink> Links => _links;
+        public IReadOnlyList<CrossroadLink> Links => _links;
         public Vector3 Position { get; private set; }
 
         public void Init(Key key)
@@ -86,6 +86,9 @@ namespace Vurbiri.Colonization
 
             return true;
         }
+
+        public CrossroadLink GetLink(Id<LinkId> linkId) => _links[linkId];
+        public CrossroadLink GetLinkAndSetStart(Id<LinkId> linkId) => _links[linkId].SetStart(this);
 
         public bool Build(int playerId, int id, bool isWall)
         {
@@ -221,7 +224,7 @@ namespace Vurbiri.Colonization
 
         public static Key operator -(Crossroad a, Crossroad b) => a._key - b._key;
 
-        public int[] ToArray() => new int[] { _key.X, _key.Y, _edifice.Id.ToInt, _edifice.IsWall ? 1 : 0 };
+        public int[] ToArray() => new int[] { _key.X, _key.Y, _edifice.Id.Value, _edifice.IsWall ? 1 : 0 };
 
 #if UNITY_EDITOR
         private void OnValidate()

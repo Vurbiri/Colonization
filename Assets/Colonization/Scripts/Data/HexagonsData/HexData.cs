@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.Data
             this.id = id;
             this.position = position;
             this.surface = surface;
-            _surfaceId = surface.Id.ToInt;
+            _surfaceId = surface.Id.Value;
         }
         public HexData(int[] array, SurfacesScriptable surfaces)
         {

@@ -7,20 +7,34 @@ namespace Vurbiri.Colonization.UI
     public class ButtonBuild : AButtonBuild
     {
         [Space]
-        [SerializeField] private string _key;
+        [SerializeField] protected string _key;
 
         private ACurrencies _cost;
         private Unsubscriber<Language> _unsubscriber;
         private string _caption;
 
-        public void Init(ACurrencies cost)
+        public virtual void Init(Vector3 localPosition, ACurrencies cost)
         {
-            base.Init();
+            base.Init(localPosition);
             _cost = cost;
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }
 
-        public void SetupHint(ACurrencies cash) => SetTextHint(_caption, cash, _cost);
+        public void Setup(bool isEnable, Color color, ACurrencies cash)
+        {
+            if(!isEnable)
+            {
+                _thisGO.SetActive(false);
+                return;
+            }
+            
+            _button.Interactable = cash >= _cost;
+            _targetGraphic.color = color;
+
+            SetTextHint(_caption, cash, _cost);
+
+            _thisGO.SetActive(true);
+        }
 
         private void SetText(Language localization) => _caption = localization.GetText(_file, _key);
 

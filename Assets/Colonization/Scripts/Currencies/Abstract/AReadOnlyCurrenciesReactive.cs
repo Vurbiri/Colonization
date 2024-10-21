@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
         }
 
         public override int this[int index] { get => _values[index].Value; }
-        public override int this[Id<CurrencyId> id] { get => _values[id.ToInt].Value; }
+        public override int this[Id<CurrencyId> id] { get => _values[id.Value].Value; }
 
         public AReadOnlyCurrenciesReactive(IReadOnlyList<int> array)
         {
@@ -60,10 +60,10 @@ namespace Vurbiri.Colonization
             return new(this, action);
         }
         public Unsubscriber<int> Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
-        public Unsubscriber<int> Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.ToInt].Subscribe(action, calling);
+        public Unsubscriber<int> Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
         public void Unsubscribe(Action<int> action) => ActionAmountChange -= action;
         public void Unsubscribe(int index, Action<int> action) => _values[index].Unsubscribe(action);
-        public void Unsubscribe(Id<CurrencyId> id, Action<int> action) => _values[id.ToInt].Unsubscribe(action);
+        public void Unsubscribe(Id<CurrencyId> id, Action<int> action) => _values[id.Value].Unsubscribe(action);
         #endregion
 
         #region Nested: ACurrency, CurrencyMain, CurrencyBlood

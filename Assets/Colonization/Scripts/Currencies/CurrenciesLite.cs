@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
         public override int Amount { get => _amount;  protected set => _amount = value; }
 
         public override int this[int index] { get => _values[index]; }
-        public override int this[Id<CurrencyId> id] { get => _values[id.ToInt]; }
+        public override int this[Id<CurrencyId> id] { get => _values[id.Value]; }
 
         public static CurrenciesLite Empty => _empty;
         private static readonly CurrenciesLite _empty = new();

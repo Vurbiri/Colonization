@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-    public class WarriorsId : AIdType<WarriorsId>
+    public class WarriorId : AIdType<WarriorId>
     {
         public const int Militia = 0;
         public const int Solder = 1;
@@ -8,10 +8,10 @@ namespace Vurbiri.Colonization
         public const int Saboteur = 3;
         public const int Knight = 4;
 
-        static WarriorsId()
+        static WarriorId()
         {
             RunConstructor();
         }
-        private WarriorsId() { }
+        private WarriorId() { }
     }
 }

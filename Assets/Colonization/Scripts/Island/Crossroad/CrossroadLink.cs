@@ -37,10 +37,12 @@ namespace Vurbiri.Colonization
             static Id<LinkId> ToLinkType(Key key) => new(System.Array.IndexOf(NEAR_CROSS, key) % 3);
         }
 
-        public void SetStart(Crossroad cross)
+        public CrossroadLink SetStart(Crossroad cross)
         {
             if (_start != cross)
                 (_start, _end) = (_end, _start);
+
+            return this;
         }
 
         public void RoadBuilt(Id<PlayerId> playerId)

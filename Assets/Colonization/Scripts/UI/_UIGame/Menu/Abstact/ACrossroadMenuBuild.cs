@@ -2,26 +2,12 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class ACrossroadMenuBuild : ACrossroadMenu
+    public abstract class ACrossroadMenuBuild : ACrossroadMenu
     {
+        [SerializeField] protected float _distanceOfButtons = 5f;
+
+        protected Players _players;
         protected Player _playerCurrent;
-        protected Color _currentColor;
 
-        public override void Open(Crossroad crossroad)
-        {
-            _playerCurrent = _players.Current;
-            _currentCrossroad = crossroad;
-            _currentColor = _playerCurrent.Color;
-        }
-
-        protected bool ButtonSetup(AButtonBuild button, bool isEnable)
-        {
-            button.SetActive(isEnable);
-
-            if (isEnable)
-                button.Color = _currentColor;
-
-            return isEnable;
-        }
     }
 }

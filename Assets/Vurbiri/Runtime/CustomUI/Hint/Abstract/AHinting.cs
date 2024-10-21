@@ -13,11 +13,13 @@ namespace Vurbiri.UI
         public bool IsShowingHint => _isShowingHint;
 
         private bool _isShowingHint = false;
+        protected GameObject _thisGO;
         protected Transform _thisTransform;
         protected string _text;
 
         protected virtual void Awake()
         {
+            _thisGO = gameObject;
             _thisTransform = transform;
         }
 
@@ -37,7 +39,7 @@ namespace Vurbiri.UI
         }
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             if (_hint == null)
                 _hint = FindAnyObjectByType<HintGlobal>();

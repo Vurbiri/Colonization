@@ -13,17 +13,17 @@ namespace Vurbiri.Colonization
         public Currencies() : base() { }
 
         public void Set(int index, int value) => Amount += _values[index].Set(value);
-        public void Set(Id<CurrencyId> id, int value) => Amount += _values[id.ToInt].Set(value);
+        public void Set(Id<CurrencyId> id, int value) => Amount += _values[id.Value].Set(value);
 
         public void Increment(int index) => Amount += _values[index].Increment();
-        public void Increment(Id<CurrencyId> id) => Amount += _values[id.ToInt].Increment();
+        public void Increment(Id<CurrencyId> id) => Amount += _values[id.Value].Increment();
 
         public void Add(int index, int value)
         {
             if (value != 0)
                 Amount += _values[index].Add(value);
         }
-        public void Add(Id<CurrencyId> id, int value) => Add(id.ToInt, value);
+        public void Add(Id<CurrencyId> id, int value) => Add(id.Value, value);
         
         public void AddAndClampBlood(int value, int max) => Amount += _values[CurrencyId.Blood].AddAndClamp(value, max);
 

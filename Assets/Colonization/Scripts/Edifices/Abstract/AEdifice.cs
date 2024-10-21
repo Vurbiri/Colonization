@@ -77,12 +77,12 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         protected virtual void OnValidate()
         {
-            _groupId = EdificeId.ToGroup(_id.ToInt);
+            _groupId = EdificeId.ToGroup(_id.Value);
             _isBuildWall = _groupId == EdificeGroupId.Urban && _id != EdificeId.Camp;
 
             if (_isUpgrade = _prefabUpgrade != null)
             {
-                _nextId = _prefabUpgrade._id.ToInt;
+                _nextId = _prefabUpgrade._id.Value;
                 _nextGroupId = _prefabUpgrade._groupId;
             }
             else

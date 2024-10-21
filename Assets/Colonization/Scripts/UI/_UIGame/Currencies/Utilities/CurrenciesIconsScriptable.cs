@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private IdArray<CurrencyId, CurrencyIcon> _icons;
 
         public CurrencyIcon this[int index] => _icons[index];
-        public CurrencyIcon this[Id<CurrencyId> id] => _icons[id.ToInt];
+        public CurrencyIcon this[Id<CurrencyId> id] => _icons[id.Value];
 
 
 #if UNITY_EDITOR
