@@ -23,21 +23,19 @@ namespace Vurbiri.Colonization
         [SerializeField] private CameraController _cameraController;
         [SerializeField] private UI.ContextMenusWorld _contextMenusWorld;
         [Space]
-        [Header("Init data for classes")]
+        [Header("Localization")]
+        [SerializeField] private EnumArray<Files, bool> _localizationFiles = new(true);
         [Space]
-        [SerializeField] private LocalizationFiles _localizationFiles;
+        [Header("Init data for classes")]
+        [SerializeField] private Players.Settings _playersSettings;
         [Space]
         [SerializeField] private InputController.Settings _inputControllerSettings;
         [Space]
-        [SerializeField] private RoadsSetup _roads;
-        [Space]
         [Header("ScriptableObjects")]
         [SerializeField] private SurfacesScriptable _surfaces;
-        [Space]
         [SerializeField] private PricesScriptable _prices;
-        [SerializeField] private PlayerStatesScriptable _states;
         [SerializeField] private PlayerVisualSetScriptable _visualSet;
-
+        [Space]
         [Header("TEST")]
         [SerializeField] private bool _isLoad;
         [SerializeField] private Id<PlayerId> id;
@@ -60,43 +58,29 @@ namespace Vurbiri.Colonization
 
             _gameplaySettings = _data.Get<GameplaySettingsData>();
 
-            _objects.Get<LoadingScreen>().TurnOnOf(false);
-
             FillingContainers();
 
-            SetupLocalizationFiles();
+            _services.Get<Language>().LoadFiles(_localizationFiles);
 
             StartCoroutine(Enter_Coroutine());
 
             return _defaultNextScene;
 
-            #region Local: WaterCheck(), SetupLocalizationFiles()
+            #region Local: FillingContainers()
             //=================================
             void FillingContainers()
             {
                 _services.AddInstance(Coroutines.Create("Gameplay Coroutines"));
                 _eventBus = _services.AddInstance(new GameplayEventBus());
                 _inputController = _services.AddInstance(new InputController(_cameraMain, _inputControllerSettings));
-                _hexagonsData = _data.AddInstance(new HexagonsData(_services, _surfaces, _isLoad));
-                _players = _objects.AddInstance(new Players(_states, _visualSet, _gameplaySettings.VisualIds));
-
+                _hexagonsData = _data.AddInstance(new HexagonsData(_surfaces, _isLoad));
+                _playersSettings.visual = _data.AddInstance(_visualSet.Get(_gameplaySettings.VisualIds));
+                
                 _objects.AddInstance(_cameraMain);
                 _objects.AddInstance(_islandCreator.Land);
                 _objects.AddInstance(_islandCreator.Crossroads);
 
-                _states = null; Resources.UnloadAsset(_states);
                 _visualSet = null; Resources.UnloadAsset(_visualSet);
-            }
-            //=================================
-            void SetupLocalizationFiles()
-            {
-                var language = _services.Get<Language>();
-
-                foreach (var file in _localizationFiles.unloads)
-                    language.UnloadFile(file);
-
-                foreach (var file in _localizationFiles.loads)
-                    language.LoadFile(file);
             }
             #endregion
         }
@@ -104,7 +88,7 @@ namespace Vurbiri.Colonization
         private IEnumerator Enter_Coroutine()
         {
             yield return StartCoroutine(CreateIsland_Coroutine());
-
+            yield return StartCoroutine(CreatePlayers_Coroutine());
             yield return StartCoroutine(InitObjects_Coroutine());
 
             StartCoroutine(Final_Coroutine());
@@ -123,16 +107,22 @@ namespace Vurbiri.Colonization
             yield return null;
         }
 
-        private IEnumerator InitObjects_Coroutine()
+        private IEnumerator CreatePlayers_Coroutine()
         {
-            _players.Setup(_services, _prices, _islandCreator.Crossroads, new RoadsFactory(_roads.prefab, _roads.container), _isLoad);
+            _players = _objects.AddInstance(new Players(_playersSettings, _isLoad));
 
             yield return null;
 
-            _cameraController.Init(_cameraMain, _inputController.CameraActions);
-            _contextMenusWorld.Init(_players, _cameraMain, _prices, _eventBus);
+            _playersSettings.Dispose();
+            _playersSettings = null;
+        }
 
-            _objects.Remove<Roads>();
+        private IEnumerator InitObjects_Coroutine()
+        {
+            _cameraController.Init(_cameraMain, _inputController.CameraActions);
+            _contextMenusWorld.Init(_players, _cameraMain, _eventBus);
+
+            yield return null;
         }
 
         private IEnumerator Final_Coroutine()
@@ -154,44 +144,35 @@ namespace Vurbiri.Colonization
 
             Destroy(gameObject);
         }
-
-        #region Nested: Settings, LocalizationFiles
-        //***********************************
-        [System.Serializable]
-        private class RoadsSetup
-        {
-            public Roads prefab;
-            public Transform container;
-        }
-        //***********************************
-        [System.Serializable]
-        private class LocalizationFiles
-        {
-            public Files[] unloads;
-            public Files[] loads;
-        }
-        #endregion
-
 #if UNITY_EDITOR
         private void OnValidate()
         {
             if (_cameraMain == null)
                 _cameraMain = FindAnyObjectByType<Camera>();
-
             if (_islandCreator == null)
                 _islandCreator = FindAnyObjectByType<IslandCreator>();
-
             if (_cameraController == null)
                 _cameraController = FindAnyObjectByType<CameraController>();
-
             if (_contextMenusWorld == null)
                 _contextMenusWorld = FindAnyObjectByType<UI.ContextMenusWorld>();
+            
+            if (_playersSettings.prices == null)
+                _playersSettings.prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
+            if (_playersSettings.states == null)
+                _playersSettings.states = VurbiriEditor.Utility.FindAnyScriptable<PlayerStatesScriptable>();
+            if (_playersSettings.crossroads == null)
+                _playersSettings.crossroads = _islandCreator.Crossroads;
+            if (_playersSettings.roadsFactory.prefab == null)
+                _playersSettings.roadsFactory.prefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
+            if (_playersSettings.roadsFactory.container == null)
+                _playersSettings.roadsFactory.container = _islandCreator.RoadsContainer;
 
-            if (_roads.prefab == null)
-                _roads.prefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
-
-            //if (surfaces == null)
-            //    surfaces = VurbiriEditor.Utility.FindAnyScriptable<SurfacesScriptable>();
+            if (_surfaces == null)
+                _surfaces = VurbiriEditor.Utility.FindAnyScriptable<SurfacesScriptable>();
+            if (_prices == null)
+                _prices = _playersSettings.prices;
+            if (_visualSet == null)
+                _visualSet = VurbiriEditor.Utility.FindAnyScriptable<PlayerVisualSetScriptable>();
         }
 #endif
     }

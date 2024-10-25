@@ -13,11 +13,12 @@ namespace Vurbiri.Colonization.UI
         private Unsubscriber<Language> _unsubscriber;
         private string _caption;
 
-        public virtual void Init(Vector3 localPosition, ACurrencies cost)
+        public virtual ButtonBuild Init(Vector3 localPosition, ACurrencies cost)
         {
             base.Init(localPosition);
             _cost = cost;
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
+            return this;
         }
 
         public void Setup(bool isEnable, Color color, ACurrencies cash)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -10,11 +11,11 @@ namespace Vurbiri.Colonization
 
         private static Chance chanceAltMesh = new(50);
 
-        public override void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
+        public override void Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
-            if(chanceAltMesh.Roll)
+            if (chanceAltMesh.Roll)
                 GetComponent<MeshFilter>().sharedMesh = _altMesh;
-            
+
             base.Init(playerId, links);
         }
     }

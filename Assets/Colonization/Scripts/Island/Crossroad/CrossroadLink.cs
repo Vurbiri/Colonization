@@ -20,21 +20,33 @@ namespace Vurbiri.Colonization
 
         private static readonly Key[] NEAR_CROSS = { new(2, -1), new(2, 1), new(0, 2), new(-2, 1), new(-2, -1), new(0, -2) };
 
-        public CrossroadLink(Crossroad[] arr, bool isWater)
+        private CrossroadLink(Id<LinkId> id, Crossroad start, Crossroad end, bool isWater)
         {
-            _start = arr[0]; _end = arr[1];
-            _id = ToLinkType(_end - _start);
+            _id = id;
+            _start = start;
+            _end = end;
 
-            if (!(_start.AddLink(this) && _end.AddLink(this)))
+            _owner = PlayerId.None;
+            _isWater = isWater;
+            _middle = (_start.Position + _end.Position) * 0.5f;
+        }
+
+        public static void Create(Crossroad[] crossroads, bool isWater)
+        {
+            Crossroad start = crossroads[0], end = crossroads[1];
+            int id = ToLinkType(end.Key - start.Key);
+
+            if (start.ContainsLink(id) && end.ContainsLink(id))
                 return;
 
-            _isWater = isWater;
-            _owner = PlayerId.None;
-            _middle = (_start.Position + _end.Position) * 0.5f;
+            CrossroadLink link = new(id, start, end, isWater);
+
+            start.AddLink(link);
+            end.AddLink(link);
 
             // Local: ToLinkType(..)
             //=================================
-            static Id<LinkId> ToLinkType(Key key) => new(System.Array.IndexOf(NEAR_CROSS, key) % 3);
+            static int ToLinkType(Key key) => System.Array.IndexOf(NEAR_CROSS, key) % 3;
         }
 
         public CrossroadLink SetStart(Crossroad cross)

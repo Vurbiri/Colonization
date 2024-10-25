@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.Data
         public int RoadsCount => _roads.Count;
         public int WarriorsCount => 0;
 
-        public PlayerData(PricesScriptable prices, Roads roads) 
+        public PlayerData(PricesScriptable prices, Roads roads)
         {
             resources = new(prices.PlayersDefault);
             _edifices = new();
@@ -67,6 +67,5 @@ namespace Vurbiri.Colonization.Data
         }
 
         public int EdificeCount(int edificeGroupId) => _edifices.values[edificeGroupId].Count;
-
     }
 }

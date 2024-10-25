@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 {
     public abstract class AReadOnlyCurrenciesReactive : ACurrencies, IReactiveSubValues<int, CurrencyId>
     {
-        protected ACurrency[] _values = new ACurrency[CurrencyId.CountAll];
+        protected ACurrency[] _values = new ACurrency[countAll];
         protected Action<int> ActionAmountChange;
 
         public override int Amount
@@ -21,11 +21,11 @@ namespace Vurbiri.Colonization
 
         public AReadOnlyCurrenciesReactive(IReadOnlyList<int> array)
         {
-            if (_countAll != array.Count)
+            if (countAll != array.Count)
                 throw new ArgumentOutOfRangeException($"Currencies. Копирование из IReadOnlyList размера {array.Count} невозможно.");
 
             int value;
-            for (int i = 0; i < _countMain; i++)
+            for (int i = 0; i < countMain; i++)
             {
                 value = array[i];
                 _values[i] = new CurrencyMain(value);
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
         }
         public AReadOnlyCurrenciesReactive(ACurrencies other)
         {
-            for (int i = 0; i < _countMain; i++)
+            for (int i = 0; i < countMain; i++)
                 _values[i] = new CurrencyMain(other[i]);
             _values[CurrencyId.Blood] = new CurrencyBlood(other[CurrencyId.Blood]);
 
@@ -43,11 +43,10 @@ namespace Vurbiri.Colonization
         }
         public AReadOnlyCurrenciesReactive()
         {
-            for (int i = 0; i < _countMain; i++)
+            for (int i = 0; i < countMain; i++)
                 _values[i] = new CurrencyMain();
             _values[CurrencyId.Blood] = new CurrencyBlood();
         }
-
 
         #region Reactive
         public Unsubscriber<int> Subscribe(Action<int> action, bool calling = true)

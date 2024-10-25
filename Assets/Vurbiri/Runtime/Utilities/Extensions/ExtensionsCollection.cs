@@ -15,6 +15,14 @@ namespace Vurbiri
         public static T Rand<T>(this IReadOnlyList<T> self) => self[Random.Range(0, self.Count)];
         public static T Rand<T>(this IReadOnlyList<T> self, int startIndex) => self[Random.Range(startIndex, self.Count)];
 
+        public static int FirstNullIndex<T>(this IReadOnlyList<T> self) where T : class
+        {
+            for (int i = 0; i < self.Count; i++)
+                if (self[i] == null)
+                    return i;
+            return -1;
+        }
+
         public static void Fill<T>(this IList<T> self, T value = default)
         {
             for (int i = 0; i < self.Count; i++)

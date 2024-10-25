@@ -4,14 +4,15 @@ namespace Vurbiri.Colonization.UI
 {
     public class LookAtCamera : MonoBehaviour
     {
-        [SerializeField] private Transform _cameraTransform;
-
+        private Transform _cameraTransform;
         private Transform _thisTransform;
         private Vector3 _lastCameraPosition;
 
-        private void Awake()
+        public void Init(Camera camera)
         {
             _thisTransform = transform;
+            _cameraTransform = camera.transform;
+            enabled = false;
         }
 
         private void Update()
@@ -22,13 +23,5 @@ namespace Vurbiri.Colonization.UI
             _lastCameraPosition = _cameraTransform.position;
             _thisTransform.rotation = Quaternion.LookRotation(_cameraTransform.forward, Vector3.up);
         }
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (_cameraTransform == null)
-                _cameraTransform = Camera.main.transform;
-        }
-#endif
     }
 }

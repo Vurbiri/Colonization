@@ -74,6 +74,22 @@ namespace Vurbiri.Localization
             return false;
         }
 
+        public void LoadFiles(EnumArray<Files, bool> files)
+        {
+            for (int i = 0; i < _countFiles; i++)
+            {
+                if (!files[i])
+                {
+                    _text[i] = null;
+                    _loadFiles[i] = false;
+                    continue;
+                }
+
+                if (files[i] && !_loadFiles[i])
+                    _loadFiles[i] = LoadingFile(i, _currentLanguage);
+            }
+        }
+
         public bool LoadFile(Files file)
         {
             int id = (int)file;

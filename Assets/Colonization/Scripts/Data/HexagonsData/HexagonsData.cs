@@ -16,12 +16,12 @@ namespace Vurbiri.Colonization.Data
 
         public SurfacesScriptable Surfaces => _surfaces;
 
-        public HexagonsData(IReadOnlyDIContainer container, SurfacesScriptable surfaces, bool isLoading)
+        public HexagonsData(SurfacesScriptable surfaces, bool isLoading)
         {
             _hexagons = new(MAX_HEXAGONS);
 
-            _coroutines = container.Get<Coroutines>();
-            _storage = container.Get<IStorageService>();
+            _coroutines = SceneServices.Get<Coroutines>();
+            _storage = SceneServices.Get<IStorageService>();
 
             _surfaces = surfaces;
 

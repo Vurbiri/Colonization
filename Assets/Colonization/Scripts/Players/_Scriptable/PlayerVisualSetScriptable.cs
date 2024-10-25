@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+using Vurbiri.Colonization;
 
 [CreateAssetMenu(fileName = "PlayerVisualSet", menuName = "Vurbiri/Colonization/PlayerVisualSet", order = 51)]
 public class PlayerVisualSetScriptable : ScriptableObject
@@ -15,7 +15,19 @@ public class PlayerVisualSetScriptable : ScriptableObject
     public int Count => _colors.Length;
     public Color[] Colors => _colors;
 
-    public PlayerVisual Get(int id) => new(id, _colors[id], new (_defaultMaterialLit), new(_defaultMaterialUnlit), new(_defaultMaterialActor));
+    public PlayersVisual Get(int[] ids)
+    {
+        int count = ids.Length;
+
+        if (count != PlayerId.CountPlayers)
+            throw new($"Неожидаемое количество id представлений игроков: {count} (а не {PlayerId.CountPlayers})");
+
+        Color[] colors = new Color[count];
+        for (int i = 0; i < count; i++)
+            colors[i] = _colors[ids[i]];
+
+        return new(colors, _defaultMaterialLit, _defaultMaterialUnlit, _defaultMaterialActor);
+    }
 
     public int[] GetIds(int count, int start = 0)
     {

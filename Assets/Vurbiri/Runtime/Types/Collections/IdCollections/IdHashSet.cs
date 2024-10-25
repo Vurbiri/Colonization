@@ -18,8 +18,8 @@ namespace Vurbiri
         private readonly int _capacity;
         private readonly IdHashSetIdsEnumerable _typesEnumerable;
 
-        public int Count => _count;
-        public int Capacity => _capacity;
+        public int CountAvailable => _count;
+        public int Count => _capacity;
 
         public IEnumerable<Id<TId>> CurrentIds => _typesEnumerable;
         public TValue this[int id] { get => _values[id]; set => Replace(value); }
@@ -71,14 +71,6 @@ namespace Vurbiri
                 _count++;
 
             _values[index] = value;
-        }
-
-        public int FirstEmptyIndex()
-        {
-            for (int i = 0; i < _capacity; i++)
-                if (_values[i] == null)
-                    return i;
-            return -1;
         }
 
         public TValue Next(int index)

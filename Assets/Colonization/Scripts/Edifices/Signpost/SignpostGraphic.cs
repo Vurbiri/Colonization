@@ -1,17 +1,36 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace Vurbiri.Colonization
 {
-    public class SignpostGraphic : AEdificeSidesGraphic<SignpostSide>
+    public class SignpostGraphic : AEdificeGraphic
     {
-        private Players _players;
+        [SerializeField] private IdHashSet<LinkId, SignpostSide> _graphicSides;
 
-        public override void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
+        private int _countRoads = 0;
+
+        public override void Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
-            _players = SceneObjects.Get<Players>();
-
             foreach (var side in _graphicSides)
-                side.SetActive(links.ContainsKey(side.Id));
+                side.SetActive(links[side.Id.Value] != null);
+
+            SceneServices.Get<GameplayEventBus>().EventCrossroadMarkShow += Show;
         }
 
-        public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) => _graphicSides[linkId].AddRoad(_players[playerId].MaterialUnlit);
+        public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId)
+        {
+            _countRoads++;
+            gameObject.SetActive(false);
+        }
+
+        private void Show(bool isShow) 
+        {
+            gameObject.SetActive(isShow && _countRoads == 0);
+        }
+
+        private void OnDestroy()
+        {
+            SceneServices.Get<GameplayEventBus>().EventCrossroadMarkShow -= Show;
+        }
     }
 }

@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
 
                 while (angle > angleStep)
                 {
-                    if (chance)
+                    if (chance.Roll)
                     {
                         position = new(Mathf.Cos(angle) * radius + offset, 0f, Mathf.Sin(angle) * radius + offset);
                         customMesh.AddTriangles( _rock.Create(position, isHigh, ratioHeight, ratioRadius));

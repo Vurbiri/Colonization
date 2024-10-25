@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -6,7 +7,7 @@ namespace Vurbiri.Colonization
     public abstract class AEdifice : MonoBehaviour, IValueId<EdificeId>
     {
         [SerializeField] protected Id<EdificeId> _id;
-        [SerializeField, Hide] private int _groupId;
+        [SerializeField, Hide] protected int _groupId;
         [SerializeField, Range(0, 3)] private int _profit;
         [SerializeField, Hide] protected bool _isUpgrade;
         [SerializeField, Hide] protected bool _isBuildWall;
@@ -27,13 +28,15 @@ namespace Vurbiri.Colonization
         public int NextGroupId => _nextGroupId;
         public Id<PlayerId> Owner => _owner;
         public bool IsUpgrade => _isUpgrade;
-        public bool IsOccupied => _owner != PlayerId.None;
+        public bool IsOwned => _owner != PlayerId.None;
+        public bool IsPort => _owner != PlayerId.None && _groupId == EdificeGroupId.Port;
         public bool IsUrban => _owner != PlayerId.None && _groupId == EdificeGroupId.Urban;
+        public bool IsShrine => _owner != PlayerId.None && _groupId == EdificeGroupId.Shrine;
         public int Profit => _profit;
         public bool IsWall => _isWall;
         public float Radius => _radiusCollider;
 
-        public virtual void Setup(AEdifice edifice, IdHashSet<LinkId, CrossroadLink> links)
+        public virtual void Setup(AEdifice edifice, IReadOnlyList<CrossroadLink> links)
         {
             _owner = edifice._owner;
             _isWall = edifice._isWall;
@@ -42,13 +45,13 @@ namespace Vurbiri.Colonization
             _graphic.Init(_owner, links);
         }
 
-        public virtual bool Build(AEdifice prefab, Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, bool isWall, out AEdifice edifice)
+        public virtual bool Build(AEdifice prefab, Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links, bool isWall, out AEdifice edifice)
         {
             edifice = this;
             return false;
         }
 
-        public virtual bool Upgrade(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links, out AEdifice edifice)
+        public virtual bool Upgrade(Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links, out AEdifice edifice)
         {
             if (_isUpgrade && _owner == owner)
             {
@@ -63,21 +66,18 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public bool CanHiringWarriors(Id<PlayerId> owner) => _owner == owner && _groupId == EdificeGroupId.Port;
+        public bool CanRecruitingWarriors(Id<PlayerId> owner) => _owner == owner && _groupId == EdificeGroupId.Port;
 
         public bool CanWallBuild(Id<PlayerId> owner) => _isBuildWall && _owner == owner;
 
-        public virtual bool WallBuild(Id<PlayerId> owner, IdHashSet<LinkId, CrossroadLink> links) => _isBuildWall;
+        public virtual bool WallBuild(Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links) => _isBuildWall;
 
         public virtual void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) { }
-
-        public virtual void Show(bool isShow) { }
-
 
 #if UNITY_EDITOR
         protected virtual void OnValidate()
         {
-            _groupId = EdificeId.ToGroup(_id.Value);
+            _groupId = _id.ToGroup();
             _isBuildWall = _groupId == EdificeGroupId.Urban && _id != EdificeId.Camp;
 
             if (_isUpgrade = _prefabUpgrade != null)
@@ -91,7 +91,8 @@ namespace Vurbiri.Colonization
                 _nextGroupId = EdificeGroupId.None;
             }
 
-            _graphic = GetComponentInChildren<AEdificeGraphic>();
+            if (_graphic == null)
+                _graphic = GetComponentInChildren<AEdificeGraphic>();
         }
 #endif
     }

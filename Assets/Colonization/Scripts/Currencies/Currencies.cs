@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
             if (other.Amount == 0)
                 return;
             
-            for (int i = 0; i < _countAll; i++)
+            for (int i = 0; i < countAll; i++)
                 _amount += _values[i].Add(other[i]);
 
             ActionAmountChange?.Invoke(_amount);
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
 
         public void Pay(ACurrencies cost)
         {
-            for (int i = 0; i < _countAll; i++)
+            for (int i = 0; i < countAll; i++)
                 _amount += _values[i].Add(-cost[i]);
 
             ActionAmountChange?.Invoke(_amount);
@@ -51,14 +51,14 @@ namespace Vurbiri.Colonization
             if (_amount <= max)
                 return;
 
-            int index = Random.Range(0, _countMain);
+            int index = Random.Range(0, countMain);
             while (_amount > max)
             {
                 _amount += _values[index].DecrementNotMessage();
-                index = ++index % _countMain;
+                index = ++index % countMain;
             }
 
-            for (int i = 0; i < _countMain; i++)
+            for (int i = 0; i < countMain; i++)
                 _values[i].SendMessage();
 
             ActionAmountChange?.Invoke(_amount);
@@ -66,14 +66,14 @@ namespace Vurbiri.Colonization
 
         public void Clear()
         {
-            for (int i = 0; i < _countAll; i++)
+            for (int i = 0; i < countAll; i++)
                 _values[i].Set(0);
             Amount = 0;
         }
 
         public IEnumerator<int> GetEnumerator()
         {
-            for (int i = 0; i < _countAll; i++)
+            for (int i = 0; i < countAll; i++)
                 yield return _values[i].Value;
         }
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

@@ -15,6 +15,8 @@ namespace Vurbiri.Colonization.UI
 
         private CrossroadRoadsMenu _roadsMenu;
         private CrossroadWarriorsMenu _warriorsMenu;
+        private Players _players;
+        private Player _playerCurrent;
 
         public void Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, Players players, PricesScriptable prices)
         {
@@ -22,51 +24,21 @@ namespace Vurbiri.Colonization.UI
             _warriorsMenu = warriorsMenu;
             _players = players;
 
-            _buttonClose.onClick.AddListener(() => gameObject.SetActive(false));
+            _buttonClose.onClick.AddListener(OnClose);
 
-            Vector3 distance = Vector3.up * _distanceOfButtons;
-            Vector3 distance60angle = Quaternion.Euler(0f, 0f, -60f) * distance;
+            _buttonRoads.Init(new(0f, -_distanceOfButtons, 0f), prices.Road).AddListener(OnRoads);
 
-            _buttonHiring.onClick.AddListener(OnHiring);
+            Vector3 distance60angle = new(_distanceOfButtons * CONST.SIN_60, _distanceOfButtons * CONST.COS_60, 0f);
+
             _buttonHiring.transform.localPosition = distance60angle;
+            _buttonHiring.onClick.AddListener(OnHiring);
 
-            _buttonRoads.Init(Quaternion.Euler(0f, 0f, 180f) * distance, prices.Road);
-            _buttonRoads.AddListener(OnRoads);
+            _buttonWall.Init(distance60angle, prices.Wall).AddListener(OnWall);
 
-            _buttonWall.Init(distance60angle, prices.Wall);
-            _buttonWall.AddListener(OnWall);
-
-            _buttonUpgrade.Init(Quaternion.Euler(0f, 0f, 60f) * distance, prices.Edifices);
-            _buttonUpgrade.AddListener(OnUpgrade);
+            distance60angle.x *= -1f;
+            _buttonUpgrade.Init(distance60angle, prices.Edifices).AddListener(OnUpgrade);
 
             _thisGO.SetActive(false);
-
-            #region Local: OnUpgrade(), OnWall(), OnRoads()
-            //=================================
-            void OnUpgrade()
-            {
-                _thisGO.SetActive(false);
-                _playerCurrent.BuyEdificeUpgrade(_currentCrossroad);
-            }
-            //=================================
-            void OnWall()
-            {
-                _thisGO.SetActive(false);
-                _playerCurrent.BuyWall(_currentCrossroad);
-            }
-            //=================================
-            void OnRoads()
-            {
-                _thisGO.SetActive(false);
-                _roadsMenu.Open(_currentCrossroad);
-            }
-            //=================================
-            void OnHiring()
-            {
-                _thisGO.SetActive(false);
-                _warriorsMenu.Open(_currentCrossroad);
-            }
-            #endregion
         }
 
         public override void Open(Crossroad crossroad)
@@ -75,9 +47,9 @@ namespace Vurbiri.Colonization.UI
             _currentCrossroad = crossroad;
 
             ACurrencies currentCash = _playerCurrent.Resources;
-            Color currentColor = _playerCurrent.Color;
+            Color currentColor = _playerCurrent.Visual.color;
 
-            _buttonHiring.SetActive(_playerCurrent.CanHiringWarriors(crossroad));
+            _buttonHiring.SetActive(_playerCurrent.CanAnyRecruitingWarriors(crossroad));
             _buttonHiring.targetGraphic.color = currentColor;
 
             _buttonUpgrade.Setup(_playerCurrent.CanEdificeUpgrade(crossroad), crossroad.NextId, currentColor, currentCash);
@@ -85,6 +57,35 @@ namespace Vurbiri.Colonization.UI
             _buttonRoads.Setup(_playerCurrent.CanRoadBuild(crossroad), currentColor, currentCash);
 
             _thisGO.SetActive(true);
+        }
+
+        private void OnClose()
+        {
+            _thisGO.SetActive(false);
+        }
+
+        private void OnUpgrade()
+        {
+            _thisGO.SetActive(false);
+            _playerCurrent.BuyEdificeUpgrade(_currentCrossroad);
+        }
+
+        private void OnWall()
+        {
+            _thisGO.SetActive(false);
+            _playerCurrent.BuyWall(_currentCrossroad);
+        }
+
+        private void OnRoads()
+        {
+            _thisGO.SetActive(false);
+            _roadsMenu.Open(_currentCrossroad);
+        }
+
+        private void OnHiring()
+        {
+            _thisGO.SetActive(false);
+            _warriorsMenu.Open(_currentCrossroad);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -7,7 +8,7 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private WallGraphic _graphic;
 
-        public void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
+        public void Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
             gameObject.SetActive(true);
             _graphic.Init(playerId, links);

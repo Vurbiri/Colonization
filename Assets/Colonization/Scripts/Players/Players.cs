@@ -1,41 +1,36 @@
 using System;
+using UnityEngine;
 using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization
 {
-    using static CONST;
+    using static PlayerId;
 
     public class Players
     {
         private Player _current;
         private readonly IdHashSet<PlayerId, Player> _players = new();
-        private PlayersData _playersData;
+        private readonly PlayersData _playersData;
 
         public Player Current => _current;
         public Player this[Id<PlayerId> id] => _players[id];
 
-        public Players(PlayerStatesScriptable states, PlayerVisualSetScriptable visualSet, int[] visualIds)
+        public Players(Settings settings, bool isLoading)
         {
+            Roads[] roads = new Roads[CountPlayers];
+            for (int i = 0; i < CountPlayers; i++)
+                roads[i] = settings.roadsFactory.Create().Init(i, settings.prices.Road, settings.visual[i].color);
+
+            _playersData = new(settings.prices, roads, settings.crossroads, isLoading);
+
             Player player;
-            for (int i = 0; i < MAX_PLAYERS; i++)
+            for (int i = 0; i < CountPlayers; i++)
             {
-                player = new(i, visualSet.Get(visualIds[i]), states.GetAbilities());
+                player = new(i, settings.visual[i], settings.states.GetAbilities(), _playersData[i]);
                 _players.Add(player);
             }
 
             _current = _players[0];
-        }
-
-        public void Setup(IReadOnlyDIContainer services, PricesScriptable prices, Crossroads crossroads, RoadsFactory roadsFactory, bool isLoading)
-        {
-            Roads[] roads = new Roads[MAX_PLAYERS];
-            for (int i = 0; i < MAX_PLAYERS; i++)
-                roads[i] = roadsFactory.Create().Init(i, _players[i].Color);
-
-            _playersData = new(services, prices, roads, crossroads, isLoading);
-
-            for (int i = 0; i < MAX_PLAYERS; i++)
-                _players[i].SetData(_playersData[i]);
 
             _playersData.Save(true);
         }
@@ -49,5 +44,25 @@ namespace Vurbiri.Colonization
             foreach (Player player in _players)
                 player.Profit(hexId, freeGroundRes);
         }
+
+        #region Nested: Settings
+        //***********************************
+        [Serializable]
+        public class Settings : IDisposable
+        {
+            public PricesScriptable prices;
+            public PlayerStatesScriptable states;
+            public PlayersVisual visual;
+            public Crossroads crossroads;
+            [Space]
+            public RoadsFactory roadsFactory;
+
+            public void Dispose()
+            {
+                states = null; 
+                Resources.UnloadAsset(states);
+            }
+        }
+        #endregion
     }
 }

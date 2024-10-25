@@ -10,11 +10,11 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private Land _land;
         [SerializeField] private Crossroads _crossroads;
-
-        private Chance _chanceWater = CHANCE_WATER;
+        [SerializeField] private Transform _roadsContainer;
 
         public Crossroads Crossroads => _crossroads;
         public Land Land => _land;
+        public Transform RoadsContainer => _roadsContainer;
 
         public IEnumerator Create_Coroutine(HexagonsData hexagonsData, bool isLoad)
         {
@@ -48,6 +48,7 @@ namespace Vurbiri.Colonization
         {
             SurfacesScriptable surfaces = hexagonsData.Surfaces;
 
+            Chance chanceWater = CHANCE_WATER;
             HexData hexData; Key keyHex; int circle = 0;
             bool isWater = false, isWaterPossible, isLastCircle = circle == MAX_CIRCLES;
             Vector3 position, positionNext, direction, positionCurrent;
@@ -79,7 +80,7 @@ namespace Vurbiri.Colonization
                         positionCurrent = position + direction * j;
 
                         keyHex = positionCurrent.HexPositionToKey();
-                        isWater = isWaterPossible && (isLastCircle || (!isWater && j != 0 && (_land.IsWaterNearby(keyHex) || _chanceWater)));
+                        isWater = isWaterPossible && (isLastCircle || (!isWater && j != 0 && chanceWater.Roll));
                         
                         hexData = isWater ? new(keyHex, numWater.Next, positionCurrent, surfaces[SurfaceId.Water]) :
                                             new(keyHex, numGround.Next, positionCurrent, ground.Next);

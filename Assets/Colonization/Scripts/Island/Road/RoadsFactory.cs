@@ -2,18 +2,12 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
+    [System.Serializable]
     public class RoadsFactory
     {
-        private readonly Roads _roadsPrefab;
-        private readonly Transform _roadsContainer;
+        public Roads prefab;
+        public Transform container;
 
-        public RoadsFactory(Roads roadsPrefab, Transform roadsContainer) 
-        {
-            _roadsPrefab = roadsPrefab;
-            _roadsContainer = roadsContainer;
-        }
-
-        public Roads Create() => Object.Instantiate(_roadsPrefab, _roadsContainer.transform, false);
-
+        public Roads Create() => Object.Instantiate(prefab, container.transform, false);
     }
 }

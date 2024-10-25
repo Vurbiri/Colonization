@@ -2,6 +2,7 @@
 using System.Collections;
 #endif
 
+
 namespace Vurbiri
 {
     public partial class YandexSDK
@@ -41,12 +42,12 @@ namespace Vurbiri
         public WaitResult<Return<PlayerRecord>> GetPlayerResult() 
         {
             WaitResult<Return<PlayerRecord>> wait = new();
-            _coroutines.Run(GetPlayerResult_Coroutine());
+            _coroutines.Run(GetPlayerResult_Coroutine(wait));
             return wait;
 
             #region Local: GetPlayerResult_Coroutine()
             //============================================
-            IEnumerator GetPlayerResult_Coroutine()
+            IEnumerator GetPlayerResult_Coroutine(WaitResult<Return<PlayerRecord>> wait)
             {
                 yield return WaitResult(ref _waitEndGetPlayerResult, GetPlayerResultJS, _lbName);
                 string json = _waitEndGetPlayerResult.Result;
@@ -62,11 +63,11 @@ namespace Vurbiri
         public WaitResult<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 1, AvatarSize size = AvatarSize.Medium)
         {
             WaitResult<Return<Leaderboard>> wait = new();
-            _coroutines.Run(GetLeaderboardCoroutine());
+            _coroutines.Run(GetLeaderboardCoroutine(wait));
             return wait;
 
             #region Local Function
-            IEnumerator GetLeaderboardCoroutine()
+            IEnumerator GetLeaderboardCoroutine(WaitResult<Return<Leaderboard>> wait)
             {
                 _waitEndGetLeaderboard = _waitEndGetLeaderboard.Delete();
                 GetLeaderboardJS(_lbName, quantityTop, includeUser, quantityAround, size.ToString().ToLower());

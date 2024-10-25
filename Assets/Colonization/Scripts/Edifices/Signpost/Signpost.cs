@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 namespace Vurbiri.Colonization
 {
     public class Signpost : AEdifice
     {
-        public override void Setup(AEdifice edifice, IdHashSet<LinkId, CrossroadLink> links)
+        public override void Setup(AEdifice edifice, IReadOnlyList<CrossroadLink> links)
         {
             _graphic.Init(_owner, links);
 
@@ -12,14 +14,14 @@ namespace Vurbiri.Colonization
             _isUpgrade = true;
         }
 
-        public override bool Build(AEdifice prefab, Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links, bool isWall, out AEdifice city)
+        public override bool Build(AEdifice prefab, Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links, bool isWall, out AEdifice city)
         {
             _prefabUpgrade = prefab;
             _isWall = isWall;
             return Upgrade(playerId, links, out city);
         }
 
-        public override bool Upgrade(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links, out AEdifice city)
+        public override bool Upgrade(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links, out AEdifice city)
         {
             _owner = playerId;
             if (base.Upgrade(playerId, links, out city))
@@ -29,8 +31,7 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) => _graphic.AddRoad(linkId, playerId);
+        public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> owner) => _graphic.AddRoad(linkId, owner);
 
-        public override void Show(bool isShow) => _graphic.gameObject.SetActive(isShow);
     }
 }

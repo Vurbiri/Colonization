@@ -22,11 +22,25 @@ namespace Vurbiri.Colonization
 
         public static int ToGroup(int id) => id switch
         {
-            None => EdificeGroupId.None,
-            Shrine => EdificeGroupId.Shrine,
+            None                                                 => EdificeGroupId.None,
+            Shrine                                               => EdificeGroupId.Shrine,
             PortOne or PortTwo or LighthouseOne or LighthouseTwo => EdificeGroupId.Port,
-            Camp or Town or Capital => EdificeGroupId.Urban,
-            _ => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение EdificeType: {id}"),
+            Camp or Town or Capital                              => EdificeGroupId.Urban,
+            _                                                    => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение EdificeType: {id}"),
         };
+
+        public static int GetId(int countWater, bool isGate) => countWater switch
+        {
+            0 when isGate  => Shrine,
+            0 when !isGate => Camp,
+            1              => PortOne,
+            2              => PortTwo,
+            _              => None
+        };
+    }
+
+    public static class ExtensionsEdificeId
+    {
+        public static int ToGroup(this Id<EdificeId> self) => EdificeId.ToGroup(self.Value); 
     }
 }

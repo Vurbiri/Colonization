@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization
     public class Roads : MonoBehaviour, IEnumerable<int[][]>
     {
         [SerializeField] private Road _prefabRoad;
-        [SerializeField] private PricesScriptable _prices;
 
         #region private
         private Transform _thisTransform;
@@ -27,17 +26,15 @@ namespace Vurbiri.Colonization
         public ACurrencies Cost => _cost;
         public int Count => _count;
 
-        public Roads Init(Id<PlayerId> id, Color color)
+        public Roads Init(Id<PlayerId> id, ACurrencies cost, Color color)
         {
             _thisTransform = transform;
             _id = id;
             _color = color;
-            _cost = _prices.Road;
-            _prices = null;
+            _cost = cost;
 
-            
 #if UNITY_EDITOR
-            name = NAME + PlayerId.Names[id.Value - PlayerId.Min];
+            name = NAME + PlayerId.Names[id.Value + 1];
 #endif
             return this;
         }
@@ -161,9 +158,6 @@ namespace Vurbiri.Colonization
         {
             if(_prefabRoad == null)
                 _prefabRoad = VurbiriEditor.Utility.FindAnyPrefab<Road>();
-
-            if (_prices == null)
-                _prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
         }
 #endif
     }

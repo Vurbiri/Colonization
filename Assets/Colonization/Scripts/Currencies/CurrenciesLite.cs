@@ -33,9 +33,20 @@ namespace Vurbiri.Colonization
             _amount += value;
         }
 
+        public void Multiply(int ratio)
+        {
+            if (_amount == 0)
+                return;
+
+            for (int i = 0; i < countMain; i++)
+                _values[i] *= ratio;
+
+            _amount *= ratio;
+        }
+
         public void RandomMainAdd(int value)
         {
-            _values[Random.Range(0, _countMain)] += value;
+            _values[Random.Range(0, countMain)] += value;
             _amount += value;
         }
 
@@ -47,11 +58,11 @@ namespace Vurbiri.Colonization
                 return;
 
             _values ??= new int[CurrencyId.Count];
-            if (_values.Length != _countAll)
-                Array.Resize(ref _values, _countAll);
+            if (_values.Length != countAll)
+                Array.Resize(ref _values, countAll);
 
             _amount = 0;
-            for (int i = 0; i < _countMain; i++)
+            for (int i = 0; i < countMain; i++)
                 _amount += _values[i];
 
         }

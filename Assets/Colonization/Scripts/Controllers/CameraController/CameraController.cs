@@ -87,7 +87,7 @@ namespace Vurbiri.Colonization.Controllers
 
         private void OnEdgeMove(CallbackContext ctx)
         {
-            if (!_isEdgeMove || _machine.CurrentState.GetType() == typeof(MoveToTargetState)) 
+            if (!_isEdgeMove || _machine.CurrentState.GetType() == typeof(MoveToTargetState))
                 return;
 
             Vector2 position = ctx.ReadValue<Vector2>();
@@ -107,7 +107,7 @@ namespace Vurbiri.Colonization.Controllers
 
         private void OnDisable()
         {
-            if(_eventBus != null)
+            if (_eventBus != null)
                 _eventBus.EventCrossroadSelect -= OnMoveToCrossroad;
 
             _cameraActions.Move.performed -= OnMove;
@@ -120,7 +120,7 @@ namespace Vurbiri.Colonization.Controllers
         #region Nested: Movement, MovementToTarget
         //***********************************
         [Serializable]
-        internal struct Movement
+        private struct Movement
         {
             public float speedMoveMax;
             public float accelerationMove;
@@ -128,7 +128,7 @@ namespace Vurbiri.Colonization.Controllers
         }
         //***********************************
         [Serializable]
-        internal struct MovementToTarget
+        private struct MovementToTarget
         {
             [Range(0.05f, 1f)] public float smoothTime;
             [Range(0.01f, 0.5f)] public float sqrVelocityMin;

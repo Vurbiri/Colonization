@@ -13,27 +13,26 @@ namespace Vurbiri.Colonization
         #region private
         private Key _key;
 
-        private readonly List<Hexagon> _hexagons = new(COUNT);
+        private readonly List<Hexagon> _hexagons = new(HEX_COUNT);
         private readonly IdHashSet<LinkId, CrossroadLink> _links = new();
 
         private int _countFreeLink = 0, _countWater = 0;
         private bool _isGate = false;
+        private WaitResult<Hexagon> _waitHex;
 
         private SphereCollider _collider;
         private GameplayEventBus _eventBus;
 
-        private const int COUNT = 3;
-#if UNITY_EDITOR
-        private const string NAME = "Crossroad_";
-#endif
+        private const int HEX_COUNT = 3;
         #endregion
 
         public Key Key => _key;
-        public bool IsOccupied => _edifice.IsOccupied;
         public int Id => _edifice.Id.Value;
         public int GroupId => _edifice.GroupId;
         public int NextId => _edifice.NextId;
         public int NextGroupId => _edifice.NextGroupId;
+        public bool IsPort => _edifice.IsPort;
+        public bool IsUrban => _edifice.IsUrban;
         public bool IsWall => _edifice.IsWall;
         public IReadOnlyList<CrossroadLink> Links => _links;
         public Vector3 Position { get; private set; }
@@ -41,7 +40,6 @@ namespace Vurbiri.Colonization
         public void Init(Key key)
         {
             _eventBus = SceneServices.Get<GameplayEventBus>();
-            _eventBus.EventCrossroadMarkShow += Show;
             _eventBus.EventEndSceneCreation += ClearResources;
 
             _collider = GetComponent<SphereCollider>();
@@ -49,10 +47,6 @@ namespace Vurbiri.Colonization
 
             _key = key;
             Position = transform.position;
-
-#if UNITY_EDITOR
-            name = NAME.Concat(Key.ToString());
-#endif
         }
 
         public bool AddHexagon(Hexagon hexagon)
@@ -62,11 +56,11 @@ namespace Vurbiri.Colonization
             if (hexagon.IsWater)
                 _countWater++;
 
-            if (_hexagons.Count < (COUNT - 1) || _countWater < COUNT)
+            if (_hexagons.Count < (HEX_COUNT - 1) || _countWater < HEX_COUNT)
             {
                 _hexagons.Add(hexagon);
 
-                if (_hexagons.Count == COUNT)
+                if (_hexagons.Count == HEX_COUNT)
                     _countFreeLink = _countWater <= 1 ? _isGate ? 1 : 3 : 2;
 
                 return true;
@@ -76,15 +70,13 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public bool AddLink(CrossroadLink link)
+        public bool ContainsLink(int id) => _links.ContainsKey(id);
+        public void AddLink(CrossroadLink link)
         {
-            if (!_links.TryAdd(link))
-                return false;
+            _links.Add(link);
 
-            if (_countFreeLink == _links.Count)
-                _edifice.Setup(_prefabs[_countWater switch { 0 when _isGate => Colonization.EdificeId.Shrine, 0 when !_isGate => Colonization.EdificeId.Camp, 1 => Colonization.EdificeId.PortOne, 2 => Colonization.EdificeId.PortTwo, _ => Colonization.EdificeId.None }], _links);
-
-            return true;
+            if (_countFreeLink == _links.CountAvailable)
+                _edifice.Setup(_prefabs[EdificeId.GetId(_countWater, _isGate)], _links);
         }
 
         public CrossroadLink GetLink(Id<LinkId> linkId) => _links[linkId];
@@ -94,7 +86,6 @@ namespace Vurbiri.Colonization
         {
             if (_edifice.Build(_prefabs[id], playerId, _links, isWall, out _edifice))
             {
-                _eventBus.EventCrossroadMarkShow -= Show;
                 _collider.radius = _edifice.Radius;
                 return true;
             }
@@ -120,7 +111,7 @@ namespace Vurbiri.Colonization
                     return false;
 
                 foreach (var hex in _hexagons)
-                    if (hex.IsWaterOccupied)
+                    if (hex.IsOwnedByPort())
                         return false;
 
                 return true;
@@ -143,14 +134,60 @@ namespace Vurbiri.Colonization
         {
             if (_edifice.Upgrade(playerId, _links, out _edifice))
             {
-                _eventBus.EventCrossroadMarkShow -= Show;
                 _collider.radius = _edifice.Radius;
                 return true;
             }
             return false;
         }
 
-        public bool CanHiringWarriors(Id<PlayerId> playerId) => _edifice.CanHiringWarriors(playerId);
+        public bool CanRecruitingWarriors(Id<PlayerId> playerId)
+        {
+            int busyCount = 0;
+            foreach (var hex in _hexagons)
+                if (!hex.CanUnitEnter)
+                    busyCount++;
+
+            return busyCount < _hexagons.Count && _edifice.CanRecruitingWarriors(playerId);
+        }
+
+        public WaitResult<Hexagon> GetHexagonForRecruiting_Wait()
+        {
+            _waitHex = new();
+
+            foreach (var hex in _hexagons)
+                hex.TrySetSelectable();
+
+            _eventBus.EventCrossroadSelect += Cancel;
+            _eventBus.EventHexagonSelect += OnSelect;
+
+            return _waitHex;
+
+            #region Local: WaterCheck(), NeighborCheck()
+            //=================================
+            void Cancel(Crossroad crossroad)
+            {
+                _waitHex.Cancel();
+                Reset();
+            }
+            //=================================
+            void OnSelect(Hexagon hex)
+            {
+                _waitHex.SetResult(hex);
+                Reset();
+            }
+            //=================================
+            void Reset()
+            {
+                _eventBus.EventHexagonSelect -= OnSelect;
+                _eventBus.EventCrossroadSelect -= Cancel;
+
+                foreach (var hex in _hexagons)
+                    hex.SetUnselectable();
+
+                _waitHex = null;
+            }
+            #endregion
+        }
 
         public bool CanWallBuild(Id<PlayerId> playerId) => _edifice.CanWallBuild(playerId);
         public bool BuyWall(Id<PlayerId> playerId) => _edifice.WallBuild(playerId, _links);
@@ -164,7 +201,7 @@ namespace Vurbiri.Colonization
 
         public bool IsFullyOwned(Id<PlayerId> playerId)
         {
-            if (_links.Count <= 1)
+            if (_links.CountAvailable <= 1)
                 return false;
 
             if (_countFreeLink > 0)
@@ -187,49 +224,76 @@ namespace Vurbiri.Colonization
 
             return false;
         }
-        
-        public CurrenciesLite Profit(int idHex, int ratio = 1)
+
+        public CurrenciesLite ProfitFromPort(int idHex, int ratio)
         {
             CurrenciesLite profit = new();
             foreach (var hex in _hexagons)
-                if (hex.TryGetProfit(idHex, out int currencyId))
+                if (hex.TryGetProfit(idHex, true, out int currencyId))
                     profit.Add(currencyId, _edifice.Profit * ratio);
 
             return profit;
         }
 
-        public bool IsNotEnemy()
+        public CurrenciesLite ProfitFromUrban(int idHex, int compensationRes, int wallDef)
         {
-            Debug.LogWarning("Реализовать Crossroad.IsNotEnemy");
-            return false;
+            CurrenciesLite profit = new();
+            int countEnemy = 0;
+
+            foreach (var hex in _hexagons)
+            {
+                if (hex.IsEnemy(_edifice.Owner))
+                    countEnemy++;
+
+                if (hex.TryGetProfit(idHex, false, out int currencyId))
+                    profit.Increment(currencyId);
+            }
+
+            if (profit.Amount == 0)
+            {
+                if (countEnemy == 0)
+                    profit.RandomMainAdd(compensationRes);
+
+                return profit;
+            }
+
+            int ratioProfit = _edifice.Profit - (wallDef >= countEnemy ? 0 : countEnemy - wallDef);
+            profit.Multiply(ratioProfit < 0 ? 0 : ratioProfit);
+
+            return profit;
         }
 
-        public void Select() => _eventBus.TriggerCrossroadSelect(this);
+        public int[] ToArray() => new int[] { _key.X, _key.Y, _edifice.Id.Value, _edifice.IsWall ? 1 : 0 };
 
-        private void Show(bool show) => _edifice.Show(show);
+        public void Select()
+        {
+            _eventBus.TriggerCrossroadSelect(this);
+        }
+
+        public void Unselect()
+        {
+            _eventBus.TriggerCrossroadUnselect(this);
+ 
+        }
 
         private void ClearResources()
         {
             _prefabs = null;
+            _eventBus.EventEndSceneCreation -= ClearResources;
         }
 
         private void OnDestroy()
         {
-            _eventBus.EventCrossroadMarkShow -= Show;
             _eventBus.EventEndSceneCreation -= ClearResources;
 
             foreach (var hex in _hexagons)
                 hex.CrossroadRemove(this);
         }
 
-        public static Key operator -(Crossroad a, Crossroad b) => a._key - b._key;
-
-        public int[] ToArray() => new int[] { _key.X, _key.Y, _edifice.Id.Value, _edifice.IsWall ? 1 : 0 };
-
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if(_edifice == null)
+            if (_edifice == null)
                 _edifice = GetComponentInChildren<AEdifice>();
         }
 #endif

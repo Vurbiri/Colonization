@@ -9,13 +9,14 @@ namespace Vurbiri.Colonization.UI
         private Player _playerCurrent;
         private Crossroad _currentCrossroad;
 
-        public void Init(Players players, ACurrencies cost)
+        public ButtonBuildRoad Init(Players players, ACurrencies cost)
         {
             base.Init(Vector3.zero);
             _players = players;
             _cost = cost;
             _buttonClicked.AddListener(OnClick);
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
+            return this;
         }
 
         public bool Setup(Crossroad crossroad, out CrossroadLink link)
@@ -35,12 +36,12 @@ namespace Vurbiri.Colonization.UI
             if (owner >= 0)
             {
                 _button.Interactable = false;
-                _targetGraphic.color = _players[owner].Color;
+                _targetGraphic.color = _players[owner].Visual.color;
             }
             else
             {
                 _button.Interactable = cash >= _cost;
-                _targetGraphic.color = _playerCurrent.Color;
+                _targetGraphic.color = _playerCurrent.Visual.color;
             }
 
             SetTextHint(_caption, cash, _cost);

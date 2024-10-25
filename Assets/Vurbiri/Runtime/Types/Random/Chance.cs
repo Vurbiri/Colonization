@@ -6,7 +6,7 @@ namespace Vurbiri
     public struct Chance : System.IEquatable<Chance>, ISerializationCallbackReceiver
     {
         [SerializeField] private int _value;
-        
+
         private int _negentropy;
         private const int MAX_CHANCE = 100;
 
@@ -36,7 +36,10 @@ namespace Vurbiri
 
         public static bool Rolling(int value = 50) => value > 0 && (value >= 100 || Random.Range(0, 100) < value);
 
-        public static T Select<T>(T trueValue, T falseValue, int value = 50) => (value > 0 && (value >= 100 || Random.Range(0, 100) < value)) ? trueValue : falseValue;
+        public static T Select<T>(T trueValue, T falseValue, int value = 50)
+        {
+            return (value > 0 && (value >= 100 || Random.Range(0, 100) < value)) ? trueValue : falseValue;
+        }
 
         public void OnBeforeSerialize()
         {
@@ -54,8 +57,6 @@ namespace Vurbiri
         public static implicit operator Chance(int value) => new(value);
         public static explicit operator int(Chance chance) => chance._value;
 
-        public static implicit operator bool(Chance chance) => chance.Roll;
-
         public static Chance operator *(int value, Chance chance) => new(chance._value * value);
         public static Chance operator *(Chance chance, int value) => new(chance._value * value);
 
@@ -67,7 +68,7 @@ namespace Vurbiri
 
         public static Chance operator /(Chance chance, int value) => new(chance._value / value);
 
-        public static bool operator == (Chance chance, int value) => chance._value == value;
+        public static bool operator ==(Chance chance, int value) => chance._value == value;
         public static bool operator !=(Chance chance, int value) => chance._value != value;
         public static bool operator ==(int value, Chance chance) => value == chance._value;
         public static bool operator !=(int value, Chance chance) => value != chance._value;

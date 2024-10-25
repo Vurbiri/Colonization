@@ -1,12 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public class UrbanGraphic : AEdificeGraphic
+    public class UrbanGraphic : AEdificeGraphicReColor
     {
-        public override void Init(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
+        public override void Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
-            GetComponent<MeshRenderer>().SetSharedMaterial(SceneObjects.Get<Players>()[playerId].MaterialLit, _idMaterial);
+            GetComponent<MeshRenderer>().SetSharedMaterial(SceneData.Get<PlayersVisual>()[playerId].materialLit, _idMaterial);
 
             foreach (var link in links)
             {

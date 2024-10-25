@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
             Player player = SceneObjects.Get<Players>()[_playerId];
             var currencies = player.Resources;
             
-            GetComponent<Image>().color = player.Color.SetAlpha(_transparency);
+            GetComponent<Image>().color = player.Visual.color.SetAlpha(_transparency);
 
             Vector2 cSize = _currencyUIPrefab.Size, aSize = _amountUIPrefab.Size, bSize = _bloodUIPrefab.Size;
             float offset = cSize.x * 5f + aSize.x + bSize.x + _space * 7f;

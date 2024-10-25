@@ -17,11 +17,12 @@ namespace Vurbiri.Colonization.UI
         private Language _localization;
         private IReadOnlyList<ACurrencies> _edificePrices;
 
-        public void Init(Vector3 localPosition, IReadOnlyList<ACurrencies> edificePrices)
+        public ButtonBuildEdifice Init(Vector3 localPosition, IReadOnlyList<ACurrencies> edificePrices)
         {
             base.Init(localPosition);
             _edificePrices = edificePrices;
             _localization = SceneServices.Get<Language>();
+            return this;
         }
 
         public void Setup(bool isEnable, int edificeId, Color color, ACurrencies cash)

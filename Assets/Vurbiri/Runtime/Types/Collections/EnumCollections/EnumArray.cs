@@ -25,24 +25,24 @@ namespace Vurbiri
 
         public EnumArray()
         {
-            _count = Enum<TType>.Count;
+            _count = 0;
+            foreach (TType item in Enum<TType>.Values)
+            {
+                if (item.ToInt() >= 0)
+                    _count++;
+            }
+
             _values = new TValue[_count];
         }
 
-        public EnumArray(TValue defaultValue)
+        public EnumArray(TValue defaultValue) : this()
         {
-            _count = Enum<TType>.Count;
-            _values = new TValue[_count];
-
             for (int i = 0; i < _count; i++)
                 _values[i] = defaultValue;
         }
 
-        public EnumArray(IReadOnlyList<TValue> collection)
+        public EnumArray(IReadOnlyList<TValue> collection) : this()
         {
-            _count = Enum<TType>.Count;
-            _values = new TValue[_count];
-
             int count = _count <= collection.Count ? _count : collection.Count;
             for (int i = 0; i < count; i++)
                 _values[i] = collection[i];
@@ -55,7 +55,7 @@ namespace Vurbiri
         }
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public static implicit operator EnumArray<TType, TValue>(TValue[] value) => new(value);
+        public static implicit operator EnumArray<TType, TValue>(TValue[] values) => new(values);
 
         #region ISerializationCallbackReceiver
 #if UNITY_EDITOR

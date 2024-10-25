@@ -7,6 +7,15 @@ namespace Vurbiri.Colonization
         public event Action<Crossroad> EventCrossroadSelect;
         public void TriggerCrossroadSelect(Crossroad crossroad) => EventCrossroadSelect?.Invoke(crossroad);
 
+        public event Action<Crossroad> EventCrossroadUnselect;
+        public void TriggerCrossroadUnselect(Crossroad crossroad) => EventCrossroadUnselect?.Invoke(crossroad);
+
+        public event Action<Hexagon> EventHexagonSelect;
+        public void TriggerHexagonSelect(Hexagon hex) => EventHexagonSelect?.Invoke(hex);
+
+        public event Action<Hexagon> EventHexagonUnselect;
+        public void TriggerHexagonUnselect(Hexagon hex) => EventHexagonUnselect?.Invoke(hex);
+
         public event Action<bool> EventCrossroadMarkShow;
         public void TriggerCrossroadMarkShow(bool show) => EventCrossroadMarkShow?.Invoke(show);
 

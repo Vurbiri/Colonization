@@ -10,35 +10,29 @@ namespace Vurbiri
 #if UNITY_EDITOR
         ISerializationCallbackReceiver,
 #endif
-        IEnumerable<TValue> where TType : Enum where TValue : class, IValueTypeEnum<TType>
+        IReadOnlyList<TValue> where TType : Enum where TValue : class, IValueTypeEnum<TType>
     {
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;
 
-        public int Count => _count;
-        public int Capacity => _capacity;
+        public int CountAvailable => _count;
+        public int Count => _capacity;
 
         public IEnumerable<TType> Types => _typesEnumerable;
-        public TValue this[TType type] { get => _values[type.ToInt(_offset)]; set => Replace(value); }
+        public TValue this[int index] { get => _values[index]; set => Replace(value); }
+        public TValue this[TType type] { get => _values[type.ToInt()]; set => Replace(value); }
 
-        private readonly int _offset, _capacity;
+        private readonly int _capacity;
         private readonly EnumHashSetKeysEnumerable _typesEnumerable;
 
         public EnumHashSet()
         {
-            int min = Int32.MaxValue, max = Int32.MinValue, key;
+            _capacity = _count = 0;
             foreach (TType item in Enum<TType>.Values)
             {
-                key = item.ToInt();
-                if (key < 0) continue;
-
-                min = key < min ? key : min;
-                max = key > max ? key : max;
+                if (item.ToInt() >= 0)
+                    _capacity++;
             }
-
-            _offset = -min;
-            _capacity = max - min + 1;
-            _count = 0;
 
             _values = new TValue[_capacity];
             _typesEnumerable = new(this);
@@ -50,8 +44,8 @@ namespace Vurbiri
                 Add(value);
         }
 
-        public bool ContainsKey(TType type) => _values[type.ToInt(_offset)] != null;
-        public bool Contains(TValue value) => _values[value.Type.ToInt(_offset)] != null;
+        public bool ContainsKey(TType type) => _values[type.ToInt()] != null;
+        public bool Contains(TValue value) => _values[value.Type.ToInt()] != null;
 
         public void Add(TValue value)
         {
@@ -62,7 +56,7 @@ namespace Vurbiri
 
         public bool TryAdd(TValue value)
         {
-            int index = value.Type.ToInt(_offset);
+            int index = value.Type.ToInt();
 
             if (_values[index] != null)
                 return false;
@@ -74,7 +68,7 @@ namespace Vurbiri
 
         public void Replace(TValue value)
         {
-            int index = value.Type.ToInt(_offset);
+            int index = value.Type.ToInt();
 
             if (_values[index] == null)
                 _count++;
@@ -84,7 +78,7 @@ namespace Vurbiri
 
         public bool Remove(TType type)
         {
-            int index = type.ToInt(_offset);
+            int index = type.ToInt();
 
             if (_values[index] == null)
                 return false;
@@ -107,18 +101,10 @@ namespace Vurbiri
             return value;
         }
 
-        public int FirstEmptyIndex()
-        {
-            for (int i = 0; i < _capacity; i++)
-                if (_values[i] == null)
-                    return i;
-            return -1;
-        }
-
         public TValue Next(TType type)
         {
             TValue value;
-            int index = type.ToInt(_offset), start = index;
+            int index = type.ToInt(), start = index;
             do
             {
                 index = ++index % _capacity;
@@ -158,7 +144,7 @@ namespace Vurbiri
 
         public List<TValue> GetRange(TType typeStart, TType typeEnd)
         {
-            int start = typeStart.ToInt(_offset), end = typeEnd.ToInt(_offset);
+            int start = typeStart.ToInt(), end = typeEnd.ToInt();
             List<TValue> values = new(end - start + 1);
             TValue value;
 
@@ -198,7 +184,7 @@ namespace Vurbiri
                         _values[j] = null;
                 }
 
-                index = value.Type.ToInt(_offset);
+                index = value.Type.ToInt();
                 if (index == i)
                 {
                     _count++;

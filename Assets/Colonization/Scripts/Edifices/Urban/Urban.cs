@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -7,7 +8,7 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private Wall _wall;
 
-        public override void Setup(AEdifice edifice, IdHashSet<LinkId, CrossroadLink> links)
+        public override void Setup(AEdifice edifice, IReadOnlyList<CrossroadLink> links)
         {
             base.Setup(edifice, links);
 
@@ -32,7 +33,7 @@ namespace Vurbiri.Colonization
             _isBuildWall = _isBuildWall && !_isWall;
         }
 
-        public override bool WallBuild(Id<PlayerId> playerId, IdHashSet<LinkId, CrossroadLink> links)
+        public override bool WallBuild(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
             if (_isBuildWall && _owner == playerId)
             {
@@ -48,7 +49,7 @@ namespace Vurbiri.Colonization
 
         public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> owner)
         {
-            if(_isWall && _wall != null)
+            if (_isWall && _wall != null)
                 _wall.AddRoad(linkId, owner);
         }
 
@@ -56,8 +57,8 @@ namespace Vurbiri.Colonization
         protected override void OnValidate()
         {
             base.OnValidate();
-            
-            if(_isBuildWall && _wall == null)
+
+            if (_isBuildWall && _wall == null)
                 _wall = VurbiriEditor.Utility.FindAnyPrefab<Wall>();
         }
 #endif

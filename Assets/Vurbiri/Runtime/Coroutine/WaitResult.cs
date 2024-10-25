@@ -28,12 +28,18 @@ namespace Vurbiri
             EventCompleted?.Invoke(result);
         }
 
-        public WaitResult<T> Delete()
+        public WaitResult<T> Restart()
         {
             Result = default;
             _keepWaiting = false;
 
             return new();
+        }
+
+        public void Cancel()
+        {
+            Result = default;
+            _keepWaiting = false;
         }
     }
 }

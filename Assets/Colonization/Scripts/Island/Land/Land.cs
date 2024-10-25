@@ -72,18 +72,6 @@ namespace Vurbiri.Colonization
             return hex;
         }
 
-        public bool IsWaterNearby(Key key)
-        {
-            Hexagon hex;
-            foreach (var offset in NEAR)
-            {
-                if (_hexagons.TryGetValue(key + offset, out hex))
-                    if (hex.IsWater)
-                        return true;
-            }
-            return false;
-        }
-
         public IEnumerator SetMesh_Coroutine()
         {
             yield return StartCoroutine(_landMesh.SetMesh_Coroutine());

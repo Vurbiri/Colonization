@@ -28,10 +28,7 @@ namespace Vurbiri.Colonization.UI
             _cameraTransform = _camera.transform;
 
             foreach (var button in _roadButtons)
-            {
-                button.Init(players, roadCost);
-                button.AddListener(OnClick);
-            }
+                button.Init(players, roadCost).AddListener(OnClick);
 
             _thisGO.SetActive(false);
         }
