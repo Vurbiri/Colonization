@@ -4,35 +4,50 @@ namespace Vurbiri.Colonization.Data
 {
     using static PlayerId;
 
-    public class PlayersData
+    public class PlayersData : IDisposable
     {
-        private readonly PlayerData[] _values;
-
+        private readonly PlayerData[] _dataValues;
+        private readonly string[] _keys;
         private readonly Coroutines _coroutines;
         private readonly IStorageService _storage;
 
-        public PlayerData this[int index] => _values[index];
-
-        public PlayersData(PricesScriptable prices, Roads[] roads, Crossroads crossroads, bool isLoading)
+        public PlayerData this[int index] => _dataValues[index];
+        
+        public PlayersData(bool isLoading)
         {
-            _values = new PlayerData[CountPlayers];
+            _dataValues = new PlayerData[CountPlayers];
+            _keys = new string[CountPlayers];
 
             _coroutines = SceneServices.Get<Coroutines>();
             _storage = SceneServices.Get<IStorageService>();
 
-            if(isLoading && _storage.TryGet(SAVE_KEYS.PLAYERS, out PlayerLoadData[] LoadValues))
+            PlayerData data = null;
+            string key; bool isLoad;
+            for (int i = 0; i < CountPlayers; i++)
             {
-                for(int i = 0; i < LoadValues.Length; i++)
-                    _values[i] = new(i, prices, LoadValues[i], crossroads, roads[i]);
-            }
-            else
-            {
-                for(int i = 0; i < CountPlayers; i++)
-                    _values[i] = new(prices, roads[i]);
+                _keys[i] = key = SAVE_KEYS.PLAYERS.Concat(i);
+                isLoad = isLoading && _storage.TryGet(key, out data);
+                data ??= new();
+                data.IsLoad = isLoad;
+                _dataValues[i] = data;
             }
         }
 
+        public void Save(int id, bool saveToFile, Action<bool> callback = null)
+        {
+            _coroutines.Run(_storage.Save_Coroutine(_keys[id], _dataValues[id], saveToFile, callback));
+        }
+
         public void Save(bool saveToFile, Action<bool> callback = null)
-                    => _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.PLAYERS, _values, saveToFile, callback));
+        {
+            for (int i = 0; i < CountPlayers; i++)
+                _coroutines.Run(_storage.Save_Coroutine(_keys[i], _dataValues[i], saveToFile, callback));
+        }
+
+        public void Dispose()
+        {
+            foreach (var player in _dataValues)
+                player.Dispose();
+        }
     }
 }

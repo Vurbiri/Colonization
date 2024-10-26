@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
 
         private int _countFreeLink = 0, _countWater = 0;
         private bool _isGate = false;
-        private WaitResult<Hexagon> _waitHex;
+        private WaitResult<Hexagon> _waitHexagon;
 
         private SphereCollider _collider;
         private GameplayEventBus _eventBus;
@@ -152,41 +152,10 @@ namespace Vurbiri.Colonization
 
         public WaitResult<Hexagon> GetHexagonForRecruiting_Wait()
         {
-            _waitHex = new();
-
             foreach (var hex in _hexagons)
                 hex.TrySetSelectable();
 
-            _eventBus.EventCrossroadSelect += Cancel;
-            _eventBus.EventHexagonSelect += OnSelect;
-
-            return _waitHex;
-
-            #region Local: WaterCheck(), NeighborCheck()
-            //=================================
-            void Cancel(Crossroad crossroad)
-            {
-                _waitHex.Cancel();
-                Reset();
-            }
-            //=================================
-            void OnSelect(Hexagon hex)
-            {
-                _waitHex.SetResult(hex);
-                Reset();
-            }
-            //=================================
-            void Reset()
-            {
-                _eventBus.EventHexagonSelect -= OnSelect;
-                _eventBus.EventCrossroadSelect -= Cancel;
-
-                foreach (var hex in _hexagons)
-                    hex.SetUnselectable();
-
-                _waitHex = null;
-            }
-            #endregion
+            return _waitHexagon = new();
         }
 
         public bool CanWallBuild(Id<PlayerId> playerId) => _edifice.CanWallBuild(playerId);
@@ -234,7 +203,6 @@ namespace Vurbiri.Colonization
 
             return profit;
         }
-
         public CurrenciesLite ProfitFromUrban(int idHex, int compensationRes, int wallDef)
         {
             CurrenciesLite profit = new();
@@ -270,10 +238,17 @@ namespace Vurbiri.Colonization
             _eventBus.TriggerCrossroadSelect(this);
         }
 
-        public void Unselect()
+        public void Unselect(ISelectable newSelectable)
         {
             _eventBus.TriggerCrossroadUnselect(this);
- 
+
+            if (_waitHexagon == null)
+                return;
+
+            _waitHexagon.SetResult(newSelectable as Hexagon);
+            _waitHexagon = null;
+            foreach (var hex in _hexagons)
+                hex.SetUnselectable();
         }
 
         private void ClearResources()

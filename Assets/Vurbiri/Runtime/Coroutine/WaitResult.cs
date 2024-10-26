@@ -5,10 +5,10 @@ namespace Vurbiri
 {
     public class WaitResult<T> : CustomYieldInstruction
     {
-        public T Result { get; private set; }
-
-        public override bool keepWaiting => _keepWaiting;
         private bool _keepWaiting = true;
+
+        public T Result { get; private set; }
+        public override bool keepWaiting => _keepWaiting;
 
         public static WaitResult<T> Empty { get; } = new(default);
 
@@ -28,7 +28,7 @@ namespace Vurbiri
             EventCompleted?.Invoke(result);
         }
 
-        public WaitResult<T> Restart()
+        public WaitResult<T> Recreate()
         {
             Result = default;
             _keepWaiting = false;

@@ -3,6 +3,6 @@ namespace Vurbiri.Colonization
     public interface ISelectable
     {
         public void Select();
-        public void Unselect();
+        public void Unselect(ISelectable newSelectable);
     }
 }

@@ -61,19 +61,19 @@ namespace Vurbiri
 
         private WaitResult<T> WaitResult<T>(ref WaitResult<T> completion, Action action)
         {
-            completion = completion.Restart();
+            completion = completion.Recreate();
             action();
             return completion;
         }
         private WaitResult<T> WaitResult<T, U>(ref WaitResult<T> completion, Action<U> action, U value)
         {
-            completion = completion.Restart();
+            completion = completion.Recreate();
             action(value);
             return completion;
         }
         private WaitResult<T> WaitResult<T, U, V>(ref WaitResult<T> completion, Action<U, V> action, U value1, V value2)
         {
-            completion = completion.Restart();
+            completion = completion.Recreate();
             action(value1, value2);
             return completion;
         }

@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private HexagonCaption _hexagonCaption;
         [SerializeField] private GameObject _selected;
+        [SerializeField] private Collider _collider;
 
         #region private
         private GameplayEventBus _eventBus;
@@ -17,7 +18,6 @@ namespace Vurbiri.Colonization
         private bool _isGate, _isWater, _isShow;
 
         private Id<PlayerId> _owner = PlayerId.None;
-        private bool _isSelectable = false;
 
         private readonly HashSet<Crossroad> _crossroads = new(CONST.HEX_COUNT_SIDES);
         private readonly HashSet<Hexagon> _neighbors = new(CONST.HEX_COUNT_SIDES);
@@ -44,22 +44,20 @@ namespace Vurbiri.Colonization
             _isGate = surface.IsGate;
             _isWater = surface.IsWater;
 
+            _hexagonCaption.Init(data.id, surface.Currencies);
+
+            surface.Create(transform);
+            eventBus.EventHexagonIdShow += OnShow;
+
+            EnableSelect(false);
+
             if (_isWater || _isGate)
             {
-                Destroy(GetComponent<Collider>());
+                Destroy(_collider);
+                _collider = null;
                 Destroy(_selected);
                 _selected = null;
             }
-
-            _hexagonCaption.Init(data.id, surface.Currencies);
-
-            eventBus.EventHexagonIdShow += OnShow;
-
-            surface.Create(transform);
-
-#if UNITY_EDITOR
-            name = NAME.Concat(data.key, "__", data.id);
-#endif
         }
 
         public void NeighborAddAndCreateCrossroadLink(Hexagon neighbor)
@@ -133,32 +131,35 @@ namespace Vurbiri.Colonization
 
         public bool TrySetSelectable()
         {
-            if(_selected == null || _owner != PlayerId.None)
+            if(_selected == null || _collider == null || _owner != PlayerId.None)
                 return false;
 
-            _selected.SetActive(true);
-            return _isSelectable = true;
+            EnableSelect(true);
+            return true;
         }
 
         public void SetUnselectable()
         {
-            if (_selected == null)
+            if (_selected == null || _collider == null)
                 return;
 
-            _selected.SetActive(false);
-            _isSelectable = false;
+            EnableSelect(false);
         }
 
         public void Select()
         {
-            if(_isSelectable)
-                _eventBus.TriggerHexagonSelect(this);
+            //_eventBus.TriggerHexagonSelect(this);
         }
 
-        public void Unselect()
+        public void Unselect(ISelectable newSelectable)
         {
-            if (_isSelectable)
-                _eventBus.TriggerHexagonUnselect(this);
+            //_eventBus.TriggerHexagonUnselect(this);
+        }
+
+        private void EnableSelect(bool value)
+        {
+            _selected.SetActive(value);
+            _collider.enabled = value;
         }
 
         private void OnShow(bool value)
@@ -172,6 +173,9 @@ namespace Vurbiri.Colonization
         {
             if (_hexagonCaption == null)
                 _hexagonCaption = GetComponentInChildren<HexagonCaption>();
+
+            if(_collider == null)
+                _collider = GetComponent<Collider>();
         }
 #endif
     }

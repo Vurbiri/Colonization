@@ -1,41 +1,33 @@
-using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    [JsonArray]
-    public class Roads : MonoBehaviour, IEnumerable<int[][]>
+    public class Roads : MonoBehaviour, IReactive<int[][][]>
     {
         [SerializeField] private Road _prefabRoad;
 
         #region private
         private Transform _thisTransform;
         private Id<PlayerId> _id;
-        private ACurrencies _cost;
         private Color _color;
         private readonly List<Road> _roadsLists = new();
         private int _count = 0;
 
-#if UNITY_EDITOR
-        private const string NAME = "Roads_";
-#endif
+        private Action<int[][][]> ActionValueChange;
         #endregion
 
-        public ACurrencies Cost => _cost;
         public int Count => _count;
 
-        public Roads Init(Id<PlayerId> id, ACurrencies cost, Color color)
+        public Roads Init(Id<PlayerId> id, Color color)
         {
             _thisTransform = transform;
             _id = id;
             _color = color;
-            _cost = cost;
 
-#if UNITY_EDITOR
-            name = NAME + PlayerId.Names[id.Value + 1];
-#endif
             return this;
         }
 
@@ -108,6 +100,19 @@ namespace Vurbiri.Colonization
             StartCoroutine(TryUnion_Coroutine());
         }
 
+        #region Reactive
+        public Unsubscriber<int[][][]> Subscribe(Action<int[][][]> action, bool calling = false)
+        {
+            ActionValueChange -= action;
+            ActionValueChange += action;
+            if (calling && action != null)
+                action(ToArray());
+
+            return new(this, action);
+        }
+
+        public void Unsubscribe(Action<int[][][]> action) => ActionValueChange -= action;
+
         public int[][][] ToArray()
         {
             int count = _roadsLists.Count;
@@ -118,6 +123,7 @@ namespace Vurbiri.Colonization
 
             return keys;
         }
+        #endregion
 
         private void SetRoadsEndings()
         {
@@ -143,15 +149,11 @@ namespace Vurbiri.Colonization
                     }
                 }
             }
+
+            ActionValueChange?.Invoke(ToArray());
         }
 
-        public IEnumerator<int[][]> GetEnumerator()
-        {
-            int count = _roadsLists.Count;
-            for (int i = 0; i < count; i++)
-                yield return _roadsLists[i].ToArray();
-        }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+       
 
 #if UNITY_EDITOR
         protected virtual void OnValidate()

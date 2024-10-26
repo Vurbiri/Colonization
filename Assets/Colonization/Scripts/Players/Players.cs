@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
-using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization
 {
+    using Data;
     using static PlayerId;
 
     public class Players
@@ -15,18 +15,22 @@ namespace Vurbiri.Colonization
         public Player Current => _current;
         public Player this[Id<PlayerId> id] => _players[id];
 
-        public Players(Settings settings, bool isLoading)
+        public Players(Settings stt, bool isLoading)
         {
-            Roads[] roads = new Roads[CountPlayers];
-            for (int i = 0; i < CountPlayers; i++)
-                roads[i] = settings.roadsFactory.Create().Init(i, settings.prices.Road, settings.visual[i].color);
+            _playersData = new(isLoading);
 
-            _playersData = new(settings.prices, roads, settings.crossroads, isLoading);
-
+            PlayerObjects playerObjects;
+            Roads roads;
             Player player;
             for (int i = 0; i < CountPlayers; i++)
             {
-                player = new(i, settings.visual[i], settings.states.GetAbilities(), _playersData[i]);
+                roads = stt.roadsFactory.Create().Init(i, stt.visual[i].color);
+                if (_playersData[i].IsLoad)
+                    playerObjects = new(i, stt.prices, _playersData[i], stt.crossroads, roads);
+                else
+                    playerObjects = new(stt.prices, _playersData[i], roads);
+
+                player = new(i, stt.visual[i], stt.states.GetAbilities(), playerObjects);
                 _players.Add(player);
             }
 
@@ -59,7 +63,7 @@ namespace Vurbiri.Colonization
 
             public void Dispose()
             {
-                states = null; 
+                states = null;
                 Resources.UnloadAsset(states);
             }
         }

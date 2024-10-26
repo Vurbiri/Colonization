@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine;
-using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
@@ -11,47 +10,47 @@ namespace Vurbiri.Colonization
     {
         public Id<PlayerId> Id => _id;
         public PlayerVisual Visual { get; }
-        public AReadOnlyCurrenciesReactive Resources => _data.resources;
+        public AReadOnlyCurrenciesReactive Resources { get; }
         public IReactiveSubValues<int, CurrencyId> ExchangeRate => _exchangeRate;
 
-        private readonly PlayerData _data;
+        private readonly PlayerObjects _obg;
         private readonly Id<PlayerId> _id;
         private readonly StatesSet<PlayerStateId> _states;
         private readonly Currencies _exchangeRate = new();
         private readonly Coroutines _coroutines;
-        private Coroutine _recruiting;
 
-        public Player(Id<PlayerId> playerId, PlayerVisual visual, StatesSet<PlayerStateId> states, PlayerData data)
+        public Player(Id<PlayerId> playerId, PlayerVisual visual, StatesSet<PlayerStateId> states, PlayerObjects obj)
         {
             _id = playerId;
-            Visual = visual;
             _states = states;
-            _data = data;
-
+            _obg = obj;
+            Visual = visual;
+            Resources = obj.Resources;
+           
             _coroutines = SceneServices.Get<Coroutines>();
         }
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
-            int shrineCount = _data.EdificeCount(EdificeGroupId.Shrine), shrineMaxRes = _states.GetValue(PlayerStateId.ShrineMaxRes);
+            int shrineCount = _obg.GetEdificeCount(EdificeGroupId.Shrine), shrineMaxRes = _states.GetValue(PlayerStateId.ShrineMaxRes);
 
-            _data.AddAndClampBlood(_states.GetValue(PlayerStateId.ShrinePassiveProfit) * shrineCount, shrineMaxRes);
+            _obg.AddAndClampBlood(_states.GetValue(PlayerStateId.ShrinePassiveProfit) * shrineCount, shrineMaxRes);
 
             if (hexId == CONST.ID_GATE)
             {
-                _data.AddAndClampBlood(_states.GetValue(PlayerStateId.ShrineProfit) * shrineCount, shrineMaxRes);
-                _data.ClampMainResources(_states.GetValue(PlayerStateId.MaxResources));
+                _obg.AddAndClampBlood(_states.GetValue(PlayerStateId.ShrineProfit) * shrineCount, shrineMaxRes);
+                _obg.ClampMainResources(_states.GetValue(PlayerStateId.MaxResources));
                 return;
             }
 
             if (_states.IsTrue(PlayerStateId.IsFreeGroundRes) && freeGroundRes != null)
-                _data.AddResourcesFrom(freeGroundRes);
+                _obg.AddResourcesFrom(freeGroundRes);
 
-            foreach (var crossroad in _data.Ports)
-                _data.AddResourcesFrom(crossroad.ProfitFromPort(hexId, _states.GetValue(PlayerStateId.PortsRatioRes)));
+            foreach (var crossroad in _obg.Ports)
+                _obg.AddResourcesFrom(crossroad.ProfitFromPort(hexId, _states.GetValue(PlayerStateId.PortsRatioRes)));
 
-            foreach (var crossroad in _data.Urbans)
-                _data.AddResourcesFrom(crossroad.ProfitFromUrban(hexId, _states.GetValue(PlayerStateId.CompensationRes), _states.GetValue(PlayerStateId.WallDefence)));
+            foreach (var crossroad in _obg.Urbans)
+                _obg.AddResourcesFrom(crossroad.ProfitFromUrban(hexId, _states.GetValue(PlayerStateId.CompensationRes), _states.GetValue(PlayerStateId.WallDefence)));
         }
 
         public void UpdateExchangeRate()
@@ -69,31 +68,31 @@ namespace Vurbiri.Colonization
         {
             int upgradeGroup = crossroad.NextGroupId;
             return (crossroad.GroupId != EdificeGroupId.None 
-                                        || _states.IsGreater(EdificeGroupId.ToIdAbility(upgradeGroup), _data.EdificeCount(upgradeGroup))) 
+                                        || _states.IsGreater(EdificeGroupId.ToIdAbility(upgradeGroup), _obg.GetEdificeCount(upgradeGroup))) 
                                         && crossroad.CanUpgrade(_id);
         }
         public void BuyEdificeUpgrade(Crossroad crossroad)
         {
             if (crossroad.BuyUpgrade(_id))
-                _data.BuyEdificeUpgrade(crossroad);
+                _obg.BuyEdificeUpgrade(crossroad);
         }
 
-        public bool CanAnyRecruitingWarriors(Crossroad crossroad) => _states.IsGreater(PlayerStateId.MaxWarrior, _data.WarriorsCount) && crossroad.CanRecruitingWarriors(_id);
+        public bool CanAnyRecruitingWarriors(Crossroad crossroad) => _states.IsGreater(PlayerStateId.MaxWarrior, _obg.WarriorsCount) && crossroad.CanRecruitingWarriors(_id);
         public bool CanRecruitingWarrior(Id<WarriorId> id) => _states.IsTrue(id.ToState());
 
-        public void RecruitWarriors(Crossroad crossroad, Id<WarriorId> id) => _recruiting = _coroutines.Run(RecruitWarriors_Coroutine(crossroad, id));
+        public void RecruitWarriors(Crossroad crossroad, Id<WarriorId> id) => _coroutines.Run(RecruitWarriors_Coroutine(crossroad, id));
 
         public bool CanWallBuild(Crossroad crossroad) => _states.IsTrue(PlayerStateId.IsWall) && crossroad.CanWallBuild(_id);
         public void BuyWall(Crossroad crossroad)
         {
             if (crossroad.BuyWall(_id))
-                _data.BuyWall();
+                _obg.BuyWall();
         }
 
-        public bool CanRoadBuild(Crossroad crossroad) => _states.IsGreater(PlayerStateId.MaxRoads, _data.RoadsCount) && crossroad.CanRoadBuild(_id);
+        public bool CanRoadBuild(Crossroad crossroad) => _states.IsGreater(PlayerStateId.MaxRoads, _obg.RoadsCount) && crossroad.CanRoadBuild(_id);
         public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
         {
-            _data.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
+            _obg.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
         }
 
         public bool BuyPerk(IPerk<PlayerStateId> perk)

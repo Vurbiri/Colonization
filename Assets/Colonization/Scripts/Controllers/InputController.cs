@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Controllers
     public class InputController : IDisposable
     {
         private readonly Camera _camera;
-        private LayerMask _layerMask;
+        private int _layerMask;
         private readonly float _distance = 900f;
         private readonly InputControlAction _inputActions;
 
@@ -46,9 +46,9 @@ namespace Vurbiri.Colonization.Controllers
         private void OnRightClick(CallbackContext ctx)
         {
             Ray ray = _camera.ScreenPointToRay(ctx.ReadValue<Vector2>());
-            if (Physics.Raycast(ray, out RaycastHit hit, _distance, _layerMask.value) && hit.collider.TryGetComponent(out ISelectable selectObj))
+            if (Physics.Raycast(ray, out RaycastHit hit, _distance, _layerMask) && hit.collider.TryGetComponent(out ISelectable selectObj))
             {
-                _selectObj?.Unselect();
+                _selectObj?.Unselect(selectObj);
                 _selectObj = selectObj;
                 _selectObj.Select();
             }

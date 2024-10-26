@@ -7,6 +7,6 @@ namespace Vurbiri.Colonization
         public const string SETTINGS = "std";
         public const string GAMEPLAY_SETTINGS = "gsd";
         public const string HEX_DATA = "hex";
-        public const string PLAYERS = "plr";
+        public const string PLAYERS = "p_";
     }
 }

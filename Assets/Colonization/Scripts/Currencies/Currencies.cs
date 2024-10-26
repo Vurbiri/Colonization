@@ -1,12 +1,9 @@
-using Newtonsoft.Json;
-using System.Collections;
 using System.Collections.Generic;
-using Random = UnityEngine.Random;
+using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    [JsonArray]
-    public class Currencies : AReadOnlyCurrenciesReactive, IEnumerable<int>
+    public class Currencies : AReadOnlyCurrenciesReactive
     {
         public Currencies(IReadOnlyList<int> array) : base(array) { }
         public Currencies(ACurrencies other) : base(other) { }
@@ -71,11 +68,13 @@ namespace Vurbiri.Colonization
             Amount = 0;
         }
 
-        public IEnumerator<int> GetEnumerator()
+        public int[] ToArray()
         {
+            int[] result = new int[countAll];
             for (int i = 0; i < countAll; i++)
-                yield return _values[i].Value;
+                result[i] = _values[i].Value;
+
+            return result;
         }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

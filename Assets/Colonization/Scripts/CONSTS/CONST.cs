@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
         public const int MAX_CIRCLES = 4;
         public const int MAX_HEXAGONS = ((HEX_COUNT_SIDES * MAX_CIRCLES * (MAX_CIRCLES + 1)) >> 1) + 1;
 
-        public const int CHANCE_WATER = 18;
+        public const int CHANCE_WATER = 17;
 
         public const float PI = Mathf.PI;
         public const float TAU = 2f * PI;

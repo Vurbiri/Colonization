@@ -1,71 +1,72 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Data
 {
     using static JSON_KEYS;
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class PlayerData
+    public class PlayerData : /*AReactive<void>,*/ IDisposable
     {
         [JsonProperty(P_RESURSES)]
-        public readonly Currencies resources;
+        private readonly int[] _resources;
         [JsonProperty(P_EDIFICES)]
-        private readonly EdificesData _edifices;
+        private List<int[]> _edifices;
         [JsonProperty(P_ROADS)]
-        private readonly Roads _roads;
+        private int[][][] _roads;
         [JsonProperty(P_PERKS)]
-        private readonly HashSet<int> _perks;
+        private int[] _perks;
+        
+        private readonly List<Unsubscriber<int>> _unsubscribersResources = new(CurrencyId.CountAll);
+        private Unsubscriber<List<int[]>> _unsubscriberEdifices;
+        private Unsubscriber<int[][][]> _unsubscriberRoads;
 
-        private readonly PricesScriptable _prices;
+        public bool IsLoad { get; set; } = false;
 
-        public IEnumerable<Crossroad> Ports => _edifices.values[EdificeGroupId.Port].Values;
-        public IEnumerable<Crossroad> Urbans => _edifices.values[EdificeGroupId.Urban].Values;
+        public int[] Resources => _resources;
+        public List<int[]> Edifices => _edifices;
+        public int[][][] Roads => _roads;
+        public int[] Perks => _perks;
 
-        public int RoadsCount => _roads.Count;
-        public int WarriorsCount => 0;
-
-        public PlayerData(PricesScriptable prices, Roads roads)
+        public PlayerData()
         {
-            resources = new(prices.PlayersDefault);
-            _edifices = new();
+            _resources = new int[CurrencyId.CountAll];
+            _perks = new int[0];
+        }
+
+        [JsonConstructor]
+        public PlayerData(int[] resources, List<int[]> edifices, int[][][] roads, int[] perks)
+        {
+            _resources = resources;
+            _edifices = edifices;
             _roads = roads;
-            _perks = new();
-
-            _prices = prices;
+            _perks = perks;
         }
 
-        internal PlayerData(int playerId, PricesScriptable prices, PlayerLoadData data, Crossroads crossroads, Roads roads)
+        public void CurrenciesBind(AReadOnlyCurrenciesReactive currencies, bool calling)
         {
-            resources = new(data.resources);
-            _edifices = new(playerId, data.edifices, crossroads);
-            _roads = roads.Restoration(data.roads, crossroads);
-            _perks = new(data.perks);
-
-            _prices = prices;
+            for (int i = 0; i < CurrencyId.Count; i++)
+                _unsubscribersResources[i] = currencies.Subscribe(i, (v) => _resources[i] = v, calling);
         }
 
-        public void AddResourcesFrom(ACurrencies other) => resources.AddFrom(other);
-        public void AddAndClampBlood(int value, int max) => resources.AddAndClampBlood(value, max);
-        public void ClampMainResources(int max) => resources.ClampMain(max);
+        public void EdificesBind(IReactive<List<int[]>> edificesReactive, bool calling)
+        { 
+              _unsubscriberEdifices = edificesReactive.Subscribe(v => _edifices = v, calling);
+        }
 
-        public void BuyEdificeUpgrade(Crossroad crossroad)
+        public void RoadsBind(IReactive<int[][][]> roadsReactive, bool calling) => _unsubscriberRoads = roadsReactive.Subscribe(v => _roads = v, calling);
+
+
+        public void Dispose()
         {
-            _edifices.values[crossroad.GroupId][crossroad.Key] = crossroad;
-            resources.Pay(_prices.Edifices[crossroad.Id]);
+            foreach (var unsubscriber in _unsubscribersResources)
+                unsubscriber?.Unsubscribe();
+            
+            _unsubscriberEdifices?.Unsubscribe();
+            _unsubscriberRoads?.Unsubscribe();
         }
 
-        public void BuyWall()
-        {
-            resources.Pay(_prices.Wall);
-        }
-
-        public void BuyRoad(CrossroadLink link)
-        {
-            _roads.BuildAndUnion(link);
-            resources.Pay(_prices.Road);
-        }
-
-        public int EdificeCount(int edificeGroupId) => _edifices.values[edificeGroupId].Count;
     }
 }
