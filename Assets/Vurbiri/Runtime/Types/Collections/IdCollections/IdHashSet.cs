@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.Collections
 {
     [Serializable, JsonArray]
     public class IdHashSet<TId, TValue> :

@@ -51,16 +51,17 @@ namespace Vurbiri.Colonization
         #region Reactive
         public Unsubscriber<int> Subscribe(Action<int> action, bool calling = true)
         {
-            ActionAmountChange -= action;
+            ActionAmountChange -= action ?? throw new ArgumentNullException("action");
+
             ActionAmountChange += action;
-            if (calling && action != null)
+            if (calling)
                 action(_amount);
 
             return new(this, action);
         }
         public Unsubscriber<int> Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
         public Unsubscriber<int> Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
-        public void Unsubscribe(Action<int> action) => ActionAmountChange -= action;
+        public void Unsubscribe(Action<int> action) => ActionAmountChange -= action ?? throw new ArgumentNullException("action");
         public void Unsubscribe(int index, Action<int> action) => _values[index].Unsubscribe(action);
         public void Unsubscribe(Id<CurrencyId> id, Action<int> action) => _values[id.Value].Unsubscribe(action);
         #endregion

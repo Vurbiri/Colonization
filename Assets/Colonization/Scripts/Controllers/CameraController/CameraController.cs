@@ -105,17 +105,18 @@ namespace Vurbiri.Colonization.Controllers
             _machine.SetState<ZoomState>();
         }
 
-        private void OnDisable()
-        {
-            if (_eventBus != null)
-                _eventBus.EventCrossroadSelect -= OnMoveToCrossroad;
+        //private void OnDisable()
+        //{
+        //    if (_eventBus != null)
+        //        _eventBus.EventCrossroadSelect -= OnMoveToCrossroad;
 
-            _cameraActions.Move.performed -= OnMove;
-            _cameraActions.Move.canceled -= OnCancelMove;
-            _cameraActions.Zoom.performed -= OnZoom;
-            _cameraActions.Rotate.performed -= OnRotate;
-            _cameraActions.Position.performed -= OnEdgeMove;
-        }
+
+        //    _cameraActions.Move.performed -= OnMove;
+        //    _cameraActions.Move.canceled -= OnCancelMove;
+        //    _cameraActions.Zoom.performed -= OnZoom;
+        //    _cameraActions.Rotate.performed -= OnRotate;
+        //    _cameraActions.Position.performed -= OnEdgeMove;
+        //}
 
         #region Nested: Movement, MovementToTarget
         //***********************************

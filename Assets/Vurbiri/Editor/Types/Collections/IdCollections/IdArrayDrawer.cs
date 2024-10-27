@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Vurbiri;
+using Vurbiri.Collections;
 
 namespace VurbiriEditor
 {

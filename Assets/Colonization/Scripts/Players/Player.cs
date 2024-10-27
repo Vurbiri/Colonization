@@ -13,97 +13,86 @@ namespace Vurbiri.Colonization
         public AReadOnlyCurrenciesReactive Resources { get; }
         public IReactiveSubValues<int, CurrencyId> ExchangeRate => _exchangeRate;
 
-        private readonly PlayerObjects _obg;
+        private readonly PlayerObjects _obj;
         private readonly Id<PlayerId> _id;
-        private readonly StatesSet<PlayerStateId> _states;
         private readonly Currencies _exchangeRate = new();
         private readonly Coroutines _coroutines;
 
-        public Player(Id<PlayerId> playerId, PlayerVisual visual, StatesSet<PlayerStateId> states, PlayerObjects obj)
+        public Player(Id<PlayerId> playerId, PlayerObjects obj)
         {
             _id = playerId;
-            _states = states;
-            _obg = obj;
-            Visual = visual;
+            _obj = obj;
             Resources = obj.Resources;
-           
+            
+            Visual = SceneData.Get<PlayersVisual>()[_id];
             _coroutines = SceneServices.Get<Coroutines>();
         }
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
-            int shrineCount = _obg.GetEdificeCount(EdificeGroupId.Shrine), shrineMaxRes = _states.GetValue(PlayerStateId.ShrineMaxRes);
-
-            _obg.AddAndClampBlood(_states.GetValue(PlayerStateId.ShrinePassiveProfit) * shrineCount, shrineMaxRes);
+            _obj.ShrinePassiveProfit();
 
             if (hexId == CONST.ID_GATE)
             {
-                _obg.AddAndClampBlood(_states.GetValue(PlayerStateId.ShrineProfit) * shrineCount, shrineMaxRes);
-                _obg.ClampMainResources(_states.GetValue(PlayerStateId.MaxResources));
+                _obj.ShrineProfit();
+                _obj.ClampMainResources();
                 return;
             }
 
-            if (_states.IsTrue(PlayerStateId.IsFreeGroundRes) && freeGroundRes != null)
-                _obg.AddResourcesFrom(freeGroundRes);
-
-            foreach (var crossroad in _obg.Ports)
-                _obg.AddResourcesFrom(crossroad.ProfitFromPort(hexId, _states.GetValue(PlayerStateId.PortsRatioRes)));
-
-            foreach (var crossroad in _obg.Urbans)
-                _obg.AddResourcesFrom(crossroad.ProfitFromUrban(hexId, _states.GetValue(PlayerStateId.CompensationRes), _states.GetValue(PlayerStateId.WallDefence)));
+            _obj.ProfitFromEdifices(hexId, freeGroundRes);
         }
 
         public void UpdateExchangeRate()
         {
-            State<PlayerStateId> state = _states.GetState(PlayerStateId.ExchangeRate);
+            State<PlayerStateId> exchangeRate = _obj.ExchangeRate;
 
             for (int i = 0; i < CurrencyId.CountMain; i++)
-                _exchangeRate.Set(i, state.NextValue);
+                _exchangeRate.Set(i, exchangeRate.NextValue);
 
         }
 
-        public IReadOnlyReactiveValue<int> GetStateReactive(Id<PlayerStateId> id) => _states[id];
+        public IReadOnlyReactiveValue<int> GetStateReactive(Id<PlayerStateId> id) => _obj.GetStateReactive(id);
 
         public bool CanEdificeUpgrade(Crossroad crossroad)
         {
             int upgradeGroup = crossroad.NextGroupId;
-            return (crossroad.GroupId != EdificeGroupId.None 
-                                        || _states.IsGreater(EdificeGroupId.ToIdAbility(upgradeGroup), _obg.GetEdificeCount(upgradeGroup))) 
-                                        && crossroad.CanUpgrade(_id);
+            return (crossroad.GroupId != EdificeGroupId.None || _obj.IsNotMaxEdifice(upgradeGroup)) && crossroad.CanUpgrade(_id);
         }
         public void BuyEdificeUpgrade(Crossroad crossroad)
         {
             if (crossroad.BuyUpgrade(_id))
-                _obg.BuyEdificeUpgrade(crossroad);
+                _obj.BuyEdificeUpgrade(crossroad);
         }
 
-        public bool CanAnyRecruitingWarriors(Crossroad crossroad) => _states.IsGreater(PlayerStateId.MaxWarrior, _obg.WarriorsCount) && crossroad.CanRecruitingWarriors(_id);
-        public bool CanRecruitingWarrior(Id<WarriorId> id) => _states.IsTrue(id.ToState());
+        public bool CanAnyRecruitingWarriors(Crossroad crossroad) => _obj.IsNotMaxWarriors() && crossroad.CanRecruitingWarriors(_id);
+        public bool CanRecruitingWarrior(Id<WarriorId> id) => _obj.CanRecruitingWarrior(id);
 
         public void RecruitWarriors(Crossroad crossroad, Id<WarriorId> id) => _coroutines.Run(RecruitWarriors_Coroutine(crossroad, id));
 
-        public bool CanWallBuild(Crossroad crossroad) => _states.IsTrue(PlayerStateId.IsWall) && crossroad.CanWallBuild(_id);
+        public bool CanWallBuild(Crossroad crossroad) => _obj.CanWallBuild && crossroad.CanWallBuild(_id);
         public void BuyWall(Crossroad crossroad)
         {
             if (crossroad.BuyWall(_id))
-                _obg.BuyWall();
+                _obj.BuyWall(crossroad);
         }
 
-        public bool CanRoadBuild(Crossroad crossroad) => _states.IsGreater(PlayerStateId.MaxRoads, _obg.RoadsCount) && crossroad.CanRoadBuild(_id);
+        public bool CanRoadBuild(Crossroad crossroad) => _obj.CanRoadBuild && crossroad.CanRoadBuild(_id);
         public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
         {
-            _obg.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
+            _obj.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
         }
 
         public bool BuyPerk(IPerk<PlayerStateId> perk)
         {
-            if (perk.TargetObject == TargetOfPerkId.Player && _states.TryAddPerk(perk))
-            {
-                Debug.LogWarning("Player PerkBuy");
-                //_data.perks.Add(perk.Id);
-                //_data.resources.Pay(perk.Cost);
-                return true;
-            }
+            Debug.LogWarning("Player PerkBuy");
+
+            //if (perk.TargetObject == TargetOfPerkId.Player && _states.TryAddPerk(perk))
+            //{
+                
+            //    _data.perks.Add(perk.Id);
+            //    _data.resources.Pay(perk.Cost);
+            //    return true;
+            //}
 
             return false;
         }

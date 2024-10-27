@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri.Localization
 {
+    using Collections;
     using static CONST_L;
 
     public class SettingsScriptable : ScriptableObject, IDisposable

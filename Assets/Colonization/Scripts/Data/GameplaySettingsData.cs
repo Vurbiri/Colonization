@@ -61,21 +61,21 @@ namespace Vurbiri.Colonization.Data
 
             public bool isFirstStart = true;
 
-            [JsonConstructor]
-            public GameplayData(GameModeStart modeStart, int maxScore, int[] visualPlayers)
-            {
-                this.modeStart = modeStart;
-                this.maxScore = maxScore;
-                this.visualPlayers = visualPlayers;
-                isFirstStart = false;
-            }
+            //[JsonConstructor]
+            //public GameplayData(GameModeStart modeStart, int maxScore, int[] visualPlayers)
+            //{
+            //    this.modeStart = modeStart;
+            //    this.maxScore = maxScore;
+            //    this.visualPlayers = visualPlayers;
+            //    isFirstStart = false;
+            //}
             public GameplayData()
             {
                 Reset();
                 maxScore = 0;
 
-                visualPlayers = new int[PlayerId.CountPlayers];
-                for (int i = 0; i < PlayerId.CountPlayers; i++)
+                visualPlayers = new int[PlayerId.PlayersCount];
+                for (int i = 0; i < PlayerId.PlayersCount; i++)
                     visualPlayers[i] = i;
 
                 isFirstStart = true;

@@ -1,7 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
-using Vurbiri;
+using Vurbiri.Collections;
 
 namespace VurbiriEditor
 {

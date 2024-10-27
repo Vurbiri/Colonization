@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public class Road : MonoBehaviour
+    public partial class Road : MonoBehaviour
     {
         [SerializeField] private LineRenderer _roadRenderer;
         [Space]
@@ -65,13 +65,13 @@ namespace Vurbiri.Colonization
             //=================================
             void AddFirst(Crossroad end)
             {
-                _crossroads.AddFirst(end);
+                _crossroads.AddToFirst(end);
                 _points.Mode = LinkListMode.First;
             }
             //=================================
             void AddLast(Crossroad end)
             {
-                _crossroads.AddLast(end);
+                _crossroads.AddToLast(end);
                 _points.Mode = LinkListMode.Last;
             }
             #endregion

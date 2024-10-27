@@ -10,6 +10,7 @@ namespace Vurbiri.Colonization
 {
     using Controllers;
     using Data;
+    using Vurbiri.Collections;
 
     [DefaultExecutionOrder(-10)]
     public class GameplayEntryPoint : ASceneEntryPoint
@@ -33,7 +34,6 @@ namespace Vurbiri.Colonization
         [Space]
         [Header("ScriptableObjects")]
         [SerializeField] private SurfacesScriptable _surfaces;
-        [SerializeField] private PricesScriptable _prices;
         [SerializeField] private PlayerVisualSetScriptable _visualSet;
         [Space]
         [Header("TEST")]
@@ -74,8 +74,9 @@ namespace Vurbiri.Colonization
                 _eventBus = _services.AddInstance(new GameplayEventBus());
                 _inputController = _services.AddInstance(new InputController(_cameraMain, _inputControllerSettings));
                 _hexagonsData = _data.AddInstance(new HexagonsData(_surfaces, _isLoad));
-                _playersSettings.visual = _data.AddInstance(_visualSet.Get(_gameplaySettings.VisualIds));
                 
+                _data.AddInstance(_visualSet.Get(_gameplaySettings.VisualIds));
+
                 _objects.AddInstance(_cameraMain);
                 _objects.AddInstance(_islandCreator.Land);
                 _objects.AddInstance(_islandCreator.Crossroads);
@@ -160,8 +161,6 @@ namespace Vurbiri.Colonization
                 _playersSettings.prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
             if (_playersSettings.states == null)
                 _playersSettings.states = VurbiriEditor.Utility.FindAnyScriptable<PlayerStatesScriptable>();
-            if (_playersSettings.crossroads == null)
-                _playersSettings.crossroads = _islandCreator.Crossroads;
             if (_playersSettings.roadsFactory.prefab == null)
                 _playersSettings.roadsFactory.prefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
             if (_playersSettings.roadsFactory.container == null)
@@ -169,8 +168,6 @@ namespace Vurbiri.Colonization
 
             if (_surfaces == null)
                 _surfaces = VurbiriEditor.Utility.FindAnyScriptable<SurfacesScriptable>();
-            if (_prices == null)
-                _prices = _playersSettings.prices;
             if (_visualSet == null)
                 _visualSet = VurbiriEditor.Utility.FindAnyScriptable<PlayerVisualSetScriptable>();
         }

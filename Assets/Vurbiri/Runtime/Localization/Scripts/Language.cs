@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Vurbiri.Reactive;
-using static Vurbiri.Storage;
 
 namespace Vurbiri.Localization
 {
+    using Collections;
+    using Reactive;
+    using static Storage;
+
     public class Language : IReactive<Language>
     {
         private readonly bool _isValid;

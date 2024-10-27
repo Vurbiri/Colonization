@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Vurbiri.Colonization.UI
+namespace VurbiriEditor.Colonization
 {
     [Serializable]
     public class CurrencyIcon

@@ -101,40 +101,5 @@ namespace Vurbiri
             //public static implicit operator KeyValuePair<TKey, TValue>(KeyValue kv) => new(kv.key, kv.value);
         }
         #endregion
-
-        #region Old OnAfterDeserialize & OnBeforeSerialize
-        //public void OnAfterDeserialize()
-        //{
-        //    if (_elements == null)
-        //        return;
-
-        //    _dictionary = new(_elements.Count);
-
-        //    TKey key;
-        //    foreach (var kv in _elements)
-        //    {
-        //        key = kv.key;
-        //        if (_dictionary.ContainsKey(key))
-        //            key = default;
-
-        //        if (!_dictionary.TryAdd(key, kv.value))
-        //            Debug.LogError($"Не удалось добавить {kv} - элемент с таким же ключом [{key}] уже был добавлен.");
-        //    }
-
-        //    _elements.Clear();
-        //    _elements = null;
-        //}
-
-        //public void OnBeforeSerialize()
-        //{
-        //    if (_dictionary == null)
-        //        return;
-
-        //    _elements = new(_dictionary.Count);
-
-        //    foreach (var kv in _dictionary)
-        //        _elements.Add(kv);
-        //}
-        #endregion
     }
 }

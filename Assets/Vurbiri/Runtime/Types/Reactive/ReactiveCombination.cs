@@ -23,9 +23,10 @@ namespace Vurbiri.Reactive
 
         public Unsubscriber<TA, TB> Subscribe(Action<TA, TB> action, bool calling = true)
         {
-            ActionValuesChange -= action;
+            ActionValuesChange -= action ?? throw new ArgumentNullException("action");
+
             ActionValuesChange += action;
-            if (calling && action != null)
+            if (calling)
                 action(_valueA, _valueB);
 
             return new(this, action);
@@ -33,7 +34,7 @@ namespace Vurbiri.Reactive
 
         public void Signal() => ActionValuesChange?.Invoke(_valueA, _valueB);
 
-        public void Unsubscribe(Action<TA, TB> action) => ActionValuesChange -= action;
+        public void Unsubscribe(Action<TA, TB> action) => ActionValuesChange -= action ?? throw new ArgumentNullException("action");
 
         public void Dispose()
         {

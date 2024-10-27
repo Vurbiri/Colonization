@@ -22,11 +22,11 @@ namespace Vurbiri.Colonization
 
         public int Count => _count;
 
-        public Roads Init(Id<PlayerId> id, Color color)
+        public Roads Init(Id<PlayerId> id)
         {
             _thisTransform = transform;
             _id = id;
-            _color = color;
+            _color = SceneData.Get<PlayersVisual>()[id].color;
 
             return this;
         }

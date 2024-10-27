@@ -10,14 +10,15 @@ namespace Vurbiri.Reactive
 
         public Unsubscriber<T> Subscribe(Action<T> action, bool calling = true)
         {
-            ActionValueChange -= action;
+            ActionValueChange -= action ?? throw new ArgumentNullException("action");
+
             ActionValueChange += action;
-            if (calling && action != null)
+            if (calling)
                 action(Value);
 
             return new(this, action);
         }
 
-        public void Unsubscribe(Action<T> action) => ActionValueChange -= action;
+        public void Unsubscribe(Action<T> action) => ActionValueChange -= action ?? throw new ArgumentNullException("action");
     }
 }

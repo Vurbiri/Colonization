@@ -21,9 +21,9 @@ namespace Vurbiri.Reactive
 
         public Unsubscriber<T> Subscribe(Action<T> action, bool calling = true)
         {
-            ActionValueChange -= action;
+            ActionValueChange -= action ?? throw new ArgumentNullException("action");
             ActionValueChange += action;
-            if (calling && action != null) 
+            if (calling) 
                 action(_value);
 
             return new(this, action);
@@ -40,7 +40,7 @@ namespace Vurbiri.Reactive
 
         public void Signal() => ActionValueChange?.Invoke(_value);
 
-        public void Unsubscribe(Action<T> action) => ActionValueChange -= action;
+        public void Unsubscribe(Action<T> action) => ActionValueChange -= action ?? throw new ArgumentNullException("action");
 
         public static implicit operator ReactiveValue<T>(T value) => new(value);
     }

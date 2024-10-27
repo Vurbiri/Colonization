@@ -19,8 +19,8 @@ public class PlayerVisualSetScriptable : ScriptableObject
     {
         int count = ids.Length;
 
-        if (count != PlayerId.CountPlayers)
-            throw new($"Неожидаемое количество id представлений игроков: {count} (а не {PlayerId.CountPlayers})");
+        if (count != PlayerId.PlayersCount)
+            throw new($"Неожидаемое количество id представлений игроков: {count} (а не {PlayerId.PlayersCount})");
 
         Color[] colors = new Color[count];
         for (int i = 0; i < count; i++)

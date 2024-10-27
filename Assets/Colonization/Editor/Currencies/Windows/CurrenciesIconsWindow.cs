@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
-using Vurbiri.Colonization.UI;
 using Color = System.Drawing.Color;
 
 
@@ -16,7 +15,7 @@ namespace VurbiriEditor.Colonization
     public class CurrenciesIconsWindow : EditorWindow
     {
         #region Consts
-        private const string NAME = "Currencies Icons", MENU = MENU_PATH + NAME;
+        private const string NAME = "Currencies Icons", MENU = MENU_PATH + "Tools/" + NAME;
         private const string PROPERTY_ICONS = "_icons";
         private const string BUTTON_NAME = "Create Atlas";
         private const string DEFAULT_PATH = "Assets/TextMesh Pro/Sprites/";

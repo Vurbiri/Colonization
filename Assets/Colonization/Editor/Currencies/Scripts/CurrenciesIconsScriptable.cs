@@ -1,18 +1,15 @@
 using UnityEngine;
+using Vurbiri.Collections;
+using Vurbiri.Colonization;
 
-namespace Vurbiri.Colonization.UI
+namespace VurbiriEditor.Colonization
 {
     [CreateAssetMenu(fileName = "CurrenciesIcons", menuName = "Vurbiri/Colonization/CurrenciesIcons", order = 51)]
     public class CurrenciesIconsScriptable : ScriptableObject
     {
         [SerializeField] private IdArray<CurrencyId, CurrencyIcon> _icons;
 
-        public CurrencyIcon this[int index] => _icons[index];
-        public CurrencyIcon this[Id<CurrencyId> id] => _icons[id.Value];
-
-
-#if UNITY_EDITOR
         public IdArray<CurrencyId, CurrencyIcon> Icons => _icons;
-#endif
+
     }
 }

@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
             _players.Save();
             _players.Next();
 
-            if ((_player = ++_player % PlayerId.CountPlayers) == 0)
+            if ((_player = ++_player % PlayerId.PlayersCount) == 0)
                 _turn++;
 
             int roll = _dices.Roll();

@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using UnityEngine;
+using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {

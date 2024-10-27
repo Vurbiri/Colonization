@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.Collections
 {
     [Serializable]
     public class EnumHashSet<TType, TValue> :

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Collections;
 using Vurbiri.Localization;
 using Vurbiri.UI;
 
