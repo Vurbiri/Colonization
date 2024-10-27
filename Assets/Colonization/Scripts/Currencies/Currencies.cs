@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < countAll; i++)
                 _amount += _values[i].Add(other[i]);
 
-            ActionAmountChange?.Invoke(_amount);
+            actionAmountChange?.Invoke(_amount);
         }
 
         public void Pay(ACurrencies cost)
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < countAll; i++)
                 _amount += _values[i].Add(-cost[i]);
 
-            ActionAmountChange?.Invoke(_amount);
+            actionAmountChange?.Invoke(_amount);
         }
 
         public void ClampMain(int max)
@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < countMain; i++)
                 _values[i].SendMessage();
 
-            ActionAmountChange?.Invoke(_amount);
+            actionAmountChange?.Invoke(_amount);
         }
 
         public void Clear()

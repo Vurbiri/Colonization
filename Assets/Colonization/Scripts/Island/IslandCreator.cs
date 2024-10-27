@@ -8,18 +8,29 @@ namespace Vurbiri.Colonization
 
     public class IslandCreator : MonoBehaviourDisposable
     {
-        [SerializeField] private Land _land;
-        [SerializeField] private Crossroads _crossroads;
+        [SerializeField] private Transform _landContainer;
+        [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private Transform _roadsContainer;
+        [SerializeField] private Transform _warriorsContainer;
 
-        public Crossroads Crossroads => _crossroads;
-        public Land Land => _land;
+        private Land _land;
+        private Crossroads _crossroads;
+
         public Transform RoadsContainer => _roadsContainer;
+        public Transform WarriorContainer => _warriorsContainer;
+
+        public void Init(Land land, Crossroads crossroads)
+        {
+            _land = land;
+            _land.Init(_landContainer);
+
+            _crossroads = crossroads;
+            _crossroads.Init(_crossroadsContainer);
+        }
 
         public IEnumerator Create_Coroutine(HexagonsData hexagonsData, bool isLoad)
         {
-            _land.Init();
-            _crossroads.Init();
+            
 
             yield return null;
 
@@ -104,16 +115,5 @@ namespace Vurbiri.Colonization
             yield return null;
             yield return StartCoroutine(_land.SetMesh_Coroutine());
         }
-
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (_land == null)
-                _land = GetComponentInChildren<Land>();
-            if (_crossroads == null)
-                _crossroads = GetComponentInChildren<Crossroads>();
-        }
-#endif
     }
 }

@@ -8,12 +8,12 @@ namespace Vurbiri.Colonization
     public abstract class AReadOnlyCurrenciesReactive : ACurrencies, IReactiveSubValues<int, CurrencyId>
     {
         protected ACurrency[] _values = new ACurrency[countAll];
-        protected Action<int> ActionAmountChange;
+        protected Action<int> actionAmountChange;
 
         public override int Amount
         {
             get => _amount;
-            protected set { if (_amount != value) ActionAmountChange?.Invoke(_amount = value); }
+            protected set { if (_amount != value) actionAmountChange?.Invoke(_amount = value); }
         }
 
         public override int this[int index] { get => _values[index].Value; }
@@ -51,9 +51,9 @@ namespace Vurbiri.Colonization
         #region Reactive
         public Unsubscriber<int> Subscribe(Action<int> action, bool calling = true)
         {
-            ActionAmountChange -= action ?? throw new ArgumentNullException("action");
+            actionAmountChange -= action ?? throw new ArgumentNullException("action");
 
-            ActionAmountChange += action;
+            actionAmountChange += action;
             if (calling)
                 action(_amount);
 
@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
         }
         public Unsubscriber<int> Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
         public Unsubscriber<int> Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
-        public void Unsubscribe(Action<int> action) => ActionAmountChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<int> action) => actionAmountChange -= action ?? throw new ArgumentNullException("action");
         public void Unsubscribe(int index, Action<int> action) => _values[index].Unsubscribe(action);
         public void Unsubscribe(Id<CurrencyId> id, Action<int> action) => _values[id.Value].Unsubscribe(action);
         #endregion
@@ -140,7 +140,7 @@ namespace Vurbiri.Colonization
         {
             protected int _value;
 
-            public override int Value { get => _value; protected set => ActionValueChange?.Invoke(_value = value); }
+            public override int Value { get => _value; protected set => actionValueChange?.Invoke(_value = value); }
 
             public ACurrency(int value) => _value = value;
 
@@ -151,7 +151,7 @@ namespace Vurbiri.Colonization
             public abstract int Increment();
             public abstract int DecrementNotMessage();
 
-            public void SendMessage() => ActionValueChange?.Invoke(_value);
+            public void SendMessage() => actionValueChange?.Invoke(_value);
 
             public static explicit operator int(ACurrency currency) => currency._value;
         }

@@ -4,9 +4,16 @@ namespace Vurbiri.FSM
 {
     public abstract class AState : IDisposable
     {
-        protected StateMachine _fsm;
+        protected readonly TypeIdKey _key;
+        protected readonly StateMachine _fsm;
 
-        public AState(StateMachine fsm) => _fsm = fsm;
+        public TypeIdKey Key => _key;
+
+        public AState(StateMachine fsm, int id = 0)
+        {
+            _fsm = fsm;
+            _key = new(GetType(), id);
+        }
 
         public virtual void Enter() { }
 
@@ -17,21 +24,14 @@ namespace Vurbiri.FSM
 
         public virtual void Dispose() { }
 
-        public override string ToString() => GetType().Name;
-
-        public override int GetHashCode() => GetType().GetHashCode();
-        public bool Equals(AState other) => other is not null && GetType() == other.GetType();
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (obj is Type type) return GetType() == type;
-            return obj is AState state && GetType() == state.GetType();
-        }
-        public static bool operator ==(AState a, AState b) => (a is null && b is null) || (a is not null && b is not null && a.GetType() == b.GetType());
+        public override int GetHashCode() => _key.GetHashCode();
+        public bool Equals(AState other) => other is not null && _key == other._key;
+        public override bool Equals(object obj) => Equals(obj as AState);
+        public static bool operator ==(AState a, AState b) => (a is null && b is null) || (a is not null && b is not null && a._key == b._key);
         public static bool operator !=(AState a, AState b) =>!(a == b);
-        public static bool operator ==(AState s, Type t) => s is not null && t is not null && s.GetType() == t;
-        public static bool operator !=(AState s, Type t) => !(s == t);
-        public static bool operator ==(Type t, AState s) => s is not null && t is not null && s.GetType() == t;
-        public static bool operator !=(Type t, AState s) => !(s == t);
+        public static bool operator ==(AState s, TypeIdKey k) => s is not null && s._key == k;
+        public static bool operator !=(AState s, TypeIdKey k) => s is not null && s._key != k;
+        public static bool operator ==(TypeIdKey k, AState s) => s is not null && s._key == k;
+        public static bool operator !=(TypeIdKey k, AState s) => s is not null && s._key != k;
     }
 }

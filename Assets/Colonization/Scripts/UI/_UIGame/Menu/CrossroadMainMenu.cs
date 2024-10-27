@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private CmButton _buttonClose;
         [Space]
         [SerializeField] private ButtonBuildEdifice _buttonUpgrade;
-        [SerializeField] private CmButton _buttonHiring;
+        [SerializeField] private CmButton _buttonRecruiting;
         [SerializeField] private ButtonBuild _buttonWall;
         [SerializeField] private ButtonBuild _buttonRoads;
 
@@ -30,8 +30,8 @@ namespace Vurbiri.Colonization.UI
 
             Vector3 distance60angle = new(_distanceOfButtons * CONST.SIN_60, _distanceOfButtons * CONST.COS_60, 0f);
 
-            _buttonHiring.transform.localPosition = distance60angle;
-            _buttonHiring.onClick.AddListener(OnHiring);
+            _buttonRecruiting.transform.localPosition = distance60angle;
+            _buttonRecruiting.onClick.AddListener(OnHiring);
 
             _buttonWall.Init(distance60angle, prices.Wall).AddListener(OnWall);
 
@@ -49,19 +49,14 @@ namespace Vurbiri.Colonization.UI
             ACurrencies currentCash = _playerCurrent.Resources;
             Color currentColor = _playerCurrent.Visual.color;
 
-            _buttonHiring.SetActive(_playerCurrent.CanAnyRecruitingWarriors(crossroad));
-            _buttonHiring.targetGraphic.color = currentColor;
+            _buttonRecruiting.SetActive(_playerCurrent.CanAnyRecruitingWarriors(crossroad));
+            _buttonRecruiting.targetGraphic.color = currentColor;
 
-            _buttonUpgrade.Setup(_playerCurrent.CanEdificeUpgrade(crossroad), crossroad.NextId, currentColor, currentCash);
+            _buttonUpgrade.Setup(_playerCurrent.CanEdificeUpgrade(crossroad), crossroad.NextId.Value, currentColor, currentCash);
             _buttonWall.Setup(_playerCurrent.CanWallBuild(crossroad), currentColor, currentCash);
             _buttonRoads.Setup(_playerCurrent.CanRoadBuild(crossroad), currentColor, currentCash);
 
             _thisGO.SetActive(true);
-        }
-
-        private void OnClose()
-        {
-            _thisGO.SetActive(false);
         }
 
         private void OnUpgrade()

@@ -5,22 +5,18 @@ namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public class Crossroads : MonoBehaviour
-    {
+    [System.Serializable]
+    public class Crossroads
+    { 
         [SerializeField] private Crossroad _prefabCrossroad;
 
-        private Transform _thisTransform;
-        private Dictionary<Key, Crossroad> _crossroads;
-
+        private Transform _container;
+        private readonly Dictionary<Key, Crossroad> _crossroads = new(HEX_COUNT_SIDES * MAX_CIRCLES * MAX_CIRCLES);
         private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
 
         public Crossroad this[Key key] => _crossroads[key];
 
-        public void Init()
-        {
-            _crossroads = new(HEX_COUNT_SIDES * MAX_CIRCLES * MAX_CIRCLES);
-            _thisTransform = transform;
-        }
+        public void Init(Transform container) => _container = container;
 
         public void CreateCrossroads(Vector3 position, Hexagon hex, bool isLastCircle)
         {
@@ -38,7 +34,7 @@ namespace Vurbiri.Colonization
                     if (isLastCircle)
                         continue;
 
-                    cross = Instantiate(_prefabCrossroad, positionCross, i % 2 == 0 ? ANGLE_180 : ANGLE_0, _thisTransform);
+                    cross = Object.Instantiate(_prefabCrossroad, positionCross, i % 2 == 0 ? ANGLE_180 : ANGLE_0, _container);
                     cross.Init(key);
                     _crossroads.Add(key, cross);
                 }
@@ -51,7 +47,7 @@ namespace Vurbiri.Colonization
         }
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        public void OnValidate()
         {
             if (_prefabCrossroad == null)
                 _prefabCrossroad = VurbiriEditor.Utility.FindAnyPrefab<Crossroad>();

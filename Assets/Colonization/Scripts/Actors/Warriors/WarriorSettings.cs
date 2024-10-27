@@ -7,5 +7,8 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private Mesh _mesh;
         [SerializeField] private RuntimeAnimatorController _animatorController;
+
+        public Mesh Mesh => _mesh;
+        public RuntimeAnimatorController AnimatorController => _animatorController;
     }
 }

@@ -6,7 +6,7 @@ namespace Vurbiri.FSM
     public class StateMachine : IDisposable
     {
         protected AState _currentState;
-        protected Dictionary<Type, AState> _states = new();
+        protected Dictionary<TypeIdKey, AState> _states = new();
 
         public AState CurrentState => _currentState;
 
@@ -14,7 +14,7 @@ namespace Vurbiri.FSM
 
         public StateMachine(AState startState)
         {
-            _states.Add(startState.GetType(), startState);
+            _states.Add(startState.Key, startState);
 
             _currentState = startState;
             _currentState.Enter();
@@ -22,24 +22,24 @@ namespace Vurbiri.FSM
 
         public void Init(AState startState)
         {
-            _states.Add(startState.GetType(), startState);
+            _states.Add(startState.Key, startState);
 
             _currentState = startState;
             _currentState.Enter();
         }
 
-        public void AddState(AState state) => _states.Add(state.GetType(), state);
+        public void AddState(AState state) => _states.Add(state.Key, state);
 
-        public bool TryAddState(AState state) => _states.TryAdd(state.GetType(), state);
+        public bool TryAddState(AState state) => _states.TryAdd(state.Key, state);
 
-        public bool SetState<T>()
+        public bool SetState<T>(int id = 0)
         {
-            Type type = typeof(T);
+            TypeIdKey key = new(typeof(T), id);
 
-            if(type == _currentState.GetType())
+            if(key == _currentState.Key)
                 return true;
 
-            if(_states.TryGetValue(type, out AState newState))
+            if(_states.TryGetValue(key, out AState newState))
             { 
                 _currentState.Exit();
                 _currentState = newState;
@@ -49,9 +49,9 @@ namespace Vurbiri.FSM
             return false;
         }
 
-        public bool ForceSetState<T>()
+        public bool ForceSetState<T>(int id = 0)
         {
-            if (_states.TryGetValue(typeof(T), out AState newState))
+            if (_states.TryGetValue(new(typeof(T), id), out AState newState))
             {
                 _currentState.Exit();
                 _currentState = newState;
@@ -63,10 +63,10 @@ namespace Vurbiri.FSM
 
         public void SetState(AState newState)
         {
-            if (newState.GetType() == _currentState.GetType())
+            if (newState == _currentState)
                 return;
 
-            _states.TryAdd(newState.GetType(), newState);
+            _states.TryAdd(newState.Key, newState);
 
             _currentState.Exit();
             _currentState = newState;

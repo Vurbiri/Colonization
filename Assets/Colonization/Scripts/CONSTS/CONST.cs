@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
 
@@ -31,57 +31,49 @@ namespace Vurbiri.Colonization
         public const float HEX_DIAMETER_IN = HEX_DIAMETER_OUT * COS_30;
         public const float HEX_RADIUS_IN = HEX_DIAMETER_IN * 0.5f;
 
-        public static readonly ReadOnlyCollection<Vector3> HEX_VERTICES;
-        public static readonly ReadOnlyCollection<Vector3> VERTEX_DIRECTIONS;
-        public static readonly ReadOnlyCollection<Vector3> HEX_SIDES;
-        public static readonly ReadOnlyCollection<Vector3> SIDE_DIRECTIONS;
+        public static readonly IReadOnlyList<Vector3> HEX_VERTICES;
+        public static readonly IReadOnlyList<Vector3> VERTEX_DIRECTIONS;
+        public static readonly IReadOnlyList<Vector3> HEX_SIDES;
+        public static readonly IReadOnlyList<Vector3> SIDE_DIRECTIONS;
 
-        public static readonly ReadOnlyCollection<float> COS_HEX;
-        public static readonly ReadOnlyCollection<float> SIN_HEX;
-        public static readonly ReadOnlyCollection<float> COS_HEX_DIRECT;
-        public static readonly ReadOnlyCollection<float> SIN_HEX_DIRECT;
+        public static readonly IReadOnlyList<float> COS_HEX = new float[] { COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 };
+        public static readonly IReadOnlyList<float> SIN_HEX = new float[] { -SIN_30, SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90 };
+        public static readonly IReadOnlyList<float> COS_HEX_DIRECT = new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60};
+        public static readonly IReadOnlyList<float> SIN_HEX_DIRECT = new float[] { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 };
 
-        public static readonly ReadOnlyCollection<Quaternion> ROTATIONS_60;
+        public static readonly IReadOnlyList<Quaternion> ROTATIONS_60;
 
-        public const int ID_GATE = 13;
-        public static readonly ReadOnlyCollection<int> NUMBERS = new((new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 }));
+        public static readonly IReadOnlyList<Key> NEAR_HEX = new Key[]{ new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
+        public static readonly IReadOnlyList<Key> NEAR_HEX_TWO;
 
         public static readonly IdArray<LinkId, Quaternion> LINK_ROTATIONS 
             = new (new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, -120f, 0f), Quaternion.Euler(0f, 0f, 0f) });
 
+        public const int ID_GATE = 13;
+        public static readonly IReadOnlyList<int> NUMBERS = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };
+
 
         static CONST()
         {
-            float[] COS_H = { COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 };
-            float[] SIN_H = { -SIN_30, SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90 };
-            COS_HEX = new(COS_H);
-            SIN_HEX = new(SIN_H);
-
             Vector3[] positions = new Vector3[HEX_COUNT_VERTICES];
             Vector3[] directions = new Vector3[HEX_COUNT_VERTICES];
-
             for (int i = 0; i < HEX_COUNT_VERTICES; i++)
             {
-                directions[i] = new Vector3(COS_H[i], 0, SIN_H[i]);
+                directions[i] = new Vector3(COS_HEX[i], 0, SIN_HEX[i]);
                 positions[i] = HEX_RADIUS_OUT * directions[i];
             }
-            VERTEX_DIRECTIONS = new(directions);
-            HEX_VERTICES = new(positions);
-
-            COS_H = new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60 };
-            SIN_H = new float[] { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 };
-            COS_HEX_DIRECT = new(COS_H);
-            SIN_HEX_DIRECT = new(SIN_H);
+            VERTEX_DIRECTIONS = directions;
+            HEX_VERTICES = positions;
 
             directions = new Vector3[HEX_COUNT_SIDES];
             positions = new Vector3[HEX_COUNT_SIDES];
             for (int i = 0; i < HEX_COUNT_SIDES; i++)
             {
-                directions[i] = new Vector3(COS_H[i], 0, SIN_H[i]);
+                directions[i] = new Vector3(COS_HEX_DIRECT[i], 0, SIN_HEX_DIRECT[i]);
                 positions[i] = HEX_DIAMETER_IN * directions[i];
             }
-            SIDE_DIRECTIONS = new(directions);
-            HEX_SIDES = new(positions);
+            SIDE_DIRECTIONS = directions;
+            HEX_SIDES = positions;
 
             Quaternion[] quaternions = new Quaternion[HEX_COUNT_SIDES];
             float angle = 0f;
@@ -90,7 +82,17 @@ namespace Vurbiri.Colonization
                 quaternions[i] = Quaternion.Euler(0f, angle, 0f);
                 angle += 60f;
             }
-            ROTATIONS_60 = new(quaternions);
+            ROTATIONS_60 = quaternions;
+
+            Key[] nearTwo= new Key[HEX_COUNT_SIDES << 1];
+            Key key;
+            for (int i = 0, j = 0; i < HEX_COUNT_SIDES; i++, j = i << 1)
+            {
+                key = NEAR_HEX[i];
+                nearTwo[j] = key + key;
+                nearTwo[++j] = key + NEAR_HEX.Next(i);
+            }
+            NEAR_HEX_TWO = nearTwo;
         }
     }
 }

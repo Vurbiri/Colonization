@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         [Header("Scene objects")]
         [SerializeField] private Game _game;
         [Space]
-        [SerializeField] private Camera _cameraMain; 
+        [SerializeField] private Camera _mainCamera; 
         [Space]
         [SerializeField] private IslandCreator _islandCreator;
         [SerializeField] private CameraController _cameraController;
@@ -28,6 +28,9 @@ namespace Vurbiri.Colonization
         [SerializeField] private EnumArray<Files, bool> _localizationFiles = new(true);
         [Space]
         [Header("Init data for classes")]
+        [SerializeField] private Land _land;
+        [SerializeField] private Crossroads _crossroads;
+        [Space]
         [SerializeField] private Players.Settings _playersSettings;
         [Space]
         [SerializeField] private InputController.Settings _inputControllerSettings;
@@ -72,14 +75,14 @@ namespace Vurbiri.Colonization
             {
                 _services.AddInstance(Coroutines.Create("Gameplay Coroutines"));
                 _eventBus = _services.AddInstance(new GameplayEventBus());
-                _inputController = _services.AddInstance(new InputController(_cameraMain, _inputControllerSettings));
+                _inputController = _services.AddInstance(new InputController(_mainCamera, _inputControllerSettings));
                 _hexagonsData = _data.AddInstance(new HexagonsData(_surfaces, _isLoad));
                 
                 _data.AddInstance(_visualSet.Get(_gameplaySettings.VisualIds));
 
-                _objects.AddInstance(_cameraMain);
-                _objects.AddInstance(_islandCreator.Land);
-                _objects.AddInstance(_islandCreator.Crossroads);
+                _objects.AddInstance(_mainCamera);
+                _objects.AddInstance(_land);
+                _objects.AddInstance(_crossroads);
 
                 _visualSet = null; Resources.UnloadAsset(_visualSet);
             }
@@ -97,6 +100,8 @@ namespace Vurbiri.Colonization
 
         private IEnumerator CreateIsland_Coroutine()
         {
+            _islandCreator.Init(_land, _crossroads);
+
             yield return StartCoroutine(_islandCreator.Create_Coroutine(_hexagonsData, _isLoad));
 
             yield return null;
@@ -120,15 +125,15 @@ namespace Vurbiri.Colonization
 
         private IEnumerator InitObjects_Coroutine()
         {
-            _cameraController.Init(_cameraMain, _inputController.CameraActions);
-            _contextMenusWorld.Init(_players, _cameraMain, _eventBus);
+            _cameraController.Init(_mainCamera, _inputController.CameraActions);
+            _contextMenusWorld.Init(_players, _mainCamera, _eventBus);
 
             yield return null;
         }
 
         private IEnumerator Final_Coroutine()
         {
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 14; i++)
                 yield return null;
 
             Resources.UnloadUnusedAssets();
@@ -148,21 +153,21 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_cameraMain == null)
-                _cameraMain = FindAnyObjectByType<Camera>();
+            _crossroads.OnValidate();
+            _land.OnValidate();
+
+            if (_mainCamera == null)
+                _mainCamera = FindAnyObjectByType<Camera>();
             if (_islandCreator == null)
                 _islandCreator = FindAnyObjectByType<IslandCreator>();
             if (_cameraController == null)
                 _cameraController = FindAnyObjectByType<CameraController>();
             if (_contextMenusWorld == null)
                 _contextMenusWorld = FindAnyObjectByType<UI.ContextMenusWorld>();
-            
-            if (_playersSettings.prices == null)
-                _playersSettings.prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
-            if (_playersSettings.states == null)
-                _playersSettings.states = VurbiriEditor.Utility.FindAnyScriptable<PlayerStatesScriptable>();
-            if (_playersSettings.roadsFactory.prefab == null)
-                _playersSettings.roadsFactory.prefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
+
+            _playersSettings.OnValidate();
+            if (_playersSettings.warriorsContainer == null)
+                _playersSettings.warriorsContainer = _islandCreator.WarriorContainer;
             if (_playersSettings.roadsFactory.container == null)
                 _playersSettings.roadsFactory.container = _islandCreator.RoadsContainer;
 

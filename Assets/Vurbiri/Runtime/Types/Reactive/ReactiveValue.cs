@@ -11,9 +11,9 @@ namespace Vurbiri.Reactive
         [SerializeField, JsonProperty("value")]
         protected T _value;
 
-        protected Action<T> ActionValueChange;
+        protected Action<T> actionValueChange;
 
-        public T Value { get => _value; set { if(!_value.Equals(value)) { _value = value; ActionValueChange?.Invoke(_value); } } }
+        public T Value { get => _value; set { if(!_value.Equals(value)) { _value = value; actionValueChange?.Invoke(_value); } } }
 
         public ReactiveValue() => _value = default;
         [JsonConstructor]
@@ -21,8 +21,8 @@ namespace Vurbiri.Reactive
 
         public Unsubscriber<T> Subscribe(Action<T> action, bool calling = true)
         {
-            ActionValueChange -= action ?? throw new ArgumentNullException("action");
-            ActionValueChange += action;
+            actionValueChange -= action ?? throw new ArgumentNullException("action");
+            actionValueChange += action;
             if (calling) 
                 action(_value);
 
@@ -35,12 +35,12 @@ namespace Vurbiri.Reactive
                 return;
 
             _value = value; 
-            ActionValueChange?.Invoke(_value);
+            actionValueChange?.Invoke(_value);
         }
 
-        public void Signal() => ActionValueChange?.Invoke(_value);
+        public void Signal() => actionValueChange?.Invoke(_value);
 
-        public void Unsubscribe(Action<T> action) => ActionValueChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<T> action) => actionValueChange -= action ?? throw new ArgumentNullException("action");
 
         public static implicit operator ReactiveValue<T>(T value) => new(value);
     }

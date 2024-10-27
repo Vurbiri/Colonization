@@ -53,11 +53,7 @@ namespace Vurbiri.Colonization
 
         public IReadOnlyReactiveValue<int> GetStateReactive(Id<PlayerStateId> id) => _obj.GetStateReactive(id);
 
-        public bool CanEdificeUpgrade(Crossroad crossroad)
-        {
-            int upgradeGroup = crossroad.NextGroupId;
-            return (crossroad.GroupId != EdificeGroupId.None || _obj.IsNotMaxEdifice(upgradeGroup)) && crossroad.CanUpgrade(_id);
-        }
+        public bool CanEdificeUpgrade(Crossroad crossroad) => _obj.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
         public void BuyEdificeUpgrade(Crossroad crossroad)
         {
             if (crossroad.BuyUpgrade(_id))
@@ -69,14 +65,14 @@ namespace Vurbiri.Colonization
 
         public void RecruitWarriors(Crossroad crossroad, Id<WarriorId> id) => _coroutines.Run(RecruitWarriors_Coroutine(crossroad, id));
 
-        public bool CanWallBuild(Crossroad crossroad) => _obj.CanWallBuild && crossroad.CanWallBuild(_id);
+        public bool CanWallBuild(Crossroad crossroad) => _obj.CanWallBuild() && crossroad.CanWallBuild(_id);
         public void BuyWall(Crossroad crossroad)
         {
             if (crossroad.BuyWall(_id))
                 _obj.BuyWall(crossroad);
         }
 
-        public bool CanRoadBuild(Crossroad crossroad) => _obj.CanRoadBuild && crossroad.CanRoadBuild(_id);
+        public bool CanRoadBuild(Crossroad crossroad) => _obj.CanRoadBuild() && crossroad.CanRoadBuild(_id);
         public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
         {
             _obj.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
@@ -107,7 +103,7 @@ namespace Vurbiri.Colonization
             if(result.Result == null)
                 yield break;
 
-            Debug.Log(result.Result.ToString());
+            _obj.RecruitingWarrior(id.Value, result.Result);
         }
 
     }

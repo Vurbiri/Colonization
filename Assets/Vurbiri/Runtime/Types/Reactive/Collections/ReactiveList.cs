@@ -10,7 +10,8 @@ namespace Vurbiri.Reactive.Collections
         private int _count = 0;
         private int _capacity = 4;
 
-        private Action<int, T, Operation> ActionListChange;
+        private readonly Func<T, T, bool> funcEquals;
+        private Action<int, T, Operation> actionListChange;
 
         public T this[int index] 
         {
@@ -28,7 +29,7 @@ namespace Vurbiri.Reactive.Collections
 
                 _values[index] = value;
 
-                ActionListChange?.Invoke(index, value, Operation.Change);
+                actionListChange?.Invoke(index, value, Operation.Change);
             }
         }
 
@@ -36,13 +37,35 @@ namespace Vurbiri.Reactive.Collections
 
         public bool IsReadOnly => false;
 
-        public ReactiveList() => _values = new T[_capacity];
+        #region Constructors
+        public ReactiveList()
+        {
+            _values = new T[_capacity];
+            funcEquals = Equals;
+        }
+
+        public ReactiveList(Func<T, T, bool> equals)
+        {
+            funcEquals = equals ?? throw new ArgumentNullException("equals"); ;
+            _values = new T[_capacity];
+        }
 
         public ReactiveList(int capacity)
         {
-            if (capacity <= 0)
+            if (capacity < 0)
                 throw new ArgumentOutOfRangeException($"capacity = {capacity}");
 
+            _capacity = capacity;
+            _values = new T[_capacity];
+            funcEquals = Equals;
+        }
+
+        public ReactiveList(int capacity, Func<T, T, bool> equals)
+        {
+            if (capacity < 0)
+                throw new ArgumentOutOfRangeException($"capacity = {capacity}");
+
+            funcEquals = equals ?? throw new ArgumentNullException("equals"); ;
             _capacity = capacity;
             _values = new T[_capacity];
         }
@@ -54,14 +77,17 @@ namespace Vurbiri.Reactive.Collections
 
             for (_count = 0; _count < _capacity; _count++)
                 _values[_count] = values[_count];
+
+            funcEquals = Equals;
         }
+        #endregion
 
         public void ChangeSignal(int index)
         {
             if (index < 0 || index >= _count)
                 throw new ArgumentOutOfRangeException($"index = {index}");
 
-            ActionListChange?.Invoke(index, _values[index], Operation.Change);
+            actionListChange?.Invoke(index, _values[index], Operation.Change);
         }
 
         public void ChangeSignal(T item)
@@ -69,7 +95,7 @@ namespace Vurbiri.Reactive.Collections
             int index = IndexOf(item);
 
             if (index >= 0)
-                ActionListChange?.Invoke(index, _values[index], Operation.Change);
+                actionListChange?.Invoke(index, _values[index], Operation.Change);
         }
 
         public void TryAdd(T item)
@@ -78,8 +104,7 @@ namespace Vurbiri.Reactive.Collections
 
             if (index >= 0)
             {
-                _values[index] = item;
-                ActionListChange?.Invoke(index, item, Operation.Change);
+                actionListChange?.Invoke(index, item, Operation.Change);
                 return;
             }
 
@@ -89,9 +114,9 @@ namespace Vurbiri.Reactive.Collections
         #region IReadOnlyReactiveList
         public UnsubscriberList<T> Subscribe(Action<int, T, Operation> action, bool calling = true)
         {
-            ActionListChange -= action ?? throw new ArgumentNullException("action");
+            actionListChange -= action ?? throw new ArgumentNullException("action");
 
-            ActionListChange += action;
+            actionListChange += action;
             if (calling)
             {
                 for (int i = 0; i < _count; i++)
@@ -101,38 +126,89 @@ namespace Vurbiri.Reactive.Collections
             return new(this, action);
         }
 
-        public void Unsubscribe(Action<int, T, Operation> action) => ActionListChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<int, T, Operation> action) => actionListChange -= action ?? throw new ArgumentNullException("action");
         #endregion
 
         #region IList
         public void Add(T item)
         {
+            if (_count == _capacity)
+                GrowArray();
+
             _values[_count] = item;
+            actionListChange?.Invoke(_count, item, Operation.Add);
 
-            ActionListChange?.Invoke(_count, item, Operation.Add);
+            _count++;
+        }
 
-            if (++_count == _capacity)
-                ResizeArray();
+        public void Insert(int index, T item)
+        {
+            if (index < 0 || index >= _count)
+                throw new ArgumentOutOfRangeException($"index = {index}");
+
+            if (_count == _capacity)
+                GrowArray();
+
+            for (int i = _count - 1; i > index; i--)
+                _values[i] = _values[i - 1];
+
+            _values[index] = item;
+            actionListChange?.Invoke(index, item, Operation.Insert);
+
+            _count++;
+        }
+
+        public bool Contains(T item)
+        {
+            for (int i = 0; i < _count; i++)
+                if (funcEquals(_values[i], item))
+                    return true;
+
+            return false;
+        }
+
+        public int IndexOf(T item)
+        {
+            for (int i = 0; i < _count; i++)
+                if (funcEquals(_values[i], item))
+                    return i;
+
+            return -1;
+        }
+        
+        public bool Remove(T item)
+        {
+            int index = IndexOf(item);
+            if(index < 0) return false;
+            RemoveAt(index);
+            return true;
+        }
+
+        public void RemoveAt(int index)
+        {
+            if (index < 0 || index >= _count)
+                throw new ArgumentOutOfRangeException($"index = {index}");
+            
+            T temp = _values[index];
+            
+            _count--;
+            for (int i = index; i < _count; i++)
+                _values[i] = _values[i + 1];
+
+            _values[_count] = default;
+
+            actionListChange?.Invoke(index, temp, Operation.Remove);
         }
 
         public void Clear()
         {
             for (int i = 0; i < _count; i++)
             {
-                ActionListChange?.Invoke(i, _values[i], Operation.Remove);
+                actionListChange?.Invoke(i, _values[i], Operation.Remove);
                 _values[i] = default;
             }
 
             _count = 0;
-        }
-
-        public bool Contains(T item)
-        {
-            for (int i = 0; i < _count; i++)
-                if(_values[i].Equals(item))
-                    return true;
-
-            return false;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -147,67 +223,13 @@ namespace Vurbiri.Reactive.Collections
         public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < _count; i++)
-                 yield return _values[i];
-        }
-
-        public int IndexOf(T item)
-        {
-            for (int i = 0; i < _count; i++)
-                if (_values[i].Equals(item))
-                    return i;
-
-            return -1;
-        }
-
-        public void Insert(int index, T item)
-        {
-            if (index < 0 || index >= _count)
-                throw new ArgumentOutOfRangeException($"index = {index}");
-
-            for (int i = _count - 1; i > index; i--)
-                _values[i] = _values[i - 1];
-            
-            _values[index] = item;
-            ActionListChange?.Invoke(index, item, Operation.Insert);
-
-            if (++_count == _capacity)
-                ResizeArray();
-        }
-
-        public bool Remove(T item)
-        {
-            int index = IndexOf(item);
-
-            if(index < 0)
-                return false;
-
-            RemoveAt(index);
-            return true;
-        }
-
-        public void RemoveAt(int index)
-        {
-            if (index < 0 || index >= _count)
-                throw new ArgumentOutOfRangeException($"index = {index}");
-
-            _count--;
-
-            ActionListChange?.Invoke(index, _values[index], Operation.Remove);
-
-            if (index == _count)
-            {
-                _values[index] = default;
-                return;
-            }
-
-            for (int i = index; i < _count; i++)
-                _values[i] = _values[i + 1];
+                yield return _values[i];
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
 
-        private void ResizeArray()
+        private void GrowArray()
         {
             _capacity <<= 1 + 4;
 
@@ -216,5 +238,7 @@ namespace Vurbiri.Reactive.Collections
                 array[i] = _values[i];
             _values = array;
         }
+
+        private bool Equals(T a, T b) => a.Equals(b);
     }
 }

@@ -28,10 +28,10 @@ namespace Vurbiri.Colonization
         #endregion
 
         public Key Key => _key;
-        public int Id => _edifice.Id.Value;
-        public int GroupId => _edifice.GroupId;
-        public int NextId => _edifice.NextId;
-        public int NextGroupId => _edifice.NextGroupId;
+        public Id<EdificeId> Id => _edifice.Id;
+        public Id<EdificeGroupId> GroupId => _edifice.GroupId;
+        public Id<EdificeId> NextId => _edifice.NextId;
+        public Id<EdificeGroupId> NextGroupId => _edifice.NextGroupId;
         public bool IsPort => _edifice.IsPort;
         public bool IsUrban => _edifice.IsUrban;
         public bool IsWall => _edifice.IsWall;
@@ -96,7 +96,7 @@ namespace Vurbiri.Colonization
         public bool CanUpgrade(Id<PlayerId> playerId)
         {
             return _edifice.IsUpgrade && (_edifice.Owner == playerId ||
-            _edifice.NextGroupId switch
+            _edifice.NextGroupId.Value switch
             {
                 EdificeGroupId.Shrine => IsRoadConnect(playerId),
                 EdificeGroupId.Port => WaterCheck(),
@@ -265,6 +265,8 @@ namespace Vurbiri.Colonization
             foreach (var hex in _hexagons)
                 hex.CrossroadRemove(this);
         }
+
+        public static bool Equals(Crossroad a, Crossroad b) => a._key == b._key;
 
 #if UNITY_EDITOR
         private void OnValidate()

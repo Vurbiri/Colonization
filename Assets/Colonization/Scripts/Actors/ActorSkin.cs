@@ -20,11 +20,10 @@ namespace Vurbiri.Colonization
         {
             _time -= Time.fixedDeltaTime;
 
-            if (_time > 0)
-                return;
+            if (_time > 0) return;
+
             _time = Random.Range(10f, 20f);
-            _animator.SetTrigger(_attackId);
-            //_animator.SetTrigger(_ids.Rand());
+            _animator.SetTrigger(_ids.Rand());
         }
     }
 }

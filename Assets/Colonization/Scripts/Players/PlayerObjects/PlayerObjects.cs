@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Vurbiri.Colonization
 {
     using Data;
-    using Vurbiri.Reactive.Collections;
+    using Reactive.Collections;
 
     public partial class PlayerObjects
     {
@@ -11,11 +11,15 @@ namespace Vurbiri.Colonization
         private readonly Edifices _edifices;
         private readonly Roads _roads;
         private readonly HashSet<int> _perks;
+        private readonly HashSet<Warrior> _warriors = new();
 
         private readonly StatesSet<PlayerStateId> _states;
         private readonly PricesScriptable _prices;
+        private readonly WarriorsSpawner _spawner;
 
         public AReadOnlyCurrenciesReactive Resources => _resources;
+
+        public State<PlayerStateId> ExchangeRate => _states.GetState(PlayerStateId.ExchangeRate);
 
         public IReactiveList<Crossroad> Shrines => _edifices.shrines;
         public IReactiveList<Crossroad> Ports => _edifices.ports;
@@ -25,9 +29,12 @@ namespace Vurbiri.Colonization
 
         public PlayerObjects(int playerId, bool isLoad, PlayerData data, Players.Settings settings)
         {
+            PlayerVisual visual = SceneData.Get<PlayersVisual>()[playerId];
+
             _states = settings.states.GetAbilities();
-            _roads = settings.roadsFactory.Create().Init(playerId);
+            _roads = settings.roadsFactory.Create().Init(playerId, visual.color);
             _prices = settings.prices;
+            _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.warriorsContainer);
 
             if (isLoad)
             {
@@ -50,44 +57,6 @@ namespace Vurbiri.Colonization
             data.RoadsBind(_roads, !isLoad);
         }
 
-        public void ShrinePassiveProfit()
-         => _resources.AddAndClampBlood(_states.GetValue(PlayerStateId.ShrinePassiveProfit) * _edifices.shrines.Count, _states.GetValue(PlayerStateId.ShrineMaxRes));
-        public void ShrineProfit()
-         => _resources.AddAndClampBlood(_states.GetValue(PlayerStateId.ShrineProfit) * _edifices.shrines.Count, _states.GetValue(PlayerStateId.ShrineMaxRes));
-
-        public void ClampMainResources() => _resources.ClampMain(_states.GetValue(PlayerStateId.MaxResources));
-        public void ProfitFromEdifices(int hexId, ACurrencies freeGroundRes)
-        {
-            if (_states.IsTrue(PlayerStateId.IsFreeGroundRes) && freeGroundRes != null)
-                _resources.AddFrom(freeGroundRes);
-
-            foreach (var crossroad in _edifices.ports)
-                _resources.AddFrom(crossroad.ProfitFromPort(hexId, _states.GetValue(PlayerStateId.PortsRatioRes)));
-
-            foreach (var crossroad in _edifices.urbans)
-                _resources.AddFrom(crossroad.ProfitFromUrban(hexId, _states.GetValue(PlayerStateId.CompensationRes), _states.GetValue(PlayerStateId.WallDefence)));
-        }
-
-        public void AddResourcesFrom(ACurrencies other) => _resources.AddFrom(other);
-        public void AddAndClampBlood(int value, int max) => _resources.AddAndClampBlood(value, max);
         
-
-        public void BuyEdificeUpgrade(Crossroad crossroad)
-        {
-            _resources.Pay(_prices.Edifices[crossroad.Id]);
-            _edifices.values[crossroad.GroupId].TryAdd(crossroad);
-        }
-
-        public void BuyWall(Crossroad crossroad)
-        {
-            _resources.Pay(_prices.Wall);
-            _edifices.values[crossroad.GroupId].ChangeSignal(crossroad);
-        }
-
-        public void BuyRoad(CrossroadLink link)
-        {
-            _resources.Pay(_prices.Road);
-            _roads.BuildAndUnion(link);
-        }
     }
 }

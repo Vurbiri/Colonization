@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
                 return _randomPerks.Add(perk);
 
             _currentValue = perk.Apply(_currentValue);
-            ActionValueChange?.Invoke(_currentValue);
+            actionValueChange?.Invoke(_currentValue);
             return true;
         }
 

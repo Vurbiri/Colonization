@@ -10,7 +10,7 @@ namespace Vurbiri
         public readonly Type Type => _type;
         public readonly int Id => _id;
 
-        public TypeIdKey(Type type, int id)
+        public TypeIdKey(Type type, int id = 0)
         {
             _type = type;
             _id = id;

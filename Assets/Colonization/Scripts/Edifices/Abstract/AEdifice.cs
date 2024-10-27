@@ -7,14 +7,14 @@ namespace Vurbiri.Colonization
     public abstract class AEdifice : MonoBehaviour, IValueId<EdificeId>
     {
         [SerializeField] protected Id<EdificeId> _id;
-        [SerializeField, Hide] protected int _groupId;
+        [SerializeField, Hide] protected Id<EdificeGroupId> _groupId;
         [SerializeField, Range(0, 3)] private int _profit;
         [SerializeField, Hide] protected bool _isUpgrade;
         [SerializeField, Hide] protected bool _isBuildWall;
         [Space]
         [SerializeField] protected AEdifice _prefabUpgrade;
-        [SerializeField, Hide] protected int _nextId;
-        [SerializeField, Hide] protected int _nextGroupId;
+        [SerializeField, Hide] protected Id<EdificeId> _nextId;
+        [SerializeField, Hide] protected Id<EdificeGroupId> _nextGroupId;
         [SerializeField, Range(1f, 5f)] private float _radiusCollider = 1.75f;
         [Space]
         [SerializeField] protected AEdificeGraphic _graphic;
@@ -23,9 +23,9 @@ namespace Vurbiri.Colonization
         protected bool _isWall = false;
 
         public Id<EdificeId> Id => _id;
-        public int GroupId => _groupId;
-        public int NextId => _nextId;
-        public int NextGroupId => _nextGroupId;
+        public Id<EdificeGroupId> GroupId => _groupId;
+        public Id<EdificeId> NextId => _nextId;
+        public Id<EdificeGroupId> NextGroupId => _nextGroupId;
         public Id<PlayerId> Owner => _owner;
         public bool IsUpgrade => _isUpgrade;
         public bool IsOwned => _owner != PlayerId.None;

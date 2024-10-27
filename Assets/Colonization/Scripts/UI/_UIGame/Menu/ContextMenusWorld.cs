@@ -11,40 +11,50 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private RectTransform _canvasTransform;
         [Space]
         [SerializeField] private CrossroadMainMenu _crossroadMenu;
-        [SerializeField] private CrossroadWarriorsMenu _warriorsMenu;
+        [SerializeField] private CrossroadWarriorsMenu _recruitingMenu;
         [SerializeField] private CrossroadRoadsMenu _roadsMenu;
+        [Space]
+        [SerializeField] private WarriorsMenu _warriorsMenu;
         [Space]
         [SerializeField] private LookAtCamera _lookAtCamera;
 
         protected GameObject _thisGO;
         private Camera _camera;
+        private Players _players;
 
         public void Init(Players players, Camera camera, GameplayEventBus eventBus)
         {
             _thisGO = gameObject;
             _camera = camera;
+            _players = players;
 
             _lookAtCamera.Init(camera);
 
-            _crossroadMenu.Init(_roadsMenu, _warriorsMenu, players,  _prices);
-            _warriorsMenu.Init(_crossroadMenu, players, _prices.Warriors);
+            _crossroadMenu.Init(_roadsMenu, _recruitingMenu, players,  _prices);
+            _recruitingMenu.Init(_crossroadMenu, players, _prices.Warriors);
             _roadsMenu.Init(_crossroadMenu, players, camera, _prices.Road);
+            _warriorsMenu.Init(players, _prices);
 
             _crossroadMenu.EventEnabled += EnableLook;
-            _warriorsMenu.EventEnabled += EnableLook;
+            _recruitingMenu.EventEnabled += EnableLook;
             _roadsMenu.EventEnabled += EnableLook;
+            _warriorsMenu.EventEnabled += EnableLook;
 
             eventBus.EventCrossroadSelect += OnSelectCrossroad;
             eventBus.EventCrossroadUnselect += OnUnselectCrossroad;
+
+            eventBus.EventWarriorSelect += OnSelectWarrior;
+            eventBus.EventWarriorUnselect += OnUnselectWarrior;
         }
 
         private void OnSelectCrossroad(Crossroad crossroad)
         {
-            _lookAtCamera.enabled = true;
+            //if (_players.Current.Id != PlayerId.Player)
+            //    return;
 
-            Vector3 screenPosition = _camera.WorldToScreenPoint(crossroad.Position);
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasTransform, screenPosition, _camera, out Vector2 localPoint))
-                _thisRectTransform.anchoredPosition = localPoint;
+            _warriorsMenu.Close();
+
+            ToPosition(crossroad.Position);
 
             _crossroadMenu.Open(crossroad);
         }
@@ -53,11 +63,43 @@ namespace Vurbiri.Colonization.UI
         {
             _lookAtCamera.enabled = false;
 
-            _crossroadMenu.Close();
-            _roadsMenu.Close();
+            CrossroadMenusClose();
+        }
+
+        private void OnSelectWarrior(Warrior warrior)
+        {
+            //if (_players.Current.Id != PlayerId.Player)
+            //    return;
+            CrossroadMenusClose();
+
+            ToPosition(warrior.Position);
+
+            _warriorsMenu.Open(warrior);
+        }
+
+        private void OnUnselectWarrior(Warrior warrior)
+        {
+            _lookAtCamera.enabled = false;
+
             _warriorsMenu.Close();
         }
 
+
+        private void ToPosition(Vector3 position)
+        {
+            _lookAtCamera.enabled = true;
+
+            Vector3 screenPosition = _camera.WorldToScreenPoint(position);
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasTransform, screenPosition, _camera, out Vector2 localPoint))
+                _thisRectTransform.anchoredPosition = localPoint;
+        }
+
+        private void CrossroadMenusClose()
+        {
+            _crossroadMenu.Close();
+            _roadsMenu.Close();
+            _recruitingMenu.Close();
+        }
 
         private void EnableLook(bool value)
         {
@@ -77,8 +119,9 @@ namespace Vurbiri.Colonization.UI
         private void OnDestroy()
         {
             _crossroadMenu.EventEnabled -= EnableLook;
-            _warriorsMenu.EventEnabled -= EnableLook;
+            _recruitingMenu.EventEnabled -= EnableLook;
             _roadsMenu.EventEnabled -= EnableLook;
+            _warriorsMenu.EventEnabled -= EnableLook;
         }
 
 #if UNITY_EDITOR
@@ -92,10 +135,12 @@ namespace Vurbiri.Colonization.UI
                 _canvasTransform = _thisRectTransform.parent.GetComponent<RectTransform>();
             if (_crossroadMenu == null)
                 _crossroadMenu = GetComponentInChildren<CrossroadMainMenu>();
-            if (_warriorsMenu == null)
-                _warriorsMenu = GetComponentInChildren<CrossroadWarriorsMenu>();
+            if (_recruitingMenu == null)
+                _recruitingMenu = GetComponentInChildren<CrossroadWarriorsMenu>();
             if (_roadsMenu == null)
                 _roadsMenu = GetComponentInChildren<CrossroadRoadsMenu>();
+            if (_warriorsMenu == null)
+                _warriorsMenu = GetComponentInChildren<WarriorsMenu>();
             if (_lookAtCamera == null)
                 _lookAtCamera = GetComponent<LookAtCamera>();
         }

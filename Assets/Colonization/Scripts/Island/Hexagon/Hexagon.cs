@@ -5,6 +5,7 @@ using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization
 {
+
     public class Hexagon : MonoBehaviour, ISelectable
     {
         [SerializeField] private HexagonCaption _hexagonCaption;
@@ -21,16 +22,13 @@ namespace Vurbiri.Colonization
 
         private readonly HashSet<Crossroad> _crossroads = new(CONST.HEX_COUNT_SIDES);
         private readonly HashSet<Hexagon> _neighbors = new(CONST.HEX_COUNT_SIDES);
-
-#if UNITY_EDITOR
-        private const string NAME = "Hexagon_";
-#endif
         #endregion
 
         public Key Key => _data.key;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
         public Vector3 Position => _data.position;
+
         public bool CanUnitEnter => !_isGate && !_isWater && _owner == PlayerId.None;
 
         public void Init(HexData data, GameplayEventBus eventBus)
@@ -69,6 +67,14 @@ namespace Vurbiri.Colonization
                 if (set.Count == 2)
                     CrossroadLink.Create(set.ToArray(), _isWater || neighbor._isWater);
             }
+        }
+        public Key GetNearGroundHexOffset()
+        {
+            foreach (var neighbor in _neighbors) 
+                if(!neighbor._isWater)
+                    return neighbor._data.key - _data.key;
+
+            return CONST.NEAR_HEX.Rand();
         }
 
         public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
@@ -126,6 +132,9 @@ namespace Vurbiri.Colonization
 
             return false;
         }
+
+        public void EnterActor(Id<PlayerId> id) => _owner = id;
+        public void ExitActor() => _owner = PlayerId.None;
 
         public bool IsEnemy(Id<PlayerId> id) => _owner != PlayerId.None && _owner != id;
 

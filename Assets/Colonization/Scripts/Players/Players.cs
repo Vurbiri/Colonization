@@ -48,9 +48,10 @@ namespace Vurbiri.Colonization
         [Serializable]
         public class Settings : IDisposable
         {
+            public WarriorInitializer warriorPrefab;
+            public Transform warriorsContainer;
             public PricesScriptable prices;
             public PlayerStatesScriptable states;
-            [Space]
             public RoadsFactory roadsFactory;
 
             public void Dispose()
@@ -58,6 +59,20 @@ namespace Vurbiri.Colonization
                 Resources.UnloadAsset(states);
                 states = null;
             }
+
+#if UNITY_EDITOR
+            public void OnValidate()
+            {
+                if (warriorPrefab == null)
+                    warriorPrefab = VurbiriEditor.Utility.FindAnyPrefab<WarriorInitializer>();
+                if (prices == null)
+                    prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
+                if (states == null)
+                    states = VurbiriEditor.Utility.FindAnyScriptable<PlayerStatesScriptable>();
+                if (roadsFactory.prefab == null)
+                    roadsFactory.prefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
+            }
+#endif
         }
         #endregion
     }

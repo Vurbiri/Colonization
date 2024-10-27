@@ -9,6 +9,12 @@ namespace Vurbiri.Colonization
 
         public event Action<Crossroad> EventCrossroadUnselect;
         public void TriggerCrossroadUnselect(Crossroad crossroad) => EventCrossroadUnselect?.Invoke(crossroad);
+        
+        public event Action<Warrior> EventWarriorSelect;
+        public void TriggerWarriorSelect(Warrior warrior) => EventWarriorSelect?.Invoke(warrior);
+
+        public event Action<Warrior> EventWarriorUnselect;
+        public void TriggerWarriorUnselect(Warrior warrior) => EventWarriorUnselect?.Invoke(warrior);
 
         public event Action<Hexagon> EventHexagonSelect;
         public void TriggerHexagonSelect(Hexagon hex) => EventHexagonSelect?.Invoke(hex);

@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.Controllers
 
         private Transform _thisTransform;
         private readonly StateMachine _machine = new();
-        private readonly Type _typeMoveToTargetState = typeof(MoveToTargetState);
+        private MoveToTargetState _moveToTargetState;
         private float _edgeRight;
 
         private float _heightZoom;
@@ -42,7 +42,8 @@ namespace Vurbiri.Colonization.Controllers
             _eventBus = SceneServices.Get<GameplayEventBus>();
 
             _machine.AddState(new MoveState(this, camera));
-            _machine.AddState(new MoveToTargetState(this));
+            _moveToTargetState = new MoveToTargetState(this);
+            _machine.AddState(_moveToTargetState);
             _machine.AddState(new ZoomState(this, camera));
 
             Subscribe();
@@ -65,7 +66,7 @@ namespace Vurbiri.Colonization.Controllers
 
         private void OnMove(CallbackContext ctx)
         {
-            if (_machine.CurrentState == _typeMoveToTargetState)
+            if (_machine.CurrentState == _moveToTargetState)
                 return;
 
             _moveDirection = ctx.ReadValue<Vector2>();

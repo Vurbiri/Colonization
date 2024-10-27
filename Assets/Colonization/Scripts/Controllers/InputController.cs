@@ -5,10 +5,11 @@ using static UnityEngine.InputSystem.InputAction;
 
 namespace Vurbiri.Colonization.Controllers
 {
+    [Serializable]
     public class InputController : IDisposable
     {
         private readonly Camera _camera;
-        private int _layerMask;
+        private readonly int _layerMask;
         private readonly float _distance = 900f;
         private readonly InputControlAction _inputActions;
 
