@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
 
         protected virtual void Awake()
         {
-            transform.localRotation = CONST.LINK_ROTATIONS[_id];
+            transform.localRotation = CONST.LINK_ROTATIONS[_id.Value];
         }
     }
 }

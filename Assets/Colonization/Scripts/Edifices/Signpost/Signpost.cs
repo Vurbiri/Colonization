@@ -4,34 +4,12 @@ namespace Vurbiri.Colonization
 {
     public class Signpost : AEdifice
     {
-        public override void Setup(AEdifice edifice, IReadOnlyList<CrossroadLink> links)
+        public override AEdifice Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice)
         {
-            _graphic.Init(_owner, links);
-
-            _prefabUpgrade = edifice;
-            _nextId = edifice.Id.Value;
-            _nextGroupId = edifice.GroupId;
-            _isUpgrade = true;
+            _graphic.Init(playerId, links);
+            return this;
         }
 
-        public override bool Build(AEdifice prefab, Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links, bool isWall, out AEdifice city)
-        {
-            _prefabUpgrade = prefab;
-            _isWall = isWall;
-            return Upgrade(playerId, links, out city);
-        }
-
-        public override bool Upgrade(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links, out AEdifice city)
-        {
-            _owner = playerId;
-            if (base.Upgrade(playerId, links, out city))
-                return true;
-
-            _owner = PlayerId.None;
-            return false;
-        }
-
-        public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> owner) => _graphic.AddRoad(linkId, owner);
-
+        public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> owner, bool isWall) => _graphic.AddRoad(linkId, owner);
     }
 }

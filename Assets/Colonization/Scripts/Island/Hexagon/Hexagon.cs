@@ -27,9 +27,10 @@ namespace Vurbiri.Colonization
         public Key Key => _data.key;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
+        public bool CanUnitEnter => !_isGate && !_isWater && _owner == PlayerId.None;
         public Vector3 Position => _data.position;
 
-        public bool CanUnitEnter => !_isGate && !_isWater && _owner == PlayerId.None;
+        
 
         public void Init(HexData data, GameplayEventBus eventBus)
         {
@@ -140,7 +141,7 @@ namespace Vurbiri.Colonization
 
         public bool TrySetSelectable()
         {
-            if(_selected == null || _collider == null || _owner != PlayerId.None)
+            if(_isGate || _isWater || _owner != PlayerId.None)
                 return false;
 
             EnableSelect(true);
@@ -149,7 +150,7 @@ namespace Vurbiri.Colonization
 
         public void SetUnselectable()
         {
-            if (_selected == null || _collider == null)
+            if (_isGate || _isWater)
                 return;
 
             EnableSelect(false);

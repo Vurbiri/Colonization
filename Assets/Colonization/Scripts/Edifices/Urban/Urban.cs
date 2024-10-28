@@ -8,59 +8,43 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private Wall _wall;
 
-        public override void Setup(AEdifice edifice, IReadOnlyList<CrossroadLink> links)
+        public override AEdifice Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice)
         {
-            base.Setup(edifice, links);
 
-            if (_id == EdificeId.Camp)
+            base.Init(playerId, isWall, links, edifice);
+
+            if (edifice.Id == EdificeId.Signpost)
             {
                 foreach (var link in links)
                 {
-                    if (link.Owner == _owner)
+                    if (link.Owner == playerId)
                     {
-                        _graphic.transform.localRotation = CONST.LINK_ROTATIONS[link.Id];
+                        _graphic.transform.localRotation = CONST.LINK_ROTATIONS[link.Id.Value];
                         break;
                     }
                 }
             }
 
-            if (_isWall)
+            if (isWall)
             {
                 _wall = Instantiate(_wall, transform);
-                _wall.Init(_owner, links);
+                _wall.Init(playerId, links);
             }
 
-            _isBuildWall = _isBuildWall && !_isWall;
+            return this;
         }
 
         public override bool WallBuild(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
-            if (_isBuildWall && _owner == playerId)
-            {
-                _wall = Instantiate(_wall, transform);
-                _wall.Init(_owner, links);
-                _isWall = true;
-                _isBuildWall = false;
-                return true;
-            }
-
-            return false;
+            _wall = Instantiate(_wall, transform);
+            _wall.Init(playerId, links);
+            return true;
         }
 
-        public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> owner)
+        public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> owner, bool isWall)
         {
-            if (_isWall && _wall != null)
+            if (isWall && _wall != null)
                 _wall.AddRoad(linkId, owner);
         }
-
-#if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-
-            if (_isBuildWall && _wall == null)
-                _wall = VurbiriEditor.Utility.FindAnyPrefab<Wall>();
-        }
-#endif
     }
 }

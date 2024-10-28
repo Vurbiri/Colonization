@@ -41,8 +41,8 @@ namespace Vurbiri.Colonization
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
 
                 _resources = new(data.Resources);
-                _edifices = new(playerId, data, crossroads);
                 _roads.Restoration(data.Roads, crossroads);
+                _edifices = new(playerId, data, crossroads);
                 _perks = new(data.Perks);
             }
             else

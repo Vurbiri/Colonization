@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
             _thisTransform = transform;
             _gameObject = transform.gameObject;
 
-            _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, KeyToQuaternion(_currentHex.GetNearGroundHexOffset()));
+            _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
             _currentHex.EnterActor(_owner);
             
             _gameObject.SetActive(true);
@@ -43,21 +43,5 @@ namespace Vurbiri.Colonization
         {
             _eventBus.TriggerWarriorUnselect(this);
         }
-
-        private Quaternion KeyToQuaternion(Key key)
-        {
-            int index = 0;
-
-            for(int i = 0; i < HEX_COUNT_SIDES; i++)
-            {
-                if (NEAR_HEX[i] == key)
-                {
-                    index = i; break;
-                }
-            }
-
-            return ROTATIONS_60[index];
-        }
-
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -41,13 +40,13 @@ namespace Vurbiri.Colonization
         public static readonly IReadOnlyList<float> COS_HEX_DIRECT = new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60};
         public static readonly IReadOnlyList<float> SIN_HEX_DIRECT = new float[] { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 };
 
-        public static readonly IReadOnlyList<Quaternion> ROTATIONS_60;
-
         public static readonly IReadOnlyList<Key> NEAR_HEX = new Key[]{ new(2, 0), new(1, 1), new(-1, 1), new(-2, 0), new(-1, -1), new(1, -1) };
         public static readonly IReadOnlyList<Key> NEAR_HEX_TWO;
 
-        public static readonly IdArray<LinkId, Quaternion> LINK_ROTATIONS 
-            = new (new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, -120f, 0f), Quaternion.Euler(0f, 0f, 0f) });
+        public static readonly IReadOnlyDictionary<Key, Quaternion> ACTOR_ROTATIONS;
+
+        public static readonly IReadOnlyList<Quaternion> LINK_ROTATIONS 
+            = new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, -120f, 0f), Quaternion.Euler(0f, 0f, 0f) };
 
         public const int ID_GATE = 13;
         public static readonly IReadOnlyList<int> NUMBERS = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };
@@ -75,14 +74,14 @@ namespace Vurbiri.Colonization
             SIDE_DIRECTIONS = directions;
             HEX_SIDES = positions;
 
-            Quaternion[] quaternions = new Quaternion[HEX_COUNT_SIDES];
-            float angle = 0f;
+            Dictionary<Key, Quaternion> quaternions = new(HEX_COUNT_SIDES);
+            float angle = 90f;
             for (int i = 0; i < HEX_COUNT_SIDES; i++)
             {
-                quaternions[i] = Quaternion.Euler(0f, angle, 0f);
-                angle += 60f;
+                quaternions[NEAR_HEX[i]] = Quaternion.Euler(0f, angle, 0f);
+                angle -= 60f;
             }
-            ROTATIONS_60 = quaternions;
+            ACTOR_ROTATIONS = quaternions;
 
             Key[] nearTwo= new Key[HEX_COUNT_SIDES << 1];
             Key key;

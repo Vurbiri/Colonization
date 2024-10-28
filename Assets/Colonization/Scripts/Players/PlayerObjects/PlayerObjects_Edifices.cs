@@ -11,9 +11,9 @@ namespace Vurbiri.Colonization
         {
             public readonly IdArray<EdificeGroupId, ReactiveList<Crossroad>> values = new();
 
-            public readonly ReactiveList<Crossroad> shrines = new(Crossroad.Equals);
-            public readonly ReactiveList<Crossroad> ports = new(Crossroad.Equals);
-            public readonly ReactiveList<Crossroad> urbans = new(Crossroad.Equals);
+            public readonly ReactiveList<Crossroad> shrines = new();
+            public readonly ReactiveList<Crossroad> ports = new();
+            public readonly ReactiveList<Crossroad> urbans = new();
 
             public Edifices()
             {
@@ -39,12 +39,12 @@ namespace Vurbiri.Colonization
 
                     key.SetValues(array[0], array[1]);
                     crossroad = crossroads[key];
-                    if (crossroad.Build(playerId, array[2], array[3] > 0))
-                        values.Add(crossroad);
+                    crossroad.Build(playerId, array[2], array[3] > 0);
+                    values.Add(crossroad);
                 }
             }
 
-            private bool EqualsCrossroads(Crossroad a, Crossroad b) => a.Key == b.Key;
+            
         }
     }
 }

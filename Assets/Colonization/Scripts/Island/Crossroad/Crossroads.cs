@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -7,8 +8,8 @@ namespace Vurbiri.Colonization
 
     [System.Serializable]
     public class Crossroads
-    { 
-        [SerializeField] private Crossroad _prefabCrossroad;
+    {
+        [SerializeField] private IdHashSet<EdificeId, AEdifice> _prefabs;
 
         private Transform _container;
         private readonly Dictionary<Key, Crossroad> _crossroads = new(HEX_COUNT_SIDES * MAX_CIRCLES * MAX_CIRCLES);
@@ -34,8 +35,7 @@ namespace Vurbiri.Colonization
                     if (isLastCircle)
                         continue;
 
-                    cross = Object.Instantiate(_prefabCrossroad, positionCross, i % 2 == 0 ? ANGLE_180 : ANGLE_0, _container);
-                    cross.Init(key);
+                    cross = new(key, _container, positionCross, i % 2 == 0 ? ANGLE_180 : ANGLE_0, _prefabs);
                     _crossroads.Add(key, cross);
                 }
 
@@ -45,13 +45,5 @@ namespace Vurbiri.Colonization
                     _crossroads.Remove(key);
             }
         }
-
-#if UNITY_EDITOR
-        public void OnValidate()
-        {
-            if (_prefabCrossroad == null)
-                _prefabCrossroad = VurbiriEditor.Utility.FindAnyPrefab<Crossroad>();
-        }
-#endif
     }
 }

@@ -10,7 +10,8 @@ namespace Vurbiri.Reactive.Collections
         private int _count = 0;
         private int _capacity = 4;
 
-        private readonly Func<T, T, bool> funcEquals;
+        private readonly IEqualityComparer<T> _comparer;
+
         private Action<int, T, Operation> actionListChange;
 
         public T this[int index] 
@@ -40,13 +41,12 @@ namespace Vurbiri.Reactive.Collections
         #region Constructors
         public ReactiveList()
         {
+            _comparer = EqualityComparer<T>.Default;
             _values = new T[_capacity];
-            funcEquals = Equals;
         }
-
-        public ReactiveList(Func<T, T, bool> equals)
+        public ReactiveList(IEqualityComparer<T> comparer)
         {
-            funcEquals = equals ?? throw new ArgumentNullException("equals"); ;
+            _comparer = comparer ?? throw new ArgumentNullException("comparer");
             _values = new T[_capacity];
         }
 
@@ -55,30 +55,39 @@ namespace Vurbiri.Reactive.Collections
             if (capacity < 0)
                 throw new ArgumentOutOfRangeException($"capacity = {capacity}");
 
+            _comparer = EqualityComparer<T>.Default;
             _capacity = capacity;
             _values = new T[_capacity];
-            funcEquals = Equals;
         }
-
-        public ReactiveList(int capacity, Func<T, T, bool> equals)
+        public ReactiveList(int capacity, IEqualityComparer<T> comparer)
         {
             if (capacity < 0)
                 throw new ArgumentOutOfRangeException($"capacity = {capacity}");
 
-            funcEquals = equals ?? throw new ArgumentNullException("equals"); ;
+            _comparer = comparer ?? throw new ArgumentNullException("comparer");
             _capacity = capacity;
             _values = new T[_capacity];
         }
 
         public ReactiveList(IReadOnlyList<T> values)
         {
+            _comparer = EqualityComparer<T>.Default;
+            _capacity = values.Count;
+            _values = new T[_capacity];
+
+            for (_count = 0; _count < _capacity; _count++)
+                _values[_count] = values[_count];
+        }
+        public ReactiveList(IReadOnlyList<T> values, IEqualityComparer<T> comparer)
+        {
+            _comparer = comparer ?? throw new ArgumentNullException("comparer");
             _capacity = values.Count;
             _values = new T[_capacity];
 
             for (_count = 0; _count < _capacity; _count++)
                 _values[_count] = values[_count];
 
-            funcEquals = Equals;
+            
         }
         #endregion
 
@@ -161,7 +170,7 @@ namespace Vurbiri.Reactive.Collections
         public bool Contains(T item)
         {
             for (int i = 0; i < _count; i++)
-                if (funcEquals(_values[i], item))
+                if (_comparer.Equals(_values[i], item))
                     return true;
 
             return false;
@@ -170,7 +179,7 @@ namespace Vurbiri.Reactive.Collections
         public int IndexOf(T item)
         {
             for (int i = 0; i < _count; i++)
-                if (funcEquals(_values[i], item))
+                if (_comparer.Equals(_values[i], item))
                     return i;
 
             return -1;

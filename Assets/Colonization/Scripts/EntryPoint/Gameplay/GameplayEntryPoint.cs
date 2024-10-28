@@ -23,10 +23,8 @@ namespace Vurbiri.Colonization
         [SerializeField] private IslandCreator _islandCreator;
         [SerializeField] private CameraController _cameraController;
         [SerializeField] private UI.ContextMenusWorld _contextMenusWorld;
-        [Space]
         [Header("Localization")]
         [SerializeField] private EnumArray<Files, bool> _localizationFiles = new(true);
-        [Space]
         [Header("Init data for classes")]
         [SerializeField] private Land _land;
         [SerializeField] private Crossroads _crossroads;
@@ -34,7 +32,6 @@ namespace Vurbiri.Colonization
         [SerializeField] private Players.Settings _playersSettings;
         [Space]
         [SerializeField] private InputController.Settings _inputControllerSettings;
-        [Space]
         [Header("ScriptableObjects")]
         [SerializeField] private SurfacesScriptable _surfaces;
         [SerializeField] private PlayerVisualSetScriptable _visualSet;
@@ -153,7 +150,6 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            _crossroads.OnValidate();
             _land.OnValidate();
 
             if (_mainCamera == null)

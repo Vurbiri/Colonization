@@ -20,12 +20,14 @@ namespace Vurbiri
         }
         public WaitResult(T result) => SetResult(result);
 
-        public void SetResult(T result)
+        public WaitResult<T> SetResult(T result)
         {
             Result = result;
             _keepWaiting = false;
 
             EventCompleted?.Invoke(result);
+
+            return this;
         }
 
         public WaitResult<T> Recreate()
@@ -36,10 +38,12 @@ namespace Vurbiri
             return new();
         }
 
-        public void Cancel()
+        public WaitResult<T> Cancel()
         {
             Result = default;
             _keepWaiting = false;
+
+            return this;
         }
     }
 }
