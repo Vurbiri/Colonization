@@ -15,7 +15,7 @@ namespace Vurbiri
 
 #if UNITY_EDITOR
         private readonly static List<string> _names;
-        public static IReadOnlyList<string> Names => _names;
+        public static string GetName(Id<T> id) => _names[id.Value - _min];
 
         static AIdType() 
         {

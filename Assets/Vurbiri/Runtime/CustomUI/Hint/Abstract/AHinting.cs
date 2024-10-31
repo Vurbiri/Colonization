@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Vurbiri.Localization;
 
 namespace Vurbiri.UI
@@ -13,14 +15,25 @@ namespace Vurbiri.UI
         public bool IsShowingHint => _isShowingHint;
 
         private bool _isShowingHint = false;
+       
         protected GameObject _thisGO;
         protected Transform _thisTransform;
+        protected CmButton _button;
+        protected Graphic _targetGraphic;
         protected string _text;
 
-        protected virtual void Awake()
+        protected virtual void Init(Vector3 localPosition, UnityAction action, bool active = true)
         {
             _thisGO = gameObject;
             _thisTransform = transform;
+
+            _thisTransform.localPosition = localPosition;
+
+            _button = GetComponent<CmButton>();
+            _button.onClick.AddListener(action);
+            _targetGraphic = _button.targetGraphic;
+
+            _thisGO.SetActive(active);
         }
 
         public virtual void OnPointerEnter(PointerEventData eventData)

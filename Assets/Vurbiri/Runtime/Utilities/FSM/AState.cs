@@ -1,8 +1,6 @@
-using System;
-
 namespace Vurbiri.FSM
 {
-    public abstract class AState : IDisposable
+    public abstract class AState : IState
     {
         protected readonly TypeIdKey _key;
         protected readonly StateMachine _fsm;
@@ -16,17 +14,15 @@ namespace Vurbiri.FSM
         }
 
         public virtual void Enter() { }
-
         public virtual void Exit() { }
-
         public virtual void Update() { }
-
 
         public virtual void Dispose() { }
 
         public override int GetHashCode() => _key.GetHashCode();
-        public bool Equals(AState other) => other is not null && _key == other._key;
+        public bool Equals(IState other) => other is not null && _key == other.Key;
         public override bool Equals(object obj) => Equals(obj as AState);
+
         public static bool operator ==(AState a, AState b) => (a is null && b is null) || (a is not null && b is not null && a._key == b._key);
         public static bool operator !=(AState a, AState b) =>!(a == b);
         public static bool operator ==(AState s, TypeIdKey k) => s is not null && s._key == k;

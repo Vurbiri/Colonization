@@ -1,23 +1,9 @@
-using UnityEngine;
-using Vurbiri.Localization;
-
 namespace Vurbiri.Colonization.UI
 {
     public class ButtonBuildRoad : AButtonBuildType<LinkId>
     {
-        private Players _players;
         private Player _playerCurrent;
         private Crossroad _currentCrossroad;
-
-        public ButtonBuildRoad Init(Players players, ACurrencies cost)
-        {
-            base.Init(Vector3.zero);
-            _players = players;
-            _cost = cost;
-            _buttonClicked.AddListener(OnClick);
-            _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
-            return this;
-        }
 
         public bool Setup(Crossroad crossroad, out CrossroadLink link)
         {
@@ -50,8 +36,9 @@ namespace Vurbiri.Colonization.UI
             return true;
         }
 
-        private void OnClick()
+        protected override void OnClick()
         {
+            _parentGO.SetActive(false);
             _playerCurrent.BuyRoad(_currentCrossroad, _id);
         }
     }

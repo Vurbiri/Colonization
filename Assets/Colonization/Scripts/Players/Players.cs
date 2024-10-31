@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
+    using Actors;
     using Data;
     using Vurbiri.Collections;
     using static PlayerId;

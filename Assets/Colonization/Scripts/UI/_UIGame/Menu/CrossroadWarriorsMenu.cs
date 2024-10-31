@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
     public class CrossroadWarriorsMenu : ACrossroadMenuBuild
     {
         [Space]
-        [SerializeField] private CmButton _buttonBack;
+        [SerializeField] private HintingButton _buttonBack;
         [Space]
         [SerializeField] private IdHashSet<WarriorId, ButtonRecruiting> _buttons;
 
@@ -18,12 +18,12 @@ namespace Vurbiri.Colonization.UI
         {
             _mainMen = mainMenu;
 
-            _buttonBack.onClick.AddListener(OnClose);
+            _buttonBack.Init(Vector3.zero, OnClose);
 
             float angle = 360 / WarriorId.Count;
             Vector3 distance = new(0f, _distanceOfButtons, 0f);
             for (int i = 0; i < WarriorId.Count; i++)
-                _buttons[i].Init(Quaternion.Euler(0f, 0f, -angle * i) * distance, players, warriorPrices[i]).AddListener(OnClick);
+                _buttons[i].Init(players, warriorPrices[i], _thisGO, Quaternion.Euler(0f, 0f, -angle * i) * distance);
 
             _thisGO.SetActive(false);
         }
@@ -40,11 +40,6 @@ namespace Vurbiri.Colonization.UI
         {
             _thisGO.SetActive(false);
             _mainMen.Open();
-        }
-
-        private void OnClick()
-        {
-            _thisGO.SetActive(false);
         }
     }
 

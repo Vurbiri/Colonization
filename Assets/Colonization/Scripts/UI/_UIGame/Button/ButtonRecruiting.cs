@@ -1,23 +1,9 @@
-using UnityEngine;
-using Vurbiri.Localization;
-
 namespace Vurbiri.Colonization.UI
 {
     public class ButtonRecruiting : AButtonBuildType<WarriorId>
     {
-        private Players _players;
         private Player _playerCurrent;
         private Crossroad _currentCrossroad;
-
-        public ButtonRecruiting Init(Vector3 localPosition, Players players, ACurrencies cost)
-        {
-            base.Init(localPosition);
-            _players = players;
-            _cost = cost;
-            _buttonClicked.AddListener(OnClick);
-            _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
-            return this;
-        }
 
         public void Setup(Crossroad crossroadCurrent)
         {
@@ -31,8 +17,9 @@ namespace Vurbiri.Colonization.UI
             SetTextHint(_caption, cash, _cost);
         }
 
-        private void OnClick()
+        protected override void OnClick()
         {
+            _parentGO.SetActive(false);
             _playerCurrent.RecruitWarriors(_currentCrossroad, _id);
         }
 
@@ -42,7 +29,7 @@ namespace Vurbiri.Colonization.UI
             base.OnValidate();
             
             if(string.Empty == _key)
-                _key = WarriorId.Names[_id.Value];
+                _key = WarriorId.GetName(_id);
         }
 #endif
     }

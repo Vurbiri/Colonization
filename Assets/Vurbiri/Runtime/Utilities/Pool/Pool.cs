@@ -15,49 +15,56 @@ namespace Vurbiri
             _prefab = prefab;
             _repository = repository;
             for (int i = 0; i < size; i++)
-                _pool.Push(CreateObject());
+                _pool.Push(Create());
         }
 
-        public T GetObject(Transform parent)
+        public T Get(Transform parent, bool worldPositionStays = false)
         {
-            T poolObject = GetObject();
-            poolObject.SetParent(parent);
+            T pooledObject = Get();
+            pooledObject.SetParent(parent, worldPositionStays);
 
-            return poolObject;
+            return pooledObject;
         }
 
-        public T GetObject()
+        public T Get()
         {
-            T poolObject;
+            T pooledObject;
             if (_pool.Count == 0)
-                poolObject = CreateObject();
+                pooledObject = Create();
             else
-                poolObject = _pool.Pop();
+                pooledObject = _pool.Pop();
 
-            return poolObject;
+            return pooledObject;
         }
 
-        public List<T> GetObjects(Transform parent, int count)
+        public List<T> Get(int count, Transform parent, bool worldPositionStays = false)
         {
-            List<T> gameObjects = new(count);
+            List<T> pooledObjects = new(count);
             for (int i = 0; i < count; i++)
-                gameObjects.Add(GetObject(parent));
+                pooledObjects.Add(Get(parent, worldPositionStays));
 
-            return gameObjects;
+            return pooledObjects;
         }
 
-        protected void OnDeactivate(T poolObject)
+        public virtual void Return(T pooledObject, bool worldPositionStays = false)
         {
-            poolObject.SetParent(_repository);
-            _pool.Push(poolObject);
+            pooledObject.SetActive(false);
+            pooledObject.SetParent(_repository, worldPositionStays);
+            _pool.Push(pooledObject);
         }
 
-        protected virtual T CreateObject()
+        protected void OnDeactivate(T pooledObject, bool worldPositionStays)
         {
-            T gameObject = Object.Instantiate(_prefab, _repository);
-            gameObject.Init();
-            gameObject.EventDeactivate += OnDeactivate;
-            return gameObject;
+            pooledObject.SetParent(_repository, worldPositionStays);
+            _pool.Push(pooledObject);
+        }
+
+        protected virtual T Create()
+        {
+            T pooledObject = Object.Instantiate(_prefab, _repository);
+            pooledObject.Init();
+            pooledObject.EventDeactivate += OnDeactivate;
+            return pooledObject;
         }
     }
 }

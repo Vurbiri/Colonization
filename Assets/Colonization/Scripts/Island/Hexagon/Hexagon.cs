@@ -9,11 +9,13 @@ namespace Vurbiri.Colonization
     public class Hexagon : MonoBehaviour, ISelectable
     {
         [SerializeField] private HexagonCaption _hexagonCaption;
-        [SerializeField] private GameObject _selected;
         [SerializeField] private Collider _collider;
 
         #region private
+        private Transform _thisTransform;
         private GameplayEventBus _eventBus;
+        private Pool<HexagonMark> _poolMarks;
+        private HexagonMark _mark;
         private HexData _data;
         private IProfit _profit;
         private bool _isGate, _isWater, _isShow;
@@ -29,12 +31,14 @@ namespace Vurbiri.Colonization
         public bool IsWater => _isWater;
         public bool CanUnitEnter => !_isGate && !_isWater && _owner == PlayerId.None;
         public Vector3 Position => _data.position;
+        public IReadOnlyCollection<Hexagon> Neighbors => _neighbors;
 
-        
 
-        public void Init(HexData data, GameplayEventBus eventBus)
+        public void Init(HexData data, Pool<HexagonMark> poolMarks, GameplayEventBus eventBus)
         {
+            _thisTransform = transform;
             _data = data;
+            _poolMarks = poolMarks;
             _eventBus = eventBus;
             var surface = data.surface;
 
@@ -48,14 +52,11 @@ namespace Vurbiri.Colonization
             surface.Create(transform);
             eventBus.EventHexagonIdShow += OnShow;
 
-            EnableSelect(false);
-
             if (_isWater || _isGate)
             {
                 Destroy(_collider);
                 _collider = null;
-                Destroy(_selected);
-                _selected = null;
+                _poolMarks = null;
             }
         }
 
@@ -139,21 +140,24 @@ namespace Vurbiri.Colonization
 
         public bool IsEnemy(Id<PlayerId> id) => _owner != PlayerId.None && _owner != id;
 
-        public bool TrySetSelectable()
+        public bool TrySetSelectable(bool isFree = true)
         {
             if(_isGate || _isWater || _owner != PlayerId.None)
                 return false;
 
-            EnableSelect(true);
+            _mark = _poolMarks.Get(_thisTransform, false).View(isFree);
+            _collider.enabled = true;
             return true;
         }
 
         public void SetUnselectable()
         {
-            if (_isGate || _isWater)
+            if (_mark == null || _isGate || _isWater)
                 return;
 
-            EnableSelect(false);
+            _poolMarks.Return(_mark);
+            _collider.enabled = false;
+            _mark = null;
         }
 
         public void Select()
@@ -164,12 +168,6 @@ namespace Vurbiri.Colonization
         public void Unselect(ISelectable newSelectable)
         {
             //_eventBus.TriggerHexagonUnselect(this);
-        }
-
-        private void EnableSelect(bool value)
-        {
-            _selected.SetActive(value);
-            _collider.enabled = value;
         }
 
         private void OnShow(bool value)

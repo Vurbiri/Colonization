@@ -1,4 +1,4 @@
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Actors
 {
     [System.Serializable]
     public class ActorSettings

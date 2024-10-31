@@ -26,7 +26,7 @@ namespace Vurbiri
 
         public void Message(string message, MessageType messageType, float time, bool isThrough)
         {
-            _banners.GetObject(_container).Setup(message, messageType, time, isThrough);
+            _banners.Get(_container).Setup(message, messageType, time, isThrough);
         }
 
         public void Clear()
@@ -35,7 +35,7 @@ namespace Vurbiri
             while (_container.childCount > 0)
             {
                 child = _container.GetChild(0);
-                child.GetComponent<Banner>().Deactivate();
+                child.GetComponent<Banner>().ToPool();
                 child.SetParent(_repository);
             }
         }

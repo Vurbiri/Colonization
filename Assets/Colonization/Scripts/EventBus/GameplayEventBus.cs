@@ -2,6 +2,8 @@ using System;
 
 namespace Vurbiri.Colonization
 {
+    using Actors;
+
     public class GameplayEventBus
     {
         public event Action<Crossroad> EventCrossroadSelect;

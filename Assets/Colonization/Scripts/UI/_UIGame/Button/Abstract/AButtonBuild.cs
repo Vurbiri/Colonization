@@ -1,7 +1,7 @@
+using System;
 using System.Globalization;
 using System.Text;
 using UnityEngine;
-using UnityEngine.UI;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -16,22 +16,15 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField, Range(0.05f, 0.5f)] private float _space = 0.1f;
 
-        protected CmButton _button;
-        protected CmButton.ButtonClickedEvent _buttonClicked;
-        protected Graphic _targetGraphic;
         private string _hexColorPlus, _hexColorMinus;
 
         private const int MIN_SIZE = 64, MAX_SIZE = 256;
 
         public Vector3 LocalPosition { set => _thisTransform.localPosition = value; }
 
-        protected virtual void Init(Vector3 localPosition)
+        protected override void Init(Vector3 localPosition, UnityEngine.Events.UnityAction action, bool active = true)
         {
-            _thisTransform.localPosition = localPosition;
-
-            _button = GetComponent<CmButton>();
-            _buttonClicked = _button.onClick;
-            _targetGraphic = _button.targetGraphic;
+            base.Init(localPosition, action, active);
 
             _hexColorPlus = string.Format(TAG_COLOR_FORMAT_LITE, _colorPlus.ToHex());
             _hexColorMinus = string.Format(TAG_COLOR_FORMAT_LITE, _colorMinus.ToHex());
@@ -62,6 +55,6 @@ namespace Vurbiri.Colonization.UI
             _text = sb.ToString();
         }
 
-        public void AddListener(UnityEngine.Events.UnityAction action) => _buttonClicked.AddListener(action);
+        //public void AddListener(UnityEngine.Events.UnityAction action) => _buttonClicked.AddListener(action);
     }
 }

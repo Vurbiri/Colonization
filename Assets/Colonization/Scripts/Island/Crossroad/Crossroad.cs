@@ -21,9 +21,7 @@ namespace Vurbiri.Colonization
         private int _countFreeLink = 0, _countWater = 0;
         private bool _isGate = false;
         private WaitResult<Hexagon> _waitHexagon;
-
         
-
         private const int HEX_COUNT = 3;
         #endregion
 
@@ -283,9 +281,10 @@ namespace Vurbiri.Colonization
                 return;
 
             _waitHexagon.SetResult(newSelectable as Hexagon);
-            _waitHexagon = null;
             foreach (var hex in _hexagons)
                 hex.SetUnselectable();
+
+            _waitHexagon = null;
         }
 
         public int[] ToArray() => new int[] { _key.X, _key.Y, _states.id.Value, _isWall ? 1 : 0 };

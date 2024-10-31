@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Colonization
 {
+    using Actors;
     using Data;
     using Reactive.Collections;
 

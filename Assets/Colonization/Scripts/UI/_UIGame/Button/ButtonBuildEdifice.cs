@@ -18,12 +18,11 @@ namespace Vurbiri.Colonization.UI
         private Language _localization;
         private IReadOnlyList<ACurrencies> _edificePrices;
 
-        public ButtonBuildEdifice Init(Vector3 localPosition, IReadOnlyList<ACurrencies> edificePrices)
+        public void Init(Vector3 localPosition, IReadOnlyList<ACurrencies> edificePrices, UnityEngine.Events.UnityAction action)
         {
-            base.Init(localPosition);
+            base.Init(localPosition, action);
             _edificePrices = edificePrices;
             _localization = SceneServices.Get<Language>();
-            return this;
         }
 
         public void Setup(bool isEnable, int edificeId, Color color, ACurrencies cash)
@@ -65,7 +64,7 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < EdificeId.Count; i++)
             {
                 if(string.IsNullOrEmpty(_edificeView[i].keyHint))
-                _edificeView[i].keyHint = EdificeId.Names[i];
+                _edificeView[i].keyHint = EdificeId.GetName(i);
             }
         }
 #endif

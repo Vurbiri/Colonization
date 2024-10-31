@@ -12,16 +12,20 @@ namespace Vurbiri.Colonization
     public class Land
     {
         [SerializeField] private Hexagon _prefabHex;
+        [SerializeField] private HexagonMark _prefabHexMark;
+        [Space]
         [SerializeField] private LandMesh _landMesh;
 
         private Transform _container;
         private GameplayEventBus _eventBus;
+        private Pool<HexagonMark> _poolMarks;
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
         private readonly Dictionary<int, List<Key>> _hexagonsIdForKey = new(NUMBERS.Count + 1);
 
         public void Init(Transform container)
         {
             InitHexagonsIdForKey();
+            _poolMarks = new(_prefabHexMark, container, HEX_COUNT_SIDES);
             _container = container;
             _eventBus = SceneServices.Get<GameplayEventBus>();
 
@@ -44,7 +48,7 @@ namespace Vurbiri.Colonization
         {
             Key key = data.key;
             Hexagon hex = Object.Instantiate(_prefabHex, data.position, Quaternion.identity, _container);
-            hex.Init(data, _eventBus);
+            hex.Init(data, _poolMarks, _eventBus);
 
             _hexagons.Add(key, hex);
             _hexagonsIdForKey[data.id].Add(key);
@@ -116,6 +120,8 @@ namespace Vurbiri.Colonization
                 _landMesh = Object.FindAnyObjectByType<LandMesh>();
             if (_prefabHex == null)
                 _prefabHex = VurbiriEditor.Utility.FindAnyPrefab<Hexagon>();
+            if (_prefabHexMark == null)
+                _prefabHexMark = VurbiriEditor.Utility.FindAnyPrefab<HexagonMark>();
         }
 #endif
     }

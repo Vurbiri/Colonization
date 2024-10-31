@@ -11,9 +11,22 @@ namespace Vurbiri.UI
 
         private Unsubscriber<Language> _unsubscriber;
 
-        public void Start() 
+        public void Init(Vector3 localPosition, UnityEngine.Events.UnityAction action)
         {
+            base.Init(localPosition, action);
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
+        }
+
+        public void Setup(bool isEnable, Color color)
+        {
+            if (!isEnable)
+            {
+                _thisGO.SetActive(false);
+                return;
+            }
+
+            _targetGraphic.color = color;
+            _thisGO.SetActive(true);
         }
 
         private void SetText(Language localization) => _text = localization.GetText(_file, _key);

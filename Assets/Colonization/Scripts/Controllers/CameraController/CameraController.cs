@@ -59,7 +59,9 @@ namespace Vurbiri.Colonization.Controllers
                 _cameraActions.Rotate.performed += OnRotate;
                 _cameraActions.Position.performed += OnEdgeMove;
                 _cameraActions.Zoom.performed += OnZoom;
-                _eventBus.EventCrossroadSelect += OnMoveToCrossroad;
+
+                _eventBus.EventCrossroadSelect += obj => OnMoveToCrossroad(obj.Position);
+                _eventBus.EventWarriorSelect += obj => OnMoveToCrossroad(obj.Position);
             }
             #endregion
         }
@@ -75,9 +77,9 @@ namespace Vurbiri.Colonization.Controllers
         }
         private void OnCancelMove(CallbackContext ctx) => _moveDirection = Vector2.zero;
 
-        private void OnMoveToCrossroad(Crossroad crossroad)
+        private void OnMoveToCrossroad(Vector3 position)
         {
-            _targetPosition = crossroad.Position;
+            _targetPosition = position;
             _machine.SetState<MoveToTargetState>();
         }
 
@@ -105,20 +107,7 @@ namespace Vurbiri.Colonization.Controllers
             _heightZoom = Mathf.Clamp(_heightZoom - ctx.ReadValue<float>() * _steepZoomRate, _heightZoomMin, _heightZoomMax); ;
             _machine.SetState<ZoomState>();
         }
-
-        //private void OnDisable()
-        //{
-        //    if (_eventBus != null)
-        //        _eventBus.EventCrossroadSelect -= OnMoveToCrossroad;
-
-
-        //    _cameraActions.Move.performed -= OnMove;
-        //    _cameraActions.Move.canceled -= OnCancelMove;
-        //    _cameraActions.Zoom.performed -= OnZoom;
-        //    _cameraActions.Rotate.performed -= OnRotate;
-        //    _cameraActions.Position.performed -= OnEdgeMove;
-        //}
-
+        
         #region Nested: Movement, MovementToTarget
         //***********************************
         [Serializable]

@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private Camera _camera;
         [Space]
-        [SerializeField] private CmButton _buttonBack;
+        [SerializeField] private HintingButton _buttonBack;
         [Space]
         [SerializeField] private IdHashSet<LinkId, ButtonBuildRoad> _roadButtons;
 
@@ -23,13 +23,13 @@ namespace Vurbiri.Colonization.UI
             _mainMen = mainMenu;
             _camera = camera;
 
-            _buttonBack.onClick.AddListener(OnClose);
+            _buttonBack.Init(Vector3.zero, OnClose);
 
             _thisTransform = GetComponent<RectTransform>();
             _cameraTransform = _camera.transform;
 
             foreach (var button in _roadButtons)
-                button.Init(players, roadCost).AddListener(OnClick);
+                button.Init(players, roadCost, _thisGO);
 
             _thisGO.SetActive(false);
         }
@@ -55,11 +55,6 @@ namespace Vurbiri.Colonization.UI
         {
             _thisGO.SetActive(false);
             _mainMen.Open();
-        }
-
-        private void OnClick()
-        {
-            _thisGO.SetActive(false);
         }
 
         private void Update()

@@ -43,18 +43,18 @@ namespace Vurbiri
             _text.text = message;
             _image.color = _banners.Colors[(int)messageType];
 
-            Activate();
+            _thisGO.SetActive(true);
             _coroutine = StartCoroutine(TimeShow());
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
             IEnumerator TimeShow()
             {
                 yield return new WaitForSecondsRealtime(time);
-                Deactivate();
+                ToPool();
             }
         }
 
-        public override void Deactivate()
+        public override void ToPool(bool worldPositionStays = true)
         {
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
             if (_coroutine != null)
@@ -62,7 +62,7 @@ namespace Vurbiri
                 StopCoroutine(_coroutine);
                 _coroutine = null;
             }
-            base.Deactivate();
+            base.ToPool(worldPositionStays);
         }
 
         private void OnSceneUnloaded(Scene scene)
@@ -70,7 +70,7 @@ namespace Vurbiri
             if (_isThrough)
                 return;
 
-            Deactivate();
+            ToPool();
         }
     }
 }
