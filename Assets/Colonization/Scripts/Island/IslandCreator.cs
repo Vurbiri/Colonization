@@ -30,8 +30,6 @@ namespace Vurbiri.Colonization
 
         public IEnumerator Create_Coroutine(HexagonsData hexagonsData, bool isLoad)
         {
-            
-
             yield return null;
 
             if (isLoad)
@@ -77,7 +75,7 @@ namespace Vurbiri.Colonization
             while (!isLastCircle)
             {
                 isLastCircle = ++circle == MAX_CIRCLES;
-                isWaterPossible = isLastCircle || (circle >= (MAX_CIRCLES - 1));
+                isWaterPossible = isLastCircle | (circle >= (MAX_CIRCLES - 1));
 
                 positionNext = HEX_SIDES[0] * circle;
                 for (int i = 0; i < HEX_COUNT_SIDES; i++)
@@ -91,7 +89,7 @@ namespace Vurbiri.Colonization
                         positionCurrent = position + direction * j;
 
                         keyHex = positionCurrent.HexPositionToKey();
-                        isWater = isWaterPossible && (isLastCircle || (!isWater && j != 0 && chanceWater.Roll));
+                        isWater = isWaterPossible && (isLastCircle || (!isWater & j != 0 && chanceWater.Roll));
                         
                         hexData = isWater ? new(keyHex, numWater.Next, positionCurrent, surfaces[SurfaceId.Water]) :
                                             new(keyHex, numGround.Next, positionCurrent, ground.Next);

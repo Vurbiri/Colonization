@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: afcba74525ab4ad43a4bbf4537c0d6c3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _treeWarriorsSettingsScriptable: {fileID: 9197481963319205126, guid: fe38df201a4a5eb439817847019b3d18,
+      type: 3}
+  - _treeWarriorSettings: {fileID: 9197481963319205126, guid: e504c9e057ed7464db0baadce84227ff,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

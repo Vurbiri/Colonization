@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void StartMove() => _machine.SetState<MoveState>();
         
-        public void ResetStates() => _machine.Reset();
+        public void ResetStates() => _machine.Default();
 
     }
 }

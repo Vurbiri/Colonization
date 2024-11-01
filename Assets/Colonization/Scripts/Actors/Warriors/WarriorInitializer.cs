@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
 
             Destroy(this);
 
-            return _warrior.Init(id, owner, _skin, startHex, eventBus);
+            return _warrior.Init(settings, owner, _skin, startHex, eventBus);
         }
 
 #if UNITY_EDITOR

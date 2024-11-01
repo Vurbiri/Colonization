@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private HintingButton _buttonMovement;
 
         private Players _players;
-        private Actors.Warrior _currentWarrior;
+        private Actors.Actor _currentWarrior;
 
         public void Init(Players players)
         {
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
             _thisGO.SetActive(false);
         }
 
-        public void Open(Actors.Warrior warrior)
+        public void Open(Actors.Actor warrior)
         {
             _currentWarrior = warrior;
             Color currentColor = _players.Current.Visual.color;

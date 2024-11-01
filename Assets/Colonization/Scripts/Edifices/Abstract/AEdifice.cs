@@ -27,7 +27,8 @@ namespace Vurbiri.Colonization
             transform.SetParent(edifice.transform.parent);
             transform.SetLocalPositionAndRotation(edifice.transform);
 
-            _graphic.transform.localRotation = edifice._graphic.transform.localRotation;
+            if(edifice._graphic != null)
+                _graphic.transform.localRotation = edifice._graphic.transform.localRotation;
             _graphic.Init(playerId, links);
 
             Destroy(edifice.gameObject);
@@ -36,7 +37,7 @@ namespace Vurbiri.Colonization
 
         public virtual bool WallBuild(Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links) => false;
 
-        public virtual void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId, bool isWall) { }
+        public virtual void AddRoad(Id<LinkId> linkId, bool isWall) { }
 
         public void Select() => eventSelect?.Invoke();
 

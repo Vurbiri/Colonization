@@ -60,8 +60,8 @@ namespace Vurbiri.Colonization
         public void RoadBuilt(Id<PlayerId> playerId)
         {
             _owner = playerId;
-            _start.RoadBuilt(_id, playerId);
-            _end.RoadBuilt(_id, playerId);
+            _start.RoadBuilt(_id);
+            _end.RoadBuilt(_id);
         }
 
         public Crossroad Other(Crossroad crossroad) => crossroad == _start ? _end : _start;

@@ -43,8 +43,8 @@ namespace Vurbiri.Colonization.UI
             eventBus.EventCrossroadSelect += OnSelectCrossroad;
             eventBus.EventCrossroadUnselect += OnUnselectCrossroad;
 
-            eventBus.EventWarriorSelect += OnSelectWarrior;
-            eventBus.EventWarriorUnselect += OnUnselectWarrior;
+            eventBus.EventActorSelect += OnSelectWarrior;
+            eventBus.EventActorUnselect += OnUnselectWarrior;
         }
 
         private void OnSelectCrossroad(Crossroad crossroad)
@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization.UI
             CrossroadMenusClose();
         }
 
-        private void OnSelectWarrior(Actors.Warrior warrior)
+        private void OnSelectWarrior(Actors.Actor warrior)
         {
             //if (_players.Current.Id != PlayerId.Player)
             //    return;
@@ -77,7 +77,7 @@ namespace Vurbiri.Colonization.UI
             _warriorsMenu.Open(warrior);
         }
 
-        private void OnUnselectWarrior(Actors.Warrior warrior)
+        private void OnUnselectWarrior(Actors.Actor warrior)
         {
             _lookAtCamera.enabled = false;
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.CreatingMesh;
@@ -7,37 +8,32 @@ namespace Vurbiri.Colonization
 {
     public class HexagonMesh : IPrimitive
     {
-        public static Vector2 CoastSize { set => _coastSize = value; }
-        public static int CoastSteps { set => _coastSteps = value; }
-        public static float FinalBevelSize { set => _finalBevelSize = value; }
-
         public IEnumerable<Triangle> Triangles => _triangles;
 
-        private static readonly int[][] INDEXES = { new int[] { 0, 4, 2 }, new int[] { 0, 5, 4 }, new int[] { 0, 2, 1 }, new int[] { 2, 4, 3 } };
-        private static readonly Vector3 NORMAL = Vector3.up;
-        private static readonly Vector3 DOWN = Vector3.down;
+        private readonly Vector3 NORMAL = Vector3.up;
+        private readonly Vector3 DOWN = Vector3.down;
 
-        private static Vector2 _coastSize = new(0.7f, 0.3f);
-        private static float _finalBevelSize = 5f;
-        private static int _coastSteps = 5;
+        private readonly Settings _stt;
 
         private readonly List<Triangle> _triangles = new();
         private readonly Vertex[] _verticesBase = new Vertex[HEX_COUNT_SIDES];
         private readonly bool[] _visits = new bool[HEX_COUNT_SIDES];
 
-        public HexagonMesh(Vector3 position, Color32 color, float sizeRate, bool isCreate)
+        public HexagonMesh(Settings settings, Vector3 position, Color32 color, bool isCreate)
         {
-            int i;
-            for (i = 0; i < HEX_COUNT_SIDES; i++)
+            _stt = settings;
+
+            float sizeRate = isCreate ? _stt.rateCellBaseLand : _stt.rateCellBaseWater;
+            for (int i = 0; i < HEX_COUNT_SIDES; i++)
                 _verticesBase[i] = new(HEX_VERTICES[i] * sizeRate + position, NORMAL, color);
 
             if (!isCreate)
                 return;
 
             int[] idx;
-            for (i = 0; i < INDEXES.Length; i++)
+            for (int i = 0; i < _stt.INDEXES.Length; i++)
             {
-                idx = INDEXES[i];
+                idx = _stt.INDEXES[i];
                 _triangles.Add(new(_verticesBase[idx[0]], _verticesBase[idx[1]], _verticesBase[idx[2]]));
             }
         }
@@ -88,7 +84,7 @@ namespace Vurbiri.Colonization
 
                 triangles.Add(new(_verticesBase[indexNext], verticesSideNext[0], verticesSide[1]));
 
-                if (isWater && isWaterNext)
+                if (isWater & isWaterNext)
                 {
                     coastPositions[indexNext, 0] ??= CreateCoast(verticesSideNext[0], SIDE_DIRECTIONS[indexNext]);
 
@@ -97,25 +93,36 @@ namespace Vurbiri.Colonization
             }
 
             return triangles;
-
-            #region Local: CreateCoast()
-            //=================================
-            static List<Vector3> CreateCoast(Vertex vertex, Vector3 direction)
-            {
-                List<Vector3> positions = new(2)
-                {
-                    vertex.Position
-                };
-
-                for (int i = 0; i < _coastSteps; i++)
-                    positions.Add(positions[i] + (DOWN * _coastSize[i % 2] + direction * _coastSize[(i + 1) % 2]));
-
-                positions.Add(positions[^1] + (DOWN + direction) * _finalBevelSize);
-
-                return positions;
-            }
-            #endregion
         }
 
+        private List<Vector3> CreateCoast(Vertex vertex, Vector3 direction)
+        {
+            List<Vector3> positions = new(2 + _stt.coastSteps)
+            {
+                vertex.Position
+            };
+
+            for (int i = 0; i < _stt.coastSteps; i++)
+                positions.Add(positions[i] + (DOWN * _stt.coastSize[i % 2] + direction * _stt.coastSize[(i + 1) % 2]));
+
+            positions.Add(positions[^1] + (DOWN + direction) * _stt.finalBevelSize);
+
+            return positions;
+        }
+
+        #region Nested: Settings
+        //***********************************
+        [Serializable]
+        public class Settings
+        {
+            public Vector2 coastSize = new(0.55f, 0.125f);
+            [Range(3, 8)] public int coastSteps = 5;
+            [Range(3f, 8f)] public float finalBevelSize = 5f;
+            [Range(0.5f, 0.99f)] public float rateCellBaseLand = 0.8f;
+            [Range(0.5f, 0.99f)] public float rateCellBaseWater = 0.9f;
+
+            public readonly int[][] INDEXES = { new int[] { 0, 4, 2 }, new int[] { 0, 5, 4 }, new int[] { 0, 2, 1 }, new int[] { 2, 4, 3 } };
+        }
+        #endregion
     }
 }

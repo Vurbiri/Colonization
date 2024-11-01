@@ -162,10 +162,10 @@ namespace Vurbiri.Colonization
         }
 
         public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
-        public void RoadBuilt(Id<LinkId> id, Id<PlayerId> playerId)
+        public void RoadBuilt(Id<LinkId> id)
         {
             _countFreeLink--;
-            _edifice.AddRoad(id, playerId, _isWall);
+            _edifice.AddRoad(id, _isWall);
         }
 
         #endregion

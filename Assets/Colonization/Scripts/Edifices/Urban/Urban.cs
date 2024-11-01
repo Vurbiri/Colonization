@@ -26,25 +26,21 @@ namespace Vurbiri.Colonization
             }
 
             if (isWall)
-            {
-                _wall = Instantiate(_wall, transform);
-                _wall.Init(playerId, links);
-            }
+                _wall = Instantiate(_wall, transform).Init(playerId, links);
 
             return this;
         }
 
         public override bool WallBuild(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
-            _wall = Instantiate(_wall, transform);
-            _wall.Init(playerId, links);
+            _wall = Instantiate(_wall, transform).Init(playerId, links);
             return true;
         }
 
-        public override void AddRoad(Id<LinkId> linkId, Id<PlayerId> owner, bool isWall)
+        public override void AddRoad(Id<LinkId> linkId, bool isWall)
         {
             if (isWall && _wall != null)
-                _wall.AddRoad(linkId, owner);
+                _wall.AddRoad(linkId);
         }
     }
 }

@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization.Controllers
                 _cameraActions.Zoom.performed += OnZoom;
 
                 _eventBus.EventCrossroadSelect += obj => OnMoveToCrossroad(obj.Position);
-                _eventBus.EventWarriorSelect += obj => OnMoveToCrossroad(obj.Position);
+                _eventBus.EventActorSelect += obj => OnMoveToCrossroad(obj.Position);
             }
             #endregion
         }

@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
     {
         public abstract void Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links);
 
-        public virtual void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) { }
+        public virtual void AddRoad(Id<LinkId> linkId) { }
 
     }
 }

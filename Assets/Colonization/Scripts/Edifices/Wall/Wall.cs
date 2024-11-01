@@ -1,28 +1,28 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
+    [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class Wall : MonoBehaviour
     {
+        [SerializeField, Range(0, 5)] protected int _idMaterial;
         [Space]
-        [SerializeField] private WallGraphic _graphic;
+        [SerializeField] protected IdHashSet<LinkId, WallGate> _graphicSides;
 
-        public void Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
+        public Wall Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
+            GetComponent<MeshRenderer>().SetSharedMaterial(SceneData.Get<PlayersVisual>()[playerId].materialLit, _idMaterial);
+
+            foreach (var link in links)
+                _graphicSides[link.Id].Open(link.Owner != PlayerId.None);
+
             gameObject.SetActive(true);
-            _graphic.Init(playerId, links);
+
+            return this;
         }
 
-        public void AddRoad(Id<LinkId> linkId, Id<PlayerId> playerId) => _graphic.AddRoad(linkId, playerId);
-
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (_graphic == null)
-                _graphic = GetComponentInChildren<WallGraphic>();
-        }
-#endif
+        public void AddRoad(Id<LinkId> linkId) => _graphicSides[linkId].Open(true);
     }
 }
