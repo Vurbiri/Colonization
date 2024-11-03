@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization
             Chance chanceWater = CHANCE_WATER;
             HexData hexData; Key keyHex; int circle = 0;
             bool isWater = false, isWaterPossible, isLastCircle = circle == MAX_CIRCLES;
-            Vector3 position, positionNext, direction, positionCurrent;
+            Vector3 position, positionNext, positionCurrent;
 
             ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);
             ShuffleLoopArray<SurfaceScriptable> ground = new(surfaces.GetRange(SurfaceId.Village, SurfaceId.Forest));
@@ -82,11 +82,10 @@ namespace Vurbiri.Colonization
                 {
                     position = positionNext;
                     positionNext = HEX_SIDES.Next(i) * circle;
-                    direction = (positionNext - position) / circle;
 
                     for (int j = 0; j < circle; j++)
                     {
-                        positionCurrent = position + direction * j;
+                        positionCurrent = Vector3.Lerp(position, positionNext, 1f * j / circle);
 
                         keyHex = positionCurrent.HexPositionToKey();
                         isWater = isWaterPossible && (isLastCircle || (!isWater & j != 0 && chanceWater.Roll));

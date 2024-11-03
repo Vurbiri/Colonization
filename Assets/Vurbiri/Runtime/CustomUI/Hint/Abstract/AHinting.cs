@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Vurbiri.Localization;
 
 namespace Vurbiri.UI
@@ -12,17 +11,16 @@ namespace Vurbiri.UI
         [SerializeField] protected Files _file;
         [SerializeField] protected Vector3 _offset;
 
-        public bool IsShowingHint => _isShowingHint;
-
         private bool _isShowingHint = false;
        
         protected GameObject _thisGO;
         protected Transform _thisTransform;
         protected CmButton _button;
-        protected Graphic _targetGraphic;
         protected string _text;
 
-        protected virtual void Init(Vector3 localPosition, UnityAction action, bool active = true)
+        public bool IsShowingHint => _isShowingHint;
+
+        protected virtual void Init(Vector3 localPosition, UnityAction action, bool active)
         {
             _thisGO = gameObject;
             _thisTransform = transform;
@@ -31,8 +29,7 @@ namespace Vurbiri.UI
 
             _button = GetComponent<CmButton>();
             _button.onClick.AddListener(action);
-            _targetGraphic = _button.targetGraphic;
-
+            
             _thisGO.SetActive(active);
         }
 

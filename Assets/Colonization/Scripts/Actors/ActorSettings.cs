@@ -11,6 +11,9 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private Skills _skills;
 
         public int Id => _id;
+        public StatesSet<ActorStateId> States => new(_states);
         public Skills Skills => _skills;
+
+
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -8,34 +7,32 @@ namespace Vurbiri.Colonization.Actors
     {
         private class IdleState : AAnimatorState
         {
-            private readonly Animator _animator;
             private readonly RFloat _timeSwitchIdle;
-            private readonly int _idIdle = Animator.StringToHash("tIdle");
+            private readonly int _idTriggerIdle = Animator.StringToHash(T_IDLE);
+            private readonly int _idBoolIdle = Animator.StringToHash(B_IDLE);
 
             private Coroutine _coroutine;
 
-            public IdleState(ActorSkin parent, StateMachine fsm, int id = 0) : base(parent, fsm, id)
+            public IdleState(ActorSkin parent) : base(parent, 0)
             {
                 _timeSwitchIdle = parent._timeSwitchIdle;
-                _animator = parent._animator;
-
-                foreach (var behaviour in _animator.GetBehaviours<IdleBehaviour>())
-                    behaviour.IdIdle = _idIdle;
             }
 
             public override void Enter()
             {
+                _animator.SetBool(_idBoolIdle, true);
                 _coroutine = _parent.StartCoroutine(Idle_Coroutine());
             }
 
             public override void Exit()
             {
-                _animator.ResetTrigger(_idIdle);
+                _animator.ResetTrigger(_idTriggerIdle);
                 if (_coroutine != null)
                 {
                     _parent.StopCoroutine(_coroutine);
                     _coroutine = null;
                 }
+                _animator.SetBool(_idBoolIdle, false);
             }
 
             private IEnumerator Idle_Coroutine()
@@ -43,7 +40,7 @@ namespace Vurbiri.Colonization.Actors
                 while (true)
                 {
                     yield return new WaitForSeconds(_timeSwitchIdle);
-                    _animator.SetTrigger(_idIdle);
+                    _animator.SetTrigger(_idTriggerIdle);
                 }
             }
         }

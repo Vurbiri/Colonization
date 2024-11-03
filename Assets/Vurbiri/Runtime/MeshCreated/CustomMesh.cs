@@ -22,10 +22,11 @@ namespace Vurbiri
         }
 
         public void AddPrimitive(IPrimitive primitive) => AddTriangles(primitive.Triangles);
-        public void AddTriangles(IEnumerable<Triangle> triangles)
+        public void AddTriangles(IReadOnlyList<Triangle> triangles)
         {
-            foreach (var tr in triangles)
-                AddTriangle(tr);
+            int count = triangles.Count;
+            for (int i = 0; i < count; i++)
+                AddTriangle(triangles[i]);
         }
 
         public void AddTriangle(Triangle triangle)
@@ -54,7 +55,7 @@ namespace Vurbiri
             }
         }
 
-        public Mesh ToMesh(bool tangents = false)
+        public Mesh ToMesh()
         {
             int count = _vertices.Count;
             Vector3[] vertices = new Vector3[count], normals = new Vector3[count];
@@ -81,14 +82,17 @@ namespace Vurbiri
             };
 
             mesh.RecalculateBounds();
-            if (tangents) mesh.RecalculateTangents();
-
+            
             return mesh;
         }
 
         public IEnumerator ToMesh_Coroutine(Action<Mesh> callback, bool tangents = false, bool isOptimize = true, bool isReadable = false)
         {
-            Mesh mesh = ToMesh(tangents);
+            Mesh mesh = ToMesh();
+
+            yield return null;
+            if (tangents)
+                mesh.RecalculateTangents();
             yield return null;
             if (isOptimize)
                 mesh.Optimize();
@@ -96,9 +100,8 @@ namespace Vurbiri
             if (!isReadable)
                 mesh.UploadMeshData(true);
             yield return null;
-            callback?.Invoke(mesh);
 
-            yield break;
+            callback?.Invoke(mesh);
         }
     }
 }

@@ -4,9 +4,12 @@ namespace Vurbiri.Colonization.Actors
     {
         public class IdleState : AState
         {
-            private readonly GameplayEventBus _eventBus;
+            public IdleState(Actor parent) : base(parent, 0) {}
 
-            public IdleState(GameplayEventBus eventBus, Actor parent) : base(parent, 0) => _eventBus = eventBus;
+            public override void Enter()
+            {
+                _skin.Idle();
+            }
 
             public override void Select() => _eventBus.TriggerActorSelect(_parent);
             public override void Unselect(ISelectable newSelectable) => _eventBus.TriggerActorUnselect(_parent);

@@ -25,10 +25,16 @@ namespace Vurbiri.Colonization
 
             RMFloat offsetRadius = radius * _ratioOffsetXZ;
 
-            foreach (var crystal in _druse.Create(new(offsetRadius, -_offsetY, offsetRadius)))
-                customMesh.AddTriangles(crystal);
+            int i, count;
+            List<Triangle>[] druse;
 
-            yield return null;
+            druse = _druse.Create(new(offsetRadius, -_offsetY, offsetRadius));
+            count = druse.Length;
+            for (i = 0; i < count; i++)
+            {
+                customMesh.AddTriangles(druse[i]);
+                yield return null;
+            }
 
             float x, z;
             for (int k = 0; k < COUNT_DRUSE; k++)
@@ -36,12 +42,13 @@ namespace Vurbiri.Colonization
                 x = COS_HEX_DIRECT[k] * radius + offsetRadius;
                 z = SIN_HEX_DIRECT[k] * radius + offsetRadius;
 
-                foreach (var crystal in _druse.Create(new(x, -_offsetY, z)))
+                druse = _druse.Create(new(x, -_offsetY, z));
+                count = druse.Length;
+                for (i = 0; i < count; i++)
                 {
-                    customMesh.AddTriangles(crystal);
+                    customMesh.AddTriangles(druse[i]);
                     yield return null;
                 }
-
             }
 
             yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));

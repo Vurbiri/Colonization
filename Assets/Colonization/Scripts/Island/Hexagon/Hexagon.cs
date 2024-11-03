@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Data;
 using Vurbiri.Colonization.UI;
 
@@ -20,7 +21,8 @@ namespace Vurbiri.Colonization
         private IProfit _profit;
         private bool _isGate, _isWater, _isShow;
 
-        private Id<PlayerId> _owner = PlayerId.None;
+        private Actor _owner = null;
+        private Id<PlayerId> _ownerId = PlayerId.None;
 
         private readonly HashSet<Crossroad> _crossroads = new(CONST.HEX_COUNT_SIDES);
         private readonly HashSet<Hexagon> _neighbors = new(CONST.HEX_COUNT_SIDES);
@@ -29,7 +31,7 @@ namespace Vurbiri.Colonization
         public Key Key => _data.key;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
-        public bool CanUnitEnter => !_isGate && !_isWater && _owner == PlayerId.None;
+        public bool CanUnitEnter => !_isGate && !_isWater && _ownerId == PlayerId.None;
         public Vector3 Position => _data.position;
         public IReadOnlyCollection<Hexagon> Neighbors => _neighbors;
 
@@ -135,14 +137,22 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public void EnterActor(Id<PlayerId> id) => _owner = id;
-        public void ExitActor() => _owner = PlayerId.None;
+        public void EnterActor(Actor actor)
+        {
+            _owner = actor;
+            _ownerId = actor.Owner;
+        }
+        public void ExitActor()
+        {
+            _owner = null;
+            _ownerId = PlayerId.None;
+        }
 
-        public bool IsEnemy(Id<PlayerId> id) => _owner != PlayerId.None && _owner != id;
+        public bool IsEnemy(Id<PlayerId> id) => _ownerId != PlayerId.None && _ownerId != id;
 
         public bool TrySetSelectable(bool isFree = true)
         {
-            if(_isGate || _isWater || _owner != PlayerId.None)
+            if(_isGate || _isWater || _ownerId != PlayerId.None)
                 return false;
 
             _mark = _poolMarks.Get(_thisTransform, false).View(isFree);

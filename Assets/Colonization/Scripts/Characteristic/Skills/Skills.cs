@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization
     public partial class Skills
     {
         [SerializeField] MoveSkill _moveSkill;
+        [SerializeField] AttackSkill[] _attackSkills = new AttackSkill[1];
 
 
         public MoveState GetMoveSate(Actor parent) => new(_moveSkill.speed, parent);

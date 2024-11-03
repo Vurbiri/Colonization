@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
         public bool Setup(Crossroad crossroad, out CrossroadLink link)
         {
             link = crossroad.GetLink(_id);
-            if (link == null)
+            if (link == null || link.Owner.Value >= 0)
             {
                 _thisGO.SetActive(false);
                 return false;
@@ -17,18 +17,8 @@ namespace Vurbiri.Colonization.UI
             _playerCurrent = _players.Current;
             _currentCrossroad = crossroad;
             ACurrencies cash = _playerCurrent.Resources;
-            int owner = link.Owner.Value;
 
-            if (owner >= 0)
-            {
-                _button.Interactable = false;
-                _targetGraphic.color = _players[owner].Visual.color;
-            }
-            else
-            {
-                _button.Interactable = cash >= _cost;
-                _targetGraphic.color = _playerCurrent.Visual.color;
-            }
+            _button.Interactable = cash >= _cost;
 
             SetTextHint(_caption, cash, _cost);
 

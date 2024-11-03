@@ -1,14 +1,20 @@
+using UnityEngine;
 using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class AAnimatorState : AState
+    public partial class ActorSkin : MonoBehaviour
     {
-        protected ActorSkin _parent;
-
-        public AAnimatorState(ActorSkin parent, StateMachine fsm, int id = 0) : base(fsm, id)
+        public class AAnimatorState : AState
         {
-            _parent = parent;
+            protected readonly ActorSkin _parent;
+            protected readonly Animator _animator;
+
+            public AAnimatorState(ActorSkin parent, int id = 0) : base(parent._stateMachine, id)
+            {
+                _parent = parent;
+                _animator = parent._animator;
+            }
         }
     }
 }

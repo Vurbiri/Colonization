@@ -9,18 +9,19 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] protected string _key;
 
+        
         private ACurrencies _cost;
         private Unsubscriber<Language> _unsubscriber;
         private string _caption;
 
-        public virtual void Init(Vector3 localPosition, ACurrencies cost, UnityEngine.Events.UnityAction action)
+        public virtual void Init(Vector3 localPosition, Color color, ACurrencies cost, UnityEngine.Events.UnityAction action)
         {
-            base.Init(localPosition, action);
+            base.Init(localPosition, color, action);
             _cost = cost;
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }
 
-        public void Setup(bool isEnable, Color color, ACurrencies cash)
+        public void Setup(bool isEnable, ACurrencies cash)
         {
             if(!isEnable)
             {
@@ -29,7 +30,6 @@ namespace Vurbiri.Colonization.UI
             }
             
             _button.Interactable = cash >= _cost;
-            _targetGraphic.color = color;
 
             SetTextHint(_caption, cash, _cost);
 

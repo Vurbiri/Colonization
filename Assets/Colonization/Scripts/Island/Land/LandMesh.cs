@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
         {
             _thisMeshFilter = GetComponent<MeshFilter>();
             _hexagons = new(MAX_HEXAGONS);
-            _customMesh = new(_nameMesh, (2f * MAX_CIRCLES * CONST.HEX_DIAMETER_IN) * Vector2.one);
+            _customMesh = new(_nameMesh, (2f * MAX_CIRCLES * HEX_DIAMETER_IN) * Vector2.one);
 
             GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTilingMaterial * MAX_CIRCLES);
 
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
         public Vertex[] GetVertexSide(Key key, Key neighbors, int side)
         {
             _hexagons[key].Visit(side);
-            return _hexagons[neighbors].GetVertexSide((side + 3) % CONST.HEX_COUNT_SIDES);
+            return _hexagons[neighbors].GetVertexSide((side + (HEX_COUNT_SIDES >> 1)) % HEX_COUNT_SIDES);
         }
 
         public void SetVertexSides(Key key, Vertex[][] verticesNear, bool[] waterNear) => _customMesh.AddTriangles(_hexagons[key].CreateBorder(verticesNear, waterNear));

@@ -12,7 +12,6 @@ namespace Vurbiri.Colonization.UI
             ACurrencies cash = _playerCurrent.Resources;
 
             _button.Interactable = _playerCurrent.CanRecruitingWarrior(_id) && cash >= _cost;
-            _targetGraphic.color = _playerCurrent.Visual.color;
 
             SetTextHint(_caption, cash, _cost);
         }

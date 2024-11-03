@@ -22,10 +22,11 @@ namespace Vurbiri.Colonization.UI
 
         public Vector3 LocalPosition { set => _thisTransform.localPosition = value; }
 
-        protected override void Init(Vector3 localPosition, UnityEngine.Events.UnityAction action, bool active = true)
+        protected virtual void Init(Vector3 localPosition, Color color, UnityEngine.Events.UnityAction action)
         {
-            base.Init(localPosition, action, active);
+            base.Init(localPosition, action, true);
 
+            _button.targetGraphic.color = color;
             _hexColorPlus = string.Format(TAG_COLOR_FORMAT_LITE, _colorPlus.ToHex());
             _hexColorMinus = string.Format(TAG_COLOR_FORMAT_LITE, _colorMinus.ToHex());
         }
@@ -55,6 +56,5 @@ namespace Vurbiri.Colonization.UI
             _text = sb.ToString();
         }
 
-        //public void AddListener(UnityEngine.Events.UnityAction action) => _buttonClicked.AddListener(action);
     }
 }

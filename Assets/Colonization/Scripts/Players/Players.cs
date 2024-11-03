@@ -19,6 +19,8 @@ namespace Vurbiri.Colonization
 
         public Players(Settings settings, bool isLoading)
         {
+            Debug.Log("Переделать перки - из перка создается простой перк который суммируется - два типа сразу");
+
             _playersData = new(isLoading, out bool[] loads);
 
             for (int i = 0; i < PlayersCount; i++)

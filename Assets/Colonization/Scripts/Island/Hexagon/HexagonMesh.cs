@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
 {
     public class HexagonMesh : IPrimitive
     {
-        public IEnumerable<Triangle> Triangles => _triangles;
+        public IReadOnlyList<Triangle> Triangles => _triangles;
 
         private readonly Vector3 NORMAL = Vector3.up;
         private readonly Vector3 DOWN = Vector3.down;

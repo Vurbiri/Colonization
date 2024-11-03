@@ -5,9 +5,9 @@ namespace Vurbiri.CreatingMesh
 {
     public class PolygonChain : IPrimitive
     {
-        public IEnumerable<Triangle> Triangles => _triangles;
+        public IReadOnlyList<Triangle> Triangles => _triangles;
 
-        private readonly IEnumerable<Triangle> _triangles;
+        private readonly List<Triangle> _triangles;
 
         public PolygonChain(IReadOnlyList<Vertex> chainA, IReadOnlyList<Vertex> chainB, bool loop = false) => _triangles = Create(chainA, chainB, loop);
 

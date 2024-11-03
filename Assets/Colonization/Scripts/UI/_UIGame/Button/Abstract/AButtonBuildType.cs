@@ -19,9 +19,10 @@ namespace Vurbiri.Colonization.UI
 
         public Id<T> Id => _id;
 
-        public void Init(Players players, ACurrencies cost, GameObject parent, Vector3 localPosition = default)
+        public virtual void Init(Players players, Color color, ACurrencies cost, GameObject parent, Vector3 localPosition = default)
         {
-            base.Init(localPosition, OnClick);
+            base.Init(localPosition, color, OnClick);
+            
             _players = players;
             _cost = cost;
             _parentGO = parent;
@@ -36,7 +37,5 @@ namespace Vurbiri.Colonization.UI
         {
             _unsubscriber?.Unsubscribe();
         }
-
-        
     }
 }

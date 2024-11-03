@@ -139,7 +139,7 @@ namespace Vurbiri.Colonization
 
             _game.Init();
             _gameplaySettings.StartGame();
-            _eventBus.TriggerEndSceneCreation();
+            _eventBus.TriggerSceneEndCreation();
 
             yield return _objects.Get<LoadingScreen>().SmoothOff_Wait();
 

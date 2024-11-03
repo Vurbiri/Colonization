@@ -5,38 +5,36 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class StatesSet<TId> : IEnumerable<State<TId>> where TId : AStateId<TId>
+    public class StatesSet<TId> : IReadOnlyList<IReadOnlyReactiveValue<int>> where TId : AStateId<TId>
     {
-        private readonly State<TId>[] _states;
-        private readonly int _count;
+        private readonly IdArray<TId, State<TId>> _states = new();
 
         public IReadOnlyReactiveValue<int> this[int index] => _states[index];
-        public IReadOnlyReactiveValue<int> this[Id<TId> id] => _states[id.Value];
+        public IReadOnlyReactiveValue<int> this[Id<TId> id] => _states[id];
+
+        public int Count => AStateId<TId>.Count;
 
         public StatesSet(IdArray<TId, int> states)
         {
-            _count = AStateId<TId>.Count;
-            _states = new State<TId>[_count];
-
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < AStateId<TId>.Count; i++)
                 _states[i] = new State<TId>(i, states[i]);
         }
 
-        public bool IsGreater(Id<TId> stateId, int value) => _states[stateId.Value].NextValue > value;
-        public bool IsLess(Id<TId> stateId, int value) => _states[stateId.Value].NextValue < value;
+        public bool IsGreater(Id<TId> stateId, int value) => _states[stateId].NextValue > value;
+        public bool IsLess(Id<TId> stateId, int value) => _states[stateId].NextValue < value;
 
-        public bool IsTrue(Id<TId> stateId) => _states[stateId.Value].NextValue > 0;
+        public bool IsTrue(Id<TId> stateId) => _states[stateId].NextValue > 0;
 
-        public State<TId> GetState(Id<TId> stateId) => _states[stateId.Value];
+        public State<TId> GetState(Id<TId> stateId) => _states[stateId];
 
-        public int GetValue(Id<TId> stateId) => _states[stateId.Value].NextValue;
+        public int GetValue(Id<TId> stateId) => _states[stateId].NextValue;
 
-        public bool TryAddPerk(IPerk<TId> perk) => _states[perk.TargetAbility.Value].TryAddPerk(perk);
+        public bool TryAddPerk(IPerk<TId> perk) => _states[perk.TargetAbility].TryAddPerk(perk);
 
-        public IEnumerator<State<TId>> GetEnumerator()
+        public IEnumerator<IReadOnlyReactiveValue<int>> GetEnumerator()
         {
-            foreach(var state in _states)
-                yield return state;
+            for (int i = 0; i < AStateId<TId>.Count; i++)
+                yield return _states[i];
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

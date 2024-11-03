@@ -5,9 +5,9 @@ namespace Vurbiri.CreatingMesh
 {
     public class Polygon : IPrimitive
     {
-        public IEnumerable<Triangle> Triangles => _triangles;
+        public IReadOnlyList<Triangle> Triangles => _triangles;
 
-        private readonly IEnumerable<Triangle> _triangles;
+        private readonly IReadOnlyList<Triangle> _triangles;
 
         private static readonly Color32[] BARYCENTRIC_COLORS_A = { new(255, 255, 0, 255), new(0, 255, 0, 255), new(0, 255, 255, 255) };
         private static readonly Color32[] BARYCENTRIC_COLORS_B = { new(255, 255, 0, 255), new(0, 255, 255, 255), new(0, 255, 0, 255) };

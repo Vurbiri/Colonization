@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
         {
             PlayerVisual visual = SceneData.Get<PlayersVisual>()[playerId];
 
-            _states = settings.states.GetAbilities();
+            _states = settings.states.GetStates();
             _roads = settings.roadsFactory.Create().Init(playerId, visual.color);
             _prices = settings.prices;
             _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.warriorsContainer);

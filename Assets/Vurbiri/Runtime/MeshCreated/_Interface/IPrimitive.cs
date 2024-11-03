@@ -4,6 +4,6 @@ namespace Vurbiri.CreatingMesh
 {
     public interface IPrimitive
     {
-        public IEnumerable<Triangle> Triangles { get; }
+        public IReadOnlyList<Triangle> Triangles { get; }
     }
 }

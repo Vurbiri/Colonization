@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
         public event Action<bool> EventHexagonIdShow;
         public void TriggerHexagonIdShow(bool show) => EventHexagonIdShow?.Invoke(show);
 
-        public event Action EventEndSceneCreation;
-        public void TriggerEndSceneCreation() => EventEndSceneCreation?.Invoke();
+        public event Action EventSceneEndCreation;
+        public void TriggerSceneEndCreation() => EventSceneEndCreation?.Invoke();
     }
 }

@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         private Players _players;
         private Player _playerCurrent;
 
-        public void Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, Players players, PricesScriptable prices)
+        public void Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, Players players, Color color, PricesScriptable prices)
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;
@@ -26,13 +26,13 @@ namespace Vurbiri.Colonization.UI
 
             _buttonClose.Init(Vector3.zero, OnClose);
 
-            _buttonRoads.Init(new(0f, -_distanceOfButtons, 0f), prices.Road, OnRoads);
+            _buttonRoads.Init(new(0f, -_distanceOfButtons, 0f), color, prices.Road, OnRoads);
 
             Vector3 distance60angle = new(_distanceOfButtons * CONST.SIN_60, _distanceOfButtons * CONST.COS_60, 0f);
-            _buttonRecruiting.Init(distance60angle, OnHiring);
-            _buttonWall.Init(distance60angle, prices.Wall, OnWall);
+            _buttonRecruiting.Init(distance60angle, color, OnHiring);
+            _buttonWall.Init(distance60angle, color, prices.Wall, OnWall);
             distance60angle.x *= -1f;
-            _buttonUpgrade.Init(distance60angle, prices.Edifices, OnUpgrade);
+            _buttonUpgrade.Init(distance60angle, color, prices.Edifices, OnUpgrade);
 
             _thisGO.SetActive(false);
         }
@@ -43,12 +43,11 @@ namespace Vurbiri.Colonization.UI
             _currentCrossroad = crossroad;
 
             ACurrencies currentCash = _playerCurrent.Resources;
-            Color currentColor = _playerCurrent.Visual.color;
 
-            _buttonRecruiting.Setup(_playerCurrent.CanAnyRecruitingWarriors(crossroad), currentColor);
-            _buttonUpgrade.Setup(_playerCurrent.CanEdificeUpgrade(crossroad), crossroad.NextId.Value, currentColor, currentCash);
-            _buttonWall.Setup(_playerCurrent.CanWallBuild(crossroad), currentColor, currentCash);
-            _buttonRoads.Setup(_playerCurrent.CanRoadBuild(crossroad), currentColor, currentCash);
+            _buttonRecruiting.Setup(_playerCurrent.CanAnyRecruitingWarriors(crossroad));
+            _buttonUpgrade.Setup(_playerCurrent.CanEdificeUpgrade(crossroad), crossroad.NextId.Value, currentCash);
+            _buttonWall.Setup(_playerCurrent.CanWallBuild(crossroad), currentCash);
+            _buttonRoads.Setup(_playerCurrent.CanRoadBuild(crossroad), currentCash);
 
             _thisGO.SetActive(true);
         }

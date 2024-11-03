@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
 
         private CrossroadMainMenu _mainMen;
 
-        public void Init(CrossroadMainMenu mainMenu, Players players, IReadOnlyList<ACurrencies> warriorPrices)
+        public void Init(CrossroadMainMenu mainMenu, Players players, Color color, IReadOnlyList<ACurrencies> warriorPrices)
         {
             _mainMen = mainMenu;
 
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.UI
             float angle = 360 / WarriorId.Count;
             Vector3 distance = new(0f, _distanceOfButtons, 0f);
             for (int i = 0; i < WarriorId.Count; i++)
-                _buttons[i].Init(players, warriorPrices[i], _thisGO, Quaternion.Euler(0f, 0f, -angle * i) * distance);
+                _buttons[i].Init(players, color, warriorPrices[i], _thisGO, Quaternion.Euler(0f, 0f, -angle * i) * distance);
 
             _thisGO.SetActive(false);
         }

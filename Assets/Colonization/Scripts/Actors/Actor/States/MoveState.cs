@@ -5,35 +5,34 @@ using UnityEngine;
 namespace Vurbiri.Colonization.Actors
 {
     using static CONST;
+
     public abstract partial class Actor
     {
         public class MoveState : AState
         {
             private readonly float _speed = 0.5f;
             private readonly Transform _parentTransform;
-            private readonly ActorSkin _skin;
             private WaitActivate _waitHexagon;
             private Hexagon _targetHex;
-            private Coroutine _coroutineMove;
+            private Coroutine _coroutineAction;
 
             public MoveState(float speed, Actor parent) : base(parent, 0)
             {
                 _speed = speed;
                 _parentTransform = _parent._thisTransform;
-                _skin = _parent._skin;
             }
 
             public override void Enter()
             {
-                _parent.StartCoroutine(SelectHexagon_Coroutine());
+                _coroutineAction = _parent.StartCoroutine(SelectHexagon_Coroutine());
             }
 
             public override void Exit()
             {
-                if (_coroutineMove != null)
+                if (_coroutineAction != null)
                 {
-                    _parent.StopCoroutine(_coroutineMove);
-                    _coroutineMove = null;
+                    _parent.StopCoroutine(_coroutineAction);
+                    _coroutineAction = null;
                 }
 
                 _waitHexagon = null;
@@ -42,6 +41,8 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Unselect(ISelectable newSelectable)
             {
+                _eventBus.TriggerActorUnselect(_parent);
+
                 if (_waitHexagon == null)
                     return;
 
@@ -51,7 +52,7 @@ namespace Vurbiri.Colonization.Actors
 
             private void Reset()
             {
-                _coroutineMove = null;
+                _coroutineAction = null;
                 _fsm.Default();
             }
 
@@ -70,9 +71,9 @@ namespace Vurbiri.Colonization.Actors
 
                 currentHex.ExitActor();
                 _parent._currentHex = currentHex = _targetHex;
-                currentHex.EnterActor(_parent._owner);
+                currentHex.EnterActor(_parent);
 
-                _skin.StartMove();
+                _skin.Move();
 
                 float _progress = 0f;
                 while (_progress <= 1f)
@@ -83,9 +84,8 @@ namespace Vurbiri.Colonization.Actors
                 }
 
                 _parentTransform.localPosition = end;
-                _skin.ResetStates();
 
-                _fsm.SetState<IdleState>();
+                Reset();
             }
 
             private IEnumerator SelectHexagon_Coroutine()
@@ -120,7 +120,7 @@ namespace Vurbiri.Colonization.Actors
                 foreach (var hex in empty)
                     hex.SetUnselectable();
 
-                _coroutineMove = _parent.StartCoroutine(Move_Coroutine());
+                _coroutineAction = _parent.StartCoroutine(Move_Coroutine());
             }
         }
     }

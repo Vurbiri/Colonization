@@ -11,13 +11,20 @@ namespace Vurbiri.UI
 
         private Unsubscriber<Language> _unsubscriber;
 
-        public void Init(Vector3 localPosition, UnityEngine.Events.UnityAction action)
+        public void Init(Vector3 localPosition, Color color, UnityEngine.Events.UnityAction action)
         {
-            base.Init(localPosition, action);
+            base.Init(localPosition, action, true);
+            _button.targetGraphic.color = color;
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }
 
-        public void Setup(bool isEnable, Color color)
+        public void Init(Vector3 localPosition, UnityEngine.Events.UnityAction action)
+        {
+            base.Init(localPosition, action, true);
+            _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
+        }
+
+        public void Setup(bool isEnable)
         {
             if (!isEnable)
             {
@@ -25,7 +32,6 @@ namespace Vurbiri.UI
                 return;
             }
 
-            _targetGraphic.color = color;
             _thisGO.SetActive(true);
         }
 

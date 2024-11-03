@@ -9,17 +9,19 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private HintingButton _buttonClose;
         [SerializeField] private HintingButton _buttonMovement;
+        [SerializeField] private HintingButton _buttonAttack;
 
         private Players _players;
         private Actors.Actor _currentWarrior;
 
-        public void Init(Players players)
+        public void Init(Players players, Color color)
         {
             _players = players;
 
             _buttonClose.Init(Vector3.zero, OnClose);
 
-            _buttonMovement.Init(new(0f, _distanceOfButtons, 0f), OnMovement);
+            _buttonMovement.Init(new(0f, -_distanceOfButtons, 0f), color, OnMovement);
+            _buttonAttack.Init(new(0f, _distanceOfButtons, 0f), color, OnAttack);
 
             _thisGO.SetActive(false);
         }
@@ -27,9 +29,9 @@ namespace Vurbiri.Colonization.UI
         public void Open(Actors.Actor warrior)
         {
             _currentWarrior = warrior;
-            Color currentColor = _players.Current.Visual.color;
+            
 
-            _buttonMovement.Setup(_currentWarrior.CanMove(), currentColor);
+            _buttonMovement.Setup(_currentWarrior.CanMove());
 
 
             _thisGO.SetActive(true);
@@ -39,6 +41,12 @@ namespace Vurbiri.Colonization.UI
         {
             _thisGO.SetActive(false);
             _currentWarrior.Move();
+        }
+
+        private void OnAttack()
+        {
+            _thisGO.SetActive(false);
+            _currentWarrior.Attack();
         }
     }
 }

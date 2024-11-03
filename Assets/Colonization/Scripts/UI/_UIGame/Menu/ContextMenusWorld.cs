@@ -30,10 +30,13 @@ namespace Vurbiri.Colonization.UI
 
             _lookAtCamera.Init(camera);
 
-            _crossroadMenu.Init(_roadsMenu, _recruitingMenu, players,  _prices);
-            _recruitingMenu.Init(_crossroadMenu, players, _prices.Warriors);
-            _roadsMenu.Init(_crossroadMenu, players, camera, _prices.Road);
-            _warriorsMenu.Init(players);
+            Color color = SceneData.Get<PlayersVisual>()[PlayerId.Player].color;
+            Debug.Log("Переделать _playerCurrent на _player!!!");
+
+            _crossroadMenu.Init(_roadsMenu, _recruitingMenu, players, color, _prices);
+            _recruitingMenu.Init(_crossroadMenu, players, color, _prices.Warriors);
+            _roadsMenu.Init(_crossroadMenu, players, color, camera, _prices.Road);
+            _warriorsMenu.Init(players, color);
 
             _crossroadMenu.EventEnabled += EnableLook;
             _recruitingMenu.EventEnabled += EnableLook;

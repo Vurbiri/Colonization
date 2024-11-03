@@ -8,6 +8,6 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private IdArray<PlayerStateId, int> _states;
 
-        public StatesSet<PlayerStateId> GetAbilities() => new(_states);
+        public StatesSet<PlayerStateId> GetStates() => new(_states);
     }
 }

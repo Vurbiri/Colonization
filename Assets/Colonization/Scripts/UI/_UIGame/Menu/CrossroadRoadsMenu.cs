@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         private Vector2 _localPoint;
         private CrossroadMainMenu _mainMen;
 
-        public void Init(CrossroadMainMenu mainMenu, Players players, Camera camera, ACurrencies roadCost)
+        public void Init(CrossroadMainMenu mainMenu, Players players, Color color ,Camera camera, ACurrencies roadCost)
         {
             _mainMen = mainMenu;
             _camera = camera;
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
             _cameraTransform = _camera.transform;
 
             foreach (var button in _roadButtons)
-                button.Init(players, roadCost, _thisGO);
+                button.Init(players, color, roadCost, _thisGO);
 
             _thisGO.SetActive(false);
         }

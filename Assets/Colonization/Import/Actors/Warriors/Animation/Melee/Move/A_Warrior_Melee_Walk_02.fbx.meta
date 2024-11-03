@@ -33,7 +33,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: A_Humans_Melee_Walk_02
+      name: A_Warrior_Melee_Walk_02
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0

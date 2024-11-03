@@ -8,23 +8,21 @@ namespace Vurbiri.Colonization
     [JsonObject(MemberSerialization.OptIn)]
     public class Player : IValueId<PlayerId>
     {
-        public Id<PlayerId> Id => _id;
-        public PlayerVisual Visual { get; }
-        public AReadOnlyCurrenciesReactive Resources { get; }
-        public IReactiveSubValues<int, CurrencyId> ExchangeRate => _exchangeRate;
-
         private readonly PlayerObjects _obj;
         private readonly Id<PlayerId> _id;
         private readonly Currencies _exchangeRate = new();
         private readonly Coroutines _coroutines;
+
+        public Id<PlayerId> Id => _id;
+        public AReadOnlyCurrenciesReactive Resources { get; }
+        public IReactiveSubValues<int, CurrencyId> ExchangeRate => _exchangeRate;
 
         public Player(Id<PlayerId> playerId, PlayerObjects obj)
         {
             _id = playerId;
             _obj = obj;
             Resources = obj.Resources;
-            
-            Visual = SceneData.Get<PlayersVisual>()[_id];
+
             _coroutines = SceneServices.Get<Coroutines>();
         }
 
