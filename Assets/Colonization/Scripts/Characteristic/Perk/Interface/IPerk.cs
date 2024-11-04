@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-    public interface IPerk<T> where T : AStateId<T>
+    public interface IPerk<T> where T : AAbilityd<T>
     {
         public int Id { get; }
         public int Level { get; }

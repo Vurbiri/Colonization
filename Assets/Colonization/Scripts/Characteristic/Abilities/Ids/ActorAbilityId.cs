@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-    public class ActorStateId : AStateId<ActorStateId>
+    public class ActorAbilityId : AAbilityd<ActorAbilityId>
     {
         public const int MaxHealth = 0;
         public const int Damage = 1;
@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
         public const int MaxActionPoint = 3;
         public const int ActionPointPerTurn = 4;
 
-        static ActorStateId() => RunConstructor();
-        private ActorStateId() { }
+        static ActorAbilityId() => RunConstructor();
+        private ActorAbilityId() { }
     }
 }

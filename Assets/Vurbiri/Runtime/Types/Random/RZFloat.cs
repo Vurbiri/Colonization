@@ -16,6 +16,10 @@ namespace Vurbiri
         public static implicit operator RZFloat(float value) => new(value);
         public static implicit operator float(RZFloat mp) => Random.Range(0f, mp._value);
 
+        public static RZFloat operator *(RZFloat mp1, RZFloat mp2) => new(mp1._value * mp2._value);
+        public static RZFloat operator +(RZFloat mp1, RZFloat mp2) => new(mp1._value + mp2._value);
+        public static RZFloat operator -(RZFloat mp1, RZFloat mp2) => new(mp1._value - mp2._value);
+
         public static float operator *(float value, RZFloat mp) => value * Random.Range(0f, mp._value);
         public static float operator *(RZFloat mp, float value) => value * Random.Range(0f, mp._value);
         public static Vector3 operator *(Vector3 value, RZFloat mp) => value * Random.Range(0f, mp._value);

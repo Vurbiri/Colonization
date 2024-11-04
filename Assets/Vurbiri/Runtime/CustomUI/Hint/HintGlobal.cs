@@ -69,8 +69,8 @@ namespace Vurbiri.UI
                 _coroutineHide = null;
             }
 
+            position.y += SetHint(text);
             _backTransform.localPosition = position;
-            SetHint(text);
 
             float alpha = _thisCanvasGroup.alpha;
             while (alpha < 1f)
@@ -112,7 +112,7 @@ namespace Vurbiri.UI
             #endregion
         }
 
-        private void SetHint(string text)
+        private float SetHint(string text)
         {
             _hint.enableWordWrapping = false;
             _hint.text = text;
@@ -133,6 +133,8 @@ namespace Vurbiri.UI
 
             _textTransform.sizeDelta = _size;
             _backTransform.sizeDelta = _size + _padding;
+
+            return _backTransform.sizeDelta.y / 2f;
 
             //_transformText.ForceUpdateRectTransforms();
             //_transformBack.ForceUpdateRectTransforms();

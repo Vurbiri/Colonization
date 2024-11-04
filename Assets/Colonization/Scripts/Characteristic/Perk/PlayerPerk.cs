@@ -4,14 +4,14 @@ using UnityEngine;
 namespace Vurbiri.Colonization
 {
     [Serializable]
-    public class PlayerPerk : IPerk<PlayerStateId>, IPerkUI
+    public class PlayerPerk : IPerk<PlayerAbilityId>, IPerkUI
     {
         [SerializeField] private int _id;
         [SerializeField] private int _level;
         [SerializeField] private string _keyName;
         [SerializeField] private string _keyDescription;
         [SerializeField] private Id<TargetOfPerkId> _target;
-        [SerializeField] private Id<PlayerStateId> _ability;
+        [SerializeField] private Id<PlayerAbilityId> _ability;
         [SerializeField] private int _value;
         [SerializeField] private Chance _chance = 100;
         [SerializeField] private CurrenciesLite _cost;
@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
         public string KeyName => _keyName;
         public string KeyDescription => _keyDescription;
         public Id<TargetOfPerkId> TargetObject => _target;
-        public Id<PlayerStateId> TargetAbility => _ability;
+        public Id<PlayerAbilityId> TargetAbility => _ability;
         public CurrenciesLite Cost => _cost;
         public bool IsPermanent => _chance == 100;
 

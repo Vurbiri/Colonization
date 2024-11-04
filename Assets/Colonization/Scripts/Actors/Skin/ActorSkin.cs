@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
         private const string T_IDLE = "tIdle", B_IDLE = "bIdle";
         private const string B_MOVE = "bMove", B_RUN_F = "bRunF", B_RUN_B = "bRunB";
         private readonly string[] T_ATTACKS = { "tAttack_01", "tAttack_02" };
-        private const int COUNT_ATTACKS = 3;
+        private const int COUNT_ATTACKS = 2;
         #endregion
 
         private Animator _animator;

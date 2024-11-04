@@ -18,9 +18,9 @@ namespace Vurbiri.UI
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }
 
-        public void Init(Vector3 localPosition, UnityEngine.Events.UnityAction action)
+        public void Init(UnityEngine.Events.UnityAction action)
         {
-            base.Init(localPosition, action, true);
+            base.Init(action, true);
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }
 

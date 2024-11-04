@@ -36,10 +36,11 @@ namespace Vurbiri
 
         public static implicit operator float(RFloat mm) => Random.Range(mm._min, mm._max);
 
-        public static RFloat operator &(float value, RFloat mm) => new(mm, value);
-        public static RFloat operator &(RFloat mm, float value) => new(mm, value);
+        public static RFloat operator *(RFloat mm1, RFloat mm2) => new(mm1._min * mm2._min, mm1._max * mm2._max);
+        public static RFloat operator +(RFloat mm1, RFloat mm2) => new(mm1._min + mm2._min, mm1._max + mm2._max);
+        public static RFloat operator -(RFloat mm1, RFloat mm2) => new(mm1._min - mm2._min, mm1._max - mm2._max);
 
-        public static float operator *(RFloat mm1, RFloat mm2) => Random.Range(mm1._min, mm1._max) * Random.Range(mm2._min, mm2._max);
+
         public static float operator *(float value, RFloat mm) => value * Random.Range(mm._min, mm._max);
         public static float operator *(RFloat mm, float value) => value * Random.Range(mm._min, mm._max);
         public static Vector3 operator *(Vector3 value, RFloat mm) => value * Random.Range(mm._min, mm._max);
@@ -47,7 +48,6 @@ namespace Vurbiri
         public static Vector2 operator *(Vector2 value, RFloat mm) => value * Random.Range(mm._min, mm._max);
         public static Vector2 operator *(RFloat mm, Vector2 value) => value * Random.Range(mm._min, mm._max);
 
-        public static float operator +(RFloat mm1, RFloat mm2) => Random.Range(mm1._min, mm1._max) + Random.Range(mm2._min, mm2._max);
         public static float operator +(float value, RFloat mm) => value + Random.Range(mm._min, mm._max);
         public static float operator +(RFloat mm, float value) => value + Random.Range(mm._min, mm._max);
 

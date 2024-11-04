@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private PlayerPerk[] _perks;
 
-        public IReadOnlyList<IPerk<PlayerStateId>> Perks => _perks;
+        public IReadOnlyList<IPerk<PlayerAbilityId>> Perks => _perks;
         public IReadOnlyList<IPerkUI> PerksUI => _perks;
     }
 }

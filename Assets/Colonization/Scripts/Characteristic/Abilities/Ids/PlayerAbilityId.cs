@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-    public class PlayerStateId : AStateId<PlayerStateId>
+    public class PlayerAbilityId : AAbilityd<PlayerAbilityId>
     {
         public const int None                   = -1;
         public const int MaxPort                = 0;
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
         public const int IsKnight               = 18;
         public const int WallDefence            = 19;
 
-        static PlayerStateId() => RunConstructor();
-        private PlayerStateId() { }
+        static PlayerAbilityId() => RunConstructor();
+        private PlayerAbilityId() { }
     }
 }

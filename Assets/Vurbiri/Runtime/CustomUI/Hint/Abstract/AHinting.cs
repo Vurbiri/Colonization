@@ -33,6 +33,17 @@ namespace Vurbiri.UI
             _thisGO.SetActive(active);
         }
 
+        protected virtual void Init(UnityAction action, bool active)
+        {
+            _thisGO = gameObject;
+            _thisTransform = transform;
+
+            _button = GetComponent<CmButton>();
+            _button.onClick.AddListener(action);
+
+            _thisGO.SetActive(active);
+        }
+
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
             if (!_isShowingHint)

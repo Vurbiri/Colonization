@@ -11,22 +11,28 @@ namespace Vurbiri.Colonization.Actors
     {
         public class AttackState : AState
         {
+            private readonly float _percentDamage;
+            private readonly float _speedRun;
+            private readonly float _selfRange;
+            private readonly int _idAnimation;
+            private readonly int _cost;
             private readonly Transform _parentTransform;
-            private readonly Settings _settings;
             private WaitActivate _waitActor;
             private Hexagon _targetActor;
             private Coroutine _coroutineAction;
             private readonly WaitForSeconds _waitDamage, _waitEndAttack;
-            private readonly float _selfRange;
-
-            public AttackState(Actor parent, Settings settings, int id) : base(parent, id)
+            
+            public AttackState(Actor parent, float percentDamage, float speedRun, Settings settings, int id) : base(parent, id)
             {
-                _parentTransform = _parent._thisTransform;
-                _settings = settings;
+                _percentDamage = percentDamage;
+                _speedRun = speedRun;
+                _selfRange = settings.range + _parent._extentsZ;
+                _idAnimation = settings.idAnimation;
+                _cost = settings.cost;
 
+                _parentTransform = _parent._thisTransform;
                 _waitDamage = new(settings.damageTime);
                 _waitEndAttack = new(settings.remainingTime);
-                _selfRange = settings.range + _parent._extentsZ;
             }
 
             public override void Enter()
@@ -120,14 +126,14 @@ namespace Vurbiri.Colonization.Actors
                 while (progress <= path)
                 {
                     yield return null;
-                    progress += _settings.moveSpeed * Time.deltaTime;
+                    progress += _speedRun * Time.deltaTime;
                     _parentTransform.localPosition = Vector3.Lerp(start, end, progress);
                 }
             }
 
             private IEnumerator Attack_Coroutine()
             {
-                _skin.Attack(_settings.idAnimation);
+                _skin.Attack(_idAnimation);
                 yield return _waitDamage;
                 yield return _waitEndAttack;
             }
@@ -135,13 +141,11 @@ namespace Vurbiri.Colonization.Actors
             #region Nested: Settings
             //*******************************************************
             [System.Serializable]
-            public struct Settings
+            public class Settings
             {
                 public float damageTime;
                 public float remainingTime;
-                public float percentDamage;
                 public float range;
-                public float moveSpeed;
                 public int idAnimation;
                 public int cost;
             }

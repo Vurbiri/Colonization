@@ -3,7 +3,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class State<TId> : AReactive<int>, IValueId<TId> where TId : AStateId<TId>
+    public class Ability<TId> : AReactive<int>, IValueId<TId> where TId : AAbilityd<TId>
     {
         private readonly Id<TId> _id;
         private readonly int _baseValue;
@@ -28,14 +28,14 @@ namespace Vurbiri.Colonization
             }
         }
         
-        public State(Id<TId> id, int baseValue)
+        public Ability(Id<TId> id, int baseValue)
         {
             _id = id;
             _baseValue = _currentValue = baseValue;
             _randomPerks = new();
         }
 
-        public State(State<TId> state)
+        public Ability(Ability<TId> state)
         {
             _id = state._id;
             _baseValue = _currentValue = state._baseValue;

@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.UI
             _mainMen = mainMenu;
             _camera = camera;
 
-            _buttonBack.Init(Vector3.zero, OnClose);
+            _buttonBack.Init(OnClose);
 
             _thisTransform = GetComponent<RectTransform>();
             _cameraTransform = _camera.transform;

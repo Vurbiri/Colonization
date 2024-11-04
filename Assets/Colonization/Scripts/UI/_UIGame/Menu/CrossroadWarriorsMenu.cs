@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         {
             _mainMen = mainMenu;
 
-            _buttonBack.Init(Vector3.zero, OnClose);
+            _buttonBack.Init(OnClose);
 
             float angle = 360 / WarriorId.Count;
             Vector3 distance = new(0f, _distanceOfButtons, 0f);

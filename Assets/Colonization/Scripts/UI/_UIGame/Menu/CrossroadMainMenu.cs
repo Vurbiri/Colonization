@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
             _warriorsMenu = warriorsMenu;
             _players = players;
 
-            _buttonClose.Init(Vector3.zero, OnClose);
+            _buttonClose.Init(OnClose);
 
             _buttonRoads.Init(new(0f, -_distanceOfButtons, 0f), color, prices.Road, OnRoads);
 

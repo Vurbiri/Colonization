@@ -14,13 +14,13 @@ namespace Vurbiri.Colonization
         private readonly HashSet<int> _perks;
         private readonly HashSet<Warrior> _warriors = new();
 
-        private readonly StatesSet<PlayerStateId> _states;
+        private readonly AbilitiesSet<PlayerAbilityId> _abilities;
         private readonly PricesScriptable _prices;
         private readonly WarriorsSpawner _spawner;
 
         public AReadOnlyCurrenciesReactive Resources => _resources;
 
-        public State<PlayerStateId> ExchangeRate => _states.GetState(PlayerStateId.ExchangeRate);
+        public Ability<PlayerAbilityId> ExchangeRate => _abilities.GetState(PlayerAbilityId.ExchangeRate);
 
         public IReactiveList<Crossroad> Shrines => _edifices.shrines;
         public IReactiveList<Crossroad> Ports => _edifices.ports;
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
         {
             PlayerVisual visual = SceneData.Get<PlayersVisual>()[playerId];
 
-            _states = settings.states.GetStates();
+            _abilities = settings.states.GetAbilities();
             _roads = settings.roadsFactory.Create().Init(playerId, visual.color);
             _prices = settings.prices;
             _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.warriorsContainer);

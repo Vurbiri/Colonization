@@ -15,11 +15,11 @@ namespace Vurbiri.Colonization
 
         public static int ToState(int id) => id switch
         {
-            Militia     => PlayerStateId.IsMilitia,
-            Solder      => PlayerStateId.IsSolder,
-            Wizard      => PlayerStateId.IsWizard,
-            Saboteur    => PlayerStateId.IsSaboteur,
-            Knight      => PlayerStateId.IsKnight,
+            Militia     => PlayerAbilityId.IsMilitia,
+            Solder      => PlayerAbilityId.IsSolder,
+            Wizard      => PlayerAbilityId.IsWizard,
+            Saboteur    => PlayerAbilityId.IsSaboteur,
+            Knight      => PlayerAbilityId.IsKnight,
             _           => throw new ArgumentOutOfRangeException("id", $"Неожидаемое значение WarriorId - {id} в ToState()"),
         };
     }

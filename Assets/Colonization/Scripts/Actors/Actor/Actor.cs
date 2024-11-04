@@ -11,7 +11,10 @@ namespace Vurbiri.Colonization.Actors
     {
         protected int _id;
         protected Id<PlayerId> _owner;
-        protected StatesSet<ActorStateId> _states;
+        protected int _currentHP;
+        protected int _currentActionPoint = 3;
+
+        protected AbilitiesSet<ActorAbilityId> _states;
         protected ActorSkin _skin;
         protected Transform _thisTransform;
         protected GameObject _thisGO;
@@ -22,14 +25,18 @@ namespace Vurbiri.Colonization.Actors
         protected readonly StateMachineSelectable _stateMachine = new();
         protected int _countAttackStates;
        
+        public int Id => _id;
         public Id<PlayerId> Owner => _owner;
+        public int ActionPoint => _currentActionPoint;
         public Vector3 Position => _thisTransform.position;
+
+        public bool CanAction => true;
 
         protected void Init(ActorSettings settings, int owner, ActorSkin skin, Hexagon startHex, GameplayEventBus eventBus)
         {
             _id = settings.Id;
             _owner = owner;
-            _states = settings.States;
+            _states = settings.Abilities;
             _skin = skin;
             _currentHex = startHex;
             _eventBus = eventBus;
@@ -56,6 +63,8 @@ namespace Vurbiri.Colonization.Actors
 
             _thisGO.SetActive(true);
         }
+
+         
 
         public bool CanMove()
         {

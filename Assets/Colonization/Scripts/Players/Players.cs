@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization
             public WarriorInitializer warriorPrefab;
             public Transform warriorsContainer;
             public PricesScriptable prices;
-            public PlayerStatesScriptable states;
+            public PlayerAbilitiesScriptable states;
             public RoadsFactory roadsFactory;
 
             public void Dispose()
@@ -71,7 +71,7 @@ namespace Vurbiri.Colonization
                 if (prices == null)
                     prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
                 if (states == null)
-                    states = VurbiriEditor.Utility.FindAnyScriptable<PlayerStatesScriptable>();
+                    states = VurbiriEditor.Utility.FindAnyScriptable<PlayerAbilitiesScriptable>();
                 if (roadsFactory.prefab == null)
                     roadsFactory.prefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
             }

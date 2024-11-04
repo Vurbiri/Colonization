@@ -42,14 +42,14 @@ namespace Vurbiri.Colonization
 
         public void UpdateExchangeRate()
         {
-            State<PlayerStateId> exchangeRate = _obj.ExchangeRate;
+            Ability<PlayerAbilityId> exchangeRate = _obj.ExchangeRate;
 
             for (int i = 0; i < CurrencyId.CountMain; i++)
                 _exchangeRate.Set(i, exchangeRate.NextValue);
 
         }
 
-        public IReadOnlyReactiveValue<int> GetStateReactive(Id<PlayerStateId> id) => _obj.GetStateReactive(id);
+        public IReadOnlyReactiveValue<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _obj.GetAbilityReactive(id);
 
         public bool CanEdificeUpgrade(Crossroad crossroad) => _obj.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
         public void BuyEdificeUpgrade(Crossroad crossroad)
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization
             _obj.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
         }
 
-        public bool BuyPerk(IPerk<PlayerStateId> perk)
+        public bool BuyPerk(IPerk<PlayerAbilityId> perk)
         {
             Debug.LogWarning("Player PerkBuy");
 

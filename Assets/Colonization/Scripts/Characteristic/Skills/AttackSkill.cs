@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization
         {
             public AnimationClipSettingsScriptable clipSettings;
             public bool isValid;
+            public float percentDamage;
             public AttackState.Settings settings;
             public AttackSkillUI ui;
         }

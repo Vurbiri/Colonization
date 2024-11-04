@@ -69,15 +69,17 @@ namespace Vurbiri.Colonization.UI
             CrossroadMenusClose();
         }
 
-        private void OnSelectWarrior(Actors.Actor warrior)
+        private void OnSelectWarrior(Actors.Actor actor)
         {
             //if (_players.Current.Id != PlayerId.Player)
             //    return;
+
             CrossroadMenusClose();
 
-            ToPosition(warrior.Position);
+            if (!actor.CanAction) return;
 
-            _warriorsMenu.Open(warrior);
+            ToPosition(actor.Position);
+            _warriorsMenu.Open(actor);
         }
 
         private void OnUnselectWarrior(Actors.Actor warrior)

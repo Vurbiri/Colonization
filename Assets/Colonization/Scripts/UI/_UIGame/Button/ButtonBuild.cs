@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] protected string _key;
 
-        
         private ACurrencies _cost;
         private Unsubscriber<Language> _unsubscriber;
         private string _caption;

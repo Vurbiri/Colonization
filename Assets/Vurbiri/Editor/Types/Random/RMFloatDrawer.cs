@@ -5,9 +5,8 @@ using Vurbiri;
 namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(RMFloat))]
-    public class RMFloatDrawer : PropertyDrawer
+    public class RMFloatDrawer : ARValueDrawer
     {
-        private const float OFFSET_SIZE_LABEL = 20f, SIZE_VALUE = 85f, SIZE_SPACE = 5f;
         private const string NAME_VALUE = "_value";
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -17,11 +16,7 @@ namespace VurbiriEditor
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
             valueProperty.floatValue = Mathf.Abs(valueProperty.floatValue);
 
-            Rect sizeLabel = position, sizeMinus = position, sizePlus = position;
-            sizeLabel.width = EditorGUIUtility.labelWidth + OFFSET_SIZE_LABEL;
-            sizeMinus.x = sizeLabel.width;
-            sizePlus.x = sizeLabel.width + SIZE_VALUE + SIZE_SPACE;
-            sizeMinus.width = sizePlus.width = SIZE_VALUE;
+            (Rect sizeLabel, Rect sizeMinus, Rect sizePlus) = CalkPosition(position);
 
             label = EditorGUI.BeginProperty(position, label, property);
             EditorGUI.LabelField(sizeLabel, label);
