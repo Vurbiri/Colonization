@@ -18,8 +18,8 @@ namespace VurbiriEditor.Colonization.Actors
 
         public override VisualElement CreateInspectorGUI()
         {
-            VisualElement root = _treeWarriorsSettingsScriptable.CloneTree();
-            VisualElement container = root.Q<VisualElement>(NAME_CONTAINER);
+            var root = _treeWarriorsSettingsScriptable.CloneTree();
+            var container = root.Q<VisualElement>(NAME_CONTAINER);
 
             SerializedProperty propertyValues = serializedObject.FindProperty(PROP_SETTINGS).FindPropertyRelative(PROP_ARRAY);
 

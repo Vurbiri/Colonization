@@ -35,7 +35,8 @@ namespace VurbiriEditor
             {
                 path = AssetDatabase.GUIDToAssetPath(guid);
                 obj = (AssetDatabase.LoadMainAssetAtPath(path) as GameObject).GetComponent<T>();
-                if (obj != null) list.Add(obj);
+                if (obj != null) 
+                    list.Add(obj);
             }
 
             return list;
@@ -56,6 +57,23 @@ namespace VurbiriEditor
             return default;
         }
 
+        public static List<T> FindScriptables<T>() where T : ScriptableObject
+        {
+            string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", new[] { "Assets" });
+
+            string path; T obj;
+            List<T> list = new();
+            foreach (var guid in guids)
+            {
+                path = AssetDatabase.GUIDToAssetPath(guid);
+                obj = AssetDatabase.LoadAssetAtPath<T>(path);
+                if (obj != null) 
+                    list.Add(obj);
+            }
+
+            return list;
+        }
+
         public static void CreateFromPrefab(string path, string name, GameObject parent) => Place(GameObject.Instantiate(Resources.Load(path)) as GameObject, parent, name);
 
         public static GameObject CreateObject(string name, GameObject parent, params Type[] types)
@@ -65,7 +83,6 @@ namespace VurbiriEditor
 
             return newObject;
         }
-
 
         private static void Place(GameObject gameObject, GameObject parent, string name)
         {

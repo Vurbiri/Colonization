@@ -24,7 +24,7 @@ namespace VurbiriEditor.Colonization
         
         public void CreateGUI()
         {
-            rootVisualElement.Add(PlayerVisualSetEditor.BindAndGetVisualElement(_visualSet));
+            rootVisualElement.Add(PlayerVisualSetEditor.CreateCachedEditorAndBind(_visualSet));
         }
 
     }

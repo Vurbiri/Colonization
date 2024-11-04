@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization.UI
         private void OnAttack()
         {
             _thisGO.SetActive(false);
-            _currentWarrior.Attack();
+            _currentWarrior.Attack(0);
         }
     }
 }

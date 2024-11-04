@@ -3,6 +3,7 @@ using UnityEngine;
 namespace Vurbiri.Colonization.Actors
 {
     using FSMSelectable;
+    using System.Collections.Generic;
     using static CONST;
 
     [RequireComponent(typeof(BoxCollider))]
@@ -17,7 +18,9 @@ namespace Vurbiri.Colonization.Actors
         protected Hexagon _currentHex;
         protected GameplayEventBus _eventBus;
         protected float _extentsZ;
+
         protected readonly StateMachineSelectable _stateMachine = new();
+        protected int _countAttackStates;
        
         public Id<PlayerId> Owner => _owner;
         public Vector3 Position => _thisTransform.position;
@@ -45,7 +48,11 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.SetDefaultState<IdleState>();
 
             _stateMachine.AddState(skills.GetMoveSate(this));
-            _stateMachine.AddState(new AttackState(this));
+
+            List<AttackState> attackStates = skills.GetAttackSates(this);
+            _countAttackStates = attackStates.Count;
+            for(int i = 0; i < _countAttackStates; i++)
+                _stateMachine.AddState(attackStates[i]);
 
             _thisGO.SetActive(true);
         }
@@ -59,9 +66,9 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.SetState<MoveState>();
         }
 
-        public void Attack()
+        public void Attack(int id)
         {
-            _stateMachine.SetState<AttackState>();
+            _stateMachine.SetState<AttackState>(id);
         }
 
 

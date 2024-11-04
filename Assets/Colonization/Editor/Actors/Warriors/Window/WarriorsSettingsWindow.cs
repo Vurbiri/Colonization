@@ -30,7 +30,7 @@ namespace VurbiriEditor.Colonization.Actors
                 return;
             }
 
-            rootVisualElement.Add(WarriorsSettingsEditor.BindAndGetVisualElement(_warriorsSettings));
+            rootVisualElement.Add(WarriorsSettingsEditor.CreateCachedEditorAndBind(_warriorsSettings));
         }
     }
 }

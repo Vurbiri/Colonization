@@ -30,7 +30,7 @@ namespace VurbiriEditor.Colonization
                 return;
             }
             
-            rootVisualElement.Add(PlayerStatesScriptableEditor.BindAndGetVisualElement(_states));
+            rootVisualElement.Add(PlayerStatesScriptableEditor.CreateCachedEditorAndBind(_states));
         }
     }
 }

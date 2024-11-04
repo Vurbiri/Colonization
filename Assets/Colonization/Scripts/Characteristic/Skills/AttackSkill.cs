@@ -1,21 +1,18 @@
-using UnityEngine;
+using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization
 {
+    using static Actors.Actor;
+
     public partial class Skills
     {
         [System.Serializable]
-        private class AttackSkill
+        public class AttackSkill
         {
-            public AnimationClip clip;
-            
-            public float totalTime;
-            public float range;
-            public float damageTime;
-            public float percentDamage;
-
-
+            public AnimationClipSettingsScriptable clipSettings;
+            public bool isValid;
+            public AttackState.Settings settings;
             public AttackSkillUI ui;
         }
     }

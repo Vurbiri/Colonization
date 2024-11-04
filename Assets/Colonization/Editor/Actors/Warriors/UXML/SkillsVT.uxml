@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Colonization/Editor/Actors/Warriors/UXML/SkillsUSS.uss?fileID=7433441132597879392&amp;guid=e42cbd2053475f24ebce77633e3f61c1&amp;type=3#SkillsUSS" />
     <ui:VisualElement style="flex-grow: 1; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;">
-        <uie:PropertyField binding-path="_moveSkill" label="Move Skill" name="_moveSkill" class="style" style="padding-left: 16px;" />
-        <ui:ListView virtualization-method="DynamicHeight" binding-path="_attackSkills" name="_attackSkills" reorder-mode="Simple" show-add-remove-footer="true" show-foldout-header="true" show-alternating-row-backgrounds="ContentOnly" show-border="true" header-title="Attack Skills" focusable="true" usage-hints="None" show-bound-collection-size="false" class="style" />
+        <uie:PropertyField binding-path="_moveSkill" label="Move Skill" name="_moveSkill" class="style" />
+        <ui:ListView virtualization-method="DynamicHeight" binding-path="_attackSkills" name="_attackSkills" reorder-mode="Simple" show-add-remove-footer="true" show-foldout-header="true" show-border="true" header-title="Attack Skills" focusable="true" usage-hints="None" show-bound-collection-size="true" reorderable="true" class="style" />
     </ui:VisualElement>
 </ui:UXML>

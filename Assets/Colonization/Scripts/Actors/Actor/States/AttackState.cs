@@ -12,13 +12,21 @@ namespace Vurbiri.Colonization.Actors
         public class AttackState : AState
         {
             private readonly Transform _parentTransform;
+            private readonly Settings _settings;
             private WaitActivate _waitActor;
             private Hexagon _targetActor;
             private Coroutine _coroutineAction;
+            private readonly WaitForSeconds _waitDamage, _waitEndAttack;
+            private readonly float _selfRange;
 
-            public AttackState(Actor parent, int id = 0) : base(parent, id)
+            public AttackState(Actor parent, Settings settings, int id) : base(parent, id)
             {
                 _parentTransform = _parent._thisTransform;
+                _settings = settings;
+
+                _waitDamage = new(settings.damageTime);
+                _waitEndAttack = new(settings.remainingTime);
+                _selfRange = settings.range + _parent._extentsZ;
             }
 
             public override void Enter()
@@ -65,8 +73,9 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
                 }
                 _parentTransform.localRotation = ACTOR_ROTATIONS[_targetActor.Key - currentHex.Key];
+                float path = 1f - (_selfRange + _parent._extentsZ) / HEX_DIAMETER_IN;
 
-                yield return _parent.StartCoroutine(Move_Coroutine(currentHex.Position, _targetActor.Position, 0.5f, _skin.RunForward));
+                yield return _parent.StartCoroutine(Move_Coroutine(currentHex.Position, _targetActor.Position, path, _skin.RunForward));
                 yield return _parent.StartCoroutine(Attack_Coroutine());
                 yield return _parent.StartCoroutine(Move_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f, _skin.RunBack));
                 
@@ -103,30 +112,38 @@ namespace Vurbiri.Colonization.Actors
 
             private IEnumerator Move_Coroutine(Vector3 start, Vector3 end, float path, Action animAction)
             {
+                yield return null;
+
                 animAction();
 
-                float _progress = 0f;
-                while (_progress <= path)
+                float progress = 0f;
+                while (progress <= path)
                 {
                     yield return null;
-                    _progress += 0.6f * Time.deltaTime;
-                    _parentTransform.localPosition = Vector3.Lerp(start, end, _progress);
+                    progress += _settings.moveSpeed * Time.deltaTime;
+                    _parentTransform.localPosition = Vector3.Lerp(start, end, progress);
                 }
             }
 
             private IEnumerator Attack_Coroutine()
             {
-                _skin.Attack();
-                yield return new WaitForSeconds(2.12f);
+                _skin.Attack(_settings.idAnimation);
+                yield return _waitDamage;
+                yield return _waitEndAttack;
             }
 
-            #region Nested: Profile
+            #region Nested: Settings
             //*******************************************************
             [System.Serializable]
-            public struct Attack
+            public struct Settings
             {
-                public float time;
+                public float damageTime;
+                public float remainingTime;
                 public float percentDamage;
+                public float range;
+                public float moveSpeed;
+                public int idAnimation;
+                public int cost;
             }
             #endregion
         }

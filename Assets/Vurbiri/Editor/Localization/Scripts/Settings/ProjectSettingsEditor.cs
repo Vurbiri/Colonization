@@ -35,7 +35,7 @@ namespace Vurbiri.Localization.Editors
 
                 if (changeEvent.newValue is SettingsScriptable st)
                 {
-                    visualSettings.Add(SettingsEditor.BindAndGetVisualElement(st));
+                    visualSettings.Add(SettingsEditor.CreateCachedEditorAndBind(st));
                     visualSettings.visible = true;
                 }
                 else

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 57af7f0be77dc914493f3cac19a84e10
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - _treeAnimationClipSettingsWindow: {fileID: 9197481963319205126, guid: c68ba6fde92a3c341999334a3758bf15,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

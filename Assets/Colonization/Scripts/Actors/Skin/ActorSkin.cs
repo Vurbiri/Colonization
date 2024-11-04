@@ -11,7 +11,8 @@ namespace Vurbiri.Colonization.Actors
         #region CONST
         private const string T_IDLE = "tIdle", B_IDLE = "bIdle";
         private const string B_MOVE = "bMove", B_RUN_F = "bRunF", B_RUN_B = "bRunB";
-        private const string T_ATTACK_01 = "tAttack_01", T_ATTACK_02 = "tAttack_02";
+        private readonly string[] T_ATTACKS = { "tAttack_01", "tAttack_02" };
+        private const int COUNT_ATTACKS = 3;
         #endregion
 
         private Animator _animator;
@@ -19,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
         private int _idBoolState = 0, _idTriggerState = 0;
 
         private BoolSwitchState _moveState, _runForwardState, _runBackState;
-        private TriggerSwitchState _attackState;
+        private TriggerSwitchState[] _attackStates = new TriggerSwitchState[COUNT_ATTACKS];
 
         public event Action EventStart;
 
@@ -34,7 +35,8 @@ namespace Vurbiri.Colonization.Actors
             _runForwardState = CreateBoolState(B_RUN_F);
             _runBackState    = CreateBoolState(B_RUN_B);
 
-            _attackState = CreateTriggerState(T_ATTACK_01);
+            for (int i = 0; i < COUNT_ATTACKS; i++)
+                _attackStates[i] = CreateTriggerState(T_ATTACKS[i]);
 
             _animator.GetBehaviour<SpawnBehaviour>().EventExitSpawn += EventStart;
         }
@@ -45,7 +47,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void RunForward() => _stateMachine.SetState(_runForwardState);
 
-        public void Attack() => _stateMachine.SetState(_attackState);
+        public void Attack(int index) => _stateMachine.SetState(_attackStates[index]);
 
         public void RunBack() => _stateMachine.SetState(_runBackState);
 

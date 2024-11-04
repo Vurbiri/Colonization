@@ -17,7 +17,15 @@ namespace VurbiriEditor
             return root;
         }
 
-        public static VisualElement BindAndGetVisualElement(Object obj)
+        public static VisualElement CreateEditorAndBind(Object obj, out Editor editor)
+        {
+            editor = CreateEditor(obj, typeof(T));
+            VisualElement element = editor.CreateInspectorGUI();
+            element.Bind(editor.serializedObject);
+            return element;
+        }
+
+        public static VisualElement CreateCachedEditorAndBind(Object obj)
         {
             CreateCachedEditor(obj, typeof(T), ref _self);
             VisualElement element = _self.CreateInspectorGUI();

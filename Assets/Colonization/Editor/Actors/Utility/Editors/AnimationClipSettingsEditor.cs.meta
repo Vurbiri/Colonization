@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 54734c4ec60172942a410479e7b46b4e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _treeAnimationClipSettingsScriptable: {fileID: 9197481963319205126, guid: 6cdef3dbd21411d4087d3ce9fc451ee3,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
