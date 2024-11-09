@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization.UI
                 sb.Append(_language.GetText(_file, settings.keyDesc));
                 sb.Append(NEW_LINE);
             }
-            sb.AppendFormat(_textDamage, (int)(100 + settings.percentDamage));
+            sb.AppendFormat(_textDamage, settings.percentDamage);
             sb.Append(NEW_LINE);
             sb.Append(isUse ? _hexColorPlus : _hexColorMinus);
             sb.AppendFormat(_textAP, settings.cost);

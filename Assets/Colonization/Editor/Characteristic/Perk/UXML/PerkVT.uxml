@@ -1,17 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:Foldout text="Foldout" name="Foldout" style="flex-shrink: 0;">
-        <ui:VisualElement style="flex-grow: 0; padding-top: 6px; padding-right: 6px; padding-bottom: 6px; padding-left: 6px; justify-content: space-around; align-items: stretch; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); align-self: stretch; background-color: rgb(56, 56, 56);">
-            <ui:IntegerField label="Id" value="42" name="Id" binding-path="_id" />
-            <ui:SliderInt label="Level" high-value="3" binding-path="_level" show-input-field="true" low-value="1" />
-            <ui:TextField picking-mode="Ignore" label="Key Name" binding-path="_keyName" name="Name" class="unity-property-field" />
-            <ui:TextField picking-mode="Ignore" label="Key Description" binding-path="_keyDescription" />
-            <uie:PropertyField binding-path="_target" label="Target Object" />
-            <uie:PropertyField binding-path="_ability" label="Target Ability" />
-            <ui:SliderInt label="Value" high-value="10" binding-path="_value" show-input-field="true" />
-            <uie:PropertyField binding-path="_chance" />
-            <ui:VisualElement style="flex-grow: 0; align-self: stretch; border-left-color: rgb(77, 77, 77); border-right-color: rgb(77, 77, 77); border-top-color: rgb(77, 77, 77); border-bottom-color: rgb(77, 77, 77); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; justify-content: center; align-items: stretch; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px;">
-                <uie:PropertyField binding-path="_cost" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-    </ui:Foldout>
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; margin-top: 3px; margin-right: 3px; margin-bottom: 3px; margin-left: 3px; padding-top: 3px; padding-right: 3px; padding-bottom: 3px; padding-left: 3px; border-left-color: rgb(133, 94, 66); border-right-color: rgb(133, 94, 66); border-top-color: rgb(133, 94, 66); border-bottom-color: rgb(133, 94, 66); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; min-width: 300px; flex-shrink: 1; white-space: nowrap; max-width: 99%;">
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="-unity-text-align: middle-center; font-size: 14px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; margin-left: 1px; background-color: rgb(173, 165, 135); color: rgb(65, 32, 16); border-left-color: rgb(210, 219, 208); border-right-color: rgb(210, 219, 208); border-top-color: rgb(210, 219, 208); border-bottom-color: rgb(210, 219, 208); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px;" />
+        <ui:Foldout name="Foldout" value="true" style="margin-left: 1px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; padding-top: 1px; padding-right: 1px; padding-bottom: 1px; padding-left: 1px; -unity-font-style: normal; min-width: 295px; max-width: 99%;">
+            <ui:IMGUIContainer name="Container" />
+        </ui:Foldout>
+    </ui:VisualElement>
 </ui:UXML>

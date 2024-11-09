@@ -9,6 +9,6 @@ namespace Vurbiri.Colonization.UI
         public string keyName;
         public string keyDesc;
         public int cost;
-        public float percentDamage;
+        public int percentDamage;
     }
 }

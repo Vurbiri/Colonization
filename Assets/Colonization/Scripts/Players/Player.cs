@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
             Ability<PlayerAbilityId> exchangeRate = _obj.ExchangeRate;
 
             for (int i = 0; i < CurrencyId.CountMain; i++)
-                _exchangeRate.Set(i, exchangeRate.NextValue);
+                _exchangeRate.Set(i, exchangeRate.NextValue());
 
         }
 
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization
             _obj.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
         }
 
-        public bool BuyPerk(IPerk<PlayerAbilityId> perk)
+        public bool BuyPerk(IPerkSettings perk)
         {
             Debug.LogWarning("Player PerkBuy");
 

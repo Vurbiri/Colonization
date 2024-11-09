@@ -15,6 +15,7 @@ namespace Vurbiri.Colonization
     [DefaultExecutionOrder(-10)]
     public class GameplayEntryPoint : ASceneEntryPoint
     {
+        [SerializeField] protected SceneId _nextScene;
         [Header("Scene objects")]
         [SerializeField] private Game _game;
         [Space]
@@ -50,7 +51,7 @@ namespace Vurbiri.Colonization
         private InputController _inputController;
         private HexagonsData _hexagonsData;
 
-        public override IReactive<SceneId> Enter(SceneContainers containers)
+        public override IReactive<ExitParam> Enter(SceneContainers containers, AEnterParam param)
         {
             _services = containers.Services;
             _data = containers.Data;
@@ -64,7 +65,7 @@ namespace Vurbiri.Colonization
 
             StartCoroutine(Enter_Coroutine());
 
-            return _defaultNextScene;
+            return new GameplayExitPoint(_nextScene).ReactiveExitParam;
 
             #region Local: FillingContainers()
             //=================================

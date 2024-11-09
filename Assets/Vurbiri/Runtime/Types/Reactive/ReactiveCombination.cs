@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Vurbiri.Reactive
 {
@@ -12,11 +13,17 @@ namespace Vurbiri.Reactive
 
         protected Action<TA, TB> ActionValuesChange;
 
+        private readonly IEqualityComparer<TA> _comparerA;
+        private readonly IEqualityComparer<TB> _comparerB;
+
         public TA ValueA => _valueA;
         public TB ValueB => _valueB;
 
         public ReactiveCombination(IReactive<TA> reactiveA, IReactive<TB> reactiveB)
         {
+            _comparerA = EqualityComparer<TA>.Default;
+            _comparerB = EqualityComparer<TB>.Default;
+
             _unsubscriberA = reactiveA.Subscribe(OnChangeValueA);
             _unsubscriberB = reactiveB.Subscribe(OnChangeValueB);
         }
@@ -44,7 +51,7 @@ namespace Vurbiri.Reactive
 
         private void OnChangeValueA(TA value)
         {
-            if (!_valueA.Equals(value))
+            if (!_comparerA.Equals(_valueA, value))
             {
                 _valueA = value;
                 ActionValuesChange?.Invoke(_valueA, _valueB);
@@ -53,7 +60,7 @@ namespace Vurbiri.Reactive
 
         private void OnChangeValueB(TB value)
         {
-            if (!_valueB.Equals(value))
+            if (!_comparerB.Equals(_valueB, value))
             {
                 _valueB = value;
                 ActionValuesChange?.Invoke(_valueA, _valueB);

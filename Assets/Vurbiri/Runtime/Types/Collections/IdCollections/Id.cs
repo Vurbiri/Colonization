@@ -15,7 +15,7 @@ namespace Vurbiri
         public Id(int id)
         {
             if (!AIdType<T>.IsValidate(id))
-                throw new($"Неожидаемое значение: {id} для {typeof(T).Name}");
+                throw new ArgumentOutOfRangeException($"Неожидаемое значение: {id} для {typeof(T).Name}");
 
             _id = id;
         }

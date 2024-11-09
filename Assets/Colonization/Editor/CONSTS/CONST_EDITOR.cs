@@ -4,6 +4,7 @@ namespace VurbiriEditor.Colonization
     {
         public const string MENU_PATH = "Colonization/";
         public const string MENU_CH_PATH = MENU_PATH + "Characteristics/";
+        public const string MENU_PERKS_PATH = MENU_CH_PATH + "Perks/";
         public const int SPACE_WND = 8;
     }
 }

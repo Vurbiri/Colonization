@@ -35,7 +35,7 @@ namespace Vurbiri
                 if (field.GetCustomAttributes(t_attribute, false).Length > 0)
                     continue;
 
-                if (field.FieldType != t_int || !field.IsLiteral)
+                if (field.FieldType != t_int | !field.IsLiteral)
                     Debug.LogError($"ѕоле {t_child.Name}.{field.Name} должно иметь тип int и быть константным.");
 
                 value = (int)field.GetValue(null);
@@ -83,7 +83,7 @@ namespace Vurbiri
             }
         }
 #endif
-        public static bool IsValidate(int value) => value >= _min && value < _count;
+        public static bool IsValidate(int value) => value >= _min & value < _count;
 
         protected static void RunConstructor() { }
     }

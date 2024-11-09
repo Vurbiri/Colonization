@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Reactive
@@ -13,11 +14,32 @@ namespace Vurbiri.Reactive
 
         protected Action<T> actionValueChange;
 
-        public T Value { get => _value; set { if(!_value.Equals(value)) { _value = value; actionValueChange?.Invoke(_value); } } }
+        private readonly IEqualityComparer<T> _comparer;
 
-        public ReactiveValue() => _value = default;
-        [JsonConstructor]
-        public ReactiveValue(T value) => _value = value;
+        public T Value 
+        { 
+            get => _value; 
+            set 
+            {
+                if(!_comparer.Equals(_value, value))
+                { 
+                    _value = value; 
+                    actionValueChange?.Invoke(value); 
+                } 
+            } 
+        }
+
+        public ReactiveValue()
+        {
+            _value = default;
+            _comparer = EqualityComparer<T>.Default;
+        }
+        
+        public ReactiveValue(T value)
+        {
+            _value = value;
+            _comparer = EqualityComparer<T>.Default;
+        }
 
         public Unsubscriber<T> Subscribe(Action<T> action, bool calling = true)
         {

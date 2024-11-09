@@ -27,6 +27,13 @@ namespace Vurbiri.Colonization
             _amount++;
         }
 
+        public void Set(int index, int value)
+        {
+            int temp = _values[index];
+            _values[index] = value;
+            _amount += value - temp;
+        }
+
         public void Add(int index, int value)
         {
             _values[index] += value;

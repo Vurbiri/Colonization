@@ -27,6 +27,7 @@ namespace VurbiriEditor.Colonization
                 label.text = string.Format(NAME_ELEMENT, strings[1]);
 
             label = EditorGUI.BeginProperty(position, label, property);
+            EditorGUI.indentLevel++;
 
             if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
             {
@@ -56,7 +57,7 @@ namespace VurbiriEditor.Colonization
                     EditorGUI.indentLevel--;
 
                     position.y += height + ySpace;
-                    damageProperty.floatValue = EditorGUI.Slider(position, damageProperty.displayName, damageProperty.floatValue, 0f, 100f);
+                    damageProperty.intValue = EditorGUI.IntSlider(position, damageProperty.displayName, damageProperty.intValue, 50, 250);
 
                     position.y += ySpace * 2f;
                     if (DrawFoldout(parentProperty))
@@ -72,7 +73,7 @@ namespace VurbiriEditor.Colonization
                     }
 
                     parentProperty = property.FindPropertyRelative(PROP_UI);
-                    parentProperty.FindPropertyRelative(PROP_DAMAGE).floatValue = damageProperty.floatValue;
+                    parentProperty.FindPropertyRelative(PROP_DAMAGE).intValue = damageProperty.intValue;
                     parentProperty.FindPropertyRelative(PROP_COST).intValue = costProperty.intValue;
 
                     position.y += ySpace;
@@ -92,6 +93,7 @@ namespace VurbiriEditor.Colonization
                 EditorGUI.indentLevel--;
             }
 
+            EditorGUI.indentLevel--;
             EditorGUI.EndProperty();
 
             #region Local: DrawLabelAndSetValue(..), DrawFoldout(..), DrawObject<T>(..), DrawString(..), DrawIntSlider(..), DrawButton()
@@ -145,8 +147,8 @@ namespace VurbiriEditor.Colonization
                 float viewWidth = EditorGUIUtility.currentViewWidth;
 
                 positionButton.height += ySpace * 2f;
-                positionButton.x = 75f;
-                positionButton.width = viewWidth - 115f;
+                positionButton.x = 100f;
+                positionButton.width = viewWidth - 125f;
 
                 if (GUI.Button(positionButton, "Select Clip Settings".ToUpper()))
                 {

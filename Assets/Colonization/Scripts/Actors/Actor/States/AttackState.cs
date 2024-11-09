@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
     {
         public class AttackState : AState
         {
-            private readonly float _percentDamage;
+            private readonly int _percentDamage;
             private readonly float _speedRun;
             private readonly float _selfRange;
             private readonly int _idAnimation;
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Actors
             private Coroutine _coroutineAction;
             private readonly WaitForSeconds _waitDamage, _waitEndAttack;
             
-            public AttackState(Actor parent, float percentDamage, float speedRun, Settings settings, int id) : base(parent, id)
+            public AttackState(Actor parent, int percentDamage, float speedRun, Settings settings, int id) : base(parent, id)
             {
                 _percentDamage = percentDamage;
                 _speedRun = speedRun;

@@ -1,56 +1,58 @@
-using System.Collections.Generic;
+using Vurbiri.Collections;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class Ability<TId> : AReactive<int>, IValueId<TId> where TId : AAbilityd<TId>
+    public class Ability<TId> : AReactive<int>, IValueId<TId> where TId : AAbilityId<TId>
     {
         private readonly Id<TId> _id;
         private readonly int _baseValue;
 
         private int _currentValue;
-        private readonly HashSet<IPerk<TId>> _randomPerks;
+        private readonly IdArray<TypeOperationId, IAbilityModifier> _perks = new();
 
         public Id<TId> Id => _id;
         public override int Value { get => _currentValue; protected set { } }
-        public int NextValue
+
+        private Ability()
         {
-            get
-            {
-                if (_randomPerks.Count == 0)
-                    return _currentValue;
-
-                int newValue = _currentValue;
-                foreach (IPerk<TId> perk in _randomPerks)
-                    newValue = perk.Apply(newValue);
-
-                return newValue;
-            }
+            _perks[TypeOperationId.Addition] = new AbilityModAdd();
+            _perks[TypeOperationId.Percent] = new AbilityModPercent();
+            _perks[TypeOperationId.RandomAdd] = new AbilityModRandom();
         }
-        
-        public Ability(Id<TId> id, int baseValue)
+
+        public Ability(Id<TId> id, int baseValue) : this()
         {
             _id = id;
             _baseValue = _currentValue = baseValue;
-            _randomPerks = new();
         }
 
-        public Ability(Ability<TId> state)
+        public Ability(Ability<TId> state) : this()
         {
             _id = state._id;
             _baseValue = _currentValue = state._baseValue;
-            _randomPerks = new();
         }
 
-        public bool TryAddPerk(IPerk<TId> perk)
+        public void AddPerk(IAbilityModifierSettings settings)
         {
-            if (!perk.IsPermanent)
-                return _randomPerks.Add(perk);
-
-            _currentValue = perk.Apply(_currentValue);
-            actionValueChange?.Invoke(_currentValue);
-            return true;
+            _perks[settings.TypeOperation].Add(settings);
+            NextValue();
+        }
+        public void RemovePerk(IAbilityModifierSettings settings)
+        {
+            _perks[settings.TypeOperation].Remove(settings);
+            NextValue();
         }
 
+        public int NextValue()
+        {
+            _currentValue = _baseValue;
+            for (int i = 0; i < TypeOperationId.Count; i++)
+                _currentValue = _perks[i].Apply(_currentValue);
+
+            actionValueChange?.Invoke(_currentValue);
+
+            return _currentValue;
+        }
     }
 }

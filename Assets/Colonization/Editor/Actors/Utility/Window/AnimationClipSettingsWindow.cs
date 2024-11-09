@@ -34,9 +34,9 @@ namespace VurbiriEditor.Colonization.Actors
             var root = _treeAnimationClipSettingsWindow.CloneTree();
             var container = root.Q<VisualElement>(NAME_CONTAINER);
 
-            foreach (var scriptable in settings)
+            for(int i = settings.Count - 1; i >= 0; i--)
             {
-                container.Add(AnimationClipSettingsEditor.CreateEditorAndBind(scriptable, out Editor editor));
+                container.Add(AnimationClipSettingsEditor.CreateEditorAndBind(settings[i], out Editor editor));
                 _editors.Add(editor);
             }
 

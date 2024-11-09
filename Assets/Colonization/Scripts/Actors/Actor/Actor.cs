@@ -29,15 +29,14 @@ namespace Vurbiri.Colonization.Actors
         public Id<PlayerId> Owner => _owner;
         public int ActionPoint => _currentActionPoint;
         public Vector3 Position => _thisTransform.position;
-
         public bool CanAction => true;
 
-        protected void Init(ActorSettings settings, int owner, ActorSkin skin, Hexagon startHex, GameplayEventBus eventBus)
+        public virtual void Init(ActorSettings settings, int owner, Hexagon startHex, GameplayEventBus eventBus)
         {
             _id = settings.Id;
             _owner = owner;
             _states = settings.Abilities;
-            _skin = skin;
+            _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
             _eventBus = eventBus;
             _thisTransform = transform;

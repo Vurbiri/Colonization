@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ebfe1f9b1690358478c782d1986766ae
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _treePerksVT: {fileID: 9197481963319205126, guid: 0b503a727827dd340a199746ad185623,
+      type: 3}
+  - _treePerkVT: {fileID: 9197481963319205126, guid: 97ffb3cd2261827438696bb45e1e3a8b,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

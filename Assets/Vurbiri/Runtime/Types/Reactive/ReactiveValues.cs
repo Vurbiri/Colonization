@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Reactive
@@ -15,19 +16,28 @@ namespace Vurbiri.Reactive
 
         protected Action<TA, TB> ActionValuesChange;
 
-        public TA ValueA { get => _valueA; set { if (!_valueA.Equals(value)) { _valueA = value; ActionValuesChange?.Invoke(_valueA, _valueB); } } }
-        public TB ValueB { get => _valueB; set { if (!_valueB.Equals(value)) { _valueB = value; ActionValuesChange?.Invoke(_valueA, _valueB); } } }
+        private readonly IEqualityComparer<TA> _comparerA;
+        private readonly IEqualityComparer<TB> _comparerB;
+
+        public TA ValueA { get => _valueA; set { if (!_comparerA.Equals(_valueA, value)) { _valueA = value; ActionValuesChange?.Invoke(_valueA, _valueB); } } }
+        public TB ValueB { get => _valueB; set { if (!_comparerB.Equals(_valueB, value)) { _valueB = value; ActionValuesChange?.Invoke(_valueA, _valueB); } } }
 
         public ReactiveValues()
         {
             _valueA = default;
             _valueB = default;
+
+            _comparerA = EqualityComparer<TA>.Default;
+            _comparerB = EqualityComparer<TB>.Default;
         }
-        [JsonConstructor]
+        
         public ReactiveValues(TA valueA, TB valueB)
         {
             _valueA = valueA;
             _valueB = valueB;
+
+            _comparerA = EqualityComparer<TA>.Default;
+            _comparerB = EqualityComparer<TB>.Default;
         }
 
         public Unsubscriber<TA, TB> Subscribe(Action<TA, TB> action, bool calling = true)

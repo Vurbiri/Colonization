@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
                 _resources.AddFrom(freeGroundRes);
 
             foreach (var crossroad in _edifices.ports)
-                _resources.AddFrom(crossroad.ProfitFromPort(hexId, _abilities.GetValue(PlayerAbilityId.PortsRatioRes)));
+                _resources.AddFrom(crossroad.ProfitFromPort(hexId, _abilities.GetValue(PlayerAbilityId.PortsAddRes)));
 
             foreach (var crossroad in _edifices.urbans)
                 _resources.AddFrom(crossroad.ProfitFromUrban(hexId, _abilities.GetValue(PlayerAbilityId.CompensationRes), _abilities.GetValue(PlayerAbilityId.WallDefence)));
@@ -26,7 +26,20 @@ namespace Vurbiri.Colonization
         public bool CanEdificeUpgrade(Crossroad crossroad)
         {
             Id<EdificeGroupId> upGroup = crossroad.NextGroupId;
-            return crossroad.GroupId != EdificeGroupId.None || _abilities.IsGreater(upGroup.ToState(), _edifices.values[upGroup].Count);
+            Id<EdificeId> id = crossroad.NextId;
+
+            if(crossroad.GroupId != EdificeGroupId.None)
+            {
+                if ((id == EdificeId.LighthouseOne | id == EdificeId.LighthouseTwo) && !_abilities.IsTrue(PlayerAbilityId.IsLighthouse))
+                    return false;
+
+                if(id == EdificeId.Capital && !_abilities.IsTrue(PlayerAbilityId.IsCapital))
+                    return false;
+
+                return true;
+            }
+
+            return _abilities.IsGreater(upGroup.ToState(), _edifices.values[upGroup].Count);
         }
         public bool CanWallBuild() => _abilities.IsTrue(PlayerAbilityId.IsWall);
         public bool CanRoadBuild() => _abilities.IsGreater(PlayerAbilityId.MaxRoads, _roads.Count);

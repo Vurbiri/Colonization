@@ -57,7 +57,5 @@ namespace Vurbiri.Colonization
             data.EdificesBind(_edifices.values, !isLoad);
             data.RoadsBind(_roads, !isLoad);
         }
-
-        
     }
 }
