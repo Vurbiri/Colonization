@@ -1,7 +1,7 @@
-using UnityEngine;
-
 namespace Vurbiri.Colonization.Actors
 {
+    using UnityEngine;
+
     public class WarriorsSpawner
     {
         private readonly int _payerId;
@@ -25,5 +25,4 @@ namespace Vurbiri.Colonization.Actors
             return warrior.Init(id, _payerId, _material, startHex, _eventBus);
         }
     }
-
 }

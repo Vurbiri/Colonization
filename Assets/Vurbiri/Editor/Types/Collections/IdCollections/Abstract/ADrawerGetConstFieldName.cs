@@ -8,11 +8,10 @@ namespace VurbiriEditor
 {
     public abstract class ADrawerGetConstFieldName : PropertyDrawer
     {
-        protected List<string> GetNames()
+        protected List<string> GetNames(Type t_field)
         {
-            Type type = GetTypeId();
             Type t_attribute = typeof(NotIdAttribute), t_int = typeof(int);
-            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
+            FieldInfo[] fields = t_field.GetFields(BindingFlags.Public | BindingFlags.Static);
 
             int count = fields.Length;
             List<string> strings = new(count);
@@ -28,6 +27,29 @@ namespace VurbiriEditor
             return strings;
         }
 
-        protected abstract Type GetTypeId();
+        protected (string[] names, int[] values) GetNamesAndValues(Type t_field)
+        {
+            Type t_attribute = typeof(NotIdAttribute), t_int = typeof(int);
+
+            FieldInfo[] fields = t_field.GetFields(BindingFlags.Public | BindingFlags.Static);
+
+            int count = fields.Length;
+            List<string> names = new(count);
+            List<int> values = new(count);
+
+            FieldInfo field;
+            for (int i = 0; i < count; i++)
+            {
+                field = fields[i];
+
+                if (field.FieldType != t_int | !field.IsLiteral || field.GetCustomAttributes(t_attribute, false).Length > 0)
+                    continue;
+
+                names.Add(field.Name);
+                values.Add((int)field.GetValue(null));
+            }
+
+            return (names.ToArray(), values.ToArray());
+        }
     }
 }

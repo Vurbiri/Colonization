@@ -1,10 +1,9 @@
-using UnityEditor;
-using UnityEngine.UIElements;
-using Vurbiri.Colonization;
-using Vurbiri.Colonization.Actors;
-
 namespace VurbiriEditor.Colonization.Actors
 {
+    using UnityEditor;
+    using UnityEngine.UIElements;
+    using Vurbiri.Colonization.Actors;
+
     [CustomEditor(typeof(WarriorsSettingsScriptable), true)]
     public class WarriorsSettingsEditor : AActorsSettingsEditor<WarriorsSettingsEditor>
     {

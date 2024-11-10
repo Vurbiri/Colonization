@@ -1,8 +1,7 @@
-using Vurbiri.Colonization.Actors;
-using Vurbiri.Colonization.UI;
-
 namespace Vurbiri.Colonization
 {
+    using Vurbiri.Colonization.Actors;
+    using Vurbiri.Colonization.UI;
     using static Actors.Actor;
 
     public partial class Skills

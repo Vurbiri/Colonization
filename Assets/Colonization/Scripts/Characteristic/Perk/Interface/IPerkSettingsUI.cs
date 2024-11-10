@@ -1,7 +1,7 @@
-using UnityEngine;
-
 namespace Vurbiri.Colonization
 {
+    using UnityEngine;
+
     public interface IPerkSettingsUI 
     {
         public int Id { get; }

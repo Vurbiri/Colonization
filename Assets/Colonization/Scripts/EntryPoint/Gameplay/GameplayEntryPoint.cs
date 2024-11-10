@@ -1,16 +1,15 @@
-using System;
-using System.Collections;
-using UnityEngine;
-using Vurbiri.EntryPoint;
-using Vurbiri.Localization;
-using Vurbiri.Reactive;
-using Vurbiri.UI;
-
 namespace Vurbiri.Colonization
 {
+    using Collections;
     using Controllers;
     using Data;
-    using Vurbiri.Collections;
+    using EntryPoint;
+    using Localization;
+    using Reactive;
+    using System;
+    using System.Collections;
+    using UnityEngine;
+    using Vurbiri.UI;
 
     [DefaultExecutionOrder(-10)]
     public class GameplayEntryPoint : ASceneEntryPoint

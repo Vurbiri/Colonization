@@ -1,7 +1,7 @@
-using System;
-
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Actors
 {
+    using System;
+
     public class WarriorId : AIdType<WarriorId>
     {
         public const int Militia    = 0;

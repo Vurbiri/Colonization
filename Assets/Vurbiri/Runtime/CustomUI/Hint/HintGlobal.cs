@@ -23,7 +23,8 @@ namespace Vurbiri.UI
         private RectTransform _textTransform;
         private Coroutine _coroutineShow, _coroutineHide;
         private Vector2 _size;
-        private Transform _parent;
+
+        public Color32 HintColor => _hint.color;
 
         private void Start()
         {

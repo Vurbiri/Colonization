@@ -95,7 +95,7 @@ namespace Vurbiri.Colonization
 
             serializedObject.ApplyModifiedProperties();
 
-            #region Local DrawIntSlider(..), DrawId(..)
+            #region Local: Space(..), DrawIntSlider(..), DrawId(..), DrawInt(..), DrawString(..)
             //================================================================
             void Space(int value = SPACE_WND) => EditorGUILayout.Space(value);
             //================================================================
@@ -138,13 +138,11 @@ namespace Vurbiri.Colonization
             int count = fields.Length;
             List<string> names = new(count);
             List<int> values = new(count);
-            string name = "None";
-            int value = -1;
 
             if (isNone)
             {
-                names.Add(name);
-                values.Add(value);
+                names.Add("None");
+                values.Add(-1);
             }
 
             FieldInfo field;
@@ -155,12 +153,8 @@ namespace Vurbiri.Colonization
                 if (i == miss | field.FieldType != t_int | !field.IsLiteral || field.GetCustomAttributes(t_attribute, false).Length > 0)
                     continue;
 
-                name = field.Name;
-                value = (int)field.GetValue(null);
-                //name = $"{name} ({value})";
-
-                names.Add(name);
-                values.Add(value);
+                names.Add(field.Name);
+                values.Add((int)field.GetValue(null));
             }
 
             return (names.ToArray(), values.ToArray());

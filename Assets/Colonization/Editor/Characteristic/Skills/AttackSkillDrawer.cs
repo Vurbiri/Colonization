@@ -11,7 +11,7 @@ namespace VurbiriEditor.Colonization
         private const string NAME_ELEMENT = "Attack {0}";
         private const string PROP_CLIP = "clipSettings", PROP_VALID = "isValid", PROP_SETTINGS = "settings", PROP_UI = "ui";
         private const string PROP_REM_T = "remainingTime", PROP_DAMAGE_T = "damageTime", PROP_RANGE = "range", PROP_ID_A = "idAnimation";
-        private const string PROP_DAMAGE = "percentDamage", PROP_COST = "cost";
+        private const string PROP_DAMAGE = "percentDamage", PROP_COST = "cost", PROP_EFFECTS = "effects";
         private const string PROP_SPRITE = "sprite", PROP_NAME_K = "keyName", PROP_DESK_K = "keyDesc";
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -44,50 +44,36 @@ namespace VurbiriEditor.Colonization
                 {
                     DrawButton(clipSett);
                    
-                    SerializedProperty parentProperty = property.FindPropertyRelative(PROP_SETTINGS);
+                    SerializedProperty settingsProperty = property.FindPropertyRelative(PROP_SETTINGS);
                     SerializedProperty damageProperty = property.FindPropertyRelative(PROP_DAMAGE);
-                    SerializedProperty costProperty = parentProperty.FindPropertyRelative(PROP_COST);
+                    SerializedProperty costProperty = settingsProperty.FindPropertyRelative(PROP_COST);
 
                     EditorGUI.indentLevel++;
                     position.y += height;
                     EditorGUI.LabelField(position, "Total Time", $"{clipSett.totalTime}");
-                    DrawLabelAndSetValue(parentProperty, PROP_DAMAGE_T, clipSett.damageTime);
-                    DrawLabelAndSetValue(parentProperty, PROP_REM_T, clipSett.totalTime - clipSett.damageTime);
-                    DrawLabelAndSetValue(parentProperty, PROP_RANGE, clipSett.range);
+                    DrawLabelAndSetValue(settingsProperty, PROP_DAMAGE_T, clipSett.damageTime);
+                    DrawLabelAndSetValue(settingsProperty, PROP_REM_T, clipSett.totalTime - clipSett.damageTime);
+                    DrawLabelAndSetValue(settingsProperty, PROP_RANGE, clipSett.range);
                     EditorGUI.indentLevel--;
 
                     position.y += height + ySpace;
                     damageProperty.intValue = EditorGUI.IntSlider(position, damageProperty.displayName, damageProperty.intValue, 50, 250);
 
                     position.y += ySpace * 2f;
-                    if (DrawFoldout(parentProperty))
-                    {
-                        EditorGUI.indentLevel++;
+                    DrawIntSlider(settingsProperty, PROP_ID_A, 2);
 
-                        DrawIntSlider(parentProperty, PROP_ID_A, 2);
+                    position.y += height;
+                    costProperty.intValue = EditorGUI.IntSlider(position, costProperty.displayName, costProperty.intValue, 0, 3);
 
-                        position.y += height;
-                        costProperty.intValue = EditorGUI.IntSlider(position, costProperty.displayName, costProperty.intValue, 0, 3);
-
-                        EditorGUI.indentLevel--;
-                    }
-
-                    parentProperty = property.FindPropertyRelative(PROP_UI);
-                    parentProperty.FindPropertyRelative(PROP_DAMAGE).intValue = damageProperty.intValue;
-                    parentProperty.FindPropertyRelative(PROP_COST).intValue = costProperty.intValue;
+                    SerializedProperty uiProperty = property.FindPropertyRelative(PROP_UI);
+                    uiProperty.FindPropertyRelative(PROP_DAMAGE).intValue = damageProperty.intValue;
+                    uiProperty.FindPropertyRelative(PROP_COST).intValue = costProperty.intValue;
 
                     position.y += ySpace;
-                    if (DrawFoldout(parentProperty))
-                    {
-                        EditorGUI.indentLevel++;
+                    DrawObject<Sprite>(uiProperty, PROP_SPRITE, true);
 
-                        DrawObject<Sprite>(parentProperty, PROP_SPRITE, true);
-                        DrawString(parentProperty, PROP_NAME_K);
-                        DrawString(parentProperty, PROP_DESK_K);
-
-                        EditorGUI.indentLevel--;
-                    }
-
+                    position.y += height + ySpace * 2f;
+                    EditorGUI.PropertyField(position, settingsProperty.FindPropertyRelative(PROP_EFFECTS));
                 }
 
                 EditorGUI.indentLevel--;
@@ -96,7 +82,7 @@ namespace VurbiriEditor.Colonization
             EditorGUI.indentLevel--;
             EditorGUI.EndProperty();
 
-            #region Local: DrawLabelAndSetValue(..), DrawFoldout(..), DrawObject<T>(..), DrawString(..), DrawIntSlider(..), DrawButton()
+            #region Local: DrawLabelAndSetValue(..), DrawObject<T>(..), DrawIntSlider(..), DrawButton()
             //=================================
             void DrawLabelAndSetValue(SerializedProperty parent, string name, float value)
             {
@@ -104,12 +90,6 @@ namespace VurbiriEditor.Colonization
                 SerializedProperty property = parent.FindPropertyRelative(name);
                 property.floatValue = value;
                 EditorGUI.LabelField(position, $"{property.displayName}", $"{value}");
-            }
-            //=================================
-            bool DrawFoldout(SerializedProperty property)
-            {
-                position.y += height;
-                return property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, property.displayName.ToUpper());
             }
             //=================================
             SerializedProperty DrawObject<T>(SerializedProperty parent, string name, bool isName = false)
@@ -124,13 +104,6 @@ namespace VurbiriEditor.Colonization
 
                 property.objectReferenceValue = EditorGUI.ObjectField(position, property.objectReferenceValue, typeof(T), false);
                 return property;
-            }
-            //=================================
-            void DrawString(SerializedProperty parent, string name)
-            {
-                position.y += height;
-                SerializedProperty property = parent.FindPropertyRelative(name);
-                property.stringValue = EditorGUI.TextField(position, property.displayName, property.stringValue);
             }
             //=================================
             void DrawIntSlider(SerializedProperty parent, string name, int max)
@@ -164,7 +137,7 @@ namespace VurbiriEditor.Colonization
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            float rate = 1.1f;
+            float rate = 1f;
 
             if (property.isExpanded)
             {
@@ -172,11 +145,14 @@ namespace VurbiriEditor.Colonization
                 AnimationClipSettingsScriptable clipSett = property.FindPropertyRelative(PROP_CLIP).objectReferenceValue as AnimationClipSettingsScriptable;
                 if (clipSett != null && clipSett.clip != null)
                 {
-                    rate += 8.3f;
-                    if (property.FindPropertyRelative(PROP_SETTINGS).isExpanded)
-                        rate += 3.1f;
-                    if (property.FindPropertyRelative(PROP_UI).isExpanded)
-                        rate += 3.1f;
+                    SerializedProperty parentProperty = property.FindPropertyRelative(PROP_SETTINGS);
+                    SerializedProperty effectsProperty = parentProperty.FindPropertyRelative(PROP_EFFECTS);
+                    rate += 11.8f;
+                    if(effectsProperty.isExpanded)
+                    {
+                        rate += 2.1f;
+                        rate += 8.8f * effectsProperty.arraySize;
+                    }
                 }
             }
 

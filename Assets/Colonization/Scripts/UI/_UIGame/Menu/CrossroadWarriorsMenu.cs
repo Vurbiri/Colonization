@@ -1,10 +1,11 @@
-using System.Collections.Generic;
-using UnityEngine;
-using Vurbiri.Collections;
-using Vurbiri.UI;
-
 namespace Vurbiri.Colonization.UI
 {
+    using Actors;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using Vurbiri.Collections;
+    using Vurbiri.UI;
+
     public class CrossroadWarriorsMenu : ACrossroadMenuBuild
     {
         [Space]

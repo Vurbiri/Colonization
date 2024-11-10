@@ -1,5 +1,6 @@
 namespace Vurbiri.Colonization
 {
+    using Actors;
     using Reactive;
 
     public partial class PlayerObjects

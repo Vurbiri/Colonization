@@ -148,6 +148,7 @@ namespace Vurbiri.Colonization.Actors
                 public float range;
                 public int idAnimation;
                 public int cost;
+                public EffectSettings[] effects;
             }
             #endregion
         }

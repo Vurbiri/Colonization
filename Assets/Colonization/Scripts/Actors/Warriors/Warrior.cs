@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization.Actors
 {
-    public class Warrior : Actor
+    public partial class Warrior : Actor
     {
         
     }

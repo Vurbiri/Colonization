@@ -1,11 +1,10 @@
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using Vurbiri.Reactive;
-using Vurbiri.Reactive.Collections;
-
 namespace Vurbiri.Colonization.Data
 {
+    using Newtonsoft.Json;
+    using Reactive;
+    using Reactive.Collections;
+    using System;
+    using System.Collections.Generic;
     using static JSON_KEYS;
 
     [JsonObject(MemberSerialization.OptIn)]

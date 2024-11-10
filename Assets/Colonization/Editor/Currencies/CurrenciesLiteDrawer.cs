@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using Vurbiri.Colonization;
-
 namespace VurbiriEditor.Colonization
 {
+    using System.Collections.Generic;
+    using UnityEditor;
+    using UnityEngine;
+    using Vurbiri.Colonization;
+
     [CustomPropertyDrawer(typeof(CurrenciesLite))]
     public class CurrenciesLiteDrawer : ADrawerGetConstFieldName
     {
@@ -30,7 +29,7 @@ namespace VurbiriEditor.Colonization
             {
                 SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
                 int count = propertyValues.arraySize;
-                List<string> names = GetNames();
+                List<string> names = GetNames(typeof(CurrencyId));
 
                 Color prevColor = GUI.color;
                 SerializedProperty propertyElement;
@@ -106,8 +105,6 @@ namespace VurbiriEditor.Colonization
             }
             #endregion
         }
-
-        protected override Type GetTypeId() => typeof(CurrencyId);
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {

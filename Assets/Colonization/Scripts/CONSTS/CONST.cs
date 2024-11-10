@@ -89,7 +89,7 @@ namespace Vurbiri.Colonization
             {
                 key = NEAR_HEX[i];
                 nearTwo[j] = key + key;
-                nearTwo[++j] = key + NEAR_HEX.Next(i);
+                nearTwo[j + 1] = key + NEAR_HEX.Next(i);
             }
             NEAR_HEX_TWO = nearTwo;
         }

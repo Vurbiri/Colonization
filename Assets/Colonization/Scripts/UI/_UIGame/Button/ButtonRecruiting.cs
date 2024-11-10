@@ -1,5 +1,7 @@
 namespace Vurbiri.Colonization.UI
 {
+    using Actors;
+
     public class ButtonRecruiting : AButtonBuildType<WarriorId>
     {
         private Player _playerCurrent;

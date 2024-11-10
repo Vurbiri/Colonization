@@ -1,9 +1,8 @@
-using System;
-using UnityEngine;
-
 namespace Vurbiri.Colonization
 {
-    [Serializable]
+    using UnityEngine;
+
+    [System.Serializable]
     public class PerkSettings : IPerkSettings, IPerkSettingsUI
     {
         [SerializeField] private int _id;

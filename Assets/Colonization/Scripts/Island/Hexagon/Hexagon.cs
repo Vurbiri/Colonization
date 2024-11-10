@@ -1,11 +1,10 @@
-using System.Collections.Generic;
-using UnityEngine;
-using Vurbiri.Colonization.Actors;
-using Vurbiri.Colonization.Data;
-using Vurbiri.Colonization.UI;
-
 namespace Vurbiri.Colonization
 {
+    using Actors;
+    using Data;
+    using System.Collections.Generic;
+    using UI;
+    using UnityEngine;
 
     public class Hexagon : MonoBehaviour, ISelectable
     {

@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using Vurbiri;
-using Vurbiri.Collections;
-using Object = UnityEngine.Object;
-
 namespace VurbiriEditor
 {
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor;
+    using UnityEngine;
+    using Vurbiri;
+    using Vurbiri.Collections;
+    using Object = UnityEngine.Object;
+
     [CustomPropertyDrawer(typeof(IdHashSet<,>))]
     internal class IdHashSetDrawer : ADrawerGetConstFieldName
     {
@@ -29,7 +29,7 @@ namespace VurbiriEditor
             Type typeValue = fieldInfo.FieldType.GetGenericArguments()[INDEX_VALUE];
             SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
             int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue, count = propertyValues.arraySize;
-            List<string> names = GetNames();
+            List<string> names = GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
             _countMax = names.Count;
 
             label = EditorGUI.BeginProperty(position, label, property);
@@ -181,8 +181,6 @@ namespace VurbiriEditor
             }
             #endregion
         }
-
-        protected override Type GetTypeId() => fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE];
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {

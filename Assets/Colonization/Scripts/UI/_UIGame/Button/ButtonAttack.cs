@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Color32 _colorMinus = Color.red;
 
         private const string KEY_DAMAGE = "Damage", KEY_AP = "AP";
-        private const int MAX_SIZE_HINT = 128;
+        private const int MAX_SIZE_HINT = 64;
 
         private GameObject _parentGO;
         private Language _language;
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         private int _idAttack;
 
         private string _textDamage, _textAP;
-        private string _hexColorPlus, _hexColorMinus;
+        private string _hexColorPlus, _hexColorMinus, _hexColorDefault;
 
         public virtual void Init(Color color, GameObject parent, Language language)
         {
@@ -37,8 +37,9 @@ namespace Vurbiri.Colonization.UI
             _language = language;
             _hexColorPlus = string.Format(TAG_COLOR_FORMAT_LITE, _colorPlus.ToHex());
             _hexColorMinus = string.Format(TAG_COLOR_FORMAT_LITE, _colorMinus.ToHex());
+            _hexColorDefault = string.Format(TAG_COLOR_FORMAT_LITE, _hint.HintColor.ToHex());
 
-             _language.Subscribe(SetTexts);
+            _language.Subscribe(SetTexts);
         }
 
         public void Setup(Actor actor, int idAttack, AttackSkillUI settings, Vector3 localPosition)
@@ -53,13 +54,23 @@ namespace Vurbiri.Colonization.UI
             _buttonIcon.sprite = settings.sprite;
             _button.Interactable = isUse;
 
-            StringBuilder sb = new(MAX_SIZE_HINT);
-            sb.Append(_language.GetText(_file, settings.keyName));
-            sb.Append(NEW_LINE);
-            if(!string.IsNullOrEmpty(settings.keyDesc))
+            int count = settings.effects.Length;
+
+            StringBuilder sb = new(MAX_SIZE_HINT + count * MAX_SIZE_HINT);
+            if(settings.effects != null && count > 0)
             {
-                sb.Append(_language.GetText(_file, settings.keyDesc));
-                sb.Append(NEW_LINE);
+                EffectSettingsUI effect;
+                for (int i = 0; i < count; i++)
+                {
+                    effect = settings.effects[i];
+                    if(string.IsNullOrEmpty(effect.keyDesc))
+                        continue;
+
+                    sb.Append(effect.isNegative ? _hexColorMinus : _hexColorPlus);
+                    sb.Append(_language.GetTextFormat(_file, effect.keyDesc, effect.value, effect.duration));
+                    sb.Append(NEW_LINE);
+                }
+                sb.Append(_hexColorDefault);
             }
             sb.AppendFormat(_textDamage, settings.percentDamage);
             sb.Append(NEW_LINE);

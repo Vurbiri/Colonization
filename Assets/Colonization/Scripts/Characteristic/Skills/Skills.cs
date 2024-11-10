@@ -52,6 +52,7 @@ namespace Vurbiri.Colonization
                 if (skill == null || !skill.isValid)
                     continue;
 
+                skill.ui.SetEffects(skill.settings.effects);
                 _attackSkillsUI.Add(skill.ui);
             }
 
