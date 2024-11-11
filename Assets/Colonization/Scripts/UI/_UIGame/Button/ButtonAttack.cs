@@ -1,13 +1,13 @@
-using System.Text;
-using UnityEngine;
-using UnityEngine.UI;
-using Vurbiri.Colonization.Actors;
-using Vurbiri.Localization;
-using Vurbiri.UI;
-
 namespace Vurbiri.Colonization.UI
 {
+    using System.Text;
+    using UnityEngine;
+    using UnityEngine.UI;
+    using Vurbiri.Colonization.Actors;
+    using Vurbiri.Localization;
+    using Vurbiri.UI;
     using static CONST_UI;
+    using static CONST_UI_LNG_KEYS;
 
     public class ButtonAttack : AHinting
     {
@@ -17,7 +17,6 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Color32 _colorPlus = Color.green;
         [SerializeField] private Color32 _colorMinus = Color.red;
 
-        private const string KEY_DAMAGE = "Damage", KEY_AP = "AP";
         private const int MAX_SIZE_HINT = 64;
 
         private GameObject _parentGO;
@@ -26,7 +25,7 @@ namespace Vurbiri.Colonization.UI
         private int _idAttack;
 
         private string _textDamage, _textAP;
-        private string _hexColorPlus, _hexColorMinus, _hexColorDefault;
+        private string _hexColorPlus, _hexColorMinus;
 
         public virtual void Init(Color color, GameObject parent, Language language)
         {
@@ -37,7 +36,6 @@ namespace Vurbiri.Colonization.UI
             _language = language;
             _hexColorPlus = string.Format(TAG_COLOR_FORMAT_LITE, _colorPlus.ToHex());
             _hexColorMinus = string.Format(TAG_COLOR_FORMAT_LITE, _colorMinus.ToHex());
-            _hexColorDefault = string.Format(TAG_COLOR_FORMAT_LITE, _hint.HintColor.ToHex());
 
             _language.Subscribe(SetTexts);
         }
@@ -57,7 +55,8 @@ namespace Vurbiri.Colonization.UI
             int count = settings.effects.Length;
 
             StringBuilder sb = new(MAX_SIZE_HINT + count * MAX_SIZE_HINT);
-            if(settings.effects != null && count > 0)
+            sb.Append(_language.GetText(_file, settings.keyName));
+            if (settings.effects != null && count > 0)
             {
                 EffectSettingsUI effect;
                 for (int i = 0; i < count; i++)
@@ -68,12 +67,10 @@ namespace Vurbiri.Colonization.UI
 
                     sb.Append(effect.isNegative ? _hexColorMinus : _hexColorPlus);
                     sb.Append(_language.GetTextFormat(_file, effect.keyDesc, effect.value, effect.duration));
-                    sb.Append(NEW_LINE);
                 }
-                sb.Append(_hexColorDefault);
+                sb.Append(TAG_COLOR_OFF);
             }
             sb.AppendFormat(_textDamage, settings.percentDamage);
-            sb.Append(NEW_LINE);
             sb.Append(isUse ? _hexColorPlus : _hexColorMinus);
             sb.AppendFormat(_textAP, settings.cost);
 

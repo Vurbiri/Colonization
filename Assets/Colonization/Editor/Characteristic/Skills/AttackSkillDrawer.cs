@@ -12,7 +12,7 @@ namespace VurbiriEditor.Colonization
         private const string PROP_CLIP = "clipSettings", PROP_VALID = "isValid", PROP_SETTINGS = "settings", PROP_UI = "ui";
         private const string PROP_REM_T = "remainingTime", PROP_DAMAGE_T = "damageTime", PROP_RANGE = "range", PROP_ID_A = "idAnimation";
         private const string PROP_DAMAGE = "percentDamage", PROP_COST = "cost", PROP_EFFECTS = "effects";
-        private const string PROP_SPRITE = "sprite", PROP_NAME_K = "keyName", PROP_DESK_K = "keyDesc";
+        private const string PROP_SPRITE = "sprite", PROP_KEY_NAME = "keyName";
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -69,7 +69,8 @@ namespace VurbiriEditor.Colonization
                     uiProperty.FindPropertyRelative(PROP_DAMAGE).intValue = damageProperty.intValue;
                     uiProperty.FindPropertyRelative(PROP_COST).intValue = costProperty.intValue;
 
-                    position.y += ySpace;
+                    position.y += ySpace * 2f;
+                    DrawString(uiProperty, PROP_KEY_NAME);
                     DrawObject<Sprite>(uiProperty, PROP_SPRITE, true);
 
                     position.y += height + ySpace * 2f;
@@ -113,6 +114,13 @@ namespace VurbiriEditor.Colonization
                 property.intValue = EditorGUI.IntSlider(position, property.displayName, property.intValue, 0, max);
             }
             //=================================
+            void DrawString(SerializedProperty parent, string name)
+            {
+                position.y += height;
+                SerializedProperty property = parent.FindPropertyRelative(name);
+                property.stringValue = EditorGUI.TextField(position, property.displayName, property.stringValue);
+            }
+            //=================================
             void DrawButton(Object activeObject)
             {
                 position.y += height;
@@ -147,11 +155,11 @@ namespace VurbiriEditor.Colonization
                 {
                     SerializedProperty parentProperty = property.FindPropertyRelative(PROP_SETTINGS);
                     SerializedProperty effectsProperty = parentProperty.FindPropertyRelative(PROP_EFFECTS);
-                    rate += 11.8f;
+                    rate += 12.6f;
                     if(effectsProperty.isExpanded)
                     {
                         rate += 2.1f;
-                        rate += 8.8f * effectsProperty.arraySize;
+                        rate += 6.6f * effectsProperty.arraySize;
                     }
                 }
             }

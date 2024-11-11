@@ -1,10 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 namespace Vurbiri.Reactive.Collections
 {
-    public class ReactiveList<T> : IList<T>, IReadOnlyReactiveList<T>
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
+    public class ReactiveList<T> : IList<T>, IReactiveList<T>
     {
         private T[] _values;
         private int _count = 0;
@@ -18,14 +18,14 @@ namespace Vurbiri.Reactive.Collections
         {
             get
             {
-                if (index < 0 || index >= _count)
+                if (index < 0 | index >= _count)
                     throw new IndexOutOfRangeException($"index = {index}");
                 
                 return _values[index];
             }
             set
             {
-                if (index < 0 || index >= _count)
+                if (index < 0 | index >= _count)
                     throw new IndexOutOfRangeException($"index = {index}");
 
                 _values[index] = value;
@@ -35,7 +35,6 @@ namespace Vurbiri.Reactive.Collections
         }
 
         public int Count => _count;
-
         public bool IsReadOnly => false;
 
         #region Constructors
@@ -93,7 +92,7 @@ namespace Vurbiri.Reactive.Collections
 
         public void ChangeSignal(int index)
         {
-            if (index < 0 || index >= _count)
+            if (index < 0 | index >= _count)
                 throw new ArgumentOutOfRangeException($"index = {index}");
 
             actionListChange?.Invoke(index, _values[index], Operation.Change);
@@ -152,7 +151,7 @@ namespace Vurbiri.Reactive.Collections
 
         public void Insert(int index, T item)
         {
-            if (index < 0 || index >= _count)
+            if (index < 0 | index >= _count)
                 throw new ArgumentOutOfRangeException($"index = {index}");
 
             if (_count == _capacity)
@@ -195,7 +194,7 @@ namespace Vurbiri.Reactive.Collections
 
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= _count)
+            if (index < 0 | index >= _count)
                 throw new ArgumentOutOfRangeException($"index = {index}");
             
             T temp = _values[index];
@@ -209,7 +208,7 @@ namespace Vurbiri.Reactive.Collections
             actionListChange?.Invoke(index, temp, Operation.Remove);
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             for (int i = 0; i < _count; i++)
             {
@@ -222,7 +221,7 @@ namespace Vurbiri.Reactive.Collections
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (arrayIndex < 0 || arrayIndex >= _count)
+            if (arrayIndex < 0 | arrayIndex >= _count)
                 throw new ArgumentOutOfRangeException($"arrayIndex = {arrayIndex}");
 
             for (int i = arrayIndex; i < _count; i++)
@@ -240,14 +239,12 @@ namespace Vurbiri.Reactive.Collections
 
         private void GrowArray()
         {
-            _capacity <<= 1 + 4;
+            _capacity = _capacity << 1 | 4;
 
             T[] array = new T[_capacity];
             for(int i = 0; i < _count; i++)
                 array[i] = _values[i];
             _values = array;
         }
-
-        private bool Equals(T a, T b) => a.Equals(b);
     }
 }

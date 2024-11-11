@@ -5,6 +5,7 @@ namespace Vurbiri.Colonization.UI
     [System.Serializable]
     public class AttackSkillUI
     {
+        public string keyName = "Attack";
         public Sprite sprite;
         public int cost;
         public int percentDamage;

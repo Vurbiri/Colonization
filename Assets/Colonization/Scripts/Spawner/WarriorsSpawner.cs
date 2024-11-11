@@ -24,5 +24,11 @@ namespace Vurbiri.Colonization.Actors
             WarriorInitializer warrior = Object.Instantiate(_warriorPrefab, _container);
             return warrior.Init(id, _payerId, _material, startHex, _eventBus);
         }
+
+        public Warrior Create(int[][] data, Land land)
+        {
+            WarriorInitializer warrior = Object.Instantiate(_warriorPrefab, _container);
+            return warrior.Init(data[1][0], data, _payerId, _material, land[new Key(data[0])], _eventBus);
+        }
     }
 }

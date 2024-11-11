@@ -2,6 +2,7 @@ namespace Vurbiri.Colonization.UI
 {
     public static class CONST_UI
     {
+        public const string TAG_BOLD = "<b>{0}</b>";
         public const string TAG_SPRITE = "<sprite={0}>";
         public const string TAG_COLOR_WHITE = "<color=\"white\">";
         public const string TAG_COLOR_FORMAT = "<color={0}>";

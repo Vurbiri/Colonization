@@ -16,9 +16,10 @@ namespace Vurbiri.Colonization
         #region Consts
         private const string P_PERKS = "_perks", P_ARRAY = "_values", P_ID = "_id", P_TYPE = "_type";
         private const string P_LEVEL = "_level", P_TARGET_OBJ = "_targetObject", P_TARGET_AB = "_targetAbility", P_TYPE_OP = "_typeOperation";
-        private const string P_POS = "_position", P_SPRITE = "_sprite", P_KEY_NAME = "_keyName", P_KEY_DESC = "_keyDescription";
-        private const string P_VALUE = "_value", P_CHANCE = "_chance", P_COST = "_cost", P_PREV = "_prevPerk";
+        private const string P_POS = "_position", P_SPRITE = "_sprite", P_KEY_DESC = "_keyDescription";
+        private const string P_VALUE = "_value", P_CHANCE = "_chance", P_PREV = "_prevPerk";
         private const string U_CONTAINER = "Container", U_LABEL = "Label";
+        private const string PREFF_KEY_DESC = "Perk";
         private const int SPACE_WND = 4;
         #endregion
 
@@ -84,10 +85,13 @@ namespace Vurbiri.Colonization
             DrawIntSlider(P_POS, minP, maxP);
 
             Space(SPACE_WND << 1);
+            property = propertyPerk.FindPropertyRelative(P_KEY_DESC);
+            if (string.IsNullOrEmpty(property.stringValue))
+                property.stringValue = PREFF_KEY_DESC.Concat(APerkId<TId>.GetName(id));
+            property.stringValue = EditorGUILayout.TextField(property.displayName, property.stringValue);
+
             property = propertyPerk.FindPropertyRelative(P_SPRITE);
             property.objectReferenceValue = EditorGUILayout.ObjectField(property.displayName, property.objectReferenceValue, typeof(Sprite), false);
-            DrawString(P_KEY_NAME);
-            DrawString(P_KEY_DESC);
 
             EditorGUI.indentLevel--;
             Space(SPACE_WND << 2);
@@ -119,12 +123,6 @@ namespace Vurbiri.Colonization
             {
                 property = propertyPerk.FindPropertyRelative(nameProperty);
                 property.intValue = EditorGUILayout.IntField(property.displayName, property.intValue);
-            }
-            //================================================================
-            void DrawString(string nameProperty)
-            {
-                property = propertyPerk.FindPropertyRelative(nameProperty);
-                property.stringValue = EditorGUILayout.TextField(property.displayName, property.stringValue);
             }
             #endregion
         }

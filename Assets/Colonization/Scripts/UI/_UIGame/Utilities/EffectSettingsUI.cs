@@ -1,5 +1,7 @@
 namespace Vurbiri.Colonization.UI
 {
+    using static CONST_UI_LNG_KEYS;
+
     public class EffectSettingsUI
     {
         public bool isNegative;
@@ -9,10 +11,10 @@ namespace Vurbiri.Colonization.UI
 
         public EffectSettingsUI(EffectSettings effect)
         {
-            isNegative = effect.Type == EffectTypeId.Negative;
+            isNegative = effect.TargetActor == TargetOfEffectId.Enemy;
             value = effect.Value;
             duration = effect.Duration;
-            keyDesc = effect.KeyDescription;
+            keyDesc = KEYS_DESK_EFFECTS[effect.TargetAbility][effect.TypeOperation.Value];
         }
     }
 }

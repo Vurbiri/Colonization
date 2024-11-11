@@ -271,6 +271,7 @@ namespace Vurbiri.Colonization
 
         public void Select()
         {
+            Debug.Log("Добавить в событие isPlayer для меню");
             _eventBus.TriggerCrossroadSelect(this);
         }
         public void Unselect(ISelectable newSelectable)

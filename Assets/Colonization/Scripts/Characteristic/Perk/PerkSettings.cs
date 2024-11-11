@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization
         [SerializeField] private int _level = 1;
         [SerializeField] private int _position = 1;
         [SerializeField] private Sprite _sprite;
-        [SerializeField] private string _keyName;
         [SerializeField] private string _keyDescription;
         [SerializeField] private int _targetObject;
         [SerializeField] private int _targetAbility;
@@ -25,7 +24,6 @@ namespace Vurbiri.Colonization
         public int Level => _level;
         public int Position => _position;
         public Sprite Sprite => _sprite;
-        public string KeyName => _keyName;
         public string KeyDescription => _keyDescription;
         public Id<TargetOfPerkId> TargetObject => _targetObject;
         public int TargetAbility => _targetAbility;

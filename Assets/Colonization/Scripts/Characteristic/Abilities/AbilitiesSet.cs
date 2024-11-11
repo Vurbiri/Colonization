@@ -30,7 +30,8 @@ namespace Vurbiri.Colonization
         public int GetValue(Id<TId> stateId) => _abilities[stateId].Value;
         public int GetNextValue(Id<TId> stateId) => _abilities[stateId].NextValue();
 
-        public void AddPerk(IPerkSettings perk) => _abilities[perk.TargetAbility].AddPerk(perk);
+        public void AddPerk(IPerk perk) => _abilities[perk.TargetAbility].Add(perk);
+        public void RemovePerk(IPerk perk) => _abilities[perk.TargetAbility].Remove(perk);
 
         public IEnumerator<IReadOnlyReactiveValue<int>> GetEnumerator()
         {

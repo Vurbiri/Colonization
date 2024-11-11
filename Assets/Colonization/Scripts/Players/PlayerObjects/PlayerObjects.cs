@@ -11,8 +11,8 @@ namespace Vurbiri.Colonization
         private readonly Currencies _resources;
         private readonly Edifices _edifices;
         private readonly Roads _roads;
+        private readonly ReactiveCollection<Actor> _warriors = new();
         private readonly HashSet<int> _perks;
-        private readonly HashSet<Warrior> _warriors = new();
 
         private readonly AbilitiesSet<PlayerAbilityId> _abilities;
         private readonly PricesScriptable _prices;
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
         public IReactiveList<Crossroad> Ports => _edifices.ports;
         public IReactiveList<Crossroad> Urbans => _edifices.urbans;
 
-        public int WarriorsCount => 0;
+        public int WarriorsCount => _warriors.Count;
 
         public PlayerObjects(int playerId, bool isLoad, PlayerData data, Players.Settings settings)
         {
@@ -40,10 +40,16 @@ namespace Vurbiri.Colonization
             if (isLoad)
             {
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
+                Land land = SceneObjects.Get<Land>();
 
                 _resources = new(data.Resources);
                 _roads.Restoration(data.Roads, crossroads);
                 _edifices = new(playerId, data, crossroads);
+
+                List<int[][]> warriorsData = data.Warriors;
+                for (int i = 0; i < warriorsData.Count; i++)
+                    _warriors.Add(_spawner.Create(warriorsData[i], land));
+
                 _perks = new(data.Perks);
             }
             else
@@ -56,6 +62,7 @@ namespace Vurbiri.Colonization
             data.CurrenciesBind(_resources, !isLoad);
             data.EdificesBind(_edifices.values, !isLoad);
             data.RoadsBind(_roads, !isLoad);
+            data.WarriorsBind(_warriors, !isLoad);
         }
     }
 }

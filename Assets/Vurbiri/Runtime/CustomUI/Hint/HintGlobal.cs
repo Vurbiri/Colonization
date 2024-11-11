@@ -24,8 +24,6 @@ namespace Vurbiri.UI
         private Coroutine _coroutineShow, _coroutineHide;
         private Vector2 _size;
 
-        public Color32 HintColor => _hint.color;
-
         private void Start()
         {
             _localization = SceneServices.Get<Language>();

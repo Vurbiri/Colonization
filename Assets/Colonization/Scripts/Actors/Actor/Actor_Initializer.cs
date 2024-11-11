@@ -17,6 +17,7 @@ namespace Vurbiri.Colonization.Actors
             _thisTransform = transform;
             _thisGO = transform.gameObject;
             _extentsZ = GetComponent<BoxCollider>().bounds.extents.z;
+            _effects.Subscribe(RedirectEvents);
 
             _skin.EventStart += _stateMachine.Default;
 
@@ -36,6 +37,16 @@ namespace Vurbiri.Colonization.Actors
                 _stateMachine.AddState(attackStates[i]);
 
             _thisGO.SetActive(true);
+        }
+
+        public virtual void Init(ActorSettings settings, int owner, Hexagon startHex, int[][] data, GameplayEventBus eventBus)
+        {
+            Init(settings, owner, startHex, eventBus);
+
+            _currentHP = data[1][1];
+            _currentActionPoint = data[1][2];
+            for (int i = 2; i < data.Length; i++)
+                _effects.Add(new(data[i]));
         }
     }
 }

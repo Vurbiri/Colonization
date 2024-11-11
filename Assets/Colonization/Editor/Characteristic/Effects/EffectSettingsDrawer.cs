@@ -9,8 +9,7 @@ namespace VurbiriEditor.Colonization
     public class EffectSettingsDrawer : ADrawerGetConstFieldName
     {
         #region Consts
-        private const string P_TYPE = "_type", P_TARGET_ACTOR = "_targetActor", P_TARGET_AB = "_targetAbility", P_TYPE_OP = "_typeOperation";
-        private const string P_VALUE = "_value", P_CHANCE = "_chance", P_DUR = "_duration", P_KEY_DESC = "_keyDescription";
+        private const string P_TARGET_ACTOR = "_targetActor", P_TARGET_AB = "_targetAbility", P_TYPE_OP = "_typeOperation", P_VALUE = "_value", P_DUR = "_duration";
         private readonly string[] _nameOp = { "Addition", "Percent" };
         private readonly int[] _valueOp = { 0, 2 };
         #endregion
@@ -24,7 +23,7 @@ namespace VurbiriEditor.Colonization
 
             EditorGUI.BeginProperty(position, label, propertyMain);
 
-            propertyMain.FindPropertyRelative(P_TARGET_ACTOR).intValue = DrawId(P_TYPE, typeof(EffectTypeId));
+            DrawId(P_TARGET_ACTOR, typeof(TargetOfEffectId));
             DrawId(P_TARGET_AB, typeof(ActorAbilityId));
             
             Space();
@@ -35,9 +34,6 @@ namespace VurbiriEditor.Colonization
 
             Space();
             DrawIntSlider(P_DUR, 1, 3);
-
-            Space(1.5f);
-            DrawString(P_KEY_DESC);
 
             EditorGUI.EndProperty();
 
@@ -69,16 +65,9 @@ namespace VurbiriEditor.Colonization
                 property = propertyMain.FindPropertyRelative(nameProperty);
                 property.intValue = EditorGUI.IntField(position, property.displayName, property.intValue);
             }
-            //================================================================
-            void DrawString(string nameProperty)
-            {
-                position.y += height;
-                property = propertyMain.FindPropertyRelative(nameProperty);
-                property.stringValue = EditorGUI.TextField(position, property.displayName, property.stringValue);
-            }
             #endregion
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 7.7f * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 7.2f * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
     }
 }

@@ -1,10 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Vurbiri.Colonization.Actors
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
     using static CONST;
 
     public abstract partial class Actor
@@ -16,6 +15,7 @@ namespace Vurbiri.Colonization.Actors
             private readonly float _selfRange;
             private readonly int _idAnimation;
             private readonly int _cost;
+            private readonly List<Effect> _selfEffects;
             private readonly Transform _parentTransform;
             private WaitActivate _waitActor;
             private Hexagon _targetActor;

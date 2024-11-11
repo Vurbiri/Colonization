@@ -4,22 +4,32 @@ namespace Vurbiri.Colonization.Actors
 
     public class WarriorInitializer : MonoBehaviour
     {
-            [SerializeField] private Warrior _warrior;
-            [Space]
-            [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
+        [SerializeField] private Warrior _warrior;
+        [Space]
+        [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
 
-            public Warrior Init(int id, int owner, Material material, Hexagon startHex, GameplayEventBus eventBus)
-            {
-                _warrior.Init(_warriorsSettings[id], owner, startHex, eventBus);
-                GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = material;
+        public Warrior Init(int id, int owner, Material material, Hexagon startHex, GameplayEventBus eventBus)
+        {
+            _warrior.Init(_warriorsSettings[id], owner, startHex, eventBus);
+            GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = material;
 
-                Destroy(this);
+            Destroy(this);
 
-                return _warrior;
-            }
+            return _warrior;
+        }
+
+        public Warrior Init(int id, int[][] data, int owner, Material material, Hexagon startHex, GameplayEventBus eventBus)
+        {
+            _warrior.Init(_warriorsSettings[id], owner, startHex, data, eventBus);
+            GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = material;
+
+            Destroy(this);
+
+            return _warrior;
+        }
 
 #if UNITY_EDITOR
-            private void OnValidate()
+        private void OnValidate()
             {
                 if (_warrior == null)
                     _warrior = GetComponent<Warrior>();

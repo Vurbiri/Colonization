@@ -22,6 +22,8 @@ namespace Vurbiri.Colonization
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
         private readonly Dictionary<int, List<Key>> _hexagonsIdForKey = new(NUMBERS.Count + 1);
 
+        public Hexagon this[Key key] => _hexagons[key];
+
         public void Init(Transform container)
         {
             InitHexagonsIdForKey();

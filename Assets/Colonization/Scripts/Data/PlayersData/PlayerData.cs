@@ -5,6 +5,7 @@ namespace Vurbiri.Colonization.Data
     using Reactive.Collections;
     using System;
     using System.Collections.Generic;
+    using Vurbiri.Colonization.Actors;
     using static JSON_KEYS;
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -18,18 +19,22 @@ namespace Vurbiri.Colonization.Data
         private readonly Dictionary<int, List<int[]>> _edifices = new(EdificeGroupId.Count);
         [JsonProperty(P_ROADS)]
         private int[][][] _roads;
+        [JsonProperty(P_WARRIORS)]
+        private List<int[][]> _warriors;
         [JsonProperty(P_PERKS)]
         private int[] _perks;
 
         private readonly List<Unsubscriber<int>> _unsubscribersResources = new(CurrencyId.CountAll);
         private readonly List<UnsubscriberList<Crossroad>> _unsubscriberEdifices = new(EdificeGroupId.Count);
         private Unsubscriber<int[][][]> _unsubscriberRoads;
+        private UnsubscriberCollection<Actor> _unsubscriberWarriors;
 
         private Action<PlayerData> actionThisChange;
 
         public int Id => _id;
         public int[] Resources => _resources;
         public int[][][] Roads => _roads;
+        public List<int[][]> Warriors => _warriors;
         public int[] Perks => _perks;
 
         public PlayerData(int id)
@@ -78,6 +83,34 @@ namespace Vurbiri.Colonization.Data
             #endregion
         }
 
+        public void WarriorsBind(IReactiveCollection<Actor> warriorsReactive, bool calling)
+        {
+            _unsubscriberWarriors = warriorsReactive.Subscribe(OnWarriors, calling);
+
+            #region Local OnWarriors(...)
+            //==============================
+            void OnWarriors(Actor actor, Operation operation)
+            {
+                switch (operation)
+                {
+                    case Operation.Add:
+                        _warriors.Add(actor.ToArray());
+                        actionThisChange?.Invoke(this);
+                        break;
+                    case Operation.Remove:
+                        _warriors.RemoveAt(actor.Index);
+                        actionThisChange?.Invoke(this);
+                        break;
+                    case Operation.Change:
+                        _warriors[actor.Index] = actor.ToArray();
+                        break;
+                    default:
+                        return;
+                }
+            }
+            #endregion
+        }
+
         public Unsubscriber<PlayerData> Subscribe(Action<PlayerData> action, bool calling = true)
         {
             actionThisChange -= action ?? throw new ArgumentNullException("action");
@@ -100,6 +133,7 @@ namespace Vurbiri.Colonization.Data
                 unsubscriber?.Unsubscribe();
 
             _unsubscriberRoads?.Unsubscribe();
+            _unsubscriberWarriors?.Unsubscribe();
         }
 
         private void EdificesBind(IReactiveList<Crossroad> edificesReactive, List<int[]> edifices, bool calling)

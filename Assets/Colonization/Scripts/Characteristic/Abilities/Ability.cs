@@ -33,12 +33,12 @@ namespace Vurbiri.Colonization
             _baseValue = _currentValue = state._baseValue;
         }
 
-        public void AddPerk(IAbilityModifierSettings settings)
+        public void Add(IAbilityModifierSettings settings)
         {
             _perks[settings.TypeOperation].Add(settings);
             NextValue();
         }
-        public void RemovePerk(IAbilityModifierSettings settings)
+        public void Remove(IAbilityModifierSettings settings)
         {
             _perks[settings.TypeOperation].Remove(settings);
             NextValue();
