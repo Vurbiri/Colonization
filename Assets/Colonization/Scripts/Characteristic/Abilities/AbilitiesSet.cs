@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
 
         public bool IsTrue(Id<TId> stateId) => _abilities[stateId].Value > 0;
 
-        public Ability<TId> GetState(Id<TId> stateId) => _abilities[stateId];
+        public Ability<TId> GetAbility(Id<TId> stateId) => _abilities[stateId];
 
         public int GetValue(Id<TId> stateId) => _abilities[stateId].Value;
         public int GetNextValue(Id<TId> stateId) => _abilities[stateId].NextValue();

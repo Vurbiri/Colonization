@@ -1,9 +1,10 @@
 namespace Vurbiri.Reactive.Collections
 {
     using System;
+    using UnityEngine;
 
-    public abstract class AReactiveElement<T> : IReactiveElement<T> where T : AReactiveElement<T>
-	{
+    public class AReactiveElementMono<T> : MonoBehaviour, IReactiveElement<T> where T : AReactiveElementMono<T>
+    {
         protected Action<T, Operation> actionThisChange;
         protected int _index = -1;
 
@@ -22,6 +23,7 @@ namespace Vurbiri.Reactive.Collections
             actionThisChange?.Invoke((T)this, Operation.Remove);
             actionThisChange = null;
             _index = -1;
+            Destroy(gameObject);
         }
     }
 }

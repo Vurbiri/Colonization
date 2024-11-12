@@ -6,10 +6,9 @@ namespace Vurbiri.Colonization.UI
 	{
         public const string KEY_ATTACK = "Attack", KEY_DAMAGE = "Damage", KEY_AP = "AP";
 
-		public static readonly IReadOnlyList<IReadOnlyList<string>> KEYS_DESK_EFFECTS = new string[][] {
-																	new string[0], // MaxHP
-                                                                    new string[]{ "RegenerationHPAddition"},
-                                                                    new string[]{ "AttackAddition", "", "AttackPercent"},
-                                                                    new string[]{ "DefenseAddition", "", "DefensePercent"},};
+        public static readonly IReadOnlyList<string> KEYS_DESK_EFFECTS = new string[] 
+        { "Damage", "HPPerTurnAddition", "AttackAddition", "AttackPercent", "DefenseAddition", "DefensePercent" };
+
+                                                                    
     }
 }

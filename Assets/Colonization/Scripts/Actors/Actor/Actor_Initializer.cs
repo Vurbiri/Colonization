@@ -10,12 +10,18 @@ namespace Vurbiri.Colonization.Actors
         {
             _id = settings.Id;
             _owner = owner;
-            _states = settings.Abilities;
+            _abilities = settings.Abilities;
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
             _eventBus = eventBus;
+
+            _currentHP = _abilities.GetAbility(ActorAbilityId.CurrentHP);
+            _currentHP.Clamp = CurrentHPCamp;
+            _currentAP = _abilities.GetAbility(ActorAbilityId.CurrentAP);
+            _currentAP.Clamp = CurrentAPCamp;
+            _isMove = _abilities.GetAbility(ActorAbilityId.IsMove);
+
             _thisTransform = transform;
-            _thisGO = transform.gameObject;
             _extentsZ = GetComponent<BoxCollider>().bounds.extents.z;
             _effects.Subscribe(RedirectEvents);
 
@@ -36,15 +42,17 @@ namespace Vurbiri.Colonization.Actors
             for (int i = 0; i < _countAttackStates; i++)
                 _stateMachine.AddState(attackStates[i]);
 
-            _thisGO.SetActive(true);
+            gameObject.SetActive(true);
         }
 
         public virtual void Init(ActorSettings settings, int owner, Hexagon startHex, int[][] data, GameplayEventBus eventBus)
         {
             Init(settings, owner, startHex, eventBus);
 
-            _currentHP = data[1][1];
-            _currentActionPoint = data[1][2];
+            _currentHP.BaseValue = data[1][1];
+            _currentAP.BaseValue = data[1][2];
+            _isMove.BaseValue    = data[1][3];
+
             for (int i = 2; i < data.Length; i++)
                 _effects.Add(new(data[i]));
         }

@@ -1,7 +1,7 @@
 namespace Vurbiri.Reactive.Collections
 {
     using System;
-    public interface IReactiveElement<T> where T : class, IReactiveElement<T>
+    public interface IReactiveElement<out T> where T : class, IReactiveElement<T>
     {
         public int Index { get; set; }
         

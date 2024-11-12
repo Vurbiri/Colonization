@@ -7,11 +7,12 @@ namespace Vurbiri.Colonization
     {
         public IReadOnlyReactiveValue<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _abilities[id];
 
-        public void ShrinePassiveProfit() => _resources.AddAndClampBlood(_abilities.GetValue(PlayerAbilityId.ShrinePassiveProfit) * _edifices.shrines.Count,
-                                                                         _abilities.GetValue(PlayerAbilityId.ShrineMaxRes));
-        public void ShrineProfit() => _resources.AddAndClampBlood(_abilities.GetValue(PlayerAbilityId.ShrineProfit) * _edifices.shrines.Count,
-                                                                  _abilities.GetValue(PlayerAbilityId.ShrineMaxRes));
-        public void ClampMainResources() => _resources.ClampMain(_abilities.GetValue(PlayerAbilityId.MaxResources));
+        public void ShrinePassiveProfit() => _resources.AddBlood(_abilities.GetValue(PlayerAbilityId.ShrinePassiveProfit) * _edifices.shrines.Count);
+        public void GateAction()
+        {
+            _resources.AddBlood(_abilities.GetValue(PlayerAbilityId.ShrineProfit) * _edifices.shrines.Count);
+            _resources.ClampMain();
+        }
         public void ProfitFromEdifices(int hexId, ACurrencies freeGroundRes)
         {
             if (_abilities.IsTrue(PlayerAbilityId.IsFreeGroundRes) && freeGroundRes != null)

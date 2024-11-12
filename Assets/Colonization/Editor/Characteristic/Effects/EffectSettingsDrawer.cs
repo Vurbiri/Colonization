@@ -33,7 +33,7 @@ namespace VurbiriEditor.Colonization
             property.intValue = EditorGUI.IntPopup(position, property.displayName, property.intValue, _nameOp, _valueOp);
 
             Space();
-            DrawIntSlider(P_DUR, 1, 3);
+            DrawIntSlider(P_DUR, 0, 5);
 
             EditorGUI.EndProperty();
 

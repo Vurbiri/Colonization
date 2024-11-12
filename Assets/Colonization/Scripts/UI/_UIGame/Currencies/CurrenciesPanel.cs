@@ -54,10 +54,10 @@ namespace Vurbiri.Colonization.UI
             }
 
             pos.x -= (cSize.x - aSize.x) * 0.5f;
-            Instantiate(_amountUIPrefab, thisRectTransform).Init(pos, currencies, player.GetAbilityReactive(PlayerAbilityId.MaxResources));
+            Instantiate(_amountUIPrefab, thisRectTransform).Init(pos, currencies, player.GetAbilityReactive(PlayerAbilityId.MaxMainResources));
 
             pos.x += (bSize.x + aSize.x) * 0.5f + _space * 2f;
-            Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, currencies, player.GetAbilityReactive(PlayerAbilityId.ShrineMaxRes), _directionPopup);
+            Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, currencies, player.GetAbilityReactive(PlayerAbilityId.MaxBlood), _directionPopup);
 
             SceneServices.Get<GameplayEventBus>().EventSceneEndCreation -= Create;
             Destroy(this);

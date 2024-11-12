@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
 
         public AReadOnlyCurrenciesReactive Resources => _resources;
 
-        public Ability<PlayerAbilityId> ExchangeRate => _abilities.GetState(PlayerAbilityId.ExchangeRate);
+        public Ability<PlayerAbilityId> ExchangeRate => _abilities.GetAbility(PlayerAbilityId.ExchangeRate);
 
         public IReactiveList<Crossroad> Shrines => _edifices.shrines;
         public IReactiveList<Crossroad> Ports => _edifices.ports;
@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
                 Land land = SceneObjects.Get<Land>();
 
-                _resources = new(data.Resources);
+                _resources = new(data.Resources, _abilities.GetAbility(PlayerAbilityId.MaxMainResources), _abilities.GetAbility(PlayerAbilityId.MaxBlood));
                 _roads.Restoration(data.Roads, crossroads);
                 _edifices = new(playerId, data, crossroads);
 
@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization
             }
             else
             {
-                _resources = new(_prices.PlayersDefault);
+                _resources = new(_prices.PlayersDefault, _abilities.GetAbility(PlayerAbilityId.MaxMainResources), _abilities.GetAbility(PlayerAbilityId.MaxBlood));
                 _edifices = new();
                 _perks = new();
             }

@@ -33,8 +33,7 @@ namespace Vurbiri.Colonization
 
             if (hexId == CONST.ID_GATE)
             {
-                _obj.ShrineProfit();
-                _obj.ClampMainResources();
+                _obj.GateAction();
                 return;
             }
 

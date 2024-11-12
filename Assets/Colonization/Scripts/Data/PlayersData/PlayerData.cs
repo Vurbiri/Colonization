@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Data
         [JsonProperty(P_ROADS)]
         private int[][][] _roads;
         [JsonProperty(P_WARRIORS)]
-        private List<int[][]> _warriors;
+        private readonly List<int[][]> _warriors = new();
         [JsonProperty(P_PERKS)]
         private int[] _perks;
 

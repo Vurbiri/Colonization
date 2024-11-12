@@ -1,13 +1,16 @@
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Vurbiri.Colonization
 {
+    using System.Collections.Generic;
+    using Vurbiri.Reactive;
+
     public class Currencies : AReadOnlyCurrenciesReactive
     {
-        public Currencies(IReadOnlyList<int> array) : base(array) { }
-        public Currencies(ACurrencies other) : base(other) { }
+        #region Constructions
+        public Currencies(IReadOnlyList<int> array, IReactive<int> maxValueMain, IReactive<int> maxValueBlood) : base(array, maxValueMain, maxValueBlood) { }
+        public Currencies(ACurrencies other, IReactive<int> maxValueMain, IReactive<int> maxValueBlood) : base(other, maxValueMain, maxValueBlood) { }
+        public Currencies(IReactive<int> maxValueMain, IReactive<int> maxValueBlood) : base(maxValueMain, maxValueBlood) { }
         public Currencies() : base() { }
+        #endregion
 
         public void Set(int index, int value) => Amount += _values[index].Set(value);
         public void Set(Id<CurrencyId> id, int value) => Amount += _values[id.Value].Set(value);
@@ -22,7 +25,7 @@ namespace Vurbiri.Colonization
         }
         public void Add(Id<CurrencyId> id, int value) => Add(id.Value, value);
         
-        public void AddAndClampBlood(int value, int max) => Amount += _values[CurrencyId.Blood].AddAndClamp(value, max);
+        public void AddBlood(int value) => Amount += _values[CurrencyId.Blood].Add(value);
 
         public void AddFrom(ACurrencies other)
         {
@@ -43,20 +46,42 @@ namespace Vurbiri.Colonization
             actionAmountChange?.Invoke(_amount);
         }
 
-        public void ClampMain(int max)
+        public void ClampMain()
         {
-            if (_amount <= max)
+            if (_amount <= _maxMain)
                 return;
 
-            int index = Random.Range(0, countMain);
-            while (_amount > max)
+            int indexMax = 0, index;
+            ACurrency max = _values[indexMax], temp;
+            for (index = 1; index < countMain; index++)
             {
-                _amount += _values[index].DecrementNotMessage();
-                index = ++index % countMain;
+                temp = _values[index];
+                if (temp > max | (temp == max && Chance.Rolling()))
+                {
+                    indexMax = index;
+                    max = temp;
+                }
             }
 
-            for (int i = 0; i < countMain; i++)
-                _values[i].SendMessage();
+            index = indexMax;
+            while (_amount > _maxMain)
+            {
+                _amount += max.DecrementNotSignal();
+                do
+                {
+                    index = ++index % countMain;
+                    temp = _values[index];
+                    if (temp > max)
+                    {
+                        indexMax = index;
+                        max = temp;
+                    }
+                }
+                while (index != indexMax);
+            }
+
+            for (index = 0; index < countMain; index++)
+                _values[index].Signal();
 
             actionAmountChange?.Invoke(_amount);
         }

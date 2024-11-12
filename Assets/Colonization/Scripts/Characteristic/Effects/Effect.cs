@@ -16,6 +16,14 @@ namespace Vurbiri.Colonization
         public int Value => _value;
         public Chance Chance => 100;
 
+        public Effect(int targetAbility, Id<TypeOperationId> typeOperation, int value, int duration)
+        {
+            _targetAbility = targetAbility;
+            _typeOperation = typeOperation;
+            _value = value;
+            _duration = duration;
+        }
+
         public Effect(EffectSettings settings)
         {
             _targetAbility = settings.TargetAbility;
@@ -39,8 +47,7 @@ namespace Vurbiri.Colonization
         {
             if (--_duration == 0)
             {
-                actionThisChange?.Invoke(this, Operation.Remove);
-                actionThisChange = null;
+                Removing();
                 return;
             }
 
@@ -48,7 +55,5 @@ namespace Vurbiri.Colonization
         }
 
         public int[] ToArray() => new int[] { _targetAbility, _typeOperation.Value, _value, _duration };
-
-        public static implicit operator Effect(EffectSettings value) => new(value);
     }
 }

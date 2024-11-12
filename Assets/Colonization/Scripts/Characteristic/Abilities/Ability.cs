@@ -1,3 +1,4 @@
+using System;
 using Vurbiri.Collections;
 using Vurbiri.Reactive;
 
@@ -6,31 +7,35 @@ namespace Vurbiri.Colonization
     public class Ability<TId> : AReactive<int>, IValueId<TId> where TId : AAbilityId<TId>
     {
         private readonly Id<TId> _id;
-        private readonly int _baseValue;
-
+        private int _baseValue;
         private int _currentValue;
         private readonly IdArray<TypeOperationId, IAbilityModifier> _perks = new();
+        private Func<int, int> funcClamp;
 
         public Id<TId> Id => _id;
-        public override int Value { get => _currentValue; protected set { } }
+        public override int Value { get => _currentValue; protected set {} } 
+        public int BaseValue
+        {
+            get => _baseValue;
+            set
+            {
+                if (_baseValue != value)
+                {
+                    _baseValue = value;
+                    NextValue();
+                }
+            }
+        }
+        public Func<int, int> Clamp { set => funcClamp = value; }
 
-        private Ability()
+        public Ability(Id<TId> id, int baseValue)
         {
             _perks[TypeOperationId.Addition] = new AbilityModAdd();
             _perks[TypeOperationId.Percent] = new AbilityModPercent();
             _perks[TypeOperationId.RandomAdd] = new AbilityModRandom();
-        }
 
-        public Ability(Id<TId> id, int baseValue) : this()
-        {
             _id = id;
             _baseValue = _currentValue = baseValue;
-        }
-
-        public Ability(Ability<TId> state) : this()
-        {
-            _id = state._id;
-            _baseValue = _currentValue = state._baseValue;
         }
 
         public void Add(IAbilityModifierSettings settings)
@@ -49,6 +54,9 @@ namespace Vurbiri.Colonization
             _currentValue = _baseValue;
             for (int i = 0; i < TypeOperationId.Count; i++)
                 _currentValue = _perks[i].Apply(_currentValue);
+
+            if(funcClamp != null)
+                _currentValue = funcClamp(_currentValue);
 
             actionValueChange?.Invoke(_currentValue);
 
