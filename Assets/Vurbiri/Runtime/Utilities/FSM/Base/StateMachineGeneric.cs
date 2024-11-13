@@ -60,6 +60,7 @@ namespace Vurbiri.FSM
             _currentState = newState;
             _currentState.Enter();
         }
+
         public void SetAndAddState(TState newState)
         {
             if (_currentState.Equals(newState))
@@ -71,6 +72,7 @@ namespace Vurbiri.FSM
             _currentState = newState;
             _currentState.Enter();
         }
+
         public bool ForceSetState<T>(int id = 0) where T : TState
         {
             if (_states.TryGetValue(new(typeof(T), id), out TState newState))

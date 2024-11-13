@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization
             }
 
             index = indexMax;
-            while (_amount > _maxMain)
+            do
             {
                 _amount += max.DecrementNotSignal();
                 do
@@ -78,7 +78,8 @@ namespace Vurbiri.Colonization
                     }
                 }
                 while (index != indexMax);
-            }
+            } 
+            while (_amount > _maxMain);
 
             for (index = 0; index < countMain; index++)
                 _values[index].Signal();

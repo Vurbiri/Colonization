@@ -18,9 +18,9 @@ namespace Vurbiri.Colonization.Actors
             return _warrior;
         }
 
-        public Warrior Init(int id, int[][] data, int owner, Material material, Hexagon startHex, GameplayEventBus eventBus)
+        public Warrior Init(ActorLoadData data, int owner, Material material, Hexagon startHex, GameplayEventBus eventBus)
         {
-            _warrior.Init(_warriorsSettings[id], owner, startHex, data, eventBus);
+            _warrior.Init(_warriorsSettings[data.id], owner, startHex, data, eventBus);
             GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = material;
 
             Destroy(this);

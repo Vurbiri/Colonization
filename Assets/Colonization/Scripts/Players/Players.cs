@@ -1,10 +1,9 @@
-using System;
-using UnityEngine;
-
 namespace Vurbiri.Colonization
 {
     using Actors;
     using Data;
+    using System;
+    using UnityEngine;
     using Vurbiri.Collections;
     using static PlayerId;
 

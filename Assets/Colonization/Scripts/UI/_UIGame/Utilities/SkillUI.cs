@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Vurbiri.Colonization.UI
 {
     [System.Serializable]
-    public class AttackSkillUI
+    public class SkillUI
     {
         public string keyName = "Attack";
         public Sprite sprite;

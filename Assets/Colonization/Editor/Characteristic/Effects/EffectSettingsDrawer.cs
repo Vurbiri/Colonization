@@ -1,73 +1,52 @@
 namespace VurbiriEditor.Colonization
 {
-    using System;
     using UnityEditor;
     using UnityEngine;
     using Vurbiri.Colonization;
+    using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
     [CustomPropertyDrawer(typeof(EffectSettings))]
-    public class EffectSettingsDrawer : ADrawerGetConstFieldName
+    public class EffectSettingsDrawer : PropertyDrawerUtility
     {
         #region Consts
-        private const string P_TARGET_ACTOR = "_targetActor", P_TARGET_AB = "_targetAbility", P_TYPE_OP = "_typeOperation", P_VALUE = "_value", P_DUR = "_duration";
+        private const float RATE_SIZE = 7.7f;
+        private const string P_TARGET = "_target", P_TYPE_OP = "_typeOperation", P_VALUE = "_value", P_DUR = "_duration";
+        private const string P_KEY_DESC = "_keyDescId";
+        private const string P_TARGET_ACTOR = "actor", P_TARGET_AB = "ability";
         private readonly string[] _nameOp = { "Addition", "Percent" };
         private readonly int[] _valueOp = { 0, 2 };
         #endregion
 
-        public override void OnGUI(Rect position, SerializedProperty propertyMain, GUIContent label)
+
+        public override void OnGUI(Rect mainPosition, SerializedProperty mainProperty, GUIContent label)
         {
-            SerializedProperty property;
-            float height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+            base.OnGUI(mainPosition, mainProperty, label);
 
-            position.height = EditorGUIUtility.singleLineHeight;
+            SerializedProperty propertyTarget = mainProperty.FindPropertyRelative(P_TARGET);
 
-            EditorGUI.BeginProperty(position, label, propertyMain);
+            EditorGUI.BeginProperty(mainPosition, label, mainProperty);
 
-            DrawId(P_TARGET_ACTOR, typeof(TargetOfEffectId));
-            DrawId(P_TARGET_AB, typeof(ActorAbilityId));
+            DrawId(propertyTarget, P_TARGET_ACTOR, typeof(TargetOfEffectId));
+            DrawId(propertyTarget, P_TARGET_AB, typeof(ActorAbilityId));
             
             Space();
             DrawInt(P_VALUE);
-            position.y += height;
-            property = propertyMain.FindPropertyRelative(P_TYPE_OP);
-            property.intValue = EditorGUI.IntPopup(position, property.displayName, property.intValue, _nameOp, _valueOp);
+            DrawIntPopup(P_TYPE_OP, _nameOp, _valueOp);
 
             Space();
             DrawIntSlider(P_DUR, 0, 5);
 
-            EditorGUI.EndProperty();
+            Space(1.5f);
+            DrawPopup(P_KEY_DESC, KEYS_DESK_EFFECTS);
 
-            #region Local: Space(..), DrawIntSlider(..), DrawId(..), DrawInt(..), DrawString(..)
-            //================================================================
-            void Space(float ratio = 1f) => position.y += EditorGUIUtility.standardVerticalSpacing * ratio;
-            //================================================================
-            int DrawIntSlider(string nameProperty, int min, int max)
-            {
-                position.y += height;
-                property = propertyMain.FindPropertyRelative(nameProperty);
-                int value = Mathf.Clamp(property.intValue, min, max);
-                property.intValue = value = EditorGUI.IntSlider(position, property.displayName, value, min, max);
-                return value;
-            }
-            //================================================================
-            int DrawId(string nameProperty, Type t_field)
-            {
-                position.y += height;
-                var (names, values) = GetNamesAndValues(t_field);
-                property = propertyMain.FindPropertyRelative(nameProperty);
-                property.intValue = EditorGUI.IntPopup(position, property.displayName, property.intValue, names, values);
-                return property.intValue;
-            }
-            //================================================================
-            void DrawInt(string nameProperty)
-            {
-                position.y += height;
-                property = propertyMain.FindPropertyRelative(nameProperty);
-                property.intValue = EditorGUI.IntField(position, property.displayName, property.intValue);
-            }
-            #endregion
+            EditorGUI.EndProperty();
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 7.2f * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => GetPropertyRateHeight(property) * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+
+        public static float GetPropertyRateHeight(SerializedProperty property)
+        {
+            return RATE_SIZE;
+        }
     }
 }

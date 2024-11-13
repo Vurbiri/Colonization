@@ -26,13 +26,25 @@ namespace Vurbiri.Colonization
                 }
             }
         }
+        public bool IsBaseValue
+        {
+            get => _baseValue > 0;
+            set
+            {
+                if ((_baseValue > 0) != value)
+                {
+                    _baseValue = value ? 1 : 0;
+                    NextValue();
+                }
+            }
+        }
         public Func<int, int> Clamp { set => funcClamp = value; }
 
         public Ability(Id<TId> id, int baseValue)
         {
             _perks[TypeOperationId.Addition] = new AbilityModAdd();
-            _perks[TypeOperationId.Percent] = new AbilityModPercent();
             _perks[TypeOperationId.RandomAdd] = new AbilityModRandom();
+            _perks[TypeOperationId.Percent] = new AbilityModPercent();
 
             _id = id;
             _baseValue = _currentValue = baseValue;
@@ -51,6 +63,7 @@ namespace Vurbiri.Colonization
 
         public int NextValue()
         {
+            int old = _currentValue;
             _currentValue = _baseValue;
             for (int i = 0; i < TypeOperationId.Count; i++)
                 _currentValue = _perks[i].Apply(_currentValue);
@@ -58,7 +71,8 @@ namespace Vurbiri.Colonization
             if(funcClamp != null)
                 _currentValue = funcClamp(_currentValue);
 
-            actionValueChange?.Invoke(_currentValue);
+            if (old != _currentValue & actionValueChange != null)
+                actionValueChange(_currentValue);
 
             return _currentValue;
         }

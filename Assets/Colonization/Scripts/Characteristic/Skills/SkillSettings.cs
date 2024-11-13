@@ -7,13 +7,15 @@ namespace Vurbiri.Colonization
     public partial class Skills
     {
         [System.Serializable]
-        public class AttackSkill
+        public class SkillSettings
         {
             public AnimationClipSettingsScriptable clipSettings;
+            public bool isMove;
             public bool isValid;
             public int percentDamage;
-            public AttackState.Settings settings;
-            public AttackSkillUI ui;
+            public float range;
+            public ASkillState.Settings settings;
+            public SkillUI ui;
         }
     }
 }

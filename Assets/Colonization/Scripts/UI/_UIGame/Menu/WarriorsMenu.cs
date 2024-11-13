@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization.UI
             
             _buttonMovement.Setup(_currentWarrior.CanMove());
 
-            List<AttackSkillUI> settings = _warriorsSettings[actor.Id].Skills.GetAttackSkillsUI();
+            List<SkillUI> settings = _warriorsSettings[actor.Id].Skills.GetAttackSkillsUI();
             int count = settings.Count, index;
             
             for (index = 0; index < count; index++)

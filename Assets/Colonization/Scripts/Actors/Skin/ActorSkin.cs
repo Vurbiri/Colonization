@@ -10,8 +10,8 @@ namespace Vurbiri.Colonization.Actors
 
         #region CONST
         private const string T_IDLE = "tIdle", B_IDLE = "bIdle";
-        private const string B_MOVE = "bMove", B_RUN_F = "bRunF", B_RUN_B = "bRunB";
-        private static readonly string[] T_ATTACKS = { "tAttack_01", "tAttack_02" };
+        private const string B_MOVE = "bMove", B_RUN = "bRun";
+        private static readonly string[] T_SKILLS = { "tSkill_01", "tSkill_02" };
         private const int COUNT_ATTACKS = 2;
         #endregion
 
@@ -19,8 +19,8 @@ namespace Vurbiri.Colonization.Actors
         private readonly StateMachine _stateMachine = new();
         private int _idBoolState = 0, _idTriggerState = 0;
 
-        private BoolSwitchState _moveState, _runForwardState, _runBackState;
-        private TriggerSwitchState[] _attackStates = new TriggerSwitchState[COUNT_ATTACKS];
+        private BoolSwitchState _moveState, _runState;
+        private readonly TriggerSwitchState[] _skillStates = new TriggerSwitchState[COUNT_ATTACKS];
 
         public event Action EventStart;
 
@@ -32,11 +32,10 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.SetDefaultState<IdleState>();
 
             _moveState       = CreateBoolState(B_MOVE);
-            _runForwardState = CreateBoolState(B_RUN_F);
-            _runBackState    = CreateBoolState(B_RUN_B);
+            _runState         = CreateBoolState(B_RUN);
 
             for (int i = 0; i < COUNT_ATTACKS; i++)
-                _attackStates[i] = CreateTriggerState(T_ATTACKS[i]);
+                _skillStates[i] = CreateTriggerState(T_SKILLS[i]);
 
             _animator.GetBehaviour<SpawnBehaviour>().EventExitSpawn += EventStart;
         }
@@ -45,11 +44,10 @@ namespace Vurbiri.Colonization.Actors
 
         public void Move() => _stateMachine.SetState(_moveState);
 
-        public void RunForward() => _stateMachine.SetState(_runForwardState);
+        public void Run() => _stateMachine.SetState(_runState);
 
-        public void Attack(int index) => _stateMachine.SetState(_attackStates[index]);
-
-        public void RunBack() => _stateMachine.SetState(_runBackState);
+        public void Skill(int index) => _stateMachine.SetState(_skillStates[index]);
+        
 
         public void Default() => _stateMachine.Default();
 

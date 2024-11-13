@@ -13,50 +13,53 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private float _speedWalk = 0.45f;
         [SerializeField] private float _speedRun = 0.65f;
-        [SerializeField] private AttackSkill[] _attackSkills;
+        [SerializeField] private SkillSettings[] _skillsSettings;
         
-        [NonSerialized] private List<AttackSkillUI> _attackSkillsUI;
+        [NonSerialized] private List<SkillUI> _skillsUI;
 
         public MoveState GetMoveSate(Actor parent) => new(_speedWalk, parent);
 
-        public List<AttackState> GetAttackSates(Actor parent)
+        public List<ASkillState> GetSkillSates(Actor parent)
         {
-            int count = _attackSkills.Length;
-            List<AttackState> attackStates = new(count);
+            int count = _skillsSettings.Length;
+            List<ASkillState> skillStates = new(count);
 
-            AttackSkill skill;
+            SkillSettings skill;
             for (int i = 0, id = 0; i < count; i++)
             {
-                skill = _attackSkills[i];
+                skill = _skillsSettings[i];
                 if (skill == null || !skill.isValid)
                     continue;
 
-                attackStates.Add(new(parent, skill.percentDamage, _speedRun, skill.settings, id++));
+                if (skill.isMove)
+                    skillStates.Add(new AttackState(parent, skill.percentDamage, skill.range, _speedRun, skill.settings, id++));
+                else
+                    skillStates.Add(new SpellState(parent, skill.percentDamage, skill.settings, id++));
             }
 
-            return attackStates;
+            return skillStates;
         }
 
-        public List<AttackSkillUI> GetAttackSkillsUI()
+        public List<SkillUI> GetAttackSkillsUI()
         {
-            if(_attackSkillsUI != null)
-                return _attackSkillsUI;
+            if(_skillsUI != null)
+                return _skillsUI;
 
-            int count = _attackSkills.Length;
-            _attackSkillsUI = new(count);
+            int count = _skillsSettings.Length;
+            _skillsUI = new(count);
             
-            AttackSkill skill;
+            SkillSettings skill;
             for (int i = 0; i < count; i++)
             {
-                skill = _attackSkills[i];
+                skill = _skillsSettings[i];
                 if (skill == null || !skill.isValid)
                     continue;
 
                 skill.ui.SetEffects(skill.settings.effects);
-                _attackSkillsUI.Add(skill.ui);
+                _skillsUI.Add(skill.ui);
             }
 
-            return _attackSkillsUI;
+            return _skillsUI;
         }
     }
 }

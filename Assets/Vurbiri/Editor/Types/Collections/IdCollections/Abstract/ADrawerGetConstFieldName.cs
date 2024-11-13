@@ -8,6 +8,7 @@ namespace VurbiriEditor
 {
     public abstract class ADrawerGetConstFieldName : PropertyDrawer
     {
+
         protected List<string> GetNames(Type t_field)
         {
             Type t_attribute = typeof(NotIdAttribute), t_int = typeof(int);

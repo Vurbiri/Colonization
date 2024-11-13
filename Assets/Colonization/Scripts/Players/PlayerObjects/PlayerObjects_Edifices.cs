@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
@@ -11,40 +10,42 @@ namespace Vurbiri.Colonization
         {
             public readonly IdArray<EdificeGroupId, ReactiveList<Crossroad>> values = new();
 
-            public readonly ReactiveList<Crossroad> shrines = new();
-            public readonly ReactiveList<Crossroad> ports = new();
-            public readonly ReactiveList<Crossroad> urbans = new();
+            public readonly ReactiveList<Crossroad> shrines;
+            public readonly ReactiveList<Crossroad> ports;
+            public readonly ReactiveList<Crossroad> urbans;
 
             public Edifices()
             {
-                values[EdificeGroupId.Shrine] = shrines;
-                values[EdificeGroupId.Port] = ports;
-                values[EdificeGroupId.Urban] = urbans;
+                values[EdificeGroupId.Shrine] = shrines = new();
+                values[EdificeGroupId.Port] = ports = new();
+                values[EdificeGroupId.Urban] = urbans = new();
             }
 
-            public Edifices(int playerId, PlayerData data, Crossroads crossroads) : this()
+            public Edifices(int playerId, IReadOnlyDictionary<int, EdificeLoadData[]> data, Crossroads crossroads)
             {
-                for (int i = 0; i < EdificeGroupId.Count; i++)
-                    SetEdifice(playerId, values[i], data.GetEdifices(i), crossroads);
+                values[EdificeGroupId.Shrine] = CreateEdifices(ref shrines, data[EdificeGroupId.Shrine], playerId, crossroads);
+                values[EdificeGroupId.Port] = CreateEdifices(ref ports, data[EdificeGroupId.Port], playerId, crossroads);
+                values[EdificeGroupId.Urban] = CreateEdifices(ref urbans, data[EdificeGroupId.Urban], playerId, crossroads);
+
             }
 
-            private void SetEdifice(int playerId, ReactiveList<Crossroad> values, List<int[]> data, Crossroads crossroads)
+            private ReactiveList<Crossroad> CreateEdifices(ref ReactiveList<Crossroad> values, EdificeLoadData[] edificesData, int playerId, Crossroads crossroads)
             {
-                Key key = new();
+                int count = edificesData.Length;
+                values = new(count);
+
+                EdificeLoadData data;
                 Crossroad crossroad;
-                foreach (var array in data)
+                for (int i = 0; i < count; i++)
                 {
-                    if (array.Length != 4)
-                        throw new($"CrossroadData: неверный размер входного массива ({array.Length}, а не 4)");
-
-                    key.SetValues(array[0], array[1]);
-                    crossroad = crossroads[key];
-                    crossroad.Build(playerId, array[2], array[3] > 0);
+                    data = edificesData[i];
+                    crossroad = crossroads[data.key];
+                    crossroad.Build(playerId, data.id, data.isWall);
                     values.Add(crossroad);
                 }
-            }
 
-            
+                return values;
+            }
         }
     }
 }

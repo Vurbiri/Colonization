@@ -9,11 +9,13 @@ namespace Vurbiri.Colonization
         private readonly int _targetAbility;
         private readonly Id<TypeOperationId> _typeOperation;
         private readonly int _value;
+        private readonly int _keyDescId;
         private int _duration;
         
         public int TargetAbility => _targetAbility;
         public Id<TypeOperationId> TypeOperation => _typeOperation;
         public int Value => _value;
+        public int KeyDescId => _keyDescId;
         public Chance Chance => 100;
 
         public Effect(int targetAbility, Id<TypeOperationId> typeOperation, int value, int duration)
@@ -34,13 +36,14 @@ namespace Vurbiri.Colonization
 
         public Effect(IReadOnlyList<int> array)
         {
-            if (array == null | array.Count != 4)
+            if (array == null | array.Count != 5)
                 throw new ArgumentOutOfRangeException(nameof(array));
 
             _targetAbility = array[0];
             _typeOperation = array[1];
             _value = array[2];
-            _duration = array[3];
+            _keyDescId = array[3];
+            _duration = array[4];
         }
 
         public void Next()
@@ -54,6 +57,6 @@ namespace Vurbiri.Colonization
             actionThisChange?.Invoke(this, Operation.Change);
         }
 
-        public int[] ToArray() => new int[] { _targetAbility, _typeOperation.Value, _value, _duration };
+        public int[] ToArray() => new int[] { _targetAbility, _typeOperation.Value, _value, _keyDescId, _duration };
     }
 }

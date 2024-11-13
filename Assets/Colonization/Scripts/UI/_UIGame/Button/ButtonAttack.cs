@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.UI
             _language.Subscribe(SetTexts);
         }
 
-        public void Setup(Actor actor, int idAttack, AttackSkillUI settings, Vector3 localPosition)
+        public void Setup(Actor actor, int idAttack, SkillUI settings, Vector3 localPosition)
         {
             bool isUse = actor.ActionPoint >= settings.cost;
 
@@ -66,7 +66,10 @@ namespace Vurbiri.Colonization.UI
                         continue;
 
                     sb.Append(effect.isNegative ? _hexColorMinus : _hexColorPlus);
-                    sb.Append(_language.GetTextFormat(_file, effect.keyDesc, effect.value, effect.duration));
+                    if(effect.duration > 0)
+                        sb.Append(_language.GetTextFormat(_file, effect.keyDesc, effect.value, effect.duration));
+                    else
+                        sb.Append(_language.GetTextFormat(_file, effect.keyDesc, effect.value));
                 }
                 sb.Append(TAG_COLOR_OFF);
             }
@@ -89,7 +92,7 @@ namespace Vurbiri.Colonization.UI
         private void OnClick()
         {
             _parentGO.SetActive(false);
-            _currentActor.Attack(_idAttack);
+            _currentActor.Skill(_idAttack);
         }
 
         private void OnDestroy()

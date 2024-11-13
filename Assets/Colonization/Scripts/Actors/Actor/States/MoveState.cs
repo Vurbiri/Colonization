@@ -15,11 +15,13 @@ namespace Vurbiri.Colonization.Actors
             private WaitActivate _waitHexagon;
             private Hexagon _targetHex;
             private Coroutine _coroutineAction;
+            private Ability<ActorAbilityId> _move;
 
             public MoveState(float speed, Actor parent) : base(parent, 0)
             {
                 _speed = speed;
                 _parentTransform = _parent._thisTransform;
+                _move = _parent._isMove;
             }
 
             public override void Enter()
@@ -84,6 +86,7 @@ namespace Vurbiri.Colonization.Actors
                 }
 
                 _parentTransform.localPosition = end;
+                _move.IsBaseValue = false;
 
                 Reset();
             }

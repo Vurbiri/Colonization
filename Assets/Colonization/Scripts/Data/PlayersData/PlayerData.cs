@@ -32,10 +32,6 @@ namespace Vurbiri.Colonization.Data
         private Action<PlayerData> actionThisChange;
 
         public int Id => _id;
-        public int[] Resources => _resources;
-        public int[][][] Roads => _roads;
-        public List<int[][]> Warriors => _warriors;
-        public int[] Perks => _perks;
 
         public PlayerData(int id)
         {
@@ -52,7 +48,7 @@ namespace Vurbiri.Colonization.Data
         public PlayerData() {}
 
 
-        public List<int[]> GetEdifices(int id) => _edifices[id];
+        public PlayerLoadData ToLoadData() => new(_resources, _edifices, _roads, _warriors);
 
         public void CurrenciesBind(AReadOnlyCurrenciesReactive currencies, bool calling)
         {
@@ -62,13 +58,11 @@ namespace Vurbiri.Colonization.Data
                 _unsubscribersResources.Add(currencies.Subscribe(i, v => _resources[index] = v, calling));
             }
         }
-
         public void EdificesBind(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive, bool calling)
         {
             for(int i = 0; i < EdificeGroupId.Count; i++)
                 EdificesBind(edificesReactive[i], _edifices[i], calling);
         }
-
         public void RoadsBind(IReactive<int[][][]> roadsReactive, bool calling)
         { 
             _unsubscriberRoads = roadsReactive.Subscribe(OnRoads, calling);
@@ -82,7 +76,6 @@ namespace Vurbiri.Colonization.Data
             }
             #endregion
         }
-
         public void WarriorsBind(IReactiveCollection<Actor> warriorsReactive, bool calling)
         {
             _unsubscriberWarriors = warriorsReactive.Subscribe(OnWarriors, calling);
@@ -167,5 +160,7 @@ namespace Vurbiri.Colonization.Data
             }
             #endregion
         }
+
+        
     }
 }

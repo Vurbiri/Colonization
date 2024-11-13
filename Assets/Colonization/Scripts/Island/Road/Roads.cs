@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
             return this;
         }
 
-        public Roads Restoration(int[][][] array, Crossroads crossroads)
+        public Roads Restoration(IReadOnlyList<IReadOnlyList<Key>> array, Crossroads crossroads)
         {
             foreach (var keys in array)
                 CreateRoad(keys, crossroads);
@@ -41,18 +41,17 @@ namespace Vurbiri.Colonization
 
             #region Local: CreateRoad(...)
             //=================================
-            void CreateRoad(int[][] keys, Crossroads crossroads)
+            void CreateRoad(IReadOnlyList<Key> keys, Crossroads crossroads)
             {
-                int count = keys.Length;
+                int count = keys.Count;
                 if (count < 2) return;
 
-                Key key = new(keys[0]);
-                Crossroad start = crossroads[key];
+                Crossroad start = crossroads[keys[0]];
                 for (int i = 1; i < count; i++)
                 {
                     foreach (var link in start.Links)
                     {
-                        if (link.Contains(key.SetValues(keys[i])))
+                        if (link.Contains(keys[i]))
                         {
                             link.SetStart(start);
                             start = link.End;

@@ -1,10 +1,10 @@
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.UIElements;
-using Vurbiri;
-
 namespace VurbiriEditor.Colonization.Actors
 {
+    using UnityEditor;
+    using UnityEngine;
+    using UnityEngine.UIElements;
+    using Vurbiri;
+
     public abstract class AActorsSettingsEditor<T> : AEditorGetVE<T> where T : AActorsSettingsEditor<T>
     {
         [SerializeField] private VisualTreeAsset _treeActorsSettingsScriptable;

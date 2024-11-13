@@ -1,6 +1,7 @@
 namespace Vurbiri.Colonization.Actors
 {
     using FSMSelectable;
+    using System.Collections.Generic;
     using UnityEngine;
     using Vurbiri.Reactive.Collections;
 
@@ -23,7 +24,7 @@ namespace Vurbiri.Colonization.Actors
 
         protected readonly ReactiveCollection<Effect> _effects = new();
         protected readonly StateMachineSelectable _stateMachine = new();
-        protected int _countAttackStates;
+        protected List<ASkillState> _skillStates;
         #endregion
 
         public int Id => _id;
@@ -34,16 +35,16 @@ namespace Vurbiri.Colonization.Actors
 
         public bool CanMove()
         {
-            return _isMove.Value > 0;
+            return _isMove.IsBaseValue;
         }
         public void Move()
         {
             _stateMachine.SetState<MoveState>();
         }
 
-        public void Attack(int id)
+        public void Skill(int id)
         {
-            _stateMachine.SetState<AttackState>(id);
+            _stateMachine.SetState(_skillStates[id]);
         }
 
         public virtual void Select()
@@ -71,7 +72,7 @@ namespace Vurbiri.Colonization.Actors
         {
             _currentHP.BaseValue += _abilities.GetValue(ActorAbilityId.HPPerTurn);
             _currentAP.BaseValue += _abilities.GetValue(ActorAbilityId.APPerTurn);
-            _isMove.BaseValue = 1;
+            _isMove.IsBaseValue = true;
         }
 
         private void OnStartTurn()

@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-
 namespace Vurbiri.Colonization
 {
     using Actors;
-    using Data;
     using Reactive.Collections;
+    using System.Collections.Generic;
+    using Vurbiri.Colonization.Data;
+
 
     public partial class PlayerObjects
     {
@@ -39,18 +39,20 @@ namespace Vurbiri.Colonization
 
             if (isLoad)
             {
+                PlayerLoadData loadData = data.ToLoadData();
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
                 Land land = SceneObjects.Get<Land>();
 
-                _resources = new(data.Resources, _abilities.GetAbility(PlayerAbilityId.MaxMainResources), _abilities.GetAbility(PlayerAbilityId.MaxBlood));
-                _roads.Restoration(data.Roads, crossroads);
-                _edifices = new(playerId, data, crossroads);
+                _resources = new(loadData.resources, _abilities.GetAbility(PlayerAbilityId.MaxMainResources), _abilities.GetAbility(PlayerAbilityId.MaxBlood));
+                _edifices = new(playerId, loadData.edifices, crossroads);
+                _roads.Restoration(loadData.roads, crossroads);
+                
 
-                List<int[][]> warriorsData = data.Warriors;
-                for (int i = 0; i < warriorsData.Count; i++)
-                    _warriors.Add(_spawner.Create(warriorsData[i], land));
+                int count = loadData.warriors.Length;
+                for (int i = 0; i < count; i++)
+                    _warriors.Add(_spawner.Create(loadData.warriors[i], land));
 
-                _perks = new(data.Perks);
+                //_perks = new(data.Perks);
             }
             else
             {

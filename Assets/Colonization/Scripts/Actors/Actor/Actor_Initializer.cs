@@ -1,6 +1,5 @@
 namespace Vurbiri.Colonization.Actors
 {
-    using System.Collections.Generic;
     using UnityEngine;
     using static CONST;
 
@@ -37,24 +36,22 @@ namespace Vurbiri.Colonization.Actors
 
             _stateMachine.AddState(skills.GetMoveSate(this));
 
-            List<AttackState> attackStates = skills.GetAttackSates(this);
-            _countAttackStates = attackStates.Count;
-            for (int i = 0; i < _countAttackStates; i++)
-                _stateMachine.AddState(attackStates[i]);
+            _skillStates = skills.GetSkillSates(this);
 
             gameObject.SetActive(true);
         }
 
-        public virtual void Init(ActorSettings settings, int owner, Hexagon startHex, int[][] data, GameplayEventBus eventBus)
+        public virtual void Init(ActorSettings settings, int owner, Hexagon startHex, ActorLoadData data, GameplayEventBus eventBus)
         {
             Init(settings, owner, startHex, eventBus);
 
-            _currentHP.BaseValue = data[1][1];
-            _currentAP.BaseValue = data[1][2];
-            _isMove.BaseValue    = data[1][3];
+            _currentHP.BaseValue = data.currentHP;
+            _currentAP.BaseValue = data.currentAP;
+            _isMove.BaseValue    = data.move;
 
-            for (int i = 2; i < data.Length; i++)
-                _effects.Add(new(data[i]));
+            int count = data.effects.Length;
+            for (int i = 0; i < count; i++)
+                _effects.Add(data.effects[i]);
         }
     }
 }

@@ -29,6 +29,14 @@ namespace Vurbiri
                 self[i] = value;
         }
 
+        public static int[] FillWithIndexes(this int[] self)
+        {
+            for (int i = 0; i < self.Length; i++)
+                self[i] = i;
+
+            return self;
+        }
+
         public static T[] ToArray<T>(this ICollection<T> self)
         {
             T[] arr = new T[self.Count];
