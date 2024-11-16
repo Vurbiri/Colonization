@@ -1,5 +1,6 @@
 namespace Vurbiri.Colonization.UI
 {
+    using Characteristics;
     using static CONST_UI_LNG_KEYS;
 
     public class EffectSettingsUI
@@ -12,13 +13,13 @@ namespace Vurbiri.Colonization.UI
 
         public EffectSettingsUI(EffectSettings effect)
         {
-            isNegative = effect.TargetActor == TargetOfEffectId.Enemy;
+            isNegative = effect.IsNegative;
             value = effect.Value;
             duration = effect.Duration;
             keyDesc = KEYS_DESK_EFFECTS[effect.KeyDescId];
 
             isInstant = duration == 0;
-            if (effect.TypeOperation != TypeOperationId.Percent & effect.TargetAbility <= ActorAbilityId.MAC_RATE_ABILITY)
+            if (effect.TypeModifier != TypeModifierId.Percent & effect.TargetAbility <= ActorAbilityId.MAX_RATE_ABILITY)
                 value /= ActorAbilityId.RATE_ABILITY;
         }
     }

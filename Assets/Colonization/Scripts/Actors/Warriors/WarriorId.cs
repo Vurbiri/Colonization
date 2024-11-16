@@ -1,5 +1,6 @@
 namespace Vurbiri.Colonization.Actors
 {
+    using Characteristics;
     using System;
 
     public class WarriorId : AIdType<WarriorId>

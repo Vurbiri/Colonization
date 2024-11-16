@@ -1,9 +1,9 @@
-namespace VurbiriEditor.Colonization
+namespace VurbiriEditor.Colonization.Characteristics
 {
     using UnityEditor;
     using UnityEngine;
-    using Vurbiri.Colonization;
     using Vurbiri.Colonization.Actors;
+    using Vurbiri.Colonization.Characteristics;
 
     [CustomPropertyDrawer(typeof(Skills.SkillSettings))]
     public class SkillSettingsDrawer : PropertyDrawerUtility
@@ -11,7 +11,7 @@ namespace VurbiriEditor.Colonization
         private const string NAME_ELEMENT = "Skill {0}";
         private const string P_CLIP = "clipSettings", P_MOVE = "isMove", P_VALID = "isValid", P_SETTINGS = "settings", P_UI = "ui";
         private const string P_REM_T = "remainingTime", P_DAMAGE_T = "damageTime", P_RANGE = "range", P_ID_A = "idAnimation";
-        private const string P_DAMAGE = "percentDamage", P_COST = "cost", P_EFFECTS = "effects";
+        private const string P_TARGET = "target", P_COST = "cost", P_EFFECTS = "effects";
         private const string P_SPRITE = "sprite", P_KEY_NAME = "keyName";
         private readonly string[] KEYS_NAME_SKILLS = { "Attack", "Sweep" };
 
@@ -35,8 +35,7 @@ namespace VurbiriEditor.Colonization
                 EditorGUI.indentLevel++;
 
                 Space();
-                SerializedProperty clipProperty = DrawObject<AnimationClipSettingsScriptable>(mainProperty, P_CLIP);
-                AnimationClipSettingsScriptable clipSett = clipProperty.objectReferenceValue as AnimationClipSettingsScriptable;
+                var clipSett = DrawObject<AnimationClipSettingsScriptable>(P_CLIP);
 
                 bool isValid = clipSett != null && clipSett.clip != null;
                 mainProperty.FindPropertyRelative(P_VALID).boolValue = isValid;
@@ -46,8 +45,8 @@ namespace VurbiriEditor.Colonization
                     DrawButton(clipSett);
                    
                     SerializedProperty settingsProperty = mainProperty.FindPropertyRelative(P_SETTINGS);
-                    SerializedProperty damageProperty = mainProperty.FindPropertyRelative(P_DAMAGE);
                     SerializedProperty costProperty = settingsProperty.FindPropertyRelative(P_COST);
+                    SerializedProperty uiProperty = mainProperty.FindPropertyRelative(P_UI);
 
                     DrawLine(Color.gray);
                     EditorGUI.indentLevel++;
@@ -55,19 +54,20 @@ namespace VurbiriEditor.Colonization
                     EditorGUI.LabelField(_position, "Total Time", $"{clipSett.totalTime}");
                     DrawLabelAndSetValue(settingsProperty, P_DAMAGE_T, clipSett.damageTime);
                     DrawLabelAndSetValue(settingsProperty, P_REM_T, clipSett.totalTime - clipSett.damageTime);
-                    DrawLabelAndSetValue(mainProperty, P_RANGE, clipSett.range);
+                    DrawLabelAndSetValue(P_RANGE, clipSett.range);
                     DrawLabelAndSetValue(settingsProperty, P_ID_A, id);
                     EditorGUI.indentLevel--;
                     DrawLine(Color.gray);
 
-                    DrawBool(P_MOVE);
-                    DrawSelfIntSlider(damageProperty, 50, 250);
-
-                    Space(2f);
+                    if (DrawId(P_TARGET, typeof(TargetOfEffectId)) != TargetOfEffectId.Self)
+                    {
+                        Space();
+                        DrawBool(P_MOVE);
+                    }
+                    Space();
                     DrawSelfIntSlider(costProperty, 0, 3);
 
-                    SerializedProperty uiProperty = mainProperty.FindPropertyRelative(P_UI);
-                    uiProperty.FindPropertyRelative(P_DAMAGE).intValue = damageProperty.intValue;
+                    
                     uiProperty.FindPropertyRelative(P_COST).intValue = costProperty.intValue;
 
                     Space(2f);
@@ -75,7 +75,7 @@ namespace VurbiriEditor.Colonization
                     DrawObject<Sprite>(uiProperty, P_SPRITE, true);
 
                     Space(2f); _position.y += _height;
-                    EditorGUI.PropertyField(_position, settingsProperty.FindPropertyRelative(P_EFFECTS));
+                    EditorGUI.PropertyField(_position, mainProperty.FindPropertyRelative(P_EFFECTS));
                 }
 
                 EditorGUI.indentLevel--;
@@ -84,19 +84,7 @@ namespace VurbiriEditor.Colonization
             EditorGUI.indentLevel--;
             EditorGUI.EndProperty();
 
-            #region Local: DrawLabelAndSetValue<T>(..), DrawSelfIntSlider(..), DrawButton(...)
-            //=================================
-            void DrawLabelAndSetValue<T>(SerializedProperty parent, string name, T value)
-            {
-                _position.y += _height;
-                SerializedProperty property = parent.FindPropertyRelative(name);
-                if(value is float fValue)
-                    property.floatValue = fValue;
-                else if(value is int iValue)
-                    property.intValue = iValue;
-                EditorGUI.LabelField(_position, $"{property.displayName}", $"{value}");
-            }
-
+            #region Local: DrawSelfIntSlider(..), DrawButton(...)
             //=================================
             void DrawSelfIntSlider(SerializedProperty property, int min, int max)
             {
@@ -136,9 +124,11 @@ namespace VurbiriEditor.Colonization
                 AnimationClipSettingsScriptable clipSett = property.FindPropertyRelative(P_CLIP).objectReferenceValue as AnimationClipSettingsScriptable;
                 if (clipSett != null && clipSett.clip != null)
                 {
-                    SerializedProperty parentProperty = property.FindPropertyRelative(P_SETTINGS);
-                    SerializedProperty effectsProperty = parentProperty.FindPropertyRelative(P_EFFECTS);
-                    rate += 13.7f;
+                    rate += 12.6f;
+                    if (property.FindPropertyRelative(P_TARGET).intValue != TargetOfEffectId.Self)
+                        rate += 1.2f;
+
+                    SerializedProperty effectsProperty = property.FindPropertyRelative(P_EFFECTS);
                     if(effectsProperty.isExpanded)
                     {
                         rate += 2.4f;

@@ -11,8 +11,8 @@ namespace Vurbiri.Colonization.Actors
                 _skin.Idle();
             }
 
-            public override void Select() => _eventBus.TriggerActorSelect(_parent);
-            public override void Unselect(ISelectable newSelectable) => _eventBus.TriggerActorUnselect(_parent);
+            public override void Select() => _eventBus.TriggerActorSelect(_actor);
+            public override void Unselect(ISelectable newSelectable) => _eventBus.TriggerActorUnselect(_actor);
         }
     }
 }

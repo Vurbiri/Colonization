@@ -1,9 +1,10 @@
 namespace Vurbiri.Colonization
 {
     using Actors;
+    using Characteristics;
+    using Data;
     using Reactive.Collections;
     using System.Collections.Generic;
-    using Vurbiri.Colonization.Data;
 
 
     public partial class PlayerObjects

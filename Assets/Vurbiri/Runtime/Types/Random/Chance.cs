@@ -4,13 +4,10 @@ namespace Vurbiri
 {
     [System.Serializable]
     public struct Chance : System.IEquatable<Chance>
-#if UNITY_EDITOR
-        , ISerializationCallbackReceiver
-#endif
     {
         [SerializeField] private int _value;
+        [SerializeField] private int _negentropy;
 
-        private int _negentropy;
         private const int MAX_CHANCE = 100;
 
         public bool Roll
@@ -58,25 +55,8 @@ namespace Vurbiri
             return (value > 0 && (value >= 100 || Random.Range(0, 100) < value)) ? trueValue : falseValue;
         }
 
-#if UNITY_EDITOR
-        public void OnBeforeSerialize()
-        {
-
-            if (_value < 0) _value = 0;
-            if (_value > MAX_CHANCE) _value = MAX_CHANCE;
-
-            _negentropy = new System.Random().Next(MAX_CHANCE);
-
-        }
-
-        public void OnAfterDeserialize()
-        {
-            
-        }
-#endif
-
         public static implicit operator Chance(int value) => new(value);
-        public static explicit operator int(Chance chance) => chance._value;
+        //public static explicit operator int(Chance chance) => chance._value;
 
         public static Chance operator *(int value, Chance chance) => new(chance._value * value, chance._negentropy);
         public static Chance operator *(Chance chance, int value) => new(chance._value * value, chance._negentropy);

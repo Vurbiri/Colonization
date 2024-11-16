@@ -1,8 +1,9 @@
-using UnityEngine;
-using UnityEngine.UI;
-
 namespace Vurbiri.Colonization.UI
 {
+    using Characteristics;
+    using UnityEngine;
+    using UnityEngine.UI;
+
     public class CurrenciesPanel : MonoBehaviour
     {
         [SerializeField] private Id<PlayerId> _playerId;

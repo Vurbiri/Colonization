@@ -29,14 +29,6 @@ namespace Vurbiri
                 self[i] = value;
         }
 
-        public static int[] FillWithIndexes(this int[] self)
-        {
-            for (int i = 0; i < self.Length; i++)
-                self[i] = i;
-
-            return self;
-        }
-
         public static T[] ToArray<T>(this ICollection<T> self)
         {
             T[] arr = new T[self.Count];
@@ -74,19 +66,6 @@ namespace Vurbiri
             return enumerator.Current;
         }
 
-        public static T GetValue<T>(this ICollection<T> self, int index)
-        {
-            if (index < 0 || index >= self.Count)
-                throw new System.IndexOutOfRangeException();
-
-            IEnumerator<T> enumerator = self.GetEnumerator();
-            enumerator.Reset();
-            for (int i = 0; i <= index; i++)
-                enumerator.MoveNext();
-
-            return enumerator.Current;
-        }
-
         public static void Shuffle<T>(this IList<T> self)
         {
             for (int i = self.Count - 1, j; i > 0; i--)
@@ -95,7 +74,5 @@ namespace Vurbiri
                 (self[j], self[i]) = (self[i], self[j]);
             }
         }
-
-        public static bool IsCorrectIndex<T>(this T[,] self, Vector2Int index) => index.x >= 0 && index.x < self.GetLength(0) && index.y >= 0 && index.y < self.GetLength(1);
     }
 }

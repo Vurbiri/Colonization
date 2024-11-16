@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization.UI
         private void OnClick()
         {
             _parentGO.SetActive(false);
-            _currentActor.Skill(_idAttack);
+            _currentActor.UseSkill(_idAttack);
         }
 
         private void OnDestroy()

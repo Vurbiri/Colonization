@@ -1,5 +1,6 @@
 namespace Vurbiri.Colonization.Actors
 {
+    using Characteristics;
     using FSMSelectable;
     using System.Collections.Generic;
     using UnityEngine;
@@ -22,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
         protected GameplayEventBus _eventBus;
         protected float _extentsZ;
 
-        protected readonly ReactiveCollection<Effect> _effects = new();
+        protected readonly ReactiveCollection<ReactiveEffect> _effects = new();
         protected readonly StateMachineSelectable _stateMachine = new();
         protected List<ASkillState> _skillStates;
         #endregion
@@ -33,18 +34,27 @@ namespace Vurbiri.Colonization.Actors
         public Vector3 Position => _thisTransform.position;
         public bool CanAction => true;
 
-        public bool CanMove()
-        {
-            return _isMove.IsBaseValue;
-        }
+        public bool CanMove() => _isMove.IsValue;
+
         public void Move()
         {
             _stateMachine.SetState<MoveState>();
         }
 
-        public void Skill(int id)
+        public void UseSkill(int id)
         {
             _stateMachine.SetState(_skillStates[id]);
+        }
+
+
+        public void AddEffect(ReactiveEffect effect)
+        {
+            _effects.Add(effect);
+        }
+
+        public void ApplyEffect(AEffect effect)
+        {
+            _abilities.AddPerk(effect);
         }
 
         public virtual void Select()
@@ -70,9 +80,9 @@ namespace Vurbiri.Colonization.Actors
 
         private void OnEndTurn()
         {
-            _currentHP.BaseValue += _abilities.GetValue(ActorAbilityId.HPPerTurn);
-            _currentAP.BaseValue += _abilities.GetValue(ActorAbilityId.APPerTurn);
-            _isMove.IsBaseValue = true;
+            _currentHP.Value += _abilities.GetValue(ActorAbilityId.HPPerTurn);
+            _currentAP.Value += _abilities.GetValue(ActorAbilityId.APPerTurn);
+            _isMove.IsValue = true;
         }
 
         private void OnStartTurn()
@@ -81,14 +91,8 @@ namespace Vurbiri.Colonization.Actors
                 _effects[i].Next();
         }
 
-        private void AddEffect(EffectSettings effect)
-        {
-            _effects.Add(effect);
-        }
 
-
-
-        private void RedirectEvents(Effect item, Operation operation)
+        private void RedirectEvents(ReactiveEffect item, Operation operation)
         {
             if (operation == Operation.Add)
                 _abilities.AddPerk(item);

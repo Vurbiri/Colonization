@@ -1,13 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.UIElements;
-using VurbiriEditor;
-
-namespace Vurbiri.Colonization
+namespace VurbiriEditor.Colonization.Characteristics
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using UnityEditor;
+    using UnityEngine;
+    using UnityEngine.UIElements;
+    using Vurbiri;
+    using Vurbiri.Colonization;
+    using Vurbiri.Colonization.Characteristics;
+    using VurbiriEditor;
+
     public abstract class APlayerPerksEditor<T> : AEditorGetVE<T> where T : APlayerPerksEditor<T>
     {
         [SerializeField] private VisualTreeAsset _treePerksVT;
@@ -15,7 +18,7 @@ namespace Vurbiri.Colonization
 
         #region Consts
         private const string P_PERKS = "_perks", P_ARRAY = "_values", P_ID = "_id", P_TYPE = "_type";
-        private const string P_LEVEL = "_level", P_TARGET_OBJ = "_targetObject", P_TARGET_AB = "_targetAbility", P_TYPE_OP = "_typeOperation";
+        private const string P_LEVEL = "_level", P_TARGET_OBJ = "_targetObject", P_TARGET_AB = "_targetAbility", P_TYPE_OP = "_typeModifier";
         private const string P_POS = "_position", P_SPRITE = "_sprite", P_KEY_DESC = "_keyDescription";
         private const string P_VALUE = "_value", P_CHANCE = "_chance", P_PREV = "_prevPerk";
         private const string U_CONTAINER = "Container", U_LABEL = "Label";
@@ -67,7 +70,7 @@ namespace Vurbiri.Colonization
 
             Space();
             DrawInt(P_VALUE);
-            if (DrawId(P_TYPE_OP, typeof(TypeOperationId)) == TypeOperationId.RandomAdd)
+            if (DrawId(P_TYPE_OP, typeof(TypeModifierId)) == TypeModifierId.RandomAdd)
             {
                 EditorGUILayout.PropertyField(propertyPerk.FindPropertyRelative(P_CHANCE));
             }

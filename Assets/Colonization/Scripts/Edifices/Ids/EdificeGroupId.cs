@@ -1,7 +1,8 @@
-using System;
-
 namespace Vurbiri.Colonization
 {
+    using Characteristics;
+    using System;
+
     public class EdificeGroupId : AIdType<EdificeGroupId>
     {
         public const int None   = -1;

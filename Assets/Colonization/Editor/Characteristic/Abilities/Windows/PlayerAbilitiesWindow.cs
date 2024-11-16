@@ -1,9 +1,8 @@
-using UnityEditor;
-using UnityEngine;
-using Vurbiri.Colonization;
-
-namespace VurbiriEditor.Colonization
+namespace VurbiriEditor.Colonization.Characteristics
 {
+    using UnityEditor;
+    using UnityEngine;
+    using Vurbiri.Colonization.Characteristics;
     using static CONST_EDITOR;
 
     public class PlayerAbilitiesWindow : EditorWindow

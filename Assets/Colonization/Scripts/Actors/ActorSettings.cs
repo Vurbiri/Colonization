@@ -1,5 +1,6 @@
 namespace Vurbiri.Colonization.Actors
 {
+    using Characteristics;
     using Collections;
     using UnityEngine;
 

@@ -1,6 +1,7 @@
 namespace Vurbiri.Colonization
 {
     using Actors;
+    using Characteristics;
     using Newtonsoft.Json;
     using Reactive;
     using System.Collections;
@@ -45,7 +46,7 @@ namespace Vurbiri.Colonization
             Ability<PlayerAbilityId> exchangeRate = _obj.ExchangeRate;
 
             for (int i = 0; i < CurrencyId.CountMain; i++)
-                _exchangeRate.Set(i, exchangeRate.NextValue());
+                _exchangeRate.Set(i, exchangeRate.NextValue);
 
         }
 

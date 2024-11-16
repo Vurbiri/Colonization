@@ -24,123 +24,89 @@ namespace VurbiriEditor
 
         protected void Space(float ratio = 1f) => _position.y += _ySpace * ratio;
 
-        protected void DrawBool(SerializedProperty parent, string name)
+        protected bool DrawBool(SerializedProperty parent, string name)
         {
             _position.y += _height;
             SerializedProperty property = parent.FindPropertyRelative(name);
-            property.boolValue = EditorGUI.Toggle(_position, property.displayName, property.boolValue);
+            return property.boolValue = EditorGUI.Toggle(_position, property.displayName, property.boolValue);
         }
-        protected void DrawBool(string name)
-        {
-            _position.y += _height;
-            SerializedProperty property = _mainProperty.FindPropertyRelative(name);
-            property.boolValue = EditorGUI.Toggle(_position, property.displayName, property.boolValue);
-        }
+        protected bool DrawBool(string name) => DrawBool(_mainProperty, name);
 
-        protected void DrawInt(SerializedProperty parent, string name)
+        protected int DrawInt(SerializedProperty parent, string name)
         {
             _position.y += _height;
             SerializedProperty property = parent.FindPropertyRelative(name);
-            property.intValue = EditorGUI.IntField(_position, property.displayName, property.intValue);
+            return property.intValue = EditorGUI.IntField(_position, property.displayName, property.intValue);
         }
-        protected void DrawInt(string name)
-        {
-            _position.y += _height;
-            SerializedProperty property = _mainProperty.FindPropertyRelative(name);
-            property.intValue = EditorGUI.IntField(_position, property.displayName, property.intValue);
-        }
+        protected int DrawInt(string name) => DrawInt(_mainProperty, name);
 
-        protected void DrawIntSlider(SerializedProperty parent, string name, int min, int max)
+        protected int DrawIntSlider(SerializedProperty parent, string name, int min, int max)
         {
             _position.y += _height;
             SerializedProperty property = parent.FindPropertyRelative(name);
             int value = Mathf.Clamp(property.intValue, min, max);
-            property.intValue = EditorGUI.IntSlider(_position, property.displayName, value, min, max);
+            return property.intValue = EditorGUI.IntSlider(_position, property.displayName, value, min, max);
         }
-        protected void DrawIntSlider(string name, int min, int max)
-        {
-            _position.y += _height;
-            SerializedProperty property = _mainProperty.FindPropertyRelative(name);
-            int value = Mathf.Clamp(property.intValue, min, max);
-            property.intValue = EditorGUI.IntSlider(_position, property.displayName, value, min, max);
-        }
+        protected int DrawIntSlider(string name, int min, int max) => DrawIntSlider(_mainProperty, name, min, max);
 
-        protected void DrawIntPopup(SerializedProperty parent, string name, string[] displayedOptions, int[] optionValues)
+        protected int DrawIntPopup(SerializedProperty parent, string name, string[] displayedOptions, int[] optionValues)
         {
             _position.y += _height;
             SerializedProperty property = parent.FindPropertyRelative(name);
-            property.intValue = EditorGUI.IntPopup(_position, property.displayName, property.intValue, displayedOptions, optionValues);
+            return property.intValue = EditorGUI.IntPopup(_position, property.displayName, property.intValue, displayedOptions, optionValues);
         }
-        protected void DrawIntPopup(string name, string[] displayedOptions, int[] optionValues)
-        {
-            _position.y += _height;
-            SerializedProperty property = _mainProperty.FindPropertyRelative(name);
-            property.intValue = EditorGUI.IntPopup(_position, property.displayName, property.intValue, displayedOptions, optionValues);
-        }
+        protected int DrawIntPopup(string name, string[] displayedOptions, int[] optionValues) => DrawIntPopup(_mainProperty, name, displayedOptions, optionValues);
 
-        protected void DrawPopup(SerializedProperty parent, string name, string[] displayedOptions)
+        protected int DrawPopup(SerializedProperty parent, string name, string[] displayedOptions)
         {
             _position.y += _height;
             SerializedProperty property = parent.FindPropertyRelative(name);
-            property.intValue = EditorGUI.Popup(_position, property.displayName, property.intValue, displayedOptions);
+            return property.intValue = EditorGUI.Popup(_position, property.displayName, property.intValue, displayedOptions);
         }
-        protected void DrawPopup(string name, string[] displayedOptions)
-        {
-            _position.y += _height;
-            SerializedProperty property = _mainProperty.FindPropertyRelative(name);
-            property.intValue = EditorGUI.Popup(_position, property.displayName, property.intValue, displayedOptions);
-        }
+        protected int DrawPopup(string name, string[] displayedOptions) => DrawPopup(_mainProperty, name, displayedOptions);
 
-        protected void DrawStringPopup(SerializedProperty parent, string name, string[] displayedOptions)
+        protected String DrawStringPopup(SerializedProperty parent, string name, string[] displayedOptions)
         {
             _position.y += _height;
             SerializedProperty property = parent.FindPropertyRelative(name);
             int index = Array.IndexOf(displayedOptions, property.stringValue);
-            property.stringValue = displayedOptions[EditorGUI.Popup(_position, property.displayName, index, displayedOptions)];
+            index = EditorGUI.Popup(_position, property.displayName, index, displayedOptions);
+            return property.stringValue = displayedOptions[index];
         }
-        protected void DrawStringPopup(string name, string[] displayedOptions)
-        {
-            _position.y += _height;
-            SerializedProperty property = _mainProperty.FindPropertyRelative(name);
-            int index = Array.IndexOf(displayedOptions, property.stringValue);
-            property.stringValue = displayedOptions[EditorGUI.Popup(_position, property.displayName, index, displayedOptions)];
-        }
+        protected String DrawStringPopup(string name, string[] displayedOptions) => DrawStringPopup(_mainProperty, name, displayedOptions);
 
-        protected void DrawId(SerializedProperty parent, string name, Type t_field, bool isNone = false)
+        protected int DrawId(SerializedProperty parent, string name, Type t_field, bool isNone = false)
         {
             var (names, values) = GetNamesAndValues(t_field, isNone);
-            DrawIntPopup(parent, name, names, values);
+            return DrawIntPopup(parent, name, names, values);
         }
-        protected void DrawId(string name, Type t_field, bool isNone = false)
-        {
-            var (names, values) = GetNamesAndValues(t_field, isNone);
-            DrawIntPopup(_mainProperty, name, names, values);
-        }
+        protected int DrawId(string name, Type t_field, bool isNone = false) => DrawId(_mainProperty, name, t_field, isNone);
 
-        protected SerializedProperty DrawObject<T>(SerializedProperty parent, string name, bool isName = false)
+        protected T DrawObject<T>(SerializedProperty parent, string name, bool isName = false) where T : UnityEngine.Object
         {
             _position.y += _height;
             SerializedProperty property = parent.FindPropertyRelative(name);
             if (isName)
-            {
-                property.objectReferenceValue = EditorGUI.ObjectField(_position, property.displayName, property.objectReferenceValue, typeof(T), false);
-                return property;
-            }
-            property.objectReferenceValue = EditorGUI.ObjectField(_position, property.objectReferenceValue, typeof(T), false);
-            return property;
+                return (T)(property.objectReferenceValue = EditorGUI.ObjectField(_position, property.displayName, property.objectReferenceValue, typeof(T), false));
+            return (T)(property.objectReferenceValue = EditorGUI.ObjectField(_position, property.objectReferenceValue, typeof(T), false));
         }
-        protected SerializedProperty DrawObject<T>(string name, bool isName = false)
+        protected T DrawObject<T>(string name, bool isName = false) where T : UnityEngine.Object => DrawObject<T>(_mainProperty, name, isName);
+
+        protected void DrawLabelAndSetValue<T>(SerializedProperty parent, string name, T value)
         {
             _position.y += _height;
-            SerializedProperty property = _mainProperty.FindPropertyRelative(name);
-            if (isName)
-            {
-                property.objectReferenceValue = EditorGUI.ObjectField(_position, property.displayName, property.objectReferenceValue, typeof(T), false);
-                return property;
-            }
-            property.objectReferenceValue = EditorGUI.ObjectField(_position, property.objectReferenceValue, typeof(T), false);
-            return property;
+            SerializedProperty property = parent.FindPropertyRelative(name);
+
+            if (value is float fValue)
+                property.floatValue = fValue;
+            else if (value is int iValue)
+                property.intValue = iValue;
+            else if (value is bool bValue)
+                property.boolValue = bValue;
+
+            EditorGUI.LabelField(_position, $"{property.displayName}", $"{value}");
         }
+        protected void DrawLabelAndSetValue<T>(string name, T value) => DrawLabelAndSetValue<T>(_mainProperty, name, value);
 
 
         protected void DrawLine(Color color)
@@ -179,9 +145,9 @@ namespace VurbiriEditor
 
             FieldInfo[] fields = t_field.GetFields(BindingFlags.Public | BindingFlags.Static);
 
-            int count = fields.Length + (isNone ? 1 : 0);
-            List<string> names = new(count);
-            List<int> values = new(count);
+            int count = fields.Length;
+            List<string> names = new(count + 1);
+            List<int> values = new(count + 1);
 
             if (isNone)
             {

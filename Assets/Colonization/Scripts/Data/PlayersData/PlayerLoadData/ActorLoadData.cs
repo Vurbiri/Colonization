@@ -1,5 +1,7 @@
 namespace Vurbiri.Colonization
 {
+    using Characteristics;
+
     public readonly struct ActorLoadData
 	{
         public readonly int id;
@@ -7,7 +9,7 @@ namespace Vurbiri.Colonization
         public readonly int currentHP;
         public readonly int currentAP;
 		public readonly int move;
-		public readonly Effect[] effects;
+		public readonly ReactiveEffect[] effects;
 
 		public ActorLoadData(int[][] actorData)
         {
@@ -18,7 +20,7 @@ namespace Vurbiri.Colonization
             move = actorData[1][3];
 
             int count = actorData.Length - 2;
-            effects = new Effect[count];
+            effects = new ReactiveEffect[count];
             for (int i = 0, j = 2; i < count; i++, j++)
                 effects[i] = new(actorData[j]);
         }

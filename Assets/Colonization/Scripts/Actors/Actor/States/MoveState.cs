@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Vurbiri.Colonization.Actors
 {
+    using Characteristics;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
     using static CONST;
 
     public abstract partial class Actor
@@ -15,25 +15,25 @@ namespace Vurbiri.Colonization.Actors
             private WaitActivate _waitHexagon;
             private Hexagon _targetHex;
             private Coroutine _coroutineAction;
-            private Ability<ActorAbilityId> _move;
+            private readonly Ability<ActorAbilityId> _move;
 
             public MoveState(float speed, Actor parent) : base(parent, 0)
             {
                 _speed = speed;
-                _parentTransform = _parent._thisTransform;
-                _move = _parent._isMove;
+                _parentTransform = _actor._thisTransform;
+                _move = _actor._isMove;
             }
 
             public override void Enter()
             {
-                _coroutineAction = _parent.StartCoroutine(SelectHexagon_Coroutine());
+                _coroutineAction = _actor.StartCoroutine(SelectHexagon_Coroutine());
             }
 
             public override void Exit()
             {
                 if (_coroutineAction != null)
                 {
-                    _parent.StopCoroutine(_coroutineAction);
+                    _actor.StopCoroutine(_coroutineAction);
                     _coroutineAction = null;
                 }
 
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Unselect(ISelectable newSelectable)
             {
-                _eventBus.TriggerActorUnselect(_parent);
+                _eventBus.TriggerActorUnselect(_actor);
 
                 if (_waitHexagon == null)
                     return;
@@ -66,14 +66,14 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
                 }
 
-                Hexagon currentHex = _parent._currentHex;
+                Hexagon currentHex = _actor._currentHex;
 
                 _parentTransform.localRotation = ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
                 Vector3 start = currentHex.Position, end = _targetHex.Position;
 
                 currentHex.ExitActor();
-                _parent._currentHex = currentHex = _targetHex;
-                currentHex.EnterActor(_parent);
+                _actor._currentHex = currentHex = _targetHex;
+                currentHex.EnterActor(_actor);
 
                 _skin.Move();
 
@@ -86,14 +86,14 @@ namespace Vurbiri.Colonization.Actors
                 }
 
                 _parentTransform.localPosition = end;
-                _move.IsBaseValue = false;
+                _move.IsValue = false;
 
                 Reset();
             }
 
             private IEnumerator SelectHexagon_Coroutine()
             {
-                Hexagon currentHex = _parent._currentHex;
+                Hexagon currentHex = _actor._currentHex;
 
                 List<Hexagon> empty = new(6);
                 foreach (var hex in currentHex.Neighbors)
@@ -123,7 +123,7 @@ namespace Vurbiri.Colonization.Actors
                 foreach (var hex in empty)
                     hex.SetUnselectable();
 
-                _coroutineAction = _parent.StartCoroutine(Move_Coroutine());
+                _coroutineAction = _actor.StartCoroutine(Move_Coroutine());
             }
         }
     }

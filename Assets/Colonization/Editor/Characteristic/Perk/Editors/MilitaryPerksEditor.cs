@@ -1,9 +1,9 @@
-using UnityEditor;
-using UnityEngine.UIElements;
-using Vurbiri.Colonization;
-
-namespace VurbiriEditor.Colonization
+namespace VurbiriEditor.Colonization.Characteristics
 {
+    using UnityEditor;
+    using UnityEngine.UIElements;
+    using Vurbiri.Colonization.Characteristics;
+
     [CustomEditor(typeof(MilitaryPerksScriptable), true), CanEditMultipleObjects]
     public class MilitaryPerksEditor : APlayerPerksEditor<MilitaryPerksEditor>
     {

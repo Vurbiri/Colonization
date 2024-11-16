@@ -1,5 +1,6 @@
 namespace Vurbiri.Colonization.Actors
 {
+    using Characteristics;
     using UnityEngine;
     using static CONST;
 
@@ -16,8 +17,11 @@ namespace Vurbiri.Colonization.Actors
 
             _currentHP = _abilities.GetAbility(ActorAbilityId.CurrentHP);
             _currentHP.Clamp = CurrentHPCamp;
+            _currentHP.Value = _abilities.GetValue(ActorAbilityId.MaxHP);
+
             _currentAP = _abilities.GetAbility(ActorAbilityId.CurrentAP);
             _currentAP.Clamp = CurrentAPCamp;
+
             _isMove = _abilities.GetAbility(ActorAbilityId.IsMove);
 
             _thisTransform = transform;
@@ -45,9 +49,9 @@ namespace Vurbiri.Colonization.Actors
         {
             Init(settings, owner, startHex, eventBus);
 
-            _currentHP.BaseValue = data.currentHP;
-            _currentAP.BaseValue = data.currentAP;
-            _isMove.BaseValue    = data.move;
+            _currentHP.Value = data.currentHP;
+            _currentAP.Value = data.currentAP;
+            _isMove.Value    = data.move;
 
             int count = data.effects.Length;
             for (int i = 0; i < count; i++)

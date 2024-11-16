@@ -1,10 +1,11 @@
 namespace Vurbiri.Colonization
 {
     using Actors;
+    using Characteristics;
+    using Collections;
     using Data;
     using System;
     using UnityEngine;
-    using Vurbiri.Collections;
     using static PlayerId;
 
     public class Players : IDisposable
