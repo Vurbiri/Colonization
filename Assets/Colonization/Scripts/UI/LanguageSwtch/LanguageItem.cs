@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         private int _id = -1;
         private Language _localization;
         private SettingsData _settings;
-        private Unsubscriber<Language> _unsubscriber;
+        private IUnsubscriber _unsubscriber;
 
         private void Awake()
         {

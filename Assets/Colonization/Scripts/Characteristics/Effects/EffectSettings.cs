@@ -1,15 +1,16 @@
+using UnityEngine;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    using UnityEngine;
-
     [System.Serializable]
     public class EffectSettings
     {
-        [SerializeField] private int _targetAbility;
         [SerializeField] private int _usedAbility;
         [SerializeField] private int _counteredAbility;
         [SerializeField] private int _targetActor;
+        [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
+        [SerializeField] private bool _isReflect;
         [SerializeField] private int _value;
         [SerializeField] private bool _isNegative;
         [SerializeField] private int _duration;
@@ -31,6 +32,8 @@ namespace Vurbiri.Colonization.Characteristics
             {
                 if (isSelf)
                     return new TemporarySelfEffect (_targetAbility, _isNegative, _typeModifier, _value, _duration);
+                if (_isReflect)
+                    return new TemporaryReflectEffect(_targetAbility, _isNegative, _typeModifier, _value, _duration);
 
                 return new TemporaryTargetEffect(_targetAbility, _isNegative, _typeModifier, _value, _duration);
             }
@@ -39,12 +42,16 @@ namespace Vurbiri.Colonization.Characteristics
             {
                 if (isSelf)
                     return new PermanentSelfEffect(_targetAbility, _isNegative, _typeModifier, _value);
+                if (_isReflect)
+                    return new PermanentReflectEffect(_targetAbility, _isNegative, _typeModifier, _value);
 
                 return new PermanentTargetEffect(_targetAbility, _isNegative, _typeModifier, _value);
             }
 
             if (isSelf)
                 return new PermanentUsedSelfEffect(_targetAbility, _isNegative, _usedAbility, _counteredAbility, _typeModifier, _value);
+            if (_isReflect)
+                return new PermanentUsedReflectEffect(_targetAbility, _isNegative, _usedAbility, _counteredAbility, _typeModifier, _value);
 
             return new PermanentUsedTargetEffect(_targetAbility, _isNegative, _usedAbility, _counteredAbility, _typeModifier, _value);
         }

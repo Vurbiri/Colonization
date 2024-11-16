@@ -12,7 +12,7 @@ namespace Vurbiri.UI
         [SerializeField] protected Files _file;
 
         protected string _key;
-        protected Unsubscriber<Language> _subscribe;
+        protected IUnsubscriber _subscribe;
 
         public TMP_Text Text => _text;
 

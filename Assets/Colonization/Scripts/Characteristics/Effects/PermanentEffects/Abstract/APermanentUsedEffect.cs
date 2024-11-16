@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class APermanentUsedEffect : AEffect
@@ -8,6 +6,7 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly Id<ActorAbilityId> _counteredAbility;
         private readonly AbilityValue _abilityValue;
         private readonly bool _isNegative;
+
         public APermanentUsedEffect(int targetAbility, bool isNegative, int usedAbility, int counteredAbility, Id<TypeModifierId> typeModifier, int value) :
                                base(targetAbility, typeModifier)
         {
@@ -17,12 +16,11 @@ namespace Vurbiri.Colonization.Characteristics
             _isNegative = isNegative;
         }
 
-        public override void Init(AbilitiesSet<ActorAbilityId> self, AbilitiesSet<ActorAbilityId> target) 
+        protected void Init(AbilitiesSet<ActorAbilityId> self, AbilitiesSet<ActorAbilityId> target) 
         {
             int value = self.ApplyValue(_usedAbility, _typeModifier, _abilityValue);
-            value = Mathf.Clamp(value - target.GetValue(_counteredAbility), 0 , int.MinValue);
+            value = System.Math.Max(value - target.GetValue(_counteredAbility), 0);
             _value = _isNegative ? -value : value;
         }
-
     }
 }

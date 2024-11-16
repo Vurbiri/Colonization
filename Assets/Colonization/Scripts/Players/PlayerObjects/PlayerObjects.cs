@@ -1,12 +1,11 @@
+using System.Collections.Generic;
+using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.Data;
+using Vurbiri.Reactive.Collections;
+
 namespace Vurbiri.Colonization
 {
-    using Actors;
-    using Characteristics;
-    using Data;
-    using Reactive.Collections;
-    using System.Collections.Generic;
-
-
     public partial class PlayerObjects
     {
         private readonly Currencies _resources;
@@ -63,9 +62,9 @@ namespace Vurbiri.Colonization
             }
 
             data.CurrenciesBind(_resources, !isLoad);
-            data.EdificesBind(_edifices.values, !isLoad);
+            data.EdificesBind(_edifices.values);
             data.RoadsBind(_roads, !isLoad);
-            data.WarriorsBind(_warriors, !isLoad);
+            data.WarriorsBind(_warriors);
         }
     }
 }

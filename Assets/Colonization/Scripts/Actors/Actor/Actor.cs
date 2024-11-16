@@ -1,11 +1,11 @@
+using System.Collections.Generic;
+using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.FSMSelectable;
+using Vurbiri.Reactive.Collections;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using Characteristics;
-    using FSMSelectable;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using Vurbiri.Reactive.Collections;
-
     [RequireComponent(typeof(BoxCollider))]
     public abstract partial class Actor : AReactiveElementMono<Actor>, ISelectable
     {
@@ -18,12 +18,12 @@ namespace Vurbiri.Colonization.Actors
         protected Hexagon _currentHex;
 
         protected AbilitiesSet<ActorAbilityId> _abilities;
+        protected EffectsSet _effects;
         protected ActorSkin _skin;
         protected Transform _thisTransform;
         protected GameplayEventBus _eventBus;
         protected float _extentsZ;
 
-        protected readonly ReactiveCollection<ReactiveEffect> _effects = new();
         protected readonly StateMachineSelectable _stateMachine = new();
         protected List<ASkillState> _skillStates;
         #endregion
@@ -32,6 +32,7 @@ namespace Vurbiri.Colonization.Actors
         public Id<PlayerId> Owner => _owner;
         public int ActionPoint => _currentAP.Value;
         public Vector3 Position => _thisTransform.position;
+        public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
         public bool CanAction => true;
 
         public bool CanMove() => _isMove.IsValue;
@@ -47,15 +48,8 @@ namespace Vurbiri.Colonization.Actors
         }
 
 
-        public void AddEffect(ReactiveEffect effect)
-        {
-            _effects.Add(effect);
-        }
-
-        public void ApplyEffect(AEffect effect)
-        {
-            _abilities.AddPerk(effect);
-        }
+        public int AddEffect(ReactiveEffect effect) => _effects.Add(effect);
+        public int ApplyEffect(AEffect effect) => _abilities.AddPerk(effect);
 
         public virtual void Select()
         {
@@ -87,18 +81,12 @@ namespace Vurbiri.Colonization.Actors
 
         private void OnStartTurn()
         {
-            for (int i = _effects.Count - 1; i >= 0; i--)
-                _effects[i].Next();
+            _effects.Next();
         }
 
 
         private void RedirectEvents(ReactiveEffect item, Operation operation)
         {
-            if (operation == Operation.Add)
-                _abilities.AddPerk(item);
-            else if (operation == Operation.Remove)
-                _abilities.RemovePerk(item);
-
             actionThisChange?.Invoke(this, Operation.Change);
         }
 

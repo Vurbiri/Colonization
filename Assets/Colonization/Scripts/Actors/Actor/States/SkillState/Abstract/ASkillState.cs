@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization.Actors
             protected readonly int _idAnimation;
             protected readonly int _cost;
             protected readonly IReadOnlyList<AEffect> _effects;
+            protected readonly int _countEffects;
             protected readonly Transform _parentTransform;
             
             protected Actor _target;
@@ -23,6 +24,7 @@ namespace Vurbiri.Colonization.Actors
                 _idAnimation = settings.idAnimation;
                 _cost = settings.cost;
                 _effects = effects;
+                _countEffects = _effects.Count;
                 _parentTransform = _actor._thisTransform;
                 _waitTargetSkillAnimation = new(settings.damageTime);
                 _waitEndSkillAnimation = new(settings.remainingTime);
@@ -61,6 +63,10 @@ namespace Vurbiri.Colonization.Actors
             {
                 _skin.Skill(_idAnimation);
                 yield return _waitTargetSkillAnimation;
+
+                //for (int i = 0; i < _countEffects; i++)
+                //    _effects[i].Apply(_actor, _target);
+                
                 yield return _waitEndSkillAnimation;
             }
 

@@ -1,7 +1,7 @@
+using Vurbiri.Colonization.FSMSelectable;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using FSMSelectable;
-
     public abstract partial class Actor
     {
         public class AState : ASelectableState

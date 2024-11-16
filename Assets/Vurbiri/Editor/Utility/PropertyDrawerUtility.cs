@@ -1,28 +1,30 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
+using Vurbiri;
+
 namespace VurbiriEditor
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using UnityEditor;
-    using UnityEngine;
-    using Vurbiri;
-
     public class PropertyDrawerUtility : PropertyDrawer
     {
         protected SerializedProperty _mainProperty;
         protected Rect _position;
         protected float _height, _ySpace;
 
-        public override void OnGUI(Rect mainPosition, SerializedProperty mainProperty, GUIContent label)
+        public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
         {
             _mainProperty = mainProperty;
             _ySpace = EditorGUIUtility.standardVerticalSpacing;
             _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-            mainPosition.height = EditorGUIUtility.singleLineHeight;
-            _position = mainPosition;
+            position.height = EditorGUIUtility.singleLineHeight;
+            _position = position;
         }
 
         protected void Space(float ratio = 1f) => _position.y += _ySpace * ratio;
+
+        protected bool Foldout(GUIContent label) => _mainProperty.isExpanded = EditorGUI.Foldout(_position, _mainProperty.isExpanded, label);
 
         protected bool DrawBool(SerializedProperty parent, string name)
         {
@@ -108,7 +110,6 @@ namespace VurbiriEditor
         }
         protected void DrawLabelAndSetValue<T>(string name, T value) => DrawLabelAndSetValue<T>(_mainProperty, name, value);
 
-
         protected void DrawLine(Color color)
         {
             Rect size = _position;
@@ -168,6 +169,16 @@ namespace VurbiriEditor
             }
 
             return (names.ToArray(), values.ToArray());
+        }
+
+        protected int IdFromLabel(GUIContent label)
+        {
+            string[] strings = label.text.Split(' ');
+            int id = -1;
+            if (strings.Length == 2)
+                id = int.Parse(strings[1]);
+
+            return id;
         }
     }
 }

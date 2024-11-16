@@ -1,11 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
+using static Vurbiri.Colonization.CONST;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using Vurbiri.Colonization.Characteristics;
-    using static CONST;
-
     public abstract partial class Actor
     {
         public class AttackState : ASkillTargetState

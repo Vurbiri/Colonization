@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.UI;
+using static Vurbiri.Colonization.Actors.Actor;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    using Actors;
-    using System;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using Vurbiri.Colonization.UI;
-    using static Actors.Actor;
-
     [System.Serializable]
     public partial class Skills
     {
@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private SkillSettings[] _skillsSettings;
         
         [NonSerialized] private List<SkillUI> _skillsUI;
-        [NonSerialized] private List<List<AEffect>> _effects;
+        [NonSerialized] private AEffect[][] _effects;
 
         public MoveState GetMoveSate(Actor parent) => new(_speedWalk, parent);
 
@@ -23,23 +23,24 @@ namespace Vurbiri.Colonization.Characteristics
         {
             int count = _skillsSettings.Length;
             List<ASkillState> skillStates = new(count);
-            _effects ??= new(count);
+            _effects ??= new AEffect[count][];
 
-            SkillSettings skill; List<AEffect> effectsSkill;
+            SkillSettings skill; AEffect[] effectsSkill;
             for (int i = 0, id = 0; i < count; i++)
             {
                 skill = _skillsSettings[i];
                 if (skill == null || !skill.isValid)
                     throw new ArgumentNullException("SkillSettings и/или AnimationClipSettings равны null!");
 
-                effectsSkill = _effects[i];
+
+                effectsSkill = _effects[id];
                 if(effectsSkill == null)
                 {
                     int countEffects = skill.effects.Length;
-                    effectsSkill = new(countEffects);
+                    effectsSkill = new AEffect[countEffects];
                     for (int j = 0; j < countEffects; j++)
-                        effectsSkill.Add(skill.effects[j].CreateEffect());
-                    _effects.Add(effectsSkill);
+                        effectsSkill[j] = skill.effects[j].CreateEffect();
+                    _effects[id] = effectsSkill;
                 }
 
                 if (skill.target == TargetOfEffectId.Self)

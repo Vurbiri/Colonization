@@ -1,9 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
+using Vurbiri.Colonization.Characteristics;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using Vurbiri.Colonization.Characteristics;
-
     public abstract partial class Actor
 	{
 		public class SpellState : ASkillTargetState

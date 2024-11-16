@@ -2,7 +2,7 @@ using System;
 
 namespace Vurbiri.Reactive.Collections
 {
-    public class UnsubscriberCollection<T>
+    public class UnsubscriberCollection<T> : IUnsubscriber
     {
         private IReactiveCollection<T> _reactive;
         private Action<T, Operation> _listener;
@@ -13,13 +13,11 @@ namespace Vurbiri.Reactive.Collections
             _listener = listener;
         }
 
-        public UnsubscriberCollection<T> Unsubscribe()
+        public void Unsubscribe()
         {
             _reactive?.Unsubscribe(_listener);
             _reactive = null;
             _listener = null;
-
-            return null;
         }
     }
 }

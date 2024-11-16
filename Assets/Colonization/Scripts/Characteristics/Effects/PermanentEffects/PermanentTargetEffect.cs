@@ -1,12 +1,12 @@
+using Vurbiri.Colonization.Actors;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    using Actors;
-
-    public class PermanentTargetEffect : PermanentSelfEffect
+    public class PermanentTargetEffect : AEffect
     {
-        public PermanentTargetEffect(int targetAbility, bool isNegative, Id<TypeModifierId> typeModifier, int value) :
-                                base(targetAbility, isNegative, typeModifier, value)
+        public PermanentTargetEffect(int targetAbility, bool isNegative, Id<TypeModifierId> typeModifier, int value) : base(targetAbility, typeModifier)
         {
+            _value = isNegative ? -value : value;
         }
 
         public override void Apply(Actor self, Actor target) => target.ApplyEffect(this);

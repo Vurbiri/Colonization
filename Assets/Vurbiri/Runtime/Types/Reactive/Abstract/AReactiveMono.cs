@@ -7,14 +7,14 @@ namespace Vurbiri.Reactive
     {
         protected Action<T> EventThisChange;
 
-        public Unsubscriber<T> Subscribe(Action<T> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<T> action, bool calling = true)
         {
             EventThisChange -= action;
             EventThisChange += action;
             if (calling && action != null) 
                 Callback(action);
 
-            return new(this, action);
+            return new Unsubscriber<T>(this, action);
         }
 
         public void Unsubscribe(Action<T> action) => EventThisChange -= action;

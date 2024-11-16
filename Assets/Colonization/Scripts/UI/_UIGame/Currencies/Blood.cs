@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private RectTransform _thisRectTransform;
 
-        private Unsubscriber<int> _unsubCount, _unsubMax;
+        private Unsubscribers _unsubscribers = new(2);
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
@@ -21,8 +21,8 @@ namespace Vurbiri.Colonization.UI
             _popup.Init(offsetPopup);
             _thisRectTransform.localPosition = position;
 
-            _unsubCount = count.Subscribe(CurrencyId.Blood, SetValue);
-            _unsubMax = max.Subscribe((v) => _maxTMP.text = v.ToString());
+            _unsubscribers += count.Subscribe(CurrencyId.Blood, SetValue);
+            _unsubscribers += max.Subscribe((v) => _maxTMP.text = v.ToString());
         }
 
         private void SetValue(int count)
@@ -33,8 +33,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            _unsubCount?.Unsubscribe();
-            _unsubMax?.Unsubscribe();
+            _unsubscribers.Unsubscribe();
         }
 
 #if UNITY_EDITOR

@@ -1,13 +1,13 @@
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using Vurbiri.Colonization.Actors;
+using Vurbiri.Reactive;
+using Vurbiri.Reactive.Collections;
+using static Vurbiri.Colonization.Data.JSON_KEYS;
+
 namespace Vurbiri.Colonization.Data
 {
-    using Newtonsoft.Json;
-    using Reactive;
-    using Reactive.Collections;
-    using System;
-    using System.Collections.Generic;
-    using Vurbiri.Colonization.Actors;
-    using static JSON_KEYS;
-
     [JsonObject(MemberSerialization.OptIn)]
     public class PlayerData : IReactive<PlayerData>, IDisposable
     {
@@ -24,10 +24,7 @@ namespace Vurbiri.Colonization.Data
         [JsonProperty(P_PERKS)]
         private int[] _perks;
 
-        private readonly List<Unsubscriber<int>> _unsubscribersResources = new(CurrencyId.CountAll);
-        private readonly List<UnsubscriberList<Crossroad>> _unsubscriberEdifices = new(EdificeGroupId.Count);
-        private Unsubscriber<int[][][]> _unsubscriberRoads;
-        private UnsubscriberCollection<Actor> _unsubscriberWarriors;
+        private Unsubscribers _unsubscribers = new(CurrencyId.CountAll + EdificeGroupId.Count + 2);
 
         private Action<PlayerData> actionThisChange;
 
@@ -55,17 +52,17 @@ namespace Vurbiri.Colonization.Data
             for (int i = 0; i < CurrencyId.Count; i++)
             {
                 int index = i;
-                _unsubscribersResources.Add(currencies.Subscribe(i, v => _resources[index] = v, calling));
+                _unsubscribers += currencies.Subscribe(i, v => _resources[index] = v, calling);
             }
         }
-        public void EdificesBind(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive, bool calling)
+        public void EdificesBind(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive)
         {
             for(int i = 0; i < EdificeGroupId.Count; i++)
-                EdificesBind(edificesReactive[i], _edifices[i], calling);
+                EdificesBind(edificesReactive[i], _edifices[i]);
         }
         public void RoadsBind(IReactive<int[][][]> roadsReactive, bool calling)
-        { 
-            _unsubscriberRoads = roadsReactive.Subscribe(OnRoads, calling);
+        {
+            _unsubscribers += roadsReactive.Subscribe(OnRoads, calling);
 
             #region Local OnRoads(...)
             //==============================
@@ -76,9 +73,9 @@ namespace Vurbiri.Colonization.Data
             }
             #endregion
         }
-        public void WarriorsBind(IReactiveCollection<Actor> warriorsReactive, bool calling)
+        public void WarriorsBind(IReactiveCollection<Actor> warriorsReactive)
         {
-            _unsubscriberWarriors = warriorsReactive.Subscribe(OnWarriors, calling);
+            _unsubscribers += warriorsReactive.Subscribe(OnWarriors);
 
             #region Local OnWarriors(...)
             //==============================
@@ -104,7 +101,7 @@ namespace Vurbiri.Colonization.Data
             #endregion
         }
 
-        public Unsubscriber<PlayerData> Subscribe(Action<PlayerData> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<PlayerData> action, bool calling = true)
         {
             actionThisChange -= action ?? throw new ArgumentNullException("action");
 
@@ -112,26 +109,19 @@ namespace Vurbiri.Colonization.Data
             if (calling)
                 action(this);
 
-            return new(this, action);
+            return new Unsubscriber<PlayerData>(this, action);
         }
 
         public void Unsubscribe(Action<PlayerData> action) => actionThisChange -= action ?? throw new ArgumentNullException("action");
 
         public void Dispose()
         {
-            foreach (var unsubscriber in _unsubscribersResources)
-                unsubscriber?.Unsubscribe();
-
-            foreach (var unsubscriber in _unsubscriberEdifices)
-                unsubscriber?.Unsubscribe();
-
-            _unsubscriberRoads?.Unsubscribe();
-            _unsubscriberWarriors?.Unsubscribe();
+            _unsubscribers.Unsubscribe();
         }
 
-        private void EdificesBind(IReactiveList<Crossroad> edificesReactive, List<int[]> edifices, bool calling)
+        private void EdificesBind(IReactiveList<Crossroad> edificesReactive, List<int[]> edifices)
         {
-            _unsubscriberEdifices.Add(edificesReactive.Subscribe(OnEdifice, calling));
+            _unsubscribers += edificesReactive.Subscribe(OnEdifice);
 
             #region Local OnEdifice(...)
             //==============================

@@ -1,10 +1,10 @@
+using UnityEditor;
+using UnityEngine;
+using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Characteristics;
+
 namespace VurbiriEditor.Colonization.Characteristics
 {
-    using UnityEditor;
-    using UnityEngine;
-    using Vurbiri.Colonization.Actors;
-    using Vurbiri.Colonization.Characteristics;
-
     [CustomPropertyDrawer(typeof(Skills.SkillSettings))]
     public class SkillSettingsDrawer : PropertyDrawerUtility
     {
@@ -19,18 +19,14 @@ namespace VurbiriEditor.Colonization.Characteristics
         {
             base.OnGUI(mainPosition, mainProperty, label);
 
-            string[] strings = label.text.Split(' ');
-            int id = -1;
-            if (strings.Length == 2)
-            {
-                id = int.Parse(strings[1]);
+            int id = IdFromLabel(label);
+            if (id >= 0)
                 label.text = string.Format(NAME_ELEMENT, id);
-            }
 
             label = EditorGUI.BeginProperty(_position, label, mainProperty);
             EditorGUI.indentLevel++;
 
-            if (mainProperty.isExpanded = EditorGUI.Foldout(_position, mainProperty.isExpanded, label))
+            if (Foldout(label))
             {
                 EditorGUI.indentLevel++;
 

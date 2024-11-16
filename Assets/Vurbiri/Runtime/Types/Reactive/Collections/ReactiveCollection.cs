@@ -1,9 +1,9 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 namespace Vurbiri.Reactive.Collections
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
     public class ReactiveCollection<T> : IReactiveCollection<T> where T : class, IReactiveElement<T>
     {
         private T[] _values;
@@ -42,18 +42,15 @@ namespace Vurbiri.Reactive.Collections
         #endregion
 
         #region IReactiveCollection
-        public UnsubscriberCollection<T> Subscribe(Action<T, Operation> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<T, Operation> action)
         {
             actionCollectionChange -= action ?? throw new ArgumentNullException("action");
-
             actionCollectionChange += action;
-            if (calling)
-            {
-                for (int i = 0; i < _count; i++)
-                    action(_values[i], Operation.Init);
-            }
 
-            return new(this, action);
+            for (int i = 0; i < _count; i++)
+                action(_values[i], Operation.Subscribe);
+
+            return new UnsubscriberCollection<T>(this, action);
         }
 
         public void Unsubscribe(Action<T, Operation> action) => actionCollectionChange -= action ?? throw new ArgumentNullException("action");

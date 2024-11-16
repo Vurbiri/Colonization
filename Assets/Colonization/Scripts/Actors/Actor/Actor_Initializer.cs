@@ -1,7 +1,8 @@
+using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using Characteristics;
-    using UnityEngine;
     using static CONST;
 
     public abstract partial class Actor
@@ -14,6 +15,8 @@ namespace Vurbiri.Colonization.Actors
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
             _eventBus = eventBus;
+
+            _effects = new(_abilities);
 
             _currentHP = _abilities.GetAbility(ActorAbilityId.CurrentHP);
             _currentHP.Clamp = CurrentHPCamp;

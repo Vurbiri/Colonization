@@ -120,18 +120,15 @@ namespace Vurbiri.Reactive.Collections
         }
 
         #region IReadOnlyReactiveList
-        public UnsubscriberList<T> Subscribe(Action<int, T, Operation> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<int, T, Operation> action)
         {
             actionListChange -= action ?? throw new ArgumentNullException("action");
-
             actionListChange += action;
-            if (calling)
-            {
-                for (int i = 0; i < _count; i++)
-                    action(i, _values[i], Operation.Init);
-            }
 
-            return new(this, action);
+            for (int i = 0; i < _count; i++)
+                action(i, _values[i], Operation.Subscribe);
+
+            return new UnsubscriberList<T>(this, action);
         }
 
         public void Unsubscribe(Action<int, T, Operation> action) => actionListChange -= action ?? throw new ArgumentNullException("action");

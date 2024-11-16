@@ -1,8 +1,8 @@
 using UnityEngine;
+using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
-    using static CONST;
 
     public class Game : MonoBehaviour
     {

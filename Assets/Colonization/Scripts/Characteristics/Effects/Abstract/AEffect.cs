@@ -1,7 +1,7 @@
+using Vurbiri.Colonization.Actors;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    using Actors;
-
     public abstract class AEffect : IPerk
     {
         protected readonly int _targetAbility;
@@ -18,8 +18,6 @@ namespace Vurbiri.Colonization.Characteristics
             _targetAbility = targetAbility;
             _typeModifier = typeModifier;
         }
-
-        public virtual void Init(AbilitiesSet<ActorAbilityId> self, AbilitiesSet<ActorAbilityId> target) { }
 
         public abstract void Apply(Actor self, Actor target);
     }

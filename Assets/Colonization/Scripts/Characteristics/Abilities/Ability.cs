@@ -1,16 +1,18 @@
+using System;
+using Vurbiri.Collections;
+using Vurbiri.Reactive;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    using System;
-    using Vurbiri.Collections;
-    using Vurbiri.Reactive;
-
     public class Ability<TId> : IReadOnlyReactiveValue<int>, IValueId<TId> where TId : AAbilityId<TId>
     {
         private readonly Id<TId> _id;
         private readonly int _baseValue;
         private int _currentValue;
+
         private readonly IdArray<TypeModifierId, IAbilityModifier> _mods = new();
-        private Func<int, int> funcClamp;
+
+        private Func<int, int> funcClamp = v => Math.Max(v, 0);
         private Action<int> actionValueChange;
 
         public Id<TId> Id => _id;
@@ -57,28 +59,32 @@ namespace Vurbiri.Colonization.Characteristics
             _baseValue = _currentValue = baseValue;
         }
 
-        public void Add(Id<TypeModifierId> id, AbilityValue value)
+        public int Add(Id<TypeModifierId> id, AbilityValue value)
         {
             _mods[id].Add(value);
-            ApplyMods();
+            return ApplyMods();
         }
-        public void Remove(Id<TypeModifierId> id, AbilityValue value)
+        public int Remove(Id<TypeModifierId> id, AbilityValue value)
         {
             _mods[id].Remove(value);
-            ApplyMods();
+            return ApplyMods();
         }
 
-        public int Apply(Id<TypeModifierId> id, AbilityValue value) => _mods[id].Apply(_currentValue, value);
+        public int Apply(Id<TypeModifierId> id, AbilityValue value)
+        {
+            int result = _mods[id].Apply(_currentValue, value);
+            return funcClamp(result);
+        }
 
-        public void AddModifier(IAbilityModifierSettings settings)
+        public int AddModifier(IAbilityModifierSettings settings)
         {
             _mods[settings.TypeModifier].Add(settings);
-            ApplyMods();
+            return ApplyMods();
         }
-        public void RemoveModifier(IAbilityModifierSettings settings)
+        public int RemoveModifier(IAbilityModifierSettings settings)
         {
             _mods[settings.TypeModifier].Remove(settings);
-            ApplyMods();
+            return ApplyMods();
         }
         
         public void Reset()
@@ -87,7 +93,7 @@ namespace Vurbiri.Colonization.Characteristics
                 _mods[i].Reset();
         }
 
-        public Unsubscriber<int> Subscribe(Action<int> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<int> action, bool calling = true)
         {
             actionValueChange -= action ?? throw new ArgumentNullException("Action<int> action");
 
@@ -95,23 +101,24 @@ namespace Vurbiri.Colonization.Characteristics
             if (calling)
                 action(_currentValue);
 
-            return new(this, action);
+            return new Unsubscriber<int>(this, action);
         }
 
         public void Unsubscribe(Action<int> action) => actionValueChange -= action ?? throw new ArgumentNullException("Action<int> action");
 
-        private void ApplyMods()
+        private int ApplyMods()
         {
             int old = _currentValue;
             _currentValue = _baseValue;
             for (int i = 0; i < TypeModifierId.Count; i++)
                 _currentValue = _mods[i].Apply(_currentValue);
 
-            if (funcClamp != null)
-                _currentValue = funcClamp(_currentValue);
+            _currentValue = funcClamp(_currentValue);
 
             if (old != _currentValue & actionValueChange != null)
                 actionValueChange(_currentValue);
+
+            return _currentValue - old;
         }
     }
 }

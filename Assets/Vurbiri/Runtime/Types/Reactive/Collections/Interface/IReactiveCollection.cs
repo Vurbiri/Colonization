@@ -5,7 +5,7 @@ namespace Vurbiri.Reactive.Collections
 {
     public interface IReactiveCollection<T> : IReadOnlyList<T>
     {
-        public UnsubscriberCollection<T> Subscribe(Action<T, Operation> action, bool calling = true);
+        public IUnsubscriber Subscribe(Action<T, Operation> action);
         public void Unsubscribe(Action<T, Operation> action);
     }
 }

@@ -1,9 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using Characteristics;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
     using static CONST;
 
     public abstract partial class Actor

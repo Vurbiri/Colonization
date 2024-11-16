@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected string _key;
 
         private ACurrencies _cost;
-        private Unsubscriber<Language> _unsubscriber;
+        private IUnsubscriber _unsubscriber;
         private string _caption;
 
         public virtual void Init(Vector3 localPosition, Color color, ACurrencies cost, UnityEngine.Events.UnityAction action)

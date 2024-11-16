@@ -1,6 +1,7 @@
+using Vurbiri.Colonization.Characteristics;
+
 namespace Vurbiri.Colonization.UI
 {
-    using Characteristics;
     using static CONST_UI_LNG_KEYS;
 
     public class EffectSettingsUI

@@ -14,7 +14,7 @@ namespace Vurbiri.Reactive
 
         protected Action<T> actionValueChange;
 
-        private readonly IEqualityComparer<T> _comparer;
+        private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
         public T Value 
         { 
@@ -32,23 +32,21 @@ namespace Vurbiri.Reactive
         public ReactiveValue()
         {
             _value = default;
-            _comparer = EqualityComparer<T>.Default;
         }
         
         public ReactiveValue(T value)
         {
             _value = value;
-            _comparer = EqualityComparer<T>.Default;
         }
 
-        public Unsubscriber<T> Subscribe(Action<T> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<T> action, bool calling = true)
         {
             actionValueChange -= action ?? throw new ArgumentNullException("action");
             actionValueChange += action;
             if (calling) 
                 action(_value);
 
-            return new(this, action);
+            return new Unsubscriber<T>(this, action);
         }
 
         public void Next(T value)
@@ -64,6 +62,6 @@ namespace Vurbiri.Reactive
 
         public void Unsubscribe(Action<T> action) => actionValueChange -= action ?? throw new ArgumentNullException("action");
 
-        public static implicit operator ReactiveValue<T>(T value) => new(value);
+        public static explicit operator ReactiveValue<T>(T value) => new(value);
     }
 }

@@ -1,11 +1,11 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Vurbiri.Colonization.Characteristics;
+using static Vurbiri.Colonization.CONST;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using Vurbiri.Colonization.Characteristics;
-    using static CONST;
-
     public abstract partial class Actor
     {
         public abstract class ASkillTargetState : ASkillState

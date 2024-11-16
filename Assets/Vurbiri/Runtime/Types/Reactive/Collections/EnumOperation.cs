@@ -2,7 +2,7 @@ namespace Vurbiri.Reactive.Collections
 {
     public enum Operation
     {
-        Init,
+        Subscribe,
         Add,
         Insert,
         Remove,

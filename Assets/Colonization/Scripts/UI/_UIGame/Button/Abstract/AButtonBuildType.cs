@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected Id<T> _id;
 
         protected ACurrencies _cost;
-        protected Unsubscriber<Language> _unsubscriber;
+        protected IUnsubscriber _unsubscriber;
         protected string _caption;
         protected Players _players;
         protected GameObject _parentGO;

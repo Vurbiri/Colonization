@@ -1,9 +1,9 @@
+using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Reactive;
+
 namespace Vurbiri.Colonization
 {
-    using Actors;
-    using Characteristics;
-    using Reactive;
-
     public partial class PlayerObjects
     {
         public IReadOnlyReactiveValue<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _abilities[id];

@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private RectTransform _thisRectTransform;
 
-        private Unsubscriber<int> _unsubscriber;
+        private IUnsubscriber _unsubscriber;
         
         public Vector2 Size => _thisRectTransform.sizeDelta;
 

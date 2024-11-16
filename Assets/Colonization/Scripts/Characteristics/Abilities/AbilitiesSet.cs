@@ -30,8 +30,8 @@ namespace Vurbiri.Colonization.Characteristics
         public int GetValue(Id<TId> stateId) => _abilities[stateId].Value;
         public int ApplyValue(Id<TId> stateId, Id<TypeModifierId> id, AbilityValue value) => _abilities[stateId].Apply(id, value);
 
-        public void AddPerk(IPerk perk) => _abilities[perk.TargetAbility].AddModifier(perk);
-        public void RemovePerk(IPerk perk) => _abilities[perk.TargetAbility].RemoveModifier(perk);
+        public int AddPerk(IPerk perk) => _abilities[perk.TargetAbility].AddModifier(perk);
+        public int RemovePerk(IPerk perk) => _abilities[perk.TargetAbility].RemoveModifier(perk);
 
         public IEnumerator<IReadOnlyReactiveValue<int>> GetEnumerator()
         {

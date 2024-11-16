@@ -100,14 +100,14 @@ namespace Vurbiri.Colonization
         }
 
         #region Reactive
-        public Unsubscriber<int[][][]> Subscribe(Action<int[][][]> action, bool calling = false)
+        public IUnsubscriber Subscribe(Action<int[][][]> action, bool calling = false)
         {
             ActionValueChange -= action;
             ActionValueChange += action;
             if (calling && action != null)
                 action(ToArray());
 
-            return new(this, action);
+            return new Unsubscriber<int[][][]>(this, action);
         }
 
         public void Unsubscribe(Action<int[][][]> action) => ActionValueChange -= action;

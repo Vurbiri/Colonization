@@ -1,11 +1,12 @@
+using Newtonsoft.Json;
+using System.Collections;
+using UnityEngine;
+using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Reactive;
+
 namespace Vurbiri.Colonization
 {
-    using Actors;
-    using Characteristics;
-    using Newtonsoft.Json;
-    using Reactive;
-    using System.Collections;
-    using UnityEngine;
 
     [JsonObject(MemberSerialization.OptIn)]
     public class Player : IValueId<PlayerId>

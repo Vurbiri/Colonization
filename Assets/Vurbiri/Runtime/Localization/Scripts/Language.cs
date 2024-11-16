@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Vurbiri.Collections;
+using Vurbiri.Reactive;
+using static Vurbiri.Storage;
 
 namespace Vurbiri.Localization
 {
-    using Collections;
-    using Reactive;
-    using static Storage;
-
     public class Language : IReactive<Language>
     {
         private readonly bool _isValid;
@@ -48,14 +47,14 @@ namespace Vurbiri.Localization
             _isValid = true;
         }
 
-        public Unsubscriber<Language> Subscribe(Action<Language> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<Language> action, bool calling = true)
         {
             ActionValueChange -= action;
             ActionValueChange += action;
             if (calling && action != null)
                 action(this);
 
-            return new(this, action);
+            return new Unsubscriber<Language>(this, action);
         }
         public void Unsubscribe(Action<Language> action) => ActionValueChange -= action;
 

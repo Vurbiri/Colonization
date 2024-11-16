@@ -1,9 +1,9 @@
+using UnityEngine;
+using Vurbiri.Collections;
+using Vurbiri.Colonization.Characteristics;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using Characteristics;
-    using Collections;
-    using UnityEngine;
-
     [System.Serializable]
     public class ActorSettings
     {

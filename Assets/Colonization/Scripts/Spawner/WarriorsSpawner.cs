@@ -1,7 +1,7 @@
+using UnityEngine;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using UnityEngine;
-
     public class WarriorsSpawner
     {
         private readonly int _payerId;

@@ -1,7 +1,7 @@
+using System.Collections.Generic;
+
 namespace Vurbiri.Colonization
 {
-    using System.Collections.Generic;
-
     public readonly struct PlayerLoadData
 	{
         public readonly int[] resources;

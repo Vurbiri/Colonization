@@ -1,11 +1,12 @@
+using System.Text;
+using UnityEngine;
+using UnityEngine.UI;
+using Vurbiri.Colonization.Actors;
+using Vurbiri.Localization;
+using Vurbiri.UI;
+
 namespace Vurbiri.Colonization.UI
 {
-    using System.Text;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using Vurbiri.Colonization.Actors;
-    using Vurbiri.Localization;
-    using Vurbiri.UI;
     using static CONST_UI;
     using static CONST_UI_LNG_KEYS;
 

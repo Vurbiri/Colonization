@@ -1,7 +1,7 @@
+using UnityEngine;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using UnityEngine;
-
     public class WarriorInitializer : MonoBehaviour
     {
         [SerializeField] private Warrior _warrior;

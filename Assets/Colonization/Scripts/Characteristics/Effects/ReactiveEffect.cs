@@ -1,9 +1,9 @@
+using System;
+using System.Collections.Generic;
+using Vurbiri.Reactive.Collections;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    using Reactive.Collections;
-    using System;
-    using System.Collections.Generic;
-
     public class ReactiveEffect : AReactiveElement<ReactiveEffect>, IPerk
     {
         private readonly int _targetAbility;

@@ -1,8 +1,8 @@
+using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
+
 namespace Vurbiri.Colonization.UI
 {
-    using Characteristics;
-    using UnityEngine;
-
     [System.Serializable]
     public class SkillUI
     {

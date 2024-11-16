@@ -1,7 +1,7 @@
+using Vurbiri.Colonization.Actors;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    using Actors;
-
     public class TemporarySelfEffect : ATemporaryEffect
     {
         public TemporarySelfEffect(int targetAbility, bool isNegative, Id<TypeModifierId> typeModifier, int value, int duration) : 

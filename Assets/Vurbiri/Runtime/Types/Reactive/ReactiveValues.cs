@@ -40,7 +40,7 @@ namespace Vurbiri.Reactive
             _comparerB = EqualityComparer<TB>.Default;
         }
 
-        public Unsubscriber<TA, TB> Subscribe(Action<TA, TB> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<TA, TB> action, bool calling = true)
         {
             ActionValuesChange -= action ?? throw new ArgumentNullException("action");
 
@@ -48,7 +48,7 @@ namespace Vurbiri.Reactive
             if (calling)
                 action(_valueA, _valueB);
 
-            return new(this, action);
+            return new Unsubscriber<TA, TB>(this, action);
         }
 
         public void Signal() => ActionValuesChange?.Invoke(_valueA, _valueB);

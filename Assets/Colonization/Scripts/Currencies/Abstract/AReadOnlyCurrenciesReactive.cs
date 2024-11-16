@@ -1,16 +1,16 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Vurbiri.Reactive;
+
 namespace Vurbiri.Colonization
 {
-    using System;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using Vurbiri.Reactive;
-
     public abstract class AReadOnlyCurrenciesReactive : ACurrencies, IReactiveSubValues<int, CurrencyId>, IDisposable
     {
         protected ACurrency[] _values = new ACurrency[countAll];
         protected Action<int> actionAmountChange;
         protected int _maxMain;
-        private readonly Unsubscriber<int> _subscriber;
+        private readonly IUnsubscriber _subscriber;
 
         public override int Amount
         {
@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Reactive
-        public Unsubscriber<int> Subscribe(Action<int> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<int> action, bool calling = true)
         {
             actionAmountChange -= action ?? throw new ArgumentNullException("action");
 
@@ -71,10 +71,10 @@ namespace Vurbiri.Colonization
             if (calling)
                 action(_amount);
 
-            return new(this, action);
+            return new Unsubscriber<int>(this, action);
         }
-        public Unsubscriber<int> Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
-        public Unsubscriber<int> Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
+        public IUnsubscriber Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
+        public IUnsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
         public void Unsubscribe(Action<int> action) => actionAmountChange -= action ?? throw new ArgumentNullException("action");
         public void Unsubscribe(int index, Action<int> action) => _values[index].Unsubscribe(action);
         public void Unsubscribe(Id<CurrencyId> id, Action<int> action) => _values[id.Value].Unsubscribe(action);
@@ -127,7 +127,7 @@ namespace Vurbiri.Colonization
         protected class CurrencyBlood : ACurrency
         {
             private int _max;
-            private readonly Unsubscriber<int> _subscriber;
+            private readonly IUnsubscriber _subscriber;
 
             public override int Value 
             { 

@@ -9,7 +9,7 @@ namespace Vurbiri.UI
         [Space]
         [SerializeField] private string _key;
 
-        private Unsubscriber<Language> _unsubscriber;
+        private IUnsubscriber _unsubscriber;
 
         public void Init(Vector3 localPosition, Color color, UnityEngine.Events.UnityAction action)
         {
