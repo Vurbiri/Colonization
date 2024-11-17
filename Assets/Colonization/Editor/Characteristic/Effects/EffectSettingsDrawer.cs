@@ -9,11 +9,12 @@ namespace VurbiriEditor.Colonization.Characteristics
     public class EffectSettingsDrawer : PropertyDrawerUtility
     {
         #region Consts
-        private const float RATE_SIZE_FULL = 12.1f;
-        private const string NAME_ELEMENT = "Effect {0}";
+        private const float RATE_SIZE_FULL = 11.1f;
+        private const string NAME_NEGATIVE_ELEMENT = "Negative Effect {0}", NAME_POSITIVE_ELEMENT = "Positive Effect {0}";
         private const string P_TARGET_ACTOR = "_targetActor", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_IS_REFLECT = "_isReflect", P_DUR = "_duration";
-        private const string P_IS_NEGATIVE = "_isNegative", P_KEY_DESC = "_keyDescId";
+        private const string P_KEY_DESC = "_keyDescId";
         private const string P_TARGET_ABILITY = "_targetAbility", P_USED_ABILITY = "_usedAbility", P_CONTR_ABILITY = "_counteredAbility";
+        private const string P_PARENT_TARGET = "_parentTarget";
         private readonly (int min, int max) MIN_MAX_A = (0, 7), MIN_MAX_P = (50, 200);
         #endregion
 
@@ -21,10 +22,20 @@ namespace VurbiriEditor.Colonization.Characteristics
         {
             base.OnGUI(position, mainProperty, label);
 
-            bool isDuration, isNotUse = true, isTargetEnemy;
-            int usedAbility;
+            int parentTarget = mainProperty.FindPropertyRelative(P_PARENT_TARGET).intValue;
+            bool isParentSelf = parentTarget == TargetOfSkillId.Self;
 
-            label.text = string.Format(NAME_ELEMENT, IdFromLabel(label));
+            SerializedProperty target = mainProperty.FindPropertyRelative(P_TARGET_ACTOR);
+
+            if (isParentSelf)
+                target.intValue = TargetOfEffectId.Self;
+
+            bool isDuration, isNotUse = true, isTarget = false;
+            int usedAbility;
+                        
+            bool isNegative = parentTarget == TargetOfSkillId.Enemy & target.intValue == TargetOfEffectId.Target;
+
+            label.text = string.Format(isNegative ? NAME_NEGATIVE_ELEMENT : NAME_POSITIVE_ELEMENT, IdFromLabel(label));
 
             EditorGUI.BeginProperty(_position, label, mainProperty);
 
@@ -32,7 +43,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             {
                 isDuration = DrawIntSlider(P_DUR, 0, 5) > 0;
 
-                if (!isDuration && !(isNotUse = (usedAbility = DrawId(P_USED_ABILITY, typeof(ActorAbilityId), true)) < 0))
+                if (!isParentSelf & !isDuration && !(isNotUse = (usedAbility = DrawId(P_USED_ABILITY, typeof(ActorAbilityId), true)) < 0))
                 {
                     Space(2f);
                     DrawValue(usedAbility);
@@ -40,17 +51,19 @@ namespace VurbiriEditor.Colonization.Characteristics
                 }
 
                 Space(2f);
-                isTargetEnemy = DrawId(P_TARGET_ACTOR, typeof(TargetOfEffectId)) == TargetOfEffectId.Enemy;
+                if (isParentSelf)
+                    DrawLabel(target.displayName, TargetOfEffectId.GetName(TargetOfEffectId.Self));
+                else
+                    isTarget = DrawId(P_TARGET_ACTOR, typeof(TargetOfEffectId)) == TargetOfEffectId.Target;
+
                 usedAbility = DrawId(P_TARGET_ABILITY, typeof(ActorAbilityId));
                 if (isNotUse)
                     DrawValue(usedAbility);
 
-                DrawLabelAndSetValue(P_IS_NEGATIVE, isTargetEnemy);
-
-                if (isTargetEnemy)
+                if (isTarget)
                     DrawBool(P_IS_REFLECT);
                 else
-                    DrawLabelAndSetValue(P_IS_REFLECT, isTargetEnemy);
+                    DrawLabelAndSetValue(P_IS_REFLECT, isTarget);
 
                 Space(1.5f);
                 DrawPopup(P_KEY_DESC, KEYS_DESK_EFFECTS);
@@ -88,8 +101,8 @@ namespace VurbiriEditor.Colonization.Characteristics
         {
             if (!property.isExpanded)
                 return 1f;
-            
-            if (property.FindPropertyRelative(P_DUR).intValue > 0)
+
+            if (property.FindPropertyRelative(P_PARENT_TARGET).intValue == TargetOfSkillId.Self || property.FindPropertyRelative(P_DUR).intValue > 0)
                 return RATE_SIZE_FULL - 2f;
 
             if (property.FindPropertyRelative(P_USED_ABILITY).intValue < 0)

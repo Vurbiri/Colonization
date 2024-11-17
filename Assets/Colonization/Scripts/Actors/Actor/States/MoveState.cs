@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -16,13 +15,11 @@ namespace Vurbiri.Colonization.Actors
             private WaitActivate _waitHexagon;
             private Hexagon _targetHex;
             private Coroutine _coroutineAction;
-            private readonly Ability<ActorAbilityId> _move;
 
             public MoveState(float speed, Actor parent) : base(parent, 0)
             {
                 _speed = speed;
                 _parentTransform = _actor._thisTransform;
-                _move = _actor._isMove;
             }
 
             public override void Enter()
@@ -87,7 +84,8 @@ namespace Vurbiri.Colonization.Actors
                 }
 
                 _parentTransform.localPosition = end;
-                _move.IsValue = false;
+
+                MoveFalse();
 
                 Reset();
             }

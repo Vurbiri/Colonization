@@ -13,12 +13,14 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_REM_T = "remainingTime", P_DAMAGE_T = "damageTime", P_RANGE = "range", P_ID_A = "idAnimation";
         private const string P_TARGET = "target", P_COST = "cost", P_EFFECTS = "effects";
         private const string P_SPRITE = "sprite", P_KEY_NAME = "keyName";
+        private const string P_CHILD_TARGET = "_parentTarget";
         private readonly string[] KEYS_NAME_SKILLS = { "Attack", "Sweep" };
 
         public override void OnGUI(Rect mainPosition, SerializedProperty mainProperty, GUIContent label)
         {
             base.OnGUI(mainPosition, mainProperty, label);
 
+            int target;
             int id = IdFromLabel(label);
             if (id >= 0)
                 label.text = string.Format(NAME_ELEMENT, id);
@@ -55,15 +57,17 @@ namespace VurbiriEditor.Colonization.Characteristics
                     EditorGUI.indentLevel--;
                     DrawLine(Color.gray);
 
-                    if (DrawId(P_TARGET, typeof(TargetOfEffectId)) != TargetOfEffectId.Self)
+                    if ((target = DrawId(P_TARGET, typeof(TargetOfSkillId))) != TargetOfSkillId.Self)
                     {
                         Space();
                         DrawBool(P_MOVE);
                     }
+
+                    SetChildrenEffectSelfTarget(target);
+
                     Space();
                     DrawSelfIntSlider(costProperty, 0, 3);
-
-                    
+                                        
                     uiProperty.FindPropertyRelative(P_COST).intValue = costProperty.intValue;
 
                     Space(2f);
@@ -107,6 +111,13 @@ namespace VurbiriEditor.Colonization.Characteristics
                 _position.y += _ySpace * 2f;
             }
             //=================================
+            void SetChildrenEffectSelfTarget(int target)
+            {
+                SerializedProperty effects = _mainProperty.FindPropertyRelative(P_EFFECTS);
+                int count = effects.arraySize;
+                for (int i = 0; i < count; i++)
+                    effects.GetArrayElementAtIndex(i).FindPropertyRelative(P_CHILD_TARGET).intValue = target;
+            }
             #endregion
         }
 

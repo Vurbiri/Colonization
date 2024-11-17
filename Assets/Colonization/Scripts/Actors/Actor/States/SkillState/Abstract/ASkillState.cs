@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization.Actors
 		public abstract partial class ASkillState : AState
         {
             protected readonly int _idAnimation;
-            protected readonly int _cost;
             protected readonly IReadOnlyList<AEffect> _effects;
             protected readonly int _countEffects;
             protected readonly Transform _parentTransform;
@@ -19,10 +18,9 @@ namespace Vurbiri.Colonization.Actors
             protected Coroutine _coroutineAction;
             protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
-            public ASkillState(Actor parent, IReadOnlyList<AEffect> effects, Settings settings, int id) : base(parent, id)
+            public ASkillState(Actor parent, IReadOnlyList<AEffect> effects, Settings settings, int id) : base(parent, settings.cost, id)
             {
                 _idAnimation = settings.idAnimation;
-                _cost = settings.cost;
                 _effects = effects;
                 _countEffects = _effects.Count;
                 _parentTransform = _actor._thisTransform;
@@ -68,6 +66,8 @@ namespace Vurbiri.Colonization.Actors
                 //    _effects[i].Apply(_actor, _target);
                 
                 yield return _waitEndSkillAnimation;
+
+                Pay();
             }
 
             #region Nested: Settings

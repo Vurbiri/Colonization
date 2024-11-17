@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.Characteristics
                     _effects[id] = effectsSkill;
                 }
 
-                if (skill.target == TargetOfEffectId.Self)
+                if (skill.target == TargetOfSkillId.Self)
                 {
                     skillStates.Add(new SelfBuffState(parent, effectsSkill, skill.settings, id++));
                     continue;

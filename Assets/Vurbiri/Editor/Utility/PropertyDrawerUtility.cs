@@ -94,6 +94,12 @@ namespace VurbiriEditor
         }
         protected T DrawObject<T>(string name, bool isName = false) where T : UnityEngine.Object => DrawObject<T>(_mainProperty, name, isName);
 
+        protected void DrawLabel(string name, string value)
+        {
+            _position.y += _height;
+            EditorGUI.LabelField(_position, name, value);
+        }
+
         protected void DrawLabelAndSetValue<T>(SerializedProperty parent, string name, T value)
         {
             _position.y += _height;

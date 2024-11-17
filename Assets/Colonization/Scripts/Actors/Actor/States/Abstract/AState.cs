@@ -1,3 +1,4 @@
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.FSMSelectable;
 
 namespace Vurbiri.Colonization.Actors
@@ -10,12 +11,29 @@ namespace Vurbiri.Colonization.Actors
             protected readonly ActorSkin _skin;
             protected readonly GameplayEventBus _eventBus;
 
-            public AState(Actor parent, int id = 0) : base(parent._stateMachine, id)
+            private readonly Ability<ActorAbilityId> _move;
+            private readonly Ability<ActorAbilityId> _currentAP;
+            private readonly AbilityModAddSettings _costModAP;
+
+            public AState(Actor parent, int cost = 0, int id = 0) : base(parent._stateMachine, id)
             {
                 _actor = parent;
                 _skin = parent._skin;
+
+                _move = parent._isMove;
+                _currentAP = parent._currentHP;
+                _costModAP = new(cost);
+
                 _eventBus = parent._eventBus;
             }
+
+            protected void MoveFalse() => _move.IsValue = false;
+            protected void Pay()
+            {
+                _currentAP.RemoveModifier(_costModAP);
+                _move.IsValue = false;
+            }
+
         }
     }
 }
