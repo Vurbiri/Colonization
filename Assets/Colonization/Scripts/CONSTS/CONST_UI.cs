@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization.UI
         public const string TAG_COLOR_OFF = "</color>";
         public const string TAG_SPACE = "<cspace={0}em>";
         public const string TAG_SPACE_OFF = "</cspace>";
-        public const string NEW_LINE = "\r\n";
         public const string SPACE = " ";
         public static readonly int TAG_SPRITE_LENGTH = TAG_SPRITE.Length;
     }

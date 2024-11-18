@@ -9,10 +9,10 @@ namespace VurbiriEditor.Colonization.Characteristics
     public class EffectSettingsDrawer : PropertyDrawerUtility
     {
         #region Consts
-        private const float RATE_SIZE_FULL = 11.1f;
+        private const float RATE_SIZE_FULL = 12.12f;
         private const string NAME_NEGATIVE_ELEMENT = "Negative Effect {0}", NAME_POSITIVE_ELEMENT = "Positive Effect {0}";
         private const string P_TARGET_ACTOR = "_targetActor", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_IS_REFLECT = "_isReflect", P_DUR = "_duration";
-        private const string P_KEY_DESC = "_keyDescId";
+        private const string P_DESC_KEY = "_descKeyId", P_IS_DESC_BASE = "_isDescKeyBase";
         private const string P_TARGET_ABILITY = "_targetAbility", P_USED_ABILITY = "_usedAbility", P_CONTR_ABILITY = "_counteredAbility";
         private const string P_PARENT_TARGET = "_parentTarget";
         private readonly (int min, int max) MIN_MAX_A = (0, 7), MIN_MAX_P = (50, 200);
@@ -66,7 +66,8 @@ namespace VurbiriEditor.Colonization.Characteristics
                     DrawLabelAndSetValue(P_IS_REFLECT, isTarget);
 
                 Space(1.5f);
-                DrawPopup(P_KEY_DESC, KEYS_DESK_EFFECTS);
+                DrawPopup(P_DESC_KEY, DESK_EFFECTS_KEYS);
+                DrawBool(P_IS_DESC_BASE);
 
             }
             EditorGUI.EndProperty();

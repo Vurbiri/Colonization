@@ -18,18 +18,19 @@ namespace Vurbiri.Colonization.UI
         private Vector2 _localPoint;
         private CrossroadMainMenu _mainMen;
 
-        public void Init(CrossroadMainMenu mainMenu, Players players, Color color ,Camera camera, ACurrencies roadCost)
+        public void Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
         {
+            ACurrencies roadCost = settings.prices.Road;
             _mainMen = mainMenu;
-            _camera = camera;
+            _camera = settings.camera;
 
-            _buttonBack.Init(OnClose);
+            _buttonBack.Init(settings.hint, OnClose);
 
             _thisTransform = GetComponent<RectTransform>();
             _cameraTransform = _camera.transform;
 
             foreach (var button in _roadButtons)
-                button.Init(players, color, roadCost, _thisGO);
+                button.Init(settings, roadCost, _thisGO);
 
             _thisGO.SetActive(false);
         }

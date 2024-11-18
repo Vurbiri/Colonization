@@ -5,14 +5,14 @@ using Vurbiri.Localization;
 
 namespace Vurbiri.UI
 {
-    public abstract class AHinting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public abstract class AHintingButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        [SerializeField] protected HintGlobal _hint;
         [SerializeField] protected Files _file;
         [SerializeField] protected Vector3 _offset;
 
         private bool _isShowingHint = false;
-       
+
+        protected HintGlobal _hint;
         protected GameObject _thisGO;
         protected Transform _thisTransform;
         protected CmButton _button;
@@ -20,21 +20,17 @@ namespace Vurbiri.UI
 
         public bool IsShowingHint => _isShowingHint;
 
-        protected virtual void Init(Vector3 localPosition, UnityAction action, bool active)
+        protected virtual void Init(Vector3 localPosition, HintGlobal hint, UnityAction action, bool active)
         {
-            _thisGO = gameObject;
-            _thisTransform = transform;
+            transform.localPosition = localPosition;
 
-            _thisTransform.localPosition = localPosition;
-
-            _button = GetComponent<CmButton>();
-            _button.onClick.AddListener(action);
-            
-            _thisGO.SetActive(active);
+            Init(hint, action, active);
         }
 
-        protected virtual void Init(UnityAction action, bool active)
+        protected virtual void Init(HintGlobal hint, UnityAction action, bool active)
         {
+            _hint = hint;
+
             _thisGO = gameObject;
             _thisTransform = transform;
 
@@ -58,13 +54,5 @@ namespace Vurbiri.UI
             if (_isShowingHint)
                 _isShowingHint = !_hint.Hide();
         }
-
-#if UNITY_EDITOR
-        protected virtual void OnValidate()
-        {
-            if (_hint == null)
-                _hint = FindAnyObjectByType<HintGlobal>();
-        }
-#endif
     }
 }

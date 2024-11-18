@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
+using Vurbiri;
 using Vurbiri.Colonization;
 
 [CreateAssetMenu(fileName = "PlayerVisualSet", menuName = "Vurbiri/Colonization/PlayerVisualSet", order = 51)]
-public class PlayerVisualSetScriptable : ScriptableObject
+public class PlayerVisualSetScriptable : ScriptableObjectDisposable
 {
     [SerializeField] private Color[] _colors;
     [Space]

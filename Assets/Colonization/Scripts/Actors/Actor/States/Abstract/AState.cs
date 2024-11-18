@@ -20,8 +20,8 @@ namespace Vurbiri.Colonization.Actors
                 _actor = parent;
                 _skin = parent._skin;
 
-                _move = parent._isMove;
-                _currentAP = parent._currentHP;
+                _move = parent._move;
+                _currentAP = parent._currentAP;
                 _costModAP = new(cost);
 
                 _eventBus = parent._eventBus;

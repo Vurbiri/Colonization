@@ -19,11 +19,11 @@ namespace Vurbiri.Colonization.UI
 
         public Id<T> Id => _id;
 
-        public virtual void Init(Players players, Color color, ACurrencies cost, GameObject parent, Vector3 localPosition = default)
+        public virtual void Init(ButtonSettings settings, ACurrencies cost, GameObject parent, Vector3 localPosition = default)
         {
-            base.Init(localPosition, color, OnClick);
+            base.Init(localPosition, settings, OnClick);
             
-            _players = players;
+            _players = settings.players;
             _cost = cost;
             _parentGO = parent;
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);

@@ -2,17 +2,15 @@ using System;
 using System.Globalization;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Events;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
     using static CONST_UI;
 
-    public abstract class AButtonBuild : AHinting
+    public abstract class AButtonBuild : AHintingButton
     {
-        [Space]
-        [SerializeField] private Color32 _colorPlus = Color.green;
-        [SerializeField] private Color32 _colorMinus = Color.red;
         [Space]
         [SerializeField, Range(0.05f, 0.5f)] private float _space = 0.1f;
 
@@ -22,20 +20,19 @@ namespace Vurbiri.Colonization.UI
 
         public Vector3 LocalPosition { set => _thisTransform.localPosition = value; }
 
-        protected virtual void Init(Vector3 localPosition, Color color, UnityEngine.Events.UnityAction action)
+        protected virtual void Init(Vector3 localPosition, ButtonSettings settings, UnityAction action)
         {
-            base.Init(localPosition, action, true);
+            base.Init(localPosition, settings.hint, action, true);
 
-            _button.targetGraphic.color = color;
-            _hexColorPlus = string.Format(TAG_COLOR_FORMAT_LITE, _colorPlus.ToHex());
-            _hexColorMinus = string.Format(TAG_COLOR_FORMAT_LITE, _colorMinus.ToHex());
+            _button.targetGraphic.color = settings.color;
+            _hexColorPlus = settings.hintColors.HexColorPlus;
+            _hexColorMinus = settings.hintColors.HexColorMinus;
         }
 
         protected void SetTextHint(string caption, ACurrencies cash, ACurrencies cost)
         {
             StringBuilder sb = new(cost.Amount > 0 ? MAX_SIZE : MIN_SIZE);
-            sb.Append(caption);
-            sb.Append(NEW_LINE);
+            sb.AppendLine(caption);
             sb.AppendFormat(CultureInfo.InvariantCulture, TAG_SPACE, _space);
 
             int costV;

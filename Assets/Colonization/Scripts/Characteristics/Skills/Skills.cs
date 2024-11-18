@@ -3,83 +3,102 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
+using Vurbiri.Localization;
+using Vurbiri.UI;
 using static Vurbiri.Colonization.Actors.Actor;
 
 namespace Vurbiri.Colonization.Characteristics
 {
     [System.Serializable]
-    public partial class Skills
+    public partial class Skills : IDisposable
     {
         [SerializeField] private float _speedWalk = 0.45f;
         [SerializeField] private float _speedRun = 0.65f;
         [SerializeField] private SkillSettings[] _skillsSettings;
         
-        [NonSerialized] private List<SkillUI> _skillsUI;
+        [NonSerialized] private SkillUI[] _skillsUI;
         [NonSerialized] private AEffect[][] _effects;
+
+        public IReadOnlyList<SkillUI> SkillsUI => _skillsUI;
 
         public MoveState GetMoveSate(Actor parent) => new(_speedWalk, parent);
 
         public List<ASkillState> GetSkillSates(Actor parent)
         {
+            if(_effects == null | _skillsUI == null)
+                return GetAndCreateSkills(parent);
+
             int count = _skillsSettings.Length;
             List<ASkillState> skillStates = new(count);
-            _effects ??= new AEffect[count][];
 
-            SkillSettings skill; AEffect[] effectsSkill;
-            for (int i = 0, id = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
+                skillStates.Add(CreateState(parent, _skillsSettings[i], i));
+
+            return skillStates;
+        }
+
+        public void Dispose()
+        {
+            if (_skillsUI == null)
+                return;
+
+            foreach (var skillUI in _skillsUI)
+                skillUI.Dispose();
+        }
+
+        private List<ASkillState> GetAndCreateSkills(Actor parent)
+        {
+            var hintTextColor = SceneData.Get<HintTextColor>();
+            var language = SceneServices.Get<Language>();
+
+            int count = _skillsSettings.Length;
+            List<ASkillState> skillStates = new(count);
+
+            _effects = new AEffect[count][];
+            _skillsUI = new SkillUI[count];
+
+            SkillSettings skill; EffectSettings effect;
+            AEffect[] effectsSkill; AEffectsUI[] effectsSkillUI;
+            for (int i = 0; i < count; i++)
             {
                 skill = _skillsSettings[i];
-                if (skill == null || !skill.isValid)
-                    throw new ArgumentNullException("SkillSettings и/или AnimationClipSettings равны null!");
 
+                int countEffects = skill.effects.Length;
+                effectsSkill = new AEffect[countEffects];
+                effectsSkillUI = new AEffectsUI[countEffects];
 
-                effectsSkill = _effects[id];
-                if(effectsSkill == null)
+                for (int j = 0; j < countEffects; j++)
                 {
-                    int countEffects = skill.effects.Length;
-                    effectsSkill = new AEffect[countEffects];
-                    for (int j = 0; j < countEffects; j++)
-                        effectsSkill[j] = skill.effects[j].CreateEffect();
-                    _effects[id] = effectsSkill;
+                    effect = skill.effects[j];
+                    effectsSkill[j] = effect.CreateEffect();
+                    effectsSkillUI[j] = effect.CreateEffectUI(hintTextColor);
                 }
+                skill.ui.Init(language, hintTextColor, effectsSkillUI);
 
-                if (skill.target == TargetOfSkillId.Self)
-                {
-                    skillStates.Add(new SelfBuffState(parent, effectsSkill, skill.settings, id++));
-                    continue;
-                }
-                if (skill.isMove)
-                {
-                    skillStates.Add(new AttackState(parent, skill.target, effectsSkill, skill.range, _speedRun, skill.settings, id++));
-                    continue;
-                }
-                
-                skillStates.Add(new SpellState(parent, skill.target, effectsSkill, skill.settings, id++));
+                _skillsUI[i] = skill.ui;
+                _effects[i] = effectsSkill;
+
+                skillStates.Add(CreateState(parent, skill, i));
+
+#if !UNITY_EDITOR
+                skill.ui = null;
+                skill.effects = null;
+#endif
+
             }
 
             return skillStates;
         }
 
-        public List<SkillUI> GetAttackSkillsUI()
+        private ASkillState CreateState(Actor parent, SkillSettings skill, int id)
         {
-            if(_skillsUI != null)
-                return _skillsUI;
+            if (skill.target == TargetOfSkillId.Self)
+                return new SelfBuffState(parent, _effects[id], skill.settings, id);
 
-            int count = _skillsSettings.Length;
-            _skillsUI = new(count);
-            
-            SkillSettings skill;
-            for (int i = 0; i < count; i++)
-            {
-                skill = _skillsSettings[i];
-                if (skill == null || !skill.isValid)
-                    continue;
+            if (skill.isMove)
+                return new AttackState(parent, skill.target, _effects[id], skill.range, _speedRun, skill.settings, id);
 
-                skill.ui.SetEffects(skill.effects);
-                _skillsUI.Add(skill.ui);
-            }
-
-            return _skillsUI;
+            return new SpellState(parent, skill.target, _effects[id], skill.settings, id);
         }
     }
 }

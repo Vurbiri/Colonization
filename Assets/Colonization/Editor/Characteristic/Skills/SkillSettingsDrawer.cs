@@ -12,7 +12,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_CLIP = "clipSettings", P_MOVE = "isMove", P_VALID = "isValid", P_SETTINGS = "settings", P_UI = "ui";
         private const string P_REM_T = "remainingTime", P_DAMAGE_T = "damageTime", P_RANGE = "range", P_ID_A = "idAnimation";
         private const string P_TARGET = "target", P_COST = "cost", P_EFFECTS = "effects";
-        private const string P_SPRITE = "sprite", P_KEY_NAME = "keyName";
+        private const string P_SPRITE = "_sprite", P_KEY_NAME = "_nameKey", P_COST_UI = "_cost";
         private const string P_CHILD_TARGET = "_parentTarget";
         private readonly string[] KEYS_NAME_SKILLS = { "Attack", "Sweep" };
 
@@ -68,7 +68,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     Space();
                     DrawSelfIntSlider(costProperty, 0, 3);
                                         
-                    uiProperty.FindPropertyRelative(P_COST).intValue = costProperty.intValue;
+                    uiProperty.FindPropertyRelative(P_COST_UI).intValue = costProperty.intValue;
 
                     Space(2f);
                     DrawStringPopup(uiProperty, P_KEY_NAME, KEYS_NAME_SKILLS);

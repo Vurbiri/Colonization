@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
         protected Id<PlayerId> _owner;
         protected Ability<ActorAbilityId> _currentHP;
         protected Ability<ActorAbilityId> _currentAP;
-        protected Ability<ActorAbilityId> _isMove;
+        protected Ability<ActorAbilityId> _move;
         protected Hexagon _currentHex;
 
         protected AbilitiesSet<ActorAbilityId> _abilities;
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.Actors
         public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
         public bool CanAction => true;
 
-        public bool CanMove() => _isMove.IsValue;
+        public bool CanMove() => _move.IsValue;
 
         public void Move()
         {
@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization.Actors
             int count = _effects.Count + 2;
             int[][] array = new int[count][];
             array[0] = _currentHex.Key.ToArray();
-            array[1] = new int[] { _id, _currentHP.Value, _currentAP.Value, _isMove.Value };
+            array[1] = new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value };
             for (int i = 2; i < count; i++)
                 array[i] = _effects[i].ToArray();
 
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization.Actors
         {
             _currentHP.Value += _abilities.GetValue(ActorAbilityId.HPPerTurn);
             _currentAP.Value += _abilities.GetValue(ActorAbilityId.APPerTurn);
-            _isMove.IsValue = true;
+            _move.IsValue = true;
         }
 
         private void OnStartTurn()

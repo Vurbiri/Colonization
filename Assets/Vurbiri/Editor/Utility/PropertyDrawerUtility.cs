@@ -71,7 +71,7 @@ namespace VurbiriEditor
         {
             _position.y += _height;
             SerializedProperty property = parent.FindPropertyRelative(name);
-            int index = Array.IndexOf(displayedOptions, property.stringValue);
+            int index = Math.Clamp(Array.IndexOf(displayedOptions, property.stringValue), 0, displayedOptions.Length);
             index = EditorGUI.Popup(_position, property.displayName, index, displayedOptions);
             return property.stringValue = displayedOptions[index];
         }

@@ -4,6 +4,7 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.Localization;
 using Vurbiri.Reactive;
@@ -15,30 +16,21 @@ namespace Vurbiri.Colonization
     public class GameplayEntryPoint : ASceneEntryPoint
     {
         [SerializeField] protected SceneId _nextScene;
-        [Header("Scene objects")]
-        [SerializeField] private Game _game;
         [Space]
-        [SerializeField] private Camera _mainCamera; 
+        [SerializeField] private SceneObjects _sceneObjects;
+        [SerializeField] private ScriptableObjects _scriptables;
         [Space]
-        [SerializeField] private IslandCreator _islandCreator;
-        [SerializeField] private CameraController _cameraController;
-        [SerializeField] private UI.ContextMenusWorld _contextMenusWorld;
-        [Header("Localization")]
         [SerializeField] private EnumArray<Files, bool> _localizationFiles = new(true);
         [Header("Init data for classes")]
         [SerializeField] private Land _land;
         [SerializeField] private Crossroads _crossroads;
-        [Space]
         [SerializeField] private Players.Settings _playersSettings;
-        [Space]
         [SerializeField] private InputController.Settings _inputControllerSettings;
-        [Header("ScriptableObjects")]
-        [SerializeField] private SurfacesScriptable _surfaces;
-        [SerializeField] private PlayerVisualSetScriptable _visualSet;
+        [Space]
+        [SerializeField] private UISettings _settingsUI;
         [Space]
         [Header("TEST")]
         [SerializeField] private bool _isLoad;
-        [SerializeField] private Id<PlayerId> id;
 
         private DIContainer _services;
         private DIContainer _data;
@@ -58,9 +50,9 @@ namespace Vurbiri.Colonization
 
             _gameplaySettings = _data.Get<GameplaySettingsData>();
 
-            FillingContainers();
-
             _services.Get<Language>().LoadFiles(_localizationFiles);
+
+            FillingContainers();
 
             StartCoroutine(Enter_Coroutine());
 
@@ -72,16 +64,16 @@ namespace Vurbiri.Colonization
             {
                 _services.AddInstance(Coroutines.Create("Gameplay Coroutines"));
                 _eventBus = _services.AddInstance(new GameplayEventBus());
-                _inputController = _services.AddInstance(new InputController(_mainCamera, _inputControllerSettings));
-                _hexagonsData = _data.AddInstance(new HexagonsData(_surfaces, _isLoad));
+                _inputController = _services.AddInstance(new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
+                _hexagonsData = _data.AddInstance(new HexagonsData(_scriptables.surfaces, _isLoad));
                 
-                _data.AddInstance(_visualSet.Get(_gameplaySettings.VisualIds));
-
-                _objects.AddInstance(_mainCamera);
+                _data.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));
+                
+                _objects.AddInstance(_sceneObjects.mainCamera);
                 _objects.AddInstance(_land);
                 _objects.AddInstance(_crossroads);
 
-                _visualSet = null; Resources.UnloadAsset(_visualSet);
+                _settingsUI.InstanceAddToData(_data);
             }
             #endregion
         }
@@ -90,22 +82,23 @@ namespace Vurbiri.Colonization
         {
             yield return StartCoroutine(CreateIsland_Coroutine());
             yield return StartCoroutine(CreatePlayers_Coroutine());
-            yield return StartCoroutine(InitObjects_Coroutine());
+
+            _sceneObjects.Init(this, _settingsUI, _scriptables);
 
             StartCoroutine(Final_Coroutine());
         }
 
         private IEnumerator CreateIsland_Coroutine()
         {
-            _islandCreator.Init(_land, _crossroads);
+            _sceneObjects.islandCreator.Init(_land, _crossroads);
 
-            yield return StartCoroutine(_islandCreator.Create_Coroutine(_hexagonsData, _isLoad));
+            yield return StartCoroutine(_sceneObjects.islandCreator.Create_Coroutine(_hexagonsData, _isLoad));
 
             yield return null;
 
-            _surfaces = null;
-            _hexagonsData.UnloadSurfaces();
-            _islandCreator.Dispose();
+            _hexagonsData.ClearLinks();
+            _sceneObjects.islandCreator.Dispose();
+            _scriptables.Dispose();
 
             yield return null;
         }
@@ -120,16 +113,10 @@ namespace Vurbiri.Colonization
             _playersSettings = null;
         }
 
-        private IEnumerator InitObjects_Coroutine()
-        {
-            _cameraController.Init(_mainCamera, _inputController.CameraActions);
-            _contextMenusWorld.Init(_players, _mainCamera, _eventBus);
-
-            yield return null;
-        }
-
         private IEnumerator Final_Coroutine()
         {
+            yield return null;
+
             for (int i = 0; i < 14; i++)
                 yield return null;
 
@@ -137,7 +124,7 @@ namespace Vurbiri.Colonization
             yield return null;
             GC.Collect();
 
-            _game.Init();
+            _sceneObjects.game.Init();
             _gameplaySettings.StartGame();
             _eventBus.TriggerSceneEndCreation();
 
@@ -151,27 +138,105 @@ namespace Vurbiri.Colonization
         private void OnValidate()
         {
             _land.OnValidate();
-
-            if (_mainCamera == null)
-                _mainCamera = FindAnyObjectByType<Camera>();
-            if (_islandCreator == null)
-                _islandCreator = FindAnyObjectByType<IslandCreator>();
-            if (_cameraController == null)
-                _cameraController = FindAnyObjectByType<CameraController>();
-            if (_contextMenusWorld == null)
-                _contextMenusWorld = FindAnyObjectByType<UI.ContextMenusWorld>();
+            _sceneObjects.OnValidate();
+            _scriptables.OnValidate();
+            _settingsUI.OnValidate();
 
             _playersSettings.OnValidate();
             if (_playersSettings.warriorsContainer == null)
-                _playersSettings.warriorsContainer = _islandCreator.WarriorContainer;
+                _playersSettings.warriorsContainer = _sceneObjects.islandCreator.WarriorContainer;
             if (_playersSettings.roadsFactory.container == null)
-                _playersSettings.roadsFactory.container = _islandCreator.RoadsContainer;
-
-            if (_surfaces == null)
-                _surfaces = VurbiriEditor.Utility.FindAnyScriptable<SurfacesScriptable>();
-            if (_visualSet == null)
-                _visualSet = VurbiriEditor.Utility.FindAnyScriptable<PlayerVisualSetScriptable>();
+                _playersSettings.roadsFactory.container = _sceneObjects.islandCreator.RoadsContainer;
         }
 #endif
+
+        #region Nested: SceneObjects, ScriptableObjects, UISettings
+        //*******************************************************
+        [System.Serializable]
+        private class SceneObjects
+        {
+            public Game game;
+            [Space]
+            public Camera mainCamera;
+            [Space]
+            public IslandCreator islandCreator;
+            public CameraController cameraController;
+            public ContextMenusWorld contextMenusWorld;
+
+            public void Init(GameplayEntryPoint parent, UISettings ui, ScriptableObjects scriptables)
+            {
+                cameraController.Init(mainCamera, parent._inputController.CameraActions);
+                contextMenusWorld.Init(new(parent._players, ui.hintGlobalWorld, ui.hintTextColors, scriptables.prices, mainCamera, parent._eventBus));
+            }
+
+#if UNITY_EDITOR
+            public void OnValidate()
+            {
+                if (game == null)
+                    game = FindAnyObjectByType<Game>();
+                if (mainCamera == null)
+                    mainCamera = FindAnyObjectByType<Camera>();
+                if (islandCreator == null)
+                    islandCreator = FindAnyObjectByType<IslandCreator>();
+                if (cameraController == null)
+                    cameraController = FindAnyObjectByType<CameraController>();
+                if (contextMenusWorld == null)
+                    contextMenusWorld = FindAnyObjectByType<ContextMenusWorld>();
+            }
+#endif
+        }
+        //*******************************************************
+        [System.Serializable]
+        private class ScriptableObjects : IDisposable
+        {
+            public SurfacesScriptable surfaces;
+            public PricesScriptable prices;
+            public PlayerVisualSetScriptable visualSet;
+
+            public PlayersVisual GetPlayersVisual(int[] ids) => visualSet.Get(ids);
+
+            public void Dispose()
+            {
+                surfaces.Dispose();
+                surfaces = null;
+                visualSet.Dispose();
+                visualSet = null;
+            }
+
+#if UNITY_EDITOR
+            public void OnValidate()
+            {
+                if (surfaces == null)
+                    surfaces = VurbiriEditor.Utility.FindAnyScriptable<SurfacesScriptable>();
+                if (prices == null)
+                    prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
+                if (visualSet == null)
+                    visualSet = VurbiriEditor.Utility.FindAnyScriptable<PlayerVisualSetScriptable>();
+            }
+#endif
+        }
+        //*******************************************************
+        [System.Serializable]
+        private class UISettings
+        {
+            public HintGlobal hintGlobalWorld;
+            public HintTextColor hintTextColors;
+
+            public void InstanceAddToData(DIContainer data)
+            {
+                hintTextColors.Init();
+
+                data.AddInstance(hintTextColors);
+            }
+
+#if UNITY_EDITOR
+            public void OnValidate()
+            {
+                if (hintGlobalWorld == null)
+                    hintGlobalWorld = GameObject.Find("HintGlobalWorld").GetComponent<HintGlobal>();
+            }
+#endif
+        }
+        #endregion
     }
 }

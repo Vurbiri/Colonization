@@ -8,7 +8,7 @@ namespace VurbiriEditor.Colonization
     public class PlayerVisualSetWindow : EditorWindow
     {
         #region Consts
-        private const string NAME = "Player Visual", MENU = MENU_PATH + NAME;
+        private const string NAME = "Player Visual", MENU = MENU_UI_PATH + NAME;
         #endregion
 
         [SerializeField] private PlayerVisualSetScriptable _visualSet;

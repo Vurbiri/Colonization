@@ -18,21 +18,21 @@ namespace Vurbiri.Colonization.UI
         private Players _players;
         private Player _playerCurrent;
 
-        public void Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, Players players, Color color, PricesScriptable prices)
+        public void Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;
-            _players = players;
+            _players = settings.players;
 
-            _buttonClose.Init(OnClose);
+            _buttonClose.Init(settings.hint, OnClose);
 
-            _buttonRoads.Init(new(0f, -_distanceOfButtons, 0f), color, prices.Road, OnRoads);
+            _buttonRoads.Init(new(0f, -_distanceOfButtons, 0f), settings, settings.prices.Road, OnRoads);
 
             Vector3 distance60angle = new(_distanceOfButtons * CONST.SIN_60, _distanceOfButtons * CONST.COS_60, 0f);
-            _buttonRecruiting.Init(distance60angle, color, OnHiring);
-            _buttonWall.Init(distance60angle, color, prices.Wall, OnWall);
+            _buttonRecruiting.Init(distance60angle, settings.hint, settings.color, OnHiring);
+            _buttonWall.Init(distance60angle, settings, settings.prices.Wall, OnWall);
             distance60angle.x *= -1f;
-            _buttonUpgrade.Init(distance60angle, color, prices.Edifices, OnUpgrade);
+            _buttonUpgrade.Init(distance60angle, settings, settings.prices.Edifices, OnUpgrade);
 
             _thisGO.SetActive(false);
         }

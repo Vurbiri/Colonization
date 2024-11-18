@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
-using Vurbiri.Localization;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -14,7 +12,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private HintingButton _buttonClose;
         [SerializeField] private HintingButton _buttonMovement;
-        [SerializeField] private ButtonAttack[] _buttonsAttack;
+        [SerializeField] private ButtonSkill[] _buttonsSkills;
 
         private int _countButtonsAttack;
         private Players _players;
@@ -22,12 +20,11 @@ namespace Vurbiri.Colonization.UI
 
         private readonly Vector3[][] _buttonPositions = new Vector3[4][];
 
-        public void Init(Players players, Color color)
+        public void Init(ContextMenuSettings settings)
         {
-            _players = players;
-            Language language = SceneServices.Get<Language>();
+            _players = settings.players;
 
-            _countButtonsAttack = _buttonsAttack.Length;
+            _countButtonsAttack = _buttonsSkills.Length;
             float angle;
             Vector3 distance = new(0f, _distanceOfButtons, 0f);
             for (int i = 0; i <= _countButtonsAttack; i++)
@@ -38,13 +35,13 @@ namespace Vurbiri.Colonization.UI
                     _buttonPositions[i][k] = Quaternion.Euler(0f, 0f, angle * (k + 1)) * distance;
             }
 
-            _buttonClose.Init(OnClose);
+            _buttonClose.Init(settings.hint, OnClose);
 
-            _buttonMovement.Init(-distance, color, OnMovement);
+            _buttonMovement.Init(-distance, settings.hint, settings.color, OnMovement);
 
             
             for (int i = 0; i < _countButtonsAttack; i++)
-                _buttonsAttack[i].Init(color, _thisGO, language);
+                _buttonsSkills[i].Init(settings, _thisGO);
 
             _thisGO.SetActive(false);
         }
@@ -53,16 +50,16 @@ namespace Vurbiri.Colonization.UI
         {
             _currentWarrior = actor;
             
-            _buttonMovement.Setup(_currentWarrior.CanMove());
+            _buttonMovement.Setup(true, _currentWarrior.CanMove());
 
-            List<SkillUI> settings = _warriorsSettings[actor.Id].Skills.GetAttackSkillsUI();
-            int count = settings.Count, index;
+            var skills = _warriorsSettings[actor.Id].Skills.SkillsUI;
+            int count = skills.Count, index;
             
             for (index = 0; index < count; index++)
-                _buttonsAttack[index].Setup(actor, index, settings[index], _buttonPositions[count][index]);
+                _buttonsSkills[index].Setup(actor, index, skills[index], _buttonPositions[count][index]);
 
             for (; index < _countButtonsAttack; index++)
-                _buttonsAttack[index].Disable();
+                _buttonsSkills[index].Disable();
 
             _thisGO.SetActive(true);
         }
@@ -76,8 +73,8 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if(_buttonsAttack == null || _buttonsAttack.Length == 0)
-                _buttonsAttack = GetComponentsInChildren<ButtonAttack>();
+            if(_buttonsSkills == null || _buttonsSkills.Length == 0)
+                _buttonsSkills = GetComponentsInChildren<ButtonSkill>();
             if (_warriorsSettings == null)
                 _warriorsSettings = VurbiriEditor.Utility.FindAnyScriptable<WarriorsSettingsScriptable>();
         }

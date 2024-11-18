@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Vurbiri.Collections;
 using Vurbiri.Localization;
@@ -18,9 +19,9 @@ namespace Vurbiri.Colonization.UI
         private Language _localization;
         private IReadOnlyList<ACurrencies> _edificePrices;
 
-        public void Init(Vector3 localPosition, Color color, IReadOnlyList<ACurrencies> edificePrices, UnityEngine.Events.UnityAction action)
+        public void Init(Vector3 localPosition, ButtonSettings settings, IReadOnlyList<ACurrencies> edificePrices, UnityAction action)
         {
-            base.Init(localPosition, color, action);
+            base.Init(localPosition, settings, action);
             _edificePrices = edificePrices;
             _localization = SceneServices.Get<Language>();
         }
@@ -56,10 +57,10 @@ namespace Vurbiri.Colonization.UI
 
 
 #if UNITY_EDITOR
-        protected override void OnValidate()
+        private void OnValidate()
         {
-            base.OnValidate();
-            
+            _file = CONST_UI_LNG_KEYS.FILE;
+
             for (int i = 0; i < EdificeId.Count; i++)
             {
                 if(string.IsNullOrEmpty(_edificeView[i].keyHint))

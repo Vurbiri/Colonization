@@ -25,11 +25,11 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        protected override void OnValidate()
+        protected void OnValidate()
         {
-            base.OnValidate();
-            
-            if(string.Empty == _key)
+            _file = CONST_UI_LNG_KEYS.FILE;
+
+            if (string.Empty == _key)
                 _key = WarriorId.GetName(_id);
         }
 #endif

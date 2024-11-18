@@ -5,9 +5,6 @@ namespace Vurbiri.Colonization.UI
 {
     public class ContextMenusWorld : MonoBehaviour
     {
-        [SerializeField] private PricesScriptable _prices;
-        [Space]
-        [SerializeField] private RectTransform _thisRectTransform;
         [SerializeField] private RectTransform _canvasTransform;
         [Space]
         [SerializeField] private CrossroadMainMenu _crossroadMenu;
@@ -18,36 +15,37 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private LookAtCamera _lookAtCamera;
 
-        protected GameObject _thisGO;
+        private GameObject _thisGO;
         private Camera _camera;
         private Players _players;
+        private RectTransform _thisRectTransform;
 
-        public void Init(Players players, Camera camera, GameplayEventBus eventBus)
+        public void Init(ContextMenuSettings settings)
         {
             _thisGO = gameObject;
-            _camera = camera;
-            _players = players;
+            _camera = settings.camera;
+            _players = settings.players;
+            _thisRectTransform = GetComponent<RectTransform>();
 
-            _lookAtCamera.Init(camera);
+            _lookAtCamera.Init(_camera);
 
-            Color color = SceneData.Get<PlayersVisual>()[PlayerId.Player].color;
             Debug.Log("Переделать _playerCurrent на _player!!!");
 
-            _crossroadMenu.Init(_roadsMenu, _recruitingMenu, players, color, _prices);
-            _recruitingMenu.Init(_crossroadMenu, players, color, _prices.Warriors);
-            _roadsMenu.Init(_crossroadMenu, players, color, camera, _prices.Road);
-            _warriorsMenu.Init(players, color);
+            _crossroadMenu.Init(_roadsMenu, _recruitingMenu, settings);
+            _recruitingMenu.Init(_crossroadMenu, settings);
+            _roadsMenu.Init(_crossroadMenu, settings);
+            _warriorsMenu.Init(settings);
 
             _crossroadMenu.EventEnabled += EnableLook;
             _recruitingMenu.EventEnabled += EnableLook;
             _roadsMenu.EventEnabled += EnableLook;
             _warriorsMenu.EventEnabled += EnableLook;
 
-            eventBus.EventCrossroadSelect += OnSelectCrossroad;
-            eventBus.EventCrossroadUnselect += OnUnselectCrossroad;
+            settings.eventBus.EventCrossroadSelect += OnSelectCrossroad;
+            settings.eventBus.EventCrossroadUnselect += OnUnselectCrossroad;
 
-            eventBus.EventActorSelect += OnSelectWarrior;
-            eventBus.EventActorUnselect += OnUnselectWarrior;
+            settings.eventBus.EventActorSelect += OnSelectWarrior;
+            settings.eventBus.EventActorUnselect += OnUnselectWarrior;
         }
 
         private void OnSelectCrossroad(Crossroad crossroad)
@@ -132,12 +130,8 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_prices == null)
-                _prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
-            if (_thisRectTransform == null)
-                _thisRectTransform = GetComponent<RectTransform>();
             if (_canvasTransform == null)
-                _canvasTransform = _thisRectTransform.parent.GetComponent<RectTransform>();
+                _canvasTransform = transform.parent.GetComponent<RectTransform>();
             if (_crossroadMenu == null)
                 _crossroadMenu = GetComponentInChildren<CrossroadMainMenu>();
             if (_recruitingMenu == null)

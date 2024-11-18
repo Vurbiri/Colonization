@@ -1,12 +1,14 @@
+using Vurbiri.Localization;
+
 namespace Vurbiri.Colonization.UI
 {
     public static class CONST_UI_LNG_KEYS
 	{
-        public const string KEY_DAMAGE = "Damage", KEY_AP = "AP";
+        public const Files FILE = Files.Gameplay;
 
-        public static readonly string[] KEYS_DESK_EFFECTS =
-        { "Damage", "HPPerTurnAddition", "AttackAddition", "AttackPercent", "DefenseAddition", "DefensePercent" };
+        public const string AP_KEY = "AP";
 
-                                                                    
+        public static readonly string[] DESK_EFFECTS_KEYS =
+        { "Damage", "HPPerTurnAdditionTemp", "AttackAdditionTemp", "AttackPercentTemp", "DefenseAdditionTemp", "DefensePercentTemp" };
     }
 }

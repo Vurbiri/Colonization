@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.Actors
             _currentAP = _abilities.GetAbility(ActorAbilityId.CurrentAP);
             _currentAP.Clamp = CurrentAPCamp;
 
-            _isMove = _abilities.GetAbility(ActorAbilityId.IsMove);
+            _move = _abilities.GetAbility(ActorAbilityId.IsMove);
 
             _thisTransform = transform;
             _extentsZ = GetComponent<BoxCollider>().bounds.extents.z;
@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.Actors
 
             _currentHP.Value = data.currentHP;
             _currentAP.Value = data.currentAP;
-            _isMove.Value    = data.move;
+            _move.Value    = data.move;
 
             int count = data.effects.Length;
             for (int i = 0; i < count; i++)

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using Vurbiri.Localization;
 using Vurbiri.Reactive;
 
@@ -13,9 +14,9 @@ namespace Vurbiri.Colonization.UI
         private IUnsubscriber _unsubscriber;
         private string _caption;
 
-        public virtual void Init(Vector3 localPosition, Color color, ACurrencies cost, UnityEngine.Events.UnityAction action)
+        public virtual void Init(Vector3 localPosition, ButtonSettings settings, ACurrencies cost, UnityAction action)
         {
-            base.Init(localPosition, color, action);
+            base.Init(localPosition, settings, action);
             _cost = cost;
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }

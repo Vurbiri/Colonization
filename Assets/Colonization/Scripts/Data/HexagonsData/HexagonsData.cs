@@ -41,9 +41,8 @@ namespace Vurbiri.Colonization.Data
         public void Save(bool saveToFile, Action<bool> callback = null) 
                     => _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.HEX_DATA, _hexagons.Values, saveToFile, callback));
 
-        public void UnloadSurfaces()
+        public void ClearLinks()
         {
-            _surfaces.Dispose();
             _surfaces = null;
         }
 
