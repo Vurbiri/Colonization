@@ -10,6 +10,7 @@ namespace Vurbiri.Colonization.Actors
     public abstract partial class Actor : AReactiveElementMono<Actor>, ISelectable
     {
         #region Fields
+        protected int _typeId;
         protected int _id;
         protected Id<PlayerId> _owner;
         protected Ability<ActorAbilityId> _currentHP;
@@ -28,6 +29,7 @@ namespace Vurbiri.Colonization.Actors
         protected List<ASkillState> _skillStates;
         #endregion
 
+        public int TypeId => _typeId;
         public int Id => _id;
         public Id<PlayerId> Owner => _owner;
         public int ActionPoint => _currentAP.Value;
@@ -42,14 +44,24 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.SetState<MoveState>();
         }
 
+        public void Block()
+        {
+            _stateMachine.SetState<MoveState>();
+        }
+
         public void UseSkill(int id)
         {
             _stateMachine.SetState(_skillStates[id]);
         }
 
 
-        public int AddEffect(ReactiveEffect effect) => _effects.Add(effect);
-        public int ApplyEffect(AEffect effect) => _abilities.AddPerk(effect);
+        public void AddEffect(ReactiveEffect effect) => _effects.Add(effect);
+        public int ApplyEffect(AEffect effect)
+        {
+            int delta = _abilities.AddPerk(effect);
+            actionThisChange?.Invoke(this, TypeEvent.Change);
+            return delta;
+        }
 
         public virtual void Select()
         {
@@ -62,12 +74,13 @@ namespace Vurbiri.Colonization.Actors
 
         public int[][] ToArray()
         {
+            int i = 0;
             int count = _effects.Count + 2;
             int[][] array = new int[count][];
-            array[0] = _currentHex.Key.ToArray();
-            array[1] = new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value };
-            for (int i = 2; i < count; i++)
-                array[i] = _effects[i].ToArray();
+            array[i++] = _currentHex.Key.ToArray();
+            array[i++] = new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value };
+            foreach (ReactiveEffect effect in _effects)
+                array[i++] = effect.ToArray();
 
             return array;
         }
@@ -85,9 +98,9 @@ namespace Vurbiri.Colonization.Actors
         }
 
 
-        private void RedirectEvents(ReactiveEffect item, Operation operation)
+        private void RedirectEvents(ReactiveEffect item, TypeEvent operation)
         {
-            actionThisChange?.Invoke(this, Operation.Change);
+            actionThisChange?.Invoke(this, TypeEvent.Change);
         }
 
         private int CurrentHPCamp(int value) => Mathf.Clamp(value, 0, _abilities.GetValue(ActorAbilityId.MaxHP));

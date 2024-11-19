@@ -2,33 +2,14 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    public class Unsubscriber<T> : IUnsubscriber
+    public class Unsubscriber<TDelegate> : IUnsubscriber where TDelegate : Delegate
     {
-        private IReactive<T> _reactive;
-        private Action<T> _listener;
+        private IReactiveBase<TDelegate> _reactive;
+        private TDelegate _listener;
 
-        public Unsubscriber(IReactive<T> reactiveValue, Action<T> listener)
+        public Unsubscriber(IReactiveBase<TDelegate> reactiveValue, TDelegate listener)
         {
             _reactive = reactiveValue;
-            _listener = listener;
-        }
-
-        public void Unsubscribe()
-        {
-            _reactive?.Unsubscribe(_listener);
-            _reactive = null;
-            _listener = null;
-        }
-    }
-
-    public class Unsubscriber<TA, TB> : IUnsubscriber
-    {
-        private IReactive<TA, TB> _reactive;
-        private Action<TA, TB> _listener;
-
-        public Unsubscriber(IReactive<TA, TB> reactiveValues, Action<TA, TB> listener)
-        {
-            _reactive = reactiveValues;
             _listener = listener;
         }
 

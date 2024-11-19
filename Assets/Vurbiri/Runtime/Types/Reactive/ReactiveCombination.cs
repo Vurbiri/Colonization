@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Reactive
 {
-    public class ReactiveCombination<TA, TB> : IReadOnlyReactiveValue<TA, TB>, IDisposable
+    public class ReactiveCombination<TA, TB> : IReadOnlyReactive<TA, TB>, IDisposable
     {
         protected TA _valueA;
         protected TB _valueB;
@@ -36,7 +36,7 @@ namespace Vurbiri.Reactive
             if (calling)
                 action(_valueA, _valueB);
 
-            return new Unsubscriber<TA, TB>(this, action);
+            return new Unsubscriber<Action<TA, TB>>(this, action);
         }
 
         public void Signal() => ActionValuesChange?.Invoke(_valueA, _valueB);

@@ -42,11 +42,13 @@ namespace VurbiriEditor
         }
         protected int DrawInt(string name) => DrawInt(_mainProperty, name);
 
-        protected int DrawIntSlider(SerializedProperty parent, string name, int min, int max)
+        protected int DrawIntSlider(SerializedProperty parent, string name, int min, int max, int defaultValue = 0)
         {
             _position.y += _height;
             SerializedProperty property = parent.FindPropertyRelative(name);
-            int value = Mathf.Clamp(property.intValue, min, max);
+            int value = property.intValue;
+            if (value < min & value > max) value = defaultValue;
+            value = Mathf.Clamp(value, min, max);
             return property.intValue = EditorGUI.IntSlider(_position, property.displayName, value, min, max);
         }
         protected int DrawIntSlider(string name, int min, int max) => DrawIntSlider(_mainProperty, name, min, max);

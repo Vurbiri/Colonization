@@ -17,8 +17,8 @@ namespace Vurbiri.Colonization
         private readonly Coroutines _coroutines;
 
         public Id<PlayerId> Id => _id;
-        public AReadOnlyCurrenciesReactive Resources { get; }
-        public IReactiveSubValues<int, CurrencyId> ExchangeRate => _exchangeRate;
+        public ACurrenciesReactive Resources { get; }
+        public IReactive<int, int> ExchangeRate => _exchangeRate;
 
         public Player(Id<PlayerId> playerId, PlayerObjects obj)
         {
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization
 
         }
 
-        public IReadOnlyReactiveValue<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _obj.GetAbilityReactive(id);
+        public IReadOnlyReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _obj.GetAbilityReactive(id);
 
         public bool CanEdificeUpgrade(Crossroad crossroad) => _obj.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
         public void BuyEdificeUpgrade(Crossroad crossroad)

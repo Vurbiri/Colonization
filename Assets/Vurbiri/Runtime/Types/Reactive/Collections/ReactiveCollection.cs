@@ -10,7 +10,7 @@ namespace Vurbiri.Reactive.Collections
         private int _count = 0;
         private int _capacity = 4;
 
-        private Action<T, Operation> actionCollectionChange;
+        private Action<T, TypeEvent> actionCollectionChange;
 
         public T this[int index]
         {
@@ -42,18 +42,21 @@ namespace Vurbiri.Reactive.Collections
         #endregion
 
         #region IReactiveCollection
-        public IUnsubscriber Subscribe(Action<T, Operation> action)
+        public IUnsubscriber Subscribe(Action<T, TypeEvent> action, bool calling = true)
         {
             actionCollectionChange -= action ?? throw new ArgumentNullException("action");
             actionCollectionChange += action;
 
-            for (int i = 0; i < _count; i++)
-                action(_values[i], Operation.Subscribe);
+            if (calling)
+            {
+                for (int i = 0; i < _count; i++)
+                    action(_values[i], TypeEvent.Subscribe);
+            }
 
-            return new UnsubscriberCollection<T>(this, action);
+            return new Unsubscriber<Action<T, TypeEvent>>(this, action);
         }
 
-        public void Unsubscribe(Action<T, Operation> action) => actionCollectionChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<T, TypeEvent> action) => actionCollectionChange -= action ?? throw new ArgumentNullException("action");
         #endregion
 
         public void Add(T item)
@@ -83,9 +86,9 @@ namespace Vurbiri.Reactive.Collections
             _values = array;
         }
 
-        private void RedirectEvents(T item, Operation operation)
+        private void RedirectEvents(T item, TypeEvent operation)
         {
-            if (operation == Operation.Remove)
+            if (operation == TypeEvent.Remove)
             {
                 _count--;
                 T temp;

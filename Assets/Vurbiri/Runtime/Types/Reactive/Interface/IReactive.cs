@@ -2,15 +2,17 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    public interface IReactive<T> 
+    public interface IReactiveBase<TAction> where TAction : Delegate
     {
-        public IUnsubscriber Subscribe(Action<T> action, bool calling = true);
-        public void Unsubscribe(Action<T> action);
+        public IUnsubscriber Subscribe(TAction action, bool calling = true);
+        public void Unsubscribe(TAction action);
     }
 
-    public interface IReactive<TA, TB>
+    public interface IReactive<T> : IReactiveBase<Action<T>>
     {
-        public IUnsubscriber Subscribe(Action<TA, TB> action, bool calling = true);
-        public void Unsubscribe(Action<TA, TB> action);
+    }
+
+    public interface IReactive<TA, TB> : IReactiveBase<Action<TA, TB>>
+    {
     }
 }

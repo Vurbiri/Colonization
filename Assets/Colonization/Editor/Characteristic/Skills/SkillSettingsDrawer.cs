@@ -9,7 +9,7 @@ namespace VurbiriEditor.Colonization.Characteristics
     public class SkillSettingsDrawer : PropertyDrawerUtility
     {
         private const string NAME_ELEMENT = "Skill {0}";
-        private const string P_CLIP = "clipSettings", P_MOVE = "isMove", P_VALID = "isValid", P_SETTINGS = "settings", P_UI = "ui";
+        private const string P_CLIP = "clipSettings", P_MOVE = "isMove", P_REACT = "isTargetReact", P_SETTINGS = "settings", P_UI = "ui";
         private const string P_REM_T = "remainingTime", P_DAMAGE_T = "damageTime", P_RANGE = "range", P_ID_A = "idAnimation";
         private const string P_TARGET = "target", P_COST = "cost", P_EFFECTS = "effects";
         private const string P_SPRITE = "_sprite", P_KEY_NAME = "_nameKey", P_COST_UI = "_cost";
@@ -35,10 +35,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 Space();
                 var clipSett = DrawObject<AnimationClipSettingsScriptable>(P_CLIP);
 
-                bool isValid = clipSett != null && clipSett.clip != null;
-                mainProperty.FindPropertyRelative(P_VALID).boolValue = isValid;
-
-                if (isValid)
+                if (clipSett != null && clipSett.clip != null)
                 {
                     DrawButton(clipSett);
                    
@@ -53,14 +50,24 @@ namespace VurbiriEditor.Colonization.Characteristics
                     DrawLabelAndSetValue(settingsProperty, P_DAMAGE_T, clipSett.damageTime);
                     DrawLabelAndSetValue(settingsProperty, P_REM_T, clipSett.totalTime - clipSett.damageTime);
                     DrawLabelAndSetValue(P_RANGE, clipSett.range);
-                    DrawLabelAndSetValue(settingsProperty, P_ID_A, id);
                     EditorGUI.indentLevel--;
                     DrawLine(Color.gray);
 
-                    if ((target = DrawId(P_TARGET, typeof(TargetOfSkillId))) != TargetOfSkillId.Self)
+                    Space();
+                    DrawIntSlider(settingsProperty, P_ID_A, 0, ActorSkin.COUNT_SKILLS - 1, id);
+
+                    if ((target = DrawId(P_TARGET, typeof(TargetOfSkillId))) == TargetOfSkillId.Enemy)
                     {
                         Space();
-                        DrawBool(P_MOVE);
+                        if (DrawBool(P_MOVE))
+                            DrawLabelAndSetValue(P_REACT, true);
+                        else
+                            DrawBool(P_REACT);
+                    }
+                    else
+                    {
+                        DrawLabelAndSetValue(P_MOVE, false);
+                        DrawLabelAndSetValue(P_REACT, false);
                     }
 
                     SetChildrenEffectSelfTarget(target);
@@ -131,16 +138,22 @@ namespace VurbiriEditor.Colonization.Characteristics
                 AnimationClipSettingsScriptable clipSett = property.FindPropertyRelative(P_CLIP).objectReferenceValue as AnimationClipSettingsScriptable;
                 if (clipSett != null && clipSett.clip != null)
                 {
-                    rate += 12.6f;
-                    if (property.FindPropertyRelative(P_TARGET).intValue != TargetOfEffectId.Self)
-                        rate += 1.2f;
+                    rate += 15f;
 
                     SerializedProperty effectsProperty = property.FindPropertyRelative(P_EFFECTS);
                     if(effectsProperty.isExpanded)
                     {
-                        rate += 2.4f;
-                        for (int i = 0; i < effectsProperty.arraySize; i++)
-                            rate += EffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(i));
+                        if (effectsProperty.arraySize > 0)
+                        {
+                            rate += 1.3f;
+                            for (int i = 0; i < effectsProperty.arraySize; i++)
+                                rate += EffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(i));
+                        }
+                        else
+                        {
+                            rate += 2.3f;
+                        }
+
                     }
                 }
             }

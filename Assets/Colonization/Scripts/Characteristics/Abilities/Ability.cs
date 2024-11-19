@@ -4,7 +4,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class Ability<TId> : IReadOnlyReactiveValue<int>, IValueId<TId> where TId : AAbilityId<TId>
+    public class Ability<TId> : IReadOnlyReactive<int>, IValueId<TId> where TId : AAbilityId<TId>
     {
         private readonly Id<TId> _id;
         private readonly int _baseValue;
@@ -101,7 +101,7 @@ namespace Vurbiri.Colonization.Characteristics
             if (calling)
                 action(_currentValue);
 
-            return new Unsubscriber<int>(this, action);
+            return new Unsubscriber<Action<int>>(this, action);
         }
 
         public void Unsubscribe(Action<int> action) => actionValueChange -= action ?? throw new ArgumentNullException("Action<int> action");

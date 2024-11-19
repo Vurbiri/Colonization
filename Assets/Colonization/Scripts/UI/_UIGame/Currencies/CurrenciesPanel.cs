@@ -1,6 +1,5 @@
 namespace Vurbiri.Colonization.UI
 {
-    using Characteristics;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -29,8 +28,7 @@ namespace Vurbiri.Colonization.UI
 
             GetComponent<Image>().color = SceneData.Get<PlayersVisual>()[_playerId].color.SetAlpha(_transparency);
 
-            Player player = SceneObjects.Get<Players>()[_playerId];
-            var currencies = player.Resources;
+            var currencies = SceneObjects.Get<Players>()[_playerId].Resources;
 
             Vector2 cSize = _currencyUIPrefab.Size, aSize = _amountUIPrefab.Size, bSize = _bloodUIPrefab.Size;
             float offset = cSize.x * 5f + aSize.x + bSize.x + _space * 7f;
@@ -55,10 +53,10 @@ namespace Vurbiri.Colonization.UI
             }
 
             pos.x -= (cSize.x - aSize.x) * 0.5f;
-            Instantiate(_amountUIPrefab, thisRectTransform).Init(pos, currencies, player.GetAbilityReactive(PlayerAbilityId.MaxMainResources));
+            Instantiate(_amountUIPrefab, thisRectTransform).Init(pos, currencies.AmountReactive, currencies.AmountMax);
 
             pos.x += (bSize.x + aSize.x) * 0.5f + _space * 2f;
-            Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, currencies, player.GetAbilityReactive(PlayerAbilityId.MaxBlood), _directionPopup);
+            Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, currencies, currencies.BloodMax, _directionPopup);
 
             SceneServices.Get<GameplayEventBus>().EventSceneEndCreation -= Create;
             Destroy(this);

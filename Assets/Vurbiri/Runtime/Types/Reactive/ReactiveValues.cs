@@ -7,7 +7,7 @@ namespace Vurbiri.Reactive
 {
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]
-    public class ReactiveValues<TA, TB> : IReadOnlyReactiveValue<TA, TB>
+    public class ReactiveValues<TA, TB> : IReadOnlyReactive<TA, TB>
     {
         [SerializeField, JsonProperty("v1")]
         protected TA _valueA;
@@ -48,7 +48,7 @@ namespace Vurbiri.Reactive
             if (calling)
                 action(_valueA, _valueB);
 
-            return new Unsubscriber<TA, TB>(this, action);
+            return new Unsubscriber<Action<TA, TB>>(this, action);
         }
 
         public void Signal() => ActionValuesChange?.Invoke(_valueA, _valueB);

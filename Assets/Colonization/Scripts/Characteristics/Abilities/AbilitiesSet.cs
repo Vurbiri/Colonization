@@ -5,12 +5,12 @@ namespace Vurbiri.Colonization.Characteristics
     using Vurbiri.Collections;
     using Vurbiri.Reactive;
 
-    public class AbilitiesSet<TId> : IReadOnlyList<IReadOnlyReactiveValue<int>> where TId : AAbilityId<TId>
+    public class AbilitiesSet<TId> : IReadOnlyList<IReadOnlyReactive<int>> where TId : AAbilityId<TId>
     {
         private readonly IdArray<TId, Ability<TId>> _abilities = new();
 
-        public IReadOnlyReactiveValue<int> this[int index] => _abilities[index];
-        public IReadOnlyReactiveValue<int> this[Id<TId> id] => _abilities[id];
+        public IReadOnlyReactive<int> this[int index] => _abilities[index];
+        public IReadOnlyReactive<int> this[Id<TId> id] => _abilities[id];
 
         public int Count => AAbilityId<TId>.Count;
 
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Characteristics
         public int AddPerk(IPerk perk) => _abilities[perk.TargetAbility].AddModifier(perk);
         public int RemovePerk(IPerk perk) => _abilities[perk.TargetAbility].RemoveModifier(perk);
 
-        public IEnumerator<IReadOnlyReactiveValue<int>> GetEnumerator()
+        public IEnumerator<IReadOnlyReactive<int>> GetEnumerator()
         {
             for (int i = 0; i < AAbilityId<TId>.Count; i++)
                 yield return _abilities[i];

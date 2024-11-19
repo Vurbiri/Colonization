@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.Characteristics
         public bool IsNegative => _parentTarget == TargetOfSkillId.Enemy;
         public int KeyDescId => _descKeyId;
 
-        public AEffect CreateEffect()
+        public AEffect CreateEffect(EffectCode _code)
         {
             bool isSelf = _targetActor == TargetOfEffectId.Self;
             bool isNegative = !isSelf & _parentTarget == TargetOfSkillId.Enemy;
@@ -35,11 +35,11 @@ namespace Vurbiri.Colonization.Characteristics
             if (_duration > 0)
             {
                 if (isSelf)
-                    return new TemporarySelfEffect (_targetAbility, isNegative, _typeModifier, _value, _duration);
+                    return new TemporarySelfEffect (_targetAbility, isNegative, _typeModifier, _value, _duration, _code);
                 if (_isReflect)
-                    return new TemporaryReflectEffect(_targetAbility, isNegative, _typeModifier, _value, _duration);
+                    return new TemporaryReflectEffect(_targetAbility, isNegative, _typeModifier, _value, _duration, _code);
 
-                return new TemporaryTargetEffect(_targetAbility, isNegative, _typeModifier, _value, _duration);
+                return new TemporaryTargetEffect(_targetAbility, isNegative, _typeModifier, _value, _duration, _code);
             }
 
             if (_usedAbility < 0)
@@ -62,28 +62,8 @@ namespace Vurbiri.Colonization.Characteristics
 
         public AEffectsUI CreateEffectUI(HintTextColor hintTextColor)
         {
-            int value;
-            string hexColor;
             string deskKey = CONST_UI_LNG_KEYS.DESK_EFFECTS_KEYS[_descKeyId];
-
-            if (_isDescKeyBase)
-            {
-                hexColor = hintTextColor.HexColorBase;
-                value = _value;
-            }
-            else
-            {
-                if (_targetActor == TargetOfEffectId.Target & _parentTarget == TargetOfSkillId.Enemy)
-                {
-                    hexColor = hintTextColor.HexColorMinus;
-                    value = -_value;
-                }
-                else
-                {
-                    hexColor = hintTextColor.HexColorPlus;
-                    value = _value;
-                }
-            }
+            (int value, string hexColor) = GetSettingsEffectUI(hintTextColor);
 
             if (_typeModifier != TypeModifierId.Percent & _targetAbility <= ActorAbilityId.MAX_RATE_ABILITY)
                 value /= ActorAbilityId.RATE_ABILITY;
@@ -93,6 +73,17 @@ namespace Vurbiri.Colonization.Characteristics
                 return new TempEffectUI(deskKey, value, _duration, hexColor);
 
             return new PermEffectUI(deskKey, value, hexColor);
+        }
+
+        private (int, string) GetSettingsEffectUI(HintTextColor hintTextColor)
+        {
+            if (_isDescKeyBase)
+                return (_value, hintTextColor.HexColorBase);
+
+            if (_targetActor == TargetOfEffectId.Target & _parentTarget == TargetOfSkillId.Enemy)
+                return (-_value, hintTextColor.HexColorMinus);
+
+            return (_value, hintTextColor.HexColorPlus);
         }
     }
 }

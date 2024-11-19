@@ -12,36 +12,26 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private HintingButton _buttonClose;
         [SerializeField] private HintingButton _buttonMovement;
-        [SerializeField] private ButtonSkill[] _buttonsSkills;
+        [SerializeField] private ButtonSkill[] _buttonsSkill;
 
-        private int _countButtonsAttack;
+        private int _countButtonsSkill;
         private Players _players;
         private Actor _currentWarrior;
 
-        private readonly Vector3[][] _buttonPositions = new Vector3[4][];
+        private Vector3[][] _buttonPositions;
 
         public void Init(ContextMenuSettings settings)
         {
             _players = settings.players;
 
-            _countButtonsAttack = _buttonsSkills.Length;
-            float angle;
+            CreatePositionButtons();
             Vector3 distance = new(0f, _distanceOfButtons, 0f);
-            for (int i = 0; i <= _countButtonsAttack; i++)
-            {
-                angle = 180f / (i + 1);
-                _buttonPositions[i] = new Vector3[i];
-                for (int k = 0; k < i; k++)
-                    _buttonPositions[i][k] = Quaternion.Euler(0f, 0f, angle * (k + 1)) * distance;
-            }
 
             _buttonClose.Init(settings.hint, OnClose);
-
             _buttonMovement.Init(-distance, settings.hint, settings.color, OnMovement);
 
-            
-            for (int i = 0; i < _countButtonsAttack; i++)
-                _buttonsSkills[i].Init(settings, _thisGO);
+            for (int i = 0; i < _countButtonsSkill; i++)
+                _buttonsSkill[i].Init(settings, _thisGO);
 
             _thisGO.SetActive(false);
         }
@@ -49,17 +39,19 @@ namespace Vurbiri.Colonization.UI
         public void Open(Actors.Actor actor)
         {
             _currentWarrior = actor;
-            
+            var warriorSettings = _warriorsSettings[actor.Id];
+
             _buttonMovement.Setup(true, _currentWarrior.CanMove());
 
-            var skills = _warriorsSettings[actor.Id].Skills.SkillsUI;
+
+            var skills = warriorSettings.Skills.SkillsUI;
             int count = skills.Count, index;
             
             for (index = 0; index < count; index++)
-                _buttonsSkills[index].Setup(actor, index, skills[index], _buttonPositions[count][index]);
+                _buttonsSkill[index].Setup(actor, index, skills[index], _buttonPositions[count][index]);
 
-            for (; index < _countButtonsAttack; index++)
-                _buttonsSkills[index].Disable();
+            for (; index < _countButtonsSkill; index++)
+                _buttonsSkill[index].Disable();
 
             _thisGO.SetActive(true);
         }
@@ -70,11 +62,32 @@ namespace Vurbiri.Colonization.UI
             _currentWarrior.Move();
         }
 
+        private void CreatePositionButtons()
+        {
+            _countButtonsSkill = _buttonsSkill.Length;
+            _buttonPositions = new Vector3[_countButtonsSkill + 1][];
+            float angle;
+            Vector3 distance = new(0f, _distanceOfButtons, 0f);
+            for (int i = 0, j, right, left; i <= _countButtonsSkill; i++)
+            {
+                _buttonPositions[i] = new Vector3[i];
+                right = i >> 1; left = i - right;
+
+                angle = 180f / (left + 1);
+                for (j = 0; j < left; j++)
+                    _buttonPositions[i][j] = Quaternion.Euler(0f, 0f, angle * (j + 1)) * distance;
+
+                angle = -180f / (right + 1);
+                for (; j < i; j++)
+                    _buttonPositions[i][j] = Quaternion.Euler(0f, 0f, angle * (right--)) * distance;
+            }
+        }
+
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if(_buttonsSkills == null || _buttonsSkills.Length == 0)
-                _buttonsSkills = GetComponentsInChildren<ButtonSkill>();
+            if(_buttonsSkill == null || _buttonsSkill.Length == 0)
+                _buttonsSkill = GetComponentsInChildren<ButtonSkill>();
             if (_warriorsSettings == null)
                 _warriorsSettings = VurbiriEditor.Utility.FindAnyScriptable<WarriorsSettingsScriptable>();
         }

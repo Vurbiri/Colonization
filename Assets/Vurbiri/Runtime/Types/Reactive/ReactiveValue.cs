@@ -7,13 +7,12 @@ namespace Vurbiri.Reactive
 {
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]
-    public class ReactiveValue<T> : IReadOnlyReactiveValue<T>
+    public class ReactiveValue<T> : IReadOnlyReactive<T>
     {
         [SerializeField, JsonProperty("value")]
         protected T _value;
 
         protected Action<T> actionValueChange;
-
         private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
         public T Value 
@@ -28,6 +27,8 @@ namespace Vurbiri.Reactive
                 } 
             } 
         }
+
+        public T SilentValue { get => _value; set => _value = value; }
 
         public ReactiveValue()
         {
@@ -46,7 +47,7 @@ namespace Vurbiri.Reactive
             if (calling) 
                 action(_value);
 
-            return new Unsubscriber<T>(this, action);
+            return new Unsubscriber<Action<T>>(this, action);
         }
 
         public void Next(T value)
@@ -61,7 +62,5 @@ namespace Vurbiri.Reactive
         public void Signal() => actionValueChange?.Invoke(_value);
 
         public void Unsubscribe(Action<T> action) => actionValueChange -= action ?? throw new ArgumentNullException("action");
-
-        public static explicit operator ReactiveValue<T>(T value) => new(value);
     }
 }

@@ -47,13 +47,9 @@ namespace Vurbiri.Colonization.Data
 
         public PlayerLoadData ToLoadData() => new(_resources, _edifices, _roads, _warriors);
 
-        public void CurrenciesBind(AReadOnlyCurrenciesReactive currencies, bool calling)
+        public void CurrenciesBind(ACurrenciesReactive currencies, bool calling)
         {
-            for (int i = 0; i < CurrencyId.Count; i++)
-            {
-                int index = i;
-                _unsubscribers += currencies.Subscribe(i, v => _resources[index] = v, calling);
-            }
+            _unsubscribers += currencies.Subscribe((i, v) => _resources[i] = v, calling);
         }
         public void EdificesBind(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive)
         {
@@ -79,19 +75,19 @@ namespace Vurbiri.Colonization.Data
 
             #region Local OnWarriors(...)
             //==============================
-            void OnWarriors(Actor actor, Operation operation)
+            void OnWarriors(Actor actor, TypeEvent operation)
             {
                 switch (operation)
                 {
-                    case Operation.Add:
+                    case TypeEvent.Add:
                         _warriors.Add(actor.ToArray());
                         actionThisChange?.Invoke(this);
                         break;
-                    case Operation.Remove:
+                    case TypeEvent.Remove:
                         _warriors.RemoveAt(actor.Index);
                         actionThisChange?.Invoke(this);
                         break;
-                    case Operation.Change:
+                    case TypeEvent.Change:
                         _warriors[actor.Index] = actor.ToArray();
                         break;
                     default:
@@ -109,7 +105,7 @@ namespace Vurbiri.Colonization.Data
             if (calling)
                 action(this);
 
-            return new Unsubscriber<PlayerData>(this, action);
+            return new Unsubscriber<Action<PlayerData>>(this, action);
         }
 
         public void Unsubscribe(Action<PlayerData> action) => actionThisChange -= action ?? throw new ArgumentNullException("action");
@@ -125,20 +121,17 @@ namespace Vurbiri.Colonization.Data
 
             #region Local OnEdifice(...)
             //==============================
-            void OnEdifice(int index, Crossroad crossroad, Operation operation)
+            void OnEdifice(int index, Crossroad crossroad, TypeEvent operation)
             {
                 switch (operation)
                 {
-                    case Operation.Add:
+                    case TypeEvent.Add:
                         edifices.Add(crossroad.ToArray());
                         break;
-                    case Operation.Remove:
+                    case TypeEvent.Remove:
                         edifices.RemoveAt(index);
                         break;
-                    case Operation.Insert:
-                        edifices.Insert(index, crossroad.ToArray());
-                        break;
-                    case Operation.Change:
+                    case TypeEvent.Change:
                         edifices[index] = crossroad.ToArray();
                         break;
                     default:

@@ -1,8 +1,8 @@
+using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.UI;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    using Actors;
-    using UI;
-
     public partial class Skills
     {
         [System.Serializable]
@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Characteristics
             public AnimationClipSettingsScriptable clipSettings;
             public int target;
             public bool isMove;
-            public bool isValid;
+            public bool isTargetReact;
             public float range;
             public EffectSettings[] effects;
             public Actor.ASkillState.Settings settings;

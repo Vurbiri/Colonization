@@ -2,7 +2,7 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    public abstract class AReactive<T> : IReadOnlyReactiveValue<T>
+    public abstract class AReactive<T> : IReadOnlyReactive<T>
     {
         protected Action<T> actionValueChange;
 
@@ -16,7 +16,7 @@ namespace Vurbiri.Reactive
             if (calling)
                 action(Value);
 
-            return new Unsubscriber<T>(this, action);
+            return new Unsubscriber<Action<T>>(this, action);
         }
 
         public void Unsubscribe(Action<T> action) => actionValueChange -= action ?? throw new ArgumentNullException("action");

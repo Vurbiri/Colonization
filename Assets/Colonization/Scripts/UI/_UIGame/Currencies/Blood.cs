@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
-        public void Init(Vector3 position, AReadOnlyCurrenciesReactive count, IReadOnlyReactiveValue<int> max, Vector3 offsetPopup)
+        public void Init(Vector3 position, ACurrenciesReactive count, IReactive<int> max, Vector3 offsetPopup)
         {
             _popup.Init(offsetPopup);
             _thisRectTransform.localPosition = position;

@@ -54,7 +54,7 @@ namespace Vurbiri.Localization
             if (calling && action != null)
                 action(this);
 
-            return new Unsubscriber<Language>(this, action);
+            return new Unsubscriber<Action<Language>>(this, action);
         }
         public void Unsubscribe(Action<Language> action) => ActionValueChange -= action;
 

@@ -5,77 +5,104 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class AReadOnlyCurrenciesReactive : ACurrencies, IReactiveSubValues<int, CurrencyId>, IDisposable
+    public abstract class ACurrenciesReactive : ACurrencies, IDisposable, IReactive<int, int>
     {
         protected ACurrency[] _values = new ACurrency[countAll];
-        protected Action<int> actionAmountChange;
-        protected int _maxMain;
+        protected ReactiveValue<int> _amount = new(0);
+        protected IReadOnlyReactive<int> _maxValueMain, _maxValueBlood;
         private readonly IUnsubscriber _subscriber;
+        private Action<int, int> actionValuesChange;
 
-        public override int Amount
-        {
-            get => _amount;
-            protected set { if (_amount != value) actionAmountChange?.Invoke(_amount = value); }
-        }
+        public override int Amount => _amount.Value;
+        public IReactive<int> AmountReactive => _amount;
+        public IReactive<int> AmountMax => _maxValueMain;
+        public IReactive<int> BloodMax => _maxValueBlood;
 
         public override int this[int index] { get => _values[index].Value; }
         public override int this[Id<CurrencyId> id] { get => _values[id.Value].Value; }
 
         #region Constructions
-        public AReadOnlyCurrenciesReactive(IReadOnlyList<int> array, IReactive<int> maxValueMain, IReactive<int> maxValueBlood)
+        public ACurrenciesReactive(IReadOnlyList<int> array, IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood)
         {
-            _subscriber = maxValueMain.Subscribe(v => _maxMain = v);
+            _maxValueMain = maxValueMain;
+            _maxValueBlood = maxValueBlood;
 
-            int value;
+            int value, amount = 0;
             for (int i = 0; i < countMain; i++)
             {
+                int index = i;
                 value = array[i];
                 _values[i] = new CurrencyMain(value);
-                _amount += value;
+                _values[i].Subscribe(v => actionValuesChange?.Invoke(index, v), false);
+                amount += value;
             }
             _values[CurrencyId.Blood] = new CurrencyBlood(array[CurrencyId.Blood], maxValueBlood);
+            _values[CurrencyId.Blood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Blood, v), false);
+
+            _amount.SilentValue = amount;
         }
-        public AReadOnlyCurrenciesReactive(ACurrencies other, IReactive<int> maxValueMain, IReactive<int> maxValueBlood)
+        public ACurrenciesReactive(ACurrencies other, IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood)
         {
-            _subscriber = maxValueMain.Subscribe(v => _maxMain = v);
+            _maxValueMain = maxValueMain;
+            _maxValueBlood = maxValueBlood;
 
             for (int i = 0; i < countMain; i++)
+            {
                 _values[i] = new CurrencyMain(other[i]);
+                int index = i;
+                _values[i].Subscribe(v => actionValuesChange?.Invoke(index, v), false);
+            }
             _values[CurrencyId.Blood] = new CurrencyBlood(other[CurrencyId.Blood], maxValueBlood);
+            _values[CurrencyId.Blood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Blood, v), false);
 
-            _amount = other.Amount;
+            _amount.SilentValue = other.Amount;
         }
-        public AReadOnlyCurrenciesReactive(IReactive<int> maxValueMain, IReactive<int> maxValueBlood)
+
+        public ACurrenciesReactive(IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood)
         {
-            _subscriber = maxValueMain.Subscribe(v => _maxMain = v);
+            _maxValueMain = maxValueMain;
+            _maxValueBlood = maxValueBlood;
 
             for (int i = 0; i < countMain; i++)
+            {
                 _values[i] = new CurrencyMain();
+                int index = i;
+                _values[i].Subscribe(v => actionValuesChange?.Invoke(index, v), false);
+            }
             _values[CurrencyId.Blood] = new CurrencyBlood(maxValueBlood);
+            _values[CurrencyId.Blood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Blood, v), false);
         }
 
-        public AReadOnlyCurrenciesReactive()
+        public ACurrenciesReactive()
         {
             for (int i = 0; i < countMain; i++)
+            {
                 _values[i] = new CurrencyMain();
+                int index = i;
+                _values[i].Subscribe(v => actionValuesChange?.Invoke(index, v), false);
+            }
             _values[CurrencyId.Blood] = new CurrencyBlood();
+            _values[CurrencyId.Blood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Blood, v), false);
         }
         #endregion
 
         #region Reactive
-        public IUnsubscriber Subscribe(Action<int> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<int, int> action, bool calling = true)
         {
-            actionAmountChange -= action ?? throw new ArgumentNullException("action");
+            actionValuesChange -= action ?? throw new ArgumentNullException("action");
+            actionValuesChange += action;
 
-            actionAmountChange += action;
             if (calling)
-                action(_amount);
+            {
+                for (int i = 0; i < countAll; i++)
+                    action(i, _values[i].Value);
+            }
 
-            return new Unsubscriber<int>(this, action);
+            return new Unsubscriber<Action<int, int>>(this, action);
         }
         public IUnsubscriber Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
         public IUnsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
-        public void Unsubscribe(Action<int> action) => actionAmountChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<int, int> action) => actionValuesChange -= action ?? throw new ArgumentNullException("action");
         public void Unsubscribe(int index, Action<int> action) => _values[index].Unsubscribe(action);
         public void Unsubscribe(Id<CurrencyId> id, Action<int> action) => _values[id.Value].Unsubscribe(action);
         #endregion
@@ -85,6 +112,16 @@ namespace Vurbiri.Colonization
             _subscriber?.Unsubscribe();
             for (int i = 0; i < countAll; i++)
                 _values[i].Dispose();
+        }
+
+        private void SubscribeToValues()
+        {
+            _values[0].Subscribe(v => actionValuesChange?.Invoke(0, v), false);
+            _values[1].Subscribe(v => actionValuesChange?.Invoke(1, v), false);
+            _values[2].Subscribe(v => actionValuesChange?.Invoke(2, v), false);
+            _values[3].Subscribe(v => actionValuesChange?.Invoke(3, v), false);
+            _values[CurrencyId.Wood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Wood, v), false);
+            _values[CurrencyId.Blood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Blood, v), false);
         }
 
         #region Nested: ACurrency, CurrencyMain, CurrencyBlood

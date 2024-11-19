@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Reactive.Collections
 {
-    public interface IReactiveCollection<T> : IReadOnlyList<T>
+    public interface IReactiveCollection<T> : IReadOnlyList<T>, IReactiveBase<Action<T, TypeEvent>> where T : class, IReactiveElement<T>
     {
-        public IUnsubscriber Subscribe(Action<T, Operation> action);
-        public void Unsubscribe(Action<T, Operation> action);
+    }
+
+    public interface IReactiveList<T> : IReadOnlyList<T>, IReactiveBase<Action<int, T, TypeEvent>>
+    {
     }
 }

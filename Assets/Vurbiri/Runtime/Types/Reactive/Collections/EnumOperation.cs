@@ -1,6 +1,6 @@
 namespace Vurbiri.Reactive.Collections
 {
-    public enum Operation
+    public enum TypeEvent
     {
         Subscribe,
         Add,

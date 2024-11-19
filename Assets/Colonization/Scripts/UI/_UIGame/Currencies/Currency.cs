@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
-        public void Init(int id, Vector3 position, AReadOnlyCurrenciesReactive count, Vector3 offsetPopup)
+        public void Init(int id, Vector3 position, ACurrenciesReactive count, Vector3 offsetPopup)
         {
             _popup.Init(offsetPopup);
             _iconTMP.text = string.Format(TAG_SPRITE, id);

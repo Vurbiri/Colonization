@@ -11,9 +11,9 @@ namespace Vurbiri.Colonization
 #endif 
     {
         [SerializeField] protected int[] _values = new int[CurrencyId.CountAll];
+        [SerializeField] protected int _amount = 0;
 
-
-        public override int Amount { get => _amount;  protected set => _amount = value; }
+        public override int Amount { get => _amount;}
 
         public override int this[int index] { get => _values[index]; }
         public override int this[Id<CurrencyId> id] { get => _values[id.Value]; }

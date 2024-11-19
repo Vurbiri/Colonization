@@ -3,52 +3,57 @@ namespace Vurbiri.Colonization
     using System.Collections.Generic;
     using Vurbiri.Reactive;
 
-    public class Currencies : AReadOnlyCurrenciesReactive
+    public class Currencies : ACurrenciesReactive
     {
         #region Constructions
-        public Currencies(IReadOnlyList<int> array, IReactive<int> maxValueMain, IReactive<int> maxValueBlood) : base(array, maxValueMain, maxValueBlood) { }
-        public Currencies(ACurrencies other, IReactive<int> maxValueMain, IReactive<int> maxValueBlood) : base(other, maxValueMain, maxValueBlood) { }
-        public Currencies(IReactive<int> maxValueMain, IReactive<int> maxValueBlood) : base(maxValueMain, maxValueBlood) { }
+        public Currencies(IReadOnlyList<int> array, IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood) : 
+            base(array, maxValueMain, maxValueBlood) { }
+        public Currencies(ACurrencies other, IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood) : 
+            base(other, maxValueMain, maxValueBlood) { }
+        public Currencies(IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood) : 
+            base(maxValueMain, maxValueBlood) { }
         public Currencies() : base() { }
         #endregion
 
-        public void Set(int index, int value) => Amount += _values[index].Set(value);
-        public void Set(Id<CurrencyId> id, int value) => Amount += _values[id.Value].Set(value);
+        public void Set(int index, int value) => _amount.Value += _values[index].Set(value);
+        public void Set(Id<CurrencyId> id, int value) => _amount.Value += _values[id.Value].Set(value);
 
-        public void Increment(int index) => Amount += _values[index].Increment();
-        public void Increment(Id<CurrencyId> id) => Amount += _values[id.Value].Increment();
+        public void Increment(int index) => _amount.Value += _values[index].Increment();
+        public void Increment(Id<CurrencyId> id) => _amount.Value += _values[id.Value].Increment();
 
         public void Add(int index, int value)
         {
             if (value != 0)
-                Amount += _values[index].Add(value);
+                _amount.Value += _values[index].Add(value);
         }
         public void Add(Id<CurrencyId> id, int value) => Add(id.Value, value);
         
-        public void AddBlood(int value) => Amount += _values[CurrencyId.Blood].Add(value);
+        public void AddBlood(int value) => _values[CurrencyId.Blood].Add(value);
 
         public void AddFrom(ACurrencies other)
         {
             if (other.Amount == 0)
                 return;
-            
-            for (int i = 0; i < countAll; i++)
-                _amount += _values[i].Add(other[i]);
 
-            actionAmountChange?.Invoke(_amount);
+            for (int i = 0; i < countAll; i++)
+                _values[i].Add(other[i]);
+
+            _amount.Value += other.Amount;
         }
 
         public void Pay(ACurrencies cost)
         {
+            int amount = _amount.Value;
             for (int i = 0; i < countAll; i++)
-                _amount += _values[i].Add(-cost[i]);
+                amount += _values[i].Add(-cost[i]);
 
-            actionAmountChange?.Invoke(_amount);
+            _amount.Value = amount;
         }
 
         public void ClampMain()
         {
-            if (_amount <= _maxMain)
+            int amount = _amount.Value, maxMain = _maxValueMain.Value;
+            if (amount <= maxMain)
                 return;
 
             int indexMax = 0, index;
@@ -66,7 +71,7 @@ namespace Vurbiri.Colonization
             index = indexMax;
             do
             {
-                _amount += max.DecrementNotSignal();
+                amount += max.DecrementNotSignal();
                 do
                 {
                     index = ++index % countMain;
@@ -79,28 +84,19 @@ namespace Vurbiri.Colonization
                 }
                 while (index != indexMax);
             } 
-            while (_amount > _maxMain);
+            while (amount > maxMain);
 
             for (index = 0; index < countMain; index++)
                 _values[index].Signal();
 
-            actionAmountChange?.Invoke(_amount);
+            _amount.Value = amount;
         }
 
         public void Clear()
         {
             for (int i = 0; i < countAll; i++)
                 _values[i].Set(0);
-            Amount = 0;
-        }
-
-        public int[] ToArray()
-        {
-            int[] result = new int[countAll];
-            for (int i = 0; i < countAll; i++)
-                result[i] = _values[i].Value;
-
-            return result;
+            _amount.Value = 0;
         }
     }
 }

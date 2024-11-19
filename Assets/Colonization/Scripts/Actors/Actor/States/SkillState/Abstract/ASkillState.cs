@@ -1,10 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using Characteristics;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-
     public abstract partial class Actor
 	{
 		public abstract partial class ASkillState : AState
@@ -13,7 +13,8 @@ namespace Vurbiri.Colonization.Actors
             protected readonly IReadOnlyList<AEffect> _effects;
             protected readonly int _countEffects;
             protected readonly Transform _parentTransform;
-            
+
+            protected bool _isTargetReact = false;
             protected Actor _target;
             protected Coroutine _coroutineAction;
             protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
@@ -62,9 +63,11 @@ namespace Vurbiri.Colonization.Actors
                 _skin.Skill(_idAnimation);
                 yield return _waitTargetSkillAnimation;
 
+                //if (_isTargetReact)
+                //    _target._skin.React();
                 //for (int i = 0; i < _countEffects; i++)
                 //    _effects[i].Apply(_actor, _target);
-                
+
                 yield return _waitEndSkillAnimation;
 
                 Pay();
@@ -78,7 +81,7 @@ namespace Vurbiri.Colonization.Actors
                 public int targetActor;
                 public float damageTime;
                 public float remainingTime;
-                public int idAnimation;
+                public int idAnimation = -1;
                 public int cost;
             }
             #endregion

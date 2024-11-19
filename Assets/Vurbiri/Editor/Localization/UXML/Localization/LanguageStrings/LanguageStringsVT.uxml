@@ -1,12 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:VisualElement style="flex-grow: 1; max-height: 50px; min-height: 50px; height: 50px; justify-content: flex-start; align-items: flex-start;">
+    <ui:VisualElement style="flex-grow: 1; max-height: 30px; min-height: 30px; height: 30px; justify-content: flex-start; align-items: flex-start;">
         <ui:Label tabindex="-1" text=" Strings" parse-escape-sequences="false" display-tooltip-when-elided="false" enable-rich-text="false" style="font-size: 20px; -unity-font-style: bold;" />
     </ui:VisualElement>
     <ui:VisualElement style="flex-grow: 1;">
-        <ui:VisualElement style="margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; flex-direction: column; align-items: center; justify-content: center; align-self: stretch; flex-wrap: nowrap; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; flex-grow: 1; min-height: 80px;">
+        <ui:VisualElement style="margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; flex-direction: column; align-items: center; justify-content: center; align-self: stretch; flex-wrap: nowrap; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; flex-grow: 1; min-height: 70px;">
             <ui:Label tabindex="-1" text="File" parse-escape-sequences="false" display-tooltip-when-elided="false" enable-rich-text="false" style="-unity-font-style: bold;" />
             <ui:EnumField type="Vurbiri.Localization.Files, Vurbiri" name="File" binding-path="_file" style="max-width: 150px; min-width: 150px; width: 150px;" />
-            <ui:VisualElement style="flex-grow: 0; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; flex-direction: row; justify-content: center; align-self: auto;">
+            <ui:VisualElement style="flex-grow: 0; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; flex-direction: row; justify-content: center; align-self: auto;">
                 <ui:Button text="Load" parse-escape-sequences="false" display-tooltip-when-elided="false" enable-rich-text="false" name="Load" style="min-width: 60px; min-height: 20px;" />
                 <ui:Button text="Unload" parse-escape-sequences="false" display-tooltip-when-elided="false" enable-rich-text="false" name="Unload" style="min-width: 60px; min-height: 20px;" />
                 <ui:Button text="Save" parse-escape-sequences="false" display-tooltip-when-elided="false" enable-rich-text="false" name="Save" style="min-width: 60px; min-height: 20px;" />

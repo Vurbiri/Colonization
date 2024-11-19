@@ -107,7 +107,7 @@ namespace Vurbiri.Colonization
             if (calling && action != null)
                 action(ToArray());
 
-            return new Unsubscriber<int[][][]>(this, action);
+            return new Unsubscriber<Action<int[][][]>>(this, action);
         }
 
         public void Unsubscribe(Action<int[][][]> action) => ActionValueChange -= action;

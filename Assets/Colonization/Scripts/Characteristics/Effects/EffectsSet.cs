@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Characteristics
         private int _count = 0;
         private int _capacity = 4;
 
-        private Action<ReactiveEffect, Operation> actionCollectionChange;
+        private Action<ReactiveEffect, TypeEvent> actionCollectionChange;
         private readonly AbilitiesSet<ActorAbilityId> _abilities;
 
         public ReactiveEffect this[int index] => _effects[index];
@@ -26,31 +26,36 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
         #region IReactiveCollection
-        public IUnsubscriber Subscribe(Action<ReactiveEffect, Operation> action)
+        public IUnsubscriber Subscribe(Action<ReactiveEffect, TypeEvent> action, bool calling = true)
         {
             actionCollectionChange -= action ?? throw new ArgumentNullException("action");
             actionCollectionChange += action;
 
-            for (int i = 0; i < _count; i++)
-                action(_effects[i], Operation.Subscribe);
+            if (calling)
+            {
+                for (int i = 0; i < _count; i++)
+                    action(_effects[i], TypeEvent.Subscribe);
+            }
 
-            return new UnsubscriberCollection<ReactiveEffect>(this, action);
+            return new Unsubscriber<Action<ReactiveEffect, TypeEvent>>(this, action);
         }
 
-        public void Unsubscribe(Action<ReactiveEffect, Operation> action) => actionCollectionChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<ReactiveEffect, TypeEvent> action) => actionCollectionChange -= action ?? throw new ArgumentNullException("action");
         #endregion
 
-        public int Add(ReactiveEffect effect)
+        public void Add(ReactiveEffect effect)
         {
+            for (int i = 0; i < _count; i++)
+                if (_effects[i].Update(effect))
+                    return;
+
             if (_count == _capacity)
                 GrowArray();
 
             _effects[_count++] = effect;
-            int delta = _abilities.AddPerk(effect);
+            _abilities.AddPerk(effect);
 
             effect.Subscribe(RedirectEvents, _count - 1);
-
-            return delta;
         }
 
         public void Next()
@@ -76,9 +81,9 @@ namespace Vurbiri.Colonization.Characteristics
             _effects = array;
         }
 
-        private void RedirectEvents(ReactiveEffect effect, Operation operation)
+        private void RedirectEvents(ReactiveEffect effect, TypeEvent operation)
         {
-            if (operation == Operation.Remove)
+            if (operation == TypeEvent.Remove)
             {
                 _count--;
                 ReactiveEffect temp;

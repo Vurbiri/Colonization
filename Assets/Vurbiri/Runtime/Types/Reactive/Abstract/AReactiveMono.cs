@@ -14,7 +14,7 @@ namespace Vurbiri.Reactive
             if (calling && action != null) 
                 Callback(action);
 
-            return new Unsubscriber<T>(this, action);
+            return new Unsubscriber<Action<T>>(this, action);
         }
 
         public void Unsubscribe(Action<T> action) => EventThisChange -= action;

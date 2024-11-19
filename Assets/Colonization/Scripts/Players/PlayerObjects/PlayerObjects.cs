@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         private readonly PricesScriptable _prices;
         private readonly WarriorsSpawner _spawner;
 
-        public AReadOnlyCurrenciesReactive Resources => _resources;
+        public ACurrenciesReactive Resources => _resources;
 
         public Ability<PlayerAbilityId> ExchangeRate => _abilities.GetAbility(PlayerAbilityId.ExchangeRate);
 

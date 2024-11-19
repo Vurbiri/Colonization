@@ -14,14 +14,19 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [SerializeField] private float _speedWalk = 0.45f;
         [SerializeField] private float _speedRun = 0.65f;
+        [SerializeField] private int _blockCost = 2;
+        [SerializeField] private int _blockValue = 1;
         [SerializeField] private SkillSettings[] _skillsSettings;
         
         [NonSerialized] private SkillUI[] _skillsUI;
         [NonSerialized] private AEffect[][] _effects;
+        [NonSerialized] private BlockUI _blockUI;
 
         public IReadOnlyList<SkillUI> SkillsUI => _skillsUI;
+        public BlockUI BlockUI => _blockUI ??= new(_blockCost, _blockValue);
 
         public MoveState GetMoveSate(Actor parent) => new(_speedWalk, parent);
+        public BlockState GetBlockState(Actor parent) => new(_blockCost, _blockValue, parent);
 
         public List<ASkillState> GetSkillSates(Actor parent)
         {
@@ -39,6 +44,8 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Dispose()
         {
+            _blockUI?.Dispose();
+
             if (_skillsUI == null)
                 return;
 
@@ -59,7 +66,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             SkillSettings skill; EffectSettings effect;
             AEffect[] effectsSkill; AEffectsUI[] effectsSkillUI;
-            for (int i = 0; i < count; i++)
+            for (int i = 0, j; i < count; i++)
             {
                 skill = _skillsSettings[i];
 
@@ -67,10 +74,10 @@ namespace Vurbiri.Colonization.Characteristics
                 effectsSkill = new AEffect[countEffects];
                 effectsSkillUI = new AEffectsUI[countEffects];
 
-                for (int j = 0; j < countEffects; j++)
+                for (j = 0; j < countEffects; j++)
                 {
                     effect = skill.effects[j];
-                    effectsSkill[j] = effect.CreateEffect();
+                    effectsSkill[j] = effect.CreateEffect(new(parent.TypeId, parent.Id, i, j));
                     effectsSkillUI[j] = effect.CreateEffectUI(hintTextColor);
                 }
                 skill.ui.Init(language, hintTextColor, effectsSkillUI);
@@ -84,7 +91,6 @@ namespace Vurbiri.Colonization.Characteristics
                 skill.ui = null;
                 skill.effects = null;
 #endif
-
             }
 
             return skillStates;
@@ -98,7 +104,7 @@ namespace Vurbiri.Colonization.Characteristics
             if (skill.isMove)
                 return new AttackState(parent, skill.target, _effects[id], skill.range, _speedRun, skill.settings, id);
 
-            return new SpellState(parent, skill.target, _effects[id], skill.settings, id);
+            return new SpellState(parent, skill.target, _effects[id], skill.isTargetReact, skill.settings, id);
         }
     }
 }

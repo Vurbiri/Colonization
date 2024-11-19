@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization.Actors
     {
         public virtual void Init(ActorSettings settings, int owner, Hexagon startHex, GameplayEventBus eventBus)
         {
+            _typeId = settings.TypeId;
             _id = settings.Id;
             _owner = owner;
             _abilities = settings.Abilities;
@@ -41,6 +42,7 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.AddState(new IdleState(this));
             _stateMachine.SetDefaultState<IdleState>();
 
+            _stateMachine.AddState(skills.GetBlockState(this));
             _stateMachine.AddState(skills.GetMoveSate(this));
 
             _skillStates = skills.GetSkillSates(this);
