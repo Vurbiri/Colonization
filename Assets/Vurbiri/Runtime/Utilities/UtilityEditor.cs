@@ -1,13 +1,13 @@
 #if UNITY_EDITOR
 
-using System;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.SceneManagement;
-using UnityEngine;
-
 namespace VurbiriEditor
 {
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor;
+    using UnityEditor.SceneManagement;
+    using UnityEngine;
+
     public static class Utility
     {
         public static T FindAnyPrefab<T>() where T : MonoBehaviour
@@ -41,17 +41,17 @@ namespace VurbiriEditor
             return list;
         }
 
-        public static List<T> FindAllComponentsPrefabs<T>() where T : Component
+        public static List<T> FindComponentsPrefabs<T>() where T : Component
         {
             string[] guids = AssetDatabase.FindAssets($"t:Prefab", new[] { "Assets" });
 
             List<T> list = new();
-            string path; T obj;
+            string path; T[] obj;
             foreach (var guid in guids)
             {
                 path = AssetDatabase.GUIDToAssetPath(guid);
-                if((obj = (AssetDatabase.LoadMainAssetAtPath(path) as GameObject).GetComponentInChildren<T>()) != null)
-                    list.Add(obj);
+                if((obj = (AssetDatabase.LoadMainAssetAtPath(path) as GameObject).GetComponentsInChildren<T>()) != null)
+                    list.AddRange(obj);
             }
 
             return list;

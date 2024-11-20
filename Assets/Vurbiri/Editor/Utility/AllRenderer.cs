@@ -1,22 +1,24 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static VurbiriEditor.CONST_EDITOR;
 
 namespace VurbiriEditor
 {
-    public class AllRenderer : EditorWindow
+    internal class AllRenderer : EditorWindow
     {
         private const string NAME = "All Renderer Settings", MENU = MENU_PATH + NAME;
 
         private Vector2 _scrollPos;
-        private List<Renderer> _renderersPrefabs;
-        private Renderer[] _renderersScene;
+        [SerializeField] private List<Renderer> _renderersPrefabs;
+        [SerializeField] private Renderer[] _renderersScene;
         private MotionVectorGenerationMode _motionVector = MotionVectorGenerationMode.Object;
         private LightProbeUsage _probeUsage;
-
+        SerializedObject _self;
+        SerializedProperty _propertyPrefabs, _propertyScenes;
 
         [MenuItem(MENU)]
         private static void ShowWindow()
@@ -26,8 +28,15 @@ namespace VurbiriEditor
 
         private void OnEnable()
         {
-            _renderersScene = FindObjectsByType<Renderer>(FindObjectsSortMode.None);
-            _renderersPrefabs = Utility.FindAllComponentsPrefabs<Renderer>();
+            _self = new(this);
+            _propertyScenes = _self.FindProperty("_renderersScene");
+            _propertyPrefabs = _self.FindProperty("_renderersPrefabs");
+
+            _renderersScene = FindObjectsByType<Renderer>(FindObjectsInactive.Include ,FindObjectsSortMode.None);
+            _renderersPrefabs = Utility.FindComponentsPrefabs<Renderer>();
+
+            _self.Update();
+
             if (_renderersPrefabs == null || _renderersPrefabs.Count == 0)
                 return;
 
@@ -38,7 +47,7 @@ namespace VurbiriEditor
 
         private void OnGUI()
         {
-            if (_renderersPrefabs == null || _renderersPrefabs.Count == 0 )
+            if (_renderersPrefabs == null || _renderersScene == null)
                 return;
 
             BeginWindows();
@@ -64,15 +73,9 @@ namespace VurbiriEditor
                 EditorGUILayout.BeginVertical(GUI.skin.window);
                 _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
 
-                EditorGUILayout.LabelField("SCENE:");
-                foreach (Renderer renderer in _renderersScene)
-                    EditorGUILayout.ObjectField(renderer, type, true);
-                
-                EditorGUILayout.Space(12);
-                EditorGUILayout.LabelField("PREFABS:");
-                foreach (Renderer renderer in _renderersPrefabs)
-                    EditorGUILayout.ObjectField(renderer, type, true);
+                EditorGUILayout.PropertyField(_propertyScenes);
                 EditorGUILayout.Space();
+                EditorGUILayout.PropertyField(_propertyPrefabs);
 
                 EditorGUILayout.EndScrollView();
                 EditorGUILayout.EndVertical();
@@ -82,6 +85,8 @@ namespace VurbiriEditor
             {
                 if (GUILayout.Button("Apply"))
                 {
+                    _self.ApplyModifiedProperties();
+
                     foreach (Renderer renderer in _renderersPrefabs)
                     {
                         renderer.motionVectorGenerationMode = _motionVector;
@@ -93,12 +98,20 @@ namespace VurbiriEditor
                         renderer.lightProbeUsage = _probeUsage;
                     }
 
+                    EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
                     AssetDatabase.SaveAssets();
                 }
 
                 EditorGUILayout.Space();
             }
             #endregion
+        }
+
+        private void OnDisable()
+        {
+            _renderersScene = null;
+            _renderersPrefabs = null;
+            _self.Update();
         }
     }
 }

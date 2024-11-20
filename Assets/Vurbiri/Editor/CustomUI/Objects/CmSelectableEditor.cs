@@ -7,8 +7,9 @@ using UnityEditor.Animations;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.UI;
 
-namespace Vurbiri.UI
+namespace VurbiriEditor.UI
 {
     [CustomEditor(typeof(CmSelectable), true), CanEditMultipleObjects]
     public class CmSelectableEditor : Editor
