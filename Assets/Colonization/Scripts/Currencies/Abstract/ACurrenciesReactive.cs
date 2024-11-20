@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization
         protected ACurrency[] _values = new ACurrency[countAll];
         protected ReactiveValue<int> _amount = new(0);
         protected IReadOnlyReactive<int> _maxValueMain, _maxValueBlood;
-        private readonly IUnsubscriber _subscriber;
         private Action<int, int> actionValuesChange;
 
         public override int Amount => _amount.Value;
@@ -109,7 +108,6 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            _subscriber?.Unsubscribe();
             for (int i = 0; i < countAll; i++)
                 _values[i].Dispose();
         }

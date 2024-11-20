@@ -1,5 +1,5 @@
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Reactive.Collections;
+using static Vurbiri.Colonization.Characteristics.EffectsFactory;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -16,26 +16,17 @@ namespace Vurbiri.Colonization.Actors
 
             public BlockState(int cost, int value, Actor parent) : base(parent, cost)
             {
-                _code = new(_actor.TypeId, _actor.Id, 7, 0);
+                _code = new(_actor.TypeId, _actor.Id, BLOCK_SKILL_ID, BLOCK_EFFECT_ID);
                 _value = value;
             }
 
             public override void Enter()
             {
                 _skin.Block();
-
-                ReactiveEffect blockEffect = new(_code, ABILITY, MOD, _value, DURATION);
-                blockEffect.Subscribe(OnExit);
-
-                _actor.AddEffect(blockEffect);
+                _actor.AddEffect(CreateBlockEffect(_code, _value, _fsm.Default));
                 Pay();
             }
 
-            private void OnExit(ReactiveEffect effect, TypeEvent type)
-            {
-                if (type == TypeEvent.Remove)
-                    _fsm.Default();
-            }
         }
 	}
 }

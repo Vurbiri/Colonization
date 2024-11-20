@@ -74,8 +74,6 @@ namespace Vurbiri.Colonization.UI
 
             CrossroadMenusClose();
 
-            if (!actor.CanAction) return;
-
             ToPosition(actor.Position);
             _warriorsMenu.Open(actor);
         }

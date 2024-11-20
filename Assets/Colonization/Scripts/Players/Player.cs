@@ -1,30 +1,31 @@
-using Newtonsoft.Json;
+using System;
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive;
+using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-
-    [JsonObject(MemberSerialization.OptIn)]
-    public class Player : IValueId<PlayerId>
+    public partial class Player : IValueId<PlayerId>, IDisposable
     {
-        private readonly PlayerObjects _obj;
-        private readonly Id<PlayerId> _id;
+        private readonly Objects _obj;
         private readonly Currencies _exchangeRate = new();
         private readonly Coroutines _coroutines;
 
-        public Id<PlayerId> Id => _id;
-        public ACurrenciesReactive Resources { get; }
+        public Id<PlayerId> Id => _obj.id;
+        public ACurrenciesReactive Resources => _obj.resources;
         public IReactive<int, int> ExchangeRate => _exchangeRate;
 
-        public Player(Id<PlayerId> playerId, PlayerObjects obj)
+        public IReactiveList<Crossroad> Shrines => _obj.edifices.shrines;
+        public IReactiveList<Crossroad> Ports => _obj.edifices.ports;
+        public IReactiveList<Crossroad> Urbans => _obj.edifices.urbans;
+
+        public Player(int playerId, bool isLoad, PlayerData data, Players.Settings settings)
         {
-            _id = playerId;
-            _obj = obj;
-            Resources = obj.Resources;
+            _obj = new(playerId, isLoad, data, settings);
 
             _coroutines = SceneServices.Get<Coroutines>();
         }
@@ -44,39 +45,27 @@ namespace Vurbiri.Colonization
 
         public void UpdateExchangeRate()
         {
-            Ability<PlayerAbilityId> exchangeRate = _obj.ExchangeRate;
+            Ability<PlayerAbilityId> exchangeRate = _obj.abilities.GetAbility(PlayerAbilityId.ExchangeRate);
 
             for (int i = 0; i < CurrencyId.CountMain; i++)
-                _exchangeRate.Set(i, exchangeRate.NextValue);
-
+                _exchangeRate[i] = exchangeRate.NextValue;
         }
 
         public IReadOnlyReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _obj.GetAbilityReactive(id);
 
-        public bool CanEdificeUpgrade(Crossroad crossroad) => _obj.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
-        public void BuyEdificeUpgrade(Crossroad crossroad)
-        {
-            if (crossroad.BuyUpgrade(_id))
-                _obj.BuyEdificeUpgrade(crossroad);
-        }
+        public bool CanEdificeUpgrade(Crossroad crossroad) => _obj.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_obj.id);
+        public void BuyEdificeUpgrade(Crossroad crossroad) => _obj.BuyEdificeUpgrade(crossroad);
 
-        public bool CanAnyRecruitingWarriors(Crossroad crossroad) => _obj.IsNotMaxWarriors() && crossroad.CanRecruitingWarriors(_id);
+        public bool CanAnyRecruitingWarriors(Crossroad crossroad) => _obj.IsNotMaxWarriors() && crossroad.CanRecruitingWarriors(_obj.id);
         public bool CanRecruitingWarrior(Id<WarriorId> id) => _obj.CanRecruitingWarrior(id);
 
         public void RecruitWarriors(Crossroad crossroad, Id<WarriorId> id) => _coroutines.Run(RecruitWarriors_Coroutine(crossroad, id));
 
-        public bool CanWallBuild(Crossroad crossroad) => _obj.CanWallBuild() && crossroad.CanWallBuild(_id);
-        public void BuyWall(Crossroad crossroad)
-        {
-            if (crossroad.BuyWall(_id))
-                _obj.BuyWall(crossroad);
-        }
+        public bool CanWallBuild(Crossroad crossroad) => _obj.abilities.IsTrue(PlayerAbilityId.IsWall) && crossroad.CanWallBuild(_obj.id);
+        public void BuyWall(Crossroad crossroad) => _obj.BuyWall(crossroad);
 
-        public bool CanRoadBuild(Crossroad crossroad) => _obj.CanRoadBuild() && crossroad.CanRoadBuild(_id);
-        public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
-        {
-            _obj.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
-        }
+        public bool CanRoadBuild(Crossroad crossroad) => _obj.CanRoadBuild() && crossroad.CanRoadBuild(_obj.id);
+        public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId) => _obj.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
 
         public bool BuyPerk(IPerkSettings perk)
         {
@@ -93,7 +82,7 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public override string ToString() => $"Player: {_id}";
+        public override string ToString() => $"Player: {_obj.id}";
 
         private IEnumerator RecruitWarriors_Coroutine(Crossroad crossroad, Id<WarriorId> id)
         {
@@ -106,5 +95,10 @@ namespace Vurbiri.Colonization
             _obj.RecruitingWarrior(id.Value, result.Result);
         }
 
+        public void Dispose()
+        {
+            _obj.Dispose();
+            _exchangeRate.Dispose();
+        }
     }
 }

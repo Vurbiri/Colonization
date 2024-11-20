@@ -1,4 +1,5 @@
 using UnityEngine;
+using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization.Actors
 {

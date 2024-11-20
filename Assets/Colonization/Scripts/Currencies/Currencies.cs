@@ -1,10 +1,13 @@
+using System.Collections.Generic;
+using Vurbiri.Reactive;
+
 namespace Vurbiri.Colonization
 {
-    using System.Collections.Generic;
-    using Vurbiri.Reactive;
-
     public class Currencies : ACurrenciesReactive
     {
+        public new int this[int index] { get => _values[index].Value; set => _amount.Value += _values[index].Set(value); }
+        public new int this[Id<CurrencyId> id] { get => _values[id.Value].Value; set => _amount.Value += _values[id.Value].Set(value); }
+
         #region Constructions
         public Currencies(IReadOnlyList<int> array, IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood) : 
             base(array, maxValueMain, maxValueBlood) { }
@@ -14,9 +17,6 @@ namespace Vurbiri.Colonization
             base(maxValueMain, maxValueBlood) { }
         public Currencies() : base() { }
         #endregion
-
-        public void Set(int index, int value) => _amount.Value += _values[index].Set(value);
-        public void Set(Id<CurrencyId> id, int value) => _amount.Value += _values[id.Value].Set(value);
 
         public void Increment(int index) => _amount.Value += _values[index].Increment();
         public void Increment(Id<CurrencyId> id) => _amount.Value += _values[id.Value].Increment();

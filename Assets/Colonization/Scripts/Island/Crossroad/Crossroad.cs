@@ -1,17 +1,23 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
+using Vurbiri.Reactive;
+using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    public class Crossroad
+    public class Crossroad : IDisposable
     {
         #region private
+        private const int HEX_COUNT = 3;
+
         private readonly Key _key;
         private AEdifice _edifice;
         private EdificeSettings _states;
         private Id<PlayerId> _owner = PlayerId.None;
         private bool _isWall = false;
+        private int _defenceWall = 0;
 
         private readonly GameplayEventBus _eventBus;
         private readonly IReadOnlyList<AEdifice> _prefabs;
@@ -22,7 +28,7 @@ namespace Vurbiri.Colonization
         private bool _isGate = false;
         private WaitResult<Hexagon> _waitHexagon;
         
-        private const int HEX_COUNT = 3;
+        private IUnsubscriber _unsubscriber;
         #endregion
 
         public Key Key => _key;
@@ -30,9 +36,9 @@ namespace Vurbiri.Colonization
         public Id<EdificeGroupId> GroupId => _states.groupId;
         public Id<EdificeId> NextId => _states.nextId;
         public Id<EdificeGroupId> NextGroupId => _states.nextGroupId;
-        public bool IsPort => _owner != PlayerId.None && _states.groupId == EdificeGroupId.Port;
-        public bool IsUrban => _owner != PlayerId.None && _states.groupId == EdificeGroupId.Urban;
-        public bool IsShrine => _owner != PlayerId.None && _states.groupId == EdificeGroupId.Shrine;
+        public bool IsPort => _states.groupId == EdificeGroupId.Port;
+        public bool IsUrban => _states.groupId == EdificeGroupId.Urban;
+        public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
         public bool IsWall => _isWall;
         public IReadOnlyList<CrossroadLink> Links => _links;
         public Vector3 Position { get;}
@@ -46,7 +52,7 @@ namespace Vurbiri.Colonization
             _eventBus = SceneServices.Get<GameplayEventBus>();
 
             _edifice = Object.Instantiate(_prefabs[EdificeId.Signpost], position, rotation, container);
-            _edifice.Subscribe(Select, Unselect);
+            _edifice.Subscribe(OnSelect, OnUnselect);
             _states = _edifice.Settings;
         }
 
@@ -72,6 +78,8 @@ namespace Vurbiri.Colonization
             Object.Destroy(_edifice.gameObject);
             return false;
         }
+
+        public int GetDefense(Id<PlayerId> playerId) => playerId == _owner ? _defenceWall : -1;
 
         #region Link
         public bool ContainsLink(int id) => _links.ContainsKey(id);
@@ -102,8 +110,8 @@ namespace Vurbiri.Colonization
             _states.nextGroupId.Value switch
             {
                 EdificeGroupId.Shrine => IsRoadConnect(playerId),
-                EdificeGroupId.Port => WaterCheck(),
-                EdificeGroupId.Urban => NeighborCheck(playerId),
+                EdificeGroupId.Port   => WaterCheck(),
+                EdificeGroupId.Urban  => NeighborCheck(playerId),
                 _ => false
             });
 
@@ -115,7 +123,7 @@ namespace Vurbiri.Colonization
                     return false;
 
                 foreach (var hex in _hexagons)
-                    if (hex.IsOwnedByPort())
+                    if (hex.IsOwnedByPort)
                         return false;
 
                 return true;
@@ -136,7 +144,7 @@ namespace Vurbiri.Colonization
         }
         public bool BuyUpgrade(Id<PlayerId> playerId)
         {
-            if (!_states.isUpgrade || (_states.id != EdificeId.Signpost && _owner != playerId))
+            if (!_states.isUpgrade | (_states.id != EdificeId.Signpost & _owner != playerId))
                 return false;
 
             BuildEdifice(playerId, _states.nextId.Value);
@@ -146,18 +154,19 @@ namespace Vurbiri.Colonization
         {
             _owner = playerId;
             _edifice = Object.Instantiate(_prefabs[buildId]).Init(_owner, _isWall, _links, _edifice);
-            _edifice.Subscribe(Select, Unselect);
+            _edifice.Subscribe(OnSelect, OnUnselect);
             _states = _edifice.Settings;
             _states.isBuildWall = _states.isBuildWall && !_isWall;
         }
 
-        public bool CanWallBuild(Id<PlayerId> playerId) => _owner == playerId && _states.isBuildWall && !_isWall;
-        public bool BuyWall(Id<PlayerId> playerId)
+        public bool CanWallBuild(Id<PlayerId> playerId) => _owner == playerId & _states.isBuildWall & !_isWall;
+        public bool BuyWall(Id<PlayerId> playerId, IReactive<int> abilityWall)
         {
-            if (!_states.isBuildWall || _isWall || _owner != playerId || !_edifice.WallBuild(playerId, _links))
+            if (!_states.isBuildWall | _isWall | _owner != playerId || !_edifice.WallBuild(playerId, _links))
                 return false;
 
             _states.isBuildWall = !(_isWall = true);
+            _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d);
             return true;
         }
 
@@ -203,7 +212,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-
+        #region Road
         public bool IsFullyOwned(Id<PlayerId> playerId)
         {
             if (_links.CountAvailable <= 1)
@@ -229,6 +238,7 @@ namespace Vurbiri.Colonization
 
             return false;
         }
+        #endregion
 
         #region Profit
         public CurrenciesLite ProfitFromPort(int idHex, int add)
@@ -240,7 +250,7 @@ namespace Vurbiri.Colonization
 
             return profit;
         }
-        public CurrenciesLite ProfitFromUrban(int idHex, int compensationRes, int wallDef)
+        public CurrenciesLite ProfitFromUrban(int idHex, int compensationRes)
         {
             CurrenciesLite profit = new();
             int countEnemy = 0;
@@ -262,19 +272,20 @@ namespace Vurbiri.Colonization
                 return profit;
             }
 
-            int ratioProfit = _states.profit - (wallDef >= countEnemy ? 0 : countEnemy - wallDef);
-            profit.Multiply(ratioProfit < 0 ? 0 : ratioProfit);
+            int ratioProfit = Math.Max(_states.profit - Math.Max(countEnemy - _defenceWall, 0), 0);
+            profit.Multiply(ratioProfit);
 
             return profit;
         }
         #endregion
 
-        public void Select()
+        #region ISelectable
+        public void OnSelect()
         {
             Debug.Log("Добавить в событие isPlayer для меню");
             _eventBus.TriggerCrossroadSelect(this);
         }
-        public void Unselect(ISelectable newSelectable)
+        public void OnUnselect(ISelectable newSelectable)
         {
             _eventBus.TriggerCrossroadUnselect(this);
 
@@ -287,8 +298,14 @@ namespace Vurbiri.Colonization
 
             _waitHexagon = null;
         }
+        #endregion
 
         public int[] ToArray() => new int[] { _key.X, _key.Y, _states.id.Value, _isWall ? 1 : 0 };
+
+        public void Dispose()
+        {
+            _unsubscriber?.Unsubscribe();
+        }
     }
 }
 

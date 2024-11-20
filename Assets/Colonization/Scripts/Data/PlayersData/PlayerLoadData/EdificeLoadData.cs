@@ -1,16 +1,17 @@
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Data
 {
     public readonly struct EdificeLoadData
 	{
 		public readonly Key key;
 		public readonly int id;
-		public readonly bool isWall;
+        public readonly bool isWall;
 
 		public EdificeLoadData(int[] data)
 		{
-            key = new(data[0], data[1]);
-			id = data[2];
-            isWall = data[3] > 0;
+			int i = 0;
+			key = new(data[i++], data[i++]);
+			id = data[i++];
+            isWall = data[i++] > 0;
         }
     }
 }

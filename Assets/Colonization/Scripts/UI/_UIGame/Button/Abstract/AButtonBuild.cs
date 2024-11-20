@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using System.Text;
 using UnityEngine;
@@ -11,12 +10,10 @@ namespace Vurbiri.Colonization.UI
 
     public abstract class AButtonBuild : AHintingButton
     {
-        [Space]
-        [SerializeField, Range(0.05f, 0.5f)] private float _space = 0.1f;
-
         private string _hexColorPlus, _hexColorMinus;
 
         private const int MIN_SIZE = 64, MAX_SIZE = 256;
+        private const float SPACE = 0.1f;
 
         public Vector3 LocalPosition { set => _thisTransform.localPosition = value; }
 
@@ -33,7 +30,7 @@ namespace Vurbiri.Colonization.UI
         {
             StringBuilder sb = new(cost.Amount > 0 ? MAX_SIZE : MIN_SIZE);
             sb.AppendLine(caption);
-            sb.AppendFormat(CultureInfo.InvariantCulture, TAG_SPACE, _space);
+            sb.AppendFormat(CultureInfo.InvariantCulture, TAG_SPACE, SPACE);
 
             int costV;
             for (int i = 0; i < CurrencyId.CountMain; i++)

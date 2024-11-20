@@ -1,6 +1,5 @@
 namespace Vurbiri.Colonization
 {
-
     public abstract class ACurrencies
     {
         protected const int countMain = CurrencyId.CountMain;

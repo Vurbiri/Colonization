@@ -1,7 +1,7 @@
-namespace Vurbiri.Colonization
-{
-    using Characteristics;
+using Vurbiri.Colonization.Characteristics;
 
+namespace Vurbiri.Colonization.Data
+{
     public readonly struct ActorLoadData
 	{
         public readonly int id;
@@ -9,20 +9,25 @@ namespace Vurbiri.Colonization
         public readonly int currentHP;
         public readonly int currentAP;
 		public readonly int move;
-		public readonly ReactiveEffect[] effects;
+        public readonly bool isBlock;
+        public readonly ReactiveEffect[] effects;
 
 		public ActorLoadData(int[][] actorData)
         {
-            keyHex = new(actorData[0]);
-            id = actorData[1][0];
-            currentHP = actorData[1][1];
-            currentAP = actorData[1][2];
-            move = actorData[1][3];
+            int n = 0, m = 0;
+            keyHex = new(actorData[n++]);
 
-            int count = actorData.Length - 2;
+            id = actorData[n][m++];
+            currentHP = actorData[n][m++];
+            currentAP = actorData[n][m++];
+            move = actorData[n][m++];
+            isBlock = actorData[n][m++] > 0;
+            n++;
+
+            int count = actorData.Length - n;
             effects = new ReactiveEffect[count];
-            for (int i = 0, j = 2; i < count; i++, j++)
-                effects[i] = new(actorData[j]);
+            for (int l = 0; l < count; l++, n++)
+                effects[l] = new(actorData[n]);
         }
     }
 }

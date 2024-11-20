@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.UI
             _button.Interactable = cash >= cost;
             _buttonIcon.sprite = view.sprite;
 
-            SetTextHint(_localization.GetText(_file, view.keyHint), cash, cost);
+            SetTextHint(_localization.GetText(Files.Gameplay, view.keyHint), cash, cost);
 
             _thisGO.SetActive(true);
         }
@@ -59,8 +59,6 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            _file = CONST_UI_LNG_KEYS.FILE;
-
             for (int i = 0; i < EdificeId.Count; i++)
             {
                 if(string.IsNullOrEmpty(_edificeView[i].keyHint))

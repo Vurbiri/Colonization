@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private HexagonCaption _hexagonCaption;
         [SerializeField] private Collider _collider;
 
-        #region private
+        #region Fields
         private Transform _thisTransform;
         private GameplayEventBus _eventBus;
         private Pool<HexagonMark> _poolMarks;
@@ -27,14 +27,41 @@ namespace Vurbiri.Colonization
         private readonly HashSet<Hexagon> _neighbors = new(CONST.HEX_COUNT_SIDES);
         #endregion
 
+        #region Propirties
         public Key Key => _data.key;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
+        public Actor Owner => _owner;
         public bool CanUnitEnter => !_isGate && !_isWater && _ownerId == PlayerId.None;
         public Vector3 Position => _data.position;
         public IReadOnlyCollection<Hexagon> Neighbors => _neighbors;
+        public bool IsOwnedByPort
+        {
+            get
+            {
+                if (_isGate || !_isWater) return false;
 
+                foreach (var crossroad in _crossroads)
+                    if (crossroad.IsPort) return true;
 
+                return false;
+            }
+        }
+        public bool IsOwnedByUrban
+        {
+            get
+            {
+                if (_isGate || _isWater) return false;
+
+                foreach (var crossroad in _crossroads)
+                    if (crossroad.IsUrban) return true;
+
+                return false;
+            }
+        }
+        #endregion
+
+        #region Init
         public void Init(HexData data, Pool<HexagonMark> poolMarks, GameplayEventBus eventBus)
         {
             _thisTransform = transform;
@@ -82,60 +109,32 @@ namespace Vurbiri.Colonization
 
         public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
         public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
+        #endregion
 
-        public int GetCurrencyId() => _profit.Get;
+        #region Profit
         public bool TryGetProfit(int hexId, bool isPort, out int currencyId)
         {
             currencyId = CurrencyId.Blood;
-            if (hexId != _data.id || isPort != _isWater)
+            if (hexId != _data.id | isPort != _isWater)
             {
                 _hexagonCaption.ResetProfit(_isShow);
                 return false;
             }
 
             currencyId = _profit.Get;
-            Debug.Log($"{_data.key}: {currencyId}");
 
             if (_isWater)
                 _hexagonCaption.Profit(currencyId);
             else
                 _hexagonCaption.Profit();
 
-            return currencyId != CurrencyId.Blood;
+            return true;
         }
 
-        public bool TryGetFreeGroundResource(out int currencyId)
-        {
-            currencyId = CurrencyId.Blood;
-            return !IsOwnedByUrban() && (currencyId = _profit.Get) != CurrencyId.Blood;
-        }
+        public bool TryGetFreeGroundResource(out int currencyId) => !IsOwnedByUrban & (currencyId = _profit.Get) != CurrencyId.Blood;
+        #endregion
 
-        public bool IsOwnedByPort()
-        {
-            if (_isGate || !_isWater) return false;
-
-            foreach (var crossroad in _crossroads)
-            {
-                if (crossroad.IsPort)
-                    return true;
-            }
-
-            return false;
-        }
-
-        public bool IsOwnedByUrban()
-        {
-            if (_isGate || _isWater) return false;
-
-            foreach (var crossroad in _crossroads)
-            {
-                if (crossroad.IsUrban)
-                    return true;
-            }
-
-            return false;
-        }
-
+        #region Actor
         public void EnterActor(Actor actor)
         {
             _owner = actor;
@@ -145,6 +144,16 @@ namespace Vurbiri.Colonization
         {
             _owner = null;
             _ownerId = PlayerId.None;
+        }
+
+        public int GetDefense()
+        {
+            int max = int.MinValue;
+
+            foreach (var crossroad in _crossroads)
+                max = Mathf.Max(crossroad.GetDefense(_ownerId), max);
+
+            return max;
         }
 
         public bool IsEnemy(Id<PlayerId> id) => _ownerId != PlayerId.None && _ownerId != id;
@@ -168,16 +177,18 @@ namespace Vurbiri.Colonization
             _collider.enabled = false;
             _mark = null;
         }
+        #endregion
 
+        #region ISelectable
         public void Select()
         {
             //_eventBus.TriggerHexagonSelect(this);
         }
-
         public void Unselect(ISelectable newSelectable)
         {
             //_eventBus.TriggerHexagonUnselect(this);
         }
+        #endregion
 
         private void OnShow(bool value)
         {

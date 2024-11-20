@@ -3,8 +3,6 @@ using Vurbiri.Localization;
 
 namespace Vurbiri.Colonization.UI
 {
-    using static CONST_UI_LNG_KEYS;
-
     public class TempEffectUI : AEffectsUI
     {
         private readonly int _duration;
@@ -17,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         public override void GetText(Language language, StringBuilder sb)
         {
             sb.Append(_hexColor);
-            sb.AppendLine(language.GetTextFormat(FILE, _descKey, _value, _duration));
+            sb.AppendLine(language.GetTextFormat(Files.Gameplay, _descKey, _value, _duration));
         }
     }
 }

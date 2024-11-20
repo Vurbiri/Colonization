@@ -15,7 +15,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_DESC_KEY = "_descKeyId", P_IS_DESC_BASE = "_isDescKeyBase";
         private const string P_TARGET_ABILITY = "_targetAbility", P_USED_ABILITY = "_usedAbility", P_CONTR_ABILITY = "_counteredAbility";
         private const string P_PARENT_TARGET = "_parentTarget";
-        private readonly (int min, int max) MIN_MAX_A = (0, 7), MIN_MAX_P = (50, 200);
+        private readonly (int min, int max) MIN_MAX_A = (0, 7), MIN_MAX_P = (25, 350);
         #endregion
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)

@@ -70,6 +70,7 @@ namespace Vurbiri.Colonization.Actors
                 Vector3 start = currentHex.Position, end = _targetHex.Position;
 
                 currentHex.ExitActor();
+                _actor.RemoveWallDefenceEffect();
                 _actor._currentHex = currentHex = _targetHex;
                 currentHex.EnterActor(_actor);
 
@@ -104,13 +105,6 @@ namespace Vurbiri.Colonization.Actors
                     Reset();
                     yield break;
                 }
-
-                //if (empty.Count == 1)
-                //{
-                //    _targetHex = empty[0];
-                //    _coroutineMove = _parent.StartCoroutine(Move_Coroutine());
-                //    yield break;
-                //}
 
                 _waitHexagon = new();
 

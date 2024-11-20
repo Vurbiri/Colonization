@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Data
 {
     public readonly struct PlayerLoadData
 	{

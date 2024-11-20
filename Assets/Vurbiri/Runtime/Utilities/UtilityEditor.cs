@@ -30,12 +30,27 @@ namespace VurbiriEditor
             string[] guids = AssetDatabase.FindAssets($"t:Prefab", new[] { "Assets" });
             
             List<T> list = new();
+            string path; 
+            foreach (var guid in guids)
+            {
+                path = AssetDatabase.GUIDToAssetPath(guid);
+                if ((AssetDatabase.LoadMainAssetAtPath(path) as GameObject).TryGetComponent<T>(out T obj)) 
+                    list.Add(obj);
+            }
+
+            return list;
+        }
+
+        public static List<T> FindAllComponentsPrefabs<T>() where T : Component
+        {
+            string[] guids = AssetDatabase.FindAssets($"t:Prefab", new[] { "Assets" });
+
+            List<T> list = new();
             string path; T obj;
             foreach (var guid in guids)
             {
                 path = AssetDatabase.GUIDToAssetPath(guid);
-                obj = (AssetDatabase.LoadMainAssetAtPath(path) as GameObject).GetComponent<T>();
-                if (obj != null) 
+                if((obj = (AssetDatabase.LoadMainAssetAtPath(path) as GameObject).GetComponentInChildren<T>()) != null)
                     list.Add(obj);
             }
 

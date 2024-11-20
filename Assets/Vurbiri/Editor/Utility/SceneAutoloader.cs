@@ -35,11 +35,13 @@ namespace VurbiriEditor
             if (Application.isPlaying)
                 return;
 
+            BeginWindows();
             EditorGUILayout.Space(12);
             _path = EditorGUILayout.DelayedTextField(LABEL_PATH, arrPaths[0]);
             _startSceneTemp = EditorGUILayout.IntPopup(LABEL_SCENE, startScene, nameScenes, idScenes);
             EditorGUILayout.Space(12);
             saveScene = EditorGUILayout.Toggle(LABEL_SAVE, saveScene);
+            EndWindows();
 
             if (_startSceneTemp != startScene || _path != arrPaths[0])
             {

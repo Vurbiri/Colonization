@@ -7,7 +7,7 @@ namespace Vurbiri.UI
 {
     public class HintingButton : AHintingButton
     {
-        [Space]
+        [SerializeField] protected Files _file;
         [SerializeField] private string _key;
 
         private IUnsubscriber _unsubscriber;

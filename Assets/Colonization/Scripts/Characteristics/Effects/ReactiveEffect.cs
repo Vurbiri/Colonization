@@ -40,15 +40,7 @@ namespace Vurbiri.Colonization.Characteristics
             _duration = array[i++];
         }
 
-        public void Subscribe(Action<ReactiveEffect, TypeEvent> action)
-        {
-            actionThisChange -= action ?? throw new ArgumentNullException("action");
-            actionThisChange += action;
-
-            action(this, TypeEvent.Subscribe);
-        }
-
-        public bool Update(ReactiveEffect other)
+        public bool UpdateDuration(ReactiveEffect other)
         {
             if (_code != other._code)
                 return false;
@@ -73,12 +65,5 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
         public int[] ToArray() => new int[] { _code, _targetAbility, _typeModifier.Value, _value, _duration };
-
-        public override int GetHashCode() => _code.GetHashCode();
-        public bool Equals(ReactiveEffect other) => other is not null && _code == other._code;
-        public override bool Equals(object obj) => obj is ReactiveEffect other && _code == other._code;
-
-        public static bool operator ==(ReactiveEffect left, ReactiveEffect right) => left._code == right._code;
-        public static bool operator !=(ReactiveEffect left, ReactiveEffect right) => left._code != right._code;
     }
 }

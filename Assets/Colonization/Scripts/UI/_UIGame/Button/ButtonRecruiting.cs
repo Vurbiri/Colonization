@@ -27,8 +27,6 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         protected void OnValidate()
         {
-            _file = CONST_UI_LNG_KEYS.FILE;
-
             if (string.Empty == _key)
                 _key = WarriorId.GetName(_id);
         }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -27,6 +28,7 @@ namespace Vurbiri.Colonization.Actors
 
             return _warrior;
         }
+
 
 #if UNITY_EDITOR
         private void OnValidate()

@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.UI
             _thisGO.SetActive(true);
         }
 
-        private void SetText(Language localization) => _caption = localization.GetText(_file, _key);
+        private void SetText(Language localization) => _caption = localization.GetText(Files.Gameplay, _key);
 
         private void OnDestroy()
         {

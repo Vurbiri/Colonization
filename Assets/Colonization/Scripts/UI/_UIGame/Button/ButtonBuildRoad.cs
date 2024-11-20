@@ -31,5 +31,13 @@ namespace Vurbiri.Colonization.UI
             _parentGO.SetActive(false);
             _playerCurrent.BuyRoad(_currentCrossroad, _id);
         }
+
+#if UNITY_EDITOR
+        protected void OnValidate()
+        {
+            if (string.Empty == _key)
+                _key = "Road";
+        }
+#endif
     }
 }

@@ -17,7 +17,7 @@ namespace Vurbiri.Reactive.Collections
             action((T)this, TypeEvent.Subscribe);
         }
 
-        protected virtual void Removing()
+        public virtual void Removing()
         {
             actionThisChange?.Invoke((T)this, TypeEvent.Remove);
             actionThisChange = null;

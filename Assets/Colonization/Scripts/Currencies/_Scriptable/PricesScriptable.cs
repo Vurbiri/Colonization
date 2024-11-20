@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
     using UnityEngine;
 
     [CreateAssetMenu(fileName = "Prices", menuName = "Vurbiri/Colonization/Prices", order = 51)]
-    public class PricesScriptable : ScriptableObject
+    public class PricesScriptable : ScriptableObjectDisposable
     {
         [SerializeField] private CurrenciesLite _playersDefault;
         [SerializeField] private CurrenciesLite _roads;

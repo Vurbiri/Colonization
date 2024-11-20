@@ -52,13 +52,13 @@ namespace Vurbiri.Colonization.UI
         {
             int count = _effects.Length;
             StringBuilder sb = new(SIZE + count * SIZE);
-            sb.AppendLine(localization.GetText(FILE, _nameKey));
+            sb.AppendLine(localization.GetText(Files.Gameplay, _nameKey));
             for (int i = 0; i < count; i++)
                 _effects[i].GetText(localization, sb);
             sb.Append(TAG_COLOR_OFF);
 
             _textMain = sb.ToString();
-            _textAP = localization.GetTextFormat(FILE, AP_KEY, _cost);
+            _textAP = localization.GetTextFormat(Files.Gameplay, AP_KEY, _cost);
 
             _capacity = _textMain.Length + +_hexColorPlus.Length + _textAP.Length;
         }

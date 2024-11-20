@@ -12,8 +12,8 @@ namespace Vurbiri.Colonization.Actors
         private const string T_IDLE = "tIdleAdv", B_IDLE = "bIdle";
         private const string B_MOVE = "bMove", B_RUN = "bRun", B_BLOCK = "bBlock";
         private const string T_REACT = "tReact";
-        private static readonly string[] T_SKILLS = { "tSkill_01", "tSkill_02" };
-        public const int COUNT_SKILLS = 2;
+        private static readonly string[] T_SKILLS = { "tSkill_01", "tSkill_02", "tSkill_03" };
+        public const int COUNT_SKILLS = 3;
         #endregion
 
         private Animator _animator;

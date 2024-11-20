@@ -8,6 +8,13 @@ namespace Vurbiri.Reactive
 
         public Unsubscribers() => _unsubscribers = new();
         public Unsubscribers(int capacity) => _unsubscribers = new(capacity);
+        public Unsubscribers(IUnsubscriber unsubscriber)
+        {
+            _unsubscribers = new()
+            {
+                unsubscriber
+            };
+        }
 
         public void Unsubscribe()
         {

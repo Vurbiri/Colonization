@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
             _playersData = new(isLoading, out bool[] loads);
 
             for (int i = 0; i < PlayersCount; i++)
-                _players.Add(new(i, new(i, loads[i], _playersData[i], settings)));
+                _players.Add(new(i, loads[i], _playersData[i], settings));
 
             _current = _players[0];
 
@@ -44,6 +44,9 @@ namespace Vurbiri.Colonization
         public void Dispose()
         {
             _playersData.Dispose();
+            
+            for(int i = 0; i < PlayersCount; i++)
+                _players[i].Dispose();
         }
 
         #region Nested: Settings

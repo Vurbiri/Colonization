@@ -14,7 +14,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_TARGET = "target", P_COST = "cost", P_EFFECTS = "effects";
         private const string P_SPRITE = "_sprite", P_KEY_NAME = "_nameKey", P_COST_UI = "_cost";
         private const string P_CHILD_TARGET = "_parentTarget";
-        private readonly string[] KEYS_NAME_SKILLS = { "Attack", "Sweep" };
+        private readonly string[] KEYS_NAME_SKILLS = { "Attack", "Sweep", "Combo" };
 
         public override void OnGUI(Rect mainPosition, SerializedProperty mainProperty, GUIContent label)
         {

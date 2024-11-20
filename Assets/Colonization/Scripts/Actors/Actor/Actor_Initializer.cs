@@ -1,5 +1,6 @@
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -7,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
 
     public abstract partial class Actor
     {
-        public virtual void Init(ActorSettings settings, int owner, Hexagon startHex, GameplayEventBus eventBus)
+        public void Init(ActorSettings settings, int owner, Hexagon startHex, GameplayEventBus eventBus)
         {
             _typeId = settings.TypeId;
             _id = settings.Id;
@@ -32,25 +33,29 @@ namespace Vurbiri.Colonization.Actors
             _extentsZ = GetComponent<BoxCollider>().bounds.extents.z;
             _effects.Subscribe(RedirectEvents);
 
-            _skin.EventStart += _stateMachine.Default;
-
             _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
             _currentHex.EnterActor(this);
 
             Skills skills = settings.Skills;
 
-            _stateMachine.AddState(new IdleState(this));
-            _stateMachine.SetDefaultState<IdleState>();
+            Debug.Log("Раскомментить PlayerIdleState");
+            //AIdleState idle = owner == PlayerId.Player ? new PlayerIdleState(this) : new AIIdleState(this);
+            AIdleState idle = new PlayerIdleState(this);
 
-            _stateMachine.AddState(skills.GetBlockState(this));
+            _stateMachine.AddState(idle);
+            _stateMachine.SetDefaultState(idle);
+
             _stateMachine.AddState(skills.GetMoveSate(this));
 
+            _blockState = skills.GetBlockState(this);
             _skillStates = skills.GetSkillSates(this);
+
+            _skin.EventStart += _stateMachine.Default;
 
             gameObject.SetActive(true);
         }
 
-        public virtual void Init(ActorSettings settings, int owner, Hexagon startHex, ActorLoadData data, GameplayEventBus eventBus)
+        public void Init(ActorSettings settings, int owner, Hexagon startHex, ActorLoadData data, GameplayEventBus eventBus)
         {
             Init(settings, owner, startHex, eventBus);
 
@@ -61,6 +66,9 @@ namespace Vurbiri.Colonization.Actors
             int count = data.effects.Length;
             for (int i = 0; i < count; i++)
                 _effects.Add(data.effects[i]);
+
+            if(data.isBlock)
+                _skin.EventStart += Block;
         }
     }
 }

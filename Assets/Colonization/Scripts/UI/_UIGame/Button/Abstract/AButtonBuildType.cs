@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }
 
-        protected void SetText(Language localization) => _caption = localization.GetText(_file, _key);
+        protected void SetText(Language localization) => _caption = localization.GetText(Files.Gameplay, _key);
 
         protected abstract void OnClick();
 
