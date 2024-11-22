@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\ContextMenusWorld.cs
 using System.Collections;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ namespace Vurbiri.Colonization.UI
 
             _lookAtCamera.Init(_camera);
 
-            Debug.Log("Переделать _playerCurrent на _player!!!");
+            Debug.Log("Р—Р°РјРµРЅРёС‚СЊ _playerCurrent РЅР° _player!!!");
 
             _crossroadMenu.Init(_roadsMenu, _recruitingMenu, settings);
             _recruitingMenu.Init(_crossroadMenu, settings);

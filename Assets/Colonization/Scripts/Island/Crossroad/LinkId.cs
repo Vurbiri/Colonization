@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Island\Crossroad\LinkId.cs
 namespace Vurbiri.Colonization
 {
     public class LinkId : AIdType<LinkId>

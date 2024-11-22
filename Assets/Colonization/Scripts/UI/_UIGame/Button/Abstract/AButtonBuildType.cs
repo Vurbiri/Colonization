@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\UI\_UIGame\Button\Abstract\AButtonBuildType.cs
 using UnityEngine;
 using Vurbiri.Localization;
 using Vurbiri.Reactive;

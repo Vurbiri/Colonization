@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Types\Random\RColor32.cs
 using System;
 using UnityEngine;
 

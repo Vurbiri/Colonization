@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Utilities\EnumsGeneric.cs
 using System;
 namespace Vurbiri
 {

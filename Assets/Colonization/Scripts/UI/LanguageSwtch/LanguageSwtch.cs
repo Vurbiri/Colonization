@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\UI\LanguageSwtch\LanguageSwtch.cs
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Localization;

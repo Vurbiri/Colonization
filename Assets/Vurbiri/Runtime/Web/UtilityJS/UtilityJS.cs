@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Web\UtilityJS\UtilityJS.cs
 namespace Vurbiri
 {
     public static partial class UtilityJS

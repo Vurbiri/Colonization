@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Editor\Actors\Warriors\Editors\WarriorsSettingsEditor.cs
 namespace VurbiriEditor.Colonization.Actors
 {
     using UnityEditor;

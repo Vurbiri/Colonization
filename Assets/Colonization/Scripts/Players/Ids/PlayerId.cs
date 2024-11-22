@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Players\Ids\PlayerId.cs
 namespace Vurbiri.Colonization
 {
     public class PlayerId : AIdType<PlayerId>

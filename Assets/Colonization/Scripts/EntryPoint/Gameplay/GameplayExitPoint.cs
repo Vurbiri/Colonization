@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayExitPoint.cs
 using System;
 using System.Collections;
 using Vurbiri.EntryPoint;

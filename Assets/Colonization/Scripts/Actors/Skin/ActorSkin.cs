@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Actors\Skin\ActorSkin.cs
 using System;
 using UnityEngine;
 using Vurbiri.FSM;

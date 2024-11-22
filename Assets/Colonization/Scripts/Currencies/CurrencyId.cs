@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Currencies\CurrencyId.cs
 namespace Vurbiri.Colonization
 {
     public class CurrencyId : AIdType<CurrencyId>

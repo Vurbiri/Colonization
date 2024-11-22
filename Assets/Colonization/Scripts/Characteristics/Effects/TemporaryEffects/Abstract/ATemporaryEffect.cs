@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Characteristics\Effects\TemporaryEffects\Abstract\ATemporaryEffect.cs
 namespace Vurbiri.Colonization.Characteristics
 {
 

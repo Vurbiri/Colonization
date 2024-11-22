@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Island\Hexagon\Hexagon.cs
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;

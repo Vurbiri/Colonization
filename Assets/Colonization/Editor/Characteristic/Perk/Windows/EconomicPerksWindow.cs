@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Editor\Characteristic\Perk\Windows\EconomicPerksWindow.cs
 namespace VurbiriEditor.Colonization.Characteristics
 {
     using UnityEditor;
@@ -25,7 +26,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             if (perks == null)
             {
-                Debug.Log("Нет EconomicPerksScriptable");
+                Debug.Log("пїЅпїЅпїЅ EconomicPerksScriptable");
                 return;
             }
 

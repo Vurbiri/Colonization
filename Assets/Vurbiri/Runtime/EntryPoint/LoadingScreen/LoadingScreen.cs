@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\EntryPoint\LoadingScreen\LoadingScreen.cs
 using System.Collections;
 using UnityEngine;
 

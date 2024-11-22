@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\CONSTS\JSON_KEYS.cs
 namespace Vurbiri.Colonization.Data
 {
     public static class JSON_KEYS 

@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Editor\Characteristic\Perk\Editors\EconomicPerksEditor.cs
 namespace VurbiriEditor.Colonization.Characteristics
 {
     using UnityEditor;

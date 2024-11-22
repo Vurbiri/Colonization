@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Players\Player_Objects\Objects_Edifices.cs
 using System;
 using System.Collections.Generic;
 using Vurbiri.Collections;
@@ -8,7 +9,7 @@ namespace Vurbiri.Colonization
 {
     public partial class Player
     {
-        private partial class Objects
+        protected partial class Objects
         {
             public class Edifices : IDisposable
             {

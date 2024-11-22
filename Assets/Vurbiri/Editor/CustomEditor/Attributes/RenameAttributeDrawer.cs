@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\CustomEditor\Attributes\RenameAttributeDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

@@ -1,3 +1,4 @@
+п»ї//Assets\Vurbiri\Runtime\Types\Collections\IdCollections\Abstract\AIdType.cs
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -23,7 +24,7 @@ namespace Vurbiri
             FieldInfo[] fields = t_child.GetFields(BindingFlags.Public | BindingFlags.Static);
 
             if (fields.Length == 0)
-                Debug.LogError($"Нет public static полей. Класс: {t_child.Name}");
+                Debug.LogError($"пїЅпїЅпїЅ public static пїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ: {t_child.Name}");
 
             _names = new(fields.Length);
 
@@ -36,7 +37,7 @@ namespace Vurbiri
                     continue;
 
                 if (field.FieldType != t_int | !field.IsLiteral)
-                    Debug.LogError($"Поле {t_child.Name}.{field.Name} должно иметь тип int и быть константным.");
+                    Debug.LogError($"пїЅпїЅпїЅпїЅ {t_child.Name}.{field.Name} пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ int пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.");
 
                 value = (int)field.GetValue(null);
 
@@ -46,7 +47,7 @@ namespace Vurbiri
                 }
                 else if (value != oldValue + 1)
                 {
-                    Debug.LogError($"Неожидаемое значение поля {t_child.Name}.{field.Name} = {value} вместо {oldValue + 1}");
+                    Debug.LogError($"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ {t_child.Name}.{field.Name} = {value} пїЅпїЅпїЅпїЅпїЅпїЅ {oldValue + 1}");
                 }
 
                 if (value >= 0)
@@ -57,7 +58,7 @@ namespace Vurbiri
             }
 
             if (_count == 0)
-                Debug.LogError($"Нет положительных public const полей. Класс: {t_child.Name}");
+                Debug.LogError($"пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ public const пїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ: {t_child.Name}");
 
             //Message.Log($"Create {t_child.Name}. min: {_min}, count: {_count}, countAll: {_countAll}");
         }

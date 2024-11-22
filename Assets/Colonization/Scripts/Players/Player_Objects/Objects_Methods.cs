@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Players\Player_Objects\Objects_Methods.cs
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
@@ -6,7 +7,7 @@ namespace Vurbiri.Colonization
 {
     public partial class Player
     {
-        private partial class Objects
+        protected partial class Objects
         {
             public IReadOnlyReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => abilities[id];
 

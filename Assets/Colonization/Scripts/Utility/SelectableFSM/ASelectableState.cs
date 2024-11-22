@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Utility\SelectableFSM\ASelectableState.cs
 using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.FSMSelectable

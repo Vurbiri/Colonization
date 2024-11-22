@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Editor\Players\PlayerVisualSetEditor.cs
 using UnityEditor;
 using UnityEngine.UIElements;
 

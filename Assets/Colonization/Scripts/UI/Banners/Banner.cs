@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\UI\Banners\Banner.cs
 using System.Collections;
 using TMPro;
 using UnityEngine;

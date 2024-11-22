@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Utilities\UtilityEditor.cs
 #if UNITY_EDITOR
 
 namespace VurbiriEditor

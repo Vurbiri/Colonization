@@ -1,3 +1,4 @@
+п»ї//Assets\Vurbiri\Runtime\Types\Collections\IdCollections\Id.cs
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace Vurbiri
         public Id(int id)
         {
             if (!AIdType<T>.IsValidate(id))
-                throw new ArgumentOutOfRangeException($"Неожидаемое значение: {id} для {typeof(T).Name}");
+                throw new ArgumentOutOfRangeException($"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: {id} пїЅпїЅпїЅ {typeof(T).Name}");
 
             _id = id;
         }

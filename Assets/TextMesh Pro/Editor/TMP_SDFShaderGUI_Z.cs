@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿//Assets\TextMesh Pro\Editor\TMP_SDFShaderGUI_Z.cs
+using UnityEditor;
 using UnityEngine;
 
 namespace TMPro.EditorUtilities

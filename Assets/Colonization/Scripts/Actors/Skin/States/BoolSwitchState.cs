@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Actors\Skin\States\BoolSwitchState.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors

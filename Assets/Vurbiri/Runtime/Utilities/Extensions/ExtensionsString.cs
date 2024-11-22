@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Utilities\Extensions\ExtensionsString.cs
 namespace Vurbiri
 {
     public static class ExtensionsString 

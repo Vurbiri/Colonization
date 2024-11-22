@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\UI\_UIGame\Currencies\CurrencyWidget.cs
 using System.Collections;
 using TMPro;
 using UnityEngine;

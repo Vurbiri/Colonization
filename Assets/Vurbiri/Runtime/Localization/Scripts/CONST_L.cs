@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Localization\Scripts\CONST_L.cs
 namespace Vurbiri.Localization
 {
     public static class CONST_L

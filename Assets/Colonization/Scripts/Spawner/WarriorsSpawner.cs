@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Spawner\WarriorsSpawner.cs
 using UnityEngine;
 using Vurbiri.Colonization.Data;
 

@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\EdificeLoadData.cs
 namespace Vurbiri.Colonization.Data
 {
     public readonly struct EdificeLoadData

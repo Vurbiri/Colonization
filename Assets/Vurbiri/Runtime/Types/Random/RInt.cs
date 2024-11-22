@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Types\Random\RInt.cs
 using UnityEngine;
 
 namespace Vurbiri

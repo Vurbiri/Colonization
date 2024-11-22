@@ -1,3 +1,4 @@
+п»ї//Assets\Vurbiri\Runtime\Utilities\Storage\Storage.cs
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -76,7 +77,7 @@ namespace Vurbiri
             }
             catch (Exception ex)
             {
-                Message.Error($"--- Ошибка загрузки объекта {typeof(T).Name} по пути {path} ---\n".Concat(ex.Message));
+                Message.Error($"--- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ {typeof(T).Name} пїЅпїЅ пїЅпїЅпїЅпїЅ {path} ---\n".Concat(ex.Message));
                 obj = null;
                 return false;
             }

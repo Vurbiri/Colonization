@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Types\Reactive\Abstract\AReactiveMono.cs
 using System;
 using UnityEngine;
 

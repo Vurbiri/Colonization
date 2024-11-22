@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Characteristics\Effects\EffectSettings.cs
 using UnityEngine;
 using Vurbiri.Colonization.UI;
 using Vurbiri.UI;

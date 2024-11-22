@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Characteristics\Abilities\AbilityValue.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     using System;

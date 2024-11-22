@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\Types\Random\RFloatDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

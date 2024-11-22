@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\CustomEditor\Attributes\GetComponent\GetComponentInParentAttributeDrawer.cs
 using System;
 using UnityEditor;
 using UnityEngine;

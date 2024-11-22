@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Scripts\Island\Crossroad\Crossroad.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -282,7 +283,7 @@ namespace Vurbiri.Colonization
         #region ISelectable
         public void OnSelect()
         {
-            Debug.Log("Добавить в событие isPlayer для меню");
+            Debug.Log("РћС‚РїСЂР°РІР»СЏС‚СЊ С‚РѕР»СЊРєРѕ РµСЃР»Рё РёРіСЂРѕРє");
             _eventBus.TriggerCrossroadSelect(this);
         }
         public void OnUnselect(ISelectable newSelectable)

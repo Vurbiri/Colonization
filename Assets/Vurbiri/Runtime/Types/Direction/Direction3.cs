@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Types\Direction\Direction3.cs
 using System;
 using UnityEngine;
 

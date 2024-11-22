@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Types\Collections\CONST_COLL.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.Collections

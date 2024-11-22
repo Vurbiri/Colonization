@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Data\PlayersData\PlayerData.cs
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

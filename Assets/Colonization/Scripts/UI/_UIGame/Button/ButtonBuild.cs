@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonBuild.cs
 using UnityEngine;
 using UnityEngine.Events;
 using Vurbiri.Localization;

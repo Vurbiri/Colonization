@@ -1,3 +1,4 @@
+п»ї//Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\EnumHashSet.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace Vurbiri.Collections
         {
             if (TryAdd(value)) return;
 
-            throw new Exception($"Объект типа {value.Type} уже был добавлен.");
+            throw new Exception($"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ {value.Type} пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.");
         }
 
         public bool TryAdd(TValue value)

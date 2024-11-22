@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Editor\Characteristic\Skills\SkillSettingsDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;

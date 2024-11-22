@@ -1,3 +1,4 @@
+п»ї//Assets\Vurbiri\Editor\Localization\Scripts\LanguageType\LanguageTypesScriptable.cs
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -43,7 +44,7 @@ namespace Vurbiri.Localization.Editors
         public void EmptyMethod()
         {
             if (_auto)
-                Debug.Log("Чтобы в консоль не ругалась");
+                Debug.Log("пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
         }
     }
 }

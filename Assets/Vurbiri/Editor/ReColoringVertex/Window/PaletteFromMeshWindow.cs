@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\ReColoringVertex\Window\PaletteFromMeshWindow.cs
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\MeshCreated\Primitives\Vertex.cs
 using System;
 using UnityEngine;
 

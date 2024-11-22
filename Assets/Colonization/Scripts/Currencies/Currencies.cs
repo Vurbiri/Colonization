@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Currencies\Currencies.cs
 using System.Collections.Generic;
 using Vurbiri.Reactive;
 

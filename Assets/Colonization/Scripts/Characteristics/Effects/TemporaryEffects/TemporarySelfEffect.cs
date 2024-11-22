@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Characteristics\Effects\TemporaryEffects\TemporarySelfEffect.cs
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics

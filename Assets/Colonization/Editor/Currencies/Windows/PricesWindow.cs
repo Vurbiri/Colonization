@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Editor\Currencies\Windows\PricesWindow.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization;
@@ -26,7 +27,7 @@ namespace VurbiriEditor.Colonization
         {
             if (_prices == null)
             {
-                Debug.Log("Нет PricesScriptable");
+                Debug.Log("пїЅпїЅпїЅ PricesScriptable");
                 return;
             }
 

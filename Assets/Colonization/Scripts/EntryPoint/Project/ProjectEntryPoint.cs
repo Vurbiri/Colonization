@@ -1,3 +1,4 @@
+Ôªø//Assets\Colonization\Scripts\EntryPoint\Project\ProjectEntryPoint.cs
 using System.Collections;
 using Vurbiri.Colonization.Data;
 using Vurbiri.EntryPoint;
@@ -5,74 +6,73 @@ using Vurbiri.Localization;
 
 namespace Vurbiri.Colonization
 {
-
     public class ProjectEntryPoint : AProjectEntryPoint
-    {
-        private void Start()
-        {
-            StartCoroutine(Run_Coroutine(GetComponent<ProjectInitializationData>()));
-        }
+	{
+		private void Start()
+		{
+			StartCoroutine(Run_Coroutine(GetComponent<ProjectInitializationData>()));
+		}
 
-        private IEnumerator Run_Coroutine(ProjectInitializationData data)
-        {
-            LoadScene loadScene = data.startScene;
+		private IEnumerator Run_Coroutine(ProjectInitializationData data)
+		{
+			LoadScene loadScene = data.startScene;
 
-            loadScene.Start();
+			loadScene.Start();
 
-            yield return StartCoroutine(Init_Coroutine(data));
+			yield return StartCoroutine(Init_Coroutine(data));
 
-            data.Dispose();
+			data.Dispose();
 
-            loadScene.End();
-        }
+			loadScene.End();
+		}
 
-        private IEnumerator Init_Coroutine(ProjectInitializationData data)
-        {
-            //Message.Log("Start LoadingPreGame");
+		private IEnumerator Init_Coroutine(ProjectInitializationData data)
+		{
+			//Message.Log("Start LoadingPreGame");
 
-            if (!_servicesContainer.AddInstance(new Language()).IsValid)
-                Message.Error("Error loading Localization!");
+			if (!_servicesContainer.AddInstance(new Language()).IsValid)
+				Message.Error("Error loading Localization!");
 
-            YandexSDK ysdk = new(_servicesContainer, data.leaderboardName);
-            yield return StartCoroutine(ysdk.Init_Coroutine());
-            _servicesContainer.AddInstance(ysdk);
+			YandexSDK ysdk = new(_servicesContainer, data.leaderboardName);
+			yield return StartCoroutine(ysdk.Init_Coroutine());
+			_servicesContainer.AddInstance(ysdk);
 
-            //Banners.InstanceF.Initialize();
+			//Banners.InstanceF.Initialize();
 
-            yield return StartCoroutine(CreateStorages_Coroutine(data.defaultProfile));
-            yield return StartCoroutine(YandexIsLogOn_Coroutine(ysdk, data.logOnPanel, data.defaultProfile));
+			yield return StartCoroutine(CreateStorages_Coroutine(data.defaultProfile));
+			yield return StartCoroutine(YandexIsLogOn_Coroutine(ysdk, data.logOnPanel, data.defaultProfile));
 
-            _dataContainer.AddInstance<GameplaySettingsData>(new(_servicesContainer));
+			_dataContainer.AddInstance<GameplaySettingsData>(new(_servicesContainer));
 
-            //Message.Log("End LoadingPreGame");
-        }
+			//Message.Log("End LoadingPreGame");
+		}
 
-        private IEnumerator CreateStorages_Coroutine(SettingsData.Profile defaultProfile)
-        {
-            _servicesContainer.Remove<IStorageService>();
-            var storage = _servicesContainer.AddInstance<IStorageService>(new Storage());
+		private IEnumerator CreateStorages_Coroutine(SettingsData.Profile defaultProfile)
+		{
+			_servicesContainer.Remove<IStorageService>();
+			var storage = _servicesContainer.AddInstance<IStorageService>(new Storage());
 
-            if (storage.Init(_servicesContainer))
-            {
-                bool result = false;
-                yield return StartCoroutine(storage.Load_Coroutine(SAVE_KEYS.PROJECT, (b) => result = b));
-                Message.Log(result ? "—Óı‡ÌÂÌËÂ Á‡„ÛÊÂÌÓ" : "—Óı‡ÌÂÌËÂ ÌÂ Ì‡È‰ÂÌÓ");
-            }
+			if (storage.Init(_servicesContainer))
+			{
+				bool result = false;
+				yield return StartCoroutine(storage.Load_Coroutine(SAVE_KEYS.PROJECT, (b) => result = b));
+				Message.Log(result ? "–°–æ—Ö—Ä–∞–Ω–µ–Ω–∏—è –∑–∞–≥—Ä—É–∂–µ–Ω—ã" : "–°–æ—Ö—Ä–∞–Ω–µ–Ω–∏—è –Ω–µ –Ω–∞–π–¥–µ–Ω—ã");
+			}
 
-            _dataContainer.Remove<SettingsData>();
-            _dataContainer.AddInstance(new SettingsData(_servicesContainer, defaultProfile));
-        }
+			_dataContainer.Remove<SettingsData>();
+			_dataContainer.AddInstance(new SettingsData(_servicesContainer, defaultProfile));
+		}
 
-        private IEnumerator YandexIsLogOn_Coroutine(YandexSDK ysdk, LogOnPanel logOnPanel, SettingsData.Profile defaultProfile)
-        {
-            if (!ysdk.IsLogOn)
-            {
-                _loadingScreen.SmoothOff_Wait();
-                yield return StartCoroutine(logOnPanel.TryLogOn_Coroutine(ysdk));
-                yield return _loadingScreen.SmoothOn_Wait();
-                if (ysdk.IsLogOn)
-                    yield return StartCoroutine(CreateStorages_Coroutine(defaultProfile));
-            }
-        }
-    }
+		private IEnumerator YandexIsLogOn_Coroutine(YandexSDK ysdk, LogOnPanel logOnPanel, SettingsData.Profile defaultProfile)
+		{
+			if (!ysdk.IsLogOn)
+			{
+				_loadingScreen.SmoothOff_Wait();
+				yield return StartCoroutine(logOnPanel.TryLogOn_Coroutine(ysdk));
+				yield return _loadingScreen.SmoothOn_Wait();
+				if (ysdk.IsLogOn)
+					yield return StartCoroutine(CreateStorages_Coroutine(defaultProfile));
+			}
+		}
+	}
 }

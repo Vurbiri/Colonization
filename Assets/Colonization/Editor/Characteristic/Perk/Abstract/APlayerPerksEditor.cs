@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Editor\Characteristic\Perk\Abstract\APlayerPerksEditor.cs
 namespace VurbiriEditor.Colonization.Characteristics
 {
     using System;

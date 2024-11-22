@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Coroutine\WaitActivate.cs
 using UnityEngine;
 
 namespace Vurbiri

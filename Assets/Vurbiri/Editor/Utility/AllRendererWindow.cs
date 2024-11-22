@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\Utility\AllRendererWindow.cs
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -8,7 +9,7 @@ using static VurbiriEditor.CONST_EDITOR;
 
 namespace VurbiriEditor
 {
-    internal class AllRenderer : EditorWindow
+    internal class AllRendererWindow : EditorWindow
     {
         private const string NAME = "All Renderer Settings", MENU = MENU_PATH + NAME;
 
@@ -23,7 +24,7 @@ namespace VurbiriEditor
         [MenuItem(MENU)]
         private static void ShowWindow()
         {
-            GetWindow<AllRenderer>(true, NAME);
+            GetWindow<AllRendererWindow>(true, NAME);
         }
 
         private void OnEnable()

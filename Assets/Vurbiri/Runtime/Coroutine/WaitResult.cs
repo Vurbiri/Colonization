@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Coroutine\WaitResult.cs
 using System;
 using UnityEngine;
 

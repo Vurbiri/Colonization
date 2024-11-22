@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Editor\Actors\Warriors\Window\WarriorsSettingsWindow.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
@@ -26,7 +27,7 @@ namespace VurbiriEditor.Colonization.Actors
         {
             if (_warriorsSettings == null)
             {
-                Debug.Log("Нет WarriorsSettingsScriptable");
+                Debug.Log("пїЅпїЅпїЅ WarriorsSettingsScriptable");
                 return;
             }
 

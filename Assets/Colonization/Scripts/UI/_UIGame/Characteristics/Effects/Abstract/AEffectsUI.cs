@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\UI\_UIGame\Characteristics\Effects\Abstract\AEffectsUI.cs
 using System.Text;
 using Vurbiri.Localization;
 

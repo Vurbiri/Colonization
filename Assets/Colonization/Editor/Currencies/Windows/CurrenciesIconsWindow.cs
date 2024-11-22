@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Editor\Currencies\Windows\CurrenciesIconsWindow.cs
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;

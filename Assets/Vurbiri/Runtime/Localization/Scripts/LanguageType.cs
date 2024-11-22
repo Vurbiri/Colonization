@@ -1,3 +1,4 @@
+п»ї//Assets\Vurbiri\Runtime\Localization\Scripts\LanguageType.cs
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -42,7 +43,7 @@ namespace Vurbiri.Localization
             }
             catch (Exception ex)
             {
-                Message.Error($"--- Ошибка загрузки спрайта{_spriteName} для локализации {_name} / {_folder}  ---\n".Concat(ex.Message));
+                Message.Error($"--- пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ{_spriteName} пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ {_name} / {_folder}  ---\n".Concat(ex.Message));
                 return false;
             }
         }

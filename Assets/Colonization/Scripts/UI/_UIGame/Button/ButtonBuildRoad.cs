@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonBuildRoad.cs
 namespace Vurbiri.Colonization.UI
 {
     public class ButtonBuildRoad : AButtonBuildType<LinkId>

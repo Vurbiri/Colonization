@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Characteristics\Skills\SkillSettings.cs
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
 

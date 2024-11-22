@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Scripts\Actors\Warriors\WarriorId.cs
 namespace Vurbiri.Colonization.Actors
 {
     using Characteristics;
@@ -21,7 +22,7 @@ namespace Vurbiri.Colonization.Actors
             Wizard      => PlayerAbilityId.IsWizard,
             Saboteur    => PlayerAbilityId.IsSaboteur,
             Knight      => PlayerAbilityId.IsKnight,
-            _           => throw new ArgumentOutOfRangeException("id", $"Неожидаемое значение WarriorId - {id} в ToState()"),
+            _           => throw new ArgumentOutOfRangeException("id", $"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ WarriorId - {id} пїЅ ToState()"),
         };
     }
 

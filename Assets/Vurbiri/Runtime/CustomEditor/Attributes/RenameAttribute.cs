@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\CustomEditor\Attributes\RenameAttribute.cs
 using System;
 using UnityEngine;
 

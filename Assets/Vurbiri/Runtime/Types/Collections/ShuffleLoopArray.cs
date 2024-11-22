@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Types\Collections\ShuffleLoopArray.cs
 using System.Collections.Generic;
 using UnityEngine;
 

@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\EntryPoint\Points\AProjectEntryPoint.cs
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;

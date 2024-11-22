@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\EntryPoint\Points\ASceneEntryPoint.cs
 using System;
 using UnityEngine;
 using Vurbiri.Reactive;

@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\CustomEditor\Attributes\GetComponent\FindObjectAttributeDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

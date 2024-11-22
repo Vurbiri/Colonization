@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Controllers\CameraController\States\MoveState.cs
 using System.Collections;
 using UnityEngine;
 using Vurbiri.FSM;

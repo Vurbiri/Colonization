@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\EventBus\GameplayEventBus.cs
 using System;
 
 namespace Vurbiri.Colonization

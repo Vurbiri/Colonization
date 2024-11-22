@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Editor\Characteristic\Abilities\Windows\PlayerAbilitiesWindow.cs
 namespace VurbiriEditor.Colonization.Characteristics
 {
     using UnityEditor;
@@ -25,7 +26,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             if (abilities == null)
             {
-                Debug.Log("Нет PlayerAbilitiesScriptable");
+                Debug.Log("пїЅпїЅпїЅ PlayerAbilitiesScriptable");
                 return;
             }
             

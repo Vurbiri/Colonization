@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\UI\_UIGame\Characteristics\BlockUI.cs
 using System;
 using System.Text;
 using Vurbiri.Localization;

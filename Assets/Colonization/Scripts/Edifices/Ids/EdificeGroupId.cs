@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Scripts\Edifices\Ids\EdificeGroupId.cs
 namespace Vurbiri.Colonization
 {
     using Characteristics;
@@ -18,7 +19,7 @@ namespace Vurbiri.Colonization
             Shrine  => PlayerAbilityId.MaxShrine,
             Port    => PlayerAbilityId.MaxPort,
             Urban   => PlayerAbilityId.MaxUrban,
-            _       => throw new ArgumentOutOfRangeException("id", $"Неожидаемое значение EdificeGroup - {id} в ToState()"),
+            _       => throw new ArgumentOutOfRangeException("id", $"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ EdificeGroup - {id} пїЅ ToState()"),
         };
     }
 

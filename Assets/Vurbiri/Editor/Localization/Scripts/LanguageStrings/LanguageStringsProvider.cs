@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\Localization\Scripts\LanguageStrings\LanguageStringsProvider.cs
 using UnityEditor;
 
 namespace Vurbiri.Localization.Editors

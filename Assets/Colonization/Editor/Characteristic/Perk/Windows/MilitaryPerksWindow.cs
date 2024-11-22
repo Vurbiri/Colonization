@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Editor\Characteristic\Perk\Windows\MilitaryPerksWindow.cs
 namespace VurbiriEditor.Colonization.Characteristics
 {
     using UnityEditor;
@@ -25,7 +26,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             if (perks == null)
             {
-                Debug.Log("Нет MilitaryPerksScriptable");
+                Debug.Log("пїЅпїЅпїЅ MilitaryPerksScriptable");
                 return;
             }
 

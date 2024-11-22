@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Types\Random\Chance.cs
 using UnityEngine;
 
 namespace Vurbiri

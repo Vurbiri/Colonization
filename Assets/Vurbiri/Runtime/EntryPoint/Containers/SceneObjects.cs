@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\EntryPoint\Containers\SceneObjects.cs
 using System;
 
 namespace Vurbiri

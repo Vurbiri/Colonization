@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Players\Player.cs
 using System;
 using System.Collections;
 using UnityEngine;
@@ -11,9 +12,9 @@ namespace Vurbiri.Colonization
 {
     public partial class Player : IValueId<PlayerId>, IDisposable
     {
-        private readonly Objects _obj;
-        private readonly Currencies _exchangeRate = new();
-        private readonly Coroutines _coroutines;
+        protected readonly Objects _obj;
+        protected readonly Currencies _exchangeRate = new();
+        protected readonly Coroutines _coroutines;
 
         public Id<PlayerId> Id => _obj.id;
         public ACurrenciesReactive Resources => _obj.resources;

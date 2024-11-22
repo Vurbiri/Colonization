@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Types\SceneId.cs
 using UnityEngine;
 
 namespace Vurbiri

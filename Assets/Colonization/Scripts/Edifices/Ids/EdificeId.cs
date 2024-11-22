@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Scripts\Edifices\Ids\EdificeId.cs
 using System;
 
 namespace Vurbiri.Colonization
@@ -26,7 +27,7 @@ namespace Vurbiri.Colonization
             Shrine                                               => EdificeGroupId.Shrine,
             PortOne or PortTwo or LighthouseOne or LighthouseTwo => EdificeGroupId.Port,
             Camp or Town or Capital                              => EdificeGroupId.Urban,
-            _                                                    => throw new ArgumentOutOfRangeException("self", $"Неожидаемое значение EdificeType: {id}"),
+            _                                                    => throw new ArgumentOutOfRangeException("self", $"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ EdificeType: {id}"),
         };
 
         public static int GetId(int countWater, bool isGate) => countWater switch

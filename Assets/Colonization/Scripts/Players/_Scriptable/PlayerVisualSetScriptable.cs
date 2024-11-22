@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Scripts\Players\_Scriptable\PlayerVisualSetScriptable.cs
 using System;
 using UnityEngine;
 using Vurbiri;
@@ -21,7 +22,7 @@ public class PlayerVisualSetScriptable : ScriptableObjectDisposable
         int count = ids.Length;
 
         if (count != PlayerId.PlayersCount)
-            throw new($"Неожидаемое количество id представлений игроков: {count} (а не {PlayerId.PlayersCount})");
+            throw new($"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ id пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: {count} (пїЅ пїЅпїЅ {PlayerId.PlayersCount})");
 
         Color[] colors = new Color[count];
         for (int i = 0; i < count; i++)

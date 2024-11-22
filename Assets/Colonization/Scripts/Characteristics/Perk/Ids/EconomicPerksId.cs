@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Characteristics\Perk\Ids\EconomicPerksId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public class EconomicPerksId : APerkId<EconomicPerksId>

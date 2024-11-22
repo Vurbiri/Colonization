@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Types\Singleton\ASingleton.cs
 using UnityEngine;
 
 namespace Vurbiri

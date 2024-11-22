@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\Localization\Scripts\CONST.cs
 namespace Vurbiri.Localization.Editors
 {
     using GLOBAL_CONST = Vurbiri.Localization.CONST_L;

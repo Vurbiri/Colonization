@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Utilities\FSM\Base\IState.cs
 using System;
 
 namespace Vurbiri.FSM

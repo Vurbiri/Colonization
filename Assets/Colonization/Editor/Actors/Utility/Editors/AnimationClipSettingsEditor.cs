@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Editor\Actors\Utility\Editors\AnimationClipSettingsEditor.cs
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;

@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\EntryPoint\Params\AEnterParam.cs
 namespace Vurbiri.EntryPoint
 {
     public abstract class AEnterParam

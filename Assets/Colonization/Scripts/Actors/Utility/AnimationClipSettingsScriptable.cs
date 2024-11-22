@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Actors\Utility\AnimationClipSettingsScriptable.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors

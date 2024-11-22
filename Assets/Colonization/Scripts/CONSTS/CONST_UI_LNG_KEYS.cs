@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\CONSTS\CONST_UI_LNG_KEYS.cs
 namespace Vurbiri.Colonization.UI
 {
     public static class CONST_UI_LNG_KEYS

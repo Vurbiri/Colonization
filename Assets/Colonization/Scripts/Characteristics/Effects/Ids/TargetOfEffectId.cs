@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Characteristics\Effects\Ids\TargetOfEffectId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public class TargetOfEffectId : AIdType<TargetOfEffectId>

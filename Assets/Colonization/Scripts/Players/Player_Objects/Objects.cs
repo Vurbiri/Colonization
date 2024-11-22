@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Players\Player_Objects\Objects.cs
 using System;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Actors;
@@ -9,10 +10,10 @@ namespace Vurbiri.Colonization
 {
     public partial class Player
     {
-        private partial class Objects : IDisposable
+        protected partial class Objects : IDisposable
         {
-            private readonly PricesScriptable _prices;
-            private readonly WarriorsSpawner _spawner;
+            protected readonly PricesScriptable _prices;
+            protected readonly WarriorsSpawner _spawner;
 
             public readonly Id<PlayerId> id;
             public readonly Currencies resources;

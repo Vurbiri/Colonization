@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\Types\Vector2SpecularDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Currencies\Abstract\ACurrenciesReactive.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;

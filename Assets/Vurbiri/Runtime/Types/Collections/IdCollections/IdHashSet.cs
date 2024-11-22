@@ -1,3 +1,4 @@
+п»ї//Assets\Vurbiri\Runtime\Types\Collections\IdCollections\IdHashSet.cs
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -60,7 +61,7 @@ namespace Vurbiri.Collections
         {
             if (TryAdd(value)) return;
 
-            throw new Exception($"Объект c Id = {value.Id} уже был добавлен.");
+            throw new Exception($"пїЅпїЅпїЅпїЅпїЅпїЅ c Id = {value.Id} пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.");
         }
 
         public void Replace(TValue value)

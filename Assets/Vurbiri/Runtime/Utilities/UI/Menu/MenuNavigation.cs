@@ -1,10 +1,11 @@
+п»ї//Assets\Vurbiri\Runtime\Utilities\UI\Menu\MenuNavigation.cs
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class MenuNavigation : MonoBehaviour
 {
-    [Header("Настройка кнопок"), Space]
+    [Header("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"), Space]
     [SerializeField] private Buttons[] _buttons;
 
     protected virtual void Awake()

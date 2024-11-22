@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\MeshCreated\Primitives\Triangle.cs
 using UnityEngine;
 
 namespace Vurbiri.CreatingMesh

@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Editor\CONSTS\CONST_EDITOR.cs
 namespace VurbiriEditor.Colonization
 {
     public static class CONST_EDITOR

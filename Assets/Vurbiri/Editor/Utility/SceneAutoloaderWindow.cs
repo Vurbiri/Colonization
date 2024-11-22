@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\Utility\SceneAutoloaderWindow.cs
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -5,7 +6,7 @@ using static VurbiriEditor.CONST_EDITOR;
 
 namespace VurbiriEditor
 {
-    internal class SceneAutoloader : EditorWindow
+    internal class SceneAutoloaderWindow : EditorWindow
     {
         private const string NAME = "Scene Autoloader", MENU = MENU_PATH + NAME;
         private const string SCENE_TYPE = "t:Scene";
@@ -27,7 +28,7 @@ namespace VurbiriEditor
         [MenuItem(MENU)]
         private static void ShowWindow()
         {
-            GetWindow<SceneAutoloader>(true, NAME);
+            GetWindow<SceneAutoloaderWindow>(true, NAME);
         }
 
         private void OnGUI()

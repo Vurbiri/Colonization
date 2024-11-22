@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Scripts\Players\Players.cs
 namespace Vurbiri.Colonization
 {
     using Actors;
@@ -19,12 +20,12 @@ namespace Vurbiri.Colonization
 
         public Players(Settings settings, bool isLoading)
         {
-            Debug.Log("Сделать Отношения между игроками ");
-
             _playersData = new(isLoading, out bool[] loads);
 
-            for (int i = 0; i < PlayersCount; i++)
-                _players.Add(new(i, loads[i], _playersData[i], settings));
+            _players.Add(new Player(0, loads[0], _playersData[0], settings));
+
+            for (int i = PlayerId.AI_01; i < PlayersCount; i++)
+                _players.Add(new PlayerAI(i, loads[i], _playersData[i], settings));
 
             _current = _players[0];
 

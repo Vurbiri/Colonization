@@ -1,3 +1,4 @@
+п»ї//Assets\Colonization\Scripts\Actors\Actor\Actor_Initializer.cs
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
@@ -38,7 +39,7 @@ namespace Vurbiri.Colonization.Actors
 
             Skills skills = settings.Skills;
 
-            Debug.Log("Раскомментить PlayerIdleState");
+            Debug.Log("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ PlayerIdleState");
             //AIdleState idle = owner == PlayerId.Player ? new PlayerIdleState(this) : new AIIdleState(this);
             AIdleState idle = new PlayerIdleState(this);
 

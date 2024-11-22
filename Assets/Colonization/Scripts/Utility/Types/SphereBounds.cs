@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Utility\Types\SphereBounds.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

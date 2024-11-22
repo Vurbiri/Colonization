@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Characteristics\Abilities\AbilityModifier\AbilityModifiers.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public class AbilityModAdd : IAbilityModifier

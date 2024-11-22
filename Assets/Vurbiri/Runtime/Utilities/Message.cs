@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Utilities\Message.cs
 namespace Vurbiri
 {
     public static class Message

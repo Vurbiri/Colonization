@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\ReColoringVertex\Types\PaletteVertexScriptable.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;

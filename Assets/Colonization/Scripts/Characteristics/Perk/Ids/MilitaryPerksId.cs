@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Characteristics\Perk\Ids\MilitaryPerksId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public class MilitaryPerksId : APerkId<MilitaryPerksId>

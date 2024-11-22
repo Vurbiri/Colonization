@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Data\HexagonsData\HexagonsData.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

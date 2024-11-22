@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\EntryPoint\Params\ExitParam.cs
 namespace Vurbiri.EntryPoint
 {
     public class ExitParam

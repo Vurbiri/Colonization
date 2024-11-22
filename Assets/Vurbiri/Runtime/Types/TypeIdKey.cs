@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Runtime\Types\TypeIdKey.cs
 using System;
 
 namespace Vurbiri

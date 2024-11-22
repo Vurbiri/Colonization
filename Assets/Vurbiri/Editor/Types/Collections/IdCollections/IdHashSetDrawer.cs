@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\Types\Collections\IdCollections\IdHashSetDrawer.cs
 namespace VurbiriEditor
 {
     using System;

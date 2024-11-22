@@ -1,3 +1,4 @@
+﻿//Assets\Vurbiri\Editor\Types\Collections\IdCollections\IdDrawer.cs
 using System;
 using System.Collections.Generic;
 using System.Reflection;

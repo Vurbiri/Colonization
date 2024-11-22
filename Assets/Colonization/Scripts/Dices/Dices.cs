@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Dices\Dices.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

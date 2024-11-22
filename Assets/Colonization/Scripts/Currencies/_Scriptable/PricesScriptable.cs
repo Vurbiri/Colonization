@@ -1,3 +1,4 @@
+﻿//Assets\Colonization\Scripts\Currencies\_Scriptable\PricesScriptable.cs
 namespace Vurbiri.Colonization
 {
     using Actors;
