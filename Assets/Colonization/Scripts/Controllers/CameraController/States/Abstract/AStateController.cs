@@ -6,17 +6,19 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        private class AStateController : AState
+        private abstract class AStateController<T> : AState where T : struct
         {
             protected readonly CameraController _controller;
             protected readonly Transform _controllerTransform;
 
             protected Coroutine _coroutine;
 
+            public abstract T InputValue { get;  set; }
+
             public AStateController(CameraController controller) : base(controller._machine)
             {
                 _controller = controller;
-                _controllerTransform = _controller.transform;
+                _controllerTransform = _controller._thisTransform;
             }
 
             public override void Exit()

@@ -29,6 +29,7 @@ namespace VurbiriEditor
 
             count = 0;
             Search(path);
+            AssetDatabase.Refresh();
             EditorUtility.DisplayDialog(NAME, $"Изменено {count} файлов", "OK");
         }
 

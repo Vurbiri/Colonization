@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization.Actors
 
             Skills skills = settings.Skills;
 
-            Debug.Log("������������� PlayerIdleState");
+            Debug.Log("разкомментить PlayerIdleState");
             //AIdleState idle = owner == PlayerId.Player ? new PlayerIdleState(this) : new AIIdleState(this);
             AIdleState idle = new PlayerIdleState(this);
 
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.Actors
             _blockState = skills.GetBlockState(this);
             _skillStates = skills.GetSkillSates(this);
 
-            _skin.EventStart += _stateMachine.Default;
+            _skin.EventStart += _stateMachine.ToDefault;
 
             gameObject.SetActive(true);
         }

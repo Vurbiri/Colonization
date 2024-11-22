@@ -10,61 +10,45 @@ namespace Vurbiri.Colonization.Controllers
     {
         [SerializeField] private Movement _movement;
         [SerializeField] private MovementToTarget _movementTo;
-        [Header("Zoom")]
-        [SerializeField] private float _speedZoom = 4f;
-        [SerializeField] private float _heightZoomMin = 65;
-        [SerializeField] private float _heightZoomMax = 410f;
-        [SerializeField, Range(0.01f, 0.3f)] private float _steepZoomRate = 0.1f;
+        [SerializeField] private Zoom _zoom;
         [Header("Rotation")]
         [SerializeField] private float _speedRotation = 2f;
         [Header("Edge")]
         [SerializeField, Range(0.001f, 0.1f)] private float _edge = 0.05f;
         [SerializeField] private bool _isEdgeMove;
 
-        private InputControlAction.CameraActions _cameraActions;
-        private GameplayEventBus _eventBus;
-
         private Transform _thisTransform;
         private readonly StateMachine _machine = new();
+        private MoveState _moveState;
+        private EdgeMoveState _edgeMoveState;
         private MoveToTargetState _moveToTargetState;
-        private float _edgeRight;
-
-        private float _heightZoom;
-        private Vector2 _moveDirection;
-        private Vector3 _targetPosition;
+        private ZoomState _zoomState;
 
         public void Init(Camera camera, InputControlAction.CameraActions cameraActions)
         {
             _thisTransform = transform;
-            _heightZoom = camera.transform.position.y;
-            _edgeRight = 1f - _edge;
+            
+            #region States
+            _moveState          = new(this, _movement, camera);
+            _edgeMoveState      = new(this, _movement, _edge, camera);
+            _moveToTargetState  = new(this, _movementTo);
+            _zoomState          = new(this, _zoom, camera);
+            #endregion
 
-            _cameraActions = cameraActions;
-            _eventBus = SceneServices.Get<GameplayEventBus>();
+            #region Subscribe
+            GameplayEventBus eventBus = SceneServices.Get<GameplayEventBus>();
 
-            _machine.AddState(new MoveState(this, camera));
-            _moveToTargetState = new MoveToTargetState(this);
-            _machine.AddState(_moveToTargetState);
-            _machine.AddState(new ZoomState(this, camera));
+            cameraActions.Move.performed +=     OnMove;
+            cameraActions.Move.canceled +=      OnMoveCancel;
+            cameraActions.Rotate.performed +=   OnRotate;
+            cameraActions.Position.performed += OnEdgeMove;
+            cameraActions.Zoom.performed +=     OnZoom;
 
-            Subscribe();
+            eventBus.EventCrossroadSelect +=    OnMoveToPosition;
+            eventBus.EventActorSelect +=        OnMoveToPosition;
+            #endregion
 
             camera.transform.LookAt(_thisTransform);
-
-            #region Local: Subscribe()
-            //=================================
-            void Subscribe()
-            {
-                _cameraActions.Move.performed += OnMove;
-                _cameraActions.Move.canceled += OnCancelMove;
-                _cameraActions.Rotate.performed += OnRotate;
-                _cameraActions.Position.performed += OnEdgeMove;
-                _cameraActions.Zoom.performed += OnZoom;
-
-                _eventBus.EventCrossroadSelect += obj => OnMoveToCrossroad(obj.Position);
-                _eventBus.EventActorSelect += obj => OnMoveToCrossroad(obj.Position);
-            }
-            #endregion
         }
 
         private void OnMove(CallbackContext ctx)
@@ -72,58 +56,64 @@ namespace Vurbiri.Colonization.Controllers
             if (_machine.CurrentState == _moveToTargetState)
                 return;
 
-            _moveDirection = ctx.ReadValue<Vector2>();
-            _machine.SetState<MoveState>();
+            _moveState.InputValue = ctx.ReadValue<Vector2>();
+            _machine.SetState(_moveState);
 
         }
-        private void OnCancelMove(CallbackContext ctx) => _moveDirection = Vector2.zero;
+        private void OnMoveCancel(CallbackContext ctx) => _moveState.InputValue = Vector2.zero;
 
-        private void OnMoveToCrossroad(Vector3 position)
+        private void OnMoveToPosition(IPositionable obj)
         {
-            _targetPosition = position;
-            _machine.SetState<MoveToTargetState>();
+            _moveToTargetState.InputValue = obj.Position;
+            _machine.SetState(_moveToTargetState);
         }
 
         private void OnRotate(CallbackContext ctx)
         {
-            _thisTransform.rotation *= Quaternion.Euler(0f, _speedRotation * ctx.ReadValue<float>(), 0f);
+            _thisTransform.localRotation *= Quaternion.Euler(0f, _speedRotation * ctx.ReadValue<float>(), 0f);
         }
 
         private void OnEdgeMove(CallbackContext ctx)
         {
-            if (!_isEdgeMove || _machine.CurrentState.GetType() == typeof(MoveToTargetState))
+            if (!_isEdgeMove || !(_machine.IsDefaultState | _machine.CurrentState == _edgeMoveState))
                 return;
 
-            Vector2 position = ctx.ReadValue<Vector2>();
+            _edgeMoveState.InputValue = ctx.ReadValue<Vector2>();
 
-            _moveDirection.x = position.x > 0 && position.x < Screen.width * _edge ? -1 : position.x < Screen.width && position.x > Screen.width * _edgeRight ? 1 : 0;
-            _moveDirection.y = position.y > 0 && position.y < Screen.height * _edge ? -1 : position.y < Screen.height && position.y > Screen.height * _edgeRight ? 1 : 0;
-
-            if (_moveDirection.sqrMagnitude > 0f)
-                _machine.SetState<MoveState>();
+            if (_edgeMoveState.InputValue.sqrMagnitude > 0f)
+                _machine.SetState(_edgeMoveState);
         }
 
         private void OnZoom(CallbackContext ctx)
         {
-            _heightZoom = Mathf.Clamp(_heightZoom - ctx.ReadValue<float>() * _steepZoomRate, _heightZoomMin, _heightZoomMax); ;
-            _machine.SetState<ZoomState>();
+            _zoomState.InputValue = ctx.ReadValue<float>();
+            _machine.SetState(_zoomState);
         }
         
         #region Nested: Movement, MovementToTarget
         //***********************************
         [Serializable]
-        private struct Movement
+        private class Movement
         {
-            public float speedMoveMax;
-            public float accelerationMove;
-            public float dampingMove;
+            public float speedMoveMax = 40f;
+            public float accelerationMove = 25f;
+            public float dampingMove = 75f;
         }
         //***********************************
         [Serializable]
-        private struct MovementToTarget
+        private class MovementToTarget
         {
-            [Range(0.05f, 1f)] public float smoothTime;
-            [Range(0.01f, 0.5f)] public float sqrVelocityMin;
+            [Range(0.05f, 1f)] public float smoothTime = 0.35f;
+            [Range(0.01f, 0.5f)] public float sqrVelocityMin = 0.2f;
+        }
+        //***********************************
+        [Serializable]
+        private class Zoom
+        {
+            public float speedZoom = 4f;
+            public float heightZoomMin = 65f;
+            public float heightZoomMax = 410f;
+            [Range(0.01f, 0.3f)] public float steepZoomRate = 0.1f;
         }
         //***********************************
         #endregion

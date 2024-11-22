@@ -33,17 +33,11 @@ namespace Vurbiri
             return instance;
         }
 
-        public bool Remove<T>(int id = 0) where T : class
+        public T ReplaceInstance<T>(T instance, int id = 0) where T : class
         {
             TypeIdKey key = new(typeof(T), id);
-
-            if (_registration.TryGetValue(key, out var registration))
-            {
-                registration.Dispose();
-                return _registration.Remove(key);
-            }
-
-            return false;
+            _registration[key] = new DIRegistration<T>(instance);
+            return instance;
         }
 
         public T Get<T>(int id = 0) where T : class => Get<T>(new TypeIdKey(typeof(T), id));

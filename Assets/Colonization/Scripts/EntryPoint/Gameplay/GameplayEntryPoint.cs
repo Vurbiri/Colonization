@@ -81,8 +81,8 @@ namespace Vurbiri.Colonization
 
         private IEnumerator Enter_Coroutine()
         {
-            yield return StartCoroutine(CreateIsland_Coroutine());
-            yield return StartCoroutine(CreatePlayers_Coroutine());
+            yield return CreateIsland_Coroutine();
+            yield return CreatePlayers_Coroutine();
 
             _sceneObjects.Init(this, _settingsUI, _scriptables);
 
@@ -93,7 +93,7 @@ namespace Vurbiri.Colonization
         {
             _sceneObjects.islandCreator.Init(_land, _crossroads);
 
-            yield return StartCoroutine(_sceneObjects.islandCreator.Create_Coroutine(_hexagonsData, _isLoad));
+            yield return _sceneObjects.islandCreator.Create_Coroutine(_hexagonsData, _isLoad);
 
             yield return null;
 
@@ -129,7 +129,9 @@ namespace Vurbiri.Colonization
             _gameplaySettings.StartGame();
             _eventBus.TriggerSceneEndCreation();
 
-            yield return _objects.Get<LoadingScreen>().SmoothOff_Wait();
+            yield return null;
+
+            _objects.Get<LoadingScreen>().SmoothOff_Wait();
 
             _inputController.EnableGameplayMap();
 

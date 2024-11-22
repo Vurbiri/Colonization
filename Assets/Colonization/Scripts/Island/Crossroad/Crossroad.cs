@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    public class Crossroad : IDisposable
+    public class Crossroad : IDisposable, IPositionable
     {
         #region private
         private const int HEX_COUNT = 3;

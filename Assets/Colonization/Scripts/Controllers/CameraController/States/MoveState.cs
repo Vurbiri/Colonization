@@ -1,33 +1,29 @@
 //Assets\Colonization\Scripts\Controllers\CameraController\States\MoveState.cs
 using System.Collections;
 using UnityEngine;
-using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        private class MoveState : AStateController
+        private class MoveState : AStateController<Vector2>
         {
             private readonly Camera _camera;
             private readonly Transform _cameraTransform;
             private readonly SphereBounds _bounds;
-            private readonly float _speedMoveMax = 25f;
-            private readonly float _accelerationMove = 2f;
-            private readonly float _dampingMove = 75f;
+            private readonly Movement _stt;
 
+            protected Vector2 _moveDirection;
             private float _speedMove;
 
-            public MoveState(CameraController controller, Camera camera) : base(controller)
+            public override Vector2 InputValue { get => _moveDirection; set => _moveDirection = value; }
+
+            public MoveState(CameraController controller, Movement movement, Camera camera) : base(controller)
             {
                 _camera = camera;
                 _cameraTransform = _camera.transform;
-
                 _bounds = new(CONST.HEX_DIAMETER_IN * CONST.MAX_CIRCLES);
-
-                _speedMoveMax = controller._movement.speedMoveMax;
-                _accelerationMove = controller._movement.accelerationMove;
-                _dampingMove = controller._movement.dampingMove;
+                _stt = movement;
             }
 
             public override void Enter()
@@ -37,21 +33,18 @@ namespace Vurbiri.Colonization.Controllers
 
             private IEnumerator Move_Coroutine()
             {
-                Vector2 absoluteDirection = _controller._moveDirection;
-                Vector3 relativelyDirection = absoluteDirection.x * _cameraTransform.right.ResetY() + absoluteDirection.y * _cameraTransform.forward.ResetY();
+                Vector3 relativelyDirection = _moveDirection.x * _cameraTransform.right.ResetY() + _moveDirection.y * _cameraTransform.forward.ResetY();
 
                 while (true)
                 {
-                    absoluteDirection = _controller._moveDirection;
-
-                    if (absoluteDirection.sqrMagnitude > 0.1f)
+                    if (_moveDirection.sqrMagnitude > 0.1f)
                     {
-                        _speedMove = _speedMove < _speedMoveMax ? _speedMove + Time.deltaTime * _accelerationMove : _speedMoveMax;
-                        relativelyDirection = absoluteDirection.x * _cameraTransform.right.ResetY() + absoluteDirection.y * _cameraTransform.forward.ResetY();
+                        _speedMove = _speedMove < _stt.speedMoveMax ? _speedMove + Time.deltaTime * _stt.accelerationMove : _stt.speedMoveMax;
+                        relativelyDirection = _moveDirection.x * _cameraTransform.right.ResetY() + _moveDirection.y * _cameraTransform.forward.ResetY();
                     }
                     else if (_speedMove > 0f)
                     {
-                        _speedMove -= Time.deltaTime * _dampingMove;
+                        _speedMove -= Time.deltaTime * _stt.dampingMove;
                     }
                     else
                     {
@@ -63,7 +56,7 @@ namespace Vurbiri.Colonization.Controllers
                 }
 
                 _coroutine = null;
-                _fsm.SetState<EmptyState>();
+                _fsm.ToDefault();
             }
         }
     }

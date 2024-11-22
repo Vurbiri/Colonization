@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void React() => _stateMachine.SetState(_reactState);
 
-        public void Default() => _stateMachine.Default();
+        public void Default() => _stateMachine.ToDefault();
 
 
         private BoolSwitchState CreateBoolState(string nameParam) => new(nameParam, this, _idBoolState++);

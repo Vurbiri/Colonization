@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
 
 			loadScene.Start();
 
-			yield return StartCoroutine(Init_Coroutine(data));
+			yield return Init_Coroutine(data);
 
 			data.Dispose();
 
@@ -28,39 +28,30 @@ namespace Vurbiri.Colonization
 
 		private IEnumerator Init_Coroutine(ProjectInitializationData data)
 		{
-			//Message.Log("Start LoadingPreGame");
+			Message.Log("Start Init Project");
 
 			if (!_servicesContainer.AddInstance(new Language()).IsValid)
 				Message.Error("Error loading Localization!");
 
 			YandexSDK ysdk = new(_servicesContainer, data.leaderboardName);
-			yield return StartCoroutine(ysdk.Init_Coroutine());
+			yield return ysdk.Init_Coroutine();
 			_servicesContainer.AddInstance(ysdk);
 
 			//Banners.InstanceF.Initialize();
 
-			yield return StartCoroutine(CreateStorages_Coroutine(data.defaultProfile));
-			yield return StartCoroutine(YandexIsLogOn_Coroutine(ysdk, data.logOnPanel, data.defaultProfile));
+			yield return CreateStorages_Coroutine(data.defaultProfile);
+			yield return YandexIsLogOn_Coroutine(ysdk, data.logOnPanel, data.defaultProfile);
 
 			_dataContainer.AddInstance<GameplaySettingsData>(new(_servicesContainer));
 
-			//Message.Log("End LoadingPreGame");
+			Message.Log("End Init Project");
 		}
 
 		private IEnumerator CreateStorages_Coroutine(SettingsData.Profile defaultProfile)
 		{
-			_servicesContainer.Remove<IStorageService>();
-			var storage = _servicesContainer.AddInstance<IStorageService>(new Storage());
+            yield return StartCoroutine(Storage.Create_Coroutine(_servicesContainer, SAVE_KEYS.PROJECT));
 
-			if (storage.Init(_servicesContainer))
-			{
-				bool result = false;
-				yield return StartCoroutine(storage.Load_Coroutine(SAVE_KEYS.PROJECT, (b) => result = b));
-				Message.Log(result ? "Сохранения загружены" : "Сохранения не найдены");
-			}
-
-			_dataContainer.Remove<SettingsData>();
-			_dataContainer.AddInstance(new SettingsData(_servicesContainer, defaultProfile));
+			_dataContainer.ReplaceInstance(new SettingsData(_servicesContainer, defaultProfile));
 		}
 
 		private IEnumerator YandexIsLogOn_Coroutine(YandexSDK ysdk, LogOnPanel logOnPanel, SettingsData.Profile defaultProfile)
@@ -68,10 +59,10 @@ namespace Vurbiri.Colonization
 			if (!ysdk.IsLogOn)
 			{
 				_loadingScreen.SmoothOff_Wait();
-				yield return StartCoroutine(logOnPanel.TryLogOn_Coroutine(ysdk));
+				yield return logOnPanel.TryLogOn_Coroutine(ysdk);
 				yield return _loadingScreen.SmoothOn_Wait();
 				if (ysdk.IsLogOn)
-					yield return StartCoroutine(CreateStorages_Coroutine(defaultProfile));
+					yield return CreateStorages_Coroutine(defaultProfile);
 			}
 		}
 	}

@@ -86,7 +86,7 @@ namespace Vurbiri.FSM
             return false;
         }
 
-        public void Default()
+        public void ToDefault()
         {
             if (_currentState.Equals(_defaultState))
                 return;

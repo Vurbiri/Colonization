@@ -1,29 +1,34 @@
 //Assets\Colonization\Scripts\Controllers\CameraController\States\ZoomState.cs
 using System.Collections;
 using UnityEngine;
-using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        private class ZoomState : AStateController
+        private class ZoomState : AStateController<float>
         {
             private readonly Camera _camera;
             private readonly Transform _cameraTransform;
-            private readonly float _speedZoom = 4f;
+            private readonly Zoom _stt;
+            private float _heightZoom;
 
-            public ZoomState(CameraController controller, Camera camera) : base(controller)
+            public override float InputValue 
+            {
+                get => _heightZoom;
+                set => _heightZoom = Mathf.Clamp(_heightZoom - value * _stt.steepZoomRate, _stt.heightZoomMin, _stt.heightZoomMax); 
+            }
+
+            public ZoomState(CameraController controller, Zoom zoom, Camera camera) : base(controller)
             {
                 _camera = camera;
                 _cameraTransform = _camera.transform;
-
-                _speedZoom = controller._speedZoom;
+                _heightZoom = camera.transform.position.y;
+                _stt = zoom;
             }
 
             public override void Enter()
             {
-                base.Enter();
                 _coroutine = _controller.StartCoroutine(Zoom_Coroutine());
             }
             private IEnumerator Zoom_Coroutine()
@@ -31,16 +36,16 @@ namespace Vurbiri.Colonization.Controllers
                 Vector3 position = _cameraTransform.localPosition;
                 do
                 {
-                    position.y = Mathf.Lerp(position.y, _controller._heightZoom, Time.deltaTime * _speedZoom);
+                    position.y = Mathf.Lerp(position.y, _heightZoom, Time.deltaTime * _stt.speedZoom);
                     _cameraTransform.localPosition = position;
                     _cameraTransform.LookAt(_controllerTransform);
 
                     yield return null;
                 }
-                while (Mathf.Abs(_controller._heightZoom - position.y) > _speedZoom);
+                while (Mathf.Abs(_heightZoom - position.y) > _stt.speedZoom);
 
                 _coroutine = null;
-                _fsm.SetState<EmptyState>();
+                _fsm.ToDefault();
             }
         }
     }

@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Runtime\Utilities\Storage\EmptyStorage.cs
+//Assets\Vurbiri\Runtime\Storage\EmptyStorage.cs
 using System;
 using System.Collections;
 
@@ -8,7 +8,7 @@ namespace Vurbiri
     {
         public override bool IsValid => false;
 
-        public override bool Init(IReadOnlyDIContainer container) => true;
+        public override bool Init(IReadOnlyDIContainer container) => false;
 
         public override IEnumerator Load_Coroutine(string key, Action<bool> callback)
         {

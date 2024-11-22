@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.Actors
             private void Reset()
             {
                 _coroutineAction = null;
-                _fsm.Default();
+                _fsm.ToDefault();
             }
 
             private IEnumerator Move_Coroutine()

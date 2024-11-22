@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.Actors
             public override void Enter()
             {
                 _skin.Block();
-                _actor.AddEffect(CreateBlockEffect(_code, _value, _fsm.Default));
+                _actor.AddEffect(CreateBlockEffect(_code, _value, _fsm.ToDefault));
                 Pay();
             }
 

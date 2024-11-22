@@ -8,6 +8,7 @@ namespace Vurbiri.UI
     public class LoadingScreen : MonoBehaviour
     {
         [SerializeField, Range(0.1f, 2f)] private float _speedSmooth = 0.5f;
+        [SerializeField, Range(0f, 0.5f)] private float _alphaThreshold = 0.1f;
         [Space]
         [SerializeField] private GameObject _indicatorImage;
 
@@ -109,7 +110,7 @@ namespace Vurbiri.UI
             IEnumerator SmoothOff_Coroutine()
             {
                 float alpha = _thisCanvasGroup.alpha;
-                while (alpha > 0.15f)
+                while (alpha > _alphaThreshold)
                 {
                     _thisCanvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _speedSmooth;
                     yield return null;

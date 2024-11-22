@@ -8,7 +8,7 @@ using Vurbiri.Reactive.Collections;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveElementMono<Actor>, ISelectable
+    public abstract partial class Actor : AReactiveElementMono<Actor>, ISelectable, IPositionable
     {
         #region Fields
         protected int _typeId;

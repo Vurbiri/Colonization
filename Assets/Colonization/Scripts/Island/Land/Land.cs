@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization
 
         public IEnumerator SetMesh_Coroutine()
         {
-            yield return _landMesh.StartCoroutine(_landMesh.SetMesh_Coroutine());
+            yield return _landMesh.SetMesh_Coroutine();
 
             Object.Destroy(_landMesh);
             _landMesh = null;

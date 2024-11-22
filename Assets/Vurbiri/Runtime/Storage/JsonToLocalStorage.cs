@@ -1,24 +1,25 @@
-//Assets\Vurbiri\Runtime\Utilities\Storage\JsonToCookies.cs
+//Assets\Vurbiri\Runtime\Storage\JsonToLocalStorage.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Vurbiri
 {
-    public class JsonToCookies : ASaveLoadJsonTo
+    public class JsonToLocalStorage : ASaveLoadJsonTo
     {
-        public override bool IsValid => UtilityJS.IsCookies();
+        public override bool IsValid => UtilityJS.IsStorage();
 
-        public override bool Init(IReadOnlyDIContainer container) => UtilityJS.IsCookies();
+        public override bool Init(IReadOnlyDIContainer container) => UtilityJS.IsStorage();
 
         public override IEnumerator Load_Coroutine(string key, Action<bool> callback)
         {
             _key = key;
 
             string json;
+
             try
             {
-                json = UtilityJS.GetCookies(_key);
+                json = UtilityJS.GetStorage(_key);
             }
             catch (Exception ex)
             {
@@ -48,7 +49,7 @@ namespace Vurbiri
 
             try
             {
-                waitResult.SetResult(UtilityJS.SetCookies(_key, Serialize(_saved)));
+                waitResult.SetResult(UtilityJS.SetStorage(_key, Serialize(_saved)));
             }
             catch (Exception ex)
             {
