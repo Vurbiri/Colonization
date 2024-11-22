@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\CustomUI\CmSelectable.cs
+//Assets\Vurbiri\Runtime\CustomUI\CmSelectable.cs
 using UnityEngine;
 using UnityEngine.UI;
 

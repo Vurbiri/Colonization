@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Currencies\Abstract\ACurrencies.cs
+//Assets\Colonization\Scripts\Currencies\Abstract\ACurrencies.cs
 namespace Vurbiri.Colonization
 {
     public abstract class ACurrencies

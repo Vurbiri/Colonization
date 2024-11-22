@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\MeshCreated\CustomMesh.cs
+//Assets\Vurbiri\Runtime\MeshCreated\CustomMesh.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Actor\States\Abstract\AState.cs
+//Assets\Colonization\Scripts\Actors\Actor\States\Abstract\AState.cs
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.FSMSelectable;
 

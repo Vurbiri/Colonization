@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Effects\EffectsFactory.cs
+//Assets\Colonization\Scripts\Characteristics\Effects\EffectsFactory.cs
 using System;
 using Vurbiri.Reactive.Collections;
 

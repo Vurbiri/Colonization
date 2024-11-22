@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\EnumHashSet.cs
+//Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\EnumHashSet.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

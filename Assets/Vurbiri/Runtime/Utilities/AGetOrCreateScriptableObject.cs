@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\AGetOrCreateScriptableObject.cs
+//Assets\Vurbiri\Runtime\Utilities\AGetOrCreateScriptableObject.cs
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;

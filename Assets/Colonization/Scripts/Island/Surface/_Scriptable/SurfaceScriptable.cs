@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Island\Surface\_Scriptable\SurfaceScriptable.cs
+//Assets\Colonization\Scripts\Island\Surface\_Scriptable\SurfaceScriptable.cs
 using System.Collections.Generic;
 using UnityEngine;
 

@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Reactive\Collections\ReactiveCollection.cs
+//Assets\Vurbiri\Runtime\Types\Reactive\Collections\ReactiveCollection.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

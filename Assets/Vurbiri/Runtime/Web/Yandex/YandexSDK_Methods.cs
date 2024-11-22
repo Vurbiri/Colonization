@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Web\Yandex\YandexSDK_Methods.cs
+//Assets\Vurbiri\Runtime\Web\Yandex\YandexSDK_Methods.cs
 using Newtonsoft.Json;
 using System;
 using System.Collections;

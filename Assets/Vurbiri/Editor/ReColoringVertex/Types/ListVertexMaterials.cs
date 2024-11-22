@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\ReColoringVertex\Types\ListVertexMaterials.cs
+//Assets\Vurbiri\Editor\ReColoringVertex\Types\ListVertexMaterials.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;

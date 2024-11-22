@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Players\Players.cs
+//Assets\Colonization\Scripts\Players\Players.cs
 namespace Vurbiri.Colonization
 {
     using Actors;

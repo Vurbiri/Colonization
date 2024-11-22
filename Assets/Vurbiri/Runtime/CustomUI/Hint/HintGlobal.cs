@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\CustomUI\Hint\HintGlobal.cs
+//Assets\Vurbiri\Runtime\CustomUI\Hint\HintGlobal.cs
 using System;
 using System.Collections;
 using TMPro;

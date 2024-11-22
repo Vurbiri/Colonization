@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Random\RZFloat.cs
+//Assets\Vurbiri\Runtime\Types\Random\RZFloat.cs
 using UnityEngine;
 
 namespace Vurbiri

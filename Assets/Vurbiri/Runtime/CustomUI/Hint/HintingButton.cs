@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\CustomUI\Hint\HintingButton.cs
+//Assets\Vurbiri\Runtime\CustomUI\Hint\HintingButton.cs
 using UnityEngine;
 using UnityEngine.Events;
 using Vurbiri.Localization;

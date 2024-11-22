@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Types\Direction\Abstract\ADirectionDrawer.cs
+//Assets\Vurbiri\Editor\Types\Direction\Abstract\ADirectionDrawer.cs
 using UnityEditor;
 using UnityEngine;
 

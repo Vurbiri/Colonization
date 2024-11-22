@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Island\Surface\Generator\VillageGenerator.cs
+//Assets\Colonization\Scripts\Island\Surface\Generator\VillageGenerator.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

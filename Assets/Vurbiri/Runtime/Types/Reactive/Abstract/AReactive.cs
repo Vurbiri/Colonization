@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Reactive\Abstract\AReactive.cs
+//Assets\Vurbiri\Runtime\Types\Reactive\Abstract\AReactive.cs
 using System;
 
 namespace Vurbiri.Reactive

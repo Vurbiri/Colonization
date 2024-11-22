@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\EntryPoint\LoadingScreen\LoadingIndicator.cs
+//Assets\Vurbiri\Runtime\EntryPoint\LoadingScreen\LoadingIndicator.cs
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;

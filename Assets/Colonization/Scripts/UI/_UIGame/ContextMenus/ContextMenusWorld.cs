@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\ContextMenusWorld.cs
+//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\ContextMenusWorld.cs
 using System.Collections;
 using UnityEngine;
 

@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\Pool\APooledObject.cs
+//Assets\Vurbiri\Runtime\Utilities\Pool\APooledObject.cs
 using System;
 using UnityEngine;
 

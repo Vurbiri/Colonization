@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Editor\Actors\Utility\Window\AnimationClipSettingsWindow.cs
+//Assets\Colonization\Editor\Actors\Utility\Window\AnimationClipSettingsWindow.cs
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;

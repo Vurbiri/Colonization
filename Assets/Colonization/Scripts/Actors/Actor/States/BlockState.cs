@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Actor\States\BlockState.cs
+//Assets\Colonization\Scripts\Actors\Actor\States\BlockState.cs
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.Characteristics.EffectsFactory;
 

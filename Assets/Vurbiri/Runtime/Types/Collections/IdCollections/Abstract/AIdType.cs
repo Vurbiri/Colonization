@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Collections\IdCollections\Abstract\AIdType.cs
+//Assets\Vurbiri\Runtime\Types\Collections\IdCollections\Abstract\AIdType.cs
 using System;
 using System.Collections.Generic;
 using System.Reflection;

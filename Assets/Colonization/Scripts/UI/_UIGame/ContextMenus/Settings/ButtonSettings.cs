@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Settings\ButtonSettings.cs
+//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Settings\ButtonSettings.cs
 using UnityEngine;
 using Vurbiri.UI;
 

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Players\View\PlayersVisual.cs
+//Assets\Colonization\Scripts\Players\View\PlayersVisual.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

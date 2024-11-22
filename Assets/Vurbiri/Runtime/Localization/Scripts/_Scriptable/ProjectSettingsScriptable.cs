@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Localization\Scripts\_Scriptable\ProjectSettingsScriptable.cs
+//Assets\Vurbiri\Runtime\Localization\Scripts\_Scriptable\ProjectSettingsScriptable.cs
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;

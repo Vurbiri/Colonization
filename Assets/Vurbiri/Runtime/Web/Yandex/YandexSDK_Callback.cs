@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Web\Yandex\YandexSDK_Callback.cs
+//Assets\Vurbiri\Runtime\Web\Yandex\YandexSDK_Callback.cs
 using System;
 
 namespace Vurbiri

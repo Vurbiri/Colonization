@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\UI\_UIGame\Currencies\Currency.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Currencies\Currency.cs
 using TMPro;
 using UnityEngine;
 using Vurbiri.Reactive;

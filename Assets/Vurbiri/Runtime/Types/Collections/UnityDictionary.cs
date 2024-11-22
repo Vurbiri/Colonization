@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Collections\UnityDictionary.cs
+//Assets\Vurbiri\Runtime\Types\Collections\UnityDictionary.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

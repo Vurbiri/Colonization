@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Utility\SelectableFSM\TestState.cs
+//Assets\Colonization\Scripts\Utility\SelectableFSM\TestState.cs
 namespace Vurbiri.Colonization.FSMSelectable
 {
     public class TestState : ASelectableState

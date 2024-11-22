@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\PermanentReflectEffect.cs
+//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\PermanentReflectEffect.cs
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics

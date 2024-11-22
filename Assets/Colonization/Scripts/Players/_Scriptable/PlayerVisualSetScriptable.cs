@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Players\_Scriptable\PlayerVisualSetScriptable.cs
+//Assets\Colonization\Scripts\Players\_Scriptable\PlayerVisualSetScriptable.cs
 using System;
 using UnityEngine;
 using Vurbiri;

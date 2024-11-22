@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\EntryPoint\Project\ProjectInitializationData.cs
+//Assets\Colonization\Scripts\EntryPoint\Project\ProjectInitializationData.cs
 using UnityEngine;
 using Vurbiri.Colonization.Data;
 

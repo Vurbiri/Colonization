@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Players\View\PlayerVisual.cs
+//Assets\Colonization\Scripts\Players\View\PlayerVisual.cs
 using UnityEngine;
 
 public class PlayerVisual

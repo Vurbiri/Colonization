@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Diplomacy\Diplomacy.cs
+//Assets\Colonization\Scripts\Diplomacy\Diplomacy.cs
 namespace Vurbiri.Colonization
 {
     public class Diplomacy
@@ -15,6 +15,5 @@ namespace Vurbiri.Colonization
 
 			return _values[idA + idB - 1] > 0 ? RelationId.Friend : RelationId.Enemy;
         }
-
     }
 }

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Data\GameplaySettingsData.cs
+//Assets\Colonization\Scripts\Data\GameplaySettingsData.cs
 using Newtonsoft.Json;
 using System;
 

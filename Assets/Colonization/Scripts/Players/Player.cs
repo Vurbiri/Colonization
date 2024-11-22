@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Players\Player.cs
+//Assets\Colonization\Scripts\Players\Player.cs
 using System;
 using System.Collections;
 using UnityEngine;

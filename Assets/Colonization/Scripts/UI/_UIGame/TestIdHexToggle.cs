@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\UI\_UIGame\TestIdHexToggle.cs
+//Assets\Colonization\Scripts\UI\_UIGame\TestIdHexToggle.cs
 using UnityEngine;
 using UnityEngine.UI;
 

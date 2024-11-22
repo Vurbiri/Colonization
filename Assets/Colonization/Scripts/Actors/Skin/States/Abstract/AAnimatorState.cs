@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Skin\States\Abstract\AAnimatorState.cs
+//Assets\Colonization\Scripts\Actors\Skin\States\Abstract\AAnimatorState.cs
 using UnityEngine;
 using Vurbiri.FSM;
 

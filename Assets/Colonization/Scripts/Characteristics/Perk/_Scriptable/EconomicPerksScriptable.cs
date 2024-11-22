@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Perk\_Scriptable\EconomicPerksScriptable.cs
+//Assets\Colonization\Scripts\Characteristics\Perk\_Scriptable\EconomicPerksScriptable.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     using UnityEngine;

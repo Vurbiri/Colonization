@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\SFX\SoundSingleton.cs
+//Assets\Colonization\Scripts\SFX\SoundSingleton.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

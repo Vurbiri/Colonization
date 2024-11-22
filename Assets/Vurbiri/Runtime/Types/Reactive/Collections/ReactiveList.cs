@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Reactive\Collections\ReactiveList.cs
+//Assets\Vurbiri\Runtime\Types\Reactive\Collections\ReactiveList.cs
 namespace Vurbiri.Reactive.Collections
 {
     using System;

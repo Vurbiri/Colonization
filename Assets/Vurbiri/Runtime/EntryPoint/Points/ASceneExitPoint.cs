@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\EntryPoint\Points\ASceneExitPoint.cs
+//Assets\Vurbiri\Runtime\EntryPoint\Points\ASceneExitPoint.cs
 using System;
 using Vurbiri.Reactive;
 

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Currencies\CurrenciesLite.cs
+//Assets\Colonization\Scripts\Currencies\CurrenciesLite.cs
 using System;
 using UnityEngine;
 using Random = UnityEngine.Random;

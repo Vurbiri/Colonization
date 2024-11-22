@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Island\Land\LandMesh.cs
+//Assets\Colonization\Scripts\Island\Land\LandMesh.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

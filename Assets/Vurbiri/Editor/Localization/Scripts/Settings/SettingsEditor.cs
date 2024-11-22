@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Localization\Scripts\Settings\SettingsEditor.cs
+//Assets\Vurbiri\Editor\Localization\Scripts\Settings\SettingsEditor.cs
 using System.IO;
 using System.Linq;
 using UnityEditor;

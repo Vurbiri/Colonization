@@ -1,4 +1,4 @@
-﻿//Assets\TextMesh Pro\Editor\TMP_SDFShaderGUI_Z.cs
+//Assets\TextMesh Pro\Editor\TMP_SDFShaderGUI_Z.cs
 using UnityEditor;
 using UnityEngine;
 

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Editor\Characteristic\Abilities\Windows\PlayerAbilitiesWindow.cs
+//Assets\Colonization\Editor\Characteristic\Abilities\Windows\PlayerAbilitiesWindow.cs
 namespace VurbiriEditor.Colonization.Characteristics
 {
     using UnityEditor;

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Players\Player_Objects\Objects_Edifices.cs
+//Assets\Colonization\Scripts\Players\Player_Objects\Objects_Edifices.cs
 using System;
 using System.Collections.Generic;
 using Vurbiri.Collections;

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Controllers\Interface\ISelectable.cs
+//Assets\Colonization\Scripts\Controllers\Interface\ISelectable.cs
 namespace Vurbiri.Colonization
 {
     public interface ISelectable

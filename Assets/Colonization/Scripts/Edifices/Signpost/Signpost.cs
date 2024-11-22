@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Edifices\Signpost\Signpost.cs
+//Assets\Colonization\Scripts\Edifices\Signpost\Signpost.cs
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;

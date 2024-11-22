@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Editor\Characteristic\Perk\Windows\MilitaryPerksWindow.cs
+//Assets\Colonization\Editor\Characteristic\Perk\Windows\MilitaryPerksWindow.cs
 namespace VurbiriEditor.Colonization.Characteristics
 {
     using UnityEditor;

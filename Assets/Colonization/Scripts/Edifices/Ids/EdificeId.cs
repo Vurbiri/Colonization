@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Edifices\Ids\EdificeId.cs
+//Assets\Colonization\Scripts\Edifices\Ids\EdificeId.cs
 using System;
 
 namespace Vurbiri.Colonization

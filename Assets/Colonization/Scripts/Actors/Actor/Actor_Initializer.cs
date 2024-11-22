@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Actor\Actor_Initializer.cs
+//Assets\Colonization\Scripts\Actors\Actor\Actor_Initializer.cs
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;

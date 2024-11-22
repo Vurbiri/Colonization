@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Controllers\CameraController\States\MoveToTargetState.cs
+//Assets\Colonization\Scripts\Controllers\CameraController\States\MoveToTargetState.cs
 using System.Collections;
 using UnityEngine;
 using Vurbiri.FSM;

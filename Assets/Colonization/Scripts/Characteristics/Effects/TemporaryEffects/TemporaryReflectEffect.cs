@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Effects\TemporaryEffects\TemporaryReflectEffect.cs
+//Assets\Colonization\Scripts\Characteristics\Effects\TemporaryEffects\TemporaryReflectEffect.cs
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics

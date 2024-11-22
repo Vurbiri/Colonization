@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\CONSTS\CONST.cs
+//Assets\Colonization\Scripts\CONSTS\CONST.cs
 using System.Collections.Generic;
 using UnityEngine;
 

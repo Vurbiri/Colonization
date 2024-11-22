@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Effects\Abstract\AEffect.cs
+//Assets\Colonization\Scripts\Characteristics\Effects\Abstract\AEffect.cs
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics

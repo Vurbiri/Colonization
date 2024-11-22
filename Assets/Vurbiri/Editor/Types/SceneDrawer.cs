@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Types\SceneDrawer.cs
+//Assets\Vurbiri\Editor\Types\SceneDrawer.cs
 using System.IO;
 using UnityEditor;
 using UnityEngine;

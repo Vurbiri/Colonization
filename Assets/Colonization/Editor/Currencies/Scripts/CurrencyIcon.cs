@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Editor\Currencies\Scripts\CurrencyIcon.cs
+//Assets\Colonization\Editor\Currencies\Scripts\CurrencyIcon.cs
 using System;
 using UnityEngine;
 

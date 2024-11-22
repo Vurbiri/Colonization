@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonRecruiting.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonRecruiting.cs
 namespace Vurbiri.Colonization.UI
 {
     using Actors;

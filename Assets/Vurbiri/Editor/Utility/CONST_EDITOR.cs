@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Utility\CONST_EDITOR.cs
+//Assets\Vurbiri\Editor\Utility\CONST_EDITOR.cs
 using UnityEngine;
 
 namespace VurbiriEditor

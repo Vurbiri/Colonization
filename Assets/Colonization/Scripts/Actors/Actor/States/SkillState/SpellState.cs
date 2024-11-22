@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Actor\States\SkillState\SpellState.cs
+//Assets\Colonization\Scripts\Actors\Actor\States\SkillState\SpellState.cs
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Characteristics;

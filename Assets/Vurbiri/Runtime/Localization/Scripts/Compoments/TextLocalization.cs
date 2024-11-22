@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Localization\Scripts\Compoments\TextLocalization.cs
+//Assets\Vurbiri\Runtime\Localization\Scripts\Compoments\TextLocalization.cs
 using TMPro;
 using UnityEngine;
 using Vurbiri.Localization;

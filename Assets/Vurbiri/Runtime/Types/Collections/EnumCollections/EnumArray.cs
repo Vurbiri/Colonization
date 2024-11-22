@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\EnumArray.cs
+//Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\EnumArray.cs
 using Newtonsoft.Json;
 using System;
 using System.Collections;

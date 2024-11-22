@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Island\Crossroad\CrossroadLink.cs
+//Assets\Colonization\Scripts\Island\Crossroad\CrossroadLink.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

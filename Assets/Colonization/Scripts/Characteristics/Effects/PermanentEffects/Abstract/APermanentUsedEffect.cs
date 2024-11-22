@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Abstract\APermanentUsedEffect.cs
+//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Abstract\APermanentUsedEffect.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class APermanentUsedEffect : AEffect

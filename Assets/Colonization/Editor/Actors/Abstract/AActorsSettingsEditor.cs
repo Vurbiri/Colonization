@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Editor\Actors\Abstract\AActorsSettingsEditor.cs
+//Assets\Colonization\Editor\Actors\Abstract\AActorsSettingsEditor.cs
 namespace VurbiriEditor.Colonization.Actors
 {
     using UnityEditor;

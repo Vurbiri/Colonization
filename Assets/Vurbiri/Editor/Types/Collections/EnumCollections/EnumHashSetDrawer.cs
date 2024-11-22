@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Types\Collections\EnumCollections\EnumHashSetDrawer.cs
+//Assets\Vurbiri\Editor\Types\Collections\EnumCollections\EnumHashSetDrawer.cs
 using System;
 using System.Collections.Generic;
 using UnityEditor;

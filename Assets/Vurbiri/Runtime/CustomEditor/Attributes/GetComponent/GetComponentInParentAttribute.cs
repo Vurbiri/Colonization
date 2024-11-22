@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\CustomEditor\Attributes\GetComponent\GetComponentInParentAttribute.cs
+//Assets\Vurbiri\Runtime\CustomEditor\Attributes\GetComponent\GetComponentInParentAttribute.cs
 using System;
 using UnityEngine;
 

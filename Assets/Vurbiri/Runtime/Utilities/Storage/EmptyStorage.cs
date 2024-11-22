@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\Storage\EmptyStorage.cs
+//Assets\Vurbiri\Runtime\Utilities\Storage\EmptyStorage.cs
 using System;
 using System.Collections;
 

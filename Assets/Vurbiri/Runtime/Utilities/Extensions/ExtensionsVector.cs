@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\Extensions\ExtensionsVector.cs
+//Assets\Vurbiri\Runtime\Utilities\Extensions\ExtensionsVector.cs
 using UnityEngine;
 
 namespace Vurbiri

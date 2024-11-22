@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\Extensions\ExtensionsType.cs
+//Assets\Vurbiri\Runtime\Utilities\Extensions\ExtensionsType.cs
 using System;
 
 namespace Vurbiri

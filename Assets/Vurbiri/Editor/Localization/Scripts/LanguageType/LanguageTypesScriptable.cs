@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Localization\Scripts\LanguageType\LanguageTypesScriptable.cs
+//Assets\Vurbiri\Editor\Localization\Scripts\LanguageType\LanguageTypesScriptable.cs
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;

@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\Pool\Pool.cs
+//Assets\Vurbiri\Runtime\Utilities\Pool\Pool.cs
 using System.Collections.Generic;
 using UnityEngine;
 

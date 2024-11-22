@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Edifices\Shrine\ShrineGraphic.cs
+//Assets\Colonization\Scripts\Edifices\Shrine\ShrineGraphic.cs
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;

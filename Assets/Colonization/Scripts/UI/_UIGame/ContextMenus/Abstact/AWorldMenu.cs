@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Abstact\AWorldMenu.cs
+//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Abstact\AWorldMenu.cs
 using System;
 using UnityEngine;
 

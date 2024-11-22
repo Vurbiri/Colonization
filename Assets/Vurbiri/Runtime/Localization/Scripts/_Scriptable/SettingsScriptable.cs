@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Localization\Scripts\_Scriptable\SettingsScriptable.cs
+//Assets\Vurbiri\Runtime\Localization\Scripts\_Scriptable\SettingsScriptable.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;

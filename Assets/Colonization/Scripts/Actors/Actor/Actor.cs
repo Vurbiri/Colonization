@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Actor\Actor.cs
+//Assets\Colonization\Scripts\Actors\Actor\Actor.cs
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;

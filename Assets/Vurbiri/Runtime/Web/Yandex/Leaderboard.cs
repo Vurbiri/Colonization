@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Web\Yandex\Leaderboard.cs
+//Assets\Vurbiri\Runtime\Web\Yandex\Leaderboard.cs
 namespace Vurbiri
 {
 

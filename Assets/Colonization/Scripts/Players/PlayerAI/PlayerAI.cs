@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Players\PlayerAI\PlayerAI.cs
+//Assets\Colonization\Scripts\Players\PlayerAI\PlayerAI.cs
 using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization

@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\EntryPoint\Containers\ASceneDIContainer.cs
+//Assets\Vurbiri\Runtime\EntryPoint\Containers\ASceneDIContainer.cs
 using System;
 using UnityEngine;
 

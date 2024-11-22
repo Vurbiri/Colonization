@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Edifices\Abstract\AEdifice.cs
+//Assets\Colonization\Scripts\Edifices\Abstract\AEdifice.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;

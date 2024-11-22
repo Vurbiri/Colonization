@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Editor\Currencies\Editors\PricesScriptableEditor.cs
+//Assets\Colonization\Editor\Currencies\Editors\PricesScriptableEditor.cs
 namespace VurbiriEditor.Colonization
 {
     using UnityEditor;

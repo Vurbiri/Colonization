@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Localization\Scripts\Settings\ProjectSettingsEditor.cs
+//Assets\Vurbiri\Editor\Localization\Scripts\Settings\ProjectSettingsEditor.cs
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;

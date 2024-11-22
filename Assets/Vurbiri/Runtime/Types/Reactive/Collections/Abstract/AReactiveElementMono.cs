@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Reactive\Collections\Abstract\AReactiveElementMono.cs
+//Assets\Vurbiri\Runtime\Types\Reactive\Collections\Abstract\AReactiveElementMono.cs
 namespace Vurbiri.Reactive.Collections
 {
     using System;

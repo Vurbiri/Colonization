@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Data\PlayersData\PlayersData.cs
+//Assets\Colonization\Scripts\Data\PlayersData\PlayersData.cs
 using System;
 
 namespace Vurbiri.Colonization.Data

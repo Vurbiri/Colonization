@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Web\UtilityJS\UtilityJS_DllImport.cs
+//Assets\Vurbiri\Runtime\Web\UtilityJS\UtilityJS_DllImport.cs
 using System.Runtime.InteropServices;
 
 namespace Vurbiri

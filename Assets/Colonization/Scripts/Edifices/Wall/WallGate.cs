@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Edifices\Wall\WallGate.cs
+//Assets\Colonization\Scripts\Edifices\Wall\WallGate.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

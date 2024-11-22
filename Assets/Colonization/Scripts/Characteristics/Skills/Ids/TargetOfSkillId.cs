@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Skills\Ids\TargetOfSkillId.cs
+//Assets\Colonization\Scripts\Characteristics\Skills\Ids\TargetOfSkillId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public class TargetOfSkillId : AIdType<TargetOfSkillId>

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Players\Player_Objects\Objects_Methods.cs
+//Assets\Colonization\Scripts\Players\Player_Objects\Objects_Methods.cs
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;

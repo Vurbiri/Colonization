@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Types\Collections\IdCollections\IdArrayDrawer.cs
+//Assets\Vurbiri\Editor\Types\Collections\IdCollections\IdArrayDrawer.cs
 namespace VurbiriEditor
 {
     using System.Collections.Generic;

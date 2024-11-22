@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\Storage\JsonToCookies.cs
+//Assets\Vurbiri\Runtime\Utilities\Storage\JsonToCookies.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

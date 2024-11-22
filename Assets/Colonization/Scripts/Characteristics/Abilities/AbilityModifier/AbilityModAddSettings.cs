@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Abilities\AbilityModifier\AbilityModAddSettings.cs
+//Assets\Colonization\Scripts\Characteristics\Abilities\AbilityModifier\AbilityModAddSettings.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public class AbilityModAddSettings : IAbilityModifierSettings

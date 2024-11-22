@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Warriors\WarriorInitializer.cs
+//Assets\Colonization\Scripts\Actors\Warriors\WarriorInitializer.cs
 using UnityEngine;
 using Vurbiri.Colonization.Data;
 

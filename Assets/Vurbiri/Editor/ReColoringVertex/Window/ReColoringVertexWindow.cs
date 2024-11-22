@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\ReColoringVertex\Window\ReColoringVertexWindow.cs
+//Assets\Vurbiri\Editor\ReColoringVertex\Window\ReColoringVertexWindow.cs
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\ActorLoadData.cs
+//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\ActorLoadData.cs
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Data

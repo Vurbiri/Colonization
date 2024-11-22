@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Perk\Interface\IPerkSettings.cs
+//Assets\Colonization\Scripts\Characteristics\Perk\Interface\IPerkSettings.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public interface IPerkSettings : IPerk

@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Localization\Scripts\LanguageType\LanguageTypesEditor.cs
+//Assets\Vurbiri\Editor\Localization\Scripts\LanguageType\LanguageTypesEditor.cs
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEditor;

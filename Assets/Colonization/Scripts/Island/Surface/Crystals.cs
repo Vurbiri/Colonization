@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Island\Surface\Crystals.cs
+//Assets\Colonization\Scripts\Island\Surface\Crystals.cs
 
 namespace Vurbiri.Colonization
 {

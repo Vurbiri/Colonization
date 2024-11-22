@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Abilities\_Scriptable\PlayerAbilitiesScriptable.cs
+//Assets\Colonization\Scripts\Characteristics\Abilities\_Scriptable\PlayerAbilitiesScriptable.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     using UnityEngine;

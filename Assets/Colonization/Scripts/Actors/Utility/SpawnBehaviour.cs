@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Utility\SpawnBehaviour.cs
+//Assets\Colonization\Scripts\Actors\Utility\SpawnBehaviour.cs
 using System;
 using UnityEngine;
 

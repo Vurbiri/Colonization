@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
+//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
 using System;
 using System.Collections;
 using UnityEngine;

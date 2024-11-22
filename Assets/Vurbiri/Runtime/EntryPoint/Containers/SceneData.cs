@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\EntryPoint\Containers\SceneData.cs
+//Assets\Vurbiri\Runtime\EntryPoint\Containers\SceneData.cs
 using System;
 
 namespace Vurbiri

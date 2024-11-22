@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Actor\States\SkillState\Abstract\ASkillState.cs
+//Assets\Colonization\Scripts\Actors\Actor\States\SkillState\Abstract\ASkillState.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

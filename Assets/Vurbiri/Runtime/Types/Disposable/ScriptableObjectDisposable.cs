@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Disposable\ScriptableObjectDisposable.cs
+//Assets\Vurbiri\Runtime\Types\Disposable\ScriptableObjectDisposable.cs
 using UnityEngine;
 
 namespace Vurbiri

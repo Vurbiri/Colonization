@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Reactive\Interface\IReadOnlyReactive.cs
+//Assets\Vurbiri\Runtime\Types\Reactive\Interface\IReadOnlyReactive.cs
 namespace Vurbiri.Reactive
 {
     public interface IReadOnlyReactive<T> : IReactive<T>

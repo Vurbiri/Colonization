@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\Extensions\ExtensionsCollection.cs
+//Assets\Vurbiri\Runtime\Utilities\Extensions\ExtensionsCollection.cs
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;

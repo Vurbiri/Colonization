@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Coroutine\WaitReturnData.cs
+//Assets\Vurbiri\Runtime\Coroutine\WaitReturnData.cs
 using System;
 using System.Collections;
 using UnityEngine;

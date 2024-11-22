@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\EntryPoint\Project\ProjectEntryPoint.cs
+//Assets\Colonization\Scripts\EntryPoint\Project\ProjectEntryPoint.cs
 using System.Collections;
 using Vurbiri.Colonization.Data;
 using Vurbiri.EntryPoint;

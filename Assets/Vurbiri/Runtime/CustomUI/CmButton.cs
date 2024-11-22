@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\CustomUI\CmButton.cs
+//Assets\Vurbiri\Runtime\CustomUI\CmButton.cs
 using System;
 using System.Collections;
 using UnityEngine;

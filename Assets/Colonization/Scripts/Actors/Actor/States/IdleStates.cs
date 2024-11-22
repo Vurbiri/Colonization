@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Actor\States\IdleStates.cs
+//Assets\Colonization\Scripts\Actors\Actor\States\IdleStates.cs
 namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor

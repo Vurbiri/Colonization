@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\ActorSettings.cs
+//Assets\Colonization\Scripts\Actors\ActorSettings.cs
 using System;
 using UnityEngine;
 using Vurbiri.Collections;

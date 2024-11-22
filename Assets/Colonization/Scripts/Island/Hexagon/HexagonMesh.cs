@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Island\Hexagon\HexagonMesh.cs
+//Assets\Colonization\Scripts\Island\Hexagon\HexagonMesh.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;

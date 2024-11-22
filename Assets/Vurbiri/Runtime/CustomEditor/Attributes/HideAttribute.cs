@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\CustomEditor\Attributes\HideAttribute.cs
+//Assets\Vurbiri\Runtime\CustomEditor\Attributes\HideAttribute.cs
 using System;
 using UnityEngine;
 

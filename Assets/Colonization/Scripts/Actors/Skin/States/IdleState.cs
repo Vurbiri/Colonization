@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Skin\States\IdleState.cs
+//Assets\Colonization\Scripts\Actors\Skin\States\IdleState.cs
 using System.Collections;
 using UnityEngine;
 

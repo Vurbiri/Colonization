@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Perk\PerkSettings.cs
+//Assets\Colonization\Scripts\Characteristics\Perk\PerkSettings.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     using UI;

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Data\HexagonsData\HexData.cs
+//Assets\Colonization\Scripts\Data\HexagonsData\HexData.cs
 using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;

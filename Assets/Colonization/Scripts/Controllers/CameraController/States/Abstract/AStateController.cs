@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Controllers\CameraController\States\Abstract\AStateController.cs
+//Assets\Colonization\Scripts\Controllers\CameraController\States\Abstract\AStateController.cs
 using UnityEngine;
 using Vurbiri.FSM;
 

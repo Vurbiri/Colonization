@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\CustomEditor\Attributes\GetComponent\FindObjectAttribute.cs
+//Assets\Vurbiri\Runtime\CustomEditor\Attributes\GetComponent\FindObjectAttribute.cs
 using System;
 using UnityEngine;
 

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\EntryPoint\Project\LogOnPanel.cs
+//Assets\Colonization\Scripts\EntryPoint\Project\LogOnPanel.cs
 using System.Collections;
 using UnityEngine;
 

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Edifices\Abstract\AEdificeGraphicReColor.cs
+//Assets\Colonization\Scripts\Edifices\Abstract\AEdificeGraphicReColor.cs
 using System.Collections.Generic;
 using UnityEngine;
 

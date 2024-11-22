@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Editor\Currencies\CurrenciesLiteDrawer.cs
+//Assets\Colonization\Editor\Currencies\CurrenciesLiteDrawer.cs
 namespace VurbiriEditor.Colonization
 {
     using System.Collections.Generic;

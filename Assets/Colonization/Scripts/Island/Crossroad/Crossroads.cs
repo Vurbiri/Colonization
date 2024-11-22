@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Island\Crossroad\Crossroads.cs
+//Assets\Colonization\Scripts\Island\Crossroad\Crossroads.cs
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;

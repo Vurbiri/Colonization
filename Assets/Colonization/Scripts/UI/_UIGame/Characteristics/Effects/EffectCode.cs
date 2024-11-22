@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\UI\_UIGame\Characteristics\Effects\EffectCode.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Characteristics\Effects\EffectCode.cs
 using System;
 
 namespace Vurbiri.Colonization.Characteristics

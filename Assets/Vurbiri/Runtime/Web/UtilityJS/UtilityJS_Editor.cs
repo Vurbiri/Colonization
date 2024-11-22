@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Web\UtilityJS\UtilityJS_Editor.cs
+//Assets\Vurbiri\Runtime\Web\UtilityJS\UtilityJS_Editor.cs
 #if UNITY_EDITOR
 
 using System.IO;

@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\ReColoringVertex\Window\PaletteWindow.cs
+//Assets\Vurbiri\Editor\ReColoringVertex\Window\PaletteWindow.cs
 using UnityEditor;
 using UnityEngine;
 

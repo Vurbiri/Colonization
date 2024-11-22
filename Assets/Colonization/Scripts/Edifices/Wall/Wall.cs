@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Edifices\Wall\Wall.cs
+//Assets\Colonization\Scripts\Edifices\Wall\Wall.cs
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;

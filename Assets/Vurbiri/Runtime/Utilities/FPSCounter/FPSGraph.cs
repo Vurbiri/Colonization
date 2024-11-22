@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\FPSCounter\FPSGraph.cs
+//Assets\Vurbiri\Runtime\Utilities\FPSCounter\FPSGraph.cs
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;

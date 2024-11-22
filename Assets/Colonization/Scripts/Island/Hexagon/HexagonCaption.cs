@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Island\Hexagon\HexagonCaption.cs
+//Assets\Colonization\Scripts\Island\Hexagon\HexagonCaption.cs
 using System.Collections.Generic;
 using System.Text;
 using TMPro;

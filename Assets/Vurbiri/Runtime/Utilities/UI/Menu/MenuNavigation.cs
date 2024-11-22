@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\UI\Menu\MenuNavigation.cs
+//Assets\Vurbiri\Runtime\Utilities\UI\Menu\MenuNavigation.cs
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;

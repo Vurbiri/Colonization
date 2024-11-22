@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\Interface\IValueTypeEnum.cs
+//Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\Interface\IValueTypeEnum.cs
 using System;
 
 namespace Vurbiri

@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Diplomacy\Ids\RelationId.cs
+//Assets\Colonization\Scripts\Diplomacy\Ids\RelationId.cs
 namespace Vurbiri.Colonization
 {
     public class RelationId : AIdType<RelationId>

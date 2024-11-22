@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Localization\Scripts\Language.cs
+//Assets\Vurbiri\Runtime\Localization\Scripts\Language.cs
 using System;
 using System.Collections.Generic;
 using System.IO;

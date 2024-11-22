@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Warriors\WarriorId.cs
+//Assets\Colonization\Scripts\Actors\Warriors\WarriorId.cs
 namespace Vurbiri.Colonization.Actors
 {
     using Characteristics;

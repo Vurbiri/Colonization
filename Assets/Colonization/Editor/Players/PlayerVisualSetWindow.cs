@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Editor\Players\PlayerVisualSetWindow.cs
+//Assets\Colonization\Editor\Players\PlayerVisualSetWindow.cs
 using UnityEditor;
 using UnityEngine;
 

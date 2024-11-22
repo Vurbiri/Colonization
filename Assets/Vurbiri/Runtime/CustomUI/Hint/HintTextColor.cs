@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\CustomUI\Hint\HintTextColor.cs
+//Assets\Vurbiri\Runtime\CustomUI\Hint\HintTextColor.cs
 using UnityEngine;
 
 namespace Vurbiri.UI

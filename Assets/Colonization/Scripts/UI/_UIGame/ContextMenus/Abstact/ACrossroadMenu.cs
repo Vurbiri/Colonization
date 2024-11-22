@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Abstact\ACrossroadMenu.cs
+//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Abstact\ACrossroadMenu.cs
 namespace Vurbiri.Colonization.UI
 {
     public abstract class ACrossroadMenu : AWorldMenu

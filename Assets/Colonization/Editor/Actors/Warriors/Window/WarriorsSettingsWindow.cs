@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Editor\Actors\Warriors\Window\WarriorsSettingsWindow.cs
+//Assets\Colonization\Editor\Actors\Warriors\Window\WarriorsSettingsWindow.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;

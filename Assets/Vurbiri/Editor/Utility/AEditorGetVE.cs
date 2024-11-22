@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Utility\AEditorGetVE.cs
+//Assets\Vurbiri\Editor\Utility\AEditorGetVE.cs
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;

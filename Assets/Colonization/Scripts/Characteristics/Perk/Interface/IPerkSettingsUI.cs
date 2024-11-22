@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Characteristics\Perk\Interface\IPerkSettingsUI.cs
+//Assets\Colonization\Scripts\Characteristics\Perk\Interface\IPerkSettingsUI.cs
 namespace Vurbiri.Colonization.UI
 {
     using Characteristics;

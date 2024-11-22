@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Types\Collections\UnityDictionaryDrawer.cs
+//Assets\Vurbiri\Editor\Types\Collections\UnityDictionaryDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

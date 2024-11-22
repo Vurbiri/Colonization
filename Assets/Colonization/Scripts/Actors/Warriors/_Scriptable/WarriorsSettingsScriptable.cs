@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\Actors\Warriors\_Scriptable\WarriorsSettingsScriptable.cs
+//Assets\Colonization\Scripts\Actors\Warriors\_Scriptable\WarriorsSettingsScriptable.cs
 using System;
 using UnityEngine;
 using Vurbiri.Collections;

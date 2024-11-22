@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Localization\Scripts\LanguageStrings\LanguageStringsEditor.cs
+//Assets\Vurbiri\Editor\Localization\Scripts\LanguageStrings\LanguageStringsEditor.cs
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;

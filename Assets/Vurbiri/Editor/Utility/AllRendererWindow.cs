@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Editor\Utility\AllRendererWindow.cs
+//Assets\Vurbiri\Editor\Utility\AllRendererWindow.cs
 using System;
 using System.Collections.Generic;
 using UnityEditor;

@@ -1,4 +1,4 @@
-﻿//Assets\Vurbiri\Runtime\Utilities\Extensions\ExtensionsColor.cs
+//Assets\Vurbiri\Runtime\Utilities\Extensions\ExtensionsColor.cs
 using UnityEngine;
 
 namespace Vurbiri

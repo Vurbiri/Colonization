@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\UI\_UIGame\TestMarkCrossToggle.cs
+//Assets\Colonization\Scripts\UI\_UIGame\TestMarkCrossToggle.cs
 using UnityEngine;
 using UnityEngine.UI;
 

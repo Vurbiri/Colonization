@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Editor\Characteristic\Effects\EffectSettingsDrawer.cs
+//Assets\Colonization\Editor\Characteristic\Effects\EffectSettingsDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
