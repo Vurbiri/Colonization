@@ -207,7 +207,7 @@ namespace Vurbiri.Colonization
                 return _waitHexagon.SetResult(empty[0]);
 
             foreach (var hex in empty)
-                hex.TrySetSelectable();
+                hex.TrySetSelectableFree();
 
             return _waitHexagon;
         }
@@ -279,6 +279,17 @@ namespace Vurbiri.Colonization
             return profit;
         }
         #endregion
+
+        public void EndTurn()
+        {
+            Debug.Log("Выключить Collider");
+        }
+        public void StartTurn()
+        {
+            Debug.Log("Включить Collider если игрок и его ход");
+
+        }
+
 
         #region ISelectable
         public void OnSelect()

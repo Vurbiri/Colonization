@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
-using static Vurbiri.Colonization.Data.JSON_KEYS;
 
 namespace Vurbiri.Colonization.Data
 {
+    using static JSON_KEYS;
+
     [JsonObject(MemberSerialization.OptIn)]
     public class PlayerData : IReactive<PlayerData>, IDisposable
     {
@@ -48,10 +49,11 @@ namespace Vurbiri.Colonization.Data
 
         public PlayerLoadData ToLoadData() => new(_resources, _edifices, _roads, _warriors);
 
-        public void CurrenciesBind(ACurrenciesReactive currencies, bool calling)
+        public void CurrenciesBind(IReactive<int, int> currencies, bool calling)
         {
             _unsubscribers += currencies.Subscribe((i, v) => _resources[i] = v, calling);
         }
+
         public void EdificesBind(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive)
         {
             for(int i = 0; i < EdificeGroupId.Count; i++)
@@ -100,8 +102,6 @@ namespace Vurbiri.Colonization.Data
 
         public IUnsubscriber Subscribe(Action<PlayerData> action, bool calling = true)
         {
-            actionThisChange -= action ?? throw new ArgumentNullException("action");
-
             actionThisChange += action;
             if (calling)
                 action(this);
@@ -109,7 +109,7 @@ namespace Vurbiri.Colonization.Data
             return new Unsubscriber<Action<PlayerData>>(this, action);
         }
 
-        public void Unsubscribe(Action<PlayerData> action) => actionThisChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<PlayerData> action) => actionThisChange -= action;
 
         public void Dispose()
         {

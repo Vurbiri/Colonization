@@ -6,10 +6,8 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        private class ZoomState : AStateController<float>
+        private class ZoomState : AStateControllerCamera<float>
         {
-            private readonly Camera _camera;
-            private readonly Transform _cameraTransform;
             private readonly Zoom _stt;
             private float _heightZoom;
 
@@ -19,11 +17,9 @@ namespace Vurbiri.Colonization.Controllers
                 set => _heightZoom = Mathf.Clamp(_heightZoom - value * _stt.steepZoomRate, _stt.heightZoomMin, _stt.heightZoomMax); 
             }
 
-            public ZoomState(CameraController controller, Zoom zoom, Camera camera) : base(controller)
+            public ZoomState(CameraController controller, Zoom zoom, Camera camera) : base(controller, camera)
             {
-                _camera = camera;
-                _cameraTransform = _camera.transform;
-                _heightZoom = camera.transform.position.y;
+                _heightZoom = _cameraTransform.localPosition.y;
                 _stt = zoom;
             }
 

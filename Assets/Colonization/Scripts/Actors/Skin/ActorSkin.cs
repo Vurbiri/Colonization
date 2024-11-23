@@ -1,7 +1,6 @@
 //Assets\Colonization\Scripts\Actors\Skin\ActorSkin.cs
 using System;
 using UnityEngine;
-using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -13,17 +12,17 @@ namespace Vurbiri.Colonization.Actors
         private const string T_IDLE = "tIdleAdv", B_IDLE = "bIdle";
         private const string B_MOVE = "bMove", B_RUN = "bRun", B_BLOCK = "bBlock";
         private const string T_REACT = "tReact";
-        private static readonly string[] T_SKILLS = { "tSkill_01", "tSkill_02", "tSkill_03" };
+        private static readonly string[] T_SKILLS = { "bSkill_01", "bSkill_02", "bSkill_03" };
         public const int COUNT_SKILLS = 3;
         #endregion
 
         private Animator _animator;
-        private readonly StateMachine _stateMachine = new();
+        private readonly SkinStateMachine _stateMachine = new();
         private int _idBoolState = 0, _idTriggerState = 0;
 
         private BoolSwitchState _moveState, _runState, _blockState;
         private TriggerSwitchState _reactState;
-        private readonly TriggerSwitchState[] _skillStates = new TriggerSwitchState[COUNT_SKILLS];
+        private readonly BoolSwitchState[] _skillStates = new BoolSwitchState[COUNT_SKILLS];
 
         public event Action EventStart;
 
@@ -41,7 +40,7 @@ namespace Vurbiri.Colonization.Actors
             _reactState = CreateTriggerState(T_REACT);
 
             for (int i = 0; i < COUNT_SKILLS; i++)
-                _skillStates[i] = CreateTriggerState(T_SKILLS[i]);
+                _skillStates[i] = CreateBoolState(T_SKILLS[i]);
 
             _animator.GetBehaviour<SpawnBehaviour>().EventExitSpawn += EventStart;
         }
@@ -58,7 +57,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void React() => _stateMachine.SetState(_reactState);
 
-        public void Default() => _stateMachine.ToDefault();
+        public void ToDefault() => _stateMachine.ToDefault();
 
 
         private BoolSwitchState CreateBoolState(string nameParam) => new(nameParam, this, _idBoolState++);

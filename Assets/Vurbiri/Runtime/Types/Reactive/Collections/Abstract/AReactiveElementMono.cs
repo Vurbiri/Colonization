@@ -13,7 +13,6 @@ namespace Vurbiri.Reactive.Collections
 
         public void Subscribe(Action<T, TypeEvent> action, int index)
         {
-            actionThisChange -= action ?? throw new ArgumentNullException("action");
             actionThisChange += action;
             _index = index;
             action((T)this, TypeEvent.Add);

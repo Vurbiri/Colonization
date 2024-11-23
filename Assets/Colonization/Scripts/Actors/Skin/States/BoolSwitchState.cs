@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin
     {
-        public class BoolSwitchState : AAnimatorState
+        public class BoolSwitchState : ASkinState
         {
             protected readonly int _idParam;
 

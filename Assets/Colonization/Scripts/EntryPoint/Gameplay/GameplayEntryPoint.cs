@@ -33,9 +33,7 @@ namespace Vurbiri.Colonization
         [Header("TEST")]
         [SerializeField] private bool _isLoad;
 
-        private DIContainer _services;
-        private DIContainer _data;
-        private DIContainer _objects;
+        private SceneContainers _containers;
 
         private Players _players;
         private GameplaySettingsData _gameplaySettings;
@@ -45,15 +43,13 @@ namespace Vurbiri.Colonization
 
         public override IReactive<ExitParam> Enter(SceneContainers containers, AEnterParam param)
         {
-            _services = containers.Services;
-            _data = containers.Data;
-            _objects = containers.Objects;
+            _containers = containers;
 
-            _gameplaySettings = _data.Get<GameplaySettingsData>();
+            _gameplaySettings = containers.Data.Get<GameplaySettingsData>();
 
-            _services.Get<Language>().LoadFiles(_localizationFiles);
+            containers.Services.Get<Language>().LoadFiles(_localizationFiles);
 
-            FillingContainers();
+            FillingContainers(containers);
 
             StartCoroutine(Enter_Coroutine());
 
@@ -61,20 +57,24 @@ namespace Vurbiri.Colonization
 
             #region Local: FillingContainers()
             //=================================
-            void FillingContainers()
+            void FillingContainers(SceneContainers containers)
             {
-                _services.AddInstance(Coroutines.Create("Gameplay Coroutines"));
-                _eventBus = _services.AddInstance(new GameplayEventBus());
-                _inputController = _services.AddInstance(new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
-                _hexagonsData = _data.AddInstance(new HexagonsData(_scriptables.surfaces, _isLoad));
-                
-                _data.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));
-                
-                _objects.AddInstance(_sceneObjects.mainCamera);
-                _objects.AddInstance(_land);
-                _objects.AddInstance(_crossroads);
+                DIContainer services = containers.Services;
+                DIContainer data = containers.Data;
+                DIContainer objects = containers.Objects;
 
-                _settingsUI.InstanceAddToData(_data);
+                services.AddInstance(Coroutines.Create("Gameplay Coroutines"));
+                _eventBus = services.AddInstance(new GameplayEventBus());
+                _inputController = services.AddInstance(new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
+                _hexagonsData = data.AddInstance(new HexagonsData(_scriptables.surfaces, _isLoad));
+                
+                data.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));
+                
+                objects.AddInstance(_sceneObjects.mainCamera);
+                objects.AddInstance(_land);
+                objects.AddInstance(_crossroads);
+
+                _settingsUI.InstanceAddToData(data);
             }
             #endregion
         }
@@ -106,7 +106,7 @@ namespace Vurbiri.Colonization
 
         private IEnumerator CreatePlayers_Coroutine()
         {
-            _players = _objects.AddInstance(new Players(_playersSettings, _isLoad));
+            _players = _containers.Objects.AddInstance(new Players(_containers, _playersSettings, _isLoad));
 
             yield return null;
 
@@ -131,7 +131,7 @@ namespace Vurbiri.Colonization
 
             yield return null;
 
-            _objects.Get<LoadingScreen>().SmoothOff_Wait();
+            _containers.Objects.Get<LoadingScreen>().SmoothOff_Wait();
 
             _inputController.EnableGameplayMap();
 

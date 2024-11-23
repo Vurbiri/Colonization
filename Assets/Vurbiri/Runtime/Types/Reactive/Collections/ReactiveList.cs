@@ -123,7 +123,6 @@ namespace Vurbiri.Reactive.Collections
         #region IReadOnlyReactiveList
         public IUnsubscriber Subscribe(Action<int, T, TypeEvent> action, bool calling = true)
         {
-            actionListChange -= action ?? throw new ArgumentNullException("action");
             actionListChange += action;
 
             if (calling)
@@ -135,7 +134,7 @@ namespace Vurbiri.Reactive.Collections
             return new Unsubscriber<Action<int, T, TypeEvent>>(this, action);
         }
 
-        public void Unsubscribe(Action<int, T, TypeEvent> action) => actionListChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<int, T, TypeEvent> action) => actionListChange -= action;
         #endregion
 
         #region IList

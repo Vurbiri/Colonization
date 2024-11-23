@@ -10,9 +10,9 @@ namespace Vurbiri.Colonization.Actors
         [Space]
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
 
-        public Warrior Init(int id, int owner, Material material, Hexagon startHex, GameplayEventBus eventBus)
+        public Warrior Init(int id, int owner, Material material, Hexagon startHex)
         {
-            _warrior.Init(_warriorsSettings[id], owner, startHex, eventBus);
+            _warrior.Init(_warriorsSettings[id], owner, startHex);
             GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = material;
 
             Destroy(this);
@@ -20,9 +20,9 @@ namespace Vurbiri.Colonization.Actors
             return _warrior;
         }
 
-        public Warrior Init(ActorLoadData data, int owner, Material material, Hexagon startHex, GameplayEventBus eventBus)
+        public Warrior Init(ActorLoadData data, int owner, Material material, Hexagon startHex)
         {
-            _warrior.Init(_warriorsSettings[data.id], owner, startHex, data, eventBus);
+            _warrior.Init(_warriorsSettings[data.id], owner, startHex, data);
             GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = material;
 
             Destroy(this);

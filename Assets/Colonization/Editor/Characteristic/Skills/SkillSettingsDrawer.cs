@@ -21,7 +21,6 @@ namespace VurbiriEditor.Colonization.Characteristics
         {
             base.OnGUI(mainPosition, mainProperty, label);
 
-            int target;
             int id = IdFromLabel(label);
             if (id >= 0)
                 label.text = string.Format(NAME_ELEMENT, id);
@@ -49,7 +48,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     _position.y += _height;
                     EditorGUI.LabelField(_position, "Total Time", $"{clipSett.totalTime}");
                     DrawLabelAndSetValue(settingsProperty, P_DAMAGE_T, clipSett.damageTime);
-                    DrawLabelAndSetValue(settingsProperty, P_REM_T, clipSett.totalTime - clipSett.damageTime);
+                    DrawLabelAndSetValue(settingsProperty, P_REM_T, clipSett.RemainingTime);
                     DrawLabelAndSetValue(P_RANGE, clipSett.range);
                     EditorGUI.indentLevel--;
                     DrawLine(Color.gray);
@@ -57,7 +56,8 @@ namespace VurbiriEditor.Colonization.Characteristics
                     Space();
                     DrawIntSlider(settingsProperty, P_ID_A, 0, ActorSkin.COUNT_SKILLS - 1, id);
 
-                    if ((target = DrawId(P_TARGET, typeof(TargetOfSkillId))) == TargetOfSkillId.Enemy)
+                    TargetOfSkill target;
+                    if ((target = DrawEnumPopup<TargetOfSkill>(P_TARGET)) == TargetOfSkill.Enemy)
                     {
                         Space();
                         if (DrawBool(P_MOVE))
@@ -119,12 +119,12 @@ namespace VurbiriEditor.Colonization.Characteristics
                 _position.y += _ySpace * 2f;
             }
             //=================================
-            void SetChildrenEffectSelfTarget(int target)
+            void SetChildrenEffectSelfTarget(TargetOfSkill target)
             {
                 SerializedProperty effects = _mainProperty.FindPropertyRelative(P_EFFECTS);
                 int count = effects.arraySize;
                 for (int i = 0; i < count; i++)
-                    effects.GetArrayElementAtIndex(i).FindPropertyRelative(P_CHILD_TARGET).intValue = target;
+                    effects.GetArrayElementAtIndex(i).FindPropertyRelative(P_CHILD_TARGET).SetEnumValue(target);
             }
             #endregion
         }

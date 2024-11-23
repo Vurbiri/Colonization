@@ -88,7 +88,6 @@ namespace Vurbiri.Colonization.Actors
                 _parentTransform.localPosition = end;
 
                 MoveFalse();
-
                 Reset();
             }
 
@@ -96,9 +95,9 @@ namespace Vurbiri.Colonization.Actors
             {
                 Hexagon currentHex = _actor._currentHex;
 
-                List<Hexagon> empty = new(6);
+                List<Hexagon> empty = new(HEX_COUNT_SIDES);
                 foreach (var hex in currentHex.Neighbors)
-                    if (hex.CanUnitEnter)
+                    if (hex.TrySetSelectableFree())
                         empty.Add(hex);
 
                 if (empty.Count == 0)
@@ -107,12 +106,7 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
                 }
 
-                _waitHexagon = new();
-
-                foreach (var hex in empty)
-                    hex.TrySetSelectable();
-
-                yield return _waitHexagon;
+                yield return _waitHexagon = new();
 
                 foreach (var hex in empty)
                     hex.SetUnselectable();

@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Game.cs
 using UnityEngine;
+using Vurbiri.Colonization.Data;
 using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
@@ -10,6 +11,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private Dices _dices;
 
         private Players _players;
+        private PlayersData _playersData;
         private Land _land;
 
         private int _player = 0, _turn = 1;
@@ -18,11 +20,12 @@ namespace Vurbiri.Colonization
         {
             _land = SceneObjects.Get<Land>();
             _players = SceneObjects.Get<Players>();
+            _playersData = SceneData.Get<PlayersData>();
         }
 
         public void EndTurnPlayer()
         {
-            _players.Save();
+            _playersData.Save();
             _players.Next();
 
             if ((_player = ++_player % PlayerId.PlayersCount) == 0)

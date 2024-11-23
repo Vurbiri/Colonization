@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin : MonoBehaviour
     {
-        private class IdleState : AAnimatorState
+        private class IdleState : ASkinState
         {
             private readonly RFloat _timeSwitchIdle;
             private readonly int _idTriggerIdle = Animator.StringToHash(T_IDLE);

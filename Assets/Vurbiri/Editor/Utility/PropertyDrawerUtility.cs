@@ -54,6 +54,16 @@ namespace VurbiriEditor
         }
         protected int DrawIntSlider(string name, int min, int max) => DrawIntSlider(_mainProperty, name, min, max);
 
+        protected T DrawEnumPopup<T>(SerializedProperty parent, string name) where T : Enum
+        {
+            _position.y += _height;
+            SerializedProperty property = parent.FindPropertyRelative(name);
+            T value = (T)EditorGUI.EnumPopup(_position, property.displayName, property.enumValueIndex.ToEnum<T>());
+            property.enumValueIndex = value.ToInt();
+            return value;
+        }
+        protected T DrawEnumPopup<T>(string name) where T : Enum => DrawEnumPopup<T>(_mainProperty, name);
+
         protected int DrawIntPopup(SerializedProperty parent, string name, string[] displayedOptions, int[] optionValues)
         {
             _position.y += _height;

@@ -29,7 +29,6 @@ namespace Vurbiri.Colonization.Characteristics
         #region IReactiveCollection
         public IUnsubscriber Subscribe(Action<ReactiveEffect, TypeEvent> action, bool calling = true)
         {
-            actionCollectionChange -= action ?? throw new ArgumentNullException("action");
             actionCollectionChange += action;
 
             if (calling)
@@ -41,7 +40,7 @@ namespace Vurbiri.Colonization.Characteristics
             return new Unsubscriber<Action<ReactiveEffect, TypeEvent>>(this, action);
         }
 
-        public void Unsubscribe(Action<ReactiveEffect, TypeEvent> action) => actionCollectionChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<ReactiveEffect, TypeEvent> action) => actionCollectionChange -= action;
         #endregion
 
         public void Add(ReactiveEffect effect)

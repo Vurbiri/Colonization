@@ -36,7 +36,7 @@ namespace Vurbiri.FSM
         public void AddState(TState state) => _states.Add(state.Key, state);
         public bool TryAddState(TState state) => _states.TryAdd(state.Key, state);
 
-        public bool SetState<T>(int id = 0) where T : TState
+        public virtual bool SetState<T>(int id = 0) where T : TState
         {
             TypeIdKey key = new(typeof(T), id);
 
@@ -52,7 +52,7 @@ namespace Vurbiri.FSM
 
             return false;
         }
-        public void SetState(TState newState)
+        public virtual void SetState(TState newState)
         {
             if (_currentState.Equals(newState))
                 return;
@@ -62,7 +62,7 @@ namespace Vurbiri.FSM
             _currentState.Enter();
         }
 
-        public void SetAndAddState(TState newState)
+        public virtual void SetAndAddState(TState newState)
         {
             if (_currentState.Equals(newState))
                 return;
@@ -74,7 +74,7 @@ namespace Vurbiri.FSM
             _currentState.Enter();
         }
 
-        public bool ForceSetState<T>(int id = 0) where T : TState
+        public virtual bool ForceSetState<T>(int id = 0) where T : TState
         {
             if (_states.TryGetValue(new(typeof(T), id), out TState newState))
             {

@@ -70,6 +70,7 @@ namespace Vurbiri.Colonization.Characteristics
             for (int i = 0, j; i < count; i++)
             {
                 skill = _skillsSettings[i];
+                skill.SetTiming();
 
                 int countEffects = skill.effects.Length;
                 effectsSkill = new AEffect[countEffects];
@@ -99,7 +100,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         private ASkillState CreateState(Actor parent, SkillSettings skill, int id)
         {
-            if (skill.target == TargetOfSkillId.Self)
+            if (skill.target == TargetOfSkill.Self)
                 return new SelfBuffState(parent, _effects[id], skill.settings, id);
 
             if (skill.isMove)

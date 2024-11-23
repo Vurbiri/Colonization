@@ -157,27 +157,38 @@ namespace Vurbiri.Colonization
             return max;
         }
 
-        public bool IsEnemy(Id<PlayerId> id) => _ownerId != PlayerId.None && _ownerId != id;
+        public bool IsEnemy(Id<PlayerId> id) => _owner.GetRelation(id) == Relation.Enemy;
 
-        public bool TrySetSelectable(bool isFree = true)
+
+        public bool TrySetSelectableFree()
         {
-            if(_isGate || _isWater || _ownerId != PlayerId.None)
+            if(_isGate | _isWater | _owner != null)
                 return false;
 
-            _mark = _poolMarks.Get(_thisTransform, false).View(isFree);
+            _mark = _poolMarks.Get(_thisTransform, false).View(true);
             _collider.enabled = true;
             return true;
         }
 
+        public bool TrySetSelectableActor(Id<PlayerId> id, Relation relation)
+        {
+            if (_isGate | _isWater | _owner == null || _owner.GetRelation(id) != relation)
+                return false;
+
+            _mark = _poolMarks.Get(_thisTransform, false).View(relation == Relation.Friend);
+            _collider.enabled = true;
+            return true;
+        }
         public void SetUnselectable()
         {
-            if (_mark == null || _isGate || _isWater)
+            if (_mark == null | _isGate | _isWater)
                 return;
 
             _poolMarks.Return(_mark);
             _collider.enabled = false;
             _mark = null;
         }
+
         #endregion
 
         #region ISelectable

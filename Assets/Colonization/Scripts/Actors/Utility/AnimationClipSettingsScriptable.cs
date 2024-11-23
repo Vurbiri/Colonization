@@ -10,5 +10,7 @@ namespace Vurbiri.Colonization.Actors
         public float totalTime;
         public float damageTime;
         public float range;
+
+        public float RemainingTime => totalTime - damageTime;
     }
 }

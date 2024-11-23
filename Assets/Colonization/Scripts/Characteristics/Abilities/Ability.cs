@@ -96,8 +96,6 @@ namespace Vurbiri.Colonization.Characteristics
 
         public IUnsubscriber Subscribe(Action<int> action, bool calling = true)
         {
-            actionValueChange -= action ?? throw new ArgumentNullException("Action<int> action");
-
             actionValueChange += action;
             if (calling)
                 action(_currentValue);
@@ -105,7 +103,7 @@ namespace Vurbiri.Colonization.Characteristics
             return new Unsubscriber<Action<int>>(this, action);
         }
 
-        public void Unsubscribe(Action<int> action) => actionValueChange -= action ?? throw new ArgumentNullException("Action<int> action");
+        public void Unsubscribe(Action<int> action) => actionValueChange -= action;
 
         private int ApplyMods()
         {

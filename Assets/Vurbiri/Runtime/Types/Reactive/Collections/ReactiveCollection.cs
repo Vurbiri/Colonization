@@ -45,7 +45,6 @@ namespace Vurbiri.Reactive.Collections
         #region IReactiveCollection
         public IUnsubscriber Subscribe(Action<T, TypeEvent> action, bool calling = true)
         {
-            actionCollectionChange -= action ?? throw new ArgumentNullException("action");
             actionCollectionChange += action;
 
             if (calling)
@@ -57,7 +56,7 @@ namespace Vurbiri.Reactive.Collections
             return new Unsubscriber<Action<T, TypeEvent>>(this, action);
         }
 
-        public void Unsubscribe(Action<T, TypeEvent> action) => actionCollectionChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<T, TypeEvent> action) => actionCollectionChange -= action;
         #endregion
 
         public void Add(T item)

@@ -89,7 +89,6 @@ namespace Vurbiri.Colonization
         #region Reactive
         public IUnsubscriber Subscribe(Action<int, int> action, bool calling = true)
         {
-            actionValuesChange -= action ?? throw new ArgumentNullException("action");
             actionValuesChange += action;
 
             if (calling)
@@ -102,7 +101,7 @@ namespace Vurbiri.Colonization
         }
         public IUnsubscriber Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
         public IUnsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
-        public void Unsubscribe(Action<int, int> action) => actionValuesChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<int, int> action) => actionValuesChange -= action;
         public void Unsubscribe(int index, Action<int> action) => _values[index].Unsubscribe(action);
         public void Unsubscribe(Id<CurrencyId> id, Action<int> action) => _values[id.Value].Unsubscribe(action);
         #endregion

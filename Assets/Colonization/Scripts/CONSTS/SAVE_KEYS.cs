@@ -1,5 +1,5 @@
 //Assets\Colonization\Scripts\CONSTS\SAVE_KEYS.cs
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Data
 {
     public static class SAVE_KEYS
     {
@@ -9,5 +9,6 @@ namespace Vurbiri.Colonization
         public const string GAMEPLAY_SETTINGS = "gsd";
         public const string HEX_DATA = "hex";
         public const string PLAYERS = "p_";
+        public const string DIPLOMANCY = "dip";
     }
 }

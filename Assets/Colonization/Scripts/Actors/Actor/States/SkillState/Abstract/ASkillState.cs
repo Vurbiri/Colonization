@@ -64,10 +64,10 @@ namespace Vurbiri.Colonization.Actors
                 _skin.Skill(_idAnimation);
                 yield return _waitTargetSkillAnimation;
 
-                //if (_isTargetReact)
-                //    _target._skin.React();
-                //for (int i = 0; i < _countEffects; i++)
-                //    _effects[i].Apply(_actor, _target);
+                if (_isTargetReact)
+                    _target._skin.React();
+                for (int i = 0; i < _countEffects; i++)
+                    _effects[i].Apply(_actor, _target);
 
                 yield return _waitEndSkillAnimation;
 
@@ -79,7 +79,6 @@ namespace Vurbiri.Colonization.Actors
             [System.Serializable]
             public class Settings
             {
-                public int targetActor;
                 public float damageTime;
                 public float remainingTime;
                 public int idAnimation = -1;

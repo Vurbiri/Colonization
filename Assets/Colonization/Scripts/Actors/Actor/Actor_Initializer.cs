@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
 
     public abstract partial class Actor
     {
-        public void Init(ActorSettings settings, int owner, Hexagon startHex, GameplayEventBus eventBus)
+        public void Init(ActorSettings settings, int owner, Hexagon startHex)
         {
             _typeId = settings.TypeId;
             _id = settings.Id;
@@ -17,7 +17,9 @@ namespace Vurbiri.Colonization.Actors
             _abilities = settings.Abilities;
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
-            _eventBus = eventBus;
+
+            _eventBus   = SceneServices.Get<GameplayEventBus>();
+            _diplomacy  = SceneObjects.Get<Diplomacy>();
 
             _effects = new(_abilities);
 
@@ -30,9 +32,12 @@ namespace Vurbiri.Colonization.Actors
 
             _move = _abilities.GetAbility(ActorAbilityId.IsMove);
 
-            _thisTransform = transform;
-            _extentsZ = GetComponent<BoxCollider>().bounds.extents.z;
             _effects.Subscribe(RedirectEvents);
+
+            _thisTransform = transform;
+            Debug.Log("Выключить Collider на старте");
+            _thisCollider = GetComponent<Collider>();
+            _extentsZ = _thisCollider.bounds.extents.z;
 
             _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
             _currentHex.EnterActor(this);
@@ -56,13 +61,13 @@ namespace Vurbiri.Colonization.Actors
             gameObject.SetActive(true);
         }
 
-        public void Init(ActorSettings settings, int owner, Hexagon startHex, ActorLoadData data, GameplayEventBus eventBus)
+        public void Init(ActorSettings settings, int owner, Hexagon startHex, ActorLoadData data)
         {
-            Init(settings, owner, startHex, eventBus);
+            Init(settings, owner, startHex);
 
             _currentHP.Value = data.currentHP;
             _currentAP.Value = data.currentAP;
-            _move.Value    = data.move;
+            _move.Value      = data.move;
 
             int count = data.effects.Length;
             for (int i = 0; i < count; i++)

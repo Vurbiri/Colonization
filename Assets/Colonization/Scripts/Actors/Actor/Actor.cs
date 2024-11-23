@@ -23,6 +23,8 @@ namespace Vurbiri.Colonization.Actors
 
         protected ActorSkin _skin;
         protected Transform _thisTransform;
+        protected Collider _thisCollider;
+        protected Diplomacy _diplomacy;
         protected GameplayEventBus _eventBus;
         protected float _extentsZ;
 
@@ -43,6 +45,7 @@ namespace Vurbiri.Colonization.Actors
         public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
         #endregion
 
+        #region States
         public bool CanMove() => _move.IsValue;
 
         public void Move()
@@ -59,6 +62,9 @@ namespace Vurbiri.Colonization.Actors
         {
             _stateMachine.SetState(_skillStates[id]);
         }
+        #endregion
+
+        public Relation GetRelation(Id<PlayerId> id) => _diplomacy.GetRelation(id, _owner);
 
         public void AddEffect(ReactiveEffect effect) => _effects.Add(effect);
         public int ApplyEffect(AEffect effect)
@@ -66,6 +72,24 @@ namespace Vurbiri.Colonization.Actors
             int delta = _abilities.AddPerk(effect);
             actionThisChange?.Invoke(this, TypeEvent.Change);
             return delta;
+        }
+
+        public void EndTurn()
+        {
+            _currentHP.Value += _abilities.GetValue(ActorAbilityId.HPPerTurn);
+            _currentAP.Value += _abilities.GetValue(ActorAbilityId.APPerTurn);
+            _move.IsValue = true;
+            Debug.Log("Выключить Collider");
+            if(_stateMachine.CurrentState != _blockState)
+                _stateMachine.ToDefault();
+        }
+        public void StartTurn()
+        {
+            Debug.Log("Включить Collider если игрок и его ход");
+            _effects.Next();
+            _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetDefense());
+            if (_wallDefenceEffect != null)
+                _effects.Add(_wallDefenceEffect);
         }
 
         public virtual void Select()
@@ -91,21 +115,6 @@ namespace Vurbiri.Colonization.Actors
                 array[i] = _effects[j].ToArray();
 
             return array;
-        }
-
-        private void OnEndTurn()
-        {
-            _currentHP.Value += _abilities.GetValue(ActorAbilityId.HPPerTurn);
-            _currentAP.Value += _abilities.GetValue(ActorAbilityId.APPerTurn);
-            _move.IsValue = true;
-        }
-
-        private void OnStartTurn()
-        {
-            _effects.Next();
-            _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetDefense());
-            if (_wallDefenceEffect != null) 
-                _effects.Add(_wallDefenceEffect);
         }
 
         private void RedirectEvents(ReactiveEffect item, TypeEvent type)

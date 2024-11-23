@@ -11,8 +11,6 @@ namespace Vurbiri.Reactive
 
         public IUnsubscriber Subscribe(Action<T> action, bool calling = true)
         {
-            actionValueChange -= action ?? throw new ArgumentNullException("action");
-
             actionValueChange += action;
             if (calling)
                 action(Value);
@@ -20,6 +18,6 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<T>>(this, action);
         }
 
-        public void Unsubscribe(Action<T> action) => actionValueChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<T> action) => actionValueChange -= action;
     }
 }

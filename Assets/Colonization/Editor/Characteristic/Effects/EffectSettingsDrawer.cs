@@ -23,19 +23,18 @@ namespace VurbiriEditor.Colonization.Characteristics
         {
             base.OnGUI(position, mainProperty, label);
 
-            int parentTarget = mainProperty.FindPropertyRelative(P_PARENT_TARGET).intValue;
-            bool isParentSelf = parentTarget == TargetOfSkillId.Self;
+            var parentTarget = mainProperty.FindPropertyRelative(P_PARENT_TARGET).GetEnumValue<TargetOfSkill>();
+            bool isParentSelf = parentTarget == TargetOfSkill.Self;
 
             SerializedProperty target = mainProperty.FindPropertyRelative(P_TARGET_ACTOR);
 
             if (isParentSelf)
-                target.intValue = TargetOfEffectId.Self;
+                target.SetEnumValue(TargetOfEffect.Self);
 
             bool isDuration, isNotUse = true, isTarget = false;
             int usedAbility;
                         
-            bool isNegative = parentTarget == TargetOfSkillId.Enemy & target.intValue == TargetOfEffectId.Target;
-
+            bool isNegative = parentTarget == TargetOfSkill.Enemy & target.GetEnumValue<TargetOfEffect>() == TargetOfEffect.Target;
             label.text = string.Format(isNegative ? NAME_NEGATIVE_ELEMENT : NAME_POSITIVE_ELEMENT, IdFromLabel(label));
 
             EditorGUI.BeginProperty(_position, label, mainProperty);
@@ -53,9 +52,9 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 Space(2f);
                 if (isParentSelf)
-                    DrawLabel(target.displayName, TargetOfEffectId.GetName(TargetOfEffectId.Self));
+                    DrawLabel(target.displayName, TargetOfEffect.Self.ToString());
                 else
-                    isTarget = DrawId(P_TARGET_ACTOR, typeof(TargetOfEffectId)) == TargetOfEffectId.Target;
+                    isTarget = DrawEnumPopup<TargetOfEffect>(P_TARGET_ACTOR) == TargetOfEffect.Target;
 
                 usedAbility = DrawId(P_TARGET_ABILITY, typeof(ActorAbilityId));
                 if (isNotUse)
@@ -104,7 +103,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             if (!property.isExpanded)
                 return 1f;
 
-            if (property.FindPropertyRelative(P_PARENT_TARGET).intValue == TargetOfSkillId.Self || property.FindPropertyRelative(P_DUR).intValue > 0)
+            if (property.FindPropertyRelative(P_PARENT_TARGET).GetEnumValue<TargetOfSkill>() == TargetOfSkill.Self || property.FindPropertyRelative(P_DUR).intValue > 0)
                 return RATE_SIZE_FULL - 2f;
 
             if (property.FindPropertyRelative(P_USED_ABILITY).intValue < 0)

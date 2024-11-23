@@ -26,6 +26,10 @@ namespace Vurbiri.FSM
 
         public static bool operator ==(AState a, AState b) => (a is null && b is null) || (a is not null && b is not null && a._key == b._key);
         public static bool operator !=(AState a, AState b) =>!(a == b);
+        public static bool operator ==(AState a, IState b) => (a is null && b is null) || (a is not null && b is not null && a._key == b.Key);
+        public static bool operator !=(AState a, IState b) => !(a == b);
+        public static bool operator ==(IState a, AState b) => (a is null && b is null) || (a is not null && b is not null && a.Key == b._key);
+        public static bool operator !=(IState a, AState b) => !(a == b);
         public static bool operator ==(AState s, TypeIdKey k) => s is not null && s._key == k;
         public static bool operator !=(AState s, TypeIdKey k) => s is not null && s._key != k;
         public static bool operator ==(TypeIdKey k, AState s) => s is not null && s._key == k;

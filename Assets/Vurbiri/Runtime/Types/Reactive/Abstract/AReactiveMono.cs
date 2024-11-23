@@ -4,22 +4,22 @@ using UnityEngine;
 
 namespace Vurbiri.Reactive
 {
-    public abstract class AReactiveMono<T> : MonoBehaviour, IReactive<T>
+    public abstract class AReactiveMono<T> : MonoBehaviour, IReadOnlyReactive<T>
     {
-        protected Action<T> EventThisChange;
+        protected Action<T> actionValueChange;
+
+        public abstract T Value { get; protected set; }
 
         public IUnsubscriber Subscribe(Action<T> action, bool calling = true)
         {
-            EventThisChange -= action;
-            EventThisChange += action;
-            if (calling && action != null) 
-                Callback(action);
+            actionValueChange -= action;
+            actionValueChange += action;
+            if (calling && action != null)
+                action(Value);
 
             return new Unsubscriber<Action<T>>(this, action);
         }
 
-        public void Unsubscribe(Action<T> action) => EventThisChange -= action;
-
-        protected abstract void Callback(Action<T> action);
+        public void Unsubscribe(Action<T> action) => actionValueChange -= action;
     }
 }

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Controllers
 
             public abstract T InputValue { get;  set; }
 
-            public AStateController(CameraController controller) : base(controller._machine)
+            protected AStateController(CameraController controller) : base(controller._machine)
             {
                 _controller = controller;
                 _controllerTransform = _controller._thisTransform;

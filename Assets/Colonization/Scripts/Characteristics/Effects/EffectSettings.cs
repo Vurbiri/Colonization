@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [SerializeField] private int _usedAbility;
         [SerializeField] private int _counteredAbility;
-        [SerializeField] private int _targetActor;
+        [SerializeField] private TargetOfEffect _targetActor;
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
         [SerializeField] private bool _isReflect;
@@ -18,20 +18,12 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private int _duration;
         [SerializeField] private int _descKeyId;
         [SerializeField] private bool _isDescKeyBase;
-        [SerializeField] private int _parentTarget;
-
-        public Id<TargetOfEffectId> TargetActor => _targetActor;
-        public int TargetAbility => _targetAbility;
-        public int Value => _value;
-        public Id<TypeModifierId> TypeModifier => _typeModifier;
-        public int Duration => _duration;
-        public bool IsNegative => _parentTarget == TargetOfSkillId.Enemy;
-        public int KeyDescId => _descKeyId;
+        [SerializeField] private TargetOfSkill _parentTarget;
 
         public AEffect CreateEffect(EffectCode _code)
         {
-            bool isSelf = _targetActor == TargetOfEffectId.Self;
-            bool isNegative = !isSelf & _parentTarget == TargetOfSkillId.Enemy;
+            bool isSelf = _targetActor == TargetOfEffect.Self;
+            bool isNegative = !isSelf & _parentTarget == TargetOfSkill.Enemy;
 
             if (_duration > 0)
             {
@@ -81,7 +73,7 @@ namespace Vurbiri.Colonization.Characteristics
             if (_isDescKeyBase)
                 return (_value, hintTextColor.HexColorBase);
 
-            if (_targetActor == TargetOfEffectId.Target & _parentTarget == TargetOfSkillId.Enemy)
+            if (_targetActor == TargetOfEffect.Target & _parentTarget == TargetOfSkill.Enemy)
                 return (-_value, hintTextColor.HexColorMinus);
 
             return (_value, hintTextColor.HexColorPlus);

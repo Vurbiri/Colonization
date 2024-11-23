@@ -6,10 +6,8 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        private class MoveState : AStateController<Vector2>
+        private class MoveState : AStateControllerCamera<Vector2>
         {
-            private readonly Camera _camera;
-            private readonly Transform _cameraTransform;
             private readonly SphereBounds _bounds;
             private readonly Movement _stt;
 
@@ -18,10 +16,8 @@ namespace Vurbiri.Colonization.Controllers
 
             public override Vector2 InputValue { get => _moveDirection; set => _moveDirection = value; }
 
-            public MoveState(CameraController controller, Movement movement, Camera camera) : base(controller)
+            public MoveState(CameraController controller, Movement movement, Camera camera) : base(controller, camera)
             {
-                _camera = camera;
-                _cameraTransform = _camera.transform;
                 _bounds = new(CONST.HEX_DIAMETER_IN * CONST.MAX_CIRCLES);
                 _stt = movement;
             }

@@ -14,11 +14,12 @@ namespace Vurbiri.Colonization.Actors
             private readonly float _speedRun;
             private readonly float _selfRange;
 
-            public AttackState(Actor parent, int targetActor, IReadOnlyList<AEffect> effects, float range, float speedRun, Settings settings, int id) : 
+            public AttackState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<AEffect> effects, float range, float speedRun, Settings settings, int id) : 
                 base(parent, targetActor, effects, settings, id)
             {
                 _speedRun = speedRun;
                 _selfRange = range + _actor._extentsZ;
+                _isTargetReact = true;
             }
 
             protected override IEnumerator Actions_Coroutine()
@@ -32,8 +33,8 @@ namespace Vurbiri.Colonization.Actors
                 }
 
                 float path = 1f - (_selfRange + _actor._extentsZ) / HEX_DIAMETER_IN;
-                Hexagon currentHex = _actor._currentHex;
-                yield return _actor.StartCoroutine(Move_Coroutine(currentHex.Position, _targetHex.Position, path));
+                Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
+                yield return _actor.StartCoroutine(Move_Coroutine(currentHex.Position, targetHex.Position, path));
                 yield return _actor.StartCoroutine(ApplySkill_Coroutine());
                 yield return _actor.StartCoroutine(Move_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f));
                 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.CONST;
 
@@ -11,14 +12,14 @@ namespace Vurbiri.Colonization.Actors
     {
         public abstract class ASkillTargetState : ASkillState
         {
-            protected int _targetActor;
+            protected Relation _targetActor;
             protected WaitActivate _waitActor;
-            protected Hexagon _targetHex;
 
-            protected ASkillTargetState(Actor parent, int targetActor, IReadOnlyList<AEffect> effects, Settings settings, int id) : 
+            protected ASkillTargetState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<AEffect> effects, Settings settings, int id) : 
                 base(parent, effects, settings, id)
             {
-                _targetActor = targetActor;
+                _targetActor = targetActor.ToRelation();
+                _targetActor = Relation.Friend;
             }
 
             public override void Exit()
@@ -26,7 +27,7 @@ namespace Vurbiri.Colonization.Actors
                 base.Exit();
 
                 _waitActor = null;
-                _targetHex = null;
+                _target = null;
             }
 
             public override void Unselect(ISelectable newSelectable)
@@ -36,37 +37,42 @@ namespace Vurbiri.Colonization.Actors
                 if (_waitActor == null)
                     return;
 
-                _targetHex = newSelectable as Hexagon;
+                if (newSelectable is Actor actor)
+                    _target = actor;
+                else if(newSelectable is Hexagon hex)
+                    _target = hex.Owner;
+                else
+                    _target = null;
+
                 _waitActor.Activate();
             }
 
             protected IEnumerator SelectActor_Coroutine(Action<bool> callback)
             {
                 Hexagon currentHex = _actor._currentHex;
-                List<Hexagon> empty = new(6);
+                List<Hexagon> targets = new(HEX_COUNT_SIDES);
 
                 foreach (var hex in currentHex.Neighbors)
-                    if (hex.CanUnitEnter)
-                        empty.Add(hex);
+                    if (hex.TrySetSelectableActor(_actor._owner, _targetActor))
+                        targets.Add(hex);
 
-                if (empty.Count == 0)
+                if (targets.Count == 0)
                     yield break;
 
+                yield return _waitActor = new();
 
-                _waitActor = new();
-
-                foreach (var hex in empty)
-                    hex.TrySetSelectable(false);
-
-                yield return _waitActor;
-
-                foreach (var hex in empty)
+                foreach (var hex in targets)
                     hex.SetUnselectable();
 
-                if (_targetHex == null)
+                if (_target == null || _target == _actor)
                     yield break;
 
-                _parentTransform.localRotation = ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
+                Key rKey = _target._currentHex.Key - currentHex.Key;
+
+                if(!ACTOR_ROTATIONS.TryGetValue(rKey, out Quaternion rotation))
+                    yield break;
+
+                _parentTransform.localRotation = rotation;
 
                 callback(true);
             }

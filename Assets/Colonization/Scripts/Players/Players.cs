@@ -7,32 +7,38 @@ namespace Vurbiri.Colonization
     using Data;
     using System;
     using UnityEngine;
+    using Vurbiri.EntryPoint;
     using static PlayerId;
 
     public class Players : IDisposable
     {
+
+        private readonly IdArray<PlayerId, Player> _players = new();
         private Player _current;
-        private readonly IdHashSet<PlayerId, Player> _players = new();
-        private readonly PlayersData _playersData;
 
         public Player Current => _current;
         public Player this[Id<PlayerId> id] => _players[id];
 
-        public Players(Settings settings, bool isLoading)
+        public Players(SceneContainers containers, Settings settings, bool isLoading)
         {
-            _playersData = new(isLoading, out bool[] loads);
+            PlayersData playersData = new(isLoading, out bool[] loads, out bool isLoadDiplomacy);
+            containers.Data.AddInstance(playersData);
 
-            _players.Add(new Player(0, loads[0], _playersData[0], settings));
+            Diplomacy diplomacy = isLoadDiplomacy ? new Diplomacy(playersData.DiplomacyData) : new Diplomacy();
+            playersData.DiplomacyBind(diplomacy, !isLoadDiplomacy);
+            containers.Objects.AddInstance(diplomacy);
+
+            _players[0] = new Player(0, loads[0], playersData[0], settings);
 
             for (int i = PlayerId.AI_01; i < PlayersCount; i++)
-                _players.Add(new PlayerAI(i, loads[i], _playersData[i], settings));
+                _players[i] = new PlayerAI(i, loads[i], playersData[i], settings);
 
             _current = _players[0];
 
-            _playersData.Save(true);
-        }
+            
 
-        public void Save(bool saveToFile = true, Action<bool> callback = null) => _playersData.Save(saveToFile, callback);
+            playersData.Save(true);
+        }
 
         public void Next() => _current = _players.Next(_current.Id.Value);
 
@@ -44,7 +50,6 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            _playersData.Dispose();
             
             for(int i = 0; i < PlayersCount; i++)
                 _players[i].Dispose();

@@ -12,7 +12,7 @@ namespace Vurbiri.Reactive
         protected IUnsubscriber _unsubscriberA;
         protected IUnsubscriber _unsubscriberB;
 
-        protected Action<TA, TB> ActionValuesChange;
+        protected Action<TA, TB> actionValuesChange;
 
         private readonly IEqualityComparer<TA> _comparerA;
         private readonly IEqualityComparer<TB> _comparerB;
@@ -31,18 +31,16 @@ namespace Vurbiri.Reactive
 
         public IUnsubscriber Subscribe(Action<TA, TB> action, bool calling = true)
         {
-            ActionValuesChange -= action ?? throw new ArgumentNullException("action");
-
-            ActionValuesChange += action;
+            actionValuesChange += action;
             if (calling)
                 action(_valueA, _valueB);
 
             return new Unsubscriber<Action<TA, TB>>(this, action);
         }
 
-        public void Signal() => ActionValuesChange?.Invoke(_valueA, _valueB);
+        public void Signal() => actionValuesChange?.Invoke(_valueA, _valueB);
 
-        public void Unsubscribe(Action<TA, TB> action) => ActionValuesChange -= action ?? throw new ArgumentNullException("action");
+        public void Unsubscribe(Action<TA, TB> action) => actionValuesChange -= action;
 
         public void Dispose()
         {
@@ -55,7 +53,7 @@ namespace Vurbiri.Reactive
             if (!_comparerA.Equals(_valueA, value))
             {
                 _valueA = value;
-                ActionValuesChange?.Invoke(_valueA, _valueB);
+                actionValuesChange?.Invoke(_valueA, _valueB);
             }
         }
 
@@ -64,7 +62,7 @@ namespace Vurbiri.Reactive
             if (!_comparerB.Equals(_valueB, value))
             {
                 _valueB = value;
-                ActionValuesChange?.Invoke(_valueA, _valueB);
+                actionValuesChange?.Invoke(_valueA, _valueB);
             }
         }
     }
