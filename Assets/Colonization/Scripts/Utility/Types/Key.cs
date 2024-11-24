@@ -45,8 +45,8 @@ public struct Key : IEquatable<Key>
 
     public readonly int[] ToArray() => new int[] { _x, _y };
 
-    public readonly bool Equals(Key other) => _x == other._x && _y == other._y;
-    public override readonly bool Equals(object obj) => obj is Key key && Equals(key);
+    public readonly bool Equals(Key other) => _x == other._x & _y == other._y;
+    public override readonly bool Equals(object obj) => obj is Key key && _x == key._x & _y == key._y;
 
     public override readonly int GetHashCode() => HashCode.Combine(_x, _y);
 
@@ -54,7 +54,7 @@ public struct Key : IEquatable<Key>
     public static Key operator -(Key a, Key b) => new(a._x - b._x, a._y - b._y);
     public static Key operator -(Key a) => new(-a._x, -a._y);
 
-    public static bool operator ==(Key a, Key b) => a._x == b._x && a._y == b._y;
-    public static bool operator !=(Key a, Key b) => a._x != b._x || a._y != b._y;
+    public static bool operator ==(Key a, Key b) => a._x == b._x & a._y == b._y;
+    public static bool operator !=(Key a, Key b) => a._x != b._x | a._y != b._y;
     public override readonly string ToString() => $"({_x}, {_y})";
 }

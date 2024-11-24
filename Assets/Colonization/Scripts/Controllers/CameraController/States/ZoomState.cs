@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.Controllers
                 while (Mathf.Abs(_heightZoom - position.y) > _stt.speedZoom);
 
                 _coroutine = null;
-                _fsm.ToDefault();
+                _fsm.ToDefaultState();
             }
         }
     }

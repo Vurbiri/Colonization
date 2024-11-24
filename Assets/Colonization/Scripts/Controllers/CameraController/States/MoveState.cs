@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization.Controllers
                 }
 
                 _coroutine = null;
-                _fsm.ToDefault();
+                _fsm.ToDefaultState();
             }
         }
     }

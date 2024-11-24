@@ -12,19 +12,27 @@ namespace Vurbiri.Colonization.Actors
     {
         public abstract class ASkillTargetState : ASkillState
         {
-            protected Relation _targetActor;
+            protected Actor _target;
+            protected bool _isTargetReact = true;
             protected WaitActivate _waitActor;
+            protected readonly Relation _relationTarget;
+            protected readonly Transform _parentTransform;
 
             protected ASkillTargetState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<AEffect> effects, Settings settings, int id) : 
                 base(parent, effects, settings, id)
             {
-                _targetActor = targetActor.ToRelation();
-                _targetActor = Relation.Friend;
+                _parentTransform = _actor._thisTransform;
+
+                _relationTarget = targetActor.ToRelation();
+                _relationTarget = Relation.Friend;
             }
 
             public override void Exit()
             {
                 base.Exit();
+
+                if (_target != null)
+                    _target._stateMachine.ToPrevState();
 
                 _waitActor = null;
                 _target = null;
@@ -32,17 +40,13 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Unselect(ISelectable newSelectable)
             {
-                _eventBus.TriggerActorUnselect(_actor);
-
                 if (_waitActor == null)
                     return;
 
-                if (newSelectable is Actor actor)
-                    _target = actor;
-                else if(newSelectable is Hexagon hex)
-                    _target = hex.Owner;
+                if (newSelectable is Hexagon hex)
+                    _target = CheckTarget(hex.Owner);
                 else
-                    _target = null;
+                    _target = CheckTarget(newSelectable as Actor);
 
                 _waitActor.Activate();
             }
@@ -53,7 +57,7 @@ namespace Vurbiri.Colonization.Actors
                 List<Hexagon> targets = new(HEX_COUNT_SIDES);
 
                 foreach (var hex in currentHex.Neighbors)
-                    if (hex.TrySetSelectableActor(_actor._owner, _targetActor))
+                    if (hex.TrySetSelectableActor(_actor._owner, _relationTarget))
                         targets.Add(hex);
 
                 if (targets.Count == 0)
@@ -64,17 +68,40 @@ namespace Vurbiri.Colonization.Actors
                 foreach (var hex in targets)
                     hex.SetUnselectable();
 
-                if (_target == null || _target == _actor)
+                if (_target == null)
                     yield break;
 
-                Key rKey = _target._currentHex.Key - currentHex.Key;
-
-                if(!ACTOR_ROTATIONS.TryGetValue(rKey, out Quaternion rotation))
-                    yield break;
-
-                _parentTransform.localRotation = rotation;
-
+                _parentTransform.localRotation = ACTOR_ROTATIONS[_target._currentHex.Key - currentHex.Key];
                 callback(true);
+            }
+
+            protected override IEnumerator ApplySkill_Coroutine()
+            {
+                _skin.Skill(_idAnimation);
+                yield return _waitTargetSkillAnimation;
+
+                for (int i = 0; i < _countEffects; i++)
+                    _effects[i].Apply(_actor, _target);
+
+                Pay();
+                _target.ReactionToAttack(_isTargetReact);
+
+                yield return _waitEndSkillAnimation;
+                
+            }
+
+            private Actor CheckTarget(Actor target)
+            {
+                if (target == null)
+                    return null;
+
+                Key key = target._currentHex.Key - _actor._currentHex.Key;
+
+                if (target == _actor || target.GetRelation(_actor._owner) != _relationTarget || !ACTOR_ROTATIONS.ContainsKey(key))
+                    return null;
+
+                target.BecomeTarget(_actor._owner, _relationTarget);
+                return target;
             }
         }
     }

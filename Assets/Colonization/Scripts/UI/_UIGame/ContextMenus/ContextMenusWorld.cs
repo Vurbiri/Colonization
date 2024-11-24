@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\ContextMenusWorld.cs
 using System.Collections;
 using UnityEngine;
+using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -43,10 +44,9 @@ namespace Vurbiri.Colonization.UI
             _warriorsMenu.EventEnabled += EnableLook;
 
             settings.eventBus.EventCrossroadSelect += OnSelectCrossroad;
-            settings.eventBus.EventCrossroadUnselect += OnUnselectCrossroad;
-
             settings.eventBus.EventActorSelect += OnSelectWarrior;
-            settings.eventBus.EventActorUnselect += OnUnselectWarrior;
+
+            settings.eventBus.EventUnselect += OnUnselect;
         }
 
         private void OnSelectCrossroad(Crossroad crossroad)
@@ -57,18 +57,10 @@ namespace Vurbiri.Colonization.UI
             _warriorsMenu.Close();
 
             ToPosition(crossroad.Position);
-
             _crossroadMenu.Open(crossroad);
         }
 
-        private void OnUnselectCrossroad(Crossroad crossroad)
-        {
-            _lookAtCamera.enabled = false;
-
-            CrossroadMenusClose();
-        }
-
-        private void OnSelectWarrior(Actors.Actor actor)
+        private void OnSelectWarrior(Actor actor)
         {
             //if (_players.Current.Id != PlayerId.Player)
             //    return;
@@ -79,18 +71,14 @@ namespace Vurbiri.Colonization.UI
             _warriorsMenu.Open(actor);
         }
 
-        private void OnUnselectWarrior(Actors.Actor warrior)
+        private void OnUnselect()
         {
-            _lookAtCamera.enabled = false;
-
+            CrossroadMenusClose();
             _warriorsMenu.Close();
         }
 
-
         private void ToPosition(Vector3 position)
         {
-            _lookAtCamera.enabled = true;
-
             Vector3 screenPosition = _camera.WorldToScreenPoint(position);
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasTransform, screenPosition, _camera, out Vector2 localPoint))
                 _thisRectTransform.anchoredPosition = localPoint;

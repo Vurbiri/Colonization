@@ -1,7 +1,4 @@
 //Assets\Colonization\Scripts\Characteristics\Effects\EffectsFactory.cs
-using System;
-using Vurbiri.Reactive.Collections;
-
 namespace Vurbiri.Colonization.Characteristics
 {
     public class EffectsFactory
@@ -13,18 +10,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public const int BLOCK_DURATION = DURATION, BLOCK_SKILL_ID = 7, BLOCK_EFFECT_ID = 0;
 
-        public static ReactiveEffect CreateBlockEffect(EffectCode code, int value, Action onRemove)
-        {
-            ReactiveEffect block = new(code, ABILITY, MOD, value, BLOCK_DURATION);
-            block.Subscribe(OnRemove, -1);
-            return block;
-
-            void OnRemove(ReactiveEffect effect, TypeEvent type)
-            {
-                if (type == TypeEvent.Remove)
-                    onRemove();
-            }
-        }
+        public static ReactiveEffect CreateBlockEffect(EffectCode code, int value) => new(code, ABILITY, MOD, value, BLOCK_DURATION);
 
         public static ReactiveEffect CreateWallDefenceEffect(int value)
         {

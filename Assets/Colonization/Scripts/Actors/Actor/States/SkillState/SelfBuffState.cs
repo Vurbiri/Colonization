@@ -15,9 +15,8 @@ namespace Vurbiri.Colonization.Actors
 
             protected override IEnumerator Actions_Coroutine()
             {
-                _target = _actor;
-                yield return _actor.StartCoroutine(ApplySkill_Coroutine());
-                Reset();
+                yield return ApplySkill_Coroutine();
+                ToExit();
             }
         }
 	}

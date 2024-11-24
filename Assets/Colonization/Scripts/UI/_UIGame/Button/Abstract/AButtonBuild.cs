@@ -44,7 +44,6 @@ namespace Vurbiri.Colonization.UI
                 sb.AppendFormat(TAG_SPRITE, i);
                 sb.Append(costV > cash[i] ? _hexColorMinus : _hexColorPlus);
                 sb.Append(costV.ToString());
-                sb.Append(SPACE);
             }
             sb.Append(TAG_SPACE_OFF);
 

@@ -44,7 +44,6 @@ namespace Vurbiri.Colonization
                     edifices = new(playerId, loadData.edifices, crossroads);
                     roads.Restoration(loadData.roads, crossroads);
 
-
                     int count = loadData.warriors.Length;
                     for (int i = 0; i < count; i++)
                         warriors.Add(_spawner.Create(loadData.warriors[i], land));
@@ -68,6 +67,8 @@ namespace Vurbiri.Colonization
             {
                 resources.Dispose();
                 edifices.Dispose();
+                for(int i = warriors.Count -1; i >= 0; i--)
+                    warriors[i].Dispose();
             }
         }
     }

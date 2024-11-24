@@ -14,7 +14,6 @@ namespace Vurbiri.Colonization
 
         #region Fields
         private Transform _thisTransform;
-        private GameplayEventBus _eventBus;
         private Pool<HexagonMark> _poolMarks;
         private HexagonMark _mark;
         private HexData _data;
@@ -68,7 +67,6 @@ namespace Vurbiri.Colonization
             _thisTransform = transform;
             _data = data;
             _poolMarks = poolMarks;
-            _eventBus = eventBus;
             var surface = data.surface;
 
             _profit = surface.Profit;
@@ -191,22 +189,16 @@ namespace Vurbiri.Colonization
 
         #endregion
 
-        #region ISelectable
-        public void Select()
-        {
-            //_eventBus.TriggerHexagonSelect(this);
-        }
-        public void Unselect(ISelectable newSelectable)
-        {
-            //_eventBus.TriggerHexagonUnselect(this);
-        }
-        #endregion
-
         private void OnShow(bool value)
         {
             _isShow = value;
             _hexagonCaption.SetActive(value);
         }
+
+        #region ISelectable
+        public void Select() { }
+        public void Unselect(ISelectable newSelectable) { }
+        #endregion
 
 #if UNITY_EDITOR
         private void OnValidate()

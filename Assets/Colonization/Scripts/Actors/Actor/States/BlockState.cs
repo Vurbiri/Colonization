@@ -6,12 +6,8 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
 	{
-		public class BlockState : AState
+		public class BlockState : AActionState
         {
-            public const int DURATION = 1;
-            private const int ABILITY = ActorAbilityId.Defense;
-            private const int MOD = TypeModifierId.Addition;
-
             private readonly EffectCode _code;
             private readonly int _value;
 
@@ -24,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
             public override void Enter()
             {
                 _skin.Block();
-                _actor.AddEffect(CreateBlockEffect(_code, _value, _fsm.ToDefault));
+                _actor.AddEffect(CreateBlockEffect(_code, _value));
                 Pay();
             }
 

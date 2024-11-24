@@ -299,7 +299,7 @@ namespace Vurbiri.Colonization
         }
         public void OnUnselect(ISelectable newSelectable)
         {
-            _eventBus.TriggerCrossroadUnselect(this);
+            _eventBus.TriggerUnselect();
 
             if (_waitHexagon == null)
                 return;

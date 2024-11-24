@@ -9,6 +9,10 @@ namespace Vurbiri.Colonization.FSMSelectable
         {
         }
 
+        public StateMachineSelectable(ASelectableState state) : base(state)
+        {
+        }
+
         public void Select() => _currentState.Select();
 
         public void Unselect(ISelectable newSelectable) => _currentState.Unselect(newSelectable);

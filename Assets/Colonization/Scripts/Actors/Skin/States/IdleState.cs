@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public partial class ActorSkin : MonoBehaviour
+    public partial class ActorSkin
     {
         private class IdleState : ASkinState
         {

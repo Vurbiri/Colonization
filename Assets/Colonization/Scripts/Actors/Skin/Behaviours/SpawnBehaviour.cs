@@ -1,13 +1,8 @@
 //Assets\Colonization\Scripts\Actors\Skin\Behaviours\SpawnBehaviour.cs
-using System;
-using UnityEngine;
-
 namespace Vurbiri.Colonization.Actors
 {
-    public class SpawnBehaviour : StateMachineBehaviour
+    public class SpawnBehaviour : AExitBehaviour
     {
-        public event Action EventExitSpawn;
 
-        public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) => EventExitSpawn?.Invoke();
     }
 }

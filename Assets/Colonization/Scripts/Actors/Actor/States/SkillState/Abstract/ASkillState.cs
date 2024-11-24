@@ -8,24 +8,21 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
 	{
-		public abstract partial class ASkillState : AState
+		public abstract partial class ASkillState : AActionState
         {
             protected readonly int _idAnimation;
             protected readonly IReadOnlyList<AEffect> _effects;
             protected readonly int _countEffects;
-            protected readonly Transform _parentTransform;
 
-            protected bool _isTargetReact = false;
-            protected Actor _target;
             protected Coroutine _coroutineAction;
             protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
-            public ASkillState(Actor parent, IReadOnlyList<AEffect> effects, Settings settings, int id) : base(parent, settings.cost, id)
+            public ASkillState(Actor parent, IReadOnlyList<AEffect> effects, Settings settings, int id) : base(parent, settings.cost, TypeIdKey.Get<ASkillState>(id))
             {
                 _idAnimation = settings.idAnimation;
                 _effects = effects;
                 _countEffects = _effects.Count;
-                _parentTransform = _actor._thisTransform;
+                
                 _waitTargetSkillAnimation = new(settings.damageTime);
                 _waitEndSkillAnimation = new(settings.remainingTime);
             }
@@ -43,35 +40,28 @@ namespace Vurbiri.Colonization.Actors
                     _coroutineAction = null;
                 }
 
-                _target = null;
+                
             }
 
-            public override void Unselect(ISelectable newSelectable)
-            {
-                _eventBus.TriggerActorUnselect(_actor);
-            }
-
-            protected void Reset()
+            protected void ToExit()
             {
                 _coroutineAction = null;
-                _fsm.ToDefault();
+                _fsm.ToDefaultState();
             }
 
             protected abstract IEnumerator Actions_Coroutine();
 
-            protected IEnumerator ApplySkill_Coroutine()
+            protected virtual IEnumerator ApplySkill_Coroutine()
             {
                 _skin.Skill(_idAnimation);
                 yield return _waitTargetSkillAnimation;
 
-                if (_isTargetReact)
-                    _target._skin.React();
                 for (int i = 0; i < _countEffects; i++)
-                    _effects[i].Apply(_actor, _target);
-
-                yield return _waitEndSkillAnimation;
+                    _effects[i].Apply(_actor, _actor);
 
                 Pay();
+
+                yield return _waitEndSkillAnimation;
             }
 
             #region Nested: Settings
@@ -81,7 +71,7 @@ namespace Vurbiri.Colonization.Actors
             {
                 public float damageTime;
                 public float remainingTime;
-                public int idAnimation = -1;
+                public int idAnimation;
                 public int cost;
             }
             #endregion

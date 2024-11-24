@@ -12,14 +12,14 @@ namespace Vurbiri.EntryPoint
 
         private static ASceneEntryPoint _instance;
 
-        public static event Action<ASceneEntryPoint> EventLoading;
+        public static event Action<ASceneEntryPoint> EventLoaded;
 
         protected virtual void Awake()
         {
             if (_instance == null)
             {
                 _instance = this;
-                EventLoading?.Invoke(this);
+                EventLoaded?.Invoke(this);
                 return;
             }
 

@@ -7,127 +7,102 @@ namespace Vurbiri
     public class DIContainer : IReadOnlyDIContainer, IDisposable
     {
         private readonly IReadOnlyDIContainer _parent;
-        private readonly Dictionary<TypeIdKey, IDIRegistration> _registration = new();
-        private readonly HashSet<TypeIdKey> _hashRequests = new();
+        private readonly Dictionary<TypeIdKey, IRegistration> _registration = new();
 
-        public DIContainer(IReadOnlyDIContainer parent) => _parent = parent;
-
-        public IDIRegistration<T> AddFactory<T>(Func<DIContainer, T> factory, int id = 0) where T : class
+        public DIContainer(IReadOnlyDIContainer parent)
         {
-            TypeIdKey key = new(typeof(T), id);
-            DIRegistration<T> registration = new(factory);
-
-            if (!_registration.TryAdd(key, registration))
-                throw new Exception($"{key.Type.FullName} (id = {key.Id}) уже добавлен.");
-
-            return registration;
+            _parent = parent;
         }
 
-        public T AddInstance<T>(T instance, int id = 0) where T : class
+        public void AddFactory<T>(Func<T> factory, int id = 0)
         {
             TypeIdKey key = new(typeof(T), id);
 
-            if (!_registration.TryAdd(key, new DIRegistration<T>(instance)))
-                throw new Exception($"Экземпляр {key.Type.FullName} (id = {key.Id}) уже добавлен.");
+            if (!_registration.TryAdd(key, new RegFactory<T>(factory)))
+                throw new($"{key.Type.FullName} (id = {key.Id}) уже добавлен");
+        }
+
+        public T AddInstance<T>(T instance, int id = 0)
+        {
+            TypeIdKey key = new(typeof(T), id);
+
+            if (!_registration.TryAdd(key, new RegInstance<T>(instance)))
+                throw new($"Экземпляр {key.Type.FullName} (id = {key.Id}) уже добавлен");
 
             return instance;
         }
 
-        public T ReplaceInstance<T>(T instance, int id = 0) where T : class
+        public T ReplaceInstance<T>(T instance, int id = 0)
         {
             TypeIdKey key = new(typeof(T), id);
-            _registration[key] = new DIRegistration<T>(instance);
+
+            if (_registration.TryGetValue(key, out var registration))
+                registration.Dispose();
+
+            _registration[key] = new RegInstance<T>(instance);
             return instance;
         }
 
-        public T Get<T>(int id = 0) where T : class => Get<T>(new TypeIdKey(typeof(T), id));
+        public T Get<T>(int id = 0) => Get<T>(new TypeIdKey(typeof(T), id));
 
-        public T Get<T>(TypeIdKey key) where T : class
+        public T Get<T>(TypeIdKey key)
         {
-            if (!_hashRequests.Add(key))
-                throw new Exception($"Цикличная зависимость.");
+            if (_registration.TryGetValue(key, out var registration))
+                return ((IRegistration<T>)registration).Get();
 
-            try
-            {
-                if (_registration.TryGetValue(key, out var registration))
-                    return ((DIRegistration<T>)registration).Get(this);
+            if (_parent != null)
+                return _parent.Get<T>(key);
 
-                if (_parent != null)
-                    return _parent.Get<T>(key);
-            }
-            finally
-            {
-                _hashRequests.Remove(key);
-            }
-
-            throw new Exception($"{key.Type.FullName} (id = {key.Id}) не найден.");
+            throw new($"{key.Type.FullName} (id = {key.Id}) не найден");
         }
 
         public void Dispose()
         {
-           foreach(var reg in _registration.Values)
+            foreach (var reg in _registration.Values)
                 reg.Dispose();
-
-            _registration.Clear();
         }
 
-        #region Nested: IDIRegistration, DIRegistration<T>
+        #region Nested: IRegistration<T>, RegInstance<T>, RegFactory<T>
         //***********************************
-        public interface IDIRegistration : IDisposable { }
+        protected interface IRegistration : IDisposable { }
         //***********************************
-        public interface IDIRegistration<T> : IDIRegistration where T : class 
+        protected interface IRegistration<T> : IRegistration
         {
-            public IDIRegistration<T> AsSingleton();
-            public T Instantiate(DIContainer container);
+            public T Get();
         }
         //***********************************
-        protected class DIRegistration<T> : IDIRegistration<T> where T : class
+        protected class RegInstance<T> : IRegistration<T>
         {
-            private T _instance;
-            private Func<DIContainer, T> _factory;
-            
-            public Func<DIContainer, T> Get;
-
-            public DIRegistration(Func<DIContainer, T> factory)
+            private readonly T _instance;
+           
+            public RegInstance(T instance)
             {
-                _factory = factory;
-                Get = factory;
-            }
-
-            public DIRegistration(T instance)
-            {
-                _factory = null;
                 _instance = instance;
-                Get = GetInstance;
             }
 
-            public IDIRegistration<T> AsSingleton()
-            {
-                if(_instance == null)
-                    Get = GetSingleton;
-                return this;
-            }
-
-            public T Instantiate(DIContainer container) => Get(container);
+            public T Get() => _instance;
 
             public void Dispose()
             {
                 if(_instance is IDisposable disposable)
                     disposable.Dispose();
             }
-
-            private T GetSingleton(DIContainer container)
-            {
-                _instance ??= _factory?.Invoke(container);
-                _factory = null;
-                Get = GetInstance;
-                return _instance;
-            }
-
-            private T GetInstance(DIContainer container) => _instance;
         }
         //***********************************
-       
+        protected class RegFactory<T> : IRegistration<T>
+        {
+            private readonly Func<T> _factory;
+
+            public RegFactory(Func<T> factory)
+            {
+                _factory = factory;
+            }
+
+            public T Get() => _factory();
+
+            public void Dispose() { }
+        }           
+        //***********************************
         #endregion
     }
 }

@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
 
             StartCoroutine(Enter_Coroutine());
 
-            return new GameplayExitPoint(_nextScene).ReactiveExitParam;
+            return new GameplayExitPoint(_nextScene).ExitParam;
 
             #region Local: FillingContainers()
             //=================================

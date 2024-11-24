@@ -15,7 +15,7 @@ namespace Vurbiri
             _container = new(parent);
         }
 
-        public static T Get<T>(int id = 0) where T : class => _container.Get<T>(id);
+        public static T Get<T>(int id = 0) => _container.Get<T>(id);
 
         public void Dispose()
         {

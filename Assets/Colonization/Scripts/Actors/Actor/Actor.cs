@@ -1,5 +1,5 @@
 //Assets\Colonization\Scripts\Actors\Actor\Actor.cs
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.FSMSelectable;
@@ -8,7 +8,7 @@ using Vurbiri.Reactive.Collections;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveElementMono<Actor>, ISelectable, IPositionable
+    public abstract partial class Actor : AReactiveElementMono<Actor>, ISelectable, IPositionable, IDisposable
     {
         #region Fields
         protected int _typeId;
@@ -31,9 +31,7 @@ namespace Vurbiri.Colonization.Actors
         protected EffectsSet _effects;
         protected ReactiveEffect _wallDefenceEffect;
 
-        protected readonly StateMachineSelectable _stateMachine = new();
-        protected BlockState _blockState;
-        protected List<ASkillState> _skillStates;
+        protected readonly StateMachineSelectable _stateMachine = new(new TargetState());
         #endregion
 
         #region Propirties
@@ -55,12 +53,12 @@ namespace Vurbiri.Colonization.Actors
 
         public void Block()
         {
-            _stateMachine.SetState(_blockState);
+            _stateMachine.SetState<BlockState>();
         }
 
         public void UseSkill(int id)
         {
-            _stateMachine.SetState(_skillStates[id]);
+            _stateMachine.SetState<ASkillState>(id);
         }
         #endregion
 
@@ -80,13 +78,15 @@ namespace Vurbiri.Colonization.Actors
             _currentAP.Value += _abilities.GetValue(ActorAbilityId.APPerTurn);
             _move.IsValue = true;
             Debug.Log("Выключить Collider");
-            if(_stateMachine.CurrentState != _blockState)
-                _stateMachine.ToDefault();
+            //if(_stateMachine.CurrentState != _blockState)
+            //    _stateMachine.ToDefault();
         }
         public void StartTurn()
         {
             Debug.Log("Включить Collider если игрок и его ход");
             _effects.Next();
+            _stateMachine.ToDefaultState();
+
             _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetDefense());
             if (_wallDefenceEffect != null)
                 _effects.Add(_wallDefenceEffect);
@@ -105,7 +105,7 @@ namespace Vurbiri.Colonization.Actors
         {
             int i = 0;
             int count = _effects.Count;
-            bool isBlock = _stateMachine.CurrentState == _blockState;
+            bool isBlock = _stateMachine.IsCurrentState<BlockState>();
             int[][] array = new int[count + 2][];
 
             array[i++] = _currentHex.Key.ToArray();
@@ -117,9 +117,33 @@ namespace Vurbiri.Colonization.Actors
             return array;
         }
 
-        private void RedirectEvents(ReactiveEffect item, TypeEvent type)
+        public void Dispose()
         {
-            actionThisChange?.Invoke(this, TypeEvent.Change);
+            _skin.Dispose();
+            _stateMachine.Dispose();
+        }
+
+        private void BecomeTarget(Id<PlayerId> initiator, Relation relation)
+        {
+            _stateMachine.SetState<TargetState>();
+
+            if (initiator == _owner)
+                return;
+        }
+
+        private bool ReactionToAttack(bool _isTargetReact)
+        {
+            if (_currentHP.Value <= 0)
+            {
+                _skin.Death();
+                return true;
+            }
+
+            if (_isTargetReact)
+                _skin.React();
+
+            return false;
+
         }
 
         private void RemoveWallDefenceEffect()
@@ -128,7 +152,13 @@ namespace Vurbiri.Colonization.Actors
                 _effects.Remove(_wallDefenceEffect);
         }
 
+        private void RedirectEvents(ReactiveEffect item, TypeEvent type)
+        {
+            actionThisChange?.Invoke(this, TypeEvent.Change);
+        }
+
         private int CurrentHPCamp(int value) => Mathf.Clamp(value, 0, _abilities.GetValue(ActorAbilityId.MaxHP));
         private int CurrentAPCamp(int value) => Mathf.Clamp(value, 0, _abilities.GetValue(ActorAbilityId.MaxAP));
+
     }
 }

@@ -33,16 +33,24 @@ namespace Vurbiri.Colonization
 
         public Relation GetRelation(Id<PlayerId> idA, Id<PlayerId> idB)
 		{
-            if (idA == PlayerId.None || idB == PlayerId.None)
+            if (idA == PlayerId.None | idB == PlayerId.None)
                 return Relation.None;
 
             if (idA == idB)
 				return Relation.Friend;
 			
-			if(idA == PlayerId.Demons || idB == PlayerId.Demons)
+			if(idA == PlayerId.Demons | idB == PlayerId.Demons)
 				return Relation.Enemy;
 
 			return _values[idA + idB - 1] > 0 ? Relation.Friend : Relation.Enemy;
+        }
+
+        public void ActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation relation)
+        {
+            if (idA == idB | idA == PlayerId.None | idB == PlayerId.None | idA == PlayerId.Demons | idB == PlayerId.Demons)
+                return;
+
+
         }
 
         #region IReactive

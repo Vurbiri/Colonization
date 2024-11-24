@@ -16,7 +16,6 @@ namespace Vurbiri.Colonization
 		private IEnumerator Run_Coroutine(ProjectInitializationData data)
 		{
 			LoadScene loadScene = data.startScene;
-
 			loadScene.Start();
 
 			yield return Init_Coroutine(data);
@@ -33,16 +32,15 @@ namespace Vurbiri.Colonization
 			if (!_servicesContainer.AddInstance(new Language()).IsValid)
 				Message.Error("Error loading Localization!");
 
-			YandexSDK ysdk = new(_servicesContainer, data.leaderboardName);
+			var ysdk = _servicesContainer.AddInstance(new YandexSDK(_servicesContainer, data.leaderboardName));
 			yield return ysdk.Init_Coroutine();
-			_servicesContainer.AddInstance(ysdk);
-
+			
 			//Banners.InstanceF.Initialize();
 
 			yield return CreateStorages_Coroutine(data.defaultProfile);
 			yield return YandexIsLogOn_Coroutine(ysdk, data.logOnPanel, data.defaultProfile);
 
-			_dataContainer.AddInstance<GameplaySettingsData>(new(_servicesContainer));
+			_dataContainer.AddInstance(new GameplaySettingsData(_servicesContainer));
 
 			Message.Log("End Init Project");
 		}
@@ -50,7 +48,6 @@ namespace Vurbiri.Colonization
 		private IEnumerator CreateStorages_Coroutine(SettingsData.Profile defaultProfile)
 		{
             yield return StartCoroutine(Storage.Create_Coroutine(_servicesContainer, SAVE_KEYS.PROJECT));
-
 			_dataContainer.ReplaceInstance(new SettingsData(_servicesContainer, defaultProfile));
 		}
 

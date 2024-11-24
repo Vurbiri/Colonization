@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Actors
     {
         public abstract class AIdleState : AState
         {
-            public AIdleState(Actor parent) : base(parent, 0) { }
+            public AIdleState(Actor parent) : base(parent) { }
 
             public override void Enter()
             {
@@ -13,17 +13,17 @@ namespace Vurbiri.Colonization.Actors
             }
         }
 
-        public class AIIdleState : AIdleState
+        private class AIIdleState : AIdleState
         {
             public AIIdleState(Actor parent) : base(parent) {}
         }
 
-        public class PlayerIdleState : AIdleState
+        private class PlayerIdleState : AIdleState
         {
             public PlayerIdleState(Actor parent) : base(parent) { }
 
             public override void Select() => _eventBus.TriggerActorSelect(_actor);
-            public override void Unselect(ISelectable newSelectable) => _eventBus.TriggerActorUnselect(_actor);
+            public override void Unselect(ISelectable newSelectable) => _eventBus.TriggerUnselect();
         }
     }
 }

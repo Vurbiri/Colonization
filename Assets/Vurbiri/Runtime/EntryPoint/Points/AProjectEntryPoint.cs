@@ -16,7 +16,7 @@ namespace Vurbiri.EntryPoint
 
         protected LoadingScreen _loadingScreen;
 
-        protected AEnterParam _currentEnterParam;
+        private AEnterParam _currentEnterParam;
 
         protected override void Awake()
         {
@@ -24,7 +24,7 @@ namespace Vurbiri.EntryPoint
 
             DontDestroyOnLoad(gameObject);
 
-            ASceneEntryPoint.EventLoading += EnterScene;
+            ASceneEntryPoint.EventLoaded += EnterScene;
 
             _servicesContainer.AddInstance(Coroutines.Create("Project Coroutines", true));
             _loadingScreen = _objectsContainer.AddInstance(LoadingScreen.Create());

@@ -1,10 +1,11 @@
 //Assets\Colonization\Scripts\Actors\Skin\ActorSkin.cs
 using System;
 using UnityEngine;
+using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public partial class ActorSkin : MonoBehaviour
+    public partial class ActorSkin : MonoBehaviour, IDisposable
     {
         [SerializeField] private RFloat _timeSwitchIdle = new(10f, 30f);
 
@@ -17,11 +18,10 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         private Animator _animator;
-        private readonly SkinStateMachine _stateMachine = new();
+        private readonly StateMachine _stateMachine = new();
         private int _idBoolState = 0, _idTriggerState = 0;
 
         private BoolSwitchState _moveState, _runState, _blockState;
-        private TriggerSwitchState _reactState;
         private readonly BoolSwitchState[] _skillStates = new BoolSwitchState[COUNT_SKILLS];
 
         public event Action EventStart;
@@ -32,17 +32,16 @@ namespace Vurbiri.Colonization.Actors
 
             _stateMachine.AddState(new IdleState(this));
             _stateMachine.SetDefaultState<IdleState>();
+            _stateMachine.AddState(new ReactState(this));
 
             _moveState  = CreateBoolState(B_MOVE);
             _runState   = CreateBoolState(B_RUN);
             _blockState = CreateBoolState(B_BLOCK);
 
-            _reactState = CreateTriggerState(T_REACT);
-
             for (int i = 0; i < COUNT_SKILLS; i++)
                 _skillStates[i] = CreateBoolState(T_SKILLS[i]);
 
-            _animator.GetBehaviour<SpawnBehaviour>().EventExitSpawn += EventStart;
+            _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }
 
         public void Idle() => _stateMachine.SetState<IdleState>();
@@ -55,12 +54,24 @@ namespace Vurbiri.Colonization.Actors
 
         public void Skill(int index) => _stateMachine.SetState(_skillStates[index]);
 
-        public void React() => _stateMachine.SetState(_reactState);
+        public void React() => _stateMachine.SetState<ReactState>();
+        
+        public void Death() { }
 
-        public void ToDefault() => _stateMachine.ToDefault();
+        public void ToDefault() => _stateMachine.ToDefaultState();
 
 
         private BoolSwitchState CreateBoolState(string nameParam) => new(nameParam, this, _idBoolState++);
         private TriggerSwitchState CreateTriggerState(string nameParam) => new(nameParam, this, _idTriggerState++);
+
+        public void Dispose()
+        {
+            _stateMachine.Dispose();
+            for (int i = 0; i < COUNT_SKILLS; i++)
+                _skillStates[i].Dispose();
+            _moveState.Dispose();
+            _runState.Dispose();
+            _blockState.Dispose();
+        }
     }
 }

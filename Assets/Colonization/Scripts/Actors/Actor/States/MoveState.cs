@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
 
     public abstract partial class Actor
     {
-        public class MoveState : AState
+        public class MoveState : AActionState
         {
             private readonly float _speed = 0.5f;
             private readonly Transform _parentTransform;
@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.Actors
             private Hexagon _targetHex;
             private Coroutine _coroutineAction;
 
-            public MoveState(float speed, Actor parent) : base(parent, 0)
+            public MoveState(float speed, Actor parent) : base(parent)
             {
                 _speed = speed;
                 _parentTransform = _actor._thisTransform;
@@ -36,14 +36,13 @@ namespace Vurbiri.Colonization.Actors
                     _coroutineAction = null;
                 }
 
+                _parentTransform.localPosition = _actor._currentHex.Position;
                 _waitHexagon = null;
                 _targetHex = null;
             }
 
             public override void Unselect(ISelectable newSelectable)
             {
-                _eventBus.TriggerActorUnselect(_actor);
-
                 if (_waitHexagon == null)
                     return;
 
@@ -51,44 +50,10 @@ namespace Vurbiri.Colonization.Actors
                 _waitHexagon.Activate();
             }
 
-            private void Reset()
+            private void ToExit()
             {
                 _coroutineAction = null;
-                _fsm.ToDefault();
-            }
-
-            private IEnumerator Move_Coroutine()
-            {
-                if (_targetHex == null)
-                {
-                    Reset();
-                    yield break;
-                }
-
-                Hexagon currentHex = _actor._currentHex;
-
-                _parentTransform.localRotation = ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
-                Vector3 start = currentHex.Position, end = _targetHex.Position;
-
-                currentHex.ExitActor();
-                _actor.RemoveWallDefenceEffect();
-                _actor._currentHex = currentHex = _targetHex;
-                currentHex.EnterActor(_actor);
-
-                _skin.Move();
-
-                float _progress = 0f;
-                while (_progress <= 1f)
-                {
-                    yield return null;
-                    _progress += _speed * Time.deltaTime;
-                    _parentTransform.localPosition = Vector3.Lerp(start, end, _progress);
-                }
-
-                _parentTransform.localPosition = end;
-
-                MoveFalse();
-                Reset();
+                _fsm.ToDefaultState();
             }
 
             private IEnumerator SelectHexagon_Coroutine()
@@ -102,8 +67,7 @@ namespace Vurbiri.Colonization.Actors
 
                 if (empty.Count == 0)
                 {
-                    Reset();
-                    yield break;
+                    ToExit(); yield break;
                 }
 
                 yield return _waitHexagon = new();
@@ -111,7 +75,38 @@ namespace Vurbiri.Colonization.Actors
                 foreach (var hex in empty)
                     hex.SetUnselectable();
 
+                if (_targetHex == null)
+                {
+                    ToExit(); yield break;
+                }
+
                 _coroutineAction = _actor.StartCoroutine(Move_Coroutine());
+            }
+
+            private IEnumerator Move_Coroutine()
+            {
+                Hexagon currentHex = _actor._currentHex;
+
+                _parentTransform.localRotation = ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
+                Vector3 start = currentHex.Position, end = _targetHex.Position;
+
+                currentHex.ExitActor();
+                _actor.RemoveWallDefenceEffect();
+                _actor._currentHex = currentHex = _targetHex;
+                currentHex.EnterActor(_actor);
+                _move.IsValue = false;
+
+                _skin.Move();
+
+                float _progress = 0f;
+                while (_progress <= 1f)
+                {
+                    yield return null;
+                    _progress += _speed * Time.deltaTime;
+                    _parentTransform.localPosition = Vector3.Lerp(start, end, _progress);
+                }
+
+                ToExit();
             }
         }
     }

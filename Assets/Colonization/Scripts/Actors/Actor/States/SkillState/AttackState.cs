@@ -22,23 +22,32 @@ namespace Vurbiri.Colonization.Actors
                 _isTargetReact = true;
             }
 
+            public override void Exit()
+            {
+                base.Exit();
+
+                _parentTransform.localPosition = _actor._currentHex.Position;
+            }
+
             protected override IEnumerator Actions_Coroutine()
             {
                 bool isTarget = false;
-                yield return _actor.StartCoroutine(SelectActor_Coroutine(b => isTarget = b));
-                if (!isTarget)
-                {
-                    Reset();
-                    yield break;
+                yield return SelectActor_Coroutine(b => isTarget = b);
+                if (!isTarget) 
+                { 
+                    ToExit(); yield break;
                 }
 
-                float path = 1f - (_selfRange + _actor._extentsZ) / HEX_DIAMETER_IN;
                 Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
-                yield return _actor.StartCoroutine(Move_Coroutine(currentHex.Position, targetHex.Position, path));
-                yield return _actor.StartCoroutine(ApplySkill_Coroutine());
-                yield return _actor.StartCoroutine(Move_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f));
+                float path = 1f - (_selfRange + _actor._extentsZ) / HEX_DIAMETER_IN;
+
+                _target._thisTransform.localRotation = ACTOR_ROTATIONS[currentHex.Key - targetHex.Key];
+
+                yield return Move_Coroutine(currentHex.Position, targetHex.Position, 1f - (_selfRange + _actor._extentsZ) / HEX_DIAMETER_IN);
+                yield return ApplySkill_Coroutine();
+                yield return Move_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f);
                 
-                Reset();
+                ToExit();
             }
 
             private IEnumerator Move_Coroutine(Vector3 start, Vector3 end, float path)

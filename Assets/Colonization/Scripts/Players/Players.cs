@@ -12,7 +12,6 @@ namespace Vurbiri.Colonization
 
     public class Players : IDisposable
     {
-
         private readonly IdArray<PlayerId, Player> _players = new();
         private Player _current;
 
@@ -50,7 +49,6 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            
             for(int i = 0; i < PlayersCount; i++)
                 _players[i].Dispose();
         }
