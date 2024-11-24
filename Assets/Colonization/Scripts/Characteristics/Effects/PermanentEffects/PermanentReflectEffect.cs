@@ -14,7 +14,6 @@ namespace Vurbiri.Colonization.Characteristics
         {
             int temp = _value;
             _value = -target.ApplyEffect(this);
-
             self.ApplyEffect(this);
             _value = temp;
         }

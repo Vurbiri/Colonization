@@ -67,7 +67,10 @@ namespace Vurbiri.Colonization.Actors
         public void AddEffect(ReactiveEffect effect) => _effects.Add(effect);
         public int ApplyEffect(AEffect effect)
         {
+            Debug.Log($"currentHP {_currentHP.Value}");
             int delta = _abilities.AddPerk(effect);
+            Debug.Log($"currentHP {_currentHP.Value}");
+
             actionThisChange?.Invoke(this, TypeEvent.Change);
             return delta;
         }
@@ -127,8 +130,7 @@ namespace Vurbiri.Colonization.Actors
         {
             _stateMachine.SetState<TargetState>();
 
-            if (initiator == _owner)
-                return;
+            _diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
 
         private bool ReactionToAttack(bool _isTargetReact)

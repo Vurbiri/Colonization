@@ -19,7 +19,6 @@ namespace Vurbiri.Colonization.Actors
             {
                 _speedRun = speedRun;
                 _selfRange = range + _actor._extentsZ;
-                _isTargetReact = true;
             }
 
             public override void Exit()

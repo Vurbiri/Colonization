@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private float _speedWalk = 0.45f;
         [SerializeField] private float _speedRun = 0.65f;
         [SerializeField] private int _blockCost = 2;
-        [SerializeField] private int _blockValue = 1;
+        [SerializeField] private int _blockValue = 100;
         [SerializeField] private SkillSettings[] _skillsSettings;
         
         [NonSerialized] private SkillUI[] _skillsUI;

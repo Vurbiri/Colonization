@@ -71,11 +71,7 @@ namespace Vurbiri.Colonization.Characteristics
             return ApplyMods();
         }
 
-        public int Apply(Id<TypeModifierId> id, AbilityValue value)
-        {
-            int result = _mods[id].Apply(_currentValue, value);
-            return funcClamp(result);
-        }
+        public int Apply(Id<TypeModifierId> id, AbilityValue value) => funcClamp(_mods[id].Apply(_currentValue, value));
 
         public int AddModifier(IAbilityModifierSettings settings)
         {

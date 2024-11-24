@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Characteristics\BlockUI.cs
 using System;
 using System.Text;
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Localization;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
@@ -26,7 +27,7 @@ namespace Vurbiri.Colonization.UI
         public BlockUI(int cost, int value)
         {
             _cost = cost;
-            _value = value;
+            _value = value / ActorAbilityId.RATE_ABILITY;
 
             var hintTextColor = SceneData.Get<HintTextColor>();
             _hexColorPlus = hintTextColor.HexColorPlus;

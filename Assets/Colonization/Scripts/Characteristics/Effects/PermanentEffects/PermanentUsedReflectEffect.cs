@@ -13,7 +13,8 @@ namespace Vurbiri.Colonization.Characteristics
         public override void Apply(Actor self, Actor target)
         {
             Init(self.Abilities, target.Abilities);
-            target.ApplyEffect(this);
+            _value = -target.ApplyEffect(this);
+            self.ApplyEffect(this);
         }
     }
 }
