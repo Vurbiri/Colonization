@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
             Shrine                                               => EdificeGroupId.Shrine,
             PortOne or PortTwo or LighthouseOne or LighthouseTwo => EdificeGroupId.Port,
             Camp or Town or Capital                              => EdificeGroupId.Urban,
-            _                                                    => throw new ArgumentOutOfRangeException("self", $"����������� �������� EdificeType: {id}"),
+            _                                                    => throw new ArgumentOutOfRangeException("id", $"EdificeType: {id}. ToGroup(..)"),
         };
 
         public static int GetId(int countWater, bool isGate) => countWater switch

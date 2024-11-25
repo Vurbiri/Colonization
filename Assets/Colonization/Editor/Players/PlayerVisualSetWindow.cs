@@ -16,16 +16,39 @@ namespace VurbiriEditor.Colonization
 
         private static readonly Vector2 wndMinSize = new(350f, 300f);
 
+        private Editor _editor;
+
         [MenuItem(MENU)]
         private static void ShowWindow()
         {
             GetWindow<PlayerVisualSetWindow>(true, NAME).minSize = wndMinSize;
         }
 
-        
-        public void CreateGUI()
+
+        public void OnEnable()
         {
-            rootVisualElement.Add(PlayerVisualSetEditor.CreateCachedEditorAndBind(_visualSet));
+            _editor = Editor.CreateEditor(_visualSet);
+        }
+
+
+        public void OnGUI()
+        {
+            BeginWindows();
+            EditorGUILayout.BeginVertical(GUI.skin.window);
+            _editor.OnInspectorGUI();
+            EditorGUILayout.EndVertical();
+            EndWindows();
+        }
+
+        public void OnDisable()
+        {
+            DestroyImmediate(_editor);
+        }
+
+        private void OnValidate()
+        {
+            if(_visualSet == null)
+                _visualSet = VurbiriEditor.Utility.FindAnyScriptable<PlayerVisualSetScriptable>();
         }
 
     }

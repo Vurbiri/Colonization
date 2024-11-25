@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             PlayersData playersData = new(isLoading, out bool[] loads, out bool isLoadDiplomacy);
             containers.Data.AddInstance(playersData);
 
-            Diplomacy diplomacy = isLoadDiplomacy ? new Diplomacy(playersData.DiplomacyData) : new Diplomacy();
+            Diplomacy diplomacy = isLoadDiplomacy ? new Diplomacy(playersData.DiplomacyData, settings.diplomacy) : new Diplomacy(settings.diplomacy);
             playersData.DiplomacyBind(diplomacy, !isLoadDiplomacy);
             containers.Objects.AddInstance(diplomacy);
 
@@ -62,12 +62,15 @@ namespace Vurbiri.Colonization
             public Transform warriorsContainer;
             public PricesScriptable prices;
             public PlayerAbilitiesScriptable states;
+            public DiplomacySettingsScriptable diplomacy;
             public RoadsFactory roadsFactory;
 
             public void Dispose()
             {
-                Resources.UnloadAsset(states);
+                states.Dispose();
                 states = null;
+                diplomacy.Dispose();
+                diplomacy = null;
             }
 
 #if UNITY_EDITOR
@@ -79,6 +82,8 @@ namespace Vurbiri.Colonization
                     prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
                 if (states == null)
                     states = VurbiriEditor.Utility.FindAnyScriptable<PlayerAbilitiesScriptable>();
+                if (diplomacy == null)
+                    diplomacy = VurbiriEditor.Utility.FindAnyScriptable<DiplomacySettingsScriptable>();
                 if (roadsFactory.prefab == null)
                     roadsFactory.prefab = VurbiriEditor.Utility.FindAnyPrefab<Roads>();
             }

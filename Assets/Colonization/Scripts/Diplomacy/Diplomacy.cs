@@ -5,28 +5,24 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    using static CONST_DIP;
-
     public class Diplomacy : IReactive<int, int>
 	{
 		private readonly int[] _values = new int[PlayerId.PlayersCount];
+        private readonly DiplomacySettings _stt;
 
         private Action<int, int> actionValueChange;
 
         #region Constructors
-        public Diplomacy() 
-        { 
-            for (int i = 0; i < PlayerId.PlayersCount; i++)
-                _values[i] = DEFAULT;
-        }
-        public Diplomacy(int defaultValue)
+        public Diplomacy(DiplomacySettings settings) 
         {
+            _stt = settings;
             for (int i = 0; i < PlayerId.PlayersCount; i++)
-                _values[i] = defaultValue;
+                _values[i] = _stt.defaultValue;
         }
-        public Diplomacy(IReadOnlyList<int> values)
+        public Diplomacy(IReadOnlyList<int> values, DiplomacySettings settings)
         {
-            for(int i = 0; i < PlayerId.PlayersCount; i++)
+            _stt = settings;
+            for (int i = 0; i < PlayerId.PlayersCount; i++)
                 _values[i] = values[i];
         }
         #endregion

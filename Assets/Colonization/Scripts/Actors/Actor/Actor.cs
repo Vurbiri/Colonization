@@ -71,7 +71,8 @@ namespace Vurbiri.Colonization.Actors
             int delta = _abilities.AddPerk(effect);
             Debug.Log($"currentHP {_currentHP.Value}");
 
-            actionThisChange?.Invoke(this, TypeEvent.Change);
+            if(delta != 0)
+                actionThisChange?.Invoke(this, TypeEvent.Change);
             return delta;
         }
 

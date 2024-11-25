@@ -1,0 +1,19 @@
+{
+    "name": "Vurbiri.Colonization",
+    "rootNamespace": "Vurbiri.Colonization",
+    "references": [
+        "GUID:8d796b54c349a5e4e9e760d782ae9adf",
+        "GUID:e947f98736bb6e54ea6482933d6ed5c5",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

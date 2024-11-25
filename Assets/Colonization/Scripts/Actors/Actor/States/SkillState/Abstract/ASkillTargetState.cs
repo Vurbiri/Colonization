@@ -71,7 +71,11 @@ namespace Vurbiri.Colonization.Actors
                 if (_target == null)
                     yield break;
 
-                _parentTransform.localRotation = ACTOR_ROTATIONS[_target._currentHex.Key - currentHex.Key];
+                Hexagon targetHex = _target._currentHex;
+                _parentTransform.localRotation = ACTOR_ROTATIONS[targetHex.Key - currentHex.Key];
+                if(_isTargetReact)
+                    _target._thisTransform.localRotation = ACTOR_ROTATIONS[currentHex.Key - targetHex.Key];
+
                 callback(true);
             }
 

@@ -1,16 +1,16 @@
-//Assets\Vurbiri\Editor\Types\Vector2SpecularDrawer.cs
+//Assets\Vurbiri\Editor\ReColoringVertex\Drawers\Vector2SpecularDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
 
 namespace VurbiriEditor
 {
-    using static CONST_EDITOR;
-
     [CustomPropertyDrawer(typeof(Vector2Specular))]
     public class Vector2SpecularDrawer : PropertyDrawer
     {
         private const string NAME_VALUE = "_value";
+        private static readonly string[] labelsSpecular = { "Metallic", "Smoothness" };
+        private const int COUNT_SPECULAR = 2;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

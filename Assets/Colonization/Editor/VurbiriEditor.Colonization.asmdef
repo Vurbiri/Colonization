@@ -1,0 +1,20 @@
+{
+    "name": "VurbiriEditor.Colonization",
+    "rootNamespace": "VurbiriEditor.Colonization",
+    "references": [
+        "GUID:8d796b54c349a5e4e9e760d782ae9adf",
+        "GUID:9fa1b33fdc3c3894994221ede2152958",
+        "GUID:cc350478d8523df4b8e32ac1e494cb9c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

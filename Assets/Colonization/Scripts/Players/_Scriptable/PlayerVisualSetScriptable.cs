@@ -21,9 +21,6 @@ public class PlayerVisualSetScriptable : ScriptableObjectDisposable
     {
         int count = ids.Length;
 
-        if (count != PlayerId.PlayersCount)
-            throw new($"����������� ���������� id ������������� �������: {count} (� �� {PlayerId.PlayersCount})");
-
         Color[] colors = new Color[count];
         for (int i = 0; i < count; i++)
             colors[i] = _colors[ids[i]];

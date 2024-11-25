@@ -9,19 +9,16 @@ namespace VurbiriEditor
     internal class SceneAutoloaderWindow : EditorWindow
     {
         private const string NAME = "Scene Autoloader", MENU = MENU_PATH + NAME;
-        private const string SCENE_TYPE = "t:Scene";
-        private const string LABEL_SCENE = "Start scene", LABEL_SAVE = "Save scene", LABEL_PATH = "Path";
+        private const string SCENE_TYPE = "t:Scene", ASSETS = "Assets";
+        private const string LABEL_SCENE = "Start scene", LABEL_SAVE = "Save Assets and Scene", LABEL_PATH = "Folder", LABEL_BUTTON = "Set Folder";
         private const string KEY_SCENE = "MSA_StartScene", KEY_SAVE = "MSA_SaveScene", KEY_PATH = "MSA_Path";
 
-        private static SceneAsset[] sceneAssets;
-        private static string[] nameScenes;
-        private static int[] idScenes;
-        private static string[] guids;
-        private static readonly string[] arrPaths = { "Assets" };
+        private static readonly string[] arrPaths = { ASSETS };
+        private static int startScene = 0;
+        private static bool isSaveScene = true;
 
-        private static int startScene = 0, countScenes = 0;
-        private static bool saveScene = true;
-
+        private string[] _nameScenes;
+        private int[] _idScenes;
         private string _path;
         private int _startSceneTemp;
 
@@ -31,17 +28,25 @@ namespace VurbiriEditor
             GetWindow<SceneAutoloaderWindow>(true, NAME);
         }
 
+        private void OnEnable()
+        {
+            if(!UpdateListOfScenes())
+            {
+                _nameScenes = new string[0];
+                _idScenes = new int[0];
+            }
+        }
+
         private void OnGUI()
         {
             if (Application.isPlaying)
                 return;
 
             BeginWindows();
-            EditorGUILayout.Space(12);
-            _path = EditorGUILayout.DelayedTextField(LABEL_PATH, arrPaths[0]);
-            _startSceneTemp = EditorGUILayout.IntPopup(LABEL_SCENE, startScene, nameScenes, idScenes);
-            EditorGUILayout.Space(12);
-            saveScene = EditorGUILayout.Toggle(LABEL_SAVE, saveScene);
+            DrawButton();
+            _startSceneTemp = EditorGUILayout.IntPopup(LABEL_SCENE, startScene, _nameScenes, _idScenes);
+            EditorGUILayout.Space();
+            isSaveScene = EditorGUILayout.Toggle(LABEL_SAVE, isSaveScene);
             EndWindows();
 
             if (_startSceneTemp != startScene || _path != arrPaths[0])
@@ -50,6 +55,28 @@ namespace VurbiriEditor
                 startScene = _startSceneTemp;
                 UpdateListOfScenes();
             }
+
+            #region Local: DrawButton()
+            //=================================
+            void DrawButton()
+            {
+                EditorGUILayout.Space();
+                if (GUILayout.Button(LABEL_BUTTON))
+                {
+                    _path = EditorUtility.OpenFolderPanel(LABEL_PATH, arrPaths[0], "");
+
+                    int index = _path.IndexOf(ASSETS);
+                    if (index > 0) _path = _path[index..];
+                }
+
+                if (string.IsNullOrEmpty(_path) || !AssetDatabase.IsValidFolder(_path))
+                    _path = arrPaths[0];
+
+                EditorGUILayout.LabelField(LABEL_PATH, _path);
+                EditorGUILayout.Space();
+            }
+            //=================================
+            #endregion
         }
 
         private void OnDisable()
@@ -57,40 +84,45 @@ namespace VurbiriEditor
             Save();
         }
 
-        private static void UpdateListOfScenes()
+        private bool UpdateListOfScenes()
         {
             if (!AssetDatabase.IsValidFolder(arrPaths[0]))
-                return;
+                return false;
 
-            guids = AssetDatabase.FindAssets(SCENE_TYPE, arrPaths);
+            string[] guids = AssetDatabase.FindAssets(SCENE_TYPE, arrPaths);
 
-            countScenes = guids.Length;
-
-            sceneAssets = new SceneAsset[countScenes];
-            nameScenes = new string[countScenes];
-            idScenes = new int[countScenes];
-
+            int countScenes = guids.Length;
             if (countScenes == 0)
-                return;
+            {
+                startScene = 0;
+                return false;
+            }
+
+            startScene = Mathf.Clamp(startScene, 0, countScenes - 1);
+            var sceneAssets = new SceneAsset[countScenes];
+            _nameScenes = new string[countScenes];
+            _idScenes = new int[countScenes];
 
             for (int i = 0; i < countScenes; i++)
             {
                 sceneAssets[i] = AssetDatabase.LoadAssetAtPath<SceneAsset>(AssetDatabase.GUIDToAssetPath(guids[i]));
-                nameScenes[i] = sceneAssets[i].name;
-                idScenes[i] = i;
+                _nameScenes[i] = sceneAssets[i].name;
+                _idScenes[i] = i;
             }
 
-            if (startScene < 0 || startScene >= countScenes)
-                startScene = 0;
-
             EditorSceneManager.playModeStartScene = sceneAssets[startScene];
+
+            return true;
         }
 
         private static void OnModeStateChanged(PlayModeStateChange change)
         {
-            if (saveScene && !EditorApplication.isPlaying && EditorApplication.isPlayingOrWillChangePlaymode)
+            if (isSaveScene & change == PlayModeStateChange.ExitingEditMode)
+            {
+                AssetDatabase.SaveAssets();
                 if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
                     EditorApplication.ExitPlaymode();
+            }
         }
 
         private static void Load()
@@ -99,16 +131,16 @@ namespace VurbiriEditor
                 startScene = EditorPrefs.GetInt(KEY_SCENE);
 
             if (EditorPrefs.HasKey(KEY_SAVE))
-                saveScene = EditorPrefs.GetBool(KEY_SAVE);
+                isSaveScene = EditorPrefs.GetBool(KEY_SAVE);
 
             if (EditorPrefs.HasKey(KEY_PATH))
                 arrPaths[0] = EditorPrefs.GetString(KEY_PATH);
         }
 
-        private static void Save()
+        private void Save()
         {
             EditorPrefs.SetInt(KEY_SCENE, startScene);
-            EditorPrefs.SetBool(KEY_SAVE, saveScene);
+            EditorPrefs.SetBool(KEY_SAVE, isSaveScene);
             EditorPrefs.SetString(KEY_PATH, arrPaths[0]);
         }
 
@@ -119,7 +151,7 @@ namespace VurbiriEditor
         {
             static InitializeOnLoad()
             {
-                Debug.Log("SceneAutoloader - InitializeOnLoad");
+                Debug.Log("SceneAutoloader [InitializeOnLoad]");
 
                 Load();
 
@@ -128,13 +160,6 @@ namespace VurbiriEditor
             }
         }
         //*******************************************************
-        private class Postprocessor : AssetPostprocessor
-        {
-            private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
-            {
-                UpdateListOfScenes();
-            }
-        }
         #endregion
     }
 }

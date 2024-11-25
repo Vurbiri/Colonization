@@ -16,7 +16,7 @@ namespace Vurbiri
         public Id(int id)
         {
             if (!AIdType<T>.IsValidate(id))
-                throw new ArgumentOutOfRangeException($"����������� ��������: {id} ��� {typeof(T).Name}");
+                throw new ArgumentOutOfRangeException($"{id} - {typeof(T).Name}");
 
             _id = id;
         }

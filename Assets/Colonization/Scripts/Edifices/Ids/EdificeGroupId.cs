@@ -7,9 +7,9 @@ namespace Vurbiri.Colonization
     public class EdificeGroupId : AIdType<EdificeGroupId>
     {
         public const int None   = -1;
-        public const int Shrine = 0;
-        public const int Port   = 1;
-        public const int Urban  = 2;
+        public const int Shrine =  0;
+        public const int Port   =  1;
+        public const int Urban  =  2;
 
         static EdificeGroupId() => RunConstructor();
         private EdificeGroupId() { }
@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
             Shrine  => PlayerAbilityId.MaxShrine,
             Port    => PlayerAbilityId.MaxPort,
             Urban   => PlayerAbilityId.MaxUrban,
-            _       => throw new ArgumentOutOfRangeException("id", $"����������� �������� EdificeGroup - {id} � ToState()"),
+            _       => throw new ArgumentOutOfRangeException("id", $"EdificeGroup: {id}.  ToState(..)"),
         };
     }
 

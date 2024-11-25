@@ -9,7 +9,7 @@ namespace VurbiriEditor
     public class ScriptTemplatesKeywords : AssetModificationProcessor
 	{
 		private const string META_EXT = ".meta", CS_EXT = ".cs";
-		private const string ASSETS = "Assets", EDITOR = "Editor", DRAWER = "Drawer";
+		private const string ASSETS = "Assets", WINDOW = "Window", EDITOR = "Editor", DRAWER = "Drawer";
         private static readonly Encoding utf8WithoutBom = new UTF8Encoding(false);
 
         public static void OnWillCreateAsset(string assetName)
@@ -26,7 +26,8 @@ namespace VurbiriEditor
 			bool isReplace = false;
 			isReplace |= Replace(ref file, @"#PROJECTNAME#", PlayerSettings.productName);
 			isReplace |= Replace(ref file, @"#COMPANYNAME#", PlayerSettings.companyName);
-			isReplace |= Replace(ref file, @"#NAMENOTEDITOR#", name.Replace(EDITOR, string.Empty));
+            isReplace |= Replace(ref file, @"#NAMENOTWINDOW#", name.Replace(WINDOW, string.Empty));
+            isReplace |= Replace(ref file, @"#NAMENOTEDITOR#", name.Replace(EDITOR, string.Empty));
 			isReplace |= Replace(ref file, @"#NAMENOTDRAWER#", name.Replace(DRAWER, string.Empty));
 
 			if (isReplace)

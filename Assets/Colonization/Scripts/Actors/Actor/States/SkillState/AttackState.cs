@@ -40,9 +40,7 @@ namespace Vurbiri.Colonization.Actors
                 Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
                 float path = 1f - (_selfRange + _actor._extentsZ) / HEX_DIAMETER_IN;
 
-                _target._thisTransform.localRotation = ACTOR_ROTATIONS[currentHex.Key - targetHex.Key];
-
-                yield return Move_Coroutine(currentHex.Position, targetHex.Position, 1f - (_selfRange + _actor._extentsZ) / HEX_DIAMETER_IN);
+                yield return Move_Coroutine(currentHex.Position, targetHex.Position, path);
                 yield return ApplySkill_Coroutine();
                 yield return Move_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f);
                 
