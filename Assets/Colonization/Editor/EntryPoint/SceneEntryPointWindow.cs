@@ -26,31 +26,30 @@ namespace VurbiriEditor.Colonization
 		
 		private void OnEnable()
 		{
-            
 
-            ASceneEntryPoint gameplayEntryPoint = FindAnyObjectByType<ASceneEntryPoint>();
+			ASceneEntryPoint gameplayEntryPoint = FindAnyObjectByType<ASceneEntryPoint>();
 
 			if (gameplayEntryPoint != null)
 			{
-                _editor = Editor.CreateEditor(gameplayEntryPoint);
-                minSize = _wndMinSizeScene;
+				_editor = Editor.CreateEditor(gameplayEntryPoint);
+				minSize = _wndMinSizeScene;
 				titleContent = _titleScene;
-                return;
+				return;
 			}
 
-            ProjectInitializationData projectInitialization = FindAnyObjectByType<ProjectInitializationData>();
+			ProjectInitializationData projectInitialization = FindAnyObjectByType<ProjectInitializationData>();
 
 			if (projectInitialization != null)
 			{
 				_editor = Editor.CreateEditor(projectInitialization);
-                minSize = _wndMinSizeProject;
-                titleContent = _titleProject;
-                return;
-            }
+				minSize = _wndMinSizeProject;
+				titleContent = _titleProject;
+				return;
+			}
 
 			maxSize = new(350f, 25f);
-            titleContent = _titleNone;
-        }
+			titleContent = _titleNone;
+		}
 		
 		private void OnGUI()
 		{

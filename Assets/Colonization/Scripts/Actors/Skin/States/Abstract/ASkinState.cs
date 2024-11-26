@@ -6,15 +6,19 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin
     {
-        private class ASkinState : AState
+        protected class ASkinState : AState
         {
             protected readonly ActorSkin _parent;
             protected readonly Animator _animator;
+            protected readonly ASFX _sfx;
+            protected readonly int _idParam;
 
-            public ASkinState(ActorSkin parent, int id = 0) : base(parent._stateMachine, id)
+            public ASkinState(string stateName, ActorSkin parent, int id = 0) : base(parent._stateMachine, id)
             {
                 _parent = parent;
                 _animator = parent._animator;
+                _sfx = parent._sfx;
+                _idParam = Animator.StringToHash(stateName);
             }
         }
     }

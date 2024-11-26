@@ -90,8 +90,6 @@ namespace Vurbiri.FSM
         }
         public void SetDefaultState(TState state) => _defaultState = state;
 
-        public void Update() => _currentState.Update();
-
         public void Dispose()
         {
             _currentState.Exit();

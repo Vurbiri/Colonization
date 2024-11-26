@@ -18,8 +18,10 @@ namespace Vurbiri.Colonization.Actors
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
 
-            _eventBus   = SceneServices.Get<GameplayEventBus>();
-            _diplomacy  = SceneObjects.Get<Diplomacy>();
+            _eventBus = SceneServices.Get<GameplayEventBus>();
+            _eventBus.EventStartTurn += OnStartTurn;
+
+            _diplomacy = SceneObjects.Get<Diplomacy>();
 
             _effects = new(_abilities);
 
@@ -44,16 +46,16 @@ namespace Vurbiri.Colonization.Actors
 
             Skills skills = settings.Skills;
 
+            _stateMachine = new();
             Debug.Log("разкомментить PlayerIdleState");
             //AIdleState idle = owner == PlayerId.Player ? new PlayerIdleState(this) : new AIIdleState(this);
-            AIdleState idle = new PlayerIdleState(this);
 
-            _stateMachine.AddState(idle);
-            _stateMachine.SetDefaultState(idle);
-
+            _stateMachine.SetDefaultState(new PlayerIdleState(this));
             _stateMachine.AddState(skills.GetMoveSate(this));
-            _stateMachine.AddState(skills.GetBlockState(this));
+            _blockState = skills.GetBlockState(this);
+            _stateMachine.AddState(_blockState);
             _stateMachine.AddStates(skills.GetSkillSates(this));
+            _targetState = new(this);
 
             _skin.EventStart += _stateMachine.ToDefaultState;
 

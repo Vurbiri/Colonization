@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public static ReactiveEffect CreateWallDefenceEffect(int value)
         {
-            if(value <= 0) 
+            if(value <= 0)
                 return null;
 
             return new(WallEffectCode, ABILITY, MOD, value, DURATION);

@@ -1,17 +1,15 @@
 //Assets\Vurbiri\Editor\Utility\ScriptTemplatesKeywords.cs
 using System.IO;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
+using static VurbiriEditor.CONST_EDITOR;
 
 namespace VurbiriEditor
 {
     public class ScriptTemplatesKeywords : AssetModificationProcessor
 	{
-		private const string META_EXT = ".meta", CS_EXT = ".cs";
-		private const string ASSETS = "Assets", WINDOW = "Window", EDITOR = "Editor", DRAWER = "Drawer";
-        private static readonly Encoding utf8WithoutBom = new UTF8Encoding(false);
-
+		private const string WINDOW = "Window", EDITOR = "Editor", DRAWER = "Drawer";
+        
         public static void OnWillCreateAsset(string assetName)
 		{
 			if (!assetName.EndsWith(META_EXT)) return;

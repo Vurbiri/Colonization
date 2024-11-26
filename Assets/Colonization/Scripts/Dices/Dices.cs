@@ -1,9 +1,7 @@
 //Assets\Colonization\Scripts\Dices\Dices.cs
-using UnityEngine;
-
 namespace Vurbiri.Colonization
 {
-    public class Dices : MonoBehaviour
+    public class Dices
     {
         private readonly Dice[] _dices = { new(), new(), new() };
 

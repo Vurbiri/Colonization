@@ -1,11 +1,10 @@
 //Assets\Vurbiri\Editor\Types\Collections\UnityDictionaryDrawer.cs
 using UnityEditor;
 using UnityEngine;
-using Vurbiri;
 
 namespace VurbiriEditor
 {
-    [CustomPropertyDrawer(typeof(UnityDictionary<,>))]
+    [CustomPropertyDrawer(typeof(Vurbiri.Collections.UnityDictionary<,>))]
     public class UnityDictionaryDrawer : PropertyDrawer
     {
         private const string NAME_VALUE = "_values";

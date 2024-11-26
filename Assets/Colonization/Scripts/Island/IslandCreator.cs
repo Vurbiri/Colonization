@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\Island\IslandCreator.cs
 using System.Collections;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization

@@ -3,12 +3,12 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin
     {
-        private class ReactState : TriggerSwitchState
+        protected class ReactState : ATriggerSwitchState
         {
             public ReactState(ActorSkin parent) : base(T_REACT, parent)
             {
                 foreach (var behaviour in _animator.GetBehaviours<ReactBehaviour>())
-                    behaviour.EventExit += () => _fsm.ToPrevState();
+                    behaviour.EventExit += waitActivate.Activate;
             }
         }
     }

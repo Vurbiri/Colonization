@@ -5,11 +5,9 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.EntryPoint
 {
-    [DefaultExecutionOrder(-10)]
+    [DefaultExecutionOrder(-20)]
     public abstract class ASceneEntryPoint : MonoBehaviour
     {
-        
-
         private static ASceneEntryPoint _instance;
 
         public static event Action<ASceneEntryPoint> EventLoaded;
@@ -33,6 +31,5 @@ namespace Vurbiri.EntryPoint
             if (_instance == this)
                 _instance = null;
         }
-
     }
 }

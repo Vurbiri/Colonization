@@ -62,6 +62,9 @@ namespace Vurbiri.Colonization.UI
 
         private void OnSelectWarrior(Actor actor)
         {
+            if (!actor.IsIdle)
+                return;
+
             //if (_players.Current.Id != PlayerId.Player)
             //    return;
 

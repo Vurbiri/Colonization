@@ -13,17 +13,22 @@ namespace Vurbiri.Colonization
     public class Players : IDisposable
     {
         private readonly IdArray<PlayerId, Player> _players = new();
+        private readonly GameplayEventBus _eventBus;
         private Player _current;
 
         public Player Current => _current;
         public Player this[Id<PlayerId> id] => _players[id];
 
+        #region Constructor
         public Players(SceneContainers containers, Settings settings, bool isLoading)
         {
+            _eventBus = containers.Services.Get<GameplayEventBus>();
+
             PlayersData playersData = new(isLoading, out bool[] loads, out bool isLoadDiplomacy);
             containers.Data.AddInstance(playersData);
 
-            Diplomacy diplomacy = isLoadDiplomacy ? new Diplomacy(playersData.DiplomacyData, settings.diplomacy) : new Diplomacy(settings.diplomacy);
+            Diplomacy diplomacy = isLoadDiplomacy ? new Diplomacy(playersData.DiplomacyData, settings.diplomacy, _eventBus) 
+                                                  : new Diplomacy(settings.diplomacy, _eventBus);
             playersData.DiplomacyBind(diplomacy, !isLoadDiplomacy);
             containers.Objects.AddInstance(diplomacy);
 
@@ -34,17 +39,21 @@ namespace Vurbiri.Colonization
 
             _current = _players[0];
 
-            
-
             playersData.Save(true);
         }
+        #endregion
 
-        public void Next() => _current = _players.Next(_current.Id.Value);
+        public void Next()
+        {
+            Id<PlayerId> prev = _current.Id; 
+            _current = _players.Next(_current.Id.Value); ;
+            _eventBus.TriggerStartTurn(prev, _current.Id);
+        }
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
-            foreach (Player player in _players)
-                player.Profit(hexId, freeGroundRes);
+            for (int i = 0; i < PlayersCount; i++)
+                _players[i].Profit(hexId, freeGroundRes);
         }
 
         public void Dispose()

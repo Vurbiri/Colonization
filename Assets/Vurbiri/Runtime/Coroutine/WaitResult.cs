@@ -1,5 +1,4 @@
 //Assets\Vurbiri\Runtime\Coroutine\WaitResult.cs
-using System;
 using UnityEngine;
 
 namespace Vurbiri
@@ -7,13 +6,12 @@ namespace Vurbiri
     public class WaitResult<T> : CustomYieldInstruction
     {
         private bool _keepWaiting = true;
+        private T _result;
 
-        public T Result { get; private set; }
+        public T Result => _result;
         public override bool keepWaiting => _keepWaiting;
 
         public static WaitResult<T> Empty { get; } = new(default);
-
-        public event Action<T> EventCompleted;
 
         public WaitResult()
         {
@@ -23,17 +21,15 @@ namespace Vurbiri
 
         public WaitResult<T> SetResult(T result)
         {
-            Result = result;
+            _result = result;
             _keepWaiting = false;
-
-            EventCompleted?.Invoke(result);
 
             return this;
         }
 
         public WaitResult<T> Recreate()
         {
-            Result = default;
+            _result = default;
             _keepWaiting = false;
 
             return new();
@@ -41,10 +37,12 @@ namespace Vurbiri
 
         public WaitResult<T> Cancel()
         {
-            Result = default;
+            _result = default;
             _keepWaiting = false;
 
             return this;
         }
+
+        public override void Reset() => _keepWaiting = true;
     }
 }

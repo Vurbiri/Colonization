@@ -1,17 +1,12 @@
 //Assets\Colonization\Scripts\Actors\Skin\States\BoolSwitchState.cs
-using UnityEngine;
-
 namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin
     {
         private class BoolSwitchState : ASkinState
         {
-            protected readonly int _idParam;
-
-            public BoolSwitchState(string stateName, ActorSkin parent, int id = 0) : base(parent, id)
+            public BoolSwitchState(string stateName, ActorSkin parent, int id = 0) : base(stateName, parent, id)
             {
-                _idParam = Animator.StringToHash(stateName);
             }
 
             public override void Enter()

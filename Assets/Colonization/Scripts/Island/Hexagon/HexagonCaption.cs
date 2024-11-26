@@ -67,7 +67,7 @@ namespace Vurbiri.Colonization.UI
 
         private void Update()
         {
-            if (!_idTextRenderer.isVisible && !_currencyTextRenderer.isVisible && _lastCameraRotation == _cameraTransform.rotation) 
+            if (!_idTextRenderer.isVisible & !_currencyTextRenderer.isVisible & _lastCameraRotation == _cameraTransform.rotation) 
                 return;
 
             _lastCameraRotation = _cameraTransform.rotation;

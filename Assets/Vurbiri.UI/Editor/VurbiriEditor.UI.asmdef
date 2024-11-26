@@ -1,0 +1,18 @@
+{
+    "name": "VurbiriEditor.UI",
+    "rootNamespace": "VurbiriEditor.UI",
+    "references": [
+        "GUID:c8c3c199385590949883ed96c279e4a3"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

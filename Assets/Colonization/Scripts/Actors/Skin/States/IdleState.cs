@@ -10,18 +10,17 @@ namespace Vurbiri.Colonization.Actors
         {
             private readonly RFloat _timeSwitchIdle;
             private readonly int _idTriggerIdle = Animator.StringToHash(T_IDLE);
-            private readonly int _idBoolIdle = Animator.StringToHash(B_IDLE);
 
             private Coroutine _coroutine;
 
-            public IdleState(ActorSkin parent) : base(parent, 0)
+            public IdleState(ActorSkin parent) : base(B_IDLE, parent, 0)
             {
                 _timeSwitchIdle = parent._timeSwitchIdle;
             }
 
             public override void Enter()
             {
-                _animator.SetBool(_idBoolIdle, true);
+                _animator.SetBool(_idParam, true);
                 _coroutine = _parent.StartCoroutine(Idle_Coroutine());
             }
 
@@ -33,7 +32,7 @@ namespace Vurbiri.Colonization.Actors
                     _parent.StopCoroutine(_coroutine);
                     _coroutine = null;
                 }
-                _animator.SetBool(_idBoolIdle, false);
+                _animator.SetBool(_idParam, false);
             }
 
             private IEnumerator Idle_Coroutine()

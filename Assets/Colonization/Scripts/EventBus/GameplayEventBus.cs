@@ -16,6 +16,9 @@ namespace Vurbiri.Colonization
         public event Action EventUnselect;
         public void TriggerUnselect() => EventUnselect?.Invoke();
 
+        public event Action<Id<PlayerId>, Id<PlayerId>> EventStartTurn;
+        public void TriggerStartTurn(Id<PlayerId> prev, Id<PlayerId> current) => EventStartTurn?.Invoke(prev, current);
+
 
         public event Action<bool> EventCrossroadMarkShow;
         public void TriggerCrossroadMarkShow(bool show) => EventCrossroadMarkShow?.Invoke(show);

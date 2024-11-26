@@ -13,7 +13,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
-    [DefaultExecutionOrder(-10)]
+    [DefaultExecutionOrder(-20)]
     public class GameplayEntryPoint : ASceneEntryPoint
     {
         [SerializeField] protected SceneId _nextScene;
@@ -158,7 +158,7 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class SceneObjects
         {
-            public Game game;
+            public GameLoop game;
             [Space]
             public Camera mainCamera;
             [Space]
@@ -176,7 +176,7 @@ namespace Vurbiri.Colonization
             public void OnValidate()
             {
                 if (game == null)
-                    game = FindAnyObjectByType<Game>();
+                    game = FindAnyObjectByType<GameLoop>();
                 if (mainCamera == null)
                     mainCamera = FindAnyObjectByType<Camera>();
                 if (islandCreator == null)

@@ -39,8 +39,6 @@ namespace Vurbiri.Colonization.Actors
                     _actor.StopCoroutine(_coroutineAction);
                     _coroutineAction = null;
                 }
-
-                
             }
 
             protected void ToExit()

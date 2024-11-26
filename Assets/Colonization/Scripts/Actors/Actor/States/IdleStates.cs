@@ -20,7 +20,12 @@ namespace Vurbiri.Colonization.Actors
 
         private class PlayerIdleState : AIdleState
         {
-            public PlayerIdleState(Actor parent) : base(parent) { }
+            private readonly GameplayEventBus _eventBus;
+
+            public PlayerIdleState(Actor parent) : base(parent) 
+            {
+                _eventBus = parent._eventBus;
+            }
 
             public override void Select() => _eventBus.TriggerActorSelect(_actor);
             public override void Unselect(ISelectable newSelectable) => _eventBus.TriggerUnselect();

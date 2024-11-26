@@ -7,6 +7,7 @@ namespace Vurbiri.Colonization.Actors
     {
         public abstract class AActionState : AState
         {
+            
             protected readonly Ability<ActorAbilityId> _move;
             private readonly Ability<ActorAbilityId> _currentAP;
             private readonly AbilityModAddSettings _costModAP;

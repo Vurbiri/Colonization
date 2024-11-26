@@ -12,12 +12,10 @@ namespace VurbiriEditor
     {
 		#region Consts
 		private const string NAME = "Path To CSFiles", MENU = MENU_PATH + NAME;
-        private const string META_EXT = ".meta", CS_EXT = ".cs";
-        private const string MASK = "*" + CS_EXT, COMMENT = @"//", ASSETS = "Assets", START = COMMENT + ASSETS;
+        private const string MASK = "*" + CS_EXT, COMMENT = @"//", START = COMMENT + ASSETS;
         #endregion
 
         private static uint count;
-        private static readonly Encoding utf8WithoutBom = new UTF8Encoding(false);
 
         [MenuItem(MENU)]
 		private static void Command()

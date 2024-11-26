@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Vurbiri
+namespace Vurbiri.Collections
 {
     public class ShuffleLoopArray<T>
     {

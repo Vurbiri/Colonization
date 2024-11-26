@@ -35,7 +35,7 @@ namespace Vurbiri
         public WaitAll AddRange(params IEnumerator[] coroutines)
         {
             foreach (var coroutine in coroutines)
-                Add(coroutine);
+                _monoBehaviour.StartCoroutine(AddCoroutine(coroutine));
 
             return this;
         }
@@ -54,6 +54,5 @@ namespace Vurbiri
             yield return coroutine;
             _coroutines.Remove(coroutine);
         }
-
     }
 }

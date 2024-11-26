@@ -145,7 +145,7 @@ namespace Vurbiri.Colonization
             _ownerId = PlayerId.None;
         }
 
-        public int GetDefense()
+        public int GetMaxDefense()
         {
             int max = int.MinValue;
 
@@ -168,12 +168,12 @@ namespace Vurbiri.Colonization
             return true;
         }
 
-        public bool TrySetSelectableActor(Id<PlayerId> id, Relation relation)
+        public bool TrySetSelectableActor(Id<PlayerId> id, Relation targetAttack)
         {
-            if (_isGate | _isWater | _owner == null || _owner.GetRelation(id) != relation)
+            if (_isGate | _isWater | _owner == null || !_owner.IsCanUseSkill(id, targetAttack, out bool isFriendly))
                 return false;
 
-            _mark = _poolMarks.Get(_thisTransform, false).View(relation == Relation.Friend);
+            _mark = _poolMarks.Get(_thisTransform, false).View(isFriendly);
             _collider.enabled = true;
             return true;
         }

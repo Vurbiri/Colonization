@@ -31,9 +31,6 @@ namespace Vurbiri.Colonization.Actors
             {
                 base.Exit();
 
-                if (_target != null)
-                    _target._stateMachine.ToPrevState();
-
                 _waitActor = null;
                 _target = null;
             }
@@ -91,7 +88,6 @@ namespace Vurbiri.Colonization.Actors
                 _target.ReactionToAttack(_isTargetReact);
 
                 yield return _waitEndSkillAnimation;
-                
             }
 
             private Actor CheckTarget(Actor target)
@@ -101,7 +97,7 @@ namespace Vurbiri.Colonization.Actors
 
                 Key key = target._currentHex.Key - _actor._currentHex.Key;
 
-                if (target == _actor || target.GetRelation(_actor._owner) != _relationTarget || !ACTOR_ROTATIONS.ContainsKey(key))
+                if (target == _actor || !target.IsCanUseSkill(_actor._owner, _relationTarget) || !ACTOR_ROTATIONS.ContainsKey(key))
                     return null;
 
                 target.BecomeTarget(_actor._owner, _relationTarget);

@@ -31,7 +31,9 @@ namespace Vurbiri.Colonization.Actors
         protected EffectsSet _effects;
         protected ReactiveEffect _wallDefenceEffect;
 
-        protected readonly StateMachineSelectable _stateMachine = new(new TargetState());
+        protected StateMachineSelectable _stateMachine;
+        protected BlockState _blockState;
+        protected TargetState _targetState;
         #endregion
 
         #region Propirties
@@ -39,6 +41,8 @@ namespace Vurbiri.Colonization.Actors
         public int Id => _id;
         public Id<PlayerId> Owner => _owner;
         public int ActionPoint => _currentAP.Value;
+        public bool IsIdle => _stateMachine.IsDefaultState;
+        public bool IsBlock => _stateMachine.CurrentState == _blockState;
         public Vector3 Position => _thisTransform.position;
         public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
         #endregion
@@ -63,6 +67,10 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         public Relation GetRelation(Id<PlayerId> id) => _diplomacy.GetRelation(id, _owner);
+        public bool IsCanUseSkill(Id<PlayerId> id, Relation targetAttack, out bool isFriendly)
+        {
+            return _diplomacy.IsCanActorsInteraction(id, _owner, targetAttack, out isFriendly);
+        }
 
         public void AddEffect(ReactiveEffect effect) => _effects.Add(effect);
         public int ApplyEffect(AEffect effect)
@@ -74,26 +82,6 @@ namespace Vurbiri.Colonization.Actors
             if(delta != 0)
                 actionThisChange?.Invoke(this, TypeEvent.Change);
             return delta;
-        }
-
-        public void EndTurn()
-        {
-            _currentHP.Value += _abilities.GetValue(ActorAbilityId.HPPerTurn);
-            _currentAP.Value += _abilities.GetValue(ActorAbilityId.APPerTurn);
-            _move.IsValue = true;
-            Debug.Log("Выключить Collider");
-            //if(_stateMachine.CurrentState != _blockState)
-            //    _stateMachine.ToDefault();
-        }
-        public void StartTurn()
-        {
-            Debug.Log("Включить Collider если игрок и его ход");
-            _effects.Next();
-            _stateMachine.ToDefaultState();
-
-            _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetDefense());
-            if (_wallDefenceEffect != null)
-                _effects.Add(_wallDefenceEffect);
         }
 
         public virtual void Select()
@@ -109,11 +97,10 @@ namespace Vurbiri.Colonization.Actors
         {
             int i = 0;
             int count = _effects.Count;
-            bool isBlock = _stateMachine.IsCurrentState<BlockState>();
             int[][] array = new int[count + 2][];
 
             array[i++] = _currentHex.Key.ToArray();
-            array[i++] = new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value , isBlock ? 1 : 0 };
+            array[i++] = new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value , IsBlock ? 1 : 0 };
             
             for (int j = 0; j < count; j++, i++)
                 array[i] = _effects[j].ToArray();
@@ -123,36 +110,48 @@ namespace Vurbiri.Colonization.Actors
 
         public void Dispose()
         {
+            Debug.Log("Dispose");
             _skin.Dispose();
             _stateMachine.Dispose();
+            Destroy(gameObject);
         }
 
         private void BecomeTarget(Id<PlayerId> initiator, Relation relation)
         {
-            _stateMachine.SetState<TargetState>();
-
+            _stateMachine.SetState(_targetState);
             _diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
+        private bool IsCanUseSkill(Id<PlayerId> id, Relation targetAttack) => _diplomacy.IsCanActorsInteraction(id, _owner, targetAttack, out _);
 
-        private bool ReactionToAttack(bool _isTargetReact)
-        {
-            if (_currentHP.Value <= 0)
-            {
-                _skin.Death();
-                return true;
-            }
-
-            if (_isTargetReact)
-                _skin.React();
-
-            return false;
-
-        }
+        private bool ReactionToAttack(bool isTargetReact) => !_targetState.Update(isTargetReact);
 
         private void RemoveWallDefenceEffect()
         {
             if (_wallDefenceEffect != null)
                 _effects.Remove(_wallDefenceEffect);
+        }
+
+        private void OnStartTurn(Id<PlayerId> prev, Id<PlayerId> current)
+        {
+            if (_owner == prev)
+            {
+                _currentHP.Value += _abilities.GetValue(ActorAbilityId.HPPerTurn);
+                _currentAP.Value += _abilities.GetValue(ActorAbilityId.APPerTurn);
+                _move.IsValue = true;
+                Debug.Log("Выключить Collider");
+                return;
+            }
+
+            if (_owner == current)
+            {
+                //Debug.Log("Включить Collider если его ход");
+                _effects.Next();
+                _stateMachine.ToDefaultState();
+
+                _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetMaxDefense());
+                if (_wallDefenceEffect != null)
+                    _effects.Add(_wallDefenceEffect);
+            }
         }
 
         private void RedirectEvents(ReactiveEffect item, TypeEvent type)

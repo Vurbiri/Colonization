@@ -23,7 +23,6 @@ namespace Vurbiri.Reactive.Collections
             actionThisChange?.Invoke((T)this, TypeEvent.Remove);
             actionThisChange = null;
             _index = -1;
-            Destroy(gameObject);
         }
     }
 }
