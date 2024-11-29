@@ -9,13 +9,13 @@ namespace Vurbiri.Colonization.Actors
 	{
 		public class SelfBuffState : ASkillState
         {
-            public SelfBuffState(Actor parent, IReadOnlyList<AEffect> effects, Settings settings, int id) : base(parent, effects, settings, id)
+            public SelfBuffState(Actor parent, IReadOnlyList<EffectsPacket> effects, int cost, int id) : base(parent, effects, cost, id)
             {
             }
 
             protected override IEnumerator Actions_Coroutine()
             {
-                yield return ApplySkill_Coroutine();
+                yield return ApplySkill_Coroutine(_parentTransform);
                 ToExit();
             }
         }

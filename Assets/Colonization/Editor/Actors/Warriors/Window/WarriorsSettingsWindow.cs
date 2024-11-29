@@ -27,11 +27,19 @@ namespace VurbiriEditor.Colonization.Actors
         {
             if (_warriorsSettings == null)
             {
-                Debug.Log("��� WarriorsSettingsScriptable");
-                return;
+                Debug.LogWarning("Set WarriorsSettingsScriptable");
+                _warriorsSettings = VurbiriEditor.Utility.FindAnyScriptable<WarriorsSettingsScriptable>();
+                if (_warriorsSettings == null)
+                    return;
             }
 
             rootVisualElement.Add(WarriorsSettingsEditor.CreateCachedEditorAndBind(_warriorsSettings));
+        }
+
+        private void OnDisable()
+        {
+            if (_warriorsSettings != null)
+                ActorUtility.OverrideClips(_warriorsSettings.Settings);
         }
     }
 }

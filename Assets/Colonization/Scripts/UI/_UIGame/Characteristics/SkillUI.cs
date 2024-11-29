@@ -21,6 +21,7 @@ namespace Vurbiri.Colonization.UI
         private const int SIZE = 64;
 
         private AEffectsUI[] _effects;
+        private int _count;
         private string _textMain, _textAP;
         private string _hexColorPlus, _hexColorMinus;
         private int _capacity;
@@ -36,6 +37,7 @@ namespace Vurbiri.Colonization.UI
             _hexColorMinus = hintTextColor.HexColorMinus;
 
             _effects = effects;
+            _count = effects.Length;
 
             _unsubscriber = language.Subscribe(SetTexts);
         }
@@ -51,10 +53,9 @@ namespace Vurbiri.Colonization.UI
 
         private void SetTexts(Language localization)
         {
-            int count = _effects.Length;
-            StringBuilder sb = new(SIZE + count * SIZE);
+            StringBuilder sb = new(SIZE + _count * SIZE);
             sb.AppendLine(localization.GetText(Files.Gameplay, _nameKey));
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < _count; i++)
                 _effects[i].GetText(localization, sb);
             sb.Append(TAG_COLOR_OFF);
 

@@ -27,7 +27,7 @@ namespace VurbiriEditor.Colonization.Actors
 
         public void CreateGUI()
         {
-            List<AnimationClipSettingsScriptable> settings = Utility.FindScriptables<AnimationClipSettingsScriptable>();
+            List<AnimationClipSettingsScriptable> settings = VurbiriEditor.Utility.FindScriptables<AnimationClipSettingsScriptable>();
 
             if (settings == null || settings.Count == 0 || _treeAnimationClipSettingsWindow == null)
                 return;
@@ -50,6 +50,10 @@ namespace VurbiriEditor.Colonization.Actors
                 DestroyImmediate(editor);
 
             _editors.Clear();
+
+            var warriorsSettings = Utility.FindAnyScriptable<WarriorsSettingsScriptable>();
+            if (warriorsSettings != null)
+                ActorUtility.OverrideClips(warriorsSettings.Settings);
         }
     }
 }

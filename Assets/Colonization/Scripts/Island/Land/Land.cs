@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
         private GameplayEventBus _eventBus;
         private Pool<HexagonMark> _poolMarks;
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
-        private readonly Dictionary<int, List<Key>> _hexagonsIdForKey = new(NUMBERS.Count + 1);
+        private readonly Dictionary<int, List<Key>> _hexagonsIdForKey = new(NUMBERS_HEX.Count + 1);
 
         public Hexagon this[Key key] => _hexagons[key];
 
@@ -38,9 +38,9 @@ namespace Vurbiri.Colonization
             //================================================
             void InitHexagonsIdForKey()
             {
-                int capacity = MAX_HEXAGONS / NUMBERS.Count + 1;
+                int capacity = MAX_HEXAGONS / NUMBERS_HEX.Count + 1;
 
-                foreach (int i in NUMBERS)
+                foreach (int i in NUMBERS_HEX)
                     _hexagonsIdForKey[i] = new List<Key>(capacity);
                 _hexagonsIdForKey[ID_GATE] = new List<Key>(1);
             }

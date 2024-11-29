@@ -21,6 +21,13 @@ namespace Vurbiri
             if (!_registration.TryAdd(key, new RegFactory<T>(factory)))
                 throw new($"{key.Type.FullName} (id = {key.Id}) уже добавлен");
         }
+        public void AddFactory<P, T>(Func<P, T> factory, int id = 0)
+        {
+            TypeIdKey key = new(typeof(T), id);
+
+            if (!_registration.TryAdd(key, new RegFactory<P, T>(factory)))
+                throw new($"{key.Type.FullName} (id = {key.Id}) уже добавлен");
+        }
 
         public T AddInstance<T>(T instance, int id = 0)
         {
@@ -44,7 +51,6 @@ namespace Vurbiri
         }
 
         public T Get<T>(int id = 0) => Get<T>(new TypeIdKey(typeof(T), id));
-
         public T Get<T>(TypeIdKey key)
         {
             if (_registration.TryGetValue(key, out var registration))
@@ -52,6 +58,18 @@ namespace Vurbiri
 
             if (_parent != null)
                 return _parent.Get<T>(key);
+
+            throw new($"{key.Type.FullName} (id = {key.Id}) не найден");
+        }
+
+        public T Get<P, T>(P value, int id = 0) => Get<P, T>(value, new TypeIdKey(typeof(T), id));
+        public T Get<P, T>(P value, TypeIdKey key)
+        {
+            if (_registration.TryGetValue(key, out var registration))
+                return ((IRegistration<P, T>)registration).Get(value);
+
+            if (_parent != null)
+                return _parent.Get<P, T>(value, key);
 
             throw new($"{key.Type.FullName} (id = {key.Id}) не найден");
         }
@@ -69,6 +87,11 @@ namespace Vurbiri
         protected interface IRegistration<T> : IRegistration
         {
             public T Get();
+        }
+        //***********************************
+        protected interface IRegistration<P, T> : IRegistration
+        {
+            public T Get(P value);
         }
         //***********************************
         protected class RegInstance<T> : IRegistration<T>
@@ -101,7 +124,21 @@ namespace Vurbiri
             public T Get() => _factory();
 
             public void Dispose() { }
-        }           
+        }
+        //***********************************
+        protected class RegFactory<P,T> : IRegistration<P, T>
+        {
+            private readonly Func<P, T> _factory;
+
+            public RegFactory(Func<P, T> factory)
+            {
+                _factory = factory;
+            }
+
+            public T Get(P value) => _factory(value);
+
+            public void Dispose() { }
+        }
         //***********************************
         #endregion
     }

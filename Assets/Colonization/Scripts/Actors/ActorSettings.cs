@@ -26,5 +26,9 @@ namespace Vurbiri.Colonization.Actors
         {
             _skills.Dispose();
         }
+
+#if UNITY_EDITOR
+        public ActorSkin Skin => _prefabActorSkin;
+#endif
     }
 }

@@ -10,21 +10,20 @@ namespace Vurbiri.Colonization.Actors
 	{
 		public abstract partial class ASkillState : AActionState
         {
-            protected readonly int _idAnimation;
-            protected readonly IReadOnlyList<AEffect> _effects;
-            protected readonly int _countEffects;
+            protected readonly int _id;
+            protected readonly Transform _parentTransform;
+            protected readonly IReadOnlyList<EffectsPacket> _effectsPackets;
+            protected readonly int _countPackets;
 
             protected Coroutine _coroutineAction;
             protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
-            public ASkillState(Actor parent, IReadOnlyList<AEffect> effects, Settings settings, int id) : base(parent, settings.cost, TypeIdKey.Get<ASkillState>(id))
+            public ASkillState(Actor parent, IReadOnlyList<EffectsPacket> effects, int cost, int id) : base(parent, cost, TypeIdKey.Get<ASkillState>(id))
             {
-                _idAnimation = settings.idAnimation;
-                _effects = effects;
-                _countEffects = _effects.Count;
-                
-                _waitTargetSkillAnimation = new(settings.damageTime);
-                _waitEndSkillAnimation = new(settings.remainingTime);
+                _id = id;
+                _parentTransform = _actor._thisTransform;
+                _effectsPackets = effects;
+                _countPackets = _effectsPackets.Count;
             }
 
             public override void Enter()
@@ -49,30 +48,27 @@ namespace Vurbiri.Colonization.Actors
 
             protected abstract IEnumerator Actions_Coroutine();
 
-            protected virtual IEnumerator ApplySkill_Coroutine()
+            protected IEnumerator ApplySkill_Coroutine(Transform target)
             {
-                _skin.Skill(_idAnimation);
-                yield return _waitTargetSkillAnimation;
+                WaitActivate wait = _skin.Skill(_id, target);
 
-                for (int i = 0; i < _countEffects; i++)
-                    _effects[i].Apply(_actor, _actor);
+                for (int i = 0; i < _countPackets; i++)
+                {
+                    yield return wait;
+                    _effectsPackets[i].Apply(_actor, _actor);
+                    wait.Reset();
+                }
+
+                yield return wait;
+            }
+
+            protected virtual void Hint()
+            {
+                for (int i = 0; i < _countPackets; i++)
+                    _effectsPackets[i].Apply(_actor, _actor);
 
                 Pay();
-
-                yield return _waitEndSkillAnimation;
             }
-
-            #region Nested: Settings
-            //*******************************************************
-            [System.Serializable]
-            public class Settings
-            {
-                public float damageTime;
-                public float remainingTime;
-                public int idAnimation;
-                public int cost;
-            }
-            #endregion
         }
     }
 }

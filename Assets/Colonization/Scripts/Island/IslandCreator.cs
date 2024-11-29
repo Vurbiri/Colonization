@@ -18,8 +18,10 @@ namespace Vurbiri.Colonization
         private Land _land;
         private Crossroads _crossroads;
 
+#if UNITY_EDITOR
         public Transform RoadsContainer => _roadsContainer;
         public Transform WarriorContainer => _warriorsContainer;
+#endif
 
         public void Init(Land land, Crossroads crossroads)
         {
@@ -64,7 +66,7 @@ namespace Vurbiri.Colonization
             bool isWater = false, isWaterPossible, isLastCircle = circle == MAX_CIRCLES;
             Vector3 position, positionNext, positionCurrent;
 
-            ShuffleLoopArray<int> numGround = new(NUMBERS), numWater = new(NUMBERS);
+            ShuffleLoopArray<int> numGround = new(NUMBERS_HEX), numWater = new(NUMBERS_HEX);
             ShuffleLoopArray<SurfaceScriptable> ground = new(surfaces.GetRange(SurfaceId.Village, SurfaceId.Forest));
 
             hexData = new(new(), ID_GATE, Vector3.zero, surfaces[SurfaceId.Gate]);

@@ -32,13 +32,13 @@ namespace VurbiriEditor.Colonization.Actors
             void Setup(AnimationClip clip)
             {
                 var totalTimeUXML = root.Q<FloatField>(FIELD_TOTAL_T);
-                var damageTimeUXML = root.Q<Slider>(FIELD_DAMAGE_T);
+                var damageTimeUXML = root.Q<ListView>(FIELD_DAMAGE_T);
                 var rangeUXML = root.Q<Slider>(FIELD_RANGE);
 
                 bool isShow = clip != null;
 
                 totalTimeUXML.visible = isShow;
-                damageTimeUXML.visible = isShow;
+                //damageTimeUXML.visible = isShow;
                 rangeUXML.visible = isShow;
 
                 if (!isShow)
@@ -46,7 +46,7 @@ namespace VurbiriEditor.Colonization.Actors
 
                 float time = clip.length;// - 0.1f;
                 totalTimeUXML.value = time;
-                damageTimeUXML.highValue = time;
+                //damageTimeUXML.highValue = time;
             }
             #endregion
         }

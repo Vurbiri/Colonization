@@ -9,21 +9,16 @@ namespace Vurbiri.Colonization.Characteristics
         [System.Serializable]
         public class SkillSettings
         {
-            public AnimationClipSettingsScriptable clipSettings;
             public TargetOfSkill target;
             public bool isMove;
             public bool isTargetReact;
             public float range;
-            public EffectSettings[] effects;
-            public Actor.ASkillState.Settings settings;
+            public int cost;
+            public EffectsPacketSettings[] effectsPacket;
             public SkillUI ui;
-
-            public void SetTiming()
-            {
-                settings.damageTime = clipSettings.damageTime;
-                settings.remainingTime = clipSettings.RemainingTime;
-                range = clipSettings.range;
-            }
+#if UNITY_EDITOR
+            public AnimationClipSettingsScriptable clipSettings;
+#endif
         }
     }
 }

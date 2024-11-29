@@ -50,8 +50,7 @@ namespace Vurbiri.Colonization
             = new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, -120f, 0f), Quaternion.Euler(0f, 0f, 0f) };
 
         public const int ID_GATE = 13;
-        public static readonly IReadOnlyList<int> NUMBERS = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };
-
+        public static readonly IReadOnlyList<int> NUMBERS_HEX = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };
 
         static CONST()
         {

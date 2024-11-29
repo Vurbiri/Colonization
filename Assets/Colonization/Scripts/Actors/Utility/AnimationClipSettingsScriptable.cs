@@ -1,4 +1,6 @@
 //Assets\Colonization\Scripts\Actors\Utility\AnimationClipSettingsScriptable.cs
+#if UNITY_EDITOR
+
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
@@ -8,9 +10,11 @@ namespace Vurbiri.Colonization.Actors
     {
         public AnimationClip clip;
         public float totalTime;
-        public float damageTime;
+        public float[] damageTimes = new float[1];
         public float range;
 
-        public float RemainingTime => totalTime - damageTime;
+        public float RemainingTime => 1;// totalTime - damageTimes[^1];
+
     }
 }
+#endif

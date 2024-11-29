@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private SkillSettings[] _skillsSettings;
         
         [NonSerialized] private SkillUI[] _skillsUI;
-        [NonSerialized] private AEffect[][] _effects;
+        [NonSerialized] private EffectsPacket[][] _effects;
         [NonSerialized] private BlockUI _blockUI;
 
         public IReadOnlyList<SkillUI> SkillsUI => _skillsUI;
@@ -62,30 +62,31 @@ namespace Vurbiri.Colonization.Characteristics
             int count = _skillsSettings.Length;
             List<ASkillState> skillStates = new(count);
 
-            _effects = new AEffect[count][];
+            _effects = new EffectsPacket[count][];
             _skillsUI = new SkillUI[count];
 
-            SkillSettings skill; EffectSettings effect;
-            AEffect[] effectsSkill; AEffectsUI[] effectsSkillUI;
-            for (int i = 0, j; i < count; i++)
+            SkillSettings skill; EffectsPacketSettings packSettings;
+            EffectsPacket[] effectsPackets; 
+            List<AEffectsUI> effectsSkillUI;
+            for (int i = 0; i < count; i++)
             {
                 skill = _skillsSettings[i];
-                skill.SetTiming();
 
-                int countEffects = skill.effects.Length;
-                effectsSkill = new AEffect[countEffects];
-                effectsSkillUI = new AEffectsUI[countEffects];
+                int countPackets = skill.effectsPacket[i].Count;
+                effectsPackets = new EffectsPacket[countPackets];
+                effectsSkillUI = new(countPackets << 1);
 
-                for (j = 0; j < countEffects; j++)
+                for (int j = 0, u = 0; j < countPackets; j++)
                 {
-                    effect = skill.effects[j];
-                    effectsSkill[j] = effect.CreateEffect(new(parent.TypeId, parent.Id, i, j));
-                    effectsSkillUI[j] = effect.CreateEffectUI(hintTextColor);
+                    packSettings = skill.effectsPacket[j];
+                    effectsPackets[j] = packSettings.CreateEffectsPacket(skill.isTargetReact, parent.TypeId, parent.Id, i, u);
+                    effectsSkillUI.AddRange(packSettings.CreateEffectsUI(hintTextColor));
+                    u += packSettings.Count;
                 }
-                skill.ui.Init(language, hintTextColor, effectsSkillUI);
+                skill.ui.Init(language, hintTextColor, effectsSkillUI.ToArray());
 
                 _skillsUI[i] = skill.ui;
-                _effects[i] = effectsSkill;
+                _effects[i] = effectsPackets;
 
                 skillStates.Add(CreateState(parent, skill, i));
 
@@ -101,12 +102,16 @@ namespace Vurbiri.Colonization.Characteristics
         private ASkillState CreateState(Actor parent, SkillSettings skill, int id)
         {
             if (skill.target == TargetOfSkill.Self)
-                return new SelfBuffState(parent, _effects[id], skill.settings, id);
+                return new SelfBuffState(parent, _effects[id], skill.cost, id);
 
             if (skill.isMove)
-                return new AttackState(parent, skill.target, _effects[id], skill.range, _speedRun, skill.settings, id);
+                return new AttackState(parent, skill.target, _effects[id], skill.range, _speedRun, skill.cost, id);
 
-            return new SpellState(parent, skill.target, _effects[id], skill.isTargetReact, skill.settings, id);
+            return new SpellState(parent, skill.target, _effects[id], skill.isTargetReact, skill.cost, id);
         }
+
+#if UNITY_EDITOR
+        public IReadOnlyList<SkillSettings> List => _skillsSettings;
+#endif
     }
 }

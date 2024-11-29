@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.CONST;
 
@@ -16,13 +15,10 @@ namespace Vurbiri.Colonization.Actors
             protected bool _isTargetReact = true;
             protected WaitActivate _waitActor;
             protected readonly Relation _relationTarget;
-            protected readonly Transform _parentTransform;
 
-            protected ASkillTargetState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<AEffect> effects, Settings settings, int id) : 
-                base(parent, effects, settings, id)
+            protected ASkillTargetState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsPacket> effects, int cost, int id) : 
+                base(parent, effects, cost, id)
             {
-                _parentTransform = _actor._thisTransform;
-
                 _relationTarget = targetActor.ToRelation();
                 _relationTarget = Relation.Friend;
             }
@@ -76,18 +72,10 @@ namespace Vurbiri.Colonization.Actors
                 callback(true);
             }
 
-            protected override IEnumerator ApplySkill_Coroutine()
+            protected override void Hint()
             {
-                _skin.Skill(_idAnimation);
-                yield return _waitTargetSkillAnimation;
-
-                for (int i = 0; i < _countEffects; i++)
-                    _effects[i].Apply(_actor, _target);
-
-                Pay();
+                base.Hint();
                 _target.ReactionToAttack(_isTargetReact);
-
-                yield return _waitEndSkillAnimation;
             }
 
             private Actor CheckTarget(Actor target)

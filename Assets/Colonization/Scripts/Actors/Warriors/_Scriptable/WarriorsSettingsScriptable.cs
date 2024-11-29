@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Actors\Warriors\_Scriptable\WarriorsSettingsScriptable.cs
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
 
@@ -20,5 +21,9 @@ namespace Vurbiri.Colonization.Actors
 
             Resources.UnloadAsset(this);
         }
+
+#if UNITY_EDITOR
+        public IReadOnlyList<ActorSettings> Settings => _settings;
+#endif
     }
 }

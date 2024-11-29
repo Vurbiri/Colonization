@@ -50,17 +50,17 @@ namespace Vurbiri.Colonization.Actors
         #region States
         public bool CanMove() => _move.IsValue;
 
-        public void Move()
+        public virtual void Move()
         {
             _stateMachine.SetState<MoveState>();
         }
 
-        public void Block()
+        public virtual void Block()
         {
             _stateMachine.SetState<BlockState>();
         }
 
-        public void UseSkill(int id)
+        public virtual void UseSkill(int id)
         {
             _stateMachine.SetState<ASkillState>(id);
         }
@@ -83,6 +83,7 @@ namespace Vurbiri.Colonization.Actors
                 actionThisChange?.Invoke(this, TypeEvent.Change);
             return delta;
         }
+        public bool ReactionToAttack(bool isTargetReact) => !_targetState.Update(isTargetReact);
 
         public virtual void Select()
         {
@@ -123,7 +124,7 @@ namespace Vurbiri.Colonization.Actors
         }
         private bool IsCanUseSkill(Id<PlayerId> id, Relation targetAttack) => _diplomacy.IsCanActorsInteraction(id, _owner, targetAttack, out _);
 
-        private bool ReactionToAttack(bool isTargetReact) => !_targetState.Update(isTargetReact);
+        
 
         private void RemoveWallDefenceEffect()
         {

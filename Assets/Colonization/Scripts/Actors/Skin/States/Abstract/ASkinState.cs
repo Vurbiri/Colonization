@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Actors
         {
             protected readonly ActorSkin _parent;
             protected readonly Animator _animator;
-            protected readonly ASFX _sfx;
+            protected readonly AActorSFX _sfx;
             protected readonly int _idParam;
 
             public ASkinState(string stateName, ActorSkin parent, int id = 0) : base(parent._stateMachine, id)
