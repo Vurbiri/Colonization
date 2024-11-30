@@ -12,11 +12,11 @@ namespace Vurbiri.Colonization.Actors
         public abstract class ASkillTargetState : ASkillState
         {
             protected Actor _target;
-            protected bool _isTargetReact = true;
+            protected bool _isTargetReact;
             protected WaitActivate _waitActor;
             protected readonly Relation _relationTarget;
 
-            protected ASkillTargetState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsPacket> effects, int cost, int id) : 
+            protected ASkillTargetState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHint> effects, int cost, int id) : 
                 base(parent, effects, cost, id)
             {
                 _relationTarget = targetActor.ToRelation();
@@ -72,9 +72,9 @@ namespace Vurbiri.Colonization.Actors
                 callback(true);
             }
 
-            protected override void Hint()
+            protected override void Hint(int index)
             {
-                base.Hint();
+                _effectsHint[index].Apply(_actor, _target);
                 _target.ReactionToAttack(_isTargetReact);
             }
 

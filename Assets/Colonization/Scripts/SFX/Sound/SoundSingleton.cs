@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\SFX\Sound\SoundSingleton.cs
 using UnityEngine;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.SFX
 {
     public class SoundSingleton : ASingleton<SoundSingleton>, IVolume
     {

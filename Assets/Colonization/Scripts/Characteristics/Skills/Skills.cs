@@ -13,6 +13,8 @@ namespace Vurbiri.Colonization.Characteristics
     [System.Serializable]
     public partial class Skills : IDisposable
     {
+        public const int COUNT_SKILLS_MAX = 4;
+
         [SerializeField] private float _speedWalk = 0.45f;
         [SerializeField] private float _speedRun = 0.65f;
         [SerializeField] private int _blockCost = 2;
@@ -20,7 +22,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private SkillSettings[] _skillsSettings;
         
         [NonSerialized] private SkillUI[] _skillsUI;
-        [NonSerialized] private EffectsPacket[][] _effects;
+        [NonSerialized] private EffectsHint[][] _effects;
         [NonSerialized] private BlockUI _blockUI;
 
         public IReadOnlyList<SkillUI> SkillsUI => _skillsUI;
@@ -34,10 +36,10 @@ namespace Vurbiri.Colonization.Characteristics
             if(_effects == null | _skillsUI == null)
                 return GetAndCreateSkills(parent);
 
-            int count = _skillsSettings.Length;
-            List<ASkillState> skillStates = new(count);
+            int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
+            List<ASkillState> skillStates = new(countSkills);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < countSkills; i++)
                 skillStates.Add(CreateState(parent, _skillsSettings[i], i));
 
             return skillStates;
@@ -59,27 +61,27 @@ namespace Vurbiri.Colonization.Characteristics
             var hintTextColor = SceneData.Get<HintTextColor>();
             var language = SceneServices.Get<Language>();
 
-            int count = _skillsSettings.Length;
-            List<ASkillState> skillStates = new(count);
+            int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
+            List<ASkillState> skillStates = new(countSkills);
 
-            _effects = new EffectsPacket[count][];
-            _skillsUI = new SkillUI[count];
+            _effects = new EffectsHint[countSkills][];
+            _skillsUI = new SkillUI[countSkills];
 
-            SkillSettings skill; EffectsPacketSettings packSettings;
-            EffectsPacket[] effectsPackets; 
+            SkillSettings skill; EffectsHintSettings packSettings;
+            EffectsHint[] effectsPackets; 
             List<AEffectsUI> effectsSkillUI;
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < countSkills; i++)
             {
                 skill = _skillsSettings[i];
 
-                int countPackets = skill.effectsPacket[i].Count;
-                effectsPackets = new EffectsPacket[countPackets];
+                int countPackets = skill.effectsPacket.Length;
+                effectsPackets = new EffectsHint[countPackets];
                 effectsSkillUI = new(countPackets << 1);
 
                 for (int j = 0, u = 0; j < countPackets; j++)
                 {
                     packSettings = skill.effectsPacket[j];
-                    effectsPackets[j] = packSettings.CreateEffectsPacket(skill.isTargetReact, parent.TypeId, parent.Id, i, u);
+                    effectsPackets[j] = packSettings.CreatePacket(parent, i, u);
                     effectsSkillUI.AddRange(packSettings.CreateEffectsUI(hintTextColor));
                     u += packSettings.Count;
                 }
@@ -92,7 +94,7 @@ namespace Vurbiri.Colonization.Characteristics
 
 #if !UNITY_EDITOR
                 skill.ui = null;
-                skill.effects = null;
+                skill.effectsPacket = null;
 #endif
             }
 

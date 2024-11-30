@@ -12,7 +12,7 @@ namespace VurbiriEditor.Colonization.Actors
     {
         [SerializeField] private VisualTreeAsset _treeAnimationClipSettingsScriptable;
 
-        private const string FIELD_LABEL = "Label", FIELD_CLIP = "clip", FIELD_TOTAL_T = "totalTime", FIELD_DAMAGE_T = "damageTime", FIELD_RANGE = "range";
+        private const string FIELD_LABEL = "Label", FIELD_CLIP = "clip", FIELD_TOTAL_T = "totalTime", FIELD_DAMAGES_T = "damageTimes", FIELD_RANGE = "range";
 
         public override VisualElement CreateInspectorGUI()
         {
@@ -22,31 +22,38 @@ namespace VurbiriEditor.Colonization.Actors
 
             var clipUXML = root.Q<ObjectField>(FIELD_CLIP);
             clipUXML.RegisterCallback<ChangeEvent<Object>>(evt => Setup(evt.newValue as AnimationClip));
+            root.Q<ListView>(FIELD_DAMAGES_T).makeItem = Make;
 
             Setup(clipUXML.value as AnimationClip);
 
             return root;
 
-            #region Local: Setup(..)
+            #region Local: Setup(..), Make(..)
             //=================================
             void Setup(AnimationClip clip)
             {
                 var totalTimeUXML = root.Q<FloatField>(FIELD_TOTAL_T);
-                var damageTimeUXML = root.Q<ListView>(FIELD_DAMAGE_T);
+                var damageTimeUXML = root.Q<ListView>(FIELD_DAMAGES_T);
                 var rangeUXML = root.Q<Slider>(FIELD_RANGE);
 
                 bool isShow = clip != null;
 
                 totalTimeUXML.visible = isShow;
-                //damageTimeUXML.visible = isShow;
+                damageTimeUXML.visible = isShow;
                 rangeUXML.visible = isShow;
 
-                if (!isShow)
-                    return;
+                if (!isShow) return;
 
-                float time = clip.length;// - 0.1f;
-                totalTimeUXML.value = time;
-                //damageTimeUXML.highValue = time;
+                totalTimeUXML.value = clip.length;
+            }
+            //=================================
+            VisualElement Make()
+            {
+                return new Slider
+                {
+                    showInputField = true,
+                    highValue = 100f
+                };
             }
             #endregion
         }

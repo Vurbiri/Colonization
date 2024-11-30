@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
 	{
 		public class SelfBuffState : ASkillState
         {
-            public SelfBuffState(Actor parent, IReadOnlyList<EffectsPacket> effects, int cost, int id) : base(parent, effects, cost, id)
+            public SelfBuffState(Actor parent, IReadOnlyList<EffectsHint> effects, int cost, int id) : base(parent, effects, cost, id)
             {
             }
 
@@ -17,6 +17,11 @@ namespace Vurbiri.Colonization.Actors
             {
                 yield return ApplySkill_Coroutine(_parentTransform);
                 ToExit();
+            }
+
+            protected override void Hint(int index)
+            {
+                _effectsHint[index].Apply(_actor, _actor);
             }
         }
 	}

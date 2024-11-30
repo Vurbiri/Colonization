@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\SFX\Sound\MusicSingleton.cs
 using UnityEngine;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.SFX
 {
     [RequireComponent(typeof(AudioSource))]
     public class MusicSingleton : ASingleton<MusicSingleton>, IVolume

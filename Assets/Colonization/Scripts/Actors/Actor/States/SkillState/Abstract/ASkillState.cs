@@ -12,18 +12,18 @@ namespace Vurbiri.Colonization.Actors
         {
             protected readonly int _id;
             protected readonly Transform _parentTransform;
-            protected readonly IReadOnlyList<EffectsPacket> _effectsPackets;
+            protected readonly IReadOnlyList<EffectsHint> _effectsHint;
             protected readonly int _countPackets;
 
             protected Coroutine _coroutineAction;
             protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
-            public ASkillState(Actor parent, IReadOnlyList<EffectsPacket> effects, int cost, int id) : base(parent, cost, TypeIdKey.Get<ASkillState>(id))
+            public ASkillState(Actor parent, IReadOnlyList<EffectsHint> effects, int cost, int id) : base(parent, cost, TypeIdKey.Get<ASkillState>(id))
             {
                 _id = id;
                 _parentTransform = _actor._thisTransform;
-                _effectsPackets = effects;
-                _countPackets = _effectsPackets.Count;
+                _effectsHint = effects;
+                _countPackets = _effectsHint.Count;
             }
 
             public override void Enter()
@@ -55,20 +55,14 @@ namespace Vurbiri.Colonization.Actors
                 for (int i = 0; i < _countPackets; i++)
                 {
                     yield return wait;
-                    _effectsPackets[i].Apply(_actor, _actor);
+                    Hint(i);
                     wait.Reset();
                 }
-
+                Pay();
                 yield return wait;
             }
 
-            protected virtual void Hint()
-            {
-                for (int i = 0; i < _countPackets; i++)
-                    _effectsPackets[i].Apply(_actor, _actor);
-
-                Pay();
-            }
+            protected abstract void Hint(int index);
         }
     }
 }

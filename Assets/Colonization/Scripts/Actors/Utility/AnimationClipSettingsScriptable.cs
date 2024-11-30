@@ -12,9 +12,6 @@ namespace Vurbiri.Colonization.Actors
         public float totalTime;
         public float[] damageTimes = new float[1];
         public float range;
-
-        public float RemainingTime => 1;// totalTime - damageTimes[^1];
-
     }
 }
 #endif

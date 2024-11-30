@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\Actors\Skin\ActorSkin.cs
 using System;
 using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.Actors
@@ -9,21 +10,21 @@ namespace Vurbiri.Colonization.Actors
     {
         [SerializeField] private AActorSFX _sfx;
         [SerializeField] private Animator _animator;
-        [SerializeField] private TimingSkillSettings[] _timings = new TimingSkillSettings[COUNT_SKILLS];
+        [HideInInspector, SerializeField] private int  _count;
+        [HideInInspector, SerializeField] TimingSkillSettings[] _timings;
 
         #region CONST
-        private const string T_IDLE = "tIdleAdv", B_IDLE = "bIdle";
+        private const string B_IDLE = "bIdle";
         private const string B_MOVE = "bMove", B_RUN = "bRun", B_BLOCK = "bBlock";
         private const string T_REACT = "tReact", T_DEATH = "tDeath";
         private static readonly string[] T_SKILLS = { "bSkill_0", "bSkill_1", "bSkill_2", "bSkill_3" };
-        public const int COUNT_SKILLS = 4;
         #endregion
 
         private readonly StateMachine _stateMachine = new();
         private int _idBoolState = 0;
 
         private BoolSwitchState _moveState, _runState, _blockState;
-        private readonly SkillState[] _skillStates = new SkillState[COUNT_SKILLS];
+        private SkillState[] _skillStates;
         private ATriggerSwitchState _reactState, _deathState;
 
         public event Action EventStart;
@@ -39,7 +40,8 @@ namespace Vurbiri.Colonization.Actors
             _reactState = new ReactState(this);
             _deathState = new DeathState(this);
 
-            for (int i = 0; i < COUNT_SKILLS; i++)
+            _skillStates = new SkillState[_count];
+            for (int i = 0; i < _count; i++)
                 _skillStates[i] = new(T_SKILLS[i], this, _timings[i], i);
             _timings = null;
 
@@ -79,7 +81,7 @@ namespace Vurbiri.Colonization.Actors
         public void Dispose()
         {
             _stateMachine.Dispose();
-            for (int i = 0; i < COUNT_SKILLS; i++)
+            for (int i = 0; i < _count; i++)
                 _skillStates[i].Dispose();
             _moveState.Dispose();
             _runState.Dispose();
@@ -92,16 +94,39 @@ namespace Vurbiri.Colonization.Actors
 
         public void SetAnimationClip(AnimationClipSettingsScriptable clipSettings, int id)
         {
-            var timing = _timings[id];
-            float[] damageTimes = clipSettings.damageTimes;
-            timing.damageTimes = new float[damageTimes.Length];
-            for (int i = 0; i < damageTimes.Length; i++)
-                timing.damageTimes[i] = damageTimes[i];
-            timing.remainingTime = clipSettings.RemainingTime;
 
             AnimatorOverrideController animator = (AnimatorOverrideController)_animator.runtimeAnimatorController;
             if (animator[SKILLS[id]] != clipSettings.clip)
                 animator[SKILLS[id]] = clipSettings.clip;
+
+            if (clipSettings.damageTimes == null || clipSettings.damageTimes.Length == 0)
+                return;
+
+            var timing = _timings[id];
+            int count = clipSettings.damageTimes.Length;
+            timing.damageTimes = new float[count];
+            float totalTime = clipSettings.totalTime;
+            float current, prev = timing.damageTimes[0] = totalTime * clipSettings.damageTimes[0] / 100f;
+            for (int i = 1; i < count; i++)
+            {
+                current = totalTime * clipSettings.damageTimes[i] / 100f;
+                timing.damageTimes[i] = current - prev;
+                prev = current;
+            }
+
+            timing.remainingTime = clipSettings.totalTime - prev;
+        }
+
+        public void SetCountAnimationClips(int count)
+        {
+            _count = count;
+            _timings ??= new TimingSkillSettings[count];
+            if (_timings.Length != count)
+                Array.Resize(ref _timings, count);
+
+            AnimatorOverrideController animator = (AnimatorOverrideController)_animator.runtimeAnimatorController;
+            for (int i = 1; i < Skills.COUNT_SKILLS_MAX; i++)
+                animator[SKILLS[i]] = null;
         }
 
         private void OnValidate()
@@ -111,8 +136,10 @@ namespace Vurbiri.Colonization.Actors
             if (_sfx == null)
                 _sfx = GetComponent<AActorSFX>();
 
-            if(_timings != null && _timings.Length != COUNT_SKILLS)
-                Array.Resize(ref _timings, COUNT_SKILLS);
+            _timings ??= new TimingSkillSettings[_count];
+            if (_timings.Length != _count)
+                Array.Resize(ref _timings, _count);
+
         }
 #endif
     }

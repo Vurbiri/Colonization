@@ -9,8 +9,6 @@ namespace VurbiriEditor.Colonization.Actors
 {
     public class ActorUtility
 	{
-        private static readonly string[] SKILLS = { "A_Skill_0", "A_Skill_1", "A_Skill_2", "A_Skill_3" };
-
         public static void OverrideClips(IReadOnlyList<ActorSettings> list)
         {
             Debug.Log("[OverrideClips]");
@@ -26,7 +24,9 @@ namespace VurbiriEditor.Colonization.Actors
 
                 animator = (AnimatorOverrideController)settings.Skin.GetComponent<Animator>().runtimeAnimatorController;
                 skills = settings.Skills;
-                for (int i = 0; i < skills.List.Count; i++)
+                int count = skills.List.Count;
+                settings.Skin.SetCountAnimationClips(count);
+                for (int i = 0; i < count; i++)
                 {
                     skillSettings = skills.List[i];
 
@@ -34,9 +34,6 @@ namespace VurbiriEditor.Colonization.Actors
                     skillSettings.range = skillSettings.clipSettings.range;
                 }
             }
-
-            //AssetDatabase.Refresh();
-            //AssetDatabase.SaveAssets();
         }
     }
 }

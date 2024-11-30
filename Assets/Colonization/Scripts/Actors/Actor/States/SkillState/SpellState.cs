@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
 	{
 		public class SpellState : ASkillTargetState
         {
-            public SpellState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsPacket> effects, bool isTargetReact, int cost, int id) : 
+            public SpellState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHint> effects, bool isTargetReact, int cost, int id) : 
                 base(parent, targetActor, effects, cost, id)
             {
                 _isTargetReact = isTargetReact;

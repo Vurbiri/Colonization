@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Characteristics
             public bool isTargetReact;
             public float range;
             public int cost;
-            public EffectsPacketSettings[] effectsPacket;
+            public EffectsHintSettings[] effectsPacket;
             public SkillUI ui;
 #if UNITY_EDITOR
             public AnimationClipSettingsScriptable clipSettings;

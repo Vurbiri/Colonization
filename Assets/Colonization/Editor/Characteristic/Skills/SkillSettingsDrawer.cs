@@ -45,8 +45,8 @@ namespace VurbiriEditor.Colonization.Characteristics
                     EditorGUI.indentLevel++;
 
                     DrawLabel("Total Time", $"{clip.totalTime}");
-                    DrawLabel("Damage Time", string.Join(" ", clip.damageTimes));
-                    DrawLabel("Remaining Time", $"{clip.RemainingTime}");
+                    DrawLabel("Damage Time", string.Join("% ", clip.damageTimes) + "%");
+                    DrawLabel("Remaining Time", $"{clip.totalTime * (100f - clip.damageTimes[^1])/100f}");
                     DrawLabelAndSetValue(P_RANGE, clip.range);
                     EditorGUI.indentLevel--;
                     DrawLine(Color.gray);
@@ -79,8 +79,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                     Space(2f);
                     DrawPackets(clip.damageTimes.Length, target);
-                   
-                }
+                 }
 
                 EditorGUI.indentLevel--;
             }
@@ -114,8 +113,11 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 _position.y += _ySpace * 2f;
             }
+            //=================================
             void DrawPackets(int count, TargetOfSkill target)
             {
+                if (count <= 0) return;
+                
                 SerializedProperty packetsProperty = _mainProperty.FindPropertyRelative(P_PACKETS);
                 while (packetsProperty.arraySize > count)
                     packetsProperty.DeleteArrayElementAtIndex(packetsProperty.arraySize - 1);
@@ -131,16 +133,15 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                     _position.y += _height;
                     EditorGUI.PropertyField(_position, effectsProperty, new GUIContent($"Hint {i}"));
-                    if (effectsProperty.isExpanded)
-                    { 
-                        for (int j = 0; j < effectsProperty.arraySize; j++)
-                        {
-                            effectProperty = effectsProperty.GetArrayElementAtIndex(j);
-                            effectProperty.FindPropertyRelative(P_CHILD_TARGET).SetEnumValue(target);
+                    for (int j = 0; j < effectsProperty.arraySize; j++)
+                    {
+                        effectProperty = effectsProperty.GetArrayElementAtIndex(j);
+                        effectProperty.FindPropertyRelative(P_CHILD_TARGET).SetEnumValue(target);
+                        if (effectsProperty.isExpanded)
                             _position.y += _height * EffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j));
-                        }
-                        _position.y += _height * 2f;
                     }
+                    if (effectsProperty.isExpanded)
+                        _position.y += _height * 1.8f;
                 }
                 
             }
@@ -168,7 +169,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                         effectsProperty = packetsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
                         if (effectsProperty.isExpanded)
                         {
-                            rate += 2.1f;
+                            rate += 1.8f;
                             for (int j = 0; j < effectsProperty.arraySize; j++)
                                 rate += EffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j));
                         }

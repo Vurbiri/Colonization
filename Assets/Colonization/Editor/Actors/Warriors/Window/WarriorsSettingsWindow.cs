@@ -15,7 +15,7 @@ namespace VurbiriEditor.Colonization.Actors
 
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
 
-        private static readonly Vector2 wndMinSize = new(475f, 800f);
+        private static readonly Vector2 wndMinSize = new(650f, 800f);
 
         [MenuItem(MENU)]
         private static void ShowWindow()

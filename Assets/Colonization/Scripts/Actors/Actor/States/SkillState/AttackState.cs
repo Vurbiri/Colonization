@@ -14,9 +14,10 @@ namespace Vurbiri.Colonization.Actors
             private readonly float _speedRun;
             private readonly float _selfRange;
 
-            public AttackState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsPacket> effects, float range, float speedRun, int cost, int id) : 
+            public AttackState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHint> effects, float range, float speedRun, int cost, int id) : 
                 base(parent, targetActor, effects, cost, id)
             {
+                _isTargetReact = true;
                 _speedRun = speedRun;
                 _selfRange = range + _actor._extentsZ;
             }

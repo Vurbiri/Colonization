@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.Actors
                 }
 
                 if (isTargetReact)
-                    _coroutine = _actor.StartCoroutine(React_Coroutine());
+                    _coroutine ??= _actor.StartCoroutine(React_Coroutine());
 
                 return true;
             }
