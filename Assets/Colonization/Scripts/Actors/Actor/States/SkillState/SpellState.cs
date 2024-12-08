@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
 	{
 		public class SpellState : ASkillTargetState
         {
-            public SpellState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHint> effects, bool isTargetReact, int cost, int id) : 
+            public SpellState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, bool isTargetReact, int cost, int id) : 
                 base(parent, targetActor, effects, cost, id)
             {
                 _isTargetReact = isTargetReact;
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.Actors
                     ToExit(); yield break;
                 }
 
-                yield return ApplySkill_Coroutine(_target._thisTransform);
+                yield return ApplySkill_Coroutine();
 
                 ToExit();
             }

@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
             private readonly float _speedRun;
             private readonly float _selfRange;
 
-            public AttackState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHint> effects, float range, float speedRun, int cost, int id) : 
+            public AttackState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, float range, float speedRun, int cost, int id) : 
                 base(parent, targetActor, effects, cost, id)
             {
                 _isTargetReact = true;
@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.Actors
                 float path = 1f - (_selfRange + _actor._extentsZ) / HEX_DIAMETER_IN;
 
                 yield return Move_Coroutine(currentHex.Position, targetHex.Position, path);
-                yield return ApplySkill_Coroutine(_target._thisTransform);
+                yield return ApplySkill_Coroutine();
                 yield return Move_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f);
                 
                 ToExit();

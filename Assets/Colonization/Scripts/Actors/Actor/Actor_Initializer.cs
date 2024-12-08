@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization.Actors
             _blockState = skills.GetBlockState(this);
             _stateMachine.AddState(_blockState);
             _stateMachine.AddStates(skills.GetSkillSates(this));
-            _targetState = new(this);
+            _stateMachine.AddState(new TargetState());
 
             _skin.EventStart += _stateMachine.ToDefaultState;
 

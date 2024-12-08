@@ -3,7 +3,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin
     {
-        private class BoolSwitchState : ASkinState
+        protected class BoolSwitchState : ASkinState
         {
             public BoolSwitchState(string stateName, ActorSkin parent, int id = 0) : base(stateName, parent, id)
             {

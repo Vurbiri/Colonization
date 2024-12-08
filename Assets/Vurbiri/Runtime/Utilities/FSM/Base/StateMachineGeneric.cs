@@ -13,6 +13,8 @@ namespace Vurbiri.FSM
         protected Dictionary<TypeIdKey, TState> _states = new();
 
         public TState CurrentState => _currentState;
+        public TState PrevState => _previousState;
+
         public bool IsDefaultState => _currentState.Equals(_defaultState);
 
         public StateMachine(TState startState)
@@ -89,6 +91,8 @@ namespace Vurbiri.FSM
                 _defaultState = state;
         }
         public void SetDefaultState(TState state) => _defaultState = state;
+
+        public void Update() => _currentState.Update();
 
         public void Dispose()
         {

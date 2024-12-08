@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.CONST;
 
@@ -14,9 +15,10 @@ namespace Vurbiri.Colonization.Actors
             protected Actor _target;
             protected bool _isTargetReact;
             protected WaitActivate _waitActor;
+            protected readonly WaitForSecondsRealtime _waitRealtime = new(0.6f);
             protected readonly Relation _relationTarget;
 
-            protected ASkillTargetState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHint> effects, int cost, int id) : 
+            protected ASkillTargetState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, int cost, int id) : 
                 base(parent, effects, cost, id)
             {
                 _relationTarget = targetActor.ToRelation();
@@ -72,10 +74,24 @@ namespace Vurbiri.Colonization.Actors
                 callback(true);
             }
 
-            protected override void Hint(int index)
+            protected override IEnumerator ApplySkill_Coroutine()
             {
-                _effectsHint[index].Apply(_actor, _target);
-                _target.ReactionToAttack(_isTargetReact);
+                CustomYieldInstruction wait = _skin.Skill(_id, _target._thisTransform);
+
+                for (int i = 0; i < _countHits; i++)
+                {
+                    yield return wait;
+                    _effectsHint[i].Apply(_actor, _target);
+                    if (_target.Hit(_isTargetReact))
+                    {
+                        wait = _waitRealtime;
+                        break;
+                    }
+                    wait.Reset();
+                }
+                Pay();
+                yield return wait;
+                _target.SkillUsedEnd();
             }
 
             private Actor CheckTarget(Actor target)
@@ -88,7 +104,7 @@ namespace Vurbiri.Colonization.Actors
                 if (target == _actor || !target.IsCanUseSkill(_actor._owner, _relationTarget) || !ACTOR_ROTATIONS.ContainsKey(key))
                     return null;
 
-                target.BecomeTarget(_actor._owner, _relationTarget);
+                target.SkillUsedStart(_actor._owner, _relationTarget);
                 return target;
             }
         }

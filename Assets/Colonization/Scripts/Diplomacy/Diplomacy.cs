@@ -65,10 +65,10 @@ namespace Vurbiri.Colonization
 			return this[idA, idB] > 0 ? Relation.Friend : Relation.Enemy;
         }
 
-        public bool IsCanActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation targetAttack, out bool isFriendly)
+        public bool IsCanActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation typeAction, out bool isFriendly)
         {
-            isFriendly = targetAttack == Relation.Friend;
-            if (idA == PlayerId.None | idB == PlayerId.None | targetAttack == Relation.None)
+            isFriendly = typeAction == Relation.Friend;
+            if (idA == PlayerId.None | idB == PlayerId.None | typeAction == Relation.None)
                 return false;
 
             if (idA == idB)
@@ -81,8 +81,7 @@ namespace Vurbiri.Colonization
             if (value <= 0)
                 return !isFriendly;
 
-            isFriendly = value > 0;
-            return true;
+            return isFriendly = true;
         }
 
         public void ActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation targetAttack)

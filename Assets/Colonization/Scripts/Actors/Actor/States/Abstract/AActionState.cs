@@ -7,27 +7,26 @@ namespace Vurbiri.Colonization.Actors
     {
         public abstract class AActionState : AState
         {
-            
             protected readonly Ability<ActorAbilityId> _move;
             private readonly Ability<ActorAbilityId> _currentAP;
-            private readonly AbilityModAddSettings _costModAP;
+            private readonly AbilityAddValue _costAP;
 
             public AActionState(Actor parent, int cost = 0, int id = 0) : base(parent, id)
             {
                 _move = parent._move;
                 _currentAP = parent._currentAP;
-                _costModAP = new(cost);
+                _costAP = new(cost);
             }
             public AActionState(Actor parent, int cost, TypeIdKey key) : base(parent, key)
             {
                 _move = parent._move;
                 _currentAP = parent._currentAP;
-                _costModAP = new(cost);
+                _costAP = new(cost);
             }
 
-            protected void Pay()
+            protected virtual void Pay()
             {
-                _currentAP.RemoveModifier(_costModAP);
+                _currentAP.RemoveModifier(_costAP);
                 _move.IsValue = false;
             }
         }

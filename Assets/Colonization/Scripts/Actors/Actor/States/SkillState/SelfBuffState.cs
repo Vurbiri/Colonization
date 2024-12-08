@@ -9,20 +9,30 @@ namespace Vurbiri.Colonization.Actors
 	{
 		public class SelfBuffState : ASkillState
         {
-            public SelfBuffState(Actor parent, IReadOnlyList<EffectsHint> effects, int cost, int id) : base(parent, effects, cost, id)
+            public SelfBuffState(Actor parent, IReadOnlyList<EffectsHit> effects, int cost, int id) : base(parent, effects, cost, id)
             {
             }
 
             protected override IEnumerator Actions_Coroutine()
             {
-                yield return ApplySkill_Coroutine(_parentTransform);
+                yield return ApplySkill_Coroutine();
                 ToExit();
             }
 
-            protected override void Hint(int index)
+            protected override IEnumerator ApplySkill_Coroutine()
             {
-                _effectsHint[index].Apply(_actor, _actor);
+                WaitActivate wait = _skin.Skill(_id, _parentTransform);
+
+                for (int i = 0; i < _countHits; i++)
+                {
+                    yield return wait;
+                    _effectsHint[i].Apply(_actor, _actor);
+                    wait.Reset();
+                }
+                Pay();
+                yield return wait;
             }
+
         }
 	}
 }

@@ -12,18 +12,18 @@ namespace Vurbiri.Colonization.Actors
         {
             protected readonly int _id;
             protected readonly Transform _parentTransform;
-            protected readonly IReadOnlyList<EffectsHint> _effectsHint;
-            protected readonly int _countPackets;
+            protected readonly IReadOnlyList<EffectsHit> _effectsHint;
+            protected readonly int _countHits;
 
             protected Coroutine _coroutineAction;
             protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
-            public ASkillState(Actor parent, IReadOnlyList<EffectsHint> effects, int cost, int id) : base(parent, cost, TypeIdKey.Get<ASkillState>(id))
+            public ASkillState(Actor parent, IReadOnlyList<EffectsHit> effects, int cost, int id) : base(parent, cost, TypeIdKey.Get<ASkillState>(id))
             {
                 _id = id;
                 _parentTransform = _actor._thisTransform;
                 _effectsHint = effects;
-                _countPackets = _effectsHint.Count;
+                _countHits = _effectsHint.Count;
             }
 
             public override void Enter()
@@ -46,23 +46,14 @@ namespace Vurbiri.Colonization.Actors
                 _fsm.ToDefaultState();
             }
 
-            protected abstract IEnumerator Actions_Coroutine();
-
-            protected IEnumerator ApplySkill_Coroutine(Transform target)
+            protected override void Pay()
             {
-                WaitActivate wait = _skin.Skill(_id, target);
-
-                for (int i = 0; i < _countPackets; i++)
-                {
-                    yield return wait;
-                    Hint(i);
-                    wait.Reset();
-                }
-                Pay();
-                yield return wait;
+                base.Pay();
+                _actor.TriggerChange();
             }
 
-            protected abstract void Hint(int index);
+            protected abstract IEnumerator Actions_Coroutine();
+            protected abstract IEnumerator ApplySkill_Coroutine();
         }
     }
 }

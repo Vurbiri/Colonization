@@ -14,10 +14,11 @@ namespace Vurbiri.Colonization.Characteristics
             public bool isTargetReact;
             public float range;
             public int cost;
-            public EffectsHintSettings[] effectsPacket;
+            public EffectsHitSettings[] effectsHits;
             public SkillUI ui;
 #if UNITY_EDITOR
             public AnimationClipSettingsScriptable clipSettings;
+            public ASkillMonoSFX skillSFX;
 #endif
         }
     }

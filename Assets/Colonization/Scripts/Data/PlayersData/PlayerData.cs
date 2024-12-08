@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization.Data
         {
             _unsubscribers += roadsReactive.Subscribe(OnRoads, calling);
 
-            #region Local OnRoads(...)
+            #region Local OnRoads(..)
             //==============================
             void OnRoads(int[][][] values)
             {
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization.Data
         {
             _unsubscribers += warriorsReactive.Subscribe(OnWarriors);
 
-            #region Local OnWarriors(...)
+            #region Local OnWarriors(..)
             //==============================
             void OnWarriors(Actor actor, TypeEvent operation)
             {
@@ -85,14 +85,14 @@ namespace Vurbiri.Colonization.Data
                     case TypeEvent.Add:
                         _warriors.Add(actor.ToArray());
                         actionThisChange?.Invoke(this);
-                        break;
+                        return;
                     case TypeEvent.Remove:
                         _warriors.RemoveAt(actor.Index);
                         actionThisChange?.Invoke(this);
-                        break;
+                        return;
                     case TypeEvent.Change:
                         _warriors[actor.Index] = actor.ToArray();
-                        break;
+                        return;
                     default:
                         return;
                 }
@@ -120,7 +120,7 @@ namespace Vurbiri.Colonization.Data
         {
             _unsubscribers += edificesReactive.Subscribe(OnEdifice);
 
-            #region Local OnEdifice(...)
+            #region Local OnEdifice(..)
             //==============================
             void OnEdifice(int index, Crossroad crossroad, TypeEvent operation)
             {
@@ -138,13 +138,9 @@ namespace Vurbiri.Colonization.Data
                     default:
                         return;
                 }
-
                 actionThisChange?.Invoke(this);
-                
             }
             #endregion
         }
-
-        
     }
 }

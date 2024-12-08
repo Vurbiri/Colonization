@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization.Actors
                     yield return _waitDamages[i];
 
                     waitActivate.Activate();
-                    _sfx.Hint(_id);
+                    _sfx.Hit(_id);
                 }
 
                 yield return _waitEnd;

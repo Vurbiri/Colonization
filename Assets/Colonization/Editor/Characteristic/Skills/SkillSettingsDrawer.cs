@@ -10,8 +10,8 @@ namespace VurbiriEditor.Colonization.Characteristics
     public class SkillSettingsDrawer : PropertyDrawerUtility
     {
         private const string NAME_ELEMENT = "Skill {0}";
-        private const string P_CLIP = "clipSettings", P_MOVE = "isMove", P_REACT = "isTargetReact", P_UI = "ui";
-        private const string P_RANGE = "range", P_TARGET = "target", P_COST = "cost", P_PACKETS = "effectsPacket", P_EFFECTS = "_effects";
+        private const string P_CLIP = "clipSettings", P_SFX = "skillSFX", P_MOVE = "isMove", P_REACT = "isTargetReact", P_UI = "ui";
+        private const string P_RANGE = "range", P_TARGET = "target", P_COST = "cost", P_HITS = "effectsHits", P_EFFECTS = "_effects";
         private const string P_SPRITE = "_sprite", P_KEY_NAME = "_nameKey", P_COST_UI = "_cost";
         private const string P_CHILD_TARGET = "_parentTarget";
         private readonly string[] KEYS_NAME_SKILLS = { "Attack", "Sweep", "Combo" };
@@ -44,11 +44,15 @@ namespace VurbiriEditor.Colonization.Characteristics
                     DrawLine(Color.gray);
                     EditorGUI.indentLevel++;
 
-                    DrawLabel("Total Time", $"{clip.totalTime}");
-                    DrawLabel("Damage Time", string.Join("% ", clip.damageTimes) + "%");
-                    DrawLabel("Remaining Time", $"{clip.totalTime * (100f - clip.damageTimes[^1])/100f}");
+                    DrawLabel("Total Time", $"{clip.totalTime} c");
+                    DrawLabel("Damage Time", $"{string.Join("% ", clip.damageTimes)}%");
+                    DrawLabel("Remaining Time", $"{clip.totalTime * (100f - clip.damageTimes[^1])/100f} c");
                     DrawLabelAndSetValue(P_RANGE, clip.range);
                     EditorGUI.indentLevel--;
+                    DrawLine(Color.gray);
+
+                    DrawObject<ASkillMonoSFX>(P_SFX, true);
+
                     DrawLine(Color.gray);
 
                     Space();
@@ -78,7 +82,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     DrawObject<Sprite>(uiProperty, P_SPRITE, true);
 
                     Space(2f);
-                    DrawPackets(clip.damageTimes.Length, target);
+                    DrawHits(clip.damageTimes.Length, target);
                  }
 
                 EditorGUI.indentLevel--;
@@ -114,25 +118,25 @@ namespace VurbiriEditor.Colonization.Characteristics
                 _position.y += _ySpace * 2f;
             }
             //=================================
-            void DrawPackets(int count, TargetOfSkill target)
+            void DrawHits(int count, TargetOfSkill target)
             {
                 if (count <= 0) return;
                 
-                SerializedProperty packetsProperty = _mainProperty.FindPropertyRelative(P_PACKETS);
-                while (packetsProperty.arraySize > count)
-                    packetsProperty.DeleteArrayElementAtIndex(packetsProperty.arraySize - 1);
-                while (packetsProperty.arraySize < count)
-                    packetsProperty.InsertArrayElementAtIndex(packetsProperty.arraySize);
+                SerializedProperty hitsProperty = _mainProperty.FindPropertyRelative(P_HITS);
+                while (hitsProperty.arraySize > count)
+                    hitsProperty.DeleteArrayElementAtIndex(hitsProperty.arraySize - 1);
+                while (hitsProperty.arraySize < count)
+                    hitsProperty.InsertArrayElementAtIndex(hitsProperty.arraySize);
 
                 SerializedProperty effectsProperty, effectProperty;
                 for (int i = 0; i < count; i++)
                 {
-                    effectsProperty = packetsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
+                    effectsProperty = hitsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
                     if (effectsProperty.arraySize == 0)
                         effectsProperty.InsertArrayElementAtIndex(0);
 
                     _position.y += _height;
-                    EditorGUI.PropertyField(_position, effectsProperty, new GUIContent($"Hint {i}"));
+                    EditorGUI.PropertyField(_position, effectsProperty, new GUIContent($"Hit {i}"));
                     for (int j = 0; j < effectsProperty.arraySize; j++)
                     {
                         effectProperty = effectsProperty.GetArrayElementAtIndex(j);
@@ -158,15 +162,15 @@ namespace VurbiriEditor.Colonization.Characteristics
                 AnimationClipSettingsScriptable clipSett = property.FindPropertyRelative(P_CLIP).objectReferenceValue as AnimationClipSettingsScriptable;
                 if (clipSett != null && clipSett.clip != null)
                 {
-                    rate += 13.1f;
+                    rate += 14.1f;
 
-                    SerializedProperty packetsProperty = property.FindPropertyRelative(P_PACKETS);
+                    SerializedProperty hitsProperty = property.FindPropertyRelative(P_HITS);
                     SerializedProperty effectsProperty;
 
-                    for (int i = 0; i < packetsProperty.arraySize; i++)
+                    for (int i = 0; i < hitsProperty.arraySize; i++)
                     {
                         rate += 1f;
-                        effectsProperty = packetsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
+                        effectsProperty = hitsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
                         if (effectsProperty.isExpanded)
                         {
                             rate += 1.8f;

@@ -6,14 +6,20 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract class AWarriorSFX : AActorSFX
     {
+        [Space]
+        [SerializeField] protected float _scale = 0.01f;
+        [SerializeField] protected float _durationScaling = 0.9f;
+
         protected virtual IEnumerator Start()
         {
-            Vector3 scale = new(0.1f, 0.1f, 0.1f), delta = Vector3.one;
-            while(scale.x <= 1f )
+            Vector3 current = _scale * Vector3.one;
+            float speed = (1f - _scale) / _durationScaling;
+            while(_scale <= 1f )
             {
-                _thisTransform.localScale = scale;
+                _thisTransform.localScale = current;
                 yield return null;
-                scale += Time.deltaTime * delta;
+                _scale += speed * Time.deltaTime;
+                current.x = current.y = current.z = _scale;
             }
             _thisTransform.localScale = Vector3.one;
         }

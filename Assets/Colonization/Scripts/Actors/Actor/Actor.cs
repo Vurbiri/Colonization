@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Actors\Actor\Actor.cs
 using System;
+using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.FSMSelectable;
@@ -33,7 +34,8 @@ namespace Vurbiri.Colonization.Actors
 
         protected StateMachineSelectable _stateMachine;
         protected BlockState _blockState;
-        protected TargetState _targetState;
+
+        protected Coroutine _onHitCoroutine, _deathCoroutine;
         #endregion
 
         #region Propirties
@@ -67,15 +69,14 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         public Relation GetRelation(Id<PlayerId> id) => _diplomacy.GetRelation(id, _owner);
-        public bool IsCanUseSkill(Id<PlayerId> id, Relation targetAttack, out bool isFriendly)
+        public bool IsCanUseSkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
-            return _diplomacy.IsCanActorsInteraction(id, _owner, targetAttack, out isFriendly);
+            return _diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
         public void AddEffect(ReactiveEffect effect) => _effects.Add(effect);
-        public int ApplyEffect(AEffect effect)
+        public int ApplyEffect(IPerk effect)
         {
-            Debug.Log($"currentHP {_currentHP.Value}");
             int delta = _abilities.AddPerk(effect);
             Debug.Log($"currentHP {_currentHP.Value}");
 
@@ -83,8 +84,7 @@ namespace Vurbiri.Colonization.Actors
                 actionThisChange?.Invoke(this, TypeEvent.Change);
             return delta;
         }
-        public bool ReactionToAttack(bool isTargetReact) => !_targetState.Update(isTargetReact);
-
+        
         public virtual void Select()
         {
             _stateMachine.Select();
@@ -111,25 +111,62 @@ namespace Vurbiri.Colonization.Actors
 
         public void Dispose()
         {
-            Debug.Log("Dispose");
             _skin.Dispose();
             _stateMachine.Dispose();
             Destroy(gameObject);
         }
 
-        private void BecomeTarget(Id<PlayerId> initiator, Relation relation)
-        {
-            _stateMachine.SetState(_targetState);
-            _diplomacy.ActorsInteraction(_owner, initiator, relation);
-        }
         private bool IsCanUseSkill(Id<PlayerId> id, Relation targetAttack) => _diplomacy.IsCanActorsInteraction(id, _owner, targetAttack, out _);
 
-        
+        private void SkillUsedStart(Id<PlayerId> initiator, Relation relation)
+        {
+            _stateMachine.SetState<TargetState>();
+            _diplomacy.ActorsInteraction(_owner, initiator, relation);
+        }
+
+        private void SkillUsedEnd()
+        {
+            if (_deathCoroutine == null)
+                _stateMachine.ToPrevState();
+        }
+
+        private bool Hit(bool isTargetReact)
+        {
+            if (_onHitCoroutine != null)
+                StopCoroutine(_onHitCoroutine);
+
+            if (_currentHP.Value <= 0)
+            {
+                _deathCoroutine = StartCoroutine(Death_Coroutine());
+                return true;
+            }
+
+            if (isTargetReact)
+                _onHitCoroutine = StartCoroutine(Hit_Coroutine());
+
+            return false;
+        }
+
+        private IEnumerator Death_Coroutine()
+        {
+            Removing();
+            yield return _skin.Death();
+            Dispose();
+        }
+
+        private IEnumerator Hit_Coroutine()
+        {
+            yield return _skin.React();
+            _onHitCoroutine = null;
+        }
 
         private void RemoveWallDefenceEffect()
         {
             if (_wallDefenceEffect != null)
+            {
                 _effects.Remove(_wallDefenceEffect);
+                _wallDefenceEffect = null;
+            }
         }
 
         private void OnStartTurn(Id<PlayerId> prev, Id<PlayerId> current)
@@ -159,9 +196,10 @@ namespace Vurbiri.Colonization.Actors
         {
             actionThisChange?.Invoke(this, TypeEvent.Change);
         }
+        private void TriggerChange() => actionThisChange?.Invoke(this, TypeEvent.Change);
 
-        private int CurrentHPCamp(int value) => Mathf.Clamp(value, 0, _abilities.GetValue(ActorAbilityId.MaxHP));
-        private int CurrentAPCamp(int value) => Mathf.Clamp(value, 0, _abilities.GetValue(ActorAbilityId.MaxAP));
+        private int CurrentHPCamp(int value) => Math.Clamp(value, 0, _abilities.GetValue(ActorAbilityId.MaxHP));
+        private int CurrentAPCamp(int value) => Math.Clamp(value, 0, _abilities.GetValue(ActorAbilityId.MaxAP));
 
     }
 }

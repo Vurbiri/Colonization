@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
     {
         public class MoveState : AActionState
         {
-            private readonly float _speed = 0.5f;
+            private readonly float _speed;
             private readonly Transform _parentTransform;
             private WaitActivate _waitHexagon;
             private Hexagon _targetHex;
@@ -91,10 +91,11 @@ namespace Vurbiri.Colonization.Actors
                 Vector3 start = currentHex.Position, end = _targetHex.Position;
 
                 currentHex.ExitActor();
-                _actor.RemoveWallDefenceEffect();
                 _actor._currentHex = currentHex = _targetHex;
                 currentHex.EnterActor(_actor);
+
                 _move.IsValue = false;
+                _actor.RemoveWallDefenceEffect();
 
                 _skin.Move();
 

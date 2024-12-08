@@ -168,9 +168,9 @@ namespace Vurbiri.Colonization
             return true;
         }
 
-        public bool TrySetSelectableActor(Id<PlayerId> id, Relation targetAttack)
+        public bool TrySetSelectableActor(Id<PlayerId> id, Relation typeAction)
         {
-            if (_isGate | _isWater | _owner == null || !_owner.IsCanUseSkill(id, targetAttack, out bool isFriendly))
+            if (_isGate | _isWater | _owner == null || !_owner.IsCanUseSkill(id, typeAction, out bool isFriendly))
                 return false;
 
             _mark = _poolMarks.Get(_thisTransform, false).View(isFriendly);
