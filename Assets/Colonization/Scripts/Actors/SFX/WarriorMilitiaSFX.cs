@@ -4,12 +4,5 @@ namespace Vurbiri.Colonization.Actors
     public class WarriorMilitiaSFX : AWarriorSFX
     {
 
-		
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-			
-        }
-#endif
 	}
 }

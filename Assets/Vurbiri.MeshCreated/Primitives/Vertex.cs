@@ -42,6 +42,7 @@ namespace Vurbiri.CreatingMesh
 
         public readonly Vertex Offset(Vector3 direct) => new(_position + direct, _normal, _color);
 
+        public readonly bool Equals(Vector3 position, Vector3 normal, Color32 color) => _position == position && _normal == normal && _color.Equals(color);
         public readonly bool Equals(Vertex other) => _position == other._position && _normal == other._normal && _color.Equals(other._color);
         public override readonly bool Equals(object obj) => obj is Vertex vertex && Equals(vertex);
 

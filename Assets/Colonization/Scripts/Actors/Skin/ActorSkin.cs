@@ -81,6 +81,8 @@ namespace Vurbiri.Colonization.Actors
 
         public void Dispose()
         {
+            _animator.GetBehaviour<SpawnBehaviour>().EventExit -= EventStart;
+
             _stateMachine.Dispose();
             for (int i = 0; i < _skillStates.Length; i++)
                 _skillStates[i].Dispose();

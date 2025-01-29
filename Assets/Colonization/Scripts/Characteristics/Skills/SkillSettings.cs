@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Characteristics
             public SkillUI ui;
 #if UNITY_EDITOR
             public AnimationClipSettingsScriptable clipSettings;
-            public ASkillMonoSFX skillSFX;
+            public AScriptableSFX skillSFX;
 #endif
         }
     }

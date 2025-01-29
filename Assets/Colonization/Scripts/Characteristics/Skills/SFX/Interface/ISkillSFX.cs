@@ -6,5 +6,7 @@ namespace Vurbiri.Colonization.Characteristics
     public interface ISkillSFX
 	{
 		public void Run(Transform target);
+
+        public void Hint(int index);
     }
 }

@@ -5,14 +5,19 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public class SkillParticleSFX : ASkillMonoSFX
     {
-        private ParticleSystem _particle;
+        [SerializeField] AudioClip _clip;
 
-        protected override ISkillSFX Init(float time)
+        private ParticleSystem _particle;
+        private AudioSource _audioSource;
+
+        public override ISkillSFX Init(IActorSFX parent, float duration)
 		{
             _particle = GetComponent<ParticleSystem>();
             ParticleSystem.MainModule main = _particle.main;
-            main.duration = time;
-            main.startLifetime = time;
+            main.duration = duration;
+            main.startLifetime = duration;
+
+            _audioSource = parent.AudioSource;
 
             return this;
         }
@@ -22,6 +27,8 @@ namespace Vurbiri.Colonization.Characteristics
             _thisTransform.SetParent(target, false);
             _thisGO.SetActive(true);
             _particle.Play();
+
+            _audioSource.PlayOneShot(_clip);
         }
 
         private void OnParticleSystemStopped()
@@ -29,5 +36,6 @@ namespace Vurbiri.Colonization.Characteristics
             _thisGO.SetActive(false);
             _thisTransform.SetParent(_parent, false);
         }
+
 	}
 }

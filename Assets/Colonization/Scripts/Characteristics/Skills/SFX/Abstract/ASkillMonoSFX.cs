@@ -17,13 +17,10 @@ namespace Vurbiri.Colonization.Characteristics
             _parent = _thisTransform.parent;
         }
 
-        public ISkillSFX Create(Transform container, float time)
-        {
-            return Instantiate(this, container).Init(time);
-        }
-
         public abstract void Run(Transform target);
 
-        protected abstract ISkillSFX Init(float time);
+        public virtual void Hint(int index) { }
+
+        public abstract ISkillSFX Init(IActorSFX parent, float duration);
     }
 }

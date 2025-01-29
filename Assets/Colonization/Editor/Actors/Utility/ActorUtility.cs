@@ -1,5 +1,6 @@
 //Assets\Colonization\Editor\Actors\Utility\ActorUtility.cs
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
@@ -53,7 +54,11 @@ namespace VurbiriEditor.Colonization.Actors
                 for (; i < COUNT_SKILLS_MAX; i++)
                     if (animator[A_SKILLS[i]] != null)
                         animator[A_SKILLS[i]] = null;
+
+                PrefabUtility.SavePrefabAsset(actorSkin.gameObject);
             }
+
+            AssetDatabase.SaveAssets();
         }
     }
 }

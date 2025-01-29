@@ -51,7 +51,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     EditorGUI.indentLevel--;
                     DrawLine(Color.gray);
 
-                    DrawObject<ASkillMonoSFX>(P_SFX, true);
+                    DrawObject<AScriptableSFX>(P_SFX, true);
 
                     DrawLine(Color.gray);
 

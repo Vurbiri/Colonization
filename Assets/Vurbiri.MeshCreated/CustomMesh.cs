@@ -9,16 +9,13 @@ namespace Vurbiri.CreatingMesh
     public class CustomMesh
     {
         private readonly string _name;
-        private readonly List<Vertex> _vertices = new();
+        private readonly Vertices _vertices;
         private readonly List<int> _triangles = new();
-        private readonly BoundUV _boundsUV;
-        private readonly bool _convertUV;
 
         public CustomMesh(string name, Vector2 sizeBound, bool convertUV = true)
         {
             _name = name;
-            _boundsUV = new(sizeBound);
-            _convertUV = convertUV;
+            _vertices = new(sizeBound, convertUV);
         }
 
         public void AddPrimitive(IPrimitive primitive) => AddTriangles(primitive.Triangles);
@@ -45,52 +42,37 @@ namespace Vurbiri.CreatingMesh
                     if (isNotAddVertex = vertex == _vertices[vIndex])
                         break;
                 }
+
                 if (!isNotAddVertex)
-                {
-                    if (_convertUV)
-                        vertex.UV = _boundsUV.ConvertToUV(vertex.UV);
                     _vertices.Add(vertex);
-                }
+
                 _triangles.Add(vIndex);
             }
         }
 
         public Mesh ToMesh()
         {
-            int count = _vertices.Count;
-            Vector3[] vertices = new Vector3[count], normals = new Vector3[count];
-            Color32[] colors = new Color32[count];
-            Vector2[] uv = new Vector2[count];
-            Vertex vertex;
-            for (int i = 0; i < count; i++)
-            {
-                vertex = _vertices[i];
-                vertices[i] = vertex.Position;
-                normals[i] = vertex.Normal;
-                colors[i] = vertex.Color;
-                uv[i] = vertex.UV;
-            }
+            Mesh mesh = new() { name = _name };
 
-            Mesh mesh = new()
-            {
-                name = _name,
-                vertices = vertices,
-                normals = normals,
-                colors32 = colors,
-                uv = uv,
-                triangles = _triangles.ToArray(),
-            };
+            _vertices.SetupMesh(mesh);
 
+            mesh.SetTriangles(_triangles, 0);
             mesh.RecalculateBounds();
-            
+
             return mesh;
         }
 
         public IEnumerator ToMesh_Coroutine(Action<Mesh> callback, bool tangents = false, bool isOptimize = true, bool isReadable = false)
         {
-            Mesh mesh = ToMesh();
+            Mesh mesh = new() { name = _name };
 
+            yield return _vertices.SetupMesh_Coroutine(mesh);
+
+            mesh.SetTriangles(_triangles, 0);
             yield return null;
+
+            mesh.RecalculateBounds();
+
             if (tangents)
                 mesh.RecalculateTangents();
             yield return null;
@@ -103,5 +85,60 @@ namespace Vurbiri.CreatingMesh
 
             callback?.Invoke(mesh);
         }
+
+        #region Nested: Vertices
+        //***********************************
+        private class Vertices
+        {
+            private readonly List<Vector3> _positions = new();
+            private readonly List<Vector3> _normals = new();
+            private readonly List<Vector2> _uvs = new();
+            private readonly List<Color32> _colors = new();
+
+            private readonly BoundUV _boundsUV;
+            private readonly bool _convertUV;
+
+            private int _count = 0;
+
+            public int Count => _count;
+            public Vertex this[int index] => new(_positions[index], _normals[index], _colors[index], _uvs[index]);
+
+            public Vertices(Vector2 sizeBound, bool convertUV)
+            {
+                _boundsUV = new(sizeBound);
+                _convertUV = convertUV;
+            }
+
+            public void Add(Vertex v)
+            {
+                _positions.Add(v.Position);
+                _normals.Add(v.Normal);
+                _colors.Add(v.Color);
+                _uvs.Add(_convertUV ? _boundsUV.ConvertToUV(v.UV) : v.UV);
+
+                _count++;
+            }
+
+            public void SetupMesh(Mesh mesh)
+            {
+                mesh.SetVertices(_positions);
+                mesh.SetNormals(_normals);
+                mesh.SetUVs(0, _uvs);
+                mesh.SetColors(_colors);
+            }
+
+            public IEnumerator SetupMesh_Coroutine(Mesh mesh)
+            {
+                mesh.SetVertices(_positions);
+                yield return null;
+                mesh.SetNormals(_normals);
+                yield return null;
+                mesh.SetUVs(0, _uvs);
+                yield return null;
+                mesh.SetColors(_colors);
+                yield return null;
+            }
+        }
+        #endregion
     }
 }
