@@ -34,6 +34,7 @@ namespace Vurbiri.Colonization.Actors
 
         protected StateMachineSelectable _stateMachine;
         protected BlockState _blockState;
+        protected TargetState _targetState;
 
         protected Coroutine _onHitCoroutine, _deathCoroutine;
         #endregion
@@ -78,7 +79,6 @@ namespace Vurbiri.Colonization.Actors
         public int ApplyEffect(IPerk effect)
         {
             int delta = _abilities.AddPerk(effect);
-            Debug.Log($"currentHP {_currentHP.Value}");
 
             if(delta != 0)
                 actionThisChange?.Invoke(this, TypeEvent.Change);
@@ -120,14 +120,21 @@ namespace Vurbiri.Colonization.Actors
 
         private void SkillUsedStart(Id<PlayerId> initiator, Relation relation)
         {
-            _stateMachine.SetState<TargetState>();
+            if(_stateMachine.IsDefaultState)
+                _stateMachine.SetState<TargetState>();
+
             _diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
 
         private void SkillUsedEnd()
         {
             if (_deathCoroutine == null)
-                _stateMachine.ToPrevState();
+            {
+                if (_stateMachine.CurrentState == _targetState)
+                    _stateMachine.ToDefaultState();
+
+                actionThisChange?.Invoke(this, TypeEvent.Change);
+            }
         }
 
         private bool Hit(bool isTargetReact)

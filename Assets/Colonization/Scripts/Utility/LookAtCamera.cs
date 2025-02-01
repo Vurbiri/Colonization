@@ -1,13 +1,13 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Utilities\LookAtCamera.cs
+//Assets\Colonization\Scripts\Utility\LookAtCamera.cs
 using UnityEngine;
 
-namespace Vurbiri.Colonization.UI
+namespace Vurbiri.Colonization
 {
     public class LookAtCamera : MonoBehaviour
     {
         private Transform _cameraTransform;
         private Transform _thisTransform;
-        private Vector3 _lastCameraPosition;
+        private Vector3 _lastCameraPosition = -Vector3.up, _up = Vector3.up;
 
         public void Init(Camera camera)
         {
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
                 return;
 
             _lastCameraPosition = _cameraTransform.position;
-            _thisTransform.rotation = Quaternion.LookRotation(_cameraTransform.forward, Vector3.up);
+            _thisTransform.rotation = Quaternion.LookRotation(_cameraTransform.forward, _up);
         }
     }
 }

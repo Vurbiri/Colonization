@@ -84,18 +84,17 @@ namespace Vurbiri.Colonization.Data
                 {
                     case TypeEvent.Add:
                         _warriors.Add(actor.ToArray());
-                        actionThisChange?.Invoke(this);
-                        return;
+                        break;
                     case TypeEvent.Remove:
                         _warriors.RemoveAt(actor.Index);
-                        actionThisChange?.Invoke(this);
-                        return;
+                        break;
                     case TypeEvent.Change:
                         _warriors[actor.Index] = actor.ToArray();
-                        return;
+                        break;
                     default:
                         return;
                 }
+                actionThisChange?.Invoke(this);
             }
             #endregion
         }

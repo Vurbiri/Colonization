@@ -21,6 +21,8 @@ namespace Vurbiri.Colonization.Actors
 
             protected override IEnumerator ApplySkill_Coroutine()
             {
+                Pay();
+
                 WaitActivate wait = _skin.Skill(_id, _parentTransform);
 
                 for (int i = 0; i < _countHits; i++)
@@ -29,7 +31,6 @@ namespace Vurbiri.Colonization.Actors
                     _effectsHint[i].Apply(_actor, _actor);
                     wait.Reset();
                 }
-                Pay();
                 yield return wait;
             }
 

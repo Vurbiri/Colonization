@@ -114,7 +114,7 @@ namespace Vurbiri.Colonization.Actors
 #endif
         }
         #endregion
-        #region Nested: PrefabsSFX
+        #region Nested: ScriptableSFX
         //***********************************
         [Serializable]
         protected class ScriptableSFX : IEquatable<ScriptableSFX>

@@ -66,6 +66,7 @@ namespace Vurbiri.Colonization.Actors
                 if (_target == null)
                     yield break;
 
+                Pay();
                 Hexagon targetHex = _target._currentHex;
                 _parentTransform.localRotation = ACTOR_ROTATIONS[targetHex.Key - currentHex.Key];
                 if(_isTargetReact)
@@ -89,7 +90,6 @@ namespace Vurbiri.Colonization.Actors
                     }
                     wait.Reset();
                 }
-                Pay();
                 yield return wait;
                 _target.SkillUsedEnd();
             }

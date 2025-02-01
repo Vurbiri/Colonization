@@ -19,9 +19,9 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
+                Pay();
                 _skin.Block();
                 _actor.AddEffect(CreateBlockEffect(_code, _value));
-                Pay();
             }
 
         }

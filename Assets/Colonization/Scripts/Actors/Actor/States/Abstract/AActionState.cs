@@ -26,8 +26,8 @@ namespace Vurbiri.Colonization.Actors
 
             protected virtual void Pay()
             {
-                _currentAP.RemoveModifier(_costAP);
                 _move.IsValue = false;
+                _currentAP.RemoveModifier(_costAP);
             }
         }
     }

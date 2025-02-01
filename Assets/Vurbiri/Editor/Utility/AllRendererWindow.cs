@@ -1,5 +1,4 @@
 //Assets\Vurbiri\Editor\Utility\AllRendererWindow.cs
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -69,7 +68,6 @@ namespace VurbiriEditor
             //=================================
             void DrawRenderer()
             {
-                Type type = typeof(Renderer);
                 EditorGUILayout.Space();
                 EditorGUILayout.BeginVertical(GUI.skin.window);
                 _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
