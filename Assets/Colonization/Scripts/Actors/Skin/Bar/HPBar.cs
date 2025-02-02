@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
@@ -9,20 +10,24 @@ namespace Vurbiri.Colonization.Actors
     public class HPBar : MonoBehaviour, IRendererVisible
     {
 		private const float SP_WIDTH = 8f, SP_HIGHT = 1f;
+        private const int SP_ID = 0;
 
-		[SerializeField] private SpriteRenderer _backgroundSprite;
+        [SerializeField] private SpriteRenderer _backgroundSprite;
 		[SerializeField] private SpriteRenderer _barSprite;
 		[SerializeField] private TextMeshPro _maxValueTMP;
         [SerializeField] private TextMeshPro _currentValueTMP;
 
 		private Transform _barTransform;
-		private int _currentValue, _maxValue;
-		private Unsubscribers _unsubscribers = new();
+		private int _currentValue = int.MinValue, _maxValue;
+        private PopupWidget3D _popup;
+        private Unsubscribers _unsubscribers;
 
         public bool IsVisible => _backgroundSprite.isVisible || _barSprite.isVisible;
 
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, Color color, int orderLevel)
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, PopupWidget3D popup, Color color, int orderLevel)
 		{
+            _popup = popup;
+
             _backgroundSprite.size = _barSprite.size = new(SP_WIDTH, SP_HIGHT);
             _barTransform = _barSprite.transform;
             _barSprite.color = color;
@@ -30,7 +35,7 @@ namespace Vurbiri.Colonization.Actors
 			_backgroundSprite.sortingOrder += orderLevel;
             _barSprite.sortingOrder += orderLevel;
 			_maxValueTMP.sortingOrder += orderLevel;
-            _currentValueTMP.geometrySortingOrder += orderLevel;
+            _currentValueTMP.sortingOrder += orderLevel;
 
             _unsubscribers += abilities.GetAbility(ActorAbilityId.MaxHP).Subscribe(SetMaxValue);
             _unsubscribers += abilities.GetAbility(ActorAbilityId.CurrentHP).Subscribe(SetCurrentValue);
@@ -46,11 +51,15 @@ namespace Vurbiri.Colonization.Actors
             //=================================
             void SetCurrentValue(int value)
             {
-                _currentValueTMP.text = Mathf.RoundToInt((float)value / ActorAbilityId.RATE_ABILITY).ToString();
+                int rateValue = Mathf.RoundToInt((float)value / ActorAbilityId.RATE_ABILITY);
+                _currentValueTMP.text = rateValue.ToString();
 
                 float size = SP_WIDTH * value / _maxValue;
                 _barSprite.size = new(size, SP_HIGHT);
                 _barTransform.localPosition = new((size - SP_WIDTH) * 0.5f, 0f, 0f);
+
+                if(_currentValue > 0)
+                    _popup.Run(rateValue - Mathf.RoundToInt((float)_currentValue / ActorAbilityId.RATE_ABILITY), SP_ID);
 
                 _currentValue = value;
             }
@@ -59,7 +68,7 @@ namespace Vurbiri.Colonization.Actors
 
         private void OnDestroy()
         {
-            _unsubscribers.Unsubscribe();
+            _unsubscribers?.Unsubscribe();
         }
 
 #if UNITY_EDITOR

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private TMP_Text _countTMP;
         [SerializeField] private TMP_Text _maxTMP;
-        [SerializeField] private CurrencyWidget _popup;
+        [SerializeField] private PopupWidgetUI _popup;
         [Space]
         [SerializeField] private RectTransform _thisRectTransform;
 
@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
-        public void Init(Vector3 position, ACurrenciesReactive count, IReactive<int> max, Vector3 offsetPopup)
+        public void Init(Vector3 position, ACurrenciesReactive count, IReactive<int> max, Direction2 offsetPopup)
         {
             _popup.Init(offsetPopup);
             _thisRectTransform.localPosition = position;
@@ -42,6 +42,8 @@ namespace Vurbiri.Colonization.UI
         {
             if (_thisRectTransform == null)
                 _thisRectTransform = GetComponent<RectTransform>();
+            if (_popup == null)
+                _popup = GetComponentInChildren<PopupWidgetUI>();
         }
 #endif
     }

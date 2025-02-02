@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.Actors
 
         private void OnDestroy()
         {
-            _unsubscriber.Unsubscribe();
+            _unsubscriber?.Unsubscribe();
         }
 
 #if UNITY_EDITOR

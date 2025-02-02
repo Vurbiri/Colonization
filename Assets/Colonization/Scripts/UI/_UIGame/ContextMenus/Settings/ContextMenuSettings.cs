@@ -10,8 +10,8 @@ namespace Vurbiri.Colonization.UI
         public readonly Camera camera;
         public readonly GameplayEventBus eventBus;
 
-        public ContextMenuSettings(Players players, HintGlobal hint, HintTextColor hintColors, PricesScriptable prices, Camera camera, GameplayEventBus eventBus)
-            : base(players, hint, hintColors)
+        public ContextMenuSettings(Players players, HintGlobal hint, PricesScriptable prices, Camera camera, GameplayEventBus eventBus)
+            : base(players, hint)
         {
             this.prices = prices;
             this.camera = camera;

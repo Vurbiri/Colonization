@@ -1,43 +1,43 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Currencies\CurrencyWidget.cs
+//Assets\Colonization\Scripts\UI\Utilities\PopupWidget\Abstact\APopupWidget.cs
 using System.Collections;
 using TMPro;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.UI
 {
-    [RequireComponent(typeof(TMP_Text))]
-    public class CurrencyWidget : MonoBehaviour
+    public abstract class APopupWidget<T> : MonoBehaviour where T : TMP_Text
     {
-        [SerializeField, Range(0.1f, 2f)] private float _speed = 0.6f;
+        [SerializeField] protected T _thisTMP;
         [Space]
-        [SerializeField] private Color _colorPlus = Color.green;
-        [SerializeField] private Color _colorMinus = Color.red;
+        [SerializeField, Range(0.1f, 2f)] private float _speed = 0.6f;
         [Space]
         [SerializeField] private float _distance = 100f;
         [Space]
         [SerializeField, Range(0.05f, 1f)] private float _minAlpha = 0.25f;
         [SerializeField, Range(0.05f, 1f)] private float _startHide = 0.67f;
 
-        private TMP_Text _thisTMP;
         private Transform _thisTransform;
-        private Color _colorPlusEnd, _colorMinusEnd;
-        private Vector3 _positionStart, _positionEnd;
-        private int _prevValue = -1;
         private float _scaleColorSpeed;
-        private WaitQueue _queue;
-        private GameObject _self;
+        private Vector3 _positionStart, _positionEnd;
 
-        public void Init(Vector3 direction)
+        protected GameObject _self;
+        protected Color _colorPlusStart, _colorMinusStart;
+        protected Color _colorPlusEnd, _colorMinusEnd;
+        protected WaitQueue _queue;
+        
+
+        protected void Init(Vector3 direction)
         {
-            _thisTMP = GetComponent<TMP_Text>();
             _thisTransform = transform;
             _self = gameObject;
 
             _positionStart = _thisTransform.localPosition;
             _positionEnd = _positionStart + direction * _distance;
 
-            _colorPlusEnd = _colorPlus;
-            _colorMinusEnd = _colorMinus;
+            Vurbiri.UI.SettingsTextColor settings = SceneData.Get<Vurbiri.UI.SettingsTextColor>();
+
+            _colorPlusEnd = _colorPlusStart = settings.ColorPositive;
+            _colorMinusEnd = _colorMinusStart = settings.ColorNegative;
             _colorPlusEnd.a = _colorMinusEnd.a = _minAlpha;
 
             _scaleColorSpeed = 1f / (1f - _startHide);
@@ -46,26 +46,8 @@ namespace Vurbiri.Colonization.UI
             _self.SetActive(false);
         }
 
-        public void Run(int value)
-        {
-            int delta = value - _prevValue;
 
-            if (_prevValue < 0 || delta == 0)
-            {
-               _prevValue = value;
-                return;
-            }
-
-            _self.SetActive(true);
-            if (delta > 0)
-                _queue.Add(Run_Coroutine($"+{delta}", _colorPlus, _colorPlusEnd));
-            else
-                _queue.Add(Run_Coroutine(delta.ToString(), _colorMinus, _colorMinusEnd));
-
-            _prevValue = value;
-        }
-
-        private IEnumerator Run_Coroutine(string text, Color start, Color end)
+        protected IEnumerator Run_Coroutine(string text, Color start, Color end)
         {
             float lerpVector = 0f, lerpColor = 0f, delta;
             _thisTMP.text = text;
@@ -86,5 +68,13 @@ namespace Vurbiri.Colonization.UI
                 yield return null;
             }
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_thisTMP == null)
+                _thisTMP = GetComponent<T>();
+        }
+#endif
     }
 }

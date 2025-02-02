@@ -9,14 +9,14 @@ namespace Vurbiri.Colonization.UI
         public readonly Players players;
         public readonly Color color;
         public readonly HintGlobal hint;
-        public readonly HintTextColor hintColors;
+        public readonly SettingsTextColor colors;
 
-        public ButtonSettings(Players players, HintGlobal hint, HintTextColor hintColors)
+        public ButtonSettings(Players players, HintGlobal hint)
         {
             this.players = players;
             this.color = SceneData.Get<PlayersVisual>()[PlayerId.Player].color;
             this.hint = hint;
-            this.hintColors = hintColors;
+            this.colors = SceneData.Get<SettingsTextColor>();
         }
     }
 }

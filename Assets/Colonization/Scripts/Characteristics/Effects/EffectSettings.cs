@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization.Characteristics
             return new PermanentUsedTargetEffect(_targetAbility, isNegative, _usedAbility, _counteredAbility, _typeModifier, _value);
         }
 
-        public AEffectsUI CreateEffectUI(HintTextColor hintTextColor)
+        public AEffectsUI CreateEffectUI(SettingsTextColor hintTextColor)
         {
             string deskKey = CONST_UI_LNG_KEYS.DESK_EFFECTS_KEYS[_descKeyId];
             (int value, string hexColor) = GetSettingsEffectUI(hintTextColor);
@@ -68,15 +68,15 @@ namespace Vurbiri.Colonization.Characteristics
             return new PermEffectUI(deskKey, value, hexColor);
         }
 
-        private (int, string) GetSettingsEffectUI(HintTextColor hintTextColor)
+        private (int, string) GetSettingsEffectUI(SettingsTextColor hintTextColor)
         {
             if (_isDescKeyBase)
-                return (_value, hintTextColor.HexColorBase);
+                return (_value, hintTextColor.HexColorHintBase);
 
             if (_targetActor == TargetOfEffect.Target & _parentTarget == TargetOfSkill.Enemy)
-                return (-_value, hintTextColor.HexColorMinus);
+                return (-_value, hintTextColor.HexColorNegative);
 
-            return (_value, hintTextColor.HexColorPlus);
+            return (_value, hintTextColor.HexColorPositive);
         }
     }
 }

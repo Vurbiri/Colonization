@@ -28,6 +28,9 @@ namespace Vurbiri.Reactive
 
         public static Unsubscribers operator +(Unsubscribers unsubscribers, IUnsubscriber unsubscriber)
         {
+            if (unsubscribers == null)
+                return new(unsubscriber);
+
             unsubscribers._unsubscribers.Add(unsubscriber);
             return unsubscribers;
         }

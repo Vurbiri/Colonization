@@ -32,7 +32,9 @@ namespace Vurbiri.Colonization
 			if (!_servicesContainer.AddInstance(new Language()).IsValid)
 				Message.Error("Error loading Localization!");
 
-			var ysdk = _servicesContainer.AddInstance(new YandexSDK(_servicesContainer, data.leaderboardName));
+            _dataContainer.AddInstance(data.settingsColorScriptable.Colors);
+
+            var ysdk = _servicesContainer.AddInstance(new YandexSDK(_servicesContainer, data.leaderboardName));
 			yield return ysdk.Init_Coroutine();
 			
 			//Banners.InstanceF.Initialize();
@@ -42,7 +44,7 @@ namespace Vurbiri.Colonization
 
 			_dataContainer.AddInstance(new GameplaySettingsData(_servicesContainer));
 
-			Message.Log("End Init Project");
+            Message.Log("End Init Project");
 		}
 
 		private IEnumerator CreateStorages_Coroutine(SettingsData.Profile defaultProfile)

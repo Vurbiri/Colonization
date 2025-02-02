@@ -73,8 +73,6 @@ namespace Vurbiri.Colonization
                 objects.AddInstance(_sceneObjects.mainCamera);
                 objects.AddInstance(_land);
                 objects.AddInstance(_crossroads);
-
-                _settingsUI.InstanceAddToData(data);
             }
             #endregion
         }
@@ -169,7 +167,7 @@ namespace Vurbiri.Colonization
             public void Init(GameplayEntryPoint parent, UISettings ui, ScriptableObjects scriptables)
             {
                 cameraController.Init(mainCamera, parent._inputController.CameraActions);
-                contextMenusWorld.Init(new(parent._players, ui.hintGlobalWorld, ui.hintTextColors, scriptables.prices, mainCamera, parent._eventBus));
+                contextMenusWorld.Init(new(parent._players, ui.hintGlobalWorld, scriptables.prices, mainCamera, parent._eventBus));
             }
 
 #if UNITY_EDITOR
@@ -223,14 +221,6 @@ namespace Vurbiri.Colonization
         private class UISettings
         {
             public HintGlobal hintGlobalWorld;
-            public HintTextColor hintTextColors;
-
-            public void InstanceAddToData(DIContainer data)
-            {
-                hintTextColors.Init();
-
-                data.AddInstance(hintTextColors);
-            }
 
 #if UNITY_EDITOR
             public void OnValidate()

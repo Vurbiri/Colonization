@@ -13,12 +13,12 @@ namespace Vurbiri.Colonization.Actors
 		[SerializeField] private TextMeshPro _maxValueTMP;
         [SerializeField] private TextMeshPro _currentValueTMP;
 
-        private Unsubscribers _unsubscribers = new();
+        private Unsubscribers _unsubscribers;
 
         public void Init(AbilitiesSet<ActorAbilityId> abilities, int orderLevel)
         {
             _maxValueTMP.sortingOrder += orderLevel;
-            _currentValueTMP.geometrySortingOrder += orderLevel;
+            _currentValueTMP.sortingOrder += orderLevel;
 
             _unsubscribers += abilities.GetAbility(ActorAbilityId.MaxAP).Subscribe(value => _maxValueTMP.text = new(CHAR, value));
             _unsubscribers += abilities.GetAbility(ActorAbilityId.CurrentAP).Subscribe(value => _currentValueTMP.text = new(CHAR, value));
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.Actors
 
         private void OnDestroy()
         {
-            _unsubscribers.Unsubscribe();
+            _unsubscribers?.Unsubscribe();
         }
 
 #if UNITY_EDITOR

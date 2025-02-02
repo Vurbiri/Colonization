@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         private List<ASkillState> GetAndCreateSkills(Actor parent)
         {
-            var hintTextColor = SceneData.Get<HintTextColor>();
+            var hintTextColor = SceneData.Get<SettingsTextColor>();
             var language = SceneServices.Get<Language>();
 
             int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);

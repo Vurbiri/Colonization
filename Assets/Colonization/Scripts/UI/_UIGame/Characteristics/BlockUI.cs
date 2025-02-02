@@ -29,9 +29,9 @@ namespace Vurbiri.Colonization.UI
             _cost = cost;
             _value = value / ActorAbilityId.RATE_ABILITY;
 
-            var hintTextColor = SceneData.Get<HintTextColor>();
-            _hexColorPlus = hintTextColor.HexColorPlus;
-            _hexColorMinus = hintTextColor.HexColorMinus;
+            var hintTextColor = SceneData.Get<SettingsTextColor>();
+            _hexColorPlus = hintTextColor.HexColorPositive;
+            _hexColorMinus = hintTextColor.HexColorNegative;
 
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetTexts);
         }

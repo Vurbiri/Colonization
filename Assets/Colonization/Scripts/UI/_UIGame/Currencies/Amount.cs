@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using Vurbiri.Reactive;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
@@ -10,17 +11,18 @@ namespace Vurbiri.Colonization
         [SerializeField] private TMP_Text _amountTMP;
         [SerializeField] private TMP_Text _maxTMP;
         [Space]
-        [SerializeField] private Color _colorNormal = Color.white;
-        [SerializeField] private Color _colorOver = Color.red;
-        [Space]
         [SerializeField] private RectTransform _thisRectTransform;
 
         private ReactiveCombination<int, int> _reactiveAmountMax;
+        private Color _colorNormal, _colorOver;
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
         public void Init(Vector3 position, IReactive<int> amount, IReactive<int> max)
         {
+            _colorNormal = _maxTMP.color;
+            _colorOver = SceneData.Get<SettingsTextColor>().ColorNegative;
+
             _thisRectTransform.localPosition = position;
 
             _reactiveAmountMax = new(amount, max);

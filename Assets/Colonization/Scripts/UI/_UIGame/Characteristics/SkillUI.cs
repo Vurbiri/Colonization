@@ -31,10 +31,10 @@ namespace Vurbiri.Colonization.UI
         public Sprite Sprite => _sprite;
         public int Cost => _cost;
 
-        public void Init(Language language, HintTextColor hintTextColor, AEffectsUI[] effects)
+        public void Init(Language language, SettingsTextColor hintTextColor, AEffectsUI[] effects)
         {
-            _hexColorPlus = hintTextColor.HexColorPlus;
-            _hexColorMinus = hintTextColor.HexColorMinus;
+            _hexColorPlus = hintTextColor.HexColorPositive;
+            _hexColorMinus = hintTextColor.HexColorNegative;
 
             _effects = effects;
             _count = effects.Length;

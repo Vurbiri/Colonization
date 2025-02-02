@@ -23,8 +23,8 @@ namespace Vurbiri.Colonization.UI
             base.Init(localPosition, settings.hint, action, true);
 
             _button.targetGraphic.color = settings.color;
-            _hexColorPlus = settings.hintColors.HexColorPlus;
-            _hexColorMinus = settings.hintColors.HexColorMinus;
+            _hexColorPlus = settings.colors.HexColorPositive;
+            _hexColorMinus = settings.colors.HexColorNegative;
         }
 
         protected void SetTextHint(string caption, ACurrencies cash, ACurrencies cost)

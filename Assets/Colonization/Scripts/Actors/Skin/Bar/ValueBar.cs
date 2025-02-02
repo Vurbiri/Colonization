@@ -2,23 +2,30 @@
 using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
     public class ValueBar : MonoBehaviour, IRendererVisible
     {
-		[SerializeField] private Id<ActorAbilityId> _ability;
+        private const int SP_DELTA_ID = ActorAbilityId.Attack - 1;
+
+        [SerializeField] private Id<ActorAbilityId> _ability;
 		[Space]
 		[SerializeField] private TextMeshPro _valueTMP;
         [SerializeField] private SpriteRenderer _sprite;
 
+        private int _currentValue = int.MinValue;
+        private PopupWidget3D _popup;
         private IUnsubscriber _unsubscriber;
 
         public bool IsVisible => _sprite.isVisible;
 
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, int orderLevel)
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, PopupWidget3D popup, int orderLevel)
         {
+            _popup = popup;
+
             _sprite.sortingOrder += orderLevel;
             _valueTMP.sortingOrder += orderLevel;
 
@@ -28,14 +35,20 @@ namespace Vurbiri.Colonization.Actors
             //=================================
             void SetValue(int value)
             {
-                _valueTMP.text = Mathf.RoundToInt((float)value / ActorAbilityId.RATE_ABILITY).ToString();
+                value = Mathf.RoundToInt((float)value / ActorAbilityId.RATE_ABILITY);
+                _valueTMP.text = value.ToString();
+
+                if (_currentValue > 0)
+                    _popup.Run(value - _currentValue, _ability - SP_DELTA_ID);
+
+                _currentValue = value;
             }
             #endregion
         }
 
         private void OnDestroy()
         {
-            _unsubscriber.Unsubscribe();
+            _unsubscriber?.Unsubscribe();
         }
 
 #if UNITY_EDITOR
