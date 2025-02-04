@@ -12,7 +12,7 @@ namespace VurbiriEditor.Colonization.Actors
     {
         [SerializeField] private VisualTreeAsset _treeAnimationClipSettingsScriptable;
 
-        private const string FIELD_LABEL = "Label", FIELD_CLIP = "clip", FIELD_TOTAL_T = "totalTime", FIELD_DAMAGES_T = "damageTimes", FIELD_RANGE = "range";
+        private const string FIELD_LABEL = "Label", FIELD_CLIP = "clip", FIELD_TOTAL_T = "totalTime", FIELD_DAMAGES_T = "hitTimes", FIELD_RANGE = "range";
 
         public override VisualElement CreateInspectorGUI()
         {

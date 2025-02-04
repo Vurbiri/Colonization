@@ -155,7 +155,7 @@ namespace Vurbiri.Colonization
             return max;
         }
 
-        public bool IsEnemy(Id<PlayerId> id) => _owner.GetRelation(id) == Relation.Enemy;
+        public bool IsEnemy(Id<PlayerId> id) => _owner != null && _owner.GetRelation(id) == Relation.Enemy;
 
 
         public bool TrySetSelectableFree()

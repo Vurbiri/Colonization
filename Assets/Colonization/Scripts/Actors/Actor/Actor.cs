@@ -183,6 +183,11 @@ namespace Vurbiri.Colonization.Actors
                 _currentHP.Value += _abilities.GetValue(ActorAbilityId.HPPerTurn);
                 _currentAP.Value += _abilities.GetValue(ActorAbilityId.APPerTurn);
                 _move.IsValue = true;
+
+                _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetMaxDefense());
+                if (_wallDefenceEffect != null)
+                    _effects.Add(_wallDefenceEffect);
+
                 Debug.Log("Выключить Collider");
                 return;
             }
@@ -192,10 +197,6 @@ namespace Vurbiri.Colonization.Actors
                 //Debug.Log("Включить Collider если его ход");
                 _effects.Next();
                 _stateMachine.ToDefaultState();
-
-                _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetMaxDefense());
-                if (_wallDefenceEffect != null)
-                    _effects.Add(_wallDefenceEffect);
             }
         }
 

@@ -32,23 +32,27 @@ namespace VurbiriEditor.Colonization.Actors
                 animator = (AnimatorOverrideController)actorSkin.GetComponent<Animator>().runtimeAnimatorController;
                 actorSFX = actorSkin.GetComponent<AActorSFX>();
                 skills = settings.Skills;
-                int count = skills.List.Count, i;
+                int countSkills = skills.List.Count, i;
 
-                actorSkin.SetCountAnimationClips(count);
-                actorSFX.SetCountSkillsSFX(count);
+                actorSkin.SetCountAnimationClips(countSkills);
+                actorSFX.SetCountSkillsSFX(countSkills);
 
-                for (i = 0; i < count; i++)
+                for (i = 0; i < countSkills; i++)
                 {
                     skillSettings = skills.List[i];
                     clipSettings = skillSettings.clipSettings;
+
+                    skillSettings.range = clipSettings.range;
 
                     if (animator[A_SKILLS[i]] != clipSettings.clip)
                         animator[A_SKILLS[i]] = clipSettings.clip;
 
                     actorSkin.SetAnimationClip(clipSettings, i);
-                    actorSFX.SetSkillSFX(skillSettings.skillSFX, clipSettings.totalTime, i);
 
-                    skillSettings.range = clipSettings.range;
+                    int countHits = skillSettings.SFXHits.Length;
+                    actorSFX.SetCountHitsSFX(i, countHits);
+                    for(int j = 0; j < countHits; j++)
+                        actorSFX.SetSkillSFX(i, j, skillSettings.SFXHits[j]);
                 }
 
                 for (; i < COUNT_SKILLS_MAX; i++)

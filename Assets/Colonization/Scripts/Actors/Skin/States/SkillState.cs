@@ -10,8 +10,8 @@ namespace Vurbiri.Colonization.Actors
         {
             protected readonly int _id;
             protected readonly WaitForSeconds _waitEnd;
-            protected readonly WaitForSeconds[] _waitDamages;
-            protected readonly int _countDamages;
+            protected readonly WaitForSeconds[] _waitHits;
+            protected readonly int _countHits;
             protected Coroutine _coroutine;
 
             public Transform target;
@@ -20,10 +20,10 @@ namespace Vurbiri.Colonization.Actors
             public SkillState(string stateName, ActorSkin parent, TimingSkillSettings timing, int id = 0) : base(stateName, parent, id)
             {
                 _id = id;
-                _countDamages = timing.damageTimes.Length;
-                _waitDamages = new WaitForSeconds[_countDamages];
-                for(int i = 0; i < _countDamages; i++)
-                    _waitDamages[i] = new(timing.damageTimes[i]);
+                _countHits = timing.hitTimes.Length;
+                _waitHits = new WaitForSeconds[_countHits];
+                for(int i = 0; i < _countHits; i++)
+                    _waitHits[i] = new(timing.hitTimes[i]);
                 _waitEnd = new(timing.remainingTime);
             }
 
@@ -46,13 +46,12 @@ namespace Vurbiri.Colonization.Actors
 
             protected virtual IEnumerator StartSkill_Coroutine()
             {
-                _sfx.Skill(_id, target);
-                for (int i = 0; i < _countDamages; i++)
+                for (int i = 0; i < _countHits; i++)
                 {
-                    yield return _waitDamages[i];
+                    yield return _waitHits[i];
 
                     waitActivate.Activate();
-                    _sfx.Hit(_id, i);
+                    _sfx.Hit(_id, i, target);
                 }
 
                 yield return _waitEnd;
@@ -66,7 +65,7 @@ namespace Vurbiri.Colonization.Actors
         [System.Serializable]
         protected class TimingSkillSettings
         {
-            public float[] damageTimes;
+            public float[] hitTimes;
             public float remainingTime;
         }
     }

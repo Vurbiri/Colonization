@@ -17,8 +17,8 @@ namespace Vurbiri.Colonization.Characteristics
             public EffectsHitSettings[] effectsHits;
             public SkillUI ui;
 #if UNITY_EDITOR
+            public AHitScriptableSFX[] SFXHits;
             public AnimationClipSettingsScriptable clipSettings;
-            public AScriptableSFX skillSFX;
 #endif
         }
     }

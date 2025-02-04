@@ -28,8 +28,7 @@ namespace Vurbiri.Colonization.Actors
                 if(isVisible = _renderers[i].IsVisible)
                     break;
             }
-            
-            
+
             if (!isVisible || (_lastCameraPosition == _cameraTransform.position && _lastRotation == transform.rotation))
                 return;
 

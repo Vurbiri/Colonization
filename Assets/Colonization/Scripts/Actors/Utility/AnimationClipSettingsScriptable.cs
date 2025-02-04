@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Actors
     {
         public AnimationClip clip;
         public float totalTime;
-        public float[] damageTimes = new float[1];
+        public float[] hitTimes = new float[1];
         public float range;
     }
 }

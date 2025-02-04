@@ -1,28 +1,24 @@
-//Assets\Colonization\Scripts\Characteristics\Skills\SFX\SkillParticleSFX.cs
+//Assets\Colonization\Scripts\Actors\SFX\Hit\HitParticleSFX.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class SkillParticleSFX : ASkillMonoSFX
+    public class HitParticleSFX : AHitMonoSFX
     {
         [SerializeField] AudioClip _clip;
 
         private ParticleSystem _particle;
         private AudioSource _audioSource;
 
-        public override ISkillSFX Init(IActorSFX parent, float duration)
+        public override IHitSFX Init(IActorSFX parent)
 		{
             _particle = GetComponent<ParticleSystem>();
-            ParticleSystem.MainModule main = _particle.main;
-            main.duration = duration;
-            main.startLifetime = duration;
-
             _audioSource = parent.AudioSource;
 
             return this;
         }
 
-        public override void Run(Transform target)
+        public override void Hit(Transform target)
         {
             _thisTransform.SetParent(target, false);
             _thisGO.SetActive(true);

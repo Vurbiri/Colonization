@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Characteristics
     [Serializable]
 	public class EffectsHitSettings
 	{
-		[SerializeField] private EffectSettings[] _effects;
+        [SerializeField] private EffectSettings[] _effects;
 
         public int Count => _effects.Length;
 

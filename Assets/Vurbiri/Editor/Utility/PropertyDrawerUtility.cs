@@ -97,15 +97,24 @@ namespace VurbiriEditor
         }
         protected int DrawId(string name, Type t_field, bool isNone = false) => DrawId(_mainProperty, name, t_field, isNone);
 
-        protected T DrawObject<T>(SerializedProperty parent, string name, bool isName = false) where T : UnityEngine.Object
+        protected T DrawObject<T>(SerializedProperty property, string name) where T : UnityEngine.Object
         {
             _position.y += _height;
-            SerializedProperty property = parent.FindPropertyRelative(name);
-            if (isName)
-                return (T)(property.objectReferenceValue = EditorGUI.ObjectField(_position, property.displayName, property.objectReferenceValue, typeof(T), false));
+            return (T)(property.objectReferenceValue = EditorGUI.ObjectField(_position, name, property.objectReferenceValue, typeof(T), false));
+        }
+        protected T DrawObject<T>(SerializedProperty property) where T : UnityEngine.Object
+        {
+            _position.y += _height;
             return (T)(property.objectReferenceValue = EditorGUI.ObjectField(_position, property.objectReferenceValue, typeof(T), false));
         }
-        protected T DrawObject<T>(string name, bool isName = false) where T : UnityEngine.Object => DrawObject<T>(_mainProperty, name, isName);
+        protected T DrawChildrenObject<T>(SerializedProperty parent, string nameChildren, bool isName = false) where T : UnityEngine.Object
+        {
+            SerializedProperty property = parent.FindPropertyRelative(nameChildren);
+            return isName ? DrawObject<T>(property, property.displayName) : DrawObject<T>(property);
+        }
+        protected T DrawChildrenObject<T>(string nameChildren, bool isName = false) where T : UnityEngine.Object 
+                                                                                                          => DrawChildrenObject<T>(_mainProperty, nameChildren, isName);
+        
 
         protected void DrawLabel(string name, string value)
         {
@@ -198,6 +207,19 @@ namespace VurbiriEditor
                 id = int.Parse(strings[1]);
 
             return id;
+        }
+
+        protected bool TrySetArraySize(SerializedProperty property, int size)
+        {
+            if(size < 0 || property == null || !property.isArray)
+                return false;
+
+            while (property.arraySize > size)
+                property.DeleteArrayElementAtIndex(property.arraySize - 1);
+            while (property.arraySize < size)
+                property.InsertArrayElementAtIndex(property.arraySize);
+
+            return true;
         }
     }
 }

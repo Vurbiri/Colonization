@@ -12,10 +12,10 @@ namespace Vurbiri.Colonization.Actors
     {
         [SerializeField] protected float _heightDeath = -3.5f;
         [SerializeField] protected float _durationDeath = 1f;
-        [HideInInspector, SerializeField] protected SkillsSFXSettings _prefabsSFX = new();
+        [HideInInspector, SerializeField] protected HitsSFXSettings _scriptablesSFX = new();
 
         protected Transform _thisTransform;
-        protected SkillsSFX _skills;
+        protected HitsSFX _skills;
 
         public Transform Container => _thisTransform;
         public AudioSource AudioSource { get; private set; }
@@ -25,18 +25,11 @@ namespace Vurbiri.Colonization.Actors
             _thisTransform = transform;
             AudioSource = GetComponent<AudioSource>();
 
-            _skills = _prefabsSFX.GetSkillsSFX(this);
-            _prefabsSFX = null;
+            _skills = _scriptablesSFX.GetSkillsSFX(this);
+            _scriptablesSFX = null;
         }
 
-        public virtual void Skill(int id, Transform target) 
-        {
-           _skills[id].Run(target);
-        }
-        public virtual void Hit(int id, int index) 
-        {
-            _skills[id].Hint(index);
-        }
+        public virtual void Hit(int idSkill, int idHit, Transform target) => _skills[idSkill, idHit].Hit(target);
 
         public IEnumerator Death_Coroutine()
         {
@@ -50,55 +43,67 @@ namespace Vurbiri.Colonization.Actors
             }
         }
 
-        #region Nested: SkillsSFX
+        #region Nested: HitsSFX
         //***********************************
         [Serializable]
-        protected class SkillsSFX
+        protected class HitsSFX
         {
-            private readonly ISkillSFX[] _instances;
-            private readonly int[] _skills;
+            private readonly IHitSFX[] _instances;
+            private readonly int[][] _hits;
 
-            public ISkillSFX this[int index] => _instances[_skills[index]];
+            public IHitSFX this[int x, int y] => _instances[_hits[x][y]];
 
-            public SkillsSFX(int countSkills, IReadOnlyList<ScriptableSFX> prefabs, IActorSFX parent)
+            public HitsSFX(IReadOnlyList<int> countHits, IReadOnlyList<ScriptableSFX> scriptables, IActorSFX parent)
             {
-                _skills = new int[countSkills];
+                int count = countHits.Count, countIDs;
+                _hits = new int[count][];
+                for (int i = 0; i < count; i++)
+                    _hits[i] = new int[countHits[i]];
 
-                int countInstances = prefabs.Count, countIds;
-                _instances = new ISkillSFX[countInstances];
+                count = scriptables.Count;
+                _instances = new IHitSFX[count];
 
-                ScriptableSFX prefab; IReadOnlyList<int> ids;
-                for (int i = 0; i < countInstances; i++)
+                ScriptableSFX scriptable; IReadOnlyList<ID> ids; ID id;
+                for (int i = 0; i < count; i++)
                 {
-                    prefab = prefabs[i];
-                    _instances[i] = prefab.Instantiate(parent);
+                    scriptable = scriptables[i];
 
-                    ids = prefab.IDs;
-                    countIds = prefab.IDs.Count;
-                    for (int j = 0; j < countIds; j++)
-                        _skills[ids[j]] = i;
+                    _instances[i] = scriptable.Instantiate(parent);
+
+                    ids = scriptable.IDs;
+                    countIDs = ids.Count;
+                    for (int j = 0; j < countIDs; j++)
+                    {
+                        id = ids[j];
+                        _hits[id.skill][id.hit] = i;
+                    }
                 }
             }
         }
         #endregion
-        #region Nested: SkillsSFXSettings
+        #region Nested: HitsSFXSettings
         //***********************************
         [Serializable]
-        protected class SkillsSFXSettings
+        protected class HitsSFXSettings
         {
             [SerializeField] private List<ScriptableSFX> _scriptables;
-            [SerializeField] private int _count;
+            [SerializeField] private int[] _countHits;
 
-            public SkillsSFX GetSkillsSFX(IActorSFX parent) => new(_count, _scriptables, parent);
+            public HitsSFX GetSkillsSFX(IActorSFX parent) => new(_countHits, _scriptables, parent);
 
 #if UNITY_EDITOR
-            public void SetCount(int count)
+            public void SetCountSkills(int count)
             {
-                _count = count;
-                _scriptables = new(count);
+                _countHits = new int[count];
+                _scriptables = new();
             }
 
-            public void AddPrefab(int id, ScriptableSFX scriptables)
+            public void SetCountHits(int idSkill, int count)
+            {
+                _countHits[idSkill] = count;
+            }
+
+            public void Add(int idSkill, int idHit, ScriptableSFX scriptables)
             {
                 if (_scriptables == null)
                     return;
@@ -109,7 +114,7 @@ namespace Vurbiri.Colonization.Actors
                 else
                     scriptables = _scriptables[index];
 
-                scriptables.IdAdd(id);
+                scriptables.IDAdd(new(idSkill, idHit));
             }
 #endif
         }
@@ -119,45 +124,59 @@ namespace Vurbiri.Colonization.Actors
         [Serializable]
         protected class ScriptableSFX : IEquatable<ScriptableSFX>
         {
-            [SerializeField] private AScriptableSFX _sfx;
-            [SerializeField] private float _duration;
-            [SerializeField] private List<int> _ids = new();
+            [SerializeField] private AHitScriptableSFX _sfx;
+            [SerializeField] private List<ID> _ids = new();
 
-            public IReadOnlyList<int> IDs => _ids;
+            public IReadOnlyList<ID> IDs => _ids;
 
-            public ScriptableSFX(AScriptableSFX sfx, float duration)
+            public ScriptableSFX(AHitScriptableSFX sfx)
             {
                 _sfx = sfx;
-                _duration = sfx == null ? 0f : duration;
             }
 
-            public void IdAdd(int id) { _ids.Add(id); }
+            public void IDAdd(ID id) => _ids.Add(id);
 
-            public ISkillSFX Instantiate(IActorSFX parent)
+            public IHitSFX Instantiate(IActorSFX parent)
             {
                 if (_sfx == null)
-                    return new SkillEmptySFX();
+                    return new HitEmptySFX();
 
-                return _sfx.Create(parent, _duration);
+                return _sfx.Create(parent);
             }
 
             public bool Equals(ScriptableSFX other)
             {
                 if(other is null) return false;
-                if(_sfx == null & other._sfx == null) return true;
-                return _sfx == other._sfx & Mathf.Approximately(_duration, other._duration);
+
+                return _sfx == other._sfx;
             }
             public override bool Equals(object obj) => Equals(obj as ScriptableSFX);
-            public override int GetHashCode()=> HashCode.Combine(_sfx.GetHashCode(), _duration.GetHashCode());
+            public override int GetHashCode()=> _sfx.GetHashCode();
 
             public static bool operator ==(ScriptableSFX a, ScriptableSFX b) => (a is null & b is null) || (a is not null && a.Equals(b));
             public static bool operator !=(ScriptableSFX a, ScriptableSFX b) => !(a is null & b is null) && !(a is not null && a.Equals(b));
         }
         #endregion
+        #region Nested: ID
+        //***********************************
+        [Serializable]
+        protected class ID
+        {
+            public int skill;
+            public int hit;
+
+            public ID(int skillID, int hitID)
+            {
+                skill = skillID;
+                hit = hitID;
+            }
+        }
+        #endregion
 
 #if UNITY_EDITOR
-        public void SetCountSkillsSFX(int count) => _prefabsSFX.SetCount(count);
-        public void SetSkillSFX(AScriptableSFX sfx, float duration, int id) => _prefabsSFX.AddPrefab(id, new(sfx, duration));
+        public void SetCountSkillsSFX(int count) => _scriptablesSFX.SetCountSkills(count);
+        public void SetCountHitsSFX(int idSkill, int count) => _scriptablesSFX.SetCountHits(idSkill, count);
+        public void SetSkillSFX(int idSkill, int idHit, AHitScriptableSFX sfx) => _scriptablesSFX.Add(idSkill, idHit, new(sfx));
 #endif
     }
 }

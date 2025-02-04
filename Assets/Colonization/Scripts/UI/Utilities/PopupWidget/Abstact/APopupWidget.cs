@@ -21,11 +21,9 @@ namespace Vurbiri.Colonization.UI
         private Vector3 _positionStart, _positionEnd;
 
         protected GameObject _self;
-        protected Color _colorPlusStart, _colorMinusStart;
-        protected Color _colorPlusEnd, _colorMinusEnd;
+        protected string _stringPlus, _stringMinus;
         protected WaitQueue _queue;
         
-
         protected void Init(Vector3 direction)
         {
             _thisTransform = transform;
@@ -36,9 +34,8 @@ namespace Vurbiri.Colonization.UI
 
             Vurbiri.UI.SettingsTextColor settings = SceneData.Get<Vurbiri.UI.SettingsTextColor>();
 
-            _colorPlusEnd = _colorPlusStart = settings.ColorPositive;
-            _colorMinusEnd = _colorMinusStart = settings.ColorNegative;
-            _colorPlusEnd.a = _colorMinusEnd.a = _minAlpha;
+            _stringPlus = settings.HexColorPositive.Concat(" +{0}");
+            _stringMinus = settings.HexColorNegative.Concat(" {0}");
 
             _scaleColorSpeed = 1f / (1f - _startHide);
 
@@ -47,21 +44,25 @@ namespace Vurbiri.Colonization.UI
         }
 
 
-        protected IEnumerator Run_Coroutine(string text, Color start, Color end)
+        protected IEnumerator Run_Coroutine(string text)
         {
             float lerpVector = 0f, lerpColor = 0f, delta;
+            Color color = Color.white;
+
+            _thisTMP.color = color;
             _thisTMP.text = text;
-            _thisTMP.color = start;
+
             while (lerpVector < 1f)
             {
-                delta = Time.deltaTime * _speed;
-
-                lerpVector += delta;
                 _thisTransform.localPosition = Vector3.Lerp(_positionStart, _positionEnd, lerpVector);
-                
+
+                delta = Time.deltaTime * _speed;
+                lerpVector += delta;
+
                 if (lerpVector > _startHide)
                 {
-                    _thisTMP.color = Color.Lerp(start, end, lerpColor);
+                    color.a = Mathf.Lerp(1f, _minAlpha, lerpColor);
+                    _thisTMP.color = color;
                     lerpColor += delta * _scaleColorSpeed;
                 }
 

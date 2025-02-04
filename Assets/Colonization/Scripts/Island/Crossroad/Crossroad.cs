@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Object = UnityEngine.Object;
 
@@ -167,7 +168,7 @@ namespace Vurbiri.Colonization
                 return false;
 
             _states.isBuildWall = !(_isWall = true);
-            _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d);
+            _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d * ActorAbilityId.RATE_ABILITY);
             return true;
         }
 

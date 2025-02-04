@@ -23,6 +23,10 @@ namespace VurbiriEditor.Colonization.Characteristics
         {
             base.OnGUI(position, mainProperty, label);
 
+            int id = IdFromLabel(label);
+            //if (id == 0)
+            //    _position.y += _height;
+
             var parentTarget = mainProperty.FindPropertyRelative(P_PARENT_TARGET).GetEnumValue<TargetOfSkill>();
             bool isParentSelf = parentTarget == TargetOfSkill.Self;
 
@@ -35,7 +39,8 @@ namespace VurbiriEditor.Colonization.Characteristics
             int usedAbility;
                         
             bool isNegative = parentTarget == TargetOfSkill.Enemy & target.GetEnumValue<TargetOfEffect>() == TargetOfEffect.Target;
-            label.text = string.Format(isNegative ? NAME_NEGATIVE_ELEMENT : NAME_POSITIVE_ELEMENT, IdFromLabel(label));
+            
+            label.text = string.Format(isNegative ? NAME_NEGATIVE_ELEMENT : NAME_POSITIVE_ELEMENT, id);
 
             EditorGUI.BeginProperty(_position, label, mainProperty);
 

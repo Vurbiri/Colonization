@@ -1,9 +1,9 @@
-//Assets\Colonization\Scripts\Characteristics\Skills\SFX\Abstract\ASkillSFX.cs
+//Assets\Colonization\Scripts\Actors\SFX\Hit\Abstract\AHitMonoSFX.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class ASkillMonoSFX : MonoBehaviour, ISkillSFX
+    public abstract class AHitMonoSFX : MonoBehaviour, IHitSFX
     {
         protected GameObject _thisGO;
         protected Transform _thisTransform, _parent;
@@ -17,10 +17,8 @@ namespace Vurbiri.Colonization.Characteristics
             _parent = _thisTransform.parent;
         }
 
-        public abstract void Run(Transform target);
+        public abstract void Hit(Transform target);
 
-        public virtual void Hint(int index) { }
-
-        public abstract ISkillSFX Init(IActorSFX parent, float duration);
+        public abstract IHitSFX Init(IActorSFX parent);
     }
 }

@@ -7,9 +7,12 @@ namespace Vurbiri.Colonization.UI
     [RequireComponent(typeof(TMP_Text))]
     public class PopupWidgetUI : APopupWidget<TMP_Text>
     {
-        protected int _prevValue = -1;
+        protected int _prevValue = int.MinValue;
 
-        public void Init(Direction2 direction) => base.Init(direction);
+        public void Init(Direction2 direction)
+        {
+            base.Init(direction);
+        }
 
         public void Run(int value)
         {
@@ -22,10 +25,7 @@ namespace Vurbiri.Colonization.UI
             }
 
             _self.SetActive(true);
-            if (delta > 0)
-                _queue.Add(Run_Coroutine($"+{delta}", _colorPlusStart, _colorPlusEnd));
-            else
-                _queue.Add(Run_Coroutine(delta.ToString(), _colorMinusStart, _colorMinusEnd));
+            _queue.Add(Run_Coroutine(string.Format(delta > 0 ? _stringPlus : _stringMinus, delta)));
 
             _prevValue = value;
         }
