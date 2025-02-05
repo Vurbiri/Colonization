@@ -45,6 +45,16 @@ namespace Vurbiri.Colonization.Characteristics
                 return new PermanentTargetEffect(_targetAbility, isNegative, _typeModifier, _value);
             }
 
+            if (_counteredAbility < 0)
+            {
+                if (isSelf)
+                    return new PermanentUsedNotCounterSelfEffect(_targetAbility, isNegative, _usedAbility, _typeModifier, _value);
+                if (_isReflect)
+                    return new PermanentUsedNotCounterReflectEffect(_targetAbility, isNegative, _usedAbility, _typeModifier, _value);
+
+                return new PermanentUsedNotCounterTargetEffect(_targetAbility, isNegative, _usedAbility, _typeModifier, _value);
+            }
+
             if (isSelf)
                 return new PermanentUsedSelfEffect(_targetAbility, isNegative, _usedAbility, _counteredAbility, _typeModifier, _value);
             if (_isReflect)

@@ -16,7 +16,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_DESC_KEY = "_descKeyId", P_IS_DESC_BASE = "_isDescKeyBase";
         private const string P_TARGET_ABILITY = "_targetAbility", P_USED_ABILITY = "_usedAbility", P_CONTR_ABILITY = "_counteredAbility";
         private const string P_PARENT_TARGET = "_parentTarget";
-        private readonly (int min, int max) MIN_MAX_A = (0, 7), MIN_MAX_P = (25, 350);
+        private readonly (int min, int max) MIN_MAX_A = (0, 50), MIN_MAX_P = (25, 350);
         #endregion
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
@@ -24,8 +24,6 @@ namespace VurbiriEditor.Colonization.Characteristics
             base.OnGUI(position, mainProperty, label);
 
             int id = IdFromLabel(label);
-            //if (id == 0)
-            //    _position.y += _height;
 
             var parentTarget = mainProperty.FindPropertyRelative(P_PARENT_TARGET).GetEnumValue<TargetOfSkill>();
             bool isParentSelf = parentTarget == TargetOfSkill.Self;
@@ -52,7 +50,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 {
                     Space(2f);
                     DrawValue(usedAbility);
-                    DrawId(P_CONTR_ABILITY, typeof(ActorAbilityId));
+                    DrawId(P_CONTR_ABILITY, typeof(ActorAbilityId), true);
                 }
 
                 Space(2f);

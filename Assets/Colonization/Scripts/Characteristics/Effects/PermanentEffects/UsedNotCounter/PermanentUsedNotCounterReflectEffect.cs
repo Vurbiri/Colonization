@@ -1,0 +1,20 @@
+//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\UsedNotCounter\PermanentUsedNotCounterReflectEffect.cs
+using Vurbiri.Colonization.Actors;
+
+namespace Vurbiri.Colonization.Characteristics
+{
+    public class PermanentUsedNotCounterReflectEffect : APermanentUsedNotCounterEffect
+    {
+        public PermanentUsedNotCounterReflectEffect(int targetAbility, bool isNegative, int usedAbility, Id<TypeModifierId> typeModifier, int value) :
+                                  base(targetAbility, isNegative, usedAbility, typeModifier, value)
+        {
+        }
+
+        public override void Apply(Actor self, Actor target)
+        {
+            Init(self.Abilities);
+            _value = -target.ApplyEffect(this);
+            self.ApplyEffect(this);
+        }
+    }
+}

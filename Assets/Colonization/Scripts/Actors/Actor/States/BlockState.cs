@@ -19,11 +19,19 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                Pay();
-                _skin.Block();
+                if (_actor.ContainsEffect(_code))
+                    return;
+
+                _skin.Block(true);
                 _actor.AddEffect(CreateBlockEffect(_code, _value));
+                Pay();
             }
 
+            public override void Exit()
+            {
+                if (!_actor.ContainsEffect(_code))
+                    _skin.Block(false);
+            }
         }
 	}
 }

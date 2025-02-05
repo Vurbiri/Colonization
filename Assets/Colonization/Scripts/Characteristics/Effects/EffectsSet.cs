@@ -43,6 +43,24 @@ namespace Vurbiri.Colonization.Characteristics
         public void Unsubscribe(Action<ReactiveEffect, TypeEvent> action) => actionCollectionChange -= action;
         #endregion
 
+        public bool Contains(EffectCode code)
+        {
+            for (int i = 0; i < _count; i++)
+                if (_effects[i].Code == code)
+                    return true;
+
+            return false;
+        }
+
+        public bool Contains(ReactiveEffect effect)
+        {
+            for (int i = 0; i < _count; i++)
+                if (_effects[i].Equals(effect))
+                    return true;
+
+            return false;
+        }
+
         public void Add(ReactiveEffect effect)
         {
             if (_effects == null)

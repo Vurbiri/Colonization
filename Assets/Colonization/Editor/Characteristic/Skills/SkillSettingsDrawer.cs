@@ -15,7 +15,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_SPRITE = "_sprite", P_KEY_NAME = "_nameKey", P_COST_UI = "_cost";
         private const string P_CHILD_TARGET = "_parentTarget";
 
-        private readonly string[] KEYS_NAME_SKILLS = { "Attack", "Sweep", "Combo" };
+        private readonly string[] KEYS_NAME_SKILLS = { "Attack", "MagicAttack", "Sweep", "Combo", "Heal" };
 
         public override void OnGUI(Rect mainPosition, SerializedProperty mainProperty, GUIContent label)
         {
@@ -53,20 +53,11 @@ namespace VurbiriEditor.Colonization.Characteristics
                     DrawLine(Color.gray);
                     Space();
 
-                    TargetOfSkill target;
-                    if ((target = DrawEnumPopup<TargetOfSkill>(P_TARGET)) == TargetOfSkill.Enemy)
-                    {
-                        Space();
-                        if (DrawBool(P_MOVE))
-                            DrawLabelAndSetValue(P_REACT, true);
-                        else
-                            DrawBool(P_REACT);
-                    }
-                    else
-                    {
-                        DrawLabelAndSetValue(P_MOVE, false);
-                        DrawLabelAndSetValue(P_REACT, false);
-                    }
+                    TargetOfSkill target = DrawEnumPopup<TargetOfSkill>(P_TARGET);
+
+                    Space();
+                    DrawBool(P_MOVE);
+                    DrawBool(P_REACT);
 
                     Space();
                     DrawSelfIntSlider(costProperty, 0, 3);

@@ -8,6 +8,8 @@ namespace Vurbiri.Colonization.UI
     public abstract class AButtonBuildType<T> : AButtonBuild, IValueId<T> where T : AIdType<T>
     {
         [Space]
+        [SerializeField] protected Files _lngFile = Files.Gameplay;
+        [Space]
         [SerializeField] protected string _key;
         [Space]
         [SerializeField] protected Id<T> _id;
@@ -17,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         protected string _caption;
         protected Players _players;
         protected GameObject _parentGO;
-
+        
         public Id<T> Id => _id;
 
         public virtual void Init(ButtonSettings settings, ACurrencies cost, GameObject parent, Vector3 localPosition = default)
@@ -30,7 +32,7 @@ namespace Vurbiri.Colonization.UI
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }
 
-        protected void SetText(Language localization) => _caption = localization.GetText(Files.Gameplay, _key);
+        protected void SetText(Language localization) => _caption = localization.GetText(_lngFile, _key);
 
         protected abstract void OnClick();
 

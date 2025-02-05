@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
         public override void GetText(Language language, StringBuilder sb)
         {
             sb.Append(_hexColor);
-            sb.AppendLine(language.GetTextFormat(Files.Gameplay, _descKey, _value, _duration));
+            sb.AppendLine(language.GetTextFormat(CONST_UI_LNG_KEYS.FILE, _descKey, _value, _duration));
         }
     }
 }

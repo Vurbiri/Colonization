@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Actors
             Wizard      => PlayerAbilityId.IsWizard,
             Saboteur    => PlayerAbilityId.IsSaboteur,
             Knight      => PlayerAbilityId.IsKnight,
-            _           => throw new ArgumentOutOfRangeException("id", $"����������� �������� WarriorId - {id} � ToState()"),
+            _           => throw new ArgumentOutOfRangeException("id", $"WarriorId: {id}.ToState()"),
         };
     }
 

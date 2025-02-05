@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization.Actors
 
             _look.Init(_hpBar, _moveBar);
 
-           
+            Debug.Log("Сделать панель баффов/дебаффов");
 
             Destroy(this);
         }

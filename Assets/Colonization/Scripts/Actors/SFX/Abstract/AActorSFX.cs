@@ -29,6 +29,8 @@ namespace Vurbiri.Colonization.Actors
             _scriptablesSFX = null;
         }
 
+        public virtual void Block(bool isActive) { Debug.Log($"Block: {isActive}"); }
+
         public virtual void Hit(int idSkill, int idHit, Transform target) => _skills[idSkill, idHit].Hit(target);
 
         public IEnumerator Death_Coroutine()

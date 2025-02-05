@@ -104,12 +104,12 @@ namespace Vurbiri.Colonization.Characteristics
         private ASkillState CreateState(Actor parent, SkillSettings skill, int id)
         {
             if (skill.target == TargetOfSkill.Self)
-                return new SelfBuffState(parent, _effectsHits[id], skill.cost, id);
+                return new SelfSkillState(parent, _effectsHits[id], skill.cost, id);
 
             if (skill.isMove)
-                return new AttackState(parent, skill.target, _effectsHits[id], skill.range, _speedRun, skill.cost, id);
+                return new SkillState(parent, skill.target, _effectsHits[id], skill.isTargetReact, skill.range, _speedRun, skill.cost, id);
 
-            return new SpellState(parent, skill.target, _effectsHits[id], skill.isTargetReact, skill.cost, id);
+            return new RangeSkillState(parent, skill.target, _effectsHits[id], skill.isTargetReact, skill.cost, id);
         }
 
 #if UNITY_EDITOR

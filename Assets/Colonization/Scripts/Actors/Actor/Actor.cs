@@ -34,7 +34,6 @@ namespace Vurbiri.Colonization.Actors
 
         protected StateMachineSelectable _stateMachine;
         protected BlockState _blockState;
-        protected TargetState _targetState;
 
         protected Coroutine _onHitCoroutine, _deathCoroutine;
         #endregion
@@ -75,6 +74,7 @@ namespace Vurbiri.Colonization.Actors
             return _diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
+        public bool ContainsEffect(EffectCode code) => _effects.Contains(code);
         public void AddEffect(ReactiveEffect effect) => _effects.Add(effect);
         public int ApplyEffect(IPerk effect)
         {
@@ -120,9 +120,7 @@ namespace Vurbiri.Colonization.Actors
 
         private void SkillUsedStart(Id<PlayerId> initiator, Relation relation)
         {
-            if(_stateMachine.IsDefaultState)
-                _stateMachine.SetState<TargetState>();
-
+            _stateMachine.SetState<TargetState>();
             _diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
 
@@ -130,9 +128,7 @@ namespace Vurbiri.Colonization.Actors
         {
             if (_deathCoroutine == null)
             {
-                if (_stateMachine.CurrentState == _targetState)
-                    _stateMachine.ToDefaultState();
-
+                _stateMachine.ToPrevState();
                 actionThisChange?.Invoke(this, TypeEvent.Change);
             }
         }
@@ -184,6 +180,7 @@ namespace Vurbiri.Colonization.Actors
                 _currentAP.Value += _abilities.GetValue(ActorAbilityId.APPerTurn);
                 _move.IsValue = true;
 
+                Debug.Log("Защита от стен - решить проблему");
                 _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetMaxDefense());
                 if (_wallDefenceEffect != null)
                     _effects.Add(_wallDefenceEffect);

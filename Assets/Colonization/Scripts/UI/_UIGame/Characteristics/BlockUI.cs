@@ -48,13 +48,13 @@ namespace Vurbiri.Colonization.UI
         private void SetTexts(Language localization)
         {
             StringBuilder sb = new(SIZE << 1);
-            sb.AppendLine(localization.GetText(Files.Gameplay, BLOCK_KEY));
+            sb.AppendLine(localization.GetText(FILE, BLOCK_KEY));
             sb.Append(_hexColorPlus);
-            sb.AppendLine(localization.GetTextFormat(Files.Gameplay, BLOCK_DESK_KEY, _value, BLOCK_DURATION));
+            sb.AppendLine(localization.GetTextFormat(FILE, BLOCK_DESK_KEY, _value, BLOCK_DURATION));
             sb.Append(TAG_COLOR_OFF);
 
             _textMain = sb.ToString();
-            _textAP = localization.GetTextFormat(Files.Gameplay, AP_KEY, _cost);
+            _textAP = localization.GetTextFormat(FILE, AP_KEY, _cost);
 
             _capacity = _textMain.Length + +_hexColorPlus.Length + _textAP.Length;
         }

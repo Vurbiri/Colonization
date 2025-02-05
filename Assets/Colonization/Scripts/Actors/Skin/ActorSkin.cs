@@ -50,7 +50,12 @@ namespace Vurbiri.Colonization.Actors
 
         public virtual void Idle() => _stateMachine.ToDefaultState();
 
-        public virtual void Block() => _stateMachine.SetState(_blockState);
+        public virtual void Block(bool isActive)
+        {
+            if (isActive)
+                _stateMachine.SetState(_blockState);
+            _sfx.Block(isActive);
+        }
 
         public virtual void Move() => _stateMachine.SetState(_moveState);
 

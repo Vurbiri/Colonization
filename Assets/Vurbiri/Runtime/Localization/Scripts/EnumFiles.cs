@@ -4,6 +4,7 @@ namespace Vurbiri.Localization
     public enum Files
     {
         Main,
-        Gameplay
+        Gameplay,
+        Actors
     }
 }

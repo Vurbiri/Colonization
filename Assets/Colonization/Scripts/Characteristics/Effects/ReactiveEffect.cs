@@ -5,7 +5,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class ReactiveEffect : AReactiveElement<ReactiveEffect>, IPerk
+    public class ReactiveEffect : AReactiveElement<ReactiveEffect>, IPerk, IEquatable<ReactiveEffect>
     {
         private readonly EffectCode _code;
         private readonly int _targetAbility;
@@ -59,12 +59,20 @@ namespace Vurbiri.Colonization.Characteristics
         {
             if (--_duration == 0)
             {
-                Removing(); return;
+                Removing(); 
+                return;
             }
 
             actionThisChange?.Invoke(this, TypeEvent.Change);
         }
 
         public int[] ToArray() => new int[] { _code, _targetAbility, _typeModifier.Value, _value, _duration };
+
+        public bool Equals(ReactiveEffect other)
+        {
+           if(other is null) return false;
+
+            return _code == other._code;
+        }
     }
 }
