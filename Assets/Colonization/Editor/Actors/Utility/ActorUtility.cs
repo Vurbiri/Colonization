@@ -25,7 +25,7 @@ namespace VurbiriEditor.Colonization.Actors
 
             foreach (var settings in list)
             {
-                actorSkin = settings.Skin;
+                actorSkin = settings.PrefabSkin;
                 if (actorSkin == null)
                     continue;
 

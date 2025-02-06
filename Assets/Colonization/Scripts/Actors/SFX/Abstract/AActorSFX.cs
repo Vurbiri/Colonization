@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
         [HideInInspector, SerializeField] protected HitsSFXSettings _scriptablesSFX = new();
 
         protected Transform _thisTransform;
-        protected HitsSFX _skills;
+        protected HitsSFX _hitsSFX;
 
         public Transform Container => _thisTransform;
         public AudioSource AudioSource { get; private set; }
@@ -25,15 +25,15 @@ namespace Vurbiri.Colonization.Actors
             _thisTransform = transform;
             AudioSource = GetComponent<AudioSource>();
 
-            _skills = _scriptablesSFX.GetSkillsSFX(this);
+            _hitsSFX = _scriptablesSFX.GetHitsSFX(this);
             _scriptablesSFX = null;
         }
 
-        public virtual void Block(bool isActive) { Debug.Log($"Block: {isActive}"); }
+        public virtual void Block(bool isActive) { }
 
-        public virtual void Hit(int idSkill, int idHit, Transform target) => _skills[idSkill, idHit].Hit(target);
+        public virtual void Hit(int idSkill, int idHit, Transform target) => _hitsSFX[idSkill, idHit].Hit(target);
 
-        public IEnumerator Death_Coroutine()
+        public virtual IEnumerator Death_Coroutine()
         {
             Vector3 position = _thisTransform.localPosition;
             float speed = _heightDeath / _durationDeath;
@@ -91,7 +91,7 @@ namespace Vurbiri.Colonization.Actors
             [SerializeField] private List<ScriptableSFX> _scriptables;
             [SerializeField] private int[] _countHits;
 
-            public HitsSFX GetSkillsSFX(IActorSFX parent) => new(_countHits, _scriptables, parent);
+            public HitsSFX GetHitsSFX(IActorSFX parent) => new(_countHits, _scriptables, parent);
 
 #if UNITY_EDITOR
             public void SetCountSkills(int count)

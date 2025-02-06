@@ -28,8 +28,8 @@ namespace Vurbiri.Colonization.Characteristics
         public IReadOnlyList<SkillUI> SkillsUI => _skillsUI;
         public BlockUI BlockUI => _blockUI ??= new(_blockCost, _blockValue);
 
-        public MoveState GetMoveSate(Actor parent) => new(_speedWalk, parent);
-        public BlockState GetBlockState(Actor parent) => new(_blockCost, _blockValue, parent);
+        public MoveState GetMoveState(Actor parent) => new(_speedWalk, parent);
+        public ABlockState GetBlockState(Actor parent) => ABlockState.Create(_blockCost, _blockValue, parent);
 
         public List<ASkillState> GetSkillSates(Actor parent)
         {

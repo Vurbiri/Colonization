@@ -174,6 +174,7 @@ namespace Vurbiri.Colonization
                 return false;
 
             _mark = _poolMarks.Get(_thisTransform, false).View(isFriendly);
+            _owner.ColliderEnable(true);
             _collider.enabled = true;
             return true;
         }
@@ -185,6 +186,13 @@ namespace Vurbiri.Colonization
             _poolMarks.Return(_mark);
             _collider.enabled = false;
             _mark = null;
+        }
+        public void SetOwnerUnselectable()
+        {
+            SetUnselectable();
+            if (_owner == null || _owner.Owner == PlayerId.Player)
+                return;
+            _owner.ColliderEnable(false);
         }
 
         #endregion

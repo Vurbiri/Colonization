@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.Actors
             for (int i = 0; i < _valueBars.Length; i++)
                 _valueBars[i].Init(abilities, _popup, orderLevel);
 
-            _look.Init(_hpBar, _moveBar);
+            _look.Init(actor, _hpBar, _moveBar);
 
             Debug.Log("Сделать панель баффов/дебаффов");
 

@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization.Actors
     {
         [SerializeField] private AActorSFX _sfx;
         [SerializeField] private Animator _animator;
+        [SerializeField] private SkinnedMeshRenderer _mesh;
         [HideInInspector, SerializeField] TimingSkillSettings[] _timings;
         [HideInInspector, SerializeField] float _durationDeath;
 
@@ -27,6 +28,8 @@ namespace Vurbiri.Colonization.Actors
         private ReactState _reactState;
 
         public event Action EventStart;
+
+        public SkinnedMeshRenderer Mesh => _mesh;
 
         private void Start()
         {

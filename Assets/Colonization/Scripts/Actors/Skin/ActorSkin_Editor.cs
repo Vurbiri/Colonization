@@ -43,6 +43,8 @@ namespace Vurbiri.Colonization.Actors
                 _animator = GetComponent<Animator>();
             if (_sfx == null)
                 _sfx = GetComponent<AActorSFX>();
+            if (_mesh == null)
+                _mesh = GetComponentInChildren<SkinnedMeshRenderer>();
 
             if (_animator != null)
                 _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)[A_DEATH].length;

@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Actors
         protected ReactiveEffect _wallDefenceEffect;
 
         protected StateMachineSelectable _stateMachine;
-        protected BlockState _blockState;
+        protected ABlockState _blockState;
 
         protected Coroutine _onHitCoroutine, _deathCoroutine;
         #endregion
@@ -42,10 +42,13 @@ namespace Vurbiri.Colonization.Actors
         public int TypeId => _typeId;
         public int Id => _id;
         public Id<PlayerId> Owner => _owner;
+        public bool IsPlayer => _owner == PlayerId.Player;
         public int ActionPoint => _currentAP.Value;
         public bool IsIdle => _stateMachine.IsDefaultState;
-        public bool IsBlock => _stateMachine.CurrentState == _blockState;
+        public bool IsBlock => _blockState.Enabled;
         public Vector3 Position => _thisTransform.position;
+        public ActorSkin Skin => _skin;
+        public IReactiveCollection<ReactiveEffect> Effects => _effects;
         public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
         #endregion
 
@@ -59,7 +62,7 @@ namespace Vurbiri.Colonization.Actors
 
         public virtual void Block()
         {
-            _stateMachine.SetState<BlockState>();
+            _stateMachine.SetState(_blockState);
         }
 
         public virtual void UseSkill(int id)
@@ -71,10 +74,15 @@ namespace Vurbiri.Colonization.Actors
         public Relation GetRelation(Id<PlayerId> id) => _diplomacy.GetRelation(id, _owner);
         public bool IsCanUseSkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
+            if(!(_stateMachine.IsDefaultState || _blockState.Enabled))
+            {
+                isFriendly = false;
+                return false;
+            }
+            
             return _diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
-        public bool ContainsEffect(EffectCode code) => _effects.Contains(code);
         public void AddEffect(ReactiveEffect effect) => _effects.Add(effect);
         public int ApplyEffect(IPerk effect)
         {
@@ -84,7 +92,9 @@ namespace Vurbiri.Colonization.Actors
                 actionThisChange?.Invoke(this, TypeEvent.Change);
             return delta;
         }
-        
+
+        public void ColliderEnable(bool enabled) => _thisCollider.enabled = enabled;
+
         public virtual void Select()
         {
             _stateMachine.Select();
@@ -101,7 +111,7 @@ namespace Vurbiri.Colonization.Actors
             int[][] array = new int[count + 2][];
 
             array[i++] = _currentHex.Key.ToArray();
-            array[i++] = new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value , IsBlock ? 1 : 0 };
+            array[i++] = new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value };
             
             for (int j = 0; j < count; j++, i++)
                 array[i] = _effects[j].ToArray();
@@ -115,8 +125,6 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.Dispose();
             Destroy(gameObject);
         }
-
-        private bool IsCanUseSkill(Id<PlayerId> id, Relation targetAttack) => _diplomacy.IsCanActorsInteraction(id, _owner, targetAttack, out _);
 
         private void SkillUsedStart(Id<PlayerId> initiator, Relation relation)
         {

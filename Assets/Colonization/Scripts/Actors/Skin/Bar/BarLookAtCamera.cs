@@ -11,13 +11,15 @@ namespace Vurbiri.Colonization.Actors
         private IRendererVisible[] _renderers;
         private int _renderersCount;
 
-        public void Init(params IRendererVisible[] renderers)
+        public void Init(Actor actor, params IRendererVisible[] renderers)
 		{
             _cameraTransform = SceneObjects.Get<Camera>().transform;
             _thisTransform = transform;
 
             _renderers = renderers;
             _renderersCount = renderers.Length;
+
+            actor.Subscribe((type) => { if (type == Reactive.Collections.TypeEvent.Remove) Destroy(gameObject); }, false);
         }
 
         private void Update()
@@ -35,5 +37,5 @@ namespace Vurbiri.Colonization.Actors
             _lastCameraPosition = _cameraTransform.position;
             _thisTransform.rotation = _lastRotation = Quaternion.LookRotation(_cameraTransform.forward, _up);
         }
-	}
+    }
 }

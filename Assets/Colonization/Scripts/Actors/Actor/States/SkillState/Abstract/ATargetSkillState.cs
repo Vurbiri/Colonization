@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization.Actors
                 yield return _waitActor = new();
 
                 foreach (var hex in targets)
-                    hex.SetUnselectable();
+                    hex.SetOwnerUnselectable();
 
                 if (_target == null)
                     yield break;
@@ -103,7 +103,7 @@ namespace Vurbiri.Colonization.Actors
 
                 Key key = target._currentHex.Key - _actor._currentHex.Key;
 
-                if (target == _actor || !target.IsCanUseSkill(_actor._owner, _relationTarget) || !ACTOR_ROTATIONS.ContainsKey(key))
+                if (target == _actor || !target.IsCanUseSkill(_actor._owner, _relationTarget, out _) || !ACTOR_ROTATIONS.ContainsKey(key))
                     return null;
 
                 target.SkillUsedStart(_actor._owner, _relationTarget);

@@ -21,14 +21,13 @@ namespace Vurbiri.Colonization.Actors
 
         public ActorSkin InstantiateActorSkin(Transform parent) => UnityEngine.Object.Instantiate(_prefabActorSkin, parent);
 
-
         public void Dispose()
         {
             _skills.Dispose();
         }
 
 #if UNITY_EDITOR
-        public ActorSkin Skin => _prefabActorSkin;
+        public ActorSkin PrefabSkin => _prefabActorSkin;
 #endif
     }
 }

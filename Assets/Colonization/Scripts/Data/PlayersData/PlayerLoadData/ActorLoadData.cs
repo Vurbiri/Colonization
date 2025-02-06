@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization.Data
         public readonly int currentHP;
         public readonly int currentAP;
 		public readonly int move;
-        public readonly bool isBlock;
         public readonly ReactiveEffect[] effects;
 
 		public ActorLoadData(int[][] actorData)
@@ -22,7 +21,6 @@ namespace Vurbiri.Colonization.Data
             currentHP = actorData[n][m++];
             currentAP = actorData[n][m++];
             move = actorData[n][m++];
-            isBlock = actorData[n][m++] > 0;
             n++;
 
             int count = actorData.Length - n;
