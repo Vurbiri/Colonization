@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
                 _thisRenderer.sharedMaterial = isGreen ? _greenMaterial : _redMaterial;
 
             _isGreenMaterial = isGreen;
-            _thisGO.SetActive(true);
+            _thisGObj.SetActive(true);
 
             return this;
         }

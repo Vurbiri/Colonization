@@ -119,6 +119,13 @@ namespace Vurbiri.Colonization.Actors
             return array;
         }
 
+        public override bool Equals(Actor other)
+        {
+            if (other == null) return false;
+
+            return _typeId == other._typeId & _id == other._id & _owner == other._owner;
+        }
+
         public void Dispose()
         {
             _skin.Dispose();

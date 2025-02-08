@@ -1,14 +1,15 @@
-//Assets\Colonization\Scripts\Actors\SFX\WarriorWizardSFX.cs
+//Assets\Colonization\Scripts\Actors\SFX\Warrior\WarriorWizardSFX.cs
 using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class WarriorWizardSFX : AWarriorSFX
+    public class WarriorWizardSFX : WarriorSFX
     {
-        [SerializeField] private ParticleSystem[] _particles;
+        [Space]
         [SerializeField] private MeshRenderer _magicShield;
-
+        [SerializeField] private ParticleSystem[] _particles;
+        
         protected override IEnumerator Start()
         {
             _magicShield.enabled = false;
@@ -21,14 +22,12 @@ namespace Vurbiri.Colonization.Actors
 
         public override void Block(bool isActive) { _magicShield.enabled = isActive; }
 
-        public override IEnumerator Death_Coroutine()
+        public override void Death()
         {
+            _magicShield.enabled = false;
             for (int i = 0; i < _particles.Length; i++)
                 _particles[i].Stop();
-
-            yield return base.Death_Coroutine();
         }
-
 
 #if UNITY_EDITOR
         private void OnValidate()

@@ -1,10 +1,10 @@
-//Assets\Colonization\Scripts\Actors\SFX\Abstract\AWarriorSFX.cs
+//Assets\Colonization\Scripts\Actors\SFX\Warrior\WarriorSFX.cs
 using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public abstract class AWarriorSFX : AActorSFX
+    public class WarriorSFX : AActorSFX
     {
         [Space]
         [SerializeField] protected float _startScale = 0.01f;

@@ -7,6 +7,7 @@ namespace Vurbiri.Reactive.Collections
         Add,
         Insert,
         Remove,
-        Change
+        Change,
+        Reindex
     }
 }

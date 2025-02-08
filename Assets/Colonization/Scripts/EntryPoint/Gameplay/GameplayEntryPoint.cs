@@ -73,6 +73,8 @@ namespace Vurbiri.Colonization
                 objects.AddInstance(_sceneObjects.mainCamera);
                 objects.AddInstance(_land);
                 objects.AddInstance(_crossroads);
+
+                _settingsUI.Init(services);
             }
             #endregion
         }
@@ -82,7 +84,7 @@ namespace Vurbiri.Colonization
             yield return CreateIsland_Coroutine();
             yield return CreatePlayers_Coroutine();
 
-            _sceneObjects.Init(this, _settingsUI, _scriptables);
+            _sceneObjects.Init(this, _scriptables);
 
             StartCoroutine(Final_Coroutine());
         }
@@ -163,11 +165,13 @@ namespace Vurbiri.Colonization
             public IslandCreator islandCreator;
             public CameraController cameraController;
             public ContextMenusWorld contextMenusWorld;
+            [Space]
+            public HintGlobal hintGlobalWorld;
 
-            public void Init(GameplayEntryPoint parent, UISettings ui, ScriptableObjects scriptables)
+            public void Init(GameplayEntryPoint parent, ScriptableObjects scriptables)
             {
                 cameraController.Init(mainCamera, parent._inputController.CameraActions);
-                contextMenusWorld.Init(new(parent._players, ui.hintGlobalWorld, scriptables.prices, mainCamera, parent._eventBus));
+                contextMenusWorld.Init(new(parent._players, hintGlobalWorld, scriptables.prices, mainCamera, parent._eventBus));
             }
 
 #if UNITY_EDITOR
@@ -183,6 +187,8 @@ namespace Vurbiri.Colonization
                     cameraController = FindAnyObjectByType<CameraController>();
                 if (contextMenusWorld == null)
                     contextMenusWorld = FindAnyObjectByType<ContextMenusWorld>();
+                if (hintGlobalWorld == null)
+                    hintGlobalWorld = GameObject.Find("HintGlobalWorld").GetComponent<HintGlobal>();
             }
 #endif
         }
@@ -220,13 +226,19 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class UISettings
         {
-            public HintGlobal hintGlobalWorld;
+            public EffectsBar prefabEffectsBar;
+            public Transform repositoryUI;
+
+            public void Init(DIContainer services)
+            {
+                services.AddInstance(new Pool<EffectsBar>(prefabEffectsBar, repositoryUI, 3));
+            }
 
 #if UNITY_EDITOR
             public void OnValidate()
             {
-                if (hintGlobalWorld == null)
-                    hintGlobalWorld = GameObject.Find("HintGlobalWorld").GetComponent<HintGlobal>();
+                if (prefabEffectsBar == null)
+                    prefabEffectsBar = VurbiriEditor.Utility.FindAnyPrefab<EffectsBar>();
             }
 #endif
         }

@@ -18,6 +18,7 @@ namespace Vurbiri.Colonization.Characteristics
         public Id<TypeModifierId> TypeModifier => _typeModifier;
         public int Value => _value;
         public Chance Chance => 100;
+        public int Duration => _duration;
         public bool IsNegative => _value < 0;
 
         public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration)
@@ -68,7 +69,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public int[] ToArray() => new int[] { _code, _targetAbility, _typeModifier.Value, _value, _duration };
 
-        public bool Equals(ReactiveEffect other)
+        public override bool Equals(ReactiveEffect other)
         {
            if(other is null) return false;
 

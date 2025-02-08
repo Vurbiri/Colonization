@@ -13,9 +13,9 @@ namespace Vurbiri.Colonization.Actors
 
         [SerializeField] private Id<ActorAbilityId> _ability;
 		[Space]
-		[SerializeField] private TextMeshPro _valueTMP;
         [SerializeField] private SpriteRenderer _sprite;
-
+        [SerializeField] private TextMeshPro _valueTMP;
+        
         private int _currentValue = int.MinValue;
         private PopupWidget3D _popup;
         private IUnsubscriber _unsubscriber;
@@ -54,11 +54,11 @@ namespace Vurbiri.Colonization.Actors
 #if UNITY_EDITOR
         private void OnValidate()
         {
+            if (_sprite == null)
+                _sprite = GetComponent<SpriteRenderer>();
+
             if (_valueTMP == null)
                 _valueTMP = GetComponentInChildren<TextMeshPro>();
-
-            if (_sprite == null)
-                _sprite = GetComponentInChildren<SpriteRenderer>();
         }
 #endif
 	}

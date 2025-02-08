@@ -7,11 +7,11 @@ namespace Vurbiri.Reactive.Collections
 {
     public class ReactiveCollection<T> : IReactiveCollection<T> where T : class, IReactiveElement<T>
     {
-        private T[] _values;
-        private int _count = 0;
-        private int _capacity = 4;
+        protected T[] _values;
+        protected int _count = 0;
+        protected int _capacity = 4;
 
-        private Action<T, TypeEvent> actionCollectionChange;
+        protected Action<T, TypeEvent> actionCollectionChange;
 
         public T this[int index]
         {
@@ -59,13 +59,25 @@ namespace Vurbiri.Reactive.Collections
         public void Unsubscribe(Action<T, TypeEvent> action) => actionCollectionChange -= action;
         #endregion
 
-        public void Add(T item)
+        public virtual void Add(T item)
         {
             if (_count == _capacity)
                 GrowArray();
 
             _values[_count++] = item;
-            item.Subscribe(RedirectEvents, _count - 1);
+            item.Adding(RedirectEvents, _count - 1);
+        }
+
+        public virtual void Remove(int index) => _values[index].Removing();
+        public virtual void Remove(T item) => _values[item.Index].Removing();
+
+        public virtual bool Contains(T item)
+        {
+            for (int i = 0; i < _count; i++)
+                if (_values[i].Equals(item))
+                    return true;
+
+            return false;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -75,6 +87,28 @@ namespace Vurbiri.Reactive.Collections
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        protected virtual void RemoveElement(T item)
+        {
+            _count--;
+            T temp;
+            for (int i = item.Index; i < _count; i++)
+            {
+                temp = _values[i + 1];
+                temp.Index = i;
+                _values[i] = temp;
+            }
+
+            _values[_count] = null;
+        }
+
+        protected void RedirectEvents(T item, TypeEvent operation)
+        {
+            if (operation == TypeEvent.Remove)
+                RemoveElement(item);
+
+            actionCollectionChange?.Invoke(item, operation);
+        }
 
         private void GrowArray()
         {
@@ -86,23 +120,5 @@ namespace Vurbiri.Reactive.Collections
             _values = array;
         }
 
-        private void RedirectEvents(T item, TypeEvent operation)
-        {
-            if (operation == TypeEvent.Remove)
-            {
-                _count--;
-                T temp;
-                for (int i = item.Index; i < _count; i++)
-                {
-                    temp = _values[i + 1];
-                    temp.Index = i;
-                    _values[i] = temp;
-                }
-
-                _values[_count] = null;
-            }
-
-            actionCollectionChange?.Invoke(item, operation);
-        }
     }
 }

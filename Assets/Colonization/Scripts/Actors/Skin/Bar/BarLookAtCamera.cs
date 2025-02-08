@@ -11,15 +11,13 @@ namespace Vurbiri.Colonization.Actors
         private IRendererVisible[] _renderers;
         private int _renderersCount;
 
-        public void Init(Actor actor, params IRendererVisible[] renderers)
+        public void Init(params IRendererVisible[] renderers)
 		{
             _cameraTransform = SceneObjects.Get<Camera>().transform;
             _thisTransform = transform;
 
             _renderers = renderers;
             _renderersCount = renderers.Length;
-
-            actor.Subscribe((type) => { if (type == Reactive.Collections.TypeEvent.Remove) Destroy(gameObject); }, false);
         }
 
         private void Update()

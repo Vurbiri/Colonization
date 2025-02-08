@@ -44,7 +44,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             if (Foldout(label))
             {
-                isDuration = DrawIntSlider(P_DUR, 0, 5) > 0;
+                isDuration = DrawIntSlider(P_DUR, 0, 3) > 0;
 
                 if (!isParentSelf & !isDuration && !(isNotUse = (usedAbility = DrawId(P_USED_ABILITY, typeof(ActorAbilityId), true)) < 0))
                 {

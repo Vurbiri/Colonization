@@ -33,6 +33,8 @@ namespace Vurbiri.Colonization.Actors
 
         public virtual void Hit(int idSkill, int idHit, Transform target) => _hitsSFX[idSkill, idHit].Hit(target);
 
+        public virtual void Death() { }
+
         public virtual IEnumerator Death_Coroutine()
         {
             Vector3 position = _thisTransform.localPosition;
@@ -47,7 +49,6 @@ namespace Vurbiri.Colonization.Actors
 
         #region Nested: HitsSFX
         //***********************************
-        [Serializable]
         protected class HitsSFX
         {
             private readonly IHitSFX[] _instances;

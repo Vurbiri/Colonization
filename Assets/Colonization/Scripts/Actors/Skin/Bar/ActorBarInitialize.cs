@@ -15,6 +15,8 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private MoveBar _moveBar;
         [SerializeField] private ValueBar[] _valueBars;
         [Space]
+        [SerializeField] private EffectsBarPanel _effectsPanel;
+        [Space]
         [SerializeField] private PopupWidget3D _popup;
         [Space]
         [SerializeField] private BarLookAtCamera _look;
@@ -37,9 +39,9 @@ namespace Vurbiri.Colonization.Actors
             for (int i = 0; i < _valueBars.Length; i++)
                 _valueBars[i].Init(abilities, _popup, orderLevel);
 
-            _look.Init(actor, _hpBar, _moveBar);
+            _effectsPanel.Init(actor, gameObject, orderLevel);
 
-            Debug.Log("Сделать панель баффов/дебаффов");
+            _look.Init(_hpBar, _moveBar);
 
             Destroy(this);
         }
@@ -56,6 +58,8 @@ namespace Vurbiri.Colonization.Actors
                 _moveBar = GetComponentInChildren<MoveBar>();
             if (_valueBars == null || _valueBars.Length == 0)
                 _valueBars = GetComponentsInChildren<ValueBar>();
+            if (_effectsPanel == null)
+                _effectsPanel = GetComponentInChildren<EffectsBarPanel>();
             if (_popup == null)
                 _popup = GetComponentInChildren<PopupWidget3D>();
             if (_look == null)

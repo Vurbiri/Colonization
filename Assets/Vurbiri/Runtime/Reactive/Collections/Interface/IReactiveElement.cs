@@ -3,10 +3,11 @@ using System;
 
 namespace Vurbiri.Reactive.Collections
 {
-    public interface IReactiveElement<T> : IReactive<TypeEvent> where T : class, IReactiveElement<T>
+    public interface IReactiveElement<T> : IReactive<T, TypeEvent>, IEquatable<T> where T : class, IReactiveElement<T>
     {
         public int Index { get; set; }
         
-        public void Subscribe(Action<T, TypeEvent> action, int index);
+        public void Adding(Action<T, TypeEvent> action, int index);
+        public void Removing();
     }
 }

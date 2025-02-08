@@ -62,6 +62,22 @@ namespace Vurbiri
             throw new($"{key.Type.FullName} (id = {key.Id}) не найден");
         }
 
+        public bool TryGet<T>(out T instance, int id = 0) => TryGet<T>(out instance, new TypeIdKey(typeof(T), id));
+        public bool TryGet<T>(out T instance, TypeIdKey key)
+        {
+            if (_registration.TryGetValue(key, out var registration))
+            {
+                instance = ((IRegistration<T>)registration).Get();
+                return true;
+            }
+
+            if (_parent != null)
+                return _parent.TryGet<T>(out instance, key);
+
+            instance = default;
+            return false;
+        }
+
         public T Get<P, T>(P value, int id = 0) => Get<P, T>(value, new TypeIdKey(typeof(T), id));
         public T Get<P, T>(P value, TypeIdKey key)
         {
@@ -72,6 +88,22 @@ namespace Vurbiri
                 return _parent.Get<P, T>(value, key);
 
             throw new($"{key.Type.FullName} (id = {key.Id}) не найден");
+        }
+
+        public bool TryGet<P, T>(out T instance, P value, int id = 0) => TryGet<P, T>(out instance, value, new TypeIdKey(typeof(T), id));
+        public bool TryGet<P, T>(out T instance, P value, TypeIdKey key)
+        {
+            if (_registration.TryGetValue(key, out var registration))
+            {
+                instance = ((IRegistration<P, T>)registration).Get(value);
+                return true;
+            }
+
+            if (_parent != null)
+                return _parent.TryGet<P, T>(out instance, value, key);
+
+            instance = default;
+            return false;
         }
 
         public void Dispose()

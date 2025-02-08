@@ -2,37 +2,36 @@
 using System;
 using System.Collections.Generic;
 
-
 namespace Vurbiri.Reactive.Collections
 {
     public abstract class AReactiveElement<T> : IReactiveElement<T> where T : AReactiveElement<T>
 	{
-        private readonly HashSet<Action<TypeEvent>> _hashActions = new();
+        private readonly HashSet<Action<T, TypeEvent>> _hashActions = new();
 
         protected Action<T, TypeEvent> actionThisChange;
         protected int _index = -1;
 
-        public int Index { get => _index; set => _index = value; }
+        public int Index { get => _index; set { _index = value; actionThisChange?.Invoke((T)this, TypeEvent.Reindex); } }
 
-        public void Subscribe(Action<T, TypeEvent> action, int index)
+        public void Adding(Action<T, TypeEvent> action, int index)
         {
             actionThisChange += action;
             _index = index;
-            action((T)this, TypeEvent.Subscribe);
+            action((T)this, TypeEvent.Add);
         }
 
-        public IUnsubscriber Subscribe(Action<TypeEvent> action, bool calling = true)
+        public IUnsubscriber Subscribe(Action<T, TypeEvent> action, bool calling = true)
         {
             if (_hashActions.Count == 0)
                 actionThisChange += RedirectEvent;
 
             _hashActions.Add(action);
             if (calling)
-                action(TypeEvent.Subscribe);
-            return new Unsubscriber<Action<TypeEvent>>(this, action);
+                action((T)this, TypeEvent.Subscribe);
+            return new Unsubscriber<Action<T, TypeEvent>>(this, action);
         }
 
-        public void Unsubscribe(Action<TypeEvent> action)
+        public void Unsubscribe(Action<T, TypeEvent> action)
         {
             _hashActions.Remove(action);
             if(_hashActions.Count == 0)
@@ -50,7 +49,9 @@ namespace Vurbiri.Reactive.Collections
         private void RedirectEvent(T self, TypeEvent type)
         {
             foreach (var action in _hashActions)
-                action(type);
+                action(self, type);
         }
+
+        public abstract bool Equals(T other);
     }
 }

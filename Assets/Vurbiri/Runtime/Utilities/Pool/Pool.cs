@@ -68,4 +68,21 @@ namespace Vurbiri
             return pooledObject;
         }
     }
+
+    public class Pool<T, U> : Pool<T> where T : APooledObject<T, U>
+    {
+        private readonly U _setupData;
+
+        public Pool(T prefab, Transform repository, U setupData, int size) : base(prefab, repository, size)
+        {
+            _setupData = setupData;
+        }
+
+        protected override T Create()
+        {
+            T pooledObject = base.Create();
+            pooledObject.Setup(_setupData);
+            return pooledObject;
+        }
+    }
 }

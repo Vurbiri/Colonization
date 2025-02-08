@@ -20,6 +20,7 @@ namespace Vurbiri.Colonization.Actors
             public override void Enter()
             {
                 _animator.SetBool(_idParam, true);
+                _sfx.Death();
                 _parent.StartCoroutine(Death_Coroutine());
             }
 

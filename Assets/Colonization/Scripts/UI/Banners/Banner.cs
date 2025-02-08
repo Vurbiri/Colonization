@@ -44,7 +44,7 @@ namespace Vurbiri
             _text.text = message;
             _image.color = _banners.Colors[(int)messageType];
 
-            _thisGO.SetActive(true);
+            _thisGObj.SetActive(true);
             _coroutine = StartCoroutine(TimeShow());
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
