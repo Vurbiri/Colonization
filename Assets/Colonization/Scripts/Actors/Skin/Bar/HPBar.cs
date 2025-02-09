@@ -10,14 +10,15 @@ namespace Vurbiri.Colonization.Actors
     public class HPBar : MonoBehaviour, IRendererVisible
     {
 		private const float SP_WIDTH = 8f, SP_HIGHT = 1f;
-        private const int SP_ID = 0;
 
         [SerializeField] private SpriteRenderer _backgroundSprite;
 		[SerializeField] private SpriteRenderer _barSprite;
 		[SerializeField] private TextMeshPro _maxValueTMP;
         [SerializeField] private TextMeshPro _currentValueTMP;
+        [Space]
+        [SerializeField] private Id<ActorAbilityId> _ability;
 
-		private Transform _barTransform;
+        private Transform _barTransform;
 		private int _currentValue = int.MinValue, _maxValue;
         private PopupWidget3D _popup;
         private Unsubscribers _unsubscribers;
@@ -59,7 +60,7 @@ namespace Vurbiri.Colonization.Actors
                 _barTransform.localPosition = new((size - SP_WIDTH) * 0.5f, 0f, 0f);
 
                 if(_currentValue > 0)
-                    _popup.Run(rateValue - Mathf.RoundToInt((float)_currentValue / ActorAbilityId.RATE_ABILITY), SP_ID);
+                    _popup.Run(rateValue - Mathf.RoundToInt((float)_currentValue / ActorAbilityId.RATE_ABILITY), _ability);
 
                 _currentValue = value;
             }

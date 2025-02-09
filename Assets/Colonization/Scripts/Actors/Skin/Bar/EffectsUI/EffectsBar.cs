@@ -13,13 +13,15 @@ namespace Vurbiri.Colonization.Actors
     {
         private const char CHAR = '-';
 
-        [SerializeField] private float _offset;
+        [SerializeField] private Vector3 _startPosition = new(3.6f, 0.9f, 0f);
+        [Space]
+        [SerializeField] private Vector3 _offsetPosition = new(-0.7f, 0f, 0f);
         [SerializeField] private int _orderLevel = 0;
         [Space]
         [SerializeField] private SpriteRenderer _sprite;
         [SerializeField] private TextMeshPro _durationTMP;
 
-        private int Index { set => _thisTransform.localPosition = new(_offset * value, 0f, 0f); }
+        private int Index { set => _thisTransform.localPosition = _startPosition + _offsetPosition * value; }
         private int Duration { set => _durationTMP.text = new(CHAR, value); }
 
         private Unsubscribers _unsubscribers;

@@ -4,12 +4,13 @@ using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.FSMSelectable;
+using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveElementMono<Actor>, ISelectable, IPositionable, IDisposable
+    public abstract partial class Actor : AReactiveElementMono<Actor>, ISelectable, ICancel, IPositionable, IDisposable
     {
         #region Fields
         protected int _typeId;
@@ -35,6 +36,8 @@ namespace Vurbiri.Colonization.Actors
         protected StateMachineSelectable _stateMachine;
         protected ABlockState _blockState;
 
+        protected ReactiveValue<bool> _isCancel = new(false);
+
         protected Coroutine _onHitCoroutine, _deathCoroutine;
         #endregion
 
@@ -50,25 +53,16 @@ namespace Vurbiri.Colonization.Actors
         public ActorSkin Skin => _skin;
         public IReactiveCollection<ReactiveEffect> Effects => _effects;
         public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
+        public IReadOnlyReactive<bool> IsCancel => _isCancel;
         #endregion
 
         #region States
         public bool CanMove() => _move.IsValue;
 
-        public virtual void Move()
-        {
-            _stateMachine.SetState<MoveState>();
-        }
-
-        public virtual void Block()
-        {
-            _stateMachine.SetState(_blockState);
-        }
-
-        public virtual void UseSkill(int id)
-        {
-            _stateMachine.SetState<ASkillState>(id);
-        }
+        public virtual void Move() => _stateMachine.SetState<MoveState>();
+        public virtual void Block() => _stateMachine.SetState(_blockState);
+        public virtual void UseSkill(int id) => _stateMachine.SetState<ASkillState>(id);
+        public virtual void Cancel() => _stateMachine.Cancel();
         #endregion
 
         public Relation GetRelation(Id<PlayerId> id) => _diplomacy.GetRelation(id, _owner);
@@ -128,6 +122,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void Dispose()
         {
+            _currentHex.ExitActor();
             _skin.Dispose();
             _stateMachine.Dispose();
             Destroy(gameObject);

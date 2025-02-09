@@ -9,9 +9,9 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    public class Crossroad : IDisposable, IPositionable
+    public class Crossroad : IDisposable, IPositionable, ICancel
     {
-        #region private
+        #region Fields
         private const int HEX_COUNT = 3;
 
         private readonly Key _key;
@@ -29,10 +29,12 @@ namespace Vurbiri.Colonization
         private int _countFreeLink = 0, _countWater = 0;
         private bool _isGate = false;
         private WaitResult<Hexagon> _waitHexagon;
-        
+        private ReactiveValue<bool> _isCancel = new(false);
+
         private IUnsubscriber _unsubscriber;
         #endregion
 
+        #region Property
         public Key Key => _key;
         public Id<EdificeId> Id => _states.id;
         public Id<EdificeGroupId> GroupId => _states.groupId;
@@ -43,7 +45,9 @@ namespace Vurbiri.Colonization
         public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
         public bool IsWall => _isWall;
         public IReadOnlyList<CrossroadLink> Links => _links;
+        public IReadOnlyReactive<bool> IsCancel => _isCancel;
         public Vector3 Position { get;}
+        #endregion
 
         public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IReadOnlyList<AEdifice> prefabs)
         {
@@ -210,6 +214,7 @@ namespace Vurbiri.Colonization
             foreach (var hex in empty)
                 hex.TrySetSelectableFree();
 
+            _isCancel.Value = true;
             return _waitHexagon;
         }
         #endregion
@@ -292,7 +297,7 @@ namespace Vurbiri.Colonization
         }
 
 
-        #region ISelectable
+        #region ISelectable, ICancel
         public void OnSelect()
         {
             Debug.Log("Отправлять только если игрок");
@@ -305,12 +310,15 @@ namespace Vurbiri.Colonization
             if (_waitHexagon == null)
                 return;
 
+            _isCancel.Value = false;
+
             _waitHexagon.SetResult(newSelectable as Hexagon);
             foreach (var hex in _hexagons)
                 hex.SetUnselectable();
 
             _waitHexagon = null;
         }
+        public void Cancel() => OnUnselect(null);
         #endregion
 
         public int[] ToArray() => new int[] { _key.X, _key.Y, _states.id.Value, _isWall ? 1 : 0 };

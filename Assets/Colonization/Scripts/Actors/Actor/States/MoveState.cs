@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -13,6 +14,7 @@ namespace Vurbiri.Colonization.Actors
         {
             private readonly float _speed;
             private readonly Transform _parentTransform;
+            private readonly ReactiveValue<bool> _isCancel;
             private WaitActivate _waitHexagon;
             private Hexagon _targetHex;
             private Coroutine _coroutineAction;
@@ -20,7 +22,8 @@ namespace Vurbiri.Colonization.Actors
             public MoveState(float speed, Actor parent) : base(parent)
             {
                 _speed = speed;
-                _parentTransform = _actor._thisTransform;
+                _parentTransform = parent._thisTransform;
+                _isCancel = parent._isCancel;
             }
 
             public override void Enter()
@@ -67,17 +70,21 @@ namespace Vurbiri.Colonization.Actors
 
                 if (empty.Count == 0)
                 {
-                    ToExit(); yield break;
+                    ToExit();
+                    yield break;
                 }
 
+                _isCancel.Value = true;
                 yield return _waitHexagon = new();
+                _isCancel.Value = false;
 
                 foreach (var hex in empty)
                     hex.SetUnselectable();
 
                 if (_targetHex == null)
                 {
-                    ToExit(); yield break;
+                    ToExit(); 
+                    yield break;
                 }
 
                 _coroutineAction = _actor.StartCoroutine(Move_Coroutine());

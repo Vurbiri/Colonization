@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Reactive;
 using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization.Actors
@@ -15,12 +16,14 @@ namespace Vurbiri.Colonization.Actors
             protected Actor _target;
             protected bool _isTargetReact;
             protected WaitActivate _waitActor;
+            protected readonly ReactiveValue<bool> _isCancel;
             protected readonly WaitForSecondsRealtime _waitRealtime = new(0.6f);
             protected readonly Relation _relationTarget;
 
             protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, bool isTargetReact, int cost, int id) : 
                 base(parent, effects, cost, id)
             {
+                _isCancel = parent._isCancel;
                 _isTargetReact = isTargetReact;
                 _relationTarget = targetActor.ToRelation();
                 Debug.Log("Удалить _relationTarget = Relation.Friend;");
@@ -60,7 +63,9 @@ namespace Vurbiri.Colonization.Actors
                 if (targets.Count == 0)
                     yield break;
 
+                _isCancel.Value = true;
                 yield return _waitActor = new();
+                _isCancel.Value = false;
 
                 foreach (var hex in targets)
                     hex.SetOwnerUnselectable();

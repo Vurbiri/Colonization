@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonBlock.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Button\WarriorButtons\ButtonBlock.cs
 using UnityEngine;
 using UnityEngine.Events;
 using Vurbiri.Colonization.Actors;

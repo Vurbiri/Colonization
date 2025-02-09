@@ -24,6 +24,8 @@ namespace Vurbiri.Colonization.Actors
                 _costAP = new(TypeModifierId.Addition, cost);
             }
 
+            public override void Cancel() => Unselect(null);
+
             protected virtual void Pay()
             {
                 _move.IsValue = false;

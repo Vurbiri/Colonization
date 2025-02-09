@@ -26,6 +26,7 @@ namespace Vurbiri.Colonization.FSMSelectable
         public virtual void Update() { }
         public virtual void Exit() { }
 
+        public virtual void Cancel() { }
         public virtual void Select() { }
         public virtual void Unselect(ISelectable newSelectable) { }
 

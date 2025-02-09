@@ -15,6 +15,8 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private WarriorsMenu _warriorsMenu;
         [Space]
+        [SerializeField] private ButtonCancel _buttonCancel;
+        [Space]
         [SerializeField] private LookAtCamera _lookAtCamera;
 
         private GameObject _thisGO;
@@ -32,6 +34,8 @@ namespace Vurbiri.Colonization.UI
             _lookAtCamera.Init(_camera);
 
             Debug.Log("Заменить _playerCurrent на _player!!!");
+
+            _buttonCancel.Init(settings.hint);
 
             _crossroadMenu.Init(_roadsMenu, _recruitingMenu, settings);
             _recruitingMenu.Init(_crossroadMenu, settings);
@@ -58,6 +62,7 @@ namespace Vurbiri.Colonization.UI
 
             ToPosition(crossroad.Position);
             _crossroadMenu.Open(crossroad);
+            _buttonCancel.Setup(crossroad);
         }
 
         private void OnSelectWarrior(Actor actor)
@@ -72,12 +77,14 @@ namespace Vurbiri.Colonization.UI
 
             ToPosition(actor.Position);
             _warriorsMenu.Open(actor);
+            _buttonCancel.Setup(actor);
         }
 
         private void OnUnselect()
         {
             CrossroadMenusClose();
             _warriorsMenu.Close();
+            _buttonCancel.Disable();
         }
 
         private void ToPosition(Vector3 position)
@@ -130,6 +137,8 @@ namespace Vurbiri.Colonization.UI
                 _roadsMenu = GetComponentInChildren<CrossroadRoadsMenu>();
             if (_warriorsMenu == null)
                 _warriorsMenu = GetComponentInChildren<WarriorsMenu>();
+            if (_buttonCancel == null)
+                _buttonCancel = GetComponentInChildren<ButtonCancel>();
             if (_lookAtCamera == null)
                 _lookAtCamera = GetComponent<LookAtCamera>();
         }

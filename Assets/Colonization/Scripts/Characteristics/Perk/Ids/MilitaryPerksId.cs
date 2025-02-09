@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Characteristics\Perk\Ids\MilitaryPerksId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class MilitaryPerksId : APerkId<MilitaryPerksId>
+    public abstract class MilitaryPerksId : APerkId<MilitaryPerksId>
     {
         public const int Defense_1 = 0;
         public const int Defense_2 = 1;
@@ -9,6 +9,5 @@ namespace Vurbiri.Colonization.Characteristics
         public const int Attack_2 = 3;
 
         static MilitaryPerksId() => RunConstructor();
-        private MilitaryPerksId() { }
     }
 }

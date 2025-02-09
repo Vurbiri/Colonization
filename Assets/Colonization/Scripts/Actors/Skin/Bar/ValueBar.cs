@@ -9,8 +9,6 @@ namespace Vurbiri.Colonization.Actors
 {
     public class ValueBar : MonoBehaviour, IRendererVisible
     {
-        private const int SP_DELTA_ID = ActorAbilityId.Attack - 1;
-
         [SerializeField] private Id<ActorAbilityId> _ability;
 		[Space]
         [SerializeField] private SpriteRenderer _sprite;
@@ -39,7 +37,7 @@ namespace Vurbiri.Colonization.Actors
                 _valueTMP.text = value.ToString();
 
                 if (_currentValue > 0)
-                    _popup.Run(value - _currentValue, _ability - SP_DELTA_ID);
+                    _popup.Run(value - _currentValue, _ability);
 
                 _currentValue = value;
             }

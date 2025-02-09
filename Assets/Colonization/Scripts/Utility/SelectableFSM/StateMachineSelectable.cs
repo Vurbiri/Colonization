@@ -13,6 +13,8 @@ namespace Vurbiri.Colonization.FSMSelectable
         {
         }
 
+        public void Cancel() => _currentState.Cancel();
+
         public void Select() => _currentState.Select();
 
         public void Unselect(ISelectable newSelectable) => _currentState.Unselect(newSelectable);
