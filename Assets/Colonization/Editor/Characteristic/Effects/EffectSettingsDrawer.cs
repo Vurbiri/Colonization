@@ -10,13 +10,12 @@ namespace VurbiriEditor.Colonization.Characteristics
     public class EffectSettingsDrawer : PropertyDrawerUtility
     {
         #region Consts
-        private const float RATE_SIZE_FULL = 12.12f;
         private const string NAME_NEGATIVE_ELEMENT = "Negative Effect {0}", NAME_POSITIVE_ELEMENT = "Positive Effect {0}";
-        private const string P_TARGET_ACTOR = "_targetActor", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_IS_REFLECT = "_isReflect", P_DUR = "_duration";
+        private const string P_TARGET_ACTOR = "_targetActor", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
+        private const string P_IS_REFLECT = "_isReflect", P_REFLECT = "_reflectValue";
         private const string P_DESC_KEY = "_descKeyId", P_IS_DESC_BASE = "_isDescKeyBase";
         private const string P_TARGET_ABILITY = "_targetAbility", P_USED_ABILITY = "_usedAbility", P_CONTR_ABILITY = "_counteredAbility";
         private const string P_PARENT_TARGET = "_parentTarget";
-        private readonly (int min, int max) MIN_MAX_A = (0, 50), MIN_MAX_P = (25, 350);
         #endregion
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
@@ -25,18 +24,18 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             int id = IdFromLabel(label);
 
-            var parentTarget = mainProperty.FindPropertyRelative(P_PARENT_TARGET).GetEnumValue<TargetOfSkill>();
+            var parentTarget = GetProperty(P_PARENT_TARGET).GetEnumValue<TargetOfSkill>();
             bool isParentSelf = parentTarget == TargetOfSkill.Self;
 
-            SerializedProperty target = mainProperty.FindPropertyRelative(P_TARGET_ACTOR);
+            SerializedProperty targetActorProperty = GetProperty(P_TARGET_ACTOR);
 
             if (isParentSelf)
-                target.SetEnumValue(TargetOfEffect.Self);
+                targetActorProperty.SetEnumValue(TargetOfEffect.Self);
 
-            bool isDuration, isNotUse = true, isTarget = false;
+            bool isDuration, isNotUsedAbility = true, isTarget = false;
             int usedAbility;
                         
-            bool isNegative = parentTarget == TargetOfSkill.Enemy & target.GetEnumValue<TargetOfEffect>() == TargetOfEffect.Target;
+            bool isNegative = parentTarget == TargetOfSkill.Enemy & targetActorProperty.GetEnumValue<TargetOfEffect>() == TargetOfEffect.Target;
             
             label.text = string.Format(isNegative ? NAME_NEGATIVE_ELEMENT : NAME_POSITIVE_ELEMENT, id);
 
@@ -44,9 +43,9 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             if (Foldout(label))
             {
-                isDuration = DrawIntSlider(P_DUR, 0, 3) > 0;
+                isDuration = DrawInt(P_DUR, 0, 3) > 0;
 
-                if (!isParentSelf & !isDuration && !(isNotUse = (usedAbility = DrawId(P_USED_ABILITY, typeof(ActorAbilityId), true)) < 0))
+                if (!isParentSelf & !isDuration && !(isNotUsedAbility = (usedAbility = DrawId(P_USED_ABILITY, typeof(ActorAbilityId), true)) < 0))
                 {
                     Space(2f);
                     DrawValue(usedAbility);
@@ -55,46 +54,60 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 Space(2f);
                 if (isParentSelf)
-                    DrawLabel(target.displayName, TargetOfEffect.Self.ToString());
+                    DrawLabel(targetActorProperty.displayName, TargetOfEffect.Self.ToString());
                 else
                     isTarget = DrawEnumPopup<TargetOfEffect>(P_TARGET_ACTOR) == TargetOfEffect.Target;
 
                 usedAbility = DrawId(P_TARGET_ABILITY, typeof(ActorAbilityId));
-                if (isNotUse)
+                if (isNotUsedAbility)
                     DrawValue(usedAbility);
 
                 if (isTarget)
-                    DrawBool(P_IS_REFLECT);
+                    DrawReflect();
                 else
                     DrawLabelAndSetValue(P_IS_REFLECT, isTarget);
 
                 Space(1.5f);
-                DrawPopup(P_DESC_KEY, DESK_EFFECTS_KEYS);
+                DrawIntPopup(P_DESC_KEY, DESK_EFFECTS_KEYS);
                 DrawBool(P_IS_DESC_BASE);
 
             }
             EditorGUI.EndProperty();
 
-            #region Local: DrawValue()
+            #region Local: DrawValue(..), DrawReflect()
             //==============================================
             void DrawValue(int usedAbility)
             {
-                int min, max;
                 EditorGUI.indentLevel++;
+
                 if (DrawId(P_TYPE_OP, typeof(TypeModifierId)) == TypeModifierId.Percent)
-                {
-                    min = MIN_MAX_P.min;
-                    max = MIN_MAX_P.max;
-                }
+                    DrawInt(P_VALUE, "Value (%)", 5, 300, 100);
+                else if (usedAbility <= ActorAbilityId.MAX_RATE_ABILITY)
+                    DrawRateValue(-50, 50);
                 else
-                {
-                    int ratio = usedAbility <= ActorAbilityId.MAX_RATE_ABILITY ? ActorAbilityId.RATE_ABILITY : 1;
-                    min = MIN_MAX_A.min * ratio;
-                    max = MIN_MAX_A.max * ratio;
-                }
-                DrawIntSlider(P_VALUE, min, max);
+                    DrawInt(P_VALUE, -5, 5, 0);
+
                 EditorGUI.indentLevel--;
                 Space(2f);
+            }
+            //==============================================
+            void DrawRateValue(int min, int max)
+            {
+                SerializedProperty valueProperty = GetProperty(P_VALUE);
+                int rate = ActorAbilityId.RATE_ABILITY;
+                _position.y += _height;
+                valueProperty.intValue = EditorGUI.IntSlider(_position, "Value", valueProperty.intValue / rate, min, max) * rate;
+            }
+            //==============================================
+            void DrawReflect()
+            {
+                if (DrawBool(P_IS_REFLECT))
+                {
+                    EditorGUI.indentLevel++;
+                    DrawInt(GetProperty(P_REFLECT), "value (%)", 10, 250, 100);
+                    EditorGUI.indentLevel--;
+                    Space(2f);
+                }
             }
             #endregion
         }
@@ -106,13 +119,18 @@ namespace VurbiriEditor.Colonization.Characteristics
             if (!property.isExpanded)
                 return 1f;
 
+            float size = 13.14f;
+
+            if (!property.FindPropertyRelative(P_IS_REFLECT).boolValue)
+                size -= 1.2f;
+
             if (property.FindPropertyRelative(P_PARENT_TARGET).GetEnumValue<TargetOfSkill>() == TargetOfSkill.Self || property.FindPropertyRelative(P_DUR).intValue > 0)
-                return RATE_SIZE_FULL - 2f;
+                return size - 2f;
 
             if (property.FindPropertyRelative(P_USED_ABILITY).intValue < 0)
-                return RATE_SIZE_FULL - 1f;
+                return size - 1f;
 
-            return RATE_SIZE_FULL;
+            return size;
         }
     }
 }

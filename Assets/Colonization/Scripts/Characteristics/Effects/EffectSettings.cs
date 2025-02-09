@@ -14,6 +14,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
         [SerializeField] private bool _isReflect;
+        [SerializeField] private int _reflectValue;
         [SerializeField] private int _value;
         [SerializeField] private int _duration;
         [SerializeField] private int _descKeyId;

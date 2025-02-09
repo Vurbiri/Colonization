@@ -21,7 +21,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_PERKS = "_perks", P_ARRAY = "_values", P_ID = "_id", P_TYPE = "_type";
         private const string P_LEVEL = "_level", P_TARGET_OBJ = "_targetObject", P_TARGET_AB = "_targetAbility", P_TYPE_OP = "_typeModifier";
         private const string P_POS = "_position", P_SPRITE = "_sprite", P_KEY_DESC = "_keyDescription";
-        private const string P_VALUE = "_value", P_CHANCE = "_chance", P_PREV = "_prevPerk";
+        private const string P_VALUE = "_value", P_PREV = "_prevPerk";
         private const string U_CONTAINER = "Container", U_LABEL = "Label";
         private const string PREFF_KEY_DESC = "Perk";
         private const int SPACE_WND = 4;
@@ -71,10 +71,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             Space();
             DrawInt(P_VALUE);
-            if (DrawId(P_TYPE_OP, typeof(TypeModifierId)) == TypeModifierId.RandomAdd)
-            {
-                EditorGUILayout.PropertyField(propertyPerk.FindPropertyRelative(P_CHANCE));
-            }
+            DrawId(P_TYPE_OP, typeof(TypeModifierId));
 
             Space();
             if ((prev = DrawId(P_PREV, type, true, id)) >= 0)

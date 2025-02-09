@@ -9,19 +9,19 @@ namespace Vurbiri.Colonization.Actors
         {
             protected readonly Ability<ActorAbilityId> _move;
             private readonly Ability<ActorAbilityId> _currentAP;
-            private readonly AbilityAddValue _costAP;
+            private readonly AbilityModifierValue _costAP;
 
             public AActionState(Actor parent, int cost = 0, int id = 0) : base(parent, id)
             {
                 _move = parent._move;
                 _currentAP = parent._currentAP;
-                _costAP = new(cost);
+                _costAP = new(TypeModifierId.Addition, cost);
             }
             public AActionState(Actor parent, int cost, TypeIdKey key) : base(parent, key)
             {
                 _move = parent._move;
                 _currentAP = parent._currentAP;
-                _costAP = new(cost);
+                _costAP = new(TypeModifierId.Addition, cost);
             }
 
             protected virtual void Pay()

@@ -1,71 +1,54 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\AbilityModifier\AbilityModifiers.cs
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class AbilityModAdd : IAbilityModifier
+    public static class AbilityModifierFactory
+    {
+        public static IAbilityModifier Create(int type, int value) => type switch
+        {
+            TypeModifierId.Addition => new AbilityModifierAdd(value),
+            TypeModifierId.Percent => new AbilityModifierPercent(value),
+            _ => null,
+        };
+    }
+
+    public class AbilityModifierAdd : IAbilityModifier
     {
         private const int DEFAULT_VALUE = 0;
         
         private int _value = DEFAULT_VALUE;
         
-        public virtual Id<TypeModifierId> Id => TypeModifierId.Addition;
+        public Id<TypeModifierId> Id => TypeModifierId.Addition;
 
-        public int Apply(int value) => _value + value;
-        public int Apply(int value, IAbilityValue mod) => value + mod.Value;
-        public void Set(IAbilityValue value) => _value = value.Value;
+        public int Value { get => _value; set => _value = value; }
+
+        public AbilityModifierAdd() { }
+        public AbilityModifierAdd(int value) => _value = value;
+
+        public int Apply(int value) => value + _value;
+        public int Apply(int value, int modifier) => value + modifier;
+        
+        public void Add(int value) => _value += value;
+
         public void Reset() => _value = DEFAULT_VALUE;
-        public void Add(IAbilityValue value) => _value += value.Value;
-        public void Remove(IAbilityValue value) => _value -= value.Value;
     }
-
-    public class AbilityModRandom : IAbilityModifier
-    {
-        private const int DEFAULT_VALUE = 0, DEFAULT_CHANCE = 0;
-
-        private int _value = DEFAULT_VALUE;
-        private Chance _chance = DEFAULT_CHANCE;
-
-        public virtual Id<TypeModifierId> Id => TypeModifierId.RandomAdd;
-
-        public int Apply(int value) => value + (_chance.Roll ? _value : 0);
-        public int Apply(int value, IAbilityValue mod) => value + (mod.Chance.Roll ? mod.Value : 0);
-
-        public void Set(IAbilityValue value)
-        {
-            _value = value.Value;
-            _chance = value.Chance;
-        }
-        public void Reset()
-        {
-            _value = DEFAULT_VALUE;
-            _chance = DEFAULT_CHANCE;
-        }
-        public void Add(IAbilityValue value)
-        {
-            _value += value.Value;
-            _chance.Add(value.Chance);
-        }
-        public void Remove(IAbilityValue value)
-        {
-            _value -= value.Value;
-            _chance.Remove(value.Chance);
-        }
-    }
-
-    public class AbilityModPercent : IAbilityModifier
+        
+    public class AbilityModifierPercent : IAbilityModifier
     {
         private const int DEFAULT_VALUE = 100;
 
         private int _value = DEFAULT_VALUE;
 
         public Id<TypeModifierId> Id => TypeModifierId.Percent;
+        public int Value { get => _value; set => _value = value; }
 
-        public int Apply(int value) => value * _value / 100;
-        public int Apply(int value, IAbilityValue mod) => value * mod.Value / 100;
-        public void Set(IAbilityValue value) => _value = value.Value;
+        public AbilityModifierPercent() { }
+        public AbilityModifierPercent(int value) => _value = value;
+
+        public int Apply(int value) => UnityEngine.Mathf.RoundToInt(value * _value / 100f);
+        public int Apply(int value, int modifier) => UnityEngine.Mathf.RoundToInt(value * modifier / 100f);
+
+        public void Add(int value) => _value += value;
+
         public void Reset() => _value = DEFAULT_VALUE;
-        public void Add(IAbilityValue value) => _value += value.Value;
-        public void Remove(IAbilityValue value) => _value -= value.Value;
     }
-
-    
 }

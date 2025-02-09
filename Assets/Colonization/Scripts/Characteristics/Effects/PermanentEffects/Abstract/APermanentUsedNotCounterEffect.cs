@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Characteristics
     {
         protected readonly Id<TypeModifierId> _typeUsedModifier;
         protected readonly Id<ActorAbilityId> _usedAbility;
-        protected readonly AbilityValue _abilityValue;
+        protected readonly int _abilityValue;
         protected readonly bool _isNegative;
 
         public APermanentUsedNotCounterEffect(int targetAbility, bool isNegative, int usedAbility, Id<TypeModifierId> typeModifier, int value) :

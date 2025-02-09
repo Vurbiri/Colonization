@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
     public partial class Player : IValueId<PlayerId>, IDisposable
     {
         protected readonly Objects _obj;
-        protected readonly Currencies _exchangeRate = new();
+        protected readonly ExchangeRate _exchangeRate;
         protected readonly Coroutines _coroutines;
 
         public Id<PlayerId> Id => _obj.id;
@@ -28,6 +28,7 @@ namespace Vurbiri.Colonization
         {
             _obj = new(playerId, isLoad, data, settings);
 
+            _exchangeRate = new(_obj.abilities);
             _coroutines = SceneServices.Get<Coroutines>();
         }
 
@@ -46,10 +47,7 @@ namespace Vurbiri.Colonization
 
         public void UpdateExchangeRate()
         {
-            Ability<PlayerAbilityId> exchangeRate = _obj.abilities.GetAbility(PlayerAbilityId.ExchangeRate);
-
-            for (int i = 0; i < CurrencyId.CountMain; i++)
-                _exchangeRate[i] = exchangeRate.NextValue;
+            _exchangeRate.Update();
         }
 
         public IReadOnlyReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _obj.GetAbilityReactive(id);

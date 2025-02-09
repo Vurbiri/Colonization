@@ -33,14 +33,14 @@ namespace VurbiriEditor.Colonization.Characteristics
                 EditorGUI.indentLevel++;
 
                 Space();
-                var clip = DrawChildrenObject<AnimationClipSettingsScriptable>(P_CLIP);
+                var clip = DrawObject<AnimationClipSettingsScriptable>(P_CLIP, false);
 
                 if (clip != null && clip.clip != null)
                 {
                     DrawButton(clip);
 
-                    SerializedProperty costProperty = mainProperty.FindPropertyRelative(P_COST);
-                    SerializedProperty uiProperty = mainProperty.FindPropertyRelative(P_UI);
+                    SerializedProperty costProperty = GetProperty(P_COST);
+                    SerializedProperty uiProperty = GetProperty(P_UI);
 
                     DrawLine(Color.gray);
                     EditorGUI.indentLevel++;
@@ -62,11 +62,11 @@ namespace VurbiriEditor.Colonization.Characteristics
                     Space();
                     DrawSelfIntSlider(costProperty, 0, 3);
                                         
-                    uiProperty.FindPropertyRelative(P_COST_UI).intValue = costProperty.intValue;
+                    GetProperty(uiProperty, P_COST_UI).intValue = costProperty.intValue;
 
                     Space(2f);
-                    DrawStringPopup(uiProperty, P_KEY_NAME, KEYS_NAME_SKILLS);
-                    DrawChildrenObject<Sprite>(uiProperty, P_SPRITE, true);
+                    DrawStringPopupRelative(uiProperty, P_KEY_NAME, KEYS_NAME_SKILLS);
+                    DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
 
                     DrawLine(Color.gray);
                     DrawHits(clip.hitTimes.Length, target);
@@ -109,8 +109,8 @@ namespace VurbiriEditor.Colonization.Characteristics
             {
                 if (count <= 0) return;
 
-                SerializedProperty SFXsProperty = _mainProperty.FindPropertyRelative(P_SFX);
-                SerializedProperty hitsProperty = _mainProperty.FindPropertyRelative(P_HITS);
+                SerializedProperty SFXsProperty = GetProperty(P_SFX);
+                SerializedProperty hitsProperty = GetProperty(P_HITS);
 
                 TrySetArraySize(SFXsProperty, count);
                 TrySetArraySize(hitsProperty, count);
@@ -118,8 +118,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 SerializedProperty effectsProperty, effectProperty;
                 for (int i = 0; i < count; i++)
                 {
-                    
-                    effectsProperty = hitsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
+                    effectsProperty = GetProperty(hitsProperty.GetArrayElementAtIndex(i), P_EFFECTS);
                     if (effectsProperty.arraySize == 0)
                         effectsProperty.InsertArrayElementAtIndex(0);
 
@@ -132,7 +131,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     for (int j = 0; j < effectsProperty.arraySize; j++)
                     {
                         effectProperty = effectsProperty.GetArrayElementAtIndex(j);
-                        effectProperty.FindPropertyRelative(P_CHILD_TARGET).SetEnumValue(target);
+                        GetProperty(effectProperty, P_CHILD_TARGET).SetEnumValue(target);
                         if (effectsProperty.isExpanded)
                             _position.y += _height * EffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j));
                     }

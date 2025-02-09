@@ -25,8 +25,9 @@ namespace Vurbiri.Colonization.Characteristics
             get => _currentValue;
             set
             {
-                _mods[TypeModifierId.Addition].Set(new AbilityValue(value - _baseValue));
-                ApplyMods();
+                _mods[TypeModifierId.Addition].Value = value - _baseValue;
+                _mods[TypeModifierId.Percent].Reset();
+                ApplyModifiers();
             }
 
         }
@@ -35,53 +36,41 @@ namespace Vurbiri.Colonization.Characteristics
             get => _currentValue > 0;
             set
             {
-                _mods[TypeModifierId.Addition].Set(new AbilityValue((value ? 1 : 0) - _baseValue));
-                ApplyMods();
+                _mods[TypeModifierId.Addition].Value = (value ? 1 : 0) - _baseValue;
+                _mods[TypeModifierId.Percent].Reset();
+                ApplyModifiers();
             }
 
         }
-        public int NextValue
-        {
-            get
-            {
-                ApplyMods();
-                return _currentValue;
-            }
-        }
+
         public Func<int, int> Clamp { set => funcClamp = value; }
 
         public Ability(Id<TId> id, int baseValue)
         {
-            _mods[TypeModifierId.Addition] = new AbilityModAdd();
-            _mods[TypeModifierId.RandomAdd] = new AbilityModRandom();
-            _mods[TypeModifierId.Percent] = new AbilityModPercent();
+            _mods[TypeModifierId.Addition] = new AbilityModifierAdd();
+            _mods[TypeModifierId.Percent] = new AbilityModifierPercent();
 
             _id = id;
             _baseValue = _currentValue = baseValue;
         }
 
-        public int Add(Id<TypeModifierId> id, AbilityValue value)
+        public int Add(Id<TypeModifierId> id, int value)
         {
             _mods[id].Add(value);
-            return ApplyMods();
-        }
-        public int Remove(Id<TypeModifierId> id, AbilityValue value)
-        {
-            _mods[id].Remove(value);
-            return ApplyMods();
+            return ApplyModifiers();
         }
 
-        public int Apply(Id<TypeModifierId> id, AbilityValue value) => funcClamp(_mods[id].Apply(_currentValue, value));
+        public int ApplyModifier(Id<TypeModifierId> id, int value) => funcClamp(_mods[id].Apply(_currentValue, value));
 
-        public int AddModifier(IAbilityModifierValue settings)
+        public int AddModifier(IAbilityModifierValue mod)
         {
-            _mods[settings.TypeModifier].Add(settings);
-            return ApplyMods();
+            _mods[mod.TypeModifier].Add(mod.Value);
+            return ApplyModifiers();
         }
-        public int RemoveModifier(IAbilityModifierValue settings)
+        public int RemoveModifier(IAbilityModifierValue mod)
         {
-            _mods[settings.TypeModifier].Remove(settings);
-            return ApplyMods();
+            _mods[mod.TypeModifier].Add(-mod.Value);
+            return ApplyModifiers();
         }
         
         public void Reset()
@@ -101,7 +90,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Unsubscribe(Action<int> action) => actionValueChange -= action;
 
-        private int ApplyMods()
+        private int ApplyModifiers()
         {
             int old = _currentValue;
             _currentValue = _baseValue;

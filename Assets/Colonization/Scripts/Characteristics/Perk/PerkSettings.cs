@@ -17,7 +17,6 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
         [SerializeField] private int _value;
-        [SerializeField] private Chance _chance = 100;
         [SerializeField] private CurrenciesLite _cost;
         [SerializeField] private int _prevPerk = -1;
 
@@ -31,7 +30,6 @@ namespace Vurbiri.Colonization.Characteristics
         public int TargetAbility => _targetAbility;
         public Id<TypeModifierId> TypeModifier => _typeModifier;
         public int Value => _value;
-        public Chance Chance => _chance;
         public CurrenciesLite Cost => _cost;
         public int PrevPerk => _prevPerk;
     }

@@ -21,6 +21,15 @@ namespace Vurbiri.Colonization.Characteristics
                 _abilities[i] = new Ability<TId>(i, states[i]);
         }
 
+        public AbilitiesSet(IdArray<TId, int> states, int rate, int maxIndexRate)
+        {
+            int i;
+            for (i = 0; i <= maxIndexRate; i++)
+                _abilities[i] = new Ability<TId>(i, states[i] * rate);
+            for (; i < AAbilityId<TId>.Count; i++)
+                _abilities[i] = new Ability<TId>(i, states[i]);
+        }
+
         public bool IsGreater(Id<TId> stateId, int value) => _abilities[stateId].Value > value;
         public bool IsLess(Id<TId> stateId, int value) => _abilities[stateId].Value < value;
 
@@ -29,7 +38,7 @@ namespace Vurbiri.Colonization.Characteristics
         public Ability<TId> GetAbility(Id<TId> stateId) => _abilities[stateId];
 
         public int GetValue(Id<TId> stateId) => _abilities[stateId].Value;
-        public int ApplyValue(Id<TId> stateId, Id<TypeModifierId> id, AbilityValue value) => _abilities[stateId].Apply(id, value);
+        public int ApplyValue(Id<TId> stateId, Id<TypeModifierId> id, int value) => _abilities[stateId].ApplyModifier(id, value);
 
         public int AddPerk(IPerk perk) => _abilities[perk.TargetAbility].AddModifier(perk);
         public int RemovePerk(IPerk perk) => _abilities[perk.TargetAbility].RemoveModifier(perk);

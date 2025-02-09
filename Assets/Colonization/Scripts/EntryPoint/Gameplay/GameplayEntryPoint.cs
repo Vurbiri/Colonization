@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Collections;
+using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Data;
 using Vurbiri.Colonization.UI;

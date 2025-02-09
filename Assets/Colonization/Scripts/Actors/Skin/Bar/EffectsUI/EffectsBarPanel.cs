@@ -1,12 +1,11 @@
 //Assets\Colonization\Scripts\Actors\Skin\Bar\EffectsUI\EffectsBarPanel.cs
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive.Collections;
 using Vurbiri.UI;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Actors
 {
     public class EffectsBarPanel : MonoBehaviour
 	{

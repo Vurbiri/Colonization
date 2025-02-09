@@ -1,14 +1,13 @@
 //Assets\Colonization\Scripts\Actors\Skin\Bar\EffectsUI\EffectsBar.cs
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Vurbiri.Collections;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 using Vurbiri.UI;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Actors
 {
     public class EffectsBar : APooledObject<EffectsBar>
     {
@@ -25,7 +24,7 @@ namespace Vurbiri.Colonization
 
         private Unsubscribers _unsubscribers;
 
-        public void Init(ReactiveEffect effect, IReactiveElement<Actor> actor, IdArray<ActorAbilityId, Sprite> sprites, SettingsTextColor colors, int orderLevel)
+        public void Init(ReactiveEffect effect, IReactiveElement<Actor> actor, IReadOnlyList<Sprite> sprites, SettingsTextColor colors, int orderLevel)
         {
             _sprite.sortingOrder = _orderLevel + orderLevel;
             _durationTMP.sortingOrder = _orderLevel + orderLevel;

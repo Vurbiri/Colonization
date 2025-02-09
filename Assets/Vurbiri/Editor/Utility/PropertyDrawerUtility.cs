@@ -27,95 +27,257 @@ namespace VurbiriEditor
 
         protected bool Foldout(GUIContent label) => _mainProperty.isExpanded = EditorGUI.Foldout(_position, _mainProperty.isExpanded, label);
 
-        protected bool DrawBool(SerializedProperty parent, string name)
+        //================================================================
+        #region DrawBool
+        protected bool DrawBool(SerializedProperty property, bool isName = true)
         {
-            _position.y += _height;
-            SerializedProperty property = parent.FindPropertyRelative(name);
-            return property.boolValue = EditorGUI.Toggle(_position, property.displayName, property.boolValue);
-        }
-        protected bool DrawBool(string name) => DrawBool(_mainProperty, name);
+            if (isName) return DrawBool(property, property.displayName);
 
-        protected int DrawInt(SerializedProperty parent, string name)
-        {
             _position.y += _height;
-            SerializedProperty property = parent.FindPropertyRelative(name);
-            return property.intValue = EditorGUI.IntField(_position, property.displayName, property.intValue);
+            return property.boolValue = EditorGUI.Toggle(_position, property.boolValue);
         }
-        protected int DrawInt(string name) => DrawInt(_mainProperty, name);
-
-        protected int DrawIntSlider(SerializedProperty parent, string name, int min, int max, int defaultValue = 0)
+        protected bool DrawBool(SerializedProperty property, string displayName)
         {
             _position.y += _height;
-            SerializedProperty property = parent.FindPropertyRelative(name);
-            int value = property.intValue;
-            if (value < min & value > max) value = defaultValue;
-            value = Mathf.Clamp(value, min, max);
-            return property.intValue = EditorGUI.IntSlider(_position, property.displayName, value, min, max);
+            return property.boolValue = EditorGUI.Toggle(_position, displayName, property.boolValue);
         }
-        protected int DrawIntSlider(string name, int min, int max) => DrawIntSlider(_mainProperty, name, min, max);
+        protected bool DrawBool(string nameChildren, bool isName = true) => DrawBool(_mainProperty.FindPropertyRelative(nameChildren), isName);
+        protected bool DrawBool(string nameChildren, string displayName) => DrawBool(_mainProperty.FindPropertyRelative(nameChildren), displayName);
+        protected bool DrawBoolRelative(SerializedProperty parent, string nameChildren, bool isName = true) 
+        {   return DrawBool(parent.FindPropertyRelative(nameChildren), isName); }
+        protected bool DrawBoolRelative(SerializedProperty parent, string nameChildren, string displayName)
+        {   return DrawBool(parent.FindPropertyRelative(nameChildren), displayName);}
+        #endregion
+        //================================================================
+        #region DrawInt
+        protected int DrawInt(SerializedProperty property, bool isName = true)
+        {
+            if (isName) return DrawInt(property, property.displayName);
 
-        protected T DrawEnumPopup<T>(SerializedProperty parent, string name) where T : Enum
+            _position.y += _height;
+            return property.intValue = EditorGUI.IntField(_position, property.intValue);
+        }
+        protected int DrawInt(SerializedProperty property, string displayName)
         {
             _position.y += _height;
-            SerializedProperty property = parent.FindPropertyRelative(name);
-            T value = (T)EditorGUI.EnumPopup(_position, property.displayName, property.enumValueIndex.ToEnum<T>());
+            return property.intValue = EditorGUI.IntField(_position, displayName, property.intValue);
+        }
+        protected int DrawInt(string nameChildren, bool isName = true) => DrawInt(_mainProperty.FindPropertyRelative(nameChildren), isName);
+        protected int DrawInt(string nameChildren, string displayName) => DrawInt(_mainProperty.FindPropertyRelative(nameChildren), displayName);
+        protected int DrawIntRelative(SerializedProperty parent, string nameChildren, bool isName = true) => DrawInt(parent.FindPropertyRelative(nameChildren), isName);
+        protected int DrawIntRelative(SerializedProperty parent, string nameChildren, string displayName)
+        {   return DrawInt(parent.FindPropertyRelative(nameChildren), displayName);}
+        // == IntSlider ====
+        protected int DrawInt(SerializedProperty property, int min, int max, int defaultValue = 0, bool isName = true)
+        {
+            if (isName) return DrawInt(property, property.displayName, min, max, defaultValue);
+
+            _position.y += _height;
+
+            if (property.intValue < min | property.intValue > max)
+                defaultValue = Mathf.Clamp(defaultValue, min, max);
+            else
+                defaultValue = property.intValue;
+
+            return property.intValue = EditorGUI.IntSlider(_position, Mathf.Clamp(property.intValue, min, max), min, max);
+        }
+        protected int DrawInt(SerializedProperty property, string displayName, int min, int max, int defaultValue = 0)
+        {
+            _position.y += _height;
+
+            if (property.intValue < min | property.intValue > max)
+                defaultValue = Mathf.Clamp(defaultValue, min, max);
+            else
+                defaultValue = property.intValue;
+
+            return property.intValue = EditorGUI.IntSlider(_position, displayName, defaultValue, min, max);
+        }
+        protected int DrawInt(string nameChildren, int min, int max, int defaultValue = 0, bool isName = true) 
+        {   return DrawInt(_mainProperty.FindPropertyRelative(nameChildren), min, max, defaultValue, isName); }
+        protected int DrawInt(string nameChildren, string displayName, int min, int max, int defaultValue = 0)
+        {   return DrawInt(_mainProperty.FindPropertyRelative(nameChildren), displayName, min, max, defaultValue); }
+        protected int DrawIntRelative(SerializedProperty parent, string nameChildren, int min, int max, int defaultValue = 0, bool isName = true)
+        {   return DrawInt(parent.FindPropertyRelative(nameChildren), min, max, defaultValue, isName); }
+        protected int DrawIntRelative(SerializedProperty parent, string nameChildren, string displayName, int min, int max, int defaultValue = 0)
+        {   return DrawInt(parent.FindPropertyRelative(nameChildren), displayName, min, max, defaultValue);}
+        #endregion
+        //================================================================
+        #region DrawFloat
+        protected float DrawFloat(SerializedProperty property, bool isName = true)
+        {
+            if (isName) return DrawFloat(property, property.displayName);
+
+            _position.y += _height;
+            return property.floatValue = EditorGUI.FloatField(_position, property.floatValue);
+        }
+        protected float DrawFloat(SerializedProperty property, string displayName)
+        {
+            _position.y += _height;
+            return property.floatValue = EditorGUI.FloatField(_position, displayName, property.floatValue);
+        }
+        protected float DrawFloat(string nameChildren, bool isName = true) => DrawFloat(_mainProperty.FindPropertyRelative(nameChildren), isName);
+        protected float DrawFloat(string nameChildren, string displayName) => DrawFloat(_mainProperty.FindPropertyRelative(nameChildren), displayName);
+        protected float DrawFloatRelative(SerializedProperty parent, string nameChildren, bool isName = true)
+        { return DrawFloat(parent.FindPropertyRelative(nameChildren), isName); }
+        protected float DrawFloatRelative(SerializedProperty parent, string nameChildren, string displayName)
+        {   return DrawFloat(parent.FindPropertyRelative(nameChildren), displayName);}
+        #endregion
+        //================================================================
+        #region DrawEnumPopup
+        protected T DrawEnumPopup<T>(SerializedProperty property, bool isName = true) where T : Enum
+        {
+            if (isName) return DrawEnumPopup<T>(property, property.displayName);
+
+            _position.y += _height;
+            T value = (T)EditorGUI.EnumPopup(_position, property.enumValueIndex.ToEnum<T>());
             property.enumValueIndex = value.ToInt();
             return value;
         }
-        protected T DrawEnumPopup<T>(string name) where T : Enum => DrawEnumPopup<T>(_mainProperty, name);
-
-        protected int DrawIntPopup(SerializedProperty parent, string name, string[] displayedOptions, int[] optionValues)
+        protected T DrawEnumPopup<T>(SerializedProperty property, string displayName) where T : Enum
         {
             _position.y += _height;
-            SerializedProperty property = parent.FindPropertyRelative(name);
-            return property.intValue = EditorGUI.IntPopup(_position, property.displayName, property.intValue, displayedOptions, optionValues);
+            T value = (T)EditorGUI.EnumPopup(_position, displayName, property.enumValueIndex.ToEnum<T>());
+            property.enumValueIndex = value.ToInt();
+            return value;
         }
-        protected int DrawIntPopup(string name, string[] displayedOptions, int[] optionValues) => DrawIntPopup(_mainProperty, name, displayedOptions, optionValues);
-
-        protected int DrawPopup(SerializedProperty parent, string name, string[] displayedOptions)
+        protected T DrawEnumPopup<T>(string nameChildren) where T : Enum => DrawEnumPopup<T>(_mainProperty.FindPropertyRelative(nameChildren));
+        protected T DrawEnumPopup<T>(string nameChildren, string displayName) where T : Enum 
+        { return DrawEnumPopup<T>(_mainProperty.FindPropertyRelative(nameChildren), displayName); }
+        protected T DrawEnumPopupRelative<T>(SerializedProperty parent, string nameChildren) where T : Enum
+        { return DrawEnumPopup<T>(parent.FindPropertyRelative(nameChildren)); }
+        protected T DrawEnumPopupRelative<T>(SerializedProperty parent, string nameChildren, string displayName) where T : Enum
+        {   return DrawEnumPopup<T>(parent.FindPropertyRelative(nameChildren), displayName); }
+        #endregion
+        //================================================================
+        #region DrawIntPopup
+        // === Popup ===
+        protected int DrawIntPopup(SerializedProperty property, string[] displayedOptions, bool isName = true)
         {
+            if (isName) return DrawIntPopup(property, property.displayName, displayedOptions);
+
             _position.y += _height;
-            SerializedProperty property = parent.FindPropertyRelative(name);
-            return property.intValue = EditorGUI.Popup(_position, property.displayName, property.intValue, displayedOptions);
+            return property.intValue = EditorGUI.Popup(_position, property.intValue, displayedOptions);
         }
-        protected int DrawPopup(string name, string[] displayedOptions) => DrawPopup(_mainProperty, name, displayedOptions);
-
-        protected String DrawStringPopup(SerializedProperty parent, string name, string[] displayedOptions)
+        protected int DrawIntPopup(SerializedProperty property, string displayName, string[] displayedOptions)
         {
             _position.y += _height;
-            SerializedProperty property = parent.FindPropertyRelative(name);
-            int index = Math.Clamp(Array.IndexOf(displayedOptions, property.stringValue), 0, displayedOptions.Length);
-            index = EditorGUI.Popup(_position, property.displayName, index, displayedOptions);
+            return property.intValue = EditorGUI.Popup(_position, displayName, property.intValue, displayedOptions);
+        }
+        protected int DrawIntPopup(string nameChildren, string[] displayedOptions, bool isName = true)
+        { return DrawIntPopup(_mainProperty.FindPropertyRelative(nameChildren), displayedOptions, isName); }
+        protected int DrawIntPopup(string nameChildren, string displayName, string[] displayedOptions)
+        { return DrawIntPopup(_mainProperty.FindPropertyRelative(nameChildren), displayName, displayedOptions); }
+        protected int DrawIntPopupRelative(SerializedProperty parent, string nameChildren, string[] displayedOptions, bool isName = true)
+        { return DrawIntPopup(parent.FindPropertyRelative(nameChildren), displayedOptions, isName); }
+        protected int DrawIntPopupRelative(SerializedProperty parent, string nameChildren, string displayName, string[] displayedOptions)
+        { return DrawIntPopup(parent.FindPropertyRelative(nameChildren), displayName, displayedOptions); }
+        // === IntPopup ===
+        protected int DrawIntPopup(SerializedProperty property, string[] displayedOptions, int[] optionValues, bool isName = true)
+        {
+            if (isName) return DrawIntPopup(property, property.displayName, displayedOptions, optionValues);
+
+            _position.y += _height;
+            return property.intValue = EditorGUI.IntPopup(_position, property.intValue, displayedOptions, optionValues);
+        }
+        protected int DrawIntPopup(SerializedProperty property, string displayName, string[] displayedOptions, int[] optionValues)
+        {
+            _position.y += _height;
+            return property.intValue = EditorGUI.IntPopup(_position, displayName, property.intValue, displayedOptions, optionValues);
+        }
+        protected int DrawIntPopup(string nameChildren, string[] displayedOptions, int[] optionValues, bool isName = true)
+        { return DrawIntPopup(_mainProperty.FindPropertyRelative(nameChildren), displayedOptions, optionValues, isName); }
+        protected int DrawIntPopup(string nameChildren, string displayName, string[] displayedOptions, int[] optionValues)
+        { return DrawIntPopup(_mainProperty.FindPropertyRelative(nameChildren), displayName, displayedOptions, optionValues); }
+        protected int DrawIntPopupRelative(SerializedProperty parent, string nameChildren, string[] displayedOptions, int[] optionValues, bool isName = true)
+        { return DrawIntPopup(parent.FindPropertyRelative(nameChildren), displayedOptions, optionValues, isName); }
+        protected int DrawIntPopupRelative(SerializedProperty parent, string nameChildren, string displayName, string[] displayedOptions, int[] optionValues)
+        { return DrawIntPopup(parent.FindPropertyRelative(nameChildren), displayName, displayedOptions, optionValues); }
+        #endregion
+        //================================================================
+        #region DrawStringPopup
+        protected string DrawStringPopup(SerializedProperty property, string[] displayedOptions, bool isName = true)
+        {
+            if (isName) return DrawStringPopup(property, property.displayName, displayedOptions);
+
+            _position.y += _height;
+            int index = Math.Clamp(Array.IndexOf(displayedOptions, property.stringValue), 0, displayedOptions.Length - 1);
+            index = EditorGUI.Popup(_position, index, displayedOptions);
             return property.stringValue = displayedOptions[index];
         }
-        protected String DrawStringPopup(string name, string[] displayedOptions) => DrawStringPopup(_mainProperty, name, displayedOptions);
-
-        protected int DrawId(SerializedProperty parent, string name, Type t_field, bool isNone = false)
-        {
-            var (names, values) = GetNamesAndValues(t_field, isNone);
-            return DrawIntPopup(parent, name, names, values);
-        }
-        protected int DrawId(string name, Type t_field, bool isNone = false) => DrawId(_mainProperty, name, t_field, isNone);
-
-        protected T DrawObject<T>(SerializedProperty property, string name) where T : UnityEngine.Object
+        protected string DrawStringPopup(SerializedProperty property, string displayName, string[] displayedOptions)
         {
             _position.y += _height;
-            return (T)(property.objectReferenceValue = EditorGUI.ObjectField(_position, name, property.objectReferenceValue, typeof(T), false));
+            int index = Math.Clamp(Array.IndexOf(displayedOptions, property.stringValue), 0, displayedOptions.Length - 1);
+            index = EditorGUI.Popup(_position, displayName, index, displayedOptions);
+            return property.stringValue = displayedOptions[index];
         }
-        protected T DrawObject<T>(SerializedProperty property) where T : UnityEngine.Object
+        protected string DrawStringPopup(string nameChildren, string[] displayedOptions)
+        { return DrawStringPopup(_mainProperty.FindPropertyRelative(nameChildren), displayedOptions); }
+        protected string DrawStringPopup(string nameChildren, string displayName, string[] displayedOptions)
+        { return DrawStringPopup(_mainProperty.FindPropertyRelative(nameChildren), displayName, displayedOptions); }
+        protected string DrawStringPopupRelative(SerializedProperty parent, string nameChildren, string[] displayedOptions)
+        { return DrawStringPopup(parent.FindPropertyRelative(nameChildren), displayedOptions); }
+        protected string DrawStringPopupRelative(SerializedProperty parent, string nameChildren, string displayName, string[] displayedOptions)
+        { return DrawStringPopup(parent.FindPropertyRelative(nameChildren), displayName, displayedOptions); }
+        #endregion
+        //================================================================
+        #region DrawId
+        protected int DrawId(SerializedProperty property, Type t_field, bool isNone = false, bool isName = true)
         {
+            var (names, values) = GetNamesAndValues(t_field, isNone);
+            return DrawIntPopup(property, names, values, isName);
+        }
+        protected int DrawId(SerializedProperty property, string displayName, Type t_field, bool isNone = false)
+        {
+            var (names, values) = GetNamesAndValues(t_field, isNone);
+            return DrawIntPopup(property, displayName, names, values);
+        }
+        protected int DrawId(string nameChildren, Type t_field, bool isNone = false, bool isName = true)
+        {
+            var (names, values) = GetNamesAndValues(t_field, isNone);
+            return DrawIntPopupRelative(_mainProperty, nameChildren, names, values, isName);
+        }
+        protected int DrawId(string nameChildren, string displayName, Type t_field, bool isNone = false)
+        {
+            var (names, values) = GetNamesAndValues(t_field, isNone);
+            return DrawIntPopupRelative(_mainProperty, nameChildren, displayName, names, values);
+        }
+        protected int DrawIdRelative(SerializedProperty parent, string nameChildren, Type t_field, bool isNone = false, bool isName = true)
+        {
+            var (names, values) = GetNamesAndValues(t_field, isNone);
+            return DrawIntPopupRelative(parent, nameChildren, names, values, isName);
+        }
+        protected int DrawIdRelative(SerializedProperty parent, string nameChildren, string displayName, Type t_field, bool isNone = false)
+        {
+            var (names, values) = GetNamesAndValues(t_field, isNone);
+            return DrawIntPopupRelative(parent, nameChildren, displayName, names, values);
+        }
+        #endregion
+        //================================================================
+        #region DrawObject
+        protected T DrawObject<T>(SerializedProperty property, bool isName = true) where T : UnityEngine.Object
+        {
+            if (isName)
+                return DrawObject<T>(property, property.displayName);
+
             _position.y += _height;
             return (T)(property.objectReferenceValue = EditorGUI.ObjectField(_position, property.objectReferenceValue, typeof(T), false));
         }
-        protected T DrawChildrenObject<T>(SerializedProperty parent, string nameChildren, bool isName = false) where T : UnityEngine.Object
+        protected T DrawObject<T>(SerializedProperty property, string displayName) where T : UnityEngine.Object
         {
-            SerializedProperty property = parent.FindPropertyRelative(nameChildren);
-            return isName ? DrawObject<T>(property, property.displayName) : DrawObject<T>(property);
+            _position.y += _height;
+            return (T)(property.objectReferenceValue = EditorGUI.ObjectField(_position, displayName, property.objectReferenceValue, typeof(T), false));
         }
-        protected T DrawChildrenObject<T>(string nameChildren, bool isName = false) where T : UnityEngine.Object 
-                                                                                                          => DrawChildrenObject<T>(_mainProperty, nameChildren, isName);
-        
-
+        protected T DrawObject<T>(string nameChildren, bool isName = true) where T : UnityEngine.Object
+        { return DrawObject<T>(_mainProperty.FindPropertyRelative(nameChildren), isName); }
+        protected T DrawObject<T>(string nameChildren, string displayName) where T : UnityEngine.Object
+        { return DrawObject<T>(_mainProperty.FindPropertyRelative(nameChildren), displayName); }
+        protected T DrawObjectRelative<T>(SerializedProperty parent, string nameChildren, bool isName = true) where T : UnityEngine.Object
+        { return DrawObject<T>(parent.FindPropertyRelative(nameChildren), isName); }
+        protected T DrawObjectRelative<T>(SerializedProperty parent, string nameChildren, string displayName) where T : UnityEngine.Object
+        { return DrawObject<T>(parent.FindPropertyRelative(nameChildren), displayName); }
+        #endregion
+        //================================================================
         protected void DrawLabel(string name, string value)
         {
             _position.y += _height;
@@ -148,6 +310,9 @@ namespace VurbiriEditor
             EditorGUI.DrawRect(size, color);
             _position.y += _ySpace * 5f;
         }
+
+        protected SerializedProperty GetProperty(string nameChildren) => _mainProperty.FindPropertyRelative(nameChildren);
+        protected SerializedProperty GetProperty(SerializedProperty parent, string nameChildren) => parent.FindPropertyRelative(nameChildren);
 
         protected List<string> GetNames(Type t_field)
         {
