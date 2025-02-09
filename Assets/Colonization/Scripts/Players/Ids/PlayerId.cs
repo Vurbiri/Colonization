@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Players\Ids\PlayerId.cs
 namespace Vurbiri.Colonization
 {
-    public class PlayerId : AIdType<PlayerId>
+    public class PlayerId : IdType<PlayerId>
     {
         public const int None           = -1;
         public const int Player         = 0;

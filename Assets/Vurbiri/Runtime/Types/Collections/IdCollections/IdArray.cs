@@ -12,7 +12,7 @@ namespace Vurbiri.Collections
 #if UNITY_EDITOR
         ISerializationCallbackReceiver,
 #endif
-        IReadOnlyList<TValue> where TId : AIdType<TId>
+        IReadOnlyList<TValue> where TId : IdType<TId>
     {
         [SerializeField] protected TValue[] _values;
         protected int _count;
@@ -24,7 +24,7 @@ namespace Vurbiri.Collections
 
         public IdArray()
         {
-            _count = AIdType<TId>.Count;
+            _count = IdType<TId>.Count;
             _values = new TValue[_count];
         }
 
@@ -57,7 +57,7 @@ namespace Vurbiri.Collections
             if (Application.isPlaying)
                 return;
 
-            _count = AIdType<TId>.Count;
+            _count = IdType<TId>.Count;
             if (_values.Length != _count)
                 Array.Resize(ref _values, _count);
         }

@@ -15,7 +15,7 @@ namespace VurbiriEditor.Colonization.Actors
         private const string P_SETTINGS = "_settings", P_ARRAY = "_values", P_ID = "_id", P_SKILLS = "_skills";
         private const string U_CONTAINER = "Container", U_LABEL = "Label", U_SKILLS = "Skills";
 
-        protected VisualElement CreateGUI<TId>(string captionText) where TId : AIdType<TId>
+        protected VisualElement CreateGUI<TId>(string captionText) where TId : IdType<TId>
         {
             var root = _treeActorsSettingsScriptable.CloneTree();
             root.Q<Label>(U_LABEL).text = captionText;
@@ -25,14 +25,14 @@ namespace VurbiriEditor.Colonization.Actors
 
             SerializedProperty propertyValue, propertySkills;
             VisualElement element;
-            for (int i = 0; i < AIdType<TId>.Count; i++)
+            for (int i = 0; i < IdType<TId>.Count; i++)
             {
                 propertyValue = propertyValues.GetArrayElementAtIndex(i);
                 propertyValue.FindPropertyRelative(P_ID).intValue = i;
                 propertySkills = propertyValue.FindPropertyRelative(P_SKILLS);
 
                 element = _treeActorSettings.Instantiate(propertyValue.propertyPath);
-                element.Q<Foldout>(U_LABEL).text = AIdType<TId>.GetName(i);
+                element.Q<Foldout>(U_LABEL).text = IdType<TId>.GetName(i);
                 element.Q<VisualElement>(U_SKILLS).Add(_treeSkillsVT.Instantiate(propertySkills.propertyPath));
                 container.Add(element);
             }

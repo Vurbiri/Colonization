@@ -1,7 +1,6 @@
 //Assets\Vurbiri\Editor\Types\Collections\IdCollections\IdArrayDrawer.cs
 namespace VurbiriEditor
 {
-    using System.Collections.Generic;
     using UnityEditor;
     using UnityEngine;
     using Vurbiri.Collections;
@@ -13,10 +12,6 @@ namespace VurbiriEditor
         protected const float Y_SPACE = 2f;
         private const string NAME_ARRAY = "_values";
 
-        protected Rect _position;
-        protected SerializedProperty _propertyValues;
-        protected int _count;
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             position.height = EditorGUIUtility.singleLineHeight;
@@ -25,19 +20,17 @@ namespace VurbiriEditor
 
             if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
             {
-                _propertyValues = property.FindPropertyRelative(NAME_ARRAY);
-                _count = _propertyValues.arraySize;
-                List<string> names = GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
+                SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
+                int count = propertyValues.arraySize;
+                string[] names = GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
 
                 EditorGUI.indentLevel++;
-                for (int i = 0; i < _count; i++)
-                    DrawField(_propertyValues.GetArrayElementAtIndex(i), names[i]);
+                for (int i = 0; i < count; i++)
+                    DrawField(propertyValues.GetArrayElementAtIndex(i), names[i]);
                 EditorGUI.indentLevel--;
             }
 
             EditorGUI.EndProperty();
-
-            _position = position;
 
             #region Local: DrawField(...)
             //=================================
@@ -68,10 +61,10 @@ namespace VurbiriEditor
 
             if (property.isExpanded)
             {
-                _propertyValues = property.FindPropertyRelative(NAME_ARRAY);
-                _count = _propertyValues.arraySize;
-                for (int i = 0; i < _count; i++)
-                    rate += _propertyValues.GetArrayElementAtIndex(i).CountInProperty();
+                SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
+                int count = propertyValues.arraySize;
+                for (int i = 0; i < count; i++)
+                    rate += propertyValues.GetArrayElementAtIndex(i).CountInProperty();
             }
 
             return (EditorGUIUtility.singleLineHeight + Y_SPACE) * rate;

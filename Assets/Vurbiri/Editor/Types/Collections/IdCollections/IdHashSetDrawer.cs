@@ -30,8 +30,8 @@ namespace VurbiriEditor
             Type typeValue = fieldInfo.FieldType.GetGenericArguments()[INDEX_VALUE];
             SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
             int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue, count = propertyValues.arraySize;
-            List<string> names = GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
-            _countMax = names.Count;
+            string[] names = GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
+            _countMax = names.Length;
 
             label = EditorGUI.BeginProperty(position, label, property);
             if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))

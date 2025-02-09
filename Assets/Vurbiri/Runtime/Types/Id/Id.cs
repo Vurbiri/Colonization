@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Runtime\Types\Collections\IdCollections\Id.cs
+//Assets\Vurbiri\Runtime\Types\Id\Id.cs
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Vurbiri
 {
     [Serializable, JsonObject(MemberSerialization.OptIn)]
-    public struct Id<T> : IEquatable<Id<T>>, IComparable<Id<T>> where T : AIdType<T>
+    public struct Id<T> : IEquatable<Id<T>>, IComparable<Id<T>> where T : IdType<T>
     {
         [SerializeField, JsonProperty("id")]
         private int _id;
@@ -15,7 +15,7 @@ namespace Vurbiri
         [JsonConstructor]
         public Id(int id)
         {
-            if (!AIdType<T>.IsValidate(id))
+            if (!IdType<T>.IsValidate(id))
                 throw new ArgumentOutOfRangeException($"{id} - {typeof(T).Name}");
 
             _id = id;

@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization.Actors
     using Characteristics;
     using System;
 
-    public class WarriorId : AIdType<WarriorId>
+    public class WarriorId : IdType<WarriorId>
     {
         public const int Militia    = 0;
         public const int Solder     = 1;

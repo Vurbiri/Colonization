@@ -1,7 +1,6 @@
 //Assets\Vurbiri\Editor\Utility\PropertyDrawerUtility.cs
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -222,34 +221,34 @@ namespace VurbiriEditor
         #endregion
         //================================================================
         #region DrawId
-        protected int DrawId(SerializedProperty property, Type t_field, bool isNone = false, bool isName = true)
+        protected int DrawId<T>(SerializedProperty property, bool isNone = false, bool isName = true) where T : IdType<T>
         {
-            var (names, values) = GetNamesAndValues(t_field, isNone);
+            var (names, values) = GetNamesAndValues<T>(isNone);
             return DrawIntPopup(property, names, values, isName);
         }
-        protected int DrawId(SerializedProperty property, string displayName, Type t_field, bool isNone = false)
+        protected int DrawId<T>(SerializedProperty property, string displayName, bool isNone = false) where T : IdType<T>
         {
-            var (names, values) = GetNamesAndValues(t_field, isNone);
+            var (names, values) = GetNamesAndValues<T>(isNone);
             return DrawIntPopup(property, displayName, names, values);
         }
-        protected int DrawId(string nameChildren, Type t_field, bool isNone = false, bool isName = true)
+        protected int DrawId<T>(string nameChildren, bool isNone = false, bool isName = true) where T : IdType<T>
         {
-            var (names, values) = GetNamesAndValues(t_field, isNone);
+            var (names, values) = GetNamesAndValues<T>(isNone);
             return DrawIntPopupRelative(_mainProperty, nameChildren, names, values, isName);
         }
-        protected int DrawId(string nameChildren, string displayName, Type t_field, bool isNone = false)
+        protected int DrawId<T>(string nameChildren, string displayName, bool isNone = false) where T : IdType<T>
         {
-            var (names, values) = GetNamesAndValues(t_field, isNone);
+            var (names, values) = GetNamesAndValues<T>(isNone);
             return DrawIntPopupRelative(_mainProperty, nameChildren, displayName, names, values);
         }
-        protected int DrawIdRelative(SerializedProperty parent, string nameChildren, Type t_field, bool isNone = false, bool isName = true)
+        protected int DrawIdRelative<T>(SerializedProperty parent, string nameChildren, bool isNone = false, bool isName = true) where T : IdType<T>
         {
-            var (names, values) = GetNamesAndValues(t_field, isNone);
+            var (names, values) = GetNamesAndValues<T>(isNone);
             return DrawIntPopupRelative(parent, nameChildren, names, values, isName);
         }
-        protected int DrawIdRelative(SerializedProperty parent, string nameChildren, string displayName, Type t_field, bool isNone = false)
+        protected int DrawIdRelative<T>(SerializedProperty parent, string nameChildren, string displayName, bool isNone = false) where T : IdType<T>
         {
-            var (names, values) = GetNamesAndValues(t_field, isNone);
+            var (names, values) = GetNamesAndValues<T>(isNone);
             return DrawIntPopupRelative(parent, nameChildren, displayName, names, values);
         }
         #endregion
@@ -278,16 +277,17 @@ namespace VurbiriEditor
         { return DrawObject<T>(parent.FindPropertyRelative(nameChildren), displayName); }
         #endregion
         //================================================================
-        protected void DrawLabel(string name, string value)
+        #region DrawObject
+        protected void DrawLabel(string displayName, string value)
         {
             _position.y += _height;
-            EditorGUI.LabelField(_position, name, value);
+            EditorGUI.LabelField(_position, displayName, value);
         }
 
-        protected void DrawLabelAndSetValue<T>(SerializedProperty parent, string name, T value)
+        protected void DrawLabelAndSetValue<T>(SerializedProperty parent, string nameChildren, T value) where T : struct
         {
             _position.y += _height;
-            SerializedProperty property = parent.FindPropertyRelative(name);
+            SerializedProperty property = parent.FindPropertyRelative(nameChildren);
 
             if (value is float fValue)
                 property.floatValue = fValue;
@@ -296,9 +296,11 @@ namespace VurbiriEditor
             else if (value is bool bValue)
                 property.boolValue = bValue;
 
-            EditorGUI.LabelField(_position, $"{property.displayName}", $"{value}");
+            EditorGUI.LabelField(_position, property.displayName, $"{value}");
         }
-        protected void DrawLabelAndSetValue<T>(string name, T value) => DrawLabelAndSetValue<T>(_mainProperty, name, value);
+        protected void DrawLabelAndSetValue<T>(string nameChildren, T value) where T : struct => DrawLabelAndSetValue<T>(_mainProperty, nameChildren, value);
+        #endregion
+        //================================================================
 
         protected void DrawLine(Color color)
         {
@@ -314,52 +316,16 @@ namespace VurbiriEditor
         protected SerializedProperty GetProperty(string nameChildren) => _mainProperty.FindPropertyRelative(nameChildren);
         protected SerializedProperty GetProperty(SerializedProperty parent, string nameChildren) => parent.FindPropertyRelative(nameChildren);
 
-        protected List<string> GetNames(Type t_field)
+        protected (string[] names, int[] values) GetNamesAndValues<T>(bool isNone) where T : IdType<T>
         {
-            Type t_attribute = typeof(NotIdAttribute), t_int = typeof(int);
-            FieldInfo[] fields = t_field.GetFields(BindingFlags.Public | BindingFlags.Static);
+            if (!isNone)
+                return (IdType<T>.Names, IdType<T>.Values);
 
-            int count = fields.Length;
-            List<string> strings = new(count);
+            List<string> names = new(IdType<T>.Names);
+            List<int> values = new(IdType<T>.Values);
 
-            foreach (FieldInfo field in fields)
-            {
-                if (field.FieldType != t_int || !field.IsLiteral || field.GetCustomAttributes(t_attribute, false).Length > 0 || (int)field.GetValue(null) < 0)
-                    continue;
-
-                strings.Add(field.Name);
-            }
-
-            return strings;
-        }
-
-        protected (string[] names, int[] values) GetNamesAndValues(Type t_field, bool isNone = false)
-        {
-            Type t_attribute = typeof(NotIdAttribute), t_int = typeof(int);
-
-            FieldInfo[] fields = t_field.GetFields(BindingFlags.Public | BindingFlags.Static);
-
-            int count = fields.Length;
-            List<string> names = new(count + 1);
-            List<int> values = new(count + 1);
-
-            if (isNone)
-            {
-                names.Add("None");
-                values.Add(-1);
-            }
-
-            FieldInfo field;
-            for (int i = 0; i < count; i++)
-            {
-                field = fields[i];
-
-                if (field.FieldType != t_int | !field.IsLiteral || field.GetCustomAttributes(t_attribute, false).Length > 0)
-                    continue;
-
-                names.Add(field.Name);
-                values.Add((int)field.GetValue(null));
-            }
+            names.Insert(0, "None");
+            values.Insert(0, -1);
 
             return (names.ToArray(), values.ToArray());
         }

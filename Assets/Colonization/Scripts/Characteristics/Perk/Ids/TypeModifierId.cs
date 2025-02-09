@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Characteristics\Perk\Ids\TypeModifierId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class TypeModifierId : AIdType<TypeModifierId>
+    public class TypeModifierId : IdType<TypeModifierId>
     {
         public const int Addition = 0;
         public const int Percent = 1;

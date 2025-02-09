@@ -1,7 +1,6 @@
 //Assets\Colonization\Editor\Currencies\CurrenciesLiteDrawer.cs
 namespace VurbiriEditor.Colonization
 {
-    using System.Collections.Generic;
     using UnityEditor;
     using UnityEngine;
     using Vurbiri.Colonization;
@@ -30,7 +29,7 @@ namespace VurbiriEditor.Colonization
             {
                 SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
                 int count = propertyValues.arraySize;
-                List<string> names = GetNames(typeof(CurrencyId));
+                string[] names = GetNames(typeof(CurrencyId));
 
                 Color prevColor = GUI.color;
                 SerializedProperty propertyElement;

@@ -5,7 +5,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-    public abstract class AButtonBuildType<T> : AButtonBuild, IValueId<T> where T : AIdType<T>
+    public abstract class AButtonBuildType<T> : AButtonBuild, IValueId<T> where T : IdType<T>
     {
         [Space]
         [SerializeField] protected Files _lngFile = Files.Gameplay;

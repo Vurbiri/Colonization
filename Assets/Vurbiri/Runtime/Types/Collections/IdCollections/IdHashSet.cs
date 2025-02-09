@@ -12,7 +12,7 @@ namespace Vurbiri.Collections
 #if UNITY_EDITOR
         ISerializationCallbackReceiver,
 #endif
-        IReadOnlyList<TValue> where TId : AIdType<TId> where TValue : class, IValueId<TId>
+        IReadOnlyList<TValue> where TId : IdType<TId> where TValue : class, IValueId<TId>
     {
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;
@@ -28,7 +28,7 @@ namespace Vurbiri.Collections
 
         public IdHashSet()
         {
-            _capacity = AIdType<TId>.Count;
+            _capacity = IdType<TId>.Count;
             _count = 0;
 
             _values = new TValue[_capacity];

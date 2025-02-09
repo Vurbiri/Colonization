@@ -9,85 +9,65 @@ namespace VurbiriEditor
 
     public static class Utility
     {
+        public const string TYPE_PREFAB = "t:Prefab";
+        private readonly static string[] ASSET_FOLDERS = new string[] { "Assets" };
+
         public static T FindAnyPrefab<T>() where T : MonoBehaviour
         {
-            string[] guids = AssetDatabase.FindAssets($"t:Prefab", new[] { "Assets" });
-
-            string path; T obj;
-            foreach (var guid in guids)
-            {
-                path = AssetDatabase.GUIDToAssetPath(guid);
-                obj = (AssetDatabase.LoadMainAssetAtPath(path) as GameObject).GetComponent<T>();
-                if (obj != null) return obj;
-            }
+            foreach (var guid in FindPrefabs())
+                if (LoadMainAssetAtGUID(guid).TryGetComponent<T>(out T component))
+                    return component;
 
             return default;
         }
 
         public static List<T> FindPrefabs<T>() where T : MonoBehaviour
         {
-            string[] guids = AssetDatabase.FindAssets($"t:Prefab", new[] { "Assets" });
-            
             List<T> list = new();
-            string path; 
-            foreach (var guid in guids)
-            {
-                path = AssetDatabase.GUIDToAssetPath(guid);
-                if ((AssetDatabase.LoadMainAssetAtPath(path) as GameObject).TryGetComponent<T>(out T obj)) 
-                    list.Add(obj);
-            }
+            foreach (var guid in FindPrefabs())
+                if (LoadMainAssetAtGUID(guid).TryGetComponent<T>(out T component))
+                    list.Add(component);
 
             return list;
         }
 
         public static List<T> FindComponentsPrefabs<T>() where T : Component
         {
-            string[] guids = AssetDatabase.FindAssets($"t:Prefab", new[] { "Assets" });
-
-            List<T> list = new();
-            string path; T[] obj;
-            foreach (var guid in guids)
-            {
-                path = AssetDatabase.GUIDToAssetPath(guid);
-                if((obj = (AssetDatabase.LoadMainAssetAtPath(path) as GameObject).GetComponentsInChildren<T>()) != null)
-                    list.AddRange(obj);
-            }
+            List<T> list = new(); T[] components;
+            foreach (var guid in FindPrefabs())
+                if ((components = LoadMainAssetAtGUID(guid).GetComponentsInChildren<T>()) != null)
+                    list.AddRange(components);
 
             return list;
         }
 
         public static T FindAnyScriptable<T>() where T : ScriptableObject
         {
-            string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", new[] { "Assets" });
-
-            string path; T obj;
-            foreach (var guid in guids)
-            {
-                path = AssetDatabase.GUIDToAssetPath(guid);
-                obj = AssetDatabase.LoadAssetAtPath<T>(path);
-                if (obj != null) return obj;
-            }
+            foreach (var guid in FindAssets<T>())
+                if (TryLoadAssetAtGUID<T>(guid, out T scriptable))
+                    return scriptable;
 
             return default;
         }
 
         public static List<T> FindScriptables<T>() where T : ScriptableObject
         {
-            string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", new[] { "Assets" });
-
-            string path; T obj;
             List<T> list = new();
-            foreach (var guid in guids)
-            {
-                path = AssetDatabase.GUIDToAssetPath(guid);
-                obj = AssetDatabase.LoadAssetAtPath<T>(path);
-                if (obj != null) 
-                    list.Add(obj);
-            }
+            foreach (var guid in FindAssets<T>())
+                if (TryLoadAssetAtGUID<T>(guid, out T scriptable))
+                    list.Add(scriptable);
 
             return list;
         }
+
+        public static string[] FindPrefabs() => AssetDatabase.FindAssets(TYPE_PREFAB, ASSET_FOLDERS);
+        public static string[] FindAssets<T>() where T : Object => AssetDatabase.FindAssets($"t:{typeof(T).Name}", ASSET_FOLDERS);
+        public static GameObject LoadMainAssetAtGUID(string guid) => ((GameObject)AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid)));
+        public static bool TryLoadAssetAtGUID<T>(string guid, out T obj) where T : Object
+        {
+            obj = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));
+            return obj != null;
+        }
     }
 }
-
 #endif

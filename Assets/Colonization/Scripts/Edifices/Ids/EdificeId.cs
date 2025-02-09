@@ -3,7 +3,7 @@ using System;
 
 namespace Vurbiri.Colonization
 {
-    public class EdificeId : AIdType<EdificeId>
+    public class EdificeId : IdType<EdificeId>
     {
         public const int Signpost       = 0;
 

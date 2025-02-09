@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Island\Surface\SurfaceId.cs
 namespace Vurbiri.Colonization
 {
-    public class SurfaceId : AIdType<SurfaceId>
+    public class SurfaceId : IdType<SurfaceId>
     {
         public const int Village    = 0;
         public const int Field      = 1;

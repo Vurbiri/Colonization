@@ -45,11 +45,11 @@ namespace VurbiriEditor.Colonization.Characteristics
             {
                 isDuration = DrawInt(P_DUR, 0, 3) > 0;
 
-                if (!isParentSelf & !isDuration && !(isNotUsedAbility = (usedAbility = DrawId(P_USED_ABILITY, typeof(ActorAbilityId), true)) < 0))
+                if (!isParentSelf & !isDuration && !(isNotUsedAbility = (usedAbility = DrawId<ActorAbilityId>(P_USED_ABILITY, true)) < 0))
                 {
                     Space(2f);
                     DrawValue(usedAbility);
-                    DrawId(P_CONTR_ABILITY, typeof(ActorAbilityId), true);
+                    DrawId<ActorAbilityId>(P_CONTR_ABILITY, true);
                 }
 
                 Space(2f);
@@ -58,7 +58,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 else
                     isTarget = DrawEnumPopup<TargetOfEffect>(P_TARGET_ACTOR) == TargetOfEffect.Target;
 
-                usedAbility = DrawId(P_TARGET_ABILITY, typeof(ActorAbilityId));
+                usedAbility = DrawId<ActorAbilityId>(P_TARGET_ABILITY);
                 if (isNotUsedAbility)
                     DrawValue(usedAbility);
 
@@ -80,7 +80,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             {
                 EditorGUI.indentLevel++;
 
-                if (DrawId(P_TYPE_OP, typeof(TypeModifierId)) == TypeModifierId.Percent)
+                if (DrawId<TypeModifierId>(P_TYPE_OP) == TypeModifierId.Percent)
                     DrawInt(P_VALUE, "Value (%)", 5, 300, 100);
                 else if (usedAbility <= ActorAbilityId.MAX_RATE_ABILITY)
                     DrawRateValue(-50, 50);

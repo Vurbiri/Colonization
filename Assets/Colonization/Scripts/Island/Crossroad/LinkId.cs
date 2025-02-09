@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Island\Crossroad\LinkId.cs
 namespace Vurbiri.Colonization
 {
-    public class LinkId : AIdType<LinkId>
+    public class LinkId : IdType<LinkId>
     {
         public const int DR_UL = 0;
         public const int DL_UR = 1;

@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
     using Characteristics;
     using System;
 
-    public class EdificeGroupId : AIdType<EdificeGroupId>
+    public class EdificeGroupId : IdType<EdificeGroupId>
     {
         public const int None   = -1;
         public const int Shrine =  0;

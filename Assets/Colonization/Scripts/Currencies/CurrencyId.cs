@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Currencies\CurrencyId.cs
 namespace Vurbiri.Colonization
 {
-    public class CurrencyId : AIdType<CurrencyId>
+    public class CurrencyId : IdType<CurrencyId>
     {
         public const int Gold  = 0;
         public const int Food  = 1;
