@@ -3,12 +3,13 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public static class AbilityModifierFactory
     {
-        public static IAbilityModifier Create(int type, int value) => type switch
+        public static IAbilityModifier Create(Id<TypeModifierId> type, int value)
         {
-            TypeModifierId.Addition => new AbilityModifierAdd(value),
-            TypeModifierId.Percent => new AbilityModifierPercent(value),
-            _ => null,
-        };
+            if (type == TypeModifierId.Addition)
+                return new AbilityModifierAdd(value);
+
+            return new AbilityModifierPercent(value);
+        }
     }
 
     public class AbilityModifierAdd : IAbilityModifier
@@ -28,8 +29,6 @@ namespace Vurbiri.Colonization.Characteristics
         public int Apply(int value, int modifier) => value + modifier;
         
         public void Add(int value) => _value += value;
-
-        public void Reset() => _value = DEFAULT_VALUE;
     }
         
     public class AbilityModifierPercent : IAbilityModifier
@@ -38,7 +37,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         private int _value = DEFAULT_VALUE;
 
-        public Id<TypeModifierId> Id => TypeModifierId.Percent;
+        public Id<TypeModifierId> Id => TypeModifierId.BasePercent;
         public int Value { get => _value; set => _value = value; }
 
         public AbilityModifierPercent() { }
@@ -48,7 +47,5 @@ namespace Vurbiri.Colonization.Characteristics
         public int Apply(int value, int modifier) => UnityEngine.Mathf.RoundToInt(value * modifier / 100f);
 
         public void Add(int value) => _value += value;
-
-        public void Reset() => _value = DEFAULT_VALUE;
     }
 }

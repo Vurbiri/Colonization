@@ -142,6 +142,7 @@ namespace Vurbiri.Colonization
         private void OnValidate()
         {
             _land.OnValidate();
+            _crossroads.OnValidate();
             _sceneObjects.OnValidate();
             _scriptables.OnValidate();
             _settingsUI.OnValidate();
@@ -216,6 +217,9 @@ namespace Vurbiri.Colonization
             {
                 if (surfaces == null)
                     surfaces = VurbiriEditor.Utility.FindAnyScriptable<SurfacesScriptable>();
+                else 
+                    surfaces.OnValidate();
+
                 if (prices == null)
                     prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
                 if (visualSet == null)

@@ -3,23 +3,21 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class APermanentUsedNotCounterEffect : AEffect
     {
-        protected readonly Id<TypeModifierId> _typeUsedModifier;
-        protected readonly Id<ActorAbilityId> _usedAbility;
-        protected readonly int _abilityValue;
-        protected readonly bool _isNegative;
+        private readonly IAbilityModifier _usedModifier;
+        private readonly Id<ActorAbilityId> _usedAbility;
+        private readonly bool _isNegative;
 
         public APermanentUsedNotCounterEffect(int targetAbility, bool isNegative, int usedAbility, Id<TypeModifierId> typeModifier, int value) :
                                base(targetAbility, TypeModifierId.Addition)
         {
-            _typeUsedModifier = typeModifier;
+            _usedModifier = AbilityModifierFactory.Create(typeModifier, value);
             _usedAbility = usedAbility;
-            _abilityValue = value;
             _isNegative = isNegative;
         }
 
         protected void Init(AbilitiesSet<ActorAbilityId> self)
         {
-            _value = self.ApplyValue(_usedAbility, _typeUsedModifier, _abilityValue) * (_isNegative ? -1 : 1);
+            _value = _usedModifier.Apply(self.GetValue(_usedAbility)) * (_isNegative ? -1 : 1);
         }
     }
 }

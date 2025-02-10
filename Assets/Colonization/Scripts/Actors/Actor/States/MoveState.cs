@@ -101,7 +101,7 @@ namespace Vurbiri.Colonization.Actors
                 _actor._currentHex = currentHex = _targetHex;
                 currentHex.EnterActor(_actor);
 
-                _move.IsValue = false;
+                _move.Off();
                 _actor.RemoveWallDefenceEffect();
 
                 _skin.Move();

@@ -43,6 +43,14 @@ namespace Vurbiri.Colonization.UI
             _thisGO.SetActive(false);
             _mainMen.Open();
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_buttons.CountAvailable < _buttons.Count)
+                _buttons.ReplaceRange(GetComponentsInChildren<ButtonRecruiting>());
+        }
+#endif
     }
 
 }

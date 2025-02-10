@@ -8,16 +8,16 @@ using UnityEngine;
 namespace Vurbiri.Collections
 {
     [Serializable, JsonArray]
-    public class IdHashSet<TId, TValue> :
+    public class IdHashSet<TId, TValue> : IReadOnlyList<TValue>
 #if UNITY_EDITOR
-        ISerializationCallbackReceiver,
+        ,ISerializationCallbackReceiver
 #endif
-        IReadOnlyList<TValue> where TId : IdType<TId> where TValue : class, IValueId<TId>
+         where TId : IdType<TId> where TValue : class, IValueId<TId>
     {
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;
-        private readonly int _capacity;
-        private readonly IdHashSetIdsEnumerable _typesEnumerable;
+        private int _capacity;
+        private IdHashSetIdsEnumerable _typesEnumerable;
 
         public int CountAvailable => _count;
         public int Count => _capacity;
@@ -59,9 +59,10 @@ namespace Vurbiri.Collections
 
         public void Add(TValue value)
         {
-            if (TryAdd(value)) return;
+            if (TryAdd(value)) 
+                return;
 
-            throw new Exception($"������ c Id = {value.Id} ��� ��� ��������.");
+            throw new Exception($"Элемент c Id = {value.Id} уже был добавлен.");
         }
 
         public void Replace(TValue value)
@@ -72,6 +73,15 @@ namespace Vurbiri.Collections
                 _count++;
 
             _values[index] = value;
+        }
+
+        public void ReplaceRange(IEnumerable<TValue> collection)
+        {
+            if (collection == null)
+                throw new ArgumentNullException("IEnumerable<TValue> collection");
+
+            foreach (TValue value in collection)
+                Replace(value);
         }
 
         public TValue Next(int index)
@@ -223,8 +233,22 @@ namespace Vurbiri.Collections
             }
         }
 
-        public void OnAfterDeserialize() { }
+        public void OnAfterDeserialize() 
+        {
+            //_capacity = _values.Length;
+            //_typesEnumerable = new(this);
+
+            //_count = 0;
+            //for (int j = 0; j < _capacity; j++)
+            //{
+            //    if (_values[j] == null)
+            //        continue;
+
+            //    _count++;
+            //}
+        }
 #endif
         #endregion
+
     }
 }

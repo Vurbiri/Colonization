@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
             _exchangeRate.Update();
         }
 
-        public IReadOnlyReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _obj.GetAbilityReactive(id);
+        public IReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _obj.GetAbilityReactive(id);
 
         public bool CanEdificeUpgrade(Crossroad crossroad) => _obj.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_obj.id);
         public void BuyEdificeUpgrade(Crossroad crossroad) => _obj.BuyEdificeUpgrade(crossroad);

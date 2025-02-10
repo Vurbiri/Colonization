@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization.Characteristics
             string deskKey = CONST_UI_LNG_KEYS.DESK_EFFECTS_KEYS[_descKeyId];
             (int value, string hexColor) = GetSettingsEffectUI(hintTextColor);
 
-            if (_typeModifier != TypeModifierId.Percent & _targetAbility <= ActorAbilityId.MAX_RATE_ABILITY)
+            if (_typeModifier != TypeModifierId.BasePercent & _targetAbility <= ActorAbilityId.MAX_RATE_ABILITY)
                 value /= ActorAbilityId.RATE_ABILITY;
 
 

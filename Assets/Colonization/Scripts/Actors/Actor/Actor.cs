@@ -18,9 +18,9 @@ namespace Vurbiri.Colonization.Actors
         protected Id<PlayerId> _owner;
 
         protected AbilitiesSet<ActorAbilityId> _abilities;
-        protected Ability<ActorAbilityId> _currentHP;
-        protected Ability<ActorAbilityId> _currentAP;
-        protected Ability<ActorAbilityId> _move;
+        protected SubAbility<ActorAbilityId> _currentHP;
+        protected SubAbility<ActorAbilityId> _currentAP;
+        protected BooleanAbility<ActorAbilityId> _move;
         protected Hexagon _currentHex;
 
         protected ActorSkin _skin;
@@ -186,9 +186,9 @@ namespace Vurbiri.Colonization.Actors
         {
             if (_owner == prev)
             {
-                _currentHP.Value += _abilities.GetValue(ActorAbilityId.HPPerTurn);
-                _currentAP.Value += _abilities.GetValue(ActorAbilityId.APPerTurn);
-                _move.IsValue = true;
+                _currentHP.Next();
+                _currentAP.Next();
+                _move.On();
 
                 Debug.Log("Защита от стен - решить проблему");
                 _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetMaxDefense());
@@ -212,9 +212,5 @@ namespace Vurbiri.Colonization.Actors
             actionThisChange?.Invoke(this, TypeEvent.Change);
         }
         private void TriggerChange() => actionThisChange?.Invoke(this, TypeEvent.Change);
-
-        private int CurrentHPCamp(int value) => Math.Clamp(value, 0, _abilities.GetValue(ActorAbilityId.MaxHP));
-        private int CurrentAPCamp(int value) => Math.Clamp(value, 0, _abilities.GetValue(ActorAbilityId.MaxAP));
-
     }
 }

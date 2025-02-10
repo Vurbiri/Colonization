@@ -80,7 +80,11 @@ namespace VurbiriEditor.Colonization.Characteristics
             {
                 EditorGUI.indentLevel++;
 
-                if (DrawId<TypeModifierId>(P_TYPE_OP) == TypeModifierId.Percent)
+                int typeModifierId = DrawId<TypeModifierId>(P_TYPE_OP);
+
+                if (typeModifierId == TypeModifierId.BasePercent)
+                    DrawInt(P_VALUE, "Value (%)", 5, 300, 100);
+                else if(typeModifierId == TypeModifierId.TotalPercent)
                     DrawInt(P_VALUE, "Value (%)", 5, 300, 100);
                 else if (usedAbility <= ActorAbilityId.MAX_RATE_ABILITY)
                     DrawRateValue(-50, 50);

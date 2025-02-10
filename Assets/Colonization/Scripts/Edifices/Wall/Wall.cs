@@ -25,5 +25,13 @@ namespace Vurbiri.Colonization
         }
 
         public void AddRoad(Id<LinkId> linkId) => _graphicSides[linkId].Open(true);
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_graphicSides.CountAvailable < _graphicSides.Count)
+                _graphicSides.ReplaceRange(GetComponentsInChildren<WallGate>());
+        }
+#endif
     }
 }

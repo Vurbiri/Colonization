@@ -46,5 +46,13 @@ namespace Vurbiri.Colonization
                     _crossroads.Remove(key);
             }
         }
+
+#if UNITY_EDITOR
+        public void OnValidate()
+        {
+            if (_prefabs.CountAvailable < _prefabs.Count)
+                _prefabs.ReplaceRange(VurbiriEditor.Utility.FindPrefabs<AEdifice>());
+        }
+#endif
     }
 }

@@ -1,7 +1,8 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\WarriorButtons\ButtonRecruiting.cs
+using Vurbiri.Colonization.Actors;
+
 namespace Vurbiri.Colonization.UI
 {
-    using Actors;
 
     public class ButtonRecruiting : AButtonBuildType<WarriorId>
     {

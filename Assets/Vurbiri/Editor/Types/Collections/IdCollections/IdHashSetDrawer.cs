@@ -29,7 +29,8 @@ namespace VurbiriEditor
             Rect startPosition = position;
             Type typeValue = fieldInfo.FieldType.GetGenericArguments()[INDEX_VALUE];
             SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
-            int countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue, count = propertyValues.arraySize;
+            SerializedProperty propertyCount = property.FindPropertyRelative(NAME_COUNT);
+            int countCurrent = 0, count = propertyValues.arraySize;
             string[] names = GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
             _countMax = names.Length;
 
@@ -37,20 +38,23 @@ namespace VurbiriEditor
             if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
             {
                 SerializedProperty propertyCurrent, propertyNull = null;
-                
 
                 EditorGUI.indentLevel++;
+
                 for (int i = 0; i < count; i++)
                 {
                     propertyCurrent = propertyValues.GetArrayElementAtIndex(i);
                     if (propertyCurrent.objectReferenceValue != null)
                     {
                         DrawField(propertyCurrent, names[i]);
+                        countCurrent++;
                         continue;
                     }
 
                     propertyNull = propertyCurrent;
                 }
+                propertyCount.intValue = countCurrent;
+
                 if (propertyNull != null)
                     DrawField(propertyNull, LABEL_EMPTY);
                 EditorGUI.indentLevel--;
@@ -173,12 +177,16 @@ namespace VurbiriEditor
             {
                 for (int index = 0; index < array.Count; index++)
                     propertyValues.GetArrayElementAtIndex(index % count).objectReferenceValue = array[index];
+
+                propertyCount.intValue = array.Count;
             }
             //=================================
             void Clear()
             {
                 for (int index = 0; index < count; index++)
                     propertyValues.GetArrayElementAtIndex(index).objectReferenceValue = null;
+
+                propertyCount.intValue = 0;
             }
             #endregion
         }

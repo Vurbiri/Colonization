@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\Ids\ActorAbilityId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class ActorAbilityId : AAbilityId<ActorAbilityId>
+    public class ActorAbilityId : AbilityId<ActorAbilityId>
     {
         public const int MaxHP = 0;
         public const int CurrentHP = 1;
@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Characteristics
         public const int APPerTurn = 7;
         public const int IsMove = 8;
 
-        [NotId] public const int RATE_ABILITY = 100;
+        [NotId] public const int RATE_ABILITY = 1000;
         [NotId] public const int MAX_RATE_ABILITY = Defense;
 
         static ActorAbilityId() => RunConstructor();

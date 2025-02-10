@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
     {
         protected partial class Objects
         {
-            public IReadOnlyReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => abilities[id];
+            public IReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => abilities[id];
 
             public void ShrinePassiveProfit() => resources.AddBlood(abilities.GetValue(PlayerAbilityId.ShrinePassiveProfit) * edifices.shrines.Count);
             public void GateAction()

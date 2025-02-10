@@ -11,9 +11,10 @@ namespace Vurbiri.Colonization.Actors
     {
 		private const float SP_WIDTH = 8f, SP_HIGHT = 1f;
 
-        [SerializeField] private SpriteRenderer _backgroundSprite;
+        [SerializeField] private SpriteRenderer _backgroundBar;
 		[SerializeField] private SpriteRenderer _barSprite;
-		[SerializeField] private TextMeshPro _maxValueTMP;
+        [SerializeField] private SpriteRenderer _hpSprite;
+        [SerializeField] private TextMeshPro _maxValueTMP;
         [SerializeField] private TextMeshPro _currentValueTMP;
         [Space]
         [SerializeField] private Id<ActorAbilityId> _ability;
@@ -23,19 +24,20 @@ namespace Vurbiri.Colonization.Actors
         private PopupWidget3D _popup;
         private Unsubscribers _unsubscribers;
 
-        public bool IsVisible => _backgroundSprite.isVisible || _barSprite.isVisible;
+        public bool IsVisible => _backgroundBar.isVisible || _barSprite.isVisible;
 
         public void Init(AbilitiesSet<ActorAbilityId> abilities, PopupWidget3D popup, Color color, int orderLevel)
 		{
             _popup = popup;
 
-            _backgroundSprite.size = _barSprite.size = new(SP_WIDTH, SP_HIGHT);
+            _backgroundBar.size = _barSprite.size = new(SP_WIDTH, SP_HIGHT);
             _barTransform = _barSprite.transform;
             _barSprite.color = color;
 
-			_backgroundSprite.sortingOrder += orderLevel;
+			_backgroundBar.sortingOrder += orderLevel;
             _barSprite.sortingOrder += orderLevel;
-			_maxValueTMP.sortingOrder += orderLevel;
+            _hpSprite.sortingOrder += orderLevel;
+            _maxValueTMP.sortingOrder += orderLevel;
             _currentValueTMP.sortingOrder += orderLevel;
 
             _unsubscribers += abilities.GetAbility(ActorAbilityId.MaxHP).Subscribe(SetMaxValue);
@@ -75,10 +77,10 @@ namespace Vurbiri.Colonization.Actors
 #if UNITY_EDITOR
         private void OnValidate()
 		{
-			if (_backgroundSprite == null || _barSprite == null)
+			if (_backgroundBar == null || _barSprite == null)
 			{
 				SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
-				_backgroundSprite = renderers[0];
+				_backgroundBar = renderers[0];
 				_barSprite = renderers[1];
 			}
 

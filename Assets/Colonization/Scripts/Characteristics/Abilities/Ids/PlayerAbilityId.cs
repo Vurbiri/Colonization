@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\Ids\PlayerAbilityId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class PlayerAbilityId : AAbilityId<PlayerAbilityId>
+    public class PlayerAbilityId : AbilityId<PlayerAbilityId>
     {
         public const int MaxPort                = 0;
         public const int MaxUrban               = 1;

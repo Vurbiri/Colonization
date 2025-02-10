@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Button\WarriorButtons\ButtonCancel.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonCancel.cs
 using Vurbiri.Localization;
 using Vurbiri.Reactive;
 using Vurbiri.UI;

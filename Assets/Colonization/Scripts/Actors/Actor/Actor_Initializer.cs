@@ -25,14 +25,9 @@ namespace Vurbiri.Colonization.Actors
 
             _effects = new(_abilities);
 
-            _currentHP = _abilities.GetAbility(ActorAbilityId.CurrentHP);
-            _currentHP.Clamp = CurrentHPCamp;
-            _currentHP.Value = _abilities.GetValue(ActorAbilityId.MaxHP);
-
-            _currentAP = _abilities.GetAbility(ActorAbilityId.CurrentAP);
-            _currentAP.Clamp = CurrentAPCamp;
-
-            _move = _abilities.GetAbility(ActorAbilityId.IsMove);
+            _currentHP = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
+            _currentAP = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
+            _move = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
 
             _effects.Subscribe(RedirectEvents);
 
@@ -64,7 +59,7 @@ namespace Vurbiri.Colonization.Actors
 
             _currentHP.Value = data.currentHP;
             _currentAP.Value = data.currentAP;
-            _move.Value      = data.move;
+            _move.Value  = data.move;
 
             int count = data.effects.Length;
             for (int i = 0; i < count; i++)

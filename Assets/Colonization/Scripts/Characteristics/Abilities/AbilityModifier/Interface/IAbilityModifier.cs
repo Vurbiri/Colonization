@@ -9,7 +9,5 @@ namespace Vurbiri.Colonization.Characteristics
         public int Apply(int value, int modifier);
 
         public void Add(int value);
-
-        public void Reset();
     }
 }

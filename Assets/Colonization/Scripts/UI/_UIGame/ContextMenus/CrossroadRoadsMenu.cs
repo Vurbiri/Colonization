@@ -71,5 +71,13 @@ namespace Vurbiri.Colonization.UI
             }
             _lastCameraPosition = _cameraTransform.position;
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_roadButtons.CountAvailable < _roadButtons.Count)
+                _roadButtons.ReplaceRange(GetComponentsInChildren<ButtonBuildRoad>());
+        }
+#endif
     }
 }

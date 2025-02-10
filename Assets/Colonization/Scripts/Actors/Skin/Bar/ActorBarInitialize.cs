@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private HPBar _hpBar;
         [SerializeField] private APBar _apBar;
         [SerializeField] private MoveBar _moveBar;
-        [SerializeField] private ValueBar[] _valueBars;
+        [SerializeField] private IdHashSet<ActorAbilityId, ValueBar> _valueBars;
         [Space]
         [SerializeField] private PopupWidget3D _popup;
         [Space]
@@ -37,8 +37,8 @@ namespace Vurbiri.Colonization.Actors
             _apBar.Init(abilities, orderLevel);
             _moveBar.Init(abilities, orderLevel);
 
-            for (int i = 0; i < _valueBars.Length; i++)
-                _valueBars[i].Init(abilities, _popup, orderLevel);
+            foreach (var bar in _valueBars)
+                bar.Init(abilities, _popup, orderLevel);
 
             _look.Init(_hpBar, _moveBar);
 
@@ -57,8 +57,8 @@ namespace Vurbiri.Colonization.Actors
                 _apBar = GetComponentInChildren<APBar>();
             if (_moveBar == null)
                 _moveBar = GetComponentInChildren<MoveBar>();
-            if (_valueBars == null || _valueBars.Length == 0)
-                _valueBars = GetComponentsInChildren<ValueBar>();
+            if (_valueBars == null || _valueBars.CountAvailable < 2)
+                _valueBars.ReplaceRange(GetComponentsInChildren<ValueBar>());
             if (_popup == null)
                 _popup = GetComponentInChildren<PopupWidget3D>();
             if (_look == null)

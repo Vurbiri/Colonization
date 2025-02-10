@@ -23,5 +23,13 @@ namespace Vurbiri.Colonization
 
             Resources.UnloadAsset(this);
         }
+
+#if UNITY_EDITOR
+        public void OnValidate()
+        {
+            if (_surfaces.CountAvailable < _surfaces.Count)
+                _surfaces.ReplaceRange(VurbiriEditor.Utility.FindScriptables<SurfaceScriptable>());
+        }
+#endif
     }
 }

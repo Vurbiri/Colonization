@@ -62,13 +62,11 @@ namespace Vurbiri.Colonization.UI
             if (delta == 0)
                 return;
 
-            _sprite.sprite = _sprites[id];
-
             _self.SetActive(true);
-            _queue.Add(Run_Coroutine(delta));
+            _queue.Add(Run_Coroutine(delta, id));
         }
 
-        protected IEnumerator Run_Coroutine(int value)
+        protected IEnumerator Run_Coroutine(int value, Id<ActorAbilityId> id)
         {
             float lerpVector = 0f, lerpColor = 0f, delta;
             Color start, end;
@@ -86,6 +84,7 @@ namespace Vurbiri.Colonization.UI
                 end = _colorMinusEnd;
             }
 
+            _sprite.sprite = _sprites[id];
             Color = start;
 
             while (lerpVector < 1f)
@@ -114,9 +113,5 @@ namespace Vurbiri.Colonization.UI
                 _valueTMP = GetComponentInChildren<TextMeshPro>();
         }
 #endif
-
-        
-
-        
     }
 }
