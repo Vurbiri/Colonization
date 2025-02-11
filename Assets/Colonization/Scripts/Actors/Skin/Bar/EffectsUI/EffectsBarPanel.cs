@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
         private readonly IdArray<ActorAbilityId, Sprite> _sprites;
         private readonly SettingsTextColor _colors;
         private readonly int _orderLevel;
-        private readonly IReactiveElement<Actor> _actor;
+        private readonly IReactiveItem<Actor> _actor;
         private readonly Transform _transform;
         private readonly Unsubscribers _unsubscribers;
 

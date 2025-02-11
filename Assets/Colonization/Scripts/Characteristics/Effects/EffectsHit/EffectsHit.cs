@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Characteristics
 		protected readonly AEffect[] _effects;
         protected readonly int _count;
 
-        public EffectsHit(EffectSettings[] setting, int sourceId, int actorId, int skillId, int startEffectId)
+        public EffectsHit(EffectHitSettings[] setting, int sourceId, int actorId, int skillId, int startEffectId)
         {
             _count = setting.Length;
             _effects = new AEffect[_count];

@@ -10,12 +10,12 @@ namespace Vurbiri.Colonization.Characteristics
             _value = isNegative ? -value : value;
         }
 
-        public override void Apply(Actor self, Actor target)
+        public override int Apply(Actor self, Actor target)
         {
             int temp = _value;
             _value = -target.ApplyEffect(this);
             self.ApplyEffect(this);
-            _value = temp;
+            return _value = temp;
         }
     }
 }

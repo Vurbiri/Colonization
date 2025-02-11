@@ -48,6 +48,9 @@ namespace Vurbiri.Colonization.Actors
 
             if (_animator != null)
                 _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)[A_DEATH].length;
+
+            _bounds = _mesh.bounds;
+
         }
     }
 }

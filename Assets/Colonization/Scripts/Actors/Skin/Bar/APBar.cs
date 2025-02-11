@@ -15,13 +15,13 @@ namespace Vurbiri.Colonization.Actors
 
         private Unsubscribers _unsubscribers;
 
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, int orderLevel)
+        public void Init(IReadOnlyAbilities<ActorAbilityId> abilities, int orderLevel)
         {
             _maxValueTMP.sortingOrder += orderLevel;
             _currentValueTMP.sortingOrder += orderLevel;
 
-            _unsubscribers += abilities.GetAbility(ActorAbilityId.MaxAP).Subscribe(value => _maxValueTMP.text = new(CHAR, value));
-            _unsubscribers += abilities.GetAbility(ActorAbilityId.CurrentAP).Subscribe(value => _currentValueTMP.text = new(CHAR, value));
+            _unsubscribers += abilities[ActorAbilityId.MaxAP].Subscribe(value => _maxValueTMP.text = new(CHAR, value));
+            _unsubscribers += abilities[ActorAbilityId.CurrentAP].Subscribe(value => _currentValueTMP.text = new(CHAR, value));
         }
 
         private void OnDestroy()

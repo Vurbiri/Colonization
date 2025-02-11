@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private float _speedWalk = 0.45f;
         [SerializeField] private float _speedRun = 0.65f;
         [SerializeField] private int _blockCost = 2;
-        [SerializeField] private int _blockValue = 100;
+        [SerializeField] private int _blockValue = 10;
         [SerializeField] private SkillSettings[] _skillsSettings;
         
         [NonSerialized] private SkillUI[] _skillsUI;
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.Characteristics
         public BlockUI BlockUI => _blockUI ??= new(_blockCost, _blockValue);
 
         public MoveState GetMoveState(Actor parent) => new(_speedWalk, parent);
-        public ABlockState GetBlockState(Actor parent) => ABlockState.Create(_blockCost, _blockValue, parent);
+        public ABlockState GetBlockState(Actor parent) => ABlockState.Create(_blockCost, _blockValue * ActorAbilityId.RATE_ABILITY, parent);
 
         public List<ASkillState> GetSkillSates(Actor parent)
         {
@@ -67,30 +67,30 @@ namespace Vurbiri.Colonization.Characteristics
             _effectsHits = new EffectsHit[countSkills][];
             _skillsUI = new SkillUI[countSkills];
 
-            SkillSettings skill; EffectsHitSettings packSettings;
+            SkillSettings skillSettings; EffectsHitSettings effectsHitSettings;
             EffectsHit[] effectsHits; 
             List<AEffectsUI> effectsSkillUI;
             for (int i = 0; i < countSkills; i++)
             {
-                skill = _skillsSettings[i];
+                skillSettings = _skillsSettings[i];
 
-                int countHits = skill.effectsHits.Length;
+                int countHits = skillSettings.effectsHits.Length;
                 effectsHits = new EffectsHit[countHits];
                 effectsSkillUI = new(countHits << 1);
 
                 for (int j = 0, u = 0; j < countHits; j++)
                 {
-                    packSettings = skill.effectsHits[j];
-                    effectsHits[j] = packSettings.CreateHit(parent, i, u);
-                    effectsSkillUI.AddRange(packSettings.CreateEffectsUI(hintTextColor));
-                    u += packSettings.Count;
+                    effectsHitSettings = skillSettings.effectsHits[j];
+                    effectsHits[j] = effectsHitSettings.CreateEffectsHit(parent, i, u);
+                    effectsSkillUI.AddRange(effectsHitSettings.CreateEffectsHitUI(hintTextColor));
+                    u += effectsHitSettings.Count;
                 }
-                skill.ui.Init(language, hintTextColor, effectsSkillUI.ToArray());
+                skillSettings.ui.Init(language, hintTextColor, effectsSkillUI.ToArray());
 
-                _skillsUI[i] = skill.ui;
+                _skillsUI[i] = skillSettings.ui;
                 _effectsHits[i] = effectsHits;
 
-                skillStates.Add(CreateState(parent, skill, i));
+                skillStates.Add(CreateState(parent, skillSettings, i));
 
 #if !UNITY_EDITOR
                 skill.ui = null;

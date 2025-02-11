@@ -11,6 +11,8 @@ namespace Vurbiri.Colonization.Actors
         private static short orderLevel = short.MinValue;
         private static readonly short incOrderLevel = 7;
 
+        [SerializeField] private float _offset = 1f;
+        [Space]
         [SerializeField] private HPBar _hpBar;
         [SerializeField] private APBar _apBar;
         [SerializeField] private MoveBar _moveBar;
@@ -25,7 +27,9 @@ namespace Vurbiri.Colonization.Actors
         private void Start()
 		{
             Actor actor = GetComponentInParent<Actor>();
-            AbilitiesSet<ActorAbilityId> abilities = actor.Abilities;
+            IReadOnlyAbilities<ActorAbilityId> abilities = actor.Abilities;
+
+            transform.localPosition = new(0f, actor.Skin.Bounds.size.y + _offset, 0f);
 
             if (orderLevel >= short.MaxValue - (incOrderLevel << 1))
                 orderLevel = short.MinValue;

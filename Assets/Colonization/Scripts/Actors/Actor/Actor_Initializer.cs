@@ -18,6 +18,13 @@ namespace Vurbiri.Colonization.Actors
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
 
+            Bounds bounds = _skin.Bounds;
+
+            collider.size = bounds.size;
+            collider.center = bounds.center;
+
+            _extentsZ = bounds.extents.z;
+
             _eventBus = SceneServices.Get<GameplayEventBus>();
             _eventBus.EventStartTurn += OnStartTurn;
 
@@ -34,7 +41,7 @@ namespace Vurbiri.Colonization.Actors
             _thisTransform = transform;
             Debug.Log("Выключить Collider на старте");
             _thisCollider = collider;
-            _extentsZ = _thisCollider.bounds.extents.z;
+            
 
             _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
             _currentHex.EnterActor(this);

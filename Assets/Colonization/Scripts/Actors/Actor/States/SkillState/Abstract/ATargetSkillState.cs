@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
             protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, bool isTargetReact, int cost, int id) : 
                 base(parent, effects, cost, id)
             {
-                _isCancel = parent._isCancel;
+                _isCancel = parent._canCancel;
                 _isTargetReact = isTargetReact;
                 _relationTarget = targetActor.ToRelation();
                 Debug.Log("Удалить _relationTarget = Relation.Friend;");

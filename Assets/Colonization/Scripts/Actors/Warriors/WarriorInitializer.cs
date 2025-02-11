@@ -35,9 +35,6 @@ namespace Vurbiri.Colonization.Actors
         {
             mesh.sharedMaterial = material;
 
-            _collider.size = mesh.bounds.size;
-            _collider.center = new(0f, mesh.bounds.extents.y, 0f);
-
             _collider.enabled = false;
         }
 

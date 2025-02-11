@@ -10,10 +10,12 @@ namespace Vurbiri.Colonization.Characteristics
         {
         }
 
-        public override void Apply(Actor self, Actor target)
+        public override int Apply(Actor self, Actor target)
         {
             target.AddEffect(new(_code, _targetAbility, _typeModifier, _value, _duration));
             self.AddEffect(new(_code, _targetAbility, _typeModifier, -_value, _duration));
+
+            return 0;
         }
     }
 }

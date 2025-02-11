@@ -10,16 +10,16 @@ namespace Vurbiri.Colonization.Characteristics
     [Serializable]
 	public class EffectsHitSettings
 	{
-        [SerializeField] private EffectSettings[] _effects;
+        [SerializeField] private EffectHitSettings[] _effects;
 
         public int Count => _effects.Length;
 
-        public EffectsHit CreateHit(Actor parent, int skillId, int startEffectId)
+        public EffectsHit CreateEffectsHit(Actor parent, int skillId, int startEffectId)
         {
             return new EffectsHit(_effects, parent.TypeId, parent.Id, skillId, startEffectId);
         }
 
-        public AEffectsUI[] CreateEffectsUI(SettingsTextColor hintTextColor)
+        public AEffectsUI[] CreateEffectsHitUI(SettingsTextColor hintTextColor)
 		{
 			int count = _effects.Length;
             AEffectsUI[] effectsUIs = new AEffectsUI[count];
@@ -30,6 +30,6 @@ namespace Vurbiri.Colonization.Characteristics
 			return effectsUIs;
         }
 
-		public static implicit operator EffectSettings[](EffectsHitSettings packetSettings) => packetSettings._effects;
+		public static implicit operator EffectHitSettings[](EffectsHitSettings packetSettings) => packetSettings._effects;
     }
 }

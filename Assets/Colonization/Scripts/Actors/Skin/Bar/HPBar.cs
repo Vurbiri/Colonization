@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.Actors
 
         public bool IsVisible => _backgroundBar.isVisible || _barSprite.isVisible;
 
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, PopupWidget3D popup, Color color, int orderLevel)
+        public void Init(IReadOnlyAbilities<ActorAbilityId> abilities, PopupWidget3D popup, Color color, int orderLevel)
 		{
             _popup = popup;
 
@@ -40,8 +40,8 @@ namespace Vurbiri.Colonization.Actors
             _maxValueTMP.sortingOrder += orderLevel;
             _currentValueTMP.sortingOrder += orderLevel;
 
-            _unsubscribers += abilities.GetAbility(ActorAbilityId.MaxHP).Subscribe(SetMaxValue);
-            _unsubscribers += abilities.GetAbility(ActorAbilityId.CurrentHP).Subscribe(SetCurrentValue);
+            _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe(SetMaxValue);
+            _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(SetCurrentValue);
 
             #region Local: SetMaxValue(..), SetCurrentValue(..)
             //=================================

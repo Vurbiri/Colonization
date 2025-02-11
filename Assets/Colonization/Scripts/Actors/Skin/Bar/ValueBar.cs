@@ -22,14 +22,14 @@ namespace Vurbiri.Colonization.Actors
 
         public Id<ActorAbilityId> Id => _ability;
 
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, PopupWidget3D popup, int orderLevel)
+        public void Init(IReadOnlyAbilities<ActorAbilityId> abilities, PopupWidget3D popup, int orderLevel)
         {
             _popup = popup;
 
             _sprite.sortingOrder += orderLevel;
             _valueTMP.sortingOrder += orderLevel;
 
-            _unsubscriber = abilities.GetAbility(_ability).Subscribe(SetValue);
+            _unsubscriber = abilities[_ability].Subscribe(SetValue);
             
             #region Local: SetValue(..)
             //=================================

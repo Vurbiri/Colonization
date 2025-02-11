@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             public readonly Edifices edifices;
             public readonly Roads roads;
             public readonly AbilitiesSet<PlayerAbilityId> abilities;
-            public readonly ReactiveCollection<Actor> warriors = new();
+            public readonly ListReactiveItems<Actor> warriors = new();
             public readonly HashSet<int> perks;
 
             public Objects(int playerId, bool isLoad, PlayerData data, Players.Settings settings)
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
                     Crossroads crossroads = SceneObjects.Get<Crossroads>();
                     Land land = SceneObjects.Get<Land>();
 
-                    resources = new(loadData.resources, abilities.GetAbility(PlayerAbilityId.MaxMainResources), abilities.GetAbility(PlayerAbilityId.MaxBlood));
+                    resources = new(loadData.resources, abilities[PlayerAbilityId.MaxMainResources], abilities[PlayerAbilityId.MaxBlood]);
                     edifices = new(playerId, loadData.edifices, crossroads);
                     roads.Restoration(loadData.roads, crossroads);
 
@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization
                 }
                 else
                 {
-                    resources = new(_prices.PlayersDefault, abilities.GetAbility(PlayerAbilityId.MaxMainResources), abilities.GetAbility(PlayerAbilityId.MaxBlood));
+                    resources = new(_prices.PlayersDefault, abilities[PlayerAbilityId.MaxMainResources], abilities[PlayerAbilityId.MaxBlood]);
                     edifices = new();
                     perks = new();
                 }

@@ -16,8 +16,8 @@ namespace Vurbiri.Collections
     {
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;
-        private int _capacity;
-        private IdHashSetIdsEnumerable _typesEnumerable;
+        private readonly int _capacity;
+        private readonly IdHashSetIdsEnumerable _typesEnumerable;
 
         public int CountAvailable => _count;
         public int Count => _capacity;
@@ -235,17 +235,6 @@ namespace Vurbiri.Collections
 
         public void OnAfterDeserialize() 
         {
-            //_capacity = _values.Length;
-            //_typesEnumerable = new(this);
-
-            //_count = 0;
-            //for (int j = 0; j < _capacity; j++)
-            //{
-            //    if (_values[j] == null)
-            //        continue;
-
-            //    _count++;
-            //}
         }
 #endif
         #endregion

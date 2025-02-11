@@ -11,10 +11,10 @@ namespace Vurbiri.Colonization
         {
             public IReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => abilities[id];
 
-            public void ShrinePassiveProfit() => resources.AddBlood(abilities.GetValue(PlayerAbilityId.ShrinePassiveProfit) * edifices.shrines.Count);
+            public void ShrinePassiveProfit() => resources.AddBlood(abilities[PlayerAbilityId.ShrinePassiveProfit].Value * edifices.shrines.Count);
             public void GateAction()
             {
-                resources.AddBlood(abilities.GetValue(PlayerAbilityId.ShrineProfit) * edifices.shrines.Count);
+                resources.AddBlood(abilities[PlayerAbilityId.ShrineProfit].Value * edifices.shrines.Count);
                 resources.ClampMain();
             }
             public void ProfitFromEdifices(int hexId, ACurrencies freeGroundRes)
@@ -23,10 +23,10 @@ namespace Vurbiri.Colonization
                     resources.AddFrom(freeGroundRes);
 
                 foreach (var crossroad in edifices.ports)
-                    resources.AddFrom(crossroad.ProfitFromPort(hexId, abilities.GetValue(PlayerAbilityId.PortsAddRes)));
+                    resources.AddFrom(crossroad.ProfitFromPort(hexId, abilities[PlayerAbilityId.PortsAddRes].Value));
 
                 foreach (var crossroad in edifices.urbans)
-                    resources.AddFrom(crossroad.ProfitFromUrban(hexId, abilities.GetValue(PlayerAbilityId.CompensationRes)));
+                    resources.AddFrom(crossroad.ProfitFromUrban(hexId, abilities[PlayerAbilityId.CompensationRes].Value));
             }
 
             public bool CanEdificeUpgrade(Crossroad crossroad)
@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
             }
             public void BuyWall(Crossroad crossroad)
             {
-                if (crossroad.BuyWall(id, abilities.GetAbility(PlayerAbilityId.WallDefence)))
+                if (crossroad.BuyWall(id, abilities[PlayerAbilityId.WallDefence]))
                 {
                     resources.Pay(_prices.Wall);
                     edifices.values[crossroad.GroupId].ChangeSignal(crossroad);

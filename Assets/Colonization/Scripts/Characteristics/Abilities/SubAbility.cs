@@ -5,9 +5,9 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class SubAbility<TId> : AAbility<TId> where TId : AbilityId<TId>
+    public class SubAbility<TId> : AAbilityChange<TId> where TId : AbilityId<TId>
     {
-        private int _maxValue, _restoreValue;
+        private int _restoreValue;
 
         private readonly IdArray<TypeModifierId, Func<int, int>> _modifiers = new();
 
@@ -38,19 +38,6 @@ namespace Vurbiri.Colonization.Characteristics
                 return;
 
             Change(_value + _restoreValue);
-        }
-
-        private int Change(int value)
-        {
-            value = Math.Clamp(value, 0, _maxValue);
-            int delta = value - _value;
-
-            _value = value;
-
-            if (delta != 0)
-                actionValueChange?.Invoke(_value);
-
-            return delta;
         }
 
         private int OnBasePercent(int value) => _value * (100 + value) / 100;

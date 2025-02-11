@@ -42,18 +42,18 @@ namespace VurbiriEditor.Colonization.Characteristics
                     SerializedProperty costProperty = GetProperty(P_COST);
                     SerializedProperty uiProperty = GetProperty(P_UI);
 
-                    DrawLine(Color.gray);
+                    DrawLine(40f);
                     EditorGUI.indentLevel++;
 
                     DrawLabel("Total Time", $"{clip.totalTime} c");
                     DrawLabel("Hit Time", $"{string.Join("% ", clip.hitTimes)}%");
                     DrawLabel("Remaining Time", $"{clip.totalTime * (100f - clip.hitTimes[^1])/100f} c");
-                    DrawLabelAndSetValue(P_RANGE, clip.range);
+                    SetLabelFloat(P_RANGE, clip.range);
                     EditorGUI.indentLevel--;
-                    DrawLine(Color.gray);
+                    DrawLine(40f);
                     Space();
 
-                    TargetOfSkill target = DrawEnumPopup<TargetOfSkill>(P_TARGET);
+                    TargetOfSkill target = DrawEnum<TargetOfSkill>(P_TARGET);
 
                     Space();
                     DrawBool(P_MOVE);
@@ -68,7 +68,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     DrawStringPopupRelative(uiProperty, P_KEY_NAME, KEYS_NAME_SKILLS);
                     DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
 
-                    DrawLine(Color.gray);
+                    DrawLine(40f);
                     DrawHits(clip.hitTimes.Length, target);
                  }
 
@@ -131,9 +131,9 @@ namespace VurbiriEditor.Colonization.Characteristics
                     for (int j = 0; j < effectsProperty.arraySize; j++)
                     {
                         effectProperty = effectsProperty.GetArrayElementAtIndex(j);
-                        GetProperty(effectProperty, P_CHILD_TARGET).SetEnumValue(target);
+                        GetProperty(effectProperty, P_CHILD_TARGET).SetEnum(target);
                         if (effectsProperty.isExpanded)
-                            _position.y += _height * EffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j));
+                            _position.y += _height * EffectHitSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j));
                     }
                     if (effectsProperty.isExpanded)
                         _position.y += _height * 1.8f; // "+ -" панель
@@ -166,7 +166,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                         {
                             rate += 1.8f;
                             for (int j = 0; j < effectsProperty.arraySize; j++)
-                                rate += EffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j));
+                                rate += EffectHitSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j));
                         }
                     }
                 }

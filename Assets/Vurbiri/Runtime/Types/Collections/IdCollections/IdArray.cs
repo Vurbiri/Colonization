@@ -34,11 +34,11 @@ namespace Vurbiri.Collections
                 _values[i] = defaultValue;
         }
 
-        public IdArray(IReadOnlyList<TValue> collection) : this() 
+        public IdArray(IReadOnlyList<TValue> list) : this() 
         {
-            int count = _count <= collection.Count ? _count : collection.Count;
+            int count = _count <= list.Count ? _count : list.Count;
             for (int i = 0; i < count; i++)
-                _values[i] = collection[i];
+                _values[i] = list[i];
         }
 
         public IEnumerator<TValue> GetEnumerator()

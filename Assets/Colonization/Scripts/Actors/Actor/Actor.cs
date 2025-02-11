@@ -10,7 +10,7 @@ using Vurbiri.Reactive.Collections;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveElementMono<Actor>, ISelectable, ICancel, IPositionable, IDisposable
+    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, ICancel, IPositionable, IDisposable
     {
         #region Fields
         protected int _typeId;
@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.Actors
         protected StateMachineSelectable _stateMachine;
         protected ABlockState _blockState;
 
-        protected ReactiveValue<bool> _isCancel = new(false);
+        protected ReactiveValue<bool> _canCancel = new(false);
 
         protected Coroutine _onHitCoroutine, _deathCoroutine;
         #endregion
@@ -51,9 +51,9 @@ namespace Vurbiri.Colonization.Actors
         public bool IsBlock => _blockState.Enabled;
         public Vector3 Position => _thisTransform.position;
         public ActorSkin Skin => _skin;
-        public IReactiveCollection<ReactiveEffect> Effects => _effects;
-        public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
-        public IReadOnlyReactive<bool> IsCancel => _isCancel;
+        public IListReactiveItems<ReactiveEffect> Effects => _effects;
+        public IReadOnlyAbilities<ActorAbilityId> Abilities => _abilities;
+        public IReadOnlyReactive<bool> CanCancel => _canCancel;
         #endregion
 
         #region States

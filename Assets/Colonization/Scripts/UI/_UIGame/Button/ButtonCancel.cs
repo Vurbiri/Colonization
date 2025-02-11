@@ -21,23 +21,23 @@ namespace Vurbiri.Colonization.UI
 
         public void Setup(ICancel cancelledObj)
         {
-            _cancelledObj?.IsCancel.Unsubscribe(_thisGO.SetActive);
+            _cancelledObj?.CanCancel.Unsubscribe(_thisGO.SetActive);
 
             _cancelledObj = cancelledObj;
-            _cancelledObj.IsCancel.Subscribe(_thisGO.SetActive);
+            _cancelledObj.CanCancel.Subscribe(_thisGO.SetActive);
         }
 
         public void Disable()
         {
             _thisGO.SetActive(false);
-            _cancelledObj?.IsCancel.Unsubscribe(_thisGO.SetActive);
+            _cancelledObj?.CanCancel.Unsubscribe(_thisGO.SetActive);
             _cancelledObj = null;
         }
 
         private void OnClick()
         {
             _thisGO.SetActive(false);
-            _cancelledObj?.IsCancel.Unsubscribe(_thisGO.SetActive);
+            _cancelledObj?.CanCancel.Unsubscribe(_thisGO.SetActive);
             _cancelledObj?.Cancel();
             _cancelledObj = null;
         }
@@ -47,8 +47,7 @@ namespace Vurbiri.Colonization.UI
         private void OnDestroy()
         {
             _unLanguage?.Unsubscribe();
-            _cancelledObj?.IsCancel.Unsubscribe(_thisGO.SetActive);
+            _cancelledObj?.CanCancel.Unsubscribe(_thisGO.SetActive);
         }
-
     }
 }

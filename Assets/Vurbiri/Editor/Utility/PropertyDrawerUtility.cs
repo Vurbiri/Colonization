@@ -27,6 +27,7 @@ namespace VurbiriEditor
         protected bool Foldout(GUIContent label) => _mainProperty.isExpanded = EditorGUI.Foldout(_position, _mainProperty.isExpanded, label);
 
         //================================================================
+        #region Bool
         #region DrawBool
         protected bool DrawBool(SerializedProperty property, bool isName = true)
         {
@@ -47,7 +48,28 @@ namespace VurbiriEditor
         protected bool DrawBoolRelative(SerializedProperty parent, string nameChildren, string displayName)
         {   return DrawBool(parent.FindPropertyRelative(nameChildren), displayName);}
         #endregion
+        //----------------------------------------------------------------
+        #region GetBool, SetBool
+        protected bool GetBool(string nameChildren) => _mainProperty.FindPropertyRelative(nameChildren).boolValue;
+
+        protected void SetBool(string nameChildren, bool value) => _mainProperty.FindPropertyRelative(nameChildren).boolValue = value;
+        #endregion
+        //----------------------------------------------------------------
+        #region SetLabelBool
+        protected void SetLabelBool(string nameChildren, bool value) => SetLabelBool(_mainProperty, nameChildren, value);
+        protected void SetLabelBool(SerializedProperty parent, string nameChildren, bool value)
+        {
+            SerializedProperty property = parent.FindPropertyRelative(nameChildren);
+
+            property.boolValue = value;
+
+            _position.y += _height;
+            EditorGUI.LabelField(_position, property.displayName, value.ToString());
+        }
+        #endregion
+        #endregion
         //================================================================
+        #region Int
         #region DrawInt
         protected int DrawInt(SerializedProperty property, bool isName = true)
         {
@@ -71,24 +93,22 @@ namespace VurbiriEditor
         {
             if (isName) return DrawInt(property, property.displayName, min, max, defaultValue);
 
-            _position.y += _height;
-
             if (property.intValue < min | property.intValue > max)
                 defaultValue = Mathf.Clamp(defaultValue, min, max);
             else
                 defaultValue = property.intValue;
 
-            return property.intValue = EditorGUI.IntSlider(_position, Mathf.Clamp(property.intValue, min, max), min, max);
+            _position.y += _height;
+            return property.intValue = EditorGUI.IntSlider(_position, defaultValue, min, max);
         }
         protected int DrawInt(SerializedProperty property, string displayName, int min, int max, int defaultValue = 0)
         {
-            _position.y += _height;
-
             if (property.intValue < min | property.intValue > max)
                 defaultValue = Mathf.Clamp(defaultValue, min, max);
             else
                 defaultValue = property.intValue;
 
+            _position.y += _height;
             return property.intValue = EditorGUI.IntSlider(_position, displayName, defaultValue, min, max);
         }
         protected int DrawInt(string nameChildren, int min, int max, int defaultValue = 0, bool isName = true) 
@@ -100,7 +120,28 @@ namespace VurbiriEditor
         protected int DrawIntRelative(SerializedProperty parent, string nameChildren, string displayName, int min, int max, int defaultValue = 0)
         {   return DrawInt(parent.FindPropertyRelative(nameChildren), displayName, min, max, defaultValue);}
         #endregion
+        //----------------------------------------------------------------
+        #region GetInt, SetInt
+        protected int GetInt(string nameChildren) => _mainProperty.FindPropertyRelative(nameChildren).intValue;
+
+        protected void SetInt(string nameChildren, int value) => _mainProperty.FindPropertyRelative(nameChildren).intValue = value;
+        #endregion
+        //----------------------------------------------------------------
+        #region SetLabelInt
+        protected void SetLabelInt(string nameChildren, int value) => SetLabelInt(_mainProperty, nameChildren, value);
+        protected void SetLabelInt(SerializedProperty parent, string nameChildren, int value)
+        {
+            SerializedProperty property = parent.FindPropertyRelative(nameChildren);
+
+            property.intValue = value;
+
+            _position.y += _height;
+            EditorGUI.LabelField(_position, property.displayName, value.ToString());
+        }
+        #endregion
+        #endregion
         //================================================================
+        #region Float
         #region DrawFloat
         protected float DrawFloat(SerializedProperty property, bool isName = true)
         {
@@ -120,32 +161,106 @@ namespace VurbiriEditor
         { return DrawFloat(parent.FindPropertyRelative(nameChildren), isName); }
         protected float DrawFloatRelative(SerializedProperty parent, string nameChildren, string displayName)
         {   return DrawFloat(parent.FindPropertyRelative(nameChildren), displayName);}
+        // == Slider ====
+        protected float DrawFloat(SerializedProperty property, float min, float max, float defaultValue = 0f, bool isName = true)
+        {
+            if (isName) return DrawFloat(property, property.displayName, min, max, defaultValue);
+
+            if (property.intValue < min | property.intValue > max)
+                defaultValue = Mathf.Clamp(defaultValue, min, max);
+            else
+                defaultValue = property.floatValue;
+
+            _position.y += _height;
+            return property.floatValue = EditorGUI.Slider(_position, defaultValue, min, max);
+        }
+        protected float DrawFloat(SerializedProperty property, string displayName, float min, float max, float defaultValue = 0f)
+        {
+            if (property.intValue < min | property.intValue > max)
+                defaultValue = Mathf.Clamp(defaultValue, min, max);
+            else
+                defaultValue = property.floatValue;
+
+            _position.y += _height;
+            return property.floatValue = EditorGUI.Slider(_position, displayName, defaultValue, min, max);
+        }
+        protected float DrawFloat(string nameChildren, float min, float max, float defaultValue = 0f, bool isName = true)
+        { return DrawFloat(_mainProperty.FindPropertyRelative(nameChildren), min, max, defaultValue, isName); }
+        protected float DrawFloat(string nameChildren, string displayName, float min, float max, float defaultValue = 0f)
+        { return DrawFloat(_mainProperty.FindPropertyRelative(nameChildren), displayName, min, max, defaultValue); }
+        protected float DrawFloatRelative(SerializedProperty parent, string nameChildren, float min, float max, float defaultValue = 0f, bool isName = true)
+        { return DrawFloat(parent.FindPropertyRelative(nameChildren), min, max, defaultValue, isName); }
+        protected float DrawFloatRelative(SerializedProperty parent, string nameChildren, string displayName, float min, float max, float defaultValue = 0f)
+        { return DrawFloat(parent.FindPropertyRelative(nameChildren), displayName, min, max, defaultValue); }
+        #endregion
+        //----------------------------------------------------------------
+        #region GetFloat, SetFloat
+        protected float GetFloat(string nameChildren) => _mainProperty.FindPropertyRelative(nameChildren).floatValue;
+
+        protected void SetFloat(string nameChildren, float value) => _mainProperty.FindPropertyRelative(nameChildren).floatValue = value;
+        #endregion
+        //----------------------------------------------------------------
+        #region SetLabelFloat
+        protected void SetLabelFloat(string nameChildren, float value) => SetLabelFloat(_mainProperty, nameChildren, value);
+        protected void SetLabelFloat(SerializedProperty parent, string nameChildren, float value)
+        {
+            SerializedProperty property = parent.FindPropertyRelative(nameChildren);
+
+            property.floatValue = value;
+
+            _position.y += _height;
+            EditorGUI.LabelField(_position, property.displayName, value.ToString());
+        }
+        #endregion
         #endregion
         //================================================================
-        #region DrawEnumPopup
-        protected T DrawEnumPopup<T>(SerializedProperty property, bool isName = true) where T : Enum
+        #region Enum
+        #region DrawEnum
+        protected T DrawEnum<T>(SerializedProperty property, bool isName = true) where T : Enum
         {
-            if (isName) return DrawEnumPopup<T>(property, property.displayName);
+            if (isName) return DrawEnum<T>(property, property.displayName);
 
             _position.y += _height;
             T value = (T)EditorGUI.EnumPopup(_position, property.enumValueIndex.ToEnum<T>());
             property.enumValueIndex = value.ToInt();
             return value;
         }
-        protected T DrawEnumPopup<T>(SerializedProperty property, string displayName) where T : Enum
+        protected T DrawEnum<T>(SerializedProperty property, string displayName) where T : Enum
         {
             _position.y += _height;
             T value = (T)EditorGUI.EnumPopup(_position, displayName, property.enumValueIndex.ToEnum<T>());
             property.enumValueIndex = value.ToInt();
             return value;
         }
-        protected T DrawEnumPopup<T>(string nameChildren) where T : Enum => DrawEnumPopup<T>(_mainProperty.FindPropertyRelative(nameChildren));
-        protected T DrawEnumPopup<T>(string nameChildren, string displayName) where T : Enum 
-        { return DrawEnumPopup<T>(_mainProperty.FindPropertyRelative(nameChildren), displayName); }
-        protected T DrawEnumPopupRelative<T>(SerializedProperty parent, string nameChildren) where T : Enum
-        { return DrawEnumPopup<T>(parent.FindPropertyRelative(nameChildren)); }
-        protected T DrawEnumPopupRelative<T>(SerializedProperty parent, string nameChildren, string displayName) where T : Enum
-        {   return DrawEnumPopup<T>(parent.FindPropertyRelative(nameChildren), displayName); }
+        protected T DrawEnum<T>(string nameChildren) where T : Enum => DrawEnum<T>(_mainProperty.FindPropertyRelative(nameChildren));
+        protected T DrawEnum<T>(string nameChildren, string displayName) where T : Enum 
+        { return DrawEnum<T>(_mainProperty.FindPropertyRelative(nameChildren), displayName); }
+        protected T DrawEnumRelative<T>(SerializedProperty parent, string nameChildren) where T : Enum
+        { return DrawEnum<T>(parent.FindPropertyRelative(nameChildren)); }
+        protected T DrawEnumRelative<T>(SerializedProperty parent, string nameChildren, string displayName) where T : Enum
+        {   return DrawEnum<T>(parent.FindPropertyRelative(nameChildren), displayName); }
+        #endregion
+        //----------------------------------------------------------------
+        #region GetEnum, SetEnum
+        protected T GetEnum<T>(string nameChildren) where T : Enum => _mainProperty.FindPropertyRelative(nameChildren).enumValueIndex.ToEnum<T>();
+
+        protected void SetEnum<T>(string nameChildren, T value) where T : Enum => _mainProperty.FindPropertyRelative(nameChildren).enumValueIndex = value.ToInt();
+        #endregion
+        //----------------------------------------------------------------
+        #region SetLabelBool
+        protected void SetLabelEnum<T>(string nameChildren, T value) where T : Enum
+        { SetLabelEnum(_mainProperty.FindPropertyRelative(nameChildren), nameChildren, value); }
+        protected void SetLabelEnum<T>(SerializedProperty parent, string nameChildren, T value) where T : Enum
+        { SetLabelEnum(parent.FindPropertyRelative(nameChildren), nameChildren, value); }
+        protected void SetLabelEnum<T>(SerializedProperty property, T value) where T : Enum
+        {
+            int index = value.ToInt();
+            property.enumValueIndex = index;
+
+            _position.y += _height;
+            EditorGUI.LabelField(_position, property.displayName, property.enumDisplayNames[index]);
+        }
+        #endregion
         #endregion
         //================================================================
         #region DrawIntPopup
@@ -277,45 +392,35 @@ namespace VurbiriEditor
         { return DrawObject<T>(parent.FindPropertyRelative(nameChildren), displayName); }
         #endregion
         //================================================================
-        #region DrawObject
+        #region DrawLabel
         protected void DrawLabel(string displayName, string value)
         {
             _position.y += _height;
             EditorGUI.LabelField(_position, displayName, value);
         }
-
-        protected void DrawLabelAndSetValue<T>(SerializedProperty parent, string nameChildren, T value) where T : struct
-        {
-            _position.y += _height;
-            SerializedProperty property = parent.FindPropertyRelative(nameChildren);
-
-            if (value is float fValue)
-                property.floatValue = fValue;
-            else if (value is int iValue)
-                property.intValue = iValue;
-            else if (value is bool bValue)
-                property.boolValue = bValue;
-
-            EditorGUI.LabelField(_position, property.displayName, $"{value}");
-        }
-        protected void DrawLabelAndSetValue<T>(string nameChildren, T value) where T : struct => DrawLabelAndSetValue<T>(_mainProperty, nameChildren, value);
         #endregion
         //================================================================
-
-        protected void DrawLine(Color color)
+        #region DrawLine
+        protected void DrawLine() => DrawLine(Color.gray, 0f);
+        protected void DrawLine(float leftOffset) => DrawLine(Color.gray, leftOffset);
+        protected void DrawLine(Color color, float leftOffset = 0f)
         {
             Rect size = _position;
             size.y += _height + _ySpace * 2f;
-            size.x += 40;
-            size.width -= 40;
+            size.x += leftOffset;
+            size.width -= leftOffset;
             size.height = _ySpace;
             EditorGUI.DrawRect(size, color);
             _position.y += _ySpace * 5f;
         }
-
+        #endregion
+        //================================================================
+        #region GetProperty
         protected SerializedProperty GetProperty(string nameChildren) => _mainProperty.FindPropertyRelative(nameChildren);
         protected SerializedProperty GetProperty(SerializedProperty parent, string nameChildren) => parent.FindPropertyRelative(nameChildren);
-
+        #endregion
+        //================================================================
+        #region Utilities
         protected (string[] names, int[] values) GetNamesAndValues<T>(bool isNone) where T : IdType<T>
         {
             if (!isNone)
@@ -342,7 +447,7 @@ namespace VurbiriEditor
 
         protected bool TrySetArraySize(SerializedProperty property, int size)
         {
-            if(size < 0 || property == null || !property.isArray)
+            if(size < 0 | property == null || !property.isArray)
                 return false;
 
             while (property.arraySize > size)
@@ -352,5 +457,39 @@ namespace VurbiriEditor
 
             return true;
         }
+        #endregion
+    }
+
+    //================================================================================================================================
+    //===================================== Extensions SerializedProperty ============================================================
+    //================================================================================================================================
+    public static class ExtensionsSerializedProperty
+    {
+        //================================================================
+        #region Bool
+        public static bool GetBool(this SerializedProperty parent, string nameChildren) => parent.FindPropertyRelative(nameChildren).boolValue;
+        public static void SetBool(this SerializedProperty parent, string nameChildren, bool value) => parent.FindPropertyRelative(nameChildren).boolValue = value;
+        #endregion
+        //================================================================
+        #region Int
+        public static int GetInt(this SerializedProperty parent, string nameChildren) => parent.FindPropertyRelative(nameChildren).intValue;
+        public static void SetInt(this SerializedProperty parent, string nameChildren, int value) => parent.FindPropertyRelative(nameChildren).intValue = value;
+        #endregion
+        //================================================================
+        #region Float
+        public static float GetFloat(this SerializedProperty parent, string nameChildren) => parent.FindPropertyRelative(nameChildren).floatValue;
+        public static void SetFloat(this SerializedProperty parent, string nameChildren, float value) => parent.FindPropertyRelative(nameChildren).floatValue = value;
+        #endregion
+        //================================================================
+        #region Enum
+        public static T GetEnum<T>(this SerializedProperty property) where T : Enum => property.enumValueIndex.ToEnum<T>();
+        public static T GetEnum<T>(this SerializedProperty parent, string nameChildren) where T : Enum
+        {   return parent.FindPropertyRelative(nameChildren).enumValueIndex.ToEnum<T>(); }
+
+        public static void SetEnum(this SerializedProperty property, Enum value) => property.enumValueIndex = value.ToInt();
+        public static void SetEnum(this SerializedProperty parent, string nameChildren, Enum value)
+        { parent.FindPropertyRelative(nameChildren).enumValueIndex = value.ToInt();}
+        #endregion
+        //================================================================
     }
 }

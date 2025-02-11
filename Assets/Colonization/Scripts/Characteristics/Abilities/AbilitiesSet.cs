@@ -1,12 +1,12 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\AbilitiesSet.cs
+using System.Collections;
+using System.Collections.Generic;
+using Vurbiri.Collections;
+using Vurbiri.Reactive;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using Vurbiri.Collections;
-    using Vurbiri.Reactive;
-
-    public class AbilitiesSet<TId> : IReadOnlyList<IReadOnlyReactive<int>> where TId : AbilityId<TId>
+    public class AbilitiesSet<TId> : IReadOnlyAbilities<TId> where TId : AbilityId<TId>
     {
         private readonly IdArray<TId, AAbility<TId>> _abilities = new();
 
@@ -48,10 +48,6 @@ namespace Vurbiri.Colonization.Characteristics
         public bool IsLess(Id<TId> stateId, int value) => _abilities[stateId].Value < value;
 
         public bool IsTrue(Id<TId> stateId) => _abilities[stateId].IsValue;
-
-        public AAbility<TId> GetAbility(Id<TId> stateId) => _abilities[stateId];
-
-        public int GetValue(Id<TId> stateId) => _abilities[stateId].Value;
 
         public int AddPerk(IPerk perk) => _abilities[perk.TargetAbility].AddModifier(perk);
         public int RemovePerk(IPerk perk) => _abilities[perk.TargetAbility].RemoveModifier(perk);

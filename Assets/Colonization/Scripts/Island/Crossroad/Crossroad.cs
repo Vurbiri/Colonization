@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
         private int _countFreeLink = 0, _countWater = 0;
         private bool _isGate = false;
         private WaitResult<Hexagon> _waitHexagon;
-        private ReactiveValue<bool> _isCancel = new(false);
+        private ReactiveValue<bool> _canCancel = new(false);
 
         private IUnsubscriber _unsubscriber;
         #endregion
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
         public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
         public bool IsWall => _isWall;
         public IReadOnlyList<CrossroadLink> Links => _links;
-        public IReadOnlyReactive<bool> IsCancel => _isCancel;
+        public IReadOnlyReactive<bool> CanCancel => _canCancel;
         public Vector3 Position { get;}
         #endregion
 
@@ -214,7 +214,7 @@ namespace Vurbiri.Colonization
             foreach (var hex in empty)
                 hex.TrySetSelectableFree();
 
-            _isCancel.Value = true;
+            _canCancel.Value = true;
             return _waitHexagon;
         }
         #endregion
@@ -310,7 +310,7 @@ namespace Vurbiri.Colonization
             if (_waitHexagon == null)
                 return;
 
-            _isCancel.Value = false;
+            _canCancel.Value = false;
 
             _waitHexagon.SetResult(newSelectable as Hexagon);
             foreach (var hex in _hexagons)

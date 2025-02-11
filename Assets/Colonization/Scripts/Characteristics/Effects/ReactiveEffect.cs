@@ -5,7 +5,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class ReactiveEffect : AReactiveElement<ReactiveEffect>, IPerk, IEquatable<ReactiveEffect>
+    public class ReactiveEffect : AReactiveItem<ReactiveEffect>, IPerk, IEquatable<ReactiveEffect>
     {
         private readonly EffectCode _code;
         private readonly int _targetAbility;
@@ -17,7 +17,6 @@ namespace Vurbiri.Colonization.Characteristics
         public int TargetAbility => _targetAbility;
         public Id<TypeModifierId> TypeModifier => _typeModifier;
         public int Value => _value;
-        public Chance Chance => 100;
         public int Duration => _duration;
         public bool IsNegative => _value < 0;
 

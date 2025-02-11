@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
             {
                 _speed = speed;
                 _parentTransform = parent._thisTransform;
-                _isCancel = parent._isCancel;
+                _isCancel = parent._canCancel;
             }
 
             public override void Enter()

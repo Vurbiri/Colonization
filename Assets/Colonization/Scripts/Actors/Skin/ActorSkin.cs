@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin : MonoBehaviour, IDisposable
     {
+        [SerializeField] private Bounds _bounds;
+        [Space]
         [SerializeField] private AActorSFX _sfx;
         [SerializeField] private Animator _animator;
         [SerializeField] private SkinnedMeshRenderer _mesh;
@@ -30,6 +32,7 @@ namespace Vurbiri.Colonization.Actors
         public event Action EventStart;
 
         public SkinnedMeshRenderer Mesh => _mesh;
+        public Bounds Bounds => _bounds;
 
         private void Start()
         {
@@ -100,5 +103,7 @@ namespace Vurbiri.Colonization.Actors
             _reactState.Dispose();
             _deathState.Dispose();
         }
+
+        // UNITY_EDITOR смотри в ActorSkin_Editor
     }
 }

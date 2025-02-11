@@ -13,10 +13,10 @@ namespace Vurbiri.Colonization.Actors
 
         public bool IsVisible => _moveSprite.isVisible;
 
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, int orderLevel)
+        public void Init(IReadOnlyAbilities<ActorAbilityId> abilities, int orderLevel)
         {
             _moveSprite.sortingOrder += orderLevel;
-            _unsubscriber = abilities.GetAbility(ActorAbilityId.IsMove).Subscribe(value => _moveSprite.enabled = value > 0);
+            _unsubscriber = abilities[ActorAbilityId.IsMove].Subscribe(value => _moveSprite.enabled = value > 0);
         }
 
         private void OnDestroy()

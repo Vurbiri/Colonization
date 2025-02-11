@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization.Data
             }
             #endregion
         }
-        public void WarriorsBind(IReactiveCollection<Actor> warriorsReactive)
+        public void WarriorsBind(IListReactiveItems<Actor> warriorsReactive)
         {
             _unsubscribers += warriorsReactive.Subscribe(OnWarriors);
 

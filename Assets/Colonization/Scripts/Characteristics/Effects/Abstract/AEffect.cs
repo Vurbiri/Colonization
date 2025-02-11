@@ -12,7 +12,6 @@ namespace Vurbiri.Colonization.Characteristics
         public int TargetAbility => _targetAbility;
         public Id<TypeModifierId> TypeModifier => _typeModifier;
         public int Value => _value;
-        public Chance Chance => 100;
 
         public AEffect(int targetAbility, Id<TypeModifierId> typeModifier)
         {
@@ -20,6 +19,6 @@ namespace Vurbiri.Colonization.Characteristics
             _typeModifier = typeModifier;
         }
 
-        public abstract void Apply(Actor self, Actor target);
+        public abstract int Apply(Actor self, Actor target);
     }
 }

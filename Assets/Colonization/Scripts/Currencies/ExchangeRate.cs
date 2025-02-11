@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Currencies\ExchangeRate.cs
 using System;
+using System.Collections.Generic;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 
@@ -12,11 +13,11 @@ namespace Vurbiri.Colonization
         private Chance _chance = new(0);
         private int _min, _max;
         
-        public ExchangeRate(AbilitiesSet<PlayerAbilityId> abilities)
+        public ExchangeRate(IReadOnlyList<IReadOnlyReactive<int>> abilities)
         {
-            _unsubscribers += abilities.GetAbility(PlayerAbilityId.ExchangeRateMin).Subscribe(v => _min = v);
-            _unsubscribers += abilities.GetAbility(PlayerAbilityId.ExchangeRateMax).Subscribe(v => _max = v);
-            _unsubscribers += abilities.GetAbility(PlayerAbilityId.ExchangeMinChance).Subscribe(v => _chance.Value = v);
+            _unsubscribers += abilities[PlayerAbilityId.ExchangeRateMin].Subscribe(v => _min = v);
+            _unsubscribers += abilities[PlayerAbilityId.ExchangeRateMax].Subscribe(v => _max = v);
+            _unsubscribers += abilities[PlayerAbilityId.ExchangeMinChance].Subscribe(v => _chance.Value = v);
 
             Update();
         }
