@@ -65,8 +65,11 @@ namespace VurbiriEditor.Colonization.Characteristics
                     GetProperty(uiProperty, P_COST_UI).intValue = costProperty.intValue;
 
                     Space(2f);
+                    DrawLabel("UI:");
+                    EditorGUI.indentLevel++;
                     DrawStringPopupRelative(uiProperty, P_KEY_NAME, KEYS_NAME_SKILLS);
                     DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
+                    EditorGUI.indentLevel--;
 
                     DrawLine(40f);
                     DrawHits(clip.hitTimes.Length, target);

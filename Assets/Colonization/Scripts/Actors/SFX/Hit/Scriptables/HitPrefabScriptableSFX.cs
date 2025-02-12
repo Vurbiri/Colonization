@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Characteristics
             if(_prefab == null)
                 return new HitEmptySFX();
 
-            return Instantiate(_prefab, parent.Container).Init(parent);
+            return Instantiate(_prefab, parent.Main).Init(parent);
         }
     }
 }

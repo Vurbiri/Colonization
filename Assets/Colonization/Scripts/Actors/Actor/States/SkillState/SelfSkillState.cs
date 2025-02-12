@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
             {
                 Pay();
 
-                WaitActivate wait = _skin.Skill(_id, _parentTransform);
+                WaitActivate wait = _skin.Skill(_id, _skin);
 
                 for (int i = 0; i < _countHits; i++)
                 {

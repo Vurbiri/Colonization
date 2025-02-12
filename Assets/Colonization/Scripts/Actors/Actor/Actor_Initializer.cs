@@ -70,7 +70,7 @@ namespace Vurbiri.Colonization.Actors
 
             int count = data.effects.Length;
             for (int i = 0; i < count; i++)
-                _effects.Add(data.effects[i]);
+                _effects.AddEffect(data.effects[i]);
 
             if(_blockState.Enabled)
                 _skin.EventStart += Block;

@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
             protected readonly int _countHits;
             protected Coroutine _coroutine;
 
-            public Transform target;
+            public ActorSkin targetSkin;
             public readonly WaitActivate waitActivate = new();
 
             public SkillState(string stateName, ActorSkin parent, TimingSkillSettings timing, int id = 0) : base(stateName, parent, id)
@@ -22,8 +22,10 @@ namespace Vurbiri.Colonization.Actors
                 _id = id;
                 _countHits = timing.hitTimes.Length;
                 _waitHits = new WaitForSeconds[_countHits];
-                for(int i = 0; i < _countHits; i++)
+
+                for (int i = 0; i < _countHits; i++)
                     _waitHits[i] = new(timing.hitTimes[i]);
+
                 _waitEnd = new(timing.remainingTime);
             }
 
@@ -51,7 +53,8 @@ namespace Vurbiri.Colonization.Actors
                     yield return _waitHits[i];
 
                     waitActivate.Activate();
-                    _sfx.Hit(_id, i, target);
+
+                    _sfx.Hit(_id, i, targetSkin);
                 }
 
                 yield return _waitEnd;
@@ -59,14 +62,6 @@ namespace Vurbiri.Colonization.Actors
                 _coroutine = null;
                 waitActivate.Activate();
             }
-        }
-
-        //*******************************************************
-        [System.Serializable]
-        protected class TimingSkillSettings
-        {
-            public float[] hitTimes;
-            public float remainingTime;
         }
     }
 }

@@ -14,17 +14,15 @@ namespace Vurbiri.Colonization.Actors
         public abstract class ATargetSkillState : ASkillState
         {
             protected Actor _target;
-            protected bool _isTargetReact;
             protected WaitActivate _waitActor;
             protected readonly ReactiveValue<bool> _isCancel;
             protected readonly WaitForSecondsRealtime _waitRealtime = new(0.6f);
             protected readonly Relation _relationTarget;
 
-            protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, bool isTargetReact, int cost, int id) : 
+            protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, int cost, int id) : 
                 base(parent, effects, cost, id)
             {
                 _isCancel = parent._canCancel;
-                _isTargetReact = isTargetReact;
                 _relationTarget = targetActor.ToRelation();
                 Debug.Log("Удалить _relationTarget = Relation.Friend;");
                 _relationTarget = Relation.Friend;
@@ -76,7 +74,7 @@ namespace Vurbiri.Colonization.Actors
                 Pay();
                 Hexagon targetHex = _target._currentHex;
                 _parentTransform.localRotation = ACTOR_ROTATIONS[targetHex.Key - currentHex.Key];
-                if(_isTargetReact)
+                if(_skin.IsTargetReact(_id))
                     _target._thisTransform.localRotation = ACTOR_ROTATIONS[currentHex.Key - targetHex.Key];
 
                 callback(true);
@@ -84,13 +82,13 @@ namespace Vurbiri.Colonization.Actors
 
             protected override IEnumerator ApplySkill_Coroutine()
             {
-                CustomYieldInstruction wait = _skin.Skill(_id, _target._thisTransform);
+                CustomYieldInstruction wait = _skin.Skill(_id, _target._skin);
 
                 for (int i = 0; i < _countHits; i++)
                 {
                     yield return wait;
                     _effectsHint[i].Apply(_actor, _target);
-                    if (_target.Hit(_isTargetReact))
+                    if (_target.IsDead())
                     {
                         wait = _waitRealtime;
                         break;

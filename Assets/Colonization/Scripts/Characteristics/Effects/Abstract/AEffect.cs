@@ -19,6 +19,13 @@ namespace Vurbiri.Colonization.Characteristics
             _typeModifier = typeModifier;
         }
 
+        public AEffect(int targetAbility, Id<TypeModifierId> typeModifier, int value)
+        {
+            _targetAbility = targetAbility;
+            _typeModifier = typeModifier;
+            _value = value;
+        }
+
         public abstract int Apply(Actor self, Actor target);
     }
 }

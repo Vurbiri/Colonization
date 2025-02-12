@@ -68,8 +68,8 @@ namespace Vurbiri.Reactive.Collections
             item.Adding(RedirectEvents, _count - 1);
         }
 
-        public virtual void Remove(int index) => _values[index].Removing();
-        public virtual void Remove(T item) => _values[item.Index].Removing();
+        public void Remove(int index) => _values[index].Removing();
+        public void Remove(T item) => _values[item.Index].Removing();
 
         public virtual bool Contains(T item)
         {
@@ -88,7 +88,7 @@ namespace Vurbiri.Reactive.Collections
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        protected virtual void RemoveElement(T item)
+        protected virtual void RemoveItem(T item)
         {
             _count--;
             T temp;
@@ -105,7 +105,7 @@ namespace Vurbiri.Reactive.Collections
         protected void RedirectEvents(T item, TypeEvent operation)
         {
             if (operation == TypeEvent.Remove)
-                RemoveElement(item);
+                RemoveItem(item);
 
             actionCollectionChange?.Invoke(item, operation);
         }

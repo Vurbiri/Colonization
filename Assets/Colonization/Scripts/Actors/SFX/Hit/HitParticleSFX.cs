@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Actors\SFX\Hit\HitParticleSFX.cs
 using UnityEngine;
+using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -18,13 +19,15 @@ namespace Vurbiri.Colonization.Characteristics
             return this;
         }
 
-        public override void Hit(Transform target)
+        public override CustomYieldInstruction Hit(ActorSkin target)
         {
-            _thisTransform.SetParent(target, false);
+            _thisTransform.SetParent(target.Transform, false);
             _thisGO.SetActive(true);
             _particle.Play();
 
             _audioSource.PlayOneShot(_clip);
+
+            return null;
         }
 
         private void OnParticleSystemStopped()

@@ -22,20 +22,21 @@ namespace Vurbiri.Colonization.Characteristics
             return false;
         }
 
-        public override void Add(ReactiveEffect effect)
+        public int AddEffect(ReactiveEffect effect)
         {
             if (_values == null)
-                return;
+                return 0;
             
             for (int i = 0; i < _count; i++)
                 if (_values[i].UpdateDuration(effect))
-                    return;
+                    return 0;
 
             base.Add(effect);
 
-            _abilities.AddPerk(effect);
+            return _abilities.AddPerk(effect);
         }
 
+        
         public void Remove(EffectCode code)
         {
             for (int i = 0; i < _count; i++)
@@ -54,9 +55,9 @@ namespace Vurbiri.Colonization.Characteristics
                 _values[i].Next();
         }
 
-        protected override void RemoveElement(ReactiveEffect effect)
+        protected override void RemoveItem(ReactiveEffect effect)
         {
-            base.RemoveElement(effect);
+            base.RemoveItem(effect);
             _abilities.RemovePerk(effect);
         }
     }

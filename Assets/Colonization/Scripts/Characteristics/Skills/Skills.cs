@@ -107,9 +107,9 @@ namespace Vurbiri.Colonization.Characteristics
                 return new SelfSkillState(parent, _effectsHits[id], skill.cost, id);
 
             if (skill.isMove)
-                return new SkillState(parent, skill.target, _effectsHits[id], skill.isTargetReact, skill.range, _speedRun, skill.cost, id);
+                return new SkillState(parent, skill.target, _effectsHits[id], skill.range, _speedRun, skill.cost, id);
 
-            return new RangeSkillState(parent, skill.target, _effectsHits[id], skill.isTargetReact, skill.cost, id);
+            return new RangeSkillState(parent, skill.target, _effectsHits[id], skill.cost, id);
         }
 
 #if UNITY_EDITOR

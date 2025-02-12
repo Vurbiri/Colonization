@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Used\AttackEffect.cs
+//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Attacks\AttackEffect.cs
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics

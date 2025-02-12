@@ -6,7 +6,6 @@ namespace Vurbiri.Colonization.Actors
         protected class ReactState : ASkinState
         {
             private bool _isIgnoreEvent;
-            public readonly WaitActivate waitActivate = new();
 
             public ReactState(ActorSkin parent) : base(T_REACT, parent)
             {
@@ -22,7 +21,6 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                waitActivate.Reset();
                 _animator.SetTrigger(_idParam);
             }
 
@@ -39,7 +37,6 @@ namespace Vurbiri.Colonization.Actors
                     return;
                 }
 
-                waitActivate.Activate();
                 _fsm.ToPrevState();
             }
         }

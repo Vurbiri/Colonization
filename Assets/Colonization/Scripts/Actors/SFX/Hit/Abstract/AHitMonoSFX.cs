@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Actors\SFX\Hit\Abstract\AHitMonoSFX.cs
 using UnityEngine;
+using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -17,7 +18,7 @@ namespace Vurbiri.Colonization.Characteristics
             _parent = _thisTransform.parent;
         }
 
-        public abstract void Hit(Transform target);
+        public abstract CustomYieldInstruction Hit(ActorSkin target);
 
         public abstract IHitSFX Init(IActorSFX parent);
     }

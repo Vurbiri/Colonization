@@ -176,7 +176,7 @@ namespace VurbiriEditor
         }
         protected float DrawFloat(SerializedProperty property, string displayName, float min, float max, float defaultValue = 0f)
         {
-            if (property.intValue < min | property.intValue > max)
+            if (property.floatValue < min | property.floatValue > max)
                 defaultValue = Mathf.Clamp(defaultValue, min, max);
             else
                 defaultValue = property.floatValue;
@@ -393,6 +393,11 @@ namespace VurbiriEditor
         #endregion
         //================================================================
         #region DrawLabel
+        protected void DrawLabel(string displayName)
+        {
+            _position.y += _height;
+            EditorGUI.LabelField(_position, displayName);
+        }
         protected void DrawLabel(string displayName, string value)
         {
             _position.y += _height;

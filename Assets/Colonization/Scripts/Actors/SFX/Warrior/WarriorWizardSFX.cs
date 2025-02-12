@@ -30,8 +30,10 @@ namespace Vurbiri.Colonization.Actors
         }
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected override void OnValidate()
         {
+            base.OnValidate();
+            
             if(_particles == null || _particles.Length == 0)
                 _particles = GetComponentsInChildren<ParticleSystem>();
 

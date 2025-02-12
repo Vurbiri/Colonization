@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Attacks\AttackNotDefenseEffect.cs
+//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Attacks\AttackNotDefEffect.cs
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics

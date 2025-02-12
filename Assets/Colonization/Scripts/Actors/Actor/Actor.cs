@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.Actors
 
         protected ReactiveValue<bool> _canCancel = new(false);
 
-        protected Coroutine _onHitCoroutine, _deathCoroutine;
+        protected Coroutine _deathCoroutine;
         #endregion
 
         #region Propirties
@@ -77,7 +77,7 @@ namespace Vurbiri.Colonization.Actors
             return _diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
-        public void AddEffect(ReactiveEffect effect) => _effects.Add(effect);
+        public int AddEffect(ReactiveEffect effect) => _effects.AddEffect(effect);
         public int ApplyEffect(IPerk effect)
         {
             int delta = _abilities.AddPerk(effect);
@@ -143,21 +143,12 @@ namespace Vurbiri.Colonization.Actors
             }
         }
 
-        private bool Hit(bool isTargetReact)
+        private bool IsDead()
         {
-            if (_onHitCoroutine != null)
-                StopCoroutine(_onHitCoroutine);
+            if (_currentHP.Value > 0) return false;
 
-            if (_currentHP.Value <= 0)
-            {
-                _deathCoroutine = StartCoroutine(Death_Coroutine());
-                return true;
-            }
-
-            if (isTargetReact)
-                _onHitCoroutine = StartCoroutine(Hit_Coroutine());
-
-            return false;
+            _deathCoroutine = StartCoroutine(Death_Coroutine());
+            return true;
         }
 
         private IEnumerator Death_Coroutine()
@@ -165,12 +156,6 @@ namespace Vurbiri.Colonization.Actors
             Removing();
             yield return _skin.Death();
             Dispose();
-        }
-
-        private IEnumerator Hit_Coroutine()
-        {
-            yield return _skin.React();
-            _onHitCoroutine = null;
         }
 
         private void RemoveWallDefenceEffect()
@@ -193,7 +178,7 @@ namespace Vurbiri.Colonization.Actors
                 Debug.Log("Защита от стен - решить проблему");
                 _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetMaxDefense());
                 if (_wallDefenceEffect != null)
-                    _effects.Add(_wallDefenceEffect);
+                    _effects.AddEffect(_wallDefenceEffect);
 
                 Debug.Log("Выключить Collider");
                 return;

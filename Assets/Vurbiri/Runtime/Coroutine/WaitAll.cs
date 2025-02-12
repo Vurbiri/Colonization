@@ -24,7 +24,7 @@ namespace Vurbiri
         public WaitAll(MonoBehaviour monoBehaviour, params IEnumerator[] coroutines)
         {
             _monoBehaviour = monoBehaviour;
-            AddRange(coroutines);
+            Add(coroutines);
         }
 
         public WaitAll Add(IEnumerator coroutine)
@@ -32,7 +32,13 @@ namespace Vurbiri
             _monoBehaviour.StartCoroutine(AddCoroutine(coroutine));
             return this;
         }
-        public WaitAll AddRange(params IEnumerator[] coroutines)
+        public WaitAll Add(IEnumerator coroutine1, IEnumerator coroutine2)
+        {
+            _monoBehaviour.StartCoroutine(AddCoroutine(coroutine1));
+            _monoBehaviour.StartCoroutine(AddCoroutine(coroutine2));
+            return this;
+        }
+        public WaitAll Add(params IEnumerator[] coroutines)
         {
             foreach (var coroutine in coroutines)
                 _monoBehaviour.StartCoroutine(AddCoroutine(coroutine));

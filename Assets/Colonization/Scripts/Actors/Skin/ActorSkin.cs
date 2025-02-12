@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Actors\Skin\ActorSkin.cs
 using System;
+using System.Collections;
 using UnityEngine;
 using Vurbiri.FSM;
 
@@ -21,6 +22,8 @@ namespace Vurbiri.Colonization.Actors
         private const string T_REACT = "tReact";
         #endregion
 
+        private Transform _thisTransform;
+        
         private readonly StateMachine _stateMachine = new();
         private int _idBoolState = 0;
 
@@ -31,11 +34,14 @@ namespace Vurbiri.Colonization.Actors
 
         public event Action EventStart;
 
+        public Transform Transform => _thisTransform;
         public SkinnedMeshRenderer Mesh => _mesh;
         public Bounds Bounds => _bounds;
 
         private void Start()
         {
+            _thisTransform = transform;
+
             _stateMachine.SetDefaultState(CreateBoolState(B_IDLE));
 
             _moveState  = CreateBoolState(B_MOVE);
@@ -49,6 +55,7 @@ namespace Vurbiri.Colonization.Actors
             _skillStates = new SkillState[count];
             for (int i = 0; i < count; i++)
                 _skillStates[i] = new(B_SKILLS[i], this, _timings[i], i);
+            
             _timings = null;
 
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
@@ -67,19 +74,19 @@ namespace Vurbiri.Colonization.Actors
 
         public virtual void Run() => _stateMachine.SetState(_runState);
 
-        public virtual WaitActivate Skill(int index, Transform target)
+        public virtual WaitActivate Skill(int index, ActorSkin targetActorSkin)
         {
             SkillState skill = _skillStates[index];
-            skill.target = target;
+            skill.targetSkin = targetActorSkin;
             _stateMachine.SetState(skill);
             return skill.waitActivate;
         }
 
-        public WaitActivate React()
+        public bool IsTargetReact(int index) => _sfx.IsTargetReact(index);
+
+        public void React(CustomYieldInstruction delayReact)
         {
-            _stateMachine.Update();
-            _stateMachine.SetState(_reactState);
-            return _reactState.waitActivate;
+            StartCoroutine(React_Coroutine(delayReact));
         }
 
         public WaitActivate Death()
@@ -89,6 +96,14 @@ namespace Vurbiri.Colonization.Actors
         }
 
         private BoolSwitchState CreateBoolState(string nameParam) => new(nameParam, this, _idBoolState++);
+
+        private IEnumerator React_Coroutine(CustomYieldInstruction delayReact)
+        {
+            yield return delayReact;
+
+            _stateMachine.Update();
+            _stateMachine.SetState(_reactState);
+        }
 
         public void Dispose()
         {
@@ -105,5 +120,15 @@ namespace Vurbiri.Colonization.Actors
         }
 
         // UNITY_EDITOR смотри в ActorSkin_Editor
+
+        #region Nested: TimingSkillSettings
+        //*******************************************************
+        [System.Serializable]
+        protected class TimingSkillSettings
+        {
+            public float[] hitTimes;
+            public float remainingTime;
+        }
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
 //Assets\Colonization\Editor\Characteristic\Effects\EffectSettingsDrawer.cs
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
@@ -6,68 +7,108 @@ using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
 namespace VurbiriEditor.Colonization.Characteristics
 {
+    using static ActorAbilityId;
+
     [CustomPropertyDrawer(typeof(EffectHitSettings))]
     public class EffectHitSettingsDrawer : PropertyDrawerUtility
     {
         #region Consts
-        private const string NAME_ELEMENT = "EFFECT {0}";
-        private const string P_TARGET_ACTOR = "_targetActor", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
+        private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID ="Void Effect {0}";
+        private const string P_IS_SELF = "_isSelf", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
         private const string P_IS_REFLECT = "_isReflect", P_REFLECT = "_reflectValue";
-        private const string P_DESC_KEY = "_descKeyId", P_IS_DESC_BASE = "_isDescKeyBase";
+        private const string P_DESC_KEY = "_descKeyId", P_IS_DESC_BASE = "_isKeyBase";
         private const string P_TARGET_ABILITY = "_targetAbility", P_USED_ATTACK = "_useAttack", P_USED_DEFENSE = "_useDefense";
         private const string P_PARENT_TARGET = "_parentTarget";
         #endregion
 
-        private static readonly string[] NamesAbilitiesDur = { "Max HP", "HP Per Turn", "Attack", "Defense" };
-        private static readonly int[] ValuesModifiers = { ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn, ActorAbilityId.Attack, ActorAbilityId.Defense };
+        #region Values
+        private static readonly string[] NamesAbilitiesDuration = { ActorAbilityId.Names[MaxHP], ActorAbilityId.Names[HPPerTurn], ActorAbilityId.Names[Attack],
+                                                               ActorAbilityId.Names[Defense] };
+        private static readonly int[] ValuesAbilitiesDuration = { MaxHP, HPPerTurn, Attack, Defense };
+
+        private static readonly string[] NamesModifiersDuration = { "Flat", "Percent" };
+        private static readonly int[] ValuesModifiersDuration = { TypeModifierId.Addition, TypeModifierId.TotalPercent };
+
+        private static readonly string[] NamesAbilitiesInstant = { ActorAbilityId.Names[CurrentHP], ActorAbilityId.Names[CurrentAP], ActorAbilityId.Names[IsMove] };
+        private static readonly int[] ValuesAbilitiesInstant = { CurrentHP, CurrentAP, IsMove };
+
+        private static readonly string[] NamesModifiersCurrentHP = { "Percent of CurrentHP", "Flat", "Percent of MaxHP" };
+
+        private static readonly HashSet<int> NonReflect = new() { CurrentAP, IsMove };
+        #endregion
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
         {
             base.OnGUI(position, mainProperty, label);
 
-            GetTargetSkill(out bool isTargetSkillSelf, out bool isTargetSkillEnemy);
+            int id = IdFromLabel(label);
+            var (name, color) = GetSkin();
 
-            bool isUsedAttack = false, isTarget = false;
-
-            
-            label.text = string.Format(NAME_ELEMENT, IdFromLabel(label));
+            label.text = string.Format(name, id);
             EditorGUI.BeginProperty(_position, label, mainProperty);
 
-            if (Foldout(label))
+            Color defaultColor = GUI.color; GUI.color = color;
+            Foldout(label); GUI.color = defaultColor;
+
+            if (_mainProperty.isExpanded)
             {
+                GetTargetSkill(out bool isTargetSkillSelf, out bool isTargetSkillEnemy);
+                bool isNotDuration, isUsedAttack, isTarget = false;
+                int targetAbility = CurrentHP;
+
                 if (isTargetSkillSelf)
-                    SetLabelEnum(P_TARGET_ACTOR, TargetOfEffect.Self);
+                    SetBool(P_IS_SELF, true);
                 else
-                    isTarget = DrawEnum<TargetOfEffect>(P_TARGET_ACTOR) == TargetOfEffect.Target;
+                    isTarget = !DrawBool(P_IS_SELF);
 
                 bool isTargetEnemy = isTargetSkillEnemy & isTarget;
 
                 Space();
-                if ((DrawInt(P_DUR, 0, 3) <= 0) && DrawBool(P_USED_ATTACK, isTargetEnemy ? "Is Attack?" : "Is Heal?"))
+                if ((isNotDuration = DrawInt(P_DUR, 0, 3) <= 0) & id == 0)
                 {
-                    isUsedAttack = true;
-                    DrawUsedAttack(isTargetEnemy);
+                    if(isUsedAttack = DrawBool(P_USED_ATTACK, isTargetEnemy ? "Is Attack" : "Is Heal"))
+                        DrawUsedAttack(isTargetEnemy);
+                }
+                else
+                {
+                    SetBool(P_USED_ATTACK, isUsedAttack = false);
+                    SetBool(P_USED_DEFENSE, false);
                 }
 
                 if (!isUsedAttack)
-                    DrawValue(DrawId<ActorAbilityId>(P_TARGET_ABILITY));
+                    targetAbility = DrawDirectEffect(!isNotDuration);
 
-                if (isTargetEnemy)
+                if (isTargetEnemy && !NonReflect.Contains(targetAbility))
                     DrawReflect();
                 else
                     SetBool(P_IS_REFLECT, false);
 
-                
                 Space(2f);
+                DrawLabel("UI:");
+                EditorGUI.indentLevel++;
                 DrawIntPopup(P_DESC_KEY, DESK_EFFECTS_KEYS);
                 DrawBool(P_IS_DESC_BASE);
+                EditorGUI.indentLevel--;
                 Space(2f);
                 DrawLine();
 
             }
             EditorGUI.EndProperty();
 
-            #region Local: GetTargetSkill(..), DrawValue(..), DrawReflect()
+            #region Local: GetSkin(), GetTargetSkill(..), DrawUsedAttack(..), DrawUsedAttack(..), DrawDirectEffect(..), DrawDurationValue(..), DrawInstantValue(..), DrawRateValue(..), DrawMoveValue(..), DrawReflect(), SetDefaultValue()
+            //==============================================
+            (string name, Color color) GetSkin()
+            {
+                SerializedProperty property = GetProperty(P_VALUE);
+
+                if (property.intValue > 0)
+                    return (NAME_POSITIVE, new(0.5f, 1f, 0.3f, 1f));
+
+                if (property.intValue < 0)
+                    return (NAME_NEGATIVE, new(1f, 0.5f, 0.3f, 1f));
+
+                return (NAME_VOID, new(0.1f, 0.1f, 0.1f, 1f));
+            }
             //==============================================
             void GetTargetSkill(out bool isTargetSkillSelf, out bool isTargetSkillEnemy)
             {
@@ -81,6 +122,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 Space();
                 EditorGUI.indentLevel++;
 
+                SetInt(P_TARGET_ABILITY, CurrentHP);
                 SetInt(P_TYPE_OP, TypeModifierId.TotalPercent);
 
                 DrawRateValue("Value (%)", 5, 300, 100, isTargetEnemy ? -1 : 1);
@@ -93,29 +135,72 @@ namespace VurbiriEditor.Colonization.Characteristics
                 EditorGUI.indentLevel--;
                 Space(2f);
             }
-
             //==============================================
-            void DrawValue(int usedAbility)
+            int DrawDirectEffect(bool isDuration)
             {
+                SerializedProperty targetAbility = GetProperty(P_TARGET_ABILITY);
+                
                 Space();
-
-                EditorGUI.indentLevel++;
-
-                int typeModifierId = DrawId<TypeModifierId>(P_TYPE_OP);
-
-                if (typeModifierId == TypeModifierId.BasePercent)
-                    DrawInt(P_VALUE, "Value (%)", 5, 300, 100);
-                else if(typeModifierId == TypeModifierId.TotalPercent)
-                    DrawInt(P_VALUE, "Value (%)", 5, 300, 100);
-                else if (usedAbility <= ActorAbilityId.MAX_RATE_ABILITY)
-                    DrawRateValue("Value (%)", - 50, 50, 0);
+                if (isDuration)
+                {
+                    SetDefaultValue(targetAbility, ValuesAbilitiesDuration);
+                    return DrawDurationValue(DrawIntPopup(targetAbility, NamesAbilitiesDuration, ValuesAbilitiesDuration));
+                }
                 else
-                    DrawInt(P_VALUE, -5, 5, 0);
-
-                EditorGUI.indentLevel--;
+                {
+                    SetDefaultValue(targetAbility, ValuesAbilitiesInstant);
+                    return DrawInstantValue(DrawIntPopup(targetAbility, NamesAbilitiesInstant, ValuesAbilitiesInstant));
+                }
+                
             }
             //==============================================
-            void DrawRateValue(string displayName, int min, int max, int defaultValue, int rate = ActorAbilityId.RATE_ABILITY)
+            int DrawDurationValue(int usedAbility)
+            {
+                Space();
+                EditorGUI.indentLevel++;
+
+                int typeModifierId = DrawIntPopup(P_TYPE_OP, NamesModifiersDuration, ValuesModifiersDuration);
+
+                if (typeModifierId == TypeModifierId.TotalPercent)
+                    DrawInt(P_VALUE, "Value (%)", -300, 300, 100);
+                else 
+                    DrawRateValue("Value (%)", -50, 50);
+    
+                EditorGUI.indentLevel--;
+                Space(2f);
+
+                return usedAbility;
+            }
+            //==============================================
+            int DrawInstantValue(int usedAbility)
+            {
+                Space();
+                EditorGUI.indentLevel++;
+
+                if (usedAbility == CurrentHP)
+                {
+                    if (DrawIntPopup(P_TYPE_OP, NamesModifiersCurrentHP, ActorAbilityId.Values) == TypeModifierId.Addition)
+                        DrawRateValue("Value", -75, 75);
+                    else
+                        DrawInt(P_VALUE, "Value (%)", -100, 100);
+                }
+                else
+                {
+                    SetInt(P_TYPE_OP, TypeModifierId.Addition);
+
+                    if (usedAbility == CurrentAP)
+                        DrawInt(P_VALUE, "Value", -5, 5);
+                    else
+                        DrawMoveValue();
+                }
+
+                EditorGUI.indentLevel--;
+                Space(2f);
+
+                return usedAbility;
+            }
+            //==============================================
+            void DrawRateValue(string displayName, int min, int max, int defaultValue = 0, int rate = RATE_ABILITY)
             {
                 SerializedProperty property = GetProperty(P_VALUE);
                 int value = property.intValue / rate;  
@@ -129,15 +214,40 @@ namespace VurbiriEditor.Colonization.Characteristics
                 property.intValue = EditorGUI.IntSlider(_position, displayName, defaultValue, min, max) * rate;
             }
             //==============================================
+            void DrawMoveValue()
+            {
+                SerializedProperty property = GetProperty(P_VALUE);
+
+                _position.y += _height;
+                property.intValue = EditorGUI.Toggle(_position, "Is Move", property.intValue > 0) ? 1 : -1;
+            }
+            //==============================================
             void DrawReflect()
             {
                 if (DrawBool(P_IS_REFLECT))
                 {
+                    SerializedProperty property = GetProperty(P_REFLECT);
+                    int value = -property.intValue;
+                    int min = 10, max = 200;
+                    if (value < min | value > max)
+                        value = 100;
+
+                    _position.y += _height;
                     EditorGUI.indentLevel++;
-                    DrawInt(GetProperty(P_REFLECT), "value (%)", 10, 250, 100);
+                    property.intValue = -EditorGUI.IntSlider(_position, "value (%)", value, min, max);
                     EditorGUI.indentLevel--;
                     Space(2f);
                 }
+            }
+            //==============================================
+            void SetDefaultValue(SerializedProperty property, int[] values)
+            {
+                int value = property.intValue;
+                for (int i = 0; i < values.Length; i++)
+                    if (values[i] == value)
+                        return;
+
+                property.intValue = values[0];
             }
             #endregion
         }
@@ -150,26 +260,25 @@ namespace VurbiriEditor.Colonization.Characteristics
                 return 1f;
             
             float size = 12.6f;
-            bool isTargetEnemy = property.FindPropertyRelative(P_PARENT_TARGET).GetEnum<TargetOfSkill>() == TargetOfSkill.Enemy &
-                                 property.FindPropertyRelative(P_TARGET_ACTOR).GetEnum<TargetOfEffect>() == TargetOfEffect.Target;
-
-            if (property.FindPropertyRelative(P_DUR).intValue > 0)
-            {
-                size -= 1.2f;
-            }
-            else if (property.FindPropertyRelative(P_USED_ATTACK).boolValue)
-            {
+            int targetAbility = GetProperty(P_TARGET_ABILITY).intValue;
+            bool isTargetEnemy = !GetProperty(P_IS_SELF).boolValue && GetProperty(P_PARENT_TARGET).GetEnum<TargetOfSkill>() == TargetOfSkill.Enemy;
+            
+            if (!isTargetEnemy && GetProperty(P_USED_ATTACK).boolValue)
                 size -= 1f;
-                if (!isTargetEnemy)
-                    size -= 1f;
-            }
+            else if(targetAbility != CurrentHP && GetProperty(P_DUR).intValue == 0)
+                size -= 1f;
 
-            if(!isTargetEnemy)
-                size -= 2.2f;
-            else if (!property.FindPropertyRelative(P_IS_REFLECT).boolValue)
-                size -= 1.2f;
+            if (!isTargetEnemy || NonReflect.Contains(targetAbility))
+                size -= 2.1f;
+            else if (!GetProperty(P_IS_REFLECT).boolValue)
+                size -= 1.1f;
 
             return size;
+
+            #region Local: GetProperty(..)
+            //==============================================
+            SerializedProperty GetProperty(string name) => property.FindPropertyRelative(name);
+            #endregion
         }
     }
 }

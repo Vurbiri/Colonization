@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Actors\SFX\Hit\HitSoundSFX.cs
 using UnityEngine;
+using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -14,7 +15,11 @@ namespace Vurbiri.Colonization.Characteristics
             _audioSource = audioSource;
         }
 
-        public void Hit(Transform target) => _audioSource.PlayOneShot(_clip);
+        public CustomYieldInstruction Hit(ActorSkin target)
+        {
+            _audioSource.PlayOneShot(_clip);
+            return null;
+        }
 
     }
 }

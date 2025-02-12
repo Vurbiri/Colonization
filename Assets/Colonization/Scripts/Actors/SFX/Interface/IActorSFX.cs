@@ -5,7 +5,8 @@ namespace Vurbiri.Colonization
 {
     public interface IActorSFX
 	{
-		public Transform Container { get; }
-		public AudioSource AudioSource { get; }
+		public Transform Main { get; }
+        public Transform RightHand { get; }
+        public AudioSource AudioSource { get; }
 	}
 }

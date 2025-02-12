@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Abstract\AHealEffect.cs
+//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Heals\Abstract\AHealEffect.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class AHealEffect : AEffect

@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [SerializeField] private bool _useAttack;
         [SerializeField] private bool _useDefense;
-        [SerializeField] private TargetOfEffect _targetActor;
+        [SerializeField] private bool _isSelf;
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
         [SerializeField] private bool _isReflect;
@@ -18,44 +18,43 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private int _value;
         [SerializeField] private int _duration;
         [SerializeField] private int _descKeyId;
-        [SerializeField] private bool _isDescKeyBase;
+        [SerializeField] private bool _isKeyBase; // _useAttack
+
+#if UNITY_EDITOR
         [SerializeField] private TargetOfSkill _parentTarget;
+#endif
 
         public AEffect CreateEffect(EffectCode _code)
         {
-            bool isSelf = _targetActor == TargetOfEffect.Self;
-            //bool isNegative = !isSelf & _parentTarget == TargetOfSkill.Enemy;
-            bool isNegative = _value < 0;
-
             if (_duration > 0)
             {
-                if (isSelf)
-                    return new TemporarySelfEffect (_targetAbility, isNegative, _typeModifier, _value, _duration, _code);
+                if (_isSelf)
+                    return new SelfTemporaryEffect (_targetAbility, _typeModifier, _value, _duration, _code);
                 if (_isReflect)
-                    return new TemporaryReflectEffect(_targetAbility, isNegative, _typeModifier, _value, _duration, _code);
+                    return new ReflectTemporaryEffect(_targetAbility, _typeModifier, _value, _reflectValue, _duration, _code);
 
-                return new TemporaryTargetEffect(_targetAbility, isNegative, _typeModifier, _value, _duration, _code);
+                return new TargetTemporaryEffect(_targetAbility, _typeModifier, _value, _duration, _code);
             }
 
             if (!_useAttack)
             {
-                if (isSelf)
-                    return new PermanentSelfEffect(_targetAbility, isNegative, _typeModifier, _value);
+                if (_isSelf)
+                    return new SelfEffect(_targetAbility, _typeModifier, _value);
                 if (_isReflect)
-                    return new PermanentReflectEffect(_targetAbility, isNegative, _typeModifier, _value);
+                    return new ReflectEffect(_targetAbility, _typeModifier, _value);
 
-                return new PermanentTargetEffect(_targetAbility, isNegative, _typeModifier, _value);
+                return new TargetEffect(_targetAbility, _typeModifier, _value);
             }
 
             if (!_useDefense)
             {
-                if (isNegative)
-                    return _isReflect ? new AttackNotDefReflectEffect(_value) : new AttackNotDefEffect(_value);
+                if (_value < 0)
+                    return _isReflect ? new ReflectAttackNotDefEffect(_value, _reflectValue) : new AttackNotDefEffect(_value);
                 
-                return isSelf? new SelfHealEffect(_value) : new TargetHealEffect(_value);
+                return _isSelf ? new SelfHealEffect(_value) : new TargetHealEffect(_value);
             }
 
-            return _isReflect ? new AttackReflectEffect(_value) : new AttackEffect(_value);
+            return _isReflect ? new ReflectAttackEffect(_value, _reflectValue) : new AttackEffect(_value);
         }
 
         public AEffectsUI CreateEffectUI(SettingsTextColor hintTextColor)
@@ -75,10 +74,10 @@ namespace Vurbiri.Colonization.Characteristics
 
         private (int, string) GetSettingsEffectUI(SettingsTextColor hintTextColor)
         {
-            if (_isDescKeyBase)
+            if (_isKeyBase)
                 return (_value, hintTextColor.HexColorHintBase);
 
-            if (_targetActor == TargetOfEffect.Target & _parentTarget == TargetOfSkill.Enemy)
+            if (!_isSelf & _parentTarget == TargetOfSkill.Enemy)
                 return (-_value, hintTextColor.HexColorNegative);
 
             return (_value, hintTextColor.HexColorPositive);

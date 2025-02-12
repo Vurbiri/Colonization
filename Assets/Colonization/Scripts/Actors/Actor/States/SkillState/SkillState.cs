@@ -14,10 +14,9 @@ namespace Vurbiri.Colonization.Actors
             private readonly float _speedRun;
             private readonly float _selfRange;
 
-            public SkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, bool isTargetReact, float range, float speedRun, int cost, int id) : 
-                base(parent, targetActor, effects, isTargetReact, cost, id)
+            public SkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, float range, float speedRun, int cost, int id) : 
+                base(parent, targetActor, effects, cost, id)
             {
-                
                 _speedRun = speedRun;
                 _selfRange = range + _actor._extentsZ;
             }
