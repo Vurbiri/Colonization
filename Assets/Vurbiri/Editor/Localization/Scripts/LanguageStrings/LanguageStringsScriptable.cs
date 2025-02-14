@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using static Vurbiri.Storage;
 
-namespace Vurbiri.Localization.Editors
+namespace Vurbiri.Localization.Editor
 {
     using static CONST;
 
@@ -21,20 +21,12 @@ namespace Vurbiri.Localization.Editors
         private LanguageType[] _languages;
         private string[] _names;
         private int _count;
-        private string _folderPath, _folder, _languageFile;
 
         public string LoadFile => _loadFile;
 
         public void Init()
         {
-            using (SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings())
-            {
-                _folderPath = settings.FolderPath;
-                _folder = settings.Folder;
-                _languageFile = settings.LanguageFile;
-            }
-
-            LoadObjectFromResourceJson(Path.Combine(_folder, _languageFile), out _languages);
+            LoadObjectFromResourceJson(CONST_L.FILE_LANG, out _languages);
             _count = _languages.Length;
             _names = new string[_count];
             for (int i = 0; i < _count; i++)
@@ -81,9 +73,10 @@ namespace Vurbiri.Localization.Editors
             int idMaxLength = -1, maxLength = -1;
             for (int i = 0; i < _count; i++)
             {
-                path = Application.dataPath.Concat(Path.Combine(_folderPath, _languages[i].Folder, _file.ToString()), JSON_EXP);
+                path = Path.Combine(CONST_L.FOLDER_PATH, _languages[i].Folder, _file.ToString().Concat(JSON_EXP));
+
                 if (File.Exists(path))
-                    LoadObjectFromResourceJson(Path.Combine(_folder, _languages[i].Folder, _file.ToString()), out strings[i]);
+                    LoadObjectFromResourceJson(Path.Combine(_languages[i].Folder, _file.ToString()), out strings[i]);
                 else
                     strings[i] = new();
 
@@ -139,9 +132,10 @@ namespace Vurbiri.Localization.Editors
             string path;
             for (int i = 0; i < _count; i++)
             {
-                path = Application.dataPath.Concat(Path.Combine(_folderPath, _languages[i].Folder, _file.ToString()), JSON_EXP);
-                if (!File.Exists(path))
-                    new FileInfo(path).Directory.Create();
+                path = Path.Combine(CONST_L.FOLDER_PATH, _languages[i].Folder, _file.ToString().Concat(JSON_EXP));
+                FileInfo fileInfo = new(path);
+                if (!fileInfo.Exists)
+                    fileInfo.Directory.Create();
                 
                 File.WriteAllText(path, JsonConvert.SerializeObject(strings[i]));
             }

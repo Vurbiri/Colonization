@@ -29,7 +29,9 @@ namespace Vurbiri.Colonization
 		{
 			Message.Log("Start Init Project");
 
-			if (!_servicesContainer.AddInstance(new Language()).IsValid)
+            using SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings();
+
+            if (!_servicesContainer.AddInstance(new Language(settings?.LoadFiles)).IsValid)
 				Message.Error("Error loading Localization!");
 
             _dataContainer.AddInstance(data.settingsColorScriptable.Colors);

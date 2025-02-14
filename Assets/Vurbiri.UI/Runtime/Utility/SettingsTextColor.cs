@@ -29,12 +29,15 @@ namespace Vurbiri.UI
 
         public SettingsTextColor Init()
         {
-            _hexColorHintBase = string.Format(TAG_COLOR_FORMAT_LITE, _colorTextBase.ToHex());
-            _hexColorTextBase = string.Format(TAG_COLOR_FORMAT_LITE, _colorHintBase.ToHex());
+            _hexColorTextBase = string.Format(TAG_COLOR_FORMAT_LITE, _colorTextBase.ToHex());
+            _hexColorHintBase = string.Format(TAG_COLOR_FORMAT_LITE, _colorHintBase.ToHex());
             _hexColorPositive = string.Format(TAG_COLOR_FORMAT_LITE, _colorPositive.ToHex());
             _hexColorNegative = string.Format(TAG_COLOR_FORMAT_LITE, _colorNegative.ToHex());
 
             return this;
         }
+
+        public Color GetColor(bool isPositive) => isPositive ? _colorPositive : _colorNegative;
+        public string GetHexColor(bool isPositive) => isPositive ? _hexColorPositive : _hexColorNegative;
     }
 }

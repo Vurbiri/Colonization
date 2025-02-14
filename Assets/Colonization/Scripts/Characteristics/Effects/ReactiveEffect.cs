@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Characteristics
         public Id<TypeModifierId> TypeModifier => _typeModifier;
         public int Value => _value;
         public int Duration => _duration;
-        public bool IsNegative => _value < 0;
+        public bool IsPositive => _value > 0;
 
         public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration)
         {

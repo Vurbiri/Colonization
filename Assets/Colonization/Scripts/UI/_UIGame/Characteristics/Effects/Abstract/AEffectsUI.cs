@@ -6,11 +6,12 @@ namespace Vurbiri.Colonization.UI
 {
     public abstract class AEffectsUI
 	{
+       
         protected readonly string _descKey;
-        protected readonly int _value;
+        protected readonly string _value;
         protected readonly string _hexColor;
 
-        public AEffectsUI(string key, int value, string hexColor)
+        public AEffectsUI(string key, string value, string hexColor)
         {
             _descKey = key;
             _value = value;

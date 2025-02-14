@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
+using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
 namespace VurbiriEditor.Colonization.Characteristics
 {
@@ -12,10 +13,8 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string NAME_ELEMENT = "Skill {0}";
         private const string P_CLIP = "clipSettings", P_MOVE = "isMove", P_REACT = "isTargetReact", P_UI = "ui";
         private const string P_RANGE = "range", P_TARGET = "target", P_COST = "cost", P_HITS = "effectsHits", P_SFX = "SFXHits", P_EFFECTS = "_effects";
-        private const string P_SPRITE = "_sprite", P_KEY_NAME = "_nameKey", P_COST_UI = "_cost";
+        private const string P_SPRITE = "_sprite", P_KEY_NAME = "_idNameKey", P_COST_UI = "_cost";
         private const string P_CHILD_TARGET = "_parentTarget";
-
-        private readonly string[] KEYS_NAME_SKILLS = { "Attack", "MagicAttack", "Sweep", "Combo", "Heal" };
 
         public override void OnGUI(Rect mainPosition, SerializedProperty mainProperty, GUIContent label)
         {
@@ -67,7 +66,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     Space(2f);
                     DrawLabel("UI:");
                     EditorGUI.indentLevel++;
-                    DrawStringPopupRelative(uiProperty, P_KEY_NAME, KEYS_NAME_SKILLS);
+                    DrawIntPopupRelative(uiProperty, P_KEY_NAME, KEYS_NAME_SKILLS);
                     DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
                     EditorGUI.indentLevel--;
 

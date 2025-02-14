@@ -1,13 +1,13 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Attacks\ReflectAttackNotDefEffect.cs
+//Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Heals\ReflectHealEffect.cs
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class ReflectAttackNotDefEffect : AttackNotDefEffect
+    public class ReflectHealEffect : TargetHealEffect
     {
         private readonly AbilityModifierPercent _reflectMod;
 
-        public ReflectAttackNotDefEffect(int value, int reflectValue) : base(value) => _reflectMod = new(reflectValue);
+        public ReflectHealEffect(int value, int reflectValue) : base(value)  => _reflectMod = new(reflectValue);
 
         public override int Apply(Actor self, Actor target)
         {

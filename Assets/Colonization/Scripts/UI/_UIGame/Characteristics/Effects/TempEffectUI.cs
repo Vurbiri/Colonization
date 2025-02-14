@@ -6,11 +6,11 @@ namespace Vurbiri.Colonization.UI
 {
     public class TempEffectUI : AEffectsUI
     {
-        private readonly int _duration;
+        private readonly string _duration;
         
-        public TempEffectUI(string descKey, int value, int duration, string hexColor) : base(descKey, value, hexColor)
+        public TempEffectUI(string descKey, string value, int duration, string hexColor) : base(descKey, value, hexColor)
         {
-            _duration = duration;
+            _duration = duration.ToString();
         }
 
         public override void GetText(Language language, StringBuilder sb)

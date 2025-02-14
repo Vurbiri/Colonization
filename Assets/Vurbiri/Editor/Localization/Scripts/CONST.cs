@@ -1,11 +1,11 @@
 //Assets\Vurbiri\Editor\Localization\Scripts\CONST.cs
-namespace Vurbiri.Localization.Editors
+namespace Vurbiri.Localization.Editor
 {
     using GLOBAL_CONST = Vurbiri.Localization.CONST_L;
 
-    public class CONST
+    internal class CONST
     {
-        public const string FOLDER = GLOBAL_CONST.FOLDER;
+
         public const string FILE_LANG = GLOBAL_CONST.FILE_LANG;
 
         public const string JSON_EXP = ".json";
@@ -14,7 +14,7 @@ namespace Vurbiri.Localization.Editors
         public const string ASSET_FOLDER = "Assets";
         public const string RESOURCES_PATH = "Assets/Vurbiri/Scripts/Editor/Localization/Resources/";
 
-        public const string LANGS = "Languages";
+        public const string LANGS = "LanguageTypes";
 
         public const string SETTINGS_PATH = GLOBAL_CONST.RESOURCES_PATH;
         public const string SETTINGS_NAME = "LocalizationSettings";

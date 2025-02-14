@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.Actors
             _durationTMP.sortingOrder = _orderLevel + orderLevel;
 
             _sprite.sprite = sprites[effect.TargetAbility];
-            _sprite.color = effect.IsNegative ? colors.ColorNegative : colors.ColorPositive;
+            _sprite.color = colors.GetColor(effect.IsPositive);
 
             Index = effect.Index;
             Duration = effect.Duration;

@@ -34,16 +34,18 @@ namespace Vurbiri.Localization
             _spriteName = spriteName;
         }
 
-        public bool LoadSprite(string mainFolder)
+        public bool LoadSprite()
         {
+            string path = Path.Combine(_folder, _spriteName);
+
             try 
             {
-                _sprite = Resources.Load<Sprite>(Path.Combine(mainFolder, _folder, _spriteName));
+                _sprite = Resources.Load<Sprite>(path);
                 return true;
             }
             catch (Exception ex)
             {
-                Message.Error($"--- ������ �������� �������{_spriteName} ��� ����������� {_name} / {_folder}  ---\n".Concat(ex.Message));
+                Message.Error($"--- Ошибка загрузки спрайта {_spriteName} по пути {path}  ---\n".Concat(ex.Message));
                 return false;
             }
         }

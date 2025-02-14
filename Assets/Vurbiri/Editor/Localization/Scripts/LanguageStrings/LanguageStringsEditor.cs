@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using VurbiriEditor;
 
-namespace Vurbiri.Localization.Editors
+namespace Vurbiri.Localization.Editor
 {
     [CustomEditor(typeof(LanguageStringsScriptable), true)]
     internal class LanguageStringsEditor : AEditorGetVE<LanguageStringsEditor>
@@ -23,9 +23,9 @@ namespace Vurbiri.Localization.Editors
             list.headerTitle = strings.LoadFile;
             list.itemsAdded += strings.OnAdded;
 
-            root.Q<Button>("Load").clicked += () => list.headerTitle = strings.Load();
+            root.Q<Button>("Load").clicked += () => { list.headerTitle = strings.Load(); serializedObject.ApplyModifiedProperties(); };
             root.Q<Button>("Save").clicked += strings.Save;
-            root.Q<Button>("Unload").clicked += () => { list.headerTitle = string.Empty; strings.Reset(); };
+            root.Q<Button>("Unload").clicked += () => { list.headerTitle = string.Empty; strings.Reset(); serializedObject.ApplyModifiedProperties(); };
 
             return root;
         }

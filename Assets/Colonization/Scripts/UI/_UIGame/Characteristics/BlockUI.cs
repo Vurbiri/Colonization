@@ -16,7 +16,8 @@ namespace Vurbiri.Colonization.UI
         private const int SIZE = 64;
 
         private readonly IUnsubscriber _unsubscriber;
-        private readonly int _cost, _value;
+        private readonly int _cost;
+        private readonly string _value;
         private readonly string _hexColorPlus, _hexColorMinus;
         private string _textMain, _textAP;
         private int _capacity;
@@ -26,7 +27,7 @@ namespace Vurbiri.Colonization.UI
         public BlockUI(int cost, int value)
         {
             _cost = cost;
-            _value = value;
+            _value = value > 0 ? $"+{value}" : value.ToString();
 
             var hintTextColor = SceneData.Get<SettingsTextColor>();
             _hexColorPlus = hintTextColor.HexColorPositive;

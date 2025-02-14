@@ -1,7 +1,7 @@
 //Assets\Vurbiri\Editor\Localization\Scripts\Settings\ProjectSettingsProvider.cs
 using UnityEditor;
 
-namespace Vurbiri.Localization.Editors
+namespace Vurbiri.Localization.Editor
 {
     using static CONST;
 
@@ -10,11 +10,14 @@ namespace Vurbiri.Localization.Editors
         [SettingsProvider]
         public static SettingsProvider CreateProjectSettingsProvider()
         {
+            ProjectSettingsScriptable settings = ProjectSettingsScriptable.GetOrCreateSelf();
+            
             var provider = new SettingsProvider(PROJECT_MENU, SettingsScope.Project)
             {
                 label = PROJECT_LABEL,
                 activateHandler = (searchContext, rootElement)
-                                => rootElement.Add(ProjectSettingsEditor.CreateCachedEditorAndBind(ProjectSettingsScriptable.GetOrCreateSelf()))
+                                => rootElement.Add(ProjectSettingsEditor.CreateCachedEditorAndBind(settings)),
+                 deactivateHandler = settings.Dispose
             };
 
             return provider;

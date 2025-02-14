@@ -1,7 +1,9 @@
 //Assets\Colonization\Editor\Characteristic\Effects\EffectSettingsDrawer.cs
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
@@ -16,7 +18,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID ="Void Effect {0}";
         private const string P_IS_SELF = "_isSelf", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
         private const string P_IS_REFLECT = "_isReflect", P_REFLECT = "_reflectValue";
-        private const string P_DESC_KEY = "_descKeyId", P_IS_DESC_BASE = "_isKeyBase";
+        private const string P_DESC_KEY = "_descKeyId";
         private const string P_TARGET_ABILITY = "_targetAbility", P_USED_ATTACK = "_useAttack", P_USED_DEFENSE = "_useDefense";
         private const string P_PARENT_TARGET = "_parentTarget";
         #endregion
@@ -36,6 +38,8 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         private static readonly HashSet<int> NonReflect = new() { CurrentAP, IsMove };
         #endregion
+
+        private static readonly Color Positive = new(0.5f, 1f, 0.3f, 1f), Negative = new(1f, 0.5f, 0.3f, 1f);
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
         {
@@ -78,18 +82,13 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if (!isUsedAttack)
                     targetAbility = DrawDirectEffect(!isNotDuration);
 
-                if (isTargetEnemy && !NonReflect.Contains(targetAbility))
+                if (isTarget & isUsedAttack)
                     DrawReflect();
                 else
                     SetBool(P_IS_REFLECT, false);
 
-                Space(2f);
-                DrawLabel("UI:");
-                EditorGUI.indentLevel++;
-                DrawIntPopup(P_DESC_KEY, DESK_EFFECTS_KEYS);
-                DrawBool(P_IS_DESC_BASE);
-                EditorGUI.indentLevel--;
-                Space(2f);
+                DrawLine();
+                SetAndDrawDesc(isUsedAttack, targetAbility);
                 DrawLine();
 
             }
@@ -102,10 +101,10 @@ namespace VurbiriEditor.Colonization.Characteristics
                 SerializedProperty property = GetProperty(P_VALUE);
 
                 if (property.intValue > 0)
-                    return (NAME_POSITIVE, new(0.5f, 1f, 0.3f, 1f));
+                    return (NAME_POSITIVE, Positive);
 
                 if (property.intValue < 0)
-                    return (NAME_NEGATIVE, new(1f, 0.5f, 0.3f, 1f));
+                    return (NAME_NEGATIVE, Negative);
 
                 return (NAME_VOID, new(0.1f, 0.1f, 0.1f, 1f));
             }
@@ -162,9 +161,9 @@ namespace VurbiriEditor.Colonization.Characteristics
                 int typeModifierId = DrawIntPopup(P_TYPE_OP, NamesModifiersDuration, ValuesModifiersDuration);
 
                 if (typeModifierId == TypeModifierId.TotalPercent)
-                    DrawInt(P_VALUE, "Value (%)", -300, 300, 100);
+                    DrawInt(P_VALUE, "Value (%)", -200, 200, 100);
                 else 
-                    DrawRateValue("Value (%)", -50, 50);
+                    DrawRateValue("Value", -50, 50);
     
                 EditorGUI.indentLevel--;
                 Space(2f);
@@ -249,6 +248,86 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 property.intValue = values[0];
             }
+            //==============================================
+            void SetAndDrawDesc(bool isUsedAttack, int targetAbility)
+            {
+                _position.x += 35;
+
+                Color defaultColor = GUI.contentColor;
+                int value = GetInt(P_VALUE);
+                bool isPositive = value > 0;
+                int duration = GetInt(P_DUR);
+                int mod = GetInt(P_TYPE_OP);
+
+                string key;
+                string strValue = ValueToString(value, targetAbility, mod, isUsedAttack);
+
+                if (isUsedAttack)
+                {
+                    if(isPositive)
+                    {  key = "Healing"; GUI.contentColor = Positive; }
+                    else
+                    {  key = GetBool(P_USED_DEFENSE) ? "Damage" : "DamageNotDef"; }
+
+                    DrawLabel(Localization.GetTextFormat(FILE, key, strValue).Delete("<b>", "</b>").Replace("\n", " "));
+                }
+                else
+                {
+                    GUI.contentColor = isPositive ? Positive : Negative;
+
+                    if (duration > 0)
+                    {
+                        key = ActorAbilityId.Names[targetAbility].Concat("Temp");
+                        DrawLabel(Localization.GetTextFormat(FILE, key, strValue, duration).Delete("<b>", "</b>"));
+                    }
+                    else 
+                    {
+                        key = ActorAbilityId.Names[targetAbility].Concat("Perm");
+                        if (mod == TypeModifierId.TotalPercent & targetAbility == CurrentHP) 
+                            key = "CurrentHPOfMaxPerm";
+
+                        DrawLabel(Localization.GetTextFormat(FILE, key, strValue).Delete("<b>", "</b>"));
+                    }
+                }
+
+                
+
+                SerializedProperty property = GetProperty(P_DESC_KEY);
+                property.intValue = Array.IndexOf(DESK_EFFECTS_KEYS, key);
+
+                if (property.intValue < 0)
+                    Debug.LogWarning($"Не найден ключ [{key}]");
+
+                if(GetBool(P_IS_REFLECT))
+                {
+                    if (isPositive)
+                    { key = REFLECT_MINUS; GUI.contentColor = Negative; }
+                    else
+                    { key = REFLECT_PLUS; GUI.contentColor = Positive; }
+                    DrawLabel(Localization.GetTextFormat(FILE, key, -GetInt(P_REFLECT)).Delete("<b>", "</b>"));
+                }
+
+                GUI.contentColor = defaultColor;
+                _position.x -= 35;
+            }
+            //==============================================
+            string ValueToString(int value, int targetAbility, int typeModifier, bool isUsedAttack)
+            {
+                bool isPositive = value > 0;
+
+                if (targetAbility == IsMove)
+                    return isPositive ? PLUS : MINUS;
+                if (isUsedAttack)
+                    return isPositive ? value.ToString() : (-value).ToString();
+
+                bool isPresent = !(typeModifier == TypeModifierId.Addition);
+                string present = isPresent ? PRESENT : string.Empty;
+
+                if (!isPresent & targetAbility <= MAX_RATE_ABILITY)
+                    value /= RATE_ABILITY;
+
+                return isPositive ? $"{PLUS}{value}{present}" : $"{value}{present}";
+            }
             #endregion
         }
 
@@ -259,17 +338,19 @@ namespace VurbiriEditor.Colonization.Characteristics
             if (!property.isExpanded)
                 return 1f;
             
-            float size = 12.6f;
+            float size = 11.7f;
             int targetAbility = GetProperty(P_TARGET_ABILITY).intValue;
-            bool isTargetEnemy = !GetProperty(P_IS_SELF).boolValue && GetProperty(P_PARENT_TARGET).GetEnum<TargetOfSkill>() == TargetOfSkill.Enemy;
-            
-            if (!isTargetEnemy && GetProperty(P_USED_ATTACK).boolValue)
+            bool isTarget = !GetProperty(P_IS_SELF).boolValue;
+            bool isTargetEnemy = isTarget && GetProperty(P_PARENT_TARGET).GetEnum<TargetOfSkill>() == TargetOfSkill.Enemy;
+            bool isUsedAttack = GetProperty(P_USED_ATTACK).boolValue;
+
+            if (!isTargetEnemy & isUsedAttack)
                 size -= 1f;
             else if(targetAbility != CurrentHP && GetProperty(P_DUR).intValue == 0)
                 size -= 1f;
 
-            if (!isTargetEnemy || NonReflect.Contains(targetAbility))
-                size -= 2.1f;
+            if (!isTarget | !isUsedAttack)
+                size -= 3.1f;
             else if (!GetProperty(P_IS_REFLECT).boolValue)
                 size -= 1.1f;
 

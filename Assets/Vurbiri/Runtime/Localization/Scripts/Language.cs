@@ -11,7 +11,6 @@ namespace Vurbiri.Localization
     public class Language : IReactive<Language>
     {
         private readonly bool _isValid;
-        private readonly string _folder;
         private readonly EnumArray<Files, bool> _loadFiles;
         private readonly string[] _nameFiles = Enum<Files>.Names;
         private readonly Dictionary<string, string>[] _text;
@@ -26,21 +25,20 @@ namespace Vurbiri.Localization
         public IEnumerable<LanguageType> Languages => _languages;
         public int CurrentId => _currentLanguage == null ? -1 : _currentLanguage.Id;
 
-        public Language()
+        public Language(IReadOnlyList<bool> loadFiles)
         {
             _isValid = false;
-            
-            using SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings();
-            if (settings == null) return;
 
-            _folder = settings.Folder;
-            _loadFiles = new(settings.LoadFiles);
+            if (loadFiles == null) 
+                return;
 
-            if (!LoadObjectFromResourceJson(Path.Combine(_folder, settings.LanguageFile), out _languages))
+            _loadFiles = new(loadFiles);
+
+            if (!LoadObjectFromResourceJson(CONST_L.FILE_LANG, out _languages))
                 return;
 
             foreach (var language in _languages)
-                if (!language.LoadSprite(_folder))
+                if (!language.LoadSprite())
                     return;
 
             _countFiles = _nameFiles.Length;
@@ -159,7 +157,7 @@ namespace Vurbiri.Localization
 
         private bool LoadingFile(int idFile, LanguageType type)
         {
-            if (!LoadObjectFromResourceJson(Path.Combine(_folder, type.Folder, _nameFiles[idFile]), out Dictionary<string, string> load))
+            if (!LoadObjectFromResourceJson(Path.Combine(type.Folder, _nameFiles[idFile]), out Dictionary<string, string> load))
                 return false;
 
             var current = _text[idFile];
@@ -175,7 +173,7 @@ namespace Vurbiri.Localization
             return true;
         }
 
-        #region Nested: StringComparer
+    #region Nested: StringComparer
         //***********************************************************
         public class StringComparer : IEqualityComparer<string>
         {

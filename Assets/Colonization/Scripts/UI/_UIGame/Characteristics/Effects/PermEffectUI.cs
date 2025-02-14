@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.UI
 {
     public class PermEffectUI : AEffectsUI
     {
-        public PermEffectUI(string descKey, int value, string hexColor) : base(descKey, value, hexColor)
+        public PermEffectUI(string descKey, string value, string hexColor) : base(descKey, value, hexColor)
         {
         }
 

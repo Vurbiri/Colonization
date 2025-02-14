@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 using VurbiriEditor;
 using static Vurbiri.Storage;
 
-namespace Vurbiri.Localization.Editors
+namespace Vurbiri.Localization.Editor
 {
     using static CONST;
 

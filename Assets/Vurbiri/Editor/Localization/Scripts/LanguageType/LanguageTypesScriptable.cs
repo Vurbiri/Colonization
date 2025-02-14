@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using static Vurbiri.Storage;
 
-namespace Vurbiri.Localization.Editors
+namespace Vurbiri.Localization.Editor
 {
     using static CONST;
 
@@ -18,8 +18,7 @@ namespace Vurbiri.Localization.Editors
 
         public void Load()
         {
-            using SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings();
-            if (settings != null && LoadObjectFromResourceJson(Path.Combine(settings.Folder, settings.LanguageFile), out _languageTypes))
+            if (LoadObjectFromResourceJson(CONST_L.FILE_LANG, out _languageTypes))
                 _languageTypes.Sort();
         }
 
@@ -44,7 +43,7 @@ namespace Vurbiri.Localization.Editors
         public void EmptyMethod()
         {
             if (_auto)
-                Debug.Log("����� � ������� �� ��������");
+                Debug.Log("Чтобы не ругался Editor");
         }
     }
 }

@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="flex-grow: 1; border-left-color: rgba(0, 0, 101, 0); border-right-color: rgba(0, 0, 101, 0); border-top-color: rgba(0, 0, 101, 0); border-bottom-color: rgba(0, 0, 101, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; -unity-background-scale-mode: stretch-to-fill; background-color: rgba(0, 0, 0, 0); align-self: auto; justify-content: center; align-items: center; height: 40px; min-height: 40px; max-height: 40px;">
+        <ui:TextField picking-mode="Ignore" label="File Path" binding-path="_filePath" name="FilePath" readonly="true" style="min-width: 60%;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-left-color: rgb(88, 88, 88); border-right-color: rgb(88, 88, 88); border-top-color: rgb(88, 88, 88); border-bottom-color: rgb(88, 88, 88); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; align-self: auto; min-width: 100%; background-color: rgb(66, 66, 66);">
+        <uie:PropertyField binding-path="_startLoadFiles" style="margin-left: 12px;" />
+    </ui:VisualElement>
+</ui:UXML>

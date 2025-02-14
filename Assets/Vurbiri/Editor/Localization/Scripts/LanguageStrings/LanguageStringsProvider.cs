@@ -1,7 +1,7 @@
 //Assets\Vurbiri\Editor\Localization\Scripts\LanguageStrings\LanguageStringsProvider.cs
 using UnityEditor;
 
-namespace Vurbiri.Localization.Editors
+namespace Vurbiri.Localization.Editor
 {
     using static CONST;
 

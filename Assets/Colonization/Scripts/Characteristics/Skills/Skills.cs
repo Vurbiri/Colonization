@@ -69,23 +69,23 @@ namespace Vurbiri.Colonization.Characteristics
 
             SkillSettings skillSettings; EffectsHitSettings effectsHitSettings;
             EffectsHit[] effectsHits; 
-            List<AEffectsUI> effectsSkillUI;
+            List<AEffectsUI>[] effectsSkillUI;
             for (int i = 0; i < countSkills; i++)
             {
                 skillSettings = _skillsSettings[i];
 
                 int countHits = skillSettings.effectsHits.Length;
                 effectsHits = new EffectsHit[countHits];
-                effectsSkillUI = new(countHits << 1);
+                effectsSkillUI = new List<AEffectsUI>[]{ new(countHits), new(countHits) };
 
                 for (int j = 0, u = 0; j < countHits; j++)
                 {
                     effectsHitSettings = skillSettings.effectsHits[j];
                     effectsHits[j] = effectsHitSettings.CreateEffectsHit(parent, i, u);
-                    effectsSkillUI.AddRange(effectsHitSettings.CreateEffectsHitUI(hintTextColor));
+                    effectsHitSettings.CreateEffectsHitUI(hintTextColor, effectsSkillUI[0], effectsSkillUI[1]);
                     u += effectsHitSettings.Count;
                 }
-                skillSettings.ui.Init(language, hintTextColor, effectsSkillUI.ToArray());
+                skillSettings.ui.Init(language, hintTextColor, effectsSkillUI[0].ToArray(), effectsSkillUI[1].ToArray());
 
                 _skillsUI[i] = skillSettings.ui;
                 _effectsHits[i] = effectsHits;

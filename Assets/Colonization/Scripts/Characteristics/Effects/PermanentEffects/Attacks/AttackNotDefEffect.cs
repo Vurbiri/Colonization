@@ -7,10 +7,7 @@ namespace Vurbiri.Colonization.Characteristics
     {
         private readonly AbilityModifierPercent _usedModifier;
 
-        public AttackNotDefEffect(int value) : base(ActorAbilityId.CurrentHP, TypeModifierId.Addition)
-        {
-            _usedModifier = new(value);
-        }
+        public AttackNotDefEffect(int value) : base(ActorAbilityId.CurrentHP, TypeModifierId.Addition) => _usedModifier = new(value);
 
         public override int Apply(Actor self, Actor target)
         {

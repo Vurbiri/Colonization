@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Characteristics\Effects\EffectsHit\EffectsHitSettings.cs
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
@@ -19,15 +20,21 @@ namespace Vurbiri.Colonization.Characteristics
             return new EffectsHit(_effects, parent.TypeId, parent.Id, skillId, startEffectId);
         }
 
-        public AEffectsUI[] CreateEffectsHitUI(SettingsTextColor hintTextColor)
+        public void CreateEffectsHitUI(SettingsTextColor hintTextColor, IList<AEffectsUI> target, IList<AEffectsUI> self)
 		{
 			int count = _effects.Length;
-            AEffectsUI[] effectsUIs = new AEffectsUI[count];
+            EffectHitSettings effect;
+            IList<AEffectsUI> list;
 
             for (int i = 0; i < count; i++)
-				effectsUIs[i] = _effects[i].CreateEffectUI(hintTextColor);
-			
-			return effectsUIs;
+            {
+                effect = _effects[i];
+                list = target;
+                if (effect.IsSelf)
+                    list = self;
+
+                list.Add(effect.CreateEffectUI(hintTextColor));
+            }
         }
 
 		public static implicit operator EffectHitSettings[](EffectsHitSettings packetSettings) => packetSettings._effects;
