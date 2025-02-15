@@ -14,10 +14,10 @@ namespace VurbiriEditor.Colonization.Actors
         [SerializeField] private VisualTreeAsset _treeAnimationClipSettingsWindow;
 
         private const string NAME = "Animation Clips Settings", MENU = MENU_PATH + NAME;
-        private const string NAME_CONTAINER = "Container";
+        private const string NAME_MELEE = "Melee", NAME_SHIELD = "Shield", NAME_WIZAED = "Wizard";
 
         private readonly List<Editor> _editors = new();
-        private static readonly Vector2 wndMinSize = new(325f, 500f);
+        private static readonly Vector2 wndMinSize = new(370f, 500f);
 
         [MenuItem(MENU)]
         public static void ShowWindow()
@@ -33,15 +33,54 @@ namespace VurbiriEditor.Colonization.Actors
                 return;
 
             var root = _treeAnimationClipSettingsWindow.CloneTree();
-            var container = root.Q<VisualElement>(NAME_CONTAINER);
 
-            for(int i = settings.Count - 1; i >= 0; i--)
+            var containerMelee = root.Q<ScrollView>(NAME_MELEE);
+            var containerShield = root.Q<ScrollView>(NAME_SHIELD);
+            var containerWizard = root.Q<ScrollView>(NAME_WIZAED);
+
+            AnimationClipSettingsScriptable clip;
+            Editor editor;
+
+            for (int i = settings.Count - 1; i >= 0; i--)
             {
-                container.Add(AnimationClipSettingsEditor.CreateEditorAndBind(settings[i], out Editor editor));
-                _editors.Add(editor);
+                clip = settings[i];
+                editor = null;
+
+                NameSynchronization(clip);
+
+                if (clip.name.Contains(NAME_MELEE))
+                    containerMelee.Add(AnimationClipSettingsEditor.CreateEditorAndBind(clip, out editor));
+
+                if (clip.name.Contains(NAME_SHIELD))
+                    containerShield.Add(AnimationClipSettingsEditor.CreateEditorAndBind(clip, out editor));
+
+                if (clip.name.Contains(NAME_WIZAED))
+                    containerWizard.Add(AnimationClipSettingsEditor.CreateEditorAndBind(clip, out editor));
+
+                if (editor)
+                    _editors.Add(editor);
             }
 
             rootVisualElement.Add(root);
+        }
+
+        private void NameSynchronization(AnimationClipSettingsScriptable scriptable)
+        {
+            AnimationClip clip = scriptable.clip;
+
+            if (clip == null)
+                return;
+
+            string newName = clip.name.Insert(1, "CS");
+
+            if (scriptable.name != newName)
+            {
+                string path = AssetDatabase.GetAssetPath(scriptable);
+                AssetDatabase.RenameAsset(path, newName);
+                scriptable.name = newName;
+
+                //Selection.activeObject = scriptable;
+            }
         }
 
         private void OnDisable()

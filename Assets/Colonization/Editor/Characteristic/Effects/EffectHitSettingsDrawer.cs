@@ -331,9 +331,9 @@ namespace VurbiriEditor.Colonization.Characteristics
             #endregion
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => GetPropertyRateHeight(property) * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => GetPropertyRateHeight(property, IdFromLabel(label)) * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
 
-        public static float GetPropertyRateHeight(SerializedProperty property)
+        public static float GetPropertyRateHeight(SerializedProperty property, int id)
         {
             if (!property.isExpanded)
                 return 1f;
@@ -344,15 +344,18 @@ namespace VurbiriEditor.Colonization.Characteristics
             bool isTargetEnemy = isTarget && GetProperty(P_PARENT_TARGET).GetEnum<TargetOfSkill>() == TargetOfSkill.Enemy;
             bool isUsedAttack = GetProperty(P_USED_ATTACK).boolValue;
 
+
             if (!isTargetEnemy & isUsedAttack)
                 size -= 1f;
-            else if(targetAbility != CurrentHP && GetProperty(P_DUR).intValue == 0)
+            else if (id == 0 & !isUsedAttack)
+                size += targetAbility != CurrentHP ? 0f : 1f;
+            else if (targetAbility != CurrentHP && GetProperty(P_DUR).intValue == 0)
                 size -= 1f;
 
             if (!isTarget | !isUsedAttack)
                 size -= 3.1f;
             else if (!GetProperty(P_IS_REFLECT).boolValue)
-                size -= 1.1f;
+                size -= 2.1f;
 
             return size;
 

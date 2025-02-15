@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ba7a4c8b042daa9448bea88549a22669
+guid: 808f4b926c4f4ca47a837dd346411224
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: A_Warrior_Melee_Walk_02
+      name: A_Warrior_Shield_RunForward
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 41
+      lastFrame: 21
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -68,7 +68,7 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
-    sortHierarchyByName: 1
+    sortHierarchyByName: 0
     importPhysicalCameras: 1
     importVisibility: 0
     importBlendShapes: 0

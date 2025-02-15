@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void SetTimings(AnimationClipSettingsScriptable clipSettings, int id)
         {
-            if (clipSettings.hitTimes == null || clipSettings.hitTimes.Length == 0)
+            if (clipSettings == null || clipSettings.hitTimes == null || clipSettings.hitTimes.Length == 0)
                 return;
 
             var timing = _timings[id];
@@ -51,9 +51,13 @@ namespace Vurbiri.Colonization.Actors
 
             if (_animator != null)
                 _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)[A_DEATH].length;
+        }
 
-            _bounds = _mesh.bounds;
-
+        public void OnDrawGizmosSelected()
+        {
+            Gizmos.matrix = Matrix4x4.identity;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(_bounds.center, _bounds.size);
         }
     }
 }
