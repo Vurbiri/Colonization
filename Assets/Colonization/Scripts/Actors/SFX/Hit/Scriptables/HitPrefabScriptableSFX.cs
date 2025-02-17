@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    [CreateAssetMenu(fileName = "ScriptableHitPrefabSFX", menuName = "Vurbiri/Colonization/ActorSFX/HitPrefabScriptableSFX", order = 51)]
+    [CreateAssetMenu(fileName = "ASFX_", menuName = "Vurbiri/Colonization/ActorSFX/HitPrefab", order = 51)]
     public class HitPrefabScriptableSFX : AHitScriptableSFX
     {
         [SerializeField] private AHitMonoSFX _prefab;

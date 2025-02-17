@@ -14,8 +14,8 @@ namespace Vurbiri
 
         public IEnumerator Save_Coroutine(string key, object data, bool toFile = true, Action<bool> callback = null);
 
-        public Return<T> Get<T>(string key) where T : class;
+        public Return<T> Get<T>(string key);
 
-        public bool TryGet<T>(string key, out T value) where T : class;
+        public bool TryGet<T>(string key, out T value);
     }
 }

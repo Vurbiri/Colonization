@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.Actors
 
             private IEnumerator Death_Coroutine()
             {
-                yield return null;
+                yield return new WaitForSecondsRealtime(0.1f);
                 _animator.SetBool(_idParam, false);
                 yield return _waitEndAnimation;
                 yield return _sfx.Death_Coroutine();

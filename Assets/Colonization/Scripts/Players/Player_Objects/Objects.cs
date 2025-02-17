@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             public readonly ListReactiveItems<Actor> warriors = new();
             public readonly HashSet<int> perks;
 
-            public Objects(int playerId, bool isLoad, PlayerData data, Players.Settings settings)
+            public Objects(int playerId, int currentPlayerId, bool isLoad, PlayerData data, Players.Settings settings)
             {
                 id = playerId;
 
@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization
 
                 if (isLoad)
                 {
-                    PlayerLoadData loadData = data.ToLoadData();
+                    PlayerLoadData loadData = data.ToLoadData(currentPlayerId);
                     Crossroads crossroads = SceneObjects.Get<Crossroads>();
                     Land land = SceneObjects.Get<Land>();
 
@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization
 
                     int count = loadData.warriors.Length;
                     for (int i = 0; i < count; i++)
-                        warriors.Add(_spawner.Create(loadData.warriors[i], land));
+                        warriors.Add(_spawner.Load(loadData.warriors[i], land));
 
                     //_perks = new(data.Perks);
                 }

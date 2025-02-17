@@ -12,12 +12,12 @@ namespace Vurbiri.Colonization.Characteristics
             public TargetOfSkill target;
             public bool isMove;
             public float range;
+            public float distance;
             public int cost;
             public EffectsHitSettings[] effectsHits;
             public SkillUI ui;
 
 #if UNITY_EDITOR
-            public bool isTargetReact;
             public AHitScriptableSFX[] SFXHits;
             public AnimationClipSettingsScriptable clipSettings;
 #endif

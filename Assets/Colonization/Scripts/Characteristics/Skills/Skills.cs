@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.Characteristics
             List<ASkillState> skillStates = new(countSkills);
 
             for (int i = 0; i < countSkills; i++)
-                skillStates.Add(CreateState(parent, _skillsSettings[i], i));
+                skillStates.Add(CreateSkill(parent, _skillsSettings[i], i));
 
             return skillStates;
         }
@@ -90,7 +90,7 @@ namespace Vurbiri.Colonization.Characteristics
                 _skillsUI[i] = skillSettings.ui;
                 _effectsHits[i] = effectsHits;
 
-                skillStates.Add(CreateState(parent, skillSettings, i));
+                skillStates.Add(CreateSkill(parent, skillSettings, i));
 
 #if !UNITY_EDITOR
                 skill.ui = null;
@@ -101,15 +101,18 @@ namespace Vurbiri.Colonization.Characteristics
             return skillStates;
         }
 
-        private ASkillState CreateState(Actor parent, SkillSettings skill, int id)
+        private ASkillState CreateSkill(Actor parent, SkillSettings skill, int id)
         {
             if (skill.target == TargetOfSkill.Self)
                 return new SelfSkillState(parent, _effectsHits[id], skill.cost, id);
 
-            if (skill.isMove)
+            if (!skill.isMove)
+                return new RangeSkillState(parent, skill.target, _effectsHits[id], skill.cost, id);
+
+            if(skill.distance <= 0.1f)
                 return new SkillState(parent, skill.target, _effectsHits[id], skill.range, _speedRun, skill.cost, id);
 
-            return new RangeSkillState(parent, skill.target, _effectsHits[id], skill.cost, id);
+            return new MovementSkillState(parent, skill.target, _effectsHits[id], skill.distance, skill.range, _speedRun, skill.cost, id);
         }
 
 #if UNITY_EDITOR

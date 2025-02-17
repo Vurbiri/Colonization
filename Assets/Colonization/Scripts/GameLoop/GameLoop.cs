@@ -25,7 +25,6 @@ namespace Vurbiri.Colonization
 
         public void EndTurnPlayer()
         {
-            _playersData.Save();
             _players.Next();
 
             if ((_player = ++_player % PlayerId.PlayersCount) == 0)
@@ -38,6 +37,8 @@ namespace Vurbiri.Colonization
                 free = _land.GetFreeGroundResource(roll);
 
             _players.Profit(roll, free);
+
+            _playersData.Save((int)_players.Current.Id);
         }
     }
 }

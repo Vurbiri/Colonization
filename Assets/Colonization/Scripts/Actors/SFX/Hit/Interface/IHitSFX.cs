@@ -6,6 +6,6 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public interface IHitSFX
 	{
-        public CustomYieldInstruction Hit(ActorSkin target);
+        public void Hit(ActorSkin target);
     }
 }

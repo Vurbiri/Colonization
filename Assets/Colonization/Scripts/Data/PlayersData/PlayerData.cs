@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization.Data
         public PlayerData() {}
 
 
-        public PlayerLoadData ToLoadData() => new(_resources, _edifices, _roads, _warriors);
+        public PlayerLoadData ToLoadData(int currentPlayerId) => new(_resources, _edifices, _roads, _warriors, currentPlayerId);
 
         public void CurrenciesBind(IReactive<int, int> currencies, bool calling)
         {

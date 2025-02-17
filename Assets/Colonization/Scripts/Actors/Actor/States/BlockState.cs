@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                _actor.ColliderEnable(true);
+                _actor.EnablePlayerCollider();
                 base.Enter();
             }
 

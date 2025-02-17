@@ -18,13 +18,16 @@ namespace Vurbiri.Colonization.Actors
             protected readonly ReactiveValue<bool> _isCancel;
             protected readonly WaitForSecondsRealtime _waitRealtime = new(0.6f);
             protected readonly Relation _relationTarget;
+            // !!!!!!!!!!!!!!!!!!!!! Удалить _relationRealTarget
+            protected readonly Relation _relationRealTarget;
 
             protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, int cost, int id) : 
                 base(parent, effects, cost, id)
             {
                 _isCancel = parent._canCancel;
                 _relationTarget = targetActor.ToRelation();
-                Debug.Log("Удалить _relationTarget = Relation.Friend;");
+                Debug.Log("Удалить _relationTarget = Relation.Friend; и _relationRealTarget");
+                _relationRealTarget = _relationTarget;
                 _relationTarget = Relation.Friend;
             }
 
@@ -72,9 +75,10 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
 
                 Pay();
+
                 Hexagon targetHex = _target._currentHex;
                 _parentTransform.localRotation = ACTOR_ROTATIONS[targetHex.Key - currentHex.Key];
-                if(_skin.IsTargetReact(_id))
+                if (_relationRealTarget == Relation.Enemy)
                     _target._thisTransform.localRotation = ACTOR_ROTATIONS[currentHex.Key - targetHex.Key];
 
                 callback(true);
@@ -88,7 +92,7 @@ namespace Vurbiri.Colonization.Actors
                 {
                     yield return wait;
                     _effectsHint[i].Apply(_actor, _target);
-                    if (_target.IsDead())
+                    if (_target.IsDead)
                     {
                         wait = _waitRealtime;
                         break;
@@ -96,7 +100,7 @@ namespace Vurbiri.Colonization.Actors
                     wait.Reset();
                 }
                 yield return wait;
-                _target.SkillUsedEnd();
+                _target.BecomeTargetEnd();
             }
 
             private Actor CheckTarget(Actor target)
@@ -109,7 +113,7 @@ namespace Vurbiri.Colonization.Actors
                 if (target == _actor || !target.IsCanUseSkill(_actor._owner, _relationTarget, out _) || !ACTOR_ROTATIONS.ContainsKey(key))
                     return null;
 
-                target.SkillUsedStart(_actor._owner, _relationTarget);
+                target.BecomeTargetStart(_actor._owner, _relationTarget);
                 return target;
             }
         }

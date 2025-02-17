@@ -33,7 +33,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: MA_Humans_Melee_AttackCombo_01
+      name: MA_Warrior_Melee_AttackCombo_01
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0

@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Characteristics
             _parent = _thisTransform.parent;
         }
 
-        public abstract CustomYieldInstruction Hit(ActorSkin target);
+        public abstract void Hit(ActorSkin target);
 
         public abstract IHitSFX Init(IActorSFX parent);
     }

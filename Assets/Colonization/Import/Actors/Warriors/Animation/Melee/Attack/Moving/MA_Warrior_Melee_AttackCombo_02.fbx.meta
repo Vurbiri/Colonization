@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 901fd3ee7b74ec3489cfd0a0bd214534
+guid: 7176c4745e64cba48a7264d952901576
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: A_Humans_Melee_AttackKick_02
+      name: MA_Warrior_Melee_AttackCombo_02
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 42
+      lastFrame: 140
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

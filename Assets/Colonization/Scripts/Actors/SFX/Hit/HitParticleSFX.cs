@@ -19,15 +19,13 @@ namespace Vurbiri.Colonization.Characteristics
             return this;
         }
 
-        public override CustomYieldInstruction Hit(ActorSkin target)
+        public override void Hit(ActorSkin target)
         {
             _thisTransform.SetParent(target.Transform, false);
             _thisGO.SetActive(true);
             _particle.Play();
 
             _audioSource.PlayOneShot(_clip);
-
-            return null;
         }
 
         private void OnParticleSystemStopped()

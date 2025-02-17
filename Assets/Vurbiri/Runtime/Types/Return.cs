@@ -1,7 +1,7 @@
 //Assets\Vurbiri\Runtime\Types\Return.cs
 namespace Vurbiri
 {
-    public class Return<T> where T : class
+    public class Return<T>
     {
         public bool Result { get; }
         public T Value { get; }
@@ -11,12 +11,12 @@ namespace Vurbiri
         private Return()
         {
             Result = false;
-            Value = null;
+            Value = default;
         }
 
         public Return(T value)
         {
-            Result = value != null;
+            Result = true;
             Value = value;
         }
 

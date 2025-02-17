@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.Actors
         public AbilitiesSet<ActorAbilityId> Abilities => new(_abilities, ActorAbilityId.RATE_ABILITY, ActorAbilityId.MAX_RATE_ABILITY);
         public Skills Skills => _skills;
 
-        public ActorSkin InstantiateActorSkin(Transform parent) => UnityEngine.Object.Instantiate(_prefabActorSkin, parent);
+        public ActorSkin InstantiateActorSkin(Transform parent) => UnityEngine.Object.Instantiate(_prefabActorSkin, parent).Init();
 
         public void Dispose()
         {

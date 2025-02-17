@@ -16,7 +16,6 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] protected float _heightDeath = -3.5f;
         [SerializeField] protected float _durationDeath = 1f;
         [HideInInspector, SerializeField] protected HitsSFXSettings _scriptablesSFX = new();
-        [HideInInspector, SerializeField] bool[] _isReactToSkills;
 
         protected Transform _thisTransform;
         protected HitsSFX _hitsSFX;
@@ -36,13 +35,7 @@ namespace Vurbiri.Colonization.Actors
 
         public virtual void Block(bool isActive) { }
 
-        public bool IsTargetReact(int index) => _isReactToSkills[index];
-        public virtual void Hit(int idSkill, int idHit, ActorSkin target)
-        {
-            var delay = _hitsSFX[idSkill, idHit].Hit(target);
-            if (_isReactToSkills[idSkill])
-                target.React(delay);
-        }
+        public virtual void Hit(int idSkill, int idHit, ActorSkin target) => _hitsSFX[idSkill, idHit].Hit(target);
 
         public virtual void Death() { }
 
@@ -198,14 +191,9 @@ namespace Vurbiri.Colonization.Actors
         public void SetCountSkillsSFX(int count)
         {
             _scriptablesSFX.SetCountSkills(count);
-
-            _isReactToSkills ??= new bool[count];
-            if (_isReactToSkills.Length != count)
-                Array.Resize(ref _isReactToSkills, count);
         }
         public void SetCountHitsSFX(int idSkill, int count) => _scriptablesSFX.SetCountHits(idSkill, count);
 
-        public void SetReactToSkills(bool isReactToSkill, int id) => _isReactToSkills[id] = isReactToSkill;
         public void SetSkillSFX(int idSkill, int idHit, AHitScriptableSFX sfx) => _scriptablesSFX.Add(idSkill, idHit, new(sfx));
 #endif
     }

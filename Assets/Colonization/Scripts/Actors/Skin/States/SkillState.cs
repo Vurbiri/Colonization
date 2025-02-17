@@ -9,22 +9,22 @@ namespace Vurbiri.Colonization.Actors
         protected class SkillState : ASkinState
         {
             protected readonly int _id;
-            protected readonly WaitForSeconds _waitEnd;
-            protected readonly WaitForSeconds[] _waitHits;
+            protected readonly WaitTime _waitEnd;
             protected readonly int _countHits;
             protected Coroutine _coroutine;
 
             public ActorSkin targetSkin;
             public readonly WaitActivate waitActivate = new();
+            public readonly WaitTime[] waitHits;
 
             public SkillState(string stateName, ActorSkin parent, TimingSkillSettings timing, int id = 0) : base(stateName, parent, id)
             {
                 _id = id;
                 _countHits = timing.hitTimes.Length;
-                _waitHits = new WaitForSeconds[_countHits];
+                waitHits = new WaitTime[_countHits];
 
                 for (int i = 0; i < _countHits; i++)
-                    _waitHits[i] = new(timing.hitTimes[i]);
+                    waitHits[i] = new(timing.hitTimes[i]);
 
                 _waitEnd = new(timing.remainingTime);
             }
@@ -40,9 +40,15 @@ namespace Vurbiri.Colonization.Actors
                 if (_coroutine != null)
                 {
                     _parent.StopCoroutine(_coroutine);
+
+                    _waitEnd.Reset();
+                    for (int i = 0; i < _countHits; i++)
+                        waitHits[i].Reset();
+
                     _coroutine = null;
                 }
                 waitActivate.Reset();
+
                 _animator.SetBool(_idParam, false);
             }
 
@@ -50,7 +56,7 @@ namespace Vurbiri.Colonization.Actors
             {
                 for (int i = 0; i < _countHits; i++)
                 {
-                    yield return _waitHits[i];
+                    yield return waitHits[i];
 
                     waitActivate.Activate();
 

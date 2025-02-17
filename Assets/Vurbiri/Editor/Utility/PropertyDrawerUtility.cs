@@ -426,6 +426,9 @@ namespace VurbiriEditor
         #endregion
         //================================================================
         #region Utilities
+
+        protected int Level { get => EditorGUI.indentLevel; set => EditorGUI.indentLevel = value; } 
+
         protected (string[] names, int[] values) GetNamesAndValues<T>(bool isNone) where T : IdType<T>
         {
             if (!isNone)

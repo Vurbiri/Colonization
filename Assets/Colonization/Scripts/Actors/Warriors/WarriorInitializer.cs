@@ -14,28 +14,24 @@ namespace Vurbiri.Colonization.Actors
         public Warrior Init(int id, int owner, Material material, Hexagon startHex)
         {
             _warrior.Init(_warriorsSettings[id], _collider, owner, startHex);
-            Setup(_warrior.Skin.Mesh, material);
-
-            Destroy(this);
-
-            return _warrior;
+            return Setup(_warrior.Skin.Mesh, material);
         }
 
-        public Warrior Init(ActorLoadData data, int owner, Material material, Hexagon startHex)
+        public Warrior Load(ActorLoadData data, int owner, Material material, Hexagon startHex)
         {
-            _warrior.Init(_warriorsSettings[data.id], _collider, owner, startHex, data);
-            Setup(_warrior.Skin.Mesh, material);
-
-            Destroy(this);
-
-            return _warrior;
+            _warrior.Load(_warriorsSettings[data.id], _collider, owner, startHex, data);
+            return Setup(_warrior.Skin.Mesh, material);
         }
 
-        private void Setup(SkinnedMeshRenderer mesh, Material material)
+        private Warrior Setup(SkinnedMeshRenderer mesh, Material material)
         {
             mesh.sharedMaterial = material;
 
             _collider.enabled = false;
+
+            Destroy(this);
+
+            return _warrior;
         }
 
 #if UNITY_EDITOR

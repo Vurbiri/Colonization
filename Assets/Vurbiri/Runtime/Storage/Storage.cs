@@ -9,7 +9,7 @@ using static UnityEngine.Networking.UnityWebRequest;
 
 namespace Vurbiri
 {
-    public class Storage
+    public static class Storage
     {
         public static IEnumerator Create_Coroutine(DIContainer container, string key)
         {
@@ -69,10 +69,12 @@ namespace Vurbiri
                 yield break;
             }
 
-            callback?.Invoke(new(((DownloadHandlerTexture)request.downloadHandler).texture));
+            Texture texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
+
+            callback?.Invoke(new(texture != null, texture));
         }
 
-        public static bool LoadObjectFromResourceJson<T>(string path, out T obj) where T : class
+        public static bool LoadObjectFromResourceJson<T>(string path, out T obj)
         {
             try
             {
@@ -84,7 +86,7 @@ namespace Vurbiri
             catch (Exception ex)
             {
                 Message.Log($"--- Не удалось загрузить объект {typeof(T).Name} по пути {path} ---\n".Concat(ex.Message));
-                obj = null;
+                obj = default;
                 return false;
             }
         }

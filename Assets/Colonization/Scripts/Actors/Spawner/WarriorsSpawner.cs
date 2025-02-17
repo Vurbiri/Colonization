@@ -25,10 +25,10 @@ namespace Vurbiri.Colonization.Actors
             return warrior.Init(id, _payerId, _material, startHex);
         }
 
-        public Warrior Create(ActorLoadData data, Land land)
+        public Warrior Load(ActorLoadData data, Land land)
         {
             WarriorInitializer warrior = Object.Instantiate(_warriorPrefab, _container);
-            return warrior.Init(data, _payerId, _material, land[data.keyHex]);
+            return warrior.Load(data, _payerId, _material, land[data.keyHex]);
         }
     }
 }

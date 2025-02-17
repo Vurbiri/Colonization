@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization.Actors
         public float totalTime;
         public float[] hitTimes = new float[1];
         public float range;
+        public float distance = -1;
     }
 }
 #endif

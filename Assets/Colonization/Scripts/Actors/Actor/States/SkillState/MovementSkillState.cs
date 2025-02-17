@@ -1,0 +1,58 @@
+//Assets\Colonization\Scripts\Actors\Actor\States\SkillState\SkillDistanceState.cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
+using static Vurbiri.Colonization.CONST;
+
+namespace Vurbiri.Colonization.Actors
+{
+    public abstract partial class Actor
+    {
+        public class MovementSkillState : SkillState
+        {
+            private readonly float _distanceMove;
+            private readonly float _timeToHit;
+
+            public MovementSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, float distance, float range, float speedRun, int cost, int id) : base(parent, targetActor, effects, range, speedRun, cost, id)
+            {
+                _distanceMove = distance;
+                _timeToHit = _skin.GetFirsHitTime(id);
+            }
+
+            protected override IEnumerator Actions_Coroutine()
+            {
+                bool isTarget = false;
+                yield return SelectActor_Coroutine(b => isTarget = b);
+                if (!isTarget)
+                {
+                    ToExit();
+                    yield break;
+                }
+
+                Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
+
+                float distance = _distanceMove + _target._extentsZ;
+                float path = 1f - distance / HEX_DIAMETER_IN;
+
+                yield return Run_Coroutine(currentHex.Position, targetHex.Position, path);
+                yield return ApplyMovementSkill_Coroutine(_parentTransform.localPosition, targetHex.Position, distance);
+                yield return Run_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f);
+
+                ToExit();
+            }
+
+            private IEnumerator ApplyMovementSkill_Coroutine(Vector3 start, Vector3 end, float remainingDistance)
+            {
+                float distance = _rangeSkill + _target._extentsZ;
+                float path = 1f - distance / remainingDistance;
+                float speed = path / _timeToHit;
+                
+
+                _actor.StartCoroutine(Movement_Coroutine(start, end, speed, path));
+
+                yield return ApplySkill_Coroutine();
+            }
+        }
+    }
+}

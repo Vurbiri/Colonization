@@ -1,6 +1,5 @@
 //Assets\Colonization\Scripts\Actors\Skin\ActorSkin.cs
 using System;
-using System.Collections;
 using UnityEngine;
 using Vurbiri.FSM;
 
@@ -40,6 +39,11 @@ namespace Vurbiri.Colonization.Actors
 
         private void Start()
         {
+            _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
+        }
+
+        public ActorSkin Init()
+        {
             _thisTransform = transform;
 
             _stateMachine.SetDefaultState(CreateBoolState(B_IDLE));
@@ -58,8 +62,10 @@ namespace Vurbiri.Colonization.Actors
             
             _timings = null;
 
-            _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
+            return this;
         }
+
+        
 
         public virtual void Idle() => _stateMachine.ToDefaultState();
 
@@ -82,11 +88,10 @@ namespace Vurbiri.Colonization.Actors
             return skill.waitActivate;
         }
 
-        public bool IsTargetReact(int index) => _sfx.IsTargetReact(index);
-
-        public void React(CustomYieldInstruction delayReact)
+        public void React()
         {
-            StartCoroutine(React_Coroutine(delayReact));
+            _stateMachine.Update();
+            _stateMachine.SetState(_reactState);
         }
 
         public WaitActivate Death()
@@ -95,15 +100,7 @@ namespace Vurbiri.Colonization.Actors
             return _deathState.waitActivate;
         }
 
-        private BoolSwitchState CreateBoolState(string nameParam) => new(nameParam, this, _idBoolState++);
-
-        private IEnumerator React_Coroutine(CustomYieldInstruction delayReact)
-        {
-            yield return delayReact;
-
-            _stateMachine.Update();
-            _stateMachine.SetState(_reactState);
-        }
+        public float GetFirsHitTime(int skillId) => _skillStates[skillId].waitHits[0].Time;
 
         public void Dispose()
         {
@@ -118,6 +115,8 @@ namespace Vurbiri.Colonization.Actors
             _reactState.Dispose();
             _deathState.Dispose();
         }
+
+        private BoolSwitchState CreateBoolState(string nameParam) => new(nameParam, this, _idBoolState++);
 
         // UNITY_EDITOR смотри в ActorSkin_Editor
 

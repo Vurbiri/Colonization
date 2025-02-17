@@ -79,12 +79,13 @@ namespace Vurbiri
             return completion;
         }
 
-        private Return<T> Deserialize<T>(string json) where T : class
+        private Return<T> Deserialize<T>(string json)
         {
             Return<T> result = Return<T>.Empty;
             try
             {
-                result = new(JsonConvert.DeserializeObject<T>(json));
+                if (!string.IsNullOrEmpty(json))
+                    result = new(JsonConvert.DeserializeObject<T>(json));
             }
             catch (Exception ex)
             {

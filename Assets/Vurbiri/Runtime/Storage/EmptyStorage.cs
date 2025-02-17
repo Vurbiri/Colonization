@@ -17,9 +17,9 @@ namespace Vurbiri
         }
         public override Return<T> Get<T>(string key) => Return<T>.Empty;
         
-        public override bool TryGet<T>(string key, out T value) where T : class
+        public override bool TryGet<T>(string key, out T value)
         {
-            value = null;
+            value = default;
             return false;
         }
 

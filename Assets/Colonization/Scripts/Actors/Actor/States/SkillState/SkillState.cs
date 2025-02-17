@@ -11,14 +11,14 @@ namespace Vurbiri.Colonization.Actors
     {
         public class SkillState : ATargetSkillState
         {
-            private readonly float _speedRun;
-            private readonly float _selfRange;
+            protected readonly float _speedRun;
+            protected readonly float _rangeSkill;
 
             public SkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, float range, float speedRun, int cost, int id) : 
                 base(parent, targetActor, effects, cost, id)
             {
                 _speedRun = speedRun;
-                _selfRange = range + _actor._extentsZ;
+                _rangeSkill = range;
             }
 
             public override void Exit()
@@ -34,30 +34,36 @@ namespace Vurbiri.Colonization.Actors
                 yield return SelectActor_Coroutine(b => isTarget = b);
                 if (!isTarget) 
                 { 
-                    ToExit(); yield break;
+                    ToExit(); 
+                    yield break;
                 }
 
                 Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
-                float path = 1f - (_selfRange + _actor._extentsZ) / HEX_DIAMETER_IN;
+                float path = 1f - (_rangeSkill + _target._extentsZ) / HEX_DIAMETER_IN;
 
-                yield return Move_Coroutine(currentHex.Position, targetHex.Position, path);
+                yield return Run_Coroutine(currentHex.Position, targetHex.Position, path);
                 yield return ApplySkill_Coroutine();
-                yield return Move_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f);
+                yield return Run_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f);
                 
                 ToExit();
             }
 
-            private IEnumerator Move_Coroutine(Vector3 start, Vector3 end, float path)
+            protected IEnumerator Run_Coroutine(Vector3 start, Vector3 end, float path)
             {
                 yield return null;
 
                 _skin.Run();
 
+                yield return Movement_Coroutine(start, end, _speedRun, path);
+            }
+
+            protected IEnumerator Movement_Coroutine(Vector3 start, Vector3 end, float speed, float path)
+            {
                 float progress = 0f;
                 while (progress <= path)
                 {
                     yield return null;
-                    progress += _speedRun * Time.deltaTime;
+                    progress += speed * Time.deltaTime;
                     _parentTransform.localPosition = Vector3.Lerp(start, end, progress);
                 }
             }

@@ -11,7 +11,9 @@ namespace Vurbiri.Colonization.Data
     {
         private readonly PlayerData[] _dataValues = new PlayerData[PlayersCount];
         private readonly int[] _diplomacyData = new int[PlayersCount];
+
         private readonly string[] _keys = new string[PlayersCount];
+
         private readonly Coroutines _coroutines;
         private readonly IStorageService _storage;
         private IUnsubscriber _unsubscriber;
@@ -44,8 +46,17 @@ namespace Vurbiri.Colonization.Data
             isLoadDiplomacy = isLoading && _storage.TryGet(SAVE_KEYS.DIPLOMANCY, out _diplomacyData);
         }
 
-        public void Save(bool saveToFile = true, Action<bool> callback = null)
+        public int LoadCurrentPlayerId(bool isLoading, int defaultValue)
         {
+            if(isLoading && _storage.TryGet(SAVE_KEYS.CURRENT_PLAYER, out int value))
+                return value;
+
+            return defaultValue;
+        }
+
+        public void Save(int currentPlayerId, bool saveToFile = true, Action<bool> callback = null)
+        {
+            _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.CURRENT_PLAYER, currentPlayerId, saveToFile, callback));
             _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.DIPLOMANCY, _diplomacyData, saveToFile, callback));
             for (int i = 0; i < PlayersCount; i++)
                 _coroutines.Run(_storage.Save_Coroutine(_keys[i], _dataValues[i], saveToFile, callback));

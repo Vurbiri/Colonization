@@ -12,7 +12,8 @@ namespace VurbiriEditor.Colonization.Actors
     {
         [SerializeField] private VisualTreeAsset _treeAnimationClipSettingsScriptable;
 
-        private const string FIELD_LABEL = "Label", FIELD_CLIP = "clip", FIELD_TOTAL_T = "totalTime", FIELD_DAMAGES_T = "hitTimes", FIELD_RANGE = "range";
+        private const string FIELD_LABEL = "Label", FIELD_CLIP = "clip", FIELD_TOTAL_T = "totalTime", FIELD_DAMAGES_T = "hitTimes";
+        private const string FIELD_RANGE = "range", FIELD_DISTANCE = "distance";
 
         public override VisualElement CreateInspectorGUI()
         {
@@ -35,6 +36,7 @@ namespace VurbiriEditor.Colonization.Actors
                 var totalTimeUXML = root.Q<FloatField>(FIELD_TOTAL_T);
                 var damageTimeUXML = root.Q<ListView>(FIELD_DAMAGES_T);
                 var rangeUXML = root.Q<Slider>(FIELD_RANGE);
+                var distanceUXML = root.Q<Slider>(FIELD_DISTANCE);
 
                 bool isShow = clip != null;
 

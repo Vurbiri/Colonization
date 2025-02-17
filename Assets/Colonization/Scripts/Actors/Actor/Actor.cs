@@ -36,6 +36,8 @@ namespace Vurbiri.Colonization.Actors
         protected StateMachineSelectable _stateMachine;
         protected ABlockState _blockState;
 
+        protected bool _isPlayerTurn;
+
         protected ReactiveValue<bool> _canCancel = new(false);
 
         protected Coroutine _deathCoroutine;
@@ -49,6 +51,7 @@ namespace Vurbiri.Colonization.Actors
         public int ActionPoint => _currentAP.Value;
         public bool IsIdle => _stateMachine.IsDefaultState;
         public bool IsBlock => _blockState.Enabled;
+        public bool IsDead => _currentHP.Value <= 0;
         public Vector3 Position => _thisTransform.position;
         public ActorSkin Skin => _skin;
         public IListReactiveItems<ReactiveEffect> Effects => _effects;
@@ -87,8 +90,6 @@ namespace Vurbiri.Colonization.Actors
             return delta;
         }
 
-        public void ColliderEnable(bool enabled) => _thisCollider.enabled = enabled;
-
         public virtual void Select()
         {
             _stateMachine.Select();
@@ -113,12 +114,7 @@ namespace Vurbiri.Colonization.Actors
             return array;
         }
 
-        public override bool Equals(Actor other)
-        {
-            if (other == null) return false;
-
-            return _typeId == other._typeId & _id == other._id & _owner == other._owner;
-        }
+        public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
 
         public void Dispose()
         {
@@ -128,27 +124,22 @@ namespace Vurbiri.Colonization.Actors
             Destroy(gameObject);
         }
 
-        private void SkillUsedStart(Id<PlayerId> initiator, Relation relation)
+        public void ColliderEnable(bool enabled) => _thisCollider.enabled = enabled;
+        private void EnablePlayerCollider() => _thisCollider.enabled = _isPlayerTurn;
+
+        private void BecomeTargetStart(Id<PlayerId> initiator, Relation relation)
         {
             _stateMachine.SetState<TargetState>();
             _diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
 
-        private void SkillUsedEnd()
+        private void BecomeTargetEnd()
         {
             if (_deathCoroutine == null)
             {
                 _stateMachine.ToPrevState();
                 actionThisChange?.Invoke(this, TypeEvent.Change);
             }
-        }
-
-        private bool IsDead()
-        {
-            if (_currentHP.Value > 0) return false;
-
-            _deathCoroutine = StartCoroutine(Death_Coroutine());
-            return true;
         }
 
         private IEnumerator Death_Coroutine()
@@ -180,13 +171,14 @@ namespace Vurbiri.Colonization.Actors
                 if (_wallDefenceEffect != null)
                     _effects.AddEffect(_wallDefenceEffect);
 
-                Debug.Log("Выключить Collider");
+                _isPlayerTurn = _thisCollider.enabled = false;
                 return;
             }
 
             if (_owner == current)
             {
-                //Debug.Log("Включить Collider если его ход");
+                _isPlayerTurn = _thisCollider.enabled = _owner == PlayerId.Player;
+
                 _effects.Next();
                 _stateMachine.ToDefaultState();
             }

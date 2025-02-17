@@ -27,26 +27,28 @@ namespace Vurbiri.Colonization
             PlayersData playersData = new(isLoading, out bool[] loads, out bool isLoadDiplomacy);
             containers.Data.AddInstance(playersData);
 
+            int currentPlayerId = playersData.LoadCurrentPlayerId(isLoading, 0);
+
             Diplomacy diplomacy = isLoadDiplomacy ? new Diplomacy(playersData.DiplomacyData, settings.diplomacy, _eventBus) 
                                                   : new Diplomacy(settings.diplomacy, _eventBus);
             playersData.DiplomacyBind(diplomacy, !isLoadDiplomacy);
             containers.Objects.AddInstance(diplomacy);
 
-            _players[0] = new Player(0, loads[0], playersData[0], settings);
+            _players[0] = new Player(0, currentPlayerId, loads[0], playersData[0], settings);
 
             for (int i = PlayerId.AI_01; i < PlayersCount; i++)
-                _players[i] = new PlayerAI(i, loads[i], playersData[i], settings);
+                _players[i] = new PlayerAI(i, currentPlayerId, loads[i], playersData[i], settings);
 
-            _current = _players[0];
+            _current = _players[currentPlayerId];
 
-            playersData.Save(true);
+            playersData.Save(currentPlayerId, true);
         }
         #endregion
 
         public void Next()
         {
             Id<PlayerId> prev = _current.Id; 
-            _current = _players.Next(_current.Id.Value); ;
+            _current = _players.Next(_current.Id.Value);
             _eventBus.TriggerStartTurn(prev, _current.Id);
         }
 

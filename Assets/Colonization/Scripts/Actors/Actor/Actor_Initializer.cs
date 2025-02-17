@@ -18,8 +18,12 @@ namespace Vurbiri.Colonization.Actors
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
 
-            Bounds bounds = _skin.Bounds;
+            _isPlayerTurn = owner == PlayerId.Player;
 
+            _thisTransform = transform;
+            _thisCollider = collider;
+
+            Bounds bounds = _skin.Bounds;
             collider.size = bounds.size;
             collider.center = bounds.center;
 
@@ -29,23 +33,20 @@ namespace Vurbiri.Colonization.Actors
             _eventBus.EventStartTurn += OnStartTurn;
 
             _diplomacy = SceneObjects.Get<Diplomacy>();
-
+            
+            #region Effects
             _effects = new(_abilities);
 
             _currentHP = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
             _currentAP = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
             _move = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
 
+            _currentHP.Subscribe(hp => { if (hp <= 0) _deathCoroutine = StartCoroutine(Death_Coroutine()); });
+
             _effects.Subscribe(RedirectEvents);
+            #endregion
 
-            _thisTransform = transform;
-            Debug.Log("Выключить Collider на старте");
-            _thisCollider = collider;
-            
-
-            _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
-            _currentHex.EnterActor(this);
-
+            #region States
             Skills skills = settings.Skills;
             _stateMachine = new();
             _stateMachine.SetDefaultState(AIdleState.Create(this));
@@ -54,13 +55,16 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.AddState(_blockState);
             _stateMachine.AddState(new TargetState());
             _stateMachine.AddStates(skills.GetSkillSates(this));
-            
+            #endregion
+
             _skin.EventStart += _stateMachine.ToDefaultState;
 
+            _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
+            _currentHex.EnterActor(this);
             gameObject.SetActive(true);
         }
 
-        public void Init(ActorSettings settings, BoxCollider collider, int owner, Hexagon startHex, ActorLoadData data)
+        public void Load(ActorSettings settings, BoxCollider collider, int owner,  Hexagon startHex, ActorLoadData data)
         {
             Init(settings, collider, owner, startHex);
 
@@ -72,8 +76,13 @@ namespace Vurbiri.Colonization.Actors
             for (int i = 0; i < count; i++)
                 _effects.AddEffect(data.effects[i]);
 
-            if(_blockState.Enabled)
+            _isPlayerTurn = owner == PlayerId.Player & owner == data.currentPlayerId;
+
+            if (_blockState.Enabled)
+            {
+                _skin.EventStart -= _stateMachine.ToDefaultState;
                 _skin.EventStart += Block;
+            }
         }
     }
 }

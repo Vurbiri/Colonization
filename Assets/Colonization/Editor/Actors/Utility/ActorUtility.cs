@@ -54,7 +54,6 @@ namespace VurbiriEditor.Colonization.Actors
                         actorSFX.SetSkillSFX(i, j, skillSettings.SFXHits[j]);
 
                     actorSkin.SetTimings(clipSettings, i);
-                    actorSFX.SetReactToSkills(skillSettings.isTargetReact, i);
                 }
 
                 for (; i < COUNT_SKILLS_MAX; i++)
