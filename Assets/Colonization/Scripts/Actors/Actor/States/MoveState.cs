@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Actors
 
     public abstract partial class Actor
     {
-        public class MoveState : AActionState
+        protected class MoveState : AActionState
         {
             private readonly float _speed;
             private readonly Transform _parentTransform;

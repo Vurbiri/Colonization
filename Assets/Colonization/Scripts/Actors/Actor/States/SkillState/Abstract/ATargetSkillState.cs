@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        public abstract class ATargetSkillState : ASkillState
+        protected abstract class ATargetSkillState : ASkillState
         {
             protected Actor _target;
             protected WaitActivate _waitActor;

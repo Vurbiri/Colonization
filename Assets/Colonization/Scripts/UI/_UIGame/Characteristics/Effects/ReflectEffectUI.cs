@@ -6,9 +6,9 @@ namespace Vurbiri.Colonization.UI
 {
     public class ReflectEffectUI : AEffectsUI
     {
-        private readonly string _descKeyReflect;
-        private readonly string _valueReflect;
-        private readonly string _hexColorReflect;
+        protected readonly string _descKeyReflect;
+        protected readonly string _valueReflect;
+        protected readonly string _hexColorReflect;
 
         public ReflectEffectUI(string descKey, string value, string hexColor, string descKeyReflect, int valueReflect, string hexColorReflect) 
                         : base(descKey, value, hexColor)

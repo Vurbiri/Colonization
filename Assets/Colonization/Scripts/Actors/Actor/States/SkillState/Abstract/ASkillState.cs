@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
+using static Vurbiri.Colonization.Characteristics.Skills;
 
 namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
 	{
-		public abstract partial class ASkillState : AActionState
+        protected abstract partial class ASkillState : AActionState
         {
             protected readonly int _id;
             protected readonly Transform _parentTransform;
@@ -24,6 +25,20 @@ namespace Vurbiri.Colonization.Actors
                 _parentTransform = _actor._thisTransform;
                 _effectsHint = effects;
                 _countHits = _effectsHint.Count;
+            }
+
+            public static ASkillState Create(IReadOnlyList<EffectsHit> effects, SkillSettings skill, float speedRun, int id, Actor parent)
+            {
+                if (skill.target == TargetOfSkill.Self)
+                    return new SelfSkillState(parent, effects, skill.cost, id);
+
+                if (skill.range <= 0.01f)
+                    return new RangeSkillState(parent, skill.target, effects, skill.cost, id);
+
+                if (skill.distance <= 0.01f)
+                    return new SkillState(parent, skill.target, effects, skill.range, speedRun, skill.cost, id);
+
+                return new MovementSkillState(parent, skill.target, effects, skill.distance, skill.range, speedRun, skill.cost, id);
             }
 
             public override void Enter()

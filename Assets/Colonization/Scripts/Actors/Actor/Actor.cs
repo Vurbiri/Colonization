@@ -49,6 +49,7 @@ namespace Vurbiri.Colonization.Actors
         public Id<PlayerId> Owner => _owner;
         public bool IsPlayer => _owner == PlayerId.Player;
         public int ActionPoint => _currentAP.Value;
+        public bool CanMove => _move.IsValue;
         public bool IsIdle => _stateMachine.IsDefaultState;
         public bool IsBlock => _blockState.Enabled;
         public bool IsDead => _currentHP.Value <= 0;
@@ -60,8 +61,6 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         #region States
-        public bool CanMove() => _move.IsValue;
-
         public virtual void Move() => _stateMachine.SetState<MoveState>();
         public virtual void Block() => _stateMachine.SetState(_blockState);
         public virtual void UseSkill(int id) => _stateMachine.SetState<ASkillState>(id);

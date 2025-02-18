@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization.UI
             _currentWarrior = actor;
             var skills = _warriorsSettings[actor.Id].Skills;
 
-            _buttonMovement.Setup(true, _currentWarrior.CanMove());
+            _buttonMovement.Setup(true, _currentWarrior.CanMove);
             _buttonBlock.Setup(actor, skills.BlockUI);
 
             var skillsUI = skills.SkillsUI;

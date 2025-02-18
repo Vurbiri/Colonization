@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        public class SkillState : ATargetSkillState
+        protected class SkillState : ATargetSkillState
         {
             protected readonly float _speedRun;
             protected readonly float _rangeSkill;

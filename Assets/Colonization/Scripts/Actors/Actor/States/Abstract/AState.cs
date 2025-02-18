@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        public abstract class AState : ASelectableState
+        protected abstract class AState : ASelectableState
         {
             protected readonly Actor _actor;
             protected readonly ActorSkin _skin;

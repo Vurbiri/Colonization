@@ -11,8 +11,7 @@ namespace VurbiriEditor.Colonization.Characteristics
     public class SkillSettingsDrawer : PropertyDrawerUtility
     {
         private const string NAME_ELEMENT = "Skill {0}";
-        private const string P_CLIP = "clipSettings", P_MOVE = "isMove", P_UI = "ui", P_RANGE = "range", P_TARGET = "target", P_COST = "cost";
-        private const string P_DISTANCE = "distance";
+        private const string P_CLIP = "clipSettings", P_UI = "ui", P_RANGE = "range", P_DISTANCE = "distance", P_TARGET = "target", P_COST = "cost";
         private const string P_HITS = "effectsHits", P_SFX = "SFXHits", P_EFFECTS = "_effects";
         private const string P_SPRITE = "_sprite", P_KEY_NAME = "_idNameKey", P_COST_UI = "_cost";
         private const string P_CHILD_TARGET = "_parentTarget";
@@ -55,9 +54,6 @@ namespace VurbiriEditor.Colonization.Characteristics
                     Space();
 
                     TargetOfSkill target = DrawEnum<TargetOfSkill>(P_TARGET);
-
-                    Space();
-                    DrawBool(P_MOVE);
 
                     Space();
                     DrawInt(costProperty, 1, 3, 1);
@@ -150,7 +146,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 AnimationClipSettingsScriptable clipSett = property.FindPropertyRelative(P_CLIP).objectReferenceValue as AnimationClipSettingsScriptable;
                 if (clipSett != null && clipSett.clip != null)
                 {
-                    rate += 14.1f;
+                    rate += 13.1f;
 
                     SerializedProperty hitsProperty = property.FindPropertyRelative(P_HITS);
                     SerializedProperty effectsProperty;

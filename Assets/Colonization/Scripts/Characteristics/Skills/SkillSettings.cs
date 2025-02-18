@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization.Characteristics
         public class SkillSettings
         {
             public TargetOfSkill target;
-            public bool isMove;
             public float range;
             public float distance;
             public int cost;

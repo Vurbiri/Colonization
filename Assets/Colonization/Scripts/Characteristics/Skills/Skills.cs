@@ -6,7 +6,6 @@ using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
 using Vurbiri.Localization;
 using Vurbiri.UI;
-using static Vurbiri.Colonization.Actors.Actor;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -27,48 +26,36 @@ namespace Vurbiri.Colonization.Characteristics
 
         public IReadOnlyList<SkillUI> SkillsUI => _skillsUI;
         public BlockUI BlockUI => _blockUI ??= new(_blockCost, _blockValue);
+#if UNITY_EDITOR
+        public IReadOnlyList<SkillSettings> List => _skillsSettings;
+#endif
 
-        public MoveState GetMoveState(Actor parent) => new(_speedWalk, parent);
-        public ABlockState GetBlockState(Actor parent) => ABlockState.Create(_blockCost, _blockValue * ActorAbilityId.RATE_ABILITY, parent);
-
-        public List<ASkillState> GetSkillSates(Actor parent)
+        public void CreateStates(Actor parent)
         {
-            if(_effectsHits == null | _skillsUI == null)
-                return GetAndCreateSkills(parent);
+            parent.AddMoveState(_speedWalk);
+            parent.AddBlockState(_blockCost, _blockValue * ActorAbilityId.RATE_ABILITY);
+
+            if (_effectsHits == null | _skillsUI == null)
+                CreateEffectsAndUI(parent);
 
             int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
-            List<ASkillState> skillStates = new(countSkills);
 
             for (int i = 0; i < countSkills; i++)
-                skillStates.Add(CreateSkill(parent, _skillsSettings[i], i));
-
-            return skillStates;
+                parent.AddSkillState(_effectsHits[i], _skillsSettings[i], _speedRun, i);
         }
 
-        public void Dispose()
-        {
-            _blockUI?.Dispose();
-
-            if (_skillsUI == null)
-                return;
-
-            foreach (var skillUI in _skillsUI)
-                skillUI.Dispose();
-        }
-
-        private List<ASkillState> GetAndCreateSkills(Actor parent)
+        private void CreateEffectsAndUI(Actor parent)
         {
             var hintTextColor = SceneData.Get<SettingsTextColor>();
             var language = SceneServices.Get<Language>();
 
             int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
-            List<ASkillState> skillStates = new(countSkills);
 
             _effectsHits = new EffectsHit[countSkills][];
             _skillsUI = new SkillUI[countSkills];
 
             SkillSettings skillSettings; EffectsHitSettings effectsHitSettings;
-            EffectsHit[] effectsHits; 
+            EffectsHit[] effectsHits;
             List<AEffectsUI>[] effectsSkillUI;
             for (int i = 0; i < countSkills; i++)
             {
@@ -76,7 +63,7 @@ namespace Vurbiri.Colonization.Characteristics
 
                 int countHits = skillSettings.effectsHits.Length;
                 effectsHits = new EffectsHit[countHits];
-                effectsSkillUI = new List<AEffectsUI>[]{ new(countHits), new(countHits) };
+                effectsSkillUI = new List<AEffectsUI>[] { new(countHits), new(countHits) };
 
                 for (int j = 0, u = 0; j < countHits; j++)
                 {
@@ -90,33 +77,22 @@ namespace Vurbiri.Colonization.Characteristics
                 _skillsUI[i] = skillSettings.ui;
                 _effectsHits[i] = effectsHits;
 
-                skillStates.Add(CreateSkill(parent, skillSettings, i));
-
 #if !UNITY_EDITOR
                 skill.ui = null;
                 skill.effectsHits = null;
 #endif
             }
-
-            return skillStates;
         }
 
-        private ASkillState CreateSkill(Actor parent, SkillSettings skill, int id)
+        public void Dispose()
         {
-            if (skill.target == TargetOfSkill.Self)
-                return new SelfSkillState(parent, _effectsHits[id], skill.cost, id);
+            _blockUI?.Dispose();
 
-            if (!skill.isMove)
-                return new RangeSkillState(parent, skill.target, _effectsHits[id], skill.cost, id);
+            if (_skillsUI == null)
+                return;
 
-            if(skill.distance <= 0.1f)
-                return new SkillState(parent, skill.target, _effectsHits[id], skill.range, _speedRun, skill.cost, id);
-
-            return new MovementSkillState(parent, skill.target, _effectsHits[id], skill.distance, skill.range, _speedRun, skill.cost, id);
+            foreach (var skillUI in _skillsUI)
+                skillUI.Dispose();
         }
-
-#if UNITY_EDITOR
-        public IReadOnlyList<SkillSettings> List => _skillsSettings;
-#endif
     }
 }

@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Actors\Actor\States\SkillState\SkillDistanceState.cs
+//Assets\Colonization\Scripts\Actors\Actor\States\SkillState\MovementSkillState.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        public class MovementSkillState : SkillState
+        protected class MovementSkillState : SkillState
         {
             private readonly float _distanceMove;
             private readonly float _timeToHit;
@@ -48,7 +48,6 @@ namespace Vurbiri.Colonization.Actors
                 float path = 1f - distance / remainingDistance;
                 float speed = path / _timeToHit;
                 
-
                 _actor.StartCoroutine(Movement_Coroutine(start, end, speed, path));
 
                 yield return ApplySkill_Coroutine();

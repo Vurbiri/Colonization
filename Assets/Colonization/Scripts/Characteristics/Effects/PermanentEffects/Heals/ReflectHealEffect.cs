@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Characteristics
     {
         private readonly AbilityModifierPercent _reflectMod;
 
-        public ReflectHealEffect(int value, int reflectValue) : base(value)  => _reflectMod = new(reflectValue);
+        public ReflectHealEffect(int value, int reflectValue) : base(value)  => _reflectMod = new(-reflectValue);
 
         public override int Apply(Actor self, Actor target)
         {

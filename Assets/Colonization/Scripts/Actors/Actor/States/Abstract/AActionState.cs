@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        public abstract class AActionState : AState
+        protected abstract class AActionState : AState
         {
             protected readonly BooleanAbility<ActorAbilityId> _move;
             private readonly SubAbility<ActorAbilityId> _currentAP;

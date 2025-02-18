@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\Actors\Actor\Actor_Initializer.cs
+using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
@@ -6,9 +7,17 @@ using Vurbiri.Colonization.Data;
 namespace Vurbiri.Colonization.Actors
 {
     using static CONST;
+    using static Vurbiri.Colonization.Characteristics.Skills;
 
     public abstract partial class Actor
     {
+        public void AddMoveState(float speed) => _stateMachine.AddState(new MoveState(speed, this));
+        public void AddBlockState(int cost, int value) => _stateMachine.AddState(_blockState = ABlockState.Create(_owner, cost, value, this));
+        public void AddSkillState(IReadOnlyList<EffectsHit> effects, SkillSettings skill, float speedRun, int id)
+        {
+            _stateMachine.AddState(ASkillState.Create(effects, skill, speedRun, id, this));
+        }
+
         public void Init(ActorSettings settings, BoxCollider collider, int owner, Hexagon startHex)
         {
             _typeId = settings.TypeId;
@@ -50,11 +59,8 @@ namespace Vurbiri.Colonization.Actors
             Skills skills = settings.Skills;
             _stateMachine = new();
             _stateMachine.SetDefaultState(AIdleState.Create(this));
-            _stateMachine.AddState(skills.GetMoveState(this));
-            _blockState = skills.GetBlockState(this);
-            _stateMachine.AddState(_blockState);
             _stateMachine.AddState(new TargetState());
-            _stateMachine.AddStates(skills.GetSkillSates(this));
+            skills.CreateStates(this);
             #endregion
 
             _skin.EventStart += _stateMachine.ToDefaultState;

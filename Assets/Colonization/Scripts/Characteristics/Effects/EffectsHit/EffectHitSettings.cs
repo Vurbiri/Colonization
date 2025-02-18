@@ -10,15 +10,14 @@ namespace Vurbiri.Colonization.Characteristics
     [System.Serializable]
     public class EffectHitSettings
     {
-        [SerializeField] private bool _useAttack;
-        [SerializeField] private bool _useDefense;
         [SerializeField] private bool _isSelf;
+        [SerializeField] private int _duration;
+        [SerializeField] private bool _useAttack;
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
-        [SerializeField] private bool _isReflect;
-        [SerializeField] private int _reflectValue;
         [SerializeField] private int _value;
-        [SerializeField] private int _duration;
+        [SerializeField] private int _defenseValue = 100;
+        [SerializeField] private int _reflectValue;
         [SerializeField] private int _descKeyId;
 
 #if UNITY_EDITOR
@@ -36,21 +35,22 @@ namespace Vurbiri.Colonization.Characteristics
             if (!_useAttack)
                 return _isSelf ? new SelfEffect(_targetAbility, _typeModifier, _value) : new TargetEffect(_targetAbility, _typeModifier, _value);
 
-            if (_useDefense)
-                return _isReflect ? new ReflectAttackEffect(_value, _reflectValue) : new AttackEffect(_value);
+            bool isReflect = _reflectValue > 0;
+
+            if (_defenseValue > 0)
+                return isReflect ? new ReflectAttackEffect(_value, _defenseValue, _reflectValue) : new AttackEffect(_value, _defenseValue);
 
             if (_value < 0)
-                return _isReflect ? new ReflectAttackNotDefEffect(_value, _reflectValue) : new AttackNotDefEffect(_value);
+                return isReflect ? new ReflectAttackNotDefEffect(_value, _reflectValue) : new AttackNotDefEffect(_value);
 
             if (_isSelf)
                 return new SelfHealEffect(_value);
-            if (_isReflect)
+            if (isReflect)
                 return new ReflectHealEffect(_value, _reflectValue);
 
             return new TargetHealEffect(_value);
         }
-
-       
+               
         public AEffectsUI CreateEffectUI(SettingsTextColor hintTextColor)
         {
             string deskKey = DESK_EFFECTS_KEYS[_descKeyId];
@@ -60,11 +60,16 @@ namespace Vurbiri.Colonization.Characteristics
 
             if (_useAttack)
             {
-                hexColor = hintTextColor.HexColorTextBase;
-                value = isPositive ? _value.ToString() : (-_value).ToString();
+                bool isNotPenetration = _defenseValue == 100;
 
-                if (!_isReflect)
-                    return new PermEffectUI(deskKey, value, hexColor);
+                hexColor = hintTextColor.HexColorTextBase;
+                value = _value.ToString("#;#;0");
+
+                if (_reflectValue <= 0)
+                {
+                    if (isNotPenetration) return new PermEffectUI(deskKey, value, hexColor);
+                    return new PenetrationEffectUI(deskKey, value, _defenseValue, hexColor);
+                }
 
                 string descKeyReflect, hexColorReflect;
 
@@ -79,7 +84,8 @@ namespace Vurbiri.Colonization.Characteristics
                     hexColorReflect = hintTextColor.HexColorPositive;
                 }
 
-                return new ReflectEffectUI(deskKey, value, hexColor, descKeyReflect, -_reflectValue, hexColorReflect);
+                if (isNotPenetration) return new ReflectEffectUI(deskKey, value, hexColor, descKeyReflect, _reflectValue, hexColorReflect);
+                return new ReflectPenetrationEffectUI(deskKey, value, _defenseValue, hexColor, descKeyReflect, _reflectValue, hexColorReflect);
             }
 
             hexColor = isPositive ? hintTextColor.HexColorPositive : hintTextColor.HexColorNegative;

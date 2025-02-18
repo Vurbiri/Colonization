@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
 	{
-		public abstract class ABlockState : AActionState
+        protected abstract class ABlockState : AActionState
         {
             private readonly EffectCode _code;
             private readonly EffectsSet _effects;
@@ -21,10 +21,10 @@ namespace Vurbiri.Colonization.Actors
                 _effects = _actor._effects;
             }
 
-            public static ABlockState Create(int cost, int value, Actor parent)
+            public static ABlockState Create(Id<PlayerId> owner, int cost, int value, Actor parent)
             {
-                UnityEngine.Debug.Log("СЂР°Р·РєРѕРјРјРµРЅС‚РёС‚СЊ PlayerBlockState/AIBlockState ");
-                //return parent._owner == PlayerId.Player ? new PlayerBlockState(cost, value, parent) : new AIBlockState(cost, value, parent);
+                UnityEngine.Debug.Log("разкомментить PlayerBlockState/AIBlockState ");
+                //return owner == PlayerId.Player ? new PlayerBlockState(cost, value, parent) : new AIBlockState(cost, value, parent);
                 return new PlayerBlockState(cost, value, parent);
             }
 
@@ -45,12 +45,12 @@ namespace Vurbiri.Colonization.Actors
             }
         }
 
-        public class AIBlockState : ABlockState
+        protected class AIBlockState : ABlockState
         {
             public AIBlockState(int cost, int value, Actor parent) : base(cost, value, parent) { }
         }
 
-        public class PlayerBlockState : ABlockState
+        protected class PlayerBlockState : ABlockState
         {
             public PlayerBlockState(int cost, int value, Actor parent) : base(cost, value, parent) { }
 

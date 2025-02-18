@@ -3,7 +3,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        public abstract class AIdleState : AState
+        protected abstract class AIdleState : AState
         {
             public AIdleState(Actor parent) : base(parent, TypeIdKey.Get<AIdleState>(0)) { }
 
@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
             }
         }
 
-        private class AIIdleState : AIdleState
+        protected class AIIdleState : AIdleState
         {
             public AIIdleState(Actor parent) : base(parent) {}
 
@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.Actors
             }
         }
 
-        private class PlayerIdleState : AIdleState
+        protected class PlayerIdleState : AIdleState
         {
             private readonly GameplayEventBus _eventBus;
 
