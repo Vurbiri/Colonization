@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private AActorSFX _sfx;
         [SerializeField] private Animator _animator;
         [SerializeField] private SkinnedMeshRenderer _mesh;
-        [HideInInspector, SerializeField] TimingSkillSettings[] _timings;
+        [/*HideInInspector,*/ SerializeField] TimingSkillSettings[] _timings;
         [HideInInspector, SerializeField] float _durationDeath;
 
         #region CONST
@@ -64,9 +64,7 @@ namespace Vurbiri.Colonization.Actors
 
             return this;
         }
-
         
-
         public virtual void Idle() => _stateMachine.ToDefaultState();
 
         public virtual void Block(bool isActive)
@@ -88,10 +86,13 @@ namespace Vurbiri.Colonization.Actors
             return skill.waitActivate;
         }
 
-        public void React()
+        public void React(AudioClip clip)
         {
             _stateMachine.Update();
             _stateMachine.SetState(_reactState);
+
+            if (clip != null)
+                _sfx.React(clip);
         }
 
         public WaitActivate Death()

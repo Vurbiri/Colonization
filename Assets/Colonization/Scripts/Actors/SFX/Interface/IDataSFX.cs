@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public interface IActorSFX
+    public interface IDataSFX
 	{
 		public Transform Main { get; }
         public Transform RightHand { get; }

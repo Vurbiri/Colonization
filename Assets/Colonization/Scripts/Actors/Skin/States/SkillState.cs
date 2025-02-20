@@ -58,9 +58,8 @@ namespace Vurbiri.Colonization.Actors
                 {
                     yield return waitHits[i];
 
+                    yield return _sfx.Hit(_id, i, targetSkin);
                     waitActivate.Activate();
-
-                    _sfx.Hit(_id, i, targetSkin);
                 }
 
                 yield return _waitEnd;

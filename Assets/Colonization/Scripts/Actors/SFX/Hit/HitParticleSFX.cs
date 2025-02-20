@@ -1,31 +1,34 @@
 //Assets\Colonization\Scripts\Actors\SFX\Hit\HitParticleSFX.cs
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization.Actors
 {
     public class HitParticleSFX : AHitMonoSFX
     {
-        [SerializeField] AudioClip _clip;
+        [SerializeField] private AudioClip _clip;
 
         private ParticleSystem _particle;
         private AudioSource _audioSource;
 
-        public override IHitSFX Init(IActorSFX parent)
+        public override IHitSFX Init(IDataSFX parent)
 		{
+            Init();
+            
             _particle = GetComponent<ParticleSystem>();
             _audioSource = parent.AudioSource;
 
             return this;
         }
 
-        public override void Hit(ActorSkin target)
+        public override CustomYieldInstruction Hit(ActorSkin target)
         {
             _thisTransform.SetParent(target.Transform, false);
             _thisGO.SetActive(true);
             _particle.Play();
 
             _audioSource.PlayOneShot(_clip);
+
+            return null;
         }
 
         private void OnParticleSystemStopped()
@@ -33,6 +36,5 @@ namespace Vurbiri.Colonization.Characteristics
             _thisGO.SetActive(false);
             _thisTransform.SetParent(_parent, false);
         }
-
 	}
 }

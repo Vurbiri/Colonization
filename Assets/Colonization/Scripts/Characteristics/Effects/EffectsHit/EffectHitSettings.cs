@@ -11,8 +11,8 @@ namespace Vurbiri.Colonization.Characteristics
     public class EffectHitSettings
     {
         [SerializeField] private bool _isSelf;
+        [SerializeField] private bool _useAttack = true;
         [SerializeField] private int _duration;
-        [SerializeField] private bool _useAttack;
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
         [SerializeField] private int _value;

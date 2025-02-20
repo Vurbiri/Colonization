@@ -11,8 +11,10 @@ namespace VurbiriEditor.Colonization.Characteristics
     public class SkillSettingsDrawer : PropertyDrawerUtility
     {
         private const string NAME_ELEMENT = "Skill {0}";
-        private const string P_CLIP = "clipSettings", P_UI = "ui", P_RANGE = "range", P_DISTANCE = "distance", P_TARGET = "target", P_COST = "cost";
-        private const string P_HITS = "effectsHits", P_SFX = "SFXHits", P_EFFECTS = "_effects";
+        private const string P_RANGE = "_range", P_DISTANCE = "_distance", P_TARGET = "_target", P_COST = "_cost";
+        private const string P_HITS = "_effectsHitsSettings", P_UI = "_ui";
+        private const string P_CLIP = "clipSettings", P_SFX = "SFXHits";
+        private const string P_EFFECTS = "_effects";
         private const string P_SPRITE = "_sprite", P_KEY_NAME = "_idNameKey", P_COST_UI = "_cost";
         private const string P_CHILD_TARGET = "_parentTarget";
 

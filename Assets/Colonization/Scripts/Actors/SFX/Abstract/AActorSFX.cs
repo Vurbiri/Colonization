@@ -2,14 +2,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(AudioSource))]
-    public abstract class AActorSFX : MonoBehaviour, IActorSFX
+    public abstract class AActorSFX : MonoBehaviour, IDataSFX
     {
         [SerializeField] protected Transform _rightHand;
         [Space]
@@ -19,23 +17,26 @@ namespace Vurbiri.Colonization.Actors
 
         protected Transform _thisTransform;
         protected HitsSFX _hitsSFX;
+        protected AudioSource _audioSource;
 
         public Transform Main => _thisTransform;
         public Transform RightHand => _rightHand;
-        public AudioSource AudioSource { get; private set; }
+        public AudioSource AudioSource => _audioSource;
 
         protected virtual void Awake()
 		{
             _thisTransform = transform;
-            AudioSource = GetComponent<AudioSource>();
+            _audioSource = GetComponent<AudioSource>();
 
             _hitsSFX = _scriptablesSFX.GetHitsSFX(this);
             _scriptablesSFX = null;
         }
 
+        public virtual void React(AudioClip clip) => _audioSource.PlayOneShot(clip);
+
         public virtual void Block(bool isActive) { }
 
-        public virtual void Hit(int idSkill, int idHit, ActorSkin target) => _hitsSFX[idSkill, idHit].Hit(target);
+        public virtual CustomYieldInstruction Hit(int idSkill, int idHit, ActorSkin target) => _hitsSFX[idSkill, idHit].Hit(target);
 
         public virtual void Death() { }
 
@@ -60,7 +61,7 @@ namespace Vurbiri.Colonization.Actors
 
             public IHitSFX this[int x, int y] => _instances[_hits[x][y]];
 
-            public HitsSFX(IReadOnlyList<int> countHits, IReadOnlyList<ScriptableSFX> scriptables, IActorSFX parent)
+            public HitsSFX(IReadOnlyList<int> countHits, IReadOnlyList<ScriptableSFX> scriptables, IDataSFX parent)
             {
                 int count = countHits.Count, countIDs;
                 _hits = new int[count][];
@@ -96,7 +97,7 @@ namespace Vurbiri.Colonization.Actors
             [SerializeField] private List<ScriptableSFX> _scriptables;
             [SerializeField] private int[] _countHits;
 
-            public HitsSFX GetHitsSFX(IActorSFX parent) => new(_countHits, _scriptables, parent);
+            public HitsSFX GetHitsSFX(IDataSFX parent) => new(_countHits, _scriptables, parent);
 
 #if UNITY_EDITOR
             public void SetCountSkills(int count)
@@ -143,7 +144,7 @@ namespace Vurbiri.Colonization.Actors
 
             public void IDAdd(ID id) => _ids.Add(id);
 
-            public IHitSFX Instantiate(IActorSFX parent)
+            public IHitSFX Instantiate(IDataSFX parent)
             {
                 if (_sfx == null)
                     return new HitEmptySFX();
@@ -185,13 +186,10 @@ namespace Vurbiri.Colonization.Actors
         protected virtual void OnValidate()
         {
             if (_rightHand == null)
-                _rightHand = GetComponentsInChildren<Transform>().Where(t => t.gameObject.name == "RightHand").First();
+                _rightHand = VurbiriEditor.Utility.GetComponentByName<Transform>(this, "RightHand");
         }
 
-        public void SetCountSkillsSFX(int count)
-        {
-            _scriptablesSFX.SetCountSkills(count);
-        }
+        public void SetCountSkillsSFX(int count) => _scriptablesSFX.SetCountSkills(count);
         public void SetCountHitsSFX(int idSkill, int count) => _scriptablesSFX.SetCountHits(idSkill, count);
 
         public void SetSkillSFX(int idSkill, int idHit, AHitScriptableSFX sfx) => _scriptablesSFX.Add(idSkill, idHit, new(sfx));

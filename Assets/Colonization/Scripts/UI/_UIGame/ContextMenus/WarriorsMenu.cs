@@ -48,9 +48,9 @@ namespace Vurbiri.Colonization.UI
             _buttonBlock.Setup(actor, skills.BlockUI);
 
             var skillsUI = skills.SkillsUI;
-            int count = skillsUI.Count, index;
+            int count = skillsUI.Count, index = 0;
             
-            for (index = 0; index < count; index++)
+            for (; index < count; index++)
                 _buttonsSkill[index].Setup(actor, index, skillsUI[index], _buttonPositions[count][index]);
 
             for (; index < _countButtonsSkill; index++)

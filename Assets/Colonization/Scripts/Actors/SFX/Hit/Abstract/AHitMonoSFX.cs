@@ -1,15 +1,17 @@
 //Assets\Colonization\Scripts\Actors\SFX\Hit\Abstract\AHitMonoSFX.cs
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization.Actors
 {
     public abstract class AHitMonoSFX : MonoBehaviour, IHitSFX
     {
         protected GameObject _thisGO;
         protected Transform _thisTransform, _parent;
 
-        protected virtual void Awake()
+        public abstract IHitSFX Init(IDataSFX parent);
+        public abstract CustomYieldInstruction Hit(ActorSkin target);
+
+        protected void Init()
         {
             _thisGO = gameObject;
             _thisGO.SetActive(false);
@@ -18,8 +20,5 @@ namespace Vurbiri.Colonization.Characteristics
             _parent = _thisTransform.parent;
         }
 
-        public abstract void Hit(ActorSkin target);
-
-        public abstract IHitSFX Init(IActorSFX parent);
     }
 }

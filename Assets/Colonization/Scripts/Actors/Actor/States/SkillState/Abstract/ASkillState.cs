@@ -29,16 +29,16 @@ namespace Vurbiri.Colonization.Actors
 
             public static ASkillState Create(IReadOnlyList<EffectsHit> effects, SkillSettings skill, float speedRun, int id, Actor parent)
             {
-                if (skill.target == TargetOfSkill.Self)
-                    return new SelfSkillState(parent, effects, skill.cost, id);
+                if (skill.Target == TargetOfSkill.Self)
+                    return new SelfSkillState(parent, effects, skill.Cost, id);
 
-                if (skill.range <= 0.01f)
-                    return new RangeSkillState(parent, skill.target, effects, skill.cost, id);
+                if (skill.Range <= 0.01f)
+                    return new RangeSkillState(parent, skill.Target, effects, skill.Cost, id);
 
-                if (skill.distance <= 0.01f)
-                    return new SkillState(parent, skill.target, effects, skill.range, speedRun, skill.cost, id);
+                if (skill.Distance <= 0.01f)
+                    return new SkillState(parent, skill.Target, effects, skill.Range, speedRun, skill.Cost, id);
 
-                return new MovementSkillState(parent, skill.target, effects, skill.distance, skill.range, speedRun, skill.cost, id);
+                return new MovementSkillState(parent, skill.Target, effects, skill.Distance, skill.Range, speedRun, skill.Cost, id);
             }
 
             public override void Enter()

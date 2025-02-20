@@ -4,6 +4,7 @@
 namespace VurbiriEditor
 {
     using System.Collections.Generic;
+    using System.Linq;
     using UnityEditor;
     using UnityEngine;
 
@@ -11,6 +12,11 @@ namespace VurbiriEditor
     {
         public const string TYPE_PREFAB = "t:Prefab";
         private readonly static string[] ASSET_FOLDERS = new string[] { "Assets" };
+
+        public static T GetComponentByName<T>(this Component self, string name) where T : Component
+        {
+            return self.GetComponentsInChildren<T>().Where(t => t.gameObject.name == name).First();
+        }
 
         public static T FindAnyPrefab<T>() where T : MonoBehaviour
         {
@@ -60,10 +66,10 @@ namespace VurbiriEditor
             return list;
         }
 
-        public static string[] FindPrefabs() => AssetDatabase.FindAssets(TYPE_PREFAB, ASSET_FOLDERS);
-        public static string[] FindAssets<T>() where T : Object => AssetDatabase.FindAssets($"t:{typeof(T).Name}", ASSET_FOLDERS);
-        public static GameObject LoadMainAssetAtGUID(string guid) => ((GameObject)AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid)));
-        public static bool TryLoadAssetAtGUID<T>(string guid, out T obj) where T : Object
+        private static string[] FindPrefabs() => AssetDatabase.FindAssets(TYPE_PREFAB, ASSET_FOLDERS);
+        private static string[] FindAssets<T>() where T : Object => AssetDatabase.FindAssets($"t:{typeof(T).Name}", ASSET_FOLDERS);
+        private static GameObject LoadMainAssetAtGUID(string guid) => ((GameObject)AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid)));
+        private static bool TryLoadAssetAtGUID<T>(string guid, out T obj) where T : Object
         {
             obj = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));
             return obj != null;

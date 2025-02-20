@@ -1,11 +1,10 @@
 //Assets\Colonization\Scripts\Actors\SFX\Hit\Interface\IHitSFX.cs
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization.Actors
 {
     public interface IHitSFX
 	{
-        public void Hit(ActorSkin target);
+        public CustomYieldInstruction Hit(ActorSkin target);
     }
 }

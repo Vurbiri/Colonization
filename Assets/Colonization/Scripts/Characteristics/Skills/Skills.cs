@@ -24,64 +24,45 @@ namespace Vurbiri.Colonization.Characteristics
         [NonSerialized] private EffectsHit[][] _effectsHits;
         [NonSerialized] private BlockUI _blockUI;
 
-        public IReadOnlyList<SkillUI> SkillsUI => _skillsUI;
         public BlockUI BlockUI => _blockUI ??= new(_blockCost, _blockValue);
-#if UNITY_EDITOR
-        public IReadOnlyList<SkillSettings> List => _skillsSettings;
-#endif
+        public IReadOnlyList<SkillUI> SkillsUI
+        {
+            get
+            {
+                if (_skillsUI != null)  
+                    return _skillsUI;
+
+                var hintTextColor = SceneData.Get<SettingsTextColor>();
+                var language = SceneServices.Get<Language>();
+                int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
+                _skillsUI = new SkillUI[countSkills];
+
+                for (int i = 0; i < countSkills; i++)
+                    _skillsUI[i] = _skillsSettings[i].GetSkillUI(language, hintTextColor);
+
+                return _skillsUI;
+            }
+        }
+        public IReadOnlyList<SkillSettings> Settings => _skillsSettings;
 
         public void CreateStates(Actor parent)
         {
             parent.AddMoveState(_speedWalk);
             parent.AddBlockState(_blockCost, _blockValue * ActorAbilityId.RATE_ABILITY);
 
-            if (_effectsHits == null | _skillsUI == null)
-                CreateEffectsAndUI(parent);
-
             int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
 
-            for (int i = 0; i < countSkills; i++)
-                parent.AddSkillState(_effectsHits[i], _skillsSettings[i], _speedRun, i);
-        }
+            if (_effectsHits != null)
+            {
+                for (int i = 0; i < countSkills; i++)
+                    parent.AddSkillState(_effectsHits[i], _skillsSettings[i], _speedRun, i);
 
-        private void CreateEffectsAndUI(Actor parent)
-        {
-            var hintTextColor = SceneData.Get<SettingsTextColor>();
-            var language = SceneServices.Get<Language>();
-
-            int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
+                return;
+            }
 
             _effectsHits = new EffectsHit[countSkills][];
-            _skillsUI = new SkillUI[countSkills];
-
-            SkillSettings skillSettings; EffectsHitSettings effectsHitSettings;
-            EffectsHit[] effectsHits;
-            List<AEffectsUI>[] effectsSkillUI;
             for (int i = 0; i < countSkills; i++)
-            {
-                skillSettings = _skillsSettings[i];
-
-                int countHits = skillSettings.effectsHits.Length;
-                effectsHits = new EffectsHit[countHits];
-                effectsSkillUI = new List<AEffectsUI>[] { new(countHits), new(countHits) };
-
-                for (int j = 0, u = 0; j < countHits; j++)
-                {
-                    effectsHitSettings = skillSettings.effectsHits[j];
-                    effectsHits[j] = effectsHitSettings.CreateEffectsHit(parent, i, u);
-                    effectsHitSettings.CreateEffectsHitUI(hintTextColor, effectsSkillUI[0], effectsSkillUI[1]);
-                    u += effectsHitSettings.Count;
-                }
-                skillSettings.ui.Init(language, hintTextColor, effectsSkillUI[0].ToArray(), effectsSkillUI[1].ToArray());
-
-                _skillsUI[i] = skillSettings.ui;
-                _effectsHits[i] = effectsHits;
-
-#if !UNITY_EDITOR
-                skill.ui = null;
-                skill.effectsHits = null;
-#endif
-            }
+                _effectsHits[i] = parent.AddSkillState(_skillsSettings[i], _speedRun, i);
         }
 
         public void Dispose()

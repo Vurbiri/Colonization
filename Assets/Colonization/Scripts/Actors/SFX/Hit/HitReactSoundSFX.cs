@@ -1,24 +1,21 @@
 //Assets\Colonization\Scripts\Actors\SFX\Hit\HitReactSoundSFX.cs
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization.Actors
 {
     public class HitReactSoundSFX : IHitSFX
     {
         private readonly AudioClip _clip;
-        private readonly AudioSource _audioSource;
 
-        public HitReactSoundSFX(AudioClip clip, AudioSource audioSource)
+        public HitReactSoundSFX(AudioClip clip)
         {
             _clip = clip;
-            _audioSource = audioSource;
         }
 
-        public void Hit(ActorSkin target)
+        public CustomYieldInstruction Hit(ActorSkin target)
         {
-            _audioSource.PlayOneShot(_clip);
-            target.React();
+            target.React(_clip);
+            return null;
         }
 
     }

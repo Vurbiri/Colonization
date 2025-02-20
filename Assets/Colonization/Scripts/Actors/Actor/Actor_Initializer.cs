@@ -17,6 +17,12 @@ namespace Vurbiri.Colonization.Actors
         {
             _stateMachine.AddState(ASkillState.Create(effects, skill, speedRun, id, this));
         }
+        public EffectsHit[] AddSkillState(SkillSettings skill, float speedRun, int id)
+        {
+            EffectsHit[] effects = skill.CreateEffectsHit(this, id);
+            _stateMachine.AddState(ASkillState.Create(effects, skill, speedRun, id, this));
+            return effects;
+        }
 
         public void Init(ActorSettings settings, BoxCollider collider, int owner, Hexagon startHex)
         {

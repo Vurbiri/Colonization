@@ -1,4 +1,5 @@
 //Assets\Vurbiri\Runtime\Coroutine\WaitTime.cs
+
 namespace Vurbiri
 {
     public class WaitTime : UnityEngine.CustomYieldInstruction
@@ -17,7 +18,7 @@ namespace Vurbiri
             get
             {
                 if (_waitUntilTime < 0f)
-                    _waitUntilTime = UnityEngine.Time.time + Time;
+                    _waitUntilTime = UnityEngine.Time.time + _waitTime;
 
                 bool flag = UnityEngine.Time.time < _waitUntilTime;
                 if (!flag)

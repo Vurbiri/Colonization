@@ -1,10 +1,10 @@
 //Assets\Colonization\Scripts\Actors\SFX\Hit\HitEmptySFX.cs
-using Vurbiri.Colonization.Actors;
+using UnityEngine;
 
-namespace Vurbiri.Colonization.Characteristics
+namespace Vurbiri.Colonization.Actors
 {
     public class HitEmptySFX : IHitSFX
     {
-        public void Hit(ActorSkin target) { }
+        public CustomYieldInstruction Hit(ActorSkin target) => null;
     }
 }
