@@ -6,17 +6,17 @@ namespace Vurbiri.Colonization.UI
 {
     public class PenetrationEffectUI : AEffectsUI
     {
-        private readonly string _valueDefense;
+        private readonly string _pierce;
 
-        public PenetrationEffectUI(string descKey, string value, int valueDefense, string hexColor) : base(descKey, value, hexColor)
+        public PenetrationEffectUI(string descKey, string value, int pierce, string hexColor) : base(descKey, value, hexColor)
         {
-            _valueDefense = (100 - valueDefense).ToString();
+            _pierce = pierce.ToString();
         }
 
         public override void GetText(Language language, StringBuilder sb)
         {
             sb.Append(_hexColor);
-            sb.AppendLine(language.GetTextFormat(CONST_UI_LNG_KEYS.FILE, _descKey, _value, _valueDefense));
+            sb.AppendLine(language.GetTextFormat(CONST_UI_LNG_KEYS.FILE, _descKey, _value, _pierce));
         }
     }
 }

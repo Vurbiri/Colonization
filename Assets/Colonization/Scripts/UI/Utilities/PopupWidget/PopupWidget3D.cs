@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.UI
 
         private Transform _thisTransform;
         private GameObject _self;
-        private WaitQueue _queue;
+        private CoroutinesQueue _queue;
         private IdArray<ActorAbilityId, Sprite> _sprites;
 
         private float _scaleColorSpeed;
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.UI
             _sprites = sprites;
             _queue = new(this, () => _self.SetActive(false));
 
-            Vurbiri.UI.SettingsTextColor settings = SceneData.Get<Vurbiri.UI.SettingsTextColor>();
+            Vurbiri.UI.TextColorSettings settings = SceneData.Get<Vurbiri.UI.TextColorSettings>();
 
             _colorPlusStart = _colorPlusEnd = settings.ColorPositive;
             _colorMinusStart = _colorMinusEnd = settings.ColorNegative;
@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization.UI
                 return;
 
             _self.SetActive(true);
-            _queue.Add(Run_Coroutine(delta, id));
+            _queue.Enqueue(Run_Coroutine(delta, id));
         }
 
         protected IEnumerator Run_Coroutine(int value, Id<ActorAbilityId> id)

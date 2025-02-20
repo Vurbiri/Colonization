@@ -19,15 +19,17 @@ namespace Vurbiri.Colonization.UI
 
         private Language _localization;
         private IReadOnlyList<ACurrencies> _edificePrices;
+        private ACurrencies _cash;
 
         public void Init(Vector3 localPosition, ButtonSettings settings, IReadOnlyList<ACurrencies> edificePrices, UnityAction action)
         {
             base.Init(localPosition, settings, action);
-            _edificePrices = edificePrices;
             _localization = SceneServices.Get<Language>();
+            _edificePrices = edificePrices;
+            _cash = settings.player.Resources;
         }
 
-        public void Setup(bool isEnable, int edificeId, ACurrencies cash)
+        public void Setup(bool isEnable, int edificeId)
         {
             if (!isEnable)
             {
@@ -38,10 +40,10 @@ namespace Vurbiri.Colonization.UI
             ButtonView view = _edificeView[edificeId];
             ACurrencies cost = _edificePrices[edificeId];
 
-            _button.Interactable = cash >= cost;
+            _button.Interactable = _cash >= cost;
             _buttonIcon.sprite = view.sprite;
 
-            SetTextHint(_localization.GetText(Files.Gameplay, view.keyHint), cash, cost);
+            SetTextHint(_localization.GetText(Files.Gameplay, view.keyHint), _cash, cost);
 
             _thisGO.SetActive(true);
         }

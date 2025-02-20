@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected string _key;
 
         private ACurrencies _cost;
+        private ACurrencies _cash;
         private IUnsubscriber _unsubscriber;
         private string _caption;
 
@@ -19,10 +20,11 @@ namespace Vurbiri.Colonization.UI
         {
             base.Init(localPosition, settings, action);
             _cost = cost;
+            _cash = settings.player.Resources;
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
         }
 
-        public void Setup(bool isEnable, ACurrencies cash)
+        public void Setup(bool isEnable)
         {
             if(!isEnable)
             {
@@ -30,9 +32,9 @@ namespace Vurbiri.Colonization.UI
                 return;
             }
             
-            _button.Interactable = cash >= _cost;
+            _button.Interactable = _cash >= _cost;
 
-            SetTextHint(_caption, cash, _cost);
+            SetTextHint(_caption, _cash, _cost);
 
             _thisGO.SetActive(true);
         }

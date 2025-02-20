@@ -12,7 +12,7 @@ namespace Vurbiri
 
         public IEnumerator Load_Coroutine(string key, Action<bool> callback);
 
-        public IEnumerator Save_Coroutine(string key, object data, bool toFile = true, Action<bool> callback = null);
+        public IEnumerator Save_Coroutine<T>(string key, T data, bool toFile = true, Action<bool> callback = null);
 
         public Return<T> Get<T>(string key);
 

@@ -1,13 +1,12 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Currencies\CurrenciesPanel.cs
+using UnityEngine;
+using UnityEngine.UI;
+
 namespace Vurbiri.Colonization.UI
 {
-    using UnityEngine;
-    using UnityEngine.UI;
 
     public class CurrenciesPanel : MonoBehaviour
     {
-        [SerializeField] private Id<PlayerId> _playerId;
-        [Space]
         [SerializeField] private Currency _currencyUIPrefab;
         [SerializeField] private Amount _amountUIPrefab;
         [SerializeField] private Blood _bloodUIPrefab;
@@ -27,9 +26,9 @@ namespace Vurbiri.Colonization.UI
         {
             RectTransform thisRectTransform = GetComponent<RectTransform>();
 
-            GetComponent<Image>().color = SceneData.Get<PlayersVisual>()[_playerId].color.SetAlpha(_transparency);
+            GetComponent<Image>().color = SceneData.Get<PlayersVisual>()[PlayerId.Player].color.SetAlpha(_transparency);
 
-            var currencies = SceneObjects.Get<Players>()[_playerId].Resources;
+            var currencies = SceneObjects.Get<Players>().Player.Resources;
 
             Vector2 cSize = _currencyUIPrefab.Size, aSize = _amountUIPrefab.Size, bSize = _bloodUIPrefab.Size;
             float offset = cSize.x * 5f + aSize.x + bSize.x + _space * 7f;

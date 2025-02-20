@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\Players\Player.cs
-using System;
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
@@ -10,7 +9,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Player : IValueId<PlayerId>, IDisposable
+    public partial class Player : IPlayer
     {
         protected readonly Objects _obj;
         protected readonly ExchangeRate _exchangeRate;

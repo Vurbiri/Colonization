@@ -7,7 +7,7 @@ using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
 namespace VurbiriEditor.Colonization.Characteristics
 {
-    [CustomPropertyDrawer(typeof(Skills.SkillSettings))]
+    [CustomPropertyDrawer(typeof(SkillSettings))]
     public class SkillSettingsDrawer : PropertyDrawerUtility
     {
         private const string NAME_ELEMENT = "Skill {0}";

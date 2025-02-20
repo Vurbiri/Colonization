@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         {
             Init(settings.hint, OnClick, false);
 
-            _button.targetGraphic.color = settings.color;
+            _button.targetGraphic.color = settings.playerColor;
             _parentGO = parent;
         }
 

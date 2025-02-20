@@ -196,7 +196,7 @@ namespace Vurbiri.Colonization
             return busyCount < _hexagons.Count && _owner == playerId && _states.groupId == EdificeGroupId.Port;
         }
 
-        public WaitResult<Hexagon> GetHexagonForRecruiting_Wait()
+        public WaitResult<Hexagon> GetHexagonForRecruiting_Wait(bool isNotDemon = true)
         {
             _waitHexagon = new();
             List<Hexagon> empty = new(2);
@@ -212,7 +212,7 @@ namespace Vurbiri.Colonization
                 return _waitHexagon.SetResult(empty[0]);
 
             foreach (var hex in empty)
-                hex.TrySetSelectableFree();
+                hex.TrySetSelectableFree(isNotDemon);
 
             _canCancel.Value = true;
             return _waitHexagon;

@@ -10,7 +10,7 @@ using Vurbiri.UI;
 namespace Vurbiri.Colonization.Characteristics
 {
     [System.Serializable]
-    public partial class Skills : IDisposable
+    public class Skills : IDisposable
     {
         public const int COUNT_SKILLS_MAX = 4;
 
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.Characteristics
                 if (_skillsUI != null)  
                     return _skillsUI;
 
-                var hintTextColor = SceneData.Get<SettingsTextColor>();
+                var hintTextColor = SceneData.Get<TextColorSettings>();
                 var language = SceneServices.Get<Language>();
                 int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
                 _skillsUI = new SkillUI[countSkills];

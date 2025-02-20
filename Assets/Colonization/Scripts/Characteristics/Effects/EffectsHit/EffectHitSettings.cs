@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
         [SerializeField] private int _value;
-        [SerializeField] private int _defenseValue = 100;
+        [SerializeField] private int _pierce;
         [SerializeField] private int _reflectValue;
         [SerializeField] private int _descKeyId;
 
@@ -37,11 +37,8 @@ namespace Vurbiri.Colonization.Characteristics
 
             bool isReflect = _reflectValue > 0;
 
-            if (_defenseValue > 0)
-                return isReflect ? new ReflectAttackEffect(_value, _defenseValue, _reflectValue) : new AttackEffect(_value, _defenseValue);
-
             if (_value < 0)
-                return isReflect ? new ReflectAttackNotDefEffect(_value, _reflectValue) : new AttackNotDefEffect(_value);
+                    return isReflect ? new ReflectAttackEffect(_value, _pierce, _reflectValue) : new AttackEffect(_value, _pierce);
 
             if (_isSelf)
                 return new SelfHealEffect(_value);
@@ -51,7 +48,7 @@ namespace Vurbiri.Colonization.Characteristics
             return new TargetHealEffect(_value);
         }
                
-        public AEffectsUI CreateEffectUI(SettingsTextColor hintTextColor)
+        public AEffectsUI CreateEffectUI(TextColorSettings hintTextColor)
         {
             string deskKey = DESK_EFFECTS_KEYS[_descKeyId];
             
@@ -60,15 +57,15 @@ namespace Vurbiri.Colonization.Characteristics
 
             if (_useAttack)
             {
-                bool isNotPenetration = _defenseValue == 100;
+                bool isNotPiercing = _pierce == 0;
 
                 hexColor = hintTextColor.HexColorTextBase;
                 value = _value.ToString("#;#;0");
 
                 if (_reflectValue <= 0)
                 {
-                    if (isNotPenetration) return new PermEffectUI(deskKey, value, hexColor);
-                    return new PenetrationEffectUI(deskKey, value, _defenseValue, hexColor);
+                    if (isNotPiercing) return new PermEffectUI(deskKey, value, hexColor);
+                    return new PenetrationEffectUI(deskKey, value, _pierce, hexColor);
                 }
 
                 string descKeyReflect, hexColorReflect;
@@ -84,8 +81,8 @@ namespace Vurbiri.Colonization.Characteristics
                     hexColorReflect = hintTextColor.HexColorPositive;
                 }
 
-                if (isNotPenetration) return new ReflectEffectUI(deskKey, value, hexColor, descKeyReflect, _reflectValue, hexColorReflect);
-                return new ReflectPenetrationEffectUI(deskKey, value, _defenseValue, hexColor, descKeyReflect, _reflectValue, hexColorReflect);
+                if (isNotPiercing) return new ReflectEffectUI(deskKey, value, hexColor, descKeyReflect, _reflectValue, hexColorReflect);
+                return new ReflectPenetrationEffectUI(deskKey, value, _pierce, hexColor, descKeyReflect, _reflectValue, hexColorReflect);
             }
 
             hexColor = isPositive ? hintTextColor.HexColorPositive : hintTextColor.HexColorNegative;

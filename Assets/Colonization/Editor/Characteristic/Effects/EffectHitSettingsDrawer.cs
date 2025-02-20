@@ -17,7 +17,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         #region Consts
         private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID ="Void Effect {0}";
         private const string P_IS_SELF = "_isSelf", P_TARGET_ABILITY = "_targetAbility", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
-        private const string P_USED_ATTACK = "_useAttack", P_DEFENSE = "_defenseValue", P_REFLECT = "_reflectValue";
+        private const string P_USED_ATTACK = "_useAttack", P_PIERCE = "_pierce", P_REFLECT = "_reflectValue";
         private const string P_DESC_KEY = "_descKeyId";
         private const string P_PARENT_TARGET = "_parentTarget";
         #endregion
@@ -74,7 +74,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 else
                 {
                     SetBool(P_USED_ATTACK, isUsedAttack = false);
-                    SetInt(P_DEFENSE, 0);
+                    SetInt(P_PIERCE, 0);
                     SetInt(P_REFLECT, 0);
                 }
 
@@ -123,9 +123,9 @@ namespace VurbiriEditor.Colonization.Characteristics
                 DrawRateValue("Attack (%)", 5, 300, 100, isTargetEnemy ? -1 : 1);
 
                 if (isTargetEnemy)
-                    DrawInt(P_DEFENSE, "Defense (%)", 0, 100, 100);
+                    DrawInt(P_PIERCE, "Pierce (%)", 0, 100);
                 else
-                    SetInt(P_DEFENSE, 0);
+                    SetInt(P_PIERCE, 0);
 
                 if (isTarget)
                     DrawInt(P_REFLECT, "Reflect (%)", 0, 200);
@@ -252,16 +252,16 @@ namespace VurbiriEditor.Colonization.Characteristics
                     }
                     else
                     {
-                        int defense = GetInt(P_DEFENSE);
-                        if (defense == 100)
+                        int pierce = GetInt(P_PIERCE);
+                        if (pierce == 0)
                         {
                             key = "Damage";
                             DrawLabel(Localization.GetTextFormat(FILE, key, strValue).Delete("<b>", "</b>"));
                         }
                         else
                         {
-                            key = "DamagePenetration";
-                            DrawLabel(Localization.GetTextFormat(FILE, key, strValue, 100 - defense).Delete("<b>", "</b>").Replace("\n", " "));
+                            key = "DamagePierce";
+                            DrawLabel(Localization.GetTextFormat(FILE, key, strValue, pierce).Delete("<b>", "</b>").Replace("\n", " "));
                         }
                     }
                 }

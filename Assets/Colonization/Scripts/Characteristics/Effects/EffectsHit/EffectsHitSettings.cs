@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Characteristics
             return new EffectsHit(_effects, parent.TypeId, parent.Id, skillId, startEffectId);
         }
 
-        public void CreateEffectsHitUI(SettingsTextColor hintTextColor, IList<AEffectsUI> target, IList<AEffectsUI> self)
+        public void CreateEffectsHitUI(TextColorSettings hintTextColor, IList<AEffectsUI> target, IList<AEffectsUI> self)
 		{
 			int count = _effects.Length;
             EffectHitSettings effect;

@@ -31,7 +31,7 @@ namespace Vurbiri.UI
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _textTransform = _hint.rectTransform;
 
-            _hint.color = SceneData.Get<SettingsTextColor>().ColorHintBase;
+            _hint.color = SceneData.Get<TextColorSettings>().ColorHintBase;
             _hint.overflowMode = TextOverflowModes.Overflow;
 
             _thisCanvasGroup.alpha = 0f;

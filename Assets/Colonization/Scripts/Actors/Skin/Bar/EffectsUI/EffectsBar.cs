@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.Actors
 
         private Unsubscribers _unsubscribers;
 
-        public void Init(ReactiveEffect effect, IReactiveItem<Actor> actor, IReadOnlyList<Sprite> sprites, SettingsTextColor colors, int orderLevel)
+        public void Init(ReactiveEffect effect, IReactiveItem<Actor> actor, IReadOnlyList<Sprite> sprites, TextColorSettings colors, int orderLevel)
         {
             _sprite.sortingOrder = _orderLevel + orderLevel;
             _durationTMP.sortingOrder = _orderLevel + orderLevel;

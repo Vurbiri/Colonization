@@ -15,21 +15,30 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected Id<T> _id;
 
         protected ACurrencies _cost;
+        protected ACurrencies _cash;
         protected IUnsubscriber _unsubscriber;
         protected string _caption;
-        protected Players _players;
+        protected Player _player;
         protected GameObject _parentGO;
-        
+        protected Crossroad _currentCrossroad;
+
         public Id<T> Id => _id;
 
         public virtual void Init(ButtonSettings settings, ACurrencies cost, GameObject parent, Vector3 localPosition = default)
         {
             base.Init(localPosition, settings, OnClick);
             
-            _players = settings.players;
+            _player = settings.player;
             _cost = cost;
+            _cash = _player.Resources;
             _parentGO = parent;
             _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
+        }
+
+        public virtual void Setup(Crossroad crossroad)
+        {
+            _currentCrossroad = crossroad;
+            SetTextHint(_caption, _cash, _cost);
         }
 
         protected void SetText(Language localization) => _caption = localization.GetText(_lngFile, _key);

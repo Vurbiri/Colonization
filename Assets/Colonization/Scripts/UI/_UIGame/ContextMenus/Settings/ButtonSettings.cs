@@ -6,17 +6,17 @@ namespace Vurbiri.Colonization.UI
 {
     public class ButtonSettings
     {
-        public readonly Players players;
-        public readonly Color color;
+        public readonly Player player;
+        public readonly Color playerColor;
         public readonly HintGlobal hint;
-        public readonly SettingsTextColor colors;
+        public readonly TextColorSettings colorSettings;
 
-        public ButtonSettings(Players players, HintGlobal hint)
+        public ButtonSettings(Player player, HintGlobal hint)
         {
-            this.players = players;
-            this.color = SceneData.Get<PlayersVisual>()[PlayerId.Player].color;
+            this.player = player;
             this.hint = hint;
-            this.colors = SceneData.Get<SettingsTextColor>();
+            playerColor = SceneData.Get<PlayersVisual>()[PlayerId.Player].color;
+            colorSettings = SceneData.Get<TextColorSettings>();
         }
     }
 }

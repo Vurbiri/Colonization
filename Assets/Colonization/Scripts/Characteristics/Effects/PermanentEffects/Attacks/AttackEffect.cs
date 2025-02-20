@@ -3,20 +3,21 @@ using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
+    using static ActorAbilityId;
+
     public class AttackEffect : AEffect
     {
-        private readonly AbilityModifierPercent _usedModifier, _defModifier;
+        private readonly AbilityModifierPercent _damage, _pierce;
 
-        public AttackEffect(int value, int _defenseValue) : base(ActorAbilityId.CurrentHP, TypeModifierId.Addition)
+        public AttackEffect(int value, int pierce) : base(CurrentHP, TypeModifierId.Addition)
         {
-            _usedModifier = new(-value);
-            _defModifier = new(-_defenseValue);
+            _damage = new(-value);
+            _pierce = new(100 - pierce);
         }
 
         public override int Apply(Actor self, Actor target)
         {
-            int value = _usedModifier.Apply(self.Abilities[ActorAbilityId.Attack].Value);
-            _value = -System.Math.Max(value + _defModifier.Apply(target.Abilities[ActorAbilityId.Defense].Value), 0);
+            _value = -Formulas.Damage(_damage.Apply(self.Abilities[Attack].Value), _pierce.Apply(target.Abilities[Defense].Value) );
             return target.ApplyEffect(this);
         }
     }

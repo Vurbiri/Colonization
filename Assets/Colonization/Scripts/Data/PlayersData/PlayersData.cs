@@ -54,6 +54,11 @@ namespace Vurbiri.Colonization.Data
             return defaultValue;
         }
 
+        public void Save<T>(string key, T data, bool toFile = true, Action<bool> callback = null)
+        {
+            _coroutines.Run(_storage.Save_Coroutine(key, data, toFile, callback));
+        }
+
         public void Save(int currentPlayerId, bool saveToFile = true, Action<bool> callback = null)
         {
             _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.CURRENT_PLAYER, currentPlayerId, saveToFile, callback));

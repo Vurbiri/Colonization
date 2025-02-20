@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.UI
         public Sprite Sprite => _sprite;
         public int Cost => _cost;
 
-        public void Init(Language language, SettingsTextColor hintTextColor, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf)
+        public void Init(Language language, TextColorSettings hintTextColor, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf)
         {
             _hexColor = hintTextColor.HexColorHintBase;
             _hexColorPlus = hintTextColor.HexColorPositive;

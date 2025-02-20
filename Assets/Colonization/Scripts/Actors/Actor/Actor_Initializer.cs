@@ -7,17 +7,16 @@ using Vurbiri.Colonization.Data;
 namespace Vurbiri.Colonization.Actors
 {
     using static CONST;
-    using static Vurbiri.Colonization.Characteristics.Skills;
 
     public abstract partial class Actor
     {
-        public void AddMoveState(float speed) => _stateMachine.AddState(new MoveState(speed, this));
-        public void AddBlockState(int cost, int value) => _stateMachine.AddState(_blockState = ABlockState.Create(_owner, cost, value, this));
-        public void AddSkillState(IReadOnlyList<EffectsHit> effects, SkillSettings skill, float speedRun, int id)
+        public virtual void AddMoveState(float speed) => _stateMachine.AddState(new MoveState(speed, this));
+        public virtual void AddBlockState(int cost, int value) => _stateMachine.AddState(_blockState = ABlockState.Create(_owner, cost, value, this));
+        public virtual void AddSkillState(IReadOnlyList<EffectsHit> effects, SkillSettings skill, float speedRun, int id)
         {
             _stateMachine.AddState(ASkillState.Create(effects, skill, speedRun, id, this));
         }
-        public EffectsHit[] AddSkillState(SkillSettings skill, float speedRun, int id)
+        public virtual EffectsHit[] AddSkillState(SkillSettings skill, float speedRun, int id)
         {
             EffectsHit[] effects = skill.CreateEffectsHit(this, id);
             _stateMachine.AddState(ASkillState.Create(effects, skill, speedRun, id, this));

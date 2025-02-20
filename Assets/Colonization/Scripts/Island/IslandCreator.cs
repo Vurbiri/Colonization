@@ -4,6 +4,10 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Data;
 
+#if UNITY_EDITOR
+using static VurbiriEditor.Utility;
+#endif
+
 namespace Vurbiri.Colonization
 {
     using static CONST;
@@ -13,14 +17,14 @@ namespace Vurbiri.Colonization
         [SerializeField] private Transform _landContainer;
         [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private Transform _roadsContainer;
-        [SerializeField] private Transform _warriorsContainer;
+        [SerializeField] private Transform _actorsContainer;
 
         private Land _land;
         private Crossroads _crossroads;
 
 #if UNITY_EDITOR
         public Transform RoadsContainer => _roadsContainer;
-        public Transform WarriorContainer => _warriorsContainer;
+        public Transform ActorsContainer => _actorsContainer;
 #endif
 
         public void Init(Land land, Crossroads crossroads)
@@ -116,5 +120,20 @@ namespace Vurbiri.Colonization
             yield return null;
             yield return StartCoroutine(_land.SetMesh_Coroutine());
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_landContainer == null)
+                _landContainer = this.GetComponentByName<Transform>("Land");
+            if (_crossroadsContainer == null)
+                _crossroadsContainer = this.GetComponentByName<Transform>("Crossroads");
+            if (_roadsContainer == null)
+                _roadsContainer = this.GetComponentByName<Transform>("Roads");
+            if (_actorsContainer == null)
+                _actorsContainer = this.GetComponentByName<Transform>("Actors");
+
+        }
+#endif
     }
 }

@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         private Vector3 _positionStart, _positionEnd;
         private GameObject _self;
         private string _stringPlus, _stringMinus;
-        private WaitQueue _queue;
+        private CoroutinesQueue _queue;
         private int _prevValue = int.MinValue;
 
         public void Init(Vector3 direction)
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.UI
             _positionStart = _thisTransform.localPosition;
             _positionEnd = _positionStart + direction * _distance;
 
-            Vurbiri.UI.SettingsTextColor settings = SceneData.Get<Vurbiri.UI.SettingsTextColor>();
+            Vurbiri.UI.TextColorSettings settings = SceneData.Get<Vurbiri.UI.TextColorSettings>();
 
             _stringPlus = settings.HexColorPositive.Concat(" +{0}");
             _stringMinus = settings.HexColorNegative.Concat(" {0}");
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization.UI
             }
 
             _self.SetActive(true);
-            _queue.Add(Run_Coroutine(string.Format(delta > 0 ? _stringPlus : _stringMinus, delta)));
+            _queue.Enqueue(Run_Coroutine(string.Format(delta > 0 ? _stringPlus : _stringMinus, delta)));
 
             _prevValue = value;
         }

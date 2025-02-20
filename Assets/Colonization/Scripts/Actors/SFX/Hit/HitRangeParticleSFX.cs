@@ -15,6 +15,7 @@ namespace Vurbiri.Colonization.Actors
         private MainModule _main;
         private readonly WaitTime _waitTime = new(0);
         private readonly WaitActivate _waitActivate = new();
+        private float _avgSpeed;
 
         public override IHitSFX Init(IDataSFX parent)
         {
@@ -25,15 +26,18 @@ namespace Vurbiri.Colonization.Actors
             _particle = GetComponent<ParticleSystem>();
             _main = _particle.main;
 
+            _avgSpeed = (_main.startSpeed.constantMin + _main.startSpeed.constantMax) / 2f;
+
             return this;
         }
 
         public override CustomYieldInstruction Hit(ActorSkin target)
         {
+            Bounds bounds = target.Bounds;
             Vector3 targetPosition = target.transform.position;
-            targetPosition.y += target.Bounds.extents.y;
+            targetPosition.y += bounds.extents.y;
 
-            float time = (Vector3.Distance(_thisTransform.position, targetPosition) - target.Bounds.extents.z) / _main.startSpeed.constantMin;
+            float time = (Vector3.Distance(_thisTransform.position, targetPosition) - bounds.extents.z) / _avgSpeed;
             _main.startLifetime = time;
             _main.duration = time;
                         
@@ -53,6 +57,8 @@ namespace Vurbiri.Colonization.Actors
             yield return _waitTime.SetTime(time);
             _waitActivate.Activate();
             target.React(_clipHit);
+
+            yield return _waitTime.SetTime(0.25f);
             _thisGO.SetActive(false);
         }
 

@@ -12,7 +12,7 @@ namespace VurbiriEditor.Colonization.Actors
 	{
         public static readonly string[] A_SKILLS = { "A_Skill_0", "A_Skill_1", "A_Skill_2", "A_Skill_3" };
 
-        public static void OverrideClips(IReadOnlyList<ActorSettings> list)
+        public static void OverrideClips(IReadOnlyList<ActorSettings> listSettings)
         {
             Debug.Log("[OverrideClips]");
 
@@ -23,7 +23,7 @@ namespace VurbiriEditor.Colonization.Actors
             SkillSettings skillSettings;
             AnimationClipSettingsScriptable clipSettings;
 
-            foreach (var settings in list)
+            foreach (var settings in listSettings)
             {
                 actorSkin = settings.PrefabSkin;
                 if (actorSkin == null)

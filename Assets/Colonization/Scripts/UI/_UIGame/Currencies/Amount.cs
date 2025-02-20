@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
         public void Init(Vector3 position, IReactive<int> amount, IReactive<int> max)
         {
             _colorNormal = _maxTMP.color;
-            _colorOver = SceneData.Get<SettingsTextColor>().ColorNegative;
+            _colorOver = SceneData.Get<TextColorSettings>().ColorNegative;
 
             _thisRectTransform.localPosition = position;
 

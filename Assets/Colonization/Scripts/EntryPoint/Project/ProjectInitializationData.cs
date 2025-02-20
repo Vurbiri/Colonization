@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         [Space]
         public string leaderboardName = "lbColonization";
         [Space]
-        public SettingsTextColorScriptable settingsColorScriptable;
+        public TextColorSettingsScriptable settingsColorScriptable;
         [Space]
         public SettingsData.Profile defaultProfile;
 
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
             if(logOnPanel == null)
                 logOnPanel = FindAnyObjectByType<LogOnPanel>();
             if (settingsColorScriptable == null)
-                settingsColorScriptable = VurbiriEditor.Utility.FindAnyScriptable<SettingsTextColorScriptable>();
+                settingsColorScriptable = VurbiriEditor.Utility.FindAnyScriptable<TextColorSettingsScriptable>();
         }
 #endif
     }

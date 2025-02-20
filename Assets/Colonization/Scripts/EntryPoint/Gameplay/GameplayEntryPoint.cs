@@ -148,8 +148,8 @@ namespace Vurbiri.Colonization
             _settingsUI.OnValidate();
 
             _playersSettings.OnValidate();
-            if (_playersSettings.warriorsContainer == null)
-                _playersSettings.warriorsContainer = _sceneObjects.islandCreator.WarriorContainer;
+            if (_playersSettings.actorsContainer == null)
+                _playersSettings.actorsContainer = _sceneObjects.islandCreator.ActorsContainer;
             if (_playersSettings.roadsFactory.container == null)
                 _playersSettings.roadsFactory.container = _sceneObjects.islandCreator.RoadsContainer;
         }

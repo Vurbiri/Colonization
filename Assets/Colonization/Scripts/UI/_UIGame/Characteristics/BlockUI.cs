@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
             _cost = cost;
             _value = value > 0 ? $"+{value}" : value.ToString();
 
-            var hintTextColor = SceneData.Get<SettingsTextColor>();
+            var hintTextColor = SceneData.Get<TextColorSettings>();
             _hexColorPlus = hintTextColor.HexColorPositive;
             _hexColorMinus = hintTextColor.HexColorNegative;
 

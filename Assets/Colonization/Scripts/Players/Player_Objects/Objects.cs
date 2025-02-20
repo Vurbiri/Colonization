@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
                 abilities = settings.states;
                 roads = settings.roadsFactory.Create().Init(playerId, visual.color);
                 _prices = settings.prices;
-                _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.warriorsContainer);
+                _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
 
                 if (isLoad)
                 {

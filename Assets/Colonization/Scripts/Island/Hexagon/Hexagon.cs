@@ -158,9 +158,9 @@ namespace Vurbiri.Colonization
         public bool IsEnemy(Id<PlayerId> id) => _owner != null && _owner.GetRelation(id) == Relation.Enemy;
 
 
-        public bool TrySetSelectableFree()
+        public bool TrySetSelectableFree(bool isNotDemon)
         {
-            if(_isGate | _isWater | _owner != null)
+            if((_isGate & isNotDemon) | _isWater | _owner != null)
                 return false;
 
             _mark = _poolMarks.Get(_thisTransform, false).View(true);

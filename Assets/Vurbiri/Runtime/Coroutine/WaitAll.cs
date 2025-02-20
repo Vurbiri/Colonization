@@ -7,58 +7,69 @@ namespace Vurbiri
 {
     public class WaitAll : CustomYieldInstruction
     {
-        private readonly HashSet<IEnumerator> _coroutines = new();
-        private readonly MonoBehaviour _monoBehaviour;
+        private readonly List<IEnumerator> _coroutines;
 
-        public override bool keepWaiting => _coroutines.Count != 0;
+        public int Count => _coroutines.Count;
 
-        public WaitAll(MonoBehaviour monoBehaviour)
+        public override bool keepWaiting
         {
-            _monoBehaviour = monoBehaviour;
+            get
+            {
+                for(int i = _coroutines.Count - 1; i >= 0; i--)
+                    if (!_coroutines[i].MoveNext())
+                        _coroutines.RemoveAt(i);
+
+                return _coroutines.Count != 0;
+            }
         }
-        public WaitAll(MonoBehaviour monoBehaviour, IEnumerator coroutine)
+
+        public WaitAll()
         {
-            _monoBehaviour = monoBehaviour;
-            Add(coroutine);
+            _coroutines = new();
         }
-        public WaitAll(MonoBehaviour monoBehaviour, params IEnumerator[] coroutines)
+
+        public WaitAll(IEnumerator coroutine)
         {
-            _monoBehaviour = monoBehaviour;
-            Add(coroutines);
+            _coroutines = new() { coroutine };
+        }
+        public WaitAll(IEnumerator coroutine1, IEnumerator coroutine2)
+        {
+            _coroutines = new() { coroutine1, coroutine2 };
+        }
+        public WaitAll(params IEnumerator[] coroutines)
+        {
+            _coroutines = new(coroutines);
+        }
+        public WaitAll(IEnumerable<IEnumerator> coroutines)
+        {
+            _coroutines = new(coroutines);
         }
 
         public WaitAll Add(IEnumerator coroutine)
         {
-            _monoBehaviour.StartCoroutine(AddCoroutine(coroutine));
+            _coroutines.Add(coroutine);
             return this;
         }
         public WaitAll Add(IEnumerator coroutine1, IEnumerator coroutine2)
         {
-            _monoBehaviour.StartCoroutine(AddCoroutine(coroutine1));
-            _monoBehaviour.StartCoroutine(AddCoroutine(coroutine2));
+            _coroutines.Add(coroutine1);
+            _coroutines.Add(coroutine2);
             return this;
         }
         public WaitAll Add(params IEnumerator[] coroutines)
         {
-            foreach (var coroutine in coroutines)
-                _monoBehaviour.StartCoroutine(AddCoroutine(coroutine));
-
+            _coroutines.AddRange(coroutines);
+            return this;
+        }
+        public WaitAll AddRange(IEnumerable<IEnumerator> coroutines)
+        {
+            _coroutines.AddRange(coroutines);
             return this;
         }
 
-        public void Stop()
+        public override void Reset()
         {
-            foreach (var coroutine in _coroutines)
-                _monoBehaviour.StopCoroutine(coroutine);
-
             _coroutines.Clear();
-        }
-
-        private IEnumerator AddCoroutine(IEnumerator coroutine)
-        {
-            _coroutines.Add(coroutine);
-            yield return coroutine;
-            _coroutines.Remove(coroutine);
         }
     }
 }

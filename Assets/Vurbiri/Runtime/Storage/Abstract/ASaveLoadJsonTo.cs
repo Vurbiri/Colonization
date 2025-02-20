@@ -33,7 +33,7 @@ namespace Vurbiri
             return result.Result;
         }
 
-        public IEnumerator Save_Coroutine(string key, object data, bool toFile, Action<bool> callback)
+        public IEnumerator Save_Coroutine<T>(string key, T data, bool toFile, Action<bool> callback)
         {
             bool result = SaveToMemory(data);
             if (!toFile | !(result & _modified))
@@ -46,11 +46,11 @@ namespace Vurbiri
 
             #region Local: SaveToMemory(..), SaveToFile_Coroutine()
             //======================================
-            bool SaveToMemory(object data)
+            bool SaveToMemory(T data)
             {
                 try
                 {
-                    string json = Serialize(data);
+                    string json = Serialize<T>(data);
 
                     if (!_saved.TryGetValue(key, out string saveJson) || saveJson != json)
                     {
@@ -82,7 +82,7 @@ namespace Vurbiri
 
         protected abstract WaitResult<bool> SaveToFile_Wait();
 
-        protected virtual string Serialize(object obj) => JsonConvert.SerializeObject(obj);
+        protected virtual string Serialize<T>(T obj) => JsonConvert.SerializeObject(obj, typeof(T), null);
 
         protected virtual Return<T> Deserialize<T>(string json)
         {

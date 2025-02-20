@@ -33,8 +33,6 @@ namespace Vurbiri.Colonization.UI
 
             _lookAtCamera.Init(_camera);
 
-            Debug.Log("Заменить _playerCurrent на _player!!!");
-
             _buttonCancel.Init(settings.hint);
 
             _crossroadMenu.Init(_roadsMenu, _recruitingMenu, settings);
@@ -50,15 +48,15 @@ namespace Vurbiri.Colonization.UI
             settings.eventBus.EventCrossroadSelect += OnSelectCrossroad;
             settings.eventBus.EventActorSelect += OnSelectWarrior;
 
-            settings.eventBus.EventUnselect += OnUnselect;
+            settings.eventBus.EventUnselect += CloseAll;
         }
 
         private void OnSelectCrossroad(Crossroad crossroad)
         {
-            //if (_players.Current.Id != PlayerId.Player)
-            //    return;
+            CloseAll();
 
-            _warriorsMenu.Close();
+            if (_players.Current.Id != PlayerId.Player)
+                return;
 
             ToPosition(crossroad.Position);
             _crossroadMenu.Open(crossroad);
@@ -67,22 +65,21 @@ namespace Vurbiri.Colonization.UI
 
         private void OnSelectWarrior(Actor actor)
         {
-            if (!actor.IsIdle)
+            CloseAll();
+
+            if (!actor.IsIdle | _players.Current.Id != PlayerId.Player)
                 return;
-
-            //if (_players.Current.Id != PlayerId.Player)
-            //    return;
-
-            CrossroadMenusClose();
 
             ToPosition(actor.Position);
             _warriorsMenu.Open(actor);
             _buttonCancel.Setup(actor);
         }
 
-        private void OnUnselect()
+        public void CloseAll()
         {
-            CrossroadMenusClose();
+            _crossroadMenu.Close();
+            _roadsMenu.Close();
+            _recruitingMenu.Close();
             _warriorsMenu.Close();
             _buttonCancel.Disable();
         }
@@ -92,13 +89,6 @@ namespace Vurbiri.Colonization.UI
             Vector3 screenPosition = _camera.WorldToScreenPoint(position);
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasTransform, screenPosition, _camera, out Vector2 localPoint))
                 _thisRectTransform.anchoredPosition = localPoint;
-        }
-
-        private void CrossroadMenusClose()
-        {
-            _crossroadMenu.Close();
-            _roadsMenu.Close();
-            _recruitingMenu.Close();
         }
 
         private void EnableLook(bool value)

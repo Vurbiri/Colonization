@@ -6,24 +6,17 @@ namespace Vurbiri.Colonization.UI
 
     public class ButtonRecruiting : AButtonBuildType<WarriorId>
     {
-        private Player _playerCurrent;
-        private Crossroad _currentCrossroad;
 
-        public void Setup(Crossroad crossroadCurrent)
+        public override void Setup(Crossroad crossroad)
         {
-            _playerCurrent = _players.Current;
-            _currentCrossroad = crossroadCurrent;
-            ACurrencies cash = _playerCurrent.Resources;
-
-            _button.Interactable = _playerCurrent.CanRecruitingWarrior(_id) && cash >= _cost;
-
-            SetTextHint(_caption, cash, _cost);
+            base.Setup(crossroad);
+            _button.Interactable = _player.CanRecruitingWarrior(_id) && _cash >= _cost;
         }
 
         protected override void OnClick()
         {
             _parentGO.SetActive(false);
-            _playerCurrent.RecruitWarriors(_currentCrossroad, _id);
+            _player.RecruitWarriors(_currentCrossroad, _id);
         }
 
 #if UNITY_EDITOR

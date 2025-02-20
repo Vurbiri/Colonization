@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri;
+using Vurbiri.Colonization.Actors;
 
 //Assets\Colonization\Editor\Actors\Abstract\AActorsSettingsEditor.cs
 namespace VurbiriEditor.Colonization.Actors
@@ -15,7 +16,7 @@ namespace VurbiriEditor.Colonization.Actors
         private const string P_SETTINGS = "_settings", P_ARRAY = "_values", P_ID = "_id", P_SKILLS = "_skills";
         private const string U_CONTAINER = "Container", U_LABEL = "Label", U_SKILLS = "Skills";
 
-        protected VisualElement CreateGUI<TId>(string captionText) where TId : IdType<TId>
+        protected VisualElement CreateGUI<TId>(string captionText) where TId : ActorId<TId>
         {
             var root = _treeActorsSettingsScriptable.CloneTree();
             root.Q<Label>(U_LABEL).text = captionText;

@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
 	{
         private readonly Pool<EffectsBar> _poolEffectsUI;
         private readonly IdArray<ActorAbilityId, Sprite> _sprites;
-        private readonly SettingsTextColor _colors;
+        private readonly TextColorSettings _colors;
         private readonly int _orderLevel;
         private readonly IReactiveItem<Actor> _actor;
         private readonly Transform _transform;
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Actors
 		{
             _poolEffectsUI = SceneServices.Get<Pool<EffectsBar>>();
             _sprites = sprites;
-            _colors = SceneData.Get<SettingsTextColor>();
+            _colors = SceneData.Get<TextColorSettings>();
             _orderLevel = orderLevel;
             _actor = actor;
             _transform = transform;

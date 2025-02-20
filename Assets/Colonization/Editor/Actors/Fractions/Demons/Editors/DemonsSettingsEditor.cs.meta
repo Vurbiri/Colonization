@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f33c9877eaf85b347b066e9fc79d2776
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _treeActorsSettingsScriptable: {fileID: 9197481963319205126, guid: fe38df201a4a5eb439817847019b3d18,
+      type: 3}
+  - _treeActorSettings: {fileID: 9197481963319205126, guid: e504c9e057ed7464db0baadce84227ff,
+      type: 3}
+  - _treeSkillsVT: {fileID: 9197481963319205126, guid: d0d1d5b761e55644db6c743f19df7d97,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

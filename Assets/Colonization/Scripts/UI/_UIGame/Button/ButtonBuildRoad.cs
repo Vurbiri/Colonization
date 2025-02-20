@@ -3,9 +3,6 @@ namespace Vurbiri.Colonization.UI
 {
     public class ButtonBuildRoad : AButtonBuildType<LinkId>
     {
-        private Player _playerCurrent;
-        private Crossroad _currentCrossroad;
-
         public bool Setup(Crossroad crossroad, out CrossroadLink link)
         {
             link = crossroad.GetLink(_id);
@@ -15,13 +12,8 @@ namespace Vurbiri.Colonization.UI
                 return false;
             }
 
-            _playerCurrent = _players.Current;
-            _currentCrossroad = crossroad;
-            ACurrencies cash = _playerCurrent.Resources;
-
-            _button.Interactable = cash >= _cost;
-
-            SetTextHint(_caption, cash, _cost);
+            Setup(crossroad);
+            _button.Interactable = _cash >= _cost;
 
             _thisGO.SetActive(true);
             return true;
@@ -30,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnClick()
         {
             _parentGO.SetActive(false);
-            _playerCurrent.BuyRoad(_currentCrossroad, _id);
+            _player.BuyRoad(_currentCrossroad, _id);
         }
 
 #if UNITY_EDITOR

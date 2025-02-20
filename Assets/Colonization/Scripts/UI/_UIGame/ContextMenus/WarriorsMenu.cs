@@ -17,21 +17,18 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ButtonSkill[] _buttonsSkill;
 
         private int _countButtonsSkill;
-        private Players _players;
         private Actor _currentWarrior;
 
         private Vector3[][] _buttonPositions;
 
         public void Init(ContextMenuSettings settings)
         {
-            _players = settings.players;
-
             CreatePositionButtons();
             Vector3 distance = new(0f, _distanceOfButtons, 0f);
 
             _buttonClose.Init(settings.hint, OnClose);
-            _buttonMovement.Init(-distance, settings.hint, settings.color, OnMovement);
-            _buttonBlock.Init(distance, settings.hint, settings.color, OnBlock);
+            _buttonMovement.Init(-distance, settings.hint, settings.playerColor, OnMovement);
+            _buttonBlock.Init(distance, settings.hint, settings.playerColor, OnBlock);
 
             for (int i = 0; i < _countButtonsSkill; i++)
                 _buttonsSkill[i].Init(settings, _thisGO);

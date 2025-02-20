@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
         public const string REFLECT_PLUS = "ReflectPlus", REFLECT_MINUS = "ReflectMinus";
 
         public static readonly string[] DESK_EFFECTS_KEYS =
-        { "Damage", "DamagePenetration", "Healing", "MaxHPTemp", "HPPerTurnTemp", "AttackTemp", "DefenseTemp", "CurrentHPPerm", "CurrentHPOfMaxPerm", "CurrentAPPerm", "IsMovePerm" };
+        { "Damage", "DamagePierce", "Healing", "MaxHPTemp", "HPPerTurnTemp", "AttackTemp", "DefenseTemp", "CurrentHPPerm", "CurrentHPOfMaxPerm", "CurrentAPPerm", "IsMovePerm" };
 
         public static readonly string[] KEYS_NAME_SKILLS = { "Attack", "MagicAttack", "Sweep", "Combo", "Heal" };
 

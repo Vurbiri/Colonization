@@ -89,6 +89,9 @@ namespace Vurbiri.Colonization.Actors
             return delta;
         }
 
+        public void ColliderEnable(bool enabled) => _thisCollider.enabled = enabled;
+        public void EnablePlayerCollider() => _thisCollider.enabled = _isPlayerTurn;
+
         public virtual void Select()
         {
             _stateMachine.Select();
@@ -122,9 +125,6 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.Dispose();
             Destroy(gameObject);
         }
-
-        public void ColliderEnable(bool enabled) => _thisCollider.enabled = enabled;
-        private void EnablePlayerCollider() => _thisCollider.enabled = _isPlayerTurn;
 
         private void BecomeTargetStart(Id<PlayerId> initiator, Relation relation)
         {

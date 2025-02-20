@@ -25,7 +25,7 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
-    motionNodeName: 
+    motionNodeName: <Root Transform>
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
@@ -43,7 +43,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: BindPose
+      name: A_Demon_Imp_BindPose
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 5862543501114407046
       firstFrame: 2
@@ -72,7 +72,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: IdlePose
+      name: A_Demon_Imp_IdlePose
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -116377980659431767
       firstFrame: 7
@@ -101,7 +101,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Idle
+      name: A_Demon_Imp_Idle
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 6278076655783655555
       firstFrame: 60
@@ -130,7 +130,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Walk
+      name: A_Demon_Imp_Walk
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 7977021332590339227
       firstFrame: 181
@@ -159,7 +159,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Run
+      name: A_Demon_Imp_Run
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 8886541931632710349
       firstFrame: 245
@@ -188,7 +188,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: RunScared
+      name: A_Demon_Imp_RunScared
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -7963774686903210653
       firstFrame: 295
@@ -217,7 +217,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: StrafeLeft
+      name: ZA_Demon_Imp_StrafeLeft
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 4223948567200016791
       firstFrame: 351
@@ -246,7 +246,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: StrafeRight
+      name: ZA_Demon_Imp_StrafeRight
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -5145528631032475470
       firstFrame: 421
@@ -275,7 +275,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: TurnLeft
+      name: ZA_Demon_Imp_TurnLeft
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -6483777253769847912
       firstFrame: 491
@@ -304,7 +304,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: TurnRight
+      name: ZA_Demon_Imp_TurnRight
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -8370433630096874165
       firstFrame: 561
@@ -333,7 +333,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: BackPedal
+      name: A_Demon_Imp_BackWalk
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -1177588366188397721
       firstFrame: 631
@@ -362,7 +362,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: HitRight
+      name: A_Demon_Imp_ReactRight
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -2886856005674755917
       firstFrame: 680
@@ -391,7 +391,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: HitLeft
+      name: A_Demon_Imp_ReactLeft
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -2047091880658919039
       firstFrame: 710
@@ -420,7 +420,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: HitFront
+      name: A_Demon_Imp_ReactFront
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 6937745295484146524
       firstFrame: 740
@@ -449,7 +449,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Attack_1
+      name: A_Demon_Imp_Attack_1
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -446548913267839981
       firstFrame: 770
@@ -478,7 +478,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Attack_2
+      name: A_Demon_Imp_Attack_2
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 8406559838421361848
       firstFrame: 790
@@ -507,7 +507,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Attack_3
+      name: A_Demon_Imp_Attack_3
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -6803210815553180543
       firstFrame: 820
@@ -536,7 +536,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Jump
+      name: ZA_Demon_Imp_Jump
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 7744307311942036929
       firstFrame: 870
@@ -565,7 +565,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Spawn
+      name: A_Demon_Imp_Spawn
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 6267464267636126071
       firstFrame: 910
@@ -594,7 +594,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Death
+      name: A_Demon_Imp_Death
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 7187447139602393397
       firstFrame: 980
@@ -623,7 +623,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: CastMagic
+      name: A_Demon_Imp_CastMagic
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -8192762264547241768
       firstFrame: 1045
@@ -709,7 +709,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.035
+    globalScale: 3.5
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
