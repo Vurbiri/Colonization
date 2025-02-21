@@ -8,13 +8,13 @@ namespace Vurbiri.Colonization.UI
     {
         public readonly PricesScriptable prices;
         public readonly Camera camera;
-        public readonly Players players;
+        public readonly ITurn turn;
         public readonly GameplayEventBus eventBus;
 
         public ContextMenuSettings(Players players, HintGlobal hint, PricesScriptable prices, Camera camera, GameplayEventBus eventBus)
             : base(players.Player, hint)
         {
-            this.players = players;
+            this.turn = players.Turn;
             this.prices = prices;
             this.camera = camera;
             this.eventBus = eventBus;

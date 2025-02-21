@@ -41,6 +41,12 @@ namespace Vurbiri.Reactive
             _value = value;
         }
 
+        public ReactiveValue(T value, IEqualityComparer<T> comparer)
+        {
+            _value = value;
+            _comparer = comparer;
+        }
+
         public IUnsubscriber Subscribe(Action<T> action, bool calling = true)
         {
             actionValueChange += action;
@@ -62,5 +68,7 @@ namespace Vurbiri.Reactive
         public void Signal() => actionValueChange?.Invoke(_value);
 
         public void Unsubscribe(Action<T> action) => actionValueChange -= action;
+
+        public static implicit operator T(ReactiveValue<T> value) => value._value;
     }
 }

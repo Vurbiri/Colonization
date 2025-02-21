@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    public class Crossroad : IDisposable, IPositionable, ICancel
+    public class Crossroad : IDisposable, IPositionable, ICancel, IArrayable
     {
         #region Fields
         private const int HEX_COUNT = 3;
@@ -49,13 +49,14 @@ namespace Vurbiri.Colonization
         public Vector3 Position { get;}
         #endregion
 
-        public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IReadOnlyList<AEdifice> prefabs)
+        public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IReadOnlyList<AEdifice> prefabs, GameplayEventBus eventBus)
         {
             _key = key;
             Position = position;
             _prefabs = prefabs;
 
-            _eventBus = SceneServices.Get<GameplayEventBus>();
+            _eventBus = eventBus;
+            _eventBus.EventStartTurn += OnStartTurn;
 
             _edifice = Object.Instantiate(_prefabs[EdificeId.Signpost], position, rotation, container);
             _edifice.Subscribe(OnSelect, OnUnselect);
@@ -286,16 +287,10 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public void EndTurn()
+        private void OnStartTurn(Id<PlayerId> prev, Id<PlayerId> current)
         {
-            Debug.Log("Выключить Collider");
+            _edifice.ColliderEnable = current == PlayerId.Player;
         }
-        public void StartTurn()
-        {
-            Debug.Log("Включить Collider если игрок и его ход");
-
-        }
-
 
         #region ISelectable, ICancel
         public void OnSelect()
@@ -321,7 +316,17 @@ namespace Vurbiri.Colonization
         public void Cancel() => OnUnselect(null);
         #endregion
 
+        #region IArrayable
         public int[] ToArray() => new int[] { _key.X, _key.Y, _states.id.Value, _isWall ? 1 : 0 };
+        public void ToArray(int[] array)
+        {
+            if (array == null || array.Length != 4)
+                throw new ArgumentException($"int[] array = {array}");
+
+            int i = 0;
+            array[i++] = _key.X; array[i++] = _key.Y; array[i++] = _states.id.Value; array[i] = _isWall ? 1 : 0;
+        }
+        #endregion
 
         public void Dispose()
         {

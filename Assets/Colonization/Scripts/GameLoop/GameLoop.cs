@@ -12,8 +12,6 @@ namespace Vurbiri.Colonization
         private PlayersData _playersData;
         private Land _land;
 
-        private int _player = 0, _turn = 1;
-
         public void Init()
         {
             _dices = new();
@@ -27,9 +25,6 @@ namespace Vurbiri.Colonization
         {
             _players.Next();
 
-            if ((_player = ++_player % PlayerId.PlayersCount) == 0)
-                _turn++;
-
             int roll = _dices.Roll();
             UnityEngine.Debug.Log("ROLL: " + roll);
             ACurrencies free = null;
@@ -38,7 +33,7 @@ namespace Vurbiri.Colonization
 
             _players.Profit(roll, free);
 
-            _playersData.Save((int)_players.Current.Id);
+            _playersData.Save();
         }
     }
 }

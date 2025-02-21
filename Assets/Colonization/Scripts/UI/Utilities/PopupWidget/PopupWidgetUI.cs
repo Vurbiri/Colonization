@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -25,15 +26,13 @@ namespace Vurbiri.Colonization.UI
         private CoroutinesQueue _queue;
         private int _prevValue = int.MinValue;
 
-        public void Init(Vector3 direction)
+        public void Init(TextColorSettings settings, Vector3 direction)
         {
             _thisTransform = transform;
             _self = gameObject;
 
             _positionStart = _thisTransform.localPosition;
             _positionEnd = _positionStart + direction * _distance;
-
-            Vurbiri.UI.TextColorSettings settings = SceneData.Get<Vurbiri.UI.TextColorSettings>();
 
             _stringPlus = settings.HexColorPositive.Concat(" +{0}");
             _stringMinus = settings.HexColorNegative.Concat(" {0}");

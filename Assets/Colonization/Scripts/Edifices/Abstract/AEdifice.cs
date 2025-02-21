@@ -5,22 +5,18 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class AEdifice : MonoBehaviour, ISelectable, IValueId<EdificeId>
+    public abstract class AEdifice : MonoBehaviour, IValueId<EdificeId>
     {
         [SerializeField] protected EdificeSettings _settings;
         [Space]
         [SerializeField] protected AEdificeGraphic _graphic;
 
-        private Action eventSelect;
-        private Action<ISelectable> eventUnselect;
-
         public Id<EdificeId> Id => _settings.id;
         public EdificeSettings Settings => _settings;
+        public virtual bool ColliderEnable { get => false; set { } }
 
-        public void Subscribe(Action onSelect, Action<ISelectable> onUnselect)
+        public virtual void Subscribe(Action onSelect, Action<ISelectable> onUnselect)
         {
-            eventSelect = onSelect;
-            eventUnselect = onUnselect;
         }
 
         public virtual AEdifice Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice)
@@ -37,12 +33,7 @@ namespace Vurbiri.Colonization
         }
 
         public virtual bool WallBuild(Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links) => false;
-
         public virtual void AddRoad(Id<LinkId> linkId, bool isWall) { }
-
-        public void Select() => eventSelect?.Invoke();
-
-        public void Unselect(ISelectable newSelectable) => eventUnselect?.Invoke(newSelectable);
 
 #if UNITY_EDITOR
         protected virtual void OnValidate()
@@ -67,8 +58,6 @@ namespace Vurbiri.Colonization
 
             if (_graphic == null)
                 _graphic = GetComponentInChildren<AEdificeGraphic>();
-
-           
         }
 #endif
     }

@@ -8,7 +8,8 @@ namespace Vurbiri.Colonization.Data
         public const string SETTINGS = "std";
         public const string GAMEPLAY_SETTINGS = "gsd";
         public const string HEX_DATA = "hex";
-        public const string CURRENT_PLAYER = "cpl";
+        public const string TURNS_QUEUE = "tq";
+        public const string TURNS_DATA = "tqd";
         public const string PLAYERS = "p_";
         public const string DIPLOMANCY = "dip";
     }

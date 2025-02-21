@@ -1,12 +1,12 @@
 //Assets\Vurbiri\Runtime\Types\Reactive\Interface\IReadOnlyReactive.cs
 namespace Vurbiri.Reactive
 {
-    public interface IReadOnlyReactive<T> : IReactive<T>
+    public interface IReadOnlyReactive<out T> : IReactive<T>
     {
         public T Value { get; }
     }
 
-    public interface IReadOnlyReactive<TA, TB> : IReactive<TA, TB>
+    public interface IReadOnlyReactive<out TA, out TB> : IReactive<TA, TB>
     {
         public TA ValueA { get; }
         public TB ValueB { get; }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    public class Urban : AEdifice
+    public class Urban : AEdificeSelectable
     {
         [Space]
         [SerializeField] private Wall _wall;

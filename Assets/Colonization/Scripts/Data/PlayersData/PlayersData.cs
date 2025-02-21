@@ -9,8 +9,9 @@ namespace Vurbiri.Colonization.Data
 
     public class PlayersData : IDisposable
     {
-        private readonly PlayerData[] _dataValues = new PlayerData[PlayersCount];
-        private readonly int[] _diplomacyData = new int[PlayersCount];
+        private readonly PlayerData[] _playersData = new PlayerData[PlayersCount];
+        private int[] _diplomacyData;
+        private int[] _turnQueueData;
 
         private readonly string[] _keys = new string[PlayersCount];
 
@@ -18,58 +19,57 @@ namespace Vurbiri.Colonization.Data
         private readonly IStorageService _storage;
         private IUnsubscriber _unsubscriber;
 
-        public PlayerData this[int index] => _dataValues[index];
+        public PlayerData this[int index] => _playersData[index];
         public IReadOnlyList<int> DiplomacyData => _diplomacyData;
 
-        public PlayersData(bool isLoading, out bool[] loads, out bool isLoadDiplomacy)
+        public PlayersData(bool isLoading, out bool[] isLoadingPlayers)
         {
-            loads = new bool[PlayersCount];
+            isLoadingPlayers = new bool[PlayersCount];
 
             _coroutines = SceneServices.Get<Coroutines>();
             _storage = SceneServices.Get<IStorageService>();
 
             PlayerData data = null;
-            string key; bool isLoad;
-            for (int i = 0; i < PlayersCount; i++)
+            if (!isLoading)
             {
-                _keys[i] = key = SAVE_KEYS.PLAYERS.Concat(i);
-
-                isLoad = isLoading && _storage.TryGet(key, out data);
-                if(!isLoad) 
+                for (int i = 0; i < PlayersCount; i++)
+                {
+                    _keys[i] = SAVE_KEYS.PLAYERS.Concat(i);
                     data = new(i);
-                loads[i] = isLoad;
+                    data.Subscribe(OnSave, false);
+                    _playersData[i] = data;
+                }
 
-                data.Subscribe(OnSave, false);
-                _dataValues[i] = data;
+                return;
             }
 
-            isLoadDiplomacy = isLoading && _storage.TryGet(SAVE_KEYS.DIPLOMANCY, out _diplomacyData);
+            for (int i = 0; i < PlayersCount; i++)
+            {
+                if(!(isLoadingPlayers[i] = _storage.TryGet(_keys[i] = SAVE_KEYS.PLAYERS.Concat(i), out data)))
+                    data = new(i);
+
+                data.Subscribe(OnSave, false);
+                _playersData[i] = data;
+            }
+
+            if(_storage.TryGet(SAVE_KEYS.DIPLOMANCY, out int[] diplomacyData))
+                _diplomacyData = diplomacyData;
         }
 
-        public int LoadCurrentPlayerId(bool isLoading, int defaultValue)
-        {
-            if(isLoading && _storage.TryGet(SAVE_KEYS.CURRENT_PLAYER, out int value))
-                return value;
+        
 
-            return defaultValue;
-        }
-
-        public void Save<T>(string key, T data, bool toFile = true, Action<bool> callback = null)
+        public void Save(bool saveToFile = true, Action<bool> callback = null)
         {
-            _coroutines.Run(_storage.Save_Coroutine(key, data, toFile, callback));
-        }
-
-        public void Save(int currentPlayerId, bool saveToFile = true, Action<bool> callback = null)
-        {
-            _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.CURRENT_PLAYER, currentPlayerId, saveToFile, callback));
+            
             _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.DIPLOMANCY, _diplomacyData, saveToFile, callback));
             for (int i = 0; i < PlayersCount; i++)
-                _coroutines.Run(_storage.Save_Coroutine(_keys[i], _dataValues[i], saveToFile, callback));
+                _coroutines.Run(_storage.Save_Coroutine(_keys[i], _playersData[i], saveToFile, callback));
         }
 
-        public void DiplomacyBind(IReactive<int, int> currencies, bool calling)
+        public void DiplomacyBind(IReactive<int, int> diplomacy, bool calling)
         {
-            _unsubscriber = currencies.Subscribe(OnDiplomacy, calling);
+            _diplomacyData ??= new int[PlayersCount];
+            _unsubscriber = diplomacy.Subscribe(OnDiplomacy, calling);
 
             #region Local OnDiplomacy(...)
             //==============================
@@ -81,11 +81,35 @@ namespace Vurbiri.Colonization.Data
             #endregion
         }
 
+        public bool TryLoadTurnQueue(out int[] queue, out int[] data)
+        {
+            if (!(_storage.TryGet(SAVE_KEYS.TURNS_QUEUE, out queue) & _storage.TryGet(SAVE_KEYS.TURNS_DATA, out data)))
+                return false;
+
+            _turnQueueData = data;
+            return true;
+        }
+        public void SaveTurnQueue(IEnumerable<int> queue) => _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.TURNS_QUEUE, queue));
+        public void TurnQueueBind(IReadOnlyReactive<IArrayable> turnData)
+        {
+            _turnQueueData ??= turnData.Value.ToArray();
+            _unsubscriber = turnData.Subscribe(OnTurnQueue, false);
+
+            #region Local OnDiplomacy(...)
+            //==============================
+            void OnTurnQueue(IArrayable item)
+            {
+                item.ToArray(_turnQueueData);
+                _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.TURNS_DATA, _diplomacyData));
+            }
+            #endregion
+        }
+
         public void Dispose()
         {
             _unsubscriber?.Unsubscribe();
 
-            foreach (var player in _dataValues)
+            foreach (var player in _playersData)
                 player.Dispose();
         }
 

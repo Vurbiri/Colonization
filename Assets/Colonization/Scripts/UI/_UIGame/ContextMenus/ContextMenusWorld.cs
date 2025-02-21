@@ -21,14 +21,14 @@ namespace Vurbiri.Colonization.UI
 
         private GameObject _thisGO;
         private Camera _camera;
-        private Players _players;
+        private ITurn _turn;
         private RectTransform _thisRectTransform;
 
         public void Init(ContextMenuSettings settings)
         {
             _thisGO = gameObject;
             _camera = settings.camera;
-            _players = settings.players;
+            _turn = settings.turn;
             _thisRectTransform = GetComponent<RectTransform>();
 
             _lookAtCamera.Init(_camera);
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization.UI
         {
             CloseAll();
 
-            if (_players.Current.Id != PlayerId.Player)
+            if (_turn.CurrentId != PlayerId.Player)
                 return;
 
             ToPosition(crossroad.Position);
@@ -67,7 +67,7 @@ namespace Vurbiri.Colonization.UI
         {
             CloseAll();
 
-            if (!actor.IsIdle | _players.Current.Id != PlayerId.Player)
+            if (!actor.IsIdle | _turn.CurrentId != PlayerId.Player)
                 return;
 
             ToPosition(actor.Position);

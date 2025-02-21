@@ -1,58 +1,62 @@
 //Assets\Colonization\Scripts\Players\Players.cs
+using System;
+using UnityEngine;
+using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.Data;
+using Vurbiri.EntryPoint;
+using static Vurbiri.Colonization.PlayerId;
+
 namespace Vurbiri.Colonization
 {
-    using Actors;
-    using Characteristics;
-    using Collections;
-    using Data;
-    using System;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using Vurbiri.EntryPoint;
-    using static PlayerId;
-
     public class Players : IDisposable
     {
-        private readonly IdArray<PlayerId, Player> _players = new();
-        private readonly Queue<Id<PlayerId>> _turnQueue = new(PlayerId.Count);
+        private readonly Player _player;
+        private readonly PlayerAI[] _playersAI = new PlayerAI[CountAI];
+
+        private readonly TurnQueue _turnQueue;
         private readonly GameplayEventBus _eventBus;
-        private Player _current;
 
-        public Player Player => _players[PlayerId.Player];
-
-        public IPlayer Current => _current;
-        public IPlayer this[Id<PlayerId> id] => _players[id];
+        public Player Player => _player;
+        public ITurn Turn => _turnQueue;
 
         #region Constructor
         public Players(SceneContainers containers, Settings settings, bool isLoading)
         {
             _eventBus = containers.Services.Get<GameplayEventBus>();
 
-            PlayersData playersData = new(isLoading, out bool[] loads, out bool isLoadDiplomacy);
+            PlayersData playersData = new(isLoading, out bool[] isLoadingPlayers);
             containers.Data.AddInstance(playersData);
 
-            int currentPlayerId = playersData.LoadCurrentPlayerId(isLoading, 0);
+            _turnQueue = CreateTurnQueue(playersData, isLoading, out int currentPlayerId);
+            CreateDiplomacy(playersData, settings.diplomacy, _eventBus, containers);
 
-            CreateDiplomacy(playersData, settings.diplomacy, _eventBus, containers, isLoadDiplomacy);
+            _player = new Player(0, currentPlayerId, isLoadingPlayers[0], playersData[0], settings);
+            for (int i = 0; i < CountAI; i++)
+                _playersAI[i] = new(i, currentPlayerId, isLoadingPlayers[i], playersData[i], settings);
 
-            _players[0] = new Player(0, currentPlayerId, loads[0], playersData[0], settings);
-
-            for (int i = AI_01; i < PlayersCount; i++)
-                _players[i] = new PlayerAI(i, currentPlayerId, loads[i], playersData[i], settings);
-
-            _current = _players[currentPlayerId];
-
-            playersData.Save(currentPlayerId, true);
+            playersData.Save(true);
 
             #region Local: CreateDiplomacy(..)
             //=================================
-            //void CreateTurnQueue(PlayersData playersData, bool isLoad)
-            //{
-
-            //}
-            //=================================
-            void CreateDiplomacy(PlayersData playersData, DiplomacySettings settings, GameplayEventBus eventBus, SceneContainers containers, bool isLoad)
+            TurnQueue CreateTurnQueue(PlayersData playersData, bool isLoad, out int currentPlayerId)
             {
+                TurnQueue turn;
+
+                if (isLoad && playersData.TryLoadTurnQueue(out int[] queue, out int[] data))
+                    turn = new(queue, data);
+                else
+                    playersData.SaveTurnQueue(turn = new TurnQueue());
+
+                currentPlayerId = turn.CurrentId;
+
+                playersData.TurnQueueBind(turn);
+                return turn;
+            }
+            //=================================
+            void CreateDiplomacy(PlayersData playersData, DiplomacySettings settings, GameplayEventBus eventBus, SceneContainers containers)
+            {
+                bool isLoad = playersData.DiplomacyData != null;
                 Diplomacy diplomacy = isLoad ? new Diplomacy(playersData.DiplomacyData, settings, _eventBus)
                                              : new Diplomacy(settings, _eventBus);
                 playersData.DiplomacyBind(diplomacy, !isLoad);
@@ -64,21 +68,22 @@ namespace Vurbiri.Colonization
 
         public void Next()
         {
-            Id<PlayerId> prev = _current.Id; 
-            _current = _players.Next(_current.Id.Value);
-            _eventBus.TriggerStartTurn(prev, _current.Id);
+            _turnQueue.Next();
+            _eventBus.TriggerStartTurn(_turnQueue.PrevId, _turnQueue.CurrentId);
         }
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
-            for (int i = 0; i < PlayersCount; i++)
-                _players[i].Profit(hexId, freeGroundRes);
+            _player.Profit(hexId, freeGroundRes);
+            for (int i = 0; i < CountAI; i++)
+                _playersAI[i].Profit(hexId, freeGroundRes);
         }
 
         public void Dispose()
         {
-            for(int i = 0; i < PlayersCount; i++)
-                _players[i].Dispose();
+            _player.Dispose();
+            for (int i = 0; i < CountAI; i++)
+                _playersAI[i].Dispose();
         }
 
         #region Nested: Settings

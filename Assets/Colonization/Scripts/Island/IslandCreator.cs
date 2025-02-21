@@ -27,13 +27,13 @@ namespace Vurbiri.Colonization
         public Transform ActorsContainer => _actorsContainer;
 #endif
 
-        public void Init(Land land, Crossroads crossroads)
+        public void Init(Land land, Crossroads crossroads, GameplayEventBus eventBus)
         {
             _land = land;
             _land.Init(_landContainer);
 
             _crossroads = crossroads;
-            _crossroads.Init(_crossroadsContainer);
+            _crossroads.Init(_crossroadsContainer, eventBus);
         }
 
         public IEnumerator Create_Coroutine(HexagonsData hexagonsData, bool isLoad)

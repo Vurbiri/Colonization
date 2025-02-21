@@ -49,12 +49,13 @@ namespace Vurbiri.Colonization.Data
 
         public PlayerLoadData ToLoadData(int currentPlayerId) => new(_resources, _edifices, _roads, _warriors, currentPlayerId);
 
+        #region Bind
         public void CurrenciesBind(IReactive<int, int> currencies, bool calling)
         {
             _unsubscribers += currencies.Subscribe((i, v) => _resources[i] = v, calling);
         }
 
-        public void EdificesBind(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive)
+        public void EdificesBind(IReadOnlyList<IReactiveList<IArrayable>> edificesReactive)
         {
             for(int i = 0; i < EdificeGroupId.Count; i++)
                 EdificesBind(edificesReactive[i], _edifices[i]);
@@ -98,7 +99,9 @@ namespace Vurbiri.Colonization.Data
             }
             #endregion
         }
+        #endregion
 
+        #region IReactive
         public IUnsubscriber Subscribe(Action<PlayerData> action, bool calling = true)
         {
             actionThisChange += action;
@@ -109,19 +112,20 @@ namespace Vurbiri.Colonization.Data
         }
 
         public void Unsubscribe(Action<PlayerData> action) => actionThisChange -= action;
+        #endregion
 
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
         }
 
-        private void EdificesBind(IReactiveList<Crossroad> edificesReactive, List<int[]> edifices)
+        private void EdificesBind(IReactiveList<IArrayable> edificesReactive, List<int[]> edifices)
         {
             _unsubscribers += edificesReactive.Subscribe(OnEdifice);
 
             #region Local OnEdifice(..)
             //==============================
-            void OnEdifice(int index, Crossroad crossroad, TypeEvent operation)
+            void OnEdifice(int index, IArrayable crossroad, TypeEvent operation)
             {
                 switch (operation)
                 {
@@ -132,7 +136,7 @@ namespace Vurbiri.Colonization.Data
                         edifices.RemoveAt(index);
                         break;
                     case TypeEvent.Change:
-                        edifices[index] = crossroad.ToArray();
+                        crossroad.ToArray(edifices[index]);
                         break;
                     default:
                         return;

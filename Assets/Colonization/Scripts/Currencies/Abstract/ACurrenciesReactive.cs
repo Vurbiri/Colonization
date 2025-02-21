@@ -16,6 +16,7 @@ namespace Vurbiri.Colonization
         public override int Amount => _amount.Value;
         public IReactive<int> AmountReactive => _amount;
         public IReactive<int> AmountMax => _maxValueMain;
+        public IReactive<int> BloodCurrent => _values[CurrencyId.Blood];
         public IReactive<int> BloodMax => _maxValueBlood;
 
         public override int this[int index] { get => _values[index].Value; }
@@ -110,16 +111,6 @@ namespace Vurbiri.Colonization
         {
             for (int i = 0; i < countAll; i++)
                 _values[i].Dispose();
-        }
-
-        private void SubscribeToValues()
-        {
-            _values[0].Subscribe(v => actionValuesChange?.Invoke(0, v), false);
-            _values[1].Subscribe(v => actionValuesChange?.Invoke(1, v), false);
-            _values[2].Subscribe(v => actionValuesChange?.Invoke(2, v), false);
-            _values[3].Subscribe(v => actionValuesChange?.Invoke(3, v), false);
-            _values[CurrencyId.Wood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Wood, v), false);
-            _values[CurrencyId.Blood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Blood, v), false);
         }
 
         #region Nested: ACurrency, CurrencyMain, CurrencyBlood

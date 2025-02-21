@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;
-            _player = settings.players.Player;
+            _player = settings.player;
 
             _buttonClose.Init(settings.hint, OnClose);
 

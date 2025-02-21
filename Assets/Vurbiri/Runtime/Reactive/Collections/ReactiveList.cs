@@ -8,10 +8,10 @@ namespace Vurbiri.Reactive.Collections
     public class ReactiveList<T> : IList<T>, IReactiveList<T>
     {
         private T[] _values;
-        private int _count = 0;
         private int _capacity = 4;
-
-        private readonly IEqualityComparer<T> _comparer;
+        protected readonly ReactiveValue<int> _count = new(0);
+        
+        private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
         private Action<int, T, TypeEvent> actionListChange;
 
@@ -36,6 +36,7 @@ namespace Vurbiri.Reactive.Collections
         }
 
         public int Count => _count;
+        public IReadOnlyReactive<int> CountReactive => _count;
         public bool IsReadOnly => false;
 
         #region Constructors
@@ -55,7 +56,6 @@ namespace Vurbiri.Reactive.Collections
             if (capacity < 0)
                 throw new ArgumentOutOfRangeException($"capacity = {capacity}");
 
-            _comparer = EqualityComparer<T>.Default;
             _capacity = capacity;
             _values = new T[_capacity];
         }
@@ -71,23 +71,20 @@ namespace Vurbiri.Reactive.Collections
 
         public ReactiveList(IReadOnlyList<T> values)
         {
-            _comparer = EqualityComparer<T>.Default;
-            _capacity = values.Count;
+            _capacity = _count.Value = values.Count;
             _values = new T[_capacity];
 
-            for (_count = 0; _count < _capacity; _count++)
-                _values[_count] = values[_count];
+            for (int i = 0; i < _capacity; i++)
+                _values[i] = values[i];
         }
         public ReactiveList(IReadOnlyList<T> values, IEqualityComparer<T> comparer)
         {
             _comparer = comparer ?? throw new ArgumentNullException("comparer");
-            _capacity = values.Count;
+            _capacity = _count.Value = values.Count;
             _values = new T[_capacity];
 
-            for (_count = 0; _count < _capacity; _count++)
-                _values[_count] = values[_count];
-
-            
+            for (int i = 0; i < _capacity; i++)
+                _values[i] = values[i];
         }
         #endregion
 
@@ -146,7 +143,7 @@ namespace Vurbiri.Reactive.Collections
             _values[_count] = item;
             actionListChange?.Invoke(_count, item, TypeEvent.Add);
 
-            _count++;
+            _count.Value++;
         }
 
         public void Insert(int index, T item)
@@ -163,7 +160,7 @@ namespace Vurbiri.Reactive.Collections
             _values[index] = item;
             actionListChange?.Invoke(index, item, TypeEvent.Insert);
 
-            _count++;
+            _count.Value++;
         }
 
         public bool Contains(T item)
@@ -187,7 +184,9 @@ namespace Vurbiri.Reactive.Collections
         public bool Remove(T item)
         {
             int index = IndexOf(item);
-            if(index < 0) return false;
+            if(index < 0) 
+                return false;
+
             RemoveAt(index);
             return true;
         }
@@ -199,13 +198,14 @@ namespace Vurbiri.Reactive.Collections
             
             T temp = _values[index];
             
-            _count--;
+            _count.SilentValue--;
             for (int i = index; i < _count; i++)
                 _values[i] = _values[i + 1];
 
             _values[_count] = default;
 
             actionListChange?.Invoke(index, temp, TypeEvent.Remove);
+            _count.Signal();
         }
 
         public virtual void Clear()
@@ -216,7 +216,7 @@ namespace Vurbiri.Reactive.Collections
                 _values[i] = default;
             }
 
-            _count = 0;
+            _count.Value = 0;
         }
 
         public void CopyTo(T[] array, int arrayIndex)

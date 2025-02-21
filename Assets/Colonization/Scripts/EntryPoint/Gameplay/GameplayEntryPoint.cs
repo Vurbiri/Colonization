@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization
 
         private IEnumerator CreateIsland_Coroutine()
         {
-            _sceneObjects.islandCreator.Init(_land, _crossroads);
+            _sceneObjects.islandCreator.Init(_land, _crossroads, _eventBus);
 
             yield return _sceneObjects.islandCreator.Create_Coroutine(_hexagonsData, _isLoad);
 

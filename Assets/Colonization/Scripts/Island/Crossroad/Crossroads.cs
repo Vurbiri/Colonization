@@ -13,12 +13,17 @@ namespace Vurbiri.Colonization
         [SerializeField] private IdHashSet<EdificeId, AEdifice> _prefabs;
 
         private Transform _container;
+        private GameplayEventBus _eventBus;
         private readonly Dictionary<Key, Crossroad> _crossroads = new(HEX_COUNT_SIDES * MAX_CIRCLES * MAX_CIRCLES);
         private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
 
         public Crossroad this[Key key] => _crossroads[key];
 
-        public void Init(Transform container) => _container = container;
+        public void Init(Transform container, GameplayEventBus eventBus)
+        {
+            _container = container;
+            _eventBus = eventBus;
+        }
 
         public void CreateCrossroads(Vector3 position, Hexagon hex, bool isLastCircle)
         {
@@ -36,7 +41,7 @@ namespace Vurbiri.Colonization
                     if (isLastCircle)
                         continue;
 
-                    cross = new(key, _container, positionCross, i % 2 == 0 ? ANGLE_180 : ANGLE_0, _prefabs);
+                    cross = new(key, _container, positionCross, i % 2 == 0 ? ANGLE_180 : ANGLE_0, _prefabs, _eventBus);
                     _crossroads.Add(key, cross);
                 }
 

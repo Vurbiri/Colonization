@@ -165,7 +165,6 @@ namespace Vurbiri.Colonization.Actors
                 _currentAP.Next();
                 _move.On();
 
-                Debug.Log("Защита от стен - решить проблему");
                 _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetMaxDefense());
                 if (_wallDefenceEffect != null)
                     _effects.AddEffect(_wallDefenceEffect);

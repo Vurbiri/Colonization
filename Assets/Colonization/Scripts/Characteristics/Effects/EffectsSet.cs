@@ -35,8 +35,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             return _abilities.AddPerk(effect);
         }
-
-        
+                
         public void Remove(EffectCode code)
         {
             for (int i = 0; i < _count; i++)
@@ -51,7 +50,7 @@ namespace Vurbiri.Colonization.Characteristics
         
         public void Next()
         {
-            for (int i = 0; i < _count; i++)
+            for (int i = _count - 1; i >= 0; i--)
                 _values[i].Next();
         }
 

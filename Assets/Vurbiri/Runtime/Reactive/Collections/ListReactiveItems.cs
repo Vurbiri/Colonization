@@ -8,8 +8,8 @@ namespace Vurbiri.Reactive.Collections
     public class ListReactiveItems<T> : IListReactiveItems<T> where T : class, IReactiveItem<T>
     {
         protected T[] _values;
-        protected int _count = 0;
         protected int _capacity = 4;
+        protected readonly ReactiveValue<int> _count = new(0);
 
         protected Action<T, TypeEvent> actionCollectionChange;
 
@@ -25,6 +25,8 @@ namespace Vurbiri.Reactive.Collections
         }
 
         public int Count => _count;
+
+        public IReadOnlyReactive<int> CountReactive => _count;
 
         #region Constructors
         public ListReactiveItems()
@@ -64,7 +66,7 @@ namespace Vurbiri.Reactive.Collections
             if (_count == _capacity)
                 GrowArray();
 
-            _values[_count++] = item;
+            _values[_count.Value++] = item;
             item.Adding(RedirectEvents, _count - 1);
         }
 
@@ -90,7 +92,7 @@ namespace Vurbiri.Reactive.Collections
 
         protected virtual void RemoveItem(T item)
         {
-            _count--;
+            _count.SilentValue--;
             T temp;
             for (int i = item.Index; i < _count; i++)
             {
@@ -100,6 +102,7 @@ namespace Vurbiri.Reactive.Collections
             }
 
             _values[_count] = null;
+            _count.Signal();
         }
 
         protected void RedirectEvents(T item, TypeEvent operation)

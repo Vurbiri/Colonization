@@ -5,7 +5,7 @@ using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
-    public class Signpost : AEdifice
+    public class Signpost : AEdificeSelectable
     {
         [Space]
         [SerializeField] protected GameObject _graphicObject;
@@ -61,6 +61,9 @@ namespace Vurbiri.Colonization
             _settings.isUpgrade = true;
 
             _settings.profit = 0;
+
+            if (_collider == null)
+                _collider = GetComponent<Collider>();
         }
 #endif
     }

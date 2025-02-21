@@ -2,44 +2,53 @@
 using TMPro;
 using UnityEngine;
 using Vurbiri.Reactive;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
+    using static CONST_UI;
+
     public class Blood : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _countTMP;
-        [SerializeField] private TMP_Text _maxTMP;
+        private const string COUNT = "{0}({1})";
+
+        [SerializeField] private TMP_Text _textTMP;
         [SerializeField] private PopupWidgetUI _popup;
         [Space]
         [SerializeField] private RectTransform _thisRectTransform;
 
-        private Unsubscribers _unsubscribers = new(2);
+        private ReactiveCombination<int, int> _reactiveBlood;
+        private string _blood;
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
-        public void Init(Vector3 position, ACurrenciesReactive count, IReactive<int> max, Direction2 offsetPopup)
+        public void Init(Vector3 position, IReactive<int> current, IReactive<int> max, TextColorSettings settings, Direction2 offsetPopup)
         {
-            _popup.Init(offsetPopup);
+            _popup.Init(settings, offsetPopup);
             _thisRectTransform.localPosition = position;
 
-            _unsubscribers += count.Subscribe(CurrencyId.Blood, SetValue);
-            _unsubscribers += max.Subscribe((v) => _maxTMP.text = v.ToString());
+            _blood = string.Format(TAG_SPRITE, CurrencyId.Blood).Concat(COUNT);
+            _textTMP.color = settings.ColorTextBase;
+
+            _reactiveBlood = new(current, max);
+            _reactiveBlood.Subscribe(SetBlood);
         }
 
-        private void SetValue(int count)
+        private void SetBlood(int current, int max)
         {
-            _popup.Run(count);
-            _countTMP.text = count.ToString();
+            _textTMP.text = string.Format(_blood, current, max);
         }
 
         private void OnDestroy()
         {
-            _unsubscribers.Unsubscribe();
+            _reactiveBlood.Dispose();
         }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
+            if (_textTMP == null)
+                _textTMP = GetComponent<TMP_Text>();
             if (_thisRectTransform == null)
                 _thisRectTransform = GetComponent<RectTransform>();
             if (_popup == null)
