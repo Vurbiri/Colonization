@@ -2,12 +2,6 @@
 using System;
 namespace Vurbiri
 {
-    public enum AudioType
-    {
-        Music,
-        SFX,
-    }
-
     public enum AvatarSize
     {
         Small,

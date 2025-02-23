@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.Characteristics
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Characteristics
                     return _skillsUI;
 
                 var hintTextColor = SceneData.Get<TextColorSettings>();
-                var language = SceneServices.Get<Language>();
+                var language = SceneServices.Get<Localization>();
                 int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
                 _skillsUI = new SkillUI[countSkills];
 

@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
                     values[EdificeGroupId.Urban]  = urbans  = new();
                 }
 
-                public Edifices(int playerId, IReadOnlyDictionary<int, EdificeLoadData[]> data, Crossroads crossroads)
+                public Edifices(Id<PlayerId> playerId, IReadOnlyDictionary<int, EdificeLoadData[]> data, Crossroads crossroads)
                 {
                     values[EdificeGroupId.Shrine] = CreateEdifices(ref shrines, data[EdificeGroupId.Shrine], playerId, crossroads);
                     values[EdificeGroupId.Port]   = CreateEdifices(ref ports,   data[EdificeGroupId.Port],   playerId, crossroads);
@@ -40,16 +40,16 @@ namespace Vurbiri.Colonization
                             values[i][j].Dispose();
                 }
 
-                private ReactiveList<Crossroad> CreateEdifices(ref ReactiveList<Crossroad> values, EdificeLoadData[] edificesData, int playerId, Crossroads crossroads)
+                private ReactiveList<Crossroad> CreateEdifices(ref ReactiveList<Crossroad> values, EdificeLoadData[] loadData, Id<PlayerId> playerId, Crossroads crossroads)
                 {
-                    int count = edificesData.Length;
+                    int count = loadData.Length;
                     values = new(count);
 
                     EdificeLoadData data;
                     Crossroad crossroad;
                     for (int i = 0; i < count; i++)
                     {
-                        data = edificesData[i];
+                        data = loadData[i];
                         crossroad = crossroads[data.key];
                         crossroad.Build(playerId, data.id, data.isWall);
                         values.Add(crossroad);

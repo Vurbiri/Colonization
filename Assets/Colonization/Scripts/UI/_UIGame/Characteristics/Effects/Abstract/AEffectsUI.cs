@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Characteristics\Effects\Abstract\AEffectsUI.cs
 using System.Text;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -18,6 +18,6 @@ namespace Vurbiri.Colonization.UI
             _hexColor = hexColor;
         }
 
-        public abstract void GetText(Language language, StringBuilder sb);
+        public abstract void GetText(Localization language, StringBuilder sb);
     }
 }

@@ -7,8 +7,8 @@ namespace Vurbiri.Colonization
     {
         public int Turn { get; }
         
-        public int PrevId { get; }
-        public int CurrentId { get; }
+        public Id<PlayerId> PreviousId { get; }
+        public Id<PlayerId> CurrentId { get; }
 
     }  
 }

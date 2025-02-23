@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 using UnityEngine;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.UI
         public Sprite Sprite => _sprite;
         public int Cost => _cost;
 
-        public void Init(Language language, TextColorSettings hintTextColor, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf)
+        public void Init(Localization language, TextColorSettings hintTextColor, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf)
         {
             _hexColor = hintTextColor.HexColorHintBase;
             _hexColorPlus = hintTextColor.HexColorPositive;
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.UI
             return sb.ToString();
         }
 
-        private void SetTexts(Language localization)
+        private void SetTexts(Localization localization)
         {
             int countTarget = _effectsTarget.Length, countSelf = _effectsSelf.Length;
 

@@ -8,11 +8,8 @@ namespace Vurbiri
 {
     public abstract class IdType<T> where T : IdType<T>
     {
-        private readonly static int _min;
-        private readonly static int _count;
-
-        public static int Min => _min;
-        public static int Count => _count;
+        public readonly static int Min;
+        public readonly static int Count;
 
 #if UNITY_EDITOR
         private readonly static List<string> _names;
@@ -23,7 +20,7 @@ namespace Vurbiri
         public static string[] DisplayNames => _displayNames.ToArray();
         public static int[] Values => _values.ToArray();
 
-        public static string GetName(Id<T> id) => _names[id.Value - _min];
+        public static string GetName(Id<T> id) => _names[id.Value - Min];
 
         static IdType()
         {
@@ -37,7 +34,7 @@ namespace Vurbiri
             _displayNames = new(fields.Length);
             _values = new(fields.Length);
 
-            _count = 0;
+            Count = 0;
             int value;
             int? oldValue = null;
             foreach (FieldInfo field in fields)
@@ -52,7 +49,7 @@ namespace Vurbiri
 
                 if (oldValue == null)
                 {
-                    _min = value;
+                    Min = value;
                 }
                 else if (value != oldValue + 1)
                 {
@@ -60,7 +57,7 @@ namespace Vurbiri
                 }
 
                 if (value >= 0)
-                    _count++;
+                    Count++;
 
                 oldValue = value;
                 _names.Add(field.Name);
@@ -68,35 +65,33 @@ namespace Vurbiri
                 _values.Add(value);
             }
 
-            if (_count == 0)
+            if (Count == 0)
                 Debug.LogError($"Не найдено public const int полей. Класс: {typeId.Name}");
 
-            //Message.Log($"Create {t_child.Name}. min: {_min}, count: {_count}, countAll: {_countAll}");
+            //Message.Log($"Create {typeId.Name}. min: {Min}, count: {Count}");
         }
 
         
 #else
-        static AIdType()
+        static IdType()
         {
-            Type typeId = typeof(T), typeAttribute = typeof(NotIdAttribute);
+            Type typeId = typeof(T), typeInt = typeof(int), typeAttribute = typeof(NotIdAttribute);
             FieldInfo[] fields = typeId.GetFields(BindingFlags.Public | BindingFlags.Static);
 
-            _count = 0; _min = int.MaxValue;
+            Count = 0; Min = int.MaxValue;
             int value;
             foreach (FieldInfo field in fields)
             {
-                if (field.GetCustomAttributes(typeAttribute, false).Length > 0)
+                if (field.FieldType != typeInt | !field.IsLiteral || field.GetCustomAttributes(typeAttribute, false).Length > 0)
                     continue;
 
                 value = (int)field.GetValue(null);
-                _min = Mathf.Min(value, _min);
+                Min = Mathf.Min(value, Min);
                 if (value >= 0)
-                    _count++;
+                    Count++;
             }
         }
 #endif
-        public static bool IsValidate(int value) => value >= _min & value < _count;
-
         protected static void RunConstructor() { }
     }
 }

@@ -1,12 +1,13 @@
 //Assets\Colonization\Scripts\EventBus\GameplayEventBus.cs
 using System;
+using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization
 {
-    using Actors;
 
     public class GameplayEventBus
     {
+        #region Selectable
         public event Action<Crossroad> EventCrossroadSelect;
         public void TriggerCrossroadSelect(Crossroad crossroad) => EventCrossroadSelect?.Invoke(crossroad);
 
@@ -15,18 +16,22 @@ namespace Vurbiri.Colonization
         
         public event Action EventUnselect;
         public void TriggerUnselect() => EventUnselect?.Invoke();
+        #endregion
 
-        public event Action<Id<PlayerId>, Id<PlayerId>> EventStartTurn;
-        public void TriggerStartTurn(Id<PlayerId> prev, Id<PlayerId> current) => EventStartTurn?.Invoke(prev, current);
-
-
+        #region UI
         public event Action<bool> EventCrossroadMarkShow;
         public void TriggerCrossroadMarkShow(bool show) => EventCrossroadMarkShow?.Invoke(show);
 
         public event Action<bool> EventHexagonIdShow;
         public void TriggerHexagonIdShow(bool show) => EventHexagonIdShow?.Invoke(show);
+        #endregion
 
+        #region GameLoop
         public event Action EventSceneEndCreation;
         public void TriggerSceneEndCreation() => EventSceneEndCreation?.Invoke();
+
+        public event Action<Id<PlayerId>, Id<PlayerId>> EventStartTurn;
+        public void TriggerStartTurn(Id<PlayerId> prev, Id<PlayerId> current) => EventStartTurn?.Invoke(prev, current);
+        #endregion
     }
 }

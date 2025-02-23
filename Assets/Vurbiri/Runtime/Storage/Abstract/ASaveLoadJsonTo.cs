@@ -18,22 +18,27 @@ namespace Vurbiri
 
         public abstract IEnumerator Load_Coroutine(string key, Action<bool> callback);
 
-        public virtual Return<T> Get<T>(string key)
-        {
-            if (_saved.TryGetValue(key, out string json))
-                return Deserialize<T>(json);
-
-            return Return<T>.Empty;
-        }
-
         public virtual bool TryGet<T>(string key, out T value)
         {
-            Return<T> result = Get<T>(key);
-            value = result.Value;
-            return result.Result;
+            value = default;
+            if (_saved.TryGetValue(key, out string json))
+            {
+                Return<T> result = Deserialize<T>(json);
+                value = result.Value;
+                return result.Result;
+            }
+            return false;
         }
 
-        public IEnumerator Save_Coroutine<T>(string key, T data, bool toFile, Action<bool> callback)
+        public virtual T Get<T>(string key) where T : class
+        {
+            if (_saved.TryGetValue(key, out string json))
+                return Deserialize<T>(json).Value;
+
+            return null;
+        }
+
+        public virtual IEnumerator Save_Coroutine<T>(string key, T data, bool toFile, Action<bool> callback)
         {
             bool result = SaveToMemory(data);
             if (!toFile | !(result & _modified))
@@ -78,7 +83,7 @@ namespace Vurbiri
             #endregion
         }
 
-        public bool ContainsKey(string key) => _saved.ContainsKey(key);
+        public virtual bool ContainsKey(string key) => _saved.ContainsKey(key);
 
         protected abstract WaitResult<bool> SaveToFile_Wait();
 

@@ -12,8 +12,8 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private AActorSFX _sfx;
         [SerializeField] private Animator _animator;
         [SerializeField] private SkinnedMeshRenderer _mesh;
-        [/*HideInInspector,*/ SerializeField] TimingSkillSettings[] _timings;
-        [/*HideInInspector,*/ SerializeField] float _durationDeath;
+        [HideInInspector, SerializeField] TimingSkillSettings[] _timings;
+        [HideInInspector, SerializeField] float _durationDeath;
 
         #region CONST
         private const string B_IDLE = "bIdle", B_MOVE = "bMove", B_RUN = "bRun", B_BLOCK = "bBlock", B_DEATH = "bDeath";

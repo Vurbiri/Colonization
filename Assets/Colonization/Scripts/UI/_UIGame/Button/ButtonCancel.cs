@@ -1,5 +1,5 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonCancel.cs
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 
@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
         public void Init(HintGlobal hint)
         {
             base.Init(hint, OnClick, false);
-            _unLanguage = SceneServices.Get<Language>().Subscribe(SetText);
+            _unLanguage = SceneServices.Get<Localization>().Subscribe(SetText);
         }
 
         public void Setup(ICancel cancelledObj)
@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.UI
             _cancelledObj = null;
         }
 
-        private void SetText(Language localization) => _text = localization.GetText(FILE, KEY);
+        private void SetText(Localization localization) => _text = localization.GetText(FILE, KEY);
 
         private void OnDestroy()
         {

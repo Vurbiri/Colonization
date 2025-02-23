@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             public readonly ListReactiveItems<Actor> warriors = new();
             public readonly HashSet<int> perks;
 
-            public Objects(int playerId, int currentPlayerId, bool isLoad, PlayerData data, Players.Settings settings)
+            public Objects(Id<PlayerId> playerId, Id<PlayerId> currentPlayerId, PlayerSaveData data, Players.Settings settings)
             {
                 id = playerId;
 
@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
                 _prices = settings.prices;
                 _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
 
-                if (isLoad)
+                if (data.IsLoaded)
                 {
                     PlayerLoadData loadData = data.ToLoadData(currentPlayerId);
                     Crossroads crossroads = SceneObjects.Get<Crossroads>();
@@ -57,9 +57,9 @@ namespace Vurbiri.Colonization
                     perks = new();
                 }
 
-                data.CurrenciesBind(resources, !isLoad);
+                data.CurrenciesBind(resources);
                 data.EdificesBind(edifices.values);
-                data.RoadsBind(roads, !isLoad);
+                data.RoadsBind(roads);
                 data.WarriorsBind(warriors);
             }
 

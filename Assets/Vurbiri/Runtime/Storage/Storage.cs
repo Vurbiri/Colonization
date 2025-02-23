@@ -11,7 +11,7 @@ namespace Vurbiri
 {
     public static class Storage
     {
-        public static IEnumerator Create_Coroutine(DIContainer container, string key)
+        public static IEnumerator Create_Coroutine(DIContainer container, string key, Action<IStorageService> callback)
         {
             if (Create(container, out IStorageService storage))
             {
@@ -24,6 +24,7 @@ namespace Vurbiri
                 Message.Log("StorageService не определён");
             }
 
+            callback?.Invoke(storage);
             container.ReplaceInstance<IStorageService>(storage);
 
             #region Local: Create(...), Creator()

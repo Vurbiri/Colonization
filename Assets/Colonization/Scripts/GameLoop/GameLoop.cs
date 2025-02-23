@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\GameLoop\GameLoop.cs
 using UnityEngine;
+using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Data;
 using static Vurbiri.Colonization.CONST;
 
@@ -9,16 +10,26 @@ namespace Vurbiri.Colonization
     {
         private Dices _dices;
         private Players _players;
-        private PlayersData _playersData;
+        private InputController _inputController;
+        private PlayersSaveData _playersData;
         private Land _land;
 
-        public void Init()
+        public void Init(InputController inputController)
         {
             _dices = new();
 
             _land = SceneObjects.Get<Land>();
             _players = SceneObjects.Get<Players>();
-            _playersData = SceneData.Get<PlayersData>();
+            _playersData = SceneData.Get<PlayersSaveData>();
+
+            _inputController = inputController;
+
+            StartGame();
+        }
+
+        private void StartGame()
+        {
+            _inputController.EnableGameplayMap();
         }
 
         public void EndTurnPlayer()

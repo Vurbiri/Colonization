@@ -6,12 +6,12 @@ namespace Vurbiri.Colonization.Actors
 {
     public class WarriorsSpawner
     {
-        private readonly int _payerId;
+        private readonly Id<PlayerId> _payerId;
         private readonly WarriorInitializer _warriorPrefab;
         private readonly Material _material;
         private readonly Transform _container;
 
-        public WarriorsSpawner(int payerId, WarriorInitializer warriorPrefab, Material material, Transform container)
+        public WarriorsSpawner(Id<PlayerId> payerId, WarriorInitializer warriorPrefab, Material material, Transform container)
         {
             _payerId = payerId;
             _warriorPrefab = warriorPrefab;

@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Characteristics\Effects\TempEffectUI.cs
 using System.Text;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
             _duration = duration.ToString();
         }
 
-        public override void GetText(Language language, StringBuilder sb)
+        public override void GetText(Localization language, StringBuilder sb)
         {
             sb.Append(_hexColor);
             sb.AppendLine(language.GetTextFormat(CONST_UI_LNG_KEYS.FILE, _descKey, _value, _duration));

@@ -2,9 +2,10 @@
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
+using Vurbiri.Colonization;
 
 [JsonObject(MemberSerialization.OptIn)]
-public struct Key : IEquatable<Key>
+public struct Key : IEquatable<Key>, IArrayable
 {
     public readonly int X => _x;
     public readonly int Y => _y;
@@ -43,7 +44,19 @@ public struct Key : IEquatable<Key>
         return this;
     }
 
+    #region IArrayable
+    private const int SIZE_ARRAY = 2;
     public readonly int[] ToArray() => new int[] { _x, _y };
+    public readonly int[] ToArray(int[] array)
+    {
+        if (array == null || array.Length != SIZE_ARRAY)
+            return new int[] { _x, _y };
+
+        int i = 0;
+        array[i++] = _x; array[i] = _y;
+        return array;
+    }
+    #endregion
 
     public readonly bool Equals(Key other) => _x == other._x & _y == other._y;
     public override readonly bool Equals(object obj) => obj is Key key && _x == key._x & _y == key._y;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.Characteristics
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
 
-        public SkillUI GetSkillUI(Language language, TextColorSettings hintTextColor)
+        public SkillUI GetSkillUI(Localization language, TextColorSettings hintTextColor)
         {
             int countHits = _effectsHitsSettings.Length;
             List<AEffectsUI> targetEffectsUI = new(countHits), selfEffectsUI = new(countHits);

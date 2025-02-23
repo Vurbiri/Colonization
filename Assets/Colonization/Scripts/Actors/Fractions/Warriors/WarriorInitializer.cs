@@ -11,13 +11,13 @@ namespace Vurbiri.Colonization.Actors
         [Space]
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
 
-        public Warrior Init(int id, int owner, Material material, Hexagon startHex)
+        public Warrior Init(int id, Id<PlayerId> owner, Material material, Hexagon startHex)
         {
             _warrior.Init(_warriorsSettings[id], _collider, owner, startHex);
             return Setup(_warrior.Skin.Mesh, material);
         }
 
-        public Warrior Load(ActorLoadData data, int owner, Material material, Hexagon startHex)
+        public Warrior Load(ActorLoadData data, Id<PlayerId> owner, Material material, Hexagon startHex)
         {
             _warrior.Load(_warriorsSettings[data.id], _collider, owner, startHex, data);
             return Setup(_warrior.Skin.Mesh, material);

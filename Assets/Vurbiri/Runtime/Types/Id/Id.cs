@@ -10,13 +10,14 @@ namespace Vurbiri
     {
         [SerializeField, JsonProperty("id")]
         private int _id;
+
         public readonly int Value => _id;
 
         [JsonConstructor]
         public Id(int id)
         {
-            if (!IdType<T>.IsValidate(id))
-                throw new ArgumentOutOfRangeException($"{id} - {typeof(T).Name}");
+            if (id < IdType<T>.Min | id >= IdType<T>.Count)
+                throw new ArgumentOutOfRangeException($"{typeof(T).Name} = {id}");
 
             _id = id;
         }

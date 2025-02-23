@@ -1,5 +1,6 @@
 //Assets\Colonization\Editor\EntryPoint\GameplayEntryPointWindow.cs
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using Vurbiri.Colonization;
 using Vurbiri.EntryPoint;
@@ -69,6 +70,8 @@ namespace VurbiriEditor.Colonization
                 return;
 
             DestroyImmediate(_editor);
-		}
+
+            EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+        }
 	}
 }

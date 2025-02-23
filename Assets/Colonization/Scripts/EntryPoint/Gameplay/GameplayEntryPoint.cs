@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
@@ -8,8 +9,8 @@ using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Data;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
-using Vurbiri.Localization;
 using Vurbiri.Reactive;
+using Vurbiri.TextLocalization;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
@@ -37,7 +38,7 @@ namespace Vurbiri.Colonization
         private SceneContainers _containers;
 
         private Players _players;
-        private GameplaySettingsData _gameplaySettings;
+        private GameSettings _gameplaySettings;
         private GameplayEventBus _eventBus;
         private InputController _inputController;
         private HexagonsData _hexagonsData;
@@ -46,9 +47,9 @@ namespace Vurbiri.Colonization
         {
             _containers = containers;
 
-            _gameplaySettings = containers.Data.Get<GameplaySettingsData>();
+            _gameplaySettings = containers.Data.Get<GameSettings>();
 
-            containers.Services.Get<Language>().LoadFiles(_localizationFiles);
+            containers.Services.Get<Localization>().SetFiles(_localizationFiles);
 
             FillingContainers(containers);
 
@@ -126,15 +127,13 @@ namespace Vurbiri.Colonization
             yield return null;
             GC.Collect();
 
-            _sceneObjects.game.Init();
+            _sceneObjects.game.Init(_inputController);
             _gameplaySettings.StartGame();
             _eventBus.TriggerSceneEndCreation();
 
             yield return null;
 
             _containers.Objects.Get<LoadingScreen>().SmoothOff_Wait();
-
-            _inputController.EnableGameplayMap();
 
             Destroy(gameObject);
         }
@@ -202,7 +201,7 @@ namespace Vurbiri.Colonization
             public PricesScriptable prices;
             public PlayerVisualSetScriptable visualSet;
 
-            public PlayersVisual GetPlayersVisual(int[] ids) => visualSet.Get(ids);
+            public PlayersVisual GetPlayersVisual(IReadOnlyList<int> ids) => visualSet.Get(ids);
 
             public void Dispose()
             {

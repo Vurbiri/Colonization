@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\Abstract\AButtonBuildType.cs
 using UnityEngine;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.UI
             _cost = cost;
             _cash = _player.Resources;
             _parentGO = parent;
-            _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
+            _unsubscriber = SceneServices.Get<Localization>().Subscribe(SetText);
         }
 
         public virtual void Setup(Crossroad crossroad)
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.UI
             SetTextHint(_caption, _cash, _cost);
         }
 
-        protected void SetText(Language localization) => _caption = localization.GetText(_lngFile, _key);
+        protected void SetText(Localization localization) => _caption = localization.GetText(_lngFile, _key);
 
         protected abstract void OnClick();
 

@@ -4,7 +4,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 
 namespace Vurbiri.UI
 {
@@ -19,7 +19,7 @@ namespace Vurbiri.UI
         [SerializeField] private float _maxWidth = 400f;
         [SerializeField] private Vector2 _padding = new(15f, 15f);
 
-        private Language _localization;
+        private Localization _localization;
         private CanvasGroup _thisCanvasGroup;
         private RectTransform _textTransform;
         private Coroutine _coroutineShow, _coroutineHide;
@@ -27,7 +27,7 @@ namespace Vurbiri.UI
 
         private void Start()
         {
-            _localization = SceneServices.Get<Language>();
+            _localization = SceneServices.Get<Localization>();
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _textTransform = _hint.rectTransform;
 

@@ -11,9 +11,9 @@ namespace Vurbiri
         private readonly string _lbName = "lbColonization";
         private readonly Coroutines _coroutines;
 
-        public YandexSDK(IReadOnlyDIContainer container, string lbName = null)
+        public YandexSDK(Coroutines coroutine, string lbName = null)
         {
-            _coroutines = container.Get<Coroutines>();
+            _coroutines = coroutine;
             if(!string.IsNullOrEmpty(lbName))
                 _lbName = lbName;
         }

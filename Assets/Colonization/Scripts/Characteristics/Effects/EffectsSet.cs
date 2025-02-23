@@ -28,11 +28,10 @@ namespace Vurbiri.Colonization.Characteristics
                 return 0;
             
             for (int i = 0; i < _count; i++)
-                if (_values[i].UpdateDuration(effect))
-                    return 0;
+                if (_values[i].Update(effect, _abilities.AddPerk, out int delta))
+                    return delta;
 
             base.Add(effect);
-
             return _abilities.AddPerk(effect);
         }
                 

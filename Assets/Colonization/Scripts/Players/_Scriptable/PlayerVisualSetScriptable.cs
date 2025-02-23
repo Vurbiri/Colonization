@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Players\_Scriptable\PlayerVisualSetScriptable.cs
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri;
 using Vurbiri.Colonization;
@@ -7,6 +8,8 @@ using Vurbiri.Colonization;
 [CreateAssetMenu(fileName = "PlayerVisualSet", menuName = "Vurbiri/Colonization/PlayerVisualSet", order = 51)]
 public class PlayerVisualSetScriptable : ScriptableObjectDisposable
 {
+    [SerializeField] private Color _colorDemons = Color.red;
+    [Space]
     [SerializeField] private Color[] _colors;
     [Space]
     [SerializeField] private Material _defaultMaterialLit;
@@ -17,13 +20,15 @@ public class PlayerVisualSetScriptable : ScriptableObjectDisposable
     public int Count => _colors.Length;
     public Color[] Colors => _colors;
 
-    public PlayersVisual Get(int[] ids)
+    public PlayersVisual Get(IReadOnlyList<int> ids)
     {
-        int count = ids.Length;
+        int count = ids.Count;
 
-        Color[] colors = new Color[count];
-        for (int i = 0; i < count; i++)
+        Color[] colors = new Color[count + 1];
+        int i = 0;
+        for (; i < count; i++)
             colors[i] = _colors[ids[i]];
+        colors[i] = _colorDemons;
 
         return new(colors, _defaultMaterialLit, _defaultMaterialUnlit, _defaultMaterialActor);
     }

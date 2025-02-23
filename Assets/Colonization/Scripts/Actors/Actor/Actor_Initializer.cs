@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
             return effects;
         }
 
-        public void Init(ActorSettings settings, BoxCollider collider, int owner, Hexagon startHex)
+        public void Init(ActorSettings settings, BoxCollider collider, Id<PlayerId> owner, Hexagon startHex)
         {
             _typeId = settings.TypeId;
             _id = settings.Id;
@@ -75,7 +75,7 @@ namespace Vurbiri.Colonization.Actors
             gameObject.SetActive(true);
         }
 
-        public void Load(ActorSettings settings, BoxCollider collider, int owner,  Hexagon startHex, ActorLoadData data)
+        public void Load(ActorSettings settings, BoxCollider collider, Id<PlayerId> owner,  Hexagon startHex, ActorLoadData data)
         {
             Init(settings, collider, owner, startHex);
 
@@ -83,7 +83,7 @@ namespace Vurbiri.Colonization.Actors
             _currentAP.Value = data.currentAP;
             _move.Value  = data.move;
 
-            int count = data.effects.Length;
+            int count = data.effects.Count;
             for (int i = 0; i < count; i++)
                 _effects.AddEffect(data.effects[i]);
 

@@ -25,21 +25,21 @@ namespace Vurbiri.Colonization
         {
             _eventBus = containers.Services.Get<GameplayEventBus>();
 
-            PlayersData playersData = new(isLoading, out bool[] isLoadingPlayers);
+            PlayersSaveData playersData = new(isLoading);
             containers.Data.AddInstance(playersData);
 
-            _turnQueue = CreateTurnQueue(playersData, isLoading, out int currentPlayerId);
+            _turnQueue = CreateTurnQueue(playersData, isLoading, out Id<PlayerId> currentPlayerId);
             CreateDiplomacy(playersData, settings.diplomacy, _eventBus, containers);
 
-            _player = new Player(0, currentPlayerId, isLoadingPlayers[0], playersData[0], settings);
+            _player = new Player(0, currentPlayerId, playersData[0], settings);
             for (int i = 0; i < CountAI; i++)
-                _playersAI[i] = new(i, currentPlayerId, isLoadingPlayers[i], playersData[i], settings);
+                _playersAI[i] = new(i, currentPlayerId, playersData[i], settings);
 
             playersData.Save(true);
 
             #region Local: CreateDiplomacy(..)
             //=================================
-            TurnQueue CreateTurnQueue(PlayersData playersData, bool isLoad, out int currentPlayerId)
+            TurnQueue CreateTurnQueue(PlayersSaveData playersData, bool isLoad, out Id<PlayerId> currentPlayerId)
             {
                 TurnQueue turn;
 
@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization
                 return turn;
             }
             //=================================
-            void CreateDiplomacy(PlayersData playersData, DiplomacySettings settings, GameplayEventBus eventBus, SceneContainers containers)
+            void CreateDiplomacy(PlayersSaveData playersData, DiplomacySettings settings, GameplayEventBus eventBus, SceneContainers containers)
             {
                 bool isLoad = playersData.DiplomacyData != null;
                 Diplomacy diplomacy = isLoad ? new Diplomacy(playersData.DiplomacyData, settings, _eventBus)
@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization
         public void Next()
         {
             _turnQueue.Next();
-            _eventBus.TriggerStartTurn(_turnQueue.PrevId, _turnQueue.CurrentId);
+            _eventBus.TriggerStartTurn(_turnQueue.PreviousId, _turnQueue.CurrentId);
         }
 
         public void Profit(int hexId, ACurrencies freeGroundRes)

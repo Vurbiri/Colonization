@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Object = UnityEngine.Object;
 
@@ -29,7 +28,7 @@ namespace Vurbiri.Colonization
         private int _countFreeLink = 0, _countWater = 0;
         private bool _isGate = false;
         private WaitResult<Hexagon> _waitHexagon;
-        private ReactiveValue<bool> _canCancel = new(false);
+        private readonly ReactiveValue<bool> _canCancel = new(false);
 
         private IUnsubscriber _unsubscriber;
         #endregion
@@ -106,7 +105,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Build
-        public void Build(int playerId, int idBuild, bool isWall)
+        public void Build(Id<PlayerId> playerId, int idBuild, bool isWall)
         {
             _isWall = isWall;
             BuildEdifice(playerId, idBuild);
@@ -173,7 +172,7 @@ namespace Vurbiri.Colonization
                 return false;
 
             _states.isBuildWall = !(_isWall = true);
-            _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d * ActorAbilityId.RATE_ABILITY);
+            _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d);
             return true;
         }
 
@@ -191,7 +190,7 @@ namespace Vurbiri.Colonization
         {
             int busyCount = 0;
             foreach (var hex in _hexagons)
-                if (!hex.CanUnitEnter)
+                if (!hex.CanActorEnter)
                     busyCount++;
 
             return busyCount < _hexagons.Count && _owner == playerId && _states.groupId == EdificeGroupId.Port;
@@ -203,12 +202,13 @@ namespace Vurbiri.Colonization
             List<Hexagon> empty = new(2);
 
             foreach (var hex in _hexagons)
-                if (hex.CanUnitEnter)
+                if (hex.CanActorEnter)
                     empty.Add(hex);
 
             if (empty.Count == 0)
                 return _waitHexagon.Cancel();
 
+            Debug.Log("Сразу ли спаунить на одной ???");
             if (empty.Count == 1)
                 return _waitHexagon.SetResult(empty[0]);
 
@@ -317,14 +317,17 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region IArrayable
+        private const int SIZE_ARRAY = 4;
         public int[] ToArray() => new int[] { _key.X, _key.Y, _states.id.Value, _isWall ? 1 : 0 };
-        public void ToArray(int[] array)
+        public int[] ToArray(int[] array)
         {
-            if (array == null || array.Length != 4)
-                throw new ArgumentException($"int[] array = {array}");
+            if (array == null || array.Length != SIZE_ARRAY)
+                return ToArray();
 
             int i = 0;
             array[i++] = _key.X; array[i++] = _key.Y; array[i++] = _states.id.Value; array[i] = _isWall ? 1 : 0;
+
+            return array;
         }
         #endregion
 

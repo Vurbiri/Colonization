@@ -103,9 +103,8 @@ namespace Vurbiri.Colonization
         #region Reactive
         public IUnsubscriber Subscribe(Action<int[][][]> action, bool calling = false)
         {
-            ActionValueChange -= action;
             ActionValueChange += action;
-            if (calling && action != null)
+            if (calling)
                 action(ToArray());
 
             return new Unsubscriber<Action<int[][][]>>(this, action);
@@ -113,7 +112,7 @@ namespace Vurbiri.Colonization
 
         public void Unsubscribe(Action<int[][][]> action) => ActionValueChange -= action;
 
-        public int[][][] ToArray()
+        private int[][][] ToArray()
         {
             int count = _roadsLists.Count;
             int[][][] keys = new int[count][][];

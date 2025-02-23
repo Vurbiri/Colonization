@@ -8,6 +8,11 @@ public class PlayerVisual
     public readonly Material materialUnlit;
     public readonly Material materialWarriors;
 
+    public PlayerVisual(Color color)
+    {
+        this.color = color;
+    }
+
     public PlayerVisual(Color color, Material materialLit, Material materialUnlit, Material materialWarriors)
     {
         materialLit.color = color;

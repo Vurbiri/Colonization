@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Vurbiri.Collections
 {
     [Serializable, JsonArray]
-    public class EnumArray<TType, TValue> : IEnumerable<TValue>
+    public class EnumArray<TType, TValue> : IReadOnlyList<TValue>
 #if UNITY_EDITOR
         , ISerializationCallbackReceiver
 #endif 

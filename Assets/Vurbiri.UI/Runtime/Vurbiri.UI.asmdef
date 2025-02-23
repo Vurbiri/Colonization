@@ -3,6 +3,7 @@
     "rootNamespace": "Vurbiri.UI",
     "references": [
         "GUID:8d796b54c349a5e4e9e760d782ae9adf",
+        "GUID:d3b36ff6adb70214ab38c4129f60db79",
         "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
     "includePlatforms": [],

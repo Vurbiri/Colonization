@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using Vurbiri.Collections;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -17,14 +17,14 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private IdArray<EdificeId, ButtonView> _edificeView;
 
-        private Language _localization;
+        private Localization _localization;
         private IReadOnlyList<ACurrencies> _edificePrices;
         private ACurrencies _cash;
 
         public void Init(Vector3 localPosition, ButtonSettings settings, IReadOnlyList<ACurrencies> edificePrices, UnityAction action)
         {
             base.Init(localPosition, settings, action);
-            _localization = SceneServices.Get<Language>();
+            _localization = SceneServices.Get<Localization>();
             _edificePrices = edificePrices;
             _cash = settings.player.Resources;
         }

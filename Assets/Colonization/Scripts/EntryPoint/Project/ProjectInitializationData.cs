@@ -1,7 +1,8 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\ProjectInitializationData.cs
 using UnityEngine;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.UI;
+using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization
 {
@@ -11,11 +12,13 @@ namespace Vurbiri.Colonization
         [Space]
         public LogOnPanel logOnPanel;
         [Space]
+        public EnumArray<Files, bool> localizationFiles = new(false);
+        [Space]
         public string leaderboardName = "lbColonization";
         [Space]
         public TextColorSettingsScriptable settingsColorScriptable;
         [Space]
-        public SettingsData.Profile defaultProfile;
+        public Settings settings;
 
         public void Dispose()
         {

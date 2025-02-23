@@ -66,6 +66,15 @@ namespace VurbiriEditor
             return list;
         }
 
+        public static T FindAnyAsset<T>() where T : Object
+        {
+            foreach (var guid in FindAssets<T>())
+                if (TryLoadAssetAtGUID<T>(guid, out T asset))
+                    return asset;
+
+            return default;
+        }
+
         private static string[] FindPrefabs() => AssetDatabase.FindAssets(TYPE_PREFAB, ASSET_FOLDERS);
         private static string[] FindAssets<T>() where T : Object => AssetDatabase.FindAssets($"t:{typeof(T).Name}", ASSET_FOLDERS);
         private static GameObject LoadMainAssetAtGUID(string guid) => ((GameObject)AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid)));

@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonBuild.cs
 using UnityEngine;
 using UnityEngine.Events;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
             base.Init(localPosition, settings, action);
             _cost = cost;
             _cash = settings.player.Resources;
-            _unsubscriber = SceneServices.Get<Language>().Subscribe(SetText);
+            _unsubscriber = SceneServices.Get<Localization>().Subscribe(SetText);
         }
 
         public void Setup(bool isEnable)
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization.UI
             _thisGO.SetActive(true);
         }
 
-        private void SetText(Language localization) => _caption = localization.GetText(Files.Gameplay, _key);
+        private void SetText(Localization localization) => _caption = localization.GetText(Files.Gameplay, _key);
 
         private void OnDestroy()
         {

@@ -6,6 +6,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.EntryPoint
 {
+    [DefaultExecutionOrder(10)]
     public class AProjectEntryPoint : AClosedSingleton<AProjectEntryPoint>
     {
         [SerializeField] private SceneId _emptyScene;
@@ -26,7 +27,6 @@ namespace Vurbiri.EntryPoint
 
             ASceneEntryPoint.EventLoaded += EnterScene;
 
-            _servicesContainer.AddInstance(Coroutines.Create("Project Coroutines", true));
             _loadingScreen = _objectsContainer.AddInstance(LoadingScreen.Create());
         }
 

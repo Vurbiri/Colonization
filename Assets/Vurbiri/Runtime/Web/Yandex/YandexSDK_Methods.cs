@@ -15,7 +15,6 @@ namespace Vurbiri
             if (!waitResult.Result)
             {
                 Message.Log("YandexSDK - initialization error!");
-
                 yield break;
             }
 

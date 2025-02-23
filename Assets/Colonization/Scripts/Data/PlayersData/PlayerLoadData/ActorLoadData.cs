@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\ActorLoadData.cs
+using System.Collections.Generic;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Data
@@ -10,10 +11,10 @@ namespace Vurbiri.Colonization.Data
         public readonly int currentHP;
         public readonly int currentAP;
 		public readonly int move;
-        public readonly ReactiveEffect[] effects;
-        public readonly int currentPlayerId;
+        public readonly IReadOnlyList<ReactiveEffect> effects;
+        public readonly Id<PlayerId> currentPlayerId;
 
-        public ActorLoadData(int[][] actorData, int currentPlayerId)
+        public ActorLoadData(int[][] actorData, Id<PlayerId> currentPlayerId)
         {
             int n = 0, m = 0;
             keyHex = new(actorData[n++]);
@@ -21,14 +22,14 @@ namespace Vurbiri.Colonization.Data
             id = actorData[n][m++];
             currentHP = actorData[n][m++];
             currentAP = actorData[n][m++];
-            move = actorData[n][m++];
-            n++;
+            move = actorData[n++][m++];
 
             int count = actorData.Length - n;
-            effects = new ReactiveEffect[count];
+            var effects = new ReactiveEffect[count];
             for (int l = 0; l < count; l++, n++)
                 effects[l] = new(actorData[n]);
 
+            this.effects = effects;
             this.currentPlayerId = currentPlayerId;
         }
     }

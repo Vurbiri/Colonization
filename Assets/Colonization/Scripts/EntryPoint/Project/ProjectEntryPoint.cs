@@ -1,11 +1,13 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\ProjectEntryPoint.cs
 using System.Collections;
+using UnityEngine;
 using Vurbiri.Colonization.Data;
 using Vurbiri.EntryPoint;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization
 {
+    [DefaultExecutionOrder(10)]
     public class ProjectEntryPoint : AProjectEntryPoint
 	{
 		private void Start()
@@ -29,42 +31,48 @@ namespace Vurbiri.Colonization
 		{
 			Message.Log("Start Init Project");
 
-            using SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings();
+            _servicesContainer.AddInstance(Localization.Instance).SetFiles(data.localizationFiles);
 
-            if (!_servicesContainer.AddInstance(new Language(settings?.LoadFiles)).IsValid)
-				Message.Error("Error loading Localization!");
+			var coroutine = _servicesContainer.AddInstance(Coroutines.Create("Project Coroutines", true));
 
-            _dataContainer.AddInstance(data.settingsColorScriptable.Colors);
-
-            var ysdk = _servicesContainer.AddInstance(new YandexSDK(_servicesContainer, data.leaderboardName));
+            var ysdk = _servicesContainer.AddInstance(new YandexSDK(coroutine, data.leaderboardName));
 			yield return ysdk.Init_Coroutine();
-			
-			//Banners.InstanceF.Initialize();
 
-			yield return CreateStorages_Coroutine(data.defaultProfile);
-			yield return YandexIsLogOn_Coroutine(ysdk, data.logOnPanel, data.defaultProfile);
+            _dataContainer.AddInstance(data.settings);
+            _dataContainer.AddInstance(data.settingsColorScriptable.Colors);
+            //Banners.InstanceF.Initialize();
 
-			_dataContainer.AddInstance(new GameplaySettingsData(_servicesContainer));
+            yield return CreateStoroge_Coroutine(coroutine, ysdk, data);
+            yield return YandexIsLogOn_Coroutine(coroutine, ysdk, data);
+
+            _dataContainer.AddInstance(new GameSettings(_servicesContainer));
 
             Message.Log("End Init Project");
-		}
 
-		private IEnumerator CreateStorages_Coroutine(SettingsData.Profile defaultProfile)
-		{
-            yield return StartCoroutine(Storage.Create_Coroutine(_servicesContainer, SAVE_KEYS.PROJECT));
-			_dataContainer.ReplaceInstance(new SettingsData(_servicesContainer, defaultProfile));
-		}
-
-		private IEnumerator YandexIsLogOn_Coroutine(YandexSDK ysdk, LogOnPanel logOnPanel, SettingsData.Profile defaultProfile)
-		{
-			if (!ysdk.IsLogOn)
+            #region Local: LoadData_Coroutine(..), YandexIsLogOn_Coroutine(..)
+            //=================================
+            IEnumerator CreateStoroge_Coroutine(Coroutines coroutine, YandexSDK ysdk, ProjectInitializationData data)
 			{
-				_loadingScreen.SmoothOff_Wait();
-				yield return logOnPanel.TryLogOn_Coroutine(ysdk);
-				yield return _loadingScreen.SmoothOn_Wait();
-				if (ysdk.IsLogOn)
-					yield return CreateStorages_Coroutine(defaultProfile);
-			}
-		}
+                IStorageService storage = null;
+                yield return StartCoroutine(Storage.Create_Coroutine(_servicesContainer, SAVE_KEYS.PROJECT, s => storage = s));
+
+                var projectSaveData = _dataContainer.ReplaceInstance(new ProjectSaveData(coroutine, storage));
+                data.settings.Init(ysdk, projectSaveData.SettingsLoadData);
+                projectSaveData.SettingsBind(data.settings);
+            }
+            //=================================
+            IEnumerator YandexIsLogOn_Coroutine(Coroutines coroutine, YandexSDK ysdk, ProjectInitializationData data)
+            {
+                if (!ysdk.IsLogOn)
+                {
+                    _loadingScreen.SmoothOff_Wait();
+                    yield return data.logOnPanel.TryLogOn_Coroutine(ysdk);
+                    yield return _loadingScreen.SmoothOn_Wait();
+                    if (ysdk.IsLogOn)
+                        yield return CreateStoroge_Coroutine(coroutine, ysdk, data);
+                }
+            }
+            #endregion
+        }
 	}
 }

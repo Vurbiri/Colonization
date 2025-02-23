@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Characteristics\BlockUI.cs
 using System;
 using System.Text;
-using Vurbiri.Localization;
+using Vurbiri.TextLocalization;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 using static Vurbiri.Colonization.Characteristics.EffectsFactory;
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.UI
             _hexColorPlus = hintTextColor.HexColorPositive;
             _hexColorMinus = hintTextColor.HexColorNegative;
 
-            _unsubscriber = SceneServices.Get<Language>().Subscribe(SetTexts);
+            _unsubscriber = SceneServices.Get<Localization>().Subscribe(SetTexts);
         }
 
         public string GetText(bool isUse)
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.UI
             return sb.ToString();
         }
 
-        private void SetTexts(Language localization)
+        private void SetTexts(Localization localization)
         {
             StringBuilder sb = new(SIZE << 1);
             sb.AppendLine(localization.GetText(FILE, BLOCK_KEY));

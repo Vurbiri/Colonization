@@ -9,14 +9,14 @@ namespace Vurbiri.Colonization
 {
     public class TurnQueue : AReactive<ITurn>, ITurn, IEnumerable<int>
     {
-        private readonly int[] _queue = new int[PlayerId.Count];
-        private int _prevId = PlayerId.None;
+        private readonly Id<PlayerId>[] _queue = new Id<PlayerId>[PlayerId.Count];
+        private Id<PlayerId> _prevId = PlayerId.None;
         private int _currentIndex = 0;
         private int _turn = 1;
 
         public int Turn => _turn;
-        public int PrevId => _prevId;
-        public int CurrentId => _queue[_currentIndex];
+        public Id<PlayerId> PreviousId => _prevId;
+        public Id<PlayerId> CurrentId => _queue[_currentIndex];
         
         public override ITurn Value { get => this; protected set { } }
 
@@ -38,36 +38,36 @@ namespace Vurbiri.Colonization
             if ((queue == null || queue.Count != PlayerId.Count) | (data == null || data.Count != 3))
                 throw new ArgumentException($"IReadOnlyList<int> queue = {queue} | IReadOnlyList<int> turns = {data}");
 
-            
             for (int j = 0; j < PlayerId.Count; j++)
                 _queue[j] = queue[j];
 
             int i = 0;
-            _prevId           = data[i++];
-            _currentIndex     = data[i++];
-            _turn             = data[i++];
+            _prevId = data[i++]; _currentIndex = data[i++]; _turn = data[i];
         }
 
         public void Next()
         {
             _prevId = _queue[_currentIndex];
-            _currentIndex = (_currentIndex + 1) % PlayerId.Count;
-            _turn++;
+            if(++_currentIndex == PlayerId.Count)
+            {
+                _currentIndex = 0;
+                _turn++;
+            }
 
             actionValueChange?.Invoke(this);
         }
 
         #region IArrayable
-        public int[] ToArray() => new int[] { _prevId, _currentIndex, _turn };
-        public void ToArray(int[] array)
+        private const int SIZE_ARRAY = 3;
+        public int[] ToArray() => new int[] { _prevId.Value, _currentIndex, _turn };
+        public int[] ToArray(int[] array)
         {
-            if (array == null || array.Length != 3)
-                throw new ArgumentException($"int[] array = {array}");
+            if (array == null || array.Length != SIZE_ARRAY)
+                return ToArray();
 
             int i = 0;
-            array[i++] = _prevId;
-            array[i++] = _currentIndex;
-            array[i++] = _turn;
+            array[i++] = _prevId.Value; array[i++] = _currentIndex; array[i]   = _turn;
+            return array;
         }
         #endregion
 
@@ -75,7 +75,7 @@ namespace Vurbiri.Colonization
         public IEnumerator<int> GetEnumerator()
         {
             for (int i = 0; i < PlayerId.Count; i++)
-                yield return _queue[i];
+                yield return _queue[i].Value;
         }
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion

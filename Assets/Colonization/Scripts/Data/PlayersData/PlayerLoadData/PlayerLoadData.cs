@@ -5,12 +5,12 @@ namespace Vurbiri.Colonization.Data
 {
     public readonly struct PlayerLoadData
 	{
-        public readonly int[] resources;
-        public readonly Dictionary<int, EdificeLoadData[]> edifices;
-        public readonly Key[][] roads;
+        public readonly IReadOnlyList<int> resources;
+        public readonly IReadOnlyDictionary<int, EdificeLoadData[]> edifices;
+        public readonly IReadOnlyList<IReadOnlyList<Key>> roads;
         public readonly ActorLoadData[] warriors;
 
-        public PlayerLoadData(int[] resources, Dictionary<int, List<int[]>> edifices, int[][][] roads, List<int[][]> warriors, int currentPlayerId)
+        public PlayerLoadData(int[] resources, Dictionary<int, List<int[]>> edifices, int[][][] roads, List<int[][]> warriors, Id<PlayerId> currentPlayerId)
         {
             this.resources = resources;
             this.edifices = CreateEdificesLoadData(edifices);
@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.Data
                 return roads;
             }
             //================================================================
-            ActorLoadData[] CreateActorData(List<int[][]> warriorsData, int currentPlayerId)
+            ActorLoadData[] CreateActorData(List<int[][]> warriorsData, Id<PlayerId> currentPlayerId)
             {
                 int count = warriorsData.Count;
                 ActorLoadData[] warriors = new ActorLoadData[count];
