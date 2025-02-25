@@ -51,11 +51,5 @@ namespace Vurbiri.Audio
 
             return subscribers[id].Add(action);
         }
-
-        public void Dispose()
-        {
-            for (int i = 0; i < AudioTypeId.Count; i++)
-                subscribers[i].Dispose();
-        }
     }
 }

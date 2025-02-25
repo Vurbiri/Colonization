@@ -107,8 +107,6 @@ namespace Vurbiri.Colonization
         {
             for (int i = 0; i < countAll; i++)
                 _values[i].Dispose();
-
-            _subscriber?.Dispose();
         }
 
         #region Nested: ACurrency, CurrencyMain, CurrencyBlood
@@ -195,7 +193,7 @@ namespace Vurbiri.Colonization
             }
         }
         //*******************************************************
-        protected abstract class ACurrency : AReactive<int>, IEquatable<ACurrency>, IComparable<ACurrency>
+        protected abstract class ACurrency : AReactive<int>, IDisposable, IEquatable<ACurrency>, IComparable<ACurrency>
         {
             protected int _value;
 
@@ -227,6 +225,7 @@ namespace Vurbiri.Colonization
             public override bool Equals(object other) => Equals(other as ACurrency);
             public override int GetHashCode() => _value.GetHashCode();
             public override string ToString() => _value.ToString();
+            public virtual void Dispose() { }
 
             public static bool operator ==(ACurrency a, ACurrency b) => (a is null & b is null) || (a is not null & b is not null && a._value == b._value);
             public static bool operator !=(ACurrency a, ACurrency b) => !(a == b);

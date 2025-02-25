@@ -32,7 +32,5 @@ namespace Vurbiri.Reactive.Collections
         }
 
         public abstract bool Equals(T other);
-
-        public virtual void Dispose() => _subscriber.Dispose();
     }
 }

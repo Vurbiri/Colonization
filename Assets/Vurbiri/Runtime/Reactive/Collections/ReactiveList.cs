@@ -233,11 +233,6 @@ namespace Vurbiri.Reactive.Collections
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
 
-        public virtual void Dispose()
-        {
-            _subscriber.Dispose();
-        }
-
         private void GrowArray()
         {
             _capacity = _capacity << 1 | 4;

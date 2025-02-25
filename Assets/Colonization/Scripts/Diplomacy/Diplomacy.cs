@@ -112,8 +112,6 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public virtual void Dispose() => _subscriber.Dispose();
-
         private void OnStartTurn(Id<PlayerId> prev, Id<PlayerId> current)
         {
             if (current == PlayerId.Player | current == PlayerId.Demons)

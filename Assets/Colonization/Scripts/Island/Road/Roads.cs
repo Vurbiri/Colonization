@@ -100,8 +100,6 @@ namespace Vurbiri.Colonization
             StartCoroutine(TryUnion_Coroutine());
         }
 
-        public virtual void Dispose() => _subscriber.Dispose();
-
         #region Reactive
         public IUnsubscriber Subscribe(Action<int[][][]> action, bool calling = false)
         {

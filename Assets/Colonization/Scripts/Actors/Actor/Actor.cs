@@ -149,7 +149,7 @@ namespace Vurbiri.Colonization.Actors
 
         public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
 
-        public override void Dispose()
+        public void Dispose()
         {
             _currentHex.ExitActor();
             _skin.Dispose();

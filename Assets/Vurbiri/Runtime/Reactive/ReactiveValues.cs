@@ -50,10 +50,5 @@ namespace Vurbiri.Reactive
         }
 
         public void Signal() => _subscriber.Invoke(_valueA, _valueB);
-
-        public virtual void Dispose()
-        {
-            _subscriber.Dispose();
-        }
     }
 }

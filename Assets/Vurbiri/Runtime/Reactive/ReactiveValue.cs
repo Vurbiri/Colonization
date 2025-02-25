@@ -66,8 +66,6 @@ namespace Vurbiri.Reactive
 
         public void Signal() => _subscriber.Invoke(_value);
 
-        public virtual void Dispose() => _subscriber.Dispose();
-
         public static implicit operator T(ReactiveValue<T> value) => value._value;
     }
 }

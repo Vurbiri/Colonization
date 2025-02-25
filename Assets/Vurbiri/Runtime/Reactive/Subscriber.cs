@@ -1,102 +1,73 @@
 //Assets\Vurbiri\Runtime\Reactive\Subscriber.cs
 using System;
-using System.Collections.Generic;
 
 namespace Vurbiri.Reactive
 {
     public class Subscriber<T> : ISubscriber<Action<T>>, IDisposable
     {
-        internal readonly HashSet<Unsubscriber<Action<T>>> _actions = new();
         private Action<T> actions;
 
         public IUnsubscriber Add(Action<T> action)
         {
             actions += action;
-
-            Unsubscriber<Action<T>> temp = new(this, action);
-            _actions.Add(temp);
-            return temp;
+            return new Unsubscriber<Action<T>>(this, action);
         }
 
         public void Invoke(T value) => actions?.Invoke(value);
 
-        public void Dispose()
-        {
-            foreach (var unsubscriber in _actions)
-                unsubscriber.Clear();
+        public void Unsubscribe(Action<T> action) => actions -= action;
 
-            actions = null;
-            _actions.Clear();
-        }
-
-        void ISubscriber<Action<T>>.Unsubscribe(Unsubscriber<Action<T>> unsubscriber)
-        {
-            _actions.Remove(unsubscriber);
-            actions -= unsubscriber.action;
-        }
+        public void Dispose() => actions = null;
     }
-
+    //=======================================================================================
     public class Subscriber<TA, TB> : ISubscriber<Action<TA, TB>>, IDisposable
     {
-        internal readonly HashSet<Unsubscriber<Action<TA, TB>>> _actions = new();
         private Action<TA, TB> actions;
 
         public IUnsubscriber Add(Action<TA, TB> action)
         {
             actions += action;
-
-            Unsubscriber<Action<TA, TB>> temp = new(this, action);
-            _actions.Add(temp);
-            return temp;
+            return new Unsubscriber<Action<TA, TB>>(this, action);
         }
 
         public void Invoke(TA valueA, TB valueB) => actions?.Invoke(valueA, valueB);
 
-        public void Dispose()
-        {
-            foreach (var unsubscriber in _actions)
-                unsubscriber.Clear();
+        public void Unsubscribe(Action<TA, TB> action) => actions -= action;
 
-            actions = null;
-            _actions.Clear();
-        }
-
-        void ISubscriber<Action<TA, TB>>.Unsubscribe(Unsubscriber<Action<TA, TB>> unsubscriber)
-        {
-            _actions.Remove(unsubscriber);
-            actions -= unsubscriber.action;
-        }
+        public void Dispose() => actions = null;
     }
-
+    //=======================================================================================
     public class Subscriber<TA, TB, TC> : ISubscriber<Action<TA, TB, TC>>, IDisposable
     {
-        internal readonly HashSet<Unsubscriber<Action<TA, TB, TC>>> _actions = new();
         private Action<TA, TB, TC> actions;
 
         public IUnsubscriber Add(Action<TA, TB, TC> action)
         {
             actions += action;
-
-            Unsubscriber<Action<TA, TB, TC>> temp = new(this, action);
-            _actions.Add(temp);
-            return temp;
+            return new Unsubscriber<Action<TA, TB, TC>>(this, action);
         }
 
         public void Invoke(TA valueA, TB valueB, TC valueC) => actions?.Invoke(valueA, valueB, valueC);
 
-        public void Dispose()
-        {
-            foreach (var unsubscriber in _actions)
-                unsubscriber.Clear();
+        public void Unsubscribe(Action<TA, TB, TC> action) => actions -= action;
 
-            actions = null;
-            _actions.Clear();
+        public void Dispose() => actions = null;
+    }
+    //=======================================================================================
+    public class Subscriber<TA, TB, TC, TD> : ISubscriber<Action<TA, TB, TC, TD>>, IDisposable
+    {
+        private Action<TA, TB, TC, TD> actions;
+
+        public IUnsubscriber Add(Action<TA, TB, TC, TD> action)
+        {
+            actions += action;
+            return new Unsubscriber<Action<TA, TB, TC, TD>>(this, action);
         }
 
-        void ISubscriber<Action<TA, TB, TC>>.Unsubscribe(Unsubscriber<Action<TA, TB, TC>> unsubscriber)
-        {
-            _actions.Remove(unsubscriber);
-            actions -= unsubscriber.action;
-        }
+        public void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => actions?.Invoke(valueA, valueB, valueC, valueD);
+
+        public void Unsubscribe(Action<TA, TB, TC, TD> action) => actions -= action;
+
+        public void Dispose() => actions = null;
     }
 }

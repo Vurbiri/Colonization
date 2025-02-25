@@ -116,7 +116,6 @@ namespace Vurbiri.Colonization.Data
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
-            _subscriber.Dispose();
         }
 
         private void EdificesBind(IReactiveList<IArrayable> edificesReactive, List<int[]> edifices)

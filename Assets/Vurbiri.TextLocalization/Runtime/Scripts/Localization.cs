@@ -141,8 +141,6 @@ namespace Vurbiri.TextLocalization
         public string GetTextFormat(Files file, string key, object arg0, object arg1) => string.Format(GetText(idFile: (int)file, key), arg0, arg1);
         public string GetTextFormat(Files file, string key, object arg0) => string.Format(GetText(idFile: (int)file, key), arg0);
 
-        public virtual void Dispose() => _subscriber.Dispose();
-
         private bool SetLanguage(LanguageType type)
         {
             for (int i = 0; i < _countFiles; i++)

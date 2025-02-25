@@ -11,4 +11,11 @@ namespace Vurbiri.Reactive
         public TA ValueA { get; }
         public TB ValueB { get; }
     }
+
+    public interface IReadOnlyReactive<out TA, out TB, out TC> : IReactive<TA, TB, TC>
+    {
+        public TA ValueA { get; }
+        public TB ValueB { get; }
+        public TC ValueC { get; }
+    }
 }

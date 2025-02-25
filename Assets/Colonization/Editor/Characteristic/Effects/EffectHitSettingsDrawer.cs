@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.TextLocalization;
 using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
 namespace VurbiriEditor.Colonization.Characteristics
@@ -14,7 +15,20 @@ namespace VurbiriEditor.Colonization.Characteristics
     [CustomPropertyDrawer(typeof(EffectHitSettings))]
     public class EffectHitSettingsDrawer : PropertyDrawerUtility
     {
-        private static readonly Vurbiri.TextLocalization.Localization localization = new(new bool[] { false, false, true });
+        private static WeakReference<Localization> _weakLocalization = new(new(new bool[] { false, false, true }));
+        private static Localization Localization
+        {
+            get
+            {
+                if (!_weakLocalization.TryGetTarget(out Localization localization))
+                {
+                    localization = new(new bool[] { false, false, true });
+                    _weakLocalization.SetTarget(localization);
+                }
+                return localization;
+            }
+        }
+       
 
         #region Consts
         private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID ="Void Effect {0}";
@@ -233,6 +247,8 @@ namespace VurbiriEditor.Colonization.Characteristics
             //==============================================
             void SetAndDrawDesc(bool isUsedAttack, int targetAbility)
             {
+                Localization localization = Localization;
+
                 _position.x += 35;
 
                 Color defaultColor = GUI.contentColor;

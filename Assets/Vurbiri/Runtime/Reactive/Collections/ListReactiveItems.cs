@@ -78,14 +78,6 @@ namespace Vurbiri.Reactive.Collections
             return false;
         }
 
-        public virtual void Dispose()
-        {
-            for (int i = 0; i < _count; i++)
-                _values[i].Dispose();
-            
-            _subscriber.Dispose();
-        }
-
         public IEnumerator<T> GetEnumerator()
         {
             for (int i = 0; i < _count; i++)

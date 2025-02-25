@@ -102,7 +102,5 @@ namespace Vurbiri.Colonization
             return _subscriber.Add(action);
         }
         #endregion
-
-        public virtual void Dispose() => _subscriber.Dispose();
     }
 }

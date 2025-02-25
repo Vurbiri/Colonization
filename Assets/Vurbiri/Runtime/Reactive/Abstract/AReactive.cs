@@ -16,10 +16,5 @@ namespace Vurbiri.Reactive
 
             return _subscriber.Add(action);
         }
-
-        public virtual void Dispose()
-        {
-            _subscriber.Dispose();
-        }
     }
 }
