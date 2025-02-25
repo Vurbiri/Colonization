@@ -10,19 +10,19 @@ namespace Vurbiri
         public static Coroutine Appear(this Graphic self, Color color, float duration, bool isUnscaled = false)
         {
             if (isUnscaled)
-                return self.StartCoroutine(SmoothAlphaUnscaled_Coroutine(self, color, 0f, 1f, duration));
+                return self.StartCoroutine(SmoothAlphaUnscaled_Cn(self, color, 0f, 1f, duration));
             else
-                return self.StartCoroutine(SmoothAlpha_Coroutine(self, color, 0f, 1f, duration));
+                return self.StartCoroutine(SmoothAlpha_Cn(self, color, 0f, 1f, duration));
         }
         public static Coroutine Fade(this Graphic self, Color color, float duration, bool isUnscaled = false)
         {
             if (isUnscaled)
-                return self.StartCoroutine(SmoothAlphaUnscaled_Coroutine(self, color, 1f, 0f, duration));
+                return self.StartCoroutine(SmoothAlphaUnscaled_Cn(self, color, 1f, 0f, duration));
             else
-                return self.StartCoroutine(SmoothAlpha_Coroutine(self, color, 1f, 0f, duration));
+                return self.StartCoroutine(SmoothAlpha_Cn(self, color, 1f, 0f, duration));
         }
 
-        private static IEnumerator SmoothAlpha_Coroutine(Graphic graphic, Color color, float start, float end, float duration)
+        private static IEnumerator SmoothAlpha_Cn(Graphic graphic, Color color, float start, float end, float duration)
         {
             float currentTime = 0f;
             float alpha;
@@ -36,7 +36,7 @@ namespace Vurbiri
             graphic.color = color.SetAlpha(end);
         }
 
-        private static IEnumerator SmoothAlphaUnscaled_Coroutine(Graphic graphic, Color color, float start, float end, float duration)
+        private static IEnumerator SmoothAlphaUnscaled_Cn(Graphic graphic, Color color, float start, float end, float duration)
         {
             float currentTime = 0f;
             float alpha;

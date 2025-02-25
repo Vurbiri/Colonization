@@ -13,13 +13,13 @@ namespace Vurbiri.Colonization.Actors
             {
             }
 
-            protected override IEnumerator Actions_Coroutine()
+            protected override IEnumerator Actions_Cn()
             {
-                yield return ApplySkill_Coroutine();
+                yield return ApplySkill_Cn();
                 ToExit();
             }
 
-            protected override IEnumerator ApplySkill_Coroutine()
+            protected override IEnumerator ApplySkill_Cn()
             {
                 Pay();
 

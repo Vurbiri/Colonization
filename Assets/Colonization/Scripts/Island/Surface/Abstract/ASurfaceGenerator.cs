@@ -9,6 +9,6 @@ namespace Vurbiri.Colonization
     {
         public abstract void Generate(float size);
 
-        public abstract IEnumerator Generate_Coroutine(float size);
+        public abstract IEnumerator Generate_Cn(float size);
     }
 }

@@ -48,11 +48,11 @@ namespace Vurbiri.Colonization.Actors
             _audioSource.PlayOneShot(_clipRun);
 
             _waitActivate.Reset();
-            StartCoroutine(React_Coroutine(target, time));
+            StartCoroutine(React_Cn(target, time));
             return _waitActivate;
         }
 
-        private IEnumerator React_Coroutine(ActorSkin target, float time)
+        private IEnumerator React_Cn(ActorSkin target, float time)
         {
             yield return _waitTime.SetTime(time);
             _waitActivate.Activate();

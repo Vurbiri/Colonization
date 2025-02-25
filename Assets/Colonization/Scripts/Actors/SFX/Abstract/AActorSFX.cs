@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.Actors
 
         public virtual void Death() { }
 
-        public virtual IEnumerator Death_Coroutine()
+        public virtual IEnumerator Death_Cn()
         {
             Vector3 position = _thisTransform.localPosition;
             float speed = _heightDeath / _durationDeath;

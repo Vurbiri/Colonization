@@ -37,7 +37,7 @@ namespace Vurbiri
         public void Enqueue(IEnumerator coroutine)
         {
             _coroutines.Enqueue(coroutine);
-            _runningCoroutine ??= _monoBehaviour.StartCoroutine(Run_Coroutine());
+            _runningCoroutine ??= _monoBehaviour.StartCoroutine(Run_Cn());
         }
 
         public void StopAndClear(bool runFinalAction)
@@ -54,7 +54,7 @@ namespace Vurbiri
                 finalAction?.Invoke();
         }
 
-        private IEnumerator Run_Coroutine()
+        private IEnumerator Run_Cn()
         {
             while (_coroutines.Count > 0)
                 yield return _coroutines.Dequeue();

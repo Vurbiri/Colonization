@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         {
             if (!oneFrame)
             {
-                StartCoroutine(Init_Coroutine());
+                StartCoroutine(Init_Cn());
                 return;
             }
 
@@ -24,9 +24,9 @@ namespace Vurbiri.Colonization
             Destroy(this);
         }
 
-        protected IEnumerator Init_Coroutine()
+        protected IEnumerator Init_Cn()
         {
-            yield return StartCoroutine(_generator.Generate_Coroutine(CONST.HEX_RADIUS_IN * _ratioSize));
+            yield return StartCoroutine(_generator.Generate_Cn(CONST.HEX_RADIUS_IN * _ratioSize));
 
             _generator.Dispose();
             Destroy(this);

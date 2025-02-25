@@ -34,9 +34,9 @@ namespace Vurbiri.EntryPoint
         {
             _currentEnterParam = param.EnterParam;
             gameObject.SetActive(true);
-            StartCoroutine(LoadScene_Coroutine(param.NextScene));
+            StartCoroutine(LoadScene_Cn(param.NextScene));
         }
-        protected IEnumerator LoadScene_Coroutine(int sceneId)
+        protected IEnumerator LoadScene_Cn(int sceneId)
         {
             _loadingScreen.TurnOnOf(true);
 

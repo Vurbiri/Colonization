@@ -69,9 +69,12 @@ public struct Key : IEquatable<Key>, IArrayable
     public static Key operator -(Key a, Key b) => new(a._x - b._x, a._y - b._y);
     public static Key operator -(Key a) => new(-a._x, -a._y);
 
+    public static Key operator *(Key k, int i) => new(k._x * i, k._y * i);
+    public static Key operator *(int i, Key k) => new(k._x * i, k._y * i);
+
     public static bool operator ==(Key a, Key b) => a._x == b._x & a._y == b._y;
     public static bool operator !=(Key a, Key b) => a._x != b._x | a._y != b._y;
 
-    public override readonly string ToString() => $"[{_x}, {_y})]";
+    public override readonly string ToString() => $"{_x}, {_y}";
 
 }

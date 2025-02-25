@@ -21,16 +21,20 @@ namespace Vurbiri.Colonization.Data
 
         public int[] SettingsLoadData => _storage.Get<int[]>(SAVE_KEYS.SETTINGS);
 
-        public int[] GetHexData(Key key) => _storage.Get<int[]>(key.ToSaveKey(SAVE_KEYS.HEX_SEPARATOR));
+        public void GetHexData(Key key, out int id, out int surfaceId)
+        {
+            _storage.TryGet(key.ToSaveKey(SAVE_KEYS.HEX_SEPARATOR), out int[] data);
+            Hexagon.FromArray(data, out id, out surfaceId);
+        }
 
         public void SettingsBind(IReactive<IReadOnlyList<int>> settings)
         {
-            _unsubscribers += settings.Subscribe( data => _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.SETTINGS, data)));
+            _unsubscribers += settings.Subscribe( data => _coroutines.Run(_storage.Save_Cn(SAVE_KEYS.SETTINGS, data)));
         }
 
         public void LandBind(IReactive<Key, int[]> hex)
         {
-            _unsubscribers += hex.Subscribe((key, data) => _coroutines.Run(_storage.Save_Coroutine(key.ToSaveKey(SAVE_KEYS.HEX_SEPARATOR), data)));
+            _unsubscribers += hex.Subscribe((key, data) => _coroutines.Run(_storage.Save_Cn(key.ToSaveKey(SAVE_KEYS.HEX_SEPARATOR), data)));
         }
 
         public void Dispose()

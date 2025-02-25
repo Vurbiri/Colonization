@@ -17,12 +17,12 @@ namespace Vurbiri.Colonization
 
         protected override void OnExit(Action<ExitParam> callback)
         {
-            SceneServices.Get<Coroutines>().Run(OnExit_Coroutine(callback));
+            SceneServices.Get<Coroutines>().Run(OnExit_Cn(callback));
         }
 
-        private IEnumerator OnExit_Coroutine(Action<ExitParam> callback)
+        private IEnumerator OnExit_Cn(Action<ExitParam> callback)
         {
-            yield return SceneObjects.Get<LoadingScreen>().SmoothOn_Wait();
+            yield return SceneObjects.Get<LoadingScreen>().SmoothOn_Wt();
             callback(_exitParam);
         }
     }

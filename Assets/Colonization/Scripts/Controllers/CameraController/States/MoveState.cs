@@ -24,10 +24,10 @@ namespace Vurbiri.Colonization.Controllers
 
             public override void Enter()
             {
-                _coroutine = _controller.StartCoroutine(Move_Coroutine());
+                _coroutine = _controller.StartCoroutine(Move_Cn());
             }
 
-            private IEnumerator Move_Coroutine()
+            private IEnumerator Move_Cn()
             {
                 Vector3 relativelyDirection = _moveDirection.x * _cameraTransform.right.ResetY() + _moveDirection.y * _cameraTransform.forward.ResetY();
 

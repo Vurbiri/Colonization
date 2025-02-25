@@ -46,15 +46,15 @@ namespace Vurbiri.Colonization
 
         public void HexagonsNeighbors(Dictionary<Key, Hexagon> hexagons)
         {
-            Vertex[][] verticesNear = new Vertex[HEX_COUNT_SIDES][];
-            bool[] waterNear = new bool[HEX_COUNT_SIDES];
+            Vertex[][] verticesNear = new Vertex[HEX.SIDES][];
+            bool[] waterNear = new bool[HEX.SIDES];
             bool isNotWater;
             foreach (var hex in hexagons.Values)
             {
                 isNotWater = !hex.IsWater;
-                for (int i = 0; i < HEX_COUNT_SIDES; i++)
+                for (int i = 0; i < HEX.SIDES; i++)
                 {
-                    if (hexagons.TryGetValue(hex.Key + NEAR_HEX[i], out Hexagon neighbor))
+                    if (hexagons.TryGetValue(hex.Key + HEX.NEAR[i], out Hexagon neighbor))
                     {
                         hex.NeighborAddAndCreateCrossroadLink(neighbor);
 
@@ -75,14 +75,14 @@ namespace Vurbiri.Colonization
             Vertex[] GetVertexSide(Key key, Key neighbors, int side)
             {
                 _hexagons[key].Visit(side);
-                return _hexagons[neighbors].GetVertexSide((side + (HEX_COUNT_SIDES >> 1)) % HEX_COUNT_SIDES);
+                return _hexagons[neighbors].GetVertexSide((side + (HEX.SIDES >> 1)) % HEX.SIDES);
             }
             #endregion
         }
 
-        public IEnumerator SetMesh_Coroutine()
+        public IEnumerator SetMesh_Cn()
         {
-            yield return StartCoroutine(_customMesh.ToMesh_Coroutine(m => _thisMeshFilter.sharedMesh = m));
+            yield return StartCoroutine(_customMesh.ToMesh_Cn(m => _thisMeshFilter.sharedMesh = m));
 
             _customMesh = null;
             _hexagons = null;

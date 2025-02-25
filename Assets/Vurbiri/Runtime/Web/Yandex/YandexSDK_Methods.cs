@@ -7,7 +7,7 @@ namespace Vurbiri
 {
     public partial class YandexSDK
     {
-        public IEnumerator Init_Coroutine()
+        public IEnumerator Init_Cn()
         {
             WaitResult<bool> waitResult;
 
@@ -27,7 +27,7 @@ namespace Vurbiri
                 Message.Log("Leaderboards - initialization error!");
         }
 
-        public IEnumerator Authorization_Coroutine(Action<bool> callback)
+        public IEnumerator Authorization_Cn(Action<bool> callback)
         {
             ///Message.BannersClear();
 

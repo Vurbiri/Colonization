@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                _coroutineAction = _actor.StartCoroutine(SelectHexagon_Coroutine());
+                _coroutineAction = _actor.StartCoroutine(SelectHexagon_Cn());
             }
 
             public override void Exit()
@@ -61,11 +61,11 @@ namespace Vurbiri.Colonization.Actors
                 _fsm.ToDefaultState();
             }
 
-            private IEnumerator SelectHexagon_Coroutine()
+            private IEnumerator SelectHexagon_Cn()
             {
                 Hexagon currentHex = _actor._currentHex;
 
-                List<Hexagon> empty = new(HEX_COUNT_SIDES);
+                List<Hexagon> empty = new(HEX.SIDES);
                 foreach (var hex in currentHex.Neighbors)
                     if (hex.TrySetSelectableFree(_isNotDemon))
                         empty.Add(hex);
@@ -89,10 +89,10 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
                 }
 
-                _coroutineAction = _actor.StartCoroutine(Move_Coroutine());
+                _coroutineAction = _actor.StartCoroutine(Move_Cn());
             }
 
-            private IEnumerator Move_Coroutine()
+            private IEnumerator Move_Cn()
             {
                 Hexagon currentHex = _actor._currentHex;
 

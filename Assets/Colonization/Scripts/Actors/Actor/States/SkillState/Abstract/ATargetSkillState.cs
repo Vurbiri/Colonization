@@ -52,10 +52,10 @@ namespace Vurbiri.Colonization.Actors
                 _waitActor.Activate();
             }
 
-            protected IEnumerator SelectActor_Coroutine(Action<bool> callback)
+            protected IEnumerator SelectActor_Cn(Action<bool> callback)
             {
                 Hexagon currentHex = _actor._currentHex;
-                List<Hexagon> targets = new(HEX_COUNT_SIDES);
+                List<Hexagon> targets = new(HEX.SIDES);
 
                 foreach (var hex in currentHex.Neighbors)
                     if (hex.TrySetSelectableActor(_actor._owner, _relationTarget))
@@ -84,7 +84,7 @@ namespace Vurbiri.Colonization.Actors
                 callback(true);
             }
 
-            protected override IEnumerator ApplySkill_Coroutine()
+            protected override IEnumerator ApplySkill_Cn()
             {
                 CustomYieldInstruction wait = _skin.Skill(_id, _target._skin);
 

@@ -17,15 +17,15 @@ namespace Vurbiri.Colonization
         private readonly Settings _stt;
 
         private readonly List<Triangle> _triangles = new();
-        private readonly Vertex[] _verticesBase = new Vertex[HEX_COUNT_SIDES];
-        private readonly bool[] _visits = new bool[HEX_COUNT_SIDES];
+        private readonly Vertex[] _verticesBase = new Vertex[HEX.SIDES];
+        private readonly bool[] _visits = new bool[HEX.SIDES];
 
         public HexagonMesh(Settings settings, Vector3 position, Color32 color, bool isCreate)
         {
             _stt = settings;
 
             float sizeRate = isCreate ? _stt.rateCellBaseLand : _stt.rateCellBaseWater;
-            for (int i = 0; i < HEX_COUNT_SIDES; i++)
+            for (int i = 0; i < HEX.SIDES; i++)
                 _verticesBase[i] = new(HEX_VERTICES[i] * sizeRate + position, NORMAL, color);
 
             if (!isCreate)
@@ -52,12 +52,12 @@ namespace Vurbiri.Colonization
         public List<Triangle> CreateBorder(Vertex[][] verticesNear, bool[] waterNear)
         {
             List<Triangle> triangles = new();
-            List<Vector3>[,] coastPositions = new List<Vector3>[HEX_COUNT_SIDES, 2];
+            List<Vector3>[,] coastPositions = new List<Vector3>[HEX.SIDES, 2];
             Vertex[] verticesSide, verticesSideNext = verticesNear[0];
             bool isWater, isWaterNext = waterNear[0];
             int indexNext;
 
-            for (int index = 0; index < HEX_COUNT_SIDES; index++)
+            for (int index = 0; index < HEX.SIDES; index++)
             {
                 indexNext = verticesNear.RightIndex(index);
 

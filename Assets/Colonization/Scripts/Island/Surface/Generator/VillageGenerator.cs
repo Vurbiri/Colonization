@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
 
             GetComponent<MeshFilter>().sharedMesh = customMesh.ToMesh();
         }
-        public override IEnumerator Generate_Coroutine(float size)
+        public override IEnumerator Generate_Cn(float size)
         {
             float sizeSqr = size * size, step = size * _density;
             RMFloat offset = step * _ratioOffset;
@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization
                 height += step;
             }
 
-            yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
+            yield return StartCoroutine(customMesh.ToMesh_Cn(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
         }
 
         #region Nested: Hut, MeshMaterial

@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.Actors
             public override void Enter()
             {
                 _animator.SetBool(_idParam, true);
-                _coroutine = _parent.StartCoroutine(StartSkill_Coroutine());
+                _coroutine = _parent.StartCoroutine(StartSkill_Cn());
             }
 
             public override void Exit()
@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization.Actors
                 _animator.SetBool(_idParam, false);
             }
 
-            protected virtual IEnumerator StartSkill_Coroutine()
+            protected virtual IEnumerator StartSkill_Cn()
             {
                 for (int i = 0; i < _countHits; i++)
                 {

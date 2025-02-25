@@ -25,9 +25,9 @@ namespace Vurbiri.Colonization.Controllers
 
             public override void Enter()
             {
-                _coroutine = _controller.StartCoroutine(Zoom_Coroutine());
+                _coroutine = _controller.StartCoroutine(Zoom_Cn());
             }
-            private IEnumerator Zoom_Coroutine()
+            private IEnumerator Zoom_Cn()
             {
                 Vector3 position = _cameraTransform.localPosition;
                 do

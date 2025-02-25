@@ -43,12 +43,12 @@ namespace Vurbiri
         public WaitResult<Return<PlayerRecord>> GetPlayerResult() 
         {
             WaitResult<Return<PlayerRecord>> wait = new();
-            _coroutines.Run(GetPlayerResult_Coroutine(wait));
+            _coroutines.Run(GetPlayerResult_Cn(wait));
             return wait;
 
-            #region Local: GetPlayerResult_Coroutine()
+            #region Local: GetPlayerResult_Cn()
             //============================================
-            IEnumerator GetPlayerResult_Coroutine(WaitResult<Return<PlayerRecord>> wait)
+            IEnumerator GetPlayerResult_Cn(WaitResult<Return<PlayerRecord>> wait)
             {
                 yield return WaitResult(ref _waitEndGetPlayerResult, GetPlayerResultJS, _lbName);
                 string json = _waitEndGetPlayerResult.Result;

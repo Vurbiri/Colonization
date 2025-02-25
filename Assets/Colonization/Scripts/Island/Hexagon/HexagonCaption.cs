@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -16,11 +17,9 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private TMP_Text _currencyText;
         [SerializeField] private Renderer _currencyTextRenderer;
         [Space]
-        [SerializeField] private Color _colorNormal = Color.white;
-        [SerializeField] private Color32 _colorProfit = Color.green;
-        [Space]
         [SerializeField] private float _angleX = 90f;
 
+        private Color _colorNormal, _colorProfit;
         private Transform _thisTransform, _cameraTransform;
         private Quaternion _lastCameraRotation;
         private string _defaultCurrencyText;
@@ -33,15 +32,20 @@ namespace Vurbiri.Colonization.UI
             _cameraTransform = SceneObjects.Get<Camera>().transform;
             _lastCameraRotation = Quaternion.identity;
 
+            var colorSettings = SceneData.Get<TextColorSettings>();
+            _colorNormal = colorSettings.ColorTextBase;
+            _colorProfit = colorSettings.ColorPositive;
+
             StringBuilder sb = new(TAG_SPRITE_LENGTH * spritesIds.Count);
 
             foreach (var sid in spritesIds)
                 sb.AppendFormat(TAG_SPRITE, sid);
 
             _currencyText.text = _defaultCurrencyText = sb.ToString();
+
             _idText.text = id.ToString();
             _idText.color = _colorNormal;
-        }
+         }
 
         public void Profit()
         {

@@ -21,15 +21,15 @@ namespace Vurbiri.Colonization.Actors
             {
                 _animator.SetBool(_idParam, true);
                 _sfx.Death();
-                _parent.StartCoroutine(Death_Coroutine());
+                _parent.StartCoroutine(Death_Cn());
             }
 
-            private IEnumerator Death_Coroutine()
+            private IEnumerator Death_Cn()
             {
                 yield return new WaitForSecondsRealtime(0.1f);
                 _animator.SetBool(_idParam, false);
                 yield return _waitEndAnimation;
-                yield return _sfx.Death_Coroutine();
+                yield return _sfx.Death_Cn();
                 waitActivate.Activate();
             }
         }

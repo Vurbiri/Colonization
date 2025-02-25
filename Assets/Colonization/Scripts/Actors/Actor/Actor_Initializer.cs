@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization.Actors
             _currentAP = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
             _move = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
 
-            _currentHP.Subscribe(hp => { if (hp <= 0) _deathCoroutine = StartCoroutine(Death_Coroutine()); });
+            _currentHP.Subscribe(hp => { if (hp <= 0) _deathCoroutine = StartCoroutine(Death_Cn()); });
 
             _effects.Subscribe(RedirectEvents);
             #endregion

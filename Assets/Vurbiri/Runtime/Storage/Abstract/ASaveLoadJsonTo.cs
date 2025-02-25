@@ -16,9 +16,9 @@ namespace Vurbiri
 
         public abstract bool Init(IReadOnlyDIContainer container);
 
-        public abstract IEnumerator Load_Coroutine(string key, Action<bool> callback);
+        public abstract IEnumerator Load_Cn(string key, Action<bool> callback);
 
-        public virtual bool TryGet<T>(string key, out T value)
+        public bool TryGet<T>(string key, out T value)
         {
             value = default;
             if (_saved.TryGetValue(key, out string json))
@@ -38,35 +38,97 @@ namespace Vurbiri
             return null;
         }
 
-        public virtual IEnumerator Save_Coroutine<T>(string key, T data, bool toFile, Action<bool> callback)
+        public IEnumerator Save_Cn<T>(string key, T data, bool toFile, Action<bool> callback)
         {
             bool result = SaveToMemory(key, data);
-            if (!toFile | !(result & _modified))
+            if (!(toFile & _modified))
             {
                 callback?.Invoke(result);
                 yield break;
             }
 
-            yield return SaveToFile_Coroutine(callback);
+            yield return SaveToFile_Cn(callback);
         }
 
-        public virtual IEnumerator Remove_Coroutine(string key, bool fromFile, Action<bool> callback)
+        public IEnumerator Remove_Cn(string key, bool fromFile, Action<bool> callback)
         {
             bool result = _saved.Remove(key);
             _modified |= result;
-            if (!fromFile | !result)
+            if (!(fromFile & _modified))
             {
                 callback?.Invoke(result);
                 yield break;
             }
 
-            yield return SaveToFile_Coroutine(callback);
+            yield return SaveToFile_Cn(callback);
         }
 
+        #region Clear
+        public IEnumerator Clear_Cn(bool fromFile, Action<bool> callback)
+        {
+            _modified |= _saved.Count > 0;
+            _saved.Clear();
+            if (!(fromFile & _modified))
+            {
+                callback?.Invoke(true);
+                yield break;
+            }
 
-        public virtual bool ContainsKey(string key) => _saved.ContainsKey(key);
+            yield return SaveToFile_Cn(callback);
+        }
+        public IEnumerator Clear_Cn(string keyExclude, bool fromFile, Action<bool> callback)
+        {
+            if(_saved.Count > 0)
+            {
+                _saved.Remove(keyExclude, out string restore);
 
-        protected virtual bool SaveToMemory<T>(string key, T data)
+                _saved.Clear();
+                _modified = true;
+
+                if (restore != null) 
+                    _saved.Add(keyExclude, restore);
+            }
+            if (!(fromFile & _modified))
+            {
+                callback?.Invoke(true);
+                yield break;
+            }
+
+            yield return SaveToFile_Cn(callback);
+        }
+        public IEnumerator Clear_Cn(string[] keyExcludes, bool fromFile, Action<bool> callback)
+        {
+            if (_saved.Count > 0)
+            {
+                int count = keyExcludes.Length;
+                string[] values = new string[count];
+
+                for(int i = 0; i < count; i++)
+                    _saved.Remove(keyExcludes[i], out values[i]);
+
+                _saved.Clear();
+                _modified = true;
+
+                for (int i = 0; i < count; i++)
+                {
+                    if (values[i] != null)
+                        _saved.Add(keyExcludes[i], values[i]);
+                }
+            }
+            if (!(fromFile & _modified))
+            {
+                callback?.Invoke(true);
+                yield break;
+            }
+
+            yield return SaveToFile_Cn(callback);
+        }
+        #endregion
+
+        public bool ContainsKey(string key) => _saved.ContainsKey(key);
+
+
+        protected bool SaveToMemory<T>(string key, T data)
         {
             try
             {
@@ -86,15 +148,16 @@ namespace Vurbiri
             return false;
         }
 
-        protected virtual IEnumerator SaveToFile_Coroutine(Action<bool> callback)
+        protected IEnumerator SaveToFile_Cn(Action<bool> callback)
         {
-            WaitResult<bool> waitResult = SaveToFile_Wait();
+            WaitResult<bool> waitResult = SaveToFile_Wt();
             yield return waitResult;
 
             _modified = !waitResult.Result;
             callback?.Invoke(waitResult.Result);
         }
-        protected abstract WaitResult<bool> SaveToFile_Wait();
+        protected abstract WaitResult<bool> SaveToFile_Wt();
+
 
         protected virtual string Serialize<T>(T obj) => JsonConvert.SerializeObject(obj, typeof(T), null);
 

@@ -5,6 +5,7 @@ using Vurbiri.Collections;
 using Vurbiri.Colonization.Data;
 
 
+
 #if UNITY_EDITOR
 using static VurbiriEditor.Utility;
 #endif
@@ -34,35 +35,59 @@ namespace Vurbiri.Colonization
         public void Init(DIContainer diObjects, ProjectSaveData saveData, GameplayEventBus eventBus)
         {
             _land = diObjects.AddInstance<Land>(new(_landInitData));
-            saveData.LandBind(_land);
+            
+
             _crossroads = diObjects.AddInstance<Crossroads>(new(_crossroadsContainer, _edificePrefabs, eventBus));
         }
 
-        public IEnumerator Create_Coroutine(bool isLoad)
+        public IEnumerator Create_Cn(bool isLoad, ProjectSaveData saveData)
         {
             if (isLoad)
-                yield return StartCoroutine(Load_Coroutine());
+                yield return StartCoroutine(Load_Cn(saveData));
             else
-                yield return StartCoroutine(Generate_Coroutine());
+                yield return StartCoroutine(Generate_Cn(saveData));
             
-            yield return StartCoroutine(Setup_Coroutine());
+            yield return StartCoroutine(Setup_Cn());
         }
 
-        public IEnumerator Load_Coroutine()
+        public IEnumerator Load_Cn(ProjectSaveData saveData)
         {
-            //int lastHexagons = MAX_HEXAGONS - HEX_COUNT_SIDES * MAX_CIRCLES;
-            //Hexagon hex;
-            //foreach (HexData data in hexagonsData)
-            //{
-            //    hex = _land.CreateHexagon(data);
-            //    _crossroads.CreateCrossroads(data.position, hex, --lastHexagons < 0);
+            Key keyHex; 
+            int circle = 0, id, surfaceId;
+            bool isLastCircle = circle == MAX_CIRCLES;
+            Vector3 position, positionNext, positionCurrent;
 
-            //    yield return null;
-            //}
-            yield return null;
+            Hexagon hex = _land.CreateHexagon(new(), ID_GATE, SurfaceId.Gate, Vector3.zero);
+            _crossroads.CreateCrossroads(Vector3.zero, hex, false);
+
+            while (!isLastCircle)
+            {
+                isLastCircle = ++circle == MAX_CIRCLES;
+                positionNext = HEX_SIDES[0] * circle;
+                for (int i = 0; i < HEX.SIDES; i++)
+                {
+                    position = positionNext;
+                    positionNext = HEX_SIDES.Next(i) * circle;
+
+                    for (int j = 0; j < circle; j++)
+                    {
+                        positionCurrent = Vector3.Lerp(position, positionNext, (float)j / circle);
+                        keyHex = positionCurrent.HexPositionToKey();
+
+                        saveData.GetHexData(keyHex, out id, out surfaceId);
+
+                        hex = _land.CreateHexagon(keyHex, id, surfaceId, positionCurrent);
+                        _crossroads.CreateCrossroads(positionCurrent, hex, isLastCircle);
+
+                        yield return null;
+                    }
+                }
+            }
+
+            saveData.LandBind(_land);
         }
 
-        private IEnumerator Generate_Coroutine()
+        private IEnumerator Generate_Cn(ProjectSaveData saveData)
         {
             Chance chanceWater = CHANCE_WATER;
             Key keyHex; int circle = 0;
@@ -75,20 +100,22 @@ namespace Vurbiri.Colonization
             Hexagon hex = _land.CreateHexagon(new(), ID_GATE, SurfaceId.Gate, Vector3.zero);
             _crossroads.CreateCrossroads(Vector3.zero, hex, false);
 
+            saveData.LandBind(_land);
+
             while (!isLastCircle)
             {
                 isLastCircle = ++circle == MAX_CIRCLES;
                 isWaterPossible = isLastCircle | (circle >= (MAX_CIRCLES - 1));
 
                 positionNext = HEX_SIDES[0] * circle;
-                for (int i = 0; i < HEX_COUNT_SIDES; i++)
+                for (int i = 0; i < HEX.SIDES; i++)
                 {
                     position = positionNext;
                     positionNext = HEX_SIDES.Next(i) * circle;
 
                     for (int j = 0; j < circle; j++)
                     {
-                        positionCurrent = Vector3.Lerp(position, positionNext, 1f * j / circle);
+                        positionCurrent = Vector3.Lerp(position, positionNext, (float)j / circle);
 
                         keyHex = positionCurrent.HexPositionToKey();
                         isWater = isWaterPossible && (isLastCircle || (!isWater & j != 0 && chanceWater.Roll));
@@ -104,12 +131,12 @@ namespace Vurbiri.Colonization
             }
         }
 
-        private IEnumerator Setup_Coroutine()
+        private IEnumerator Setup_Cn()
         {
             yield return null;
             _land.HexagonsNeighbors();
             yield return null;
-            yield return StartCoroutine(_land.FinishCreate_Coroutine());
+            yield return StartCoroutine(_land.FinishCreate_Cn());
         }
 
 #if UNITY_EDITOR

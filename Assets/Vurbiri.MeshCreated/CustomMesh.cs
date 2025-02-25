@@ -68,11 +68,11 @@ namespace Vurbiri.CreatingMesh
             return mesh;
         }
 
-        public IEnumerator ToMesh_Coroutine(Action<Mesh> callback, bool tangents = false, bool isOptimize = true, bool isReadable = false)
+        public IEnumerator ToMesh_Cn(Action<Mesh> callback, bool tangents = false, bool isOptimize = true, bool isReadable = false)
         {
             Mesh mesh = new() { name = _name };
 
-            yield return _vertices.SetupMesh_Coroutine(mesh);
+            yield return _vertices.SetupMesh_Cn(mesh);
 
             mesh.SetTriangles(_triangles, 0);
             yield return null;
@@ -134,7 +134,7 @@ namespace Vurbiri.CreatingMesh
                 mesh.SetColors(_colors);
             }
 
-            public IEnumerator SetupMesh_Coroutine(Mesh mesh)
+            public IEnumerator SetupMesh_Cn(Mesh mesh)
             {
                 mesh.SetVertices(_positions);
                 yield return null;

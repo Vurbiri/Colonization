@@ -21,10 +21,10 @@ namespace Vurbiri.Colonization.Controllers
             public override void Enter()
             {
                 base.Enter();
-                _coroutine = _controller.StartCoroutine(MoveToTarget_Coroutine());
+                _coroutine = _controller.StartCoroutine(MoveToTarget_Cn());
             }
 
-            private IEnumerator MoveToTarget_Coroutine()
+            private IEnumerator MoveToTarget_Cn()
             {
                 Vector3 velocity = Vector3.zero;
                 do

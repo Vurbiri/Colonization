@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
         private WaitResult<bool> _waitLogOn;
         private YandexSDK _ysdk;
 
-        public IEnumerator TryLogOn_Coroutine(YandexSDK ysdk)
+        public IEnumerator TryLogOn_Cn(YandexSDK ysdk)
         {
             gameObject.SetActive(true);
 
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
                 if (!_waitLogOn.Result)
                     break;
 
-                yield return StartCoroutine(ysdk.Authorization_Coroutine((b) => resultAuthorization = b));
+                yield return StartCoroutine(ysdk.Authorization_Cn((b) => resultAuthorization = b));
                 if (resultAuthorization)
                     break;
 

@@ -15,16 +15,16 @@ namespace Vurbiri.Colonization.Actors
 
             }
 
-            protected override IEnumerator Actions_Coroutine()
+            protected override IEnumerator Actions_Cn()
             {
                 bool isTarget = false;
-                yield return SelectActor_Coroutine(b => isTarget = b);
+                yield return SelectActor_Cn(b => isTarget = b);
                 if (!isTarget)
                 {
                     ToExit(); yield break;
                 }
 
-                yield return ApplySkill_Coroutine();
+                yield return ApplySkill_Cn();
 
                 ToExit();
             }

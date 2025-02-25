@@ -97,7 +97,7 @@ namespace Vurbiri.Colonization
         public void BuildAndUnion(CrossroadLink link)
         {
             Build(link);
-            StartCoroutine(TryUnion_Coroutine());
+            StartCoroutine(TryUnion_Cn());
         }
 
         #region Reactive
@@ -127,7 +127,7 @@ namespace Vurbiri.Colonization
                 road.SetGradient();
         }
 
-        private IEnumerator TryUnion_Coroutine()
+        private IEnumerator TryUnion_Cn()
         {
             yield return null;
             Road roadLine;
@@ -140,7 +140,7 @@ namespace Vurbiri.Colonization
                     {
                         _roadsLists.Remove(roadLine);
                         Destroy(roadLine.gameObject);
-                        StartCoroutine(TryUnion_Coroutine());
+                        StartCoroutine(TryUnion_Cn());
                         yield break;
                     }
                 }

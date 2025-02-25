@@ -57,9 +57,9 @@ namespace Vurbiri.Colonization.Data
         public void Save(bool saveToFile = true, Action<bool> callback = null)
         {
             
-            _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.DIPLOMANCY, _diplomacyData, saveToFile, callback));
+            _coroutines.Run(_storage.Save_Cn(SAVE_KEYS.DIPLOMANCY, _diplomacyData, saveToFile, callback));
             for (int i = 0; i < PlayersCount; i++)
-                _coroutines.Run(_storage.Save_Coroutine(_keys[i], _playersData[i], saveToFile, callback));
+                _coroutines.Run(_storage.Save_Cn(_keys[i], _playersData[i], saveToFile, callback));
         }
 
         public void DiplomacyBind(IReactive<int, int> diplomacy, bool calling)
@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization.Data
             void OnDiplomacy(int index, int value)
             {
                 _diplomacyData[index] = value;
-                _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.DIPLOMANCY, _diplomacyData));
+                _coroutines.Run(_storage.Save_Cn(SAVE_KEYS.DIPLOMANCY, _diplomacyData));
             }
             #endregion
         }
@@ -85,7 +85,7 @@ namespace Vurbiri.Colonization.Data
             _turnQueueData = data;
             return true;
         }
-        public void SaveTurnQueue(IEnumerable<int> queue) => _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.TURNS_QUEUE, queue));
+        public void SaveTurnQueue(IEnumerable<int> queue) => _coroutines.Run(_storage.Save_Cn(SAVE_KEYS.TURNS_QUEUE, queue));
         public void TurnQueueBind(IReadOnlyReactive<IArrayable> turnData)
         {
             _turnQueueData ??= turnData.Value.ToArray();
@@ -96,7 +96,7 @@ namespace Vurbiri.Colonization.Data
             void OnTurnQueue(IArrayable item)
             {
                 _turnQueueData = item.ToArray(_turnQueueData);
-                _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.TURNS_DATA, _turnQueueData));
+                _coroutines.Run(_storage.Save_Cn(SAVE_KEYS.TURNS_DATA, _turnQueueData));
             }
             #endregion
         }
@@ -109,6 +109,6 @@ namespace Vurbiri.Colonization.Data
                 player.Dispose();
         }
 
-        private void OnSave(PlayerSaveData data) => _coroutines.Run(_storage.Save_Coroutine(_keys[data.Id], data));
+        private void OnSave(PlayerSaveData data) => _coroutines.Run(_storage.Save_Cn(_keys[data.Id], data));
     }
 }

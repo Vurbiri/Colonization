@@ -42,7 +42,7 @@ namespace Vurbiri.UI
             if (string.IsNullOrEmpty(key))
                 return false;
             
-            _coroutineShow ??= StartCoroutine(Show_Coroutine(_localization.GetText(file, key), position));
+            _coroutineShow ??= StartCoroutine(Show_Cn(_localization.GetText(file, key), position));
 
             return true;
         }
@@ -55,12 +55,12 @@ namespace Vurbiri.UI
             if (_coroutineShow != null)
                 StopCoroutine(_coroutineShow);
 
-            _coroutineShow = StartCoroutine(Show_Coroutine(text, position));
+            _coroutineShow = StartCoroutine(Show_Cn(text, position));
 
             return true;
         }
 
-        private IEnumerator Show_Coroutine(string text, Vector3 position)
+        private IEnumerator Show_Cn(string text, Vector3 position)
         {
             yield return new WaitForSecondsRealtime(_timeDelay);
 
@@ -92,13 +92,13 @@ namespace Vurbiri.UI
                 _coroutineShow = null;
             }
 
-            _coroutineHide ??= StartCoroutine(Hide_Coroutine());
+            _coroutineHide ??= StartCoroutine(Hide_Cn());
 
             return true;
 
-            #region Local: Hide_Coroutine()
+            #region Local: Hide_Cn()
             //=================================
-            IEnumerator Hide_Coroutine()
+            IEnumerator Hide_Cn()
             {
                 float alpha = _thisCanvasGroup.alpha;
                 while (alpha > 0f)

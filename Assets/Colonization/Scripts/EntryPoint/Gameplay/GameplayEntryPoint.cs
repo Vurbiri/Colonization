@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization
 
             FillingContainers(containers);
 
-            StartCoroutine(Enter_Coroutine());
+            StartCoroutine(Enter_Cn());
 
             return new GameplayExitPoint(_nextScene).ExitParam;
 
@@ -77,21 +77,21 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        private IEnumerator Enter_Coroutine()
+        private IEnumerator Enter_Cn()
         {
-            yield return CreateIsland_Coroutine();
-            yield return CreatePlayers_Coroutine();
+            yield return CreateIsland_Cn();
+            yield return CreatePlayers_Cn();
 
             _sceneObjects.Init(this, _scriptables);
 
-            StartCoroutine(Final_Coroutine());
+            StartCoroutine(Final_Cn());
         }
 
-        private IEnumerator CreateIsland_Coroutine()
+        private IEnumerator CreateIsland_Cn()
         {
             _sceneObjects.islandCreator.Init(_containers.Objects, _projectSaveData, _eventBus);
 
-            yield return _sceneObjects.islandCreator.Create_Coroutine(_isLoad);
+            yield return _sceneObjects.islandCreator.Create_Cn(_isLoad, _projectSaveData);
 
             yield return null;
 
@@ -101,7 +101,7 @@ namespace Vurbiri.Colonization
             yield return null;
         }
 
-        private IEnumerator CreatePlayers_Coroutine()
+        private IEnumerator CreatePlayers_Cn()
         {
             _players = _containers.Objects.AddInstance(new Players(_containers, _playersSettings, _isLoad));
 
@@ -111,7 +111,7 @@ namespace Vurbiri.Colonization
             _playersSettings = null;
         }
 
-        private IEnumerator Final_Coroutine()
+        private IEnumerator Final_Cn()
         {
             yield return null;
 
@@ -128,7 +128,7 @@ namespace Vurbiri.Colonization
 
             yield return null;
 
-            _containers.Objects.Get<LoadingScreen>().SmoothOff_Wait();
+            _containers.Objects.Get<LoadingScreen>().SmoothOff_Wt();
 
             Destroy(gameObject);
         }

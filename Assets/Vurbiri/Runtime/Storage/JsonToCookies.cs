@@ -11,7 +11,7 @@ namespace Vurbiri
 
         public override bool Init(IReadOnlyDIContainer container) => UtilityJS.IsCookies();
 
-        public override IEnumerator Load_Coroutine(string key, Action<bool> callback)
+        public override IEnumerator Load_Cn(string key, Action<bool> callback)
         {
             _key = key;
 
@@ -42,7 +42,7 @@ namespace Vurbiri
             callback?.Invoke(false);
         }
 
-        protected override WaitResult<bool> SaveToFile_Wait()
+        protected override WaitResult<bool> SaveToFile_Wt()
         {
             WaitResult<bool> waitResult = new();
 

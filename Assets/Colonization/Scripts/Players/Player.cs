@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
         public bool CanAnyRecruitingWarriors(Crossroad crossroad) => _obj.IsNotMaxWarriors() && crossroad.CanRecruitingWarriors(_obj.id);
         public bool CanRecruitingWarrior(Id<WarriorId> id) => _obj.CanRecruitingWarrior(id);
 
-        public void RecruitWarriors(Crossroad crossroad, Id<WarriorId> id) => _coroutines.Run(RecruitWarriors_Coroutine(crossroad, id));
+        public void RecruitWarriors(Crossroad crossroad, Id<WarriorId> id) => _coroutines.Run(RecruitWarriors_Cn(crossroad, id));
 
         public bool CanWallBuild(Crossroad crossroad) => _obj.abilities.IsTrue(PlayerAbilityId.IsWall) && crossroad.CanWallBuild(_obj.id);
         public void BuyWall(Crossroad crossroad) => _obj.BuyWall(crossroad);
@@ -82,9 +82,9 @@ namespace Vurbiri.Colonization
 
         public override string ToString() => $"Player: {_obj.id}";
 
-        private IEnumerator RecruitWarriors_Coroutine(Crossroad crossroad, Id<WarriorId> id)
+        private IEnumerator RecruitWarriors_Cn(Crossroad crossroad, Id<WarriorId> id)
         {
-            WaitResult<Hexagon> result = crossroad.GetHexagonForRecruiting_Wait();
+            WaitResult<Hexagon> result = crossroad.GetHexagonForRecruiting_Wt();
             yield return result;
 
             if(result.Result == null)

@@ -174,7 +174,7 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
-        private IEnumerator Death_Coroutine()
+        private IEnumerator Death_Cn()
         {
             Removing();
             yield return _skin.Death();

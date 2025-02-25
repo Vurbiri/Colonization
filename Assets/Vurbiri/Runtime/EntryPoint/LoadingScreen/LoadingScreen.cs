@@ -47,7 +47,7 @@ namespace Vurbiri.UI
             _self.SetActive(isOn);
         }
 
-        public WaitActivate SmoothOn_Wait()
+        public WaitActivate SmoothOn_Wt()
         {
             WaitActivate wait = new();
 
@@ -62,13 +62,13 @@ namespace Vurbiri.UI
             if (_coroutineSmooth != null)
                 StopCoroutine(_coroutineSmooth);
 
-            _coroutineSmooth = StartCoroutine(SmoothOn_Coroutine());
+            _coroutineSmooth = StartCoroutine(SmoothOn_Cn());
 
             return wait;
 
-            #region Local: SmoothOn_Coroutine()
+            #region Local: SmoothOn_Cn()
             //=================================
-            IEnumerator SmoothOn_Coroutine()
+            IEnumerator SmoothOn_Cn()
             {
 
                 float alpha = _thisCanvasGroup.alpha;
@@ -86,7 +86,7 @@ namespace Vurbiri.UI
             #endregion
         }
 
-        public WaitActivate SmoothOff_Wait()
+        public WaitActivate SmoothOff_Wt()
         {
             WaitActivate wait = new();
 
@@ -101,13 +101,13 @@ namespace Vurbiri.UI
             if (_coroutineSmooth != null)
                 StopCoroutine(_coroutineSmooth);
 
-            _coroutineSmooth = StartCoroutine(SmoothOff_Coroutine());
+            _coroutineSmooth = StartCoroutine(SmoothOff_Cn());
 
             return wait;
 
-            #region Local: SmoothOff_Coroutine()
+            #region Local: SmoothOff_Cn()
             //=================================
-            IEnumerator SmoothOff_Coroutine()
+            IEnumerator SmoothOff_Cn()
             {
                 float alpha = _thisCanvasGroup.alpha;
                 while (alpha > _alphaThreshold)

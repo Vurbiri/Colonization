@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization
 
         }
 
-        public override IEnumerator Generate_Coroutine(float size)
+        public override IEnumerator Generate_Cn(float size)
         {
             CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
 
@@ -103,7 +103,7 @@ namespace Vurbiri.Colonization
                 offset = step * _ratioOffset;
             }
 
-            yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
+            yield return StartCoroutine(customMesh.ToMesh_Cn(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
 
         }
 

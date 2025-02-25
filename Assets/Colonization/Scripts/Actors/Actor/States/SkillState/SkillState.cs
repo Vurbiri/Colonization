@@ -28,10 +28,10 @@ namespace Vurbiri.Colonization.Actors
                 _parentTransform.localPosition = _actor._currentHex.Position;
             }
 
-            protected override IEnumerator Actions_Coroutine()
+            protected override IEnumerator Actions_Cn()
             {
                 bool isTarget = false;
-                yield return SelectActor_Coroutine(b => isTarget = b);
+                yield return SelectActor_Cn(b => isTarget = b);
                 if (!isTarget) 
                 { 
                     ToExit(); 
@@ -41,23 +41,23 @@ namespace Vurbiri.Colonization.Actors
                 Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
                 float path = 1f - (_rangeSkill + _target._extentsZ) / HEX_DIAMETER_IN;
 
-                yield return Run_Coroutine(currentHex.Position, targetHex.Position, path);
-                yield return ApplySkill_Coroutine();
-                yield return Run_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f);
+                yield return Run_Cn(currentHex.Position, targetHex.Position, path);
+                yield return ApplySkill_Cn();
+                yield return Run_Cn(_parentTransform.localPosition, currentHex.Position, 1f);
                 
                 ToExit();
             }
 
-            protected IEnumerator Run_Coroutine(Vector3 start, Vector3 end, float path)
+            protected IEnumerator Run_Cn(Vector3 start, Vector3 end, float path)
             {
                 yield return null;
 
                 _skin.Run();
 
-                yield return Movement_Coroutine(start, end, _speedRun, path);
+                yield return Movement_Cn(start, end, _speedRun, path);
             }
 
-            protected IEnumerator Movement_Coroutine(Vector3 start, Vector3 end, float speed, float path)
+            protected IEnumerator Movement_Cn(Vector3 start, Vector3 end, float speed, float path)
             {
                 float progress = 0f;
                 while (progress <= path)

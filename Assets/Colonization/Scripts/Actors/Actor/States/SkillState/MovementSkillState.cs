@@ -20,10 +20,10 @@ namespace Vurbiri.Colonization.Actors
                 _timeToHit = _skin.GetFirsHitTime(id);
             }
 
-            protected override IEnumerator Actions_Coroutine()
+            protected override IEnumerator Actions_Cn()
             {
                 bool isTarget = false;
-                yield return SelectActor_Coroutine(b => isTarget = b);
+                yield return SelectActor_Cn(b => isTarget = b);
                 if (!isTarget)
                 {
                     ToExit();
@@ -35,22 +35,22 @@ namespace Vurbiri.Colonization.Actors
                 float distance = _distanceMove + _target._extentsZ;
                 float path = 1f - distance / HEX_DIAMETER_IN;
 
-                yield return Run_Coroutine(currentHex.Position, targetHex.Position, path);
-                yield return ApplyMovementSkill_Coroutine(_parentTransform.localPosition, targetHex.Position, distance);
-                yield return Run_Coroutine(_parentTransform.localPosition, currentHex.Position, 1f);
+                yield return Run_Cn(currentHex.Position, targetHex.Position, path);
+                yield return ApplyMovementSkill_Cn(_parentTransform.localPosition, targetHex.Position, distance);
+                yield return Run_Cn(_parentTransform.localPosition, currentHex.Position, 1f);
 
                 ToExit();
             }
 
-            private IEnumerator ApplyMovementSkill_Coroutine(Vector3 start, Vector3 end, float remainingDistance)
+            private IEnumerator ApplyMovementSkill_Cn(Vector3 start, Vector3 end, float remainingDistance)
             {
                 float distance = _rangeSkill + _target._extentsZ;
                 float path = 1f - distance / remainingDistance;
                 float speed = path / _timeToHit;
                 
-                _actor.StartCoroutine(Movement_Coroutine(start, end, speed, path));
+                _actor.StartCoroutine(Movement_Cn(start, end, speed, path));
 
-                yield return ApplySkill_Coroutine();
+                yield return ApplySkill_Cn();
             }
         }
     }

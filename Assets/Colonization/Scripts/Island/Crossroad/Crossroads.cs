@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         private readonly Transform _container;
         private readonly IdHashSet<EdificeId, AEdifice> _prefabs;
         private readonly GameplayEventBus _eventBus;
-        private readonly Dictionary<Key, Crossroad> _crossroads = new(HEX_COUNT_SIDES * MAX_CIRCLES * MAX_CIRCLES);
+        private readonly Dictionary<Key, Crossroad> _crossroads = new(HEX.SIDES * MAX_CIRCLES * MAX_CIRCLES);
         private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
 
         public Crossroad this[Key key] => _crossroads[key];
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
             Crossroad cross;
             Key key;
             Vector3 positionCross;
-            for (int i = 0; i < HEX_COUNT_SIDES; i++)
+            for (int i = 0; i < HEX.SIDES; i++)
             {
                 positionCross = HEX_VERTICES[i] + position;
 

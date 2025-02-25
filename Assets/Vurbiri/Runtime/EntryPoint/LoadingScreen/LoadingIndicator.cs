@@ -19,10 +19,10 @@ namespace Vurbiri.UI
 
         private void OnEnable()
         {
-            StartCoroutine(Turn_Coroutine());
+            StartCoroutine(Turn_Cn());
         }
 
-        private IEnumerator Turn_Coroutine()
+        private IEnumerator Turn_Cn()
         {
             float fill;
 

@@ -24,8 +24,8 @@ namespace Vurbiri.Colonization
         private Actor _owner = null;
         private Id<PlayerId> _ownerId = PlayerId.None;
 
-        private readonly HashSet<Crossroad> _crossroads = new(CONST.HEX_COUNT_SIDES);
-        private readonly HashSet<Hexagon> _neighbors = new(CONST.HEX_COUNT_SIDES);
+        private readonly HashSet<Crossroad> _crossroads = new(HEX.SIDES);
+        private readonly HashSet<Hexagon> _neighbors = new(HEX.SIDES);
         #endregion
 
         #region Propirties
@@ -105,7 +105,7 @@ namespace Vurbiri.Colonization
                 if(!neighbor._isWater)
                     return neighbor._key - _key;
 
-            return CONST.NEAR_HEX.Rand();
+            return HEX.NEAR.Rand();
         }
 
         public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
@@ -205,7 +205,17 @@ namespace Vurbiri.Colonization
             _hexagonCaption.SetActive(value);
         }
 
+        private const int SIZE_ARRAY = 2;
         public int[] ToArray() => new int[] { _id, _surfaceId };
+        public static void FromArray(int[] data, out int id, out int surfaceId)
+        {
+            if(data == null || data.Length != SIZE_ARRAY)
+                throw new System.ArgumentException($"int[] data {data}");
+            
+            int i = 0;
+            id = data[i++];
+            surfaceId = data[i];
+        }
 
         #region ISelectable
         public void Select() { }

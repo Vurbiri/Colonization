@@ -54,12 +54,12 @@ namespace Vurbiri.Colonization.UI
             }
 
             _self.SetActive(true);
-            _queue.Enqueue(Run_Coroutine(string.Format(delta > 0 ? _stringPlus : _stringMinus, delta)));
+            _queue.Enqueue(Run_Cn(string.Format(delta > 0 ? _stringPlus : _stringMinus, delta)));
 
             _prevValue = value;
         }
 
-        private IEnumerator Run_Coroutine(string text)
+        private IEnumerator Run_Cn(string text)
         {
             float lerpVector = 0f, lerpColor = 0f, delta;
             Color color = Color.white;

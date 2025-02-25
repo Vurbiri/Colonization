@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
             GetComponent<MeshFilter>().sharedMesh = customMesh.ToMesh();
         }
 
-        public override IEnumerator Generate_Coroutine(float size)
+        public override IEnumerator Generate_Cn(float size)
         {
             CustomMesh customMesh = new(NAME_MESH.Concat(ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
             float step = _spruce.RadiusAvg * _density, radius = step;
@@ -79,7 +79,7 @@ namespace Vurbiri.Colonization
                 yield return null;
             }
 
-            yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
+            yield return StartCoroutine(customMesh.ToMesh_Cn(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
         }
 
         #region Nested: Spruce

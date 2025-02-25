@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
 
             GetComponent<MeshFilter>().sharedMesh = customMesh.ToMesh();
         }
-        public override IEnumerator Generate_Coroutine(float radius)
+        public override IEnumerator Generate_Cn(float radius)
         {
             CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
 
@@ -79,7 +79,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            yield return StartCoroutine(customMesh.ToMesh_Coroutine(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
+            yield return StartCoroutine(customMesh.ToMesh_Cn(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
         }
 
         #region Nested: Druse, Cristal

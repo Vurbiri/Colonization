@@ -97,10 +97,10 @@ namespace Vurbiri.Colonization.UI
                 return;
             
             StopAllCoroutines();
-            StartCoroutine(EnableLook_Coroutine(value));
+            StartCoroutine(EnableLook_Cn(value));
         }
 
-        private IEnumerator EnableLook_Coroutine(bool value)
+        private IEnumerator EnableLook_Cn(bool value)
         {
             yield return null;
             _lookAtCamera.enabled = value;

@@ -17,7 +17,7 @@ namespace Vurbiri
             return _ysdk.IsLogOn;
         }
 
-        public override IEnumerator Load_Coroutine(string key, Action<bool> callback)
+        public override IEnumerator Load_Cn(string key, Action<bool> callback)
         {
             _key = key;
 
@@ -43,6 +43,6 @@ namespace Vurbiri
             callback?.Invoke(false);
         }
 
-        protected override WaitResult<bool> SaveToFile_Wait() => _ysdk.Save(_key, Serialize(_saved));
+        protected override WaitResult<bool> SaveToFile_Wt() => _ysdk.Save(_key, Serialize(_saved));
     }
 }

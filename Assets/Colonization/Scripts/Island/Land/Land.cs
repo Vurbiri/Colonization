@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
             _container = _landMesh.transform;
 
             InitHexagonsIdForKey();
-            _poolMarks = new(initData.prefabHexMark, _container, HEX_COUNT_SIDES);
+            _poolMarks = new(initData.prefabHexMark, _container, HEX.SIDES);
             
             _eventBus = SceneServices.Get<GameplayEventBus>();
 
@@ -70,9 +70,9 @@ namespace Vurbiri.Colonization
 
         public void HexagonsNeighbors() => _landMesh.HexagonsNeighbors(_hexagons);
 
-        public IEnumerator FinishCreate_Coroutine()
+        public IEnumerator FinishCreate_Cn()
         {
-            yield return _landMesh.SetMesh_Coroutine();
+            yield return _landMesh.SetMesh_Cn();
 
             _landMesh.Dispose();
             _surfaces.Dispose();

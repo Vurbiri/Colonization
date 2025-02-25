@@ -11,12 +11,12 @@ namespace Vurbiri
 {
     public static class Storage
     {
-        public static IEnumerator Create_Coroutine(DIContainer container, string key, Action<IStorageService> callback)
+        public static IEnumerator Create_Cn(DIContainer container, string key, Action<IStorageService> callback)
         {
             if (Create(container, out IStorageService storage))
             {
                 bool result = false;
-                yield return storage.Load_Coroutine(key, (b) => result = b);
+                yield return storage.Load_Cn(key, (b) => result = b);
                 Message.Log(result ? "Сохранения загружены" : "Сохранения не найдены");
             }
             else
@@ -52,7 +52,7 @@ namespace Vurbiri
             #endregion
         }
 
-        public static IEnumerator TryLoadTextureWeb_Coroutine(string url, Action<Return<Texture>> callback)
+        public static IEnumerator TryLoadTextureWeb_Cn(string url, Action<Return<Texture>> callback)
         {
             if (string.IsNullOrEmpty(url) || !url.StartsWith("https://"))
             {

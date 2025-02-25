@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                _coroutineAction = _actor.StartCoroutine(Actions_Coroutine());
+                _coroutineAction = _actor.StartCoroutine(Actions_Cn());
             }
 
             public override void Exit()
@@ -67,8 +67,8 @@ namespace Vurbiri.Colonization.Actors
                 _actor.TriggerChange();
             }
 
-            protected abstract IEnumerator Actions_Coroutine();
-            protected abstract IEnumerator ApplySkill_Coroutine();
+            protected abstract IEnumerator Actions_Cn();
+            protected abstract IEnumerator ApplySkill_Cn();
         }
     }
 }

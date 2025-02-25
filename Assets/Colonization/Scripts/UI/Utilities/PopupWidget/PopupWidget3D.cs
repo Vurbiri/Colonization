@@ -63,10 +63,10 @@ namespace Vurbiri.Colonization.UI
                 return;
 
             _self.SetActive(true);
-            _queue.Enqueue(Run_Coroutine(delta, id));
+            _queue.Enqueue(Run_Cn(delta, id));
         }
 
-        protected IEnumerator Run_Coroutine(int value, Id<ActorAbilityId> id)
+        protected IEnumerator Run_Cn(int value, Id<ActorAbilityId> id)
         {
             float lerpVector = 0f, lerpColor = 0f, delta;
             Color start, end;
