@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization.Characteristics
                 _value = other._value;
             }
 
-            actionThisChange?.Invoke(this, TypeEvent.Change);
+            _subscriber.Invoke(this, TypeEvent.Change);
 
             return true;
         }
@@ -75,7 +75,7 @@ namespace Vurbiri.Colonization.Characteristics
                 return;
             }
 
-            actionThisChange?.Invoke(this, TypeEvent.Change);
+            _subscriber.Invoke(this, TypeEvent.Change);
         }
 
         #region IArrayable

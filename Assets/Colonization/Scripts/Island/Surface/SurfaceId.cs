@@ -11,6 +11,8 @@ namespace Vurbiri.Colonization
         public const int Water      = 5;
         public const int Gate       = 6;
 
+        [NotId] public const int CountGround = 5;
+
         static SurfaceId() => RunConstructor();
         private SurfaceId() { }
     }

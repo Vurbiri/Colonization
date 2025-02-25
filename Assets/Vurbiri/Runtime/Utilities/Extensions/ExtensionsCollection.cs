@@ -24,7 +24,7 @@ namespace Vurbiri
             return -1;
         }
 
-        public static void Fill<T>(this IList<T> self, T value = default)
+        public static void FillDefault<T>(this IList<T> self, T value = default)
         {
             for (int i = 0; i < self.Count; i++)
                 self[i] = value;

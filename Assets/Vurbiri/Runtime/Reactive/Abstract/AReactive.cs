@@ -5,19 +5,21 @@ namespace Vurbiri.Reactive
 {
     public abstract class AReactive<T> : IReadOnlyReactive<T>
     {
-        protected Action<T> actionValueChange;
+        protected Subscriber<T> _subscriber = new();
 
         public abstract T Value { get; protected set; }
 
         public IUnsubscriber Subscribe(Action<T> action, bool calling = true)
         {
-            actionValueChange += action;
             if (calling)
                 action(Value);
 
-            return new Unsubscriber<Action<T>>(this, action);
+            return _subscriber.Add(action);
         }
 
-        public void Unsubscribe(Action<T> action) => actionValueChange -= action;
+        public virtual void Dispose()
+        {
+            _subscriber.Dispose();
+        }
     }
 }

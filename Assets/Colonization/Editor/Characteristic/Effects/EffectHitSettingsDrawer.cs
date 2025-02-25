@@ -14,6 +14,8 @@ namespace VurbiriEditor.Colonization.Characteristics
     [CustomPropertyDrawer(typeof(EffectHitSettings))]
     public class EffectHitSettingsDrawer : PropertyDrawerUtility
     {
+        private static readonly Vurbiri.TextLocalization.Localization localization = new(new bool[] { false, false, true });
+
         #region Consts
         private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID ="Void Effect {0}";
         private const string P_IS_SELF = "_isSelf", P_TARGET_ABILITY = "_targetAbility", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
@@ -231,8 +233,6 @@ namespace VurbiriEditor.Colonization.Characteristics
             //==============================================
             void SetAndDrawDesc(bool isUsedAttack, int targetAbility)
             {
-                var localization = new Vurbiri.TextLocalization.Localization(new bool[] { false, false, true});
-
                 _position.x += 35;
 
                 Color defaultColor = GUI.contentColor;

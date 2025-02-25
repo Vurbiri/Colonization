@@ -13,7 +13,7 @@ namespace Vurbiri.Reactive.Collections
         
         private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
-        private Action<int, T, TypeEvent> actionListChange;
+        private Subscriber<int, T, TypeEvent> _subscriber = new();
 
         public T this[int index] 
         {
@@ -31,7 +31,7 @@ namespace Vurbiri.Reactive.Collections
 
                 _values[index] = value;
 
-                actionListChange?.Invoke(index, value, TypeEvent.Change);
+                _subscriber.Invoke(index, value, TypeEvent.Change);
             }
         }
 
@@ -93,7 +93,7 @@ namespace Vurbiri.Reactive.Collections
             if (index < 0 | index >= _count)
                 throw new ArgumentOutOfRangeException($"index = {index}");
 
-            actionListChange?.Invoke(index, _values[index], TypeEvent.Change);
+            _subscriber.Invoke(index, _values[index], TypeEvent.Change);
         }
 
         public void ChangeSignal(T item)
@@ -101,7 +101,7 @@ namespace Vurbiri.Reactive.Collections
             int index = IndexOf(item);
 
             if (index >= 0)
-                actionListChange?.Invoke(index, _values[index], TypeEvent.Change);
+                _subscriber.Invoke(index, _values[index], TypeEvent.Change);
         }
 
         public void TryAdd(T item)
@@ -110,7 +110,7 @@ namespace Vurbiri.Reactive.Collections
 
             if (index >= 0)
             {
-                actionListChange?.Invoke(index, item, TypeEvent.Change);
+                _subscriber.Invoke(index, item, TypeEvent.Change);
                 return;
             }
 
@@ -120,18 +120,14 @@ namespace Vurbiri.Reactive.Collections
         #region IReadOnlyReactiveList
         public IUnsubscriber Subscribe(Action<int, T, TypeEvent> action, bool calling = true)
         {
-            actionListChange += action;
-
             if (calling)
             {
                 for (int i = 0; i < _count; i++)
                     action(i, _values[i], TypeEvent.Subscribe);
             }
 
-            return new Unsubscriber<Action<int, T, TypeEvent>>(this, action);
+            return _subscriber.Add(action);
         }
-
-        public void Unsubscribe(Action<int, T, TypeEvent> action) => actionListChange -= action;
         #endregion
 
         #region IList
@@ -141,7 +137,7 @@ namespace Vurbiri.Reactive.Collections
                 GrowArray();
 
             _values[_count] = item;
-            actionListChange?.Invoke(_count, item, TypeEvent.Add);
+            _subscriber.Invoke(_count, item, TypeEvent.Add);
 
             _count.Value++;
         }
@@ -158,7 +154,7 @@ namespace Vurbiri.Reactive.Collections
                 _values[i] = _values[i - 1];
 
             _values[index] = item;
-            actionListChange?.Invoke(index, item, TypeEvent.Insert);
+            _subscriber.Invoke(index, item, TypeEvent.Insert);
 
             _count.Value++;
         }
@@ -204,7 +200,7 @@ namespace Vurbiri.Reactive.Collections
 
             _values[_count] = default;
 
-            actionListChange?.Invoke(index, temp, TypeEvent.Remove);
+            _subscriber.Invoke(index, temp, TypeEvent.Remove);
             _count.Signal();
         }
 
@@ -212,7 +208,7 @@ namespace Vurbiri.Reactive.Collections
         {
             for (int i = 0; i < _count; i++)
             {
-                actionListChange?.Invoke(i, _values[i], TypeEvent.Remove);
+                _subscriber.Invoke(i, _values[i], TypeEvent.Remove);
                 _values[i] = default;
             }
 
@@ -236,6 +232,11 @@ namespace Vurbiri.Reactive.Collections
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
+
+        public virtual void Dispose()
+        {
+            _subscriber.Dispose();
+        }
 
         private void GrowArray()
         {

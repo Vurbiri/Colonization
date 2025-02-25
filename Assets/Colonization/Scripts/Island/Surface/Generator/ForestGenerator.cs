@@ -21,9 +21,38 @@ namespace Vurbiri.Colonization
         private const string NAME_MESH = "MH_Forest_";
         private static int ID = 0;
 
+        public override void Generate(float size)
+        {
+            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
+            float step = _spruce.RadiusAvg * _density, radius = step;
+            float angle, angleStep;
+            RMFloat offsetAngle;
+            float x, z;
+
+            customMesh.AddTriangles(_spruce.Create(new(step * _offsetRange, _offsetY, step * _offsetRange), _colorRange.Roll, _specular));
+
+            while (radius < size)
+            {
+                angle = 0f;
+                angleStep = step / radius;
+                offsetAngle = angleStep * _offsetRange;
+                while (angle < TAU)
+                {
+                    x = Mathf.Cos(angle + offsetAngle) * radius + step * _offsetRange;
+                    z = Mathf.Sin(angle + offsetAngle) * radius + step * _offsetRange;
+                    customMesh.AddTriangles(_spruce.Create(new(x, _offsetY, z), _colorRange.Roll, _specular));
+                    angle += angleStep;
+                }
+
+                radius += step;
+            }
+
+            GetComponent<MeshFilter>().sharedMesh = customMesh.ToMesh();
+        }
+
         public override IEnumerator Generate_Coroutine(float size)
         {
-            CustomMesh customMesh = new(NAME_MESH + (ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
             float step = _spruce.RadiusAvg * _density, radius = step;
             float angle, angleStep;
             RMFloat offsetAngle;
@@ -72,26 +101,20 @@ namespace Vurbiri.Colonization
             public float RadiusAvg => _sizeRatioRange.Avg * _radiusBase;
 
             private readonly List<Triangle> _triangles = new(MAX_COUNT * 7);
-            private Vector3 _peakPoint;
-            private Vector3[] _basePoints;
-            private float _sizeRatio, _height, _radius;
-            private float _angle, _angleStep;
-            private int _countBranches;
+            private float _height, _radius;
 
             private const int MIN_COUNT = 3, MAX_COUNT = 4;
 
             public List<Triangle> Create(Vector3 position, Color32 color, Vector2 uv)
             {
-                _sizeRatio = _sizeRatioRange;
-                _countBranches = _chanceSmall.Select(MIN_COUNT, MAX_COUNT);
-                _height = _heightBase * _sizeRatio;
-                _radius = _radiusBase * _sizeRatio;
+                float sizeRatio = _sizeRatioRange;
+                int countBranches = _chanceSmall.Select(MIN_COUNT, MAX_COUNT);
+                _height = _heightBase * sizeRatio;
+                _radius = _radiusBase * sizeRatio;
 
                 _triangles.Clear();
-                //_triangles.Capacity = _countBranches * _countVertexRange.Max;
-                //_triangles = new(_countBranches * _countVertexRange.Max);
 
-                for (int i = 0; i < _countBranches; i++)
+                for (int i = 0; i < countBranches; i++)
                 {
                     BranchCreate(_countVertexRange, position, color, uv);
 
@@ -106,19 +129,19 @@ namespace Vurbiri.Colonization
                 //=================================
                 void BranchCreate(int countBase, Vector3 position, Color32 color, Vector2 uv)
                 {
-                    _peakPoint = position + new Vector3(0f, _height, 0f);
-                    _basePoints = new Vector3[countBase];
-                    _angleStep = TAU / countBase;
-                    _angle = RZFloat.Rolling(_angleStep);
+                    Vector3 peakPoint = position + new Vector3(0f, _height, 0f);
+                    Vector3[] basePoints = new Vector3[countBase];
+                    float angleStep = TAU / countBase;
+                    float angle = RZFloat.Rolling(angleStep);
 
                     for (int i = 0; i < countBase; i++)
                     {
-                        _basePoints[i] = position + new Vector3(Mathf.Cos(_angle) * _radius, 0f, Mathf.Sin(_angle) * _radius);
-                        _angle += _angleStep;
+                        basePoints[i] = position + new Vector3(Mathf.Cos(angle) * _radius, 0f, Mathf.Sin(angle) * _radius);
+                        angle += angleStep;
                     }
 
                     for (int i = 0; i < countBase; i++)
-                        _triangles.Add(new(color, uv, _basePoints.Next(i), _basePoints[i], _peakPoint));
+                        _triangles.Add(new(color, uv, basePoints.Next(i), basePoints[i], peakPoint));
                 }
                 #endregion
             }

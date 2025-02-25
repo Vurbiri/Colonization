@@ -13,7 +13,7 @@ namespace Vurbiri.Reactive
         [SerializeField, JsonProperty("value")]
         protected T _value;
 
-        protected Action<T> actionValueChange;
+        protected Subscriber<T> _subscriber = new();
         private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
         public T Value 
@@ -24,7 +24,7 @@ namespace Vurbiri.Reactive
                 if(!_comparer.Equals(_value, value))
                 { 
                     _value = value; 
-                    actionValueChange?.Invoke(value); 
+                    _subscriber.Invoke(value); 
                 } 
             } 
         }
@@ -49,11 +49,10 @@ namespace Vurbiri.Reactive
 
         public IUnsubscriber Subscribe(Action<T> action, bool calling = true)
         {
-            actionValueChange += action;
             if (calling) 
                 action(_value);
 
-            return new Unsubscriber<Action<T>>(this, action);
+            return _subscriber.Add(action);
         }
 
         public void Next(T value)
@@ -62,12 +61,12 @@ namespace Vurbiri.Reactive
                 return;
 
             _value = value; 
-            actionValueChange?.Invoke(_value);
+            _subscriber.Invoke(_value);
         }
 
-        public void Signal() => actionValueChange?.Invoke(_value);
+        public void Signal() => _subscriber.Invoke(_value);
 
-        public void Unsubscribe(Action<T> action) => actionValueChange -= action;
+        public virtual void Dispose() => _subscriber.Dispose();
 
         public static implicit operator T(ReactiveValue<T> value) => value._value;
     }

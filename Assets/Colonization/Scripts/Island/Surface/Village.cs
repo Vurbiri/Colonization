@@ -16,14 +16,14 @@ namespace Vurbiri.Colonization
 
         private static Chance chanceAltMesh = new(50);
 
-        public override void Init()
+        public override void Init(bool oneFrame)
         {
             transform.localRotation = Quaternion.Euler(0f, _offsetAngle + 60f * Random.Range(0, 6) + 30f, 0f);
                         
             _windmillMeshFilter.sharedMesh = chanceAltMesh.Select(_meshWindmill01, _meshWindmill02);
             _windmillMeshFilter.transform.localPosition = new(0f, 0f, CONST.HEX_RADIUS_IN * _ratioSize - _windmillOffsetDistance);
 
-            StartCoroutine(Init_Coroutine());
+            base.Init(oneFrame);
         }
     }
 }

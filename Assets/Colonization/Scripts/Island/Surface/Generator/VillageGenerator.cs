@@ -17,13 +17,40 @@ namespace Vurbiri.Colonization
         private const string NAME_MESH = "MH_Village_";
         private static int ID = 0;
 
+        public override void Generate(float size)
+        {
+            float sizeSqr = size * size, step = size * _density;
+            RMFloat offset = step * _ratioOffset;
+            float height = -size, width, x, z;
+
+            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
+            _hut.Init();
+
+            while (height < size)
+            {
+                width = -size;
+                while (width < size)
+                {
+                    x = width + offset;
+                    z = height + offset;
+                    // ↓ место для мельницы ↓
+                    if (x * x + z * z < sizeSqr && !(z > size - step & (x > -step & x < step)))
+                        customMesh.AddTriangles(_hut.Create(new(x, 0f, z)));
+
+                    width += step;
+                }
+                height += step;
+            }
+
+            GetComponent<MeshFilter>().sharedMesh = customMesh.ToMesh();
+        }
         public override IEnumerator Generate_Coroutine(float size)
         {
             float sizeSqr = size * size, step = size * _density;
             RMFloat offset = step * _ratioOffset;
             float height = -size, width, x, z;
 
-            CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
             _hut.Init();
 
             while (height < size)
@@ -75,20 +102,13 @@ namespace Vurbiri.Colonization
             [SerializeField] private MeshMaterial _doorMaterial;
             [SerializeField] private MeshMaterial _blackMaterial;
 
-            private List<Triangle> _triangles;
-            private Vector3[] _baseBottom;
+            private readonly List<Triangle> _triangles = new(COUNT_TRIANGLES);
             private readonly Vector3[] _foundation = new Vector3[4];
             private readonly Vector3[] _wallTop = new Vector3[4];
             private readonly Vector3[] _windowBase = new Vector3[4];
             private readonly Vector3[] _windowA = new Vector3[4], _windowB = new Vector3[4];
-            private Vector3 _windowOffsetA, _windowOffsetB;
-            private Vector3[] _doorBase;
             private readonly Vector3[] _door = new Vector3[4];
-            private Vector3[] _roofA, _roofB;
-            private Vector3 _roofPointA, _roofPointB;
-            private Quaternion _rotation;
-            
-            private float _x, _z, _height, _heightWall, _heightFoundation;
+            private Vector3[] _doorBase;
 
             private const int COUNT_TRIANGLES = 28;
             private const float OFFSET = 0.001f;
@@ -96,7 +116,9 @@ namespace Vurbiri.Colonization
             public void Init()
             {
                 _doorBase = new Vector3[] 
-                       { new(_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, 0f, 0f), new(_halfWidthDoor, 0f, 0f) };
+                {
+                    new(_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, 0f, 0f), new(_halfWidthDoor, 0f, 0f) 
+                };
 
                 _windowBase[0] = _halfSizeWindow;
                 _halfSizeWindow.z *= -1f;
@@ -110,32 +132,34 @@ namespace Vurbiri.Colonization
 
             public List<Triangle> Create(Vector3 position)
             {
-                _triangles = new(COUNT_TRIANGLES);
-
+                _triangles.Clear();
                 _base.Roll(); _wall.Roll(); _roof.Roll(); _roofWall.Roll(); _doorMaterial.Roll();
 
-                _x = _baseHalfSizeWidth; _z = _baseHalfSizeLength;
+                float x = _baseHalfSizeWidth, z = _baseHalfSizeLength;
+                Vector3[] _baseBottom = new Vector3[] 
+                { 
+                    new(x, _startHeight, z), new(-x, _startHeight, z), new(-x, _startHeight, -z), new(x, _startHeight, -z) 
+                };
 
-                _baseBottom = new Vector3[] { new(_x, _startHeight, _z), new(-_x, _startHeight, _z), new(-_x, _startHeight, -_z), new(_x, _startHeight, -_z) };
-                _height = _heightRange;
-                _heightFoundation = _height * _ratioFoundationRange;
-                _heightWall = _height * _ratioWallRange;
+                float height = _heightRange;
+                float heightFoundation = height * _ratioFoundationRange;
+                float heightWall = height * _ratioWallRange;
 
-                _windowOffsetA = _windowOffsetB = new(_x + OFFSET, _height * _ratioWindow, 0f);
-                _windowOffsetA.x *= -1f;
+                Vector3 _windowOffsetB = new(x + OFFSET, height * _ratioWindow, 0f);
+                Vector3 _windowOffsetA = new(_windowOffsetB.x * -1f, _windowOffsetB.y, 0f);
 
-                _rotation = Quaternion.Euler(0f, _rotationYRange, 0f);
+                Quaternion rotation = Quaternion.Euler(0f, _rotationYRange, 0f);
                 for (int i = 0; i < 4; i++)
                 {
-                    _foundation[i] = _wallTop[i] = _baseBottom[i] = _rotation * _baseBottom[i] + position;
-                    _foundation[i].y = _heightFoundation;
-                    _wallTop[i].y = _heightWall;
+                    _foundation[i] = _wallTop[i] = _baseBottom[i] = rotation * _baseBottom[i] + position;
+                    _foundation[i].y = heightFoundation;
+                    _wallTop[i].y = heightWall;
 
-                    _windowA[i] = _rotation * (_windowBase[i] + _windowOffsetA) + position;
-                    _windowB[3 - i] = _rotation * (_windowBase[i] + _windowOffsetB) + position;
+                    _windowA[i] = rotation * (_windowBase[i] + _windowOffsetA) + position;
+                    _windowB[3 - i] = rotation * (_windowBase[i] + _windowOffsetB) + position;
 
-                    _doorBase[i].z = _z + OFFSET;
-                    _door[i] = _rotation * _doorBase[i] + position;
+                    _doorBase[i].z = z + OFFSET;
+                    _door[i] = rotation * _doorBase[i] + position;
                 }
 
                 _triangles.AddRange(PolygonChain.Create(_base.color, _base.specular, _baseBottom, _foundation, true));
@@ -146,18 +170,18 @@ namespace Vurbiri.Colonization
 
                 _triangles.AddRange(Polygon.Create(_doorMaterial.color, _doorMaterial.specular, _door));
 
-                _roofPointA = (_wallTop[0] + _wallTop[1]) * 0.5f;
-                _roofPointB = (_wallTop[2] + _wallTop[3]) * 0.5f;
-                _roofPointA.y  =_roofPointB.y = _height;
+                Vector3 roofPointA = (_wallTop[0] + _wallTop[1]) * 0.5f;
+                Vector3 roofPointB = (_wallTop[2] + _wallTop[3]) * 0.5f;
+                roofPointA.y  =roofPointB.y = height;
 
-                _roofA = new Vector3[] { _wallTop[0], _roofPointA, _wallTop[1] };
-                _roofB = new Vector3[] { _wallTop[3], _roofPointB, _wallTop[2] };
+                Vector3[] roofA = new Vector3[] { _wallTop[0], roofPointA, _wallTop[1] };
+                Vector3[] roofB = new Vector3[] { _wallTop[3], roofPointB, _wallTop[2] };
 
-                _triangles.AddRange(PolygonChain.Create(_roof.color, _roof.specular, _roofA, _roofB));
+                _triangles.AddRange(PolygonChain.Create(_roof.color, _roof.specular, roofA, roofB));
 
-                (_roofB[0], _roofB[2]) = (_roofB[2], _roofB[0]);
-                _triangles.Add(new(_roofWall.color, _roofWall.specular, _roofA));
-                _triangles.Add(new(_roofWall.color, _roofWall.specular, _roofB));
+                (roofB[0], roofB[2]) = (roofB[2], roofB[0]);
+                _triangles.Add(new(_roofWall.color, _roofWall.specular, roofA));
+                _triangles.Add(new(_roofWall.color, _roofWall.specular, roofB));
 
                 return _triangles;
             }

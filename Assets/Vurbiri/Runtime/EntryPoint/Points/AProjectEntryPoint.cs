@@ -6,7 +6,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.EntryPoint
 {
-    [DefaultExecutionOrder(10)]
+    [DefaultExecutionOrder(5)]
     public class AProjectEntryPoint : AClosedSingleton<AProjectEntryPoint>
     {
         [SerializeField] private SceneId _emptyScene;

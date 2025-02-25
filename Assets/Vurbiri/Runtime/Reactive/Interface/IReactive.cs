@@ -3,16 +3,14 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    public interface IReactiveBase<in TAction> where TAction : Delegate
+    public interface IReactiveBase<in TAction> : IDisposable where TAction : Delegate
     {
         public IUnsubscriber Subscribe(TAction action, bool calling = true);
-        public void Unsubscribe(TAction action);
     }
 
-    public interface IReactiveBase<TId, in TAction> where TAction : Delegate
+    public interface IReactiveBase<TId, in TAction> : IDisposable where TAction : Delegate
     {
         public IUnsubscriber Subscribe(TId id, TAction action, bool calling = true);
-        public void Unsubscribe(TId id, TAction action);
     }
 
     public interface IReactive<out T> : IReactiveBase<Action<T>>

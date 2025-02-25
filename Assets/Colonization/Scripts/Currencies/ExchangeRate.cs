@@ -6,7 +6,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class ExchangeRate : IReactive<int, int>, IDisposable
+    public class ExchangeRate : IReactive<int, int>
     {
         private readonly Currencies _exchange = new();
         private readonly Unsubscribers _unsubscribers = new();
@@ -29,7 +29,6 @@ namespace Vurbiri.Colonization
         }
 
         public IUnsubscriber Subscribe(Action<int, int> action, bool calling = true) => _exchange.Subscribe(action, calling);
-        public void Unsubscribe(Action<int, int> action) => _exchange.Unsubscribe(action);
 
         public void Dispose()
         {

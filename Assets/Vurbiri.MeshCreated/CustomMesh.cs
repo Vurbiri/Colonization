@@ -50,7 +50,7 @@ namespace Vurbiri.CreatingMesh
             }
         }
 
-        public Mesh ToMesh()
+        public Mesh ToMesh(bool tangents = false, bool isOptimize = true, bool isReadable = false)
         {
             Mesh mesh = new() { name = _name };
 
@@ -58,6 +58,12 @@ namespace Vurbiri.CreatingMesh
 
             mesh.SetTriangles(_triangles, 0);
             mesh.RecalculateBounds();
+            if (tangents)
+                mesh.RecalculateTangents();
+            if (isOptimize)
+                mesh.Optimize();
+            if (!isReadable)
+                mesh.UploadMeshData(true);
 
             return mesh;
         }
@@ -73,6 +79,7 @@ namespace Vurbiri.CreatingMesh
 
             mesh.RecalculateBounds();
 
+            yield return null;
             if (tangents)
                 mesh.RecalculateTangents();
             yield return null;

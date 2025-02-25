@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
         public void Create(Transform parent) 
         {
             if (_prefabSurface != null)
-                Instantiate(_prefabSurface, parent).Init();
+                Instantiate(_prefabSurface, parent).Init(_id == SurfaceId.Mountain);
         }
     }
 }

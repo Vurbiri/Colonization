@@ -40,51 +40,60 @@ namespace Vurbiri
 
         public virtual IEnumerator Save_Coroutine<T>(string key, T data, bool toFile, Action<bool> callback)
         {
-            bool result = SaveToMemory(data);
+            bool result = SaveToMemory(key, data);
             if (!toFile | !(result & _modified))
             {
                 callback?.Invoke(result);
                 yield break;
             }
 
-            yield return SaveToFile_Coroutine();
-
-            #region Local: SaveToMemory(..), SaveToFile_Coroutine()
-            //======================================
-            bool SaveToMemory(T data)
-            {
-                try
-                {
-                    string json = Serialize<T>(data);
-
-                    if (!_saved.TryGetValue(key, out string saveJson) || saveJson != json)
-                    {
-                        _saved[key] = json;
-                        _modified = true;
-                    }
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Message.Log(ex.Message);
-                }
-
-                return false;
-            }
-            //======================================
-            IEnumerator SaveToFile_Coroutine()
-            {
-                WaitResult<bool> waitResult = SaveToFile_Wait();
-                yield return waitResult;
-
-                _modified = !waitResult.Result;
-                callback?.Invoke(waitResult.Result);
-            }
-            #endregion
+            yield return SaveToFile_Coroutine(callback);
         }
+
+        public virtual IEnumerator Remove_Coroutine(string key, bool fromFile, Action<bool> callback)
+        {
+            bool result = _saved.Remove(key);
+            _modified |= result;
+            if (!fromFile | !result)
+            {
+                callback?.Invoke(result);
+                yield break;
+            }
+
+            yield return SaveToFile_Coroutine(callback);
+        }
+
 
         public virtual bool ContainsKey(string key) => _saved.ContainsKey(key);
 
+        protected virtual bool SaveToMemory<T>(string key, T data)
+        {
+            try
+            {
+                string json = Serialize<T>(data);
+                if (!_saved.TryGetValue(key, out string saveJson) || saveJson != json)
+                {
+                    _saved[key] = json;
+                    _modified = true;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Message.Log(ex.Message);
+            }
+
+            return false;
+        }
+
+        protected virtual IEnumerator SaveToFile_Coroutine(Action<bool> callback)
+        {
+            WaitResult<bool> waitResult = SaveToFile_Wait();
+            yield return waitResult;
+
+            _modified = !waitResult.Result;
+            callback?.Invoke(waitResult.Result);
+        }
         protected abstract WaitResult<bool> SaveToFile_Wait();
 
         protected virtual string Serialize<T>(T obj) => JsonConvert.SerializeObject(obj, typeof(T), null);

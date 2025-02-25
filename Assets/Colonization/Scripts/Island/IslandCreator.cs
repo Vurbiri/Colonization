@@ -4,6 +4,7 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Data;
 
+
 #if UNITY_EDITOR
 using static VurbiriEditor.Utility;
 #endif
@@ -14,7 +15,10 @@ namespace Vurbiri.Colonization
 
     public class IslandCreator : MonoBehaviourDisposable
     {
-        [SerializeField] private Transform _landContainer;
+        [SerializeField] private LandInitData _landInitData;
+        [Space]
+        [SerializeField] private IdHashSet<EdificeId, AEdifice> _edificePrefabs;
+        [Space]
         [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private Transform _roadsContainer;
         [SerializeField] private Transform _actorsContainer;
@@ -27,58 +31,49 @@ namespace Vurbiri.Colonization
         public Transform ActorsContainer => _actorsContainer;
 #endif
 
-        public void Init(Land land, Crossroads crossroads, GameplayEventBus eventBus)
+        public void Init(DIContainer diObjects, ProjectSaveData saveData, GameplayEventBus eventBus)
         {
-            _land = land;
-            _land.Init(_landContainer);
-
-            _crossroads = crossroads;
-            _crossroads.Init(_crossroadsContainer, eventBus);
+            _land = diObjects.AddInstance<Land>(new(_landInitData));
+            saveData.LandBind(_land);
+            _crossroads = diObjects.AddInstance<Crossroads>(new(_crossroadsContainer, _edificePrefabs, eventBus));
         }
 
-        public IEnumerator Create_Coroutine(HexagonsData hexagonsData, bool isLoad)
+        public IEnumerator Create_Coroutine(bool isLoad)
         {
-            yield return null;
-
             if (isLoad)
-                yield return StartCoroutine(Load_Coroutine(hexagonsData));
+                yield return StartCoroutine(Load_Coroutine());
             else
-                yield return StartCoroutine(Generate_Coroutine(hexagonsData));
+                yield return StartCoroutine(Generate_Coroutine());
             
             yield return StartCoroutine(Setup_Coroutine());
         }
 
-        public IEnumerator Load_Coroutine(HexagonsData hexagonsData)
+        public IEnumerator Load_Coroutine()
         {
-            int lastHexagons = MAX_HEXAGONS - HEX_COUNT_SIDES * MAX_CIRCLES;
-            Hexagon hex;
-            foreach (HexData data in hexagonsData)
-            {
-                hex = _land.CreateHexagon(data);
-                _crossroads.CreateCrossroads(data.position, hex, --lastHexagons < 0);
+            //int lastHexagons = MAX_HEXAGONS - HEX_COUNT_SIDES * MAX_CIRCLES;
+            //Hexagon hex;
+            //foreach (HexData data in hexagonsData)
+            //{
+            //    hex = _land.CreateHexagon(data);
+            //    _crossroads.CreateCrossroads(data.position, hex, --lastHexagons < 0);
 
-                yield return null;
-            }
+            //    yield return null;
+            //}
+            yield return null;
         }
 
-        private IEnumerator Generate_Coroutine(HexagonsData hexagonsData)
+        private IEnumerator Generate_Coroutine()
         {
-            SurfacesScriptable surfaces = hexagonsData.Surfaces;
-
             Chance chanceWater = CHANCE_WATER;
-            HexData hexData; Key keyHex; int circle = 0;
+            Key keyHex; int circle = 0;
             bool isWater = false, isWaterPossible, isLastCircle = circle == MAX_CIRCLES;
             Vector3 position, positionNext, positionCurrent;
 
             ShuffleLoopArray<int> numGround = new(NUMBERS_HEX), numWater = new(NUMBERS_HEX);
-            ShuffleLoopArray<SurfaceScriptable> ground = new(surfaces.GetRange(SurfaceId.Village, SurfaceId.Forest));
+            ShuffleLoopArray<int> ground = new((new int[SurfaceId.CountGround]).Fill());
 
-            hexData = new(new(), ID_GATE, Vector3.zero, surfaces[SurfaceId.Gate]);
-            hexagonsData.Add(hexData);
-            Hexagon hex = _land.CreateHexagon(hexData);
+            Hexagon hex = _land.CreateHexagon(new(), ID_GATE, SurfaceId.Gate, Vector3.zero);
             _crossroads.CreateCrossroads(Vector3.zero, hex, false);
-
-            yield return null;
 
             while (!isLastCircle)
             {
@@ -97,20 +92,16 @@ namespace Vurbiri.Colonization
 
                         keyHex = positionCurrent.HexPositionToKey();
                         isWater = isWaterPossible && (isLastCircle || (!isWater & j != 0 && chanceWater.Roll));
-                        
-                        hexData = isWater ? new(keyHex, numWater.Next, positionCurrent, surfaces[SurfaceId.Water]) :
-                                            new(keyHex, numGround.Next, positionCurrent, ground.Next);
 
-                        hexagonsData.Add(hexData);
-                        hex = _land.CreateHexagon(hexData);
+                        hex = isWater ? _land.CreateHexagon(keyHex, numWater.Next,  SurfaceId.Water, positionCurrent) :
+                                        _land.CreateHexagon(keyHex, numGround.Next, ground.Next,     positionCurrent);
+
                         _crossroads.CreateCrossroads(positionCurrent, hex, isLastCircle);
 
                         yield return null;
                     }
                 }
             }
-
-            hexagonsData.Save(false);
         }
 
         private IEnumerator Setup_Coroutine()
@@ -118,14 +109,15 @@ namespace Vurbiri.Colonization
             yield return null;
             _land.HexagonsNeighbors();
             yield return null;
-            yield return StartCoroutine(_land.SetMesh_Coroutine());
+            yield return StartCoroutine(_land.FinishCreate_Coroutine());
         }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_landContainer == null)
-                _landContainer = this.GetComponentByName<Transform>("Land");
+            _landInitData.OnValidate();
+            if (_edificePrefabs.CountAvailable < _edificePrefabs.Count)
+                _edificePrefabs.ReplaceRange(VurbiriEditor.Utility.FindPrefabs<AEdifice>());
             if (_crossroadsContainer == null)
                 _crossroadsContainer = this.GetComponentByName<Transform>("Crossroads");
             if (_roadsContainer == null)

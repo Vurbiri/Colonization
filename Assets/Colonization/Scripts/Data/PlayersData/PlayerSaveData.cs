@@ -27,8 +27,8 @@ namespace Vurbiri.Colonization.Data
         private int[] _perks;
 
         private readonly bool _isLoaded;
+        private readonly Subscriber<PlayerSaveData> _subscriber = new();
         private Unsubscribers _unsubscribers = new(CurrencyId.CountAll + EdificeGroupId.Count + 3);
-        private Action<PlayerSaveData> actionThisChange;
 
         public int Id => _id;
         public bool IsLoaded => _isLoaded;
@@ -71,7 +71,7 @@ namespace Vurbiri.Colonization.Data
             void OnRoads(int[][][] values)
             {
                 _roads = values;
-                actionThisChange?.Invoke(this);
+                _subscriber.Invoke(this);
             }
             #endregion
         }
@@ -97,7 +97,7 @@ namespace Vurbiri.Colonization.Data
                     default:
                         return;
                 }
-                actionThisChange?.Invoke(this);
+                _subscriber.Invoke(this);
             }
             #endregion
         }
@@ -106,19 +106,17 @@ namespace Vurbiri.Colonization.Data
         #region IReactive
         public IUnsubscriber Subscribe(Action<PlayerSaveData> action, bool calling = true)
         {
-            actionThisChange += action;
             if (calling)
                 action(this);
 
-            return new Unsubscriber<Action<PlayerSaveData>>(this, action);
+            return _subscriber.Add(action);
         }
-
-        public void Unsubscribe(Action<PlayerSaveData> action) => actionThisChange -= action;
         #endregion
 
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
+            _subscriber.Dispose();
         }
 
         private void EdificesBind(IReactiveList<IArrayable> edificesReactive, List<int[]> edifices)
@@ -143,7 +141,7 @@ namespace Vurbiri.Colonization.Data
                     default:
                         return;
                 }
-                actionThisChange?.Invoke(this);
+                _subscriber.Invoke(this);
             }
             #endregion
         }

@@ -85,7 +85,7 @@ namespace Vurbiri.Colonization.Actors
             int delta = _abilities.AddPerk(effect);
 
             if(delta != 0)
-                actionThisChange?.Invoke(this, TypeEvent.Change);
+                _subscriber.Invoke(this, TypeEvent.Change);
             return delta;
         }
 
@@ -149,7 +149,7 @@ namespace Vurbiri.Colonization.Actors
 
         public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
 
-        public void Dispose()
+        public override void Dispose()
         {
             _currentHex.ExitActor();
             _skin.Dispose();
@@ -169,7 +169,7 @@ namespace Vurbiri.Colonization.Actors
             if (_deathCoroutine == null)
             {
                 _stateMachine.ToPrevState();
-                actionThisChange?.Invoke(this, TypeEvent.Change);
+                _subscriber.Invoke(this, TypeEvent.Change);
             }
         }
         #endregion
@@ -223,8 +223,8 @@ namespace Vurbiri.Colonization.Actors
 
         private void RedirectEvents(ReactiveEffect item, TypeEvent type)
         {
-            actionThisChange?.Invoke(this, TypeEvent.Change);
+            _subscriber.Invoke(this, TypeEvent.Change);
         }
-        private void TriggerChange() => actionThisChange?.Invoke(this, TypeEvent.Change);
+        private void TriggerChange() => _subscriber.Invoke(this, TypeEvent.Change);
     }
 }

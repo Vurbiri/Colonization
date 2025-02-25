@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Data
 {
     using static CONST;
 
-    public class HexagonsData : IEnumerable<HexData>
+    public class HexagonsSaveData : IEnumerable<HexData>
     {
         private readonly Dictionary<Key, HexData> _hexagons;
 
@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.Data
 
         public SurfacesScriptable Surfaces => _surfaces;
 
-        public HexagonsData(SurfacesScriptable surfaces, bool isLoading)
+        public HexagonsSaveData(SurfacesScriptable surfaces, bool isLoading)
         {
             _hexagons = new(MAX_HEXAGONS);
 
@@ -26,21 +26,23 @@ namespace Vurbiri.Colonization.Data
 
             _surfaces = surfaces;
 
-            HexData hex;
-            if (isLoading && _storage.TryGet(SAVE_KEYS.HEX_DATA, out int[][] arrays))
-            {
-                foreach(var array in arrays)
-                {
-                    hex = new(array, surfaces);
-                    _hexagons.Add(hex.key, hex);
-                }
-            }
+            //HexData hex;
+            //if (isLoading && _storage.TryGet(SAVE_KEYS.HEX_DATA, out int[][] arrays))
+            //{
+            //    foreach(var array in arrays)
+            //    {
+            //        hex = new(array, surfaces);
+            //        _hexagons.Add(hex.key, hex);
+            //    }
+            //}
         }
 
-        public void Add(HexData data) => _hexagons[data.key] = data;
+        //public void Add(HexData data) => _hexagons[data.key] = data;
 
-        public void Save(bool saveToFile, Action<bool> callback = null) 
-                    => _coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.HEX_DATA, _hexagons.Values, saveToFile, callback));
+        public void Save(bool saveToFile, Action<bool> callback = null)
+        { 
+            //_coroutines.Run(_storage.Save_Coroutine(SAVE_KEYS.HEX_DATA, _hexagons.Values, saveToFile, callback));
+        }
 
         public void ClearLinks()
         {

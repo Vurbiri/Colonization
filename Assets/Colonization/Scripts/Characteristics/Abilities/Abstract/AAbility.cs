@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         protected int _value;
 
-        protected Action<int> actionValueChange;
+        protected Subscriber<int> _subscriber = new();
 
         public Id<TId> Id => _id;
         public virtual int Value { get => _value; set { } }
@@ -33,13 +33,12 @@ namespace Vurbiri.Colonization.Characteristics
 
         public IUnsubscriber Subscribe(Action<int> action, bool calling = true)
         {
-            actionValueChange += action;
             if (calling)
                 action(_value);
 
-            return new Unsubscriber<Action<int>>(this, action);
+            return _subscriber.Add(action);
         }
 
-        public void Unsubscribe(Action<int> action) => actionValueChange -= action;
+        public virtual void Dispose() => _subscriber.Dispose();
     }
 }

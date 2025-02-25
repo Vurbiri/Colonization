@@ -10,7 +10,7 @@ namespace Vurbiri.Audio
     {
         private static readonly AudioController _instance;
 
-        private readonly IdArray<AudioTypeId, Action<float>> actionsValues = new();
+        private readonly IdArray<AudioTypeId, Subscriber<float>> subscribers = new();
         private readonly IdArray<AudioTypeId, float> _volumes = new();
 
         public static AudioController Instance => _instance;
@@ -24,7 +24,7 @@ namespace Vurbiri.Audio
             set
             {
                 _volumes[type] = value;
-                actionsValues[type]?.Invoke(value);
+                subscribers[type].Invoke(value);
             }
         }
         public float this[int id]
@@ -33,21 +33,29 @@ namespace Vurbiri.Audio
             set
             {
                 _volumes[id] = value;
-                actionsValues[id]?.Invoke(value);
+                subscribers[id].Invoke(value);
             }
         }
 
         static AudioController() => _instance = new();
-        private AudioController() { }
+        private AudioController() 
+        {
+            for (int i = 0; i < AudioTypeId.Count; i++)
+                subscribers[i] = new();
+        }
 
         public IUnsubscriber Subscribe(Id<AudioTypeId> id, Action<float> action, bool calling = true)
         {
-            actionsValues[id] += action;
-            if (calling) action(_volumes[id]);
+            if (calling)
+                action(_volumes[id]);
 
-            return new Unsubscriber<Id<AudioTypeId>, Action<float>>(this, id, action);
+            return subscribers[id].Add(action);
         }
 
-        public void Unsubscribe(Id<AudioTypeId> id, Action<float> action) => actionsValues[id] -= action;
+        public void Dispose()
+        {
+            for (int i = 0; i < AudioTypeId.Count; i++)
+                subscribers[i].Dispose();
+        }
     }
 }

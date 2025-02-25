@@ -98,9 +98,9 @@ namespace VurbiriEditor
                 startPosition.x = EditorGUIUtility.currentViewWidth - LABEL_SIZE - 20f;
                 startPosition.width = LABEL_SIZE;
 
-                if (countCurrent < _countMax)
+                if (propertyCount.intValue < _countMax)
                     GUI.color = colorNull;
-                EditorGUI.LabelField(startPosition, $"{countCurrent} / {_countMax}", style);
+                EditorGUI.LabelField(startPosition, $"{propertyCount.intValue} / {_countMax}", style);
                 GUI.color = prevColor;
             }
             //=================================

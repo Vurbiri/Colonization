@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\Island\Land\LandMesh.cs
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace Vurbiri.Colonization
     using static CONST;
 
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-    public class LandMesh : MonoBehaviour
+    public class LandMesh : MonoBehaviour, IDisposable
     {
         [SerializeField] private string _nameMesh = "MH_Land";
         [Space]
@@ -43,13 +44,41 @@ namespace Vurbiri.Colonization
             _customMesh.AddPrimitive(hex);
         }
 
-        public Vertex[] GetVertexSide(Key key, Key neighbors, int side)
+        public void HexagonsNeighbors(Dictionary<Key, Hexagon> hexagons)
         {
-            _hexagons[key].Visit(side);
-            return _hexagons[neighbors].GetVertexSide((side + (HEX_COUNT_SIDES >> 1)) % HEX_COUNT_SIDES);
-        }
+            Vertex[][] verticesNear = new Vertex[HEX_COUNT_SIDES][];
+            bool[] waterNear = new bool[HEX_COUNT_SIDES];
+            bool isNotWater;
+            foreach (var hex in hexagons.Values)
+            {
+                isNotWater = !hex.IsWater;
+                for (int i = 0; i < HEX_COUNT_SIDES; i++)
+                {
+                    if (hexagons.TryGetValue(hex.Key + NEAR_HEX[i], out Hexagon neighbor))
+                    {
+                        hex.NeighborAddAndCreateCrossroadLink(neighbor);
 
-        public void SetVertexSides(Key key, Vertex[][] verticesNear, bool[] waterNear) => _customMesh.AddTriangles(_hexagons[key].CreateBorder(verticesNear, waterNear));
+                        if (isNotWater)
+                        {
+                            verticesNear[i] = GetVertexSide(hex.Key, neighbor.Key, i);
+                            waterNear[i] = neighbor.IsWater;
+                        }
+                    }
+                }
+
+                if (isNotWater)
+                    _customMesh.AddTriangles(_hexagons[hex.Key].CreateBorder(verticesNear, waterNear));
+            }
+
+            #region Local: GetVertexSide(..)
+            //=================================
+            Vertex[] GetVertexSide(Key key, Key neighbors, int side)
+            {
+                _hexagons[key].Visit(side);
+                return _hexagons[neighbors].GetVertexSide((side + (HEX_COUNT_SIDES >> 1)) % HEX_COUNT_SIDES);
+            }
+            #endregion
+        }
 
         public IEnumerator SetMesh_Coroutine()
         {
@@ -57,6 +86,11 @@ namespace Vurbiri.Colonization
 
             _customMesh = null;
             _hexagons = null;
+        }
+
+        public void Dispose()
+        {
+            Destroy(this);
         }
     }
 }

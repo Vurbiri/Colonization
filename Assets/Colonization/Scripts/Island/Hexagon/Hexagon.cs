@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
-using Vurbiri.Colonization.Data;
 using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization
@@ -13,10 +12,12 @@ namespace Vurbiri.Colonization
         [SerializeField] private Collider _collider;
 
         #region Fields
+        private Key _key;
+        private int _id;
+        private int _surfaceId;
         private Transform _thisTransform;
         private Pool<HexagonMark> _poolMarks;
         private HexagonMark _mark;
-        private HexData _data;
         private IProfit _profit;
         private bool _isGate, _isWater, _isShow;
 
@@ -28,18 +29,18 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Propirties
-        public Key Key => _data.key;
+        public Key Key => _key;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
         public Actor Owner => _owner;
-        public bool CanActorEnter => !_isGate && !_isWater && _ownerId == PlayerId.None;
-        public Vector3 Position => _data.position;
+        public bool CanActorEnter => !_isGate & !_isWater & _ownerId == PlayerId.None;
+        public Vector3 Position => _thisTransform.localPosition;
         public IReadOnlyCollection<Hexagon> Neighbors => _neighbors;
         public bool IsOwnedByPort
         {
             get
             {
-                if (_isGate || !_isWater) return false;
+                if (_isGate | !_isWater) return false;
 
                 foreach (var crossroad in _crossroads)
                     if (crossroad.IsPort) return true;
@@ -51,7 +52,7 @@ namespace Vurbiri.Colonization
         {
             get
             {
-                if (_isGate || _isWater) return false;
+                if (_isGate | _isWater) return false;
 
                 foreach (var crossroad in _crossroads)
                     if (crossroad.IsUrban) return true;
@@ -62,24 +63,25 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Init
-        public void Init(HexData data, Pool<HexagonMark> poolMarks, GameplayEventBus eventBus)
+        public void Init(Key key, int id, Pool<HexagonMark> poolMarks, SurfaceScriptable surface, GameplayEventBus eventBus)
         {
             _thisTransform = transform;
-            _data = data;
+            _key = key;
+            _id = id;
             _poolMarks = poolMarks;
-            var surface = data.surface;
 
+            _surfaceId = surface.Id.Value;
             _profit = surface.Profit;
 
             _isGate = surface.IsGate;
             _isWater = surface.IsWater;
 
-            _hexagonCaption.Init(data.id, surface.Currencies);
+            _hexagonCaption.Init(id, surface.Currencies);
 
             surface.Create(transform);
             eventBus.EventHexagonIdShow += OnShow;
 
-            if (_isWater || _isGate)
+            if (_isWater | _isGate)
             {
                 Destroy(_collider);
                 _collider = null;
@@ -89,7 +91,7 @@ namespace Vurbiri.Colonization
 
         public void NeighborAddAndCreateCrossroadLink(Hexagon neighbor)
         {
-            if (_neighbors.Add(neighbor) && !(_isWater && neighbor._isWater) && !(_isGate || neighbor._isGate))
+            if (_neighbors.Add(neighbor) & !(_isWater & neighbor._isWater) & !(_isGate | neighbor._isGate))
             {
                 HashSet<Crossroad> set = new(_crossroads);
                 set.IntersectWith(neighbor._crossroads);
@@ -101,7 +103,7 @@ namespace Vurbiri.Colonization
         {
             foreach (var neighbor in _neighbors) 
                 if(!neighbor._isWater)
-                    return neighbor._data.key - _data.key;
+                    return neighbor._key - _key;
 
             return CONST.NEAR_HEX.Rand();
         }
@@ -114,7 +116,7 @@ namespace Vurbiri.Colonization
         public bool TryGetProfit(int hexId, bool isPort, out int currencyId)
         {
             currencyId = CurrencyId.Blood;
-            if (hexId != _data.id | isPort != _isWater)
+            if (hexId != _id | isPort != _isWater)
             {
                 _hexagonCaption.ResetProfit(_isShow);
                 return false;
@@ -202,6 +204,8 @@ namespace Vurbiri.Colonization
             _isShow = value;
             _hexagonCaption.SetActive(value);
         }
+
+        public int[] ToArray() => new int[] { _id, _surfaceId };
 
         #region ISelectable
         public void Select() { }

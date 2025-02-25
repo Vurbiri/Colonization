@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         protected ACurrency[] _values = new ACurrency[countAll];
         protected ReactiveValue<int> _amount = new(0);
         protected IReadOnlyReactive<int> _maxValueMain, _maxValueBlood;
-        private Action<int, int> actionValuesChange;
+        private readonly Subscriber<int, int> _subscriber = new();
 
         public override int Amount => _amount.Value;
         public IReactive<int> AmountReactive => _amount;
@@ -34,11 +34,11 @@ namespace Vurbiri.Colonization
                 int index = i;
                 value = array[i];
                 _values[i] = new CurrencyMain(value);
-                _values[i].Subscribe(v => actionValuesChange?.Invoke(index, v), false);
+                _values[i].Subscribe(v => _subscriber.Invoke(index, v), false);
                 amount += value;
             }
             _values[CurrencyId.Blood] = new CurrencyBlood(array[CurrencyId.Blood], maxValueBlood);
-            _values[CurrencyId.Blood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Blood, v), false);
+            _values[CurrencyId.Blood].Subscribe(v => _subscriber.Invoke(CurrencyId.Blood, v), false);
 
             _amount.SilentValue = amount;
         }
@@ -51,10 +51,10 @@ namespace Vurbiri.Colonization
             {
                 _values[i] = new CurrencyMain(other[i]);
                 int index = i;
-                _values[i].Subscribe(v => actionValuesChange?.Invoke(index, v), false);
+                _values[i].Subscribe(v => _subscriber.Invoke(index, v), false);
             }
             _values[CurrencyId.Blood] = new CurrencyBlood(other[CurrencyId.Blood], maxValueBlood);
-            _values[CurrencyId.Blood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Blood, v), false);
+            _values[CurrencyId.Blood].Subscribe(v => _subscriber.Invoke(CurrencyId.Blood, v), false);
 
             _amount.SilentValue = other.Amount;
         }
@@ -68,10 +68,10 @@ namespace Vurbiri.Colonization
             {
                 _values[i] = new CurrencyMain();
                 int index = i;
-                _values[i].Subscribe(v => actionValuesChange?.Invoke(index, v), false);
+                _values[i].Subscribe(v => _subscriber.Invoke(index, v), false);
             }
             _values[CurrencyId.Blood] = new CurrencyBlood(maxValueBlood);
-            _values[CurrencyId.Blood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Blood, v), false);
+            _values[CurrencyId.Blood].Subscribe(v => _subscriber.Invoke(CurrencyId.Blood, v), false);
         }
 
         public ACurrenciesReactive()
@@ -80,17 +80,16 @@ namespace Vurbiri.Colonization
             {
                 _values[i] = new CurrencyMain();
                 int index = i;
-                _values[i].Subscribe(v => actionValuesChange?.Invoke(index, v), false);
+                _values[i].Subscribe(v => _subscriber.Invoke(index, v), false);
             }
             _values[CurrencyId.Blood] = new CurrencyBlood();
-            _values[CurrencyId.Blood].Subscribe(v => actionValuesChange?.Invoke(CurrencyId.Blood, v), false);
+            _values[CurrencyId.Blood].Subscribe(v => _subscriber.Invoke(CurrencyId.Blood, v), false);
         }
         #endregion
 
         #region Reactive
         public IUnsubscriber Subscribe(Action<int, int> action, bool calling = true)
         {
-            actionValuesChange += action;
 
             if (calling)
             {
@@ -98,19 +97,18 @@ namespace Vurbiri.Colonization
                     action(i, _values[i].Value);
             }
 
-            return new Unsubscriber<Action<int, int>>(this, action);
+            return _subscriber.Add(action);
         }
         public IUnsubscriber Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
         public IUnsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
-        public void Unsubscribe(Action<int, int> action) => actionValuesChange -= action;
-        public void Unsubscribe(int index, Action<int> action) => _values[index].Unsubscribe(action);
-        public void Unsubscribe(Id<CurrencyId> id, Action<int> action) => _values[id.Value].Unsubscribe(action);
         #endregion
 
         public void Dispose()
         {
             for (int i = 0; i < countAll; i++)
                 _values[i].Dispose();
+
+            _subscriber?.Dispose();
         }
 
         #region Nested: ACurrency, CurrencyMain, CurrencyBlood
@@ -153,7 +151,7 @@ namespace Vurbiri.Colonization
         protected class CurrencyBlood : ACurrency
         {
             private int _max;
-            private readonly IUnsubscriber _subscriber;
+            private readonly IUnsubscriber _unsubscriber;
 
             public override int Value 
             { 
@@ -161,7 +159,7 @@ namespace Vurbiri.Colonization
                 protected set
                 {
                     if (value != _value)
-                        actionValueChange?.Invoke(_value = Mathf.Clamp(value, 0, _max));
+                        base._subscriber.Invoke(_value = Mathf.Clamp(value, 0, _max));
                 }
             }
 
@@ -169,13 +167,13 @@ namespace Vurbiri.Colonization
             public CurrencyBlood(IReactive<int> maxValue) : this(0, maxValue) { }
             public CurrencyBlood(int value, IReactive<int> maxValue) : base(value)
             {
-                _subscriber = maxValue.Subscribe(v => _max = v);
+                _unsubscriber = maxValue.Subscribe(v => _max = v);
             }
 
             public override int Set(int value)
             {
                 if (value != _value)
-                    actionValueChange?.Invoke(_value = Mathf.Clamp(value, 0, _max));
+                    base._subscriber.Invoke(_value = Mathf.Clamp(value, 0, _max));
                 return 0;
             }
 
@@ -192,11 +190,12 @@ namespace Vurbiri.Colonization
 
             public override void Dispose()
             {
-                _subscriber?.Unsubscribe();
+                _unsubscriber?.Unsubscribe();
+                _subscriber.Dispose();
             }
         }
         //*******************************************************
-        protected abstract class ACurrency : AReactive<int>, IDisposable, IEquatable<ACurrency>, IComparable<ACurrency>
+        protected abstract class ACurrency : AReactive<int>, IEquatable<ACurrency>, IComparable<ACurrency>
         {
             protected int _value;
 
@@ -206,7 +205,7 @@ namespace Vurbiri.Colonization
                 protected set
                 {
                     if (value != _value)
-                        actionValueChange?.Invoke(_value = value);
+                        _subscriber.Invoke(_value = value);
                 }
             }
 
@@ -218,9 +217,8 @@ namespace Vurbiri.Colonization
             public abstract int Increment();
             public abstract int DecrementNotSignal();
 
-            public void Signal() => actionValueChange?.Invoke(_value);
+            public void Signal() => _subscriber.Invoke(_value);
 
-            public virtual void Dispose() { }
            
             public static explicit operator int(ACurrency currency) => currency._value;
 

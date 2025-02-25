@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization
                 _turn++;
             }
 
-            actionValueChange?.Invoke(this);
+            _subscriber.Invoke(this);
         }
 
         #region IArrayable

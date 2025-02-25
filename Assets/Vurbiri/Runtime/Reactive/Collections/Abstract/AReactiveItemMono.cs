@@ -6,39 +6,34 @@ namespace Vurbiri.Reactive.Collections
 {
     public abstract class AReactiveItemMono<T> : MonoBehaviour, IReactiveItem<T> where T : AReactiveItemMono<T>
     {
-        protected Action<T, TypeEvent> actionThisChange;
+        protected Subscriber<T, TypeEvent> _subscriber = new();
         protected int _index = -1;
 
-        public int Index { get => _index; set { _index = value; actionThisChange?.Invoke((T)this, TypeEvent.Reindex); } }
+        public int Index { get => _index; set { _index = value; _subscriber.Invoke((T)this, TypeEvent.Reindex); } }
 
         public void Adding(Action<T, TypeEvent> action, int index)
         {
-            actionThisChange += action;
             _index = index;
             action((T)this, TypeEvent.Add);
+            _subscriber.Add(action);
         }
 
         public IUnsubscriber Subscribe(Action<T, TypeEvent> action, bool calling = true)
         {
-            actionThisChange += action;
-
             if (calling)
                 action((T)this, TypeEvent.Subscribe);
-            return new Unsubscriber<Action<T, TypeEvent>>(this, action);
-        }
-
-        public void Unsubscribe(Action<T, TypeEvent> action)
-        {
-            actionThisChange -= action;
+            return _subscriber.Add(action);
         }
 
         public virtual void Removing()
         {
-            actionThisChange?.Invoke((T)this, TypeEvent.Remove);
-            actionThisChange = null;
+            _subscriber.Invoke((T)this, TypeEvent.Remove);
+            _subscriber.Dispose();
             _index = -1;
         }
 
         public abstract bool Equals(T other);
+
+        public virtual void Dispose() => _subscriber.Dispose();
     }
 }

@@ -1,46 +1,24 @@
 //Assets\Colonization\Scripts\Data\HexagonsData\HexData.cs
-using Newtonsoft.Json;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace Vurbiri.Colonization.Data
 {
-    [JsonArray]
-    public class HexData : IEnumerable<int>
+    public class HexData
     {
-        private readonly int _surfaceId;
-
-        public readonly Key key;
         public readonly int id;
-        public SurfaceScriptable surface;
-        public readonly Vector3 position;
+        public readonly int surfaceId;
 
-        public HexData(Key key, int id, Vector3 position, SurfaceScriptable surface)
+        public HexData(int id, int surfaceId)
         {
-            this.key = key;
             this.id = id;
-            this.position = position;
-            this.surface = surface;
-            _surfaceId = surface.Id.Value;
+            this.surfaceId = surfaceId;
         }
-        public HexData(int[] array, SurfacesScriptable surfaces)
+        public HexData(int[] array)
         {
-            key = new(array[0], array[1]);
-            id = array[2];
-            _surfaceId = array[3];
-            position = key.HexKeyToPosition();
-            surface = surfaces[_surfaceId];
+            int i = 0;
+            id = array[i++];
+            surfaceId = array[i];
+            //position = key.HexKeyToPosition();
         }
 
-        public IEnumerator<int> GetEnumerator()
-        {
-            yield return key.X;
-            yield return key.Y;
-            yield return id;
-            yield return _surfaceId;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public int[] ToArray() => new int[] { id, surfaceId };
     }
 }

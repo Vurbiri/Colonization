@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         private readonly List<Road> _roadsLists = new();
         private int _count = 0;
 
-        private Action<int[][][]> ActionValueChange;
+        private Subscriber<int[][][]> _subscriber = new();
         #endregion
 
         public int Count => _count;
@@ -100,17 +100,16 @@ namespace Vurbiri.Colonization
             StartCoroutine(TryUnion_Coroutine());
         }
 
+        public virtual void Dispose() => _subscriber.Dispose();
+
         #region Reactive
         public IUnsubscriber Subscribe(Action<int[][][]> action, bool calling = false)
         {
-            ActionValueChange += action;
             if (calling)
                 action(ToArray());
 
-            return new Unsubscriber<Action<int[][][]>>(this, action);
+            return _subscriber.Add(action);
         }
-
-        public void Unsubscribe(Action<int[][][]> action) => ActionValueChange -= action;
 
         private int[][][] ToArray()
         {
@@ -149,7 +148,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            ActionValueChange?.Invoke(ToArray());
+            _subscriber.Invoke(ToArray());
         }
 
        

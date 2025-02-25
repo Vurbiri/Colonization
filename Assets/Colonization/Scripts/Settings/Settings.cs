@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
             _profile.idLang = _localization.CurrentId;
             _profile.quality = QualitySettings.GetQualityLevel();
 
-            actionValueChange?.Invoke(_profile.ToArray());
+            _subscriber.Invoke(_profile.ToArray());
         }
 
         public void Cancel()

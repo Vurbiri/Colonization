@@ -25,8 +25,6 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private EnumArray<Files, bool> _localizationFiles = new(true);
         [Header("Init data for classes")]
-        [SerializeField] private Land _land;
-        [SerializeField] private Crossroads _crossroads;
         [SerializeField] private Players.Settings _playersSettings;
         [SerializeField] private InputController.Settings _inputControllerSettings;
         [Space]
@@ -39,14 +37,15 @@ namespace Vurbiri.Colonization
 
         private Players _players;
         private GameSettings _gameplaySettings;
+        private ProjectSaveData _projectSaveData;
         private GameplayEventBus _eventBus;
         private InputController _inputController;
-        private HexagonsData _hexagonsData;
 
         public override IReactive<ExitParam> Enter(SceneContainers containers, AEnterParam param)
         {
             _containers = containers;
 
+            _projectSaveData = containers.Data.Get<ProjectSaveData>();
             _gameplaySettings = containers.Data.Get<GameSettings>();
 
             containers.Services.Get<Localization>().SetFiles(_localizationFiles);
@@ -68,13 +67,10 @@ namespace Vurbiri.Colonization
                 services.AddInstance(Coroutines.Create("Gameplay Coroutines"));
                 _eventBus = services.AddInstance(new GameplayEventBus());
                 _inputController = services.AddInstance(new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
-                _hexagonsData = data.AddInstance(new HexagonsData(_scriptables.surfaces, _isLoad));
                 
                 data.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));
                 
                 objects.AddInstance(_sceneObjects.mainCamera);
-                objects.AddInstance(_land);
-                objects.AddInstance(_crossroads);
 
                 _settingsUI.Init(services);
             }
@@ -93,13 +89,12 @@ namespace Vurbiri.Colonization
 
         private IEnumerator CreateIsland_Coroutine()
         {
-            _sceneObjects.islandCreator.Init(_land, _crossroads, _eventBus);
+            _sceneObjects.islandCreator.Init(_containers.Objects, _projectSaveData, _eventBus);
 
-            yield return _sceneObjects.islandCreator.Create_Coroutine(_hexagonsData, _isLoad);
+            yield return _sceneObjects.islandCreator.Create_Coroutine(_isLoad);
 
             yield return null;
 
-            _hexagonsData.ClearLinks();
             _sceneObjects.islandCreator.Dispose();
             _scriptables.Dispose();
 
@@ -140,8 +135,6 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            _land.OnValidate();
-            _crossroads.OnValidate();
             _sceneObjects.OnValidate();
             _scriptables.OnValidate();
             _settingsUI.OnValidate();
@@ -197,7 +190,6 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class ScriptableObjects : IDisposable
         {
-            public SurfacesScriptable surfaces;
             public PricesScriptable prices;
             public PlayerVisualSetScriptable visualSet;
 
@@ -205,8 +197,6 @@ namespace Vurbiri.Colonization
 
             public void Dispose()
             {
-                surfaces.Dispose();
-                surfaces = null;
                 visualSet.Dispose();
                 visualSet = null;
             }
@@ -214,11 +204,6 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
             public void OnValidate()
             {
-                if (surfaces == null)
-                    surfaces = VurbiriEditor.Utility.FindAnyScriptable<SurfacesScriptable>();
-                else 
-                    surfaces.OnValidate();
-
                 if (prices == null)
                     prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
                 if (visualSet == null)

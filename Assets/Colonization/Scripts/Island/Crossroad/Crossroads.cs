@@ -7,21 +7,20 @@ namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    [System.Serializable]
     public class Crossroads
     {
-        [SerializeField] private IdHashSet<EdificeId, AEdifice> _prefabs;
-
-        private Transform _container;
-        private GameplayEventBus _eventBus;
+        private readonly Transform _container;
+        private readonly IdHashSet<EdificeId, AEdifice> _prefabs;
+        private readonly GameplayEventBus _eventBus;
         private readonly Dictionary<Key, Crossroad> _crossroads = new(HEX_COUNT_SIDES * MAX_CIRCLES * MAX_CIRCLES);
         private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
 
         public Crossroad this[Key key] => _crossroads[key];
 
-        public void Init(Transform container, GameplayEventBus eventBus)
+        public Crossroads(Transform container, IdHashSet<EdificeId, AEdifice> prefabs, GameplayEventBus eventBus)
         {
             _container = container;
+            _prefabs = prefabs;
             _eventBus = eventBus;
         }
 
@@ -51,13 +50,5 @@ namespace Vurbiri.Colonization
                     _crossroads.Remove(key);
             }
         }
-
-#if UNITY_EDITOR
-        public void OnValidate()
-        {
-            if (_prefabs.CountAvailable < _prefabs.Count)
-                _prefabs.ReplaceRange(VurbiriEditor.Utility.FindPrefabs<AEdifice>());
-        }
-#endif
     }
 }

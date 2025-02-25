@@ -15,7 +15,13 @@ namespace Vurbiri
             callback?.Invoke(false);
             return null;
         }
-        public IEnumerator Save_Coroutine<T>(string key, T data, bool toFile = true, Action<bool> callback = null)
+        public IEnumerator Save_Coroutine<T>(string key, T data, bool toFile, Action<bool> callback)
+        {
+            callback?.Invoke(false);
+            return null;
+        }
+
+        public IEnumerator Remove_Coroutine(string key, bool toFile, Action<bool> callback)
         {
             callback?.Invoke(false);
             return null;
@@ -31,6 +37,6 @@ namespace Vurbiri
 
         public bool ContainsKey(string key) => false;
 
-        
+       
     }
 }

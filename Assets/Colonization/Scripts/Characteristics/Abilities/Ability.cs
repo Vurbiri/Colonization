@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.Characteristics
             _value = Math.Max(_value, 0);
 
             if(old != _value)
-                actionValueChange?.Invoke(_value);
+                _subscriber.Invoke(_value);
 
             return _value - old;
         }

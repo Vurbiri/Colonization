@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.Characteristics
             _value = value;
 
             if (delta != 0)
-                actionValueChange?.Invoke(_value);
+                _subscriber.Invoke(_value);
 
             return delta;
         }

@@ -16,9 +16,8 @@ namespace Vurbiri.TextLocalization
         private readonly LanguageType[] _languages;
         private readonly int _languagesCount;
         private readonly int _countFiles;
+        private readonly Subscriber<Localization> _subscriber = new();
         private LanguageType _currentLanguage;
-
-        private Action<Localization> actionValueChange;
 
         public static Localization Instance => _instance;
 
@@ -47,14 +46,11 @@ namespace Vurbiri.TextLocalization
 
         public IUnsubscriber Subscribe(Action<Localization> action, bool calling = true)
         {
-            actionValueChange -= action;
-            actionValueChange += action;
-            if (calling && action != null)
+            if (calling)
                 action(this);
 
-            return new Unsubscriber<Action<Localization>>(this, action);
+            return _subscriber.Add(action);
         }
-        public void Unsubscribe(Action<Localization> action) => actionValueChange -= action;
 
         public bool TryIdFromCode(string code, out int id)
         {
@@ -145,6 +141,8 @@ namespace Vurbiri.TextLocalization
         public string GetTextFormat(Files file, string key, object arg0, object arg1) => string.Format(GetText(idFile: (int)file, key), arg0, arg1);
         public string GetTextFormat(Files file, string key, object arg0) => string.Format(GetText(idFile: (int)file, key), arg0);
 
+        public virtual void Dispose() => _subscriber.Dispose();
+
         private bool SetLanguage(LanguageType type)
         {
             for (int i = 0; i < _countFiles; i++)
@@ -157,7 +155,7 @@ namespace Vurbiri.TextLocalization
             }
 
             _currentLanguage = type;
-            actionValueChange?.Invoke(this);
+            _subscriber.Invoke(this);
             return true;
         }
 

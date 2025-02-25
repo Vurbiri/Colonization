@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         private readonly int[] _values = new int[PlayerId.PlayersCount];
         private readonly DiplomacySettings _stt;
 
-        private Action<int, int> actionValueChange;
+        private readonly Subscriber<int, int> _subscriber = new();
 
         private int this[Id<PlayerId> idA, Id<PlayerId> idB]
         {
@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
                     return;
 
                 _values[index] = value;
-                actionValueChange?.Invoke(index, value);
+                _subscriber.Invoke(index, value);
             }
         }
 
@@ -102,19 +102,17 @@ namespace Vurbiri.Colonization
         #region IReactive
         public IUnsubscriber Subscribe(Action<int, int> action, bool calling = true)
         {
-            actionValueChange += action;
-
             if (calling)
             {
                 for (int i = 0; i < PlayerId.PlayersCount; i++)
                     action(i, _values[i]);
             }
 
-            return new Unsubscriber<Action<int, int>>(this, action);
+            return _subscriber.Add(action);
         }
-
-        public void Unsubscribe(Action<int, int> action) => actionValueChange -= action;
         #endregion
+
+        public virtual void Dispose() => _subscriber.Dispose();
 
         private void OnStartTurn(Id<PlayerId> prev, Id<PlayerId> current)
         {

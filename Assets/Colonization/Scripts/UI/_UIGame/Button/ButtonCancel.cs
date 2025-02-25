@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonCancel.cs
-using Vurbiri.TextLocalization;
 using Vurbiri.Reactive;
+using Vurbiri.TextLocalization;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         private const string KEY = "Cancel";
 
         private ICancel _cancelledObj;
-        private IUnsubscriber _unLanguage;
+        private IUnsubscriber _unLanguage, _unAction;
 
         public void Init(HintGlobal hint)
         {
@@ -21,23 +21,23 @@ namespace Vurbiri.Colonization.UI
 
         public void Setup(ICancel cancelledObj)
         {
-            _cancelledObj?.CanCancel.Unsubscribe(_thisGO.SetActive);
+            _unAction?.Unsubscribe();
 
             _cancelledObj = cancelledObj;
-            _cancelledObj.CanCancel.Subscribe(_thisGO.SetActive);
+            _unAction = _cancelledObj.CanCancel.Subscribe(_thisGO.SetActive);
         }
 
         public void Disable()
         {
             _thisGO.SetActive(false);
-            _cancelledObj?.CanCancel.Unsubscribe(_thisGO.SetActive);
+            _unAction?.Unsubscribe();
             _cancelledObj = null;
         }
 
         private void OnClick()
         {
             _thisGO.SetActive(false);
-            _cancelledObj?.CanCancel.Unsubscribe(_thisGO.SetActive);
+            _unAction?.Unsubscribe();
             _cancelledObj?.Cancel();
             _cancelledObj = null;
         }
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization.UI
         private void OnDestroy()
         {
             _unLanguage?.Unsubscribe();
-            _cancelledObj?.CanCancel.Unsubscribe(_thisGO.SetActive);
+            _unAction?.Unsubscribe();
         }
     }
 }

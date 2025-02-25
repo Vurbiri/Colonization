@@ -7,7 +7,7 @@ using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization
 {
-    [DefaultExecutionOrder(10)]
+    [DefaultExecutionOrder(5)]
     public class ProjectEntryPoint : AProjectEntryPoint
 	{
 		private void Start()
@@ -42,16 +42,16 @@ namespace Vurbiri.Colonization
             _dataContainer.AddInstance(data.settingsColorScriptable.Colors);
             //Banners.InstanceF.Initialize();
 
-            yield return CreateStoroge_Coroutine(coroutine, ysdk, data);
+            yield return CreateStorage_Coroutine(coroutine, ysdk, data);
             yield return YandexIsLogOn_Coroutine(coroutine, ysdk, data);
 
             _dataContainer.AddInstance(new GameSettings(_servicesContainer));
 
             Message.Log("End Init Project");
 
-            #region Local: LoadData_Coroutine(..), YandexIsLogOn_Coroutine(..)
+            #region Local: CreateStorage_Coroutine(..), YandexIsLogOn_Coroutine(..)
             //=================================
-            IEnumerator CreateStoroge_Coroutine(Coroutines coroutine, YandexSDK ysdk, ProjectInitializationData data)
+            IEnumerator CreateStorage_Coroutine(Coroutines coroutine, YandexSDK ysdk, ProjectInitializationData data)
 			{
                 IStorageService storage = null;
                 yield return StartCoroutine(Storage.Create_Coroutine(_servicesContainer, SAVE_KEYS.PROJECT, s => storage = s));
@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization
                     yield return data.logOnPanel.TryLogOn_Coroutine(ysdk);
                     yield return _loadingScreen.SmoothOn_Wait();
                     if (ysdk.IsLogOn)
-                        yield return CreateStoroge_Coroutine(coroutine, ysdk, data);
+                        yield return CreateStorage_Coroutine(coroutine, ysdk, data);
                 }
             }
             #endregion

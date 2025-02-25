@@ -19,10 +19,37 @@ namespace Vurbiri.Colonization
 
         private const string NAME_MESH = "MH_CrystalField_";
         private static int ID = 0;
+        public override void Generate(float radius)
+        {
+            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
 
+            RMFloat offsetRadius = radius * _ratioOffsetXZ;
+
+            int i, count;
+            List<Triangle>[] druse;
+
+            druse = _druse.Create(new(offsetRadius, -_offsetY, offsetRadius));
+            count = druse.Length;
+            for (i = 0; i < count; i++)
+                customMesh.AddTriangles(druse[i]);
+
+            float x, z;
+            for (int k = 0; k < COUNT_DRUSE; k++)
+            {
+                x = COS_HEX_DIRECT[k] * radius + offsetRadius;
+                z = SIN_HEX_DIRECT[k] * radius + offsetRadius;
+
+                druse = _druse.Create(new(x, -_offsetY, z));
+                count = druse.Length;
+                for (i = 0; i < count; i++)
+                    customMesh.AddTriangles(druse[i]);
+            }
+
+            GetComponent<MeshFilter>().sharedMesh = customMesh.ToMesh();
+        }
         public override IEnumerator Generate_Coroutine(float radius)
         {
-            CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
 
             RMFloat offsetRadius = radius * _ratioOffsetXZ;
 
@@ -74,34 +101,28 @@ namespace Vurbiri.Colonization
             [Space, Space]
             [SerializeField] private Crystal _crystals;
 
-            private List<Triangle>[] _triangles;
-            private float _stepAngleY, _offsetAngleY, _angleY;
-            private RMFloat _ratioAngleY;
-            private int _countCrystals;
-            private byte _colorCrystal;
-
             public List<Triangle>[] Create(Vector3 position)
             {
-                _countCrystals = _countCrystalsRange;
-                _colorCrystal = (byte)_colorCrystalRange;
+                int countCrystals = _countCrystalsRange;
+                byte colorCrystal = (byte)_colorCrystalRange;
 
-                _triangles = new List<Triangle>[_countCrystals + 1];
+                List<Triangle>[] triangles = new List<Triangle>[countCrystals + 1];
 
-                _stepAngleY = 360f / _countCrystals;
-                _offsetAngleY = RZFloat.Rolling(180f / _countCrystals);
-                _ratioAngleY = _stepAngleY * _ratioAngleYRange;
-                _angleY = _offsetAngleY + _ratioAngleY;
+                float stepAngleY = 360f / countCrystals;
+                float offsetAngleY = RZFloat.Rolling(180f / countCrystals);
+                RMFloat ratioAngleY = stepAngleY * _ratioAngleYRange;
+                float angleY = offsetAngleY + ratioAngleY;
 
-                _triangles[0] = _crystals.Create(position, Quaternion.Euler(_angleFirstRange, _angleY, _angleFirstRange), _colorCrystal, true);
+                triangles[0] = _crystals.Create(position, Quaternion.Euler(_angleFirstRange, angleY, _angleFirstRange), colorCrystal, true);
 
-                for (int i = 1; i <= _countCrystals; i++)
+                for (int i = 1; i <= countCrystals; i++)
                 {
-                    _angleY = _stepAngleY * i + _offsetAngleY + _ratioAngleY;
+                    angleY = stepAngleY * i + offsetAngleY + ratioAngleY;
 
-                    _triangles[i] = _crystals.Create(position, Quaternion.Euler(_angleXRange, _angleY, _angleZRange), _colorCrystal, false);
+                    triangles[i] = _crystals.Create(position, Quaternion.Euler(_angleXRange, angleY, _angleZRange), colorCrystal, false);
                 }
 
-                return _triangles;
+                return triangles;
             }
         }
         //*******************************************************
@@ -118,57 +139,46 @@ namespace Vurbiri.Colonization
             [Space]
             [SerializeField] private RFloat _ratioOffsetRange = new(0.16f, 0.32f);
 
-            private List<Triangle> _triangles;
-            private Vector3[] _baseBottom, _baseTop;
-            private Vector3 _pick;
-            private float _height, _heightBase;
-            private float _radius, _radiusX, _radiusZ;
-            private float _cos, _sin;
-            private float _angle, _stepAngle;
-            private RMFloat _offsetSide, _offsetHeight;
-            private int _countVertex;
-
             private static readonly Vector2[] UV_PICK = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
 
             public List<Triangle> Create(Vector3 position, Quaternion rotation, byte color, bool moreAvg)
             {
-                _countVertex = moreAvg ? _countVertexRange.RollMoreAvg : _countVertexRange;
+                int countVertex = moreAvg ? _countVertexRange.RollMoreAvg : _countVertexRange;
+                List<Triangle> triangles = new(countVertex * 3);
 
-                _triangles = new(_countVertex * 3);
+                float height = moreAvg ? _heightRange.RollMoreAvg : _heightRange;
+                float radius = moreAvg ? _radiusRange.RollMoreAvg : _radiusRange;
+                float heightBase = height * _ratioPartRange;
 
-                _height = moreAvg ? _heightRange.RollMoreAvg : _heightRange;
-                _radius = moreAvg ? _radiusRange.RollMoreAvg : _radiusRange;
+                float stepAngle = TAU / countVertex;
+                float angle = RZFloat.Rolling(stepAngle);
 
-                _heightBase = _height * _ratioPartRange;
+                RMFloat offsetSide = radius * _ratioOffsetRange;
+                RMFloat offsetHeight = (height - heightBase) * _ratioOffsetRange;
 
-                _stepAngle = TAU / _countVertex;
-                _angle = RZFloat.Rolling(_stepAngle);
+                Vector3[] baseBottom = new Vector3[countVertex];
+                Vector3[] baseTop = new Vector3[countVertex];
 
-                _offsetSide = _radius * _ratioOffsetRange;
-                _offsetHeight = (_height - _heightBase) * _ratioOffsetRange;
-
-                _baseBottom = new Vector3[_countVertex];
-                _baseTop = new Vector3[_countVertex];
-
-                for (int i = 0; i < _countVertex; i++)
+                float cos, sin, radiusX, radiusZ;
+                for (int i = 0; i < countVertex; i++)
                 {
-                    _cos = Mathf.Cos(_angle); _sin = Mathf.Sin(_angle);
+                    cos = Mathf.Cos(angle); sin = Mathf.Sin(angle);
 
-                    _radiusX = _radius + _offsetSide; _radiusZ = _radius + _offsetSide;
-                    _baseTop[i] = rotation * new Vector3(_cos * _radiusX, _heightBase + _offsetHeight, _sin * _radiusZ) + position;
+                    radiusX = radius + offsetSide; radiusZ = radius + offsetSide;
+                    baseTop[i] = rotation * new Vector3(cos * radiusX, heightBase + offsetHeight, sin * radiusZ) + position;
 
-                    _radiusX *= _ratioRadiusBottom; _radiusZ *= _ratioRadiusBottom;
-                    _baseBottom[i] = rotation * new Vector3(_cos * _radiusX, 0f, _sin * _radiusZ) + position;
+                    radiusX *= _ratioRadiusBottom; radiusZ *= _ratioRadiusBottom;
+                    baseBottom[i] = rotation * new Vector3(cos * radiusX, 0f, sin * radiusZ) + position;
 
-                    _angle += _stepAngle;
+                    angle += stepAngle;
                 }
-                _triangles.AddRange(PolygonChain.CreateBarycentric(color, _baseBottom, _baseTop, true));
+                triangles.AddRange(PolygonChain.CreateBarycentric(color, baseBottom, baseTop, true));
 
-                _pick = rotation * new Vector3(_offsetSide, _height, _offsetSide) + position;
-                for (int i = 0; i < _countVertex; i++)
-                    _triangles.Add(new(color, UV_PICK, _baseTop.Next(i), _baseTop[i], _pick));
+                Vector3 pick = rotation * new Vector3(offsetSide, height, offsetSide) + position;
+                for (int i = 0; i < countVertex; i++)
+                    triangles.Add(new(color, UV_PICK, baseTop.Next(i), baseTop[i], pick));
 
-                return _triangles;
+                return triangles;
             }
         }
         #endregion

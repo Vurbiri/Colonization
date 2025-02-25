@@ -11,7 +11,7 @@ namespace Vurbiri.Reactive.Collections
         protected int _capacity = 4;
         protected readonly ReactiveValue<int> _count = new(0);
 
-        protected Action<T, TypeEvent> actionCollectionChange;
+        protected Subscriber<T, TypeEvent> _subscriber = new();
 
         public T this[int index]
         {
@@ -47,18 +47,14 @@ namespace Vurbiri.Reactive.Collections
         #region IReactiveCollection
         public IUnsubscriber Subscribe(Action<T, TypeEvent> action, bool calling = true)
         {
-            actionCollectionChange += action;
-
             if (calling)
             {
                 for (int i = 0; i < _count; i++)
                     action(_values[i], TypeEvent.Subscribe);
             }
 
-            return new Unsubscriber<Action<T, TypeEvent>>(this, action);
+            return _subscriber.Add(action);
         }
-
-        public void Unsubscribe(Action<T, TypeEvent> action) => actionCollectionChange -= action;
         #endregion
 
         public virtual void Add(T item)
@@ -80,6 +76,14 @@ namespace Vurbiri.Reactive.Collections
                     return true;
 
             return false;
+        }
+
+        public virtual void Dispose()
+        {
+            for (int i = 0; i < _count; i++)
+                _values[i].Dispose();
+            
+            _subscriber.Dispose();
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -110,7 +114,7 @@ namespace Vurbiri.Reactive.Collections
             if (operation == TypeEvent.Remove)
                 RemoveItem(item);
 
-            actionCollectionChange?.Invoke(item, operation);
+            _subscriber.Invoke(item, operation);
         }
 
         private void GrowArray()

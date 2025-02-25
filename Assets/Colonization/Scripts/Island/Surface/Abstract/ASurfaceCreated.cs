@@ -11,9 +11,17 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField, Range(0.1f, 1f)] protected float _ratioSize = 0.8f;
 
-        public override void Init()
+        public override void Init(bool oneFrame)
         {
-            StartCoroutine(Init_Coroutine());
+            if (!oneFrame)
+            {
+                StartCoroutine(Init_Coroutine());
+                return;
+            }
+
+            _generator.Generate(CONST.HEX_RADIUS_IN * _ratioSize);
+            _generator.Dispose();
+            Destroy(this);
         }
 
         protected IEnumerator Init_Coroutine()
