@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.Characteristics
         public abstract int AddModifier(IAbilityModifierValue mod);
         public abstract int RemoveModifier(IAbilityModifierValue mod);
 
-        public IUnsubscriber Subscribe(Action<int> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<int> action, bool calling = true)
         {
             if (calling)
                 action(_value);

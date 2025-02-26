@@ -26,31 +26,20 @@ namespace Vurbiri.Colonization
 
         public Hexagon this[Key key] => _hexagons[key];
 
-        public Land(LandInitData initData)
+        public Land(LandInitData initData, GameplayEventBus eventBus)
         {
-            _landMesh = initData.landMesh;
+            _landMesh = initData.landMesh.Init();
             _prefabHex = initData.prefabHex;
             _surfaces = initData.surfaces;
+            _eventBus = eventBus;
             _container = _landMesh.transform;
 
-            InitHexagonsIdForKey();
             _poolMarks = new(initData.prefabHexMark, _container, HEX.SIDES);
-            
-            _eventBus = SceneServices.Get<GameplayEventBus>();
 
-            _landMesh.Init();
-
-            #region Local: InitHexagonsIdForKey();
-            //================================================
-            void InitHexagonsIdForKey()
-            {
-                int capacity = MAX_HEXAGONS / NUMBERS_HEX.Count + 1;
-
-                foreach (int i in NUMBERS_HEX)
-                    _hexagonsIdForKey[i] = new List<Key>(capacity);
-                _hexagonsIdForKey[ID_GATE] = new List<Key>(1);
-            }
-            #endregion
+            int count = NUMBERS_HEX.Count, capacity = MAX_HEXAGONS / count + 1;
+            for (int i = 0; i < count; i++)
+                _hexagonsIdForKey[NUMBERS_HEX[i]] = new List<Key>(capacity);
+            _hexagonsIdForKey[ID_GATE] = new List<Key>(1);
         }
 
         public Hexagon CreateHexagon(Key key, int id, int surfaceId, Vector3 position)
@@ -60,6 +49,7 @@ namespace Vurbiri.Colonization
             hex.Init(key, id, _poolMarks, surface,  _eventBus);
 
             _subscriber.Invoke(key, hex.ToArray());
+
             _hexagons.Add(key, hex);
             _hexagonsIdForKey[id].Add(key);
  
@@ -95,12 +85,7 @@ namespace Vurbiri.Colonization
             return res;
         }
 
-        #region IReactive
-        public IUnsubscriber Subscribe(Action<Key, int[]> action, bool calling = true)
-        {
-            
-            return _subscriber.Add(action);
-        }
-        #endregion
+        public Unsubscriber Subscribe(Action<Key, int[]> action, bool calling = true) => _subscriber.Add(action);
+
     }
 }

@@ -28,7 +28,7 @@ namespace VurbiriEditor.Colonization.Actors
             if (_warriorsSettings == null)
             {
                 Debug.LogWarning("Set WarriorsSettingsScriptable");
-                _warriorsSettings = VurbiriEditor.Utility.FindAnyScriptable<WarriorsSettingsScriptable>();
+                _warriorsSettings = Vurbiri.EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
                 if (_warriorsSettings == null)
                     return;
             }

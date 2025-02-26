@@ -44,7 +44,7 @@ namespace Vurbiri.Audio
                 subscribers[i] = new();
         }
 
-        public IUnsubscriber Subscribe(Id<AudioTypeId> id, Action<float> action, bool calling = true)
+        public Unsubscriber Subscribe(Id<AudioTypeId> id, Action<float> action, bool calling = true)
         {
             if (calling)
                 action(_volumes[id]);

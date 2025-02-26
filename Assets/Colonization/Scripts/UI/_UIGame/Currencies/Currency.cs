@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private RectTransform _thisRectTransform;
 
         private string _currency;
-        private IUnsubscriber _unsubscriber;
+        private Unsubscriber _unsubscriber;
         
         public Vector2 Size => _thisRectTransform.sizeDelta;
 

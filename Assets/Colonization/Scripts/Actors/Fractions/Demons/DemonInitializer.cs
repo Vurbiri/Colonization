@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.Actors
             if (_collider == null)
                 _collider = GetComponent<BoxCollider>();
             if (_demonSettings == null)
-                _demonSettings = VurbiriEditor.Utility.FindAnyScriptable<DemonsSettingsScriptable>();
+                _demonSettings = EUtility.FindAnyScriptable<DemonsSettingsScriptable>();
         }
 #endif
     }

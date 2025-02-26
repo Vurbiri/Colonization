@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Actors
         
         private int _currentValue = int.MinValue;
         private PopupWidget3D _popup;
-        private IUnsubscriber _unsubscriber;
+        private Unsubscriber _unsubscriber;
 
         public bool IsVisible => _sprite.isVisible;
 

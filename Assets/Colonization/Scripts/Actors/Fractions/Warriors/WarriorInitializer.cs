@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.Actors
             if (_collider == null)
                 _collider = GetComponent<BoxCollider>();
             if (_warriorsSettings == null)
-                    _warriorsSettings = VurbiriEditor.Utility.FindAnyScriptable<WarriorsSettingsScriptable>();
+                    _warriorsSettings = EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
         }
 #endif
         }

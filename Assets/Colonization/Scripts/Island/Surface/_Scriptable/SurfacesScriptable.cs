@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
         public void OnValidate()
         {
             if (_surfaces.CountAvailable < _surfaces.Count)
-                _surfaces.ReplaceRange(VurbiriEditor.Utility.FindScriptables<SurfaceScriptable>());
+                _surfaces.ReplaceRange(EUtility.FindScriptables<SurfaceScriptable>());
         }
 #endif
     }

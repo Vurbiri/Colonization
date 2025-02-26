@@ -45,7 +45,7 @@ namespace Vurbiri.Reactive.Collections
         #endregion
 
         #region IReactiveCollection
-        public IUnsubscriber Subscribe(Action<T, TypeEvent> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool calling = true)
         {
             if (calling)
             {

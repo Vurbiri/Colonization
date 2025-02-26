@@ -3,7 +3,13 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    public class Unsubscriber<TDelegate> : IUnsubscriber where TDelegate : Delegate
+    public abstract class Unsubscriber
+    {
+        public abstract void Unsubscribe();
+    }
+
+
+    internal class Unsubscriber<TDelegate> : Unsubscriber where TDelegate : Delegate
     {
         private WeakReference<ISubscriber<TDelegate>> _weakSubscriber;
         private TDelegate action;
@@ -14,7 +20,7 @@ namespace Vurbiri.Reactive
             this.action = action;
         }
 
-        public void Unsubscribe()
+        public override void Unsubscribe()
         {
             if(_weakSubscriber != null && _weakSubscriber.TryGetTarget(out ISubscriber<TDelegate> subscriber))
             {

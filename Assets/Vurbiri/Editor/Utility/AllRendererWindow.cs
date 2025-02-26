@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Vurbiri;
 using static VurbiriEditor.CONST_EDITOR;
 
 namespace VurbiriEditor
@@ -33,7 +34,7 @@ namespace VurbiriEditor
             _propertyPrefabs = _self.FindProperty("_renderersPrefabs");
 
             _renderersScene = FindObjectsByType<Renderer>(FindObjectsInactive.Include ,FindObjectsSortMode.None);
-            _renderersPrefabs = Utility.FindComponentsPrefabs<Renderer>();
+            _renderersPrefabs = EUtility.FindComponentsPrefabs<Renderer>();
 
             _self.Update();
 

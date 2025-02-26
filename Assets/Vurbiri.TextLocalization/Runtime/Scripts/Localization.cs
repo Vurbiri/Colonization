@@ -44,7 +44,7 @@ namespace Vurbiri.TextLocalization
         public Localization(bool[] loadFiles) : this() => SetFiles(loadFiles);
 #endif
 
-        public IUnsubscriber Subscribe(Action<Localization> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<Localization> action, bool calling = true)
         {
             if (calling)
                 action(this);

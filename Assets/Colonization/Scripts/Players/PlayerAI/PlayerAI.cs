@@ -5,8 +5,7 @@ namespace Vurbiri.Colonization
 {
     public class PlayerAI : Player
     {
-        public PlayerAI(Id<PlayerId> playerId, Id<PlayerId> currentPlayerId, PlayerSaveData data, Players.Settings settings) 
-            : base(playerId, currentPlayerId, data, settings)
+        public PlayerAI(Id<PlayerId> playerId, PlayerSaveData data, Players.Settings settings) : base(playerId, data, settings)
         {
         }
     }

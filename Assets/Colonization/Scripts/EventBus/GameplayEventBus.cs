@@ -30,8 +30,6 @@ namespace Vurbiri.Colonization
         public event Action EventSceneEndCreation;
         public void TriggerSceneEndCreation() => EventSceneEndCreation?.Invoke();
 
-        public event Action<Id<PlayerId>, Id<PlayerId>> EventStartTurn;
-        public void TriggerStartTurn(Id<PlayerId> prev, Id<PlayerId> current) => EventStartTurn?.Invoke(prev, current);
         #endregion
     }
 }

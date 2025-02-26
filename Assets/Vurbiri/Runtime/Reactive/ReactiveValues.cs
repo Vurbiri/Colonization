@@ -41,7 +41,7 @@ namespace Vurbiri.Reactive
             _comparerB = EqualityComparer<TB>.Default;
         }
 
-        public IUnsubscriber Subscribe(Action<TA, TB> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<TA, TB> action, bool calling = true)
         {
             if (calling)
                 action(_valueA, _valueB);

@@ -10,12 +10,12 @@ namespace Vurbiri.Colonization.Data
         public readonly IReadOnlyList<IReadOnlyList<Key>> roads;
         public readonly ActorLoadData[] warriors;
 
-        public PlayerLoadData(int[] resources, Dictionary<int, List<int[]>> edifices, int[][][] roads, List<int[][]> warriors, Id<PlayerId> currentPlayerId)
+        public PlayerLoadData(int[] resources, Dictionary<int, List<int[]>> edifices, int[][][] roads, List<int[][]> warriors)
         {
             this.resources = resources;
             this.edifices = CreateEdificesLoadData(edifices);
             this.roads = CreateRoadsData(roads);
-            this.warriors = CreateActorData(warriors, currentPlayerId);
+            this.warriors = CreateActorData(warriors);
 
             #region Local: CreateEdificesLoadData(..), CreateRoadsData(..), CreateActorData(...)
             //================================================================
@@ -54,13 +54,13 @@ namespace Vurbiri.Colonization.Data
                 return roads;
             }
             //================================================================
-            ActorLoadData[] CreateActorData(List<int[][]> warriorsData, Id<PlayerId> currentPlayerId)
+            ActorLoadData[] CreateActorData(List<int[][]> warriorsData)
             {
                 int count = warriorsData.Count;
                 ActorLoadData[] warriors = new ActorLoadData[count];
 
                 for (int i = 0; i < count; i++)
-                    warriors[i] = new(warriorsData[i], currentPlayerId);
+                    warriors[i] = new(warriorsData[i]);
 
                 return warriors;
             }

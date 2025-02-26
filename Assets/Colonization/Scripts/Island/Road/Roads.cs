@@ -101,7 +101,7 @@ namespace Vurbiri.Colonization
         }
 
         #region Reactive
-        public IUnsubscriber Subscribe(Action<int[][][]> action, bool calling = false)
+        public Unsubscriber Subscribe(Action<int[][][]> action, bool calling = false)
         {
             if (calling)
                 action(ToArray());
@@ -155,7 +155,7 @@ namespace Vurbiri.Colonization
         protected virtual void OnValidate()
         {
             if(_prefabRoad == null)
-                _prefabRoad = VurbiriEditor.Utility.FindAnyPrefab<Road>();
+                _prefabRoad = EUtility.FindAnyPrefab<Road>();
         }
 #endif
     }

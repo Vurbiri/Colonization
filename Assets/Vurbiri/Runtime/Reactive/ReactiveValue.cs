@@ -47,7 +47,7 @@ namespace Vurbiri.Reactive
             _comparer = comparer;
         }
 
-        public IUnsubscriber Subscribe(Action<T> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<T> action, bool calling = true)
         {
             if (calling) 
                 action(_value);

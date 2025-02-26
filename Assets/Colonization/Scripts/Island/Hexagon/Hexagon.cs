@@ -101,9 +101,9 @@ namespace Vurbiri.Colonization
         }
         public Key GetNearGroundHexOffset()
         {
-            foreach (var neighbor in _neighbors) 
-                if(!neighbor._isWater)
-                    return neighbor._key - _key;
+            foreach (var neighbor in _neighbors)
+                if(neighbor._isWater)
+                    return _key - neighbor._key;
 
             return HEX.NEAR.Rand();
         }
@@ -205,6 +205,7 @@ namespace Vurbiri.Colonization
             _hexagonCaption.SetActive(value);
         }
 
+        #region Save/Load data 
         private const int SIZE_ARRAY = 2;
         public int[] ToArray() => new int[] { _id, _surfaceId };
         public static void FromArray(int[] data, out int id, out int surfaceId)
@@ -216,6 +217,7 @@ namespace Vurbiri.Colonization
             id = data[i++];
             surfaceId = data[i];
         }
+        #endregion
 
         #region ISelectable
         public void Select() { }

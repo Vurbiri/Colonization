@@ -38,8 +38,8 @@ namespace Vurbiri.Colonization.UI
 
             StringBuilder sb = new(TAG_SPRITE_LENGTH * spritesIds.Count);
 
-            foreach (var sid in spritesIds)
-                sb.AppendFormat(TAG_SPRITE, sid);
+            foreach (var sId in spritesIds)
+                sb.AppendFormat(TAG_SPRITE, sId);
 
             _currencyText.text = _defaultCurrencyText = sb.ToString();
 

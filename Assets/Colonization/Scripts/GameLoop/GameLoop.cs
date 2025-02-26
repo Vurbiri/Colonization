@@ -1,7 +1,6 @@
 //Assets\Colonization\Scripts\GameLoop\GameLoop.cs
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
-using Vurbiri.Colonization.Data;
 using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
@@ -9,18 +8,17 @@ namespace Vurbiri.Colonization
     public class GameLoop : MonoBehaviour
     {
         private Dices _dices;
+        private TurnQueue _turnQueue;
         private Players _players;
         private InputController _inputController;
-        private PlayersSaveData _playersData;
         private Land _land;
 
-        public void Init(InputController inputController)
+        public void Init(TurnQueue turnQueue, InputController inputController)
         {
             _dices = new();
-
+            _turnQueue = turnQueue;
             _land = SceneObjects.Get<Land>();
             _players = SceneObjects.Get<Players>();
-            _playersData = SceneData.Get<PlayersSaveData>();
 
             _inputController = inputController;
 
@@ -29,12 +27,14 @@ namespace Vurbiri.Colonization
 
         private void StartGame()
         {
-            _inputController.EnableGameplayMap();
+            _inputController.EnableAll();
+            _inputController.GameplayMap = _turnQueue.CurrentId == PlayerId.Player;
         }
 
         public void EndTurnPlayer()
         {
-            _players.Next();
+            _turnQueue.Next();
+            _inputController.GameplayMap = _turnQueue.CurrentId == PlayerId.Player;
 
             int roll = _dices.Roll();
             UnityEngine.Debug.Log("ROLL: " + roll);
@@ -43,8 +43,6 @@ namespace Vurbiri.Colonization
                 free = _land.GetFreeGroundResource(roll);
 
             _players.Profit(roll, free);
-
-            _playersData.Save();
         }
     }
 }

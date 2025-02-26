@@ -88,9 +88,8 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Reactive
-        public IUnsubscriber Subscribe(Action<int, int> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<int, int> action, bool calling = true)
         {
-
             if (calling)
             {
                 for (int i = 0; i < countAll; i++)
@@ -99,8 +98,8 @@ namespace Vurbiri.Colonization
 
             return _subscriber.Add(action);
         }
-        public IUnsubscriber Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
-        public IUnsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
+        public Unsubscriber Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
+        public Unsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
         #endregion
 
         public void Dispose()
@@ -149,7 +148,7 @@ namespace Vurbiri.Colonization
         protected class CurrencyBlood : ACurrency
         {
             private int _max;
-            private readonly IUnsubscriber _unsubscriber;
+            private readonly Unsubscriber _unsubscriber;
 
             public override int Value 
             { 

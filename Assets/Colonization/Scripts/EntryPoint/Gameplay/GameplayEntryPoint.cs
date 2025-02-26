@@ -20,6 +20,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] protected SceneId _nextScene;
         [Space]
+        [SerializeField] private IslandCreator _islandCreator;
         [SerializeField] private SceneObjects _sceneObjects;
         [SerializeField] private ScriptableObjects _scriptables;
         [Space]
@@ -35,6 +36,7 @@ namespace Vurbiri.Colonization
 
         private SceneContainers _containers;
 
+        private TurnQueue _turnQueue;
         private Players _players;
         private GameSettings _gameplaySettings;
         private ProjectSaveData _projectSaveData;
@@ -47,6 +49,8 @@ namespace Vurbiri.Colonization
 
             _projectSaveData = containers.Data.Get<ProjectSaveData>();
             _gameplaySettings = containers.Data.Get<GameSettings>();
+
+            _projectSaveData.Load = _isLoad;
 
             containers.Services.Get<Localization>().SetFiles(_localizationFiles);
 
@@ -65,9 +69,11 @@ namespace Vurbiri.Colonization
                 DIContainer objects = containers.Objects;
 
                 services.AddInstance(Coroutines.Create("Gameplay Coroutines"));
-                _eventBus = services.AddInstance(new GameplayEventBus());
-                _inputController = services.AddInstance(new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
-                
+                services.AddInstance(_eventBus = new GameplayEventBus());
+                services.AddInstance(_inputController = new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
+                services.AddInstance<ITurn>(_turnQueue = TurnQueue.Create(_projectSaveData));
+                services.AddInstance(Diplomacy.Create(_projectSaveData, _scriptables.diplomacy, _turnQueue));
+
                 data.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));
                 
                 objects.AddInstance(_sceneObjects.mainCamera);
@@ -79,31 +85,18 @@ namespace Vurbiri.Colonization
 
         private IEnumerator Enter_Cn()
         {
-            yield return CreateIsland_Cn();
+            yield return _islandCreator.Init(_containers.Objects, _eventBus).Create_Cn(_projectSaveData);
             yield return CreatePlayers_Cn();
 
             _sceneObjects.Init(this, _scriptables);
+            _scriptables.Dispose();
 
             StartCoroutine(Final_Cn());
         }
 
-        private IEnumerator CreateIsland_Cn()
-        {
-            _sceneObjects.islandCreator.Init(_containers.Objects, _projectSaveData, _eventBus);
-
-            yield return _sceneObjects.islandCreator.Create_Cn(_isLoad, _projectSaveData);
-
-            yield return null;
-
-            _sceneObjects.islandCreator.Dispose();
-            _scriptables.Dispose();
-
-            yield return null;
-        }
-
         private IEnumerator CreatePlayers_Cn()
         {
-            _players = _containers.Objects.AddInstance(new Players(_containers, _playersSettings, _isLoad));
+            _players = _containers.Objects.AddInstance(new Players(_playersSettings, _projectSaveData, _eventBus));
 
             yield return null;
 
@@ -122,7 +115,7 @@ namespace Vurbiri.Colonization
             yield return null;
             GC.Collect();
 
-            _sceneObjects.game.Init(_inputController);
+            _sceneObjects.game.Init(_turnQueue, _inputController);
             _gameplaySettings.StartGame();
             _eventBus.TriggerSceneEndCreation();
 
@@ -140,10 +133,12 @@ namespace Vurbiri.Colonization
             _settingsUI.OnValidate();
 
             _playersSettings.OnValidate();
+            if (_islandCreator == null)
+                _islandCreator = FindAnyObjectByType<IslandCreator>();
             if (_playersSettings.actorsContainer == null)
-                _playersSettings.actorsContainer = _sceneObjects.islandCreator.ActorsContainer;
+                _playersSettings.actorsContainer = EUtility.FindObjectByName<Transform>("Actors");
             if (_playersSettings.roadsFactory.container == null)
-                _playersSettings.roadsFactory.container = _sceneObjects.islandCreator.RoadsContainer;
+                _playersSettings.roadsFactory.container = EUtility.FindObjectByName<Transform>("Roads");
         }
 #endif
 
@@ -156,7 +151,6 @@ namespace Vurbiri.Colonization
             [Space]
             public Camera mainCamera;
             [Space]
-            public IslandCreator islandCreator;
             public CameraController cameraController;
             public ContextMenusWorld contextMenusWorld;
             [Space]
@@ -165,7 +159,7 @@ namespace Vurbiri.Colonization
             public void Init(GameplayEntryPoint parent, ScriptableObjects scriptables)
             {
                 cameraController.Init(mainCamera, parent._inputController.CameraActions);
-                contextMenusWorld.Init(new(parent._players, hintGlobalWorld, scriptables.prices, mainCamera, parent._eventBus));
+                contextMenusWorld.Init(new(parent._turnQueue, parent._players, hintGlobalWorld, scriptables.prices, mainCamera, parent._eventBus));
             }
 
 #if UNITY_EDITOR
@@ -175,8 +169,7 @@ namespace Vurbiri.Colonization
                     game = FindAnyObjectByType<GameLoop>();
                 if (mainCamera == null)
                     mainCamera = FindAnyObjectByType<Camera>();
-                if (islandCreator == null)
-                    islandCreator = FindAnyObjectByType<IslandCreator>();
+                
                 if (cameraController == null)
                     cameraController = FindAnyObjectByType<CameraController>();
                 if (contextMenusWorld == null)
@@ -192,6 +185,7 @@ namespace Vurbiri.Colonization
         {
             public PricesScriptable prices;
             public PlayerVisualSetScriptable visualSet;
+            public DiplomacySettingsScriptable diplomacy;
 
             public PlayersVisual GetPlayersVisual(IReadOnlyList<int> ids) => visualSet.Get(ids);
 
@@ -199,15 +193,19 @@ namespace Vurbiri.Colonization
             {
                 visualSet.Dispose();
                 visualSet = null;
+                diplomacy.Dispose();
+                diplomacy = null;
             }
 
 #if UNITY_EDITOR
             public void OnValidate()
             {
                 if (prices == null)
-                    prices = VurbiriEditor.Utility.FindAnyScriptable<PricesScriptable>();
+                    prices = EUtility.FindAnyScriptable<PricesScriptable>();
                 if (visualSet == null)
-                    visualSet = VurbiriEditor.Utility.FindAnyScriptable<PlayerVisualSetScriptable>();
+                    visualSet = EUtility.FindAnyScriptable<PlayerVisualSetScriptable>();
+                if (diplomacy == null)
+                    diplomacy = EUtility.FindAnyScriptable<DiplomacySettingsScriptable>();
             }
 #endif
         }
@@ -227,7 +225,7 @@ namespace Vurbiri.Colonization
             public void OnValidate()
             {
                 if (prefabEffectsBar == null)
-                    prefabEffectsBar = VurbiriEditor.Utility.FindAnyPrefab<EffectsBar>();
+                    prefabEffectsBar = EUtility.FindAnyPrefab<EffectsBar>();
             }
 #endif
         }

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
         public const int MAX_CIRCLES = 4;
         public const int MAX_HEXAGONS = ((HEX.SIDES * MAX_CIRCLES * (MAX_CIRCLES + 1)) >> 1) + 1;
 
-        public const int CHANCE_WATER = 17;
+        public const int CHANCE_WATER = MAX_CIRCLES * MAX_CIRCLES;
 
         public const int ID_GATE = 13;
         public static readonly IReadOnlyList<int> NUMBERS_HEX = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };

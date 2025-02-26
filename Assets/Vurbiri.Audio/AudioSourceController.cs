@@ -11,7 +11,7 @@ namespace Vurbiri.Audio
 		[Space]
         [SerializeField] private AudioSource _audio;
 
-		private IUnsubscriber _unsubscriber;
+		private Unsubscriber _unsubscriber;
 		
 		private void Start() => _unsubscriber = AudioController.Instance.Subscribe(_audioType, v => _audio.volume = v);
         private void OnDestroy() => _unsubscriber.Unsubscribe();

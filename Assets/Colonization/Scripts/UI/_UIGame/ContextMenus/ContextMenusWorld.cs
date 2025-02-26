@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -21,14 +22,14 @@ namespace Vurbiri.Colonization.UI
 
         private GameObject _thisGO;
         private Camera _camera;
-        private ITurn _turn;
+        private bool _isNotPlayer;
         private RectTransform _thisRectTransform;
+        private Unsubscriber _inTurn;
 
         public void Init(ContextMenuSettings settings)
         {
             _thisGO = gameObject;
             _camera = settings.camera;
-            _turn = settings.turn;
             _thisRectTransform = GetComponent<RectTransform>();
 
             _lookAtCamera.Init(_camera);
@@ -49,13 +50,15 @@ namespace Vurbiri.Colonization.UI
             settings.eventBus.EventActorSelect += OnSelectWarrior;
 
             settings.eventBus.EventUnselect += CloseAll;
+
+            _inTurn = settings.turn.Subscribe(OnNextTurn);
         }
 
         private void OnSelectCrossroad(Crossroad crossroad)
         {
             CloseAll();
 
-            if (_turn.CurrentId != PlayerId.Player)
+            if (_isNotPlayer)
                 return;
 
             ToPosition(crossroad.Position);
@@ -67,7 +70,7 @@ namespace Vurbiri.Colonization.UI
         {
             CloseAll();
 
-            if (!actor.IsIdle | _turn.CurrentId != PlayerId.Player)
+            if (!actor.IsIdle | _isNotPlayer)
                 return;
 
             ToPosition(actor.Position);
@@ -91,6 +94,12 @@ namespace Vurbiri.Colonization.UI
                 _thisRectTransform.anchoredPosition = localPoint;
         }
 
+        private void OnNextTurn(ITurn turn)
+        {
+            _isNotPlayer = turn.CurrentId != PlayerId.Player;
+            CloseAll();
+        }
+
         private void EnableLook(bool value)
         {
             if (!_thisGO.activeInHierarchy)
@@ -112,6 +121,7 @@ namespace Vurbiri.Colonization.UI
             _recruitingMenu.EventEnabled -= EnableLook;
             _roadsMenu.EventEnabled -= EnableLook;
             _warriorsMenu.EventEnabled -= EnableLook;
+            _inTurn.Unsubscribe();
         }
 
 #if UNITY_EDITOR

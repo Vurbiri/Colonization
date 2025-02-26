@@ -186,7 +186,7 @@ namespace Vurbiri.Colonization.Actors
         protected virtual void OnValidate()
         {
             if (_rightHand == null)
-                _rightHand = VurbiriEditor.Utility.GetComponentByName<Transform>(this, "RightHand");
+                _rightHand = EUtility.GetComponentInChildren<Transform>(this, "RightHand");
         }
 
         public void SetCountSkillsSFX(int count) => _scriptablesSFX.SetCountSkills(count);

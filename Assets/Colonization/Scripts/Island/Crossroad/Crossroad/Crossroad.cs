@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
         private WaitResult<Hexagon> _waitHexagon;
         private readonly ReactiveValue<bool> _canCancel = new(false);
 
-        private IUnsubscriber _unsubscriber;
+        private Unsubscriber _unsubscriber;
         #endregion
 
         #region Property
@@ -55,7 +55,6 @@ namespace Vurbiri.Colonization
             _prefabs = prefabs;
 
             _eventBus = eventBus;
-            _eventBus.EventStartTurn += OnStartTurn;
 
             _edifice = Object.Instantiate(_prefabs[EdificeId.Signpost], position, rotation, container);
             _edifice.Subscribe(OnSelect, OnUnselect);
@@ -64,12 +63,11 @@ namespace Vurbiri.Colonization
 
         public bool AddHexagon(Hexagon hexagon)
         {
-            _isGate = _isGate || hexagon.IsGate;
+            _isGate |= hexagon.IsGate;
 
-            if (hexagon.IsWater)
-                _countWater++;
+            if (hexagon.IsWater) _countWater++;
 
-            if (_hexagons.Count < (HEX_COUNT - 1) || _countWater < HEX_COUNT)
+            if (_hexagons.Count < (HEX_COUNT - 1) | _countWater < HEX_COUNT)
             {
                 _hexagons.Add(hexagon);
 
@@ -79,14 +77,13 @@ namespace Vurbiri.Colonization
                 return true;
             }
 
-            foreach (var hex in _hexagons)
-                hex.CrossroadRemove(this);
+            for(int i = 0; i < _hexagons.Count; i++)
+                _hexagons[i].CrossroadRemove(this);
             Object.Destroy(_edifice.gameObject);
             return false;
         }
 
         public int GetDefense(Id<PlayerId> playerId) => playerId == _owner ? _defenceWall : -1;
-        public void AttachDefense(IReactive<int> abilityWall) => _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d);
 
         #region Link
         public bool ContainsLink(int id) => _links.ContainsKey(id);
@@ -109,8 +106,8 @@ namespace Vurbiri.Colonization
         public CurrenciesLite ProfitFromPort(int idHex, int add)
         {
             CurrenciesLite profit = new();
-            foreach (var hex in _hexagons)
-                if (hex.TryGetProfit(idHex, true, out int currencyId))
+            for (int i = 0; i < HEX_COUNT; i++)
+                if (_hexagons[i].TryGetProfit(idHex, true, out int currencyId))
                     profit.Add(currencyId, _states.profit + add);
 
             return profit;
@@ -118,10 +115,13 @@ namespace Vurbiri.Colonization
         public CurrenciesLite ProfitFromUrban(int idHex, int compensationRes)
         {
             CurrenciesLite profit = new();
+            Hexagon hex;
             int countEnemy = 0;
 
-            foreach (var hex in _hexagons)
+            for (int i = 0; i < HEX_COUNT; i++)
             {
+                hex = _hexagons[i];
+
                 if (hex.IsEnemy(_owner))
                     countEnemy++;
 
@@ -137,17 +137,10 @@ namespace Vurbiri.Colonization
                 return profit;
             }
 
-            int ratioProfit = Math.Max(_states.profit - Math.Max(countEnemy - _defenceWall, 0), 0);
-            profit.Multiply(ratioProfit);
-
+            profit.Multiply(Mathf.Max(_states.profit - Mathf.Max(countEnemy - _defenceWall, 0), 0));
             return profit;
         }
         #endregion
-
-        private void OnStartTurn(Id<PlayerId> prev, Id<PlayerId> current)
-        {
-            _edifice.ColliderEnable = current == PlayerId.Player;
-        }
 
         #region ISelectable, ICancel
         public void OnSelect()

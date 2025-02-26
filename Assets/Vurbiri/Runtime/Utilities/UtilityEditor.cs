@@ -1,21 +1,25 @@
 //Assets\Vurbiri\Runtime\Utilities\UtilityEditor.cs
 #if UNITY_EDITOR
 
-namespace VurbiriEditor
+namespace Vurbiri
 {
     using System.Collections.Generic;
     using System.Linq;
     using UnityEditor;
     using UnityEngine;
 
-    public static class Utility
+    public static class EUtility
     {
         public const string TYPE_PREFAB = "t:Prefab";
-        private readonly static string[] ASSET_FOLDERS = new string[] { "Assets" };
+        public readonly static string[] ASSET_FOLDERS = new string[] { "Assets" };
 
-        public static T GetComponentByName<T>(this Component self, string name) where T : Component
+        public static T GetComponentInChildren<T>(this Component self, string name) where T : Component
         {
             return self.GetComponentsInChildren<T>().Where(t => t.gameObject.name == name).First();
+        }
+        public static T FindObjectByName<T>(string name) where T : Component
+        {
+            return Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(t => t.gameObject.name == name).First();
         }
 
         public static T FindAnyPrefab<T>() where T : MonoBehaviour

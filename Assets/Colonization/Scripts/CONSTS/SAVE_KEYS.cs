@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Data
         public const string SETTINGS = "stt";
         public const string GAME = "gam";
         public const string TURNS_QUEUE = "tuq";
-        public const string TURNS_DATA = "tqd";
+        public const string TURN_STATE = "tqd";
         public const string PLAYERS = "p_";
         public const string DIPLOMANCY = "dip";
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Vurbiri;
 using Vurbiri.Colonization.Actors;
 
 namespace VurbiriEditor.Colonization.Actors
@@ -27,7 +28,7 @@ namespace VurbiriEditor.Colonization.Actors
 
         public void CreateGUI()
         {
-            List<AnimationClipSettingsScriptable> settings = VurbiriEditor.Utility.FindScriptables<AnimationClipSettingsScriptable>();
+            List<AnimationClipSettingsScriptable> settings = EUtility.FindScriptables<AnimationClipSettingsScriptable>();
 
             if (settings == null || settings.Count == 0 || _treeAnimationClipSettingsWindow == null)
                 return;
@@ -90,7 +91,7 @@ namespace VurbiriEditor.Colonization.Actors
 
             _editors.Clear();
 
-            var warriorsSettings = Utility.FindAnyScriptable<WarriorsSettingsScriptable>();
+            var warriorsSettings = EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
             if (warriorsSettings != null)
                 ActorUtility.OverrideClips(warriorsSettings.Settings);
         }

@@ -25,7 +25,7 @@ namespace VurbiriEditor.Colonization.UI
 		private void OnEnable()
 		{
 			if(_scriptable == null)
-				_scriptable = VurbiriEditor.Utility.FindAnyScriptable<TextColorSettingsScriptable>();
+				_scriptable = Vurbiri.EUtility.FindAnyScriptable<TextColorSettingsScriptable>();
 			
 			_editor = Editor.CreateEditor(_scriptable);		
 		}

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
     {
         private const int SIZE = 64;
 
-        private readonly IUnsubscriber _unsubscriber;
+        private readonly Unsubscriber _unsubscriber;
         private readonly int _cost;
         private readonly string _value;
         private readonly string _hexColorPlus, _hexColorMinus;

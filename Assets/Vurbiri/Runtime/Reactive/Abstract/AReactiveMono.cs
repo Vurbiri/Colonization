@@ -10,7 +10,7 @@ namespace Vurbiri.Reactive
 
         public abstract T Value { get; protected set; }
 
-        public IUnsubscriber Subscribe(Action<T> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<T> action, bool calling = true)
         {
             if (calling)
                 action(Value);

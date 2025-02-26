@@ -43,11 +43,15 @@ namespace Vurbiri.Colonization.Actors
 
             _extentsZ = bounds.extents.z;
 
+            #region Get Services
             _eventBus = SceneServices.Get<GameplayEventBus>();
-            _eventBus.EventStartTurn += OnStartTurn;
+            _diplomacy = SceneServices.Get<Diplomacy>();
 
-            _diplomacy = SceneObjects.Get<Diplomacy>();
-            
+            var turn = SceneServices.Get<ITurn>();
+            turn.Subscribe(OnNextTurn, false);
+            _isPlayerTurn = owner == PlayerId.Player & owner == turn.CurrentId;
+            #endregion
+
             #region Effects
             _effects = new(_abilities);
 
@@ -86,8 +90,6 @@ namespace Vurbiri.Colonization.Actors
             int count = data.effects.Count;
             for (int i = 0; i < count; i++)
                 _effects.AddEffect(data.effects[i]);
-
-            _isPlayerTurn = owner == PlayerId.Player & owner == data.currentPlayerId;
 
             if (_blockState.Enabled)
             {

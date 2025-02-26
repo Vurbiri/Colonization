@@ -8,19 +8,14 @@ namespace Vurbiri.Colonization
     public partial class Crossroad
 	{
         #region Edifice
-        public void Build(Id<PlayerId> playerId, int idBuild, bool isWall)
-        {
-            _isWall = isWall;
-            BuildEdifice(playerId, idBuild);
-        }
         public bool CanUpgrade(Id<PlayerId> playerId)
         {
             return _states.isUpgrade && (_owner == playerId ||
             _states.nextGroupId.Value switch
             {
                 EdificeGroupId.Shrine => IsRoadConnect(playerId),
-                EdificeGroupId.Port => WaterCheck(),
-                EdificeGroupId.Urban => NeighborCheck(playerId),
+                EdificeGroupId.Port   => WaterCheck(),
+                EdificeGroupId.Urban  => NeighborCheck(playerId),
                 _ => false
             });
 
@@ -31,8 +26,8 @@ namespace Vurbiri.Colonization
                 if (_countFreeLink == 0 && !IsRoadConnect(playerId))
                     return false;
 
-                foreach (var hex in _hexagons)
-                    if (hex.IsOwnedByPort)
+                for(int i = 0; i < HEX_COUNT; i++)
+                    if (_hexagons[i].IsOwnedByPort)
                         return false;
 
                 return true;
@@ -59,7 +54,7 @@ namespace Vurbiri.Colonization
             BuildEdifice(playerId, _states.nextId.Value);
             return true;
         }
-        private void BuildEdifice(Id<PlayerId> playerId, int buildId)
+        public void BuildEdifice(Id<PlayerId> playerId, int buildId)
         {
             _owner = playerId;
             _edifice = Object.Instantiate(_prefabs[buildId]).Init(_owner, _isWall, _links, _edifice);
@@ -79,15 +74,16 @@ namespace Vurbiri.Colonization
             return true;
         }
 
+        #endregion
+
+        #region Road
         public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
         public void RoadBuilt(Id<LinkId> id)
         {
             _countFreeLink--;
             _edifice.AddRoad(id, _isWall);
         }
-        #endregion
 
-        #region Road
         public bool IsFullyOwned(Id<PlayerId> playerId)
         {
             if (_links.CountAvailable <= 1)
@@ -118,12 +114,12 @@ namespace Vurbiri.Colonization
         #region Recruiting
         public bool CanRecruitingWarriors(Id<PlayerId> playerId)
         {
-            int busyCount = 0;
-            foreach (var hex in _hexagons)
-                if (!hex.CanActorEnter)
-                    busyCount++;
+            int countUnfit = 0;
+            for (int i = 0; i < HEX_COUNT; i++)
+                if (!_hexagons[i].CanActorEnter)
+                    countUnfit++;
 
-            return busyCount < _hexagons.Count && _owner == playerId && _states.groupId == EdificeGroupId.Port;
+            return countUnfit < HEX_COUNT & _owner == playerId & _states.groupId == EdificeGroupId.Port;
         }
 
         public WaitResult<Hexagon> GetHexagonForRecruiting_Wt(bool isNotDemon = true)
@@ -131,19 +127,20 @@ namespace Vurbiri.Colonization
             _waitHexagon = new();
             List<Hexagon> empty = new(2);
 
-            foreach (var hex in _hexagons)
-                if (hex.CanActorEnter)
-                    empty.Add(hex);
+            for (int i = 0; i < HEX_COUNT; i++)
+                if (_hexagons[i].CanActorEnter)
+                    empty.Add(_hexagons[i]);
 
-            if (empty.Count == 0)
+            int emptyCount = empty.Count;
+            if (emptyCount == 0)
                 return _waitHexagon.Cancel();
 
             Debug.Log("Сразу ли спаунить на одной ???");
-            if (empty.Count == 1)
+            if (emptyCount == 1)
                 return _waitHexagon.SetResult(empty[0]);
 
-            foreach (var hex in empty)
-                hex.TrySetSelectableFree(isNotDemon);
+            for (int i = 0;i < emptyCount; i++)
+                empty[i].TrySetSelectableFree(isNotDemon);
 
             _canCancel.Value = true;
             return _waitHexagon;

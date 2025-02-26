@@ -25,7 +25,7 @@ namespace VurbiriEditor.Colonization
 		private void OnEnable()
 		{
             if (_scriptable == null)
-                _scriptable = VurbiriEditor.Utility.FindAnyScriptable<DiplomacySettingsScriptable>();
+                _scriptable = Vurbiri.EUtility.FindAnyScriptable<DiplomacySettingsScriptable>();
 
             _editor = Editor.CreateEditor(_scriptable, typeof(DiplomacySettingsEditor));		
 		}

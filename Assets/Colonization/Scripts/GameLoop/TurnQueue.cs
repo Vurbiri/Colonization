@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
@@ -20,7 +21,7 @@ namespace Vurbiri.Colonization
         
         public override ITurn Value { get => this; protected set { } }
 
-        public TurnQueue()
+        private TurnQueue()
         {
             int[] array = new int[PlayerId.PlayersCount];
             Debug.Log("Раскомментить в TurnQueue");
@@ -33,7 +34,7 @@ namespace Vurbiri.Colonization
             _queue[i] = PlayerId.Demons;
         }
 
-        public TurnQueue(IReadOnlyList<int> queue, IReadOnlyList<int> data)
+        private TurnQueue(IReadOnlyList<int> queue, IReadOnlyList<int> data)
         {
             if ((queue == null || queue.Count != PlayerId.Count) | (data == null || data.Count != 3))
                 throw new ArgumentException($"IReadOnlyList<int> queue = {queue} | IReadOnlyList<int> turns = {data}");
@@ -43,6 +44,15 @@ namespace Vurbiri.Colonization
 
             int i = 0;
             _prevId = data[i++]; _currentIndex = data[i++]; _turn = data[i];
+        }
+
+        public static TurnQueue Create(ProjectSaveData saveData)
+        {
+            bool isLoad = saveData.TryGetTurnQueueData(out int[] queue, out int[] data);
+            TurnQueue turn = isLoad ? new(queue, data) : new();
+            saveData.TurnStateBind(turn, !isLoad);
+
+            return turn;
         }
 
         public void Next()
@@ -79,7 +89,5 @@ namespace Vurbiri.Colonization
         }
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
-
-
     }
 }

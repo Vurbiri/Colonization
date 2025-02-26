@@ -198,9 +198,9 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
-        private void OnStartTurn(Id<PlayerId> prev, Id<PlayerId> current)
+        private void OnNextTurn(ITurn turn)
         {
-            if (_owner == prev)
+            if (_owner == turn.PreviousId)
             {
                 _currentHP.Next();
                 _currentAP.Next();
@@ -212,7 +212,7 @@ namespace Vurbiri.Colonization.Actors
                 return;
             }
 
-            if (_owner == current)
+            if (_owner == turn.CurrentId)
             {
                 _isPlayerTurn = _thisCollider.enabled = _owner == PlayerId.Player;
 

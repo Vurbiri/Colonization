@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
     {
         [SerializeField] private SpriteRenderer _moveSprite;
 
-        private IUnsubscriber _unsubscriber;
+        private Unsubscriber _unsubscriber;
 
         public bool IsVisible => _moveSprite.isVisible;
 

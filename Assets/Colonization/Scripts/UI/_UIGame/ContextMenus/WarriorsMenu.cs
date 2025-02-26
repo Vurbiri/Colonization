@@ -95,7 +95,7 @@ namespace Vurbiri.Colonization.UI
             if(_buttonsSkill == null || _buttonsSkill.Length == 0)
                 _buttonsSkill = GetComponentsInChildren<ButtonSkill>();
             if (_warriorsSettings == null)
-                _warriorsSettings = VurbiriEditor.Utility.FindAnyScriptable<WarriorsSettingsScriptable>();
+                _warriorsSettings = EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
             if (_buttonBlock == null)
                 _buttonBlock = GetComponentInChildren<ButtonBlock>();
         }

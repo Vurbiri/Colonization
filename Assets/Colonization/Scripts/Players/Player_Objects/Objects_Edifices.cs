@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Data;
+using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
@@ -26,11 +27,11 @@ namespace Vurbiri.Colonization
                     values[EdificeGroupId.Urban]  = urbans  = new();
                 }
 
-                public Edifices(Id<PlayerId> playerId, IReadOnlyDictionary<int, EdificeLoadData[]> data, Crossroads crossroads)
+                public Edifices(Id<PlayerId> playerId, IReadOnlyDictionary<int, EdificeLoadData[]> data, Crossroads crossroads, IReactive<int> abilityWall)
                 {
-                    values[EdificeGroupId.Shrine] = CreateEdifices(ref shrines, data[EdificeGroupId.Shrine], playerId, crossroads);
-                    values[EdificeGroupId.Port]   = CreateEdifices(ref ports,   data[EdificeGroupId.Port],   playerId, crossroads);
-                    values[EdificeGroupId.Urban]  = CreateEdifices(ref urbans,  data[EdificeGroupId.Urban],  playerId, crossroads);
+                    values[EdificeGroupId.Shrine] = CreateEdifices(ref shrines, data[EdificeGroupId.Shrine], playerId, crossroads, abilityWall);
+                    values[EdificeGroupId.Port]   = CreateEdifices(ref ports,   data[EdificeGroupId.Port],   playerId, crossroads, abilityWall);
+                    values[EdificeGroupId.Urban]  = CreateEdifices(ref urbans,  data[EdificeGroupId.Urban],  playerId, crossroads, abilityWall);
                 }
 
                 public void Dispose()
@@ -40,7 +41,7 @@ namespace Vurbiri.Colonization
                             values[i][j].Dispose();
                 }
 
-                private ReactiveList<Crossroad> CreateEdifices(ref ReactiveList<Crossroad> values, EdificeLoadData[] loadData, Id<PlayerId> playerId, Crossroads crossroads)
+                private ReactiveList<Crossroad> CreateEdifices(ref ReactiveList<Crossroad> values, EdificeLoadData[] loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)
                 {
                     int count = loadData.Length;
                     values = new(count);
@@ -51,7 +52,9 @@ namespace Vurbiri.Colonization
                     {
                         data = loadData[i];
                         crossroad = crossroads[data.key];
-                        crossroad.Build(playerId, data.id, data.isWall);
+                        crossroad.BuildEdifice(playerId, data.id);
+                        if (data.isWall)
+                            crossroad.BuyWall(playerId, abilityWall);
                         values.Add(crossroad);
                     }
 

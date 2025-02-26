@@ -63,7 +63,7 @@ namespace Vurbiri
         public void OnValidate()
         {
             if (_audioMixer == null)
-                _audioMixer = VurbiriEditor.Utility.FindAnyAsset<AudioMixer>();
+                _audioMixer = EUtility.FindAnyAsset<AudioMixer>();
 
             _nameParams = new(IdType<T>.Names);
         }

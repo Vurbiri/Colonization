@@ -28,7 +28,7 @@ namespace VurbiriEditor.Colonization.Actors
             if (_demonsSettings == null)
             {
                 Debug.LogWarning("Set DemonsSettingsScriptable");
-                _demonsSettings = VurbiriEditor.Utility.FindAnyScriptable<DemonsSettingsScriptable>();
+                _demonsSettings = Vurbiri.EUtility.FindAnyScriptable<DemonsSettingsScriptable>();
                 if (_demonsSettings == null)
                     return;
             }

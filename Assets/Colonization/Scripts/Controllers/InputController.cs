@@ -15,8 +15,15 @@ namespace Vurbiri.Colonization.Controllers
         private readonly InputControlAction _inputActions;
 
         private ISelectable _selectObj;
+        private InputControlAction.GameplayActions _gameplayMap;
+        private InputControlAction.CameraActions _cameraMap;
+        private InputControlAction.UIActions _UIMap;
 
-        public InputControlAction.CameraActions CameraActions => _inputActions.Camera;
+        public InputControlAction.CameraActions CameraActions => _cameraMap;
+
+        public bool GameplayMap { get => _gameplayMap.enabled;  set { if (value) _gameplayMap.Enable(); else _gameplayMap.Disable(); } }
+        public bool CameraMap { get => _cameraMap.enabled; set { if (value) _cameraMap.Enable(); else _cameraMap.Disable(); } }
+        public bool UIMap { get => _UIMap.enabled; set { if (value) _UIMap.Enable(); else _UIMap.Disable(); } }
 
         public InputController(Camera camera, Settings settings)
         {
@@ -27,25 +34,24 @@ namespace Vurbiri.Colonization.Controllers
             _inputActions = new();
             _inputActions.Enable();
 
-            DisableGameplayMap();
+            _gameplayMap = _inputActions.Gameplay;
+            _cameraMap = _inputActions.Camera;
+            _UIMap = _inputActions.UI;
 
             //_inputActions.Gameplay.LeftClick.performed += OnLeftClick;
             _inputActions.Gameplay.RightClick.performed += OnRightClick;
         }
 
-        public void DisableGameplayMap()
+        public void EnableAll()
         {
-            _inputActions.Gameplay.Disable();
-            _inputActions.Camera.Disable();
+            _gameplayMap.Enable(); _cameraMap.Enable(); _UIMap.Enable();
+        }
+        public void DisableAll()
+        {
+            _gameplayMap.Disable(); _cameraMap.Disable(); _UIMap.Disable();
         }
 
-        public void EnableGameplayMap()
-        {
-            _inputActions.Gameplay.Enable();
-            _inputActions.Camera.Enable();
-        }
-
-        private void OnRightClick(CallbackContext ctx)
+        public void OnRightClick(CallbackContext ctx)
         {
             Ray ray = _camera.ScreenPointToRay(ctx.ReadValue<Vector2>());
             if (Physics.Raycast(ray, out RaycastHit hit, _distance, _layerMask) && hit.collider.TryGetComponent(out ISelectable selectObj))

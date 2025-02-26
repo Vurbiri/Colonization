@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization.Data
         [JsonConstructor]
         public PlayerSaveData() { _isLoaded = true; }
 
-        public PlayerLoadData ToLoadData(Id<PlayerId> currentPlayerId) => new(_resources, _edifices, _roads, _warriors, currentPlayerId);
+        public PlayerLoadData ToLoadData => new(_resources, _edifices, _roads, _warriors);
 
         #region Bind
         public void CurrenciesBind(IReactive<int, int> currencies)
@@ -60,7 +60,37 @@ namespace Vurbiri.Colonization.Data
         public void EdificesBind(IReadOnlyList<IReactiveList<IArrayable>> edificesReactive)
         {
             for(int i = 0; i < EdificeGroupId.Count; i++)
-                EdificesBind(edificesReactive[i], _edifices[i]);
+                Bind(edificesReactive[i], _edifices[i]);
+
+            #region Local Bind(..)
+            //==============================
+            void Bind(IReactiveList<IArrayable> edificesReactive, List<int[]> edifices)
+            {
+                _unsubscribers += edificesReactive.Subscribe(OnEdifice, false);
+
+                #region Local OnEdifice(..)
+                //==============================
+                void OnEdifice(int index, IArrayable crossroad, TypeEvent operation)
+                {
+                    switch (operation)
+                    {
+                        case TypeEvent.Add:
+                            edifices.Add(crossroad.ToArray());
+                            break;
+                        case TypeEvent.Remove:
+                            edifices.RemoveAt(index);
+                            break;
+                        case TypeEvent.Change:
+                            crossroad.ToArray(edifices[index]);
+                            break;
+                        default:
+                            return;
+                    }
+                    _subscriber.Invoke(this);
+                }
+                #endregion
+            }
+            #endregion
         }
         public void RoadsBind(IReactive<int[][][]> roadsReactive)
         {
@@ -104,7 +134,7 @@ namespace Vurbiri.Colonization.Data
         #endregion
 
         #region IReactive
-        public IUnsubscriber Subscribe(Action<PlayerSaveData> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<PlayerSaveData> action, bool calling = true)
         {
             if (calling)
                 action(this);
@@ -118,31 +148,5 @@ namespace Vurbiri.Colonization.Data
             _unsubscribers.Unsubscribe();
         }
 
-        private void EdificesBind(IReactiveList<IArrayable> edificesReactive, List<int[]> edifices)
-        {
-            _unsubscribers += edificesReactive.Subscribe(OnEdifice, false);
-
-            #region Local OnEdifice(..)
-            //==============================
-            void OnEdifice(int index, IArrayable crossroad, TypeEvent operation)
-            {
-                switch (operation)
-                {
-                    case TypeEvent.Add:
-                        edifices.Add(crossroad.ToArray());
-                        break;
-                    case TypeEvent.Remove:
-                        edifices.RemoveAt(index);
-                        break;
-                    case TypeEvent.Change:
-                        crossroad.ToArray(edifices[index]);
-                        break;
-                    default:
-                        return;
-                }
-                _subscriber.Invoke(this);
-            }
-            #endregion
-        }
     }
 }

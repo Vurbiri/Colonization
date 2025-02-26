@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             public readonly ListReactiveItems<Actor> warriors = new();
             public readonly HashSet<int> perks;
 
-            public Objects(Id<PlayerId> playerId, Id<PlayerId> currentPlayerId, PlayerSaveData data, Players.Settings settings)
+            public Objects(Id<PlayerId> playerId, PlayerSaveData data, Players.Settings settings)
             {
                 id = playerId;
 
@@ -31,17 +31,18 @@ namespace Vurbiri.Colonization
 
                 abilities = settings.states;
                 roads = settings.roadsFactory.Create().Init(playerId, visual.color);
+
                 _prices = settings.prices;
                 _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
 
                 if (data.IsLoaded)
                 {
-                    PlayerLoadData loadData = data.ToLoadData(currentPlayerId);
+                    PlayerLoadData loadData = data.ToLoadData;
                     Crossroads crossroads = SceneObjects.Get<Crossroads>();
                     Land land = SceneObjects.Get<Land>();
 
                     resources = new(loadData.resources, abilities[PlayerAbilityId.MaxMainResources], abilities[PlayerAbilityId.MaxBlood]);
-                    edifices = new(playerId, loadData.edifices, crossroads);
+                    edifices = new(playerId, loadData.edifices, crossroads, abilities[PlayerAbilityId.WallDefence]);
                     roads.Restoration(loadData.roads, crossroads);
 
                     int count = loadData.warriors.Length;

@@ -3,6 +3,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 {
     using UnityEditor;
     using UnityEngine;
+    using Vurbiri;
     using Vurbiri.Colonization.Characteristics;
     using static CONST_EDITOR;
 
@@ -22,7 +23,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         public void CreateGUI()
         {
-            PlayerAbilitiesScriptable abilities = Utility.FindAnyScriptable<PlayerAbilitiesScriptable>();
+            PlayerAbilitiesScriptable abilities = EUtility.FindAnyScriptable<PlayerAbilitiesScriptable>();
 
             if (abilities == null)
             {

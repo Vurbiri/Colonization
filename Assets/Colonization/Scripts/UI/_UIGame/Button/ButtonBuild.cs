@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
 
         private ACurrencies _cost;
         private ACurrencies _cash;
-        private IUnsubscriber _unsubscriber;
+        private Unsubscriber _unsubscriber;
         private string _caption;
 
         public virtual void Init(Vector3 localPosition, ButtonSettings settings, ACurrencies cost, UnityAction action)

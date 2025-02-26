@@ -118,7 +118,7 @@ namespace Vurbiri.Reactive.Collections
         }
 
         #region IReadOnlyReactiveList
-        public IUnsubscriber Subscribe(Action<int, T, TypeEvent> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<int, T, TypeEvent> action, bool calling = true)
         {
             if (calling)
             {

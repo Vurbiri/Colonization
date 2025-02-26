@@ -9,8 +9,8 @@ namespace Vurbiri.Reactive
         protected TA _valueA;
         protected TB _valueB;
 
-        protected IUnsubscriber _unsubscriberA;
-        protected IUnsubscriber _unsubscriberB;
+        protected Unsubscriber _unsubscriberA;
+        protected Unsubscriber _unsubscriberB;
 
         protected Subscriber<TA, TB> _subscriber = new();
 
@@ -29,7 +29,7 @@ namespace Vurbiri.Reactive
             _unsubscriberB = reactiveB.Subscribe(OnChangeValueB);
         }
 
-        public IUnsubscriber Subscribe(Action<TA, TB> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<TA, TB> action, bool calling = true)
         {
             if (calling)
                 action(_valueA, _valueB);

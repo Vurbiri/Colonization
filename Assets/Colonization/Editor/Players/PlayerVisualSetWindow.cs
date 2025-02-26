@@ -48,7 +48,7 @@ namespace VurbiriEditor.Colonization
         private void OnValidate()
         {
             if(_visualSet == null)
-                _visualSet = VurbiriEditor.Utility.FindAnyScriptable<PlayerVisualSetScriptable>();
+                _visualSet = Vurbiri.EUtility.FindAnyScriptable<PlayerVisualSetScriptable>();
         }
 
     }

@@ -12,9 +12,8 @@ namespace Vurbiri.Colonization.Data
         public readonly int currentAP;
 		public readonly int move;
         public readonly IReadOnlyList<ReactiveEffect> effects;
-        public readonly Id<PlayerId> currentPlayerId;
 
-        public ActorLoadData(int[][] actorData, Id<PlayerId> currentPlayerId)
+        public ActorLoadData(int[][] actorData)
         {
             int n = 0, m = 0;
             keyHex = new(actorData[n++]);
@@ -30,7 +29,6 @@ namespace Vurbiri.Colonization.Data
                 effects[l] = new(actorData[n]);
 
             this.effects = effects;
-            this.currentPlayerId = currentPlayerId;
         }
     }
 }

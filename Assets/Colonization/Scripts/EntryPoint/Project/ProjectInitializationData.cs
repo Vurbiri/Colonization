@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
             if(logOnPanel == null)
                 logOnPanel = FindAnyObjectByType<LogOnPanel>();
             if (settingsColorScriptable == null)
-                settingsColorScriptable = VurbiriEditor.Utility.FindAnyScriptable<TextColorSettingsScriptable>();
+                settingsColorScriptable = EUtility.FindAnyScriptable<TextColorSettingsScriptable>();
         }
 #endif
     }

@@ -7,7 +7,7 @@ namespace Vurbiri.Reactive
     {
         private Action<T> actions;
 
-        public IUnsubscriber Add(Action<T> action)
+        public Unsubscriber Add(Action<T> action)
         {
             actions += action;
             return new Unsubscriber<Action<T>>(this, action);
@@ -24,7 +24,7 @@ namespace Vurbiri.Reactive
     {
         private Action<TA, TB> actions;
 
-        public IUnsubscriber Add(Action<TA, TB> action)
+        public Unsubscriber Add(Action<TA, TB> action)
         {
             actions += action;
             return new Unsubscriber<Action<TA, TB>>(this, action);
@@ -41,7 +41,7 @@ namespace Vurbiri.Reactive
     {
         private Action<TA, TB, TC> actions;
 
-        public IUnsubscriber Add(Action<TA, TB, TC> action)
+        public Unsubscriber Add(Action<TA, TB, TC> action)
         {
             actions += action;
             return new Unsubscriber<Action<TA, TB, TC>>(this, action);
@@ -58,7 +58,7 @@ namespace Vurbiri.Reactive
     {
         private Action<TA, TB, TC, TD> actions;
 
-        public IUnsubscriber Add(Action<TA, TB, TC, TD> action)
+        public Unsubscriber Add(Action<TA, TB, TC, TD> action)
         {
             actions += action;
             return new Unsubscriber<Action<TA, TB, TC, TD>>(this, action);

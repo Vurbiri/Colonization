@@ -17,11 +17,11 @@ namespace Vurbiri.Colonization
         {
             
             if (prefabHex == null)
-                prefabHex = VurbiriEditor.Utility.FindAnyPrefab<Hexagon>();
+                prefabHex = EUtility.FindAnyPrefab<Hexagon>();
             if (prefabHexMark == null)
-                prefabHexMark = VurbiriEditor.Utility.FindAnyPrefab<HexagonMark>();
+                prefabHexMark = EUtility.FindAnyPrefab<HexagonMark>();
             if (surfaces == null)
-                surfaces = VurbiriEditor.Utility.FindAnyScriptable<SurfacesScriptable>();
+                surfaces = EUtility.FindAnyScriptable<SurfacesScriptable>();
             else
                 surfaces.OnValidate();
             if (landMesh == null)

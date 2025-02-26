@@ -11,7 +11,7 @@ namespace Vurbiri.UI
         [SerializeField] protected Files _file;
         [SerializeField] private string _key;
 
-        private IUnsubscriber _unsubscriber;
+        private Unsubscriber _unsubscriber;
 
         public void Init(Vector3 localPosition, HintGlobal hint, Color color, UnityAction action)
         {

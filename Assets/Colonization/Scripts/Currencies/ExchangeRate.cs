@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
                 _exchange[i] = _chance.Select(_min, _max);
         }
 
-        public IUnsubscriber Subscribe(Action<int, int> action, bool calling = true) => _exchange.Subscribe(action, calling);
+        public Unsubscriber Subscribe(Action<int, int> action, bool calling = true) => _exchange.Subscribe(action, calling);
 
         public void Dispose()
         {

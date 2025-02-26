@@ -47,7 +47,7 @@ namespace Vurbiri.TextLocalization.Editor
             //=================================
             void OnButtonNew()
             {
-                string path = EditorUtility.SaveFilePanelInProject("New settings", SETTINGS_NAME, ASSET_EXP, "", SETTINGS_PATH);
+                string path = UnityEditor.EditorUtility.SaveFilePanelInProject("New settings", SETTINGS_NAME, ASSET_EXP, "", SETTINGS_PATH);
                 if (string.IsNullOrEmpty(path))
                     return;
 

@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         private const string KEY = "Cancel";
 
         private ICancel _cancelledObj;
-        private IUnsubscriber _unLanguage, _unAction;
+        private Unsubscriber _unLanguage, _unAction;
 
         public void Init(HintGlobal hint)
         {

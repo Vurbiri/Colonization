@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
         private CustomMesh _customMesh;
         private Dictionary<Key, HexagonMesh> _hexagons;
 
-        public void Init()
+        public LandMesh Init()
         {
             _thisMeshFilter = GetComponent<MeshFilter>();
             _hexagons = new(MAX_HEXAGONS);
@@ -35,6 +35,8 @@ namespace Vurbiri.Colonization
             int step = _meshSettings.coastSteps >> 1;
             float waterLevel = -(_meshSettings.coastSize.x * (_meshSettings.coastSteps - step) + _meshSettings.coastSize.y * step);
             _waterTransform.localPosition = new(0f, waterLevel, 0f);
+
+            return this;
         }
 
         public void AddHexagon(Key key, Vector3 position, Color32 color, bool isWater)

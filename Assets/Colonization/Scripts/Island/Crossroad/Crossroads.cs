@@ -24,23 +24,23 @@ namespace Vurbiri.Colonization
             _eventBus = eventBus;
         }
 
-        public void CreateCrossroads(Vector3 position, Hexagon hex, bool isLastCircle)
+        public void CreateCrossroads(Vector3 positionHex, Hexagon hex, bool isLastCircle)
         {
             Crossroad cross;
             Key key;
-            Vector3 positionCross;
+            Vector3 position;
             for (int i = 0; i < HEX.SIDES; i++)
             {
-                positionCross = HEX_VERTICES[i] + position;
+                position = HEX_VERTICES[i] + positionHex;
 
-                key = positionCross.CrossPositionToKey();
+                key = position.CrossPositionToKey();
 
                 if (!_crossroads.TryGetValue(key, out cross))
                 {
                     if (isLastCircle)
                         continue;
 
-                    cross = new(key, _container, positionCross, i % 2 == 0 ? ANGLE_180 : ANGLE_0, _prefabs, _eventBus);
+                    cross = new(key, _container, position, i % 2 == 0 ? ANGLE_180 : ANGLE_0, _prefabs, _eventBus);
                     _crossroads.Add(key, cross);
                 }
 

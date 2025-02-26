@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Reactive
 {
-    public class Unsubscribers : IUnsubscriber
+    public class Unsubscribers : Unsubscriber
     {
-        private readonly List<IUnsubscriber> _unsubscribers;
+        private readonly List<Unsubscriber> _unsubscribers;
 
         public Unsubscribers() => _unsubscribers = new();
         public Unsubscribers(int capacity) => _unsubscribers = new(capacity);
-        public Unsubscribers(IUnsubscriber unsubscriber)
+        public Unsubscribers(Unsubscriber unsubscriber)
         {
             _unsubscribers = new()
             {
@@ -17,7 +17,7 @@ namespace Vurbiri.Reactive
             };
         }
 
-        public void Unsubscribe()
+        public override void Unsubscribe()
         {
             int count = _unsubscribers.Count;
             for (int i = 0; i < count; i++)
@@ -26,7 +26,7 @@ namespace Vurbiri.Reactive
             _unsubscribers.Clear();
         }
 
-        public static Unsubscribers operator +(Unsubscribers unsubscribers, IUnsubscriber unsubscriber)
+        public static Unsubscribers operator +(Unsubscribers unsubscribers, Unsubscriber unsubscriber)
         {
             if (unsubscribers == null)
                 return new(unsubscriber);

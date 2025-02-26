@@ -23,9 +23,9 @@ namespace Vurbiri.Colonization
         public IReactiveList<Crossroad> Ports => _obj.edifices.ports;
         public IReactiveList<Crossroad> Urbans => _obj.edifices.urbans;
 
-        public Player(Id<PlayerId> playerId, Id<PlayerId> currentPlayerId, PlayerSaveData data, Players.Settings settings)
+        public Player(Id<PlayerId> playerId, PlayerSaveData data, Players.Settings settings)
         {
-            _obj = new(playerId, currentPlayerId, data, settings);
+            _obj = new(playerId, data, settings);
 
             _exchangeRate = new(_obj.abilities);
             _coroutines = SceneServices.Get<Coroutines>();
