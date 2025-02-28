@@ -8,14 +8,14 @@ namespace Vurbiri.Reactive
 {
     [Serializable]
     [JsonObject(MemberSerialization.OptIn)]
-    public class ReactiveValues<TA, TB> : IReadOnlyReactive<TA, TB>
+    public class ReactiveValues<TA, TB> : IReactiveValue<TA, TB>
     {
         [SerializeField, JsonProperty("v1")]
         protected TA _valueA;
         [SerializeField, JsonProperty("v2")]
         protected TB _valueB;
 
-        protected Subscriber<TA, TB> _subscriber = new();
+        protected Subscriber<TA, TB> _subscriber;
 
         private readonly IEqualityComparer<TA> _comparerA;
         private readonly IEqualityComparer<TB> _comparerB;

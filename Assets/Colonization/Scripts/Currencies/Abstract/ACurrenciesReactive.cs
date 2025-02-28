@@ -10,8 +10,8 @@ namespace Vurbiri.Colonization
     {
         protected ACurrency[] _values = new ACurrency[countAll];
         protected ReactiveValue<int> _amount = new(0);
-        protected IReadOnlyReactive<int> _maxValueMain, _maxValueBlood;
-        private readonly Subscriber<int, int> _subscriber = new();
+        protected IReactiveValue<int> _maxValueMain, _maxValueBlood;
+        private Subscriber<int, int> _subscriber;
 
         public override int Amount => _amount.Value;
         public IReactive<int> AmountReactive => _amount;
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
         public override int this[Id<CurrencyId> id] { get => _values[id.Value].Value; }
 
         #region Constructions
-        public ACurrenciesReactive(IReadOnlyList<int> array, IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood)
+        public ACurrenciesReactive(IReadOnlyList<int> array, IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood)
         {
             _maxValueMain = maxValueMain;
             _maxValueBlood = maxValueBlood;
@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization
 
             _amount.SilentValue = amount;
         }
-        public ACurrenciesReactive(ACurrencies other, IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood)
+        public ACurrenciesReactive(ACurrencies other, IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood)
         {
             _maxValueMain = maxValueMain;
             _maxValueBlood = maxValueBlood;
@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
             _amount.SilentValue = other.Amount;
         }
 
-        public ACurrenciesReactive(IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood)
+        public ACurrenciesReactive(IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood)
         {
             _maxValueMain = maxValueMain;
             _maxValueBlood = maxValueBlood;
@@ -192,7 +192,7 @@ namespace Vurbiri.Colonization
             }
         }
         //*******************************************************
-        protected abstract class ACurrency : AReactive<int>, IDisposable, IEquatable<ACurrency>, IComparable<ACurrency>
+        protected abstract class ACurrency : AReactiveValue<int>, IDisposable, IEquatable<ACurrency>, IComparable<ACurrency>
         {
             protected int _value;
 

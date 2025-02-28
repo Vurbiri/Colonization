@@ -13,20 +13,16 @@ namespace Vurbiri.Colonization
         private readonly Player _player;
         private readonly PlayerAI[] _playersAI = new PlayerAI[CountAI];
 
-        private readonly GameplayEventBus _eventBus;
-
         public Player Player => _player;
 
         #region Constructor
-        public Players(Settings settings, ProjectSaveData saveData, GameplayEventBus eventBus)
+        public Players(Settings settings, ProjectSaveData saveData)
         {
-            _eventBus = eventBus;
-
             PlayersSaveData playersData = saveData.PlayersSaveData;
 
             _player = new Player(0, playersData[0], settings);
-            for (int i = 0; i < CountAI; i++)
-                _playersAI[i] = new(i, playersData[i], settings);
+            for (int i = 0, j = AI_01; i < CountAI; i++, j++)
+                _playersAI[i] = new(j, playersData[j], settings);
 
             playersData.Save(true);
         }

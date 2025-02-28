@@ -11,7 +11,7 @@ namespace Vurbiri.Reactive.Collections
         protected int _capacity = 4;
         protected readonly ReactiveValue<int> _count = new(0);
 
-        protected Subscriber<T, TypeEvent> _subscriber = new();
+        protected Subscriber<T, TypeEvent> _subscriber;
 
         public T this[int index]
         {
@@ -26,7 +26,7 @@ namespace Vurbiri.Reactive.Collections
 
         public int Count => _count;
 
-        public IReadOnlyReactive<int> CountReactive => _count;
+        public IReactiveValue<int> CountReactive => _count;
 
         #region Constructors
         public ListReactiveItems()

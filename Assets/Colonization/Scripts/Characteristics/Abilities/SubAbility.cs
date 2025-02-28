@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.Characteristics
             set => Change(value);
         }
 
-        public SubAbility(AAbility<TId> self, IReadOnlyReactive<int> max, IReadOnlyReactive<int> restore) : base(self)
+        public SubAbility(AAbility<TId> self, IReactiveValue<int> max, IReactiveValue<int> restore) : base(self)
         {
             _modifiers[TypeModifierId.BasePercent] = OnBasePercent;
             _modifiers[TypeModifierId.Addition] = OnAddition;

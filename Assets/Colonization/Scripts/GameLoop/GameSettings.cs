@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.Data
         }
 
         public void Save(bool saveToFile = true, Action<bool> callback = null) 
-                    => _coroutines.Run(_storage.Save_Cn(SAVE_KEYS.GAME, _data, saveToFile, callback));
+                    => _storage.Save(SAVE_KEYS.GAME, _data, saveToFile, callback);
 
         public void StartGame()
         {

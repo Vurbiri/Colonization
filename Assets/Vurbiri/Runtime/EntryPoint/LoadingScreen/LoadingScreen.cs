@@ -47,7 +47,7 @@ namespace Vurbiri.UI
             _self.SetActive(isOn);
         }
 
-        public WaitActivate SmoothOn_Wt()
+        public WaitActivate SmoothOn_Wait()
         {
             WaitActivate wait = new();
 
@@ -86,7 +86,7 @@ namespace Vurbiri.UI
             #endregion
         }
 
-        public WaitActivate SmoothOff_Wt()
+        public WaitActivate SmoothOff_Wait()
         {
             WaitActivate wait = new();
 

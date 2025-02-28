@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Reactive
 {
-    public class ReactiveCombination<TA, TB> : IReadOnlyReactive<TA, TB>, IDisposable
+    public class ReactiveCombination<TA, TB> : IReactiveValue<TA, TB>, IDisposable
     {
         protected TA _valueA;
         protected TB _valueB;
@@ -12,7 +12,7 @@ namespace Vurbiri.Reactive
         protected Unsubscriber _unsubscriberA;
         protected Unsubscriber _unsubscriberB;
 
-        protected Subscriber<TA, TB> _subscriber = new();
+        protected Subscriber<TA, TB> _subscriber;
 
         private readonly IEqualityComparer<TA> _comparerA;
         private readonly IEqualityComparer<TB> _comparerB;

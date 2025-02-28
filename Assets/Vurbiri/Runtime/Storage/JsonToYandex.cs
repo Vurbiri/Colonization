@@ -13,6 +13,7 @@ namespace Vurbiri
 
         public override bool Init(IReadOnlyDIContainer container)
         {
+            Init(container.Get<Coroutines>());
             _ysdk = container.Get<YandexSDK>();
             return _ysdk.IsLogOn;
         }
@@ -43,6 +44,6 @@ namespace Vurbiri
             callback?.Invoke(false);
         }
 
-        protected override WaitResult<bool> SaveToFile_Wt() => _ysdk.Save(_key, Serialize(_saved));
+        protected override WaitResult<bool> SaveToFile_Wait() => _ysdk.Save(_key, Serialize(_saved));
     }
 }

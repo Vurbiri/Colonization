@@ -10,8 +10,8 @@ namespace Vurbiri.Colonization.Characteristics
     {
         private readonly IdArray<TId, AAbility<TId>> _abilities = new();
 
-        public IReadOnlyReactive<int> this[int index] => _abilities[index];
-        public IReadOnlyReactive<int> this[Id<TId> id] => _abilities[id];
+        public IReactiveValue<int> this[int index] => _abilities[index];
+        public IReactiveValue<int> this[Id<TId> id] => _abilities[id];
 
         public int Count => AbilityId<TId>.Count;
 
@@ -44,6 +44,9 @@ namespace Vurbiri.Colonization.Characteristics
             return ability;
         }
 
+
+        public IAbility GetAbility(Id<TId> stateId) => _abilities[stateId];
+
         public bool IsGreater(Id<TId> stateId, int value) => _abilities[stateId].Value > value;
         public bool IsLess(Id<TId> stateId, int value) => _abilities[stateId].Value < value;
 
@@ -52,7 +55,7 @@ namespace Vurbiri.Colonization.Characteristics
         public int AddPerk(IPerk perk) => _abilities[perk.TargetAbility].AddModifier(perk);
         public int RemovePerk(IPerk perk) => _abilities[perk.TargetAbility].RemoveModifier(perk);
 
-        public IEnumerator<IReadOnlyReactive<int>> GetEnumerator()
+        public IEnumerator<IReactiveValue<int>> GetEnumerator()
         {
             for (int i = 0; i < AbilityId<TId>.Count; i++)
                 yield return _abilities[i];

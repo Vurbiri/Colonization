@@ -38,8 +38,8 @@ namespace Vurbiri.Colonization.Controllers
             _cameraMap = _inputActions.Camera;
             _UIMap = _inputActions.UI;
 
-            //_inputActions.Gameplay.LeftClick.performed += OnLeftClick;
-            _inputActions.Gameplay.RightClick.performed += OnRightClick;
+            //_inputActions.Gameplay.LeftClick.performed += OnClick;
+            _inputActions.Gameplay.RightClick.performed += OnClick;
         }
 
         public void EnableAll()
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.Controllers
             _gameplayMap.Disable(); _cameraMap.Disable(); _UIMap.Disable();
         }
 
-        public void OnRightClick(CallbackContext ctx)
+        public void OnClick(CallbackContext ctx)
         {
             Ray ray = _camera.ScreenPointToRay(ctx.ReadValue<Vector2>());
             if (Physics.Raycast(ray, out RaycastHit hit, _distance, _layerMask) && hit.collider.TryGetComponent(out ISelectable selectObj))

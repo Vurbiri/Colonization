@@ -5,10 +5,10 @@ namespace Vurbiri.Colonization.Data
     {
         public const string PROJECT = "CLN";
 
-        public const string SETTINGS = "stt";
+        public const string SETTINGS_P = "stp";
+        public const string SETTINGS_V = "stv";
         public const string GAME = "gam";
         public const string TURNS_QUEUE = "tuq";
-        public const string TURN_STATE = "tqd";
         public const string PLAYERS = "p_";
         public const string DIPLOMANCY = "dip";
 

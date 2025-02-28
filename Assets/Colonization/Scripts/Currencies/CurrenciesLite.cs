@@ -41,6 +41,16 @@ namespace Vurbiri.Colonization
             _amount += value;
         }
 
+        public void AddFrom(CurrenciesLite other)
+        {
+            if (other._amount == 0)
+                return;
+
+            for (int i = 0; i < countAll; i++)
+                _values[i] += other._values[i];
+            _amount += other._amount;
+        }
+
         public void Multiply(int ratio)
         {
             if (_amount == 0)
@@ -56,6 +66,20 @@ namespace Vurbiri.Colonization
         {
             _values[Random.Range(0, countMain)] += value;
             _amount += value;
+        }
+
+        public static CurrenciesLite operator +(CurrenciesLite a, CurrenciesLite b)
+        {
+            if(a == null | b == null) return null;
+
+            if (a._amount == 0) return b;
+            if (b._amount == 0) return a;
+
+            for (int i = 0; i < countAll; i++)
+                a._values[i] += b._values[i];
+            a._amount += b._amount;
+
+            return a;
         }
 
         #region ISerializationCallbackReceiver

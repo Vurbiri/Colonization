@@ -122,7 +122,7 @@ namespace Vurbiri.Colonization
             return countUnfit < HEX_COUNT & _owner == playerId & _states.groupId == EdificeGroupId.Port;
         }
 
-        public WaitResult<Hexagon> GetHexagonForRecruiting_Wt(bool isNotDemon = true)
+        public WaitResult<Hexagon> GetHexagonForRecruiting_Wait(bool isNotDemon = true)
         {
             _waitHexagon = new();
             List<Hexagon> empty = new(2);

@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization.Actors
         public ActorSkin Skin => _skin;
         public IListReactiveItems<ReactiveEffect> Effects => _effects;
         public IReadOnlyAbilities<ActorAbilityId> Abilities => _abilities;
-        public IReadOnlyReactive<bool> CanCancel => _canCancel;
+        public IReactiveValue<bool> CanCancel => _canCancel;
         #endregion
 
         #region States

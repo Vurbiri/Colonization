@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.Actors
             _container = container;
         }
 
-        public Warrior Create(int id, Hexagon startHex)
+        public Warrior Create(Id<WarriorId> id, Hexagon startHex)
         {
             return Object.Instantiate(_warriorPrefab, _container).Init(id, _payerId, _material, startHex);
         }

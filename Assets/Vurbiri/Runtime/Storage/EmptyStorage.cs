@@ -15,17 +15,9 @@ namespace Vurbiri
             callback?.Invoke(false);
             return null;
         }
-        public IEnumerator Save_Cn<T>(string key, T data, bool toFile, Action<bool> callback)
-        {
-            callback?.Invoke(false);
-            return null;
-        }
+        public void Save<T>(string key, T data, bool toFile, Action<bool> callback) => callback?.Invoke(false);
 
-        public IEnumerator Remove_Cn(string key, bool toFile, Action<bool> callback)
-        {
-            callback?.Invoke(false);
-            return null;
-        }
+        public void Remove(string key, bool toFile, Action<bool> callback) => callback?.Invoke(false);
 
         public bool TryGet<T>(string key, out T value)
         {
@@ -37,22 +29,10 @@ namespace Vurbiri
 
         public bool ContainsKey(string key) => false;
 
-        public IEnumerator Clear_Cn(bool fromFile = true, Action<bool> callback = null)
-        {
-            callback?.Invoke(false);
-            return null;
-        }
+        public void Clear(bool fromFile = true, Action<bool> callback = null) => callback?.Invoke(false);
 
-        public IEnumerator Clear_Cn(string keyExclude, bool fromFile = true, Action<bool> callback = null)
-        {
-            callback?.Invoke(false);
-            return null;
-        }
+        public void Clear(string keyExclude, bool fromFile = true, Action<bool> callback = null) => callback?.Invoke(false);
 
-        public IEnumerator Clear_Cn(string[] keyExcludes, bool fromFile = true, Action<bool> callback = null)
-        {
-            callback?.Invoke(false);
-            return null;
-        }
+        public void Clear(string[] keyExcludes, bool fromFile = true, Action<bool> callback = null) => callback?.Invoke(false);
     }
 }

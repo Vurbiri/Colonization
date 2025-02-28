@@ -6,7 +6,7 @@ namespace Vurbiri.Reactive.Collections
 {
     public abstract class AReactiveItemMono<T> : MonoBehaviour, IReactiveItem<T> where T : AReactiveItemMono<T>
     {
-        protected Subscriber<T, TypeEvent> _subscriber = new();
+        protected Subscriber<T, TypeEvent> _subscriber;
         protected int _index = -1;
 
         public int Index { get => _index; set { _index = value; _subscriber.Invoke((T)this, TypeEvent.Reindex); } }

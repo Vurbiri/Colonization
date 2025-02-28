@@ -9,22 +9,23 @@ namespace Vurbiri.Colonization.Data
     {
         private PlayersSaveData _playersSaveData;
 
-        private readonly Coroutines _coroutines;
         private readonly IStorageService _storage;
         private Unsubscribers _unProject = new(), _unGameplay = new();
 
-        public ProjectSaveData(Coroutines coroutine, IStorageService storage)
+        public ProjectSaveData(IStorageService storage)
         {
-            _coroutines = coroutine;
             _storage = storage;
         }
 
         public bool Load;
 
-        public PlayersSaveData PlayersSaveData => _playersSaveData ??= new(Load, _coroutines, _storage);
+        public PlayersSaveData PlayersSaveData => _playersSaveData ??= new(Load, _storage);
 
         #region Load
-        public int[] SettingsLoadData => _storage.Get<int[]>(SAVE_KEYS.SETTINGS);
+        public bool TryGetSettingsData(out int[] profile, out float[] volumes)
+        {
+            return _storage.TryGet(SAVE_KEYS.SETTINGS_P, out profile) & _storage.TryGet(SAVE_KEYS.SETTINGS_V, out volumes);
+        }
 
         public void GetHexData(Key key, out int id, out int surfaceId)
         {
@@ -38,33 +39,40 @@ namespace Vurbiri.Colonization.Data
             return Load && _storage.TryGet(SAVE_KEYS.DIPLOMANCY, out data);
         }
 
-        public bool TryGetTurnQueueData(out int[] queue, out int[] data)
+        public bool TryGetTurnQueueData(out int[] data)
         {
-            queue = data = null;
-            return Load && _storage.TryGet(SAVE_KEYS.TURNS_QUEUE, out queue) & _storage.TryGet(SAVE_KEYS.TURN_STATE, out data);
+            data = null;
+            return Load && _storage.TryGet(SAVE_KEYS.TURNS_QUEUE, out data);
         }
         #endregion
 
         #region Bind
-        public void SettingsBind(IReactive<IReadOnlyList<int>> settings)
+        public void SettingsBind(IReactive<IReadOnlyList<int>, IReadOnlyList<float>> settings, bool calling)
         {
-            _unProject += settings.Subscribe( data => _coroutines.Run(_storage.Save_Cn(SAVE_KEYS.SETTINGS, data)));
+            _unProject += settings.Subscribe((p, v) => Save(p, v), calling);
+
+            #region Local Save(..)
+            //==============================
+            void Save(IReadOnlyList<int> profile, IReadOnlyList<float> volumes)
+            {
+                _storage.Save(SAVE_KEYS.SETTINGS_P, profile, false);
+                _storage.Save(SAVE_KEYS.SETTINGS_V, volumes);
+            }
+            #endregion
         }
 
         public void HexagonsBind(IReactive<Key, int[]> hex)
         {
-            _unGameplay += hex.Subscribe((key, data) => _coroutines.Run(_storage.Save_Cn(key.ToSaveKey(SAVE_KEYS.HEX_SEPARATOR), data)));
+            _unGameplay += hex.Subscribe((key, data) => _storage.Save(key.ToSaveKey(SAVE_KEYS.HEX_SEPARATOR), data));
         }
         public void DiplomacyBind(IReactive<IReadOnlyList<int>> diplomacy, bool calling)
         {
-            _unGameplay += diplomacy.Subscribe(data => _coroutines.Run(_storage.Save_Cn(SAVE_KEYS.DIPLOMANCY, data)), calling);
+            _unGameplay += diplomacy.Subscribe(data => _storage.Save(SAVE_KEYS.DIPLOMANCY, data), calling);
         }
 
-        public void SaveTurnQueue(IEnumerable<int> queue) => _coroutines.Run(_storage.Save_Cn(SAVE_KEYS.TURNS_QUEUE, queue));
         public void TurnStateBind(TurnQueue turn, bool calling)
         {
-            if(calling) _coroutines.Run(_storage.Save_Cn<IEnumerable<int>>(SAVE_KEYS.TURNS_QUEUE, turn));
-            _unGameplay += turn.Subscribe(data => _coroutines.Run(_storage.Save_Cn(SAVE_KEYS.TURN_STATE, data.ToArray())), calling);
+            _unGameplay += turn.Subscribe(iTurn => _storage.Save(SAVE_KEYS.TURNS_QUEUE, iTurn.ToArray()), calling);
         }
         #endregion
 

@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Characteristics
         public const int ExchangeMinChance      = 8;
         public const int IsFreeGroundRes        = 9;
         public const int CompensationRes        = 10;
-        public const int PortsAddRes            = 11;
+        public const int PortsProfit            = 11;
         public const int MaxBlood               = 12;
         public const int ShrineProfit           = 13;
         public const int ShrinePassiveProfit    = 14;

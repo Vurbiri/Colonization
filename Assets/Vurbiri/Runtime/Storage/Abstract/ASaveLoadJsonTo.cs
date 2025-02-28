@@ -3,19 +3,20 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Vurbiri
 {
     public abstract class ASaveLoadJsonTo : IStorageService
     {
         protected Dictionary<string, string> _saved = null;
+        protected CoroutinesQueue _cnQueue;
         protected string _key;
         protected bool _modified = false;
 
         public abstract bool IsValid { get; }
 
         public abstract bool Init(IReadOnlyDIContainer container);
-
         public abstract IEnumerator Load_Cn(string key, Action<bool> callback);
 
         public bool TryGet<T>(string key, out T value)
@@ -38,45 +39,45 @@ namespace Vurbiri
             return null;
         }
 
-        public IEnumerator Save_Cn<T>(string key, T data, bool toFile, Action<bool> callback)
+        public void Save<T>(string key, T data, bool toFile, Action<bool> callback)
         {
             bool result = SaveToMemory(key, data);
             if (!(toFile & _modified))
             {
                 callback?.Invoke(result);
-                yield break;
+                return;
             }
 
-            yield return SaveToFile_Cn(callback);
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
         }
 
-        public IEnumerator Remove_Cn(string key, bool fromFile, Action<bool> callback)
+        public void Remove(string key, bool fromFile, Action<bool> callback)
         {
             bool result = _saved.Remove(key);
             _modified |= result;
             if (!(fromFile & _modified))
             {
                 callback?.Invoke(result);
-                yield break;
+                return;
             }
 
-            yield return SaveToFile_Cn(callback);
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
         }
 
         #region Clear
-        public IEnumerator Clear_Cn(bool fromFile, Action<bool> callback)
+        public void Clear(bool fromFile, Action<bool> callback)
         {
             _modified |= _saved.Count > 0;
             _saved.Clear();
             if (!(fromFile & _modified))
             {
                 callback?.Invoke(true);
-                yield break;
+                return;
             }
 
-            yield return SaveToFile_Cn(callback);
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
         }
-        public IEnumerator Clear_Cn(string keyExclude, bool fromFile, Action<bool> callback)
+        public void Clear(string keyExclude, bool fromFile, Action<bool> callback)
         {
             if(_saved.Count > 0)
             {
@@ -91,12 +92,12 @@ namespace Vurbiri
             if (!(fromFile & _modified))
             {
                 callback?.Invoke(true);
-                yield break;
+                return;
             }
 
-            yield return SaveToFile_Cn(callback);
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
         }
-        public IEnumerator Clear_Cn(string[] keyExcludes, bool fromFile, Action<bool> callback)
+        public void Clear(string[] keyExcludes, bool fromFile, Action<bool> callback)
         {
             if (_saved.Count > 0)
             {
@@ -118,15 +119,16 @@ namespace Vurbiri
             if (!(fromFile & _modified))
             {
                 callback?.Invoke(true);
-                yield break;
+                return;
             }
 
-            yield return SaveToFile_Cn(callback);
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
         }
         #endregion
 
         public bool ContainsKey(string key) => _saved.ContainsKey(key);
 
+        protected void Init(MonoBehaviour monoBehaviour) => _cnQueue = new (monoBehaviour);
 
         protected bool SaveToMemory<T>(string key, T data)
         {
@@ -150,14 +152,14 @@ namespace Vurbiri
 
         protected IEnumerator SaveToFile_Cn(Action<bool> callback)
         {
-            WaitResult<bool> waitResult = SaveToFile_Wt();
+            WaitResult<bool> waitResult = SaveToFile_Wait();
             yield return waitResult;
 
             _modified = !waitResult.Result;
             callback?.Invoke(waitResult.Result);
         }
-        protected abstract WaitResult<bool> SaveToFile_Wt();
 
+        protected abstract WaitResult<bool> SaveToFile_Wait();
 
         protected virtual string Serialize<T>(T obj) => JsonConvert.SerializeObject(obj, typeof(T), null);
 

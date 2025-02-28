@@ -9,7 +9,11 @@ namespace Vurbiri
     {
         public override bool IsValid => UtilityJS.IsStorage();
 
-        public override bool Init(IReadOnlyDIContainer container) => UtilityJS.IsStorage();
+        public override bool Init(IReadOnlyDIContainer container)
+        {
+            Init(container.Get<Coroutines>());
+            return UtilityJS.IsStorage();
+        }
 
         public override IEnumerator Load_Cn(string key, Action<bool> callback)
         {
@@ -43,7 +47,7 @@ namespace Vurbiri
             callback?.Invoke(false);
         }
 
-        protected override WaitResult<bool> SaveToFile_Wt()
+        protected override WaitResult<bool> SaveToFile_Wait()
         {
             WaitResult<bool> waitResult = new();
 

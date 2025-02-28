@@ -96,7 +96,7 @@ namespace Vurbiri.Colonization
 
         private IEnumerator CreatePlayers_Cn()
         {
-            _players = _containers.Objects.AddInstance(new Players(_playersSettings, _projectSaveData, _eventBus));
+            _players = _containers.Objects.AddInstance(new Players(_playersSettings, _projectSaveData));
 
             yield return null;
 
@@ -121,7 +121,7 @@ namespace Vurbiri.Colonization
 
             yield return null;
 
-            _containers.Objects.Get<LoadingScreen>().SmoothOff_Wt();
+            _containers.Objects.Get<LoadingScreen>().SmoothOff_Wait();
 
             Destroy(gameObject);
         }

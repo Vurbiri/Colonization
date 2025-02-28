@@ -3,7 +3,7 @@ using System;
 
 namespace Vurbiri.Colonization
 {
-    public class EdificeId : IdType<EdificeId>
+    public abstract class EdificeId : IdType<EdificeId>
     {
         public const int Signpost       = 0;
 
@@ -19,7 +19,6 @@ namespace Vurbiri.Colonization
         public const int Capital        = 8;
 
         static EdificeId() => RunConstructor();
-        private EdificeId() { }
 
         public static int ToGroup(int id) => id switch
         {

@@ -1,11 +1,11 @@
-//Assets\Vurbiri\Runtime\Types\Reactive\Abstract\AReactive.cs
+//Assets\Vurbiri\Runtime\Reactive\Abstract\AReactiveValue.cs
 using System;
 
 namespace Vurbiri.Reactive
 {
-    public abstract class AReactive<T> : IReadOnlyReactive<T>
+    public abstract class AReactiveValue<T> : IReactiveValue<T>
     {
-        protected Subscriber<T> _subscriber = new();
+        protected Subscriber<T> _subscriber;
 
         public abstract T Value { get; protected set; }
 

@@ -42,8 +42,8 @@ namespace Vurbiri.Colonization
             _dataContainer.AddInstance(data.settingsColorScriptable.Colors);
             //Banners.InstanceF.Initialize();
 
-            yield return CreateStorage_Cn(coroutine, ysdk, data);
-            yield return YandexIsLogOn_Cn(coroutine, ysdk, data);
+            yield return CreateStorage_Cn(ysdk, data);
+            yield return YandexIsLogOn_Cn(ysdk, data);
 
             _dataContainer.AddInstance(new GameSettings(_servicesContainer));
 
@@ -51,25 +51,24 @@ namespace Vurbiri.Colonization
 
             #region Local: CreateStorage_Cn(..), YandexIsLogOn_Cn(..)
             //=================================
-            IEnumerator CreateStorage_Cn(Coroutines coroutine, YandexSDK ysdk, ProjectInitializationData data)
-			{
-                IStorageService storage = null;
-                yield return StartCoroutine(Storage.Create_Cn(_servicesContainer, SAVE_KEYS.PROJECT, s => storage = s));
-
-                var projectSaveData = _dataContainer.ReplaceInstance(new ProjectSaveData(coroutine, storage));
-                data.settings.Init(ysdk, projectSaveData.SettingsLoadData);
-                projectSaveData.SettingsBind(data.settings);
+            IEnumerator CreateStorage_Cn(YandexSDK ysdk, ProjectInitializationData data)
+            {
+                yield return StartCoroutine(Storage.Create_Cn(_servicesContainer, SAVE_KEYS.PROJECT, storage =>
+                {
+                    var projectSaveData = _dataContainer.ReplaceInstance(new ProjectSaveData(storage));
+                    data.settings.Init(ysdk, projectSaveData);
+                }));
             }
             //=================================
-            IEnumerator YandexIsLogOn_Cn(Coroutines coroutine, YandexSDK ysdk, ProjectInitializationData data)
+            IEnumerator YandexIsLogOn_Cn(YandexSDK ysdk, ProjectInitializationData data)
             {
                 if (!ysdk.IsLogOn)
                 {
-                    _loadingScreen.SmoothOff_Wt();
+                    _loadingScreen.SmoothOff_Wait();
                     yield return data.logOnPanel.TryLogOn_Cn(ysdk);
-                    yield return _loadingScreen.SmoothOn_Wt();
+                    yield return _loadingScreen.SmoothOn_Wait();
                     if (ysdk.IsLogOn)
-                        yield return CreateStorage_Cn(coroutine, ysdk, data);
+                        yield return CreateStorage_Cn(ysdk, data);
                 }
             }
             #endregion

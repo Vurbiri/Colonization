@@ -10,11 +10,11 @@ namespace Vurbiri.Colonization
         public new int this[Id<CurrencyId> id] { get => _values[id.Value].Value; set => _amount.Value += _values[id.Value].Set(value); }
 
         #region Constructions
-        public Currencies(IReadOnlyList<int> array, IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood) : 
+        public Currencies(IReadOnlyList<int> array, IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood) : 
             base(array, maxValueMain, maxValueBlood) { }
-        public Currencies(ACurrencies other, IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood) : 
+        public Currencies(ACurrencies other, IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood) : 
             base(other, maxValueMain, maxValueBlood) { }
-        public Currencies(IReadOnlyReactive<int> maxValueMain, IReadOnlyReactive<int> maxValueBlood) : 
+        public Currencies(IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood) : 
             base(maxValueMain, maxValueBlood) { }
         public Currencies() : base() { }
         #endregion

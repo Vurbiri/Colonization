@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.Data
             //================================================================
             Key[][] CreateRoadsData(int[][][] roadsData)
             {
-                int count, mainCount = roadsData == null ? 0 : roadsData.Length;
+                int count, mainCount = roadsData.Length;
                 Key[][] roads = new Key[mainCount][];
 
                 for (int i = 0; i < mainCount; i++)

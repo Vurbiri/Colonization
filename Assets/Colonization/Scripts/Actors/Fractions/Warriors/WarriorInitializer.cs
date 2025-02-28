@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
         [Space]
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
 
-        public Warrior Init(int id, Id<PlayerId> owner, Material material, Hexagon startHex)
+        public Warrior Init(Id<WarriorId> id, Id<PlayerId> owner, Material material, Hexagon startHex)
         {
             _warrior.Init(_warriorsSettings[id], _collider, owner, startHex);
             return Setup(_warrior.Skin.Mesh, material);

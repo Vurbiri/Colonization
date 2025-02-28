@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         private readonly List<Road> _roadsLists = new();
         private int _count = 0;
 
-        private Subscriber<int[][][]> _subscriber = new();
+        private Subscriber<int[][][]> _subscriber;
         #endregion
 
         public int Count => _count;

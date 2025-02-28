@@ -1,55 +1,36 @@
 //Assets\Colonization\Scripts\GameLoop\TurnQueue.cs
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class TurnQueue : AReactive<ITurn>, ITurn, IEnumerable<int>
+    public class TurnQueue : AReactiveValue<ITurn>, ITurn
     {
-        private readonly Id<PlayerId>[] _queue = new Id<PlayerId>[PlayerId.Count];
-        private Id<PlayerId> _prevId = PlayerId.None;
-        private int _currentIndex = 0;
+        private Id<PlayerId> _previousId = PlayerId.None, _currentId = PlayerId.Player;
         private int _turn = 1;
 
         public int Turn => _turn;
-        public Id<PlayerId> PreviousId => _prevId;
-        public Id<PlayerId> CurrentId => _queue[_currentIndex];
+        public Id<PlayerId> PreviousId => _previousId;
+        public Id<PlayerId> CurrentId => _currentId;
         
         public override ITurn Value { get => this; protected set { } }
 
-        private TurnQueue()
+        private TurnQueue() { }
+        private TurnQueue(IReadOnlyList<int> data)
         {
-            int[] array = new int[PlayerId.PlayersCount];
-            Debug.Log("Раскомментить в TurnQueue");
-            //array.Fill().Shuffle();
-            array.Fill();
+            if (data == null || data.Count != SIZE_ARRAY)
+                throw new ArgumentException($"IReadOnlyList<int> turns = {data}");
 
             int i = 0;
-            for(; i< PlayerId.PlayersCount; i++)
-                _queue[i] = array[i];
-            _queue[i] = PlayerId.Demons;
-        }
-
-        private TurnQueue(IReadOnlyList<int> queue, IReadOnlyList<int> data)
-        {
-            if ((queue == null || queue.Count != PlayerId.Count) | (data == null || data.Count != 3))
-                throw new ArgumentException($"IReadOnlyList<int> queue = {queue} | IReadOnlyList<int> turns = {data}");
-
-            for (int j = 0; j < PlayerId.Count; j++)
-                _queue[j] = queue[j];
-
-            int i = 0;
-            _prevId = data[i++]; _currentIndex = data[i++]; _turn = data[i];
+            _previousId = data[i++]; _currentId = data[i++]; _turn = data[i];
         }
 
         public static TurnQueue Create(ProjectSaveData saveData)
         {
-            bool isLoad = saveData.TryGetTurnQueueData(out int[] queue, out int[] data);
-            TurnQueue turn = isLoad ? new(queue, data) : new();
+            bool isLoad = saveData.TryGetTurnQueueData(out int[] data);
+            TurnQueue turn = isLoad ? new(data) : new();
             saveData.TurnStateBind(turn, !isLoad);
 
             return turn;
@@ -57,37 +38,17 @@ namespace Vurbiri.Colonization
 
         public void Next()
         {
-            _prevId = _queue[_currentIndex];
-            if(++_currentIndex == PlayerId.Count)
-            {
-                _currentIndex = 0;
+            _previousId = _currentId;
+            _currentId.Next();
+            if (_currentId == PlayerId.Player)
                 _turn++;
-            }
 
             _subscriber.Invoke(this);
         }
 
-        #region IArrayable
+        #region ToArray
         private const int SIZE_ARRAY = 3;
-        public int[] ToArray() => new int[] { _prevId.Value, _currentIndex, _turn };
-        public int[] ToArray(int[] array)
-        {
-            if (array == null || array.Length != SIZE_ARRAY)
-                return ToArray();
-
-            int i = 0;
-            array[i++] = _prevId.Value; array[i++] = _currentIndex; array[i]   = _turn;
-            return array;
-        }
-        #endregion
-
-        #region IEnumerable
-        public IEnumerator<int> GetEnumerator()
-        {
-            for (int i = 0; i < PlayerId.Count; i++)
-                yield return _queue[i].Value;
-        }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public int[] ToArray() => new int[] { _previousId.Value, _currentId.Value, _turn };
         #endregion
     }
 }

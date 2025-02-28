@@ -11,33 +11,20 @@ namespace Vurbiri.Colonization.Data
 
         private readonly string[] _keys = new string[PlayersCount];
 
-        private readonly Coroutines _coroutines;
         private readonly IStorageService _storage;
 
         public PlayerSaveData this[int index] => _playersData[index];
 
-        public PlayersSaveData(bool isLoad, Coroutines coroutines, IStorageService storage)
+        public PlayersSaveData(bool isLoad, IStorageService storage)
         {
-            _coroutines = coroutines;
             _storage = storage;
 
             PlayerSaveData data = null;
-            if (!isLoad)
-            {
-                for (int i = 0; i < PlayersCount; i++)
-                {
-                    _keys[i] = SAVE_KEYS.PLAYERS.Concat(i);
-                    data = new(i);
-                    data.Subscribe(OnSave, false);
-                    _playersData[i] = data;
-                }
-
-                return;
-            }
-
             for (int i = 0; i < PlayersCount; i++)
             {
-                if(!_storage.TryGet(_keys[i] = SAVE_KEYS.PLAYERS.Concat(i), out data))
+                _keys[i] = SAVE_KEYS.PLAYERS.Concat(i);
+
+                if (!(isLoad && _storage.TryGet(_keys[i], out data)))
                     data = new(i);
 
                 data.Subscribe(OnSave, false);
@@ -48,9 +35,8 @@ namespace Vurbiri.Colonization.Data
         public void Save(bool saveToFile = true, Action<bool> callback = null)
         {
             for (int i = 0; i < PlayersCount; i++)
-                _coroutines.Run(_storage.Save_Cn(_keys[i], _playersData[i], saveToFile, callback));
+                _storage.Save(_keys[i], _playersData[i], saveToFile, callback);
         }
-
 
         public void Dispose()
         {
@@ -58,6 +44,6 @@ namespace Vurbiri.Colonization.Data
                 player.Dispose();
         }
 
-        private void OnSave(PlayerSaveData data) => _coroutines.Run(_storage.Save_Cn(_keys[data.Id], data));
+        private void OnSave(PlayerSaveData data) => _storage.Save(_keys[data.Id], data);
     }
 }

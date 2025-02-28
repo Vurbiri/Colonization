@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Players\Player.cs
-using System.Collections;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
@@ -9,61 +10,103 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Player : IPlayer
+    public partial class Player : IDisposable
     {
-        protected readonly Objects _obj;
-        protected readonly ExchangeRate _exchangeRate;
         protected readonly Coroutines _coroutines;
 
-        public Id<PlayerId> Id => _obj.id;
-        public ACurrenciesReactive Resources => _obj.resources;
+        protected readonly Id<PlayerId> _id;
+        protected readonly Currencies _resources;
+        protected readonly ExchangeRate _exchangeRate;
+        protected readonly PricesScriptable _prices;
+
+        protected readonly Edifices _edifices;
+        protected readonly Roads _roads;
+
+        protected readonly WarriorsSpawner _spawner;
+        protected readonly ListReactiveItems<Actor> _warriors = new();
+
+        protected readonly AbilitiesSet<PlayerAbilityId> _abilities;
+        protected readonly HashSet<int> _perks;
+       
+        public ACurrenciesReactive Resources => _resources;
         public IReactive<int, int> ExchangeRate => _exchangeRate;
 
-        public IReactiveList<Crossroad> Shrines => _obj.edifices.shrines;
-        public IReactiveList<Crossroad> Ports => _obj.edifices.ports;
-        public IReactiveList<Crossroad> Urbans => _obj.edifices.urbans;
+        public IReactiveList<Crossroad> Shrines => _edifices.shrines;
+        public IReactiveList<Crossroad> Ports => _edifices.ports;
+        public IReactiveList<Crossroad> Urbans => _edifices.urbans;
 
+        #region Constructor
         public Player(Id<PlayerId> playerId, PlayerSaveData data, Players.Settings settings)
         {
-            _obj = new(playerId, data, settings);
-
-            _exchangeRate = new(_obj.abilities);
             _coroutines = SceneServices.Get<Coroutines>();
-        }
 
-        public void Profit(int hexId, ACurrencies freeGroundRes)
-        {
-            _obj.ShrinePassiveProfit();
+            _id = playerId;
 
-            if (hexId == CONST.ID_GATE)
+            PlayerVisual visual = SceneData.Get<PlayersVisual>()[playerId];
+
+            _abilities = settings.states;
+            _roads = settings.roadsFactory.Create().Init(playerId, visual.color);
+
+            _prices = settings.prices;
+            _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
+
+            if (data.IsLoaded)
             {
-                _obj.GateAction();
-                return;
+                PlayerLoadData loadData = data.ToLoadData;
+                Crossroads crossroads = SceneObjects.Get<Crossroads>();
+                Land land = SceneObjects.Get<Land>();
+
+                _resources = new(loadData.resources, _abilities[PlayerAbilityId.MaxMainResources], _abilities[PlayerAbilityId.MaxBlood]);
+                _edifices = new(playerId, loadData.edifices, crossroads, _abilities);
+                _roads.Restoration(loadData.roads, crossroads);
+
+                int count = loadData.warriors.Length;
+                for (int i = 0; i < count; i++)
+                    _warriors.Add(_spawner.Load(loadData.warriors[i], land));
+
+                //_perks = new(data.Perks);
+            }
+            else
+            {
+                _resources = new(_prices.PlayersDefault, _abilities[PlayerAbilityId.MaxMainResources], _abilities[PlayerAbilityId.MaxBlood]);
+                _edifices = new(_abilities);
+                _perks = new();
             }
 
-            _obj.ProfitFromEdifices(hexId, freeGroundRes);
+            _exchangeRate = new(_abilities);
+
+            data.CurrenciesBind(_resources);
+            data.EdificesBind(_edifices.values);
+            data.RoadsBind(_roads);
+            data.WarriorsBind(_warriors);
         }
+        #endregion
+
+        
 
         public void UpdateExchangeRate()
         {
             _exchangeRate.Update();
         }
 
-        public IReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _obj.GetAbilityReactive(id);
+        public IReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _abilities[id];
 
-        public bool CanEdificeUpgrade(Crossroad crossroad) => _obj.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_obj.id);
-        public void BuyEdificeUpgrade(Crossroad crossroad) => _obj.BuyEdificeUpgrade(crossroad);
+        public void Profit(int hexId, ACurrencies freeGroundRes)
+        {
+            _resources.AddBlood(_edifices.ShrinePassiveProfit);
 
-        public bool CanAnyRecruitingWarriors(Crossroad crossroad) => _obj.IsNotMaxWarriors() && crossroad.CanRecruitingWarriors(_obj.id);
-        public bool CanRecruitingWarrior(Id<WarriorId> id) => _obj.CanRecruitingWarrior(id);
+            if (hexId == CONST.ID_GATE)
+            {
+                _resources.AddBlood(_edifices.ShrineProfit);
+                _resources.ClampMain();
+                return;
+            }
 
-        public void RecruitWarriors(Crossroad crossroad, Id<WarriorId> id) => _coroutines.Run(RecruitWarriors_Cn(crossroad, id));
+            if (_abilities.IsTrue(PlayerAbilityId.IsFreeGroundRes) & freeGroundRes != null)
+                _resources.AddFrom(freeGroundRes);
 
-        public bool CanWallBuild(Crossroad crossroad) => _obj.abilities.IsTrue(PlayerAbilityId.IsWall) && crossroad.CanWallBuild(_obj.id);
-        public void BuyWall(Crossroad crossroad) => _obj.BuyWall(crossroad);
-
-        public bool CanRoadBuild(Crossroad crossroad) => _obj.CanRoadBuild() && crossroad.CanRoadBuild(_obj.id);
-        public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId) => _obj.BuyRoad(crossroad.GetLinkAndSetStart(linkId));
+            _resources.AddFrom(_edifices.ProfitFromEdifices(hexId));
+        }
 
         public bool BuyPerk(IPerkSettings perk)
         {
@@ -80,23 +123,16 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public override string ToString() => $"Player: {_obj.id}";
-
-        private IEnumerator RecruitWarriors_Cn(Crossroad crossroad, Id<WarriorId> id)
-        {
-            WaitResult<Hexagon> result = crossroad.GetHexagonForRecruiting_Wt();
-            yield return result;
-
-            if(result.Result == null)
-                yield break;
-
-            _obj.RecruitingWarrior(id.Value, result.Result);
-        }
+        public override string ToString() => $"Player: {_id}";
 
         public void Dispose()
         {
-            _obj.Dispose();
+            _resources.Dispose();
             _exchangeRate.Dispose();
+            _edifices.Dispose();
+            for (int i = _warriors.Count - 1; i >= 0; i--)
+                _warriors[i].Dispose();
+           
         }
     }
 }

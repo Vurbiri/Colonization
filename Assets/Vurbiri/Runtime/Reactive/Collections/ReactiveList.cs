@@ -13,7 +13,7 @@ namespace Vurbiri.Reactive.Collections
         
         private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
-        private Subscriber<int, T, TypeEvent> _subscriber = new();
+        private Subscriber<int, T, TypeEvent> _subscriber;
 
         public T this[int index] 
         {
@@ -36,7 +36,7 @@ namespace Vurbiri.Reactive.Collections
         }
 
         public int Count => _count;
-        public IReadOnlyReactive<int> CountReactive => _count;
+        public IReactiveValue<int> CountReactive => _count;
         public bool IsReadOnly => false;
 
         #region Constructors

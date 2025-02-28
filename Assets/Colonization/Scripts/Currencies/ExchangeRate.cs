@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         private Chance _chance = new(0);
         private int _min, _max;
         
-        public ExchangeRate(IReadOnlyList<IReadOnlyReactive<int>> abilities)
+        public ExchangeRate(IReadOnlyList<IReactiveValue<int>> abilities)
         {
             _unsubscribers += abilities[PlayerAbilityId.ExchangeRateMin].Subscribe(v => _min = v);
             _unsubscribers += abilities[PlayerAbilityId.ExchangeRateMax].Subscribe(v => _max = v);

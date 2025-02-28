@@ -4,13 +4,13 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class AAbility<TId> : IReadOnlyReactive<int>, IValueId<TId> where TId : AbilityId<TId>
+    public abstract class AAbility<TId> : IAbility, IReactiveValue<int>, IValueId<TId> where TId : AbilityId<TId>
     {
         private readonly Id<TId> _id;
 
         protected int _value;
 
-        protected Subscriber<int> _subscriber = new();
+        protected Subscriber<int> _subscriber;
 
         public Id<TId> Id => _id;
         public virtual int Value { get => _value; set { } }

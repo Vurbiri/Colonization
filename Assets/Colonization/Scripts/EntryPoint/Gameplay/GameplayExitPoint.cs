@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
 
         private IEnumerator OnExit_Cn(Action<ExitParam> callback)
         {
-            yield return SceneObjects.Get<LoadingScreen>().SmoothOn_Wt();
+            yield return SceneObjects.Get<LoadingScreen>().SmoothOn_Wait();
             callback(_exitParam);
         }
     }

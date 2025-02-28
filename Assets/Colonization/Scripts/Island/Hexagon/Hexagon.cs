@@ -96,7 +96,7 @@ namespace Vurbiri.Colonization
                 HashSet<Crossroad> set = new(_crossroads);
                 set.IntersectWith(neighbor._crossroads);
                 if (set.Count == 2)
-                    CrossroadLink.Create(set.ToArray(), _isWater || neighbor._isWater);
+                    CrossroadLink.Create(set.ToArray(), _isWater | neighbor._isWater);
             }
         }
         public Key GetNearGroundHexOffset()

@@ -6,16 +6,16 @@ namespace Vurbiri.Reactive.Collections
 {
     public interface IListReactiveItems<out T> : IReadOnlyList<T>, IReactiveBase<Action<T, TypeEvent>> where T : class, IReactiveItem<T>
     {
-        public IReadOnlyReactive<int> CountReactive { get; }
+        public IReactiveValue<int> CountReactive { get; }
     }
 
     public interface IReactiveList<out T> : IReadOnlyList<T>, IReactiveBase<Action<int, T, TypeEvent>>
     {
-        public IReadOnlyReactive<int> CountReactive { get; }
+        public IReactiveValue<int> CountReactive { get; }
     }
 
-    public interface IReadOnlyReactiveList<TId, out TValue> : IReadOnlyList<IReadOnlyReactive<TValue>> where TId : IdType<TId>
+    public interface IReadOnlyReactiveList<TId, out TValue> : IReadOnlyList<IReactiveValue<TValue>> where TId : IdType<TId>
     {
-        public IReadOnlyReactive<int> this[Id<TId> id] { get; }
+        public IReactiveValue<int> this[Id<TId> id] { get; }
     }
 }

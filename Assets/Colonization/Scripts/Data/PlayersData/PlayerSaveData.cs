@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.Data
         private int[] _perks;
 
         private readonly bool _isLoaded;
-        private readonly Subscriber<PlayerSaveData> _subscriber = new();
+        private Subscriber<PlayerSaveData> _subscriber;
         private Unsubscribers _unsubscribers = new(CurrencyId.CountAll + EdificeGroupId.Count + 3);
 
         public int Id => _id;
@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization.Data
             //==============================
             void Bind(IReactiveList<IArrayable> edificesReactive, List<int[]> edifices)
             {
-                _unsubscribers += edificesReactive.Subscribe(OnEdifice, false);
+                _unsubscribers += edificesReactive.Subscribe(OnEdifice, !_isLoaded);
 
                 #region Local OnEdifice(..)
                 //==============================
@@ -94,7 +94,7 @@ namespace Vurbiri.Colonization.Data
         }
         public void RoadsBind(IReactive<int[][][]> roadsReactive)
         {
-            _unsubscribers += roadsReactive.Subscribe(OnRoads, false);
+            _unsubscribers += roadsReactive.Subscribe(OnRoads, !_isLoaded);
 
             #region Local OnRoads(..)
             //==============================
@@ -107,7 +107,7 @@ namespace Vurbiri.Colonization.Data
         }
         public void WarriorsBind(IListReactiveItems<Actor> warriorsReactive)
         {
-            _unsubscribers += warriorsReactive.Subscribe(OnWarriors, false);
+            _unsubscribers += warriorsReactive.Subscribe(OnWarriors, !_isLoaded);
 
             #region Local OnWarriors(..)
             //==============================
