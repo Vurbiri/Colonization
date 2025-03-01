@@ -71,6 +71,7 @@ namespace Vurbiri.Colonization
 
             _states.isBuildWall = !(_isWall = true);
             _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d);
+
             return true;
         }
 
@@ -116,7 +117,7 @@ namespace Vurbiri.Colonization
         {
             int countUnfit = 0;
             for (int i = 0; i < HEX_COUNT; i++)
-                if (!_hexagons[i].CanActorEnter)
+                if (!_hexagons[i].CanWarriorEnter)
                     countUnfit++;
 
             return countUnfit < HEX_COUNT & _owner == playerId & _states.groupId == EdificeGroupId.Port;
@@ -128,7 +129,7 @@ namespace Vurbiri.Colonization
             List<Hexagon> empty = new(2);
 
             for (int i = 0; i < HEX_COUNT; i++)
-                if (_hexagons[i].CanActorEnter)
+                if (_hexagons[i].CanWarriorEnter)
                     empty.Add(_hexagons[i]);
 
             int emptyCount = empty.Count;

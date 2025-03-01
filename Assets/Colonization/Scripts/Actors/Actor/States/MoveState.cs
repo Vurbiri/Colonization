@@ -30,7 +30,10 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                _coroutineAction = _actor.StartCoroutine(SelectHexagon_Cn());
+                if(_isPlayer)
+                    _coroutineAction = _actor.StartCoroutine(SelectHexagon_Cn());
+                else
+                    _coroutineAction = _actor.StartCoroutine(SelectHexagonAI_Cn());
             }
 
             public override void Exit()
@@ -92,6 +95,19 @@ namespace Vurbiri.Colonization.Actors
                 _coroutineAction = _actor.StartCoroutine(Move_Cn());
             }
 
+            private IEnumerator SelectHexagonAI_Cn()
+            {
+                yield return _waitHexagon = new();
+
+                if (_targetHex == null)
+                {
+                    ToExit();
+                    yield break;
+                }
+
+                _coroutineAction = _actor.StartCoroutine(Move_Cn());
+            }
+
             private IEnumerator Move_Cn()
             {
                 Hexagon currentHex = _actor._currentHex;
@@ -101,11 +117,8 @@ namespace Vurbiri.Colonization.Actors
 
                 currentHex.ExitActor();
                 _actor._currentHex = currentHex = _targetHex;
-                currentHex.EnterActor(_actor);
-
                 _move.Off();
-                _actor.RemoveWallDefenceEffect();
-
+                
                 _skin.Move();
 
                 float _progress = 0f;
@@ -115,6 +128,8 @@ namespace Vurbiri.Colonization.Actors
                     _progress += _speed * Time.deltaTime;
                     _parentTransform.localPosition = Vector3.Lerp(start, end, _progress);
                 }
+
+                currentHex.EnterActor(_actor);
 
                 ToExit();
             }

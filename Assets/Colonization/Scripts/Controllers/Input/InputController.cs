@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Controllers\InputController.cs
+//Assets\Colonization\Scripts\Controllers\Input\InputController.cs
 using System;
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Controllers
     public class InputController : IDisposable
     {
         private readonly Camera _camera;
-        private readonly int _layerMask;
+        private readonly int _layerMaskRight, _layerMaskLeft;
         private readonly float _distance = 900f;
         private readonly InputControlAction _inputActions;
 
@@ -28,7 +28,8 @@ namespace Vurbiri.Colonization.Controllers
         public InputController(Camera camera, Settings settings)
         {
             _camera = camera;
-            _layerMask = settings.layerMask;
+            _layerMaskRight = settings.layerMaskRight;
+            _layerMaskLeft = settings.layerMaskLeft;
             _distance = settings.distance;
 
             _inputActions = new();
@@ -38,8 +39,8 @@ namespace Vurbiri.Colonization.Controllers
             _cameraMap = _inputActions.Camera;
             _UIMap = _inputActions.UI;
 
-            //_inputActions.Gameplay.LeftClick.performed += OnClick;
-            _inputActions.Gameplay.RightClick.performed += OnClick;
+            _inputActions.Gameplay.LeftClick.performed += OnClickLeft;
+            _inputActions.Gameplay.RightClick.performed += OnClickRight;
         }
 
         public void EnableAll()
@@ -51,10 +52,13 @@ namespace Vurbiri.Colonization.Controllers
             _gameplayMap.Disable(); _cameraMap.Disable(); _UIMap.Disable();
         }
 
-        public void OnClick(CallbackContext ctx)
+
+        public void OnClickLeft(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskLeft);
+        public void OnClickRight(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskRight);
+        private void OnClick(Vector2 position, int layerMask)
         {
-            Ray ray = _camera.ScreenPointToRay(ctx.ReadValue<Vector2>());
-            if (Physics.Raycast(ray, out RaycastHit hit, _distance, _layerMask) && hit.collider.TryGetComponent(out ISelectable selectObj))
+            Ray ray = _camera.ScreenPointToRay(position);
+            if (Physics.Raycast(ray, out RaycastHit hit, _distance, layerMask) && hit.collider.TryGetComponent(out ISelectable selectObj))
             {
                 _selectObj?.Unselect(selectObj);
                 _selectObj = selectObj;
@@ -69,7 +73,8 @@ namespace Vurbiri.Colonization.Controllers
         [Serializable]
         public class Settings
         {
-            public LayerMask layerMask;
+            public LayerMask layerMaskRight;
+            public LayerMask layerMaskLeft;
             public float distance = 900f;
         }
         #endregion

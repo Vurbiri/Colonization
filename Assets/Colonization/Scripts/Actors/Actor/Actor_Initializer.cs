@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization.Actors
             Skills skills = settings.Skills;
             _stateMachine = new();
             _stateMachine.SetDefaultState(AIdleState.Create(this));
-            _stateMachine.AddState(new TargetState());
+            _stateMachine.AddState(new BecomeTargetState());
             skills.CreateStates(this);
             #endregion
 

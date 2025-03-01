@@ -13,10 +13,12 @@ namespace Vurbiri
 
 #if UNITY_EDITOR
         private readonly static List<string> _names;
+        private readonly static List<string> _positiveNames;
         private readonly static List<string> _displayNames;
         private readonly static List<int> _values;
 
         public static string[] Names => _names.ToArray();
+        public static string[] PositiveNames => _positiveNames.ToArray();
         public static string[] DisplayNames => _displayNames.ToArray();
         public static int[] Values => _values.ToArray();
 
@@ -31,6 +33,7 @@ namespace Vurbiri
                 Debug.LogError($"Нет public static полей. Класс: {typeId.Name}");
 
             _names = new(fields.Length);
+            _positiveNames = new(fields.Length);
             _displayNames = new(fields.Length);
             _values = new(fields.Length);
 
@@ -57,7 +60,10 @@ namespace Vurbiri
                 }
 
                 if (value >= 0)
+                {
                     Count++;
+                    _positiveNames.Add(field.Name);
+                }
 
                 oldValue = value;
                 _names.Add(field.Name);

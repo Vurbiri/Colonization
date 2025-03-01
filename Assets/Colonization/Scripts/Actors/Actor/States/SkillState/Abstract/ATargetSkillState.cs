@@ -75,11 +75,20 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
 
                 Pay();
+                RotateActors();
 
-                Hexagon targetHex = _target._currentHex;
-                _parentTransform.localRotation = ACTOR_ROTATIONS[targetHex.Key - currentHex.Key];
-                if (_relationRealTarget == Relation.Enemy)
-                    _target._thisTransform.localRotation = ACTOR_ROTATIONS[currentHex.Key - targetHex.Key];
+                callback(true);
+            }
+
+            protected IEnumerator SelectActorAI_Cn(Action<bool> callback)
+            {
+                yield return _waitActor = new();
+
+                if (_target == null)
+                    yield break;
+
+                Pay();
+                RotateActors();
 
                 callback(true);
             }
@@ -101,6 +110,14 @@ namespace Vurbiri.Colonization.Actors
                 }
                 yield return wait;
                 _target.BecomeTargetEnd();
+            }
+
+            private void RotateActors()
+            {
+                Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
+                _parentTransform.localRotation = ACTOR_ROTATIONS[targetHex.Key - currentHex.Key];
+                if (_relationRealTarget == Relation.Enemy)
+                    _target._thisTransform.localRotation = ACTOR_ROTATIONS[currentHex.Key - targetHex.Key];
             }
 
             private Actor CheckTarget(Actor target)

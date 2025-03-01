@@ -31,7 +31,11 @@ namespace Vurbiri.Colonization.Actors
             protected override IEnumerator Actions_Cn()
             {
                 bool isTarget = false;
-                yield return SelectActor_Cn(b => isTarget = b);
+                if(_isPlayer)
+                    yield return SelectActor_Cn(b => isTarget = b);
+                else
+                    yield return SelectActorAI_Cn(b => isTarget = b);
+                
                 if (!isTarget) 
                 { 
                     ToExit(); 

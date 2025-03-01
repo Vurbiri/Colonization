@@ -67,15 +67,21 @@ namespace Vurbiri.Reactive.Collections
         }
 
         public void Remove(int index) => _values[index].Removing();
-        public void Remove(T item) => _values[item.Index].Removing();
+        public bool Remove(T item)
+        {
+            if (!Contains(item))
+                return false;
+
+            _values[item.Index].Removing();
+            return true;
+        }
 
         public virtual bool Contains(T item)
         {
-            for (int i = 0; i < _count; i++)
-                if (_values[i].Equals(item))
-                    return true;
+            if (item == null) return false;
 
-            return false;
+            int index = item.Index;
+            return index >= 0 & index < _count && EqualityComparer<T>.Default.Equals(_values[index], item);
         }
 
         public IEnumerator<T> GetEnumerator()

@@ -13,15 +13,6 @@ namespace Vurbiri.Colonization.Characteristics
             _abilities = abilities;
         }
 
-        public bool Contains(EffectCode code)
-        {
-            for (int i = 0; i < _count; i++)
-                if (_values[i].Code == code)
-                    return true;
-
-            return false;
-        }
-
         public int AddEffect(ReactiveEffect effect)
         {
             if (_values == null)
@@ -46,7 +37,23 @@ namespace Vurbiri.Colonization.Characteristics
                 }
             }
         }
-        
+
+        public bool Contains(EffectCode code)
+        {
+            for (int i = 0; i < _count; i++)
+                if (_values[i].Code == code)
+                    return true;
+
+            return false;
+        }
+        public override bool Contains(ReactiveEffect item)
+        {
+            if (item == null) return false;
+
+            int index = item.Index;
+            return index >= 0 & index < _count && _values[index].Equals(item);
+        }
+
         public void Next()
         {
             for (int i = _count - 1; i >= 0; i--)

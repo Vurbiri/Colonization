@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Players\Player.cs
+//Assets\Colonization\Scripts\Players\Player\Player.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,8 +81,6 @@ namespace Vurbiri.Colonization
             data.WarriorsBind(_warriors);
         }
         #endregion
-
-        
 
         public void UpdateExchangeRate()
         {

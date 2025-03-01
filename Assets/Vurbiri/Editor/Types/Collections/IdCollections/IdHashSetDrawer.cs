@@ -30,8 +30,8 @@ namespace VurbiriEditor
             Type typeValue = fieldInfo.FieldType.GetGenericArguments()[INDEX_VALUE];
             SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
             SerializedProperty propertyCount = property.FindPropertyRelative(NAME_COUNT);
-            int countCurrent = 0, count = propertyValues.arraySize;
-            string[] names = GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
+            int count = propertyValues.arraySize;
+            string[] names = GetPositiveNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
             _countMax = names.Length;
 
             label = EditorGUI.BeginProperty(position, label, property);
@@ -47,13 +47,11 @@ namespace VurbiriEditor
                     if (propertyCurrent.objectReferenceValue != null)
                     {
                         DrawField(propertyCurrent, names[i]);
-                        countCurrent++;
                         continue;
                     }
 
                     propertyNull = propertyCurrent;
                 }
-                propertyCount.intValue = countCurrent;
 
                 if (propertyNull != null)
                     DrawField(propertyNull, LABEL_EMPTY);

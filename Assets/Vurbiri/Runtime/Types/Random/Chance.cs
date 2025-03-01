@@ -9,9 +9,10 @@ namespace Vurbiri
         [SerializeField] private int _value;
         [SerializeField] private int _negentropy;
 
-        private const int MAX_CHANCE = 100;
+        public const int MAX_CHANCE = 100;
 
         public int Value { readonly get => _value; set => _value = Mathf.Clamp(value, 0, MAX_CHANCE); }
+        public readonly int Negentropy => _negentropy;
 
         public bool Roll
         {
@@ -32,7 +33,7 @@ namespace Vurbiri
             _negentropy = new System.Random().Next(MAX_CHANCE);
         }
 
-        private Chance(int value, int negentropy)
+        public Chance(int value, int negentropy)
         {
             _value = Mathf.Clamp(value, 0, MAX_CHANCE);
             _negentropy = negentropy;
@@ -40,17 +41,12 @@ namespace Vurbiri
 
         public T Select<T>(T trueValue, T falseValue) => Roll ? trueValue : falseValue;
 
-        public void Add(Chance chance) => _value += chance._value;
-        public void Add(int value) => _value += value;
-
-        public void Remove(Chance chance) => _value -= chance._value;
-
         #region Static methods
-        public static bool Rolling(int value = 50) => value > 0 && (value >= 100 || Random.Range(0, 100) < value);
+        public static bool Rolling(int value = 50) => value > 0 && (value >= MAX_CHANCE || Random.Range(0, MAX_CHANCE) < value);
 
         public static T Select<T>(T trueValue, T falseValue, int value = 50)
         {
-            return (value > 0 && (value >= 100 || Random.Range(0, 100) < value)) ? trueValue : falseValue;
+            return (value > 0 && (value >= MAX_CHANCE || Random.Range(0, MAX_CHANCE) < value)) ? trueValue : falseValue;
         }
         #endregion
 
@@ -60,7 +56,6 @@ namespace Vurbiri
         public readonly override int GetHashCode() => _value.GetHashCode();
 
         public static implicit operator Chance(int value) => new(value);
-        //public static explicit operator int(Chance chance) => chance._value;
 
         #region Arithmetic operators
         public static Chance operator *(int value, Chance chance) => new(chance._value * value, chance._negentropy);

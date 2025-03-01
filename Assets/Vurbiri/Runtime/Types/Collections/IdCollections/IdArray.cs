@@ -8,11 +8,7 @@ using UnityEngine;
 namespace Vurbiri.Collections
 {
     [Serializable, JsonArray]
-    public class IdArray<TId, TValue> :
-#if UNITY_EDITOR
-        ISerializationCallbackReceiver,
-#endif
-        IReadOnlyList<TValue> where TId : IdType<TId>
+    public class IdArray<TId, TValue> : IReadOnlyList<TValue> where TId : IdType<TId>
     {
         [SerializeField] protected TValue[] _values;
         protected int _count;
@@ -49,20 +45,5 @@ namespace Vurbiri.Collections
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public static implicit operator IdArray<TId, TValue>(TValue[] value) => new(value);
-
-        #region ISerializationCallbackReceiver
-#if UNITY_EDITOR
-        public virtual void OnBeforeSerialize()
-        {
-            if (Application.isPlaying)
-                return;
-
-            _count = IdType<TId>.Count;
-            if (_values.Length != _count)
-                Array.Resize(ref _values, _count);
-        }
-        public void OnAfterDeserialize() { }
-#endif
-        #endregion
     }
 }

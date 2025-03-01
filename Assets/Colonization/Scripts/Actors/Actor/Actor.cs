@@ -10,7 +10,7 @@ using Vurbiri.Reactive.Collections;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, ICancel, IPositionable, IDisposable, IJaggedArrayable
+    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, ICancel, IPositionable, IDisposable
     {
         #region Fields
         protected int _typeId;
@@ -47,7 +47,6 @@ namespace Vurbiri.Colonization.Actors
         public int TypeId => _typeId;
         public int Id => _id;
         public Id<PlayerId> Owner => _owner;
-        public bool IsPlayer => _owner == PlayerId.Player;
         public int ActionPoint => _currentAP.Value;
         public bool CanMove => _move.IsValue;
         public bool IsIdle => _stateMachine.IsDefaultState;
@@ -86,24 +85,36 @@ namespace Vurbiri.Colonization.Actors
 
             if(delta != 0)
                 _subscriber.Invoke(this, TypeEvent.Change);
+
             return delta;
         }
+
+        #region WallDefence
+        public void AddWallDefenceEffect()
+        {
+            _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetMaxDefense());
+            if (_wallDefenceEffect != null)
+                _effects.AddEffect(_wallDefenceEffect);
+        }
+        public void RemoveWallDefenceEffect()
+        {
+            if (_wallDefenceEffect != null)
+            {
+                _effects.Remove(_wallDefenceEffect);
+                _wallDefenceEffect = null;
+            }
+        }
+        #endregion
 
         public void ColliderEnable(bool enabled) => _thisCollider.enabled = enabled;
         public void EnablePlayerCollider() => _thisCollider.enabled = _isPlayerTurn;
 
         #region ISelectable
-        public virtual void Select()
-        {
-            _stateMachine.Select();
-        }
-        public virtual void Unselect(ISelectable newSelectable)
-        {
-            _stateMachine.Unselect(newSelectable);
-        }
+        public virtual void Select() => _stateMachine.Select();
+        public virtual void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
         #endregion
 
-        #region IJaggedArrayable
+        #region ToArray()
         private const int ADD_SIZE_ARRAY = 2;
         public int[][] ToArray()
         {
@@ -112,37 +123,11 @@ namespace Vurbiri.Colonization.Actors
             int[][] array = new int[count + ADD_SIZE_ARRAY][];
 
             array[i++] = _currentHex.Key.ToArray();
-            array[i++] = ToSubArray();
-            
+            array[i++] = new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value };
+
             for (int j = 0; j < count; j++, i++)
                 array[i] = _effects[j].ToArray();
 
-            return array;
-        }
-        public int[][] ToArray(int[][] array)
-        {
-            int count = _effects.Count;
-            if (array == null || array.Length != count + ADD_SIZE_ARRAY)
-                return ToArray();
-
-            int i = 0;
-            array[i] = _currentHex.Key.ToArray(array[i++]);
-            array[i] = ToSubArray(array[i++]);
-
-            for (int j = 0; j < count; j++, i++)
-                array[i] = _effects[j].ToArray(array[i]);
-
-            return array;
-        }
-        private const int SIZE_SUBARRAY = 4;
-        private int[] ToSubArray() => new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value };
-        private int[] ToSubArray(int[] array)
-        {
-            if (array == null || array.Length != SIZE_SUBARRAY)
-                return ToSubArray();
-
-            int i = 0;
-            array[i++] = _id; array[i++] = _currentHP.Value; array[i++] = _currentAP.Value; array[i] = _move.Value;
             return array;
         }
         #endregion
@@ -160,7 +145,7 @@ namespace Vurbiri.Colonization.Actors
         #region BecomeTarget
         private void BecomeTargetStart(Id<PlayerId> initiator, Relation relation)
         {
-            _stateMachine.SetState<TargetState>();
+            _stateMachine.SetState<BecomeTargetState>();
             _diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
 
@@ -180,23 +165,6 @@ namespace Vurbiri.Colonization.Actors
             yield return _skin.Death();
             Dispose();
         }
-
-        #region WallDefence
-        private void AddWallDefenceEffect()
-        {
-            _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetMaxDefense());
-            if (_wallDefenceEffect != null)
-                _effects.AddEffect(_wallDefenceEffect);
-        }
-        private void RemoveWallDefenceEffect()
-        {
-            if (_wallDefenceEffect != null)
-            {
-                _effects.Remove(_wallDefenceEffect);
-                _wallDefenceEffect = null;
-            }
-        }
-        #endregion
 
         private void OnNextTurn(ITurn turn)
         {

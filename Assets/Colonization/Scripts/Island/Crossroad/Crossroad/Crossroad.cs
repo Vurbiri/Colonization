@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
         public bool IsWall => _isWall;
         public IReadOnlyList<CrossroadLink> Links => _links;
         public IReactiveValue<bool> CanCancel => _canCancel;
-        public Vector3 Position { get;}
+        public Vector3 Position { get; }
         #endregion
 
         public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IReadOnlyList<AEdifice> prefabs, GameplayEventBus eventBus)

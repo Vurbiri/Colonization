@@ -29,7 +29,7 @@ namespace VurbiriEditor.Colonization
             {
                 SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
                 int count = propertyValues.arraySize;
-                string[] names = GetNames(typeof(CurrencyId));
+                string[] names = GetPositiveNames(typeof(CurrencyId));
 
                 Color prevColor = GUI.color;
                 SerializedProperty propertyElement;

@@ -122,7 +122,7 @@ namespace Vurbiri.Colonization.Data
                         _warriors.RemoveAt(actor.Index);
                         break;
                     case TypeEvent.Change:
-                        _warriors[actor.Index] = actor.ToArray(_warriors[actor.Index]);
+                        _warriors[actor.Index] = actor.ToArray();
                         break;
                     default:
                         return;

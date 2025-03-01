@@ -21,8 +21,10 @@ namespace VurbiriEditor
             if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
             {
                 SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
-                int count = propertyValues.arraySize;
-                string[] names = GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
+                
+                string[] names = GetPositiveNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
+                int count = names.Length;
+                SetArraySize(propertyValues, count);
 
                 EditorGUI.indentLevel++;
                 for (int i = 0; i < count; i++)

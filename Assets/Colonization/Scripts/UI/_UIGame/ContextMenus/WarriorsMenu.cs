@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization.UI
             _currentWarrior.Move();
         }
 
-        private void OnBlock()
+        public void OnBlock()
         {
             _thisGO.SetActive(false);
             _currentWarrior.Block();

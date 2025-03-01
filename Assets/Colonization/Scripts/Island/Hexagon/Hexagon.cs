@@ -6,7 +6,7 @@ using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization
 {
-    public class Hexagon : MonoBehaviour, ISelectable
+    public class Hexagon : MonoBehaviour, ISelectable, IPositionable
     {
         [SerializeField] private HexagonCaption _hexagonCaption;
         [SerializeField] private Collider _collider;
@@ -33,8 +33,8 @@ namespace Vurbiri.Colonization
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
         public Actor Owner => _owner;
-        public bool CanActorEnter => !_isGate & !_isWater & _ownerId == PlayerId.None;
-        public Vector3 Position => _thisTransform.localPosition;
+        public bool CanWarriorEnter => !_isGate & !_isWater & _ownerId == PlayerId.None;
+        public Vector3 Position { get; private set; }
         public IReadOnlyCollection<Hexagon> Neighbors => _neighbors;
         public bool IsOwnedByPort
         {
@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization
         #region Init
         public void Init(Key key, int id, Pool<HexagonMark> poolMarks, SurfaceScriptable surface, GameplayEventBus eventBus)
         {
-            _thisTransform = transform;
+            _thisTransform = transform; Position = _thisTransform.localPosition;
             _key = key;
             _id = id;
             _poolMarks = poolMarks;
@@ -140,17 +140,21 @@ namespace Vurbiri.Colonization
         {
             _owner = actor;
             _ownerId = actor.Owner;
+            _owner.AddWallDefenceEffect();
         }
         public void ExitActor()
         {
+            _owner.RemoveWallDefenceEffect();
             _owner = null;
             _ownerId = PlayerId.None;
         }
 
         public int GetMaxDefense()
         {
+            if (_ownerId == PlayerId.Demons & _isGate)
+                return Demon.GATE_DEFENSE;
+            
             int max = int.MinValue;
-
             foreach (var crossroad in _crossroads)
                 max = Mathf.Max(crossroad.GetDefense(_ownerId), max);
 
@@ -158,7 +162,6 @@ namespace Vurbiri.Colonization
         }
 
         public bool IsEnemy(Id<PlayerId> id) => _owner != null && _owner.GetRelation(id) == Relation.Enemy;
-
 
         public bool TrySetSelectableFree(bool isNotDemon)
         {
@@ -172,7 +175,7 @@ namespace Vurbiri.Colonization
 
         public bool TrySetSelectableActor(Id<PlayerId> id, Relation typeAction)
         {
-            if (_isGate | _isWater | _owner == null || !_owner.IsCanUseSkill(id, typeAction, out bool isFriendly))
+            if (_isWater | _owner == null || !_owner.IsCanUseSkill(id, typeAction, out bool isFriendly))
                 return false;
 
             _mark = _poolMarks.Get(_thisTransform, false).View(isFriendly);
@@ -182,8 +185,7 @@ namespace Vurbiri.Colonization
         }
         public void SetUnselectable()
         {
-            if (_mark == null | _isGate | _isWater)
-                return;
+            if (_mark == null | _isWater) return;
 
             _poolMarks.Return(_mark);
             _collider.enabled = false;

@@ -13,10 +13,13 @@ namespace VurbiriEditor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
-            property.FindPropertyRelative(NAME_ENT).intValue = Random.Range(0, 100);
+            SerializedProperty negentropyProperty = property.FindPropertyRelative(NAME_ENT);
+            
+            if(negentropyProperty.intValue == 0)
+                negentropyProperty.intValue = Random.Range(1, Chance.MAX_CHANCE);
 
             label = EditorGUI.BeginProperty(position, label, property);
-            valueProperty.intValue = EditorGUI.IntSlider(position, label, valueProperty.intValue, 0, 100);
+            valueProperty.intValue = EditorGUI.IntSlider(position, label, valueProperty.intValue, 0, Chance.MAX_CHANCE);
             EditorGUI.EndProperty();
         }
     }
