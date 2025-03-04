@@ -13,6 +13,9 @@ namespace Vurbiri
         private readonly Action finalAction;
         private Coroutine _runningCoroutine = null;
 
+        public int Count => _coroutines.Count;
+        public bool IsRunning => _runningCoroutine != null;
+
         public CoroutinesQueue(MonoBehaviour monoBehaviour)
         {
             _monoBehaviour = monoBehaviour;

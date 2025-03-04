@@ -16,6 +16,7 @@ namespace Vurbiri
             return null;
         }
         public void Save<T>(string key, T data, bool toFile, Action<bool> callback) => callback?.Invoke(false);
+        public void Save<T>(string key, T data, float time, Action<bool> callback = null) => callback?.Invoke(false);
 
         public void Remove(string key, bool toFile, Action<bool> callback) => callback?.Invoke(false);
 

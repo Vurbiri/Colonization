@@ -7,13 +7,16 @@ using Vurbiri.Colonization;
 [JsonObject(MemberSerialization.OptIn)]
 public struct Key : IEquatable<Key>, IArrayable
 {
-    public readonly int X => _x;
-    public readonly int Y => _y;
-
     [JsonProperty("x")]
     private int _x;
     [JsonProperty("y")]
     private int _y;
+
+    private static Key _zero = new();
+    public static Key Zero => _zero;
+    
+    public readonly int X => _x;
+    public readonly int Y => _y;
 
     public Key(int x, int y)
     {

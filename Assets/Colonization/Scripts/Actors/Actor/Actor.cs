@@ -10,7 +10,7 @@ using Vurbiri.Reactive.Collections;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, ICancel, IPositionable, IDisposable
+    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, ICancel, IPositionable, IDisposable, IArrayable<int[][]>
     {
         #region Fields
         protected int _typeId;
@@ -115,7 +115,7 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         #region ToArray()
-        private const int ADD_SIZE_ARRAY = 2;
+        private const int ADD_SIZE_ARRAY = 2, SIZE_DATA_ARRAY = 4;
         public int[][] ToArray()
         {
             int i = 0;
@@ -123,10 +123,35 @@ namespace Vurbiri.Colonization.Actors
             int[][] array = new int[count + ADD_SIZE_ARRAY][];
 
             array[i++] = _currentHex.Key.ToArray();
-            array[i++] = new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value };
+            array[i++] = ToDataArray(null);
 
             for (int j = 0; j < count; j++, i++)
                 array[i] = _effects[j].ToArray();
+
+            return array;
+        }
+        public int[][] ToArray(int[][] array)
+        {
+            int count = _effects.Count;
+            if(array == null || array.Length != count + ADD_SIZE_ARRAY)
+                return ToArray();
+
+            int i = 0;
+            array[i] = _currentHex.Key.ToArray(array[i++]);
+            array[i] = ToDataArray(array[i++]);
+
+            for (int j = 0; j < count; j++, i++)
+                array[i] = _effects[j].ToArray(array[i]);
+
+            return array;
+        }
+        public int[] ToDataArray(int[] array)
+        {
+            if (array == null || array.Length != SIZE_DATA_ARRAY)
+                return new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value };
+            
+            int i = 0;
+            array[i++] = _id; array[i++] = _currentHP.Value; array[i++] = _currentAP.Value; array[i] = _move.Value;
 
             return array;
         }

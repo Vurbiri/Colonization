@@ -141,7 +141,7 @@ namespace Vurbiri.Colonization
                 return _waitHexagon.SetResult(empty[0]);
 
             for (int i = 0;i < emptyCount; i++)
-                empty[i].TrySetSelectableFree(isNotDemon);
+                empty[i].TrySetSelectableFree();
 
             _canCancel.Value = true;
             return _waitHexagon;

@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
         public static HexCreator Factory(Land land, ProjectSaveData saveData)
         {
             if(saveData.Load) return new HexLoader(land, saveData);
-                               return new HexGenerator(land, saveData);
+                              return new HexGenerator(land, saveData);
         }
 
         public abstract Hexagon Gate { get; }
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization
         {
             get
             {
-                Hexagon hex = _land.CreateHexagon(new Key(), ID_GATE, SurfaceId.Gate, Vector3.zero);
+                Hexagon hex = _land.CreateHexagon(Key.Zero, ID_GATE, SurfaceId.Gate, Vector3.zero);
                 _saveData.HexagonsBind(_land);
                 return hex;
             }
@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization
     {
         public HexLoader(Land land, ProjectSaveData saveData) : base(land, saveData) { }
 
-        public override Hexagon Gate => _land.CreateHexagon(new Key(), ID_GATE, SurfaceId.Gate, Vector3.zero);
+        public override Hexagon Gate => _land.CreateHexagon(Key.Zero, ID_GATE, SurfaceId.Gate, Vector3.zero);
 
         public override Hexagon Create(Vector3 position, int circle, bool isNotApex)
         {

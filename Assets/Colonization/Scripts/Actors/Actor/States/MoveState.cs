@@ -13,7 +13,6 @@ namespace Vurbiri.Colonization.Actors
         protected class MoveState : AActionState
         {
             private readonly float _speed;
-            private readonly bool _isNotDemon;
             private readonly Transform _parentTransform;
             private readonly ReactiveValue<bool> _isCancel;
             private WaitActivate _waitHexagon;
@@ -23,7 +22,6 @@ namespace Vurbiri.Colonization.Actors
             public MoveState(float speed, Actor parent) : base(parent)
             {
                 _speed = speed;
-                _isNotDemon = parent._owner != PlayerId.Demons;
                 _parentTransform = parent._thisTransform;
                 _isCancel = parent._canCancel;
             }
@@ -70,7 +68,7 @@ namespace Vurbiri.Colonization.Actors
 
                 List<Hexagon> empty = new(HEX.SIDES);
                 foreach (var hex in currentHex.Neighbors)
-                    if (hex.TrySetSelectableFree(_isNotDemon))
+                    if (hex.TrySetSelectableFree())
                         empty.Add(hex);
 
                 if (empty.Count == 0)

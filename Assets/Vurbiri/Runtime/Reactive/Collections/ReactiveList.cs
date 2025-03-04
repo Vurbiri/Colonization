@@ -1,10 +1,12 @@
 //Assets\Vurbiri\Runtime\Types\Reactive\Collections\ReactiveList.cs
+using Newtonsoft.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 namespace Vurbiri.Reactive.Collections
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
+    [JsonArray]
     public class ReactiveList<T> : IList<T>, IReactiveList<T>
     {
         private T[] _values;

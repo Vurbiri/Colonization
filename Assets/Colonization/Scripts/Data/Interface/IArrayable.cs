@@ -7,15 +7,10 @@ namespace Vurbiri.Colonization
         public int[] ToArray(int[] array);
     }
 
-    public interface IJaggedArrayable
+    public interface IArrayable<T>
     {
-        public int[][] ToArray();
-        public int[][] ToArray(int[][] array);
+        public T ToArray();
+        public T ToArray(T array);
     }
 
-    public interface IJMoreArrayable
-    {
-        public int[][][] ToArray();
-        public int[][][] ToArray(int[][][] array);
-    }
 }

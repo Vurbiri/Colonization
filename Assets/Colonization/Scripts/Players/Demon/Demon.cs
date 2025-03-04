@@ -7,12 +7,24 @@ namespace Vurbiri.Colonization
 {
     public class Demon : IDisposable
     {
+        protected const int GATE_CURCE = 5;
+
         public const int GATE_DEFENSE = 3;
 
+        protected int _curse;
 
         protected readonly Hexagon _gateHex;
         protected readonly DemonsSpawner _spawner;
         protected readonly ListReactiveItems<Actor> _demons = new();
+
+
+        public void Profit(int hexId)
+        {
+            if (hexId != CONST.ID_GATE)
+                return;
+
+            _curse += GATE_CURCE;
+        }
 
         public void Dispose()
         {

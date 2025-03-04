@@ -1,20 +1,21 @@
 //Assets\Colonization\Scripts\Currencies\Currencies.cs
 using System.Collections.Generic;
-using Vurbiri.Reactive;
+using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization
 {
     public class Currencies : ACurrenciesReactive
     {
+
         public new int this[int index] { get => _values[index].Value; set => _amount.Value += _values[index].Set(value); }
         public new int this[Id<CurrencyId> id] { get => _values[id.Value].Value; set => _amount.Value += _values[id.Value].Set(value); }
 
         #region Constructions
-        public Currencies(IReadOnlyList<int> array, IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood) : 
+        public Currencies(IReadOnlyList<int> array, IAbility maxValueMain, IAbility maxValueBlood) : 
             base(array, maxValueMain, maxValueBlood) { }
-        public Currencies(ACurrencies other, IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood) : 
+        public Currencies(ACurrencies other, IAbility maxValueMain, IAbility maxValueBlood) : 
             base(other, maxValueMain, maxValueBlood) { }
-        public Currencies(IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood) : 
+        public Currencies(IAbility maxValueMain, IAbility maxValueBlood) : 
             base(maxValueMain, maxValueBlood) { }
         public Currencies() : base() { }
         #endregion
@@ -44,9 +45,12 @@ namespace Vurbiri.Colonization
 
         public void Pay(ACurrencies cost)
         {
+            if (cost.Amount == 0)
+                return;
+
             int amount = _amount.Value;
             for (int i = 0; i < countAll; i++)
-                amount += _values[i].Add(-cost[i]);
+                _values[i].Add(-cost[i]);
 
             _amount.Value = amount;
         }
@@ -72,7 +76,7 @@ namespace Vurbiri.Colonization
             index = indexMax;
             do
             {
-                amount += max.DecrementNotSignal();
+                amount += max.SilentDecrement();
                 do
                 {
                     index = ++index % countMain;

@@ -16,12 +16,13 @@ namespace Vurbiri.Colonization
         private Id<PlayerId> _id;
         private Color _color;
         private readonly List<Road> _roadsLists = new();
-        private int _count = 0;
+        private readonly ReactiveValue<int> _count = new(0);
 
         private Subscriber<int[][][]> _subscriber;
         #endregion
 
-        public int Count => _count;
+        public int Count => _count.Value;
+        public IReactive<int> CountReactive => _count;
 
         public Roads Init(Id<PlayerId> id, Color color)
         {
@@ -68,7 +69,7 @@ namespace Vurbiri.Colonization
         public void Build(CrossroadLink link)
         {
             link.RoadBuilt(_id);
-            _count++;
+            _count.Value++;
 
             if (!AddRoadLine(link))
                 NewRoadLine(link);
@@ -121,7 +122,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        private void SetRoadsEndings()
+        public void SetRoadsEndings()
         {
             foreach (var road in _roadsLists)
                 road.SetGradient();

@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization.Data
         public readonly IReadOnlyDictionary<int, EdificeLoadData[]> edifices;
         public readonly IReadOnlyList<IReadOnlyList<Key>> roads;
         public readonly ActorLoadData[] warriors;
+        public readonly bool isLoaded;
 
         public PlayerLoadData(int[] resources, Dictionary<int, List<int[]>> edifices, int[][][] roads, List<int[][]> warriors)
         {
@@ -16,6 +17,7 @@ namespace Vurbiri.Colonization.Data
             this.edifices = CreateEdificesLoadData(edifices);
             this.roads = CreateRoadsData(roads);
             this.warriors = CreateActorData(warriors);
+            isLoaded = true;
 
             #region Local: CreateEdificesLoadData(..), CreateRoadsData(..), CreateActorData(...)
             //================================================================

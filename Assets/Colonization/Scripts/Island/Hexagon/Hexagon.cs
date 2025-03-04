@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization
             surface.Create(transform);
             eventBus.EventHexagonIdShow += OnShow;
 
-            if (_isWater | _isGate)
+            if (_isWater)
             {
                 Destroy(_collider);
                 _collider = null;
@@ -163,9 +163,9 @@ namespace Vurbiri.Colonization
 
         public bool IsEnemy(Id<PlayerId> id) => _owner != null && _owner.GetRelation(id) == Relation.Enemy;
 
-        public bool TrySetSelectableFree(bool isNotDemon)
+        public bool TrySetSelectableFree()
         {
-            if((_isGate & isNotDemon) | _isWater | _owner != null)
+            if(_isGate | _isWater | _owner != null)
                 return false;
 
             _mark = _poolMarks.Get(_thisTransform, false).View(true);
@@ -194,11 +194,9 @@ namespace Vurbiri.Colonization
         public void SetOwnerUnselectable()
         {
             SetUnselectable();
-            if (_owner == null || _owner.Owner == PlayerId.Player)
-                return;
-            _owner.ColliderEnable(false);
+            if (_ownerId != PlayerId.Player & _ownerId != PlayerId.None)
+                _owner.ColliderEnable(false);
         }
-
         #endregion
 
         private void OnShow(bool value)
@@ -214,7 +212,7 @@ namespace Vurbiri.Colonization
         {
             if(data == null || data.Length != SIZE_ARRAY)
                 throw new System.ArgumentException($"int[] data {data}");
-            
+
             int i = 0;
             id = data[i++];
             surfaceId = data[i];

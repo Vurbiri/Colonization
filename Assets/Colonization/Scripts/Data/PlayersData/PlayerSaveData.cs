@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\Data\PlayersData\PlayerSaveData.cs
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Actors;
@@ -10,51 +9,66 @@ namespace Vurbiri.Colonization.Data
 {
     using static SAVE_KEYS;
 
-    [JsonObject(MemberSerialization.OptIn)]
-    public class PlayerSaveData : IReactive<PlayerSaveData>, IDisposable
+    public class PlayerSaveData : IDisposable
     {
-        [JsonProperty(P_ID)]
-        private readonly int _id;
-        [JsonProperty(P_RESURSES)]
+        private const float DELAY_SAVE = 0.5f;
+        
         private readonly int[] _resources;
-        [JsonProperty(P_EDIFICES)]
-        private readonly Dictionary<int, List<int[]>> _edifices = new(EdificeGroupId.Count);
-        [JsonProperty(P_ROADS)]
-        private int[][][] _roads;
-        [JsonProperty(P_WARRIORS)]
-        private readonly List<int[][]> _warriors = new();
-        [JsonProperty(P_PERKS)]
+        private readonly Dictionary<int, List<int[]>> _edifices;
+        private readonly List<int[][]> _warriors;
         private int[] _perks;
 
-        private readonly bool _isLoaded;
-        private Subscriber<PlayerSaveData> _subscriber;
+        private readonly string _keyResources, _keyEdifices, _keyRoads, _keyWarriors, _keyPerks;
+        private readonly IStorageService _storage;
         private Unsubscribers _unsubscribers = new(CurrencyId.CountAll + EdificeGroupId.Count + 3);
 
-        public int Id => _id;
-        public bool IsLoaded => _isLoaded;
+        public PlayerLoadData LoadData { get; }
 
-        public PlayerSaveData(int id)
+        public PlayerSaveData(int id, IStorageService storage, bool isLoad)
         {
-            _id = id;
-            _resources = new int[CurrencyId.CountAll];
-            _edifices = new(EdificeGroupId.Count);
-            _perks = new int[0];
+            _storage = storage;
 
-            for (int i = 0; i < EdificeGroupId.Count; i++)
-                _edifices[i] = new();
+            string strId = id.ToString();
+            _keyResources = P_RESOURCES.Concat(strId); _keyEdifices = P_EDIFICES.Concat(strId); _keyRoads = P_ROADS.Concat(strId);
+            _keyWarriors = P_WARRIORS.Concat(strId); _keyPerks = P_PERKS.Concat(strId);
 
-            _isLoaded = false;
+            if (!(isLoad && storage.TryGet(_keyResources, out _resources)))
+                _resources = new int[CurrencyId.CountAll];
+
+            if (!(isLoad && storage.TryGet(_keyEdifices, out _edifices)))
+            {
+                _edifices = new(EdificeGroupId.Count);
+                for (int i = 0; i < EdificeGroupId.Count; i++)
+                    _edifices[i] = new();
+            }
+
+            if (!(isLoad && storage.TryGet(_keyRoads, out int[][][] roads)))
+                roads = new int[0][][];
+
+            if (!(isLoad && storage.TryGet(_keyPerks, out _perks)))
+                _perks = new int[0];
+
+            if (!(isLoad && storage.TryGet(_keyWarriors, out _warriors)))
+                _warriors = new();
+
+            if(isLoad)
+                LoadData = new(_resources, _edifices, roads, _warriors);
         }
-
-        [JsonConstructor]
-        public PlayerSaveData() { _isLoaded = true; }
-
-        public PlayerLoadData ToLoadData => new(_resources, _edifices, _roads, _warriors);
+                
 
         #region Bind
-        public void CurrenciesBind(IReactive<int, int> currencies)
+        public void CurrenciesBind(IReactive<int, int> currencies, bool calling)
         {
-            _unsubscribers += currencies.Subscribe((i, v) => _resources[i] = v, !_isLoaded);
+            _unsubscribers += currencies.Subscribe(OnCurrencies, calling);
+
+            #region Local OnCurrencies(..)
+            //==============================
+            void OnCurrencies(int index, int value)
+            {
+                _resources[index] = value;
+                _storage.Save(_keyResources, _resources, DELAY_SAVE);
+            }
+            #endregion
         }
 
         public void EdificesBind(IReadOnlyList<IReactiveList<IArrayable>> edificesReactive)
@@ -66,7 +80,7 @@ namespace Vurbiri.Colonization.Data
             //==============================
             void Bind(IReactiveList<IArrayable> edificesReactive, List<int[]> edifices)
             {
-                _unsubscribers += edificesReactive.Subscribe(OnEdifice, !_isLoaded);
+                _unsubscribers += edificesReactive.Subscribe(OnEdifice, false);
 
                 #region Local OnEdifice(..)
                 //==============================
@@ -81,12 +95,13 @@ namespace Vurbiri.Colonization.Data
                             edifices.RemoveAt(index);
                             break;
                         case TypeEvent.Change:
-                            crossroad.ToArray(edifices[index]);
+                            edifices[index] = crossroad.ToArray(edifices[index]);
                             break;
                         default:
                             return;
                     }
-                    _subscriber.Invoke(this);
+
+                    _storage.Save(_keyEdifices, _edifices, DELAY_SAVE);
                 }
                 #endregion
             }
@@ -94,20 +109,19 @@ namespace Vurbiri.Colonization.Data
         }
         public void RoadsBind(IReactive<int[][][]> roadsReactive)
         {
-            _unsubscribers += roadsReactive.Subscribe(OnRoads, !_isLoaded);
+            _unsubscribers += roadsReactive.Subscribe(OnRoads, false);
 
             #region Local OnRoads(..)
             //==============================
             void OnRoads(int[][][] values)
             {
-                _roads = values;
-                _subscriber.Invoke(this);
+                _storage.Save(_keyRoads, values, DELAY_SAVE);
             }
             #endregion
         }
         public void WarriorsBind(IListReactiveItems<Actor> warriorsReactive)
         {
-            _unsubscribers += warriorsReactive.Subscribe(OnWarriors, !_isLoaded);
+            _unsubscribers += warriorsReactive.Subscribe(OnWarriors, false);
 
             #region Local OnWarriors(..)
             //==============================
@@ -122,24 +136,14 @@ namespace Vurbiri.Colonization.Data
                         _warriors.RemoveAt(actor.Index);
                         break;
                     case TypeEvent.Change:
-                        _warriors[actor.Index] = actor.ToArray();
+                        _warriors[actor.Index] = actor.ToArray(_warriors[actor.Index]);
                         break;
                     default:
                         return;
                 }
-                _subscriber.Invoke(this);
+                _storage.Save(_keyWarriors, _warriors, DELAY_SAVE);
             }
             #endregion
-        }
-        #endregion
-
-        #region IReactive
-        public Unsubscriber Subscribe(Action<PlayerSaveData> action, bool calling = true)
-        {
-            if (calling)
-                action(this);
-
-            return _subscriber.Add(action);
         }
         #endregion
 

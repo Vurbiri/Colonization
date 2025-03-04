@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class ACurrenciesReactive : ACurrencies, IDisposable, IReactive<int, int>
+    public abstract class ACurrenciesReactive : ACurrencies, IReactive<int, int>
     {
         protected ACurrency[] _values = new ACurrency[countAll];
         protected ReactiveValue<int> _amount = new(0);
@@ -14,7 +15,7 @@ namespace Vurbiri.Colonization
         private Subscriber<int, int> _subscriber;
 
         public override int Amount => _amount.Value;
-        public IReactive<int> AmountReactive => _amount;
+        public IReactive<int> AmountCurrent => _amount;
         public IReactive<int> AmountMax => _maxValueMain;
         public IReactive<int> BloodCurrent => _values[CurrencyId.Blood];
         public IReactive<int> BloodMax => _maxValueBlood;
@@ -23,7 +24,7 @@ namespace Vurbiri.Colonization
         public override int this[Id<CurrencyId> id] { get => _values[id.Value].Value; }
 
         #region Constructions
-        public ACurrenciesReactive(IReadOnlyList<int> array, IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood)
+        public ACurrenciesReactive(IReadOnlyList<int> array, IAbility maxValueMain, IAbility maxValueBlood)
         {
             _maxValueMain = maxValueMain;
             _maxValueBlood = maxValueBlood;
@@ -42,7 +43,7 @@ namespace Vurbiri.Colonization
 
             _amount.SilentValue = amount;
         }
-        public ACurrenciesReactive(ACurrencies other, IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood)
+        public ACurrenciesReactive(ACurrencies other, IAbility maxValueMain, IAbility maxValueBlood)
         {
             _maxValueMain = maxValueMain;
             _maxValueBlood = maxValueBlood;
@@ -59,7 +60,7 @@ namespace Vurbiri.Colonization
             _amount.SilentValue = other.Amount;
         }
 
-        public ACurrenciesReactive(IReactiveValue<int> maxValueMain, IReactiveValue<int> maxValueBlood)
+        public ACurrenciesReactive(IAbility maxValueMain, IAbility maxValueBlood)
         {
             _maxValueMain = maxValueMain;
             _maxValueBlood = maxValueBlood;
@@ -102,11 +103,6 @@ namespace Vurbiri.Colonization
         public Unsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
         #endregion
 
-        public void Dispose()
-        {
-            for (int i = 0; i < countAll; i++)
-                _values[i].Dispose();
-        }
 
         #region Nested: ACurrency, CurrencyMain, CurrencyBlood
         //*******************************************************
@@ -135,7 +131,7 @@ namespace Vurbiri.Colonization
                 Value = _value + 1;
                 return 1;
             }
-            public override int DecrementNotSignal()
+            public override int SilentDecrement()
             {
                 if (_value == 0)
                     return 0;
@@ -147,8 +143,7 @@ namespace Vurbiri.Colonization
         //*******************************************************
         protected class CurrencyBlood : ACurrency
         {
-            private int _max;
-            private readonly Unsubscriber _unsubscriber;
+            private readonly IAbility _max;
 
             public override int Value 
             { 
@@ -156,21 +151,21 @@ namespace Vurbiri.Colonization
                 protected set
                 {
                     if (value != _value)
-                        base._subscriber.Invoke(_value = Mathf.Clamp(value, 0, _max));
+                        _subscriber.Invoke(_value = Mathf.Clamp(value, 0, _max.Value));
                 }
             }
 
             public CurrencyBlood() : base(0) { }
-            public CurrencyBlood(IReactive<int> maxValue) : this(0, maxValue) { }
-            public CurrencyBlood(int value, IReactive<int> maxValue) : base(value)
+            public CurrencyBlood(IAbility maxValue) : this(0, maxValue) { }
+            public CurrencyBlood(int value, IAbility maxValue) : base(value)
             {
-                _unsubscriber = maxValue.Subscribe(v => _max = v);
+                _max = maxValue;
             }
 
             public override int Set(int value)
             {
                 if (value != _value)
-                    base._subscriber.Invoke(_value = Mathf.Clamp(value, 0, _max));
+                    _subscriber.Invoke(_value = Mathf.Clamp(value, 0, _max.Value));
                 return 0;
             }
 
@@ -178,21 +173,16 @@ namespace Vurbiri.Colonization
             
             public override int Increment() => Set(_value + 1);
 
-            public override int DecrementNotSignal()
+            public override int SilentDecrement()
             {
                 if (_value > 0)
                     _value -= 1;
                 return 0;
             }
 
-            public override void Dispose()
-            {
-                _unsubscriber?.Unsubscribe();
-                _subscriber.Dispose();
-            }
         }
         //*******************************************************
-        protected abstract class ACurrency : AReactiveValue<int>, IDisposable, IEquatable<ACurrency>, IComparable<ACurrency>
+        protected abstract class ACurrency : AReactiveValue<int>, IEquatable<ACurrency>, IComparable<ACurrency>
         {
             protected int _value;
 
@@ -212,7 +202,7 @@ namespace Vurbiri.Colonization
             public abstract int Add(int value);
 
             public abstract int Increment();
-            public abstract int DecrementNotSignal();
+            public abstract int SilentDecrement();
 
             public void Signal() => _subscriber.Invoke(_value);
 
@@ -224,7 +214,6 @@ namespace Vurbiri.Colonization
             public override bool Equals(object other) => Equals(other as ACurrency);
             public override int GetHashCode() => _value.GetHashCode();
             public override string ToString() => _value.ToString();
-            public virtual void Dispose() { }
 
             public static bool operator ==(ACurrency a, ACurrency b) => (a is null & b is null) || (a is not null & b is not null && a._value == b._value);
             public static bool operator !=(ACurrency a, ACurrency b) => !(a == b);

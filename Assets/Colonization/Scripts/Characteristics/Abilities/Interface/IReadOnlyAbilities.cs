@@ -1,11 +1,11 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\Interface\IReadOnlyAbilities.cs
-using Vurbiri.Reactive.Collections;
+using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public interface IReadOnlyAbilities<TId> : IReadOnlyReactiveList<TId, int> where TId : AbilityId<TId>
+    public interface IReadOnlyAbilities<TId> : IReadOnlyList<IAbility> where TId : AbilityId<TId>
     {
-        public IAbility GetAbility(Id<TId> stateId);
+        public IAbility this[Id<TId> index] { get; }
 
         public bool IsGreater(Id<TId> stateId, int value);
         public bool IsLess(Id<TId> stateId, int value);

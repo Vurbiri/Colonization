@@ -7,6 +7,7 @@ using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
+using static Vurbiri.Colonization.Characteristics.PlayerAbilityId;
 
 namespace Vurbiri.Colonization
 {
@@ -50,13 +51,15 @@ namespace Vurbiri.Colonization
             _prices = settings.prices;
             _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
 
-            if (data.IsLoaded)
+            PlayerLoadData loadData = data.LoadData;
+
+            if (loadData.isLoaded)
             {
-                PlayerLoadData loadData = data.ToLoadData;
+                
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
                 Land land = SceneObjects.Get<Land>();
 
-                _resources = new(loadData.resources, _abilities[PlayerAbilityId.MaxMainResources], _abilities[PlayerAbilityId.MaxBlood]);
+                _resources = new(loadData.resources, _abilities[MaxMainResources], _abilities[MaxBlood]);
                 _edifices = new(playerId, loadData.edifices, crossroads, _abilities);
                 _roads.Restoration(loadData.roads, crossroads);
 
@@ -68,14 +71,14 @@ namespace Vurbiri.Colonization
             }
             else
             {
-                _resources = new(_prices.PlayersDefault, _abilities[PlayerAbilityId.MaxMainResources], _abilities[PlayerAbilityId.MaxBlood]);
+                _resources = new(_prices.PlayersDefault, _abilities[MaxMainResources], _abilities[MaxBlood]);
                 _edifices = new(_abilities);
                 _perks = new();
             }
 
             _exchangeRate = new(_abilities);
 
-            data.CurrenciesBind(_resources);
+            data.CurrenciesBind(_resources, !loadData.isLoaded);
             data.EdificesBind(_edifices.values);
             data.RoadsBind(_roads);
             data.WarriorsBind(_warriors);
@@ -100,7 +103,7 @@ namespace Vurbiri.Colonization
                 return;
             }
 
-            if (_abilities.IsTrue(PlayerAbilityId.IsFreeGroundRes) & freeGroundRes != null)
+            if (_abilities.IsTrue(IsFreeGroundRes) & freeGroundRes != null)
                 _resources.AddFrom(freeGroundRes);
 
             _resources.AddFrom(_edifices.ProfitFromEdifices(hexId));
@@ -121,11 +124,9 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public override string ToString() => $"Player: {_id}";
-
+        
         public void Dispose()
         {
-            _resources.Dispose();
             _exchangeRate.Dispose();
             _edifices.Dispose();
             for (int i = _warriors.Count - 1; i >= 0; i--)

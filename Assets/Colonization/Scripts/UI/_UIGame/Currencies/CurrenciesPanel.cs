@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.UI
             }
 
             pos.x -= (cSize.x - aSize.x) * 0.5f;
-            Instantiate(_amountUIPrefab, thisRectTransform).Init(pos, currencies.AmountReactive, currencies.AmountMax, settings);
+            Instantiate(_amountUIPrefab, thisRectTransform).Init(pos, currencies.AmountCurrent, currencies.AmountMax, settings);
 
             pos.x += (bSize.x + aSize.x) * 0.5f + _space * 2f;
             Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, currencies.BloodCurrent, currencies.BloodMax, settings, _directionPopup);

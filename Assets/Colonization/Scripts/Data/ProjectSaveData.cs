@@ -7,8 +7,8 @@ namespace Vurbiri.Colonization.Data
 {
     public class ProjectSaveData : IDisposable
     {
-        private PlayersSaveData _playersSaveData;
-
+        //private PlayersSaveData _playersSaveData;
+        private PlayerSaveData[] _playersSaveData;
         private readonly IStorageService _storage;
         private Unsubscribers _unProject = new(), _unGameplay = new();
 
@@ -19,7 +19,19 @@ namespace Vurbiri.Colonization.Data
 
         public bool Load;
 
-        public PlayersSaveData PlayersSaveData => _playersSaveData ??= new(Load, _storage);
+        public PlayerSaveData[] PlayersSaveData
+        {
+            get
+            {
+               if (_playersSaveData != null) return _playersSaveData;
+
+                _playersSaveData = new PlayerSaveData[PlayerId.PlayersCount];
+                for (int i = 0; i < PlayerId.PlayersCount; i++)
+                    _playersSaveData[i] = new(i, _storage, Load);
+
+                return _playersSaveData;
+            }
+        }
 
         #region Load
         public bool TryGetSettingsData(out int[] profile, out float[] volumes)
@@ -63,7 +75,7 @@ namespace Vurbiri.Colonization.Data
 
         public void HexagonsBind(IReactive<Key, int[]> hex)
         {
-            _unGameplay += hex.Subscribe((key, data) => _storage.Save(key.ToSaveKey(SAVE_KEYS.HEX_SEPARATOR), data));
+            _unGameplay += hex.Subscribe((key, data) => _storage.Save(key.ToSaveKey(SAVE_KEYS.HEX_SEPARATOR), data, 1f));
         }
         public void DiplomacyBind(IReactive<IReadOnlyList<int>> diplomacy, bool calling)
         {
@@ -80,7 +92,8 @@ namespace Vurbiri.Colonization.Data
         {
             _unProject.Unsubscribe();
             _unGameplay.Unsubscribe();
-            _playersSaveData.Dispose();
+            for (int i = 0; i < PlayerId.PlayersCount; i++)
+                _playersSaveData[i].Dispose();
         }
     }
 }

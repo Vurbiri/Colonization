@@ -18,13 +18,11 @@ namespace Vurbiri.Colonization
         #region Constructor
         public Players(Settings settings, ProjectSaveData saveData)
         {
-            PlayersSaveData playersData = saveData.PlayersSaveData;
+            PlayerSaveData[] playersData = saveData.PlayersSaveData;
 
             _player = new Player(0, playersData[0], settings);
             for (int i = 0, j = AI_01; i < CountAI; i++, j++)
                 _playersAI[i] = new(j, playersData[j], settings);
-
-            playersData.Save(true);
         }
         #endregion
 

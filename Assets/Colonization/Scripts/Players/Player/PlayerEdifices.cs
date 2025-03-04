@@ -89,10 +89,10 @@ namespace Vurbiri.Colonization
 
             private void GetAbilities()
             {
-                _shrinePassiveProfit = _abilities.GetAbility(PlayerAbilityId.ShrinePassiveProfit);
-                _shrineProfit = _abilities.GetAbility(PlayerAbilityId.ShrineProfit);
-                _portsProfit = _abilities.GetAbility(PlayerAbilityId.PortsProfit);
-                _compensationRes = _abilities.GetAbility(PlayerAbilityId.CompensationRes);
+                _shrinePassiveProfit = _abilities[PlayerAbilityId.ShrinePassiveProfit];
+                _shrineProfit = _abilities[PlayerAbilityId.ShrineProfit];
+                _portsProfit = _abilities[PlayerAbilityId.PortsProfit];
+                _compensationRes = _abilities[PlayerAbilityId.CompensationRes];
             }
 
             private ReactiveList<Crossroad> CreateEdifices(ref ReactiveList<Crossroad> values, EdificeLoadData[] loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)

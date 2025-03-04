@@ -172,7 +172,7 @@ namespace Vurbiri.Colonization
         public int[] ToArray(int[] array)
         {
             if (array == null || array.Length != SIZE_ARRAY)
-                return ToArray();
+                return new int[] { _key.X, _key.Y, _states.id.Value, _isWall ? 1 : 0 };
 
             int i = 0;
             array[i++] = _key.X; array[i++] = _key.Y; array[i++] = _states.id.Value; array[i] = _isWall ? 1 : 0;

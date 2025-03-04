@@ -13,6 +13,7 @@ namespace Vurbiri
         public IEnumerator Load_Cn(string key, Action<bool> callback);
 
         public void Save<T>(string key, T data, bool toFile = true, Action<bool> callback = null);
+        public void Save<T>(string key, T data, float time, Action<bool> callback = null);
 
         public bool TryGet<T>(string key, out T value);
 

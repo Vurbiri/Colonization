@@ -4,27 +4,24 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class AAbility<TId> : IAbility, IReactiveValue<int>, IValueId<TId> where TId : AbilityId<TId>
+    public abstract class AAbility<TId> : IAbility, IValueId<TId> where TId : AbilityId<TId>
     {
-        private readonly Id<TId> _id;
-
         protected int _value;
-
         protected Subscriber<int> _subscriber;
 
-        public Id<TId> Id => _id;
+        public Id<TId> Id { get; }
         public virtual int Value { get => _value; set { } }
         public virtual bool IsValue { get => _value > 0; set { } }
 
         public AAbility(Id<TId> id, int value)
         {
-            _id = id;
+            Id = id;
             _value = value;
         }
 
         public AAbility(AAbility<TId> other)
         {
-            _id = other._id;
+            Id = other.Id;
             _value = other._value;
         }
 

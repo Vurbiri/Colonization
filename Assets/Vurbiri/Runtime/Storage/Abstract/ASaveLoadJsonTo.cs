@@ -42,7 +42,7 @@ namespace Vurbiri
         public void Save<T>(string key, T data, bool toFile, Action<bool> callback)
         {
             bool result = SaveToMemory(key, data);
-            if (!(toFile & _modified))
+            if (!(toFile & _modified) | _cnQueue.Count > 0)
             {
                 callback?.Invoke(result);
                 return;
@@ -51,11 +51,25 @@ namespace Vurbiri
             _cnQueue.Enqueue(SaveToFile_Cn(callback));
         }
 
+        public void Save<T>(string key, T data, float time, Action<bool> callback)
+        {
+            bool result = SaveToMemory(key, data);
+            if (!_modified | _cnQueue.Count > 0)
+            {
+                callback?.Invoke(result);
+                return;
+            }
+
+            _cnQueue.Enqueue(new WaitForSecondsRealtime(time));
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
+        }
+
         public void Remove(string key, bool fromFile, Action<bool> callback)
         {
             bool result = _saved.Remove(key);
             _modified |= result;
-            if (!(fromFile & _modified))
+
+            if (!(fromFile & _modified) | _cnQueue.Count > 0)
             {
                 callback?.Invoke(result);
                 return;
@@ -69,7 +83,7 @@ namespace Vurbiri
         {
             _modified |= _saved.Count > 0;
             _saved.Clear();
-            if (!(fromFile & _modified))
+            if (!(fromFile & _modified) | _cnQueue.Count > 0)
             {
                 callback?.Invoke(true);
                 return;
@@ -89,7 +103,8 @@ namespace Vurbiri
                 if (restore != null) 
                     _saved.Add(keyExclude, restore);
             }
-            if (!(fromFile & _modified))
+
+            if (!(fromFile & _modified) | _cnQueue.Count > 0)
             {
                 callback?.Invoke(true);
                 return;
@@ -116,7 +131,8 @@ namespace Vurbiri
                         _saved.Add(keyExcludes[i], values[i]);
                 }
             }
-            if (!(fromFile & _modified))
+
+            if (!(fromFile & _modified) | _cnQueue.Count > 0)
             {
                 callback?.Invoke(true);
                 return;

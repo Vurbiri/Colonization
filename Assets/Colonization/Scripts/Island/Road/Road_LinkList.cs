@@ -54,11 +54,10 @@ namespace Vurbiri.Colonization
                 _count++;
             }
             public void Add(T value) => _actionAdd(value);
-            public void Add(params T[] values) => AddRang(values);
-            public void AddRang(IEnumerable<T> values)
+            public void Add(T valueA, T valueB)
             {
-                foreach (T value in values)
-                    _actionAdd(value);
+                _actionAdd(valueA);
+                _actionAdd(valueB);
             }
 
             public bool Union(LinkList<T> other)

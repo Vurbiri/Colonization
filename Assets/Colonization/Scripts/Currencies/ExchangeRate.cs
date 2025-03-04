@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
-            _exchange.Dispose();
+
         }
     }
 }
