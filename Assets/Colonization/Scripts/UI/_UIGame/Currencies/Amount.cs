@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
-        public void Init(Vector3 position, IReactive<int> amount, IReactive<int> max, TextColorSettings settings)
+        public void Init(Vector3 position, IReactiveValue<int> amount, IReactiveValue<int> max, TextColorSettings settings)
         {
             _thisRectTransform.localPosition = position;
 

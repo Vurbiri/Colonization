@@ -30,7 +30,6 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                UnityEngine.Debug.Log(_effects.Contains(_code));
                 if (_effects.Contains(_code))
                     return;
 

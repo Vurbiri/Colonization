@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Island\Land\Land.cs
+//Assets\Colonization\Scripts\Island\Hexagon\Hexagons.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,12 +10,12 @@ namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public class Land : IReactive<Key, int[]>
+    public class Hexagons : IReactive<Key, int[]>
     {
         private readonly GameplayEventBus _eventBus;
         private readonly Pool<HexagonMark> _poolMarks;
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
-        private readonly Dictionary<int, List<Key>> _hexagonsIdForKey = new(NUMBERS_HEX.Count + 1);
+        private readonly Dictionary<int, List<Key>> _hexagonsIdForKey = new(HEX_IDS.Count + 1);
 
         private Subscriber<Key, int[]> _subscriber;
 
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
 
         public Hexagon this[Key key] => _hexagons[key];
 
-        public Land(LandInitData initData, GameplayEventBus eventBus)
+        public Hexagons(LandInitData initData, GameplayEventBus eventBus)
         {
             _landMesh = initData.landMesh.Init();
             _prefabHex = initData.prefabHex;
@@ -36,10 +36,10 @@ namespace Vurbiri.Colonization
 
             _poolMarks = new(initData.prefabHexMark, _container, HEX.SIDES);
 
-            int count = NUMBERS_HEX.Count, capacity = MAX_HEXAGONS / count + 1;
+            int count = HEX_IDS.Count, capacity = MAX_HEXAGONS / count + 1;
             for (int i = 0; i < count; i++)
-                _hexagonsIdForKey[NUMBERS_HEX[i]] = new List<Key>(capacity);
-            _hexagonsIdForKey[ID_GATE] = new List<Key>(1);
+                _hexagonsIdForKey[HEX_IDS[i]] = new List<Key>(capacity);
+            _hexagonsIdForKey[GATE_ID] = new List<Key>(1);
         }
 
         public Hexagon CreateHexagon(Key key, int id, int surfaceId, Vector3 position)

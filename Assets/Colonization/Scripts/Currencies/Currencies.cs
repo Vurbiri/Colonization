@@ -6,31 +6,30 @@ namespace Vurbiri.Colonization
 {
     public class Currencies : ACurrenciesReactive
     {
-
-        public new int this[int index] { get => _values[index].Value; set => _amount.Value += _values[index].Set(value); }
-        public new int this[Id<CurrencyId> id] { get => _values[id.Value].Value; set => _amount.Value += _values[id.Value].Set(value); }
-
         #region Constructions
-        public Currencies(IReadOnlyList<int> array, IAbility maxValueMain, IAbility maxValueBlood) : 
-            base(array, maxValueMain, maxValueBlood) { }
-        public Currencies(ACurrencies other, IAbility maxValueMain, IAbility maxValueBlood) : 
-            base(other, maxValueMain, maxValueBlood) { }
-        public Currencies(IAbility maxValueMain, IAbility maxValueBlood) : 
-            base(maxValueMain, maxValueBlood) { }
-        public Currencies() : base() { }
+        public Currencies(IReadOnlyList<int> array, IAbility maxValueMain, IAbility maxValueBlood) : base(array, maxValueMain, maxValueBlood) { }
+        public Currencies(ACurrencies other, IAbility maxValueMain, IAbility maxValueBlood) : base(other, maxValueMain, maxValueBlood) { }
+        public Currencies(IAbility maxValueMain, IAbility maxValueBlood) : base(maxValueMain, maxValueBlood) { }
         #endregion
-
-        public void Increment(int index) => _amount.Value += _values[index].Increment();
-        public void Increment(Id<CurrencyId> id) => _amount.Value += _values[id.Value].Increment();
 
         public void Add(int index, int value)
         {
-            if (value != 0)
-                _amount.Value += _values[index].Add(value);
+            if (value == 0)
+                return;
+
+            _amount.Value += _values[index].Add(value);
+            _subscriber.Invoke(this);
         }
         public void Add(Id<CurrencyId> id, int value) => Add(id.Value, value);
-        
-        public void AddBlood(int value) => _values[CurrencyId.Blood].Add(value);
+
+        public void AddBlood(int value)
+        {
+            if (value == 0)
+                return;
+
+            _values[CurrencyId.Blood].Add(value);
+            _subscriber.Invoke(this);
+        }
 
         public void AddFrom(ACurrencies other)
         {
@@ -41,6 +40,7 @@ namespace Vurbiri.Colonization
                 _values[i].Add(other[i]);
 
             _amount.Value += other.Amount;
+            _subscriber.Invoke(this);
         }
 
         public void Pay(ACurrencies cost)
@@ -50,9 +50,10 @@ namespace Vurbiri.Colonization
 
             int amount = _amount.Value;
             for (int i = 0; i < countAll; i++)
-                _values[i].Add(-cost[i]);
+                amount += _values[i].Add(-cost[i]);
 
             _amount.Value = amount;
+            _subscriber.Invoke(this);
         }
 
         public void ClampMain()
@@ -95,13 +96,16 @@ namespace Vurbiri.Colonization
                 _values[index].Signal();
 
             _amount.Value = amount;
+            _subscriber.Invoke(this);
         }
 
         public void Clear()
         {
             for (int i = 0; i < countAll; i++)
                 _values[i].Set(0);
+
             _amount.Value = 0;
+            _subscriber.Invoke(this);
         }
     }
 }

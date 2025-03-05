@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         public const int Demons         = 3;
 
         [NotId] public const int PlayersCount = 3;
-        [NotId] public const int CountAI = 2;
+        [NotId] public const int AICount = 2;
 
         static PlayerId() => RunConstructor();
     }

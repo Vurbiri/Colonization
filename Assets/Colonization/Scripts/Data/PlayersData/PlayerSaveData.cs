@@ -1,6 +1,8 @@
 //Assets\Colonization\Scripts\Data\PlayersData\PlayerSaveData.cs
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
@@ -13,27 +15,30 @@ namespace Vurbiri.Colonization.Data
     {
         private const float DELAY_SAVE = 0.5f;
         
-        private readonly int[] _resources;
         private readonly Dictionary<int, List<int[]>> _edifices;
         private readonly List<int[][]> _warriors;
         private int[] _perks;
 
         private readonly string _keyResources, _keyEdifices, _keyRoads, _keyWarriors, _keyPerks;
         private readonly IStorageService _storage;
-        private Unsubscribers _unsubscribers = new(CurrencyId.CountAll + EdificeGroupId.Count + 3);
+        private readonly Coroutines _coroutines;
+        private Coroutine _saveWarriors;
+        private readonly WaitForSecondsRealtime _delaySave = new(DELAY_SAVE * 1.5f);
+        private Unsubscribers _unsubscribers = new(EdificeGroupId.Count + 4);
 
         public PlayerLoadData LoadData { get; }
 
         public PlayerSaveData(int id, IStorageService storage, bool isLoad)
         {
             _storage = storage;
+            _coroutines = SceneServices.Get<Coroutines>();
 
             string strId = id.ToString();
             _keyResources = P_RESOURCES.Concat(strId); _keyEdifices = P_EDIFICES.Concat(strId); _keyRoads = P_ROADS.Concat(strId);
             _keyWarriors = P_WARRIORS.Concat(strId); _keyPerks = P_PERKS.Concat(strId);
 
-            if (!(isLoad && storage.TryGet(_keyResources, out _resources)))
-                _resources = new int[CurrencyId.CountAll];
+            if (!(isLoad && storage.TryGet(_keyResources, out int[] resources)))
+                resources = new int[CurrencyId.CountAll];
 
             if (!(isLoad && storage.TryGet(_keyEdifices, out _edifices)))
             {
@@ -45,30 +50,21 @@ namespace Vurbiri.Colonization.Data
             if (!(isLoad && storage.TryGet(_keyRoads, out int[][][] roads)))
                 roads = new int[0][][];
 
-            if (!(isLoad && storage.TryGet(_keyPerks, out _perks)))
-                _perks = new int[0];
-
             if (!(isLoad && storage.TryGet(_keyWarriors, out _warriors)))
                 _warriors = new();
 
+            if (!(isLoad && storage.TryGet(_keyPerks, out _perks)))
+                _perks = new int[0];
+
             if(isLoad)
-                LoadData = new(_resources, _edifices, roads, _warriors);
+                LoadData = new(resources, _edifices, roads, _warriors);
         }
                 
 
         #region Bind
-        public void CurrenciesBind(IReactive<int, int> currencies, bool calling)
+        public void CurrenciesBind(IReactive<IReadOnlyList<int>> currencies, bool calling)
         {
-            _unsubscribers += currencies.Subscribe(OnCurrencies, calling);
-
-            #region Local OnCurrencies(..)
-            //==============================
-            void OnCurrencies(int index, int value)
-            {
-                _resources[index] = value;
-                _storage.Save(_keyResources, _resources, DELAY_SAVE);
-            }
-            #endregion
+            _unsubscribers += currencies.Subscribe(value => _storage.Save(_keyResources, value, DELAY_SAVE), calling);
         }
 
         public void EdificesBind(IReadOnlyList<IReactiveList<IArrayable>> edificesReactive)
@@ -109,15 +105,7 @@ namespace Vurbiri.Colonization.Data
         }
         public void RoadsBind(IReactive<int[][][]> roadsReactive)
         {
-            _unsubscribers += roadsReactive.Subscribe(OnRoads, false);
-
-            #region Local OnRoads(..)
-            //==============================
-            void OnRoads(int[][][] values)
-            {
-                _storage.Save(_keyRoads, values, DELAY_SAVE);
-            }
-            #endregion
+            _unsubscribers += roadsReactive.Subscribe(value => _storage.Save(_keyRoads, value, DELAY_SAVE), false);
         }
         public void WarriorsBind(IListReactiveItems<Actor> warriorsReactive)
         {
@@ -141,7 +129,18 @@ namespace Vurbiri.Colonization.Data
                     default:
                         return;
                 }
-                _storage.Save(_keyWarriors, _warriors, DELAY_SAVE);
+
+                _saveWarriors ??= _coroutines.Run(SaveWarriors_Cn());
+
+                #region Local SaveWarriors_Cn()
+                //==============================
+                IEnumerator SaveWarriors_Cn()
+                {
+                    yield return _delaySave;
+                    _storage.Save(_keyWarriors, _warriors);
+                    _saveWarriors = null;
+                }
+                #endregion
             }
             #endregion
         }

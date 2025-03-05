@@ -38,6 +38,9 @@ namespace Vurbiri.Colonization.Actors
             _timings ??= new TimingSkillSettings[count];
             if (_timings.Length != count)
                 Array.Resize(ref _timings, count);
+
+            for (int i = 0; i < count; i++)
+                _timings[i] = new();
         }
 
         private void OnValidate()

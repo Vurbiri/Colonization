@@ -18,6 +18,16 @@ public struct Key : IEquatable<Key>, IArrayable
     public readonly int X => _x;
     public readonly int Y => _y;
 
+    public readonly int Distance
+    {
+        get
+        {
+            int x = Mathf.Abs(_x), y = Mathf.Abs(_y);
+            if (y - x < 0) return (x + y) >> 1;
+            return y;
+        }
+    }
+
     public Key(int x, int y)
     {
         _x = x; _y = y;
@@ -62,6 +72,7 @@ public struct Key : IEquatable<Key>, IArrayable
     #endregion
 
     public readonly string ToSaveKey(string separator) => $"{_x}{separator}{_y}";
+    public readonly string ToSaveKey() => $"{_x}{_y}";
 
     public readonly bool Equals(Key other) => _x == other._x & _y == other._y;
     public override readonly bool Equals(object obj) => obj is Key key && _x == key._x & _y == key._y;
@@ -78,6 +89,6 @@ public struct Key : IEquatable<Key>, IArrayable
     public static bool operator ==(Key a, Key b) => a._x == b._x & a._y == b._y;
     public static bool operator !=(Key a, Key b) => a._x != b._x | a._y != b._y;
 
-    public override readonly string ToString() => $"{_x}, {_y}";
+    public override readonly string ToString() => $"[{_x}, {_y}]";
 
 }

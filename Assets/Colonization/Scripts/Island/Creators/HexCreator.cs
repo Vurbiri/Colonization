@@ -12,16 +12,16 @@ namespace Vurbiri.Colonization
 	{
         private readonly Vector2 _offsetHex = new(HEX_DIAMETER_IN, HEX_DIAMETER_IN * SIN_60);
 
-        protected Land _land;
+        protected Hexagons _land;
 		protected ProjectSaveData _saveData;
             			
-		public HexCreator(Land land, ProjectSaveData saveData)
+		public HexCreator(Hexagons land, ProjectSaveData saveData)
 		{
 			_land = land;
 			_saveData = saveData;
 		}
 
-        public static HexCreator Factory(Land land, ProjectSaveData saveData)
+        public static HexCreator Factory(Hexagons land, ProjectSaveData saveData)
         {
             if(saveData.Load) return new HexLoader(land, saveData);
                               return new HexGenerator(land, saveData);
@@ -40,10 +40,10 @@ namespace Vurbiri.Colonization
         private Chance _chanceWater = CHANCE_WATER;
         private bool _isWater = false;
 
-        public HexGenerator(Land land, ProjectSaveData saveData) : base(land, saveData)
+        public HexGenerator(Hexagons land, ProjectSaveData saveData) : base(land, saveData)
         {
-            _groundIDs = new(NUMBERS_HEX); 
-            _waterIDs = new(NUMBERS_HEX);
+            _groundIDs = new(HEX_IDS); 
+            _waterIDs = new(HEX_IDS);
             _surfaceIDs = new((new int[SurfaceId.CountGround]).Fill());
         }
 
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization
         {
             get
             {
-                Hexagon hex = _land.CreateHexagon(Key.Zero, ID_GATE, SurfaceId.Gate, Vector3.zero);
+                Hexagon hex = _land.CreateHexagon(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
                 _saveData.HexagonsBind(_land);
                 return hex;
             }
@@ -59,6 +59,7 @@ namespace Vurbiri.Colonization
         public override Hexagon Create(Vector3 position, int circle, bool isNotApex)
         {
             Key keyHex = PositionToKey(position);
+            Debug.Log(keyHex.Distance);
             _isWater = circle == MAX_CIRCLES || (circle == (MAX_CIRCLES - 1) & !_isWater & isNotApex && _chanceWater.Roll);
 
             if (_isWater) return _land.CreateHexagon(keyHex, _waterIDs.Next,  SurfaceId.Water,  position);
@@ -70,9 +71,9 @@ namespace Vurbiri.Colonization
     //==========================================================================
     public class HexLoader : HexCreator
     {
-        public HexLoader(Land land, ProjectSaveData saveData) : base(land, saveData) { }
+        public HexLoader(Hexagons land, ProjectSaveData saveData) : base(land, saveData) { }
 
-        public override Hexagon Gate => _land.CreateHexagon(Key.Zero, ID_GATE, SurfaceId.Gate, Vector3.zero);
+        public override Hexagon Gate => _land.CreateHexagon(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
 
         public override Hexagon Create(Vector3 position, int circle, bool isNotApex)
         {

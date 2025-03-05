@@ -35,17 +35,17 @@ namespace Vurbiri.Colonization.UI
             _lookAtCamera.Init(_camera);
 
             _buttonCancel.Init(settings.hint);
-
             _crossroadMenu.Init(_roadsMenu, _recruitingMenu, settings);
             _recruitingMenu.Init(_crossroadMenu, settings);
             _roadsMenu.Init(_crossroadMenu, settings);
             _warriorsMenu.Init(settings);
 
+            _buttonCancel.EventEnabled += EnableLook;
             _crossroadMenu.EventEnabled += EnableLook;
             _recruitingMenu.EventEnabled += EnableLook;
             _roadsMenu.EventEnabled += EnableLook;
             _warriorsMenu.EventEnabled += EnableLook;
-
+            
             settings.eventBus.EventCrossroadSelect += OnSelectCrossroad;
             settings.eventBus.EventActorSelect += OnSelectWarrior;
 
@@ -117,6 +117,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
+            _buttonCancel.EventEnabled -= EnableLook;
             _crossroadMenu.EventEnabled -= EnableLook;
             _recruitingMenu.EventEnabled -= EnableLook;
             _roadsMenu.EventEnabled -= EnableLook;

@@ -11,8 +11,8 @@ namespace Vurbiri.Colonization
 
         public const int CHANCE_WATER = MAX_CIRCLES * MAX_CIRCLES;
 
-        public const int ID_GATE = 13;
-        public static readonly IReadOnlyList<int> NUMBERS_HEX = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };
+        public const int GATE_ID = GATE.ID;
+        public static readonly IReadOnlyList<int> HEX_IDS = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };
 
         public const float PI = Mathf.PI;
         public const float TAU = 2f * PI;

@@ -13,9 +13,4 @@ namespace Vurbiri.Reactive.Collections
     {
         public IReactiveValue<int> CountReactive { get; }
     }
-
-    public interface IReadOnlyReactiveList<TId, out TValue> : IReadOnlyList<IReactiveValue<TValue>> where TId : IdType<TId>
-    {
-        public IReactiveValue<int> this[Id<TId> id] { get; }
-    }
 }

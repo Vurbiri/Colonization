@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
-        public void Init(Vector3 position, IReactive<int> current, IReactive<int> max, TextColorSettings settings, Direction2 offsetPopup)
+        public void Init(Vector3 position, IReactiveValue<int> current, IReactiveValue<int> max, TextColorSettings settings, Direction2 offsetPopup)
         {
             _popup.Init(settings, offsetPopup);
             _thisRectTransform.localPosition = position;

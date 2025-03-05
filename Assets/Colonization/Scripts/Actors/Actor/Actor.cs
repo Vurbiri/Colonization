@@ -145,10 +145,10 @@ namespace Vurbiri.Colonization.Actors
 
             return array;
         }
-        public int[] ToDataArray(int[] array)
+        private int[] ToDataArray(int[] array)
         {
             if (array == null || array.Length != SIZE_DATA_ARRAY)
-                return new int[] { _id, _currentHP.Value, _currentAP.Value, _move.Value };
+                array = new int[SIZE_DATA_ARRAY];
             
             int i = 0;
             array[i++] = _id; array[i++] = _currentHP.Value; array[i++] = _currentAP.Value; array[i] = _move.Value;
@@ -162,8 +162,10 @@ namespace Vurbiri.Colonization.Actors
         public void Dispose()
         {
             _currentHex.ExitActor();
+
             _skin.Dispose();
             _stateMachine.Dispose();
+
             Destroy(gameObject);
         }
 
@@ -199,8 +201,6 @@ namespace Vurbiri.Colonization.Actors
                 _currentAP.Next();
                 _move.On();
 
-                AddWallDefenceEffect();
-
                 _isPlayerTurn = _thisCollider.enabled = false;
                 return;
             }
@@ -210,6 +210,7 @@ namespace Vurbiri.Colonization.Actors
                 _isPlayerTurn = _thisCollider.enabled = _owner == PlayerId.Player;
 
                 _effects.Next();
+                AddWallDefenceEffect();
                 _stateMachine.ToDefaultState();
             }
         }

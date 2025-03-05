@@ -16,7 +16,7 @@ namespace Vurbiri.TextLocalization
         [SerializeField] private string _spriteName = "Banner";
         [SerializeField] private Sprite _sprite;
 
-        public int Id { get => _id; set => _id = value; }
+        public int Id => _id;
         public string Code => _code;
         public string Name => _name;
         public string Folder => _folder;
@@ -34,19 +34,26 @@ namespace Vurbiri.TextLocalization
             _spriteName = spriteName;
         }
 
-        public bool LoadSprite()
+        public LanguageType(int id, LanguageType other)
+        {
+            _id = id;
+            _code = other._code;
+            _name = other._name;
+            _folder = other._folder;
+            _spriteName = other._spriteName;
+        }
+
+        public void LoadSprite()
         {
             string path = Path.Combine(_folder, _spriteName);
 
             try 
             {
                 _sprite = Resources.Load<Sprite>(path);
-                return true;
             }
             catch (Exception ex)
             {
-                Message.Error($"--- Ошибка загрузки спрайта {_spriteName} по пути {path}  ---\n".Concat(ex.Message));
-                return false;
+                Message.Error($"Localization. Error loading sprite {path} for {_name}\n".Concat(ex.Message));
             }
         }
 

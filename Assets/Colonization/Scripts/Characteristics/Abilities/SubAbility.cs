@@ -1,14 +1,12 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\SubAbility.cs
 using System;
 using Vurbiri.Collections;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
     public class SubAbility<TId> : AAbilityChange<TId> where TId : AbilityId<TId>
     {
-        private int _restoreValue;
-
+        private readonly IAbility _restore;
         private readonly IdArray<TypeModifierId, Func<int, int>> _modifiers = new();
 
         public override int Value
@@ -17,7 +15,7 @@ namespace Vurbiri.Colonization.Characteristics
             set => Change(value);
         }
 
-        public SubAbility(AAbility<TId> self, IReactiveValue<int> max, IReactiveValue<int> restore) : base(self)
+        public SubAbility(AAbility<TId> self, IAbility max, IAbility restore) : base(self)
         {
             _modifiers[TypeModifierId.BasePercent] = OnBasePercent;
             _modifiers[TypeModifierId.Addition] = OnAddition;
@@ -26,7 +24,7 @@ namespace Vurbiri.Colonization.Characteristics
             _value = _maxValue = max.Value;
 
             max.Subscribe(OnMaxChange, false);
-            restore.Subscribe(v => _restoreValue = v);
+            _restore = restore;
         }
 
         public override int AddModifier(IAbilityModifierValue mod) => Change(_modifiers[mod.TypeModifier](mod.Value));
@@ -34,10 +32,10 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Next()
         {
-            if(_restoreValue <= 0)
+            if(_restore.Value <= 0)
                 return;
 
-            Change(_value + _restoreValue);
+            Change(_value + _restore.Value);
         }
 
         private int OnBasePercent(int value) => _value * (100 + value) / 100;

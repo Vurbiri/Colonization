@@ -6,7 +6,6 @@ namespace Vurbiri.Colonization.UI
 
     public class ButtonRecruiting : AButtonBuildType<WarriorId>
     {
-
         public override void Setup(Crossroad crossroad)
         {
             base.Setup(crossroad);
@@ -16,13 +15,13 @@ namespace Vurbiri.Colonization.UI
         protected override void OnClick()
         {
             _parentGO.SetActive(false);
-            _player.RecruitWarriors(_currentCrossroad, _id);
+            _player.RecruitWarriors(_id, _currentCrossroad);
         }
 
 #if UNITY_EDITOR
         protected void OnValidate()
         {
-            if (string.Empty == _key)
+            if (_key == string.Empty)
                 _key = WarriorId.GetName(_id);
         }
 #endif

@@ -21,7 +21,7 @@ namespace Vurbiri.TextLocalization
 
         public static Localization Instance => _instance;
 
-        public IEnumerable<LanguageType> Languages => _languages;
+        public IReadOnlyList<LanguageType> Languages => _languages;
         public int CurrentId => _currentLanguage.Id;
 
         static Localization() => _instance = new();
@@ -31,9 +31,8 @@ namespace Vurbiri.TextLocalization
                 throw new("Localization. Error loading LanguageType");
 
             _languagesCount = _languages.Length;
-            for(int i = 0; i < _languagesCount; i++)
-                if (!_languages[i].LoadSprite())
-                    throw new($"Localization. Error loading sprite for {_languages[i].Name}");
+            for (int i = 0; i < _languagesCount; i++)
+                _languages[i].LoadSprite();
 
             _countFiles = _nameFiles.Length;
             _text = new Dictionary<string, string>[_countFiles];
@@ -58,8 +57,10 @@ namespace Vurbiri.TextLocalization
             if (string.IsNullOrEmpty(code))
                 return false;
 
-            foreach (LanguageType language in _languages)
+            LanguageType language;
+            for(int i = 0; i < _languagesCount; i++)
             {
+                language = _languages[i];
                 if (language.Code.ToLowerInvariant() == code.ToLowerInvariant())
                 {
                     id = language.Id;

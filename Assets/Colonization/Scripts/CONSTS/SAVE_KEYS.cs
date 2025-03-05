@@ -12,7 +12,6 @@ namespace Vurbiri.Colonization.Data
         public const string DIPLOMANCY = "dip";
 
         public const string P_RESOURCES = "rs", P_ROADS = "rd", P_EDIFICES = "ed", P_WARRIORS = "ws", P_PERKS = "pk";
-        public const string HEX_SEPARATOR = "H";
                 
         public const string G_MODE = "gs", G_MAX_SCORE = "ms", G_VISUAL_PLAYER_IDS = "vp";
     }

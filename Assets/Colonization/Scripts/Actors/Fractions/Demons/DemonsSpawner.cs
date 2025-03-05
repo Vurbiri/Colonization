@@ -17,12 +17,12 @@ namespace Vurbiri.Colonization.Actors
             _startHex = startHex;
         }
 
-        public Demon Create(int id, Hexagon startHex)
+        public Demon Create(int id)
         {
-            return Object.Instantiate(_demonPrefab, _container).Init(id, startHex);
+            return Object.Instantiate(_demonPrefab, _container).Init(id, _startHex);
         }
 
-        public Demon Load(ActorLoadData data, Land land)
+        public Demon Load(ActorLoadData data, Hexagons land)
         {
             return Object.Instantiate(_demonPrefab, _container).Load(data, land[data.keyHex]);
         }

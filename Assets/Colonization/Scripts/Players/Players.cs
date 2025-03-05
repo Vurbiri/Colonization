@@ -4,40 +4,35 @@ using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
-using static Vurbiri.Colonization.PlayerId;
 
 namespace Vurbiri.Colonization
 {
     public class Players : IDisposable
     {
-        private readonly Player _player;
-        private readonly PlayerAI[] _playersAI = new PlayerAI[CountAI];
+        private readonly Player[] _players = new Player[PlayerId.PlayersCount];
 
-        public Player Player => _player;
+        public Player Player => _players[PlayerId.Player];
 
         #region Constructor
         public Players(Settings settings, ProjectSaveData saveData)
         {
             PlayerSaveData[] playersData = saveData.PlayersSaveData;
 
-            _player = new Player(0, playersData[0], settings);
-            for (int i = 0, j = AI_01; i < CountAI; i++, j++)
-                _playersAI[i] = new(j, playersData[j], settings);
+            for (int i = 0; i < PlayerId.PlayersCount; i++)
+                _players[i] = new(i, playersData[i], settings);
         }
         #endregion
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
-            _player.Profit(hexId, freeGroundRes);
-            for (int i = 0; i < CountAI; i++)
-                _playersAI[i].Profit(hexId, freeGroundRes);
+            for (int i = 0; i < PlayerId.PlayersCount; i++)
+                _players[i].Profit(hexId, freeGroundRes);
         }
 
         public void Dispose()
         {
-            _player.Dispose();
-            for (int i = 0; i < CountAI; i++)
-                _playersAI[i].Dispose();
+            for (int i = 0; i < PlayerId.PlayersCount; i++)
+                _players[i].Dispose();
         }
 
         #region Nested: Settings

@@ -45,9 +45,14 @@ namespace Vurbiri.Colonization
         }
         public bool CanRecruitingWarrior(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
 
-        public void RecruitWarriors(Crossroad crossroad, Id<WarriorId> id) => _coroutines.Run(RecruitWarriors_Cn(crossroad, id));
+        public void RecruitWarriors(Id<WarriorId> id, Crossroad crossroad) => _coroutines.Run(RecruitWarriors_Cn(id, crossroad));
+        public void RecruitWarriors(Id<WarriorId> id, Hexagon hexagon)
+        {
+            _resources.Pay(_prices.Warriors[id.Value]);
+            _warriors.Add(_spawner.Create(id, hexagon));
+        }
 
-        private IEnumerator RecruitWarriors_Cn(Crossroad crossroad, Id<WarriorId> id)
+        private IEnumerator RecruitWarriors_Cn(Id<WarriorId> id, Crossroad crossroad)
         {
             WaitResult<Hexagon> result = crossroad.GetHexagonForRecruiting_Wait();
             yield return result;
@@ -55,8 +60,7 @@ namespace Vurbiri.Colonization
             if (result.Result == null)
                 yield break;
 
-            _resources.Pay(_prices.Warriors[id.Value]);
-            _warriors.Add(_spawner.Create(id, result.Result));
+            RecruitWarriors(id, result.Result);
         }
         #endregion
     }

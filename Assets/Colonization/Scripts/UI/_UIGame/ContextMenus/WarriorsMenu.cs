@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
         [Space]
         [SerializeField] private HintingButton _buttonClose;
+        [Space]
         [SerializeField] private HintingButton _buttonMovement;
         [SerializeField] private ButtonBlock _buttonBlock;
         [SerializeField] private ButtonSkill[] _buttonsSkill;
@@ -36,7 +37,7 @@ namespace Vurbiri.Colonization.UI
             _thisGO.SetActive(false);
         }
 
-        public void Open(Actors.Actor actor)
+        public void Open(Actor actor)
         {
             _currentWarrior = actor;
             var skills = _warriorsSettings[actor.Id].Skills;

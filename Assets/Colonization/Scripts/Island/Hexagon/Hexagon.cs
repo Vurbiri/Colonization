@@ -87,6 +87,8 @@ namespace Vurbiri.Colonization
                 _collider = null;
                 _poolMarks = null;
             }
+
+            gameObject.name = $"Hex {key} => {key.Distance}";
         }
 
         public void NeighborAddAndCreateCrossroadLink(Hexagon neighbor)
@@ -152,7 +154,7 @@ namespace Vurbiri.Colonization
         public int GetMaxDefense()
         {
             if (_ownerId == PlayerId.Demons & _isGate)
-                return Demon.GATE_DEFENSE;
+                return GATE.DEFENSE;
             
             int max = int.MinValue;
             foreach (var crossroad in _crossroads)

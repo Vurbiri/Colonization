@@ -127,7 +127,7 @@ namespace Vurbiri.Colonization.Actors
 
                 Key key = target._currentHex.Key - _actor._currentHex.Key;
 
-                if (target == _actor || !target.IsCanUseSkill(_actor._owner, _relationTarget, out _) || !ACTOR_ROTATIONS.ContainsKey(key))
+                if (target == _actor | key.Distance != 1 || !target.IsCanUseSkill(_actor._owner, _relationTarget, out _))
                     return null;
 
                 target.BecomeTargetStart(_actor._owner, _relationTarget);

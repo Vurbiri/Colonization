@@ -94,5 +94,14 @@ namespace Vurbiri.Colonization
         {
             Destroy(this);
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_waterTransform == null)
+                _waterTransform = EUtility.FindObjectByName<Transform>("Water");
+
+        }
+#endif
     }
 }

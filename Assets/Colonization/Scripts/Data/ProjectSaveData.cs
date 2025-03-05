@@ -7,7 +7,6 @@ namespace Vurbiri.Colonization.Data
 {
     public class ProjectSaveData : IDisposable
     {
-        //private PlayersSaveData _playersSaveData;
         private PlayerSaveData[] _playersSaveData;
         private readonly IStorageService _storage;
         private Unsubscribers _unProject = new(), _unGameplay = new();
@@ -41,7 +40,7 @@ namespace Vurbiri.Colonization.Data
 
         public void GetHexData(Key key, out int id, out int surfaceId)
         {
-            _storage.TryGet(key.ToSaveKey(SAVE_KEYS.HEX_SEPARATOR), out int[] data);
+            _storage.TryGet(key.ToSaveKey(), out int[] data);
             Hexagon.FromArray(data, out id, out surfaceId);
         }
 
@@ -75,7 +74,7 @@ namespace Vurbiri.Colonization.Data
 
         public void HexagonsBind(IReactive<Key, int[]> hex)
         {
-            _unGameplay += hex.Subscribe((key, data) => _storage.Save(key.ToSaveKey(SAVE_KEYS.HEX_SEPARATOR), data, 1f));
+            _unGameplay += hex.Subscribe((key, data) => _storage.Save(key.ToSaveKey(), data, 1f));
         }
         public void DiplomacyBind(IReactive<IReadOnlyList<int>> diplomacy, bool calling)
         {

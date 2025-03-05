@@ -41,7 +41,8 @@ namespace Vurbiri.TextLocalization.Editor
 
 
             for (int i = 0; i < _languageTypes.Count; i++)
-                _languageTypes[i].Id = i;
+                if(_languageTypes[i].Id != i)
+                    _languageTypes[i] = new(i, _languageTypes[i]);
         }
 
         public void EmptyMethod()

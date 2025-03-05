@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Currencies\CurrenciesLite.cs
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -66,6 +67,12 @@ namespace Vurbiri.Colonization
         {
             _values[Random.Range(0, countMain)] += value;
             _amount += value;
+        }
+
+        public override IEnumerator<int> GetEnumerator()
+        {
+            for (int i = 0; i < countAll; i++)
+                yield return _values[i];
         }
 
         public static CurrenciesLite operator +(CurrenciesLite a, CurrenciesLite b)

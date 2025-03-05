@@ -15,19 +15,9 @@ namespace Vurbiri.Reactive.Collections
 
         protected Subscriber<T, TypeEvent> _subscriber;
 
-        public T this[int index]
-        {
-            get
-            {
-                if (index < 0 | index >= _count)
-                    throw new IndexOutOfRangeException($"index = {index}");
-
-                return _values[index];
-            }
-        }
+        public T this[int index] => _values[index];
 
         public int Count => _count;
-
         public IReactiveValue<int> CountReactive => _count;
 
         #region Constructors

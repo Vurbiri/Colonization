@@ -19,20 +19,10 @@ namespace Vurbiri.Reactive.Collections
 
         public T this[int index] 
         {
-            get
-            {
-                if (index < 0 | index >= _count)
-                    throw new IndexOutOfRangeException($"index = {index}");
-                
-                return _values[index];
-            }
+            get => _values [index];
             set
             {
-                if (index < 0 | index >= _count)
-                    throw new IndexOutOfRangeException($"index = {index}");
-
                 _values[index] = value;
-
                 _subscriber.Invoke(index, value, TypeEvent.Change);
             }
         }
@@ -90,13 +80,7 @@ namespace Vurbiri.Reactive.Collections
         }
         #endregion
 
-        public void ChangeSignal(int index)
-        {
-            if (index < 0 | index >= _count)
-                throw new ArgumentOutOfRangeException($"index = {index}");
-
-            _subscriber.Invoke(index, _values[index], TypeEvent.Change);
-        }
+        public void ChangeSignal(int index) => _subscriber.Invoke(index, _values[index], TypeEvent.Change);
 
         public void ChangeSignal(T item)
         {
@@ -191,9 +175,6 @@ namespace Vurbiri.Reactive.Collections
 
         public void RemoveAt(int index)
         {
-            if (index < 0 | index >= _count)
-                throw new ArgumentOutOfRangeException($"index = {index}");
-            
             T temp = _values[index];
             
             _count.SilentValue--;
@@ -219,9 +200,6 @@ namespace Vurbiri.Reactive.Collections
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (arrayIndex < 0 | arrayIndex >= _count)
-                throw new ArgumentOutOfRangeException($"arrayIndex = {arrayIndex}");
-
             for (int i = arrayIndex; i < _count; i++)
                 array[i] = _values[i];
         }

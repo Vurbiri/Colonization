@@ -12,14 +12,15 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private LandInitData _landInitData;
+        [Space]
         [SerializeField] private IdHashSet<EdificeId, AEdifice> _edificePrefabs;
 
-        private Land _land;
+        private Hexagons _land;
         private Crossroads _crossroads;
 
         public IslandCreator Init(DIContainer diObjects, GameplayEventBus eventBus)
         {
-            _land       = diObjects.AddInstance<Land>(new(_landInitData, eventBus));
+            _land       = diObjects.AddInstance<Hexagons>(new(_landInitData, eventBus));
             _crossroads = diObjects.AddInstance<Crossroads>(new(_crossroadsContainer, _edificePrefabs, eventBus));
             return this;
         }

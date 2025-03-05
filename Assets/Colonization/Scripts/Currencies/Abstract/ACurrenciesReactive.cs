@@ -7,18 +7,18 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class ACurrenciesReactive : ACurrencies, IReactive<int, int>
+    public abstract class ACurrenciesReactive : ACurrencies, IReactive<ACurrencies>
     {
         protected ACurrency[] _values = new ACurrency[countAll];
         protected ReactiveValue<int> _amount = new(0);
         protected IReactiveValue<int> _maxValueMain, _maxValueBlood;
-        private Subscriber<int, int> _subscriber;
+        protected Subscriber<ACurrencies> _subscriber;
 
         public override int Amount => _amount.Value;
-        public IReactive<int> AmountCurrent => _amount;
-        public IReactive<int> AmountMax => _maxValueMain;
-        public IReactive<int> BloodCurrent => _values[CurrencyId.Blood];
-        public IReactive<int> BloodMax => _maxValueBlood;
+        public IReactiveValue<int> AmountCurrent => _amount;
+        public IReactiveValue<int> AmountMax => _maxValueMain;
+        public IReactiveValue<int> BloodCurrent => _values[CurrencyId.Blood];
+        public IReactiveValue<int> BloodMax => _maxValueBlood;
 
         public override int this[int index] { get => _values[index].Value; }
         public override int this[Id<CurrencyId> id] { get => _values[id.Value].Value; }
@@ -32,14 +32,11 @@ namespace Vurbiri.Colonization
             int value, amount = 0;
             for (int i = 0; i < countMain; i++)
             {
-                int index = i;
                 value = array[i];
                 _values[i] = new CurrencyMain(value);
-                _values[i].Subscribe(v => _subscriber.Invoke(index, v), false);
                 amount += value;
             }
             _values[CurrencyId.Blood] = new CurrencyBlood(array[CurrencyId.Blood], maxValueBlood);
-            _values[CurrencyId.Blood].Subscribe(v => _subscriber.Invoke(CurrencyId.Blood, v), false);
 
             _amount.SilentValue = amount;
         }
@@ -49,13 +46,9 @@ namespace Vurbiri.Colonization
             _maxValueBlood = maxValueBlood;
 
             for (int i = 0; i < countMain; i++)
-            {
                 _values[i] = new CurrencyMain(other[i]);
-                int index = i;
-                _values[i].Subscribe(v => _subscriber.Invoke(index, v), false);
-            }
+
             _values[CurrencyId.Blood] = new CurrencyBlood(other[CurrencyId.Blood], maxValueBlood);
-            _values[CurrencyId.Blood].Subscribe(v => _subscriber.Invoke(CurrencyId.Blood, v), false);
 
             _amount.SilentValue = other.Amount;
         }
@@ -66,35 +59,19 @@ namespace Vurbiri.Colonization
             _maxValueBlood = maxValueBlood;
 
             for (int i = 0; i < countMain; i++)
-            {
                 _values[i] = new CurrencyMain();
-                int index = i;
-                _values[i].Subscribe(v => _subscriber.Invoke(index, v), false);
-            }
-            _values[CurrencyId.Blood] = new CurrencyBlood(maxValueBlood);
-            _values[CurrencyId.Blood].Subscribe(v => _subscriber.Invoke(CurrencyId.Blood, v), false);
-        }
 
-        public ACurrenciesReactive()
-        {
-            for (int i = 0; i < countMain; i++)
-            {
-                _values[i] = new CurrencyMain();
-                int index = i;
-                _values[i].Subscribe(v => _subscriber.Invoke(index, v), false);
-            }
-            _values[CurrencyId.Blood] = new CurrencyBlood();
-            _values[CurrencyId.Blood].Subscribe(v => _subscriber.Invoke(CurrencyId.Blood, v), false);
+            _values[CurrencyId.Blood] = new CurrencyBlood(maxValueBlood);
         }
         #endregion
 
         #region Reactive
-        public Unsubscriber Subscribe(Action<int, int> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<ACurrencies> action, bool calling = true)
         {
             if (calling)
             {
                 for (int i = 0; i < countAll; i++)
-                    action(i, _values[i].Value);
+                    action(this);
             }
 
             return _subscriber.Add(action);
@@ -103,6 +80,11 @@ namespace Vurbiri.Colonization
         public Unsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
         #endregion
 
+        public override IEnumerator<int> GetEnumerator()
+        {
+            for (int i = 0; i < countAll; i++)
+                yield return _values[i].Value;
+        }
 
         #region Nested: ACurrency, CurrencyMain, CurrencyBlood
         //*******************************************************

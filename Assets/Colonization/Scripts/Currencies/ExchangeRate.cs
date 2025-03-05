@@ -1,13 +1,12 @@
 //Assets\Colonization\Scripts\Currencies\ExchangeRate.cs
-using System;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class ExchangeRate : IReactive<int, int>
+    public class ExchangeRate
     {
-        private readonly Currencies _exchange = new();
+        private readonly CurrenciesLite _exchange = new();
         private readonly Unsubscribers _unsubscribers = new();
         private Chance _chance;
         private int _min, _max;
@@ -24,10 +23,8 @@ namespace Vurbiri.Colonization
         public void Update()
         {
             for (int i = 0; i < CurrencyId.CountMain; i++)
-                _exchange[i] = _chance.Select(_min, _max);
+                _exchange.Set(i, _chance.Select(_min, _max));
         }
-
-        public Unsubscriber Subscribe(Action<int, int> action, bool calling = true) => _exchange.Subscribe(action, calling);
 
         public void Dispose()
         {

@@ -11,13 +11,13 @@ namespace Vurbiri.Colonization
         private TurnQueue _turnQueue;
         private Players _players;
         private InputController _inputController;
-        private Land _land;
+        private Hexagons _land;
 
         public void Init(TurnQueue turnQueue, InputController inputController)
         {
             _dices = new();
             _turnQueue = turnQueue;
-            _land = SceneObjects.Get<Land>();
+            _land = SceneObjects.Get<Hexagons>();
             _players = SceneObjects.Get<Players>();
 
             _inputController = inputController;
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
             int roll = _dices.Roll();
             UnityEngine.Debug.Log("ROLL: " + roll);
             ACurrencies free = null;
-            if (roll != ID_GATE)
+            if (roll != GATE_ID)
                 free = _land.GetFreeGroundResource(roll);
 
             _players.Profit(roll, free);
