@@ -1,4 +1,5 @@
 //Assets\Vurbiri.MeshCreated\Primitives\Triangle.cs
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.CreatingMesh
@@ -7,14 +8,20 @@ namespace Vurbiri.CreatingMesh
     {
         public const int COUNT_VERTICES = 3;
 
-        public Vertex[] Vertices => _vertices;
+        public IReadOnlyList<Vertex> Vertices => _vertices;
 
         protected readonly Vertex[] _vertices = new Vertex[COUNT_VERTICES];
 
         protected static readonly Color32[] BARYCENTRIC_COLORS = { new(255, 0, 0, 255), new(0, 255, 0, 255), new(0, 0, 255, 255) };
 
 
-        public Triangle(params Vertex[] vertices) => vertices.CopyTo(Vertices, 0);
+        public Triangle(params Vertex[] vertices) => vertices.CopyTo(_vertices, 0);
+        
+        public Triangle(Color32 color, params Vertex[] vertices)
+        {
+            for (int index = 0; index < COUNT_VERTICES; index++)
+                _vertices[index] = new(vertices[index], color);
+        }
 
         public Triangle(Color32 color, params Vector3[] vertices)
         {

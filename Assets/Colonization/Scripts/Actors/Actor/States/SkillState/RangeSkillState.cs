@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
 	{
         protected class RangeSkillState : ATargetSkillState
         {
-            public RangeSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, int cost, int id) :
+            public RangeSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<HitEffects> effects, int cost, int id) :
                 base(parent, targetActor, effects, cost, id)
             {
 

@@ -1,4 +1,6 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\AbilityModifier\AbilityModifiers.cs
+using System;
+
 namespace Vurbiri.Colonization.Characteristics
 {
     public static class AbilityModifierFactory
@@ -14,9 +16,7 @@ namespace Vurbiri.Colonization.Characteristics
 
     public class AbilityModifierAdd : IAbilityModifier
     {
-        private const int DEFAULT_VALUE = 0;
-        
-        private int _value = DEFAULT_VALUE;
+        private int _value = 0;
         
         public Id<TypeModifierId> Id => TypeModifierId.Addition;
 
@@ -33,9 +33,7 @@ namespace Vurbiri.Colonization.Characteristics
         
     public class AbilityModifierPercent : IAbilityModifier
     {
-        private const int DEFAULT_VALUE = 100;
-
-        private int _value = DEFAULT_VALUE;
+        private int _value = 100;
 
         public Id<TypeModifierId> Id => TypeModifierId.BasePercent;
         public int Value { get => _value; set => _value = value; }
@@ -43,8 +41,8 @@ namespace Vurbiri.Colonization.Characteristics
         public AbilityModifierPercent() { }
         public AbilityModifierPercent(int value) => _value = value;
 
-        public int Apply(int value) => UnityEngine.Mathf.RoundToInt(value * _value / 100f);
-        public int Apply(int value, int modifier) => UnityEngine.Mathf.RoundToInt(value * modifier / 100f);
+        public int Apply(int value) => (int)Math.Round(value * _value / 100.0);
+        public int Apply(int value, int modifier) => (int)Math.Round(value * modifier / 100.0);
 
         public void Add(int value) => _value += value;
     }

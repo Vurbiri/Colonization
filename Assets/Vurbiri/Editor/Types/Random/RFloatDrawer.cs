@@ -1,4 +1,5 @@
 //Assets\Vurbiri\Editor\Types\Random\RFloatDrawer.cs
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -17,18 +18,38 @@ namespace VurbiriEditor
             SerializedProperty minProperty = property.FindPropertyRelative(NAME_MIN);
             SerializedProperty maxProperty = property.FindPropertyRelative(NAME_MAX);
 
-            (Rect sizeLabel, Rect sizeMin, Rect sizeMax) = CalkPosition(position);
+            float min = minProperty.floatValue, max = maxProperty.floatValue;
 
+            MinMaxAttribute range = fieldInfo.GetCustomAttribute<MinMaxAttribute>();
+            
             label = EditorGUI.BeginProperty(position, label, property);
 
-            EditorGUI.LabelField(sizeLabel, label);
-            minProperty.floatValue = EditorGUI.FloatField(sizeMin, minProperty.floatValue);
-            maxProperty.floatValue = EditorGUI.FloatField(sizeMax, maxProperty.floatValue);
+            if (range != null)
+            {
+                var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
+                min = Mathf.Clamp(min, range.min, range.max);
+                max = Mathf.Clamp(max, range.min, range.max);
+                if (min > max) (min, max) = (max, min);
+
+                EditorGUI.LabelField(sizeLabel, label);
+
+                min = EditorGUI.FloatField(sizeMin, min);
+                max = EditorGUI.FloatField(sizeMax, max);
+                EditorGUI.MinMaxSlider(sizeSlider, ref min, ref max, range.min, range.max);
+            }
+            else
+            {
+                var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
+                EditorGUI.LabelField(sizeLabel, label);
+                min = EditorGUI.FloatField(sizeMin, min);
+                max = EditorGUI.FloatField(sizeMax, max);
+            }
 
             EditorGUI.EndProperty();
+
+            minProperty.floatValue = min; maxProperty.floatValue = max;
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => EditorGUIUtility.singleLineHeight;
     }
 }
 

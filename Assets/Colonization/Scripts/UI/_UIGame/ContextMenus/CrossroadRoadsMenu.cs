@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private HintingButton _buttonBack;
         [Space]
-        [SerializeField] private IdHashSet<LinkId, ButtonBuildRoad> _roadButtons;
+        [SerializeField] private IdSet<LinkId, ButtonBuildRoad> _roadButtons;
 
         private RectTransform _thisTransform;
         private Transform _cameraTransform;
@@ -75,7 +75,7 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_roadButtons.CountAvailable < _roadButtons.Count)
+            if (_roadButtons.Filling < _roadButtons.Count)
                 _roadButtons.ReplaceRange(GetComponentsInChildren<ButtonBuildRoad>());
         }
 #endif

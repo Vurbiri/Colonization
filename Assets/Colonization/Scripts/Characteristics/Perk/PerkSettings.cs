@@ -1,9 +1,9 @@
 //Assets\Colonization\Scripts\Characteristics\Perk\PerkSettings.cs
+using UnityEngine;
+using Vurbiri.Colonization.UI;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    using UI;
-    using UnityEngine;
-
     [System.Serializable]
     public class PerkSettings : IPerkSettings, IPerkSettingsUI
     {

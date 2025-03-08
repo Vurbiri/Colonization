@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\Island\IslandCreator\HexCreator.cs
-using System;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Data;
@@ -8,7 +7,7 @@ namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public abstract class HexCreator : IDisposable
+    public abstract class HexCreator
 	{
         private readonly Vector2 _offsetHex = new(HEX_DIAMETER_IN, HEX_DIAMETER_IN * SIN_60);
 
@@ -29,7 +28,7 @@ namespace Vurbiri.Colonization
 
         public abstract Hexagon Gate { get; }
         public abstract Hexagon Create(Vector3 position, int circle, bool isNotApex);
-		public abstract void Dispose();
+		public abstract void Finish();
 
         protected Key PositionToKey(Vector3 position) => new(2f * position.x / _offsetHex.x, position.z / _offsetHex.y);
     }
@@ -59,14 +58,13 @@ namespace Vurbiri.Colonization
         public override Hexagon Create(Vector3 position, int circle, bool isNotApex)
         {
             Key keyHex = PositionToKey(position);
-            Debug.Log(keyHex.Distance);
             _isWater = circle == MAX_CIRCLES || (circle == (MAX_CIRCLES - 1) & !_isWater & isNotApex && _chanceWater.Roll);
 
             if (_isWater) return _land.CreateHexagon(keyHex, _waterIDs.Next,  SurfaceId.Water,  position);
-                            return _land.CreateHexagon(keyHex, _groundIDs.Next, _surfaceIDs.Next, position);
+                          return _land.CreateHexagon(keyHex, _groundIDs.Next, _surfaceIDs.Next, position);
         }
 
-        public override void Dispose() { }
+        public override void Finish() { }
     }
     //==========================================================================
     public class HexLoader : HexCreator
@@ -83,6 +81,6 @@ namespace Vurbiri.Colonization
             return _land.CreateHexagon(keyHex, id, surfaceId, position);
         }
 
-        public override void Dispose() => _saveData.HexagonsBind(_land);
+        public override void Finish() => _saveData.HexagonsBind(_land);
     }
 }

@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Init
-        public void Init(Key key, int id, Pool<HexagonMark> poolMarks, SurfaceScriptable surface, GameplayEventBus eventBus)
+        public void Init(Key key, int id, Pool<HexagonMark> poolMarks, SurfaceType surface, GameplayEventBus eventBus)
         {
             _thisTransform = transform; Position = _thisTransform.localPosition;
             _key = key;
@@ -88,10 +88,10 @@ namespace Vurbiri.Colonization
                 _poolMarks = null;
             }
 
-            gameObject.name = $"Hex {key} => {key.Distance}";
+            gameObject.name = $"Hex_{_key}_{_isWater}";
         }
 
-        public void NeighborAddAndCreateCrossroadLink(Hexagon neighbor)
+        public void AddNeighborAndCreateCrossroadLink(Hexagon neighbor)
         {
             if (_neighbors.Add(neighbor) & !(_isWater & neighbor._isWater) & !(_isGate | neighbor._isGate))
             {

@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
         private readonly GameplayEventBus _eventBus;
         private readonly IReadOnlyList<AEdifice> _prefabs;
         private readonly List<Hexagon> _hexagons = new(HEX_COUNT);
-        private readonly IdHashSet<LinkId, CrossroadLink> _links = new();
+        private readonly IdSet<LinkId, CrossroadLink> _links = new();
 
         private int _countFreeLink = 0, _countWater = 0;
         private bool _isGate = false;
@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization
 
             _eventBus = eventBus;
 
-            _edifice = Object.Instantiate(_prefabs[EdificeId.Signpost], position, rotation, container);
+            _edifice = Object.Instantiate(_prefabs[EdificeId.Empty], position, rotation, container);
             _edifice.Subscribe(OnSelect, OnUnselect);
             _states = _edifice.Settings;
         }
@@ -91,7 +91,7 @@ namespace Vurbiri.Colonization
         {
             _links.Add(link);
 
-            if (_countFreeLink == _links.CountAvailable)
+            if (_countFreeLink == _links.Filling)
             {
                 _states.SetNextId(EdificeId.GetId(_countWater, _isGate));
                 _edifice.Init(_owner, _isWall, _links, _edifice);

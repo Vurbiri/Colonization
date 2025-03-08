@@ -17,5 +17,24 @@ namespace Vurbiri.Colonization.Characteristics
             _typeModifier = typeModifier;
             _value = value;
         }
+
+        public bool TryAdd(IPerk perk)
+        {
+            if (perk == null || _targetAbility != perk.TargetAbility | _typeModifier != perk.TypeModifier) 
+                return false;
+
+            _value += perk.Value;
+            return true;
+        }
+
+        public bool TryAdd(Perk perk)
+        {
+            if (perk == null || _targetAbility != perk._targetAbility | _typeModifier != perk._typeModifier)
+                return false;
+
+            _value += perk._value;
+            return true;
+        }
+
     }
 }

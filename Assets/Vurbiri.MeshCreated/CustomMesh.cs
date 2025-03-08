@@ -118,10 +118,10 @@ namespace Vurbiri.CreatingMesh
 
             public void Add(Vertex v)
             {
-                _positions.Add(v.Position);
-                _normals.Add(v.Normal);
-                _colors.Add(v.Color);
-                _uvs.Add(_convertUV ? _boundsUV.ConvertToUV(v.UV) : v.UV);
+                _positions.Add(v.position);
+                _normals.Add(v.normal);
+                _colors.Add(v.color);
+                _uvs.Add(_convertUV ? _boundsUV.ConvertToUV(v.uv) : v.uv);
 
                 _count++;
             }

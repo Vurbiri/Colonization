@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
             private readonly float _distanceMove;
             private readonly float _timeToHit;
 
-            public MovementSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, float distance, float range, float speedRun, int cost, int id) : base(parent, targetActor, effects, range, speedRun, cost, id)
+            public MovementSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<HitEffects> effects, float distance, float range, float speedRun, int cost, int id) : base(parent, targetActor, effects, range, speedRun, cost, id)
             {
                 _distanceMove = distance;
                 _timeToHit = _skin.GetFirsHitTime(id);

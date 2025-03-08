@@ -13,13 +13,13 @@ namespace Vurbiri.Colonization.Actors
         {
             protected readonly int _id;
             protected readonly Transform _parentTransform;
-            protected readonly IReadOnlyList<EffectsHit> _effectsHint;
+            protected readonly IReadOnlyList<HitEffects> _effectsHint;
             protected readonly int _countHits;
 
             protected Coroutine _coroutineAction;
             protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
-            public ASkillState(Actor parent, IReadOnlyList<EffectsHit> effects, int cost, int id) : base(parent, cost, TypeIdKey.Get<ASkillState>(id))
+            public ASkillState(Actor parent, IReadOnlyList<HitEffects> effects, int cost, int id) : base(parent, cost, TypeIdKey.Get<ASkillState>(id))
             {
                 _id = id;
                 _parentTransform = _actor._thisTransform;
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.Actors
                 _countHits = _effectsHint.Count;
             }
 
-            public static ASkillState Create(IReadOnlyList<EffectsHit> effects, SkillSettings skill, float speedRun, int id, Actor parent)
+            public static ASkillState Create(IReadOnlyList<HitEffects> effects, SkillSettings skill, float speedRun, int id, Actor parent)
             {
                 if (skill.Target == TargetOfSkill.Self)
                     return new SelfSkillState(parent, effects, skill.Cost, id);

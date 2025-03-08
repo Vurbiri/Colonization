@@ -15,15 +15,12 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         public void OnValidate()
         {
-            
             if (prefabHex == null)
                 prefabHex = EUtility.FindAnyPrefab<Hexagon>();
             if (prefabHexMark == null)
                 prefabHexMark = EUtility.FindAnyPrefab<HexagonMark>();
             if (surfaces == null)
                 surfaces = EUtility.FindAnyScriptable<SurfacesScriptable>();
-            else
-                surfaces.OnValidate();
             if (landMesh == null)
                 landMesh = Object.FindAnyObjectByType<LandMesh>();
         }

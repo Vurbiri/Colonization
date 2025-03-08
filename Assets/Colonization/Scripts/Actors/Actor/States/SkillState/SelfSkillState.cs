@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
 	{
         protected class SelfSkillState : ASkillState
         {
-            public SelfSkillState(Actor parent, IReadOnlyList<EffectsHit> effects, int cost, int id) : base(parent, effects, cost, id)
+            public SelfSkillState(Actor parent, IReadOnlyList<HitEffects> effects, int cost, int id) : base(parent, effects, cost, id)
             {
             }
 

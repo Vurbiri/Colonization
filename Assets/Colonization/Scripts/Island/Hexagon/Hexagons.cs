@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
 
         public Hexagon CreateHexagon(Key key, int id, int surfaceId, Vector3 position)
         {
-            SurfaceScriptable surface = _surfaces[surfaceId];
+            SurfaceType surface = _surfaces[surfaceId];
             Hexagon hex = Object.Instantiate(_prefabHex, position, Quaternion.identity, _container);
             hex.Init(key, id, _poolMarks, surface,  _eventBus);
 
@@ -53,12 +53,12 @@ namespace Vurbiri.Colonization
             _hexagons.Add(key, hex);
             _hexagonsIdForKey[id].Add(key);
  
-            _landMesh.AddHexagon(key, position, surface.Color, hex.IsWater);
+            _landMesh.AddHexagon(key, position, surfaceId);
 
             return hex;
         }
 
-        public void HexagonsNeighbors() => _landMesh.HexagonsNeighbors(_hexagons);
+        public IEnumerator HexagonsNeighbors_Cn() => _landMesh.HexagonsNeighbors_Cn(_hexagons);
 
         public IEnumerator FinishCreate_Cn()
         {

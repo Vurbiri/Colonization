@@ -22,7 +22,7 @@ public struct Key : IEquatable<Key>, IArrayable
     {
         get
         {
-            int x = Mathf.Abs(_x), y = Mathf.Abs(_y);
+            int x = Math.Abs(_x), y = Math.Abs(_y);
             if (y - x < 0) return (x + y) >> 1;
             return y;
         }

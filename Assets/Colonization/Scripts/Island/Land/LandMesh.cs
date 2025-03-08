@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.CreatingMesh;
 
 namespace Vurbiri.Colonization
@@ -14,7 +15,9 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private string _nameMesh = "MH_Land";
         [Space]
-        [SerializeField, Range(0.5f, 1.5f)] private float _rateTilingMaterial = 1.05f;
+        [SerializeField, Range(0.1f, 1.5f)] private float _rateTilingMaterial = 1.05f;
+        [Space]
+        [SerializeField] private IdArray<SurfaceId, Color32> _colors = new(Color.black);
         [Space]
         [SerializeField] private HexagonMesh.Settings _meshSettings;
         [Space]
@@ -32,44 +35,52 @@ namespace Vurbiri.Colonization
 
             GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTilingMaterial * MAX_CIRCLES);
 
+            _meshSettings.Init();
+
             int step = _meshSettings.coastSteps >> 1;
-            float waterLevel = -(_meshSettings.coastSize.x * (_meshSettings.coastSteps - step) + _meshSettings.coastSize.y * step);
+            float waterLevel = -(_meshSettings.coastSize.x * step + _meshSettings.coastSize.y * (_meshSettings.coastSteps - step));
             _waterTransform.localPosition = new(0f, waterLevel, 0f);
 
             return this;
         }
 
-        public void AddHexagon(Key key, Vector3 position, Color32 color, bool isWater)
+        public void AddHexagon(Key key, Vector3 position, int surfaceId)
         {
-            HexagonMesh hex = new(_meshSettings, position, color, !isWater);
+            HexagonMesh hex = new(_meshSettings, position, _colors[surfaceId], surfaceId != SurfaceId.Water);
             _hexagons.Add(key, hex);
             _customMesh.AddPrimitive(hex);
         }
 
-        public void HexagonsNeighbors(Dictionary<Key, Hexagon> hexagons)
+        public IEnumerator HexagonsNeighbors_Cn(IReadOnlyDictionary<Key, Hexagon> hexagons)
         {
+            Color32 colorCoast = _colors[SurfaceId.Water];
             Vertex[][] verticesNear = new Vertex[HEX.SIDES][];
             bool[] waterNear = new bool[HEX.SIDES];
-            bool isNotWater;
+
             foreach (var hex in hexagons.Values)
             {
-                isNotWater = !hex.IsWater;
+                if (hex.IsWater)
+                {
+                    for (int i = 0; i < HEX.SIDES; i++)
+                        if (hexagons.TryGetValue(hex.Key + HEX.NEAR[i], out Hexagon neighbor))
+                            hex.AddNeighborAndCreateCrossroadLink(neighbor);
+
+                    continue;
+                }
+
                 for (int i = 0; i < HEX.SIDES; i++)
                 {
                     if (hexagons.TryGetValue(hex.Key + HEX.NEAR[i], out Hexagon neighbor))
                     {
-                        hex.NeighborAddAndCreateCrossroadLink(neighbor);
+                        hex.AddNeighborAndCreateCrossroadLink(neighbor);
 
-                        if (isNotWater)
-                        {
-                            verticesNear[i] = GetVertexSide(hex.Key, neighbor.Key, i);
-                            waterNear[i] = neighbor.IsWater;
-                        }
+                        verticesNear[i] = GetVertexSide(hex.Key, neighbor.Key, i);
+                        waterNear[i] = neighbor.IsWater;
                     }
                 }
 
-                if (isNotWater)
-                    _customMesh.AddTriangles(_hexagons[hex.Key].CreateBorder(verticesNear, waterNear));
+                _customMesh.AddTriangles(_hexagons[hex.Key].CreateBorder(verticesNear, waterNear, colorCoast));
+                yield return null;
             }
 
             #region Local: GetVertexSide(..)

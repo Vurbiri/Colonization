@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Heals\Abstract\AAttackNotDefenseEffect.cs
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class AAttackNotDefenseEffect : AEffect
+    public abstract class AAttackNotDefenseEffect : AHitEffect
     {
         private readonly AbilityModifierPercent _usedModifier;
 

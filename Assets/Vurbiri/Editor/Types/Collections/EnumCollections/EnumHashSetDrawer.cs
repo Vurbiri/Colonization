@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace VurbiriEditor
 {
-    [CustomPropertyDrawer(typeof(EnumHashSet<,>))]
+    [CustomPropertyDrawer(typeof(EnumSet<,>))]
     public class EnumHashSetDrawer : PropertyDrawer
     {
         private const int INDEX_TYPE = 0, INDEX_VALUE = 1;

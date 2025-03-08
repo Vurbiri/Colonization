@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Characteristics\Effects\PermanentEffects\Heals\Abstract\AHealEffect.cs
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class AHealEffect : AEffect
+    public abstract class AHealEffect : AHitEffect
     {
         private readonly AbilityModifierPercent _usedModifier;
 

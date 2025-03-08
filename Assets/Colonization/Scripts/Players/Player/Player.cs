@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization
 {
     public partial class Player : IDisposable
     {
+        #region Fields
         private readonly Coroutines _coroutines;
 
         private readonly Id<PlayerId> _id;
@@ -27,7 +28,8 @@ namespace Vurbiri.Colonization
 
         private readonly AbilitiesSet<PlayerAbilityId> _abilities;
         private readonly ReactiveList<IPerk> _perks;
-       
+        #endregion
+
         public ACurrenciesReactive Resources => _resources;
         //public IReactive<int, int> ExchangeRate => _exchangeRate;
 
@@ -45,7 +47,7 @@ namespace Vurbiri.Colonization
             PlayerVisual visual = SceneData.Get<PlayersVisual>()[playerId];
 
             _abilities = settings.states;
-            _roads = settings.roadsFactory.Create().Init(playerId, visual.color);
+            _roads = new(playerId, visual.color, settings.roadFactory, _coroutines);
 
             _prices = settings.prices;
             _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
@@ -125,6 +127,7 @@ namespace Vurbiri.Colonization
         {
             _exchangeRate.Dispose();
             _edifices.Dispose();
+            _roads.Dispose();
             for (int i = _warriors.Count - 1; i >= 0; i--)
                 _warriors[i].Dispose();
            

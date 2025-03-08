@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private SkillSettings[] _skillsSettings;
         
         [NonSerialized] private SkillUI[] _skillsUI;
-        [NonSerialized] private EffectsHit[][] _effectsHits;
+        [NonSerialized] private HitEffects[][] _effectsHits;
         [NonSerialized] private BlockUI _blockUI;
 
         public BlockUI BlockUI => _blockUI ??= new(_blockCost, _blockValue);
@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization.Characteristics
                 return;
             }
 
-            _effectsHits = new EffectsHit[countSkills][];
+            _effectsHits = new HitEffects[countSkills][];
             for (int i = 0; i < countSkills; i++)
                 _effectsHits[i] = parent.AddSkillState(_skillsSettings[i], _speedRun, i);
         }

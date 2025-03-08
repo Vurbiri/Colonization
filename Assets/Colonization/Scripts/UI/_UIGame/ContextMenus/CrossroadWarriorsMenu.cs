@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private HintingButton _buttonBack;
         [Space]
-        [SerializeField] private IdHashSet<WarriorId, ButtonRecruiting> _buttons;
+        [SerializeField] private IdSet<WarriorId, ButtonRecruiting> _buttons;
 
         private CrossroadMainMenu _mainMen;
 
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_buttons.CountAvailable < _buttons.Count)
+            if (_buttons.Filling < _buttons.Count)
                 _buttons.ReplaceRange(GetComponentsInChildren<ButtonRecruiting>());
         }
 #endif

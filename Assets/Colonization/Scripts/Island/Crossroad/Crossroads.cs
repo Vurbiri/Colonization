@@ -10,14 +10,14 @@ namespace Vurbiri.Colonization
     public class Crossroads
     {
         private readonly Transform _container;
-        private readonly IdHashSet<EdificeId, AEdifice> _prefabs;
+        private readonly IdSet<EdificeId, AEdifice> _prefabs;
         private readonly GameplayEventBus _eventBus;
         private readonly Dictionary<Key, Crossroad> _crossroads = new(HEX.SIDES * MAX_CIRCLES * MAX_CIRCLES);
         private readonly Quaternion ANGLE_0 = Quaternion.identity, ANGLE_180 = Quaternion.Euler(0, 180, 0);
 
         public Crossroad this[Key key] => _crossroads[key];
 
-        public Crossroads(Transform container, IdHashSet<EdificeId, AEdifice> prefabs, GameplayEventBus eventBus)
+        public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs, GameplayEventBus eventBus)
         {
             _container = container;
             _prefabs = prefabs;

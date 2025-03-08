@@ -9,7 +9,7 @@ namespace VurbiriEditor
     using Vurbiri.Collections;
     using Object = UnityEngine.Object;
 
-    [CustomPropertyDrawer(typeof(IdHashSet<,>))]
+    [CustomPropertyDrawer(typeof(IdSet<,>))]
     internal class IdHashSetDrawer : ADrawerGetConstFieldName
     {
         private const int INDEX_TYPE = 0, INDEX_VALUE = 1;

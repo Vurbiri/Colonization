@@ -1,4 +1,5 @@
 //Assets\Vurbiri\Editor\Types\Random\RZFloatDrawer.cs
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -6,41 +7,49 @@ using Vurbiri;
 namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(RZFloat))]
-    public class RZFloatDrawer : PropertyDrawer
+    public class RZFloatDrawer : ARValueDrawer
     {
-        private const float OFFSET_SIZE_LABEL = 20f, SIZE_VALUE = 85f, SIZE_SPACE = 5f;
         private const string NAME_VALUE = "_value";
+        private const float ZERO = 0.00001f;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             position.height = EditorGUIUtility.singleLineHeight;
 
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
+            float max, min;
+            float value = valueProperty.floatValue;
 
-            Rect sizeLabel = position, sizeZero = position, sizeValue = position;
-
-            sizeLabel.width = EditorGUIUtility.labelWidth + OFFSET_SIZE_LABEL;
-
-            if (valueProperty.floatValue >= 0f)
-            {
-                sizeZero.x = sizeLabel.width;
-                sizeValue.x = sizeLabel.width + SIZE_VALUE + SIZE_SPACE;
-            }
-            else
-            {
-                sizeZero.x = sizeLabel.width + SIZE_VALUE + SIZE_SPACE;
-                sizeValue.x = sizeLabel.width;
-            }
-
-            sizeZero.width = sizeValue.width = SIZE_VALUE;
+            var range = fieldInfo.GetCustomAttribute<MaxAttribute>();
 
             label = EditorGUI.BeginProperty(position, label, property);
 
-            EditorGUI.LabelField(sizeLabel, label);
-            EditorGUI.FloatField(sizeZero, 0f);
-            valueProperty.floatValue = EditorGUI.FloatField(sizeValue, valueProperty.floatValue);
+            if (range != null)
+            {
+                if(range.max >= 0) { max = range.max; min = ZERO; }
+                else { min = range.max; max = -ZERO; }
+
+                value = EditorGUI.Slider(position, label, value, min, max);
+            }
+            else
+            {
+                var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
+                EditorGUI.LabelField(sizeLabel, label);
+                if (value >= 0f) 
+                {
+                    EditorGUI.FloatField(sizeMin, 0f);
+                    value = EditorGUI.FloatField(sizeMax, value);
+                }
+                else 
+                {
+                    value = EditorGUI.FloatField(sizeMin, value);
+                    EditorGUI.FloatField(sizeMax, 0f);
+                }
+            }
 
             EditorGUI.EndProperty();
+
+            valueProperty.floatValue = value;
         }
     }
 }

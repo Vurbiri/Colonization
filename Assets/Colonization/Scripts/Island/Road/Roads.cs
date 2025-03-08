@@ -4,19 +4,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Reactive;
+using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    public class Roads : MonoBehaviour, IReactive<int[][][]>
+    public class Roads : IReactive<int[][][]>, IDisposable
     {
-        [SerializeField] private Road _prefabRoad;
-
-        #region private
-        private Transform _thisTransform;
-        private Id<PlayerId> _id;
-        private Color _color;
+        #region Fields
+        private readonly Id<PlayerId> _id;
+        private readonly Gradient _gradient = new();
+        private readonly RoadFactory _factory;
         private readonly List<Road> _roadsLists = new();
         private readonly ReactiveValue<int> _count = new(0);
+        private readonly Coroutines _coroutines;
 
         private Subscriber<int[][][]> _subscriber;
         #endregion
@@ -24,22 +24,21 @@ namespace Vurbiri.Colonization
         public int Count => _count.Value;
         public IReactive<int> CountReactive => _count;
 
-        public Roads Init(Id<PlayerId> id, Color color)
+        public Roads(Id<PlayerId> id, Color color, RoadFactory factory, Coroutines coroutines)
         {
-            _thisTransform = transform;
             _id = id;
-            _color = color;
+            _factory = factory;
+            _coroutines = coroutines;
 
-            return this;
+            var alphas = new GradientAlphaKey[] { new(1.0f, 0.0f), new(1.0f, 1.0f) };
+            var colors = new GradientColorKey[] { new(color, 0.0f), new(color, 1.0f) };
+            _gradient.SetKeys(colors, alphas);
         }
 
-        public Roads Restoration(IReadOnlyList<IReadOnlyList<Key>> array, Crossroads crossroads)
+        public void Restoration(IReadOnlyList<IReadOnlyList<Key>> array, Crossroads crossroads)
         {
             foreach (var keys in array)
                 CreateRoad(keys, crossroads);
-
-            SetRoadsEndings();
-            return this;
 
             #region Local: CreateRoad(...)
             //=================================
@@ -72,9 +71,9 @@ namespace Vurbiri.Colonization
             _count.Value++;
 
             if (!AddRoadLine(link))
-                NewRoadLine(link);
+                _roadsLists.Add(_factory.Create(link.Start, link.End, _gradient));
 
-            #region Local: AddRoadLine(), NewRoadLine()
+            #region Local: AddRoadLine(..)
             //=================================
             bool AddRoadLine(CrossroadLink link)
             {
@@ -84,21 +83,13 @@ namespace Vurbiri.Colonization
 
                 return false;
             }
-            //=================================
-            void NewRoadLine(CrossroadLink link)
-            {
-                Road roadLine;
-                roadLine = Instantiate(_prefabRoad, _thisTransform);
-                roadLine.Create(link.Start, link.End, _id, _color);
-                _roadsLists.Add(roadLine);
-            }
             #endregion
         }
 
         public void BuildAndUnion(CrossroadLink link)
         {
             Build(link);
-            StartCoroutine(TryUnion_Cn());
+            _coroutines.Run(TryUnion_Cn());
         }
 
         #region Reactive
@@ -122,12 +113,6 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public void SetRoadsEndings()
-        {
-            foreach (var road in _roadsLists)
-                road.SetGradient();
-        }
-
         private IEnumerator TryUnion_Cn()
         {
             yield return null;
@@ -140,8 +125,8 @@ namespace Vurbiri.Colonization
                     if (roadLine != null)
                     {
                         _roadsLists.Remove(roadLine);
-                        Destroy(roadLine.gameObject);
-                        StartCoroutine(TryUnion_Cn());
+                        Object.Destroy(roadLine.gameObject);
+                        _coroutines.Run(TryUnion_Cn());
                         yield break;
                     }
                 }
@@ -150,14 +135,9 @@ namespace Vurbiri.Colonization
             _subscriber.Invoke(ToArray());
         }
 
-       
-
-#if UNITY_EDITOR
-        protected virtual void OnValidate()
+        public void Dispose()
         {
-            if(_prefabRoad == null)
-                _prefabRoad = EUtility.FindAnyPrefab<Road>();
+            _subscriber.Dispose();
         }
-#endif
     }
 }

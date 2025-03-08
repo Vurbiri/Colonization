@@ -1,4 +1,5 @@
 //Assets\Vurbiri\Editor\Types\Random\RMFloatDrawer.cs
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -15,17 +16,35 @@ namespace VurbiriEditor
             position.height = EditorGUIUtility.singleLineHeight;
 
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
-            valueProperty.floatValue = Mathf.Abs(valueProperty.floatValue);
+            float max = Mathf.Abs(valueProperty.floatValue), min = -max;
 
-            (Rect sizeLabel, Rect sizeMinus, Rect sizePlus) = CalkPosition(position);
+            var range = fieldInfo.GetCustomAttribute<MaxAttribute>();
 
             label = EditorGUI.BeginProperty(position, label, property);
-            EditorGUI.LabelField(sizeLabel, label);
-            valueProperty.floatValue = -EditorGUI.FloatField(sizeMinus, -valueProperty.floatValue);
-            valueProperty.floatValue = EditorGUI.FloatField(sizePlus, valueProperty.floatValue);
+
+            if (range != null)
+            {
+                var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
+
+                EditorGUI.LabelField(sizeLabel, label);
+
+                min = EditorGUI.FloatField(sizeMin, min);
+                max = EditorGUI.FloatField(sizeMax, max);
+                EditorGUI.MinMaxSlider(sizeSlider, ref min, ref max, -range.max, range.max);
+            }
+            else
+            {
+                var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
+                EditorGUI.LabelField(sizeLabel, label);
+                min = EditorGUI.FloatField(sizeMin, min);
+                max = EditorGUI.FloatField(sizeMax, max);
+            }
+
             EditorGUI.EndProperty();
 
-            valueProperty.floatValue = Mathf.Abs(valueProperty.floatValue);
+            valueProperty.floatValue = Mathf.Abs(max);
         }
+
+        
     }
 }

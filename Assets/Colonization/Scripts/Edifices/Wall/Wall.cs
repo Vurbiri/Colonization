@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField, Range(0, 5)] protected int _idMaterial;
         [Space]
-        [SerializeField] protected IdHashSet<LinkId, WallGate> _graphicSides;
+        [SerializeField] protected IdSet<LinkId, WallGate> _graphicSides;
 
         public Wall Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_graphicSides.CountAvailable < _graphicSides.Count)
+            if (_graphicSides.Filling < _graphicSides.Count)
                 _graphicSides.ReplaceRange(GetComponentsInChildren<WallGate>());
         }
 #endif

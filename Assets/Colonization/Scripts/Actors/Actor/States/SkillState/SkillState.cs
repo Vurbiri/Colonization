@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
             protected readonly float _speedRun;
             protected readonly float _rangeSkill;
 
-            public SkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, float range, float speedRun, int cost, int id) : 
+            public SkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<HitEffects> effects, float range, float speedRun, int cost, int id) : 
                 base(parent, targetActor, effects, cost, id)
             {
                 _speedRun = speedRun;

@@ -131,14 +131,10 @@ namespace Vurbiri.Colonization
             _sceneObjects.OnValidate();
             _scriptables.OnValidate();
             _settingsUI.OnValidate();
-
             _playersSettings.OnValidate();
+
             if (_islandCreator == null)
                 _islandCreator = FindAnyObjectByType<IslandCreator>();
-            if (_playersSettings.actorsContainer == null)
-                _playersSettings.actorsContainer = EUtility.FindObjectByName<Transform>("Actors");
-            if (_playersSettings.roadsFactory.container == null)
-                _playersSettings.roadsFactory.container = EUtility.FindObjectByName<Transform>("Roads");
         }
 #endif
 

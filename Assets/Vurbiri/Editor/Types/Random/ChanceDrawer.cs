@@ -14,8 +14,8 @@ namespace VurbiriEditor
         {
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
             SerializedProperty negentropyProperty = property.FindPropertyRelative(NAME_ENT);
-            
-            if(negentropyProperty.intValue == 0)
+
+            if (negentropyProperty.intValue == 0)
                 negentropyProperty.intValue = Random.Range(1, Chance.MAX_CHANCE);
 
             label = EditorGUI.BeginProperty(position, label, property);

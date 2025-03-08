@@ -13,11 +13,9 @@ namespace Vurbiri.Colonization.Characteristics
         {
             value = Math.Clamp(value, 0, _maxValue);
             int delta = value - _value;
-
             _value = value;
 
-            if (delta != 0)
-                _subscriber.Invoke(_value);
+            if (delta != 0)  _subscriber.Invoke(_value);
 
             return delta;
         }

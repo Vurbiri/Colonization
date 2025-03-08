@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
 {
     public abstract class EdificeId : IdType<EdificeId>
     {
-        public const int Signpost       = 0;
+        public const int Empty          = 0;
 
         public const int Shrine         = 1;
 
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
 
         public static int ToGroup(int id) => id switch
         {
-            Signpost                                             => EdificeGroupId.None,
+            Empty                                             => EdificeGroupId.None,
             Shrine                                               => EdificeGroupId.Shrine,
             PortOne or PortTwo or LighthouseOne or LighthouseTwo => EdificeGroupId.Port,
             Camp or Town or Capital                              => EdificeGroupId.Urban,
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
             0 when !isGate => Camp,
             1              => PortOne,
             2              => PortTwo,
-            _              => Signpost
+            _              => Empty
         };
     }
 

@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.Actors
             // !!!!!!!!!!!!!!!!!!!!! Удалить _relationRealTarget
             protected readonly Relation _relationRealTarget;
 
-            protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<EffectsHit> effects, int cost, int id) : 
+            protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<HitEffects> effects, int cost, int id) : 
                 base(parent, effects, cost, id)
             {
                 _isCancel = parent._canCancel;

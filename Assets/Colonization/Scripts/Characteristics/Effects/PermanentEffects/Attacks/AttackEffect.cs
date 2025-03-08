@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Characteristics
 {
     using static ActorAbilityId;
 
-    public class AttackEffect : AEffect
+    public class AttackEffect : AHitEffect
     {
         private readonly AbilityModifierPercent _damage, _pierce;
 

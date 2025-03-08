@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private LandInitData _landInitData;
         [Space]
-        [SerializeField] private IdHashSet<EdificeId, AEdifice> _edificePrefabs;
+        [SerializeField] private IdSet<EdificeId, AEdifice> _edificePrefabs;
 
         private Hexagons _land;
         private Crossroads _crossroads;
@@ -64,13 +64,13 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            hexCreator.Dispose();
+            hexCreator.Finish();
         }
 
         private IEnumerator Setup_Cn()
         {
             yield return null;
-            _land.HexagonsNeighbors();
+            yield return StartCoroutine(_land.HexagonsNeighbors_Cn());
             yield return null;
             yield return StartCoroutine(_land.FinishCreate_Cn());
         }
@@ -79,7 +79,7 @@ namespace Vurbiri.Colonization
         private void OnValidate()
         {
             _landInitData.OnValidate();
-            if (_edificePrefabs.CountAvailable < _edificePrefabs.Count)
+            if (_edificePrefabs.Filling < _edificePrefabs.Count)
                 _edificePrefabs.ReplaceRange(EUtility.FindPrefabs<AEdifice>());
             if (_crossroadsContainer == null)
                 _crossroadsContainer = this.GetComponentInChildren<Transform>("Crossroads");

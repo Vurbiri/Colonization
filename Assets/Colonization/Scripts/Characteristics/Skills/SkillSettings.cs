@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private float _range;
         [SerializeField] private float _distance;
         [SerializeField] private int _cost;
-        [SerializeField] private EffectsHitSettings[] _effectsHitsSettings;
+        [SerializeField] private HitEffectsSettings[] _effectsHitsSettings;
         [SerializeField] private SkillUI _ui;
 
 #if UNITY_EDITOR
@@ -28,11 +28,11 @@ namespace Vurbiri.Colonization.Characteristics
         public float Distance => _distance;
         public int Cost => _cost;
 
-        public EffectsHit[] CreateEffectsHit(Actor parent, int skillId)
+        public HitEffects[] CreateEffectsHit(Actor parent, int skillId)
         {
             int countHits = _effectsHitsSettings.Length;
-            EffectsHit[] effects = new EffectsHit[countHits];
-            EffectsHitSettings effectsHitSettings;
+            HitEffects[] effects = new HitEffects[countHits];
+            HitEffectsSettings effectsHitSettings;
 
             for (int i = 0, u = 0; i < countHits; i++)
             {

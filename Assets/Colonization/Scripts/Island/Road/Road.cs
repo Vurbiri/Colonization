@@ -7,43 +7,43 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private LineRenderer _roadRenderer;
         [Space]
-        [SerializeField] private float _widthRoad = 1.1f;
-        [SerializeField] private RInt _rangeCount = new(2, 4);
-        [SerializeField] private float _offsetY = 0.05f;
-        [SerializeField] private RFloat _rateWave = new(0.5f, 0.9f);
-        [SerializeField] private RFloat _lengthFluctuation = new(0.85f, 1.15f);
+        [SerializeField, Range(0.5f, 1.5f)] private float _widthRoad = 0.95f;
         [Space]
-        [SerializeField] private RFloat _textureXRange = new(0.6f, 0.9f);
-        [SerializeField] private RFloat _textureYRange = new(0.4f, 1f);
+        [SerializeField] private float _offsetY = 0.0125f;
         [Space]
-        [SerializeField] private float _alphaTime = 0.01f;
+        [SerializeField, MinMax(1, 6)] private RInt _rangeCount = new(2, 4);
+        [SerializeField, MinMax(0.1f, 0.3f)] private RFloat _rateWave = new(0.15f, 0.25f);
+        [SerializeField, MinMax(0.5f, 1.5f)] private RFloat _lengthFluctuation = new(0.85f, 1.15f);
+        [Space]
+        [SerializeField, MinMax(0.1f, 2f)] private RFloat _textureXRange = new(0.6f, 0.9f);
+        [SerializeField, MinMax(0.1f, 2f)] private RFloat _textureYRange = new(0.4f, 1f);
 
         private readonly LinkList<Crossroad> _crossroads = new();
         private readonly LinkList<Vector3> _points = new();
-        private Id<PlayerId> _owner;
-        private GradientLine _gradient;
         private Vector2 _textureScale;
         private float _textureScaleX;
 
-        public void Create(Crossroad start, Crossroad end, Id<PlayerId> playerId, Color color)
+        public Road Init(Crossroad start, Crossroad end, Gradient gradient)
         {
-            _owner = playerId;
+            _rateWave = new(_rateWave, _widthRoad);
+
+
             _crossroads.Add(start, end);
 
-            InitLineRenderer(start.Position, color);
-
+            InitLineRenderer(start.Position, gradient);
             CreateLine(start.Position, end.Position);
+
+            return this;
 
             #region Local: InitLineRenderer(...)
             //=================================
-            void InitLineRenderer(Vector3 start, Color color)
+            void InitLineRenderer(Vector3 start, Gradient gradient)
             {
                 _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
+                _roadRenderer.colorGradient = gradient;
                 _textureScale = new Vector2(_textureXRange, _textureYRange);
                 _textureScaleX = _textureScale.x;
-
-                _gradient = new(_roadRenderer, _alphaTime, color);
-
+                
                 start.y = _offsetY;
                 _points.Add(start);
             }
@@ -110,14 +110,13 @@ namespace Vurbiri.Colonization
             start.y = end.y = _offsetY;
 
             int count = _rangeCount;
-            RFloat wave = new(_rateWave, _widthRoad / count);
             Vector3 step = (end - start) / (count + 1), offsetSide = Vector3.Cross(Vector3.up, step.normalized);
             float sign = Chance.Select(1f, -1f), signStep = -1f;
 
             for (int i = 0; i < count; i++)
             {
                 sign *= signStep;
-                start += _lengthFluctuation * step + wave * sign * offsetSide;
+                start += _lengthFluctuation * step + _rateWave * sign * offsetSide;
                 _points.Add(start);
             }
             _points.Add(end);
@@ -125,17 +124,8 @@ namespace Vurbiri.Colonization
             SetLineRenderer();
         }
 
-        public void SetGradient()
-        {
-            _gradient.AlphaFirst = _crossroads.First.IsFullyOwned(_owner) ? 1f : 0f;
-            _gradient.AlphaLast = _crossroads.Last.IsFullyOwned(_owner) ? 1f : 0f;
-            _gradient.SetKeys();
-        }
-
         private void SetLineRenderer()
         {
-            SetGradient();
-
             _textureScale.x = _textureScaleX * (_crossroads.Count - 1);
 
             _roadRenderer.textureScale = _textureScale;
@@ -151,34 +141,5 @@ namespace Vurbiri.Colonization
         }
 #endif
 
-        #region Nested class: GradientLine
-        private class GradientLine
-        {
-            public float AlphaFirst { get => _alphas[0].alpha; set => _alphas[0].alpha = value; }
-            public float AlphaLast { get => _alphas[^1].alpha; set => _alphas[^1].alpha = value; }
-
-            private readonly LineRenderer _lineRenderer;
-            private readonly Gradient _gradient = new();
-
-            private readonly GradientAlphaKey[] _alphas;
-            private readonly GradientColorKey[] _colors;
-
-            public GradientLine(LineRenderer lineRenderer, float alphaTime, Color color)
-            {
-                _lineRenderer = lineRenderer;
-
-                _alphas = new GradientAlphaKey[] { new(0.0f, 0.0f), new(1.0f, alphaTime), new(1.0f, 1f - alphaTime), new(0.0f, 1.0f) };
-                _colors = new GradientColorKey[] { new(color, 0.0f), new(color, 1.0f) };
-
-                SetKeys();
-            }
-
-            public void SetKeys()
-            {
-                _gradient.SetKeys(_colors, _alphas);
-                _lineRenderer.colorGradient = _gradient;
-            }
-        }
-        #endregion
     }
 }

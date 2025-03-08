@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
         }
         public bool BuyUpgrade(Id<PlayerId> playerId)
         {
-            if (!_states.isUpgrade | (_states.id != EdificeId.Signpost & _owner != playerId))
+            if (!_states.isUpgrade | (_states.id != EdificeId.Empty & _owner != playerId))
                 return false;
 
             BuildEdifice(playerId, _states.nextId.Value);
@@ -85,20 +85,20 @@ namespace Vurbiri.Colonization
             _edifice.AddRoad(id, _isWall);
         }
 
-        public bool IsFullyOwned(Id<PlayerId> playerId)
-        {
-            if (_links.CountAvailable <= 1)
-                return false;
+        //public bool IsFullyOwned(Id<PlayerId> playerId)
+        //{
+        //    if (_links.Filling <= 1)
+        //        return false;
 
-            if (_countFreeLink > 0)
-                return _owner == playerId;
+        //    if (_countFreeLink > 0)
+        //        return _owner == playerId;
 
-            foreach (var link in _links)
-                if (link.Owner != playerId)
-                    return false;
+        //    foreach (var link in _links)
+        //        if (link.Owner != playerId)
+        //            return false;
 
-            return true;
-        }
+        //    return true;
+        //}
         public bool IsRoadConnect(Id<PlayerId> playerId)
         {
             if (_owner == playerId)

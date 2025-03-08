@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
             public Transform actorsContainer;
             public PricesScriptable prices;
             public PlayerAbilitiesScriptable states;
-            public RoadsFactory roadsFactory;
+            public RoadFactory roadFactory;
 
             public void Dispose()
             {
@@ -56,16 +56,18 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
             public void OnValidate()
             {
+                roadFactory.OnValidate();
+
                 if (warriorPrefab == null)
                     warriorPrefab = EUtility.FindAnyPrefab<WarriorInitializer>();
                 if (demonPrefab == null)
                     demonPrefab = EUtility.FindAnyPrefab<DemonInitializer>();
+                if (actorsContainer == null)
+                    actorsContainer = EUtility.FindObjectByName<Transform>("Actors");
                 if (prices == null)
                     prices = EUtility.FindAnyScriptable<PricesScriptable>();
                 if (states == null)
                     states = EUtility.FindAnyScriptable<PlayerAbilitiesScriptable>();
-                if (roadsFactory.prefab == null)
-                    roadsFactory.prefab = EUtility.FindAnyPrefab<Roads>();
             }
 #endif
         }

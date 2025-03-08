@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
 
             base.Init(playerId, isWall, links, edifice);
 
-            if (edifice.Id == EdificeId.Signpost)
+            if (edifice.Id == EdificeId.Empty)
             {
                 foreach (var link in links)
                 {

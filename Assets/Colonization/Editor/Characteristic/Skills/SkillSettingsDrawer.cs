@@ -128,7 +128,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                         effectProperty = effectsProperty.GetArrayElementAtIndex(j);
                         GetProperty(effectProperty, P_CHILD_TARGET).SetEnum(target);
                         if (effectsProperty.isExpanded)
-                            _position.y += _height * EffectHitSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j), j);
+                            _position.y += _height * HitEffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j), j);
                     }
                     if (effectsProperty.isExpanded)
                         _position.y += _height * 1.8f; // "+ -" панель
@@ -161,7 +161,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                         {
                             rate += 1.8f;
                             for (int j = 0; j < effectsProperty.arraySize; j++)
-                                rate += EffectHitSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j), j);
+                                rate += HitEffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j), j);
                         }
                     }
                 }

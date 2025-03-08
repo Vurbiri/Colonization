@@ -10,8 +10,8 @@ namespace Vurbiri.Colonization
     public class ForestGenerator : ASurfaceGenerator
     {
         [SerializeField, Range(0.01f, 0.3f)] private float _offsetY = 0.1f;
-        [SerializeField, Range(1f, 3.5f)] private float _density = 1.9f;
-        [SerializeField] private RMFloat _offsetRange = 0.3f;
+        [SerializeField, Range(1f, 3.5f)] private float _sparsity = 1.9f;
+        [SerializeField, Max(0.5f)] private RMFloat _offsetRange = 0.3f;
         [Space]
         [SerializeField] private RColor32 _colorRange;
         [SerializeField] private Vector2Specular _specular = new(0f, 0.1f);
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
         public override void Generate(float size)
         {
             CustomMesh customMesh = new(NAME_MESH.Concat(ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
-            float step = _spruce.RadiusAvg * _density, radius = step;
+            float step = _spruce.RadiusAvg * _sparsity, radius = step;
             float angle, angleStep;
             RMFloat offsetAngle;
             float x, z;
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
         public override IEnumerator Generate_Cn(float size)
         {
             CustomMesh customMesh = new(NAME_MESH.Concat(ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
-            float step = _spruce.RadiusAvg * _density, radius = step;
+            float step = _spruce.RadiusAvg * _sparsity, radius = step;
             float angle, angleStep;
             RMFloat offsetAngle;
             float x, z;
@@ -87,16 +87,16 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Spruce
         {
-            [SerializeField] private RInt _countVertexRange = new(5, 6);
+            [SerializeField, MinMax(4, 7)] private RInt _countVertexRange = new(5, 6);
             [Space]
             [SerializeField, Range(1f, 3f)] private float _heightBase = 1.55f;
             [SerializeField, Range(0.5f, 2f)] private float _radiusBase = 1.11f;
             [Space]
-            [SerializeField] private RFloat _sizeRatioRange = new(0.65f, 1.15f);
+            [SerializeField, MinMax(0.4f,1.5f)] private RFloat _sizeRatioRange = new(0.65f, 1.15f);
             [SerializeField] private Chance _chanceSmall = 38;
             [Space]
             [SerializeField, Range(0.5f, 1f)] private float _ratioNextPos = 0.75f;
-            [SerializeField] private RFloat _ratioNextSizeRange = new(0.68f, 0.72f);
+            [SerializeField, MinMax(0.4f, 0.9f)] private RFloat _ratioNextSizeRange = new(0.68f, 0.72f);
 
             public float RadiusAvg => _sizeRatioRange.Avg * _radiusBase;
 
