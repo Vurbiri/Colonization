@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Characteristics
     public abstract class AAbility<TId> : IAbility, IValueId<TId> where TId : AbilityId<TId>
     {
         protected int _value;
-        protected Subscriber<int> _subscriber;
+        protected Subscriber<int> _subscriber = new();
 
         public Id<TId> Id { get; }
         public virtual int Value { get => _value; set { } }
@@ -30,9 +30,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public Unsubscriber Subscribe(Action<int> action, bool calling = true)
         {
-            if (calling)
-                action(_value);
-
+            if (calling) action(_value);
             return _subscriber.Add(action);
         }
     }

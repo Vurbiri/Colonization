@@ -13,7 +13,7 @@ namespace Vurbiri.Reactive.Collections
         protected int _capacity = 4;
         protected readonly ReactiveValue<int> _count = new(0);
 
-        protected Subscriber<T, TypeEvent> _subscriber;
+        protected Subscriber<T, TypeEvent> _subscriber = new();
 
         public T this[int index] => _values[index];
 

@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
         private readonly Dictionary<int, List<Key>> _hexagonsIdForKey = new(HEX_IDS.Count + 1);
 
-        private Subscriber<Key, int[]> _subscriber;
+        private Subscriber<Key, int[]> _subscriber = new();
 
         private LandMesh _landMesh;
         private Hexagon _prefabHex;

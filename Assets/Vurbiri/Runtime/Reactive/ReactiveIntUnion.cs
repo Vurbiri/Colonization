@@ -8,7 +8,7 @@ namespace Vurbiri.Reactive
     {
 		private readonly List<IReactiveValue<int>> _reactive;
         private Unsubscribers _unsubscribers = new();
-        private Subscriber<int> _subscriber;
+        private Subscriber<int> _subscriber = new();
         private int _count;
 
         public int Value

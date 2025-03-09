@@ -15,7 +15,7 @@ namespace Vurbiri.Reactive
         [SerializeField, JsonProperty("v2")]
         protected TB _valueB;
 
-        protected Subscriber<TA, TB> _subscriber;
+        protected Subscriber<TA, TB> _subscriber = new();
 
         private readonly IEqualityComparer<TA> _comparerA;
         private readonly IEqualityComparer<TB> _comparerB;

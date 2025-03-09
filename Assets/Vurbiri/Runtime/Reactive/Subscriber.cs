@@ -3,7 +3,7 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    public struct Subscriber<T> : ISubscriber<Action<T>>, IDisposable
+    public class Subscriber<T> : ISubscriber<Action<T>>, IDisposable
     {
         private Action<T> actions;
 
@@ -14,14 +14,14 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<T>>(this, action);
         }
 
-        public readonly void Invoke(T value) => actions?.Invoke(value);
+        public void Invoke(T value) => actions?.Invoke(value);
 
         public void Unsubscribe(Action<T> action) => actions -= action;
 
         public void Dispose() => actions = null;
     }
     //=======================================================================================
-    public struct Subscriber<TA, TB> : ISubscriber<Action<TA, TB>>, IDisposable
+    public class Subscriber<TA, TB> : ISubscriber<Action<TA, TB>>, IDisposable
     {
         private Action<TA, TB> actions;
 
@@ -32,14 +32,14 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<TA, TB>>(this, action);
         }
 
-        public readonly void Invoke(TA valueA, TB valueB) => actions?.Invoke(valueA, valueB);
+        public void Invoke(TA valueA, TB valueB) => actions?.Invoke(valueA, valueB);
 
         public void Unsubscribe(Action<TA, TB> action) => actions -= action;
 
         public void Dispose() => actions = null;
     }
     //=======================================================================================
-    public struct Subscriber<TA, TB, TC> : ISubscriber<Action<TA, TB, TC>>, IDisposable
+    public class Subscriber<TA, TB, TC> : ISubscriber<Action<TA, TB, TC>>, IDisposable
     {
         private Action<TA, TB, TC> actions;
 
@@ -50,14 +50,14 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<TA, TB, TC>>(this, action);
         }
 
-        public readonly void Invoke(TA valueA, TB valueB, TC valueC) => actions?.Invoke(valueA, valueB, valueC);
+        public void Invoke(TA valueA, TB valueB, TC valueC) => actions?.Invoke(valueA, valueB, valueC);
 
         public void Unsubscribe(Action<TA, TB, TC> action) => actions -= action;
 
         public void Dispose() => actions = null;
     }
     //=======================================================================================
-    public struct Subscriber<TA, TB, TC, TD> : ISubscriber<Action<TA, TB, TC, TD>>, IDisposable
+    public class Subscriber<TA, TB, TC, TD> : ISubscriber<Action<TA, TB, TC, TD>>, IDisposable
     {
         private Action<TA, TB, TC, TD> actions;
 
@@ -68,7 +68,7 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<TA, TB, TC, TD>>(this, action);
         }
 
-        public readonly void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => actions?.Invoke(valueA, valueB, valueC, valueD);
+        public void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => actions?.Invoke(valueA, valueB, valueC, valueD);
 
         public void Unsubscribe(Action<TA, TB, TC, TD> action) => actions -= action;
 

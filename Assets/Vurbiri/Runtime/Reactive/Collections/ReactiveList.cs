@@ -15,7 +15,7 @@ namespace Vurbiri.Reactive.Collections
         
         private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
-        private Subscriber<int, T, TypeEvent> _subscriber;
+        private Subscriber<int, T, TypeEvent> _subscriber = new();
 
         public T this[int index] 
         {

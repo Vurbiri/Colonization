@@ -6,11 +6,9 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    using static CONST_UI;
-
     public class Currency : MonoBehaviour
     {
-        private const string COUNT = "{0}";
+        private const string COUNT = "{0}", TEXT = "<sprite={0}><space=0.1em>";
 
         [SerializeField] private TMP_Text _textTMP;
         [SerializeField] private PopupWidgetUI _popup;
@@ -27,7 +25,7 @@ namespace Vurbiri.Colonization.UI
             _popup.Init(settings, offsetPopup);
             _thisRectTransform.localPosition = position;
 
-            _currency = string.Format(TAG_SPRITE, id).Concat(COUNT);
+            _currency = string.Format(TEXT, id).Concat(COUNT);
             _textTMP.color = settings.ColorTextBase;
 
             _unsubscriber = count.Subscribe(id, SetValue);

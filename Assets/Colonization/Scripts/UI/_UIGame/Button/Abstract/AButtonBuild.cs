@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.UI
         {
             StringBuilder sb = new(cost.Amount > 0 ? MAX_SIZE : MIN_SIZE);
             sb.AppendLine(caption);
-            sb.AppendFormat(CultureInfo.InvariantCulture, TAG_SPACE, SPACE);
+            sb.AppendFormat(CultureInfo.InvariantCulture, TAG_CSPACE, SPACE);
 
             int costV;
             for (int i = 0; i < CurrencyId.CountMain; i++)
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.UI
                 sb.Append(costV > cash[i] ? _hexColorMinus : _hexColorPlus);
                 sb.Append(costV.ToString());
             }
-            sb.Append(TAG_SPACE_OFF);
+            sb.Append(TAG_CSPACE_OFF);
 
             _text = sb.ToString();
         }

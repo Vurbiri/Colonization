@@ -87,15 +87,15 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Druse
         {
-            [SerializeField] private RInt _countCrystalsRange = new(5, 6);
+            [SerializeField, MinMax(4, 7)] private RInt _countCrystalsRange = new(5, 6);
             [Space]
-            [SerializeField] private RInt _colorCrystalRange = new(125, 255);
+            [SerializeField, MinMax(100, 255)] private RInt _colorCrystalRange = new(175, 255);
 
             [Header("First")]
-            [SerializeField] private RMFloat _angleFirstRange = 10f;
+            [SerializeField, Max(16f)] private RMFloat _angleFirstRange = 10f;
             [Header("Other")]
-            [SerializeField] private RMFloat _angleXRange = 15f;
-            [SerializeField] private RFloat _angleZRange = new(35f, 60f);
+            [SerializeField, Max(20f)] private RMFloat _angleXRange = 15f;
+            [SerializeField, MinMax(30f, 75f)] private RFloat _angleZRange = new(35f, 60f);
             [Space]
             [SerializeField, Range(0.05f, 0.25f)] private float _ratioAngleYRange = 0.15f;
             [Space, Space]
@@ -129,15 +129,15 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Crystal
         {
-            [SerializeField] private RInt _countVertexRange = new(3, 6);
+            [SerializeField, MinMax(1, 7)] private RInt _countVertexRange = new(4, 6);
             [Space]
             [SerializeField, Range(0.1f, 0.9f)] private float _ratioRadiusBottom = 0.75f;
             [Space]
-            [SerializeField] private RFloat _heightRange = new(1.5f, 2.8f);
-            [SerializeField] private RFloat _radiusRange = new(0.325f, 0.425f);
-            [SerializeField] private RFloat _ratioPartRange = new(0.8f, 0.95f);
+            [SerializeField, MinMax(1f, 3f)] private RFloat _heightRange = new(1.6f, 2.3f);
+            [SerializeField, MinMax(0.3f, 0.5f)] private RFloat _radiusRange = new(0.325f, 0.45f);
+            [SerializeField, MinMax(0.6f, 1f)] private RFloat _ratioPartRange = new(0.8f, 0.95f);
             [Space]
-            [SerializeField] private RFloat _ratioOffsetRange = new(0.16f, 0.32f);
+            [SerializeField, MinMax(0.1f, 0.5f)] private RFloat _ratioOffsetRange = new(0.16f, 0.32f);
 
             private static readonly Vector2[] UV_PICK = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
 
