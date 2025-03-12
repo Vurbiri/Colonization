@@ -6,7 +6,7 @@ namespace Vurbiri.Reactive
 {
     public abstract class AReactiveValueMono<T> : MonoBehaviour, IReactiveValue<T>
     {
-        protected Subscriber<T> _subscriber = new();
+        protected readonly Subscriber<T> _subscriber = new();
 
         public abstract T Value { get; protected set; }
 

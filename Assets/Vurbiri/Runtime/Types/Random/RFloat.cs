@@ -19,6 +19,13 @@ namespace Vurbiri
 
         public RFloat(float min, float max)
         {
+            if (min > max)
+            {
+                _min = max;
+                _max = min;
+                return;
+            }
+
             _min = min;
             _max = max;
         }
@@ -29,11 +36,7 @@ namespace Vurbiri
             _max = value._max * ratio;
         }
 
-        public RFloat(Vector2 vector)
-        {
-            _min = vector.x;
-            _max = vector.y;
-        }
+        public RFloat(Vector2 vector) : this(vector.x, vector.y) { }
 
         public static implicit operator float(RFloat mm) => Random.Range(mm._min, mm._max);
 

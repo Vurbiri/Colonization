@@ -18,23 +18,14 @@ namespace Vurbiri.Colonization.Characteristics
             _value = value;
         }
 
-        public bool TryAdd(IPerk perk)
+        public void Add(IPerk perk)
         {
-            if (perk == null || _targetAbility != perk.TargetAbility | _typeModifier != perk.TypeModifier) 
-                return false;
+            if (perk == null || _targetAbility != perk.TargetAbility | _typeModifier != perk.TypeModifier)
+                Errors.Argument("Perk", perk);
 
             _value += perk.Value;
-            return true;
         }
 
-        public bool TryAdd(Perk perk)
-        {
-            if (perk == null || _targetAbility != perk._targetAbility | _typeModifier != perk._typeModifier)
-                return false;
-
-            _value += perk._value;
-            return true;
-        }
-
+        public override string ToString() => $"{GetType().Name}: targetID = {_targetAbility}, modifierID = {_typeModifier}, value = {_value}.";
     }
 }

@@ -18,12 +18,12 @@ namespace Vurbiri.Colonization.Characteristics
             _modifiers[TypeModifierId.TotalPercent] = new AbilityModifierPercent();
         }
 
-        public override int AddModifier(IAbilityModifierValue mod)
+        public override int AddModifier(IAbilityValue mod)
         {
             _modifiers[mod.TypeModifier].Add(mod.Value);
             return ApplyModifiers();
         }
-        public override int RemoveModifier(IAbilityModifierValue mod)
+        public override int RemoveModifier(IAbilityValue mod)
         {
             _modifiers[mod.TypeModifier].Add(-mod.Value);
             return ApplyModifiers();

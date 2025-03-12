@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         private readonly ReactiveValue<int> _count = new(0);
         private readonly Coroutines _coroutines;
 
-        private Subscriber<int[][][]> _subscriber = new();
+        private readonly Subscriber<int[][][]> _subscriber = new();
         #endregion
 
         public int Count => _count.Value;

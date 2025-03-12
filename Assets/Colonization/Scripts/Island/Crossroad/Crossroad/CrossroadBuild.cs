@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Island\Crossroad\Crossroad\CrossroadBuild.cs
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Reactive;
 
@@ -21,6 +22,7 @@ namespace Vurbiri.Colonization
 
             #region Local: WaterCheck(), NeighborCheck()
             //=================================
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             bool WaterCheck()
             {
                 if (_countFreeLink == 0 && !IsRoadConnect(playerId))
@@ -33,6 +35,7 @@ namespace Vurbiri.Colonization
                 return true;
             }
             //=================================
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             bool NeighborCheck(Id<PlayerId> playerId)
             {
                 Crossroad neighbor;
@@ -71,6 +74,9 @@ namespace Vurbiri.Colonization
 
             _states.isBuildWall = !(_isWall = true);
             _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d);
+
+            for (int i = 0; i < _hexagons.Count; i++)
+                _hexagons[i].BuildWall(playerId);
 
             return true;
         }

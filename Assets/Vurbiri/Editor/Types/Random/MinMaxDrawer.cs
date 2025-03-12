@@ -14,42 +14,59 @@ namespace VurbiriEditor
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
-            if (attribute is not MinMaxAttribute range) return;
-            
-            if(mainProperty.propertyType != SerializedPropertyType.Vector2 & mainProperty.propertyType != SerializedPropertyType.Vector2Int)
+            if (attribute is not MinMaxAttribute range || fieldInfo.FieldType == typeof(RInt))
             {
                 EditorGUI.PropertyField(position, mainProperty, label);
-                //EditorGUILayout.PropertyField(mainProperty);
                 return;
             }
-            
+
             position.height = EditorGUIUtility.singleLineHeight;
 
-            SerializedProperty xProperty = mainProperty.FindPropertyRelative(NAME_X);
-            SerializedProperty yProperty = mainProperty.FindPropertyRelative(NAME_Y);
+            SerializedProperty minProperty, maxProperty;
+
+            if (mainProperty.propertyType == SerializedPropertyType.Vector2 | mainProperty.propertyType == SerializedPropertyType.Vector2Int)
+            {
+                minProperty = mainProperty.FindPropertyRelative(NAME_X);
+                maxProperty = mainProperty.FindPropertyRelative(NAME_Y);
+            }
+            else
+            {
+                minProperty = mainProperty.FindPropertyRelative(range.nameMin);
+                maxProperty = mainProperty.FindPropertyRelative(range.nameMax);
+            }
+
+            if (minProperty == null | maxProperty == null || minProperty.propertyType != maxProperty.propertyType)
+            {
+                EditorGUI.PropertyField(position, mainProperty, label);
+                return;
+            }
 
             float min, max, rMin = range.min, rMax = range.max;
 
-            if(mainProperty.propertyType == SerializedPropertyType.Vector2)
+            if(minProperty.propertyType == SerializedPropertyType.Float)
             { 
-                min = xProperty.floatValue;
-                max = yProperty.floatValue;
+                min = minProperty.floatValue;
+                max = maxProperty.floatValue;
             }
-            else
+            else if(minProperty.propertyType == SerializedPropertyType.Integer)
             { 
-                min = xProperty.intValue;
-                max = yProperty.intValue;
+                min = minProperty.intValue;
+                max = maxProperty.intValue;
                 rMin = Mathf.Round(rMin);
                 rMax = Mathf.Round(rMax);
+            }
+            else
+            {
+                EditorGUI.PropertyField(position, mainProperty, label);
+                return;
             }
 
             min = Mathf.Clamp(min, rMin, rMax);
             max = Mathf.Clamp(max, rMin, rMax);
-            if (min > max) (min, max) = (max, min);
-
-            label = EditorGUI.BeginProperty(position, label, mainProperty);
 
             var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
+
+            label = EditorGUI.BeginProperty(position, label, mainProperty);
 
             EditorGUI.LabelField(sizeLabel, label);
 
@@ -59,17 +76,18 @@ namespace VurbiriEditor
 
             EditorGUI.EndProperty();
 
-            if (mainProperty.propertyType == SerializedPropertyType.Vector2)
+            if (min > max) (min, max) = (max, min);
+
+            if (minProperty.propertyType == SerializedPropertyType.Float)
             { 
-                xProperty.floatValue = min; 
-                yProperty.floatValue = max; 
+                minProperty.floatValue = min; 
+                maxProperty.floatValue = max; 
             }
             else
             {
-                xProperty.intValue = Mathf.RoundToInt(min);
-                yProperty.intValue = Mathf.RoundToInt(max);
+                minProperty.intValue = Mathf.RoundToInt(min);
+                maxProperty.intValue = Mathf.RoundToInt(max);
             }
-
         }
 
 	}

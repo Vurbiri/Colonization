@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         private readonly int[] _values = new int[PlayerId.PlayersCount];
         private readonly DiplomacySettings _stt;
 
-        private Subscriber<IReadOnlyList<int>> _subscriber = new();
+        private readonly Subscriber<IReadOnlyList<int>> _subscriber = new();
 
         private int this[Id<PlayerId> idA, Id<PlayerId> idB]
         {

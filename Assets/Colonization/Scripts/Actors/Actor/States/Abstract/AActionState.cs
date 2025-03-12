@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Actors
             protected readonly bool _isPlayer;
             protected readonly BooleanAbility<ActorAbilityId> _move;
             private readonly SubAbility<ActorAbilityId> _currentAP;
-            private readonly AbilityModifierValue _costAP;
+            private readonly AbilityValue _costAP;
             
             public AActionState(Actor parent, int cost = 0, int id = 0) : base(parent, id)
             {

@@ -3,9 +3,9 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public class PlayerAbilityId : AbilityId<PlayerAbilityId>
     {
-        public const int MaxPort                = 0;
-        public const int MaxUrban               = 1;
-        public const int MaxShrine              = 2;
+        public const int MaxShrine              = 0;
+        public const int MaxPort                = 1;
+        public const int MaxUrban               = 2;
         public const int MaxRoads               = 3;
         public const int IsWall                 = 4;
         public const int MaxMainResources       = 5;

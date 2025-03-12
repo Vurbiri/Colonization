@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
             int i, count;
             List<Triangle>[] druse;
 
-            druse = _druse.Create(new(offsetRadius, -_offsetY, offsetRadius));
+            druse = _druse.Create(new(offsetRadius, -_offsetY, offsetRadius), true);
             count = druse.Length;
             for (i = 0; i < count; i++)
                 customMesh.AddTriangles(druse[i]);
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
                 x = COS_HEX_DIRECT[k] * radius + offsetRadius;
                 z = SIN_HEX_DIRECT[k] * radius + offsetRadius;
 
-                druse = _druse.Create(new(x, -_offsetY, z));
+                druse = _druse.Create(new(x, -_offsetY, z), false);
                 count = druse.Length;
                 for (i = 0; i < count; i++)
                     customMesh.AddTriangles(druse[i]);
@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization
             int i, count;
             List<Triangle>[] druse;
 
-            druse = _druse.Create(new(offsetRadius, -_offsetY, offsetRadius));
+            druse = _druse.Create(new(offsetRadius, -_offsetY, offsetRadius), true);
             count = druse.Length;
             for (i = 0; i < count; i++)
             {
@@ -70,7 +70,7 @@ namespace Vurbiri.Colonization
                 x = COS_HEX_DIRECT[k] * radius + offsetRadius;
                 z = SIN_HEX_DIRECT[k] * radius + offsetRadius;
 
-                druse = _druse.Create(new(x, -_offsetY, z));
+                druse = _druse.Create(new(x, -_offsetY, z), false);
                 count = druse.Length;
                 for (i = 0; i < count; i++)
                 {
@@ -87,7 +87,7 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Druse
         {
-            [SerializeField, MinMax(4, 7)] private RInt _countCrystalsRange = new(5, 6);
+            [SerializeField, MinMax(3, 7)] private RInt _countCrystalsRange = new(4, 6);
             [Space]
             [SerializeField, MinMax(100, 255)] private RInt _colorCrystalRange = new(175, 255);
 
@@ -101,9 +101,9 @@ namespace Vurbiri.Colonization
             [Space, Space]
             [SerializeField] private Crystal _crystals;
 
-            public List<Triangle>[] Create(Vector3 position)
+            public List<Triangle>[] Create(Vector3 position, bool moreAvg)
             {
-                int countCrystals = _countCrystalsRange;
+                int countCrystals = moreAvg ? _countCrystalsRange.RollMoreAvg : _countCrystalsRange;
                 byte colorCrystal = (byte)_colorCrystalRange;
 
                 List<Triangle>[] triangles = new List<Triangle>[countCrystals + 1];
@@ -129,7 +129,7 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Crystal
         {
-            [SerializeField, MinMax(1, 7)] private RInt _countVertexRange = new(4, 6);
+            [SerializeField, MinMax(3, 6)] private RInt _countVertexRange = new(4, 6);
             [Space]
             [SerializeField, Range(0.1f, 0.9f)] private float _ratioRadiusBottom = 0.75f;
             [Space]

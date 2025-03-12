@@ -142,7 +142,7 @@ namespace Vurbiri.Colonization
         {
             _owner = actor;
             _ownerId = actor.Owner;
-            _owner.AddWallDefenceEffect();
+            _owner.AddWallDefenceEffect(GetMaxDefense());
         }
         public void ExitActor()
         {
@@ -161,6 +161,12 @@ namespace Vurbiri.Colonization
                 max = Mathf.Max(crossroad.GetDefense(_ownerId), max);
 
             return max;
+        }
+
+        public void BuildWall(Id<PlayerId> playerId)
+        {
+            if (_ownerId == playerId)
+                _owner.AddWallDefenceEffect(GetMaxDefense());
         }
 
         public bool IsEnemy(Id<PlayerId> id) => _owner != null && _owner.GetRelation(id) == Relation.Enemy;
@@ -213,7 +219,7 @@ namespace Vurbiri.Colonization
         public static void FromArray(int[] data, out int id, out int surfaceId)
         {
             if(data == null || data.Length != SIZE_ARRAY)
-                throw new System.ArgumentException($"int[] data {data}");
+                Errors.Argument(nameof(data), data);
 
             int i = 0;
             id = data[i++];

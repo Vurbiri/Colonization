@@ -13,7 +13,7 @@ namespace Vurbiri.Reactive.Collections
         protected int _capacity = 4;
         protected readonly ReactiveValue<int> _count = new(0);
 
-        protected Subscriber<T, TypeEvent> _subscriber = new();
+        protected readonly Subscriber<T, TypeEvent> _subscriber = new();
 
         public T this[int index] => _values[index];
 
@@ -29,7 +29,7 @@ namespace Vurbiri.Reactive.Collections
         public ListReactiveItems(int capacity)
         {
             if (capacity < 0)
-                throw new ArgumentOutOfRangeException($"capacity = {capacity}");
+                Errors.ArgumentOutOfRange("capacity", capacity);
 
             _capacity = capacity;
             _values = new T[_capacity];

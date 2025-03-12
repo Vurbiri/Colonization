@@ -5,8 +5,9 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public readonly struct EffectCode : IEquatable<EffectCode>
 	{
-        private const int MASK = 7, OFFSET_1 = 3;
+        private const int OFFSET_1 = 3;
         private const int OFFSET_2 = OFFSET_1 << 1, OFFSET_3 = OFFSET_2 + OFFSET_1;
+        private const int MASK = (1 << OFFSET_1) - 1;
 
         private readonly int _code;
 

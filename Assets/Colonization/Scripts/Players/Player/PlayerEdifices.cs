@@ -63,8 +63,10 @@ namespace Vurbiri.Colonization
 
             public bool CanEdificeUpgrade(Crossroad crossroad)
             {
-                Id<EdificeGroupId> upGroup = crossroad.NextGroupId;
+                Id<EdificeGroupId> nextGroup = crossroad.NextGroupId;
                 Id<EdificeId> id = crossroad.NextId;
+
+                if(nextGroup == EdificeGroupId.None) return false;
 
                 if (crossroad.GroupId != EdificeGroupId.None)
                 {
@@ -77,7 +79,7 @@ namespace Vurbiri.Colonization
                     return true;
                 }
 
-                return _abilities.IsGreater(upGroup.ToState(), values[upGroup].Count);
+                return _abilities.IsGreater(nextGroup.ToState(), values[nextGroup].Count);
             }
 
             public void Dispose()

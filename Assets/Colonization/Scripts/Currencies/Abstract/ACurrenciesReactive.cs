@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         protected ACurrency[] _values = new ACurrency[countAll];
         protected ReactiveValue<int> _amount = new(0);
         protected IReactiveValue<int> _maxValueMain, _maxValueBlood;
-        protected Subscriber<ACurrencies> _subscriber = new();
+        protected readonly Subscriber<ACurrencies> _subscriber = new();
 
         public override int Amount => _amount.Value;
         public IReactiveValue<int> AmountCurrent => _amount;

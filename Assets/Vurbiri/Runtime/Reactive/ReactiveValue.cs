@@ -13,7 +13,7 @@ namespace Vurbiri.Reactive
         [SerializeField, JsonProperty("value")]
         protected T _value;
 
-        protected Subscriber<T> _subscriber = new();
+        protected readonly Subscriber<T> _subscriber = new();
         private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
         public T Value 

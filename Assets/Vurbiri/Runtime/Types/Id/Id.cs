@@ -16,8 +16,7 @@ namespace Vurbiri
         [JsonConstructor]
         public Id(int id)
         {
-            if (id < IdType<T>.Min | id >= IdType<T>.Count)
-                throw new ArgumentOutOfRangeException($"{typeof(T).Name} = {id}");
+            Errors.CheckForMinMax(id, IdType<T>.Min, IdType<T>.Count);
 
             _id = id;
         }

@@ -3,50 +3,47 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.CreatingMesh;
-using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
+    using static CONST;
+
     public class HexagonMesh : IPrimitive
     {
         public IReadOnlyList<Triangle> Triangles => _triangles;
 
-        private readonly Vector3 NORMAL = Vector3.up;
-        private readonly Vector3 DOWN = Vector3.down;
-
-        private readonly Settings _stt;
+        private readonly Settings _settings;
 
         private readonly List<Triangle> _triangles = new();
-        private readonly Vertex[] _verticesBase = new Vertex[HEX.SIDES];
+        private readonly Vertex[] _vertices = new Vertex[HEX.SIDES];
         private readonly bool[] _visits = new bool[HEX.SIDES];
 
         public HexagonMesh(Settings settings, Vector3 position, Color32 color, bool isCreate)
         {
-            _stt = settings;
+            _settings = settings;
 
             for (int i = 0; i < HEX.SIDES; i++)
-                _verticesBase[i] = new(HEX_VERTICES[i] * settings.borderSizeRate + position, NORMAL, settings.borderColor);
+                _vertices[i] = new(settings.HEX_VERTICES[i] + position, settings.NORMAL, settings.borderColor);
 
             if (isCreate)
             {
                 int[] idx;
-                for (int i = 0; i < _stt.INDEXES.Length; i++)
+                for (int i = 0; i < _settings.INDEXES.Length; i++)
                 {
-                    idx = _stt.INDEXES[i];
-                    _triangles.Add(new(color, _verticesBase[idx[0]], _verticesBase[idx[1]], _verticesBase[idx[2]]));
+                    idx = _settings.INDEXES[i];
+                    _triangles.Add(new(color, _vertices[idx[0]], _vertices[idx[1]], _vertices[idx[2]]));
                 }
             }
         }
 
+        public void Visit(int side) => _visits[side] = true;
         public Vertex[] GetVertexSide(int side)
         {
             if (_visits[side])
                 return null;
 
-            return new Vertex[] { _verticesBase.Next(side), _verticesBase[side] };
+            return new Vertex[] { _vertices.Next(side), _vertices[side] };
         }
-
-        public void Visit(int side) => _visits[side] = true;
 
         public List<Triangle> CreateBorder(Vertex[][] verticesNear, bool[] waterNear, Color32 colorCoast)
         {
@@ -54,9 +51,8 @@ namespace Vurbiri.Colonization
             List<Vector3>[,] coastPositions = new List<Vector3>[HEX.SIDES, 2];
             Vertex[] verticesSide, verticesSideNext = verticesNear[0];
             bool isWaterPrev, isWater = waterNear[^1], isWaterNext = waterNear[0];
-            int indexNext;
 
-            for (int index = 0; index < HEX.SIDES; index++)
+            for (int index = 0, indexNext; index < HEX.SIDES; index++)
             {
                 indexNext = (index + 1) % HEX.SIDES;
 
@@ -70,12 +66,12 @@ namespace Vurbiri.Colonization
                 if (verticesSide == null)
                     continue;
 
-                triangles.AddRange(Polygon.Create(verticesSide[0], _verticesBase[index], _verticesBase[indexNext], verticesSide[1]));
+                triangles.AddRange(Polygon.Create(verticesSide[0], _vertices[index], _vertices[indexNext], verticesSide[1]));
 
                 if (isWater)
                 {
                     coastPositions[index, 0] ??= CreateCoast(verticesSide[0], isWaterPrev ? SIDE_DIRECTIONS[index] : VERTEX_DIRECTIONS[indexNext]);
-                    coastPositions[index, 1] = CreateCoast(verticesSide[1], isWaterNext ? SIDE_DIRECTIONS[index] : VERTEX_DIRECTIONS[index]);
+                    coastPositions[index, 1]   = CreateCoast(verticesSide[1], isWaterNext ? SIDE_DIRECTIONS[index] : VERTEX_DIRECTIONS[index]);
 
                     triangles.AddRange(PolygonChain.Create(colorCoast, coastPositions[index, 0], coastPositions[index, 1]));
                 }
@@ -83,7 +79,7 @@ namespace Vurbiri.Colonization
                 if (verticesSideNext == null)
                     continue;
 
-                triangles.Add(new(_verticesBase[indexNext], verticesSideNext[0], verticesSide[1]));
+                triangles.Add(new(_vertices[indexNext], verticesSideNext[0], verticesSide[1]));
 
                 if (isWater & isWaterNext)
                 {
@@ -98,16 +94,16 @@ namespace Vurbiri.Colonization
 
         private List<Vector3> CreateCoast(Vertex vertex, Vector3 direction)
         {
-            List<Vector3> positions = new(2 + _stt.coastSteps)
+            List<Vector3> positions = new(3 + _settings.coastSteps)
             {
                 vertex.position,
-                vertex.position + direction * _stt.startCoastSize
+                vertex.position + direction * _settings.coastStartSize
             };
 
-            for (int i = 1; i <= _stt.coastSteps; i++)
-                positions.Add(positions[i] + (DOWN * _stt.coastSize[(i + 1) % 2] + direction * _stt.coastSize[i % 2]));
+            for (int i = 1; i <= _settings.coastSteps; i++)
+                positions.Add(positions[i] + (_settings.DOWN * _settings.coastSize[(i + 1) % 2] + direction * _settings.coastSize[i % 2]));
 
-            positions.Add(positions[^1] + (DOWN + direction) * _stt.finalBevelSize);
+            positions.Add(positions[^1] + (_settings.DOWN + direction) * _settings.bevelFinalSize);
 
             return positions;
         }
@@ -118,21 +114,25 @@ namespace Vurbiri.Colonization
         public class Settings
         {
             public Color32 borderColor = Color.black;
-            [Range(0.1f, 2f)] public float borderSize = 0.22f;
-            [Range(0.1f, 1f)] public float startCoastSize = 0.7f;
+            [Range(0.1f, 5f)] public float borderHalfSize = 0.2f;
+            [Space]
+            [Range(0.1f, 1f)] public float coastStartSize = 0.7f;
             public Vector2 coastSize = new(0.55f, 0.125f);
             [Range(3, 8)] public int coastSteps = 5;
-            [Range(3f, 8f)] public float finalBevelSize = 5f;
-            [Range(0.5f, 0.99f)] public float rateCellBaseLand = 0.8f;
-            [Range(0.5f, 0.99f)] public float rateCellBaseWater = 0.9f;
+            [Space]
+            [Range(3f, 8f)] public float bevelFinalSize = 5f;
 
-            [NonSerialized] public float borderSizeRate = 1f;
-
+            public readonly Vector3 NORMAL = Vector3.up;
+            public readonly Vector3 DOWN = Vector3.down;
             public readonly int[][] INDEXES = { new int[] { 0, 4, 2 }, new int[] { 0, 5, 4 }, new int[] { 0, 2, 1 }, new int[] { 2, 4, 3 } };
+            public readonly Vector3[] HEX_VERTICES = new Vector3[HEX_COUNT_VERTICES];
 
             public void Init()
             {
-                borderSizeRate = 1f - borderSize / HEX_RADIUS_OUT;
+                float borderSizeRate = HEX_RADIUS_OUT - borderHalfSize;
+
+                for (int i = 0; i < HEX_COUNT_VERTICES; i++)
+                    HEX_VERTICES[i] = borderSizeRate * VERTEX_DIRECTIONS[i];
             }
         }
         #endregion

@@ -60,10 +60,10 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         #region States
-        public virtual void Move() => _stateMachine.SetState<MoveState>();
-        public virtual void Block() => _stateMachine.SetState(_blockState);
-        public virtual void UseSkill(int id) => _stateMachine.SetState<ASkillState>(id);
-        public virtual void Cancel() => _stateMachine.Cancel();
+        public void Move() => _stateMachine.SetState<MoveState>();
+        public void Block() => _stateMachine.SetState(_blockState);
+        public void UseSkill(int id) => _stateMachine.SetState<ASkillState>(id);
+        public void Cancel() => _stateMachine.Cancel();
         #endregion
 
         public Relation GetRelation(Id<PlayerId> id) => _diplomacy.GetRelation(id, _owner);
@@ -96,6 +96,12 @@ namespace Vurbiri.Colonization.Actors
             if (_wallDefenceEffect != null)
                 _effects.AddEffect(_wallDefenceEffect);
         }
+        public void AddWallDefenceEffect(int maxDefense)
+        {
+            _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(maxDefense);
+            if (_wallDefenceEffect != null)
+                _effects.AddEffect(_wallDefenceEffect);
+        }
         public void RemoveWallDefenceEffect()
         {
             if (_wallDefenceEffect != null)
@@ -110,8 +116,8 @@ namespace Vurbiri.Colonization.Actors
         public void EnablePlayerCollider() => _thisCollider.enabled = _isPlayerTurn;
 
         #region ISelectable
-        public virtual void Select() => _stateMachine.Select();
-        public virtual void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
+        public void Select() => _stateMachine.Select();
+        public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
         #endregion
 
         #region ToArray()

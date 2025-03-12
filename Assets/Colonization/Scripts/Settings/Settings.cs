@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private AudioMixer<MixerId> _mixer;
 
         private Localization _localization;
-        private Subscriber<IReadOnlyList<int>, IReadOnlyList<float>> _subscriber = new();
+        private readonly Subscriber<IReadOnlyList<int>, IReadOnlyList<float>> _subscriber = new();
 
         public IVolume<MixerId> Volume { get => _mixer; }
         public int Language { get => _localization.CurrentId; set => _localization.SwitchLanguage(value); }

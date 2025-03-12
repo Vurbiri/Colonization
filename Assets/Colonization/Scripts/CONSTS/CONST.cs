@@ -34,9 +34,7 @@ namespace Vurbiri.Colonization
         public const float HEX_DIAMETER_IN = HEX_DIAMETER_OUT * COS_30;
         public const float HEX_RADIUS_IN = HEX_DIAMETER_IN * 0.5f;
 
-        public static readonly IReadOnlyList<Vector3> HEX_VERTICES;
         public static readonly IReadOnlyList<Vector3> VERTEX_DIRECTIONS;
-        public static readonly IReadOnlyList<Vector3> HEX_SIDES;
         public static readonly IReadOnlyList<Vector3> SIDE_DIRECTIONS;
 
         public static readonly IReadOnlyList<float> COS_HEX = new float[] { COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 };
@@ -51,25 +49,15 @@ namespace Vurbiri.Colonization
 
         static CONST()
         {
-            Vector3[] positions = new Vector3[HEX_COUNT_VERTICES];
             Vector3[] directions = new Vector3[HEX_COUNT_VERTICES];
             for (int i = 0; i < HEX_COUNT_VERTICES; i++)
-            {
                 directions[i] = new Vector3(COS_HEX[i], 0, SIN_HEX[i]);
-                positions[i] = HEX_RADIUS_OUT * directions[i];
-            }
             VERTEX_DIRECTIONS = directions;
-            HEX_VERTICES = positions;
 
             directions = new Vector3[HEX.SIDES];
-            positions = new Vector3[HEX.SIDES];
             for (int i = 0; i < HEX.SIDES; i++)
-            {
                 directions[i] = new Vector3(COS_HEX_DIRECT[i], 0, SIN_HEX_DIRECT[i]);
-                positions[i] = HEX_DIAMETER_IN * directions[i];
-            }
             SIDE_DIRECTIONS = directions;
-            HEX_SIDES = positions;
 
             Dictionary<Key, Quaternion> quaternions = new(HEX.SIDES);
             float angle = 90f;
@@ -79,8 +67,6 @@ namespace Vurbiri.Colonization
                 angle -= 60f;
             }
             ACTOR_ROTATIONS = quaternions;
-
-            
         }
     }
 }

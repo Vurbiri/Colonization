@@ -26,11 +26,11 @@ namespace Vurbiri.Colonization.Characteristics
 
         public bool IsSelf => _isSelf;
 
-        public AHitEffect CreateEffect(EffectCode _code)
+        public AHitEffect CreateEffect(EffectCode code)
         {
             if (_duration > 0)
-                return _isSelf ? new SelfTemporaryEffect(_targetAbility, _typeModifier, _value, _duration, _code) :
-                                 new TargetTemporaryEffect(_targetAbility, _typeModifier, _value, _duration, _code);
+                return _isSelf ? new SelfTemporaryEffect(code, _targetAbility, _typeModifier, _value, _duration) :
+                                 new TargetTemporaryEffect(code, _targetAbility, _typeModifier, _value, _duration);
 
             if (!_useAttack)
                 return _isSelf ? new SelfEffect(_targetAbility, _typeModifier, _value) : new TargetEffect(_targetAbility, _typeModifier, _value);

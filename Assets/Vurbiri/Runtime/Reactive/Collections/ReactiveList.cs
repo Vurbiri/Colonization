@@ -15,7 +15,7 @@ namespace Vurbiri.Reactive.Collections
         
         private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
-        private Subscriber<int, T, TypeEvent> _subscriber = new();
+        private readonly Subscriber<int, T, TypeEvent> _subscriber = new();
 
         public T this[int index] 
         {
@@ -39,24 +39,25 @@ namespace Vurbiri.Reactive.Collections
         }
         public ReactiveList(IEqualityComparer<T> comparer)
         {
-            _comparer = comparer ?? throw new ArgumentNullException("comparer");
+           Errors.CheckForNull(comparer);
+            
+            _comparer = comparer;
             _values = new T[_capacity];
         }
 
         public ReactiveList(int capacity)
         {
-            if (capacity < 0)
-                throw new ArgumentOutOfRangeException($"capacity = {capacity}");
+            Errors.CheckForMin(capacity, 0);
 
             _capacity = capacity;
             _values = new T[_capacity];
         }
         public ReactiveList(int capacity, IEqualityComparer<T> comparer)
         {
-            if (capacity < 0)
-                throw new ArgumentOutOfRangeException($"capacity = {capacity}");
+            Errors.CheckForMin(capacity, 0);
+            Errors.CheckForNull(comparer);
 
-            _comparer = comparer ?? throw new ArgumentNullException("comparer");
+            _comparer = comparer;
             _capacity = capacity;
             _values = new T[_capacity];
         }
@@ -71,7 +72,10 @@ namespace Vurbiri.Reactive.Collections
         }
         public ReactiveList(IReadOnlyList<T> values, IEqualityComparer<T> comparer)
         {
-            _comparer = comparer ?? throw new ArgumentNullException("comparer");
+            Errors.CheckForNull(values);
+            Errors.CheckForNull(comparer);
+
+            _comparer = comparer;
             _capacity = _count.Value = values.Count;
             _values = new T[_capacity];
 
@@ -130,8 +134,7 @@ namespace Vurbiri.Reactive.Collections
 
         public void Insert(int index, T item)
         {
-            if (index < 0 | index >= _count)
-                throw new ArgumentOutOfRangeException($"index = {index}");
+            Errors.CheckIndex(index, 0, _count);
 
             if (_count == _capacity)
                 GrowArray();

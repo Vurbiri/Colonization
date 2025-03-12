@@ -13,15 +13,26 @@ namespace Vurbiri.Colonization
         [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private LandInitData _landInitData;
         [Space]
+        [SerializeField] private ParticleSystem _psFog;
+        [SerializeField] private float _ratioFogSize = 55f;
+        [Space]
         [SerializeField] private IdSet<EdificeId, AEdifice> _edificePrefabs;
-
+        
         private Hexagons _land;
         private Crossroads _crossroads;
+        private readonly Vector3[] _sides = new Vector3[HEX.SIDES];
 
         public IslandCreator Init(DIContainer diObjects, GameplayEventBus eventBus)
         {
             _land       = diObjects.AddInstance<Hexagons>(new(_landInitData, eventBus));
             _crossroads = diObjects.AddInstance<Crossroads>(new(_crossroadsContainer, _edificePrefabs, eventBus));
+
+            var shape = _psFog.shape;
+            shape.radius = _ratioFogSize * MAX_CIRCLES;
+
+            for (int i = 0; i < HEX.SIDES; i++)
+                _sides[i] = HEX_DIAMETER_IN * SIDE_DIRECTIONS[i];
+
             return this;
         }
 
@@ -45,12 +56,12 @@ namespace Vurbiri.Colonization
             while (!isLastCircle)
             {
                 isLastCircle = ++circle == MAX_CIRCLES;
-                positionNext = HEX_SIDES[0] * circle;
+                positionNext = _sides[0] * circle;
 
                 for (int i = 0; i < HEX.SIDES; i++)
                 {
                     positionPrev = positionNext;
-                    positionNext = HEX_SIDES.Next(i) * circle;
+                    positionNext = _sides.Next(i) * circle;
 
                     for (int j = 0; j < circle; j++)
                     {
@@ -83,7 +94,8 @@ namespace Vurbiri.Colonization
                 _edificePrefabs.ReplaceRange(EUtility.FindPrefabs<AEdifice>());
             if (_crossroadsContainer == null)
                 _crossroadsContainer = this.GetComponentInChildren<Transform>("Crossroads");
-
+            if (_psFog == null)
+                _psFog = this.GetComponentInChildren<ParticleSystem>();
         }
 #endif
     }

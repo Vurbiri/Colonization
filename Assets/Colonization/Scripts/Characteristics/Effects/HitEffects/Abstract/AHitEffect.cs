@@ -3,7 +3,7 @@ using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class AHitEffect : Effect
+    public abstract class AHitEffect : Perk
     {
         public AHitEffect(int targetAbility, Id<TypeModifierId> typeModifier) : base(targetAbility, typeModifier, 0) { }
         public AHitEffect(int targetAbility, Id<TypeModifierId> typeModifier, int value) : base(targetAbility, typeModifier, value) { }

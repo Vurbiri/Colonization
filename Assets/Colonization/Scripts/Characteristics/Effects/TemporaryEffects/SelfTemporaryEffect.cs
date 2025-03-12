@@ -5,8 +5,8 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public class SelfTemporaryEffect : ATemporaryEffect
     {
-        public SelfTemporaryEffect(int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, EffectCode code) : 
-                                base(targetAbility, typeModifier, value, duration, code)
+        public SelfTemporaryEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration) : 
+                                base(code, targetAbility, typeModifier, value, duration)
         {
         }
 

@@ -7,8 +7,8 @@ namespace Vurbiri.Colonization.Characteristics
     {
         private readonly AbilityModifierPercent _reflectMod;
 
-        public ReflectTemporaryEffect(int targetAbility, Id<TypeModifierId> typeModifier, int value, int reflectValue, int duration, EffectCode _code) :
-                                base(targetAbility, typeModifier, value, duration, _code)
+        public ReflectTemporaryEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int reflectValue, int duration) :
+                                base(code, targetAbility, typeModifier, value, duration)
         {
             _reflectMod = new(reflectValue);
         }

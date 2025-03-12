@@ -1,6 +1,4 @@
 //Assets\Colonization\Scripts\Edifices\Ids\EdificeId.cs
-using System;
-
 namespace Vurbiri.Colonization
 {
     public abstract class EdificeId : IdType<EdificeId>
@@ -26,7 +24,7 @@ namespace Vurbiri.Colonization
             Shrine                                               => EdificeGroupId.Shrine,
             PortOne or PortTwo or LighthouseOne or LighthouseTwo => EdificeGroupId.Port,
             Camp or Town or Capital                              => EdificeGroupId.Urban,
-            _                                                    => throw new ArgumentOutOfRangeException("id", $"EdificeType: {id}.ToGroup(..)"),
+            _                                                    => Errors.ArgumentOutOfRange("EdificeTypeId", id),
         };
 
         public static int GetId(int countWater, bool isGate) => countWater switch

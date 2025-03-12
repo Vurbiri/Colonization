@@ -27,8 +27,8 @@ namespace Vurbiri.Colonization.Characteristics
             _restore = restore;
         }
 
-        public override int AddModifier(IAbilityModifierValue mod) => Change(_modifiers[mod.TypeModifier](mod.Value));
-        public override int RemoveModifier(IAbilityModifierValue mod) => Change(_modifiers[mod.TypeModifier](-mod.Value));
+        public override int AddModifier(IAbilityValue mod) => Change(_modifiers[mod.TypeModifier](mod.Value));
+        public override int RemoveModifier(IAbilityValue mod) => Change(_modifiers[mod.TypeModifier](-mod.Value));
 
         public void Next()
         {

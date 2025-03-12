@@ -52,7 +52,7 @@ namespace Vurbiri.Collections
         {
             if (TryAdd(value)) return;
 
-            throw new Exception($"������ ���� {value.Type} ��� ��� ��������.");
+            Errors.AddItem(value.ToString());
         }
 
         public bool TryAdd(TValue value)
@@ -123,8 +123,9 @@ namespace Vurbiri.Collections
             foreach (TValue value in this)
                 if (index-- == 0)
                     return value;
-
-            throw new IndexOutOfRangeException();
+            
+            Errors.IndexOutOfRange(index);
+            return null;
         }
 
         public bool TryGetValue(int index, out TValue value)
@@ -138,7 +139,8 @@ namespace Vurbiri.Collections
                 }
             }
 
-            throw new IndexOutOfRangeException();
+            value = null;
+            return false;
         }
 
         public bool TryGetValue(TType type, out TValue value) => TryGetValue(index: type.ToInt(), out value);

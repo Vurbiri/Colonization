@@ -10,22 +10,21 @@ namespace Vurbiri
         public readonly float min;
         public readonly float max;
 
+        public readonly string nameMin = "_min";
+        public readonly string nameMax = "_max";
+
         public MinMaxAttribute(float min, float max)
         {
-            if (min > max)
-                (min, max) = (max, min);
+            if (min > max) (min, max) = (max, min);
 
             this.min = min;
             this.max = max;
         }
 
-        public MinMaxAttribute(int min, int max)
+        public MinMaxAttribute(string nameMin, float min, string nameMax, float max) : this(min, max)
         {
-            if (min > max)
-                (min, max) = (max, min);
-
-            this.min = min;
-            this.max = max;
+            this.nameMin = nameMin;
+            this.nameMax = nameMax;
         }
     }
 }

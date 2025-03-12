@@ -27,7 +27,7 @@ namespace VurbiriEditor.Colonization
         {
             if (_prices == null)
             {
-                Debug.Log("��� PricesScriptable");
+                Debug.Log("Нет PricesScriptable");
                 return;
             }
 

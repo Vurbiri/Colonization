@@ -23,8 +23,8 @@ namespace Vurbiri.Colonization.Characteristics
         public void On() => ChangeNotClamp(1);
         public void Off() => ChangeNotClamp(0);
 
-        public override int AddModifier(IAbilityModifierValue mod) => Change(_value + mod.Value);
-        public override int RemoveModifier(IAbilityModifierValue mod) => Change(_value - mod.Value);
+        public override int AddModifier(IAbilityValue mod) => Change(_value + mod.Value);
+        public override int RemoveModifier(IAbilityValue mod) => Change(_value - mod.Value);
 
         private int ChangeNotClamp(int value)
         {

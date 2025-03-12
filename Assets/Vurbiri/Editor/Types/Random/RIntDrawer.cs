@@ -26,27 +26,32 @@ namespace VurbiriEditor
             {
                 var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
                 float min, max, rMin = Mathf.Round(range.min), rMax = Mathf.Round(range.max);
+                min = Mathf.Clamp(minProperty.intValue, rMin, rMax);
+                max = Mathf.Clamp(maxProperty.intValue - 1, rMin, rMax);
 
                 EditorGUI.LabelField(sizeLabel, label);
 
-                min = EditorGUI.IntField(sizeMin, minProperty.intValue);
-                max = EditorGUI.IntField(sizeMax, maxProperty.intValue - 1);
-
-                min = Mathf.Clamp(min, rMin, rMax);
-                max = Mathf.Clamp(max, rMin, rMax);
-                if (min > max) (min, max) = (max, min);
+                min = EditorGUI.FloatField(sizeMin, min);
+                max = EditorGUI.FloatField(sizeMax, max);
 
                 EditorGUI.MinMaxSlider(sizeSlider, ref min, ref max, rMin, rMax);
 
+                if (min > max) (min, max) = (max, min);
                 minProperty.intValue = Mathf.RoundToInt(min); 
                 maxProperty.intValue = Mathf.RoundToInt(max) + 1;
             }
             else
             {
+                int min = minProperty.intValue, max = maxProperty.intValue - 1;
+                
                 var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
                 EditorGUI.LabelField(sizeLabel, label);
-                minProperty.intValue = EditorGUI.IntField(sizeMin, minProperty.intValue);
-                maxProperty.intValue = EditorGUI.IntField(sizeMax, maxProperty.intValue - 1) + 1;
+                min = EditorGUI.IntField(sizeMin, min);
+                max = EditorGUI.IntField(sizeMax, max);
+
+                if (min > max) (min, max) = (max, min);
+                minProperty.intValue = min;
+                maxProperty.intValue = max + 1;
             }
 
             EditorGUI.EndProperty();

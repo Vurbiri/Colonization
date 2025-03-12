@@ -18,15 +18,18 @@ namespace Vurbiri
 
         public RInt(int min, int max)
         {
+            if (min > max)
+            {
+                _min = max;
+                _max = min + 1;
+                return;
+            }
+
             _min = min;
             _max = max + 1;
         }
 
-        public RInt(Vector2Int vector)
-        {
-            _min = vector.x;
-            _max = vector.y + 1;
-        }
+        public RInt(Vector2Int vector) : this(vector.x, vector.y) { }
 
         public static implicit operator int(RInt mm) => Random.Range(mm._min, mm._max);
         public static explicit operator byte(RInt mm) => (byte)Random.Range(mm._min, mm._max);

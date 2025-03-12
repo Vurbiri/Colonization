@@ -66,8 +66,7 @@ namespace Vurbiri
 
         public static T First<T>(this ICollection<T> self)
         {
-            if (self.Count == 0)
-                throw new System.IndexOutOfRangeException();
+            if (self.Count == 0) Errors.IndexOutOfRange(-1);
 
             IEnumerator<T> enumerator = self.GetEnumerator();
             enumerator.MoveNext();

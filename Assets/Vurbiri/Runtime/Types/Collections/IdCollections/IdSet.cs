@@ -62,7 +62,7 @@ namespace Vurbiri.Collections
             if (TryAdd(value)) 
                 return;
 
-            throw new Exception($"Элемент c Id = {value.Id} уже был добавлен.");
+            Errors.AddItem(value.ToString());
         }
 
         public void Replace(TValue value)
@@ -77,8 +77,7 @@ namespace Vurbiri.Collections
 
         public void ReplaceRange(IEnumerable<TValue> collection)
         {
-            if (collection == null)
-                throw new ArgumentNullException("IEnumerable<TValue> collection");
+            Errors.CheckForNull(collection);
 
             foreach (TValue value in collection)
                 Replace(value);
@@ -110,7 +109,9 @@ namespace Vurbiri.Collections
                     return v != null;
                 }
             }
-            throw new IndexOutOfRangeException(GetType().Name, null);
+            value = null;
+            return false;
+
         }
         public bool TryGetValue(Id<TId> id, out TValue value) => TryGetValue(id.Value, out value);
 

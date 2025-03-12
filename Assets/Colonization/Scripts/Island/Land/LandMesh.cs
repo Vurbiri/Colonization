@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private string _nameMesh = "MH_Land";
         [Space]
-        [SerializeField, Range(0.1f, 1.5f)] private float _rateTilingMaterial = 1.05f;
+        [SerializeField, Range(0.1f, 1.5f)] private float _rateTilingMaterial = 0.69f;
         [Space]
         [SerializeField] private IdArray<SurfaceId, Color32> _colors = new(Color.black);
         [Space]

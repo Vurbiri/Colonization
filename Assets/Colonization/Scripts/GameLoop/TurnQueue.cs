@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\GameLoop\TurnQueue.cs
-using System;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive;
@@ -21,7 +20,7 @@ namespace Vurbiri.Colonization
         private TurnQueue(IReadOnlyList<int> data)
         {
             if (data == null || data.Count != SIZE_ARRAY)
-                throw new ArgumentException($"IReadOnlyList<int> turns = {data}");
+                Errors.Argument(nameof(data), data);
 
             int i = 0;
             _previousId = data[i++]; _currentId = data[i++]; _turn = data[i];

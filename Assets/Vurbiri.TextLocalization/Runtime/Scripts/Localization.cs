@@ -16,7 +16,7 @@ namespace Vurbiri.TextLocalization
         private readonly LanguageType[] _languages;
         private readonly int _languagesCount;
         private readonly int _countFiles;
-        private Subscriber<Localization> _subscriber = new();
+        private readonly Subscriber<Localization> _subscriber = new();
         private LanguageType _currentLanguage;
 
         public static Localization Instance => _instance;
@@ -28,7 +28,7 @@ namespace Vurbiri.TextLocalization
         private Localization()
         {
             if (!LoadObjectFromResourceJson(CONST_L.FILE_LANG, out _languages))
-                throw new("Localization. Error loading LanguageType");
+                Errors.Error("Localization. Error loading LanguageType");
 
             _languagesCount = _languages.Length;
             for (int i = 0; i < _languagesCount; i++)

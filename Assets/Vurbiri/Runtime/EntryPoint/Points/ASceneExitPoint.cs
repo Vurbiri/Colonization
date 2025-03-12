@@ -20,8 +20,7 @@ namespace Vurbiri.EntryPoint
 
         public static void Exit()
         {
-            if (_instance == null)
-                throw new NullReferenceException("SceneExitPoint == null");
+            if (_instance == null) Errors.ArgumentNull("SceneExitPoint");
 
             _instance.OnExit(_instance.ExitCallback);
         }

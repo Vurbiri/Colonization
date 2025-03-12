@@ -8,7 +8,7 @@ namespace Vurbiri.Reactive
         private readonly IReactiveValue<TA> _reactiveA;
         private readonly IReactiveValue<TB> _reactiveB;
         private readonly Unsubscribers _unsubscribers = new();
-        private Subscriber<TA, TB> _subscriber = new();
+        private readonly Subscriber<TA, TB> _subscriber = new();
 
         public ReactiveCombination(IReactiveValue<TA> reactiveA, IReactiveValue<TB> reactiveB)
         {
@@ -40,7 +40,7 @@ namespace Vurbiri.Reactive
         private readonly IReactiveValue<TB> _reactiveB;
         private readonly IReactiveValue<TC> _reactiveC;
         private readonly Unsubscribers _unsubscribers = new();
-        private Subscriber<TA, TB, TC> _subscriber = new();
+        private readonly Subscriber<TA, TB, TC> _subscriber = new();
 
         public ReactiveCombination(IReactiveValue<TA> reactiveA, IReactiveValue<TB> reactiveB, IReactiveValue<TC> reactiveC)
         {

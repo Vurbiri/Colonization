@@ -2,7 +2,6 @@
 namespace Vurbiri.Colonization
 {
     using Characteristics;
-    using System;
 
     public class EdificeGroupId : IdType<EdificeGroupId>
     {
@@ -19,7 +18,7 @@ namespace Vurbiri.Colonization
             Shrine  => PlayerAbilityId.MaxShrine,
             Port    => PlayerAbilityId.MaxPort,
             Urban   => PlayerAbilityId.MaxUrban,
-            _       => throw new ArgumentOutOfRangeException("id", $"EdificeGroup: {id}.  ToState(..)"),
+            _       => Errors.ArgumentOutOfRange("EdificeGroupId", id),
         };
     }
 

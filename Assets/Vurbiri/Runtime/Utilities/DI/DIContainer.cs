@@ -19,14 +19,14 @@ namespace Vurbiri
             TypeIdKey key = new(typeof(T), id);
 
             if (!_registration.TryAdd(key, new RegFactory<T>(factory)))
-                throw new($"{key.Type.FullName} (id = {key.Id}) уже добавлен");
+                Errors.AddItem(key.ToString());
         }
         public void AddFactory<P, T>(Func<P, T> factory, int id = 0)
         {
             TypeIdKey key = new(typeof(T), id);
 
             if (!_registration.TryAdd(key, new RegFactory<P, T>(factory)))
-                throw new($"{key.Type.FullName} (id = {key.Id}) уже добавлен");
+                Errors.AddItem(key.ToString());
         }
 
         public T AddInstance<T>(T instance, int id = 0)
@@ -34,7 +34,7 @@ namespace Vurbiri
             TypeIdKey key = new(typeof(T), id);
 
             if (!_registration.TryAdd(key, new RegInstance<T>(instance)))
-                throw new($"Экземпляр {key.Type.FullName} (id = {key.Id}) уже добавлен");
+                Errors.AddItem(key.ToString());
 
             return instance;
         }
@@ -59,7 +59,8 @@ namespace Vurbiri
             if (_parent != null)
                 return _parent.Get<T>(key);
 
-            throw new($"{key.Type.FullName} (id = {key.Id}) не найден");
+            Errors.NotFound(key.ToString());
+            return default;
         }
 
         public bool TryGet<T>(out T instance, int id = 0) => TryGet<T>(out instance, new TypeIdKey(typeof(T), id));
@@ -87,7 +88,8 @@ namespace Vurbiri
             if (_parent != null)
                 return _parent.Get<P, T>(value, key);
 
-            throw new($"{key.Type.FullName} (id = {key.Id}) не найден");
+            Errors.NotFound(key.ToString());
+            return default;
         }
 
         public bool TryGet<P, T>(out T instance, P value, int id = 0) => TryGet<P, T>(out instance, value, new TypeIdKey(typeof(T), id));

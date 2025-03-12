@@ -32,7 +32,8 @@ namespace Vurbiri.Colonization.Characteristics
         public ReactiveEffect(IReadOnlyList<int> array)
         {
             if (array == null | array.Count != 5)
-                throw new ArgumentOutOfRangeException(nameof(array));
+                Errors.ArgumentOutOfRange(nameof(array), array);
+
             int i = 0;
             _code = array[i++];
             _targetAbility = array[i++];
@@ -99,7 +100,7 @@ namespace Vurbiri.Colonization.Characteristics
             return _code == other._code;
         }
 
-        public static Effect operator -(ReactiveEffect left, ReactiveEffect right)
+        public static Perk operator -(ReactiveEffect left, ReactiveEffect right)
         {
             if(left == null | right == null)
                 return null;
@@ -108,7 +109,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             return new(right._targetAbility, right._typeModifier, left._value - right._value);
         }
-        public static Effect operator +(ReactiveEffect left, ReactiveEffect right)
+        public static Perk operator +(ReactiveEffect left, ReactiveEffect right)
         {
             if (left == null | right == null)
                 return null;

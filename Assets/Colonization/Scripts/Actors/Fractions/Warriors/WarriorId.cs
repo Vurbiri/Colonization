@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\Actors\Fractions\Warriors\WarriorId.cs
-using System;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
@@ -21,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
             Wizard      => PlayerAbilityId.IsWizard,
             Saboteur    => PlayerAbilityId.IsSaboteur,
             Knight      => PlayerAbilityId.IsKnight,
-            _           => throw new ArgumentOutOfRangeException("id", $"WarriorId: {id}.ToState()"),
+            _           => Errors.ArgumentOutOfRange("WarriorId", id),
         };
     }
 

@@ -6,7 +6,6 @@ namespace Vurbiri.Colonization.Characteristics
         public int Value { get; set; }
 
         public int Apply(int value);
-        public int Apply(int value, int modifier);
 
         public void Add(int value);
     }
