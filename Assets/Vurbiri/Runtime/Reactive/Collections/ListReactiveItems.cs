@@ -28,8 +28,7 @@ namespace Vurbiri.Reactive.Collections
 
         public ListReactiveItems(int capacity)
         {
-            if (capacity < 0)
-                Errors.ArgumentOutOfRange("capacity", capacity);
+            Errors.CheckForMin(capacity, 0);
 
             _capacity = capacity;
             _values = new T[_capacity];

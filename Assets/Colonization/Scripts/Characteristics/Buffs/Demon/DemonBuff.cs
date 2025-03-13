@@ -1,32 +1,18 @@
 //Assets\Colonization\Scripts\Characteristics\Buffs\Demon\DemonBuff.cs
-using System;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class DemonBuff : IDemonBuff
+    public class DemonBuff : ABuff<DemonBuffSettings>
     {
-        private readonly Perk _base, _current;
-        private readonly Subscriber<IPerk> _subscriber;
         private readonly int _levelUP;
 
-        public DemonBuff(Subscriber<IPerk> subscriber, int targetAbility, Id<TypeModifierId> typeModifier, int value, int levelUP)
+        public DemonBuff(Subscriber<IPerk> subscriber, DemonBuffSettings settings) : base(subscriber, settings) => _levelUP = settings.levelUP;
+
+        public DemonBuff(Subscriber<IPerk> subscriber, DemonBuffSettings settings, int level) : base(subscriber, settings, settings.value * level / settings.levelUP)
         {
-            _subscriber = subscriber;
-            _base = new(targetAbility, typeModifier, value);
-            _current = new(targetAbility, typeModifier, 0);
-            _levelUP = levelUP;
+            _levelUP = settings.levelUP;
         }
-
-        public static IDemonBuff Create(Subscriber<IPerk> subscriber, int targetAbility, Id<TypeModifierId> typeModifier, int value, int levelUP)
-        {
-            if (typeModifier.Value < 0 | value <= 0)
-                return new DemonBuffEmpty();
-
-            return new DemonBuff(subscriber, targetAbility, typeModifier, value, levelUP);
-        }
-
-        public int Apply(Func<IPerk, int> func) => func(_current);
 
         public void Next(int level)
         {
@@ -37,16 +23,6 @@ namespace Vurbiri.Colonization.Characteristics
             _subscriber.Invoke(_base);
         }
 
-        #region Nested: DemonBuffEmpty
-        //***********************************
-        private class DemonBuffEmpty : IDemonBuff
-        {
-            public DemonBuffEmpty() { }
-
-            public int Apply(Func<IPerk, int> func) => 0;
-
-            public void Next(int level) { }
-        }
-        #endregion
+        
     }
 }

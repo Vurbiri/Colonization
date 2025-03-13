@@ -87,8 +87,6 @@ namespace Vurbiri.Colonization
                 _collider = null;
                 _poolMarks = null;
             }
-
-            gameObject.name = $"Hex_{_key}_{_isWater}";
         }
 
         public void AddNeighborAndCreateCrossroadLink(Hexagon neighbor)
@@ -216,10 +214,9 @@ namespace Vurbiri.Colonization
         #region Save/Load data 
         private const int SIZE_ARRAY = 2;
         public int[] ToArray() => new int[] { _id, _surfaceId };
-        public static void FromArray(int[] data, out int id, out int surfaceId)
+        public static void FromArray(IReadOnlyList<int> data, out int id, out int surfaceId)
         {
-            if(data == null || data.Length != SIZE_ARRAY)
-                Errors.Argument(nameof(data), data);
+            Errors.CheckArraySize(data, SIZE_ARRAY);
 
             int i = 0;
             id = data[i++];

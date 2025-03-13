@@ -30,6 +30,14 @@ namespace Vurbiri.Collections
                 _values[i] = defaultValue;
         }
 
+        public IdArray(Func<TValue> factory) : this()
+        {
+            Errors.CheckForNull(factory);
+            
+            for (int i = 0; i < _count; i++)
+                _values[i] = factory();
+        }
+
         public IdArray(IReadOnlyList<TValue> list) : this() 
         {
             int count = _count <= list.Count ? _count : list.Count;

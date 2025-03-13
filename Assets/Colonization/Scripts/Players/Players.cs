@@ -41,11 +41,13 @@ namespace Vurbiri.Colonization
         public class Settings : IDisposable
         {
             public WarriorInitializer warriorPrefab;
-            public DemonInitializer demonPrefab;
-            public Transform actorsContainer;
             public PricesScriptable prices;
             public PlayerAbilitiesScriptable states;
             public RoadFactory roadFactory;
+            [Space]
+            public DemonInitializer demonPrefab;
+            [Space]
+            public Transform actorsContainer;
 
             public void Dispose()
             {

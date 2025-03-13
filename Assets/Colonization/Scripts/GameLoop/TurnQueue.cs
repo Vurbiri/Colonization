@@ -19,8 +19,7 @@ namespace Vurbiri.Colonization
         private TurnQueue() { }
         private TurnQueue(IReadOnlyList<int> data)
         {
-            if (data == null || data.Count != SIZE_ARRAY)
-                Errors.Argument(nameof(data), data);
+            Errors.CheckArraySize(data, SIZE_ARRAY);
 
             int i = 0;
             _previousId = data[i++]; _currentId = data[i++]; _turn = data[i];

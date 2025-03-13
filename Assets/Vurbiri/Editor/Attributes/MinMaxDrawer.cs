@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Editor\Types\Random\MinMaxDrawer.cs
+//Assets\Vurbiri\Editor\Attributes\MinMaxDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -16,7 +16,7 @@ namespace VurbiriEditor
 		{
             if (attribute is not MinMaxAttribute range || fieldInfo.FieldType == typeof(RInt))
             {
-                EditorGUI.PropertyField(position, mainProperty, label);
+                EditorGUILayout.PropertyField(mainProperty, label, true);
                 return;
             }
 
@@ -37,7 +37,7 @@ namespace VurbiriEditor
 
             if (minProperty == null | maxProperty == null || minProperty.propertyType != maxProperty.propertyType)
             {
-                EditorGUI.PropertyField(position, mainProperty, label);
+                EditorGUILayout.PropertyField(mainProperty, label, true);
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace VurbiriEditor
             }
             else
             {
-                EditorGUI.PropertyField(position, mainProperty, label);
+                EditorGUILayout.PropertyField(mainProperty, label, true);
                 return;
             }
 

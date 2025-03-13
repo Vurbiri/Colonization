@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Actors
         [Space]
         [SerializeField] protected float _heightDeath = -3.5f;
         [SerializeField] protected float _durationDeath = 1f;
-        [HideInInspector, SerializeField] protected HitsSFXSettings _scriptablesSFX = new();
+        [ReadOnly, SerializeField] protected HitsSFXSettings _scriptablesSFX = new();
 
         protected Transform _thisTransform;
         protected HitsSFX _hitsSFX;
