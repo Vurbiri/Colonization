@@ -10,7 +10,7 @@ namespace Vurbiri.EntryPoint
 
         protected readonly ReactiveValue<ExitParam> _exitEvent;
 
-        public ReactiveValue<ExitParam> ExitParam => _exitEvent;
+        public IReactive<ExitParam> ExitParam => _exitEvent;
 
         public ASceneExitPoint(ReactiveValue<ExitParam> exitEvent)
         {
@@ -18,12 +18,7 @@ namespace Vurbiri.EntryPoint
             _instance = this;
         }
 
-        public static void Exit()
-        {
-            Errors.CheckForNull(_instance);
-
-            _instance.OnExit(_instance.ExitCallback);
-        }
+        public static void Exit() => _instance.OnExit(_instance.ExitCallback);
 
         protected abstract void OnExit(Action<ExitParam> callback);
 

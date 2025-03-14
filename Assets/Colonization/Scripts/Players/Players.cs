@@ -46,13 +46,17 @@ namespace Vurbiri.Colonization
             public RoadFactory roadFactory;
             [Space]
             public DemonInitializer demonPrefab;
+            public DemonBuffsScriptable demonBuffsSettings;
             [Space]
+            public BuffsScriptable artefact;
             public Transform actorsContainer;
 
             public void Dispose()
             {
                 states.Dispose();
-                states = null;
+                demonBuffsSettings.Dispose();
+                artefact.Dispose();
+                states = null; demonBuffsSettings = null; artefact = null;
             }
 
 #if UNITY_EDITOR
@@ -62,14 +66,20 @@ namespace Vurbiri.Colonization
 
                 if (warriorPrefab == null)
                     warriorPrefab = EUtility.FindAnyPrefab<WarriorInitializer>();
-                if (demonPrefab == null)
-                    demonPrefab = EUtility.FindAnyPrefab<DemonInitializer>();
-                if (actorsContainer == null)
-                    actorsContainer = EUtility.FindObjectByName<Transform>("Actors");
                 if (prices == null)
                     prices = EUtility.FindAnyScriptable<PricesScriptable>();
                 if (states == null)
                     states = EUtility.FindAnyScriptable<PlayerAbilitiesScriptable>();
+
+                if (demonPrefab == null)
+                    demonPrefab = EUtility.FindAnyPrefab<DemonInitializer>();
+                if (demonBuffsSettings == null)
+                    demonBuffsSettings = EUtility.FindAnyScriptable<DemonBuffsScriptable>();
+
+                if (artefact == null)
+                    artefact = EUtility.FindAnyScriptable<BuffsScriptable>();
+                if (actorsContainer == null)
+                    actorsContainer = EUtility.FindObjectByName<Transform>("Actors");
             }
 #endif
         }

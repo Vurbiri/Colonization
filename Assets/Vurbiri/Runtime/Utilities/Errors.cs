@@ -39,8 +39,8 @@ namespace Vurbiri
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CheckArraySize<T>(IReadOnlyList<T> value, int size)
         {
-            if (value == null || value.Count != size)
-                Argument(nameof(value), value);
+            if (value.Count != size)
+                Error($"Array size {value.Count} != {size}");
         }
         #endregion
 

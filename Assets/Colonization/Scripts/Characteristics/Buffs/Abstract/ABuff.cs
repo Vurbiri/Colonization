@@ -4,12 +4,15 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class ABuff<T> : IBuff where T : BuffSettings
+    public abstract class ABuff : IBuff
     {
         protected readonly Subscriber<IPerk> _subscriber;
         protected readonly Perk _base, _current;
 
-        public ABuff(Subscriber<IPerk> subscriber, T settings)
+        public IPerk Base => _base;
+        public IPerk Current => _current;
+
+        public ABuff(Subscriber<IPerk> subscriber, BuffSettings settings)
         {
             _subscriber = subscriber;
             _base = new(settings.targetAbility, settings.typeModifier, settings.value);

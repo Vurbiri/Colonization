@@ -32,8 +32,6 @@ namespace Vurbiri.Collections
 
         public IdArray(Func<TValue> factory) : this()
         {
-            Errors.CheckForNull(factory);
-            
             for (int i = 0; i < _count; i++)
                 _values[i] = factory();
         }

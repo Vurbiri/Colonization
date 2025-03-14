@@ -19,8 +19,7 @@ namespace Vurbiri.Reactive.Collections
 
         public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool calling = true)
         {
-            if (calling)
-                action((T)this, TypeEvent.Subscribe);
+            if (calling) action((T)this, TypeEvent.Subscribe);
             return _subscriber.Add(action);
         }
 

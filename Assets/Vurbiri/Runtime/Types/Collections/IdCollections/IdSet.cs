@@ -77,8 +77,6 @@ namespace Vurbiri.Collections
 
         public void ReplaceRange(IEnumerable<TValue> collection)
         {
-            Errors.CheckForNull(collection);
-
             foreach (TValue value in collection)
                 Replace(value);
         }

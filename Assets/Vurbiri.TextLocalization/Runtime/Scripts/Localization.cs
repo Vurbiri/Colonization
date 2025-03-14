@@ -43,13 +43,7 @@ namespace Vurbiri.TextLocalization
         public Localization(bool[] loadFiles) : this() => SetFiles(loadFiles);
 #endif
 
-        public Unsubscriber Subscribe(Action<Localization> action, bool calling = true)
-        {
-            if (calling)
-                action(this);
-
-            return _subscriber.Add(action);
-        }
+        public Unsubscriber Subscribe(Action<Localization> action, bool calling = true) => _subscriber.Add(action, calling, this);
 
         public bool TryIdFromCode(string code, out int id)
         {

@@ -20,7 +20,7 @@ namespace Vurbiri.Reactive
             this.action = action;
         }
 
-        public override void Unsubscribe()
+        sealed public override void Unsubscribe()
         {
             if(_weakSubscriber != null && _weakSubscriber.TryGetTarget(out ISubscriber<TDelegate> subscriber))
             {

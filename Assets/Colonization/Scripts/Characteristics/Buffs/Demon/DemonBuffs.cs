@@ -1,16 +1,30 @@
 //Assets\Colonization\Scripts\Characteristics\Buffs\Demon\DemonBuffs.cs
+using System.Collections.Generic;
+
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class DemonBuffs
+    public class DemonBuffs : ABuffs<DemonBuff>
 	{
-		private readonly Perk _addMaxHP = new(ActorAbilityId.MaxHP, TypeModifierId.BasePercent, 5);
-        private const int HP_LVL = 1;
-        private readonly Perk _addHPPerTurn = new(ActorAbilityId.HPPerTurn, TypeModifierId.BasePercent, 5);
-        private const int HPTURN_LVL= 3;
-        private readonly Perk _addDefense = new(ActorAbilityId.Defense, TypeModifierId.BasePercent, 5);
-        private const int DEF_LVL = 6;
-        private readonly Perk _addAttack = new(ActorAbilityId.Attack, TypeModifierId.BasePercent, 5);
-        private const int ATK_LVL = 7;
-        private readonly Perk _addMaxAP = new(ActorAbilityId.Defense, TypeModifierId.Addition, 1);
+        public DemonBuffs(IReadOnlyList<DemonBuffSettings> settings)
+        {
+            _count = settings.Count;
+            _buffs = new DemonBuff[_count];
+            for (int i = 0; i < _count; i++)
+                _buffs[i] = new(_subscriber, settings[i]);
+        }
+
+        public DemonBuffs(IReadOnlyList<DemonBuffSettings> settings, int level)
+        {
+            _count = settings.Count;
+            _buffs = new DemonBuff[_count];
+            for (int i = 0; i < _count; i++)
+                _buffs[i] = new(_subscriber, settings[i], level);
+        }
+
+        public void Next(int level)
+        {
+            for (int i = 0; i < _count; i++)
+                _buffs[i].Next(level);
+        }
     }
 }

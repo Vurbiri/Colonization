@@ -13,7 +13,7 @@ namespace Vurbiri
         {
             get
             {
-                if (_instance == null && !_isQuit)
+                if (_instance == null & !_isQuit)
                 {
                     T[] instances = FindObjectsByType<T>(FindObjectsSortMode.None);
                     int instancesCount = instances.Length;

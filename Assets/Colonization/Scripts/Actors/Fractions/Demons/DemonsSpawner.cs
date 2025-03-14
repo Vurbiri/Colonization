@@ -1,6 +1,8 @@
 //Assets\Colonization\Scripts\Actors\Fractions\Demons\DemonsSpawner.cs
 using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -17,14 +19,16 @@ namespace Vurbiri.Colonization.Actors
             _startHex = startHex;
         }
 
-        public Demon Create(int id)
+        public Demon Create(int id, IReactive<IPerk> artefact, IReactive<IPerk> demonBuffs)
         {
-            return Object.Instantiate(_demonPrefab, _container).Init(id, _startHex);
+            IReactive<IPerk>[] buffs = { artefact, demonBuffs };
+            return Object.Instantiate(_demonPrefab, _container).Init(id, buffs, _startHex);
         }
 
-        public Demon Load(ActorLoadData data, Hexagons land)
+        public Demon Load(ActorLoadData data, IReactive<IPerk> artefact, IReactive<IPerk> demonBuffs, Hexagons land)
         {
-            return Object.Instantiate(_demonPrefab, _container).Load(data, land[data.keyHex]);
+            IReactive<IPerk>[] buffs = { artefact, demonBuffs };
+            return Object.Instantiate(_demonPrefab, _container).Load(data, buffs, land[data.keyHex]);
         }
     }
 }

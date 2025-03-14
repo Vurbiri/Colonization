@@ -39,7 +39,7 @@ namespace Vurbiri.Reactive.Collections
         }
         public ReactiveList(IEqualityComparer<T> comparer)
         {
-           Errors.CheckForNull(comparer);
+            Errors.CheckForNull(comparer);
             
             _comparer = comparer;
             _values = new T[_capacity];
@@ -47,14 +47,11 @@ namespace Vurbiri.Reactive.Collections
 
         public ReactiveList(int capacity)
         {
-            Errors.CheckForMin(capacity, 0);
-
             _capacity = capacity;
             _values = new T[_capacity];
         }
         public ReactiveList(int capacity, IEqualityComparer<T> comparer)
         {
-            Errors.CheckForMin(capacity, 0);
             Errors.CheckForNull(comparer);
 
             _comparer = comparer;
@@ -72,7 +69,6 @@ namespace Vurbiri.Reactive.Collections
         }
         public ReactiveList(IReadOnlyList<T> values, IEqualityComparer<T> comparer)
         {
-            Errors.CheckForNull(values);
             Errors.CheckForNull(comparer);
 
             _comparer = comparer;

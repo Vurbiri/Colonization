@@ -13,7 +13,7 @@ namespace VurbiriEditor.Colonization
         [MenuItem(MENU)]
         private static void ShowWindow()
         {
-            GetWindow<BuffsWindow>(true, NAME).minSize = new(300f, 400f);
+            GetWindow<BuffsWindow>(true, NAME).minSize = new(300f, 300f);
         }
 
         protected override void OnEnable()

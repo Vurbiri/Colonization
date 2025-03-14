@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.Data
         private readonly List<int[][]> _warriors;
         private int[] _perks;
 
-        private readonly string _keyResources, _keyEdifices, _keyRoads, _keyWarriors, _keyPerks;
+        private readonly string _keyResources, _keyEdifices, _keyRoads, _keyWarriors, _keyBuffs, _keyPerks;
         private readonly IStorageService _storage;
         private readonly Coroutines _coroutines;
         private Coroutine _saveWarriors;
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.Data
 
             string strId = id.ToString();
             _keyResources = P_RESOURCES.Concat(strId); _keyEdifices = P_EDIFICES.Concat(strId); _keyRoads = P_ROADS.Concat(strId);
-            _keyWarriors = P_WARRIORS.Concat(strId); _keyPerks = P_PERKS.Concat(strId);
+            _keyWarriors = P_WARRIORS.Concat(strId); _keyBuffs = P_BUFFS.Concat(strId); ; _keyPerks = P_PERKS.Concat(strId);
 
             if (!(isLoad && storage.TryGet(_keyResources, out int[] resources)))
                 resources = new int[CurrencyId.CountAll];
@@ -53,11 +53,14 @@ namespace Vurbiri.Colonization.Data
             if (!(isLoad && storage.TryGet(_keyWarriors, out _warriors)))
                 _warriors = new();
 
+            if (!(isLoad && storage.TryGet(_keyBuffs, out int[] buffs)))
+                buffs = new int[0];
+
             if (!(isLoad && storage.TryGet(_keyPerks, out _perks)))
                 _perks = new int[0];
 
             if(isLoad)
-                LoadData = new(resources, _edifices, roads, _warriors);
+                LoadData = new(resources, _edifices, roads, buffs, _warriors);
         }
                 
 
@@ -144,6 +147,11 @@ namespace Vurbiri.Colonization.Data
             }
             #endregion
         }
+        public void ArtefactBind(IReactive<IReadOnlyList<int>> currencies, bool calling)
+        {
+            _unsubscribers += currencies.Subscribe(value => _storage.Save(_keyBuffs, value, DELAY_SAVE), calling);
+        }
+
         #endregion
 
         public void Dispose()

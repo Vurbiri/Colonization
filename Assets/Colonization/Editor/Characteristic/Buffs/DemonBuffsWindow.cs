@@ -14,7 +14,7 @@ namespace VurbiriEditor.Colonization
         [MenuItem(MENU)]
 		private static void ShowWindow()
 		{
-			GetWindow<DemonBuffsWindow>(true, NAME).minSize = new(300f, 600f); ;
+			GetWindow<DemonBuffsWindow>(true, NAME).minSize = new(300f, 500f); ;
 		}
 
         protected override void OnEnable()
@@ -23,10 +23,14 @@ namespace VurbiriEditor.Colonization
             base.OnEnable();
         }
 
-        protected override void DrawValues(DemonBuffSettings settings)
+        protected override bool DrawValues(DemonBuffSettings settings)
         {
-           base.DrawValues(settings);
+            int oldLevelUP = settings.levelUP;
+            
+            bool isSave = base.DrawValues(settings);
             settings.levelUP = EditorGUILayout.IntSlider("Level Up", settings.levelUP, 1, 25);
+
+            return isSave | oldLevelUP != settings.levelUP;
         }
     }
 }

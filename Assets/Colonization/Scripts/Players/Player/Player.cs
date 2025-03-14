@@ -27,6 +27,7 @@ namespace Vurbiri.Colonization
         private readonly ListReactiveItems<Actor> _warriors = new();
 
         private readonly AbilitiesSet<PlayerAbilityId> _abilities;
+        private readonly Buffs _artefact;
         private readonly ReactiveList<IPerk> _perks;
         #endregion
 
@@ -62,16 +63,19 @@ namespace Vurbiri.Colonization
                 _edifices = new(playerId, loadData.edifices, crossroads, _abilities);
                 _roads.Restoration(loadData.roads, crossroads);
 
-                int count = loadData.warriors.Length;
-                for (int i = 0; i < count; i++)
-                    _warriors.Add(_spawner.Load(loadData.warriors[i], land));
+                _artefact = new(settings.artefact.Settings, loadData.buffs);
 
                 //_perks = new(data.Perks);
+
+                int count = loadData.warriors.Length;
+                for (int i = 0; i < count; i++)
+                    _warriors.Add(_spawner.Load(loadData.warriors[i], _artefact, land));
             }
             else
             {
                 _resources = new(_prices.PlayersDefault, _abilities[MaxMainResources], _abilities[MaxBlood]);
                 _edifices = new(_abilities);
+                _artefact = new(settings.artefact.Settings);
                 _perks = new();
             }
 
@@ -80,6 +84,7 @@ namespace Vurbiri.Colonization
             data.CurrenciesBind(_resources, !loadData.isLoaded);
             data.EdificesBind(_edifices.values);
             data.RoadsBind(_roads);
+            data.ArtefactBind(_artefact, !loadData.isLoaded);
             data.WarriorsBind(_warriors);
         }
 

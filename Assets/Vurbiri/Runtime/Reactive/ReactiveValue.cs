@@ -43,17 +43,13 @@ namespace Vurbiri.Reactive
 
         public ReactiveValue(T value, IEqualityComparer<T> comparer)
         {
+            Errors.CheckForNull(comparer);
+
             _value = value;
             _comparer = comparer;
         }
 
-        public Unsubscriber Subscribe(Action<T> action, bool calling = true)
-        {
-            if (calling) 
-                action(_value);
-
-            return _subscriber.Add(action);
-        }
+        public Unsubscriber Subscribe(Action<T> action, bool calling = true) => _subscriber.Add(action, calling, _value);
 
         public void Next(T value)
         {

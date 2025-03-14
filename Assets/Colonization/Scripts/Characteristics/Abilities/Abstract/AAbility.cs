@@ -28,10 +28,6 @@ namespace Vurbiri.Colonization.Characteristics
         public abstract int AddModifier(IAbilityValue mod);
         public abstract int RemoveModifier(IAbilityValue mod);
 
-        public Unsubscriber Subscribe(Action<int> action, bool calling = true)
-        {
-            if (calling) action(_value);
-            return _subscriber.Add(action);
-        }
+        public Unsubscriber Subscribe(Action<int> action, bool calling = true) => _subscriber.Add(action, calling, _value);
     }
 }

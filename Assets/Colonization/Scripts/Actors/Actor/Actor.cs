@@ -41,6 +41,7 @@ namespace Vurbiri.Colonization.Actors
         protected ReactiveValue<bool> _canCancel = new(false);
 
         protected Coroutine _deathCoroutine;
+        protected Unsubscribers _unsubscribers = new();
         #endregion
 
         #region Propirties
@@ -194,6 +195,7 @@ namespace Vurbiri.Colonization.Actors
 
         private IEnumerator Death_Cn()
         {
+            _unsubscribers.Unsubscribe();
             Removing();
             yield return _skin.Death();
             Dispose();
@@ -219,6 +221,12 @@ namespace Vurbiri.Colonization.Actors
                 AddWallDefenceEffect();
                 _stateMachine.ToDefaultState();
             }
+        }
+
+        private void OnBuff(IPerk perk)
+        {
+            if (_abilities.AddPerk(perk) != 0)
+                _subscriber.Invoke(this, TypeEvent.Change);
         }
 
         private void RedirectEvents(ReactiveEffect item, TypeEvent type)

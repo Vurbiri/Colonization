@@ -21,9 +21,7 @@ namespace Vurbiri.Reactive
 
         public Unsubscriber Subscribe(Action<TA, TB> action, bool calling = true)
         {
-            if (calling)
-                action(_reactiveA.Value, _reactiveB.Value);
-
+            if (calling) action(_reactiveA.Value, _reactiveB.Value);
             return _subscriber.Add(action);
         }
 

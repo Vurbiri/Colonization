@@ -3,7 +3,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class DemonBuff : ABuff<DemonBuffSettings>
+    public class DemonBuff : ABuff
     {
         private readonly int _levelUP;
 
@@ -22,7 +22,5 @@ namespace Vurbiri.Colonization.Characteristics
             _current.Add(_base);
             _subscriber.Invoke(_base);
         }
-
-        
     }
 }

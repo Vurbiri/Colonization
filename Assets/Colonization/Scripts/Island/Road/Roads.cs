@@ -95,9 +95,7 @@ namespace Vurbiri.Colonization
         #region Reactive
         public Unsubscriber Subscribe(Action<int[][][]> action, bool calling = false)
         {
-            if (calling)
-                action(ToArray());
-
+            if (calling) action(ToArray());
             return _subscriber.Add(action);
         }
 

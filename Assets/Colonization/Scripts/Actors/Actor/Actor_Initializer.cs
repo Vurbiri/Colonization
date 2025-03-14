@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -23,44 +24,48 @@ namespace Vurbiri.Colonization.Actors
             return effects;
         }
 
-        public void Init(ActorSettings settings, BoxCollider collider, Id<PlayerId> owner, Hexagon startHex)
+        public void Init(ActorSettings settings, BoxCollider collider, Id<PlayerId> owner, IReactive<IPerk>[] buffs, Hexagon startHex)
         {
             _typeId = settings.TypeId;
             _id = settings.Id;
             _owner = owner;
-            _abilities = settings.Abilities;
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
 
-            _isPlayerTurn = owner == PlayerId.Player;
+            #region Abilities
+            _abilities = settings.Abilities;
+
+            _currentHP = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
+            _currentAP = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
+            _move = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
+
+            for (int i = 0; i < buffs.Length; i++)
+                _unsubscribers += buffs[i].Subscribe(OnBuff);
+            #endregion
 
             _thisTransform = transform;
             _thisCollider = collider;
 
+            #region Bounds
             Bounds bounds = _skin.Bounds;
             collider.size = bounds.size;
             collider.center = bounds.center;
 
             _extentsZ = bounds.extents.z;
+            #endregion
 
             #region Get Services
             _eventBus = SceneServices.Get<GameplayEventBus>();
             _diplomacy = SceneServices.Get<Diplomacy>();
 
             var turn = SceneServices.Get<ITurn>();
-            turn.Subscribe(OnNextTurn, false);
+            _unsubscribers += turn.Subscribe(OnNextTurn, false);
             _isPlayerTurn = owner == PlayerId.Player & owner == turn.CurrentId;
             #endregion
 
             #region Effects
             _effects = new(_abilities);
-
-            _currentHP = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
-            _currentAP = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
-            _move = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
-
             _currentHP.Subscribe(hp => { if (hp <= 0) _deathCoroutine = StartCoroutine(Death_Cn()); });
-
             _effects.Subscribe(RedirectEvents);
             #endregion
 
@@ -79,9 +84,9 @@ namespace Vurbiri.Colonization.Actors
             gameObject.SetActive(true);
         }
 
-        public void Load(ActorSettings settings, BoxCollider collider, Id<PlayerId> owner,  Hexagon startHex, ActorLoadData data)
+        public void Load(ActorSettings settings, BoxCollider collider, Id<PlayerId> owner, IReactive<IPerk>[] buffs, Hexagon startHex, ActorLoadData data)
         {
-            Init(settings, collider, owner, startHex);
+            Init(settings, collider, owner, buffs, startHex);
 
             _currentHP.Value = data.currentHP;
             _currentAP.Value = data.currentAP;

@@ -107,8 +107,8 @@ namespace VurbiriEditor.Colonization.Characteristics
                 SerializedProperty SFXsProperty = GetProperty(P_SFX);
                 SerializedProperty hitsProperty = GetProperty(P_HITS);
 
-                TrySetArraySize(SFXsProperty, count);
-                TrySetArraySize(hitsProperty, count);
+                SFXsProperty.arraySize = count;
+                hitsProperty.arraySize = count;
                 
                 SerializedProperty effectsProperty, effectProperty;
                 for (int i = 0; i < count; i++)

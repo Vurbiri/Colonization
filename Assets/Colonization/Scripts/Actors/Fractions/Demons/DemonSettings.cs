@@ -2,7 +2,7 @@
 namespace Vurbiri.Colonization.Actors
 {
     [System.Serializable]
-    public class DemonSettings : ActorSettings
+    sealed public class DemonSettings : ActorSettings
     {
         public override int TypeId => 1;
     }

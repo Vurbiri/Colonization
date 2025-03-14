@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
+using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor
 {
@@ -34,12 +35,12 @@ namespace VurbiriEditor
             if (isName) return DrawBool(property, property.displayName);
 
             _position.y += _height;
-            return property.boolValue = EditorGUI.Toggle(_position, property.boolValue);
+            return property.boolValue = Toggle(_position, property.boolValue);
         }
         protected bool DrawBool(SerializedProperty property, string displayName)
         {
             _position.y += _height;
-            return property.boolValue = EditorGUI.Toggle(_position, displayName, property.boolValue);
+            return property.boolValue = Toggle(_position, displayName, property.boolValue);
         }
         protected bool DrawBool(string nameChildren, bool isName = true) => DrawBool(_mainProperty.FindPropertyRelative(nameChildren), isName);
         protected bool DrawBool(string nameChildren, string displayName) => DrawBool(_mainProperty.FindPropertyRelative(nameChildren), displayName);
@@ -76,12 +77,12 @@ namespace VurbiriEditor
             if (isName) return DrawInt(property, property.displayName);
 
             _position.y += _height;
-            return property.intValue = EditorGUI.IntField(_position, property.intValue);
+            return property.intValue = IntField(_position, property.intValue);
         }
         protected int DrawInt(SerializedProperty property, string displayName)
         {
             _position.y += _height;
-            return property.intValue = EditorGUI.IntField(_position, displayName, property.intValue);
+            return property.intValue = IntField(_position, displayName, property.intValue);
         }
         protected int DrawInt(string nameChildren, bool isName = true) => DrawInt(_mainProperty.FindPropertyRelative(nameChildren), isName);
         protected int DrawInt(string nameChildren, string displayName) => DrawInt(_mainProperty.FindPropertyRelative(nameChildren), displayName);
@@ -99,7 +100,7 @@ namespace VurbiriEditor
                 defaultValue = property.intValue;
 
             _position.y += _height;
-            return property.intValue = EditorGUI.IntSlider(_position, defaultValue, min, max);
+            return property.intValue = IntSlider(_position, defaultValue, min, max);
         }
         protected int DrawInt(SerializedProperty property, string displayName, int min, int max, int defaultValue = 0)
         {
@@ -109,7 +110,7 @@ namespace VurbiriEditor
                 defaultValue = property.intValue;
 
             _position.y += _height;
-            return property.intValue = EditorGUI.IntSlider(_position, displayName, defaultValue, min, max);
+            return property.intValue = IntSlider(_position, displayName, defaultValue, min, max);
         }
         protected int DrawInt(string nameChildren, int min, int max, int defaultValue = 0, bool isName = true) 
         {   return DrawInt(_mainProperty.FindPropertyRelative(nameChildren), min, max, defaultValue, isName); }
@@ -136,7 +137,7 @@ namespace VurbiriEditor
             property.intValue = value;
 
             _position.y += _height;
-            EditorGUI.LabelField(_position, property.displayName, value.ToString());
+            LabelField(_position, property.displayName, value.ToString());
         }
         #endregion
         #endregion
@@ -148,12 +149,12 @@ namespace VurbiriEditor
             if (isName) return DrawFloat(property, property.displayName);
 
             _position.y += _height;
-            return property.floatValue = EditorGUI.FloatField(_position, property.floatValue);
+            return property.floatValue = FloatField(_position, property.floatValue);
         }
         protected float DrawFloat(SerializedProperty property, string displayName)
         {
             _position.y += _height;
-            return property.floatValue = EditorGUI.FloatField(_position, displayName, property.floatValue);
+            return property.floatValue = FloatField(_position, displayName, property.floatValue);
         }
         protected float DrawFloat(string nameChildren, bool isName = true) => DrawFloat(_mainProperty.FindPropertyRelative(nameChildren), isName);
         protected float DrawFloat(string nameChildren, string displayName) => DrawFloat(_mainProperty.FindPropertyRelative(nameChildren), displayName);
@@ -172,7 +173,7 @@ namespace VurbiriEditor
                 defaultValue = property.floatValue;
 
             _position.y += _height;
-            return property.floatValue = EditorGUI.Slider(_position, defaultValue, min, max);
+            return property.floatValue = Slider(_position, defaultValue, min, max);
         }
         protected float DrawFloat(SerializedProperty property, string displayName, float min, float max, float defaultValue = 0f)
         {
@@ -182,7 +183,7 @@ namespace VurbiriEditor
                 defaultValue = property.floatValue;
 
             _position.y += _height;
-            return property.floatValue = EditorGUI.Slider(_position, displayName, defaultValue, min, max);
+            return property.floatValue = Slider(_position, displayName, defaultValue, min, max);
         }
         protected float DrawFloat(string nameChildren, float min, float max, float defaultValue = 0f, bool isName = true)
         { return DrawFloat(_mainProperty.FindPropertyRelative(nameChildren), min, max, defaultValue, isName); }
@@ -209,7 +210,7 @@ namespace VurbiriEditor
             property.floatValue = value;
 
             _position.y += _height;
-            EditorGUI.LabelField(_position, property.displayName, value.ToString());
+            LabelField(_position, property.displayName, value.ToString());
         }
         #endregion
         #endregion
@@ -258,7 +259,7 @@ namespace VurbiriEditor
             property.enumValueIndex = index;
 
             _position.y += _height;
-            EditorGUI.LabelField(_position, property.displayName, property.enumDisplayNames[index]);
+            LabelField(_position, property.displayName, property.enumDisplayNames[index]);
         }
         #endregion
         #endregion
@@ -270,12 +271,12 @@ namespace VurbiriEditor
             if (isName) return DrawIntPopup(property, property.displayName, displayedOptions);
 
             _position.y += _height;
-            return property.intValue = EditorGUI.Popup(_position, property.intValue, displayedOptions);
+            return property.intValue = Popup(_position, property.intValue, displayedOptions);
         }
         protected int DrawIntPopup(SerializedProperty property, string displayName, string[] displayedOptions)
         {
             _position.y += _height;
-            return property.intValue = EditorGUI.Popup(_position, displayName, property.intValue, displayedOptions);
+            return property.intValue = Popup(_position, displayName, property.intValue, displayedOptions);
         }
         protected int DrawIntPopup(string nameChildren, string[] displayedOptions, bool isName = true)
         { return DrawIntPopup(_mainProperty.FindPropertyRelative(nameChildren), displayedOptions, isName); }
@@ -296,7 +297,7 @@ namespace VurbiriEditor
         protected int DrawIntPopup(SerializedProperty property, string displayName, string[] displayedOptions, int[] optionValues)
         {
             _position.y += _height;
-            return property.intValue = EditorGUI.IntPopup(_position, displayName, property.intValue, displayedOptions, optionValues);
+            return property.intValue = IntPopup(_position, displayName, property.intValue, displayedOptions, optionValues);
         }
         protected int DrawIntPopup(string nameChildren, string[] displayedOptions, int[] optionValues, bool isName = true)
         { return DrawIntPopup(_mainProperty.FindPropertyRelative(nameChildren), displayedOptions, optionValues, isName); }
@@ -315,14 +316,14 @@ namespace VurbiriEditor
 
             _position.y += _height;
             int index = Math.Clamp(Array.IndexOf(displayedOptions, property.stringValue), 0, displayedOptions.Length - 1);
-            index = EditorGUI.Popup(_position, index, displayedOptions);
+            index = Popup(_position, index, displayedOptions);
             return property.stringValue = displayedOptions[index];
         }
         protected string DrawStringPopup(SerializedProperty property, string displayName, string[] displayedOptions)
         {
             _position.y += _height;
             int index = Math.Clamp(Array.IndexOf(displayedOptions, property.stringValue), 0, displayedOptions.Length - 1);
-            index = EditorGUI.Popup(_position, displayName, index, displayedOptions);
+            index = Popup(_position, displayName, index, displayedOptions);
             return property.stringValue = displayedOptions[index];
         }
         protected string DrawStringPopup(string nameChildren, string[] displayedOptions)
@@ -375,12 +376,12 @@ namespace VurbiriEditor
                 return DrawObject<T>(property, property.displayName);
 
             _position.y += _height;
-            return (T)(property.objectReferenceValue = EditorGUI.ObjectField(_position, property.objectReferenceValue, typeof(T), false));
+            return (T)(property.objectReferenceValue = ObjectField(_position, property.objectReferenceValue, typeof(T), false));
         }
         protected T DrawObject<T>(SerializedProperty property, string displayName) where T : UnityEngine.Object
         {
             _position.y += _height;
-            return (T)(property.objectReferenceValue = EditorGUI.ObjectField(_position, displayName, property.objectReferenceValue, typeof(T), false));
+            return (T)(property.objectReferenceValue = ObjectField(_position, displayName, property.objectReferenceValue, typeof(T), false));
         }
         protected T DrawObject<T>(string nameChildren, bool isName = true) where T : UnityEngine.Object
         { return DrawObject<T>(_mainProperty.FindPropertyRelative(nameChildren), isName); }
@@ -396,12 +397,12 @@ namespace VurbiriEditor
         protected void DrawLabel(string displayName)
         {
             _position.y += _height;
-            EditorGUI.LabelField(_position, displayName);
+            LabelField(_position, displayName);
         }
         protected void DrawLabel(string displayName, string value)
         {
             _position.y += _height;
-            EditorGUI.LabelField(_position, displayName, value);
+            LabelField(_position, displayName, value);
         }
         #endregion
         //================================================================
@@ -415,7 +416,7 @@ namespace VurbiriEditor
             size.x += leftOffset;
             size.width -= leftOffset;
             size.height = _ySpace;
-            EditorGUI.DrawRect(size, color);
+            DrawRect(size, color);
             _position.y += _ySpace * 5f;
         }
         #endregion
@@ -451,19 +452,6 @@ namespace VurbiriEditor
                 id = int.Parse(strings[1]);
 
             return id;
-        }
-
-        protected bool TrySetArraySize(SerializedProperty property, int size)
-        {
-            if(size < 0 | property == null || !property.isArray)
-                return false;
-
-            while (property.arraySize > size)
-                property.DeleteArrayElementAtIndex(property.arraySize - 1);
-            while (property.arraySize < size)
-                property.InsertArrayElementAtIndex(property.arraySize);
-
-            return true;
         }
         #endregion
     }

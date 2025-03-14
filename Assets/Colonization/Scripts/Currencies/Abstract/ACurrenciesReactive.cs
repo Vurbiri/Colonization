@@ -66,16 +66,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Reactive
-        public Unsubscriber Subscribe(Action<ACurrencies> action, bool calling = true)
-        {
-            if (calling)
-            {
-                for (int i = 0; i < countAll; i++)
-                    action(this);
-            }
-
-            return _subscriber.Add(action);
-        }
+        public Unsubscriber Subscribe(Action<ACurrencies> action, bool calling = true) => _subscriber.Add(action, calling, this);
         public Unsubscriber Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
         public Unsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
         #endregion

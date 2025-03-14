@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
             _exitParam = new(nextScene);
         }
 
-        protected override void OnExit(Action<ExitParam> callback)
+        sealed protected override void OnExit(Action<ExitParam> callback)
         {
             SceneServices.Get<Coroutines>().Run(OnExit_Cn(callback));
         }

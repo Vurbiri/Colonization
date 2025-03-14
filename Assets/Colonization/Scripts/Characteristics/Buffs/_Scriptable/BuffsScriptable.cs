@@ -6,5 +6,6 @@ namespace Vurbiri.Colonization.Characteristics
     [CreateAssetMenu(fileName = "Buffs", menuName = "Vurbiri/Colonization/Buffs/Buffs", order = 51)]
     public class BuffsScriptable : ABuffsScriptable<BuffSettings>
     {
+
     }
 }

@@ -28,8 +28,6 @@ namespace Vurbiri.Reactive.Collections
 
         public ListReactiveItems(int capacity)
         {
-            Errors.CheckForMin(capacity, 0);
-
             _capacity = capacity;
             _values = new T[_capacity];
         }

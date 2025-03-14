@@ -52,13 +52,7 @@ namespace Vurbiri.Reactive
             _unsubscribers += reactive.Subscribe(v => _subscriber.Invoke(Value), false);
         }
         
-        public Unsubscriber Subscribe(Action<int> action, bool calling = true)
-        {
-            if (calling)
-                action(Value);
-
-            return _subscriber.Add(action);
-        }
+        public Unsubscriber Subscribe(Action<int> action, bool calling = true) => _subscriber.Add(action, calling, Value);
 
         public void Dispose()
         {

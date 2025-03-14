@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
         public void RecruitWarriors(Id<WarriorId> id, Hexagon hexagon)
         {
             _resources.Pay(_prices.Warriors[id.Value]);
-            _warriors.Add(_spawner.Create(id, hexagon));
+            _warriors.Add(_spawner.Create(id, _artefact, hexagon));
         }
 
         private IEnumerator RecruitWarriors_Cn(Id<WarriorId> id, Crossroad crossroad)
