@@ -1,7 +1,8 @@
 //Assets\Colonization\Scripts\Players\Demon\Demon.cs
 using System;
-using UnityEngine;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
@@ -9,33 +10,26 @@ namespace Vurbiri.Colonization
 {
     using static GATE;
 
-    public class Demons : IDisposable
+    public class Satan : IDisposable
     {
         private int _curse;
         private int _level;
         private int _cursePerTurn;
 
-        private readonly ReactiveCombination<int, int> _countPerkAndShrine;
         private Unsubscribers _unsubscribers = new();
+
+        private readonly DemonBuffs _leveling;
+        private readonly Buffs _artefact;
 
         private readonly Hexagon _gateHex;
         private readonly DemonsSpawner _spawner;
         private readonly ListReactiveItems<Actor> _demons = new();
 
-        public Demons(Hexagon gateHex, Player[] players, Players.Settings settings)
+        public Satan(Hexagon gateHex, Human[] players, SatanSaveData data, Players.Settings settings)
         {
             _gateHex = gateHex;
-            _spawner = new(settings.demonPrefab, settings.actorsContainer, gateHex);
 
-            ReactiveIntUnion perksCount = new(PlayerId.PlayersCount), shrineCount = new(PlayerId.PlayersCount);
-            for (int i = 0; i < PlayerId.PlayersCount; i++)
-            {
-                perksCount.Add(players[i].Perks.CountReactive);
-                shrineCount.Add(players[i].Shrines.CountReactive);
-            }
-            _countPerkAndShrine = new(perksCount, shrineCount);
-            _unsubscribers += _countPerkAndShrine.Subscribe((perks, shrines) => _cursePerTurn = CURSE_PER_TURN + Mathf.Max(perks - CURSE_PER_CHRINE * shrines, 0));
-
+            _spawner = new(new(_leveling, _artefact), settings.demonPrefab, settings.actorsContainer, gateHex);
         }
 
         public void Profit(int hexId)
@@ -47,8 +41,6 @@ namespace Vurbiri.Colonization
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
-
-            _countPerkAndShrine.Dispose();
             for (int i = 0; i <= _demons.Count; i++)
                 _demons[i].Dispose();
         }

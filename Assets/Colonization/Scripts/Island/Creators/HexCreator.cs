@@ -12,15 +12,15 @@ namespace Vurbiri.Colonization
         private readonly Vector2 _offsetHex = new(HEX_DIAMETER_IN, HEX_DIAMETER_IN * SIN_60);
 
         protected Hexagons _land;
-		protected ProjectSaveData _saveData;
+		protected GameplaySaveData _saveData;
             			
-		public HexCreator(Hexagons land, ProjectSaveData saveData)
+		public HexCreator(Hexagons land, GameplaySaveData saveData)
 		{
 			_land = land;
 			_saveData = saveData;
 		}
 
-        public static HexCreator Factory(Hexagons land, ProjectSaveData saveData)
+        public static HexCreator Factory(Hexagons land, GameplaySaveData saveData)
         {
             if(saveData.Load) return new HexLoader(land, saveData);
                               return new HexGenerator(land, saveData);
@@ -33,13 +33,13 @@ namespace Vurbiri.Colonization
         protected Key PositionToKey(Vector3 position) => new(2f * position.x / _offsetHex.x, position.z / _offsetHex.y);
     }
     //==========================================================================
-    public class HexGenerator : HexCreator
+    sealed public class HexGenerator : HexCreator
     {
         private readonly ShuffleLoopArray<int> _groundIDs, _waterIDs, _surfaceIDs;
         private Chance _chanceWater = CHANCE_WATER;
         private bool _isWater = false;
 
-        public HexGenerator(Hexagons land, ProjectSaveData saveData) : base(land, saveData)
+        public HexGenerator(Hexagons land, GameplaySaveData saveData) : base(land, saveData)
         {
             _groundIDs = new(HEX_IDS); 
             _waterIDs = new(HEX_IDS);
@@ -67,9 +67,9 @@ namespace Vurbiri.Colonization
         public override void Finish() { }
     }
     //==========================================================================
-    public class HexLoader : HexCreator
+    sealed public class HexLoader : HexCreator
     {
-        public HexLoader(Hexagons land, ProjectSaveData saveData) : base(land, saveData) { }
+        public HexLoader(Hexagons land, GameplaySaveData saveData) : base(land, saveData) { }
 
         public override Hexagon Gate => _land.CreateHexagon(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
 

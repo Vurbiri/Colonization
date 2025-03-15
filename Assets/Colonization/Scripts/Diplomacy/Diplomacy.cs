@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
 {
     public class Diplomacy : IReactive<IReadOnlyList<int>>
 	{
-        private const int MIN = -100, MAX = 101;
+        public const int MIN = -100, MAX = 101;
 
         private readonly int[] _values = new int[PlayerId.PlayersCount];
         private readonly DiplomacySettings _stt;
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
             turn.Subscribe(OnNextTurn, false);
         }
 
-        public static Diplomacy Create(ProjectSaveData saveData, DiplomacySettings settings, ITurn turn)
+        public static Diplomacy Create(GameplaySaveData saveData, DiplomacySettings settings, ITurn turn)
         {
             bool isLoad = saveData.TryGetDiplomacyData(out int[] data);
             Diplomacy diplomacy = isLoad ? new Diplomacy(data, settings, turn) : new Diplomacy(settings, turn);
@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization
             if (idA == idB)
 				return Relation.Friend;
 			
-			if(idA == PlayerId.Demons | idB == PlayerId.Demons)
+			if(idA == PlayerId.Satan | idB == PlayerId.Satan)
 				return Relation.Enemy;
 
 			return this[idA, idB] > 0 ? Relation.Friend : Relation.Enemy;
@@ -83,7 +83,7 @@ namespace Vurbiri.Colonization
             if (idA == idB)
                 return isFriendly;
 
-            if (idA == PlayerId.Demons | idB == PlayerId.Demons)
+            if (idA == PlayerId.Satan | idB == PlayerId.Satan)
                 return !isFriendly;
 
             int value = this[idA, idB];
@@ -95,14 +95,14 @@ namespace Vurbiri.Colonization
 
         public void ActorsInteraction(Id<PlayerId> idA, Id<PlayerId> idB, Relation targetAttack)
         {
-            if (idA == idB | idA == PlayerId.None | idB == PlayerId.None | idA == PlayerId.Demons | idB == PlayerId.Demons | targetAttack == Relation.None)
+            if (idA == idB | idA == PlayerId.None | idB == PlayerId.None | idA == PlayerId.Satan | idB == PlayerId.Satan | targetAttack == Relation.None)
                 return;
 
             int index = GetIndex(idA, idB);
             int value = _values[index];
 
             if (targetAttack == Relation.Enemy)
-                this[index] = value + (value <= 0 ? _stt.penaltyForAttackingEnemy : _stt.penaltyForFriendlyFire);
+                this[index] = value + (value <= 0 ? _stt.penaltyForFireOnEnemy : _stt.penaltyForFriendlyFire);
             else
                 this[index] = value + _stt.rewardForBuff;
 
@@ -115,7 +115,7 @@ namespace Vurbiri.Colonization
         {
             int current = turn.CurrentId.Value;
 
-            if (current == PlayerId.Player | current == PlayerId.Demons)
+            if (current == PlayerId.Player | current == PlayerId.Satan)
                 return;
 
             this[current - 1] = _values[current - 1] + _stt.penaltyPerRound;

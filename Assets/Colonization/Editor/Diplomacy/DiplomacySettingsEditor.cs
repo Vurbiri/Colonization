@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization;
+using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.Colonization
 {
@@ -20,11 +21,16 @@ namespace VurbiriEditor.Colonization
 		{
 			serializedObject.Update();
 
-            EditorGUILayout.BeginVertical(GUI.skin.window);
+			Space(10);
+            EditorGUI.BeginDisabledGroup(true);
+			IntField("MIN", Diplomacy.MIN);
+            IntField("MAX", Diplomacy.MAX);
+            EditorGUI.EndDisabledGroup();
+            Space();
 
-            EditorGUILayout.PropertyField(_serializedProperty);
-
-            EditorGUILayout.EndVertical();
+            BeginVertical(GUI.skin.box);
+            PropertyField(_serializedProperty);
+            EndVertical();
 
 			serializedObject.ApplyModifiedProperties();
 		}

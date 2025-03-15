@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Players\Player\Player.cs
+//Assets\Colonization\Scripts\Players\Player\Human.cs
 using System;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
@@ -10,7 +10,7 @@ using static Vurbiri.Colonization.Characteristics.PlayerAbilityId;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Player : IDisposable
+    public partial class Human : IDisposable
     {
         #region Fields
         private readonly Coroutines _coroutines;
@@ -23,12 +23,12 @@ namespace Vurbiri.Colonization
         private readonly Edifices _edifices;
         private readonly Roads _roads;
 
-        private readonly WarriorsSpawner _spawner;
-        private readonly ListReactiveItems<Actor> _warriors = new();
-
         private readonly AbilitiesSet<PlayerAbilityId> _abilities;
         private readonly Buffs _artefact;
         private readonly ReactiveList<IPerk> _perks;
+
+        private readonly WarriorsSpawner _spawner;
+        private readonly ListReactiveItems<Actor> _warriors = new();
         #endregion
 
         public ACurrenciesReactive Resources => _resources;
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
 
         public IReactiveList<IPerk> Perks => _perks;
 
-        public Player(Id<PlayerId> playerId, PlayerSaveData data, Players.Settings settings)
+        public Human(Id<PlayerId> playerId, HumanSaveData data, Players.Settings settings)
         {
             _id = playerId;
             _coroutines = SceneServices.Get<Coroutines>();
@@ -49,11 +49,9 @@ namespace Vurbiri.Colonization
 
             _abilities = settings.states;
             _roads = new(playerId, visual.color, settings.roadFactory, _coroutines);
-
             _prices = settings.prices;
-            _spawner = new(playerId, settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
 
-            PlayerLoadData loadData = data.LoadData;
+            HumanLoadData loadData = data.LoadData;
             if (loadData.isLoaded)
             {
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
@@ -67,9 +65,11 @@ namespace Vurbiri.Colonization
 
                 //_perks = new(data.Perks);
 
+                _spawner = new(new(playerId, _artefact), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
+
                 int count = loadData.warriors.Length;
                 for (int i = 0; i < count; i++)
-                    _warriors.Add(_spawner.Load(loadData.warriors[i], _artefact, land));
+                    _warriors.Add(_spawner.Load(loadData.warriors[i], land));
             }
             else
             {
@@ -77,6 +77,8 @@ namespace Vurbiri.Colonization
                 _edifices = new(_abilities);
                 _artefact = new(settings.artefact.Settings);
                 _perks = new();
+
+                _spawner = new(new(playerId, _artefact), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
             }
 
             _exchangeRate = new(_abilities);
@@ -85,7 +87,7 @@ namespace Vurbiri.Colonization
             data.EdificesBind(_edifices.values);
             data.RoadsBind(_roads);
             data.ArtefactBind(_artefact, !loadData.isLoaded);
-            data.WarriorsBind(_warriors);
+            data.ActorsBind(_warriors);
         }
 
         public void UpdateExchangeRate()

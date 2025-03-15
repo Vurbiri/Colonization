@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -24,11 +23,11 @@ namespace Vurbiri.Colonization.Actors
             return effects;
         }
 
-        public void Init(ActorSettings settings, BoxCollider collider, Id<PlayerId> owner, IReactive<IPerk>[] buffs, Hexagon startHex)
+        public void Init(ActorSettings settings, ActorInitData initData, BoxCollider collider, Hexagon startHex)
         {
             _typeId = settings.TypeId;
             _id = settings.Id;
-            _owner = owner;
+            _owner = initData.owner;
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
 
@@ -39,8 +38,8 @@ namespace Vurbiri.Colonization.Actors
             _currentAP = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
             _move = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
 
-            for (int i = 0; i < buffs.Length; i++)
-                _unsubscribers += buffs[i].Subscribe(OnBuff);
+            for (int i = 0; i < initData.buffs.Length; i++)
+                _unsubscribers += initData.buffs[i].Subscribe(OnBuff);
             #endregion
 
             _thisTransform = transform;
@@ -55,12 +54,11 @@ namespace Vurbiri.Colonization.Actors
             #endregion
 
             #region Get Services
-            _eventBus = SceneServices.Get<GameplayEventBus>();
-            _diplomacy = SceneServices.Get<Diplomacy>();
+            _eventBus = initData.eventBus;
+            _diplomacy = initData.diplomacy;
 
-            var turn = SceneServices.Get<ITurn>();
-            _unsubscribers += turn.Subscribe(OnNextTurn, false);
-            _isPlayerTurn = owner == PlayerId.Player & owner == turn.CurrentId;
+            _unsubscribers += initData.turn.Subscribe(OnNextTurn, false);
+            _isPlayerTurn = _owner == PlayerId.Player & _owner == initData.turn.CurrentId;
             #endregion
 
             #region Effects
@@ -84,9 +82,9 @@ namespace Vurbiri.Colonization.Actors
             gameObject.SetActive(true);
         }
 
-        public void Load(ActorSettings settings, BoxCollider collider, Id<PlayerId> owner, IReactive<IPerk>[] buffs, Hexagon startHex, ActorLoadData data)
+        public void Load(ActorSettings settings, ActorInitData initData, BoxCollider collider, Hexagon startHex, ActorLoadData data)
         {
-            Init(settings, collider, owner, buffs, startHex);
+            Init(settings, initData, collider, startHex);
 
             _currentHP.Value = data.currentHP;
             _currentAP.Value = data.currentAP;

@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
             _previousId = data[i++]; _currentId = data[i++]; _turn = data[i];
         }
 
-        public static TurnQueue Create(ProjectSaveData saveData)
+        public static TurnQueue Create(GameplaySaveData saveData)
         {
             bool isLoad = saveData.TryGetTurnQueueData(out int[] data);
             TurnQueue turn = isLoad ? new(data) : new();

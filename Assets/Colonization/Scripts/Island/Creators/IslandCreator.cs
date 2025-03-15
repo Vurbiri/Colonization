@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization
             return this;
         }
 
-        public IEnumerator Create_Cn(ProjectSaveData saveData)
+        public IEnumerator Create_Cn(GameplaySaveData saveData)
         {
             yield return Create_Cn(HexCreator.Factory(_land, saveData));
             yield return Setup_Cn();

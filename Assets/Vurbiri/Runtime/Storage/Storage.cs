@@ -25,7 +25,7 @@ namespace Vurbiri
             }
 
             callback?.Invoke(storage);
-            container.ReplaceInstance<IStorageService>(storage);
+            container.ReplaceInstance(storage);
 
             #region Local: Create(...), Creator()
             // =====================

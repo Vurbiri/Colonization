@@ -9,30 +9,30 @@ namespace Vurbiri.Colonization
 {
     public class Players : IDisposable
     {
-        private readonly Player[] _players = new Player[PlayerId.PlayersCount];
+        private readonly Human[] _humans = new Human[PlayerId.PlayersCount];
 
-        public Player Player => _players[PlayerId.Player];
+        public Human Player => _humans[PlayerId.Player];
 
         #region Constructor
-        public Players(Settings settings, ProjectSaveData saveData)
+        public Players(Settings settings, GameplaySaveData saveData)
         {
-            PlayerSaveData[] playersData = saveData.PlayersSaveData;
+            HumanSaveData[] playersData = saveData.HumansSaveData;
 
             for (int i = 0; i < PlayerId.PlayersCount; i++)
-                _players[i] = new(i, playersData[i], settings);
+                _humans[i] = new(i, playersData[i], settings);
         }
         #endregion
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
             for (int i = 0; i < PlayerId.PlayersCount; i++)
-                _players[i].Profit(hexId, freeGroundRes);
+                _humans[i].Profit(hexId, freeGroundRes);
         }
 
         public void Dispose()
         {
             for (int i = 0; i < PlayerId.PlayersCount; i++)
-                _players[i].Dispose();
+                _humans[i].Dispose();
         }
 
         #region Nested: Settings

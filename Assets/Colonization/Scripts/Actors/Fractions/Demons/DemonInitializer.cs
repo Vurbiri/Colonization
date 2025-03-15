@@ -1,8 +1,6 @@
 //Assets\Colonization\Scripts\Actors\Fractions\Demons\DemonInitializer.cs
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -13,11 +11,9 @@ namespace Vurbiri.Colonization.Actors
         [Space]
         [SerializeField] private DemonsSettingsScriptable _demonSettings;
 
-        const int OWNER = PlayerId.Demons;
-
-        public Demon Init(int id, IReactive<IPerk>[] buffs, Hexagon startHex)
+        public Demon Init(int id, ActorInitData initData, Hexagon startHex)
         {
-            _demon.Init(_demonSettings[id], _collider, OWNER, buffs, startHex);
+            _demon.Init(_demonSettings[id], initData, _collider, startHex);
             _collider.enabled = false;
 
             Destroy(this);
@@ -25,9 +21,9 @@ namespace Vurbiri.Colonization.Actors
             return _demon;
         }
 
-        public Demon Load(ActorLoadData data, IReactive<IPerk>[] buffs, Hexagon startHex)
+        public Demon Load(ActorLoadData data, ActorInitData initData, Hexagon startHex)
         {
-            _demon.Load(_demonSettings[data.id], _collider, OWNER, buffs, startHex, data);
+            _demon.Load(_demonSettings[data.id], initData, _collider, startHex, data);
             _collider.enabled = false;
 
             Destroy(this);

@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
         private TurnQueue _turnQueue;
         private Players _players;
         private GameSettings _gameplaySettings;
-        private ProjectSaveData _projectSaveData;
+        private GameplaySaveData _gameSaveData;
         private GameplayEventBus _eventBus;
         private InputController _inputController;
 
@@ -47,10 +47,7 @@ namespace Vurbiri.Colonization
         {
             _containers = containers;
 
-            _projectSaveData = containers.Data.Get<ProjectSaveData>();
             _gameplaySettings = containers.Data.Get<GameSettings>();
-
-            _projectSaveData.Load = _isLoad;
 
             containers.Services.Get<Localization>().SetFiles(_localizationFiles);
 
@@ -69,10 +66,13 @@ namespace Vurbiri.Colonization
                 DIContainer objects = containers.Objects;
 
                 services.AddInstance(Coroutines.Create("Gameplay Coroutines"));
-                services.AddInstance(_eventBus = new GameplayEventBus());
+
+                data.AddInstance(_gameSaveData = new(_isLoad));
+
+                services.AddInstance(_eventBus = new());
                 services.AddInstance(_inputController = new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
-                services.AddInstance<ITurn>(_turnQueue = TurnQueue.Create(_projectSaveData));
-                services.AddInstance(Diplomacy.Create(_projectSaveData, _scriptables.diplomacy, _turnQueue));
+                services.AddInstance<ITurn>(_turnQueue = TurnQueue.Create(_gameSaveData));
+                services.AddInstance(Diplomacy.Create(_gameSaveData, _scriptables.diplomacy, _turnQueue));
 
                 data.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));
                 
@@ -85,7 +85,7 @@ namespace Vurbiri.Colonization
 
         private IEnumerator Enter_Cn()
         {
-            yield return _islandCreator.Init(_containers.Objects, _eventBus).Create_Cn(_projectSaveData);
+            yield return _islandCreator.Init(_containers.Objects, _eventBus).Create_Cn(_gameSaveData);
             yield return CreatePlayers_Cn();
 
             _sceneObjects.Init(this, _scriptables);
@@ -96,7 +96,7 @@ namespace Vurbiri.Colonization
 
         private IEnumerator CreatePlayers_Cn()
         {
-            _players = _containers.Objects.AddInstance(new Players(_playersSettings, _projectSaveData));
+            _players = _containers.Objects.AddInstance(new Players(_playersSettings, _gameSaveData));
 
             yield return null;
 

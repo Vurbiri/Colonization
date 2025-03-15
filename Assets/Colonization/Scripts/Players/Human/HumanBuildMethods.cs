@@ -1,11 +1,11 @@
-//Assets\Colonization\Scripts\Players\PlayerPartial\PlayerBuildMethods.cs
+//Assets\Colonization\Scripts\Players\Player\HumanBuildMethods.cs
 using System.Collections;
 using Vurbiri.Colonization.Actors;
 using static Vurbiri.Colonization.Characteristics.PlayerAbilityId;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Player
+    public partial class Human
     {
         #region Edifice
         public bool CanEdificeUpgrade(Crossroad crossroad) => _edifices.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
@@ -39,20 +39,20 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Warriors
-        public bool CanAnyRecruitingWarriors(Crossroad crossroad)
+        public bool CanAnyRecruiting(Crossroad crossroad)
         { 
-            return _abilities.IsGreater(MaxWarrior, _warriors.Count) && crossroad.CanRecruitingWarriors(_id); 
+            return _abilities.IsGreater(MaxWarrior, _warriors.Count) && crossroad.CanRecruiting(_id); 
         }
-        public bool CanRecruitingWarrior(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
+        public bool CanRecruiting(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
 
-        public void RecruitWarriors(Id<WarriorId> id, Crossroad crossroad) => _coroutines.Run(RecruitWarriors_Cn(id, crossroad));
-        public void RecruitWarriors(Id<WarriorId> id, Hexagon hexagon)
+        public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => _coroutines.Run(Recruiting_Cn(id, crossroad));
+        public void Recruiting(Id<WarriorId> id, Hexagon hexagon)
         {
             _resources.Pay(_prices.Warriors[id.Value]);
-            _warriors.Add(_spawner.Create(id, _artefact, hexagon));
+            _warriors.Add(_spawner.Create(id, hexagon));
         }
 
-        private IEnumerator RecruitWarriors_Cn(Id<WarriorId> id, Crossroad crossroad)
+        private IEnumerator Recruiting_Cn(Id<WarriorId> id, Crossroad crossroad)
         {
             WaitResult<Hexagon> result = crossroad.GetHexagonForRecruiting_Wait();
             yield return result;
@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization
             if (result.Result == null)
                 yield break;
 
-            RecruitWarriors(id, result.Result);
+            Recruiting(id, result.Result);
         }
         #endregion
     }

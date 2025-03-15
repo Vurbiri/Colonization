@@ -151,7 +151,7 @@ namespace Vurbiri.Colonization
 
         public int GetMaxDefense()
         {
-            if (_ownerId == PlayerId.Demons & _isGate)
+            if (_ownerId == PlayerId.Satan & _isGate)
                 return GATE.DEFENSE;
             
             int max = int.MinValue;

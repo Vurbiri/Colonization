@@ -1,8 +1,6 @@
 //Assets\Colonization\Scripts\Actors\Fractions\Warriors\WarriorInitializer.cs
 using UnityEngine;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -13,15 +11,15 @@ namespace Vurbiri.Colonization.Actors
         [Space]
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
 
-        public Warrior Init(Id<WarriorId> id, Id<PlayerId> owner, IReactive<IPerk>[] buffs, Material material, Hexagon startHex)
+        public Warrior Init(Id<WarriorId> id, ActorInitData initData, Material material, Hexagon startHex)
         {
-            _warrior.Init(_warriorsSettings[id], _collider, owner, buffs, startHex);
+            _warrior.Init(_warriorsSettings[id], initData, _collider, startHex);
             return Setup(_warrior.Skin.Mesh, material);
         }
 
-        public Warrior Load(ActorLoadData data, Id<PlayerId> owner, IReactive<IPerk>[] buffs, Material material, Hexagon startHex)
+        public Warrior Load(ActorLoadData data, ActorInitData initData, Material material, Hexagon startHex)
         {
-            _warrior.Load(_warriorsSettings[data.id], _collider, owner, buffs, startHex, data);
+            _warrior.Load(_warriorsSettings[data.id], initData, _collider, startHex, data);
             return Setup(_warrior.Skin.Mesh, material);
         }
 

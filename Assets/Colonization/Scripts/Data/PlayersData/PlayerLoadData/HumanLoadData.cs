@@ -1,9 +1,9 @@
-//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\PlayerLoadData.cs
+//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\HumanLoadData.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Data
 {
-    public readonly struct PlayerLoadData
+    public readonly struct HumanLoadData
 	{
         public readonly int[] resources;
         public readonly Dictionary<int, EdificeLoadData[]> edifices;
@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Data
         public readonly ActorLoadData[] warriors;
         public readonly bool isLoaded;
 
-        public PlayerLoadData(int[] resources, Dictionary<int, List<int[]>> edifices, int[][][] roads, int[] buffs, List<int[][]> warriors)
+        public HumanLoadData(int[] resources, Dictionary<int, List<int[]>> edifices, int[][][] roads, int[] buffs, List<int[][]> warriors)
         {
             this.resources = resources;
             this.edifices = CreateEdificesLoadData(edifices);

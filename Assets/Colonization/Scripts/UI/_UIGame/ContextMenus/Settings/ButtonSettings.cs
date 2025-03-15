@@ -6,12 +6,12 @@ namespace Vurbiri.Colonization.UI
 {
     public class ButtonSettings
     {
-        public readonly Player player;
+        public readonly Human player;
         public readonly Color playerColor;
         public readonly HintGlobal hint;
         public readonly TextColorSettings colorSettings;
 
-        public ButtonSettings(Player player, HintGlobal hint)
+        public ButtonSettings(Human player, HintGlobal hint)
         {
             this.player = player;
             this.hint = hint;

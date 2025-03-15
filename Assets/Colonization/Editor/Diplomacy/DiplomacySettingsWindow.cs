@@ -33,9 +33,7 @@ namespace VurbiriEditor.Colonization
 		private void OnGUI()
 		{
             BeginWindows();
-            EditorGUILayout.BeginVertical(GUI.skin.window);
             _editor.OnInspectorGUI();
-            EditorGUILayout.EndVertical();
             EndWindows();
         }
 		

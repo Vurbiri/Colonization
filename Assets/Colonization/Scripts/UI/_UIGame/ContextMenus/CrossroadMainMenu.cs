@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
 
         private CrossroadRoadsMenu _roadsMenu;
         private CrossroadWarriorsMenu _warriorsMenu;
-        private Player _player;
+        private Human _player;
 
         public void Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
         {
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.UI
         {
             _currentCrossroad = crossroad;
 
-            _buttonRecruiting.Setup(_player.CanAnyRecruitingWarriors(crossroad));
+            _buttonRecruiting.Setup(_player.CanAnyRecruiting(crossroad));
             _buttonUpgrade.Setup(_player.CanEdificeUpgrade(crossroad), crossroad.NextId.Value);
             _buttonWall.Setup(_player.CanWallBuild(crossroad));
             _buttonRoads.Setup(_player.CanRoadBuild(crossroad));

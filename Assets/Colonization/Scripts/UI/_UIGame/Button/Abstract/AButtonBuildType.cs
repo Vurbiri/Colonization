@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         protected ACurrencies _cash;
         protected Unsubscriber _unsubscriber;
         protected string _caption;
-        protected Player _player;
+        protected Human _player;
         protected GameObject _parentGO;
         protected Crossroad _currentCrossroad;
 

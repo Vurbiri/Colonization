@@ -119,7 +119,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Recruiting
-        public bool CanRecruitingWarriors(Id<PlayerId> playerId)
+        public bool CanRecruiting(Id<PlayerId> playerId)
         {
             int countUnfit = 0;
             for (int i = 0; i < HEX_COUNT; i++)
