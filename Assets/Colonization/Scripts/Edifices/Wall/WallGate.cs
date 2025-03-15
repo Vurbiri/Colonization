@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Vurbiri.Colonization
 {
     [RequireComponent(typeof(MeshFilter))]
-    public class WallGate : MonoBehaviour, IValueId<LinkId>
+    sealed public class WallGate : MonoBehaviour, IValueId<LinkId>
     {
         [SerializeField] private Id<LinkId> _id;
         [Space]

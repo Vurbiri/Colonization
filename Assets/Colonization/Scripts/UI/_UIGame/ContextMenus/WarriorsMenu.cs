@@ -5,7 +5,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class WarriorsMenu : AWorldMenu
+    sealed public class WarriorsMenu : AWorldMenu
     {
         [SerializeField] private float _distanceOfButtons = 5f;
         [Space]

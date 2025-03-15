@@ -3,7 +3,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin
     {
-        protected class ReactState : ASkinState
+        sealed protected class ReactState : ASkinState
         {
             private bool _isIgnoreEvent;
 

@@ -116,19 +116,19 @@ namespace Vurbiri
 
         #region Nested: IRegistration<T>, RegInstance<T>, RegFactory<T>
         //***********************************
-        protected interface IRegistration : IDisposable { }
+        private interface IRegistration : IDisposable { }
         //***********************************
-        protected interface IRegistration<T> : IRegistration
+        private interface IRegistration<T> : IRegistration
         {
             public T Get();
         }
         //***********************************
-        protected interface IRegistration<P, T> : IRegistration
+        private interface IRegistration<P, T> : IRegistration
         {
             public T Get(P value);
         }
         //***********************************
-        protected class RegInstance<T> : IRegistration<T>
+        private class RegInstance<T> : IRegistration<T>
         {
             private readonly T _instance;
            
@@ -146,7 +146,7 @@ namespace Vurbiri
             }
         }
         //***********************************
-        protected class RegFactory<T> : IRegistration<T>
+        private class RegFactory<T> : IRegistration<T>
         {
             private readonly Func<T> _factory;
 
@@ -160,7 +160,7 @@ namespace Vurbiri
             public void Dispose() { }
         }
         //***********************************
-        protected class RegFactory<P,T> : IRegistration<P, T>
+        private class RegFactory<P,T> : IRegistration<P, T>
         {
             private readonly Func<P, T> _factory;
 

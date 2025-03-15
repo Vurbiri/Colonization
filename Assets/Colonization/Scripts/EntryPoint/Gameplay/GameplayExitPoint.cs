@@ -6,7 +6,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
-    public class GameplayExitPoint : ASceneExitPoint
+    sealed public class GameplayExitPoint : ASceneExitPoint
     {
         private readonly ExitParam _exitParam;
 

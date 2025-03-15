@@ -193,7 +193,7 @@ namespace Vurbiri.Colonization
             public RColor32 color;
             public Vector2Specular specular;
 
-            public void Roll() => color.Rolling();
+            public void Roll() => color.Next();
         }
         #endregion
     }

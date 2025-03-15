@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
 
         public static int ToGroup(int id) => id switch
         {
-            Empty                                             => EdificeGroupId.None,
+            Empty                                                => EdificeGroupId.None,
             Shrine                                               => EdificeGroupId.Shrine,
             PortOne or PortTwo or LighthouseOne or LighthouseTwo => EdificeGroupId.Port,
             Camp or Town or Capital                              => EdificeGroupId.Urban,

@@ -1,22 +1,22 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonBuild.cs
 using UnityEngine;
 using UnityEngine.Events;
-using Vurbiri.TextLocalization;
 using Vurbiri.Reactive;
+using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class ButtonBuild : AButtonBuild
+    sealed public class ButtonBuild : AButtonBuild
     {
         [Space]
-        [SerializeField] protected string _key;
+        [SerializeField] private string _key;
 
         private ACurrencies _cost;
         private ACurrencies _cash;
         private Unsubscriber _unsubscriber;
         private string _caption;
 
-        public virtual void Init(Vector3 localPosition, ButtonSettings settings, ACurrencies cost, UnityAction action)
+        public void Init(Vector3 localPosition, ButtonSettings settings, ACurrencies cost, UnityAction action)
         {
             base.Init(localPosition, settings, action);
             _cost = cost;

@@ -3,7 +3,7 @@ using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class ReflectAttackEffect : AttackEffect
+    sealed public class ReflectAttackEffect : AttackEffect
     {
         private readonly AbilityModifierPercent _reflectMod;
 

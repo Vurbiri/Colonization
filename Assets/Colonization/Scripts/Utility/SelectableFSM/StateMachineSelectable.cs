@@ -3,7 +3,7 @@ using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.FSMSelectable
 {
-    public class StateMachineSelectable : StateMachine<ASelectableState>, ISelectable
+    sealed public class StateMachineSelectable : StateMachine<ASelectableState>, ISelectable
     {
         public StateMachineSelectable() : base(new EmptyStateSelectable())
         {

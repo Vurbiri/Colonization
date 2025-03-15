@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri
 {
-    public class JsonToYandex : ASaveLoadJsonTo
+    sealed public class JsonToYandex : ASaveLoadJsonTo
     {
         private YandexSDK _ysdk;
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class HitParticleSFX : AHitMonoSFX
+    sealed public class HitParticleSFX : AHitMonoSFX
     {
         [SerializeField] private AudioClip _clip;
 

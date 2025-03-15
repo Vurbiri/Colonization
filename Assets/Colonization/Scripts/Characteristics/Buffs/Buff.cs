@@ -3,7 +3,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class Buff : ABuff
+    sealed public class Buff : ABuff
     {
         public Buff(Subscriber<IPerk> subscriber, BuffSettings settings) : base(subscriber, settings) { }
 

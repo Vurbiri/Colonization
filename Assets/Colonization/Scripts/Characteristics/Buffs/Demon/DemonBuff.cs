@@ -3,7 +3,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class DemonBuff : ABuff
+    sealed public class DemonBuff : ABuff
     {
         private readonly int _levelUP;
 

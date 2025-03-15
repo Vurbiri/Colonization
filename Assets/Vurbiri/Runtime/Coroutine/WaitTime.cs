@@ -2,7 +2,7 @@
 
 namespace Vurbiri
 {
-    public class WaitTime : AWaitTime
+    sealed public class WaitTime : AWaitTime
     {
         protected override float ApplicationTime => UnityEngine.Time.time;
 

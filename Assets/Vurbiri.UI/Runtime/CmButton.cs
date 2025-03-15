@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 namespace Vurbiri.UI
 {
     [AddComponentMenu("UICustom/Button", 30)]
-    public class CmButton : CmSelectable, IPointerClickHandler, ISubmitHandler
+    sealed public class CmButton : CmSelectable, IPointerClickHandler, ISubmitHandler
     {
         [Serializable]
         /// <summary>
@@ -21,7 +21,7 @@ namespace Vurbiri.UI
         [SerializeField]
         private ButtonClickedEvent m_OnClick = new();
 
-        protected CmButton()
+        private CmButton()
         { }
 
         public ButtonClickedEvent onClick
@@ -39,7 +39,7 @@ namespace Vurbiri.UI
             m_OnClick.Invoke();
         }
 
-        public virtual void OnPointerClick(PointerEventData eventData)
+        public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
                 return;
@@ -47,7 +47,7 @@ namespace Vurbiri.UI
             Press();
         }
 
-        public virtual void OnSubmit(BaseEventData eventData)
+        public void OnSubmit(BaseEventData eventData)
         {
             Press();
 

@@ -14,8 +14,8 @@ namespace Vurbiri.Colonization.Actors
                 return new PlayerIdleState(parent);
             }
         }
-
-        protected class AIIdleState : AIdleState
+        //========================================================================================================
+        sealed protected class AIIdleState : AIdleState
         {
             public AIIdleState(Actor parent) : base(parent) {}
 
@@ -24,8 +24,8 @@ namespace Vurbiri.Colonization.Actors
                 _skin.Idle();
             }
         }
-
-        protected class PlayerIdleState : AIdleState
+        //=========================================================================================================
+        sealed protected class PlayerIdleState : AIdleState
         {
             private readonly GameplayEventBus _eventBus;
 

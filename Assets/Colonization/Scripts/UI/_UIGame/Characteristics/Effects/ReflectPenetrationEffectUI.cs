@@ -4,7 +4,7 @@ using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class ReflectPenetrationEffectUI : ReflectEffectUI
+    sealed public class ReflectPenetrationEffectUI : ReflectEffectUI
     {
         private readonly string _pierce;
 

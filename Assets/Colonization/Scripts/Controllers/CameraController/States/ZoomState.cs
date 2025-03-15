@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        private class ZoomState : AStateControllerCamera<float>
+        sealed private class ZoomState : AStateControllerCamera<float>
         {
             private readonly Zoom _stt;
             private float _heightZoom;

@@ -1,10 +1,9 @@
 //Assets\Colonization\Scripts\Characteristics\Buffs\Abstract\ABuff.cs
-using System;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class ABuff : IBuff
+    public abstract class ABuff
     {
         protected readonly Subscriber<IPerk> _subscriber;
         protected readonly Perk _base, _current;
@@ -25,7 +24,5 @@ namespace Vurbiri.Colonization.Characteristics
             _base = new(settings.targetAbility, settings.typeModifier, settings.value);
             _current = new(settings.targetAbility, settings.typeModifier, value);
         }
-
-        public int Apply(Func<IPerk, int> func) => func(_current);
     }
 }

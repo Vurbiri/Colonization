@@ -4,7 +4,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class CrossroadMainMenu : ACrossroadMenuBuild
+    sealed public class CrossroadMainMenu : ACrossroadMenuBuild
     {
         [Space]
         [SerializeField] private HintingButton _buttonClose;

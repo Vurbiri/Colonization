@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Actors
 
     public abstract partial class Actor
 	{
-        protected class SelfSkillState : ASkillState
+        sealed protected class SelfSkillState : ASkillState
         {
             public SelfSkillState(Actor parent, IReadOnlyList<HitEffects> effects, int cost, int id) : base(parent, effects, cost, id)
             {

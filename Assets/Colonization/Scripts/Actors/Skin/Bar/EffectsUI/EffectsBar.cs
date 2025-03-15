@@ -9,7 +9,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class EffectsBar : APooledObject<EffectsBar>
+    sealed public class EffectsBar : APooledObject<EffectsBar>
     {
         private const char CHAR = '-';
 

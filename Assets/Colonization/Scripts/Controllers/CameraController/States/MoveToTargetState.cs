@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        private class MoveToTargetState : AStateController<Vector3>
+        sealed private class MoveToTargetState : AStateController<Vector3>
         {
             private readonly MovementToTarget _stt;
             private Vector3 _targetPosition;

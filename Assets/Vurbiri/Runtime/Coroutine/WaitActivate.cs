@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public class WaitActivate : CustomYieldInstruction
+    sealed public class WaitActivate : CustomYieldInstruction
     {
         public override bool keepWaiting => _keepWaiting;
         private bool _keepWaiting;

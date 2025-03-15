@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        protected class MovementSkillState : SkillState
+        sealed protected class MovementSkillState : SkillState
         {
             private readonly float _distanceMove;
             private readonly float _timeToHit;

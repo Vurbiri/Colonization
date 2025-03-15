@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        private class EdgeMoveState : MoveState
+        sealed private class EdgeMoveState : MoveState
         {
             private readonly float _edgeLeft, _edgeRight;
 

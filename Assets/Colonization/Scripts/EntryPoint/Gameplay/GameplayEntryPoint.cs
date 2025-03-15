@@ -16,9 +16,9 @@ using Vurbiri.UI;
 namespace Vurbiri.Colonization
 {
     [DefaultExecutionOrder(-20)]
-    public class GameplayEntryPoint : ASceneEntryPoint
+    sealed public class GameplayEntryPoint : ASceneEntryPoint
     {
-        [SerializeField] protected SceneId _nextScene;
+        [SerializeField] private SceneId _nextScene;
         [Space]
         [SerializeField] private IslandCreator _islandCreator;
         [SerializeField] private SceneObjects _sceneObjects;

@@ -6,7 +6,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class ButtonCancel : AHintingButton
+    sealed public class ButtonCancel : AHintingButton
     {
         private const Files FILE = Files.Main;
         private const string KEY = "Cancel";

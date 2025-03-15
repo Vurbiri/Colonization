@@ -79,7 +79,7 @@ namespace Vurbiri.Colonization
 
         #region Nested: ACurrency, CurrencyMain, CurrencyBlood
         //*******************************************************
-        protected class CurrencyMain : ACurrency
+        sealed protected class CurrencyMain : ACurrency
         {
             public CurrencyMain() : base(0) { }
             public CurrencyMain(int value) : base(value) { }
@@ -114,7 +114,7 @@ namespace Vurbiri.Colonization
             }
         }
         //*******************************************************
-        protected class CurrencyBlood : ACurrency
+        sealed protected class CurrencyBlood : ACurrency
         {
             private readonly IAbility _max;
 

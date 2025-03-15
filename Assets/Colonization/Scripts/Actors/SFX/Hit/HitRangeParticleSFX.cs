@@ -5,7 +5,7 @@ using static UnityEngine.ParticleSystem;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class HitRangeParticleSFX : AHitMonoSFX
+    sealed public class HitRangeParticleSFX : AHitMonoSFX
     {
         [SerializeField] private AudioClip _clipRun;
         [SerializeField] private AudioClip _clipHit;

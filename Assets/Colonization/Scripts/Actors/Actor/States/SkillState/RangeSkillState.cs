@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
 	{
-        protected class RangeSkillState : ATargetSkillState
+        sealed protected class RangeSkillState : ATargetSkillState
         {
             public RangeSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<HitEffects> effects, int cost, int id) :
                 base(parent, targetActor, effects, cost, id)

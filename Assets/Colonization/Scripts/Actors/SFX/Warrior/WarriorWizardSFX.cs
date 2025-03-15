@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class WarriorWizardSFX : WarriorSFX
+    sealed public class WarriorWizardSFX : WarriorSFX
     {
         [Space]
         [SerializeField] private MeshRenderer _magicShield;

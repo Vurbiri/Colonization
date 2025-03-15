@@ -7,13 +7,13 @@ using Random = UnityEngine.Random;
 namespace Vurbiri.Colonization
 {
     [Serializable]
-    public class CurrenciesLite : ACurrencies
+    sealed public class CurrenciesLite : ACurrencies
 #if UNITY_EDITOR
         ,ISerializationCallbackReceiver
 #endif 
     {
-        [SerializeField] protected int[] _values = new int[CurrencyId.CountAll];
-        [SerializeField] protected int _amount = 0;
+        [SerializeField] private int[] _values = new int[CurrencyId.CountAll];
+        [SerializeField] private int _amount = 0;
 
         public override int Amount { get => _amount;}
 

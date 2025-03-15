@@ -5,7 +5,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class CrossroadRoadsMenu : ACrossroadMenu
+    sealed public class CrossroadRoadsMenu : ACrossroadMenu
     {
         [SerializeField] private Camera _camera;
         [Space]

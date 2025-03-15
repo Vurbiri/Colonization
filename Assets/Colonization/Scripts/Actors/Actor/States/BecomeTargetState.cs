@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        protected class BecomeTargetState : ASelectableState
+        sealed protected class BecomeTargetState : ASelectableState
         {
             public BecomeTargetState() : base(null)
             {

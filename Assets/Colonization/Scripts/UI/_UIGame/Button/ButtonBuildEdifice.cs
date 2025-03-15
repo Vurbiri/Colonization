@@ -10,7 +10,7 @@ using Vurbiri.UI;
 namespace Vurbiri.Colonization.UI
 {
     [RequireComponent(typeof(CmButton))]
-    public class ButtonBuildEdifice : AButtonBuild
+    sealed public class ButtonBuildEdifice : AButtonBuild
     {
         [Space]
         [SerializeField] private Image _buttonIcon;

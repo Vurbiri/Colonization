@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Edifices\Shrine\Shrine.cs
 namespace Vurbiri.Colonization
 {
-    public class Shrine : AEdifice
+    sealed public class Shrine : AEdifice
     {
 
     }

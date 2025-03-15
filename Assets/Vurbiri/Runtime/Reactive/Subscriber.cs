@@ -4,6 +4,27 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Reactive
 {
+    public class Subscriber : ISubscriber<Action>, IDisposable
+    {
+        private Action actions;
+
+        public Unsubscriber Add(Action action)
+        {
+            Errors.CheckForNull(action);
+
+            actions -= action;
+            actions += action;
+            return new Unsubscriber<Action>(this, action);
+        }
+
+        public void Invoke() => actions?.Invoke();
+
+        public void Unsubscribe(Action action) => actions -= action;
+
+        public void Dispose() => actions = null;
+    }
+    //=======================================================================================
+
     public class Subscriber<T> : ISubscriber<Action<T>>, IDisposable
     {
         private Action<T> actions;

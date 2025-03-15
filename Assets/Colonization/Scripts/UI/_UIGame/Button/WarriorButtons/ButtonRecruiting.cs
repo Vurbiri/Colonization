@@ -3,8 +3,7 @@ using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.UI
 {
-
-    public class ButtonRecruiting : AButtonBuildType<WarriorId>
+    sealed public class ButtonRecruiting : AButtonBuildType<WarriorId>
     {
         public override void Setup(Crossroad crossroad)
         {
@@ -19,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        protected void OnValidate()
+        private void OnValidate()
         {
             if (_key == string.Empty)
                 _key = WarriorId.GetName(_id);

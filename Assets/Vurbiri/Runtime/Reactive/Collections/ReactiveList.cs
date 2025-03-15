@@ -186,7 +186,7 @@ namespace Vurbiri.Reactive.Collections
             _count.Signal();
         }
 
-        public virtual void Clear()
+        public void Clear()
         {
             for (int i = 0; i < _count; i++)
             {

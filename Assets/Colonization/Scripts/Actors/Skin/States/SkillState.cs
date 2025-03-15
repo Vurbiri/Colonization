@@ -6,12 +6,12 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin
     {
-        protected class SkillState : ASkinState
+        sealed protected class SkillState : ASkinState
         {
-            protected readonly int _id;
-            protected readonly WaitTime _waitEnd;
-            protected readonly int _countHits;
-            protected Coroutine _coroutine;
+            private readonly int _id;
+            private readonly WaitTime _waitEnd;
+            private readonly int _countHits;
+            private Coroutine _coroutine;
 
             public ActorSkin targetSkin;
             public readonly WaitActivate waitActivate = new();
@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization.Actors
                 _animator.SetBool(_idParam, false);
             }
 
-            protected virtual IEnumerator StartSkill_Cn()
+            private IEnumerator StartSkill_Cn()
             {
                 for (int i = 0; i < _countHits; i++)
                 {

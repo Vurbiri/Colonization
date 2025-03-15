@@ -10,9 +10,9 @@ namespace Vurbiri.Reactive
     [JsonObject(MemberSerialization.OptIn)]
     public class ReactiveValues<TA, TB> : IReactiveValue<TA, TB>
     {
-        [SerializeField, JsonProperty("v1")]
+        [SerializeField, JsonProperty("vA")]
         protected TA _valueA;
-        [SerializeField, JsonProperty("v2")]
+        [SerializeField, JsonProperty("vB")]
         protected TB _valueB;
 
         protected readonly Subscriber<TA, TB> _subscriber = new();

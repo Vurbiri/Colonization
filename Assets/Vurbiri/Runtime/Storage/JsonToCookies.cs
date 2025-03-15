@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri
 {
-    public class JsonToCookies : ASaveLoadJsonTo
+    sealed public class JsonToCookies : ASaveLoadJsonTo
     {
         public override bool IsValid => UtilityJS.IsCookies();
 

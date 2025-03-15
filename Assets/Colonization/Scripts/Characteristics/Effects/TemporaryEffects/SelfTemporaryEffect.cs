@@ -3,7 +3,7 @@ using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class SelfTemporaryEffect : ATemporaryEffect
+    sealed public class SelfTemporaryEffect : ATemporaryEffect
     {
         public SelfTemporaryEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration) : 
                                 base(code, targetAbility, typeModifier, value, duration)

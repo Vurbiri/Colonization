@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin
     {
-        protected class DeathState : ASkinState
+        sealed protected class DeathState : ASkinState
         {
             private readonly WaitForSecondsRealtime _waitEndAnimation;
 

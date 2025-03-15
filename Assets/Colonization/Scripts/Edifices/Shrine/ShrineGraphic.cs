@@ -5,7 +5,7 @@ using static UnityEngine.ParticleSystem;
 
 namespace Vurbiri.Colonization
 {
-    public class ShrineGraphic : AEdificeGraphicReColor
+    sealed public class ShrineGraphic : AEdificeGraphicReColor
     {
         [Space]
         [SerializeField] private ParticleSystem _pillarFlame;

@@ -1,7 +1,7 @@
 //Assets\Vurbiri\Runtime\Coroutine\WaitRealtime.cs
 namespace Vurbiri
 {
-    public class WaitRealtime : AWaitTime
+    sealed public class WaitRealtime : AWaitTime
     {
         protected override float ApplicationTime => UnityEngine.Time.realtimeSinceStartup;
 

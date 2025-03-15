@@ -3,7 +3,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class EffectsSet : ListReactiveItems<ReactiveEffect>
+    sealed public class EffectsSet : ListReactiveItems<ReactiveEffect>
     {
         private readonly AbilitiesSet<ActorAbilityId> _abilities;
 

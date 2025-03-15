@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public class WaitAll : CustomYieldInstruction
+    sealed public class WaitAll : CustomYieldInstruction
     {
         private readonly List<IEnumerator> _coroutines;
 

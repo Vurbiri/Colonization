@@ -8,13 +8,12 @@ namespace Vurbiri.Colonization.Characteristics
     {
         protected readonly Subscriber<IPerk> _subscriber = new();
         protected T[] _buffs;
-        protected int _count;
 
         public Unsubscriber Subscribe(Action<IPerk> action, bool calling = true)
         {
             if (calling)
             {
-                for (int i = 0; i < _count; i++)
+                for (int i = 0; i < _buffs.Length; i++)
                     action(_buffs[i].Current);
             }
 

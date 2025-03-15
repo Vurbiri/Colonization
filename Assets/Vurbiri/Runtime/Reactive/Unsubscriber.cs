@@ -9,7 +9,7 @@ namespace Vurbiri.Reactive
     }
 
 
-    internal class Unsubscriber<TDelegate> : Unsubscriber where TDelegate : Delegate
+    sealed internal class Unsubscriber<TDelegate> : Unsubscriber where TDelegate : Delegate
     {
         private WeakReference<ISubscriber<TDelegate>> _weakSubscriber;
         private TDelegate action;
@@ -20,7 +20,7 @@ namespace Vurbiri.Reactive
             this.action = action;
         }
 
-        sealed public override void Unsubscribe()
+        public override void Unsubscribe()
         {
             if(_weakSubscriber != null && _weakSubscriber.TryGetTarget(out ISubscriber<TDelegate> subscriber))
             {

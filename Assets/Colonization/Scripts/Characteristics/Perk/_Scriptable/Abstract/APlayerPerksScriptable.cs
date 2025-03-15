@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Characteristics\Perk\Abstract\APlayerPerksScriptable.cs
+//Assets\Colonization\Scripts\Characteristics\Perk\_Scriptable\Abstract\APlayerPerksScriptable.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     using Collections;

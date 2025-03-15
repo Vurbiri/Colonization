@@ -3,7 +3,7 @@ using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class SelfHealEffect : AHealEffect
+    sealed public class SelfHealEffect : AHealEffect
     {
         public SelfHealEffect(int value) : base(value) { }
 

@@ -27,7 +27,7 @@ namespace Vurbiri
         private int _count = 3;
         private RFloat _rand;
 
-        public void Rolling()
+        public void Next()
         {
             _currentColor = _color;
             for (int i = 0; i < _count; i++)

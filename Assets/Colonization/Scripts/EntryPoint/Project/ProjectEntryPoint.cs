@@ -8,7 +8,7 @@ using Vurbiri.TextLocalization;
 namespace Vurbiri.Colonization
 {
     [DefaultExecutionOrder(5)]
-    public class ProjectEntryPoint : AProjectEntryPoint
+    sealed public class ProjectEntryPoint : AProjectEntryPoint
 	{
 		private void Start()
 		{

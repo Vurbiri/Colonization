@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri
 {
-    public class JsonToLocalStorage : ASaveLoadJsonTo
+    sealed public class JsonToLocalStorage : ASaveLoadJsonTo
     {
         public override bool IsValid => UtilityJS.IsStorage();
 

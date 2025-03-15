@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonBuildRoad.cs
 namespace Vurbiri.Colonization.UI
 {
-    public class ButtonBuildRoad : AButtonBuildType<LinkId>
+    sealed public class ButtonBuildRoad : AButtonBuildType<LinkId>
     {
         public bool Setup(Crossroad crossroad, out CrossroadLink link)
         {
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        protected void OnValidate()
+        private void OnValidate()
         {
             if (string.Empty == _key)
                 _key = "Road";

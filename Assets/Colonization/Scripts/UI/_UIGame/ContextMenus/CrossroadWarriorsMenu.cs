@@ -1,12 +1,12 @@
 //Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\CrossroadWarriorsMenu.cs
+using UnityEngine;
+using Vurbiri.Collections;
+using Vurbiri.Colonization.Actors;
+using Vurbiri.UI;
+
 namespace Vurbiri.Colonization.UI
 {
-    using Actors;
-    using UnityEngine;
-    using Vurbiri.Collections;
-    using Vurbiri.UI;
-
-    public class CrossroadWarriorsMenu : ACrossroadMenuBuild
+    sealed public class CrossroadWarriorsMenu : ACrossroadMenuBuild
     {
         [Space]
         [SerializeField] private HintingButton _buttonBack;

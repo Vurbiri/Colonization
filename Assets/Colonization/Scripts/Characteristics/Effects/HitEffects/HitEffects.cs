@@ -5,8 +5,8 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public class HitEffects
 	{
-		protected readonly AHitEffect[] _effects;
-        protected readonly int _count;
+		private readonly AHitEffect[] _effects;
+        private readonly int _count;
 
         public HitEffects(HitEffectSettings[] setting, int sourceId, int actorId, int skillId, int startEffectId)
         {

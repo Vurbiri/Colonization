@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Vurbiri.Colonization
 {
     //[CreateAssetMenu(fileName = "DiplomacySettings", menuName = "Vurbiri/Colonization/Diplomacy Settings", order = 51)]
-    public class DiplomacySettingsScriptable : ScriptableObjectDisposable
+    sealed public class DiplomacySettingsScriptable : ScriptableObjectDisposable
 	{
 		[SerializeField] private DiplomacySettings _settings;
 

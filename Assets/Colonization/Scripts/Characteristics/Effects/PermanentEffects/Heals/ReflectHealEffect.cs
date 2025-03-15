@@ -3,7 +3,7 @@ using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class ReflectHealEffect : TargetHealEffect
+    sealed public class ReflectHealEffect : TargetHealEffect
     {
         private readonly AbilityModifierPercent _reflectMod;
 

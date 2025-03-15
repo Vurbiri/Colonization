@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Characteristics
     using Vurbiri.Collections;
 
     [CreateAssetMenu(fileName = "PlayerAbilities", menuName = "Vurbiri/Colonization/Characteristics/PlayerAbilities", order = 51)]
-    public class PlayerAbilitiesScriptable : ScriptableObjectDisposable
+    sealed public class PlayerAbilitiesScriptable : ScriptableObjectDisposable
     {
         [SerializeField] private IdArray<PlayerAbilityId, int> _abilities;
 

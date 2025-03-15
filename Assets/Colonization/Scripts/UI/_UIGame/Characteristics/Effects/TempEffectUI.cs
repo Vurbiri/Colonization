@@ -4,7 +4,7 @@ using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class TempEffectUI : AEffectsUI
+    sealed public class TempEffectUI : AEffectsUI
     {
         private readonly string _duration;
         

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Vurbiri.Colonization
 {
     [RequireComponent (typeof (MeshRenderer))]
-    public class HexagonMark : APooledObject<HexagonMark>
+    sealed public class HexagonMark : APooledObject<HexagonMark>
     {
         [SerializeField] private Material _greenMaterial;
         [SerializeField] private Material _redMaterial;

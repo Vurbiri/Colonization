@@ -6,11 +6,11 @@ using Vurbiri.Collections;
 namespace Vurbiri.Colonization
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-    public class Wall : MonoBehaviour
+    sealed public class Wall : MonoBehaviour
     {
-        [SerializeField, Range(0, 5)] protected int _idMaterial;
+        [SerializeField, Range(0, 5)] private int _idMaterial;
         [Space]
-        [SerializeField] protected IdSet<LinkId, WallGate> _graphicSides;
+        [SerializeField] private IdSet<LinkId, WallGate> _graphicSides;
 
         public Wall Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {

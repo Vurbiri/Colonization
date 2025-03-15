@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\BooleanAbility.cs
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class BooleanAbility<TId> : AAbilityChange<TId> where TId : AbilityId<TId>
+    sealed  public class BooleanAbility<TId> : AAbilityChange<TId> where TId : AbilityId<TId>
     {
         public override int Value
         {

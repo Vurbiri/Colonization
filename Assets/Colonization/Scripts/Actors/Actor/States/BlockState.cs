@@ -44,13 +44,13 @@ namespace Vurbiri.Colonization.Actors
                     _skin.Block(false);
             }
         }
-
-        protected class AIBlockState : ABlockState
+        //=======================================================================================
+        sealed protected class AIBlockState : ABlockState
         {
             public AIBlockState(int cost, int value, Actor parent) : base(cost, value, parent) { }
         }
-
-        protected class PlayerBlockState : ABlockState
+        //=======================================================================================
+        sealed protected class PlayerBlockState : ABlockState
         {
             public PlayerBlockState(int cost, int value, Actor parent) : base(cost, value, parent) { }
 

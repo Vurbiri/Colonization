@@ -6,7 +6,7 @@ using Vurbiri.Collections;
 namespace Vurbiri.Colonization
 {
     [RequireComponent(typeof(MeshRenderer))]
-    public class PortTwoGraphic : AEdificeGraphicReColor
+    sealed public class PortTwoGraphic : AEdificeGraphicReColor
     {
         private static readonly IdArray<LinkId, Quaternion> angles = new(
             new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, 240f, 0f), Quaternion.Euler(0f, 0f, 0f) });

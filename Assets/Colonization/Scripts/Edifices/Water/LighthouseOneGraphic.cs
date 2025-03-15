@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Vurbiri.Colonization
 {
     [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
-    public class LighthouseOneGraphic : PortOneGraphic
+    sealed public class LighthouseOneGraphic : PortOneGraphic
     {
         [Space]
         [SerializeField] private Mesh _altMesh;

@@ -6,7 +6,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class ButtonSkill : AHintingButton
+    sealed public class ButtonSkill : AHintingButton
     {
         [Space]
         [SerializeField] private Image _iconImage;
@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         private Actor _currentActor;
         private int _idSkill;
 
-        public virtual void Init(ButtonSettings settings, GameObject parent)
+        public void Init(ButtonSettings settings, GameObject parent)
         {
             Init(settings.hint, OnClick, false);
 

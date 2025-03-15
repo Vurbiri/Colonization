@@ -4,7 +4,7 @@ using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization
 {
-    public class Currencies : ACurrenciesReactive
+    sealed public class Currencies : ACurrenciesReactive
     {
         #region Constructions
         public Currencies(IReadOnlyList<int> array, IAbility maxValueMain, IAbility maxValueBlood) : base(array, maxValueMain, maxValueBlood) { }

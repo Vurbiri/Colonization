@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class DemonBuffs : ABuffs<DemonBuff>
+    sealed public class DemonBuffs : ABuffs<DemonBuff>
 	{
+        private readonly int _count;
+
         public DemonBuffs(IReadOnlyList<DemonBuffSettings> settings)
         {
             _count = settings.Count;

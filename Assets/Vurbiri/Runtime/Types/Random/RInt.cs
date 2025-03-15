@@ -29,12 +29,6 @@ namespace Vurbiri
             _max = max + 1;
         }
 
-        public RInt(int count)
-        {
-            _min = 0;
-            _max = count;
-        }
-
         public RInt(Vector2Int vector) : this(vector.x, vector.y) { }
 
         public static implicit operator int(RInt mm) => Random.Range(mm._min, mm._max);

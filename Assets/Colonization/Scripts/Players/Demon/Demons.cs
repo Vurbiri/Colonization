@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
 {
     using static GATE;
 
-    public class Demon : IDisposable
+    public class Demons : IDisposable
     {
         private int _curse;
         private int _level;
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
         private readonly DemonsSpawner _spawner;
         private readonly ListReactiveItems<Actor> _demons = new();
 
-        public Demon(Hexagon gateHex, Player[] players, Players.Settings settings)
+        public Demons(Hexagon gateHex, Player[] players, Players.Settings settings)
         {
             _gateHex = gateHex;
             _spawner = new(settings.demonPrefab, settings.actorsContainer, gateHex);
