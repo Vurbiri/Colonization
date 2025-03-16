@@ -5,7 +5,7 @@ using Vurbiri.Colonization;
 
 namespace VurbiriEditor.Colonization
 {
-    [CreateAssetMenu(fileName = "CurrenciesIcons", menuName = "Vurbiri/Colonization/CurrenciesIcons", order = 51)]
+    //[CreateAssetMenu(fileName = "CurrenciesIcons", menuName = "Vurbiri/Colonization/CurrenciesIcons", order = 51)]
     public class CurrenciesIconsScriptable : ScriptableObject
     {
         [SerializeField] private IdArray<CurrencyId, CurrencyIcon> _icons;

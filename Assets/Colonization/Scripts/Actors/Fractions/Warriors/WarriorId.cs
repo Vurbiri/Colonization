@@ -15,11 +15,11 @@ namespace Vurbiri.Colonization.Actors
 
         public static int ToState(int id) => id switch
         {
-            Militia     => PlayerAbilityId.IsMilitia,
-            Solder      => PlayerAbilityId.IsSolder,
-            Wizard      => PlayerAbilityId.IsWizard,
-            Saboteur    => PlayerAbilityId.IsSaboteur,
-            Knight      => PlayerAbilityId.IsKnight,
+            Militia     => HumanAbilityId.IsMilitia,
+            Solder      => HumanAbilityId.IsSolder,
+            Wizard      => HumanAbilityId.IsWizard,
+            Saboteur    => HumanAbilityId.IsSaboteur,
+            Knight      => HumanAbilityId.IsKnight,
             _           => Errors.ArgumentOutOfRange("WarriorId", id),
         };
     }

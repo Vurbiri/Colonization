@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization.Data
     public class GameplaySaveData : IDisposable
 	{
         private readonly HumanSaveData[] _humansSaveData;
+        private readonly SatanSaveData _satanSaveData;
         private readonly IStorageService _storage;
         private readonly bool _isLoad;
         private Unsubscribers _unsubscribers = new();
@@ -20,10 +21,13 @@ namespace Vurbiri.Colonization.Data
             _humansSaveData = new HumanSaveData[PlayerId.PlayersCount];
             for (int i = 0; i < PlayerId.PlayersCount; i++)
                 _humansSaveData[i] = new(i, _storage, isLoad);
+
+            _satanSaveData = new(_storage, isLoad);
         }
 
         public bool Load => _isLoad;
-        public HumanSaveData[] HumansSaveData => _humansSaveData;
+        public HumanSaveData[] Humans => _humansSaveData;
+        public SatanSaveData Satan => _satanSaveData;
 
         #region Load
         public void GetHexData(Key key, out int id, out int surfaceId)

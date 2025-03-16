@@ -11,11 +11,11 @@ namespace Vurbiri.Colonization
         private Chance _chance;
         private int _min, _max;
         
-        public ExchangeRate(IReadOnlyAbilities<PlayerAbilityId> abilities)
+        public ExchangeRate(IReadOnlyAbilities<HumanAbilityId> abilities)
         {
-            _unsubscribers += abilities[PlayerAbilityId.ExchangeRateMin].Subscribe(v => _min = v);
-            _unsubscribers += abilities[PlayerAbilityId.ExchangeRateMax].Subscribe(v => _max = v);
-            _unsubscribers += abilities[PlayerAbilityId.ExchangeMinChance].Subscribe(v => _chance.Value = v);
+            _unsubscribers += abilities[HumanAbilityId.ExchangeRateMin].Subscribe(v => _min = v);
+            _unsubscribers += abilities[HumanAbilityId.ExchangeRateMax].Subscribe(v => _max = v);
+            _unsubscribers += abilities[HumanAbilityId.ExchangeMinChance].Subscribe(v => _chance.Value = v);
 
             Update();
         }

@@ -18,13 +18,13 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private IdSet<EdificeId, AEdifice> _edificePrefabs;
         
-        private Hexagons _land;
+        private Hexagons _hexagons;
         private Crossroads _crossroads;
         private readonly Vector3[] _sides = new Vector3[HEX.SIDES];
 
         public IslandCreator Init(DIContainer diObjects, GameplayEventBus eventBus)
         {
-            _land       = diObjects.AddInstance<Hexagons>(new(_landInitData, eventBus));
+            _hexagons   = diObjects.AddInstance<Hexagons>(new(_landInitData, eventBus));
             _crossroads = diObjects.AddInstance<Crossroads>(new(_crossroadsContainer, _edificePrefabs, eventBus));
 
             var shape = _psFog.shape;
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
 
         public IEnumerator Create_Cn(GameplaySaveData saveData)
         {
-            yield return Create_Cn(HexCreator.Factory(_land, saveData));
+            yield return Create_Cn(HexCreator.Factory(_hexagons, saveData));
             yield return Setup_Cn();
 
             Destroy(this);
@@ -81,9 +81,9 @@ namespace Vurbiri.Colonization
         private IEnumerator Setup_Cn()
         {
             yield return null;
-            yield return StartCoroutine(_land.HexagonsNeighbors_Cn());
+            yield return StartCoroutine(_hexagons.HexagonsNeighbors_Cn());
             yield return null;
-            yield return StartCoroutine(_land.FinishCreate_Cn());
+            yield return StartCoroutine(_hexagons.FinishCreate_Cn());
         }
 
 #if UNITY_EDITOR

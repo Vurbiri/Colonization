@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
     {
         protected class Edifices : IDisposable
         {
-            private readonly IReadOnlyAbilities<PlayerAbilityId> _abilities;
+            private readonly IReadOnlyAbilities<HumanAbilityId> _abilities;
             private IAbility _shrinePassiveProfit, _shrineProfit, _portsProfit, _compensationRes;
 
             public readonly IdArray<EdificeGroupId, ReactiveList<Crossroad>> values = new();
@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
             public int ShrinePassiveProfit => _shrinePassiveProfit.Value * shrines.Count;
             public int ShrineProfit => _shrineProfit.Value * shrines.Count;
             
-            public Edifices(IReadOnlyAbilities<PlayerAbilityId> abilities)
+            public Edifices(IReadOnlyAbilities<HumanAbilityId> abilities)
             {
                 _abilities = abilities;
                 GetAbilities();
@@ -35,11 +35,11 @@ namespace Vurbiri.Colonization
                 values[EdificeGroupId.Urban] = urbans = new();
             }
 
-            public Edifices(Id<PlayerId> playerId, IReadOnlyDictionary<int, EdificeLoadData[]> data, Crossroads crossroads, IReadOnlyAbilities<PlayerAbilityId> abilities)
+            public Edifices(Id<PlayerId> playerId, IReadOnlyDictionary<int, EdificeLoadData[]> data, Crossroads crossroads, IReadOnlyAbilities<HumanAbilityId> abilities)
             {
                 _abilities = abilities;
                 GetAbilities();
-                var abilityWall = abilities[PlayerAbilityId.WallDefence];
+                var abilityWall = abilities[HumanAbilityId.WallDefence];
 
                 values[EdificeGroupId.Shrine] = CreateEdifices(ref shrines, data[EdificeGroupId.Shrine], playerId, crossroads, abilityWall);
                 values[EdificeGroupId.Port] = CreateEdifices(ref ports, data[EdificeGroupId.Port], playerId, crossroads, abilityWall);
@@ -70,10 +70,10 @@ namespace Vurbiri.Colonization
 
                 if (crossroad.GroupId != EdificeGroupId.None)
                 {
-                    if ((id == EdificeId.LighthouseOne | id == EdificeId.LighthouseTwo) && !_abilities.IsTrue(PlayerAbilityId.IsLighthouse))
+                    if ((id == EdificeId.LighthouseOne | id == EdificeId.LighthouseTwo) && !_abilities.IsTrue(HumanAbilityId.IsLighthouse))
                         return false;
 
-                    if (id == EdificeId.Capital && !_abilities.IsTrue(PlayerAbilityId.IsCapital))
+                    if (id == EdificeId.Capital && !_abilities.IsTrue(HumanAbilityId.IsCapital))
                         return false;
 
                     return true;
@@ -91,10 +91,10 @@ namespace Vurbiri.Colonization
 
             private void GetAbilities()
             {
-                _shrinePassiveProfit = _abilities[PlayerAbilityId.ShrinePassiveProfit];
-                _shrineProfit = _abilities[PlayerAbilityId.ShrineProfit];
-                _portsProfit = _abilities[PlayerAbilityId.PortsProfit];
-                _compensationRes = _abilities[PlayerAbilityId.CompensationRes];
+                _shrinePassiveProfit = _abilities[HumanAbilityId.ShrinePassiveProfit];
+                _shrineProfit = _abilities[HumanAbilityId.ShrineProfit];
+                _portsProfit = _abilities[HumanAbilityId.PortsProfit];
+                _compensationRes = _abilities[HumanAbilityId.CompensationRes];
             }
 
             private ReactiveList<Crossroad> CreateEdifices(ref ReactiveList<Crossroad> values, EdificeLoadData[] loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)

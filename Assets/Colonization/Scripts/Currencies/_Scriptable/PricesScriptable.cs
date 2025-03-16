@@ -1,12 +1,12 @@
 //Assets\Colonization\Scripts\Currencies\_Scriptable\PricesScriptable.cs
+using System.Collections.Generic;
+using UnityEngine;
+using Vurbiri.Collections;
+using Vurbiri.Colonization.Actors;
+
 namespace Vurbiri.Colonization
 {
-    using Actors;
-    using Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-
-    [CreateAssetMenu(fileName = "Prices", menuName = "Vurbiri/Colonization/Prices", order = 51)]
+    //[CreateAssetMenu(fileName = "Prices", menuName = "Vurbiri/Colonization/Prices", order = 51)]
     public class PricesScriptable : ScriptableObject
     {
         [SerializeField] private CurrenciesLite _playersDefault;

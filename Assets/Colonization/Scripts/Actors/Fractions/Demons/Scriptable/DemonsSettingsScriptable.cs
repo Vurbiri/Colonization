@@ -5,8 +5,8 @@ using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Actors
 {
-    [CreateAssetMenu(fileName = "DemonsSettings", menuName = "Vurbiri/Colonization/Characteristics/DemonsSettings", order = 51)]
-	public class DemonsSettingsScriptable : ScriptableObject
+    //[CreateAssetMenu(fileName = "DemonsSettings", menuName = "Vurbiri/Colonization/Characteristics/DemonsSettings", order = 51)]
+    public class DemonsSettingsScriptable : ScriptableObject
 	{
         [SerializeField] private IdArray<DemonId, DemonSettings> _settings;
 

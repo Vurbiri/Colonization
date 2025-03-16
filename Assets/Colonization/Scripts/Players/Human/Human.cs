@@ -6,7 +6,7 @@ using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
-using static Vurbiri.Colonization.Characteristics.PlayerAbilityId;
+using static Vurbiri.Colonization.Characteristics.HumanAbilityId;
 
 namespace Vurbiri.Colonization
 {
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
         private readonly Edifices _edifices;
         private readonly Roads _roads;
 
-        private readonly AbilitiesSet<PlayerAbilityId> _abilities;
+        private readonly AbilitiesSet<HumanAbilityId> _abilities;
         private readonly Buffs _artefact;
         private readonly ReactiveList<IPerk> _perks;
 
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
 
             PlayerVisual visual = SceneData.Get<PlayersVisual>()[playerId];
 
-            _abilities = settings.states;
+            _abilities = settings.humanStates;
             _roads = new(playerId, visual.color, settings.roadFactory, _coroutines);
             _prices = settings.prices;
 
@@ -95,7 +95,7 @@ namespace Vurbiri.Colonization
             _exchangeRate.Update();
         }
 
-        public IReactive<int> GetAbilityReactive(Id<PlayerAbilityId> id) => _abilities[id];
+        public IReactive<int> GetAbilityReactive(Id<HumanAbilityId> id) => _abilities[id];
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {

@@ -67,7 +67,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             EditorGUI.indentLevel++;
                         
             DrawId(P_TARGET_OBJ, typeof(TargetOfPerkId));
-            DrawId(P_TARGET_AB, property.intValue == TargetOfPerkId.Player ? typeof(PlayerAbilityId) : typeof(ActorAbilityId));
+            DrawId(P_TARGET_AB, property.intValue == TargetOfPerkId.Player ? typeof(HumanAbilityId) : typeof(ActorAbilityId));
 
             Space();
             DrawInt(P_VALUE);

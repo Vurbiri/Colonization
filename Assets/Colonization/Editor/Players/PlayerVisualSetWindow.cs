@@ -1,6 +1,7 @@
 //Assets\Colonization\Editor\Players\PlayerVisualSetWindow.cs
 using UnityEditor;
 using UnityEngine;
+using Vurbiri.Colonization;
 
 namespace VurbiriEditor.Colonization
 {

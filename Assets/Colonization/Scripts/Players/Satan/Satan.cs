@@ -8,8 +8,6 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-    using static GATE;
-
     public class Satan : IDisposable
     {
         private int _curse;
@@ -18,6 +16,8 @@ namespace Vurbiri.Colonization
 
         private Unsubscribers _unsubscribers = new();
 
+        private readonly SatanAbilities _states;
+
         private readonly DemonBuffs _leveling;
         private readonly Buffs _artefact;
 
@@ -25,17 +25,20 @@ namespace Vurbiri.Colonization
         private readonly DemonsSpawner _spawner;
         private readonly ListReactiveItems<Actor> _demons = new();
 
-        public Satan(Hexagon gateHex, Human[] players, SatanSaveData data, Players.Settings settings)
-        {
-            _gateHex = gateHex;
+        private int MaxCurse => _states.maxCurse + _level * _states.maxCursePerLevel;
 
-            _spawner = new(new(_leveling, _artefact), settings.demonPrefab, settings.actorsContainer, gateHex);
+        public Satan(SatanSaveData data, Players.Settings settings)
+        {
+            _gateHex = SceneObjects.Get<Hexagons>()[Key.Zero];
+            _states = settings.satanStates;
+
+            _spawner = new(new(_leveling, _artefact), settings.demonPrefab, settings.actorsContainer, _gateHex);
         }
 
         public void Profit(int hexId)
         {
-            if (hexId == ID)
-                CurseAdd(CURSE_PROFIT);
+            if (hexId == GATE.ID)
+                CurseAdd(_states.curseProfit);
         }
 
         public void Dispose()
@@ -49,10 +52,10 @@ namespace Vurbiri.Colonization
         {
             _curse += value;
 
-            if (_curse < MAX_CURSE)
+            if (_curse < MaxCurse)
                 return;
 
-            _curse -= MAX_CURSE;
+            _curse -= MaxCurse;
             _level++;
         }
     }

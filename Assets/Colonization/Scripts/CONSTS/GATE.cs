@@ -5,9 +5,5 @@ namespace Vurbiri.Colonization
 	{
         public const int ID = 13;
         public const int DEFENSE = 3;
-
-        public const int MAX_CURSE = 100;
-        public const int CURSE_PER_TURN = 13;
-        public const int CURSE_PROFIT = 33;
     }
 }

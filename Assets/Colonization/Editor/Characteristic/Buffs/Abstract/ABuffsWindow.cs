@@ -43,7 +43,6 @@ namespace VurbiriEditor.Colonization
 
         private void OnGUI()
         {
-            GUIStyle label = GetLabelStyle();
             string[] names = _names.ToArray();
             int[] values = _values.ToArray();
 
@@ -58,7 +57,7 @@ namespace VurbiriEditor.Colonization
             EndScrollView();
             EndWindows();
 
-            #region Local: DrawSettings(..), GetLabelStyle()
+            #region Local: DrawSettings(..)
             //=================================
             void DrawSave()
             {
@@ -84,7 +83,7 @@ namespace VurbiriEditor.Colonization
                 BeginVertical(GUI.skin.box);
                 Space();
 
-                LabelField(ActorAbilityId.Names[id], label);
+                LabelField(ActorAbilityId.Names[id], STYLES.H2);
                 Space();
                 settings.typeModifier = IntPopup("Modifier", oldTypeModifier, names, values);
                 AnimBool animBool = new(settings.typeModifier >= 0);
@@ -98,19 +97,6 @@ namespace VurbiriEditor.Colonization
                 EndVertical();
 
                 return isSave;
-            }
-            //=================================
-            GUIStyle GetLabelStyle()
-            {
-                GUIStyle style = new()
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    fontStyle = FontStyle.Bold,
-                    fontSize = 13
-                };
-                style.normal.textColor = Color.cyan;
-
-                return style;
             }
             #endregion
         }

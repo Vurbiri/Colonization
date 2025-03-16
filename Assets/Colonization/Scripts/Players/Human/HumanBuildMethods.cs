@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Players\Player\HumanBuildMethods.cs
 using System.Collections;
 using Vurbiri.Colonization.Actors;
-using static Vurbiri.Colonization.Characteristics.PlayerAbilityId;
+using static Vurbiri.Colonization.Characteristics.HumanAbilityId;
 
 namespace Vurbiri.Colonization
 {

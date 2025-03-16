@@ -15,9 +15,9 @@ namespace Vurbiri.Colonization
 
         public static int ToState(int id) => id switch
         {
-            Shrine  => PlayerAbilityId.MaxShrine,
-            Port    => PlayerAbilityId.MaxPort,
-            Urban   => PlayerAbilityId.MaxUrban,
+            Shrine  => HumanAbilityId.MaxShrine,
+            Port    => HumanAbilityId.MaxPort,
+            Urban   => HumanAbilityId.MaxUrban,
             _       => Errors.ArgumentOutOfRange("EdificeGroupId", id),
         };
     }

@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: e651759c48e3f0d4f82aa354a8d6067f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _humanAbilitiesVT: {fileID: 9197481963319205126, guid: b5393b98ccd437141874f86cf66d556e,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
