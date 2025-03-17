@@ -12,10 +12,10 @@ namespace Vurbiri.Colonization
     {
         [SerializeField, Range(0.5f, 1.5f)] private float _density = 0.9f;
         [Space]
-        [SerializeField] private int _countCircle = 3;
-        [SerializeField, Range(50, 100)] private int _ratioChanceRock = 88;
-        [SerializeField] private float _stepRatioRadius = 0.8f;
-        [SerializeField] private float _ratioOffset = 0.25f;
+        [SerializeField] private int _countCircle = 4;
+        [SerializeField, Range(50, 100)] private int _ratioChanceRock = 95;
+        [SerializeField] private float _stepRatioRadius = 0.85f;
+        [SerializeField] private float _ratioOffset = 0.2f;
         [Space, Space]
         [SerializeField] private Rock _rock;
 
@@ -33,13 +33,13 @@ namespace Vurbiri.Colonization
             float angle, angleStep, angleOffset;
             bool isHigh = Chance.Rolling();
             Chance chance;
-            RMFloat offset = step * _ratioOffset;
+            FloatMRnd offset = step * _ratioOffset;
             Vector3 position;
 
             for (int i = 0; i < _countCircle; i++)
             {
                 angleStep = 2f * _density * step / radius;
-                angleOffset = RZFloat.Rolling(angleStep);
+                angleOffset = FloatZRnd.Rolling(angleStep);
                 angle = TAU + angleOffset;
                 chance = ((_countCircle << 1) - i) * _ratioChanceRock / (_countCircle << 1);
 
@@ -75,13 +75,13 @@ namespace Vurbiri.Colonization
             float angle, angleStep, angleOffset;
             bool isHigh = Chance.Rolling();
             Chance chance;
-            RMFloat offset = step * _ratioOffset;
+            FloatMRnd offset = step * _ratioOffset;
             Vector3 position;
 
             for (int i = 0; i < _countCircle; i++)
             {
                 angleStep = 2f * _density * step / radius;
-                angleOffset = RZFloat.Rolling(angleStep);
+                angleOffset = FloatZRnd.Rolling(angleStep);
                 angle = TAU + angleOffset;
                 chance = ((_countCircle << 1) - i) * _ratioChanceRock / (_countCircle << 1);
 
@@ -112,17 +112,17 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Rock
         {
-            [SerializeField] private RInt _countVertexRange = new(5, MAX_VERTEX);
+            [SerializeField, MinMax(3, MAX_VERTEX)] private IntRnd _countVertexRange = new(5, MAX_VERTEX);
             [Space]
             [SerializeField] private float _startHeight = -0.1f;
-            [SerializeField] private RFloat _heightRangeHigh = new(2.7f, 2.9f);
-            [SerializeField] private RFloat _heightRangeLow = new(2.3f, 2.4f);
+            [SerializeField, MinMax(0.5f, 3f)] private FloatRnd _heightRangeHigh = new(1.1f, 2f);
+            [SerializeField, MinMax(0.1f, 3f)] private FloatRnd _heightRangeLow = new(0.4f, 1.3f);
             [Space]
-            [SerializeField] private RFloat _ratioRadiusRange = new(0.9f, 1f);
+            [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _ratioRadiusRange = new(0.65f, 0.9f);
             [Space]
-            [SerializeField] private RFloat _ratioOffsetRange = new(0.075f, 0.15f);
+            [SerializeField, MinMax(0.01f, 0.5f)] private FloatRnd _ratioOffsetRange = new(0.075f, 0.15f);
             [Space]
-            [SerializeField] private byte _color = 144;
+            [SerializeField] private byte _color = 211;
 
             private const int MAX_VERTEX = 6;
 
@@ -130,7 +130,7 @@ namespace Vurbiri.Colonization
             public float Radius { set => _radiusRange = new(_ratioRadiusRange, value); }
 
             private readonly List<Triangle> _triangles = new(MAX_VERTEX);
-            private RFloat _radiusRange;
+            private FloatRnd _radiusRange;
 
             private static readonly Vector2[] UV_PICK = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
             private static readonly Color32[] BARYCENTRIC_COLORS = { new(255, 0, 0, 255), new(0, 255, 0, 255), new(255, 255, 255, 255) };
@@ -142,10 +142,10 @@ namespace Vurbiri.Colonization
 
                 float height = ratioHeight * (isHigh ? _heightRangeHigh : _heightRangeLow);
                 float radius = _radiusRange * ratioRadius;
-                RMFloat offsetSide = radius * _ratioOffsetRange;
+                FloatMRnd offsetSide = radius * _ratioOffsetRange;
 
                 float stepAngle = TAU / countVertex;
-                float angle = RZFloat.Rolling(stepAngle);
+                float angle = FloatZRnd.Rolling(stepAngle);
 
                 Vector3[] bottom = new Vector3[countVertex];
                 Vector3[] top = new Vector3[countVertex];

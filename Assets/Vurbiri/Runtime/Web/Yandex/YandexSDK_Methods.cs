@@ -12,18 +12,18 @@ namespace Vurbiri
             WaitResult<bool> waitResult;
 
             yield return (waitResult = InitYsdk());
-            if (!waitResult.Result)
+            if (!waitResult.Value)
             {
                 Message.Log("YandexSDK - initialization error!");
                 yield break;
             }
 
             yield return (waitResult = InitPlayer());
-            if (!waitResult.Result)
+            if (!waitResult.Value)
                 Message.Log("Player - initialization error!");
 
             yield return (waitResult = InitLeaderboards());
-            if (!waitResult.Result)
+            if (!waitResult.Value)
                 Message.Log("Leaderboards - initialization error!");
         }
 
@@ -36,7 +36,7 @@ namespace Vurbiri
             if (!IsPlayer)
             {
                 yield return (waitResult = InitPlayer());
-                if (!waitResult.Result)
+                if (!waitResult.Value)
                 {
                     callback?.Invoke(false);
                     yield break;
@@ -46,7 +46,7 @@ namespace Vurbiri
             if (!IsLogOn)
             {
                 yield return (waitResult = LogOn());
-                if (!waitResult.Result)
+                if (!waitResult.Value)
                 {
                     callback?.Invoke(false);
                     yield break;
@@ -59,19 +59,19 @@ namespace Vurbiri
             callback?.Invoke(true);
         }
 
-        private WaitResult<T> WaitResult<T>(ref WaitResult<T> completion, Action action)
+        private WaitResult<T> WaitResult<T>(ref WaitResultSource<T> completion, Action action)
         {
             completion = completion.Recreate();
             action();
             return completion;
         }
-        private WaitResult<T> WaitResult<T, U>(ref WaitResult<T> completion, Action<U> action, U value)
+        private WaitResult<T> WaitResult<T, U>(ref WaitResultSource<T> completion, Action<U> action, U value)
         {
             completion = completion.Recreate();
             action(value);
             return completion;
         }
-        private WaitResult<T> WaitResult<T, U, V>(ref WaitResult<T> completion, Action<U, V> action, U value1, V value2)
+        private WaitResult<T> WaitResult<T, U, V>(ref WaitResultSource<T> completion, Action<U, V> action, U value1, V value2)
         {
             completion = completion.Recreate();
             action(value1, value2);

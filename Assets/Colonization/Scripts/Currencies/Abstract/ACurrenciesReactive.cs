@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     public abstract class ACurrenciesReactive : ACurrencies, IReactive<ACurrencies>
     {
         protected ACurrency[] _values = new ACurrency[countAll];
-        protected ReactiveValue<int> _amount = new(0);
+        protected RInt _amount = new(0);
         protected IReactiveValue<int> _maxValueMain, _maxValueBlood;
         protected readonly Subscriber<ACurrencies> _subscriber = new();
 

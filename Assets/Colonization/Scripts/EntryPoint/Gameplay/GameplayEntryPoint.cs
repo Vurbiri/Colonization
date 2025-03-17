@@ -51,6 +51,9 @@ namespace Vurbiri.Colonization
 
             containers.Services.Get<Localization>().SetFiles(_localizationFiles);
 
+            if (!_isLoad)
+                containers.Data.Get<ProjectSaveData>().Clear();
+
             FillingContainers(containers);
 
             StartCoroutine(Enter_Cn());
@@ -120,6 +123,8 @@ namespace Vurbiri.Colonization
             _eventBus.TriggerSceneEndCreation();
 
             yield return null;
+
+            _gameSaveData.Save();
 
             _containers.Objects.Get<LoadingScreen>().SmoothOff_Wait();
 

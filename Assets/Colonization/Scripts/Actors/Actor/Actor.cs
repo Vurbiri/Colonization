@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.Actors
 
         protected bool _isPlayerTurn;
 
-        protected ReactiveValue<bool> _canCancel = new(false);
+        protected RBool _canCancel = new(false);
 
         protected Coroutine _deathCoroutine;
         protected Unsubscribers _unsubscribers = new();

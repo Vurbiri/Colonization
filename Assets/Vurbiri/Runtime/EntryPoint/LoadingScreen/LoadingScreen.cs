@@ -47,13 +47,13 @@ namespace Vurbiri.UI
             _self.SetActive(isOn);
         }
 
-        public WaitActivate SmoothOn_Wait()
+        public WaitSignal SmoothOn_Wait()
         {
-            WaitActivate wait = new();
+            WaitSignal wait = new();
 
             if(_isOn)
             {
-                wait.Activate();
+                wait.Send();
                 return wait;
             }
 
@@ -81,18 +81,18 @@ namespace Vurbiri.UI
                 _indicatorImage.SetActive(true);
                 _thisCanvasGroup.alpha = 1f;
                 _coroutineSmooth = null;
-                wait.Activate();
+                wait.Send();
             }
             #endregion
         }
 
-        public WaitActivate SmoothOff_Wait()
+        public WaitSignal SmoothOff_Wait()
         {
-            WaitActivate wait = new();
+            WaitSignal wait = new();
 
             if (!_isOn)
             {
-                wait.Activate();
+                wait.Send();
                 return wait;
             }
 
@@ -119,7 +119,7 @@ namespace Vurbiri.UI
                 _thisCanvasGroup.alpha = 0f;
                 _coroutineSmooth = null;
 
-                wait.Activate();
+                wait.Send();
                 _self.SetActive(false);
             }
             #endregion

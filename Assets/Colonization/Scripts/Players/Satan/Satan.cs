@@ -10,8 +10,8 @@ namespace Vurbiri.Colonization
 {
     public class Satan : IDisposable
     {
-        private int _curse;
-        private int _level;
+        private RInt _curse;
+        private RInt _level;
         private int _cursePerTurn;
 
         private Unsubscribers _unsubscribers = new();
@@ -25,12 +25,15 @@ namespace Vurbiri.Colonization
         private readonly DemonsSpawner _spawner;
         private readonly ListReactiveItems<Actor> _demons = new();
 
-        private int MaxCurse => _states.maxCurse + _level * _states.maxCursePerLevel;
+        private int MaxCurse => _states.maxCurse + _states.maxCursePerLevel * _level;
 
         public Satan(SatanSaveData data, Players.Settings settings)
         {
             _gateHex = SceneObjects.Get<Hexagons>()[Key.Zero];
             _states = settings.satanStates;
+
+            SatanLoadData loadData = data.LoadData;
+            bool isLoaded = loadData != null;
 
             _spawner = new(new(_leveling, _artefact), settings.demonPrefab, settings.actorsContainer, _gateHex);
         }
@@ -50,12 +53,12 @@ namespace Vurbiri.Colonization
 
         private void CurseAdd(int value)
         {
-            _curse += value;
+            _curse.Add(value);
 
             if (_curse < MaxCurse)
                 return;
 
-            _curse -= MaxCurse;
+            _curse.Add(-MaxCurse);
             _level++;
         }
     }

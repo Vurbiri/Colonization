@@ -57,10 +57,10 @@ namespace Vurbiri.Colonization
             WaitResult<Hexagon> result = crossroad.GetHexagonForRecruiting_Wait();
             yield return result;
 
-            if (result.Result == null)
+            if (result.Value == null)
                 yield break;
 
-            Recruiting(id, result.Result);
+            Recruiting(id, result.Value);
         }
         #endregion
     }

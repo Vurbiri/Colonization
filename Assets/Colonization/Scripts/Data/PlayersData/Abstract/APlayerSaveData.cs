@@ -13,17 +13,15 @@ namespace Vurbiri.Colonization.Data
 
     public abstract class APlayerSaveData : IDisposable
     {
-        protected const float DELAY_SAVE = 0.5f;
-
         protected readonly List<int[][]> _actors;
 
         protected readonly IStorageService _storage;
-        protected readonly string _keyActors, _keyBuffs;
+        protected readonly string _keyActors, _keyArtefact;
         protected Unsubscribers _unsubscribers = new();
 
         private readonly Coroutines _coroutines;
         private Coroutine _saveActors;
-        private readonly WaitForSecondsRealtime _delaySave = new(DELAY_SAVE * 1.5f);
+        private readonly WaitForSecondsRealtime _delaySave = new(0.75f);
 
         public APlayerSaveData(int id, IStorageService storage, bool isLoad)
         {
@@ -31,7 +29,7 @@ namespace Vurbiri.Colonization.Data
             _coroutines = SceneServices.Get<Coroutines>();
 
             string strId = id.ToString();
-            _keyActors = P_ACTORS.Concat(strId); _keyBuffs = P_BUFFS.Concat(strId);
+            _keyActors = P_ACTORS.Concat(strId); _keyArtefact = P_BUFFS.Concat(strId);
 
             if (!(isLoad && storage.TryGet(_keyActors, out _actors)))
                 _actors = new();
@@ -67,7 +65,7 @@ namespace Vurbiri.Colonization.Data
                 IEnumerator SaveActors_Cn()
                 {
                     yield return _delaySave;
-                    _storage.Save(_keyActors, _actors);
+                    _storage.Set(_keyActors, _actors);
                     _saveActors = null;
                 }
                 #endregion
@@ -76,7 +74,7 @@ namespace Vurbiri.Colonization.Data
         }
         public void ArtefactBind(IReactive<IReadOnlyList<int>> currencies, bool calling)
         {
-            _unsubscribers += currencies.Subscribe(value => _storage.Save(_keyBuffs, value, DELAY_SAVE), calling);
+            _unsubscribers += currencies.Subscribe(value => _storage.Set(_keyArtefact, value), calling);
         }
 
         public void Dispose()

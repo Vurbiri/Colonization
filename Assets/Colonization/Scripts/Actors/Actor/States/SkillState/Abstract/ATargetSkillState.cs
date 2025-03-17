@@ -14,8 +14,8 @@ namespace Vurbiri.Colonization.Actors
         protected abstract class ATargetSkillState : ASkillState
         {
             protected Actor _target;
-            protected WaitActivate _waitActor;
-            protected readonly ReactiveValue<bool> _isCancel;
+            protected WaitSignal _waitActor;
+            protected readonly RBool _isCancel;
             protected readonly WaitForSecondsRealtime _waitRealtime = new(0.6f);
             protected readonly Relation _relationTarget;
             // !!!!!!!!!!!!!!!!!!!!! Удалить _relationRealTarget
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization.Actors
                 else
                     _target = CheckTarget(newSelectable as Actor);
 
-                _waitActor.Activate();
+                _waitActor.Send();
             }
 
             protected IEnumerator SelectActor_Cn(Action<bool> callback)
@@ -64,9 +64,9 @@ namespace Vurbiri.Colonization.Actors
                 if (targets.Count == 0)
                     yield break;
 
-                _isCancel.Value = true;
+                _isCancel.True();
                 yield return _waitActor = new();
-                _isCancel.Value = false;
+                _isCancel.False();
 
                 foreach (var hex in targets)
                     hex.SetOwnerUnselectable();

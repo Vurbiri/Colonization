@@ -149,7 +149,7 @@ namespace Vurbiri.Colonization
             for (int i = 0;i < emptyCount; i++)
                 empty[i].TrySetSelectableFree();
 
-            _canCancel.Value = true;
+            _canCancel.True();
             return _waitHexagon;
         }
         #endregion

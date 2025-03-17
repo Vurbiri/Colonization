@@ -11,12 +11,12 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private float _offsetY = 0.0125f;
         [Space]
-        [SerializeField, MinMax(1, 6)] private RInt _rangeCount = new(2, 4);
-        [SerializeField, MinMax(0.1f, 0.3f)] private RFloat _rateWave = new(0.15f, 0.25f);
-        [SerializeField, MinMax(0.5f, 1.5f)] private RFloat _lengthFluctuation = new(0.85f, 1.15f);
+        [SerializeField, MinMax(1, 6)] private IntRnd _rangeCount = new(2, 5);
+        [SerializeField, MinMax(0.1f, 0.3f)] private FloatRnd _rateWave = new(0.12f, 0.24f);
+        [SerializeField, MinMax(0.5f, 1.5f)] private FloatRnd _lengthFluctuation = new(0.85f, 1.15f);
         [Space]
-        [SerializeField, MinMax(0.1f, 2f)] private RFloat _textureXRange = new(0.6f, 0.9f);
-        [SerializeField, MinMax(0.1f, 2f)] private RFloat _textureYRange = new(0.4f, 1f);
+        [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureXRange = new(0.6f, 0.9f);
+        [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureYRange = new(0.4f, 1f);
 
         private readonly LinkList<Crossroad> _crossroads = new();
         private readonly LinkList<Vector3> _points = new();

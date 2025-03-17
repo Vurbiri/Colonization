@@ -12,19 +12,20 @@ namespace Vurbiri
 
         public IEnumerator Load_Cn(string key, Action<bool> callback);
 
-        public void Save<T>(string key, T data, bool toFile = true, Action<bool> callback = null);
-        public void Save<T>(string key, T data, float time, Action<bool> callback = null);
+        public void Save(Action<bool> callback = null);
+        public void Save<T>(string key, T data, Action<bool> callback = null);
 
-        public bool TryGet<T>(string key, out T value);
+        public bool Set<T>(string key, T data);
 
         public T Get<T>(string key) where T : class;
+        public bool TryGet<T>(string key, out T value);
 
         public bool ContainsKey(string key);
 
         public void Remove(string key, bool fromFile = true, Action<bool> callback = null);
 
-        public void Clear(bool fromFile = true, Action<bool> callback = null);
-        public void Clear(string keyExclude, bool fromFile = true, Action<bool> callback = null);
-        public void Clear(string[] keyExcludes, bool fromFile = true, Action<bool> callback = null);
+        public void Clear(Action<bool> callback = null);
+        public void Clear(string excludeKey, Action<bool> callback = null);
+        public void Clear(string[] excludeKeys, Action<bool> callback = null);
     }
 }

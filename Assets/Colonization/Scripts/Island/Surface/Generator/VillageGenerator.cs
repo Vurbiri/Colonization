@@ -9,8 +9,8 @@ namespace Vurbiri.Colonization
 {
     public class VillageGenerator : ASurfaceGenerator
     {
-        [SerializeField, Range(0.05f, 1f)] private float _density = 0.33f;
-        [SerializeField, Range(0.05f, 1f)] private float _ratioOffset = 0.2f;
+        [SerializeField, Range(0.05f, 1f)] private float _density = 0.39f;
+        [SerializeField, Range(0.05f, 1f)] private float _ratioOffset = 0.17f;
         
         [SerializeField] private Hut _hut;
 
@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
         public override void Generate(float size)
         {
             float sizeSqr = size * size, step = size * _density;
-            RMFloat offset = step * _ratioOffset;
+            FloatMRnd offset = step * _ratioOffset;
             float height = -size, width, x, z;
 
             CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
         public override IEnumerator Generate_Cn(float size)
         {
             float sizeSqr = size * size, step = size * _density;
-            RMFloat offset = step * _ratioOffset;
+            FloatMRnd offset = step * _ratioOffset;
             float height = -size, width, x, z;
 
             CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
@@ -81,19 +81,19 @@ namespace Vurbiri.Colonization
         private class Hut
         {
             [SerializeField] private float _startHeight = -0.1f;
-            [SerializeField] private RFloat _baseHalfSizeWidth = new(0.4f, 6f);
-            [SerializeField] private RFloat _baseHalfSizeLength = new(0.25f, 0.5f);
-            [SerializeField] private RFloat _heightRange = new(0.75f, 1f);
-            [SerializeField] private RFloat _ratioFoundationRange = new(0.09f, 0.11f);
-            [SerializeField] private RFloat _ratioWallRange = new(0.7f, 0.8f);
+            [SerializeField] private FloatRnd _baseHalfSizeWidth = new(0.4f, 0.5f);
+            [SerializeField] private FloatRnd _baseHalfSizeLength = new(0.5f, 0.725f);
+            [SerializeField] private FloatRnd _heightRange = new(1.1f, 1.3f);
+            [SerializeField] private FloatRnd _ratioFoundationRange = new(0.12f, 0.15f);
+            [SerializeField] private FloatRnd _ratioWallRange = new(0.7f, 0.8f);
             [Space]
-            [SerializeField] private float _ratioWindow = 0.5f;
-            [SerializeField] private Vector3 _halfSizeWindow = new(0f, 0.1f, 0.125f);
+            [SerializeField] private float _ratioWindow = 0.45f;
+            [SerializeField] private Vector3 _halfSizeWindow = new(0f, 0.115f, 0.16f);
             [Space]
-            [SerializeField] private float _heightDoor = 0.5f;
-            [SerializeField] private float _halfWidthDoor = 0.075f;
+            [SerializeField] private float _heightDoor = 0.725f;
+            [SerializeField] private float _halfWidthDoor = 0.17f;
             [Space]
-            [SerializeField] private RZFloat _rotationYRange = 180f;
+            [SerializeField] private FloatZRnd _rotationYRange = 360f;
             [Space]
             [SerializeField] private MeshMaterial _base;
             [SerializeField] private MeshMaterial _wall;
@@ -127,7 +127,6 @@ namespace Vurbiri.Colonization
                 _windowBase[2] = _halfSizeWindow;
                 _halfSizeWindow.z *= -1f;
                 _windowBase[3] = _halfSizeWindow;
-
             }
 
             public List<Triangle> Create(Vector3 position)
@@ -190,7 +189,7 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class MeshMaterial
         {
-            public RColor32 color;
+            public ColorRnd32 color;
             public Vector2Specular specular;
 
             public void Roll() => color.Next();

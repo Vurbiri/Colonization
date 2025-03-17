@@ -1,11 +1,11 @@
-//Assets\Vurbiri\Runtime\Types\Random\RColor32.cs
+//Assets\Vurbiri\Runtime\Types\Random\ColorRnd32.cs
 using System;
 using UnityEngine;
 
 namespace Vurbiri
 {
     [System.Serializable]
-    public class RColor32 : ISerializationCallbackReceiver
+    public class ColorRnd32 : ISerializationCallbackReceiver
     {
         [SerializeField] private Color32 _color = new(0, 0, 0, 255);
         [SerializeField, Range(0f, 1f)] private float _range = 0.2f;
@@ -25,7 +25,7 @@ namespace Vurbiri
 
         private Color32 _currentColor;
         private int _count = 3;
-        private RFloat _rand;
+        private FloatRnd _rand;
 
         public void Next()
         {
@@ -34,7 +34,7 @@ namespace Vurbiri
                 _currentColor[i] = (byte)Mathf.Clamp(_currentColor[i] * _rand, 0f, 255f);
         }
 
-        public static implicit operator Color32(RColor32 value) => value._currentColor;
+        public static implicit operator Color32(ColorRnd32 value) => value._currentColor;
 
         public void OnBeforeSerialize() { }
         public void OnAfterDeserialize() 

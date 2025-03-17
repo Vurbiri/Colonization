@@ -14,8 +14,8 @@ namespace Vurbiri.Colonization.Actors
         {
             private readonly float _speed;
             private readonly Transform _parentTransform;
-            private readonly ReactiveValue<bool> _isCancel;
-            private WaitActivate _waitHexagon;
+            private readonly RBool _isCancel;
+            private WaitSignal _waitHexagon;
             private Hexagon _targetHex;
             private Coroutine _coroutineAction;
 
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization.Actors
                     return;
 
                 _targetHex = newSelectable as Hexagon;
-                _waitHexagon.Activate();
+                _waitHexagon.Send();
             }
 
             private void ToExit()
@@ -77,9 +77,9 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
                 }
 
-                _isCancel.Value = true;
+                _isCancel.True();
                 yield return _waitHexagon = new();
-                _isCancel.Value = false;
+                _isCancel.False();
 
                 foreach (var hex in empty)
                     hex.SetUnselectable();

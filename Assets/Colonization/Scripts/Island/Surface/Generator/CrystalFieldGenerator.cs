@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
         {
             CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
 
-            RMFloat offsetRadius = radius * _ratioOffsetXZ;
+            FloatMRnd offsetRadius = radius * _ratioOffsetXZ;
 
             int i, count;
             List<Triangle>[] druse;
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization
         {
             CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
 
-            RMFloat offsetRadius = radius * _ratioOffsetXZ;
+            FloatMRnd offsetRadius = radius * _ratioOffsetXZ;
 
             int i, count;
             List<Triangle>[] druse;
@@ -87,15 +87,15 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Druse
         {
-            [SerializeField, MinMax(3, 7)] private RInt _countCrystalsRange = new(4, 6);
+            [SerializeField, MinMax(3, 7)] private IntRnd _countCrystalsRange = new(3, 6);
             [Space]
-            [SerializeField, MinMax(100, 255)] private RInt _colorCrystalRange = new(175, 255);
+            [SerializeField, MinMax(100, 255)] private IntRnd _colorCrystalRange = new(175, 255);
 
             [Header("First")]
-            [SerializeField, Max(16f)] private RMFloat _angleFirstRange = 10f;
+            [SerializeField, Max(16f)] private FloatMRnd _angleFirstRange = 8f;
             [Header("Other")]
-            [SerializeField, Max(20f)] private RMFloat _angleXRange = 15f;
-            [SerializeField, MinMax(30f, 75f)] private RFloat _angleZRange = new(35f, 60f);
+            [SerializeField, Max(20f)] private FloatMRnd _angleXRange = 15f;
+            [SerializeField, MinMax(30f, 75f)] private FloatRnd _angleZRange = new(35f, 60f);
             [Space]
             [SerializeField, Range(0.05f, 0.25f)] private float _ratioAngleYRange = 0.15f;
             [Space, Space]
@@ -109,8 +109,8 @@ namespace Vurbiri.Colonization
                 List<Triangle>[] triangles = new List<Triangle>[countCrystals + 1];
 
                 float stepAngleY = 360f / countCrystals;
-                float offsetAngleY = RZFloat.Rolling(180f / countCrystals);
-                RMFloat ratioAngleY = stepAngleY * _ratioAngleYRange;
+                float offsetAngleY = FloatZRnd.Rolling(180f / countCrystals);
+                FloatMRnd ratioAngleY = stepAngleY * _ratioAngleYRange;
                 float angleY = offsetAngleY + ratioAngleY;
 
                 triangles[0] = _crystals.Create(position, Quaternion.Euler(_angleFirstRange, angleY, _angleFirstRange), colorCrystal, true);
@@ -129,15 +129,15 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Crystal
         {
-            [SerializeField, MinMax(3, 6)] private RInt _countVertexRange = new(4, 6);
+            [SerializeField, MinMax(3, 6)] private IntRnd _countVertexRange = new(4, 5);
             [Space]
             [SerializeField, Range(0.1f, 0.9f)] private float _ratioRadiusBottom = 0.75f;
             [Space]
-            [SerializeField, MinMax(1f, 3f)] private RFloat _heightRange = new(1.6f, 2.3f);
-            [SerializeField, MinMax(0.3f, 0.5f)] private RFloat _radiusRange = new(0.325f, 0.45f);
-            [SerializeField, MinMax(0.6f, 1f)] private RFloat _ratioPartRange = new(0.8f, 0.95f);
+            [SerializeField, MinMax(1f, 3f)] private FloatRnd _heightRange = new(1.8f, 2.5f);
+            [SerializeField, MinMax(0.3f, 0.5f)] private FloatRnd _radiusRange = new(0.325f, 0.425f);
+            [SerializeField, MinMax(0.6f, 1f)] private FloatRnd _ratioPartRange = new(0.8f, 0.95f);
             [Space]
-            [SerializeField, MinMax(0.1f, 0.5f)] private RFloat _ratioOffsetRange = new(0.16f, 0.32f);
+            [SerializeField, MinMax(0.1f, 0.5f)] private FloatRnd _ratioOffsetRange = new(0.16f, 0.32f);
 
             private static readonly Vector2[] UV_PICK = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
 
@@ -151,10 +151,10 @@ namespace Vurbiri.Colonization
                 float heightBase = height * _ratioPartRange;
 
                 float stepAngle = TAU / countVertex;
-                float angle = RZFloat.Rolling(stepAngle);
+                float angle = FloatZRnd.Rolling(stepAngle);
 
-                RMFloat offsetSide = radius * _ratioOffsetRange;
-                RMFloat offsetHeight = (height - heightBase) * _ratioOffsetRange;
+                FloatMRnd offsetSide = radius * _ratioOffsetRange;
+                FloatMRnd offsetHeight = (height - heightBase) * _ratioOffsetRange;
 
                 Vector3[] baseBottom = new Vector3[countVertex];
                 Vector3[] baseTop = new Vector3[countVertex];

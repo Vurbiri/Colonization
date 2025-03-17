@@ -7,13 +7,13 @@ namespace Vurbiri.Colonization
 {
     public class Balance : IReactive<Win>
 	{
-        private readonly ReactiveValue<int> _value;
+        private readonly RInt _value;
         private readonly BalanceSettings _settings;
         private readonly Subscriber<Win> _subscriber = new();
         
         public Balance(BalanceSettings settings, Players players)
         {
-            _value = 0;
+            _value = new();
             _settings = settings;
             for (int i = 0; i < PlayerId.PlayersCount; i++)
             {
@@ -25,11 +25,11 @@ namespace Vurbiri.Colonization
 
         public void Add(int value)
         {
-            _value.Value += value;
+            _value.Add(value);
 
-            if (value <= _settings.min)
+            if (_value <= _settings.min)
                 _subscriber.Invoke(Win.Satan);
-            if (value >= _settings.max)
+            if (_value >= _settings.max)
                 _subscriber.Invoke(Win.Human);
         }
 

@@ -42,16 +42,16 @@ namespace Vurbiri
         public WaitResult<bool> InitLeaderboards() => WaitResult(ref _waitEndInitLeaderboards, InitLeaderboardsJS);
         public WaitResult<Return<PlayerRecord>> GetPlayerResult() 
         {
-            WaitResult<Return<PlayerRecord>> wait = new();
+            WaitResultSource<Return<PlayerRecord>> wait = new();
             _coroutines.Run(GetPlayerResult_Cn(wait));
             return wait;
 
             #region Local: GetPlayerResult_Cn()
             //============================================
-            IEnumerator GetPlayerResult_Cn(WaitResult<Return<PlayerRecord>> wait)
+            IEnumerator GetPlayerResult_Cn(WaitResultSource<Return<PlayerRecord>> wait)
             {
                 yield return WaitResult(ref _waitEndGetPlayerResult, GetPlayerResultJS, _lbName);
-                string json = _waitEndGetPlayerResult.Result;
+                string json = _waitEndGetPlayerResult.Value;
 
                 if (string.IsNullOrEmpty(json))
                     wait.SetResult(Return<PlayerRecord>.Empty);
@@ -63,17 +63,17 @@ namespace Vurbiri
         public WaitResult<bool> SetScore(long score) => WaitResult(ref _waitEndSetScore, SetScoreJS, _lbName, score);
         public WaitResult<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 1, AvatarSize size = AvatarSize.Medium)
         {
-            WaitResult<Return<Leaderboard>> wait = new();
+            WaitResultSource<Return<Leaderboard>> wait = new();
             _coroutines.Run(GetLeaderboardCoroutine(wait));
             return wait;
 
             #region Local Function
-            IEnumerator GetLeaderboardCoroutine(WaitResult<Return<Leaderboard>> wait)
+            IEnumerator GetLeaderboardCoroutine(WaitResultSource<Return<Leaderboard>> wait)
             {
-                _waitEndGetLeaderboard = _waitEndGetLeaderboard.Delete();
+                _waitEndGetLeaderboard = _waitEndGetLeaderboard.Recreate();
                 GetLeaderboardJS(_lbName, quantityTop, includeUser, quantityAround, size.ToString().ToLower());
                 yield return _waitEndGetLeaderboard;
-                string json = _waitEndGetLeaderboard.Result;
+                string json = _waitEndGetLeaderboard.Value;
 
                 if (string.IsNullOrEmpty(json))
                     wait.SetResult(Return<Leaderboard>.Empty);

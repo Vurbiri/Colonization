@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Characteristics
     {
         private readonly int[] _levels;
         private readonly Subscriber<IReadOnlyList<int>> _subscriberLevels = new();
-        private RIndex _rIndex;
+        private IndexRnd _rIndex;
         
         public Buffs(IReadOnlyList<BuffSettings> settings)
         {
@@ -22,16 +22,16 @@ namespace Vurbiri.Colonization.Characteristics
                 _buffs[i] = new(_subscriber, settings[i]);
         }
 
-        public Buffs(IReadOnlyList<BuffSettings> settings, int[] levels)
+        public Buffs(IReadOnlyList<BuffSettings> settings, IReadOnlyList<int> levels)
         {
             int count = settings.Count;
 
             _rIndex = new(count);
-            _levels = levels;
+            _levels = new int[count];
             _buffs = new Buff[count];
 
             for (int i = 0; i < count; i++)
-                _buffs[i] = new(_subscriber, settings[i], levels[i]);
+                _buffs[i] = new(_subscriber, settings[i], _levels[i] = levels[i]);
         }
 
         public void Next(int count)

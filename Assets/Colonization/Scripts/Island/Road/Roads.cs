@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         private readonly Gradient _gradient = new();
         private readonly RoadFactory _factory;
         private readonly List<Road> _roadsLists = new();
-        private readonly ReactiveValue<int> _count = new(0);
+        private readonly RInt _count = new(0);
         private readonly Coroutines _coroutines;
 
         private readonly Subscriber<int[][][]> _subscriber = new();
@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization
         public void Build(CrossroadLink link)
         {
             link.RoadBuilt(_id);
-            _count.Value++;
+            _count.Increment();
 
             if (!AddRoadLine(link))
                 _roadsLists.Add(_factory.Create(link.Start, link.End, _gradient));

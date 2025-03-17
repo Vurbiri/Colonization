@@ -21,20 +21,20 @@ namespace Vurbiri
         public bool IsPlayer => IsInitialize && _isPlayer;
         public bool IsLeaderboard => IsLogOn && _isLeaderboard;
 
-        public WaitResult<bool> InitYsdk() => new(_isInitialize);
+        public WaitResult<bool> InitYsdk() => new WaitResultSource<bool>(_isInitialize);
         public void LoadingAPI_Ready() { }
-        public WaitResult<bool> InitPlayer() => new(_isPlayer);
+        public WaitResult<bool> InitPlayer() => new WaitResultSource<bool>(_isPlayer);
         public WaitResult<bool> LogOn()
         {
             IsLogOn = true;
-            return new(IsLogOn); ;
+            return new WaitResultSource<bool>(IsLogOn); ;
         }
-        public WaitResult<bool> InitLeaderboards() => new(IsLeaderboard);
+        public WaitResult<bool> InitLeaderboards() => new WaitResultSource<bool>(IsLeaderboard);
         public string GetPlayerAvatarURL(AvatarSize size) => string.Empty;
 
-        public WaitResult<Return<PlayerRecord>> GetPlayerResult() => new(new Return<PlayerRecord>(new PlayerRecord(6, 1)));
-        public WaitResult<bool> SetScore(long score) => new(true);
-        public WaitResult<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 0, AvatarSize size = AvatarSize.Small)
+        public WaitResultSource<Return<PlayerRecord>> GetPlayerResult() => new(new Return<PlayerRecord>(new PlayerRecord(6, 1)));
+        public WaitResult<bool> SetScore(long score) => new WaitResultSource<bool>(true);
+        public WaitResultSource<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 0, AvatarSize size = AvatarSize.Small)
         {
             Debug.Log(_lbName);
 
@@ -58,7 +58,7 @@ namespace Vurbiri
             return new(new Return<Leaderboard>(l));
         }
 
-        public WaitResult<Return<Leaderboard>> GetLeaderboardTest()
+        public WaitResultSource<Return<Leaderboard>> GetLeaderboardTest()
         {
             List<LeaderboardRecord> list = new()
         {
@@ -78,14 +78,14 @@ namespace Vurbiri
             return new(new Return<Leaderboard>(l));
         }
 
-        public WaitResult<bool> Save(string key, string data)
+        public WaitResultSource<bool> Save(string key, string data)
         {
             using StreamWriter sw = new(Path.Combine(Application.persistentDataPath, key));
             sw.Write(data);
 
             return new(true);
         }
-        public WaitResult<string> Load(string key)
+        public WaitResultSource<string> Load(string key)
         {
             string path = Path.Combine(Application.persistentDataPath, key);
             if (File.Exists(path))
@@ -96,11 +96,11 @@ namespace Vurbiri
             return new(string.Empty);
         }
 
-        public WaitResult<bool> CanReview() => new(IsLogOn);
-        public WaitResult<bool> RequestReview() => new(true);
+        public WaitResultSource<bool> CanReview() => new(IsLogOn);
+        public WaitResultSource<bool> RequestReview() => new(true);
 
-        public WaitResult<bool> CanShortcut() => new(IsLogOn);
-        public WaitResult<bool> CreateShortcut() => new(IsLogOn);
+        public WaitResultSource<bool> CanShortcut() => new(IsLogOn);
+        public WaitResultSource<bool> CreateShortcut() => new(IsLogOn);
 
     }
 }

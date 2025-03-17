@@ -29,6 +29,8 @@ namespace Vurbiri.Colonization.Data
         public HumanSaveData[] Humans => _humansSaveData;
         public SatanSaveData Satan => _satanSaveData;
 
+        public void Save() => _storage.Save();
+
         #region Load
         public void GetHexData(Key key, out int id, out int surfaceId)
         {
@@ -52,16 +54,16 @@ namespace Vurbiri.Colonization.Data
         #region Bind
         public void HexagonsBind(IReactive<Key, int[]> hex)
         {
-            _unsubscribers += hex.Subscribe((key, data) => _storage.Save(key.ToSaveKey(), data, 1f));
+            _unsubscribers += hex.Subscribe((key, data) => _storage.Set(key.ToSaveKey(), data));
         }
         public void DiplomacyBind(IReactive<IReadOnlyList<int>> diplomacy, bool calling)
         {
-            _unsubscribers += diplomacy.Subscribe(data => _storage.Save(SAVE_KEYS.DIPLOMANCY, data), calling);
+            _unsubscribers += diplomacy.Subscribe(data => _storage.Set(SAVE_KEYS.DIPLOMANCY, data), calling);
         }
 
         public void TurnStateBind(TurnQueue turn, bool calling)
         {
-            _unsubscribers += turn.Subscribe(iTurn => _storage.Save(SAVE_KEYS.TURNS_QUEUE, iTurn.ToArray()), calling);
+            _unsubscribers += turn.Subscribe(iTurn => _storage.Set(SAVE_KEYS.TURNS_QUEUE, iTurn.ToArray()), calling);
         }
         #endregion
 

@@ -15,10 +15,13 @@ namespace Vurbiri
             callback?.Invoke(false);
             return null;
         }
-        public void Save<T>(string key, T data, bool toFile, Action<bool> callback) => callback?.Invoke(false);
-        public void Save<T>(string key, T data, float time, Action<bool> callback = null) => callback?.Invoke(false);
 
-        public void Remove(string key, bool toFile, Action<bool> callback) => callback?.Invoke(false);
+        public void Save(Action<bool> callback = null) => callback?.Invoke(false);
+        public void Save<T>(string key, T data, Action<bool> callback = null) => callback?.Invoke(false);
+
+        public bool Set<T>(string key, T data) => false;
+
+        public T Get<T>(string key) where T : class => null;
 
         public bool TryGet<T>(string key, out T value)
         {
@@ -26,14 +29,14 @@ namespace Vurbiri
             return false;
         }
 
-        public T Get<T>(string key) where T : class => null;
-
         public bool ContainsKey(string key) => false;
 
-        public void Clear(bool fromFile = true, Action<bool> callback = null) => callback?.Invoke(false);
+        public void Remove(string key, bool toFile, Action<bool> callback) => callback?.Invoke(false);
 
-        public void Clear(string keyExclude, bool fromFile = true, Action<bool> callback = null) => callback?.Invoke(false);
+        public void Clear(Action<bool> callback = null) => callback?.Invoke(false);
 
-        public void Clear(string[] keyExcludes, bool fromFile = true, Action<bool> callback = null) => callback?.Invoke(false);
+        public void Clear(string keyExclude, Action<bool> callback = null) => callback?.Invoke(false);
+
+        public void Clear(string[] keyExcludes, Action<bool> callback = null) => callback?.Invoke(false);
     }
 }

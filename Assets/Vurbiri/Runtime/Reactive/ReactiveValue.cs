@@ -22,10 +22,7 @@ namespace Vurbiri.Reactive
             set 
             {
                 if(!_comparer.Equals(_value, value))
-                { 
-                    _value = value; 
-                    _subscriber.Invoke(value); 
-                } 
+                    _subscriber.Invoke(_value = value);
             } 
         }
 
@@ -51,18 +48,9 @@ namespace Vurbiri.Reactive
 
         public Unsubscriber Subscribe(Action<T> action, bool calling = true) => _subscriber.Add(action, calling, _value);
 
-        public void Next(T value)
-        {
-            if (_value.Equals(value))
-                return;
-
-            _value = value; 
-            _subscriber.Invoke(_value);
-        }
-
         public void Signal() => _subscriber.Invoke(_value);
 
-        public static implicit operator ReactiveValue<T>(T value) => new(value);
+        public static explicit operator ReactiveValue<T>(T value) => new(value);
         public static implicit operator T(ReactiveValue<T> value) => value._value;
     }
 }

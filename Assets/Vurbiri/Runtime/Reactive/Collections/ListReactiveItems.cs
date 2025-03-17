@@ -11,7 +11,7 @@ namespace Vurbiri.Reactive.Collections
     {
         protected T[] _values;
         protected int _capacity = 4;
-        protected readonly ReactiveValue<int> _count = new(0);
+        protected readonly RInt _count = new(0);
 
         protected readonly Subscriber<T, TypeEvent> _subscriber = new();
 

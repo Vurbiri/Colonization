@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
     public class Village : ASurfaceCreated
     {
         [Space]
-        [SerializeField] private RMFloat _offsetAngle = 15f;
+        [SerializeField] private FloatMRnd _offsetAngle = 15f;
         [Space]
         [SerializeField] private MeshFilter _windmillMeshFilter;
         [Space]

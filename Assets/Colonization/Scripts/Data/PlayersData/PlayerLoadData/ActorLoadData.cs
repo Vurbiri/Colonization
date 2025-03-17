@@ -4,7 +4,7 @@ using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Data
 {
-    public readonly struct ActorLoadData
+    public class ActorLoadData
 	{
         public readonly int id;
         public readonly Key keyHex;

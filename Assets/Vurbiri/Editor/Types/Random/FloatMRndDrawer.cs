@@ -6,8 +6,8 @@ using Vurbiri;
 
 namespace VurbiriEditor
 {
-    [CustomPropertyDrawer(typeof(RMFloat))]
-    public class RMFloatDrawer : ARValueDrawer
+    [CustomPropertyDrawer(typeof(FloatMRnd))]
+    public class FloatMRndDrawer : ARValueDrawer
     {
         private const string NAME_VALUE = "_value";
 

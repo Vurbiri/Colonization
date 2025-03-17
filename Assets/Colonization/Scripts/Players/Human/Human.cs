@@ -52,7 +52,8 @@ namespace Vurbiri.Colonization
             _prices = settings.prices;
 
             HumanLoadData loadData = data.LoadData;
-            if (loadData.isLoaded)
+            bool isLoaded = loadData != null;
+            if (isLoaded)
             {
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
                 Hexagons land = SceneObjects.Get<Hexagons>();
@@ -61,15 +62,17 @@ namespace Vurbiri.Colonization
                 _edifices = new(playerId, loadData.edifices, crossroads, _abilities);
                 _roads.Restoration(loadData.roads, crossroads);
 
-                _artefact = new(settings.artefact.Settings, loadData.buffs);
+                _artefact = new(settings.artefact.Settings, loadData.artefact);
 
                 //_perks = new(data.Perks);
 
                 _spawner = new(new(playerId, _artefact), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
 
-                int count = loadData.warriors.Length;
+                int count = loadData.actors.Count;
                 for (int i = 0; i < count; i++)
-                    _warriors.Add(_spawner.Load(loadData.warriors[i], land));
+                    _warriors.Add(_spawner.Load(loadData.actors[i], land));
+
+                data.LoadData = null;
             }
             else
             {
@@ -83,10 +86,10 @@ namespace Vurbiri.Colonization
 
             _exchangeRate = new(_abilities);
 
-            data.CurrenciesBind(_resources, !loadData.isLoaded);
+            data.CurrenciesBind(_resources, !isLoaded);
             data.EdificesBind(_edifices.values);
             data.RoadsBind(_roads);
-            data.ArtefactBind(_artefact, !loadData.isLoaded);
+            data.ArtefactBind(_artefact, !isLoaded);
             data.ActorsBind(_warriors);
         }
 

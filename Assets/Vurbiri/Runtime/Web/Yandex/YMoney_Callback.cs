@@ -5,9 +5,9 @@ namespace Vurbiri
 {
     public partial class YMoney
     {
-        private readonly WaitResult<bool> _waitEndShowFullscreenAdv = new();
-        private readonly WaitResult<bool> _waitRewardRewardedVideo = new();
-        private readonly WaitResult<bool> _waitCloseRewardedVideo = new();
+        private readonly WaitResultSource<bool> _waitEndShowFullscreenAdv = new();
+        private readonly WaitResultSource<bool> _waitRewardRewardedVideo = new();
+        private readonly WaitResultSource<bool> _waitCloseRewardedVideo = new();
 
         public void OnEndShowFullscreenAdv(int result) => _waitEndShowFullscreenAdv.SetResult(Convert.ToBoolean(result));
         public void OnRewardRewardedVideo(int result) => _waitRewardRewardedVideo.SetResult(Convert.ToBoolean(result));

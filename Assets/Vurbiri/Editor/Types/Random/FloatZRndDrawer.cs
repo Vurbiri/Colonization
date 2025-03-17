@@ -6,8 +6,8 @@ using Vurbiri;
 
 namespace VurbiriEditor
 {
-    [CustomPropertyDrawer(typeof(RZFloat))]
-    public class RZFloatDrawer : ARValueDrawer
+    [CustomPropertyDrawer(typeof(FloatZRnd))]
+    public class FloatZRndDrawer : ARValueDrawer
     {
         private const string NAME_VALUE = "_value";
         private const float ZERO = 0.00001f;

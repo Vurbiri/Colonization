@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\EdificeLoadData.cs
 namespace Vurbiri.Colonization.Data
 {
-    public readonly struct EdificeLoadData
+    public class EdificeLoadData
 	{
 		public readonly Key key;
 		public readonly int id;

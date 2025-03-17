@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
         private ParticleSystem _particle;
         private MainModule _main;
         private readonly WaitTime _waitTime = new(0);
-        private readonly WaitActivate _waitActivate = new();
+        private readonly WaitSignal _waitActivate = new();
         private float _avgSpeed;
 
         public override IHitSFX Init(IDataSFX parent)
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization.Actors
         private IEnumerator React_Cn(ActorSkin target, float time)
         {
             yield return _waitTime.SetTime(time);
-            _waitActivate.Activate();
+            _waitActivate.Send();
             target.React(_clipHit);
 
             yield return _waitTime.SetTime(0.25f);

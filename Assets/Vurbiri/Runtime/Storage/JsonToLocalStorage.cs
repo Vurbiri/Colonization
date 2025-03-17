@@ -49,7 +49,7 @@ namespace Vurbiri
 
         protected override WaitResult<bool> SaveToFile_Wait()
         {
-            WaitResult<bool> waitResult = new();
+            WaitResultSource<bool> waitResult = new();
 
             try
             {

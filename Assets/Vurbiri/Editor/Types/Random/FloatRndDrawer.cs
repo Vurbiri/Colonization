@@ -5,8 +5,8 @@ using Vurbiri;
 
 namespace VurbiriEditor
 {
-    [CustomPropertyDrawer(typeof(RFloat))]
-    public class RFloatDrawer : ARValueDrawer
+    [CustomPropertyDrawer(typeof(FloatRnd))]
+    public class FloatRndDrawer : ARValueDrawer
     {
         private const string NAME_MIN = "_min", NAME_MAX = "_max";
 

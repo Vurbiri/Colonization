@@ -10,10 +10,10 @@ namespace Vurbiri.Colonization
     public class ForestGenerator : ASurfaceGenerator
     {
         [SerializeField, Range(0.01f, 0.3f)] private float _offsetY = 0.1f;
-        [SerializeField, Range(1f, 3.5f)] private float _sparsity = 1.9f;
-        [SerializeField, Max(0.5f)] private RMFloat _offsetRange = 0.3f;
+        [SerializeField, Range(1f, 3.5f)] private float _sparsity = 2.05f;
+        [SerializeField, Max(0.5f)] private FloatMRnd _offsetRange = 0.3f;
         [Space]
-        [SerializeField] private RColor32 _colorRange;
+        [SerializeField] private ColorRnd32 _colorRange;
         [SerializeField] private Vector2Specular _specular = new(0f, 0.1f);
         [Space]
         [SerializeField] private Spruce _spruce;
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
             CustomMesh customMesh = new(NAME_MESH.Concat(ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
             float step = _spruce.RadiusAvg * _sparsity, radius = step;
             float angle, angleStep;
-            RMFloat offsetAngle;
+            FloatMRnd offsetAngle;
             float x, z;
 
             customMesh.AddTriangles(_spruce.Create(new(step * _offsetRange, _offsetY, step * _offsetRange), _colorRange.Roll, _specular));
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization
             CustomMesh customMesh = new(NAME_MESH.Concat(ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
             float step = _spruce.RadiusAvg * _sparsity, radius = step;
             float angle, angleStep;
-            RMFloat offsetAngle;
+            FloatMRnd offsetAngle;
             float x, z;
 
             customMesh.AddTriangles(_spruce.Create(new(step * _offsetRange, _offsetY, step * _offsetRange), _colorRange.Roll, _specular));
@@ -87,16 +87,16 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Spruce
         {
-            [SerializeField, MinMax(4, 7)] private RInt _countVertexRange = new(5, 6);
+            [SerializeField, MinMax(4, 7)] private IntRnd _countVertexRange = new(5, 6);
             [Space]
             [SerializeField, Range(1f, 3f)] private float _heightBase = 1.55f;
             [SerializeField, Range(0.5f, 2f)] private float _radiusBase = 1.11f;
             [Space]
-            [SerializeField, MinMax(0.4f,1.5f)] private RFloat _sizeRatioRange = new(0.65f, 1.15f);
+            [SerializeField, MinMax(0.4f,1.5f)] private FloatRnd _sizeRatioRange = new(0.65f, 1.15f);
             [SerializeField] private Chance _chanceSmall = 38;
             [Space]
             [SerializeField, Range(0.5f, 1f)] private float _ratioNextPos = 0.75f;
-            [SerializeField, MinMax(0.4f, 0.9f)] private RFloat _ratioNextSizeRange = new(0.68f, 0.72f);
+            [SerializeField, MinMax(0.4f, 0.9f)] private FloatRnd _ratioNextSizeRange = new(0.68f, 0.72f);
 
             public float RadiusAvg => _sizeRatioRange.Avg * _radiusBase;
 
@@ -132,7 +132,7 @@ namespace Vurbiri.Colonization
                     Vector3 peakPoint = position + new Vector3(0f, _height, 0f);
                     Vector3[] basePoints = new Vector3[countBase];
                     float angleStep = TAU / countBase;
-                    float angle = RZFloat.Rolling(angleStep);
+                    float angle = FloatZRnd.Rolling(angleStep);
 
                     for (int i = 0; i < countBase; i++)
                     {

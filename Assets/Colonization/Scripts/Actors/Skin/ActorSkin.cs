@@ -78,7 +78,7 @@ namespace Vurbiri.Colonization.Actors
 
         public virtual void Run() => _stateMachine.SetState(_runState);
 
-        public virtual WaitActivate Skill(int index, ActorSkin targetActorSkin)
+        public virtual WaitSignal Skill(int index, ActorSkin targetActorSkin)
         {
             SkillState skill = _skillStates[index];
             skill.targetSkin = targetActorSkin;
@@ -95,7 +95,7 @@ namespace Vurbiri.Colonization.Actors
                 _sfx.React(clip);
         }
 
-        public WaitActivate Death()
+        public WaitSignal Death()
         {
             _stateMachine.SetState(_deathState);
             return _deathState.waitActivate;

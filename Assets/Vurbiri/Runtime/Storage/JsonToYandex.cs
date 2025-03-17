@@ -26,7 +26,7 @@ namespace Vurbiri
             string json;
 
             yield return (waitResult = _ysdk.Load(_key));
-            json = waitResult.Result;
+            json = waitResult.Value;
 
             if (!string.IsNullOrEmpty(json))
             {

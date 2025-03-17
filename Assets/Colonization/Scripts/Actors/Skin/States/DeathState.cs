@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Actors
         {
             private readonly WaitForSecondsRealtime _waitEndAnimation;
 
-            public readonly WaitActivate waitActivate = new();
+            public readonly WaitSignal waitActivate = new();
 
             public DeathState(ActorSkin parent, float duration) : base(B_DEATH, parent)
             {
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.Actors
                 _animator.SetBool(_idParam, false);
                 yield return _waitEndAnimation;
                 yield return _sfx.Death_Cn();
-                waitActivate.Activate();
+                waitActivate.Send();
             }
         }
     }

@@ -28,15 +28,15 @@ namespace Vurbiri.Colonization.Data
                 _data = new();
         }
 
-        public void Save(bool saveToFile = true, Action<bool> callback = null) 
-                    => _storage.Save(SAVE_KEYS.GAME, _data, saveToFile, callback);
+        public void Save(Action<bool> callback = null) 
+                    => _storage.Save(SAVE_KEYS.GAME, _data, callback);
 
         public void StartGame()
         {
             _data.modeStart = GameModeStart.Continue;
         }
 
-        public void ResetGame(bool saveToFile)
+        public void ResetGame()
         {
             //if (IsRecord)
             //    MaxScore = Score;
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization.Data
             //_data.Reset();
 
             //_isNewRecord = false;
-            Save(saveToFile);
+            Save();
         }
 
         #region Nested: GameData

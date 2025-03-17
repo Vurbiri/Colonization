@@ -3,33 +3,42 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    sealed public class WaitResult<T> : CustomYieldInstruction
+    public abstract class WaitResult<T> : CustomYieldInstruction
     {
-        private bool _keepWaiting = true;
-        private T _result;
+        protected bool _keepWaiting = true;
+        protected T _value;
 
-        public T Result => _result;
-        public override bool keepWaiting => _keepWaiting;
+        public T Value => _value;
+        sealed public override bool keepWaiting => _keepWaiting;
 
-        public static WaitResult<T> Empty { get; } = new(default);
+        sealed public override void Reset() => _keepWaiting = true;
+    }
 
-        public WaitResult()
+    public class WaitResultSource<T> : WaitResult<T>
+    {
+        public static WaitResultSource<T> Empty { get; } = new(default);
+
+        public WaitResultSource()
         {
             _keepWaiting = true;
         }
-        public WaitResult(T result) => SetResult(result);
+        public WaitResultSource(T result)
+        {
+            _value = result;
+            _keepWaiting = false;
+        }
 
         public WaitResult<T> SetResult(T result)
         {
-            _result = result;
+            _value = result;
             _keepWaiting = false;
 
             return this;
         }
 
-        public WaitResult<T> Recreate()
+        public WaitResultSource<T> Recreate()
         {
-            _result = default;
+            _value = default;
             _keepWaiting = false;
 
             return new();
@@ -37,12 +46,10 @@ namespace Vurbiri
 
         public WaitResult<T> Cancel()
         {
-            _result = default;
+            _value = default;
             _keepWaiting = false;
 
             return this;
         }
-
-        public override void Reset() => _keepWaiting = true;
     }
 }

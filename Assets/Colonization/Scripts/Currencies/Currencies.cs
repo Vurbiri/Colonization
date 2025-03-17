@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < countAll; i++)
                 _values[i].Add(other[i]);
 
-            _amount.Value += other.Amount;
+            _amount.Add(other.Amount);
             _subscriber.Invoke(this);
         }
 
@@ -58,9 +58,10 @@ namespace Vurbiri.Colonization
 
         public void ClampMain()
         {
-            int amount = _amount.Value, maxMain = _maxValueMain.Value;
-            if (amount <= maxMain)
+            if (_amount <= _maxValueMain)
                 return;
+
+            int amount = _amount.Value, maxMain = _maxValueMain.Value;
 
             int indexMax = 0, index;
             ACurrency max = _values[indexMax], temp;

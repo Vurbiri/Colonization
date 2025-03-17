@@ -14,7 +14,7 @@ namespace VurbiriEditor
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
-            if (attribute is not MinMaxAttribute range || fieldInfo.FieldType == typeof(RInt))
+            if (attribute is not MinMaxAttribute range || fieldInfo.FieldType == typeof(IntRnd))
             {
                 EditorGUILayout.PropertyField(mainProperty, label, true);
                 return;

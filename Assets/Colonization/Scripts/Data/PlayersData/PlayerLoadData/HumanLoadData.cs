@@ -3,28 +3,22 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Data
 {
-    public readonly struct HumanLoadData
-	{
-        public readonly int[] resources;
-        public readonly Dictionary<int, EdificeLoadData[]> edifices;
-        public readonly Key[][] roads;
-        public readonly int[] buffs;
-        public readonly ActorLoadData[] warriors;
-        public readonly bool isLoaded;
+    public class HumanLoadData : APlayerLoadData
+    {
+        public readonly IReadOnlyList<int> resources;
+        public readonly IReadOnlyDictionary<int, EdificeLoadData[]> edifices;
+        public readonly IReadOnlyList<IReadOnlyList<Key>> roads;
 
-        public HumanLoadData(int[] resources, Dictionary<int, List<int[]>> edifices, int[][][] roads, int[] buffs, List<int[][]> warriors)
+        public HumanLoadData(int[] resources, int[][][] roads, int[] artefact, Dictionary<int, List<int[]>> edifices, List<int[][]> warriors)
+                      : base(artefact, warriors)
         {
             this.resources = resources;
             this.edifices = CreateEdificesLoadData(edifices);
             this.roads = CreateRoadsData(roads);
-            this.buffs = buffs;
-            this.warriors = CreateActorData(warriors);
-            
-            isLoaded = true;
 
-            #region Local: CreateEdificesLoadData(..), CreateRoadsData(..), CreateActorData(...)
+            #region Local: CreateEdificesLoadData(..), CreateRoadsData(..)
             //================================================================
-            Dictionary<int, EdificeLoadData[]> CreateEdificesLoadData(Dictionary<int, List<int[]>> edificesData)
+            static Dictionary<int, EdificeLoadData[]> CreateEdificesLoadData(Dictionary<int, List<int[]>> edificesData)
             {
                 Dictionary<int, EdificeLoadData[]> edifices = new(EdificeGroupId.Count);
 
@@ -44,7 +38,7 @@ namespace Vurbiri.Colonization.Data
                 return edifices;
             }
             //================================================================
-            Key[][] CreateRoadsData(int[][][] roadsData)
+            static Key[][] CreateRoadsData(int[][][] roadsData)
             {
                 int count, mainCount = roadsData.Length;
                 Key[][] roads = new Key[mainCount][];
@@ -57,17 +51,6 @@ namespace Vurbiri.Colonization.Data
                         roads[i][j] = new(roadsData[i][j]);
                 }
                 return roads;
-            }
-            //================================================================
-            ActorLoadData[] CreateActorData(List<int[][]> warriorsData)
-            {
-                int count = warriorsData.Count;
-                ActorLoadData[] warriors = new ActorLoadData[count];
-
-                for (int i = 0; i < count; i++)
-                    warriors[i] = new(warriorsData[i]);
-
-                return warriors;
             }
             #endregion
         }

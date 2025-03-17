@@ -17,7 +17,16 @@ namespace Vurbiri
         public abstract bool IsValid { get; }
 
         public abstract bool Init(IReadOnlyDIContainer container);
+        
         public abstract IEnumerator Load_Cn(string key, Action<bool> callback);
+
+        public virtual T Get<T>(string key) where T : class
+        {
+            if (_saved.TryGetValue(key, out string json))
+                return Deserialize<T>(json).Value;
+
+            return null;
+        }
 
         public bool TryGet<T>(string key, out T value)
         {
@@ -31,122 +40,7 @@ namespace Vurbiri
             return false;
         }
 
-        public virtual T Get<T>(string key) where T : class
-        {
-            if (_saved.TryGetValue(key, out string json))
-                return Deserialize<T>(json).Value;
-
-            return null;
-        }
-
-        public void Save<T>(string key, T data, bool toFile, Action<bool> callback)
-        {
-            bool result = SaveToMemory(key, data);
-            if (!(toFile & _modified) | _cnQueue.Count > 0)
-            {
-                callback?.Invoke(result);
-                return;
-            }
-
-            _cnQueue.Enqueue(SaveToFile_Cn(callback));
-        }
-
-        public void Save<T>(string key, T data, float time, Action<bool> callback)
-        {
-            bool result = SaveToMemory(key, data);
-            if (!_modified | _cnQueue.Count > 0)
-            {
-                callback?.Invoke(result);
-                return;
-            }
-
-            _cnQueue.Enqueue(new WaitForSecondsRealtime(time));
-            _cnQueue.Enqueue(SaveToFile_Cn(callback));
-        }
-
-        public void Remove(string key, bool fromFile, Action<bool> callback)
-        {
-            bool result = _saved.Remove(key);
-            _modified |= result;
-
-            if (!(fromFile & _modified) | _cnQueue.Count > 0)
-            {
-                callback?.Invoke(result);
-                return;
-            }
-
-            _cnQueue.Enqueue(SaveToFile_Cn(callback));
-        }
-
-        #region Clear
-        public void Clear(bool fromFile, Action<bool> callback)
-        {
-            _modified |= _saved.Count > 0;
-            _saved.Clear();
-            if (!(fromFile & _modified) | _cnQueue.Count > 0)
-            {
-                callback?.Invoke(true);
-                return;
-            }
-
-            _cnQueue.Enqueue(SaveToFile_Cn(callback));
-        }
-        public void Clear(string keyExclude, bool fromFile, Action<bool> callback)
-        {
-            if(_saved.Count > 0)
-            {
-                _saved.Remove(keyExclude, out string restore);
-
-                _saved.Clear();
-                _modified = true;
-
-                if (restore != null) 
-                    _saved.Add(keyExclude, restore);
-            }
-
-            if (!(fromFile & _modified) | _cnQueue.Count > 0)
-            {
-                callback?.Invoke(true);
-                return;
-            }
-
-            _cnQueue.Enqueue(SaveToFile_Cn(callback));
-        }
-        public void Clear(string[] keyExcludes, bool fromFile, Action<bool> callback)
-        {
-            if (_saved.Count > 0)
-            {
-                int count = keyExcludes.Length;
-                string[] values = new string[count];
-
-                for(int i = 0; i < count; i++)
-                    _saved.Remove(keyExcludes[i], out values[i]);
-
-                _saved.Clear();
-                _modified = true;
-
-                for (int i = 0; i < count; i++)
-                {
-                    if (values[i] != null)
-                        _saved.Add(keyExcludes[i], values[i]);
-                }
-            }
-
-            if (!(fromFile & _modified) | _cnQueue.Count > 0)
-            {
-                callback?.Invoke(true);
-                return;
-            }
-
-            _cnQueue.Enqueue(SaveToFile_Cn(callback));
-        }
-        #endregion
-
-        public bool ContainsKey(string key) => _saved.ContainsKey(key);
-
-        protected void Init(MonoBehaviour monoBehaviour) => _cnQueue = new (monoBehaviour);
-
-        protected bool SaveToMemory<T>(string key, T data)
+        public bool Set<T>(string key, T data)
         {
             try
             {
@@ -166,13 +60,115 @@ namespace Vurbiri
             return false;
         }
 
+        public void Save(Action<bool> callback) => _cnQueue.Enqueue(SaveToFile_Cn(callback));
+        public void Save<T>(string key, T data, Action<bool> callback)
+        {
+            bool result = Set(key, data);
+            if (_cnQueue.Count > 0)
+            {
+                callback?.Invoke(result);
+                return;
+            }
+
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
+        }
+
+        public void Remove(string key, bool fromFile, Action<bool> callback)
+        {
+            bool result = _saved.Remove(key);
+            _modified |= result;
+
+            if (!fromFile | _cnQueue.Count > 0)
+            {
+                callback?.Invoke(result);
+                return;
+            }
+
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
+        }
+
+        #region Clear
+        public void Clear(Action<bool> callback)
+        {
+            _modified |= _saved.Count > 0;
+            _saved.Clear();
+            if (_cnQueue.Count > 0)
+            {
+                callback?.Invoke(true);
+                return;
+            }
+
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
+        }
+        public void Clear(string excludeKey, Action<bool> callback)
+        {
+            if(_saved.Count > 0)
+            {
+                _saved.Remove(excludeKey, out string restore);
+
+                _saved.Clear();
+                _modified = true;
+
+                if (restore != null) 
+                    _saved.Add(excludeKey, restore);
+            }
+
+            if (_cnQueue.Count > 0)
+            {
+                callback?.Invoke(true);
+                return;
+            }
+
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
+        }
+        public void Clear(string[] excludeKeys, Action<bool> callback)
+        {
+            if (_saved.Count > 0)
+            {
+                int count = excludeKeys.Length;
+                string[] values = new string[count];
+
+                for(int i = 0; i < count; i++)
+                    _saved.Remove(excludeKeys[i], out values[i]);
+
+                _saved.Clear();
+                _modified = true;
+
+                for (int i = 0; i < count; i++)
+                {
+                    if (values[i] != null)
+                        _saved.Add(excludeKeys[i], values[i]);
+                }
+            }
+
+            if (_cnQueue.Count > 0)
+            {
+                callback?.Invoke(true);
+                return;
+            }
+
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
+        }
+        #endregion
+
+        public bool ContainsKey(string key) => _saved.ContainsKey(key);
+
+        protected void Init(MonoBehaviour monoBehaviour) => _cnQueue = new(monoBehaviour);
+
         protected IEnumerator SaveToFile_Cn(Action<bool> callback)
         {
-            WaitResult<bool> waitResult = SaveToFile_Wait();
-            yield return waitResult;
+            if (_modified)
+            {
+                WaitResult<bool> waitResult = SaveToFile_Wait();
+                yield return waitResult;
 
-            _modified = !waitResult.Result;
-            callback?.Invoke(waitResult.Result);
+                _modified = !waitResult.Value;
+                callback?.Invoke(waitResult.Value);
+
+                yield break;
+            }
+
+            callback?.Invoke(false);
         }
 
         protected abstract WaitResult<bool> SaveToFile_Wait();

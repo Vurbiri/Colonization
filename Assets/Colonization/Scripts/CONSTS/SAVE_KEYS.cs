@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Data
         public const string TURNS_QUEUE = "tuq";
         public const string DIPLOMANCY = "dip";
 
-        public const string P_RESOURCES = "rs", P_ROADS = "rd", P_EDIFICES = "ed", P_ACTORS = "ac", P_BUFFS = "bf", P_PERKS = "pk";
+        public const string P_RESOURCES = "rs", P_ROADS = "rd", P_EDIFICES = "ed", P_ACTORS = "ac", P_ARTEFACT = "ar", P_BUFFS = "bf", P_PERKS = "pk";
                 
         public const string G_MODE = "gs", G_MAX_SCORE = "ms", G_VISUAL_PLAYER_IDS = "vp";
     }

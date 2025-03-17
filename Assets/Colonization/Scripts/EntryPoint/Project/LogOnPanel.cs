@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
 {
     public class LogOnPanel : MonoBehaviour
     {
-        private WaitResult<bool> _waitLogOn;
+        private WaitResultSource<bool> _waitLogOn;
         private YandexSDK _ysdk;
 
         public IEnumerator TryLogOn_Cn(YandexSDK ysdk)
@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
             {
                 yield return _waitLogOn;
 
-                if (!_waitLogOn.Result)
+                if (!_waitLogOn.Value)
                     break;
 
                 yield return StartCoroutine(ysdk.Authorization_Cn((b) => resultAuthorization = b));

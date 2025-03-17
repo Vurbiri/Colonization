@@ -27,8 +27,8 @@ namespace Vurbiri.Colonization
 
         private int _countFreeLink = 0, _countWater = 0;
         private bool _isGate = false;
-        private WaitResult<Hexagon> _waitHexagon;
-        private readonly ReactiveValue<bool> _canCancel = new(false);
+        private WaitResultSource<Hexagon> _waitHexagon;
+        private readonly RBool _canCancel = new();
 
         private Unsubscriber _unsubscriber;
         #endregion
@@ -155,7 +155,7 @@ namespace Vurbiri.Colonization
             if (_waitHexagon == null)
                 return;
 
-            _canCancel.Value = false;
+            _canCancel.False();
 
             _waitHexagon.SetResult(newSelectable as Hexagon);
             foreach (var hex in _hexagons)

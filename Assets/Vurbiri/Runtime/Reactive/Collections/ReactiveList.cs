@@ -11,7 +11,7 @@ namespace Vurbiri.Reactive.Collections
     {
         private T[] _values;
         private int _capacity = 4;
-        protected readonly ReactiveValue<int> _count = new(0);
+        protected readonly RInt _count = new(0);
         
         private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
