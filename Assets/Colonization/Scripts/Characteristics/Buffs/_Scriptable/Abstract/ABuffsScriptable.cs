@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class ABuffsScriptable<T> : ScriptableObjectDisposable where T : BuffSettings
     {
-        [SerializeField] private List<T> _settings;
+        [SerializeField] protected List<T> _settings;
 
         public IReadOnlyList<T> Settings => _settings;
 

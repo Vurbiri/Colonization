@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.Data
 
         public void ActorsBind(IListReactiveItems<Actor> actors)
         {
-            _unsubscribers += actors.Subscribe(OnActors, false);
+            _unsubscribers += actors.Subscribe(OnActors);
 
             #region Local OnWarriors(..)
             //==============================

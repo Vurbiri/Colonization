@@ -19,6 +19,8 @@ namespace Vurbiri.Colonization
             {
                 players[i].Shrines.Subscribe(OnShrineBuild, false);
             }
+
+            players.Satan.SetBalance(_value);
         }
 
         public Unsubscriber Subscribe(Action<Win> action, bool calling = true) => _subscriber.Add(action);

@@ -11,8 +11,6 @@ namespace Vurbiri.Reactive
         public RFloat(float value) : base(value) { }
 
         #region Arithmetic
-        public void Increment() => _subscriber.Invoke(++_value);
-        public void Decrement() => _subscriber.Invoke(--_value);
         public void Add(float value)
         {
             if (value != 0f)
@@ -47,16 +45,11 @@ namespace Vurbiri.Reactive
         public static float operator +(RFloat r, float f) => r._value + f;
         public static float operator +(float f, RFloat r) => f + r._value;
 
-
-        public static RFloat operator ++(RFloat r) { r._subscriber.Invoke(++r._value); return r; }
-
         public static float operator -(RFloat a, RFloat b) => a._value - b._value;
         public static float operator -(RFloat r, IReactiveValue<float> f) => r._value - f.Value;
         public static float operator -(IReactiveValue<float> f, RFloat r) => f.Value - r._value;
         public static float operator -(RFloat r, float f) => r._value - f;
         public static float operator -(float f, RFloat r) => f - r._value;
-
-        public static RFloat operator --(RFloat r) { r._subscriber.Invoke(--r._value); return r; }
 
         public static float operator *(RFloat a, RFloat b) => a._value * b._value;
         public static float operator *(RFloat r, IReactiveValue<float> f) => r._value * f.Value;

@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization.Data
             //==============================
             void Bind(IReactiveList<IArrayable> edificesReactive, List<int[]> edifices)
             {
-                _unsubscribers += edificesReactive.Subscribe(OnEdifice, false);
+                _unsubscribers += edificesReactive.Subscribe(OnEdifice);
 
                 #region Local OnEdifice(..)
                 //==============================
@@ -77,9 +77,9 @@ namespace Vurbiri.Colonization.Data
             }
             #endregion
         }
-        public void RoadsBind(IReactive<int[][][]> roadsReactive)
+        public void RoadsBind(IReactive<int[][][]> roadsReactive, bool calling)
         {
-            _unsubscribers += roadsReactive.Subscribe(value => _storage.Set(_keyRoads, value), false);
+            _unsubscribers += roadsReactive.Subscribe(value => _storage.Set(_keyRoads, value), calling);
         }
     }
 }

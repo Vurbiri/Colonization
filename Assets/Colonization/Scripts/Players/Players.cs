@@ -19,12 +19,13 @@ namespace Vurbiri.Colonization
         #region Constructor
         public Players(Settings settings, GameplaySaveData saveData)
         {
+            Hexagons land = SceneObjects.Get<Hexagons>();
             HumanSaveData[] playersData = saveData.Humans;
 
             for (int i = 0; i < PlayerId.PlayersCount; i++)
-                _humans[i] = new(i, playersData[i], settings);
+                _humans[i] = new(i, playersData[i], settings, land);
 
-            _satan = new(saveData.Satan, settings);
+            _satan = new(saveData.Satan, settings, land);
 
         }
         #endregion
@@ -54,7 +55,7 @@ namespace Vurbiri.Colonization
             [Space]
             public DemonInitializer demonPrefab;
             public SatanAbilitiesScriptable satanStates;
-            public DemonBuffsScriptable demonBuffsSettings;
+            public DemonBuffsScriptable demonBuffs;
             [Space]
             public BuffsScriptable artefact;
             public Transform actorsContainer;
@@ -63,9 +64,9 @@ namespace Vurbiri.Colonization
             {
                 humanStates.Dispose();
                 satanStates.Dispose();
-                demonBuffsSettings.Dispose();
+                demonBuffs.Dispose();
                 artefact.Dispose();
-                humanStates = null; satanStates = null;  demonBuffsSettings = null; artefact = null;
+                humanStates = null; satanStates = null;  demonBuffs = null; artefact = null;
             }
 
 #if UNITY_EDITOR
@@ -84,8 +85,8 @@ namespace Vurbiri.Colonization
                     demonPrefab = EUtility.FindAnyPrefab<DemonInitializer>();
                 if (satanStates == null)
                     satanStates = EUtility.FindAnyScriptable<SatanAbilitiesScriptable>();
-                if (demonBuffsSettings == null)
-                    demonBuffsSettings = EUtility.FindAnyScriptable<DemonBuffsScriptable>();
+                if (demonBuffs == null)
+                    demonBuffs = EUtility.FindAnyScriptable<DemonBuffsScriptable>();
 
                 if (artefact == null)
                     artefact = EUtility.FindAnyScriptable<BuffsScriptable>();

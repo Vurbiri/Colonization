@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Actors
     {
         private const string A_DEATH = "A_Death";
 
-        public void SetTimings(AnimationClipSettingsScriptable clipSettings, int id)
+        public void SetTimings_EditorOnly(AnimationClipSettingsScriptable clipSettings, int id)
         {
             if (clipSettings == null || clipSettings.hitTimes == null || clipSettings.hitTimes.Length == 0)
                 return;
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Actors
             timing.remainingTime = clipSettings.totalTime - prev;
         }
 
-        public void SetCountSkills(int count)
+        public void SetCountSkills_EditorOnly(int count)
         {
             _timings ??= new TimingSkillSettings[count];
             if (_timings.Length != count)

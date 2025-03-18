@@ -189,10 +189,10 @@ namespace Vurbiri.Colonization.Actors
                 _rightHand = EUtility.GetComponentInChildren<Transform>(this, "RightHand");
         }
 
-        public void SetCountSkillsSFX(int count) => _scriptablesSFX.SetCountSkills(count);
-        public void SetCountHitsSFX(int idSkill, int count) => _scriptablesSFX.SetCountHits(idSkill, count);
+        public void SetCountSkillsSFX_EditorOnly(int count) => _scriptablesSFX.SetCountSkills(count);
+        public void SetCountHitsSFX_EditorOnly(int idSkill, int count) => _scriptablesSFX.SetCountHits(idSkill, count);
 
-        public void SetSkillSFX(int idSkill, int idHit, AHitScriptableSFX sfx) => _scriptablesSFX.Add(idSkill, idHit, new(sfx));
+        public void SetSkillSFX_EditorOnly(int idSkill, int idHit, AHitScriptableSFX sfx) => _scriptablesSFX.Add(idSkill, idHit, new(sfx));
 #endif
     }
 }

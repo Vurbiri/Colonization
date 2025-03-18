@@ -5,10 +5,13 @@ namespace Vurbiri.Colonization.Characteristics
 	public class SatanAbilities
 	{
         public int maxCurse = 100;
-        public int maxCursePerLevel = 1;
-        public int cursePerTurn = 13;
+        public int maxCursePerLevel = 2;
         public int curseProfit = 33;
-        public float ratioRewardCurse = 0.05f;
-        public float ratioPenaltyCurse = 0.015f;
+        public int curseProfitPerLevel = 3;
+        public int cursePerTurn = 13;
+        public int ratioRewardCurse = 50;
+        public int ratioPenaltyCurse = 15;
+
+        public const int SHIFT_RATIO = 10;
     }
 }

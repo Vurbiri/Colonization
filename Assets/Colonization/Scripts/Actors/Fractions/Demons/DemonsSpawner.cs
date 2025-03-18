@@ -1,27 +1,52 @@
 //Assets\Colonization\Scripts\Actors\Fractions\Demons\DemonsSpawner.cs
 using UnityEngine;
 using Vurbiri.Colonization.Data;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
     public class DemonsSpawner
 	{
+        private const int SHIFT_ID = 5;
+        
         private readonly ActorInitData _initData;
         private readonly DemonInitializer _demonPrefab;
         private readonly Hexagon _startHex;
         private readonly Transform _container;
 
-        public DemonsSpawner(ActorInitData initData, DemonInitializer demonPrefab, Transform container, Hexagon startHex)
+        private int _potential;
+
+        public int Potential => _potential;
+
+        public DemonsSpawner(IReactiveValue<int> level, ActorInitData initData, Players.Settings settings, Hexagon startHex)
         {
             _initData = initData;
-            _demonPrefab = demonPrefab;
-            _container = container;
+            _demonPrefab = settings.demonPrefab;
+            _container = settings.actorsContainer;
             _startHex = startHex;
+
+            level.Subscribe(value => _potential += value, false);
+        }
+        public DemonsSpawner(int potential, IReactiveValue<int> level, ActorInitData initData, Players.Settings settings, Hexagon startHex)
+            : this(level, initData, settings, startHex)
+        {
+            _potential = potential;
         }
 
-        public Demon Create(int id)
+        public bool TryCreate(out Demon demon)
         {
-            return Object.Instantiate(_demonPrefab, _container).Init(id, _initData, _startHex);
+            if (_potential == 0 | _startHex.IsOwner)
+            {
+                demon = null;
+                return false;
+            }
+
+            int maxId = Mathf.Min(_potential, DemonId.Count);
+            int id = Random.Range(0, maxId << SHIFT_ID) % maxId;
+            _potential -= (id + 1);
+
+            demon = Object.Instantiate(_demonPrefab, _container).Init(id, _initData, _startHex);
+            return true;
         }
 
         public Demon Load(ActorLoadData data, Hexagons land)

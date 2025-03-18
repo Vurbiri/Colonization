@@ -2,19 +2,27 @@
 
 namespace Vurbiri.Colonization.Data
 {
+    using Vurbiri.Reactive;
+    using static SAVE_KEYS;
+
     public class SatanSaveData : APlayerSaveData
     {
-        //private readonly string _keyBuffs;
-
+        private int[] _status;
+        
         public SatanLoadData LoadData { get; set; }
 
         public SatanSaveData(IStorageService storage, bool isLoad) : base(PlayerId.Satan, storage, isLoad)
         {
-            //string strId = PlayerId.Satan.ToString();
-            //_keyBuffs = P_BUFFS.Concat(strId);
+            if (!(isLoad && storage.TryGet(P_SATAN, out _status)))
+                _status = new int[Satan.SIZE_ARRAY];
 
             if (isLoad)
-                LoadData = new(storage.Get<int[]>(_keyArtefact), _actors);
+                LoadData = new(storage.Get<int[]>(_keyArtefact), _status, _actors);
+        }
+
+        public void StatusBind(IReactive<IArrayable> status, bool calling)
+        {
+            _unsubscribers += status.Subscribe(satan => _storage.Set(P_SATAN, _status = satan.ToArray(_status)), calling);
         }
     }
 }

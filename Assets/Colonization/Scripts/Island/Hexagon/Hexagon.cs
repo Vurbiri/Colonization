@@ -33,6 +33,8 @@ namespace Vurbiri.Colonization
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
         public Actor Owner => _owner;
+        public bool IsOwner => _ownerId != PlayerId.None;
+        public bool CanDemonEnter => !_isWater & _ownerId == PlayerId.None;
         public bool CanWarriorEnter => !_isGate & !_isWater & _ownerId == PlayerId.None;
         public Vector3 Position { get; private set; }
         public IReadOnlyCollection<Hexagon> Neighbors => _neighbors;

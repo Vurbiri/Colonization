@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
 
         public IReactiveList<IPerk> Perks => _perks;
 
-        public Human(Id<PlayerId> playerId, HumanSaveData data, Players.Settings settings)
+        public Human(Id<PlayerId> playerId, HumanSaveData data, Players.Settings settings, Hexagons land)
         {
             _id = playerId;
             _coroutines = SceneServices.Get<Coroutines>();
@@ -56,7 +56,6 @@ namespace Vurbiri.Colonization
             if (isLoaded)
             {
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
-                Hexagons land = SceneObjects.Get<Hexagons>();
 
                 _resources = new(loadData.resources, _abilities[MaxMainResources], _abilities[MaxBlood]);
                 _edifices = new(playerId, loadData.edifices, crossroads, _abilities);
@@ -88,7 +87,7 @@ namespace Vurbiri.Colonization
 
             data.CurrenciesBind(_resources, !isLoaded);
             data.EdificesBind(_edifices.values);
-            data.RoadsBind(_roads);
+            data.RoadsBind(_roads, !isLoaded);
             data.ArtefactBind(_artefact, !isLoaded);
             data.ActorsBind(_warriors);
         }

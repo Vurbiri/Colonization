@@ -49,8 +49,6 @@ namespace Vurbiri.Reactive
         public static int operator +(int i, RInt r) => i + r._value;
         public static float operator +(RInt r, float f) => r._value + f;
         public static float operator +(float f, RInt r) => f + r._value;
-        
-        public static RInt operator ++(RInt r) { r._subscriber.Invoke(++r._value); return r; }
 
         public static int operator -(RInt a, RInt b) => a._value - b._value;
         public static int operator -(RInt r, IReactiveValue<int> i) => r._value - i.Value;
@@ -59,8 +57,6 @@ namespace Vurbiri.Reactive
         public static int operator -(int i, RInt r) => i - r._value;
         public static float operator -(RInt r, float f) => r._value - f;
         public static float operator -(float f, RInt r) => f - r._value;
-        
-        public static RInt operator --(RInt r) { r._subscriber.Invoke(--r._value); return r; }
 
         public static int operator *(RInt a, RInt b) => a._value * b._value;
         public static int operator *(RInt r, IReactiveValue<int> i) => r._value * i.Value;
