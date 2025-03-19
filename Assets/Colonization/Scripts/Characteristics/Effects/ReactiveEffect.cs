@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public ReactiveEffect(IReadOnlyList<int> array)
         {
-            Errors.CheckArraySize(array, SIZE_ARRAY);
+            Errors.ThrowIfLengthNotEqual(array, SIZE_ARRAY);
 
             int i = 0;
             _code = array[i++];

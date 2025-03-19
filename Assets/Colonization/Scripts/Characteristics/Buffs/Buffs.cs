@@ -41,8 +41,8 @@ namespace Vurbiri.Colonization.Characteristics
             for (int i = 0; i < count; i++)
             {
                 _rIndex.Next();
-                _buffs[_rIndex].Next();
-                _levels[_rIndex]++;
+                _buffs[_rIndex.Current].Next();
+                _levels[_rIndex.Current]++;
             }
 
             _subscriberLevels.Invoke(_levels);

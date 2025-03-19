@@ -1,11 +1,12 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\AbilitiesSet.cs
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class AbilitiesSet<TId> : IReadOnlyAbilities<TId> where TId : AbilityId<TId>
+    public class AbilitiesSet<TId> : IReadOnlyAbilities<TId>, IDisposable where TId : AbilityId<TId>
     {
         private readonly IdArray<TId, AAbility<TId>> _abilities = new();
 
@@ -29,18 +30,14 @@ namespace Vurbiri.Colonization.Characteristics
                 _abilities[i] = new Ability<TId>(i, states[i]);
         }
 
-        public BooleanAbility<TId> ReplaceToBoolean(Id<TId> id)
+        public BooleanAbility<TId> ReplaceToBoolean(Id<TId> id) => ReplaceTo(id, new BooleanAbility<TId>(_abilities[id]));
+        public ChanceAbility<TId> ReplaceToChance(Id<TId> id, IAbility ratioA, IAbility ratioB)
         {
-            BooleanAbility<TId> ability = new(_abilities[id]);
-            _abilities[id] = ability;
-            return ability;
+            return ReplaceTo(id, new ChanceAbility<TId>(_abilities[id], ratioA, ratioB));
         }
-
         public SubAbility<TId> ReplaceToSub(Id<TId> id, Id<TId> max, Id<TId> restore)
         {
-            SubAbility<TId> ability = new(_abilities[id], _abilities[max], _abilities[restore]);
-            _abilities[id] = ability;
-            return ability;
+            return ReplaceTo(id, new SubAbility<TId>(_abilities[id], _abilities[max], _abilities[restore]));
         }
 
         public bool IsGreater(Id<TId> stateId, int value) => _abilities[stateId].Value > value;
@@ -58,5 +55,18 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public void Dispose()
+        {
+            for(int i = 0; i < AbilityId<TId>.Count; i++)
+                _abilities[i].Dispose();
+        }
+
+
+        private T ReplaceTo<T>(Id<TId> id, T newAbility) where T : AAbility<TId>
+        {
+            _abilities[id] = newAbility;
+            return newAbility;
+        }
     }
 }

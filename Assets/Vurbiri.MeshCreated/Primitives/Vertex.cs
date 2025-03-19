@@ -16,7 +16,7 @@ namespace Vurbiri.CreatingMesh
             this.position = position;
             this.normal = normal;
             color = default;
-            uv = position.To2D();
+            uv = new(position.x, position.z);
         }
 
         public Vertex(Vector3 position, Vector3 normal, Color32 color)
@@ -24,7 +24,7 @@ namespace Vurbiri.CreatingMesh
             this.position = position;
             this.normal = normal;
             this.color = color;
-            uv = position.To2D();
+            uv = new(position.x, position.z);
         }
 
         public Vertex(Vector3 position, Vector3 normal, Color32 color, Vector2 uv)

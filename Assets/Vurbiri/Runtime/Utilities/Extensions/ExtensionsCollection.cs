@@ -7,8 +7,8 @@ namespace Vurbiri
 {
     public static class ExtensionsCollection
     {
-        public static int LeftIndex<T>(this IReadOnlyList<T> self, int index) => (index == 0 ? self.Count : index) - 1;
-        public static int RightIndex<T>(this IReadOnlyList<T> self, int index) => (index + 1) % self.Count;
+        public static int LeftIndex<T>(this IReadOnlyCollection<T> self, int index) => (index == 0 ? self.Count : index) - 1;
+        public static int RightIndex<T>(this IReadOnlyCollection<T> self, int index) => (index + 1) % self.Count;
 
         public static T Prev<T>(this IReadOnlyList<T> self, int index) => self[(index == 0 ? self.Count : index) - 1];
         public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
@@ -40,9 +40,9 @@ namespace Vurbiri
 
         public static T[] ToArray<T>(this ICollection<T> self)
         {
-            T[] arr = new T[self.Count];
-            self.CopyTo(arr, 0);
-            return arr;
+            T[] array = new T[self.Count];
+            self.CopyTo(array, 0);
+            return array;
         }
 
         public static void Resize<T>(this List<T> self, int size) where T : new()
@@ -64,9 +64,9 @@ namespace Vurbiri
                 self.RemoveRange(size, count - size);
         }
 
-        public static T First<T>(this ICollection<T> self)
+        public static T First<T>(this IReadOnlyCollection<T> self)
         {
-            if (self.Count == 0) Errors.IndexOutOfRange(-1);
+            Errors.ThrowIfLengthZero<T>(self);
 
             IEnumerator<T> enumerator = self.GetEnumerator();
             enumerator.MoveNext();

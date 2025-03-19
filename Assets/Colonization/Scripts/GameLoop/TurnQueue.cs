@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
         private TurnQueue() { }
         private TurnQueue(IReadOnlyList<int> data)
         {
-            Errors.CheckArraySize(data, SIZE_ARRAY);
+            Errors.ThrowIfLengthNotEqual(data, SIZE_ARRAY);
 
             int i = 0;
             _previousId = data[i++]; _currentId = data[i++]; _turn = data[i];

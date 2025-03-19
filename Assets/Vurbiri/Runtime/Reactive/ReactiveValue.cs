@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Reactive
@@ -17,7 +18,8 @@ namespace Vurbiri.Reactive
         private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
         public T Value 
-        { 
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _value; 
             set 
             {
@@ -40,7 +42,7 @@ namespace Vurbiri.Reactive
 
         public ReactiveValue(T value, IEqualityComparer<T> comparer)
         {
-            Errors.CheckForNull(comparer);
+            Errors.ThrowIfNull(comparer);
 
             _value = value;
             _comparer = comparer;

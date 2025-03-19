@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public int AddEffect(ReactiveEffect effect)
         {
-            if (_values == null)
+            if (effect == null)
                 return 0;
             
             for (int i = 0; i < _count; i++)

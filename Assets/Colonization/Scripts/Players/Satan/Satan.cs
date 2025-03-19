@@ -66,13 +66,32 @@ namespace Vurbiri.Colonization
             data.ActorsBind(_demons);
         }
 
+        public void EndTurn()
+        {
+            int countBuffs = 0, balance = 0;
+            Actor actor;
+            for (int i = 0; i < _demons.Count; i++)
+            {
+                actor = _demons[i];
+                if (actor.IsMainProfit)
+                    balance++;
+                if (actor.IsAdvProfit)
+                    countBuffs++;
+
+                actor.StatesUpdate();
+            }
+
+
+            _artefact.Next(countBuffs);
+        }
+
         public void Profit(int hexId)
         {
-            if (hexId == GATE.ID)
+            if (hexId == CONST.GATE_ID)
                 CurseAdd(_states.curseProfit + _level * _states.curseProfitPerLevel);
         }
 
-        public void Turn()
+        public void StartTurn()
         {
             CurseAdd(_cursePerTurn);
         }
@@ -80,11 +99,7 @@ namespace Vurbiri.Colonization
         public void SetBalance(IReactiveValue<int> value) => _unsubscribers += value.Subscribe(OnBalance);
 
 
-        public Unsubscriber Subscribe(Action<IArrayable> action, bool calling)
-        {
-            if (calling) action(this);
-            return _subscriber.Add(action);
-        }
+        public Unsubscriber Subscribe(Action<IArrayable> action, bool calling) => _subscriber.Add(action, calling, this);
 
         public void Dispose()
         {
@@ -107,7 +122,7 @@ namespace Vurbiri.Colonization
         }
         public static void FromArray(IReadOnlyList<int> array, out int level, out int curse, out int spawn)
         {
-            Errors.CheckArraySize(array, SIZE_ARRAY);
+            Errors.ThrowIfLengthNotEqual(array, SIZE_ARRAY);
 
             int i = 0;
             level = array[i++];

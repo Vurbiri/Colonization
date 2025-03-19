@@ -3,13 +3,13 @@ using System;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class AAbilityChange<TId> : AAbility<TId> where TId : AbilityId<TId>
+    public abstract class AAbilitySettable<TId> : AAbility<TId> where TId : AbilityId<TId>
     {
         protected int _maxValue;
 
-        public AAbilityChange(AAbility<TId> other) :base(other) { }
+        public AAbilitySettable(AAbility<TId> other) :base(other) { }
 
-        protected int Change(int value)
+        public int Set(int value)
         {
             value = Math.Clamp(value, 0, _maxValue);
             int delta = value - _value;

@@ -17,10 +17,15 @@ namespace Vurbiri.Colonization.Actors
         protected int _id;
         protected Id<PlayerId> _owner;
 
+        #region Abilities
         protected AbilitiesSet<ActorAbilityId> _abilities;
         protected SubAbility<ActorAbilityId> _currentHP;
         protected SubAbility<ActorAbilityId> _currentAP;
         protected BooleanAbility<ActorAbilityId> _move;
+        protected ChanceAbility<ActorAbilityId> _profitMain;
+        protected ChanceAbility<ActorAbilityId> _profitAdv;
+        #endregion
+
         protected Hexagon _currentHex;
 
         protected ActorSkin _skin;
@@ -31,7 +36,6 @@ namespace Vurbiri.Colonization.Actors
         protected float _extentsZ;
 
         protected EffectsSet _effects;
-        protected ReactiveEffect _wallDefenceEffect;
 
         protected StateMachineSelectable _stateMachine;
         protected ABlockState _blockState;
@@ -48,6 +52,7 @@ namespace Vurbiri.Colonization.Actors
         public int TypeId => _typeId;
         public int Id => _id;
         public Id<PlayerId> Owner => _owner;
+        public Hexagon Hexagon => _currentHex;
         public int ActionPoint => _currentAP.Value;
         public bool CanMove => _move.IsValue;
         public bool IsIdle => _stateMachine.IsDefaultState;
@@ -58,6 +63,8 @@ namespace Vurbiri.Colonization.Actors
         public IListReactiveItems<ReactiveEffect> Effects => _effects;
         public IReadOnlyAbilities<ActorAbilityId> Abilities => _abilities;
         public IReactiveValue<bool> CanCancel => _canCancel;
+        public bool IsMainProfit => _profitMain.Next();
+        public bool IsAdvProfit => _profitAdv.Next();
         #endregion
 
         #region States
@@ -79,6 +86,7 @@ namespace Vurbiri.Colonization.Actors
             return _diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
+        #region Effect
         public int AddEffect(ReactiveEffect effect) => _effects.AddEffect(effect);
         public int ApplyEffect(IPerk effect)
         {
@@ -89,32 +97,35 @@ namespace Vurbiri.Colonization.Actors
 
             return delta;
         }
+        #endregion
+
+        #region Start/End turn
+        public void StatesUpdate()
+        {
+            _currentHP.Next();
+            _currentAP.Next();
+            _move.On();
+
+            _isPlayerTurn = _thisCollider.enabled = false;
+        }
+        public void EffectsUpdate(int defense)
+        {
+            _isPlayerTurn = _thisCollider.enabled = _owner == PlayerId.Player;
+
+            _effects.Next();
+            _effects.AddEffect(EffectsFactory.CreateWallDefenceEffect(defense));
+
+            _stateMachine.ToDefaultState();
+        }
+        public void EffectsUpdate() => EffectsUpdate(_currentHex.GetMaxDefense());
+        #endregion
 
         #region WallDefence
-        public void AddWallDefenceEffect()
-        {
-            _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(_currentHex.GetMaxDefense());
-            if (_wallDefenceEffect != null)
-                _effects.AddEffect(_wallDefenceEffect);
-        }
-        public void AddWallDefenceEffect(int maxDefense)
-        {
-            _wallDefenceEffect = EffectsFactory.CreateWallDefenceEffect(maxDefense);
-            if (_wallDefenceEffect != null)
-                _effects.AddEffect(_wallDefenceEffect);
-        }
-        public void RemoveWallDefenceEffect()
-        {
-            if (_wallDefenceEffect != null)
-            {
-                _effects.Remove(_wallDefenceEffect);
-                _wallDefenceEffect = null;
-            }
-        }
+        public void AddWallDefenceEffect(int maxDefense) => _effects.AddEffect(EffectsFactory.CreateWallDefenceEffect(maxDefense));
+        public void RemoveWallDefenceEffect() => _effects.Remove(EffectsFactory.WallEffectCode);
         #endregion
 
         public void ColliderEnable(bool enabled) => _thisCollider.enabled = enabled;
-        public void EnablePlayerCollider() => _thisCollider.enabled = _isPlayerTurn;
 
         #region ISelectable
         public void Select() => _stateMachine.Select();
@@ -172,6 +183,7 @@ namespace Vurbiri.Colonization.Actors
 
             _skin.Dispose();
             _stateMachine.Dispose();
+            _abilities.Dispose();
 
             Destroy(gameObject);
         }
@@ -199,28 +211,6 @@ namespace Vurbiri.Colonization.Actors
             Removing();
             yield return _skin.Death();
             Dispose();
-        }
-
-        private void OnNextTurn(ITurn turn)
-        {
-            if (_owner == turn.PreviousId)
-            {
-                _currentHP.Next();
-                _currentAP.Next();
-                _move.On();
-
-                _isPlayerTurn = _thisCollider.enabled = false;
-                return;
-            }
-
-            if (_owner == turn.CurrentId)
-            {
-                _isPlayerTurn = _thisCollider.enabled = _owner == PlayerId.Player;
-
-                _effects.Next();
-                AddWallDefenceEffect();
-                _stateMachine.ToDefaultState();
-            }
         }
 
         private void OnBuff(IPerk perk)

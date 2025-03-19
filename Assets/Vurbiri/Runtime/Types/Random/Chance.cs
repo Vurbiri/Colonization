@@ -18,9 +18,9 @@ namespace Vurbiri
         {
             get
             {
-                _negentropy += _value;
-                if (_negentropy <= 0 || (_negentropy < MAX_CHANCE && Random.Range(0, MAX_CHANCE) >= _negentropy))
-                    return false;
+                if(_value == 0) return false;
+                if((_negentropy += _value) <= 0) return false;
+                if(_negentropy < MAX_CHANCE && Random.Range(0, MAX_CHANCE) >= _negentropy) return false;
 
                 _negentropy -= MAX_CHANCE;
                 return true;
@@ -30,7 +30,7 @@ namespace Vurbiri
         public Chance(int value)
         {
             _value = Mathf.Clamp(value, 0, MAX_CHANCE);
-            _negentropy = new System.Random().Next(MAX_CHANCE);
+            _negentropy = SysRandom.Next(MAX_CHANCE);
         }
 
         public Chance(int value, int negentropy)

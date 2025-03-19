@@ -6,11 +6,14 @@ namespace Vurbiri.Colonization
 {
     public class ActorInitData
 	{
+        private readonly ITurn _turn;
+
         public readonly Id<PlayerId> owner;
         public readonly Diplomacy diplomacy;
         public readonly GameplayEventBus eventBus;
-        public readonly ITurn turn;
         public readonly IReactive<IPerk>[] buffs;
+
+        public bool IsPlayerTurn => owner == PlayerId.Player & owner == _turn.CurrentId;
 
         public ActorInitData(Id<PlayerId> owner, Buffs artefact) : this(owner)
         {
@@ -27,7 +30,7 @@ namespace Vurbiri.Colonization
             this.owner = owner;
             diplomacy = SceneServices.Get<Diplomacy>();
             eventBus = SceneServices.Get<GameplayEventBus>();
-            turn = SceneServices.Get<ITurn>();
+            _turn = SceneServices.Get<ITurn>();
         }
     }
 }

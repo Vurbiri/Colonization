@@ -4,10 +4,10 @@ using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    sealed public class Ability<TId> : AAbility<TId> where TId : AbilityId<TId>
+    public class Ability<TId> : AAbility<TId> where TId : AbilityId<TId>
     {
-        private readonly int _baseValue;
         private readonly IdArray<TypeModifierId, IAbilityModifier> _modifiers = new();
+        protected readonly int _baseValue;
 
         public Ability(Id<TId> id, int baseValue) : base(id, baseValue)
         {
@@ -18,12 +18,12 @@ namespace Vurbiri.Colonization.Characteristics
             _modifiers[TypeModifierId.TotalPercent] = new AbilityModifierPercent();
         }
 
-        public override int AddModifier(IAbilityValue mod)
+        sealed public override int AddModifier(IAbilityValue mod)
         {
             _modifiers[mod.TypeModifier].Add(mod.Value);
             return ApplyModifiers();
         }
-        public override int RemoveModifier(IAbilityValue mod)
+        sealed public override int RemoveModifier(IAbilityValue mod)
         {
             _modifiers[mod.TypeModifier].Add(-mod.Value);
             return ApplyModifiers();

@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\Actors\Actor\States\BlockState.cs
+using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.Characteristics.EffectsFactory;
 
@@ -52,17 +53,19 @@ namespace Vurbiri.Colonization.Actors
         //=======================================================================================
         sealed protected class PlayerBlockState : ABlockState
         {
-            public PlayerBlockState(int cost, int value, Actor parent) : base(cost, value, parent) { }
+            private readonly Collider _actorCollider;
+
+            public PlayerBlockState(int cost, int value, Actor parent) : base(cost, value, parent) => _actorCollider = parent._thisCollider;
 
             public override void Enter()
             {
-                _actor.EnablePlayerCollider();
+                _actorCollider.enabled = _actor._isPlayerTurn;
                 base.Enter();
             }
 
             public override void Exit()
             {
-                _actor.ColliderEnable(false);
+                _actorCollider.enabled = false;
                 base.Exit();
             }
         }

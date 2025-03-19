@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization.Actors
                 List<Hexagon> targets = new(HEX.SIDES);
 
                 foreach (var hex in currentHex.Neighbors)
-                    if (hex.TrySetSelectableActor(_actor._owner, _relationTarget))
+                    if (hex.TrySetOwnerSelectable(_actor._owner, _relationTarget))
                         targets.Add(hex);
 
                 if (targets.Count == 0)

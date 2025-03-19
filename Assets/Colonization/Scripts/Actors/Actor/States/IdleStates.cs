@@ -1,4 +1,6 @@
 //Assets\Colonization\Scripts\Actors\Actor\States\IdleStates.cs
+using UnityEngine;
+
 namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
@@ -28,21 +30,23 @@ namespace Vurbiri.Colonization.Actors
         sealed protected class PlayerIdleState : AIdleState
         {
             private readonly GameplayEventBus _eventBus;
+            private readonly Collider _actorCollider;
 
             public PlayerIdleState(Actor parent) : base(parent) 
             {
                 _eventBus = parent._eventBus;
+                _actorCollider = parent._thisCollider;
             }
 
             public override void Enter()
             {
+                _actorCollider.enabled = _actor._isPlayerTurn;
                 _skin.Idle();
-                _actor.ColliderEnable(true);
             }
 
             public override void Exit()
             {
-                _actor.ColliderEnable(false);
+                _actorCollider.enabled = false;
             }
 
             public override void Select() => _eventBus.TriggerActorSelect(_actor);

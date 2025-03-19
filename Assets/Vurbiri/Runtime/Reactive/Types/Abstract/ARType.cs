@@ -1,6 +1,7 @@
 //Assets\Vurbiri\Runtime\Reactive\Types\Abstract\ARType.cs
 using Newtonsoft.Json;
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Reactive
@@ -15,6 +16,7 @@ namespace Vurbiri.Reactive
 
         public T Value
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _value;
             set { if (!_value.Equals(value)) _subscriber.Invoke(_value = value); }
         }

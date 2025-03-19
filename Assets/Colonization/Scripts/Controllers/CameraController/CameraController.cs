@@ -89,7 +89,16 @@ namespace Vurbiri.Colonization.Controllers
             _zoomState.InputValue = ctx.ReadValue<float>();
             _machine.SetState(_zoomState);
         }
-        
+
+#if UNITY_EDITOR
+        public void OnDrawGizmosSelected()
+        {
+            Gizmos.matrix = Matrix4x4.identity;
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(transform.position, 2f);
+        }
+#endif
+
         #region Nested: Movement, MovementToTarget
         //***********************************
         [Serializable]

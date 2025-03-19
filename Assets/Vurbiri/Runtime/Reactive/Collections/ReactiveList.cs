@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Vurbiri.Reactive.Collections
 {
@@ -27,7 +28,11 @@ namespace Vurbiri.Reactive.Collections
             }
         }
 
-        public int Count => _count;
+        public int Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _count;
+        }
         public IReactiveValue<int> CountReactive => _count;
         public bool IsReadOnly => false;
 
@@ -39,8 +44,8 @@ namespace Vurbiri.Reactive.Collections
         }
         public ReactiveList(IEqualityComparer<T> comparer)
         {
-            Errors.CheckForNull(comparer);
-            
+            Errors.ThrowIfNull(comparer);
+
             _comparer = comparer;
             _values = new T[_capacity];
         }
@@ -52,7 +57,7 @@ namespace Vurbiri.Reactive.Collections
         }
         public ReactiveList(int capacity, IEqualityComparer<T> comparer)
         {
-            Errors.CheckForNull(comparer);
+            Errors.ThrowIfNull(comparer);
 
             _comparer = comparer;
             _capacity = capacity;
@@ -69,7 +74,7 @@ namespace Vurbiri.Reactive.Collections
         }
         public ReactiveList(IReadOnlyList<T> values, IEqualityComparer<T> comparer)
         {
-            Errors.CheckForNull(comparer);
+            Errors.ThrowIfNull(comparer);
 
             _comparer = comparer;
             _capacity = _count.Value = values.Count;
@@ -130,7 +135,7 @@ namespace Vurbiri.Reactive.Collections
 
         public void Insert(int index, T item)
         {
-            Errors.CheckIndex(index, 0, _count);
+            Errors.ThrowIfOutOfRange(index, _count);
 
             if (_count == _capacity)
                 GrowArray();

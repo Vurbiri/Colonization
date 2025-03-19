@@ -4,16 +4,10 @@ using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    sealed public class SubAbility<TId> : AAbilityChange<TId> where TId : AbilityId<TId>
+    sealed public class SubAbility<TId> : AAbilitySettable<TId> where TId : AbilityId<TId>
     {
         private readonly IAbility _restore;
         private readonly IdArray<TypeModifierId, Func<int, int>> _modifiers = new();
-
-        public override int Value
-        {
-            get => _value;
-            set => Change(value);
-        }
 
         public SubAbility(AAbility<TId> self, IAbility max, IAbility restore) : base(self)
         {
@@ -27,15 +21,15 @@ namespace Vurbiri.Colonization.Characteristics
             _restore = restore;
         }
 
-        public override int AddModifier(IAbilityValue mod) => Change(_modifiers[mod.TypeModifier](mod.Value));
-        public override int RemoveModifier(IAbilityValue mod) => Change(_modifiers[mod.TypeModifier](-mod.Value));
+        public override int AddModifier(IAbilityValue mod) => Set(_modifiers[mod.TypeModifier](mod.Value));
+        public override int RemoveModifier(IAbilityValue mod) => Set(_modifiers[mod.TypeModifier](-mod.Value));
 
         public void Next()
         {
             if(_restore.Value <= 0)
                 return;
 
-            Change(_value + _restore.Value);
+            Set(_value + _restore.Value);
         }
 
         private int OnBasePercent(int value) => _value * (100 + value) / 100;
@@ -51,9 +45,9 @@ namespace Vurbiri.Colonization.Characteristics
             _maxValue = value;
 
             if (delta > 0)
-                Change(_value + delta);
+                Set(_value + delta);
             else
-                Change(_value);
+                Set(_value);
         }
     }
 }

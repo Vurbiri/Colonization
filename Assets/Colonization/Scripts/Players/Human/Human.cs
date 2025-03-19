@@ -4,7 +4,6 @@ using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
-using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 using static Vurbiri.Colonization.Characteristics.HumanAbilityId;
 
@@ -92,13 +91,29 @@ namespace Vurbiri.Colonization
             data.ActorsBind(_warriors);
         }
 
-        public void UpdateExchangeRate()
+        public IAbility GetAbility(Id<HumanAbilityId> id) => _abilities[id];
+
+
+        public void EndTurn()
         {
-            _exchangeRate.Update();
+            int countBuffs = 0;
+            CurrenciesLite profit = new();
+            Actor actor;
+            for(int i = 0; i < _warriors.Count; i++)
+            {
+                actor = _warriors[i];
+                if (actor.IsMainProfit)
+                    profit.Increment(actor.Hexagon.SurfaceId);
+                if (actor.IsAdvProfit)
+                    countBuffs++;
+
+                actor.StatesUpdate();
+            }
+
+            _resources.AddFrom(profit);
+            _artefact.Next(countBuffs);
         }
-
-        public IReactive<int> GetAbilityReactive(Id<HumanAbilityId> id) => _abilities[id];
-
+       
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
             _resources.AddBlood(_edifices.ShrinePassiveProfit);
@@ -114,6 +129,10 @@ namespace Vurbiri.Colonization
                 _resources.AddFrom(freeGroundRes);
 
             _resources.AddFrom(_edifices.ProfitFromEdifices(hexId));
+        }
+        public void UpdateExchangeRate()
+        {
+            _exchangeRate.Update();
         }
 
         public bool BuyPerk(IPerkSettings perk)

@@ -30,6 +30,8 @@ namespace Vurbiri.Colonization
 
         #region Propirties
         public Key Key => _key;
+        public int ID => _id;
+        public int SurfaceId => _surfaceId;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
         public Actor Owner => _owner;
@@ -153,8 +155,7 @@ namespace Vurbiri.Colonization
 
         public int GetMaxDefense()
         {
-            if (_ownerId == PlayerId.Satan & _isGate)
-                return GATE.DEFENSE;
+            if (_isGate) return 0;
             
             int max = int.MinValue;
             foreach (var crossroad in _crossroads)
@@ -170,7 +171,9 @@ namespace Vurbiri.Colonization
         }
 
         public bool IsEnemy(Id<PlayerId> id) => _owner != null && _owner.GetRelation(id) == Relation.Enemy;
+        #endregion
 
+        #region Set(Un)Selectable
         public bool TrySetSelectableFree()
         {
             if(_isGate | _isWater | _owner != null)
@@ -180,8 +183,7 @@ namespace Vurbiri.Colonization
             _collider.enabled = true;
             return true;
         }
-
-        public bool TrySetSelectableActor(Id<PlayerId> id, Relation typeAction)
+        public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
         {
             if (_isWater | _owner == null || !_owner.IsCanUseSkill(id, typeAction, out bool isFriendly))
                 return false;
@@ -218,7 +220,7 @@ namespace Vurbiri.Colonization
         public int[] ToArray() => new int[] { _id, _surfaceId };
         public static void FromArray(IReadOnlyList<int> data, out int id, out int surfaceId)
         {
-            Errors.CheckArraySize(data, SIZE_ARRAY);
+            Errors.ThrowIfLengthNotEqual(data, SIZE_ARRAY);
 
             int i = 0;
             id = data[i++];

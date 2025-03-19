@@ -50,12 +50,10 @@ namespace Vurbiri.Colonization
             {
                 CurrenciesLite profit = new();
 
-                int count = ports.Count;
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < ports.Count; i++)
                     profit += ports[i].ProfitFromPort(hexId, _portsProfit.Value);
 
-                count = urbans.Count;
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < urbans.Count; i++)
                     profit += urbans[i].ProfitFromUrban(hexId, _compensationRes.Value);
 
                 return profit;

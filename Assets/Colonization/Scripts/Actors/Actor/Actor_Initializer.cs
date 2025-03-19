@@ -28,6 +28,7 @@ namespace Vurbiri.Colonization.Actors
             _typeId = settings.TypeId;
             _id = settings.Id;
             _owner = initData.owner;
+            _isPlayerTurn = initData.IsPlayerTurn;
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
 
@@ -37,6 +38,8 @@ namespace Vurbiri.Colonization.Actors
             _currentHP = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
             _currentAP = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
             _move = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
+            _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP, _move);
+            _profitAdv = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP, _move);
 
             for (int i = 0; i < initData.buffs.Length; i++)
                 _unsubscribers += initData.buffs[i].Subscribe(OnBuff);
@@ -56,9 +59,6 @@ namespace Vurbiri.Colonization.Actors
             #region Get Services
             _eventBus = initData.eventBus;
             _diplomacy = initData.diplomacy;
-
-            _unsubscribers += initData.turn.Subscribe(OnNextTurn, false);
-            _isPlayerTurn = _owner == PlayerId.Player & _owner == initData.turn.CurrentId;
             #endregion
 
             #region Effects
@@ -86,9 +86,9 @@ namespace Vurbiri.Colonization.Actors
         {
             Init(settings, initData, collider, startHex);
 
-            _currentHP.Value = data.currentHP;
-            _currentAP.Value = data.currentAP;
-            _move.Value  = data.move;
+            _currentHP.Set(data.currentHP);
+            _currentAP.Set(data.currentAP);
+            _move.Set(data.move);
 
             int count = data.effects.Count;
             for (int i = 0; i < count; i++)

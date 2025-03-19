@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Collections
@@ -13,7 +14,11 @@ namespace Vurbiri.Collections
         [SerializeField] protected TValue[] _values;
         protected int _count;
 
-        public int Count => _count;
+        public int Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _count;
+        }
 
         public virtual TValue this[Id<TId> id] { get => _values[id.Value]; set => _values[id.Value] = value; }
         public virtual TValue this[int index] { get => _values[index]; set => _values[index] = value; }

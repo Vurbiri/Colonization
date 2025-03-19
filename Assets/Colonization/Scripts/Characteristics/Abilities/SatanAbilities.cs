@@ -4,6 +4,7 @@ namespace Vurbiri.Colonization.Characteristics
     [System.Serializable]
 	public class SatanAbilities
 	{
+        public int gateDefense = 3;
         public int maxCurse = 100;
         public int maxCursePerLevel = 2;
         public int curseProfit = 33;

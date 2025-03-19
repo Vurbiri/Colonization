@@ -7,40 +7,46 @@ namespace Vurbiri
 {
     public static class Errors
 	{
-        #region Check
+        #region ThrowIf..
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CheckForNull<T>(T value) where T : class
+        public static void ThrowIfNull<T>(T value) where T : class
         {
            if (value == null)
                 ArgumentNull(nameof(value));
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CheckIndex(int index, int minExclude, int maxInclude)
+        public static void ThrowIfOutOfRange(int index, int maxExclude)
         {
-            if (index < minExclude | index >= maxInclude)
+            if (index < 0 | index >= maxExclude)
                 IndexOutOfRange(index);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CheckForMin<T>(T value, T minExclude) where T : IComparable<T>
+        public static void ThrowIfLess<T>(T value, T minInclude) where T : IComparable<T>
         {
-            if (value.CompareTo(minExclude) < 0)
-                ArgumentOutOfRange($"{value} < {minExclude}");
+            if (value.CompareTo(minInclude) < 0)
+                ArgumentOutOfRange($"{value} < {minInclude}");
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CheckForMinMax<T>(T value, T minExclude, T maxInclude) where T : IComparable<T>
+        public static void ThrowIfOutOfRange<T>(T value, T minInclude, T maxExclude) where T : IComparable<T>
         {
-            if (value.CompareTo(minExclude) < 0 | value.CompareTo(maxInclude) >= 0)
-                ArgumentOutOfRange($"{value} < {minExclude} || {value} >= {maxInclude}");
+            if (value.CompareTo(minInclude) < 0 | value.CompareTo(maxExclude) >= 0)
+                ArgumentOutOfRange($"{value} < {minInclude} || {value} >= {maxExclude}");
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CheckArraySize<T>(IReadOnlyList<T> value, int size)
+        public static void ThrowIfLengthNotEqual<T>(IReadOnlyCollection<T> value, int size)
         {
             if (value.Count != size)
-                Error($"Array size {value.Count} != {size}");
+                Rank(value.Count, size);
+        }
+        public static void ThrowIfLengthNotEqual<T>(IReadOnlyCollection<T> valueA, IReadOnlyCollection<T> valueB)
+        {
+            if (valueA.Count != valueB.Count)
+                Rank(valueA.Count, valueB.Count);
+        }
+        public static void ThrowIfLengthZero<T>(IReadOnlyCollection<T> value)
+        {
+            if (value.Count == 0)
+                ArgumentOutOfRange($"Length = 0");
         }
         #endregion
 
@@ -50,7 +56,8 @@ namespace Vurbiri
         public static void IndexOutOfRange(int index) => throw new IndexOutOfRangeException($"index = {index}");
         public static void ArgumentOutOfRange(string message) => throw new ArgumentOutOfRangeException(message);
         public static T ArgumentOutOfRange<T>(string paramName, T value) => throw new ArgumentOutOfRangeException($"{paramName} = {value}");
-
+        public static void Rank(int length, int size) => throw new RankException($"Length {length} != {size}");
+        
         public static void InvalidOperation() => throw new InvalidOperationException();
 
         public static void AddItem(string value) => throw new($"{value} has already been added.");
