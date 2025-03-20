@@ -16,8 +16,7 @@ namespace Vurbiri.Reactive
 
         public override void Unsubscribe()
         {
-            int count = _unsubscribers.Count;
-            for (int i = 0; i < count; i++)
+            for (int i = _unsubscribers.Count - 1; i >= 0; i--)
                 _unsubscribers[i]?.Unsubscribe();
 
             _unsubscribers.Clear();
@@ -25,8 +24,7 @@ namespace Vurbiri.Reactive
 
         public static Unsubscribers operator +(Unsubscribers unsubscribers, Unsubscriber unsubscriber)
         {
-            if (unsubscribers == null)
-                return new(unsubscriber);
+            if (unsubscribers == null) return new(unsubscriber);
 
             unsubscribers._unsubscribers.Add(unsubscriber);
             return unsubscribers;

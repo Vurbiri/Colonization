@@ -22,10 +22,10 @@ namespace Vurbiri.Colonization
         private Crossroads _crossroads;
         private readonly Vector3[] _sides = new Vector3[HEX.SIDES];
 
-        public IslandCreator Init(DIContainer diObjects, GameplayEventBus eventBus)
+        public IslandCreator Init(DIContainer diObjects, GameplayTriggerBus triggerBus)
         {
-            _hexagons   = diObjects.AddInstance<Hexagons>(new(_landInitData, eventBus));
-            _crossroads = diObjects.AddInstance<Crossroads>(new(_crossroadsContainer, _edificePrefabs, eventBus));
+            _hexagons   = diObjects.AddInstance<Hexagons>(new(_landInitData, triggerBus));
+            _crossroads = diObjects.AddInstance<Crossroads>(new(_crossroadsContainer, _edificePrefabs, triggerBus));
 
             var shape = _psFog.shape;
             shape.radius = _ratioFogSize * MAX_CIRCLES;

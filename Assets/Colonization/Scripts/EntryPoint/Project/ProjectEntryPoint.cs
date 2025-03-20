@@ -1,13 +1,11 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\ProjectEntryPoint.cs
 using System.Collections;
-using UnityEngine;
 using Vurbiri.Colonization.Data;
 using Vurbiri.EntryPoint;
 using Vurbiri.TextLocalization;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.EntryPoint
 {
-    [DefaultExecutionOrder(5)]
     sealed public class ProjectEntryPoint : AProjectEntryPoint
 	{
 		private void Start()
@@ -21,7 +19,6 @@ namespace Vurbiri.Colonization
 			loadScene.Start();
 
 			yield return Init_Cn(data);
-
 			data.Dispose();
 
 			loadScene.End();
@@ -33,7 +30,7 @@ namespace Vurbiri.Colonization
 
             _servicesContainer.AddInstance(Localization.Instance).SetFiles(data.localizationFiles);
 
-			var coroutine = _servicesContainer.AddInstance(Coroutines.Create("Project Coroutines", true));
+			var coroutine = _servicesContainer.AddInstance(Coroutines.Create("Project Coroutine", true));
 
             var ysdk = _servicesContainer.AddInstance(new YandexSDK(coroutine, data.leaderboardName));
 			yield return ysdk.Init_Cn();

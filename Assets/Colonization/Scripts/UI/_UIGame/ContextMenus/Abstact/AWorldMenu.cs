@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Abstact\AWorldMenu.cs
-using System;
 using UnityEngine;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -9,18 +9,18 @@ namespace Vurbiri.Colonization.UI
         protected GameObject _thisGO;
         protected Crossroad _currentCrossroad;
 
-        public event Action<bool> EventEnabled;
+        protected readonly Subscriber<bool> _subscriber = new();
 
         protected virtual void Awake() => _thisGO = gameObject;
 
-        protected virtual void OnEnable() => EventEnabled?.Invoke(true);
+        protected virtual void OnEnable() => _subscriber.Invoke(true);
 
         public void Open() => _thisGO.SetActive(true);
         public void Close() => _thisGO.SetActive(false);
 
-        protected virtual void OnDisable() => EventEnabled?.Invoke(false);
+        protected virtual void OnDisable() => _subscriber.Invoke(false);
 
-        protected virtual void OnDestroy() => EventEnabled = null;
+        protected virtual void OnDestroy() => _subscriber.Dispose();
 
         protected virtual void OnClose()
         {

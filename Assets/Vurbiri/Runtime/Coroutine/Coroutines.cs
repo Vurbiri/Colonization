@@ -11,12 +11,12 @@ namespace Vurbiri
         
         public static Coroutines Create(string name, bool isDontDestroy = false)
         {
-            GameObject go = new(string.Format(NAME, name));
+            GameObject gObj = new(string.Format(NAME, name));
 
             if (isDontDestroy)
-                DontDestroyOnLoad(go);
+                DontDestroyOnLoad(gObj);
 
-            return go.AddComponent<Coroutines>();
+            return gObj.AddComponent<Coroutines>();
         }
 
         public Coroutine Run(IEnumerator routine) => StartCoroutine(routine);

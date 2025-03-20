@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
             if (crossroad.BuyUpgrade(_id))
             {
                 _resources.Pay(_prices.Edifices[crossroad.Id.Value]);
-                _edifices.values[crossroad.GroupId].TryAdd(crossroad);
+                _edifices.values[crossroad.GroupId].AddOrChange(crossroad);
             }
         }
 
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
             if (crossroad.BuyWall(_id, _abilities[WallDefence]))
             {
                 _resources.Pay(_prices.Wall);
-                _edifices.values[crossroad.GroupId].ChangeSignal(crossroad);
+                _edifices.values[crossroad.GroupId].Signal(crossroad);
             }
         }
         #endregion

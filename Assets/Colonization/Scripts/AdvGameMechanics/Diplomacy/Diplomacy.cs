@@ -110,6 +110,8 @@ namespace Vurbiri.Colonization
 
         public Unsubscriber Subscribe(Action<IReadOnlyList<int>> action, bool calling = true) => _subscriber.Add(action, calling, _values);
 
+        public void Dispose() => _subscriber.Dispose();
+
         private void OnNextTurn(ITurn turn)
         {
             int current = turn.CurrentId.Value;

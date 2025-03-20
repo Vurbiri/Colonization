@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
         private void Start()
         {
             Toggle toggle = GetComponent<Toggle>();
-            GameplayEventBus eventBus = SceneServices.Get<GameplayEventBus>();
+            GameplayTriggerBus eventBus = SceneServices.Get<GameplayTriggerBus>();
 
             eventBus.TriggerHexagonIdShow(toggle.isOn);
             toggle.onValueChanged.AddListener(eventBus.TriggerHexagonIdShow);

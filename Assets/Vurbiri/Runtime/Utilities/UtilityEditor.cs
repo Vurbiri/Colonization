@@ -110,12 +110,12 @@ namespace Vurbiri
             return null;
         }
 
-        private static string[] FindPrefabs() => AssetDatabase.FindAssets(TYPE_PREFAB, ASSET_FOLDERS);
-        private static string[] FindPrefabs(string name) => AssetDatabase.FindAssets($"{name} {TYPE_PREFAB}", ASSET_FOLDERS);
-        private static string[] FindAssets<T>() where T : Object => AssetDatabase.FindAssets($"t:{typeof(T).Name}", ASSET_FOLDERS);
-        private static string[] FindAssets<T>(string name) where T : Object => AssetDatabase.FindAssets($"{name} t:{typeof(T).Name}", ASSET_FOLDERS);
-        private static GameObject LoadMainAssetAtGUID(string guid) => ((GameObject)AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid)));
-        private static bool TryLoadAssetAtGUID<T>(string guid, out T obj) where T : Object
+        public static string[] FindPrefabs() => AssetDatabase.FindAssets(TYPE_PREFAB, ASSET_FOLDERS);
+        public static string[] FindPrefabs(string name) => AssetDatabase.FindAssets($"{name} {TYPE_PREFAB}", ASSET_FOLDERS);
+        public static string[] FindAssets<T>() where T : Object => AssetDatabase.FindAssets($"t:{typeof(T).Name}", ASSET_FOLDERS);
+        public static string[] FindAssets<T>(string name) where T : Object => AssetDatabase.FindAssets($"{name} t:{typeof(T).Name}", ASSET_FOLDERS);
+        public static GameObject LoadMainAssetAtGUID(string guid) => ((GameObject)AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GUIDToAssetPath(guid)));
+        public static bool TryLoadAssetAtGUID<T>(string guid, out T obj) where T : Object
         {
             obj = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));
             return obj != null;

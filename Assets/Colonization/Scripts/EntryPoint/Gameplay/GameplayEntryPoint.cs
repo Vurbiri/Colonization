@@ -13,9 +13,9 @@ using Vurbiri.Reactive;
 using Vurbiri.TextLocalization;
 using Vurbiri.UI;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.EntryPoint
 {
-    [DefaultExecutionOrder(-20)]
+    //[DefaultExecutionOrder(-20)]
     sealed public class GameplayEntryPoint : ASceneEntryPoint
     {
         [SerializeField] private SceneId _nextScene;
@@ -40,10 +40,10 @@ namespace Vurbiri.Colonization
         private Players _players;
         private GameSettings _gameplaySettings;
         private GameplaySaveData _gameSaveData;
-        private GameplayEventBus _eventBus;
+        private GameplayTriggerBus _triggerBus;
         private InputController _inputController;
 
-        public override IReactive<ExitParam> Enter(SceneContainers containers, AEnterParam param)
+        public override ISubscriber<ExitParam> Enter(SceneContainers containers, AEnterParam param)
         {
             _containers = containers;
 
@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization
 
             StartCoroutine(Enter_Cn());
 
-            return new GameplayExitPoint(_nextScene).ExitParam;
+            return new GameplayExitPoint(_nextScene).EventExit;
 
             #region Local: FillingContainers()
             //=================================
@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization
 
                 data.AddInstance(_gameSaveData = new(_isLoad));
 
-                services.AddInstance(_eventBus = new());
+                services.AddInstance<GameplayTriggerBus, GameplayEventBus>(_triggerBus = new());
                 services.AddInstance(_inputController = new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
                 services.AddInstance<ITurn>(_turnQueue = TurnQueue.Create(_gameSaveData));
                 services.AddInstance(Diplomacy.Create(_gameSaveData, _scriptables.diplomacy, _turnQueue));
@@ -88,7 +88,7 @@ namespace Vurbiri.Colonization
 
         private IEnumerator Enter_Cn()
         {
-            yield return _islandCreator.Init(_containers.Objects, _eventBus).Create_Cn(_gameSaveData);
+            yield return _islandCreator.Init(_containers.Objects, _triggerBus).Create_Cn(_gameSaveData);
             yield return CreatePlayers_Cn();
 
             _sceneObjects.Init(this, _scriptables);
@@ -120,7 +120,7 @@ namespace Vurbiri.Colonization
 
             _sceneObjects.game.Init(_turnQueue, _inputController);
             _gameplaySettings.StartGame();
-            _eventBus.TriggerSceneEndCreation();
+            _triggerBus.TriggerSceneEndCreation();
 
             yield return null;
 
@@ -160,7 +160,7 @@ namespace Vurbiri.Colonization
             public void Init(GameplayEntryPoint parent, ScriptableObjects scriptables)
             {
                 cameraController.Init(mainCamera, parent._inputController.CameraActions);
-                contextMenusWorld.Init(new(parent._turnQueue, parent._players, hintGlobalWorld, scriptables.prices, mainCamera, parent._eventBus));
+                contextMenusWorld.Init(new(parent._turnQueue, parent._players, hintGlobalWorld, scriptables.prices, mainCamera, parent._triggerBus));
             }
 
 #if UNITY_EDITOR

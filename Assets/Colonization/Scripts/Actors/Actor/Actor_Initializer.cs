@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization.Actors
             #endregion
 
             #region Get Services
-            _eventBus = initData.eventBus;
+            _triggerBus = initData.triggerBus;
             _diplomacy = initData.diplomacy;
             #endregion
 

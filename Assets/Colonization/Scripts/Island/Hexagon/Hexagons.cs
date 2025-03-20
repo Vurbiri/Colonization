@@ -87,5 +87,6 @@ namespace Vurbiri.Colonization
 
         public Unsubscriber Subscribe(Action<Key, int[]> action, bool calling = true) => _subscriber.Add(action);
 
+        public void Dispose() => _subscriber.Dispose();
     }
 }

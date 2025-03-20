@@ -7,7 +7,7 @@ namespace Vurbiri.Reactive
     {
         private TA _valueA;
         private TB _valueB;
-        private readonly Unsubscribers _unsubscribers = new();
+        private readonly Unsubscribers _unsubscribers = new(2);
         private readonly Subscriber<TA, TB> _subscriber = new();
 
         public ReactiveCombination(IReactiveValue<TA> reactiveA, IReactiveValue<TB> reactiveB)
@@ -37,17 +37,31 @@ namespace Vurbiri.Reactive
         private TA _valueA;
         private TB _valueB;
         private TC _valueC;
-        private readonly Unsubscribers _unsubscribers = new();
+        private readonly Unsubscribers _unsubscribers;
         private readonly Subscriber<TA, TB, TC> _subscriber = new();
 
         public ReactiveCombination(IReactiveValue<TA> reactiveA, IReactiveValue<TB> reactiveB, IReactiveValue<TC> reactiveC)
         {
+            _unsubscribers = new(3);
+
             _valueA = reactiveA.Value;
             _valueB = reactiveB.Value;
             _valueC = reactiveC.Value;
 
             _unsubscribers += reactiveA.Subscribe(value => _subscriber.Invoke(_valueA = value, _valueB, _valueC), false);
             _unsubscribers += reactiveB.Subscribe(value => _subscriber.Invoke(_valueA, _valueB = value, _valueC), false);
+            _unsubscribers += reactiveC.Subscribe(value => _subscriber.Invoke(_valueA, _valueB, _valueC = value), false);
+        }
+
+        public ReactiveCombination(IReactiveValue<TA, TB> reactiveAB, IReactiveValue<TC> reactiveC)
+        {
+            _unsubscribers = new(2);
+
+            _valueA = reactiveAB.ValueA;
+            _valueB = reactiveAB.ValueB;
+            _valueC = reactiveC.Value;
+
+            _unsubscribers += reactiveAB.Subscribe((valueA, valueB) => _subscriber.Invoke(_valueA = valueA, _valueB = valueB, _valueC), false);
             _unsubscribers += reactiveC.Subscribe(value => _subscriber.Invoke(_valueA, _valueB, _valueC = value), false);
         }
 

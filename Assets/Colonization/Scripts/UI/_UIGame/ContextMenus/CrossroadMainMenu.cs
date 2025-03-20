@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\CrossroadMainMenu.cs
 using UnityEngine;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -18,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         private CrossroadWarriorsMenu _warriorsMenu;
         private Human _player;
 
-        public void Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
+        public ISubscriber<bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;
@@ -35,6 +36,8 @@ namespace Vurbiri.Colonization.UI
             _buttonUpgrade.Init(distance60angle, settings, settings.prices.Edifices, OnUpgrade);
 
             _thisGO.SetActive(false);
+
+            return _subscriber;
         }
 
         public override void Open(Crossroad crossroad)

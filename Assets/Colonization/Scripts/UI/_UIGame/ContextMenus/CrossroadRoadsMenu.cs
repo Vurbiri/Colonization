@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\CrossroadRoadsMenu.cs
 using UnityEngine;
 using Vurbiri.Collections;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -19,7 +20,7 @@ namespace Vurbiri.Colonization.UI
         private Vector2 _localPoint;
         private CrossroadMainMenu _mainMen;
 
-        public void Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
+        public ISubscriber<bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
         {
             ACurrencies roadCost = settings.prices.Road;
             _mainMen = mainMenu;
@@ -34,6 +35,8 @@ namespace Vurbiri.Colonization.UI
                 button.Init(settings, roadCost, _thisGO);
 
             _thisGO.SetActive(false);
+
+            return _subscriber;
         }
 
         public override void Open(Crossroad crossroad)

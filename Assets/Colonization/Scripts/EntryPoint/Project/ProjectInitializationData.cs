@@ -4,7 +4,7 @@ using Vurbiri.Collections;
 using Vurbiri.Colonization.UI;
 using Vurbiri.TextLocalization;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.EntryPoint
 {
     public class ProjectInitializationData : MonoBehaviour, System.IDisposable
     {

@@ -98,6 +98,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             return _code == other._code;
         }
+        public override void Dispose() => _subscriber.Dispose();
 
         public static Perk operator -(ReactiveEffect left, ReactiveEffect right)
         {

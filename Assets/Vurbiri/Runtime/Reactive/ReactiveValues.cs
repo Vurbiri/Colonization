@@ -6,16 +6,15 @@ using UnityEngine;
 
 namespace Vurbiri.Reactive
 {
-    [Serializable]
-    [JsonObject(MemberSerialization.OptIn)]
-    public class ReactiveValues<TA, TB> : IReactiveValue<TA, TB>
+    [Serializable, JsonObject(MemberSerialization.OptIn)]
+    sealed public class ReactiveValues<TA, TB> : IReactiveValue<TA, TB>
     {
         [SerializeField, JsonProperty("vA")]
-        protected TA _valueA;
+        private TA _valueA;
         [SerializeField, JsonProperty("vB")]
-        protected TB _valueB;
+        private TB _valueB;
 
-        protected readonly Subscriber<TA, TB> _subscriber = new();
+        private readonly Subscriber<TA, TB> _subscriber = new();
 
         private readonly IEqualityComparer<TA> _comparerA;
         private readonly IEqualityComparer<TB> _comparerB;
@@ -50,5 +49,7 @@ namespace Vurbiri.Reactive
         }
 
         public void Signal() => _subscriber.Invoke(_valueA, _valueB);
+
+        public void Dispose() => _subscriber.Dispose();
     }
 }

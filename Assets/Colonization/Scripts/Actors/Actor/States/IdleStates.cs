@@ -29,12 +29,12 @@ namespace Vurbiri.Colonization.Actors
         //=========================================================================================================
         sealed protected class PlayerIdleState : AIdleState
         {
-            private readonly GameplayEventBus _eventBus;
+            private readonly GameplayTriggerBus _triggerBus;
             private readonly Collider _actorCollider;
 
             public PlayerIdleState(Actor parent) : base(parent) 
             {
-                _eventBus = parent._eventBus;
+                _triggerBus = parent._triggerBus;
                 _actorCollider = parent._thisCollider;
             }
 
@@ -49,8 +49,8 @@ namespace Vurbiri.Colonization.Actors
                 _actorCollider.enabled = false;
             }
 
-            public override void Select() => _eventBus.TriggerActorSelect(_actor);
-            public override void Unselect(ISelectable newSelectable) => _eventBus.TriggerUnselect();
+            public override void Select() => _triggerBus.TriggerActorSelect(_actor);
+            public override void Unselect(ISelectable newSelectable) => _triggerBus.TriggerUnselect();
         }
     }
 }

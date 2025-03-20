@@ -5,7 +5,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-    public class Balance : IReactive<Win>
+    public class Balance : IReactive<Win>, IDisposable
 	{
         private readonly RInt _value;
         private readonly BalanceSettings _settings;
@@ -39,6 +39,12 @@ namespace Vurbiri.Colonization
         {
             if (type == TypeEvent.Add)
                 Add(_settings.perShrine);
+        }
+
+        public void Dispose()
+        {
+            _value.Dispose();
+            _subscriber.Dispose();
         }
     }
 }

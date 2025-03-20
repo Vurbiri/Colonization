@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
 
         public readonly Id<PlayerId> owner;
         public readonly Diplomacy diplomacy;
-        public readonly GameplayEventBus eventBus;
+        public readonly GameplayTriggerBus triggerBus;
         public readonly IReactive<IPerk>[] buffs;
 
         public bool IsPlayerTurn => owner == PlayerId.Player & owner == _turn.CurrentId;
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
         {
             this.owner = owner;
             diplomacy = SceneServices.Get<Diplomacy>();
-            eventBus = SceneServices.Get<GameplayEventBus>();
+            triggerBus = SceneServices.Get<GameplayTriggerBus>();
             _turn = SceneServices.Get<ITurn>();
         }
     }

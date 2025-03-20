@@ -104,6 +104,16 @@ namespace Vurbiri.Reactive.Collections
             _subscriber.Invoke(item, operation);
         }
 
+        public void Dispose()
+        {
+            _subscriber.Dispose();
+            for (int i = 0; i < _count; i++)
+                _values[i].Dispose();
+            _count.Dispose();
+
+            _values = null;
+        }
+
         private void GrowArray()
         {
             _capacity = _capacity << 1 | 4;
@@ -114,5 +124,6 @@ namespace Vurbiri.Reactive.Collections
             _values = array;
         }
 
+        
     }
 }

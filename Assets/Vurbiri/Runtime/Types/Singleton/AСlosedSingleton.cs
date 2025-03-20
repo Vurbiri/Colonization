@@ -11,7 +11,7 @@ namespace Vurbiri
         {
             if (_instance == null)
                 _instance = (T)this;
-            else if (_instance != this)
+            else
                 Destroy(gameObject);
         }
 

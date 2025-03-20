@@ -8,13 +8,11 @@ namespace Vurbiri.EntryPoint
     {
         private static ASceneExitPoint _instance;
 
-        protected readonly ReactiveValue<ExitParam> _exitEvent;
+        private readonly Subscriber<ExitParam> _exit = new();
+        public ISubscriber<ExitParam> EventExit => _exit;
 
-        public IReactive<ExitParam> ExitParam => _exitEvent;
-
-        public ASceneExitPoint(ReactiveValue<ExitParam> exitEvent)
+        public ASceneExitPoint()
         {
-            _exitEvent = exitEvent;
             _instance = this;
         }
 
@@ -24,8 +22,10 @@ namespace Vurbiri.EntryPoint
 
         private void ExitCallback(ExitParam param)
         {
+            _exit.Invoke(param);
+
             _instance = null;
-            _exitEvent.Value = param;
+            _exit.Dispose();
         }
     }
 }

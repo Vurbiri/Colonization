@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
         private Camera _camera;
         private bool _isNotPlayer;
         private RectTransform _thisRectTransform;
-        private Unsubscriber _inTurn;
+        private Unsubscribers _unsubscribers = new(9);
 
         public void Init(ContextMenuSettings settings)
         {
@@ -34,24 +34,18 @@ namespace Vurbiri.Colonization.UI
 
             _lookAtCamera.Init(_camera);
 
-            _buttonCancel.Init(settings.hint);
-            _crossroadMenu.Init(_roadsMenu, _recruitingMenu, settings);
-            _recruitingMenu.Init(_crossroadMenu, settings);
-            _roadsMenu.Init(_crossroadMenu, settings);
-            _warriorsMenu.Init(settings);
+            _unsubscribers += _buttonCancel.Init(settings.hint).Add(EnableLook);
+            _unsubscribers += _crossroadMenu.Init(_roadsMenu, _recruitingMenu, settings).Add(EnableLook);
+            _unsubscribers += _recruitingMenu.Init(_crossroadMenu, settings).Add(EnableLook);
+            _unsubscribers += _roadsMenu.Init(_crossroadMenu, settings).Add(EnableLook);
+            _unsubscribers += _warriorsMenu.Init(settings).Add(EnableLook);
 
-            _buttonCancel.EventEnabled += EnableLook;
-            _crossroadMenu.EventEnabled += EnableLook;
-            _recruitingMenu.EventEnabled += EnableLook;
-            _roadsMenu.EventEnabled += EnableLook;
-            _warriorsMenu.EventEnabled += EnableLook;
-            
-            settings.eventBus.EventCrossroadSelect += OnSelectCrossroad;
-            settings.eventBus.EventActorSelect += OnSelectWarrior;
+            _unsubscribers += settings.eventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
+            _unsubscribers += settings.eventBus.EventActorSelect.Add(OnSelectWarrior);
 
-            settings.eventBus.EventUnselect += CloseAll;
+            _unsubscribers += settings.eventBus.EventUnselect.Add(CloseAll);
 
-            _inTurn = settings.turn.Subscribe(OnNextTurn);
+            _unsubscribers += settings.turn.Subscribe(OnNextTurn);
         }
 
         private void OnSelectCrossroad(Crossroad crossroad)
@@ -117,12 +111,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            _buttonCancel.EventEnabled -= EnableLook;
-            _crossroadMenu.EventEnabled -= EnableLook;
-            _recruitingMenu.EventEnabled -= EnableLook;
-            _roadsMenu.EventEnabled -= EnableLook;
-            _warriorsMenu.EventEnabled -= EnableLook;
-            _inTurn.Unsubscribe();
+            _unsubscribers.Unsubscribe();
         }
 
 #if UNITY_EDITOR

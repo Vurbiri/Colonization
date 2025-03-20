@@ -19,5 +19,11 @@ namespace Vurbiri.Colonization.Characteristics
 
             return _subscriber.Add(action);
         }
+
+        public void Dispose()
+        {
+            _subscriber.Dispose();
+            _buffs = null;
+        }
     }
 }

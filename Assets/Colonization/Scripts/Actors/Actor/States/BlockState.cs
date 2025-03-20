@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\Actors\Actor\States\BlockState.cs
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.Characteristics.EffectsFactory;
@@ -13,7 +14,11 @@ namespace Vurbiri.Colonization.Actors
             private readonly EffectsSet _effects;
             private readonly int _value;
 
-            public bool Enabled => _effects.Contains(_code);
+            public bool Enabled
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _actor._effects.Contains(_code);
+            }
 
             public ABlockState(int cost, int value, Actor parent) : base(parent, cost, TypeIdKey.Get<ABlockState>(0))
             {
@@ -35,7 +40,7 @@ namespace Vurbiri.Colonization.Actors
                     return;
 
                 _skin.Block(true);
-                _effects.AddEffect(EffectsFactory.CreateBlockEffect(_code, _value));
+                _effects.AddEffect(CreateBlockEffect(_code, _value));
                 Pay();
             }
 
@@ -59,15 +64,15 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                _actorCollider.enabled = _actor._isPlayerTurn;
+                _actorCollider.enabled = false;
                 base.Enter();
             }
 
-            public override void Exit()
-            {
-                _actorCollider.enabled = false;
-                base.Exit();
-            }
+            //public override void Exit()
+            //{
+            //    _actorCollider.enabled = false;
+            //    base.Exit();
+            //}
         }
     }
 }

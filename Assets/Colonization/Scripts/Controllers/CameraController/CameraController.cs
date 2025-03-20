@@ -44,8 +44,8 @@ namespace Vurbiri.Colonization.Controllers
             cameraActions.Position.performed += OnEdgeMove;
             cameraActions.Zoom.performed +=     OnZoom;
 
-            eventBus.EventCrossroadSelect +=    OnMoveToPosition;
-            eventBus.EventActorSelect +=        OnMoveToPosition;
+            eventBus.EventCrossroadSelect.Add(OnMoveToPosition);
+            eventBus.EventActorSelect.Add(OnMoveToPosition);
             #endregion
 
             camera.transform.LookAt(_thisTransform);

@@ -61,6 +61,11 @@ namespace Vurbiri.Colonization
             return _subscriber.Add(action);
         }
 
+        public void Dispose()
+        {
+            _subscriber.Dispose();
+        }
+
 #if UNITY_EDITOR
         public void OnValidate()
         {

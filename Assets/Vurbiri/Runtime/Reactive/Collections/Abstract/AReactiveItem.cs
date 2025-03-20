@@ -31,5 +31,6 @@ namespace Vurbiri.Reactive.Collections
         }
 
         public abstract bool Equals(T other);
+        public abstract void Dispose();
     }
 }

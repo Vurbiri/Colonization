@@ -2,6 +2,7 @@
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -15,7 +16,7 @@ namespace Vurbiri.Colonization.UI
 
         private CrossroadMainMenu _mainMen;
 
-        public void Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
+        public ISubscriber<bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
         {
             var warriorPrices = settings.prices.Warriors;
             _mainMen = mainMenu;
@@ -28,6 +29,8 @@ namespace Vurbiri.Colonization.UI
                 _buttons[i].Init(settings, warriorPrices[i], _thisGO, Quaternion.Euler(0f, 0f, -angle * i) * distance);
 
             _thisGO.SetActive(false);
+
+            return _subscriber;
         }
 
         public override void Open(Crossroad crossroad)

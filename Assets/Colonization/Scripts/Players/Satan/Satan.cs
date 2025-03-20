@@ -9,7 +9,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-    public class Satan : IReactive<IArrayable>, IArrayable, IDisposable
+    public class Satan : IReactive<IArrayable>, IArrayable
     {
         private readonly RInt _level;
         private readonly RInt _curse;
@@ -104,8 +104,10 @@ namespace Vurbiri.Colonization
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
-            for (int i = 0; i <= _demons.Count; i++)
-                _demons[i].Dispose();
+            _subscriber.Dispose();
+            _leveling.Dispose();
+            _artefact.Dispose();
+            _demons.Dispose();
         }
 
         #region IArrayable

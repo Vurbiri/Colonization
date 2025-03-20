@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Reactive
 {
-    public class Subscriber : ISubscriber<Action>, IDisposable
+    public class Subscriber : ISubscriber, IDisposable
     {
         private Action actions;
 
@@ -19,13 +19,13 @@ namespace Vurbiri.Reactive
 
         public void Invoke() => actions?.Invoke();
 
-        public void Unsubscribe(Action action) => actions -= action;
+        public void Remove(Action action) => actions -= action;
 
         public void Dispose() => actions = null;
     }
     //=======================================================================================
 
-    public class Subscriber<T> : ISubscriber<Action<T>>, IDisposable
+    public class Subscriber<T> : ISubscriber<T>, IDisposable
     {
         private Action<T> actions;
 
@@ -81,7 +81,7 @@ namespace Vurbiri.Reactive
 
         public void Invoke(T value) => actions?.Invoke(value);
 
-        public void Unsubscribe(Action<T> action) => actions -= action;
+        public void Remove(Action<T> action) => actions -= action;
 
         public void Dispose() => actions = null;
 
@@ -96,7 +96,7 @@ namespace Vurbiri.Reactive
         }
     }
     //=======================================================================================
-    public class Subscriber<TA, TB> : ISubscriber<Action<TA, TB>>, IDisposable
+    public class Subscriber<TA, TB> : ISubscriber<TA, TB>, IDisposable
     {
         private Action<TA, TB> actions;
 
@@ -122,12 +122,12 @@ namespace Vurbiri.Reactive
 
         public void Invoke(TA valueA, TB valueB) => actions?.Invoke(valueA, valueB);
 
-        public void Unsubscribe(Action<TA, TB> action) => actions -= action;
+        public void Remove(Action<TA, TB> action) => actions -= action;
 
         public void Dispose() => actions = null;
     }
     //=======================================================================================
-    public class Subscriber<TA, TB, TC> : ISubscriber<Action<TA, TB, TC>>, IDisposable
+    public class Subscriber<TA, TB, TC> : ISubscriber<TA, TB, TC>, IDisposable
     {
         private Action<TA, TB, TC> actions;
 
@@ -153,12 +153,12 @@ namespace Vurbiri.Reactive
 
         public void Invoke(TA valueA, TB valueB, TC valueC) => actions?.Invoke(valueA, valueB, valueC);
 
-        public void Unsubscribe(Action<TA, TB, TC> action) => actions -= action;
+        public void Remove(Action<TA, TB, TC> action) => actions -= action;
 
         public void Dispose() => actions = null;
     }
     //=======================================================================================
-    public class Subscriber<TA, TB, TC, TD> : ISubscriber<Action<TA, TB, TC, TD>>, IDisposable
+    public class Subscriber<TA, TB, TC, TD> : ISubscriber<TA, TB, TC, TD>, IDisposable
     {
         private Action<TA, TB, TC, TD> actions;
 
@@ -184,7 +184,7 @@ namespace Vurbiri.Reactive
 
         public void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => actions?.Invoke(valueA, valueB, valueC, valueD);
 
-        public void Unsubscribe(Action<TA, TB, TC, TD> action) => actions -= action;
+        public void Remove(Action<TA, TB, TC, TD> action) => actions -= action;
 
         public void Dispose() => actions = null;
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
@@ -26,6 +27,8 @@ namespace Vurbiri.Colonization
 
         private readonly HashSet<Crossroad> _crossroads = new(HEX.SIDES);
         private readonly HashSet<Hexagon> _neighbors = new(HEX.SIDES);
+
+        private Unsubscriber _unsubscriber;
         #endregion
 
         #region Propirties
@@ -83,7 +86,7 @@ namespace Vurbiri.Colonization
             _hexagonCaption.Init(id, surface.Currencies);
 
             surface.Create(transform);
-            eventBus.EventHexagonIdShow += OnShow;
+            _unsubscriber = eventBus.EventHexagonIdShow.Add(OnShow);
 
             if (_isWater)
             {
@@ -232,6 +235,11 @@ namespace Vurbiri.Colonization
         public void Select() { }
         public void Unselect(ISelectable newSelectable) { }
         #endregion
+
+        private void OnDestroy()
+        {
+            _unsubscriber?.Unsubscribe();
+        }
 
 #if UNITY_EDITOR
         private void OnValidate()

@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\WarriorsMenu.cs
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -22,7 +23,7 @@ namespace Vurbiri.Colonization.UI
 
         private Vector3[][] _buttonPositions;
 
-        public void Init(ContextMenuSettings settings)
+        public ISubscriber<bool> Init(ContextMenuSettings settings)
         {
             CreatePositionButtons();
             Vector3 distance = new(0f, _distanceOfButtons, 0f);
@@ -35,6 +36,8 @@ namespace Vurbiri.Colonization.UI
                 _buttonsSkill[i].Init(settings, _thisGO);
 
             _thisGO.SetActive(false);
+            
+            return _subscriber;
         }
 
         public void Open(Actor actor)

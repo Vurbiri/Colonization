@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Vurbiri.Reactive
 {
     [Serializable, JsonObject(MemberSerialization.OptIn)]
-    public abstract class ARType<T> : IReactiveValue<T>, IEquatable<T>, IEquatable<ARType<T>>, IComparable<T>, IComparable<ARType<T>>, IDisposable 
+    public abstract class ARType<T> : IReactiveValue<T>, IEquatable<T>, IEquatable<ARType<T>>, IComparable<T>, IComparable<ARType<T>> 
     where T : struct, IEquatable<T>, IComparable<T>
     {
         [SerializeField, JsonProperty("value")]

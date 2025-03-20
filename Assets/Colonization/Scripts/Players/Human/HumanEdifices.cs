@@ -83,8 +83,7 @@ namespace Vurbiri.Colonization
             public void Dispose()
             {
                 for (int i = values.Count - 1; i >= 0; i--)
-                    for (int j = values[i].Count - 1; j >= 0; j--)
-                        values[i][j].Dispose();
+                    values[i].Dispose();
             }
 
             private void GetAbilities()

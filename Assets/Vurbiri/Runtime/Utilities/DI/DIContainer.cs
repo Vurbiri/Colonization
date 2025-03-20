@@ -7,102 +7,98 @@ namespace Vurbiri
     public class DIContainer : IReadOnlyDIContainer, IDisposable
     {
         private readonly IReadOnlyDIContainer _parent;
-        private readonly Dictionary<TypeIdKey, IRegistration> _registration = new();
+        private readonly Dictionary<Type, IRegistration> _registration = new();
 
         public DIContainer(IReadOnlyDIContainer parent)
         {
             _parent = parent;
         }
 
-        public void AddFactory<T>(Func<T> factory, int id = 0)
+        public void AddFactory<T>(Func<T> factory)
         {
-            TypeIdKey key = new(typeof(T), id);
-
-            if (!_registration.TryAdd(key, new RegFactory<T>(factory)))
-                Errors.AddItem(key.ToString());
+             if (!_registration.TryAdd(typeof(T), new RegFactory<T>(factory)))
+                Errors.AddItem(typeof(T).ToString());
         }
-        public void AddFactory<P, T>(Func<P, T> factory, int id = 0)
+        public void AddFactory<P, T>(Func<P, T> factory)
         {
-            TypeIdKey key = new(typeof(T), id);
-
-            if (!_registration.TryAdd(key, new RegFactory<P, T>(factory)))
-                Errors.AddItem(key.ToString());
+            if (!_registration.TryAdd(typeof(T), new RegFactory<P, T>(factory)))
+                Errors.AddItem(typeof(T).ToString());
         }
 
-        public T AddInstance<T>(T instance, int id = 0)
+        public T AddInstance<T>(T instance)
         {
-            TypeIdKey key = new(typeof(T), id);
-
-            if (!_registration.TryAdd(key, new RegInstance<T>(instance)))
-                Errors.AddItem(key.ToString());
+            if (!_registration.TryAdd(typeof(T), new RegInstance<T>(instance)))
+                Errors.AddItem(typeof(T).ToString());
 
             return instance;
         }
 
-        public T ReplaceInstance<T>(T instance, int id = 0)
+        public void AddInstance<T, U>(T instance) where T : U
         {
-            TypeIdKey key = new(typeof(T), id);
+            AddInstance(instance);
+            AddInstance<U>(instance);
+        }
 
-            if (_registration.TryGetValue(key, out var registration))
+        public T ReplaceInstance<T>(T instance)
+        {
+            Type type = typeof(T);
+
+            if (_registration.TryGetValue(type, out var registration))
                 registration.Dispose();
 
-            _registration[key] = new RegInstance<T>(instance);
+            _registration[type] = new RegInstance<T>(instance);
             return instance;
         }
 
-        public T Get<T>(int id = 0) => Get<T>(new TypeIdKey(typeof(T), id));
-        public T Get<T>(TypeIdKey key)
+        public T Get<T>()
         {
-            if (_registration.TryGetValue(key, out var registration))
+            if (_registration.TryGetValue(typeof(T), out var registration))
                 return ((IRegistration<T>)registration).Get();
 
             if (_parent != null)
-                return _parent.Get<T>(key);
+                return _parent.Get<T>();
 
-            Errors.NotFound(key.ToString());
+            Errors.NotFound(typeof(T).ToString());
             return default;
         }
 
-        public bool TryGet<T>(out T instance, int id = 0) => TryGet<T>(out instance, new TypeIdKey(typeof(T), id));
-        public bool TryGet<T>(out T instance, TypeIdKey key)
+        public bool TryGet<T>(out T instance)
         {
-            if (_registration.TryGetValue(key, out var registration))
+            if (_registration.TryGetValue(typeof(T), out var registration))
             {
                 instance = ((IRegistration<T>)registration).Get();
                 return true;
             }
 
             if (_parent != null)
-                return _parent.TryGet<T>(out instance, key);
+                return _parent.TryGet<T>(out instance);
 
             instance = default;
             return false;
         }
 
-        public T Get<P, T>(P value, int id = 0) => Get<P, T>(value, new TypeIdKey(typeof(T), id));
-        public T Get<P, T>(P value, TypeIdKey key)
+        public T Get<P, T>(P value)
         {
-            if (_registration.TryGetValue(key, out var registration))
+            if (_registration.TryGetValue(typeof(T), out var registration))
                 return ((IRegistration<P, T>)registration).Get(value);
 
             if (_parent != null)
-                return _parent.Get<P, T>(value, key);
+                return _parent.Get<P, T>(value);
 
-            Errors.NotFound(key.ToString());
+            Errors.NotFound(typeof(T).ToString());
             return default;
         }
 
-        public bool TryGet<P, T>(out T instance, P value, int id = 0) => TryGet<P, T>(out instance, value, new TypeIdKey(typeof(T), id));
-        public bool TryGet<P, T>(out T instance, P value, TypeIdKey key)
+        public bool TryGet<P, T>(out T instance, P value)
         {
-            if (_registration.TryGetValue(key, out var registration))
+            if (_registration.TryGetValue(typeof(T), out var registration))
             {
                 instance = ((IRegistration<P, T>)registration).Get(value);
                 return true;
             }
 
             if (_parent != null)
-                return _parent.TryGet<P, T>(out instance, value, key);
+                return _parent.TryGet<P, T>(out instance, value);
 
             instance = default;
             return false;

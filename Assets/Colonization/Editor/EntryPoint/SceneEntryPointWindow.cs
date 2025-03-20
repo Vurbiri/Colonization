@@ -2,11 +2,11 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using Vurbiri.Colonization;
+using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.EntryPoint;
 using static VurbiriEditor.Colonization.CONST_EDITOR;
 
-namespace VurbiriEditor.Colonization
+namespace VurbiriEditor.Colonization.EntryPoint
 {
     public class SceneEntryPointWindow : EditorWindow
 	{

@@ -149,16 +149,16 @@ namespace Vurbiri.Colonization
 
             return false;
         }
-
-        
+                
         public void Dispose()
         {
+            _resources.Dispose();
             _exchangeRate.Dispose();
             _edifices.Dispose();
             _roads.Dispose();
-            for (int i = _warriors.Count - 1; i >= 0; i--)
-                _warriors[i].Dispose();
-           
+            _warriors.Dispose();
+            _artefact.Dispose();
+            _abilities.Dispose();
         }
     }
 }

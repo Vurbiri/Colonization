@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\Actors\Actor\Actor.cs
-using System;
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
@@ -10,7 +9,7 @@ using Vurbiri.Reactive.Collections;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, ICancel, IPositionable, IDisposable, IArrayable<int[][]>
+    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, ICancel, IPositionable, IArrayable<int[][]>
     {
         #region Fields
         protected int _typeId;
@@ -32,7 +31,7 @@ namespace Vurbiri.Colonization.Actors
         protected Transform _thisTransform;
         protected Collider _thisCollider;
         protected Diplomacy _diplomacy;
-        protected GameplayEventBus _eventBus;
+        protected GameplayTriggerBus _triggerBus;
         protected float _extentsZ;
 
         protected EffectsSet _effects;
@@ -175,9 +174,8 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
-        public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
-
-        public void Dispose()
+        sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
+        sealed public override void Dispose()
         {
             _currentHex.ExitActor();
 

@@ -15,7 +15,11 @@ namespace Vurbiri
             _container = new(parent);
         }
 
-        public static T Get<T>(int id = 0) => _container.Get<T>(id);
+        public static T Get<T>() => _container.Get<T>();
+        public static bool TryGet<T>(out T instance) => _container.TryGet(out instance);
+
+        public static T Get<P, T>(P value) => _container.Get<P, T>(value);
+        public static bool TryGet<P, T>(out T instance, P value) => _container.TryGet(out instance, value);
 
         public void Dispose()
         {

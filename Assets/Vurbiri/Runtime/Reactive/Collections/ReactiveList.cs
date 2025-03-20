@@ -14,7 +14,7 @@ namespace Vurbiri.Reactive.Collections
         private int _capacity = 4;
         protected readonly RInt _count = new(0);
         
-        private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
+        private readonly IEqualityComparer<T> _comparer;
 
         private readonly Subscriber<int, T, TypeEvent> _subscriber = new();
 
@@ -52,6 +52,7 @@ namespace Vurbiri.Reactive.Collections
 
         public ReactiveList(int capacity)
         {
+            _comparer = EqualityComparer<T>.Default;
             _capacity = capacity;
             _values = new T[_capacity];
         }
@@ -66,6 +67,7 @@ namespace Vurbiri.Reactive.Collections
 
         public ReactiveList(IReadOnlyList<T> values)
         {
+            _comparer = EqualityComparer<T>.Default;
             _capacity = _count.Value = values.Count;
             _values = new T[_capacity];
 
@@ -85,9 +87,9 @@ namespace Vurbiri.Reactive.Collections
         }
         #endregion
 
-        public void ChangeSignal(int index) => _subscriber.Invoke(index, _values[index], TypeEvent.Change);
+        public void Signal(int index) => _subscriber.Invoke(index, _values[index], TypeEvent.Change);
 
-        public void ChangeSignal(T item)
+        public void Signal(T item)
         {
             int index = IndexOf(item);
 
@@ -95,7 +97,7 @@ namespace Vurbiri.Reactive.Collections
                 _subscriber.Invoke(index, _values[index], TypeEvent.Change);
         }
 
-        public void TryAdd(T item)
+        public void AddOrChange(T item)
         {
             int index = IndexOf(item);
 
@@ -216,6 +218,13 @@ namespace Vurbiri.Reactive.Collections
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
+
+        public void Dispose()
+        {
+            _count.Dispose();
+            _subscriber.Dispose();
+            _values = null;
+        }
 
         private void GrowArray()
         {

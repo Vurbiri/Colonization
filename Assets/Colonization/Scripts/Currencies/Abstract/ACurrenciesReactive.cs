@@ -77,6 +77,16 @@ namespace Vurbiri.Colonization
                 yield return _values[i].Value;
         }
 
+        public void Dispose()
+        {
+            _amount.Dispose();
+            _subscriber.Dispose();
+            for (int i = 0; i < countAll; i++)
+                _values[i].Dispose();
+
+            _values = null;
+        }
+
         #region Nested: ACurrency, CurrencyMain, CurrencyBlood
         //*******************************************************
         sealed protected class CurrencyMain : ACurrency
@@ -123,8 +133,9 @@ namespace Vurbiri.Colonization
                 get => _value; 
                 protected set
                 {
+                    value = Mathf.Clamp(value, 0, _max.Value);
                     if (value != _value)
-                        _subscriber.Invoke(_value = Mathf.Clamp(value, 0, _max.Value));
+                        _subscriber.Invoke(_value = value);
                 }
             }
 
@@ -137,8 +148,9 @@ namespace Vurbiri.Colonization
 
             public override int Set(int value)
             {
+                value = Mathf.Clamp(value, 0, _max.Value);
                 if (value != _value)
-                    _subscriber.Invoke(_value = Mathf.Clamp(value, 0, _max.Value));
+                    _subscriber.Invoke(_value = value);
                 return 0;
             }
 

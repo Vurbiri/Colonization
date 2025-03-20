@@ -6,10 +6,13 @@ using Vurbiri.UI;
 
 namespace Vurbiri.EntryPoint
 {
-    [DefaultExecutionOrder(5)]
-    public class AProjectEntryPoint : AClosedSingleton<AProjectEntryPoint>
+    public class AProjectEntryPoint : MonoBehaviour
     {
         [SerializeField] private SceneId _emptyScene;
+
+        private static AProjectEntryPoint _instance;
+
+        private AEnterParam _currentEnterParam;
 
         protected DIContainer _servicesContainer = new(null);
         protected DIContainer _dataContainer = new(null);
@@ -17,37 +20,50 @@ namespace Vurbiri.EntryPoint
 
         protected LoadingScreen _loadingScreen;
 
-        private AEnterParam _currentEnterParam;
-
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
+            if (_instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
 
+            _instance = this;
             DontDestroyOnLoad(gameObject);
 
             ASceneEntryPoint.EventLoaded += EnterScene;
-
-            _loadingScreen = _objectsContainer.AddInstance(LoadingScreen.Create());
+            _objectsContainer.AddInstance(_loadingScreen = LoadingScreen.Create());
         }
 
         protected void LoadScene(ExitParam param)
         {
             _currentEnterParam = param.EnterParam;
+
             gameObject.SetActive(true);
             StartCoroutine(LoadScene_Cn(param.NextScene));
-        }
-        protected IEnumerator LoadScene_Cn(int sceneId)
-        {
-            _loadingScreen.TurnOnOf(true);
 
-            yield return SceneManager.LoadSceneAsync(_emptyScene);
-            SceneManager.LoadSceneAsync(sceneId);
+            #region Local: LoadScene_Cn(..)
+            //=================================
+            IEnumerator LoadScene_Cn(int sceneId)
+            {
+                _loadingScreen.TurnOnOf(true);
+
+                yield return SceneManager.LoadSceneAsync(_emptyScene);
+                SceneManager.LoadSceneAsync(sceneId);
+            }
+            #endregion
         }
 
-        protected void EnterScene(ASceneEntryPoint sceneEntryPoint)
+        private void EnterScene(ASceneEntryPoint sceneEntryPoint)
         {
-            sceneEntryPoint.Enter(new(_servicesContainer, _dataContainer, _objectsContainer), _currentEnterParam).Subscribe(LoadScene, false);
+            sceneEntryPoint.Enter(new(_servicesContainer, _dataContainer, _objectsContainer), _currentEnterParam).Add(LoadScene);
             gameObject.SetActive(false);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (_instance == this)
+                _instance = null;
         }
     }
 }

@@ -4,13 +4,13 @@ using System.Collections;
 using Vurbiri.EntryPoint;
 using Vurbiri.UI;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.EntryPoint
 {
     sealed public class GameplayExitPoint : ASceneExitPoint
     {
         private readonly ExitParam _exitParam;
 
-        public GameplayExitPoint(int nextScene) : base(new())
+        public GameplayExitPoint(int nextScene) : base()
         {
             _exitParam = new(nextScene);
         }

@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
         private bool _isWall = false;
         private int _defenceWall = 0;
 
-        private readonly GameplayEventBus _eventBus;
+        private readonly GameplayTriggerBus _triggerBus;
         private readonly IReadOnlyList<AEdifice> _prefabs;
         private readonly List<Hexagon> _hexagons = new(HEX_COUNT);
         private readonly IdSet<LinkId, CrossroadLink> _links = new();
@@ -48,13 +48,13 @@ namespace Vurbiri.Colonization
         public Vector3 Position { get; }
         #endregion
 
-        public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IReadOnlyList<AEdifice> prefabs, GameplayEventBus eventBus)
+        public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IReadOnlyList<AEdifice> prefabs, GameplayTriggerBus triggerBus)
         {
             _key = key;
             Position = position;
             _prefabs = prefabs;
 
-            _eventBus = eventBus;
+            _triggerBus = triggerBus;
 
             _edifice = Object.Instantiate(_prefabs[EdificeId.Empty], position, rotation, container);
             _edifice.Subscribe(OnSelect, OnUnselect);
@@ -146,11 +146,11 @@ namespace Vurbiri.Colonization
         public void OnSelect()
         {
             Debug.Log("Отправлять только если игрок");
-            _eventBus.TriggerCrossroadSelect(this);
+            _triggerBus.TriggerCrossroadSelect(this);
         }
         public void OnUnselect(ISelectable newSelectable)
         {
-            _eventBus.TriggerUnselect();
+            _triggerBus.TriggerUnselect();
 
             if (_waitHexagon == null)
                 return;
