@@ -8,11 +8,43 @@ namespace VurbiriEditor
 {
     public class ScriptTemplatesKeywords : AssetModificationProcessor
 	{
-		private const string WINDOW = "Window", EDITOR = "Editor", DRAWER = "Drawer";
-        
+        #region Consts
+        private const string MENU_NAME = "Custom keywords/", MENU = MENU_PATH + MENU_NAME;
+        private const string MENU_NAME_ENABLE = "Enable", MENU_COMMAND_ENABLE = MENU + MENU_NAME_ENABLE;
+        private const string MENU_NAME_DISABLE = "Disable", MENU_COMMAND_DISABLE = MENU + MENU_NAME_DISABLE;
+        private const string KEY_SAVE = "CSTK_ENABLE";
+        private const string WINDOW = "Window", EDITOR = "Editor", DRAWER = "Drawer";
+		#endregion
+
+		private static bool _enabled = true;
+
+        [MenuItem(MENU_COMMAND_ENABLE, false, 35)]
+        private static void CommandEnable()
+        {
+            _enabled = true;
+			Save(); Log();
+        }
+        [MenuItem(MENU_COMMAND_ENABLE, true, 35)]
+        private static bool CommandEnableValidate()
+        {
+            Menu.SetChecked(MENU, _enabled);
+            return !_enabled;
+        }
+
+        [MenuItem(MENU_COMMAND_DISABLE, false, 36)]
+        private static void CommandDisable()
+        {
+            _enabled = false;
+            Save(); Log();
+        }
+        [MenuItem(MENU_COMMAND_DISABLE, true, 36)]
+        private static bool CommandDisableValidate() => !CommandEnableValidate();
+
         public static void OnWillCreateAsset(string assetName)
 		{
-			if (!assetName.EndsWith(META_EXT)) return;
+            if (!_enabled) return;
+            
+            if (!assetName.EndsWith(META_EXT)) return;
 			assetName = assetName.Replace(META_EXT, string.Empty);
 			if (!assetName.EndsWith(CS_EXT)) return;
 
@@ -44,5 +76,35 @@ namespace VurbiriEditor
 			//=======================================================
 			#endregion
 		}
-	}
+
+		private static void Save()
+		{
+            EditorPrefs.SetBool(KEY_SAVE, _enabled);
+
+            SetChecked();
+        }
+
+        [InitializeOnLoadMethod]
+        private static void Load()
+		{
+            if (EditorPrefs.HasKey(KEY_SAVE))
+                _enabled = EditorPrefs.GetBool(KEY_SAVE);
+            
+            SetChecked(); 
+        }
+
+        private static void SetChecked()
+        {
+            Menu.SetChecked(MENU_COMMAND_ENABLE, _enabled);
+            Menu.SetChecked(MENU_COMMAND_DISABLE, !_enabled);
+
+            Menu.SetChecked(MENU, _enabled);
+        }
+
+        private static void Log()
+        {
+            string state = _enabled ? MENU_NAME_ENABLE : MENU_NAME_DISABLE;
+            Debug.Log($"[ScriptTemplatesKeywords] {state}");
+        }
+    }
 }

@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public override ISubscriber<ExitParam> Enter(SceneContainers containers, AEnterParam param)
         {
             _containers = containers;
-
+            Debug.Log("GameplayEntryPoint");
             _gameplaySettings = containers.Data.Get<GameSettings>();
 
             containers.Services.Get<Localization>().SetFiles(_localizationFiles);

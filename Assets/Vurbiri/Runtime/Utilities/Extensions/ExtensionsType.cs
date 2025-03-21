@@ -17,5 +17,18 @@ namespace Vurbiri
 
             return false;
         }
+
+        public static bool Is(this Type self, Type other, Type deep)
+        {
+            while (self != null & self != deep)
+            {
+                if (self == other)
+                    return true;
+
+                self = self.BaseType;
+            }
+
+            return false;
+        }
     }
 }

@@ -1,4 +1,5 @@
 //Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\EnumSet.cs
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,12 +7,8 @@ using UnityEngine;
 
 namespace Vurbiri.Collections
 {
-    [Serializable]
-    public class EnumSet<TType, TValue> :
-#if UNITY_EDITOR
-        ISerializationCallbackReceiver,
-#endif
-        IReadOnlyList<TValue> where TType : Enum where TValue : class, IValueTypeEnum<TType>
+    [Serializable, JsonArray]
+    public partial class EnumSet<TType, TValue> : IReadOnlyList<TValue> where TType : Enum where TValue : class, IValueTypeEnum<TType>
     {
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;
@@ -160,49 +157,6 @@ namespace Vurbiri.Collections
 
             return values;
         }
-
-        #region ISerializationCallbackReceiver
-#if UNITY_EDITOR
-        public void OnBeforeSerialize()
-        {
-            if (Application.isPlaying)
-                return;
-
-            if (_values.Length != _capacity)
-                Array.Resize(ref _values, _capacity);
-
-            TValue value; _count = 0;
-            for (int index, i = 0; i < _capacity; i++)
-            {
-                value = _values[i];
-                if (value == null)
-                    continue;
-
-                for (int j = i + 1; j < _capacity; j++)
-                {
-                    if (_values[j] == null)
-                        continue;
-
-                    if (value.Type.Equals(_values[j].Type))
-                        _values[j] = null;
-                }
-
-                index = value.Type.ToInt();
-                if (index == i)
-                {
-                    _count++;
-                    continue;
-                }
-
-                (_values[i], _values[index]) = (_values[index], _values[i]);
-                i--;
-            }
-        }
-
-        public void OnAfterDeserialize() { }
-#endif
-        #endregion
-
 
         public IEnumerator<TValue> GetEnumerator() => new EnumHashSetValueEnumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

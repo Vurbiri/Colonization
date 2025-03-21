@@ -1,7 +1,7 @@
-//Assets\Colonization\Editor\CONSTS\STYLES.cs
+//Assets\Vurbiri\Editor\Utility\STYLES.cs
 using UnityEngine;
 
-namespace VurbiriEditor.Colonization
+namespace VurbiriEditor
 {
     public static class STYLES
 	{

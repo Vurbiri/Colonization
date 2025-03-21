@@ -11,7 +11,7 @@ namespace Vurbiri.EntryPoint
 
         public static event Action<ASceneEntryPoint> EventLoaded;
 
-        protected void Awake()
+        private void Awake()
         {
             if (_instance == null)
             {
