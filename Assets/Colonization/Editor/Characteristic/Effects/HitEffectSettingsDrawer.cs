@@ -6,6 +6,7 @@ using UnityEngine;
 using Vurbiri;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.TextLocalization;
+using static UnityEditor.EditorGUI;
 using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
 namespace VurbiriEditor.Colonization.Characteristics
@@ -15,7 +16,7 @@ namespace VurbiriEditor.Colonization.Characteristics
     [CustomPropertyDrawer(typeof(HitEffectSettings))]
     public class HitEffectSettingsDrawer : PropertyDrawerUtility
     {
-        private static WeakReference<Localization> _weakLocalization = new(new(new bool[] { false, false, true }));
+        private static readonly WeakReference<Localization> _weakLocalization = new(new(new bool[] { false, false, true }));
         private static Localization Localization
         {
             get
@@ -56,18 +57,16 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         private static readonly Color Positive = new(0.5f, 1f, 0.3f, 1f), Negative = new(1f, 0.5f, 0.3f, 1f);
 
-        public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
+        protected override void OnGUI()
         {
-            base.OnGUI(position, mainProperty, label);
-
-            int id = IdFromLabel(label);
+            int id = IdFromLabel();
             var (name, color) = GetSkin();
 
-            label.text = string.Format(name, id);
-            EditorGUI.BeginProperty(_position, label, mainProperty);
+            _label.text = string.Format(name, id);
+            BeginProperty();
 
             Color defaultColor = GUI.color; GUI.color = color;
-            Foldout(label); GUI.color = defaultColor;
+            Foldout(); GUI.color = defaultColor;
 
             if (_mainProperty.isExpanded)
             {
@@ -104,7 +103,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 DrawLine();
 
             }
-            EditorGUI.EndProperty();
+            EndProperty();
 
             #region Local: GetSkin(), GetTargetSkill(..), DrawUsedAttack(..), DrawUsedAttack(..), DrawDirectEffect(..), DrawDurationValue(..), DrawInstantValue(..), DrawRateValue(..), DrawMoveValue(..), SetDefaultValue()
             //==============================================
@@ -131,7 +130,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             void DrawUsedAttack(bool isTarget, bool isTargetEnemy)
             {
                 Space();
-                Level++;
+                indentLevel++;
 
                 SetInt(P_TARGET_ABILITY, CurrentHP);
                 SetInt(P_TYPE_OP, TypeModifierId.TotalPercent);
@@ -148,7 +147,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 else
                     SetInt(P_REFLECT, 0);
 
-                Level--;
+                indentLevel--;
             }
             //==============================================
             int DrawDirectEffect(bool isDuration)
@@ -172,7 +171,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             int DrawDurationValue(int usedAbility)
             {
                 Space();
-                Level++;
+                indentLevel++;
 
                 int typeModifierId = DrawIntPopup(P_TYPE_OP, NamesModifiersDuration, ValuesModifiersDuration);
 
@@ -180,8 +179,8 @@ namespace VurbiriEditor.Colonization.Characteristics
                     DrawInt(P_VALUE, "Value (%)", -200, 200, 100);
                 else 
                     DrawRateValue("Value", -50, 50);
-    
-                Level--;
+
+                indentLevel--;
 
                 return usedAbility;
             }
@@ -189,7 +188,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             int DrawInstantValue(int usedAbility)
             {
                 Space();
-                Level++;
+                indentLevel++;
 
                 if (usedAbility == CurrentHP)
                 {
@@ -208,7 +207,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                         DrawMoveValue();
                 }
 
-                Level--;
+                indentLevel--;
 
                 return usedAbility;
             }
@@ -224,7 +223,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     defaultValue = value;
 
                 _position.y += _height;
-                property.intValue = EditorGUI.IntSlider(_position, displayName, defaultValue, min, max) * rate;
+                property.intValue = IntSlider(_position, displayName, defaultValue, min, max) * rate;
             }
             //==============================================
             void DrawMoveValue()
@@ -232,7 +231,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 SerializedProperty property = GetProperty(P_VALUE);
 
                 _position.y += _height;
-                property.intValue = EditorGUI.Toggle(_position, "Is Move", property.intValue > 0) ? 1 : -1;
+                property.intValue = Toggle(_position, "Is Move", property.intValue > 0) ? 1 : -1;
             }
             //==============================================
             void SetDefaultValue(SerializedProperty property, int[] values)
@@ -306,7 +305,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 property.intValue = Array.IndexOf(DESK_EFFECTS_KEYS, key);
 
                 if (property.intValue < 0)
-                    Debug.LogWarning($"�� ������ ���� [{key}]");
+                    Debug.LogWarning($"Desk key not found: [{key}]");
 
                 if(GetInt(P_REFLECT) > 0)
                 {

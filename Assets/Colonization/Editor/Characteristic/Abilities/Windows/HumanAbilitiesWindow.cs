@@ -15,7 +15,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         [SerializeField] private HumanAbilitiesScriptable _scriptable;
 
-        [MenuItem(MENU)]
+        [MenuItem(MENU, false, 21)]
         private static void ShowWindow()
         {
             GetWindow<HumanAbilitiesWindow>(true, NAME).minSize = new(225f, 300f);

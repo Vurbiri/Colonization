@@ -1,33 +1,32 @@
 //Assets\Colonization\Editor\Characteristic\Perk\Abstract\APlayerPerksEditor.cs
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Vurbiri;
+using Vurbiri.Colonization.Characteristics;
+using static UnityEditor.EditorGUI;
+using static UnityEditor.EditorGUILayout;
+
 namespace VurbiriEditor.Colonization.Characteristics
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using UnityEditor;
-    using UnityEngine;
-    using UnityEngine.UIElements;
-    using Vurbiri;
-    using Vurbiri.Colonization;
-    using Vurbiri.Colonization.Characteristics;
-    using VurbiriEditor;
-
     public abstract class APlayerPerksEditor<T> : AEditorGetVE<T> where T : APlayerPerksEditor<T>
     {
         [SerializeField] private VisualTreeAsset _treePerksVT;
         [SerializeField] private VisualTreeAsset _treePerkVT;
 
         #region Consts
-        private const string P_PERKS = "_perks", P_ARRAY = "_values", P_ID = "_id", P_TYPE = "_type";
+        private const string P_PERKS = "_perks", P_ARRAY = "_values", P_ID = "_id";
         private const string P_LEVEL = "_level", P_TARGET_OBJ = "_targetObject", P_TARGET_AB = "_targetAbility", P_TYPE_OP = "_typeModifier";
         private const string P_POS = "_position", P_SPRITE = "_sprite", P_KEY_DESC = "_keyDescription";
-        private const string P_VALUE = "_value", P_PREV = "_prevPerk";
+        private const string P_TYPE = "_type", P_VALUE = "_value", P_COST = "_cost";
         private const string U_CONTAINER = "Container", U_LABEL = "Label";
         private const string PREFF_KEY_DESC = "Perk";
-        private const int SPACE_WND = 4;
         #endregion
 
-        protected VisualElement CreateGUI<TId>(string captionText, APlayerPerksScriptable<TId> perks) where TId : APerkId<TId>
+        protected VisualElement CreateGUI<TId>(string captionText) where TId : APerkId<TId>
         {
             var root = _treePerksVT.CloneTree();
             root.Q<Label>(U_LABEL).text = captionText;
@@ -43,7 +42,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 
                 element = _treePerkVT.Instantiate(propertyPerk.propertyPath);
                 element.Q<Label>(U_LABEL).text = APerkId<TId>.GetName(i);
-                element.Q<IMGUIContainer>(U_CONTAINER).onGUIHandler = () => IMGUIPerk<TId>(id, propertyPerk, propertyPerks, perks);
+                element.Q<IMGUIContainer>(U_CONTAINER).onGUIHandler = () => IMGUIPerk<TId>(id, propertyPerk);
 
                 container.Add(element);
             }
@@ -51,11 +50,10 @@ namespace VurbiriEditor.Colonization.Characteristics
             return root;
         }
 
-        private void IMGUIPerk<TId>(int id, SerializedProperty propertyPerk, SerializedProperty propertyPerks, APlayerPerksScriptable<TId> perks) 
+        private void IMGUIPerk<TId>(int id, SerializedProperty propertyPerk) 
             where TId : APerkId<TId>
         {
-            SerializedProperty property;
-            int prev, minL = 1, minP = 1, maxL = 6, maxP = 7;
+            int minLevel = 0, minPosition = 0, minCost = 1, maxLevel = 6, maxPosition = 7, maxCost = 16;
             Type type = typeof(TId);
 
             serializedObject.Update();
@@ -63,67 +61,68 @@ namespace VurbiriEditor.Colonization.Characteristics
             propertyPerk.FindPropertyRelative(P_ID).intValue = id;
             propertyPerk.FindPropertyRelative(P_TYPE).intValue = type == typeof(EconomicPerksId) ? TypePerksId.Economic : TypePerksId.Military;
 
-            EditorGUILayout.BeginVertical(GUI.skin.window);
-            EditorGUI.indentLevel++;
-                        
-            DrawId(P_TARGET_OBJ, typeof(TargetOfPerkId));
-            DrawId(P_TARGET_AB, property.intValue == TargetOfPerkId.Player ? typeof(HumanAbilityId) : typeof(ActorAbilityId));
+            BeginVertical(GUI.skin.window);
+            indentLevel++;
 
+            int target = DrawId(P_TARGET_OBJ, typeof(TargetOfPerkId));
+            
             Space();
-            DrawInt(P_VALUE);
+            DrawIntSlider(P_LEVEL, minLevel, maxLevel);
+            DrawIntSlider(P_COST, minCost, maxCost);
+            
+            Space();
+            int ability = DrawId(P_TARGET_AB, target == TargetOfPerkId.Player ? typeof(HumanAbilityId) : typeof(ActorAbilityId));
+            DrawValue(target, ability);
             DrawId(P_TYPE_OP, typeof(TypeModifierId));
 
             Space();
-            if ((prev = DrawId(P_PREV, type, true, id)) >= 0)
-            {
-                SerializedProperty propertyPrevPerk = propertyPerks.GetArrayElementAtIndex(prev);
-                minL = propertyPrevPerk.FindPropertyRelative(P_LEVEL).intValue + 1;
-                minP = maxP = propertyPrevPerk.FindPropertyRelative(P_POS).intValue;
-            }
+            DrawIntSlider(P_POS, minPosition, maxPosition);
+            DrawDesc();
+            SerializedProperty property = propertyPerk.FindPropertyRelative(P_SPRITE);
+            property.objectReferenceValue = ObjectField(property.displayName, property.objectReferenceValue, typeof(Sprite), false);
 
+            indentLevel--;
             Space();
-            perks.Perks[id].Cost.Set(CurrencyId.Mana, DrawIntSlider(P_LEVEL, minL, maxL));
-            DrawIntSlider(P_POS, minP, maxP);
-
-            Space(SPACE_WND << 1);
-            property = propertyPerk.FindPropertyRelative(P_KEY_DESC);
-            if (string.IsNullOrEmpty(property.stringValue))
-                property.stringValue = PREFF_KEY_DESC.Concat(APerkId<TId>.GetName(id));
-            property.stringValue = EditorGUILayout.TextField(property.displayName, property.stringValue);
-
-            property = propertyPerk.FindPropertyRelative(P_SPRITE);
-            property.objectReferenceValue = EditorGUILayout.ObjectField(property.displayName, property.objectReferenceValue, typeof(Sprite), false);
-
-            EditorGUI.indentLevel--;
-            Space(SPACE_WND << 2);
-            EditorGUILayout.EndVertical();
+            EndVertical();
 
             serializedObject.ApplyModifiedProperties();
 
-            #region Local: Space(..), DrawIntSlider(..), DrawId(..), DrawInt(..), DrawString(..)
-            //================================================================
-            void Space(int value = SPACE_WND) => EditorGUILayout.Space(value);
+            #region Local: DrawIntSlider(..), DrawId(..), DrawValue(..), DrawDesc(..)
             //================================================================
             int DrawIntSlider(string nameProperty, int min, int max)
             {
-                property = propertyPerk.FindPropertyRelative(nameProperty);
+                SerializedProperty property = propertyPerk.FindPropertyRelative(nameProperty);
                 int value = Mathf.Clamp(property.intValue, min, max);
-                property.intValue = value = EditorGUILayout.IntSlider(property.displayName, value, min, max);
+                property.intValue = value = IntSlider(property.displayName, value, min, max);
                 return value;
             }
             //================================================================
             int DrawId(string nameProperty, Type t_field, bool isNone = false, int miss = -1)
             {
                 var (names, values) = GetNamesAndValues(t_field, isNone, miss);
-                property = propertyPerk.FindPropertyRelative(nameProperty);
-                property.intValue = EditorGUILayout.IntPopup(property.displayName, property.intValue, names, values);
+                SerializedProperty property = propertyPerk.FindPropertyRelative(nameProperty);
+                property.intValue = IntPopup(property.displayName, property.intValue, names, values);
                 return property.intValue;
             }
             //================================================================
-            void DrawInt(string nameProperty)
+            void DrawValue(int target, int ability)
             {
-                property = propertyPerk.FindPropertyRelative(nameProperty);
-                property.intValue = EditorGUILayout.IntField(property.displayName, property.intValue);
+                SerializedProperty property = propertyPerk.FindPropertyRelative(P_VALUE);
+                if(target == TargetOfPerkId.Warriors & ability <= ActorAbilityId.MAX_RATE_ABILITY)
+                    property.intValue = IntField(property.displayName, property.intValue / ActorAbilityId.RATE_ABILITY) * ActorAbilityId.RATE_ABILITY;
+                else
+                    property.intValue = IntField(property.displayName, property.intValue);
+            }
+            //================================================================
+            void DrawDesc()
+            {
+                SerializedProperty property = propertyPerk.FindPropertyRelative(P_KEY_DESC);
+
+                if (string.IsNullOrEmpty(property.stringValue))
+                    property.stringValue = PREFF_KEY_DESC.Concat(APerkId<TId>.GetName(id));
+
+                property.stringValue = TextField(property.displayName, property.stringValue);
+                Space();
             }
             #endregion
         }

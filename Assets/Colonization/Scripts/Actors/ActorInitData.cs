@@ -15,9 +15,9 @@ namespace Vurbiri.Colonization
 
         public bool IsPlayerTurn => owner == PlayerId.Player & owner == _turn.CurrentId;
 
-        public ActorInitData(Id<PlayerId> owner, Buffs artefact) : this(owner)
+        public ActorInitData(Id<PlayerId> owner, Buffs artefact, WarriorPerks perks) : this(owner)
         {
-            buffs = new IReactive<IPerk>[] { artefact };
+            buffs = new IReactive<IPerk>[] { artefact, perks };
         }
 
         public ActorInitData(DemonBuffs leveling, Buffs artefact) : this(PlayerId.Satan)

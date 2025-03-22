@@ -1,6 +1,7 @@
 //Assets\Colonization\Editor\Diplomacy\DiplomacySettingsWindow.cs
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 using Vurbiri.Colonization;
 using static VurbiriEditor.Colonization.CONST_EDITOR;
 
@@ -9,14 +10,14 @@ namespace VurbiriEditor.Colonization
     public class DiplomacySettingsWindow : EditorWindow
 	{
 		#region Consts
-		private const string NAME = "Diplomacy", MENU = MENU_MECH_PATH + NAME;
+		private const string NAME = "Diplomacy", MENU = MENU_PATH + NAME;
 		#endregion
 		
 		[SerializeField] private DiplomacySettingsScriptable _scriptable;
 		
 		private Editor _editor;
 		
-		[MenuItem(MENU)]
+		[MenuItem(MENU, false, 30)]
 		private static void ShowWindow()
 		{
 			GetWindow<DiplomacySettingsWindow>(true, NAME);
@@ -25,7 +26,7 @@ namespace VurbiriEditor.Colonization
 		private void OnEnable()
 		{
             if (_scriptable == null)
-                _scriptable = Vurbiri.EUtility.FindAnyScriptable<DiplomacySettingsScriptable>();
+                _scriptable = EUtility.FindAnyScriptable<DiplomacySettingsScriptable>();
 
             _editor = Editor.CreateEditor(_scriptable, typeof(DiplomacySettingsEditor));		
 		}
@@ -41,5 +42,5 @@ namespace VurbiriEditor.Colonization
 		{
 			DestroyImmediate(_editor);
 		}
-	}
+    }
 }

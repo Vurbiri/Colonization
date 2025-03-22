@@ -11,8 +11,8 @@ namespace Vurbiri.Colonization
     [System.Serializable]
     public partial class Settings : IReactive<IReadOnlyList<int>, IReadOnlyList<float>>
     {
-        [SerializeField] private Profile _profile;
-        [SerializeField] private AudioMixer<MixerId> _mixer;
+        [SerializeField] private Profile _profile = new();
+        [SerializeField] private AudioMixer<MixerId> _mixer = new();
 
         private Localization _localization;
         private readonly Subscriber<IReadOnlyList<int>, IReadOnlyList<float>> _subscriber = new();

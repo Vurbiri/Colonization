@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\_Scriptable\HumanAbilitiesScriptable.cs
 using UnityEngine;
 using Vurbiri.Collections;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -9,6 +10,6 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [SerializeField] private IdArray<HumanAbilityId, int> _abilities;
 
-        public static implicit operator AbilitiesSet<HumanAbilityId>(HumanAbilitiesScriptable self) => new(self._abilities);
+        public AbilitiesSet<HumanAbilityId> Get(IReactive<Perk> perks) => new(_abilities, perks);
     }
 }

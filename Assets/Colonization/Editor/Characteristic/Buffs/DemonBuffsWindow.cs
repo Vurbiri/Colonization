@@ -8,11 +8,11 @@ namespace VurbiriEditor.Colonization
     {
 		#region Consts
 		private const string NAME = "Demon Buffs", MENU = CONST_EDITOR.MENU_BUFFS_PATH + NAME;
-		#endregion
-		
+        #endregion
 
-        [MenuItem(MENU)]
-		private static void ShowWindow()
+
+        [MenuItem(MENU, false, 12)]
+        private static void ShowWindow()
 		{
 			GetWindow<DemonBuffsWindow>(true, NAME).minSize = new(300f, 500f); ;
 		}

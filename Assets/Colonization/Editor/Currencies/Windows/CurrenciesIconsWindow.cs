@@ -30,7 +30,7 @@ namespace VurbiriEditor.Colonization
 
         public static readonly Vector2 wndMinSize = new(350f, 350f);
 
-        [MenuItem(MENU)]
+        [MenuItem(MENU, false, 59)]
         private static void ShowWindow()
         {
             GetWindow<CurrenciesIconsWindow>(true, NAME).minSize = wndMinSize;

@@ -17,7 +17,7 @@ namespace VurbiriEditor.Colonization.Actors
 
         private static readonly Vector2 wndMinSize = new(650f, 800f);
 
-        [MenuItem(MENU)]
+        [MenuItem(MENU, false, 10)]
         private static void ShowWindow()
         {
             GetWindow<WarriorsSettingsWindow>(true, NAME).minSize = wndMinSize;

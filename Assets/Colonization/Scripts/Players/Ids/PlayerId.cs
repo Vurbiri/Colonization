@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
         public const int AI_02          = 2;
         public const int Satan          = 3;
 
-        [NotId] public const int PlayersCount = 3;
+        [NotId] public const int HumansCount = 3;
         [NotId] public const int AICount = 2;
 
         static PlayerId() => RunConstructor();

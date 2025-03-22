@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Characteristics
     public abstract class ABuff
     {
         protected readonly Subscriber<IPerk> _subscriber;
-        protected readonly Perk _base, _current;
+        protected readonly Effect _base, _current;
 
         public IPerk Base => _base;
         public IPerk Current => _current;

@@ -1,6 +1,5 @@
 //Assets\Colonization\Scripts\Players\Player\Human.cs
 using System;
-using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Data;
@@ -24,7 +23,7 @@ namespace Vurbiri.Colonization
 
         private readonly AbilitiesSet<HumanAbilityId> _abilities;
         private readonly Buffs _artefact;
-        private readonly ReactiveList<IPerk> _perks;
+        private readonly PerkTree _perks;
 
         private readonly WarriorsSpawner _spawner;
         private readonly ListReactiveItems<Actor> _warriors = new();
@@ -37,54 +36,50 @@ namespace Vurbiri.Colonization
         public IReactiveList<Crossroad> Ports => _edifices.ports;
         public IReactiveList<Crossroad> Urbans => _edifices.urbans;
 
-        public IReactiveList<IPerk> Perks => _perks;
+        public PerkTree Perks => _perks;
 
-        public Human(Id<PlayerId> playerId, HumanSaveData data, Players.Settings settings, Hexagons land)
+        public Human(Id<PlayerId> playerId, HumanSaveData data, Players.Settings settings, Hexagons hexagons)
         {
             _id = playerId;
             _coroutines = SceneServices.Get<Coroutines>();
 
+            HumanLoadData loadData = data.LoadData;
             PlayerVisual visual = SceneData.Get<PlayersVisual>()[playerId];
 
-            _abilities = settings.humanStates;
+            _perks = PerkTree.Create(settings, loadData);
+            _abilities = settings.humanStates.Get(_perks);
+
             _roads = new(playerId, visual.color, settings.roadFactory, _coroutines);
             _prices = settings.prices;
 
-            HumanLoadData loadData = data.LoadData;
+            _resources = Currencies.Create(_abilities, _prices, loadData);
+            _artefact = Buffs.Create(settings.artefact.Settings, loadData);
+
+            _spawner = new(new(playerId, _artefact, new(_perks)), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
+
             bool isLoaded = loadData != null;
             if (isLoaded)
             {
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
 
-                _resources = new(loadData.resources, _abilities[MaxMainResources], _abilities[MaxBlood]);
                 _edifices = new(playerId, loadData.edifices, crossroads, _abilities);
                 _roads.Restoration(loadData.roads, crossroads);
 
-                _artefact = new(settings.artefact.Settings, loadData.artefact);
-
-                //_perks = new(data.Perks);
-
-                _spawner = new(new(playerId, _artefact), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
-
                 int count = loadData.actors.Count;
                 for (int i = 0; i < count; i++)
-                    _warriors.Add(_spawner.Load(loadData.actors[i], land));
+                    _warriors.Add(_spawner.Load(loadData.actors[i], hexagons));
 
                 data.LoadData = null;
             }
             else
             {
-                _resources = new(_prices.PlayersDefault, _abilities[MaxMainResources], _abilities[MaxBlood]);
                 _edifices = new(_abilities);
-                _artefact = new(settings.artefact.Settings);
-                _perks = new();
-
-                _spawner = new(new(playerId, _artefact), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
             }
 
             _exchangeRate = new(_abilities);
 
             data.CurrenciesBind(_resources, !isLoaded);
+            data.PerksBind(_perks, !isLoaded);
             data.EdificesBind(_edifices.values);
             data.RoadsBind(_roads, !isLoaded);
             data.ArtefactBind(_artefact, !isLoaded);
@@ -135,24 +130,16 @@ namespace Vurbiri.Colonization
             _exchangeRate.Update();
         }
 
-        public bool BuyPerk(IPerkSettings perk)
+        public void BuyPerk(int typePerk, int idPerk)
         {
-            Debug.LogWarning("Player PerkBuy");
-
-            //if (perk.TargetObject == TargetOfPerkId.Player && _states.TryAddPerk(perk))
-            //{
-                
-            //    _data.perks.Add(perk.Id);
-            //    _data.resources.Pay(perk.Cost);
-            //    return true;
-            //}
-
-            return false;
+            if(_perks.TryAdd(typePerk, idPerk, out int cost))
+                _resources.Add(CurrencyId.Mana, -cost);
         }
                 
         public void Dispose()
         {
             _resources.Dispose();
+            _perks.Dispose();
             _exchangeRate.Dispose();
             _edifices.Dispose();
             _roads.Dispose();

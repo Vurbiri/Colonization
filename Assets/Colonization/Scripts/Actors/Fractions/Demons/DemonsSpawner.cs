@@ -33,6 +33,14 @@ namespace Vurbiri.Colonization.Actors
             _potential = potential;
         }
 
+        public static DemonsSpawner Create(IReactiveValue<int> level, ActorInitData initData, Players.Settings settings, Hexagon startHex, SatanLoadData loadData)
+        {
+            DemonsSpawner spawner = new(level, initData, settings, startHex);
+            if (loadData != null) spawner._potential = loadData.spawnPotential;
+
+            return spawner;
+        }
+
         public bool TryCreate(out Demon demon)
         {
             if (_potential == 0 | _startHex.IsOwner)

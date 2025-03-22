@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
 {
     public class Players : IDisposable
     {
-        private readonly Human[] _humans = new Human[PlayerId.PlayersCount];
+        private readonly Human[] _humans = new Human[PlayerId.HumansCount];
         private readonly Satan _satan;
 
         public Human Player => _humans[PlayerId.Player];
@@ -22,24 +22,24 @@ namespace Vurbiri.Colonization
             Hexagons land = SceneObjects.Get<Hexagons>();
             HumanSaveData[] playersData = saveData.Humans;
 
-            for (int i = 0; i < PlayerId.PlayersCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; i++)
                 _humans[i] = new(i, playersData[i], settings, land);
 
-            _satan = new(saveData.Satan, settings, land);
+            _satan = new(saveData.Satan, settings, land, _humans);
 
         }
         #endregion
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
-            for (int i = 0; i < PlayerId.PlayersCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; i++)
                 _humans[i].Profit(hexId, freeGroundRes);
         }
 
         public void Dispose()
         {
             _satan.Dispose();
-            for (int i = 0; i < PlayerId.PlayersCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; i++)
                 _humans[i].Dispose();
         }
 
@@ -51,6 +51,8 @@ namespace Vurbiri.Colonization
             public WarriorInitializer warriorPrefab;
             public PricesScriptable prices;
             public HumanAbilitiesScriptable humanStates;
+            public EconomicPerksScriptable economicPerks;
+            public MilitaryPerksScriptable militaryPerks;
             public RoadFactory roadFactory;
             [Space]
             public DemonInitializer demonPrefab;
@@ -63,10 +65,13 @@ namespace Vurbiri.Colonization
             public void Dispose()
             {
                 humanStates.Dispose();
+                economicPerks.Dispose();
+                militaryPerks.Dispose();
                 satanStates.Dispose();
                 demonBuffs.Dispose();
                 artefact.Dispose();
-                humanStates = null; satanStates = null;  demonBuffs = null; artefact = null;
+                humanStates = null; economicPerks = null; militaryPerks = null;
+                satanStates = null;  demonBuffs = null; artefact = null;
             }
 
 #if UNITY_EDITOR
@@ -80,6 +85,10 @@ namespace Vurbiri.Colonization
                     prices = EUtility.FindAnyScriptable<PricesScriptable>();
                 if (humanStates == null)
                     humanStates = EUtility.FindAnyScriptable<HumanAbilitiesScriptable>();
+                if (economicPerks == null)
+                    economicPerks = EUtility.FindAnyScriptable<EconomicPerksScriptable>();
+                if (militaryPerks == null)
+                    militaryPerks = EUtility.FindAnyScriptable<MilitaryPerksScriptable>();
 
                 if (demonPrefab == null)
                     demonPrefab = EUtility.FindAnyPrefab<DemonInitializer>();

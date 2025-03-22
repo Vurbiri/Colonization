@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Crossroad : IDisposable, IPositionable, ICancel, IArrayable
+    public partial class Crossroad : IDisposable, IPositionable, ICancel
     {
         #region Fields
         private const int HEX_COUNT = 3;
@@ -166,7 +166,7 @@ namespace Vurbiri.Colonization
         public void Cancel() => OnUnselect(null);
         #endregion
 
-        #region IArrayable
+        #region Arrayable
         private const int SIZE_ARRAY = 4;
         public int[] ToArray() => new int[] { _key.X, _key.Y, _states.id.Value, _isWall ? 1 : 0 };
         public int[] ToArray(int[] array)

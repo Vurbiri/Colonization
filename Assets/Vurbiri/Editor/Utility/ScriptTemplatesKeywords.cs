@@ -27,7 +27,7 @@ namespace VurbiriEditor
         [MenuItem(MENU_COMMAND_ENABLE, true, 35)]
         private static bool CommandEnableValidate()
         {
-            Menu.SetChecked(MENU, _enabled);
+            SetChecked();
             return !_enabled;
         }
 

@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Data
 {
     public class GameplaySaveData : IDisposable
 	{
-        private readonly HumanSaveData[] _humansSaveData = new HumanSaveData[PlayerId.PlayersCount];
+        private readonly HumanSaveData[] _humansSaveData = new HumanSaveData[PlayerId.HumansCount];
         private readonly SatanSaveData _satanSaveData;
         private readonly IStorageService _storage;
         private readonly bool _isLoad;
@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Data
             _storage = SceneServices.Get<IStorageService>();
             _isLoad = isLoad;
 
-            for (int i = 0; i < PlayerId.PlayersCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; i++)
                 _humansSaveData[i] = new(i, _storage, isLoad);
 
             _satanSaveData = new(_storage, isLoad);
@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization.Data
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
-            for (int i = 0; i < PlayerId.PlayersCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; i++)
                 _humansSaveData[i].Dispose();
         }
     }

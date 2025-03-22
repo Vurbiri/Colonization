@@ -12,7 +12,7 @@ namespace VurbiriEditor.Colonization
         private const string NAME = "Save Land Mesh", MENU = MENU_PATH + NAME;
         #endregion
 
-        [MenuItem(MENU)]
+        [MenuItem(MENU, false, 77)]
         private static void Command()
         {
             if (!Application.isPlaying)

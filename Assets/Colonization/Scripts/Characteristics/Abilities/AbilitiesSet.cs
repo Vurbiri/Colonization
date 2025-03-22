@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -15,10 +16,12 @@ namespace Vurbiri.Colonization.Characteristics
 
         public int Count => AbilityId<TId>.Count;
 
-        public AbilitiesSet(IdArray<TId, int> states)
+        public AbilitiesSet(IdArray<TId, int> states, IReactive<Perk> perks)
         {
             for (int i = 0; i < AbilityId<TId>.Count; i++)
                 _abilities[i] = new Ability<TId>(i, states[i]);
+
+            perks.Subscribe(OnPerks);
         }
 
         public AbilitiesSet(IdArray<TId, int> states, int rate, int maxIndexRate)
@@ -67,6 +70,12 @@ namespace Vurbiri.Colonization.Characteristics
         {
             _abilities[id] = newAbility;
             return newAbility;
+        }
+
+        private void OnPerks(Perk perk)
+        {
+            if (perk.TargetObject == TargetOfPerkId.Player)
+                _abilities[perk.TargetAbility].AddModifier(perk);
         }
     }
 }

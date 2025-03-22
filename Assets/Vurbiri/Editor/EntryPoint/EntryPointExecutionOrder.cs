@@ -28,26 +28,31 @@ namespace VurbiriEditor.EntryPoint
         {
             if (EditorPrefs.HasKey(KEY_SAVE))
                 isAuto = EditorPrefs.GetBool(KEY_SAVE);
-            Menu.SetChecked(MENU_COMMAND_AUTO, isAuto);
         }
 
         [MenuItem(MENU_COMMAND_SET)]
         private static void CommandSet()
         {
             foreach (MonoScript monoScript in MonoImporter.GetAllRuntimeMonoScripts())
-            {
-                SetOrder(monoScript, _sceneType, SCENE_ORDER);
-                SetOrder(monoScript, _projectType, PROJECT_ORDER);
-            }
+                SetOrders(monoScript);
+
+            Debug.Log($"[EntryPointExecutionOrder] End set order.");
         }
+
         [MenuItem(MENU_COMMAND_AUTO, false, 13)]
         private static void CommandAuto()
         {
             isAuto = !isAuto;
 
             EditorPrefs.SetBool(KEY_SAVE, isAuto);
-            Menu.SetChecked(MENU_COMMAND_AUTO, isAuto);
+            SetChecked();
             Log();
+        }
+        [MenuItem(MENU_COMMAND_AUTO, true, 13)]
+        private static bool CommandAutoValidate()
+        {
+            SetChecked();
+            return true;
         }
 
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
@@ -68,20 +73,36 @@ namespace VurbiriEditor.EntryPoint
             var monoScript = monoImporter.GetScript();
             if (monoScript == null) return;
             
-            SetOrder(monoScript, _sceneType, SCENE_ORDER);
-            SetOrder(monoScript, _projectType, PROJECT_ORDER);
+            SetOrders(monoScript);
         }
 
-        private static void SetOrder(MonoScript monoScript, Type type, int order)
+        private static void SetOrders(MonoScript monoScript)
         {
-            Type currentType = monoScript.GetClass()?.BaseType;
-            if (currentType == null || !currentType.Is(type, _monoType)) return;
+            Type currentType = monoScript.GetClass();
+            if (currentType == null || currentType.IsAbstract) return;
+
+            currentType = currentType.BaseType;
+            if (currentType == null) return;
+
+            SetOrder(monoScript, currentType, _sceneType, SCENE_ORDER);
+            SetOrder(monoScript, currentType, _projectType, PROJECT_ORDER);
+        }
+
+        private static void SetOrder(MonoScript monoScript, Type currentType, Type type, int order)
+        {
+            if (!currentType.Is(type, _monoType)) return;
 
             if (MonoImporter.GetExecutionOrder(monoScript) != order)
             {
                 MonoImporter.SetExecutionOrder(monoScript, order);
                 EditorUtility.DisplayDialog("Entry Point Execution Order", $"{monoScript.name} = {order}", "OK");
             }
+        }
+
+        private static void SetChecked()
+        {
+            Menu.SetChecked(MENU_COMMAND_AUTO, isAuto);
+            Menu.SetChecked(MENU, isAuto);
         }
 
         private static void Log()

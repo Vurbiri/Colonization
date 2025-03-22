@@ -5,8 +5,8 @@ namespace Vurbiri.Colonization.Characteristics
     {
         private const int ABILITY = ActorAbilityId.Defense;
         private const int MOD = TypeModifierId.Addition;
-        private const int WALL_RATE = ActorAbilityId.RATE_ABILITY << 3, WALL_DURATION = 3;
-
+        
+        public const int WALL_RATE = ActorAbilityId.RATE_ABILITY * 11, WALL_DURATION = 3;
         public const int BLOCK_DURATION = 1, BLOCK_SKILL_ID = 7, BLOCK_EFFECT_ID = 0;
         public static readonly EffectCode WallEffectCode = new(3, 0, 0, 0);
 

@@ -7,11 +7,12 @@ namespace Vurbiri.Colonization.Data
     {
         public readonly int level;
         public readonly int curse;
+        public readonly int balance;
         public readonly int spawnPotential;
 
         public SatanLoadData(int[] artefact, int[] status, List<int[][]> demons) : base(artefact, demons)
         {
-            Satan.FromArray(status, out level, out curse, out spawnPotential);
+            Satan.FromArray(status, out level, out curse, out balance, out spawnPotential);
         }
     }
 }

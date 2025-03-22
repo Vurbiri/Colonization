@@ -13,9 +13,12 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string NAME = "Military", MENU = MENU_PERKS_PATH + NAME;
         #endregion
 
-        private static readonly Vector2 wndMinSize = new(375f, 800f);
+        [SerializeField] private MilitaryPerksScriptable _perks;
 
-        [MenuItem(MENU)]
+        private static readonly Vector2 wndMinSize = new(375f, 800f);
+        private Editor _editor;
+
+        [MenuItem(MENU, false, 15)]
         private static void ShowWindow()
         {
             GetWindow<MilitaryPerksWindow>(false, NAME).minSize = wndMinSize;
@@ -23,15 +26,15 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         public void CreateGUI()
         {
-            MilitaryPerksScriptable perks = EUtility.FindAnyScriptable<MilitaryPerksScriptable>();
+            if (_perks == null)
+                _perks = EUtility.FindAnyScriptable<MilitaryPerksScriptable>();
 
-            if (perks == null)
-            {
-                Debug.Log("��� MilitaryPerksScriptable");
-                return;
-            }
+            rootVisualElement.Add(MilitaryPerksEditor.CreateEditorAndBind(_perks, out _editor));
+        }
 
-            rootVisualElement.Add(MilitaryPerksEditor.CreateCachedEditorAndBind(perks));
+        private void OnDisable()
+        {
+            DestroyImmediate(_editor);
         }
     }
 }

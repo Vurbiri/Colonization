@@ -1,31 +1,35 @@
 //Assets\Colonization\Scripts\Characteristics\Perk\Perk.cs
+using UnityEngine;
+
 namespace Vurbiri.Colonization.Characteristics
 {
+    [System.Serializable]
     public class Perk : IPerk
     {
-        protected readonly int _targetAbility;
-        protected readonly Id<TypeModifierId> _typeModifier;
-        protected int _value;
+        [SerializeField] private int _id;
+        [SerializeField] private int _type;
+        [SerializeField] private int _level;
+        [SerializeField] private int _targetObject;
+        [SerializeField] private int _targetAbility;
+        [SerializeField] private int _value;
+        [SerializeField] private int _typeModifier;
+        [SerializeField] private int _cost = 1;
 
+        [SerializeField] private int _position;
+        [SerializeField] private string _keyDescription;
+        [SerializeField] private Sprite _sprite;
+
+        public int Id => _id;
+        public int Type => _type;
+        public int Level => _level;
+        public Id<TargetOfPerkId> TargetObject => _targetObject;
         public int TargetAbility => _targetAbility;
-        public Id<TypeModifierId> TypeModifier => _typeModifier;
         public int Value => _value;
+        public Id<TypeModifierId> TypeModifier => _typeModifier;
+        public int Cost => _cost;
 
-        public Perk(int targetAbility, Id<TypeModifierId> typeModifier, int value)
-        {
-            _targetAbility = targetAbility;
-            _typeModifier = typeModifier;
-            _value = value;
-        }
-
-        public void Add(IPerk perk)
-        {
-            if (perk == null || _targetAbility != perk.TargetAbility | _typeModifier != perk.TypeModifier)
-                Errors.Argument("Perk", perk);
-
-            _value += perk.Value;
-        }
-
-        public override string ToString() => $"{GetType().Name}: targetID = {_targetAbility}, modifierID = {_typeModifier}, value = {_value}.";
+        public int Position => _position;
+        public string KeyDescription => _keyDescription;
+        public Sprite Sprite => _sprite;
     }
 }

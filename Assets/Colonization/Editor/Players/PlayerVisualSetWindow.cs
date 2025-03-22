@@ -19,7 +19,7 @@ namespace VurbiriEditor.Colonization
 
         private Editor _editor;
 
-        [MenuItem(MENU)]
+        [MenuItem(MENU, false, 40)]
         private static void ShowWindow()
         {
             GetWindow<PlayerVisualSetWindow>(true, NAME).minSize = wndMinSize;

@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Characteristics\Buffs\Buffs.cs
 using System.Collections.Generic;
+using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
@@ -9,8 +10,8 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly int[] _levels;
         private readonly Subscriber<IReadOnlyList<int>> _subscriberLevels = new();
         private IndexRnd _rIndex;
-        
-        public Buffs(IReadOnlyList<BuffSettings> settings)
+
+        private Buffs(IReadOnlyList<BuffSettings> settings)
         {
             int count = settings.Count;
 
@@ -22,7 +23,7 @@ namespace Vurbiri.Colonization.Characteristics
                 _buffs[i] = new(_subscriber, settings[i]);
         }
 
-        public Buffs(IReadOnlyList<BuffSettings> settings, IReadOnlyList<int> levels)
+        private Buffs(IReadOnlyList<BuffSettings> settings, IReadOnlyList<int> levels)
         {
             int count = settings.Count;
 
@@ -32,6 +33,12 @@ namespace Vurbiri.Colonization.Characteristics
 
             for (int i = 0; i < count; i++)
                 _buffs[i] = new(_subscriber, settings[i], _levels[i] = levels[i]);
+        }
+
+        public static Buffs Create(IReadOnlyList<BuffSettings> settings, APlayerLoadData loadData)
+        {
+            if(loadData == null) return new(settings);
+            return new(settings, loadData.artefact);
         }
 
         public void Next(int count)

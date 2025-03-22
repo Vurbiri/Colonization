@@ -6,7 +6,6 @@ namespace VurbiriEditor.Colonization
         public const string MENU_PATH = "Colonization/";
         public const string MENU_CH_PATH = MENU_PATH + "Characteristics/";
         public const string MENU_UI_PATH = MENU_PATH + "UI/";
-        public const string MENU_MECH_PATH = MENU_PATH + "Game Mechanics/";
         public const string MENU_PERKS_PATH = MENU_CH_PATH + "Perks/";
         public const string MENU_BUFFS_PATH = MENU_CH_PATH + "Buffs/";
         public const int SPACE_WND = 8;

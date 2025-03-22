@@ -5,7 +5,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    sealed public class ReactiveEffect : AReactiveItem<ReactiveEffect>, IPerk, IEquatable<ReactiveEffect>, IArrayable
+    sealed public class ReactiveEffect : AReactiveItem<ReactiveEffect>, IPerk, IEquatable<ReactiveEffect>
     {
         private readonly EffectCode _code;
         private readonly int _targetAbility;
@@ -78,7 +78,7 @@ namespace Vurbiri.Colonization.Characteristics
             _subscriber.Invoke(this, TypeEvent.Change);
         }
 
-        #region IArrayable
+        #region ToArray
         private const int SIZE_ARRAY = 5;
         public int[] ToArray() => new int[] { _code, _targetAbility, _typeModifier.Value, _value, _duration };
         public int[] ToArray(int[] array)
@@ -100,7 +100,7 @@ namespace Vurbiri.Colonization.Characteristics
         }
         public override void Dispose() => _subscriber.Dispose();
 
-        public static Perk operator -(ReactiveEffect left, ReactiveEffect right)
+        public static Effect operator -(ReactiveEffect left, ReactiveEffect right)
         {
             if(left == null | right == null)
                 return null;
@@ -109,7 +109,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             return new(right._targetAbility, right._typeModifier, left._value - right._value);
         }
-        public static Perk operator +(ReactiveEffect left, ReactiveEffect right)
+        public static Effect operator +(ReactiveEffect left, ReactiveEffect right)
         {
             if (left == null | right == null)
                 return null;

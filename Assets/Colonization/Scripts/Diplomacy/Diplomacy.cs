@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
 {
     public class Diplomacy : IReactive<IReadOnlyList<int>>
 	{
-        private readonly int[] _values = new int[PlayerId.PlayersCount];
+        private readonly int[] _values = new int[PlayerId.HumansCount];
         private readonly DiplomacySettings _settings;
 
         private readonly Subscriber<IReadOnlyList<int>> _subscriber = new();
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
         private Diplomacy(DiplomacySettings settings, ITurn turn) 
         {
             _settings = settings;
-            for (int i = 0; i < PlayerId.PlayersCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; i++)
                 _values[i] = _settings.defaultValue;
 
             turn.Subscribe(OnNextTurn, false);
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
         private Diplomacy(IReadOnlyList<int> values, DiplomacySettings settings, ITurn turn)
         {
             _settings = settings;
-            for (int i = 0; i < PlayerId.PlayersCount; i++)
+            for (int i = 0; i < PlayerId.HumansCount; i++)
                 _values[i] = values[i];
 
             turn.Subscribe(OnNextTurn, false);

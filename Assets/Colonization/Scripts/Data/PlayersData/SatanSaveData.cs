@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Data
                 LoadData = new(storage.Get<int[]>(_keyArtefact), _status, _actors);
         }
 
-        public void StatusBind(IReactive<IArrayable> status, bool calling)
+        public void StatusBind(IReactive<Satan> status, bool calling)
         {
             _unsubscribers += status.Subscribe(satan => _storage.Set(P_SATAN, _status = satan.ToArray(_status)), calling);
         }

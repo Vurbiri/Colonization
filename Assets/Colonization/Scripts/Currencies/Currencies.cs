@@ -1,16 +1,22 @@
 //Assets\Colonization\Scripts\Currencies\Currencies.cs
 using System.Collections.Generic;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization
 {
     sealed public class Currencies : ACurrenciesReactive
     {
         #region Constructions
-        public Currencies(IReadOnlyList<int> array, IAbility maxValueMain, IAbility maxValueBlood) : base(array, maxValueMain, maxValueBlood) { }
-        public Currencies(ACurrencies other, IAbility maxValueMain, IAbility maxValueBlood) : base(other, maxValueMain, maxValueBlood) { }
-        public Currencies(IAbility maxValueMain, IAbility maxValueBlood) : base(maxValueMain, maxValueBlood) { }
+        private Currencies(IReadOnlyList<int> array, IAbility maxValueMain, IAbility maxValueBlood) : base(array, maxValueMain, maxValueBlood) { }
+        private Currencies(ACurrencies other, IAbility maxValueMain, IAbility maxValueBlood) : base(other, maxValueMain, maxValueBlood) { }
         #endregion
+
+        public static Currencies Create(AbilitiesSet<HumanAbilityId> abilities, PricesScriptable prices, HumanLoadData loadData)
+        {
+            if (loadData == null) return new(prices.PlayersDefault, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
+            return new(loadData.resources, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
+        }
 
         public void Add(int index, int value)
         {

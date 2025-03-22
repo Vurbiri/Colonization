@@ -17,7 +17,7 @@ namespace VurbiriEditor.Colonization
 
         private static readonly Vector2 wndMinSize = new(325f, 400f);
 
-        [MenuItem(MENU)]
+        [MenuItem(MENU, false, 30)]
         private static void ShowWindow()
         {
             GetWindow<PricesWindow>(false, NAME).minSize = wndMinSize;

@@ -8,10 +8,13 @@ namespace Vurbiri.Colonization.Data
         public readonly IReadOnlyList<int> resources;
         public readonly IReadOnlyDictionary<int, EdificeLoadData[]> edifices;
         public readonly IReadOnlyList<IReadOnlyList<Key>> roads;
+        public readonly IReadOnlyList<IReadOnlyList<int>> perks;
 
-        public HumanLoadData(int[] resources, int[][][] roads, int[] artefact, Dictionary<int, List<int[]>> edifices, List<int[][]> warriors) : base(artefact, warriors)
+        public HumanLoadData(int[] resources, int[][][] roads, int[] artefact, List<int>[] perks, Dictionary<int, List<int[]>> edifices, List<int[][]> warriors) 
+            : base(artefact, warriors)
         {
             this.resources = resources;
+            this.perks = perks;
             this.edifices = CreateEdificesLoadData(edifices);
             this.roads = CreateRoadsData(roads);
 

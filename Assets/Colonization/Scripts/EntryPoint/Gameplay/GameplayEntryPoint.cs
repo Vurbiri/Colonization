@@ -109,10 +109,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         private IEnumerator Final_Cn()
         {
-            yield return null;
-
-            for (int i = 0; i < 14; i++)
-                yield return null;
+            yield return new WaitFrames(15);
 
             Resources.UnloadUnusedAssets();
             yield return null;

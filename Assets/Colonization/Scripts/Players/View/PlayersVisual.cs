@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         public PlayersVisual(Color[] colors, Material materialLit, Material materialUnlit, Material materialWarriors)
         {
             int i = 0;
-            for (; i < PlayerId.PlayersCount; i++)
+            for (; i < PlayerId.HumansCount; i++)
                 _playersVisual[i] = new(colors[i], new(materialLit), new(materialUnlit), new(materialWarriors));
 
             _playersVisual[i] = new(colors[i]);

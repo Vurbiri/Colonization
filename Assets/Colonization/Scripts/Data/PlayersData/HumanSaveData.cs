@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Data\PlayersData\HumanSaveData.cs
 using System.Collections.Generic;
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
@@ -10,7 +11,7 @@ namespace Vurbiri.Colonization.Data
     public class HumanSaveData : APlayerSaveData
     {
         private readonly Dictionary<int, List<int[]>> _edifices;
-        private int[] _perks;
+        private readonly List<int>[] _perks;
 
         private readonly string _keyResources, _keyEdifices, _keyRoads, _keyPerks;
 
@@ -30,10 +31,14 @@ namespace Vurbiri.Colonization.Data
             }
 
             if (!(isLoad && storage.TryGet(_keyPerks, out _perks)))
-                _perks = new int[0];
+            {
+                _perks = new List<int>[TypePerksId.Count];
+                for (int i = 0; i < TypePerksId.Count; i++)
+                    _perks[i] = new();
+            }
 
             if (isLoad)
-                LoadData = new(storage.Get<int[]>(_keyResources), storage.Get<int[][][]>(_keyRoads), storage.Get<int[]>(_keyArtefact), _edifices, _actors);
+                LoadData = new(storage.Get<int[]>(_keyResources), storage.Get<int[][][]>(_keyRoads), storage.Get<int[]>(_keyArtefact), _perks, _edifices, _actors);
         }
 
         public void CurrenciesBind(IReactive<IReadOnlyList<int>> currencies, bool calling)
@@ -41,20 +46,34 @@ namespace Vurbiri.Colonization.Data
             _unsubscribers += currencies.Subscribe(value => _storage.Set(_keyResources, value), calling);
         }
 
-        public void EdificesBind(IReadOnlyList<IReactiveList<IArrayable>> edificesReactive)
+        public void PerksBind(IReactive<Perk> perk, bool calling)
+        {
+            _unsubscribers += perk.Subscribe(OnPerk, calling);
+
+            #region Local OnPerk(..)
+            //==============================
+            void OnPerk(Perk perk)
+            {
+                _perks[perk.TargetObject.Value].Add(perk.Id);
+                _storage.Set(_keyPerks, _perks);
+            }
+            #endregion
+        }
+
+        public void EdificesBind(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive)
         {
             for(int i = 0; i < EdificeGroupId.Count; i++)
                 Bind(edificesReactive[i], _edifices[i]);
 
             #region Local Bind(..)
             //==============================
-            void Bind(IReactiveList<IArrayable> edificesReactive, List<int[]> edifices)
+            void Bind(IReactiveList<Crossroad> edificesReactive, List<int[]> edifices)
             {
                 _unsubscribers += edificesReactive.Subscribe(OnEdifice);
 
                 #region Local OnEdifice(..)
                 //==============================
-                void OnEdifice(int index, IArrayable crossroad, TypeEvent operation)
+                void OnEdifice(int index, Crossroad crossroad, TypeEvent operation)
                 {
                     switch (operation)
                     {

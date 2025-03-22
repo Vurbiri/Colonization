@@ -20,7 +20,7 @@ namespace VurbiriEditor.Colonization.Actors
         private readonly List<Editor> _editors = new();
         private static readonly Vector2 wndMinSize = new(370f, 500f);
 
-        [MenuItem(MENU)]
+        [MenuItem(MENU, false, 51)]
         public static void ShowWindow()
         {
             GetWindow<AnimationClipSettingsWindow>(true, NAME).minSize = wndMinSize;

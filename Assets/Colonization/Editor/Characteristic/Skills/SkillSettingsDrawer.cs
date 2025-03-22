@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
+using static UnityEditor.EditorGUI;
 using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
 namespace VurbiriEditor.Colonization.Characteristics
@@ -10,6 +11,7 @@ namespace VurbiriEditor.Colonization.Characteristics
     [CustomPropertyDrawer(typeof(SkillSettings))]
     public class SkillSettingsDrawer : PropertyDrawerUtility
     {
+        #region Consts
         private const string NAME_ELEMENT = "Skill {0}";
         private const string P_RANGE = "_range", P_DISTANCE = "_distance", P_TARGET = "_target", P_COST = "_cost";
         private const string P_HITS = "_effectsHitsSettings", P_UI = "_ui";
@@ -17,21 +19,20 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_EFFECTS = "_effects";
         private const string P_SPRITE = "_sprite", P_KEY_NAME = "_idNameKey", P_COST_UI = "_cost";
         private const string P_CHILD_TARGET = "_parentTarget";
+        #endregion
 
-        public override void OnGUI(Rect mainPosition, SerializedProperty mainProperty, GUIContent label)
+        protected override void OnGUI()
         {
-            base.OnGUI(mainPosition, mainProperty, label);
-
-            int id = IdFromLabel(label);
+            int id = IdFromLabel();
             if (id >= 0)
-                label.text = string.Format(NAME_ELEMENT, id);
+                _label.text = string.Format(NAME_ELEMENT, id);
 
-            label = EditorGUI.BeginProperty(_position, label, mainProperty);
-            Level++;
+            BeginProperty();
+            indentLevel++;
 
-            if (Foldout(label))
+            if (Foldout())
             {
-                Level++;
+                indentLevel++;
 
                 Space();
                 var clip = DrawObject<AnimationClipSettingsScriptable>(P_CLIP, false);
@@ -44,14 +45,14 @@ namespace VurbiriEditor.Colonization.Characteristics
                     SerializedProperty uiProperty = GetProperty(P_UI);
 
                     DrawLine(40f);
-                    Level++;
+                    indentLevel++;
 
                     DrawLabel("Total Time", $"{clip.totalTime} c");
                     DrawLabel("Hit Time", $"{string.Join("% ", clip.hitTimes)}%");
                     DrawLabel("Remaining Time", $"{clip.totalTime * (100f - clip.hitTimes[^1])/100f} c");
                     SetLabelFloat(P_RANGE, clip.range);
                     SetLabelFloat(P_DISTANCE, clip.distance);
-                    Level--;
+                    indentLevel--;
                     DrawLine(40f);
                     Space();
 
@@ -64,20 +65,20 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                     Space(2f);
                     DrawLabel("UI:");
-                    Level++;
+                    indentLevel++;
                     DrawIntPopupRelative(uiProperty, P_KEY_NAME, KEYS_NAME_SKILLS);
                     DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
-                    Level--;
+                    indentLevel--;
 
                     DrawLine(40f);
                     DrawHits(clip.hitTimes.Length, target);
                  }
 
-                Level--;
+                indentLevel--;
             }
 
-            Level--;
-            EditorGUI.EndProperty();
+            indentLevel--;
+            EndProperty();
 
             #region Local: DrawButton(...)
             //=================================

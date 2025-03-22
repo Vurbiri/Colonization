@@ -8,23 +8,35 @@ using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor
 {
-    public class PropertyDrawerUtility : PropertyDrawer
+    public abstract class PropertyDrawerUtility : PropertyDrawer
     {
-        protected SerializedProperty _mainProperty;
         protected Rect _position;
+        protected SerializedProperty _mainProperty;
+        protected GUIContent _label;
         protected float _height, _ySpace;
 
-        public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
+        sealed public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
         {
-            _mainProperty = mainProperty;
             _ySpace = EditorGUIUtility.standardVerticalSpacing;
             _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             position.height = EditorGUIUtility.singleLineHeight;
+            
             _position = position;
+            _mainProperty = mainProperty;
+            _label = label;
+
+            OnGUI();
         }
 
+        protected abstract void OnGUI();
+
+
+        //================================================================
         protected void Space(float ratio = 1f) => _position.y += _ySpace * ratio;
 
+        protected void BeginProperty() => _label = EditorGUI.BeginProperty(_position, _label, _mainProperty);
+
+        protected bool Foldout() => Foldout(_label);
         protected bool Foldout(GUIContent label) => _mainProperty.isExpanded = EditorGUI.Foldout(_position, _mainProperty.isExpanded, label);
 
         //================================================================
@@ -428,8 +440,6 @@ namespace VurbiriEditor
         //================================================================
         #region Utilities
 
-        protected int Level { get => EditorGUI.indentLevel; set => EditorGUI.indentLevel = value; } 
-
         protected (string[] names, int[] values) GetNamesAndValues<T>(bool isNone) where T : IdType<T>
         {
             if (!isNone)
@@ -444,6 +454,7 @@ namespace VurbiriEditor
             return (names.ToArray(), values.ToArray());
         }
 
+        protected int IdFromLabel() => IdFromLabel(_label);
         protected int IdFromLabel(GUIContent label)
         {
             string[] strings = label.text.Split(' ');

@@ -27,8 +27,6 @@ namespace VurbiriEditor
         {
             if (EditorPrefs.HasKey(KEY_SAVE))
                 isAuto = EditorPrefs.GetBool(KEY_SAVE);
-
-            Menu.SetChecked(MENU_COMMAND_AUTO, isAuto);
         }
 
         [MenuItem(MENU_COMMAND_ADD)]
@@ -51,8 +49,14 @@ namespace VurbiriEditor
             isAuto = !isAuto;
 
             EditorPrefs.SetBool(KEY_SAVE, isAuto);
-            Menu.SetChecked(MENU_COMMAND_AUTO, isAuto);
+            SetChecked();
             Log();
+        }
+        [MenuItem(MENU_COMMAND_AUTO, true, 12)]
+        private static bool CommandAutoValidate()
+        {
+            SetChecked();
+            return true;
         }
 
         public static void OnWillCreateAsset(string assetName)
@@ -148,6 +152,12 @@ namespace VurbiriEditor
 
             comment = string.Concat(COMMENT, path[index..].Replace(@"/", @"\"));
             return true;
+        }
+
+        private static void SetChecked()
+        {
+            Menu.SetChecked(MENU_COMMAND_AUTO, isAuto);
+            Menu.SetChecked(MENU, isAuto);
         }
 
         private static void Log()

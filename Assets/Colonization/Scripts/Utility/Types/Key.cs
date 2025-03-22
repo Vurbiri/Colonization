@@ -2,10 +2,9 @@
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
-using Vurbiri.Colonization;
 
 [JsonObject(MemberSerialization.OptIn)]
-public struct Key : IEquatable<Key>, IArrayable
+public struct Key : IEquatable<Key>
 {
     [JsonProperty("x")]
     private int _x;
@@ -57,7 +56,7 @@ public struct Key : IEquatable<Key>, IArrayable
         return this;
     }
 
-    #region IArrayable
+    #region ToArray
     private const int SIZE_ARRAY = 2;
     public readonly int[] ToArray() => new int[] { _x, _y };
     public readonly int[] ToArray(int[] array)

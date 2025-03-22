@@ -13,14 +13,14 @@ namespace VurbiriEditor
 
             property.isExpanded = true;
 
+            int count = property.Copy().CountInProperty();
             EditorGUI.BeginProperty(position, label, property);
-
-            while (property.Next(true))
+            while (--count > 0)
             {
+                property.Next(true);
                 EditorGUI.PropertyField(position, property, new GUIContent(property.displayName));
                 position.y += height;
             }
-
             EditorGUI.EndProperty();
         }
 

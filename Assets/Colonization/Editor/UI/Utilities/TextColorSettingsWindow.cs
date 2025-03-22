@@ -16,7 +16,7 @@ namespace VurbiriEditor.Colonization.UI
 		
 		private Editor _editor;
 		
-		[MenuItem(MENU)]
+		[MenuItem(MENU, false, 40)]
 		private static void ShowWindow()
 		{
 			GetWindow<TextColorSettingsWindow>(true, NAME);

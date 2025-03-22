@@ -34,7 +34,7 @@ namespace Vurbiri.Reactive
         public int CompareTo(T other) => _value.CompareTo(other);
         public int CompareTo(ARType<T> other) => _value.CompareTo(other._value);
 
-        public override bool Equals(object other)
+        sealed public override bool Equals(object other)
         {
             if (other is null) return false;
             if (other is T tValue) return _value.Equals(tValue);
@@ -47,7 +47,7 @@ namespace Vurbiri.Reactive
         public void Dispose() => _subscriber.Dispose();
 
         #region Comparison operator
-        public static bool operator ==(ARType<T> a, ARType<T> b) => a is null & b is null || ((a is not null & b is not null) && a._value.Equals(b._value));
+        public static bool operator ==(ARType<T> a, ARType<T> b) => ReferenceEquals(a, b) || ((a is not null & b is not null) && a._value.Equals(b._value));
         public static bool operator !=(ARType<T> a, ARType<T> b) => !(a == b);
 
         public static bool operator <(ARType<T> a, ARType<T> b) => a._value.CompareTo(b._value) < 0;
@@ -55,7 +55,7 @@ namespace Vurbiri.Reactive
         public static bool operator >(ARType<T> a, ARType<T> b) => a._value.CompareTo(b._value) > 0;
         public static bool operator >=(ARType<T> a, ARType<T> b) => a._value.CompareTo(b._value) >= 0;
 
-        public static bool operator ==(ARType<T> a, IReactiveValue<T> b) => a is null & b is null || ((a is not null & b is not null) && a._value.Equals(b.Value));
+        public static bool operator ==(ARType<T> a, IReactiveValue<T> b) => ReferenceEquals(a, b) || ((a is not null & b is not null) && a._value.Equals(b.Value));
         public static bool operator !=(ARType<T> a, IReactiveValue<T> b) => !(a == b);
 
         public static bool operator <(ARType<T> a, IReactiveValue<T> b) => a._value.CompareTo(b.Value) < 0;
@@ -63,7 +63,7 @@ namespace Vurbiri.Reactive
         public static bool operator >(ARType<T> a, IReactiveValue<T> b) => a._value.CompareTo(b.Value) > 0;
         public static bool operator >=(ARType<T> a, IReactiveValue<T> b) => a._value.CompareTo(b.Value) >= 0;
 
-        public static bool operator ==(IReactiveValue<T> a, ARType<T> b) => a is null & b is null || ((a is not null & b is not null) && a.Value.Equals(b._value));
+        public static bool operator ==(IReactiveValue<T> a, ARType<T> b) => ReferenceEquals(a, b) || ((a is not null & b is not null) && a.Value.Equals(b._value));
         public static bool operator !=(IReactiveValue<T> a, ARType<T> b) => !(a == b);
 
         public static bool operator <(IReactiveValue<T> a, ARType<T> b) => a.Value.CompareTo(b._value) < 0;

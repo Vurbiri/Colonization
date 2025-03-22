@@ -74,8 +74,8 @@ namespace Vurbiri.Colonization.Data
                 Reset();
                 maxScore = 0;
 
-                visualPlayers = new int[PlayerId.PlayersCount];
-                for (int i = 0; i < PlayerId.PlayersCount; i++)
+                visualPlayers = new int[PlayerId.HumansCount];
+                for (int i = 0; i < PlayerId.HumansCount; i++)
                     visualPlayers[i] = i;
 
                 isFirstStart = true;

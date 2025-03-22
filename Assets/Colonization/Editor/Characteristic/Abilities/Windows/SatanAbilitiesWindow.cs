@@ -16,7 +16,7 @@ namespace VurbiriEditor.Colonization
 		
 		[SerializeField] private SatanAbilitiesScriptable _scriptable;
 		
-		[MenuItem(MENU)]
+		[MenuItem(MENU, false, 21)]
 		private static void ShowWindow()
 		{
 			GetWindow<SatanAbilitiesWindow>(true, NAME);
