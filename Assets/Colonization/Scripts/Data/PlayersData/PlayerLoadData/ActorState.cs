@@ -25,6 +25,7 @@ namespace Vurbiri.Colonization.Data
         {
             private const int SIZE_ARRAY = 4;
 
+            public override bool CanRead => true;
             public override bool CanWrite => false;
 
             public override ActorState ReadJson(JsonReader reader, Type objectType, ActorState existingValue, bool hasExistingValue, JsonSerializer serializer)

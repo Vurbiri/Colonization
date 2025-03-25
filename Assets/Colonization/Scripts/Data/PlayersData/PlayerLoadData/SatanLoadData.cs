@@ -5,22 +5,15 @@ namespace Vurbiri.Colonization.Data
 {
     public class SatanLoadData : APlayerLoadData
     {
-        public readonly int level;
-        public readonly int curse;
-        public readonly int balance;
-        public readonly int spawnPotential;
+        public readonly SatanState state;
 
-        public SatanLoadData(int[] artefact, int[] status, List<int[][]> demons) : base(artefact, demons)
+        public SatanLoadData(int[] artefact, SatanState state, List<int[][]> demons) : base(artefact, demons)
         {
-            Satan.FromArray(status, out level, out curse, out balance, out spawnPotential);
+            this.state = state;
         }
 
         public SatanLoadData() : base()
         {
-            level = 0;
-            curse = 0;
-            balance = 0;
-            spawnPotential = 0;
         }
     }
 }

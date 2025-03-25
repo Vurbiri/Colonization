@@ -1,6 +1,5 @@
 //Assets\Colonization\Scripts\GameLoop\GameSettings.cs
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Data
@@ -28,8 +27,8 @@ namespace Vurbiri.Colonization.Data
                 _data = new();
         }
 
-        public void Save(Action<bool> callback = null) 
-                    => _storage.Save(SAVE_KEYS.GAME, _data, callback);
+        public void Save() 
+                    => _storage.Save(SAVE_KEYS.GAME, _data);
 
         public void StartGame()
         {

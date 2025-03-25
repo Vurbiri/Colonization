@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
 
             public override Road ReadJson(JsonReader reader, Type objectType, Road existingValue, bool hasExistingValue, JsonSerializer serializer)
             {
-                throw new NotSupportedException($"Not supported deserialize type [{objectType.Name}].");
+                throw new NotSupportedException("Not supported deserialize type {Road}");
             }
 
             public override void WriteJson(JsonWriter writer, Road value, JsonSerializer serializer)

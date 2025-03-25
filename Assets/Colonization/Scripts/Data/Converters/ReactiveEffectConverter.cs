@@ -11,12 +11,15 @@ namespace Vurbiri.Colonization.Characteristics
 
         sealed public class Converter : JsonConverter<ReactiveEffect>
         {
+            public override bool CanRead => true;
+            public override bool CanWrite => true;
+
             public override ReactiveEffect ReadJson(JsonReader reader, Type objectType, ReactiveEffect existingValue, bool hasExistingValue, JsonSerializer serializer)
             {
-                return ReadFromArray(serializer.Deserialize<int[]>(reader));
+                return EffectFromArray(serializer.Deserialize<int[]>(reader));
             }
 
-            public static ReactiveEffect ReadFromArray(int[] array)
+            public static ReactiveEffect EffectFromArray(int[] array)
             {
                 Errors.ThrowIfLengthNotEqual(array, SIZE_ARRAY);
                 int i = 0;

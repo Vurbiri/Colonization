@@ -1,4 +1,5 @@
 //Assets\Vurbiri\Runtime\Storage\EmptyStorage.cs
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 
@@ -17,9 +18,9 @@ namespace Vurbiri
         }
 
         public void Save(Action<bool> callback = null) => callback?.Invoke(false);
-        public void Save<T>(string key, T data, Action<bool> callback = null) => callback?.Invoke(false);
+        public void Save<T>(string key, T data, JsonConverter converter, Action<bool> callback = null) => callback?.Invoke(false);
 
-        public bool Set<T>(string key, T data) => false;
+        public bool Set<T>(string key, T data, JsonConverter converter) => false;
 
         public T Get<T>(string key) where T : class => null;
 
@@ -28,6 +29,14 @@ namespace Vurbiri
             value = default;
             return false;
         }
+
+        public bool TryGet<T>(string key, JsonConverter converter, out T value)
+        {
+            value = default;
+            return false;
+        }
+
+        public bool TryPopulate(string key, object obj, JsonConverter converter = null) => false;
 
         public bool ContainsKey(string key) => false;
 

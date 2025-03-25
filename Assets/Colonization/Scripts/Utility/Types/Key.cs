@@ -42,20 +42,6 @@ namespace Vurbiri.Colonization
             _y = arr[1];
         }
 
-        #region ToArray
-        private const int SIZE_ARRAY = 2;
-        public readonly int[] ToArray() => new int[] { _x, _y };
-        public readonly int[] ToArray(int[] array)
-        {
-            if (array == null || array.Length != SIZE_ARRAY)
-                return new int[] { _x, _y };
-
-            int i = 0;
-            array[i++] = _x; array[i] = _y;
-            return array;
-        }
-        #endregion
-
         public readonly string ToSaveKey() => $"{_x}{_y}";
 
         public readonly bool Equals(Key other) => _x == other._x & _y == other._y;
@@ -73,28 +59,19 @@ namespace Vurbiri.Colonization
         public static bool operator ==(Key a, Key b) => a._x == b._x & a._y == b._y;
         public static bool operator !=(Key a, Key b) => a._x != b._x | a._y != b._y;
 
-        public override readonly string ToString() => $"{_x},{_y}";
+        public override readonly string ToString() => $"[{_x}, {_y}]";
 
         #region Nested: Converter
         //***********************************
         sealed public class Converter : JsonConverter<Key>
         {
-            public override bool CanRead => false;
-
             public override Key ReadJson(JsonReader reader, Type objectType, Key existingValue, bool hasExistingValue, JsonSerializer serializer)
             {
-                throw new NotSupportedException("Not supported deserialize type {Key}");
+                return new(serializer.Deserialize<int[]>(reader));
             }
 
             public override void WriteJson(JsonWriter writer, Key value, JsonSerializer serializer)
             {
-                //if (writer is JsonTextWriter jsonTextWriter)
-                //{
-                //    jsonTextWriter.QuoteChar = '\'';
-                //jsonTextWriter.QuoteName = false;
-                //jsonTextWriter.StringEscapeHandling = StringEscapeHandling.EscapeHtml;
-                //}
-
                 WriteJsonArray(writer ,value);
             }
 

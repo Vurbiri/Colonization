@@ -1,7 +1,6 @@
 //Assets\Colonization\Scripts\Data\PlayersData\Abstract\APlayerSaveData.cs
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
@@ -12,32 +11,19 @@ namespace Vurbiri.Colonization.Data
 
     public abstract class APlayerSaveData : IDisposable
     {
-        protected List<int[][]> _actors = new(DEFOULT_COUNT_KEYS_ACTORS);
-        protected readonly List<string> _keysActors = new(DEFOULT_COUNT_KEYS_ACTORS);
+        protected readonly List<string> _keysActors;
 
         protected readonly IStorageService _storage;
         protected readonly string _strId;
         protected readonly string _keyArtefact;
         protected Unsubscribers _unsubscribers = new();
 
-        private readonly Coroutines _coroutines;
-        private Coroutine _saveActors;
-        private readonly WaitForSecondsRealtime _delaySave = new(0.75f);
-
-        public APlayerSaveData(int id, IStorageService storage, bool isLoad)
+        public APlayerSaveData(int id, IStorageService storage)
         {
             _storage = storage;
-            _coroutines = SceneServices.Get<Coroutines>();
 
             _strId = id.ToString();
             _keyArtefact = P_BUFFS.Concat(_strId); 
-
-            for (int i = 0; i < DEFOULT_COUNT_KEYS_ACTORS; i++)
-            {
-                _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
-                if (isLoad && storage.TryGet(_keysActors[i], out int[][] actor))
-                    _actors.Add(actor);
-            }
         }
 
         public void ActorsBind(IReactiveSet<Actor> actors)
@@ -48,7 +34,6 @@ namespace Vurbiri.Colonization.Data
             //==============================
             void OnActors(Actor actor, TypeEvent operation)
             {
-                string key = _keysActors[actor.Index];
                 switch (operation)
                 {
                     case TypeEvent.Add:
@@ -66,16 +51,6 @@ namespace Vurbiri.Colonization.Data
 
             }
             //==============================
-            string GetNewKey(int index)
-            {
-                if(index < _keysActors.Count)
-                    return _keysActors[index];
-
-                for (int i = _keysActors.Count - 1; i <= index; i++)
-                    _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
-
-                return _keysActors[index];
-            }
             #endregion
         }
         public void ArtefactBind(IReactive<IReadOnlyList<int>> currencies, bool calling)
@@ -87,5 +62,19 @@ namespace Vurbiri.Colonization.Data
         {
             _unsubscribers.Unsubscribe();
         }
+
+        protected List<int[][]> InitActors(int max, bool isLoad)
+        {
+            List<int[][]> actors = new(max);
+            for (int i = 0; i < max; i++)
+            {
+                _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
+                if (isLoad && _storage.TryGet(_keysActors[i], out int[][] actor))
+                    actors.Add(actor);
+            }
+            return actors;
+        }
+
+        protected abstract string GetNewKey(int index);
     }
 }

@@ -47,14 +47,14 @@ namespace Vurbiri.Colonization
 
             SatanLoadData loadData = data.LoadData;
 
-            _level = new(loadData.level);
-            _curse = new(loadData.curse);
-            _balance = new(loadData.balance);
+            _level = new(loadData.state.level);
+            _curse = new(loadData.state.curse);
+            _balance = new(loadData.state.balance);
 
             _leveling = new(settings.demonBuffs.Settings, _level);
             _artefact = Buffs.Create(settings.artefact.Settings, loadData);
 
-            _spawner = new(_level, new(_leveling, _artefact), settings, hexagons[Key.Zero], loadData.spawnPotential);
+            _spawner = new(_level, new(_leveling, _artefact), settings, hexagons[Key.Zero], loadData.state.spawnPotential);
 
             for (int i = loadData.actors.Length - 1; i >= 0; i--)
                 _demons.Add(_spawner.Load(loadData.actors[i], hexagons));
@@ -145,19 +145,19 @@ namespace Vurbiri.Colonization
         }
 
         #region CopyToArray(..), FromArray(..)
-        public const int SIZE_ARRAY = 4;
+        public const int SIZE_ARRAY = 5;
         public int[] CopyToArray(int[] array)
         {
             int i = 0;
-            array[i++] = _level; array[i++] = _curse; array[i++] = _balance; array[i] = _spawner.Potential;
+            array[i++] = _level; array[i++] = _curse; array[i++] = _balance; array[i++] = _spawner.Potential; array[i] = _demons.Capacity;
             return array;
         }
-        public static void FromArray(IReadOnlyList<int> array, out int level, out int curse, out int balance, out int spawn)
+        public static void FromArray(IReadOnlyList<int> array, out int level, out int curse, out int balance, out int spawn, out int maxDemons)
         {
             Errors.ThrowIfLengthNotEqual(array, SIZE_ARRAY);
 
             int i = 0;
-            level = array[i++]; curse = array[i++]; balance = array[i++]; spawn = array[i];
+            level = array[i++]; curse = array[i++]; balance = array[i++]; spawn = array[i++]; maxDemons = array[i];
         }
         #endregion
 

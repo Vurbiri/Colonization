@@ -4,54 +4,40 @@ using System;
 
 namespace Vurbiri.Colonization
 {
-    [JsonConverter(typeof(Roads.Converter))]
+    [JsonConverter(typeof(Converter))]
     public partial class Roads
     {
-        sealed public class Converter : JsonConverter<Roads>
+        sealed public class Converter : JsonConverter
         {
             public override bool CanRead => false;
+            public override bool CanWrite => true;
 
-            public override Roads ReadJson(JsonReader reader, Type objectType, Roads existingValue, bool hasExistingValue, JsonSerializer serializer)
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException("Not supported deserialize type {Roads}");
             }
 
-            public override void WriteJson(JsonWriter writer, Roads value, JsonSerializer serializer)
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
             {
-                int count = value._roadsLists.Count;
+                //if (writer is JsonTextWriter jsonTextWriter)
+                //{
+                //jsonTextWriter.QuoteChar = '\'';
+                //jsonTextWriter.QuoteName = false;
+                //jsonTextWriter.StringEscapeHandling = StringEscapeHandling.EscapeHtml;
+                //}
+
+                if (value is not Roads roads) return;
+
+                int count = roads._roadsLists.Count;
                 writer.WriteStartArray();
                 for (int i = 0; i < count; i++)
-                    Road.Converter.WriteJsonArray(writer, value._roadsLists[i]);
+                    Road.Converter.WriteJsonArray(writer, roads._roadsLists[i]);
                 writer.WriteEndArray();
             }
 
-            public static void ReadFromArray(Roads roads, int[][][] array, Crossroads crossroads)
+            public override bool CanConvert(Type objectType)
             {
-                for (int i = 0; i < array.Length; i++)
-                    CreateRoad(array[i], crossroads);
-
-                #region Local: CreateRoad(...)
-                //=================================
-                void CreateRoad(int[][] keys, Crossroads crossroads)
-                {
-                    int count = keys.Length;
-                    if (count < 2) return;
-
-                    Crossroad start = crossroads[new(keys[0])];
-                    for (int i = 1; i < count; i++)
-                    {
-                        foreach (var link in start.Links)
-                        {
-                            if (link.Contains(new(keys[i])))
-                            {
-                                roads.Build(link.SetStart(start));
-                                start = link.End;
-                                break;
-                            }
-                        }
-                    }
-                }
-                #endregion
+                return typeof(Roads).IsAssignableFrom(objectType);
             }
         }
     }

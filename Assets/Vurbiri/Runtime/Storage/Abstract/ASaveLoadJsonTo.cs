@@ -40,11 +40,31 @@ namespace Vurbiri
             return false;
         }
 
-        public bool Set<T>(string key, T data)
+        public bool TryGet<T>(string key, JsonConverter converter, out T value)
+        {
+            value = default;
+            if (_saved.TryGetValue(key, out string json))
+            {
+                Return<T> result = Deserialize<T>(json, converter);
+                value = result.Value;
+                return result.Result;
+            }
+            return false;
+        }
+
+        public bool TryPopulate(string key, object obj, JsonConverter converter)
+        {
+            if (_saved.TryGetValue(key, out string json))
+                return Populate(json, obj, converter);
+            
+            return false;
+        }
+
+        public bool Set<T>(string key, T data, JsonConverter converter)
         {
             try
             {
-                string json = Serialize<T>(data);
+                string json = Serialize<T>(data, converter);
                 if (!_saved.TryGetValue(key, out string saveJson) || saveJson != json)
                 {
                     _saved[key] = json;
@@ -61,9 +81,9 @@ namespace Vurbiri
         }
 
         public void Save(Action<bool> callback) => _cnQueue.Enqueue(SaveToFile_Cn(callback));
-        public void Save<T>(string key, T data, Action<bool> callback)
+        public void Save<T>(string key, T data, JsonConverter converter, Action<bool> callback)
         {
-            bool result = Set(key, data);
+            bool result = Set(key, data, converter);
             if (_cnQueue.Count > 0)
             {
                 callback?.Invoke(result);
@@ -174,6 +194,14 @@ namespace Vurbiri
         protected abstract WaitResult<bool> SaveToFile_Wait();
 
         protected virtual string Serialize<T>(T obj) => JsonConvert.SerializeObject(obj, typeof(T), null);
+        protected virtual string Serialize<T>(T obj, JsonConverter converter)
+        {
+            JsonSerializerSettings settings = null;
+            if (converter != null)
+                settings = new() { Converters = new List<JsonConverter>(1) { converter } };
+
+            return JsonConvert.SerializeObject(obj, typeof(T), settings);
+        }
 
         protected virtual Return<T> Deserialize<T>(string json)
         {
@@ -189,6 +217,45 @@ namespace Vurbiri
             }
 
             return result;
+        }
+
+        protected virtual Return<T> Deserialize<T>(string json, JsonConverter converter)
+        {
+            Debug.Log(json);
+            Return<T> result = Return<T>.Empty;
+            try
+            {
+                if (!string.IsNullOrEmpty(json))
+                    result = new(JsonConvert.DeserializeObject<T>(json, converter));
+            }
+            catch (Exception ex)
+            {
+                Message.Log(ex.Message);
+            }
+
+            return result;
+        }
+
+        protected virtual bool Populate(string json, object target, JsonConverter converter)
+        {
+            JsonSerializerSettings settings = null;
+            if (converter != null)
+                settings = new() { Converters = new List<JsonConverter>(1) { converter } };
+
+            try
+            {
+                if (!string.IsNullOrEmpty(json))
+                {
+                    JsonConvert.PopulateObject(json, target, settings);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Message.Log(ex.Message);
+            }
+
+            return false;
         }
     }
 }

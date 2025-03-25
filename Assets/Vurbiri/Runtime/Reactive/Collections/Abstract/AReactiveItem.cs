@@ -3,7 +3,7 @@ using System;
 
 namespace Vurbiri.Reactive.Collections
 {
-    public abstract class AReactiveItem<T> : IReactiveItem<T> where T : AReactiveItem<T>
+    public abstract class AReactiveItem<T> : IReactiveItem<T>, IEquatable<T> where T : AReactiveItem<T>
 	{
         protected readonly Subscriber<T, TypeEvent> _subscriber = new();
         protected int _index = -1;
