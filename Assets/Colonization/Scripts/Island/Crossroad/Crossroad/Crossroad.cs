@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
         public bool IsUrban => _states.groupId == EdificeGroupId.Urban;
         public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
         public bool IsWall => _isWall;
-        public IReadOnlyList<CrossroadLink> Links => _links;
+        public IEnumerable<CrossroadLink> Links => _links;
         public IReactiveValue<bool> CanCancel => _canCancel;
         public Vector3 Position { get; }
         #endregion

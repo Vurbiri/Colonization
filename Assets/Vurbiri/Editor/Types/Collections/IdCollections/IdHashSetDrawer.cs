@@ -1,22 +1,24 @@
 //Assets\Vurbiri\Editor\Types\Collections\IdCollections\IdHashSetDrawer.cs
-namespace VurbiriEditor
-{
-    using System;
-    using System.Collections.Generic;
-    using UnityEditor;
-    using UnityEngine;
-    using Vurbiri;
-    using Vurbiri.Collections;
-    using Object = UnityEngine.Object;
+using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using Vurbiri;
+using Vurbiri.Collections;
+using Object = UnityEngine.Object;
 
+namespace VurbiriEditor.Collections
+{
     [CustomPropertyDrawer(typeof(IdSet<,>))]
     internal class IdHashSetDrawer : ADrawerGetConstFieldName
     {
-        private const int INDEX_TYPE = 0, INDEX_VALUE = 1;
-        private const float Y_SPACE = 2f, BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
-        private const string NAME_ARRAY = "_values", NAME_COUNT = "_count", LABEL_EMPTY = "-----";
-        private const string BUTTON_CHILD = "Set children", BUTTON_ASSET = "Set assets", BUTTON_CLEAR = "Clear";
-        private static readonly Color colorNull = new(1f, 0.65f, 0f, 1f);
+        public const int INDEX_TYPE = 0, INDEX_VALUE = 1;
+        public const float Y_SPACE = 2f, BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
+        public const string NAME_ARRAY = "_values", NAME_COUNT = "_count", LABEL_EMPTY = "-----";
+        public const string BUTTON_CHILD = "Set children", BUTTON_PREFAB = "Set prefabs", BUTTON_ASSET = "Set assets", BUTTON_CLEAR = "Clear";
+
+        public static readonly Color colorNull = new(1f, 0.65f, 0f, 1f);
+        public static readonly Type typeObject = typeof(UnityEngine.Object), typeMono = typeof(MonoBehaviour);
 
         private int _countMax = 0;
 
@@ -53,18 +55,23 @@ namespace VurbiriEditor
                     propertyNull = propertyCurrent;
                 }
 
-                if (propertyNull != null)
-                    DrawField(propertyNull, LABEL_EMPTY);
+                if (propertyNull != null) DrawField(propertyNull, LABEL_EMPTY);
                 EditorGUI.indentLevel--;
 
                 if (!Application.isPlaying)
                 {
-                    if (typeValue.Is(typeof(Object)))
+                    if (typeValue.Is(typeObject))
                     {
                         if (property.serializedObject.targetObject is Component && DrawButton(BUTTON_CHILD, 1))
                             GetComponentsInChildren(property.serializedObject.targetObject as Component);
-                        if (DrawButton(BUTTON_ASSET, 0))
-                            SetValues(typeValue.Is(typeof(MonoBehaviour)) ? LoadPrefabs() : LoadAssets());
+                        if(typeValue.Is(typeMono))
+                        {
+                            if (DrawButton(BUTTON_PREFAB, 0)) LoadPrefabs();
+                        }
+                        else 
+                        { 
+                            if (DrawButton(BUTTON_ASSET, 0)) LoadAssets();
+                        }
                     }
 
                     if (DrawButton(BUTTON_CLEAR, 2))

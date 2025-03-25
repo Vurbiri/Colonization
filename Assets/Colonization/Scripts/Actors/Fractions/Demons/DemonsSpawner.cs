@@ -18,27 +18,15 @@ namespace Vurbiri.Colonization.Actors
 
         public int Potential => _potential;
 
-        public DemonsSpawner(IReactiveValue<int> level, ActorInitData initData, Players.Settings settings, Hexagon startHex)
+        public DemonsSpawner(IReactiveValue<int> level, ActorInitData initData, Players.Settings settings, Hexagon startHex, int potential)
         {
             _initData = initData;
             _demonPrefab = settings.demonPrefab;
             _container = settings.actorsContainer;
             _startHex = startHex;
+            _potential = potential;
 
             level.Subscribe(value => _potential += value, false);
-        }
-        public DemonsSpawner(int potential, IReactiveValue<int> level, ActorInitData initData, Players.Settings settings, Hexagon startHex)
-            : this(level, initData, settings, startHex)
-        {
-            _potential = potential;
-        }
-
-        public static DemonsSpawner Create(IReactiveValue<int> level, ActorInitData initData, Players.Settings settings, Hexagon startHex, SatanLoadData loadData)
-        {
-            DemonsSpawner spawner = new(level, initData, settings, startHex);
-            if (loadData != null) spawner._potential = loadData.spawnPotential;
-
-            return spawner;
         }
 
         public bool TryCreate(out Demon demon)

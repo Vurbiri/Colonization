@@ -5,7 +5,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    sealed public class ReactiveEffect : AReactiveItem<ReactiveEffect>, IPerk, IEquatable<ReactiveEffect>
+    sealed public partial class ReactiveEffect : AReactiveItem<ReactiveEffect>, IPerk, IEquatable<ReactiveEffect>
     {
         private readonly EffectCode _code;
         private readonly int _targetAbility;
@@ -79,7 +79,6 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
         #region ToArray
-        private const int SIZE_ARRAY = 5;
         public int[] ToArray() => new int[] { _code, _targetAbility, _typeModifier.Value, _value, _duration };
         public int[] ToArray(int[] array)
         {

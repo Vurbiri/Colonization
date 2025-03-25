@@ -6,17 +6,17 @@ namespace Vurbiri.Colonization.Data
     public class HumanLoadData : APlayerLoadData
     {
         public readonly IReadOnlyList<int> resources;
-        public readonly IReadOnlyDictionary<int, EdificeLoadData[]> edifices;
-        public readonly IReadOnlyList<IReadOnlyList<Key>> roads;
-        public readonly IReadOnlyList<IReadOnlyList<int>> perks;
+        public readonly Dictionary<int, EdificeLoadData[]> edifices;
+        public readonly int[][][] roads;
+        public readonly int[][] perks;
 
-        public HumanLoadData(int[] resources, int[][][] roads, int[] artefact, List<int>[] perks, Dictionary<int, List<int[]>> edifices, List<int[][]> warriors) 
+        public HumanLoadData(int[] resources, int[][][] roads, int[] artefact, int[][] perks, Dictionary<int, List<int[]>> edifices, List<int[][]> warriors) 
             : base(artefact, warriors)
         {
             this.resources = resources;
             this.perks = perks;
             this.edifices = CreateEdificesLoadData(edifices);
-            this.roads = CreateRoadsData(roads);
+            this.roads = roads;
 
             #region Local: CreateEdificesLoadData(..), CreateRoadsData(..)
             //================================================================
@@ -39,22 +39,12 @@ namespace Vurbiri.Colonization.Data
 
                 return edifices;
             }
-            //================================================================
-            static Key[][] CreateRoadsData(int[][][] roadsData)
-            {
-                int count, mainCount = roadsData.Length;
-                Key[][] roads = new Key[mainCount][];
-
-                for (int i = 0; i < mainCount; i++)
-                {
-                    count = roadsData[i].Length;
-                    roads[i] = new Key[count];
-                    for (int j = 0; j < count; j++)
-                        roads[i][j] = new(roadsData[i][j]);
-                }
-                return roads;
-            }
             #endregion
+        }
+
+        public HumanLoadData() : base()
+        {
+
         }
     }
 }

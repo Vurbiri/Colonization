@@ -131,49 +131,6 @@ namespace Vurbiri.Colonization.Actors
         public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
         #endregion
 
-        #region ToArray()
-        private const int ADD_SIZE_ARRAY = 2, SIZE_DATA_ARRAY = 4;
-        public int[][] ToArray()
-        {
-            int i = 0;
-            int count = _effects.Count;
-            int[][] array = new int[count + ADD_SIZE_ARRAY][];
-
-            array[i++] = _currentHex.Key.ToArray();
-            array[i++] = ToDataArray(null);
-
-            for (int j = 0; j < count; j++, i++)
-                array[i] = _effects[j].ToArray();
-
-            return array;
-        }
-        public int[][] ToArray(int[][] array)
-        {
-            int count = _effects.Count;
-            if(array == null || array.Length != count + ADD_SIZE_ARRAY)
-                return ToArray();
-
-            int i = 0;
-            array[i] = _currentHex.Key.ToArray(array[i++]);
-            array[i] = ToDataArray(array[i++]);
-
-            for (int j = 0; j < count; j++, i++)
-                array[i] = _effects[j].ToArray(array[i]);
-
-            return array;
-        }
-        private int[] ToDataArray(int[] array)
-        {
-            if (array == null || array.Length != SIZE_DATA_ARRAY)
-                array = new int[SIZE_DATA_ARRAY];
-            
-            int i = 0;
-            array[i++] = _id; array[i++] = _currentHP.Value; array[i++] = _currentAP.Value; array[i] = _move.Value;
-
-            return array;
-        }
-        #endregion
-
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
         sealed public override void Dispose()
         {
@@ -217,10 +174,7 @@ namespace Vurbiri.Colonization.Actors
                 _subscriber.Invoke(this, TypeEvent.Change);
         }
 
-        private void RedirectEvents(ReactiveEffect item, TypeEvent type)
-        {
-            _subscriber.Invoke(this, TypeEvent.Change);
-        }
-        private void TriggerChange() => _subscriber.Invoke(this, TypeEvent.Change);
+        private void RedirectEvents(ReactiveEffect item, TypeEvent type) => _subscriber.Invoke(this, TypeEvent.Change);
+        private void Signal() => _subscriber.Invoke(this, TypeEvent.Change);
     }
 }

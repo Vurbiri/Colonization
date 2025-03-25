@@ -95,16 +95,6 @@ namespace Vurbiri.Colonization
             return other;
         }
 
-        public int[][] ToArray()
-        {
-            int[][] keys = new int[_crossroads.Count][];
-            int i = 0;
-            foreach (var crossroad in _crossroads)
-                keys[i++] = crossroad.Key.ToArray();
-
-            return keys;
-        }
-
         private void CreateLine(Vector3 start, Vector3 end)
         {
             start.y = end.y = _offsetY;

@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Data
 
     public class SatanSaveData : APlayerSaveData
     {
-        private int[] _status;
+        private readonly int[] _status;
         
         public SatanLoadData LoadData { get; set; }
 
@@ -16,13 +16,13 @@ namespace Vurbiri.Colonization.Data
             if (!(isLoad && storage.TryGet(P_SATAN, out _status)))
                 _status = new int[Satan.SIZE_ARRAY];
 
-            if (isLoad)
-                LoadData = new(storage.Get<int[]>(_keyArtefact), _status, _actors);
+            if (isLoad) LoadData = new(storage.Get<int[]>(_keyArtefact), _status, _actors);
+            else LoadData = new();
         }
 
         public void StatusBind(IReactive<Satan> status, bool calling)
         {
-            _unsubscribers += status.Subscribe(satan => _storage.Set(P_SATAN, _status = satan.ToArray(_status)), calling);
+            _unsubscribers += status.Subscribe(satan => _storage.Set(P_SATAN, satan.CopyToArray(_status)), calling);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private IdArray<EdificeId, CurrenciesLite> _edifices;
         [SerializeField] private IdArray<WarriorId, CurrenciesLite> _warriors;
 
-        public ACurrencies PlayersDefault => _playersDefault;
+        public ACurrencies HumanDefault => _playersDefault;
         public ACurrencies Road => _roads;
         public ACurrencies Wall => _wall;
         public IReadOnlyList<ACurrencies> Edifices => _edifices;

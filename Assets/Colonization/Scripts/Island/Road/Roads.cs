@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    public class Roads : IReactive<int[][][]>, IDisposable
+    public partial class Roads : IReactive<Roads>, IDisposable
     {
         #region Fields
         private readonly Id<PlayerId> _id;
@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         private readonly RInt _count = new(0);
         private readonly Coroutines _coroutines;
 
-        private readonly Subscriber<int[][][]> _subscriber = new();
+        private readonly Subscriber<Roads> _subscriber = new();
         #endregion
 
         public int Count => _count.Value;
@@ -35,35 +35,7 @@ namespace Vurbiri.Colonization
             _gradient.SetKeys(colors, alphas);
         }
 
-        public void Restoration(IReadOnlyList<IReadOnlyList<Key>> array, Crossroads crossroads)
-        {
-            foreach (var keys in array)
-                CreateRoad(keys, crossroads);
-
-            #region Local: CreateRoad(...)
-            //=================================
-            void CreateRoad(IReadOnlyList<Key> keys, Crossroads crossroads)
-            {
-                int count = keys.Count;
-                if (count < 2) return;
-
-                Crossroad start = crossroads[keys[0]];
-                for (int i = 1; i < count; i++)
-                {
-                    foreach (var link in start.Links)
-                    {
-                        if (link.Contains(keys[i]))
-                        {
-                            link.SetStart(start);
-                            start = link.End;
-                            Build(link);
-                            break;
-                        }
-                    }
-                }
-            }
-            #endregion
-        }
+        public void Restoration(int[][][] array, Crossroads crossroads) => Converter.ReadFromArray(this, array, crossroads);
 
         public void Build(CrossroadLink link)
         {
@@ -77,8 +49,8 @@ namespace Vurbiri.Colonization
             //=================================
             bool AddRoadLine(CrossroadLink link)
             {
-                foreach (var line in _roadsLists)
-                    if (line.TryAdd(link.Start, link.End))
+                for (int i = _roadsLists.Count - 1; i >= 0; i--)
+                    if (_roadsLists[i].TryAdd(link.Start, link.End))
                         return true;
 
                 return false;
@@ -93,21 +65,10 @@ namespace Vurbiri.Colonization
         }
 
         #region Reactive
-        public Unsubscriber Subscribe(Action<int[][][]> action, bool calling = false)
+        public Unsubscriber Subscribe(Action<Roads> action, bool calling = false)
         {
-            if (calling) action(ToArray());
+            if (calling) action(this);
             return _subscriber.Add(action);
-        }
-
-        private int[][][] ToArray()
-        {
-            int count = _roadsLists.Count;
-            int[][][] keys = new int[count][][];
-
-            for (int i = 0; i < count; i++)
-                keys[i] = _roadsLists[i].ToArray();
-
-            return keys;
         }
         #endregion
 
@@ -130,7 +91,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            _subscriber.Invoke(ToArray());
+            _subscriber.Invoke(this);
         }
 
         public void Dispose()

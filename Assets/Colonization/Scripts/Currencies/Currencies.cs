@@ -14,8 +14,9 @@ namespace Vurbiri.Colonization
 
         public static Currencies Create(AbilitiesSet<HumanAbilityId> abilities, PricesScriptable prices, HumanLoadData loadData)
         {
-            if (loadData == null) return new(prices.PlayersDefault, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
-            return new(loadData.resources, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
+            if (loadData.isLoaded) 
+                return new(loadData.resources, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
+            return new(prices.HumanDefault, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
         }
 
         public void Add(int index, int value)

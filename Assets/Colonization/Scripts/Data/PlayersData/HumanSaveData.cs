@@ -1,6 +1,5 @@
 //Assets\Colonization\Scripts\Data\PlayersData\HumanSaveData.cs
 using System.Collections.Generic;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
@@ -11,7 +10,6 @@ namespace Vurbiri.Colonization.Data
     public class HumanSaveData : APlayerSaveData
     {
         private readonly Dictionary<int, List<int[]>> _edifices;
-        private readonly List<int>[] _perks;
 
         private readonly string _keyResources, _keyEdifices, _keyRoads, _keyPerks;
 
@@ -30,15 +28,10 @@ namespace Vurbiri.Colonization.Data
                     _edifices[i] = new();
             }
 
-            if (!(isLoad && storage.TryGet(_keyPerks, out _perks)))
-            {
-                _perks = new List<int>[TypePerksId.Count];
-                for (int i = 0; i < TypePerksId.Count; i++)
-                    _perks[i] = new();
-            }
+            if (isLoad) LoadData = new(storage.Get<int[]>(_keyResources), storage.Get<int[][][]>(_keyRoads), storage.Get<int[]>(_keyArtefact),
+                                       storage.Get<int[][]>(_keyPerks), _edifices, _actors);
+            else        LoadData = new();
 
-            if (isLoad)
-                LoadData = new(storage.Get<int[]>(_keyResources), storage.Get<int[][][]>(_keyRoads), storage.Get<int[]>(_keyArtefact), _perks, _edifices, _actors);
         }
 
         public void CurrenciesBind(IReactive<IReadOnlyList<int>> currencies, bool calling)
@@ -46,18 +39,9 @@ namespace Vurbiri.Colonization.Data
             _unsubscribers += currencies.Subscribe(value => _storage.Set(_keyResources, value), calling);
         }
 
-        public void PerksBind(IReactive<Perk> perk, bool calling)
+        public void PerksBind(IReactive<IEnumerable<IEnumerable<int>>> eventPerks, bool calling)
         {
-            _unsubscribers += perk.Subscribe(OnPerk, calling);
-
-            #region Local OnPerk(..)
-            //==============================
-            void OnPerk(Perk perk)
-            {
-                _perks[perk.TargetObject.Value].Add(perk.Id);
-                _storage.Set(_keyPerks, _perks);
-            }
-            #endregion
+            _unsubscribers += eventPerks.Subscribe(perks => _storage.Set(_keyPerks, perks), calling);
         }
 
         public void EdificesBind(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive)
@@ -96,9 +80,9 @@ namespace Vurbiri.Colonization.Data
             }
             #endregion
         }
-        public void RoadsBind(IReactive<int[][][]> roadsReactive, bool calling)
+        public void RoadsBind(IReactive<Roads> roadsReactive, bool calling)
         {
-            _unsubscribers += roadsReactive.Subscribe(value => _storage.Set(_keyRoads, value), calling);
+            _unsubscribers += roadsReactive.Subscribe(value => _storage.Save(_keyRoads, value), calling);
         }
     }
 }

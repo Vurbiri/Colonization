@@ -57,19 +57,16 @@ namespace Vurbiri.Colonization
 
             _spawner = new(new(playerId, _artefact, new(_perks)), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
 
-            bool isLoaded = loadData != null;
-            if (isLoaded)
+            if (loadData.isLoaded)
             {
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
 
                 _edifices = new(playerId, loadData.edifices, crossroads, _abilities);
                 _roads.Restoration(loadData.roads, crossroads);
 
-                int count = loadData.actors.Count;
+                int count = loadData.actors.Length;
                 for (int i = 0; i < count; i++)
                     _warriors.Add(_spawner.Load(loadData.actors[i], hexagons));
-
-                data.LoadData = null;
             }
             else
             {
@@ -78,12 +75,15 @@ namespace Vurbiri.Colonization
 
             _exchangeRate = new(_abilities);
 
-            data.CurrenciesBind(_resources, !isLoaded);
-            data.PerksBind(_perks, !isLoaded);
+            bool isNotLoaded = !loadData.isLoaded;
+            data.CurrenciesBind(_resources, isNotLoaded);
+            data.PerksBind(_perks, isNotLoaded);
+            data.RoadsBind(_roads, isNotLoaded);
+            data.ArtefactBind(_artefact, isNotLoaded);
             data.EdificesBind(_edifices.values);
-            data.RoadsBind(_roads, !isLoaded);
-            data.ArtefactBind(_artefact, !isLoaded);
             data.ActorsBind(_warriors);
+
+            data.LoadData = null;
         }
 
         public IAbility GetAbility(Id<HumanAbilityId> id) => _abilities[id];

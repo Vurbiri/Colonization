@@ -5,19 +5,14 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri;
 using Vurbiri.Collections;
+using static VurbiriEditor.Collections.IdHashSetDrawer;
 using Object = UnityEngine.Object;
 
-namespace VurbiriEditor
+namespace VurbiriEditor.Collections
 {
     [CustomPropertyDrawer(typeof(EnumSet<,>))]
     public class EnumHashSetDrawer : PropertyDrawer
     {
-        private const int INDEX_TYPE = 0, INDEX_VALUE = 1;
-        private const float Y_SPACE = 2f, BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
-        private const string NAME_ARRAY = "_values", NAME_COUNT = "_count", LABEL_EMPTY = "-----";
-        private const string BUTTON_CHILD = "Set children", BUTTON_ASSET = "Set assets", BUTTON_CLEAR = "Clear";
-        private static readonly Color colorNull = new(1f, 0.65f, 0f, 1f);
-
         private int _countMax = 0;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -56,12 +51,18 @@ namespace VurbiriEditor
 
                 if (!Application.isPlaying)
                 {
-                    if (typeValue.Is(typeof(Object)))
+                    if (typeValue.Is(typeObject))
                     {
                         if (property.serializedObject.targetObject is Component && DrawButton(BUTTON_CHILD, 1))
                             GetComponentsInChildren(property.serializedObject.targetObject as Component);
-                        if (DrawButton(BUTTON_ASSET, 0))
-                            SetValues(typeValue.Is(typeof(MonoBehaviour)) ? LoadPrefabs() : LoadAssets());
+                        if (typeValue.Is(typeMono))
+                        {
+                            if (DrawButton(BUTTON_PREFAB, 0)) LoadPrefabs();
+                        }
+                        else
+                        {
+                            if (DrawButton(BUTTON_ASSET, 0)) LoadAssets();
+                        }
                     }
 
                     if (DrawButton(BUTTON_CLEAR, 2))

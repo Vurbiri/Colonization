@@ -5,11 +5,13 @@ namespace Vurbiri.Colonization.Data
 {
     public abstract class APlayerLoadData
 	{
-        public readonly IReadOnlyList<int> artefact;
-        public readonly IReadOnlyList<ActorLoadData> actors;
+        public readonly bool isLoaded;
+        public readonly int[] artefact;
+        public readonly ActorLoadData[] actors;
 
         public APlayerLoadData(int[] artefact, List<int[][]> actorsData)
         {
+            isLoaded = true;
             this.artefact = artefact;
             this.actors = CreateActorData(actorsData);
 
@@ -26,6 +28,12 @@ namespace Vurbiri.Colonization.Data
                 return actors;
             }
             #endregion
+        }
+
+        public APlayerLoadData()
+        {
+            isLoaded = false;
+            actors = new ActorLoadData[0];
         }
     }
 }

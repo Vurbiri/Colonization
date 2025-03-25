@@ -14,5 +14,13 @@ namespace Vurbiri.Colonization.Data
         {
             Satan.FromArray(status, out level, out curse, out balance, out spawnPotential);
         }
+
+        public SatanLoadData() : base()
+        {
+            level = 0;
+            curse = 0;
+            balance = 0;
+            spawnPotential = 0;
+        }
     }
 }

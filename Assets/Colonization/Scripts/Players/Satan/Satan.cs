@@ -23,8 +23,8 @@ namespace Vurbiri.Colonization
         private readonly DemonsSpawner _spawner;
         private readonly ListReactiveItems<Actor> _demons = new();
 
-        private readonly Subscriber<Satan> _subSelf = new();
-        private readonly Subscriber<Win> _subWin = new();
+        private readonly Subscriber<Satan> _eventSelf = new();
+        private readonly Subscriber<Win> _eventWin = new();
         private readonly Unsubscribers _unsubscribers = new();
 
         public IReactiveValue<int> Level => _level;
@@ -46,41 +46,44 @@ namespace Vurbiri.Colonization
             _states = settings.satanStates;
 
             SatanLoadData loadData = data.LoadData;
-            bool isLoaded = loadData != null;
 
-            _level = isLoaded ? new(loadData.level) : new();
+            _level = new(loadData.level);
+            _curse = new(loadData.curse);
+            _balance = new(loadData.balance);
 
             _leveling = new(settings.demonBuffs.Settings, _level);
             _artefact = Buffs.Create(settings.artefact.Settings, loadData);
 
-            _spawner = DemonsSpawner.Create(_level, new(_leveling, _artefact), settings, hexagons[Key.Zero], loadData);
+            _spawner = new(_level, new(_leveling, _artefact), settings, hexagons[Key.Zero], loadData.spawnPotential);
 
-            if (isLoaded)
-            {
-                _curse = new(loadData.curse);
-                _balance = new(loadData.balance);
-
-                int count = loadData.actors.Count;
-                for (int i = 0; i < count; i++)
-                    _demons.Add(_spawner.Load(loadData.actors[i], hexagons));
-            }
-            else
-            {
-                _curse = new();
-                _balance = new();
-            }
+            for (int i = loadData.actors.Length - 1; i >= 0; i--)
+                _demons.Add(_spawner.Load(loadData.actors[i], hexagons));
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
             {
-                _unsubscribers += humans[i].Shrines.Subscribe(OnShrineBuild, false);
-                _unsubscribers += humans[i].Perks.Subscribe(_ => AddBalance(_states.balancePerPerk), false);
+                _unsubscribers += humans[i].Perks.Subscribe(OnAddPerk, false);
+                _unsubscribers += humans[i].Shrines.Subscribe(OnAddShrine, false);
             }
 
-            _balance.Subscribe(_ => _subSelf.Invoke(this));
+            _balance.Subscribe(OnBalance, false);
 
-            data.StatusBind(this, !isLoaded);
-            data.ArtefactBind(_artefact, !isLoaded);
+            data.StatusBind(this, !loadData.isLoaded);
+            data.ArtefactBind(_artefact, !loadData.isLoaded);
             data.ActorsBind(_demons);
+
+            data.LoadData = null;
+
+            #region Local: OnBalance(..), OnPerk(..), OnShrineBuild(..)
+            //=================================
+            void OnBalance(int value) => _eventSelf.Invoke(this);
+            //=================================
+            void OnAddPerk(Perk perk) => AddBalance(_states.balancePerPerk);
+            //=================================
+            void OnAddShrine(int index, Crossroad crossroad, TypeEvent type)
+            {
+                if (type == TypeEvent.Add) AddBalance(_states.balancePerShrine);
+            }
+            #endregion
         }
 
         public void EndTurn()
@@ -121,14 +124,14 @@ namespace Vurbiri.Colonization
             _balance.Add(value);
 
             if (_balance <= _states.minBalance)
-                _subWin.Invoke(Win.Satan);
+                _eventWin.Invoke(Win.Satan);
             if (_balance >= _states.maxBalance)
-                _subWin.Invoke(Win.Human);
+                _eventWin.Invoke(Win.Human);
 
-            _subSelf.Invoke(this);
+            _eventSelf.Invoke(this);
         }
 
-        public Unsubscriber Subscribe(Action<Satan> action, bool calling) => _subSelf.Add(action, calling, this);
+        public Unsubscriber Subscribe(Action<Satan> action, bool calling) => _eventSelf.Add(action, calling, this);
 
         public void Dispose()
         {
@@ -136,21 +139,17 @@ namespace Vurbiri.Colonization
             _curse.Dispose();
             _balance.Dispose();
             _unsubscribers.Unsubscribe();
-            _subSelf.Dispose();
-            _subWin.Dispose();
+            _eventSelf.Dispose();
+            _eventWin.Dispose();
             _leveling.Dispose();
             _artefact.Dispose();
             _demons.Dispose();
         }
 
-        #region IArrayable
+        #region CopyToArray(..), FromArray(..)
         public const int SIZE_ARRAY = 4;
-        public int[] ToArray() => new int[] { _level, _curse, _balance, _spawner.Potential };
-        public int[] ToArray(int[] array)
+        public int[] CopyToArray(int[] array)
         {
-            if(array.Length != SIZE_ARRAY)
-                return ToArray();
-
             int i = 0;
             array[i++] = _level; array[i++] = _curse; array[i++] = _balance; array[i] = _spawner.Potential;
             return array;
@@ -160,10 +159,7 @@ namespace Vurbiri.Colonization
             Errors.ThrowIfLengthNotEqual(array, SIZE_ARRAY);
 
             int i = 0;
-            level = array[i++];
-            curse = array[i++];
-            balance = array[i++];
-            spawn = array[i];
+            level = array[i++]; curse = array[i++]; balance = array[i++]; spawn = array[i];
         }
         #endregion
 
@@ -178,13 +174,7 @@ namespace Vurbiri.Colonization
                 _level.Increment();
             }
 
-            _subSelf.Invoke(this);
-        }
-
-        private void OnShrineBuild(int index, Crossroad crossroad, TypeEvent type)
-        {
-            if (type == TypeEvent.Add)
-                AddBalance(_states.balancePerShrine);
+            _eventSelf.Invoke(this);
         }
     }
 }

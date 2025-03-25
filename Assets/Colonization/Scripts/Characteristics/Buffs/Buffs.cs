@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Characteristics
                 _buffs[i] = new(_subscriber, settings[i]);
         }
 
-        private Buffs(IReadOnlyList<BuffSettings> settings, IReadOnlyList<int> levels)
+        private Buffs(IReadOnlyList<BuffSettings> settings, int[] levels)
         {
             int count = settings.Count;
 
@@ -37,8 +37,8 @@ namespace Vurbiri.Colonization.Characteristics
 
         public static Buffs Create(IReadOnlyList<BuffSettings> settings, APlayerLoadData loadData)
         {
-            if(loadData == null) return new(settings);
-            return new(settings, loadData.artefact);
+            if(loadData.isLoaded) return new(settings, loadData.artefact);
+            return new(settings);
         }
 
         public void Next(int count)

@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization.Actors
             protected override void Pay()
             {
                 base.Pay();
-                _actor.TriggerChange();
+                _actor.Signal();
             }
 
             protected abstract IEnumerator Actions_Cn();
