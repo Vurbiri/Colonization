@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization.Actors
 
             int count = data.effects.Count;
             for (int i = 0; i < count; i++)
-                _effects.AddEffect(data.effects[i]);
+                _effects.Add(data.effects[i]);
 
             if (_blockState.Enabled)
             {

@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.Actors
                     return;
 
                 _skin.Block(true);
-                _effects.AddEffect(CreateBlockEffect(_code, _value));
+                _effects.Add(CreateBlockEffect(_code, _value));
                 Pay();
             }
 

@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
         private readonly PerkTree _perks;
 
         private readonly WarriorsSpawner _spawner;
-        private readonly ListReactiveItems<Actor> _warriors = new();
+        private readonly ReactiveSet<Actor> _warriors = new(6);
         #endregion
 
         public ACurrenciesReactive Resources => _resources;
@@ -88,21 +88,18 @@ namespace Vurbiri.Colonization
 
         public IAbility GetAbility(Id<HumanAbilityId> id) => _abilities[id];
 
-
         public void EndTurn()
         {
             int countBuffs = 0;
             CurrenciesLite profit = new();
-            Actor actor;
-            for(int i = 0; i < _warriors.Count; i++)
+            foreach (var warrior in _warriors)
             {
-                actor = _warriors[i];
-                if (actor.IsMainProfit)
-                    profit.Increment(actor.Hexagon.SurfaceId);
-                if (actor.IsAdvProfit)
+                if (warrior.IsMainProfit)
+                    profit.Increment(warrior.Hexagon.SurfaceId);
+                if (warrior.IsAdvProfit)
                     countBuffs++;
 
-                actor.StatesUpdate();
+                warrior.StatesUpdate();
             }
 
             _resources.AddFrom(profit);

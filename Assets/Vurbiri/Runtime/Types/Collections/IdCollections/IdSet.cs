@@ -13,12 +13,10 @@ namespace Vurbiri.Collections
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;
         private readonly int _capacity;
-        private readonly IdHashSetIdsEnumerable _typesEnumerable;
 
         public int Filling => _count;
         public int Count => _capacity;
 
-        public IEnumerable<Id<TId>> CurrentIds => _typesEnumerable;
         public TValue this[int id] { get => _values[id]; set => Replace(value); }
         public TValue this[Id<TId> id] { get => _values[id.Value]; set => Replace(value); }
 
@@ -28,7 +26,6 @@ namespace Vurbiri.Collections
             _count = 0;
 
             _values = new TValue[_capacity];
-            _typesEnumerable = new(this);
         }
 
         public IdSet(IEnumerable<TValue> collection) : this()
@@ -124,46 +121,22 @@ namespace Vurbiri.Collections
             return values;
         }
 
-        public IEnumerator<TValue> GetEnumerator() => new IdHashSetValueEnumerator(this);
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public IEnumerator<TValue> GetEnumerator() => new IdSetEnumerator(this);
+        IEnumerator IEnumerable.GetEnumerator() => new IdSetEnumerator(this);
 
-        #region Nested classes: IdHashSetValueEnumerator, IdHashSetIdsEnumerable, IdHashSetIdsEnumerator, AIdHashSetEnumerator
+        #region Nested classes: IdSetEnumerator
         //***********************************
-        public class IdHashSetValueEnumerator : AIdHashSetEnumerator, IEnumerator<TValue>
-        {
-            public TValue Current => _currentValue;
-            object IEnumerator.Current => _currentValue;
-
-            public IdHashSetValueEnumerator(IdSet<TId, TValue> parent) : base(parent) { }
-        }
-        //***********************************
-        public class IdHashSetIdsEnumerable : IEnumerable<Id<TId>>
-        {
-            private readonly IdSet<TId, TValue> _parent;
-
-            public IdHashSetIdsEnumerable(IdSet<TId, TValue> parent) => _parent = parent;
-
-            public IEnumerator<Id<TId>> GetEnumerator() => new IdHashSetIdsEnumerator(_parent);
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        }
-        //***********************************
-        public class IdHashSetIdsEnumerator : AIdHashSetEnumerator, IEnumerator<Id<TId>>
-        {
-            public Id<TId> Current => _currentId;
-            object IEnumerator.Current => _currentId;
-
-            public IdHashSetIdsEnumerator(IdSet<TId, TValue> parent) : base(parent) { }
-        }
-        //***********************************
-        public abstract class AIdHashSetEnumerator
+        public class IdSetEnumerator : IEnumerator<TValue>
         {
             private readonly TValue[] _values;
             private readonly int _capacity;
             private int _cursor = -1;
-            protected Id<TId> _currentId;
-            protected TValue _currentValue;
+            private TValue _current;
 
-            public AIdHashSetEnumerator(IdSet<TId, TValue> parent)
+            public TValue Current => _current;
+            object IEnumerator.Current => _current;
+
+            public IdSetEnumerator(IdSet<TId, TValue> parent)
             {
                 _values = parent._values;
                 _capacity = parent._capacity;
@@ -174,12 +147,10 @@ namespace Vurbiri.Collections
                 if (++_cursor >= _capacity)
                     return false;
 
-                _currentValue = _values[_cursor];
+                _current = _values[_cursor];
 
-                if (_currentValue == null)
+                if (_current == null)
                     return MoveNext();
-
-                _currentId = _currentValue.Id;
 
                 return true;
             }
@@ -189,6 +160,5 @@ namespace Vurbiri.Collections
             public void Dispose() { }
         }
         #endregion
-
     }
 }

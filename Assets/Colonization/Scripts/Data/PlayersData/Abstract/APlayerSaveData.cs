@@ -12,11 +12,12 @@ namespace Vurbiri.Colonization.Data
 
     public abstract class APlayerSaveData : IDisposable
     {
-        protected List<int[][]> _actors = new(MAX_KEY_ACTORS);
-        protected readonly string[] _keyActors = new string[MAX_KEY_ACTORS];
+        protected List<int[][]> _actors = new(DEFOULT_COUNT_KEYS_ACTORS);
+        protected readonly List<string> _keysActors = new(DEFOULT_COUNT_KEYS_ACTORS);
 
         protected readonly IStorageService _storage;
-        protected readonly string /*_keyActors,*/ _keyArtefact;
+        protected readonly string _strId;
+        protected readonly string _keyArtefact;
         protected Unsubscribers _unsubscribers = new();
 
         private readonly Coroutines _coroutines;
@@ -28,18 +29,18 @@ namespace Vurbiri.Colonization.Data
             _storage = storage;
             _coroutines = SceneServices.Get<Coroutines>();
 
-            string strId = id.ToString();
-            _keyArtefact = P_BUFFS.Concat(strId);
+            _strId = id.ToString();
+            _keyArtefact = P_BUFFS.Concat(_strId); 
 
-            for (int i = 0; i < MAX_KEY_ACTORS; i++)
+            for (int i = 0; i < DEFOULT_COUNT_KEYS_ACTORS; i++)
             {
-                _keyActors[i] = P_ACTORS.Concat(strId, i.ToString());
-                if (isLoad && storage.TryGet(_keyActors[i], out int[][] actor))
+                _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
+                if (isLoad && storage.TryGet(_keysActors[i], out int[][] actor))
                     _actors.Add(actor);
             }
         }
 
-        public void ActorsBind(IListReactiveItems<Actor> actors)
+        public void ActorsBind(IReactiveSet<Actor> actors)
         {
             _unsubscribers += actors.Subscribe(OnActors);
 
@@ -47,33 +48,33 @@ namespace Vurbiri.Colonization.Data
             //==============================
             void OnActors(Actor actor, TypeEvent operation)
             {
-                string key = _keyActors[actor.Index];
+                string key = _keysActors[actor.Index];
                 switch (operation)
                 {
                     case TypeEvent.Add:
-                        _storage.Save(key, actor);
+                        _storage.Save(GetNewKey(actor.Index), actor);
                         return;
                     case TypeEvent.Remove:
-                        _storage.Remove(key);
+                        _storage.Remove(_keysActors[actor.Index]);
                         return;
                     case TypeEvent.Change:
-                        _storage.Set(key, actor);
+                        _storage.Set(_keysActors[actor.Index], actor);
                         return;
                     default:
                         return;
                 }
 
-                //_saveActors ??= _coroutines.Run(SaveActors_Cn(key, actor));
+            }
+            //==============================
+            string GetNewKey(int index)
+            {
+                if(index < _keysActors.Count)
+                    return _keysActors[index];
 
-                //#region Local SaveWarriors_Cn()
-                ////==============================
-                //IEnumerator SaveActors_Cn(string key, Actor actor)
-                //{
-                //    yield return _delaySave;
-                //    _storage.Set(key, _actors);
-                //    _saveActors = null;
-                //}
-                //#endregion
+                for (int i = _keysActors.Count - 1; i <= index; i++)
+                    _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
+
+                return _keysActors[index];
             }
             #endregion
         }

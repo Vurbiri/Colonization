@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization.Actors
         public bool IsDead => _currentHP.Value <= 0;
         public Vector3 Position => _thisTransform.position;
         public ActorSkin Skin => _skin;
-        public IListReactiveItems<ReactiveEffect> Effects => _effects;
+        public IReactiveSet<ReactiveEffect> Effects => _effects;
         public IReadOnlyAbilities<ActorAbilityId> Abilities => _abilities;
         public IReactiveValue<bool> CanCancel => _canCancel;
         public bool IsMainProfit => _profitMain.Next();
@@ -86,7 +86,7 @@ namespace Vurbiri.Colonization.Actors
         }
 
         #region Effect
-        public int AddEffect(ReactiveEffect effect) => _effects.AddEffect(effect);
+        public int AddEffect(ReactiveEffect effect) => _effects.Add(effect);
         public int ApplyEffect(IPerk effect)
         {
             int delta = _abilities.AddPerk(effect);
@@ -112,7 +112,7 @@ namespace Vurbiri.Colonization.Actors
             _isPlayerTurn = _thisCollider.enabled = _owner == PlayerId.Player;
 
             _effects.Next();
-            _effects.AddEffect(EffectsFactory.CreateWallDefenceEffect(defense));
+            _effects.Add(EffectsFactory.CreateWallDefenceEffect(defense));
 
             _stateMachine.ToDefaultState();
         }
@@ -120,7 +120,7 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         #region WallDefence
-        public void AddWallDefenceEffect(int maxDefense) => _effects.AddEffect(EffectsFactory.CreateWallDefenceEffect(maxDefense));
+        public void AddWallDefenceEffect(int maxDefense) => _effects.Add(EffectsFactory.CreateWallDefenceEffect(maxDefense));
         public void RemoveWallDefenceEffect() => _effects.Remove(EffectsFactory.WallEffectCode);
         #endregion
 
@@ -139,6 +139,7 @@ namespace Vurbiri.Colonization.Actors
             _skin.Dispose();
             _stateMachine.Dispose();
             _abilities.Dispose();
+            _effects.Dispose();
 
             Destroy(gameObject);
         }

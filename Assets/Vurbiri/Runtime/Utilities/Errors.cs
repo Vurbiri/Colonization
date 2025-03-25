@@ -14,7 +14,7 @@ namespace Vurbiri
            if (value == null)
                 ArgumentNull(nameof(value));
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowIfOutOfRange(int index, int maxExclude)
         {
             if (index < 0 | index >= maxExclude)

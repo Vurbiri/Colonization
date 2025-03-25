@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
         private readonly Buffs _artefact;
 
         private readonly DemonsSpawner _spawner;
-        private readonly ListReactiveItems<Actor> _demons = new();
+        private readonly ReactiveSet<Actor> _demons = new();
 
         private readonly Subscriber<Satan> _eventSelf = new();
         private readonly Subscriber<Win> _eventWin = new();
@@ -89,16 +89,14 @@ namespace Vurbiri.Colonization
         public void EndTurn()
         {
             int countBuffs = 0, balance = 0;
-            Actor actor;
-            for (int i = 0; i < _demons.Count; i++)
+            foreach(var demon in _demons)
             {
-                actor = _demons[i];
-                if (actor.IsMainProfit)
-                    balance += (actor.Id + 1) * _states.balancePerDemon;
-                if (actor.IsAdvProfit)
+                if (demon.IsMainProfit)
+                    balance += (demon.Id + 1) * _states.balancePerDemon;
+                if (demon.IsAdvProfit)
                     countBuffs++;
 
-                actor.StatesUpdate();
+                demon.StatesUpdate();
             }
 
             AddBalance(balance);
@@ -113,8 +111,8 @@ namespace Vurbiri.Colonization
 
         public void StartTurn()
         {
-            for (int i = 0; i < _demons.Count; i++)
-                _demons[i].EffectsUpdate(_states.gateDefense);
+            foreach (var demon in _demons)
+                demon.EffectsUpdate(_states.gateDefense);
 
             AddCurse(CursePerTurn);
         }
