@@ -1,22 +1,17 @@
 //Assets\Colonization\Scripts\Data\Converters\Road\RoadConverter.cs
 using Newtonsoft.Json;
-using System;
+using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization
 {
-    [JsonConverter(typeof(Road.Converter))]
+    [JsonConverter(typeof(Converter))]
     public partial class Road
 	{
-        sealed public class Converter : JsonConverter<Road>
+        sealed public class Converter : AJsonConverter<Road>
         {
             public override bool CanRead => false;
 
-            public override Road ReadJson(JsonReader reader, Type objectType, Road existingValue, bool hasExistingValue, JsonSerializer serializer)
-            {
-                throw new NotSupportedException("Not supported deserialize type {Road}");
-            }
-
-            public override void WriteJson(JsonWriter writer, Road value, JsonSerializer serializer)
+            protected override void WriteJson(JsonWriter writer, Road value, JsonSerializer serializer)
             {
                 WriteJsonArray(writer, value);
             }

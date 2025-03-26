@@ -31,11 +31,7 @@ namespace Vurbiri.Colonization.Data
         public void Save() => _storage.Save();
 
         #region Load
-        public void GetHexData(Key key, out int id, out int surfaceId)
-        {
-            _storage.TryGet(key.ToSaveKey(), out int[] data);
-            Hexagon.FromArray(data, out id, out surfaceId);
-        }
+        public HexLoadData GetHexData(Key key) => _storage.Get<HexLoadData>(key.ToSaveKey());
 
         public bool TryGetDiplomacyData(out int[] data)
         {
@@ -51,17 +47,17 @@ namespace Vurbiri.Colonization.Data
         #endregion
 
         #region Bind
-        public void HexagonsBind(IReactive<Key, int[]> hex)
+        public void HexagonsBind(IReactive<Hexagon> reactive)
         {
-            _unsubscribers += hex.Subscribe((key, data) => _storage.Set(key.ToSaveKey(), data));
+            _unsubscribers += reactive.Subscribe(hex => _storage.Set(hex.Key.ToSaveKey(), hex), false);
         }
-        public void DiplomacyBind(IReactive<IReadOnlyList<int>> diplomacy, bool calling)
+        public void DiplomacyBind(IReactive<IReadOnlyList<int>> reactive, bool calling)
         {
-            _unsubscribers += diplomacy.Subscribe(data => _storage.Set(SAVE_KEYS.DIPLOMANCY, data), calling);
+            _unsubscribers += reactive.Subscribe(diplomacy => _storage.Set(SAVE_KEYS.DIPLOMANCY, diplomacy), calling);
         }
-        public void TurnQueueBind(TurnQueue turn, bool calling)
+        public void TurnQueueBind(IReactive<TurnQueue> reactive, bool calling)
         {
-            _unsubscribers += turn.Subscribe(value => _storage.Set(SAVE_KEYS.TURNS_QUEUE, value), calling);
+            _unsubscribers += reactive.Subscribe(turn => _storage.Set(SAVE_KEYS.TURNS_QUEUE, turn), calling);
         }
         #endregion
 

@@ -1,4 +1,5 @@
 //Assets\Vurbiri\Runtime\Utilities\Errors.cs
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -62,7 +63,13 @@ namespace Vurbiri
 
         public static void AddItem(string value) => throw new($"{value} has already been added.");
         public static void NotFound(string value) => throw new($"{value} not found.");
+        
         public static void Error(string message) => throw new(message);
         #endregion
+
+        public static Exception NotSupportedRead(Type type) => new NotSupportedException($"Deserialization of type {type} is not supported.");
+        public static Exception NotSupportedWrite(Type type) => new NotSupportedException($"Serialization of type {type} is not supported.");
+        public static Exception JsonSerialization(Type type)
+        { return new JsonSerializationException($"Converter cannot write specified value to JSON. {type} is required."); }
     }
 }

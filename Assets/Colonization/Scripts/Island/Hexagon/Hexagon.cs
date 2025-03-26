@@ -7,7 +7,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class Hexagon : MonoBehaviour, ISelectable, IPositionable
+    public partial class Hexagon : MonoBehaviour, ISelectable, IPositionable
     {
         [SerializeField] private HexagonCaption _hexagonCaption;
         [SerializeField] private Collider _collider;
@@ -217,19 +217,6 @@ namespace Vurbiri.Colonization
             _isShow = value;
             _hexagonCaption.SetActive(value);
         }
-
-        #region Save/Load data 
-        private const int SIZE_ARRAY = 2;
-        public int[] ToArray() => new int[] { _id, _surfaceId };
-        public static void FromArray(IReadOnlyList<int> data, out int id, out int surfaceId)
-        {
-            Errors.ThrowIfLengthNotEqual(data, SIZE_ARRAY);
-
-            int i = 0;
-            id = data[i++];
-            surfaceId = data[i];
-        }
-        #endregion
 
         #region ISelectable
         public void Select() { }

@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\HumanLoadData.cs
+//Assets\Colonization\Scripts\Data\PlayersData\HumanLoadData.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Data
@@ -7,18 +7,16 @@ namespace Vurbiri.Colonization.Data
     {
         public readonly IReadOnlyList<int> resources;
         public readonly Dictionary<int, EdificeLoadData[]> edifices;
-        public readonly Key[][] roads;
         public readonly int[][] perks;
 
-        public HumanLoadData(int[] resources, Key[][] roads, int[] artefact, int[][] perks, Dictionary<int, List<int[]>> edifices, List<ActorLoadData> warriors) 
+        public HumanLoadData(int[] resources, int[] artefact, int[][] perks, Dictionary<int, List<int[]>> edifices, List<ActorLoadData> warriors) 
             : base(artefact, warriors)
         {
             this.resources = resources;
             this.perks = perks;
             this.edifices = CreateEdificesLoadData(edifices);
-            this.roads = roads;
 
-            #region Local: CreateEdificesLoadData(..), CreateRoadsData(..)
+            #region Local: CreateEdificesLoadData(..)
             //================================================================
             static Dictionary<int, EdificeLoadData[]> CreateEdificesLoadData(Dictionary<int, List<int[]>> edificesData)
             {
@@ -42,9 +40,6 @@ namespace Vurbiri.Colonization.Data
             #endregion
         }
 
-        public HumanLoadData() : base()
-        {
-
-        }
+        public HumanLoadData() : base() { }
     }
 }

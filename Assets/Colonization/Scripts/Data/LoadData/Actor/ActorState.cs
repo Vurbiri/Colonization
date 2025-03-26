@@ -1,9 +1,6 @@
-//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\ActorState.cs
-using Newtonsoft.Json;
-
+//Assets\Colonization\Scripts\Data\LoadData\Actor\ActorState.cs
 namespace Vurbiri.Colonization.Data
 {
-    [JsonConverter(typeof(ActorStateConverter))]
     public readonly struct ActorState
 	{
         public readonly int id;

@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\SatanLoadData.cs
+//Assets\Colonization\Scripts\Data\PlayersData\SatanLoadData.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Data

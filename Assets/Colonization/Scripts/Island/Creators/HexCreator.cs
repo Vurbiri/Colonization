@@ -76,9 +76,9 @@ namespace Vurbiri.Colonization
         public override Hexagon Create(Vector3 position, int circle, bool isNotApex)
         {
             Key keyHex = PositionToKey(position);
-            _saveData.GetHexData(keyHex, out int id, out int surfaceId);
+            HexLoadData data = _saveData.GetHexData(keyHex);
 
-            return _land.CreateHexagon(keyHex, id, surfaceId, position);
+            return _land.CreateHexagon(keyHex, data.id, data.surfaceId, position);
         }
 
         public override void Finish() => _saveData.HexagonsBind(_land);

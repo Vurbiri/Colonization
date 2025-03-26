@@ -9,26 +9,28 @@ namespace Vurbiri
     {
         public bool IsValid { get; }
 
-        public bool Init(IReadOnlyDIContainer container);
-
         public IEnumerator Load_Cn(string key, Action<bool> callback);
 
-        public void Save(Action<bool> callback = null);
-        public void Save<T>(string key, T data, JsonConverter converter = null, Action<bool> callback = null);
-
-        public bool Set<T>(string key, T data, JsonConverter converter = null);
-
-        public T Get<T>(string key) where T : class;
+        public T Get<T>(string key);
+        public T Get<T>(string key, JsonConverter converter);
         public bool TryGet<T>(string key, out T value);
         public bool TryGet<T>(string key, JsonConverter converter, out T value);
+        
         public bool TryPopulate(string key, object obj, JsonConverter converter = null);
+
+        public bool Set<T>(string key, T data, JsonSerializerSettings settings = null);
+        public bool Set<T>(string key, T data, JsonConverter converter);
+
+        public void Save(Action<bool> callback = null);
+        public void Save<T>(string key, T data, JsonSerializerSettings settings = null);
+        public void Save<T>(string key, T data, JsonConverter converter);
 
         public bool ContainsKey(string key);
 
-        public void Remove(string key, bool fromFile = true, Action<bool> callback = null);
+        public void Remove(string key, bool fromFile = true);
 
-        public void Clear(Action<bool> callback = null);
-        public void Clear(string excludeKey, Action<bool> callback = null);
-        public void Clear(string[] excludeKeys, Action<bool> callback = null);
+        public void Clear();
+        public void Clear(string excludeKey);
+        public void Clear(params string[] excludeKeys);
     }
 }

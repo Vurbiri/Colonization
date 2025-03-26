@@ -10,14 +10,14 @@ namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public class Hexagons : IReactive<Key, int[]>
+    public class Hexagons : IReactive<Hexagon>
     {
         private readonly GameplayEventBus _eventBus;
         private readonly Pool<HexagonMark> _poolMarks;
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
         private readonly Dictionary<int, List<Key>> _hexagonsIdForKey = new(HEX_IDS.Count + 1);
 
-        private readonly Subscriber<Key, int[]> _subscriber = new();
+        private readonly Subscriber<Hexagon> _subscriber = new();
 
         private LandMesh _landMesh;
         private Hexagon _prefabHex;
@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
             Hexagon hex = Object.Instantiate(_prefabHex, position, Quaternion.identity, _container);
             hex.Init(key, id, _poolMarks, surface,  _eventBus);
 
-            _subscriber.Invoke(key, hex.ToArray());
+            _subscriber.Invoke(hex);
 
             _hexagons.Add(key, hex);
             _hexagonsIdForKey[id].Add(key);
@@ -85,7 +85,7 @@ namespace Vurbiri.Colonization
             return res;
         }
 
-        public Unsubscriber Subscribe(Action<Key, int[]> action, bool calling = true) => _subscriber.Add(action);
+        public Unsubscriber Subscribe(Action<Hexagon> action, bool calling = true) => _subscriber.Add(action);
 
         public void Dispose() => _subscriber.Dispose();
     }

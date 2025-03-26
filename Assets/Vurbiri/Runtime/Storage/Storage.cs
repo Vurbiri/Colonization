@@ -31,23 +31,25 @@ namespace Vurbiri
             // =====================
             static bool Create(IReadOnlyDIContainer container, out IStorageService storage)
             {
-                IEnumerator<IStorageService> creator = Creator();
+                IEnumerator<IStorageService> creator = Creator(container);
                 while (creator.MoveNext())
                 {
                     storage = creator.Current;
-                    if (storage.Init(container))
+                    if (storage.IsValid)
                         return true;
                 }
 
                 storage = new EmptyStorage();
-                return storage.Init(container);
+                return storage.IsValid;
             }
             // =====================
-            static IEnumerator<IStorageService> Creator()
+            static IEnumerator<IStorageService> Creator(IReadOnlyDIContainer container)
             {
-                yield return new JsonToYandex();
-                yield return new JsonToLocalStorage();
-                yield return new JsonToCookies();
+                MonoBehaviour monoBehaviour = container.Get<Coroutines>();
+
+                yield return new JsonToYandex(monoBehaviour, container.Get<YandexSDK>());
+                yield return new JsonToLocalStorage(monoBehaviour);
+                yield return new JsonToCookies(monoBehaviour);
             }
             #endregion
         }

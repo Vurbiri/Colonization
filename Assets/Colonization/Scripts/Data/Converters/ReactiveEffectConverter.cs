@@ -7,14 +7,14 @@ namespace Vurbiri.Colonization.Characteristics
     [JsonConverter(typeof(Converter))]
     public partial class ReactiveEffect
 	{
-        private const int SIZE_ARRAY = 5;
-
-        sealed public class Converter : JsonConverter<ReactiveEffect>
+        sealed public class Converter : JsonConverter
         {
+            private const int SIZE_ARRAY = 5;
+
             public override bool CanRead => true;
             public override bool CanWrite => true;
 
-            public override ReactiveEffect ReadJson(JsonReader reader, Type objectType, ReactiveEffect existingValue, bool hasExistingValue, JsonSerializer serializer)
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 return ReadFromArray(serializer.Deserialize<int[]>(reader));
             }
@@ -26,8 +26,11 @@ namespace Vurbiri.Colonization.Characteristics
                 return new(array[i++], array[i++], array[i++], array[i++], array[i]);
             }
 
-            public override void WriteJson(JsonWriter writer, ReactiveEffect effect, JsonSerializer serializer)
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
             {
+                if (value is not ReactiveEffect effect)
+                    throw Errors.JsonSerialization(typeof(ReactiveEffect));
+
                 WriteJsonArray(writer, effect);
             }
 
@@ -42,8 +45,7 @@ namespace Vurbiri.Colonization.Characteristics
                 writer.WriteEndArray();
             }
 
-            
+            public override bool CanConvert(Type objectType) => typeof(ReactiveEffect).IsAssignableFrom(objectType);
         }
-
     }
 }

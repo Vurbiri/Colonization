@@ -10,17 +10,17 @@ namespace Vurbiri.Colonization.Data
     public class HumanSaveData : APlayerSaveData
     {
         private readonly Dictionary<int, List<int[]>> _edifices;
-
+        private readonly Roads.Converter _roadsConverter = new();
         private readonly string _keyResources, _keyEdifices, _keyRoads, _keyPerks;
 
         public HumanLoadData LoadData { get; set; }
 
         public HumanSaveData(int id, IStorageService storage, bool isLoad) : base(id, storage)
         {
-            _keyResources = P_RESOURCES.Concat(_strId); _keyEdifices = P_EDIFICES.Concat(_strId); _keyRoads = P_ROADS.Concat(_strId);
-            _keyPerks = P_PERKS.Concat(_strId);
+            _keyResources = P_RESOURCES.Concat(_strId); _keyEdifices = P_EDIFICES.Concat(_strId);
+            _keyRoads = P_ROADS.Concat(_strId); _keyPerks = P_PERKS.Concat(_strId);
 
-            List<ActorLoadData> actors = InitActors(DEFOULT_COUNT_KEYS_ACTORS, isLoad);
+            var actors = InitActors(DEFOULT_COUNT_KEYS_ACTORS, isLoad);
 
             if (!(isLoad && storage.TryGet(_keyEdifices, out _edifices)))
             {
@@ -29,10 +29,15 @@ namespace Vurbiri.Colonization.Data
                     _edifices[i] = new();
             }
 
-            if (isLoad) LoadData = new(storage.Get<int[]>(_keyResources), storage.Get<Key[][]>(_keyRoads), storage.Get<int[]>(_keyArtefact),
-                                       storage.Get<int[][]>(_keyPerks), _edifices, actors);
+            if (isLoad) LoadData = new(storage.Get<int[]>(_keyResources), storage.Get<int[]>(_keyArtefact), storage.Get<int[][]>(_keyPerks), _edifices, actors);
             else        LoadData = new();
 
+        }
+
+        public void PopulateRoads(Roads roads, Crossroads crossroads) => _storage.Get<Roads>(_keyRoads, new Roads.Converter(roads, crossroads));
+        public void RoadsBind(IReactive<Roads> roadsReactive, bool calling)
+        {
+            _unsubscribers += roadsReactive.Subscribe(value => _storage.Save(_keyRoads, value, _roadsConverter), calling);
         }
 
         public void CurrenciesBind(IReactive<IReadOnlyList<int>> currencies, bool calling)
@@ -82,10 +87,7 @@ namespace Vurbiri.Colonization.Data
             #endregion
         }
 
-        public void RoadsBind(IReactive<Roads> roadsReactive, bool calling)
-        {
-            _unsubscribers += roadsReactive.Subscribe(value => _storage.Save(_keyRoads, value), calling);
-        }
+        
 
         protected override string GetNewKey(int index) => _keysActors[index];
     }

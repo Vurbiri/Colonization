@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\SatanState.cs
+//Assets\Colonization\Scripts\Data\PlayersData\SatanState.cs
 namespace Vurbiri.Colonization.Data
 {
     public readonly struct SatanState

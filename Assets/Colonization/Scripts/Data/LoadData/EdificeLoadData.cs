@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\EdificeLoadData.cs
+//Assets\Colonization\Scripts\Data\LoadData\EdificeLoadData.cs
 namespace Vurbiri.Colonization.Data
 {
     public class EdificeLoadData

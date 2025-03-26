@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
                 Crossroads crossroads = SceneObjects.Get<Crossroads>();
 
                 _edifices = new(playerId, loadData.edifices, crossroads, _abilities);
-                _roads.Restoration(loadData.roads, crossroads);
+                data.PopulateRoads(_roads, crossroads);
 
                 for (int i = loadData.actors.Count - 1; i >= 0; i--)
                     _warriors.Add(_spawner.Load(loadData.actors[i], hexagons));

@@ -9,8 +9,6 @@ namespace Vurbiri
     {
         public bool IsValid => false;
 
-        public bool Init(IReadOnlyDIContainer container) => false;
-
         public IEnumerator Load_Cn(string key, Action<bool> callback)
         {
             callback?.Invoke(false);
@@ -18,11 +16,14 @@ namespace Vurbiri
         }
 
         public void Save(Action<bool> callback = null) => callback?.Invoke(false);
-        public void Save<T>(string key, T data, JsonConverter converter, Action<bool> callback = null) => callback?.Invoke(false);
+        public void Save<T>(string key, T data, JsonSerializerSettings settings = null) { }
+        public void Save<T>(string key, T data, JsonConverter converter) { }
 
+        public bool Set<T>(string key, T data, JsonSerializerSettings settings = null) => false;
         public bool Set<T>(string key, T data, JsonConverter converter) => false;
 
-        public T Get<T>(string key) where T : class => null;
+        public T Get<T>(string key) => default;
+        public T Get<T>(string key, JsonConverter converter) => default;
 
         public bool TryGet<T>(string key, out T value)
         {
@@ -40,12 +41,12 @@ namespace Vurbiri
 
         public bool ContainsKey(string key) => false;
 
-        public void Remove(string key, bool toFile, Action<bool> callback) => callback?.Invoke(false);
+        public void Remove(string key, bool toFile) {}
 
-        public void Clear(Action<bool> callback = null) => callback?.Invoke(false);
+        public void Clear() { }
 
-        public void Clear(string keyExclude, Action<bool> callback = null) => callback?.Invoke(false);
+        public void Clear(string keyExclude) { }
 
-        public void Clear(string[] keyExcludes, Action<bool> callback = null) => callback?.Invoke(false);
+        public void Clear(params string[] keyExcludes) { }
     }
 }

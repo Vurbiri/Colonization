@@ -1,23 +1,57 @@
 //Assets\Colonization\Scripts\Data\Converters\Road\RoadsConverter.cs
 using Newtonsoft.Json;
 using System;
+using Vurbiri.Colonization.Data;
 
 namespace Vurbiri.Colonization
 {
-    [JsonConverter(typeof(Converter))]
     public partial class Roads
     {
-        sealed public class Converter : JsonConverter
+        sealed public class Converter : AJsonConverter<Roads>
         {
-            public override bool CanRead => false;
-            public override bool CanWrite => true;
+            private readonly Roads _roads;
+            private readonly Crossroads _crossroads;
+
+            public Converter() { }
+            public Converter(Roads roads, Crossroads crossroads)
+            {
+                _roads = roads;
+                _crossroads = crossroads;
+            }
 
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
-                throw new NotSupportedException("Not supported deserialize type {Roads}");
+                Key[][] keys = serializer.Deserialize<Key[][]>(reader);
+                for (int i = 0; i < keys.Length; i++)
+                    CreateRoad(keys[i]);
+
+                return _roads;
+
+                #region Local: CreateRoad(...)
+                //=================================
+                void CreateRoad(Key[] keys)
+                {
+                    int count = keys.Length;
+                    if (count < 2) return;
+
+                    Crossroad start = _crossroads[keys[0]];
+                    for (int i = 1; i < count; i++)
+                    {
+                        foreach (var link in start.Links)
+                        {
+                            if (link.Contains(keys[i]))
+                            {
+                                _roads.Build(link.SetStart(start));
+                                start = link.End;
+                                break;
+                            }
+                        }
+                    }
+                }
+                #endregion
             }
 
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            protected override void WriteJson(JsonWriter writer, Roads roads, JsonSerializer serializer)
             {
                 //if (writer is JsonTextWriter jsonTextWriter)
                 //{
@@ -26,16 +60,12 @@ namespace Vurbiri.Colonization
                 //jsonTextWriter.StringEscapeHandling = StringEscapeHandling.EscapeHtml;
                 //}
 
-                if (value is not Roads roads) return;
-
                 int count = roads._roadsLists.Count;
                 writer.WriteStartArray();
                 for (int i = 0; i < count; i++)
                     Road.Converter.WriteJsonArray(writer, roads._roadsLists[i]);
                 writer.WriteEndArray();
             }
-
-            public override bool CanConvert(Type objectType) => typeof(Roads).IsAssignableFrom(objectType);
         }
     }
 }

@@ -1,10 +1,11 @@
-//Assets\Colonization\Scripts\Data\PlayersData\PlayerLoadData\ActorLoadData.cs
+//Assets\Colonization\Scripts\Data\LoadData\Actor\ActorLoadData.cs
 using Newtonsoft.Json;
+using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Data
 {
-    [JsonConverter(typeof(ActorLoadDataConverter))]
+    [JsonConverter(typeof(Actor.Converter))]
     public class ActorLoadData
 	{
         public readonly Key keyHex;

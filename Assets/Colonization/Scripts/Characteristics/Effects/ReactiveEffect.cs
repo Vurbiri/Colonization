@@ -1,6 +1,5 @@
 //Assets\Colonization\Scripts\Characteristics\Effects\ReactiveEffect.cs
 using System;
-using System.Collections.Generic;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
@@ -27,18 +26,6 @@ namespace Vurbiri.Colonization.Characteristics
             _typeModifier = typeModifier;
             _value = value;
             _duration = duration;
-        }
-
-        public ReactiveEffect(IReadOnlyList<int> array)
-        {
-            Errors.ThrowIfLengthNotEqual(array, SIZE_ARRAY);
-
-            int i = 0;
-            _code = array[i++];
-            _targetAbility = array[i++];
-            _typeModifier = array[i++];
-            _value = array[i++];
-            _duration = array[i];
         }
 
         public bool Update(ReactiveEffect other, Func<IPerk, int> addPerk, out int delta)
@@ -77,19 +64,6 @@ namespace Vurbiri.Colonization.Characteristics
 
             _subscriber.Invoke(this, TypeEvent.Change);
         }
-
-        #region ToArray
-        public int[] ToArray() => new int[] { _code, _targetAbility, _typeModifier.Value, _value, _duration };
-        public int[] ToArray(int[] array)
-        {
-            if (array == null || array.Length != SIZE_ARRAY)
-                return ToArray();
-
-            int i = 0;
-            array[i++] = _code; array[i++] = _targetAbility; array[i++] = _typeModifier.Value; array[i++] = _value; array[i] = _duration;
-            return array;
-        }
-        #endregion
 
         public override bool Equals(ReactiveEffect other)
         {

@@ -1,49 +1,21 @@
 //Assets\Vurbiri\Runtime\Storage\JsonToYandex.cs
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace Vurbiri
 {
     sealed public class JsonToYandex : ASaveLoadJsonTo
     {
-        private YandexSDK _ysdk;
+        private readonly YandexSDK _ysdk;
 
         public override bool IsValid => _ysdk != null && _ysdk.IsLogOn;
 
-        public override bool Init(IReadOnlyDIContainer container)
+        public JsonToYandex(MonoBehaviour monoBehaviour, YandexSDK ysdk) : base(monoBehaviour)
         {
-            Init(container.Get<Coroutines>());
-            _ysdk = container.Get<YandexSDK>();
-            return _ysdk.IsLogOn;
+            _ysdk = ysdk;
         }
 
-        public override IEnumerator Load_Cn(string key, Action<bool> callback)
-        {
-            _key = key;
-
-            WaitResult<string> waitResult;
-            string json;
-
-            yield return (waitResult = _ysdk.Load(_key));
-            json = waitResult.Value;
-
-            if (!string.IsNullOrEmpty(json))
-            {
-                Return<Dictionary<string, string>> d = Deserialize<Dictionary<string, string>>(json);
-
-                if (d.Result)
-                {
-                    _saved = d.Value;
-                    callback?.Invoke(true);
-                    yield break;
-                }
-            }
-
-            _saved = new();
-            callback?.Invoke(false);
-        }
-
+        protected override WaitResult<string> LoadFromFile_Wait() => _ysdk.Load(_key);
         protected override WaitResult<bool> SaveToFile_Wait() => _ysdk.Save(_key, Serialize(_saved));
+
     }
 }

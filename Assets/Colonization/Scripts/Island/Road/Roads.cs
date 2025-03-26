@@ -35,35 +35,6 @@ namespace Vurbiri.Colonization
             _gradient.SetKeys(colors, alphas);
         }
 
-        public void Restoration(Key[][] array, Crossroads crossroads)
-        {
-            for (int i = 0; i < array.Length; i++)
-                CreateRoad(array[i], crossroads);
-
-            #region Local: CreateRoad(...)
-            //=================================
-            void CreateRoad(Key[] keys, Crossroads crossroads)
-            {
-                int count = keys.Length;
-                if (count < 2) return;
-
-                Crossroad start = crossroads[keys[0]];
-                for (int i = 1; i < count; i++)
-                {
-                    foreach (var link in start.Links)
-                    {
-                        if (link.Contains(keys[i]))
-                        {
-                            Build(link.SetStart(start));
-                            start = link.End;
-                            break;
-                        }
-                    }
-                }
-            }
-            #endregion
-        }
-
         public void Build(CrossroadLink link)
         {
             link.RoadBuilt(_id);

@@ -8,7 +8,6 @@ namespace Vurbiri.Colonization.Data
     public class ProjectSaveData : IDisposable
     {
         private readonly IStorageService _storage;
-        private readonly string[] _notClear = { SAVE_KEYS.SETTINGS_P, SAVE_KEYS.SETTINGS_V };
         private Unsubscribers _unsubscribers = new();
 
         public ProjectSaveData(IStorageService storage)
@@ -18,7 +17,7 @@ namespace Vurbiri.Colonization.Data
 
         public void Save() => _storage.Save();
 
-        public void Clear() => _storage.Clear(_notClear);
+        public void Clear() => _storage.Clear(SAVE_KEYS.SETTINGS_P, SAVE_KEYS.SETTINGS_V);
 
         #region Load
         public bool TryGetSettingsData(out int[] profile, out float[] volumes)
