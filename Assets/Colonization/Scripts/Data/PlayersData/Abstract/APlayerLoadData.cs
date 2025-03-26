@@ -7,33 +7,19 @@ namespace Vurbiri.Colonization.Data
 	{
         public readonly bool isLoaded;
         public readonly int[] artefact;
-        public readonly ActorLoadData[] actors;
+        public readonly List<ActorLoadData> actors;
 
-        public APlayerLoadData(int[] artefact, List<int[][]> actorsData)
+        public APlayerLoadData(int[] artefact, List<ActorLoadData> actors)
         {
             isLoaded = true;
             this.artefact = artefact;
-            this.actors = CreateActorData(actorsData);
-
-            #region Local: CreateActorData(...)
-            //================================================================
-            static ActorLoadData[] CreateActorData(List<int[][]> actorsData)
-            {
-                int count = actorsData.Count;
-                ActorLoadData[] actors = new ActorLoadData[count];
-
-                for (int i = 0; i < count; i++)
-                    actors[i] = new(actorsData[i]);
-
-                return actors;
-            }
-            #endregion
+            this.actors = actors;
         }
 
         public APlayerLoadData()
         {
             isLoaded = false;
-            actors = new ActorLoadData[0];
+            actors = new(0);
         }
     }
 }

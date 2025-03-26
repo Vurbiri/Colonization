@@ -64,8 +64,7 @@ namespace Vurbiri.Colonization
                 _edifices = new(playerId, loadData.edifices, crossroads, _abilities);
                 _roads.Restoration(loadData.roads, crossroads);
 
-                int count = loadData.actors.Length;
-                for (int i = 0; i < count; i++)
+                for (int i = loadData.actors.Count - 1; i >= 0; i--)
                     _warriors.Add(_spawner.Load(loadData.actors[i], hexagons));
             }
             else

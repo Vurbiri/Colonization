@@ -15,6 +15,6 @@ namespace Vurbiri.Colonization.Data
                 
         public const string G_MODE = "gs", G_MAX_SCORE = "ms", G_VISUAL_PLAYER_IDS = "vp";
 
-        public const int DEFOULT_COUNT_KEYS_ACTORS = 7;
+        public const int DEFOULT_COUNT_KEYS_ACTORS = 8;
     }
 }

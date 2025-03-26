@@ -16,10 +16,10 @@ namespace Vurbiri.Colonization.Characteristics
 
             public override ReactiveEffect ReadJson(JsonReader reader, Type objectType, ReactiveEffect existingValue, bool hasExistingValue, JsonSerializer serializer)
             {
-                return EffectFromArray(serializer.Deserialize<int[]>(reader));
+                return ReadFromArray(serializer.Deserialize<int[]>(reader));
             }
 
-            public static ReactiveEffect EffectFromArray(int[] array)
+            public static ReactiveEffect ReadFromArray(int[] array)
             {
                 Errors.ThrowIfLengthNotEqual(array, SIZE_ARRAY);
                 int i = 0;

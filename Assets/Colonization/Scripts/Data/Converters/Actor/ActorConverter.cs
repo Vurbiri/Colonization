@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Data\Converters\ActorConverter.cs
+//Assets\Colonization\Scripts\Data\Converters\Actor\ActorConverter.cs
 using Newtonsoft.Json;
 using System;
 using Vurbiri.Colonization.Characteristics;

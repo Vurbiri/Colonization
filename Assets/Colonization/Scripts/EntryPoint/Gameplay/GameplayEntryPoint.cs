@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
                 services.AddInstance<GameplayTriggerBus, GameplayEventBus>(_triggerBus = new());
                 services.AddInstance(_inputController = new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
-                services.AddInstance<ITurn>(_turnQueue = TurnQueue.Create(_gameSaveData));
+                services.AddInstance(_turnQueue = TurnQueue.Create(_gameSaveData));
                 services.AddInstance(Diplomacy.Create(_gameSaveData, _scriptables.diplomacy, _turnQueue));
 
                 data.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));

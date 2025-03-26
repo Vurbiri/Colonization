@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
 
         public Demon Load(ActorLoadData data, ActorInitData initData, Hexagon startHex)
         {
-            _demon.Load(_demonSettings[data.id], initData, _collider, startHex, data);
+            _demon.Load(_demonSettings[data.state.id], initData, _collider, startHex, data);
             _collider.enabled = false;
 
             Destroy(this);

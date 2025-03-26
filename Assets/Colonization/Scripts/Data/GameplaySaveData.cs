@@ -43,10 +43,10 @@ namespace Vurbiri.Colonization.Data
             return _isLoad && _storage.TryGet(SAVE_KEYS.DIPLOMANCY, out data);
         }
 
-        public bool TryGetTurnQueueData(out int[] data)
+        public bool TryGetTurnQueue(out TurnQueue turn)
         {
-            data = null;
-            return _isLoad && _storage.TryGet(SAVE_KEYS.TURNS_QUEUE, out data);
+            turn = null;
+            return _isLoad && _storage.TryGet(SAVE_KEYS.TURNS_QUEUE, out turn);
         }
         #endregion
 
@@ -59,9 +59,9 @@ namespace Vurbiri.Colonization.Data
         {
             _unsubscribers += diplomacy.Subscribe(data => _storage.Set(SAVE_KEYS.DIPLOMANCY, data), calling);
         }
-        public void TurnStateBind(ITurn turn, bool calling)
+        public void TurnQueueBind(TurnQueue turn, bool calling)
         {
-            _unsubscribers += turn.Subscribe(iTurn => _storage.Set(SAVE_KEYS.TURNS_QUEUE, iTurn.ToArray()), calling);
+            _unsubscribers += turn.Subscribe(value => _storage.Set(SAVE_KEYS.TURNS_QUEUE, value), calling);
         }
         #endregion
 

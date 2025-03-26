@@ -32,27 +32,28 @@ namespace Vurbiri.Colonization
         }
 
         #region Constructors
-        private Diplomacy(DiplomacySettings settings, ITurn turn) 
+        private Diplomacy(DiplomacySettings settings, TurnQueue turn) 
         {
             _settings = settings;
+
+            _values = new int[PlayerId.HumansCount];
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 _values[i] = _settings.defaultValue;
 
             turn.Subscribe(OnNextTurn, false);
         }
-        private Diplomacy(IReadOnlyList<int> values, DiplomacySettings settings, ITurn turn)
+        private Diplomacy(int[] values, DiplomacySettings settings, TurnQueue turn)
         {
             _settings = settings;
-            for (int i = 0; i < PlayerId.HumansCount; i++)
-                _values[i] = values[i];
+            _values = values;
 
             turn.Subscribe(OnNextTurn, false);
         }
 
-        public static Diplomacy Create(GameplaySaveData saveData, DiplomacySettings settings, ITurn turn)
+        public static Diplomacy Create(GameplaySaveData saveData, DiplomacySettings settings, TurnQueue turn)
         {
             bool isLoad = saveData.TryGetDiplomacyData(out int[] data);
-            Diplomacy diplomacy = isLoad ? new Diplomacy(data, settings, turn) : new Diplomacy(settings, turn);
+            Diplomacy diplomacy = isLoad ? new(data, settings, turn) : new(settings, turn);
             saveData.DiplomacyBind(diplomacy, !isLoad);
 
             return diplomacy;
@@ -112,7 +113,7 @@ namespace Vurbiri.Colonization
 
         public void Dispose() => _subscriber.Dispose();
 
-        private void OnNextTurn(ITurn turn)
+        private void OnNextTurn(TurnQueue turn)
         {
             int current = turn.CurrentId.Value;
 

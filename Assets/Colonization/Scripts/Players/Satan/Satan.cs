@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization
 
             _spawner = new(_level, new(_leveling, _artefact), settings, hexagons[Key.Zero], loadData.state.spawnPotential);
 
-            for (int i = loadData.actors.Length - 1; i >= 0; i--)
+            for (int i = loadData.actors.Count - 1; i >= 0; i--)
                 _demons.Add(_spawner.Load(loadData.actors[i], hexagons));
 
             for (int i = 0; i < PlayerId.HumansCount; i++)

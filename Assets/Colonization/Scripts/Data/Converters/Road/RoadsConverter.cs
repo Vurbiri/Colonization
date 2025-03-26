@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Data\Converters\RoadsConverter.cs
+//Assets\Colonization\Scripts\Data\Converters\Road\RoadsConverter.cs
 using Newtonsoft.Json;
 using System;
 
@@ -35,10 +35,7 @@ namespace Vurbiri.Colonization
                 writer.WriteEndArray();
             }
 
-            public override bool CanConvert(Type objectType)
-            {
-                return typeof(Roads).IsAssignableFrom(objectType);
-            }
+            public override bool CanConvert(Type objectType) => typeof(Roads).IsAssignableFrom(objectType);
         }
     }
 }

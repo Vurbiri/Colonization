@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.Data
                 _status = new int[Satan.SIZE_ARRAY];
             SatanState state = new(_status);
 
-            List<int[][]> actors = InitActors(state.maxDemons, isLoad);
+            List<ActorLoadData> actors = InitActors(state.maxDemons, isLoad);
 
             if (isLoad) LoadData = new(storage.Get<int[]>(_keyArtefact), state, actors);
             else LoadData = new();

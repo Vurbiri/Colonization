@@ -221,7 +221,6 @@ namespace Vurbiri
 
         protected virtual Return<T> Deserialize<T>(string json, JsonConverter converter)
         {
-            Debug.Log(json);
             Return<T> result = Return<T>.Empty;
             try
             {

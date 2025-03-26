@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Data
     {
         public readonly SatanState state;
 
-        public SatanLoadData(int[] artefact, SatanState state, List<int[][]> demons) : base(artefact, demons)
+        public SatanLoadData(int[] artefact, SatanState state, List<ActorLoadData> demons) : base(artefact, demons)
         {
             this.state = state;
         }

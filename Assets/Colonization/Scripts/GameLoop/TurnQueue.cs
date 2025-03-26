@@ -1,38 +1,39 @@
 //Assets\Colonization\Scripts\GameLoop\TurnQueue.cs
-using System.Collections.Generic;
+using System;
 using Vurbiri.Colonization.Data;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class TurnQueue : AReactiveValue<ITurn>, ITurn
+    public partial class TurnQueue : IReactive<TurnQueue>
     {
-        private Id<PlayerId> _previousId = PlayerId.None, _currentId = PlayerId.Player;
-        private int _turn = 1;
+        private Id<PlayerId> _previousId, _currentId;
+        private int _turn;
+        private readonly Subscriber<TurnQueue> _subscriber = new();
 
         public int Turn => _turn;
         public Id<PlayerId> PreviousId => _previousId;
         public Id<PlayerId> CurrentId => _currentId;
-        
-        public override ITurn Value { get => this; protected set { } }
 
-        private TurnQueue() { }
-        private TurnQueue(IReadOnlyList<int> data)
+        private TurnQueue() 
         {
-            Errors.ThrowIfLengthNotEqual(data, SIZE_ARRAY);
-
-            int i = 0;
-            _previousId = data[i++]; _currentId = data[i++]; _turn = data[i];
+            _previousId = PlayerId.None; _currentId = PlayerId.Player; _turn = 1;
+        }
+        public TurnQueue(int previousId, int currentId, int turn)
+        {
+            _previousId = previousId; _currentId = currentId; _turn = turn;
         }
 
         public static TurnQueue Create(GameplaySaveData saveData)
         {
-            bool isLoad = saveData.TryGetTurnQueueData(out int[] data);
-            TurnQueue turn = isLoad ? new(data) : new();
-            saveData.TurnStateBind(turn, !isLoad);
+            bool isLoad;
+            if(!(isLoad = saveData.TryGetTurnQueue(out TurnQueue turn))) turn = new();
+            saveData.TurnQueueBind(turn, !isLoad);
 
             return turn;
         }
+
+        public Unsubscriber Subscribe(Action<TurnQueue> action, bool calling = true) => _subscriber.Add(action, calling, this);
 
         public void Next()
         {
@@ -44,9 +45,9 @@ namespace Vurbiri.Colonization
             _subscriber.Invoke(this);
         }
 
-        #region ToArray
-        private const int SIZE_ARRAY = 3;
-        public int[] ToArray() => new int[] { _previousId.Value, _currentId.Value, _turn };
-        #endregion
+        public void Dispose()
+        {
+            _subscriber.Dispose();
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.Actors
 
         public Warrior Load(ActorLoadData data, ActorInitData initData, Material material, Hexagon startHex)
         {
-            _warrior.Load(_warriorsSettings[data.id], initData, _collider, startHex, data);
+            _warrior.Load(_warriorsSettings[data.state.id], initData, _collider, startHex, data);
             return Setup(_warrior.Skin.Mesh, material);
         }
 

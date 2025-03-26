@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
 {
     public class ActorInitData
 	{
-        private readonly ITurn _turn;
+        private readonly TurnQueue _turn;
 
         public readonly Id<PlayerId> owner;
         public readonly Diplomacy diplomacy;
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
             this.owner = owner;
             diplomacy = SceneServices.Get<Diplomacy>();
             triggerBus = SceneServices.Get<GameplayTriggerBus>();
-            _turn = SceneServices.Get<ITurn>();
+            _turn = SceneServices.Get<TurnQueue>();
         }
     }
 }

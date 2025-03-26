@@ -86,12 +86,11 @@ namespace Vurbiri.Colonization.Actors
         {
             Init(settings, initData, collider, startHex);
 
-            _currentHP.Set(data.currentHP);
-            _currentAP.Set(data.currentAP);
-            _move.Set(data.move);
+            _currentHP.Set(data.state.currentHP);
+            _currentAP.Set(data.state.currentAP);
+            _move.Set(data.state.move);
 
-            int count = data.effects.Count;
-            for (int i = 0; i < count; i++)
+            for (int i = data.effects.Length - 1; i >= 0; i--)
                 _effects.Add(data.effects[i]);
 
             if (_blockState.Enabled)

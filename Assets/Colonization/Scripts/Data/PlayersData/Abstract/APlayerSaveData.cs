@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Data
 
     public abstract class APlayerSaveData : IDisposable
     {
-        protected readonly List<string> _keysActors;
+        protected List<string> _keysActors;
 
         protected readonly IStorageService _storage;
         protected readonly string _strId;
@@ -63,17 +63,33 @@ namespace Vurbiri.Colonization.Data
             _unsubscribers.Unsubscribe();
         }
 
-        protected List<int[][]> InitActors(int max, bool isLoad)
+        protected List<ActorLoadData> InitActors(int max, bool isLoad)
         {
-            List<int[][]> actors = new(max);
+            _keysActors = new(max);
+            List<ActorLoadData> actors = new(max);
             for (int i = 0; i < max; i++)
             {
                 _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
-                if (isLoad && _storage.TryGet(_keysActors[i], out int[][] actor))
+                if (isLoad && _storage.TryGet(_keysActors[i], out ActorLoadData actor))
                     actors.Add(actor);
             }
             return actors;
         }
+
+        //protected List<int[][]> InitActors(int max, bool isLoad)
+        //{
+        //    _keysActors = new(max);
+        //    List<int[][]> actors = new(max);
+        //    for (int i = 0; i < max; i++)
+        //    {
+        //        _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
+        //        if (isLoad && _storage.TryGet(_keysActors[i], out int[][] actor))
+        //            actors.Add(actor);
+        //    }
+        //    if (isLoad)
+        //        _storage.Get<ActorLoadData>(_keysActors[0]);
+        //    return actors;
+        //}
 
         protected abstract string GetNewKey(int index);
     }

@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Data
             _keyResources = P_RESOURCES.Concat(_strId); _keyEdifices = P_EDIFICES.Concat(_strId); _keyRoads = P_ROADS.Concat(_strId);
             _keyPerks = P_PERKS.Concat(_strId);
 
-            List<int[][]> actors = InitActors(DEFOULT_COUNT_KEYS_ACTORS, isLoad);
+            List<ActorLoadData> actors = InitActors(DEFOULT_COUNT_KEYS_ACTORS, isLoad);
 
             if (!(isLoad && storage.TryGet(_keyEdifices, out _edifices)))
             {

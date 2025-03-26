@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Data
         public readonly Key[][] roads;
         public readonly int[][] perks;
 
-        public HumanLoadData(int[] resources, Key[][] roads, int[] artefact, int[][] perks, Dictionary<int, List<int[]>> edifices, List<int[][]> warriors) 
+        public HumanLoadData(int[] resources, Key[][] roads, int[] artefact, int[][] perks, Dictionary<int, List<int[]>> edifices, List<ActorLoadData> warriors) 
             : base(artefact, warriors)
         {
             this.resources = resources;

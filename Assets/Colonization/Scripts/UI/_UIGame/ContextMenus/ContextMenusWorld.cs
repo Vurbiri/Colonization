@@ -88,7 +88,7 @@ namespace Vurbiri.Colonization.UI
                 _thisRectTransform.anchoredPosition = localPoint;
         }
 
-        private void OnNextTurn(ITurn turn)
+        private void OnNextTurn(TurnQueue turn)
         {
             _isNotPlayer = turn.CurrentId != PlayerId.Player;
             CloseAll();
