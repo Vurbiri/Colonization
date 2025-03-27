@@ -17,8 +17,8 @@ namespace Vurbiri.Colonization
         {
             _dices = new();
             _turnQueue = turnQueue;
-            _hexagons = SceneObjects.Get<Hexagons>();
-            _players = SceneObjects.Get<Players>();
+            _hexagons = SceneContainer.Get<Hexagons>();
+            _players = SceneContainer.Get<Players>();
 
             _inputController = inputController;
 

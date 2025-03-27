@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
         public void Init(Vector3 localPosition, ButtonSettings settings, IReadOnlyList<ACurrencies> edificePrices, UnityAction action)
         {
             base.Init(localPosition, settings, action);
-            _localization = SceneServices.Get<Localization>();
+            _localization = SceneContainer.Get<Localization>();
             _edificePrices = edificePrices;
             _cash = settings.player.Resources;
         }

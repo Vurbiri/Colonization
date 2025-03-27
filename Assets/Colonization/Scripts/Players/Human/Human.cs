@@ -2,7 +2,7 @@
 using System;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive.Collections;
 using static Vurbiri.Colonization.Characteristics.HumanAbilityId;
 
@@ -38,13 +38,13 @@ namespace Vurbiri.Colonization
 
         public PerkTree Perks => _perks;
 
-        public Human(Id<PlayerId> playerId, HumanSaveData data, Players.Settings settings, Hexagons hexagons)
+        public Human(Id<PlayerId> playerId, HumanStorage storage, Players.Settings settings, Hexagons hexagons)
         {
             _id = playerId;
-            _coroutines = SceneServices.Get<Coroutines>();
+            _coroutines = SceneContainer.Get<Coroutines>();
 
-            HumanLoadData loadData = data.LoadData;
-            PlayerVisual visual = SceneData.Get<PlayersVisual>()[playerId];
+            HumanLoadData loadData = storage.LoadData;
+            PlayerVisual visual = SceneContainer.Get<PlayersVisual>()[playerId];
 
             _perks = PerkTree.Create(settings, loadData);
             _abilities = settings.humanStates.Get(_perks);
@@ -59,10 +59,10 @@ namespace Vurbiri.Colonization
 
             if (loadData.isLoaded)
             {
-                Crossroads crossroads = SceneObjects.Get<Crossroads>();
+                Crossroads crossroads = SceneContainer.Get<Crossroads>();
 
                 _edifices = new(playerId, loadData.edifices, crossroads, _abilities);
-                data.PopulateRoads(_roads, crossroads);
+                storage.PopulateRoads(_roads, crossroads);
 
                 for (int i = loadData.actors.Count - 1; i >= 0; i--)
                     _warriors.Add(_spawner.Load(loadData.actors[i], hexagons));
@@ -75,14 +75,14 @@ namespace Vurbiri.Colonization
             _exchangeRate = new(_abilities);
 
             bool isNotLoaded = !loadData.isLoaded;
-            data.CurrenciesBind(_resources, isNotLoaded);
-            data.PerksBind(_perks, isNotLoaded);
-            data.RoadsBind(_roads, isNotLoaded);
-            data.ArtefactBind(_artefact, isNotLoaded);
-            data.EdificesBind(_edifices.values);
-            data.ActorsBind(_warriors);
+            storage.CurrenciesBind(_resources, isNotLoaded);
+            storage.PerksBind(_perks, isNotLoaded);
+            storage.RoadsBind(_roads, isNotLoaded);
+            storage.ArtefactBind(_artefact, isNotLoaded);
+            storage.EdificesBind(_edifices.values, isNotLoaded);
+            storage.ActorsBind(_warriors);
 
-            data.LoadData = null;
+            storage.LoadData = null;
         }
 
         public IAbility GetAbility(Id<HumanAbilityId> id) => _abilities[id];

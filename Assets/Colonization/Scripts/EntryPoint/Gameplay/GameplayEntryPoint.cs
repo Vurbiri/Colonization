@@ -6,7 +6,7 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Controllers;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.Reactive;
@@ -34,61 +34,56 @@ namespace Vurbiri.Colonization.EntryPoint
         [Header("TEST")]
         [SerializeField] private bool _isLoad;
 
-        private SceneContainers _containers;
+        private DIContainer _diContainer;
 
         private TurnQueue _turnQueue;
         private Players _players;
         private GameSettings _gameplaySettings;
-        private GameplaySaveData _gameSaveData;
+        private GameplayStorage _gameStorage;
         private GameplayTriggerBus _triggerBus;
         private InputController _inputController;
 
-        public override ISubscriber<ExitParam> Enter(SceneContainers containers, AEnterParam param)
+        public override ISubscriber<ExitParam> Enter(SceneContainer sceneContainer, AEnterParam param)
         {
-            _containers = containers;
+            _diContainer = sceneContainer.Container;
             Debug.Log("GameplayEntryPoint");
-            _gameplaySettings = containers.Data.Get<GameSettings>();
+            _gameplaySettings = _diContainer.Get<GameSettings>();
 
-            containers.Services.Get<Localization>().SetFiles(_localizationFiles);
+            _diContainer.Get<Localization>().SetFiles(_localizationFiles);
 
             if (!_isLoad)
-                containers.Data.Get<ProjectSaveData>().Clear();
+                _diContainer.Get<ProjectStorage>().Clear();
 
-            FillingContainers(containers);
+            FillingContainers();
 
             StartCoroutine(Enter_Cn());
 
-            return new GameplayExitPoint(_nextScene).EventExit;
+            return new GameplayExitPoint(_nextScene, sceneContainer).EventExit;
 
             #region Local: FillingContainers()
             //=================================
-            void FillingContainers(SceneContainers containers)
+            void FillingContainers()
             {
-                DIContainer services = containers.Services;
-                DIContainer data = containers.Data;
-                DIContainer objects = containers.Objects;
 
-                services.AddInstance(Coroutines.Create("Gameplay Coroutines"));
+                _diContainer.AddInstance(Coroutines.Create("Gameplay Coroutines"));
+                _diContainer.AddInstance(_gameStorage = new(_isLoad));
+                _diContainer.AddInstance<GameplayTriggerBus, GameplayEventBus>(_triggerBus = new());
+                _diContainer.AddInstance(_inputController = new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
+                _diContainer.AddInstance(_turnQueue = TurnQueue.Create(_gameStorage));
+                _diContainer.AddInstance(Diplomacy.Create(_gameStorage, _scriptables.diplomacy, _turnQueue));
 
-                data.AddInstance(_gameSaveData = new(_isLoad));
+                _diContainer.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));
 
-                services.AddInstance<GameplayTriggerBus, GameplayEventBus>(_triggerBus = new());
-                services.AddInstance(_inputController = new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
-                services.AddInstance(_turnQueue = TurnQueue.Create(_gameSaveData));
-                services.AddInstance(Diplomacy.Create(_gameSaveData, _scriptables.diplomacy, _turnQueue));
+                _diContainer.AddInstance(_sceneObjects.mainCamera);
 
-                data.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));
-                
-                objects.AddInstance(_sceneObjects.mainCamera);
-
-                _settingsUI.Init(services);
+                _settingsUI.Init(_diContainer);
             }
             #endregion
         }
 
         private IEnumerator Enter_Cn()
         {
-            yield return _islandCreator.Init(_containers.Objects, _triggerBus).Create_Cn(_gameSaveData);
+            yield return _islandCreator.Init(_diContainer, _triggerBus).Create_Cn(_gameStorage);
             yield return CreatePlayers_Cn();
 
             _sceneObjects.Init(this, _scriptables);
@@ -99,7 +94,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         private IEnumerator CreatePlayers_Cn()
         {
-            _players = _containers.Objects.AddInstance(new Players(_playersSettings, _gameSaveData));
+            _players = _diContainer.AddInstance(new Players(_playersSettings, _gameStorage));
 
             yield return null;
 
@@ -121,9 +116,9 @@ namespace Vurbiri.Colonization.EntryPoint
 
             yield return null;
 
-            _gameSaveData.Save();
+            _gameStorage.Save();
 
-            _containers.Objects.Get<LoadingScreen>().SmoothOff_Wait();
+            _diContainer.Get<LoadingScreen>().SmoothOff_Wait();
 
             Destroy(gameObject);
         }

@@ -17,6 +17,7 @@ namespace Vurbiri
         public bool TryGet<T>(string key, JsonConverter converter, out T value);
         
         public bool TryPopulate(string key, object obj, JsonConverter converter = null);
+        public bool TryPopulate<T>(string key, JsonConverter converter);
 
         public bool Set<T>(string key, T data, JsonSerializerSettings settings = null);
         public bool Set<T>(string key, T data, JsonConverter converter);

@@ -10,19 +10,19 @@ namespace Vurbiri.Colonization.EntryPoint
     {
         private readonly ExitParam _exitParam;
 
-        public GameplayExitPoint(int nextScene) : base()
+        public GameplayExitPoint(int nextScene, SceneContainer sceneContainers) : base(sceneContainers)
         {
             _exitParam = new(nextScene);
         }
 
         sealed protected override void OnExit(Action<ExitParam> callback)
         {
-            SceneServices.Get<Coroutines>().Run(OnExit_Cn(callback));
+            SceneContainer.Get<Coroutines>().Run(OnExit_Cn(callback));
         }
 
         private IEnumerator OnExit_Cn(Action<ExitParam> callback)
         {
-            yield return SceneObjects.Get<LoadingScreen>().SmoothOn_Wait();
+            yield return SceneContainer.Get<LoadingScreen>().SmoothOn_Wait();
             callback(_exitParam);
         }
     }

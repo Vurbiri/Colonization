@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.EntryPoint
 	{
 		private IEnumerator Start()
 		{
-            return GetComponent<ProjectInitialization>().Init_Cn(_servicesContainer, _dataContainer, _loadingScreen);
+            return GetComponent<ProjectInitialization>().Init_Cn(_projectContainer, _loadingScreen);
         }
 	}
 }

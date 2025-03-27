@@ -1,8 +1,8 @@
 //Assets\Vurbiri.UI\Runtime\Hint\HintingButton.cs
 using UnityEngine;
 using UnityEngine.Events;
-using Vurbiri.TextLocalization;
 using Vurbiri.Reactive;
+using Vurbiri.TextLocalization;
 
 namespace Vurbiri.UI
 {
@@ -17,13 +17,13 @@ namespace Vurbiri.UI
         {
             base.Init(localPosition, hint, action, true);
             _button.targetGraphic.color = color;
-            _unsubscriber = SceneServices.Get<Localization>().Subscribe(SetText);
+            _unsubscriber = SceneContainer.Get<Localization>().Subscribe(SetText);
         }
 
         public void Init(HintGlobal hint, UnityAction action)
         {
             base.Init(hint, action, true);
-            _unsubscriber = SceneServices.Get<Localization>().Subscribe(SetText);
+            _unsubscriber = SceneContainer.Get<Localization>().Subscribe(SetText);
         }
 
         public void Setup(bool isEnable, bool interactable = true)

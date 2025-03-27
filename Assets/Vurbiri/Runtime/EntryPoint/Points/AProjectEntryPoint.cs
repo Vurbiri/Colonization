@@ -8,42 +8,35 @@ namespace Vurbiri.EntryPoint
 {
     public class AProjectEntryPoint : MonoBehaviour
     {
-        [SerializeField] private SceneId _emptyScene;
-
         private static AProjectEntryPoint _instance;
 
+        [SerializeField] private SceneId _emptyScene;
+        
         private AEnterParam _currentEnterParam;
 
-        protected DIContainer _servicesContainer = new(null);
-        protected DIContainer _dataContainer = new(null);
-        protected DIContainer _objectsContainer = new(null);
-
+        protected readonly DIContainer _projectContainer = new(null);
         protected LoadingScreen _loadingScreen;
 
         private void Awake()
         {
             if (_instance != null)
             {
-                Destroy(gameObject);
-                return;
+                Destroy(gameObject); return;
             }
-
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
+            _instance = this; DontDestroyOnLoad(gameObject);
 
             ASceneEntryPoint.EventLoaded += EnterScene;
-            _objectsContainer.AddInstance(_loadingScreen = LoadingScreen.Create());
+            _projectContainer.AddInstance(_loadingScreen = LoadingScreen.Create());
         }
 
-        protected void LoadScene(ExitParam param)
+        private void LoadScene(ExitParam param)
         {
             _currentEnterParam = param.EnterParam;
 
             gameObject.SetActive(true);
             StartCoroutine(LoadScene_Cn(param.NextScene));
 
-            #region Local: LoadScene_Cn(..)
-            //=================================
+            #region ===== Local Coroutine =====
             IEnumerator LoadScene_Cn(int sceneId)
             {
                 _loadingScreen.TurnOnOf(true);
@@ -56,7 +49,7 @@ namespace Vurbiri.EntryPoint
 
         private void EnterScene(ASceneEntryPoint sceneEntryPoint)
         {
-            sceneEntryPoint.Enter(new(_servicesContainer, _dataContainer, _objectsContainer), _currentEnterParam).Add(LoadScene);
+            sceneEntryPoint.Enter(new(_projectContainer), _currentEnterParam).Add(LoadScene);
             gameObject.SetActive(false);
         }
 

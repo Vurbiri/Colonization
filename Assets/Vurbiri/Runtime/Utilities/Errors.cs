@@ -44,6 +44,12 @@ namespace Vurbiri
             if (valueA.Count != valueB.Count)
                 Rank(valueA.Count, valueB.Count);
         }
+        public static void ThrowIfLengthNotEqual(int length, int size)
+        {
+            if (length != size)
+                Rank(length, size);
+        }
+
         public static void ThrowIfLengthZero<T>(IReadOnlyCollection<T> value)
         {
             if (value.Count == 0)

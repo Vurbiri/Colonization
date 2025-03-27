@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         public ISubscriber<bool> Init(HintGlobal hint)
         {
             base.Init(hint, OnClick, false);
-            _unLanguage = SceneServices.Get<Localization>().Subscribe(SetText);
+            _unLanguage = SceneContainer.Get<Localization>().Subscribe(SetText);
             
             return _subscriber;
         }

@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.Controllers
             #endregion
 
             #region Subscribe
-            GameplayEventBus eventBus = SceneServices.Get<GameplayEventBus>();
+            GameplayEventBus eventBus = SceneContainer.Get<GameplayEventBus>();
 
             cameraActions.Move.performed +=     OnMove;
             cameraActions.Move.canceled +=      OnMoveCancel;

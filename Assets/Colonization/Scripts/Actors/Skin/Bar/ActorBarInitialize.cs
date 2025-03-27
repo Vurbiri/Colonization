@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.Actors
 
             _popup.Init(_sprites, orderLevel);
 
-            _hpBar.Init(abilities, _popup, SceneData.Get<PlayersVisual>()[actor.Owner].color, orderLevel);
+            _hpBar.Init(abilities, _popup, SceneContainer.Get<PlayersVisual>()[actor.Owner].color, orderLevel);
             _apBar.Init(abilities, orderLevel);
             _moveBar.Init(abilities, orderLevel);
 

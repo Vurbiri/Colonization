@@ -32,7 +32,6 @@ namespace Vurbiri
 
             return instance;
         }
-
         public void AddInstance<T, U>(T instance) where T : U
         {
             AddInstance(instance);

@@ -16,9 +16,12 @@ namespace Vurbiri.Colonization.UI
             base.Awake();
 
             allowSwitchOff = false;
-            var languages = SceneServices.Get<Localization>().Languages;
+
+            var profile = SceneContainer.Get<Settings>().Profile;
+            var languages = SceneContainer.Get<Localization>().Languages;
+            
             foreach (var item in languages)
-                Instantiate(_langPrefab, transform).Setup(item, this, _isSave);
+                Instantiate(_langPrefab, transform).Setup(profile, item, this, _isSave);
         }
     }
 }

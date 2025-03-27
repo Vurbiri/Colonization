@@ -1,18 +1,21 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\LogOnPanel.cs
 using System.Collections;
 using UnityEngine;
+using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
 {
     public class LogOnPanel : MonoBehaviour
     {
+        private ProjectStorage _storage;
         private WaitResultSource<bool> _waitLogOn;
         private YandexSDK _ysdk;
 
-        public IEnumerator TryLogOn_Cn(YandexSDK ysdk)
+        public IEnumerator TryLogOn_Cn(YandexSDK ysdk, ProjectStorage storage)
         {
             gameObject.SetActive(true);
 
+            _storage = storage;
             _ysdk = ysdk;
             _waitLogOn = new();
             
@@ -42,13 +45,13 @@ namespace Vurbiri.Colonization
 
         public void OnLogOn()
         {
+            _storage.Save();
             _waitLogOn.SetResult(true);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            if (_ysdk.IsLogOn)
-                _waitLogOn.SetResult(true);
+            if (_ysdk.IsLogOn) OnLogOn();
         }
     }
 }

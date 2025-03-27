@@ -1,38 +1,58 @@
 //Assets\Colonization\Scripts\Settings\Profile.cs
-using System.Collections.Generic;
+using System;
+using UnityEngine;
+using Vurbiri.Reactive;
+using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Settings
+    [System.Serializable]
+    public partial class Profile : IReactive<Profile>
     {
-        [System.Serializable]
-        private class Profile
+        [SerializeField] private int _idLang = 0;
+        [SerializeField] private int _quality = 2;
+
+        private readonly Subscriber<Profile> _subscriber = new();
+        private Localization _localization;
+
+        public int Language { get => _idLang; set => _localization.SwitchLanguage(value); }
+        public int Quality { get => _quality; set => QualitySettings.SetQualityLevel(value); }
+
+        public int QualityCount => QualitySettings.count;
+
+        public void Init(YandexSDK ysdk)
         {
-            public int idLang = 1;
-            public int quality = 2;
-
-            private const int SIZE_ARRAY_ADD = 2;
-
-            public void FromArray(IReadOnlyList<int> loadData)
-            {
-                if (loadData == null || loadData.Count != SIZE_ARRAY_ADD)
-                    return;
-
-                int i = 0;
-                idLang = loadData[i++];
-                quality = loadData[i];
-            }
-
-            public int[] ToArray()
-            {
-                int[] array = new int[SIZE_ARRAY_ADD];
-
-                int i = 0;
-                array[i++] = idLang;
-                array[i++] = quality;
-
-                return array;
-            }
+            _localization = Localization.Instance;
+            if (ysdk.IsInitialize && _localization.TryIdFromCode(ysdk.Lang, out int id))
+                _idLang = id;
         }
+
+        public Unsubscriber Subscribe(Action<Profile> action, bool calling = true)=> _subscriber.Add(action, calling, this);
+
+        public void Apply()
+        {
+            bool changed = false; int value;
+
+            value = _localization.CurrentId;
+            changed |= _idLang != value;
+            _idLang = value;
+
+            value = QualitySettings.GetQualityLevel();
+            changed |= _quality != value;
+            _quality = value;
+
+            _idLang = _localization.CurrentId;
+            _quality = QualitySettings.GetQualityLevel();
+
+            if (changed) _subscriber.Invoke(this);
+        }
+
+        public void Cancel()
+        {
+            _localization.SwitchLanguage(_idLang);
+            QualitySettings.SetQualityLevel(_quality);
+        }
+
+        public void Dispose() => _subscriber.Dispose();
     }
 }

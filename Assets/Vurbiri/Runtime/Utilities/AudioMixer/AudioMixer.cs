@@ -1,24 +1,29 @@
 //Assets\Vurbiri.Audio\AudioMixer\AudioMixer.cs
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using Vurbiri.Collections;
+using Vurbiri.Reactive;
 
 namespace Vurbiri
 {
     [System.Serializable]
-    public class AudioMixer<T> : IVolume<T> where T : IdType<T> 
+    public partial class AudioMixer<T> : IReactive<AudioMixer<T>> where T : IdType<T> 
     {
         private const float MIN_DB = -80, MAX_DB = 20f;
         public const float MIN_VALUE = 0.01f, MAX_VALUE = 1.6f;
 
         private static readonly float RATE_TO = MIN_DB / Mathf.Log10(MIN_VALUE);
         private static readonly float RATE_TO_PLUS = MAX_DB / (Mathf.Log10(MAX_VALUE) * RATE_TO);
-        private static readonly float RATE_FROM = 1f / RATE_TO, RATE_FROM_PLUS = 1f / RATE_TO_PLUS;
+        private static readonly float RATE_FROM = 1f / RATE_TO;
+        private static readonly float RATE_FROM_PLUS = 1f / RATE_TO_PLUS;
 
         [SerializeField] private AudioMixer _audioMixer;
         [SerializeField] private IdArray<T, float> _volumes = new(0.8f);
         [SerializeField] private IdArray<T, string> _nameParams;
+
+        private readonly Subscriber<AudioMixer<T>> _subscriber = new();
 
         public float this[int index] 
         {
@@ -31,11 +36,22 @@ namespace Vurbiri
             set => _audioMixer.SetFloat(_nameParams[index], ConvertToDB(value));
         }
 
+        public IReadOnlyList<string> Names => _nameParams;
+
         public void Apply()
         {
+            bool changed = false;
             for (int i = 0; i < IdType<T>.Count; i++)
+            {
                 if (_audioMixer.GetFloat(_nameParams[i], out float value))
-                    _volumes[i] = ConvertFromDB(value);
+                {
+                    value = ConvertFromDB(value);
+                    changed |= _volumes[i] != value;
+                    _volumes[i] = value;
+                }
+            }
+
+            if (changed) _subscriber.Invoke(this);
         }
 
         public void Cancel()
@@ -44,15 +60,9 @@ namespace Vurbiri
                 this[i] = _volumes[i];
         }
 
-        public void FromArray(IReadOnlyList<float> volumes)
-        {
-            if (volumes == null || volumes.Count != IdType<T>.Count)
-                return;
+        public Unsubscriber Subscribe(Action<AudioMixer<T>> action, bool calling = true) => _subscriber.Add(action, calling, this);
 
-            _volumes = new(volumes);
-        }
-        public IReadOnlyList<float> ToArray() => _volumes;
-
+        public void Dispose() => _subscriber.Dispose();
 
         private float ConvertToDB(float volume)
         {
@@ -77,7 +87,8 @@ namespace Vurbiri
             if (_audioMixer == null)
                 _audioMixer = EUtility.FindAnyAsset<AudioMixer>();
 
-            _nameParams = new(IdType<T>.Names);
+            if (_nameParams == null || _nameParams[0] == null)
+                _nameParams = new(IdType<T>.Names);
         }
 #endif
     }

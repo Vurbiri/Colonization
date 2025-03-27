@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
@@ -13,8 +13,8 @@ namespace Vurbiri.Colonization
     {
         protected class Edifices : IDisposable
         {
-            private readonly IReadOnlyAbilities<HumanAbilityId> _abilities;
-            private IAbility _shrinePassiveProfit, _shrineProfit, _portsProfit, _compensationRes;
+            private readonly AbilitiesSet<HumanAbilityId> _abilities;
+            private AAbility<HumanAbilityId> _shrinePassiveProfit, _shrineProfit, _portsProfit, _compensationRes;
 
             public readonly IdArray<EdificeGroupId, ReactiveList<Crossroad>> values = new();
 
@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
             public int ShrinePassiveProfit => _shrinePassiveProfit.Value * shrines.Count;
             public int ShrineProfit => _shrineProfit.Value * shrines.Count;
             
-            public Edifices(IReadOnlyAbilities<HumanAbilityId> abilities)
+            public Edifices(AbilitiesSet<HumanAbilityId> abilities)
             {
                 _abilities = abilities;
                 GetAbilities();
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
                 values[EdificeGroupId.Urban] = urbans = new();
             }
 
-            public Edifices(Id<PlayerId> playerId, IReadOnlyDictionary<int, EdificeLoadData[]> data, Crossroads crossroads, IReadOnlyAbilities<HumanAbilityId> abilities)
+            public Edifices(Id<PlayerId> playerId, Dictionary<int, List<EdificeLoadData>> data, Crossroads crossroads, AbilitiesSet<HumanAbilityId> abilities)
             {
                 _abilities = abilities;
                 GetAbilities();
@@ -94,9 +94,9 @@ namespace Vurbiri.Colonization
                 _compensationRes = _abilities[HumanAbilityId.CompensationRes];
             }
 
-            private ReactiveList<Crossroad> CreateEdifices(ref ReactiveList<Crossroad> values, EdificeLoadData[] loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)
+            private ReactiveList<Crossroad> CreateEdifices(ref ReactiveList<Crossroad> values, List<EdificeLoadData> loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)
             {
-                int count = loadData.Length;
+                int count = loadData.Count;
                 values = new(count);
 
                 EdificeLoadData data;

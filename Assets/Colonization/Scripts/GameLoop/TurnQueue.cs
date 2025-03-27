@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\GameLoop\TurnQueue.cs
 using System;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
@@ -24,11 +24,11 @@ namespace Vurbiri.Colonization
             _previousId = previousId; _currentId = currentId; _turn = turn;
         }
 
-        public static TurnQueue Create(GameplaySaveData saveData)
+        public static TurnQueue Create(GameplayStorage storage)
         {
             bool isLoad;
-            if(!(isLoad = saveData.TryGetTurnQueue(out TurnQueue turn))) turn = new();
-            saveData.TurnQueueBind(turn, !isLoad);
+            if(!(isLoad = storage.TryGetTurnQueue(out TurnQueue turn))) turn = new();
+            storage.TurnQueueBind(turn, !isLoad);
 
             return turn;
         }

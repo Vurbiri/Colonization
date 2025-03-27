@@ -15,8 +15,8 @@ namespace Vurbiri.Colonization.UI
         {
             this.player = player;
             this.hint = hint;
-            playerColor = SceneData.Get<PlayersVisual>()[PlayerId.Player].color;
-            colorSettings = SceneData.Get<TextColorSettings>();
+            playerColor = SceneContainer.Get<PlayersVisual>()[PlayerId.Player].color;
+            colorSettings = SceneContainer.Get<TextColorSettings>();
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization.Actors
 {

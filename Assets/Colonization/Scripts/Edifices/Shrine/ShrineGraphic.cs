@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
         public override void Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
-            PlayerVisual visual = SceneData.Get<PlayersVisual>()[playerId];
+            PlayerVisual visual = SceneContainer.Get<PlayersVisual>()[playerId];
 
             GetComponent<MeshRenderer>().SetSharedMaterial(visual.materialUnlit, _idMaterial);
 

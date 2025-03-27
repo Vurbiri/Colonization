@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
 {
@@ -17,15 +17,15 @@ namespace Vurbiri.Colonization
         public Human this[int index] => _humans[index];
 
         #region Constructor
-        public Players(Settings settings, GameplaySaveData saveData)
+        public Players(Settings settings, GameplayStorage storage)
         {
-            Hexagons land = SceneObjects.Get<Hexagons>();
-            HumanSaveData[] playersData = saveData.Humans;
+            Hexagons land = SceneContainer.Get<Hexagons>();
+            HumanStorage[] playerStorages = storage.Humans;
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
-                _humans[i] = new(i, playersData[i], settings, land);
+                _humans[i] = new(i, playerStorages[i], settings, land);
 
-            _satan = new(saveData.Satan, settings, land, _humans);
+            _satan = new(storage.Satan, settings, land, _humans);
 
         }
         #endregion

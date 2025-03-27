@@ -38,6 +38,7 @@ namespace Vurbiri
         }
 
         public bool TryPopulate(string key, object obj, JsonConverter converter = null) => false;
+        public bool TryPopulate<T>(string key, JsonConverter converter) => false;
 
         public bool ContainsKey(string key) => false;
 

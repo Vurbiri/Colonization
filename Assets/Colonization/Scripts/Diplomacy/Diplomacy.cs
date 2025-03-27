@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
@@ -50,11 +50,11 @@ namespace Vurbiri.Colonization
             turn.Subscribe(OnNextTurn, false);
         }
 
-        public static Diplomacy Create(GameplaySaveData saveData, DiplomacySettings settings, TurnQueue turn)
+        public static Diplomacy Create(GameplayStorage storage, DiplomacySettings settings, TurnQueue turn)
         {
-            bool isLoad = saveData.TryGetDiplomacyData(out int[] data);
+            bool isLoad = storage.TryGetDiplomacyData(out int[] data);
             Diplomacy diplomacy = isLoad ? new(data, settings, turn) : new(settings, turn);
-            saveData.DiplomacyBind(diplomacy, !isLoad);
+            storage.DiplomacyBind(diplomacy, !isLoad);
 
             return diplomacy;
         }

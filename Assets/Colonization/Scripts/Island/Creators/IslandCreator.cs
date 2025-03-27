@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
 {
@@ -36,9 +36,9 @@ namespace Vurbiri.Colonization
             return this;
         }
 
-        public IEnumerator Create_Cn(GameplaySaveData saveData)
+        public IEnumerator Create_Cn(GameplayStorage storage)
         {
-            yield return Create_Cn(HexCreator.Factory(_hexagons, saveData));
+            yield return Create_Cn(HexCreator.Factory(_hexagons, storage));
             yield return Setup_Cn();
 
             Destroy(this);

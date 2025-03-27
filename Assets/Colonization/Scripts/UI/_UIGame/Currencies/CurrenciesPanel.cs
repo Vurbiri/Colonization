@@ -19,17 +19,17 @@ namespace Vurbiri.Colonization.UI
 
         private void Start()
         {
-            SceneServices.Get<GameplayEventBus>().EventSceneEndCreation += Create;
+            SceneContainer.Get<GameplayEventBus>().EventSceneEndCreation += Create;
         }
 
         private void Create()
         {
             RectTransform thisRectTransform = GetComponent<RectTransform>();
 
-            GetComponent<Image>().color = SceneData.Get<PlayersVisual>()[PlayerId.Player].color.SetAlpha(_transparency);
+            GetComponent<Image>().color = SceneContainer.Get<PlayersVisual>()[PlayerId.Player].color.SetAlpha(_transparency);
 
-            var currencies = SceneObjects.Get<Players>().Player.Resources;
-            var settings = SceneData.Get<Vurbiri.UI.TextColorSettings>();
+            var currencies = SceneContainer.Get<Players>().Player.Resources;
+            var settings = SceneContainer.Get<Vurbiri.UI.TextColorSettings>();
 
             Vector2 cSize = _currencyUIPrefab.Size, aSize = _amountUIPrefab.Size, bSize = _bloodUIPrefab.Size;
             float offset = cSize.x * 5f + aSize.x + bSize.x + _space * 7f;
@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization.UI
             pos.x += (bSize.x + aSize.x) * 0.5f + _space * 2f;
             Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, currencies.BloodCurrent, currencies.BloodMax, settings, _directionPopup);
 
-            SceneServices.Get<GameplayEventBus>().EventSceneEndCreation -= Create;
+            SceneContainer.Get<GameplayEventBus>().EventSceneEndCreation -= Create;
             Destroy(this);
         }
     }

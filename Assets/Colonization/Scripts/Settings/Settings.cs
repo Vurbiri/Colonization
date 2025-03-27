@@ -1,69 +1,56 @@
 //Assets\Colonization\Scripts\Settings\Settings.cs
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Colonization.Data;
-using Vurbiri.Reactive;
-using Vurbiri.TextLocalization;
+using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
-    public partial class Settings : IReactive<IReadOnlyList<int>, IReadOnlyList<float>>
+    public class Settings : IDisposable
     {
         [SerializeField] private Profile _profile = new();
         [SerializeField] private AudioMixer<MixerId> _mixer = new();
 
-        private Localization _localization;
-        private readonly Subscriber<IReadOnlyList<int>, IReadOnlyList<float>> _subscriber = new();
+        private ProjectStorage _storage;
 
-        public IVolume<MixerId> Volume { get => _mixer; }
-        public int Language { get => _localization.CurrentId; set => _localization.SwitchLanguage(value); }
-        public int Quality { get => QualitySettings.GetQualityLevel(); set => QualitySettings.SetQualityLevel(value); }
-        
-        public int QualityCount => QualitySettings.count;
+        public AudioMixer<MixerId> Volumes => _mixer;
+        public Profile Profile => _profile;
 
-        public void Init(YandexSDK ysdk, ProjectSaveData saveData)
+        public void Init(YandexSDK ysdk, ProjectStorage storage)
         {
-            _localization = Localization.Instance;
-            if (ysdk.IsInitialize && _localization.TryIdFromCode(ysdk.Lang, out int id))
-                _profile.idLang = id;
+            _storage = storage;
+            _profile.Init(ysdk);
 
-            bool loaded;
-            if(loaded = saveData.TryGetSettingsData(out int[] profile, out float[] volumes))
-            {
-                _profile.FromArray(profile); _mixer.FromArray(volumes);
-            }
-            saveData.SettingsBind(this, !loaded);
+            bool isSave = storage.SetAndBindAudioMixer(_mixer);
+            isSave |= storage.SetAndBindProfile(_profile);
 
-            Cancel();
+            if (isSave) storage.Save();
         }
 
         public void Apply()
         {
-            _profile.idLang = _localization.CurrentId;
-            _profile.quality = QualitySettings.GetQualityLevel();
+            _profile.Apply();
+            _mixer.Apply();
+        }
+
+        public void ApplyAndSave(Action<bool> callback = null)
+        {
+            _profile.Apply();
             _mixer.Apply();
 
-            _subscriber.Invoke(_profile.ToArray(), _mixer.ToArray());
+            _storage.Save(callback);
         }
 
         public void Cancel()
         {
-            _localization.SwitchLanguage(_profile.idLang);
-            QualitySettings.SetQualityLevel(_profile.quality);
+            _profile.Cancel();
             _mixer.Cancel();
-        }
-
-        public Unsubscriber Subscribe(Action<IReadOnlyList<int>, IReadOnlyList<float>> action, bool calling = true)
-        {
-            if (calling) action(_profile.ToArray(), _mixer.ToArray());
-            return _subscriber.Add(action);
         }
 
         public void Dispose()
         {
-            _subscriber.Dispose();
+            _profile.Dispose();
+            _mixer.Dispose();
         }
 
 #if UNITY_EDITOR

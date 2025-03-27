@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void Init(params IRendererVisible[] renderers)
 		{
-            _cameraTransform = SceneObjects.Get<Camera>().transform;
+            _cameraTransform = SceneContainer.Get<Camera>().transform;
             _thisTransform = transform;
 
             _renderers = renderers;

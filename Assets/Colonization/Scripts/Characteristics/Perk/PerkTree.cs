@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics

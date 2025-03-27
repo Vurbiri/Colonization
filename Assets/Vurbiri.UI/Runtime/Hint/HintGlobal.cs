@@ -27,11 +27,11 @@ namespace Vurbiri.UI
 
         private void Start()
         {
-            _localization = SceneServices.Get<Localization>();
+            _localization = SceneContainer.Get<Localization>();
             _thisCanvasGroup = GetComponent<CanvasGroup>();
             _textTransform = _hint.rectTransform;
 
-            _hint.color = SceneData.Get<TextColorSettings>().ColorHintBase;
+            _hint.color = SceneContainer.Get<TextColorSettings>().ColorHintBase;
             _hint.overflowMode = TextOverflowModes.Overflow;
 
             _thisCanvasGroup.alpha = 0f;

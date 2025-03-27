@@ -32,8 +32,8 @@ namespace Vurbiri.Colonization.Characteristics
                 if (_skillsUI != null)  
                     return _skillsUI;
 
-                var hintTextColor = SceneData.Get<TextColorSettings>();
-                var language = SceneServices.Get<Localization>();
+                var hintTextColor = SceneContainer.Get<TextColorSettings>();
+                var language = SceneContainer.Get<Localization>();
                 int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
                 _skillsUI = new SkillUI[countSkills];
 

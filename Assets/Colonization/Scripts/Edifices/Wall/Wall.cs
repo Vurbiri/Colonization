@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
 
         public Wall Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
-            GetComponent<MeshRenderer>().SetSharedMaterial(SceneData.Get<PlayersVisual>()[playerId].materialLit, _idMaterial);
+            GetComponent<MeshRenderer>().SetSharedMaterial(SceneContainer.Get<PlayersVisual>()[playerId].materialLit, _idMaterial);
 
             foreach (var link in links)
                 _graphicSides[link.Id].Open(link.Owner != PlayerId.None);

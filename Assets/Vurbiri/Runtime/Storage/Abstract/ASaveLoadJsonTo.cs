@@ -74,6 +74,7 @@ namespace Vurbiri
         }
         #endregion
 
+        #region TryPopulate(..)
         public bool TryPopulate(string key, object obj, JsonConverter converter)
         {
             if (_saved.TryGetValue(key, out string json))
@@ -81,6 +82,14 @@ namespace Vurbiri
             
             return false;
         }
+        public bool TryPopulate<T>(string key, JsonConverter converter)
+        {
+            if (_saved.TryGetValue(key, out string json))
+                return Populate<T>(json, converter);
+
+            return false;
+        }
+        #endregion
 
         #region Set(..)
         public bool Set<T>(string key, T data, JsonSerializerSettings settings)
@@ -224,36 +233,54 @@ namespace Vurbiri
         protected bool TryDeserialize<T>(string json, out T result)
         {
             result = default;
-            try { result = JsonConvert.DeserializeObject<T>(json); }
-            catch (Exception ex) { Message.Log(ex.Message); }
-
+            if (!string.IsNullOrEmpty(json))
+            {
+                try { result = JsonConvert.DeserializeObject<T>(json); }
+                catch (Exception ex) { Message.Log(ex.Message); }
+            }
             return result != null;
         }
         protected bool TryDeserialize<T>(string json, JsonConverter converter, out T result)
         {
             result = default;
-            try { result = JsonConvert.DeserializeObject<T>(json, converter); }
-            catch (Exception ex) { Message.Log(ex.Message); }
+            if (!string.IsNullOrEmpty(json))
+            {
+                try { result = JsonConvert.DeserializeObject<T>(json, converter); }
+                catch (Exception ex) { Message.Log(ex.Message); }
+            }
 
             return result != null;
         }
 
+        protected bool Populate<T>(string json, JsonConverter converter)
+        {
+            if (!string.IsNullOrEmpty(json))
+            {
+                try
+                {
+                    JsonConvert.DeserializeObject<T>(json, converter);
+                    return true;
+                }
+                catch (Exception ex) { Message.Log(ex.Message); }
+            }
+
+            return false;
+        }
         protected bool Populate(string json, object target, JsonConverter converter)
         {
-            JsonSerializerSettings settings = null;
-            if (converter != null)
-                settings = new() { Converters = new List<JsonConverter>(1) { converter } };
-
-            try
+            if (!string.IsNullOrEmpty(json) & target != null)
             {
-                if (!string.IsNullOrEmpty(json))
+                JsonSerializerSettings settings = null;
+                if (converter != null)
+                    settings = new() { Converters = new List<JsonConverter>(1) { converter } };
+
+                try
                 {
                     JsonConvert.PopulateObject(json, target, settings);
                     return true;
                 }
+                catch (Exception ex) { Message.Log(ex.Message); }
             }
-            catch (Exception ex) { Message.Log(ex.Message); }
-
             return false;
         }
         #endregion

@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\Island\IslandCreator\HexCreator.cs
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
 {
@@ -12,18 +12,18 @@ namespace Vurbiri.Colonization
         private readonly Vector2 _offsetHex = new(HEX_DIAMETER_IN, HEX_DIAMETER_IN * SIN_60);
 
         protected Hexagons _land;
-		protected GameplaySaveData _saveData;
+		protected GameplayStorage _storage;
             			
-		public HexCreator(Hexagons land, GameplaySaveData saveData)
+		public HexCreator(Hexagons land, GameplayStorage storage)
 		{
 			_land = land;
-			_saveData = saveData;
+			_storage = storage;
 		}
 
-        public static HexCreator Factory(Hexagons land, GameplaySaveData saveData)
+        public static HexCreator Factory(Hexagons land, GameplayStorage storage)
         {
-            if(saveData.Load) return new HexLoader(land, saveData);
-                              return new HexGenerator(land, saveData);
+            if(storage.Load) return new HexLoader(land, storage);
+                              return new HexGenerator(land, storage);
         }
 
         public abstract Hexagon Gate { get; }
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
         private Chance _chanceWater = CHANCE_WATER;
         private bool _isWater = false;
 
-        public HexGenerator(Hexagons land, GameplaySaveData saveData) : base(land, saveData)
+        public HexGenerator(Hexagons land, GameplayStorage storage) : base(land, storage)
         {
             _groundIDs = new(HEX_IDS); 
             _waterIDs = new(HEX_IDS);
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization
             get
             {
                 Hexagon hex = _land.CreateHexagon(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
-                _saveData.HexagonsBind(_land);
+                _storage.HexagonsBind(_land);
                 return hex;
             }
         }
@@ -69,18 +69,18 @@ namespace Vurbiri.Colonization
     //==========================================================================
     sealed public class HexLoader : HexCreator
     {
-        public HexLoader(Hexagons land, GameplaySaveData saveData) : base(land, saveData) { }
+        public HexLoader(Hexagons land, GameplayStorage storage) : base(land, storage) { }
 
         public override Hexagon Gate => _land.CreateHexagon(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
 
         public override Hexagon Create(Vector3 position, int circle, bool isNotApex)
         {
             Key keyHex = PositionToKey(position);
-            HexLoadData data = _saveData.GetHexData(keyHex);
+            HexLoadData data = _storage.GetHexData(keyHex);
 
             return _land.CreateHexagon(keyHex, data.id, data.surfaceId, position);
         }
 
-        public override void Finish() => _saveData.HexagonsBind(_land);
+        public override void Finish() => _storage.HexagonsBind(_land);
     }
 }

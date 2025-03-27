@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
     {
         protected ACurrency[] _values = new ACurrency[countAll];
         protected RInt _amount = new(0);
-        protected IReactiveValue<int> _maxValueMain, _maxValueBlood;
+        protected AAbility<HumanAbilityId> _maxValueMain, _maxValueBlood;
         protected readonly Subscriber<ACurrencies> _subscriber = new();
 
         public override int Amount => _amount.Value;
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
         public override int this[Id<CurrencyId> id] { get => _values[id.Value].Value; }
 
         #region Constructions
-        public ACurrenciesReactive(IReadOnlyList<int> array, IAbility maxValueMain, IAbility maxValueBlood)
+        public ACurrenciesReactive(IReadOnlyList<int> array, AAbility<HumanAbilityId> maxValueMain, AAbility<HumanAbilityId> maxValueBlood)
         {
             _maxValueMain = maxValueMain;
             _maxValueBlood = maxValueBlood;
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
 
             _amount.SilentValue = amount;
         }
-        public ACurrenciesReactive(ACurrencies other, IAbility maxValueMain, IAbility maxValueBlood)
+        public ACurrenciesReactive(ACurrencies other, AAbility<HumanAbilityId> maxValueMain, AAbility<HumanAbilityId> maxValueBlood)
         {
             _maxValueMain = maxValueMain;
             _maxValueBlood = maxValueBlood;
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
             _amount.SilentValue = other.Amount;
         }
 
-        public ACurrenciesReactive(IAbility maxValueMain, IAbility maxValueBlood)
+        public ACurrenciesReactive(AAbility<HumanAbilityId> maxValueMain, AAbility<HumanAbilityId> maxValueBlood)
         {
             _maxValueMain = maxValueMain;
             _maxValueBlood = maxValueBlood;
@@ -126,7 +126,7 @@ namespace Vurbiri.Colonization
         //*******************************************************
         sealed protected class CurrencyBlood : ACurrency
         {
-            private readonly IAbility _max;
+            private readonly AAbility<HumanAbilityId> _max;
 
             public override int Value 
             { 
@@ -140,8 +140,8 @@ namespace Vurbiri.Colonization
             }
 
             public CurrencyBlood() : base(0) { }
-            public CurrencyBlood(IAbility maxValue) : this(0, maxValue) { }
-            public CurrencyBlood(int value, IAbility maxValue) : base(value)
+            public CurrencyBlood(AAbility<HumanAbilityId> maxValue) : this(0, maxValue) { }
+            public CurrencyBlood(int value, AAbility<HumanAbilityId> maxValue) : base(value)
             {
                 _max = maxValue;
             }

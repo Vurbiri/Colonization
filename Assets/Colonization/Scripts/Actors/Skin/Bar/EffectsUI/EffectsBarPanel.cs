@@ -20,9 +20,9 @@ namespace Vurbiri.Colonization.Actors
 
         public EffectsBarPanel(Actor actor, IdArray<ActorAbilityId, Sprite> sprites, Transform transform, int orderLevel)
 		{
-            _poolEffectsUI = SceneServices.Get<Pool<EffectsBar>>();
+            _poolEffectsUI = SceneContainer.Get<Pool<EffectsBar>>();
             _sprites = sprites;
-            _colors = SceneData.Get<TextColorSettings>();
+            _colors = SceneContainer.Get<TextColorSettings>();
             _orderLevel = orderLevel;
             _actor = actor;
             _transform = transform;

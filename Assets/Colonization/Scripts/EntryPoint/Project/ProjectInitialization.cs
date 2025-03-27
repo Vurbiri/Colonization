@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
 using Vurbiri.TextLocalization;
 using Vurbiri.UI;
@@ -12,6 +12,8 @@ namespace Vurbiri.Colonization.EntryPoint
     public class ProjectInitialization : MonoBehaviour
     {
         [SerializeField] private LoadScene _startScene;
+        [Space]
+        [SerializeField] private string _projectStorageKey = SAVE_KEYS.PROJECT;
         [Space]
         [SerializeField] private LogOnPanel _logOnPanel;
         [Space]
@@ -23,28 +25,31 @@ namespace Vurbiri.Colonization.EntryPoint
         [Space]
         [SerializeField] private Settings _settings;
 
-        public IEnumerator Init_Cn(DIContainer servicesContainer, DIContainer dataContainer, LoadingScreen loadingScreen)
+        private YandexSDK _ysdk;
+        private ProjectStorage _projectStorage;
+
+        public IEnumerator Init_Cn(DIContainer diContainer, LoadingScreen loadingScreen)
         {
             _startScene.Start();
 
             //----------------------------------
             Message.Log("Start Init Project");
 
-            servicesContainer.AddInstance(Localization.Instance).SetFiles(_localizationFiles);
+            diContainer.AddInstance(Localization.Instance).SetFiles(_localizationFiles);
 
-            var coroutine = servicesContainer.AddInstance(Coroutines.Create("Project Coroutine", true));
+            var coroutine = diContainer.AddInstance(Coroutines.Create("Project Coroutine", true));
 
-            var ysdk = servicesContainer.AddInstance(new YandexSDK(coroutine, _leaderboardName));
-            yield return ysdk.Init_Cn();
+            _ysdk = diContainer.AddInstance(new YandexSDK(coroutine, _leaderboardName));
+            yield return _ysdk.Init_Cn();
 
-            dataContainer.AddInstance(_settings);
-            dataContainer.AddInstance(_settingsColorScriptable.Colors);
+            diContainer.AddInstance(_settings);
+            diContainer.AddInstance(_settingsColorScriptable.Colors);
             //Banners.InstanceF.Initialize();
 
-            yield return CreateStorage_Cn(ysdk);
-            yield return YandexIsLogOn_Cn(ysdk, loadingScreen);
+            yield return CreateStorage_Cn();
+            yield return YandexIsLogOn_Cn(loadingScreen);
 
-            dataContainer.AddInstance(new GameSettings(servicesContainer));
+            diContainer.AddInstance(new GameSettings(diContainer));
 
             Message.Log("End Init Project");
             //----------------------------------
@@ -56,23 +61,23 @@ namespace Vurbiri.Colonization.EntryPoint
 
             #region Local: CreateStorage_Cn(..), YandexIsLogOn_Cn(..)
             //=================================
-            IEnumerator CreateStorage_Cn(YandexSDK ysdk)
+            IEnumerator CreateStorage_Cn()
             {
-                yield return StartCoroutine(Storage.Create_Cn(servicesContainer, SAVE_KEYS.PROJECT, storage =>
+                yield return StartCoroutine(Vurbiri.Storage.Create_Cn(diContainer, _projectStorageKey, storage =>
                 {
-                    var projectSaveData = dataContainer.ReplaceInstance(new ProjectSaveData(storage));
-                    _settings.Init(ysdk, projectSaveData);
+                    _projectStorage = diContainer.ReplaceInstance(new ProjectStorage(storage));
+                    _settings.Init(_ysdk, _projectStorage);
                 }));
             }
             //=================================
-            IEnumerator YandexIsLogOn_Cn(YandexSDK ysdk, LoadingScreen loadingScreen)
+            IEnumerator YandexIsLogOn_Cn(LoadingScreen loadingScreen)
             {
-                if (!ysdk.IsLogOn)
+                if (!_ysdk.IsLogOn)
                 {
                     loadingScreen.SmoothOff_Wait();
-                    yield return _logOnPanel.TryLogOn_Cn(ysdk);
+                    yield return _logOnPanel.TryLogOn_Cn(_ysdk, _projectStorage);
                     yield return loadingScreen.SmoothOn_Wait();
-                    if (ysdk.IsLogOn) yield return CreateStorage_Cn(ysdk);
+                    if (_ysdk.IsLogOn) yield return CreateStorage_Cn();
                 }
             }
             #endregion

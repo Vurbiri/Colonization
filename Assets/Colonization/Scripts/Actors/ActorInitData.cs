@@ -28,9 +28,9 @@ namespace Vurbiri.Colonization
         private ActorInitData(Id<PlayerId> owner)
         {
             this.owner = owner;
-            diplomacy = SceneServices.Get<Diplomacy>();
-            triggerBus = SceneServices.Get<GameplayTriggerBus>();
-            _turn = SceneServices.Get<TurnQueue>();
+            diplomacy = SceneContainer.Get<Diplomacy>();
+            triggerBus = SceneContainer.Get<GameplayTriggerBus>();
+            _turn = SceneContainer.Get<TurnQueue>();
         }
     }
 }

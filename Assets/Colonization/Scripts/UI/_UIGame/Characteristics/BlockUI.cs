@@ -29,11 +29,11 @@ namespace Vurbiri.Colonization.UI
             _cost = cost;
             _value = value > 0 ? $"+{value}" : value.ToString();
 
-            var hintTextColor = SceneData.Get<TextColorSettings>();
+            var hintTextColor = SceneContainer.Get<TextColorSettings>();
             _hexColorPlus = hintTextColor.HexColorPositive;
             _hexColorMinus = hintTextColor.HexColorNegative;
 
-            _unsubscriber = SceneServices.Get<Localization>().Subscribe(SetTexts);
+            _unsubscriber = SceneContainer.Get<Localization>().Subscribe(SetTexts);
         }
 
         public string GetText(bool isUse)

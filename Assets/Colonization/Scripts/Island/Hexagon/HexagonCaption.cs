@@ -29,10 +29,10 @@ namespace Vurbiri.Colonization.UI
         {
             _thisGO = gameObject;
             _thisTransform = transform;
-            _cameraTransform = SceneObjects.Get<Camera>().transform;
+            _cameraTransform = SceneContainer.Get<Camera>().transform;
             _lastCameraRotation = Quaternion.identity;
 
-            var colorSettings = SceneData.Get<TextColorSettings>();
+            var colorSettings = SceneContainer.Get<TextColorSettings>();
             _colorNormal = colorSettings.ColorTextBase;
             _colorProfit = colorSettings.ColorPositive;
 

@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Vurbiri.Colonization.Data
+namespace Vurbiri.Colonization.Storage
 {
     using static SAVE_KEYS;
 

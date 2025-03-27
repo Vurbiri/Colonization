@@ -1,15 +1,15 @@
-//Assets\Colonization\Scripts\Players\Demon\Demon.cs
+//Assets\Colonization\Scripts\Players\Satan\Satan.cs
 using System;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-    public class Satan : IReactive<Satan>
+    public partial class Satan : IReactive<Satan>
     {
         private readonly RInt _level;
         private readonly RInt _curse;
@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
         private readonly Buffs _artefact;
 
         private readonly DemonsSpawner _spawner;
-        private readonly ReactiveSet<Actor> _demons = new();
+        private readonly ReactiveSet<Actor> _demons;
 
         private readonly Subscriber<Satan> _eventSelf = new();
         private readonly Subscriber<Win> _eventWin = new();
@@ -41,11 +41,11 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Satan(SatanSaveData data, Players.Settings settings, Hexagons hexagons, IReadOnlyList<Human> humans)
+        public Satan(SatanStorage storage, Players.Settings settings, Hexagons hexagons, IReadOnlyList<Human> humans)
         {
             _states = settings.satanStates;
 
-            SatanLoadData loadData = data.LoadData;
+            SatanLoadData loadData = storage.LoadData;
 
             _level = new(loadData.state.level);
             _curse = new(loadData.state.curse);
@@ -54,8 +54,9 @@ namespace Vurbiri.Colonization
             _leveling = new(settings.demonBuffs.Settings, _level);
             _artefact = Buffs.Create(settings.artefact.Settings, loadData);
 
-            _spawner = new(_level, new(_leveling, _artefact), settings, hexagons[Key.Zero], loadData.state.spawnPotential);
+            _spawner = new(_level, new(_leveling, _artefact), settings, hexagons[Key.Zero], loadData.state.spawn);
 
+            _demons = new(loadData.state.maxDemons);
             for (int i = loadData.actors.Count - 1; i >= 0; i--)
                 _demons.Add(_spawner.Load(loadData.actors[i], hexagons));
 
@@ -65,17 +66,13 @@ namespace Vurbiri.Colonization
                 _unsubscribers += humans[i].Shrines.Subscribe(OnAddShrine, false);
             }
 
-            _balance.Subscribe(OnBalance, false);
+            storage.StateBind(this, !loadData.isLoaded);
+            storage.ArtefactBind(_artefact, !loadData.isLoaded);
+            storage.ActorsBind(_demons);
 
-            data.StatusBind(this, !loadData.isLoaded);
-            data.ArtefactBind(_artefact, !loadData.isLoaded);
-            data.ActorsBind(_demons);
+            storage.LoadData = null;
 
-            data.LoadData = null;
-
-            #region Local: OnBalance(..), OnPerk(..), OnShrineBuild(..)
-            //=================================
-            void OnBalance(int value) => _eventSelf.Invoke(this);
+            #region Local: OnPerk(..), OnShrineBuild(..)
             //=================================
             void OnAddPerk(Perk perk) => AddBalance(_states.balancePerPerk);
             //=================================
@@ -85,6 +82,8 @@ namespace Vurbiri.Colonization
             }
             #endregion
         }
+
+        public Unsubscriber Subscribe(Action<Satan> action, bool calling) => _eventSelf.Add(action, calling, this);
 
         public void EndTurn()
         {
@@ -129,38 +128,6 @@ namespace Vurbiri.Colonization
             _eventSelf.Invoke(this);
         }
 
-        public Unsubscriber Subscribe(Action<Satan> action, bool calling) => _eventSelf.Add(action, calling, this);
-
-        public void Dispose()
-        {
-            _level.Dispose();
-            _curse.Dispose();
-            _balance.Dispose();
-            _unsubscribers.Unsubscribe();
-            _eventSelf.Dispose();
-            _eventWin.Dispose();
-            _leveling.Dispose();
-            _artefact.Dispose();
-            _demons.Dispose();
-        }
-
-        #region CopyToArray(..), FromArray(..)
-        public const int SIZE_ARRAY = 5;
-        public int[] CopyToArray(int[] array)
-        {
-            int i = 0;
-            array[i++] = _level; array[i++] = _curse; array[i++] = _balance; array[i++] = _spawner.Potential; array[i] = _demons.Capacity;
-            return array;
-        }
-        public static void FromArray(IReadOnlyList<int> array, out int level, out int curse, out int balance, out int spawn, out int maxDemons)
-        {
-            Errors.ThrowIfLengthNotEqual(array, SIZE_ARRAY);
-
-            int i = 0;
-            level = array[i++]; curse = array[i++]; balance = array[i++]; spawn = array[i++]; maxDemons = array[i];
-        }
-        #endregion
-
         private void AddCurse(int value)
         {
             _curse.Add(value);
@@ -173,6 +140,19 @@ namespace Vurbiri.Colonization
             }
 
             _eventSelf.Invoke(this);
+        }
+
+        public void Dispose()
+        {
+            _level.Dispose();
+            _curse.Dispose();
+            _balance.Dispose();
+            _unsubscribers.Unsubscribe();
+            _eventSelf.Dispose();
+            _eventWin.Dispose();
+            _leveling.Dispose();
+            _artefact.Dispose();
+            _demons.Dispose();
         }
     }
 }

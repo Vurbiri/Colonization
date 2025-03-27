@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public interface IReadOnlyAbilities<TId> : IReadOnlyList<IAbility> where TId : AbilityId<TId>
+    public interface IReadOnlyAbilities<TId> : IReadOnlyList<AAbility<TId>> where TId : AbilityId<TId>
     {
-        public IAbility this[Id<TId> index] { get; }
+        public AAbility<TId> this[Id<TId> index] { get; }
 
         public bool IsGreater(Id<TId> stateId, int value);
         public bool IsLess(Id<TId> stateId, int value);

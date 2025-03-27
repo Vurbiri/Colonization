@@ -166,21 +166,6 @@ namespace Vurbiri.Colonization
         public void Cancel() => OnUnselect(null);
         #endregion
 
-        #region Arrayable
-        private const int SIZE_ARRAY = 4;
-        public int[] ToArray() => new int[] { _key.X, _key.Y, _states.id.Value, _isWall ? 1 : 0 };
-        public int[] ToArray(int[] array)
-        {
-            if (array == null || array.Length != SIZE_ARRAY)
-                return new int[] { _key.X, _key.Y, _states.id.Value, _isWall ? 1 : 0 };
-
-            int i = 0;
-            array[i++] = _key.X; array[i++] = _key.Y; array[i++] = _states.id.Value; array[i] = _isWall ? 1 : 0;
-
-            return array;
-        }
-        #endregion
-
         public void Dispose()
         {
             _unsubscriber?.Unsubscribe();

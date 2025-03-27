@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\Actors\Fractions\Warriors\WarriorInitializer.cs
 using UnityEngine;
-using Vurbiri.Colonization.Data;
+using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization.Actors
 {

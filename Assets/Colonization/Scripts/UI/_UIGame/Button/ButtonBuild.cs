@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
             base.Init(localPosition, settings, action);
             _cost = cost;
             _cash = settings.player.Resources;
-            _unsubscriber = SceneServices.Get<Localization>().Subscribe(SetText);
+            _unsubscriber = SceneContainer.Get<Localization>().Subscribe(SetText);
         }
 
         public void Setup(bool isEnable)
