@@ -7,15 +7,15 @@ namespace Vurbiri.Colonization
 
         public const int Shrine         = 1;
 
-        public const int PortOne        = 2;
-        public const int PortTwo        = 3;
-        public const int LighthouseOne  = 4;
-        public const int LighthouseTwo  = 5;
+        public const int Camp           = 2;
+        public const int Town           = 3;
+        public const int City           = 4;
 
-        public const int Camp           = 6;
-        public const int Town           = 7;
-        public const int Capital        = 8;
-
+        public const int PortOne        = 5;
+        public const int PortTwo        = 6;
+        public const int LighthouseOne  = 7;
+        public const int LighthouseTwo  = 8;
+        
         static EdificeId() => RunConstructor();
 
         public static int ToGroup(int id) => id switch
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             Empty                                                => EdificeGroupId.None,
             Shrine                                               => EdificeGroupId.Shrine,
             PortOne or PortTwo or LighthouseOne or LighthouseTwo => EdificeGroupId.Port,
-            Camp or Town or Capital                              => EdificeGroupId.Urban,
+            Camp or Town or City                                 => EdificeGroupId.Urban,
             _                                                    => Errors.ArgumentOutOfRange("EdificeTypeId", id),
         };
 

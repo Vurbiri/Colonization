@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
 	{
-        protected abstract class ABlockState : AActionState
+        protected class BlockState : AActionState
         {
             private readonly EffectCode _code;
             private readonly EffectsSet _effects;
@@ -20,18 +20,16 @@ namespace Vurbiri.Colonization.Actors
                 get => _actor._effects.Contains(_code);
             }
 
-            public ABlockState(int cost, int value, Actor parent) : base(parent, cost, TypeIdKey.Get<ABlockState>(0))
+            public BlockState(int cost, int value, Actor parent) : base(parent, cost, TypeIdKey.Get<BlockState>(0))
             {
                 _code = new(_actor.TypeId, _actor.Id, BLOCK_SKILL_ID, BLOCK_EFFECT_ID);
                 _value = value;
                 _effects = _actor._effects;
             }
 
-            public static ABlockState Create(Id<PlayerId> owner, int cost, int value, Actor parent)
+            public static BlockState Create(Id<PlayerId> owner, int cost, int value, Actor parent)
             {
-                UnityEngine.Debug.Log("разкомментить PlayerBlockState/AIBlockState ");
-                //return owner == PlayerId.Player ? new PlayerBlockState(cost, value, parent) : new AIBlockState(cost, value, parent);
-                return new PlayerBlockState(cost, value, parent);
+                return owner == PlayerId.Player ? new PlayerBlockState(cost, value, parent) : new BlockState(cost, value, parent);
             }
 
             public override void Enter()
@@ -51,12 +49,7 @@ namespace Vurbiri.Colonization.Actors
             }
         }
         //=======================================================================================
-        sealed protected class AIBlockState : ABlockState
-        {
-            public AIBlockState(int cost, int value, Actor parent) : base(cost, value, parent) { }
-        }
-        //=======================================================================================
-        sealed protected class PlayerBlockState : ABlockState
+        sealed protected class PlayerBlockState : BlockState
         {
             private readonly Collider _actorCollider;
 
@@ -64,15 +57,15 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                _actorCollider.enabled = false;
+                _actorCollider.enabled = _actor._isPlayerTurn;
                 base.Enter();
             }
 
-            //public override void Exit()
-            //{
-            //    _actorCollider.enabled = false;
-            //    base.Exit();
-            //}
+            public override void Exit()
+            {
+                _actorCollider.enabled = false;
+                base.Exit();
+            }
         }
     }
 }

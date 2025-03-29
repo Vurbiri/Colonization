@@ -37,7 +37,8 @@ namespace Vurbiri.Colonization.Characteristics
 
         public static Buffs Create(IReadOnlyList<BuffSettings> settings, APlayerLoadData loadData)
         {
-            if(loadData.isLoaded) return new(settings, loadData.artefact);
+            if(loadData.isLoaded & loadData.artefact != null) 
+                return new(settings, loadData.artefact);
             return new(settings);
         }
 

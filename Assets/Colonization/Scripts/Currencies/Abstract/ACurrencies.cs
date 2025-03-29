@@ -15,11 +15,7 @@ namespace Vurbiri.Colonization
         public abstract int this[int index] { get; }
         public abstract int this[Id<CurrencyId> id] { get; }
 
-        public virtual IEnumerator<int> GetEnumerator()
-        {
-            for (int i = 0; i < countAll; i++)
-                yield return this[i];
-        }
+        public abstract IEnumerator<int> GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 

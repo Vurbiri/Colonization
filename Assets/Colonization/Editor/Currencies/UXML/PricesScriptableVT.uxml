@@ -16,7 +16,7 @@
             <ui:Label tabindex="-1" text="Urban" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 18px; -unity-text-align: upper-center; -unity-font-style: bold; background-color: rgb(25, 90, 25); padding-top: 3px; padding-right: 3px; padding-bottom: 3px; padding-left: 3px; margin-top: 3px; margin-right: 3px; margin-bottom: 3px; margin-left: 3px; min-width: 99%;" />
             <uie:PropertyField name="Camp" label="Camp" class="PropertyField" />
             <uie:PropertyField name="Town" label="Town" class="PropertyField" />
-            <uie:PropertyField name="Capital" label="Capital" class="PropertyField" />
+            <uie:PropertyField name="City" label="City" class="PropertyField" />
             <uie:PropertyField name="Wall" binding-path="_wall" class="PropertyField" />
         </ui:VisualElement>
         <ui:VisualElement style="flex-grow: 1; border-left-color: rgb(27, 27, 27); border-right-color: rgb(27, 27, 27); border-top-color: rgb(27, 27, 27); border-bottom-color: rgb(27, 27, 27); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; flex-direction: row; flex-wrap: wrap; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; justify-content: center; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; margin-left: 1px;">

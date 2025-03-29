@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.Storage
         public HumanStorage[] Humans => _humanStorages;
         public SatanStorage Satan => _satanStorage;
 
-        public void Save() => _storage.Save();
+        public void Save() => _storage.SaveAll();
 
         #region Load
         public HexLoadData GetHexData(Key key) => _storage.Get<HexLoadData>(key.ToSaveKey());

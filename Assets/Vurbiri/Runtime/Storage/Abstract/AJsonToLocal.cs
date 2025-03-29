@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public abstract class AJsonToLocal : ASaveLoadJsonTo
+    public abstract class AJsonToLocal : AStorageOneFile
     {
-        protected AJsonToLocal(MonoBehaviour monoBehaviour) : base(monoBehaviour)
+        protected AJsonToLocal(string key, MonoBehaviour monoBehaviour) : base(key, monoBehaviour)
         {
         }
 

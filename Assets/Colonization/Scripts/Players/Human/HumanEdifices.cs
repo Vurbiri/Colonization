@@ -14,13 +14,13 @@ namespace Vurbiri.Colonization
         protected class Edifices : IDisposable
         {
             private readonly AbilitiesSet<HumanAbilityId> _abilities;
-            private AAbility<HumanAbilityId> _shrinePassiveProfit, _shrineProfit, _portsProfit, _compensationRes;
+            private readonly AAbility<HumanAbilityId> _shrinePassiveProfit, _shrineProfit, _portsProfit, _compensationRes;
 
-            public readonly IdArray<EdificeGroupId, ReactiveList<Crossroad>> values = new();
+            public readonly IdArray<EdificeGroupId, ReactiveList<Crossroad>> edifices = new();
 
             public readonly ReactiveList<Crossroad> shrines;
-            public readonly ReactiveList<Crossroad> ports;
             public readonly ReactiveList<Crossroad> urbans;
+            public readonly ReactiveList<Crossroad> ports;
 
             public int ShrinePassiveProfit => _shrinePassiveProfit.Value * shrines.Count;
             public int ShrineProfit => _shrineProfit.Value * shrines.Count;
@@ -28,22 +28,21 @@ namespace Vurbiri.Colonization
             public Edifices(AbilitiesSet<HumanAbilityId> abilities)
             {
                 _abilities = abilities;
-                GetAbilities();
+                _shrinePassiveProfit = _abilities[HumanAbilityId.ShrinePassiveProfit];
+                _shrineProfit = _abilities[HumanAbilityId.ShrineProfit];
+                _portsProfit = _abilities[HumanAbilityId.PortsProfit];
+                _compensationRes = _abilities[HumanAbilityId.CompensationRes];
 
-                values[EdificeGroupId.Shrine] = shrines = new();
-                values[EdificeGroupId.Port] = ports = new();
-                values[EdificeGroupId.Urban] = urbans = new();
+                edifices[EdificeGroupId.Shrine] = shrines = new(CONST.MAX_EDIFICES[EdificeGroupId.Shrine]);
+                edifices[EdificeGroupId.Urban] = urbans = new(CONST.MAX_EDIFICES[EdificeGroupId.Urban]);
+                edifices[EdificeGroupId.Port] = ports = new(CONST.MAX_EDIFICES[EdificeGroupId.Port]);
             }
 
-            public Edifices(Id<PlayerId> playerId, Dictionary<int, List<EdificeLoadData>> data, Crossroads crossroads, AbilitiesSet<HumanAbilityId> abilities)
+            public Edifices(Human parent, Dictionary<int, List<EdificeLoadData>> data, Crossroads crossroads) : this(parent._abilities)
             {
-                _abilities = abilities;
-                GetAbilities();
-                var abilityWall = abilities[HumanAbilityId.WallDefence];
-
-                values[EdificeGroupId.Shrine] = CreateEdifices(ref shrines, data[EdificeGroupId.Shrine], playerId, crossroads, abilityWall);
-                values[EdificeGroupId.Port] = CreateEdifices(ref ports, data[EdificeGroupId.Port], playerId, crossroads, abilityWall);
-                values[EdificeGroupId.Urban] = CreateEdifices(ref urbans, data[EdificeGroupId.Urban], playerId, crossroads, abilityWall);
+                var abilityWall = _abilities[HumanAbilityId.WallDefence];
+                for (int i = 0; i < EdificeGroupId.Count; i++)
+                    CreateEdifices(edifices[i], data[i], parent._id, crossroads, abilityWall);
             }
 
             public CurrenciesLite ProfitFromEdifices(int hexId)
@@ -71,36 +70,25 @@ namespace Vurbiri.Colonization
                     if ((id == EdificeId.LighthouseOne | id == EdificeId.LighthouseTwo) && !_abilities.IsTrue(HumanAbilityId.IsLighthouse))
                         return false;
 
-                    if (id == EdificeId.Capital && !_abilities.IsTrue(HumanAbilityId.IsCapital))
+                    if (id == EdificeId.City && !_abilities.IsTrue(HumanAbilityId.IsCity))
                         return false;
 
                     return true;
                 }
 
-                return _abilities.IsGreater(nextGroup.ToState(), values[nextGroup].Count);
+                return _abilities.IsGreater(nextGroup.ToState(), edifices[nextGroup].Count);
             }
 
             public void Dispose()
             {
-                for (int i = values.Count - 1; i >= 0; i--)
-                    values[i].Dispose();
+                for (int i = edifices.Count - 1; i >= 0; i--)
+                    edifices[i].Dispose();
             }
 
-            private void GetAbilities()
-            {
-                _shrinePassiveProfit = _abilities[HumanAbilityId.ShrinePassiveProfit];
-                _shrineProfit = _abilities[HumanAbilityId.ShrineProfit];
-                _portsProfit = _abilities[HumanAbilityId.PortsProfit];
-                _compensationRes = _abilities[HumanAbilityId.CompensationRes];
-            }
-
-            private ReactiveList<Crossroad> CreateEdifices(ref ReactiveList<Crossroad> values, List<EdificeLoadData> loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)
+            private void CreateEdifices(ReactiveList<Crossroad> values, List<EdificeLoadData> loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)
             {
                 int count = loadData.Count;
-                values = new(count);
-
-                EdificeLoadData data;
-                Crossroad crossroad;
+                EdificeLoadData data; Crossroad crossroad;
                 for (int i = 0; i < count; i++)
                 {
                     data = loadData[i];
@@ -110,8 +98,6 @@ namespace Vurbiri.Colonization
                         crossroad.BuyWall(playerId, abilityWall);
                     values.Add(crossroad);
                 }
-
-                return values;
             }
         }
     }

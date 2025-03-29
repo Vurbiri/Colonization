@@ -5,21 +5,14 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        protected abstract class AIdleState : AState
+        protected class IdleState : AState
         {
-            public AIdleState(Actor parent) : base(parent, TypeIdKey.Get<AIdleState>(0)) { }
+            public IdleState(Actor parent) : base(parent, TypeIdKey.Get<IdleState>(0)) { }
 
-            public static AIdleState Create(Actor parent)
+            public static IdleState Create(Actor parent)
             {
-                UnityEngine.Debug.Log("разкомментить PlayerIdleState/AIIdleState ");
-                //return parent._owner == PlayerId.Player ? new PlayerIdleState(parent) : new AIIdleState(parent);
-                return new PlayerIdleState(parent);
+                return parent._owner == PlayerId.Player ? new PlayerIdleState(parent) : new IdleState(parent);
             }
-        }
-        //========================================================================================================
-        sealed protected class AIIdleState : AIdleState
-        {
-            public AIIdleState(Actor parent) : base(parent) {}
 
             public override void Enter()
             {
@@ -27,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
             }
         }
         //=========================================================================================================
-        sealed protected class PlayerIdleState : AIdleState
+        sealed protected class PlayerIdleState : IdleState
         {
             private readonly GameplayTriggerBus _triggerBus;
             private readonly Collider _actorCollider;
@@ -41,7 +34,7 @@ namespace Vurbiri.Colonization.Actors
             public override void Enter()
             {
                 _actorCollider.enabled = _actor._isPlayerTurn;
-                _skin.Idle();
+                base.Enter();
             }
 
             public override void Exit()

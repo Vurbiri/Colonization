@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    sealed public class JsonToYandex : ASaveLoadJsonTo
+    sealed public class JsonToYandex : AStorageOneFile
     {
         private readonly YandexSDK _ysdk;
 
         public override bool IsValid => _ysdk != null && _ysdk.IsLogOn;
 
-        public JsonToYandex(MonoBehaviour monoBehaviour, YandexSDK ysdk) : base(monoBehaviour)
+        public JsonToYandex(string key, MonoBehaviour monoBehaviour, YandexSDK ysdk) : base(key, monoBehaviour)
         {
             _ysdk = ysdk;
         }

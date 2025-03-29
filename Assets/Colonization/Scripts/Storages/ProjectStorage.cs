@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Storage
             _storage = storage;
         }
 
-        public void Save(Action<bool> callback = null) => _storage.Save(callback);
+        public void Save(Action<bool> callback = null) => _storage.SaveAll(callback);
 
         public void Clear() => _storage.Clear(SAVE_KEYS.PROFILE, SAVE_KEYS.VOLUMES);
 

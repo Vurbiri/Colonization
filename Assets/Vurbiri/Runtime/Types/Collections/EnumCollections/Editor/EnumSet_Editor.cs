@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\EnumSet_Editor.cs
+//Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\Editor\EnumSet_Editor.cs
 #if UNITY_EDITOR
 
 using System;

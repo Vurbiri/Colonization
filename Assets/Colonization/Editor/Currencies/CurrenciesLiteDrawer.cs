@@ -6,9 +6,9 @@ namespace VurbiriEditor.Colonization
     using Vurbiri.Colonization;
 
     [CustomPropertyDrawer(typeof(CurrenciesLite))]
-    public class CurrenciesLiteDrawer : ADrawerGetConstFieldName
+    public class CurrenciesLiteDrawer : PropertyDrawer
     {
-        private const int MAX_VALUE = 20;
+        private const int MAX_VALUE = 15;
         private const float Y_SPACE = 2f, BUTTON_RATE_POS = 1.1f, BUTTON_OFFSET = 10f, BUTTON_CLEAR_SIZE = 60f, BUTTON_PLUSMINUS_SIZE = 20f;
         private const float LABEL_SIZE = 100f, LABEL_OFFSET = 15f;
         private const string NAME_ARRAY = "_values", NAME_AMOUNT = "_amount", BUTTON_CLEAR = "Clear", BUTTON_PLUS = "+", BUTTON_MINUS = "-";
@@ -18,28 +18,31 @@ namespace VurbiriEditor.Colonization
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-
             position.height = EditorGUIUtility.singleLineHeight;
 
             label = EditorGUI.BeginProperty(position, label, property);
 
-            DrawLabelCount(position, property.FindPropertyRelative(NAME_AMOUNT).intValue);
+            SerializedProperty propertyAmount = property.FindPropertyRelative(NAME_AMOUNT);
+            DrawLabelCount(position, propertyAmount.intValue);
 
             if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
             {
                 SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
-                int count = propertyValues.arraySize;
-                string[] names = GetPositiveNames(typeof(CurrencyId));
+                propertyValues.arraySize = CurrencyId.CountAll;
 
                 Color prevColor = GUI.color;
                 SerializedProperty propertyElement;
+                propertyAmount.intValue = 0;
                 EditorGUI.indentLevel++;
-                for (int i = 0; i < count; i++)
+                for (int index = 0; index < CurrencyId.CountAll; index++)
                 {
-                    GUI.color = colors[i];
-                    propertyElement = propertyValues.GetArrayElementAtIndex(i);
+                    GUI.color = colors[index];
+                    propertyElement = propertyValues.GetArrayElementAtIndex(index);
                     position.y += position.height + Y_SPACE;
-                    propertyElement.intValue = EditorGUI.IntSlider(position, names[i], propertyElement.intValue, 0, MAX_VALUE);
+                    propertyElement.intValue = EditorGUI.IntSlider(position, CurrencyId.Names[index], propertyElement.intValue, 0, MAX_VALUE);
+
+                    if (index != CurrencyId.Blood)
+                        propertyAmount.intValue += propertyElement.intValue;
                 }
                 EditorGUI.indentLevel--;
                 GUI.color = prevColor;
@@ -51,11 +54,11 @@ namespace VurbiriEditor.Colonization
                     _position.y += _position.height + Y_SPACE * 2f;
 
                     if (DrawButton(BUTTON_CLEAR, BUTTON_CLEAR_SIZE, BUTTON_CLEAR_SIZE + BUTTON_OFFSET))
-                        Clear(propertyValues, count);
+                        Clear(propertyValues, propertyAmount);
                     if (DrawButton(BUTTON_MINUS, BUTTON_PLUSMINUS_SIZE, BUTTON_CLEAR_SIZE + BUTTON_PLUSMINUS_SIZE + BUTTON_OFFSET))
-                        Add(propertyValues, count, -1);
+                        Add(propertyValues, propertyAmount, -1);
                     if (DrawButton(BUTTON_PLUS, BUTTON_PLUSMINUS_SIZE, BUTTON_CLEAR_SIZE + BUTTON_PLUSMINUS_SIZE * 2f + BUTTON_OFFSET))
-                        Add(propertyValues, count, 1);
+                        Add(propertyValues, propertyAmount, 1);
                 }
             }
 
@@ -87,20 +90,26 @@ namespace VurbiriEditor.Colonization
                 return GUI.Button(positionButton, text.ToUpper());
             }
             //=================================
-            void Clear(SerializedProperty prop, int count)
+            void Clear(SerializedProperty values, SerializedProperty amount)
             {
-                for (int index = 0; index < count; index++)
-                {
-                    prop.GetArrayElementAtIndex(index).intValue = 0;
-                }
+                for (int index = 0; index < CurrencyId.CountAll; index++)
+                    values.GetArrayElementAtIndex(index).intValue = 0;
+
+                amount.intValue = 0;
             }
             //=================================
-            void Add(SerializedProperty prop, int count, int add)
+            void Add(SerializedProperty values, SerializedProperty amount, int add)
             {
-                for (int index = 0; index < count - 1; index++)
+                SerializedProperty propertyElement;
+                amount.intValue = 0;
+                for (int index = 0; index < CurrencyId.CountAll - 1; index++)
                 {
-                    if ((prop.GetArrayElementAtIndex(index).intValue += add) < 0)
-                        prop.GetArrayElementAtIndex(index).intValue = 0;
+                    propertyElement = values.GetArrayElementAtIndex(index);
+                    if ((propertyElement.intValue += add) < 0)
+                        propertyElement.intValue = 0;
+
+                    if (index != CurrencyId.Blood)
+                        amount.intValue += propertyElement.intValue;
                 }
             }
             #endregion

@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Runtime\Types\Collections\IdCollections\IdSet_Editor.cs
+//Assets\Vurbiri\Runtime\Types\Collections\IdCollections\Editor\IdSet_Editor.cs
 #if UNITY_EDITOR
 
 using System;

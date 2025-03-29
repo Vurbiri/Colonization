@@ -7,7 +7,7 @@ namespace Vurbiri
     {
         public override bool IsValid => UtilityJS.IsStorage();
 
-        public JsonToLocalStorage(MonoBehaviour monoBehaviour) : base(monoBehaviour)
+        public JsonToLocalStorage(string key, MonoBehaviour monoBehaviour) : base(key, monoBehaviour)
         {
         }
 

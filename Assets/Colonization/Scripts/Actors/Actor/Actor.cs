@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.Actors
         protected EffectsSet _effects;
 
         protected StateMachineSelectable _stateMachine;
-        protected ABlockState _blockState;
+        protected BlockState _blockState;
 
         protected bool _isPlayerTurn;
 

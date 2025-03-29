@@ -40,6 +40,7 @@ namespace Vurbiri
         }
 
         public T Select<T>(T trueValue, T falseValue) => Roll ? trueValue : falseValue;
+        public T Select<T>(T trueValue) => Roll ? trueValue : default;
 
         #region Static methods
         public static bool Rolling(int value = 50) => value > 0 && (value >= MAX_CHANCE || Random.Range(0, MAX_CHANCE) < value);

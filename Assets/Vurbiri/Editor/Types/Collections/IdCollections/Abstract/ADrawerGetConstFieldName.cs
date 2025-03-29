@@ -7,7 +7,6 @@ namespace VurbiriEditor
 {
     public abstract class ADrawerGetConstFieldName : PropertyDrawer
     {
-
         protected string[] GetPositiveNames(Type typeField)
         {
             PropertyInfo _names;
@@ -19,14 +18,6 @@ namespace VurbiriEditor
             while (_names == null);
 
             return (string[])_names.GetValue(null);
-        }
-
-        protected void SetArraySize(SerializedProperty property, int size)
-        {
-            while (property.arraySize > size)
-                property.DeleteArrayElementAtIndex(property.arraySize - 1);
-            while (property.arraySize < size)
-                property.InsertArrayElementAtIndex(property.arraySize);
         }
     }
 }

@@ -44,14 +44,14 @@ namespace Vurbiri.Colonization
             _settings.isBuildWall = _settings.groupId == EdificeGroupId.Urban && _settings.id != EdificeId.Camp;
 
             _settings.isUpgrade = _settings.groupId == EdificeGroupId.None || _settings.id == EdificeId.PortOne || _settings.id == EdificeId.PortTwo
-                || (_settings.groupId == EdificeGroupId.Urban && _settings.id != EdificeId.Capital);
+                || (_settings.groupId == EdificeGroupId.Urban && _settings.id != EdificeId.City);
 
             _settings.profit = 0;
             if (_settings.id == EdificeId.Camp || _settings.id == EdificeId.PortOne || _settings.id == EdificeId.PortTwo)
                 _settings.profit = 1;
             else if (_settings.id == EdificeId.Town || _settings.groupId == EdificeGroupId.Port)
                 _settings.profit = 2;
-            else if (_settings.id == EdificeId.Capital)
+            else if (_settings.id == EdificeId.City)
                 _settings.profit = 3;
             else
                 _settings.profit = 0;

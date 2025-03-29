@@ -9,13 +9,13 @@ namespace Vurbiri
     {
         public bool IsValid => false;
 
-        public IEnumerator Load_Cn(string key, Action<bool> callback)
+        public IEnumerator Load_Cn(Action<bool> callback)
         {
             callback?.Invoke(false);
             return null;
         }
 
-        public void Save(Action<bool> callback = null) => callback?.Invoke(false);
+        public void SaveAll(Action<bool> callback = null) => callback?.Invoke(false);
         public void Save<T>(string key, T data, JsonSerializerSettings settings = null) { }
         public void Save<T>(string key, T data, JsonConverter converter) { }
 
@@ -30,7 +30,6 @@ namespace Vurbiri
             value = default;
             return false;
         }
-
         public bool TryGet<T>(string key, JsonConverter converter, out T value)
         {
             value = default;
@@ -45,9 +44,7 @@ namespace Vurbiri
         public void Remove(string key, bool toFile) {}
 
         public void Clear() { }
-
         public void Clear(string keyExclude) { }
-
         public void Clear(params string[] keyExcludes) { }
     }
 }

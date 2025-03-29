@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Runtime\Storage\Abstract\ASaveLoadJsonTo.cs
+//Assets\Vurbiri\Runtime\Storage\Abstract\AStorageOneFile.cs
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public abstract class ASaveLoadJsonTo : IStorageService
+    public abstract class AStorageOneFile : IStorageService
     {
         protected Dictionary<string, string> _saved = null;
         protected CoroutinesQueue _cnQueue;
@@ -16,12 +16,14 @@ namespace Vurbiri
 
         public abstract bool IsValid { get; }
 
-        public ASaveLoadJsonTo(MonoBehaviour monoBehaviour) => _cnQueue = new(monoBehaviour);
-        
-        public IEnumerator Load_Cn(string key, Action<bool> callback)
+        public AStorageOneFile(string key, MonoBehaviour monoBehaviour)
         {
             _key = key;
-
+            _cnQueue = new(monoBehaviour);
+        }
+        
+        public IEnumerator Load_Cn(Action<bool> callback)
+        {
             WaitResult<string> waitResult = LoadFromFile_Wait();
             yield return waitResult;
 
@@ -116,7 +118,10 @@ namespace Vurbiri
         #endregion
 
         #region Save(..)
-        public void Save(Action<bool> callback) => _cnQueue.Enqueue(SaveToFile_Cn(callback));
+        public void SaveAll(Action<bool> callback)
+        {
+            _cnQueue.Enqueue(SaveToFile_Cn(callback));
+        }
         public void Save<T>(string key, T data, JsonSerializerSettings settings)
         {
             Set(key, data, settings);
@@ -137,7 +142,7 @@ namespace Vurbiri
         {
             _modified |= _saved.Remove(key);
 
-            if (fromFile && _cnQueue.Count == 0)
+            if (fromFile & _cnQueue.Count == 0)
                 _cnQueue.Enqueue(SaveToFile_Cn());
         }
 
@@ -179,8 +184,7 @@ namespace Vurbiri
                 _saved.Clear();
 
                 for (int i = 0; i < count; i++)
-                    if (restores[i] != null)
-                        _saved.Add(excludeKeys[i], restores[i]);
+                    if (restores[i] != null) _saved.Add(excludeKeys[i], restores[i]);
 
                 _modified = true;
             }
@@ -190,42 +194,38 @@ namespace Vurbiri
         }
         #endregion
 
-        
-
         #region SaveToFile_Cn
         protected IEnumerator SaveToFile_Cn(Action<bool> callback)
         {
             if (_modified)
             {
+                _modified = false;
                 WaitResult<bool> waitResult = SaveToFile_Wait();
                 yield return waitResult;
 
-                _modified = !waitResult.Value;
+                _modified |= !waitResult.Value;
                 callback?.Invoke(waitResult.Value);
 
                 yield break;
             }
 
-            callback?.Invoke(false);
+            callback?.Invoke(true);
         }
         protected IEnumerator SaveToFile_Cn()
         {
             if (_modified)
             {
+                _modified = false;
                 WaitResult<bool> waitResult = SaveToFile_Wait();
                 yield return waitResult;
 
-                _modified = !waitResult.Value;
-                yield break;
+                _modified |= !waitResult.Value;
             }
         }
         #endregion
 
-
         protected abstract WaitResult<string> LoadFromFile_Wait();
         protected abstract WaitResult<bool> SaveToFile_Wait();
-
-
 
         #region Serialize / Deserialize / Populate
         protected string Serialize<T>(T obj, JsonSerializerSettings settings = null) => JsonConvert.SerializeObject(obj, typeof(T), settings);

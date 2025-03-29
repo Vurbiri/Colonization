@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
         {
             _states = settings.satanStates;
 
-            SatanLoadData loadData = storage.LoadData;
+            var loadData = storage.LoadData;
 
             _level = new(loadData.state.level);
             _curse = new(loadData.state.curse);

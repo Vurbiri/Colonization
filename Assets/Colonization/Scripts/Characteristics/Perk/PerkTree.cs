@@ -46,7 +46,8 @@ namespace Vurbiri.Colonization.Characteristics
 
         public static PerkTree Create(Players.Settings settings, HumanLoadData loadData)
         {
-            if (loadData.isLoaded) return new(settings.economicPerks, settings.militaryPerks, loadData.perks);
+            if (loadData.isLoaded & loadData.perks != null) 
+                return new(settings.economicPerks, settings.militaryPerks, loadData.perks);
             return new(settings.economicPerks, settings.militaryPerks);
         }
 

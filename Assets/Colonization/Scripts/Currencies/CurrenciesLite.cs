@@ -8,9 +8,6 @@ namespace Vurbiri.Colonization
 {
     [Serializable]
     sealed public class CurrenciesLite : ACurrencies
-#if UNITY_EDITOR
-        ,ISerializationCallbackReceiver
-#endif 
     {
         [SerializeField] private int[] _values = new int[CurrencyId.CountAll];
         [SerializeField] private int _amount = 0;
@@ -20,8 +17,17 @@ namespace Vurbiri.Colonization
         public override int this[int index] { get => _values[index]; }
         public override int this[Id<CurrencyId> id] { get => _values[id.Value]; }
 
-        public static CurrenciesLite Empty => _empty;
-        private static readonly CurrenciesLite _empty = new();
+        public CurrenciesLite() { }
+        public CurrenciesLite(int[] array)
+        {
+            int value;
+            for (int i = 0; i < countAll; i++)
+            {
+                value = array[i];
+                _values[i] = value;
+                _amount += value;
+            }
+        }
 
         public void Increment(int index)
         {
@@ -88,26 +94,5 @@ namespace Vurbiri.Colonization
 
             return a;
         }
-
-        #region ISerializationCallbackReceiver
-#if UNITY_EDITOR
-        public void OnBeforeSerialize()
-        {
-            if (Application.isPlaying)
-                return;
-
-            _values ??= new int[CurrencyId.Count];
-            if (_values.Length != countAll)
-                Array.Resize(ref _values, countAll);
-
-            _amount = 0;
-            for (int i = 0; i < countMain; i++)
-                _amount += _values[i];
-
-        }
-
-        public void OnAfterDeserialize() { }
-#endif
-        #endregion
     }
 }

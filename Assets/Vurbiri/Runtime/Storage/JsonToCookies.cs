@@ -7,7 +7,7 @@ namespace Vurbiri
     {
         public override bool IsValid => UtilityJS.IsCookies();
 
-        public JsonToCookies(MonoBehaviour monoBehaviour) : base(monoBehaviour)
+        public JsonToCookies(string key, MonoBehaviour monoBehaviour) : base(key, monoBehaviour)
         {
         }
 

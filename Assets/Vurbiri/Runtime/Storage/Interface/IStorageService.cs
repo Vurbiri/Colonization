@@ -9,7 +9,7 @@ namespace Vurbiri
     {
         public bool IsValid { get; }
 
-        public IEnumerator Load_Cn(string key, Action<bool> callback);
+        public IEnumerator Load_Cn(Action<bool> callback);
 
         public T Get<T>(string key);
         public T Get<T>(string key, JsonConverter converter);
@@ -22,7 +22,7 @@ namespace Vurbiri
         public bool Set<T>(string key, T data, JsonSerializerSettings settings = null);
         public bool Set<T>(string key, T data, JsonConverter converter);
 
-        public void Save(Action<bool> callback = null);
+        public void SaveAll(Action<bool> callback = null);
         public void Save<T>(string key, T data, JsonSerializerSettings settings = null);
         public void Save<T>(string key, T data, JsonConverter converter);
 
