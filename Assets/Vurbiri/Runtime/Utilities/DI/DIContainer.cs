@@ -16,7 +16,7 @@ namespace Vurbiri
 
         public void AddFactory<T>(Func<T> factory)
         {
-             if (!_registration.TryAdd(typeof(T), new RegFactory<T>(factory)))
+            if (!_registration.TryAdd(typeof(T), new RegFactory<T>(factory)))
                 Errors.AddItem(typeof(T).ToString());
         }
         public void AddFactory<P, T>(Func<P, T> factory)
@@ -34,11 +34,11 @@ namespace Vurbiri
         }
         public void AddInstance<T, U>(T instance) where T : U
         {
-            AddInstance(instance);
+            AddInstance<T>(instance);
             AddInstance<U>(instance);
         }
 
-        public T ReplaceInstance<T>(T instance)
+        public void ReplaceInstance<T>(T instance)
         {
             Type type = typeof(T);
 
@@ -46,7 +46,6 @@ namespace Vurbiri
                 registration.Dispose();
 
             _registration[type] = new RegInstance<T>(instance);
-            return instance;
         }
 
         public T Get<T>()
@@ -109,7 +108,7 @@ namespace Vurbiri
                 reg.Dispose();
         }
 
-        #region Nested: IRegistration<T>, RegInstance<T>, RegFactory<T>
+        #region Nested: IRegistration.., RegInstance<T>, RegFactory<T>
         //***********************************
         private interface IRegistration : IDisposable { }
         //***********************************
@@ -126,7 +125,7 @@ namespace Vurbiri
         private class RegInstance<T> : IRegistration<T>
         {
             private readonly T _instance;
-           
+
             public RegInstance(T instance)
             {
                 _instance = instance;
@@ -136,7 +135,7 @@ namespace Vurbiri
 
             public void Dispose()
             {
-                if(_instance is IDisposable disposable)
+                if (_instance is IDisposable disposable)
                     disposable.Dispose();
             }
         }
@@ -155,7 +154,7 @@ namespace Vurbiri
             public void Dispose() { }
         }
         //***********************************
-        private class RegFactory<P,T> : IRegistration<P, T>
+        private class RegFactory<P, T> : IRegistration<P, T>
         {
             private readonly Func<P, T> _factory;
 

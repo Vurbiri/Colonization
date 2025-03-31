@@ -1,42 +1,38 @@
-//Assets\Vurbiri.UI\Runtime\CmButton.cs
+//Assets\Vurbiri.UI\Runtime\VButton.cs
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu("UICustom/Button", 30)]
-    sealed public class CmButton : CmSelectable, IPointerClickHandler, ISubmitHandler
+    [AddComponentMenu("UI Vurbiri/Button", 30)]
+    sealed public class VButton : VSelectable, IPointerClickHandler, ISubmitHandler
     {
-        [Serializable]
-        /// <summary>
-        /// Function definition for a button click event.
-        /// </summary>
-        public class ButtonClickedEvent : UnityEvent { }
-
-        [FormerlySerializedAs("onClick")]
         [SerializeField]
-        private ButtonClickedEvent m_OnClick = new();
+        private UnitySubscriber _onClick = new();
+        public Subscriber OnClick => _onClick;
 
-        private CmButton()
-        { }
+        private VButton() { }
 
-        public ButtonClickedEvent onClick
+        protected override void Start()
         {
-            get { return m_OnClick; }
-            set { m_OnClick = value; }
+            base.Start();
+
+            _onClick.Clear();
         }
+
+        public Unsubscriber AddListener(Action action) => _onClick.Add(action);
+        public void RemoveListener(Action action) => _onClick.Remove(action);
 
         private void Press()
         {
             if (!IsActive() || !IsInteractable())
                 return;
 
-            UISystemProfilerApi.AddMarker("Button.onClick", this);
-            m_OnClick.Invoke();
+            UISystemProfilerApi.AddMarker("VButton.onClick", this);
+            _onClick.Invoke();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -51,8 +47,7 @@ namespace Vurbiri.UI
         {
             Press();
 
-            // if we get set disabled during the press
-            // don't run the coroutine.
+            // if we get set disabled during the press don't run the coroutine.
             if (!IsActive() || !IsInteractable())
                 return;
 

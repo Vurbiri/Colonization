@@ -1,17 +1,18 @@
-//Assets\Vurbiri.UI\Runtime\CmSelectable.cs
+//Assets\Vurbiri.UI\Runtime\VSelectable.cs
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Vurbiri.UI
 {
-    public class CmSelectable : Selectable
+    public class VSelectable : Selectable
     {
         [SerializeField] private GameObject _interactableIcon;
         [SerializeField] private bool _alfaCollider = false;
         [SerializeField, Range(0.01f, 1f)] private float _threshold = 0.1f;
-        [SerializeField] private Graphic[] _targetGraphics;
+        [SerializeField] private List<Graphic> _targetGraphics = new();
 
-        public Graphic[] TargetGraphics => _targetGraphics;
+        public IReadOnlyList<Graphic> TargetGraphics => _targetGraphics;
 
         public bool Interactable
         {
@@ -24,37 +25,39 @@ namespace Vurbiri.UI
             }
         }
 
-        public void SetActive(bool active) => gameObject.SetActive(active);
-
         protected override void Start()
         {
             base.Start();
 
-            if (_targetGraphics.Length > 0)
+            for (int i = _targetGraphics.Count - 1; i >= 0; i--)
+            {
+                if (_targetGraphics[i] == null)
+                    _targetGraphics.RemoveAt(i);
+            }
+
+            if (_targetGraphics.Count > 0)
             {
                 targetGraphic = _targetGraphics[0];
             }
             else if (targetGraphic != null)
             {
-                _targetGraphics = new Graphic[1];
-                _targetGraphics[0] = targetGraphic;
+                _targetGraphics.Add(targetGraphic);
             }
 
             if (image != null && image.sprite != null && image.sprite.texture.isReadable)
-                image.alphaHitTestMinimumThreshold = !_alfaCollider ? _threshold : 0f;
+                image.alphaHitTestMinimumThreshold = _alfaCollider ? _threshold : 0f;
         }
 
         protected override void DoStateTransition(SelectionState state, bool instant)
         {
+            if (!gameObject.activeInHierarchy)
+                return;
 
-            if (transition != Transition.ColorTint)
+            if (transition != Transition.ColorTint | _targetGraphics.Count < 1)
             {
                 base.DoStateTransition(state, instant);
                 return;
             }
-
-            if (!gameObject.activeInHierarchy || _targetGraphics == null)
-                return;
 
             Color targetColor = state switch
             {
@@ -66,21 +69,8 @@ namespace Vurbiri.UI
                 _ => Color.black
             };
 
-            foreach (Graphic graphic in _targetGraphics)
-                StartColorTween(graphic, instant);
-
-            #region Local: StartColorTween(...)
-            //=================================
-            void StartColorTween(Graphic targetGraphic, bool instant)
-            {
-                if (targetGraphic == null)
-                    return;
-
-                targetGraphic.CrossFadeColor(targetColor, instant ? 0f : colors.fadeDuration, true, true);
-            }
-            #endregion
+            for (int i = _targetGraphics.Count - 1; i >= 0; i--)
+                _targetGraphics[i]!.CrossFadeColor(targetColor, instant ? 0f : colors.fadeDuration, true, true);
         }
     }
-
-    
 }

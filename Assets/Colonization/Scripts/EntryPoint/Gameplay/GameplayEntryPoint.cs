@@ -46,15 +46,16 @@ namespace Vurbiri.Colonization.EntryPoint
         public override ISubscriber<ExitParam> Enter(SceneContainer sceneContainer, AEnterParam param)
         {
             _diContainer = sceneContainer.Container;
-            Debug.Log("GameplayEntryPoint");
-            _gameplaySettings = _diContainer.Get<GameSettings>();
 
+            _gameplaySettings = _diContainer.Get<GameSettings>();
             _diContainer.Get<Localization>().SetFiles(_localizationFiles);
 
             if (!_isLoad)
                 _diContainer.Get<ProjectStorage>().Clear();
 
             FillingContainers();
+
+            _settingsUI.Init(_diContainer);
 
             StartCoroutine(Enter_Cn());
 
@@ -76,7 +77,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
                 _diContainer.AddInstance(_sceneObjects.mainCamera);
 
-                _settingsUI.Init(_diContainer);
+                
             }
             #endregion
         }
@@ -94,7 +95,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         private IEnumerator CreatePlayers_Cn()
         {
-            _players = _diContainer.AddInstance(new Players(_playersSettings, _gameStorage));
+            _diContainer.AddInstance(_players = new Players(_playersSettings, _gameStorage));
 
             yield return null;
 
@@ -111,7 +112,7 @@ namespace Vurbiri.Colonization.EntryPoint
             GC.Collect();
 
             _sceneObjects.game.Init(_turnQueue, _inputController);
-            _gameplaySettings.StartGame();
+
             _triggerBus.TriggerSceneEndCreation();
 
             yield return null;

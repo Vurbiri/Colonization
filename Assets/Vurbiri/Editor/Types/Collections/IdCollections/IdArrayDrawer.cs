@@ -24,7 +24,7 @@ namespace VurbiriEditor
                 
                 string[] names = GetPositiveNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
                 int count = names.Length;
-                property.arraySize = count;
+                propertyValues.arraySize = count;
 
                 EditorGUI.indentLevel++;
                 for (int i = 0; i < count; i++)

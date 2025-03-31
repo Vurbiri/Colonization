@@ -1,7 +1,6 @@
 //Assets\Colonization\Scripts\Characteristics\Perk\PerkTree.cs
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
@@ -9,26 +8,27 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public class PerkTree : IReactive<Perk>, IReactive<IEnumerable<IEnumerable<int>>>
     {
+        public const int MIN_LEVEL = 0, MAX_LEVEL = 6, RATIO_PROGRESS_PER_LEVEL = 2;
+        public const int MIN_PROGRESS = 0, MAX_PROGRESS = RATIO_PROGRESS_PER_LEVEL * MAX_LEVEL * (MAX_LEVEL + 1) >> 1;
+
         private readonly IReadOnlyList<Perk>[] _perks = new IReadOnlyList<Perk>[TypePerksId.Count];
-        private readonly RInt[] _levels = new RInt[TypePerksId.Count];
+        private readonly RInt[] _progress = new RInt[TypePerksId.Count];
         private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[TypePerksId.Count];
         private readonly Subscriber<Perk> _eventPerk = new();
         private readonly Subscriber<IEnumerable<IEnumerable<int>>> _eventHashSet = new();
 
-        public IReactiveValue<int> EconomicLevel => _levels[TypePerksId.Economic];
-        public IReactiveValue<int> MilitaryLevel => _levels[TypePerksId.Military];
-
-        public ISubscriber<IEnumerable<IEnumerable<int>>> LearnedPerks => _eventHashSet;
+        public IReactiveValue<int> EconomicProgress => _progress[TypePerksId.Economic];
+        public IReactiveValue<int> MilitaryProgress => _progress[TypePerksId.Military];
 
         private PerkTree(EconomicPerksScriptable economicPerks, MilitaryPerksScriptable militaryPerks)
         {
             _perks[TypePerksId.Economic] = economicPerks.Perks;
             _perks[TypePerksId.Military] = militaryPerks.Perks;
 
-            for (int i = 0; i < TypePerksId.Count; i++)
+            for (int t = 0; t < TypePerksId.Count; t++)
             {
-                _learnedPerks[i] = new();
-                _levels[i] = new();
+                _learnedPerks[t] = new();
+                _progress[t] = new(MIN_PROGRESS);
             }
         }
 
@@ -37,10 +37,14 @@ namespace Vurbiri.Colonization.Characteristics
             _perks[TypePerksId.Economic] = economicPerks.Perks;
             _perks[TypePerksId.Military] = militaryPerks.Perks;
 
-            for (int i = 0; i < TypePerksId.Count; i++)
+            for (int t = 0, progress = 0; t < TypePerksId.Count; t++, progress = 0)
             {
-                _learnedPerks[i] = new(perks[i]);
-                _levels[i] = new(LevelCalc(_learnedPerks[i]));
+                _learnedPerks[t] = new(perks[t]);
+
+                for (int i = perks[t].Length - 1; i >= 0; i--)
+                    progress += _perks[t][i].Cost;
+
+                _progress[t] = new(Math.Min(progress, MAX_PROGRESS));
             }
         }
 
@@ -62,17 +66,16 @@ namespace Vurbiri.Colonization.Characteristics
 
         public bool TryAdd(int typePerk, int idPerk, out int cost)
         {
-            HashSet<int> perks = _learnedPerks[typePerk];
-
-            if (!perks.Add(idPerk))
+            if (!_learnedPerks[typePerk].Add(idPerk))
             {
                 cost = 0; return false;
             }
-
-            _levels[typePerk].Value = LevelCalc(perks);
-
+            
             Perk perk = _perks[typePerk][idPerk];
             cost = perk.Cost;
+
+            if(_progress[typePerk] < MAX_PROGRESS)
+                _progress[typePerk].Value = Math.Min(_progress[typePerk] + cost, MAX_PROGRESS);
 
             _eventPerk.Invoke(perk);
             _eventHashSet.Invoke(_learnedPerks);
@@ -84,10 +87,7 @@ namespace Vurbiri.Colonization.Characteristics
             _eventPerk.Dispose();
             _eventHashSet.Dispose();
             for (int i = 0; i < TypePerksId.Count; i++)
-                _levels[i].Dispose();
+                _progress[i].Dispose();
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int LevelCalc(HashSet<int> perks) => (perks.Count + 1) >> 1;
     }
 }

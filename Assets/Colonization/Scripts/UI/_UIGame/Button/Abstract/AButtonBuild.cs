@@ -1,8 +1,8 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\Abstract\AButtonBuild.cs
+using System;
 using System.Globalization;
 using System.Text;
 using UnityEngine;
-using UnityEngine.Events;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
 
         public Vector3 LocalPosition { set => _thisTransform.localPosition = value; }
 
-        protected virtual void Init(Vector3 localPosition, ButtonSettings settings, UnityAction action)
+        protected virtual void Init(Vector3 localPosition, ButtonSettings settings, Action action)
         {
             base.Init(localPosition, settings.hint, action, true);
 

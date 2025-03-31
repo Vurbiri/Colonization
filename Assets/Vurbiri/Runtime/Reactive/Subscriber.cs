@@ -6,12 +6,12 @@ namespace Vurbiri.Reactive
 {
     public class Subscriber : ISubscriber, IDisposable
     {
-        private Action actions;
+        protected Action actions;
 
         public Unsubscriber Add(Action action)
         {
             Errors.ThrowIfNull(action);
-
+            
             actions -= action;
             actions += action;
             return new Unsubscriber<Action>(this, action);
@@ -27,7 +27,7 @@ namespace Vurbiri.Reactive
 
     public class Subscriber<T> : ISubscriber<T>, IDisposable
     {
-        private Action<T> actions;
+        protected Action<T> actions;
 
         public Unsubscriber Add(Action<T> action)
         {
@@ -98,7 +98,7 @@ namespace Vurbiri.Reactive
     //=======================================================================================
     public class Subscriber<TA, TB> : ISubscriber<TA, TB>, IDisposable
     {
-        private Action<TA, TB> actions;
+        protected Action<TA, TB> actions;
 
         public Unsubscriber Add(Action<TA, TB> action)
         {
@@ -129,7 +129,7 @@ namespace Vurbiri.Reactive
     //=======================================================================================
     public class Subscriber<TA, TB, TC> : ISubscriber<TA, TB, TC>, IDisposable
     {
-        private Action<TA, TB, TC> actions;
+        protected Action<TA, TB, TC> actions;
 
         public Unsubscriber Add(Action<TA, TB, TC> action)
         {
@@ -160,7 +160,7 @@ namespace Vurbiri.Reactive
     //=======================================================================================
     public class Subscriber<TA, TB, TC, TD> : ISubscriber<TA, TB, TC, TD>, IDisposable
     {
-        private Action<TA, TB, TC, TD> actions;
+        protected Action<TA, TB, TC, TD> actions;
 
         public Unsubscriber Add(Action<TA, TB, TC, TD> action)
         {

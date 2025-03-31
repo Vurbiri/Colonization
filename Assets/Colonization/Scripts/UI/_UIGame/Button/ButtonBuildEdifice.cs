@@ -1,15 +1,14 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonBuildEdifice.cs
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 using Vurbiri.Collections;
 using Vurbiri.TextLocalization;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    [RequireComponent(typeof(CmButton))]
+    //[RequireComponent(typeof(VButton))]
     sealed public class ButtonBuildEdifice : AButtonBuild
     {
         [Space]
@@ -21,7 +20,7 @@ namespace Vurbiri.Colonization.UI
         private IReadOnlyList<ACurrencies> _edificePrices;
         private ACurrencies _cash;
 
-        public void Init(Vector3 localPosition, ButtonSettings settings, IReadOnlyList<ACurrencies> edificePrices, UnityAction action)
+        public void Init(Vector3 localPosition, ButtonSettings settings, IReadOnlyList<ACurrencies> edificePrices, Action action)
         {
             base.Init(localPosition, settings, action);
             _localization = SceneContainer.Get<Localization>();

@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\Localization\TextLocalization.cs
+//Assets\Vurbiri.UI\Runtime\Components\TextLocalization.cs
 using TMPro;
 using UnityEngine;
 using Vurbiri.Reactive;
@@ -9,9 +9,9 @@ namespace Vurbiri.UI
     [RequireComponent(typeof(TMP_Text))]
     public class TextLocalization : MonoBehaviour
     {
-        [SerializeField] protected TMP_Text _text;
         [SerializeField] protected Files _file;
 
+        protected TMP_Text _text;
         protected string _key;
         protected Unsubscriber _subscribe;
 
@@ -19,8 +19,7 @@ namespace Vurbiri.UI
 
         public void Setup(string key = null)
         {
-            if (_text == null)
-                _text = GetComponent<TMP_Text>();
+            _text = GetComponent<TMP_Text>();
 
             _key = string.IsNullOrEmpty(key) ? _text.text : key;
 
@@ -30,13 +29,5 @@ namespace Vurbiri.UI
         protected virtual void SetText(Localization localization) => _text.text = localization.GetText(_file, _key);
 
         private void OnDestroy() => _subscribe.Unsubscribe();
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if(_text == null)
-                _text = GetComponent<TMP_Text>();
-        }
-#endif
     }
 }

@@ -5,15 +5,13 @@ using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
 {
+    using static CurrencyId;
+
     sealed public class Currencies : ACurrenciesReactive
     {
         #region Constructions
-        private Currencies(IReadOnlyList<int> array,
-                           AAbility<HumanAbilityId> maxValueMain,
-                           AAbility<HumanAbilityId> maxValueBlood) : base(array, maxValueMain, maxValueBlood) { }
-        private Currencies(ACurrencies other,
-                           AAbility<HumanAbilityId> maxValueMain,
-                           AAbility<HumanAbilityId> maxValueBlood) : base(other, maxValueMain, maxValueBlood) { }
+        private Currencies(IReadOnlyList<int> array, Ability maxValueMain, Ability maxValueBlood) : base(array, maxValueMain, maxValueBlood) { }
+        private Currencies(ACurrencies other, Ability maxValueMain, Ability maxValueBlood) : base(other, maxValueMain, maxValueBlood) { }
         #endregion
 
         public static Currencies Create(AbilitiesSet<HumanAbilityId> abilities, PricesScriptable prices, HumanLoadData loadData)
@@ -38,7 +36,7 @@ namespace Vurbiri.Colonization
             if (value == 0)
                 return;
 
-            _values[CurrencyId.Blood].Add(value);
+            _values[Blood].Add(value);
             _subscriber.Invoke(this);
         }
 
@@ -47,7 +45,7 @@ namespace Vurbiri.Colonization
             if (other.Amount == 0)
                 return;
 
-            for (int i = 0; i < countAll; i++)
+            for (int i = 0; i < CountAll; i++)
                 _values[i].Add(other[i]);
 
             _amount.Add(other.Amount);
@@ -60,7 +58,7 @@ namespace Vurbiri.Colonization
                 return;
 
             int amount = _amount.Value;
-            for (int i = 0; i < countAll; i++)
+            for (int i = 0; i < CountAll; i++)
                 amount += _values[i].Add(-cost[i]);
 
             _amount.Value = amount;
@@ -76,7 +74,7 @@ namespace Vurbiri.Colonization
 
             int indexMax = 0, index;
             ACurrency max = _values[indexMax], temp;
-            for (index = 1; index < countMain; index++)
+            for (index = 1; index < CountMain; index++)
             {
                 temp = _values[index];
                 if (temp > max | (temp == max && Chance.Rolling()))
@@ -92,7 +90,7 @@ namespace Vurbiri.Colonization
                 amount += max.SilentDecrement();
                 do
                 {
-                    index = ++index % countMain;
+                    index = ++index % CountMain;
                     temp = _values[index];
                     if (temp > max)
                     {
@@ -104,7 +102,7 @@ namespace Vurbiri.Colonization
             } 
             while (amount > maxMain);
 
-            for (index = 0; index < countMain; index++)
+            for (index = 0; index < CountMain; index++)
                 _values[index].Signal();
 
             _amount.Value = amount;
@@ -113,7 +111,7 @@ namespace Vurbiri.Colonization
 
         public void Clear()
         {
-            for (int i = 0; i < countAll; i++)
+            for (int i = 0; i < CountAll; i++)
                 _values[i].Set(0);
 
             _amount.Value = 0;

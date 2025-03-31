@@ -13,12 +13,10 @@ namespace VurbiriEditor
         protected Rect _position;
         protected SerializedProperty _mainProperty;
         protected GUIContent _label;
-        protected float _height, _ySpace;
+        protected float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing, _ySpace = EditorGUIUtility.standardVerticalSpacing;
 
         sealed public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
         {
-            _ySpace = EditorGUIUtility.standardVerticalSpacing;
-            _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             position.height = EditorGUIUtility.singleLineHeight;
             
             _position = position;
@@ -39,6 +37,24 @@ namespace VurbiriEditor
         protected bool Foldout() => Foldout(_label);
         protected bool Foldout(GUIContent label) => _mainProperty.isExpanded = EditorGUI.Foldout(_position, _mainProperty.isExpanded, label);
 
+        //================================================================
+        #region Property
+        protected bool DrawProperty(bool includeChildren = false)
+        {
+            _position.y += _height;
+            return PropertyField(_position, _mainProperty, includeChildren);
+        }
+        protected bool DrawProperty(SerializedProperty property, bool includeChildren = false)
+        {
+            _position.y += _height;
+            return PropertyField(_position, property, includeChildren);
+        }
+        protected bool DrawProperty(string nameChildren, bool includeChildren = false)
+        {
+            _position.y += _height;
+            return PropertyField(_position, _mainProperty.FindPropertyRelative(nameChildren), includeChildren);
+        }
+        #endregion
         //================================================================
         #region Bool
         #region DrawBool

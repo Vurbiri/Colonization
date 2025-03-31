@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.Controllers
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
                     ""id"": ""fe46882b-b242-4758-9a5e-1cd6c492e90a"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.Controllers
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""5c8fe4e8-e96e-4102-9de9-33b8d76a1178"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false

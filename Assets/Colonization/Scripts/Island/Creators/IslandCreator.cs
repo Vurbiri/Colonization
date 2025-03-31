@@ -24,8 +24,8 @@ namespace Vurbiri.Colonization
 
         public IslandCreator Init(DIContainer diObjects, GameplayTriggerBus triggerBus)
         {
-            _hexagons   = diObjects.AddInstance<Hexagons>(new(_landInitData, triggerBus));
-            _crossroads = diObjects.AddInstance<Crossroads>(new(_crossroadsContainer, _edificePrefabs, triggerBus));
+            diObjects.AddInstance<Hexagons>(_hexagons = new(_landInitData, triggerBus));
+            diObjects.AddInstance<Crossroads>(_crossroads = new(_crossroadsContainer, _edificePrefabs, triggerBus));
 
             var shape = _psFog.shape;
             shape.radius = _ratioFogSize * MAX_CIRCLES;

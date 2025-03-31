@@ -6,10 +6,10 @@ namespace Vurbiri.Colonization.Characteristics
 {
     sealed public class SubAbility<TId> : AAbilitySettable<TId> where TId : AbilityId<TId>
     {
-        private readonly IAbility _restore;
+        private readonly Ability _restore;
         private readonly IdArray<TypeModifierId, Func<int, int>> _modifiers = new();
 
-        public SubAbility(AAbility<TId> self, IAbility max, IAbility restore) : base(self)
+        public SubAbility(AAbility<TId> self, Ability max, Ability restore) : base(self)
         {
             _modifiers[TypeModifierId.BasePercent] = OnBasePercent;
             _modifiers[TypeModifierId.Addition] = OnAddition;

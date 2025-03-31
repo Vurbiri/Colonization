@@ -53,7 +53,6 @@ namespace VurbiriEditor.Colonization.Characteristics
         private void IMGUIPerk<TId>(int id, SerializedProperty propertyPerk) 
             where TId : APerkId<TId>
         {
-            int minLevel = 0, minPosition = 0, minCost = 1, maxLevel = 6, maxPosition = 7, maxCost = 16;
             Type type = typeof(TId);
 
             serializedObject.Update();
@@ -67,8 +66,8 @@ namespace VurbiriEditor.Colonization.Characteristics
             int target = DrawId(P_TARGET_OBJ, typeof(TargetOfPerkId));
             
             Space();
-            DrawIntSlider(P_LEVEL, minLevel, maxLevel);
-            DrawIntSlider(P_COST, minCost, maxCost);
+            int level = DrawIntSlider(P_LEVEL, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
+            propertyPerk.FindPropertyRelative(P_COST).intValue = level + 1;
             
             Space();
             int ability = DrawId(P_TARGET_AB, target == TargetOfPerkId.Player ? typeof(HumanAbilityId) : typeof(ActorAbilityId));
@@ -76,7 +75,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             DrawId(P_TYPE_OP, typeof(TypeModifierId));
 
             Space();
-            DrawIntSlider(P_POS, minPosition, maxPosition);
+            DrawPosition(P_POS, level, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
             DrawDesc();
             SerializedProperty property = propertyPerk.FindPropertyRelative(P_SPRITE);
             property.objectReferenceValue = ObjectField(property.displayName, property.objectReferenceValue, typeof(Sprite), false);
@@ -95,6 +94,13 @@ namespace VurbiriEditor.Colonization.Characteristics
                 int value = Mathf.Clamp(property.intValue, min, max);
                 property.intValue = value = IntSlider(property.displayName, value, min, max);
                 return value;
+            }
+            //================================================================
+            void DrawPosition(string nameProperty, int level, int min, int max)
+            {
+                SerializedProperty property = propertyPerk.FindPropertyRelative(nameProperty);
+                int value = IntSlider(property.displayName, Mathf.Clamp(property.vector2IntValue.y, min, max), min, max);
+                property.vector2IntValue = new(level, value);            
             }
             //================================================================
             int DrawId(string nameProperty, Type t_field, bool isNone = false, int miss = -1)

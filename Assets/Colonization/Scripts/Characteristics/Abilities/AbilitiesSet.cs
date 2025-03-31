@@ -11,8 +11,8 @@ namespace Vurbiri.Colonization.Characteristics
     {
         private readonly IdArray<TId, AAbility<TId>> _abilities = new();
 
-        public AAbility<TId> this[int index] => _abilities[index];
-        public AAbility<TId> this[Id<TId> id] => _abilities[id];
+        public Ability this[int index] => _abilities[index];
+        public Ability this[Id<TId> id] => _abilities[id];
 
         public int Count => AbilityId<TId>.Count;
 
@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
         public BooleanAbility<TId> ReplaceToBoolean(Id<TId> id) => ReplaceTo(id, new BooleanAbility<TId>(_abilities[id]));
-        public ChanceAbility<TId> ReplaceToChance(Id<TId> id, IAbility ratioA, IAbility ratioB)
+        public ChanceAbility<TId> ReplaceToChance(Id<TId> id, Ability ratioA, Ability ratioB)
         {
             return ReplaceTo(id, new ChanceAbility<TId>(_abilities[id], ratioA, ratioB));
         }
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.Characteristics
         public int AddPerk(IPerk perk) => _abilities[perk.TargetAbility].AddModifier(perk);
         public int RemovePerk(IPerk perk) => _abilities[perk.TargetAbility].RemoveModifier(perk);
 
-        public IEnumerator<AAbility<TId>> GetEnumerator()
+        public IEnumerator<Ability> GetEnumerator()
         {
             for (int i = 0; i < AbilityId<TId>.Count; i++)
                 yield return _abilities[i];

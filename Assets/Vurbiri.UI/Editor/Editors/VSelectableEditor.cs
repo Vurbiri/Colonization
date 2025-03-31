@@ -12,8 +12,8 @@ using Vurbiri.UI;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(CmSelectable), true), CanEditMultipleObjects]
-    public class CmSelectableEditor : Editor
+    [CustomEditor(typeof(VSelectable), true), CanEditMultipleObjects]
+    public class VSelectableEditor : Editor
     {
         protected SerializedProperty _interactableIconProperty;
         protected SerializedProperty _alfaColliderProperty;
@@ -33,7 +33,7 @@ namespace VurbiriEditor.UI
         protected AnimBool m_ShowSpriteTrasition = new();
         protected AnimBool m_ShowAnimTransition = new();
 
-        protected static List<CmSelectableEditor> s_Editors = new();
+        protected static List<VSelectableEditor> s_Editors = new();
 
         protected static bool s_ShowNavigation = false;
 
@@ -141,6 +141,10 @@ namespace VurbiriEditor.UI
                     EditorGUILayout.PropertyField(_thresholdProperty);
                     EditorGUI.indentLevel--;
                 }
+            }
+            else
+            {
+                _alfaColliderProperty.boolValue = false;
             }
 
             if (_transition == Selectable.Transition.ColorTint)

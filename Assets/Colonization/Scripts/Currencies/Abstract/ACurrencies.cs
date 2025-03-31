@@ -4,12 +4,11 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Colonization
 {
+    using static CurrencyId;
+
     public abstract class ACurrencies : IReadOnlyList<int>
     {
-        protected const int countMain = CurrencyId.CountMain;
-        protected const int countAll = CurrencyId.CountAll;
-
-        public int Count => countAll;
+        public int Count => CountAll;
         public abstract int Amount { get ; }
 
         public abstract int this[int index] { get; }
@@ -24,20 +23,20 @@ namespace Vurbiri.Colonization
             if (left.Amount < right.Amount)
                 return false;
 
-            for (int i = 0; i < countMain; i++)
+            for (int i = 0; i < CountMain; i++)
                 if (left[i] < right[i])
                     return false;
             return true;
         }
         public static bool operator <=(ACurrencies left, ACurrencies right)
         {
-            for (int i = 0; i < countMain; i++)
+            for (int i = 0; i < CountMain; i++)
                 if (left[i] > right[i])
                     return false;
             return true;
         }
 
-        //public static bool operator >(ACurrencies left, ACurrencies right) => !(left <= right);
-        //public static bool operator <(ACurrencies left, ACurrencies right) => !(left >= right);
+        public static bool operator >(ACurrencies left, ACurrencies right) => !(left <= right);
+        public static bool operator <(ACurrencies left, ACurrencies right) => !(left >= right);
     }
 }

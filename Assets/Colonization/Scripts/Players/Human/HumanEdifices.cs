@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         protected class Edifices : IDisposable
         {
             private readonly AbilitiesSet<HumanAbilityId> _abilities;
-            private readonly AAbility<HumanAbilityId> _shrinePassiveProfit, _shrineProfit, _portsProfit, _compensationRes;
+            private readonly Ability _shrinePassiveProfit, _shrineProfit, _portsProfit, _compensationRes;
 
             public readonly IdArray<EdificeGroupId, ReactiveList<Crossroad>> edifices = new();
 

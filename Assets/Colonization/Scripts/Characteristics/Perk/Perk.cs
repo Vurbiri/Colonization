@@ -8,14 +8,14 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [SerializeField] private int _id;
         [SerializeField] private int _type;
-        [SerializeField] private int _level;
+        [SerializeField] private int _level = PerkTree.MIN_LEVEL;
         [SerializeField] private int _targetObject;
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _value;
         [SerializeField] private int _typeModifier;
-        [SerializeField] private int _cost = 1;
+        [SerializeField] private int _cost = PerkTree.MIN_LEVEL + 1;
 
-        [SerializeField] private int _position;
+        [SerializeField] private Vector2Int _position;
         [SerializeField] private string _keyDescription;
         [SerializeField] private Sprite _sprite;
 
@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.Characteristics
         public Id<TypeModifierId> TypeModifier => _typeModifier;
         public int Cost => _cost;
 
-        public int Position => _position;
+        public Vector2Int Position => _position;
         public string KeyDescription => _keyDescription;
         public Sprite Sprite => _sprite;
     }

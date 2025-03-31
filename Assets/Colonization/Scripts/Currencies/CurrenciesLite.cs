@@ -6,10 +6,12 @@ using Random = UnityEngine.Random;
 
 namespace Vurbiri.Colonization
 {
+    using static CurrencyId;
+
     [Serializable]
     sealed public class CurrenciesLite : ACurrencies
     {
-        [SerializeField] private int[] _values = new int[CurrencyId.CountAll];
+        [SerializeField] private int[] _values = new int[CountAll];
         [SerializeField] private int _amount = 0;
 
         public override int Amount { get => _amount;}
@@ -21,7 +23,7 @@ namespace Vurbiri.Colonization
         public CurrenciesLite(int[] array)
         {
             int value;
-            for (int i = 0; i < countAll; i++)
+            for (int i = 0; i < CountAll; i++)
             {
                 value = array[i];
                 _values[i] = value;
@@ -37,9 +39,8 @@ namespace Vurbiri.Colonization
 
         public void Set(int index, int value)
         {
-            int temp = _values[index];
+            _amount += value - _values[index];
             _values[index] = value;
-            _amount += value - temp;
         }
 
         public void Add(int index, int value)
@@ -53,7 +54,7 @@ namespace Vurbiri.Colonization
             if (other._amount == 0)
                 return;
 
-            for (int i = 0; i < countAll; i++)
+            for (int i = 0; i < CountAll; i++)
                 _values[i] += other._values[i];
             _amount += other._amount;
         }
@@ -63,7 +64,7 @@ namespace Vurbiri.Colonization
             if (_amount == 0)
                 return;
 
-            for (int i = 0; i < countMain; i++)
+            for (int i = 0; i < CountMain; i++)
                 _values[i] *= ratio;
 
             _amount *= ratio;
@@ -71,13 +72,13 @@ namespace Vurbiri.Colonization
 
         public void RandomMainAdd(int value)
         {
-            _values[Random.Range(0, countMain)] += value;
+            _values[Random.Range(0, CountMain)] += value;
             _amount += value;
         }
 
         public override IEnumerator<int> GetEnumerator()
         {
-            for (int i = 0; i < countAll; i++)
+            for (int i = 0; i < CountAll; i++)
                 yield return _values[i];
         }
 
@@ -88,7 +89,7 @@ namespace Vurbiri.Colonization
             if (a._amount == 0) return b;
             if (b._amount == 0) return a;
 
-            for (int i = 0; i < countAll; i++)
+            for (int i = 0; i < CountAll; i++)
                 a._values[i] += b._values[i];
             a._amount += b._amount;
 

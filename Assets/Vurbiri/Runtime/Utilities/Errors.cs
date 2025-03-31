@@ -28,6 +28,17 @@ namespace Vurbiri
                 ArgumentOutOfRange($"{value} < {minInclude}");
         }
 
+        public static void ThrowIfZero(int value)
+        {
+            if (value == 0)
+                ArgumentOutOfRange($"{value} == 0");
+        }
+        public static void ThrowIfLessZero(int value)
+        {
+            if (value < 0)
+                ArgumentOutOfRange($"{value} < 0");
+        }
+
         public static void ThrowIfOutOfRange<T>(T value, T minInclude, T maxExclude) where T : IComparable<T>
         {
             if (value.CompareTo(minInclude) < 0 | value.CompareTo(maxExclude) >= 0)

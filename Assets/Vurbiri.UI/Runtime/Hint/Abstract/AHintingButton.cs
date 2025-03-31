@@ -1,6 +1,6 @@
 //Assets\Vurbiri.UI\Runtime\Hint\Abstract\AHintingButton.cs
+using System;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
@@ -13,25 +13,25 @@ namespace Vurbiri.UI
         protected Vector3 _offsetHint;
         protected GameObject _thisGO;
         protected Transform _thisTransform;
-        protected CmButton _button;
+        protected VButton _button;
         protected string _text;
 
-        protected virtual void Init(Vector3 localPosition, HintGlobal hint, UnityAction action, bool active)
+        protected virtual void Init(Vector3 localPosition, HintGlobal hint, Action action, bool active)
         {
             transform.localPosition = localPosition;
 
             Init(hint, action, active);
         }
 
-        protected virtual void Init(HintGlobal hint, UnityAction action, bool active)
+        protected virtual void Init(HintGlobal hint, Action action, bool active)
         {
             _hint = hint;
 
             _thisGO = gameObject;
             _thisTransform = transform;
 
-            _button = GetComponent<CmButton>();
-            _button.onClick.AddListener(action);
+            _button = GetComponent<VButton>();
+            _button.AddListener(action);
 
             float offset = GetComponent<RectTransform>().sizeDelta.y / 1.9f;
             _offsetHint = new( 0f, offset, 0f);

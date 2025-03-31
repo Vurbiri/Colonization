@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonBuild.cs
+using System;
 using UnityEngine;
-using UnityEngine.Events;
 using Vurbiri.Reactive;
 using Vurbiri.TextLocalization;
 
@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
         private Unsubscriber _unsubscriber;
         private string _caption;
 
-        public void Init(Vector3 localPosition, ButtonSettings settings, ACurrencies cost, UnityAction action)
+        public void Init(Vector3 localPosition, ButtonSettings settings, ACurrencies cost, Action action)
         {
             base.Init(localPosition, settings, action);
             _cost = cost;

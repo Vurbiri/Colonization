@@ -86,7 +86,7 @@ namespace Vurbiri.Colonization
             storage.LoadData = null;
         }
 
-        public IAbility GetAbility(Id<HumanAbilityId> id) => _abilities[id];
+        public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
 
         public void EndTurn()
         {

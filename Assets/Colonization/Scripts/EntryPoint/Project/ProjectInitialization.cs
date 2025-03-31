@@ -41,8 +41,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             _coroutine = diContainer.AddInstance(Coroutines.Create("Project Coroutine", true));
 
-            _ysdk = diContainer.AddInstance(new YandexSDK(_coroutine, _leaderboardName));
-            yield return _ysdk.Init_Cn();
+            yield return diContainer.AddInstance(_ysdk = new YandexSDK(_coroutine, _leaderboardName)).Init_Cn();
 
             diContainer.AddInstance(_settings);
             diContainer.AddInstance(_settingsColorScriptable.Colors);
