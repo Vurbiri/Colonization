@@ -10,13 +10,13 @@ namespace Vurbiri.Colonization.Actors
 
     public abstract partial class Actor
     {
-        public virtual void AddMoveState(float speed) => _stateMachine.AddState(new MoveState(speed, this));
-        public virtual void AddBlockState(int cost, int value) => _stateMachine.AddState(_blockState = BlockState.Create(_owner, cost, value, this));
-        public virtual void AddSkillState(IReadOnlyList<HitEffects> effects, SkillSettings skill, float speedRun, int id)
+        public void AddMoveState(float speed) => _stateMachine.AddState(new MoveState(speed, this));
+        public void AddBlockState(int cost, int value) => _stateMachine.AddState(_blockState = new BlockState(cost, value, this));
+        public void AddSkillState(IReadOnlyList<HitEffects> effects, SkillSettings skill, float speedRun, int id)
         {
             _stateMachine.AddState(ASkillState.Create(effects, skill, speedRun, id, this));
         }
-        public virtual HitEffects[] AddSkillState(SkillSettings skill, float speedRun, int id)
+        public HitEffects[] AddSkillState(SkillSettings skill, float speedRun, int id)
         {
             HitEffects[] effects = skill.CreateEffectsHit(this, id);
             _stateMachine.AddState(ASkillState.Create(effects, skill, speedRun, id, this));

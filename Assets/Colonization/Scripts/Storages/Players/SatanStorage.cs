@@ -21,9 +21,9 @@ namespace Vurbiri.Colonization.Storage
             else        LoadData = new(state);
         }
 
-        public void StateBind(IReactive<Satan> reactive, bool calling)
+        public void StateBind(IReactive<Satan> reactive, bool sendCallback)
         {
-            _unsubscribers += reactive.Subscribe(satan => _storage.Set(P_SATAN, satan), calling);
+            _unsubscribers += reactive.Subscribe(satan => _storage.Set(P_SATAN, satan), sendCallback);
         }
 
         protected override string GetNewKey(int index)

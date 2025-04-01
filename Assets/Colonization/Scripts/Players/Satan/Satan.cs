@@ -83,7 +83,7 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public Unsubscriber Subscribe(Action<Satan> action, bool calling) => _eventSelf.Add(action, calling, this);
+        public Unsubscriber Subscribe(Action<Satan> action, bool sendCallback) => _eventSelf.Add(action, sendCallback, this);
 
         public void EndTurn()
         {
@@ -144,14 +144,7 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            _level.Dispose();
-            _curse.Dispose();
-            _balance.Dispose();
             _unsubscribers.Unsubscribe();
-            _eventSelf.Dispose();
-            _eventWin.Dispose();
-            _leveling.Dispose();
-            _artefact.Dispose();
             _demons.Dispose();
         }
     }

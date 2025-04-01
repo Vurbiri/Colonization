@@ -12,12 +12,7 @@ namespace Vurbiri.Colonization.Characteristics
         public int Value => _value;
         public bool IsValue => _value > 0;
 
-        public Unsubscriber Subscribe(Action<int> action, bool calling = true) => _subscriber.Add(action, calling, _value);
-
-        public void Dispose()
-        {
-            _subscriber.Dispose();
-        }
+        public Unsubscriber Subscribe(Action<int> action, bool sendCallback = true) => _subscriber.Add(action, sendCallback, _value);
 
         public static implicit operator int(Ability ability) => ability._value;
         public static implicit operator bool(Ability ability) => ability._value > 0;

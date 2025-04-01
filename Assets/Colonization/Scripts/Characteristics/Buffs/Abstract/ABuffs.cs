@@ -9,21 +9,12 @@ namespace Vurbiri.Colonization.Characteristics
         protected readonly Subscriber<IPerk> _subscriber = new();
         protected T[] _buffs;
 
-        public Unsubscriber Subscribe(Action<IPerk> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<IPerk> action, bool sendCallback = true)
         {
-            if (calling)
-            {
-                for (int i = 0; i < _buffs.Length; i++)
-                    action(_buffs[i].Current);
-            }
+            for (int i = 0; sendCallback & i < _buffs.Length; i++)
+                action(_buffs[i].Current);
 
             return _subscriber.Add(action);
-        }
-
-        public void Dispose()
-        {
-            _subscriber.Dispose();
-            _buffs = null;
         }
     }
 }

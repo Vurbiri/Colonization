@@ -55,14 +55,14 @@ namespace Vurbiri.Colonization.Characteristics
             return new(settings.economicPerks, settings.militaryPerks);
         }
 
-        public Unsubscriber Subscribe(Action<Perk> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<Perk> action, bool sendCallback = true)
         {
-            for (int type = 0; calling & type < TypePerksId.Count; type++)
+            for (int type = 0; sendCallback & type < TypePerksId.Count; type++)
                 foreach (int id in _learnedPerks[type]) action(_perks[type][id]);
 
             return _eventPerk.Add(action);
         }
-        public Unsubscriber Subscribe(Action<IEnumerable<IEnumerable<int>>> action, bool calling = true) => _eventHashSet.Add(action, calling, _learnedPerks);
+        public Unsubscriber Subscribe(Action<IEnumerable<IEnumerable<int>>> action, bool sendCallback = true) => _eventHashSet.Add(action, sendCallback, _learnedPerks);
 
         public bool TryAdd(int typePerk, int idPerk, out int cost)
         {
@@ -80,14 +80,6 @@ namespace Vurbiri.Colonization.Characteristics
             _eventPerk.Invoke(perk);
             _eventHashSet.Invoke(_learnedPerks);
             return true;
-        }
-
-        public void Dispose()
-        {
-            _eventPerk.Dispose();
-            _eventHashSet.Dispose();
-            for (int i = 0; i < TypePerksId.Count; i++)
-                _progress[i].Dispose();
         }
     }
 }

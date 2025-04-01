@@ -25,7 +25,7 @@ namespace Vurbiri.Reactive
 
         public ARType(T value) => _value = value;
 
-        public Unsubscriber Subscribe(Action<T> action, bool calling = true) => _subscriber.Add(action, calling, _value);
+        public Unsubscriber Subscribe(Action<T> action, bool sendCallback = true) => _subscriber.Add(action, sendCallback, _value);
         public void Signal() => _subscriber.Invoke(_value);
 
         public bool Equals(T other) => _value.Equals(other);
@@ -43,8 +43,6 @@ namespace Vurbiri.Reactive
         }
 
         public override int GetHashCode() => _value.GetHashCode();
-
-        public void Dispose() => _subscriber.Dispose();
 
         #region Comparison operator
         public static bool operator ==(ARType<T> a, ARType<T> b) => ReferenceEquals(a, b) || ((a is not null & b is not null) && a._value.Equals(b._value));

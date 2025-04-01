@@ -68,25 +68,15 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Reactive
-        public Unsubscriber Subscribe(Action<ACurrencies> action, bool calling = true) => _subscriber.Add(action, calling, this);
-        public Unsubscriber Subscribe(int index, Action<int> action, bool calling = true) => _values[index].Subscribe(action, calling);
-        public Unsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool calling = true) => _values[id.Value].Subscribe(action, calling);
+        public Unsubscriber Subscribe(Action<ACurrencies> action, bool sendCallback = true) => _subscriber.Add(action, sendCallback, this);
+        public Unsubscriber Subscribe(int index, Action<int> action, bool sendCallback = true) => _values[index].Subscribe(action, sendCallback);
+        public Unsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool sendCallback = true) => _values[id.Value].Subscribe(action, sendCallback);
         #endregion
 
         public override IEnumerator<int> GetEnumerator()
         {
             for (int i = 0; i < CountAll; i++)
                 yield return _values[i].Value;
-        }
-
-        public void Dispose()
-        {
-            _amount.Dispose();
-            _subscriber.Dispose();
-            for (int i = 0; i < CountAll; i++)
-                _values[i].Dispose();
-
-            _values = null;
         }
 
         #region Nested: ACurrency, CurrencyMain, CurrencyBlood

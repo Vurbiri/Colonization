@@ -9,6 +9,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.UI;
+using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
@@ -32,6 +33,8 @@ namespace VurbiriEditor.UI
         protected AnimBool m_ShowColorTint = new();
         protected AnimBool m_ShowSpriteTrasition = new();
         protected AnimBool m_ShowAnimTransition = new();
+        protected AnimBool _showAlfaCollider = new();
+        protected AnimBool _showThreshold = new();
 
         protected static List<VSelectableEditor> s_Editors = new();
 
@@ -93,12 +96,17 @@ namespace VurbiriEditor.UI
             CustomStartPropertiesGUI();
             BeginPropertiesGUI();
             GraphicsPropertiesGUI();
+            CustomMiddlePropertiesGUI();
             GroupBlocksPropertiesGUI();
             NavigationPropertiesGUI();
             CustomEndPropertiesGUI();
             serializedObject.ApplyModifiedProperties();
         }
         protected virtual void CustomStartPropertiesGUI()
+        {
+
+        }
+        protected virtual void CustomMiddlePropertiesGUI()
         {
 
         }
@@ -109,84 +117,85 @@ namespace VurbiriEditor.UI
 
         protected void BeginPropertiesGUI()
         {
-            EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(m_InteractableProperty);
-            EditorGUILayout.PropertyField(_interactableIconProperty);
-            GameObject go = _interactableIconProperty.objectReferenceValue as GameObject;
-            if (go != null)
-                go.SetActive(!m_InteractableProperty.boolValue);
-            EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(m_TransitionProperty);
-            EditorGUI.indentLevel++;
+            Space();
+            PropertyField(m_InteractableProperty);
+            PropertyField(_interactableIconProperty);
+            Space();
+            
         }
 
         protected virtual void GraphicsPropertiesGUI()
         {
-            if (_targetGraphicsProperty.arraySize == 0)
-                _targetGraphicsProperty.InsertArrayElementAtIndex(0);
-
-            if (_targetGraphicsProperty.GetArrayElementAtIndex(0).objectReferenceValue == null)
-                _targetGraphicsProperty.GetArrayElementAtIndex(0).objectReferenceValue = (target as Selectable).GetComponent<Graphic>();
-
             Graphic graphic = _targetGraphicsProperty.GetArrayElementAtIndex(0).objectReferenceValue as Graphic;
             Image image = graphic as Image;
 
-            if (_transition != Selectable.Transition.Animation && image != null && image.sprite != null && image.sprite.texture.isReadable)
+            _showAlfaCollider.target = _transition != Selectable.Transition.Animation && image != null && image.sprite != null && image.sprite.texture.isReadable;
+
+
+            if (BeginFadeGroup(_showAlfaCollider.faded))
             {
-                EditorGUILayout.Space();
-                EditorGUILayout.PropertyField(_alfaColliderProperty);
-                if (_alfaColliderProperty.boolValue)
+                Space();
+                PropertyField(_alfaColliderProperty);
+                _showThreshold.target = _alfaColliderProperty.boolValue;
+                if (BeginFadeGroup(_showThreshold.faded))
                 {
                     EditorGUI.indentLevel++;
-                    EditorGUILayout.PropertyField(_thresholdProperty);
+                    PropertyField(_thresholdProperty);
                     EditorGUI.indentLevel--;
                 }
+                EndFadeGroup();
+                Space();
             }
             else
             {
                 _alfaColliderProperty.boolValue = false;
             }
+            EndFadeGroup();
 
             if (_transition == Selectable.Transition.ColorTint)
             {
-                EditorGUILayout.PropertyField(_targetGraphicsProperty);
+                PropertyField(_targetGraphicsProperty);
                 if (graphic == null)
-                    EditorGUILayout.HelpBox("You must have a Graphic target in order to use a color transition.", UnityEditor.MessageType.Warning);
+                    HelpBox("You must have a Graphic target in order to use a color transition.", UnityEditor.MessageType.Warning);
             }
             else if (_transition == Selectable.Transition.SpriteSwap)
             {
-                EditorGUILayout.PropertyField(_targetGraphicsProperty.GetArrayElementAtIndex(0), new GUIContent("Target Graphic"));
+                PropertyField(_targetGraphicsProperty.GetArrayElementAtIndex(0), new GUIContent("Target Graphic"));
                 if (image == null)
-                    EditorGUILayout.HelpBox("You must have a Image target in order to use a sprite swap transition.", UnityEditor.MessageType.Warning);
+                    HelpBox("You must have a Image target in order to use a sprite swap transition.", UnityEditor.MessageType.Warning);
             }
-            EditorGUILayout.Space();
+            Space();
         }
 
         protected void GroupBlocksPropertiesGUI()
         {
+            EditorGUI.indentLevel++;
+
+            PropertyField(m_TransitionProperty);
+
             Animator animator = (target as Selectable).GetComponent<Animator>();
             m_ShowColorTint.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.ColorTint;
             m_ShowSpriteTrasition.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.SpriteSwap;
             m_ShowAnimTransition.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.Animation;
 
-            if (EditorGUILayout.BeginFadeGroup(m_ShowColorTint.faded))
+            if (BeginFadeGroup(m_ShowColorTint.faded))
             {
-                EditorGUILayout.PropertyField(m_ColorBlockProperty);
+                PropertyField(m_ColorBlockProperty);
             }
-            EditorGUILayout.EndFadeGroup();
+            EndFadeGroup();
 
-            if (EditorGUILayout.BeginFadeGroup(m_ShowSpriteTrasition.faded))
+            if (BeginFadeGroup(m_ShowSpriteTrasition.faded))
             {
-                EditorGUILayout.PropertyField(m_SpriteStateProperty);
+                PropertyField(m_SpriteStateProperty);
             }
-            EditorGUILayout.EndFadeGroup();
+            EndFadeGroup();
 
-            if (EditorGUILayout.BeginFadeGroup(m_ShowAnimTransition.faded))
+            if (BeginFadeGroup(m_ShowAnimTransition.faded))
             {
-                EditorGUILayout.PropertyField(m_AnimTriggerProperty);
+                PropertyField(m_AnimTriggerProperty);
                 if (animator == null || animator.runtimeAnimatorController == null)
                 {
-                    Rect controlRect = EditorGUILayout.GetControlRect();
+                    Rect controlRect = GetControlRect();
                     controlRect.xMin += EditorGUIUtility.labelWidth;
                     if (GUI.Button(controlRect, "Auto Generate Animation", EditorStyles.miniButton))
                     {
@@ -203,16 +212,17 @@ namespace VurbiriEditor.UI
                     }
                 }
             }
-            EditorGUILayout.EndFadeGroup();
+            EndFadeGroup();
+
+            EditorGUI.indentLevel--;
         }
 
         protected void NavigationPropertiesGUI()
         {
-            EditorGUI.indentLevel--;
-            EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(m_NavigationProperty);
+            Space();
+            PropertyField(m_NavigationProperty);
             EditorGUI.BeginChangeCheck();
-            Rect controlRect2 = EditorGUILayout.GetControlRect();
+            Rect controlRect2 = GetControlRect();
             controlRect2.xMin += EditorGUIUtility.labelWidth;
             s_ShowNavigation = GUI.Toggle(controlRect2, s_ShowNavigation, m_VisualizeNavigation, EditorStyles.miniButton);
             if (EditorGUI.EndChangeCheck())

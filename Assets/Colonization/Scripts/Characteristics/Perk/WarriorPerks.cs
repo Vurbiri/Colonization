@@ -9,21 +9,21 @@ namespace Vurbiri.Colonization.Characteristics
 	{
 		private readonly List<Perk> _perks = new();
         private readonly Subscriber<IPerk> _subscriber = new();
+        private readonly Unsubscriber _unsubscriber;
 
-		public WarriorPerks(IReactive<Perk> perks) => perks.Subscribe(OnPerks);
+        public WarriorPerks(IReactive<Perk> perks) => _unsubscriber = perks.Subscribe(OnPerks);
 
-        public Unsubscriber Subscribe(Action<IPerk> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<IPerk> action, bool sendCallback = true)
         {
-            for(int i = _perks.Count - 1; calling & i >= 0; i--)
+            for(int i = _perks.Count - 1; sendCallback & i >= 0; i--)
                 action(_perks[i]);
 
             return _subscriber.Add(action);
         }
 
-
         public void Dispose()
         {
-            _subscriber.Dispose();
+            _unsubscriber.Unsubscribe();
         }
 
         private void OnPerks(Perk perk)

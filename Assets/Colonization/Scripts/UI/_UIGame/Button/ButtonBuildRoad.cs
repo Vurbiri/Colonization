@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
             }
 
             Setup(crossroad);
-            _button.Interactable = _cash >= _cost;
+            _button.interactable = _cash >= _cost;
 
             _thisGO.SetActive(true);
             return true;

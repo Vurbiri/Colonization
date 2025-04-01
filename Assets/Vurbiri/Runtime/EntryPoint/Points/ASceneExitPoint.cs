@@ -9,9 +9,9 @@ namespace Vurbiri.EntryPoint
         private static ASceneExitPoint _instance;
 
         private readonly SceneContainer _sceneContainer;
-        private readonly Subscriber<ExitParam> _exit = new();
+        private readonly Subscriber<ExitParam> _eventExit = new();
         
-        public ISubscriber<ExitParam> EventExit => _exit;
+        public ISubscriber<ExitParam> EventExit => _eventExit;
 
         public ASceneExitPoint(SceneContainer sceneContainer)
         {
@@ -26,10 +26,9 @@ namespace Vurbiri.EntryPoint
         private void ExitCallback(ExitParam param)
         {
             _sceneContainer.Dispose();
-            _exit.Invoke(param);
+            _eventExit.Invoke(param);
 
             _instance = null;
-            _exit.Dispose();
         }
     }
 }

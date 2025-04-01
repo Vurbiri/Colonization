@@ -43,7 +43,7 @@ namespace Vurbiri.TextLocalization
         public Localization(bool[] loadFiles) : this() => SetFiles(loadFiles);
 #endif
 
-        public Unsubscriber Subscribe(Action<Localization> action, bool calling = true) => _subscriber.Add(action, calling, this);
+        public Unsubscriber Subscribe(Action<Localization> action, bool sendCallback = true) => _subscriber.Add(action, sendCallback, this);
 
         public bool TryIdFromCode(string code, out int id)
         {
@@ -135,11 +135,6 @@ namespace Vurbiri.TextLocalization
         public string GetTextFormat(Files file, string key, object arg0, object arg1, object arg2) => string.Format(GetText(idFile: (int)file, key), arg0, arg1, arg2);
         public string GetTextFormat(Files file, string key, object arg0, object arg1) => string.Format(GetText(idFile: (int)file, key), arg0, arg1);
         public string GetTextFormat(Files file, string key, object arg0) => string.Format(GetText(idFile: (int)file, key), arg0);
-
-        public void Dispose()
-        {
-            _subscriber.Dispose();
-        }
 
         private bool SetLanguage(LanguageType type)
         {

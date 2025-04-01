@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.UI
                 return;
             }
             
-            _button.Interactable = _cash >= _cost;
+            _button.interactable = _cash >= _cost;
 
             SetTextHint(_caption, _cash, _cost);
 

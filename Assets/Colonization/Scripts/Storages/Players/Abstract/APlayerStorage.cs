@@ -50,9 +50,9 @@ namespace Vurbiri.Colonization.Storage
             //==============================
             #endregion
         }
-        public void ArtefactBind(IReactive<IReadOnlyList<int>> currencies, bool calling)
+        public void ArtefactBind(IReactive<IReadOnlyList<int>> currencies, bool sendCallback)
         {
-            _unsubscribers += currencies.Subscribe(value => _storage.Set(_keyArtefact, value), calling);
+            _unsubscribers += currencies.Subscribe(value => _storage.Set(_keyArtefact, value), sendCallback);
         }
 
         public void Dispose()

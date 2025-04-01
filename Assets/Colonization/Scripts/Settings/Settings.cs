@@ -6,7 +6,7 @@ using Vurbiri.Colonization.Storage;
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
-    public class Settings : IDisposable
+    public class Settings
     {
         [SerializeField] private Profile _profile = new();
         [SerializeField] private AudioMixer<MixerId> _mixer = new();
@@ -45,12 +45,6 @@ namespace Vurbiri.Colonization
         {
             _profile.Cancel();
             _mixer.Cancel();
-        }
-
-        public void Dispose()
-        {
-            _profile.Dispose();
-            _mixer.Dispose();
         }
 
 #if UNITY_EDITOR

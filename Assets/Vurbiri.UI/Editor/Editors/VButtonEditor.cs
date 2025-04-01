@@ -5,8 +5,8 @@ using Vurbiri.UI;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(VButton), true), CanEditMultipleObjects]
-    public class VButtonEditor : VSelectableEditor
+    [CustomEditor(typeof(VButton)), CanEditMultipleObjects]
+    sealed public class VButtonEditor : VSelectableEditor
     {
         private SerializedProperty _onClickProperty;
 
@@ -23,7 +23,7 @@ namespace VurbiriEditor.UI
             EditorGUILayout.Space();
         }
 
-        [MenuItem("GameObject/UI Vurbiri/Button", false, 77)]
+        [MenuItem("GameObject/UI Vurbiri/Button", false, 30)]
         public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromPrefab("VButton", "Button", command.context as GameObject);
 
     }

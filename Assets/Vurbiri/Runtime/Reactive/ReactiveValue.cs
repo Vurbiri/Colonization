@@ -47,11 +47,10 @@ namespace Vurbiri.Reactive
             _comparer = comparer;
         }
 
-        public Unsubscriber Subscribe(Action<T> action, bool calling = true) => _subscriber.Add(action, calling, _value);
+        public Unsubscriber Subscribe(Action<T> action, bool sendCallback = true) => _subscriber.Add(action, sendCallback, _value);
 
         public void Signal() => _subscriber.Invoke(_value);
 
-        public void Dispose() => _subscriber.Dispose();
 
         public static explicit operator ReactiveValue<T>(T value) => new(value);
         public static implicit operator T(ReactiveValue<T> value) => value._value;

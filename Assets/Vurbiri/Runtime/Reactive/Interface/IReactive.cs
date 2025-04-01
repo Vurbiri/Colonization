@@ -3,9 +3,9 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    public interface IReactiveBase<in TAction> : IDisposable where TAction : Delegate
+    public interface IReactiveBase<in TAction> where TAction : Delegate
     {
-        public Unsubscriber Subscribe(TAction action, bool calling = true);
+        public Unsubscriber Subscribe(TAction action, bool sendCallback = true);
     }
 
     public interface IReactive<out T> : IReactiveBase<Action<T>> {}

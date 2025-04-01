@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.UI
             _idSkill = idSkill;
 
             _iconImage.sprite = skillUI.Sprite;
-            _button.Interactable = isUse;
+            _button.interactable = isUse;
 
             _text = skillUI.GetText(isUse);
 

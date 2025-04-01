@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Roads : IReactive<Roads>, IDisposable
+    public partial class Roads : IReactive<Roads>
     {
         #region Fields
         private readonly Id<PlayerId> _id;
@@ -90,11 +90,6 @@ namespace Vurbiri.Colonization
             }
 
             _subscriber.Invoke(this);
-        }
-
-        public void Dispose()
-        {
-            _subscriber.Dispose();
         }
     }
 }

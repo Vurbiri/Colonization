@@ -56,7 +56,6 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnDestroy()
         {
-            _subscriber.Dispose();
             _unLanguage?.Unsubscribe();
             _unAction?.Unsubscribe();
         }

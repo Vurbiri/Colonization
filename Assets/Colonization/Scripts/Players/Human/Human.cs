@@ -74,13 +74,13 @@ namespace Vurbiri.Colonization
                 _edifices = new(_abilities);
             }
 
-            bool isNotLoaded = !loadData.isLoaded;
-            storage.CurrenciesBind(_resources, isNotLoaded);
-            storage.ExchangeBind(_exchange, isNotLoaded);
-            storage.PerksBind(_perks, isNotLoaded);
-            storage.RoadsBind(_roads, isNotLoaded);
-            storage.ArtefactBind(_artefact, isNotLoaded);
-            storage.EdificesBind(_edifices.edifices, isNotLoaded);
+            bool sendCallback = !loadData.isLoaded;
+            storage.CurrenciesBind(_resources, sendCallback);
+            storage.ExchangeBind(_exchange, sendCallback);
+            storage.PerksBind(_perks, sendCallback);
+            storage.RoadsBind(_roads, sendCallback);
+            storage.ArtefactBind(_artefact, sendCallback);
+            storage.EdificesBind(_edifices.edifices, sendCallback);
             storage.ActorsBind(_warriors);
 
             storage.LoadData = null;
@@ -135,14 +135,8 @@ namespace Vurbiri.Colonization
                 
         public void Dispose()
         {
-            _resources.Dispose();
-            _perks.Dispose();
             _exchange.Dispose();
-            _edifices.Dispose();
-            _roads.Dispose();
             _warriors.Dispose();
-            _artefact.Dispose();
-            _abilities.Dispose();
         }
     }
 }

@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\Players\Player\HumanEdifices.cs
-using System;
 using System.Collections.Generic;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
@@ -11,7 +10,7 @@ namespace Vurbiri.Colonization
 {
     public partial class Human
     {
-        protected class Edifices : IDisposable
+        protected class Edifices
         {
             private readonly AbilitiesSet<HumanAbilityId> _abilities;
             private readonly Ability _shrinePassiveProfit, _shrineProfit, _portsProfit, _compensationRes;
@@ -77,12 +76,6 @@ namespace Vurbiri.Colonization
                 }
 
                 return _abilities.IsGreater(nextGroup.ToState(), edifices[nextGroup].Count);
-            }
-
-            public void Dispose()
-            {
-                for (int i = edifices.Count - 1; i >= 0; i--)
-                    edifices[i].Dispose();
             }
 
             private void CreateEdifices(ReactiveList<Crossroad> values, List<EdificeLoadData> loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)

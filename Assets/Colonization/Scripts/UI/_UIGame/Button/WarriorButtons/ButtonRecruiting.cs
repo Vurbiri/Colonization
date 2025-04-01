@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
         public override void Setup(Crossroad crossroad)
         {
             base.Setup(crossroad);
-            _button.Interactable = _player.CanRecruiting(_id) && _cash >= _cost;
+            _button.interactable = _player.CanRecruiting(_id) && _cash >= _cost;
         }
 
         protected override void OnClick()

@@ -51,13 +51,13 @@ namespace Vurbiri.Colonization.Storage
         {
             _unsubscribers += reactive.Subscribe(hex => _storage.Set(hex.Key.ToSaveKey(), hex), false);
         }
-        public void DiplomacyBind(IReactive<IReadOnlyList<int>> reactive, bool calling)
+        public void DiplomacyBind(IReactive<IReadOnlyList<int>> reactive, bool sendCallback)
         {
-            _unsubscribers += reactive.Subscribe(diplomacy => _storage.Set(SAVE_KEYS.DIPLOMANCY, diplomacy), calling);
+            _unsubscribers += reactive.Subscribe(diplomacy => _storage.Set(SAVE_KEYS.DIPLOMANCY, diplomacy), sendCallback);
         }
-        public void TurnQueueBind(IReactive<TurnQueue> reactive, bool calling)
+        public void TurnQueueBind(IReactive<TurnQueue> reactive, bool sendCallback)
         {
-            _unsubscribers += reactive.Subscribe(turn => _storage.Set(SAVE_KEYS.TURNS_QUEUE, turn), calling);
+            _unsubscribers += reactive.Subscribe(turn => _storage.Set(SAVE_KEYS.TURNS_QUEUE, turn), sendCallback);
         }
         #endregion
 

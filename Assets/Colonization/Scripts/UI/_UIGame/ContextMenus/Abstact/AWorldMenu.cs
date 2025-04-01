@@ -20,8 +20,6 @@ namespace Vurbiri.Colonization.UI
 
         protected virtual void OnDisable() => _subscriber.Invoke(false);
 
-        protected virtual void OnDestroy() => _subscriber.Dispose();
-
         protected virtual void OnClose()
         {
             _thisGO.SetActive(false);

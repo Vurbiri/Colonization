@@ -19,16 +19,15 @@ namespace Vurbiri.Reactive
             _unsubscribers += reactiveB.Subscribe(value => _subscriber.Invoke(_valueA, _valueB = value), false);
         }
 
-        public Unsubscriber Subscribe(Action<TA, TB> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<TA, TB> action, bool sendCallback = true)
         {
-            if (calling) action(_valueA, _valueB);
+            if (sendCallback) action(_valueA, _valueB);
             return _subscriber.Add(action);
         }
 
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
-            _subscriber.Dispose();
         }
     }
     //=======================================================================================
@@ -65,16 +64,15 @@ namespace Vurbiri.Reactive
             _unsubscribers += reactiveC.Subscribe(value => _subscriber.Invoke(_valueA, _valueB, _valueC = value), false);
         }
 
-        public Unsubscriber Subscribe(Action<TA, TB, TC> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<TA, TB, TC> action, bool sendCallback = true)
         {
-            if (calling) action(_valueA, _valueB, _valueC);
+            if (sendCallback) action(_valueA, _valueB, _valueC);
             return _subscriber.Add(action);
         }
 
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
-            _subscriber.Dispose();
         }
     }
 

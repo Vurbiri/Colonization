@@ -109,9 +109,7 @@ namespace Vurbiri.Colonization
             _subscriber.Invoke(_values);
         }
 
-        public Unsubscriber Subscribe(Action<IReadOnlyList<int>> action, bool calling = true) => _subscriber.Add(action, calling, _values);
-
-        public void Dispose() => _subscriber.Dispose();
+        public Unsubscriber Subscribe(Action<IReadOnlyList<int>> action, bool sendCallback = true) => _subscriber.Add(action, sendCallback, _values);
 
         private void OnNextTurn(TurnQueue turn)
         {

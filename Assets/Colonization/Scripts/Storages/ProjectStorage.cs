@@ -22,16 +22,16 @@ namespace Vurbiri.Colonization.Storage
 
         public bool SetAndBindAudioMixer(AudioMixer<MixerId> mixer)
         {
-            bool calling = !_storage.TryPopulate<AudioMixer<MixerId>>(SAVE_KEYS.VOLUMES, new AudioMixer<MixerId>.Converter(mixer));
-            _unsubscribers += mixer.Subscribe(volumes => _storage.Set(SAVE_KEYS.VOLUMES, volumes, _mixerConverter), calling);
-            return calling;
+            bool sendCallback = !_storage.TryPopulate<AudioMixer<MixerId>>(SAVE_KEYS.VOLUMES, new AudioMixer<MixerId>.Converter(mixer));
+            _unsubscribers += mixer.Subscribe(volumes => _storage.Set(SAVE_KEYS.VOLUMES, volumes, _mixerConverter), sendCallback);
+            return sendCallback;
         }
 
         public bool SetAndBindProfile(Profile profile)
         {
-            bool calling = !_storage.TryPopulate<Profile>(SAVE_KEYS.PROFILE, new Profile.Converter(profile));
-            _unsubscribers += profile.Subscribe(values => _storage.Set(SAVE_KEYS.PROFILE, values, _profileConverter), calling);
-            return calling;
+            bool sendCallback = !_storage.TryPopulate<Profile>(SAVE_KEYS.PROFILE, new Profile.Converter(profile));
+            _unsubscribers += profile.Subscribe(values => _storage.Set(SAVE_KEYS.PROFILE, values, _profileConverter), sendCallback);
+            return sendCallback;
         }
        
         public void Dispose()

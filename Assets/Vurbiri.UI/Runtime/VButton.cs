@@ -7,12 +7,10 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu("UI Vurbiri/Button", 30)]
+    [AddComponentMenu(VUI_CONST.NAME_MENU + "Button", 30)]
     sealed public class VButton : VSelectable, IPointerClickHandler, ISubmitHandler
     {
-        [SerializeField]
-        private UnitySubscriber _onClick = new();
-        public Subscriber OnClick => _onClick;
+        [SerializeField] private UnitySubscriber _onClick = new();
 
         private VButton() { }
 
@@ -21,38 +19,34 @@ namespace Vurbiri.UI
             base.Start();
 
             _onClick.Clear();
+            _onClick.Add(ProfilerApiAddMarker);
         }
 
         public Unsubscriber AddListener(Action action) => _onClick.Add(action);
         public void RemoveListener(Action action) => _onClick.Remove(action);
 
-        private void Press()
+        private bool Press()
         {
             if (!IsActive() || !IsInteractable())
-                return;
+                return false;
 
-            UISystemProfilerApi.AddMarker("VButton.onClick", this);
             _onClick.Invoke();
+            return true;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (eventData.button != PointerEventData.InputButton.Left)
-                return;
-
-            Press();
+            if (eventData.button == PointerEventData.InputButton.Left)
+                Press();
         }
 
         public void OnSubmit(BaseEventData eventData)
         {
-            Press();
-
-            // if we get set disabled during the press don't run the coroutine.
-            if (!IsActive() || !IsInteractable())
-                return;
-
-            DoStateTransition(SelectionState.Pressed, false);
-            StartCoroutine(OnFinishSubmit());
+            if (Press())
+            {
+                DoStateTransition(SelectionState.Pressed, false);
+                StartCoroutine(OnFinishSubmit());
+            }
         }
 
         private IEnumerator OnFinishSubmit()
@@ -68,5 +62,7 @@ namespace Vurbiri.UI
 
             DoStateTransition(currentSelectionState, false);
         }
+
+        private void ProfilerApiAddMarker() => UISystemProfilerApi.AddMarker("VButton.onClick", this);
     }
 }

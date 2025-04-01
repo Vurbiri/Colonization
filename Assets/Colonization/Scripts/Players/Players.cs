@@ -26,7 +26,6 @@ namespace Vurbiri.Colonization
                 _humans[i] = new(i, playerStorages[i], settings, land);
 
             _satan = new(storage.Satan, settings, land, _humans);
-
         }
         #endregion
 

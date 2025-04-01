@@ -28,7 +28,7 @@ namespace Vurbiri.UI
 
         public void Setup(bool isEnable, bool interactable = true)
         {
-            _button.Interactable = interactable;
+            _button.interactable = interactable;
             _thisGO.SetActive(isEnable);
         }
 

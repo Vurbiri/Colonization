@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                 _idLang = id;
         }
 
-        public Unsubscriber Subscribe(Action<Profile> action, bool calling = true)=> _subscriber.Add(action, calling, this);
+        public Unsubscriber Subscribe(Action<Profile> action, bool sendCallback = true)=> _subscriber.Add(action, sendCallback, this);
 
         public void Apply()
         {
@@ -52,7 +52,5 @@ namespace Vurbiri.Colonization
             _localization.SwitchLanguage(_idLang);
             QualitySettings.SetQualityLevel(_quality);
         }
-
-        public void Dispose() => _subscriber.Dispose();
     }
 }

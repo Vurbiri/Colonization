@@ -18,7 +18,7 @@ namespace VurbiriEditor.Reactive
         private const string P_TARGET = "_target", P_METHOD_NAME = "_methodName";
         private const string F_NONE = "None", F_PARAM_OPEN = "(", F_PARAM = ", ", F_PARAM_CLOSE = ")";
         private const string M_VOID = "void ", M_PUBLIC = "public ", M_PRIVATE = "private ", M_PROTECTED = "protected ", M_STATIC = "static ";
-        private const string L_OBJECT = "Game Object", L_TARGET = "Target object", L_METHOD = "Method";
+        private const string L_OBJECT = "Game Object", L_TARGET = "Target Object", L_METHOD = "Method";
 
         private static readonly Type _gameObjectType = typeof(GameObject), _voidType = typeof(void);
 
@@ -110,6 +110,8 @@ namespace VurbiriEditor.Reactive
         #region Create
         private void SetArguments()
         {
+            if (_arguments != null & _params != null) return;
+            
             Type type = fieldInfo.FieldType;
             if (type.IsArray) type = type.GetElementType();
             

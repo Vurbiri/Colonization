@@ -5,23 +5,25 @@ using UnityEngine.UI;
 
 namespace Vurbiri.UI
 {
+    [AddComponentMenu(VUI_CONST.NAME_MENU + "Selectable", 35)]
+    [ExecuteAlways, SelectionBase, DisallowMultipleComponent]
     public class VSelectable : Selectable
     {
-        [SerializeField] private GameObject _interactableIcon;
+        [SerializeField] private Graphic _interactableIcon;
         [SerializeField] private bool _alfaCollider = false;
         [SerializeField, Range(0.01f, 1f)] private float _threshold = 0.1f;
         [SerializeField] private List<Graphic> _targetGraphics = new();
 
         public IReadOnlyList<Graphic> TargetGraphics => _targetGraphics;
 
-        public bool Interactable
+        public new virtual bool interactable
         {
-            get => interactable;
+            get => base.interactable;
             set
             {
-                interactable = value;
+                base.interactable = value;
                 if (_interactableIcon != null)
-                    _interactableIcon.SetActive(!value);
+                    _interactableIcon.CrossFadeAlpha(!value ? 1f : 0f, colors.fadeDuration, true);
             }
         }
 
@@ -35,15 +37,7 @@ namespace Vurbiri.UI
                     _targetGraphics.RemoveAt(i);
             }
 
-            if (_targetGraphics.Count > 0)
-            {
-                targetGraphic = _targetGraphics[0];
-            }
-            else if (targetGraphic != null)
-            {
-                _targetGraphics.Add(targetGraphic);
-            }
-
+            Image image = targetGraphic as Image;
             if (image != null && image.sprite != null && image.sprite.texture.isReadable)
                 image.alphaHitTestMinimumThreshold = _alfaCollider ? _threshold : 0f;
         }
@@ -69,8 +63,34 @@ namespace Vurbiri.UI
                 _ => Color.black
             };
 
+#if UNITY_EDITOR
+            float duration = instant ? 0f : colors.fadeDuration;
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
-                _targetGraphics[i]!.CrossFadeColor(targetColor, instant ? 0f : colors.fadeDuration, true, true);
+                if(_targetGraphics[i] != null)
+                    _targetGraphics[i].CrossFadeColor(targetColor, duration, true, true);
+#else
+            float duration = instant ? 0f : colors.fadeDuration;
+            for (int i = _targetGraphics.Count - 1; i >= 0; i--)
+                _targetGraphics[i].CrossFadeColor(targetColor, duration, true, true);
+#endif
         }
+
+#if UNITY_EDITOR
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+
+            interactable = base.interactable;
+
+            _targetGraphics ??= new();
+
+            if (_targetGraphics.Count > 0)
+                targetGraphic = _targetGraphics[0];
+            else if (targetGraphic != null)
+                _targetGraphics.Add(targetGraphic);
+
+        }
+#endif
     }
 }
+

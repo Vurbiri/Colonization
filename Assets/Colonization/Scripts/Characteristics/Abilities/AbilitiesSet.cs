@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\Characteristics\Abilities\AbilitiesSet.cs
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
@@ -7,7 +6,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class AbilitiesSet<TId> : IReadOnlyAbilities<TId>, IDisposable where TId : AbilityId<TId>
+    public class AbilitiesSet<TId> : IReadOnlyAbilities<TId> where TId : AbilityId<TId>
     {
         private readonly IdArray<TId, AAbility<TId>> _abilities = new();
 
@@ -58,13 +57,6 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public void Dispose()
-        {
-            for(int i = 0; i < AbilityId<TId>.Count; i++)
-                _abilities[i].Dispose();
-        }
-
 
         private T ReplaceTo<T>(Id<TId> id, T newAbility) where T : AAbility<TId>
         {

@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\Actors\Actor\Actor.cs
+using System;
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
@@ -9,7 +10,7 @@ using Vurbiri.Reactive.Collections;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, ICancel, IPositionable
+    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, ICancel, IDisposable, IPositionable
     {
         #region Fields
         protected int _typeId;
@@ -124,7 +125,11 @@ namespace Vurbiri.Colonization.Actors
         public void RemoveWallDefenceEffect() => _effects.Remove(EffectsFactory.WallEffectCode);
         #endregion
 
-        public void ColliderEnable(bool enabled) => _thisCollider.enabled = enabled;
+        #region Collider
+        public void Collider(bool enabled) => _thisCollider.enabled = enabled;
+        private void ColliderEnable() => _thisCollider.enabled = _isPlayerTurn;
+        private void ColliderDisable() => _thisCollider.enabled = false;
+        #endregion
 
         #region ISelectable
         public void Select() => _stateMachine.Select();
@@ -138,7 +143,6 @@ namespace Vurbiri.Colonization.Actors
 
             _skin.Dispose();
             _stateMachine.Dispose();
-            _abilities.Dispose();
             _effects.Dispose();
 
             Destroy(gameObject);
@@ -160,7 +164,7 @@ namespace Vurbiri.Colonization.Actors
             }
         }
         #endregion
-
+        
         private IEnumerator Death_Cn()
         {
             _unsubscribers.Unsubscribe();

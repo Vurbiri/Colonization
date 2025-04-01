@@ -17,16 +17,15 @@ namespace Vurbiri.Reactive.Collections
             _subscriber.Add(action);
         }
 
-        public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool sendCallback = true)
         {
-            if (calling) action((T)this, TypeEvent.Subscribe);
+            if (sendCallback) action((T)this, TypeEvent.Subscribe);
             return _subscriber.Add(action);
         }
 
         public virtual void Removing()
         {
             _subscriber.Invoke((T)this, TypeEvent.Remove);
-            _subscriber.Dispose();
             _index = -1;
         }
 

@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization.UI
             ButtonView view = _edificeView[edificeId];
             ACurrencies cost = _edificePrices[edificeId];
 
-            _button.Interactable = _cash >= cost;
+            _button.interactable = _cash >= cost;
             _buttonIcon.sprite = view.sprite;
 
             SetTextHint(_localization.GetText(Files.Gameplay, view.keyHint), _cash, cost);

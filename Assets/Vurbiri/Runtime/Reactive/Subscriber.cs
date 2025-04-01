@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri.Reactive
 {
-    public class Subscriber : ISubscriber, IDisposable
+    public class Subscriber : ISubscriber
     {
         protected Action actions;
 
@@ -20,12 +20,10 @@ namespace Vurbiri.Reactive
         public void Invoke() => actions?.Invoke();
 
         public void Remove(Action action) => actions -= action;
-
-        public void Dispose() => actions = null;
     }
     //=======================================================================================
 
-    public class Subscriber<T> : ISubscriber<T>, IDisposable
+    public class Subscriber<T> : ISubscriber<T>
     {
         protected Action<T> actions;
 
@@ -38,24 +36,25 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<T>>(this, action);
         }
 
-        public Unsubscriber Add(Action<T> action, bool calling, T value)
+        public Unsubscriber Add(Action<T> action, bool sendCallback, T value)
         {
             Errors.ThrowIfNull(action);
 
-            if (calling) action(value);
+            if (sendCallback) action(value);
 
             actions -= action;
             actions += action;
             return new Unsubscriber<Action<T>>(this, action);
         }
 
-        public Unsubscriber Add(Action<T> action, bool calling, IReadOnlyList<T> values)
+        public Unsubscriber Add(Action<T> action, bool sendCallback, IReadOnlyList<T> values)
         {
             Errors.ThrowIfNull(action);
 
-            if (calling)
+            if (sendCallback)
             {
-                for (int i = 0; i < values.Count; i++)
+                int count = values.Count;
+                for (int i = 0; i < count; i++)
                     action(values[i]);
             }
 
@@ -64,13 +63,14 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<T>>(this, action);
         }
 
-        public Unsubscriber Add<U>(Action<T> action, bool calling, IReadOnlyList<U> values, Func<U,T> get)
+        public Unsubscriber Add<U>(Action<T> action, bool sendCallback, IReadOnlyList<U> values, Func<U,T> get)
         {
             Errors.ThrowIfNull(action);
 
-            if (calling)
+            if (sendCallback)
             {
-                for (int i = 0; i < values.Count; i++)
+                int count = values.Count;
+                for (int i = 0; i < count; i++)
                     action(get(values[i]));
             }
 
@@ -83,8 +83,6 @@ namespace Vurbiri.Reactive
 
         public void Remove(Action<T> action) => actions -= action;
 
-        public void Dispose() => actions = null;
-
         public static Unsubscriber operator +(Subscriber<T> subscriber, Action<T> action)
         {
             Errors.ThrowIfNull(action);
@@ -96,7 +94,7 @@ namespace Vurbiri.Reactive
         }
     }
     //=======================================================================================
-    public class Subscriber<TA, TB> : ISubscriber<TA, TB>, IDisposable
+    public class Subscriber<TA, TB> : ISubscriber<TA, TB>
     {
         protected Action<TA, TB> actions;
 
@@ -109,11 +107,11 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<TA, TB>>(this, action);
         }
 
-        public Unsubscriber Add(Action<TA, TB> action, bool calling, TA valueA, TB valueB)
+        public Unsubscriber Add(Action<TA, TB> action, bool sendCallback, TA valueA, TB valueB)
         {
             Errors.ThrowIfNull(action);
 
-            if (calling) action(valueA, valueB);
+            if (sendCallback) action(valueA, valueB);
 
             actions -= action;
             actions += action;
@@ -123,11 +121,9 @@ namespace Vurbiri.Reactive
         public void Invoke(TA valueA, TB valueB) => actions?.Invoke(valueA, valueB);
 
         public void Remove(Action<TA, TB> action) => actions -= action;
-
-        public void Dispose() => actions = null;
     }
     //=======================================================================================
-    public class Subscriber<TA, TB, TC> : ISubscriber<TA, TB, TC>, IDisposable
+    public class Subscriber<TA, TB, TC> : ISubscriber<TA, TB, TC>
     {
         protected Action<TA, TB, TC> actions;
 
@@ -140,11 +136,11 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<TA, TB, TC>>(this, action);
         }
 
-        public Unsubscriber Add(Action<TA, TB, TC> action, bool calling, TA valueA, TB valueB, TC valueC)
+        public Unsubscriber Add(Action<TA, TB, TC> action, bool sendCallback, TA valueA, TB valueB, TC valueC)
         {
             Errors.ThrowIfNull(action);
 
-            if (calling) action(valueA, valueB, valueC);
+            if (sendCallback) action(valueA, valueB, valueC);
 
             actions -= action;
             actions += action;
@@ -154,11 +150,9 @@ namespace Vurbiri.Reactive
         public void Invoke(TA valueA, TB valueB, TC valueC) => actions?.Invoke(valueA, valueB, valueC);
 
         public void Remove(Action<TA, TB, TC> action) => actions -= action;
-
-        public void Dispose() => actions = null;
     }
     //=======================================================================================
-    public class Subscriber<TA, TB, TC, TD> : ISubscriber<TA, TB, TC, TD>, IDisposable
+    public class Subscriber<TA, TB, TC, TD> : ISubscriber<TA, TB, TC, TD>
     {
         protected Action<TA, TB, TC, TD> actions;
 
@@ -171,11 +165,11 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<TA, TB, TC, TD>>(this, action);
         }
 
-        public Unsubscriber Add(Action<TA, TB, TC, TD> action, bool calling, TA valueA, TB valueB, TC valueC, TD valueD)
+        public Unsubscriber Add(Action<TA, TB, TC, TD> action, bool sendCallback, TA valueA, TB valueB, TC valueC, TD valueD)
         {
             Errors.ThrowIfNull(action);
 
-            if (calling) action(valueA, valueB, valueC, valueD);
+            if (sendCallback) action(valueA, valueB, valueC, valueD);
 
             actions -= action;
             actions += action;
@@ -185,7 +179,5 @@ namespace Vurbiri.Reactive
         public void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => actions?.Invoke(valueA, valueB, valueC, valueD);
 
         public void Remove(Action<TA, TB, TC, TD> action) => actions -= action;
-
-        public void Dispose() => actions = null;
     }
 }

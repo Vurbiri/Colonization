@@ -40,9 +40,9 @@ namespace Vurbiri.Reactive
             _comparerB = EqualityComparer<TB>.Default;
         }
 
-        public Unsubscriber Subscribe(Action<TA, TB> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<TA, TB> action, bool sendCallback = true)
         {
-            if (calling)
+            if (sendCallback)
                 action(_valueA, _valueB);
 
             return _subscriber.Add(action);
@@ -50,6 +50,5 @@ namespace Vurbiri.Reactive
 
         public void Signal() => _subscriber.Invoke(_valueA, _valueB);
 
-        public void Dispose() => _subscriber.Dispose();
     }
 }

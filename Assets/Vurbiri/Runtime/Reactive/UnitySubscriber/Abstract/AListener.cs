@@ -14,13 +14,13 @@ namespace Vurbiri.Reactive
         [SerializeField] private Object _target;
         [SerializeField] private string _methodName = string.Empty;
 
-        private readonly Type actionType = typeof(TDelegate);
-
         public bool TryInstantiate(out TDelegate action)
         {
             action = null;
             if (_target is null | string.IsNullOrEmpty(_methodName))
                 return false;
+
+            Type actionType = typeof(TDelegate);
 
             MethodInfo method = _target.GetType().GetMethod(_methodName, flags, null, actionType.GetGenericArguments(), null);
             if (method == null)

@@ -192,7 +192,7 @@ namespace Vurbiri.Colonization
                 return false;
 
             _mark = _poolMarks.Get(_thisTransform, false).View(isFriendly);
-            _owner.ColliderEnable(true);
+            _owner.Collider(true);
             _collider.enabled = true;
             return true;
         }
@@ -208,7 +208,7 @@ namespace Vurbiri.Colonization
         {
             SetUnselectable();
             if (_ownerId != PlayerId.Player & _ownerId != PlayerId.None)
-                _owner.ColliderEnable(false);
+                _owner.Collider(false);
         }
         #endregion
 

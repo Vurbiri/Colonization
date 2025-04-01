@@ -33,9 +33,9 @@ namespace Vurbiri.Reactive.Collections
         #endregion
 
         #region IReactiveCollection
-        public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool sendCallback = true)
         {
-            if (calling)
+            if (sendCallback)
             {
                 for (int i = 0; i < _capacity; i++)
                 {
@@ -89,10 +89,8 @@ namespace Vurbiri.Reactive.Collections
 
         public void Dispose()
         {
-            _subscriber.Dispose();
             for (int i = 0; i < _capacity; i++)
                 _values[i]?.Dispose();
-            _count.Dispose();
 
             _values = null;
         }

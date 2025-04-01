@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         {
             bool isUse = actor.ActionPoint >= blockUI.Cost;
 
-            _button.Interactable = isUse;
+            _button.interactable = isUse;
             _text = blockUI.GetText(isUse);
 
             _thisGO.SetActive(true);

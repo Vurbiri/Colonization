@@ -111,9 +111,9 @@ namespace Vurbiri.Reactive.Collections
         }
 
         #region IReadOnlyReactiveList
-        public Unsubscriber Subscribe(Action<int, T, TypeEvent> action, bool calling = true)
+        public Unsubscriber Subscribe(Action<int, T, TypeEvent> action, bool sendCallback = true)
         {
-            if (calling)
+            if (sendCallback)
             {
                 for (int i = 0; i < _count; i++)
                     action(i, _values[i], TypeEvent.Subscribe);
@@ -218,13 +218,6 @@ namespace Vurbiri.Reactive.Collections
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
-
-        public void Dispose()
-        {
-            _count.Dispose();
-            _subscriber.Dispose();
-            _values = null;
-        }
 
         private void GrowArray()
         {
