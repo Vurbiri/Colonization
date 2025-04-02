@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 namespace Vurbiri.UI
 {
     [AddComponentMenu(VUI_CONST.NAME_MENU + "Selectable", 35)]
     [ExecuteAlways, SelectionBase, DisallowMultipleComponent]
     public class VSelectable : Selectable
     {
-        [SerializeField] private Graphic _interactableIcon;
+        [SerializeField] protected Graphic _interactableIcon;
         [SerializeField] private bool _alfaCollider = false;
         [SerializeField, Range(0.01f, 1f)] private float _threshold = 0.1f;
-        [SerializeField] private List<Graphic> _targetGraphics = new();
+        [SerializeField] protected List<Graphic> _targetGraphics = new();
 
         public IReadOnlyList<Graphic> TargetGraphics => _targetGraphics;
+        public Graphic InteractableIcon => _interactableIcon;
 
         public new virtual bool interactable
         {
@@ -36,13 +38,17 @@ namespace Vurbiri.UI
                 if (_targetGraphics[i] == null)
                     _targetGraphics.RemoveAt(i);
             }
+            _targetGraphics.TrimExcess();
+
+            if (_targetGraphics.Count > 0)
+                targetGraphic = _targetGraphics[0];
 
             Image image = targetGraphic as Image;
-            if (image != null && image.sprite != null && image.sprite.texture.isReadable)
-                image.alphaHitTestMinimumThreshold = _alfaCollider ? _threshold : 0f;
+            if (_alfaCollider && image != null && image.sprite != null && image.sprite.texture.isReadable)
+                image.alphaHitTestMinimumThreshold = _threshold;
         }
 
-        protected override void DoStateTransition(SelectionState state, bool instant)
+        sealed protected override void DoStateTransition(SelectionState state, bool instant)
         {
             if (!gameObject.activeInHierarchy)
                 return;
@@ -64,31 +70,40 @@ namespace Vurbiri.UI
             };
 
 #if UNITY_EDITOR
-            float duration = instant ? 0f : colors.fadeDuration;
-            for (int i = _targetGraphics.Count - 1; i >= 0; i--)
-                if(_targetGraphics[i] != null)
-                    _targetGraphics[i].CrossFadeColor(targetColor, duration, true, true);
-#else
-            float duration = instant ? 0f : colors.fadeDuration;
+            if (!Application.isPlaying)
+            {
+                CrossFadeColorNotPlaying_Editor(targetColor, instant ? 0f : colors.fadeDuration);
+                return;
+            }
+#endif
+            CrossFadeColor(targetColor, instant ? 0f : colors.fadeDuration);
+        }
+
+        protected virtual void CrossFadeColor(Color targetColor, float duration)
+        {
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 _targetGraphics[i].CrossFadeColor(targetColor, duration, true, true);
-#endif
         }
 
 #if UNITY_EDITOR
+
+        protected virtual void CrossFadeColorNotPlaying_Editor(Color targetColor, float duration)
+        {
+            for (int i = _targetGraphics.Count - 1; i >= 0; i--)
+                if (_targetGraphics[i] != null)
+                    _targetGraphics[i].CrossFadeColor(targetColor, duration, true, true);
+        }
+
         protected override void OnValidate()
         {
             base.OnValidate();
 
-            interactable = base.interactable;
-
             _targetGraphics ??= new();
 
-            if (_targetGraphics.Count > 0)
+            if (_targetGraphics.Count > 0 && _targetGraphics[0] != null)
                 targetGraphic = _targetGraphics[0];
             else if (targetGraphic != null)
                 _targetGraphics.Add(targetGraphic);
-
         }
 #endif
     }

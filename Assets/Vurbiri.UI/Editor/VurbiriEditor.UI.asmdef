@@ -2,7 +2,8 @@
     "name": "VurbiriEditor.UI",
     "rootNamespace": "VurbiriEditor.UI",
     "references": [
-        "GUID:c8c3c199385590949883ed96c279e4a3"
+        "GUID:c8c3c199385590949883ed96c279e4a3",
+        "GUID:8d796b54c349a5e4e9e760d782ae9adf"
     ],
     "includePlatforms": [
         "Editor"

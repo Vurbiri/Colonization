@@ -7,48 +7,26 @@ namespace Vurbiri
 {
     public static class ExtensionsGraphic
     {
-        public static Coroutine Appear(this Graphic self, Color color, float duration, bool isUnscaled = false)
+
+        public static Coroutine FadeAlpha(this Graphic self, float alpha, float speed)
         {
-            if (isUnscaled)
-                return self.StartCoroutine(SmoothAlphaUnscaled_Cn(self, color, 0f, 1f, duration));
-            else
-                return self.StartCoroutine(SmoothAlpha_Cn(self, color, 0f, 1f, duration));
-        }
-        public static Coroutine Fade(this Graphic self, Color color, float duration, bool isUnscaled = false)
-        {
-            if (isUnscaled)
-                return self.StartCoroutine(SmoothAlphaUnscaled_Cn(self, color, 1f, 0f, duration));
-            else
-                return self.StartCoroutine(SmoothAlpha_Cn(self, color, 1f, 0f, duration));
+             return self.StartCoroutine(FadeAlpha_Cn(self, alpha, speed));
         }
 
-        private static IEnumerator SmoothAlpha_Cn(Graphic graphic, Color color, float start, float end, float duration)
+        private static IEnumerator FadeAlpha_Cn(Graphic graphic, float alpha, float speed)
         {
-            float currentTime = 0f;
-            float alpha;
-            while (currentTime < duration)
+            Color color = graphic.color;
+            float current = color.a;
+            float progress = 0f;
+
+            while (progress <= 1f)
             {
-                alpha = Mathf.Lerp(start, end, currentTime / duration);
-                graphic.color = color.SetAlpha(alpha);
-                currentTime += Time.deltaTime;
                 yield return null;
+                progress += speed * Time.unscaledDeltaTime;
+                current = Mathf.Lerp(current, alpha, progress);
+                graphic.color = color.SetAlpha(current);
             }
-            graphic.color = color.SetAlpha(end);
+            graphic.color = color.SetAlpha(alpha);
         }
-
-        private static IEnumerator SmoothAlphaUnscaled_Cn(Graphic graphic, Color color, float start, float end, float duration)
-        {
-            float currentTime = 0f;
-            float alpha;
-            while (currentTime < duration)
-            {
-                alpha = Mathf.Lerp(start, end, currentTime / duration);
-                graphic.color = color.SetAlpha(alpha);
-                currentTime += Time.unscaledDeltaTime;
-                yield return null;
-            }
-            graphic.color = color.SetAlpha(end);
-        }
-
     }
 }

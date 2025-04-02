@@ -1,4 +1,5 @@
 //Assets\Colonization\Editor\Characteristic\Buffs\Abstract\ABuffsWindow.cs
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
@@ -12,11 +13,14 @@ namespace VurbiriEditor.Colonization
 {
     public abstract class ABuffsWindow<T> : EditorWindow where T : BuffSettings, new()
     {
+        private const int MIN_VALUE = 1, MAX_VALUE = 25;
+
         [SerializeField] private ABuffsScriptable<T> _scriptable;
 
         private Vector2 _scrollPos;
         private bool _isSave;
         private readonly IdArray<ActorAbilityId, T> _settings = new(() => new());
+        private readonly IdArray<ActorAbilityId, AnimBool> _showSettings = new(() => new());
         protected readonly List<int> _values = new(new int[] { -1, 0});
         protected readonly List<string> _names = new( new string[]{ "None", "Percent"});
         protected readonly HashSet<int> _excludeAbility = new(new int[] { ActorAbilityId.CurrentHP, ActorAbilityId.CurrentAP, ActorAbilityId.IsMove });
@@ -39,6 +43,12 @@ namespace VurbiriEditor.Colonization
                 settings = scriptableSettings[i];
                 _settings[settings.targetAbility] = settings;
             }
+
+            for (int i = 0; i < ActorAbilityId.Count; i++)
+            {
+                _showSettings[i].value = _settings[i].typeModifier >= 0;
+                _showSettings[i].valueChanged.AddListener(Repaint);
+            }
         }
 
         private void OnGUI()
@@ -52,12 +62,12 @@ namespace VurbiriEditor.Colonization
             DrawSave();
 
             for (int i = 0; i < ActorAbilityId.Count; i++)
-                _isSave |= DrawSettings(i, _settings[i]);
+                _isSave |= DrawSettings(i, _settings[i], _showSettings[i]);
 
             EndScrollView();
             EndWindows();
 
-            #region Local: DrawSettings(..)
+            #region Local: DrawSave(), DrawSettings(..)
             //=================================
             void DrawSave()
             {
@@ -69,7 +79,7 @@ namespace VurbiriEditor.Colonization
                 Space(8);
             }
             //=================================
-            bool DrawSettings(int id, T settings)
+            bool DrawSettings(int id, T settings, AnimBool showSetting)
             {
                 settings.targetAbility = id;
                 if (_excludeAbility.Contains(id))
@@ -86,10 +96,10 @@ namespace VurbiriEditor.Colonization
                 LabelField(ActorAbilityId.Names[id], STYLES.H2);
                 Space();
                 settings.typeModifier = IntPopup("Modifier", oldTypeModifier, names, values);
-                AnimBool animBool = new(settings.typeModifier >= 0);
+                showSetting.target = settings.typeModifier >= 0;
                 bool isSave = oldTypeModifier != settings.typeModifier;
 
-                if (BeginFadeGroup(animBool.faded))
+                if (BeginFadeGroup(showSetting.faded))
                     isSave |= DrawValues(settings);
                 EndFadeGroup();
 
@@ -105,13 +115,17 @@ namespace VurbiriEditor.Colonization
         {
             int oldValue = settings.value;
 
-            settings.value = IntSlider("Value", oldValue, 1, 25);
+            settings.value = Math.Clamp(settings.value, MIN_VALUE, MAX_VALUE);
+            settings.value = IntSlider("Value", settings.value, MIN_VALUE, MAX_VALUE);
 
             return oldValue != settings.value;
         }
 
         private void OnDisable()
         {
+            for (int i = 0; i < ActorAbilityId.Count; i++)
+                _showSettings[i].valueChanged.RemoveListener(Repaint);
+
             if (!_isSave) return;
             
             _scriptable.SetValues_EditorOnly(_settings);
