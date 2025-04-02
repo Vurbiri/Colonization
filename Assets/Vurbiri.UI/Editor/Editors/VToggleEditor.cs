@@ -25,7 +25,6 @@ namespace VurbiriEditor.UI
         private SerializedProperty _colorOnProperty;
         private SerializedProperty _colorOffProperty;
         private SerializedProperty _groupProperty;
-        private SerializedProperty _ignoreAlphaChannelProperty;
         private SerializedProperty _onValueChangedProperty;
 
         private readonly AnimBool _showDuration = new();
@@ -52,7 +51,6 @@ namespace VurbiriEditor.UI
             _colorOnProperty = serializedObject.FindProperty("_colorOn");
             _colorOffProperty = serializedObject.FindProperty("_colorOff");
             _groupProperty = serializedObject.FindProperty("_group");
-            _ignoreAlphaChannelProperty = serializedObject.FindProperty("_ignoreAlphaChannel");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
             _showDuration.value = _markTransition == VToggle.ToggleTransition.Fade;
@@ -154,7 +152,6 @@ namespace VurbiriEditor.UI
                 {
                     if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_toggle.gameObject.scene);
                     _toggle.SetColors(_colorOnProperty.colorValue, _colorOffProperty.colorValue);
-                    Debug.Log("_colorOnProperty");
                 }
             }
             EndFadeGroup();
@@ -170,16 +167,6 @@ namespace VurbiriEditor.UI
                 _toggle.group = _groupProperty.objectReferenceValue as VToggleGroup;
             }
             Space();
-        }
-
-        protected override void DrawColorTint()
-        {
-            if (BeginFadeGroup(m_ShowColorTint.faded))
-            {
-                PropertyField(_ignoreAlphaChannelProperty);
-                PropertyField(m_ColorBlockProperty);
-            }
-            EndFadeGroup();
         }
 
         protected override void CustomEndPropertiesGUI()

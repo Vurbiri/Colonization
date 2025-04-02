@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization.UI
             float lerpVector = 0f, lerpColor = 0f, delta;
             Color color = Color.white;
 
-            _thisTMP.color = color;
+            _thisTMP.canvasRenderer.SetColor(color);
             _thisTMP.text = text;
 
             while (lerpVector < 1f)
@@ -77,7 +77,7 @@ namespace Vurbiri.Colonization.UI
                 if (lerpVector > _startHide)
                 {
                     color.a = Mathf.Lerp(1f, _minAlpha, lerpColor);
-                    _thisTMP.color = color;
+                    _thisTMP.canvasRenderer.SetColor(color);
                     lerpColor += delta * _scaleColorSpeed;
                 }
 

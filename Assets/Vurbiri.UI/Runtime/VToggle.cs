@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\Toggle\VToggle.cs
+//Assets\Vurbiri.UI\Runtime\VToggle.cs
 using System;
 using TMPro;
 using UnityEngine;
@@ -20,13 +20,14 @@ namespace Vurbiri.UI
         [SerializeField] private Graphic _checkmarkOff;
         [SerializeField] private Color _colorOn = Color.green;
         [SerializeField] private Color _colorOff = Color.red;
-        [SerializeField] private bool _ignoreAlphaChannel = true;
         [SerializeField] private VToggleGroup _group;
         [SerializeField] private UnitySubscriber<bool> _onValueChanged = new();
 
-        private TransitionEffect _transitionEffect;
+        private bool _isTransitionOn = false, _isTransitionOff = false;
+        private ITransitionEffect _transitionEffect;
         private TMP_Text _caption;
 
+        #region Properties
         public bool isOn { get => _isOn; set => SetFromGroup(value); }
         public bool isOnSilent { get => _isOn; set => Set(value, false); }
         public TMP_Text caption => _caption;
@@ -56,7 +57,7 @@ namespace Vurbiri.UI
                 if (_markTransition == value) return;
                 
                 _markTransition = value;
-                _transitionEffect.UpdateTransition();
+                _transitionEffect.TransitionUpdate();
                 if (!_transitionEffect.IsValid)
                     _transitionEffect = TransitionEffect.Create(this);
             }
@@ -69,7 +70,7 @@ namespace Vurbiri.UI
                 if (_transitionDuration == value) return;
 
                 _transitionDuration = value;
-                _transitionEffect.UpdateTransition();
+                _transitionEffect.TransitionUpdate();
             }
         }
         public TransitionType MarkTransitionType
@@ -91,7 +92,7 @@ namespace Vurbiri.UI
                 if (_checkmarkOn == value) return;
 
                 _checkmarkOn = value;
-                if (!_transitionEffect.IsValid)
+                if (!_transitionEffect.GraphicUpdate())
                     _transitionEffect = TransitionEffect.Create(this);
 
                 _transitionEffect.PlayInstant();
@@ -105,14 +106,45 @@ namespace Vurbiri.UI
                 if (_checkmarkOff == value) return;
 
                 _checkmarkOff = value;
-                if (!_transitionEffect.IsValid)
+                if (!_transitionEffect.GraphicUpdate())
                     _transitionEffect = TransitionEffect.Create(this);
 
                 _transitionEffect.PlayInstant();
             }
         }
+        #endregion
 
         private VToggle() { }
+
+        protected override void Awake()
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) return;
+#endif
+
+            if (_checkmarkOn != null)
+            {
+                Graphic current;
+                for (int i = _targetGraphics.Count - 1; i >= 0; i--)
+                {
+                    current = _targetGraphics[i];
+                    if (current != null & current == _checkmarkOn)
+                    {
+                        _isTransitionOn = true;
+                        _targetGraphics.RemoveAt(i);
+                    }
+                    else if (current != null & current == _checkmarkOff)
+                    {
+                        _isTransitionOff = true;
+                        _targetGraphics.RemoveAt(i);
+                    }
+                }
+            }
+
+            _transitionEffect = TransitionEffect.Create(this);
+
+            base.Awake();
+        }
 
         protected override void Start()
         {
@@ -134,6 +166,8 @@ namespace Vurbiri.UI
             if(colorOn == _colorOn & colorOff == _colorOff) return;
             
             _colorOn = colorOn; _colorOff = colorOff;
+
+            _transitionEffect.ColorsUpdate();
             _transitionEffect.PlayInstant();
         }
 
@@ -160,11 +194,29 @@ namespace Vurbiri.UI
             if (sendCallback) _onValueChanged.Invoke(_isOn);
         }
 
+        private void InternalToggle()
+        {
+            if (!isActiveAndEnabled || !IsInteractable())
+                return;
+
+            Set(!_isOn, true);
+        }
+
+        protected override void OnStateTransition(SelectionState state, Color targetColor, float duration, bool instant)
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) { _transitionEffect ??= TransitionEffect.Create(this); _isTransitionOn = _checkmarkOn; _isTransitionOff = _checkmarkOn; }
+#endif
+
+            if (state == SelectionState.Pressed) return;
+
+            if (_isTransitionOn) _transitionEffect.StateTransitionOn(targetColor, duration, instant);
+            if (_isTransitionOff) _transitionEffect.StateTransitionOff(targetColor, duration, instant);
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
-
-            _transitionEffect = TransitionEffect.Create(this);
 
             if (_group != null)
                 _group.RegisterToggle(this);
@@ -178,14 +230,6 @@ namespace Vurbiri.UI
                 _group.UnregisterToggle(this);
 
             base.OnDisable();
-        }
-
-        private void InternalToggle()
-        {
-            if (!isActiveAndEnabled || !IsInteractable())
-                return;
-
-            Set(!_isOn, true);
         }
 
         private void ProfilerApiAddMarker(bool b) => UISystemProfilerApi.AddMarker("VToggle.onValueChanged", this);
@@ -237,10 +281,13 @@ namespace Vurbiri.UI
         {
             base.OnValidate();
 
-            _transitionEffect ??= TransitionEffect.Create(this);
+            if (!Application.isPlaying)
+            {
+                _transitionEffect ??= TransitionEffect.Create(this);
 
-            if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this) && !Application.isPlaying)
-                CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+                if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this))
+                    CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+            }
         }
 #endif
         #endregion
