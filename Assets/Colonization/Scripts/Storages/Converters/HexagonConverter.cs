@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 int[] data = serializer.Deserialize<int[]>(reader);
-                Errors.ThrowIfLengthNotEqual(data.Length, SIZE_ARRAY);
+                Throw.IfLengthNotEqual(data.Length, SIZE_ARRAY);
                 int i = 0;
                 return new HexLoadData(data[i++], data[i]);
             }

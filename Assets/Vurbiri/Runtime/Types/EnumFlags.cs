@@ -14,33 +14,20 @@ namespace Vurbiri
 
         public readonly int Count => _count;
 
-        public bool this[int i]
-		{
-            readonly get
-            {
-                Errors.ThrowIfOutOfRange(i, _count);
-                return ((_value >> i) & 1) > 0;
-            }
-			set
-			{
-                Errors.ThrowIfOutOfRange(i, _count);
-                if (value) _value |= 1 << i;
-				else _value ^= 1 << i;//_value &= ~(1 << i);
-            }
-		}
-        public bool this[T e]
-        {
-            readonly get => this[e.ToInt()];
-            set => this[e.ToInt()] = value;
-        }
+        public readonly bool this[int i] => ((_value >> i) & 1) > 0;
+        public readonly bool this[T e] => ((_value >> e.ToInt()) & 1) > 0;
 
+        #region Constructors
         public EnumFlags(int value)
 		{
-			_value = 1 << value; _count = Enum<T>.Count;
+			_count = Enum<T>.Count;
+            Throw.IfOutOfRange(value, 0, _count);
+            _value = 1 << value;
         }
         public EnumFlags(T value)
         {
-            _value = 1 << value.ToInt(); _count = Enum<T>.Count;
+            _count = Enum<T>.Count;
+            _value = 1 << value.ToInt();
         }
         public EnumFlags(bool all)
         {
@@ -52,18 +39,20 @@ namespace Vurbiri
         {
             _value = value; _count = count;
         }
+        #endregion
 
-        public void Add(int i) => _value |= 1 << i;
         public void Add(T e) => _value |= 1 << e.ToInt();
+        public void Add(int i)
+        {
+            Throw.IfOutOfRange(i, 0, _count);
+            _value |= 1 << i;
+        }
 
         public void Remove(int i) => _value ^= 1 << i;
         public void Remove(T e) => _value ^= 1 << e.ToInt();
 
 		public void Fill() => _value = -1;
 		public void Clear() => _value = 0;
-
-        public static implicit operator EnumFlags<T>(int value) => new(value);
-        public static implicit operator EnumFlags<T>(T value) => new(value);
 
         public readonly bool Equals(EnumFlags<T> other) => _value == other._value;
         public readonly bool Equals(int i) => ((_value >> i) & 1) > 0;
@@ -78,6 +67,10 @@ namespace Vurbiri
             return false;
         }
         public override readonly int GetHashCode() => _value.GetHashCode();
+
+        public static implicit operator EnumFlags<T>(int value) => new(value);
+        public static implicit operator EnumFlags<T>(T value) => new(value);
+        public static implicit operator EnumFlags<T>(bool all) => new(all);
 
         public static bool operator ==(EnumFlags<T> a, EnumFlags<T> b) => a._value == b._value;
         public static bool operator !=(EnumFlags<T> a, EnumFlags<T> b) => a._value != b._value;

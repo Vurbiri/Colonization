@@ -16,7 +16,7 @@ namespace Vurbiri
         public IndexRnd(int count) : this(0, count) { }
         public IndexRnd(int start, int count)
         {
-            Errors.ThrowIfOutOfRange(start, count);
+            Throw.IfIndexOutOfRange(start, count);
 
             _start = start;
             _count = count;

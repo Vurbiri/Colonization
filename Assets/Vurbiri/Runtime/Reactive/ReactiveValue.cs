@@ -41,7 +41,7 @@ namespace Vurbiri.Reactive
 
         public ReactiveValue(T value, IEqualityComparer<T> comparer)
         {
-            Errors.ThrowIfNull(comparer);
+            Throw.IfNull(comparer);
 
             _value = value;
             _comparer = comparer;

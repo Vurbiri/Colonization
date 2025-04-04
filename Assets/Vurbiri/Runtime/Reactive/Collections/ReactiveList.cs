@@ -44,7 +44,7 @@ namespace Vurbiri.Reactive.Collections
         }
         public ReactiveList(IEqualityComparer<T> comparer)
         {
-            Errors.ThrowIfNull(comparer);
+            Throw.IfNull(comparer);
 
             _comparer = comparer;
             _values = new T[_capacity];
@@ -58,7 +58,7 @@ namespace Vurbiri.Reactive.Collections
         }
         public ReactiveList(int capacity, IEqualityComparer<T> comparer)
         {
-            Errors.ThrowIfNull(comparer);
+            Throw.IfNull(comparer);
 
             _comparer = comparer;
             _capacity = capacity;
@@ -76,7 +76,7 @@ namespace Vurbiri.Reactive.Collections
         }
         public ReactiveList(IReadOnlyList<T> values, IEqualityComparer<T> comparer)
         {
-            Errors.ThrowIfNull(comparer);
+            Throw.IfNull(comparer);
 
             _comparer = comparer;
             _capacity = _count.Value = values.Count;
@@ -137,7 +137,7 @@ namespace Vurbiri.Reactive.Collections
 
         public void Insert(int index, T item)
         {
-            Errors.ThrowIfOutOfRange(index, _count);
+            Throw.IfIndexOutOfRange(index, _count);
 
             if (_count == _capacity)
                 GrowArray();

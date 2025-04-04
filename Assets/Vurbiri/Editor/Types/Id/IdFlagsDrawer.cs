@@ -12,7 +12,7 @@ namespace VurbiriEditor
 	public class IdFlagsDrawer : PropertyDrawer
 	{
 		#region Consts
-		private const string P_NAME = "_id", P_COUNT = "_count";
+		private const string P_NAME = "_id";
 		#endregion
 		
 		public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
@@ -21,7 +21,6 @@ namespace VurbiriEditor
 
             SerializedProperty valueProperty = mainProperty.FindPropertyRelative(P_NAME);
             string[] names = GetNames();
-            mainProperty.FindPropertyRelative(P_COUNT).intValue = names.Length;
 
             BeginProperty(position, label, mainProperty);
             {

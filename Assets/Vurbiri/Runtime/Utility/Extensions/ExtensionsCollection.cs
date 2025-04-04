@@ -66,7 +66,7 @@ namespace Vurbiri
 
         public static T First<T>(this IReadOnlyCollection<T> self)
         {
-            Errors.ThrowIfLengthZero<T>(self);
+            Throw.IfLengthZero<T>(self);
 
             IEnumerator<T> enumerator = self.GetEnumerator();
             enumerator.MoveNext();

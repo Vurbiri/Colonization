@@ -16,7 +16,7 @@ namespace Vurbiri
         [JsonConstructor]
         public Id(int id)
         {
-            Errors.ThrowIfOutOfRange<int>(id, IdType<T>.Min, IdType<T>.Count);
+            Throw.IfOutOfRange(id, IdType<T>.Min, IdType<T>.Count);
 
             _id = id;
         }

@@ -1,25 +1,21 @@
 //Assets\Colonization\Scripts\Currencies\Profit\ProfitArray.cs
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
     public class ProfitArray : IProfit
     {
         private readonly int[] _values;
+        private readonly int _count;
 
-        public ProfitArray(IReadOnlyList<Id<CurrencyId>> profits)
-        {
-            int count = profits.Count;
-            _values = new int[count];
-            for(int i = 0; i < count; i++) 
-                _values[i] = profits[i].Value;
-        }
         public ProfitArray(List<int> profits)
         {
             _values = profits.ToArray();
+            _count = _values.Length;
         }
 
-        public int Get => _values.Rand();
+        public int Get => _values[Random.Range(0, _count)];
 
     }
 }

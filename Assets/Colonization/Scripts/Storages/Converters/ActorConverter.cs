@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.Actors
 
             private ActorState StateReadFromArray(int[] array)
             {
-                Errors.ThrowIfLengthNotEqual(array.Length, STATE_SIZE_ARRAY);
+                Throw.IfLengthNotEqual(array.Length, STATE_SIZE_ARRAY);
                 int i = 0;
                 return new(array[i++], array[i++], array[i++], array[i]);
             }

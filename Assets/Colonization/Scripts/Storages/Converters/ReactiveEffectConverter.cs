@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             public static ReactiveEffect ReadFromArray(int[] array)
             {
-                Errors.ThrowIfLengthNotEqual(array.Length, SIZE_ARRAY);
+                Throw.IfLengthNotEqual(array.Length, SIZE_ARRAY);
                 int i = 0;
                 return new(array[i++], array[i++], array[i++], array[i++], array[i]);
             }

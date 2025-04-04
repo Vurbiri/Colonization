@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 {
     public class GameLoop : MonoBehaviour
     {
-        public IdFlags<EdificeId> Edifice = -1;
+        public IdFlags<EdificeId> Edifices = true;
 
         private Dices _dices;
         private TurnQueue _turnQueue;
@@ -51,7 +51,6 @@ namespace Vurbiri.Colonization
         private void OnValidate()
         {
 
-            
         }
 #endif
     }

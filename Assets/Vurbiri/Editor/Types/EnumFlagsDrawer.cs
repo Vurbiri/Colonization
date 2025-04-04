@@ -48,11 +48,10 @@ namespace VurbiriEditor
 				enumType = enumType.GetGenericArguments()[0];
                 if (enumType != null && enumType.IsEnum)
 				{
-					if(VerificationValues(enumType)) 
+					if(VerificationValues(position, enumType)) 
 						return true;
 
                     enumType = null;
-                    HelpBox(position, "Values cannot be negative or out of order", UnityEditor.MessageType.Error);
                     return false;
                 }
             }
@@ -60,16 +59,15 @@ namespace VurbiriEditor
             HelpBox(position, "Failed to determine type", UnityEditor.MessageType.Error);
             return false;
         }
-		private bool VerificationValues(Type enumType)
+		private bool VerificationValues(Rect position, Type enumType)
 		{
-			int intValue, oldValue = -1;
 			foreach (var value in enumType.GetEnumValues())
 			{
-                intValue = (int)value; 
-                if ((intValue - oldValue) != 1) 
-					return false;
-                
-				oldValue = intValue;
+				if ((int)value < 0)
+				{
+                    HelpBox(position, "Values cannot be negative", UnityEditor.MessageType.Error);
+                    return false;
+				}
             }
 			return true;
 		}

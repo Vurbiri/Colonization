@@ -16,7 +16,7 @@ namespace Vurbiri
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 var volumes = serializer.Deserialize<float[]>(reader);
-                Errors.ThrowIfLengthNotEqual(volumes.Length, IdType<T>.Count);
+                Throw.IfLengthNotEqual(volumes.Length, IdType<T>.Count);
 
                 for (int i = 0; i < IdType<T>.Count; i++)
                 {

@@ -39,8 +39,6 @@ namespace Vurbiri.Colonization
                 _profits = CurrencyId.Blood;
             else if (id == SurfaceId.Water)
                 _profits = new( 0, 1, 2, 3, 4 );
-
-            //EditorUtility.der
         }
 #endif
     }
