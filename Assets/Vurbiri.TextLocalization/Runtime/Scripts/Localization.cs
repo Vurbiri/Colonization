@@ -82,6 +82,24 @@ namespace Vurbiri.TextLocalization
             GC.Collect();
         }
 
+        public void SetFiles(EnumFlags<Files> files)
+        {
+            int count = _countFiles <= files.Count ? _countFiles : files.Count;
+            for (int i = 0; i < count; i++)
+            {
+                if (!files[i])
+                {
+                    _text[i] = null;
+                    continue;
+                }
+
+                if (_text[i] == null)
+                    LoadingFile(i, _currentLanguage);
+            }
+
+            GC.Collect();
+        }
+
         public bool LoadFile(Files file)
         {
             int id = (int)file;

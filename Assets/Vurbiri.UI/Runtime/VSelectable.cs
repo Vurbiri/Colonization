@@ -1,4 +1,5 @@
 //Assets\Vurbiri.UI\Runtime\VSelectable.cs
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,13 +19,13 @@ namespace Vurbiri.UI
         public IReadOnlyList<Graphic> TargetGraphics => _targetGraphics;
         public Graphic InteractableIcon => _interactableIcon;
 
-        public new virtual bool interactable
+        public new bool interactable
         {
             get => base.interactable;
             set
             {
                 if (base.interactable == value) return;
-                
+
                 base.interactable = value;
                 if (_interactableIcon != null)
                     _interactableIcon.CrossFadeAlpha(value ? 0f : 1f, colors.fadeDuration, true);
@@ -43,8 +44,6 @@ namespace Vurbiri.UI
 
             if (_targetGraphics.Count > 0)
                 targetGraphic = _targetGraphics[0];
-
-            base.Awake();
         }
 
         protected override void Start()

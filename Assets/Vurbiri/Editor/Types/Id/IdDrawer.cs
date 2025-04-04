@@ -25,7 +25,7 @@ namespace VurbiriEditor
         private (string[] names, int[] values) GetNamesAndValues()
         {
             Type typeField = fieldInfo.FieldType;
-            PropertyInfo _displayNames, _values;
+            PropertyInfo displayNames, values;
 
             if (typeField.IsArray)
                 typeField = typeField.GetElementType();
@@ -35,12 +35,12 @@ namespace VurbiriEditor
             do
             {
                 typeField = typeField.BaseType;
-                _displayNames = typeField.GetProperty("DisplayNames");
-                _values = typeField.GetProperty("Values");
+                displayNames = typeField.GetProperty("DisplayNames");
+                values = typeField.GetProperty("Values");
             }
-            while (_displayNames == null | _values == null);
+            while (typeField != null & (displayNames == null | values == null));
 
-            return ((string[])_displayNames.GetValue(null), (int[])_values.GetValue(null));
+            return ((string[])displayNames.GetValue(null), (int[])values.GetValue(null));
         }
     }
 }

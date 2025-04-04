@@ -14,6 +14,10 @@ namespace Vurbiri.Colonization
             for(int i = 0; i < count; i++) 
                 _values[i] = profits[i].Value;
         }
+        public ProfitArray(List<int> profits)
+        {
+            _values = profits.ToArray();
+        }
 
         public int Get => _values.Rand();
 

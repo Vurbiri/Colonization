@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Vurbiri
 {
     [Serializable, JsonObject(MemberSerialization.OptIn)]
-    public struct Id<T> : IEquatable<Id<T>>, IComparable<Id<T>> where T : IdType<T>
+    public struct Id<T> : IEquatable<Id<T>>, IEquatable<int>, IComparable<Id<T>>, IComparable<int> where T : IdType<T>
     {
         [SerializeField, JsonProperty("id")]
         private int _id;
@@ -25,10 +25,20 @@ namespace Vurbiri
 
         public override readonly string ToString() => _id.ToString();
         public readonly bool Equals(Id<T> other) => _id == other._id;
-        public override readonly bool Equals(object obj) => obj is Id<T> id && _id == id._id;
+        public readonly bool Equals(int value) => _id == value;
+        public override readonly bool Equals(object obj)
+        {
+            if (obj is null) return false;
+
+            if (obj is Id<T> id) return _id == id._id;
+            if (obj is int i) return _id == i;
+
+            return false;
+        }
         public override readonly int GetHashCode() => _id.GetHashCode();
 
         public readonly int CompareTo(Id<T> other) => _id - other._id;
+        public readonly int CompareTo(int value) => _id - value;
 
         public static explicit operator int(Id<T> id) => id._id;
         public static implicit operator Id<T>(int value) => new(value);

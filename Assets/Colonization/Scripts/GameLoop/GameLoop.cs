@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization
 {
     public class GameLoop : MonoBehaviour
     {
+        public IdFlags<EdificeId> Edifice = -1;
+
         private Dices _dices;
         private TurnQueue _turnQueue;
         private Players _players;
@@ -37,12 +39,22 @@ namespace Vurbiri.Colonization
             _inputController.GameplayMap = _turnQueue.CurrentId == PlayerId.Player;
 
             int roll = _dices.Roll();
-            UnityEngine.Debug.Log("ROLL: " + roll);
             ACurrencies free = null;
             if (roll != GATE_ID)
                 free = _hexagons.GetFreeGroundResource(roll);
 
             _players.Profit(roll, free);
         }
+
+#if UNITY_EDITOR
+
+        private void OnValidate()
+        {
+
+            
+        }
+#endif
     }
+
+
 }

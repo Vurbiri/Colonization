@@ -15,6 +15,8 @@ namespace VurbiriEditor
         private static string[] nameScenes;
         private static int[] idScenes;
 
+        SerializedProperty _sceneProperty;
+
         static SceneDrawer()
         {
             CreateListScenes();
@@ -25,10 +27,10 @@ namespace VurbiriEditor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            SerializedProperty sceneProperty = property.FindPropertyRelative(NAME_VALUE);
+            _sceneProperty ??= property.FindPropertyRelative(NAME_VALUE);
 
             label = EditorGUI.BeginProperty(position, label, property);
-            sceneProperty.intValue = EditorGUI.IntPopup(position, label.text, sceneProperty.intValue, nameScenes, idScenes);
+            _sceneProperty.intValue = EditorGUI.IntPopup(position, label.text, _sceneProperty.intValue, nameScenes, idScenes);
             EditorGUI.EndProperty();
         }
 

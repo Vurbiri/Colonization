@@ -35,6 +35,7 @@ namespace VurbiriEditor.Colonization
                 {
                     _surfaces.Set();
                     serializedObject.ApplyModifiedProperties();
+                    EditorUtility.SetDirty(_surfaces);
                     AssetDatabase.SaveAssets();
                 }
                 EditorGUILayout.Space();

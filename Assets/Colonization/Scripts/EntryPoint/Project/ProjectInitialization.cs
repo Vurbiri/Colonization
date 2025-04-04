@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Collections;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
 using Vurbiri.TextLocalization;
@@ -18,7 +17,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [Space]
         [SerializeField] private LogOnPanel _logOnPanel;
         [Space]
-        [SerializeField] private EnumArray<Files, bool> _localizationFiles = new(false);
+        [SerializeField] private EnumFlags<Files> _localizationFiles = 0;
         [Space]
         [SerializeField] private string _leaderboardName = "lbColonization";
         [Space]

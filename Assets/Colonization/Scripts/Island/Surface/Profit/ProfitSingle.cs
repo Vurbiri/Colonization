@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
     {
         private readonly int _value;
 
-        public ProfitSingle(Id<CurrencyId> profit) => _value = profit.Value;
+        public ProfitSingle(int profit) => _value = profit;
 
         public int Get => _value;
     }

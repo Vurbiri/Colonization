@@ -1,5 +1,6 @@
 //Assets\Vurbiri.UI\Runtime\ToggleTransitionEffects\TransitionEffects.cs
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Vurbiri.UI
 {
@@ -8,86 +9,57 @@ namespace Vurbiri.UI
         private abstract class TransitionEffect : ITransitionEffect
         {
             protected readonly VToggle _parent;
-            protected readonly ColorTween _tweenMarkA;
-            protected readonly ColorTween _tweenStateA;
+            protected readonly ColorTween _tweenMark, _tweenState;
 
             protected Color _colorMarkOn, _colorMarkOff;
-            protected Color _targetColorMarkA, _targetColorStateA;
+            protected Color _targetColorMark, _targetColorState;
 
-            public abstract bool IsValid { get; }
-            public virtual bool Value => !Mathf.Approximately(_parent._checkmarkOn.canvasRenderer.GetAlpha(), 0);
+            public bool IsValid => _tweenMark.IsValid;
+            public bool Value => _tweenMark.CurrentColor != _colorMarkOff * _targetColorState;
 
-            protected Color TargetColorA => _targetColorMarkA * _targetColorStateA;
+            protected Color TargetColor => _targetColorMark * _targetColorState;
 
             protected TransitionEffect() { }
-            protected TransitionEffect(VToggle parent)
+            protected TransitionEffect(VToggle parent, bool isOn, Graphic checkmark, Color colorMarkOn, Color colorMarkOff)
             {
                 _parent = parent;
-                
-                _targetColorStateA = _parent.CurrentColor;
-                _tweenMarkA = new(_parent._checkmarkOn.canvasRenderer);
-                _tweenStateA = new(_parent._checkmarkOn.canvasRenderer);
-                TransitionUpdate();
+
+                _colorMarkOn = colorMarkOn;
+                _colorMarkOff = colorMarkOff;
+
+                _targetColorMark = isOn ? colorMarkOn : colorMarkOff;
+                _targetColorState = parent.CurrentColor;
+
+                _tweenMark = new(checkmark, parent._isFade, parent._fadeDuration);
+                _tweenState = new(checkmark);
+
+                PlayInstant(isOn);
             }
 
-            public virtual void TransitionUpdate()
-            {
-                _tweenMarkA.SetTransition(_parent._markTransition == ToggleTransition.Fade, _parent._transitionDuration);
-            }
-
-            public bool GraphicUpdate()
-            {
-                if (_parent._checkmarkOn == null) return false;
-                return _tweenMarkA.canvasRenderer = _tweenStateA.canvasRenderer  = _parent._checkmarkOn.canvasRenderer;
-            }
+            public bool SetGraphic(Graphic checkmarkA, Graphic checkmarkB) => _tweenMark.SetTarget(checkmarkA) & _tweenState.SetTarget(checkmarkA);
+            public void TransitionUpdate() => _tweenMark.SetTransition(_parent._isFade, _parent._fadeDuration);
             public virtual void ColorsUpdate() { }
 
-            public void Play()
+            public void Play(bool isOn)
             {
 #if UNITY_EDITOR
-                if (!Application.isPlaying) { PlayInstant(); return; }
+                if (!Application.isPlaying) { PlayInstant(isOn); return; }
 #endif
-                PlayDuration();
+                _targetColorMark = isOn ? _colorMarkOn : _colorMarkOff;
+                _tweenMark.Start(TargetColor);
             }
-            public virtual void PlayInstant()
+            public void PlayInstant(bool isOn)
             {
-                _targetColorMarkA = _parent._isOn ? _colorMarkOn : _colorMarkOff;
-                _tweenMarkA.canvasRenderer.SetColor(TargetColorA);
+                _targetColorMark = _parent._isOn ? _colorMarkOn : _colorMarkOff;
+                _tweenMark.SetColor(TargetColor);
             }
-            public virtual void PlayDuration()
+
+            public void StateTransitionOn(Color targetColor, float duration, bool instant) 
             {
-                _targetColorMarkA = _parent._isOn ? _colorMarkOn : _colorMarkOff;
-                _tweenMarkA.Reset(TargetColorA);
-                _parent._checkmarkOn.StartCoroutine(_tweenMarkA);
+                _targetColorState = targetColor;
+                _tweenState.Start(TargetColor, !instant, duration);
             }
-
-            public virtual void StateTransitionOn(Color targetColor, float duration, bool instant) 
-            {
-                _targetColorStateA = targetColor;
-                _tweenStateA.Reset(TargetColorA, !instant, duration);
-                _parent._checkmarkOn.StartCoroutine(_tweenStateA);
-
-            }
-            public virtual void StateTransitionOff(Color targetColor, float duration, bool instant) { }
-
-
-            public static ITransitionEffect Create(VToggle parent)
-            {
-                if (parent._checkmarkOn != null) parent._checkmarkOn.canvasRenderer.SetAlpha(0f);
-                if (parent._checkmarkOff != null) parent._checkmarkOff.canvasRenderer.SetAlpha(0f);
-
-                if (parent._transitionType == TransitionType.OnOffCheckmark && OnOffEffect.Validate(parent))
-                    return new OnOffEffect(parent);
-
-                /*if (parent._transitionType == TransitionType.SwitchCheckmark && SwitchEffect.Validate(parent))
-                    return new SwitchEffect(parent);*/
-
-                if (parent._transitionType == TransitionType.ColorCheckmark && ColorEffect.Validate(parent))
-                    return new ColorEffect(parent);
-
-                return new EmptyEffect();
-            }
-
+            public void StateTransitionOff(Color targetColor, float duration, bool instant) { }
         }
         //==================================================================================
         sealed private class EmptyEffect : ITransitionEffect
@@ -97,31 +69,28 @@ namespace Vurbiri.UI
             public bool IsValid => false;
             public bool Value => throw new System.NotImplementedException();
 
+            public bool SetGraphic(Graphic checkmarkA, Graphic checkmarkB) => false;
             public void TransitionUpdate() { }
-            public bool GraphicUpdate() => false;
             public void ColorsUpdate() { }
 
-            public void PlayInstant() { }
-            public void PlayDuration() { }
-
-            public void Play() { }
+            public void Play(bool isOn) { }
+            public void PlayInstant(bool isOn) { }
 
             public void StateTransitionOn(Color targetColor, float duration, bool instant) { }
             public void StateTransitionOff(Color targetColor, float duration, bool instant) { }
         }
-
+        //==================================================================================
         private interface ITransitionEffect
         {
             public bool IsValid { get; }
             public bool Value { get; }
 
+            public bool SetGraphic(Graphic checkmarkA, Graphic checkmarkB);
             public void TransitionUpdate();
-            public bool GraphicUpdate();
             public void ColorsUpdate();
-            
 
-            public void Play();
-            public void PlayInstant();
+            public void Play(bool isOn);
+            public void PlayInstant(bool isOn);
 
             public void StateTransitionOn(Color targetColor, float duration, bool instant);
             public void StateTransitionOff(Color targetColor, float duration, bool instant);

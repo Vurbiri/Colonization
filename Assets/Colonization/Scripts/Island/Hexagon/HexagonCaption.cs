@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\Island\Hexagon\HexagonCaption.cs
-using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -25,7 +24,7 @@ namespace Vurbiri.Colonization.UI
         private string _defaultCurrencyText;
         protected GameObject _thisGO;
 
-        public void Init(int id, IReadOnlyList<Id<CurrencyId>> spritesIds)
+        public void Init(int id, IdFlags<CurrencyId> flags)
         {
             _thisGO = gameObject;
             _thisTransform = transform;
@@ -36,10 +35,10 @@ namespace Vurbiri.Colonization.UI
             _colorNormal = colorSettings.ColorTextBase;
             _colorProfit = colorSettings.ColorPositive;
 
-            StringBuilder sb = new(TAG_SPRITE_LENGTH * spritesIds.Count);
+            StringBuilder sb = new(TAG_SPRITE_LENGTH * CurrencyId.Count);
 
-            foreach (var sId in spritesIds)
-                sb.AppendFormat(TAG_SPRITE, sId);
+            for (int i = 0; i < CurrencyId.Count; i++)
+                if (flags[i]) sb.AppendFormat(TAG_SPRITE, i);
 
             _currencyText.text = _defaultCurrencyText = sb.ToString();
 

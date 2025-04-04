@@ -1,6 +1,5 @@
 //Assets\Colonization\Scripts\Island\Surface\SurfaceType.cs
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -10,8 +9,7 @@ namespace Vurbiri.Colonization
 	{
         [HideInInspector, SerializeField] private Id<SurfaceId> _id;
         [Space]
-        [SerializeField] private Id<CurrencyId>[] _profits;
-        [Space]
+        [SerializeField] private IdFlags<CurrencyId> _profits;
         [SerializeField] private ASurface _prefabSurface;
 
         private IProfit _profit;
@@ -19,8 +17,8 @@ namespace Vurbiri.Colonization
         public Id<SurfaceId> Id => _id;
         public bool IsWater => _id == SurfaceId.Water;
         public bool IsGate => _id == SurfaceId.Gate;
-        public IReadOnlyList<Id<CurrencyId>> Currencies => _profits;
-        public IProfit Profit => _profit ??= _profits.Length == 1 ? new ProfitSingle(_profits[0]) : new ProfitArray(_profits);
+        public IdFlags<CurrencyId> Currencies => _profits;
+        public IProfit Profit => _profit ??= _id != SurfaceId.Water ? new ProfitSingle(_profits.First()) : new ProfitArray(_profits.GetValues());
 
         public void Create(Transform parent)
         {
@@ -36,11 +34,13 @@ namespace Vurbiri.Colonization
             _prefabSurface = EUtility.FindAnyPrefab<ASurface>($"P_{IdType<SurfaceId>.Names[id]}");
 
             if (id < SurfaceId.Water)
-                _profits = new Id<CurrencyId>[] { id };
+                _profits = id;
             else if (id == SurfaceId.Gate)
-                _profits = new Id<CurrencyId>[] { CurrencyId.Blood };
+                _profits = CurrencyId.Blood;
             else if (id == SurfaceId.Water)
-                _profits = new Id<CurrencyId>[] { 0, 1, 2, 3, 4 };
+                _profits = new( 0, 1, 2, 3, 4 );
+
+            //EditorUtility.der
         }
 #endif
     }

@@ -23,7 +23,7 @@ namespace VurbiriEditor.UI
             EditorGUILayout.Space();
         }
 
-        [MenuItem("GameObject/UI Vurbiri/Button", false, 30)]
+        [MenuItem("GameObject/UI Vurbiri/Button", false, VUI_CONST.MENU_PRIORITY)]
         public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromPrefab("VButton", "Button", command.context as GameObject);
 
     }

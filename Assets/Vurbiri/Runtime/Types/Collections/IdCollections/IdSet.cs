@@ -8,11 +8,11 @@ using UnityEngine;
 namespace Vurbiri.Collections
 {
     [Serializable, JsonArray]
-    public partial class IdSet<TId, TValue> : IReadOnlyList<TValue> where TId : IdType<TId> where TValue : class, IValueId<TId>
+    sealed public partial class IdSet<TId, TValue> : IReadOnlyList<TValue> where TId : IdType<TId> where TValue : class, IValueId<TId>
     {
         [SerializeField] private TValue[] _values;
         [SerializeField] private int _count;
-        private readonly int _capacity;
+        private readonly int _capacity = IdType<TId>.Count;
 
         public int Filling => _count;
         public int Count => _capacity;
@@ -22,9 +22,7 @@ namespace Vurbiri.Collections
 
         public IdSet()
         {
-            _capacity = IdType<TId>.Count;
             _count = 0;
-
             _values = new TValue[_capacity];
         }
 

@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Storage;
@@ -15,7 +14,6 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
-    //[DefaultExecutionOrder(-20)]
     sealed public class GameplayEntryPoint : ASceneEntryPoint
     {
         [SerializeField] private SceneId _nextScene;
@@ -24,7 +22,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private SceneObjects _sceneObjects;
         [SerializeField] private ScriptableObjects _scriptables;
         [Space]
-        [SerializeField] private EnumArray<Files, bool> _localizationFiles = new(true);
+        [SerializeField] private EnumFlags<Files> _localizationFiles = new(true);
         [Header("Init data for classes")]
         [SerializeField] private Players.Settings _playersSettings;
         [SerializeField] private InputController.Settings _inputControllerSettings;

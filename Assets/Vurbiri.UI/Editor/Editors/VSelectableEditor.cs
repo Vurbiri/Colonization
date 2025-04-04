@@ -45,10 +45,13 @@ namespace VurbiriEditor.UI
         protected const float kArrowThickness = 2.5f;
         protected const float kArrowHeadSize = 1.2f;
 
+        protected VSelectable _vSelectable;
         protected Selectable.Transition _transition;
 
         protected virtual void OnEnable()
         {
+            _vSelectable = target as VSelectable;
+
             _interactableIconProperty = serializedObject.FindProperty("_interactableIcon");
             _alfaColliderProperty = serializedObject.FindProperty("_alfaCollider");
             _thresholdProperty = serializedObject.FindProperty("_threshold");
@@ -62,7 +65,6 @@ namespace VurbiriEditor.UI
             m_AnimTriggerProperty = serializedObject.FindProperty("m_AnimationTriggers");
             m_NavigationProperty = serializedObject.FindProperty("m_Navigation");
 
-            _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
             m_ShowColorTint.value = _transition == Selectable.Transition.ColorTint;
             m_ShowSpriteTransition.value = _transition == Selectable.Transition.SpriteSwap;
             m_ShowAnimTransition.value = _transition == Selectable.Transition.Animation;
@@ -77,6 +79,8 @@ namespace VurbiriEditor.UI
             s_Editors.Add(this);
             RegisterStaticOnSceneGUI();
             s_ShowNavigation = EditorPrefs.GetBool(s_ShowNavigationKey);
+
+            _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
         }
 
         protected virtual void OnDisable()
@@ -98,14 +102,12 @@ namespace VurbiriEditor.UI
 
         public override void OnInspectorGUI()
         {
-            _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
-
             serializedObject.Update();
             CustomStartPropertiesGUI();
-            BeginPropertiesGUI();
-            GraphicsPropertiesGUI();
+            InteractablePropertiesGUI();
+            AlfaColliderPropertiesGUI();
             CustomMiddlePropertiesGUI();
-            GroupBlocksPropertiesGUI();
+            GraphicsAndGroupBlocksPropertiesGUI();
             NavigationPropertiesGUI();
             CustomEndPropertiesGUI();
             serializedObject.ApplyModifiedProperties();
@@ -123,28 +125,25 @@ namespace VurbiriEditor.UI
 
         }
 
-        private void BeginPropertiesGUI()
+        private void InteractablePropertiesGUI()
         {
             Space();
             EditorGUI.BeginChangeCheck();
             PropertyField(m_InteractableProperty);
-            if (EditorGUI.EndChangeCheck())
-                (target as VSelectable).interactable = m_InteractableProperty.boolValue;
-            
             PropertyField(_interactableIconProperty);
+            if (EditorGUI.EndChangeCheck())
+            {
+                if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_vSelectable.gameObject.scene);
+
+                Graphic icon = _interactableIconProperty.objectReferenceValue as Graphic;
+                if (icon != null) icon.canvasRenderer.SetAlpha(m_InteractableProperty.boolValue ? 0f : 1f);
+            }
             Space();
-            
         }
 
-        private void GraphicsPropertiesGUI()
+        private void AlfaColliderPropertiesGUI()
         {
-            if (Application.isPlaying) return;
-
-            if (_targetGraphicsProperty.arraySize == 0) _targetGraphicsProperty.InsertArrayElementAtIndex(0);
-            m_TargetGraphicProperty.objectReferenceValue = _targetGraphicsProperty.GetArrayElementAtIndex(0).objectReferenceValue;
-   
-            Graphic graphic = m_TargetGraphicProperty.objectReferenceValue as Graphic; 
-            Image image = graphic as Image;
+            Image image = m_TargetGraphicProperty.objectReferenceValue as Image;
 
             _showAlfaCollider.target = _transition != Selectable.Transition.Animation && image != null && image.sprite != null && image.sprite.texture.isReadable;
 
@@ -167,47 +166,54 @@ namespace VurbiriEditor.UI
                 _alfaColliderProperty.boolValue = false;
             }
             EndFadeGroup();
-
-                if (BeginFadeGroup(m_ShowColorTint.faded))
-                {
-                    PropertyField(_targetGraphicsProperty);
-                    if (graphic == null)
-                        HelpBox("You must have a Graphic target in order to use a color transition.", UnityEditor.MessageType.Warning);
-                }
-                EndFadeGroup();
-
-                if (BeginFadeGroup(m_ShowSpriteTransition.faded))
-                {
-                    PropertyField(m_TargetGraphicProperty);
-                    _targetGraphicsProperty.GetArrayElementAtIndex(0).objectReferenceValue = m_TargetGraphicProperty.objectReferenceValue;
-                    if (image == null)
-                        HelpBox("You must have a Image target in order to use a sprite swap transition.", UnityEditor.MessageType.Warning);
-                }
-                EndFadeGroup();
         }
 
-        private void GroupBlocksPropertiesGUI()
+        private void GraphicsAndGroupBlocksPropertiesGUI()
         {
-            PropertyField(m_TransitionProperty);
+            if (!Application.isPlaying)
+            {
+                if (_targetGraphicsProperty.arraySize == 0) _targetGraphicsProperty.InsertArrayElementAtIndex(0);
+                if(_targetGraphicsProperty.GetArrayElementAtIndex(0).objectReferenceValue == null)
+                    _targetGraphicsProperty.GetArrayElementAtIndex(0).objectReferenceValue = _vSelectable.GetComponent<Graphic>();
 
-            EditorGUI.indentLevel++;
+                m_TargetGraphicProperty.objectReferenceValue = _targetGraphicsProperty.GetArrayElementAtIndex(0).objectReferenceValue;
+            }
+
+            PropertyField(m_TransitionProperty);
+            _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
 
             m_ShowColorTint.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.ColorTint;
             m_ShowSpriteTransition.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.SpriteSwap;
             m_ShowAnimTransition.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.Animation;
 
+            Graphic graphic = m_TargetGraphicProperty.objectReferenceValue as Graphic;
+
+            EditorGUI.indentLevel++;
+            // ========= ColorTint =================================
             if (BeginFadeGroup(m_ShowColorTint.faded))
             {
+                PropertyField(_targetGraphicsProperty);
+                if (graphic == null)
+                    HelpBox("You must have a Graphics target in order to use a color transition.", UnityEditor.MessageType.Warning);
+                
                 PropertyField(m_ColorBlockProperty);
             }
             EndFadeGroup();
-
+            // ========= SpriteSwap =================================
             if (BeginFadeGroup(m_ShowSpriteTransition.faded))
             {
+                Image image = graphic as Image;
+                PropertyField(m_TargetGraphicProperty);
+                if (!Application.isPlaying)
+                    _targetGraphicsProperty.GetArrayElementAtIndex(0).objectReferenceValue = m_TargetGraphicProperty.objectReferenceValue;
+                if (image == null)
+                    HelpBox("You must have a Image target in order to use a sprite swap transition.", UnityEditor.MessageType.Warning);
+
+                Space();
                 PropertyField(m_SpriteStateProperty);
             }
             EndFadeGroup();
-
+            // ========= Animation =================================
             if (BeginFadeGroup(m_ShowAnimTransition.faded))
             {
                 Animator animator = (target as Selectable).GetComponent<Animator>();
@@ -234,8 +240,6 @@ namespace VurbiriEditor.UI
             EndFadeGroup();
 
             EditorGUI.indentLevel--;
-
-            serializedObject.ApplyModifiedProperties();
         }
 
         private void NavigationPropertiesGUI()
