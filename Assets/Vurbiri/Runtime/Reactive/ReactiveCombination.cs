@@ -8,21 +8,21 @@ namespace Vurbiri.Reactive
         private TA _valueA;
         private TB _valueB;
         private readonly Unsubscribers _unsubscribers = new(2);
-        private readonly Subscriber<TA, TB> _subscriber = new();
+        private readonly Signer<TA, TB> _signer = new();
 
         public ReactiveCombination(IReactiveValue<TA> reactiveA, IReactiveValue<TB> reactiveB)
         {
             _valueA = reactiveA.Value;
             _valueB = reactiveB.Value;
 
-            _unsubscribers += reactiveA.Subscribe(value => _subscriber.Invoke(_valueA = value, _valueB), false);
-            _unsubscribers += reactiveB.Subscribe(value => _subscriber.Invoke(_valueA, _valueB = value), false);
+            _unsubscribers += reactiveA.Subscribe(value => _signer.Invoke(_valueA = value, _valueB), false);
+            _unsubscribers += reactiveB.Subscribe(value => _signer.Invoke(_valueA, _valueB = value), false);
         }
 
         public Unsubscriber Subscribe(Action<TA, TB> action, bool sendCallback = true)
         {
             if (sendCallback) action(_valueA, _valueB);
-            return _subscriber.Add(action);
+            return _signer.Add(action);
         }
 
         public void Dispose()
@@ -37,7 +37,7 @@ namespace Vurbiri.Reactive
         private TB _valueB;
         private TC _valueC;
         private readonly Unsubscribers _unsubscribers;
-        private readonly Subscriber<TA, TB, TC> _subscriber = new();
+        private readonly Signer<TA, TB, TC> _signer = new();
 
         public ReactiveCombination(IReactiveValue<TA> reactiveA, IReactiveValue<TB> reactiveB, IReactiveValue<TC> reactiveC)
         {
@@ -47,9 +47,9 @@ namespace Vurbiri.Reactive
             _valueB = reactiveB.Value;
             _valueC = reactiveC.Value;
 
-            _unsubscribers += reactiveA.Subscribe(value => _subscriber.Invoke(_valueA = value, _valueB, _valueC), false);
-            _unsubscribers += reactiveB.Subscribe(value => _subscriber.Invoke(_valueA, _valueB = value, _valueC), false);
-            _unsubscribers += reactiveC.Subscribe(value => _subscriber.Invoke(_valueA, _valueB, _valueC = value), false);
+            _unsubscribers += reactiveA.Subscribe(value => _signer.Invoke(_valueA = value, _valueB, _valueC), false);
+            _unsubscribers += reactiveB.Subscribe(value => _signer.Invoke(_valueA, _valueB = value, _valueC), false);
+            _unsubscribers += reactiveC.Subscribe(value => _signer.Invoke(_valueA, _valueB, _valueC = value), false);
         }
 
         public ReactiveCombination(IReactiveValue<TA, TB> reactiveAB, IReactiveValue<TC> reactiveC)
@@ -60,14 +60,14 @@ namespace Vurbiri.Reactive
             _valueB = reactiveAB.ValueB;
             _valueC = reactiveC.Value;
 
-            _unsubscribers += reactiveAB.Subscribe((valueA, valueB) => _subscriber.Invoke(_valueA = valueA, _valueB = valueB, _valueC), false);
-            _unsubscribers += reactiveC.Subscribe(value => _subscriber.Invoke(_valueA, _valueB, _valueC = value), false);
+            _unsubscribers += reactiveAB.Subscribe((valueA, valueB) => _signer.Invoke(_valueA = valueA, _valueB = valueB, _valueC), false);
+            _unsubscribers += reactiveC.Subscribe(value => _signer.Invoke(_valueA, _valueB, _valueC = value), false);
         }
 
         public Unsubscriber Subscribe(Action<TA, TB, TC> action, bool sendCallback = true)
         {
             if (sendCallback) action(_valueA, _valueB, _valueC);
-            return _subscriber.Add(action);
+            return _signer.Add(action);
         }
 
         public void Dispose()

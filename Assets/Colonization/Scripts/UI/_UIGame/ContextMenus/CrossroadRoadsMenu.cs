@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.UI
         private Vector2 _localPoint;
         private CrossroadMainMenu _mainMen;
 
-        public ISubscriber<bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
+        public ISigner<bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
         {
             ACurrencies roadCost = settings.prices.Road;
             _mainMen = mainMenu;
@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.UI
 
             _thisGO.SetActive(false);
 
-            return _subscriber;
+            return _signer;
         }
 
         public override void Open(Crossroad crossroad)

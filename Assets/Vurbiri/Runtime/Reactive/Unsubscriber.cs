@@ -11,23 +11,23 @@ namespace Vurbiri.Reactive
 
     sealed internal class Unsubscriber<TDelegate> : Unsubscriber where TDelegate : Delegate
     {
-        private WeakReference<IUnsubscribed<TDelegate>> _weakSubscriber;
+        private WeakReference<IUnsubscribed<TDelegate>> _weakSigner;
         private TDelegate action;
 
         public Unsubscriber(IUnsubscribed<TDelegate> subscriber, TDelegate action)
         {
-            _weakSubscriber = new(subscriber);
+            _weakSigner = new(subscriber);
             this.action = action;
         }
 
         public override void Unsubscribe()
         {
-            if(_weakSubscriber != null && _weakSubscriber.TryGetTarget(out IUnsubscribed<TDelegate> subscriber))
+            if(_weakSigner != null && _weakSigner.TryGetTarget(out IUnsubscribed<TDelegate> signer))
             {
-                subscriber.Remove(action);
+                signer.Remove(action);
 
-                _weakSubscriber.SetTarget(null);
-                _weakSubscriber = null;
+                _weakSigner.SetTarget(null);
+                _weakSigner = null;
             }
             action = null;
         }

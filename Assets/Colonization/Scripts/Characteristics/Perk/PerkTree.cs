@@ -14,8 +14,8 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly IReadOnlyList<Perk>[] _perks = new IReadOnlyList<Perk>[TypePerksId.Count];
         private readonly RInt[] _progress = new RInt[TypePerksId.Count];
         private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[TypePerksId.Count];
-        private readonly Subscriber<Perk> _eventPerk = new();
-        private readonly Subscriber<IEnumerable<IEnumerable<int>>> _eventHashSet = new();
+        private readonly Signer<Perk> _eventPerk = new();
+        private readonly Signer<IEnumerable<IEnumerable<int>>> _eventHashSet = new();
 
         public IReactiveValue<int> EconomicProgress => _progress[TypePerksId.Economic];
         public IReactiveValue<int> MilitaryProgress => _progress[TypePerksId.Military];

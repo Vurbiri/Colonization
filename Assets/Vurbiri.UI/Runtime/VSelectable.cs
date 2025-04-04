@@ -9,15 +9,15 @@ namespace Vurbiri.UI
 {
     [AddComponentMenu(VUI_CONST.NAME_MENU + "Selectable", 35)]
     [ExecuteAlways, SelectionBase, DisallowMultipleComponent]
-    public class VSelectable : Selectable
+    public partial class VSelectable : Selectable
     {
         [SerializeField] protected Graphic _interactableIcon;
-        [SerializeField] private bool _alfaCollider = false;
+        [SerializeField] private bool _alphaCollider = false;
         [SerializeField, Range(0.01f, 1f)] private float _threshold = 0.1f;
-        [SerializeField] protected List<Graphic> _targetGraphics = new();
+        [SerializeField] protected List<TargetGraphic> _targetGraphics = new();
 
-        public IReadOnlyList<Graphic> TargetGraphics => _targetGraphics;
         public Graphic InteractableIcon => _interactableIcon;
+        public IReadOnlyList<TargetGraphic> TargetGraphics => _targetGraphics;
 
         public new bool interactable
         {
@@ -38,7 +38,7 @@ namespace Vurbiri.UI
 #endif
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
-                if (_targetGraphics[i] == null) _targetGraphics.RemoveAt(i);
+                if (!_targetGraphics[i].IsValid) _targetGraphics.RemoveAt(i);
 
             _targetGraphics.TrimExcess();
 
@@ -54,7 +54,7 @@ namespace Vurbiri.UI
                 _interactableIcon.canvasRenderer.SetAlpha(base.interactable ? 0f : 1f);
 
             Image image = targetGraphic as Image;
-            if (_alfaCollider && image != null && image.sprite != null && image.sprite.texture.isReadable)
+            if (_alphaCollider && image != null && image.sprite != null && image.sprite.texture.isReadable)
                 image.alphaHitTestMinimumThreshold = _threshold;
         }
 
@@ -80,63 +80,49 @@ namespace Vurbiri.UI
             if (!gameObject.activeInHierarchy)
                 return;
 
+            if (transition != Transition.ColorTint)
+            {
+                base.DoStateTransition(state, instant);
+                return;
+            }
+
+            
+            Color targetColor = state switch
+            {
+                SelectionState.Normal => colors.normalColor,
+                SelectionState.Highlighted => colors.highlightedColor,
+                SelectionState.Selected => colors.selectedColor,
+                SelectionState.Pressed => colors.pressedColor,
+                SelectionState.Disabled => colors.disabledColor,
+                _ => Color.black
+            };
+            float duration = instant ? 0f : colors.fadeDuration;
+            int intState = (int)state;
+
+
 #if UNITY_EDITOR
-            if (!Application.isPlaying) { DoStateTransition_Editor(state, instant); return; }
+            if (!Application.isPlaying) { DoStateTransition_Editor(intState, targetColor, duration, instant); return; }
 #endif
 
-            if (transition != Transition.ColorTint | _targetGraphics.Count < 1)
-            {
-                base.DoStateTransition(state, instant);
-                return;
-            }
-
-            float duration = instant ? 0f : colors.fadeDuration;
-            Color targetColor = state switch
-            {
-                SelectionState.Normal => colors.normalColor,
-                SelectionState.Highlighted => colors.highlightedColor,
-                SelectionState.Selected => colors.selectedColor,
-                SelectionState.Pressed => colors.pressedColor,
-                SelectionState.Disabled => colors.disabledColor,
-                _ => Color.black
-            };
-
-            OnStateTransition(state, targetColor, duration, instant);
+            OnStateTransition(intState, targetColor, duration, instant);
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
-                _targetGraphics[i].CrossFadeColor(targetColor, duration, true, true);
+                _targetGraphics[i].CrossFadeColor(intState, targetColor, duration);
         }
 
-        protected virtual void OnStateTransition(SelectionState state, Color targetColor, float duration, bool instant)
+        protected virtual void OnStateTransition(int intState, Color targetColor, float duration, bool instant)
         {
 
         }
 
 #if UNITY_EDITOR
-        private void DoStateTransition_Editor(SelectionState state, bool instant)
+        private void DoStateTransition_Editor(int intState, Color targetColor, float duration, bool instant)
         {
-            if (transition != Transition.ColorTint | _targetGraphics.Count < 1)
-            {
-                base.DoStateTransition(state, instant);
-                return;
-            }
-
-            float duration = instant ? 0f : colors.fadeDuration;
-            Color targetColor = state switch
-            {
-                SelectionState.Normal => colors.normalColor,
-                SelectionState.Highlighted => colors.highlightedColor,
-                SelectionState.Selected => colors.selectedColor,
-                SelectionState.Pressed => colors.pressedColor,
-                SelectionState.Disabled => colors.disabledColor,
-                _ => Color.black
-            };
-
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
-                if (_targetGraphics[i] != null)
-                    _targetGraphics[i].canvasRenderer.SetColor(targetColor);
+                if (_targetGraphics[i].IsValid)
+                    _targetGraphics[i].SetColor(intState, targetColor);
 
-            OnStateTransition(state, targetColor, duration, instant);
+            OnStateTransition(intState, targetColor, duration, instant);
             return;
         }
 #endif

@@ -23,7 +23,7 @@ namespace Vurbiri.EntryPoint
             Destroy(gameObject);
         }
 
-        public abstract ISubscriber<ExitParam> Enter(SceneContainer containers, AEnterParam param);
+        public abstract ISigner<ExitParam> Enter(SceneContainer containers, AEnterParam param);
 
         protected virtual void OnDestroy()
         {

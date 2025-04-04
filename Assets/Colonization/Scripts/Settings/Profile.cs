@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private int _idLang = 0;
         [SerializeField] private int _quality = 2;
 
-        private readonly Subscriber<Profile> _subscriber = new();
+        private readonly Signer<Profile> _signer = new();
         private Localization _localization;
 
         public int Language { get => _idLang; set => _localization.SwitchLanguage(value); }
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                 _idLang = id;
         }
 
-        public Unsubscriber Subscribe(Action<Profile> action, bool sendCallback = true)=> _subscriber.Add(action, sendCallback, this);
+        public Unsubscriber Subscribe(Action<Profile> action, bool sendCallback = true)=> _signer.Add(action, sendCallback, this);
 
         public void Apply()
         {
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
             _idLang = _localization.CurrentId;
             _quality = QualitySettings.GetQualityLevel();
 
-            if (changed) _subscriber.Invoke(this);
+            if (changed) _signer.Invoke(this);
         }
 
         public void Cancel()

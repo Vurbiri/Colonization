@@ -1,10 +1,10 @@
-//Assets\Vurbiri\Runtime\Reactive\Subscriber.cs
+//Assets\Vurbiri\Runtime\Reactive\Signer.cs
 using System;
 using System.Collections.Generic;
 
 namespace Vurbiri.Reactive
 {
-    public class Subscriber : ISubscriber
+    public class Signer : ISigner
     {
         protected Action actions;
 
@@ -23,7 +23,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
 
-    public class Subscriber<T> : ISubscriber<T>
+    public class Signer<T> : ISigner<T>
     {
         protected Action<T> actions;
 
@@ -83,7 +83,7 @@ namespace Vurbiri.Reactive
 
         public void Remove(Action<T> action) => actions -= action;
 
-        public static Unsubscriber operator +(Subscriber<T> subscriber, Action<T> action)
+        public static Unsubscriber operator +(Signer<T> subscriber, Action<T> action)
         {
             Throw.IfNull(action);
 
@@ -94,7 +94,7 @@ namespace Vurbiri.Reactive
         }
     }
     //=======================================================================================
-    public class Subscriber<TA, TB> : ISubscriber<TA, TB>
+    public class Signer<TA, TB> : ISigner<TA, TB>
     {
         protected Action<TA, TB> actions;
 
@@ -123,7 +123,7 @@ namespace Vurbiri.Reactive
         public void Remove(Action<TA, TB> action) => actions -= action;
     }
     //=======================================================================================
-    public class Subscriber<TA, TB, TC> : ISubscriber<TA, TB, TC>
+    public class Signer<TA, TB, TC> : ISigner<TA, TB, TC>
     {
         protected Action<TA, TB, TC> actions;
 
@@ -152,7 +152,7 @@ namespace Vurbiri.Reactive
         public void Remove(Action<TA, TB, TC> action) => actions -= action;
     }
     //=======================================================================================
-    public class Subscriber<TA, TB, TC, TD> : ISubscriber<TA, TB, TC, TD>
+    public class Signer<TA, TB, TC, TD> : ISigner<TA, TB, TC, TD>
     {
         protected Action<TA, TB, TC, TD> actions;
 

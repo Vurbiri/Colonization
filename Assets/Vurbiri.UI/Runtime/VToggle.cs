@@ -21,9 +21,9 @@ namespace Vurbiri.UI
         [SerializeField] private Color _colorOn = Color.green;
         [SerializeField] private Color _colorOff = Color.red;
         [SerializeField] private VToggleGroup _group;
-        [SerializeField] private UnitySubscriber<bool> _onValueChanged = new();
+        [SerializeField] private UnitySigner<bool> _onValueChanged = new();
 
-        private bool _isTransitionOn = false, _isTransitionOff = false;
+        private TargetGraphic _graphicMarkOn = new(false), _graphicMarkOff = new(false);
         private ITransitionEffect _transitionEffect;
         private TMP_Text _caption;
 
@@ -124,18 +124,18 @@ namespace Vurbiri.UI
 
             if (_checkmarkOn != null)
             {
-                Graphic current;
+                TargetGraphic current;
                 for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 {
                     current = _targetGraphics[i];
-                    if (current != null & current == _checkmarkOn)
+                    if (current.IsValid & current == _checkmarkOn)
                     {
-                        _isTransitionOn = true;
+                        _graphicMarkOn.CopyFlags(current);
                         _targetGraphics.RemoveAt(i);
                     }
-                    else if (current != null & current == _checkmarkOff)
+                    else if (current.IsValid & current == _checkmarkOff)
                     {
-                        _isTransitionOff = true;
+                        _graphicMarkOff.CopyFlags(current);
                         _targetGraphics.RemoveAt(i);
                     }
                 }
@@ -202,16 +202,13 @@ namespace Vurbiri.UI
             Set(!_isOn, true);
         }
 
-        protected override void OnStateTransition(SelectionState state, Color targetColor, float duration, bool instant)
+        protected override void OnStateTransition(int intState, Color targetColor, float duration, bool instant)
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying) { _transitionEffect ??= TransitionEffectCreate(); _isTransitionOn = _checkmarkOn; _isTransitionOff = _checkmarkOn; }
+            if (!Application.isPlaying) { _transitionEffect ??= TransitionEffectCreate(); _graphicMarkOn = _checkmarkOn; _graphicMarkOff = _checkmarkOff; }
 #endif
-
-            if (state == SelectionState.Pressed) return;
-
-            if (_isTransitionOn) _transitionEffect.StateTransitionOn(targetColor, duration, instant);
-            if (_isTransitionOff) _transitionEffect.StateTransitionOff(targetColor, duration, instant);
+            if (_graphicMarkOn[intState]) _transitionEffect.StateTransitionOn(targetColor, duration, instant);
+            if (_graphicMarkOff[intState]) _transitionEffect.StateTransitionOff(targetColor, duration, instant);
         }
 
         protected override void OnEnable()

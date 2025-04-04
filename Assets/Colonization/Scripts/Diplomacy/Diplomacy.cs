@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         private readonly int[] _values = new int[PlayerId.HumansCount];
         private readonly DiplomacySettings _settings;
 
-        private readonly Subscriber<IReadOnlyList<int>> _subscriber = new();
+        private readonly Signer<IReadOnlyList<int>> _signer = new();
 
         private int this[Id<PlayerId> idA, Id<PlayerId> idB]
         {
@@ -106,10 +106,10 @@ namespace Vurbiri.Colonization
             else
                 this[index] = value + _settings.rewardForBuff;
 
-            _subscriber.Invoke(_values);
+            _signer.Invoke(_values);
         }
 
-        public Unsubscriber Subscribe(Action<IReadOnlyList<int>> action, bool sendCallback = true) => _subscriber.Add(action, sendCallback, _values);
+        public Unsubscriber Subscribe(Action<IReadOnlyList<int>> action, bool sendCallback = true) => _signer.Add(action, sendCallback, _values);
 
         private void OnNextTurn(TurnQueue turn)
         {
@@ -121,7 +121,7 @@ namespace Vurbiri.Colonization
             this[current - 1] = _values[current - 1] + _settings.penaltyPerRound;
             this[PlayerId.AI_01, PlayerId.AI_02] += UnityEngine.Random.Range(_settings.penaltyPerRound, 1 - _settings.penaltyPerRound);
 
-            _subscriber.Invoke(_values);
+            _signer.Invoke(_values);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

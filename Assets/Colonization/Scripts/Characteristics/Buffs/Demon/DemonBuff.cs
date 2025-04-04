@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Characteristics
     {
         private readonly int _levelUP;
 
-        public DemonBuff(Subscriber<IPerk> subscriber, DemonBuffSettings settings, int level) : base(subscriber, settings, settings.value * level / settings.levelUP)
+        public DemonBuff(Signer<IPerk> subscriber, DemonBuffSettings settings, int level) : base(subscriber, settings, settings.value * level / settings.levelUP)
         {
             _levelUP = settings.levelUP;
         }
@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Characteristics
                 return;
 
             _current.Add(_base);
-            _subscriber.Invoke(_base);
+            _signer.Invoke(_base);
         }
     }
 }

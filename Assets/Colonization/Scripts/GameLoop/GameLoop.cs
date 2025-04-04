@@ -1,13 +1,16 @@
 //Assets\Colonization\Scripts\GameLoop\GameLoop.cs
+using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
+using Vurbiri.UI;
 using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
     public class GameLoop : MonoBehaviour
     {
-        public IdFlags<EdificeId> Edifices = true;
+        public VSelectable.TargetGraphic _targetGraphic = new();
+        public List<VSelectable.TargetGraphic> TargetGraphic = new();
 
         private Dices _dices;
         private TurnQueue _turnQueue;

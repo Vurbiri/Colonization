@@ -23,8 +23,8 @@ namespace Vurbiri.Colonization
         private readonly DemonsSpawner _spawner;
         private readonly ReactiveSet<Actor> _demons;
 
-        private readonly Subscriber<Satan> _eventSelf = new();
-        private readonly Subscriber<Win> _eventWin = new();
+        private readonly Signer<Satan> _eventSelf = new();
+        private readonly Signer<Win> _eventWin = new();
         private readonly Unsubscribers _unsubscribers = new();
 
         public IReactiveValue<int> Level => _level;

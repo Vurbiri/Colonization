@@ -13,7 +13,7 @@ namespace Vurbiri.Reactive.Collections
         protected int _capacity = 4;
         protected readonly RInt _count = new(0);
 
-        protected readonly Subscriber<T, TypeEvent> _subscriber = new();
+        protected readonly Signer<T, TypeEvent> _signer = new();
 
         public int Capacity => _capacity;
         public int Count => _count;
@@ -44,7 +44,7 @@ namespace Vurbiri.Reactive.Collections
                 }
             }
 
-            return _subscriber.Add(action);
+            return _signer.Add(action);
         }
         #endregion
 
@@ -110,7 +110,7 @@ namespace Vurbiri.Reactive.Collections
                 _count.Decrement();
             }
 
-            _subscriber.Invoke(item, operation);
+            _signer.Invoke(item, operation);
         }
 
         private void GrowArray()

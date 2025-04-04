@@ -10,8 +10,9 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(EnumFlags<>))]
     public class EnumFlagsDrawer : PropertyDrawer
 	{
-		#region Consts
-		private const string P_VALUE = "_value", P_COUNT = "_count";
+        #region Consts
+        private const int MAX_COUNT = 32;
+        private const string P_VALUE = "_value", P_COUNT = "_count";
 		#endregion
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
@@ -21,6 +22,11 @@ namespace VurbiriEditor
             if (!TryGetTypeEnum(position, out Type enumType)) return;
 
             string[] names = enumType.GetEnumNames();
+            if (names.Length > MAX_COUNT)
+            {
+                HelpBox(position, $"Count of flags is greater than {MAX_COUNT}", UnityEditor.MessageType.Error);
+                return;
+            }
             mainProperty.FindPropertyRelative(P_COUNT).intValue = names.Length;
 
             SerializedProperty valueProperty = mainProperty.FindPropertyRelative(P_VALUE);

@@ -93,7 +93,7 @@ namespace Vurbiri.Colonization.Actors
             int delta = _abilities.AddPerk(effect);
 
             if(delta != 0)
-                _subscriber.Invoke(this, TypeEvent.Change);
+                _signer.Invoke(this, TypeEvent.Change);
 
             return delta;
         }
@@ -160,7 +160,7 @@ namespace Vurbiri.Colonization.Actors
             if (_deathCoroutine == null)
             {
                 _stateMachine.ToPrevState();
-                _subscriber.Invoke(this, TypeEvent.Change);
+                _signer.Invoke(this, TypeEvent.Change);
             }
         }
         #endregion
@@ -176,10 +176,10 @@ namespace Vurbiri.Colonization.Actors
         private void OnBuff(IPerk perk)
         {
             if (_abilities.AddPerk(perk) != 0)
-                _subscriber.Invoke(this, TypeEvent.Change);
+                _signer.Invoke(this, TypeEvent.Change);
         }
 
-        private void RedirectEvents(ReactiveEffect item, TypeEvent type) => _subscriber.Invoke(this, TypeEvent.Change);
-        private void Signal() => _subscriber.Invoke(this, TypeEvent.Change);
+        private void RedirectEvents(ReactiveEffect item, TypeEvent type) => _signer.Invoke(this, TypeEvent.Change);
+        private void Signal() => _signer.Invoke(this, TypeEvent.Change);
     }
 }

@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Characteristics
         private ReactiveEffect[] _values;
         private int _capacity = 4;
         private readonly RInt _count = new(0);
-        private readonly Subscriber<ReactiveEffect, TypeEvent> _subscriber = new();
+        private readonly Signer<ReactiveEffect, TypeEvent> _signer = new();
         
         public ReactiveEffect this[int index] => _values[index];
 
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.Characteristics
                     action(_values[i], TypeEvent.Subscribe);
             }
 
-            return _subscriber.Add(action);
+            return _signer.Add(action);
         }
         #endregion
 
@@ -123,7 +123,7 @@ namespace Vurbiri.Colonization.Characteristics
             if (operation == TypeEvent.Remove)
                 RemoveItem(effect);
 
-            _subscriber.Invoke(effect, operation);
+            _signer.Invoke(effect, operation);
         }
 
         private void GrowArray()

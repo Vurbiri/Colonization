@@ -9,7 +9,9 @@ namespace Vurbiri
     [Serializable]
 	public struct EnumFlags<T> : IReadOnlyList<bool>, IEquatable<EnumFlags<T>>, IEquatable<int> where T : Enum
 	{
-		[SerializeField] private int _value;
+        private const int MAX_COUNT = 32;
+
+        [SerializeField] private int _value;
 		[SerializeField] private int _count;
 
         public readonly int Count => _count;
@@ -21,18 +23,21 @@ namespace Vurbiri
         public EnumFlags(int value)
 		{
 			_count = Enum<T>.Count;
+            Throw.IfGreater(_count, MAX_COUNT);
             Throw.IfOutOfRange(value, 0, _count);
             _value = 1 << value;
         }
         public EnumFlags(T value)
         {
             _count = Enum<T>.Count;
+            Throw.IfGreater(_count, MAX_COUNT);
             _value = 1 << value.ToInt();
         }
         public EnumFlags(bool all)
         {
-            if (all) _value = -1; else _value = 0;
             _count = Enum<T>.Count;
+            Throw.IfGreater(_count, MAX_COUNT);
+            if (all) _value = -1; else _value = 0;
         }
 
         private EnumFlags(int value, int count)
@@ -48,10 +53,14 @@ namespace Vurbiri
             _value |= 1 << i;
         }
 
-        public void Remove(int i) => _value ^= 1 << i;
         public void Remove(T e) => _value ^= 1 << e.ToInt();
+        public void Remove(int i)
+        {
+            Throw.IfOutOfRange(i, 0, _count);
+            _value ^= 1 << i;
+        }
 
-		public void Fill() => _value = -1;
+        public void Fill() => _value = -1;
 		public void Clear() => _value = 0;
 
         public readonly bool Equals(EnumFlags<T> other) => _value == other._value;

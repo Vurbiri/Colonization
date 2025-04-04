@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
 
         private CrossroadMainMenu _mainMen;
 
-        public ISubscriber<bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
+        public ISigner<bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
         {
             var warriorPrices = settings.prices.Warriors;
             _mainMen = mainMenu;
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.UI
 
             _thisGO.SetActive(false);
 
-            return _subscriber;
+            return _signer;
         }
 
         public override void Open(Crossroad crossroad)

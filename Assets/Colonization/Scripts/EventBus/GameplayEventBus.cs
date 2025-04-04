@@ -7,17 +7,17 @@ namespace Vurbiri.Colonization
 {
     public abstract class GameplayEventBus
     {
-        protected readonly Subscriber<Crossroad> _crossroadSelect = new();
-        protected readonly Subscriber<Actor> _actorSelect = new();
-        protected readonly Subscriber _unselect = new();
+        protected readonly Signer<Crossroad> _crossroadSelect = new();
+        protected readonly Signer<Actor> _actorSelect = new();
+        protected readonly Signer _unselect = new();
 
-        protected readonly Subscriber<bool> _hexagonIdShow = new();
+        protected readonly Signer<bool> _hexagonIdShow = new();
 
-        public ISubscriber<Crossroad> EventCrossroadSelect => _crossroadSelect;
-        public ISubscriber<Actor> EventActorSelect => _actorSelect;
-        public ISubscriber EventUnselect => _unselect;
+        public ISigner<Crossroad> EventCrossroadSelect => _crossroadSelect;
+        public ISigner<Actor> EventActorSelect => _actorSelect;
+        public ISigner EventUnselect => _unselect;
 
-        public ISubscriber<bool> EventHexagonIdShow => _hexagonIdShow;
+        public ISigner<bool> EventHexagonIdShow => _hexagonIdShow;
 
 
         #region GameLoop

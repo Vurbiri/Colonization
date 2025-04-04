@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Runtime\Reactive\UnitySubscriber\Abstract\AListener.cs
+//Assets\Vurbiri\Runtime\Reactive\UnitySigner\Abstract\AListener.cs
 using System;
 using System.Reflection;
 using UnityEngine;

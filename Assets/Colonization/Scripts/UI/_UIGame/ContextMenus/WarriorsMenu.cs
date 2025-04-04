@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.UI
 
         private Vector3[][] _buttonPositions;
 
-        public ISubscriber<bool> Init(ContextMenuSettings settings)
+        public ISigner<bool> Init(ContextMenuSettings settings)
         {
             CreatePositionButtons();
             Vector3 distance = new(0f, _distanceOfButtons, 0f);
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.UI
 
             _thisGO.SetActive(false);
             
-            return _subscriber;
+            return _signer;
         }
 
         public void Open(Actor actor)

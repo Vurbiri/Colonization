@@ -12,21 +12,21 @@ namespace Vurbiri.Reactive
     {
         [SerializeField, JsonProperty("value")]
         protected T _value;
-        protected readonly Subscriber<T> _subscriber = new();
+        protected readonly Signer<T> _signer = new();
 
         public T Value
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _value;
-            set { if (!_value.Equals(value)) _subscriber.Invoke(_value = value); }
+            set { if (!_value.Equals(value)) _signer.Invoke(_value = value); }
         }
 
         public T SilentValue { get => _value; set => _value = value; }
 
         public ARType(T value) => _value = value;
 
-        public Unsubscriber Subscribe(Action<T> action, bool sendCallback = true) => _subscriber.Add(action, sendCallback, _value);
-        public void Signal() => _subscriber.Invoke(_value);
+        public Unsubscriber Subscribe(Action<T> action, bool sendCallback = true) => _signer.Add(action, sendCallback, _value);
+        public void Signal() => _signer.Invoke(_value);
 
         public bool Equals(T other) => _value.Equals(other);
         public bool Equals(ARType<T> other) => other is not null && _value.Equals(other._value);

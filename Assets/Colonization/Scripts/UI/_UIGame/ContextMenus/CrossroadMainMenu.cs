@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         private CrossroadWarriorsMenu _warriorsMenu;
         private Human _player;
 
-        public ISubscriber<bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
+        public ISigner<bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.UI
 
             _thisGO.SetActive(false);
 
-            return _subscriber;
+            return _signer;
         }
 
         public override void Open(Crossroad crossroad)

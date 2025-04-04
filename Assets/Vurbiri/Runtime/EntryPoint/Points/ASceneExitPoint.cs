@@ -9,9 +9,9 @@ namespace Vurbiri.EntryPoint
         private static ASceneExitPoint _instance;
 
         private readonly SceneContainer _sceneContainer;
-        private readonly Subscriber<ExitParam> _eventExit = new();
+        private readonly Signer<ExitParam> _eventExit = new();
         
-        public ISubscriber<ExitParam> EventExit => _eventExit;
+        public ISigner<ExitParam> EventExit => _eventExit;
 
         public ASceneExitPoint(SceneContainer sceneContainer)
         {

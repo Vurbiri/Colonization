@@ -13,14 +13,14 @@ namespace Vurbiri.Colonization.UI
         private ICancel _cancelledObj;
         private Unsubscriber _unLanguage, _unAction;
 
-        private readonly Subscriber<bool> _subscriber = new();
+        private readonly Signer<bool> _signer = new();
 
-        public ISubscriber<bool> Init(HintGlobal hint)
+        public ISigner<bool> Init(HintGlobal hint)
         {
             base.Init(hint, OnClick, false);
             _unLanguage = SceneContainer.Get<Localization>().Subscribe(SetText);
             
-            return _subscriber;
+            return _signer;
         }
 
         public void Setup(ICancel cancelledObj)
@@ -48,11 +48,11 @@ namespace Vurbiri.Colonization.UI
 
         private void SetText(Localization localization) => _text = localization.GetText(FILE, KEY);
 
-        private void OnEnable() => _subscriber.Invoke(true);
+        private void OnEnable() => _signer.Invoke(true);
         protected override void OnDisable()
         {
             base.OnDisable();
-            _subscriber.Invoke(false);
+            _signer.Invoke(false);
         }
         private void OnDestroy()
         {

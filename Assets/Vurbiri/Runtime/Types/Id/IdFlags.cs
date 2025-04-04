@@ -9,6 +9,8 @@ namespace Vurbiri
     [Serializable]
 	public struct IdFlags<T> : IEquatable<IdFlags<T>>, IEquatable<Id<T>>, IEquatable<int>, IReadOnlyList<bool> where T : IdType<T>
     {
+        private const int MAX_COUNT = 32;
+        
         [SerializeField] private int _id;
 
         public readonly int Count => IdType<T>.Count;
@@ -19,19 +21,20 @@ namespace Vurbiri
         #region Constructors
         public IdFlags(int value)
         {
-            Throw.IfNegative(IdType<T>.Min); Throw.IfOutOfRange(value, 0, IdType<T>.Count);
+            ThrowIfWrongType();
+            Throw.IfOutOfRange(value, 0, IdType<T>.Count);
             _id = 1 << value;
             
         }
         public IdFlags(Id<T> id)
         {
-            Throw.IfNegative(IdType<T>.Min);
+            ThrowIfWrongType();
             _id = 1 << id.Value;
         }
 
         public IdFlags(params int[] values)
         {
-            Throw.IfNegative(IdType<T>.Min);
+            ThrowIfWrongType();
             _id = 0;
             for (int i = values.Length - 1; i >= 0; i--)
             {
@@ -41,13 +44,16 @@ namespace Vurbiri
         }
         public IdFlags(bool all)
         {
+            ThrowIfWrongType();
             if (all) _id = -1; 
             else _id = 0;
         }
 
-        private IdFlags(int value, int count)
+        private IdFlags(int id, int i, bool operation)
         {
-            _id = value;
+            _id = id;
+            if (operation) _id |= 1 << i;
+            else _id ^= 1 << i;
         }
         #endregion
 
@@ -118,17 +124,17 @@ namespace Vurbiri
         public static bool operator ==(Id<T> id, IdFlags<T> flags) => ((flags._id >> id.Value) & 1) > 0;
         public static bool operator !=(Id<T> id, IdFlags<T> flags) => ((flags._id >> id.Value) & 1) == 0;
 
-        public static IdFlags<T> operator |(IdFlags<T> flags, int i) => new(flags._id |= 1 << i, 0);
-        public static IdFlags<T> operator |(int i, IdFlags<T> flags) => new(flags._id |= 1 << i, 0);
+        public static IdFlags<T> operator |(IdFlags<T> flags, int i) => new(flags._id, i, true);
+        public static IdFlags<T> operator |(int i, IdFlags<T> flags) => new(flags._id, i, true);
 
-        public static IdFlags<T> operator ^(IdFlags<T> flags, int i) => new(flags._id ^= 1 << i, 0);
-        public static IdFlags<T> operator ^(int i, IdFlags<T> flags) => new(flags._id ^= 1 << i, 0);
+        public static IdFlags<T> operator ^(IdFlags<T> flags, int i) => new(flags._id, i, false);
+        public static IdFlags<T> operator ^(int i, IdFlags<T> flags) => new(flags._id, i, false);
 
-        public static IdFlags<T> operator |(IdFlags<T> flags, Id<T> id) => new(flags._id |= 1 << id.Value, 0);
-        public static IdFlags<T> operator |(Id<T> id, IdFlags<T> flags) => new(flags._id |= 1 << id.Value, 0);
+        public static IdFlags<T> operator |(IdFlags<T> flags, Id<T> id) => new(flags._id, id.Value, true);
+        public static IdFlags<T> operator |(Id<T> id, IdFlags<T> flags) => new(flags._id, id.Value, true);
 
-        public static IdFlags<T> operator ^(IdFlags<T> flags, Id<T> id) => new(flags._id ^= 1 << id.Value, 0);
-        public static IdFlags<T> operator ^(Id<T> id, IdFlags<T> flags) => new(flags._id ^= 1 << id.Value, 0);
+        public static IdFlags<T> operator ^(IdFlags<T> flags, Id<T> id) => new(flags._id, id.Value, false);
+        public static IdFlags<T> operator ^(Id<T> id, IdFlags<T> flags) => new(flags._id, id.Value, false);
 
         public readonly IEnumerator<bool> GetEnumerator()
         {
@@ -136,5 +142,11 @@ namespace Vurbiri
                 yield return this[i];
         }
         readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        private static void ThrowIfWrongType()
+        {
+            if (IdType<T>.Min < 0 | IdType<T>.Count > MAX_COUNT)
+                Errors.Error($"{typeof(T)}.Min is negative ({IdType<T>.Min}). Or {typeof(T)}.Count is greater than {MAX_COUNT} (IdType<T>.Count).");
+        }
     }
 }

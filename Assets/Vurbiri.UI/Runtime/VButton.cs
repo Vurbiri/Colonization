@@ -10,7 +10,7 @@ namespace Vurbiri.UI
     [AddComponentMenu(VUI_CONST.NAME_MENU + "Button", 30)]
     sealed public class VButton : VSelectable, IPointerClickHandler, ISubmitHandler
     {
-        [SerializeField] private UnitySubscriber _onClick = new();
+        [SerializeField] private UnitySigner _onClick = new();
 
         private VButton() { }
 

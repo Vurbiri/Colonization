@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.EntryPoint
         private GameplayTriggerBus _triggerBus;
         private InputController _inputController;
 
-        public override ISubscriber<ExitParam> Enter(SceneContainer sceneContainer, AEnterParam param)
+        public override ISigner<ExitParam> Enter(SceneContainer sceneContainer, AEnterParam param)
         {
             _diContainer = sceneContainer.Container;
 

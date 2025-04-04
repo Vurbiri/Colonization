@@ -14,33 +14,44 @@ namespace VurbiriEditor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
-            var (names, values) = GetNamesAndValues();
+            string[] names = null; int[] values = null;
+            if(!GetNamesAndValues(ref names, ref values))
+            {
+                EditorGUI.HelpBox(position, $"Error getting values", UnityEditor.MessageType.Error);
+                return;
+            }
 
+            SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
             label = EditorGUI.BeginProperty(position, label, property);
-            valueProperty.intValue = EditorGUI.IntPopup(position, label.text, valueProperty.intValue, names, values, EditorStyles.popup);
+            {
+                valueProperty.intValue = EditorGUI.IntPopup(position, label.text, valueProperty.intValue, names, values, EditorStyles.popup);
+            }
             EditorGUI.EndProperty();
         }
 
-        private (string[] names, int[] values) GetNamesAndValues()
+        private bool GetNamesAndValues(ref string[] names, ref int[] values)
         {
             Type typeField = fieldInfo.FieldType;
-            PropertyInfo displayNames, values;
+            if (typeField.IsArray) typeField = typeField.GetElementType();
 
-            if (typeField.IsArray)
-                typeField = typeField.GetElementType();
+            Type[] arg = typeField.GetGenericArguments();
+            if (arg == null || arg.Length != 1) return false;
+            typeField = typeField.GetGenericArguments()[0].BaseType;
 
-            typeField = typeField.GetGenericArguments()[0];
-
-            do
+            PropertyInfo displayNamesProperty = null, valuesProperty = null;
+            while (typeField != null & (displayNamesProperty == null | valuesProperty == null))
             {
+                 displayNamesProperty = typeField.GetProperty("DisplayNames");
+                valuesProperty = typeField.GetProperty("Values");
                 typeField = typeField.BaseType;
-                displayNames = typeField.GetProperty("DisplayNames");
-                values = typeField.GetProperty("Values");
             }
-            while (typeField != null & (displayNames == null | values == null));
 
-            return ((string[])displayNames.GetValue(null), (int[])values.GetValue(null));
+            if (displayNamesProperty == null | valuesProperty == null) return false;
+
+            names = (string[])displayNamesProperty.GetValue(null);
+            values = (int[])valuesProperty.GetValue(null);
+
+            return names != null & values != null;
         }
     }
 }

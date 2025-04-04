@@ -16,7 +16,7 @@ namespace Vurbiri.TextLocalization
         private readonly LanguageType[] _languages;
         private readonly int _languagesCount;
         private readonly int _countFiles;
-        private readonly Subscriber<Localization> _subscriber = new();
+        private readonly Signer<Localization> _subscriber = new();
         private LanguageType _currentLanguage;
 
         public static Localization Instance => _instance;

@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Characteristics
     sealed public class Buffs : ABuffs<Buff>, IReactive<IReadOnlyList<int>>
     {
         private readonly int[] _levels;
-        private readonly Subscriber<IReadOnlyList<int>> _subscriberLevels = new();
+        private readonly Signer<IReadOnlyList<int>> _subscriberLevels = new();
         private IndexRnd _rIndex;
 
         private Buffs(IReadOnlyList<BuffSettings> settings)
@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Characteristics
             _buffs = new Buff[count];
 
             for (int i = 0; i < count; i++)
-                _buffs[i] = new(_subscriber, settings[i]);
+                _buffs[i] = new(_signer, settings[i]);
         }
 
         private Buffs(IReadOnlyList<BuffSettings> settings, int[] levels)
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.Characteristics
             _buffs = new Buff[count];
 
             for (int i = 0; i < count; i++)
-                _buffs[i] = new(_subscriber, settings[i], _levels[i] = levels[i]);
+                _buffs[i] = new(_signer, settings[i], _levels[i] = levels[i]);
         }
 
         public static Buffs Create(IReadOnlyList<BuffSettings> settings, APlayerLoadData loadData)

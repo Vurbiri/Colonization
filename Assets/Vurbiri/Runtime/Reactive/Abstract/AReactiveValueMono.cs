@@ -6,10 +6,10 @@ namespace Vurbiri.Reactive
 {
     public abstract class AReactiveValueMono<T> : MonoBehaviour, IReactiveValue<T>
     {
-        protected readonly Subscriber<T> _subscriber = new();
+        protected readonly Signer<T> _signer = new();
 
         public abstract T Value { get; protected set; }
 
-        public Unsubscriber Subscribe(Action<T> action, bool sendCallback = true) => _subscriber.Add(action, sendCallback, Value);
+        public Unsubscriber Subscribe(Action<T> action, bool sendCallback = true) => _signer.Add(action, sendCallback, Value);
     }
 }

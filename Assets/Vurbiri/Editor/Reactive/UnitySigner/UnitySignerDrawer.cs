@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Editor\Reactive\UnitySubscriber\UnitySubscriberDrawer.cs
+//Assets\Vurbiri\Editor\Reactive\UnitySigner\UnitySignerDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Reactive;
@@ -6,8 +6,8 @@ using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor.Reactive
 {
-    [CustomPropertyDrawer(typeof(UnitySubscriber))]
-	public class UnitySubscriberDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(UnitySigner))]
+	public class UnitySignerDrawer : PropertyDrawer
 	{
 		#region Consts
 		private const string P_NAME = "_listeners";
@@ -40,15 +40,15 @@ namespace VurbiriEditor.Reactive
         }
 	}
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UnitySubscriber<>))]
-    sealed public class UnitySubscriberDrawerT : UnitySubscriberDrawer { }
+    [CustomPropertyDrawer(typeof(UnitySigner<>))]
+    sealed public class UnitySignerDrawerT : UnitySignerDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UnitySubscriber<,>))]
-    sealed public class UnitySubscriberDrawerTT : UnitySubscriberDrawer { }
+    [CustomPropertyDrawer(typeof(UnitySigner<,>))]
+    sealed public class UnitySignerDrawerTT : UnitySignerDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UnitySubscriber<,,>))]
-    sealed public class UnitySubscriberDrawerTTT : UnitySubscriberDrawer { }
+    [CustomPropertyDrawer(typeof(UnitySigner<,,>))]
+    sealed public class UnitySignerDrawerTTT : UnitySignerDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UnitySubscriber<,,,>))]
-    sealed public class UnitySubscriberDrawerTTTT : UnitySubscriberDrawer { }
+    [CustomPropertyDrawer(typeof(UnitySigner<,,,>))]
+    sealed public class UnitySignerDrawerTTTT : UnitySignerDrawer { }
 }

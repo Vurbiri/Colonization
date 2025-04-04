@@ -1,11 +1,11 @@
-//Assets\Vurbiri\Runtime\Reactive\UnitySubscriber\UnitySubscriber.cs
+//Assets\Vurbiri\Runtime\Reactive\UnitySigner\UnitySigner.cs
 using System;
 using UnityEngine;
 
 namespace Vurbiri.Reactive
 {
     [Serializable]
-	public class UnitySubscriber :  Subscriber, ISerializationCallbackReceiver
+	public class UnitySigner :  Signer, ISerializationCallbackReceiver
 	{
         [SerializeField] private Listener[] _listeners;
 
@@ -33,7 +33,7 @@ namespace Vurbiri.Reactive
 	}
     //=======================================================================================
     [Serializable]
-    public class UnitySubscriber<T> : Subscriber<T>, ISerializationCallbackReceiver
+    public class UnitySigner<T> : Signer<T>, ISerializationCallbackReceiver
     {
         [SerializeField] private Listener<T>[] _listeners;
 
@@ -61,7 +61,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UnitySubscriber<TA, TB> : Subscriber<TA, TB>, ISerializationCallbackReceiver
+    public class UnitySigner<TA, TB> : Signer<TA, TB>, ISerializationCallbackReceiver
     {
         [SerializeField] private Listener<TA, TB>[] _listeners;
 
@@ -89,7 +89,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UnitySubscriber<TA, TB, TC> : Subscriber<TA, TB, TC>, ISerializationCallbackReceiver
+    public class UnitySigner<TA, TB, TC> : Signer<TA, TB, TC>, ISerializationCallbackReceiver
     {
         [SerializeField] private Listener<TA, TB, TC>[] _listeners;
 
@@ -117,7 +117,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UnitySubscriber<TA, TB, TC, TD> : Subscriber<TA, TB, TC, TD>, ISerializationCallbackReceiver
+    public class UnitySigner<TA, TB, TC, TD> : Signer<TA, TB, TC, TD>, ISerializationCallbackReceiver
     {
         [SerializeField] private Listener<TA, TB, TC, TD>[] _listeners;
 

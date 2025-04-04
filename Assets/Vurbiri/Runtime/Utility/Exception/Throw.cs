@@ -36,6 +36,11 @@ namespace Vurbiri
             if (value.CompareTo(minInclude) < 0)
                 Errors.ArgumentOutOfRange($"Value {value} is less than {minInclude}");
         }
+        public static void IfGreater<T>(T value, T maxInclude) where T : IComparable<T>
+        {
+            if (value.CompareTo(maxInclude) > 0)
+                Errors.ArgumentOutOfRange($"Value {value} is greater than {maxInclude}");
+        }
         public static void IfZero(int value)
         {
             if (value == 0) Errors.ArgumentOutOfRange($"Value {value} is 0");

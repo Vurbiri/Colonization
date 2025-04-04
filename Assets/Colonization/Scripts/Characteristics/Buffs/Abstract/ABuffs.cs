@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class ABuffs<T> : IReactive<IPerk> where T : ABuff
     {
-        protected readonly Subscriber<IPerk> _subscriber = new();
+        protected readonly Signer<IPerk> _signer = new();
         protected T[] _buffs;
 
         public Unsubscriber Subscribe(Action<IPerk> action, bool sendCallback = true)
@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Characteristics
             for (int i = 0; sendCallback & i < _buffs.Length; i++)
                 action(_buffs[i].Current);
 
-            return _subscriber.Add(action);
+            return _signer.Add(action);
         }
     }
 }

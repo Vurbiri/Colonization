@@ -14,13 +14,13 @@ namespace Vurbiri.Reactive
         [SerializeField, JsonProperty("vB")]
         private TB _valueB;
 
-        private readonly Subscriber<TA, TB> _subscriber = new();
+        private readonly Signer<TA, TB> _signer = new();
 
         private readonly IEqualityComparer<TA> _comparerA;
         private readonly IEqualityComparer<TB> _comparerB;
 
-        public TA ValueA { get => _valueA; set { if (!_comparerA.Equals(_valueA, value)) { _valueA = value; _subscriber.Invoke(_valueA, _valueB); } } }
-        public TB ValueB { get => _valueB; set { if (!_comparerB.Equals(_valueB, value)) { _valueB = value; _subscriber.Invoke(_valueA, _valueB); } } }
+        public TA ValueA { get => _valueA; set { if (!_comparerA.Equals(_valueA, value)) { _valueA = value; _signer.Invoke(_valueA, _valueB); } } }
+        public TB ValueB { get => _valueB; set { if (!_comparerB.Equals(_valueB, value)) { _valueB = value; _signer.Invoke(_valueA, _valueB); } } }
 
         public ReactiveValues()
         {
@@ -45,10 +45,10 @@ namespace Vurbiri.Reactive
             if (sendCallback)
                 action(_valueA, _valueB);
 
-            return _subscriber.Add(action);
+            return _signer.Add(action);
         }
 
-        public void Signal() => _subscriber.Invoke(_valueA, _valueB);
+        public void Signal() => _signer.Invoke(_valueA, _valueB);
 
     }
 }
