@@ -74,13 +74,13 @@ namespace Vurbiri.Colonization
                 _edifices = new(_abilities);
             }
 
-            bool sendCallback = !loadData.isLoaded;
-            storage.CurrenciesBind(_resources, sendCallback);
-            storage.ExchangeBind(_exchange, sendCallback);
-            storage.PerksBind(_perks, sendCallback);
-            storage.RoadsBind(_roads, sendCallback);
-            storage.ArtefactBind(_artefact, sendCallback);
-            storage.EdificesBind(_edifices.edifices, sendCallback);
+            bool instantGetValue = !loadData.isLoaded;
+            storage.CurrenciesBind(_resources, instantGetValue);
+            storage.ExchangeBind(_exchange, instantGetValue);
+            storage.PerksBind(_perks, instantGetValue);
+            storage.RoadsBind(_roads, instantGetValue);
+            storage.ArtefactBind(_artefact, instantGetValue);
+            storage.EdificesBind(_edifices.edifices, instantGetValue);
             storage.ActorsBind(_warriors);
 
             storage.LoadData = null;

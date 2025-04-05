@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
             return new(abilities);
         }
 
-        public Unsubscriber Subscribe(Action<CurrenciesLite> action, bool sendCallback = true) => _signer.Add(action, sendCallback, _exchange);
+        public Unsubscriber Subscribe(Action<CurrenciesLite> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, _exchange);
 
         public void Update()
         {

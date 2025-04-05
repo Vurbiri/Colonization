@@ -33,9 +33,9 @@ namespace Vurbiri.Reactive.Collections
         #endregion
 
         #region IReactiveCollection
-        public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool sendCallback = true)
+        public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool instantGetValue = true)
         {
-            if (sendCallback)
+            if (instantGetValue)
             {
                 for (int i = 0; i < _capacity; i++)
                 {

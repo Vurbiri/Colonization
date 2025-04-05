@@ -68,9 +68,9 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Reactive
-        public Unsubscriber Subscribe(Action<ACurrencies> action, bool sendCallback = true) => _signer.Add(action, sendCallback, this);
-        public Unsubscriber Subscribe(int index, Action<int> action, bool sendCallback = true) => _values[index].Subscribe(action, sendCallback);
-        public Unsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool sendCallback = true) => _values[id.Value].Subscribe(action, sendCallback);
+        public Unsubscriber Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, this);
+        public Unsubscriber Subscribe(int index, Action<int> action, bool instantGetValue = true) => _values[index].Subscribe(action, instantGetValue);
+        public Unsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool instantGetValue = true) => _values[id.Value].Subscribe(action, instantGetValue);
         #endregion
 
         public override IEnumerator<int> GetEnumerator()

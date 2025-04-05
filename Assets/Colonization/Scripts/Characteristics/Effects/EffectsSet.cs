@@ -27,9 +27,9 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
         #region IReactiveCollection
-        public Unsubscriber Subscribe(Action<ReactiveEffect, TypeEvent> action, bool sendCallback = true)
+        public Unsubscriber Subscribe(Action<ReactiveEffect, TypeEvent> action, bool instantGetValue = true)
         {
-            if (sendCallback)
+            if (instantGetValue)
             {
                 for (int i = 0; i < _count; i++)
                     action(_values[i], TypeEvent.Subscribe);

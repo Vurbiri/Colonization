@@ -47,7 +47,7 @@ namespace Vurbiri.Reactive
             _comparer = comparer;
         }
 
-        public Unsubscriber Subscribe(Action<T> action, bool sendCallback = true) => _signer.Add(action, sendCallback, _value);
+        public Unsubscriber Subscribe(Action<T> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, _value);
 
         public void Signal() => _signer.Invoke(_value);
 

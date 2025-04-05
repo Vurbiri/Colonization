@@ -28,7 +28,7 @@ namespace Vurbiri.UI
                 _colorMarkOff = colorMarkOff;
 
                 _targetColorMark = isOn ? colorMarkOn : colorMarkOff;
-                _targetColorState = parent.CurrentColor;
+                _targetColorState = Color.white;
 
                 _tweenMark = new(checkmark, parent._isFade, parent._fadeDuration);
                 _tweenState = new(checkmark);

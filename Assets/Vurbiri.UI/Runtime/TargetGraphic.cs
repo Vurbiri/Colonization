@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\Utility\TargetGraphic.cs
+//Assets\Vurbiri.UI\Runtime\TargetGraphic.cs
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,20 +7,18 @@ namespace Vurbiri.UI
 {
     public partial class VSelectable
 	{
-
         [Serializable]
-        public class TargetGraphic
+        protected class TargetGraphic
         {
             [SerializeField] private Graphic _graphic;
             [SerializeField] private EnumFlags<SelectionState> _stateFilter = true;
 
-            public bool IsValid => _graphic != null;
+            public bool IsValid => _graphic != null && _stateFilter != EnumFlags<SelectionState>.Empty;
+            public bool IsNotNull => _graphic != null;
             public Graphic Graphic => _graphic;
+            internal EnumFlags<SelectionState> Filter => _stateFilter;
 
-            public bool this[int state] => _stateFilter[state];
-
-            public TargetGraphic() { _stateFilter = true; }
-            public TargetGraphic(bool state) { _stateFilter = state; }
+            public TargetGraphic() { }
             public TargetGraphic(Graphic graphic) 
             {   
                 _graphic = graphic;
@@ -32,14 +30,22 @@ namespace Vurbiri.UI
                 if (_stateFilter[state])
                     _graphic.canvasRenderer.SetColor(targetColor);
             }
+            public void SetColor(SelectionState state, Color targetColor)
+            {
+                if (_stateFilter[state])
+                    _graphic.canvasRenderer.SetColor(targetColor);
+            }
 
             public void CrossFadeColor(int state, Color targetColor, float duration)
 			{
                 if (_stateFilter[state]) 
                     _graphic.CrossFadeColor(targetColor, duration, true, true);
             }
-
-            public void CopyFlags(TargetGraphic target) => _stateFilter = target._stateFilter;
+            public void CrossFadeColor(SelectionState state, Color targetColor, float duration)
+            {
+                if (_stateFilter[state])
+                    _graphic.CrossFadeColor(targetColor, duration, true, true);
+            }
 
             public static implicit operator TargetGraphic(Graphic graphic) => new(graphic);
             public static implicit operator Graphic(TargetGraphic target) => target._graphic;
@@ -60,33 +66,5 @@ namespace Vurbiri.UI
             }
             public override int GetHashCode() => _graphic.GetHashCode();
         }
-
-#if UNITY_EDITOR
-        public void UpdateTargetGraphic_Editor()
-        {
-            if (Application.isPlaying) return;
-
-            _targetGraphics ??= new();
-
-            if (_targetGraphics.Count == 0)
-                _targetGraphics.Add(GetComponent<Graphic>());
-            else if(!_targetGraphics[0].IsValid)
-                _targetGraphics[0] = GetComponent<Graphic>();
-
-            targetGraphic = _targetGraphics[0].Graphic;
-        }
-
-        public void SetTargetGraphic_Editor()
-        {
-            if (Application.isPlaying) return;
-
-            _targetGraphics ??= new();
-
-            if (_targetGraphics.Count == 0)
-                _targetGraphics.Add(targetGraphic);
-            else
-                _targetGraphics[0] = targetGraphic;
-        }
-#endif
     }
 }

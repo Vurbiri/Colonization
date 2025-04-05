@@ -21,8 +21,7 @@ namespace VurbiriEditor.UI
             _toggleGroup = target as VToggleGroup;
 
             MonoScript monoScript = MonoScript.FromMonoBehaviour(_toggleGroup);
-            if (monoScript == null) return;
-            if (MonoImporter.GetExecutionOrder(monoScript) != ORDER)
+            if (monoScript != null && MonoImporter.GetExecutionOrder(monoScript) != ORDER)
                 MonoImporter.SetExecutionOrder(monoScript, ORDER);
         }
 		

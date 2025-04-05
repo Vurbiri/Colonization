@@ -13,9 +13,8 @@ namespace Vurbiri.Collections
             if (Application.isPlaying)
                 return;
 
-            _count = Enum<TType>.Count;
-            if (_values.Length != _count)
-                Array.Resize(ref _values, _count);
+            if (_values.Length != count)
+                Array.Resize(ref _values, count);
         }
         public void OnAfterDeserialize() { }
     }

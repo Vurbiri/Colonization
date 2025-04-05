@@ -18,9 +18,9 @@ namespace Vurbiri.Reactive.Collections
             _signer.Add(action);
         }
 
-        public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool sendCallback = true)
+        public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool instantGetValue = true)
         {
-            if (sendCallback)
+            if (instantGetValue)
                 action((T)this, TypeEvent.Subscribe);
             return _signer.Add(action);
         }

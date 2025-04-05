@@ -26,7 +26,8 @@ namespace VurbiriEditor
                 HelpBox(position, $"Error getting values", UnityEditor.MessageType.Error);
                 return;
             }
-            if(names.Length > MAX_COUNT)
+            int count = names.Length;
+            if (count > MAX_COUNT)
             {
                 HelpBox(position, $"Count of flags is greater than {MAX_COUNT}", UnityEditor.MessageType.Error);
                 return;
@@ -35,7 +36,7 @@ namespace VurbiriEditor
             SerializedProperty valueProperty = mainProperty.FindPropertyRelative(P_NAME);
             BeginProperty(position, label, mainProperty);
             {
-                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, names);
+                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, names) & ~(-1 << count);
             }
             EndProperty();
 		}

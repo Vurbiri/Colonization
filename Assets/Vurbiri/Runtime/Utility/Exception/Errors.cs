@@ -25,7 +25,7 @@ namespace Vurbiri
         public static void AddItem(string value) => throw new($"{value} has already been added.");
         public static void NotFound(string value) => throw new($"{value} not found.");
         
-        public static void Error(string message) => throw new(message);
+        public static void Message(string message) => throw new(message);
 
 
         public static Exception NotSupportedRead(Type type) => new NotSupportedException($"Deserialization of type {type} is not supported.");

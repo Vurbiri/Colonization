@@ -55,30 +55,30 @@ namespace Vurbiri.Colonization.Storage
         }
 
         public bool PopulateRoads(Roads roads, Crossroads crossroads) => _storage.TryPopulate<Roads>(_keyRoads, new Roads.Converter(roads, crossroads));
-        public void RoadsBind(IReactive<Roads> reactive, bool sendCallback)
+        public void RoadsBind(IReactive<Roads> reactive, bool instantGetValue)
         {
-            _unsubscribers += reactive.Subscribe(value => _storage.Save(_keyRoads, value, _roadsConverter), sendCallback);
+            _unsubscribers += reactive.Subscribe(value => _storage.Save(_keyRoads, value, _roadsConverter), instantGetValue);
         }
 
-        public void CurrenciesBind(IReactive<IReadOnlyList<int>> reactive, bool sendCallback)
+        public void CurrenciesBind(IReactive<IReadOnlyList<int>> reactive, bool instantGetValue)
         {
-            _unsubscribers += reactive.Subscribe(exchange => _storage.Set(_keyResources, exchange), sendCallback);
+            _unsubscribers += reactive.Subscribe(exchange => _storage.Set(_keyResources, exchange), instantGetValue);
         }
 
-        public void ExchangeBind(IReactive<IReadOnlyList<int>> reactive, bool sendCallback)
+        public void ExchangeBind(IReactive<IReadOnlyList<int>> reactive, bool instantGetValue)
         {
-            _unsubscribers += reactive.Subscribe(currencies => _storage.Set(_keyExchange, currencies), sendCallback);
+            _unsubscribers += reactive.Subscribe(currencies => _storage.Set(_keyExchange, currencies), instantGetValue);
         }
 
-        public void PerksBind(IReactive<IEnumerable<IEnumerable<int>>> reactive, bool sendCallback)
+        public void PerksBind(IReactive<IEnumerable<IEnumerable<int>>> reactive, bool instantGetValue)
         {
-            _unsubscribers += reactive.Subscribe(perks => _storage.Set(_keyPerks, perks), sendCallback);
+            _unsubscribers += reactive.Subscribe(perks => _storage.Set(_keyPerks, perks), instantGetValue);
         }
 
-        public void EdificesBind(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive, bool sendCallback)
+        public void EdificesBind(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive, bool instantGetValue)
         {
             for(int i = 0; i < EdificeGroupId.Count; i++)
-                _unsubscribers += edificesReactive[i].Subscribe(OnEdifice, sendCallback);
+                _unsubscribers += edificesReactive[i].Subscribe(OnEdifice, instantGetValue);
 
             #region Local OnEdifice(..)
             //==============================

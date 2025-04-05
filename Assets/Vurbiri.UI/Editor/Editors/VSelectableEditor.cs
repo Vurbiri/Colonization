@@ -16,6 +16,8 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VSelectable), true), CanEditMultipleObjects]
     public class VSelectableEditor : Editor
     {
+        private const string P_GRAPHIC = "_graphic";
+
         protected SerializedProperty _interactableIconProperty;
         protected SerializedProperty _alphaColliderProperty;
         protected SerializedProperty _thresholdProperty;
@@ -159,7 +161,7 @@ namespace VurbiriEditor.UI
 
         private void GraphicsAndGroupBlocksPropertiesGUI()
         {
-            _vSelectable.UpdateTargetGraphic_Editor();
+            SerializedProperty targetGraphic = UpdateTargetGraphics();
 
             PropertyField(m_TransitionProperty);
             _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
@@ -168,14 +170,13 @@ namespace VurbiriEditor.UI
             m_ShowSpriteTransition.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.SpriteSwap;
             m_ShowAnimTransition.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.Animation;
 
-            Graphic graphic = m_TargetGraphicProperty.objectReferenceValue as Graphic;
-
+            Space(1f);
             EditorGUI.indentLevel++;
             // ========= ColorTint =================================
             if (BeginFadeGroup(m_ShowColorTint.faded))
             {
                 PropertyField(_targetGraphicsProperty);
-                if (graphic == null)
+                if (targetGraphic.objectReferenceValue as Graphic == null)
                     HelpBox("You must have a Graphics target in order to use a color transition.", UnityEditor.MessageType.Warning);
                 
                 PropertyField(m_ColorBlockProperty);
@@ -184,11 +185,14 @@ namespace VurbiriEditor.UI
             // ========= SpriteSwap =================================
             if (BeginFadeGroup(m_ShowSpriteTransition.faded))
             {
-                Image image = graphic as Image;
                 PropertyField(m_TargetGraphicProperty);
-                _vSelectable.SetTargetGraphic_Editor();
-                if (image == null)
+                
+                if (m_TargetGraphicProperty.objectReferenceValue as Image == null)
+                {
+                    m_TargetGraphicProperty.objectReferenceValue = null;
                     HelpBox("You must have a Image target in order to use a sprite swap transition.", UnityEditor.MessageType.Warning);
+                }
+                targetGraphic.objectReferenceValue = m_TargetGraphicProperty.objectReferenceValue;
 
                 Space();
                 PropertyField(m_SpriteStateProperty);
@@ -221,6 +225,19 @@ namespace VurbiriEditor.UI
             EndFadeGroup();
 
             EditorGUI.indentLevel--;
+        }
+
+        private SerializedProperty UpdateTargetGraphics()
+        {
+            if(_targetGraphicsProperty.arraySize == 0)
+                _targetGraphicsProperty.InsertArrayElementAtIndex(0);
+
+            SerializedProperty targetGraphic = _targetGraphicsProperty.GetArrayElementAtIndex(0).FindPropertyRelative(P_GRAPHIC);
+            if (targetGraphic.objectReferenceValue == null)
+                targetGraphic.objectReferenceValue = _vSelectable.GetComponent<Graphic>();
+
+            m_TargetGraphicProperty.objectReferenceValue = targetGraphic.objectReferenceValue;
+            return targetGraphic;
         }
 
         private void NavigationPropertiesGUI()

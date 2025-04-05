@@ -13,9 +13,9 @@ namespace Vurbiri.Colonization.Characteristics
 
         public WarriorPerks(IReactive<Perk> perks) => _unsubscriber = perks.Subscribe(OnPerks);
 
-        public Unsubscriber Subscribe(Action<IPerk> action, bool sendCallback = true)
+        public Unsubscriber Subscribe(Action<IPerk> action, bool instantGetValue = true)
         {
-            for(int i = _perks.Count - 1; sendCallback & i >= 0; i--)
+            for(int i = _perks.Count - 1; instantGetValue & i >= 0; i--)
                 action(_perks[i]);
 
             return _signer.Add(action);

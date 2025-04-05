@@ -19,9 +19,9 @@ namespace Vurbiri.Reactive
             _unsubscribers += reactiveB.Subscribe(value => _signer.Invoke(_valueA, _valueB = value), false);
         }
 
-        public Unsubscriber Subscribe(Action<TA, TB> action, bool sendCallback = true)
+        public Unsubscriber Subscribe(Action<TA, TB> action, bool instantGetValue = true)
         {
-            if (sendCallback) action(_valueA, _valueB);
+            if (instantGetValue) action(_valueA, _valueB);
             return _signer.Add(action);
         }
 
@@ -64,9 +64,9 @@ namespace Vurbiri.Reactive
             _unsubscribers += reactiveC.Subscribe(value => _signer.Invoke(_valueA, _valueB, _valueC = value), false);
         }
 
-        public Unsubscriber Subscribe(Action<TA, TB, TC> action, bool sendCallback = true)
+        public Unsubscriber Subscribe(Action<TA, TB, TC> action, bool instantGetValue = true)
         {
-            if (sendCallback) action(_valueA, _valueB, _valueC);
+            if (instantGetValue) action(_valueA, _valueB, _valueC);
             return _signer.Add(action);
         }
 

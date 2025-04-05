@@ -12,7 +12,7 @@ namespace VurbiriEditor
 	{
         #region Consts
         private const int MAX_COUNT = 32;
-        private const string P_VALUE = "_value", P_COUNT = "_count";
+        private const string P_VALUE = "_value";
 		#endregion
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
@@ -22,18 +22,18 @@ namespace VurbiriEditor
             if (!TryGetTypeEnum(position, out Type enumType)) return;
 
             string[] names = enumType.GetEnumNames();
-            if (names.Length > MAX_COUNT)
+            int count = names.Length;
+            if (count > MAX_COUNT)
             {
                 HelpBox(position, $"Count of flags is greater than {MAX_COUNT}", UnityEditor.MessageType.Error);
                 return;
             }
-            mainProperty.FindPropertyRelative(P_COUNT).intValue = names.Length;
 
             SerializedProperty valueProperty = mainProperty.FindPropertyRelative(P_VALUE);
 
             BeginProperty(position, label, mainProperty);
             {
-                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, names);
+                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, names) & ~(-1 << count);
             }
             EndProperty();
         }
@@ -67,13 +67,16 @@ namespace VurbiriEditor
         }
 		private bool VerificationValues(Rect position, Type enumType)
 		{
-			foreach (var value in enumType.GetEnumValues())
+            int value, oldValue = -1;
+            foreach (var em in enumType.GetEnumValues())
 			{
-				if ((int)value < 0)
-				{
-                    HelpBox(position, "Values cannot be negative", UnityEditor.MessageType.Error);
+                value = Convert.ToInt32(em);
+                if ((value - oldValue) != 1)
+                {
+                    HelpBox(position, "The wrong type", UnityEditor.MessageType.Error);
                     return false;
 				}
+                oldValue = value;
             }
 			return true;
 		}

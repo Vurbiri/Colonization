@@ -14,17 +14,23 @@ namespace VurbiriEditor.Reactive
     [CustomPropertyDrawer(typeof(AListener<>), true)]
 	sealed public class AListenerDrawer : PropertyDrawer
     {
-        #region Consts
-        private const string P_TARGET = "_target", P_METHOD_NAME = "_methodName";
-        private const string F_NONE = "None", F_PARAM_OPEN = "(", F_PARAM = ", ", F_PARAM_CLOSE = ")";
-        private const string M_VOID = "void ", M_PUBLIC = "public ", M_PRIVATE = "private ", M_PROTECTED = "protected ", M_STATIC = "static ";
-        private const string L_OBJECT = "Game Object", L_TARGET = "Target Object", L_METHOD = "Method";
-
-        private static readonly Type _gameObjectType = typeof(GameObject), _voidType = typeof(void);
+        #region Settings
+        private const bool DRAW_ACCESS = true, DRAW_RETURN = true, DRAW_STATIC = true;
+        
+        private const string L_OBJECT = "Game Object", L_TARGET = "Target", L_METHOD = "Method";
 
         private static readonly string[] excludeStart = { "set_", "<set_" };
         private static readonly string[] excludeEnd = { "Dirty" };
         private static readonly HashSet<string> excludeMethod = new(new string[] { "Awake", "Start", "OnEnable", "Update", "FixedUpdate", "LateUpdate", "OnDisable", "OnDestroy", "OnValidate", "Reset", "Finalize", "SendTransformChangedScale", "StopAnimation" });
+        #endregion
+
+        #region Consts
+        private const string P_TARGET = "_target", P_METHOD_NAME = "_methodName";
+        private const string F_NONE = "None", F_PARAM_OPEN = "(", F_PARAM = ", ", F_PARAM_CLOSE = ")";
+        private const string M_VOID = "void "; 
+        private const string M_PUBLIC = "public ", M_PRIVATE = "private ", M_PROTECTED = "protected ", M_INTERNAL = "internal ", M_STATIC = "static ";
+
+        private static readonly Type _gameObjectType = typeof(GameObject), _voidType = typeof(void);
         #endregion
 
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
@@ -212,19 +218,34 @@ namespace VurbiriEditor.Reactive
         {
             string methodName = method.Name;
 
-            methodName = M_VOID.Concat(methodName);
+            if(DRAW_RETURN)
+                methodName = M_VOID.Concat(methodName);
 
-            if (method.IsStatic)
+            if (DRAW_STATIC & method.IsStatic)
                 methodName = M_STATIC.Concat(methodName);
 
-            if (method.IsPublic)
-                methodName = M_PUBLIC.Concat(methodName);
-            else if (method.IsPrivate)
-                methodName = M_PRIVATE.Concat(methodName);
-            else
-                methodName = M_PROTECTED.Concat(methodName);
+            if (DRAW_ACCESS)
+                methodName = AddAccess(method, methodName);
 
             return methodName.Concat(_params);
+        }
+
+        private string AddAccess(MethodInfo method, string methodName)
+        {
+            if (method.IsPublic)
+                return M_PUBLIC.Concat(methodName);
+            if (method.IsPrivate)
+                return M_PRIVATE.Concat(methodName);
+            if (method.IsFamily)
+                return M_PROTECTED.Concat(methodName);
+            if (method.IsAssembly)
+                return M_INTERNAL.Concat(methodName);
+            if (method.IsFamilyOrAssembly)
+                return M_PROTECTED.Concat(M_INTERNAL, methodName);
+            if (method.IsFamilyAndAssembly)
+                return M_PRIVATE.Concat(M_PROTECTED, methodName);
+
+            return methodName;
         }
         #endregion
     }

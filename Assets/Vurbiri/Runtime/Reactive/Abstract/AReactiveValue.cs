@@ -9,6 +9,6 @@ namespace Vurbiri.Reactive
 
         public abstract T Value { get; protected set; }
 
-        public Unsubscriber Subscribe(Action<T> action, bool sendCallback = true) => _signer.Add(action, sendCallback, Value);
+        public Unsubscriber Subscribe(Action<T> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, Value);
     }
 }

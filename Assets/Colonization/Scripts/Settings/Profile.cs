@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                 _idLang = id;
         }
 
-        public Unsubscriber Subscribe(Action<Profile> action, bool sendCallback = true)=> _signer.Add(action, sendCallback, this);
+        public Unsubscriber Subscribe(Action<Profile> action, bool instantGetValue = true)=> _signer.Add(action, instantGetValue, this);
 
         public void Apply()
         {

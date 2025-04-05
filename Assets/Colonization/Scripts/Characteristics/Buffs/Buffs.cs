@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization.Characteristics
             _subscriberLevels.Invoke(_levels);
         }
 
-        public Unsubscriber Subscribe(System.Action<IReadOnlyList<int>> action, bool sendCallback = true) => _subscriberLevels.Add(action, sendCallback, _levels);
+        public Unsubscriber Subscribe(System.Action<IReadOnlyList<int>> action, bool instantGetValue = true) => _subscriberLevels.Add(action, instantGetValue, _levels);
 
     }
 }

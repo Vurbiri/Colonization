@@ -39,7 +39,12 @@ namespace Vurbiri
         public static void IfGreater<T>(T value, T maxInclude) where T : IComparable<T>
         {
             if (value.CompareTo(maxInclude) > 0)
-                Errors.ArgumentOutOfRange($"Value {value} is greater than {maxInclude}");
+                Errors.ArgumentOutOfRange($"Value {value} is greater than Max: {maxInclude}");
+        }
+        public static void IfGreater<T>(T value, T maxInclude, string paramName) where T : IComparable<T>
+        {
+            if (value.CompareTo(maxInclude) > 0)
+                Errors.ArgumentOutOfRange($"{paramName} ({value}) is greater than Max: {maxInclude}");
         }
         public static void IfZero(int value)
         {
@@ -47,7 +52,11 @@ namespace Vurbiri
         }
         public static void IfNegative(int value)
         {
-            if (value < 0) Errors.ArgumentOutOfRange($"Value {value} negative");
+            if (value < 0) Errors.ArgumentOutOfRange($"Value {value} is negative");
+        }
+        public static void IfNegative(int value, string paramName)
+        {
+            if (value < 0) Errors.ArgumentOutOfRange($"{paramName} ({value}) is negative");
         }
         #endregion
 

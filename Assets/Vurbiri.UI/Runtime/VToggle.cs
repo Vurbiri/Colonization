@@ -15,7 +15,7 @@ namespace Vurbiri.UI
         [SerializeField] private bool _isOn;
         [SerializeField] private bool _isFade = true;
         [SerializeField] private float _fadeDuration = 0.15f;
-        [SerializeField] private FadeType _fadeType;
+        [SerializeField] private SwitchingType _switchingType;
         [SerializeField] private Graphic _checkmarkOn;
         [SerializeField] private Graphic _checkmarkOff;
         [SerializeField] private Color _colorOn = Color.green;
@@ -23,14 +23,14 @@ namespace Vurbiri.UI
         [SerializeField] private VToggleGroup _group;
         [SerializeField] private UnitySigner<bool> _onValueChanged = new();
 
-        private TargetGraphic _graphicMarkOn = new(false), _graphicMarkOff = new(false);
+        private EnumFlags<SelectionState> _stateFilterOn = false, _stateFilterOff = false;
         private ITransitionEffect _transitionEffect;
         private TMP_Text _caption;
 
         #region Properties
         public bool isOn { get => _isOn; set => SetFromGroup(value); }
         public bool isOnSilent { get => _isOn; set => Set(value, false); }
-        public TMP_Text caption => _caption;
+        public TMP_Text Caption => _caption;
         public VToggleGroup group
         {
             get => _group;
@@ -73,14 +73,14 @@ namespace Vurbiri.UI
                 _transitionEffect.TransitionUpdate();
             }
         }
-        public FadeType CheckmarkFadeType
+        public SwitchingType Switching
         {
-            get => _fadeType;
+            get => _switchingType;
             set 
             {
-                if (_fadeType == value) return;
+                if (_switchingType == value) return;
 
-                _fadeType = value;
+                _switchingType = value;
                 _transitionEffect = TransitionEffectCreate();
             }
         }
@@ -128,14 +128,14 @@ namespace Vurbiri.UI
                 for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 {
                     current = _targetGraphics[i];
-                    if (current.IsValid & current == _checkmarkOn)
+                    if (current.IsNotNull & current == _checkmarkOn)
                     {
-                        _graphicMarkOn.CopyFlags(current);
+                        _stateFilterOn = current.Filter;
                         _targetGraphics.RemoveAt(i);
                     }
-                    else if (current.IsValid & current == _checkmarkOff)
+                    else if (current.IsNotNull & current == _checkmarkOff)
                     {
-                        _graphicMarkOff.CopyFlags(current);
+                        _stateFilterOff = current.Filter;
                         _targetGraphics.RemoveAt(i);
                     }
                 }
@@ -156,7 +156,7 @@ namespace Vurbiri.UI
             _onValueChanged.Add(ProfilerApiAddMarker);
         }
 
-        public Unsubscriber AddListener(Action<bool> action, bool sendCallback = true) => _onValueChanged.Add(action, sendCallback, _isOn);
+        public Unsubscriber AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _isOn);
         public void RemoveListener(Action<bool> action) => _onValueChanged.Remove(action);
 
         public void SetIsOnWithoutNotify(bool value) => Set(value, false);
@@ -205,10 +205,10 @@ namespace Vurbiri.UI
         protected override void OnStateTransition(int intState, Color targetColor, float duration, bool instant)
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying) { _transitionEffect ??= TransitionEffectCreate(); _graphicMarkOn = _checkmarkOn; _graphicMarkOff = _checkmarkOff; }
+            if (!Application.isPlaying) { _transitionEffect ??= TransitionEffectCreate(); _stateFilterOn = _checkmarkOn != null; _stateFilterOff = _checkmarkOff != null; }
 #endif
-            if (_graphicMarkOn[intState]) _transitionEffect.StateTransitionOn(targetColor, duration, instant);
-            if (_graphicMarkOff[intState]) _transitionEffect.StateTransitionOff(targetColor, duration, instant);
+            if (_stateFilterOn[intState]) _transitionEffect.StateTransitionOn(targetColor, duration, instant);
+            if (_stateFilterOff[intState]) _transitionEffect.StateTransitionOff(targetColor, duration, instant);
         }
 
         protected override void OnEnable()
@@ -248,13 +248,13 @@ namespace Vurbiri.UI
             if (_checkmarkOn != null) _checkmarkOn.canvasRenderer.SetAlpha(0f);
             if (_checkmarkOff != null) _checkmarkOff.canvasRenderer.SetAlpha(0f);
 
-            if (_fadeType == FadeType.OnOffCheckmark && OnOffEffect.Validate(this))
+            if (_switchingType == SwitchingType.OnOffCheckmark && OnOffEffect.Validate(this))
                 return new OnOffEffect(this, _isOn, _checkmarkOn);
 
             /*if (parent._transitionType == TransitionType.SwitchCheckmark && SwitchEffect.Validate(parent))
                 return new SwitchEffect(parent);*/
 
-            if (_fadeType == FadeType.ColorCheckmark && ColorEffect.Validate(this))
+            if (_switchingType == SwitchingType.ColorCheckmark && ColorEffect.Validate(this))
                 return new ColorEffect(this);
 
             return new EmptyEffect();
@@ -308,20 +308,11 @@ namespace Vurbiri.UI
 
         #region Nested: TransitionType
         //***********************************
-        public enum FadeType
+        public enum SwitchingType
         {
             OnOffCheckmark,
             SwitchCheckmark,
             ColorCheckmark
-        }
-        [Flags]
-        public enum Side : byte
-        {
-            None,
-            Left = 1,
-            Top = 2,
-            Right = 4,
-            Bottom = 8,
         }
         #endregion
     }

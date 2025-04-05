@@ -83,7 +83,7 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public Unsubscriber Subscribe(Action<Satan> action, bool sendCallback) => _eventSelf.Add(action, sendCallback, this);
+        public Unsubscriber Subscribe(Action<Satan> action, bool instantGetValue) => _eventSelf.Add(action, instantGetValue, this);
 
         public void EndTurn()
         {

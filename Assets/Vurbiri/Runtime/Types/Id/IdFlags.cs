@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace Vurbiri
@@ -10,10 +11,25 @@ namespace Vurbiri
 	public struct IdFlags<T> : IEquatable<IdFlags<T>>, IEquatable<Id<T>>, IEquatable<int>, IReadOnlyList<bool> where T : IdType<T>
     {
         private const int MAX_COUNT = 32;
-        
+        private static readonly int count, maskId;
+        private static readonly string format;
+
+        static IdFlags()
+        {
+            count = IdType<T>.Count;
+            string name = typeof(T).Name;
+            Throw.IfNegative(IdType<T>.Min, $"{name}.Min");
+            Throw.IfGreater(count, MAX_COUNT, $"{name}.Count");
+
+            maskId = ~(-1 << count);
+            format = $"x{Mathf.FloorToInt(count * 0.25f)}";
+        }
+
         [SerializeField] private int _id;
 
-        public readonly int Count => IdType<T>.Count;
+        public static readonly IdFlags<T> Empty = new(false);
+
+        public readonly int Count => count;
 
         public readonly bool this[int i] => ((_id >> i) & 1) > 0;
         public readonly bool this[Id<T> id] => ((_id >> id.Value) & 1) > 0;
@@ -21,83 +37,81 @@ namespace Vurbiri
         #region Constructors
         public IdFlags(int value)
         {
-            ThrowIfWrongType();
-            Throw.IfOutOfRange(value, 0, IdType<T>.Count);
+            Throw.IfOutOfRange(value, 0, count);
             _id = 1 << value;
             
         }
         public IdFlags(Id<T> id)
         {
-            ThrowIfWrongType();
             _id = 1 << id.Value;
         }
 
         public IdFlags(params int[] values)
         {
-            ThrowIfWrongType();
             _id = 0;
             for (int i = values.Length - 1; i >= 0; i--)
             {
-                Throw.IfOutOfRange(values[i], 0, IdType<T>.Count);
+                Throw.IfOutOfRange(values[i], 0, count);
                 _id |= 1 << values[i];
             }
         }
         public IdFlags(bool all)
         {
-            ThrowIfWrongType();
-            if (all) _id = -1; 
+            if (all) _id = maskId; 
             else _id = 0;
         }
 
         private IdFlags(int id, int i, bool operation)
         {
+            Throw.IfOutOfRange(i, 0, count);
+            if (operation) id |= 1 << i; else id ^= 1 << i;
             _id = id;
-            if (operation) _id |= 1 << i;
-            else _id ^= 1 << i;
+        }
+        private IdFlags(int id, Id<T> i, bool operation)
+        {
+            if (operation) id |= 1 << i.Value; else id ^= 1 << i.Value;
+            _id = id;
         }
         #endregion
 
-        public void Add(Id<T> id) => _id |= 1 << id.Value;
-        public void Add(int i)
-        {
-            Throw.IfOutOfRange(i, 0, IdType<T>.Count);
-            _id |= 1 << i;
-        }
-
-        public void Remove(Id<T> id) => _id ^= 1 << id.Value;
-        public void Remove(int i)
-        {
-            Throw.IfOutOfRange(i, 0, IdType<T>.Count);
-            _id ^= 1 << i;
-        }
-
-        public void Fill() => _id = -1;
+        public void Fill() => _id = maskId;
         public void Clear() => _id = 0;
 
         public readonly int First()
         {
-            for (int i = 0; i < IdType<T>.Count; i++)
+            for (int i = 0; i < count; i++)
                 if (this[i]) return i;
             return -1;
         }
 
         public readonly List<int> GetValues()
         {
-            List<int> values = new(IdType<T>.Count);
-            for(int i = 0; i < IdType<T>.Count; i++)
+            List<int> values = new(count);
+            for(int i = 0; i < count; i++)
                 if(this[i]) values.Add(i);
 
             return values;
         }
 
-        public readonly bool Equals(IdFlags<T> other) => _id == other._id;
+        public override readonly string ToString() => $"0x{_id.ToString(format)}";
+        public readonly string ToString(bool binary)
+        {
+            if (!binary) return ToString();
+
+            StringBuilder sb = new(count);
+            for (int i = count - 1; i >= 0; i--)
+                sb.Append(this[i] ? "1" : "0");
+            return sb.ToString();
+        }
+
+        public readonly bool Equals(IdFlags<T> other) => (_id & maskId) == (other._id & maskId);
         public readonly bool Equals(Id<T> id) => ((_id >> id.Value) & 1) > 0;
         public readonly bool Equals(int i) => ((_id >> i) & 1) > 0;
         public override readonly bool Equals(object obj)
         {
             if (obj is null) return false;
 
-            if (obj is IdFlags<T> flags) return _id == flags._id;
+            if (obj is IdFlags<T> flags) return (_id & maskId) == (flags._id & maskId);
             if (obj is int i) return ((_id >> i) & 1) > 0;
             if (obj is Id<T> id) return ((_id >> id.Value) & 1) > 0;
 
@@ -109,8 +123,8 @@ namespace Vurbiri
         public static implicit operator IdFlags<T>(Id<T> id) => new(id);
         public static implicit operator IdFlags<T>(bool all) => new(all);
 
-        public static bool operator ==(IdFlags<T> a, IdFlags<T> b) => a._id == b._id;
-        public static bool operator !=(IdFlags<T> a, IdFlags<T> b) => a._id != b._id;
+        public static bool operator ==(IdFlags<T> a, IdFlags<T> b) => (a._id & maskId) == (b._id & maskId);
+        public static bool operator !=(IdFlags<T> a, IdFlags<T> b) => (a._id & maskId) != (b._id & maskId);
 
         public static bool operator ==(IdFlags<T> flags, int i) => ((flags._id >> i) & 1) > 0;
         public static bool operator !=(IdFlags<T> flags, int i) => ((flags._id >> i) & 1) == 0;
@@ -130,23 +144,17 @@ namespace Vurbiri
         public static IdFlags<T> operator ^(IdFlags<T> flags, int i) => new(flags._id, i, false);
         public static IdFlags<T> operator ^(int i, IdFlags<T> flags) => new(flags._id, i, false);
 
-        public static IdFlags<T> operator |(IdFlags<T> flags, Id<T> id) => new(flags._id, id.Value, true);
-        public static IdFlags<T> operator |(Id<T> id, IdFlags<T> flags) => new(flags._id, id.Value, true);
+        public static IdFlags<T> operator |(IdFlags<T> flags, Id<T> id) => new(flags._id, id, true);
+        public static IdFlags<T> operator |(Id<T> id, IdFlags<T> flags) => new(flags._id, id, true);
 
-        public static IdFlags<T> operator ^(IdFlags<T> flags, Id<T> id) => new(flags._id, id.Value, false);
-        public static IdFlags<T> operator ^(Id<T> id, IdFlags<T> flags) => new(flags._id, id.Value, false);
+        public static IdFlags<T> operator ^(IdFlags<T> flags, Id<T> id) => new(flags._id, id, false);
+        public static IdFlags<T> operator ^(Id<T> id, IdFlags<T> flags) => new(flags._id, id, false);
 
         public readonly IEnumerator<bool> GetEnumerator()
         {
-            for (int i = 0; i < IdType<T>.Count; i++)
+            for (int i = 0; i < count; i++)
                 yield return this[i];
         }
         readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        private static void ThrowIfWrongType()
-        {
-            if (IdType<T>.Min < 0 | IdType<T>.Count > MAX_COUNT)
-                Errors.Error($"{typeof(T)}.Min is negative ({IdType<T>.Min}). Or {typeof(T)}.Count is greater than {MAX_COUNT} (IdType<T>.Count).");
-        }
     }
 }

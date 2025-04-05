@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
             return turn;
         }
 
-        public Unsubscriber Subscribe(Action<TurnQueue> action, bool sendCallback = true) => _signer.Add(action, sendCallback, this);
+        public Unsubscriber Subscribe(Action<TurnQueue> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, this);
 
         public void Next()
         {

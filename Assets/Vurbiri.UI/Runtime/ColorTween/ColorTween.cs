@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\Utility\ColorTween.cs
+//Assets\Vurbiri.UI\Runtime\ColorTween\ColorTween.cs
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +7,8 @@ namespace Vurbiri.UI
 {
     public class ColorTween : IEnumerator
     {
+        private const float MAX_SPEED = 999999f;
+
         private Graphic _target;
         private CanvasRenderer _canvasRenderer;
         private Color _startColor, _targetColor;
@@ -17,6 +19,7 @@ namespace Vurbiri.UI
 
         public bool IsValid => Validate(_target, _fade, _duration);
         public Color CurrentColor => _canvasRenderer.GetColor();
+        public float CurrentDuration => _duration * (1f - _progress);
         public bool IsRunning => _coroutine != null;
         public object Current => null;
 
@@ -39,11 +42,11 @@ namespace Vurbiri.UI
         {
             _fade = fade;
             if (fade) { _duration = duration; _speed = 1f / duration; }
-            else      { _duration = 0f;       _speed = float.MaxValue; }
+            else      { _duration = 0f;       _speed = MAX_SPEED; }
         }
         public bool SetTarget(Graphic target)
         {
-            if (IsRunning) { _target.StopCoroutine(_coroutine); Reset(); }
+            if (_coroutine != null) { _target.StopCoroutine(_coroutine); _progress = 1f; }
             
             _target = target;
             if (target == null) _canvasRenderer = null;
@@ -54,15 +57,28 @@ namespace Vurbiri.UI
 
         public void Start(Color targetColor)
         {
+            _progress = StopAndGetProgress();
+
             _startColor = _canvasRenderer.GetColor();
             _targetColor = targetColor;
-            _progress = StopAndGetProgress();
-            _coroutine = _target.StartCoroutine(this);
+            
+            if (_startColor != _targetColor)
+                _coroutine = _target.StartCoroutine(this);
         }
         public void Start(Color targetColor, bool fade, float duration)
         {
             SetTransition(fade, duration);
             Start(targetColor);
+        }
+
+        public void Stop()
+        {
+            if (_coroutine != null) 
+            { 
+                _target.StopCoroutine(_coroutine);
+                _coroutine = null;
+                _progress = 1f; 
+            }
         }
 
         public bool MoveNext()
@@ -91,7 +107,7 @@ namespace Vurbiri.UI
         {
             if (_coroutine == null) return 0f;
 
-            _target.StopCoroutine(_coroutine);
+            _target.StopCoroutine(_coroutine); _coroutine = null;
             return Mathf.Clamp01(1f - _progress);
         }
     }

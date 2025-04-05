@@ -55,14 +55,17 @@ namespace Vurbiri.Colonization.Characteristics
             return new(settings.economicPerks, settings.militaryPerks);
         }
 
-        public Unsubscriber Subscribe(Action<Perk> action, bool sendCallback = true)
+        public Unsubscriber Subscribe(Action<Perk> action, bool instantGetValue = true)
         {
-            for (int type = 0; sendCallback & type < TypePerksId.Count; type++)
+            for (int type = 0; instantGetValue & type < TypePerksId.Count; type++)
                 foreach (int id in _learnedPerks[type]) action(_perks[type][id]);
 
             return _eventPerk.Add(action);
         }
-        public Unsubscriber Subscribe(Action<IEnumerable<IEnumerable<int>>> action, bool sendCallback = true) => _eventHashSet.Add(action, sendCallback, _learnedPerks);
+        public Unsubscriber Subscribe(Action<IEnumerable<IEnumerable<int>>> action, bool instantGetValue = true)
+        {
+            return _eventHashSet.Add(action, instantGetValue, _learnedPerks);
+        }
 
         public bool TryAdd(int typePerk, int idPerk, out int cost)
         {

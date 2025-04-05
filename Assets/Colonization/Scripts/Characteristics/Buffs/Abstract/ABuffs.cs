@@ -9,9 +9,9 @@ namespace Vurbiri.Colonization.Characteristics
         protected readonly Signer<IPerk> _signer = new();
         protected T[] _buffs;
 
-        public Unsubscriber Subscribe(Action<IPerk> action, bool sendCallback = true)
+        public Unsubscriber Subscribe(Action<IPerk> action, bool instantGetValue = true)
         {
-            for (int i = 0; sendCallback & i < _buffs.Length; i++)
+            for (int i = 0; instantGetValue & i < _buffs.Length; i++)
                 action(_buffs[i].Current);
 
             return _signer.Add(action);

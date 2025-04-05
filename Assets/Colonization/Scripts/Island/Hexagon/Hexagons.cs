@@ -85,6 +85,6 @@ namespace Vurbiri.Colonization
             return res;
         }
 
-        public Unsubscriber Subscribe(Action<Hexagon> action, bool sendCallback = true) => _signer.Add(action);
+        public Unsubscriber Subscribe(Action<Hexagon> action, bool instantGetValue = true) => _signer.Add(action);
     }
 }
