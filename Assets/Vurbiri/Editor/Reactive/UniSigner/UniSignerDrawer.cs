@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Editor\Reactive\UnitySigner\UnitySignerDrawer.cs
+//Assets\Vurbiri\Editor\Reactive\UniSigner\UniSignerDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Reactive;
@@ -6,8 +6,8 @@ using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor.Reactive
 {
-    [CustomPropertyDrawer(typeof(UnitySigner))]
-	public class UnitySignerDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(UniSigner))]
+	public class UniSignerDrawer : PropertyDrawer
 	{
 		#region Consts
 		private const string P_NAME = "_listeners";
@@ -40,15 +40,15 @@ namespace VurbiriEditor.Reactive
         }
 	}
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UnitySigner<>))]
-    sealed public class UnitySignerDrawerT : UnitySignerDrawer { }
+    [CustomPropertyDrawer(typeof(UniSigner<>))]
+    sealed public class UniSignerDrawerT : UniSignerDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UnitySigner<,>))]
-    sealed public class UnitySignerDrawerTT : UnitySignerDrawer { }
+    [CustomPropertyDrawer(typeof(UniSigner<,>))]
+    sealed public class UniSignerDrawerTT : UniSignerDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UnitySigner<,,>))]
-    sealed public class UnitySignerDrawerTTT : UnitySignerDrawer { }
+    [CustomPropertyDrawer(typeof(UniSigner<,,>))]
+    sealed public class UniSignerDrawerTTT : UniSignerDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UnitySigner<,,,>))]
-    sealed public class UnitySignerDrawerTTTT : UnitySignerDrawer { }
+    [CustomPropertyDrawer(typeof(UniSigner<,,,>))]
+    sealed public class UniSignerDrawerTTTT : UniSignerDrawer { }
 }

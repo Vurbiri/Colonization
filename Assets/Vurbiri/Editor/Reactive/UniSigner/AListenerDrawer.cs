@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Editor\Reactive\UnitySigner\AListenerDrawer.cs
+//Assets\Vurbiri\Editor\Reactive\UniSigner\AListenerDrawer.cs
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -15,9 +15,9 @@ namespace VurbiriEditor.Reactive
 	sealed public class AListenerDrawer : PropertyDrawer
     {
         #region Settings
-        private const bool DRAW_ACCESS = true, DRAW_RETURN = true, DRAW_STATIC = true;
+        private const bool DRAW_STATIC = true;
         
-        private const string L_OBJECT = "Game Object", L_TARGET = "Target", L_METHOD = "Method";
+        private const string L_OBJECT = "Game Object", L_TARGET = "Target Object", L_METHOD = "Method";
 
         private static readonly string[] excludeStart = { "set_", "<set_" };
         private static readonly string[] excludeEnd = { "Dirty" };
@@ -34,11 +34,17 @@ namespace VurbiriEditor.Reactive
         #endregion
 
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-        private readonly Dictionary<string, GameObject> _objects = new();
+        private readonly Dictionary<string, GameObject> _goDict = new();
+        private Type _type;
         private Type[] _arguments;
         private int _argumentsCount;
         private string _params;
         private Rect _position;
+
+        private List<Object> _targetsValues;
+        private string[] _targetsNames;
+        List<string[]> _methodsValues;
+        List<string[]> _methodsNames;
 
         sealed public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
         {
@@ -50,25 +56,28 @@ namespace VurbiriEditor.Reactive
             SerializedProperty propertyTarget = mainProperty.FindPropertyRelative(P_TARGET);
             Object targetObject = propertyTarget.objectReferenceValue;
 
+            string key = label.text;
+
             if (targetObject is Component component)
                 parentObject = component.gameObject;
             else if (targetObject is GameObject gameObject)
                 parentObject = gameObject;
             else
-                _objects.TryGetValue(label.text, out parentObject);
+                _goDict.TryGetValue(key, out parentObject);
 
             BeginProperty(_position, label, mainProperty);
             {
-                parentObject = _objects[label.text] = DrawGameObject(parentObject, L_OBJECT);
+                parentObject = DrawGameObject(parentObject, L_OBJECT);
 
                 if (parentObject != null)
                 {
-                    SetArguments();
-                    var (objects, objectNames, methodsValues, methodsNames) = CreateObjectsData(parentObject);
-                    targetObject = propertyTarget.objectReferenceValue = DrawTargetObject(targetObject, objects, objectNames, out int index);
+                    if (!(SetArguments() && _goDict.TryGetValue(key, out GameObject tempObject) & tempObject == parentObject))
+                        CreateObjectsData(parentObject);
+
+                    targetObject = propertyTarget.objectReferenceValue = DrawTargetObject(targetObject, out int index);
                     
                     if (targetObject != null)
-                        DrawMethodsNames(propertyName, methodsValues[index], methodsNames[index]);
+                        DrawMethodsNames(propertyName, _methodsValues[index], _methodsNames[index]);
                     else
                         propertyName.stringValue = string.Empty;
                 }
@@ -77,6 +86,8 @@ namespace VurbiriEditor.Reactive
                     propertyTarget.objectReferenceValue = null;
                     propertyName.stringValue = string.Empty;
                 }
+
+                _goDict[key] = parentObject;
             }
             EndProperty();
         }
@@ -91,13 +102,13 @@ namespace VurbiriEditor.Reactive
         {
             return ObjectField(_position, displayName, obj, _gameObjectType, true) as GameObject;
         }
-        private Object DrawTargetObject(Object obj, List<Object> objects, List<string> obgNames, out int index)
+        private Object DrawTargetObject(Object obj, out int index)
         {
             _position.y += _height;
-            index = Popup(_position, L_TARGET, objects.IndexOf(obj), obgNames.ToArray());
+            index = Popup(_position, L_TARGET, _targetsValues.IndexOf(obj), _targetsNames);
 
-            if (index < 0 | index >= objects.Count) return null;
-            return objects[index];
+            if (index < 0 | index >= _targetsValues.Count) return null;
+            return _targetsValues[index];
         }
         private void DrawMethodsNames(SerializedProperty property, string[] values, string[] names)
         {
@@ -114,13 +125,15 @@ namespace VurbiriEditor.Reactive
         #endregion
 
         #region Create
-        private void SetArguments()
+        private bool SetArguments()
         {
-            if (_arguments != null & _params != null) return;
-            
             Type type = fieldInfo.FieldType;
             if (type.IsArray) type = type.GetElementType();
-            
+
+            if (_type == type & _arguments != null & _params != null) return true;
+
+            _type = type;
+
             _arguments = type.GetGenericArguments();
             _argumentsCount = _arguments.Length;
 
@@ -132,19 +145,21 @@ namespace VurbiriEditor.Reactive
                     _params = _params.Concat(F_PARAM);
             }
             _params = _params.Concat(F_PARAM_CLOSE);
+
+            return false;
         }
 
-        private (List<Object>, List<string>, List<string[]>, List<string[]>) CreateObjectsData(GameObject parent)
+        private void CreateObjectsData(GameObject parent)
         {
-            List<Object> objects = new() { null };
-            List<string> objectsNames = new() { F_NONE };
-            List<string[]> methodsValues = new() { new string[] { string.Empty } };
-            List<string[]> methodsNames = new() { new string[] { F_NONE } };
-
+            _targetsValues = new() { null };
+            List<string> targetsNames = new() { F_NONE };
+            _methodsValues = new() { new string[] { string.Empty } };
+            _methodsNames = new() { new string[] { F_NONE } };
+            
             {
                 if (TryGetObjectData(parent, out string name, out string[] methodValues, out string[] methodNames))
                 {
-                    objects.Add(parent); objectsNames.Add(name); methodsValues.Add(methodValues); methodsNames.Add(methodNames);
+                    _targetsValues.Add(parent); targetsNames.Add(name); _methodsValues.Add(methodValues); _methodsNames.Add(methodNames);
                 }
             }
 
@@ -152,11 +167,11 @@ namespace VurbiriEditor.Reactive
             {
                 if (TryGetObjectData(obj, out string name, out string[] methodValues, out string[] methodNames))
                 {
-                    objects.Add(obj); objectsNames.Add(name); methodsValues.Add(methodValues); methodsNames.Add(methodNames);
+                    _targetsValues.Add(obj); targetsNames.Add(name); _methodsValues.Add(methodValues); _methodsNames.Add(methodNames);
                 }
             }
 
-            return (objects, objectsNames, methodsValues, methodsNames);
+            _targetsNames = targetsNames.ToArray();
         }
 
         private bool TryGetObjectData(Object obj, out string objName, out string[] methodValues, out string[] methodNames)
@@ -178,11 +193,18 @@ namespace VurbiriEditor.Reactive
                 }
             }
 
-            objName = type.Name;
-            methodValues = values.ToArray();
-            methodNames = names.ToArray();
+            if (names.Count > 1)
+            {
+                objName = type.Name;
+                methodValues = values.ToArray();
+                methodNames = names.ToArray();
+                return true;
+            }
 
-            return names.Count > 1;
+            objName = null;
+            methodValues = null;
+            methodNames = null;
+            return false;
         }
         #endregion
 
@@ -209,7 +231,8 @@ namespace VurbiriEditor.Reactive
             for (int i = excludeEnd.Length - 1; i >= 0; i--)
                 if(name.EndsWith(excludeEnd[i])) return false;
 
-            if(_argumentsCount > 0) return true;
+            if(!Listener.flags.HasFlag(BindingFlags.NonPublic) | _argumentsCount > 0) 
+                return true;
 
             return !excludeMethod.Contains(name);
         }
@@ -218,13 +241,12 @@ namespace VurbiriEditor.Reactive
         {
             string methodName = method.Name;
 
-            if(DRAW_RETURN)
-                methodName = M_VOID.Concat(methodName);
+            methodName = M_VOID.Concat(methodName);
 
             if (DRAW_STATIC & method.IsStatic)
                 methodName = M_STATIC.Concat(methodName);
 
-            if (DRAW_ACCESS)
+            if (Listener.flags.HasFlag(BindingFlags.NonPublic))
                 methodName = AddAccess(method, methodName);
 
             return methodName.Concat(_params);

@@ -13,7 +13,10 @@ namespace VurbiriEditor
         #region Consts
         private const int MAX_COUNT = 32;
         private const string P_VALUE = "_value";
-		#endregion
+        #endregion
+
+        private Type _type;
+        private string[] _names;
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
@@ -21,8 +24,12 @@ namespace VurbiriEditor
 
             if (!TryGetTypeEnum(position, out Type enumType)) return;
 
-            string[] names = enumType.GetEnumNames();
-            int count = names.Length;
+            if (enumType != _type & _names == null)
+            {
+                _type = enumType;
+                _names = enumType.GetEnumNames();
+            }
+            int count = _names.Length;
             if (count > MAX_COUNT)
             {
                 HelpBox(position, $"Count of flags is greater than {MAX_COUNT}", UnityEditor.MessageType.Error);
@@ -33,7 +40,7 @@ namespace VurbiriEditor
 
             BeginProperty(position, label, mainProperty);
             {
-                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, names) & ~(-1 << count);
+                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, _names) & ~(-1 << count);
             }
             EndProperty();
         }

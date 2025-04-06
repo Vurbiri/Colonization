@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Runtime\Reactive\UnitySigner\Abstract\AListener.cs
+//Assets\Vurbiri\Runtime\Reactive\UniSigner\Abstract\AListener.cs
 using System;
 using System.Reflection;
 using UnityEngine;
@@ -9,7 +9,8 @@ namespace Vurbiri.Reactive
     [Serializable]
     public abstract class AListener<TDelegate> where TDelegate : Delegate
     {
-        public static readonly BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+        public static readonly BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+        //public static readonly BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
         [SerializeField] private Object _target;
         [SerializeField] private string _methodName = string.Empty;

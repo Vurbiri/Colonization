@@ -4,54 +4,73 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
+using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(Id<>), true)]
     public class IdDrawer : PropertyDrawer
     {
+        #region Consts
         private const string NAME_VALUE = "_id";
+        private const string TP_DNAMES = "DisplayNames", TP_VALUES = "Values";
+        #endregion
+
+        private Type _type;
+        private string[] _names;
+        private int[] _values;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            string[] names = null; int[] values = null;
-            if(!GetNamesAndValues(ref names, ref values))
+            if (!TryGetType(out Type typeId))
             {
-                EditorGUI.HelpBox(position, $"Error getting values", UnityEditor.MessageType.Error);
-                return;
+                HelpBox(position, "Failed to determine type", UnityEditor.MessageType.Error); return;
+            }
+            if (!TryGetNamesAndValues(typeId))
+            {
+                HelpBox(position, $"Error values", UnityEditor.MessageType.Error); return;
             }
 
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);
-            label = EditorGUI.BeginProperty(position, label, property);
+            label = BeginProperty(position, label, property);
             {
-                valueProperty.intValue = EditorGUI.IntPopup(position, label.text, valueProperty.intValue, names, values, EditorStyles.popup);
+                valueProperty.intValue = IntPopup(position, label.text, valueProperty.intValue, _names, _values, EditorStyles.popup);
             }
-            EditorGUI.EndProperty();
+            EndProperty();
         }
 
-        private bool GetNamesAndValues(ref string[] names, ref int[] values)
+        private bool TryGetType(out Type typeId)
         {
-            Type typeField = fieldInfo.FieldType;
-            if (typeField.IsArray) typeField = typeField.GetElementType();
+            typeId = fieldInfo.FieldType;
+            if (typeId.IsArray) typeId = typeId.GetElementType();
 
-            Type[] arg = typeField.GetGenericArguments();
+            Type[] arg = typeId.GetGenericArguments();
             if (arg == null || arg.Length != 1) return false;
-            typeField = typeField.GetGenericArguments()[0].BaseType;
+            typeId = typeId.GetGenericArguments()[0];
 
+            return typeId != null;
+        }
+
+        private bool TryGetNamesAndValues(Type typeId)
+        {
+            if (typeId == _type & _names != null & _values != null) return true;
+
+            _type = typeId;
+
+            typeId = typeId.BaseType;
             PropertyInfo displayNamesProperty = null, valuesProperty = null;
-            while (typeField != null & (displayNamesProperty == null | valuesProperty == null))
+            while (typeId != null & (displayNamesProperty == null | valuesProperty == null))
             {
-                 displayNamesProperty = typeField.GetProperty("DisplayNames");
-                valuesProperty = typeField.GetProperty("Values");
-                typeField = typeField.BaseType;
+                displayNamesProperty = typeId.GetProperty(TP_DNAMES);
+                valuesProperty = typeId.GetProperty(TP_VALUES);
+                typeId = typeId.BaseType;
             }
 
             if (displayNamesProperty == null | valuesProperty == null) return false;
 
-            names = (string[])displayNamesProperty.GetValue(null);
-            values = (int[])valuesProperty.GetValue(null);
-
-            return names != null & values != null;
+            _names = (string[])displayNamesProperty.GetValue(null);
+            _values = (int[])valuesProperty.GetValue(null);
+            return _names != null & _values != null;
         }
     }
 }

@@ -14,7 +14,8 @@ namespace VurbiriEditor
         protected Rect _position;
         protected SerializedProperty _mainProperty;
         protected GUIContent _label;
-        protected float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing, _ySpace = EditorGUIUtility.standardVerticalSpacing;
+        protected readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+        protected readonly float _ySpace = EditorGUIUtility.standardVerticalSpacing;
 
         sealed public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
         {

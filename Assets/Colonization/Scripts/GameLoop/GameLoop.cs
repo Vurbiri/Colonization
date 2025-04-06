@@ -1,12 +1,18 @@
 //Assets\Colonization\Scripts\GameLoop\GameLoop.cs
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
+using Vurbiri.Reactive;
 using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
     public class GameLoop : MonoBehaviour
     {
+        public Listener<bool>[] AvatarSize;
+        public Listener<int> Files;
+        public Listener<bool> HumanAbilityId;
+        public Listener Listener;
+
         private Dices _dices;
         private TurnQueue _turnQueue;
         private Players _players;

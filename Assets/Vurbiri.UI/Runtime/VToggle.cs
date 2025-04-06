@@ -21,7 +21,7 @@ namespace Vurbiri.UI
         [SerializeField] private Color _colorOn = Color.green;
         [SerializeField] private Color _colorOff = Color.red;
         [SerializeField] private VToggleGroup _group;
-        [SerializeField] private UnitySigner<bool> _onValueChanged = new();
+        [SerializeField] private UniSigner<bool> _onValueChanged = new();
 
         private EnumFlags<SelectionState> _stateFilterOn = false, _stateFilterOff = false;
         private ITransitionEffect _transitionEffect;

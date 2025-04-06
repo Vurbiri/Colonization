@@ -18,8 +18,11 @@ namespace Vurbiri
             T[] values = (T[])Enum.GetValues(typeof(T));
 
             count = values.Length;
-            Throw.IfGreater(count, MAX_COUNT);
+            maskValue = ~(-1 << count);
+            format = $"x{Mathf.FloorToInt(count * 0.25f)}";
 
+#if UNITY_EDITOR
+            Throw.IfGreater(count, MAX_COUNT);
             int value, oldValue = -1;
             for (int i = 0; i < count; i++)
             {
@@ -28,9 +31,7 @@ namespace Vurbiri
                     Errors.Message("The wrong type. Values must be equal to or greater than zero and in sequence.");
                 oldValue = value;
             }
-
-            maskValue = ~(-1 << count);
-            format = $"x{Mathf.FloorToInt(count * 0.25f)}";
+#endif
         }
 
         [SerializeField] private int _value;
