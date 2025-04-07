@@ -17,8 +17,6 @@ namespace VurbiriEditor.Reactive
 		{
 			position.height = EditorGUIUtility.singleLineHeight;
             SerializedProperty propertyArray = mainProperty.FindPropertyRelative(P_NAME);
-            
-			propertyArray.isExpanded = true;
 
             BeginProperty(position, label, mainProperty);
 			{
@@ -30,13 +28,16 @@ namespace VurbiriEditor.Reactive
         sealed public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
 		{
             float height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-            float rate = 3.1f;
+            float rate = 3.2f;
             SerializedProperty propertyArray = mainProperty.FindPropertyRelative(P_NAME);
 
-			if(propertyArray.arraySize > 0)
-				return height * propertyArray.arraySize * rate + height * 2.2f;
+            if(!propertyArray.isExpanded)
+                return height;
 
-            return height * 3.2f;
+            if (propertyArray.arraySize > 0)
+				return height * propertyArray.arraySize * rate + height * 2.4f;
+
+            return height * rate;
         }
 	}
     //=======================================================================================

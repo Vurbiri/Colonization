@@ -17,12 +17,14 @@ namespace Vurbiri
         static IdFlags()
         {
             count = IdType<T>.Count;
+            maskId = ~(-1 << count);
+            format = $"x{Mathf.FloorToInt(0.25f * count)}";
+
+#if UNITY_EDITOR
             string name = typeof(T).Name;
             Throw.IfNegative(IdType<T>.Min, $"{name}.Min");
             Throw.IfGreater(count, MAX_COUNT, $"{name}.Count");
-
-            maskId = ~(-1 << count);
-            format = $"x{Mathf.FloorToInt(count * 0.25f)}";
+#endif  
         }
 
         [SerializeField] private int _id;

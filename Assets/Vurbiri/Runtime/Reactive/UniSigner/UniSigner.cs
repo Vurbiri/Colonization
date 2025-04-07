@@ -11,19 +11,21 @@ namespace Vurbiri.Reactive
 
         public void Clear()
         {
-            if(Application.isPlaying) 
-                _listeners = null;
+#if UNITY_EDITOR
+            if (!Application.isPlaying) return;
+#endif
+            _listeners = null;
         }
 
         public void OnBeforeSerialize() { }
 
         public void OnAfterDeserialize()
         {
-            if(_listeners == null) return;
+            if (_listeners == null) return;
             
             for (int i = _listeners.Length - 1; i >= 0; i--)
             {
-                if (_listeners[i].TryInstantiate(out Action action))
+                if (_listeners[i].TryCreateDelegate(out Action action))
                 {
                     actions -= action;
                     actions += action;
@@ -51,7 +53,7 @@ namespace Vurbiri.Reactive
 
             for (int i = _listeners.Length - 1; i >= 0; i--)
             {
-                if (_listeners[i].TryInstantiate(out Action<T> action))
+                if (_listeners[i].TryCreateDelegate(out Action<T> action))
                 {
                     actions -= action;
                     actions += action;
@@ -79,7 +81,7 @@ namespace Vurbiri.Reactive
 
             for (int i = _listeners.Length - 1; i >= 0; i--)
             {
-                if (_listeners[i].TryInstantiate(out Action<TA, TB> action))
+                if (_listeners[i].TryCreateDelegate(out Action<TA, TB> action))
                 {
                     actions -= action;
                     actions += action;
@@ -107,7 +109,7 @@ namespace Vurbiri.Reactive
 
             for (int i = _listeners.Length - 1; i >= 0; i--)
             {
-                if (_listeners[i].TryInstantiate(out Action<TA, TB, TC> action))
+                if (_listeners[i].TryCreateDelegate(out Action<TA, TB, TC> action))
                 {
                     actions -= action;
                     actions += action;
@@ -135,7 +137,7 @@ namespace Vurbiri.Reactive
 
             for (int i = _listeners.Length - 1; i >= 0; i--)
             {
-                if (_listeners[i].TryInstantiate(out Action<TA, TB, TC, TD> action))
+                if (_listeners[i].TryCreateDelegate(out Action<TA, TB, TC, TD> action))
                 {
                     actions -= action;
                     actions += action;

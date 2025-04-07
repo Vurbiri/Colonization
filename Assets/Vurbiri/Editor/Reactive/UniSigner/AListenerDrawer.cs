@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
-using Vurbiri;
 using Vurbiri.Reactive;
 using static UnityEditor.EditorGUI;
 using Object = UnityEngine.Object;
@@ -21,26 +21,42 @@ namespace VurbiriEditor.Reactive
 
         private static readonly string[] excludeStart = { "set_", "<set_" };
         private static readonly string[] excludeEnd = { "Dirty" };
-        private static readonly HashSet<string> excludeMethod = new(new string[] { "Awake", "Start", "OnEnable", "Update", "FixedUpdate", "LateUpdate", "OnDisable", "OnDestroy", "OnValidate", "Reset", "Finalize", "SendTransformChangedScale", "StopAnimation" });
+        private static readonly HashSet<string> excludeVoidMethod = new(new string[] { "Awake", "Start", "OnEnable", "Update", "FixedUpdate", "LateUpdate", "OnDisable", "OnDestroy", "OnValidate", "Reset", "OnBeforeSerialize", "OnAfterDeserialize", "Finalize", "SendTransformChangedScale", "StopAnimation" });
         #endregion
 
         #region Consts
         private const string P_TARGET = "_target", P_METHOD_NAME = "_methodName";
-        private const string F_NONE = "None", F_PARAM_OPEN = "(", F_PARAM = ", ", F_PARAM_CLOSE = ")";
+        private const string F_NONE = "None", F_PARAM_OPEN = "(", F_PARAM_CLOSE = ")", F_PARAM_SEPARATOR = ", ";
+        private const string F_GENERIC_OPEN = "<", F_GENERIC_CLOSE = ">";
+        private const char F_GENERIC_SEPARATOR = '`';
         private const string M_VOID = "void "; 
         private const string M_PUBLIC = "public ", M_PRIVATE = "private ", M_PROTECTED = "protected ", M_INTERNAL = "internal ", M_STATIC = "static ";
 
+        private static readonly int _preNameMaxLength = M_PROTECTED.Length + M_INTERNAL.Length + M_STATIC.Length + M_VOID.Length;
         private static readonly Type _gameObjectType = typeof(GameObject), _voidType = typeof(void);
         #endregion
 
+        #region Cache
+        string _key;
+        private readonly Dictionary<string, GameObject> _gameObjectCache = new();
+        private readonly Dictionary<string, List<Object>> _targetsValuesCache = new();
+        private readonly Dictionary<string, string[]> _targetsNamesCache = new();
+        private readonly Dictionary<string, List<string[]>> _methodsValuesCache = new();
+        private readonly Dictionary<string, List<string[]>> _methodsNamesCache = new();
+        #endregion
+
+        #region ConvertNames
+        private static readonly Dictionary<string, string> _converter = new() {{"Boolean", "bool"}, { "Byte", "byte" }, { "SByte", "sbyte" }, { "Int16", "short" }, { "UInt16", "ushort" }, { "Int32", "int" }, { "UInt32", "uint" }, { "Int64", "long" }, { "UInt64", "ulong" }, { "Single", "float" }, { "Double", "double" }, { "Decimal", "decimal" }, { "Char", "char" }, { "String", "string" }, { "Object", "object" }};
+        #endregion
+
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-        private readonly Dictionary<string, GameObject> _goDict = new();
+        
         private Type _type;
         private Type[] _arguments;
         private int _argumentsCount;
         private string _params;
         private Rect _position;
-
+               
         private List<Object> _targetsValues;
         private string[] _targetsNames;
         List<string[]> _methodsValues;
@@ -50,20 +66,20 @@ namespace VurbiriEditor.Reactive
         {
             position.height = EditorGUIUtility.singleLineHeight;
             _position = position;
+            _key = label.text;
 
-            GameObject parentObject;
             SerializedProperty propertyName = mainProperty.FindPropertyRelative(P_METHOD_NAME);
             SerializedProperty propertyTarget = mainProperty.FindPropertyRelative(P_TARGET);
-            Object targetObject = propertyTarget.objectReferenceValue;
 
-            string key = label.text;
+            GameObject parentObject;
+            Object targetObject = propertyTarget.objectReferenceValue;
 
             if (targetObject is Component component)
                 parentObject = component.gameObject;
             else if (targetObject is GameObject gameObject)
                 parentObject = gameObject;
             else
-                _goDict.TryGetValue(key, out parentObject);
+                _gameObjectCache.TryGetValue(_key, out parentObject);
 
             BeginProperty(_position, label, mainProperty);
             {
@@ -71,8 +87,8 @@ namespace VurbiriEditor.Reactive
 
                 if (parentObject != null)
                 {
-                    if (!(SetArguments() && _goDict.TryGetValue(key, out GameObject tempObject) & tempObject == parentObject))
-                        CreateObjectsData(parentObject);
+                    bool update = !(SetArguments() && _gameObjectCache.TryGetValue(_key, out GameObject tempObject) & tempObject == parentObject);
+                    CreateObjectsData(parentObject, update);
 
                     targetObject = propertyTarget.objectReferenceValue = DrawTargetObject(targetObject, out int index);
                     
@@ -87,7 +103,7 @@ namespace VurbiriEditor.Reactive
                     propertyName.stringValue = string.Empty;
                 }
 
-                _goDict[key] = parentObject;
+                _gameObjectCache[_key] = parentObject;
             }
             EndProperty();
         }
@@ -137,24 +153,47 @@ namespace VurbiriEditor.Reactive
             _arguments = type.GetGenericArguments();
             _argumentsCount = _arguments.Length;
 
-            _params = F_PARAM_OPEN;
-            for(int i = 0; i < _argumentsCount; i++)
-            {
-                _params = _params.Concat(_arguments[i].Name);
-                if(i < _argumentsCount - 1)
-                    _params = _params.Concat(F_PARAM);
-            }
-            _params = _params.Concat(F_PARAM_CLOSE);
+            _params = GetParams(_arguments, _argumentsCount);
 
             return false;
         }
 
-        private void CreateObjectsData(GameObject parent)
+        private string GetParams(Type[] arguments, int argumentsCount, string open = F_PARAM_OPEN, string close = F_PARAM_CLOSE)
         {
-            _targetsValues = new() { null };
+            Type[] argumentsGeneric; Type argument;
+            StringBuilder sb = new(2 + 8 * argumentsCount);
+            
+            sb.Append(open);
+            for (int i = 0; i < argumentsCount; i++)
+            {
+                argument = arguments[i];
+                argumentsGeneric = argument.GetGenericArguments();
+                if (argumentsGeneric.Length > 0)
+                {
+                    sb.Append(argument.Name.Split(F_GENERIC_SEPARATOR)[0]);
+                    sb.Append(GetParams(argumentsGeneric, argumentsGeneric.Length, F_GENERIC_OPEN, F_GENERIC_CLOSE));
+                }
+                else
+                {
+                    sb.Append(ConvertName(argument.Name));
+                }
+                if (i < argumentsCount - 1) sb.Append(F_PARAM_SEPARATOR);
+            }
+            sb.Append(close);
+
+            return sb.ToString();
+        }
+
+        private void CreateObjectsData(GameObject parent, bool update)
+        {
+            if (!update && _targetsValuesCache.TryGetValue(_key, out _targetsValues) & _targetsNamesCache.TryGetValue(_key, out _targetsNames)
+                & _methodsValuesCache.TryGetValue(_key, out _methodsValues) & _methodsNamesCache.TryGetValue(_key, out _methodsNames))
+                return;
+
             List<string> targetsNames = new() { F_NONE };
-            _methodsValues = new() { new string[] { string.Empty } };
-            _methodsNames = new() { new string[] { F_NONE } };
+            _targetsValuesCache[_key] = _targetsValues = new() { null };
+            _methodsValuesCache[_key] = _methodsValues = new() { new string[] { string.Empty } };
+            _methodsNamesCache[_key] = _methodsNames = new() { new string[] { F_NONE } };
             
             {
                 if (TryGetObjectData(parent, out string name, out string[] methodValues, out string[] methodNames))
@@ -171,7 +210,7 @@ namespace VurbiriEditor.Reactive
                 }
             }
 
-            _targetsNames = targetsNames.ToArray();
+            _targetsNamesCache[_key] = _targetsNames = targetsNames.ToArray();
         }
 
         private bool TryGetObjectData(Object obj, out string objName, out string[] methodValues, out string[] methodNames)
@@ -189,7 +228,7 @@ namespace VurbiriEditor.Reactive
                 if (method.ReturnType == _voidType && IsName(methodName) && IsParams(method))
                 {
                     values.Add(methodName);
-                    names.Add(GetName(method));
+                    names.Add(GetMethodName(method));
                 }
             }
 
@@ -217,7 +256,7 @@ namespace VurbiriEditor.Reactive
                 return false;
 
             for (int i = 0; i < _argumentsCount; i++)
-                if (!_arguments[i].IsAssignableFrom(parameters[i].ParameterType))
+                if (_arguments[i] != parameters[i].ParameterType)
                     return false;
 
             return true;
@@ -231,43 +270,48 @@ namespace VurbiriEditor.Reactive
             for (int i = excludeEnd.Length - 1; i >= 0; i--)
                 if(name.EndsWith(excludeEnd[i])) return false;
 
-            if(!Listener.flags.HasFlag(BindingFlags.NonPublic) | _argumentsCount > 0) 
+            if(_argumentsCount > 0) 
                 return true;
 
-            return !excludeMethod.Contains(name);
+            return !excludeVoidMethod.Contains(name);
         }
 
-        private string GetName(MethodInfo method)
+        private string ConvertName(string name)
+        {
+            if (_converter.TryGetValue(name, out string outName))
+                return outName;
+
+            return name;
+        }
+
+        private string GetMethodName(MethodInfo method)
         {
             string methodName = method.Name;
-
-            methodName = M_VOID.Concat(methodName);
-
-            if (DRAW_STATIC & method.IsStatic)
-                methodName = M_STATIC.Concat(methodName);
+            StringBuilder sb = new(_preNameMaxLength + methodName.Length + _params.Length);
 
             if (Listener.flags.HasFlag(BindingFlags.NonPublic))
-                methodName = AddAccess(method, methodName);
+                sb.Append(GetAccess(method));
 
-            return methodName.Concat(_params);
+            if (DRAW_STATIC & method.IsStatic)
+                sb.Append(M_STATIC);
+
+            sb.Append(M_VOID);
+            sb.Append(methodName);
+            sb.Append(_params);
+
+            return sb.ToString();
         }
 
-        private string AddAccess(MethodInfo method, string methodName)
+        private string GetAccess(MethodInfo method)
         {
-            if (method.IsPublic)
-                return M_PUBLIC.Concat(methodName);
-            if (method.IsPrivate)
-                return M_PRIVATE.Concat(methodName);
-            if (method.IsFamily)
-                return M_PROTECTED.Concat(methodName);
-            if (method.IsAssembly)
-                return M_INTERNAL.Concat(methodName);
-            if (method.IsFamilyOrAssembly)
-                return M_PROTECTED.Concat(M_INTERNAL, methodName);
-            if (method.IsFamilyAndAssembly)
-                return M_PRIVATE.Concat(M_PROTECTED, methodName);
+            if (method.IsPublic)            return M_PUBLIC;
+            if (method.IsPrivate)           return M_PRIVATE;
+            if (method.IsFamily)            return M_PROTECTED;
+            if (method.IsAssembly)          return M_INTERNAL;
+            if (method.IsFamilyOrAssembly)  return string.Concat(M_PROTECTED, M_INTERNAL);
+            if (method.IsFamilyAndAssembly) return string.Concat(M_PRIVATE, M_PROTECTED);
 
-            return methodName;
+            return string.Empty;
         }
         #endregion
     }

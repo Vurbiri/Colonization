@@ -16,6 +16,7 @@ namespace VurbiriEditor.UI
         
         private static readonly string[] switchingLabels = { "On|Off checkmark", "Switch checkmarks", "Color checkmark" };
         private static readonly GUIContent[] checkmarkLabels = { new("Checkmark"), new("Checkmark On"), new("Checkmark") };
+        private static readonly GUIContent isFadeLabels = new("Checkmark Fade");
 
         private SerializedProperty _isOnProperty;
         private SerializedProperty _isFadeProperty;
@@ -88,7 +89,7 @@ namespace VurbiriEditor.UI
             }
             //============================================================
             EditorGUI.BeginChangeCheck();
-            PropertyField(_isFadeProperty, new GUIContent("Checkmark Fade?"));
+            PropertyField(_isFadeProperty, isFadeLabels);
             if (EditorGUI.EndChangeCheck())
             {
                 if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_toggle.gameObject.scene);

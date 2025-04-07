@@ -15,10 +15,10 @@ namespace Vurbiri.Reactive
         [SerializeField] private Object _target;
         [SerializeField] private string _methodName = string.Empty;
 
-        public bool TryInstantiate(out TDelegate action)
+        public bool TryCreateDelegate(out TDelegate action)
         {
             action = null;
-            if (_target is null | string.IsNullOrEmpty(_methodName))
+            if (_target == null | string.IsNullOrEmpty(_methodName))
                 return false;
 
             Type actionType = typeof(TDelegate);

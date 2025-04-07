@@ -19,7 +19,7 @@ namespace Vurbiri
 
             count = values.Length;
             maskValue = ~(-1 << count);
-            format = $"x{Mathf.FloorToInt(count * 0.25f)}";
+            format = $"x{Mathf.FloorToInt(0.25f * count)}";
 
 #if UNITY_EDITOR
             Throw.IfGreater(count, MAX_COUNT);
