@@ -150,5 +150,8 @@ namespace VurbiriEditor.UI
             Space();
             PropertyField(_onValueChangedProperty);
         }
+
+        [MenuItem("GameObject/UI Vurbiri/Toggle", false, VUI_CONST.MENU_PRIORITY)]
+        public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromPrefab("VToggle", "Toggle", command.context as GameObject);
     }
 }
