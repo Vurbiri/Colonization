@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Runtime\Types\EnumFlags.cs
+//Assets\Vurbiri\Runtime\Types\Enum\EnumFlags.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace Vurbiri
             {
                 value = values[i].ToInt();
                 if ((value - oldValue) != 1)
-                    Errors.Message("The wrong type. Values must be equal to or greater than zero and in sequence.");
+                    Errors.Message("The wrong type. Enum values must be equal to or greater than zero and in sequence.");
                 oldValue = value;
             }
 #endif
@@ -70,9 +70,6 @@ namespace Vurbiri
             _value = value;
         }
         #endregion
-
-        public void Fill() => _value = maskValue;
-        public void Clear() => _value = 0;
 
         public override readonly string ToString() => "0x".Concat(_value.ToString(format));
 

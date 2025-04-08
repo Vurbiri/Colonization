@@ -1,4 +1,4 @@
-//Assets\Vurbiri.TextLocalization\Runtime\Scripts\EnumFiles.cs
+//Assets\Vurbiri.TextLocalization\Runtime\EnumFiles.cs
 namespace Vurbiri.TextLocalization
 {
     public enum Files

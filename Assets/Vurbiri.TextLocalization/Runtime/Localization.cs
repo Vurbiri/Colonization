@@ -1,4 +1,4 @@
-//Assets\Vurbiri.TextLocalization\Runtime\Scripts\Localization.cs
+//Assets\Vurbiri.TextLocalization\Runtime\Localization.cs
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,7 +40,7 @@ namespace Vurbiri.TextLocalization
         }
 
 #if UNITY_EDITOR
-        public Localization(bool[] loadFiles) : this() => SetFiles(loadFiles);
+        public Localization(EnumFlags<Files> files) : this() => SetFiles(files);
 #endif
 
         public Unsubscriber Subscribe(Action<Localization> action, bool sendCallback = true) => _subscriber.Add(action, sendCallback, this);

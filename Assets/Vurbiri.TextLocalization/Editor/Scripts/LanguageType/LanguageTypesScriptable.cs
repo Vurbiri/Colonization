@@ -24,9 +24,7 @@ namespace Vurbiri.TextLocalization.Editor
 
         public void Save()
         {
-            using SettingsScriptable settings = ProjectSettingsScriptable.GetCurrentSettings();
-
-            File.WriteAllText(Application.dataPath.Concat(settings.FilePath), JsonConvert.SerializeObject(_languageTypes));
+            File.WriteAllText(Application.dataPath.Concat(CONST_L.FILE_PATH), JsonConvert.SerializeObject(_languageTypes));
             AssetDatabase.Refresh();
             AssetDatabase.SaveAssets();
         }

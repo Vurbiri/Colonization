@@ -12,14 +12,13 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VToggle)), CanEditMultipleObjects]
     sealed public class VToggleEditor : VSelectableEditor
     {
-        private const float MIN_DURATION = 0.01f, MAX_DURATION = 1f;
+        private const float MIN_DURATION = 0f, MAX_DURATION = 1f;
         
         private static readonly string[] switchingLabels = { "On|Off checkmark", "Switch checkmarks", "Color checkmark" };
         private static readonly GUIContent[] checkmarkLabels = { new("Checkmark"), new("Checkmark On"), new("Checkmark") };
-        private static readonly GUIContent isFadeLabels = new("Checkmark Fade");
+        private static readonly GUIContent isFadeLabels = new("Checkmark Fade Duration");
 
         private SerializedProperty _isOnProperty;
-        private SerializedProperty _isFadeProperty;
         private SerializedProperty _durationProperty;
         private SerializedProperty _switchingTypeProperty;
         private SerializedProperty _checkmarkOnProperty;
@@ -29,21 +28,17 @@ namespace VurbiriEditor.UI
         private SerializedProperty _groupProperty;
         private SerializedProperty _onValueChangedProperty;
 
-        private readonly AnimBool _showDuration = new();
         private readonly AnimBool _showSwitchType = new(), _showColorType = new();
        
         private VToggle _toggle;
-        private bool _isFade;
         private VToggle.SwitchingType _fadeType;
 
         protected override void OnEnable()
         {
             _toggle = target as VToggle;
-            _isFade = _toggle.IsCheckmarkFade;
             _fadeType = _toggle.Switching;
             
             _isOnProperty = serializedObject.FindProperty("_isOn");
-            _isFadeProperty = serializedObject.FindProperty("_isFade");
             _durationProperty = serializedObject.FindProperty("_fadeDuration");
             _switchingTypeProperty = serializedObject.FindProperty("_switchingType");
             _checkmarkOnProperty = serializedObject.FindProperty("_checkmarkOn");
@@ -53,11 +48,9 @@ namespace VurbiriEditor.UI
             _groupProperty = serializedObject.FindProperty("_group");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
-            _showDuration.value = _isFade;
             _showSwitchType.value = _fadeType == VToggle.SwitchingType.SwitchCheckmark;
             _showColorType.value = _fadeType == VToggle.SwitchingType.ColorCheckmark;
 
-            _showDuration.valueChanged.AddListener(Repaint);
             _showSwitchType.valueChanged.AddListener(Repaint);
             _showColorType.valueChanged.AddListener(Repaint);
 
@@ -66,7 +59,6 @@ namespace VurbiriEditor.UI
 
         protected override void OnDisable()
         {
-            _showDuration.valueChanged.RemoveListener(Repaint);
             _showSwitchType.valueChanged.RemoveListener(Repaint);
             _showColorType.valueChanged.RemoveListener(Repaint);
             base.OnDisable();
@@ -89,31 +81,14 @@ namespace VurbiriEditor.UI
             }
             //============================================================
             EditorGUI.BeginChangeCheck();
-            PropertyField(_isFadeProperty, isFadeLabels);
+            Slider(_durationProperty, MIN_DURATION, MAX_DURATION, isFadeLabels);
             if (EditorGUI.EndChangeCheck())
             {
                 if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_toggle.gameObject.scene);
-
-                _toggle.IsCheckmarkFade = _isFade = _isFadeProperty.boolValue;
-                _showDuration.target = !_switchingTypeProperty.hasMultipleDifferentValues && _isFade;
+                _toggle.CheckmarkFadeDuration = _durationProperty.floatValue;
             }
-            
-            if (BeginFadeGroup(_showDuration.faded))
-            {
-                EditorGUI.indentLevel++;
-                EditorGUI.BeginChangeCheck();
-                Slider(_durationProperty, MIN_DURATION, MAX_DURATION);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_toggle.gameObject.scene);
-                    _toggle.CheckmarkFadeDuration = _durationProperty.floatValue;
-                }
-                EditorGUI.indentLevel--;
-            }
-            EndFadeGroup();
             //============================================================
             EditorGUI.BeginChangeCheck();
-            //PropertyField(_switchingTypeProperty);
             _switchingTypeProperty.enumValueIndex = Popup(_switchingTypeProperty.displayName, _switchingTypeProperty.enumValueIndex, switchingLabels);
             if (EditorGUI.EndChangeCheck())
             {

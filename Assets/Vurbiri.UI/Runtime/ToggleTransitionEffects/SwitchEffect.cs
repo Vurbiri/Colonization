@@ -10,60 +10,52 @@ namespace Vurbiri.UI
         {
             internal static bool Validate(VToggle parent) => parent._checkmarkOn != null & parent._checkmarkOff != null;
 
-            private readonly VToggle _parent;
-            private readonly ColorTween _tweenMark, _tweenState;
-
-            private Color _colorMarkOn, _colorMarkOff;
-            private Color _targetColorMark, _targetColorState;
-
-            public bool IsValid => Validate(_parent);
+            private readonly OnOffEffect _markOn, _markOff;
+ 
+            public bool IsValid => _markOn.IsValid & _markOff.IsValid;
 
             public bool Value => throw new System.NotImplementedException();
 
             public SwitchEffect(VToggle parent)
             {
-                _parent = parent;
-
+                _markOn = new(parent._fadeDuration, parent.isOn, parent._checkmarkOn);
+                _markOff = new(parent._fadeDuration, !parent.isOn, parent._checkmarkOff);
             }
 
             public bool SetGraphic(Graphic checkmarkA, Graphic checkmarkB)
             {
-                throw new System.NotImplementedException();
+                return _markOn.SetGraphic(checkmarkA, null) & _markOff.SetGraphic(checkmarkB, null);
             }
 
-            public void TransitionUpdate()
+            public void SetDuration(float duration)
             {
-                throw new System.NotImplementedException();
+                _markOn.SetDuration(duration);
+                _markOff.SetDuration(duration);
             }
 
-            public void ColorsUpdate()
-            {
-                throw new System.NotImplementedException();
-            }
+            public void ColorsUpdate() { }
 
             public void Play(bool isOn)
             {
-                throw new System.NotImplementedException();
+                _markOn.Play(isOn);
+                _markOff.Play(!isOn);
             }
 
             public void PlayInstant(bool isOn)
             {
-                throw new System.NotImplementedException();
+                _markOn.PlayInstant(isOn);
+                _markOff.PlayInstant(!isOn);
             }
 
-            public void StateTransitionOn(Color targetColor, float duration, bool instant)
+            public void StateTransitionOn(Color targetColor, float duration)
             {
-                throw new System.NotImplementedException();
+                _markOn.StateTransitionOn(targetColor, duration);
             }
 
-            public void StateTransitionOff(Color targetColor, float duration, bool instant)
+            public void StateTransitionOff(Color targetColor, float duration)
             {
-                throw new System.NotImplementedException();
+                _markOff.StateTransitionOn(targetColor, duration);
             }
-
-          
-
-
         }
     }
 }

@@ -8,9 +8,9 @@ namespace Vurbiri.UI
     {
         sealed private class OnOffEffect : TransitionEffect
         {
-            internal static bool Validate(VToggle parent) => ColorTween.Validate(parent._checkmarkOn, parent._isFade, parent._fadeDuration);
+            internal static bool Validate(VToggle parent) => parent._checkmarkOn != null;
 
-            public OnOffEffect(VToggle parent, bool isOn, Graphic checkmark) : base(parent, isOn, checkmark, Color.white, new Color(1f, 1f, 1f, 0f))
+            public OnOffEffect(float duration, bool isOn, Graphic checkmark) : base(duration, isOn, checkmark, Color.white, new Color(1f, 1f, 1f, 0f))
             {
             }
         }

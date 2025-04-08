@@ -6,38 +6,27 @@ namespace Vurbiri.UI
 {
     sealed public partial class VToggle
     {
-        private abstract class TransitionEffect : ITransitionEffect
+        private abstract partial class TransitionEffect : ITransitionEffect
         {
-            protected readonly VToggle _parent;
-            protected readonly ColorTween _tweenMark, _tweenState;
-
+            protected readonly MixColorTween _tween;
             protected Color _colorMarkOn, _colorMarkOff;
-            protected Color _targetColorMark, _targetColorState;
 
-            public bool IsValid => _tweenMark.IsValid;
-            public bool Value => _tweenMark.CurrentColor != _colorMarkOff * _targetColorState;
-
-            protected Color TargetColor => _targetColorMark * _targetColorState;
+            public bool IsValid => _tween.IsValid;
+            public bool Value => _tween.Check(_colorMarkOff);
 
             protected TransitionEffect() { }
-            protected TransitionEffect(VToggle parent, bool isOn, Graphic checkmark, Color colorMarkOn, Color colorMarkOff)
+            protected TransitionEffect(float duration, bool isOn, Graphic checkmark, Color colorMarkOn, Color colorMarkOff)
             {
-                _parent = parent;
-
                 _colorMarkOn = colorMarkOn;
                 _colorMarkOff = colorMarkOff;
 
-                _targetColorMark = isOn ? colorMarkOn : colorMarkOff;
-                _targetColorState = Color.white;
-
-                _tweenMark = new(checkmark, parent._isFade, parent._fadeDuration);
-                _tweenState = new(checkmark);
+                _tween = new(checkmark, duration);
 
                 PlayInstant(isOn);
             }
 
-            public bool SetGraphic(Graphic checkmarkA, Graphic checkmarkB) => _tweenMark.SetTarget(checkmarkA) & _tweenState.SetTarget(checkmarkA);
-            public void TransitionUpdate() => _tweenMark.SetTransition(_parent._isFade, _parent._fadeDuration);
+            public bool SetGraphic(Graphic checkmarkA, Graphic checkmarkB) => _tween.SetTarget(checkmarkA);
+            public void SetDuration(float duration) => _tween.markDuration = duration;
             public virtual void ColorsUpdate() { }
 
             public void Play(bool isOn)
@@ -45,21 +34,18 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
                 if (!Application.isPlaying) { PlayInstant(isOn); return; }
 #endif
-                _targetColorMark = isOn ? _colorMarkOn : _colorMarkOff;
-                _tweenMark.Start(TargetColor);
+                _tween.SetMarkColor(isOn ? _colorMarkOn : _colorMarkOff);
             }
             public void PlayInstant(bool isOn)
             {
-                _targetColorMark = _parent._isOn ? _colorMarkOn : _colorMarkOff;
-                _tweenMark.SetColor(TargetColor);
+                _tween.SetMarkColorInstant(isOn ? _colorMarkOn : _colorMarkOff);
             }
 
-            public void StateTransitionOn(Color targetColor, float duration, bool instant) 
+            public void StateTransitionOn(Color targetColor, float duration) 
             {
-                _targetColorState = targetColor;
-                _tweenState.Start(TargetColor, !instant, duration);
+                _tween.SetStateColor(targetColor, duration);
             }
-            public void StateTransitionOff(Color targetColor, float duration, bool instant) { }
+            public void StateTransitionOff(Color targetColor, float duration) { }
         }
         //==================================================================================
         sealed private class EmptyEffect : ITransitionEffect
@@ -70,14 +56,14 @@ namespace Vurbiri.UI
             public bool Value => throw new System.NotImplementedException();
 
             public bool SetGraphic(Graphic checkmarkA, Graphic checkmarkB) => false;
-            public void TransitionUpdate() { }
+            public void SetDuration(float duration) { }
             public void ColorsUpdate() { }
 
             public void Play(bool isOn) { }
             public void PlayInstant(bool isOn) { }
 
-            public void StateTransitionOn(Color targetColor, float duration, bool instant) { }
-            public void StateTransitionOff(Color targetColor, float duration, bool instant) { }
+            public void StateTransitionOn(Color targetColor, float duration) { }
+            public void StateTransitionOff(Color targetColor, float duration) { }
         }
         //==================================================================================
         private interface ITransitionEffect
@@ -86,14 +72,14 @@ namespace Vurbiri.UI
             public bool Value { get; }
 
             public bool SetGraphic(Graphic checkmarkA, Graphic checkmarkB);
-            public void TransitionUpdate();
+            public void SetDuration(float duration);
             public void ColorsUpdate();
 
             public void Play(bool isOn);
             public void PlayInstant(bool isOn);
 
-            public void StateTransitionOn(Color targetColor, float duration, bool instant);
-            public void StateTransitionOff(Color targetColor, float duration, bool instant);
+            public void StateTransitionOn(Color targetColor, float duration);
+            public void StateTransitionOff(Color targetColor, float duration);
         }
     }
 }

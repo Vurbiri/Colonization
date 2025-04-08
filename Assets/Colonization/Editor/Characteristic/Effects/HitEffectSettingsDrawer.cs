@@ -16,14 +16,14 @@ namespace VurbiriEditor.Colonization.Characteristics
     [CustomPropertyDrawer(typeof(HitEffectSettings))]
     public class HitEffectSettingsDrawer : PropertyDrawerUtility
     {
-        private static readonly WeakReference<Localization> _weakLocalization = new(new(new bool[] { false, false, true }));
+        private static readonly WeakReference<Localization> _weakLocalization = new(new (Files.Actors));
         private static Localization Localization
         {
             get
             {
                 if (!_weakLocalization.TryGetTarget(out Localization localization))
                 {
-                    localization = new(new bool[] { false, false, true });
+                    localization = new(Files.Actors);
                     _weakLocalization.SetTarget(localization);
                 }
                 return localization;

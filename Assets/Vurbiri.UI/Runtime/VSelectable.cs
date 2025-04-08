@@ -69,7 +69,7 @@ namespace Vurbiri.UI
 
             if (transition != Transition.ColorTint)
             {
-                OnStateTransition(intState, Color.white, 0f, true);
+                OnStateTransition(intState, Color.white, 0f);
                 base.DoStateTransition(state, instant);
                 return;
             }
@@ -91,13 +91,13 @@ namespace Vurbiri.UI
             if (!Application.isPlaying) { DoStateTransition_Editor(intState, targetColor); return; }
 #endif
 
-            OnStateTransition(intState, targetColor, duration, instant);
+            OnStateTransition(intState, targetColor, duration);
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 _targetGraphics[i].CrossFadeColor(intState, targetColor, duration);
         }
 
-        protected virtual void OnStateTransition(int intState, Color targetColor, float duration, bool instant)
+        protected virtual void OnStateTransition(int intState, Color targetColor, float duration)
         {
 
         }
@@ -109,8 +109,7 @@ namespace Vurbiri.UI
                 if (_targetGraphics[i].IsValid)
                     _targetGraphics[i].SetColor(intState, targetColor);
 
-            OnStateTransition(intState, targetColor, 0f, true);
-            return;
+            OnStateTransition(intState, targetColor, 0f);
         }
 #endif
     }

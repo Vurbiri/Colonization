@@ -1,9 +1,9 @@
-//Assets\Vurbiri.TextLocalization\Runtime\Scripts\CONST_L.cs
+//Assets\Vurbiri.TextLocalization\Runtime\CONST_L.cs
 namespace Vurbiri.TextLocalization
 {
     public static class CONST_L
     {
-        public const string FILE_PATH = "Assets/Localization/Resources/Languages.json";
+        public const string FILE_PATH = "/Localization/Resources/Languages.json";
         public const string FOLDER_PATH = "Assets/Localization/Resources/";
         public const string FILE_LANG = "Languages";
 

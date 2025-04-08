@@ -1,4 +1,4 @@
-//Assets\Vurbiri.TextLocalization\Runtime\Scripts\LanguageType.cs
+//Assets\Vurbiri.TextLocalization\Runtime\LanguageType.cs
 using Newtonsoft.Json;
 using System;
 using System.IO;

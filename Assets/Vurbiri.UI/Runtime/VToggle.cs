@@ -13,8 +13,7 @@ namespace Vurbiri.UI
     sealed public partial class VToggle : VSelectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
     {
         [SerializeField] private bool _isOn;
-        [SerializeField] private bool _isFade = true;
-        [SerializeField] private float _fadeDuration = 0.15f;
+        [SerializeField] private float _fadeDuration = 0.125f;
         [SerializeField] private SwitchingType _switchingType;
         [SerializeField] private Graphic _checkmarkOn;
         [SerializeField] private Graphic _checkmarkOff;
@@ -49,19 +48,6 @@ namespace Vurbiri.UI
                 _transitionEffect.PlayInstant(_isOn);
             }
         }
-        public bool IsCheckmarkFade
-        {
-            get => _isFade;
-            set
-            {
-                if (_isFade == value) return;
-                
-                _isFade = value;
-                _transitionEffect.TransitionUpdate();
-                if (!_transitionEffect.IsValid)
-                    _transitionEffect = TransitionEffectCreate();
-            }
-        }
         public float CheckmarkFadeDuration
         {
             get => _fadeDuration;
@@ -70,7 +56,7 @@ namespace Vurbiri.UI
                 if (_fadeDuration == value) return;
 
                 _fadeDuration = value;
-                _transitionEffect.TransitionUpdate();
+                _transitionEffect.SetDuration(_fadeDuration);
             }
         }
         public SwitchingType Switching
@@ -202,13 +188,13 @@ namespace Vurbiri.UI
             Set(!_isOn, true);
         }
 
-        protected override void OnStateTransition(int intState, Color targetColor, float duration, bool instant)
+        protected override void OnStateTransition(int intState, Color targetColor, float duration)
         {
 #if UNITY_EDITOR
             if (!Application.isPlaying) { _transitionEffect ??= TransitionEffectCreate(); _stateFilterOn = _checkmarkOn != null; _stateFilterOff = _checkmarkOff != null; }
 #endif
-            if (_stateFilterOn[intState]) _transitionEffect.StateTransitionOn(targetColor, duration, instant);
-            if (_stateFilterOff[intState]) _transitionEffect.StateTransitionOff(targetColor, duration, instant);
+            if (_stateFilterOn[intState]) _transitionEffect.StateTransitionOn(targetColor, duration);
+            if (_stateFilterOff[intState]) _transitionEffect.StateTransitionOff(targetColor, duration);
         }
 
         protected override void OnEnable()
@@ -249,10 +235,10 @@ namespace Vurbiri.UI
             if (_checkmarkOff != null) _checkmarkOff.canvasRenderer.SetAlpha(0f);
 
             if (_switchingType == SwitchingType.OnOffCheckmark && OnOffEffect.Validate(this))
-                return new OnOffEffect(this, _isOn, _checkmarkOn);
+                return new OnOffEffect(_fadeDuration, _isOn, _checkmarkOn);
 
-            /*if (parent._transitionType == TransitionType.SwitchCheckmark && SwitchEffect.Validate(parent))
-                return new SwitchEffect(parent);*/
+            if (_switchingType == SwitchingType.SwitchCheckmark && SwitchEffect.Validate(this))
+                return new SwitchEffect(this);
 
             if (_switchingType == SwitchingType.ColorCheckmark && ColorEffect.Validate(this))
                 return new ColorEffect(this);
@@ -262,8 +248,7 @@ namespace Vurbiri.UI
 
         protected override void OnDidApplyAnimationProperties()
         {
-            // Check if isOn has been changed by the animation.
-            // Unfortunately there is no way to check if we don't have a graphic.
+            // Check if isOn has been changed by the animation. Unfortunately there is no way to check if we don't have a graphic.
             if (_transitionEffect.IsValid)
             {
                 bool oldValue = _transitionEffect.Value;
@@ -281,8 +266,8 @@ namespace Vurbiri.UI
         public void Rebuild(CanvasUpdate executing)
         {
 #if UNITY_EDITOR
-            if (executing == CanvasUpdate.Prelayout)
-                _onValueChanged.Invoke(_isOn);
+            //if (executing == CanvasUpdate.Prelayout)
+            //    _onValueChanged.Invoke(_isOn);
 #endif
         }
         public void LayoutComplete() { }
@@ -306,7 +291,7 @@ namespace Vurbiri.UI
 #endif
         #endregion
 
-        #region Nested: TransitionType
+        #region Nested: SwitchingType
         //***********************************
         public enum SwitchingType
         {

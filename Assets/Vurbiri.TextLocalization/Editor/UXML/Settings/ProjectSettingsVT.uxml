@@ -2,9 +2,4 @@
     <ui:VisualElement style="flex-grow: 1; max-height: 50px; min-height: 50px; height: 50px; justify-content: flex-start; align-items: flex-start;">
         <ui:Label tabindex="-1" text=" Localization Settings" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 20px; -unity-font-style: bold;" />
     </ui:VisualElement>
-    <ui:VisualElement style="flex-direction: row; justify-content: center; align-items: center; min-height: 50px; align-self: center; min-width: 200px; max-width: 550px;">
-        <uie:ObjectField label="Settings" name="Settings" binding-path="_settings" type="Vurbiri.TextLocalization.SettingsScriptable, Vurbiri.TextLocalization" allow-scene-objects="false" style="max-width: 500px; min-width: 150px; width: auto; -unity-font-style: bold;" />
-        <ui:Button text="New" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonNew" style="max-width: 45px; min-width: 40px; width: 45px;" />
-    </ui:VisualElement>
-    <ui:VisualElement name="Object" style="flex-grow: 1; align-self: stretch; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-color: rgb(44, 44, 44); border-right-color: rgb(44, 44, 44); border-bottom-color: rgb(44, 44, 44); border-left-color: rgb(44, 44, 44); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; align-items: stretch; width: 98%; max-width: 98%; min-width: 98%; background-color: rgb(52, 52, 52);" />
 </ui:UXML>

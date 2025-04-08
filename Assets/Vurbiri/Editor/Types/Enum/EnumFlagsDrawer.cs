@@ -1,11 +1,10 @@
-//Assets\Vurbiri\Editor\Types\EnumFlagsDrawer.cs
+//Assets\Vurbiri\Editor\Types\Enum\EnumFlagsDrawer.cs
 using System;
 using UnityEditor;
 using UnityEngine;
-using Vurbiri;
 using static UnityEditor.EditorGUI;
 
-namespace VurbiriEditor
+namespace Vurbiri.Editor
 {
     [CustomPropertyDrawer(typeof(EnumFlags<>))]
     public class EnumFlagsDrawer : PropertyDrawer
