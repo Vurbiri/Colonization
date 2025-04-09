@@ -15,8 +15,8 @@ namespace Vurbiri.Colonization.Characteristics
         public const int ProfitMain = 9;
         public const int ProfitAdv  = 10;
 
-        [NotId] public const int RATE_ABILITY = 1000;
-        [NotId] public const int MAX_RATE_ABILITY = Defense;
+        [NotId] public const int SHIFT_ABILITY = 10;
+        [NotId] public const int MAX_ID_SHIFT_ABILITY = Defense;
 
         static ActorAbilityId() => RunConstructor();
         private ActorAbilityId() { }

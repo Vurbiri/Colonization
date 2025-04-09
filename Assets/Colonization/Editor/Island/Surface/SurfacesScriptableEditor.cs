@@ -47,10 +47,10 @@ namespace VurbiriEditor.Colonization
 			{
                 EditorGUILayout.Space();
                 EditorGUILayout.BeginVertical(GUI.skin.window);
-                EditorGUI.indentLevel++;
+                UnityEditor.EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(_serializedProperty.GetArrayElementAtIndex(i), new GUIContent(IdType<SurfaceId>.Names[i]));
                 EditorGUILayout.Space();
-                EditorGUI.indentLevel--;
+                UnityEditor.EditorGUI.indentLevel--;
                 EditorGUILayout.EndVertical();
             }
             EditorGUILayout.EndScrollView();

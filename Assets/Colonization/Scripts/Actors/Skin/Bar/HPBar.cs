@@ -47,22 +47,21 @@ namespace Vurbiri.Colonization.Actors
             //=================================
             void SetMaxValue(int value)
             {
-                _maxValueTMP.text = (value / ActorAbilityId.RATE_ABILITY).ToString();
+                _maxValueTMP.text = (value >> ActorAbilityId.SHIFT_ABILITY).ToString();
                 _maxValue = value;
                 SetCurrentValue(_currentValue);
             }
             //=================================
             void SetCurrentValue(int value)
             {
-                int rateValue = Mathf.RoundToInt((float)value / ActorAbilityId.RATE_ABILITY);
-                _currentValueTMP.text = rateValue.ToString();
+                _currentValueTMP.text = (value >> ActorAbilityId.SHIFT_ABILITY).ToString();
 
                 float size = SP_WIDTH * value / _maxValue;
                 _barSprite.size = new(size, SP_HIGHT);
                 _barTransform.localPosition = new((size - SP_WIDTH) * 0.5f, 0f, 0f);
 
                 if(_currentValue > 0)
-                    _popup.Run(rateValue - Mathf.RoundToInt((float)_currentValue / ActorAbilityId.RATE_ABILITY), _ability);
+                    _popup.Run((value - _currentValue) >> ActorAbilityId.SHIFT_ABILITY, _ability);
 
                 _currentValue = value;
             }

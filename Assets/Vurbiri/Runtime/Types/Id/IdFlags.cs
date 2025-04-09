@@ -10,28 +10,24 @@ namespace Vurbiri
     [Serializable]
 	public struct IdFlags<T> : IEquatable<IdFlags<T>>, IEquatable<Id<T>>, IEquatable<int>, IReadOnlyList<bool> where T : IdType<T>
     {
-        private const int MAX_COUNT = 32;
-        private static readonly int count, maskId;
-        private static readonly string format;
+        private static readonly int maskId = ~(-1 << IdType<T>.Count);
+        private static readonly string format = $"x{Mathf.CeilToInt(0.25f * IdType<T>.Count)}";
+
+        public static readonly IdFlags<T> None = new(false);
+        public static readonly IdFlags<T> All = new(true);
 
         static IdFlags()
         {
-            count = IdType<T>.Count;
-            maskId = ~(-1 << count);
-            format = $"x{Mathf.FloorToInt(0.25f * count)}";
-
 #if UNITY_EDITOR
             string name = typeof(T).Name;
             Throw.IfNegative(IdType<T>.Min, $"{name}.Min");
-            Throw.IfGreater(count, MAX_COUNT, $"{name}.Count");
+            Throw.IfGreater(IdType<T>.Count, 32, $"{name}.Count");
 #endif  
         }
 
         [SerializeField] private int _id;
 
-        public static readonly IdFlags<T> Empty = new(false);
-
-        public readonly int Count => count;
+        public readonly int Count => IdType<T>.Count;
 
         public readonly bool this[int i] => ((_id >> i) & 1) > 0;
         public readonly bool this[Id<T> id] => ((_id >> id.Value) & 1) > 0;
@@ -39,7 +35,7 @@ namespace Vurbiri
         #region Constructors
         public IdFlags(int value)
         {
-            Throw.IfOutOfRange(value, 0, count);
+            Throw.IfOutOfRange(value, 0, IdType<T>.Count);
             _id = 1 << value;
             
         }
@@ -53,7 +49,7 @@ namespace Vurbiri
             _id = 0;
             for (int i = values.Length - 1; i >= 0; i--)
             {
-                Throw.IfOutOfRange(values[i], 0, count);
+                Throw.IfOutOfRange(values[i], 0, IdType<T>.Count);
                 _id |= 1 << values[i];
             }
         }
@@ -65,7 +61,7 @@ namespace Vurbiri
 
         private IdFlags(int id, int i, bool operation)
         {
-            Throw.IfOutOfRange(i, 0, count);
+            Throw.IfOutOfRange(i, 0, IdType<T>.Count);
             if (operation) id |= 1 << i; else id ^= 1 << i;
             _id = id;
         }
@@ -76,20 +72,17 @@ namespace Vurbiri
         }
         #endregion
 
-        public void Fill() => _id = maskId;
-        public void Clear() => _id = 0;
-
         public readonly int First()
         {
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < IdType<T>.Count; i++)
                 if (this[i]) return i;
             return -1;
         }
 
         public readonly List<int> GetValues()
         {
-            List<int> values = new(count);
-            for(int i = 0; i < count; i++)
+            List<int> values = new(IdType<T>.Count);
+            for(int i = 0; i < IdType<T>.Count; i++)
                 if(this[i]) values.Add(i);
 
             return values;
@@ -100,8 +93,8 @@ namespace Vurbiri
         {
             if (!binary) return ToString();
 
-            StringBuilder sb = new(count);
-            for (int i = count - 1; i >= 0; i--)
+            StringBuilder sb = new(IdType<T>.Count);
+            for (int i = IdType<T>.Count - 1; i >= 0; i--)
                 sb.Append(this[i] ? "1" : "0");
             return sb.ToString();
         }
@@ -154,7 +147,7 @@ namespace Vurbiri
 
         public readonly IEnumerator<bool> GetEnumerator()
         {
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < IdType<T>.Count; i++)
                 yield return this[i];
         }
         readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

@@ -44,7 +44,5 @@ namespace VurbiriEditor
 
             valueProperty.floatValue = Mathf.Abs(max);
         }
-
-        
     }
 }

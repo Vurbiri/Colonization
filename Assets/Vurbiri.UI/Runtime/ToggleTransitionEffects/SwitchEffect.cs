@@ -18,8 +18,8 @@ namespace Vurbiri.UI
 
             public SwitchEffect(VToggle parent)
             {
-                _markOn = new(parent._fadeDuration, parent.isOn, parent._checkmarkOn);
-                _markOff = new(parent._fadeDuration, !parent.isOn, parent._checkmarkOff);
+                _markOn = new(parent._fadeDuration, parent._isOn, parent._checkmarkOn);
+                _markOff = new(parent._fadeDuration, !parent._isOn, parent._checkmarkOff);
             }
 
             public bool SetGraphic(Graphic checkmarkA, Graphic checkmarkB)

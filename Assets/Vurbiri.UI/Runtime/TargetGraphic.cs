@@ -13,7 +13,7 @@ namespace Vurbiri.UI
             [SerializeField] private Graphic _graphic;
             [SerializeField] private EnumFlags<SelectionState> _stateFilter = true;
 
-            public bool IsValid => _graphic != null && _stateFilter != EnumFlags<SelectionState>.Empty;
+            public bool IsValid => _graphic != null && _stateFilter != EnumFlags<SelectionState>.None;
             public bool IsNotNull => _graphic != null;
             public Graphic Graphic => _graphic;
             internal EnumFlags<SelectionState> Filter => _stateFilter;

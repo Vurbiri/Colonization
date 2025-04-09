@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Characteristics
         private const int ABILITY = ActorAbilityId.Defense;
         private const int MOD = TypeModifierId.Addition;
         
-        public const int WALL_RATE = ActorAbilityId.RATE_ABILITY * 11, WALL_DURATION = 3;
+        public const int SHIFT_WALL = ActorAbilityId.SHIFT_ABILITY + 3, WALL_DURATION = 3;
         public const int BLOCK_DURATION = 1, BLOCK_SKILL_ID = 7, BLOCK_EFFECT_ID = 0;
         public static readonly EffectCode WallEffectCode = new(3, 0, 0, 0);
 
@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Characteristics
         {
             if(value <= 0) return null;
 
-            return new(WallEffectCode, ABILITY, MOD, value * WALL_RATE, WALL_DURATION);
+            return new(WallEffectCode, ABILITY, MOD, value << SHIFT_WALL, WALL_DURATION);
         }
     }
 }

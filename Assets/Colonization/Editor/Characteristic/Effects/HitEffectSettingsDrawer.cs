@@ -30,7 +30,6 @@ namespace VurbiriEditor.Colonization.Characteristics
             }
         }
        
-
         #region Consts
         private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID ="Void Effect {0}";
         private const string P_IS_SELF = "_isSelf", P_TARGET_ABILITY = "_targetAbility", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
@@ -143,7 +142,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     SetInt(P_PIERCE, 0);
 
                 if (isTarget)
-                    DrawInt(P_REFLECT, "Reflect (%)", 0, 200);
+                    DrawInt(P_REFLECT, "Leech (%)", 0, 200);
                 else
                     SetInt(P_REFLECT, 0);
 
@@ -178,7 +177,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if (typeModifierId == TypeModifierId.TotalPercent)
                     DrawInt(P_VALUE, "Value (%)", -200, 200, 100);
                 else 
-                    DrawRateValue("Value", -50, 50);
+                    DrawShiftValue("Value", -50, 50);
 
                 indentLevel--;
 
@@ -193,7 +192,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if (usedAbility == CurrentHP)
                 {
                     if (DrawIntPopup(P_TYPE_OP, NamesModifiersCurrentHP, ActorAbilityId.Values) == TypeModifierId.Addition)
-                        DrawRateValue("Value", -75, 75);
+                        DrawShiftValue("Value", -75, 75);
                     else
                         DrawInt(P_VALUE, "Value (%)", -100, 100);
                 }
@@ -212,10 +211,10 @@ namespace VurbiriEditor.Colonization.Characteristics
                 return usedAbility;
             }
             //==============================================
-            void DrawRateValue(string displayName, int min, int max, int defaultValue = 0, int rate = RATE_ABILITY)
+            void DrawRateValue(string displayName, int min, int max, int defaultValue, int rate)
             {
                 SerializedProperty property = GetProperty(P_VALUE);
-                int value = property.intValue / rate;  
+                int value = property.intValue * rate;
 
                 if (value < min | value > max)
                     defaultValue = Mathf.Clamp(defaultValue, min, max);
@@ -224,6 +223,15 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 _position.y += _height;
                 property.intValue = IntSlider(_position, displayName, defaultValue, min, max) * rate;
+            }
+            //==============================================
+            void DrawShiftValue(string displayName, int min, int max)
+            {
+                SerializedProperty property = GetProperty(P_VALUE);
+                int value = property.intValue >> SHIFT_ABILITY;  
+
+                _position.y += _height;
+                property.intValue = IntSlider(_position, displayName, Mathf.Clamp(value, min, max), min, max) << SHIFT_ABILITY;
             }
             //==============================================
             void DrawMoveValue()
@@ -332,8 +340,8 @@ namespace VurbiriEditor.Colonization.Characteristics
                 bool isPresent = !(typeModifier == TypeModifierId.Addition);
                 string present = isPresent ? PRESENT : string.Empty;
 
-                if (!isPresent & targetAbility <= MAX_RATE_ABILITY)
-                    value /= RATE_ABILITY;
+                if (!isPresent & targetAbility <= MAX_ID_SHIFT_ABILITY)
+                    value >>= SHIFT_ABILITY;
 
                 return isPositive ? $"{PLUS}{value}{present}" : $"{value}{present}";
             }

@@ -118,11 +118,11 @@ namespace VurbiriEditor.Colonization.Characteristics
                     if (effectsProperty.arraySize == 0)
                         effectsProperty.InsertArrayElementAtIndex(0);
 
-                    EditorGUI.indentLevel--;
+                    UnityEditor.EditorGUI.indentLevel--;
                     DrawObject<AHitScriptableSFX>(SFXsProperty.GetArrayElementAtIndex(i), $"SFX Hit {i}");
-                    EditorGUI.indentLevel++;
+                    UnityEditor.EditorGUI.indentLevel++;
                     _position.y += _height;
-                    EditorGUI.PropertyField(_position, effectsProperty, new GUIContent($"Hit {i}"));
+                    UnityEditor.EditorGUI.PropertyField(_position, effectsProperty, new GUIContent($"Hit {i}"));
                     
                     for (int j = 0; j < effectsProperty.arraySize; j++)
                     {

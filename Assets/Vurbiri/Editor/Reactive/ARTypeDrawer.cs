@@ -12,7 +12,7 @@ namespace VurbiriEditor.Reactive
 		
 		public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
-			EditorGUI.PropertyField(position, mainProperty.FindPropertyRelative(P_NAME), label);
+            EditorGUI.PropertyField(position, mainProperty.FindPropertyRelative(P_NAME), label);
         }
 		
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

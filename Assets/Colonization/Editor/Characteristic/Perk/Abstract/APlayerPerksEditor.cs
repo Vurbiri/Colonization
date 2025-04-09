@@ -114,8 +114,8 @@ namespace VurbiriEditor.Colonization.Characteristics
             void DrawValue(int target, int ability)
             {
                 SerializedProperty property = propertyPerk.FindPropertyRelative(P_VALUE);
-                if(target == TargetOfPerkId.Warriors & ability <= ActorAbilityId.MAX_RATE_ABILITY)
-                    property.intValue = IntField(property.displayName, property.intValue / ActorAbilityId.RATE_ABILITY) * ActorAbilityId.RATE_ABILITY;
+                if(target == TargetOfPerkId.Warriors & ability <= ActorAbilityId.MAX_ID_SHIFT_ABILITY)
+                    property.intValue = IntField(property.displayName, property.intValue >> ActorAbilityId.SHIFT_ABILITY) << ActorAbilityId.SHIFT_ABILITY;
                 else
                     property.intValue = IntField(property.displayName, property.intValue);
             }

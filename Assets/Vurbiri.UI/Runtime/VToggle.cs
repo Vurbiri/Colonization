@@ -27,10 +27,10 @@ namespace Vurbiri.UI
         private TMP_Text _caption;
 
         #region Properties
-        public bool isOn { get => _isOn; set => SetFromGroup(value); }
-        public bool isOnSilent { get => _isOn; set => Set(value, false); }
+        public bool IsOn { get => _isOn; set => Set(value, true); }
+        public bool SilentIsOn { get => _isOn; set => Set(value, false); }
         public TMP_Text Caption => _caption;
-        public VToggleGroup group
+        public VToggleGroup Group
         {
             get => _group;
             set 
@@ -102,6 +102,7 @@ namespace Vurbiri.UI
 
         private VToggle() { }
 
+        #region Awake, Start
         protected override void Awake()
         {
 #if UNITY_EDITOR
@@ -131,7 +132,6 @@ namespace Vurbiri.UI
 
             base.Awake();
         }
-
         protected override void Start()
         {
             base.Start();
@@ -141,11 +141,10 @@ namespace Vurbiri.UI
             _onValueChanged.Clear();
             _onValueChanged.Add(ProfilerApiAddMarker);
         }
+        #endregion
 
         public Unsubscriber AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _isOn);
         public void RemoveListener(Action<bool> action) => _onValueChanged.Remove(action);
-
-        public void SetIsOnWithoutNotify(bool value) => Set(value, false);
 
         public void SetColors(Color colorOn, Color colorOff)
         {
@@ -188,6 +187,7 @@ namespace Vurbiri.UI
             Set(!_isOn, true);
         }
 
+        #region Calls
         protected override void OnStateTransition(int intState, Color targetColor, float duration)
         {
 #if UNITY_EDITOR
@@ -215,9 +215,6 @@ namespace Vurbiri.UI
             base.OnDisable();
         }
 
-        private void ProfilerApiAddMarker(bool b) => UISystemProfilerApi.AddMarker("VToggle.onValueChanged", this);
-
-        #region Calls
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
@@ -228,6 +225,23 @@ namespace Vurbiri.UI
         {
             InternalToggle();
         }
+
+        protected override void OnDidApplyAnimationProperties()
+        {
+            // Check if isOn has been changed by the animation. Unfortunately there is no way to check if we don't have a graphic.
+            if (_transitionEffect.IsValid)
+            {
+                bool oldValue = _transitionEffect.Value;
+                if (_isOn != oldValue)
+                {
+                    _isOn = oldValue;
+                    Set(!_isOn, true);
+                }
+            }
+
+            base.OnDidApplyAnimationProperties();
+        }
+        #endregion
 
         private ITransitionEffect TransitionEffectCreate()
         {
@@ -246,28 +260,14 @@ namespace Vurbiri.UI
             return new EmptyEffect();
         }
 
-        protected override void OnDidApplyAnimationProperties()
-        {
-            // Check if isOn has been changed by the animation. Unfortunately there is no way to check if we don't have a graphic.
-            if (_transitionEffect.IsValid)
-            {
-                bool oldValue = _transitionEffect.Value;
-                if (_isOn != oldValue)
-                {
-                    _isOn = oldValue;
-                    Set(!_isOn, true);
-                }
-            }
-
-            base.OnDidApplyAnimationProperties();
-        }
+        private void ProfilerApiAddMarker(bool b) => UISystemProfilerApi.AddMarker("VToggle.onValueChanged", this);
 
         #region ICanvasElement
         public void Rebuild(CanvasUpdate executing)
         {
 #if UNITY_EDITOR
-            //if (executing == CanvasUpdate.Prelayout)
-            //    _onValueChanged.Invoke(_isOn);
+            if (executing == CanvasUpdate.Prelayout)
+                _onValueChanged.Invoke(_isOn);
 #endif
         }
         public void LayoutComplete() { }
@@ -275,7 +275,6 @@ namespace Vurbiri.UI
         #endregion
 
 #if UNITY_EDITOR
-
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -289,7 +288,6 @@ namespace Vurbiri.UI
             }
         }
 #endif
-        #endregion
 
         #region Nested: SwitchingType
         //***********************************

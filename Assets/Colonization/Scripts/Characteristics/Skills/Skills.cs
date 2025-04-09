@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization.Characteristics
         public void CreateStates(Actor parent)
         {
             parent.AddMoveState(_speedWalk);
-            parent.AddBlockState(_blockCost, _blockValue * ActorAbilityId.RATE_ABILITY);
+            parent.AddBlockState(_blockCost, _blockValue << ActorAbilityId.SHIFT_ABILITY);
 
             int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
 

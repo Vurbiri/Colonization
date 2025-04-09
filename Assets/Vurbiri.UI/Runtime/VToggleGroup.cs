@@ -59,7 +59,7 @@ namespace Vurbiri.UI
                 return;
             }
 
-            if(toggle.isOn & _activeToggle != null)
+            if(toggle.IsOn & _activeToggle != null)
                 toggle.SetFromGroup(false);
         }
 
@@ -115,7 +115,7 @@ namespace Vurbiri.UI
             int index;
             for (index = 0; index < count; index++)
             {
-                if (_toggles[index].isOn)
+                if (_toggles[index].IsOn)
                 {
                     _activeToggle = _toggles[index++];
                     break;

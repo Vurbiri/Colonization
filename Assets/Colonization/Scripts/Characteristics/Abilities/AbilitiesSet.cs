@@ -23,11 +23,11 @@ namespace Vurbiri.Colonization.Characteristics
             perks.Subscribe(OnPerks);
         }
 
-        public AbilitiesSet(IdArray<TId, int> states, int rate, int maxIndexRate)
+        public AbilitiesSet(IdArray<TId, int> states, int shift, int maxIndexShift)
         {
             int i;
-            for (i = 0; i <= maxIndexRate; i++)
-                _abilities[i] = new Ability<TId>(i, states[i] * rate);
+            for (i = 0; i <= maxIndexShift; i++)
+                _abilities[i] = new Ability<TId>(i, states[i] << shift);
             for (; i < AbilityId<TId>.Count; i++)
                 _abilities[i] = new Ability<TId>(i, states[i]);
         }

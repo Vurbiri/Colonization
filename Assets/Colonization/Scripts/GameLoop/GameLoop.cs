@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
 
         private void OnValidate()
         {
-
+            
         }
 #endif
     }

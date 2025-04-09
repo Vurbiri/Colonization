@@ -20,11 +20,11 @@ namespace VurbiriEditor.Colonization
 		
 		public override void OnInspectorGUI()
 		{
-            EditorGUI.BeginDisabledGroup(true);
+            UnityEditor.EditorGUI.BeginDisabledGroup(true);
 
             EditorGUILayout.PropertyField(_serializedProperty);
 
-            EditorGUI.EndDisabledGroup();
+            UnityEditor.EditorGUI.EndDisabledGroup();
         }
 	}
 }

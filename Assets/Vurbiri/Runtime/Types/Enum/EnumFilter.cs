@@ -1,39 +1,40 @@
 //Assets\Vurbiri\Runtime\Types\Enum\EnumFilter.cs
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri
 {
     [Serializable]
-	public struct EnumFilter<T> : IEquatable<EnumFilter<T>>, IEquatable<T> where T : Enum
+	public struct EnumFilter<T> : IEquatable<EnumFilter<T>>, IEquatable<T>, IEnumerable<bool> where T : Enum
     {
-        private const int MAX_COUNT = 32;
-        private static readonly int count, maskValue;
+        private static readonly int maskValue;
         private static readonly string format;
         private static readonly Dictionary<T, int> ids;
 
-        public static readonly EnumFilter<T> Empty = new(false);
+        public static readonly int Count;
+        public static readonly EnumFilter<T> None = new(0);
+        public static readonly EnumFilter<T> All = new(maskValue);
+        public static IReadOnlyCollection<T> Values => ids.Keys;
 
         static EnumFilter()
         {
             T[] values = (T[])Enum.GetValues(typeof(T));
 
-            count = values.Length;
+            Count = values.Length;
 
-            Throw.IfGreater(count, MAX_COUNT);
+            Throw.IfGreater(Count, 32);
 
-            maskValue = ~(-1 << count);
-            format = $"x{Mathf.FloorToInt(0.25f * count)}";
-            ids = new(count);
+            maskValue = ~(-1 << Count);
+            format = $"x{Mathf.CeilToInt(0.25f * Count)}";
+            ids = new(Count);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < Count; i++)
                 ids.Add(values[i], i);
         }
 
         [SerializeField] private int _value;
-        
-        public readonly int Count => count;
 
         public readonly bool this[T e] => ((_value >> ids[e]) & 1) > 0;
 
@@ -66,6 +67,13 @@ namespace Vurbiri
             return false;
         }
         public override readonly int GetHashCode() => _value.GetHashCode();
+
+        public readonly IEnumerator<bool> GetEnumerator()
+        {
+            for(int i = 0; i < Count; i++)
+                yield return ((_value >> i) & 1) > 0;
+        }
+        readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public static implicit operator EnumFilter<T>(T value) => new(value);
         public static implicit operator EnumFilter<T>(bool all) => new(all);

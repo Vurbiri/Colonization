@@ -9,9 +9,11 @@ namespace Vurbiri
     [Serializable]
 	public struct EnumFlags<T> : IReadOnlyList<bool>, IEquatable<EnumFlags<T>>, IEquatable<int> where T : Enum
 	{
-        private const int MAX_COUNT = 32;
-        private static readonly int count, maskValue;
+        private static readonly int maskValue;
         private static readonly string format;
+
+        public static readonly int count;
+        public static readonly EnumFlags<T> None = new(false);
 
         static EnumFlags()
         {
@@ -19,10 +21,10 @@ namespace Vurbiri
 
             count = values.Length;
             maskValue = ~(-1 << count);
-            format = $"x{Mathf.FloorToInt(0.25f * count)}";
+            format = $"x{Mathf.CeilToInt(0.25f * count)}";
 
 #if UNITY_EDITOR
-            Throw.IfGreater(count, MAX_COUNT);
+            Throw.IfGreater(count, 32);
             int value, oldValue = -1;
             for (int i = 0; i < count; i++)
             {
@@ -35,8 +37,6 @@ namespace Vurbiri
         }
 
         [SerializeField] private int _value;
-
-        public static readonly EnumFlags<T> Empty = new(false);
 
         public readonly int Count => count;
 

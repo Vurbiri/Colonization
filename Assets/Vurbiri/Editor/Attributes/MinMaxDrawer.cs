@@ -41,53 +41,22 @@ namespace VurbiriEditor
                 return;
             }
 
-            float min, max, rMin = range.min, rMax = range.max;
+            label = EditorGUI.BeginProperty(position, label, mainProperty);
 
-            if(minProperty.propertyType == SerializedPropertyType.Float)
-            { 
-                min = minProperty.floatValue;
-                max = maxProperty.floatValue;
+            if (minProperty.propertyType == SerializedPropertyType.Float)
+            {
+                VurbiriEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, range.min, range.max);
+
             }
             else if(minProperty.propertyType == SerializedPropertyType.Integer)
-            { 
-                min = minProperty.intValue;
-                max = maxProperty.intValue;
-                rMin = Mathf.Round(rMin);
-                rMax = Mathf.Round(rMax);
+            {
+                VurbiriEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, Mathf.RoundToInt(range.min), Mathf.RoundToInt(range.max));
             }
             else
             {
                 EditorGUILayout.PropertyField(mainProperty, label, true);
-                return;
             }
-
-            min = Mathf.Clamp(min, rMin, rMax);
-            max = Mathf.Clamp(max, rMin, rMax);
-
-            var (sizeLabel, sizeMin, sizeSlider, sizeMax) = CalkPositionSlider(position);
-
-            label = EditorGUI.BeginProperty(position, label, mainProperty);
-
-            EditorGUI.LabelField(sizeLabel, label);
-
-            min = EditorGUI.FloatField(sizeMin, min);
-            max = EditorGUI.FloatField(sizeMax, max);
-            EditorGUI.MinMaxSlider(sizeSlider, ref min, ref max, rMin, rMax);
-
             EditorGUI.EndProperty();
-
-            if (min > max) (min, max) = (max, min);
-
-            if (minProperty.propertyType == SerializedPropertyType.Float)
-            { 
-                minProperty.floatValue = min; 
-                maxProperty.floatValue = max; 
-            }
-            else
-            {
-                minProperty.intValue = Mathf.RoundToInt(min);
-                maxProperty.intValue = Mathf.RoundToInt(max);
-            }
         }
 
 	}

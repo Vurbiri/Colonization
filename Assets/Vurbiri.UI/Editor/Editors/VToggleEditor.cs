@@ -72,12 +72,12 @@ namespace VurbiriEditor.UI
             {
                 if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_toggle.gameObject.scene);
 
-                VToggleGroup group = _toggle.group;
+                VToggleGroup group = _toggle.Group;
 
                 if (group != null && _toggle.isActiveAndEnabled)
                     _isOnProperty.boolValue = group.CheckValue_Editor(_toggle, _isOnProperty.boolValue);
 
-                _toggle.isOn = _isOnProperty.boolValue;
+                _toggle.IsOn = _isOnProperty.boolValue;
             }
             //============================================================
             EditorGUI.BeginChangeCheck();
@@ -140,7 +140,7 @@ namespace VurbiriEditor.UI
             {
                 if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_toggle.gameObject.scene);
 
-                _toggle.group = _groupProperty.objectReferenceValue as VToggleGroup;
+                _toggle.Group = _groupProperty.objectReferenceValue as VToggleGroup;
             }
             Space();
         }

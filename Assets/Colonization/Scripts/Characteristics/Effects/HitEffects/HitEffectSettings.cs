@@ -104,8 +104,8 @@ namespace Vurbiri.Colonization.Characteristics
                 bool isPresent = !(_typeModifier == TypeModifierId.Addition);
                 string present = isPresent ? PRESENT : string.Empty;
 
-                if (!isPresent & _targetAbility <= ActorAbilityId.MAX_RATE_ABILITY)
-                    value /= ActorAbilityId.RATE_ABILITY;
+                if (!isPresent & _targetAbility <= ActorAbilityId.MAX_ID_SHIFT_ABILITY)
+                    value >>= ActorAbilityId.SHIFT_ABILITY;
 
                 return isPositive ? $"{PLUS}{value}{present}" : $"{value}{present}";
             }

@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.Actors
             //=================================
             void SetValue(int value)
             {
-                value = Mathf.RoundToInt((float)value / ActorAbilityId.RATE_ABILITY);
+                value = value >> ActorAbilityId.SHIFT_ABILITY;
                 _valueTMP.text = value.ToString();
 
                 if (_currentValue > 0)
