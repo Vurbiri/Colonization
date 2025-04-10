@@ -11,15 +11,15 @@ namespace VurbiriEditor.UI
 	public class VToggleGroupEditor : Editor
 	{
         private const int ORDER = 12;
+        private static readonly string _name = "Allow Switch Off";
 
-        private SerializedProperty _allowSwitchOffProperty;
 		private VToggleGroup _toggleGroup;
+        private bool _allowSwitchOff;
 
         private void OnEnable()
 		{
-			_allowSwitchOffProperty = serializedObject.FindProperty("_allowSwitchOff");
             _toggleGroup = target as VToggleGroup;
-
+            
             MonoScript monoScript = MonoScript.FromMonoBehaviour(_toggleGroup);
             if (monoScript != null && MonoImporter.GetExecutionOrder(monoScript) != ORDER)
                 MonoImporter.SetExecutionOrder(monoScript, ORDER);
@@ -27,22 +27,21 @@ namespace VurbiriEditor.UI
 		
 		public override void OnInspectorGUI()
 		{
-			serializedObject.Update();
+            serializedObject.ApplyModifiedProperties();
 
-			Space(4f);
+            Space(1f);
             EditorGUI.BeginChangeCheck();
-			PropertyField(_allowSwitchOffProperty);
+            _allowSwitchOff = Toggle(_name, _toggleGroup.allowSwitchOff);
             if (EditorGUI.EndChangeCheck())
             {
-                if (!Application.isPlaying)
-                    EditorSceneManager.MarkSceneDirty(_toggleGroup.gameObject.scene);
+                if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_toggleGroup.gameObject.scene);
 
-                _toggleGroup.allowSwitchOff = _allowSwitchOffProperty.boolValue;
+                _toggleGroup.allowSwitchOff = _allowSwitchOff;
             }
 
-            Space(2f);
+            Space(1f);
 
-            serializedObject.ApplyModifiedProperties();
+            serializedObject.Update();
 		}
 	}
 }

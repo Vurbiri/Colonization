@@ -50,7 +50,11 @@ namespace Vurbiri.UI
 
             _toggles.Add(toggle);
 
+#if UNITY_EDITOR
+            if (!isActiveAndEnabled | !Application.isPlaying) return;
+#else
             if (!isActiveAndEnabled) return;
+#endif
 
             if (!_allowSwitchOff & _activeToggle == null)
             {
@@ -76,7 +80,7 @@ namespace Vurbiri.UI
             }
         }
 
-        internal bool TrySetValue(VToggle toggle, bool value)
+        internal bool CanSetValue(VToggle toggle, bool value)
         {
             if (!isActiveAndEnabled || !toggle.isActiveAndEnabled)
                 return true;
@@ -137,31 +141,24 @@ namespace Vurbiri.UI
         }
 
 #if UNITY_EDITOR
-        public bool CheckValue_Editor(VToggle toggle, bool value)
+        protected override void OnValidate()
         {
-            if (!isActiveAndEnabled)
+            base.OnValidate();
+
+            if (isActiveAndEnabled & !Application.isPlaying)
             {
-                _activeToggle = null;
-                return value;
+                if (_activeToggle == null)
+                {
+                    foreach (var t in _toggles)
+                    {
+                        if (t.IsOn) { _activeToggle = t; break; }
+                    }
+                }
+
+                foreach (var t in _toggles)
+                    if (t != _activeToggle) t.SetFromGroup(false);
+
             }
-
-            if (_activeToggle == null & !_allowSwitchOff)
-                value = true;
-
-            if (!value)
-            {
-                if (_activeToggle != toggle) return false;
-                if (!_allowSwitchOff) return true;
-
-                _activeToggle = null;
-                return false;
-            }
-
-            foreach(var t in _toggles)
-                if (t != toggle) t.SetFromGroup(false);
-
-            _activeToggle = toggle;
-            return true;
         }
 #endif
     }

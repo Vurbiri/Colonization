@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace VurbiriEditor
 {
-    public static class VurbiriEditorGUI
+    public static class VEditorGUI
     {
         private const float OFFSET_SIZE_LABEL = 20f, SIZE_VALUE = 50f, SIZE_SPACE = 5f;
 

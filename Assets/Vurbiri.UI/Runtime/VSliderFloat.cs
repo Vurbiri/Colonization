@@ -9,7 +9,7 @@ namespace Vurbiri.UI
 {
     [AddComponentMenu(VUI_CONST.NAME_MENU + "Slider Float", 34)]
     [RequireComponent(typeof(RectTransform))]
-    public class VSliderFloat : VSelectable, IDragHandler, IInitializePotentialDragHandler, ICanvasElement
+    sealed public class VSliderFloat : VSelectable, IDragHandler, IInitializePotentialDragHandler, ICanvasElement
     {
         private const int HORIZONTAL = 0, VERTICAL = 1;
         public const float RATE_STEP_MIN = 0.025f, RATE_STEP_MAX = 0.25f;
@@ -32,6 +32,7 @@ namespace Vurbiri.UI
         private Image _fillImage;
         private Transform _fillTransform;
         private RectTransform _fillContainerRect;
+
         private Transform _handleTransform;
         private RectTransform _handleContainerRect;
 
@@ -42,7 +43,7 @@ namespace Vurbiri.UI
 #pragma warning restore 649
 
         #region Properties
-        public virtual float Value
+        public float Value
         {
             get => _value;
             set 
@@ -51,7 +52,7 @@ namespace Vurbiri.UI
                     UpdateVisuals(); 
             }
         }
-        public virtual float SilentValue
+        public float SilentValue
         {
             get => _value;
             set 
@@ -63,7 +64,7 @@ namespace Vurbiri.UI
         public float NormalizedValue
         {
             get => _normalizedValue;
-            set => this.Value = Mathf.Lerp(_minValue, _maxValue, value);
+            set => Value = Mathf.Lerp(_minValue, _maxValue, value);
         }
         public float MinValue 
         { 
@@ -135,9 +136,9 @@ namespace Vurbiri.UI
         public ISigner<float> OnValueChanged => _onValueChanged;
         #endregion
 
-        protected VSliderFloat() { }
+        private VSliderFloat() { }
 
-        public virtual void SetValueWithoutNotify(float input)
+        public void SetValueWithoutNotify(float input)
         {
             if(Set(input, false)) 
                 UpdateVisuals();
@@ -349,7 +350,7 @@ namespace Vurbiri.UI
             }
         }
 
-        public virtual void OnDrag(PointerEventData eventData)
+        public void OnDrag(PointerEventData eventData)
         {
             if (CanDrag(eventData))
                 UpdateDrag(eventData, eventData.pressEventCamera);
@@ -392,7 +393,7 @@ namespace Vurbiri.UI
             }
         }
 
-        public virtual void OnInitializePotentialDrag(PointerEventData eventData)
+        public void OnInitializePotentialDrag(PointerEventData eventData)
         {
             eventData.useDragThreshold = false;
         }

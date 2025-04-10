@@ -98,6 +98,16 @@ namespace Vurbiri.UI
                 _transitionEffect.PlayInstant(_isOn);
             }
         }
+        public Color ColorOn
+        {
+            get => _colorOn;
+            set => SetColors(value, _colorOff);
+        }
+        public Color ColorOff
+        {
+            get => _colorOff;
+            set => SetColors(_colorOn, value);
+        }
         #endregion
 
         private VToggle() { }
@@ -137,9 +147,7 @@ namespace Vurbiri.UI
             base.Start();
 
             _caption = GetComponentInChildren<TMP_Text>();
-
             _onValueChanged.Clear();
-            _onValueChanged.Add(ProfilerApiAddMarker);
         }
         #endregion
 
@@ -163,6 +171,7 @@ namespace Vurbiri.UI
             _isOn = value;
             _transitionEffect.Play(_isOn);
 
+            UISystemProfilerApi.AddMarker("VToggle.onValueChanged", this);
             _onValueChanged.Invoke(_isOn);
         }
 
@@ -170,13 +179,17 @@ namespace Vurbiri.UI
         {
             if (_isOn == value) return;
 
-            if (_group != null && !_group.TrySetValue(this, value))
+            if (_group != null && !_group.CanSetValue(this, value))
                 return;
 
             _isOn = value;
             _transitionEffect.Play(_isOn);
 
-            if (sendCallback) _onValueChanged.Invoke(_isOn);
+            if (sendCallback)
+            {
+                UISystemProfilerApi.AddMarker("VToggle.onValueChanged", this);
+                _onValueChanged.Invoke(_isOn);
+            }
         }
 
         private void InternalToggle()
@@ -259,8 +272,6 @@ namespace Vurbiri.UI
 
             return new EmptyEffect();
         }
-
-        private void ProfilerApiAddMarker(bool b) => UISystemProfilerApi.AddMarker("VToggle.onValueChanged", this);
 
         #region ICanvasElement
         public void Rebuild(CanvasUpdate executing)

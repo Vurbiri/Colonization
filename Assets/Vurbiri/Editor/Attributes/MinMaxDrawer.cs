@@ -45,12 +45,12 @@ namespace VurbiriEditor
 
             if (minProperty.propertyType == SerializedPropertyType.Float)
             {
-                VurbiriEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, range.min, range.max);
+                VEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, range.min, range.max);
 
             }
             else if(minProperty.propertyType == SerializedPropertyType.Integer)
             {
-                VurbiriEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, Mathf.RoundToInt(range.min), Mathf.RoundToInt(range.max));
+                VEditorGUI.MinMaxSlider(position, label, minProperty, maxProperty, Mathf.RoundToInt(range.min), Mathf.RoundToInt(range.max));
             }
             else
             {

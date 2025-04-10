@@ -10,7 +10,7 @@ namespace Vurbiri.UI
         private class MixColorTween : IEnumerator
         {
             private const int MARK = 0, STATE = 1;
-            private const float MIN_DUATION = 0.01351f, MIN_DELTA_DUATION = 0.09f;
+            private const float MIN_DUATION = 0.01351f, MIN_DELTA_DUATION = 0.05f, MIN_DELTA_DUATION_N = -MIN_DELTA_DUATION;
 
             private readonly Colors _markColors, _stateColors;
             private Graphic _target;
@@ -62,7 +62,7 @@ namespace Vurbiri.UI
                 if (target == null) _renderer = null;
                 else _renderer = target.canvasRenderer;
 
-                return _renderer;
+                return _renderer != null;
             }
 
             public bool MoveNext()
@@ -143,7 +143,7 @@ namespace Vurbiri.UI
                     TwoTaskSetup(main, adv, mainDuration, advDuration, main.previous);
                     return true;
                 }
-                if (delta < -MIN_DELTA_DUATION)
+                if (delta < MIN_DELTA_DUATION_N)
                 {
                     TwoTaskSetup(adv, main, advDuration, mainDuration, Color.Lerp(adv.previous, adv.current, _currentTask.progress / _currentTask.duration));
                     return true;

@@ -251,14 +251,14 @@ namespace VurbiriEditor
             if (isName) return DrawEnum<T>(property, property.displayName);
 
             _position.y += _height;
-            T value = (T)EditorGUI.EnumPopup(_position, property.enumValueIndex.ToEnum<T>());
+            T value = (T)EnumPopup(_position, property.enumValueIndex.ToEnum<T>());
             property.enumValueIndex = value.ToInt();
             return value;
         }
         protected T DrawEnum<T>(SerializedProperty property, string displayName) where T : Enum
         {
             _position.y += _height;
-            T value = (T)EditorGUI.EnumPopup(_position, displayName, property.enumValueIndex.ToEnum<T>());
+            T value = (T)EnumPopup(_position, displayName, property.enumValueIndex.ToEnum<T>());
             property.enumValueIndex = value.ToInt();
             return value;
         }
