@@ -19,7 +19,6 @@ namespace Vurbiri.UI
             base.Start();
 
             _onClick.Clear();
-            _onClick.Add(ProfilerApiAddMarker);
         }
 
         public Unsubscriber AddListener(Action action) => _onClick.Add(action);
@@ -30,6 +29,7 @@ namespace Vurbiri.UI
             if (!IsActive() || !IsInteractable())
                 return false;
 
+            UISystemProfilerApi.AddMarker("VButton.onClick", this);
             _onClick.Invoke();
             return true;
         }
@@ -62,7 +62,5 @@ namespace Vurbiri.UI
 
             DoStateTransition(currentSelectionState, false);
         }
-
-        private void ProfilerApiAddMarker() => UISystemProfilerApi.AddMarker("VButton.onClick", this);
     }
 }

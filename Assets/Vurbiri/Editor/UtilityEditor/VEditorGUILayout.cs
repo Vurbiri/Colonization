@@ -1,4 +1,5 @@
 //Assets\Vurbiri\Editor\UtilityEditor\VEditorGUILayout.cs
+using System;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -16,5 +17,6 @@ namespace VurbiriEditor
             return EditorGUILayout.ObjectField(label, obj, typeof(T), allowSceneObjects) as T;
         }
 
+        public static T EnumPopup<T>(string label, T selected) where T : Enum => (T)EditorGUILayout.EnumPopup(label, selected);
     }
 }

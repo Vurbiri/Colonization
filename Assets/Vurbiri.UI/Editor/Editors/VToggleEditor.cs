@@ -13,12 +13,14 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VToggle)), CanEditMultipleObjects]
     sealed public class VToggleEditor : VSelectableEditor
     {
+        private const string NAME = "Toggle", RESOURCE = "VToggle";
+        private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
+
         private const float MIN_DURATION = 0f, MAX_DURATION = 1f;
-        
-        private static readonly string[] switchingLabels = { "On|Off checkmark", "Switch checkmarks", "Color checkmark" };
 
         private static readonly string isOnName = "Is On";
         private static readonly string isFadeLabels = "Checkmark Fade Duration";
+        private static readonly string[] switchingLabels = { "On|Off checkmark", "Switch checkmarks", "Color checkmark" };
         private static readonly string[] checkmarkOnNames = { "Checkmark", "Checkmark On", "Checkmark" };
         private static readonly string checkmarkOffName = "Checkmark Off";
         private static readonly string colorOnName = "Color On", colorOffName = "Color Off";
@@ -30,8 +32,12 @@ namespace VurbiriEditor.UI
         private readonly AnimBool _showSwitchType = new(), _showColorType = new();
        
         private VToggle _toggle;
+        bool _isOn;
         private SwitchingType _switchingType;
         private int _switchingTypeIndex;
+        private float _duration;
+        private Graphic _checkmarkOn, _checkmarkOff;
+        private Color _colorOn, _colorOff;
         private VToggleGroup _group;
 
         protected override void OnEnable()
@@ -39,7 +45,6 @@ namespace VurbiriEditor.UI
             _toggle = target as VToggle;
             _switchingType = _toggle.Switching;
             _switchingTypeIndex = (int)_switchingType;
-            _group = _toggle.Group;
 
             _switchingTypeProperty = serializedObject.FindProperty("_switchingType");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
@@ -67,14 +72,14 @@ namespace VurbiriEditor.UI
             bool isChange = false;
 
             BeginChangeCheck();
-            bool isOn = Toggle(isOnName, _toggle.IsOn);
+            _isOn = Toggle(isOnName, _toggle.IsOn);
             if (isChange |= EndChangeCheck()) 
-                _toggle.IsOn = isOn;
+                _toggle.IsOn = _isOn;
             //============================================================
             BeginChangeCheck();
-            float duration = Slider(isFadeLabels, _toggle.CheckmarkFadeDuration, MIN_DURATION, MAX_DURATION);
+            _duration = Slider(isFadeLabels, _toggle.CheckmarkFadeDuration, MIN_DURATION, MAX_DURATION);
             if (isChange |= EndChangeCheck()) 
-                _toggle.CheckmarkFadeDuration = duration;
+                _toggle.CheckmarkFadeDuration = _duration;
             //============================================================
             BeginChangeCheck();
             _switchingTypeIndex = Popup(_switchingTypeProperty.displayName, _switchingTypeIndex, switchingLabels);
@@ -87,26 +92,26 @@ namespace VurbiriEditor.UI
             //============================================================
             indentLevel++;
             BeginChangeCheck();
-            Graphic checkmarkOn = VEditorGUILayout.ObjectField(checkmarkOnNames[_switchingTypeIndex], _toggle.CheckmarkOn);
+            _checkmarkOn = VEditorGUILayout.ObjectField(checkmarkOnNames[_switchingTypeIndex], _toggle.CheckmarkOn);
             if (isChange |= EndChangeCheck()) 
-                _toggle.CheckmarkOn = checkmarkOn;
+                _toggle.CheckmarkOn = _checkmarkOn;
             //============================================================
             if (BeginFadeGroup(_showSwitchType.faded))
             {
                 BeginChangeCheck();
-                Graphic checkmarkOff = VEditorGUILayout.ObjectField(checkmarkOffName, _toggle.CheckmarkOff);
+                _checkmarkOff = VEditorGUILayout.ObjectField(checkmarkOffName, _toggle.CheckmarkOff);
                 if (isChange |= EndChangeCheck()) 
-                    _toggle.CheckmarkOff = checkmarkOff;
+                    _toggle.CheckmarkOff = _checkmarkOff;
             }
             EndFadeGroup();
             //============================================================
             if (BeginFadeGroup(_showColorType.faded))
             {
                 BeginChangeCheck();
-                Color colorOn = ColorField(colorOnName, _toggle.ColorOn);
-                Color colorOff = ColorField(colorOffName, _toggle.ColorOff);
+                _colorOn = ColorField(colorOnName, _toggle.ColorOn);
+                _colorOff = ColorField(colorOffName, _toggle.ColorOff);
                 if (isChange |= EndChangeCheck()) 
-                    _toggle.SetColors(colorOn, colorOff);
+                    _toggle.SetColors(_colorOn, _colorOff);
             }
             EndFadeGroup();
             Space();
@@ -134,7 +139,7 @@ namespace VurbiriEditor.UI
             PropertyField(_onValueChangedProperty);
         }
 
-        [MenuItem("GameObject/UI Vurbiri/Toggle", false, VUI_CONST.MENU_PRIORITY)]
-        public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromPrefab("VToggle", "Toggle", command.context as GameObject);
+        [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
+        public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromPrefab(RESOURCE, NAME, command.context as GameObject);
     }
 }

@@ -31,12 +31,12 @@ namespace VurbiriEditor.UI
 
             Space(1f);
             EditorGUI.BeginChangeCheck();
-            _allowSwitchOff = Toggle(_name, _toggleGroup.allowSwitchOff);
+            _allowSwitchOff = Toggle(_name, _toggleGroup.AllowSwitchOff);
             if (EditorGUI.EndChangeCheck())
             {
                 if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_toggleGroup.gameObject.scene);
 
-                _toggleGroup.allowSwitchOff = _allowSwitchOff;
+                _toggleGroup.AllowSwitchOff = _allowSwitchOff;
             }
 
             Space(1f);

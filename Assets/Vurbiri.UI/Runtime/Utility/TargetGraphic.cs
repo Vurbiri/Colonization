@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\TargetGraphic.cs
+//Assets\Vurbiri.UI\Runtime\Utility\TargetGraphic.cs
 using System;
 using UnityEngine;
 using UnityEngine.UI;

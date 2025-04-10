@@ -28,6 +28,18 @@ namespace Vurbiri.UI
                     _interactableIcon.CrossFadeAlpha(value ? 0f : 1f, colors.fadeDuration, true);
             }
         }
+        public bool Interactable
+        {
+            get => base.interactable;
+            set
+            {
+                if (base.interactable == value) return;
+
+                base.interactable = value;
+                if (_interactableIcon != null)
+                    _interactableIcon.CrossFadeAlpha(value ? 0f : 1f, colors.fadeDuration, true);
+            }
+        }
 
         public Graphic InteractableIcon => _interactableIcon;
         public int TargetGraphicCount => _targetGraphics.Count;

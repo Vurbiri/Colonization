@@ -13,7 +13,7 @@ namespace Vurbiri.UI
         private readonly List<VToggle> _toggles = new();
         private VToggle _activeToggle;
 
-        public bool allowSwitchOff 
+        public bool AllowSwitchOff 
         { 
             get => _allowSwitchOff; 
             set
