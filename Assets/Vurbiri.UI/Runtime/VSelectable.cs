@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Selectable", 35)]
+    [AddComponentMenu(VUI_CONST.NAME_MENU + "Selectable", 36)]
     [ExecuteAlways, SelectionBase, DisallowMultipleComponent]
     public partial class VSelectable : Selectable
     {

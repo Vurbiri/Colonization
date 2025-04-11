@@ -147,7 +147,9 @@ namespace Vurbiri.UI
             base.Start();
 
             _caption = GetComponentInChildren<TMP_Text>();
-            _onValueChanged.Clear();
+
+
+            _onValueChanged.Init();
         }
         #endregion
 

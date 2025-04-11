@@ -1,6 +1,7 @@
 //Assets\Vurbiri.UI\Editor\Editors\Abstract\AVSliderEditor.cs
 using System;
 using UnityEditor;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.UI;
@@ -27,8 +28,9 @@ namespace VurbiriEditor.UI
 
         protected AVSlider<T> _slider;
         protected T _minValue, _maxValue, _value;
-        private RectTransform _fillRect, _handleRect;
+        private RectTransform _fillRect, _fillContainerRect, _handleRect, _handleContainerRect;
         private Direction _direction;
+        private readonly AnimBool _isCorrectReferences = new();
 
         protected abstract void CheckMinMaxValues();
         protected abstract void DrawStep();
@@ -37,10 +39,26 @@ namespace VurbiriEditor.UI
         {
             _slider = (AVSlider<T>)target;
 
+            _fillRect = _slider.FillRect;
+            if (_fillRect != null && _fillRect.parent != null)
+                _fillContainerRect = _fillRect.parent.GetComponent<RectTransform>();
+
+            _handleRect = _slider.HandleRect;
+            if (_handleRect != null && _handleRect.parent != null)
+                _handleContainerRect = _handleRect.parent.GetComponent<RectTransform>();
+
             _stepProperty = serializedObject.FindProperty("_step");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
+            _isCorrectReferences.valueChanged.AddListener(Repaint);
+
             base.OnEnable();
+        }
+
+        sealed protected override void OnDisable()
+        {
+            _isCorrectReferences.valueChanged.RemoveListener(Repaint);
+            base.OnDisable();
         }
 
         sealed protected override void CustomMiddlePropertiesGUI()
@@ -54,15 +72,26 @@ namespace VurbiriEditor.UI
             BeginChangeCheck();
             _fillRect = VEditorGUILayout.ObjectField(fillRectName, _slider.FillRect);
             if (isChange |= EndChangeCheck())
+            {
                 _slider.FillRect = _fillRect;
+                if(_fillRect != null && _fillRect.parent != null)
+                    _fillContainerRect = _fillRect.parent.GetComponent<RectTransform>();
+            }
 
             BeginChangeCheck();
             _handleRect = VEditorGUILayout.ObjectField(handleRectName, _slider.HandleRect);
             if (isChange |= EndChangeCheck())
-                _slider.HandleRect = _handleRect;
-
-            if (_fillRect != null | _handleRect != null)
             {
+                _slider.HandleRect = _handleRect;
+                if (_handleRect != null && _handleRect.parent != null)
+                    _handleContainerRect = _handleRect.parent.GetComponent<RectTransform>();
+            }
+
+            _isCorrectReferences.target = (_fillRect & _fillContainerRect) | (_handleRect & _handleContainerRect);
+
+            if (BeginFadeGroup(_isCorrectReferences.faded))
+            {
+                Space(2f);
                 BeginChangeCheck();
                 _direction = VEditorGUILayout.EnumPopup(directionName, _slider.Direction);
                 if (isChange |= EndChangeCheck())
@@ -103,7 +132,9 @@ namespace VurbiriEditor.UI
                 if (warning)
                     HelpBox("The selected slider direction conflicts with navigation. Not all navigation options may work.", MessageType.Warning);
             }
-            else
+            EndFadeGroup();
+
+            if (!_isCorrectReferences.value)
             {
                 HelpBox("Specify a RectTransform for the slider fill or the slider handle or both. Each must have a parent RectTransform that it can slide within.", MessageType.Info);
             }
@@ -116,10 +147,11 @@ namespace VurbiriEditor.UI
 
         sealed protected override void CustomEndPropertiesGUI()
         {
-            if (_fillRect != null || _handleRect != null)
+            if (_isCorrectReferences.value)
             {
                 Space();
                 PropertyField(_onValueChangedProperty);
+                serializedObject.ApplyModifiedProperties();
             }
         }
     }

@@ -8,8 +8,11 @@ namespace VurbiriEditor
 {
     public static class Utility
 	{
-        public static void CreateFromPrefab(string path, string name, GameObject parent) 
+        public static void CreateFromResources(string path, string name, GameObject parent) 
             => Place(GameObject.Instantiate(Resources.Load(path)) as GameObject, parent, name);
+
+        public static void CreateFromPrefab(MonoBehaviour prefab, string name, GameObject parent)
+            => Place(GameObject.Instantiate(prefab).gameObject, parent, name);
 
         public static GameObject CreateObject(string name, GameObject parent, params Type[] types)
         {

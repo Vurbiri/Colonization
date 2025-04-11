@@ -9,12 +9,6 @@ namespace Vurbiri.UI
     {
         public const float RATE_STEP_MIN = 0.025f, RATE_STEP_MAX = 0.2f;
 
-        public override float NormalizedValue
-        {
-            get => _normalizedValue;
-            set => Value = Mathf.Lerp(_minValue, _maxValue, value);
-        }
-        
         public override float Step
         {
             get => _step;
@@ -25,26 +19,23 @@ namespace Vurbiri.UI
             }
         }
 
-        private VSliderFloat() { }
-
-        protected override bool Set(float value, bool sendCallback)
+        public override float NormalizedValue
         {
-            value = ClampValue(value);
-            _normalizedValue = Mathf.InverseLerp(_minValue, _maxValue, value);
-
-            if (_value == value) return false;
-
-            _value = value;
-
-            if (sendCallback)
-            {
-                UISystemProfilerApi.AddMarker("VSlider.value", this);
-                _onValueChanged.Invoke(value);
-            }
-            return true;
+            get => _normalizedValue;
+            set => Set(_minValue + (_maxValue - _minValue) * Mathf.Clamp01(value), true);
         }
 
-        protected override float LeftStep => _value - _step;
-        protected override float RightStep => _value + _step;
+        private VSliderFloat() { }
+
+        protected override float StepToLeft => _value - _step;
+        protected override float StepToRight => _value + _step;
+
+        protected override void Normalized(float value)
+        {
+            if (_minValue != _maxValue)
+                _normalizedValue = Mathf.Clamp01((value - _minValue) / (_maxValue - _minValue));
+            else
+                _normalizedValue = 0f;
+        }
     }
 }

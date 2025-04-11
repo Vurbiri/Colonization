@@ -21,13 +21,13 @@ namespace Vurbiri.Reactive
             if (_target == null | string.IsNullOrEmpty(_methodName))
                 return false;
 
-            Type actionType = typeof(TDelegate);
+            Type delegateType = typeof(TDelegate);
 
-            MethodInfo method = _target.GetType().GetMethod(_methodName, flags, null, actionType.GetGenericArguments(), null);
+            MethodInfo method = _target.GetType().GetMethod(_methodName, flags, null, delegateType.GetGenericArguments(), null);
             if (method == null)
                 return false;
 
-            action = Delegate.CreateDelegate(actionType, method.IsStatic ? null : _target, method) as TDelegate;
+            action = Delegate.CreateDelegate(delegateType, method.IsStatic ? null : _target, method) as TDelegate;
             return action != null;
         }
     }

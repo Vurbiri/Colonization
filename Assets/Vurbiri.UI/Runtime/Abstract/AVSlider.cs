@@ -19,7 +19,7 @@ namespace Vurbiri.UI
         [SerializeField] protected T _maxValue;
         [SerializeField] protected T _step;
         [SerializeField] protected T _value;
-        [SerializeField] protected UniSigner<T> _onValueChanged = new();
+        [SerializeField] private UniSigner<T> _onValueChanged = new();
 
         protected float _normalizedValue;
         private int _axis;
@@ -28,10 +28,8 @@ namespace Vurbiri.UI
         private RectTransform _thisRectTransform;
 
         private Image _fillImage;
-        private Transform _fillTransform;
         private RectTransform _fillContainerRect;
 
-        private Transform _handleTransform;
         private RectTransform _handleContainerRect;
 
         private Vector2 _offset = Vector2.zero; // The offset from handle position to mouse down position
@@ -40,28 +38,25 @@ namespace Vurbiri.UI
         private DrivenRectTransformTracker _tracker;  // field is never assigned warning
 #pragma warning restore 649
 
-        #region Public Properties
+        #region Abstract
+        public abstract T Step { get; set; }
+        public abstract float NormalizedValue { get; set; }
+        protected abstract void Normalized(T value);
+        protected abstract T StepToLeft { get; }
+        protected abstract T StepToRight { get; }
+        #endregion
+
+        #region Properties
         public T Value
         {
             get => _value;
-            set
-            {
-                if (Set(value, true))
-                    UpdateVisuals();
-            }
+            set => Set(value, true);
         }
         public T SilentValue
         {
             get => _value;
-            set
-            {
-                if (Set(value, false))
-                    UpdateVisuals();
-            }
+            set => Set(value, false);
         }
-
-        public abstract float NormalizedValue { get; set; }
-
         public T MinValue
         {
             get => _minValue;
@@ -84,9 +79,6 @@ namespace Vurbiri.UI
                 UpdateMinMaxDependencies();
             }
         }
-
-        public abstract T Step { get; set; }
-
         public RectTransform FillRect
         {
             get => _fillRect;
@@ -138,9 +130,25 @@ namespace Vurbiri.UI
             return true;
         }
 
-        protected abstract bool Set(T value, bool sendCallback);
-        
-        protected T ClampValue(T value)
+        protected void Set(T value, bool sendCallback)
+        {
+            value = ClampValue(value);
+
+            if (_value.Equals(value)) return;
+
+            _value = value;
+            Normalized(value);
+
+            UpdateVisuals();
+
+            if (sendCallback)
+            {
+                UISystemProfilerApi.AddMarker("VSlider.value", this);
+                _onValueChanged.Invoke(value);
+            }
+        }
+
+        private T ClampValue(T value)
         {
             if (value.CompareTo(_minValue) < 0) 
                 value = _minValue;
@@ -154,7 +162,7 @@ namespace Vurbiri.UI
         private void UpdateMinMaxDependencies()
         {
             Step = _step;
-            Set(_value, true);
+            Normalized(_value);
             UpdateVisuals();
         }
 
@@ -162,10 +170,9 @@ namespace Vurbiri.UI
         {
             if (_fillRect && _fillRect != _thisRectTransform)
             {
-                _fillTransform = _fillRect.transform;
                 _fillImage = _fillRect.GetComponent<Image>();
-                if (_fillTransform.parent != null)
-                    _fillContainerRect = _fillTransform.parent.GetComponent<RectTransform>();
+                if (_fillRect.parent != null)
+                    _fillContainerRect = _fillRect.parent.GetComponent<RectTransform>();
             }
             else
             {
@@ -179,9 +186,8 @@ namespace Vurbiri.UI
         {
             if (_handleRect && _handleRect != _thisRectTransform)
             {
-                _handleTransform = _handleRect.transform;
-                if (_handleTransform.parent != null)
-                    _handleContainerRect = _handleTransform.parent.GetComponent<RectTransform>();
+                if (_handleRect.parent != null)
+                    _handleContainerRect = _handleRect.parent.GetComponent<RectTransform>();
             }
             else
             {
@@ -190,7 +196,7 @@ namespace Vurbiri.UI
             }
         }
 
-        private void UpdateVisuals()
+        protected void UpdateVisuals()
         {
 #if UNITY_EDITOR
             Update_Editor();
@@ -267,7 +273,7 @@ namespace Vurbiri.UI
         }
         #endregion
 
-        #region Calls
+        #region Calls ..
         sealed protected override void Awake()
         {
             base.Awake();
@@ -280,10 +286,10 @@ namespace Vurbiri.UI
         {
             base.Start();
             UpdateDirection(_direction);
-            Set(_value, false);
+            Normalized(_value);
             UpdateVisuals();
 
-            _onValueChanged.Clear();
+            _onValueChanged.Init();
         }
 
         sealed protected override void OnDisable()
@@ -296,13 +302,13 @@ namespace Vurbiri.UI
         {
             base.OnRectTransformDimensionsChange();
 
-            //This can be invoked before OnEnabled is called. So we shouldn't be accessing other objects, before OnEnable is called.
-            if (isActiveAndEnabled) UpdateVisuals();
+            if (isActiveAndEnabled) 
+                UpdateVisuals();
         }
 
         private bool CanDrag(PointerEventData eventData)
         {
-            return isActiveAndEnabled && IsInteractable() && eventData.button == PointerEventData.InputButton.Left;
+            return eventData.button == PointerEventData.InputButton.Left && isActiveAndEnabled && IsInteractable();
         }
         sealed public override void OnPointerDown(PointerEventData eventData)
         {
@@ -313,7 +319,8 @@ namespace Vurbiri.UI
             _offset = Vector2.zero;
             if (_handleContainerRect != null
             && RectTransformUtility.RectangleContainsScreenPoint(_handleRect, eventData.pointerPressRaycast.screenPosition, eventData.enterEventCamera)
-            && RectTransformUtility.ScreenPointToLocalPointInRectangle(_handleRect, eventData.pointerPressRaycast.screenPosition, eventData.pressEventCamera, out Vector2 localMousePos))
+            && RectTransformUtility.ScreenPointToLocalPointInRectangle(_handleRect, eventData.pointerPressRaycast.screenPosition, eventData.pressEventCamera,
+               out Vector2 localMousePos))
             {
                 _offset = localMousePos;
             }
@@ -334,8 +341,6 @@ namespace Vurbiri.UI
             eventData.useDragThreshold = false;
         }
 
-        protected abstract T LeftStep { get; }
-        protected abstract T RightStep { get; }
         sealed public override void OnMove(AxisEventData eventData)
         {
             if (!isActiveAndEnabled || !IsInteractable())
@@ -348,27 +353,27 @@ namespace Vurbiri.UI
             {
                 case MoveDirection.Left:
                     if (_axis == HORIZONTAL && FindSelectableOnLeft() == null)
-                    { if (Set(_reverseValue ? RightStep : LeftStep, true)) UpdateVisuals(); }
+                        Set(_reverseValue ? StepToRight : StepToLeft, true);
                     else
-                    { base.OnMove(eventData); }
+                        base.OnMove(eventData);
                     break;
                 case MoveDirection.Right:
                     if (_axis == HORIZONTAL && FindSelectableOnRight() == null)
-                    { if (Set(_reverseValue ? LeftStep : RightStep, true)) UpdateVisuals(); }
+                        Set(_reverseValue ? StepToLeft : StepToRight, true);
                     else
-                    { base.OnMove(eventData); }
+                        base.OnMove(eventData);
                     break;
                 case MoveDirection.Up:
                     if (_axis == VERTICAL && FindSelectableOnUp() == null)
-                    { if (Set(_reverseValue ? LeftStep : RightStep, true)) UpdateVisuals(); }
+                        Set(_reverseValue ? StepToLeft : StepToRight, true);
                     else
-                    { base.OnMove(eventData); }
+                        base.OnMove(eventData);
                     break;
                 case MoveDirection.Down:
                     if (_axis == VERTICAL && FindSelectableOnDown() == null)
-                    { if (Set(_reverseValue ? RightStep : LeftStep, true)) UpdateVisuals(); }
+                        Set(_reverseValue ? StepToRight : StepToLeft, true);
                     else
-                    { base.OnMove(eventData); }
+                        base.OnMove(eventData);
                     break;
             }
         }

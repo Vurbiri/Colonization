@@ -5,24 +5,17 @@ using UnityEngine;
 namespace Vurbiri.Reactive
 {
     [Serializable]
-	public class UniSigner :  Signer, ISerializationCallbackReceiver
+	public class UniSigner :  Signer
 	{
         [SerializeField] private Listener[] _listeners;
 
-        public void Clear()
+        public void Init()
         {
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
 #endif
-            _listeners = null;
-        }
-
-        public void OnBeforeSerialize() { }
-
-        public void OnAfterDeserialize()
-        {
             if (_listeners == null) return;
-            
+
             for (int i = _listeners.Length - 1; i >= 0; i--)
             {
                 if (_listeners[i].TryCreateDelegate(out Action action))
@@ -31,24 +24,21 @@ namespace Vurbiri.Reactive
                     actions += action;
                 }
             }
+
+            _listeners = null;
         }
 	}
     //=======================================================================================
     [Serializable]
-    public class UniSigner<T> : Signer<T>, ISerializationCallbackReceiver
+    public class UniSigner<T> : Signer<T>
     {
         [SerializeField] private Listener<T>[] _listeners;
 
-        public void Clear()
+        public void Init()
         {
-            if (Application.isPlaying)
-                _listeners = null;
-        }
-
-        public void OnBeforeSerialize() { }
-
-        public void OnAfterDeserialize()
-        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) return;
+#endif
             if (_listeners == null) return;
 
             for (int i = _listeners.Length - 1; i >= 0; i--)
@@ -59,24 +49,21 @@ namespace Vurbiri.Reactive
                     actions += action;
                 }
             }
+
+            _listeners = null;
         }
     }
     //=======================================================================================
     [Serializable]
-    public class UniSigner<TA, TB> : Signer<TA, TB>, ISerializationCallbackReceiver
+    public class UniSigner<TA, TB> : Signer<TA, TB>
     {
         [SerializeField] private Listener<TA, TB>[] _listeners;
 
-        public void Clear()
+        public void Init()
         {
-            if (Application.isPlaying)
-                _listeners = null;
-        }
-
-        public void OnBeforeSerialize() { }
-
-        public void OnAfterDeserialize()
-        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) return;
+#endif
             if (_listeners == null) return;
 
             for (int i = _listeners.Length - 1; i >= 0; i--)
@@ -87,24 +74,21 @@ namespace Vurbiri.Reactive
                     actions += action;
                 }
             }
+
+            _listeners = null;
         }
     }
     //=======================================================================================
     [Serializable]
-    public class UniSigner<TA, TB, TC> : Signer<TA, TB, TC>, ISerializationCallbackReceiver
+    public class UniSigner<TA, TB, TC> : Signer<TA, TB, TC>
     {
         [SerializeField] private Listener<TA, TB, TC>[] _listeners;
 
-        public void Clear()
+        public void Init()
         {
-            if (Application.isPlaying)
-                _listeners = null;
-        }
-
-        public void OnBeforeSerialize() { }
-
-        public void OnAfterDeserialize()
-        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) return;
+#endif
             if (_listeners == null) return;
 
             for (int i = _listeners.Length - 1; i >= 0; i--)
@@ -115,24 +99,21 @@ namespace Vurbiri.Reactive
                     actions += action;
                 }
             }
+
+            _listeners = null;
         }
     }
     //=======================================================================================
     [Serializable]
-    public class UniSigner<TA, TB, TC, TD> : Signer<TA, TB, TC, TD>, ISerializationCallbackReceiver
+    public class UniSigner<TA, TB, TC, TD> : Signer<TA, TB, TC, TD>
     {
         [SerializeField] private Listener<TA, TB, TC, TD>[] _listeners;
 
-        public void Clear()
+        public void Init()
         {
-            if (Application.isPlaying)
-                _listeners = null;
-        }
-
-        public void OnBeforeSerialize() { }
-
-        public void OnAfterDeserialize()
-        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) return;
+#endif
             if (_listeners == null) return;
 
             for (int i = _listeners.Length - 1; i >= 0; i--)
@@ -143,6 +124,8 @@ namespace Vurbiri.Reactive
                     actions += action;
                 }
             }
+
+            _listeners = null;
         }
     }
 }

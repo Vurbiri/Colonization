@@ -18,7 +18,7 @@ namespace Vurbiri.UI
         {
             base.Start();
 
-            _onClick.Clear();
+            _onClick.Init();
         }
 
         public Unsubscriber AddListener(Action action) => _onClick.Add(action);
