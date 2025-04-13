@@ -81,7 +81,7 @@ namespace VurbiriEditor
         {
             if (EditorSceneManager.playModeStartScene != null)
             {
-                Debug.Log($"[SceneAutoloader] Start scene: {EditorSceneManager.playModeStartScene.name}");
+                Debug.Log($"<color=yellow>[SceneAutoloader] Start scene: <b>{EditorSceneManager.playModeStartScene.name}</b></color>");
                 return;
             }
 
@@ -94,7 +94,7 @@ namespace VurbiriEditor
 
             if (string.IsNullOrEmpty(path))
             {
-                Debug.Log("[SceneAutoloader] Start scene: current");
+                Debug.Log("<color=yellow>[SceneAutoloader] Start scene: <b>current</b></color>");
                 return;
             }
 
@@ -102,7 +102,7 @@ namespace VurbiriEditor
             if (startScene != null)
             {
                 EditorSceneManager.playModeStartScene = startScene;
-                Debug.Log($"[SceneAutoloader] Set start scene: {startScene.name}");
+                Debug.Log($"<color=yellow>[SceneAutoloader] Set start scene: <b>{startScene.name}</b></color>");
             }
             else
             {

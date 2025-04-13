@@ -1,29 +1,29 @@
-//Assets\Vurbiri.UI\Editor\Editors\VProgressBarFloatEditor.cs
+//Assets\Vurbiri.UI\Editor\Editors\VProgressBarIntEditor.cs
 using UnityEditor;
 using Vurbiri.UI;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(VProgressBarFloat))]
-    sealed public class VProgressBarFloatEditor : AVProgressBarEditor<float>
-    {
-        //private const string NAME = "Progress Bar Float", RESOURCE = "VProgressBarFloat";
+    [CustomEditor(typeof(VProgressBarInt))]
+    public class VProgressBarIntEditor : AVProgressBarEditor<int>
+	{
+        //private const string NAME = "Progress Bar Int", RESOURCE = "VProgressBarInt";
         //private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
 
-        static VProgressBarFloatEditor()
+        static VProgressBarIntEditor()
         {
-            DrawSlider = EditorGUILayout.Slider;
-            DrawField = EditorGUILayout.FloatField;
+            DrawSlider = EditorGUILayout.IntSlider;
+            DrawField = EditorGUILayout.IntField;
         }
 
         protected override bool CheckMinMaxValues()
         {
             if (_maxValue <= _minValue)
             {
-                if (_minValue <= 0f)
-                    _maxValue = _minValue + 1f;
+                if (_minValue <= 0)
+                    _maxValue = _minValue + 10;
                 else
-                    _minValue = _maxValue - 1f;
+                    _minValue = _maxValue - 10;
 
                 return true;
             }

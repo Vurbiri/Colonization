@@ -1,6 +1,8 @@
 //Assets\Vurbiri.UI\Editor\Editors\VToggleEditor.cs
+using System;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.UI;
@@ -18,35 +20,50 @@ namespace VurbiriEditor.UI
 
         private const float MIN_DURATION = 0f, MAX_DURATION = 1f;
 
-        private static readonly string isOnName = "Is On";
-        private static readonly string isFadeLabels = "Checkmark Fade Duration";
+        private static readonly string durationLabels = "Checkmark Fade Duration";
         private static readonly string[] switchingLabels = { "On|Off checkmark", "Switch checkmarks", "Color checkmark" };
-        private static readonly string[] checkmarkOnNames = { "Checkmark", "Checkmark On", "Checkmark" };
-        private static readonly string checkmarkOffName = "Checkmark Off";
-        private static readonly string colorOnName = "Color On", colorOffName = "Color Off";
-        private static readonly string groupName = "Group";
+        private static readonly GUIContent[] checkmarkOnNames = { new("Checkmark"), new("Checkmark On"), new("Checkmark") };
 
+        private static readonly Type graphicType = typeof(Graphic);
+
+        private SerializedProperty _isOnProperty;
+        private SerializedProperty _durationProperty;
         private SerializedProperty _switchingTypeProperty;
+        private SerializedProperty _checkmarkOnProperty;
+        private SerializedProperty _checkmarkOffProperty;
+        private SerializedProperty _colorOnProperty;
+        private SerializedProperty _colorOffProperty;
+        private SerializedProperty _groupProperty;
         private SerializedProperty _onValueChangedProperty;
 
         private readonly AnimBool _showSwitchType = new(), _showColorType = new();
-       
+
         private VToggle _toggle;
-        bool _isOn;
+        private int _selectedCount;
+        private VToggle[] _toggles;
         private SwitchingType _switchingType;
         private int _switchingTypeIndex;
-        private float _duration;
-        private Graphic _checkmarkOn, _checkmarkOff;
-        private Color _colorOn, _colorOff;
         private VToggleGroup _group;
 
         protected override void OnEnable()
         {
-            _toggle = target as VToggle;
+            _toggle = (VToggle)target;
             _switchingType = _toggle.Switching;
             _switchingTypeIndex = (int)_switchingType;
 
+            _selectedCount = targets.Length;
+            _toggles = new VToggle[_selectedCount];
+            for (int i = 0; i < _selectedCount; i++)
+                _toggles[i] = (VToggle)targets[i];
+
+            _isOnProperty = serializedObject.FindProperty("_isOn");
+            _durationProperty = serializedObject.FindProperty("_fadeDuration");
             _switchingTypeProperty = serializedObject.FindProperty("_switchingType");
+            _checkmarkOnProperty = serializedObject.FindProperty("_checkmarkOn");
+            _checkmarkOffProperty = serializedObject.FindProperty("_checkmarkOff");
+            _colorOnProperty = serializedObject.FindProperty("_colorOn");
+            _colorOffProperty = serializedObject.FindProperty("_colorOff");
+            _groupProperty = serializedObject.FindProperty("_group");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
             _showSwitchType.value = _switchingType == SwitchingType.SwitchCheckmark;
@@ -68,69 +85,95 @@ namespace VurbiriEditor.UI
         protected override void CustomMiddlePropertiesGUI()
         {
             serializedObject.ApplyModifiedProperties();
+            serializedObject.Update();
 
-            bool isChange = false;
-
-            BeginChangeCheck();
-            _isOn = Toggle(isOnName, _toggle.IsOn);
-            if (isChange |= EndChangeCheck()) 
-                _toggle.IsOn = _isOn;
+            BeginDisabledGroup(_selectedCount > 1 && (_groupProperty.objectReferenceValue != null | _groupProperty.hasMultipleDifferentValues));
+            {
+                BeginChangeCheck();
+                PropertyField(_isOnProperty);
+                if (EndChangeCheck())
+                {
+                    _toggle.IsOn = _isOnProperty.boolValue;
+                    _isOnProperty.boolValue = _toggle.IsOn;
+                }
+            }
+            EndDisabledGroup();
             //============================================================
-            BeginChangeCheck();
-            _duration = Slider(isFadeLabels, _toggle.CheckmarkFadeDuration, MIN_DURATION, MAX_DURATION);
-            if (isChange |= EndChangeCheck()) 
-                _toggle.CheckmarkFadeDuration = _duration;
+            Slider(_durationProperty, MIN_DURATION, MAX_DURATION, durationLabels);
             //============================================================
             BeginChangeCheck();
             _switchingTypeIndex = Popup(_switchingTypeProperty.displayName, _switchingTypeIndex, switchingLabels);
-            if (isChange |= EndChangeCheck())
+            if (EndChangeCheck())
             {
-                _toggle.Switching = _switchingType = (SwitchingType)_switchingTypeIndex;
+                _switchingTypeProperty.enumValueIndex = _switchingTypeIndex;
+                _switchingType = (SwitchingType)_switchingTypeIndex;
+
+                foreach (var toggle in _toggles)
+                {
+                    toggle.Switching = _switchingType;
+                    if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(toggle.gameObject.scene);
+                }
+
                 _showSwitchType.target = !_switchingTypeProperty.hasMultipleDifferentValues && _switchingType == SwitchingType.SwitchCheckmark;
                 _showColorType.target = !_switchingTypeProperty.hasMultipleDifferentValues && _switchingType == SwitchingType.ColorCheckmark;
             }
             //============================================================
             indentLevel++;
-            BeginChangeCheck();
-            _checkmarkOn = VEditorGUILayout.ObjectField(checkmarkOnNames[_switchingTypeIndex], _toggle.CheckmarkOn);
-            if (isChange |= EndChangeCheck()) 
-                _toggle.CheckmarkOn = _checkmarkOn;
-            //============================================================
-            if (BeginFadeGroup(_showSwitchType.faded))
+            BeginDisabledGroup(_selectedCount > 1);
             {
                 BeginChangeCheck();
-                _checkmarkOff = VEditorGUILayout.ObjectField(checkmarkOffName, _toggle.CheckmarkOff);
-                if (isChange |= EndChangeCheck()) 
-                    _toggle.CheckmarkOff = _checkmarkOff;
+                ObjectField(_checkmarkOnProperty, graphicType, checkmarkOnNames[_switchingTypeIndex]);
+                if (EndChangeCheck())
+                    _toggle.CheckmarkOn = _checkmarkOnProperty.objectReferenceValue as Graphic;
+           
+                //============================================================
+                if (BeginFadeGroup(_showSwitchType.faded))
+                {
+                    BeginChangeCheck();
+                    PropertyField(_checkmarkOffProperty);
+                    if (EndChangeCheck())
+                        _toggle.CheckmarkOff = _checkmarkOffProperty.objectReferenceValue as Graphic;
+                }
+                EndFadeGroup();
             }
-            EndFadeGroup();
+            EndDisabledGroup();
             //============================================================
             if (BeginFadeGroup(_showColorType.faded))
             {
                 BeginChangeCheck();
-                _colorOn = ColorField(colorOnName, _toggle.ColorOn);
-                _colorOff = ColorField(colorOffName, _toggle.ColorOff);
-                if (isChange |= EndChangeCheck()) 
-                    _toggle.SetColors(_colorOn, _colorOff);
+                PropertyField(_colorOnProperty);
+                PropertyField(_colorOffProperty);
+                if (EndChangeCheck())
+                {
+                    foreach (var toggle in _toggles)
+                        toggle.SetColors(_colorOnProperty.colorValue, _colorOffProperty.colorValue);
+                }
             }
             EndFadeGroup();
+
             Space();
             indentLevel--;
             //============================================================
             BeginChangeCheck();
-            _group = VEditorGUILayout.ObjectField(groupName, _toggle.Group);
-            if (isChange |= EndChangeCheck())
+            PropertyField(_groupProperty);
+            if (EndChangeCheck())
             {
-                _toggle.Group = _group;
-                if (!Application.isPlaying && _group != null && _group.IsActiveToggle)
-                    _toggle.IsOn = false;
+                serializedObject.ApplyModifiedProperties();
+                _group = _groupProperty.objectReferenceValue as VToggleGroup;
+                foreach (var toggle in _toggles)
+                {
+                    toggle.Group = _group;
+                    if (!Application.isPlaying && _group != null)
+                    {
+                        if (_group.IsActiveToggle)
+                            toggle.IsOn = _group.ActiveToggle == toggle;
+                        else if (!_group.AllowSwitchOff)
+                            toggle.IsOn = true;
+                    }
+                }
+                serializedObject.Update();
             }
             Space();
-
-            if (isChange & !Application.isPlaying)
-                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(_toggle.gameObject.scene);
-
-            serializedObject.Update();
         }
 
         protected override void CustomEndPropertiesGUI()

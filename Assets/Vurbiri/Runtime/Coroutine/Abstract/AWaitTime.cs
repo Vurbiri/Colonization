@@ -37,6 +37,12 @@ namespace Vurbiri
             return this;
         }
 
+        public AWaitTime Restart()
+        {
+            _waitUntilTime = ApplicationTime + _waitTime;
+            return this;
+        }
+
         public override void Reset() => _waitUntilTime = -1f;
     }
 }

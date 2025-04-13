@@ -39,7 +39,7 @@ namespace Vurbiri.UI
             _thisGO.SetActive(active);
         }
 
-        public virtual void OnPointerEnter(PointerEventData eventData)
+        public void OnPointerEnter(PointerEventData eventData)
         {
             if (!_isShowingHint)
                 _isShowingHint = _hint.Show(_text, _thisTransform.localPosition + _offsetHint);

@@ -163,7 +163,8 @@ namespace VurbiriEditor
         private static void Log()
         {
             string state = isAuto ? "Enable" : "Disable";
-            Debug.Log($"[PathToCSFiles] {state}");
+            string color = isAuto ? "green" : "red";
+            Debug.Log($"<color={color}>[PathToCSFiles] <b>{state}</b></color>");
         }
 	}
 }

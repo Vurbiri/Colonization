@@ -53,10 +53,11 @@ namespace Vurbiri.UI
             get => _fadeDuration;
             set
             {
-                if (_fadeDuration == value) return;
-
-                _fadeDuration = value;
-                _transitionEffect.SetDuration(_fadeDuration);
+                if (_fadeDuration != value)
+                {
+                    _fadeDuration = value;
+                    _transitionEffect.SetDuration(_fadeDuration);
+                }
             }
         }
         public SwitchingType Switching
@@ -64,10 +65,11 @@ namespace Vurbiri.UI
             get => _switchingType;
             set 
             {
-                if (_switchingType == value) return;
-
-                _switchingType = value;
-                _transitionEffect = TransitionEffectCreate();
+                if (_switchingType != value)
+                {
+                    _switchingType = value;
+                    _transitionEffect = TransitionEffectCreate();
+                }
             }
         }
         public Graphic CheckmarkOn
@@ -147,8 +149,6 @@ namespace Vurbiri.UI
             base.Start();
 
             _caption = GetComponentInChildren<TMP_Text>();
-
-
             _onValueChanged.Init();
         }
         #endregion
@@ -295,6 +295,8 @@ namespace Vurbiri.UI
             if (!Application.isPlaying)
             {
                 _transitionEffect ??= TransitionEffectCreate();
+                _transitionEffect.ColorsUpdate();
+                _transitionEffect.PlayInstant(_isOn);
 
                 if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this))
                     CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);

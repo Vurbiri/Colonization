@@ -10,47 +10,52 @@ using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(AVSlider<>), true), CanEditMultipleObjects]
     public abstract class AVSliderEditor<T> : VSelectableEditor where T : struct, IEquatable<T>, IComparable<T>
     {
-        protected delegate T FuncSlider(string label, T value, T min, T max, params GUILayoutOption[] options);
-        protected delegate T FuncField(string label, T value, params GUILayoutOption[] options);
-
-        private static readonly string fillRectName = "Fill Rect", handleRectName = "Handle Rect";
-        private static readonly string directionName = "Direction";
-        private static readonly string minValueName = "Min Value", maxValueName = "Max Value", valueName = "Value";
-
-        protected static FuncSlider DrawSlider;
-        protected static FuncField DrawField;
-
+        private SerializedProperty _fillRectProperty;
+        private SerializedProperty _handleRectProperty;
+        private SerializedProperty _directionProperty;
+        protected SerializedProperty _valueProperty;
+        protected SerializedProperty _minValueProperty;
+        protected SerializedProperty _maxValueProperty;
         protected SerializedProperty _stepProperty;
         private SerializedProperty _onValueChangedProperty;
 
         protected AVSlider<T> _slider;
-        protected T _minValue, _maxValue, _value;
-        private RectTransform _fillRect, _fillContainerRect, _handleRect, _handleContainerRect;
+        protected AVSlider<T>[] _sliders;
+        protected int _selectedCount;
         private Direction _direction;
         private readonly AnimBool _isCorrectReferences = new();
 
-        protected abstract void CheckMinMaxValues();
+        protected abstract void DrawValue();
+        protected abstract void InitMinMaxValues();
+        protected abstract void SetMinValue();
+        protected abstract void SetMaxValue();
         protected abstract void DrawStep();
 
         sealed protected override void OnEnable()
         {
             _slider = (AVSlider<T>)target;
 
-            _fillRect = _slider.FillRect;
-            if (_fillRect != null && _fillRect.parent != null)
-                _fillContainerRect = _fillRect.parent.GetComponent<RectTransform>();
+            _selectedCount = targets.Length;
+            _sliders = new AVSlider<T>[_selectedCount];
+            for (int i = 0; i < _sliders.Length; i++)
+                _sliders[i] = (AVSlider<T>)targets[i];
 
-            _handleRect = _slider.HandleRect;
-            if (_handleRect != null && _handleRect.parent != null)
-                _handleContainerRect = _handleRect.parent.GetComponent<RectTransform>();
-
+            _fillRectProperty = serializedObject.FindProperty("_fillRect");
+            _handleRectProperty = serializedObject.FindProperty("_handleRect");
+            _directionProperty = serializedObject.FindProperty("_direction");
+            _valueProperty = serializedObject.FindProperty("_value");
+            _minValueProperty = serializedObject.FindProperty("_minValue");
+            _maxValueProperty = serializedObject.FindProperty("_maxValue");
             _stepProperty = serializedObject.FindProperty("_step");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
+            _isCorrectReferences.value = CheckFillRectReferences() || CheckHandleRectReferences();
             _isCorrectReferences.valueChanged.AddListener(Repaint);
+
+            if(!_minValueProperty.hasMultipleDifferentValues & !_maxValueProperty.hasMultipleDifferentValues)
+                InitMinMaxValues();
 
             base.OnEnable();
         }
@@ -61,66 +66,73 @@ namespace VurbiriEditor.UI
             base.OnDisable();
         }
 
+        private bool CheckFillRectReferences()
+        {
+            foreach(var slider in _sliders)
+            {
+                if (slider.FillRect == null || slider.FillRect.parent == null)
+                    return false;
+            }
+            return true;
+        }
+        private bool CheckHandleRectReferences()
+        {
+            foreach (var slider in _sliders)
+            {
+                if (slider.HandleRect == null || slider.HandleRect.parent == null)
+                    return false;
+            }
+            return true;
+        }
+
         sealed protected override void CustomMiddlePropertiesGUI()
         {
-            serializedObject.ApplyModifiedProperties();
-
-            bool isChange = false;
 
             Space();
 
-            BeginChangeCheck();
-            _fillRect = VEditorGUILayout.ObjectField(fillRectName, _slider.FillRect);
-            if (isChange |= EndChangeCheck())
+            BeginDisabledGroup(_selectedCount > 1);
             {
-                _slider.FillRect = _fillRect;
-                if(_fillRect != null && _fillRect.parent != null)
-                    _fillContainerRect = _fillRect.parent.GetComponent<RectTransform>();
+                BeginChangeCheck();
+                PropertyField(_fillRectProperty);
+                PropertyField(_handleRectProperty);
+                if (EndChangeCheck())
+                {
+                    serializedObject.ApplyModifiedProperties();
+                    _isCorrectReferences.target = CheckFillRectReferences() || CheckHandleRectReferences();
+                }
             }
-
-            BeginChangeCheck();
-            _handleRect = VEditorGUILayout.ObjectField(handleRectName, _slider.HandleRect);
-            if (isChange |= EndChangeCheck())
-            {
-                _slider.HandleRect = _handleRect;
-                if (_handleRect != null && _handleRect.parent != null)
-                    _handleContainerRect = _handleRect.parent.GetComponent<RectTransform>();
-            }
-
-            _isCorrectReferences.target = (_fillRect & _fillContainerRect) | (_handleRect & _handleContainerRect);
+            EndDisabledGroup();
 
             if (BeginFadeGroup(_isCorrectReferences.faded))
             {
                 Space(2f);
                 BeginChangeCheck();
-                _direction = VEditorGUILayout.EnumPopup(directionName, _slider.Direction);
-                if (isChange |= EndChangeCheck())
+                PropertyField(_directionProperty);
+                if (EndChangeCheck())
                 {
+                    _direction = (Direction)_directionProperty.enumValueIndex;
                     if (!Application.isPlaying) Undo.RecordObjects(serializedObject.targetObjects, "Change Slider Direction");
 
-                    _slider.Direction = _direction;
+                    foreach (var slider in _sliders)
+                        slider.Direction = _direction;
                 }
-
                 Space();
 
-                BeginChangeCheck();
-                _value = DrawSlider(valueName, _slider.Value, _slider.MinValue, _slider.MaxValue);
-                if (isChange |= EndChangeCheck())
-                    _slider.Value = _value;
+                BeginDisabledGroup(_minValueProperty.hasMultipleDifferentValues | _maxValueProperty.hasMultipleDifferentValues);
+                     DrawValue();
+                EndDisabledGroup();
 
                 indentLevel++;
                 BeginChangeCheck();
-                _minValue = DrawField(minValueName, _slider.MinValue);
-                _maxValue = DrawField(maxValueName, _slider.MaxValue);
-                if (isChange |= EndChangeCheck())
-                {
-                    CheckMinMaxValues();
-                    _slider.SetMinMax(_minValue, _maxValue);
-                }
+                PropertyField(_minValueProperty);
+                if (EndChangeCheck()) SetMinValue();
+                BeginChangeCheck();
+                PropertyField(_maxValueProperty);
+                if (EndChangeCheck()) SetMaxValue();
 
-                serializedObject.Update();
-
-                DrawStep();
+                BeginDisabledGroup(_minValueProperty.hasMultipleDifferentValues | _maxValueProperty.hasMultipleDifferentValues);
+                    DrawStep();
+                EndDisabledGroup();
                 indentLevel--;
 
                 bool warning;
@@ -140,9 +152,6 @@ namespace VurbiriEditor.UI
             }
 
             Space();
-
-            if (isChange & !Application.isPlaying)
-                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(_slider.gameObject.scene);
         }
 
         sealed protected override void CustomEndPropertiesGUI()
@@ -151,7 +160,6 @@ namespace VurbiriEditor.UI
             {
                 Space();
                 PropertyField(_onValueChangedProperty);
-                serializedObject.ApplyModifiedProperties();
             }
         }
     }

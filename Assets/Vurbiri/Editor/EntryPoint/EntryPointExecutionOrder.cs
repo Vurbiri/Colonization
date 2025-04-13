@@ -36,7 +36,7 @@ namespace VurbiriEditor.EntryPoint
             foreach (MonoScript monoScript in MonoImporter.GetAllRuntimeMonoScripts())
                 SetOrders(monoScript);
 
-            Debug.Log($"[EntryPointExecutionOrder] End set order.");
+            Debug.Log($"<b><color=yellow>[EntryPointExecutionOrder] End set order.</color></b>");
         }
 
         [MenuItem(MENU_COMMAND_AUTO, false, 13)]
@@ -108,7 +108,8 @@ namespace VurbiriEditor.EntryPoint
         private static void Log()
         {
             string state = isAuto ? "Enable" : "Disable";
-            Debug.Log($"[EntryPointExecutionOrder] {state}");
+            string color = isAuto ? "green" : "red";
+            Debug.Log($"<color={color}>[EntryPointExecutionOrder] <b>{state}<b></color>");
         }
     }
 }

@@ -123,6 +123,11 @@ namespace Vurbiri.UI
 
             OnStateTransition(intState, targetColor, 0f);
         }
+
+        protected override void Reset()
+        {
+            
+        }
 #endif
     }
 }

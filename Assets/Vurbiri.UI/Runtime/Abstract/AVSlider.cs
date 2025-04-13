@@ -15,10 +15,10 @@ namespace Vurbiri.UI
         [SerializeField] private RectTransform _fillRect;
         [SerializeField] private RectTransform _handleRect;
         [SerializeField] private Direction _direction = Direction.LeftToRight;
+        [SerializeField] protected T _value;
         [SerializeField] protected T _minValue;
         [SerializeField] protected T _maxValue;
         [SerializeField] protected T _step;
-        [SerializeField] protected T _value;
         [SerializeField] private UniSigner<T> _onValueChanged = new();
 
         protected float _normalizedValue;
@@ -47,6 +47,45 @@ namespace Vurbiri.UI
         #endregion
 
         #region Properties
+        public RectTransform FillRect
+        {
+            get => _fillRect;
+            set
+            {
+                if (_fillRect != value)
+                {
+                    _fillRect = value;
+                    UpdateFillRectReferences();
+                    UpdateVisuals();
+                }
+            }
+        }
+        public RectTransform HandleRect
+        {
+            get => _handleRect;
+            set
+            {
+                if (_handleRect != value)
+                {
+                    _handleRect = value;
+                    UpdateHandleRectReferences();
+                    UpdateVisuals();
+                }
+            }
+        }
+        public Direction Direction
+        {
+            get => _direction;
+            set
+            {
+                if (_direction != value)
+                {
+                    _direction = value;
+                    UpdateDirection(value);
+                    UpdateVisuals();
+                }
+            }
+        }
         public T Value
         {
             get => _value;
@@ -62,10 +101,11 @@ namespace Vurbiri.UI
             get => _minValue;
             set
             {
-                if (_minValue.Equals(value) | _maxValue.CompareTo(value) <= 0) return;
-
-                _minValue = value;
-                UpdateMinMaxDependencies();
+                if (!_minValue.Equals(value) & _maxValue.CompareTo(value) > 0)
+                {
+                    _minValue = value;
+                    UpdateMinMaxDependencies();
+                }
             }
         }
         public T MaxValue
@@ -73,46 +113,11 @@ namespace Vurbiri.UI
             get => _maxValue;
             set
             {
-                if (_maxValue.Equals(value) | _minValue.CompareTo(value) >= 0) return;
-
-                _maxValue = value;
-                UpdateMinMaxDependencies();
-            }
-        }
-        public RectTransform FillRect
-        {
-            get => _fillRect;
-            set
-            {
-                if (_fillRect == value) return;
-
-                _fillRect = value;
-                UpdateFillRectReferences();
-                UpdateVisuals();
-            }
-        }
-        public RectTransform HandleRect
-        {
-            get => _handleRect;
-            set
-            {
-                if (_handleRect == value) return;
-
-                _handleRect = value;
-                UpdateHandleRectReferences();
-                UpdateVisuals();
-            }
-        }
-        public Direction Direction
-        {
-            get => _direction;
-            set
-            {
-                if (_direction == value) return;
-
-                _direction = value;
-                UpdateDirection(value);
-                UpdateVisuals();
+                if (!_maxValue.Equals(value) & _minValue.CompareTo(value) < 0)
+                {
+                    _maxValue = value;
+                    UpdateMinMaxDependencies();
+                }
             }
         }
         #endregion
@@ -125,7 +130,7 @@ namespace Vurbiri.UI
             if (min.CompareTo(max) >= 0) return false;
             if (min.Equals(_minValue) & max.Equals(_maxValue)) return true;
 
-            _maxValue = min; _maxValue = max;
+            _minValue = min; _maxValue = max;
             UpdateMinMaxDependencies();
             return true;
         }
@@ -134,17 +139,18 @@ namespace Vurbiri.UI
         {
             value = ClampValue(value);
 
-            if (_value.Equals(value)) return;
-
-            _value = value;
-            Normalized(value);
-
-            UpdateVisuals();
-
-            if (sendCallback)
+            if (!_value.Equals(value))
             {
-                UISystemProfilerApi.AddMarker("VSlider.value", this);
-                _onValueChanged.Invoke(value);
+                _value = value;
+                Normalized(value);
+
+                UpdateVisuals();
+
+                if (sendCallback)
+                {
+                    UISystemProfilerApi.AddMarker("VSlider.value", this);
+                    _onValueChanged.Invoke(value);
+                }
             }
         }
 
@@ -162,46 +168,38 @@ namespace Vurbiri.UI
         private void UpdateMinMaxDependencies()
         {
             Step = _step;
+            _value = ClampValue(_value);
             Normalized(_value);
             UpdateVisuals();
         }
 
         private void UpdateFillRectReferences()
         {
-            if (_fillRect && _fillRect != _thisRectTransform)
+            _fillContainerRect = null;
+            _fillImage = null;
+            if (_fillRect != null & _fillRect != _thisRectTransform && _fillRect.parent != null)
             {
+                _fillContainerRect = (RectTransform)_fillRect.parent;
                 _fillImage = _fillRect.GetComponent<Image>();
-                if (_fillRect.parent != null)
-                    _fillContainerRect = _fillRect.parent.GetComponent<RectTransform>();
             }
             else
             {
                 _fillRect = null;
-                _fillContainerRect = null;
-                _fillImage = null;
             }
         }
 
         private void UpdateHandleRectReferences()
         {
-            if (_handleRect && _handleRect != _thisRectTransform)
-            {
-                if (_handleRect.parent != null)
-                    _handleContainerRect = _handleRect.parent.GetComponent<RectTransform>();
-            }
+            _handleContainerRect = null;
+
+            if (_handleRect != null & _handleRect != _thisRectTransform && _handleRect.parent != null)
+                _handleContainerRect = (RectTransform)_handleRect.parent;
             else
-            {
                 _handleRect = null;
-                _handleContainerRect = null;
-            }
         }
 
         protected void UpdateVisuals()
         {
-#if UNITY_EDITOR
-            Update_Editor();
-#endif
-
             _tracker.Clear();
 
             if (_fillContainerRect != null)
@@ -236,11 +234,15 @@ namespace Vurbiri.UI
                 _handleRect.anchorMax = anchorMax;
             }
         }
+        private bool CanDrag(PointerEventData eventData)
+        {
+            return eventData.button == PointerEventData.InputButton.Left && isActiveAndEnabled && IsInteractable();
+        }
 
         // Update the slider's position based on the mouse.
         private void UpdateDrag(PointerEventData eventData, Camera cam)
         {
-            RectTransform clickRect = _handleContainerRect ?? _fillContainerRect;
+            RectTransform clickRect = _handleContainerRect ? _handleContainerRect : _fillContainerRect;
             if (clickRect != null && clickRect.rect.size[_axis] > 0)
             {
                 Vector2 position = Vector2.zero;
@@ -264,12 +266,6 @@ namespace Vurbiri.UI
 
             if (_axis != oldAxis) RectTransformUtility.FlipLayoutAxes(_thisRectTransform, true, true);
             if (_reverseValue != oldReverse) RectTransformUtility.FlipLayoutOnAxis(_thisRectTransform, _axis, true, true);
-
-            if (_fillImage != null && _fillImage.type == Image.Type.Filled)
-            {
-                _fillImage.fillMethod = _axis == HORIZONTAL ? Image.FillMethod.Horizontal : Image.FillMethod.Vertical;
-                _fillImage.fillOrigin = _reverseValue ? 1 : 0;
-            }
         }
         #endregion
 
@@ -306,10 +302,6 @@ namespace Vurbiri.UI
                 UpdateVisuals();
         }
 
-        private bool CanDrag(PointerEventData eventData)
-        {
-            return eventData.button == PointerEventData.InputButton.Left && isActiveAndEnabled && IsInteractable();
-        }
         sealed public override void OnPointerDown(PointerEventData eventData)
         {
             if (!CanDrag(eventData)) return;
@@ -447,23 +439,27 @@ namespace Vurbiri.UI
 
 
 #if UNITY_EDITOR
-        private void Update_Editor()
+
+        private bool _delayedUpdateVisuals = false;
+        private void Update()
         {
-            if (!Application.isPlaying)
+            if (_delayedUpdateVisuals)
             {
+                _delayedUpdateVisuals = false;
+
                 _axis = (_direction == Direction.LeftToRight | _direction == Direction.RightToLeft) ? HORIZONTAL : VERTICAL;
                 _reverseValue = _direction == Direction.RightToLeft | _direction == Direction.TopToBottom;
+
+                Step = _step;
+                _value = ClampValue(_value);
+                Normalized(_value);
 
                 if (_thisRectTransform == null)
                     _thisRectTransform = (RectTransform)transform;
                 UpdateFillRectReferences();
                 UpdateHandleRectReferences();
 
-                if (_fillImage != null && _fillImage.type == Image.Type.Filled)
-                {
-                    _fillImage.fillMethod = _axis == HORIZONTAL ? Image.FillMethod.Horizontal : Image.FillMethod.Vertical;
-                    _fillImage.fillOrigin = _reverseValue ? 1 : 0;
-                }
+                UpdateVisuals();
             }
         }
         sealed protected override void OnValidate()
@@ -472,7 +468,7 @@ namespace Vurbiri.UI
 
             if (!Application.isPlaying)
             {
-                Update_Editor();
+                _delayedUpdateVisuals = isActiveAndEnabled;
 
                 if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this))
                     CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);

@@ -2,22 +2,21 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
     [ExecuteAlways]
-    public abstract class AVProgressBar<T> : MonoBehaviour, ICanvasElement where T : struct, IEquatable<T>, IComparable<T>
+    public abstract class AVProgressBar<T> : MonoBehaviour where T : struct, IEquatable<T>, IComparable<T>
     {
         private const int HORIZONTAL = 0, VERTICAL = 1;
 
         [SerializeField] private RectTransform _fillRect;
-        [SerializeField] private Gradient _gradient = new();
         [SerializeField] private Direction _direction = Direction.LeftToRight;
         [SerializeField] protected T _minValue;
         [SerializeField] protected T _maxValue;
         [SerializeField] protected T _value;
-        [SerializeField] private UniSigner<T> _onValueChanged = new();
+        [SerializeField] private bool _useGradient = true;
+        [SerializeField] private Gradient _gradient = new();
 
         protected float _normalizedValue;
         private int _axis;
@@ -25,7 +24,7 @@ namespace Vurbiri.UI
 
         private RectTransform _thisRectTransform;
 
-        private Graphic _fillGraphic;
+        private CanvasRenderer _fillRenderer;
         private Image _fillImage;
         private RectTransform _fillContainerRect;
 
@@ -39,48 +38,17 @@ namespace Vurbiri.UI
         #endregion
 
         #region Properties
-        public T Value
-        {
-            get => _value;
-            set => Set(value, true);
-        }
-        public T SilentValue
-        {
-            get => _value;
-            set => Set(value, false);
-        }
-        public T MinValue
-        {
-            get => _minValue;
-            set
-            {
-                if (_minValue.Equals(value) | _maxValue.CompareTo(value) <= 0) return;
-
-                _minValue = value;
-                UpdateMinMaxDependencies();
-            }
-        }
-        public T MaxValue
-        {
-            get => _maxValue;
-            set
-            {
-                if (_maxValue.Equals(value) | _minValue.CompareTo(value) >= 0) return;
-
-                _maxValue = value;
-                UpdateMinMaxDependencies();
-            }
-        }
         public RectTransform FillRect
         {
             get => _fillRect;
             set
             {
-                if (_fillRect == value) return;
-
-                _fillRect = value;
-                UpdateFillRectReferences();
-                UpdateVisuals();
+                if (_fillRect != value)
+                {
+                    _fillRect = value;
+                    UpdateFillRectReferences();
+                    UpdateVisuals();
+                }
             }
         }
         public Direction Direction
@@ -88,45 +56,95 @@ namespace Vurbiri.UI
             get => _direction;
             set
             {
-                if (_direction == value) return;
+                if (_direction != value)
+                {
+                    _direction = value;
+                    UpdateDirection(value);
+                    UpdateVisuals();
+                }
+            }
+        }
+        public T Value
+        {
+            get => _value;
+            set
+            {
+                _value = ClampValue(value);
 
-                _direction = value;
-                UpdateDirection(value);
-                UpdateVisuals();
+                if (!_value.Equals(value))
+                {
+                    _value = value;
+                    Normalized(value);
+
+                    UpdateVisuals();
+                }
+            }
+        }
+        public T MinValue
+        {
+            get => _minValue;
+            set
+            {
+                if (!_minValue.Equals(value) & _maxValue.CompareTo(value) > 0)
+                {
+                    _minValue = value;
+                    UpdateMinMaxDependencies();
+                }
+            }
+        }
+        public T MaxValue
+        {
+            get => _maxValue;
+            set
+            {
+                if (!_maxValue.Equals(value) & _minValue.CompareTo(value) < 0)
+                {
+                    _maxValue = value;
+                    UpdateMinMaxDependencies();
+                }
+            }
+        }
+        public bool UseGradient
+        {
+            get => _useGradient;
+            set
+            {
+                if (_useGradient != value)
+                {
+                    _useGradient = value;
+                    UpdateColor();
+                }
+            }
+        }
+        public Gradient Gradient
+        {
+            get => _gradient;
+            set 
+            {
+                if (_gradient != value)
+                {
+                    _gradient = value;
+                    UpdateColor();
+                }
             }
         }
         #endregion
-
-
-        public Unsubscriber AddListener(Action<T> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _value);
-        public void RemoveListener(Action<T> action) => _onValueChanged.Remove(action);
 
         public bool SetMinMax(T min, T max)
         {
             if (min.CompareTo(max) >= 0) return false;
             if (min.Equals(_minValue) & max.Equals(_maxValue)) return true;
 
-            _maxValue = min; _maxValue = max;
+            _minValue = min; _maxValue = max;
             UpdateMinMaxDependencies();
             return true;
         }
 
-        protected void Set(T value, bool sendCallback)
+
+        public void UpdateColor()
         {
-            value = ClampValue(value);
-
-            if (_value.Equals(value)) return;
-
-            _value = value;
-            Normalized(value);
-
-            UpdateVisuals();
-
-            if (sendCallback)
-            {
-                UISystemProfilerApi.AddMarker("VSlider.value", this);
-                _onValueChanged.Invoke(value);
-            }
+            if (_fillRenderer != null)
+                _fillRenderer.SetColor(_useGradient & _gradient != null ? _gradient.Evaluate(_normalizedValue) : Color.white);
         }
 
         private T ClampValue(T value)
@@ -142,25 +160,30 @@ namespace Vurbiri.UI
         #region Update...
         private void UpdateMinMaxDependencies()
         {
+            _value = ClampValue(_value);
             Normalized(_value);
             UpdateVisuals();
         }
 
         private void UpdateFillRectReferences()
         {
-            if (_fillRect && _fillRect != _thisRectTransform)
+            _fillContainerRect = null;
+            _fillRenderer = null;
+            _fillImage = null;
+
+            if (_fillRect != null & _fillRect != _thisRectTransform && _fillRect.parent != null)
             {
-                _fillGraphic = _fillRect.GetComponent<Graphic>();
-                _fillImage = _fillGraphic as Image;
-                if (_fillRect.parent != null)
-                    _fillContainerRect = _fillRect.parent.GetComponent<RectTransform>();
+                _fillContainerRect = (RectTransform)_fillRect.parent;
+
+                if (_fillRect.TryGetComponent<Graphic>(out var graphic))
+                {
+                    _fillRenderer = graphic.canvasRenderer;
+                    _fillImage = graphic as Image;
+                }
             }
             else
             {
                 _fillRect = null;
-                _fillGraphic = null;
-                _fillImage = null;
-                _fillContainerRect = null;
             }
         }
 
@@ -190,8 +213,8 @@ namespace Vurbiri.UI
                         anchorMax[_axis] = _normalizedValue;
                 }
 
-                if (_fillGraphic != null)
-                    _fillGraphic.canvasRenderer.SetColor(_gradient.Evaluate(_normalizedValue));
+                if (_useGradient && _fillRenderer != null & _gradient != null)
+                    _fillRenderer.SetColor(_gradient.Evaluate(_normalizedValue));
 
                 _fillRect.anchorMin = anchorMin;
                 _fillRect.anchorMax = anchorMax;
@@ -222,9 +245,8 @@ namespace Vurbiri.UI
         {
             UpdateDirection(_direction);
             Normalized(_value);
+            //UpdateColor();
             UpdateVisuals();
-
-            _onValueChanged.Init();
         }
 
         private void OnDisable()
@@ -234,28 +256,10 @@ namespace Vurbiri.UI
 
         private void OnRectTransformDimensionsChange()
         {
-            Debug.Log("OnRectTransformDimensionsChange");
             if (isActiveAndEnabled)
                 UpdateVisuals();
         }
         #endregion
-
-        #region ICanvasElement
-        public void Rebuild(CanvasUpdate executing)
-        {
-#if UNITY_EDITOR
-            if (executing == CanvasUpdate.Prelayout)
-                _onValueChanged.Invoke(_value);
-#endif
-        }
-        public bool IsDestroyed()
-        {
-            return this == null;
-        }
-        public void LayoutComplete() { }
-        public void GraphicUpdateComplete() { }
-        #endregion
-
 
 #if UNITY_EDITOR
         private void Update_Editor()
@@ -264,6 +268,8 @@ namespace Vurbiri.UI
             {
                 _axis = (_direction == Direction.LeftToRight | _direction == Direction.RightToLeft) ? HORIZONTAL : VERTICAL;
                 _reverseValue = _direction == Direction.RightToLeft | _direction == Direction.TopToBottom;
+
+                Normalized(_value);
 
                 if (_thisRectTransform == null)
                     _thisRectTransform = (RectTransform)transform;
@@ -275,9 +281,6 @@ namespace Vurbiri.UI
             if (!Application.isPlaying)
             {
                 Update_Editor();
-
-                if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this))
-                    CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
             }
         }
 #endif

@@ -3,13 +3,13 @@ using System;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
+using UnityEngine.UI;
 using Vurbiri.UI;
 using static UnityEditor.EditorGUI;
 using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(AVProgressBar<>), true), CanEditMultipleObjects]
     public abstract class AVProgressBarEditor<T> : Editor where T : struct, IEquatable<T>, IComparable<T>
     {
         protected delegate T FuncSlider(string label, T value, T min, T max, params GUILayoutOption[] options);
@@ -17,39 +17,54 @@ namespace VurbiriEditor.UI
 
         private static readonly string fillRectName = "Fill Rect";
         private static readonly string directionName = "Direction";
-        private static readonly string minValueName = "Min Value", maxValueName = "Max Value", valueName = "Value";
+        private static readonly string minValueName = "Min", maxValueName = "Max", valueName = "Value";
+        private static readonly string useGradientName = "Use Gradient";
 
         protected static FuncSlider DrawSlider;
         protected static FuncField DrawField;
 
         private SerializedProperty _gradientProperty;
-        private SerializedProperty _onValueChangedProperty;
 
         protected AVProgressBar<T> _bar;
         protected T _minValue, _maxValue, _value;
         private RectTransform _fillRect, _fillContainerRect;
+        private Graphic _fillGraphic;
         private Direction _direction;
-        private readonly AnimBool _isCorrectReferences = new();
+        private readonly AnimBool _isCorrectReferences = new(), _showGradient = new();
 
-        protected abstract void CheckMinMaxValues();
+        protected abstract bool CheckMinMaxValues();
 
         private void OnEnable()
         {
             _bar = (AVProgressBar<T>)target;
 
             _fillRect = _bar.FillRect;
-            if (_fillRect != null && _fillRect.parent != null)
-                _fillContainerRect = _fillRect.parent.GetComponent<RectTransform>();
+            UpdateFillRectReferences();
+
+            _minValue = _bar.MinValue; _maxValue = _bar.MaxValue;
+            if (CheckMinMaxValues())
+                _bar.SetMinMax(_minValue, _maxValue);
 
             _gradientProperty = serializedObject.FindProperty("_gradient");
-            _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
             _isCorrectReferences.valueChanged.AddListener(Repaint);
+            _showGradient.valueChanged.AddListener(Repaint);
         }
 
         private void OnDisable()
         {
             _isCorrectReferences.valueChanged.RemoveListener(Repaint);
+            _showGradient.valueChanged.RemoveListener(Repaint);
+        }
+
+        private void UpdateFillRectReferences()
+        {
+            _fillContainerRect = null; _fillGraphic = null;
+            if (_fillRect != null && _fillRect.parent != null)
+            {
+                _fillContainerRect = (RectTransform)_fillRect.parent;
+                _fillGraphic = _fillRect.GetComponent<Graphic>();
+            }
         }
 
         sealed public override void OnInspectorGUI()
@@ -62,11 +77,11 @@ namespace VurbiriEditor.UI
             if (isChange |= EndChangeCheck())
             {
                 _bar.FillRect = _fillRect;
-                if (_fillRect && _fillRect.parent)
-                    _fillContainerRect = _fillRect.parent.GetComponent<RectTransform>();
+                UpdateFillRectReferences();
             }
 
             _isCorrectReferences.target = _fillRect & _fillContainerRect;
+            _showGradient.target = _fillGraphic;
 
             if (BeginFadeGroup(_isCorrectReferences.faded))
             {
@@ -96,17 +111,32 @@ namespace VurbiriEditor.UI
                     CheckMinMaxValues();
                     _bar.SetMinMax(_minValue, _maxValue);
                 }
-
-                serializedObject.Update();
                 indentLevel--;
+                serializedObject.Update();
 
-                Space();
-                PropertyField(_gradientProperty);
+                if (BeginFadeGroup(_showGradient.faded))
+                {
+                    Space();
+                    BeginChangeCheck();
+                    bool useGradient = Toggle(useGradientName, _bar.UseGradient);
+                    if (isChange |= EndChangeCheck())
+                    {
+                        _bar.UseGradient = useGradient;
+                        serializedObject.Update();
+                    }
 
-                Space();
-                PropertyField(_onValueChangedProperty);
-
-                serializedObject.ApplyModifiedProperties();
+                    if (useGradient)
+                    {
+                        BeginChangeCheck();
+                        PropertyField(_gradientProperty);
+                        if (EndChangeCheck())
+                        {
+                            serializedObject.ApplyModifiedProperties();
+                            _bar.UpdateColor();
+                        }
+                    }
+                }
+                EndFadeGroup();
             }
             EndFadeGroup();
 
