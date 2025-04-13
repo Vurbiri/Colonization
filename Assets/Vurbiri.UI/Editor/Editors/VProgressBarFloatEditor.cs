@@ -1,36 +1,26 @@
 //Assets\Vurbiri.UI\Editor\Editors\VProgressBarFloatEditor.cs
 using UnityEditor;
+using UnityEngine;
 using Vurbiri.UI;
+using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(VProgressBarFloat))]
+    [CustomEditor(typeof(VProgressBarFloat)), CanEditMultipleObjects]
     sealed public class VProgressBarFloatEditor : AVProgressBarEditor<float>
     {
-        //private const string NAME = "Progress Bar Float", RESOURCE = "VProgressBarFloat";
-        //private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
+        private const string NAME = "Progress Bar Float", RESOURCE = "VProgressBarFloat";
+        private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
 
-        static VProgressBarFloatEditor()
-        {
-            DrawSlider = EditorGUILayout.Slider;
-            DrawField = EditorGUILayout.FloatField;
-        }
+        protected override float Value { get => _valueProperty.floatValue; set => _valueProperty.floatValue = value; }
+        protected override float MinValue { get => _minValueProperty.floatValue; set => _minValueProperty.floatValue = value; }
+        protected override float MaxValue { get => _maxValueProperty.floatValue; set => _maxValueProperty.floatValue = value; }
 
-        protected override bool CheckMinMaxValues()
-        {
-            if (_maxValue <= _minValue)
-            {
-                if (_minValue <= 0f)
-                    _maxValue = _minValue + 1f;
-                else
-                    _minValue = _maxValue - 1f;
+        protected override float Offset(float value, int rate) => value + 0.1f * rate;
 
-                return true;
-            }
-            return false;
-        }
+        protected override void DrawValue() => Slider(_valueProperty, _minValueProperty.floatValue, _maxValueProperty.floatValue);
 
-        //[MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
-        //public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromResources(RESOURCE, NAME, command.context as GameObject);
+        [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
+        public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromResources(RESOURCE, NAME, command.context as GameObject);
     }
 }

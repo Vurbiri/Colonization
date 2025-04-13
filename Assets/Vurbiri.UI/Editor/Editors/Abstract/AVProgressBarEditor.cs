@@ -12,43 +12,57 @@ namespace VurbiriEditor.UI
 {
     public abstract class AVProgressBarEditor<T> : Editor where T : struct, IEquatable<T>, IComparable<T>
     {
-        protected delegate T FuncSlider(string label, T value, T min, T max, params GUILayoutOption[] options);
-        protected delegate T FuncField(string label, T value, params GUILayoutOption[] options);
-
-        private static readonly string fillRectName = "Fill Rect";
-        private static readonly string directionName = "Direction";
-        private static readonly string minValueName = "Min", maxValueName = "Max", valueName = "Value";
-        private static readonly string useGradientName = "Use Gradient";
-
-        protected static FuncSlider DrawSlider;
-        protected static FuncField DrawField;
-
+        private SerializedProperty _fillRectProperty;
+        private SerializedProperty _directionProperty;
+        protected SerializedProperty _valueProperty;
+        protected SerializedProperty _minValueProperty;
+        protected SerializedProperty _maxValueProperty;
+        private SerializedProperty _useGradientProperty;
         private SerializedProperty _gradientProperty;
 
-        protected AVProgressBar<T> _bar;
-        protected T _minValue, _maxValue, _value;
-        private RectTransform _fillRect, _fillContainerRect;
+        private AVProgressBar<T> _bar;
+        private AVProgressBar<T>[] _bars;
+        private int _selectedCount;
+        private Transform _fillRect, _fillContainerRect;
         private Graphic _fillGraphic;
         private Direction _direction;
         private readonly AnimBool _isCorrectReferences = new(), _showGradient = new();
 
-        protected abstract bool CheckMinMaxValues();
+        protected abstract T Value { get; set; }
+        protected abstract T MinValue { get; set; }
+        protected abstract T MaxValue { get; set; }
+        protected abstract T Offset(T value, int rate);
+
+        protected abstract void DrawValue();
 
         private void OnEnable()
         {
             _bar = (AVProgressBar<T>)target;
+            _selectedCount = targets.Length;
+            _bars = new AVProgressBar<T>[_selectedCount];
+            for (int i = 0; i < _selectedCount; i++)
+                _bars[i] = (AVProgressBar<T>)targets[i];
 
-            _fillRect = _bar.FillRect;
-            UpdateFillRectReferences();
+            _direction = _bar.Direction;
 
-            _minValue = _bar.MinValue; _maxValue = _bar.MaxValue;
-            if (CheckMinMaxValues())
-                _bar.SetMinMax(_minValue, _maxValue);
-
+            _fillRectProperty = serializedObject.FindProperty("_fillRect");
+            _directionProperty = serializedObject.FindProperty("_direction");
+            _valueProperty = serializedObject.FindProperty("_value");
+            _minValueProperty = serializedObject.FindProperty("_minValue");
+            _maxValueProperty = serializedObject.FindProperty("_maxValue");
+            _useGradientProperty = serializedObject.FindProperty("_useGradient");
             _gradientProperty = serializedObject.FindProperty("_gradient");
 
             _isCorrectReferences.valueChanged.AddListener(Repaint);
             _showGradient.valueChanged.AddListener(Repaint);
+
+            UpdateFillRectReferences();
+
+            if (!_minValueProperty.hasMultipleDifferentValues & !_maxValueProperty.hasMultipleDifferentValues)
+            {
+                if (_bar.MaxValue.CompareTo(_bar.MinValue) <= 0)
+                    _bar.MaxValue = Offset(_bar.MinValue, 10);
+            }
         }
 
         private void OnDisable()
@@ -60,81 +74,80 @@ namespace VurbiriEditor.UI
         private void UpdateFillRectReferences()
         {
             _fillContainerRect = null; _fillGraphic = null;
+            _fillRect = _fillRectProperty.objectReferenceValue as Transform;
             if (_fillRect != null && _fillRect.parent != null)
             {
-                _fillContainerRect = (RectTransform)_fillRect.parent;
+                _fillContainerRect = _fillRect.parent;
                 _fillGraphic = _fillRect.GetComponent<Graphic>();
             }
         }
 
+        protected void SetMinValue()
+        {
+            if (MinValue.CompareTo(MaxValue) >= 0)
+                MinValue = Offset(MaxValue, -1);
+
+            if (Value.CompareTo(MinValue) < 0)
+                Value = MinValue;
+        }
+        protected void SetMaxValue()
+        {
+            if (MaxValue.CompareTo(MinValue) <= 0)
+                MaxValue = Offset(MinValue, 1);
+
+            if (Value.CompareTo(MaxValue) > 0)
+                Value = MaxValue;
+        }
+
         sealed public override void OnInspectorGUI()
         {
-            bool isChange = false;
+            serializedObject.Update();
 
             Space(2f);
-            BeginChangeCheck();
-            _fillRect = VEditorGUILayout.ObjectField(fillRectName, _bar.FillRect);
-            if (isChange |= EndChangeCheck())
-            {
-                _bar.FillRect = _fillRect;
-                UpdateFillRectReferences();
-            }
+            BeginDisabledGroup(_selectedCount > 1);
+                PropertyField(_fillRectProperty);
+            EndDisabledGroup();
 
+            UpdateFillRectReferences();
             _isCorrectReferences.target = _fillRect & _fillContainerRect;
             _showGradient.target = _fillGraphic;
 
             if (BeginFadeGroup(_isCorrectReferences.faded))
             {
                 Space(2f);
-
                 BeginChangeCheck();
-                _direction = VEditorGUILayout.EnumPopup(directionName, _bar.Direction);
-                if (isChange |= EndChangeCheck())
+                PropertyField(_directionProperty);
+                if (EndChangeCheck())
                 {
-                    if (!Application.isPlaying) Undo.RecordObjects(serializedObject.targetObjects, "Change Progress Bar Direction");
+                    _direction = (Direction)_directionProperty.enumValueIndex;
+                    if (!Application.isPlaying) Undo.RecordObjects(serializedObject.targetObjects, "Change Slider Direction");
 
-                    _bar.Direction = _direction;
+                    foreach (var bar in _bars)
+                        bar.Direction = _direction;
                 }
-
                 Space();
-                BeginChangeCheck();
-                _value = DrawSlider(valueName, _bar.Value, _bar.MinValue, _bar.MaxValue);
-                if (isChange |= EndChangeCheck())
-                    _bar.Value = _value;
+
+                DrawValue();
 
                 indentLevel++;
-                BeginChangeCheck();
-                _minValue = DrawField(minValueName, _bar.MinValue);
-                _maxValue = DrawField(maxValueName, _bar.MaxValue);
-                if (isChange |= EndChangeCheck())
-                {
-                    CheckMinMaxValues();
-                    _bar.SetMinMax(_minValue, _maxValue);
-                }
+                PropertyField(_minValueProperty);
+                SetMinValue();
+
+                PropertyField(_maxValueProperty);
+                SetMaxValue();
                 indentLevel--;
-                serializedObject.Update();
 
                 if (BeginFadeGroup(_showGradient.faded))
                 {
                     Space();
                     BeginChangeCheck();
-                    bool useGradient = Toggle(useGradientName, _bar.UseGradient);
-                    if (isChange |= EndChangeCheck())
-                    {
-                        _bar.UseGradient = useGradient;
-                        serializedObject.Update();
-                    }
+                    PropertyField(_useGradientProperty);
 
-                    if (useGradient)
-                    {
-                        BeginChangeCheck();
+                    if (_useGradientProperty.boolValue)
                         PropertyField(_gradientProperty);
-                        if (EndChangeCheck())
-                        {
-                            serializedObject.ApplyModifiedProperties();
-                            _bar.UpdateColor();
-                        }
-                    }
+
+                    foreach (var bar in _bars)
+                        bar.UseGradient = _useGradientProperty.boolValue;
                 }
                 EndFadeGroup();
             }
@@ -145,8 +158,7 @@ namespace VurbiriEditor.UI
                 HelpBox("Specify a RectTransform for the progress bar fill. It must have a parent RectTransform that it can move within.", MessageType.Info);
             }
 
-            if (isChange & !Application.isPlaying)
-                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(_bar.gameObject.scene);
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

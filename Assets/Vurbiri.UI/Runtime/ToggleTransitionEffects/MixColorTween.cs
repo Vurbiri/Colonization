@@ -10,7 +10,7 @@ namespace Vurbiri.UI
         private class MixColorTween : IEnumerator
         {
             private const int MARK = 0, STATE = 1;
-            private const float MIN_DUATION = 0.01351f, MIN_DELTA_DUATION = 0.05f, MIN_DELTA_DUATION_N = -MIN_DELTA_DUATION;
+            private const float MIN_DUATION = 0.027f, MIN_DELTA_DUATION = 0.081f, MIN_DELTA_DUATION_N = -MIN_DELTA_DUATION;
 
             private readonly Colors _markColors, _stateColors;
             private Graphic _target;
@@ -34,24 +34,27 @@ namespace Vurbiri.UI
 
             public void SetMarkColorInstant(Color target)
             {
-                if (_markColors.Set(target)) return;
-
-                if (SetupInstant(_markColors, _stateColors))
-                    _coroutine = _target.StartCoroutine(this);
+                if (_markColors.Set(target))
+                {
+                    if (SetupInstant(_markColors, _stateColors))
+                        _coroutine = _target.StartCoroutine(this);
+                }
             }
             public void SetMarkColor(Color target)
             {
-                if (_markColors.Set(target)) return;
-
-                if(Setup(_markColors, _stateColors, markDuration))
-                    _coroutine = _target.StartCoroutine(this);
+                if (_markColors.Set(target))
+                {
+                    if (Setup(_markColors, _stateColors, markDuration))
+                        _coroutine = _target.StartCoroutine(this);
+                }
             }
             public void SetStateColor(Color target, float duration)
             {
-                if (_stateColors.Set(target)) return;
-
-                if (Setup(_stateColors, _markColors, duration))
-                    _coroutine = _target.StartCoroutine(this);
+                if (_stateColors.Set(target))
+                {
+                    if (Setup(_stateColors, _markColors, duration))
+                        _coroutine = _target.StartCoroutine(this);
+                }
             }
 
             public bool SetTarget(Graphic target)
@@ -178,13 +181,12 @@ namespace Vurbiri.UI
 
                 public bool Set(Color color)
                 {
-                    bool equal = current == color;
                     previous = current;
                     current = color;
 #if UNITY_EDITOR
-                    return equal && Application.isPlaying;
+                    return previous != color || !Application.isPlaying;
 #else
-                    return equal;
+                    return previous != color;
 #endif
                 }
             }

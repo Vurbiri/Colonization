@@ -290,17 +290,15 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
-            base.OnValidate();
-
             if (!Application.isPlaying)
             {
-                _transitionEffect ??= TransitionEffectCreate();
-                _transitionEffect.ColorsUpdate();
-                _transitionEffect.PlayInstant(_isOn);
-
+                _transitionEffect = TransitionEffectCreate();
+                
                 if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this))
                     CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
             }
+
+            base.OnValidate();
         }
 #endif
 

@@ -13,61 +13,17 @@ namespace VurbiriEditor.UI
         private const string NAME = "Slider Float", RESOURCE = "VSliderFloat";
         private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
 
-        protected override void DrawValue()
-        {
-            Slider(_valueProperty, _minValueProperty.floatValue, _maxValueProperty.floatValue);
-        }
-        protected override void SetMinValue()
-        {
-            float minValue = _minValueProperty.floatValue;
-            float maxValue = _maxValueProperty.floatValue;
+        protected override float Value { get => _valueProperty.floatValue; set => _valueProperty.floatValue = value; }
+        protected override float MinValue { get => _minValueProperty.floatValue; set => _minValueProperty.floatValue = value; }
+        protected override float MaxValue { get => _maxValueProperty.floatValue; set => _maxValueProperty.floatValue = value; }
 
-            if (minValue >= maxValue)
-            {
-                minValue = maxValue - 0.1f;
-                _minValueProperty.floatValue = minValue;
-            }
+        protected override float Offset(float value, int rate) => value + 0.1f * rate;
 
-            if (_valueProperty.floatValue < minValue)
-                _valueProperty.floatValue = minValue;
-        }
-        protected override void SetMaxValue()
-        {
-            float minValue = _minValueProperty.floatValue;
-            float maxValue = _maxValueProperty.floatValue;
-
-            if (maxValue <= minValue)
-            {
-                maxValue = minValue + 0.1f;
-                _maxValueProperty.floatValue = maxValue;
-            }
-
-            if(_valueProperty.floatValue > maxValue)
-                _valueProperty.floatValue = maxValue;
-        }
-
-        protected override void InitMinMaxValues()
-        {
-            float minValue = _minValueProperty.floatValue;
-            float maxValue = _maxValueProperty.floatValue;
-
-            if (maxValue <= minValue)
-            {
-                if (minValue <= 0f)
-                    maxValue = minValue + 1f;
-                else
-                    minValue = maxValue - 1f;
-
-                _minValueProperty.floatValue = minValue;
-                _maxValueProperty.floatValue = maxValue;
-            }
-        }
-
+        protected override void DrawValue() => Slider(_valueProperty, _minValueProperty.floatValue, _maxValueProperty.floatValue);
         protected override void DrawStep()
         {
-            float delta = _slider.MaxValue - _slider.MinValue;
-            float min = delta * VSliderFloat.RATE_STEP_MIN, max = delta * VSliderFloat.RATE_STEP_MAX;
-            Slider(_stepProperty, min, max);
+            float delta = _maxValueProperty.floatValue - _minValueProperty.floatValue;
+            Slider(_stepProperty, delta * VSliderFloat.RATE_STEP_MIN, delta * VSliderFloat.RATE_STEP_MAX);
         }
 
         [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]

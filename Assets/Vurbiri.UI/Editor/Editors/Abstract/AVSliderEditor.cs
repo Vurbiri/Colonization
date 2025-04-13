@@ -21,16 +21,18 @@ namespace VurbiriEditor.UI
         protected SerializedProperty _stepProperty;
         private SerializedProperty _onValueChangedProperty;
 
-        protected AVSlider<T> _slider;
-        protected AVSlider<T>[] _sliders;
-        protected int _selectedCount;
+        private AVSlider<T> _slider;
+        private AVSlider<T>[] _sliders;
+        private int _selectedCount;
         private Direction _direction;
         private readonly AnimBool _isCorrectReferences = new();
 
+        protected abstract T Value { get; set; }
+        protected abstract T MinValue { get; set; }
+        protected abstract T MaxValue { get; set; }
+        protected abstract T Offset(T value, int rate);
+
         protected abstract void DrawValue();
-        protected abstract void InitMinMaxValues();
-        protected abstract void SetMinValue();
-        protected abstract void SetMaxValue();
         protected abstract void DrawStep();
 
         sealed protected override void OnEnable()
@@ -39,8 +41,10 @@ namespace VurbiriEditor.UI
 
             _selectedCount = targets.Length;
             _sliders = new AVSlider<T>[_selectedCount];
-            for (int i = 0; i < _sliders.Length; i++)
+            for (int i = 0; i < _selectedCount; i++)
                 _sliders[i] = (AVSlider<T>)targets[i];
+
+            _direction = _slider.Direction;
 
             _fillRectProperty = serializedObject.FindProperty("_fillRect");
             _handleRectProperty = serializedObject.FindProperty("_handleRect");
@@ -51,11 +55,14 @@ namespace VurbiriEditor.UI
             _stepProperty = serializedObject.FindProperty("_step");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
-            _isCorrectReferences.value = CheckFillRectReferences() || CheckHandleRectReferences();
+            _isCorrectReferences.value = CheckReferences();
             _isCorrectReferences.valueChanged.AddListener(Repaint);
 
-            if(!_minValueProperty.hasMultipleDifferentValues & !_maxValueProperty.hasMultipleDifferentValues)
-                InitMinMaxValues();
+            if (!_minValueProperty.hasMultipleDifferentValues & !_maxValueProperty.hasMultipleDifferentValues)
+            {
+                if (_slider.MaxValue.CompareTo(_slider.MinValue) <= 0)
+                    _slider.MaxValue = Offset(_slider.MinValue, 10);
+            }
 
             base.OnEnable();
         }
@@ -66,23 +73,30 @@ namespace VurbiriEditor.UI
             base.OnDisable();
         }
 
-        private bool CheckFillRectReferences()
+        private bool CheckReferences()
         {
-            foreach(var slider in _sliders)
-            {
-                if (slider.FillRect == null || slider.FillRect.parent == null)
-                    return false;
-            }
-            return true;
+            RectTransform fillRect = _fillRectProperty.objectReferenceValue as RectTransform;
+            RectTransform handleRect = _handleRectProperty.objectReferenceValue as RectTransform;
+
+            return (fillRect != null && fillRect.parent != null) || (handleRect != null && handleRect.parent != null);
         }
-        private bool CheckHandleRectReferences()
+
+        protected void SetMinValue()
         {
-            foreach (var slider in _sliders)
-            {
-                if (slider.HandleRect == null || slider.HandleRect.parent == null)
-                    return false;
-            }
-            return true;
+            if (MinValue.CompareTo(MaxValue) >= 0)
+                MinValue = Offset(MaxValue, -1);
+
+            if (Value.CompareTo(MinValue) < 0)
+                Value = MinValue;
+
+        }
+        protected void SetMaxValue()
+        {
+            if (MaxValue.CompareTo(MinValue) <= 0)
+                MaxValue = Offset(MinValue, 1);
+
+            if (Value.CompareTo(MaxValue) > 0)
+                Value = MaxValue;
         }
 
         sealed protected override void CustomMiddlePropertiesGUI()
@@ -92,16 +106,12 @@ namespace VurbiriEditor.UI
 
             BeginDisabledGroup(_selectedCount > 1);
             {
-                BeginChangeCheck();
                 PropertyField(_fillRectProperty);
                 PropertyField(_handleRectProperty);
-                if (EndChangeCheck())
-                {
-                    serializedObject.ApplyModifiedProperties();
-                    _isCorrectReferences.target = CheckFillRectReferences() || CheckHandleRectReferences();
-                }
             }
             EndDisabledGroup();
+
+            _isCorrectReferences.target = CheckReferences();
 
             if (BeginFadeGroup(_isCorrectReferences.faded))
             {
@@ -118,21 +128,16 @@ namespace VurbiriEditor.UI
                 }
                 Space();
 
-                BeginDisabledGroup(_minValueProperty.hasMultipleDifferentValues | _maxValueProperty.hasMultipleDifferentValues);
-                     DrawValue();
-                EndDisabledGroup();
+                DrawValue();
 
                 indentLevel++;
-                BeginChangeCheck();
-                PropertyField(_minValueProperty);
-                if (EndChangeCheck()) SetMinValue();
-                BeginChangeCheck();
-                PropertyField(_maxValueProperty);
-                if (EndChangeCheck()) SetMaxValue();
+                PropertyField(_minValueProperty); 
+                SetMinValue();
 
-                BeginDisabledGroup(_minValueProperty.hasMultipleDifferentValues | _maxValueProperty.hasMultipleDifferentValues);
-                    DrawStep();
-                EndDisabledGroup();
+                PropertyField(_maxValueProperty);
+                SetMaxValue();
+
+                DrawStep();
                 indentLevel--;
 
                 bool warning;

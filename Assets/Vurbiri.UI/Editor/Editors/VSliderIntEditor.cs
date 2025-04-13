@@ -15,63 +15,17 @@ namespace VurbiriEditor.UI
         private const string NAME = "Slider Int", RESOURCE = "VSliderInt";
         private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
 
-        protected override void DrawValue()
-        {
-            IntSlider(_valueProperty, _minValueProperty.intValue, _maxValueProperty.intValue);
-        }
+        protected override int Value { get => _valueProperty.intValue; set => _valueProperty.intValue = value; }
+        protected override int MinValue { get => _minValueProperty.intValue; set => _minValueProperty.intValue = value; }
+        protected override int MaxValue { get => _maxValueProperty.intValue; set => _maxValueProperty.intValue = value; }
 
-        protected override void SetMinValue()
-        {
-            int minValue = _minValueProperty.intValue;
-            int maxValue = _maxValueProperty.intValue;
+        protected override int Offset(int value, int rate) => value + rate;
 
-            if (minValue >= maxValue)
-            {
-                minValue = maxValue - 1;
-                _minValueProperty.intValue = minValue;
-            }
-
-            if (_valueProperty.intValue < minValue)
-                _valueProperty.intValue = minValue;
-        }
-
-        protected override void SetMaxValue()
-        {
-            int minValue = _minValueProperty.intValue;
-            int maxValue = _maxValueProperty.intValue;
-
-            if (maxValue <= minValue)
-            {
-                maxValue = minValue + 1;
-                _maxValueProperty.intValue = maxValue;
-            }
-
-            if (_valueProperty.intValue > maxValue)
-                _valueProperty.intValue = maxValue;
-        }
-
-        protected override void InitMinMaxValues()
-        {
-            int minValue = _minValueProperty.intValue;
-            int maxValue = _maxValueProperty.intValue;
-
-            if (maxValue <= minValue)
-            {
-                if (minValue <= 0f)
-                    maxValue = minValue + 10;
-                else
-                    minValue = maxValue - 10;
-
-                _minValueProperty.intValue = minValue;
-                _maxValueProperty.intValue = maxValue;
-            }
-        }
-
+        protected override void DrawValue() => IntSlider(_valueProperty, _minValueProperty.intValue, _maxValueProperty.intValue);
         protected override void DrawStep()
         {
-            int delta = _slider.MaxValue - _slider.MinValue;
-            int min = Math.Max(delta >> SHIFT_STEP_MIN, STEP_MIN), max = Math.Max(delta >> SHIFT_STEP_MAX, STEP_MIN);
-            IntSlider(_stepProperty, min, max);
+            int delta = _maxValueProperty.intValue - _minValueProperty.intValue;
+            IntSlider(_stepProperty, Math.Max(delta >> SHIFT_STEP_MIN, STEP_MIN), Math.Max(delta >> SHIFT_STEP_MAX, STEP_MIN));
         }
 
         [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]

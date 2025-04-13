@@ -149,14 +149,19 @@ namespace Vurbiri.UI
             {
                 if (_activeToggle == null)
                 {
-                    foreach (var t in _toggles)
+                    foreach (var toggle in _toggles)
                     {
-                        if (t.IsOn) { _activeToggle = t; break; }
+                        if (toggle.IsOn) 
+                        { 
+                            _activeToggle = toggle; 
+                            break; 
+                        }
                     }
                 }
 
-                foreach (var t in _toggles)
-                    if (t != _activeToggle) t.SetFromGroup(false);
+                foreach (var toggle in _toggles)
+                    if (toggle != _activeToggle) 
+                        toggle.SetFromGroup(false);
 
             }
         }

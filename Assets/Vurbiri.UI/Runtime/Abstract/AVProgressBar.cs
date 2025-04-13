@@ -59,7 +59,7 @@ namespace Vurbiri.UI
                 if (_direction != value)
                 {
                     _direction = value;
-                    UpdateDirection(value);
+                    UpdateDirection(value, true);
                     UpdateVisuals();
                 }
             }
@@ -140,7 +140,6 @@ namespace Vurbiri.UI
             return true;
         }
 
-
         public void UpdateColor()
         {
             if (_fillRenderer != null)
@@ -189,10 +188,6 @@ namespace Vurbiri.UI
 
         protected void UpdateVisuals()
         {
-#if UNITY_EDITOR
-            Update_Editor();
-#endif
-
             _tracker.Clear();
 
             if (_fillContainerRect != null)
@@ -221,7 +216,7 @@ namespace Vurbiri.UI
             }
         }
 
-        private void UpdateDirection(Direction direction)
+        private void UpdateDirection(Direction direction, bool flipLayout)
         {
             int oldAxis = _axis;
             bool oldReverse = _reverseValue;
@@ -229,8 +224,8 @@ namespace Vurbiri.UI
             _axis = (direction == Direction.LeftToRight | direction == Direction.RightToLeft) ? HORIZONTAL : VERTICAL;
             _reverseValue = direction == Direction.RightToLeft | direction == Direction.TopToBottom;
 
-            if (_axis != oldAxis) RectTransformUtility.FlipLayoutAxes(_thisRectTransform, true, true);
-            if (_reverseValue != oldReverse) RectTransformUtility.FlipLayoutOnAxis(_thisRectTransform, _axis, true, true);
+            if (flipLayout & _axis != oldAxis) RectTransformUtility.FlipLayoutAxes(_thisRectTransform, true, true);
+            if (flipLayout & _reverseValue != oldReverse) RectTransformUtility.FlipLayoutOnAxis(_thisRectTransform, _axis, true, true);
         }
         #endregion
 
@@ -243,9 +238,8 @@ namespace Vurbiri.UI
 
         private void Start()
         {
-            UpdateDirection(_direction);
+            UpdateDirection(_direction, false);
             Normalized(_value);
-            //UpdateColor();
             UpdateVisuals();
         }
 
@@ -262,26 +256,23 @@ namespace Vurbiri.UI
         #endregion
 
 #if UNITY_EDITOR
-        private void Update_Editor()
+        private bool _delayedUpdate = false;
+        private void Update()
         {
-            if (!Application.isPlaying)
+            if (_delayedUpdate)
             {
-                _axis = (_direction == Direction.LeftToRight | _direction == Direction.RightToLeft) ? HORIZONTAL : VERTICAL;
-                _reverseValue = _direction == Direction.RightToLeft | _direction == Direction.TopToBottom;
+                _delayedUpdate = false;
 
-                Normalized(_value);
-
-                if (_thisRectTransform == null)
-                    _thisRectTransform = (RectTransform)transform;
+                _thisRectTransform = (RectTransform)transform;
                 UpdateFillRectReferences();
+
+                UpdateDirection(_direction, false);
+                UpdateMinMaxDependencies();
             }
         }
         private void OnValidate()
         {
-            if (!Application.isPlaying)
-            {
-                Update_Editor();
-            }
+            _delayedUpdate = isActiveAndEnabled && !Application.isPlaying;
         }
 #endif
     }

@@ -2,7 +2,6 @@
 using System;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.UI;
@@ -21,7 +20,6 @@ namespace VurbiriEditor.UI
         private const float MIN_DURATION = 0f, MAX_DURATION = 1f;
 
         private static readonly string durationLabels = "Checkmark Fade Duration";
-        private static readonly string[] switchingLabels = { "On|Off checkmark", "Switch checkmarks", "Color checkmark" };
         private static readonly GUIContent[] checkmarkOnNames = { new("Checkmark"), new("Checkmark On"), new("Checkmark") };
 
         private static readonly Type graphicType = typeof(Graphic);
@@ -42,14 +40,11 @@ namespace VurbiriEditor.UI
         private int _selectedCount;
         private VToggle[] _toggles;
         private SwitchingType _switchingType;
-        private int _switchingTypeIndex;
-        private VToggleGroup _group;
 
         protected override void OnEnable()
         {
             _toggle = (VToggle)target;
             _switchingType = _toggle.Switching;
-            _switchingTypeIndex = (int)_switchingType;
 
             _selectedCount = targets.Length;
             _toggles = new VToggle[_selectedCount];
@@ -101,38 +96,22 @@ namespace VurbiriEditor.UI
             //============================================================
             Slider(_durationProperty, MIN_DURATION, MAX_DURATION, durationLabels);
             //============================================================
-            BeginChangeCheck();
-            _switchingTypeIndex = Popup(_switchingTypeProperty.displayName, _switchingTypeIndex, switchingLabels);
-            if (EndChangeCheck())
-            {
-                _switchingTypeProperty.enumValueIndex = _switchingTypeIndex;
-                _switchingType = (SwitchingType)_switchingTypeIndex;
+            PropertyField(_switchingTypeProperty);
 
-                foreach (var toggle in _toggles)
-                {
-                    toggle.Switching = _switchingType;
-                    if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(toggle.gameObject.scene);
-                }
+            _switchingType = (SwitchingType)_switchingTypeProperty.enumValueIndex;
 
-                _showSwitchType.target = !_switchingTypeProperty.hasMultipleDifferentValues && _switchingType == SwitchingType.SwitchCheckmark;
-                _showColorType.target = !_switchingTypeProperty.hasMultipleDifferentValues && _switchingType == SwitchingType.ColorCheckmark;
-            }
+            _showSwitchType.target = !_switchingTypeProperty.hasMultipleDifferentValues && _switchingType == SwitchingType.SwitchCheckmark;
+            _showColorType.target = !_switchingTypeProperty.hasMultipleDifferentValues && _switchingType == SwitchingType.ColorCheckmark;
             //============================================================
             indentLevel++;
             BeginDisabledGroup(_selectedCount > 1);
             {
-                BeginChangeCheck();
-                ObjectField(_checkmarkOnProperty, graphicType, checkmarkOnNames[_switchingTypeIndex]);
-                if (EndChangeCheck())
-                    _toggle.CheckmarkOn = _checkmarkOnProperty.objectReferenceValue as Graphic;
-           
+                ObjectField(_checkmarkOnProperty, graphicType, checkmarkOnNames[_switchingTypeProperty.enumValueIndex]);
+
                 //============================================================
                 if (BeginFadeGroup(_showSwitchType.faded))
                 {
-                    BeginChangeCheck();
                     PropertyField(_checkmarkOffProperty);
-                    if (EndChangeCheck())
-                        _toggle.CheckmarkOff = _checkmarkOffProperty.objectReferenceValue as Graphic;
                 }
                 EndFadeGroup();
             }
@@ -140,17 +119,10 @@ namespace VurbiriEditor.UI
             //============================================================
             if (BeginFadeGroup(_showColorType.faded))
             {
-                BeginChangeCheck();
                 PropertyField(_colorOnProperty);
                 PropertyField(_colorOffProperty);
-                if (EndChangeCheck())
-                {
-                    foreach (var toggle in _toggles)
-                        toggle.SetColors(_colorOnProperty.colorValue, _colorOffProperty.colorValue);
-                }
             }
             EndFadeGroup();
-
             Space();
             indentLevel--;
             //============================================================
@@ -158,20 +130,23 @@ namespace VurbiriEditor.UI
             PropertyField(_groupProperty);
             if (EndChangeCheck())
             {
-                serializedObject.ApplyModifiedProperties();
-                _group = _groupProperty.objectReferenceValue as VToggleGroup;
-                foreach (var toggle in _toggles)
+                VToggleGroup group = _groupProperty.objectReferenceValue as VToggleGroup;
+                if (!Application.isPlaying && group != null)
                 {
-                    toggle.Group = _group;
-                    if (!Application.isPlaying && _group != null)
+                    serializedObject.ApplyModifiedProperties();
+                    foreach (var toggle in _toggles)
                     {
-                        if (_group.IsActiveToggle)
-                            toggle.IsOn = _group.ActiveToggle == toggle;
-                        else if (!_group.AllowSwitchOff)
+                        toggle.Group = group;
+                    }
+                    foreach (var toggle in _toggles)
+                    {
+                         if (group.IsActiveToggle)
+                            toggle.IsOn = group.ActiveToggle == toggle;
+                        else if (!group.AllowSwitchOff)
                             toggle.IsOn = true;
                     }
+                    serializedObject.Update();
                 }
-                serializedObject.Update();
             }
             Space();
         }
