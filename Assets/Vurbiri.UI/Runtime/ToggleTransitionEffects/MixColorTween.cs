@@ -34,11 +34,9 @@ namespace Vurbiri.UI
 
             public void SetMarkColorInstant(Color target)
             {
-                if (_markColors.Set(target))
-                {
-                    if (SetupInstant(_markColors, _stateColors))
-                        _coroutine = _target.StartCoroutine(this);
-                }
+                _markColors.Set(target);
+                if (SetupInstant(_markColors, _stateColors))
+                    _coroutine = _target.StartCoroutine(this);
             }
             public void SetMarkColor(Color target)
             {
@@ -59,13 +57,29 @@ namespace Vurbiri.UI
 
             public bool SetTarget(Graphic target)
             {
-                if (_coroutine != null) { _target.StopCoroutine(_coroutine); _coroutine = null; _isTwoTask = false; }
+                if (_coroutine != null) { StopCoroutine(); _isTwoTask = false; }
 
                 _target = target;
                 if (target == null) _renderer = null;
                 else _renderer = target.canvasRenderer;
 
                 return _renderer != null;
+            }
+
+            public void Stop()
+            {
+                if (_coroutine != null)
+                {
+                    StopCoroutine();
+
+                    if (_isTwoTask)
+                    {
+                        _currentTask = _nextTask;
+                        _isTwoTask = false;
+                    }
+
+                    _renderer.SetColor(_currentTask.target);
+                }
             }
 
             public bool MoveNext()
@@ -96,7 +110,7 @@ namespace Vurbiri.UI
                     return false;
                 }
 
-                _target.StopCoroutine(_coroutine); _coroutine = null;
+                StopCoroutine();
 
                 if (!_isTwoTask & main.id == _currentTask.id)
                 {
@@ -116,13 +130,13 @@ namespace Vurbiri.UI
 
             private bool Setup(Colors main, Colors adv, float mainDuration)
             {
-                if (mainDuration < MIN_DUATION)
+                if (mainDuration < MIN_DUATION || !_target.isActiveAndEnabled)
                     return SetupInstant(main, adv);
 
                 if (_coroutine == null)
                     return _currentTask.Set(main.id, _renderer.GetColor(), _markColors.current * _stateColors.current, mainDuration);
 
-                _target.StopCoroutine(_coroutine); _coroutine = null;
+                StopCoroutine();
 
                 float advDuration;
                 if (!_isTwoTask)
@@ -163,6 +177,12 @@ namespace Vurbiri.UI
                 _isTwoTask = true;
                 _currentTask.Set(adv.id, _renderer.GetColor(), interim, advDuration);
                 _nextTask.Set(main.id, interim, _markColors.current * _stateColors.current, mainDuration - advDuration);
+            }
+
+            private void StopCoroutine()
+            {
+                _target.StopCoroutine(_coroutine);
+                _coroutine = null;
             }
 
             #region Nested: Setting, Task

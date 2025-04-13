@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace Vurbiri
 {
@@ -48,7 +49,11 @@ namespace Vurbiri
         }
         public static void IfZero(int value)
         {
-            if (value == 0) Errors.ArgumentOutOfRange($"Value {value} is 0");
+            if (value == 0) Errors.ArgumentOutOfRange($"Value is 0");
+        }
+        public static void IfZero(float value)
+        {
+            if (Mathf.Approximately(value, 0f)) Errors.ArgumentOutOfRange($"Value is 0");
         }
         public static void IfNegative(int value)
         {

@@ -55,7 +55,6 @@ namespace Vurbiri.UI
 #else
             if (!isActiveAndEnabled) return;
 #endif
-
             if (!_allowSwitchOff & _activeToggle == null)
             {
                 toggle.SetFromGroup(true);
@@ -145,22 +144,25 @@ namespace Vurbiri.UI
         {
             base.OnValidate();
 
-            if (isActiveAndEnabled & !Application.isPlaying)
+            if (isActiveAndEnabled && !Application.isPlaying && _toggles.Count > 1)
             {
                 if (_activeToggle == null)
                 {
                     foreach (var toggle in _toggles)
                     {
-                        if (toggle.IsOn) 
-                        { 
-                            _activeToggle = toggle; 
-                            break; 
+                        if (toggle.IsOn)
+                        {
+                            _activeToggle = toggle;
+                            break;
                         }
                     }
                 }
 
+                if (_activeToggle == null)
+                    return;
+
                 foreach (var toggle in _toggles)
-                    if (toggle != _activeToggle) 
+                    if (toggle != _activeToggle)
                         toggle.SetFromGroup(false);
 
             }

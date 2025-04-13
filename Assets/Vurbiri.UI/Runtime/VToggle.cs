@@ -10,7 +10,7 @@ namespace Vurbiri.UI
 {
     [AddComponentMenu(VUI_CONST.NAME_MENU + "Toggle", 30)]
     [RequireComponent(typeof(RectTransform))]
-    sealed public partial class VToggle : VSelectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
+    sealed public partial class VToggle : VSelectable, IPointerClickHandler, ISubmitHandler
     {
         [SerializeField] private bool _isOn;
         [SerializeField] private float _fadeDuration = 0.125f;
@@ -118,7 +118,7 @@ namespace Vurbiri.UI
         protected override void Awake()
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying) return;
+            if (!Application.isPlaying) { _transitionEffect = TransitionEffectCreate(); return; }
 #endif
 
             if (_checkmarkOn != null)
@@ -227,6 +227,8 @@ namespace Vurbiri.UI
             if (_group != null)
                 _group.UnregisterToggle(this);
 
+            _transitionEffect.Stop();
+
             base.OnDisable();
         }
 
@@ -275,27 +277,13 @@ namespace Vurbiri.UI
             return new EmptyEffect();
         }
 
-        #region ICanvasElement
-        public void Rebuild(CanvasUpdate executing)
-        {
-#if UNITY_EDITOR
-            if (executing == CanvasUpdate.Prelayout)
-                _onValueChanged.Invoke(_isOn);
-#endif
-        }
-        public void LayoutComplete() { }
-        public void GraphicUpdateComplete() { }
-        #endregion
-
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
-            if (!Application.isPlaying)
+            if (!Application.isPlaying && isActiveAndEnabled)
             {
                 _transitionEffect = TransitionEffectCreate();
-                
-                if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this))
-                    CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+
             }
 
             base.OnValidate();

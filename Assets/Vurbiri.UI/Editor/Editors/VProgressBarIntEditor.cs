@@ -18,7 +18,14 @@ namespace VurbiriEditor.UI
 
         protected override int Offset(int value, int rate) => value + rate;
 
-        protected override void DrawValue() => IntSlider(_valueProperty, _minValueProperty.intValue, _maxValueProperty.intValue);
+        protected override void DrawValue()
+        {
+            EditorGUI.BeginChangeCheck();
+            IntSlider(_valueProperty, _minValueProperty.intValue, _maxValueProperty.intValue);
+            if (EditorGUI.EndChangeCheck())
+                foreach (var bar in _bars)
+                    bar.Value = _valueProperty.intValue;
+        }
 
         [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
         public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromResources(RESOURCE, NAME, command.context as GameObject);

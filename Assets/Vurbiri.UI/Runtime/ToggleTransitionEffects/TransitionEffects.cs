@@ -41,6 +41,8 @@ namespace Vurbiri.UI
                 _tween.SetMarkColorInstant(isOn ? _colorMarkOn : _colorMarkOff);
             }
 
+            public void Stop() => _tween.Stop();
+
             public void StateTransitionOn(Color targetColor, float duration) 
             {
                 _tween.SetStateColor(targetColor, duration);
@@ -62,6 +64,8 @@ namespace Vurbiri.UI
             public void Play(bool isOn) { }
             public void PlayInstant(bool isOn) { }
 
+            public void Stop() { }
+
             public void StateTransitionOn(Color targetColor, float duration) { }
             public void StateTransitionOff(Color targetColor, float duration) { }
         }
@@ -77,6 +81,8 @@ namespace Vurbiri.UI
 
             public void Play(bool isOn);
             public void PlayInstant(bool isOn);
+
+            public void Stop();
 
             public void StateTransitionOn(Color targetColor, float duration);
             public void StateTransitionOff(Color targetColor, float duration);

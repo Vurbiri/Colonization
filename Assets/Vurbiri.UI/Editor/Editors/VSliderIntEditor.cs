@@ -21,7 +21,14 @@ namespace VurbiriEditor.UI
 
         protected override int Offset(int value, int rate) => value + rate;
 
-        protected override void DrawValue() => IntSlider(_valueProperty, _minValueProperty.intValue, _maxValueProperty.intValue);
+        protected override void DrawValue()
+        {
+            BeginChangeCheck();
+            IntSlider(_valueProperty, _minValueProperty.intValue, _maxValueProperty.intValue);
+            if (EndChangeCheck())
+                foreach (var slider in _sliders)
+                    slider.Value = _valueProperty.intValue;
+        }
         protected override void DrawStep()
         {
             int delta = _maxValueProperty.intValue - _minValueProperty.intValue;

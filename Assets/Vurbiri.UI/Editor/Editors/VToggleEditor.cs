@@ -88,7 +88,9 @@ namespace VurbiriEditor.UI
                 PropertyField(_isOnProperty);
                 if (EndChangeCheck())
                 {
-                    _toggle.IsOn = _isOnProperty.boolValue;
+                    foreach (var toggle in _toggles)
+                        toggle.IsOn = _isOnProperty.boolValue;
+
                     _isOnProperty.boolValue = _toggle.IsOn;
                 }
             }
@@ -131,16 +133,16 @@ namespace VurbiriEditor.UI
             if (EndChangeCheck())
             {
                 VToggleGroup group = _groupProperty.objectReferenceValue as VToggleGroup;
+                
+                foreach (var toggle in _toggles)
+                    toggle.Group = group;
+
                 if (!Application.isPlaying && group != null)
                 {
                     serializedObject.ApplyModifiedProperties();
                     foreach (var toggle in _toggles)
                     {
-                        toggle.Group = group;
-                    }
-                    foreach (var toggle in _toggles)
-                    {
-                         if (group.IsActiveToggle)
+                        if (group.IsActiveToggle)
                             toggle.IsOn = group.ActiveToggle == toggle;
                         else if (!group.AllowSwitchOff)
                             toggle.IsOn = true;

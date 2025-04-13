@@ -7,8 +7,11 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-    public abstract class AVSlider<T> : VSelectable, IDragHandler, IInitializePotentialDragHandler, ICanvasElement
-		where T : struct, IEquatable<T>, IComparable<T>
+    public abstract class AVSlider<T> : VSelectable, IDragHandler, IInitializePotentialDragHandler
+#if UNITY_EDITOR     
+        , ICanvasElement
+#endif
+        where T : struct, IEquatable<T>, IComparable<T>
 	{
         private const int HORIZONTAL = 0, VERTICAL = 1;
 
@@ -425,43 +428,33 @@ namespace Vurbiri.UI
         }
         #endregion
 
+
+
+
+#if UNITY_EDITOR
         #region ICanvasElement
         public void Rebuild(CanvasUpdate executing)
         {
-#if UNITY_EDITOR
             if (executing == CanvasUpdate.Prelayout)
-                _onValueChanged.Invoke(_value);
-#endif
+            {
+                UpdateMinMaxDependencies();
+            }
         }
         public void LayoutComplete() { }
         public void GraphicUpdateComplete() { }
         #endregion
 
-
-#if UNITY_EDITOR
-
-        private bool _delayedUpdate = false;
-        private void Update()
-        {
-            if (_delayedUpdate)
-            {
-                _delayedUpdate = false;
-
-                _thisRectTransform = (RectTransform)transform;
-                UpdateFillRectReferences();
-                UpdateHandleRectReferences();
-
-                UpdateDirection(_direction, false);
-                UpdateMinMaxDependencies();
-            }
-        }
         sealed protected override void OnValidate()
         {
             base.OnValidate();
 
             if (!Application.isPlaying)
             {
-                _delayedUpdate = isActiveAndEnabled;
+                _thisRectTransform = (RectTransform)transform;
+                UpdateFillRectReferences();
+                UpdateHandleRectReferences();
+
+                UpdateDirection(_direction, false);
 
                 if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this))
                     CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);

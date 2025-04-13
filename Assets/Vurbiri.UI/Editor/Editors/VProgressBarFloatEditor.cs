@@ -18,7 +18,14 @@ namespace VurbiriEditor.UI
 
         protected override float Offset(float value, int rate) => value + 0.1f * rate;
 
-        protected override void DrawValue() => Slider(_valueProperty, _minValueProperty.floatValue, _maxValueProperty.floatValue);
+        protected override void DrawValue()
+        {
+            EditorGUI.BeginChangeCheck();
+            Slider(_valueProperty, _minValueProperty.floatValue, _maxValueProperty.floatValue);
+            if (EditorGUI.EndChangeCheck())
+                foreach (var bar in _bars)
+                    bar.Value = _valueProperty.floatValue;
+        }
 
         [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
         public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromResources(RESOURCE, NAME, command.context as GameObject);

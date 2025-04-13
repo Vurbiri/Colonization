@@ -21,7 +21,7 @@ namespace VurbiriEditor.UI
         private SerializedProperty _gradientProperty;
 
         private AVProgressBar<T> _bar;
-        private AVProgressBar<T>[] _bars;
+        protected AVProgressBar<T>[] _bars;
         private int _selectedCount;
         private Transform _fillRect, _fillContainerRect;
         private Graphic _fillGraphic;

@@ -6,7 +6,11 @@ using UnityEngine.UI;
 namespace Vurbiri.UI
 {
     [ExecuteAlways]
-    public abstract class AVProgressBar<T> : MonoBehaviour where T : struct, IEquatable<T>, IComparable<T>
+    public abstract class AVProgressBar<T> : MonoBehaviour
+#if UNITY_EDITOR
+        , ICanvasElement
+#endif
+        where T : struct, IEquatable<T>, IComparable<T>
     {
         private const int HORIZONTAL = 0, VERTICAL = 1;
 
@@ -69,13 +73,13 @@ namespace Vurbiri.UI
             get => _value;
             set
             {
-                _value = ClampValue(value);
-
+                value = ClampValue(value);
+                
                 if (!_value.Equals(value))
                 {
                     _value = value;
                     Normalized(value);
-
+                    
                     UpdateVisuals();
                 }
             }
@@ -256,23 +260,31 @@ namespace Vurbiri.UI
         #endregion
 
 #if UNITY_EDITOR
-        private bool _delayedUpdate = false;
-        private void Update()
+        #region ICanvasElement
+        public void Rebuild(CanvasUpdate executing)
         {
-            if (_delayedUpdate)
+            if (executing == CanvasUpdate.Prelayout)
             {
-                _delayedUpdate = false;
+                UpdateMinMaxDependencies();
+            }
+        }
+        public bool IsDestroyed() => this == null;
+        public void LayoutComplete() { }
+        public void GraphicUpdateComplete() { }
+        #endregion
 
+        private void OnValidate()
+        {
+            if (!Application.isPlaying)
+            {
                 _thisRectTransform = (RectTransform)transform;
                 UpdateFillRectReferences();
 
                 UpdateDirection(_direction, false);
-                UpdateMinMaxDependencies();
+
+                if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this))
+                    CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
             }
-        }
-        private void OnValidate()
-        {
-            _delayedUpdate = isActiveAndEnabled && !Application.isPlaying;
         }
 #endif
     }

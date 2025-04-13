@@ -22,7 +22,7 @@ namespace VurbiriEditor.UI
         private SerializedProperty _onValueChangedProperty;
 
         private AVSlider<T> _slider;
-        private AVSlider<T>[] _sliders;
+        protected AVSlider<T>[] _sliders;
         private int _selectedCount;
         private Direction _direction;
         private readonly AnimBool _isCorrectReferences = new();
@@ -88,7 +88,6 @@ namespace VurbiriEditor.UI
 
             if (Value.CompareTo(MinValue) < 0)
                 Value = MinValue;
-
         }
         protected void SetMaxValue()
         {

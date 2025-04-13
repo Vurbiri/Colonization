@@ -47,6 +47,12 @@ namespace Vurbiri.UI
                 _markOff.PlayInstant(!isOn);
             }
 
+            public void Stop()
+            {
+                _markOn.Stop();
+                _markOff.Stop();
+            }
+
             public void StateTransitionOn(Color targetColor, float duration)
             {
                 _markOn.StateTransitionOn(targetColor, duration);

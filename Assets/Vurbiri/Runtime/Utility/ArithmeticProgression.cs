@@ -7,7 +7,7 @@ namespace Vurbiri
 		
 		public ArithmeticProgression(int a0, int d)
 		{
-            if (d == 0) Errors.ArgumentOutOfRange($"d == 0");
+            Throw.IfZero(d);
 
             _a0 = a0; _d = d;
 		}
@@ -25,7 +25,7 @@ namespace Vurbiri
 
         public ArithmeticProgressionF(float a0, float d)
         {
-            if (d == 0f) Errors.ArgumentOutOfRange($"d == 0");
+            Throw.IfZero(d);
 
             _a0 = a0; _d = d;
         }
