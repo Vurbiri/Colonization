@@ -22,7 +22,12 @@ namespace Vurbiri.UI
         public override float NormalizedValue
         {
             get => _normalizedValue;
-            set => Set(_minValue + (_maxValue - _minValue) * Mathf.Clamp01(value), true);
+            set
+            {
+                value = Mathf.Clamp01(value);
+                if (!Mathf.Approximately(_normalizedValue, value))
+                    Set(_minValue + (_maxValue - _minValue) * value, true);
+            }
         }
 
         private VSliderFloat() { }

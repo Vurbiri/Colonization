@@ -1,21 +1,25 @@
-//Assets\Vurbiri.UI\Runtime\VProgressBarInt.cs
+//Assets\Vurbiri.UI\Runtime\VBarInt.cs
 using UnityEngine;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Progress Bar Int", 33)]
+    [AddComponentMenu(VUI_CONST.NAME_MENU + "Bar Int", 33)]
     [RequireComponent(typeof(RectTransform))]
-    sealed public class VProgressBarInt : AVProgressBar<int>
+    sealed public class VBarInt : AVBar<int>
     {
-        private VProgressBarInt() { }
+        private VBarInt() { }
 
         public override float NormalizedValue
         {
             get => _normalizedValue;
             set
             {
-                value = _minValue + (_maxValue - _minValue) * Mathf.Clamp01(value);
-                Value = Mathf.RoundToInt(value);
+                value = Mathf.Clamp01(value);
+                if (!Mathf.Approximately(_normalizedValue, value))
+                {
+                    value = _minValue + (_maxValue - _minValue) * value;
+                    Value = Mathf.RoundToInt(value);
+                }
             }
         }
 

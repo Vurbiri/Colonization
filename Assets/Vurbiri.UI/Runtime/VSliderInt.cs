@@ -25,8 +25,12 @@ namespace Vurbiri.UI
             get => _normalizedValue;
             set
             {
-                value = _minValue + (_maxValue - _minValue) * Mathf.Clamp01(value);
-                Set(Mathf.RoundToInt(value), true);
+                value = Mathf.Clamp01(value);
+                if (!Mathf.Approximately(_normalizedValue, value))
+                {
+                    value = _minValue + (_maxValue - _minValue) * value;
+                    Set(Mathf.RoundToInt(value), true);
+                }
             }
         }
 

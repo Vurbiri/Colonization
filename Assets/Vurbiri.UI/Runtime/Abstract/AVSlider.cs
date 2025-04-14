@@ -29,17 +29,12 @@ namespace Vurbiri.UI
         private bool _reverseValue;
 
         private RectTransform _thisRectTransform;
-
         private Image _fillImage;
         private RectTransform _fillContainerRect;
-
         private RectTransform _handleContainerRect;
 
         private Vector2 _offset = Vector2.zero; // The offset from handle position to mouse down position
-
-#pragma warning disable 649
-        private DrivenRectTransformTracker _tracker;  // field is never assigned warning
-#pragma warning restore 649
+        private DrivenRectTransformTracker _tracker; 
 
         #region Abstract
         public abstract T Step { get; set; }
@@ -436,9 +431,7 @@ namespace Vurbiri.UI
         public void Rebuild(CanvasUpdate executing)
         {
             if (executing == CanvasUpdate.Prelayout)
-            {
                 UpdateMinMaxDependencies();
-            }
         }
         public void LayoutComplete() { }
         public void GraphicUpdateComplete() { }

@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Editor\Editors\VProgressBarIntEditor.cs
+//Assets\Vurbiri.UI\Editor\Editors\VBarIntEditor.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.UI;
@@ -6,10 +6,10 @@ using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(VProgressBarInt)), CanEditMultipleObjects]
-    public class VProgressBarIntEditor : AVProgressBarEditor<int>
+    [CustomEditor(typeof(VBarInt)), CanEditMultipleObjects]
+    public class VBarIntEditor : AVBarEditor<int>
 	{
-        private const string NAME = "Progress Bar Int", RESOURCE = "VProgressBarInt";
+        private const string NAME = "Bar Int", RESOURCE = "VBarInt";
         private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
 
         protected override int Value { get => _valueProperty.intValue; set => _valueProperty.intValue = value; }

@@ -1,102 +1,68 @@
-//Assets\Vurbiri.UI\Editor\Editors\Abstract\AVProgressBarEditor.cs
-using System;
+//Assets\Vurbiri.UI\Editor\Editors\VBarArithmeticEditor.cs
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
-using UnityEngine.UI;
 using Vurbiri.UI;
 using static UnityEditor.EditorGUI;
 using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    public abstract class AVProgressBarEditor<T> : Editor where T : struct, IEquatable<T>, IComparable<T>
+    [CustomEditor(typeof(VBarArithmetic)), CanEditMultipleObjects]
+    public class VBarArithmeticEditor : Editor
     {
+        private const string NAME = "Bar Arithmetic", RESOURCE = "VBarArithmetic";
+        private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
+
         private SerializedProperty _fillRectProperty;
         private SerializedProperty _directionProperty;
-        protected SerializedProperty _valueProperty;
-        protected SerializedProperty _minValueProperty;
-        protected SerializedProperty _maxValueProperty;
+        private SerializedProperty _valueProperty;
+        private SerializedProperty _differenceProperty;
+        private SerializedProperty _maxStepsProperty;
         private SerializedProperty _useGradientProperty;
         private SerializedProperty _gradientProperty;
 
-        private AVProgressBar<T> _bar;
-        protected AVProgressBar<T>[] _bars;
+        private VBarArithmetic _bar;
+        private VBarArithmetic[] _bars;
         private int _selectedCount;
         private Transform _fillRect, _fillContainerRect;
-        private Graphic _fillGraphic;
         private Direction _direction;
         private readonly AnimBool _isCorrectReferences = new(), _showGradient = new();
 
-        protected abstract T Value { get; set; }
-        protected abstract T MinValue { get; set; }
-        protected abstract T MaxValue { get; set; }
-        protected abstract T Offset(T value, int rate);
-
-        protected abstract void DrawValue();
-
         private void OnEnable()
         {
-            _bar = (AVProgressBar<T>)target;
+            _bar = (VBarArithmetic)target;
             _selectedCount = targets.Length;
-            _bars = new AVProgressBar<T>[_selectedCount];
+            _bars = new VBarArithmetic[_selectedCount];
             for (int i = 0; i < _selectedCount; i++)
-                _bars[i] = (AVProgressBar<T>)targets[i];
+                _bars[i] = (VBarArithmetic)targets[i];
 
             _direction = _bar.Direction;
 
             _fillRectProperty = serializedObject.FindProperty("_fillRect");
             _directionProperty = serializedObject.FindProperty("_direction");
             _valueProperty = serializedObject.FindProperty("_value");
-            _minValueProperty = serializedObject.FindProperty("_minValue");
-            _maxValueProperty = serializedObject.FindProperty("_maxValue");
+            _differenceProperty = serializedObject.FindProperty("_difference");
+            _maxStepsProperty = serializedObject.FindProperty("_maxSteps");
             _useGradientProperty = serializedObject.FindProperty("_useGradient");
             _gradientProperty = serializedObject.FindProperty("_gradient");
 
             _isCorrectReferences.valueChanged.AddListener(Repaint);
-            _showGradient.valueChanged.AddListener(Repaint);
 
             UpdateFillRectReferences();
-
-            if (!_minValueProperty.hasMultipleDifferentValues & !_maxValueProperty.hasMultipleDifferentValues)
-            {
-                if (_bar.MaxValue.CompareTo(_bar.MinValue) <= 0)
-                    _bar.MaxValue = Offset(_bar.MinValue, 10);
-            }
         }
 
         private void OnDisable()
         {
             _isCorrectReferences.valueChanged.RemoveListener(Repaint);
-            _showGradient.valueChanged.RemoveListener(Repaint);
         }
 
         private void UpdateFillRectReferences()
         {
-            _fillContainerRect = null; _fillGraphic = null;
+            _fillContainerRect = null;
             _fillRect = _fillRectProperty.objectReferenceValue as Transform;
             if (_fillRect != null && _fillRect.parent != null)
-            {
                 _fillContainerRect = _fillRect.parent;
-                _fillGraphic = _fillRect.GetComponent<Graphic>();
-            }
-        }
-
-        protected void SetMinValue()
-        {
-            if (MinValue.CompareTo(MaxValue) >= 0)
-                MinValue = Offset(MaxValue, -1);
-
-            if (Value.CompareTo(MinValue) < 0)
-                Value = MinValue;
-        }
-        protected void SetMaxValue()
-        {
-            if (MaxValue.CompareTo(MinValue) <= 0)
-                MaxValue = Offset(MinValue, 1);
-
-            if (Value.CompareTo(MaxValue) > 0)
-                Value = MaxValue;
         }
 
         sealed public override void OnInspectorGUI()
@@ -105,12 +71,11 @@ namespace VurbiriEditor.UI
 
             Space(2f);
             BeginDisabledGroup(_selectedCount > 1);
-                PropertyField(_fillRectProperty);
+            PropertyField(_fillRectProperty);
             EndDisabledGroup();
 
             UpdateFillRectReferences();
             _isCorrectReferences.target = _fillRect & _fillContainerRect;
-            _showGradient.target = _fillGraphic;
 
             if (BeginFadeGroup(_isCorrectReferences.faded))
             {
@@ -127,29 +92,37 @@ namespace VurbiriEditor.UI
                 }
                 Space();
 
-                DrawValue();
+                PropertyField(_differenceProperty);
+                if(_differenceProperty.intValue < 1)
+                    _differenceProperty.intValue = 1;
 
-                indentLevel++;
-                PropertyField(_minValueProperty);
-                SetMinValue();
+                PropertyField(_maxStepsProperty);
+                if (_maxStepsProperty.intValue < 1)
+                    _maxStepsProperty.intValue = 1;
 
-                PropertyField(_maxValueProperty);
-                SetMaxValue();
-                indentLevel--;
+                if(!_differenceProperty.hasMultipleDifferentValues && !_maxStepsProperty.hasMultipleDifferentValues)
+                    LabelField("Max Value", _bar.MaxValue.ToString());
 
-                if (BeginFadeGroup(_showGradient.faded))
+                BeginChangeCheck();
+                IntSlider(_valueProperty, 0, _bar.MaxValue);
+                if (EndChangeCheck())
                 {
-                    Space();
-                    BeginChangeCheck();
-                    PropertyField(_useGradientProperty);
-
-                    if (_useGradientProperty.boolValue)
-                        PropertyField(_gradientProperty);
-
                     foreach (var bar in _bars)
-                        bar.UseGradient = _useGradientProperty.boolValue;
+                        bar.Value = _valueProperty.intValue;
                 }
-                EndFadeGroup();
+
+                if (!_differenceProperty.hasMultipleDifferentValues && !_maxStepsProperty.hasMultipleDifferentValues && !_valueProperty.hasMultipleDifferentValues)
+                {
+                    BeginDisabledGroup(true);
+                        IntSlider("Step", _bar.Step, 0, _maxStepsProperty.intValue);
+                    EndDisabledGroup();
+                }
+
+                Space();
+                PropertyField(_useGradientProperty);
+
+                if (_useGradientProperty.boolValue)
+                    PropertyField(_gradientProperty);
             }
             EndFadeGroup();
 
@@ -160,5 +133,8 @@ namespace VurbiriEditor.UI
 
             serializedObject.ApplyModifiedProperties();
         }
+
+        [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
+        public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromResources(RESOURCE, NAME, command.context as GameObject);
     }
 }

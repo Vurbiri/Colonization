@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Editor\Editors\VProgressBarFloatEditor.cs
+//Assets\Vurbiri.UI\Editor\Editors\VBarFloatEditor.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.UI;
@@ -6,10 +6,10 @@ using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(VProgressBarFloat)), CanEditMultipleObjects]
-    sealed public class VProgressBarFloatEditor : AVProgressBarEditor<float>
+    [CustomEditor(typeof(VBarFloat)), CanEditMultipleObjects]
+    sealed public class VBarFloatEditor : AVBarEditor<float>
     {
-        private const string NAME = "Progress Bar Float", RESOURCE = "VProgressBarFloat";
+        private const string NAME = "Bar Float", RESOURCE = "VBarFloat";
         private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
 
         protected override float Value { get => _valueProperty.floatValue; set => _valueProperty.floatValue = value; }
