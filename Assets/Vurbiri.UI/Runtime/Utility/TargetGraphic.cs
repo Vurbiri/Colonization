@@ -16,6 +16,7 @@ namespace Vurbiri.UI
             public bool IsValid => _graphic != null && _stateFilter != EnumFlags<SelectionState>.None;
             public bool IsNotNull => _graphic != null;
             public Graphic Graphic => _graphic;
+            public Image Image => _graphic as Image;
             internal EnumFlags<SelectionState> Filter => _stateFilter;
 
             public TargetGraphic() { }
@@ -24,6 +25,8 @@ namespace Vurbiri.UI
                 _graphic = graphic;
                 _stateFilter = _graphic != null;
             }
+
+            public void SetGraphicColor(Color color) => _graphic.color = color;
 
             public void SetColor(int state, Color targetColor)
             {

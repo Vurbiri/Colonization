@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\Utilities\PopupWidget\PopupWidgetUI.cs
+//Assets\Colonization\Scripts\UI\Utility\PopupWidget\PopupWidgetUI.cs
 using System.Collections;
 using TMPro;
 using UnityEngine;

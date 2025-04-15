@@ -8,10 +8,10 @@ namespace Vurbiri.Colonization.UI
     sealed public class CrossroadMainMenu : ACrossroadMenuBuild
     {
         [Space]
-        [SerializeField] private HintingButton _buttonClose;
+        [SerializeField] private WorldHintButton _buttonClose;
         [Space]
         [SerializeField] private ButtonBuildEdifice _buttonUpgrade;
-        [SerializeField] private HintingButton _buttonRecruiting;
+        [SerializeField] private WorldHintButton _buttonRecruiting;
         [SerializeField] private ButtonBuild _buttonWall;
         [SerializeField] private ButtonBuild _buttonRoads;
 

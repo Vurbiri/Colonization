@@ -12,9 +12,9 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
         [Space]
-        [SerializeField] private HintingButton _buttonClose;
+        [SerializeField] private WorldHintButton _buttonClose;
         [Space]
-        [SerializeField] private HintingButton _buttonMovement;
+        [SerializeField] private WorldHintButton _buttonMovement;
         [SerializeField] private ButtonBlock _buttonBlock;
         [SerializeField] private ButtonSkill[] _buttonsSkill;
 

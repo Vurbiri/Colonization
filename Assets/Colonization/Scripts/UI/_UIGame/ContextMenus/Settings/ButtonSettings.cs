@@ -8,10 +8,10 @@ namespace Vurbiri.Colonization.UI
     {
         public readonly Human player;
         public readonly Color playerColor;
-        public readonly HintGlobal hint;
+        public readonly WorldHint hint;
         public readonly TextColorSettings colorSettings;
 
-        public ButtonSettings(Human player, HintGlobal hint)
+        public ButtonSettings(Human player, WorldHint hint)
         {
             this.player = player;
             this.hint = hint;

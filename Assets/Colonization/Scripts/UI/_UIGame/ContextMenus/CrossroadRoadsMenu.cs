@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private Camera _camera;
         [Space]
-        [SerializeField] private HintingButton _buttonBack;
+        [SerializeField] private WorldHintButton _buttonBack;
         [Space]
         [SerializeField] private IdSet<LinkId, ButtonBuildRoad> _roadButtons;
 

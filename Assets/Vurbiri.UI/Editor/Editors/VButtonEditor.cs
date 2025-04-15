@@ -1,17 +1,26 @@
 //Assets\Vurbiri.UI\Editor\Editors\CmButtonEditor.cs
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.UI;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(VButton)), CanEditMultipleObjects]
+    [CustomEditor(typeof(VButton), true), CanEditMultipleObjects]
     sealed public class VButtonEditor : VSelectableEditor
     {
         private const string NAME = "Button", RESOURCE = "VButton";
         private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
 
         private SerializedProperty _onClickProperty;
+
+        protected override bool IsDerivedEditor => GetType() != typeof(VButtonEditor);
+        protected override HashSet<string> GetExcludePropertyPaths()
+        {
+            var exclude = base.GetExcludePropertyPaths();
+            exclude.Add(_onClickProperty.propertyPath);
+            return exclude;
+        }
 
         protected override void OnEnable()
         {

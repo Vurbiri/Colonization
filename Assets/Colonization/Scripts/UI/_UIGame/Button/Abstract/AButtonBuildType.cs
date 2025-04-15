@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\Abstract\AButtonBuildType.cs
 using UnityEngine;
-using Vurbiri.TextLocalization;
 using Vurbiri.Reactive;
+using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         protected Unsubscriber _unsubscriber;
         protected string _caption;
         protected Human _player;
-        protected GameObject _parentGO;
+        protected GameObject _parent;
         protected Crossroad _currentCrossroad;
 
         public Id<T> Id => _id;
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.UI
             _player = settings.player;
             _cost = cost;
             _cash = _player.Resources;
-            _parentGO = parent;
+            _parent = parent;
             _unsubscriber = SceneContainer.Get<Localization>().Subscribe(SetText);
         }
 
@@ -45,8 +45,9 @@ namespace Vurbiri.Colonization.UI
 
         protected abstract void OnClick();
 
-        protected virtual void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             _unsubscriber?.Unsubscribe();
         }
     }

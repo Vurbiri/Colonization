@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.UI
     sealed public class CrossroadWarriorsMenu : ACrossroadMenuBuild
     {
         [Space]
-        [SerializeField] private HintingButton _buttonBack;
+        [SerializeField] private WorldHintButton _buttonBack;
         [Space]
         [SerializeField] private IdSet<WarriorId, ButtonRecruiting> _buttons;
 

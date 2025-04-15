@@ -26,6 +26,7 @@ namespace VurbiriEditor.UI
                 foreach (var bar in _bars)
                     bar.Value = _valueProperty.intValue;
         }
+        protected override void DelayedField(SerializedProperty property) => DelayedIntField(property);
 
         [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
         public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromResources(RESOURCE, NAME, command.context as GameObject);

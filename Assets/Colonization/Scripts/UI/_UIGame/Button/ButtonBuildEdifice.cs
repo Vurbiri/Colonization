@@ -32,19 +32,19 @@ namespace Vurbiri.Colonization.UI
         {
             if (!isEnable)
             {
-                _thisGO.SetActive(false);
+                _thisGameObject.SetActive(false);
                 return;
             }
 
             ButtonView view = _edificeView[edificeId];
             ACurrencies cost = _edificePrices[edificeId];
 
-            _button.interactable = _cash >= cost;
+            interactable = _cash >= cost;
             _buttonIcon.sprite = view.sprite;
 
             SetTextHint(_localization.GetText(Files.Gameplay, view.keyHint), _cash, cost);
 
-            _thisGO.SetActive(true);
+            _thisGameObject.SetActive(true);
         }
 
         #region Nested: ButtonView
@@ -59,8 +59,10 @@ namespace Vurbiri.Colonization.UI
 
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected override void OnValidate()
         {
+            base .OnValidate();
+
             for (int i = 0; i < EdificeId.Count; i++)
             {
                 if(string.IsNullOrEmpty(_edificeView[i].keyHint))

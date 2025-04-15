@@ -92,11 +92,11 @@ namespace VurbiriEditor.UI
                 }
                 Space();
 
-                PropertyField(_differenceProperty);
+                DelayedIntField(_differenceProperty);
                 if(_differenceProperty.intValue < 1)
                     _differenceProperty.intValue = 1;
 
-                PropertyField(_maxStepsProperty);
+                DelayedIntField(_maxStepsProperty);
                 if (_maxStepsProperty.intValue < 1)
                     _maxStepsProperty.intValue = 1;
 

@@ -27,6 +27,9 @@ namespace VurbiriEditor.UI
                 foreach (var slider in _sliders)
                     slider.Value = _valueProperty.floatValue;
         }
+
+        protected override void DelayedField(SerializedProperty property) => DelayedFloatField(property);
+
         protected override void DrawStep()
         {
             float delta = _maxValueProperty.floatValue - _minValueProperty.floatValue;

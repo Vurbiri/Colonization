@@ -9,8 +9,10 @@ namespace Vurbiri.Colonization.UI
 {
     using static CONST_UI;
 
-    public abstract class AButtonBuild : AHintingButton
+    public abstract class AButtonBuild : AWorldHintButton
     {
+        [SerializeField] private int _indexApplyColor;
+
         private string _hexColorPlus, _hexColorMinus;
 
         private const int MIN_SIZE = 64, MAX_SIZE = 256;
@@ -22,7 +24,7 @@ namespace Vurbiri.Colonization.UI
         {
             base.Init(localPosition, settings.hint, action, true);
 
-            _button.targetGraphic.color = settings.playerColor;
+            _targetGraphics[_indexApplyColor].SetGraphicColor(settings.playerColor);
             _hexColorPlus = settings.colorSettings.HexColorPositive;
             _hexColorMinus = settings.colorSettings.HexColorNegative;
         }

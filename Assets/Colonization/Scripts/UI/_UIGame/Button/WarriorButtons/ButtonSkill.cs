@@ -6,12 +6,14 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class ButtonSkill : AHintingButton
+    sealed public class ButtonSkill : AWorldHintButton
     {
         [Space]
         [SerializeField] private Image _iconImage;
+        [Space]
+        [SerializeField] private int _indexApplyColor;
 
-        private GameObject _parentGO;
+        private GameObject _parent;
         private Actor _currentActor;
         private int _idSkill;
 
@@ -19,8 +21,8 @@ namespace Vurbiri.Colonization.UI
         {
             Init(settings.hint, OnClick, false);
 
-            _button.targetGraphic.color = settings.playerColor;
-            _parentGO = parent;
+            _targetGraphics[_indexApplyColor].SetGraphicColor(settings.playerColor);
+            _parent = parent;
         }
 
         public void Setup(Actor actor, int idSkill, SkillUI skillUI, Vector3 localPosition)
@@ -33,18 +35,18 @@ namespace Vurbiri.Colonization.UI
             _idSkill = idSkill;
 
             _iconImage.sprite = skillUI.Sprite;
-            _button.interactable = isUse;
+            interactable = isUse;
 
             _text = skillUI.GetText(isUse);
 
-            _thisGO.SetActive(true);
+            _thisGameObject.SetActive(true);
         }
 
-        public void Disable() => _thisGO.SetActive(false);
+        public void Disable() => _thisGameObject.SetActive(false);
 
         private void OnClick()
         {
-            _parentGO.SetActive(false);
+            _parent.SetActive(false);
             _currentActor.UseSkill(_idSkill);
         }
     }

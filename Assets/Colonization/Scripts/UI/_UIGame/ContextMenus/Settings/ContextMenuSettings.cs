@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         public readonly TurnQueue turn;
         public readonly GameplayEventBus eventBus;
 
-        public ContextMenuSettings(TurnQueue turn, Players players, HintGlobal hint, PricesScriptable prices, Camera camera, GameplayEventBus eventBus)
+        public ContextMenuSettings(TurnQueue turn, Players players, WorldHint hint, PricesScriptable prices, Camera camera, GameplayEventBus eventBus)
             : base(players.Player, hint)
         {
             this.turn = turn;

@@ -146,7 +146,7 @@ namespace Vurbiri.Colonization.EntryPoint
             public CameraController cameraController;
             public ContextMenusWorld contextMenusWorld;
             [Space]
-            public HintGlobal hintGlobalWorld;
+            public WorldHint hintGlobalWorld;
 
             public void Init(GameplayEntryPoint parent, ScriptableObjects scriptables)
             {
@@ -168,7 +168,7 @@ namespace Vurbiri.Colonization.EntryPoint
                 if (contextMenusWorld == null)
                     contextMenusWorld = FindAnyObjectByType<ContextMenusWorld>();
                 if (hintGlobalWorld == null)
-                    hintGlobalWorld = GameObject.Find("HintGlobalWorld").GetComponent<HintGlobal>();
+                    hintGlobalWorld = GameObject.Find("WorldHint").GetComponent<WorldHint>();
             }
 #endif
         }

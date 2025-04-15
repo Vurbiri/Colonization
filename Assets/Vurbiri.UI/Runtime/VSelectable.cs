@@ -28,18 +28,6 @@ namespace Vurbiri.UI
                     _interactableIcon.CrossFadeAlpha(value ? 0f : 1f, colors.fadeDuration, true);
             }
         }
-        public bool Interactable
-        {
-            get => base.interactable;
-            set
-            {
-                if (base.interactable == value) return;
-
-                base.interactable = value;
-                if (_interactableIcon != null)
-                    _interactableIcon.CrossFadeAlpha(value ? 0f : 1f, colors.fadeDuration, true);
-            }
-        }
 
         public Graphic InteractableIcon => _interactableIcon;
         public int TargetGraphicCount => _targetGraphics.Count;
@@ -60,6 +48,7 @@ namespace Vurbiri.UI
             if (_targetGraphics.Count > 0)
                 targetGraphic = _targetGraphics[0];
         }
+
         protected override void Start()
         {
             base.Start();
@@ -77,15 +66,16 @@ namespace Vurbiri.UI
             if (!gameObject.activeInHierarchy)
                 return;
 
-            int intState = (int)state;
-
             if (transition != Transition.ColorTint)
             {
-                OnStateTransition(intState, Color.white, 0f);
+                OnStateTransition((int)state, Color.white, 0f);
                 base.DoStateTransition(state, instant);
                 return;
             }
-                        
+
+
+            int intState = (int)state;
+            float duration = instant ? 0f : colors.fadeDuration;
             Color targetColor = state switch
             {
                 SelectionState.Normal => colors.normalColor,
@@ -95,18 +85,15 @@ namespace Vurbiri.UI
                 SelectionState.Disabled => colors.disabledColor,
                 _ => Color.black
             };
-            float duration = instant ? 0f : colors.fadeDuration;
-            
-
 
 #if UNITY_EDITOR
             if (!Application.isPlaying) { DoStateTransition_Editor(intState, targetColor); return; }
 #endif
 
-            OnStateTransition(intState, targetColor, duration);
-
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 _targetGraphics[i].CrossFadeColor(intState, targetColor, duration);
+
+            OnStateTransition(intState, targetColor, duration);
         }
 
         protected virtual void OnStateTransition(int intState, Color targetColor, float duration)
@@ -126,7 +113,10 @@ namespace Vurbiri.UI
 
         protected override void Reset()
         {
-            
+            _targetGraphics = new()
+            {
+                GetComponent<Graphic>()
+            };
         }
 #endif
     }

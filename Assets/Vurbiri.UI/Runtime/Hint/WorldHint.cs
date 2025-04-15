@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\Hint\HintGlobal.cs
+//Assets\Vurbiri.UI\Runtime\Hint\WorldHint.cs
 using System;
 using System.Collections;
 using TMPro;
@@ -8,7 +8,7 @@ using UnityEngine.UI;
 namespace Vurbiri.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public class HintGlobal : MonoBehaviour
+    public class WorldHint : MonoBehaviour
     {
         [SerializeField] private RectTransform _backTransform;
         [SerializeField] private TMP_Text _hint;

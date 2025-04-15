@@ -32,6 +32,7 @@ namespace VurbiriEditor.UI
         protected abstract T Offset(T value, int rate);
 
         protected abstract void DrawValue();
+        protected abstract void DelayedField(SerializedProperty property);
 
         private void OnEnable()
         {
@@ -122,10 +123,10 @@ namespace VurbiriEditor.UI
                 DrawValue();
 
                 indentLevel++;
-                PropertyField(_minValueProperty);
+                DelayedField(_minValueProperty);
                 SetMinValue();
 
-                PropertyField(_maxValueProperty);
+                DelayedField(_maxValueProperty);
                 SetMaxValue();
                 indentLevel--;
 

@@ -5,7 +5,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class ButtonCancel : AHintingButton
+    sealed public class ButtonCancel : AWorldHintButton
     {
         private const Files FILE = Files.Main;
         private const string KEY = "Cancel";
@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
 
         private readonly Signer<bool> _signer = new();
 
-        public ISigner<bool> Init(HintGlobal hint)
+        public ISigner<bool> Init(WorldHint hint)
         {
             base.Init(hint, OnClick, false);
             _unLanguage = SceneContainer.Get<Localization>().Subscribe(SetText);
@@ -28,19 +28,19 @@ namespace Vurbiri.Colonization.UI
             _unAction?.Unsubscribe();
 
             _cancelledObj = cancelledObj;
-            _unAction = _cancelledObj.CanCancel.Subscribe(_thisGO.SetActive);
+            _unAction = _cancelledObj.CanCancel.Subscribe(_thisGameObject.SetActive);
         }
 
         public void Disable()
         {
-            _thisGO.SetActive(false);
+            _thisGameObject.SetActive(false);
             _unAction?.Unsubscribe();
             _cancelledObj = null;
         }
 
         private void OnClick()
         {
-            _thisGO.SetActive(false);
+            _thisGameObject.SetActive(false);
             _unAction?.Unsubscribe();
             _cancelledObj?.Cancel();
             _cancelledObj = null;
@@ -48,14 +48,19 @@ namespace Vurbiri.Colonization.UI
 
         private void SetText(Localization localization) => _text = localization.GetText(FILE, KEY);
 
-        private void OnEnable() => _signer.Invoke(true);
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            _signer.Invoke(true);
+        }
         protected override void OnDisable()
         {
             base.OnDisable();
             _signer.Invoke(false);
         }
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             _unLanguage?.Unsubscribe();
             _unAction?.Unsubscribe();
         }

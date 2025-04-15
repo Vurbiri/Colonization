@@ -8,26 +8,28 @@ namespace Vurbiri.Colonization.UI
             link = crossroad.GetLink(_id);
             if (link == null || link.Owner.Value >= 0)
             {
-                _thisGO.SetActive(false);
+                _thisGameObject.SetActive(false);
                 return false;
             }
 
             Setup(crossroad);
-            _button.interactable = _cash >= _cost;
+            interactable = _cash >= _cost;
 
-            _thisGO.SetActive(true);
+            _thisGameObject.SetActive(true);
             return true;
         }
 
         protected override void OnClick()
         {
-            _parentGO.SetActive(false);
+            _parent.SetActive(false);
             _player.BuyRoad(_currentCrossroad, _id);
         }
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected override void OnValidate()
         {
+            base.OnValidate();
+
             if (string.Empty == _key)
                 _key = "Road";
         }

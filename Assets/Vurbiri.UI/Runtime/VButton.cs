@@ -8,11 +8,11 @@ using Vurbiri.Reactive;
 namespace Vurbiri.UI
 {
     [AddComponentMenu(VUI_CONST.NAME_MENU + "Button", 30)]
-    sealed public class VButton : VSelectable, IPointerClickHandler, ISubmitHandler
+    public class VButton : VSelectable, IPointerClickHandler, ISubmitHandler
     {
-        [SerializeField] private UniSigner _onClick = new();
+        [SerializeField] protected UniSigner _onClick = new();
 
-        private VButton() { }
+        protected VButton() { }
 
         protected override void Start()
         {

@@ -9,21 +9,21 @@ namespace Vurbiri.UI
     {
         private bool _isShowingHint = false;
 
-        protected HintGlobal _hint;
+        protected WorldHint _hint;
         protected Vector3 _offsetHint;
         protected GameObject _thisGO;
         protected Transform _thisTransform;
         protected VButton _button;
         protected string _text;
 
-        protected virtual void Init(Vector3 localPosition, HintGlobal hint, Action action, bool active)
+        protected virtual void Init(Vector3 localPosition, WorldHint hint, Action action, bool active)
         {
             transform.localPosition = localPosition;
 
             Init(hint, action, active);
         }
 
-        protected virtual void Init(HintGlobal hint, Action action, bool active)
+        protected virtual void Init(WorldHint hint, Action action, bool active)
         {
             _hint = hint;
 

@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Utility\TextColorSettingsScriptable.cs
+//Assets\Colonization\Scripts\UI\Utility\TextColorSettingsScriptable.cs
 using UnityEngine;
 using Vurbiri.UI;
 

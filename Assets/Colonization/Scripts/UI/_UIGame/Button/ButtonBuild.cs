@@ -28,21 +28,22 @@ namespace Vurbiri.Colonization.UI
         {
             if(!isEnable)
             {
-                _thisGO.SetActive(false);
+                _thisGameObject.SetActive(false);
                 return;
             }
             
-            _button.interactable = _cash >= _cost;
+            interactable = _cash >= _cost;
 
             SetTextHint(_caption, _cash, _cost);
 
-            _thisGO.SetActive(true);
+            _thisGameObject.SetActive(true);
         }
 
         private void SetText(Localization localization) => _caption = localization.GetText(Files.Gameplay, _key);
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             _unsubscriber?.Unsubscribe();
         }
     }

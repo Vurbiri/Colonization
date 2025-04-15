@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Utility\LookAtCamera.cs
+//Assets\Colonization\Scripts\UI\Utility\LookAtCamera.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

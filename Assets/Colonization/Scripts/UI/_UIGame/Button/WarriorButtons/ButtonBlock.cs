@@ -6,22 +6,25 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class ButtonBlock : AHintingButton
+    public class ButtonBlock : AWorldHintButton
     {
-        public void Init(Vector3 localPosition, HintGlobal hint, Color color, Action action)
+        [SerializeField] private int _indexApplyColor;
+
+        public void Init(Vector3 localPosition, WorldHint hint, Color color, Action action)
         {
             base.Init(localPosition, hint, action, true);
-            _button.targetGraphic.color = color;
+
+            _targetGraphics[_indexApplyColor].SetGraphicColor(color);
         }
 
         public void Setup(Actor actor, BlockUI blockUI)
         {
             bool isUse = actor.ActionPoint >= blockUI.Cost;
 
-            _button.interactable = isUse;
+            interactable = isUse;
             _text = blockUI.GetText(isUse);
 
-            _thisGO.SetActive(true);
+            _thisGameObject.SetActive(true);
         }
     }
 }

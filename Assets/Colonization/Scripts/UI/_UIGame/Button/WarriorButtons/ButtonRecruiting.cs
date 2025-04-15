@@ -8,18 +8,20 @@ namespace Vurbiri.Colonization.UI
         public override void Setup(Crossroad crossroad)
         {
             base.Setup(crossroad);
-            _button.interactable = _player.CanRecruiting(_id) && _cash >= _cost;
+            interactable = _player.CanRecruiting(_id) && _cash >= _cost;
         }
 
         protected override void OnClick()
         {
-            _parentGO.SetActive(false);
+            _parent.SetActive(false);
             _player.Recruiting(_id, _currentCrossroad);
         }
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected override void OnValidate()
         {
+            base.OnValidate();
+
             if (_key == string.Empty)
                 _key = WarriorId.GetName(_id);
         }

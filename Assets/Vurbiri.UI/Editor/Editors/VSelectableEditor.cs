@@ -49,6 +49,10 @@ namespace VurbiriEditor.UI
         protected VSelectable _vSelectable;
         protected Selectable.Transition _transition;
 
+        protected readonly List<SerializedProperty> _childrenProperties = new();
+
+        protected virtual bool IsDerivedEditor => GetType() != typeof(VSelectableEditor);
+
         protected virtual void OnEnable()
         {
             _vSelectable = target as VSelectable;
@@ -80,6 +84,8 @@ namespace VurbiriEditor.UI
             s_ShowNavigation = EditorPrefs.GetBool(s_ShowNavigationKey);
 
             _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
+
+            FindChildrenProperties();
         }
 
         protected virtual void OnDisable()
@@ -91,6 +97,25 @@ namespace VurbiriEditor.UI
             RegisterStaticOnSceneGUI();
         }
 
+        protected virtual HashSet<string> GetExcludePropertyPaths()
+        {
+            return new(12)
+            {
+                _interactableIconProperty.propertyPath,
+                _alphaColliderProperty.propertyPath,
+                _thresholdProperty.propertyPath,
+                _targetGraphicsProperty.propertyPath,
+                m_Script.propertyPath,
+                m_NavigationProperty.propertyPath,
+                m_TransitionProperty.propertyPath,
+                m_ColorBlockProperty.propertyPath,
+                m_SpriteStateProperty.propertyPath,
+                m_AnimTriggerProperty.propertyPath,
+                m_InteractableProperty.propertyPath,
+                m_TargetGraphicProperty.propertyPath,
+            };
+        }
+
         protected void RegisterStaticOnSceneGUI()
         {
             SceneView.duringSceneGui -= StaticOnSceneGUI;
@@ -98,9 +123,10 @@ namespace VurbiriEditor.UI
                 SceneView.duringSceneGui += StaticOnSceneGUI;
         }
 
-        public override void OnInspectorGUI()
+        sealed public override void OnInspectorGUI()
         {
             serializedObject.Update();
+            DrawChildrenProperties();
             CustomStartPropertiesGUI();
             InteractablePropertiesGUI();
             AlfaColliderPropertiesGUI();
@@ -110,22 +136,46 @@ namespace VurbiriEditor.UI
             CustomEndPropertiesGUI();
             serializedObject.ApplyModifiedProperties();
         }
+
+        private void FindChildrenProperties()
+        {
+            if (IsDerivedEditor) return;
+
+            HashSet<string> excludeProperties = GetExcludePropertyPaths();
+            SerializedProperty iterator = serializedObject.GetIterator();
+            bool enterChildren = true;
+            while (iterator.NextVisible(enterChildren))
+            {
+                enterChildren = false;
+                if (!excludeProperties.Contains(iterator.name))
+                    _childrenProperties.Add(iterator.Copy());
+            }
+        }
+
+        private void DrawChildrenProperties()
+        {
+            if (_childrenProperties.Count == 0) return;
+
+            Space(1f);
+            BeginVertical(GUI.skin.box);
+            foreach (var child in _childrenProperties)
+                PropertyField(child, true);
+            EndVertical();
+        }
+
         protected virtual void CustomStartPropertiesGUI()
         {
-
         }
         protected virtual void CustomMiddlePropertiesGUI()
         {
-
         }
         protected virtual void CustomEndPropertiesGUI()
         {
-
         }
 
         private void InteractablePropertiesGUI()
         {
-            Space();
+            Space(1f);
             EditorGUI.BeginChangeCheck();
             PropertyField(m_InteractableProperty);
             PropertyField(_interactableIconProperty);
@@ -404,6 +454,8 @@ namespace VurbiriEditor.UI
             dir = rect.rect.center + Vector2.Scale(rect.rect.size, dir * 0.5f);
             return dir;
         }
+
+        
 
     }
 }
