@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
 
         protected override void OnClick()
         {
-            _parent.SetActive(false);
+            _parent.Close();
             _player.BuyRoad(_currentCrossroad, _id);
         }
 

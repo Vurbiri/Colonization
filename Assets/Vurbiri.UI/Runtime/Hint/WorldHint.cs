@@ -47,30 +47,33 @@ namespace Vurbiri.UI
 
             _coroutineShow = StartCoroutine(Show_Cn(text, position));
             return true;
-        }
 
-        private IEnumerator Show_Cn(string text, Vector3 position)
-        {
-            yield return _delay.Restart();
-
-            if (_coroutineHide != null)
+            #region Local: Show_Cn()
+            //=================================
+            IEnumerator Show_Cn(string text, Vector3 position)
             {
-                StopCoroutine(_coroutineHide);
-                _coroutineHide = null;
+                yield return _delay.Restart();
+
+                if (_coroutineHide != null)
+                {
+                    StopCoroutine(_coroutineHide);
+                    _coroutineHide = null;
+                }
+
+                position.y += SetHint(text);
+                _backTransform.localPosition = position;
+
+                float alpha = _thisCanvasGroup.alpha;
+                while (alpha < 1f)
+                {
+                    _thisCanvasGroup.alpha = alpha += Time.unscaledDeltaTime * _fadeSpeed;
+                    yield return null;
+                }
+
+                _thisCanvasGroup.alpha = 1f;
+                _coroutineShow = null;
             }
-
-            position.y += SetHint(text);
-            _backTransform.localPosition = position;
-
-            float alpha = _thisCanvasGroup.alpha;
-            while (alpha < 1f)
-            {
-                _thisCanvasGroup.alpha = alpha += Time.unscaledDeltaTime * _fadeSpeed;
-                yield return null;
-            }
-
-            _thisCanvasGroup.alpha = 1f;
-            _coroutineShow = null;
+            #endregion
         }
 
         public bool Hide()

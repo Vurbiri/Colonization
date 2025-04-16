@@ -32,11 +32,11 @@ namespace Vurbiri.Colonization.UI
             _cameraTransform = _camera.transform;
 
             foreach (var button in _roadButtons)
-                button.Init(settings, roadCost, _thisGO);
+                button.Init(settings, roadCost, this);
 
-            _thisGO.SetActive(false);
+            CloseInstant();
 
-            return _signer;
+            return _eventActive;
         }
 
         public override void Open(Crossroad crossroad)
@@ -53,12 +53,12 @@ namespace Vurbiri.Colonization.UI
 
             _lastCameraPosition = _cameraTransform.position;
 
-            _thisGO.SetActive(true);
+            Open();
         }
 
         protected override void OnClose()
         {
-            _thisGO.SetActive(false);
+            Close();
             _mainMen.Open();
         }
 

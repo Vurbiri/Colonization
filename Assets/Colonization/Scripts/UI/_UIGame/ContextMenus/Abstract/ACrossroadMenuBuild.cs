@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Abstact\ACrossroadMenuBuild.cs
+//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Abstract\ACrossroadMenuBuild.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.UI

@@ -13,11 +13,11 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private int _indexApplyColor;
 
-        private GameObject _parent;
+        private AWorldMenu _parent;
         private Actor _currentActor;
         private int _idSkill;
 
-        public void Init(ButtonSettings settings, GameObject parent)
+        public void Init(ButtonSettings settings, AWorldMenu parent)
         {
             Init(settings.hint, OnClick, false);
 
@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnClick()
         {
-            _parent.SetActive(false);
+            _parent.Close();
             _currentActor.UseSkill(_idSkill);
         }
     }

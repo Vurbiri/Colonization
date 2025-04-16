@@ -35,9 +35,9 @@ namespace Vurbiri.Colonization.UI
             distance60angle.x *= -1f;
             _buttonUpgrade.Init(distance60angle, settings, settings.prices.Edifices, OnUpgrade);
 
-            _thisGO.SetActive(false);
+            CloseInstant();
 
-            return _signer;
+            return _eventActive;
         }
 
         public override void Open(Crossroad crossroad)
@@ -49,30 +49,30 @@ namespace Vurbiri.Colonization.UI
             _buttonWall.Setup(_player.CanWallBuild(crossroad));
             _buttonRoads.Setup(_player.CanRoadBuild(crossroad));
 
-            _thisGO.SetActive(true);
+            Open();
         }
 
         private void OnUpgrade()
         {
-            _thisGO.SetActive(false);
+            Close();
             _player.BuyEdificeUpgrade(_currentCrossroad);
         }
 
         private void OnWall()
         {
-            _thisGO.SetActive(false);
+            Close();
             _player.BuyWall(_currentCrossroad);
         }
 
         private void OnRoads()
         {
-            _thisGO.SetActive(false);
+            Close();
             _roadsMenu.Open(_currentCrossroad);
         }
 
         private void OnHiring()
         {
-            _thisGO.SetActive(false);
+            Close();
             _warriorsMenu.Open(_currentCrossroad);
         }
     }

@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
 
         protected override void OnClick()
         {
-            _parent.SetActive(false);
+            _parent.Close();
             _player.Recruiting(_id, _currentCrossroad);
         }
 

@@ -33,11 +33,11 @@ namespace Vurbiri.Colonization.UI
             _buttonBlock.Init(distance, settings.hint, settings.playerColor, OnBlock);
 
             for (int i = 0; i < _countButtonsSkill; i++)
-                _buttonsSkill[i].Init(settings, _thisGO);
+                _buttonsSkill[i].Init(settings, this);
 
-            _thisGO.SetActive(false);
+            CloseInstant();
             
-            return _signer;
+            return _eventActive;
         }
 
         public void Open(Actor actor)
@@ -57,18 +57,18 @@ namespace Vurbiri.Colonization.UI
             for (; index < _countButtonsSkill; index++)
                 _buttonsSkill[index].Disable();
 
-            _thisGO.SetActive(true);
+            Open();
         }
 
         private void OnMovement()
         {
-            _thisGO.SetActive(false);
+            Close();
             _currentWarrior.Move();
         }
 
         public void OnBlock()
         {
-            _thisGO.SetActive(false);
+            Close();
             _currentWarrior.Block();
         }
 

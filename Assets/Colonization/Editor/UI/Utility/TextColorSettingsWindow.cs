@@ -1,4 +1,4 @@
-//Assets\Colonization\Editor\UI\Utilities\SettingsTextColorWindow.cs
+//Assets\Colonization\Editor\UI\Utility\SettingsTextColorWindow.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.UI;

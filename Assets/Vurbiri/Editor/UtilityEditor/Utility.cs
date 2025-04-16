@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Editor\Utility\Utility.cs
+//Assets\Vurbiri\Editor\UtilityEditor\Utility.cs
 using System;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -8,15 +8,17 @@ namespace VurbiriEditor
 {
     public static class Utility
 	{
-        public static void CreateFromResources(string path, string name, GameObject parent) 
+        public static void CreateObjectFromResources(string path, string name, GameObject parent) 
             => Place(GameObject.Instantiate(Resources.Load(path)) as GameObject, parent, name);
 
-        public static void CreateFromPrefab(MonoBehaviour prefab, string name, GameObject parent)
+        public static void CreateObjectFromPrefab(MonoBehaviour prefab, string name, GameObject parent)
             => Place(GameObject.Instantiate(prefab).gameObject, parent, name);
 
         public static GameObject CreateObject(string name, GameObject parent, params Type[] types)
         {
             GameObject newObject = ObjectFactory.CreateGameObject(name, types);
+            newObject.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+
             Place(newObject, parent, name);
 
             return newObject;
@@ -25,18 +27,16 @@ namespace VurbiriEditor
         private static void Place(GameObject gameObject, GameObject parent, string name)
         {
             gameObject.name = name;
-            //gameObject.transform.parent = parent.transform;
 
             GameObjectUtility.SetParentAndAlign(gameObject, parent);
 
-            // Find location
             //SceneView lastView = SceneView.lastActiveSceneView;
             //gameObject.transform.position = lastView ? lastView.pivot : Vector3.zero;
 
             StageUtility.PlaceGameObjectInCurrentStage(gameObject);
             GameObjectUtility.EnsureUniqueNameForSibling(gameObject);
 
-            Undo.RegisterCreatedObjectUndo(gameObject, $"Create Object: {gameObject.name}");
+            Undo.RegisterCreatedObjectUndo(gameObject, $"Create: {gameObject.name}");
             Selection.activeGameObject = gameObject;
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());

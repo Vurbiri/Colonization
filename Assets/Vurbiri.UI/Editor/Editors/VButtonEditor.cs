@@ -36,7 +36,7 @@ namespace VurbiriEditor.UI
         }
 
         [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
-        public static void CreateFromMenu(MenuCommand command) => Utility.CreateFromResources(RESOURCE, NAME, command.context as GameObject);
+        public static void CreateFromMenu(MenuCommand command) => Utility.CreateObjectFromResources(RESOURCE, NAME, command.context as GameObject);
 
     }
 }

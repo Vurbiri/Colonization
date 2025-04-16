@@ -74,10 +74,10 @@ namespace Vurbiri.Colonization.UI
 
         public void CloseAll()
         {
-            _crossroadMenu.Close();
-            _roadsMenu.Close();
-            _recruitingMenu.Close();
-            _warriorsMenu.Close();
+            _crossroadMenu.CloseInstant();
+            _roadsMenu.CloseInstant();
+            _recruitingMenu.CloseInstant();
+            _warriorsMenu.CloseInstant();
             _buttonCancel.Disable();
         }
 

@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization.UI
     {
         [Space]
         [SerializeField] protected Files _lngFile = Files.Gameplay;
-        [Space]
         [SerializeField] protected string _key;
         [Space]
         [SerializeField] protected Id<T> _id;
@@ -19,12 +18,12 @@ namespace Vurbiri.Colonization.UI
         protected Unsubscriber _unsubscriber;
         protected string _caption;
         protected Human _player;
-        protected GameObject _parent;
+        protected AWorldMenu _parent;
         protected Crossroad _currentCrossroad;
 
         public Id<T> Id => _id;
 
-        public virtual void Init(ButtonSettings settings, ACurrencies cost, GameObject parent, Vector3 localPosition = default)
+        public virtual void Init(ButtonSettings settings, ACurrencies cost, AWorldMenu parent, Vector3 localPosition = default)
         {
             base.Init(localPosition, settings, OnClick);
             

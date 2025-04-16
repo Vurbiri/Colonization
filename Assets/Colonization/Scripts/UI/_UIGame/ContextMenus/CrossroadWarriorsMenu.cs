@@ -26,11 +26,11 @@ namespace Vurbiri.Colonization.UI
             float angle = 360 / WarriorId.Count;
             Vector3 distance = new(0f, _distanceOfButtons, 0f);
             for (int i = 0; i < WarriorId.Count; i++)
-                _buttons[i].Init(settings, warriorPrices[i], _thisGO, Quaternion.Euler(0f, 0f, -angle * i) * distance);
+                _buttons[i].Init(settings, warriorPrices[i], this, Quaternion.Euler(0f, 0f, -angle * i) * distance);
 
-            _thisGO.SetActive(false);
+            CloseInstant();
 
-            return _signer;
+            return _eventActive;
         }
 
         public override void Open(Crossroad crossroad)
@@ -38,12 +38,12 @@ namespace Vurbiri.Colonization.UI
             foreach (var button in _buttons)
                 button.Setup(crossroad);
 
-             _thisGO.SetActive(true);
+            Open();
         }
 
         protected override void OnClose()
         {
-            _thisGO.SetActive(false);
+            Close();
             _mainMen.Open();
         }
 
