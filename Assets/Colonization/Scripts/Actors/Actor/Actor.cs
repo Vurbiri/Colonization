@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization.Actors
         public Vector3 Position => _thisTransform.position;
         public ActorSkin Skin => _skin;
         public IReactiveSet<ReactiveEffect> Effects => _effects;
-        public IReadOnlyAbilities<ActorAbilityId> Abilities => _abilities;
+        public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
         public IReactiveValue<bool> CanCancel => _canCancel;
         public bool IsMainProfit => _profitMain.Next();
         public bool IsAdvProfit => _profitAdv.Next();

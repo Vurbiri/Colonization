@@ -103,12 +103,12 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Profit
-        public CurrenciesLite ProfitFromPort(int idHex, int add)
+        public CurrenciesLite ProfitFromPort(int idHex, int shift)
         {
             CurrenciesLite profit = new();
             for (int i = 0; i < HEX_COUNT; i++)
                 if (_hexagons[i].TryGetProfit(idHex, true, out int currencyId))
-                    profit.Add(currencyId, _states.profit + add);
+                    profit.Add(currencyId, _states.profit << shift);
 
             return profit;
         }

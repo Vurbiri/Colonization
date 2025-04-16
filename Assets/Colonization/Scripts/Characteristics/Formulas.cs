@@ -3,9 +3,9 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public static class Formulas
 	{
-		public static int Damage(float damage, float defense)
+		public static int Damage(double damage, double defense)
 		{
-            return UnityEngine.Mathf.RoundToInt(damage * (1f - defense / (1f + defense + damage)));
+            return (int)System.Math.Round(damage * (1.0 - defense / (defense + damage)));
 		}
 	}
 }

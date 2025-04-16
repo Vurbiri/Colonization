@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.Characteristics
         public AbilityModifierPercent() { }
         public AbilityModifierPercent(int value) => _value = value;
 
-        public int Apply(int value) => (int)Math.Round(value * _value / 100.0);
+        public int Apply(int value) => (int)Math.Round(Math.Max(value * _value, 0) / 100.0);
 
         public void Add(int value) => _value += value;
     }

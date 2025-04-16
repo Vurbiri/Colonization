@@ -17,7 +17,10 @@ namespace Vurbiri.Colonization.Characteristics
 
         public override int Apply(Actor self, Actor target)
         {
-            _value = -Formulas.Damage(_damage.Apply(self.Abilities[Attack].Value), _pierce.Apply(target.Abilities[Defense].Value) );
+            _pierce.Add(-self.Abilities[Pierce].Value);
+            _value = -Formulas.Damage(_damage.Apply(self.Abilities[Attack].Value), _pierce.Apply(target.Abilities[Defense].Value));
+            _pierce.Add(self.Abilities[Pierce].Value);
+
             return target.ApplyEffect(this);
         }
     }
