@@ -7,12 +7,14 @@ namespace Vurbiri.Colonization.UI
 
     public class CurrenciesPanel : MonoBehaviour
     {
+        [SerializeField] private CurrenciesIconsScriptable _currenciesIcons;
+        [Space]
         [SerializeField] private Currency _currencyUIPrefab;
         [SerializeField] private Amount _amountUIPrefab;
         [SerializeField] private Blood _bloodUIPrefab;
         [Space]
-        [SerializeField] private Vector2 _padding = new(17f, 17f);
-        [SerializeField] private float _space = 15f;
+        [SerializeField] private Vector2 _padding = new(14f, 14f);
+        [SerializeField] private float _space = 4f;
         [SerializeField] private float _transparency = 0.84f;
         [Space]
         [SerializeField] private Direction2 _directionPopup;
@@ -30,6 +32,7 @@ namespace Vurbiri.Colonization.UI
 
             var currencies = SceneContainer.Get<Players>().Player.Resources;
             var settings = SceneContainer.Get<Vurbiri.UI.TextColorSettings>();
+            var icons = _currenciesIcons.Icons;
 
             Vector2 cSize = _currencyUIPrefab.Size, aSize = _amountUIPrefab.Size, bSize = _bloodUIPrefab.Size;
             float offset = cSize.x * 5f + aSize.x + bSize.x + _space * 7f;
@@ -49,7 +52,7 @@ namespace Vurbiri.Colonization.UI
             offset = cSize.x + _space;
             for (int i = 0; i < CurrencyId.CountMain; i++)
             {
-                Instantiate(_currencyUIPrefab, thisRectTransform).Init(i, pos, currencies, settings, _directionPopup);
+                Instantiate(_currencyUIPrefab, thisRectTransform).Init(i, icons, pos, currencies, settings, _directionPopup);
                 pos.x += offset;
             }
 
@@ -60,7 +63,23 @@ namespace Vurbiri.Colonization.UI
             Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, currencies.BloodCurrent, currencies.BloodMax, settings, _directionPopup);
 
             SceneContainer.Get<GameplayEventBus>().EventSceneEndCreation -= Create;
+
+            _currenciesIcons.Dispose();
             Destroy(this);
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_currenciesIcons == null)
+                _currenciesIcons = EUtility.FindAnyScriptable<CurrenciesIconsScriptable>();
+            if(_currencyUIPrefab == null)
+                _currencyUIPrefab = EUtility.FindAnyPrefab<Currency>();
+            if (_amountUIPrefab == null)
+                _amountUIPrefab = EUtility.FindAnyPrefab<Amount>();
+            if (_bloodUIPrefab == null)
+                _bloodUIPrefab = EUtility.FindAnyPrefab<Blood>();
+        }
+#endif
     }
 }

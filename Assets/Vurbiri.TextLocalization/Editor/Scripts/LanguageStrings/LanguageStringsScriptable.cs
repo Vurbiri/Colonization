@@ -137,7 +137,7 @@ namespace Vurbiri.TextLocalization.Editor
                 if (!fileInfo.Exists)
                     fileInfo.Directory.Create();
                 
-                File.WriteAllText(path, JsonConvert.SerializeObject(strings[i]));
+                File.WriteAllText(path, JsonConvert.SerializeObject(strings[i], Formatting.Indented));
             }
 
             AssetDatabase.Refresh();

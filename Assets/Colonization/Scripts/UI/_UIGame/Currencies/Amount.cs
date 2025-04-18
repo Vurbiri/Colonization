@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
 {
     public class Amount : MonoBehaviour
     {
-        private const string AMOUNT = "{0}{1}</color>({2})";
+        private const string AMOUNT = "{0}{1}</color><space=0.1em>({2})";
 
         [SerializeField] private TMP_Text _textTMP;
         [Space]

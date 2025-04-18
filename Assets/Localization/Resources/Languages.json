@@ -1,1 +1,16 @@
-[{"Id":0,"Code":"ru","Name":"Русский","Folder":"Russian","SpriteName":"Banner"},{"Id":1,"Code":"en","Name":"English","Folder":"English","SpriteName":"Banner"}]
+[
+  {
+    "Id": 0,
+    "Code": "ru",
+    "Name": "Русский",
+    "Folder": "Russian",
+    "SpriteName": "Banner"
+  },
+  {
+    "Id": 1,
+    "Code": "en",
+    "Name": "English",
+    "Folder": "English",
+    "SpriteName": "Banner"
+  }
+]

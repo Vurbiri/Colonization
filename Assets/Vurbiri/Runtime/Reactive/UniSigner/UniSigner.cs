@@ -27,7 +27,7 @@ namespace Vurbiri.Reactive
 
             _listeners = null;
         }
-	}
+    }
     //=======================================================================================
     [Serializable]
     public class UniSigner<T> : Signer<T>

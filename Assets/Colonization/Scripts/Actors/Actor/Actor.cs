@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization.Actors
         {
             int delta = _abilities.AddPerk(effect);
 
-            if(delta != 0)
+            if(delta != 0 & _deathCoroutine == null)
                 _signer.Invoke(this, TypeEvent.Change);
 
             return delta;

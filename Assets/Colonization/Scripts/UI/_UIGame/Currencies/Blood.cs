@@ -1,24 +1,22 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Currencies\Blood.cs
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    using static CONST_UI;
-
     public class Blood : MonoBehaviour
     {
-        private const string COUNT = "{0}({1})";
+        private const string COUNT = "{0}<space=0.1em>({1})";
 
-        [SerializeField] private TMP_Text _textTMP;
+        [SerializeField] private TMP_Text _countTMP;
         [SerializeField] private PopupWidgetUI _popup;
         [Space]
         [SerializeField] private RectTransform _thisRectTransform;
 
         private ReactiveCombination<int, int> _reactiveBlood;
-        private string _blood;
 
         public Vector2 Size => _thisRectTransform.sizeDelta;
 
@@ -27,8 +25,7 @@ namespace Vurbiri.Colonization.UI
             _popup.Init(settings, offsetPopup);
             _thisRectTransform.localPosition = position;
 
-            _blood = string.Format(TAG_SPRITE, CurrencyId.Blood).Concat(COUNT);
-            _textTMP.color = settings.ColorTextBase;
+            _countTMP.color = settings.ColorTextBase;
 
             _reactiveBlood = new(current, max);
             _reactiveBlood.Subscribe(SetBlood);
@@ -36,7 +33,7 @@ namespace Vurbiri.Colonization.UI
 
         private void SetBlood(int current, int max)
         {
-            _textTMP.text = string.Format(_blood, current, max);
+            _countTMP.text = string.Format(COUNT, current, max);
         }
 
         private void OnDestroy()
@@ -47,12 +44,14 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_textTMP == null)
-                _textTMP = GetComponent<TMP_Text>();
+            if (_countTMP == null)
+                _countTMP = GetComponent<TMP_Text>();
             if (_thisRectTransform == null)
                 _thisRectTransform = GetComponent<RectTransform>();
             if (_popup == null)
                 _popup = GetComponentInChildren<PopupWidgetUI>();
+
+            EUtility.FindAnyScriptable<CurrenciesIconsScriptable>().Icons[CurrencyId.Blood].ToImage(GetComponentInChildren<Image>());
         }
 #endif
     }

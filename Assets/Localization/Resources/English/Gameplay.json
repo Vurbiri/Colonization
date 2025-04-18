@@ -1,1 +1,16 @@
-{"Road":"Road","Roads":"Roads","BuildRoad":"Build a road","Build":"Build","Upgrade":"Upgrade to","Shrine":"Magic flame","PortOne":"Small port","PortTwo":"Port","LighthouseOne":"Small lighthouse","LighthouseTwo":"Lighthouse","Camp":"Camp","Town":"Town","City":"City","Wall":"Wall"}
+{
+  "Road": "Road",
+  "Roads": "Roads",
+  "BuildRoad": "Build a road",
+  "Build": "Build",
+  "Upgrade": "Upgrade to",
+  "Shrine": "Magic flame",
+  "PortOne": "Small port",
+  "PortTwo": "Port",
+  "LighthouseOne": "Small lighthouse",
+  "LighthouseTwo": "Lighthouse",
+  "Camp": "Camp",
+  "Town": "Town",
+  "City": "City",
+  "Wall": "Wall"
+}

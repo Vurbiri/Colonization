@@ -1,8 +1,9 @@
-//Assets\Colonization\Editor\Currencies\Scripts\CurrencyIcon.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Currencies\Icons\CurrencyIcon.cs
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace VurbiriEditor.Colonization
+namespace Vurbiri.Colonization.UI
 {
     [Serializable]
     public class CurrencyIcon
@@ -12,5 +13,11 @@ namespace VurbiriEditor.Colonization
 
         public Sprite Icon => _icon;
         public Color Color => _color;
+
+        public void ToImage(Image image)
+        {
+            image.sprite = _icon;
+            image.color = _color;
+        }
     }
 }

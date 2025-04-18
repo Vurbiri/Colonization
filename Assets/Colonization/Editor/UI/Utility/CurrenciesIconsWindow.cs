@@ -1,4 +1,4 @@
-//Assets\Colonization\Editor\Currencies\Windows\CurrenciesIconsWindow.cs
+//Assets\Colonization\Editor\UI\Utility\CurrenciesIconsWindow.cs
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
+using Vurbiri.Colonization.UI;
 using Color = System.Drawing.Color;
 
 namespace VurbiriEditor.Colonization

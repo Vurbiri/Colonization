@@ -28,6 +28,7 @@ namespace Vurbiri.Colonization
 
         private readonly WarriorsSpawner _spawner;
         private readonly ReactiveSet<Actor> _warriors = new(6);
+        private readonly Unsubscriber _unsubscriber;
         #endregion
 
         public ACurrenciesReactive Resources => _resources;
@@ -73,6 +74,8 @@ namespace Vurbiri.Colonization
             {
                 _edifices = new(_abilities);
             }
+
+            _unsubscriber = SceneContainer.Get<GameplayEventBus>().EventActorKilling + ActorKilling; 
 
             bool instantGetValue = !loadData.isLoaded;
             storage.CurrenciesBind(_resources, instantGetValue);
@@ -132,11 +135,17 @@ namespace Vurbiri.Colonization
             if(_perks.TryAdd(typePerk, idPerk, out int cost))
                 _resources.Add(CurrencyId.Mana, -cost);
         }
-                
+
         public void Dispose()
         {
+            _unsubscriber.Unsubscribe();
             _exchange.Dispose();
             _warriors.Dispose();
+        }
+
+        private void ActorKilling(Id<PlayerId> self, Id<PlayerId> target, int actorId)
+        {
+            UnityEngine.Debug.Log($"ActorKilling: {self}, {target}, {actorId}");
         }
     }
 }

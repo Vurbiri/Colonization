@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         private InputController _inputController;
         private Hexagons _hexagons;
 
-        public void Test(float v) => Debug.Log(v);
+        public void Test() => Debug.Log("GameLoop");
         public void Test(int v) => Debug.Log(v);
 
         public void Init(TurnQueue turnQueue, InputController inputController)

@@ -3,7 +3,7 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    public interface IUnsubscribed<TDelegate> where TDelegate : Delegate
+    public interface IUnsubscribed<in TDelegate> where TDelegate : Delegate
     {
         public void Remove(TDelegate action);
     }
@@ -22,7 +22,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
 
-    public interface ISigner<T> : IUnsubscribed<Action<T>>
+    public interface ISigner<out T> : IUnsubscribed<Action<T>>
     {
         public Unsubscriber Add(Action<T> action);
 
@@ -35,7 +35,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
 
-    public interface ISigner<TA, TB> : IUnsubscribed<Action<TA, TB>>
+    public interface ISigner<out TA, out TB> : IUnsubscribed<Action<TA, TB>>
     {
         public Unsubscriber Add(Action<TA, TB> action);
 
@@ -48,7 +48,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
 
-    public interface ISigner<TA, TB, TC> : IUnsubscribed<Action<TA, TB, TC>>
+    public interface ISigner<out TA, out TB, out TC> : IUnsubscribed<Action<TA, TB, TC>>
     {
         public Unsubscriber Add(Action<TA, TB, TC> action);
 
@@ -61,7 +61,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
 
-    public interface ISigner<TA, TB, TC, TD> : IUnsubscribed<Action<TA, TB, TC, TD>>
+    public interface ISigner<out TA, out TB,out TC,out TD> : IUnsubscribed<Action<TA, TB, TC, TD>>
     {
         public Unsubscriber Add(Action<TA, TB, TC, TD> action);
 

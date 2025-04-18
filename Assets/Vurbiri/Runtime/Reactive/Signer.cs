@@ -8,6 +8,8 @@ namespace Vurbiri.Reactive
     {
         protected Action actions;
 
+        public Signer() => actions += Empty;
+
         public Unsubscriber Add(Action action)
         {
             Throw.IfNull(action);
@@ -17,9 +19,11 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action>(this, action);
         }
 
-        public void Invoke() => actions?.Invoke();
+        public void Invoke() => actions();
 
         public void Remove(Action action) => actions -= action;
+
+        private static void Empty() { }
     }
     //=======================================================================================
 
@@ -30,6 +34,17 @@ namespace Vurbiri.Reactive
         public Unsubscriber Add(Action<T> action)
         {
             Throw.IfNull(action);
+
+            actions -= action;
+            actions += action;
+            return new Unsubscriber<Action<T>>(this, action);
+        }
+
+        public Unsubscriber Add(Action<T> action, T value)
+        {
+            Throw.IfNull(action);
+
+            action(value);
 
             actions -= action;
             actions += action;
@@ -47,6 +62,19 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<T>>(this, action);
         }
 
+        public Unsubscriber Add(Action<T> action, IReadOnlyList<T> values)
+        {
+            Throw.IfNull(action);
+
+            int count = values.Count;
+            for (int i = 0; i < count; i++)
+                action(values[i]);
+
+            actions -= action;
+            actions += action;
+            return new Unsubscriber<Action<T>>(this, action);
+        }
+
         public Unsubscriber Add(Action<T> action, bool instantGetValue, IReadOnlyList<T> values)
         {
             Throw.IfNull(action);
@@ -57,6 +85,19 @@ namespace Vurbiri.Reactive
                 for (int i = 0; i < count; i++)
                     action(values[i]);
             }
+
+            actions -= action;
+            actions += action;
+            return new Unsubscriber<Action<T>>(this, action);
+        }
+
+        public Unsubscriber Add<U>(Action<T> action, IReadOnlyList<U> values, Func<U, T> get)
+        {
+            Throw.IfNull(action);
+
+            int count = values.Count;
+            for (int i = 0; i < count; i++)
+                action(get(values[i]));
 
             actions -= action;
             actions += action;
@@ -82,16 +123,6 @@ namespace Vurbiri.Reactive
         public void Invoke(T value) => actions?.Invoke(value);
 
         public void Remove(Action<T> action) => actions -= action;
-
-        public static Unsubscriber operator +(Signer<T> subscriber, Action<T> action)
-        {
-            Throw.IfNull(action);
-
-            subscriber.actions -= action;
-            subscriber.actions += action;
-
-            return new Unsubscriber<Action<T>>(subscriber, action);
-        }
     }
     //=======================================================================================
     public class Signer<TA, TB> : ISigner<TA, TB>
@@ -101,6 +132,17 @@ namespace Vurbiri.Reactive
         public Unsubscriber Add(Action<TA, TB> action)
         {
             Throw.IfNull(action);
+
+            actions -= action;
+            actions += action;
+            return new Unsubscriber<Action<TA, TB>>(this, action);
+        }
+
+        public Unsubscriber Add(Action<TA, TB> action, TA valueA, TB valueB)
+        {
+            Throw.IfNull(action);
+
+            action(valueA, valueB);
 
             actions -= action;
             actions += action;
@@ -136,6 +178,17 @@ namespace Vurbiri.Reactive
             return new Unsubscriber<Action<TA, TB, TC>>(this, action);
         }
 
+        public Unsubscriber Add(Action<TA, TB, TC> action, TA valueA, TB valueB, TC valueC)
+        {
+            Throw.IfNull(action);
+
+            action(valueA, valueB, valueC);
+
+            actions -= action;
+            actions += action;
+            return new Unsubscriber<Action<TA, TB, TC>>(this, action);
+        }
+
         public Unsubscriber Add(Action<TA, TB, TC> action, bool instantGetValue, TA valueA, TB valueB, TC valueC)
         {
             Throw.IfNull(action);
@@ -159,6 +212,17 @@ namespace Vurbiri.Reactive
         public Unsubscriber Add(Action<TA, TB, TC, TD> action)
         {
             Throw.IfNull(action);
+
+            actions -= action;
+            actions += action;
+            return new Unsubscriber<Action<TA, TB, TC, TD>>(this, action);
+        }
+
+        public Unsubscriber Add(Action<TA, TB, TC, TD> action, TA valueA, TB valueB, TC valueC, TD valueD)
+        {
+            Throw.IfNull(action);
+
+            action(valueA, valueB, valueC, valueD);
 
             actions -= action;
             actions += action;

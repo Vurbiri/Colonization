@@ -1,12 +1,11 @@
-//Assets\Colonization\Editor\Currencies\Scripts\CurrenciesIconsScriptable.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Currencies\Icons\CurrenciesIconsScriptable.cs
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization;
 
-namespace VurbiriEditor.Colonization
+namespace Vurbiri.Colonization.UI
 {
     //[CreateAssetMenu(fileName = "CurrenciesIcons", menuName = "Vurbiri/Colonization/CurrenciesIcons", order = 51)]
-    public class CurrenciesIconsScriptable : ScriptableObject
+    public class CurrenciesIconsScriptable : ScriptableObjectDisposable
     {
         [SerializeField] private IdArray<CurrencyId, CurrencyIcon> _icons;
 

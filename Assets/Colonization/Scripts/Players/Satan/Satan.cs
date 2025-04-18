@@ -66,6 +66,8 @@ namespace Vurbiri.Colonization
                 _unsubscribers += humans[i].Shrines.Subscribe(OnAddShrine, false);
             }
 
+            _unsubscribers += SceneContainer.Get<GameplayEventBus>().EventActorKilling + ActorKilling;
+
             storage.StateBind(this, !loadData.isLoaded);
             storage.ArtefactBind(_artefact, !loadData.isLoaded);
             storage.ActorsBind(_demons);
@@ -146,6 +148,11 @@ namespace Vurbiri.Colonization
         {
             _unsubscribers.Unsubscribe();
             _demons.Dispose();
+        }
+
+        private void ActorKilling(Id<PlayerId> self, Id<PlayerId> target, int actorId)
+        {
+            UnityEngine.Debug.Log($"ActorKilling: {self}, {target}, {actorId}");
         }
     }
 }

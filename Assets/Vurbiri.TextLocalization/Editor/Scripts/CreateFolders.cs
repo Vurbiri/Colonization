@@ -12,16 +12,16 @@ namespace Vurbiri.TextLocalization.Editor
         [InitializeOnLoadMethod]
         static void OnProjectLoadedInEditor()
         {
-            FileInfo languagesJson = new(FILE_PATH);
+            FileInfo languagesJson = new(Application.dataPath.Concat(FILE_PATH));
 
             if (!languagesJson.Exists)
             {
-                Debug.Log("[Creating Assets/Localization/Resources/Languages.json]");
+                Debug.Log($"<b><color=red>[Creating /Assets{FILE_PATH}]</color></b>");
                 languagesJson.Directory.Create();
                 languagesJson.Create().Close();
 
-                AssetDatabase.Refresh();
-                AssetDatabase.SaveAssets();
+                //AssetDatabase.Refresh();
+                //AssetDatabase.SaveAssets();
             }
         }
     }
