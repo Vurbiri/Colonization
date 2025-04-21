@@ -38,8 +38,8 @@ namespace Vurbiri.Colonization.Actors
                 _demon = GetComponent<Demon>();
             if (_collider == null)
                 _collider = GetComponent<BoxCollider>();
-            if (_demonSettings == null)
-                _demonSettings = EUtility.FindAnyScriptable<DemonsSettingsScriptable>();
+
+            EUtility.SetScriptable(ref _demonSettings);
         }
 #endif
     }

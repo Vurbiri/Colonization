@@ -4,43 +4,37 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public abstract class APooledObject<T> : MonoBehaviour where T : APooledObject<T>
+    public abstract class APooledObject<T> : IPooledObject<T> where T : APooledObject<T>
     {
-        protected GameObject _thisGObj;
-        protected Transform _thisTransform;
-        private T _self;
+        protected readonly GameObject _gameObject;
+        protected readonly Transform _transform;
+        protected readonly T _self;
+        private readonly Action<T, bool> eventDeactivate;
 
-        public Transform Transform => _thisTransform;
-        public GameObject GameObject => _thisGObj;
-
-        public event Action<T, bool> EventDeactivate;
-        
-        public virtual void Init()
+        public APooledObject(GameObject gameObject, Action<T, bool> callback)
         {
-            _thisGObj = gameObject;
-            _thisGObj.SetActive(false);
-
-            _thisTransform = transform;
+            _gameObject = gameObject;
+            _transform = gameObject.transform;
             _self = (T)this;
+            eventDeactivate = callback;
+
+            _gameObject.SetActive(false);
         }
 
-        public virtual void ToPool(bool worldPositionStays = false)
+        public void ToPool(bool worldPositionStays = false)
         {
-            _thisGObj.SetActive(false);
-            EventDeactivate?.Invoke(_self, worldPositionStays);
+            _gameObject.SetActive(false);
+            eventDeactivate(_self, worldPositionStays);
         }
 
         public void SetParent(Transform parent, bool worldPositionStays = false)
         {
-            if (parent != null & _thisTransform.parent != parent)
-                _thisTransform.SetParent(parent, worldPositionStays);
+            if (parent != null & _transform.parent != parent)
+                _transform.SetParent(parent, worldPositionStays);
         }
 
-        public void SetActive(bool value) => _thisGObj.SetActive(value);
-    }
-
-    public abstract class APooledObject<T, U> : APooledObject<T> where T : APooledObject<T, U>
-    {
-        public abstract void Setup(U setupData);
+        public void SetActive(bool value) => _gameObject.SetActive(value);
+        public void Enable() => _gameObject.SetActive(true);
+        public void Disable() => _gameObject.SetActive(false);
     }
 }

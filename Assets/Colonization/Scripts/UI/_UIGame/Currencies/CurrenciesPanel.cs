@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.UI
             var icons = _currenciesIcons.Icons;
 
             Vector2 cSize = _currencyUIPrefab.Size, aSize = _amountUIPrefab.Size, bSize = _bloodUIPrefab.Size;
-            float offset = cSize.x * 5f + aSize.x + bSize.x + _space * 7f;
+            float offset = cSize.x * 5f + aSize.x + bSize.x + _space * 8f;
 
             Vector2 size = new()
             {
@@ -59,11 +59,10 @@ namespace Vurbiri.Colonization.UI
             pos.x -= (cSize.x - aSize.x) * 0.5f;
             Instantiate(_amountUIPrefab, thisRectTransform).Init(pos, currencies.AmountCurrent, currencies.AmountMax, settings);
 
-            pos.x += (bSize.x + aSize.x) * 0.5f + _space * 2f;
+            pos.x += (bSize.x + aSize.x) * 0.5f + _space * 3f;
             Instantiate(_bloodUIPrefab, thisRectTransform).Init(pos, currencies.BloodCurrent, currencies.BloodMax, settings, _directionPopup);
 
             SceneContainer.Get<GameplayEventBus>().EventSceneEndCreation -= Create;
-
             _currenciesIcons.Dispose();
             Destroy(this);
         }
@@ -71,14 +70,10 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_currenciesIcons == null)
-                _currenciesIcons = EUtility.FindAnyScriptable<CurrenciesIconsScriptable>();
-            if(_currencyUIPrefab == null)
-                _currencyUIPrefab = EUtility.FindAnyPrefab<Currency>();
-            if (_amountUIPrefab == null)
-                _amountUIPrefab = EUtility.FindAnyPrefab<Amount>();
-            if (_bloodUIPrefab == null)
-                _bloodUIPrefab = EUtility.FindAnyPrefab<Blood>();
+            EUtility.SetScriptable(ref _currenciesIcons);
+            EUtility.SetPrefab(ref _currencyUIPrefab);
+            EUtility.SetPrefab(ref _amountUIPrefab);
+            EUtility.SetPrefab(ref _bloodUIPrefab);
         }
 #endif
     }

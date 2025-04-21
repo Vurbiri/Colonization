@@ -13,10 +13,39 @@ namespace Vurbiri
         public const string TYPE_PREFAB = "t:Prefab";
         public readonly static string[] ASSET_FOLDERS = new string[] { "Assets" };
 
+        public static void SetObject<T>(ref T obj, string name = null) where T : Component
+        {
+            if (obj == null)
+                obj = string.IsNullOrEmpty(name) ? Object.FindAnyObjectByType<T>(FindObjectsInactive.Include) : FindObjectByName<T>(name);
+        }
+
+        public static void SetPrefab<T>(ref T obj, string name = null) where T : MonoBehaviour
+        {
+            if (obj == null)
+                obj = string.IsNullOrEmpty(name) ? FindAnyPrefab<T>() : FindAnyPrefab<T>(name);
+        }
+
+        public static void SetScriptable<T>(ref T obj, string name = null) where T : ScriptableObject
+        {
+            if (obj == null)
+                obj = string.IsNullOrEmpty(name) ? FindAnyScriptable<T>() : FindAnyScriptable<T>(name);
+        }
+
+        public static void SetAsset<T>(ref T obj, string name = null) where T : Object
+        {
+            if (obj == null)
+                obj = string.IsNullOrEmpty(name) ? FindAnyAsset<T>() : FindAnyAsset<T>(name);
+        }
+
+        // ********************************************
+
         public static T GetComponentInChildren<T>(this Component self, string name) where T : Component
         {
             return self.GetComponentsInChildren<T>().Where(t => t.gameObject.name == name).First();
         }
+
+        // ********************************************
+
         public static T FindObjectByName<T>(string name) where T : Component
         {
             return Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(t => t.gameObject.name == name).First();
@@ -109,6 +138,8 @@ namespace Vurbiri
 
             return null;
         }
+
+        // ********************************************
 
         public static string[] FindPrefabs() => AssetDatabase.FindAssets(TYPE_PREFAB, ASSET_FOLDERS);
         public static string[] FindPrefabs(string name) => AssetDatabase.FindAssets($"{name} {TYPE_PREFAB}", ASSET_FOLDERS);

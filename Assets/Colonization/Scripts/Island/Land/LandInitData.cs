@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
     public class LandInitData
 	{
         public Hexagon prefabHex;
-        public HexagonMark prefabHexMark;
+        public HexagonMarkFactory prefabHexMark;
         public SurfacesScriptable surfaces;
         [Space]
         public LandMesh landMesh;
@@ -15,14 +15,10 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         public void OnValidate()
         {
-            if (prefabHex == null)
-                prefabHex = EUtility.FindAnyPrefab<Hexagon>();
-            if (prefabHexMark == null)
-                prefabHexMark = EUtility.FindAnyPrefab<HexagonMark>();
-            if (surfaces == null)
-                surfaces = EUtility.FindAnyScriptable<SurfacesScriptable>();
-            if (landMesh == null)
-                landMesh = Object.FindAnyObjectByType<LandMesh>();
+            EUtility.SetPrefab(ref prefabHex);
+            EUtility.SetPrefab(ref prefabHexMark);
+            EUtility.SetScriptable(ref surfaces);
+            EUtility.SetObject(ref landMesh);
         }
 #endif
     }

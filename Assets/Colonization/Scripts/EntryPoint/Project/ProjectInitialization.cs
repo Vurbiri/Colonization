@@ -127,10 +127,8 @@ namespace Vurbiri.Colonization.EntryPoint
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if(_logOnPanel == null)
-                _logOnPanel = FindAnyObjectByType<LogOnPanel>(FindObjectsInactive.Include);
-            if (_settingsColorScriptable == null)
-                _settingsColorScriptable = EUtility.FindAnyScriptable<TextColorSettingsScriptable>();
+            EUtility.SetObject(ref _logOnPanel);
+            EUtility.SetScriptable(ref _settingsColorScriptable);
             
             _settings.OnValidate();
         }

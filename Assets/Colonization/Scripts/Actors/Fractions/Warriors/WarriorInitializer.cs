@@ -40,8 +40,8 @@ namespace Vurbiri.Colonization.Actors
                 _warrior = GetComponent<Warrior>();
             if (_collider == null)
                 _collider = GetComponent<BoxCollider>();
-            if (_warriorsSettings == null)
-                    _warriorsSettings = EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
+
+            EUtility.SetScriptable(ref _warriorsSettings);
         }
 #endif
         }

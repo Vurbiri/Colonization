@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Direction2 _directionPopup;
 
         private Transform _thisTransform;
-        private GameObject _self;
+        private GameObject _thisGameObject;
         private CoroutinesQueue _queue;
         private IdArray<ActorAbilityId, Sprite> _sprites;
 
@@ -39,9 +39,9 @@ namespace Vurbiri.Colonization.UI
             _valueTMP.sortingOrder += orderLevel;
 
             _thisTransform = transform;
-            _self = gameObject;
+            _thisGameObject = gameObject;
             _sprites = sprites;
-            _queue = new(this, () => _self.SetActive(false));
+            _queue = new(this, () => _thisGameObject.SetActive(false));
 
             Vurbiri.UI.TextColorSettings settings = SceneContainer.Get<Vurbiri.UI.TextColorSettings>();
 
@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.UI
             _positionStart = _thisTransform.localPosition;
             _positionEnd = _positionStart + ((Vector3)_directionPopup) * _distance;
             
-            _self.SetActive(false);
+            _thisGameObject.SetActive(false);
         }
 
         public void Run(int delta, Id<ActorAbilityId> id)
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization.UI
             if (delta == 0)
                 return;
 
-            _self.SetActive(true);
+            _thisGameObject.SetActive(true);
             _queue.Enqueue(Run_Cn(delta, id));
         }
 

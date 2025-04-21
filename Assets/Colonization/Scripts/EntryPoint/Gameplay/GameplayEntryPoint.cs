@@ -158,15 +158,11 @@ namespace Vurbiri.Colonization.EntryPoint
 #if UNITY_EDITOR
             public void OnValidate()
             {
-                if (game == null)
-                    game = FindAnyObjectByType<GameLoop>();
-                if (mainCamera == null)
-                    mainCamera = FindAnyObjectByType<Camera>();
-                
-                if (cameraController == null)
-                    cameraController = FindAnyObjectByType<CameraController>();
-                if (contextMenusWorld == null)
-                    contextMenusWorld = FindAnyObjectByType<ContextMenusWorld>();
+                EUtility.SetObject(ref game);
+                EUtility.SetObject(ref mainCamera);
+                EUtility.SetObject(ref cameraController);
+                EUtility.SetObject(ref contextMenusWorld);
+
                 if (hintGlobalWorld == null)
                     hintGlobalWorld = GameObject.Find("WorldHint").GetComponent<WorldHint>();
             }
@@ -193,12 +189,9 @@ namespace Vurbiri.Colonization.EntryPoint
 #if UNITY_EDITOR
             public void OnValidate()
             {
-                if (prices == null)
-                    prices = EUtility.FindAnyScriptable<PricesScriptable>();
-                if (visualSet == null)
-                    visualSet = EUtility.FindAnyScriptable<PlayerVisualSetScriptable>();
-                if (diplomacy == null)
-                    diplomacy = EUtility.FindAnyScriptable<DiplomacySettingsScriptable>();
+                EUtility.SetScriptable(ref prices);
+                EUtility.SetScriptable(ref visualSet);
+                EUtility.SetScriptable(ref diplomacy);
             }
 #endif
         }
@@ -206,19 +199,18 @@ namespace Vurbiri.Colonization.EntryPoint
         [System.Serializable]
         private class UISettings
         {
-            public EffectsBar prefabEffectsBar;
+            public EffectsBarFactory prefabEffectsBar;
             public Transform repositoryUI;
 
             public void Init(DIContainer services)
             {
-                services.AddInstance(new Pool<EffectsBar>(prefabEffectsBar, repositoryUI, 3));
+                services.AddInstance(new Pool<EffectsBar>(prefabEffectsBar.Create, repositoryUI, 3));
             }
 
 #if UNITY_EDITOR
             public void OnValidate()
             {
-                if (prefabEffectsBar == null)
-                    prefabEffectsBar = EUtility.FindAnyPrefab<EffectsBar>();
+                EUtility.SetPrefab(ref prefabEffectsBar);
             }
 #endif
         }

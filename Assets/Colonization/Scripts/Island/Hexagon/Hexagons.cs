@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
             _eventBus = eventBus;
             _container = _landMesh.transform;
 
-            _poolMarks = new(initData.prefabHexMark, _container, HEX.SIDES);
+            _poolMarks = new(initData.prefabHexMark.Create, _container, HEX.SIDES);
 
             int count = HEX_IDS.Count, capacity = MAX_HEXAGONS / count + 1;
             for (int i = 0; i < count; i++)

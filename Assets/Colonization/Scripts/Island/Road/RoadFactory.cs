@@ -17,10 +17,8 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         public void OnValidate()
         {
-            if (_prefabRoad == null)
-                _prefabRoad = EUtility.FindAnyPrefab<Road>();
-            if (_container == null)
-                _container = EUtility.FindObjectByName<Transform>("Roads");
+            EUtility.SetPrefab(ref _prefabRoad);
+            EUtility.SetObject(ref _container, "Roads");
         }
 #endif
     }

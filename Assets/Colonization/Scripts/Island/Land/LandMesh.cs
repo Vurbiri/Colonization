@@ -109,9 +109,7 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_waterTransform == null)
-                _waterTransform = EUtility.FindObjectByName<Transform>("Water");
-
+            EUtility.SetObject(ref _waterTransform, "Water");
         }
 #endif
     }

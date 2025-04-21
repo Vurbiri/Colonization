@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\Actors\Skin\Bar\EffectsUI\EffectsBar.cs
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,6 +7,7 @@ using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 using Vurbiri.UI;
+using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -13,23 +15,33 @@ namespace Vurbiri.Colonization.Actors
     {
         private const char CHAR = '-';
 
-        [SerializeField] private Vector3 _startPosition = new(3.6f, 0.9f, 0f);
-        [Space]
-        [SerializeField] private Vector3 _offsetPosition = new(-0.7f, 0f, 0f);
-        [SerializeField] private int _orderLevel = 0;
-        [Space]
-        [SerializeField] private SpriteRenderer _sprite;
-        [SerializeField] private TextMeshPro _durationTMP;
+        private readonly Vector3 _startPosition = new(3.6f, 0.9f, 0f);
+        private readonly Vector3 _offsetPosition = new(-0.7f, 0f, 0f);
+        private readonly SpriteRenderer _sprite;
+        private readonly TextMeshPro _durationTMP;
 
-        private int Index { set => _thisTransform.localPosition = _startPosition + _offsetPosition * value; }
+        private int Index { set => _transform.localPosition = _startPosition + _offsetPosition * value; }
         private int Duration { set => _durationTMP.text = new(CHAR, value); }
 
         private Unsubscribers _unsubscribers;
 
+        public EffectsBar(EffectsBarFactory initObj, Action<EffectsBar, bool> callback) : base(initObj.gameObject, callback)
+        {
+            _startPosition = initObj.startPosition;
+            _offsetPosition = initObj.offsetPosition;
+            _sprite = initObj.GetComponent<SpriteRenderer>();
+            _durationTMP = initObj.GetComponentInChildren<TextMeshPro>();
+
+            _sprite.sortingOrder = initObj.orderLevel;
+            _durationTMP.sortingOrder = initObj.orderLevel;
+
+            Object.Destroy(initObj);
+        }
+
         public void Init(ReactiveEffect effect, IReactiveItem<Actor> actor, IReadOnlyList<Sprite> sprites, TextColorSettings colors, int orderLevel)
         {
-            _sprite.sortingOrder = _orderLevel + orderLevel;
-            _durationTMP.sortingOrder = _orderLevel + orderLevel;
+            _sprite.sortingOrder += orderLevel;
+            _durationTMP.sortingOrder += orderLevel;
 
             _sprite.sprite = sprites[effect.TargetAbility];
             _sprite.color = colors.GetColor(effect.IsPositive);
@@ -40,7 +52,7 @@ namespace Vurbiri.Colonization.Actors
             _unsubscribers += actor.Subscribe((item, type) => { if (type == TypeEvent.Remove) Destroy(); }, false);
             _unsubscribers += effect.Subscribe(OnChangeEffect, false);
 
-            SetActive(true);
+            Enable();
         }
 
         private void Destroy()
@@ -64,16 +76,5 @@ namespace Vurbiri.Colonization.Actors
                     return;
             }
         }
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (_sprite == null)
-                _sprite = GetComponent<SpriteRenderer>();
-
-            if (_durationTMP == null)
-                _durationTMP = GetComponentInChildren<TextMeshPro>();
-        }
-#endif
     }
 }

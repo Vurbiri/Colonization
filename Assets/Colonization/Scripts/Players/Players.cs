@@ -78,28 +78,18 @@ namespace Vurbiri.Colonization
             {
                 roadFactory.OnValidate();
 
-                if (warriorPrefab == null)
-                    warriorPrefab = EUtility.FindAnyPrefab<WarriorInitializer>();
-                if (prices == null)
-                    prices = EUtility.FindAnyScriptable<PricesScriptable>();
-                if (humanStates == null)
-                    humanStates = EUtility.FindAnyScriptable<HumanAbilitiesScriptable>();
-                if (economicPerks == null)
-                    economicPerks = EUtility.FindAnyScriptable<EconomicPerksScriptable>();
-                if (militaryPerks == null)
-                    militaryPerks = EUtility.FindAnyScriptable<MilitaryPerksScriptable>();
+                EUtility.SetPrefab(ref warriorPrefab);
+                EUtility.SetPrefab(ref demonPrefab);
 
-                if (demonPrefab == null)
-                    demonPrefab = EUtility.FindAnyPrefab<DemonInitializer>();
-                if (satanStates == null)
-                    satanStates = EUtility.FindAnyScriptable<SatanAbilitiesScriptable>();
-                if (demonBuffs == null)
-                    demonBuffs = EUtility.FindAnyScriptable<DemonBuffsScriptable>();
+                EUtility.SetScriptable(ref prices);
+                EUtility.SetScriptable(ref humanStates);
+                EUtility.SetScriptable(ref economicPerks);
+                EUtility.SetScriptable(ref militaryPerks);
+                EUtility.SetScriptable(ref satanStates);
+                EUtility.SetScriptable(ref demonBuffs);
+                EUtility.SetScriptable(ref artefact);
 
-                if (artefact == null)
-                    artefact = EUtility.FindAnyScriptable<BuffsScriptable>();
-                if (actorsContainer == null)
-                    actorsContainer = EUtility.FindObjectByName<Transform>("Actors");
+                EUtility.SetObject(ref actorsContainer, "Actors");
             }
 #endif
         }

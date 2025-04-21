@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
         private Transform _thisTransform;
         private float _scaleColorSpeed;
         private Vector3 _positionStart, _positionEnd;
-        private GameObject _self;
+        private GameObject _thisGameObject;
         private string _stringPlus, _stringMinus;
         private CoroutinesQueue _queue;
         private int _prevValue = int.MinValue;
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
         public void Init(TextColorSettings settings, Vector3 direction)
         {
             _thisTransform = transform;
-            _self = gameObject;
+            _thisGameObject = gameObject;
 
             _positionStart = _thisTransform.localPosition;
             _positionEnd = _positionStart + direction * _distance;
@@ -39,8 +39,8 @@ namespace Vurbiri.Colonization.UI
 
             _scaleColorSpeed = 1f / (1f - _startHide);
 
-            _queue = new(this, () => _self.SetActive(false));
-            _self.SetActive(false);
+            _queue = new(this, () => _thisGameObject.SetActive(false));
+            _thisGameObject.SetActive(false);
         }
 
         public void Run(int value)
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization.UI
                 return;
             }
 
-            _self.SetActive(true);
+            _thisGameObject.SetActive(true);
             _queue.Enqueue(Run_Cn(string.Format(delta > 0 ? _stringPlus : _stringMinus, delta)));
 
             _prevValue = value;

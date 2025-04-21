@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
 
         private void SetAmountMax(int amount, int max)
         {
-            _textTMP.text = string.Format(AMOUNT, amount > max ? _colorOver : _colorNormal, amount, max);
+            _textTMP.text = string.Format(AMOUNT, amount > max ? _colorOver : _colorNormal, Mathf.Min(amount, 99), max);
         }
 
         private void OnDestroy()

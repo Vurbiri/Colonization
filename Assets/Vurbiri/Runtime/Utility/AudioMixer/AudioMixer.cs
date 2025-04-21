@@ -82,8 +82,7 @@ namespace Vurbiri
 #if UNITY_EDITOR
         public void OnValidate()
         {
-            if (_audioMixer == null)
-                _audioMixer = EUtility.FindAnyAsset<AudioMixer>();
+            EUtility.SetAsset(ref _audioMixer);
 
             if (_nameParams == null || _nameParams[0] == null)
                 _nameParams = new(IdType<T>.Names);

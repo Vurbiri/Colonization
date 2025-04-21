@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\UI\Banners\Banner.cs
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,8 +6,8 @@ using UnityEngine.UI;
 
 namespace Vurbiri
 {
-    [RequireComponent(typeof(Image), typeof(HorizontalLayoutGroup), typeof(Outline))]
-    public class Banner : APooledObject<Banner>
+    //[RequireComponent(typeof(Image), typeof(HorizontalLayoutGroup), typeof(Outline))]
+    public class Banner //: PooledObject<Banner>
     {
         [SerializeField] private TMP_Text _text;
 
@@ -18,24 +17,23 @@ namespace Vurbiri
         private Coroutine _coroutine;
         private bool _isThrough;
 
-        public override void Init()
+        public void Init()
         {
-            base.Init();
 
             _banners = Banners.Instance;
-            _image = GetComponent<Image>();
-            HorizontalLayoutGroup layoutGroup = GetComponent<HorizontalLayoutGroup>();
+            //_image = GetComponent<Image>();
+            //HorizontalLayoutGroup layoutGroup = GetComponent<HorizontalLayoutGroup>();
 
             float size = _banners.FontSize;
             _text.fontSize = size;
             size /= 2f;
-            GetComponent<Outline>().effectDistance = Vector2.one * size;
-            layoutGroup.spacing = size;
-            int iSize = Mathf.RoundToInt(size);
-            layoutGroup.padding.left = iSize;
-            layoutGroup.padding.right = iSize;
-            layoutGroup.padding.top = iSize;
-            layoutGroup.padding.bottom = iSize;
+            //GetComponent<Outline>().effectDistance = Vector2.one * size;
+            //layoutGroup.spacing = size;
+            //int iSize = Mathf.RoundToInt(size);
+            //layoutGroup.padding.left = iSize;
+            //layoutGroup.padding.right = iSize;
+            //layoutGroup.padding.top = iSize;
+            //layoutGroup.padding.bottom = iSize;
         }
 
         public void Setup(string message, MessageType messageType, float time, bool isThrough)
@@ -44,34 +42,34 @@ namespace Vurbiri
             _text.text = message;
             _image.color = _banners.Colors[(int)messageType];
 
-            _thisGObj.SetActive(true);
-            _coroutine = StartCoroutine(TimeShow());
+            //_gameObject.SetActive(true);
+            //_coroutine = StartCoroutine(TimeShow());
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
-            IEnumerator TimeShow()
-            {
-                yield return new WaitForSecondsRealtime(time);
-                ToPool();
-            }
+            //IEnumerator TimeShow()
+            //{
+            //    yield return new WaitForSecondsRealtime(time);
+            //    ToPool();
+            //}
         }
 
-        public override void ToPool(bool worldPositionStays = true)
-        {
-            SceneManager.sceneUnloaded -= OnSceneUnloaded;
-            if (_coroutine != null)
-            {
-                StopCoroutine(_coroutine);
-                _coroutine = null;
-            }
-            base.ToPool(worldPositionStays);
-        }
+        //public override void ToPool(bool worldPositionStays = true)
+        //{
+        //    SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        //    if (_coroutine != null)
+        //    {
+        //        StopCoroutine(_coroutine);
+        //        _coroutine = null;
+        //    }
+        //    base.ToPool(worldPositionStays);
+        //}
 
         private void OnSceneUnloaded(Scene scene)
         {
             if (_isThrough)
                 return;
 
-            ToPool();
+            //ToPool();
         }
     }
 }
