@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Currencies\Amount.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\Amount.cs
 using TMPro;
 using UnityEngine;
 using Vurbiri.Reactive;
@@ -8,21 +8,15 @@ namespace Vurbiri.Colonization
 {
     public class Amount : MonoBehaviour
     {
-        private const string AMOUNT = "{0}{1}</color><space=0.1em>({2})";
+        private const string AMOUNT = "{0}{1}</color><space=0.14em>({2})";
 
         [SerializeField] private TMP_Text _textTMP;
-        [Space]
-        [SerializeField] private RectTransform _thisRectTransform;
 
         private ReactiveCombination<int, int> _reactiveAmountMax;
         private string _colorNormal, _colorOver;
 
-        public Vector2 Size => _thisRectTransform.sizeDelta;
-
-        public void Init(Vector3 position, IReactiveValue<int> amount, IReactiveValue<int> max, TextColorSettings settings)
+        public void Init(IReactiveValue<int> amount, IReactiveValue<int> max, TextColorSettings settings)
         {
-            _thisRectTransform.localPosition = position;
-
             _colorNormal = settings.HexColorTextBase;
             _colorOver = settings.HexColorNegative;
 
@@ -44,12 +38,17 @@ namespace Vurbiri.Colonization
 
 
 #if UNITY_EDITOR
+        public Vector2 Size => ((RectTransform)transform).sizeDelta;
+        public void Init_Editor(Vector3 position, TextColorSettings settings)
+        {
+            ((RectTransform)transform).localPosition = position;
+
+            _textTMP.color = settings.ColorTextBase;
+        }
         private void OnValidate()
         {
             if (_textTMP == null)
                 _textTMP = GetComponent<TMP_Text>();
-            if (_thisRectTransform == null)
-                _thisRectTransform = GetComponent<RectTransform>();
         }
 #endif
     }

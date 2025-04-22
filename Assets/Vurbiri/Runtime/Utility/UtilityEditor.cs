@@ -15,26 +15,37 @@ namespace Vurbiri
 
         public static void SetObject<T>(ref T obj, string name = null) where T : Component
         {
+            if (obj != null) return;
+
+            obj = string.IsNullOrEmpty(name) ? Object.FindAnyObjectByType<T>(FindObjectsInactive.Include) : FindObjectByName<T>(name);
             if (obj == null)
-                obj = string.IsNullOrEmpty(name) ? Object.FindAnyObjectByType<T>(FindObjectsInactive.Include) : FindObjectByName<T>(name);
+                LogErrorFind<T>("object", name);
         }
 
         public static void SetPrefab<T>(ref T obj, string name = null) where T : MonoBehaviour
         {
+            if (obj != null) return;
+
+            obj = string.IsNullOrEmpty(name) ? FindAnyPrefab<T>() : FindAnyPrefab<T>(name);
             if (obj == null)
-                obj = string.IsNullOrEmpty(name) ? FindAnyPrefab<T>() : FindAnyPrefab<T>(name);
+                LogErrorFind<T>("prefab", name);
         }
 
         public static void SetScriptable<T>(ref T obj, string name = null) where T : ScriptableObject
         {
+            if (obj != null) return;
+            obj = string.IsNullOrEmpty(name) ? FindAnyScriptable<T>() : FindAnyScriptable<T>(name);
             if (obj == null)
-                obj = string.IsNullOrEmpty(name) ? FindAnyScriptable<T>() : FindAnyScriptable<T>(name);
+                LogErrorFind<T>("scriptable", name);
         }
 
         public static void SetAsset<T>(ref T obj, string name = null) where T : Object
         {
+            if (obj != null) return;
+
+            obj = string.IsNullOrEmpty(name) ? FindAnyAsset<T>() : FindAnyAsset<T>(name);
             if (obj == null)
-                obj = string.IsNullOrEmpty(name) ? FindAnyAsset<T>() : FindAnyAsset<T>(name);
+                LogErrorFind<T>("asset", name);
         }
 
         // ********************************************
@@ -151,6 +162,14 @@ namespace Vurbiri
             obj = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));
             return obj != null;
         }
+
+        public static bool IsStartEditor => EditorApplication.timeSinceStartup < 120f;
+
+        private static void LogErrorFind<T>(string type, string name)
+        {
+            Debug.LogError($"<color=orange> Unable to find the {type} <b>{typeof(T).Name}</b> {(string.IsNullOrEmpty(name) ? string.Empty : $"\"{name}\"")}</color>");
+        }
+
     }
 }
 #endif

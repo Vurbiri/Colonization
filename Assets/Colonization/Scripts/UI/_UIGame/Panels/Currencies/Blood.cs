@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Currencies\Blood.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\Blood.cs
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,21 +9,16 @@ namespace Vurbiri.Colonization.UI
 {
     public class Blood : MonoBehaviour
     {
-        private const string COUNT = "{0}<space=0.1em>({1})";
+        private const string COUNT = "{0}<space=0.14em>({1})";
 
         [SerializeField] private TMP_Text _countTMP;
         [SerializeField] private PopupWidgetUI _popup;
-        [Space]
-        [SerializeField] private RectTransform _thisRectTransform;
 
         private ReactiveCombination<int, int> _reactiveBlood;
 
-        public Vector2 Size => _thisRectTransform.sizeDelta;
-
-        public void Init(Vector3 position, IReactiveValue<int> current, IReactiveValue<int> max, TextColorSettings settings, Direction2 offsetPopup)
+        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, TextColorSettings settings, Direction2 offsetPopup)
         {
             _popup.Init(settings, offsetPopup);
-            _thisRectTransform.localPosition = position;
 
             _countTMP.color = settings.ColorTextBase;
 
@@ -42,16 +37,22 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
+        public Vector2 Size => ((RectTransform)transform).sizeDelta;
+
+        public void Init_Editor(CurrencyIcon icon, TextColorSettings settings)
+        {
+            _countTMP.color = settings.ColorTextBase;
+            SetBlood(12, 13);
+
+            icon.ToImage(GetComponentInChildren<Image>());
+        }
+
         private void OnValidate()
         {
             if (_countTMP == null)
                 _countTMP = GetComponent<TMP_Text>();
-            if (_thisRectTransform == null)
-                _thisRectTransform = GetComponent<RectTransform>();
             if (_popup == null)
                 _popup = GetComponentInChildren<PopupWidgetUI>();
-
-            EUtility.FindAnyScriptable<CurrenciesIconsScriptable>().Icons[CurrencyId.Blood].ToImage(GetComponentInChildren<Image>());
         }
 #endif
     }
