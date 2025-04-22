@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
+﻿//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,17 +19,19 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private SceneId _nextScene;
         [Space]
         [SerializeField] private IslandCreator _islandCreator;
+        [SerializeField] private PlayerPanels _playerPanelsUI;
+        [Space]
         [SerializeField] private SceneObjects _sceneObjects;
         [SerializeField] private ScriptableObjects _scriptables;
         [Space]
         [SerializeField] private EnumFlags<Files> _localizationFiles = new(true);
-        [Header("Init data for classes")]
+        [Header("══════ Init data for classes ══════")]
         [SerializeField] private Players.Settings _playersSettings;
         [SerializeField] private InputController.Settings _inputControllerSettings;
         [Space]
         [SerializeField] private UISettings _settingsUI;
         [Space]
-        [Header("TEST")]
+        [Header("══════ TEST ══════")]
         [SerializeField] private bool _isLoad;
 
         private DIContainer _diContainer;
@@ -74,8 +76,6 @@ namespace Vurbiri.Colonization.EntryPoint
                 _diContainer.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));
 
                 _diContainer.AddInstance(_sceneObjects.mainCamera);
-
-                
             }
             #endregion
         }
@@ -87,6 +87,8 @@ namespace Vurbiri.Colonization.EntryPoint
 
             _sceneObjects.Init(this, _scriptables);
             _scriptables.Dispose();
+
+            yield return InitUI_Cn();
 
             StartCoroutine(Final_Cn());
         }
@@ -101,6 +103,13 @@ namespace Vurbiri.Colonization.EntryPoint
             _playersSettings = null;
         }
 
+        private IEnumerator InitUI_Cn()
+        {
+            yield return null;
+
+            _playerPanelsUI.Create(_players);
+        }
+
         private IEnumerator Final_Cn()
         {
             yield return new WaitFrames(15);
@@ -110,8 +119,6 @@ namespace Vurbiri.Colonization.EntryPoint
             GC.Collect();
 
             _sceneObjects.game.Init(_turnQueue, _inputController);
-
-            _triggerBus.TriggerSceneEndCreation();
 
             yield return null;
 
@@ -124,13 +131,13 @@ namespace Vurbiri.Colonization.EntryPoint
 #if UNITY_EDITOR
         private void OnValidate()
         {
+            EUtility.SetObject(ref _islandCreator);
+            EUtility.SetObject(ref _playerPanelsUI);
+
             _sceneObjects.OnValidate();
             _scriptables.OnValidate();
             _settingsUI.OnValidate();
             _playersSettings.OnValidate();
-
-            if (_islandCreator == null)
-                _islandCreator = FindAnyObjectByType<IslandCreator>();
         }
 #endif
 

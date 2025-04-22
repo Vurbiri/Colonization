@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\EventBus\GameplayEventBus.cs
-using System;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
 
@@ -23,10 +22,5 @@ namespace Vurbiri.Colonization
 
         public ISigner<bool> EventHexagonIdShow => _hexagonIdShow;
 
-
-        #region GameLoop
-        public event Action EventSceneEndCreation;
-        public void TriggerSceneEndCreation() => EventSceneEndCreation?.Invoke();
-        #endregion
     }
 }

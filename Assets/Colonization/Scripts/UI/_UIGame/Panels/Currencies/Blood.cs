@@ -44,7 +44,11 @@ namespace Vurbiri.Colonization.UI
             _countTMP.color = settings.ColorTextBase;
             SetBlood(12, 13);
 
-            icon.ToImage(GetComponentInChildren<Image>());
+            UnityEditor.SerializedObject serializedImage = new(GetComponentInChildren<Image>());
+            serializedImage.Update();
+            serializedImage.FindProperty("m_Color").colorValue = icon.Color;
+            serializedImage.FindProperty("m_Sprite").objectReferenceValue = icon.Icon;
+            serializedImage.ApplyModifiedProperties();
         }
 
         private void OnValidate()

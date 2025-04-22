@@ -1,32 +1,38 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\BloodPanel.cs
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Collections;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public partial class BloodPanel : MonoBehaviour
+    public class BloodPanel : MonoBehaviour
 	{
         [SerializeField] private Blood _blood;
-        [Space]
-        [SerializeField] private float _transparency = 0.84f;
-        [Space]
-        [SerializeField] private Direction2 _directionPopup;
 
-        private void Start()
+        public void Init(Color color, Direction2 directionPopup, ACurrenciesReactive currencies, TextColorSettings settings)
         {
-            SceneContainer.Get<GameplayEventBus>().EventSceneEndCreation += Create;
-        }
+            GetComponent<Image>().color = color;
+            _blood.Init(currencies.BloodCurrent, currencies.BloodMax, settings, directionPopup);
 
-        private void Create()
-        {
-            GetComponent<Image>().color = SceneContainer.Get<PlayersVisual>()[PlayerId.Player].color.SetAlpha(_transparency);
-
-            var currencies = SceneContainer.Get<Players>().Player.Resources;
-
-            _blood.Init(currencies.BloodCurrent, currencies.BloodMax, SceneContainer.Get<Vurbiri.UI.TextColorSettings>(), _directionPopup);
-
-            SceneContainer.Get<GameplayEventBus>().EventSceneEndCreation -= Create;
             Destroy(this);
         }
-	}
+
+#if UNITY_EDITOR
+        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, IdArray<CurrencyId, CurrencyIcon> icons, TextColorSettings colors)
+        {
+            GetComponent<Image>().pixelsPerUnitMultiplier = pixelsPerUnit;
+            RectTransform thisRectTransform = (RectTransform)transform;
+            thisRectTransform.sizeDelta = _blood.Size + padding * 2f;
+            _blood.Init_Editor(icons[CurrencyId.Blood], colors);
+            return thisRectTransform;
+        }
+
+        private void OnValidate()
+        {
+            if (_blood == null)
+                _blood = GetComponentInChildren<Blood>();
+        }
+#endif
+    }
 }
