@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\Currency.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\Currency.cs
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -37,12 +37,12 @@ namespace Vurbiri.Colonization.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log("OnPointerEnter ");
+            //Debug.Log("OnPointerEnter ");
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Debug.Log("OnPointerExit ");
+            //Debug.Log("OnPointerExit ");
         }
 
 #if UNITY_EDITOR
@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization.UI
             if (_countTMP == null)
                 _countTMP = GetComponent<TMP_Text>();
             if(_popup == null)
-                _popup = GetComponentInChildren<PopupWidgetUI>();
+                _popup = GetComponentInChildren<PopupWidgetUI>(true);
 
         }
 #endif

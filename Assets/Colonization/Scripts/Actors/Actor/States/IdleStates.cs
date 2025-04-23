@@ -5,37 +5,22 @@ namespace Vurbiri.Colonization.Actors
     {
         protected class IdleState : AState
         {
-            public IdleState(Actor parent) : base(parent, TypeIdKey.Get<IdleState>(0)) { }
-
-            public static IdleState Create(Actor parent)
-            {
-                return parent._owner == PlayerId.Player ? new PlayerIdleState(parent) : new IdleState(parent);
-            }
-
-            public override void Enter()
-            {
-                _skin.Idle();
-            }
-        }
-        //=========================================================================================================
-        sealed protected class PlayerIdleState : IdleState
-        {
             private readonly GameplayTriggerBus _triggerBus;
 
-            public PlayerIdleState(Actor parent) : base(parent) 
+            public IdleState(Actor parent) : base(parent, TypeIdKey.Get<IdleState>(0)) 
             {
                 _triggerBus = parent._triggerBus;
             }
 
             public override void Enter()
             {
-                base.Enter();
-                _actor.ColliderEnable();
+                _skin.Idle();
+                _actor.Enable();
             }
 
             public override void Exit()
             {
-                _actor.ColliderDisable();
+                _actor.Disable();
             }
 
             public override void Select() => _triggerBus.TriggerActorSelect(_actor);

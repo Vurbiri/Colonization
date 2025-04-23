@@ -423,9 +423,6 @@ namespace Vurbiri.UI
         }
         #endregion
 
-
-
-
 #if UNITY_EDITOR
         #region ICanvasElement
         public void Rebuild(CanvasUpdate executing)
@@ -455,5 +452,4 @@ namespace Vurbiri.UI
         }
 #endif
     }
-
 }

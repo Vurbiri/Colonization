@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
 {
     public class BloodPanel : MonoBehaviour
 	{
-        [SerializeField] private Blood _blood;
+        [SerializeField] private CurrentMax _blood;
 
         public void Init(Color color, Direction2 directionPopup, ACurrenciesReactive currencies, TextColorSettings settings)
         {
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.UI
         private void OnValidate()
         {
             if (_blood == null)
-                _blood = GetComponentInChildren<Blood>();
+                _blood = GetComponentInChildren<CurrentMax>();
         }
 #endif
     }

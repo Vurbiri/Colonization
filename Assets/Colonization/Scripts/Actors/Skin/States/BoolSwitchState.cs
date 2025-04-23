@@ -5,6 +5,7 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed protected class BoolSwitchState : ASkinState
         {
+            
             public BoolSwitchState(string stateName, ActorSkin parent, int id = 0) : base(stateName, parent, id)
             {
             }

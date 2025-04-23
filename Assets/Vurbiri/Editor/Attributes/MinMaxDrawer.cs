@@ -59,5 +59,12 @@ namespace VurbiriEditor
             EditorGUI.EndProperty();
         }
 
-	}
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            if (attribute is not MinMaxAttribute || fieldInfo.FieldType == typeof(IntRnd))
+                return 0f;
+
+            return base.GetPropertyHeight(property, label);
+        }
+    }
 }

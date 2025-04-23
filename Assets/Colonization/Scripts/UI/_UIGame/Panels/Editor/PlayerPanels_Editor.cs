@@ -8,9 +8,10 @@ namespace Vurbiri.Colonization.UI
 {
     public partial class PlayerPanels : ICanvasElement
     {
-        [Header("┌──────────── Editor ──────────────────")]
-        [SerializeField] private CurrenciesIconsScriptable _currenciesIcons;
-        [SerializeField] private TextColorSettingsScriptable _settingsColor;
+        [Header("┌──────────── Editor ─────────────────────")]
+        [SerializeField, ReadOnly] private CurrenciesIconsScriptable _currenciesIcons;
+        [SerializeField, ReadOnly] private TextColorSettingsScriptable _settingsColor;
+        [Space]
         [SerializeField, Range(1f, 3f)] private float _pixelsPerUnit = 1.5f;
         [Header("Panels In")]
         [SerializeField] private Vector2 _paddingIn = new(14f, 12f);
@@ -18,8 +19,10 @@ namespace Vurbiri.Colonization.UI
         [Header("Between")]
         [SerializeField] private Vector2 _paddingOut = new(15f, 15f);
         [SerializeField, Range(5f, 20f)] private float _spaceOut = 5f;
-        [Header("└─────────────────────────────────")]
-        [SerializeField] private string endEditor = "****************************************************************";
+        [Header("└────────────────────────────────────")]
+        #pragma warning disable 414
+        [SerializeField, ReadOnly] private string _endEditor = "****************************************************************";
+        #pragma warning restore 414
 
         public void UpdateVisuals()
         {

@@ -10,7 +10,7 @@ using Vurbiri.Reactive.Collections;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, ICancel, IDisposable, IPositionable
+    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, IDisposable, IPositionable, ICancel
     {
         #region Fields
         protected int _typeId;
@@ -40,9 +40,8 @@ namespace Vurbiri.Colonization.Actors
         protected StateMachineSelectable _stateMachine;
         protected BlockState _blockState;
 
-        protected bool _isPlayerTurn;
-
-        protected RBool _canCancel = new(false);
+        protected readonly RBool _interactable = new(false);
+        protected readonly RBool _canCancel = new(false);
 
         protected Coroutine _deathCoroutine;
         protected Unsubscribers _unsubscribers = new();
@@ -62,16 +61,29 @@ namespace Vurbiri.Colonization.Actors
         public ActorSkin Skin => _skin;
         public IReactiveSet<ReactiveEffect> Effects => _effects;
         public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
-        public IReactiveValue<bool> CanCancel => _canCancel;
         public bool IsMainProfit => _profitMain.Next();
         public bool IsAdvProfit => _profitAdv.Next();
+
+        #endregion
+
+        #region ISelectable, ICancel
+        public RBool CanCancel => _canCancel;
+        public RBool InteractableReactive => _interactable;
+        public bool Interactable 
+        { 
+            get => _interactable.Value && _stateMachine.IsDefaultState; 
+            private set => _thisCollider.enabled = _interactable.Value = value; 
+        }
+        public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = value; }
+        public void Select() => _stateMachine.Select();
+        public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
+        public void Cancel() => _stateMachine.Cancel();
         #endregion
 
         #region States
         public void Move() => _stateMachine.SetState<MoveState>();
         public void Block() => _stateMachine.SetState(_blockState);
         public void UseSkill(int id) => _stateMachine.SetState<ASkillState>(id);
-        public void Cancel() => _stateMachine.Cancel();
         #endregion
 
         public Relation GetRelation(Id<PlayerId> id) => _diplomacy.GetRelation(id, _owner);
@@ -106,11 +118,11 @@ namespace Vurbiri.Colonization.Actors
             _currentAP.Next();
             _move.On();
 
-            _isPlayerTurn = _thisCollider.enabled = false;
+            _interactable.Value = false;
         }
         public void EffectsUpdate(int defense)
         {
-            _isPlayerTurn = _thisCollider.enabled = _owner == PlayerId.Player;
+            _interactable.Value = _owner == PlayerId.Player;
 
             _effects.Next();
             _effects.Add(EffectsFactory.CreateWallDefenceEffect(defense));
@@ -125,16 +137,8 @@ namespace Vurbiri.Colonization.Actors
         public void RemoveWallDefenceEffect() => _effects.Remove(EffectsFactory.WallEffectCode);
         #endregion
 
-        #region Collider
-        public void Collider(bool enabled) => _thisCollider.enabled = enabled;
-        private void ColliderEnable() => _thisCollider.enabled = _isPlayerTurn;
-        private void ColliderDisable() => _thisCollider.enabled = false;
-        #endregion
-
-        #region ISelectable
-        public void Select() => _stateMachine.Select();
-        public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
-        #endregion
+        private void Enable() => _thisCollider.enabled = _interactable.Value;
+        private void Disable() => _thisCollider.enabled = false;
 
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
         sealed public override void Dispose()

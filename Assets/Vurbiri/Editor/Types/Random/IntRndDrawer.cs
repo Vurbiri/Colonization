@@ -56,6 +56,5 @@ namespace VurbiriEditor
 
             EditorGUI.EndProperty();
         }
-
     }
 }

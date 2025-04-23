@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed protected class ReactState : ASkinState
         {
-            private bool _isIgnoreEvent;
+            private bool _isExit = true;
 
             public ReactState(ActorSkin parent) : base(T_REACT, parent)
             {
@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Update()
             {
-                _isIgnoreEvent = true;
+                _isExit = false;
                 _animator.SetTrigger(_idParam);
             }
 
@@ -31,13 +31,8 @@ namespace Vurbiri.Colonization.Actors
 
             private void OnEventExit()
             {
-                if (_isIgnoreEvent)
-                {
-                    _isIgnoreEvent = false;
-                    return;
-                }
-
-                _fsm.ToPrevState();
+                if (_isExit) _fsm.ToPrevState();
+                _isExit = true;
             }
         }
     }

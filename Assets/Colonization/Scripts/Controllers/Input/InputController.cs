@@ -52,13 +52,17 @@ namespace Vurbiri.Colonization.Controllers
             _gameplayMap.Disable(); _cameraMap.Disable(); _UIMap.Disable();
         }
 
-
         public void OnClickLeft(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskLeft);
         public void OnClickRight(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskRight);
         private void OnClick(Vector2 position, int layerMask)
         {
-            Ray ray = _camera.ScreenPointToRay(position);
-            if (Physics.Raycast(ray, out RaycastHit hit, _distance, layerMask) && hit.collider.TryGetComponent(out ISelectable selectObj))
+            if (!Physics.Raycast(_camera.ScreenPointToRay(position), out RaycastHit hit, _distance, layerMask)) 
+                return;
+
+            if(!hit.collider.TryGetComponent(out ISelectable selectObj) && hit.collider.TryGetComponent(out ISelectableReference selectRef))
+                selectObj = selectRef.Selectable;
+
+            if (selectObj != null)
             {
                 _selectObj?.Unselect(selectObj);
                 _selectObj = selectObj;

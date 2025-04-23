@@ -61,7 +61,6 @@ namespace Vurbiri.Colonization
         {
             _owner = playerId;
             _edifice = Object.Instantiate(_prefabs[buildId]).Init(_owner, _isWall, _links, _edifice);
-            _edifice.Subscribe(OnSelect, OnUnselect);
             _states = _edifice.Settings;
             _states.isBuildWall = _states.isBuildWall && !_isWall;
         }
@@ -91,20 +90,20 @@ namespace Vurbiri.Colonization
             _edifice.AddRoad(id, _isWall);
         }
 
-        //public bool IsFullyOwned(Id<PlayerId> playerId)
-        //{
-        //    if (_links.Filling <= 1)
-        //        return false;
+        public bool IsFullyOwned(Id<PlayerId> playerId)
+        {
+            if (_links.Filling <= 1)
+                return false;
 
-        //    if (_countFreeLink > 0)
-        //        return _owner == playerId;
+            if (_countFreeLink > 0)
+                return _owner == playerId;
 
-        //    foreach (var link in _links)
-        //        if (link.Owner != playerId)
-        //            return false;
+            foreach (var link in _links)
+                if (link.Owner != playerId)
+                    return false;
 
-        //    return true;
-        //}
+            return true;
+        }
         public bool IsRoadConnect(Id<PlayerId> playerId)
         {
             if (_owner == playerId)

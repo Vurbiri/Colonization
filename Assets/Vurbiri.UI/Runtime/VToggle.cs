@@ -10,7 +10,7 @@ namespace Vurbiri.UI
 {
     [AddComponentMenu(VUI_CONST.NAME_MENU + "Toggle", 30)]
     [RequireComponent(typeof(RectTransform))]
-    sealed public partial class VToggle : VSelectable, IPointerClickHandler, ISubmitHandler
+    sealed public partial class VToggle : VSelectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
     {
         [SerializeField] private bool _isOn;
         [SerializeField] private float _fadeDuration = 0.125f;
@@ -277,14 +277,17 @@ namespace Vurbiri.UI
             return new EmptyEffect();
         }
 
+        #region ICanvasElement
+        public void Rebuild(CanvasUpdate executing) { }
+        public void LayoutComplete() { }
+        public void GraphicUpdateComplete() { }
+        #endregion
+
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
             if (!Application.isPlaying && isActiveAndEnabled)
-            {
                 _transitionEffect = TransitionEffectCreate();
-
-            }
 
             base.OnValidate();
         }

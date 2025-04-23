@@ -39,6 +39,9 @@ namespace Vurbiri.Colonization.Actors
 
         private void Start()
         {
+            _reactState = new(this);
+            _deathState = new(this, _durationDeath);
+
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }
 
@@ -48,35 +51,31 @@ namespace Vurbiri.Colonization.Actors
 
             _stateMachine.SetDefaultState(CreateBoolState(B_IDLE));
 
-            _moveState  = CreateBoolState(B_MOVE);
-            _runState   = CreateBoolState(B_RUN);
+            _moveState = CreateBoolState(B_MOVE);
+            _runState = CreateBoolState(B_RUN);
             _blockState = CreateBoolState(B_BLOCK);
-
-            _reactState = new(this);
-            _deathState = new(this, _durationDeath);
 
             int count = _timings.Length;
             _skillStates = new SkillState[count];
             for (int i = 0; i < count; i++)
                 _skillStates[i] = new(B_SKILLS[i], this, _timings[i], i);
-            
+
             _timings = null;
 
             return this;
         }
         
-        public virtual void Idle() => _stateMachine.ToDefaultState();
+        public void Idle() => _stateMachine.ToDefaultState();
 
         public virtual void Block(bool isActive)
         {
-            if (isActive)
-                _stateMachine.SetState(_blockState);
+            if (isActive) _stateMachine.SetState(_blockState);
             _sfx.Block(isActive);
         }
 
-        public virtual void Move() => _stateMachine.SetState(_moveState);
+        public void Move() => _stateMachine.SetState(_moveState);
 
-        public virtual void Run() => _stateMachine.SetState(_runState);
+        public void Run() => _stateMachine.SetState(_runState);
 
         public virtual WaitSignal Skill(int index, ActorSkin targetActorSkin)
         {

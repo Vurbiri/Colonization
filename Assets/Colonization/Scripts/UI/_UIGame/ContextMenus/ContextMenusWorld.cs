@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
 
         private GameObject _thisGO;
         private Camera _camera;
-        private bool _isNotPlayer;
+        private bool _isNotPlayerTurn;
         private RectTransform _thisRectTransform;
         private Unsubscribers _unsubscribers = new(9);
 
@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization.UI
         {
             CloseAll();
 
-            if (_isNotPlayer)
+            if (_isNotPlayerTurn)
                 return;
 
             ToPosition(crossroad.Position);
@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization.UI
         {
             CloseAll();
 
-            if (!actor.IsIdle | _isNotPlayer)
+            if (!actor.Interactable)
                 return;
 
             ToPosition(actor.Position);
@@ -90,7 +90,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnNextTurn(TurnQueue turn)
         {
-            _isNotPlayer = turn.CurrentId != PlayerId.Player;
+            _isNotPlayerTurn = turn.CurrentId != PlayerId.Player;
             CloseAll();
         }
 

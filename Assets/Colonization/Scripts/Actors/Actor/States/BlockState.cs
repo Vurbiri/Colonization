@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\Actors\Actor\States\BlockState.cs
+using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
@@ -9,19 +10,22 @@ namespace Vurbiri.Colonization.Actors
         {
             private readonly EffectCode _code;
             private readonly EffectsSet _effects;
+            private readonly GameplayTriggerBus _triggerBus;
             private readonly int _value;
 
             public bool Enabled => _actor._effects.Contains(_code);
 
             public BlockState(int cost, int value, Actor parent) : base(parent, cost, TypeIdKey.Get<BlockState>(0))
             {
-                _code = new(_actor.TypeId, _actor.Id, EffectsFactory.BLOCK_SKILL_ID, EffectsFactory.BLOCK_EFFECT_ID);
+                _code = new(parent.TypeId, parent.Id, EffectsFactory.BLOCK_SKILL_ID, EffectsFactory.BLOCK_EFFECT_ID);
                 _value = value;
-                _effects = _actor._effects;
+                _effects = parent._effects;
+                _triggerBus = parent._triggerBus;
             }
 
             public override void Enter()
             {
+                Debug.Log($"Enter BlockState {_effects.Contains(_code)} {_skin.name}");
                 if (!_effects.Contains(_code))
                 {
                     _skin.Block(true);
@@ -29,16 +33,19 @@ namespace Vurbiri.Colonization.Actors
                     Pay();
                 }
 
-                _actor.ColliderEnable();
+                _actor.Enable();
             }
 
             public override void Exit()
             {
-                _actor.ColliderDisable();
-
+                _actor.Disable();
+                Debug.Log($"Exit BlockState {_effects.Contains(_code)} {_skin.name}");
                 if (!_effects.Contains(_code))
                     _skin.Block(false);
             }
+
+            public override void Select() => _triggerBus.TriggerActorSelect(_actor);
+            public override void Unselect(ISelectable newSelectable) => _triggerBus.TriggerUnselect();
         }
     }
 }

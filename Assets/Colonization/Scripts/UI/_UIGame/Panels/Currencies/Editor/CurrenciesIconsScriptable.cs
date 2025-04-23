@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\Editor\Icons\CurrenciesIconsScriptable.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\Editor\CurrenciesIconsScriptable.cs
 using UnityEngine;
 using Vurbiri.Collections;
 

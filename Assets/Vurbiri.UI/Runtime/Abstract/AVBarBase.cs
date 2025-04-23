@@ -5,10 +5,7 @@ using UnityEngine.UI;
 namespace Vurbiri.UI
 {
     [ExecuteAlways]
-    public abstract class AVBarBase : MonoBehaviour
-#if UNITY_EDITOR
-        , ICanvasElement
-#endif
+    public abstract class AVBarBase : MonoBehaviour, ICanvasElement
     {
         private const int HORIZONTAL = 0, VERTICAL = 1;
 
@@ -174,18 +171,21 @@ namespace Vurbiri.UI
         }
         #endregion
 
-#if UNITY_EDITOR
+
         #region ICanvasElement
         public void Rebuild(CanvasUpdate executing)
         {
+#if UNITY_EDITOR
             if (executing == CanvasUpdate.Prelayout)
                 UpdateVisuals();
+#endif
         }
         public bool IsDestroyed() => this == null;
         public void LayoutComplete() { }
         public void GraphicUpdateComplete() { }
         #endregion
 
+#if UNITY_EDITOR
         protected virtual void OnValidate()
         {
             if (!Application.isPlaying)

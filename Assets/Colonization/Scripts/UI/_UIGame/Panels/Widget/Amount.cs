@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\Amount.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\Amount.cs
 using TMPro;
 using UnityEngine;
 using Vurbiri.Reactive;

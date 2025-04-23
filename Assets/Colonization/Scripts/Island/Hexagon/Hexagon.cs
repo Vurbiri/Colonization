@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     public partial class Hexagon : MonoBehaviour, ISelectable, IPositionable
     {
         [SerializeField] private HexagonCaption _hexagonCaption;
-        [SerializeField] private Collider _collider;
+        [SerializeField] private Collider _thisCollider;
 
         #region Fields
         private Key _key;
@@ -90,11 +90,17 @@ namespace Vurbiri.Colonization
 
             if (_isWater)
             {
-                Destroy(_collider);
-                _collider = null;
+                Destroy(_thisCollider);
+                _thisCollider = null;
                 _poolMarks = null;
             }
         }
+
+        #region ISelectable
+        public bool Interactable { get => _thisCollider.enabled;}
+        public void Select() { }
+        public void Unselect(ISelectable newSelectable) { }
+        #endregion
 
         public void AddNeighborAndCreateCrossroadLink(Hexagon neighbor)
         {
@@ -183,7 +189,7 @@ namespace Vurbiri.Colonization
                 return false;
 
             _mark = _poolMarks.Get(_thisTransform, false).View(true);
-            _collider.enabled = true;
+            _thisCollider.enabled = true;
             return true;
         }
         public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
@@ -192,8 +198,7 @@ namespace Vurbiri.Colonization
                 return false;
 
             _mark = _poolMarks.Get(_thisTransform, false).View(isFriendly);
-            _owner.Collider(true);
-            _collider.enabled = true;
+            _thisCollider.enabled = _owner.RaycastTarget = true;
             return true;
         }
         public void SetUnselectable()
@@ -201,14 +206,14 @@ namespace Vurbiri.Colonization
             if (_mark == null | _isWater) return;
 
             _poolMarks.Return(_mark);
-            _collider.enabled = false;
+            _thisCollider.enabled = false;
             _mark = null;
         }
         public void SetOwnerUnselectable()
         {
             SetUnselectable();
             if (_ownerId != PlayerId.Player & _ownerId != PlayerId.None)
-                _owner.Collider(false);
+                _owner.RaycastTarget = false;
         }
         #endregion
 
@@ -217,11 +222,6 @@ namespace Vurbiri.Colonization
             _isShow = value;
             _hexagonCaption.SetActive(value);
         }
-
-        #region ISelectable
-        public void Select() { }
-        public void Unselect(ISelectable newSelectable) { }
-        #endregion
 
         private void OnDestroy()
         {
@@ -234,8 +234,8 @@ namespace Vurbiri.Colonization
             if (_hexagonCaption == null)
                 _hexagonCaption = GetComponentInChildren<HexagonCaption>();
 
-            if(_collider == null)
-                _collider = GetComponent<Collider>();
+            if(_thisCollider == null)
+                _thisCollider = GetComponent<Collider>();
         }
 #endif
     }

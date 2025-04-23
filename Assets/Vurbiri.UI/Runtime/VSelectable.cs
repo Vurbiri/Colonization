@@ -98,7 +98,6 @@ namespace Vurbiri.UI
 
         protected virtual void OnStateTransition(int intState, Color targetColor, float duration)
         {
-
         }
 
 #if UNITY_EDITOR

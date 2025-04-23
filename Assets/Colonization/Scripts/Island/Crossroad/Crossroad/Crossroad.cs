@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Crossroad : IDisposable, IPositionable, ICancel
+    sealed public partial class Crossroad : IDisposable, IPositionable, ISelectable, ICancel
     {
         #region Fields
         private const int HEX_COUNT = 3;
@@ -28,6 +28,8 @@ namespace Vurbiri.Colonization
         private int _countFreeLink = 0, _countWater = 0;
         private bool _isGate = false;
         private WaitResultSource<Hexagon> _waitHexagon;
+
+        private readonly RBool _interactable;
         private readonly RBool _canCancel = new();
 
         private Unsubscriber _unsubscriber;
@@ -44,7 +46,6 @@ namespace Vurbiri.Colonization
         public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
         public bool IsWall => _isWall;
         public IEnumerable<CrossroadLink> Links => _links;
-        public IReactiveValue<bool> CanCancel => _canCancel;
         public Vector3 Position { get; }
         #endregion
 
@@ -57,9 +58,37 @@ namespace Vurbiri.Colonization
             _triggerBus = triggerBus;
 
             _edifice = Object.Instantiate(_prefabs[EdificeId.Empty], position, rotation, container);
-            _edifice.Subscribe(OnSelect, OnUnselect);
             _states = _edifice.Settings;
+            _edifice.Selectable = this;
         }
+
+        #region ISelectable, ICancel
+        public RBool CanCancel => _canCancel;
+        public RBool InteractableReactive => _interactable;
+        public bool Interactable { get => _interactable.Value; set => _interactable.Value = value; }
+        public bool RaycastTarget { get => _edifice.RaycastTarget; set => _edifice.RaycastTarget = value; }
+        public void Select()
+        {
+            Debug.Log("Отправлять только если игрок");
+            _triggerBus.TriggerCrossroadSelect(this);
+        }
+        public void Unselect(ISelectable newSelectable)
+        {
+            _triggerBus.TriggerUnselect();
+
+            if (_waitHexagon == null)
+                return;
+
+            _canCancel.False();
+
+            _waitHexagon.SetResult(newSelectable as Hexagon);
+            foreach (var hex in _hexagons)
+                hex.SetUnselectable();
+
+            _waitHexagon = null;
+        }
+        public void Cancel() => Unselect(null);
+        #endregion
 
         public bool AddHexagon(Hexagon hexagon)
         {
@@ -140,30 +169,6 @@ namespace Vurbiri.Colonization
             profit.Multiply(Mathf.Max(_states.profit - Mathf.Max(countEnemy - _defenceWall, 0), 0));
             return profit;
         }
-        #endregion
-
-        #region ISelectable, ICancel
-        public void OnSelect()
-        {
-            Debug.Log("Отправлять только если игрок");
-            _triggerBus.TriggerCrossroadSelect(this);
-        }
-        public void OnUnselect(ISelectable newSelectable)
-        {
-            _triggerBus.TriggerUnselect();
-
-            if (_waitHexagon == null)
-                return;
-
-            _canCancel.False();
-
-            _waitHexagon.SetResult(newSelectable as Hexagon);
-            foreach (var hex in _hexagons)
-                hex.SetUnselectable();
-
-            _waitHexagon = null;
-        }
-        public void Cancel() => OnUnselect(null);
         #endregion
 
         public void Dispose()

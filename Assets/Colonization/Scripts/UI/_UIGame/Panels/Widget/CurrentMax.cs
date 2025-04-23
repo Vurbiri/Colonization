@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\Blood.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\CurrentMax.cs
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +7,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class Blood : MonoBehaviour
+    public class CurrentMax : MonoBehaviour
     {
         private const string COUNT = "{0}<space=0.14em>({1})";
 
@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization.UI
             if (_countTMP == null)
                 _countTMP = GetComponent<TMP_Text>();
             if (_popup == null)
-                _popup = GetComponentInChildren<PopupWidgetUI>();
+                _popup = GetComponentInChildren<PopupWidgetUI>(true);
         }
 #endif
     }
