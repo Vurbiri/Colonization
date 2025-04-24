@@ -31,6 +31,8 @@ namespace VurbiriEditor.UI
         protected SerializedProperty m_AnimTriggerProperty;
         protected SerializedProperty m_NavigationProperty;
 
+        private ColorBlockDrawer _colorBlockDrawer;
+
         private readonly GUIContent m_VisualizeNavigation = EditorGUIUtility.TrTextContent("Visualize", "Show navigation flows between selectable UI elements.");
 
         protected readonly AnimBool m_ShowColorTint = new();
@@ -57,23 +59,25 @@ namespace VurbiriEditor.UI
         {
             _vSelectable = target as VSelectable;
 
-            _interactableIconProperty = serializedObject.FindProperty("_interactableIcon");
-            _alphaColliderProperty = serializedObject.FindProperty("_alphaCollider");
-            _thresholdProperty = serializedObject.FindProperty("_threshold");
-            _targetGraphicsProperty = serializedObject.FindProperty("_targetGraphics");
-            m_TargetGraphicProperty = serializedObject.FindProperty("m_TargetGraphic");
-            m_Script = serializedObject.FindProperty("m_Script");
-            m_InteractableProperty = serializedObject.FindProperty("m_Interactable");
-            m_TransitionProperty = serializedObject.FindProperty("m_Transition");
-            m_ColorBlockProperty = serializedObject.FindProperty("m_Colors");
-            m_SpriteStateProperty = serializedObject.FindProperty("m_SpriteState");
-            m_AnimTriggerProperty = serializedObject.FindProperty("m_AnimationTriggers");
-            m_NavigationProperty = serializedObject.FindProperty("m_Navigation");
+            _interactableIconProperty   = serializedObject.FindProperty("_interactableIcon");
+            _alphaColliderProperty      = serializedObject.FindProperty("_alphaCollider");
+            _thresholdProperty          = serializedObject.FindProperty("_threshold");
+            _targetGraphicsProperty     = serializedObject.FindProperty("_targetGraphics");
+            m_TargetGraphicProperty     = serializedObject.FindProperty("m_TargetGraphic");
+            m_Script                    = serializedObject.FindProperty("m_Script");
+            m_InteractableProperty      = serializedObject.FindProperty("m_Interactable");
+            m_TransitionProperty        = serializedObject.FindProperty("m_Transition");
+            m_ColorBlockProperty        = serializedObject.FindProperty("m_Colors");
+            m_SpriteStateProperty       = serializedObject.FindProperty("m_SpriteState");
+            m_AnimTriggerProperty       = serializedObject.FindProperty("m_AnimationTriggers");
+            m_NavigationProperty        = serializedObject.FindProperty("m_Navigation");
 
-            m_ShowColorTint.value = _transition == Selectable.Transition.ColorTint;
-            m_ShowSpriteTransition.value = _transition == Selectable.Transition.SpriteSwap;
-            m_ShowAnimTransition.value = _transition == Selectable.Transition.Animation;
-            _showThreshold.value = _alphaColliderProperty.boolValue;
+            _colorBlockDrawer           = new(m_ColorBlockProperty);
+
+            m_ShowColorTint.value           = _transition == Selectable.Transition.ColorTint;
+            m_ShowSpriteTransition.value    = _transition == Selectable.Transition.SpriteSwap;
+            m_ShowAnimTransition.value      = _transition == Selectable.Transition.Animation;
+            _showThreshold.value            = _alphaColliderProperty.boolValue;
 
             m_ShowColorTint.valueChanged.AddListener(Repaint);
             m_ShowSpriteTransition.valueChanged.AddListener(Repaint);
@@ -228,8 +232,8 @@ namespace VurbiriEditor.UI
                 PropertyField(_targetGraphicsProperty);
                 if (targetGraphic.objectReferenceValue as Graphic == null)
                     HelpBox("You must have a Graphics target in order to use a color transition.", UnityEditor.MessageType.Warning);
-                
-                PropertyField(m_ColorBlockProperty);
+
+                _colorBlockDrawer.OnGUI();
             }
             EndFadeGroup();
             // ========= SpriteSwap =================================

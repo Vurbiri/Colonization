@@ -51,18 +51,18 @@ namespace VurbiriEditor.UI
             for (int i = 0; i < _selectedCount; i++)
                 _toggles[i] = (VToggle)targets[i];
 
-            _isOnProperty = serializedObject.FindProperty("_isOn");
-            _durationProperty = serializedObject.FindProperty("_fadeDuration");
-            _switchingTypeProperty = serializedObject.FindProperty("_switchingType");
-            _checkmarkOnProperty = serializedObject.FindProperty("_checkmarkOn");
-            _checkmarkOffProperty = serializedObject.FindProperty("_checkmarkOff");
-            _colorOnProperty = serializedObject.FindProperty("_colorOn");
-            _colorOffProperty = serializedObject.FindProperty("_colorOff");
-            _groupProperty = serializedObject.FindProperty("_group");
+            _isOnProperty           = serializedObject.FindProperty("_isOn");
+            _durationProperty       = serializedObject.FindProperty("_fadeDuration");
+            _switchingTypeProperty  = serializedObject.FindProperty("_switchingType");
+            _checkmarkOnProperty    = serializedObject.FindProperty("_checkmarkOn");
+            _checkmarkOffProperty   = serializedObject.FindProperty("_checkmarkOff");
+            _colorOnProperty        = serializedObject.FindProperty("_colorOn");
+            _colorOffProperty       = serializedObject.FindProperty("_colorOff");
+            _groupProperty          = serializedObject.FindProperty("_group");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
-            _showSwitchType.value = _switchingType == SwitchingType.SwitchCheckmark;
-            _showColorType.value = _switchingType == SwitchingType.ColorCheckmark;
+            _showSwitchType.value   = _switchingType == SwitchingType.SwitchCheckmark;
+            _showColorType.value    = _switchingType == SwitchingType.ColorCheckmark;
 
             _showSwitchType.valueChanged.AddListener(Repaint);
             _showColorType.valueChanged.AddListener(Repaint);
