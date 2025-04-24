@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         private CoroutinesQueue _queue;
         private int _prevValue = int.MinValue;
 
-        public void Init(TextColorSettings settings, Vector3 direction)
+        public void Init(ProjectColors settings, Vector3 direction)
         {
             _thisTransform = transform;
             _thisGameObject = gameObject;
@@ -34,8 +34,8 @@ namespace Vurbiri.Colonization.UI
             _positionStart = _thisTransform.localPosition;
             _positionEnd = _positionStart + direction * _distance;
 
-            _stringPlus = settings.HexColorPositive.Concat(" +{0}");
-            _stringMinus = settings.HexColorNegative.Concat(" {0}");
+            _stringPlus = settings.TextPositiveTag.Concat(" +{0}");
+            _stringMinus = settings.TextNegativeTag.Concat(" {0}");
 
             _scaleColorSpeed = 1f / (1f - _startHide);
 

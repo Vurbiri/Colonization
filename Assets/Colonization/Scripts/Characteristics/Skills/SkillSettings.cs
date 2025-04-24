@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
 
-        public SkillUI GetSkillUI(Localization language, TextColorSettings hintTextColor)
+        public SkillUI GetSkillUI(Localization language, ProjectColors hintTextColor)
         {
             int countHits = _effectsHitsSettings.Length;
             List<AEffectsUI> targetEffectsUI = new(countHits), selfEffectsUI = new(countHits);

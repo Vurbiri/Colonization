@@ -25,8 +25,8 @@ namespace Vurbiri.Colonization.UI
             base.Init(localPosition, settings.hint, action, true);
 
             _targetGraphics[_indexApplyColor].SetGraphicColor(settings.playerColor);
-            _hexColorPlus = settings.colorSettings.HexColorPositive;
-            _hexColorMinus = settings.colorSettings.HexColorNegative;
+            _hexColorPlus = settings.colorSettings.TextPositiveTag;
+            _hexColorMinus = settings.colorSettings.TextNegativeTag;
         }
 
         protected void SetTextHint(string caption, ACurrencies cash, ACurrencies cost)

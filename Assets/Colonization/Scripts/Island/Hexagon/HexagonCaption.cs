@@ -31,9 +31,9 @@ namespace Vurbiri.Colonization.UI
             _cameraTransform = SceneContainer.Get<Camera>().transform;
             _lastCameraRotation = Quaternion.identity;
 
-            var colorSettings = SceneContainer.Get<TextColorSettings>();
-            _colorNormal = colorSettings.ColorTextBase;
-            _colorProfit = colorSettings.ColorPositive;
+            var colorSettings = SceneContainer.Get<ProjectColors>();
+            _colorNormal = colorSettings.TextDefault;
+            _colorProfit = colorSettings.TextPositive;
 
             StringBuilder sb = new(TAG_SPRITE_LENGTH * CurrencyId.Count);
 

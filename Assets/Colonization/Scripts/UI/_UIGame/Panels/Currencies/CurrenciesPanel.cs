@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Collections;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -11,22 +10,24 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Currency[] _currencies;
         [SerializeField] private Amount _amount;
 
-        public void Init(Color color, Direction2 directionPopup, ACurrenciesReactive currencies, TextColorSettings settings)
+        public void Init(Direction2 directionPopup, ACurrenciesReactive currencies, ProjectColors colors)
         {
-            GetComponent<Image>().color = color;
+            GetComponent<Image>().color = colors.BackgroundPanel;
 
             for (int i = 0; i < CurrencyId.CountMain; i++)
-                _currencies[i].Init(i, currencies, settings, directionPopup);
+                _currencies[i].Init(i, currencies, colors, directionPopup);
 
-            _amount.Init(currencies.AmountCurrent, currencies.AmountMax, settings);
+            _amount.Init(currencies.AmountCurrent, currencies.AmountMax, colors);
 
             Destroy(this);
         }
 
 #if UNITY_EDITOR
-        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, float space, IdArray<CurrencyId, CurrencyIcon> icons, TextColorSettings colors)
+        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, float space, IdArray<CurrencyId, CurrencyIcon> icons, ProjectColors colors)
         {
-            GetComponent<Image>().pixelsPerUnitMultiplier = pixelsPerUnit;
+            Image image = GetComponent<Image>();
+            image.color = colors.BackgroundPanel;
+            image.pixelsPerUnitMultiplier = pixelsPerUnit;
 
             RectTransform thisRectTransform = (RectTransform)transform;
             Vector2 cSize = _currencies[0].Size, aSize = _amount.Size;

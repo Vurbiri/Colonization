@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.Characteristics
                 if (_skillsUI != null)  
                     return _skillsUI;
 
-                var hintTextColor = SceneContainer.Get<TextColorSettings>();
+                var hintTextColor = SceneContainer.Get<ProjectColors>();
                 var language = SceneContainer.Get<Localization>();
                 int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
                 _skillsUI = new SkillUI[countSkills];

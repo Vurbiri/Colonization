@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -15,11 +14,11 @@ namespace Vurbiri.Colonization.UI
 
         private Unsubscriber _unsubscriber;
 
-        public void Init(int id, ACurrenciesReactive count, TextColorSettings settings, Direction2 offsetPopup)
+        public void Init(int id, ACurrenciesReactive count, ProjectColors settings, Direction2 offsetPopup)
         {
             _popup.Init(settings, offsetPopup);
 
-            _countTMP.color = settings.ColorTextBase;
+            _countTMP.color = settings.TextPanel;
 
             _unsubscriber = count.Subscribe(id, SetValue);
         }
@@ -48,7 +47,7 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
 
         public Vector2 Size => ((RectTransform)transform).sizeDelta;
-        public void Init_Editor(Vector3 position, CurrencyIcon icon, TextColorSettings settings)
+        public void Init_Editor(Vector3 position, CurrencyIcon icon, ProjectColors settings)
         {
             ((RectTransform)transform).localPosition = position;
 
@@ -58,7 +57,7 @@ namespace Vurbiri.Colonization.UI
             serializedImage.FindProperty("m_Sprite").objectReferenceValue = icon.Icon;
             serializedImage.ApplyModifiedProperties();
 
-            _countTMP.color = settings.ColorTextBase;
+            _countTMP.color = settings.TextPanel;
         }
 
         private void OnValidate()

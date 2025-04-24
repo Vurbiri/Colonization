@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [Space]
         [SerializeField] private string _leaderboardName = "lbColonization";
         [Space]
-        [SerializeField] private TextColorSettingsScriptable _settingsColorScriptable;
+        [SerializeField] private ColorSettingsScriptable _settingsColorScriptable;
         [Space]
         [SerializeField] private Settings _settings;
 

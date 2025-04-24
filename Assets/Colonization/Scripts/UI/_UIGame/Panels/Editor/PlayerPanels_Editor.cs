@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.UI
     {
         [Header("┌──────────── Editor ─────────────────────")]
         [SerializeField, ReadOnly] private CurrenciesIconsScriptable _currenciesIcons;
-        [SerializeField, ReadOnly] private TextColorSettingsScriptable _settingsColor;
+        [SerializeField, ReadOnly] private ColorSettingsScriptable _colorSettings;
         [Space]
         [SerializeField, Range(1f, 3f)] private float _pixelsPerUnit = 1.5f;
         [Header("Panels In")]
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.UI
         public void UpdateVisuals()
         {
             var icons = _currenciesIcons.Icons;
-            var colors = _settingsColor.Colors;
+            var colors = _colorSettings.Colors;
 
             RectTransform thisRectTransform = (RectTransform)transform;
             RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, _spaceIn, icons, colors);
@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.UI
             if (!Application.isPlaying)
             {
                 EUtility.SetScriptable(ref _currenciesIcons);
-                EUtility.SetScriptable(ref _settingsColor);
+                EUtility.SetScriptable(ref _colorSettings);
 
                 EUtility.SetObject(ref _currencies);
                 EUtility.SetObject(ref _blood);

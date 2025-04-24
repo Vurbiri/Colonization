@@ -162,7 +162,7 @@ namespace Vurbiri.UI
             
             _colorOn = colorOn; _colorOff = colorOff;
 
-            _transitionEffect.ColorsUpdate();
+            _transitionEffect.ColorsUpdate(colorOn, colorOff);
             _transitionEffect.PlayInstant(_isOn);
         }
 
@@ -265,14 +265,14 @@ namespace Vurbiri.UI
             if (_checkmarkOn != null) _checkmarkOn.canvasRenderer.SetAlpha(0f);
             if (_checkmarkOff != null) _checkmarkOff.canvasRenderer.SetAlpha(0f);
 
-            if (_switchingType == SwitchingType.OnOffCheckmark && OnOffEffect.Validate(this))
+            if (_switchingType == SwitchingType.OnOffCheckmark && _checkmarkOn != null)
                 return new OnOffEffect(_fadeDuration, _isOn, _checkmarkOn);
 
-            if (_switchingType == SwitchingType.SwitchCheckmark && SwitchEffect.Validate(this))
-                return new SwitchEffect(this);
+            if (_switchingType == SwitchingType.SwitchCheckmark && _checkmarkOn != null & _checkmarkOff != null)
+                return new SwitchEffect(_fadeDuration, _isOn, _checkmarkOn, _checkmarkOff);
 
-            if (_switchingType == SwitchingType.ColorCheckmark && ColorEffect.Validate(this))
-                return new ColorEffect(this);
+            if (_switchingType == SwitchingType.ColorCheckmark && _checkmarkOn != null)
+                return new ColorEffect(_fadeDuration, _isOn, _checkmarkOn, _colorOn, _colorOff);
 
             return new EmptyEffect();
         }

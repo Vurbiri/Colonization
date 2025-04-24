@@ -3,7 +3,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -16,11 +15,11 @@ namespace Vurbiri.Colonization.UI
 
         private ReactiveCombination<int, int> _reactiveBlood;
 
-        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, TextColorSettings settings, Direction2 offsetPopup)
+        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors settings, Direction2 offsetPopup)
         {
             _popup.Init(settings, offsetPopup);
 
-            _countTMP.color = settings.ColorTextBase;
+            _countTMP.color = settings.TextPanel;
 
             _reactiveBlood = new(current, max);
             _reactiveBlood.Subscribe(SetBlood);
@@ -38,9 +37,9 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
         public Vector2 Size => ((RectTransform)transform).sizeDelta;
-        public void Init_Editor(CurrencyIcon icon, TextColorSettings settings)
+        public void Init_Editor(CurrencyIcon icon, ProjectColors settings)
         {
-            _countTMP.color = settings.ColorTextBase;
+            _countTMP.color = settings.TextPanel;
             SetBlood(12, 13);
 
             UnityEditor.SerializedObject serializedImage = new(GetComponentInChildren<Image>());

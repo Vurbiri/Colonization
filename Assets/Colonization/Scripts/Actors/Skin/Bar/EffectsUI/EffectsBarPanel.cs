@@ -2,9 +2,9 @@
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
 	{
         private readonly Pool<EffectsBar> _poolEffectsUI;
         private readonly IdArray<ActorAbilityId, Sprite> _sprites;
-        private readonly TextColorSettings _colors;
+        private readonly ProjectColors _colors;
         private readonly int _orderLevel;
         private readonly IReactiveItem<Actor> _actor;
         private readonly Transform _transform;
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Actors
 		{
             _poolEffectsUI = SceneContainer.Get<Pool<EffectsBar>>();
             _sprites = sprites;
-            _colors = SceneContainer.Get<TextColorSettings>();
+            _colors = SceneContainer.Get<ProjectColors>();
             _orderLevel = orderLevel;
             _actor = actor;
             _transform = transform;

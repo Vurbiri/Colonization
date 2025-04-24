@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Collections;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -10,20 +9,24 @@ namespace Vurbiri.Colonization.UI
 	{
         [SerializeField] private CurrentMax _blood;
 
-        public void Init(Color color, Direction2 directionPopup, ACurrenciesReactive currencies, TextColorSettings settings)
+        public void Init(Direction2 directionPopup, ACurrenciesReactive currencies, ProjectColors colors)
         {
-            GetComponent<Image>().color = color;
-            _blood.Init(currencies.BloodCurrent, currencies.BloodMax, settings, directionPopup);
+            GetComponent<Image>().color = colors.BackgroundPanel;
+            _blood.Init(currencies.BloodCurrent, currencies.BloodMax, colors, directionPopup);
 
             Destroy(this);
         }
 
 #if UNITY_EDITOR
-        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, IdArray<CurrencyId, CurrencyIcon> icons, TextColorSettings colors)
+        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, IdArray<CurrencyId, CurrencyIcon> icons, ProjectColors colors)
         {
-            GetComponent<Image>().pixelsPerUnitMultiplier = pixelsPerUnit;
+            Image image = GetComponent<Image>();
+            image.color = colors.BackgroundPanel;
+            image.pixelsPerUnitMultiplier = pixelsPerUnit;
+
             RectTransform thisRectTransform = (RectTransform)transform;
             thisRectTransform.sizeDelta = _blood.Size + padding * 2f;
+
             _blood.Init_Editor(icons[CurrencyId.Blood], colors);
             return thisRectTransform;
         }

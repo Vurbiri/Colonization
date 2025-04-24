@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
-using Vurbiri.UI;
 using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization.Actors
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.Actors
             Object.Destroy(initObj);
         }
 
-        public void Init(ReactiveEffect effect, IReactiveItem<Actor> actor, IReadOnlyList<Sprite> sprites, TextColorSettings colors, int orderLevel)
+        public void Init(ReactiveEffect effect, IReactiveItem<Actor> actor, IReadOnlyList<Sprite> sprites, ProjectColors colors, int orderLevel)
         {
             _sprite.sortingOrder += orderLevel;
             _durationTMP.sortingOrder += orderLevel;

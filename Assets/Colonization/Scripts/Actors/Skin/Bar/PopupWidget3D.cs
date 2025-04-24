@@ -43,10 +43,10 @@ namespace Vurbiri.Colonization.UI
             _sprites = sprites;
             _queue = new(this, () => _thisGameObject.SetActive(false));
 
-            Vurbiri.UI.TextColorSettings settings = SceneContainer.Get<Vurbiri.UI.TextColorSettings>();
+            ProjectColors settings = SceneContainer.Get<ProjectColors>();
 
-            _colorPlusStart = _colorPlusEnd = settings.ColorPositive;
-            _colorMinusStart = _colorMinusEnd = settings.ColorNegative;
+            _colorPlusStart = _colorPlusEnd = settings.TextPositive;
+            _colorMinusStart = _colorMinusEnd = settings.TextPositive;
             _colorPlusEnd.a = _colorMinusEnd.a = _minAlpha;
 
             _scaleColorSpeed = 1f / (1f - _startHide);

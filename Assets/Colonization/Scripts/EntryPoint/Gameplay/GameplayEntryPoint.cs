@@ -157,7 +157,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             public void Init(GameplayEntryPoint parent, ScriptableObjects scriptables)
             {
-                hintGlobalWorld.Init(parent._diContainer.Get<TextColorSettings>().ColorHintBase);
+                hintGlobalWorld.Init(parent._diContainer.Get<ProjectColors>().HintDefault);
                 cameraController.Init(mainCamera, parent._inputController.CameraActions);
                 contextMenusWorld.Init(new(parent._turnQueue, parent._players, hintGlobalWorld, scriptables.prices, mainCamera, parent._triggerBus));
             }
