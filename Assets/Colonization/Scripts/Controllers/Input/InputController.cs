@@ -56,21 +56,29 @@ namespace Vurbiri.Colonization.Controllers
         public void OnClickRight(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskRight);
         private void OnClick(Vector2 position, int layerMask)
         {
-            if (!Physics.Raycast(_camera.ScreenPointToRay(position), out RaycastHit hit, _distance, layerMask)) 
-                return;
+            Ray ray = _camera.ScreenPointToRay(position);
 
-            if(!hit.collider.TryGetComponent(out ISelectable selectObj) && hit.collider.TryGetComponent(out ISelectableReference selectRef))
-                selectObj = selectRef.Selectable;
-
-            if (selectObj != null)
+            if (Physics.Raycast(ray, out RaycastHit hit, _distance, layerMask) && TryGetSelectable(hit.collider, out ISelectable selectObj))
             {
                 _selectObj?.Unselect(selectObj);
                 _selectObj = selectObj;
                 _selectObj.Select();
             }
+
+            #region Local: TryGetSelectable(..)
+            //=================================
+            static bool TryGetSelectable(Collider collider, out ISelectable selectObj)
+            {
+                if (!collider.TryGetComponent(out selectObj) && collider.TryGetComponent(out ISelectableReference selectRef))
+                    selectObj = selectRef.Selectable;
+
+                return selectObj != null;
+            }
+            #endregion
         }
 
         public void Dispose() => _inputActions?.Disable();
+
 
         #region Nested: Settings
         //***********************************

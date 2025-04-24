@@ -13,7 +13,9 @@ namespace Vurbiri.TextLocalization.Editor
     //[CreateAssetMenu(fileName = LANG_TYPES_NAME, menuName = "Vurbiri/Localization/LanguageTypes", order = 51)]
     internal class LanguageTypesScriptable : AGetOrCreateScriptableObject<LanguageTypesScriptable>
     {
+        #pragma warning disable 414
         [SerializeField] private bool _auto = true;
+        #pragma warning restore 414
         [SerializeField] private List<LanguageType> _languageTypes = new();
 
         public void Load()
@@ -41,12 +43,6 @@ namespace Vurbiri.TextLocalization.Editor
             for (int i = 0; i < _languageTypes.Count; i++)
                 if(_languageTypes[i].Id != i)
                     _languageTypes[i] = new(i, _languageTypes[i]);
-        }
-
-        public void EmptyMethod()
-        {
-            if (_auto)
-                Debug.Log("Чтобы не ругался Editor");
         }
     }
 }

@@ -38,7 +38,6 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
         public Vector2 Size => ((RectTransform)transform).sizeDelta;
-
         public void Init_Editor(CurrencyIcon icon, TextColorSettings settings)
         {
             _countTMP.color = settings.ColorTextBase;

@@ -85,6 +85,7 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
+
 #if UNITY_EDITOR
         private void OnValidate()
         {

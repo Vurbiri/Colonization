@@ -36,7 +36,6 @@ namespace Vurbiri.Colonization
             _reactiveAmountMax.Dispose();
         }
 
-
 #if UNITY_EDITOR
         public Vector2 Size => ((RectTransform)transform).sizeDelta;
         public void Init_Editor(Vector3 position, TextColorSettings settings)
@@ -44,6 +43,7 @@ namespace Vurbiri.Colonization
             ((RectTransform)transform).localPosition = position;
 
             _textTMP.color = settings.ColorTextBase;
+            _textTMP.text = string.Format(AMOUNT, "<#ff0000ff>", Mathf.Min(33, 99), 25);
         }
         private void OnValidate()
         {

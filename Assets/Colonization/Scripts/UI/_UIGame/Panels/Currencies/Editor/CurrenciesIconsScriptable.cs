@@ -10,5 +10,6 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private IdArray<CurrencyId, CurrencyIcon> _icons;
 
         public IdArray<CurrencyId, CurrencyIcon> Icons => _icons;
+
     }
 }
