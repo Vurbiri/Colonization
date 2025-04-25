@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Button", 30)]
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.BUTTON, VUI_CONST_ED.BUTTON_ORDER)]
+#endif
     sealed public class VButton : AVButton
     {
         private VButton() { }

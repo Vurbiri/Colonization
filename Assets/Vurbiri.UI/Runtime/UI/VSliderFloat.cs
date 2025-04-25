@@ -3,8 +3,10 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Slider Float", 34)]
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.SLIDER_FLOAT, VUI_CONST_ED.SLIDER_ORDER)]
     [RequireComponent(typeof(RectTransform))]
+#endif
     sealed public class VSliderFloat : AVSlider<float>
     {
         public const float RATE_STEP_MIN = 0.025f, RATE_STEP_MAX = 0.2f;

@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Editor\Editors\Abstract\AVButtonEditor.cs
+//Assets\Vurbiri.UI\Editor\Editors\AVButtonEditor.cs
 using System.Collections.Generic;
 using UnityEditor;
 using Vurbiri.UI;
@@ -6,7 +6,7 @@ using Vurbiri.UI;
 namespace VurbiriEditor.UI
 {
     [CustomEditor(typeof(AVButton), true), CanEditMultipleObjects]
-    public abstract class AVButtonEditor : VSelectableEditor
+    public class AVButtonEditor : VSelectableEditor
     {
         private SerializedProperty _onClickProperty;
 

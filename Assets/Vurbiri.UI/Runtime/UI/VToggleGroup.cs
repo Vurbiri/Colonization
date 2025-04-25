@@ -5,7 +5,9 @@ using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Toggle Group", 31), DisallowMultipleComponent]
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.TOGGLE_GROUP, VUI_CONST_ED.TOGGLE_ORDER), DisallowMultipleComponent]
+#endif
     sealed public class VToggleGroup : UIBehaviour
     {
         [SerializeField] private bool _allowSwitchOff = false;

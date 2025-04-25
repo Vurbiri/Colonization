@@ -9,8 +9,8 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VBarInt)), CanEditMultipleObjects]
     public class VBarIntEditor : AVBarEditor<int>
 	{
-        private const string NAME = "Bar Int", RESOURCE = "VBarInt";
-        private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
+        private const string NAME = VUI_CONST_ED.BAR_INT, RESOURCE = "VBarInt";
+        private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
 
         protected override int Value { get => _valueProperty.intValue; set => _valueProperty.intValue = value; }
         protected override int MinValue { get => _minValueProperty.intValue; set => _minValueProperty.intValue = value; }
@@ -28,7 +28,7 @@ namespace VurbiriEditor.UI
         }
         protected override void DelayedField(SerializedProperty property) => DelayedIntField(property);
 
-        [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
+        [MenuItem(MENU, false, VUI_CONST_ED.CREATE_MENU_PRIORITY)]
         public static void CreateFromMenu(MenuCommand command) => Utility.CreateObjectFromResources(RESOURCE, NAME, command.context as GameObject);
     }
 }

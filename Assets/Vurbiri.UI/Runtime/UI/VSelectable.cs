@@ -7,8 +7,10 @@ using UnityEngine.UI;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Selectable", 36)]
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.SELECTABLE, VUI_CONST_ED.SELECTABLE_ORDER)]
     [ExecuteAlways, SelectionBase, DisallowMultipleComponent]
+#endif
     public partial class VSelectable : Selectable
     {
         [SerializeField] protected Graphic _interactableIcon;

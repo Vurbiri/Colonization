@@ -14,8 +14,8 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VToggle)), CanEditMultipleObjects]
     sealed public class VToggleEditor : VSelectableEditor
     {
-        private const string NAME = "Toggle", RESOURCE = "VToggle";
-        private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
+        private const string NAME = VUI_CONST_ED.TOGGLE, RESOURCE = "VToggle";
+        private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
 
         private const float MIN_DURATION = 0f, MAX_DURATION = 1f;
 
@@ -159,7 +159,7 @@ namespace VurbiriEditor.UI
             PropertyField(_onValueChangedProperty);
         }
 
-        [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
+        [MenuItem(MENU, false, VUI_CONST_ED.CREATE_MENU_PRIORITY)]
         public static void CreateFromMenu(MenuCommand command) => Utility.CreateObjectFromResources(RESOURCE, NAME, command.context as GameObject);
     }
 }

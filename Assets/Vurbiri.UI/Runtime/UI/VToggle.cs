@@ -8,8 +8,10 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Toggle", 30)]
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.TOGGLE, VUI_CONST_ED.TOGGLE_ORDER)]
     [RequireComponent(typeof(RectTransform))]
+#endif
     sealed public partial class VToggle : VSelectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
     {
         [SerializeField] private bool _isOn;

@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Bar Arithmetic", 33)]
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.BAR_ARITHMETIC, VUI_CONST_ED.BAR_ORDER)]
     [RequireComponent(typeof(RectTransform))]
+#endif
     sealed public class VBarArithmetic : AVBarBase
     {
         [SerializeField] private int _value;

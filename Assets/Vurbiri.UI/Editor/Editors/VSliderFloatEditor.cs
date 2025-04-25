@@ -10,8 +10,8 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VSliderFloat)), CanEditMultipleObjects]
 	sealed public class VSliderFloatEditor : AVSliderEditor<float>
     {
-        private const string NAME = "Slider Float", RESOURCE = "VSliderFloat";
-        private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
+        private const string NAME = VUI_CONST_ED.SLIDER_FLOAT, RESOURCE = "VSliderFloat";
+        private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
 
         protected override float Value { get => _valueProperty.floatValue; set => _valueProperty.floatValue = value; }
         protected override float MinValue { get => _minValueProperty.floatValue; set => _minValueProperty.floatValue = value; }
@@ -36,7 +36,7 @@ namespace VurbiriEditor.UI
             Slider(_stepProperty, delta * VSliderFloat.RATE_STEP_MIN, delta * VSliderFloat.RATE_STEP_MAX);
         }
 
-        [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
+        [MenuItem(MENU, false, VUI_CONST_ED.CREATE_MENU_PRIORITY)]
         public static void CreateFromMenu(MenuCommand command) => Utility.CreateObjectFromResources(RESOURCE, NAME, command.context as GameObject);
 
         

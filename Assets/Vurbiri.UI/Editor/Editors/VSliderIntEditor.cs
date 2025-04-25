@@ -12,8 +12,8 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VSliderInt))]
     sealed public class VSliderIntEditor : AVSliderEditor<int>
     {
-        private const string NAME = "Slider Int", RESOURCE = "VSliderInt";
-        private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
+        private const string NAME = VUI_CONST_ED.SLIDER_INT, RESOURCE = "VSliderInt";
+        private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
 
         protected override int Value { get => _valueProperty.intValue; set => _valueProperty.intValue = value; }
         protected override int MinValue { get => _minValueProperty.intValue; set => _minValueProperty.intValue = value; }
@@ -38,7 +38,7 @@ namespace VurbiriEditor.UI
             IntSlider(_stepProperty, Math.Max(delta >> SHIFT_STEP_MIN, STEP_MIN), Math.Max(delta >> SHIFT_STEP_MAX, STEP_MIN));
         }
 
-        [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
+        [MenuItem(MENU, false, VUI_CONST_ED.CREATE_MENU_PRIORITY)]
         public static void CreateFromMenu(MenuCommand command) => Utility.CreateObjectFromResources(RESOURCE, NAME, command.context as GameObject);
     }
 }

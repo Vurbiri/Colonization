@@ -3,8 +3,10 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Slider Int", 34)]
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.SLIDER_INT, VUI_CONST_ED.SLIDER_ORDER)]
     [RequireComponent(typeof(RectTransform))]
+#endif
     sealed public class VSliderInt : AVSlider<int>
 	{
         public const int STEP_MIN = 1;

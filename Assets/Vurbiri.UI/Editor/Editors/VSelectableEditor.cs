@@ -233,7 +233,7 @@ namespace VurbiriEditor.UI
                 if (targetGraphic.objectReferenceValue as Graphic == null)
                     HelpBox("You must have a Graphics target in order to use a color transition.", UnityEditor.MessageType.Warning);
 
-                _colorBlockDrawer.OnGUI();
+                _colorBlockDrawer.Draw();
             }
             EndFadeGroup();
             // ========= SpriteSwap =================================

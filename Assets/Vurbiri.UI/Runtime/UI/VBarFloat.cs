@@ -3,8 +3,10 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Bar Float", 33)]
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.BAR_FLOAT, VUI_CONST_ED.BAR_ORDER)]
     [RequireComponent(typeof(RectTransform))]
+#endif
     sealed public class VBarFloat : AVBar<float>
     {
         private VBarFloat() { }

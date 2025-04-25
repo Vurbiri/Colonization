@@ -3,8 +3,10 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Bar Int", 33)]
+#if UNITY_EDITOR
+    [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.BAR_INT, VUI_CONST_ED.BAR_ORDER)]
     [RequireComponent(typeof(RectTransform))]
+#endif
     sealed public class VBarInt : AVBar<int>
     {
         private VBarInt() { }

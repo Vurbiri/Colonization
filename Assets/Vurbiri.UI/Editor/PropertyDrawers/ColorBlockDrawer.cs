@@ -22,18 +22,18 @@ namespace VurbiriEditor.UI
 
         public ColorBlockDrawer(SerializedProperty colorBlock)
         {
-            _colorBlock = colorBlock;
+            _colorBlock      = colorBlock;
 
-            _normalColor = colorBlock.FindPropertyRelative("m_NormalColor");
-            _highlighted = colorBlock.FindPropertyRelative("m_HighlightedColor");
-            _pressedColor = colorBlock.FindPropertyRelative("m_PressedColor");
-            _selectedColor = colorBlock.FindPropertyRelative("m_SelectedColor");
-            _disabledColor = colorBlock.FindPropertyRelative("m_DisabledColor");
+            _normalColor     = colorBlock.FindPropertyRelative("m_NormalColor");
+            _highlighted     = colorBlock.FindPropertyRelative("m_HighlightedColor");
+            _pressedColor    = colorBlock.FindPropertyRelative("m_PressedColor");
+            _selectedColor   = colorBlock.FindPropertyRelative("m_SelectedColor");
+            _disabledColor   = colorBlock.FindPropertyRelative("m_DisabledColor");
             _colorMultiplier = colorBlock.FindPropertyRelative("m_ColorMultiplier");
-            _fadeDuration = colorBlock.FindPropertyRelative("m_FadeDuration");
+            _fadeDuration    = colorBlock.FindPropertyRelative("m_FadeDuration");
         }
 
-        public void OnGUI()
+        public void Draw()
         {
             //GUIContent label = new("Color Block");
             GUIContent label = new(_colorBlock.displayName);

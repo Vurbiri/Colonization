@@ -11,8 +11,8 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VBarArithmetic)), CanEditMultipleObjects]
     public class VBarArithmeticEditor : Editor
     {
-        private const string NAME = "Bar Arithmetic", RESOURCE = "VBarArithmetic";
-        private const string MENU = VUI_CONST_EDITOR.NAME_CREATE_MENU + NAME;
+        private const string NAME = VUI_CONST_ED.BAR_ARITHMETIC, RESOURCE = "VBarArithmetic";
+        private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
 
         private SerializedProperty _fillRectProperty;
         private SerializedProperty _directionProperty;
@@ -134,7 +134,7 @@ namespace VurbiriEditor.UI
             serializedObject.ApplyModifiedProperties();
         }
 
-        [MenuItem(MENU, false, VUI_CONST_EDITOR.MENU_PRIORITY)]
+        [MenuItem(MENU, false, VUI_CONST_ED.CREATE_MENU_PRIORITY)]
         public static void CreateFromMenu(MenuCommand command) => Utility.CreateObjectFromResources(RESOURCE, NAME, command.context as GameObject);
     }
 }

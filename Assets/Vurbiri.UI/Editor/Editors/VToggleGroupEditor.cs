@@ -7,7 +7,7 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VToggleGroup))]
 	public class VToggleGroupEditor : Editor
 	{
-        private const int ORDER = 12;
+        private const int EXECUTION_ORDER = VUI_CONST_ED.TOGGLE_GROUP_EXECUTION_ORDER;
 
         private SerializedProperty _allowSwitchOffProperty;
 
@@ -20,8 +20,8 @@ namespace VurbiriEditor.UI
             _allowSwitchOffProperty = serializedObject.FindProperty("_allowSwitchOff");
 
             MonoScript monoScript = MonoScript.FromMonoBehaviour(_toggleGroup);
-            if (monoScript != null && MonoImporter.GetExecutionOrder(monoScript) != ORDER)
-                MonoImporter.SetExecutionOrder(monoScript, ORDER);
+            if (monoScript != null && MonoImporter.GetExecutionOrder(monoScript) != EXECUTION_ORDER)
+                MonoImporter.SetExecutionOrder(monoScript, EXECUTION_ORDER);
         }
 		
 		public override void OnInspectorGUI()
