@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\VBarArithmetic.cs
+//Assets\Vurbiri.UI\Runtime\UI\VBarArithmetic.cs
 using System;
 using UnityEngine;
 

@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\VButton.cs
+//Assets\Vurbiri.UI\Runtime\AbstractUI\AVButton.cs
 using System;
 using System.Collections;
 using UnityEngine;
@@ -7,12 +7,9 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-    [AddComponentMenu(VUI_CONST.NAME_MENU + "Button", 30)]
-    public class VButton : VSelectable, IPointerClickHandler, ISubmitHandler
+    public abstract class AVButton : VSelectable, IPointerClickHandler, ISubmitHandler
     {
         [SerializeField] protected UniSigner _onClick = new();
-
-        protected VButton() { }
 
         protected override void Start()
         {

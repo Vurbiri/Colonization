@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\Abstract\AVBarBase.cs
+//Assets\Vurbiri.UI\Runtime\AbstractUI\AVBarBase.cs
 using UnityEngine;
 using UnityEngine.UI;
 

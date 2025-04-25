@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\Abstract\AVSlider.cs
+//Assets\Vurbiri.UI\Runtime\AbstractUI\AVSlider.cs
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;

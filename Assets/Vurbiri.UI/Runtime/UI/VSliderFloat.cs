@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\VSlider.cs
+//Assets\Vurbiri.UI\Runtime\UI\VSliderFloat.cs
 using UnityEngine;
 
 namespace Vurbiri.UI

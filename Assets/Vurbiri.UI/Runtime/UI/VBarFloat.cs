@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\VBarFloat.cs
+//Assets\Vurbiri.UI\Runtime\UI\VBarFloat.cs
 using UnityEngine;
 
 namespace Vurbiri.UI

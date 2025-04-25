@@ -1,4 +1,4 @@
-//Assets\Vurbiri.UI\Runtime\Hint\Abstract\AWorldHintButton.cs
+//Assets\Vurbiri.UI\Runtime\HintUI\Abstract\AWorldHintButton.cs
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
-    public abstract class AWorldHintButton : VButton
+    public abstract class AWorldHintButton : AVButton
     {
         private bool _isShowingHint = false;
 
@@ -18,9 +18,8 @@ namespace Vurbiri.UI
 
         protected virtual void Init(Vector3 localPosition, WorldHint hint, Action action, bool active)
         {
-            transform.localPosition = localPosition;
-
             Init(hint, action, active);
+            _thisTransform.localPosition = localPosition;
         }
 
         protected virtual void Init(WorldHint hint, Action action, bool active)
@@ -32,7 +31,7 @@ namespace Vurbiri.UI
 
             _onClick.Add(action);
 
-            float offset = GetComponent<RectTransform>().sizeDelta.y * 0.5263f;
+            float offset = GetComponent<RectTransform>().rect.height * 0.5263f;
             _offsetHint = new(0f, offset, 0f);
 
             _thisGameObject.SetActive(active);
