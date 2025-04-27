@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization
 {
     public class GameLoop : MonoBehaviour
     {
+        public Quaternion quaternion;
+        
         private Dices _dices;
         private TurnQueue _turnQueue;
         private Players _players;

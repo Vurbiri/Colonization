@@ -12,7 +12,7 @@ using static Vurbiri.UI.VToggle;
 namespace VurbiriEditor.UI
 {
     [CustomEditor(typeof(VToggle)), CanEditMultipleObjects]
-    sealed public class VToggleEditor : VSelectableEditor
+    sealed public class VToggleEditor : AVSelectableEditor
     {
         private const string NAME = VUI_CONST_ED.TOGGLE, RESOURCE = "VToggle";
         private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
