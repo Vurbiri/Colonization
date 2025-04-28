@@ -7,67 +7,59 @@ namespace VurbiriEditor.UI
 {
     public class ColorBlockDrawer
     {
+        private const int COUNT_SIMPLE_PROPERTIES = 6;
         private static readonly float space = EditorGUIUtility.standardVerticalSpacing;
         private static readonly float line = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
-        private readonly SerializedProperty _colorBlock;
+        private readonly SerializedProperty _colorBlockProperty;
 
-        private readonly SerializedProperty _normalColor;
-        private readonly SerializedProperty _highlighted;
-        private readonly SerializedProperty _pressedColor;
-        private readonly SerializedProperty _selectedColor;
-        private readonly SerializedProperty _disabledColor;
-        private readonly SerializedProperty _colorMultiplier;
-        private readonly SerializedProperty _fadeDuration;
+        private readonly SerializedProperty[] _simleProperties;
+        private readonly SerializedProperty _fadeDurationProperty;
 
         public ColorBlockDrawer(SerializedProperty colorBlock)
         {
-            _colorBlock      = colorBlock;
+            _colorBlockProperty      = colorBlock;
 
-            _normalColor     = colorBlock.FindPropertyRelative("m_NormalColor");
-            _highlighted     = colorBlock.FindPropertyRelative("m_HighlightedColor");
-            _pressedColor    = colorBlock.FindPropertyRelative("m_PressedColor");
-            _selectedColor   = colorBlock.FindPropertyRelative("m_SelectedColor");
-            _disabledColor   = colorBlock.FindPropertyRelative("m_DisabledColor");
-            _colorMultiplier = colorBlock.FindPropertyRelative("m_ColorMultiplier");
-            _fadeDuration    = colorBlock.FindPropertyRelative("m_FadeDuration");
+            _simleProperties = new[]
+            {
+                colorBlock.FindPropertyRelative("m_NormalColor"),
+                colorBlock.FindPropertyRelative("m_HighlightedColor"),
+                colorBlock.FindPropertyRelative("m_PressedColor"),
+                colorBlock.FindPropertyRelative("m_SelectedColor"),
+                colorBlock.FindPropertyRelative("m_DisabledColor"),
+                colorBlock.FindPropertyRelative("m_ColorMultiplier"),
+            };
+
+            _fadeDurationProperty    = colorBlock.FindPropertyRelative("m_FadeDuration");
         }
 
         public void Draw()
         {
             //GUIContent label = new("Color Block");
-            GUIContent label = new(_colorBlock.displayName);
+            GUIContent label = new(_colorBlockProperty.displayName);
 
             Rect drawRect = EditorGUILayout.BeginVertical();
             drawRect.height = EditorGUIUtility.singleLineHeight;
-            drawRect.y -= space;
 
-            BeginProperty(drawRect, label, _colorBlock);
+            BeginProperty(drawRect, label, _colorBlockProperty);
             {
-                if (_colorBlock.isExpanded = Foldout(drawRect, _colorBlock.isExpanded, label, EditorStyles.foldoutHeader))
+                if (_colorBlockProperty.isExpanded = Foldout(drawRect, _colorBlockProperty.isExpanded, label, EditorStyles.foldoutHeader))
                 {
+                    for (int i = 0; i < COUNT_SIMPLE_PROPERTIES; i++)
+                    {
+                        drawRect.y += line;
+                        PropertyField(drawRect, _simleProperties[i]);
+                    }
                     drawRect.y += line;
-                    PropertyField(drawRect, _normalColor);
-                    drawRect.y += line;
-                    PropertyField(drawRect, _highlighted);
-                    drawRect.y += line;
-                    PropertyField(drawRect, _pressedColor);
-                    drawRect.y += line;
-                    PropertyField(drawRect, _selectedColor);
-                    drawRect.y += line;
-                    PropertyField(drawRect, _disabledColor);
-                    drawRect.y += line + space;
-                    PropertyField(drawRect, _colorMultiplier);
-                    drawRect.y += line;
-                    FadeDurationField(drawRect, _fadeDuration);
+                    FadeDurationField(drawRect, _fadeDurationProperty);
                 }
             }
             EndProperty();
 
             EditorGUILayout.EndVertical();
 
-            if (_colorBlock.isExpanded) EditorGUILayout.Space(8f * line);
-            else EditorGUILayout.Space(line - space);
+            if (_colorBlockProperty.isExpanded) EditorGUILayout.Space(8f * line);
+            else EditorGUILayout.Space(line);
         }
 
         private static void FadeDurationField(Rect position, SerializedProperty property)

@@ -53,7 +53,7 @@ namespace Vurbiri.UI
             if (_targetGraphics.Count > 0)
                 targetGraphic = _targetGraphics[0];
 
-            _scaleTween = new(_targetTransform, this);
+            _scaleTween = _scaleTween.ReCreate(this, _targetTransform);
         }
 
         protected override void Start()
@@ -70,8 +70,7 @@ namespace Vurbiri.UI
 
         protected override void DoStateTransition(SelectionState state, bool instant)
         {
-            if (!gameObject.activeInHierarchy)
-                return;
+            if (!gameObject.activeInHierarchy) return;
 
             int intState;
             Vector3 targetScale;
@@ -137,11 +136,7 @@ namespace Vurbiri.UI
 
         protected virtual void StartScaleTween(Vector3 targetScale, float duration)
         {
-#if UNITY_EDITOR
-            if (!Application.isPlaying) { StartScaleTween_Editor(targetScale); return; }
-#endif
-            if (_isScaling & _scaleTween.isValid)
-                _scaleTween.Set(targetScale, duration);
+            _scaleTween.Set(targetScale, duration);
         }
 
         protected virtual void StartColorTween(int intState, Vector3 targetScale, Color targetColor, float duration)
@@ -149,8 +144,7 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
             if (!Application.isPlaying) { StartColorTween_Editor(intState, targetScale, targetColor); return; }
 #endif
-            if (_isScaling & _scaleTween.isValid)
-                _scaleTween.Set(targetScale, duration);
+            _scaleTween.Set(targetScale, duration);
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 _targetGraphics[i].CrossFadeColor(intState, targetColor, duration);
@@ -158,44 +152,32 @@ namespace Vurbiri.UI
 
         protected virtual void DoSpriteSwap(Vector3 targetScale, Sprite targetSprite, float duration)
         {
-#if UNITY_EDITOR
-            if (!Application.isPlaying) { DoSpriteSwap_Editor(targetScale, targetSprite); return; }
-#endif
-
-            if (_isScaling & _scaleTween.isValid)
-                _scaleTween.Set(targetScale, duration);
+            _scaleTween.Set(targetScale, duration);
 
             if (image != null)
                 image.overrideSprite = targetSprite;
+        }
+
+        protected override void OnEnable()
+        {
+            _scaleTween.SetActive(_isScaling);
+            base.OnEnable();
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            _scaleTween.TrackerClear();
+            _scaleTween.Disable();
         }
 
 #if UNITY_EDITOR
-        private void StartScaleTween_Editor(Vector3 targetScale)
-        {
-            _scaleTween ??= new(_targetTransform, this);
-            if (_isScaling & _scaleTween.isValid)
-                _scaleTween.Set(targetScale);
-        }
         private void StartColorTween_Editor(int intState, Vector3 targetScale, Color targetColor)
         {
-            StartScaleTween_Editor(targetScale);
+            _scaleTween.Set(targetScale);
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 if (_targetGraphics[i].IsValid)
                     _targetGraphics[i].SetColor(intState, targetColor);
-        }
-        private void DoSpriteSwap_Editor(Vector3 targetScale, Sprite targetSprite)
-        {
-            StartScaleTween_Editor(targetScale);
-
-            if (image != null)
-                image.overrideSprite = targetSprite;
         }
 
         protected override void OnValidate()
@@ -204,13 +186,9 @@ namespace Vurbiri.UI
 
             if (!Application.isPlaying)
             {
-                _scaleTween = new(_targetTransform, this);
-                if (!_isScaling)
-                {
-                    if (_scaleTween.isValid)
-                        _scaleTween.Set(Vector3.one);
-                    _scaleTween.TrackerClear();
-                }
+                _scaleTween = _scaleTween.ReCreate(this, _targetTransform, _isScaling);
+                if(!_isScaling && _targetTransform != null)
+                    _targetTransform.localScale = Vector3.one;
             }
         }
 

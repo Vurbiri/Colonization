@@ -6,50 +6,66 @@ namespace Vurbiri.UI
 {
     public class ScaleTween : IEnumerator
     {
-        private const float TRANSITION_END = 1f;
+        private const float MIN_DUATION = 0.03f, TRANSITION_END = 1f;
         
-        private readonly MonoBehaviour _mono;
+        private readonly MonoBehaviour _target;
         private readonly RectTransform _targetTransform;
 
-        private Vector3 _startScale;
-        private Vector3 _targetScale;
+        private Vector3 _startScale = Vector3.one;
+        private Vector3 _targetScale = Vector3.one;
         private float _transitionTime, _currentTime;
         private float _progress = TRANSITION_END;
         private Coroutine _coroutine;
         private DrivenRectTransformTracker _tracker;
 
-        public readonly bool isValid;
+        private readonly bool _isValid;
+        private bool _enable;
 
-        public Vector3 CurrentColor => _targetTransform.localScale;
-        public float Progress => _progress;
-        public bool IsRunning => _coroutine != null;
         public object Current => null;
-
-        public ScaleTween(RectTransform targetTransform, MonoBehaviour mono)
-        {
-            _targetTransform = targetTransform;
-            _mono = mono;
-            isValid = _targetTransform != null && _mono != null;
-        }
 
         public ScaleTween()
         { 
-            isValid = false;
+            _isValid = _enable = false;
+        }
+        private ScaleTween(MonoBehaviour target, RectTransform targetTransform)
+        {
+            _targetTransform = targetTransform;
+            _target = target;
+            _isValid = _targetTransform != null && _target != null;
+        }
+
+        public ScaleTween ReCreate(MonoBehaviour target, RectTransform targetTransform)
+        {
+            Disable();
+            return new(target, targetTransform);
+        }
+        public ScaleTween ReCreate(MonoBehaviour target, RectTransform targetTransform, bool isActive)
+        {
+            ScaleTween scaleTween = ReCreate(target, targetTransform);
+            scaleTween.SetActive(isActive);
+            return scaleTween;
         }
 
         public void Set(Vector3 target)
         {
-            Stop();
+            if (_enable & _isValid)
+            {
+                StopCoroutine();
 
-            _progress = TRANSITION_END;
-            _tracker.Add(_mono, _targetTransform, DrivenTransformProperties.Scale);
-
-            _targetTransform.localScale = target;
+                _progress = TRANSITION_END;
+                _targetTransform.localScale = target;
+            }
         }
 
         public void Set(Vector3 target, float duration)
         {
-            Stop();
+            if (duration < MIN_DUATION)
+                Set(target);
+
+            if (!(_enable & _isValid)) 
+                return;
+
+            StopCoroutine();
 
             _startScale = _targetTransform.localScale;
 
@@ -57,12 +73,9 @@ namespace Vurbiri.UI
             {
                 _transitionTime = duration;
                 _currentTime = duration * (TRANSITION_END - _progress);
-
                 _targetScale = target;
 
-                _tracker.Add(_mono, _targetTransform, DrivenTransformProperties.Scale);
-
-                _coroutine = _mono.StartCoroutine(this);
+                _coroutine = _target.StartCoroutine(this);
             }
             else
             {
@@ -70,7 +83,29 @@ namespace Vurbiri.UI
             }
         }
 
-        public void TrackerClear() => _tracker.Clear();
+        public void Enable()
+        {
+            if (!_enable & _isValid)
+                _tracker.Add(_target, _targetTransform, DrivenTransformProperties.Scale);
+
+            _enable = true;
+        }
+
+        public void Disable()
+        {
+            Set(_targetScale);
+
+            _tracker.Clear();
+            _enable = false;
+        }
+
+        public void SetActive(bool active)
+        {
+            if (active) 
+                Enable();
+            else 
+                Disable();
+        }
 
         public bool MoveNext()
         {
@@ -90,13 +125,11 @@ namespace Vurbiri.UI
 
         public void Reset() { }
 
-        private void Stop()
+        private void StopCoroutine()
         {
-            _tracker.Clear();
-            
             if (_coroutine != null)
             {
-                _mono.StopCoroutine(_coroutine);
+                _target.StopCoroutine(_coroutine);
                 _coroutine = null;
             }
         }

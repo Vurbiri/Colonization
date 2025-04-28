@@ -120,7 +120,7 @@ namespace Vurbiri.UI
         protected override void Awake()
         {
 #if UNITY_EDITOR
-            if (!Application.isPlaying) { _transitionEffect = TransitionEffectCreate(); return; }
+            if (!Application.isPlaying) return;
 #endif
 
             if (_checkmarkOn != null)
@@ -193,19 +193,6 @@ namespace Vurbiri.UI
                 _onValueChanged.Invoke(_isOn);
             }
         }
-
-#if UNITY_EDITOR
-        protected override void DoStateTransition(SelectionState state, bool instant)
-        {
-            if (!gameObject.activeInHierarchy)
-                return;
-
-            if (!Application.isPlaying) 
-                SetTransitionEffect_Editor();
-
-            base.DoStateTransition(state, instant);
-        }
-#endif
 
         protected override void StartScaleTween(Vector3 targetScale, float duration)
         {
@@ -309,27 +296,14 @@ namespace Vurbiri.UI
         #endregion
 
 #if UNITY_EDITOR
-        private void SetTransitionEffect_Editor()
-        {
-            _transitionEffect = TransitionEffectCreate();
-            _stateFilterOn = _checkmarkOn != null;
-            _stateFilterOff = _checkmarkOff != null;
-        }
-
-        private void ColorTint_Editor(int intState, Color targetColor)
-        {
-            for (int i = _targetGraphics.Count - 1; i >= 0; i--)
-                if (_targetGraphics[i].IsValid)
-                    _targetGraphics[i].SetColor(intState, targetColor);
-
-            if (_stateFilterOn[intState]) _transitionEffect.StateTransitionOn(targetColor, 0f);
-            if (_stateFilterOff[intState]) _transitionEffect.StateTransitionOff(targetColor, 0f);
-        }
-
         protected override void OnValidate()
         {
-            if (!Application.isPlaying && isActiveAndEnabled)
-                SetTransitionEffect_Editor();
+            if (!Application.isPlaying)
+            {
+                _transitionEffect = TransitionEffectCreate();
+                _stateFilterOn = _checkmarkOn != null;
+                _stateFilterOff = _checkmarkOff != null;
+            }
 
             base.OnValidate();
         }

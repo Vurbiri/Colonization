@@ -22,10 +22,10 @@ namespace Vurbiri.UI
             defaultScaleBlock = new ScaleBlock()
             {
                 normal       = Vector3.one,
-                highlighted  = Vector3.one * 1.05f,
-                pressed      = Vector3.one * 0.97f,
-                selected     = Vector3.one * 1.075f,
-                disabled     = Vector3.one * 0.95f,
+                highlighted  = Vector3.one * 1.035f,
+                pressed      = Vector3.one * 0.99f,
+                selected     = Vector3.one * 1.05f,
+                disabled     = Vector3.one * 0.99f,
                 fadeDuration = 0.1f
             };
         }
