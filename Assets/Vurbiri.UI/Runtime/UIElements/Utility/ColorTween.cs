@@ -29,22 +29,14 @@ namespace Vurbiri.UI
 
         public void Set(Color target)
         {
-            if (_coroutine != null) 
-            { 
-                _target.StopCoroutine(_coroutine);
-                _coroutine = null;
-            }
+            StopCoroutine();
 
             _canvasRenderer.SetColor(target);
         }
 
         public void Set(Color target, float duration)
         {
-            if (_coroutine != null)
-            {
-                _target.StopCoroutine(_coroutine);
-                _coroutine = null;
-            }
+            StopCoroutine();
 
             _startColor = _canvasRenderer.GetColor();
             _targetColor = target;
@@ -71,6 +63,15 @@ namespace Vurbiri.UI
         }
 
         public void Reset() { }
+
+        private void StopCoroutine()
+        {
+            if (_coroutine != null)
+            {
+                _target.StopCoroutine(_coroutine);
+                _coroutine = null;
+            }
+        }
     }
 }
 

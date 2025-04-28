@@ -6,7 +6,7 @@ using Vurbiri.UI;
 namespace VurbiriEditor.UI
 {
     [CustomEditor(typeof(AVButton), true), CanEditMultipleObjects]
-    public class AVButtonEditor : AVSelectableEditor
+    public class AVButtonEditor : VSelectableEditor
     {
         private SerializedProperty _onClickProperty;
 

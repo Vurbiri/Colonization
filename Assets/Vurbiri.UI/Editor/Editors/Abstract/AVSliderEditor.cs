@@ -10,7 +10,7 @@ using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    public abstract class AVSliderEditor<T> : AVSelectableEditor where T : struct, IEquatable<T>, IComparable<T>
+    public abstract class AVSliderEditor<T> : VSelectableEditor where T : struct, IEquatable<T>, IComparable<T>
     {
         private SerializedProperty _fillRectProperty;
         private SerializedProperty _handleRectProperty;

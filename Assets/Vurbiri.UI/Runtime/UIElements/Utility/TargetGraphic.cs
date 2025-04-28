@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 namespace Vurbiri.UI
 {
-    public partial class AVSelectable
-	{
+    public partial class VSelectable
+    {
         [Serializable]
         protected class TargetGraphic
         {

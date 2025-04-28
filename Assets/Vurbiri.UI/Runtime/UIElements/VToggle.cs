@@ -12,7 +12,7 @@ namespace Vurbiri.UI
     [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.TOGGLE, VUI_CONST_ED.TOGGLE_ORDER)]
     [RequireComponent(typeof(RectTransform))]
 #endif
-    sealed public partial class VToggle : AVSelectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
+    sealed public partial class VToggle : VSelectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
     {
         [SerializeField] private bool _isOn;
         [SerializeField] private float _fadeDuration = 0.125f;
@@ -25,7 +25,7 @@ namespace Vurbiri.UI
         [SerializeField] private UniSigner<bool> _onValueChanged = new();
 
         private EnumFlags<SelectionState> _stateFilterOn = false, _stateFilterOff = false;
-        private ITransitionEffect _transitionEffect;
+        private ITransitionEffect _transitionEffect = new EmptyEffect();
         private TMP_Text _caption;
 
         #region Properties
@@ -194,43 +194,37 @@ namespace Vurbiri.UI
             }
         }
 
+#if UNITY_EDITOR
         protected override void DoStateTransition(SelectionState state, bool instant)
         {
             if (!gameObject.activeInHierarchy)
                 return;
 
-#if UNITY_EDITOR
-            if (!Application.isPlaying) SetTransitionEffect_Editor();
+            if (!Application.isPlaying) 
+                SetTransitionEffect_Editor();
+
+            base.DoStateTransition(state, instant);
+        }
 #endif
 
-            if (transition != Transition.ColorTint)
-            {
-                _transitionEffect.StateTransitionClear();
-                base.DoStateTransition(state, instant);
-                return;
-            }
+        protected override void StartScaleTween(Vector3 targetScale, float duration)
+        {
+            base.StartScaleTween(targetScale, duration);
 
-            int intState = (int)state;
-            float duration = instant ? 0f : colors.fadeDuration;
-            Color targetColor = state switch
-            {
-                SelectionState.Normal => colors.normalColor,
-                SelectionState.Highlighted => colors.highlightedColor,
-                SelectionState.Selected => colors.selectedColor,
-                SelectionState.Pressed => colors.pressedColor,
-                SelectionState.Disabled => colors.disabledColor,
-                _ => Color.black
-            };
-
-#if UNITY_EDITOR
-            if (!Application.isPlaying) { ColorTint_Editor(intState, targetColor); return; }
-#endif
-
-            for (int i = _targetGraphics.Count - 1; i >= 0; i--)
-                _targetGraphics[i].CrossFadeColor(intState, targetColor, duration);
+            _transitionEffect.StateTransitionClear();
+        }
+        protected override void StartColorTween(int intState, Vector3 targetScale, Color targetColor, float duration)
+        {
+            base.StartColorTween(intState, targetScale, targetColor, duration);
 
             if (_stateFilterOn[intState]) _transitionEffect.StateTransitionOn(targetColor, duration);
             if (_stateFilterOff[intState]) _transitionEffect.StateTransitionOff(targetColor, duration);
+        }
+        protected override void DoSpriteSwap(Vector3 targetScale, Sprite targetSprite, float duration)
+        {
+            base.DoSpriteSwap(targetScale, targetSprite, duration);
+
+            _transitionEffect.StateTransitionClear();
         }
 
         private void InternalToggle()

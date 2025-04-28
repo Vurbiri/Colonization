@@ -66,10 +66,13 @@ namespace Vurbiri.UI
             if (_coroutine != null) { StopCoroutine(); _isTwoTask = false; }
 
             _target = target;
-            if (target == null) _renderer = null;
-            else _renderer = target.canvasRenderer;
+            _renderer = target == null ? null : target.canvasRenderer;
 
-            return _renderer != null;
+            if (_renderer == null)
+                return false;
+
+            _renderer.SetColor(_markColors.current * _stateColors.current);
+            return true;
         }
 
         public void Stop()

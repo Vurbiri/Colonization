@@ -5,8 +5,8 @@ using static UnityEditor.EditorGUI;
 
 namespace Vurbiri.UI
 {
-    public partial class AVSelectable
-	{
+    public partial class VSelectable
+    {
 		[CustomPropertyDrawer(typeof(TargetGraphic))]
 		public class TargetGraphicDrawer : PropertyDrawer
 		{

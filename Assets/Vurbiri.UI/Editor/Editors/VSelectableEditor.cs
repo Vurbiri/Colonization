@@ -1,10 +1,8 @@
-//Assets\Vurbiri.UI\Editor\Editors\AVSelectableEditor.cs
+//Assets\Vurbiri.UI\Editor\Editors\VSelectableEditor.cs
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
-using UnityEditor.Animations;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,10 +11,12 @@ using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(AVSelectable), true), CanEditMultipleObjects]
-    public class AVSelectableEditor : Editor
+    [CustomEditor(typeof(VSelectable), true), CanEditMultipleObjects]
+    public class VSelectableEditor : Editor
     {
         private const string P_GRAPHIC = "_graphic";
+        private static readonly GUIContent[] nameTransition = new GUIContent[]{ new("None"), new("Color Tint"), new("Sprite Swap") };
+        private static readonly int[] idTransition = new[] { 0, 1, 2 };
 
         protected SerializedProperty _interactableIconProperty;
         protected SerializedProperty _alphaColliderProperty;
@@ -28,7 +28,9 @@ namespace VurbiriEditor.UI
         protected SerializedProperty m_TransitionProperty;
         protected SerializedProperty m_ColorBlockProperty;
         protected SerializedProperty m_SpriteStateProperty;
-        protected SerializedProperty m_AnimTriggerProperty;
+        protected SerializedProperty _isScalingProperty;
+        protected SerializedProperty _targetTransformProperty;
+        protected SerializedProperty _scaleBlockProperty;
         protected SerializedProperty m_NavigationProperty;
 
         private ColorBlockDrawer _colorBlockDrawer;
@@ -39,8 +41,9 @@ namespace VurbiriEditor.UI
         protected readonly AnimBool m_ShowSpriteTransition = new();
         protected readonly AnimBool m_ShowAnimTransition = new();
         private readonly AnimBool _showThreshold = new();
+        private readonly AnimBool _showScaling = new();
 
-        private static readonly List<AVSelectableEditor> s_Editors = new();
+        private static readonly List<VSelectableEditor> s_Editors = new();
 
         protected static bool s_ShowNavigation = false;
         protected static string s_ShowNavigationKey = "ASelectableCustomEditor.ShowNavigation";
@@ -53,11 +56,12 @@ namespace VurbiriEditor.UI
 
         protected readonly List<SerializedProperty> _childrenProperties = new();
 
-        protected virtual bool IsDerivedEditor => GetType() != typeof(AVSelectableEditor);
+        protected virtual bool IsDerivedEditor => GetType() != typeof(VSelectableEditor);
 
         protected virtual void OnEnable()
         {
             _vSelectable = target as VSelectable;
+            _transition = _vSelectable.transition;
 
             _interactableIconProperty   = serializedObject.FindProperty("_interactableIcon");
             _alphaColliderProperty      = serializedObject.FindProperty("_alphaCollider");
@@ -69,7 +73,9 @@ namespace VurbiriEditor.UI
             m_TransitionProperty        = serializedObject.FindProperty("m_Transition");
             m_ColorBlockProperty        = serializedObject.FindProperty("m_Colors");
             m_SpriteStateProperty       = serializedObject.FindProperty("m_SpriteState");
-            m_AnimTriggerProperty       = serializedObject.FindProperty("m_AnimationTriggers");
+            _isScalingProperty          = serializedObject.FindProperty("_isScaling");
+            _targetTransformProperty    = serializedObject.FindProperty("_targetTransform");
+            _scaleBlockProperty         = serializedObject.FindProperty("_scaleBlock");
             m_NavigationProperty        = serializedObject.FindProperty("m_Navigation");
 
             _colorBlockDrawer           = new(m_ColorBlockProperty);
@@ -78,10 +84,12 @@ namespace VurbiriEditor.UI
             m_ShowSpriteTransition.value    = _transition == Selectable.Transition.SpriteSwap;
             m_ShowAnimTransition.value      = _transition == Selectable.Transition.Animation;
             _showThreshold.value            = _alphaColliderProperty.boolValue;
+            _showScaling.value              = _isScalingProperty.boolValue;
 
             m_ShowColorTint.valueChanged.AddListener(Repaint);
             m_ShowSpriteTransition.valueChanged.AddListener(Repaint);
             _showThreshold.valueChanged.AddListener(Repaint);
+            _showScaling.valueChanged.AddListener(Repaint);
 
             s_Editors.Add(this);
             RegisterStaticOnSceneGUI();
@@ -97,24 +105,29 @@ namespace VurbiriEditor.UI
             m_ShowColorTint.valueChanged.RemoveListener(Repaint);
             m_ShowSpriteTransition.valueChanged.RemoveListener(Repaint);
             _showThreshold.valueChanged.RemoveListener(Repaint);
+            _showScaling.valueChanged.RemoveListener(Repaint);
+
             s_Editors.Remove(this);
             RegisterStaticOnSceneGUI();
         }
 
         protected virtual HashSet<string> GetExcludePropertyPaths()
         {
-            return new(12)
+            return new(15)
             {
                 _interactableIconProperty.propertyPath,
                 _alphaColliderProperty.propertyPath,
                 _thresholdProperty.propertyPath,
                 _targetGraphicsProperty.propertyPath,
+                _isScalingProperty.propertyPath,
+                _targetTransformProperty.propertyPath,
+                _scaleBlockProperty.propertyPath,
                 m_Script.propertyPath,
                 m_NavigationProperty.propertyPath,
                 m_TransitionProperty.propertyPath,
                 m_ColorBlockProperty.propertyPath,
                 m_SpriteStateProperty.propertyPath,
-                m_AnimTriggerProperty.propertyPath,
+                serializedObject.FindProperty("m_AnimationTriggers").propertyPath,
                 m_InteractableProperty.propertyPath,
                 m_TargetGraphicProperty.propertyPath,
             };
@@ -217,7 +230,7 @@ namespace VurbiriEditor.UI
         {
             SerializedProperty targetGraphic = UpdateTargetGraphics();
 
-            PropertyField(m_TransitionProperty);
+            IntPopup(m_TransitionProperty, nameTransition, idTransition);
             _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
 
             m_ShowColorTint.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.ColorTint;
@@ -255,26 +268,19 @@ namespace VurbiriEditor.UI
             // ========= Animation =================================
             if (BeginFadeGroup(m_ShowAnimTransition.faded))
             {
-                Animator animator = (target as Selectable).GetComponent<Animator>();
-                PropertyField(m_AnimTriggerProperty);
-                if (animator == null || animator.runtimeAnimatorController == null)
-                {
-                    Rect controlRect = GetControlRect();
-                    controlRect.xMin += EditorGUIUtility.labelWidth;
-                    if (GUI.Button(controlRect, "Auto Generate Animation", EditorStyles.miniButton))
-                    {
-                        AnimatorController animatorController = GenerateSelectableAnimatorContoller((target as Selectable).animationTriggers, target as Selectable);
-                        if (animatorController != null)
-                        {
-                            if (animator == null)
-                            {
-                                animator = (target as Selectable).gameObject.AddComponent<Animator>();
-                            }
+                HelpBox("Animation is not supported.", UnityEditor.MessageType.Warning);
+            }
+            EndFadeGroup();
+            // ========= Scaling =================================
+            PropertyField(_isScalingProperty);
+            _showScaling.target = _isScalingProperty.boolValue;
+            if (BeginFadeGroup(_showScaling.faded))
+            {
+                if(_targetTransformProperty.objectReferenceValue == null)
+                    _targetTransformProperty.objectReferenceValue = _vSelectable.transform;
 
-                            AnimatorController.SetAnimatorController(animator, animatorController);
-                        }
-                    }
-                }
+                PropertyField(_targetTransformProperty);
+                PropertyField(_scaleBlockProperty);
             }
             EndFadeGroup();
 
@@ -307,92 +313,6 @@ namespace VurbiriEditor.UI
                 EditorPrefs.SetBool(s_ShowNavigationKey, s_ShowNavigation);
                 SceneView.RepaintAll();
             }
-        }
-
-        private static AnimatorController GenerateSelectableAnimatorContoller(AnimationTriggers animationTriggers, Selectable target)
-        {
-            if (target == null)
-                return null;
-
-            string saveControllerPath = GetSaveControllerPath(target);
-            if (string.IsNullOrEmpty(saveControllerPath))
-                return null;
-
-            string text = (string.IsNullOrEmpty(animationTriggers.normalTrigger) ? "Normal" : animationTriggers.normalTrigger);
-            string text2 = (string.IsNullOrEmpty(animationTriggers.highlightedTrigger) ? "Highlighted" : animationTriggers.highlightedTrigger);
-            string text3 = (string.IsNullOrEmpty(animationTriggers.pressedTrigger) ? "Pressed" : animationTriggers.pressedTrigger);
-            string text4 = (string.IsNullOrEmpty(animationTriggers.selectedTrigger) ? "Selected" : animationTriggers.selectedTrigger);
-            string text5 = (string.IsNullOrEmpty(animationTriggers.disabledTrigger) ? "Disabled" : animationTriggers.disabledTrigger);
-            AnimatorController animatorController = AnimatorController.CreateAnimatorControllerAtPath(saveControllerPath);
-            GenerateTriggerableTransition(text, animatorController);
-            GenerateTriggerableTransition(text2, animatorController);
-            GenerateTriggerableTransition(text3, animatorController);
-            GenerateTriggerableTransition(text4, animatorController);
-            GenerateTriggerableTransition(text5, animatorController);
-            AssetDatabase.ImportAsset(saveControllerPath);
-            return animatorController;
-        }
-
-        protected static string GetSaveControllerPath(Selectable target)
-        {
-            string text = target.gameObject.name;
-            string message = $"Create a new animator for the game object '{text}':";
-            return EditorUtility.SaveFilePanelInProject("New Animation Contoller", text, "controller", message);
-        }
-
-        protected static void SetUpCurves(AnimationClip highlightedClip, AnimationClip pressedClip, string animationPath)
-        {
-            string[] array = new string[3] { "m_LocalScale.x", "m_LocalScale.y", "m_LocalScale.z" };
-            Keyframe[] keys = new Keyframe[3] { new(0f, 1f), new(0.5f, 1.1f), new(1f, 1f) };
-            AnimationCurve curve = new(keys);
-            string[] array2 = array;
-            foreach (string inPropertyName in array2)
-                AnimationUtility.SetEditorCurve(highlightedClip, EditorCurveBinding.FloatCurve(animationPath, typeof(Transform), inPropertyName), curve);
-            Keyframe[] keys2 = new Keyframe[1] { new(0f, 1.15f) };
-            AnimationCurve curve2 = new(keys2);
-            string[] array3 = array;
-            foreach (string inPropertyName2 in array3)
-                AnimationUtility.SetEditorCurve(pressedClip, EditorCurveBinding.FloatCurve(animationPath, typeof(Transform), inPropertyName2), curve2);
-        }
-
-        protected static string BuildAnimationPath(Selectable target)
-        {
-            Graphic targetGraphic = target.targetGraphic;
-            if (targetGraphic == null)
-                return string.Empty;
-
-            GameObject gameObject = targetGraphic.gameObject;
-            GameObject gameObject2 = target.gameObject;
-            Stack<string> stack = new();
-            while (gameObject2 != gameObject)
-            {
-                stack.Push(gameObject.name);
-                if (gameObject.transform.parent == null)
-                    return string.Empty;
-
-                gameObject = gameObject.transform.parent.gameObject;
-            }
-
-            StringBuilder stringBuilder = new();
-            if (stack.Count > 0)
-                stringBuilder.Append(stack.Pop());
-
-            while (stack.Count > 0)
-                stringBuilder.Append("/").Append(stack.Pop());
-
-            return stringBuilder.ToString();
-        }
-
-        protected static AnimationClip GenerateTriggerableTransition(string name, AnimatorController controller)
-        {
-            AnimationClip animationClip = AnimatorController.AllocateAnimatorClip(name);
-            AssetDatabase.AddObjectToAsset(animationClip, controller);
-            AnimatorState destinationState = controller.AddMotion(animationClip);
-            controller.AddParameter(name, AnimatorControllerParameterType.Trigger);
-            AnimatorStateMachine stateMachine = controller.layers[0].stateMachine;
-            AnimatorStateTransition animatorStateTransition = stateMachine.AddAnyStateTransition(destinationState);
-            animatorStateTransition.AddCondition(AnimatorConditionMode.If, 0f, name);
-            return animationClip;
         }
 
         protected static void StaticOnSceneGUI(SceneView view)
@@ -458,8 +378,5 @@ namespace VurbiriEditor.UI
             dir = rect.rect.center + Vector2.Scale(rect.rect.size, dir * 0.5f);
             return dir;
         }
-
-        
-
     }
 }
