@@ -13,7 +13,8 @@ namespace Vurbiri.UI
             [SerializeField] private Graphic _graphic;
             [SerializeField] private EnumFlags<SelectionState> _stateFilter = true;
 
-            public bool IsValid => _graphic != null && _stateFilter != EnumFlags<SelectionState>.None;
+            private bool _isValid = false;
+
             public bool IsNotNull => _graphic != null;
             public Graphic Graphic => _graphic;
             public Image Image => _graphic as Image;
@@ -23,30 +24,32 @@ namespace Vurbiri.UI
             public TargetGraphic(Graphic graphic) 
             {   
                 _graphic = graphic;
-                _stateFilter = _graphic != null;
+                _stateFilter = _isValid = _graphic != null;
             }
+
+            public bool Validate() => (_isValid = _graphic != null) && _stateFilter != EnumFlags<SelectionState>.None;
 
             public void SetGraphicColor(Color color) => _graphic.color = color;
 
             public void SetColor(int state, Color targetColor)
             {
-                if (_stateFilter[state])
+                if (_isValid & _stateFilter[state])
                     _graphic.canvasRenderer.SetColor(targetColor);
             }
             public void SetColor(SelectionState state, Color targetColor)
             {
-                if (_stateFilter[state])
+                if (_isValid & _stateFilter[state])
                     _graphic.canvasRenderer.SetColor(targetColor);
             }
 
             public void CrossFadeColor(int state, Color targetColor, float duration)
 			{
-                if (_stateFilter[state]) 
+                if (_isValid & _stateFilter[state]) 
                     _graphic.CrossFadeColor(targetColor, duration, true, true);
             }
             public void CrossFadeColor(SelectionState state, Color targetColor, float duration)
             {
-                if (_stateFilter[state])
+                if (_isValid & _stateFilter[state])
                     _graphic.CrossFadeColor(targetColor, duration, true, true);
             }
 

@@ -54,6 +54,7 @@ namespace Vurbiri.UI
                 {
                     _fillRect = value;
                     UpdateFillRectReferences();
+                    UpdateTracker();
                     UpdateVisuals();
                 }
             }
@@ -67,6 +68,7 @@ namespace Vurbiri.UI
                 {
                     _handleRect = value;
                     UpdateHandleRectReferences();
+                    UpdateTracker();
                     UpdateVisuals();
                 }
             }
@@ -198,11 +200,8 @@ namespace Vurbiri.UI
 
         protected void UpdateVisuals()
         {
-            _tracker.Clear();
-
             if (_fillContainerRect != null)
             {
-                _tracker.Add(this, _fillRect, DrivenTransformProperties.Anchors);
                 Vector2 anchorMin = Vector2.zero;
                 Vector2 anchorMax = Vector2.one;
 
@@ -224,7 +223,6 @@ namespace Vurbiri.UI
 
             if (_handleContainerRect != null)
             {
-                _tracker.Add(this, _handleRect, DrivenTransformProperties.Anchors);
                 Vector2 anchorMin = Vector2.zero;
                 Vector2 anchorMax = Vector2.one;
                 anchorMin[_axis] = anchorMax[_axis] = (_reverseValue ? (1f - _normalizedValue) : _normalizedValue);
@@ -232,9 +230,14 @@ namespace Vurbiri.UI
                 _handleRect.anchorMax = anchorMax;
             }
         }
-        private bool CanDrag(PointerEventData eventData)
+
+        public void UpdateTracker()
         {
-            return eventData.button == PointerEventData.InputButton.Left && isActiveAndEnabled && IsInteractable();
+            _tracker.Clear();
+            if (_fillContainerRect != null)
+                _tracker.Add(this, _fillRect, DrivenTransformProperties.Anchors);
+            if (_handleContainerRect != null)
+                _tracker.Add(this, _handleRect, DrivenTransformProperties.Anchors);
         }
 
         // Update the slider's position based on the mouse.
@@ -286,10 +289,16 @@ namespace Vurbiri.UI
             _onValueChanged.Init();
         }
 
+        sealed protected override void OnEnable()
+        {
+            UpdateTracker();
+            base.OnEnable();
+        }
+
         sealed protected override void OnDisable()
         {
-            _tracker.Clear();
             base.OnDisable();
+            _tracker.Clear();
         }
 
         sealed protected override void OnRectTransformDimensionsChange()
@@ -300,6 +309,10 @@ namespace Vurbiri.UI
                 UpdateVisuals();
         }
 
+        private bool CanDrag(PointerEventData eventData)
+        {
+            return eventData.button == PointerEventData.InputButton.Left && isActiveAndEnabled && IsInteractable();
+        }
         sealed public override void OnPointerDown(PointerEventData eventData)
         {
             if (!CanDrag(eventData)) return;

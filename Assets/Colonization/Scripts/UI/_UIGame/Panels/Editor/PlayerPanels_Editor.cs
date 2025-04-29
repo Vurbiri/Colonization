@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(1f, 10f)] private float _spaceIn = 4f;
         [Header("Between")]
         [SerializeField] private Vector2 _paddingOut = new(15f, 15f);
-        [SerializeField, Range(5f, 20f)] private float _spaceOut = 5f;
+        [SerializeField, Range(1f, 20f)] private float _spaceOut = 5f;
         [Header("└────────────────────────────────────")]
         #pragma warning disable 414
         [SerializeField, ReadOnly] private string _endEditor = "****************************************************************";

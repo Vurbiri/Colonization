@@ -35,6 +35,7 @@ namespace Vurbiri.UI
                 {
                     _fillRect = value;
                     UpdateFillRectReferences();
+                    UpdateTracker();
                     UpdateVisuals();
                 }
             }
@@ -110,11 +111,8 @@ namespace Vurbiri.UI
 
         protected void UpdateVisuals()
         {
-            _tracker.Clear();
-
             if (_fillContainerRect != null)
             {
-                _tracker.Add(this, _fillRect, DrivenTransformProperties.Anchors);
                 Vector2 anchorMin = Vector2.zero;
                 Vector2 anchorMax = Vector2.one;
 
@@ -149,6 +147,13 @@ namespace Vurbiri.UI
             if (flipLayout & _axis != oldAxis) RectTransformUtility.FlipLayoutAxes(_thisRectTransform, true, true);
             if (flipLayout & _reverseValue != oldReverse) RectTransformUtility.FlipLayoutOnAxis(_thisRectTransform, _axis, true, true);
         }
+
+        public void UpdateTracker()
+        {
+            _tracker.Clear();
+            if (_fillContainerRect != null)
+                _tracker.Add(this, _fillRect, DrivenTransformProperties.Anchors);
+        }
         #endregion
 
         #region Calls ..
@@ -157,6 +162,11 @@ namespace Vurbiri.UI
             _thisRectTransform = (RectTransform)transform;
             UpdateFillRectReferences();
             UpdateDirection(_direction, false);
+        }
+
+        private void OnEnable()
+        {
+            UpdateTracker();
         }
 
         private void OnDisable()

@@ -44,13 +44,13 @@ namespace VurbiriEditor.UI
 
             _direction = _bar.Direction;
 
-            _fillRectProperty = serializedObject.FindProperty("_fillRect");
-            _directionProperty = serializedObject.FindProperty("_direction");
-            _valueProperty = serializedObject.FindProperty("_value");
-            _minValueProperty = serializedObject.FindProperty("_minValue");
-            _maxValueProperty = serializedObject.FindProperty("_maxValue");
+            _fillRectProperty    = serializedObject.FindProperty("_fillRect");
+            _directionProperty   = serializedObject.FindProperty("_direction");
+            _valueProperty       = serializedObject.FindProperty("_value");
+            _minValueProperty    = serializedObject.FindProperty("_minValue");
+            _maxValueProperty    = serializedObject.FindProperty("_maxValue");
             _useGradientProperty = serializedObject.FindProperty("_useGradient");
-            _gradientProperty = serializedObject.FindProperty("_gradient");
+            _gradientProperty    = serializedObject.FindProperty("_gradient");
 
             _isCorrectReferences.valueChanged.AddListener(Repaint);
 
@@ -74,6 +74,8 @@ namespace VurbiriEditor.UI
             _fillRect = _fillRectProperty.objectReferenceValue as Transform;
             if (_fillRect != null && _fillRect.parent != null)
                 _fillContainerRect = _fillRect.parent;
+
+            _bar.UpdateTracker();
         }
 
         protected void SetMinValue()
@@ -99,7 +101,9 @@ namespace VurbiriEditor.UI
 
             Space(2f);
             BeginDisabledGroup(_selectedCount > 1);
+            {
                 PropertyField(_fillRectProperty);
+            }
             EndDisabledGroup();
 
             UpdateFillRectReferences();
@@ -109,7 +113,7 @@ namespace VurbiriEditor.UI
             {
                 Space(2f);
                 BeginChangeCheck();
-                PropertyField(_directionProperty);
+                    PropertyField(_directionProperty);
                 if (EndChangeCheck())
                 {
                     _direction = (Direction)_directionProperty.enumValueIndex;

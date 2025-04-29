@@ -47,13 +47,13 @@ namespace VurbiriEditor.UI
 
             _direction = _slider.Direction;
 
-            _fillRectProperty = serializedObject.FindProperty("_fillRect");
-            _handleRectProperty = serializedObject.FindProperty("_handleRect");
-            _directionProperty = serializedObject.FindProperty("_direction");
-            _valueProperty = serializedObject.FindProperty("_value");
-            _minValueProperty = serializedObject.FindProperty("_minValue");
-            _maxValueProperty = serializedObject.FindProperty("_maxValue");
-            _stepProperty = serializedObject.FindProperty("_step");
+            _fillRectProperty       = serializedObject.FindProperty("_fillRect");
+            _handleRectProperty     = serializedObject.FindProperty("_handleRect");
+            _directionProperty      = serializedObject.FindProperty("_direction");
+            _valueProperty          = serializedObject.FindProperty("_value");
+            _minValueProperty       = serializedObject.FindProperty("_minValue");
+            _maxValueProperty       = serializedObject.FindProperty("_maxValue");
+            _stepProperty           = serializedObject.FindProperty("_step");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
             _isCorrectReferences.value = CheckReferences();
@@ -78,6 +78,8 @@ namespace VurbiriEditor.UI
         {
             RectTransform fillRect = _fillRectProperty.objectReferenceValue as RectTransform;
             RectTransform handleRect = _handleRectProperty.objectReferenceValue as RectTransform;
+
+            _slider.UpdateTracker();
 
             return (fillRect != null && fillRect.parent != null) || (handleRect != null && handleRect.parent != null);
         }
@@ -117,7 +119,7 @@ namespace VurbiriEditor.UI
             {
                 Space(2f);
                 BeginChangeCheck();
-                PropertyField(_directionProperty);
+                    PropertyField(_directionProperty);
                 if (EndChangeCheck())
                 {
                     _direction = (Direction)_directionProperty.enumValueIndex;

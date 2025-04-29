@@ -46,7 +46,8 @@ namespace Vurbiri.UI
 #endif
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
-                if (!_targetGraphics[i].IsValid) _targetGraphics.RemoveAt(i);
+                if (!_targetGraphics[i].Validate()) 
+                    _targetGraphics.RemoveAt(i);
 
             _targetGraphics.TrimExcess();
 
@@ -141,13 +142,11 @@ namespace Vurbiri.UI
 
         protected virtual void StartColorTween(int intState, Vector3 targetScale, Color targetColor, float duration)
         {
-#if UNITY_EDITOR
-            if (!Application.isPlaying) { StartColorTween_Editor(intState, targetScale, targetColor); return; }
-#endif
             _scaleTween.Set(targetScale, duration);
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 _targetGraphics[i].CrossFadeColor(intState, targetColor, duration);
+
         }
 
         protected virtual void DoSpriteSwap(Vector3 targetScale, Sprite targetSprite, float duration)
@@ -160,7 +159,7 @@ namespace Vurbiri.UI
 
         protected override void OnEnable()
         {
-            _scaleTween.SetActive(_isScaling);
+            if(_isScaling) _scaleTween.Enable();
             base.OnEnable();
         }
 
@@ -171,25 +170,19 @@ namespace Vurbiri.UI
         }
 
 #if UNITY_EDITOR
-        private void StartColorTween_Editor(int intState, Vector3 targetScale, Color targetColor)
-        {
-            _scaleTween.Set(targetScale);
-
-            for (int i = _targetGraphics.Count - 1; i >= 0; i--)
-                if (_targetGraphics[i].IsValid)
-                    _targetGraphics[i].SetColor(intState, targetColor);
-        }
-
         protected override void OnValidate()
         {
-            base.OnValidate();
-
             if (!Application.isPlaying)
             {
                 _scaleTween = _scaleTween.ReCreate(this, _targetTransform, _isScaling);
-                if(!_isScaling && _targetTransform != null)
+                if (!_isScaling && _targetTransform != null)
                     _targetTransform.localScale = Vector3.one;
+
+                for (int i = _targetGraphics.Count - 1; i >= 0; i--)
+                    _targetGraphics[i].Validate();
             }
+
+            base.OnValidate();
         }
 
         protected override void Reset()

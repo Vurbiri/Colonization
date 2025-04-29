@@ -14,7 +14,7 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VSelectable), true), CanEditMultipleObjects]
     public class VSelectableEditor : Editor
     {
-        private const string P_GRAPHIC = "_graphic";
+        private const string P_GRAPHIC = "_graphic", P_FLAGS = "_stateFilter";
         private static readonly GUIContent[] nameTransition = new GUIContent[]{ new("None"), new("Color Tint"), new("Sprite Swap") };
         private static readonly int[] idTransition = new[] { 0, 1, 2 };
 
@@ -127,9 +127,9 @@ namespace VurbiriEditor.UI
                 m_TransitionProperty.propertyPath,
                 m_ColorBlockProperty.propertyPath,
                 m_SpriteStateProperty.propertyPath,
-                serializedObject.FindProperty("m_AnimationTriggers").propertyPath,
                 m_InteractableProperty.propertyPath,
                 m_TargetGraphicProperty.propertyPath,
+                serializedObject.FindProperty("m_AnimationTriggers").propertyPath,
             };
         }
 
@@ -228,7 +228,7 @@ namespace VurbiriEditor.UI
 
         private void GraphicsAndGroupBlocksPropertiesGUI()
         {
-            SerializedProperty targetGraphic = UpdateTargetGraphics();
+            TargetGraphicProperty targetGraphic = UpdateTargetGraphics();
 
             IntPopup(m_TransitionProperty, nameTransition, idTransition);
             _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
@@ -243,7 +243,7 @@ namespace VurbiriEditor.UI
             if (BeginFadeGroup(m_ShowColorTint.faded))
             {
                 PropertyField(_targetGraphicsProperty);
-                if (targetGraphic.objectReferenceValue as Graphic == null)
+                if (targetGraphic.IsNotGraphic)
                     HelpBox("You must have a Graphics target in order to use a color transition.", UnityEditor.MessageType.Warning);
 
                 _colorBlockDrawer.Draw();
@@ -254,12 +254,12 @@ namespace VurbiriEditor.UI
             {
                 PropertyField(m_TargetGraphicProperty);
                 
-                if (m_TargetGraphicProperty.objectReferenceValue as Image == null)
+                if (m_TargetGraphicProperty.objectReferenceValue is not Image)
                 {
                     m_TargetGraphicProperty.objectReferenceValue = null;
                     HelpBox("You must have a Image target in order to use a sprite swap transition.", UnityEditor.MessageType.Warning);
                 }
-                targetGraphic.objectReferenceValue = m_TargetGraphicProperty.objectReferenceValue;
+                targetGraphic.SetGraphic(m_TargetGraphicProperty);
 
                 Space();
                 PropertyField(m_SpriteStateProperty);
@@ -272,6 +272,7 @@ namespace VurbiriEditor.UI
             }
             EndFadeGroup();
             // ========= Scaling =================================
+            Space();
             PropertyField(_isScalingProperty);
             _showScaling.target = _isScalingProperty.boolValue;
             if (BeginFadeGroup(_showScaling.faded))
@@ -287,16 +288,16 @@ namespace VurbiriEditor.UI
             EditorGUI.indentLevel--;
         }
 
-        private SerializedProperty UpdateTargetGraphics()
+        private TargetGraphicProperty UpdateTargetGraphics()
         {
             if(_targetGraphicsProperty.arraySize == 0)
                 _targetGraphicsProperty.InsertArrayElementAtIndex(0);
 
-            SerializedProperty targetGraphic = _targetGraphicsProperty.GetArrayElementAtIndex(0).FindPropertyRelative(P_GRAPHIC);
-            if (targetGraphic.objectReferenceValue == null)
-                targetGraphic.objectReferenceValue = _vSelectable.GetComponent<Graphic>();
+            TargetGraphicProperty targetGraphic = new(_targetGraphicsProperty.GetArrayElementAtIndex(0));
+            if (targetGraphic.IsNull)
+                targetGraphic.ReferenceValue = _vSelectable.GetComponent<Graphic>();
 
-            m_TargetGraphicProperty.objectReferenceValue = targetGraphic.objectReferenceValue;
+            m_TargetGraphicProperty.objectReferenceValue = targetGraphic.ReferenceValue;
             return targetGraphic;
         }
 

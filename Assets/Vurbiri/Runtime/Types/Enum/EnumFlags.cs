@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri
@@ -14,6 +15,7 @@ namespace Vurbiri
 
         public static readonly int count;
         public static readonly EnumFlags<T> None = new(false);
+        public static readonly EnumFlags<T> Fill = new(true);
 
         static EnumFlags()
         {
@@ -40,8 +42,17 @@ namespace Vurbiri
 
         public readonly int Count => count;
 
-        public readonly bool this[int i] => ((_value >> i) & 1) > 0;
-        public readonly bool this[T e] => ((_value >> e.ToInt()) & 1) > 0;
+        public readonly bool this[int i]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => ((_value >> i) & 1) > 0;
+        }
+
+        public readonly bool this[T e] 
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => ((_value >> e.ToInt()) & 1) > 0;
+        }
 
         #region Constructors
         public EnumFlags(int value)
