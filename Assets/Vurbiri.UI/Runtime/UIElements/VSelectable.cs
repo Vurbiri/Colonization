@@ -15,27 +15,83 @@ namespace Vurbiri.UI
         [SerializeField] private bool _alphaCollider = false;
         [SerializeField, Range(0.01f, 1f)] private float _threshold = 0.1f;
         [SerializeField] protected List<TargetGraphic> _targetGraphics = new();
-        [SerializeField] private bool _isScaling;
-        [SerializeField] private RectTransform _targetTransform;
-        [SerializeField] private ScaleBlock _scaleBlock = ScaleBlock.defaultScaleBlock;
+        [SerializeField] private bool _scaling;
+        [SerializeField] private RectTransform _scalingTarget;
+        [SerializeField] private ScaleBlock _scales = ScaleBlock.defaultScaleBlock;
 
         private ScaleTween _scaleTween = new();
 
+        #region Properties
         public new bool interactable
         {
             get => base.interactable;
             set
             {
-                if (base.interactable == value) return;
-
-                base.interactable = value;
-                if (_interactableIcon != null)
-                    _interactableIcon.CrossFadeAlpha(value ? 0f : 1f, colors.fadeDuration, true);
+                if (base.interactable != value)
+                {
+                    base.interactable = value;
+                    if (_interactableIcon != null)
+                        _interactableIcon.CrossFadeAlpha(value ? 0f : 1f, colors.fadeDuration, true);
+                }
+            }
+        }
+        public Graphic InteractableIcon
+        {
+            get => _interactableIcon;
+            set
+            {
+                if (_interactableIcon != value)
+                {
+                    _interactableIcon = value;
+                    if (value != null)
+                        _interactableIcon.CrossFadeAlpha(base.interactable ? 0f : 1f, colors.fadeDuration, true);
+                }
+            }
+        }
+        public bool Scaling
+        {
+            get => _scaling;
+            set
+            {
+                if (_scaling != value)
+                {
+                    _scaling = value;
+                    _scaleTween.SetActive(value);
+                }
+            }
+        }
+        public RectTransform ScalingTarget
+        {
+            get => _scalingTarget;
+            set
+            {
+                if (_scalingTarget != value)
+                {
+                    _scalingTarget = value;
+                    _scaleTween.ReCreate(this, _scalingTarget, _scaling);
+                }
+            }
+        }
+        public ScaleBlock Scales
+        {
+            get => _scales;
+            set 
+            { 
+                if (value != _scales)
+                {
+                    _scales = value;
+#if UNITY_EDITOR
+                    if (!Application.isPlaying)
+                        DoStateTransition(currentSelectionState, true);
+                    else
+#endif
+                        DoStateTransition(currentSelectionState, false);
+                }
             }
         }
 
-        public Graphic InteractableIcon => _interactableIcon;
         public int TargetGraphicCount => _targetGraphics.Count;
+        #endregion
 
         public Graphic GetTargetGraphic(int index) => _targetGraphics[index].Graphic;
 
@@ -54,7 +110,7 @@ namespace Vurbiri.UI
             if (_targetGraphics.Count > 0)
                 targetGraphic = _targetGraphics[0];
 
-            _scaleTween = _scaleTween.ReCreate(this, _targetTransform);
+            _scaleTween = _scaleTween.ReCreate(this, _scalingTarget);
         }
 
         protected override void Start()
@@ -82,31 +138,31 @@ namespace Vurbiri.UI
             {
                 case SelectionState.Normal:
                     intState = 0;
-                    targetScale = _scaleBlock.normal;
+                    targetScale = _scales.normal;
                     targetColor = colors.normalColor;
                     targetSprite = null;
                     break;
                 case SelectionState.Highlighted:
                     intState = 1;
-                    targetScale = _scaleBlock.highlighted;
+                    targetScale = _scales.highlighted;
                     targetColor = colors.highlightedColor;
                     targetSprite = spriteState.highlightedSprite;
                     break;
                 case SelectionState.Pressed:
                     intState = 2;
-                    targetScale = _scaleBlock.pressed;
+                    targetScale = _scales.pressed;
                     targetColor = colors.pressedColor;
                     targetSprite = spriteState.pressedSprite;
                     break;
                 case SelectionState.Selected:
                     intState = 3;
-                    targetScale = _scaleBlock.selected;
+                    targetScale = _scales.selected;
                     targetColor = colors.selectedColor;
                     targetSprite = spriteState.selectedSprite;
                     break;
                 case SelectionState.Disabled:
                     intState = 4;
-                    targetScale = _scaleBlock.disabled;
+                    targetScale = _scales.disabled;
                     targetColor = colors.disabledColor;
                     targetSprite = spriteState.disabledSprite;
                     break;
@@ -121,16 +177,16 @@ namespace Vurbiri.UI
             switch (transition)
             {
                 case Transition.None:
-                    StartScaleTween(targetScale, instant ? 0f : _scaleBlock.fadeDuration);
+                    StartScaleTween(targetScale, instant ? 0f : _scales.fadeDuration);
                     break;
                 case Transition.ColorTint:
                     StartColorTween(intState, targetScale, targetColor * colors.colorMultiplier, instant ? 0f : colors.fadeDuration);
                     break;
                 case Transition.SpriteSwap:
-                    DoSpriteSwap(targetScale, targetSprite, instant ? 0f : _scaleBlock.fadeDuration);
+                    DoSpriteSwap(targetScale, targetSprite, instant ? 0f : _scales.fadeDuration);
                     break;
                 case Transition.Animation:
-                    Debug.LogWarning("Animation is not supported");
+                    Errors.Message("Animation is not supported");
                     break;
             }
         }
@@ -159,7 +215,7 @@ namespace Vurbiri.UI
 
         protected override void OnEnable()
         {
-            if(_isScaling) _scaleTween.Enable();
+            if(_scaling) _scaleTween.Enable();
             base.OnEnable();
         }
 
@@ -174,9 +230,9 @@ namespace Vurbiri.UI
         {
             if (!Application.isPlaying)
             {
-                _scaleTween = _scaleTween.ReCreate(this, _targetTransform, _isScaling);
-                if (!_isScaling && _targetTransform != null)
-                    _targetTransform.localScale = Vector3.one;
+                _scaleTween = _scaleTween.ReCreate(this, _scalingTarget, _scaling);
+                if (!_scaling && _scalingTarget != null)
+                    _scalingTarget.localScale = Vector3.one;
 
                 for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                     _targetGraphics[i].Validate();

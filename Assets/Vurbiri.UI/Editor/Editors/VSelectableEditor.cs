@@ -14,7 +14,6 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VSelectable), true), CanEditMultipleObjects]
     public class VSelectableEditor : Editor
     {
-        private const string P_GRAPHIC = "_graphic", P_FLAGS = "_stateFilter";
         private static readonly GUIContent[] nameTransition = new GUIContent[]{ new("None"), new("Color Tint"), new("Sprite Swap") };
         private static readonly int[] idTransition = new[] { 0, 1, 2 };
 
@@ -29,11 +28,12 @@ namespace VurbiriEditor.UI
         protected SerializedProperty m_ColorBlockProperty;
         protected SerializedProperty m_SpriteStateProperty;
         protected SerializedProperty _isScalingProperty;
-        protected SerializedProperty _targetTransformProperty;
+        protected SerializedProperty _scalingTargetProperty;
         protected SerializedProperty _scaleBlockProperty;
         protected SerializedProperty m_NavigationProperty;
 
         private ColorBlockDrawer _colorBlockDrawer;
+        private ScaleBlockDrawer _scaleBlockDrawer;
 
         private readonly GUIContent m_VisualizeNavigation = EditorGUIUtility.TrTextContent("Visualize", "Show navigation flows between selectable UI elements.");
 
@@ -73,12 +73,13 @@ namespace VurbiriEditor.UI
             m_TransitionProperty        = serializedObject.FindProperty("m_Transition");
             m_ColorBlockProperty        = serializedObject.FindProperty("m_Colors");
             m_SpriteStateProperty       = serializedObject.FindProperty("m_SpriteState");
-            _isScalingProperty          = serializedObject.FindProperty("_isScaling");
-            _targetTransformProperty    = serializedObject.FindProperty("_targetTransform");
-            _scaleBlockProperty         = serializedObject.FindProperty("_scaleBlock");
+            _isScalingProperty          = serializedObject.FindProperty("_scaling");
+            _scalingTargetProperty      = serializedObject.FindProperty("_scalingTarget");
+            _scaleBlockProperty         = serializedObject.FindProperty("_scales");
             m_NavigationProperty        = serializedObject.FindProperty("m_Navigation");
 
             _colorBlockDrawer           = new(m_ColorBlockProperty);
+            _scaleBlockDrawer           = new(_scaleBlockProperty);
 
             m_ShowColorTint.value           = _transition == Selectable.Transition.ColorTint;
             m_ShowSpriteTransition.value    = _transition == Selectable.Transition.SpriteSwap;
@@ -120,7 +121,7 @@ namespace VurbiriEditor.UI
                 _thresholdProperty.propertyPath,
                 _targetGraphicsProperty.propertyPath,
                 _isScalingProperty.propertyPath,
-                _targetTransformProperty.propertyPath,
+                _scalingTargetProperty.propertyPath,
                 _scaleBlockProperty.propertyPath,
                 m_Script.propertyPath,
                 m_NavigationProperty.propertyPath,
@@ -194,8 +195,8 @@ namespace VurbiriEditor.UI
         {
             Space(1f);
             EditorGUI.BeginChangeCheck();
-            PropertyField(m_InteractableProperty);
-            PropertyField(_interactableIconProperty);
+                PropertyField(m_InteractableProperty);
+                PropertyField(_interactableIconProperty);
             if (EditorGUI.EndChangeCheck())
             {
                 if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_vSelectable.gameObject.scene);
@@ -230,10 +231,13 @@ namespace VurbiriEditor.UI
         {
             TargetGraphicProperty targetGraphic = UpdateTargetGraphics();
 
+            BeginVertical(STYLES.border);
+
             IntPopup(m_TransitionProperty, nameTransition, idTransition);
             _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
 
-            m_ShowColorTint.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.ColorTint;
+            bool colorTintMode = _transition == Selectable.Transition.ColorTint;
+            m_ShowColorTint.target = !m_TransitionProperty.hasMultipleDifferentValues && colorTintMode;
             m_ShowSpriteTransition.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.SpriteSwap;
             m_ShowAnimTransition.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.Animation;
 
@@ -277,15 +281,17 @@ namespace VurbiriEditor.UI
             _showScaling.target = _isScalingProperty.boolValue;
             if (BeginFadeGroup(_showScaling.faded))
             {
-                if(_targetTransformProperty.objectReferenceValue == null)
-                    _targetTransformProperty.objectReferenceValue = _vSelectable.transform;
+                if(_scalingTargetProperty.objectReferenceValue == null)
+                    _scalingTargetProperty.objectReferenceValue = _vSelectable.transform;
 
-                PropertyField(_targetTransformProperty);
-                PropertyField(_scaleBlockProperty);
+                PropertyField(_scalingTargetProperty);
+                _scaleBlockDrawer.Draw(!colorTintMode);
             }
             EndFadeGroup();
 
             EditorGUI.indentLevel--;
+
+            EndVertical();
         }
 
         private TargetGraphicProperty UpdateTargetGraphics()

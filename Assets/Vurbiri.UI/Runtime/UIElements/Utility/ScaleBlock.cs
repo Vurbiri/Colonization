@@ -14,7 +14,6 @@ namespace Vurbiri.UI
         public Vector3 pressed;
         public Vector3 selected;
         public Vector3 disabled;
-        [Range(0f, 1f)]
         public float fadeDuration;
                 
         static ScaleBlock()
@@ -52,5 +51,12 @@ namespace Vurbiri.UI
 
         public override readonly int GetHashCode() => base.GetHashCode();
 
+#if UNITY_EDITOR
+        [SerializeField] private bool _normalEdit;
+        [SerializeField] private bool _highlightedEdit;
+        [SerializeField] private bool _pressedEdit;
+        [SerializeField] private bool _selectedEdit;
+        [SerializeField] private bool _disabledEdit;
+#endif
     }
 }

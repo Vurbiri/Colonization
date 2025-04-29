@@ -7,35 +7,35 @@ namespace VurbiriEditor.UI
 {
     public class ColorBlockDrawer
     {
-        private const int COUNT_SIMPLE_PROPERTIES = 6;
-        private static readonly float space = EditorGUIUtility.standardVerticalSpacing;
+        private const int COLORS_COUNT = 5;
         private static readonly float line = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+        private static readonly GUIContent[] names = new GUIContent[] { new("Normal"), new("Highlighted"), new("Pressed"), new("Selected"), new("Disabled") };
 
-        private readonly SerializedProperty _colorBlockProperty;
+       private readonly SerializedProperty _colorBlockProperty;
 
-        private readonly SerializedProperty[] _simleProperties;
+        private readonly SerializedProperty[] _colorProperties;
         private readonly SerializedProperty _fadeDurationProperty;
+        private readonly SerializedProperty _colorMultiplierProperty;
 
         public ColorBlockDrawer(SerializedProperty colorBlock)
         {
             _colorBlockProperty      = colorBlock;
 
-            _simleProperties = new[]
+            _colorProperties = new[]
             {
                 colorBlock.FindPropertyRelative("m_NormalColor"),
                 colorBlock.FindPropertyRelative("m_HighlightedColor"),
                 colorBlock.FindPropertyRelative("m_PressedColor"),
                 colorBlock.FindPropertyRelative("m_SelectedColor"),
                 colorBlock.FindPropertyRelative("m_DisabledColor"),
-                colorBlock.FindPropertyRelative("m_ColorMultiplier"),
             };
 
+            _colorMultiplierProperty = colorBlock.FindPropertyRelative("m_ColorMultiplier");
             _fadeDurationProperty    = colorBlock.FindPropertyRelative("m_FadeDuration");
         }
 
         public void Draw()
         {
-            //GUIContent label = new("Color Block");
             GUIContent label = new(_colorBlockProperty.displayName);
 
             Rect drawRect = EditorGUILayout.BeginVertical();
@@ -45,13 +45,19 @@ namespace VurbiriEditor.UI
             {
                 if (_colorBlockProperty.isExpanded = Foldout(drawRect, _colorBlockProperty.isExpanded, label, EditorStyles.foldoutHeader))
                 {
-                    for (int i = 0; i < COUNT_SIMPLE_PROPERTIES; i++)
+                    indentLevel++;
+                    for (int i = 0; i < COLORS_COUNT; i++)
                     {
                         drawRect.y += line;
-                        PropertyField(drawRect, _simleProperties[i]);
+                        PropertyField(drawRect, _colorProperties[i], names[i]);
                     }
+                    indentLevel--;
+
+                    drawRect.y += line;
+                    PropertyField(drawRect, _colorMultiplierProperty);
                     drawRect.y += line;
                     FadeDurationField(drawRect, _fadeDurationProperty);
+                    
                 }
             }
             EndProperty();
