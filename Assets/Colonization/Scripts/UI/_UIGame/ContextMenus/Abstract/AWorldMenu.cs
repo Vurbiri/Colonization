@@ -11,15 +11,17 @@ namespace Vurbiri.Colonization.UI
         private const float SPEED_OPEN = 8f, SPEED_CLOSE = 10f;
 
         private CanvasGroup _thisCanvasGroup;
+        private GameObject _thisGameObject;
         private Coroutine _coroutine;
         private float _targetAlpha;
 
         protected Crossroad _currentCrossroad;
-        protected readonly Signer<bool> _eventActive = new();
+        protected readonly Signer<GameObject, bool> _eventActive = new();
 
         private void Awake()
         {
             _thisCanvasGroup = GetComponent<CanvasGroup>();
+            _thisGameObject = gameObject;
         }
 
         public void Open()
@@ -86,7 +88,7 @@ namespace Vurbiri.Colonization.UI
             if (_coroutine != null)
                 StopCoroutine(_coroutine);
 
-            _eventActive.Invoke(true);
+            _eventActive.Invoke(_thisGameObject, true);
         }
         private void Enable()
         {
@@ -107,7 +109,7 @@ namespace Vurbiri.Colonization.UI
         {
             _thisCanvasGroup.alpha = 0f;
             _coroutine = null;
-            _eventActive.Invoke(false);
+            _eventActive.Invoke(_thisGameObject, false);
         }
 
         private void OnEnable()
@@ -118,14 +120,14 @@ namespace Vurbiri.Colonization.UI
             _thisCanvasGroup.blocksRaycasts = isEnabled;
 
             if (isEnabled)
-                _eventActive.Invoke(true);
+                _eventActive.Invoke(_thisGameObject, true);
         }
 
         private void OnDisable()
         {
             _coroutine = null;
             if (_targetAlpha > 0.1f)
-                _eventActive.Invoke(false);
+                _eventActive.Invoke(_thisGameObject, false);
         }
     }
 }

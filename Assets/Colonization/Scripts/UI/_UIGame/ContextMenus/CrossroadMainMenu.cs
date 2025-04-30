@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         private CrossroadWarriorsMenu _warriorsMenu;
         private Human _player;
 
-        public ISigner<bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
+        public ISigner<GameObject, bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;

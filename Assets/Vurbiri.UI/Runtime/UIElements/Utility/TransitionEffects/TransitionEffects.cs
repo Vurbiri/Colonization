@@ -24,7 +24,7 @@ namespace Vurbiri.UI
         }
 
         public bool SetGraphic(Graphic checkmarkA, Graphic checkmarkB) => _tween.SetTarget(checkmarkA);
-        public void SetDuration(float duration) => _tween.markDuration = duration;
+        public void SetDuration(float duration) => _tween.MarkDuration = duration;
         public virtual void ColorsUpdate(Color colorOn, Color colorOff) { }
 
         public void Play(bool isOn)

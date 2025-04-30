@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\ContextMenusWorld.cs
-using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
@@ -20,15 +19,14 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private LookAtCamera _lookAtCamera;
 
-        private GameObject _thisGO;
         private Camera _camera;
         private bool _isNotPlayerTurn;
         private RectTransform _thisRectTransform;
         private Unsubscribers _unsubscribers = new(9);
+        private GameObject _currentOpenMenu;
 
         public void Init(ContextMenuSettings settings)
         {
-            _thisGO = gameObject;
             _camera = settings.camera;
             _thisRectTransform = GetComponent<RectTransform>();
 
@@ -94,19 +92,18 @@ namespace Vurbiri.Colonization.UI
             CloseAll();
         }
 
-        private void EnableLook(bool value)
+        private void EnableLook(GameObject signaling, bool value)
         {
-            if (!_thisGO.activeInHierarchy)
-                return;
-            
-            StopAllCoroutines();
-            StartCoroutine(EnableLook_Cn(value));
-        }
-
-        private IEnumerator EnableLook_Cn(bool value)
-        {
-            yield return null;
-            _lookAtCamera.enabled = value;
+            if (value)
+            {
+                _currentOpenMenu = signaling;
+                _lookAtCamera.enabled = true;
+            }
+            else if (_currentOpenMenu == signaling)
+            {
+                _currentOpenMenu = null;
+                _lookAtCamera.enabled = false;
+            }
         }
 
         private void OnDestroy()

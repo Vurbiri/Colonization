@@ -11,13 +11,14 @@ namespace Vurbiri.UI
         private const float MIN_DUATION = 0.027f, MIN_DELTA_DUATION = 0.081f, MIN_DELTA_DUATION_N = -MIN_DELTA_DUATION;
 
         private readonly Colors _markColors, _stateColors;
+        private float _markDuration;
         private Graphic _target;
         private CanvasRenderer _renderer;
         private Coroutine _coroutine;
         private Task _currentTask, _nextTask;
         private bool _isTwoTask;
 
-        public float markDuration;
+        public float MarkDuration { get => _markDuration; set => _markDuration = value; }
         public bool IsValid => _renderer != null;
         public object Current => null;
 
@@ -25,7 +26,7 @@ namespace Vurbiri.UI
         {
             _target = target;
             _renderer = target.canvasRenderer;
-            markDuration = duration;
+            _markDuration = duration;
             _markColors = new(MARK);
             _stateColors = new(STATE);
         }
@@ -40,7 +41,7 @@ namespace Vurbiri.UI
         {
             if (_markColors.Set(target))
             {
-                if (Setup(_markColors, _stateColors, markDuration))
+                if (Setup(_markColors, _stateColors, _markDuration))
                     _coroutine = _target.StartCoroutine(this);
             }
         }

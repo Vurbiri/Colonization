@@ -15,15 +15,13 @@ namespace VurbiriEditor.UI
         #endregion
         #region Static
         private static readonly GUIContent buttonOn, buttonOff;
-        //private static readonly GUIStyle flatButtonStyle;
-
         private static readonly float space, height, line;
         #endregion
 
         private readonly SerializedProperty _scaleBlockProperty;
 
         private readonly SerializedProperty[] _colorProperties;
-        private readonly SerializedProperty[] _editProperties;
+        private readonly SerializedProperty[] _modeProperties;
         private readonly SerializedProperty _fadeDurationProperty;
 
         static ScaleBlockDrawer()
@@ -37,20 +35,6 @@ namespace VurbiriEditor.UI
 
             image = Resources.Load<Texture>(PATH_OFF_IMAGE);
             buttonOff = new(image, TOOLTIP_OFF_BUTTON);
-
-            //flatButtonStyle = new()
-            //{
-            //    name = "flatButton",
-            //    alignment = TextAnchor.MiddleCenter,
-            //    fixedHeight = height,
-            //    fixedWidth = height
-            //};
-            //flatButtonStyle.normal.background = STYLES.BackgroundColor(new(56, 56, 56, 255));
-            //flatButtonStyle.hover.background = STYLES.BackgroundColor(new(88, 88, 88, 255));
-            //flatButtonStyle.focused.background = STYLES.BackgroundColor(new(118, 118, 118, 255));
-            //flatButtonStyle.active.background = STYLES.BackgroundColor(new(38, 38, 38, 255));
-
-            
         }
 
         public ScaleBlockDrawer(SerializedProperty colorBlock)
@@ -65,13 +49,13 @@ namespace VurbiriEditor.UI
                 colorBlock.FindPropertyRelative("selected"),
                 colorBlock.FindPropertyRelative("disabled"),
             };
-            _editProperties = new[]
+            _modeProperties = new[]
             {
-                colorBlock.FindPropertyRelative("_normalEdit"),
-                colorBlock.FindPropertyRelative("_highlightedEdit"),
-                colorBlock.FindPropertyRelative("_pressedEdit"),
-                colorBlock.FindPropertyRelative("_selectedEdit"),
-                colorBlock.FindPropertyRelative("_disabledEdit"),
+                colorBlock.FindPropertyRelative("_normalMode"),
+                colorBlock.FindPropertyRelative("_highlightedMode"),
+                colorBlock.FindPropertyRelative("_pressedMode"),
+                colorBlock.FindPropertyRelative("_selectedMode"),
+                colorBlock.FindPropertyRelative("_disabledMode"),
             };
 
             _fadeDurationProperty = colorBlock.FindPropertyRelative("fadeDuration");
@@ -93,7 +77,7 @@ namespace VurbiriEditor.UI
                     for (int i = 0; i < COLORS_COUNT; i++)
                     {
                         drawRect.y += line;
-                        VectorField(drawRect, _colorProperties[i], _editProperties[i]);
+                        VectorField(drawRect, _colorProperties[i], _modeProperties[i]);
                     }
                     indentLevel--;
 
@@ -164,7 +148,7 @@ namespace VurbiriEditor.UI
         {
             Rect sizeButton = position;
             sizeButton.width = height;
-            sizeButton.x = EditorGUIUtility.labelWidth - height * 0.5f;
+            sizeButton.x = EditorGUIUtility.labelWidth;
             return sizeButton;
         }
     }

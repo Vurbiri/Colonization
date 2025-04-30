@@ -14,7 +14,6 @@ namespace VurbiriEditor.Collections
 
             label = EditorGUI.BeginProperty(position, label, property);
             {
-
                 if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
                 {
                     SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);

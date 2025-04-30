@@ -8,7 +8,8 @@ namespace VurbiriEditor
 	{
         public static readonly GUIStyle H1;
         public static readonly GUIStyle H2;
-        public static readonly GUIStyle border;
+        public static readonly GUIStyle borderLight;
+        public static readonly GUIStyle borderDark;
         public static readonly GUIStyle flatButton;
 
         static STYLES()
@@ -32,14 +33,17 @@ namespace VurbiriEditor
             };
             H2.normal.textColor = new(120, 180, 222);
 
-            border = new()
+            borderLight = new()
             {
-                name = "border",
+                name = "borderLight",
                 border = new(4, 4, 4, 4),
                 padding = new(6, 6, 6, 6)
 
             };
-            border.normal.background = Border(new(66, 66, 66, 255));
+            borderLight.normal.background = Border(new Color32(66, 66, 66, 255));
+
+            borderDark = new(borderLight);
+            borderDark.normal.background = Border(new Color32(46, 46, 46, 255), new Color32(52, 52, 52, 255));
 
             flatButton = new()
             {
@@ -65,22 +69,54 @@ namespace VurbiriEditor
             return pixels.ToTexture(size);
         }
 
-        public static Texture2D Border(Color32 color, int size = 16, int border = 2)
+        public static Texture2D Border(Color32 colorBorder, int size = 16, int border = 2)
         {
             int borderMin = border, borderMax = size - border;
-            Color32 alpha = new(0, 0, 0, 0);
             Color32[] pixels = new Color32[size * size];
 
-            for (int i = 0; i < size; ++i)
-            {
+            for (int i = 0; i < borderMin; ++i)
                 for (int j = 0; j < size; ++j)
-                {
-                     if (i < borderMin | i >= borderMax | j < borderMin | j >= borderMax)
-                        pixels[size * i + j] = color;
-                    else
-                        pixels[size * i + j] = alpha;
-                }
-            }
+                    pixels[size * i + j] = colorBorder;
+
+            for (int i = borderMax; i < size; ++i)
+                for (int j = 0; j < size; ++j)
+                    pixels[size * i + j] = colorBorder;
+
+            for (int i = borderMin; i < borderMax; ++i)
+                for (int j = 0; j < borderMin; ++j)
+                    pixels[size * i + j] = colorBorder;
+
+            for (int i = borderMin; i < borderMax; ++i)
+                for (int j = borderMax; j < size; ++j)
+                    pixels[size * i + j] = colorBorder;
+
+            return pixels.ToTexture(size);
+        }
+
+        public static Texture2D Border(Color32 colorBorder, Color32 colorMain, int size = 16, int border = 2)
+        {
+            int borderMin = border, borderMax = size - border;
+            Color32[] pixels = new Color32[size * size];
+
+            for (int i = 0; i < borderMin; ++i)
+                for (int j = 0; j < size; ++j)
+                    pixels[size * i + j] = colorBorder;
+
+            for (int i = borderMax; i < size; ++i)
+                for (int j = 0; j < size; ++j)
+                    pixels[size * i + j] = colorBorder;
+
+            for (int i = borderMin; i < borderMax; ++i)
+                for (int j = 0; j < borderMin; ++j)
+                    pixels[size * i + j] = colorBorder;
+
+            for (int i = borderMin; i < borderMax; ++i)
+                for (int j = borderMax; j < size; ++j)
+                    pixels[size * i + j] = colorBorder;
+
+            for (int i = borderMin; i < borderMax; ++i)
+                for (int j = borderMin; j < borderMax; ++j)
+                    pixels[size * i + j] = colorMain;
             
             return pixels.ToTexture(size);
         }

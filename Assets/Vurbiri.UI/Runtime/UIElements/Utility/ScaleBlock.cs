@@ -52,11 +52,11 @@ namespace Vurbiri.UI
         public override readonly int GetHashCode() => base.GetHashCode();
 
 #if UNITY_EDITOR
-        [SerializeField] private bool _normalEdit;
-        [SerializeField] private bool _highlightedEdit;
-        [SerializeField] private bool _pressedEdit;
-        [SerializeField] private bool _selectedEdit;
-        [SerializeField] private bool _disabledEdit;
+        [SerializeField] private bool _normalMode;
+        [SerializeField] private bool _highlightedMode;
+        [SerializeField] private bool _pressedMode;
+        [SerializeField] private bool _selectedMode;
+        [SerializeField] private bool _disabledMode;
 #endif
     }
 }

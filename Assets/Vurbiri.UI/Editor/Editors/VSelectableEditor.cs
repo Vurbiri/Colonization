@@ -175,7 +175,7 @@ namespace VurbiriEditor.UI
             if (_childrenProperties.Count == 0) return;
 
             Space(1f);
-            BeginVertical(GUI.skin.box);
+            BeginVertical(STYLES.borderDark);
             foreach (var child in _childrenProperties)
                 PropertyField(child, true);
             EndVertical();
@@ -231,7 +231,7 @@ namespace VurbiriEditor.UI
         {
             TargetGraphicProperty targetGraphic = UpdateTargetGraphics();
 
-            BeginVertical(STYLES.border);
+            BeginVertical(STYLES.borderLight);
 
             IntPopup(m_TransitionProperty, nameTransition, idTransition);
             _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
