@@ -7,13 +7,11 @@ namespace Vurbiri.Colonization.UI
 {
     public class CurrenciesPanel : MonoBehaviour
     {
-        [SerializeField] private Currency[] _currencies;
+        [SerializeField] private CurrencyPopup[] _currencies;
         [SerializeField] private Amount _amount;
 
         public void Init(Direction2 directionPopup, ACurrenciesReactive currencies, ProjectColors colors)
         {
-            GetComponent<Image>().color = colors.BackgroundPanel;
-
             for (int i = 0; i < CurrencyId.CountMain; i++)
                 _currencies[i].Init(i, currencies, colors, directionPopup);
 
@@ -35,7 +33,7 @@ namespace Vurbiri.Colonization.UI
             Vector2 size = new()
             {
                 y = Mathf.Max(cSize.y, aSize.y) + padding.y * 2f,
-                x = cSize.x * 5f + aSize.x + space * 5f + padding.x * 2f
+                x = cSize.x * 5f + aSize.x + space * 8f + padding.x * 2f
             };
             thisRectTransform.sizeDelta = size;
 
@@ -51,7 +49,7 @@ namespace Vurbiri.Colonization.UI
                 pos.x += offset;
             }
 
-            pos.x -= (cSize.x - aSize.x) * 0.5f;
+            pos.x -= (cSize.x - aSize.x) * 0.5f - space * 2f;
             _amount.Init_Editor(pos, colors);
 
             return thisRectTransform;
@@ -62,7 +60,7 @@ namespace Vurbiri.Colonization.UI
         {
 
             if (_currencies == null || _currencies.Length != CurrencyId.CountMain)
-                _currencies = GetComponentsInChildren<Currency>();
+                _currencies = GetComponentsInChildren<CurrencyPopup>();
             if (_amount == null)
                 _amount = GetComponentInChildren<Amount>();
         }

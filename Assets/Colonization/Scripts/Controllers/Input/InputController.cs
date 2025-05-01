@@ -52,18 +52,23 @@ namespace Vurbiri.Colonization.Controllers
             _gameplayMap.Disable(); _cameraMap.Disable(); _UIMap.Disable();
         }
 
-        public void OnClickLeft(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskLeft);
-        public void OnClickRight(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskRight);
+        public void Select(ISelectable selectObj)
+        {
+            _selectObj?.Unselect(selectObj);
+            _selectObj = selectObj;
+            _selectObj.Select();
+        }
+
+        public void Dispose() => _inputActions?.Disable();
+
+        private void OnClickLeft(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskLeft);
+        private void OnClickRight(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskRight);
         private void OnClick(Vector2 position, int layerMask)
         {
             Ray ray = _camera.ScreenPointToRay(position);
 
             if (Physics.Raycast(ray, out RaycastHit hit, _distance, layerMask) && TryGetSelectable(hit.collider, out ISelectable selectObj))
-            {
-                _selectObj?.Unselect(selectObj);
-                _selectObj = selectObj;
-                _selectObj.Select();
-            }
+                Select(selectObj);
 
             #region Local: TryGetSelectable(..)
             //=================================
@@ -76,8 +81,6 @@ namespace Vurbiri.Colonization.Controllers
             }
             #endregion
         }
-
-        public void Dispose() => _inputActions?.Disable();
 
 
         #region Nested: Settings

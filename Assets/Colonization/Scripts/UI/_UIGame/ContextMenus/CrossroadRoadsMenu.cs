@@ -6,8 +6,9 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class CrossroadRoadsMenu : ACrossroadMenu
+    sealed public class CrossroadRoadsMenu : AWorldMenu
     {
+        [Space]
         [SerializeField] private Camera _camera;
         [Space]
         [SerializeField] private WorldHintButton _buttonBack;
@@ -34,12 +35,12 @@ namespace Vurbiri.Colonization.UI
             foreach (var button in _roadButtons)
                 button.Init(settings, roadCost, this);
 
-            CloseInstant();
+            base.CloseInstant();
 
             return _eventActive;
         }
 
-        public override void Open(Crossroad crossroad)
+        public void Open(Crossroad crossroad)
         {
             _currentCrossroad = crossroad;
 
@@ -53,12 +54,12 @@ namespace Vurbiri.Colonization.UI
 
             _lastCameraPosition = _cameraTransform.position;
 
-            Open();
+            base.Open();
         }
 
         protected override void OnClose()
         {
-            Close();
+            base.Close();
             _mainMen.Open();
         }
 

@@ -12,8 +12,6 @@ namespace Vurbiri.UI
     public partial class VSelectable : Selectable
     {
         [SerializeField] protected Graphic _interactableIcon;
-        [SerializeField] private bool _alphaCollider = false;
-        [SerializeField, Range(0.01f, 1f)] private float _threshold = 0.1f;
         [SerializeField] protected List<TargetGraphic> _targetGraphics = new();
         [SerializeField] private bool _scaling;
         [SerializeField] private RectTransform _scalingTarget;
@@ -56,7 +54,8 @@ namespace Vurbiri.UI
                 if (_scaling != value)
                 {
                     _scaling = value;
-                    _scaleTween.SetActive(value);
+                    if(isActiveAndEnabled)
+                        _scaleTween.SetActive(value);
                 }
             }
         }
@@ -68,7 +67,7 @@ namespace Vurbiri.UI
                 if (_scalingTarget != value)
                 {
                     _scalingTarget = value;
-                    _scaleTween.ReCreate(this, _scalingTarget, _scaling);
+                    _scaleTween.ReCreate(this, _scalingTarget, _scaling && isActiveAndEnabled);
                 }
             }
         }
@@ -119,10 +118,6 @@ namespace Vurbiri.UI
 
             if (_interactableIcon != null)
                 _interactableIcon.canvasRenderer.SetAlpha(base.interactable ? 0f : 1f);
-
-            Image image = targetGraphic as Image;
-            if (_alphaCollider && image != null && image.sprite != null && image.sprite.texture.isReadable)
-                image.alphaHitTestMinimumThreshold = _threshold;
         }
 
         protected override void DoStateTransition(SelectionState state, bool instant)

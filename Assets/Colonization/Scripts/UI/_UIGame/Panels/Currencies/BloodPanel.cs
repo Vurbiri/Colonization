@@ -7,11 +7,10 @@ namespace Vurbiri.Colonization.UI
 {
     public class BloodPanel : MonoBehaviour
 	{
-        [SerializeField] private CurrentMax _blood;
+        [SerializeField] private CurrentMaxPopup _blood;
 
         public void Init(Direction2 directionPopup, ACurrenciesReactive currencies, ProjectColors colors)
         {
-            GetComponent<Image>().color = colors.BackgroundPanel;
             _blood.Init(currencies.BloodCurrent, currencies.BloodMax, colors, directionPopup);
 
             Destroy(this);
@@ -27,14 +26,15 @@ namespace Vurbiri.Colonization.UI
             RectTransform thisRectTransform = (RectTransform)transform;
             thisRectTransform.sizeDelta = _blood.Size + padding * 2f;
 
-            _blood.Init_Editor(icons[CurrencyId.Blood], colors);
+            CurrencyIcon icon = icons[CurrencyId.Blood];
+            _blood.Init_Editor(icon.Icon, icon.Color, colors);
             return thisRectTransform;
         }
 
         private void OnValidate()
         {
             if (_blood == null)
-                _blood = GetComponentInChildren<CurrentMax>();
+                _blood = GetComponentInChildren<CurrentMaxPopup>();
         }
 #endif
     }

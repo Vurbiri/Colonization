@@ -30,19 +30,27 @@ namespace Vurbiri.Colonization.UI
             var colors = _colorSettings.Colors;
 
             RectTransform thisRectTransform = (RectTransform)transform;
+            RectTransform rectWarriors = _warriors.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, colors);
             RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, _spaceIn, icons, colors);
             RectTransform rectBlood = _blood.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, icons, colors);
 
             Vector3 position = -thisRectTransform.rect.size * 0.5f + _paddingOut;
-            rectCurrencies.localPosition = position;
+            rectWarriors.localPosition = position;
 
-            position.x += rectCurrencies.rect.width + _spaceOut;
-            rectBlood.localPosition = position;
+            rectCurrencies.localPosition = position = NextPosition(position, rectWarriors);
+            rectBlood.localPosition =  NextPosition(position, rectCurrencies);
+
+            // Local function
+            Vector3 NextPosition(Vector3 current, RectTransform prevPanel, float advOffset = 0f)
+            {
+                current.x += prevPanel.rect.width + _spaceOut + advOffset;
+                return current;
+            }
         }
 
         public void Rebuild(CanvasUpdate executing)
         {
-            if (executing == CanvasUpdate.Prelayout)
+            if (executing == CanvasUpdate.Prelayout && !Application.isPlaying)
                 UpdateVisuals();
         }
         public void LayoutComplete() { }
@@ -56,6 +64,7 @@ namespace Vurbiri.Colonization.UI
                 EUtility.SetScriptable(ref _currenciesIcons);
                 EUtility.SetScriptable(ref _colorSettings);
 
+                EUtility.SetObject(ref _warriors);
                 EUtility.SetObject(ref _currencies);
                 EUtility.SetObject(ref _blood);
 

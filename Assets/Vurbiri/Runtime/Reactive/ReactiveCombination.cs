@@ -19,6 +19,12 @@ namespace Vurbiri.Reactive
             _unsubscribers += reactiveB.Subscribe(value => _signer.Invoke(_valueA, _valueB = value), false);
         }
 
+        public ReactiveCombination(IReactiveValue<TA> reactiveA, IReactiveValue<TB> reactiveB, Action<TA, TB> action) : this(reactiveA, reactiveB)
+        {
+            action(_valueA, _valueB);
+            _signer.Add(action);
+        }
+
         public Unsubscriber Subscribe(Action<TA, TB> action, bool instantGetValue = true)
         {
             if (instantGetValue) action(_valueA, _valueB);

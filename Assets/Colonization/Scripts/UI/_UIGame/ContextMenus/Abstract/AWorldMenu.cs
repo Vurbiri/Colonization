@@ -8,7 +8,8 @@ namespace Vurbiri.Colonization.UI
     [RequireComponent(typeof(CanvasGroup))]
     public abstract class AWorldMenu : MonoBehaviour
     {
-        private const float SPEED_OPEN = 8f, SPEED_CLOSE = 10f;
+        [SerializeField] private float _speedOpen = 8f;
+        [SerializeField] private float _speedClose = 10f;
 
         private CanvasGroup _thisCanvasGroup;
         private GameObject _thisGameObject;
@@ -36,7 +37,7 @@ namespace Vurbiri.Colonization.UI
                 float alpha = _thisCanvasGroup.alpha;
                 while (alpha < 1f)
                 {
-                    _thisCanvasGroup.alpha = alpha += Time.unscaledDeltaTime * SPEED_OPEN;
+                    _thisCanvasGroup.alpha = alpha += Time.unscaledDeltaTime * _speedOpen;
                     yield return null;
                 }
 
@@ -56,7 +57,7 @@ namespace Vurbiri.Colonization.UI
                 float alpha = _thisCanvasGroup.alpha;
                 while (alpha > 0f)
                 {
-                    _thisCanvasGroup.alpha = alpha -= Time.unscaledDeltaTime * SPEED_CLOSE;
+                    _thisCanvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _speedClose;
                     yield return null;
                 }
 

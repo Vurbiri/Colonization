@@ -18,8 +18,6 @@ namespace VurbiriEditor.UI
         private static readonly int[] idTransition = new[] { 0, 1, 2 };
 
         protected SerializedProperty _interactableIconProperty;
-        protected SerializedProperty _alphaColliderProperty;
-        protected SerializedProperty _thresholdProperty;
         protected SerializedProperty _targetGraphicsProperty;
         protected SerializedProperty m_TargetGraphicProperty;
         protected SerializedProperty m_Script;
@@ -40,7 +38,6 @@ namespace VurbiriEditor.UI
         protected readonly AnimBool m_ShowColorTint = new();
         protected readonly AnimBool m_ShowSpriteTransition = new();
         protected readonly AnimBool m_ShowAnimTransition = new();
-        private readonly AnimBool _showThreshold = new();
         private readonly AnimBool _showScaling = new();
 
         private static readonly List<VSelectableEditor> s_Editors = new();
@@ -64,8 +61,6 @@ namespace VurbiriEditor.UI
             _transition = _vSelectable.transition;
 
             _interactableIconProperty   = serializedObject.FindProperty("_interactableIcon");
-            _alphaColliderProperty      = serializedObject.FindProperty("_alphaCollider");
-            _thresholdProperty          = serializedObject.FindProperty("_threshold");
             _targetGraphicsProperty     = serializedObject.FindProperty("_targetGraphics");
             m_TargetGraphicProperty     = serializedObject.FindProperty("m_TargetGraphic");
             m_Script                    = serializedObject.FindProperty("m_Script");
@@ -84,12 +79,10 @@ namespace VurbiriEditor.UI
             m_ShowColorTint.value           = _transition == Selectable.Transition.ColorTint;
             m_ShowSpriteTransition.value    = _transition == Selectable.Transition.SpriteSwap;
             m_ShowAnimTransition.value      = _transition == Selectable.Transition.Animation;
-            _showThreshold.value            = _alphaColliderProperty.boolValue;
             _showScaling.value              = _isScalingProperty.boolValue;
 
             m_ShowColorTint.valueChanged.AddListener(Repaint);
             m_ShowSpriteTransition.valueChanged.AddListener(Repaint);
-            _showThreshold.valueChanged.AddListener(Repaint);
             _showScaling.valueChanged.AddListener(Repaint);
 
             s_Editors.Add(this);
@@ -105,7 +98,6 @@ namespace VurbiriEditor.UI
         {
             m_ShowColorTint.valueChanged.RemoveListener(Repaint);
             m_ShowSpriteTransition.valueChanged.RemoveListener(Repaint);
-            _showThreshold.valueChanged.RemoveListener(Repaint);
             _showScaling.valueChanged.RemoveListener(Repaint);
 
             s_Editors.Remove(this);
@@ -114,11 +106,9 @@ namespace VurbiriEditor.UI
 
         protected virtual HashSet<string> GetExcludePropertyPaths()
         {
-            return new(15)
+            return new(13)
             {
                 _interactableIconProperty.propertyPath,
-                _alphaColliderProperty.propertyPath,
-                _thresholdProperty.propertyPath,
                 _targetGraphicsProperty.propertyPath,
                 _isScalingProperty.propertyPath,
                 _scalingTargetProperty.propertyPath,
@@ -147,7 +137,6 @@ namespace VurbiriEditor.UI
             DrawChildrenProperties();
             CustomStartPropertiesGUI();
             InteractablePropertiesGUI();
-            AlfaColliderPropertiesGUI();
             CustomMiddlePropertiesGUI();
             GraphicsAndGroupBlocksPropertiesGUI();
             NavigationPropertiesGUI();
@@ -204,27 +193,7 @@ namespace VurbiriEditor.UI
                 Graphic icon = _interactableIconProperty.objectReferenceValue as Graphic;
                 if (icon != null) icon.canvasRenderer.SetAlpha(m_InteractableProperty.boolValue ? 0f : 1f);
             }
-        }
-
-        private void AlfaColliderPropertiesGUI()
-        {
-            Image image = m_TargetGraphicProperty.objectReferenceValue as Image;
-            bool isAlpha = _transition != Selectable.Transition.Animation && image != null && image.sprite != null && image.sprite.texture.isReadable;
-            if(!isAlpha) _alphaColliderProperty.boolValue = false;
-
-            Space(1f);
-            EditorGUI.BeginDisabledGroup(!isAlpha);
-            PropertyField(_alphaColliderProperty);
-            EditorGUI.EndDisabledGroup();
-            _showThreshold.target = _alphaColliderProperty.boolValue;
-            if (BeginFadeGroup(_showThreshold.faded))
-            {
-                EditorGUI.indentLevel++;
-                PropertyField(_thresholdProperty);
-                EditorGUI.indentLevel--;
-            }
-            EndFadeGroup();
-            Space(1f);
+            Space();
         }
 
         private void GraphicsAndGroupBlocksPropertiesGUI()

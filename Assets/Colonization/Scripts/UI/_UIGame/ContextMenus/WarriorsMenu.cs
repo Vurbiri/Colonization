@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization.UI
 {
     sealed public class WarriorsMenu : AWorldMenu
     {
+        [Space]
         [SerializeField] private float _distanceOfButtons = 5f;
         [Space]
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
@@ -29,13 +30,13 @@ namespace Vurbiri.Colonization.UI
             Vector3 distance = new(0f, _distanceOfButtons, 0f);
 
             _buttonClose.Init(settings.hint, OnClose);
-            _buttonMovement.Init(-distance, settings.hint, settings.playerColor, OnMovement);
-            _buttonBlock.Init(distance, settings.hint, settings.playerColor, OnBlock);
+            _buttonMovement.Init(-distance, settings.hint, OnMovement);
+            _buttonBlock.Init(distance, settings.hint, OnBlock);
 
             for (int i = 0; i < _countButtonsSkill; i++)
                 _buttonsSkill[i].Init(settings, this);
 
-            CloseInstant();
+            base.CloseInstant();
             
             return _eventActive;
         }
@@ -57,18 +58,18 @@ namespace Vurbiri.Colonization.UI
             for (; index < _countButtonsSkill; index++)
                 _buttonsSkill[index].Disable();
 
-            Open();
+            base.Open();
         }
 
         private void OnMovement()
         {
-            Close();
+            base.Close();
             _currentWarrior.Move();
         }
 
         public void OnBlock()
         {
-            Close();
+            base.Close();
             _currentWarrior.Block();
         }
 

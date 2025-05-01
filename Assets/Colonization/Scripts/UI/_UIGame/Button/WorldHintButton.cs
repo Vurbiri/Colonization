@@ -10,18 +10,14 @@ namespace Vurbiri.UI
     {
         [SerializeField] private Files _file;
         [SerializeField] private string _key;
-        [Space]
-        [SerializeField] private int _indexApplyColor;
 
         private Unsubscriber _unsubscriber;
 
-        public void Init(Vector3 localPosition, WorldHint hint, Color color, Action action)
+        public void Init(Vector3 localPosition, WorldHint hint, Action action)
         {
             base.Init(localPosition, hint, action, true);
 
             _unsubscriber = Localization.Instance.Subscribe(SetText);
-
-            _targetGraphics[_indexApplyColor].SetGraphicColor(color);
         }
 
         public void Init(WorldHint hint, Action action)

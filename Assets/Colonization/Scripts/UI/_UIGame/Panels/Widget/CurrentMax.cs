@@ -2,59 +2,53 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
 
-namespace Vurbiri.Colonization.UI
+namespace Vurbiri.Colonization
 {
     public class CurrentMax : MonoBehaviour
     {
-        private const string COUNT = "{0}<space=0.14em>({1})";
+        private const string COUNT = "{0,2}<space=0.05em>|<space=0.05em>{1,-2}";
 
         [SerializeField] private TMP_Text _countTMP;
-        [SerializeField] private PopupWidgetUI _popup;
 
-        private ReactiveCombination<int, int> _reactiveBlood;
+        private ReactiveCombination<int, int> _reactiveCurrentMax;
 
-        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors settings, Direction2 offsetPopup)
+        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors settings)
         {
-            _popup.Init(settings, offsetPopup);
-
             _countTMP.color = settings.TextPanel;
-
-            _reactiveBlood = new(current, max);
-            _reactiveBlood.Subscribe(SetBlood);
+            _reactiveCurrentMax = new(current, max, SetCurrentMax);
         }
 
-        private void SetBlood(int current, int max)
+        private void SetCurrentMax(int current, int max)
         {
             _countTMP.text = string.Format(COUNT, current, max);
         }
 
         private void OnDestroy()
         {
-            _reactiveBlood.Dispose();
+            _reactiveCurrentMax.Dispose();
         }
 
 #if UNITY_EDITOR
-        public Vector2 Size => ((RectTransform)transform).sizeDelta;
-        public void Init_Editor(CurrencyIcon icon, ProjectColors settings)
+        public Vector2 Size => ((RectTransform)transform).rect.size;
+        public void Init_Editor(Sprite icon, Color colorIcon, ProjectColors settings)
         {
             _countTMP.color = settings.TextPanel;
-            SetBlood(12, 13);
+            SetCurrentMax(12, 13);
 
             UnityEditor.SerializedObject serializedImage = new(GetComponentInChildren<Image>());
             serializedImage.Update();
-            serializedImage.FindProperty("m_Color").colorValue = icon.Color;
-            serializedImage.FindProperty("m_Sprite").objectReferenceValue = icon.Icon;
+            serializedImage.FindProperty("m_Color").colorValue = colorIcon;
+            serializedImage.FindProperty("m_Sprite").objectReferenceValue = icon;
             serializedImage.ApplyModifiedProperties();
         }
 
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             if (_countTMP == null)
-                _countTMP = GetComponent<TMP_Text>();
-            if (_popup == null)
-                _popup = GetComponentInChildren<PopupWidgetUI>(true);
+                _countTMP = EUtility.GetComponentInChildren<TMP_Text>(this, "TextTMP");
         }
 #endif
     }

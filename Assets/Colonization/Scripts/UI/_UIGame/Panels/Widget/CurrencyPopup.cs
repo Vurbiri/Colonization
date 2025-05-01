@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\Currency.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\CurrencyPopup.cs
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,7 +7,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class Currency : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class CurrencyPopup : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private TMP_Text _countTMP;
         [SerializeField] private PopupWidgetUI _popup;
@@ -63,8 +63,8 @@ namespace Vurbiri.Colonization.UI
         private void OnValidate()
         {
             if (_countTMP == null)
-                _countTMP = GetComponent<TMP_Text>();
-            if(_popup == null)
+                _countTMP = EUtility.GetComponentInChildren<TMP_Text>(this, "TextTMP");
+            if (_popup == null)
                 _popup = GetComponentInChildren<PopupWidgetUI>(true);
 
         }

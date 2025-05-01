@@ -8,13 +8,9 @@ namespace Vurbiri.Colonization.UI
 {
     public class ButtonBlock : AWorldHintButton
     {
-        [SerializeField] private int _indexApplyColor;
-
-        public void Init(Vector3 localPosition, WorldHint hint, Color color, Action action)
+        public void Init(Vector3 localPosition, WorldHint hint, Action action)
         {
             base.Init(localPosition, hint, action, true);
-
-            _targetGraphics[_indexApplyColor].SetGraphicColor(color);
         }
 
         public void Setup(Actor actor, BlockUI blockUI)

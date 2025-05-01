@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
 {
     public class Amount : MonoBehaviour
     {
-        private const string AMOUNT = "{0}{1}</color><space=0.14em>({2})";
+        private const string AMOUNT = "{0,2}{1}</color><space=0.05em>|<space=0.05em>{2,-2}";
 
         [SerializeField] private TMP_Text _textTMP;
 
@@ -22,8 +22,7 @@ namespace Vurbiri.Colonization
 
             _textTMP.color = settings.TextPanel;
 
-            _reactiveAmountMax = new(amount, max);
-            _reactiveAmountMax.Subscribe(SetAmountMax);
+            _reactiveAmountMax = new(amount, max, SetAmountMax);
         }
 
         private void SetAmountMax(int amount, int max)
@@ -48,7 +47,7 @@ namespace Vurbiri.Colonization
         private void OnValidate()
         {
             if (_textTMP == null)
-                _textTMP = GetComponent<TMP_Text>();
+                _textTMP = EUtility.GetComponentInChildren<TMP_Text>(this, "TextTMP");
         }
 #endif
     }

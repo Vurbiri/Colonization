@@ -7,19 +7,21 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class CrossroadWarriorsMenu : ACrossroadMenuBuild
+    sealed public class CrossroadWarriorsMenu : AWorldMenu
     {
+        [Space]
+        [SerializeField] private float _distanceOfButtons = 5f;
         [Space]
         [SerializeField] private WorldHintButton _buttonBack;
         [Space]
         [SerializeField] private IdSet<WarriorId, ButtonRecruiting> _buttons;
 
-        private CrossroadMainMenu _mainMen;
+        private CrossroadMainMenu _mainMenu;
 
         public ISigner<GameObject, bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
         {
             var warriorPrices = settings.prices.Warriors;
-            _mainMen = mainMenu;
+            _mainMenu = mainMenu;
 
             _buttonBack.Init(settings.hint, OnClose);
 
@@ -28,23 +30,23 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < WarriorId.Count; i++)
                 _buttons[i].Init(settings, warriorPrices[i], this, Quaternion.Euler(0f, 0f, -angle * i) * distance);
 
-            CloseInstant();
+            base.CloseInstant();
 
             return _eventActive;
         }
 
-        public override void Open(Crossroad crossroad)
+        public void Open(Crossroad crossroad)
         {
             foreach (var button in _buttons)
                 button.Setup(crossroad);
 
-            Open();
+            base.Open();
         }
 
         protected override void OnClose()
         {
-            Close();
-            _mainMen.Open();
+            base.Close();
+            _mainMenu.Open();
         }
 
 #if UNITY_EDITOR

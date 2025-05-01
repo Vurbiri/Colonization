@@ -32,11 +32,13 @@ namespace Vurbiri.Colonization
         #endregion
 
         public ACurrenciesReactive Resources => _resources;
-        public IReactive<CurrenciesLite> Exchange => _exchange;
+        public ExchangeRate Exchange => _exchange;
 
-        public IReactiveList<Crossroad> Shrines => _edifices.shrines;
-        public IReactiveList<Crossroad> Ports => _edifices.ports;
-        public IReactiveList<Crossroad> Urbans => _edifices.urbans;
+        public ReactiveSet<Actor> Warriors => _warriors;
+
+        public ReactiveList<Crossroad> Shrines => _edifices.shrines;
+        public ReactiveList<Crossroad> Ports => _edifices.ports;
+        public ReactiveList<Crossroad> Urbans => _edifices.urbans;
 
         public PerkTree Perks => _perks;
 

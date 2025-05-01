@@ -107,7 +107,7 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             yield return null;
 
-            _playerPanelsUI.Create(_players);
+            _playerPanelsUI.Init(_players.Player);
         }
 
         private IEnumerator Final_Cn()

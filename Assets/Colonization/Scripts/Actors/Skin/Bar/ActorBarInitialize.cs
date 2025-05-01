@@ -26,8 +26,8 @@ namespace Vurbiri.Colonization.Actors
 
         private void Start()
 		{
-            Actor actor = GetComponentInParent<Actor>();
-            IReadOnlyAbilities<ActorAbilityId> abilities = actor.Abilities;
+            var actor = GetComponentInParent<Actor>();
+            var abilities = actor.Abilities;
 
             transform.localPosition = new(0f, actor.Skin.Bounds.size.y + _offset, 0f);
 

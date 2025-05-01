@@ -5,8 +5,10 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class CrossroadMainMenu : ACrossroadMenuBuild
+    sealed public class CrossroadMainMenu : AWorldMenu
     {
+        [Space]
+        [SerializeField] private float _distanceOfButtons = 5f;
         [Space]
         [SerializeField] private WorldHintButton _buttonClose;
         [Space]
@@ -30,17 +32,17 @@ namespace Vurbiri.Colonization.UI
             _buttonRoads.Init(new(0f, -_distanceOfButtons, 0f), settings, settings.prices.Road, OnRoads);
 
             Vector3 distance60angle = new(_distanceOfButtons * CONST.SIN_60, _distanceOfButtons * CONST.COS_60, 0f);
-            _buttonRecruiting.Init(distance60angle, settings.hint, settings.playerColor, OnHiring);
+            _buttonRecruiting.Init(distance60angle, settings.hint, OnHiring);
             _buttonWall.Init(distance60angle, settings, settings.prices.Wall, OnWall);
             distance60angle.x *= -1f;
             _buttonUpgrade.Init(distance60angle, settings, settings.prices.Edifices, OnUpgrade);
 
-            CloseInstant();
+            base.CloseInstant();
 
             return _eventActive;
         }
 
-        public override void Open(Crossroad crossroad)
+        public void Open(Crossroad crossroad)
         {
             _currentCrossroad = crossroad;
 
@@ -49,30 +51,30 @@ namespace Vurbiri.Colonization.UI
             _buttonWall.Setup(_player.CanWallBuild(crossroad));
             _buttonRoads.Setup(_player.CanRoadBuild(crossroad));
 
-            Open();
+            base.Open();
         }
 
         private void OnUpgrade()
         {
-            Close();
+            base.Close();
             _player.BuyEdificeUpgrade(_currentCrossroad);
         }
 
         private void OnWall()
         {
-            Close();
+            base.Close();
             _player.BuyWall(_currentCrossroad);
         }
 
         private void OnRoads()
         {
-            Close();
+            base.Close();
             _roadsMenu.Open(_currentCrossroad);
         }
 
         private void OnHiring()
         {
-            Close();
+            base.Close();
             _warriorsMenu.Open(_currentCrossroad);
         }
     }

@@ -8,7 +8,6 @@ using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization.UI
 {
-    //[RequireComponent(typeof(VButton))]
     sealed public class ButtonBuildEdifice : AButtonBuild
     {
         [Space]
@@ -42,31 +41,20 @@ namespace Vurbiri.Colonization.UI
             interactable = _cash >= cost;
             _buttonIcon.sprite = view.sprite;
 
-            SetTextHint(_localization.GetText(Files.Gameplay, view.keyHint), _cash, cost);
+            SetTextHint(_localization.GetText(Files.Gameplay, view.keyName), _cash, cost);
 
             _thisGameObject.SetActive(true);
         }
 
-        #region Nested: ButtonView
-        //*******************************************************
-        [System.Serializable]
-        private class ButtonView
-        {
-            public Sprite sprite;
-            public string keyHint;
-        }
-        #endregion
-
-
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
-            base .OnValidate();
+            base.OnValidate();
 
             for (int i = 0; i < EdificeId.Count; i++)
             {
-                if(string.IsNullOrEmpty(_edificeView[i].keyHint))
-                _edificeView[i].keyHint = EdificeId.GetName(i);
+                if(string.IsNullOrEmpty(_edificeView[i].keyName))
+                _edificeView[i].keyName = EdificeId.GetName(i);
             }
         }
 #endif

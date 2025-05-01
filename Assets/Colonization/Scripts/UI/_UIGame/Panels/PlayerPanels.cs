@@ -6,19 +6,21 @@ namespace Vurbiri.Colonization.UI
     public partial class PlayerPanels : MonoBehaviour
 	{
         [Space]
+        [SerializeField] private WarriorsPanel _warriors;
+        [Space]
         [SerializeField] private CurrenciesPanel _currencies;
         [SerializeField] private BloodPanel _blood;
         [Space]
         [SerializeField] private Direction2 _directionPopup;
 
-        public void Create(Players players)
+        public void Init(Human player)
         {
-            //var color = SceneContainer.Get<PlayersVisual>()[PlayerId.Player].color.SetAlpha(_transparency);
-            var currencies = players.Player.Resources;
-            var settings = SceneContainer.Get<ProjectColors>();
+            var currencies = player.Resources;
+            var colors = SceneContainer.Get<ProjectColors>();
 
-            _currencies.Init(_directionPopup, currencies, settings);
-            _blood.Init(_directionPopup, currencies, settings);
+            _warriors.Init(player, colors);
+            _currencies.Init(_directionPopup, currencies, colors);
+            _blood.Init(_directionPopup, currencies, colors);
 
             Destroy(gameObject);
         }

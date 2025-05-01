@@ -10,8 +10,6 @@ namespace Vurbiri.Colonization.UI
     {
         [Space]
         [SerializeField] private Image _iconImage;
-        [Space]
-        [SerializeField] private int _indexApplyColor;
 
         private AWorldMenu _parent;
         private Actor _currentActor;
@@ -21,7 +19,6 @@ namespace Vurbiri.Colonization.UI
         {
             Init(settings.hint, OnClick, false);
 
-            _targetGraphics[_indexApplyColor].SetGraphicColor(settings.playerColor);
             _parent = parent;
         }
 
