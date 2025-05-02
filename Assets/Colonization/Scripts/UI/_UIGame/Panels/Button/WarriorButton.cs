@@ -1,10 +1,13 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Button\WarriorButton.cs
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive;
+using Vurbiri.Reactive.Collections;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -12,45 +15,93 @@ namespace Vurbiri.Colonization.UI
     [RequireComponent(typeof(CanvasGroup))]
     public class WarriorButton : AVButton
     {
-        [SerializeField] private float _speedOpen = 8f;
-        [SerializeField] private float _speedClose = 10f;
+        [SerializeField] private float _speedOpen = 6f;
+        [SerializeField] private float _speedClose = 8f;
+        [SerializeField] private float _speedMove = 4f;
         [SerializeField] private CanvasGroup _canvasGroup;
         [Space]
-		[SerializeField] private VBarInt _hpBar;
+        [SerializeField] private Image _icon;
+        [SerializeField] private VBarInt _hpBar;
 
-        private Actor _attachActor;
+        private int _index;
+        private Vector3 _offset;
+
+        private Transform _thisTransform;
+        private Transform _container, _repository;
         private InputController _inputController;
-        private Coroutine _coroutine;
+        private ISelectable _attachActor;
+        
+        private Coroutine _activeCn, _moveCn;
         private float _targetAlpha;
+        private Vector3 _targetPosition;
         private Unsubscribers _unsubscribers = new();
+        private readonly Signer<WarriorButton> _eventRemove = new();
 
-        public void Init(InputController inputController)
-        {
-            _inputController = inputController;
-            _onClick.Add(SelectActor);
+        public RectTransform RectTransform => (RectTransform)transform;
+        public int Index
+        { 
+            get => _index; 
+            set
+            {
+                if (value != _index)
+                {
+                    _index = value;
+
+                    if (_moveCn != null)
+                        StopCoroutine(_moveCn);
+                    _moveCn = StartCoroutine(Move_Cn(_offset * value));
+                }
+            }
         }
 
-        public void Setup(Actor actor)
+        public WarriorButton Init(InputController inputController, Transform container, Action<WarriorButton> action)
         {
-            _attachActor = actor;
-            _unsubscribers.Unsubscribe();
+            _thisTransform = transform;
+            _container = container; _repository = _thisTransform.parent;
 
-            actor.InteractableReactive.Subscribe(SetInteractable);
+            _offset = new(0f, RectTransform.sizeDelta.y * 1.08f, 0f);
+
+            _inputController = inputController;
+            _onClick.Add(SelectActor);
+            _eventRemove.Add(action);
+
+            _canvasGroup.alpha = _targetAlpha = 0f;
+            _canvasGroup.blocksRaycasts = false;
+
+            return this;
+        }
+
+        public void Setup(int index, ButtonView buttonView, Actor actor, bool isOn)
+        {
+            _index = index;
+            _icon.sprite = buttonView.sprite;
+            _attachActor = actor;
+
+            _unsubscribers += actor.Subscribe(OnChangeActor, false);
+            _unsubscribers += actor.InteractableReactive.Subscribe(SetInteractable);
 
             var abilities = actor.Abilities;
             _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe(SetMaxHP);
             _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(SetCurrentHP);
+
+            _thisTransform.SetParent(_container);
+            _thisTransform.localPosition = _offset * index;
+            
+            if (isOn) Enable();
         }
 
-        #region Open/Close
-        public void Open()
+        #region Enable/Disable/Move
+        public Coroutine Enable()
         {
-            SetOpenValue();
-            _coroutine = StartCoroutine(Open_Cn());
+            _targetAlpha = 1f;
+            if (_activeCn != null)
+                StopCoroutine(_activeCn);
 
-            #region Local: Open_Cn()
+            return _activeCn = StartCoroutine(Enable_Cn());
+
+            #region Local: Enable_Cn()
             //=================================
-            IEnumerator Open_Cn()
+            IEnumerator Enable_Cn()
             {
                 float alpha = _canvasGroup.alpha;
                 while (alpha < 1f)
@@ -59,81 +110,104 @@ namespace Vurbiri.Colonization.UI
                     yield return null;
                 }
 
-                ApplyCanvasGroupValues();
+                _canvasGroup.alpha = 1f;
+                _canvasGroup.blocksRaycasts = true;
+                _activeCn = null;
             }
             #endregion
         }
-        public void Close()
+        public Coroutine Disable()
         {
-            SetCloseValue();
-            _coroutine = StartCoroutine(Close_Cn());
+            _targetAlpha = 0f;
+            _canvasGroup.blocksRaycasts = false;
 
-            #region Local: Close_Cn()
+            if (_activeCn != null)
+                StopCoroutine(_activeCn);
+
+            return _activeCn = StartCoroutine(Disable_Cn());
+
+            #region Local: Disable_Cn()
             //=================================
-            IEnumerator Close_Cn()
+            IEnumerator Disable_Cn()
             {
                 float alpha = _canvasGroup.alpha;
                 while (alpha > 0f)
                 {
-                    _canvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _speedClose;
                     yield return null;
+                    _canvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _speedClose;
                 }
 
-                ApplyCanvasGroupValues();
+                _canvasGroup.alpha = 0f;
+                _activeCn = null;
             }
             #endregion
         }
+        public IEnumerator Move_Cn(Vector3 targetPosition)
+        {
+            Vector3 startPosition = _thisTransform.localPosition;
+            _targetPosition = targetPosition;
 
-        public void OpenInstant()
-        {
-            SetOpenValue();
-            ApplyCanvasGroupValues();
-        }
+            float progress = 0f;
 
-        public void CloseInstant()
-        {
-            SetCloseValue();
-            ApplyCanvasGroupValues();
-        }
+            while (progress < 1f)
+            {
+                progress += Time.unscaledDeltaTime * _speedMove;
+                _thisTransform.localPosition = Vector3.Lerp(startPosition, targetPosition, progress);
+                yield return null;
+            }
 
-        private void SetOpenValue()
-        {
-            _targetAlpha = 1f;
-            if (_coroutine != null)
-                StopCoroutine(_coroutine);
-        }
-        private void SetCloseValue()
-        {
-            _targetAlpha = 0f;
-            if (_coroutine != null)
-                StopCoroutine(_coroutine);
-
-            _canvasGroup.blocksRaycasts = false;
-        }
-        private void ApplyCanvasGroupValues()
-        {
-            _canvasGroup.alpha = _targetAlpha;
-            _canvasGroup.blocksRaycasts = _targetAlpha > 0.1f;
-            _coroutine = null;
+            _thisTransform.localPosition = targetPosition;
+            _moveCn = null;
         }
         #endregion
 
         #region On...
-        private void SelectActor() => _inputController.Select(_attachActor);
         private void SetInteractable(bool value) => interactable = value;
         private void SetMaxHP(int maxHP) => _hpBar.MaxValue = maxHP;
         private void SetCurrentHP(int currentHP) => _hpBar.Value = currentHP;
+        private void SelectActor()
+        {
+            if (_attachActor != null && !_attachActor.Equals(_inputController.SelectableObject))
+                _inputController.Select(_attachActor);
+        }
+        private void OnChangeActor(Actor actor, TypeEvent typeEvent)
+        {
+            if (typeEvent == TypeEvent.Remove)
+            {
+                _unsubscribers.Unsubscribe();
+                _attachActor = null;
+                _canvasGroup.alpha = _targetAlpha = 0f;
+                _canvasGroup.blocksRaycasts = false;
+                _thisTransform.SetParent(_repository);
+                _eventRemove.Invoke(this);
+            }
+        }
         #endregion
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            if (_coroutine != null)
+            if (_activeCn != null)
             {
-                StopCoroutine(_coroutine);
-                ApplyCanvasGroupValues();
+                StopCoroutine(_activeCn);
+                _canvasGroup.alpha = _targetAlpha;
+                _canvasGroup.blocksRaycasts = _targetAlpha > 0.1f;
+                _activeCn = null;
             }
+
+            if (_moveCn != null)
+            {
+                StopCoroutine(_moveCn);
+                _thisTransform.localPosition = _targetPosition;
+                _moveCn = null;
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            _unsubscribers.Unsubscribe();
         }
 
 #if UNITY_EDITOR
@@ -145,6 +219,8 @@ namespace Vurbiri.Colonization.UI
                 _canvasGroup = GetComponent<CanvasGroup>();
             if (_hpBar == null)
                 _hpBar = GetComponentInChildren<VBarInt>();
+            if (_icon == null)
+                _icon = EUtility.GetComponentInChildren<Image>(this, "Icon");
         }
 #endif
     }

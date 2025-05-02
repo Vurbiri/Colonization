@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
         private readonly IdArray<ActorAbilityId, Sprite> _sprites;
         private readonly ProjectColors _colors;
         private readonly int _orderLevel;
-        private readonly IReactiveItem<Actor> _actor;
+        private readonly Actor _actor;
         private readonly Transform _transform;
         private readonly Unsubscribers _unsubscribers;
 
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Actors
 
         private void OnAddEffect(ReactiveEffect effect, TypeEvent type)
         {
-            if (type == TypeEvent.Add || type == TypeEvent.Subscribe)
+            if (type == TypeEvent.Add | type == TypeEvent.Subscribe)
                 _poolEffectsUI.Get(_transform).Init(effect, _actor, _sprites, _colors, _orderLevel);
         }
 

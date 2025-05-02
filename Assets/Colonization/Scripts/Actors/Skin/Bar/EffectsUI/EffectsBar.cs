@@ -1,8 +1,8 @@
 //Assets\Colonization\Scripts\Actors\Skin\Bar\EffectsUI\EffectsBar.cs
 using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.Actors
             Object.Destroy(initObj);
         }
 
-        public void Init(ReactiveEffect effect, IReactiveItem<Actor> actor, IReadOnlyList<Sprite> sprites, ProjectColors colors, int orderLevel)
+        public void Init(ReactiveEffect effect, Actor actor, IdArray<ActorAbilityId, Sprite> sprites, ProjectColors colors, int orderLevel)
         {
             _sprite.sortingOrder += orderLevel;
             _durationTMP.sortingOrder += orderLevel;

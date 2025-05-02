@@ -107,7 +107,7 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             yield return null;
 
-            _playerPanelsUI.Init(_players.Player);
+            _playerPanelsUI.Init(_players.Player, _inputController);
         }
 
         private IEnumerator Final_Cn()
@@ -218,6 +218,7 @@ namespace Vurbiri.Colonization.EntryPoint
             public void OnValidate()
             {
                 EUtility.SetPrefab(ref prefabEffectsBar);
+                EUtility.SetObject(ref repositoryUI, "WorldUIRepository");
             }
 #endif
         }

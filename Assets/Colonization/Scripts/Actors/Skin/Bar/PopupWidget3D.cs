@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization.UI
             ProjectColors settings = SceneContainer.Get<ProjectColors>();
 
             _colorPlusStart = _colorPlusEnd = settings.TextPositive;
-            _colorMinusStart = _colorMinusEnd = settings.TextPositive;
+            _colorMinusStart = _colorMinusEnd = settings.TextNegative;
             _colorPlusEnd.a = _colorMinusEnd.a = _minAlpha;
 
             _scaleColorSpeed = 1f / (1f - _startHide);

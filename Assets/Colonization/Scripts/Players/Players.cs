@@ -29,6 +29,14 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
+        public void EndTurn()
+        {
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                _humans[i].EndTurn();
+
+            _satan.EndTurn();
+        }
+
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
             for (int i = 0; i < PlayerId.HumansCount; i++)

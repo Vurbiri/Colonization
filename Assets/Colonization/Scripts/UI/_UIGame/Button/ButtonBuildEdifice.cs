@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         public void Init(Vector3 localPosition, ButtonSettings settings, IReadOnlyList<ACurrencies> edificePrices, Action action)
         {
             base.Init(localPosition, settings, action);
-            _localization = SceneContainer.Get<Localization>();
+            _localization = Localization.Instance;
             _edificePrices = edificePrices;
             _cash = settings.player.Resources;
         }
@@ -53,8 +53,11 @@ namespace Vurbiri.Colonization.UI
 
             for (int i = 0; i < EdificeId.Count; i++)
             {
-                if(string.IsNullOrEmpty(_edificeView[i].keyName))
-                _edificeView[i].keyName = EdificeId.GetName(i);
+                if (i > 0 && _edificeView[i].sprite == null)
+                    _edificeView[i].sprite = EUtility.FindAnyAsset<Sprite>($"SP_Icon{EdificeId.GetName(i)}");
+
+                if (string.IsNullOrEmpty(_edificeView[i].keyName))
+                    _edificeView[i].keyName = EdificeId.GetName(i);
             }
         }
 #endif

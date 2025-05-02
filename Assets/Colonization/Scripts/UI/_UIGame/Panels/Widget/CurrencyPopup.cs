@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         private void SetValue(int count)
         {
             _popup.Run(count);
-            _countTMP.text = Mathf.Min(count, 99).ToString();
+            _countTMP.text = count.ToString();
         }
 
         private void OnDestroy()

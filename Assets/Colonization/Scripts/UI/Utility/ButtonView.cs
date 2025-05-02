@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\UI\Utility\ButtonView.cs
 using UnityEngine;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.UI
 {
     [System.Serializable]
     public class ButtonView

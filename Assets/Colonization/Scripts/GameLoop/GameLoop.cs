@@ -38,6 +38,8 @@ namespace Vurbiri.Colonization
 
         public void EndTurnPlayer()
         {
+            _players.EndTurn();
+
             _turnQueue.Next();
             _inputController.GameplayMap = _turnQueue.CurrentId == PlayerId.Player;
 

@@ -25,6 +25,8 @@ namespace Vurbiri.Colonization.Controllers
         public bool CameraMap { get => _cameraMap.enabled; set { if (value) _cameraMap.Enable(); else _cameraMap.Disable(); } }
         public bool UIMap { get => _UIMap.enabled; set { if (value) _UIMap.Enable(); else _UIMap.Disable(); } }
 
+        public ISelectable SelectableObject => _selectObj;
+
         public InputController(Camera camera, Settings settings)
         {
             _camera = camera;
