@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Controllers
     {
         sealed private class EdgeMoveState : MoveState
         {
-            private readonly float _edgeLeft, _edgeRight;
+            private readonly float _edge;
 
             public override Vector2 InputValue 
             { 
@@ -17,15 +17,14 @@ namespace Vurbiri.Colonization.Controllers
                     float width = Screen.width, height = Screen.height;
                     float x = value.x, y = value.y;
 
-                    _moveDirection.x = x > 0 & x < width  * _edgeLeft ? -1f : x < width  & x > width  * _edgeRight ? 1f : 0f;
-                    _moveDirection.y = y > 0 & y < height * _edgeLeft ? -1f : y < height & y > height * _edgeRight ? 1f : 0f;
+                    _moveDirection.x = x > 0 & x < _edge ? -1f : x < width  & x > (width  - _edge) ? 1f : 0f;
+                    _moveDirection.y = y > 0 & y < _edge ? -1f : y < height & y > (height - _edge) ? 1f : 0f;
                 }
             }
-
+            
             public EdgeMoveState(CameraController controller, Movement movement, float edge, Camera camera) : base(controller, movement, camera)
             {
-                _edgeLeft = edge;
-                _edgeRight = 1f - edge;
+                _edge = edge;
             }
         }
     }

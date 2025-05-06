@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Button\WarriorButton.cs
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Colonization.Actors;
@@ -15,6 +16,8 @@ namespace Vurbiri.Colonization.UI
     [RequireComponent(typeof(CanvasGroup))]
     public class WarriorButton : AVButton
     {
+        private const char AP_CHAR = '+';
+
         [SerializeField] private float _speedOpen = 6f;
         [SerializeField] private float _speedClose = 8f;
         [SerializeField] private float _speedMove = 4f;
@@ -22,6 +25,11 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Image _icon;
         [SerializeField] private VBarInt _hpBar;
+        [SerializeField] private TMP_Text _maxAP_TMP;
+        [SerializeField] private TMP_Text _currentAP_TMP;
+        [SerializeField] private Graphic _moveIcon;
+        [SerializeField] private Color _colorOn = Color.yellow;
+        [SerializeField] private Color _colorOff = Color.gray;
 
         private int _index;
         private Vector3 _offset;
@@ -29,7 +37,7 @@ namespace Vurbiri.Colonization.UI
         private Transform _thisTransform;
         private Transform _container, _repository;
         private InputController _inputController;
-        private ISelectable _attachActor;
+        private Actor _attachActor;
         
         private Coroutine _activeCn, _moveCn;
         private float _targetAlpha;
@@ -62,8 +70,11 @@ namespace Vurbiri.Colonization.UI
             _offset = new(0f, RectTransform.sizeDelta.y * 1.08f, 0f);
 
             _inputController = inputController;
-            _onClick.Add(SelectActor);
+            _onClick.Add(OnSelectActor);
             _eventRemove.Add(action);
+
+            _maxAP_TMP.color = _colorOff;
+            _currentAP_TMP.color = _colorOn;
 
             _canvasGroup.alpha = _targetAlpha = 0f;
             _canvasGroup.blocksRaycasts = false;
@@ -71,18 +82,21 @@ namespace Vurbiri.Colonization.UI
             return this;
         }
 
-        public void Setup(int index, ButtonView buttonView, Actor actor, bool isOn)
+        public void Setup(int index, Sprite sprite, Actor actor, bool isOn)
         {
             _index = index;
-            _icon.sprite = buttonView.sprite;
+            _icon.sprite = sprite;
             _attachActor = actor;
 
             _unsubscribers += actor.Subscribe(OnChangeActor, false);
-            _unsubscribers += actor.InteractableReactive.Subscribe(SetInteractable);
+            _unsubscribers += actor.InteractableReactive.Subscribe((value) => interactable = value);
 
             var abilities = actor.Abilities;
-            _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe(SetMaxHP);
-            _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(SetCurrentHP);
+            _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe((maxHP) => _hpBar.MaxValue = maxHP);
+            _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe((currentHP) => _hpBar.Value = currentHP);
+            _unsubscribers += abilities[ActorAbilityId.MaxAP].Subscribe(maxAP => _maxAP_TMP.text = new(AP_CHAR, maxAP));
+            _unsubscribers += abilities[ActorAbilityId.CurrentAP].Subscribe(currentAP => _currentAP_TMP.text = new(AP_CHAR, currentAP));
+            _unsubscribers += abilities[ActorAbilityId.IsMove].Subscribe(move => _moveIcon.canvasRenderer.SetColor(move > 0 ? _colorOn : _colorOff));
 
             _thisTransform.SetParent(_container);
             _thisTransform.localPosition = _offset * index;
@@ -162,12 +176,9 @@ namespace Vurbiri.Colonization.UI
         #endregion
 
         #region On...
-        private void SetInteractable(bool value) => interactable = value;
-        private void SetMaxHP(int maxHP) => _hpBar.MaxValue = maxHP;
-        private void SetCurrentHP(int currentHP) => _hpBar.Value = currentHP;
-        private void SelectActor()
+        private void OnSelectActor()
         {
-            if (_attachActor != null && !_attachActor.Equals(_inputController.SelectableObject))
+            if(_attachActor != null && _attachActor.Interactable)
                 _inputController.Select(_attachActor);
         }
         private void OnChangeActor(Actor actor, TypeEvent typeEvent)
@@ -221,6 +232,12 @@ namespace Vurbiri.Colonization.UI
                 _hpBar = GetComponentInChildren<VBarInt>();
             if (_icon == null)
                 _icon = EUtility.GetComponentInChildren<Image>(this, "Icon");
+            if (_maxAP_TMP == null)
+                _maxAP_TMP = EUtility.GetComponentInChildren<TMP_Text>(this, "MaxAP_TMP");
+            if (_currentAP_TMP == null)
+                _currentAP_TMP = EUtility.GetComponentInChildren<TMP_Text>(this, "AP_TMP");
+            if (_moveIcon == null)
+                _moveIcon = EUtility.GetComponentInChildren<Image>(this, "MoveIcon");
         }
 #endif
     }

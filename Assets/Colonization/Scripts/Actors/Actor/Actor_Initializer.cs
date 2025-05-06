@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.Actors
             _owner = initData.owner;
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
-            _interactable.Value = initData.IsPlayerTurn;
+            IsPlayerTurn = initData.IsPlayerTurn;
 
             #region Abilities
             _abilities = settings.Abilities;

@@ -15,6 +15,7 @@ namespace Vurbiri.Colonization
         private readonly Coroutines _coroutines;
 
         private readonly Id<PlayerId> _id;
+        private readonly bool _isPlayer;
         private readonly Currencies _resources;
         private readonly ExchangeRate _exchange;
         private readonly PricesScriptable _prices;
@@ -45,6 +46,7 @@ namespace Vurbiri.Colonization
         public Human(Id<PlayerId> playerId, HumanStorage storage, Players.Settings settings, Hexagons hexagons)
         {
             _id = playerId;
+            _isPlayer = playerId == PlayerId.Player;
             _coroutines = SceneContainer.Get<Coroutines>();
 
             var loadData = storage.LoadData;
@@ -105,12 +107,13 @@ namespace Vurbiri.Colonization
                     countBuffs++;
 
                 warrior.StatesUpdate();
+                warrior.IsPlayerTurn = false;
             }
 
             _resources.AddFrom(profit);
             _artefact.Next(countBuffs);
         }
-       
+
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
             _resources.AddBlood(_edifices.ShrinePassiveProfit);
@@ -127,8 +130,15 @@ namespace Vurbiri.Colonization
 
             _resources.AddFrom(_edifices.ProfitFromEdifices(hexId));
         }
-        public void UpdateExchangeRate()
+
+        public void StartTurn()
         {
+            foreach (var warrior in _warriors)
+            {
+                warrior.EffectsUpdate();
+                warrior.IsPlayerTurn = _isPlayer;
+            }
+
             _exchange.Update();
         }
 

@@ -15,8 +15,10 @@ namespace VurbiriEditor
         public const string SCENE_TYPE = "t:Scene";
         #endregion
 
-        private static bool _isSaveScene = true;
+        private static bool isSaveScene = true;
+
         private readonly System.Type _typeSceneAsset = typeof(SceneAsset);
+        private SceneAsset _sceneAsset;
 
         [MenuItem(MENU, false, 44)]
         private static void ShowWindow()
@@ -24,38 +26,47 @@ namespace VurbiriEditor
             GetWindow<SceneAutoloaderWindow>(true, NAME);
         }
 
+        private void OnEnable()
+        {
+            _sceneAsset = EditorSceneManager.playModeStartScene;
+        }
+
         private void OnGUI()
         {
             if (Application.isPlaying)
                 return;
 
-            SceneAsset sceneAsset = EditorSceneManager.playModeStartScene;
-
             BeginWindows();
-            EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField(NAME, STYLES.H1);
-            EditorGUILayout.BeginVertical(GUI.skin.box);
-            EditorGUILayout.Space();
-            sceneAsset = (SceneAsset)EditorGUILayout.ObjectField(LABEL_SCENE, sceneAsset, _typeSceneAsset, false);
-            EditorGUILayout.Space();
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.Space();
-            _isSaveScene = EditorGUILayout.ToggleLeft(LABEL_SAVE, _isSaveScene);
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.Space();
-            EditorGUILayout.EndVertical();
+            {
+                EditorGUILayout.Space(10f);
+                EditorGUILayout.LabelField(NAME, STYLES.H1);
+                EditorGUILayout.BeginVertical(GUI.skin.box);
+                {
+                    EditorGUILayout.Space();
+                    _sceneAsset = (SceneAsset)EditorGUILayout.ObjectField(LABEL_SCENE, _sceneAsset, _typeSceneAsset, false);
+                    EditorGUILayout.Space();
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.Space();
+                        isSaveScene = EditorGUILayout.ToggleLeft(LABEL_SAVE, isSaveScene);
+                    }
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.Space();
+                }
+                EditorGUILayout.EndVertical();
+            }
             EndWindows();
 
-            if (sceneAsset != EditorSceneManager.playModeStartScene)
+            if (_sceneAsset != EditorSceneManager.playModeStartScene)
             {
-                EditorPrefs.SetString(KEY_PATH, sceneAsset != null ? AssetDatabase.GetAssetPath(sceneAsset) : string.Empty);
-                EditorSceneManager.playModeStartScene = sceneAsset;
+                EditorPrefs.SetString(KEY_PATH, _sceneAsset != null ? AssetDatabase.GetAssetPath(_sceneAsset) : string.Empty);
+                EditorSceneManager.playModeStartScene = _sceneAsset;
             }
         }
 
         private void OnDisable()
         {
-            EditorPrefs.SetBool(KEY_SAVE, _isSaveScene);
+            EditorPrefs.SetBool(KEY_SAVE, isSaveScene);
         }
 
         [InitializeOnLoadMethod]
@@ -69,7 +80,7 @@ namespace VurbiriEditor
 
         private static void OnModeStateChanged(PlayModeStateChange change)
         {
-            if (_isSaveScene & change == PlayModeStateChange.ExitingEditMode)
+            if (isSaveScene & change == PlayModeStateChange.ExitingEditMode)
             {
                 AssetDatabase.SaveAssets();
                 if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -86,7 +97,7 @@ namespace VurbiriEditor
             }
 
             if (EditorPrefs.HasKey(KEY_SAVE))
-                _isSaveScene = EditorPrefs.GetBool(KEY_SAVE);
+                isSaveScene = EditorPrefs.GetBool(KEY_SAVE);
 
             string path = null;
             if (EditorPrefs.HasKey(KEY_PATH))

@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Controllers
     {
         private class MoveState : AStateControllerCamera<Vector2>
         {
-            private const float MIN_VALUE = 0.1f;
+            protected const float MIN_VALUE = 0.1f;
             
             private readonly SphereBounds _bounds;
             private readonly Movement _stt;
@@ -17,6 +17,7 @@ namespace Vurbiri.Colonization.Controllers
             private float _speedMove;
 
             public override Vector2 InputValue { get => _moveDirection; set => _moveDirection = value; }
+            public bool IsMove => _moveDirection.sqrMagnitude > MIN_VALUE;
 
             public MoveState(CameraController controller, Movement movement, Camera camera) : base(controller, camera)
             {
@@ -31,18 +32,18 @@ namespace Vurbiri.Colonization.Controllers
 
             private IEnumerator Move_Cn()
             {
-                Vector3 relativelyDirection = GetRDirection();
+                Vector3 relativelyDirection = GetRelatively();
 
                 while (true)
                 {
-                    if (_moveDirection.sqrMagnitude > MIN_VALUE)
+                    if (IsMove)
                     {
-                        _speedMove = _speedMove < _stt.speedMoveMax ? _speedMove + Time.deltaTime * _stt.accelerationMove : _stt.speedMoveMax;
-                        relativelyDirection = GetRDirection();
+                        if(_speedMove < _stt.speedMoveMax) _speedMove += Time.deltaTime * _stt.accelerationMove;
+                        relativelyDirection = GetRelatively();
                     }
                     else if (_speedMove > MIN_VALUE)
                     {
-                        _speedMove -= Time.deltaTime * _stt.dampingMove;
+                        _speedMove -= Time.unscaledDeltaTime * _stt.dampingMove;
                     }
                     else
                     {
@@ -57,7 +58,7 @@ namespace Vurbiri.Colonization.Controllers
                 _fsm.ToDefaultState();
 
                 // ========== Local ===============
-                Vector3 GetRDirection() => _moveDirection.x * ResetY(_cameraTransform.right) + _moveDirection.y * ResetY(_cameraTransform.forward);
+                Vector3 GetRelatively() => _moveDirection.x * ResetY(_cameraTransform.right) + _moveDirection.y * ResetY(_cameraTransform.forward);
                 static Vector3 ResetY(Vector3 vector) => new Vector3(vector.x, 0f, vector.z).normalized;
             }
         }

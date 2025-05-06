@@ -6,29 +6,27 @@ using Vurbiri.Reactive;
 namespace Vurbiri.Colonization.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public abstract class AWorldMenu : MonoBehaviour
+    public abstract class AWorldMenu : MonoBehaviour, IMenu
     {
         [SerializeField] private float _speedOpen = 8f;
         [SerializeField] private float _speedClose = 10f;
 
         private CanvasGroup _thisCanvasGroup;
-        private GameObject _thisGameObject;
         private Coroutine _coroutine;
         private float _targetAlpha;
 
-        protected Crossroad _currentCrossroad;
-        protected readonly Signer<GameObject, bool> _eventActive = new();
+        protected readonly Signer<IMenu, bool> _eventActive = new();
+
 
         private void Awake()
         {
             _thisCanvasGroup = GetComponent<CanvasGroup>();
-            _thisGameObject = gameObject;
         }
 
         public void Open()
         {
-            PreEnable();
-            _coroutine = StartCoroutine(Open_Cn());
+            if (PreEnable())
+                _coroutine = StartCoroutine(Open_Cn());
 
             #region Local: Open_Cn()
             //=================================
@@ -47,8 +45,8 @@ namespace Vurbiri.Colonization.UI
         }
         public void Close()
         {
-            PreDisable();
-            _coroutine = StartCoroutine(Close_Cn());
+            if(PreDisable())
+                _coroutine = StartCoroutine(Close_Cn());
 
             #region Local: Close_Cn()
             //=================================
@@ -68,14 +66,14 @@ namespace Vurbiri.Colonization.UI
 
         public void OpenInstant()
         {
-            PreEnable();
-            Enable();
+            if (PreEnable())
+                Enable();
         }
 
         public void CloseInstant()
         {
-            PreDisable();
-            Disable();
+            if (PreDisable())
+                Disable();
         }
 
         protected virtual void OnClose()
@@ -83,13 +81,17 @@ namespace Vurbiri.Colonization.UI
             Close();
         }
 
-        private void PreEnable()
+        private bool PreEnable()
         {
+            if (_thisCanvasGroup.blocksRaycasts)
+                return false;
+            
             _targetAlpha = 1f;
             if (_coroutine != null)
                 StopCoroutine(_coroutine);
 
-            _eventActive.Invoke(_thisGameObject, true);
+            _eventActive.Invoke(this, true);
+            return true;
         }
         private void Enable()
         {
@@ -98,19 +100,23 @@ namespace Vurbiri.Colonization.UI
             _coroutine = null;
         }
 
-        private void PreDisable()
+        private bool PreDisable()
         {
+            if (!_thisCanvasGroup.blocksRaycasts)
+                return false;
+
             _targetAlpha = 0f;
             if (_coroutine != null)
                 StopCoroutine(_coroutine);
 
             _thisCanvasGroup.blocksRaycasts = false;
+            return true;
         }
         private void Disable()
         {
             _thisCanvasGroup.alpha = 0f;
             _coroutine = null;
-            _eventActive.Invoke(_thisGameObject, false);
+            _eventActive.Invoke(this, false);
         }
 
         private void OnEnable()
@@ -121,14 +127,14 @@ namespace Vurbiri.Colonization.UI
             _thisCanvasGroup.blocksRaycasts = isEnabled;
 
             if (isEnabled)
-                _eventActive.Invoke(_thisGameObject, true);
+                _eventActive.Invoke(this, true);
         }
 
         private void OnDisable()
         {
             _coroutine = null;
             if (_targetAlpha > 0.1f)
-                _eventActive.Invoke(_thisGameObject, false);
+                _eventActive.Invoke(this, false);
         }
     }
 }

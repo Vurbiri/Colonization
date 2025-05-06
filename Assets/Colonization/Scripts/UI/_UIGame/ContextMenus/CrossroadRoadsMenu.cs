@@ -20,8 +20,9 @@ namespace Vurbiri.Colonization.UI
         private Vector3 _lastCameraPosition;
         private Vector2 _localPoint;
         private CrossroadMainMenu _mainMen;
+        private Crossroad _currentCrossroad;
 
-        public ISigner<GameObject, bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
+        public ISigner<IMenu, bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
         {
             ACurrencies roadCost = settings.prices.Road;
             _mainMen = mainMenu;

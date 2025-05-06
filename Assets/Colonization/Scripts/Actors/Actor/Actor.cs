@@ -13,38 +13,39 @@ namespace Vurbiri.Colonization.Actors
     public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, IDisposable, IPositionable, ICancel
     {
         #region Fields
-        protected int _typeId;
-        protected int _id;
-        protected Id<PlayerId> _owner;
+        private int _typeId;
+        private int _id;
+        private Id<PlayerId> _owner;
+        private bool _isPlayerTurn;
 
         #region Abilities
-        protected AbilitiesSet<ActorAbilityId> _abilities;
-        protected SubAbility<ActorAbilityId> _currentHP;
-        protected SubAbility<ActorAbilityId> _currentAP;
-        protected BooleanAbility<ActorAbilityId> _move;
-        protected ChanceAbility<ActorAbilityId> _profitMain;
-        protected ChanceAbility<ActorAbilityId> _profitAdv;
+        private AbilitiesSet<ActorAbilityId> _abilities;
+        private SubAbility<ActorAbilityId> _currentHP;
+        private SubAbility<ActorAbilityId> _currentAP;
+        private BooleanAbility<ActorAbilityId> _move;
+        private ChanceAbility<ActorAbilityId> _profitMain;
+        private ChanceAbility<ActorAbilityId> _profitAdv;
         #endregion
 
-        protected Hexagon _currentHex;
+        private Hexagon _currentHex;
 
-        protected ActorSkin _skin;
-        protected Transform _thisTransform;
-        protected Collider _thisCollider;
-        protected Diplomacy _diplomacy;
-        protected GameplayTriggerBus _triggerBus;
-        protected float _extentsZ;
+        private ActorSkin _skin;
+        private Transform _thisTransform;
+        private Collider _thisCollider;
+        private Diplomacy _diplomacy;
+        private GameplayTriggerBus _triggerBus;
+        private float _extentsZ;
 
-        protected EffectsSet _effects;
+        private EffectsSet _effects;
 
-        protected StateMachineSelectable _stateMachine;
-        protected BlockState _blockState;
+        private StateMachineSelectable _stateMachine;
+        private BlockState _blockState;
 
-        protected readonly RBool _interactable = new(false);
-        protected readonly RBool _canCancel = new(false);
+        private readonly RBool _interactable = new(false);
+        private readonly RBool _canCancel = new(false);
 
-        protected Coroutine _deathCoroutine;
-        protected Unsubscribers _unsubscribers = new();
+        private Coroutine _deathCoroutine;
+        private Unsubscribers _unsubscribers = new();
         #endregion
 
         #region Propirties
@@ -69,12 +70,9 @@ namespace Vurbiri.Colonization.Actors
         #region ISelectable, ICancel
         public RBool CanCancel => _canCancel;
         public RBool InteractableReactive => _interactable;
-        public bool Interactable 
-        { 
-            get => _interactable.Value && _stateMachine.IsDefaultState; 
-            private set => _thisCollider.enabled = _interactable.Value = value; 
-        }
+        public bool Interactable { get => _interactable.Value; private set => _thisCollider.enabled = _interactable.Value = _isPlayerTurn & value; }
         public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = value; }
+        public bool IsPlayerTurn { get => _isPlayerTurn; set => _interactable.Value = _isPlayerTurn = value; }
         public void Select() => _stateMachine.Select();
         public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
         public void Cancel() => _stateMachine.Cancel();
@@ -117,13 +115,9 @@ namespace Vurbiri.Colonization.Actors
             _currentHP.Next();
             _currentAP.Next();
             _move.On();
-
-            _interactable.Value = false;
         }
         public void EffectsUpdate(int defense)
         {
-            _interactable.Value = _owner == PlayerId.Player;
-
             _effects.Next();
             _effects.Add(EffectsFactory.CreateWallDefenceEffect(defense));
 
@@ -137,9 +131,7 @@ namespace Vurbiri.Colonization.Actors
         public void RemoveWallDefenceEffect() => _effects.Remove(EffectsFactory.WallEffectCode);
         #endregion
 
-        private void Enable() => _thisCollider.enabled = _interactable.Value;
-        private void Disable() => _thisCollider.enabled = false;
-
+        public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
         sealed public override void Dispose()
         {
@@ -152,14 +144,14 @@ namespace Vurbiri.Colonization.Actors
             Destroy(gameObject);
         }
 
-        #region BecomeTarget
-        private void BecomeTargetStart(Id<PlayerId> initiator, Relation relation)
+        #region Target
+        private void ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
             _stateMachine.SetState<BecomeTargetState>();
             _diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
 
-        private void BecomeTargetEnd()
+        private void FromTargetState()
         {
             if (_deathCoroutine == null)
             {

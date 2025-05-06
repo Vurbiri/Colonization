@@ -1,6 +1,14 @@
 //Assets\Vurbiri\Runtime\Utility\Message.cs
 namespace Vurbiri
 {
+    public enum MessageType
+    {
+        Normal,
+        Warning,
+        Error,
+        FatalError
+    }
+
     public static class Message
     {
         //private static readonly TextFiles FILE = TextFiles.Main;

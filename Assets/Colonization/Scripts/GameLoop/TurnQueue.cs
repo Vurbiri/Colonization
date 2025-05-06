@@ -9,11 +9,12 @@ namespace Vurbiri.Colonization
     {
         private Id<PlayerId> _previousId, _currentId;
         private int _turn;
-        private readonly Signer<TurnQueue> _signer = new();
+        private readonly Signer<TurnQueue> _eventNext = new();
 
         public int Turn => _turn;
         public Id<PlayerId> PreviousId => _previousId;
         public Id<PlayerId> CurrentId => _currentId;
+        public bool IsCurrentPlayer => _currentId == PlayerId.Player;
 
         private TurnQueue() 
         {
@@ -33,7 +34,7 @@ namespace Vurbiri.Colonization
             return turn;
         }
 
-        public Unsubscriber Subscribe(Action<TurnQueue> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, this);
+        public Unsubscriber Subscribe(Action<TurnQueue> action, bool instantGetValue = true) => _eventNext.Add(action, instantGetValue, this);
 
         public void Next()
         {
@@ -42,7 +43,7 @@ namespace Vurbiri.Colonization
             if (_currentId == PlayerId.Player)
                 _turn++;
 
-            _signer.Invoke(this);
+            _eventNext.Invoke(this);
         }
     }
 }

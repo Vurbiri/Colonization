@@ -217,6 +217,8 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
+        public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
+
         private void OnShow(bool value)
         {
             _isShow = value;

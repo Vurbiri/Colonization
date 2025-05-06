@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Controllers
         [Header("Rotation")]
         [SerializeField] private float _speedRotation = 2f;
         [Header("Edge")]
-        [SerializeField, Range(0.001f, 0.1f)] private float _edge = 0.05f;
+        [SerializeField, Range(1f, 50f)] private float _edge = 14f;
         [SerializeField] private bool _isEdgeMove;
 
         private Transform _thisTransform;
@@ -80,7 +80,7 @@ namespace Vurbiri.Colonization.Controllers
 
             _edgeMoveState.InputValue = ctx.ReadValue<Vector2>();
 
-            if (_edgeMoveState.InputValue.sqrMagnitude > 0f)
+            if (_edgeMoveState.IsMove)
                 _machine.SetState(_edgeMoveState);
         }
 

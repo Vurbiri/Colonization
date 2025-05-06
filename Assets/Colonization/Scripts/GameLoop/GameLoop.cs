@@ -7,16 +7,11 @@ namespace Vurbiri.Colonization
 {
     public class GameLoop : MonoBehaviour
     {
-        public Quaternion quaternion;
-        
         private Dices _dices;
         private TurnQueue _turnQueue;
         private Players _players;
         private InputController _inputController;
         private Hexagons _hexagons;
-
-        public void Test() => Debug.Log("GameLoop");
-        public void Test(int v) => Debug.Log(v);
 
         public void Init(TurnQueue turnQueue, InputController inputController)
         {
@@ -33,15 +28,14 @@ namespace Vurbiri.Colonization
         private void StartGame()
         {
             _inputController.EnableAll();
-            _inputController.GameplayMap = _turnQueue.CurrentId == PlayerId.Player;
+            _inputController.GameplayMap = _turnQueue.IsCurrentPlayer;
         }
 
         public void EndTurnPlayer()
         {
-            _players.EndTurn();
+            _players.EndTurn(_turnQueue.CurrentId.Value);
 
             _turnQueue.Next();
-            _inputController.GameplayMap = _turnQueue.CurrentId == PlayerId.Player;
 
             int roll = _dices.Roll();
             ACurrencies free = null;
@@ -49,6 +43,9 @@ namespace Vurbiri.Colonization
                 free = _hexagons.GetFreeGroundResource(roll);
 
             _players.Profit(roll, free);
+
+            _players.StartTurn(_turnQueue.CurrentId.Value);
+            _inputController.GameplayMap = _turnQueue.IsCurrentPlayer;
         }
 
 #if UNITY_EDITOR

@@ -20,10 +20,10 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private LookAtCamera _lookAtCamera;
 
         private Camera _camera;
-        private bool _isNotPlayerTurn;
         private RectTransform _thisRectTransform;
         private Unsubscribers _unsubscribers = new(9);
-        private GameObject _currentOpenMenu;
+        private bool _isPlayerTurn;
+        private IMenu _currentOpenMenu;
 
         public void Init(ContextMenuSettings settings)
         {
@@ -32,51 +32,50 @@ namespace Vurbiri.Colonization.UI
 
             _lookAtCamera.Init(_camera);
 
-            _unsubscribers += _buttonCancel.Init(settings.hint).Add(EnableLook);
-            _unsubscribers += _crossroadMenu.Init(_roadsMenu, _recruitingMenu, settings).Add(EnableLook);
-            _unsubscribers += _recruitingMenu.Init(_crossroadMenu, settings).Add(EnableLook);
-            _unsubscribers += _roadsMenu.Init(_crossroadMenu, settings).Add(EnableLook);
-            _unsubscribers += _warriorsMenu.Init(settings).Add(EnableLook);
+            _unsubscribers += _buttonCancel.Init(settings.hint).Add(OnActiveMenu);
+            _unsubscribers += _crossroadMenu.Init(_roadsMenu, _recruitingMenu, settings).Add(OnActiveMenu);
+            _unsubscribers += _recruitingMenu.Init(_crossroadMenu, settings).Add(OnActiveMenu);
+            _unsubscribers += _roadsMenu.Init(_crossroadMenu, settings).Add(OnActiveMenu);
+            _unsubscribers += _warriorsMenu.Init(settings).Add(OnActiveMenu);
 
             _unsubscribers += settings.eventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
             _unsubscribers += settings.eventBus.EventActorSelect.Add(OnSelectWarrior);
 
-            _unsubscribers += settings.eventBus.EventUnselect.Add(CloseAll);
+            _unsubscribers += settings.eventBus.EventUnselect.Add(OnClose);
 
-            _unsubscribers += settings.turn.Subscribe(OnNextTurn);
+            _unsubscribers += settings.turn.Subscribe(OnTurn);
         }
 
         private void OnSelectCrossroad(Crossroad crossroad)
         {
-            CloseAll();
-
-            if (_isNotPlayerTurn)
-                return;
-
-            ToPosition(crossroad.Position);
-            _crossroadMenu.Open(crossroad);
-            _buttonCancel.Setup(crossroad);
+            if (_isPlayerTurn & _currentOpenMenu == null)
+            {
+                ToPosition(crossroad.Position);
+                _crossroadMenu.Open(crossroad);
+                _buttonCancel.Setup(crossroad);
+            }
         }
 
         private void OnSelectWarrior(Actor actor)
         {
-            CloseAll();
-
-            if (!actor.Interactable)
-                return;
-
-            ToPosition(actor.Position);
-            _warriorsMenu.Open(actor);
-            _buttonCancel.Setup(actor);
+            if (actor.Interactable & _currentOpenMenu == null)
+            {
+                ToPosition(actor.Position);
+                _warriorsMenu.Open(actor);
+                _buttonCancel.Setup(actor);
+            }
         }
 
-        public void CloseAll()
+        private void OnClose(bool isEquals)
         {
-            _crossroadMenu.CloseInstant();
-            _roadsMenu.CloseInstant();
-            _recruitingMenu.CloseInstant();
-            _warriorsMenu.CloseInstant();
-            _buttonCancel.Disable();
+            if (!isEquals & _currentOpenMenu != null)
+                _currentOpenMenu.CloseInstant();
+        }
+
+        private void OnTurn(TurnQueue turn)
+        {
+            _isPlayerTurn = turn.CurrentId == PlayerId.Player;
+            OnClose(false);
         }
 
         private void ToPosition(Vector3 position)
@@ -86,20 +85,14 @@ namespace Vurbiri.Colonization.UI
                 _thisRectTransform.anchoredPosition = localPoint;
         }
 
-        private void OnNextTurn(TurnQueue turn)
-        {
-            _isNotPlayerTurn = turn.CurrentId != PlayerId.Player;
-            CloseAll();
-        }
-
-        private void EnableLook(GameObject signaling, bool value)
+        private void OnActiveMenu(IMenu menu, bool value)
         {
             if (value)
             {
-                _currentOpenMenu = signaling;
+                _currentOpenMenu = menu;
                 _lookAtCamera.enabled = true;
             }
-            else if (_currentOpenMenu == signaling)
+            else if (_currentOpenMenu == menu)
             {
                 _currentOpenMenu = null;
                 _lookAtCamera.enabled = false;

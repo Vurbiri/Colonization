@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private WarriorButton _warriorButtonPrefab;
         [SerializeField] private Transform _buttonContainer, _buttonRepository;
-        [SerializeField] private IdArray<WarriorId, ButtonView> _buttonViews = new();
+        [SerializeField] private IdArray<WarriorId, Sprite> _sprites = new();
 
         private readonly List<WarriorButton> _buttons = new();
         private Stack<WarriorButton> _buttonPool;
@@ -67,7 +67,7 @@ namespace Vurbiri.Colonization
             if (typeEvent == TypeEvent.Add | typeEvent == TypeEvent.Subscribe)
             {
                 var button = _buttonPool.Pop();
-                button.Setup(_buttons.Count, _buttonViews[actor.Id], actor, _toggle.IsOn);
+                button.Setup(_buttons.Count, _sprites[actor.Id], actor, _toggle.IsOn);
                 _buttons.Add(button);
             }
         }
@@ -139,13 +139,8 @@ namespace Vurbiri.Colonization
             EUtility.SetPrefab(ref _warriorButtonPrefab);
 
             for (int i = 0; i < WarriorId.Count; i++)
-            {
-                if (_buttonViews[i].sprite == null)
-                    _buttonViews[i].sprite = EUtility.FindAnyAsset<Sprite>($"SP_Icon{WarriorId.GetName(i)}");
-
-                if (string.IsNullOrEmpty(_buttonViews[i].keyName))
-                    _buttonViews[i].keyName = WarriorId.GetName(i);
-            }
+                if (_sprites[i] == null)
+                    _sprites[i] = EUtility.FindAnyAsset<Sprite>($"SP_Icon{WarriorId.GetName(i)}");
         }
 #endif
     }

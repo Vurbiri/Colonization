@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
     {
         public void TriggerCrossroadSelect(Crossroad crossroad) => _crossroadSelect.Invoke(crossroad);
         public void TriggerActorSelect(Actor actor) => _actorSelect.Invoke(actor);
-        public void TriggerUnselect() => _unselect.Invoke();
+        public void TriggerUnselect(bool isEquals) => _unselect.Invoke(isEquals);
 
         public void TriggerActorKilling(Id<PlayerId> self, Id<PlayerId> target, int actorId) => _actorKilling.Invoke(self, target, actorId);
 

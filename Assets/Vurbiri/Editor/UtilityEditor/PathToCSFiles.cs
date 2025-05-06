@@ -157,7 +157,7 @@ namespace VurbiriEditor
         private static void SetChecked()
         {
             Menu.SetChecked(MENU_COMMAND_AUTO, isAuto);
-            Menu.SetChecked(MENU, isAuto);
+            //Menu.SetChecked(MENU, isAuto);
         }
 
         private static void Log()

@@ -1,7 +1,6 @@
 ﻿//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Controllers;
@@ -73,7 +72,7 @@ namespace Vurbiri.Colonization.EntryPoint
                 _diContainer.AddInstance(_turnQueue = TurnQueue.Create(_gameStorage));
                 _diContainer.AddInstance(Diplomacy.Create(_gameStorage, _scriptables.diplomacy, _turnQueue));
 
-                _diContainer.AddInstance(_scriptables.GetPlayersVisual(_gameplaySettings.VisualIds));
+                _diContainer.AddInstance(_gameplaySettings.PlayersVisual);
 
                 _diContainer.AddInstance(_sceneObjects.mainCamera);
             }
@@ -180,15 +179,10 @@ namespace Vurbiri.Colonization.EntryPoint
         private class ScriptableObjects : IDisposable
         {
             public PricesScriptable prices;
-            public PlayerVisualSetScriptable visualSet;
             public DiplomacySettingsScriptable diplomacy;
-
-            public PlayersVisual GetPlayersVisual(IReadOnlyList<int> ids) => visualSet.Get(ids);
 
             public void Dispose()
             {
-                visualSet.Dispose();
-                visualSet = null;
                 diplomacy.Dispose();
                 diplomacy = null;
             }
@@ -197,7 +191,6 @@ namespace Vurbiri.Colonization.EntryPoint
             public void OnValidate()
             {
                 EUtility.SetScriptable(ref prices);
-                EUtility.SetScriptable(ref visualSet);
                 EUtility.SetScriptable(ref diplomacy);
             }
 #endif

@@ -9,11 +9,12 @@ namespace Vurbiri.Colonization
         private readonly TurnQueue _turn;
 
         public readonly Id<PlayerId> owner;
+        public readonly bool isPlayerOwned;
         public readonly Diplomacy diplomacy;
         public readonly GameplayTriggerBus triggerBus;
         public readonly IReactive<IPerk>[] buffs;
 
-        public bool IsPlayerTurn => owner == PlayerId.Player & owner == _turn.CurrentId;
+        public bool IsPlayerTurn => owner == _turn.CurrentId & isPlayerOwned;
 
         public ActorInitData(Id<PlayerId> owner, Buffs artefact, WarriorPerks perks) : this(owner)
         {
@@ -28,6 +29,7 @@ namespace Vurbiri.Colonization
         private ActorInitData(Id<PlayerId> owner)
         {
             this.owner = owner;
+            isPlayerOwned = owner == PlayerId.Player;
             diplomacy = SceneContainer.Get<Diplomacy>();
             triggerBus = SceneContainer.Get<GameplayTriggerBus>();
             _turn = SceneContainer.Get<TurnQueue>();

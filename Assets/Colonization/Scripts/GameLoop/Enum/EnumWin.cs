@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\GameLoop\EnumWin.cs
+//Assets\Colonization\Scripts\GameLoop\Enum\EnumWin.cs
 namespace Vurbiri.Colonization
 {
     public enum Win

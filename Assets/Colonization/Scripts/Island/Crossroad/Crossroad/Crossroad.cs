@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\Island\Crossroad\Crossroad\Crossroad.cs
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Reactive;
@@ -29,7 +30,6 @@ namespace Vurbiri.Colonization
         private bool _isGate = false;
         private WaitResultSource<Hexagon> _waitHexagon;
 
-        private readonly RBool _interactable;
         private readonly RBool _canCancel = new();
 
         private Unsubscriber _unsubscriber;
@@ -64,8 +64,6 @@ namespace Vurbiri.Colonization
 
         #region ISelectable, ICancel
         public RBool CanCancel => _canCancel;
-        public RBool InteractableReactive => _interactable;
-        public bool Interactable { get => _interactable.Value; set => _interactable.Value = value; }
         public bool RaycastTarget { get => _edifice.RaycastTarget; set => _edifice.RaycastTarget = value; }
         public void Select()
         {
@@ -74,18 +72,18 @@ namespace Vurbiri.Colonization
         }
         public void Unselect(ISelectable newSelectable)
         {
-            _triggerBus.TriggerUnselect();
+            _triggerBus.TriggerUnselect(Equals(newSelectable));
 
-            if (_waitHexagon == null)
-                return;
+            if (_waitHexagon != null)
+            {
+                _canCancel.False();
 
-            _canCancel.False();
+                _waitHexagon.SetResult(newSelectable as Hexagon);
+                foreach (var hex in _hexagons)
+                    hex.SetUnselectable();
 
-            _waitHexagon.SetResult(newSelectable as Hexagon);
-            foreach (var hex in _hexagons)
-                hex.SetUnselectable();
-
-            _waitHexagon = null;
+                _waitHexagon = null;
+            }
         }
         public void Cancel() => Unselect(null);
         #endregion
@@ -171,6 +169,155 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
+        #region Edifice
+        #region Edifice
+        public bool CanUpgrade(Id<PlayerId> playerId)
+        {
+            return _states.isUpgrade && (_owner == playerId ||
+            _states.nextGroupId.Value switch
+            {
+                EdificeGroupId.Shrine => IsRoadConnect(playerId),
+                EdificeGroupId.Port => WaterCheck(),
+                EdificeGroupId.Urban => NeighborCheck(playerId),
+                _ => false
+            });
+
+            #region Local: WaterCheck(), NeighborCheck()
+            //=================================
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            bool WaterCheck()
+            {
+                if (_countFreeLink == 0 && !IsRoadConnect(playerId))
+                    return false;
+
+                for (int i = 0; i < HEX_COUNT; i++)
+                    if (_hexagons[i].IsOwnedByPort)
+                        return false;
+
+                return true;
+            }
+            //=================================
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            bool NeighborCheck(Id<PlayerId> playerId)
+            {
+                Crossroad neighbor;
+                foreach (var link in _links)
+                {
+                    neighbor = link.Other(this);
+                    if (neighbor._states.groupId == EdificeGroupId.Urban)
+                        return false;
+                }
+                return IsRoadConnect(playerId);
+            }
+            #endregion
+        }
+        public bool BuyUpgrade(Id<PlayerId> playerId)
+        {
+            if (!_states.isUpgrade | (_states.id != EdificeId.Empty & _owner != playerId))
+                return false;
+
+            BuildEdifice(playerId, _states.nextId.Value);
+            return true;
+        }
+        public void BuildEdifice(Id<PlayerId> playerId, int buildId)
+        {
+            _owner = playerId;
+            _edifice = Object.Instantiate(_prefabs[buildId]).Init(_owner, _isWall, _links, _edifice);
+            _states = _edifice.Settings;
+            _states.isBuildWall = _states.isBuildWall && !_isWall;
+        }
+
+        public bool CanWallBuild(Id<PlayerId> playerId) => _owner == playerId & _states.isBuildWall & !_isWall;
+        public bool BuyWall(Id<PlayerId> playerId, IReactive<int> abilityWall)
+        {
+            if (!_states.isBuildWall | _isWall | _owner != playerId || !_edifice.WallBuild(playerId, _links))
+                return false;
+
+            _states.isBuildWall = !(_isWall = true);
+            _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d);
+
+            for (int i = 0; i < _hexagons.Count; i++)
+                _hexagons[i].BuildWall(playerId);
+
+            return true;
+        }
+
+        #endregion
+
+        #region Road
+        public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
+        public void RoadBuilt(Id<LinkId> id)
+        {
+            _countFreeLink--;
+            _edifice.AddRoad(id, _isWall);
+        }
+
+        public bool IsFullyOwned(Id<PlayerId> playerId)
+        {
+            if (_links.Filling <= 1)
+                return false;
+
+            if (_countFreeLink > 0)
+                return _owner == playerId;
+
+            foreach (var link in _links)
+                if (link.Owner != playerId)
+                    return false;
+
+            return true;
+        }
+        public bool IsRoadConnect(Id<PlayerId> playerId)
+        {
+            if (_owner == playerId)
+                return true;
+
+            foreach (var link in _links)
+                if (link.Owner == playerId)
+                    return true;
+
+            return false;
+        }
+        #endregion
+
+        #region Recruiting
+        public bool CanRecruiting(Id<PlayerId> playerId)
+        {
+            int countUnfit = 0;
+            for (int i = 0; i < HEX_COUNT; i++)
+                if (!_hexagons[i].CanWarriorEnter)
+                    countUnfit++;
+
+            return countUnfit < HEX_COUNT & _owner == playerId & _states.groupId == EdificeGroupId.Port;
+        }
+
+        public WaitResult<Hexagon> GetHexagonForRecruiting_Wait(bool isNotDemon = true)
+        {
+            _waitHexagon = new();
+            List<Hexagon> empty = new(2);
+
+            for (int i = 0; i < HEX_COUNT; i++)
+                if (_hexagons[i].CanWarriorEnter)
+                    empty.Add(_hexagons[i]);
+
+            int emptyCount = empty.Count;
+            if (emptyCount == 0)
+                return _waitHexagon.Cancel();
+
+            Debug.Log("Сразу ли спаунить на одной ???");
+            if (emptyCount == 1)
+                return _waitHexagon.SetResult(empty[0]);
+
+            for (int i = 0; i < emptyCount; i++)
+                empty[i].TrySetSelectableFree();
+
+            _canCancel.True();
+            return _waitHexagon;
+        }
+        #endregion
+        #endregion
+
+
+        public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         public void Dispose()
         {
             _unsubscriber?.Unsubscribe();

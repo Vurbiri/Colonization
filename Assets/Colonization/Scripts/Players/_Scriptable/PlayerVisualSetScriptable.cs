@@ -1,6 +1,4 @@
 //Assets\Colonization\Scripts\Players\_Scriptable\PlayerVisualSetScriptable.cs
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -8,55 +6,42 @@ namespace Vurbiri.Colonization
     //[CreateAssetMenu(fileName = "PlayerVisualSet", menuName = "Vurbiri/Colonization/PlayerVisualSet", order = 51)]
     public class PlayerVisualSetScriptable : ScriptableObjectDisposable
     {
-        [SerializeField] private Color _colorDemons = Color.red;
+        [SerializeField] private Color _colorSatan = Color.red;
         [Space]
-        [SerializeField] private Color[] _colors;
+        [SerializeField] private Color[] _colorHumans;
         [Space]
         [SerializeField] private Material _defaultMaterialLit;
         [SerializeField] private Material _defaultMaterialUnlit;
         [Space]
         [SerializeField] private Material _defaultMaterialActor;
 
-        public int Count => _colors.Length;
-        public Color[] Colors => _colors;
+        public int Count => _colorHumans.Length;
+        public Color[] ColorHumans => _colorHumans;
 
-        public PlayersVisual Get(IReadOnlyList<int> ids)
+        public PlayersVisual Get(int[] colorIds)
         {
-            int count = ids.Count;
+            Color[] colors = new Color[PlayerId.Count];
 
-            Color[] colors = new Color[count + 1];
-            int i = 0;
-            for (; i < count; i++)
-                colors[i] = _colors[ids[i]];
-            colors[i] = _colorDemons;
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                colors[i] = _colorHumans[colorIds[i]];
+            colors[PlayerId.Satan] = _colorSatan;
 
             return new(colors, _defaultMaterialLit, _defaultMaterialUnlit, _defaultMaterialActor);
         }
 
-        public int[] GetIds(int count, int start = 0)
+        public int[] GetIds(int playerColorId)
         {
-            int length = _colors.Length;
-            int[] ids = new int[count];
-            for (int i = 0; i < count; i++)
-                ids[i] = (start + i) % length;
+            int length = _colorHumans.Length, step = length / (PlayerId.HumansCount - 1);
+            int[] ids = new int[PlayerId.HumansCount];
+            ids[0] = playerColorId;
+            for (int i = 1; i < PlayerId.HumansCount; i++)
+                ids[i] = (playerColorId + Random.Range(1, step)) % length;
 
             return ids;
         }
 
-        public int[] RandIds(int count)
-        {
-            int length = _colors.Length;
-            int[] ids = new int[length];
-            for (int i = 1, j; i < length; i++)
-            {
-                ids[i] = i;
-                j = UnityEngine.Random.Range(0, i);
-                (ids[j], ids[i]) = (ids[i], ids[j]);
-            }
+        public int[] GetIds() => GetIds(Random.Range(0, _colorHumans.Length));
 
-            Array.Resize(ref ids, count);
-            return ids;
-        }
     }
 }
 

@@ -98,7 +98,7 @@ namespace VurbiriEditor
             Menu.SetChecked(MENU_COMMAND_ENABLE, _enabled);
             Menu.SetChecked(MENU_COMMAND_DISABLE, !_enabled);
 
-            Menu.SetChecked(MENU, _enabled);
+            //Menu.SetChecked(MENU, _enabled);
         }
 
         private static void Log()

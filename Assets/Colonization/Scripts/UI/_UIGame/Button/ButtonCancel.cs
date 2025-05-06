@@ -1,12 +1,11 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonCancel.cs
-using UnityEngine;
 using Vurbiri.Reactive;
 using Vurbiri.TextLocalization;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class ButtonCancel : AWorldHintButton
+    sealed public class ButtonCancel : AWorldHintButton, IMenu
     {
         private const Files FILE = Files.Main;
         private const string KEY = "Cancel";
@@ -14,9 +13,9 @@ namespace Vurbiri.Colonization.UI
         private ICancel _cancelledObj;
         private Unsubscriber _unLanguage, _unAction;
 
-        private readonly Signer<GameObject, bool> _signer = new();
+        private readonly Signer<IMenu, bool> _signer = new();
 
-        public ISigner<GameObject, bool> Init(WorldHint hint)
+        public ISigner<IMenu, bool> Init(WorldHint hint)
         {
             base.Init(hint, OnClick, false);
             _unLanguage = SceneContainer.Get<Localization>().Subscribe(SetText);
@@ -32,7 +31,7 @@ namespace Vurbiri.Colonization.UI
             _unAction = _cancelledObj.CanCancel.Subscribe(_thisGameObject.SetActive);
         }
 
-        public void Disable()
+        public void CloseInstant()
         {
             _thisGameObject.SetActive(false);
             _unAction?.Unsubscribe();
@@ -52,12 +51,12 @@ namespace Vurbiri.Colonization.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            _signer.Invoke(_thisGameObject, true);
+            _signer.Invoke(this, true);
         }
         protected override void OnDisable()
         {
             base.OnDisable();
-            _signer.Invoke(_thisGameObject, false);
+            _signer.Invoke(this, false);
         }
         protected override void OnDestroy()
         {

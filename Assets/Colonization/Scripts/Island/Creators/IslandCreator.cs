@@ -93,9 +93,9 @@ namespace Vurbiri.Colonization
             if (_edificePrefabs.Filling < _edificePrefabs.Count)
                 _edificePrefabs.ReplaceRange(EUtility.FindPrefabs<AEdifice>());
             if (_crossroadsContainer == null)
-                _crossroadsContainer = this.GetComponentInChildren<Transform>("Crossroads");
+                _crossroadsContainer = EUtility.GetComponentInChildren<Transform>(this, "Crossroads");
             if (_psFog == null)
-                _psFog = this.GetComponentInChildren<ParticleSystem>();
+                _psFog = GetComponentInChildren<ParticleSystem>();
         }
 #endif
     }

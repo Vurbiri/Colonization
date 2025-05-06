@@ -110,7 +110,7 @@ namespace Vurbiri.Colonization.Actors
                     wait.Reset();
                 }
                 yield return wait;
-                _target.BecomeTargetEnd();
+                _target.FromTargetState();
             }
 
             private void RotateActors()
@@ -131,7 +131,7 @@ namespace Vurbiri.Colonization.Actors
                 if (target == _actor | key.Distance != 1 || !target.IsCanUseSkill(_actor._owner, _relationTarget, out _))
                     return null;
 
-                target.BecomeTargetStart(_actor._owner, _relationTarget);
+                target.ToTargetState(_actor._owner, _relationTarget);
                 return target;
             }
         }

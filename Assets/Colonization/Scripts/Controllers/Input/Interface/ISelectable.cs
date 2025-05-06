@@ -1,7 +1,9 @@
 //Assets\Colonization\Scripts\Controllers\Interface\ISelectable.cs
+using System;
+
 namespace Vurbiri.Colonization
 {
-    public interface ISelectable
+    public interface ISelectable : IEquatable<ISelectable>
     {
         public void Select();
         public void Unselect(ISelectable newSelectable);

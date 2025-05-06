@@ -17,11 +17,12 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ButtonBuild _buttonWall;
         [SerializeField] private ButtonBuild _buttonRoads;
 
+        private Crossroad _currentCrossroad;
         private CrossroadRoadsMenu _roadsMenu;
         private CrossroadWarriorsMenu _warriorsMenu;
         private Human _player;
 
-        public ISigner<GameObject, bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
+        public ISigner<IMenu, bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;

@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                 _idLang = id;
         }
 
-        public Unsubscriber Subscribe(Action<Profile> action, bool instantGetValue = true)=> _signer.Add(action, instantGetValue, this);
+        public Unsubscriber Subscribe(Action<Profile> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, this);
 
         public void Apply()
         {
@@ -40,9 +40,6 @@ namespace Vurbiri.Colonization
             value = QualitySettings.GetQualityLevel();
             changed |= _quality != value;
             _quality = value;
-
-            _idLang = _localization.CurrentId;
-            _quality = QualitySettings.GetQualityLevel();
 
             if (changed) _signer.Invoke(this);
         }

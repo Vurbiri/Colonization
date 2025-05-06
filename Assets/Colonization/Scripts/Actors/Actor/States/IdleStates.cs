@@ -3,7 +3,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        protected class IdleState : AState
+        sealed protected class IdleState : AState
         {
             private readonly GameplayTriggerBus _triggerBus;
 
@@ -15,16 +15,19 @@ namespace Vurbiri.Colonization.Actors
             public override void Enter()
             {
                 _skin.Idle();
-                _actor.Enable();
+                _actor.Interactable = true;
             }
 
             public override void Exit()
             {
-                _actor.Disable();
+                _actor.Interactable = false;
             }
 
             public override void Select() => _triggerBus.TriggerActorSelect(_actor);
-            public override void Unselect(ISelectable newSelectable) => _triggerBus.TriggerUnselect();
+            public override void Unselect(ISelectable newSelectable)
+            {
+                _triggerBus.TriggerUnselect(_actor.Equals(newSelectable));
+            }
         }
     }
 }

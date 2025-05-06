@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
 
             public int ShrinePassiveProfit => _shrinePassiveProfit.Value * shrines.Count;
             public int ShrineProfit => _shrineProfit.Value * shrines.Count;
-            
+
             public Edifices(AbilitiesSet<HumanAbilityId> abilities)
             {
                 _abilities = abilities;

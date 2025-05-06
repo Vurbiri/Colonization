@@ -84,8 +84,16 @@ namespace Vurbiri
         {
             EUtility.SetAsset(ref _audioMixer);
 
-            if (_nameParams == null || _nameParams[0] == null)
+            if (_nameParams == null)
+            {
                 _nameParams = new(IdType<T>.Names);
+            }
+            else
+            {
+                for (int i = 0; i < IdType<T>.Count; i++)
+                    if (string.IsNullOrEmpty(_nameParams[i]))
+                        _nameParams[i] = IdType<T>.Names[i];
+            }
         }
 #endif
     }

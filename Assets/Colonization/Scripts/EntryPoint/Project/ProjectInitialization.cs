@@ -22,6 +22,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private string _leaderboardName = "lbColonization";
         [Space]
         [SerializeField] private ColorSettingsScriptable _settingsColorScriptable;
+        [SerializeField] private PlayerVisualSetScriptable _playerVisualSetScriptable;
         [Space]
         [SerializeField] private Settings _settings;
 
@@ -49,7 +50,7 @@ namespace Vurbiri.Colonization.EntryPoint
             yield return CreateStorage_Cn(diContainer);
             yield return YandexIsLogOn_Cn(diContainer, loadingScreen);
 
-            diContainer.AddInstance(new GameSettings(diContainer));
+            diContainer.AddInstance(new GameSettings(_projectStorage, _playerVisualSetScriptable));
 
             Message.Log("End Init Project");
             //----------------------------------
@@ -129,7 +130,8 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             EUtility.SetObject(ref _logOnPanel);
             EUtility.SetScriptable(ref _settingsColorScriptable);
-            
+            EUtility.SetScriptable(ref _playerVisualSetScriptable);
+
             _settings.OnValidate();
         }
 #endif

@@ -1,13 +1,12 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\CurrencyPopup.cs
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class CurrencyPopup : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class CurrencyPopup : MonoBehaviour
     {
         [SerializeField] private TMP_Text _countTMP;
         [SerializeField] private PopupWidgetUI _popup;
@@ -32,16 +31,6 @@ namespace Vurbiri.Colonization.UI
         private void OnDestroy()
         {
             _unsubscriber?.Unsubscribe();
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            //Debug.Log("OnPointerEnter ");
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            //Debug.Log("OnPointerExit ");
         }
 
 #if UNITY_EDITOR

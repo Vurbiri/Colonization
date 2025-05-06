@@ -29,18 +29,27 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public void EndTurn()
+        public void EndTurn(int playerId)
         {
-            for (int i = 0; i < PlayerId.HumansCount; i++)
-                _humans[i].EndTurn();
-
-            _satan.EndTurn();
+            if(playerId == PlayerId.Satan)
+                _satan.EndTurn();
+            else
+                _humans[playerId].EndTurn();
         }
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
+            _satan.Profit(hexId);
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 _humans[i].Profit(hexId, freeGroundRes);
+        }
+
+        public void StartTurn(int playerId)
+        {
+            if (playerId == PlayerId.Satan)
+                _satan.StartTurn();
+            else
+                _humans[playerId].StartTurn();
         }
 
         public void Dispose()
