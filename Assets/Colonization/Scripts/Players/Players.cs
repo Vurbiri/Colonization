@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization
         public class Settings : IDisposable
         {
             public WarriorInitializer warriorPrefab;
-            public PricesScriptable prices;
+            public Prices prices;
             public HumanAbilitiesScriptable humanStates;
             public EconomicPerksScriptable economicPerks;
             public MilitaryPerksScriptable militaryPerks;

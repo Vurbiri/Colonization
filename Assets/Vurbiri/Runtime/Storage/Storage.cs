@@ -33,7 +33,7 @@ namespace Vurbiri
             callback?.Invoke(new(texture != null, texture));
         }
 
-        public static bool LoadObjectFromResourceJson<T>(string path, out T obj)
+        public static bool TryLoadObjectFromResourceJson<T>(string path, out T obj)
         {
             try
             {
@@ -47,6 +47,22 @@ namespace Vurbiri
                 Message.Log($"--- Не удалось загрузить объект {typeof(T).Name} по пути {path} ---\n".Concat(ex.Message));
                 obj = default;
                 return false;
+            }
+        }
+
+        public static T LoadObjectFromResourceJson<T>(string path)
+        {
+            try
+            {
+                var textAsset = Resources.Load<TextAsset>(path);
+                T obj = JsonConvert.DeserializeObject<T>(textAsset.text);
+                Resources.UnloadAsset(textAsset);
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                Message.Log($"--- Не удалось загрузить объект {typeof(T).Name} по пути {path} ---\n".Concat(ex.Message));
+                return default;
             }
         }
     }

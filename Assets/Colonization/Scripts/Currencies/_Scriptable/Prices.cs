@@ -1,5 +1,4 @@
-//Assets\Colonization\Scripts\Currencies\_Scriptable\PricesScriptable.cs
-using System.Collections.Generic;
+//Assets\Colonization\Scripts\Currencies\_Scriptable\Prices.cs
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
@@ -7,7 +6,7 @@ using Vurbiri.Colonization.Actors;
 namespace Vurbiri.Colonization
 {
     //[CreateAssetMenu(fileName = "Prices", menuName = "Vurbiri/Colonization/Prices", order = 51)]
-    public class PricesScriptable : ScriptableObject
+    public class Prices : ScriptableObject
     {
         [SerializeField] private CurrenciesLite _playersDefault;
         [SerializeField] private CurrenciesLite _roads;
@@ -15,10 +14,10 @@ namespace Vurbiri.Colonization
         [SerializeField] private IdArray<EdificeId, CurrenciesLite> _edifices;
         [SerializeField] private IdArray<WarriorId, CurrenciesLite> _warriors;
 
-        public ACurrencies HumanDefault => _playersDefault;
-        public ACurrencies Road => _roads;
-        public ACurrencies Wall => _wall;
-        public IReadOnlyList<ACurrencies> Edifices => _edifices;
-        public IReadOnlyList<ACurrencies> Warriors => _warriors;
+        public CurrenciesLite HumanDefault => _playersDefault;
+        public CurrenciesLite Road => _roads;
+        public CurrenciesLite Wall => _wall;
+        public IdArray<EdificeId, CurrenciesLite> Edifices => _edifices;
+        public IdArray<WarriorId, CurrenciesLite> Warriors => _warriors;
     }
 }

@@ -1,7 +1,9 @@
 //Assets\Colonization\Editor\CONSTS\CONST_EDITOR.cs
+using System.Text;
+
 namespace VurbiriEditor.Colonization
 {
-    public static class CONST_EDITOR
+    internal static class CONST_EDITOR
     {
         public const string MENU_PATH = "Colonization/";
         public const string MENU_CH_PATH = MENU_PATH + "Characteristics/";
@@ -9,5 +11,7 @@ namespace VurbiriEditor.Colonization
         public const string MENU_PERKS_PATH = MENU_CH_PATH + "Perks/";
         public const string MENU_BUFFS_PATH = MENU_CH_PATH + "Buffs/";
         public const int SPACE_WND = 8;
+
+        public static readonly Encoding utf8WithoutBom = new UTF8Encoding(false);
     }
 }

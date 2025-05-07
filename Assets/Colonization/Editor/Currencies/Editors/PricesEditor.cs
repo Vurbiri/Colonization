@@ -1,15 +1,15 @@
-//Assets\Colonization\Editor\Currencies\Editors\PricesScriptableEditor.cs
+//Assets\Colonization\Editor\Currencies\Editors\PricesEditor.cs
+using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Vurbiri.Colonization;
+using Vurbiri.Colonization.Actors;
+
 namespace VurbiriEditor.Colonization
 {
-    using UnityEditor;
-    using UnityEditor.UIElements;
-    using UnityEngine;
-    using UnityEngine.UIElements;
-    using Vurbiri.Colonization;
-    using Vurbiri.Colonization.Actors;
-
-    [CustomEditor(typeof(PricesScriptable), true)]
-    internal class PricesScriptableEditor : AEditorGetVE<PricesScriptableEditor>
+    [CustomEditor(typeof(Prices), true)]
+    internal class PricesEditor : AEditorGetVE<PricesEditor>
     {
         [SerializeField] private VisualTreeAsset _treeAssetList;
 

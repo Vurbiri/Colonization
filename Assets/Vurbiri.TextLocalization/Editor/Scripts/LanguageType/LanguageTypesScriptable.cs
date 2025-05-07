@@ -20,7 +20,7 @@ namespace Vurbiri.TextLocalization.Editor
 
         public void Load()
         {
-            if (LoadObjectFromResourceJson(CONST_L.FILE_LANG, out _languageTypes))
+            if (TryLoadObjectFromResourceJson(CONST_L.FILE_LANG, out _languageTypes))
                 _languageTypes.Sort();
         }
 

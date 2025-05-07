@@ -1,0 +1,10 @@
+{
+  "min": -100,
+  "max": 101,
+  "defaultValue": 25,
+  "penaltyPerRound": -1,
+  "rewardForBuff": 10,
+  "rewardForPresent": 5,
+  "penaltyForFireOnEnemy": -5,
+  "penaltyForFriendlyFire": -10
+}

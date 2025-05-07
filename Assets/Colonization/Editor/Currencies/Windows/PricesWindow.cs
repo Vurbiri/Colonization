@@ -13,7 +13,7 @@ namespace VurbiriEditor.Colonization
         private const string NAME = "Prices", MENU = MENU_PATH + NAME;
         #endregion
 
-        [SerializeField] private PricesScriptable _prices;
+        [SerializeField] private Prices _prices;
 
         private static readonly Vector2 wndMinSize = new(325f, 400f);
 
@@ -31,7 +31,7 @@ namespace VurbiriEditor.Colonization
                 return;
             }
 
-            rootVisualElement.Add(PricesScriptableEditor.CreateCachedEditorAndBind(_prices));
+            rootVisualElement.Add(PricesEditor.CreateCachedEditorAndBind(_prices));
         }
     }
 }

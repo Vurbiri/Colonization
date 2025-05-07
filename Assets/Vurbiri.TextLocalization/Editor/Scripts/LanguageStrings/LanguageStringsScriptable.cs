@@ -26,7 +26,7 @@ namespace Vurbiri.TextLocalization.Editor
 
         public void Init()
         {
-            LoadObjectFromResourceJson(CONST_L.FILE_LANG, out _languages);
+            TryLoadObjectFromResourceJson(CONST_L.FILE_LANG, out _languages);
             _count = _languages.Length;
             _names = new string[_count];
             for (int i = 0; i < _count; i++)
@@ -76,7 +76,7 @@ namespace Vurbiri.TextLocalization.Editor
                 path = Path.Combine(CONST_L.FOLDER_PATH, _languages[i].Folder, _file.ToString().Concat(JSON_EXP));
 
                 if (File.Exists(path))
-                    LoadObjectFromResourceJson(Path.Combine(_languages[i].Folder, _file.ToString()), out strings[i]);
+                    TryLoadObjectFromResourceJson(Path.Combine(_languages[i].Folder, _file.ToString()), out strings[i]);
                 else
                     strings[i] = new();
 

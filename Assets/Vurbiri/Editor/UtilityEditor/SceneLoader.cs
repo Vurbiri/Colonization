@@ -13,20 +13,23 @@ namespace VurbiriEditor
 {
     public class SceneLoader : EditorWindow
 	{
-		#region Consts
-		private const string NAME = "Scene Loader", MENU = MENU_PATH + NAME;
+        #region Consts
+        private const string PATH_IMAGE = "ed_iconSceneLoader";
+        private const string NAME = "Scenes Switching", MENU = MENU_PATH + NAME;
         #endregion
 
         private static SceneField sceneField;
 
-        [MenuItem(MENU, false, 77)]
+        [MenuItem(MENU, false, 47)]
 		private static void ShowWindow()
 		{
-			GetWindow<SceneLoader>(NAME);
+            GetWindow<SceneLoader>();
 		}
 		
 		private void OnEnable()
 		{
+            titleContent = new(NAME, Resources.Load<Texture>(PATH_IMAGE));
+
             sceneField = new(OpenScene);
 
             EditorSceneManager.activeSceneChangedInEditMode += ChangedActiveScene;
@@ -45,15 +48,15 @@ namespace VurbiriEditor
 
         private void OnDisable()
         {
-            sceneField = sceneField.Dispose(OpenScene);
-
             EditorSceneManager.activeSceneChangedInEditMode -= ChangedActiveScene;
             SceneManager.activeSceneChanged -= ChangedActiveScene;
+
+            sceneField = sceneField.Dispose(OpenScene);
         }
 
         private static void OpenScene(ChangeEvent<Scene> evt)
         {
-            if (EditorSceneManager.SaveOpenScenes())
+            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
                 EditorSceneManager.OpenScene(evt.newValue);
         }
 
@@ -62,7 +65,7 @@ namespace VurbiriEditor
             sceneField.SetValueWithoutNotify(next);
         }
 
-        #region Nested: SceneModificationProcessor, SceneField, 
+        #region Nested: SceneModificationProcessor, SceneField, Scene
         // ================== SceneModificationProcessor ==========================
         public class SceneModificationProcessor : AssetModificationProcessor
         {
@@ -90,36 +93,27 @@ namespace VurbiriEditor
                 return AssetMoveResult.DidNotMove;
             }
 
-            private static bool IsExecute(string assetPath)
-            {
-                return SceneField.enabled && assetPath.EndsWith(SCENE_EXT);
-            }
+            private static bool IsExecute(string assetPath) => sceneField != null && assetPath.EndsWith(SCENE_EXT);
         }
         // ================== SceneField ==========================
         private class SceneField : PopupField<Scene>
         {
-            public static bool enabled = false;
-            
             public SceneField(EventCallback<ChangeEvent<Scene>> callback)
             {
                 choices = new();
                 foreach (var guid in EUtility.FindGUIDAssets<SceneAsset>())
                     choices.Add(AssetDatabase.GUIDToAssetPath(guid));
 
-                value = SceneManager.GetActiveScene().path;
+                value = SceneManager.GetActiveScene();
 
                 this.RegisterValueChangedCallback(callback);
 
                 formatSelectedValueCallback = FormatItem;
                 formatListItemCallback = FormatItem;
-
-                enabled = true;
             }
 
             public SceneField Dispose(EventCallback<ChangeEvent<Scene>> callback)
             {
-                enabled = false;
-
                 choices.Clear();
                 this.UnregisterCallback(callback);
 

@@ -6,12 +6,12 @@ namespace Vurbiri.Colonization.UI
 {
     public class ContextMenuSettings : ButtonSettings
     {
-        public readonly PricesScriptable prices;
+        public readonly Prices prices;
         public readonly Camera camera;
         public readonly TurnQueue turn;
         public readonly GameplayEventBus eventBus;
 
-        public ContextMenuSettings(TurnQueue turn, Players players, WorldHint hint, PricesScriptable prices, Camera camera, GameplayEventBus eventBus)
+        public ContextMenuSettings(TurnQueue turn, Players players, WorldHint hint, Prices prices, Camera camera, GameplayEventBus eventBus)
             : base(players.Player, hint)
         {
             this.turn = turn;

@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         private readonly bool _isPlayer;
         private readonly Currencies _resources;
         private readonly ExchangeRate _exchange;
-        private readonly PricesScriptable _prices;
+        private readonly Prices _prices;
 
         private readonly Edifices _edifices;
         private readonly Roads _roads;

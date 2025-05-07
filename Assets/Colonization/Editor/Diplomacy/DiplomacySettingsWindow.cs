@@ -1,8 +1,8 @@
 //Assets\Colonization\Editor\Diplomacy\DiplomacySettingsWindow.cs
 using UnityEditor;
 using UnityEngine;
-using Vurbiri;
 using Vurbiri.Colonization;
+using static UnityEditor.EditorGUILayout;
 using static VurbiriEditor.Colonization.CONST_EDITOR;
 
 namespace VurbiriEditor.Colonization
@@ -11,13 +11,14 @@ namespace VurbiriEditor.Colonization
 	{
 		#region Consts
 		private const string NAME = "Diplomacy", MENU = MENU_PATH + NAME;
-		#endregion
-		
-		[SerializeField] private DiplomacySettingsScriptable _scriptable;
-		
-		private Editor _editor;
-		
-		[MenuItem(MENU, false, 30)]
+        #endregion
+
+        [SerializeField] private DiplomacySettings _settings;
+
+        private SerializedObject _serializedObject;
+        private SerializedProperty _serializedProperty;
+
+        [MenuItem(MENU, false, 30)]
 		private static void ShowWindow()
 		{
 			GetWindow<DiplomacySettingsWindow>(true, NAME);
@@ -25,22 +26,30 @@ namespace VurbiriEditor.Colonization
 		
 		private void OnEnable()
 		{
-            if (_scriptable == null)
-                _scriptable = EUtility.FindAnyScriptable<DiplomacySettingsScriptable>();
-
-            _editor = Editor.CreateEditor(_scriptable, typeof(DiplomacySettingsEditor));		
-		}
+			SettingsFile.Load(ref _settings, SETTINGS_FILE.DIPLOMACY);
+            _serializedObject = new(this);
+            _serializedProperty = _serializedObject.FindProperty("_settings");
+        }
 		
 		private void OnGUI()
 		{
+            _serializedObject.Update();
             BeginWindows();
-            _editor.OnInspectorGUI();
+            {
+                Space(10);
+                LabelField("Diplomacy Settings", STYLES.H1);
+
+                BeginVertical(GUI.skin.box);
+                    PropertyField(_serializedProperty);
+                EndVertical();
+            }
             EndWindows();
+            _serializedObject.ApplyModifiedProperties();
         }
 		
 		private void OnDisable()
 		{
-			DestroyImmediate(_editor);
-		}
+            SettingsFile.Save(_settings, SETTINGS_FILE.DIPLOMACY);
+        }
     }
 }

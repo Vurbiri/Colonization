@@ -20,8 +20,9 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private IslandCreator _islandCreator;
         [SerializeField] private PlayerPanels _playerPanelsUI;
         [Space]
+        [SerializeField] private Prices _prices;
+        [Space]
         [SerializeField] private SceneObjects _sceneObjects;
-        [SerializeField] private ScriptableObjects _scriptables;
         [Space]
         [SerializeField] private EnumFlags<Files> _localizationFiles = new(true);
         [Header("══════ Init data for classes ══════")]
@@ -70,7 +71,7 @@ namespace Vurbiri.Colonization.EntryPoint
                 _diContainer.AddInstance<GameplayTriggerBus, GameplayEventBus>(_triggerBus = new());
                 _diContainer.AddInstance(_inputController = new InputController(_sceneObjects.mainCamera, _inputControllerSettings));
                 _diContainer.AddInstance(_turnQueue = TurnQueue.Create(_gameStorage));
-                _diContainer.AddInstance(Diplomacy.Create(_gameStorage, _scriptables.diplomacy, _turnQueue));
+                _diContainer.AddInstance(Diplomacy.Create(_gameStorage, _turnQueue));
 
                 _diContainer.AddInstance(_gameplaySettings.PlayersVisual);
 
@@ -84,8 +85,7 @@ namespace Vurbiri.Colonization.EntryPoint
             yield return _islandCreator.Init(_diContainer, _triggerBus).Create_Cn(_gameStorage);
             yield return CreatePlayers_Cn();
 
-            _sceneObjects.Init(this, _scriptables);
-            _scriptables.Dispose();
+            _sceneObjects.Init(this);
 
             yield return InitUI_Cn();
 
@@ -132,9 +132,9 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             EUtility.SetObject(ref _islandCreator);
             EUtility.SetObject(ref _playerPanelsUI);
+            EUtility.SetScriptable(ref _prices);
 
             _sceneObjects.OnValidate();
-            _scriptables.OnValidate();
             _settingsUI.OnValidate();
             _playersSettings.OnValidate();
         }
@@ -154,11 +154,11 @@ namespace Vurbiri.Colonization.EntryPoint
             [Space]
             public WorldHint hintGlobalWorld;
 
-            public void Init(GameplayEntryPoint parent, ScriptableObjects scriptables)
+            public void Init(GameplayEntryPoint parent)
             {
                 hintGlobalWorld.Init(parent._diContainer.Get<ProjectColors>().HintDefault);
                 cameraController.Init(mainCamera, parent._inputController.CameraActions);
-                contextMenusWorld.Init(new(parent._turnQueue, parent._players, hintGlobalWorld, scriptables.prices, mainCamera, parent._triggerBus));
+                contextMenusWorld.Init(new(parent._turnQueue, parent._players, hintGlobalWorld, parent._prices, mainCamera, parent._triggerBus));
             }
 
 #if UNITY_EDITOR
@@ -171,27 +171,6 @@ namespace Vurbiri.Colonization.EntryPoint
 
                 if (hintGlobalWorld == null)
                     hintGlobalWorld = GameObject.Find("WorldHint").GetComponent<WorldHint>();
-            }
-#endif
-        }
-        //*******************************************************
-        [System.Serializable]
-        private class ScriptableObjects : IDisposable
-        {
-            public PricesScriptable prices;
-            public DiplomacySettingsScriptable diplomacy;
-
-            public void Dispose()
-            {
-                diplomacy.Dispose();
-                diplomacy = null;
-            }
-
-#if UNITY_EDITOR
-            public void OnValidate()
-            {
-                EUtility.SetScriptable(ref prices);
-                EUtility.SetScriptable(ref diplomacy);
             }
 #endif
         }

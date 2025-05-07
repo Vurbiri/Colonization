@@ -27,7 +27,7 @@ namespace Vurbiri.TextLocalization
         static Localization() => _instance = new();
         private Localization()
         {
-            if (!LoadObjectFromResourceJson(CONST_L.FILE_LANG, out _languages))
+            if (!TryLoadObjectFromResourceJson(CONST_L.FILE_LANG, out _languages))
                 Errors.Message("Localization. Error loading LanguageType");
 
             _languagesCount = _languages.Length;
@@ -172,7 +172,7 @@ namespace Vurbiri.TextLocalization
 
         private bool LoadingFile(int idFile, LanguageType type)
         {
-            if (!LoadObjectFromResourceJson(Path.Combine(type.Folder, _nameFiles[idFile]), out Dictionary<string, string> load))
+            if (!TryLoadObjectFromResourceJson(Path.Combine(type.Folder, _nameFiles[idFile]), out Dictionary<string, string> load))
                 return false;
 
             var current = _text[idFile];

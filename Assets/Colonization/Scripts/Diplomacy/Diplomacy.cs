@@ -50,8 +50,9 @@ namespace Vurbiri.Colonization
             turn.Subscribe(OnNextTurn, false);
         }
 
-        public static Diplomacy Create(GameplayStorage storage, DiplomacySettings settings, TurnQueue turn)
+        public static Diplomacy Create(GameplayStorage storage, TurnQueue turn)
         {
+            var settings = Vurbiri.Storage.LoadObjectFromResourceJson<DiplomacySettings>(SETTINGS_FILE.DIPLOMACY);
             bool isLoad = storage.TryGetDiplomacyData(out int[] data);
             Diplomacy diplomacy = isLoad ? new(data, settings, turn) : new(settings, turn);
             storage.DiplomacyBind(diplomacy, !isLoad);
