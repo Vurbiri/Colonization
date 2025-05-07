@@ -5,7 +5,8 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
-  - _scriptable: {fileID: 11400000, guid: ac3a6e4930c7c27489f464053c87d263, type: 2}
+  - _satanAbilitiesVT: {fileID: 9197481963319205126, guid: 43293aaa7349b524cb073a354e6d58e5,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

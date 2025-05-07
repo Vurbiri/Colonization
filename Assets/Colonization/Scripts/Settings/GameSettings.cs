@@ -29,6 +29,8 @@ namespace Vurbiri.Colonization
         public GameSettings(ProjectStorage storage, PlayerVisualSetScriptable playerVisualSet)
         {
             _playerVisualSet = playerVisualSet;
+
+            _score = Score.Create(storage);
         }
 
         public void StartGame()

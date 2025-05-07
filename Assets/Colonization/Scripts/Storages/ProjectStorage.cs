@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Storages\ProjectStorage.cs
 using System;
+using System.Collections.Generic;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Storage
@@ -33,7 +34,20 @@ namespace Vurbiri.Colonization.Storage
             _unsubscribers += profile.Subscribe(values => _storage.Set(SAVE_KEYS.PROFILE, values, _profileConverter), instantGetValue);
             return instantGetValue;
         }
-       
+
+        public bool TryGetScoreData(out int[] data)
+        {
+            if(_storage.TryGet(SAVE_KEYS.SCORE, out data))
+                return true;
+            
+            data = new int[PlayerId.HumansCount];
+            return false;
+        }
+        public void ScoreBind(IReactive<IReadOnlyList<int>> reactive, bool instantGetValue)
+        {
+            _unsubscribers += reactive.Subscribe(score => _storage.Set(SAVE_KEYS.SCORE, score), instantGetValue);
+        }
+
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();

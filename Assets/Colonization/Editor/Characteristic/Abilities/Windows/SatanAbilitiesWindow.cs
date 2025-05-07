@@ -1,9 +1,9 @@
 //Assets\Colonization\Editor\Characteristic\Abilities\Windows\SatanAbilitiesWindow.cs
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
-using Vurbiri;
-using Vurbiri.Colonization;
-using VurbiriEditor.Colonization.Characteristics;
+using UnityEngine.UIElements;
+using Vurbiri.Colonization.Characteristics;
 using static VurbiriEditor.Colonization.CONST_EDITOR;
 
 namespace VurbiriEditor.Colonization
@@ -12,11 +12,12 @@ namespace VurbiriEditor.Colonization
 	{
 		#region Consts
 		private const string NAME = "Satan Abilities", MENU = MENU_CH_PATH + NAME;
-		#endregion
-		
-		[SerializeField] private SatanAbilitiesScriptable _scriptable;
-		
-		[MenuItem(MENU, false, 21)]
+        #endregion
+
+        [SerializeField] private VisualTreeAsset _satanAbilitiesVT;
+        [SerializeField] private SatanAbilities _abilities;
+
+        [MenuItem(MENU, false, 21)]
 		private static void ShowWindow()
 		{
 			GetWindow<SatanAbilitiesWindow>(true, NAME);
@@ -24,10 +25,16 @@ namespace VurbiriEditor.Colonization
 
         public void CreateGUI()
         {
-            if (_scriptable == null)
-                _scriptable = EUtility.FindAnyScriptable<SatanAbilitiesScriptable>();
+            SettingsFileEditor.Load(ref _abilities);
 
-            rootVisualElement.Add(SatanAbilitiesEditor.CreateCachedEditorAndBind(_scriptable));
+            VisualElement element = _satanAbilitiesVT.CloneTree();
+            element.Bind(new(this));
+            rootVisualElement.Add(element);
+        }
+
+        private void OnDisable()
+        {
+            SettingsFileEditor.Save(_abilities);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Vurbiri
             try
             {
                 var textAsset = Resources.Load<TextAsset>(path);
-                obj = JsonConvert.DeserializeObject<T>(textAsset.text);
+                obj = (T)JsonConvert.DeserializeObject(textAsset.text, typeof(T), settings: null);
                 Resources.UnloadAsset(textAsset);
                 return true;
             }
@@ -52,18 +52,10 @@ namespace Vurbiri
 
         public static T LoadObjectFromResourceJson<T>(string path)
         {
-            try
-            {
-                var textAsset = Resources.Load<TextAsset>(path);
-                T obj = JsonConvert.DeserializeObject<T>(textAsset.text);
-                Resources.UnloadAsset(textAsset);
-                return obj;
-            }
-            catch (Exception ex)
-            {
-                Message.Log($"--- Не удалось загрузить объект {typeof(T).Name} по пути {path} ---\n".Concat(ex.Message));
-                return default;
-            }
+            var textAsset = Resources.Load<TextAsset>(path);
+            T obj = (T)JsonConvert.DeserializeObject(textAsset.text, typeof(T), settings: null);
+            Resources.UnloadAsset(textAsset);
+            return obj;
         }
     }
 }

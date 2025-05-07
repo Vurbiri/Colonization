@@ -1,11 +1,9 @@
 fileFormatVersion: 2
-guid: 2ade213e931802c49aa7f0c0e8bc96b7
+guid: 72a4b8e96fe95ae4c83d33b647bfbb6e
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - _satanAbilitiesVT: {fileID: 9197481963319205126, guid: 43293aaa7349b524cb073a354e6d58e5,
-      type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

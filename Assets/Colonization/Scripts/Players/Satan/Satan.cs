@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
 
         public Satan(SatanStorage storage, Players.Settings settings, Hexagons hexagons, IReadOnlyList<Human> humans)
         {
-            _states = settings.satanStates;
+            _states = SettingsFile.Load<SatanAbilities>();
 
             var loadData = storage.LoadData;
 

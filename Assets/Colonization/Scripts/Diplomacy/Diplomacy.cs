@@ -9,10 +9,10 @@ namespace Vurbiri.Colonization
 {
     public class Diplomacy : IReactive<IReadOnlyList<int>>
 	{
-        private readonly int[] _values = new int[PlayerId.HumansCount];
+        private readonly int[] _values;
         private readonly DiplomacySettings _settings;
 
-        private readonly Signer<IReadOnlyList<int>> _signer = new();
+        private readonly Signer<IReadOnlyList<int>> _eventChanged = new();
 
         private int this[Id<PlayerId> idA, Id<PlayerId> idB]
         {
@@ -32,19 +32,14 @@ namespace Vurbiri.Colonization
         }
 
         #region Constructors
-        private Diplomacy(DiplomacySettings settings, TurnQueue turn) 
+        private Diplomacy(TurnQueue turn) : this(new int[PlayerId.HumansCount], turn)
         {
-            _settings = settings;
-
-            _values = new int[PlayerId.HumansCount];
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 _values[i] = _settings.defaultValue;
-
-            turn.Subscribe(OnNextTurn, false);
         }
-        private Diplomacy(int[] values, DiplomacySettings settings, TurnQueue turn)
+        private Diplomacy(int[] values, TurnQueue turn)
         {
-            _settings = settings;
+            _settings = SettingsFile.Load<DiplomacySettings>();
             _values = values;
 
             turn.Subscribe(OnNextTurn, false);
@@ -52,11 +47,10 @@ namespace Vurbiri.Colonization
 
         public static Diplomacy Create(GameplayStorage storage, TurnQueue turn)
         {
-            var settings = Vurbiri.Storage.LoadObjectFromResourceJson<DiplomacySettings>(SETTINGS_FILE.DIPLOMACY);
             bool isLoad = storage.TryGetDiplomacyData(out int[] data);
-            Diplomacy diplomacy = isLoad ? new(data, settings, turn) : new(settings, turn);
-            storage.DiplomacyBind(diplomacy, !isLoad);
 
+            Diplomacy diplomacy = isLoad ? new(data, turn) : new(turn);
+            storage.DiplomacyBind(diplomacy, !isLoad);
             return diplomacy;
         }
         #endregion
@@ -107,10 +101,10 @@ namespace Vurbiri.Colonization
             else
                 this[index] = value + _settings.rewardForBuff;
 
-            _signer.Invoke(_values);
+            _eventChanged.Invoke(_values);
         }
 
-        public Unsubscriber Subscribe(Action<IReadOnlyList<int>> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, _values);
+        public Unsubscriber Subscribe(Action<IReadOnlyList<int>> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _values);
 
         private void OnNextTurn(TurnQueue turn)
         {
@@ -122,7 +116,7 @@ namespace Vurbiri.Colonization
             this[current - 1] = _values[current - 1] + _settings.penaltyPerRound;
             this[PlayerId.AI_01, PlayerId.AI_02] += UnityEngine.Random.Range(_settings.penaltyPerRound, 1 - _settings.penaltyPerRound);
 
-            _signer.Invoke(_values);
+            _eventChanged.Invoke(_values);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
