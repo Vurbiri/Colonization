@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
 
         public override void Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
         {
-            GetComponent<MeshRenderer>().SetSharedMaterial(SceneContainer.Get<PlayersVisual>()[playerId].materialLit, _idMaterial);
+            GetComponent<MeshRenderer>().SetSharedMaterial(SceneContainer.Get<HumansMaterials>()[playerId].materialLit, _idMaterial);
         }
     }
 }

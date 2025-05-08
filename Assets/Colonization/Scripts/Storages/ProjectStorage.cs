@@ -5,6 +5,8 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Storage
 {
+    using static SAVE_KEYS;
+
     public class ProjectStorage : IDisposable
     {
         private readonly IStorageService _storage;
@@ -20,30 +22,29 @@ namespace Vurbiri.Colonization.Storage
 
         public void Save(Action<bool> callback = null) => _storage.SaveAll(callback);
 
-        public void Clear() => _storage.Clear(SAVE_KEYS.PROFILE, SAVE_KEYS.VOLUMES);
+        public void Clear() => _storage.Clear(PROFILE, VOLUMES, COLORS);
 
         public bool SetAndBindAudioMixer(AudioMixer<MixerId> mixer)
         {
-            bool instantGetValue = !_storage.TryPopulate<AudioMixer<MixerId>>(SAVE_KEYS.VOLUMES, new AudioMixer<MixerId>.Converter(mixer));
-            _unsubscribers += mixer.Subscribe(self => _storage.Set(SAVE_KEYS.VOLUMES, self, _mixerConverter), instantGetValue);
+            bool instantGetValue = !_storage.TryPopulate<AudioMixer<MixerId>>(VOLUMES, new AudioMixer<MixerId>.Converter(mixer));
+            _unsubscribers += mixer.Subscribe(self => _storage.Set(VOLUMES, self, _mixerConverter), instantGetValue);
             return instantGetValue;
         }
         public bool SetAndBindProfile(Profile profile)
         {
-            bool instantGetValue = !_storage.TryPopulate<Profile>(SAVE_KEYS.PROFILE, new Profile.Converter(profile));
-            _unsubscribers += profile.Subscribe(self => _storage.Set(SAVE_KEYS.PROFILE, self, _profileConverter), instantGetValue);
+            bool instantGetValue = !_storage.TryPopulate<Profile>(PROFILE, new Profile.Converter(profile));
+            _unsubscribers += profile.Subscribe(self => _storage.Set(PROFILE, self, _profileConverter), instantGetValue);
             return instantGetValue;
         }
-        public bool SetAndBindPlayerColors(PlayerColors colors)
+        public void SetAndBindPlayerColors(PlayerColors colors)
         {
-            bool instantGetValue = !_storage.TryPopulate<PlayerColors>(SAVE_KEYS.COLORS, new PlayerColors.Converter(colors));
-            _unsubscribers += colors.Subscribe(self => _storage.Set(SAVE_KEYS.COLORS, self, _colorsConverter), instantGetValue);
-            return instantGetValue;
+            bool instantGetValue = !_storage.TryPopulate<PlayerColors>(COLORS, new PlayerColors.Converter(colors));
+            _unsubscribers += colors.Subscribe(self => _storage.Set(COLORS, self, _colorsConverter), instantGetValue);
         }
 
         public bool TryGetScoreData(out int[] data)
         {
-            if(_storage.TryGet(SAVE_KEYS.SCORE, out data))
+            if(_storage.TryGet(SCORE, out data))
                 return true;
             
             data = new int[PlayerId.HumansCount];
@@ -51,7 +52,7 @@ namespace Vurbiri.Colonization.Storage
         }
         public void ScoreBind(IReactive<IReadOnlyList<int>> reactive, bool instantGetValue)
         {
-            _unsubscribers += reactive.Subscribe(score => _storage.Set(SAVE_KEYS.SCORE, score), instantGetValue);
+            _unsubscribers += reactive.Subscribe(score => _storage.Set(SCORE, score), instantGetValue);
         }
 
         public void Dispose()

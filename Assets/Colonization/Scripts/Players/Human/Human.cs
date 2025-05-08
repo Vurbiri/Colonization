@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
             _coroutines = SceneContainer.Get<Coroutines>();
 
             var loadData = storage.LoadData;
-            var visual = SceneContainer.Get<PlayersVisual>()[playerId];
+            var visual = SceneContainer.Get<HumansMaterials>()[playerId];
 
             _perks = PerkTree.Create(settings, loadData);
             _abilities = settings.humanStates.Get(_perks);

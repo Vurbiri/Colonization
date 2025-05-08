@@ -20,7 +20,7 @@ namespace VurbiriEditor.Colonization
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
 			position.height = EditorGUIUtility.singleLineHeight;
-			Debug.Log(_count);
+
 			BeginProperty(position, label, mainProperty);
 			{
                 SerializedProperty propertyValues = mainProperty.FindPropertyRelative(P_NAME);

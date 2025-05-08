@@ -1,7 +1,6 @@
 //Assets\Colonization\Scripts\Players\View\PlayerColors.cs
 using System;
 using UnityEngine;
-using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
@@ -23,28 +22,16 @@ namespace Vurbiri.Colonization
                 {
                     _colors[index] = value;
                     _eventColorChanged.Invoke(value);
+                    _eventThisChanged.Invoke(this);
                 }
             }
         }
         public Color this[Id<PlayerId> id] => this[id.Value];
-
-        public PlayerColors()
-        {
-            _eventColorChanged.Add(RedirectEvents);
-        }
-
-        public void Init(ProjectStorage storage, DIContainer container)
-        {
-            storage.SetAndBindPlayerColors(this);
-            container.AddInstance(this);
-        }
 
         public Unsubscriber Subscribe(Action<PlayerColors> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, this);
         public Unsubscriber Subscribe(int index, Action<Color> action, bool instantGetValue = true)
         {
             return _eventColorChanged.Add(action, instantGetValue, _colors[index]);
         }
-
-        private void RedirectEvents(Color color) => _eventThisChanged.Invoke(this);
     }
 }

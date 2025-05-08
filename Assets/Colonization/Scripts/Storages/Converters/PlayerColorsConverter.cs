@@ -39,6 +39,7 @@ namespace Vurbiri.Colonization
                     writer.WriteStartArray();
                     {
                         color = colors._colors[i];
+
                         writer.WriteValue(color.r);
                         writer.WriteValue(color.g);
                         writer.WriteValue(color.b);

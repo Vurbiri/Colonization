@@ -34,11 +34,6 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             _startScene.Start();
 
-            for (int i = 0; i < PlayerId.HumansCount; )
-            {
-                Debug.Log(++i);
-            }
-
             //----------------------------------
             Message.Log("Start Init Project");
 

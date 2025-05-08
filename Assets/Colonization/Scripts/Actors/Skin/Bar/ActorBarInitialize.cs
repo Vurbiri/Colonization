@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.Actors
 
             _popup.Init(_sprites, orderLevel);
 
-            _hpBar.Init(abilities, _popup, SceneContainer.Get<PlayersVisual>()[actor.Owner].color, orderLevel);
+            _hpBar.Init(abilities, _popup, SceneContainer.Get<PlayerColors>()[actor.Owner], orderLevel);
             _apBar.Init(abilities, orderLevel);
             _moveBar.Init(abilities, orderLevel);
 
@@ -50,7 +50,6 @@ namespace Vurbiri.Colonization.Actors
 
             Destroy(this);
         }
-
 
 #if UNITY_EDITOR
         private void OnValidate()

@@ -12,16 +12,26 @@ namespace Vurbiri.Colonization
         [SerializeField] private Material _defaultMaterialLit;
         [SerializeField] private Material _defaultMaterialUnlit;
         [Space]
-        [SerializeField] private Material _defaultMaterialActor;
-
-        public PlayerColors Colors => _colors;
+        [SerializeField] private Material _defaultMaterialWarrior;
 
         public void Init(ProjectStorage storage, DIContainer container)
         {
-            _colors.Init(storage, container);
+            storage.SetAndBindPlayerColors(_colors);
+
+            container.AddInstance(_colors);
+            container.AddInstance(new HumansMaterials(_colors, _defaultMaterialLit, _defaultMaterialUnlit, _defaultMaterialWarrior));
 
             Resources.UnloadAsset(this);
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            EUtility.SetAsset(ref _defaultMaterialLit, "M_BasePlayersLit");
+            EUtility.SetAsset(ref _defaultMaterialUnlit, "M_BasePlayersUnlit");
+            EUtility.SetAsset(ref _defaultMaterialWarrior, "M_Warrior_Base");
+        }
+#endif
     }
 }
 
