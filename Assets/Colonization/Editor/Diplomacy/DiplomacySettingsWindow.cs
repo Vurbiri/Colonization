@@ -5,13 +5,11 @@ using static VurbiriEditor.Colonization.CONST_EDITOR;
 
 namespace VurbiriEditor.Colonization
 {
-    public class DiplomacySettingsWindow : ASettingsWindow<ScoreSettings>
+    public class DiplomacySettingsWindow : ASettingsWindow<DiplomacySettings>
 	{
 		#region Consts
 		private const string NAME = "Diplomacy", MENU = MENU_PATH + NAME;
     #endregion
-
-        protected override string Caption => "Diplomacy Settings";
 
         [MenuItem(MENU, false, 30)]
 		private static void ShowWindow()

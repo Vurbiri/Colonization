@@ -5,10 +5,10 @@ namespace Vurbiri.Colonization
 {
     public class PlayerVisual
     {
-        public readonly Color color;
-        public readonly Material materialLit;
-        public readonly Material materialUnlit;
-        public readonly Material materialWarriors;
+        public Color color;
+        public Material materialLit;
+        public Material materialUnlit;
+        public Material materialWarriors;
 
         public PlayerVisual(Color color)
         {

@@ -73,8 +73,6 @@ namespace Vurbiri.Colonization.EntryPoint
                 _diContainer.AddInstance(_turnQueue = TurnQueue.Create(_gameStorage));
                 _diContainer.AddInstance(Diplomacy.Create(_gameStorage, _turnQueue));
 
-                _diContainer.AddInstance(_gameplaySettings.PlayersVisual);
-
                 _diContainer.AddInstance(_sceneObjects.mainCamera);
             }
             #endregion

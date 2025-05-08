@@ -1,4 +1,5 @@
 //Assets\Colonization\Editor\Utility\Abstract\ASettingsWindow.cs
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using static UnityEditor.EditorGUILayout;
@@ -9,16 +10,16 @@ namespace VurbiriEditor.Colonization
 	{
         [SerializeField] private T _settings;
 
+        private string _label;
         private SerializedObject _serializedObject;
         private SerializedProperty _serializedProperty;
-
-        protected abstract string Caption { get; }
 
         private void OnEnable()
 		{
             SettingsFileEditor.Load(ref _settings);
             _serializedObject = new(this);
             _serializedProperty = _serializedObject.FindProperty("_settings");
+            _label = Regex.Replace(typeof(T).Name, "([a-z])([A-Z])", "$1 $2");
         }
 		
 		private void OnGUI()
@@ -27,7 +28,7 @@ namespace VurbiriEditor.Colonization
             BeginWindows();
             {
                 Space(10f);
-                LabelField(Caption, STYLES.H1);
+                LabelField(_label, STYLES.H1);
 
                 BeginVertical(GUI.skin.box);
                     PropertyField(_serializedProperty);

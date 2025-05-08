@@ -34,6 +34,11 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             _startScene.Start();
 
+            for (int i = 0; i < PlayerId.HumansCount; )
+            {
+                Debug.Log(++i);
+            }
+
             //----------------------------------
             Message.Log("Start Init Project");
 
@@ -50,7 +55,8 @@ namespace Vurbiri.Colonization.EntryPoint
             yield return CreateStorage_Cn(diContainer);
             yield return YandexIsLogOn_Cn(diContainer, loadingScreen);
 
-            diContainer.AddInstance(new GameSettings(_projectStorage, _playerVisualSetScriptable));
+            _playerVisualSetScriptable.Init(_projectStorage, diContainer);
+            diContainer.AddInstance(new GameSettings(_projectStorage));
 
             Message.Log("End Init Project");
             //----------------------------------

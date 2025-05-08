@@ -4,7 +4,7 @@ using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
 {
-    public class GameSettings
+    public partial class GameSettings
     {
         private readonly GameData _data;
         private readonly Score _score;
@@ -16,20 +16,9 @@ namespace Vurbiri.Colonization
 
         public bool IsFirstStart => _data.isFirstStart;
 
-        public PlayersVisual PlayersVisual
-        {
-            get 
-            {
-                PlayersVisual temp = _playerVisualSet.Get(_data.colorId);
-                _playerVisualSet.Dispose(); _playerVisualSet = null;
-                return temp;
-            }
-        }
 
-        public GameSettings(ProjectStorage storage, PlayerVisualSetScriptable playerVisualSet)
+        public GameSettings(ProjectStorage storage)
         {
-            _playerVisualSet = playerVisualSet;
-
             _score = Score.Create(storage);
         }
 
@@ -50,22 +39,19 @@ namespace Vurbiri.Colonization
         {
             public bool newGame = true;
             public int maxScore = 0;
-            public readonly int[] colorId;
 
             public bool isFirstStart = true;
 
-            public GameData(int maxScore, int[] colorId)
+            public GameData(int maxScore)
             {
                 newGame = false;
                 this.maxScore = maxScore;
-                this.colorId = colorId;
                 isFirstStart = false;
             }
             public GameData()
             {
                 newGame = true;
                 maxScore = 0;
-                colorId = new int[PlayerId.HumansCount];
                 isFirstStart = true;
             }
 

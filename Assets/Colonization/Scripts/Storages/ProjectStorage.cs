@@ -10,6 +10,7 @@ namespace Vurbiri.Colonization.Storage
         private readonly IStorageService _storage;
         private readonly AudioMixer<MixerId>.Converter _mixerConverter = new();
         private readonly Profile.Converter _profileConverter = new();
+        private readonly PlayerColors.Converter _colorsConverter = new();
         private Unsubscribers _unsubscribers = new();
 
         public ProjectStorage(IStorageService storage)
@@ -24,14 +25,19 @@ namespace Vurbiri.Colonization.Storage
         public bool SetAndBindAudioMixer(AudioMixer<MixerId> mixer)
         {
             bool instantGetValue = !_storage.TryPopulate<AudioMixer<MixerId>>(SAVE_KEYS.VOLUMES, new AudioMixer<MixerId>.Converter(mixer));
-            _unsubscribers += mixer.Subscribe(volumes => _storage.Set(SAVE_KEYS.VOLUMES, volumes, _mixerConverter), instantGetValue);
+            _unsubscribers += mixer.Subscribe(self => _storage.Set(SAVE_KEYS.VOLUMES, self, _mixerConverter), instantGetValue);
             return instantGetValue;
         }
-
         public bool SetAndBindProfile(Profile profile)
         {
             bool instantGetValue = !_storage.TryPopulate<Profile>(SAVE_KEYS.PROFILE, new Profile.Converter(profile));
-            _unsubscribers += profile.Subscribe(values => _storage.Set(SAVE_KEYS.PROFILE, values, _profileConverter), instantGetValue);
+            _unsubscribers += profile.Subscribe(self => _storage.Set(SAVE_KEYS.PROFILE, self, _profileConverter), instantGetValue);
+            return instantGetValue;
+        }
+        public bool SetAndBindPlayerColors(PlayerColors colors)
+        {
+            bool instantGetValue = !_storage.TryPopulate<PlayerColors>(SAVE_KEYS.COLORS, new PlayerColors.Converter(colors));
+            _unsubscribers += colors.Subscribe(self => _storage.Set(SAVE_KEYS.COLORS, self, _colorsConverter), instantGetValue);
             return instantGetValue;
         }
 
