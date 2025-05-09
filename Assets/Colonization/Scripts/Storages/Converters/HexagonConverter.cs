@@ -10,12 +10,11 @@ namespace Vurbiri.Colonization
 	{
         sealed public class Converter : AJsonConverter<Hexagon>
         {
-            private const int SIZE_ARRAY = 2;
 
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 int[] data = serializer.Deserialize<int[]>(reader);
-                Throw.IfLengthNotEqual(data.Length, SIZE_ARRAY);
+
                 int i = 0;
                 return new HexLoadData(data[i++], data[i]);
             }

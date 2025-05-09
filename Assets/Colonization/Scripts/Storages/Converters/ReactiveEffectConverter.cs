@@ -9,8 +9,6 @@ namespace Vurbiri.Colonization.Characteristics
 	{
         sealed public class Converter : JsonConverter
         {
-            private const int SIZE_ARRAY = 5;
-
             public override bool CanRead => true;
             public override bool CanWrite => true;
 
@@ -21,7 +19,6 @@ namespace Vurbiri.Colonization.Characteristics
 
             public static ReactiveEffect ReadFromArray(int[] array)
             {
-                Throw.IfLengthNotEqual(array.Length, SIZE_ARRAY);
                 int i = 0;
                 return new(array[i++], array[i++], array[i++], array[i++], array[i]);
             }

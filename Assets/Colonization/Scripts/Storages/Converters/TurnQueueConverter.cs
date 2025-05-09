@@ -9,12 +9,9 @@ namespace Vurbiri.Colonization
 	{
         sealed public class Converter : AJsonConverter<TurnQueue>
         {
-            private const int SIZE_ARRAY = 3;
-
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 int[] data = serializer.Deserialize<int[]>(reader);
-                Throw.IfLengthNotEqual(data.Length, SIZE_ARRAY);
 
                 int i = 0;
                 return new TurnQueue(data[i++], data[i++], data[i]);

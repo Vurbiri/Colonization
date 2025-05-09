@@ -6,6 +6,7 @@ using Vurbiri.Reactive;
 namespace Vurbiri.Colonization.Storage
 {
     using static SAVE_KEYS;
+    using static Vurbiri.Colonization.GameSettings;
 
     public class ProjectStorage : IDisposable
     {
@@ -53,6 +54,20 @@ namespace Vurbiri.Colonization.Storage
         public void ScoreBind(IReactive<IReadOnlyList<int>> reactive, bool instantGetValue)
         {
             _unsubscribers += reactive.Subscribe(score => _storage.Set(SCORE, score), instantGetValue);
+        }
+
+        public bool TryLoadAndBindGameData(out GameData data)
+        {
+            if (_storage.TryGet(GAME_DATA, out data))
+            {
+                GameDataBind(data, false);
+                return true;
+            }
+            return false;
+        }
+        public void GameDataBind(IReactive<GameData> reactive, bool instantGetValue)
+        {
+            _unsubscribers += reactive.Subscribe(self => _storage.Set(GAME_DATA, self), instantGetValue);
         }
 
         public void Dispose()

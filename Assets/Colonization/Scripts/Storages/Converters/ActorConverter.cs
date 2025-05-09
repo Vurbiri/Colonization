@@ -11,8 +11,6 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed public class Converter : AJsonConverter<Actor>
         {
-            private const int STATE_SIZE_ARRAY = 4;
-
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 int[][] data = serializer.Deserialize<int[][]>(reader);
@@ -51,7 +49,6 @@ namespace Vurbiri.Colonization.Actors
 
             private ActorState StateReadFromArray(int[] array)
             {
-                Throw.IfLengthNotEqual(array.Length, STATE_SIZE_ARRAY);
                 int i = 0;
                 return new(array[i++], array[i++], array[i++], array[i]);
             }

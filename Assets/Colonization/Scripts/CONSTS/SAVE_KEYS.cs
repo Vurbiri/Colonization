@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.Storage
     {
         public const string PROJECT = "CLN";
 
-        public const string GAME = "gam";
+        public const string GAME_DATA = "gam";
         public const string SCORE = "scr";
         public const string TURNS_QUEUE = "tuq";
         public const string DIPLOMANCY = "dip";

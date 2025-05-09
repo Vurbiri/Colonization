@@ -10,12 +10,9 @@ namespace Vurbiri.Colonization
 	{
 		sealed public class Converter : AJsonConverter<Satan>
         {
-            private const int SIZE_ARRAY = 5;
-
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 var data = serializer.Deserialize<int[]>(reader);
-                Throw.IfLengthNotEqual(data.Length, SIZE_ARRAY);
 
                 int i = 0;
                 return new SatanLoadState(data[i++], data[i++], data[i++], data[i++], data[i]);

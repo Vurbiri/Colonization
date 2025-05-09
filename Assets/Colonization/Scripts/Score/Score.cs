@@ -1,16 +1,15 @@
 //Assets\Colonization\Scripts\Score\Score.cs
 using System;
-using System.Collections.Generic;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class Score : IReactive<IReadOnlyList<int>>
+    public class Score : IReactive<int[]>
     {
 		private readonly int[] _values;
         private readonly ScoreSettings _settings;
-        private readonly Signer<IReadOnlyList<int>> _eventChanged = new();
+        private readonly Signer<int[]> _eventChanged = new();
 
         private Score(int[] values)
 		{
@@ -26,6 +25,15 @@ namespace Vurbiri.Colonization
             return score;
         }
 
-        public Unsubscriber Subscribe(Action<IReadOnlyList<int>> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _values);
+        public Unsubscriber Subscribe(Action<int[]> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _values);
+
+        public int Reset()
+        {
+            int playerScore = _values[PlayerId.Player];
+            _values.Fill(0);
+            _eventChanged.Invoke(_values);
+
+            return playerScore;
+        }
     }
 }

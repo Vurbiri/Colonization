@@ -53,6 +53,8 @@ namespace Vurbiri.Colonization.EntryPoint
             _playerVisualSetScriptable.Init(_projectStorage, diContainer);
             diContainer.AddInstance(new GameSettings(_projectStorage));
 
+            _projectStorage.Save();
+
             Message.Log("End Init Project");
             //----------------------------------
 

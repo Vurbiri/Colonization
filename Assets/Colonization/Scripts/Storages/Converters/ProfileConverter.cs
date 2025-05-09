@@ -8,8 +8,6 @@ namespace Vurbiri.Colonization
 	{
         sealed public class Converter : AJsonConverter<Profile>
         {
-            private const int SIZE_ARRAY = 2;
-
             private readonly Profile _profile;
 
             public Converter() { }
@@ -18,7 +16,6 @@ namespace Vurbiri.Colonization
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 var data = serializer.Deserialize<int[]>(reader);
-                Throw.IfLengthNotEqual(data.Length, SIZE_ARRAY);
 
                 int i = 0;
                 _profile._idLang = data[i++]; _profile._quality = data[i];
