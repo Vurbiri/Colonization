@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
+    [System.Serializable]
     public struct ColorHSV
     {
         public float h;
@@ -20,6 +21,11 @@ namespace Vurbiri
             Color.RGBToHSV(color, out h, out s, out v);
             a = color.a;
         }
+        public ColorHSV(float h, float s, float v, float a)
+        {
+            this.h = h; this.s = s; this.v = v; this.a = a;
+        }
+        public ColorHSV(float h, float s, float v) : this(h, s, v, 1f) { }
 
         public static implicit operator ColorHSV(Color value) => new(value);
         public static implicit operator Color(ColorHSV value)

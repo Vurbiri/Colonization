@@ -20,6 +20,8 @@ namespace Vurbiri.Colonization.UI
 
         private Graphic[] _graphics;
 
+        private DrivenRectTransformTracker _tracker;
+
         public string Description { set => _descText.text = value; }
         public float Progress { set => _fillBar.anchorMin = new(Mathf.Clamp01(value), 0f); }
 
@@ -34,9 +36,6 @@ namespace Vurbiri.Colonization.UI
 
                 SetActive(true);
                 _canvasGroup.alpha = 1f;
-
-                _fillBar.anchorMin = Vector2.zero;
-                _fillBar.anchorMax = Vector2.one;
             }
         }
 
@@ -82,6 +81,18 @@ namespace Vurbiri.Colonization.UI
             {
                 _graphics[i].CrossFadeAlpha(alpha, 0.1f, true);
             }
+        }
+
+        private void OnEnable()
+        {
+            _tracker.Add(this, _fillBar, DrivenTransformProperties.Anchors);
+
+            _fillBar.anchorMin = Vector2.zero;
+            _fillBar.anchorMax = Vector2.one;
+        }
+        private void OnDisable()
+        {
+            _tracker.Clear();
         }
 
 #if UNITY_EDITOR
