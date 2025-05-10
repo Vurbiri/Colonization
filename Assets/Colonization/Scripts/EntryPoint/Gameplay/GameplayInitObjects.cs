@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public float Weight => ILoadingStep.MIN_WEIGHT;
         public string Description => "SceneObjects";
 
-        public void FillingContainer(DIContainer diContainer, bool isLoad, InputController.Settings settings)
+        public void FillingContainer(DIContainer diContainer, bool isLoad, InputController.Settings settings, PoolEffectsBarFactory pool)
         {
             this.diContainer = diContainer;
 
@@ -43,6 +43,7 @@ namespace Vurbiri.Colonization.EntryPoint
             diContainer.AddInstance(inputController = new(mainCamera, settings));
             diContainer.AddInstance(turnQueue = TurnQueue.Create(storage));
             diContainer.AddInstance(Diplomacy.Create(storage, turnQueue));
+            diContainer.AddInstance(pool.Create());
 
             diContainer.AddInstance(mainCamera);
         }
@@ -64,9 +65,7 @@ namespace Vurbiri.Colonization.EntryPoint
             EUtility.SetObject(ref mainCamera);
             EUtility.SetObject(ref cameraController);
             EUtility.SetObject(ref contextMenusWorld);
-
-            if (hintGlobalWorld == null)
-                hintGlobalWorld = GameObject.Find("WorldHint").GetComponent<WorldHint>();
+            EUtility.SetObject(ref hintGlobalWorld, "WorldHint");
         }
 #endif
     }

@@ -6,9 +6,7 @@ namespace Vurbiri
 {
     public abstract class ALoadingStep : ILoadingStep
     {
-        public const float MIN_WEIGHT = ILoadingStep.MIN_WEIGHT;
-
-        private readonly float _weight = MIN_WEIGHT;
+        private readonly float _weight = ILoadingStep.MIN_WEIGHT;
         private readonly string _desc;
 
         public float Weight => _weight;
@@ -21,7 +19,7 @@ namespace Vurbiri
 
         public ALoadingStep(float weight, string desc)
         {
-            _weight = System.Math.Clamp(weight, MIN_WEIGHT, float.MaxValue);
+            _weight = System.Math.Clamp(weight, ILoadingStep.MIN_WEIGHT, float.MaxValue);
             _desc = desc;
         }
 

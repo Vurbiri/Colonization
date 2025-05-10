@@ -11,8 +11,8 @@ namespace Vurbiri.EntryPoint
         {
             _coroutine = coroutine;
         }
-        public CoroutineStep(IEnumerator coroutine, string desc) : this(coroutine, desc, MIN_WEIGHT) { }
-        public CoroutineStep(IEnumerator coroutine) : this(coroutine, string.Empty, MIN_WEIGHT) { }
+        public CoroutineStep(IEnumerator coroutine, string desc) : this(coroutine, desc, ILoadingStep.MIN_WEIGHT) { }
+        public CoroutineStep(IEnumerator coroutine) : this(coroutine, string.Empty, ILoadingStep.MIN_WEIGHT) { }
         public CoroutineStep(IEnumerator coroutine, float weight) : this(coroutine, string.Empty, weight) { }
 
         public override IEnumerator GetEnumerator() => _coroutine;

@@ -34,6 +34,11 @@ namespace Vurbiri.EntryPoint
             _steps.Enqueue(step); 
             Run(step.Weight);
         }
+        public void Add(ILoadingStep stepA, ILoadingStep stepB)
+        {
+            _steps.Enqueue(stepA); _steps.Enqueue(stepB);
+            Run(stepA.Weight + stepB.Weight);
+        }
         public void Add(params ILoadingStep[] steps)
         {
             float weight = 0f;

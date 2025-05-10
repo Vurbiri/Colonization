@@ -10,7 +10,7 @@ namespace Vurbiri.EntryPoint
         private readonly SceneContainer _sceneContainer;
         private readonly Signer<ExitParam> _eventExit = new();
 
-        protected readonly ExitParam _exitParam;
+        protected ExitParam _exitParam;
 
         public ISigner<ExitParam> EventExit => _eventExit;
 

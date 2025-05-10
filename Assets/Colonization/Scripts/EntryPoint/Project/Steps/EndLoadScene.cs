@@ -20,8 +20,7 @@ namespace Vurbiri.Colonization.EntryPoint
             while (!_operation.isDone)
                 yield return null;
 
-            Message.Log("End Init Project");
-            yield break;
+            yield return null;
         }
     }
 }

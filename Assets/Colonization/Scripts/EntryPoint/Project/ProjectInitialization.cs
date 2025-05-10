@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private SceneId _startScene;
         [Space]
         [SerializeField] private LogOnPanel _logOnPanel;
+        [SerializeField] private LoadingScreen _loadingScreen;
         [Space]
         [SerializeField] private EnumFlags<Files> _localizationFiles = 0;
         [Space]
@@ -22,46 +23,37 @@ namespace Vurbiri.Colonization.EntryPoint
         [Space]
         [SerializeField] private Settings _settings;
 
-        private Coroutines _coroutine;
+        public ILoadingScreen Screen => _loadingScreen;
 
-        public void Init(DIContainer diContainer, Loading loading, ILoadingScreen loadingScreen)
+        public void Init(DIContainer diContainer, Loading loading)
         {
+            Coroutines coroutine;
             AsyncOperation operation = SceneManager.LoadSceneAsync(_startScene);
             operation.allowSceneActivation = false;
 
             Message.Log("Start Init Project");
 
-            FillingContainer();
+            diContainer.AddInstance(Localization.Instance).SetFiles(_localizationFiles);
+            diContainer.AddInstance(coroutine = Coroutines.Create("Project Coroutine", true));
+            diContainer.AddInstance(_settings);
+            diContainer.AddInstance(_settingsColorScriptable.Colors);
 
             //Banners.InstanceF.Initialize();
 
-            loading.Add(new CreateYandexSDK(diContainer, _coroutine, _leaderboardName));
-            loading.Add(new CreateStorage(diContainer, _coroutine, loadingScreen, _logOnPanel));
+            loading.Add(new CreateYandexSDK(diContainer, coroutine, _leaderboardName));
+            loading.Add(new CreateStorage(diContainer, coroutine, _loadingScreen, _logOnPanel));
             loading.Add(new LoadDataStep(diContainer, _playerVisualSetScriptable));
             loading.Add(new EndLoadScene(operation));
 
+            _settingsColorScriptable.Dispose();
             Destroy(this);
-
-            #region Local: FillingContainer()
-            //=================================
-            void FillingContainer()
-            {
-                diContainer.AddInstance(Localization.Instance).SetFiles(_localizationFiles);
-                diContainer.AddInstance(_coroutine = Coroutines.Create("Project Coroutine", true));
-                diContainer.AddInstance(_settings);
-                diContainer.AddInstance(_settingsColorScriptable.Colors);
-
-                _settingsColorScriptable.Dispose();
-            }
-            #endregion
         }
-
-        
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
             EUtility.SetObject(ref _logOnPanel);
+            EUtility.SetObject(ref _loadingScreen);
             EUtility.SetScriptable(ref _settingsColorScriptable);
             EUtility.SetScriptable(ref _playerVisualSetScriptable);
 

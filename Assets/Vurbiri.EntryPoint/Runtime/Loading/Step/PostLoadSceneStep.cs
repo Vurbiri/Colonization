@@ -14,6 +14,10 @@ namespace Vurbiri.EntryPoint
             return this;
         }
 
-        public override bool MoveNext() => _run;
+        public override bool MoveNext()
+        {
+            UnityEngine.Debug.Log("PostLoadSceneStep");
+            return _run;
+        }
     }
 }

@@ -9,25 +9,34 @@ using Vurbiri.EntryPoint;
 namespace Vurbiri.Colonization.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
-    sealed public class LoadingScreen : ASingleton<LoadingScreen>, ILoadingScreen
+    sealed public class LoadingScreen : AClosedSingleton<LoadingScreen>, ILoadingScreen
     {
         [SerializeField, Range(0.1f, 2f)] private float _speedSmooth = 0.5f;
         [Space]
         [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField] private Image _indicatorImage;
+        [SerializeField] private RectTransform _fillBar;
         [SerializeField] private TMP_Text _descText;
+        [SerializeField] private Graphic _indicator;
+
+        private Graphic[] _graphics;
 
         public string Description { set => _descText.text = value; }
-        public float Progress { set { Debug.Log(value); } }
+        public float Progress { set => _fillBar.anchorMin = new(Mathf.Clamp01(value), 0f); }
 
         protected override void Awake()
         {
-            _isNotDestroying = true;
             base.Awake();
             if (_instance == this)
             {
+                DontDestroyOnLoad(gameObject);
+                _graphics = new Graphic[] { _descText, _indicator, _fillBar.parent.GetComponent<Graphic>() };
+                _indicator = null;
+
                 SetActive(true);
                 _canvasGroup.alpha = 1f;
+
+                _fillBar.anchorMin = Vector2.zero;
+                _fillBar.anchorMax = Vector2.one;
             }
         }
 
@@ -42,11 +51,13 @@ namespace Vurbiri.Colonization.UI
                 yield return null;
             }
             _canvasGroup.alpha = 1f;
+            CrossFadeAlpha(1f);
         }
 
         public IEnumerator SmoothOff()
         {
             _canvasGroup.blocksRaycasts = false;
+            CrossFadeAlpha(0f);
 
             float alpha = _canvasGroup.alpha;
             while (alpha > 0f)
@@ -65,6 +76,14 @@ namespace Vurbiri.Colonization.UI
             gameObject.SetActive(active);
         }
 
+        private void CrossFadeAlpha(float alpha)
+        {
+            for(int i = _graphics.Length - 1; i >= 0; i--)
+            {
+                _graphics[i].CrossFadeAlpha(alpha, 0.1f, true);
+            }
+        }
+
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
@@ -74,8 +93,10 @@ namespace Vurbiri.Colonization.UI
                 _canvasGroup = GetComponent<CanvasGroup>();
             if (_descText == null)
                 _descText = GetComponentInChildren<TMP_Text>();
-            if (_indicatorImage == null)
-                _indicatorImage = EUtility.GetComponentInChildren<Image>(this, "IndicatorImage");
+            if (_fillBar == null)
+                _fillBar = EUtility.GetComponentInChildren<RectTransform>(this, "Value");
+            if (_indicator == null)
+                _indicator = EUtility.GetComponentInChildren<Graphic>(this, "Indicator");
         }
 #endif
     }

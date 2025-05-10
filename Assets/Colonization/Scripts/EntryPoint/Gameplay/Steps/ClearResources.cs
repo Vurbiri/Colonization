@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.EntryPoint
 {
     sealed internal class ClearResources : ALoadingStep
     {
-        public ClearResources() : base("ClearResources") { }
+        public ClearResources() : base(0.2f, "ClearResources") { }
 
         public override IEnumerator GetEnumerator()
         {

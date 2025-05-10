@@ -1,6 +1,5 @@
 //Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
@@ -24,7 +23,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private Players.Settings _playersSettings;
         [SerializeField] private InputController.Settings _inputControllerSettings;
         [Space]
-        [SerializeField] private PoolEffectsBar _poolEffectsBar;
+        [SerializeField] private PoolEffectsBarFactory _poolEffectsBar;
         [Space]
         [Header("══════ TEST ══════")]
         [SerializeField] private bool _isLoad;
@@ -39,8 +38,7 @@ namespace Vurbiri.Colonization.EntryPoint
             if (!_isLoad)
                 diContainer.Get<ProjectStorage>().Clear();
 
-            _initObjects.FillingContainer(diContainer, _isLoad, _inputControllerSettings);
-            diContainer.AddInstance(_poolEffectsBar.Create());
+            _initObjects.FillingContainer(diContainer, _isLoad, _inputControllerSettings, _poolEffectsBar);
                         
             loading.Add(_islandCreator.Init(_initObjects));
             loading.Add(new CreatePlayers(_initObjects, _playersSettings));
@@ -48,6 +46,8 @@ namespace Vurbiri.Colonization.EntryPoint
             loading.Add(new InitUI(_playerPanelsUI, _initObjects.inputController));
             loading.Add(new ClearResources());
             loading.Add(new GameplayStart(_initObjects));
+
+            Destroy(this);
 
             return new SceneExitPoint(_nextScene, containers).EventExit;
         }
@@ -64,28 +64,5 @@ namespace Vurbiri.Colonization.EntryPoint
             _playersSettings.OnValidate();
         }
 #endif
-
-        #region Nested: PoolEffectsBar
-        //*******************************************************
-        [System.Serializable]
-        private struct PoolEffectsBar
-        {
-            public EffectsBarFactory prefabEffectsBar;
-            public Transform repositoryUI;
-
-            public readonly Pool<EffectsBar> Create()
-            {
-                return new Pool<EffectsBar>(prefabEffectsBar.Create, repositoryUI, 3);
-            }
-
-#if UNITY_EDITOR
-            public void OnValidate()
-            {
-                EUtility.SetPrefab(ref prefabEffectsBar);
-                EUtility.SetObject(ref repositoryUI, "WorldUIRepository");
-            }
-#endif
-        }
-        #endregion
     }
 }

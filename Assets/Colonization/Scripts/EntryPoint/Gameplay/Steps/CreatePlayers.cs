@@ -21,7 +21,6 @@ namespace Vurbiri.Colonization.EntryPoint
             yield return null;
 
             _settings.Dispose();
-            _settings = null;
 
             yield break;
         }

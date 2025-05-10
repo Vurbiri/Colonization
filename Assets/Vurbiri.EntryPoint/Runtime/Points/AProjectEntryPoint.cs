@@ -8,7 +8,6 @@ namespace Vurbiri.EntryPoint
         private static AProjectEntryPoint _instance;
 
         [SerializeField] private LoadScene _emptyScene;
-        private readonly PostLoadSceneStep _postLoad = new();
 
         private AEnterParam _currentEnterParam;
 
@@ -39,23 +38,12 @@ namespace Vurbiri.EntryPoint
         {
             _currentEnterParam = param.EnterParam;
 
-            _loading.Add(_emptyScene.Load(), new LoadSceneStep(param.NextScene, LoadingDesc), _postLoad.Restart());
+            _loading.Add(_emptyScene.Load(), new LoadSceneStep(param.NextScene, LoadingDesc));
         }
 
         private void EnterScene(ASceneEntryPoint sceneEntryPoint)
         {
             sceneEntryPoint.Enter(new(_projectContainer), _loading, _currentEnterParam).Add(LoadScene);
-            _postLoad.Stop();
-        }
-
-        protected virtual void OnDestroy()
-        {
-            if (_instance == this)
-            {
-                _projectContainer.Dispose();
-                _loading?.Dispose();
-                _instance = null;
-            }
         }
     }
 }
