@@ -10,12 +10,12 @@ namespace Vurbiri.EntryPoint
     {
         private static Loading _instance;
 
-        private readonly Queue<ALoadingStep> _steps = new();
+        private readonly Queue<ILoadingStep> _steps = new();
         private readonly MonoBehaviour _mono;
         private readonly ILoadingScreen _screen;
-        private Action _finalAction;
+
         private Coroutine _runningCoroutine = null;
-        private ALoadingStep _currentStep = null;
+        private ILoadingStep _currentStep = null;
         private float _currentWeight, _maxWeight;
 
         public static Loading Create(MonoBehaviour mono, ILoadingScreen screen) => _instance ??= new(mono, screen);
@@ -29,18 +29,12 @@ namespace Vurbiri.EntryPoint
         public void Add(IEnumerator coroutine, string desc) => Add(new CoroutineStep(coroutine, desc));
         public void Add(IEnumerator coroutine, string desc, float weight) => Add(new CoroutineStep(coroutine, desc, weight));
 
-        public void Add(ALoadingStep step)
+        public void Add(ILoadingStep step)
         {
             _steps.Enqueue(step); 
             Run(step.Weight);
         }
-        public void Add(Action finalAction, ALoadingStep step)
-        {
-            Add(step);
-            _finalAction = finalAction;
-        }
-
-        public void Add(params ALoadingStep[] steps)
+        public void Add(params ILoadingStep[] steps)
         {
             float weight = 0f;
             for (int i = 0; i < steps.Length; i++)
@@ -49,11 +43,6 @@ namespace Vurbiri.EntryPoint
                 weight += steps[i].Weight;
             }
             Run(weight);
-        }
-        public void Add(Action finalAction, params ALoadingStep[] steps)
-        {
-            Add(steps);
-            _finalAction = finalAction;
         }
 
         private void Run(float weight)
@@ -80,8 +69,7 @@ namespace Vurbiri.EntryPoint
                 _currentStep = _steps.Dequeue();
                 _screen.Description = _currentStep.Description;
 
-                while (_currentStep.MoveNext())
-                    yield return null;
+                yield return _currentStep.GetEnumerator();
 
                 _currentWeight += _currentStep.Weight;
                 _screen.Progress = _currentWeight / _maxWeight;
@@ -91,9 +79,6 @@ namespace Vurbiri.EntryPoint
             yield return _screen.SmoothOff();
 
             _runningCoroutine = null;
-
-            _finalAction?.Invoke();
-            _finalAction = null;
         }
 
         public void Dispose()

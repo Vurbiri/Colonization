@@ -3,10 +3,10 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Vurbiri
+namespace Vurbiri.EntryPoint
 {
     [Serializable]
-    sealed public class LoadScene : ALoadingStep
+    sealed public class LoadScene : AEnumeratorStep
     {
         [SerializeField] private int _scene;
 

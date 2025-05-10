@@ -24,17 +24,11 @@ namespace Vurbiri.Colonization.UI
         {
             _isNotDestroying = true;
             base.Awake();
-            Turn(_instance == this);
-        }
-
-        public void Turn(bool isOn)
-        {
-            float alpha = isOn ? 1f : 0f;
-
-            SetActive(isOn);
-            _canvasGroup.alpha = alpha;
-            _indicatorImage.canvasRenderer.SetAlpha(alpha);
-            _descText.canvasRenderer.SetAlpha(alpha);
+            if (_instance == this)
+            {
+                SetActive(true);
+                _canvasGroup.alpha = 1f;
+            }
         }
 
         public IEnumerator SmoothOn()
@@ -47,14 +41,11 @@ namespace Vurbiri.Colonization.UI
                 _canvasGroup.alpha = alpha += Time.unscaledDeltaTime * _speedSmooth;
                 yield return null;
             }
-
-            CrossFadeAlpha(1f);
             _canvasGroup.alpha = 1f;
         }
 
         public IEnumerator SmoothOff()
         {
-            CrossFadeAlpha(0f);
             _canvasGroup.blocksRaycasts = false;
 
             float alpha = _canvasGroup.alpha;
@@ -66,12 +57,6 @@ namespace Vurbiri.Colonization.UI
 
             _canvasGroup.alpha = 0f;
             gameObject.SetActive(false);
-        }
-
-        private void CrossFadeAlpha(float alpha)
-        {
-            _indicatorImage.CrossFadeAlpha(alpha, 0.1f, true);
-            _descText.CrossFadeAlpha(alpha, 0.1f, true);
         }
 
         private void SetActive(bool active)

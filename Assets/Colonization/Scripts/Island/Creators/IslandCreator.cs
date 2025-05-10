@@ -2,13 +2,15 @@
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Collections;
+using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Colonization.Storage;
+using Vurbiri.EntryPoint;
 
 namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public partial class IslandCreator : MonoBehaviour
+    public partial class IslandCreator : MonoBehaviour, ILoadingStep
     {
         [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private LandInitData _landInitData;
@@ -20,12 +22,17 @@ namespace Vurbiri.Colonization
         
         private Hexagons _hexagons;
         private Crossroads _crossroads;
+        private GameplayStorage _storage;
         private readonly Vector3[] _sides = new Vector3[HEX.SIDES];
 
-        public IslandCreator Init(DIContainer diObjects, GameplayTriggerBus triggerBus)
+        public string Description => "IslandCreator";
+        public float Weight => 3f;
+
+        public IslandCreator Init(GameplayInitObjects objects)
         {
-            diObjects.AddInstance<Hexagons>(_hexagons = new(_landInitData, triggerBus));
-            diObjects.AddInstance<Crossroads>(_crossroads = new(_crossroadsContainer, _edificePrefabs, triggerBus));
+            _storage = objects.storage;
+            objects.diContainer.AddInstance(_hexagons = new(_landInitData, objects.triggerBus));
+            objects.diContainer.AddInstance(_crossroads = new(_crossroadsContainer, _edificePrefabs, objects.triggerBus));
 
             var shape = _psFog.shape;
             shape.radius = _ratioFogSize * MAX_CIRCLES;
@@ -36,9 +43,9 @@ namespace Vurbiri.Colonization
             return this;
         }
 
-        public IEnumerator Create_Cn(GameplayStorage storage)
+        public IEnumerator GetEnumerator()
         {
-            yield return Create_Cn(HexCreator.Factory(_hexagons, storage));
+            yield return Create_Cn(HexCreator.Factory(_hexagons, _storage));
             yield return Setup_Cn();
 
             Destroy(this);

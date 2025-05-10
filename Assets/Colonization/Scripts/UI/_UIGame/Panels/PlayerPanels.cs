@@ -14,8 +14,9 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Direction2 _directionPopup;
 
-        public void Init(Human player, InputController inputController)
+        public void Init(InputController inputController)
         {
+            var player = SceneContainer.Get<Players>().Player;
             var currencies = player.Resources;
             var colors = SceneContainer.Get<ProjectColors>();
 

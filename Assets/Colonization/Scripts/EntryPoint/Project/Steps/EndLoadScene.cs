@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\Steps\EndLoadScene.cs
+using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.EntryPoint
@@ -7,24 +8,20 @@ namespace Vurbiri.Colonization.EntryPoint
     {
         private readonly AsyncOperation _operation;
 
-        private bool _allowSceneActivation;
-
         public EndLoadScene(AsyncOperation operation) : base("EndLoadScene")
         {
             _operation = operation;
-            _allowSceneActivation = operation.allowSceneActivation;
         }
 
-        public override bool MoveNext()
+        public override IEnumerator GetEnumerator()
         {
-            if (!_allowSceneActivation)
-                _operation.allowSceneActivation = _allowSceneActivation = true;
+            _operation.allowSceneActivation = true;
 
-            if (!_operation.isDone)
-                return true;
+            while (!_operation.isDone)
+                yield return null;
 
             Message.Log("End Init Project");
-            return false;
+            yield break;
         }
     }
 }

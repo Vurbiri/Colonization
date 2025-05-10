@@ -8,8 +8,6 @@ namespace Vurbiri.EntryPoint
 		public string Description { set; }
         public float Progress { set; }
 
-        public void Turn(bool isOn);
-
         public IEnumerator SmoothOn();
         public IEnumerator SmoothOff();
     }

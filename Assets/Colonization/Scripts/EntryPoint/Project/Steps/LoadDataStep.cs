@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\Steps\LoadDataStep.cs
+using System.Collections;
 using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization.EntryPoint
@@ -14,7 +15,7 @@ namespace Vurbiri.Colonization.EntryPoint
             _playerVisualSetScriptable = playerVisual;
         }
 
-        public override bool MoveNext()
+        public override IEnumerator GetEnumerator()
         {
             var projectStorage = _diContainer.Get<ProjectStorage>();
 
@@ -23,7 +24,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             projectStorage.Save();
 
-            return false;
+            yield break;
         }
     }
 }

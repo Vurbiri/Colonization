@@ -39,7 +39,7 @@ namespace Vurbiri.EntryPoint
         {
             _currentEnterParam = param.EnterParam;
 
-            _loading.Add(_emptyScene.Load(), new LoadSceneStep(param.NextScene, LoadingDesc), _postLoad.Restart(LoadingDesc));
+            _loading.Add(_emptyScene.Load(), new LoadSceneStep(param.NextScene, LoadingDesc), _postLoad.Restart());
         }
 
         private void EnterScene(ASceneEntryPoint sceneEntryPoint)
@@ -51,7 +51,11 @@ namespace Vurbiri.EntryPoint
         protected virtual void OnDestroy()
         {
             if (_instance == this)
+            {
+                _projectContainer.Dispose();
+                _loading?.Dispose();
                 _instance = null;
+            }
         }
     }
 }

@@ -13,13 +13,13 @@ namespace Vurbiri.Colonization.EntryPoint
         public override ISigner<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param)
         {
             Debug.Log("MainMenu Enter");
-            StartCoroutine(Exit_Cn());
+            loading.Add(Exit_Cn());
             return new SceneExitPoint(_nextScene, containers).EventExit;
         }
 
         private IEnumerator Exit_Cn()
         {
-            yield return new WaitForSecondsRealtime(0.5f);
+            yield return new WaitForSecondsRealtime(.5f);
             SceneExitPoint.Exit();
             Debug.Log("MainMenu Exit");
         }

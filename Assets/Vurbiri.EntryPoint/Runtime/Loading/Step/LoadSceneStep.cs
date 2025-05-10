@@ -2,16 +2,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Vurbiri
+namespace Vurbiri.EntryPoint
 {
-    sealed internal class LoadSceneStep : ALoadingStep
+    sealed internal class LoadSceneStep : AEnumeratorStep
     {
         private readonly AsyncOperation _operation;
 
-        public override float Weight => 0.9f;
-        public bool AllowSceneActivation { get => _operation.allowSceneActivation; set => _operation.allowSceneActivation = value; }
-
-        public LoadSceneStep(int sceneBuildIndex, string desc) : base(desc)
+        public LoadSceneStep(int sceneBuildIndex, string desc) : base(0.9f, desc)
         {
             _operation = SceneManager.LoadSceneAsync(sceneBuildIndex);
         }

@@ -15,7 +15,6 @@ namespace Vurbiri.Colonization.EntryPoint
         private readonly LogOnPanel _logOnPanel;
         private readonly YandexSDK _ysdk;
         private readonly Settings _settings;
-        private readonly IEnumerator _run;
         private ProjectStorage _projectStorage;
 
         public CreateStorage(DIContainer diContainer, Coroutines coroutine, ILoadingScreen loadingScreen, LogOnPanel logOnPanel) : base("CreateStorage")
@@ -26,13 +25,9 @@ namespace Vurbiri.Colonization.EntryPoint
             _logOnPanel = logOnPanel;
             _ysdk = _diContainer.Get<YandexSDK>();
             _settings = _diContainer.Get<Settings>();
-
-            _run = Run_Cn();
         }
 
-        public override bool MoveNext() => _run.MoveNext();
-
-        private IEnumerator Run_Cn()
+        public override IEnumerator GetEnumerator()
         {
             yield return _coroutine.Run(CreateStorage_Cn());
             if (!_ysdk.IsLogOn)
@@ -93,5 +88,6 @@ namespace Vurbiri.Colonization.EntryPoint
             }
             #endregion
         }
+
     }
 }
