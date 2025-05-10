@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private TMP_Text _descText;
 
         public string Description { set => _descText.text = value; }
-        public float Progress { set { } }
+        public float Progress { set { Debug.Log(value); } }
 
         protected override void Awake()
         {

@@ -12,8 +12,6 @@ namespace Vurbiri
 
         private AsyncOperation _operation;
 
-        public override float Progress => _operation.progress;
-
         public LoadScene() : base(string.Empty) { }
 
         public ALoadingStep Load()
@@ -21,13 +19,6 @@ namespace Vurbiri
             _operation = SceneManager.LoadSceneAsync(_scene);
             return this;
         }
-
-        public void LoadAndWait()
-        {
-            _operation = SceneManager.LoadSceneAsync(_scene);
-            _operation.allowSceneActivation = false;
-        }
-        public void EndWait() => _operation.allowSceneActivation = true;
 
         public override bool MoveNext() => !_operation.isDone;
     }

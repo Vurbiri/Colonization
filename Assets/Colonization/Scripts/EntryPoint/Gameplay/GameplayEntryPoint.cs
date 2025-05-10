@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
+//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
 using System;
 using System.Collections;
 using UnityEngine;
@@ -43,27 +43,28 @@ namespace Vurbiri.Colonization.EntryPoint
         private GameplayTriggerBus _triggerBus;
         private InputController _inputController;
 
-        public override ISigner<ExitParam> Enter(SceneContainer sceneContainer, Loading loading, AEnterParam param)
+        public override ISigner<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param)
         {
-            _diContainer = sceneContainer.Container;
-
+            _diContainer = containers.Container;
+           
             _gameplaySettings = _diContainer.Get<GameSettings>();
             _diContainer.Get<Localization>().SetFiles(_localizationFiles);
 
             if (!_isLoad)
                 _diContainer.Get<ProjectStorage>().Clear();
 
-            FillingContainers();
+            FillingContainer();
 
             _settingsUI.Init(_diContainer);
 
             StartCoroutine(Enter_Cn());
+            //loading.Add(new CoroutineStep(Enter_Cn()));
 
-            return new GameplayExitPoint(_nextScene, sceneContainer).EventExit;
+            return new SceneExitPoint(_nextScene, containers).EventExit;
 
             #region Local: FillingContainers()
             //=================================
-            void FillingContainers()
+            void FillingContainer()
             {
                 _diContainer.AddInstance(Coroutines.Create("Gameplay Coroutines"));
                 _diContainer.AddInstance(_gameStorage = new(_isLoad));
@@ -79,6 +80,9 @@ namespace Vurbiri.Colonization.EntryPoint
 
         private IEnumerator Enter_Cn()
         {
+            yield return null;
+            LoadingScreen.Instance.Turn(true);
+
             yield return _islandCreator.Init(_diContainer, _triggerBus).Create_Cn(_gameStorage);
             yield return CreatePlayers_Cn();
 

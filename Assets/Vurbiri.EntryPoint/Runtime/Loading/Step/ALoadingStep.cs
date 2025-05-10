@@ -5,9 +5,11 @@ namespace Vurbiri
 {
     public abstract class ALoadingStep : IEnumerator
     {
+        public const float DEFAULT_WEIGHT = 0.1f;
+
         protected string _desc;
 
-        public virtual float Progress => 1f;
+        public virtual float Weight => DEFAULT_WEIGHT;
         public string Description => _desc;
         public object Current => null;
 

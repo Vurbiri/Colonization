@@ -14,7 +14,6 @@ namespace Vurbiri.EntryPoint
 
         protected readonly DIContainer _projectContainer = new(null);
         protected Loading _loading;
-        protected ILoadingScreen _loadingScreen;
 
         protected abstract ILoadingScreen Screen { get; }
         protected abstract string LoadingDesc { get; }
@@ -40,7 +39,7 @@ namespace Vurbiri.EntryPoint
         {
             _currentEnterParam = param.EnterParam;
 
-            _loading.Add(_emptyScene, new LoadSceneStep(param.NextScene, LoadingDesc), _postLoad.Restart(LoadingDesc));
+            _loading.Add(_emptyScene.Load(), new LoadSceneStep(param.NextScene, LoadingDesc), _postLoad.Restart(LoadingDesc));
         }
 
         private void EnterScene(ASceneEntryPoint sceneEntryPoint)

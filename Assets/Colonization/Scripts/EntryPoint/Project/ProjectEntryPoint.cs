@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\ProjectEntryPoint.cs
-using System.Collections;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.TextLocalization;
@@ -11,9 +10,9 @@ namespace Vurbiri.Colonization.EntryPoint
         protected override ILoadingScreen Screen => LoadingScreen.Instance;
         protected override string LoadingDesc => Localization.Instance.GetText(Files.Main, "Loading");
 
-        private IEnumerator Start()
+        private void Start()
 		{
-            return GetComponent<ProjectInitialization>().Init_Cn(_projectContainer, _loadingScreen);
+            GetComponent<ProjectInitialization>().Init(_projectContainer, _loading, LoadingScreen.Instance);
         }
 	}
 }

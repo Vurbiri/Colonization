@@ -1,8 +1,6 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\ProjectInitialization.cs
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Colonization.Storage;
+using UnityEngine.SceneManagement;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.TextLocalization;
@@ -11,9 +9,7 @@ namespace Vurbiri.Colonization.EntryPoint
 {
     public class ProjectInitialization : MonoBehaviour
     {
-        [SerializeField] private LoadScene _startScene;
-        [Space]
-        [SerializeField] private string _projectStorageKey = SAVE_KEYS.PROJECT;
+        [SerializeField] private SceneId _startScene;
         [Space]
         [SerializeField] private LogOnPanel _logOnPanel;
         [Space]
@@ -27,106 +23,40 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private Settings _settings;
 
         private Coroutines _coroutine;
-        private YandexSDK _ysdk;
-        private ProjectStorage _projectStorage;
 
-        public IEnumerator Init_Cn(DIContainer diContainer, ILoadingScreen loadingScreen)
+        public void Init(DIContainer diContainer, Loading loading, ILoadingScreen loadingScreen)
         {
-            _startScene.LoadAndWait();
+            AsyncOperation operation = SceneManager.LoadSceneAsync(_startScene);
+            operation.allowSceneActivation = false;
 
-            //----------------------------------
             Message.Log("Start Init Project");
 
-            diContainer.AddInstance(Localization.Instance).SetFiles(_localizationFiles);
+            FillingContainer();
 
-            _coroutine = diContainer.AddInstance(Coroutines.Create("Project Coroutine", true));
-
-            yield return diContainer.AddInstance(_ysdk = new YandexSDK(_coroutine, _leaderboardName)).Init_Cn();
-
-            diContainer.AddInstance(_settings);
-            diContainer.AddInstance(_settingsColorScriptable.Colors);
             //Banners.InstanceF.Initialize();
 
-            yield return CreateStorage_Cn(diContainer);
-            yield return YandexIsLogOn_Cn(diContainer, loadingScreen);
+            loading.Add(new CreateYandexSDK(diContainer, _coroutine, _leaderboardName));
+            loading.Add(new CreateStorage(diContainer, _coroutine, loadingScreen, _logOnPanel));
+            loading.Add(new LoadDataStep(diContainer, _playerVisualSetScriptable));
+            loading.Add(new EndLoadScene(operation));
 
-            _playerVisualSetScriptable.Init(_projectStorage, diContainer);
-            diContainer.AddInstance(new GameSettings(_projectStorage));
-
-            _projectStorage.Save();
-
-            Message.Log("End Init Project");
-            //----------------------------------
-
-            _startScene.EndWait();
-
-            _settingsColorScriptable.Dispose();
             Destroy(this);
 
-            #region Local: CreateStorage_Cn(..), YandexIsLogOn_Cn(..)
+            #region Local: FillingContainer()
             //=================================
-            IEnumerator CreateStorage_Cn(DIContainer container)
+            void FillingContainer()
             {
-                yield return StartCoroutine(CreateStorageService_Cn(container));
-                _settings.Init(_ysdk, _projectStorage); ;
-            }
-            //=================================
-            IEnumerator YandexIsLogOn_Cn(DIContainer container, ILoadingScreen loadingScreen)
-            {
-                if (!_ysdk.IsLogOn)
-                {
-                    StartCoroutine(loadingScreen.SmoothOff());
-                    yield return _logOnPanel.TryLogOn_Cn(_ysdk, _projectStorage);
-                    yield return loadingScreen.SmoothOn();
-                    if (_ysdk.IsLogOn)
-                        yield return CreateStorage_Cn(container);
-                }
+                diContainer.AddInstance(Localization.Instance).SetFiles(_localizationFiles);
+                diContainer.AddInstance(_coroutine = Coroutines.Create("Project Coroutine", true));
+                diContainer.AddInstance(_settings);
+                diContainer.AddInstance(_settingsColorScriptable.Colors);
+
+                _settingsColorScriptable.Dispose();
             }
             #endregion
         }
 
-        private IEnumerator CreateStorageService_Cn(DIContainer container)
-        {
-            if (Create(out IStorageService storage))
-            {
-                bool result = false;
-                yield return storage.Load_Cn((b) => result = b);
-                Message.Log(result ? "Сохранения загружены" : "Сохранения не найдены");
-            }
-            else
-            {
-                Message.Log("StorageService не определён");
-            }
-
-            container.ReplaceInstance(storage);
-            container.ReplaceInstance(_projectStorage = new(storage));
-
-            #region Local: Create(..), Creator()
-            // =====================
-            bool Create(out IStorageService storage)
-            {
-                var creator = Creator();
-                while (creator.MoveNext())
-                {
-                    storage = creator.Current;
-                    if (storage.IsValid)
-                        return true;
-                }
-
-                storage = new EmptyStorage();
-                return storage.IsValid;
-            }
-            // =====================
-            IEnumerator<IStorageService> Creator()
-            {
-                MonoBehaviour monoBehaviour = _coroutine;
-
-                yield return new JsonToYandex(_projectStorageKey, monoBehaviour, _ysdk);
-                yield return new JsonToLocalStorage(_projectStorageKey, monoBehaviour);
-                yield return new JsonToCookies(_projectStorageKey, monoBehaviour);
-            }
-            #endregion
-        }
+        
 
 #if UNITY_EDITOR
         private void OnValidate()

@@ -8,7 +8,7 @@ namespace Vurbiri
     {
         private readonly AsyncOperation _operation;
 
-        public override float Progress => _operation.progress;
+        public override float Weight => 0.9f;
         public bool AllowSceneActivation { get => _operation.allowSceneActivation; set => _operation.allowSceneActivation = value; }
 
         public LoadSceneStep(int sceneBuildIndex, string desc) : base(desc)
