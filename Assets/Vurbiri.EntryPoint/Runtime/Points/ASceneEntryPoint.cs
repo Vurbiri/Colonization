@@ -1,4 +1,4 @@
-//Assets\Vurbiri\Runtime\EntryPoint\Points\ASceneEntryPoint.cs
+//Assets\Vurbiri.EntryPoint\Runtime\Points\ASceneEntryPoint.cs
 using System;
 using UnityEngine;
 using Vurbiri.Reactive;
@@ -23,7 +23,7 @@ namespace Vurbiri.EntryPoint
             Destroy(gameObject);
         }
 
-        public abstract ISigner<ExitParam> Enter(SceneContainer containers, AEnterParam param);
+        public abstract ISigner<ExitParam> Enter(SceneContainer containers, Loading _loading, AEnterParam param);
 
         protected virtual void OnDestroy()
         {

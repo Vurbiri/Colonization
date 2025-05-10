@@ -1,5 +1,4 @@
-//Assets\Vurbiri\Runtime\EntryPoint\Points\ASceneExitPoint.cs
-using System;
+//Assets\Vurbiri.EntryPoint\Runtime\Points\ASceneExitPoint.cs
 using Vurbiri.Reactive;
 
 namespace Vurbiri.EntryPoint
@@ -10,23 +9,24 @@ namespace Vurbiri.EntryPoint
 
         private readonly SceneContainer _sceneContainer;
         private readonly Signer<ExitParam> _eventExit = new();
-        
+
+        protected readonly ExitParam _exitParam;
+
         public ISigner<ExitParam> EventExit => _eventExit;
 
-        public ASceneExitPoint(SceneContainer sceneContainer)
+        public ASceneExitPoint(ExitParam exitParam, SceneContainer sceneContainer)
         {
+            _exitParam = exitParam;
             _sceneContainer = sceneContainer;
             _instance = this;
         }
 
-        public static void Exit() => _instance.OnExit(_instance.ExitCallback);
+        public static void Exit() => _instance.OnExit();
 
-        protected abstract void OnExit(Action<ExitParam> callback);
-
-        private void ExitCallback(ExitParam param)
+        protected virtual void OnExit()
         {
             _sceneContainer.Dispose();
-            _eventExit.Invoke(param);
+            _eventExit.Invoke(_exitParam);
 
             _instance = null;
         }

@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Storage
 
         public void Save(Action<bool> callback = null) => _storage.SaveAll(callback);
 
-        public void Clear() => _storage.Clear(PROFILE, VOLUMES, COLORS);
+        public void Clear() => _storage.Clear(PROFILE, VOLUMES, COLORS, GAME_DATA);
 
         public bool SetAndBindAudioMixer(AudioMixer<MixerId> mixer)
         {

@@ -1,21 +1,19 @@
-//Assets\Vurbiri\Editor\EntryPoint\EntryPointExecutionOrder.cs
+//Assets\Vurbiri.EntryPoint\Editor\EntryPointExecutionOrder.cs
 using System;
 using UnityEditor;
 using UnityEngine;
-using Vurbiri;
-using Vurbiri.EntryPoint;
-using static VurbiriEditor.CONST_EDITOR;
 
-namespace VurbiriEditor.EntryPoint
+namespace Vurbiri.EntryPoint.Editor
 {
     [InitializeOnLoad]
     internal class EntryPointExecutionOrder : AssetPostprocessor
     {
         #region Consts
         private const int SCENE_ORDER = -15, PROJECT_ORDER = 5;
-        private const string MENU_NAME = "EntryPoints/", MENU = MENU_PATH + MENU_NAME;
+        private const string MENU_NAME = "EntryPoints/", MENU = "Vurbiri/" + MENU_NAME;
         private const string MENU_NAME_SET = "Set Execution Order", MENU_COMMAND_SET = MENU + MENU_NAME_SET;
         private const string MENU_NAME_AUTO = "Auto", MENU_COMMAND_AUTO = MENU + MENU_NAME_AUTO;
+        private const string CS_EXT = ".cs";
         private const string KEY_SAVE = "EPEO_AUTO";
         #endregion
 

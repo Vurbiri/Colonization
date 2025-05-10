@@ -1,0 +1,16 @@
+//Assets\Vurbiri.EntryPoint\Runtime\Loading\ILoadingScreen.cs
+using System.Collections;
+
+namespace Vurbiri.EntryPoint
+{
+    public interface ILoadingScreen
+	{
+		public string Description { set; }
+        public float Progress { set; }
+
+        public void Turn(bool isOn);
+
+        public IEnumerator SmoothOn();
+        public IEnumerator SmoothOff();
+    }
+}

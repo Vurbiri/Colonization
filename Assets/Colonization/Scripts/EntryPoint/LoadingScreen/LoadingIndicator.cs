@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Vurbiri.UI
+namespace Vurbiri.Colonization.UI
 {
     [RequireComponent(typeof(Image))]
     public class LoadingIndicator : MonoBehaviour

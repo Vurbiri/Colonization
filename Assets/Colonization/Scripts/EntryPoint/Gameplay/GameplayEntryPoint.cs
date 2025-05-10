@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.EntryPoint
         private GameplayTriggerBus _triggerBus;
         private InputController _inputController;
 
-        public override ISigner<ExitParam> Enter(SceneContainer sceneContainer, AEnterParam param)
+        public override ISigner<ExitParam> Enter(SceneContainer sceneContainer, Loading loading, AEnterParam param)
         {
             _diContainer = sceneContainer.Container;
 
@@ -65,7 +65,6 @@ namespace Vurbiri.Colonization.EntryPoint
             //=================================
             void FillingContainers()
             {
-
                 _diContainer.AddInstance(Coroutines.Create("Gameplay Coroutines"));
                 _diContainer.AddInstance(_gameStorage = new(_isLoad));
                 _diContainer.AddInstance<GameplayTriggerBus, GameplayEventBus>(_triggerBus = new());
@@ -121,7 +120,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             _gameStorage.Save();
 
-            _diContainer.Get<LoadingScreen>().SmoothOff_Wait();
+            yield return LoadingScreen.Instance.SmoothOff();
 
             Destroy(gameObject);
         }

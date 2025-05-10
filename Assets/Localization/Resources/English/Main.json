@@ -29,5 +29,6 @@
   "WarningAuthorization": "Cloud save, personalization and leaderboard are not available without authorization",
   "Leaderboard": "Seekers",
   "Help": "Help",
-  "Control": "Control"
+  "Control": "Control",
+  "Loading": "Loading..."
 }

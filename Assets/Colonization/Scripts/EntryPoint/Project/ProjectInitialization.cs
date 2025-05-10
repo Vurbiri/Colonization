@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
+using Vurbiri.EntryPoint;
 using Vurbiri.TextLocalization;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -30,9 +30,9 @@ namespace Vurbiri.Colonization.EntryPoint
         private YandexSDK _ysdk;
         private ProjectStorage _projectStorage;
 
-        public IEnumerator Init_Cn(DIContainer diContainer, LoadingScreen loadingScreen)
+        public IEnumerator Init_Cn(DIContainer diContainer, ILoadingScreen loadingScreen)
         {
-            _startScene.Start();
+            _startScene.LoadAndWait();
 
             //----------------------------------
             Message.Log("Start Init Project");
@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization.EntryPoint
             Message.Log("End Init Project");
             //----------------------------------
 
-            _startScene.End();
+            _startScene.EndWait();
 
             _settingsColorScriptable.Dispose();
             Destroy(this);
@@ -71,13 +71,13 @@ namespace Vurbiri.Colonization.EntryPoint
                 _settings.Init(_ysdk, _projectStorage); ;
             }
             //=================================
-            IEnumerator YandexIsLogOn_Cn(DIContainer container, LoadingScreen loadingScreen)
+            IEnumerator YandexIsLogOn_Cn(DIContainer container, ILoadingScreen loadingScreen)
             {
                 if (!_ysdk.IsLogOn)
                 {
-                    loadingScreen.SmoothOff_Wait();
+                    StartCoroutine(loadingScreen.SmoothOff());
                     yield return _logOnPanel.TryLogOn_Cn(_ysdk, _projectStorage);
-                    yield return loadingScreen.SmoothOn_Wait();
+                    yield return loadingScreen.SmoothOn();
                     if (_ysdk.IsLogOn)
                         yield return CreateStorage_Cn(container);
                 }
@@ -105,7 +105,7 @@ namespace Vurbiri.Colonization.EntryPoint
             // =====================
             bool Create(out IStorageService storage)
             {
-                IEnumerator<IStorageService> creator = Creator();
+                var creator = Creator();
                 while (creator.MoveNext())
                 {
                     storage = creator.Current;

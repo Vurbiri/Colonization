@@ -7,13 +7,14 @@ using Vurbiri;
 namespace VurbiriEditor
 {
     [CustomPropertyDrawer(typeof(SceneId))]
-    [CustomPropertyDrawer(typeof(LoadScene))]
     public class SceneDrawer : PropertyDrawer
     {
-        private const string NAME_VALUE = "_scene";
+        protected const string F_SCENE = "_scene";
 
-        private static string[] nameScenes;
-        private static int[] idScenes;
+        protected static string[] nameScenes;
+        protected static int[] idScenes;
+
+        protected readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
         static SceneDrawer()
         {
@@ -25,7 +26,8 @@ namespace VurbiriEditor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            SerializedProperty sceneProperty = property.FindPropertyRelative(NAME_VALUE);
+            SerializedProperty sceneProperty = property.FindPropertyRelative(F_SCENE);
+            position.height = EditorGUIUtility.singleLineHeight;
 
             label = EditorGUI.BeginProperty(position, label, property);
             sceneProperty.intValue = EditorGUI.IntPopup(position, label.text, sceneProperty.intValue, nameScenes, idScenes);
