@@ -17,11 +17,15 @@ namespace VurbiriEditor.Colonization
         public static void Load<T>(ref T obj)
         {
             Type type = typeof(T);
-            string path = GetPath(type);
-
-            if (File.Exists(path))
-                obj = (T)JsonConvert.DeserializeObject(File.ReadAllText(path, CONST_EDITOR.utf8WithoutBom), type);
-        }
+            try
+            {
+                obj = (T)JsonConvert.DeserializeObject(File.ReadAllText(GetPath(type), CONST_EDITOR.utf8WithoutBom), type);
+            }
+            catch (Exception ex) 
+            { 
+                Debug.LogWarning(ex.Message);
+            }
+         }
 
         public static void Save<T>(T obj)
         {

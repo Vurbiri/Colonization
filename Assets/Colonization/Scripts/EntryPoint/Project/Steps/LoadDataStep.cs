@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.EntryPoint
             var projectStorage = _diContainer.Get<ProjectStorage>();
 
             _playerVisualSetScriptable.Init(projectStorage, _diContainer);
-            _diContainer.AddInstance(new GameSettings(projectStorage));
+            _diContainer.AddInstance(new GameState(projectStorage));
 
             projectStorage.Save();
 

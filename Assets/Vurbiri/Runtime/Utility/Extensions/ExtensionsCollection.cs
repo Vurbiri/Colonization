@@ -30,7 +30,7 @@ namespace Vurbiri
                 self[i] = value;
         }
 
-        public static IList<int> Fill(this IList<int> self, int start = 0)
+        public static IList<int> FillIncrement(this IList<int> self, int start = 0)
         {
             for (int i = 0, v = start; i < self.Count; i++, v++)
                 self[i] = v;

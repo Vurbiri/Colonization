@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\Settings\GameSettings.cs
+//Assets\Colonization\Scripts\Settings\GameState.cs
 using Newtonsoft.Json;
 using System;
 using Vurbiri.Colonization.Storage;
@@ -6,7 +6,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public partial class GameSettings
+    public partial class GameState
     {
         private readonly GameData _data;
         private readonly Score _score;
@@ -14,12 +14,11 @@ namespace Vurbiri.Colonization
         private readonly ProjectStorage _storage;
 
         public bool NewGame => _data.newGame;
-        public int MaxScore => _data.maxScore;
         public Score Score => _score;
 
         public bool IsFirstStart => _data.isFirstStart;
 
-        public GameSettings(ProjectStorage storage)
+        public GameState(ProjectStorage storage)
         {
             _score = Score.Create(storage);
             if (!storage.TryLoadAndBindGameData(out _data))
@@ -37,7 +36,8 @@ namespace Vurbiri.Colonization
         public void ResetGame()
         {
             _storage.Clear();
-            _data.Reset(_score.Reset());
+            _score.Reset();
+            _data.Reset();
             _storage.Save();
         }
 
@@ -47,22 +47,19 @@ namespace Vurbiri.Colonization
         public class GameData : IReactive<GameData>
         {
             public bool newGame = true;
-            public int maxScore = 0;
 
             public bool isFirstStart = true;
 
             private readonly Signer<GameData> _eventChanged = new();
 
-            public GameData(bool newGame, int maxScore)
+            public GameData(bool newGame)
             {
                 this.newGame = newGame;
-                this.maxScore = maxScore;
                 isFirstStart = false;
             }
             public GameData()
             {
                 newGame = true;
-                maxScore = 0;
                 isFirstStart = true;
             }
 
@@ -73,10 +70,9 @@ namespace Vurbiri.Colonization
                 _eventChanged.Invoke(this);
             }
 
-            public void Reset(int score)
+            public void Reset()
             {
                 newGame = true;
-                maxScore = Math.Max(maxScore, score);
                 isFirstStart = false;
 
                 _eventChanged.Invoke(this);

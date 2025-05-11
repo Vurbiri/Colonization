@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             DIContainer diContainer = containers.Container;
 
-            GameSettings gameplaySettings = diContainer.Get<GameSettings>();
+            GameState gameplaySettings = diContainer.Get<GameState>();
             diContainer.Get<Localization>().SetFiles(_localizationFiles);
 
             if (!_isLoad)

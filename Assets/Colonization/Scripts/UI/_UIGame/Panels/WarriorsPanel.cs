@@ -1,31 +1,20 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\WarriorsPanel.cs
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
-using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive.Collections;
-using Vurbiri.UI;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.UI
 {
-    public class WarriorsPanel : MonoBehaviour
+    public class WarriorsPanel : ATogglePanel<WarriorButton>
     {
-        [SerializeField] private VToggle _toggle;
-        [SerializeField] private CurrentMax _widget;
-        [Space]
-        [SerializeField] private WarriorButton _warriorButtonPrefab;
-        [SerializeField] private Transform _buttonContainer, _buttonRepository;
+        [SerializeField] private Transform _buttonRepository;
         [SerializeField] private IdArray<WarriorId, Sprite> _sprites = new();
 
-        private readonly List<WarriorButton> _buttons = new();
         private Stack<WarriorButton> _buttonPool;
-        private InputController _inputController;
-        private Coroutine _coroutine;
 
         public void Init(Human player, ProjectColors colors, InputController inputController)
         {
@@ -38,18 +27,15 @@ namespace Vurbiri.Colonization
 
             maxWarrior.Subscribe(FillingPool);
             warriors.Subscribe(AddWarrior);
-
-            warriors.CountReactive.Subscribe(count => _toggle.interactable = count > 0);
-            _toggle.AddListener(OnToggle);
-
-            _widget.Init(warriors.CountReactive, maxWarrior, colors);
+             
+            Init(warriors.CountReactive, maxWarrior, colors);
         }
 
         private void FillingPool(int max)
         {
             for (int i = _buttons.Count + _buttonPool.Count; i < max; i++)
             {
-                _buttonPool.Push(Instantiate(_warriorButtonPrefab, _buttonRepository, false).Init(_inputController, _buttonContainer, ToPool));
+                _buttonPool.Push(Instantiate(_buttonPrefab, _buttonRepository, false).Init(_inputController, _buttonContainer, ToPool));
             }
         }
 
@@ -72,71 +58,12 @@ namespace Vurbiri.Colonization
             }
         }
 
-        private void OnToggle(bool isOn)
-        {
-            if (_coroutine != null)
-                StopCoroutine(_coroutine);
-
-            if (isOn)
-                _coroutine = StartCoroutine(Enable_Cn());
-            else
-                _coroutine = StartCoroutine(Disable_Cn());
-
-
-            #region Local: Enable_Cn(), Disable_Cn()
-            //=================================
-            IEnumerator Enable_Cn()
-            {
-                for (int i = 0; i < _buttons.Count; i++)
-                    yield return _buttons[i].Enable();
-
-                _coroutine = null;
-            }
-            //=================================
-            IEnumerator Disable_Cn()
-            {
-                for (int i = _buttons.Count - 1; i >= 0; i--)
-                    yield return _buttons[i].Disable();
-
-                _coroutine = null;
-            }
-            #endregion
-        }
-
-
 #if UNITY_EDITOR
 
-        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, ProjectColors colors)
+        protected override void OnValidate()
         {
-            Image image = GetComponent<Image>();
-            image.color = colors.BackgroundPanel;
-            image.pixelsPerUnitMultiplier = pixelsPerUnit;
-
-            _toggle.CheckmarkOn.color = colors.BackgroundPanel;
-            _toggle.CheckmarkOff.color = colors.BackgroundPanel;
-
-            Vector2 size = _widget.Size + padding * 2f;
-
-            RectTransform thisRectTransform = (RectTransform)transform;
-
-            thisRectTransform.sizeDelta = size;
-            _warriorButtonPrefab.RectTransform.sizeDelta = new(size.x, size.x);
-            ((RectTransform)_buttonContainer).anchoredPosition = new(0f, (size.x + size.y) * 0.5f + 20f);
-
-            return thisRectTransform;
-        }
-
-        private void OnValidate()
-        {
-            if (_toggle == null)
-                _toggle = GetComponent<VToggle>();
-            if (_widget == null)
-                _widget = GetComponentInChildren<CurrentMax>();
-
-            if (_buttonContainer == null)
-                _buttonContainer = EUtility.GetComponentInChildren<Transform>(this, "ButtonContainer");
-            EUtility.SetObject<Transform>(ref _buttonRepository, "CameraUIRepository");
-            EUtility.SetPrefab(ref _warriorButtonPrefab);
+            base.OnValidate();
+            EUtility.SetObject(ref _buttonRepository, "UIRepository");
 
             for (int i = 0; i < WarriorId.Count; i++)
                 if (_sprites[i] == null)

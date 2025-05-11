@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
         private static short orderLevel = short.MinValue;
         private static readonly short incOrderLevel = 7;
 
-        [SerializeField] private float _offset = 1.3f;
+        [SerializeField] private float _offset = 1.75f;
         [Space]
         [SerializeField] private HPBar _hpBar;
         [SerializeField] private APBar _apBar;

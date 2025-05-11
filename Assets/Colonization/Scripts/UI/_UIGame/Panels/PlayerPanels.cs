@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
             _currencies.Init(_directionPopup, currencies, colors);
             _blood.Init(_directionPopup, currencies, colors);
 
-            Destroy(gameObject);
+            Destroy(this);
         }
     }
 }

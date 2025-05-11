@@ -17,15 +17,15 @@ namespace Vurbiri.Colonization
         public Human this[int index] => _humans[index];
 
         #region Constructor
-        public Players(Settings settings, GameplayStorage storage)
+        public Players(Settings settings, TurnQueue turn, GameplayStorage storage)
         {
             Hexagons land = SceneContainer.Get<Hexagons>();
             HumanStorage[] playerStorages = storage.Humans;
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
-                _humans[i] = new(i, playerStorages[i], settings, land);
+                _humans[i] = new(i, playerStorages[i], settings, land, turn);
 
-            _satan = new(storage.Satan, settings, land, _humans);
+            _satan = new(storage.Satan, settings, land, turn, _humans);
         }
         #endregion
 

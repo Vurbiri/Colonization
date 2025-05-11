@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
-    sealed public class Empty : AEdificeSelectable
+    sealed public class Empty : AEdifice
     {
         public override AEdifice Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice)
         {

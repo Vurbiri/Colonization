@@ -35,6 +35,7 @@ namespace Vurbiri.Collections
                 _values[i] = factory();
         }
 
+        [JsonConstructor]
         public IdArray(IReadOnlyList<TValue> list) : this() 
         {
             int count = _count <= list.Count ? _count : list.Count;

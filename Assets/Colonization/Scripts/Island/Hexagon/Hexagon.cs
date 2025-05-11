@@ -1,4 +1,5 @@
 //Assets\Colonization\Scripts\Island\Hexagon\Hexagon.cs
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
@@ -7,7 +8,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Hexagon : MonoBehaviour, ISelectable, IPositionable
+    public partial class Hexagon : MonoBehaviour, ISelectable, IPositionable, IReactive<int>
     {
         [SerializeField] private HexagonCaption _hexagonCaption;
         [SerializeField] private Collider _thisCollider;
@@ -21,6 +22,7 @@ namespace Vurbiri.Colonization
         private HexagonMark _mark;
         private IProfit _profit;
         private bool _isGate, _isWater, _isShow;
+        private Signer<int> _changeID = new();
 
         private Actor _owner = null;
         private Id<PlayerId> _ownerId = PlayerId.None;
@@ -97,10 +99,11 @@ namespace Vurbiri.Colonization
         }
 
         #region ISelectable
-        public bool Interactable { get => _thisCollider.enabled;}
         public void Select() { }
         public void Unselect(ISelectable newSelectable) { }
         #endregion
+
+        public Unsubscriber Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 
         public void AddNeighborAndCreateCrossroadLink(Hexagon neighbor)
         {

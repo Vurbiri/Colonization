@@ -38,10 +38,8 @@ namespace Vurbiri.Colonization
 
         public void Next()
         {
-            _previousId = _currentId;
-            _currentId.Next();
-            if (_currentId == PlayerId.Player)
-                _turn++;
+            _previousId = _currentId; _currentId.Next();
+            if (_currentId == 0) _turn++;
 
             _eventNext.Invoke(this);
         }

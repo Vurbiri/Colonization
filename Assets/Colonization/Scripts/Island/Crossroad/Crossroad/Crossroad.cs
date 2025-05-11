@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    sealed public partial class Crossroad : IDisposable, IPositionable, ISelectable, ICancel
+    sealed public partial class Crossroad : IDisposable, IInteractable
     {
         #region Fields
         private const int HEX_COUNT = 3;
@@ -20,6 +20,7 @@ namespace Vurbiri.Colonization
         private Id<PlayerId> _owner = PlayerId.None;
         private bool _isWall = false;
         private int _defenceWall = 0;
+        private readonly RBool _interactable = new(true);
 
         private readonly GameplayTriggerBus _triggerBus;
         private readonly IReadOnlyList<AEdifice> _prefabs;
@@ -46,7 +47,6 @@ namespace Vurbiri.Colonization
         public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
         public bool IsWall => _isWall;
         public IEnumerable<CrossroadLink> Links => _links;
-        public Vector3 Position { get; }
         #endregion
 
         public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IReadOnlyList<AEdifice> prefabs, GameplayTriggerBus triggerBus)
@@ -62,9 +62,11 @@ namespace Vurbiri.Colonization
             _edifice.Selectable = this;
         }
 
-        #region ISelectable, ICancel
+        #region IInteractable
+        public Vector3 Position { get; }
+        public RBool InteractableReactive => _interactable;
+        public bool Interactable { get => _interactable.Value; set => _interactable.Value = value; }
         public RBool CanCancel => _canCancel;
-        public bool RaycastTarget { get => _edifice.RaycastTarget; set => _edifice.RaycastTarget = value; }
         public void Select()
         {
             Debug.Log("Отправлять только если игрок");
@@ -169,7 +171,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        #region Edifice
+        #region Building
         #region Edifice
         public bool CanUpgrade(Id<PlayerId> playerId)
         {
@@ -315,7 +317,6 @@ namespace Vurbiri.Colonization
         }
         #endregion
         #endregion
-
 
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         public void Dispose()

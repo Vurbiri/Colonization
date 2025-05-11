@@ -1,7 +1,27 @@
 {
-  "killWarrior": 2,
-  "killDemon": 3,
-  "buildPort": 7,
-  "buildCity": 10,
-  "buildShrine": 50
+  "killWarrior": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "killDemon": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "buildEdifice": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
 }

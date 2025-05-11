@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnSelectCrossroad(Crossroad crossroad)
         {
-            if (_isPlayerTurn & _currentOpenMenu == null)
+            if (_isPlayerTurn & crossroad.Interactable & _currentOpenMenu == null)
             {
                 ToPosition(crossroad.Position);
                 _crossroadMenu.Open(crossroad);

@@ -15,9 +15,9 @@ namespace Vurbiri.Colonization
 
         private ReactiveCombination<int, int> _reactiveCurrentMax;
 
-        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors settings)
+        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors colors)
         {
-            _countTMP.color = settings.TextPanel;
+            _countTMP.color = colors.TextPanel;
             _reactiveCurrentMax = new(current, max, SetCurrentMax);
         }
 

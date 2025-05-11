@@ -13,6 +13,7 @@ namespace VurbiriEditor.Colonization
         private string _label;
         private SerializedObject _serializedObject;
         private SerializedProperty _serializedProperty;
+        private Vector2 _scrollPos;
 
         private void OnEnable()
 		{
@@ -31,7 +32,9 @@ namespace VurbiriEditor.Colonization
                 LabelField(_label, STYLES.H1);
 
                 BeginVertical(GUI.skin.box);
-                    PropertyField(_serializedProperty);
+                    _scrollPos = BeginScrollView(_scrollPos);
+                        PropertyField(_serializedProperty);
+                    EndScrollView();
                 EndVertical();
             }
             EndWindows();

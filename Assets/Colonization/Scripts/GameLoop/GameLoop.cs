@@ -35,14 +35,14 @@ namespace Vurbiri.Colonization
         {
             _players.EndTurn(_turnQueue.CurrentId.Value);
 
-            _turnQueue.Next();
-
             int roll = _dices.Roll();
             ACurrencies free = null;
             if (roll != GATE_ID)
                 free = _hexagons.GetFreeGroundResource(roll);
 
             _players.Profit(roll, free);
+
+            _turnQueue.Next();
 
             _players.StartTurn(_turnQueue.CurrentId.Value);
             _inputController.GameplayMap = _turnQueue.IsCurrentPlayer;

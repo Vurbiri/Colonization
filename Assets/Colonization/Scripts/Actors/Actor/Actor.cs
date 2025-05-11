@@ -10,7 +10,7 @@ using Vurbiri.Reactive.Collections;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveItemMono<Actor>, ISelectable, IDisposable, IPositionable, ICancel
+    public abstract partial class Actor : AReactiveItemMono<Actor>, IInteractable, IDisposable
     {
         #region Fields
         private int _typeId;
@@ -58,16 +58,15 @@ namespace Vurbiri.Colonization.Actors
         public bool IsIdle => _stateMachine.IsDefaultState;
         public bool IsBlock => _blockState.Enabled;
         public bool IsDead => _currentHP.Value <= 0;
-        public Vector3 Position => _thisTransform.position;
         public ActorSkin Skin => _skin;
         public IReactiveSet<ReactiveEffect> Effects => _effects;
         public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
         public bool IsMainProfit => _profitMain.Next();
         public bool IsAdvProfit => _profitAdv.Next();
-
         #endregion
 
-        #region ISelectable, ICancel
+        #region IInteractable
+        public Vector3 Position => _thisTransform.position;
         public RBool CanCancel => _canCancel;
         public RBool InteractableReactive => _interactable;
         public bool Interactable { get => _interactable.Value; private set => _thisCollider.enabled = _interactable.Value = _isPlayerTurn & value; }

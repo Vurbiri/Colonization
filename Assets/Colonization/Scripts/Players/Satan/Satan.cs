@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Satan(SatanStorage storage, Players.Settings settings, Hexagons hexagons, IReadOnlyList<Human> humans)
+        public Satan(SatanStorage storage, Players.Settings settings, Hexagons hexagons, TurnQueue turn, IReadOnlyList<Human> humans)
         {
             _states = SettingsFile.Load<SatanAbilities>();
 
@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization
             _leveling = new(settings.demonBuffs.Settings, _level);
             _artefact = Buffs.Create(settings.artefact.Settings, loadData);
 
-            _spawner = new(_level, new(_leveling, _artefact), settings, hexagons[Key.Zero], loadData.state.spawn);
+            _spawner = new(_level, new(_leveling, _artefact, turn), settings, hexagons[Key.Zero], loadData.state.spawn);
 
             _demons = new(loadData.state.maxDemons);
             for (int i = loadData.actors.Count - 1; i >= 0; i--)

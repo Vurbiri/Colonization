@@ -4,16 +4,18 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
+    [RequireComponent(typeof(Collider))]
     public abstract class AEdifice : MonoBehaviour, IValueId<EdificeId>, ISelectableReference
     {
         [SerializeField] protected EdificeSettings _settings;
         [Space]
         [SerializeField] protected AEdificeGraphic _graphic;
+        [SerializeField] protected Collider _thisCollider;
 
         public Id<EdificeId> Id => _settings.id;
         public EdificeSettings Settings => _settings;
-        public virtual bool RaycastTarget { get => false; set { } }
         public ISelectable Selectable { get; set; }
+        public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = value; }
 
         public virtual AEdifice Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice)
         {
@@ -21,7 +23,7 @@ namespace Vurbiri.Colonization
             transform.SetParent(edifice.transform.parent);
             transform.SetLocalPositionAndRotation(edifice.transform);
 
-            if(edifice._graphic != null)
+            if (edifice._graphic != null)
                 _graphic.transform.localRotation = edifice._graphic.transform.localRotation;
             _graphic.Init(playerId, links);
 
@@ -31,6 +33,7 @@ namespace Vurbiri.Colonization
 
         public virtual bool WallBuild(Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links) => false;
         public virtual void AddRoad(Id<LinkId> linkId, bool isWall) { }
+
 
 #if UNITY_EDITOR
         protected virtual void OnValidate()
@@ -55,6 +58,9 @@ namespace Vurbiri.Colonization
 
             if (_graphic == null)
                 _graphic = GetComponentInChildren<AEdificeGraphic>();
+
+            if (_thisCollider == null)
+                _thisCollider = GetComponent<Collider>();
         }
 #endif
     }

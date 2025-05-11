@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
 
         public PerkTree Perks => _perks;
 
-        public Human(Id<PlayerId> playerId, HumanStorage storage, Players.Settings settings, Hexagons hexagons)
+        public Human(Id<PlayerId> playerId, HumanStorage storage, Players.Settings settings, Hexagons hexagons, TurnQueue turn)
         {
             _id = playerId;
             _isPlayer = playerId == PlayerId.Player;
@@ -62,13 +62,13 @@ namespace Vurbiri.Colonization
             _exchange = ExchangeRate.Create(_abilities, loadData);
             _artefact = Buffs.Create(settings.artefact.Settings, loadData);
 
-            _spawner = new(new(playerId, _artefact, new(_perks)), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
+            _spawner = new(new(playerId, _artefact, new(_perks), turn), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
 
             if (loadData.isLoaded)
             {
                 Crossroads crossroads = SceneContainer.Get<Crossroads>();
 
-                _edifices = new(this, loadData.edifices, crossroads);
+                _edifices = new(this, loadData.edifices, crossroads, turn.CurrentId == _id & _isPlayer);
                 storage.PopulateRoads(_roads, crossroads);
 
                 for (int i = loadData.actors.Count - 1; i >= 0; i--)
@@ -112,6 +112,8 @@ namespace Vurbiri.Colonization
 
             _resources.AddFrom(profit);
             _artefact.Next(countBuffs);
+
+            _edifices.Interactable = false;
         }
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
@@ -133,6 +135,8 @@ namespace Vurbiri.Colonization
 
         public void StartTurn()
         {
+            _edifices.Interactable = _isPlayer;
+
             foreach (var warrior in _warriors)
             {
                 warrior.EffectsUpdate();
@@ -147,6 +151,8 @@ namespace Vurbiri.Colonization
             if(_perks.TryAdd(typePerk, idPerk, out int cost))
                 _resources.Add(CurrencyId.Mana, -cost);
         }
+
+        public ReactiveList<Crossroad> GetEdifices(Id<EdificeGroupId> id) => _edifices.edifices[id];
 
         public void Dispose()
         {

@@ -1,12 +1,11 @@
 //Assets\Colonization\Scripts\Storages\ProjectStorage.cs
 using System;
-using System.Collections.Generic;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Storage
 {
     using static SAVE_KEYS;
-    using static Vurbiri.Colonization.GameSettings;
+    using static Vurbiri.Colonization.GameState;
 
     public class ProjectStorage : IDisposable
     {
@@ -43,17 +42,10 @@ namespace Vurbiri.Colonization.Storage
             _unsubscribers += colors.Subscribe(self => _storage.Set(COLORS, self, _colorsConverter), instantGetValue);
         }
 
-        public bool TryGetScoreData(out int[] data)
+        public bool TryGetScoreData(out int[] data) => _storage.TryGet(SCORE, out data);
+        public void ScoreBind(IReactive<Score> reactive, bool instantGetValue)
         {
-            if(_storage.TryGet(SCORE, out data))
-                return true;
-            
-            data = new int[PlayerId.HumansCount];
-            return false;
-        }
-        public void ScoreBind(IReactive<IReadOnlyList<int>> reactive, bool instantGetValue)
-        {
-            _unsubscribers += reactive.Subscribe(score => _storage.Set(SCORE, score), instantGetValue);
+            _unsubscribers += reactive.Subscribe(score => _storage.Set(SCORE, score.Values), instantGetValue);
         }
 
         public bool TryLoadAndBindGameData(out GameData data)

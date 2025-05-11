@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.EntryPoint
     sealed internal class CreatePlayers : ALoadingStep
     {
         private readonly GameplayInitObjects _objects;
-        private Players.Settings _settings;
+        private readonly Players.Settings _settings;
 
         public CreatePlayers(GameplayInitObjects objects, Players.Settings settings) : base("CreatePlayers")
         {
@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override IEnumerator GetEnumerator()
         {
-            _objects.diContainer.AddInstance(_objects.players = new Players(_settings, _objects.storage));
+            _objects.diContainer.AddInstance(_objects.players = new Players(_settings, _objects.turnQueue, _objects.storage));
 
             yield return null;
 

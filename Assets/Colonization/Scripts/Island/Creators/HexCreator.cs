@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
         {
             _groundIDs = new(HEX_IDS); 
             _waterIDs = new(HEX_IDS);
-            _surfaceIDs = new((new int[SurfaceId.CountGround]).Fill());
+            _surfaceIDs = new((new int[SurfaceId.CountGround]).FillIncrement());
         }
 
         public override Hexagon Gate
