@@ -2,14 +2,13 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    [RequireComponent(typeof(TMP_Text))]
+    [RequireComponent(typeof(TextMeshProUGUI))]
     public class PopupWidgetUI : MonoBehaviour
     {
-        [SerializeField] protected TMP_Text _thisTMP;
+        [SerializeField] protected TextMeshProUGUI _thisTMP;
         [Space]
         [SerializeField, Range(0.1f, 2f)] private float _speed = 0.6f;
         [Space]
@@ -90,7 +89,7 @@ namespace Vurbiri.Colonization.UI
         private void OnValidate()
         {
             if (_thisTMP == null)
-                _thisTMP = GetComponent<TMP_Text>();
+                _thisTMP = GetComponent<TextMeshProUGUI>();
         }
 #endif
     }

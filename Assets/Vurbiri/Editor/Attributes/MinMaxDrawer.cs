@@ -1,4 +1,5 @@
 //Assets\Vurbiri\Editor\Attributes\MinMaxDrawer.cs
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -12,9 +13,11 @@ namespace VurbiriEditor
         private const string NAME_X = "x", NAME_Y = "y";
         #endregion
 
+        private readonly HashSet<System.Type> _excludeTypes = new() { typeof(IntRnd), typeof(WaitRealtime), typeof(WaitTime) };
+
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
-            if (attribute is not MinMaxAttribute range || fieldInfo.FieldType == typeof(IntRnd))
+            if (attribute is not MinMaxAttribute range || _excludeTypes.Contains(fieldInfo.FieldType))
             {
                 EditorGUILayout.PropertyField(mainProperty, label, true);
                 return;

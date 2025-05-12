@@ -3,8 +3,8 @@ namespace Vurbiri
 {
     public class WaitFrames : UnityEngine.CustomYieldInstruction
     {
-        private ushort _waitUntilFrames;
         private ushort _waitFrames;
+        private ushort _waitUntilFrames;
 
         public ushort Frames
         {
@@ -26,7 +26,7 @@ namespace Vurbiri
 
         public WaitFrames(ushort frames)  => Frames = frames;
 
-        public WaitFrames SetFrames(ushort value)
+        public WaitFrames Restart(ushort value)
         {
             Frames = value;
             return this;

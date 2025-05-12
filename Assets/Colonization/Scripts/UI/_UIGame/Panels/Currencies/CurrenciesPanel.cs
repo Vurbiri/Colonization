@@ -1,7 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\CurrenciesPanel.cs
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -21,7 +20,7 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, float space, IdArray<CurrencyId, CurrencyIcon> icons, ProjectColors colors)
+        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, float space, ProjectColors colors)
         {
             Image image = GetComponent<Image>();
             image.color = colors.BackgroundPanel;
@@ -45,7 +44,7 @@ namespace Vurbiri.Colonization.UI
             float offset = cSize.x + space;
             for (int i = 0; i < CurrencyId.CountMain; i++)
             {
-                _currencies[i].Init_Editor(pos, icons[i], colors);
+                _currencies[i].Init_Editor(pos, colors);
                 pos.x += offset;
             }
 

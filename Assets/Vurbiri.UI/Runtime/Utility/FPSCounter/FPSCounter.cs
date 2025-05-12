@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
-    [RequireComponent(typeof(TMP_Text))]
+    [RequireComponent(typeof(TextMeshProUGUI))]
     public class FPSCounter : MonoBehaviour
     {
         [SerializeField] private float _updateInterval = 0.2f;
         [SerializeField] private int _cacheMaxSize = 128;
         [SerializeField] private FPSGraph _graph;
 
-        private TMP_Text _thisTextFPS;
+        private TextMeshProUGUI _thisTextFPS;
         private float _time = 0f;
         private int _frames = 0;
         private int _fps = 0, _fpsMax = int.MinValue, _fpsMin = int.MaxValue;
@@ -23,7 +23,7 @@ namespace Vurbiri.UI
 
         private void Start()
         {
-            _thisTextFPS = GetComponent<TMP_Text>();
+            _thisTextFPS = GetComponent<TextMeshProUGUI>();
             if (_graph != null && _graph.gameObject.activeSelf)
                 _cacheMaxSize = _graph.Size;
 

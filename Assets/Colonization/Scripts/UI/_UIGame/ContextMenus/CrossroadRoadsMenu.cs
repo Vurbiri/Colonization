@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization.UI
             base.Open();
         }
 
-        protected override void OnClose()
+        private void OnClose()
         {
             base.Close();
             _mainMen.Open();

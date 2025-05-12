@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         private const string AMOUNT = "{0,2}{1}</color><space=0.05em>|<space=0.05em>{2,-2}";
 
-        [SerializeField] private TMP_Text _textTMP;
+        [SerializeField] private TextMeshProUGUI _textTMP;
 
         private ReactiveCombination<int, int> _reactiveAmountMax;
         private string _colorNormal, _colorOver;
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
         private void OnValidate()
         {
             if (_textTMP == null)
-                _textTMP = EUtility.GetComponentInChildren<TMP_Text>(this, "TextTMP");
+                _textTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "TextTMP");
         }
 #endif
     }

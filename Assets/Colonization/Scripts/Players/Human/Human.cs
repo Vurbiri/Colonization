@@ -127,7 +127,7 @@ namespace Vurbiri.Colonization
                 return;
             }
 
-            if (_abilities.IsTrue(IsFreeGroundRes) & freeGroundRes != null)
+            if (_abilities.IsTrue(IsFreeGroundRes))
                 _resources.AddFrom(freeGroundRes);
 
             _resources.AddFrom(_edifices.ProfitFromEdifices(hexId));

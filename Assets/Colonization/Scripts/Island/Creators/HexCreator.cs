@@ -12,18 +12,20 @@ namespace Vurbiri.Colonization
         private readonly Vector2 _offsetHex = new(HEX_DIAMETER_IN, HEX_DIAMETER_IN * SIN_60);
 
         protected Hexagons _land;
-		protected GameplayStorage _storage;
+        protected HexagonSpawner _spawner;
+        protected GameplayStorage _storage;
             			
-		public HexCreator(Hexagons land, GameplayStorage storage)
+		public HexCreator(Hexagons land, HexagonSpawner spawner, GameplayStorage storage)
 		{
 			_land = land;
+            _spawner = spawner;
 			_storage = storage;
 		}
 
-        public static HexCreator Factory(Hexagons land, GameplayStorage storage)
+        public static HexCreator Factory(Hexagons land, HexagonSpawner spawner, GameplayStorage storage)
         {
-            if(storage.Load) return new HexLoader(land, storage);
-                              return new HexGenerator(land, storage);
+            if(storage.Load) return new HexLoader(land, spawner, storage);
+                             return new HexGenerator(land, spawner, storage);
         }
 
         public abstract Hexagon Gate { get; }
@@ -31,6 +33,11 @@ namespace Vurbiri.Colonization
 		public abstract void Finish();
 
         protected Key PositionToKey(Vector3 position) => new(2f * position.x / _offsetHex.x, position.z / _offsetHex.y);
+
+        protected Hexagon Create(Key key, int id, int surfaceId, Vector3 position)
+        {
+            return _land.Add(key, id, _spawner.Spawn(key, id, surfaceId, position));
+        }
     }
     //==========================================================================
     sealed public class HexGenerator : HexCreator
@@ -39,7 +46,7 @@ namespace Vurbiri.Colonization
         private Chance _chanceWater = CHANCE_WATER;
         private bool _isWater = false;
 
-        public HexGenerator(Hexagons land, GameplayStorage storage) : base(land, storage)
+        public HexGenerator(Hexagons land, HexagonSpawner spawner, GameplayStorage storage) : base(land, spawner, storage)
         {
             _groundIDs = new(HEX_IDS); 
             _waterIDs = new(HEX_IDS);
@@ -50,7 +57,7 @@ namespace Vurbiri.Colonization
         {
             get
             {
-                Hexagon hex = _land.CreateHexagon(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
+                Hexagon hex = Create(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
                 _storage.HexagonsBind(_land);
                 return hex;
             }
@@ -60,8 +67,8 @@ namespace Vurbiri.Colonization
             Key keyHex = PositionToKey(position);
             _isWater = circle == MAX_CIRCLES || (circle == (MAX_CIRCLES - 1) & !_isWater & isNotApex && _chanceWater.Roll);
 
-            if (_isWater) return _land.CreateHexagon(keyHex, _waterIDs.Next,  SurfaceId.Water,  position);
-                          return _land.CreateHexagon(keyHex, _groundIDs.Next, _surfaceIDs.Next, position);
+            if (_isWater) return Create(keyHex, _waterIDs.Next,  SurfaceId.Water,  position);
+                          return Create(keyHex, _groundIDs.Next, _surfaceIDs.Next, position);
         }
 
         public override void Finish() { }
@@ -69,16 +76,16 @@ namespace Vurbiri.Colonization
     //==========================================================================
     sealed public class HexLoader : HexCreator
     {
-        public HexLoader(Hexagons land, GameplayStorage storage) : base(land, storage) { }
+        public HexLoader(Hexagons land, HexagonSpawner spawner, GameplayStorage storage) : base(land, spawner, storage) { }
 
-        public override Hexagon Gate => _land.CreateHexagon(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
+        public override Hexagon Gate => Create(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
 
         public override Hexagon Create(Vector3 position, int circle, bool isNotApex)
         {
             Key keyHex = PositionToKey(position);
             HexLoadData data = _storage.GetHexData(keyHex);
 
-            return _land.CreateHexagon(keyHex, data.id, data.surfaceId, position);
+            return Create(keyHex, data.id, data.surfaceId, position);
         }
 
         public override void Finish() => _storage.HexagonsBind(_land);

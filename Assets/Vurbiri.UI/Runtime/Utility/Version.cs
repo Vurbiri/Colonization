@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
-    [RequireComponent(typeof(TMPro.TMP_Text))]
+    [RequireComponent(typeof(TMPro.TextMeshProUGUI))]
     public class Version : MonoBehaviour
     {
-        void Start() => GetComponent<TMPro.TMP_Text>().text = Application.version;
+        void Start() => GetComponent<TMPro.TextMeshProUGUI>().text = Application.version;
     }
 }

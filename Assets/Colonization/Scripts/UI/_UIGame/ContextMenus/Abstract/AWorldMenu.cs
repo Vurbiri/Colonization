@@ -76,11 +76,6 @@ namespace Vurbiri.Colonization.UI
                 Disable();
         }
 
-        protected virtual void OnClose()
-        {
-            Close();
-        }
-
         private bool PreEnable()
         {
             if (_thisCanvasGroup.blocksRaycasts)
@@ -93,7 +88,7 @@ namespace Vurbiri.Colonization.UI
             _eventActive.Invoke(this, true);
             return true;
         }
-        private void Enable()
+        protected virtual void Enable()
         {
             _thisCanvasGroup.alpha = 1f;
             _thisCanvasGroup.blocksRaycasts = true;
@@ -112,7 +107,7 @@ namespace Vurbiri.Colonization.UI
             _thisCanvasGroup.blocksRaycasts = false;
             return true;
         }
-        private void Disable()
+        protected virtual void Disable()
         {
             _thisCanvasGroup.alpha = 0f;
             _coroutine = null;

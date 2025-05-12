@@ -1,7 +1,6 @@
 //Assets\Colonization\Scripts\GameLoop\GameLoop.cs
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
-using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
@@ -35,12 +34,9 @@ namespace Vurbiri.Colonization
         {
             _players.EndTurn(_turnQueue.CurrentId.Value);
 
-            int roll = _dices.Roll();
-            ACurrencies free = null;
-            if (roll != GATE_ID)
-                free = _hexagons.GetFreeGroundResource(roll);
-
-            _players.Profit(roll, free);
+            _dices.Roll();
+            ACurrencies free = _hexagons.Profit(_dices.Preview, _dices.Current);
+            _players.Profit(_dices.Current, free);
 
             _turnQueue.Next();
 

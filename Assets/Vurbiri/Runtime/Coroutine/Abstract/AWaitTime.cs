@@ -1,10 +1,11 @@
 //Assets\Vurbiri\Runtime\Coroutine\Abstract\AWaitTime.cs
 namespace Vurbiri
 {
+    [System.Serializable]
     public abstract class AWaitTime : UnityEngine.CustomYieldInstruction
     {
+        [UnityEngine.SerializeField] private float _waitTime;
         private float _waitUntilTime = -1f;
-        private float _waitTime;
 
         protected abstract float ApplicationTime { get; }
 
@@ -31,9 +32,10 @@ namespace Vurbiri
 
         public AWaitTime(float time) => _waitTime = time;
 
-        public AWaitTime SetTime(float value)
+        public AWaitTime Restart(float value)
         {
-            Time = value;
+            _waitTime = value;
+            _waitUntilTime = ApplicationTime + _waitTime;
             return this;
         }
 

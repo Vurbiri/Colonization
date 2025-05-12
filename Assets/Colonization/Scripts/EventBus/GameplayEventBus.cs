@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
 
         protected readonly Signer<Id<PlayerId>, Id<PlayerId>, int> _actorKilling = new();
 
-        protected readonly Signer<bool> _hexagonIdShow = new();
+        protected readonly Signer<bool> _hexagonShowDistance = new();
 
         public ISigner<Crossroad> EventCrossroadSelect => _crossroadSelect;
         public ISigner<Actor> EventActorSelect => _actorSelect;
@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
 
         public ISigner<Id<PlayerId>, Id<PlayerId>, int> EventActorKilling => _actorKilling;
 
-        public ISigner<bool> EventHexagonIdShow => _hexagonIdShow;
+        public ISigner<bool> EventHexagonShowDistance => _hexagonShowDistance;
 
     }
 }

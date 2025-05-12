@@ -3,6 +3,8 @@ namespace Vurbiri.Colonization
 {
     public interface IProfit
     {
-        public int Get { get; }
+        public int Value { get; }
+
+        public int Set();
     }
 }

@@ -11,9 +11,9 @@ namespace Vurbiri.UI
     public class WorldHint : MonoBehaviour
     {
         [SerializeField] private RectTransform _backTransform;
-        [SerializeField] private TMP_Text _hint;
+        [SerializeField] private TextMeshProUGUI _hint;
         [Space]
-        [SerializeField, Range(0f, 5f)] private float _timeDelay = 1f;
+        [SerializeField, MinMax(0f, 5f)] private WaitRealtime _timeDelay = 1.5f;
         [SerializeField, Range(1f, 20f)] private float _fadeSpeed = 4f;
         [SerializeField] private float _maxWidth = 30f;
         [SerializeField] private Vector2 _padding = new(1.8f, 1.5f);
@@ -21,7 +21,6 @@ namespace Vurbiri.UI
         private CanvasGroup _thisCanvasGroup;
         private RectTransform _textTransform;
         private Coroutine _coroutineShow, _coroutineHide;
-        private WaitRealtime _delay;
         private Vector2 _size;
 
         public void Init(Color textColor)
@@ -31,8 +30,6 @@ namespace Vurbiri.UI
 
             _hint.color = textColor;
             _hint.overflowMode = TextOverflowModes.Overflow;
-
-            _delay = new(_timeDelay);
 
             _thisCanvasGroup.alpha = 0f;
         }
@@ -52,7 +49,7 @@ namespace Vurbiri.UI
             //=================================
             IEnumerator Show_Cn(string text, Vector3 position)
             {
-                yield return _delay.Restart();
+                yield return _timeDelay.Restart();
 
                 if (_coroutineHide != null)
                 {
@@ -140,7 +137,7 @@ namespace Vurbiri.UI
                 _backTransform = GetComponentInChildren<Image>().rectTransform;
 
             if (_hint == null)
-                _hint = GetComponentInChildren<TMP_Text>();
+                _hint = GetComponentInChildren<TextMeshProUGUI>();
         }
 #endif
     }

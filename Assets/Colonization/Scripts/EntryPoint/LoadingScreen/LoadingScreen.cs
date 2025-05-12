@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private RectTransform _fillBar;
-        [SerializeField] private TMP_Text _descText;
+        [SerializeField] private TextMeshProUGUI _descText;
         [SerializeField] private Graphic _indicator;
 
         private Graphic[] _graphics;
@@ -103,7 +103,7 @@ namespace Vurbiri.Colonization.UI
             if(_canvasGroup == null)
                 _canvasGroup = GetComponent<CanvasGroup>();
             if (_descText == null)
-                _descText = GetComponentInChildren<TMP_Text>();
+                _descText = GetComponentInChildren<TextMeshProUGUI>();
             if (_fillBar == null)
                 _fillBar = EUtility.GetComponentInChildren<RectTransform>(this, "Value");
             if (_indicator == null)

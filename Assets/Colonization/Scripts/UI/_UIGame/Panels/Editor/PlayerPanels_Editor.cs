@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization.UI
     public partial class PlayerPanels : ICanvasElement
     {
         [Header("┌──────────── Editor ─────────────────────")]
-        [SerializeField, ReadOnly] private CurrenciesIconsScriptable _currenciesIcons;
         [SerializeField, ReadOnly] private ColorSettingsScriptable _colorSettings;
         [Space]
         [SerializeField, Range(1f, 3f)] private float _pixelsPerUnit = 1.5f;
@@ -26,13 +25,12 @@ namespace Vurbiri.Colonization.UI
 
         public void UpdateVisuals()
         {
-            var icons = _currenciesIcons.Icons;
             var colors = _colorSettings.Colors;
 
             RectTransform thisRectTransform = (RectTransform)transform;
             RectTransform rectWarriors = _warriors.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, _spaceIn, icons, colors);
-            RectTransform rectBlood = _blood.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, icons, colors);
+            RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, _spaceIn, colors);
+            RectTransform rectBlood = _blood.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, colors);
 
             Vector3 position = -thisRectTransform.rect.size * 0.5f + _paddingOut;
             rectWarriors.localPosition = position;
@@ -61,7 +59,6 @@ namespace Vurbiri.Colonization.UI
         {
             if (!Application.isPlaying)
             {
-                EUtility.SetScriptable(ref _currenciesIcons);
                 EUtility.SetScriptable(ref _colorSettings);
 
                 EUtility.SetObject(ref _warriors);

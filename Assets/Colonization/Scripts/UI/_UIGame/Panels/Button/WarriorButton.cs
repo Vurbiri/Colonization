@@ -21,8 +21,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private float _speedMove = 4f;
         [Space]
         [SerializeField] private VBarInt _hpBar;
-        [SerializeField] private TMP_Text _maxAP_TMP;
-        [SerializeField] private TMP_Text _currentAP_TMP;
+        [SerializeField] private TextMeshProUGUI _maxAP_TMP;
+        [SerializeField] private TextMeshProUGUI _currentAP_TMP;
         [SerializeField] private Graphic _moveIcon;
         [SerializeField] private Color _colorOn = Color.yellow;
         [SerializeField] private Color _colorOff = Color.gray;
@@ -148,9 +148,9 @@ namespace Vurbiri.Colonization.UI
             if (_icon == null)
                 _icon = EUtility.GetComponentInChildren<Image>(this, "Icon");
             if (_maxAP_TMP == null)
-                _maxAP_TMP = EUtility.GetComponentInChildren<TMP_Text>(this, "MaxAP_TMP");
+                _maxAP_TMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "MaxAP_TMP");
             if (_currentAP_TMP == null)
-                _currentAP_TMP = EUtility.GetComponentInChildren<TMP_Text>(this, "AP_TMP");
+                _currentAP_TMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "AP_TMP");
             if (_moveIcon == null)
                 _moveIcon = EUtility.GetComponentInChildren<Image>(this, "MoveIcon");
         }

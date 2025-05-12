@@ -9,7 +9,7 @@ namespace Vurbiri
     //[RequireComponent(typeof(Image), typeof(HorizontalLayoutGroup), typeof(Outline))]
     public class Banner //: PooledObject<Banner>
     {
-        [SerializeField] private TMP_Text _text;
+        [SerializeField] private TextMeshProUGUI _text;
 
         private Banners _banners;
 

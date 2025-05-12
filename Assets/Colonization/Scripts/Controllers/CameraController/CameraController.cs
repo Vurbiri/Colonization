@@ -24,19 +24,18 @@ namespace Vurbiri.Colonization.Controllers
         private MoveToTargetState _moveToTargetState;
         private ZoomState _zoomState;
 
-        public void Init(Camera camera, InputControlAction.CameraActions cameraActions)
+        public void Init(Camera camera, GameplayTriggerBus eventBus, InputControlAction.CameraActions cameraActions)
         {
             _thisTransform = transform;
-            
+
             #region States
             _moveState          = new(this, _movement, camera);
             _edgeMoveState      = new(this, _movement, _edge, camera);
             _moveToTargetState  = new(this, _movementTo);
-            _zoomState          = new(this, _zoom, camera);
+            _zoomState          = new(this, _zoom, camera, eventBus);
             #endregion
 
             #region Subscribe
-            GameplayEventBus eventBus = SceneContainer.Get<GameplayEventBus>();
 
             cameraActions.Move.performed +=     OnMove;
             cameraActions.Move.canceled +=      OnMoveCancel;
@@ -122,6 +121,7 @@ namespace Vurbiri.Colonization.Controllers
             public float speedZoom = 4f;
             public float heightZoomMin = 65f;
             public float heightZoomMax = 410f;
+            public float heightHexagonShow = 320f;
             [Range(0.01f, 0.3f)] public float steepZoomRate = 0.1f;
         }
         //***********************************

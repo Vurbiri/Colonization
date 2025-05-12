@@ -7,15 +7,12 @@ namespace Vurbiri.Colonization
     public class ProfitArray : IProfit
     {
         private readonly int[] _values;
-        private readonly int _count;
+        private int _value = -1;
 
-        public ProfitArray(List<int> profits)
-        {
-            _values = profits.ToArray();
-            _count = _values.Length;
-        }
+        public int Value => _value;
 
-        public int Get => _values[Random.Range(0, _count)];
+        public ProfitArray(List<int> profits) => _values = profits.ToArray();
 
+        public int Set() => _value = _values[Random.Range(0, _values.Length)];
     }
 }

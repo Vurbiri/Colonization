@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
             CreatePositionButtons();
             Vector3 distance = new(0f, _distanceOfButtons, 0f);
 
-            _buttonClose.Init(settings.hint, OnClose);
+            _buttonClose.Init(settings.hint, Close);
             _buttonMovement.Init(-distance, settings.hint, OnMovement);
             _buttonBlock.Init(distance, settings.hint, OnBlock);
 

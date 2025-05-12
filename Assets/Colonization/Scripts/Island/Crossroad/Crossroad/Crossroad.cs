@@ -69,11 +69,13 @@ namespace Vurbiri.Colonization
         public RBool CanCancel => _canCancel;
         public void Select()
         {
-            Debug.Log("Отправлять только если игрок");
-            _triggerBus.TriggerCrossroadSelect(this);
+            if (_interactable.Value)
+                _triggerBus.TriggerCrossroadSelect(this);
         }
         public void Unselect(ISelectable newSelectable)
         {
+            if (!_interactable.Value) return;
+            
             _triggerBus.TriggerUnselect(Equals(newSelectable));
 
             if (_waitHexagon != null)
@@ -110,6 +112,12 @@ namespace Vurbiri.Colonization
                 _hexagons[i].CrossroadRemove(this);
             Object.Destroy(_edifice.gameObject);
             return false;
+        }
+
+        public void SetCaptionHexagonsActive(bool active)
+        {
+            for (int i = _hexagons.Count - 1; i >= 0; i--)
+                _hexagons[i].SetCaptionActive(active);
         }
 
         public int GetDefense(Id<PlayerId> playerId) => playerId == _owner ? _defenceWall : -1;

@@ -21,16 +21,14 @@ namespace Vurbiri.Colonization
         private Pool<HexagonMark> _poolMarks;
         private HexagonMark _mark;
         private IProfit _profit;
-        private bool _isGate, _isWater, _isShow;
-        private Signer<int> _changeID = new();
+        private bool _isGate, _isWater;
+        private readonly Signer<int> _changeID = new();
 
         private Actor _owner = null;
         private Id<PlayerId> _ownerId = PlayerId.None;
 
         private readonly HashSet<Crossroad> _crossroads = new(HEX.SIDES);
         private readonly HashSet<Hexagon> _neighbors = new(HEX.SIDES);
-
-        private Unsubscriber _unsubscriber;
         #endregion
 
         #region Propirties
@@ -44,7 +42,8 @@ namespace Vurbiri.Colonization
         public bool CanDemonEnter => !_isWater & _ownerId == PlayerId.None;
         public bool CanWarriorEnter => !_isGate & !_isWater & _ownerId == PlayerId.None;
         public Vector3 Position { get; private set; }
-        public IReadOnlyCollection<Hexagon> Neighbors => _neighbors;
+        public HashSet<Hexagon> Neighbors => _neighbors;
+        public HexagonCaption Caption => _hexagonCaption;
         public bool IsOwnedByPort
         {
             get
@@ -72,7 +71,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Init
-        public void Init(Key key, int id, Pool<HexagonMark> poolMarks, SurfaceType surface, GameplayEventBus eventBus)
+        public void Init(Key key, int id, Pool<HexagonMark> poolMarks, SurfaceType surface)
         {
             _thisTransform = transform; Position = _thisTransform.localPosition;
             _key = key;
@@ -85,10 +84,7 @@ namespace Vurbiri.Colonization
             _isGate = surface.IsGate;
             _isWater = surface.IsWater;
 
-            _hexagonCaption.Init(id, surface.Currencies);
-
             surface.Create(transform);
-            _unsubscriber = eventBus.EventHexagonIdShow.Add(OnShow);
 
             if (_isWater)
             {
@@ -128,27 +124,25 @@ namespace Vurbiri.Colonization
         public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
         #endregion
 
+        public void SetCaptionActive(bool active) => _hexagonCaption.SetActive(active);
+
         #region Profit
-        public bool TryGetProfit(int hexId, bool isPort, out int currencyId)
+        public bool SetAndGetFreeProfit(out int currencyId)
         {
-            currencyId = CurrencyId.Blood;
-            if (hexId != _id | isPort != _isWater)
-            {
-                _hexagonCaption.ResetProfit(_isShow);
-                return false;
-            }
-
-            currencyId = _profit.Get;
-
             if (_isWater)
-                _hexagonCaption.Profit(currencyId);
+                _hexagonCaption.Profit(_profit.Set());
             else
                 _hexagonCaption.Profit();
 
-            return true;
+            return (currencyId = _profit.Value) != CurrencyId.Blood && !IsOwnedByUrban;
         }
+        public void ResetProfit() => _hexagonCaption.ResetProfit();
 
-        public bool TryGetFreeGroundResource(out int currencyId) => !IsOwnedByUrban & (currencyId = _profit.Get) != CurrencyId.Blood;
+        public bool TryGetProfit(int hexId, bool isPort, out int currencyId)
+        {
+            currencyId = _profit.Value;
+            return hexId == _id & isPort == _isWater;
+        }
         #endregion
 
         #region Actor
@@ -222,22 +216,12 @@ namespace Vurbiri.Colonization
 
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
 
-        private void OnShow(bool value)
-        {
-            _isShow = value;
-            _hexagonCaption.SetActive(value);
-        }
-
-        private void OnDestroy()
-        {
-            _unsubscriber?.Unsubscribe();
-        }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
             if (_hexagonCaption == null)
-                _hexagonCaption = GetComponentInChildren<HexagonCaption>();
+                _hexagonCaption = GetComponentInChildren<HexagonCaption>(true);
 
             if(_thisCollider == null)
                 _thisCollider = GetComponent<Collider>();

@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
     public partial class IslandCreator : MonoBehaviour, ILoadingStep
     {
         [SerializeField] private Transform _crossroadsContainer;
-        [SerializeField] private LandInitData _landInitData;
+        [SerializeField] private HexagonSpawner _hexagonSpawner;
         [Space]
         [SerializeField] private ParticleSystem _psFog;
         [SerializeField] private float _ratioFogSize = 55f;
@@ -31,7 +31,9 @@ namespace Vurbiri.Colonization
         public IslandCreator Init(GameplayInitObjects objects)
         {
             _storage = objects.storage;
-            objects.diContainer.AddInstance(_hexagons = new(_landInitData, objects.triggerBus));
+            _hexagonSpawner.Init(objects.mainCamera, objects.triggerBus);
+
+            objects.diContainer.AddInstance(_hexagons = new());
             objects.diContainer.AddInstance(_crossroads = new(_crossroadsContainer, _edificePrefabs, objects.triggerBus));
 
             var shape = _psFog.shape;
@@ -45,8 +47,11 @@ namespace Vurbiri.Colonization
 
         public IEnumerator GetEnumerator()
         {
-            yield return Create_Cn(HexCreator.Factory(_hexagons, _storage));
+            yield return Create_Cn(HexCreator.Factory(_hexagons, _hexagonSpawner, _storage));
             yield return Setup_Cn();
+
+            _hexagonSpawner.Dispose();
+            _hexagonSpawner = null;
 
             Destroy(this);
         }
@@ -88,15 +93,17 @@ namespace Vurbiri.Colonization
         private IEnumerator Setup_Cn()
         {
             yield return null;
-            yield return StartCoroutine(_hexagons.HexagonsNeighbors_Cn());
+            yield return StartCoroutine(_hexagonSpawner.HexagonsNeighbors_Cn(_hexagons));
             yield return null;
-            yield return StartCoroutine(_hexagons.FinishCreate_Cn());
+            yield return StartCoroutine(_hexagonSpawner.FinishCreate_Cn());
+            yield return null;
         }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            _landInitData.OnValidate();
+            _hexagonSpawner.OnValidate();
+
             if (_edificePrefabs.Filling < _edificePrefabs.Count)
                 _edificePrefabs.ReplaceRange(EUtility.FindPrefabs<AEdifice>());
             if (_crossroadsContainer == null)

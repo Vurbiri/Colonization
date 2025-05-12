@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.UI
             _warriorsMenu = warriorsMenu;
             _player = settings.player;
 
-            _buttonClose.Init(settings.hint, OnClose);
+            _buttonClose.Init(settings.hint, Close);
 
             _buttonRoads.Init(new(0f, -_distanceOfButtons, 0f), settings, settings.prices.Road, OnRoads);
 
@@ -53,6 +53,17 @@ namespace Vurbiri.Colonization.UI
             _buttonRoads.Setup(_player.CanRoadBuild(crossroad));
 
             base.Open();
+        }
+
+        protected override void Enable()
+        {
+            base.Enable();
+            _currentCrossroad.SetCaptionHexagonsActive(true);
+        }
+        protected override void Disable()
+        {
+            _currentCrossroad.SetCaptionHexagonsActive(false);
+            base.Disable();
         }
 
         private void OnUpgrade()

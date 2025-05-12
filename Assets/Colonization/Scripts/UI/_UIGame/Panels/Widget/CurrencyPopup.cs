@@ -1,14 +1,13 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\CurrencyPopup.cs
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
     public class CurrencyPopup : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _countTMP;
+        [SerializeField] private TextMeshProUGUI _countTMP;
         [SerializeField] private PopupWidgetUI _popup;
 
         private Unsubscriber _unsubscriber;
@@ -36,23 +35,16 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
 
         public Vector2 Size => ((RectTransform)transform).sizeDelta;
-        public void Init_Editor(Vector3 position, CurrencyIcon icon, ProjectColors settings)
+        public void Init_Editor(Vector3 position, ProjectColors settings)
         {
             ((RectTransform)transform).localPosition = position;
-
-            UnityEditor.SerializedObject serializedImage = new(GetComponentInChildren<Image>());
-            serializedImage.Update();
-            serializedImage.FindProperty("m_Color").colorValue = icon.Color;
-            serializedImage.FindProperty("m_Sprite").objectReferenceValue = icon.Icon;
-            serializedImage.ApplyModifiedProperties();
-
             _countTMP.color = settings.TextPanel;
         }
 
         private void OnValidate()
         {
             if (_countTMP == null)
-                _countTMP = EUtility.GetComponentInChildren<TMP_Text>(this, "TextTMP");
+                _countTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "TextTMP");
             if (_popup == null)
                 _popup = GetComponentInChildren<PopupWidgetUI>(true);
 

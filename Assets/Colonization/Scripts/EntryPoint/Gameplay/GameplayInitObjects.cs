@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public IEnumerator GetEnumerator()
         {
             hintGlobalWorld.Init(SceneContainer.Get<ProjectColors>().HintDefault);
-            cameraController.Init(mainCamera, inputController.CameraActions);
+            cameraController.Init(mainCamera, triggerBus, inputController.CameraActions);
             contextMenusWorld.Init(new(turnQueue, players, hintGlobalWorld, prices, mainCamera, triggerBus));
 
             yield return null;

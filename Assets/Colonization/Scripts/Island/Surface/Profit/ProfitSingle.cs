@@ -5,8 +5,10 @@ namespace Vurbiri.Colonization
     {
         private readonly int _value;
 
+        public int Value => _value;
+
         public ProfitSingle(int profit) => _value = profit;
 
-        public int Get => _value;
+        public int Set() => _value;
     }
 }

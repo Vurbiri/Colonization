@@ -1,7 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\BloodPanel.cs
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -17,7 +16,7 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, IdArray<CurrencyId, CurrencyIcon> icons, ProjectColors colors)
+        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, ProjectColors colors)
         {
             Image image = GetComponent<Image>();
             image.color = colors.BackgroundPanel;
@@ -26,8 +25,7 @@ namespace Vurbiri.Colonization.UI
             RectTransform thisRectTransform = (RectTransform)transform;
             thisRectTransform.sizeDelta = _blood.Size + padding * 2f;
 
-            CurrencyIcon icon = icons[CurrencyId.Blood];
-            _blood.Init_Editor(icon.Icon, icon.Color, colors);
+            _blood.Init_Editor(colors);
             return thisRectTransform;
         }
 

@@ -1,6 +1,5 @@
 //Assets\Vurbiri.UI\Runtime\UIElements\VToggle.cs
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -26,12 +25,10 @@ namespace Vurbiri.UI
 
         private EnumFlags<SelectionState> _stateFilterOn = false, _stateFilterOff = false;
         private ITransitionEffect _transitionEffect = new EmptyEffect();
-        private TMP_Text _caption;
 
         #region Properties
         public bool IsOn { get => _isOn; set => SetValue(value, true); }
         public bool SilentIsOn { get => _isOn; set => SetValue(value, false); }
-        public TMP_Text Caption => _caption;
         public VToggleGroup Group
         {
             get => _group;
@@ -150,7 +147,6 @@ namespace Vurbiri.UI
         {
             base.Start();
 
-            _caption = GetComponentInChildren<TMP_Text>();
             _onValueChanged.Init();
         }
         #endregion

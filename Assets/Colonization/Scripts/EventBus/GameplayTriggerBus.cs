@@ -11,6 +11,6 @@ namespace Vurbiri.Colonization
 
         public void TriggerActorKilling(Id<PlayerId> self, Id<PlayerId> target, int actorId) => _actorKilling.Invoke(self, target, actorId);
 
-        public void TriggerHexagonIdShow(bool show) => _hexagonIdShow.Invoke(show);
+        public void TriggerHexagonShowDistance(bool show) => _hexagonShowDistance.Invoke(show);
     }
 }
