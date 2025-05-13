@@ -41,10 +41,10 @@ namespace Vurbiri.Colonization
             _settings.groupId = _settings.id.ToGroup();
             _settings.nextGroupId = _settings.nextId.ToGroup();
 
-            _settings.isBuildWall = _settings.groupId == EdificeGroupId.Urban && _settings.id != EdificeId.Camp;
+            _settings.isBuildWall = _settings.groupId == EdificeGroupId.Colony && _settings.id != EdificeId.Camp;
 
             _settings.isUpgrade = _settings.groupId == EdificeGroupId.None || _settings.id == EdificeId.PortOne || _settings.id == EdificeId.PortTwo
-                || (_settings.groupId == EdificeGroupId.Urban && _settings.id != EdificeId.City);
+                || (_settings.groupId == EdificeGroupId.Colony && _settings.id != EdificeId.City);
 
             _settings.profit = 0;
             if (_settings.id == EdificeId.Camp || _settings.id == EdificeId.PortOne || _settings.id == EdificeId.PortTwo)

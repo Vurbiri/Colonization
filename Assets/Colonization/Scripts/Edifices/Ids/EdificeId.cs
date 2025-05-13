@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             Empty                                                => EdificeGroupId.None,
             Shrine                                               => EdificeGroupId.Shrine,
             PortOne or PortTwo or LighthouseOne or LighthouseTwo => EdificeGroupId.Port,
-            Camp or Town or City                                 => EdificeGroupId.Urban,
+            Camp or Town or City                                 => EdificeGroupId.Colony,
             _                                                    => Errors.ArgumentOutOfRange("EdificeTypeId", id),
         };
 

@@ -56,14 +56,14 @@ namespace Vurbiri.Colonization
                 return false;
             }
         }
-        public bool IsOwnedByUrban
+        public bool IsOwnedByColony
         {
             get
             {
                 if (_isGate | _isWater) return false;
 
                 foreach (var crossroad in _crossroads)
-                    if (crossroad.IsUrban) return true;
+                    if (crossroad.IsColony) return true;
 
                 return false;
             }
@@ -134,7 +134,7 @@ namespace Vurbiri.Colonization
             else
                 _hexagonCaption.Profit();
 
-            return (currencyId = _profit.Value) != CurrencyId.Blood && !IsOwnedByUrban;
+            return (currencyId = _profit.Value) != CurrencyId.Blood && !IsOwnedByColony;
         }
         public void ResetProfit() => _hexagonCaption.ResetProfit();
 

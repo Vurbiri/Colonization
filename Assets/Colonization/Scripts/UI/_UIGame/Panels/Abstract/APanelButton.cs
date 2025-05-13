@@ -126,6 +126,8 @@ namespace Vurbiri.Colonization.UI
 
             if (_canvasGroup == null)
                 _canvasGroup = GetComponent<CanvasGroup>();
+            if (_icon == null)
+                _icon = EUtility.GetComponentInChildren<Image>(this, "Icon");
         }
 #endif
     }

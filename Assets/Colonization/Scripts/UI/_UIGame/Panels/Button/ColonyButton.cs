@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Button\PortButton.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Button\ColonyButton.cs
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,39 +6,40 @@ using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class PortButton : AEdificeButton
+    sealed public class ColonyButton : AEdificeButton
     {
-        private const int MAX_HEX = 2;
-
         [Space]
         [SerializeField] private TextMeshProUGUI[] _hexIds;
+        [SerializeField] private GameObject _wall;
 
         public override void Init(Crossroad crossroad, InputController inputController, int index, Sprite sprite, bool isOn)
         {
             base.Init(crossroad, inputController, index, sprite, isOn);
 
-            int hexCount = 0;
             List<Hexagon> hexagons = crossroad.Hexagons;
-            
             for (int i = 0; i < Crossroad.HEX_COUNT; i++)
-                if (hexagons[i].IsWater)
-                    _hexIds[hexCount++].text = hexagons[i].ID.ToString();
-            
-            for (int i = hexCount; i < MAX_HEX; i++)
-                Destroy(_hexIds[i].gameObject);
+            {
+                int temp = i;
+                hexagons[i].Subscribe(id => _hexIds[temp].text = id.ToString());
+            }
+
+            _wall.SetActive(crossroad.IsWall);
         }
 
         public override void OnChange(Crossroad crossroad, Sprite sprite)
         {
             _icon.sprite = sprite;
+            _wall.SetActive(crossroad.IsWall);
         }
 
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
-            if(_hexIds == null || _hexIds.Length != MAX_HEX) 
+            if (_hexIds == null || _hexIds.Length != Crossroad.HEX_COUNT)
                 _hexIds = GetComponentsInChildren<TextMeshProUGUI>();
+            if (_wall == null)
+                _wall = EUtility.GetComponentInChildren<RectTransform>(this, "Wall").gameObject;
         }
 #endif
     }

@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
 
         public ReactiveList<Crossroad> Shrines => _edifices.shrines;
         public ReactiveList<Crossroad> Ports => _edifices.ports;
-        public ReactiveList<Crossroad> Urbans => _edifices.urbans;
+        public ReactiveList<Crossroad> Colonies => _edifices.colonies;
 
         public PerkTree Perks => _perks;
 

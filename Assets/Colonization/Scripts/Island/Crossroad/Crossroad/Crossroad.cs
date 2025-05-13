@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
     sealed public partial class Crossroad : IDisposable, IInteractable
     {
         #region Fields
-        private const int HEX_COUNT = 3;
+        public const int HEX_COUNT = 3;
 
         private readonly Key _key;
         private AEdifice _edifice;
@@ -43,10 +43,11 @@ namespace Vurbiri.Colonization
         public Id<EdificeId> NextId => _states.nextId;
         public Id<EdificeGroupId> NextGroupId => _states.nextGroupId;
         public bool IsPort => _states.groupId == EdificeGroupId.Port;
-        public bool IsUrban => _states.groupId == EdificeGroupId.Urban;
+        public bool IsColony => _states.groupId == EdificeGroupId.Colony;
         public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
         public bool IsWall => _isWall;
         public IEnumerable<CrossroadLink> Links => _links;
+        public List<Hexagon> Hexagons => _hexagons;
         #endregion
 
         public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IReadOnlyList<AEdifice> prefabs, GameplayTriggerBus triggerBus)
@@ -83,8 +84,8 @@ namespace Vurbiri.Colonization
                 _canCancel.False();
 
                 _waitHexagon.SetResult(newSelectable as Hexagon);
-                foreach (var hex in _hexagons)
-                    hex.SetUnselectable();
+                for (int i = 0; i < HEX_COUNT; i++)
+                    _hexagons[i].SetUnselectable();
 
                 _waitHexagon = null;
             }
@@ -116,7 +117,7 @@ namespace Vurbiri.Colonization
 
         public void SetCaptionHexagonsActive(bool active)
         {
-            for (int i = _hexagons.Count - 1; i >= 0; i--)
+            for (int i = 0; i < HEX_COUNT; i++)
                 _hexagons[i].SetCaptionActive(active);
         }
 
@@ -149,7 +150,7 @@ namespace Vurbiri.Colonization
 
             return profit;
         }
-        public CurrenciesLite ProfitFromUrban(int idHex, int compensationRes)
+        public CurrenciesLite ProfitFromColony(int idHex, int compensationRes)
         {
             CurrenciesLite profit = new();
             Hexagon hex;
@@ -188,7 +189,7 @@ namespace Vurbiri.Colonization
             {
                 EdificeGroupId.Shrine => IsRoadConnect(playerId),
                 EdificeGroupId.Port => WaterCheck(),
-                EdificeGroupId.Urban => NeighborCheck(playerId),
+                EdificeGroupId.Colony => NeighborCheck(playerId),
                 _ => false
             });
 
@@ -214,7 +215,7 @@ namespace Vurbiri.Colonization
                 foreach (var link in _links)
                 {
                     neighbor = link.Other(this);
-                    if (neighbor._states.groupId == EdificeGroupId.Urban)
+                    if (neighbor._states.groupId == EdificeGroupId.Colony)
                         return false;
                 }
                 return IsRoadConnect(playerId);

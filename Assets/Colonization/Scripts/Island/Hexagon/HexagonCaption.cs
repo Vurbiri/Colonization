@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, MinMax(10f, 180f)] private WaitRealtime _timeShowProfit = 60f;
         [SerializeField, Range(0.1f, 100f)] private float _fadeSpeed = 10f;
 
-        private bool _isShow = true;
+        private bool _isShow = true, _isEnable = true;
         private bool _showDistance, _showProfit, _showMode;
         private GameObject _thisGameObject;
         private Color _colorNormal, _colorProfit;
@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.UI
         private bool IsShow
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _showDistance | _showProfit | _showMode;
+            get => _showDistance | _showProfit | _showMode & _isEnable;
         }
 
         public void Init(int id, IdFlags<CurrencyId> flags, Transform cameraTransform, ProjectColors colorSettings, GameplayEventBus eventBus)
@@ -62,6 +62,7 @@ namespace Vurbiri.Colonization.UI
             SetActive();
 
             _unsubscriber = eventBus.EventHexagonShowDistance.Add(OnShow);
+            _unsubscriber = eventBus.EventHexagonShow.Add(OnCaptionEnable);
         }
 
         public void Profit()
@@ -109,6 +110,11 @@ namespace Vurbiri.Colonization.UI
         private void OnShow(bool value)
         {
             _showDistance = value;
+            SetActive();
+        }
+        private void OnCaptionEnable(bool value)
+        {
+            _isEnable = value;
             SetActive();
         }
 
