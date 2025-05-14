@@ -61,7 +61,6 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-
         public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, ProjectColors colors)
         {
             Image image = GetComponent<Image>();

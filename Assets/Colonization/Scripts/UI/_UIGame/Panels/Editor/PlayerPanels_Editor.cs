@@ -82,6 +82,12 @@ namespace Vurbiri.Colonization.UI
                 if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this))
                     CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
 
+                for (int i = 0; i < EdificeGroupId.Count; i++)
+                {
+                    if (_edifices[i] == null)
+                        _edifices[i] = EUtility.FindObjectByName<AEdificesPanel>($"{EdificeGroupId.GetName(i)}Panel");
+                }
+
                 for (int i = 0; i < EdificeId.Count; i++)
                 {
                     if (i > 0 && _sprites[i] == null)
