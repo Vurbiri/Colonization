@@ -134,8 +134,6 @@ namespace Vurbiri.Colonization.Actors
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
         sealed public override void Dispose()
         {
-            _currentHex.ExitActor();
-
             _skin.Dispose();
             _stateMachine.Dispose();
             _effects.Dispose();
@@ -162,6 +160,7 @@ namespace Vurbiri.Colonization.Actors
         
         private IEnumerator Death_Cn()
         {
+            _currentHex.ExitActor();
             _unsubscribers.Unsubscribe();
             Removing();
             yield return _skin.Death();

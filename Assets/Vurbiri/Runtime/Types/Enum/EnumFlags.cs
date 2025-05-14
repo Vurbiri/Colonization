@@ -13,15 +13,14 @@ namespace Vurbiri
         private static readonly int maskValue;
         private static readonly string format;
 
-        public static readonly int count;
         public static readonly EnumFlags<T> None = new(false);
         public static readonly EnumFlags<T> Fill = new(true);
 
         static EnumFlags()
         {
-            T[] values = (T[])Enum.GetValues(typeof(T));
+            var values = Enum<T>.Values;
+            int count = Enum<T>.count;
 
-            count = values.Length;
             maskValue = ~(-1 << count);
             format = $"x{Mathf.CeilToInt(0.25f * count)}";
 
@@ -40,7 +39,7 @@ namespace Vurbiri
 
         [SerializeField] private int _value;
 
-        public readonly int Count => count;
+        public readonly int Count => Enum<T>.count;
 
         public readonly bool this[int i]
         {
@@ -57,7 +56,7 @@ namespace Vurbiri
         #region Constructors
         public EnumFlags(int value)
 		{
-            Throw.IfOutOfRange(value, 0, count);
+            Throw.IfOutOfRange(value, 0, Enum<T>.count);
             _value = 1 << value;
         }
         public EnumFlags(T value)
@@ -71,7 +70,7 @@ namespace Vurbiri
 
         private EnumFlags(int value, int i, bool operation)
         {
-            Throw.IfOutOfRange(i, 0, count);
+            Throw.IfOutOfRange(i, 0, Enum<T>.count);
             if (operation) value |= 1 << i; else value ^= 1 << i;
             _value = value;
         }
@@ -131,7 +130,7 @@ namespace Vurbiri
 
         public readonly IEnumerator<bool> GetEnumerator()
         {
-			for (int i = 0; i < count; i++)
+			for (int i = 0; i < Enum<T>.count; i++)
 				yield return this[i];
         }
         readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

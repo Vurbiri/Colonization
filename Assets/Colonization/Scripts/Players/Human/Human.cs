@@ -41,6 +41,8 @@ namespace Vurbiri.Colonization
         public ReactiveList<Crossroad> Ports => _edifices.ports;
         public ReactiveList<Crossroad> Colonies => _edifices.colonies;
 
+        public Roads Roads => _roads;
+
         public PerkTree Perks => _perks;
 
         public Human(Id<PlayerId> playerId, HumanStorage storage, Players.Settings settings, Hexagons hexagons, TurnQueue turn)

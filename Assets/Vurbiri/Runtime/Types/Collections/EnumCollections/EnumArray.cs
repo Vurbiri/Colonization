@@ -15,8 +15,8 @@ namespace Vurbiri.Collections
         static EnumArray()
         {
             count = 0;
-            TType[] values = Enum<TType>.Values;
-            for (int i = values.Length - 1; i >= 0; i--)
+            var values = Enum<TType>.Values;
+            for (int i = 0; i < Enum<TType>.count; i--)
             {
                 if (values[i].ToInt() >= 0)
                     count++;

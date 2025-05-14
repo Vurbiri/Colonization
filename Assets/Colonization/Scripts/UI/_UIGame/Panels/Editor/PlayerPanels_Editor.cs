@@ -18,7 +18,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(1f, 10f)] private float _spaceIn = 4f;
         [Header("Between")]
         [SerializeField] private Vector2 _paddingOut = new(15f, 15f);
-        [SerializeField, Range(1f, 20f)] private float _spaceOut = 5f;
+        [SerializeField, Range(1f, 20f)] private float _spaceOut = 7f;
+        [SerializeField, Range(0.1f, 1f)] private float _advRatioSpaceOut = 0.4f;
         [Header("└────────────────────────────────────")]
         #pragma warning disable 414
         [SerializeField, ReadOnly] private string _endEditor = "****************************************************************";
@@ -27,7 +28,7 @@ namespace Vurbiri.Colonization.UI
         public void UpdateVisuals()
         {
             var colors = _colorSettings.Colors;
-            var advPadding = _paddingOut.x * 0.5f;
+            var advPadding = _paddingOut.x * _advRatioSpaceOut;
 
             RectTransform thisRectTransform = (RectTransform)transform;
 
@@ -35,6 +36,7 @@ namespace Vurbiri.Colonization.UI
             for (int i = EdificeGroupId.Count - 1; i >= 0; i--)
                 rectEdifices.Add(_edifices[i].UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, colors));
 
+            RectTransform rectRoads = _roads.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, colors);
             RectTransform rectWarriors = _warriors.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, colors);
             RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, _spaceIn, colors);
             RectTransform rectBlood = _blood.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, colors);
@@ -46,8 +48,9 @@ namespace Vurbiri.Colonization.UI
             rectEdifices[0].localPosition = position;
             for (int i = 1; i < EdificeGroupId.Count; i++)
                 rectEdifices[i].localPosition = position = NextPosition(position, rectEdifices[i - 1]);
+            rectRoads.localPosition = position = NextPosition(position, rectEdifices[EdificeGroupId.Count - 1], advPadding * .7f);
 
-            rectWarriors.localPosition = position = NextPosition(position, rectEdifices[EdificeGroupId.Count - 1], advPadding);
+            rectWarriors.localPosition = position = NextPosition(position, rectRoads, advPadding);
 
             rectCurrencies.localPosition = position = NextPosition(position, rectWarriors, advPadding);
             rectBlood.localPosition =  NextPosition(position, rectCurrencies);
@@ -75,6 +78,7 @@ namespace Vurbiri.Colonization.UI
             {
                 EUtility.SetScriptable(ref _colorSettings);
 
+                EUtility.SetObject(ref _roads);
                 EUtility.SetObject(ref _warriors);
                 EUtility.SetObject(ref _currencies);
                 EUtility.SetObject(ref _blood);

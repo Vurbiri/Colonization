@@ -10,12 +10,11 @@ namespace Vurbiri.TextLocalization
     public class Localization : IReactive<Localization>
     {
         private static readonly Localization _instance;
-        private static readonly string[] _nameFiles = Enum<Files>.Names;
+        private readonly string[] _nameFiles = Enum<Files>.Names;
 
-        private readonly Dictionary<string, string>[] _text;
+        private readonly Dictionary<Files, string> _files;
+        private readonly Dictionary<Files, Dictionary<string, string>> _text;
         private readonly LanguageType[] _languages;
-        private readonly int _languagesCount;
-        private readonly int _countFiles;
         private readonly Signer<Localization> _subscriber = new();
         private LanguageType _currentLanguage;
 
@@ -28,12 +27,18 @@ namespace Vurbiri.TextLocalization
         private Localization()
         {
             _languages = LoadObjectFromResourceJson<LanguageType[]>(CONST_L.FILE_LANG);
-            _languagesCount = _languages.Length;
-            for (int i = 0; i < _languagesCount; i++)
+
+            for (int i = 0; i < _languages.Length; i++)
                 _languages[i].LoadSprite();
 
-            _countFiles = _nameFiles.Length;
-            _text = new Dictionary<string, string>[_countFiles];
+            var values = Enum<Files>.Values;
+            
+            _files = new(Enum<Files>.count);
+            _text = new(Enum<Files>.count);
+
+            for(int i = 0; i < Enum<Files>.count; i++)
+                _files[values[i]] = values[i].ToString();
+            
             SetLanguage(_languages[0]);
         }
 
@@ -50,7 +55,7 @@ namespace Vurbiri.TextLocalization
                 return false;
 
             LanguageType language;
-            for(int i = 0; i < _languagesCount; i++)
+            for (int i = 0; i < _languages.Length; i++)
             {
                 language = _languages[i];
                 if (language.Code.ToLowerInvariant() == code.ToLowerInvariant())
@@ -62,37 +67,21 @@ namespace Vurbiri.TextLocalization
             return false;
         }
 
-        public void SetFiles(IReadOnlyList<bool> files)
-        {
-            int count = _countFiles <= files.Count ? _countFiles : files.Count;
-            for (int i = 0; i < count; i++)
-            {
-                if (!files[i])
-                {
-                    _text[i] = null;
-                    continue;
-                }
-
-                if (_text[i] == null)
-                    LoadingFile(i, _currentLanguage);
-            }
-
-            GC.Collect();
-        }
-
         public void SetFiles(EnumFlags<Files> files)
         {
-            int count = _countFiles <= files.Count ? _countFiles : files.Count;
-            for (int i = 0; i < count; i++)
+            Files file;
+            for (int i = 0; i < files.Count; i++)
             {
-                if (!files[i])
+                file = (Files)i;
+                if (files[i])
                 {
-                    _text[i] = null;
-                    continue;
+                    if (!_text.ContainsKey(file))
+                        LoadingFile(file, _currentLanguage);
                 }
-
-                if (_text[i] == null)
-                    LoadingFile(i, _currentLanguage);
+                else 
+                {
+                    _text.Remove(file);
+                }
             }
 
             GC.Collect();
@@ -100,13 +89,12 @@ namespace Vurbiri.TextLocalization
 
         public bool LoadFile(Files file)
         {
-            int id = (int)file;
-            return _text[id] != null || LoadingFile(id, _currentLanguage);
+            return _text.ContainsKey(file) || LoadingFile(file, _currentLanguage);
         }
 
         public void UnloadFile(Files file)
         {
-            _text[(int)file] = null;
+            _text.Remove(file);
             GC.Collect();
         }
 
@@ -120,14 +108,11 @@ namespace Vurbiri.TextLocalization
 
         public bool SwitchLanguage(int id)
         {
-            if (id >= _languagesCount)
-                return false;
-
             if (_currentLanguage.Id == id) 
                 return true;
 
             LanguageType language;
-            for (int i = 0; i < _languagesCount; i++)
+            for (int i = 0; i < _languages.Length; i++)
             {
                 language = _languages[i];
                 if (language.Id == id)
@@ -137,53 +122,47 @@ namespace Vurbiri.TextLocalization
             return false;
         }
 
-        public string GetText(Files file, string key) => GetText(idFile: (int)file, key);
-        public string GetText(int idFile, string key)
+        public string GetText(Files file, string key)
         {
-            if (_text[idFile] != null && _text[idFile].TryGetValue(key, out string str))
+            if (_text.TryGetValue(file, out var dictionary) && dictionary.TryGetValue(key, out string str))
                 return str;
 
-            Message.Log($"ERROR! File:[{_nameFiles[idFile]} : {_text[idFile] != null}] Key: [{key} : {_text[idFile]?.ContainsKey(key)}]");
+            Message.Log($"ERROR! File:[{_files[file]} : {_text.ContainsKey(file)} Key: [{key} : {dictionary?.ContainsKey(key)}]");
             return key;
         }
 
-        public string GetTextFormat(Files file, string key, params object[] args) => string.Format(GetText(idFile: (int)file, key), args);
-        public string GetTextFormat(Files file, string key, object arg0, object arg1, object arg2) => string.Format(GetText(idFile: (int)file, key), arg0, arg1, arg2);
-        public string GetTextFormat(Files file, string key, object arg0, object arg1) => string.Format(GetText(idFile: (int)file, key), arg0, arg1);
-        public string GetTextFormat(Files file, string key, object arg0) => string.Format(GetText(idFile: (int)file, key), arg0);
+        public string GetTextFormat(Files file, string key, params object[] args) => string.Format(GetText(file, key), args);
+        public string GetTextFormat(Files file, string key, object arg0, object arg1, object arg2) => string.Format(GetText(file, key), arg0, arg1, arg2);
+        public string GetTextFormat(Files file, string key, object arg0, object arg1) => string.Format(GetText(file, key), arg0, arg1);
+        public string GetTextFormat(Files file, string key, object arg0) => string.Format(GetText(file, key), arg0);
 
         private bool SetLanguage(LanguageType type)
         {
-            for (int i = 0; i < _countFiles; i++)
-            {
-                if (_text[i] == null)
-                    continue;
-
-                if (!LoadingFile(i, type))
+           foreach (var key in _text.Keys)
+                if (!LoadingFile(key, type))
                     return false;
-            }
 
             _currentLanguage = type;
             _subscriber.Invoke(this);
             return true;
         }
 
-        private bool LoadingFile(int idFile, LanguageType type)
+        private bool LoadingFile(Files file, LanguageType type)
         {
-            if (!TryLoadObjectFromResourceJson(Path.Combine(type.Folder, _nameFiles[idFile]), out Dictionary<string, string> load))
-                return false;
+            if (TryLoadObjectFromResourceJson(Path.Combine(type.Folder, _files[file]), out Dictionary<string, string> load))
+            { 
+                if (_text.TryGetValue(file, out var current))
+                {
+                    foreach (var item in load)
+                        current[item.Key] = item.Value;
+                    return true;
+                }
 
-            var current = _text[idFile];
-            if (current == null)
-            {
-                _text[idFile] = new(load, new StringComparer());
+                _text[file] = new(load, new StringComparer());
                 return true;
             }
 
-            foreach (var item in load)
-                current[item.Key] = item.Value;
-
-            return true;
+            return false;
         }
 
         #region Nested: StringComparer

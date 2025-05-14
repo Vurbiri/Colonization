@@ -2,17 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public abstract class ATogglePanel<T> : MonoBehaviour where T : APanelButton
+    public abstract class ATogglePanel<T> : ASinglyPanel<CurrentMax> where T : APanelButton
     {
         [SerializeField] protected VToggle _toggle;
-        [SerializeField] private CurrentMax _widget;
         [Space]
         [SerializeField] protected T _buttonPrefab;
         [SerializeField] protected Transform _buttonContainer;
@@ -61,32 +59,26 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, ProjectColors colors)
+        public override RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, ProjectColors colors)
         {
-            Image image = GetComponent<Image>();
-            image.color = colors.BackgroundPanel;
-            image.pixelsPerUnitMultiplier = pixelsPerUnit;
-
             _toggle.CheckmarkOn.color = colors.BackgroundPanel;
             _toggle.CheckmarkOff.color = colors.BackgroundPanel;
 
-            Vector2 size = _widget.Size + padding * 2f;
+            RectTransform thisRectTransform = base.UpdateVisuals_Editor(pixelsPerUnit, padding, colors);
 
-            RectTransform thisRectTransform = (RectTransform)transform;
-
-            thisRectTransform.sizeDelta = size;
+            Vector2 size = thisRectTransform.sizeDelta;
             _buttonPrefab.RectTransform.sizeDelta = new(size.x, size.x);
             ((RectTransform)_buttonContainer).anchoredPosition = new(0f, (size.x + size.y) * 0.5f + 20f);
 
             return thisRectTransform;
         }
 
-        protected virtual void OnValidate()
+        protected override void OnValidate()
         {
+            base.OnValidate();
+            
             if (_toggle == null)
                 _toggle = GetComponent<VToggle>();
-            if (_widget == null)
-                _widget = GetComponentInChildren<CurrentMax>();
             if (_buttonContainer == null)
                 _buttonContainer = EUtility.GetComponentInChildren<Transform>(this, "ButtonContainer");
 

@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         public int Count => _count.Value;
-        public IReactive<int> CountReactive => _count;
+        public IReactiveValue<int> CountReactive => _count;
 
         public Roads(Id<PlayerId> id, Color color, RoadFactory factory, Coroutines coroutines)
         {

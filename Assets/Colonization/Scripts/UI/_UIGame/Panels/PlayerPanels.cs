@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization.UI
 	{
         [Space]
         [SerializeField] private IdArray<EdificeGroupId, AEdificesPanel> _edifices;
+        [SerializeField] private RoadsPanel _roads;
         [Space]
         [SerializeField] private WarriorsPanel _warriors;
         [Space]
@@ -27,8 +28,10 @@ namespace Vurbiri.Colonization.UI
 
             for (int i = 0; i < EdificeGroupId.Count; i++)
                 _edifices[i].Init(player, _sprites, colors, inputController);
+            _roads.Init(player, colors);
 
             _warriors.Init(player, colors, inputController);
+
             _currencies.Init(_directionPopup, currencies, colors);
             _blood.Init(_directionPopup, currencies, colors);
 
