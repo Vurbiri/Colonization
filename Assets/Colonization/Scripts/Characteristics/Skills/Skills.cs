@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.Characteristics

@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 using UnityEngine;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 

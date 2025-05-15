@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 using static UnityEditor.EditorGUI;
 using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 

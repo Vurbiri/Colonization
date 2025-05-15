@@ -22,8 +22,9 @@ namespace Vurbiri.Colonization
             _profile.Init(ysdk);
 
             bool isSave = storage.SetAndBindAudioMixer(_mixer);
-            isSave |= storage.SetAndBindProfile(_profile);
+            isSave |=     storage.SetAndBindProfile(_profile);
 
+            Cancel();
             if (isSave) storage.Save();
         }
 

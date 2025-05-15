@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 using Vurbiri.Reactive;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 
 namespace Vurbiri.UI
 {

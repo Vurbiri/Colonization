@@ -5,7 +5,7 @@ using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.Reactive;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization.EntryPoint
 {

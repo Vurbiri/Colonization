@@ -1,21 +1,21 @@
 //Assets\Colonization\Scripts\Settings\Profile.cs
 using System;
 using UnityEngine;
+using Vurbiri.International;
 using Vurbiri.Reactive;
-using Vurbiri.TextLocalization;
 
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
     public partial class Profile : IReactive<Profile>
     {
-        [SerializeField] private int _idLang = 0;
+        [SerializeField] private SystemLanguage _idLang = SystemLanguage.Russian;
         [SerializeField] private int _quality = 2;
 
         private readonly Signer<Profile> _signer = new();
         private Localization _localization;
 
-        public int Language { get => _idLang; set => _localization.SwitchLanguage(value); }
+        public SystemLanguage Language { get => _idLang; set => _localization.SwitchLanguage(value); }
         public int Quality { get => _quality; set => QualitySettings.SetQualityLevel(value); }
 
         public int QualityCount => QualitySettings.count;
@@ -23,23 +23,22 @@ namespace Vurbiri.Colonization
         public void Init(YandexSDK ysdk)
         {
             _localization = Localization.Instance;
-            if (ysdk.IsInitialize && _localization.TryIdFromCode(ysdk.Lang, out int id))
-                _idLang = id;
+            if (ysdk.IsInitialize)
+                _idLang = _localization.IdFromCode(ysdk.Lang);
+
+            //_idLang = ysdk.IsInitialize ? _localization.IdFromCode(ysdk.Lang) : Application.systemLanguage;
         }
 
         public Unsubscriber Subscribe(Action<Profile> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, this);
 
         public void Apply()
         {
-            bool changed = false; int value;
+            bool changed = _idLang != _localization.CurrentId;
+            _idLang = _localization.CurrentId;
 
-            value = _localization.CurrentId;
-            changed |= _idLang != value;
-            _idLang = value;
-
-            value = QualitySettings.GetQualityLevel();
-            changed |= _quality != value;
-            _quality = value;
+            int level = QualitySettings.GetQualityLevel();
+            changed |= _quality != level;
+            _quality = level;
 
             if (changed) _signer.Invoke(this);
         }

@@ -6,6 +6,12 @@ namespace Vurbiri.Reactive
     public abstract class Unsubscriber
     {
         public abstract void Unsubscribe();
+
+        public static Unsubscriber operator +(Unsubscriber a, Unsubscriber b)
+        {
+            a?.Unsubscribe();
+            return b;
+        }
     }
 
 

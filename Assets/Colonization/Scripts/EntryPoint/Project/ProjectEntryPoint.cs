@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\ProjectEntryPoint.cs
 using Vurbiri.EntryPoint;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization.EntryPoint
 {

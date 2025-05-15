@@ -1,5 +1,5 @@
 //Assets\Colonization\Scripts\CONSTS\CONST_UI_LNG_KEYS.cs
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization.UI
 {

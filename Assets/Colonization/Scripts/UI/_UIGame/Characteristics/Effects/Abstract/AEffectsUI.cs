@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Characteristics\Effects\Abstract\AEffectsUI.cs
 using System.Text;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization.UI
 {

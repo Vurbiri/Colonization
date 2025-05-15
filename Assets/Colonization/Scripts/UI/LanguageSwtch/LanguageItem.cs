@@ -2,7 +2,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -11,13 +12,13 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private Image _icon;
         [SerializeField] private TextMeshProUGUI _name;
-        [SerializeField] private Toggle _toggle;
+        [SerializeField] private VToggle _toggle;
 
         private bool _isSave;
-        private int _id = -1;
+        private SystemLanguage _id;
         private Profile _profile;
 
-        public void Setup(Profile profile, LanguageType languageType, ToggleGroup toggleGroup, bool isSave)
+        public void Setup(Profile profile, LanguageType languageType, VToggleGroup toggleGroup, bool isSave)
         {
             _profile = profile;
             _icon.sprite = languageType.Sprite;
@@ -25,9 +26,9 @@ namespace Vurbiri.Colonization.UI
             _id = languageType.Id;
             _isSave = isSave;
 
-            _toggle.SetIsOnWithoutNotify(_profile.Language == _id);
-            _toggle.group = toggleGroup;
-            _toggle.onValueChanged.AddListener(OnSelect);
+            _toggle.SilentIsOn = _profile.Language == _id;
+            _toggle.Group = toggleGroup;
+            _toggle.AddListener(OnSelect);
         }
 
         private void OnSelect(bool isOn)
@@ -39,11 +40,10 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        public void OnValidate()
+        private void OnValidate()
         {
-
             if (_toggle == null)
-                _toggle = GetComponent<Toggle>();
+                _toggle = GetComponent<VToggle>();
         }
 #endif
     }

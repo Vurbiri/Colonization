@@ -1,0 +1,20 @@
+{
+    "name": "Vurbiri.International.Editor",
+    "rootNamespace": "Vurbiri.International.Editor",
+    "references": [
+        "GUID:9fa1b33fdc3c3894994221ede2152958",
+        "GUID:d3b36ff6adb70214ab38c4129f60db79",
+        "GUID:8d796b54c349a5e4e9e760d782ae9adf"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

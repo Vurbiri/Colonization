@@ -1,27 +1,38 @@
 //Assets\Colonization\Scripts\UI\LanguageSwtch\LanguageSwtch.cs
 using UnityEngine;
-using UnityEngine.UI;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class LanguageSwitch : ToggleGroup
+    [RequireComponent(typeof(VToggleGroup))]
+    public class LanguageSwitch : MonoBehaviour
     {
         [SerializeField] private LanguageItem _langPrefab;
+        [SerializeField] private VToggleGroup _toggleGroup;
         [Space]
         [SerializeField] private bool _isSave = false;
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
-
-            allowSwitchOff = false;
+            _toggleGroup.AllowSwitchOff = false;
 
             var profile = SceneContainer.Get<Settings>().Profile;
             var languages = SceneContainer.Get<Localization>().Languages;
-            
+
             foreach (var item in languages)
-                Instantiate(_langPrefab, transform).Setup(profile, item, this, _isSave);
+                if (!item.Equals(SystemLanguage.Unknown))
+                    Instantiate(_langPrefab, transform).Setup(profile, item, _toggleGroup, _isSave);
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            //EUtility.SetPrefab(ref _langPrefab);
+
+            if (_toggleGroup == null)
+                _toggleGroup = GetComponent<VToggleGroup>();
+        }
+#endif
     }
 }

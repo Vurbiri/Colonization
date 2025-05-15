@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Characteristics\Effects\TempEffectUI.cs
 using System.Text;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization.UI
 {

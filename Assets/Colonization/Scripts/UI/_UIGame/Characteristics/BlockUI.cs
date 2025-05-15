@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Characteristics\BlockUI.cs
 using System;
 using System.Text;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 using static Vurbiri.Colonization.Characteristics.EffectsFactory;

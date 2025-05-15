@@ -1,6 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonCancel.cs
 using Vurbiri.Reactive;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI

@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\Storages\Converters\ProfileConverter.cs
 using Newtonsoft.Json;
 using System;
+using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
@@ -18,7 +19,7 @@ namespace Vurbiri.Colonization
                 var data = serializer.Deserialize<int[]>(reader);
 
                 int i = 0;
-                _profile._idLang = data[i++]; _profile._quality = data[i];
+                _profile._idLang = (SystemLanguage)data[i++]; _profile._quality = data[i];
                 _profile.Cancel();
 
                 return _profile;
@@ -27,7 +28,7 @@ namespace Vurbiri.Colonization
             protected override void WriteJson(JsonWriter writer, Profile profile, JsonSerializer serializer)
             {
                 writer.WriteStartArray();
-                writer.WriteValue(profile._idLang);
+                writer.WriteValue((int)profile._idLang);
                 writer.WriteValue(profile._quality);
                 writer.WriteEndArray();
             }

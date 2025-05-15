@@ -1,0 +1,9 @@
+// Generated file
+
+namespace Vurbiri.International
+{
+    public enum Files
+    {
+#ENUM#
+    }
+}

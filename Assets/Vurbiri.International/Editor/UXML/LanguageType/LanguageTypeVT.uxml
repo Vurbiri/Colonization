@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="flex-grow: 1; align-items: stretch; justify-content: flex-start; border-left-color: rgb(77, 77, 77); border-right-color: rgb(77, 77, 77); border-top-color: rgb(77, 77, 77); border-bottom-color: rgb(77, 77, 77); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; background-color: rgb(66, 66, 66);">
+        <ui:EnumField label="Id" type="UnityEngine.SystemLanguage, UnityEngine.CoreModule" binding-path="_id" value="Russian" name="Id" />
+        <ui:TextField picking-mode="Ignore" label="Name" name="Name" binding-path="_name" />
+        <ui:TextField picking-mode="Ignore" label="Folder" name="Folder" binding-path="_folder" />
+        <ui:TextField picking-mode="Ignore" label="Code" value="ru" binding-path="_code" name="Code" />
+        <ui:TextField picking-mode="Ignore" label="Sprite Name" value="Banner" name="SpriteName" />
+    </ui:VisualElement>
+</ui:UXML>

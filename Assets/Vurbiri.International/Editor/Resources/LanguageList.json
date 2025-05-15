@@ -1,0 +1,266 @@
+[
+    {
+        "Id": 0,
+		"Code": "af",
+        "Folder": "Afrikaans",
+        "Name": "Afrikaans"
+    },
+    {
+        "Id": 1,
+		"Code": "ar",
+        "Folder": "Arabic",
+        "Name": "اللغة العربية"
+    },
+    {
+        "Id": 2,
+		"Code": "eu",
+        "Folder": "Basque",
+        "Name": "Euskara"
+    },
+    {
+        "Id": 3,
+		"Code": "be",
+        "Folder": "Belarusian",
+        "Name": "Беларуская"
+    },
+    {
+        "Id": 4,
+		"Code": "bg",
+        "Folder": "Bulgarian",
+        "Name": "Български език"
+    },
+    {
+        "Id": 5,
+		"Code": "ca",
+        "Folder": "Catalan",
+        "Name": "Català"
+    },
+    {
+        "Id": 6,
+		"Code": "zh",
+        "Folder": "Chinese",
+        "Name": "中文"
+    },
+    {
+        "Id": 7,
+		"Code": "cs",
+        "Folder": "Czech",
+        "Name": "Čeština"
+    },
+    {
+        "Id": 8,
+		"Code": "da",
+        "Folder": "Danish",
+        "Name": "Dansk"
+    },
+	{
+        "Id": 9,
+		"Code": "nl",
+        "Folder": "Dutch",
+        "Name": "Nederlands"
+    },
+	{
+        "Id": 10,
+		"Code": "en",
+        "Folder": "English",
+        "Name": "English"
+    },
+	{
+        "Id": 11,
+		"Code": "et",
+        "Folder": "Estonian",
+        "Name": "Eesti"
+    },
+	{
+        "Id": 12,
+		"Code": "fo",
+        "Folder": "Faroese",
+        "Name": "Føroyskt"
+    },
+	{
+        "Id": 13,
+		"Code": "fi",
+        "Folder": "Finnish",
+        "Name": "Suomi"
+    },
+	{
+        "Id": 14,
+		"Code": "fr",
+        "Folder": "French",
+        "Name": "Français"
+    },
+    {
+        "Id": 15,
+		"Code": "de",
+        "Folder": "German",
+        "Name": "Deutsch"
+    },
+	{
+        "Id": 16,
+		"Code": "el",
+        "Folder": "Greek",
+        "Name": "Ελληνικά"
+    },
+	{
+        "Id": 17,
+		"Code": "he",
+        "Folder": "Hebrew",
+        "Name": "עברית"
+    },
+	{
+        "Id": 18,
+		"Code": "hu",
+        "Folder": "Hungarian",
+        "Name": "Magyar"
+    },
+	{
+        "Id": 19,
+		"Code": "is",
+        "Folder": "Icelandic",
+        "Name": "Íslenska"
+    },
+	{
+        "Id": 20,
+		"Code": "id",
+        "Folder": "Indonesian",
+        "Name": "Bahasa Indonesia"
+    },
+	{
+        "Id": 21,
+		"Code": "it",
+        "Folder": "Italian",
+        "Name": "Italiano"
+    },
+	{
+        "Id": 22,
+		"Code": "ja",
+        "Folder": "Japanese",
+        "Name": "日本語"
+    },
+	{
+        "Id": 23,
+		"Code": "ko",
+        "Folder": "Korean",
+        "Name": "한국어"
+    },
+	{
+        "Id": 24,
+		"Code": "lv",
+        "Folder": "Latvian",
+        "Name": "Latviešu valoda"
+    },
+	{
+        "Id": 25,
+		"Code": "lt",
+        "Folder": "Lithuanian",
+        "Name": "Lietuvių kalba"
+    },
+	{
+        "Id": 26,
+		"Code": "no",
+        "Folder": "Norwegian",
+        "Name": "Norsk"
+    },
+	{
+        "Id": 27,
+		"Code": "pl",
+        "Folder": "Polish",
+        "Name": "Polski"
+    },
+	{
+        "Id": 28,
+		"Code": "pt",
+        "Folder": "Portuguese",
+        "Name": "Português"
+    },
+	{
+        "Id": 29,
+		"Code": "ro",
+        "Folder": "Romanian",
+        "Name": "Română"
+    },
+    {
+        "Id": 30,
+		"Code": "ru",
+        "Folder": "Russian",
+        "Name": "Русский"
+    },
+	{
+        "Id": 31,
+		"Code": "sh",
+        "Folder": "SerboCroatian",
+        "Name": "Српскохрватски"
+    },
+	{
+        "Id": 32,
+		"Code": "sk",
+        "Folder": "Slovak",
+        "Name": "Slovenčina"
+    },
+	{
+        "Id": 33,
+		"Code": "sl",
+        "Folder": "Slovenian",
+        "Name": "Slovenščina"
+    },
+	{
+        "Id": 34,
+		"Code": "es",
+        "Folder": "Spanish",
+        "Name": "Español"
+    },
+	{
+        "Id": 35,
+		"Code": "sv",
+        "Folder": "Swedish",
+        "Name": "Svenska"
+    },
+	{
+        "Id": 36,
+		"Code": "th",
+        "Folder": "Thai",
+        "Name": "ไทย"
+    },
+	{
+        "Id": 37,
+		"Code": "tr",
+        "Folder": "Turkish",
+        "Name": "Türkçe"
+    },
+	{
+        "Id": 38,
+		"Code": "uk",
+        "Folder": "Ukrainian",
+        "Name": "Українська"
+    },
+	{
+        "Id": 39,
+		"Code": "vi",
+        "Folder": "Vietnamese",
+        "Name": "Tiếng Việt"
+    },
+	{
+        "Id": 40,
+		"Code": "zh",
+        "Folder": "ChineseSimplified",
+        "Name": "汉语"
+    },
+	{
+        "Id": 41,
+		"Code": "zh",
+        "Folder": "ChineseTraditional",
+        "Name": "漢語"
+    },
+	{
+        "Id": 42,
+		"Code": "hi",
+        "Folder": "Hindi",
+        "Name": "हिन्दी"
+    },
+	{
+        "Id": 43,
+		"Code": "",
+        "Folder": "Unknown",
+        "Name": "Unknown"
+    }
+]

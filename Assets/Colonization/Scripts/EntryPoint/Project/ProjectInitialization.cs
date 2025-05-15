@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
-using Vurbiri.TextLocalization;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -45,8 +45,8 @@ namespace Vurbiri.Colonization.EntryPoint
             loading.Add(new LoadDataStep(diContainer, _playerVisualSetScriptable));
             loading.Add(new EndLoadScene(operation));
 
-            _settingsColorScriptable.Dispose();
             Destroy(this);
+            _settingsColorScriptable.Dispose();
         }
 
 #if UNITY_EDITOR
