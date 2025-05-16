@@ -18,6 +18,7 @@ namespace Vurbiri.Colonization
         public SystemLanguage Language { get => _idLang; set => _localization.SwitchLanguage(value); }
         public int Quality { get => _quality; set => QualitySettings.SetQualityLevel(value); }
 
+        public Localization Localization => _localization;
         public int QualityCount => QualitySettings.count;
 
         public void Init(YandexSDK ysdk)

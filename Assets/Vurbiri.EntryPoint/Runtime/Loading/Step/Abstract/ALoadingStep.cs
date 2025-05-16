@@ -1,8 +1,7 @@
 //Assets\Vurbiri.EntryPoint\Runtime\Loading\Step\Abstract\ALoadingStep.cs
 using System.Collections;
-using Vurbiri.EntryPoint;
 
-namespace Vurbiri
+namespace Vurbiri.EntryPoint
 {
     public abstract class ALoadingStep : ILoadingStep
     {

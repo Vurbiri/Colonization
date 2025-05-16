@@ -5,6 +5,7 @@ using Vurbiri.Collections;
 using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.EntryPoint;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization
 {
@@ -25,7 +26,7 @@ namespace Vurbiri.Colonization
         private GameplayStorage _storage;
         private readonly Vector3[] _sides = new Vector3[HEX.SIDES];
 
-        public string Description => "IslandCreator";
+        public string Description => Localization.Instance.GetText(Files.Main, "IslandCreation");
         public float Weight => 3f;
 
         public IslandCreator Init(GameplayInitObjects objects)

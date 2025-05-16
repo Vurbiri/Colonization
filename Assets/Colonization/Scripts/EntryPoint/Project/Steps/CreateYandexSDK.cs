@@ -3,11 +3,11 @@ using System.Collections;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
-    sealed internal class CreateYandexSDK : ALoadingStep
+    sealed internal class CreateYandexSDK : ALocalizationLoadingStep
     {
         private readonly YandexSDK _ysdk;
 
-        public CreateYandexSDK(DIContainer diContainer, Coroutines coroutine, string lbName) : base("YandexSDK...")
+        public CreateYandexSDK(DIContainer diContainer, Coroutines coroutine, string lbName) : base("Yandex")
         {
             _ysdk = new(coroutine, lbName);
 

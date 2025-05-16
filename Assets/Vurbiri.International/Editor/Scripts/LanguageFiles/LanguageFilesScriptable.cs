@@ -13,7 +13,7 @@ namespace Vurbiri.International.Editor
     {
         private const string ENUM_KEYWORD = @"#ENUM#";
         private const string ENUM_TMP = "FilesTemplate";
-        private const string ENUM_PATH = FOLDER + "Runtime/Files.cs";
+        private const string ENUM_PATH = ASM_FOLDER + "Runtime/Files.cs";
         private const string SPACE = "        ";
                 
         [SerializeField] private List<string> _files;
@@ -57,7 +57,7 @@ namespace Vurbiri.International.Editor
                     sb.AppendLine(",");
             }
 
-            File.WriteAllText(Application.dataPath.Concat(ENUM_PATH), _template.Replace(ENUM_KEYWORD, sb.ToString()), utf8WithoutBom);
+            File.WriteAllText(FileUtil.GetPhysicalPath(ENUM_PATH), _template.Replace(ENUM_KEYWORD, sb.ToString()), utf8WithoutBom);
 
             return true;
 

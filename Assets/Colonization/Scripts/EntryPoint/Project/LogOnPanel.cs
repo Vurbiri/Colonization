@@ -2,17 +2,22 @@
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
+using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization
 {
     public class LogOnPanel : MonoBehaviour
     {
+        [SerializeField] private LanguageSwitch _languageSwitch;
+
         private ProjectStorage _storage;
         private WaitResultSource<bool> _waitLogOn;
         private YandexSDK _ysdk;
 
-        public IEnumerator TryLogOn_Cn(YandexSDK ysdk, ProjectStorage storage)
+        public IEnumerator TryLogOn_Cn(YandexSDK ysdk, Settings settings, ProjectStorage storage)
         {
+            _languageSwitch.Init(settings);
+
             gameObject.SetActive(true);
 
             _storage = storage;
@@ -51,7 +56,17 @@ namespace Vurbiri.Colonization
 
         private void FixedUpdate()
         {
-            if (_ysdk.IsLogOn) OnLogOn();
+            if (_ysdk != null && _ysdk.IsLogOn) OnLogOn();
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            //EUtility.SetPrefab(ref _langPrefab);
+
+            if (_languageSwitch == null)
+                _languageSwitch = GetComponentInChildren<LanguageSwitch>();
+        }
+#endif
     }
 }

@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
         public void Setup(Profile profile, LanguageType languageType, VToggleGroup toggleGroup, bool isSave)
         {
             _profile = profile;
-            _icon.sprite = languageType.Sprite;
+            _icon.sprite = Resources.Load<Sprite>(languageType.SpriteName);
             _name.text = languageType.Name;
             _id = languageType.Id;
             _isSave = isSave;
@@ -37,6 +37,12 @@ namespace Vurbiri.Colonization.UI
 
             _profile.Language = _id;
             if (_isSave) _profile.Apply();
+        }
+
+        private void OnDestroy()
+        {
+            if(_icon.sprite != null)
+                Resources.UnloadAsset(_icon.sprite);
         }
 
 #if UNITY_EDITOR

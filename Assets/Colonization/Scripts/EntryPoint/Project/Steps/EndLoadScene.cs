@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\Steps\EndLoadScene.cs
 using System.Collections;
 using UnityEngine;
+using Vurbiri.EntryPoint;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -8,7 +9,7 @@ namespace Vurbiri.Colonization.EntryPoint
     {
         private readonly AsyncOperation _operation;
 
-        public EndLoadScene(AsyncOperation operation) : base("EndLoadScene")
+        public EndLoadScene(AsyncOperation operation) : base(string.Empty)
         {
             _operation = operation;
         }

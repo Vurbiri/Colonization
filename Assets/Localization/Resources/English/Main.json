@@ -30,5 +30,8 @@
   "Leaderboard": "Seekers",
   "Help": "Help",
   "Control": "Control",
-  "Loading": "Loading..."
+  "Loading": "Loading...",
+  "IslandCreationStep": "Island creation...",
+  "StorageCreationStep": "Storage creation...",
+  "YandexStep": "Yandex..."
 }

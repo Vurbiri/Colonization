@@ -18,14 +18,16 @@ namespace Vurbiri.International.Editor
 
             VisualElement root = _treeAsset.CloneTree();
 
+            root.Q<Label>("Label").text = CONST.PROJECT_STRING_LABEL;
+
             var list = root.Q<ListView>("Strings");
             list.makeItem = LanguageRecordEditor.CreateInstanceAndGetVisualElement;
             list.headerTitle = strings.LoadFile;
             list.itemsAdded += strings.OnAdded;
 
-            root.Q<Button>("Load").clicked += () => { list.headerTitle = strings.Load(); serializedObject.ApplyModifiedProperties(); };
+            root.Q<Button>("Load").clicked += () => { list.headerTitle = strings.Load(); serializedObject.Update(); };
             root.Q<Button>("Save").clicked += strings.Save;
-            root.Q<Button>("Unload").clicked += () => { list.headerTitle = string.Empty; strings.Unload(); serializedObject.ApplyModifiedProperties(); };
+            root.Q<Button>("Unload").clicked += () => { list.headerTitle = string.Empty; strings.Unload(); serializedObject.Update(); };
 
             return root;
         }

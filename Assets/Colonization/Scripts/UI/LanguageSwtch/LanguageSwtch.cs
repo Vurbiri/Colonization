@@ -1,6 +1,5 @@
-//Assets\Colonization\Scripts\UI\LanguageSwtch\LanguageSwtch.cs
+//Assets\Colonization\Scripts\UI\LanguageSwtch\LanguageSwitch.cs
 using UnityEngine;
-using Vurbiri.International;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -13,16 +12,18 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private bool _isSave = false;
 
-        protected void Awake()
+        public void Init(Settings settings)
         {
             _toggleGroup.AllowSwitchOff = false;
 
-            var profile = SceneContainer.Get<Settings>().Profile;
-            var languages = SceneContainer.Get<Localization>().Languages;
+            var profile = settings.Profile;
+            var languages = profile.Localization.Languages;
 
             foreach (var item in languages)
                 if (!item.Equals(SystemLanguage.Unknown))
                     Instantiate(_langPrefab, transform).Setup(profile, item, _toggleGroup, _isSave);
+
+            Destroy(this);
         }
 
 #if UNITY_EDITOR

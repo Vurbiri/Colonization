@@ -1,7 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\Abstract\AButtonBuildType.cs
 using UnityEngine;
-using Vurbiri.Reactive;
 using Vurbiri.International;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {

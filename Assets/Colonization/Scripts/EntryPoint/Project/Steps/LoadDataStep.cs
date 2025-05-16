@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\EntryPoint\Project\Steps\LoadDataStep.cs
 using System.Collections;
 using Vurbiri.Colonization.Storage;
+using Vurbiri.EntryPoint;
 
 namespace Vurbiri.Colonization.EntryPoint
 {

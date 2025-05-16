@@ -30,5 +30,8 @@
   "Leaderboard": "Искатели",
   "Help": "Справка",
   "Control": "Управление",
-  "Loading": "Загрузка..."
+  "Loading": "Загрузка...",
+  "IslandCreationStep": "Создание острова...",
+  "StorageCreationStep": "Создание системы хранения...",
+  "YandexStep": "Яндекс..."
 }

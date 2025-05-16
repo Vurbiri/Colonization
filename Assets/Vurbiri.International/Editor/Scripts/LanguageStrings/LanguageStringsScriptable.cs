@@ -60,7 +60,7 @@ namespace Vurbiri.International.Editor
             _loadFile = string.Empty;
             _strings = null;
             
-            EditorUtility.SetDirty(this);
+            //EditorUtility.SetDirty(this);
         }
 
         public void OnAdded(IEnumerable<int> indexes)
@@ -86,7 +86,7 @@ namespace Vurbiri.International.Editor
         {
             Dictionary<string, string>[] strings = new Dictionary<string, string>[_count];
 
-            string path, folder = Application.dataPath.Concat(OUT_RESOURCE_FOLDER);
+            string path, folder = FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER);
             int idMaxLength = -1, maxLength = -1;
             for (int i = 0; i < _count; i++)
             {
@@ -122,7 +122,7 @@ namespace Vurbiri.International.Editor
                 _strings.Add(record);
             }
 
-            EditorUtility.SetDirty(this);
+            //EditorUtility.SetDirty(this);
 
             return _loadFile = _file.ToString();
         }
@@ -148,7 +148,7 @@ namespace Vurbiri.International.Editor
                     strings[i].Add(key, str.GetText(i));
             }
 
-            string path, folder = Application.dataPath.Concat(OUT_RESOURCE_FOLDER);
+            string path, folder = FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER);
             for (int i = 0; i < _count; i++)
             {
                 path = Path.Combine(folder, _languages[i].Folder, _file.ToString().Concat(JSON_EXP));

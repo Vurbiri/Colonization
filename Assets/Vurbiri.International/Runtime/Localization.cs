@@ -23,6 +23,7 @@ namespace Vurbiri.International
         public static Localization Instance => s_instance;
         public ReadOnlyCollection<LanguageType> Languages => _languages;
         public SystemLanguage CurrentId => _currentLanguage.Id;
+        public ICollection<Files> LoadedFiles => _text.Keys;
 
         static Localization() => s_instance = new();
         private Localization() 
@@ -30,14 +31,14 @@ namespace Vurbiri.International
             _languages = new(LoadObjectFromResourceJson<LanguageType[]>(CONST_L.FILE_LANG));
             Throw.IfLengthZero(_languages);
 
-            LanguageType language;
             _defaultLanguage = _languages[0];
-            for (int i = 0; i < _languages.Count; i++)
+            for (int i = _languages.Count - 1; i >= 0; i--)
             {
-                language = _languages[i];
-                language.LoadSprite();
-                if (language.Equals(SystemLanguage.Unknown))
-                    _defaultLanguage = language;
+                if (_languages[i].Equals(SystemLanguage.Unknown))
+                {
+                    _defaultLanguage = _languages[i];
+                    break;
+                }
             }
 
             Files[] values = Enum<Files>.Values;
@@ -49,6 +50,7 @@ namespace Vurbiri.International
                 _files[values[i]] = values[i].ToString();
 
             SetLanguage(_defaultLanguage);
+            SetFiles(values[0]);
         }
 
 #if UNITY_EDITOR
@@ -61,7 +63,7 @@ namespace Vurbiri.International
         {
             if (!string.IsNullOrEmpty(code))
             {
-                for (int i = 0; i < _languages.Count; i++)
+                for (int i = _languages.Count - 1; i >= 0; i--)
                     if (_languages[i].Code.ToLowerInvariant() == code.ToLowerInvariant())
                         return _languages[i].Id;
             }
@@ -69,10 +71,12 @@ namespace Vurbiri.International
             return _defaultLanguage.Id;
         }
 
+        public bool IsFileLoaded(Files file) => _text.ContainsKey(file);
+
         public void SetFiles(EnumFlags<Files> files)
         {
             Files file;
-            for (int i = 0; i < files.Count; i++)
+            for (int i = files.Count - 1; i >= 0; i--)
             {
                 file = (Files)i;
                 if (files[i])
@@ -107,7 +111,7 @@ namespace Vurbiri.International
             if (_currentLanguage.Equals(id))
                 return;
 
-            for (int i = 0; i < _languages.Count; i++)
+            for (int i = _languages.Count - 1; i >= 0; i--)
             {
                 if (_languages[i].Equals(id))
                 {
@@ -121,11 +125,18 @@ namespace Vurbiri.International
 
         public string GetText(Files file, string key)
         {
-            if (_text.TryGetValue(file, out var dictionary) && dictionary.TryGetValue(key, out string str))
-                return str;
+            if (!_text.TryGetValue(file, out var dictionary))
+            {
+                Message.Log($"ERROR! File '{_files[file]}' not loaded.");
+                return key;
+            }
+            if (!dictionary.TryGetValue(key, out string str))
+            {
+                Message.Log($"ERROR! Key '{key}' not found in file '{_files[file]}'.");
+                return key;
+            }
 
-            Message.Log($"ERROR! File:[{_files[file]} : {_text.ContainsKey(file)} Key: [{key} : {dictionary?.ContainsKey(key)}]");
-            return key;
+            return str;
         }
 
         public string GetText(string key)
@@ -134,7 +145,7 @@ namespace Vurbiri.International
                 if (dictionary.TryGetValue(key, out string str))
                     return str;
 
-            Message.Log($"ERROR! Key: [{key}] Not found");
+            Message.Log($"ERROR! Key '{key}' not found.");
             return key;
         }
 

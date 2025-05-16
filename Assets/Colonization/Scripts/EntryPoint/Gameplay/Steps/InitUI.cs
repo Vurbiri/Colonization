@@ -2,6 +2,7 @@
 using System.Collections;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.UI;
+using Vurbiri.EntryPoint;
 
 namespace Vurbiri.Colonization.EntryPoint
 {

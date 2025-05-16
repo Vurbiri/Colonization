@@ -7,7 +7,7 @@ using Vurbiri.EntryPoint;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
-    sealed internal class CreateStorage : ALoadingStep
+    sealed internal class CreateStorage : ALocalizationLoadingStep
     {
         private readonly DIContainer _diContainer;
         private readonly Coroutines _coroutine;
@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.EntryPoint
         private readonly Settings _settings;
         private ProjectStorage _projectStorage;
 
-        public CreateStorage(DIContainer diContainer, Coroutines coroutine, ILoadingScreen loadingScreen, LogOnPanel logOnPanel) : base("CreateStorage")
+        public CreateStorage(DIContainer diContainer, Coroutines coroutine, ILoadingScreen loadingScreen, LogOnPanel logOnPanel) : base("StorageCreationStep")
         {
             _diContainer = diContainer;
             _coroutine = coroutine;
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.EntryPoint
             if (!_ysdk.IsLogOn)
             {
                 yield return _coroutine.Run(_loadingScreen.SmoothOff());
-                yield return _coroutine.Run(_logOnPanel.TryLogOn_Cn(_ysdk, _projectStorage));
+                yield return _coroutine.Run(_logOnPanel.TryLogOn_Cn(_ysdk, _settings, _projectStorage));
                 yield return _coroutine.Run(_loadingScreen.SmoothOn());
                 if (_ysdk.IsLogOn)
                     yield return _coroutine.Run(CreateStorage_Cn());

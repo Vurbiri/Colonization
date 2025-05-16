@@ -15,7 +15,10 @@ namespace Vurbiri.International.Editor
         {
             var settings = LanguageFilesScriptable.GetOrCreateSelf();
             settings.Init();
+
             var root = _treeAsset.CloneTree();
+
+            root.Q<Label>("Label").text = CONST.PROJECT_FILES_LABEL;
 
             var list = root.Q<ListView>("Files");
             list.makeItem = MakeItem;

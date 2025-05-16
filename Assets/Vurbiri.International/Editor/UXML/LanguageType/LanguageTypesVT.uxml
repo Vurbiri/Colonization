@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:VisualElement style="flex-grow: 1; max-height: 50px; min-height: 50px; height: 50px; justify-content: flex-start; align-items: flex-start;">
-        <ui:Label tabindex="-1" text=" Languages" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 20px; -unity-font-style: bold;" />
+    <ui:VisualElement style="flex-grow: 1; max-height: 50px; min-height: 50px; height: 50px; justify-content: flex-start; align-items: flex-start; padding-left: 10px;">
+        <ui:Label tabindex="-1" text=" Languages" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="font-size: 20px; -unity-font-style: bold;" />
     </ui:VisualElement>
     <ui:VisualElement style="flex-grow: 1; justify-content: flex-start; align-self: auto; align-items: center;">
         <ui:VisualElement name="VisualElement" style="flex-grow: 1; flex-direction: row; justify-content: center; min-width: 98%; max-height: 34px; align-items: center; max-width: 98%; align-self: auto; min-height: 34px; height: 34px;">
@@ -11,7 +11,7 @@
             <ui:Toggle label="Readonly" value="true" name="Readonly" binding-path="_readonly" />
         </ui:VisualElement>
         <ui:VisualElement style="flex-grow: 1; min-width: 98%; max-width: 98%; width: 98%;">
-            <ui:ListView name="Types" show-border="true" binding-path="_languageTypes" virtualization-method="DynamicHeight" fixed-item-height="60" show-foldout-header="false" show-add-remove-footer="true" reorderable="true" reorder-mode="Animated" show-bound-collection-size="false" style="align-items: stretch;" />
+            <ui:ListView name="Types" show-border="true" binding-path="_languageTypes" virtualization-method="DynamicHeight" show-foldout-header="false" show-add-remove-footer="true" reorderable="true" reorder-mode="Animated" show-bound-collection-size="false" style="align-items: stretch;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

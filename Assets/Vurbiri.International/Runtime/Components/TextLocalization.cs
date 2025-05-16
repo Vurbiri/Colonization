@@ -8,10 +8,10 @@ namespace Vurbiri.International.UI
     [RequireComponent(typeof(TMP_Text))]
     public class TextLocalization : MonoBehaviour
     {
+        [SerializeField] private TMP_Text _text;
+        [Space]
         [SerializeField] private Files _file;
         [SerializeField] private string _key;
-        [Space]
-        [SerializeField] private TMP_Text _text;
 
         private Unsubscriber _subscribe;
 

@@ -12,12 +12,12 @@ namespace Vurbiri.International.Editor
         {
             LanguageFilesScriptable files = LanguageFilesScriptable.GetOrCreateSelf();
             
-            var provider = new SettingsProvider(PROJECT_MENU, SettingsScope.Project)
+            var provider = new SettingsProvider(PROJECT_FILES_MENU, SettingsScope.Project)
             {
-                label = PROJECT_LABEL,
+                label = PROJECT_FILES_LABEL,
                 activateHandler = (searchContext, rootElement)
                                 => rootElement.Add(LanguageFilesEditor.CreateCachedEditorAndBind(files)),
-                 deactivateHandler = files.Dispose
+                deactivateHandler = files.Dispose
             };
 
             return provider;

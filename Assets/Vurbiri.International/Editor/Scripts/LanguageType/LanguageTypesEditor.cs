@@ -9,8 +9,6 @@ using static Vurbiri.Storage;
 
 namespace Vurbiri.International.Editor
 {
-    using static CONST;
-
     [CustomEditor(typeof(LanguageTypesScriptable), true)]
     internal class LanguageTypesEditor : AEditorGetVE<LanguageTypesEditor>
     {
@@ -21,12 +19,14 @@ namespace Vurbiri.International.Editor
         {
             var language = LanguageTypesScriptable.GetOrCreateSelf();
 
-            var allLang = LoadObjectFromResourceJson<LanguageType[]>(LANG_LIST);
+            var allLang = LoadObjectFromResourceJson<LanguageType[]>(CONST.LANG_LIST);
             Dictionary<SystemLanguage, LanguageType> langs = new(allLang.Length);
             foreach (var lang in allLang)
                 langs.Add(lang.Id, lang);
 
             VisualElement root = _treeAssetList.CloneTree();
+
+            root.Q<Label>("Label").text = CONST.PROJECT_TYPES_LABEL;
 
             var notEdit = root.Q<Toggle>("Readonly");
             bool auto = notEdit.value;
