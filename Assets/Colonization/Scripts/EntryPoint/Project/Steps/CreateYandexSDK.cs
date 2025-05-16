@@ -7,10 +7,9 @@ namespace Vurbiri.Colonization.EntryPoint
     {
         private readonly YandexSDK _ysdk;
 
-        public CreateYandexSDK(DIContainer diContainer, Coroutines coroutine, string lbName) : base("Yandex")
+        public CreateYandexSDK(DIContainer diContainer, Coroutines coroutine, string lbName) : base("YandexStep")
         {
             _ysdk = new(coroutine, lbName);
-
             diContainer.AddInstance(_ysdk);
         }
 

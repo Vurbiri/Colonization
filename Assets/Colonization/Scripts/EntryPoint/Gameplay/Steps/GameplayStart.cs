@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.EntryPoint
         private readonly TurnQueue _turnQueue;
         private readonly GameplayStorage _storage;
 
-        public GameplayStart(GameplayInitObjects objects) : base("GameplayStart")
+        public GameplayStart(GameplayInitObjects objects) : base(string.Empty)
         {
             _game = objects.game;
             _inputController = objects.inputController;

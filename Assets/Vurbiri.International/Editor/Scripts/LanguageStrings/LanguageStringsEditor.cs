@@ -25,6 +25,8 @@ namespace Vurbiri.International.Editor
             list.headerTitle = strings.LoadFile;
             list.itemsAdded += strings.OnAdded;
 
+            
+
             root.Q<Button>("Load").clicked += () => { list.headerTitle = strings.Load(); serializedObject.Update(); };
             root.Q<Button>("Save").clicked += strings.Save;
             root.Q<Button>("Unload").clicked += () => { list.headerTitle = string.Empty; strings.Unload(); serializedObject.Update(); };

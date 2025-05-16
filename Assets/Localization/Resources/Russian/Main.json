@@ -33,5 +33,9 @@
   "Loading": "Загрузка...",
   "IslandCreationStep": "Создание острова...",
   "StorageCreationStep": "Создание системы хранения...",
-  "YandexStep": "Яндекс..."
+  "YandexStep": "Яндекс...",
+  "LoadingSettingsStep": "Загрузка настроек...",
+  "PlayersCreationStep": "Создание игроков...",
+  "ResourceClearingStep": "Очистка ресурсов...",
+  "InitUIStep": "Инициализация интерфейса..."
 }

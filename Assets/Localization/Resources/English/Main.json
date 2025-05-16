@@ -33,5 +33,9 @@
   "Loading": "Loading...",
   "IslandCreationStep": "Island creation...",
   "StorageCreationStep": "Storage creation...",
-  "YandexStep": "Yandex..."
+  "YandexStep": "Yandex...",
+  "LoadingSettingsStep": "Loading settings...",
+  "PlayersCreationStep": "Players creation...",
+  "ResourceClearingStep": "Resource clearing...",
+  "InitUIStep": "Interface Initialization..."
 }

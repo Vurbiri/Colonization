@@ -1,15 +1,14 @@
 //Assets\Colonization\Scripts\EntryPoint\Gameplay\Steps\CreatePlayers.cs
 using System.Collections;
-using Vurbiri.EntryPoint;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
-    sealed internal class CreatePlayers : ALoadingStep
+    sealed internal class CreatePlayers : ALocalizationLoadingStep
     {
         private readonly GameplayInitObjects _objects;
         private readonly Players.Settings _settings;
 
-        public CreatePlayers(GameplayInitObjects objects, Players.Settings settings) : base("CreatePlayers")
+        public CreatePlayers(GameplayInitObjects objects, Players.Settings settings) : base("PlayersCreationStep")
         {
             _objects = objects;
             _settings = settings;

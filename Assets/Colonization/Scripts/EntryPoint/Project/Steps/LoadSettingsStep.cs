@@ -1,16 +1,15 @@
-//Assets\Colonization\Scripts\EntryPoint\Project\Steps\LoadDataStep.cs
+//Assets\Colonization\Scripts\EntryPoint\Project\Steps\LoadSettingsStep.cs
 using System.Collections;
 using Vurbiri.Colonization.Storage;
-using Vurbiri.EntryPoint;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
-    sealed internal class LoadDataStep : ALoadingStep
+    sealed internal class LoadSettingsStep : ALocalizationLoadingStep
     {
         private readonly DIContainer _diContainer;
         private readonly PlayerVisualSetScriptable _playerVisualSetScriptable;
 
-        public LoadDataStep(DIContainer diContainer, PlayerVisualSetScriptable playerVisual) : base("LoadDataStep")
+        public LoadSettingsStep(DIContainer diContainer, PlayerVisualSetScriptable playerVisual) : base("LoadingSettingsStep")
         {
             _diContainer = diContainer;
             _playerVisualSetScriptable = playerVisual;

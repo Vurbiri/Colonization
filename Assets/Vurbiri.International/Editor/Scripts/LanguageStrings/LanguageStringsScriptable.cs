@@ -37,7 +37,7 @@ namespace Vurbiri.International.Editor
             for (int i = 0; i < _count; i++)
                 _names[i] = _languages[i].Folder.Concat(" (", _languages[i].Name, ")");
 
-            Enum.TryParse(_loadFile, true, out _file);
+             Enum.TryParse(_loadFile, true, out _file);
 
             #region Local: CheckFolder(..)
             //=================================

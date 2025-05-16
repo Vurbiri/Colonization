@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             loading.Add(new CreateYandexSDK(diContainer, coroutine, _leaderboardName));
             loading.Add(new CreateStorage(diContainer, coroutine, _loadingScreen, _logOnPanel));
-            loading.Add(new LoadDataStep(diContainer, _playerVisualSetScriptable));
+            loading.Add(new LoadSettingsStep(diContainer, _playerVisualSetScriptable));
             loading.Add(new EndLoadScene(operation));
 
             Destroy(this);

@@ -2,13 +2,12 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Vurbiri.EntryPoint;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
-    sealed internal class ClearResources : ALoadingStep
+    sealed internal class ClearResources : ALocalizationLoadingStep
     {
-        public ClearResources() : base(0.2f, "ClearResources") { }
+        public ClearResources() : base(0.2f, "ResourceClearingStep") { }
 
         public override IEnumerator GetEnumerator()
         {
