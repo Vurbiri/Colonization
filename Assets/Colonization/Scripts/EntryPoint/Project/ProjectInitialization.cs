@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private LogOnPanel _logOnPanel;
         [SerializeField] private LoadingScreen _loadingScreen;
         [Space]
-        [SerializeField] private EnumFlags<Files> _localizationFiles = 0;
+        [SerializeField] private FileIds _localizationFiles = new(false);
         [Space]
         [SerializeField] private string _leaderboardName = "lbColonization";
         [Space]

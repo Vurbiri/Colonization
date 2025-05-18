@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace Vurbiri
@@ -54,20 +53,17 @@ namespace Vurbiri
         }
         public IdFlags(bool all)
         {
-            if (all) _id = s_maskId; 
-            else _id = 0;
+            _id = all ? s_maskId : 0;
         }
 
         private IdFlags(int id, int i, bool operation)
         {
             Throw.IfOutOfRange(i, 0, IdType<T>.Count);
-            if (operation) id |= 1 << i; else id ^= 1 << i;
-            _id = id;
+            _id = operation ? id |= 1 << i : id ^= 1 << i;
         }
         private IdFlags(int id, Id<T> i, bool operation)
         {
-            if (operation) id |= 1 << i.Value; else id ^= 1 << i.Value;
-            _id = id;
+            _id = operation ? id |= 1 << i.Value : id ^= 1 << i.Value;
         }
         #endregion
 
@@ -85,16 +81,6 @@ namespace Vurbiri
                 if(this[i]) values.Add(i);
 
             return values;
-        }
-
-        public readonly string ToString(bool binary)
-        {
-            if (!binary) return ToString();
-
-            StringBuilder sb = new(IdType<T>.Count);
-            for (int i = IdType<T>.Count - 1; i >= 0; i--)
-                sb.Append(this[i] ? "1" : "0");
-            return sb.ToString();
         }
 
         public readonly bool Equals(IdFlags<T> other) => (_id & s_maskId) == (other._id & s_maskId);

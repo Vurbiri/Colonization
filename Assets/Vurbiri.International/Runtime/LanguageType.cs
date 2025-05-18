@@ -14,6 +14,8 @@ namespace Vurbiri.International
         [SerializeField] private string _folder;
         [SerializeField] private string _spriteName = "Banner";
 
+        [JsonIgnore] private Sprite _sprite;
+
         public SystemLanguage Id => _id;
         public string Code => _code;
         public string Name => _name;
@@ -28,6 +30,13 @@ namespace Vurbiri.International
             _name = name;
             _folder = folder;
             _spriteName = spriteName;
+        }
+
+        public Sprite GetSprite()
+        {
+            if (_sprite == null)
+                _sprite = Resources.Load<Sprite>(string.Concat(_folder, "/", _spriteName));
+            return _sprite;
         }
 
         public bool Equals(SystemLanguage id) => _id == id;

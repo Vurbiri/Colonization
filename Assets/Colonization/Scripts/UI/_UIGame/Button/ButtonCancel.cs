@@ -1,15 +1,12 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonCancel.cs
-using Vurbiri.Reactive;
 using Vurbiri.International;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
     sealed public class ButtonCancel : AWorldHintButton, IMenu
     {
-        private const Files FILE = Files.Main;
-        private const string KEY = "Cancel";
-
         private ICancel _cancelledObj;
         private Unsubscriber _unLanguage, _unAction;
 
@@ -46,7 +43,7 @@ namespace Vurbiri.Colonization.UI
             _cancelledObj = null;
         }
 
-        private void SetText(Localization localization) => _text = localization.GetText(FILE, KEY);
+        private void SetText(Localization localization) => _text = localization.GetText(Files.Main, "Cancel");
 
         protected override void OnEnable()
         {

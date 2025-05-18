@@ -1,9 +1,7 @@
 //Assets\Vurbiri.International\Editor\Scripts\LanguageStrings\LanguageStringsScriptable.cs
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using static Vurbiri.Storage;
@@ -14,7 +12,7 @@ namespace Vurbiri.International.Editor
 
     internal class LanguageStringsScriptable : AGetOrCreateScriptableObject<LanguageStringsScriptable>
     {
-        [SerializeField] private Files _file = 0;
+        [SerializeField] private string _selectFile = "Main";
         [SerializeField] private string _loadFile = string.Empty;
         [SerializeField] private List<LanguageRecord> _strings;
 
@@ -37,8 +35,6 @@ namespace Vurbiri.International.Editor
             for (int i = 0; i < _count; i++)
                 _names[i] = _languages[i].Folder.Concat(" (", _languages[i].Name, ")");
 
-             Enum.TryParse(_loadFile, true, out _file);
-
             #region Local: CheckFolder(..)
             //=================================
             bool CheckFolder(string folder, int index)
@@ -60,14 +56,16 @@ namespace Vurbiri.International.Editor
             _loadFile = string.Empty;
             _strings = null;
             
-            //EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
         }
 
         public void OnAdded(IEnumerable<int> indexes)
         {
             if (string.IsNullOrEmpty(_loadFile))
             {
-                _strings.RemoveRange(indexes.First(), indexes.Count());
+                //_strings.RemoveRange(indexes.First(), indexes.Count());
+                _strings.Clear();
                 return;
             }
 
@@ -90,10 +88,10 @@ namespace Vurbiri.International.Editor
             int idMaxLength = -1, maxLength = -1;
             for (int i = 0; i < _count; i++)
             {
-                path = Path.Combine(folder, _languages[i].Folder, _file.ToString().Concat(JSON_EXP));
+                path = Path.Combine(folder, _languages[i].Folder, _selectFile.ToString().Concat(JSON_EXP));
 
                 if (File.Exists(path))
-                    strings[i] = LoadObjectFromResourceJson<Dictionary<string, string>>(Path.Combine(_languages[i].Folder, _file.ToString()));
+                    strings[i] = LoadObjectFromResourceJson<Dictionary<string, string>>(Path.Combine(_languages[i].Folder, _selectFile.ToString()));
                 else
                     strings[i] = new();
 
@@ -122,9 +120,10 @@ namespace Vurbiri.International.Editor
                 _strings.Add(record);
             }
 
-            //EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
 
-            return _loadFile = _file.ToString();
+            return _loadFile = _selectFile.ToString();
         }
 
         public void Save()
@@ -151,7 +150,7 @@ namespace Vurbiri.International.Editor
             string path, folder = FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER);
             for (int i = 0; i < _count; i++)
             {
-                path = Path.Combine(folder, _languages[i].Folder, _file.ToString().Concat(JSON_EXP));
+                path = Path.Combine(folder, _languages[i].Folder, _selectFile.ToString().Concat(JSON_EXP));
                 FileInfo fileInfo = new(path);
                 if (!fileInfo.Exists)
                     fileInfo.Directory.Create();

@@ -1,7 +1,7 @@
 //Assets\Vurbiri.International\Editor\Scripts\LanguageFiles\LanguageFilesScriptable.cs
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,54 +11,57 @@ namespace Vurbiri.International.Editor
 
     internal class LanguageFilesScriptable : AGetOrCreateScriptableObject<LanguageFilesScriptable>
     {
-        private const string ENUM_KEYWORD = @"#ENUM#";
-        private const string ENUM_TMP = "FilesTemplate";
-        private const string ENUM_PATH = ASM_FOLDER + "Runtime/Files.cs";
-        private const string SPACE = "        ";
-                
         [SerializeField] private List<string> _files;
 
-        private string _template;
+        //private string[] _folders;
 
         public void Init()
         {
-            _template = Resources.Load<TextAsset>(ENUM_TMP).text;
+            //_folders = LoadObjectFromResourceJson<List<LanguageType>>(FILE_LANG).Select(l => l.Folder).ToArray();
+        }
 
-            _files = new(Enum<Files>.Names);
+        public void OnAdded(IEnumerable<int> indexes)
+        {
+            foreach (int index in indexes)
+                _files[index] = string.Empty;
+        }
+
+        public void Load()
+        {
+            _files = new(LanguageFiles.names);
+            EditorUtility.SetDirty(this);
         }
 
         public void Apply()
         {
-            if (SaveEnum())
+            if (Save())
             {
-                Debug.Log("Saved");
                 AssetDatabase.Refresh();
+                Debug.Log($"Saved <i>{FILE_FILES_PATH}</i>");
+                LanguageFiles.Set(_files);
             }
             else
             {
                 Debug.LogWarning("Save error");
             }
+
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
         }
 
-        public bool SaveEnum()
+        public bool Save()
         {
-            StringBuilder sb = new(_files.Count * 12);
-            for (int i = 0; i < _files.Count; i++)
+            for (int i = _files.Count - 1; i >= 0; i--)
             {
                 if (!CheckValue(_files[i], i))
-                {
                     _files.RemoveAt(i);
-                    return false;
-                }
-
-                sb.Append(SPACE);
-                sb.Append(_files[i]);
-                if (i < _files.Count - 1)
-                    sb.AppendLine(",");
             }
 
-            File.WriteAllText(FileUtil.GetPhysicalPath(ENUM_PATH), _template.Replace(ENUM_KEYWORD, sb.ToString()), utf8WithoutBom);
+            if (_files.Count == 0)
+                return false;
 
+            File.WriteAllText(FileUtil.GetPhysicalPath(FILE_FILES_PATH), JsonConvert.SerializeObject(_files, Formatting.Indented), utf8WithoutBom);
+            
             return true;
 
             #region Local: CheckValue(..)
@@ -81,7 +84,7 @@ namespace Vurbiri.International.Editor
         {
             _files ??= new();
             if (_files.Count == 0)
-                _files.Add(((Files)0).ToString());
+                _files.Add("Main");
         }
 
         public static LanguageFilesScriptable GetOrCreateSelf() => GetOrCreateSelf(LANG_FILES_NAME, LANG_FILES_PATH);

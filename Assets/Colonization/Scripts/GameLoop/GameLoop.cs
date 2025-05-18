@@ -1,11 +1,14 @@
 //Assets\Colonization\Scripts\GameLoop\GameLoop.cs
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization
 {
     public class GameLoop : MonoBehaviour
     {
+        public FileIdAndKey key;
+
         private Dices _dices;
         private TurnQueue _turnQueue;
         private Players _players;

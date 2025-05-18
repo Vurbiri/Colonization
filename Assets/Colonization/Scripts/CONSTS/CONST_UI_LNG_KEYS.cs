@@ -1,11 +1,9 @@
 //Assets\Colonization\Scripts\CONSTS\CONST_UI_LNG_KEYS.cs
-using Vurbiri.International;
-
 namespace Vurbiri.Colonization.UI
 {
     public static class CONST_UI_LNG_KEYS
 	{
-        public const Files FILE = Files.Actors;
+        public const int FILE = Files.Actors;
 
         public const string ON_TARGET = "OnTarget", ON_SELF = "OnSelf";
         public const string AP_KEY = "AP", BLOCK_KEY = "Block", BLOCK_DESK_KEY = "DefenseTemp";

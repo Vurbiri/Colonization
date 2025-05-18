@@ -7,10 +7,7 @@ namespace Vurbiri.Colonization.UI
 {
     public abstract class AButtonBuildType<T> : AButtonBuild, IValueId<T> where T : IdType<T>
     {
-        [Space]
-        [SerializeField] protected Files _lngFile = Files.Gameplay;
-        [SerializeField] protected string _key;
-        [Space]
+        [SerializeField] protected FileIdAndKey _getText;
         [SerializeField] protected Id<T> _id;
 
         protected ACurrencies _cost;
@@ -40,7 +37,7 @@ namespace Vurbiri.Colonization.UI
             SetTextHint(_caption, _cash, _cost);
         }
 
-        protected void SetText(Localization localization) => _caption = localization.GetText(_lngFile, _key);
+        protected void SetText(Localization localization) => _caption = localization.GetText(_getText.id, _getText.key);
 
         protected abstract void OnClick();
 

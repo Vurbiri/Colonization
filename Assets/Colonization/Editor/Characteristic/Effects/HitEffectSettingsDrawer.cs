@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
+using Vurbiri.Colonization;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using static UnityEditor.EditorGUI;
@@ -16,7 +17,7 @@ namespace VurbiriEditor.Colonization.Characteristics
     [CustomPropertyDrawer(typeof(HitEffectSettings))]
     public class HitEffectSettingsDrawer : PropertyDrawerUtility
     {
-        private static readonly WeakReference<Localization> s_weakLocalization = new(new (Files.Actors));
+        private static readonly WeakReference<Localization> s_weakLocalization = new(new(Files.Actors));
         private static Localization Localization
         {
             get

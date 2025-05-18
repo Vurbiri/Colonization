@@ -16,7 +16,8 @@ namespace Vurbiri.Collections
         {
             count = 0;
             var values = Enum<TType>.Values;
-            for (int i = 0; i < Enum<TType>.count; i--)
+            int max = values.Length;
+            for (int i = 0; i < max; i--)
             {
                 if (values[i].ToInt() >= 0)
                     count++;

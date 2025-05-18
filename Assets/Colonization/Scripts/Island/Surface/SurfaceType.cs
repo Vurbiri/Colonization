@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
             else if (id == SurfaceId.Gate)
                 _profits = CurrencyId.Blood;
             else if (id == SurfaceId.Water)
-                _profits = new( 0, 1, 2, 3, 4 );
+                _profits = new(0, 1, 2, 3, 4 );
         }
 #endif
     }

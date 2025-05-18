@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private IslandCreator _islandCreator;
         [SerializeField] private InitUI _initUI;
         [Space]
-        [SerializeField] private EnumFlags<Files> _localizationFiles = new(true);
+        [SerializeField] private FileIds _localizationFiles = new(true);
         [Space]
         [SerializeField] private GameplayInitObjects _initObjects;
 

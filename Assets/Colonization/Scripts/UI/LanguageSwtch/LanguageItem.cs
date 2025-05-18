@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
         public void Setup(Profile profile, LanguageType languageType, VToggleGroup toggleGroup, bool isSave)
         {
             _profile = profile;
-            _icon.sprite = Resources.Load<Sprite>(languageType.SpriteName);
+            _icon.sprite = languageType.GetSprite();
             _name.text = languageType.Name;
             _id = languageType.Id;
             _isSave = isSave;

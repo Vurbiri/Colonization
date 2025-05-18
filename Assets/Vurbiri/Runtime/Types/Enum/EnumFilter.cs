@@ -43,7 +43,7 @@ namespace Vurbiri
         }
         public EnumFilter(bool all)
         {
-            if (all) _value = s_maskValue; else _value = 0;
+            _value = all ? s_maskValue : 0;
         }
         private EnumFilter(int value)
         {

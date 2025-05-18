@@ -10,7 +10,7 @@ namespace Vurbiri.International.UI
     {
         [SerializeField] private TMP_Text _text;
         [Space]
-        [SerializeField] private Files _file;
+        [SerializeField] private FileId _file;
         [SerializeField] private string _key;
 
         private Unsubscriber _subscribe;
@@ -22,7 +22,7 @@ namespace Vurbiri.International.UI
             _subscribe += Localization.Instance.Subscribe(SetText);
         }
 
-        public void Setup(Files file, string key)
+        public void Setup(FileId file, string key)
         {
             _file = file;
             _key = key;

@@ -22,8 +22,8 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
 
-            if (_key == string.Empty)
-                _key = WarriorId.GetName(_id);
+            _getText.id = Files.Actors;
+            _getText.key = WarriorId.GetName(_id);
         }
 #endif
     }

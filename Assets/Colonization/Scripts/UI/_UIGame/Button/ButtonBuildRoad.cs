@@ -30,8 +30,11 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
 
-            if (string.Empty == _key)
-                _key = "Road";
+            if (_getText.key == string.Empty)
+            {
+                _getText.id = Files.Gameplay;
+                _getText.key = "Road";
+            }
         }
 #endif
     }

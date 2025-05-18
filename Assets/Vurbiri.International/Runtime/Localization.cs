@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using UnityEngine;
 using Vurbiri.Reactive;
 using static Vurbiri.Storage;
@@ -13,8 +12,9 @@ namespace Vurbiri.International
     {
         private static readonly Localization s_instance;
 
-        private readonly Dictionary<Files, string> _files;
-        private readonly Dictionary<Files, Dictionary<string, string>> _text;
+        private readonly int _countFiles;
+        private readonly string[] _files;
+        private readonly Dictionary<string, string>[] _text;
         private readonly ReadOnlyCollection<LanguageType> _languages;
         private readonly Signer<Localization> _changed = new();
         private readonly LanguageType _defaultLanguage;
@@ -23,13 +23,18 @@ namespace Vurbiri.International
         public static Localization Instance => s_instance;
         public ReadOnlyCollection<LanguageType> Languages => _languages;
         public SystemLanguage CurrentId => _currentLanguage.Id;
-        public ICollection<Files> LoadedFiles => _text.Keys;
+        public int CountFiles => _countFiles;
 
         static Localization() => s_instance = new();
         private Localization() 
         {
+            _files = LoadObjectFromResourceJson<string[]>(CONST_L.FILE_FILES);
+            Throw.IfLengthZero(_files);
             _languages = new(LoadObjectFromResourceJson<LanguageType[]>(CONST_L.FILE_LANG));
             Throw.IfLengthZero(_languages);
+
+            _countFiles = _files.Length;
+            _text = new Dictionary<string, string>[_countFiles];
 
             _defaultLanguage = _languages[0];
             for (int i = _languages.Count - 1; i >= 0; i--)
@@ -41,20 +46,12 @@ namespace Vurbiri.International
                 }
             }
 
-            Files[] values = Enum<Files>.Values;
-
-            _files = new(Enum<Files>.count);
-            _text = new(Enum<Files>.count);
-
-            for (int i = 0; i < Enum<Files>.count; i++)
-                _files[values[i]] = values[i].ToString();
-
             SetLanguage(_defaultLanguage);
-            SetFiles(values[0]);
+            LoadFile(0);
         }
 
 #if UNITY_EDITOR
-        public Localization(EnumFlags<Files> files) : base() => SetFiles(files);
+        public Localization(int fileId) : base() => LoadFile(fileId);
 #endif
 
         public Unsubscriber Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, sendCallback, this);
@@ -71,36 +68,34 @@ namespace Vurbiri.International
             return _defaultLanguage.Id;
         }
 
-        public bool IsFileLoaded(Files file) => _text.ContainsKey(file);
+        public bool IsFileLoaded(int fileId) => _text[fileId] != null;
 
-        public void SetFiles(EnumFlags<Files> files)
+        public void SetFiles(FileIds fileIds)
         {
-            Files file;
-            for (int i = files.Count - 1; i >= 0; i--)
+            for (int i = 0; i < _countFiles; i++)
             {
-                file = (Files)i;
-                if (files[i])
+                if (fileIds[i])
                 {
-                    if (!_text.ContainsKey(file))
-                        LoadingFile(file, _currentLanguage);
+                    if (_text[i] == null)
+                        LoadingFile(i, _currentLanguage);
                 }
                 else
                 {
-                    _text.Remove(file);
+                    _text[i] = null;
                 }
             }
 
             GC.Collect();
         }
 
-        public bool LoadFile(Files file)
+        public bool LoadFile(int fileId)
         {
-            return _text.ContainsKey(file) || LoadingFile(file, _currentLanguage);
+            return _text[fileId] != null || LoadingFile(fileId, _currentLanguage);
         }
 
-        public void UnloadFile(Files file)
+        public void UnloadFile(int fileId)
         {
-            _text.Remove(file);
+            _text[fileId] = null;
             GC.Collect();
         }
 
@@ -123,16 +118,17 @@ namespace Vurbiri.International
             SetLanguage(_defaultLanguage);
         }
 
-        public string GetText(Files file, string key)
+        public string GetText(int fileId, string key)
         {
-            if (!_text.TryGetValue(file, out var dictionary))
+            var dictionary = _text[fileId];
+            if (dictionary == null)
             {
-                Message.Log($"ERROR! File '{_files[file]}' not loaded.");
+                Message.Log($"ERROR! File '{_files[fileId]}' not loaded.");
                 return key;
             }
             if (!dictionary.TryGetValue(key, out string str))
             {
-                Message.Log($"ERROR! Key '{key}' not found in file '{_files[file]}'.");
+                Message.Log($"ERROR! Key '{key}' not found in file '{_files[fileId]}'.");
                 return key;
             }
 
@@ -141,42 +137,48 @@ namespace Vurbiri.International
 
         public string GetText(string key)
         {
-            foreach (var dictionary in _text.Values)
-                if (dictionary.TryGetValue(key, out string str))
+            for (int i = 0; i < _countFiles; i++)
+            {
+                if (_text[i] != null && _text[i].TryGetValue(key, out string str))
                     return str;
+            }
 
             Message.Log($"ERROR! Key '{key}' not found.");
             return key;
         }
 
-        public string GetTextFormat(Files file, string key, params object[] args) => string.Format(GetText(file, key), args);
-        public string GetTextFormat(Files file, string key, object arg0, object arg1, object arg2) => string.Format(GetText(file, key), arg0, arg1, arg2);
-        public string GetTextFormat(Files file, string key, object arg0, object arg1) => string.Format(GetText(file, key), arg0, arg1);
-        public string GetTextFormat(Files file, string key, object arg0) => string.Format(GetText(file, key), arg0);
+        public string GetTextFormat(int fileId, string key, params object[] args) => string.Format(GetText(fileId, key), args);
+        public string GetTextFormat(int fileId, string key, object arg0, object arg1, object arg2) => string.Format(GetText(fileId, key), arg0, arg1, arg2);
+        public string GetTextFormat(int fileId, string key, object arg0, object arg1) => string.Format(GetText(fileId, key), arg0, arg1);
+        public string GetTextFormat(int fileId, string key, object arg0) => string.Format(GetText(fileId, key), arg0);
 
         private bool SetLanguage(LanguageType type)
         {
-            foreach (var key in _text.Keys)
-                if (!LoadingFile(key, type))
-                    return false;
+            for (int i = 0; i < _countFiles; i++)
+            {
+                if(_text[i] != null)
+                    if (!LoadingFile(i, type))
+                        return false;
+            }
 
             _currentLanguage = type;
             _changed.Invoke(this);
             return true;
         }
 
-        protected bool LoadingFile(Files file, LanguageType type)
+        protected bool LoadingFile(int fileId, LanguageType type)
         {
-            if (TryLoadObjectFromResourceJson(Path.Combine(type.Folder, _files[file]), out Dictionary<string, string> load))
+            if (TryLoadObjectFromResourceJson(string.Concat(type.Folder, "/", _files[fileId]), out Dictionary<string, string> load))
             {
-                if (_text.TryGetValue(file, out var current))
+                var current = _text[fileId];
+                if (current != null)
                 {
                     foreach (var item in load)
                         current[item.Key] = item.Value;
                 }
                 else
                 {
-                    _text[file] = new(load, new StringComparer());
+                    _text[fileId] = new(load, new StringComparer());
                 }
                 return true;
             }

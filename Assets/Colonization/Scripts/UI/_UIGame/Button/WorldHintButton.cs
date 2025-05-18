@@ -1,15 +1,14 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Button\WorldHintButton.cs
 using System;
 using UnityEngine;
-using Vurbiri.Reactive;
 using Vurbiri.International;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
     sealed public class WorldHintButton : AWorldHintButton
     {
-        [SerializeField] private Files _file;
-        [SerializeField] private string _key;
+        [SerializeField] private FileIdAndKey _getText;
 
         private Unsubscriber _unsubscriber;
 
@@ -33,7 +32,7 @@ namespace Vurbiri.UI
             _thisGameObject.SetActive(isEnable);
         }
 
-        private void SetText(Localization localization) => _text = localization.GetText(_file, _key);
+        private void SetText(Localization localization) => _text = localization.GetText(_getText.id, _getText.key);
 
         protected override void OnDestroy()
         {

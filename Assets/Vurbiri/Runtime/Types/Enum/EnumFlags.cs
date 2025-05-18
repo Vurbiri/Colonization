@@ -11,6 +11,7 @@ namespace Vurbiri
 	public struct EnumFlags<T> : IReadOnlyList<bool>, IEquatable<EnumFlags<T>>, IEquatable<int> where T : Enum
 	{
         private static readonly int s_maskValue;
+        private static readonly int s_count;
 
         public static readonly EnumFlags<T> None = new(false);
         public static readonly EnumFlags<T> Fill = new(true);
@@ -18,14 +19,14 @@ namespace Vurbiri
         static EnumFlags()
         {
             var values = Enum<T>.Values;
-            int count = Enum<T>.count;
 
-            s_maskValue = ~(-1 << count);
+            s_count = values.Length;
+            s_maskValue = ~(-1 << s_count);
 
 #if UNITY_EDITOR
-            Throw.IfGreater(count, 32);
+            Throw.IfGreater(s_count, 32);
             int value, oldValue = -1;
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < s_count; i++)
             {
                 value = values[i].ToInt();
                 if ((value - oldValue) != 1)
@@ -37,7 +38,7 @@ namespace Vurbiri
 
         [SerializeField] private int _value;
 
-        public readonly int Count => Enum<T>.count;
+        public readonly int Count => s_count;
 
         public readonly bool this[int i]
         {
@@ -54,7 +55,7 @@ namespace Vurbiri
         #region Constructors
         public EnumFlags(int value)
 		{
-            Throw.IfOutOfRange(value, 0, Enum<T>.count);
+            Throw.IfOutOfRange(value, 0, s_count);
             _value = 1 << value;
         }
         public EnumFlags(T value)
@@ -63,19 +64,17 @@ namespace Vurbiri
         }
         public EnumFlags(bool all)
         {
-            if (all) _value = s_maskValue; else _value = 0;
+            _value = all ? s_maskValue : 0;
         }
 
         private EnumFlags(int value, int i, bool operation)
         {
-            Throw.IfOutOfRange(i, 0, Enum<T>.count);
-            if (operation) value |= 1 << i; else value ^= 1 << i;
-            _value = value;
+            Throw.IfOutOfRange(i, 0, s_count);
+            _value = operation ? value |= 1 << i : value ^= 1 << i;
         }
         private EnumFlags(int value, T e, bool operation)
         {
-            if (operation) value |= 1 << e.ToInt(); else value ^= 1 << e.ToInt();
-            _value = value;
+            _value = operation ? value |= 1 << e.ToInt() : value ^= 1 << e.ToInt();
         }
         #endregion
 
@@ -126,7 +125,7 @@ namespace Vurbiri
 
         public readonly IEnumerator<bool> GetEnumerator()
         {
-			for (int i = 0; i < Enum<T>.count; i++)
+			for (int i = 0; i < s_count; i++)
 				yield return this[i];
         }
         readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
