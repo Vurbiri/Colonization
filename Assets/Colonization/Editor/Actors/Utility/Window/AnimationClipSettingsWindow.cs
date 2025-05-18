@@ -18,12 +18,11 @@ namespace VurbiriEditor.Colonization.Actors
         private const string NAME_MELEE = "Melee", NAME_SHIELD = "Shield", NAME_WIZAED = "Wizard";
 
         private readonly List<Editor> _editors = new();
-        private static readonly Vector2 wndMinSize = new(370f, 500f);
 
         [MenuItem(MENU, false, 51)]
         public static void ShowWindow()
         {
-            GetWindow<AnimationClipSettingsWindow>(true, NAME).minSize = wndMinSize;
+            GetWindow<AnimationClipSettingsWindow>(true, NAME).minSize = new(370f, 500f);
         }
 
         public void CreateGUI()

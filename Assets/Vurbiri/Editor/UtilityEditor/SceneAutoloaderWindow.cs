@@ -15,7 +15,7 @@ namespace VurbiriEditor
         public const string SCENE_TYPE = "t:Scene";
         #endregion
 
-        private static bool isSaveScene = true;
+        private static bool s_isSaveScene = true;
 
         private readonly System.Type _typeSceneAsset = typeof(SceneAsset);
         private SceneAsset _sceneAsset;
@@ -48,7 +48,7 @@ namespace VurbiriEditor
                     EditorGUILayout.BeginHorizontal();
                     {
                         EditorGUILayout.Space();
-                        isSaveScene = EditorGUILayout.ToggleLeft(LABEL_SAVE, isSaveScene);
+                        s_isSaveScene = EditorGUILayout.ToggleLeft(LABEL_SAVE, s_isSaveScene);
                     }
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.Space();
@@ -66,7 +66,7 @@ namespace VurbiriEditor
 
         private void OnDisable()
         {
-            EditorPrefs.SetBool(KEY_SAVE, isSaveScene);
+            EditorPrefs.SetBool(KEY_SAVE, s_isSaveScene);
         }
 
         [InitializeOnLoadMethod]
@@ -80,7 +80,7 @@ namespace VurbiriEditor
 
         private static void OnModeStateChanged(PlayModeStateChange change)
         {
-            if (isSaveScene & change == PlayModeStateChange.ExitingEditMode)
+            if (s_isSaveScene & change == PlayModeStateChange.ExitingEditMode)
             {
                 AssetDatabase.SaveAssets();
                 if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -97,7 +97,7 @@ namespace VurbiriEditor
             }
 
             if (EditorPrefs.HasKey(KEY_SAVE))
-                isSaveScene = EditorPrefs.GetBool(KEY_SAVE);
+                s_isSaveScene = EditorPrefs.GetBool(KEY_SAVE);
 
             string path = null;
             if (EditorPrefs.HasKey(KEY_PATH))

@@ -8,8 +8,8 @@ namespace Vurbiri.Colonization.Actors
 {
     public class ActorBarInitialize : MonoBehaviour
 	{
-        private static short orderLevel = short.MinValue;
-        private static readonly short incOrderLevel = 7;
+        private static short s_orderLevel = short.MinValue;
+        private static readonly short s_incOrderLevel = 7;
 
         [SerializeField] private float _offset = 1.75f;
         [Space]
@@ -31,22 +31,22 @@ namespace Vurbiri.Colonization.Actors
 
             transform.localPosition = new(0f, actor.Skin.Bounds.size.y + _offset, 0f);
 
-            if (orderLevel >= short.MaxValue - (incOrderLevel << 1))
-                orderLevel = short.MinValue;
-            orderLevel += incOrderLevel;
+            if (s_orderLevel >= short.MaxValue - (s_incOrderLevel << 1))
+                s_orderLevel = short.MinValue;
+            s_orderLevel += s_incOrderLevel;
 
-            _popup.Init(_sprites, orderLevel);
+            _popup.Init(_sprites, s_orderLevel);
 
-            _hpBar.Init(abilities, _popup, SceneContainer.Get<PlayerColors>()[actor.Owner], orderLevel);
-            _apBar.Init(abilities, orderLevel);
-            _moveBar.Init(abilities, orderLevel);
+            _hpBar.Init(abilities, _popup, SceneContainer.Get<PlayerColors>()[actor.Owner], s_orderLevel);
+            _apBar.Init(abilities, s_orderLevel);
+            _moveBar.Init(abilities, s_orderLevel);
 
             foreach (var bar in _valueBars)
-                bar.Init(abilities, _popup, orderLevel);
+                bar.Init(abilities, _popup, s_orderLevel);
 
             _look.Init(_hpBar, _moveBar);
 
-            new EffectsBarPanel(actor, _sprites, transform, orderLevel);
+            new EffectsBarPanel(actor, _sprites, transform, s_orderLevel);
 
             Destroy(this);
         }

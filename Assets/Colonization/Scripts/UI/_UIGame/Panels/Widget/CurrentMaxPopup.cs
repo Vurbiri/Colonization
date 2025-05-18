@@ -1,16 +1,17 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\CurrentMaxPopup.cs
 using UnityEngine;
 using Vurbiri.Reactive;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class CurrentMaxPopup : CurrentMax
+    sealed public class CurrentMaxPopup : CurrentMax
     {
         [SerializeField] private PopupWidgetUI _popup;
 
-        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors settings, Direction2 offsetPopup)
+        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors settings, Direction2 offsetPopup, CanvasHint hint)
         {
-            base.Init(current, max, settings);
+            base.Init(current, max, settings, hint);
             _popup.Init(settings, offsetPopup);
         }
 

@@ -3,10 +3,11 @@ using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
-    public class CurrentMax : MonoBehaviour
+    public class CurrentMax : AHintWidget
     {
         private const string COUNT = "{0,2}<space=0.05em>|<space=0.05em>{1,-2}";
 
@@ -14,9 +15,10 @@ namespace Vurbiri.Colonization
 
         private ReactiveCombination<int, int> _reactiveCurrentMax;
 
-        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors colors)
+        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors colors, CanvasHint hint)
         {
-            _countTMP.color = colors.TextPanel;
+            base.Init(hint);
+            _countTMP.color = colors.PanelText;
             _reactiveCurrentMax = new(current, max, SetCurrentMax);
         }
 
@@ -34,7 +36,7 @@ namespace Vurbiri.Colonization
         public Vector2 Size => ((RectTransform)transform).rect.size;
         public void Init_Editor(ProjectColors settings)
         {
-            _countTMP.color = settings.TextPanel;
+            _countTMP.color = settings.PanelText;
             SetCurrentMax(12, 13);
         }
 

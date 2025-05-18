@@ -8,18 +8,19 @@ namespace VurbiriEditor.UI
     public class ColorBlockDrawer
     {
         private const int COLORS_COUNT = 5;
-        private static readonly float line = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-        private static readonly GUIContent[] names = new GUIContent[] { new("Normal"), new("Highlighted"), new("Pressed"), new("Selected"), new("Disabled") };
+        private static readonly GUIContent[] s_names = new GUIContent[] { new("Normal"), new("Highlighted"), new("Pressed"), new("Selected"), new("Disabled") };
 
-       private readonly SerializedProperty _colorBlockProperty;
+        private readonly SerializedProperty _colorBlockProperty;
 
         private readonly SerializedProperty[] _colorProperties;
         private readonly SerializedProperty _fadeDurationProperty;
         private readonly SerializedProperty _colorMultiplierProperty;
 
+        private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+
         public ColorBlockDrawer(SerializedProperty colorBlock)
         {
-            _colorBlockProperty      = colorBlock;
+            _colorBlockProperty = colorBlock;
 
             _colorProperties = new[]
             {
@@ -48,14 +49,14 @@ namespace VurbiriEditor.UI
                     indentLevel++;
                     for (int i = 0; i < COLORS_COUNT; i++)
                     {
-                        drawRect.y += line;
-                        PropertyField(drawRect, _colorProperties[i], names[i]);
+                        drawRect.y += _height;
+                        PropertyField(drawRect, _colorProperties[i], s_names[i]);
                     }
                     indentLevel--;
 
-                    drawRect.y += line;
+                    drawRect.y += _height;
                     PropertyField(drawRect, _colorMultiplierProperty);
-                    drawRect.y += line;
+                    drawRect.y += _height;
                     FadeDurationField(drawRect, _fadeDurationProperty);
                     
                 }
@@ -64,8 +65,8 @@ namespace VurbiriEditor.UI
 
             EditorGUILayout.EndVertical();
 
-            if (_colorBlockProperty.isExpanded) EditorGUILayout.Space(8f * line);
-            else EditorGUILayout.Space(line);
+            if (_colorBlockProperty.isExpanded) EditorGUILayout.Space(8f * _height);
+            else EditorGUILayout.Space(_height);
         }
 
         private static void FadeDurationField(Rect position, SerializedProperty property)

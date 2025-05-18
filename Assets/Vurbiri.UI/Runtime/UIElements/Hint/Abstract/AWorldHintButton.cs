@@ -31,7 +31,7 @@ namespace Vurbiri.UI
 
             _onClick.Add(action);
 
-            float offset = GetComponent<RectTransform>().rect.height * 0.5263f;
+            float offset = ((RectTransform)_thisTransform).rect.height * 0.5263f;
             _offsetHint = new(0f, offset, 0f);
 
             _thisGameObject.SetActive(active);
@@ -41,7 +41,7 @@ namespace Vurbiri.UI
         {
             base.OnPointerEnter(eventData);
             if (!_isShowingHint)
-                _isShowingHint = _hint.Show(_text, _thisTransform.localPosition + _offsetHint);
+                _isShowingHint = _hint.Show(_text, _thisTransform.localPosition, _offsetHint);
         }
         sealed public override void OnPointerExit(PointerEventData eventData)
         {

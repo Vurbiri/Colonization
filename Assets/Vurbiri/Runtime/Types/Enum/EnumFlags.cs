@@ -10,8 +10,7 @@ namespace Vurbiri
     [Serializable]
 	public struct EnumFlags<T> : IReadOnlyList<bool>, IEquatable<EnumFlags<T>>, IEquatable<int> where T : Enum
 	{
-        private static readonly int maskValue;
-        private static readonly string format;
+        private static readonly int s_maskValue;
 
         public static readonly EnumFlags<T> None = new(false);
         public static readonly EnumFlags<T> Fill = new(true);
@@ -21,8 +20,7 @@ namespace Vurbiri
             var values = Enum<T>.Values;
             int count = Enum<T>.count;
 
-            maskValue = ~(-1 << count);
-            format = $"x{Mathf.CeilToInt(0.25f * count)}";
+            s_maskValue = ~(-1 << count);
 
 #if UNITY_EDITOR
             Throw.IfGreater(count, 32);
@@ -65,7 +63,7 @@ namespace Vurbiri
         }
         public EnumFlags(bool all)
         {
-            if (all) _value = maskValue; else _value = 0;
+            if (all) _value = s_maskValue; else _value = 0;
         }
 
         private EnumFlags(int value, int i, bool operation)
@@ -81,9 +79,7 @@ namespace Vurbiri
         }
         #endregion
 
-        public override readonly string ToString() => "0x".Concat(_value.ToString(format));
-
-        public readonly bool Equals(EnumFlags<T> other) => (_value & maskValue) == (other._value & maskValue);
+        public readonly bool Equals(EnumFlags<T> other) => (_value & s_maskValue) == (other._value & s_maskValue);
         public readonly bool Equals(int i) => ((_value >> i) & 1) > 0;
         public override readonly bool Equals(object obj)
         {
@@ -101,8 +97,8 @@ namespace Vurbiri
         public static implicit operator EnumFlags<T>(T value) => new(value);
         public static implicit operator EnumFlags<T>(bool all) => new(all);
 
-        public static bool operator ==(EnumFlags<T> a, EnumFlags<T> b) => (a._value & maskValue) == (b._value & maskValue);
-        public static bool operator !=(EnumFlags<T> a, EnumFlags<T> b) => (a._value & maskValue) != (b._value & maskValue);
+        public static bool operator ==(EnumFlags<T> a, EnumFlags<T> b) => (a._value & s_maskValue) == (b._value & s_maskValue);
+        public static bool operator !=(EnumFlags<T> a, EnumFlags<T> b) => (a._value & s_maskValue) != (b._value & s_maskValue);
 
         public static bool operator ==(EnumFlags<T> flags, int i) => ((flags._value >> i) & 1) > 0;
         public static bool operator !=(EnumFlags<T> flags, int i) => ((flags._value >> i) & 1) == 0;

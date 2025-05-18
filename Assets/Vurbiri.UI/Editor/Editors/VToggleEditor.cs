@@ -19,10 +19,10 @@ namespace VurbiriEditor.UI
 
         private const float MIN_DURATION = 0f, MAX_DURATION = 1f;
 
-        private static readonly string durationLabels = "Checkmark Fade Duration";
-        private static readonly GUIContent[] checkmarkOnNames = { new("Checkmark"), new("Checkmark On"), new("Checkmark") };
+        private static readonly string s_durationLabels = "Checkmark Fade Duration";
+        private static readonly GUIContent[] s_checkmarkOnNames = { new("Checkmark"), new("Checkmark On"), new("Checkmark") };
 
-        private static readonly Type graphicType = typeof(Graphic);
+        private static readonly Type s_graphicType = typeof(Graphic);
 
         private SerializedProperty _isOnProperty;
         private SerializedProperty _durationProperty;
@@ -96,7 +96,7 @@ namespace VurbiriEditor.UI
             }
             EndDisabledGroup();
             //============================================================
-            Slider(_durationProperty, MIN_DURATION, MAX_DURATION, durationLabels);
+            Slider(_durationProperty, MIN_DURATION, MAX_DURATION, s_durationLabels);
             //============================================================
             PropertyField(_switchingTypeProperty);
 
@@ -108,7 +108,7 @@ namespace VurbiriEditor.UI
             indentLevel++;
             BeginDisabledGroup(_selectedCount > 1);
             {
-                ObjectField(_checkmarkOnProperty, graphicType, checkmarkOnNames[_switchingTypeProperty.enumValueIndex]);
+                ObjectField(_checkmarkOnProperty, s_graphicType, s_checkmarkOnNames[_switchingTypeProperty.enumValueIndex]);
 
                 //============================================================
                 if (BeginFadeGroup(_showSwitchType.faded))

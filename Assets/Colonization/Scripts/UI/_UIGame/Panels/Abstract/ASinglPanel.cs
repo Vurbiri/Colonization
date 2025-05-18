@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
         public virtual RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, ProjectColors colors)
         {
             Image image = GetComponent<Image>();
-            image.color = colors.BackgroundPanel;
+            image.color = colors.PanelBack;
             image.pixelsPerUnitMultiplier = pixelsPerUnit;
 
             RectTransform thisRectTransform = (RectTransform)transform;

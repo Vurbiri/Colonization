@@ -15,13 +15,12 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         [SerializeField] private EconomicPerksScriptable _perks;
 
-        private static readonly Vector2 wndMinSize = new(375f, 800f);
         private Editor _editor;
 
         [MenuItem(MENU, false, 14)]
         private static void ShowWindow()
         {
-            GetWindow<EconomicPerksWindow>(false, NAME).minSize = wndMinSize;
+            GetWindow<EconomicPerksWindow>(false, NAME).minSize = new(375f, 800f);
         }
 
         public void CreateGUI()

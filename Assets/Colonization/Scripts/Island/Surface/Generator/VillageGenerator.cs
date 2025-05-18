@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private Hut _hut;
 
         private const string NAME_MESH = "MH_Village_";
-        private static int ID = 0;
+        private static int s_id = 0;
 
         public override void Generate(float size)
         {
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             FloatMRnd offset = step * _ratioOffset;
             float height = -size, width, x, z;
 
-            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH.Concat(s_id++), Vector2.one, false);
             _hut.Init();
 
             while (height < size)
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
             FloatMRnd offset = step * _ratioOffset;
             float height = -size, width, x, z;
 
-            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH.Concat(s_id++), Vector2.one, false);
             _hut.Init();
 
             while (height < size)

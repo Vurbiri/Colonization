@@ -14,42 +14,42 @@ namespace VurbiriEditor.UI
     [CustomEditor(typeof(VSelectable), true), CanEditMultipleObjects]
     public class VSelectableEditor : Editor
     {
-        private static readonly GUIContent[] nameTransition = new GUIContent[]{ new("None"), new("Color Tint"), new("Sprite Swap") };
-        private static readonly int[] idTransition = new[] { 0, 1, 2 };
+        private static readonly GUIContent[] s_nameTransition = new GUIContent[]{ new("None"), new("Color Tint"), new("Sprite Swap") };
+        private static readonly int[] s_idTransition = new[] { 0, 1, 2 };
 
         protected SerializedProperty _interactableIconProperty;
         protected SerializedProperty _targetGraphicsProperty;
-        protected SerializedProperty m_TargetGraphicProperty;
-        protected SerializedProperty m_Script;
-        protected SerializedProperty m_InteractableProperty;
-        protected SerializedProperty m_TransitionProperty;
-        protected SerializedProperty m_ColorBlockProperty;
-        protected SerializedProperty m_SpriteStateProperty;
+        protected SerializedProperty _targetGraphicProperty;
+        protected SerializedProperty _script;
+        protected SerializedProperty _interactableProperty;
+        protected SerializedProperty _transitionProperty;
+        protected SerializedProperty _colorBlockProperty;
+        protected SerializedProperty _spriteStateProperty;
         protected SerializedProperty _isScalingProperty;
         protected SerializedProperty _scalingTargetProperty;
         protected SerializedProperty _scaleBlockProperty;
-        protected SerializedProperty m_NavigationProperty;
+        protected SerializedProperty _navigationProperty;
 
         private ColorBlockDrawer _colorBlockDrawer;
         private ScaleBlockDrawer _scaleBlockDrawer;
 
-        private readonly GUIContent m_VisualizeNavigation = EditorGUIUtility.TrTextContent("Visualize", "Show navigation flows between selectable UI elements.");
+        private readonly GUIContent _visualizeNavigation = EditorGUIUtility.TrTextContent("Visualize", "Show navigation flows between selectable UI elements.");
 
-        protected readonly AnimBool m_ShowColorTint = new();
-        protected readonly AnimBool m_ShowSpriteTransition = new();
-        protected readonly AnimBool m_ShowAnimTransition = new();
+        private readonly AnimBool _showColorTint = new();
+        private readonly AnimBool _showSpriteTransition = new();
+        private readonly AnimBool _showAnimTransition = new();
         private readonly AnimBool _showScaling = new();
 
-        private static readonly List<VSelectableEditor> s_Editors = new();
+        private static readonly List<VSelectableEditor> s_editors = new();
 
-        protected static bool s_ShowNavigation = false;
-        protected static string s_ShowNavigationKey = "ASelectableCustomEditor.ShowNavigation";
+        private static bool s_showNavigation = false;
+        private static readonly string s_showNavigationKey = "ASelectableCustomEditor.ShowNavigation";
 
-        protected const float kArrowThickness = 2.5f;
-        protected const float kArrowHeadSize = 1.2f;
+        private const float kArrowThickness = 2.5f;
+        private const float kArrowHeadSize = 1.2f;
 
-        protected VSelectable _vSelectable;
-        protected Selectable.Transition _transition;
+        private VSelectable _vSelectable;
+        private Selectable.Transition _transition;
 
         protected readonly List<SerializedProperty> _childrenProperties = new();
 
@@ -60,47 +60,47 @@ namespace VurbiriEditor.UI
             _vSelectable = target as VSelectable;
             _transition = _vSelectable.transition;
 
-            _interactableIconProperty   = serializedObject.FindProperty("_interactableIcon");
-            _targetGraphicsProperty     = serializedObject.FindProperty("_targetGraphics");
-            m_TargetGraphicProperty     = serializedObject.FindProperty("m_TargetGraphic");
-            m_Script                    = serializedObject.FindProperty("m_Script");
-            m_InteractableProperty      = serializedObject.FindProperty("m_Interactable");
-            m_TransitionProperty        = serializedObject.FindProperty("m_Transition");
-            m_ColorBlockProperty        = serializedObject.FindProperty("m_Colors");
-            m_SpriteStateProperty       = serializedObject.FindProperty("m_SpriteState");
-            _isScalingProperty          = serializedObject.FindProperty("_scaling");
-            _scalingTargetProperty      = serializedObject.FindProperty("_scalingTarget");
-            _scaleBlockProperty         = serializedObject.FindProperty("_scales");
-            m_NavigationProperty        = serializedObject.FindProperty("m_Navigation");
+            _interactableIconProperty = serializedObject.FindProperty("_interactableIcon");
+            _targetGraphicsProperty   = serializedObject.FindProperty("_targetGraphics");
+            _targetGraphicProperty    = serializedObject.FindProperty("m_TargetGraphic");
+            _script                   = serializedObject.FindProperty("m_Script");
+            _interactableProperty     = serializedObject.FindProperty("m_Interactable");
+            _transitionProperty       = serializedObject.FindProperty("m_Transition");
+            _colorBlockProperty       = serializedObject.FindProperty("m_Colors");
+            _spriteStateProperty      = serializedObject.FindProperty("m_SpriteState");
+            _isScalingProperty        = serializedObject.FindProperty("_scaling");
+            _scalingTargetProperty    = serializedObject.FindProperty("_scalingTarget");
+            _scaleBlockProperty       = serializedObject.FindProperty("_scales");
+            _navigationProperty       = serializedObject.FindProperty("m_Navigation");
 
-            _colorBlockDrawer           = new(m_ColorBlockProperty);
-            _scaleBlockDrawer           = new(_scaleBlockProperty);
+            _colorBlockDrawer         = new(_colorBlockProperty);
+            _scaleBlockDrawer         = new(_scaleBlockProperty);
 
-            m_ShowColorTint.value           = _transition == Selectable.Transition.ColorTint;
-            m_ShowSpriteTransition.value    = _transition == Selectable.Transition.SpriteSwap;
-            m_ShowAnimTransition.value      = _transition == Selectable.Transition.Animation;
-            _showScaling.value              = _isScalingProperty.boolValue;
+            _showColorTint.value           = _transition == Selectable.Transition.ColorTint;
+            _showSpriteTransition.value    = _transition == Selectable.Transition.SpriteSwap;
+            _showAnimTransition.value      = _transition == Selectable.Transition.Animation;
+            _showScaling.value             = _isScalingProperty.boolValue;
 
-            m_ShowColorTint.valueChanged.AddListener(Repaint);
-            m_ShowSpriteTransition.valueChanged.AddListener(Repaint);
+            _showColorTint.valueChanged.AddListener(Repaint);
+            _showSpriteTransition.valueChanged.AddListener(Repaint);
             _showScaling.valueChanged.AddListener(Repaint);
 
-            s_Editors.Add(this);
+            s_editors.Add(this);
             RegisterStaticOnSceneGUI();
-            s_ShowNavigation = EditorPrefs.GetBool(s_ShowNavigationKey);
+            s_showNavigation = EditorPrefs.GetBool(s_showNavigationKey);
 
-            _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
+            _transition = (Selectable.Transition)_transitionProperty.enumValueIndex;
 
             FindChildrenProperties();
         }
 
         protected virtual void OnDisable()
         {
-            m_ShowColorTint.valueChanged.RemoveListener(Repaint);
-            m_ShowSpriteTransition.valueChanged.RemoveListener(Repaint);
+            _showColorTint.valueChanged.RemoveListener(Repaint);
+            _showSpriteTransition.valueChanged.RemoveListener(Repaint);
             _showScaling.valueChanged.RemoveListener(Repaint);
 
-            s_Editors.Remove(this);
+            s_editors.Remove(this);
             RegisterStaticOnSceneGUI();
         }
 
@@ -113,13 +113,13 @@ namespace VurbiriEditor.UI
                 _isScalingProperty.propertyPath,
                 _scalingTargetProperty.propertyPath,
                 _scaleBlockProperty.propertyPath,
-                m_Script.propertyPath,
-                m_NavigationProperty.propertyPath,
-                m_TransitionProperty.propertyPath,
-                m_ColorBlockProperty.propertyPath,
-                m_SpriteStateProperty.propertyPath,
-                m_InteractableProperty.propertyPath,
-                m_TargetGraphicProperty.propertyPath,
+                _script.propertyPath,
+                _navigationProperty.propertyPath,
+                _transitionProperty.propertyPath,
+                _colorBlockProperty.propertyPath,
+                _spriteStateProperty.propertyPath,
+                _interactableProperty.propertyPath,
+                _targetGraphicProperty.propertyPath,
                 serializedObject.FindProperty("m_AnimationTriggers").propertyPath,
             };
         }
@@ -127,7 +127,7 @@ namespace VurbiriEditor.UI
         protected void RegisterStaticOnSceneGUI()
         {
             SceneView.duringSceneGui -= StaticOnSceneGUI;
-            if (s_Editors.Count > 0)
+            if (s_editors.Count > 0)
                 SceneView.duringSceneGui += StaticOnSceneGUI;
         }
 
@@ -184,14 +184,14 @@ namespace VurbiriEditor.UI
         {
             Space(1f);
             EditorGUI.BeginChangeCheck();
-                PropertyField(m_InteractableProperty);
+                PropertyField(_interactableProperty);
                 PropertyField(_interactableIconProperty);
             if (EditorGUI.EndChangeCheck())
             {
                 if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_vSelectable.gameObject.scene);
 
                 Graphic icon = _interactableIconProperty.objectReferenceValue as Graphic;
-                if (icon != null) icon.canvasRenderer.SetAlpha(m_InteractableProperty.boolValue ? 0f : 1f);
+                if (icon != null) icon.canvasRenderer.SetAlpha(_interactableProperty.boolValue ? 0f : 1f);
             }
             Space();
         }
@@ -202,18 +202,18 @@ namespace VurbiriEditor.UI
 
             BeginVertical(STYLES.borderLight);
 
-            IntPopup(m_TransitionProperty, nameTransition, idTransition);
-            _transition = (Selectable.Transition)m_TransitionProperty.enumValueIndex;
+            IntPopup(_transitionProperty, s_nameTransition, s_idTransition);
+            _transition = (Selectable.Transition)_transitionProperty.enumValueIndex;
 
             bool colorTintMode = _transition == Selectable.Transition.ColorTint;
-            m_ShowColorTint.target = !m_TransitionProperty.hasMultipleDifferentValues && colorTintMode;
-            m_ShowSpriteTransition.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.SpriteSwap;
-            m_ShowAnimTransition.target = !m_TransitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.Animation;
+            _showColorTint.target = !_transitionProperty.hasMultipleDifferentValues && colorTintMode;
+            _showSpriteTransition.target = !_transitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.SpriteSwap;
+            _showAnimTransition.target = !_transitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.Animation;
 
             Space(1f);
             EditorGUI.indentLevel++;
             // ========= ColorTint =================================
-            if (BeginFadeGroup(m_ShowColorTint.faded))
+            if (BeginFadeGroup(_showColorTint.faded))
             {
                 PropertyField(_targetGraphicsProperty);
                 if (targetGraphic.IsNotGraphic)
@@ -223,23 +223,23 @@ namespace VurbiriEditor.UI
             }
             EndFadeGroup();
             // ========= SpriteSwap =================================
-            if (BeginFadeGroup(m_ShowSpriteTransition.faded))
+            if (BeginFadeGroup(_showSpriteTransition.faded))
             {
-                PropertyField(m_TargetGraphicProperty);
+                PropertyField(_targetGraphicProperty);
                 
-                if (m_TargetGraphicProperty.objectReferenceValue is not Image)
+                if (_targetGraphicProperty.objectReferenceValue is not Image)
                 {
-                    m_TargetGraphicProperty.objectReferenceValue = null;
+                    _targetGraphicProperty.objectReferenceValue = null;
                     HelpBox("You must have a Image target in order to use a sprite swap transition.", UnityEditor.MessageType.Warning);
                 }
-                targetGraphic.SetGraphic(m_TargetGraphicProperty);
+                targetGraphic.SetGraphic(_targetGraphicProperty);
 
                 Space();
-                PropertyField(m_SpriteStateProperty);
+                PropertyField(_spriteStateProperty);
             }
             EndFadeGroup();
             // ========= Animation =================================
-            if (BeginFadeGroup(m_ShowAnimTransition.faded))
+            if (BeginFadeGroup(_showAnimTransition.faded))
             {
                 HelpBox("Animation is not supported.", UnityEditor.MessageType.Warning);
             }
@@ -272,28 +272,28 @@ namespace VurbiriEditor.UI
             if (targetGraphic.IsNull)
                 targetGraphic.ReferenceValue = _vSelectable.GetComponent<Graphic>();
 
-            m_TargetGraphicProperty.objectReferenceValue = targetGraphic.ReferenceValue;
+            _targetGraphicProperty.objectReferenceValue = targetGraphic.ReferenceValue;
             return targetGraphic;
         }
 
         private void NavigationPropertiesGUI()
         {
             Space();
-            PropertyField(m_NavigationProperty);
+            PropertyField(_navigationProperty);
             EditorGUI.BeginChangeCheck();
             Rect controlRect2 = GetControlRect();
             controlRect2.xMin += EditorGUIUtility.labelWidth;
-            s_ShowNavigation = GUI.Toggle(controlRect2, s_ShowNavigation, m_VisualizeNavigation, EditorStyles.miniButton);
+            s_showNavigation = GUI.Toggle(controlRect2, s_showNavigation, _visualizeNavigation, EditorStyles.miniButton);
             if (EditorGUI.EndChangeCheck())
             {
-                EditorPrefs.SetBool(s_ShowNavigationKey, s_ShowNavigation);
+                EditorPrefs.SetBool(s_showNavigationKey, s_showNavigation);
                 SceneView.RepaintAll();
             }
         }
 
         protected static void StaticOnSceneGUI(SceneView view)
         {
-            if (!s_ShowNavigation)
+            if (!s_showNavigation)
                 return;
 
             Selectable[] allSelectablesArray = Selectable.allSelectablesArray;

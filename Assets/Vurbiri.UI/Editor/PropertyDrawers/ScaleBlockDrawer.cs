@@ -7,58 +7,49 @@ namespace VurbiriEditor.UI
 {
     public class ScaleBlockDrawer
 	{
-        #region Const
-        private const string PATH_ON_IMAGE = "Icons/d_Linked", PATH_OFF_IMAGE = "Icons/d_Unlinked";
-        private const string TOOLTIP_ON_BUTTON = "Disable all axis editing", TOOLTIP_OFF_BUTTON = "Enable all axis editing";
-
         private const int COLORS_COUNT = 5, AXIS_COUNT = 3;
-        #endregion
-        #region Static
-        private static readonly GUIContent buttonOn, buttonOff;
-        private static readonly float space, height, line;
-        #endregion
+
+        private static readonly GUIContent s_buttonOn, s_buttonOff;
 
         private readonly SerializedProperty _scaleBlockProperty;
 
-        private readonly SerializedProperty[] _colorProperties;
+        private readonly SerializedProperty[] _scaleProperties;
         private readonly SerializedProperty[] _modeProperties;
         private readonly SerializedProperty _fadeDurationProperty;
 
+        private readonly float _height = EditorGUIUtility.standardVerticalSpacing + EditorGUIUtility.singleLineHeight;
+
         static ScaleBlockDrawer()
         {
-            space = EditorGUIUtility.standardVerticalSpacing;
-            height = EditorGUIUtility.singleLineHeight;
-            line = height + space;
+            Texture image = Resources.Load<Texture>("Icons/d_Linked");
+            s_buttonOn = new(image, "Disable all axis editing");
 
-            Texture image = Resources.Load<Texture>(PATH_ON_IMAGE);
-            buttonOn = new(image, TOOLTIP_ON_BUTTON);
-
-            image = Resources.Load<Texture>(PATH_OFF_IMAGE);
-            buttonOff = new(image, TOOLTIP_OFF_BUTTON);
+            image = Resources.Load<Texture>("Icons/d_Unlinked");
+            s_buttonOff = new(image, "Enable all axis editing");
         }
 
-        public ScaleBlockDrawer(SerializedProperty colorBlock)
+        public ScaleBlockDrawer(SerializedProperty scaleBlock)
         {
-            _scaleBlockProperty   = colorBlock;
+            _scaleBlockProperty   = scaleBlock;
 
-            _colorProperties = new[]
+            _scaleProperties = new[]
             {
-                colorBlock.FindPropertyRelative("normal"),
-                colorBlock.FindPropertyRelative("highlighted"),
-                colorBlock.FindPropertyRelative("pressed"),
-                colorBlock.FindPropertyRelative("selected"),
-                colorBlock.FindPropertyRelative("disabled"),
+                scaleBlock.FindPropertyRelative("normal"),
+                scaleBlock.FindPropertyRelative("highlighted"),
+                scaleBlock.FindPropertyRelative("pressed"),
+                scaleBlock.FindPropertyRelative("selected"),
+                scaleBlock.FindPropertyRelative("disabled"),
             };
             _modeProperties = new[]
             {
-                colorBlock.FindPropertyRelative("_normalMode"),
-                colorBlock.FindPropertyRelative("_highlightedMode"),
-                colorBlock.FindPropertyRelative("_pressedMode"),
-                colorBlock.FindPropertyRelative("_selectedMode"),
-                colorBlock.FindPropertyRelative("_disabledMode"),
+                scaleBlock.FindPropertyRelative("_normalMode"),
+                scaleBlock.FindPropertyRelative("_highlightedMode"),
+                scaleBlock.FindPropertyRelative("_pressedMode"),
+                scaleBlock.FindPropertyRelative("_selectedMode"),
+                scaleBlock.FindPropertyRelative("_disabledMode"),
             };
 
-            _fadeDurationProperty = colorBlock.FindPropertyRelative("fadeDuration");
+            _fadeDurationProperty = scaleBlock.FindPropertyRelative("fadeDuration");
         }
 
         public void Draw(bool editFade)
@@ -76,14 +67,14 @@ namespace VurbiriEditor.UI
                     indentLevel++;
                     for (int i = 0; i < COLORS_COUNT; i++)
                     {
-                        drawRect.y += line;
-                        VectorField(drawRect, _colorProperties[i], _modeProperties[i]);
+                        drawRect.y += _height;
+                        VectorField(drawRect, _scaleProperties[i], _modeProperties[i]);
                     }
                     indentLevel--;
 
                     if(editFade)
                     { 
-                        drawRect.y += line; drawLine += 1f;
+                        drawRect.y += _height; drawLine += 1f;
                         FadeDurationField(drawRect, _fadeDurationProperty);
                     }
                 }
@@ -92,8 +83,8 @@ namespace VurbiriEditor.UI
 
             EditorGUILayout.EndVertical();
 
-            if (_scaleBlockProperty.isExpanded) EditorGUILayout.Space(drawLine * line);
-            else EditorGUILayout.Space(line);
+            if (_scaleBlockProperty.isExpanded) EditorGUILayout.Space(drawLine * _height);
+            else EditorGUILayout.Space(_height);
         }
 
         private static void VectorField(Rect position, SerializedProperty vector, SerializedProperty editMode)
@@ -101,7 +92,7 @@ namespace VurbiriEditor.UI
             bool mode = editMode.boolValue;
             Vector3 oldScale = vector.vector3Value;
 
-            if (GUI.Button(GetButtonRect(position), mode ? buttonOff : buttonOn, STYLES.flatButton))
+            if (GUI.Button(GetButtonRect(position), mode ? s_buttonOff : s_buttonOn, STYLES.flatButton))
             {
                 if (mode)
                 {
@@ -147,7 +138,7 @@ namespace VurbiriEditor.UI
         private static Rect GetButtonRect(Rect position)
         {
             Rect sizeButton = position;
-            sizeButton.width = height;
+            sizeButton.width = EditorGUIUtility.singleLineHeight;
             sizeButton.x = EditorGUIUtility.labelWidth;
             return sizeButton;
         }

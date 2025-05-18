@@ -10,8 +10,7 @@ namespace Vurbiri
     [Serializable]
 	public struct IdFlags<T> : IEquatable<IdFlags<T>>, IEquatable<Id<T>>, IEquatable<int>, IReadOnlyList<bool> where T : IdType<T>
     {
-        private static readonly int maskId = ~(-1 << IdType<T>.Count);
-        private static readonly string format = $"x{Mathf.CeilToInt(0.25f * IdType<T>.Count)}";
+        private static readonly int s_maskId = ~(-1 << IdType<T>.Count);
 
         public static readonly IdFlags<T> None = new(false);
         public static readonly IdFlags<T> All = new(true);
@@ -55,7 +54,7 @@ namespace Vurbiri
         }
         public IdFlags(bool all)
         {
-            if (all) _id = maskId; 
+            if (all) _id = s_maskId; 
             else _id = 0;
         }
 
@@ -88,7 +87,6 @@ namespace Vurbiri
             return values;
         }
 
-        public override readonly string ToString() => $"0x{_id.ToString(format)}";
         public readonly string ToString(bool binary)
         {
             if (!binary) return ToString();
@@ -99,14 +97,14 @@ namespace Vurbiri
             return sb.ToString();
         }
 
-        public readonly bool Equals(IdFlags<T> other) => (_id & maskId) == (other._id & maskId);
+        public readonly bool Equals(IdFlags<T> other) => (_id & s_maskId) == (other._id & s_maskId);
         public readonly bool Equals(Id<T> id) => ((_id >> id.Value) & 1) > 0;
         public readonly bool Equals(int i) => ((_id >> i) & 1) > 0;
         public override readonly bool Equals(object obj)
         {
             if (obj is null) return false;
 
-            if (obj is IdFlags<T> flags) return (_id & maskId) == (flags._id & maskId);
+            if (obj is IdFlags<T> flags) return (_id & s_maskId) == (flags._id & s_maskId);
             if (obj is int i) return ((_id >> i) & 1) > 0;
             if (obj is Id<T> id) return ((_id >> id.Value) & 1) > 0;
 
@@ -118,8 +116,8 @@ namespace Vurbiri
         public static implicit operator IdFlags<T>(Id<T> id) => new(id);
         public static implicit operator IdFlags<T>(bool all) => new(all);
 
-        public static bool operator ==(IdFlags<T> a, IdFlags<T> b) => (a._id & maskId) == (b._id & maskId);
-        public static bool operator !=(IdFlags<T> a, IdFlags<T> b) => (a._id & maskId) != (b._id & maskId);
+        public static bool operator ==(IdFlags<T> a, IdFlags<T> b) => (a._id & s_maskId) == (b._id & s_maskId);
+        public static bool operator !=(IdFlags<T> a, IdFlags<T> b) => (a._id & s_maskId) != (b._id & s_maskId);
 
         public static bool operator ==(IdFlags<T> flags, int i) => ((flags._id >> i) & 1) > 0;
         public static bool operator !=(IdFlags<T> flags, int i) => ((flags._id >> i) & 1) == 0;

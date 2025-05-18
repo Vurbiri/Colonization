@@ -18,7 +18,7 @@ namespace VurbiriEditor
         private const string NAME = "Scenes Switching", MENU = MENU_PATH + NAME;
         #endregion
 
-        private static SceneField sceneField;
+        private static SceneField s_sceneField;
 
         [MenuItem(MENU, false, 47)]
 		private static void ShowWindow()
@@ -30,7 +30,7 @@ namespace VurbiriEditor
 		{
             titleContent = new(NAME, Resources.Load<Texture>(PATH_IMAGE));
 
-            sceneField = new(OpenScene);
+            s_sceneField = new(OpenScene);
 
             EditorSceneManager.activeSceneChangedInEditMode += ChangedActiveScene;
             SceneManager.activeSceneChanged += ChangedActiveScene;
@@ -38,12 +38,12 @@ namespace VurbiriEditor
 
         public void CreateGUI()
         {
-            rootVisualElement.Add(sceneField);
+            rootVisualElement.Add(s_sceneField);
         }
 
         public void Update()
         {
-            sceneField.SetEnabled(!Application.isPlaying);
+            s_sceneField.SetEnabled(!Application.isPlaying);
         }
 
         private void OnDisable()
@@ -51,7 +51,7 @@ namespace VurbiriEditor
             EditorSceneManager.activeSceneChangedInEditMode -= ChangedActiveScene;
             SceneManager.activeSceneChanged -= ChangedActiveScene;
 
-            sceneField = sceneField.Dispose(OpenScene);
+            s_sceneField = s_sceneField.Dispose(OpenScene);
         }
 
         private static void OpenScene(ChangeEvent<Scene> evt)
@@ -62,7 +62,7 @@ namespace VurbiriEditor
 
         private static void ChangedActiveScene(UScene current, UScene next)
         {
-            sceneField.SetValueWithoutNotify(next);
+            s_sceneField.SetValueWithoutNotify(next);
         }
 
         #region Nested: SceneModificationProcessor, SceneField, Scene
@@ -74,13 +74,13 @@ namespace VurbiriEditor
             public static void OnWillCreateAsset(string assetPath)
             {
                 if (IsExecute(assetPath))
-                    sceneField.AddItem(assetPath);
+                    s_sceneField.AddItem(assetPath);
             }
 
             public static AssetDeleteResult OnWillDeleteAsset(string assetPath, RemoveAssetOptions options)
             {
                 if (IsExecute(assetPath))
-                    sceneField.RemoveItem(assetPath);
+                    s_sceneField.RemoveItem(assetPath);
 
                 return AssetDeleteResult.DidNotDelete;
             }
@@ -88,12 +88,12 @@ namespace VurbiriEditor
             public static AssetMoveResult OnWillMoveAsset(string sourcePath, string destinationPath)
             {
                 if (IsExecute(sourcePath))
-                    sceneField.ReplaceItem(sourcePath, destinationPath);
+                    s_sceneField.ReplaceItem(sourcePath, destinationPath);
 
                 return AssetMoveResult.DidNotMove;
             }
 
-            private static bool IsExecute(string assetPath) => sceneField != null && assetPath.EndsWith(SCENE_EXT);
+            private static bool IsExecute(string assetPath) => s_sceneField != null && assetPath.EndsWith(SCENE_EXT);
         }
         // ================== SceneField ==========================
         private class SceneField : PopupField<Scene>

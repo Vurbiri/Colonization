@@ -15,12 +15,10 @@ namespace VurbiriEditor.Colonization.Actors
 
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
 
-        private static readonly Vector2 wndMinSize = new(650f, 800f);
-
         [MenuItem(MENU, false, 10)]
         private static void ShowWindow()
         {
-            GetWindow<WarriorsSettingsWindow>(true, NAME).minSize = wndMinSize;
+            GetWindow<WarriorsSettingsWindow>(true, NAME).minSize = new(650f, 800f);
         }
 
         public void CreateGUI()

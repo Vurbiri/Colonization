@@ -7,15 +7,15 @@ namespace Vurbiri.EntryPoint
 {
     public abstract class ASceneEntryPoint : MonoBehaviour
     {
-        private static ASceneEntryPoint _instance;
+        private static ASceneEntryPoint s_instance;
 
         public static event Action<ASceneEntryPoint> EventLoaded;
 
         private void Awake()
         {
-            if (_instance == null)
+            if (s_instance == null)
             {
-                _instance = this;
+                s_instance = this;
                 EventLoaded?.Invoke(this);
                 return;
             }
@@ -27,8 +27,8 @@ namespace Vurbiri.EntryPoint
 
         protected virtual void OnDestroy()
         {
-            if (_instance == this)
-                _instance = null;
+            if (s_instance == this)
+                s_instance = null;
         }
     }
 }

@@ -20,11 +20,11 @@ namespace Vurbiri.Colonization
         [SerializeField] private Rock _rock;
 
         private const string NAME_MESH = "MH_Mountain_";
-        private static int ID = 0;
+        private static int s_id = 0;
 
         public override void Generate(float size)
         {
-            CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH + (s_id++), Vector2.one, false);
 
             _rock.Radius = size * (_stepRatioRadius - 1f) / (Mathf.Pow(_stepRatioRadius, _countCircle) - 1f);
 
@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
 
         public override IEnumerator Generate_Cn(float size)
         {
-            CustomMesh customMesh = new(NAME_MESH + (ID++), Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH + (s_id++), Vector2.one, false);
 
             _rock.Radius = size * (_stepRatioRadius - 1f) / (Mathf.Pow(_stepRatioRadius, _countCircle) - 1f);
 
@@ -132,8 +132,8 @@ namespace Vurbiri.Colonization
             private readonly List<Triangle> _triangles = new(MAX_VERTEX);
             private FloatRnd _radiusRange;
 
-            private static readonly Vector2[] UV_PICK = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
-            private static readonly Color32[] BARYCENTRIC_COLORS = { new(255, 0, 0, 255), new(0, 255, 0, 255), new(255, 255, 255, 255) };
+            private static readonly Vector2[] s_uvPick = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
+            private static readonly Color32[] s_barycentricColors = { new(255, 0, 0, 255), new(0, 255, 0, 255), new(255, 255, 255, 255) };
 
             public List<Triangle> Create(Vector3 position, bool isHigh, float ratioHeight, float ratioRadius)
             {
@@ -165,7 +165,7 @@ namespace Vurbiri.Colonization
                 _triangles.AddRange(PolygonChain.CreateBarycentric(_color, bottom, top, true));
 
                 for (int i = 0; i < countVertex; i++)
-                    _triangles.Add(new(BARYCENTRIC_COLORS, UV_PICK, top.Next(i), top[i], positionTop ));
+                    _triangles.Add(new(s_barycentricColors, s_uvPick, top.Next(i), top[i], positionTop ));
 
                 return _triangles;
             }

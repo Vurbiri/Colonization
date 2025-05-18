@@ -8,7 +8,7 @@ namespace VurbiriEditor
 {
     public abstract class AEditorGetVE<T> : Editor where T : AEditorGetVE<T>
     {
-        private static Editor _self;
+        private static Editor s_self;
 
         protected VisualElement CreateDefaultInspectorGUI()
         {
@@ -28,9 +28,9 @@ namespace VurbiriEditor
 
         public static VisualElement CreateCachedEditorAndBind(Object obj)
         {
-            CreateCachedEditor(obj, typeof(T), ref _self);
-            VisualElement element = _self.CreateInspectorGUI();
-            element.Bind(_self.serializedObject);
+            CreateCachedEditor(obj, typeof(T), ref s_self);
+            VisualElement element = s_self.CreateInspectorGUI();
+            element.Bind(s_self.serializedObject);
             return element;
         }
 

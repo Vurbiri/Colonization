@@ -11,10 +11,10 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override IEnumerator GetEnumerator()
         {
-            yield return new WaitFrames(15);
+            yield return new WaitFrames(13);
 
             Resources.UnloadUnusedAssets();
-            yield return null;
+            yield return new WaitFrames(3);
 
             GC.Collect();
             yield return null;

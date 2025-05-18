@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
         private readonly bool _isWater;
         private readonly Vector3 _middle;
 
-        private static readonly Key[] NEAR_CROSS = { new(2, -1), new(2, 1), new(0, 2), new(-2, 1), new(-2, -1), new(0, -2) };
+        private static readonly Key[] s_nearCross = { new(2, -1), new(2, 1), new(0, 2), new(-2, 1), new(-2, -1), new(0, -2) };
 
         private CrossroadLink(Id<LinkId> id, Crossroad start, Crossroad end, bool isWater)
         {
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
 
             // Local: ToLinkType(..)
             //=================================
-            static int ToLinkType(Key key) => System.Array.IndexOf(NEAR_CROSS, key) % 3;
+            static int ToLinkType(Key key) => System.Array.IndexOf(s_nearCross, key) % 3;
         }
 
         public CrossroadLink SetStart(Crossroad cross)

@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.UI
         public void UpdateVisuals()
         {
             var colors = _colorSettings.Colors;
-            var advPadding = _paddingOut.x * _advRatioSpaceOut;
+            var advPadding = _spaceOut * _advRatioSpaceOut;
 
             RectTransform thisRectTransform = (RectTransform)transform;
 

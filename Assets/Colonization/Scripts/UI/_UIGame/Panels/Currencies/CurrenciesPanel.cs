@@ -1,6 +1,7 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\CurrenciesPanel.cs
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -9,12 +10,12 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private CurrencyPopup[] _currencies;
         [SerializeField] private Amount _amount;
 
-        public void Init(Direction2 directionPopup, ACurrenciesReactive currencies, ProjectColors colors)
+        public void Init(Direction2 directionPopup, ACurrenciesReactive currencies, ProjectColors colors, CanvasHint hint)
         {
             for (int i = 0; i < CurrencyId.CountMain; i++)
-                _currencies[i].Init(i, currencies, colors, directionPopup);
+                _currencies[i].Init(i, currencies, colors, directionPopup, hint);
 
-            _amount.Init(currencies.AmountCurrent, currencies.AmountMax, colors);
+            _amount.Init(currencies.AmountCurrent, currencies.AmountMax, colors, hint);
 
             Destroy(this);
         }
@@ -23,7 +24,7 @@ namespace Vurbiri.Colonization.UI
         public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, float space, ProjectColors colors)
         {
             Image image = GetComponent<Image>();
-            image.color = colors.BackgroundPanel;
+            image.color = colors.PanelBack;
             image.pixelsPerUnitMultiplier = pixelsPerUnit;
 
             RectTransform thisRectTransform = (RectTransform)transform;
@@ -57,7 +58,6 @@ namespace Vurbiri.Colonization.UI
 
         private void OnValidate()
         {
-
             if (_currencies == null || _currencies.Length != CurrencyId.CountMain)
                 _currencies = GetComponentsInChildren<CurrencyPopup>();
             if (_amount == null)

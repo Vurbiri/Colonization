@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private bool _isSave = false;
 
-        public void Init(Settings settings)
+        public void Init(Colonization.Settings settings)
         {
             _toggleGroup.AllowSwitchOff = false;
 

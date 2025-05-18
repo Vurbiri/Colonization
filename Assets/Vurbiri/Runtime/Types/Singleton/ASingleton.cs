@@ -7,38 +7,38 @@ namespace Vurbiri
     {
         [SerializeField] protected bool _isNotDestroying = true;
 
-        protected static T _instance;
-        private static bool _isQuit = false;
+        protected static T s_instance;
+        private static bool s_isQuit = false;
 
         public static T Instance
         {
             get
             {
-                if (_instance == null & !_isQuit)
+                if (s_instance == null & !s_isQuit)
                 {
                     T[] instances = FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None);
                     int instancesCount = instances.Length;
 
                     if (instancesCount > 0)
                     {
-                        _instance = instances[0];
+                        s_instance = instances[0];
                         for (int i = 1; i < instancesCount; i++)
                             Destroy(instances[i].gameObject);
                     }
                     else
                     {
-                        _instance = new GameObject(typeof(T).Name).AddComponent<T>();
+                        s_instance = new GameObject(typeof(T).Name).AddComponent<T>();
                     }
                 }
 
-                return _instance;
+                return s_instance;
             }
         }
 
         protected virtual void Awake()
         {
-            if (_instance == null)
-                _instance = (T)this;
+            if (s_instance == null)
+                s_instance = (T)this;
             else
                 Destroy(gameObject);
 
@@ -49,22 +49,22 @@ namespace Vurbiri
 
         protected virtual void OnDestroy()
         {
-            if (_instance == this)
-                _instance = null;
+            if (s_instance == this)
+                s_instance = null;
         }
 
-        protected virtual void OnApplicationQuit() => _isQuit = true;
+        protected virtual void OnApplicationQuit() => s_isQuit = true;
 
 #if UNITY_EDITOR
         protected virtual void OnValidate()
         {
-            if (Application.isPlaying || _instance != null) return;
+            if (Application.isPlaying || s_instance != null) return;
             
             T[] instances = FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
             if (instances.Length > 1)
             {
-                _instance = instances[0];
+                s_instance = instances[0];
                 System.Text.StringBuilder sb = new();
                 sb.AppendLine($"<color=orange><b>[Singleton]</b> Number of objects type <b>{typeof(T).Name}</b> = <b>{instances.Length}</b></color>");
                 foreach (T instance in instances)

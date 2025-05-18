@@ -2,22 +2,23 @@
 using TMPro;
 using UnityEngine;
 using Vurbiri.Reactive;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class CurrencyPopup : MonoBehaviour
+    sealed public class CurrencyPopup : AHintWidget
     {
         [SerializeField] private TextMeshProUGUI _countTMP;
         [SerializeField] private PopupWidgetUI _popup;
 
         private Unsubscriber _unsubscriber;
 
-        public void Init(int id, ACurrenciesReactive count, ProjectColors settings, Direction2 offsetPopup)
+        public void Init(int id, ACurrenciesReactive count, ProjectColors settings, Direction2 offsetPopup, CanvasHint hint)
         {
+            base.Init(hint);
             _popup.Init(settings, offsetPopup);
-
-            _countTMP.color = settings.TextPanel;
-
+            
+            _countTMP.color = settings.PanelText;
             _unsubscriber = count.Subscribe(id, SetValue);
         }
 
@@ -38,7 +39,7 @@ namespace Vurbiri.Colonization.UI
         public void Init_Editor(Vector3 position, ProjectColors settings)
         {
             ((RectTransform)transform).localPosition = position;
-            _countTMP.color = settings.TextPanel;
+            _countTMP.color = settings.PanelText;
         }
 
         private void OnValidate()

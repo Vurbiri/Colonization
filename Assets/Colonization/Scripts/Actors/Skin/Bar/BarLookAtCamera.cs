@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\Actors\Skin\Bar\BarLookAtCamera.cs
 using UnityEngine;
+using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -13,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void Init(params IRendererVisible[] renderers)
 		{
-            _cameraTransform = SceneContainer.Get<Camera>().transform;
+            _cameraTransform = SceneContainer.Get<CameraController>().MainCamera.transform;
             _thisTransform = transform;
 
             _renderers = renderers;

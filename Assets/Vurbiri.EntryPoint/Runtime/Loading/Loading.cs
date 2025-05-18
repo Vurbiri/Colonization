@@ -8,7 +8,7 @@ namespace Vurbiri.EntryPoint
 {
     public class Loading : IDisposable
     {
-        private static Loading _instance;
+        private static Loading s_instance;
 
         private readonly Queue<ILoadingStep> _steps = new();
         private readonly MonoBehaviour _mono;
@@ -18,7 +18,7 @@ namespace Vurbiri.EntryPoint
         private ILoadingStep _currentStep = null;
         private float _currentWeight, _maxWeight;
 
-        public static Loading Create(MonoBehaviour mono, ILoadingScreen screen) => _instance ??= new(mono, screen);
+        public static Loading Create(MonoBehaviour mono, ILoadingScreen screen) => s_instance ??= new(mono, screen);
         private Loading(MonoBehaviour mono, ILoadingScreen screen)
         {
             _mono = mono;
@@ -88,8 +88,8 @@ namespace Vurbiri.EntryPoint
 
         public void Dispose()
         {
-            if(_instance == this)
-                _instance = null;
+            if(s_instance == this)
+                s_instance = null;
         }
     }
 }

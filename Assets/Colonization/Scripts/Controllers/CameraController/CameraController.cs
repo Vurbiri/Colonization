@@ -24,8 +24,11 @@ namespace Vurbiri.Colonization.Controllers
         private MoveToTargetState _moveToTargetState;
         private ZoomState _zoomState;
 
-        public void Init(Camera camera, GameplayTriggerBus eventBus, InputControlAction.CameraActions cameraActions)
+        public Camera MainCamera { get; private set; }
+
+        public CameraController Init(Camera camera, GameplayTriggerBus eventBus, InputControlAction.CameraActions cameraActions)
         {
+            MainCamera = camera;
             _thisTransform = transform;
 
             #region States
@@ -37,17 +40,19 @@ namespace Vurbiri.Colonization.Controllers
 
             #region Subscribe
 
-            cameraActions.Move.performed +=     OnMove;
-            cameraActions.Move.canceled +=      OnMoveCancel;
-            cameraActions.Rotate.performed +=   OnRotate;
+            cameraActions.Move.performed     += OnMove;
+            cameraActions.Move.canceled      += OnMoveCancel;
+            cameraActions.Rotate.performed   += OnRotate;
             cameraActions.Position.performed += OnEdgeMove;
-            cameraActions.Zoom.performed +=     OnZoom;
+            cameraActions.Zoom.performed     += OnZoom;
 
             eventBus.EventCrossroadSelect.Add(OnMoveToPosition);
             eventBus.EventActorSelect.Add(OnMoveToPosition);
             #endregion
 
             camera.transform.LookAt(_thisTransform);
+
+            return this;
         }
 
         private void OnMove(CallbackContext ctx)

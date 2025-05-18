@@ -5,7 +5,7 @@ namespace Vurbiri.EntryPoint
 {
     public abstract class ASceneExitPoint
     {
-        private static ASceneExitPoint _instance;
+        private static ASceneExitPoint s_instance;
 
         private readonly SceneContainer _sceneContainer;
         private readonly Signer<ExitParam> _eventExit = new();
@@ -18,17 +18,17 @@ namespace Vurbiri.EntryPoint
         {
             _exitParam = exitParam;
             _sceneContainer = sceneContainer;
-            _instance = this;
+            s_instance = this;
         }
 
-        public static void Exit() => _instance.OnExit();
+        public static void Exit() => s_instance.OnExit();
 
         protected virtual void OnExit()
         {
             _sceneContainer.Dispose();
             _eventExit.Invoke(_exitParam);
 
-            _instance = null;
+            s_instance = null;
         }
     }
 }

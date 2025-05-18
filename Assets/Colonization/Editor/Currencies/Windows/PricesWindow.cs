@@ -15,12 +15,10 @@ namespace VurbiriEditor.Colonization
 
         [SerializeField] private Prices _prices;
 
-        private static readonly Vector2 wndMinSize = new(325f, 400f);
-
         [MenuItem(MENU, false, 30)]
         private static void ShowWindow()
         {
-            GetWindow<PricesWindow>(false, NAME).minSize = wndMinSize;
+            GetWindow<PricesWindow>(false, NAME).minSize = new(325f, 400f);
         }
 
         public void CreateGUI()

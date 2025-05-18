@@ -15,14 +15,12 @@ namespace VurbiriEditor.Colonization
 
         [SerializeField] private PlayerVisualSetScriptable _visualSet;
 
-        private static readonly Vector2 wndMinSize = new(350f, 300f);
-
         private Editor _editor;
 
         [MenuItem(MENU, false, 40)]
         private static void ShowWindow()
         {
-            GetWindow<PlayerVisualSetWindow>(true, NAME).minSize = wndMinSize;
+            GetWindow<PlayerVisualSetWindow>(true, NAME).minSize = new(350f, 300f);
         }
 
 

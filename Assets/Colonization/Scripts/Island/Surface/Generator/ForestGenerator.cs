@@ -19,11 +19,11 @@ namespace Vurbiri.Colonization
         [SerializeField] private Spruce _spruce;
 
         private const string NAME_MESH = "MH_Forest_";
-        private static int ID = 0;
+        private static int s_id = 0;
 
         public override void Generate(float size)
         {
-            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH.Concat(s_id++), Vector2.one, false);
             float step = _spruce.RadiusAvg * _sparsity, radius = step;
             float angle, angleStep;
             FloatMRnd offsetAngle;
@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization
 
         public override IEnumerator Generate_Cn(float size)
         {
-            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH.Concat(s_id++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
             float step = _spruce.RadiusAvg * _sparsity, radius = step;
             float angle, angleStep;
             FloatMRnd offsetAngle;

@@ -1,12 +1,12 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\Amount.cs
 using TMPro;
 using UnityEngine;
-using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
+using Vurbiri.UI;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.UI
 {
-    public class Amount : MonoBehaviour
+    sealed public class Amount : AHintWidget
     {
         private const string AMOUNT = "{0,2}{1}</color><space=0.05em>|<space=0.05em>{2,-2}";
 
@@ -15,12 +15,14 @@ namespace Vurbiri.Colonization
         private ReactiveCombination<int, int> _reactiveAmountMax;
         private string _colorNormal, _colorOver;
 
-        public void Init(IReactiveValue<int> amount, IReactiveValue<int> max, ProjectColors settings)
+        public void Init(IReactiveValue<int> amount, IReactiveValue<int> max, ProjectColors settings, CanvasHint hint)
         {
-            _colorNormal = settings.TextPanelTag;
+            base.Init(hint);
+
+            _colorNormal = settings.PanelTextTag;
             _colorOver = settings.TextNegativeTag;
 
-            _textTMP.color = settings.TextPanel;
+            _textTMP.color = settings.PanelText;
 
             _reactiveAmountMax = new(amount, max, SetAmountMax);
         }
@@ -41,7 +43,7 @@ namespace Vurbiri.Colonization
         {
             ((RectTransform)transform).localPosition = position;
 
-            _textTMP.color = settings.TextPanel;
+            _textTMP.color = settings.PanelText;
             _textTMP.text = string.Format(AMOUNT, "<#ff0000ff>", Mathf.Min(33, 99), 25);
         }
         private void OnValidate()

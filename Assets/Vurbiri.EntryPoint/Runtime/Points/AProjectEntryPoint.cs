@@ -5,7 +5,7 @@ namespace Vurbiri.EntryPoint
 {
     public abstract class AProjectEntryPoint : MonoBehaviour
     {
-        private static AProjectEntryPoint _instance;
+        private static AProjectEntryPoint s_instance;
 
         [SerializeField] private LoadScene _emptyScene;
 
@@ -19,13 +19,13 @@ namespace Vurbiri.EntryPoint
 
         private void Awake()
         {
-            if (_instance != null)
+            if (s_instance != null)
             {
                 Destroy(gameObject); 
                 return;
             }
 
-            _instance = this; 
+            s_instance = this; 
             DontDestroyOnLoad(gameObject);
             gameObject.SetActive(true);
 

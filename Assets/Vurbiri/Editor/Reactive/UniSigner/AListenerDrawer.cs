@@ -19,9 +19,9 @@ namespace VurbiriEditor.Reactive
         
         private const string L_OBJECT = "Game Object", L_TARGET = "Target Object", L_METHOD = "Method";
 
-        private static readonly string[] excludeStart = { "set_", "<set_" };
-        private static readonly string[] excludeEnd = { "Dirty" };
-        private static readonly HashSet<string> excludeVoidMethod = new(new string[] { "Awake", "Start", "OnEnable", "Update", "FixedUpdate", "LateUpdate", "OnDisable", "OnDestroy", "OnValidate", "Reset", "OnBeforeSerialize", "OnAfterDeserialize", "Finalize", "SendTransformChangedScale", "StopAnimation" });
+        private readonly string[] _excludeStart = { "set_", "<set_" };
+        private readonly string[] _excludeEnd = { "Dirty" };
+        private readonly HashSet<string> _excludeVoidMethod = new(new string[] { "Awake", "Start", "OnEnable", "Update", "FixedUpdate", "LateUpdate", "OnDisable", "OnDestroy", "OnValidate", "Reset", "OnBeforeSerialize", "OnAfterDeserialize", "Finalize", "SendTransformChangedScale", "StopAnimation" });
         #endregion
 
         #region Consts
@@ -32,8 +32,8 @@ namespace VurbiriEditor.Reactive
         private const string M_VOID = "void "; 
         private const string M_PUBLIC = "public ", M_PRIVATE = "private ", M_PROTECTED = "protected ", M_INTERNAL = "internal ", M_STATIC = "static ";
 
-        private static readonly int _preNameMaxLength = M_PROTECTED.Length + M_INTERNAL.Length + M_STATIC.Length + M_VOID.Length;
-        private static readonly Type _gameObjectType = typeof(GameObject), _voidType = typeof(void);
+        private static readonly int s_preNameMaxLength = M_PROTECTED.Length + M_INTERNAL.Length + M_STATIC.Length + M_VOID.Length;
+        private static readonly Type s_gameObjectType = typeof(GameObject), _voidType = typeof(void);
         #endregion
 
         #region Cache
@@ -46,7 +46,7 @@ namespace VurbiriEditor.Reactive
         #endregion
 
         #region ConvertNames
-        private static readonly Dictionary<string, string> _converter = new() {{"Boolean", "bool"}, { "Byte", "byte" }, { "SByte", "sbyte" }, { "Int16", "short" }, { "UInt16", "ushort" }, { "Int32", "int" }, { "UInt32", "uint" }, { "Int64", "long" }, { "UInt64", "ulong" }, { "Single", "float" }, { "Double", "double" }, { "Decimal", "decimal" }, { "Char", "char" }, { "String", "string" }, { "Object", "object" }};
+        private readonly Dictionary<string, string> _converter = new() {{"Boolean", "bool"}, { "Byte", "byte" }, { "SByte", "sbyte" }, { "Int16", "short" }, { "UInt16", "ushort" }, { "Int32", "int" }, { "UInt32", "uint" }, { "Int64", "long" }, { "UInt64", "ulong" }, { "Single", "float" }, { "Double", "double" }, { "Decimal", "decimal" }, { "Char", "char" }, { "String", "string" }, { "Object", "object" }};
         #endregion
 
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
@@ -116,7 +116,7 @@ namespace VurbiriEditor.Reactive
         #region Drawers
         private GameObject DrawGameObject(GameObject obj, string displayName)
         {
-            return ObjectField(_position, displayName, obj, _gameObjectType, true) as GameObject;
+            return ObjectField(_position, displayName, obj, s_gameObjectType, true) as GameObject;
         }
         private Object DrawTargetObject(Object obj, out int index)
         {
@@ -264,16 +264,16 @@ namespace VurbiriEditor.Reactive
 
         private bool IsName(string name)
         {
-            for (int i = excludeStart.Length - 1; i >= 0; i--)
-                if (name.StartsWith(excludeStart[i])) return false;
+            for (int i = _excludeStart.Length - 1; i >= 0; i--)
+                if (name.StartsWith(_excludeStart[i])) return false;
 
-            for (int i = excludeEnd.Length - 1; i >= 0; i--)
-                if(name.EndsWith(excludeEnd[i])) return false;
+            for (int i = _excludeEnd.Length - 1; i >= 0; i--)
+                if(name.EndsWith(_excludeEnd[i])) return false;
 
             if(_argumentsCount > 0) 
                 return true;
 
-            return !excludeVoidMethod.Contains(name);
+            return !_excludeVoidMethod.Contains(name);
         }
 
         private string ConvertName(string name)
@@ -287,7 +287,7 @@ namespace VurbiriEditor.Reactive
         private string GetMethodName(MethodInfo method)
         {
             string methodName = method.Name;
-            StringBuilder sb = new(_preNameMaxLength + methodName.Length + _params.Length);
+            StringBuilder sb = new(s_preNameMaxLength + methodName.Length + _params.Length);
 
             if (Listener.flags.HasFlag(BindingFlags.NonPublic))
                 sb.Append(GetAccess(method));

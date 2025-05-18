@@ -7,12 +7,12 @@ namespace Vurbiri.Colonization
 {
 
     [JsonConverter(typeof(Converter))]
-    public struct Key : IEquatable<Key>
+    public readonly struct Key : IEquatable<Key>
     {
-        private int _x, _y;
+        private readonly int _x, _y;
 
-        private static Key _zero = new();
-        public static Key Zero => _zero;
+        private static readonly Key s_zero = new();
+        public static Key Zero => s_zero;
 
         public readonly int X => _x;
         public readonly int Y => _y;

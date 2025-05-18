@@ -7,9 +7,10 @@ namespace Vurbiri.Colonization.UI
     public class ProjectColors
 	{
         [Header("┌──────────── Panel ─────────────────────")]
-        [SerializeField] private Color _backgroundPanel = Color.blue;
-        [SerializeField] private Color _textPanel = Color.black;
+        [SerializeField] private Color _panelBack = Color.blue;
+        [SerializeField] private Color _panelText = Color.white;
         [Header("├──────────── Hint ─────────────────────"), Space]
+        [SerializeField] private Color _hintBack = new(0.985f, 0.882f, 0.725f);
         [SerializeField] private Color _hintDefault = Color.black;
         [Header("├──────────── Text ─────────────────────"), Space]
         [SerializeField] private Color _textDefault = Color.blue;
@@ -20,17 +21,18 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private string _endColors = "   Цвета проекта   ";
 #pragma warning restore 414
 
-        private string _textPanelTag;
+        private string _panelTextTag;
         private string _hintDefaultTag;
         private string _textDefaultTag, _textPositiveTag, _textNegativeTag;
 
         //private const string TAG_COLOR_FORMAT = "<color={0}>";
         private const string TAG_COLOR_FORMAT_LITE = "<{0}>";
 
-        public Color BackgroundPanel => _backgroundPanel;
-        public Color TextPanel => _textPanel;
-        public string TextPanelTag => _textPanelTag;
+        public Color PanelBack => _panelBack;
+        public Color PanelText => _panelText;
+        public string PanelTextTag => _panelTextTag;
 
+        public Color HinBack => _hintBack;
         public Color HintDefault => _hintDefault;
         public string HintDefaultTag => _hintDefaultTag;
 
@@ -44,7 +46,7 @@ namespace Vurbiri.Colonization.UI
 
         public ProjectColors Init()
         {
-            _textPanelTag = string.Format(TAG_COLOR_FORMAT_LITE, _textPanel.ToHex());
+            _panelTextTag = string.Format(TAG_COLOR_FORMAT_LITE, _panelText.ToHex());
 
             _hintDefaultTag = string.Format(TAG_COLOR_FORMAT_LITE, _hintDefault.ToHex());
 

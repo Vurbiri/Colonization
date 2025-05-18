@@ -9,7 +9,7 @@ namespace VurbiriEditor
     public class Vector2SpecularDrawer : PropertyDrawer
     {
         private const string NAME_VALUE = "_value";
-        private static readonly string[] labelsSpecular = { "Metallic", "Smoothness" };
+        private static readonly string[] s_labelsSpecular = { "Metallic", "Smoothness" };
         private const int COUNT_SPECULAR = 2;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -38,7 +38,7 @@ namespace VurbiriEditor
             void DrawField(int id)
             {
                 position.y += position.height + y_space;
-                vector[id] = EditorGUI.Slider(position, labelsSpecular[id], vector[id], 0f, 1f);
+                vector[id] = EditorGUI.Slider(position, s_labelsSpecular[id], vector[id], 0f, 1f);
             }
             //=================================
             #endregion

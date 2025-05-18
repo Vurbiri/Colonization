@@ -16,15 +16,15 @@ namespace VurbiriEditor.Colonization.Characteristics
     [CustomPropertyDrawer(typeof(HitEffectSettings))]
     public class HitEffectSettingsDrawer : PropertyDrawerUtility
     {
-        private static readonly WeakReference<Localization> _weakLocalization = new(new (Files.Actors));
+        private static readonly WeakReference<Localization> s_weakLocalization = new(new (Files.Actors));
         private static Localization Localization
         {
             get
             {
-                if (!_weakLocalization.TryGetTarget(out Localization localization))
+                if (!s_weakLocalization.TryGetTarget(out Localization localization))
                 {
                     localization = new(Files.Actors);
-                    _weakLocalization.SetTarget(localization);
+                    s_weakLocalization.SetTarget(localization);
                 }
                 return localization;
             }
@@ -39,22 +39,22 @@ namespace VurbiriEditor.Colonization.Characteristics
         #endregion
 
         #region Values
-        private static readonly string[] NamesAbilitiesDuration = { ActorAbilityId.Names[MaxHP], ActorAbilityId.Names[HPPerTurn], ActorAbilityId.Names[Attack],
+        private readonly string[] _namesAbilitiesDuration = { ActorAbilityId.Names[MaxHP], ActorAbilityId.Names[HPPerTurn], ActorAbilityId.Names[Attack],
                                                                ActorAbilityId.Names[Defense] };
-        private static readonly int[] ValuesAbilitiesDuration = { MaxHP, HPPerTurn, Attack, Defense };
+        private readonly int[] _valuesAbilitiesDuration = { MaxHP, HPPerTurn, Attack, Defense };
 
-        private static readonly string[] NamesModifiersDuration = { "Flat", "Percent" };
-        private static readonly int[] ValuesModifiersDuration = { TypeModifierId.Addition, TypeModifierId.TotalPercent };
+        private readonly string[] _namesModifiersDuration = { "Flat", "Percent" };
+        private readonly int[] _valuesModifiersDuration = { TypeModifierId.Addition, TypeModifierId.TotalPercent };
 
-        private static readonly string[] NamesAbilitiesInstant = { ActorAbilityId.Names[CurrentHP], ActorAbilityId.Names[CurrentAP], ActorAbilityId.Names[IsMove] };
-        private static readonly int[] ValuesAbilitiesInstant = { CurrentHP, CurrentAP, IsMove };
+        private readonly string[] _namesAbilitiesInstant = { ActorAbilityId.Names[CurrentHP], ActorAbilityId.Names[CurrentAP], ActorAbilityId.Names[IsMove] };
+        private readonly int[] _valuesAbilitiesInstant = { CurrentHP, CurrentAP, IsMove };
 
-        private static readonly string[] NamesModifiersCurrentHP = { "Percent of CurrentHP", "Flat", "Percent of MaxHP" };
+        private readonly string[] _namesModifiersCurrentHP = { "Percent of CurrentHP", "Flat", "Percent of MaxHP" };
 
-        private static readonly HashSet<int> NonReflect = new() { CurrentAP, IsMove };
+        private readonly HashSet<int> _nonReflect = new() { CurrentAP, IsMove };
         #endregion
 
-        private static readonly Color Positive = new(0.5f, 1f, 0.3f, 1f), Negative = new(1f, 0.5f, 0.3f, 1f);
+        private readonly Color _positive = new(0.5f, 1f, 0.3f, 1f), _negative = new(1f, 0.5f, 0.3f, 1f);
 
         protected override void OnGUI()
         {
@@ -111,10 +111,10 @@ namespace VurbiriEditor.Colonization.Characteristics
                 SerializedProperty property = GetProperty(P_VALUE);
 
                 if (property.intValue > 0)
-                    return (NAME_POSITIVE, Positive);
+                    return (NAME_POSITIVE, _positive);
 
                 if (property.intValue < 0)
-                    return (NAME_NEGATIVE, Negative);
+                    return (NAME_NEGATIVE, _negative);
 
                 return (NAME_VOID, new(0.1f, 0.1f, 0.1f, 1f));
             }
@@ -156,13 +156,13 @@ namespace VurbiriEditor.Colonization.Characteristics
                 Space();
                 if (isDuration)
                 {
-                    SetDefaultValue(targetAbility, ValuesAbilitiesDuration);
-                    return DrawDurationValue(DrawIntPopup(targetAbility, NamesAbilitiesDuration, ValuesAbilitiesDuration));
+                    SetDefaultValue(targetAbility, _valuesAbilitiesDuration);
+                    return DrawDurationValue(DrawIntPopup(targetAbility, _namesAbilitiesDuration, _valuesAbilitiesDuration));
                 }
                 else
                 {
-                    SetDefaultValue(targetAbility, ValuesAbilitiesInstant);
-                    return DrawInstantValue(DrawIntPopup(targetAbility, NamesAbilitiesInstant, ValuesAbilitiesInstant));
+                    SetDefaultValue(targetAbility, _valuesAbilitiesInstant);
+                    return DrawInstantValue(DrawIntPopup(targetAbility, _namesAbilitiesInstant, _valuesAbilitiesInstant));
                 }
                 
             }
@@ -172,7 +172,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 Space();
                 indentLevel++;
 
-                int typeModifierId = DrawIntPopup(P_TYPE_OP, NamesModifiersDuration, ValuesModifiersDuration);
+                int typeModifierId = DrawIntPopup(P_TYPE_OP, _namesModifiersDuration, _valuesModifiersDuration);
 
                 if (typeModifierId == TypeModifierId.TotalPercent)
                     DrawInt(P_VALUE, "Value (%)", -200, 200, 100);
@@ -191,7 +191,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 if (usedAbility == CurrentHP)
                 {
-                    if (DrawIntPopup(P_TYPE_OP, NamesModifiersCurrentHP, ActorAbilityId.Values) == TypeModifierId.Addition)
+                    if (DrawIntPopup(P_TYPE_OP, _namesModifiersCurrentHP, ActorAbilityId.Values) == TypeModifierId.Addition)
                         DrawShiftValue("Value", -75, 75);
                     else
                         DrawInt(P_VALUE, "Value (%)", -100, 100);
@@ -272,7 +272,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     if(isPositive)
                     {  
                         key = "Healing"; 
-                        GUI.contentColor = Positive;
+                        GUI.contentColor = _positive;
                         DrawLabel(localization.GetTextFormat(FILE, key, strValue).Delete("<b>", "</b>"));
                     }
                     else
@@ -292,7 +292,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 }
                 else
                 {
-                    GUI.contentColor = isPositive ? Positive : Negative;
+                    GUI.contentColor = isPositive ? _positive : _negative;
 
                     if (duration > 0)
                     {
@@ -318,9 +318,9 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if(GetInt(P_REFLECT) > 0)
                 {
                     if (isPositive)
-                    { key = REFLECT_MINUS; GUI.contentColor = Negative; }
+                    { key = REFLECT_MINUS; GUI.contentColor = _negative; }
                     else
-                    { key = REFLECT_PLUS; GUI.contentColor = Positive; }
+                    { key = REFLECT_PLUS; GUI.contentColor = _positive; }
                     DrawLabel(localization.GetTextFormat(FILE, key, GetInt(P_REFLECT)).Delete("<b>", "</b>"));
                 }
 

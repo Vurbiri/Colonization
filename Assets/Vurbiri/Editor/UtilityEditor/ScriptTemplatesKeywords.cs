@@ -16,25 +16,25 @@ namespace VurbiriEditor
         private const string WINDOW = "Window", EDITOR = "Editor", DRAWER = "Drawer";
 		#endregion
 
-		private static bool _enabled = true;
+		private static bool s_enabled = true;
 
         [MenuItem(MENU_COMMAND_ENABLE, false, 35)]
         private static void CommandEnable()
         {
-            _enabled = true;
+            s_enabled = true;
 			Save(); Log();
         }
         [MenuItem(MENU_COMMAND_ENABLE, true, 35)]
         private static bool CommandEnableValidate()
         {
             SetChecked();
-            return !_enabled;
+            return !s_enabled;
         }
 
         [MenuItem(MENU_COMMAND_DISABLE, false, 36)]
         private static void CommandDisable()
         {
-            _enabled = false;
+            s_enabled = false;
             Save(); Log();
         }
         [MenuItem(MENU_COMMAND_DISABLE, true, 36)]
@@ -42,7 +42,7 @@ namespace VurbiriEditor
 
         public static void OnWillCreateAsset(string assetName)
 		{
-            if (!_enabled) return;
+            if (!s_enabled) return;
             
             if (!assetName.EndsWith(META_EXT)) return;
 			assetName = assetName.Replace(META_EXT, string.Empty);
@@ -79,7 +79,7 @@ namespace VurbiriEditor
 
 		private static void Save()
 		{
-            EditorPrefs.SetBool(KEY_SAVE, _enabled);
+            EditorPrefs.SetBool(KEY_SAVE, s_enabled);
 
             SetChecked();
         }
@@ -88,22 +88,22 @@ namespace VurbiriEditor
         private static void Load()
 		{
             if (EditorPrefs.HasKey(KEY_SAVE))
-                _enabled = EditorPrefs.GetBool(KEY_SAVE);
+                s_enabled = EditorPrefs.GetBool(KEY_SAVE);
             
             SetChecked(); 
         }
 
         private static void SetChecked()
         {
-            Menu.SetChecked(MENU_COMMAND_ENABLE, _enabled);
-            Menu.SetChecked(MENU_COMMAND_DISABLE, !_enabled);
+            Menu.SetChecked(MENU_COMMAND_ENABLE, s_enabled);
+            Menu.SetChecked(MENU_COMMAND_DISABLE, !s_enabled);
 
             //Menu.SetChecked(MENU, _enabled);
         }
 
         private static void Log()
         {
-            string state = _enabled ? MENU_NAME_ENABLE : MENU_NAME_DISABLE;
+            string state = s_enabled ? MENU_NAME_ENABLE : MENU_NAME_DISABLE;
             Debug.Log($"[ScriptTemplatesKeywords] {state}");
         }
     }

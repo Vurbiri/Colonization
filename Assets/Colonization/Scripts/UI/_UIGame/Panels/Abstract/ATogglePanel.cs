@@ -19,12 +19,12 @@ namespace Vurbiri.Colonization.UI
         protected InputController _inputController;
         private Coroutine _coroutine;
 
-        protected void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors colors)
+        protected void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors colors, CanvasHint hint)
         {
             current.Subscribe(count => _toggle.interactable = count > 0);
             _toggle.AddListener(OnToggle);
 
-            _widget.Init(current, max, colors);
+            _widget.Init(current, max, colors, hint);
         }
 
         private void OnToggle(bool isOn)
@@ -61,8 +61,8 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         public override RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, ProjectColors colors)
         {
-            _toggle.CheckmarkOn.color = colors.BackgroundPanel;
-            _toggle.CheckmarkOff.color = colors.BackgroundPanel;
+            _toggle.CheckmarkOn.color = colors.PanelBack;
+            _toggle.CheckmarkOff.color = colors.PanelBack;
 
             RectTransform thisRectTransform = base.UpdateVisuals_Editor(pixelsPerUnit, padding, colors);
 

@@ -5,6 +5,7 @@ using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -17,12 +18,11 @@ namespace Vurbiri.Colonization.UI
 
         private ReactiveCombination<int, int> _reactiveProfit;
 
-        public override void Init(Human player, IdArray<EdificeId, Sprite> sprites, ProjectColors colors, InputController inputController)
+        public override void Init(Human player, IdArray<EdificeId, Sprite> sprites, ProjectColors colors, InputController inputController, CanvasHint hint)
         {
             _reactiveProfit = new(player.GetAbility(HumanAbilityId.ShrineProfit), player.GetAbility(HumanAbilityId.ShrinePassiveProfit), SetProfit);
 
-
-            base.Init(player, sprites, colors, inputController);
+            base.Init(player, sprites, colors, inputController, hint);
         }
 
         private void SetProfit(int profit, int passiveProfit)

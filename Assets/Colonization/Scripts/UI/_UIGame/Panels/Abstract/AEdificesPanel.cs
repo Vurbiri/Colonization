@@ -3,6 +3,7 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive.Collections;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -13,7 +14,7 @@ namespace Vurbiri.Colonization.UI
 
         protected IdArray<EdificeId, Sprite> _sprites;
 
-        public virtual void Init(Human player, IdArray<EdificeId, Sprite> sprites, ProjectColors colors, InputController inputController)
+        public virtual void Init(Human player, IdArray<EdificeId, Sprite> sprites, ProjectColors colors, InputController inputController, CanvasHint hint)
         {
             _sprites = sprites;
             _inputController = inputController;
@@ -23,7 +24,7 @@ namespace Vurbiri.Colonization.UI
 
             edifices.Subscribe(AddEdifice);
 
-            Init(edifices.CountReactive, maxEdifices, colors);
+            Init(edifices.CountReactive, maxEdifices, colors, hint);
         }
 
         private void AddEdifice(int index, Crossroad crossroad, TypeEvent typeEvent)

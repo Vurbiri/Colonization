@@ -20,13 +20,13 @@ namespace VurbiriEditor
         private const string KEY_SAVE = "PTCS_AUTO";
         #endregion
 
-        private static uint count;
-        private static bool isAuto = false;
+        private static uint s_count;
+        private static bool s_isAuto = false;
 
         static PathToCSFiles()
         {
             if (EditorPrefs.HasKey(KEY_SAVE))
-                isAuto = EditorPrefs.GetBool(KEY_SAVE);
+                s_isAuto = EditorPrefs.GetBool(KEY_SAVE);
         }
 
         [MenuItem(MENU_COMMAND_ADD)]
@@ -37,18 +37,18 @@ namespace VurbiriEditor
             if (string.IsNullOrEmpty(path))
                 return;
 
-            count = 0;
+            s_count = 0;
             Search(path);
             AssetDatabase.Refresh();
-            EditorUtility.DisplayDialog(MENU_NAME_ADD, $"Изменено {count} файлов", "OK");
+            EditorUtility.DisplayDialog(MENU_NAME_ADD, $"Изменено {s_count} файлов", "OK");
         }
 
         [MenuItem(MENU_COMMAND_AUTO, false, 12)]
         private static void CommandAuto()
         {
-            isAuto = !isAuto;
+            s_isAuto = !s_isAuto;
 
-            EditorPrefs.SetBool(KEY_SAVE, isAuto);
+            EditorPrefs.SetBool(KEY_SAVE, s_isAuto);
             SetChecked();
             Log();
         }
@@ -61,7 +61,7 @@ namespace VurbiriEditor
 
         public static void OnWillCreateAsset(string assetName)
         {
-            if (!isAuto) return;
+            if (!s_isAuto) return;
             
             if (!assetName.EndsWith(META_EXT)) return;
             assetName = assetName.Replace(META_EXT, string.Empty);
@@ -74,7 +74,7 @@ namespace VurbiriEditor
         {
             AssetMoveResult notMove = AssetMoveResult.DidNotMove;
 
-            if (!isAuto) return notMove;
+            if (!s_isAuto) return notMove;
 
             if (!sourcePath.EndsWith(CS_EXT) || !destinationPath.EndsWith(CS_EXT) || !CommentFromPath(destinationPath, out string comment))
                 return notMove;
@@ -120,7 +120,7 @@ namespace VurbiriEditor
             else
                 Add(path, comment);
 
-            count++;
+            s_count++;
         }
 
         private static void Replace(string path, string comment)
@@ -156,14 +156,14 @@ namespace VurbiriEditor
 
         private static void SetChecked()
         {
-            Menu.SetChecked(MENU_COMMAND_AUTO, isAuto);
+            Menu.SetChecked(MENU_COMMAND_AUTO, s_isAuto);
             //Menu.SetChecked(MENU, isAuto);
         }
 
         private static void Log()
         {
-            string state = isAuto ? "Enable" : "Disable";
-            string color = isAuto ? "green" : "red";
+            string state = s_isAuto ? "Enable" : "Disable";
+            string color = s_isAuto ? "green" : "red";
             Debug.Log($"<color={color}>[PathToCSFiles] <b>{state}</b></color>");
         }
 	}

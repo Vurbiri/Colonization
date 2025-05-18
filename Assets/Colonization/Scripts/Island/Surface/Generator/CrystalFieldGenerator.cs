@@ -18,10 +18,10 @@ namespace Vurbiri.Colonization
         private const int COUNT_DRUSE = 6;
 
         private const string NAME_MESH = "MH_CrystalField_";
-        private static int ID = 0;
+        private static int s_id = 0;
         public override void Generate(float radius)
         {
-            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH.Concat(s_id++), Vector2.one, false);
 
             FloatMRnd offsetRadius = radius * _ratioOffsetXZ;
 
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
         }
         public override IEnumerator Generate_Cn(float radius)
         {
-            CustomMesh customMesh = new(NAME_MESH.Concat(ID++), Vector2.one, false);
+            CustomMesh customMesh = new(NAME_MESH.Concat(s_id++), Vector2.one, false);
 
             FloatMRnd offsetRadius = radius * _ratioOffsetXZ;
 
@@ -139,7 +139,7 @@ namespace Vurbiri.Colonization
             [Space]
             [SerializeField, MinMax(0.1f, 0.5f)] private FloatRnd _ratioOffsetRange = new(0.16f, 0.32f);
 
-            private static readonly Vector2[] UV_PICK = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
+            private static readonly Vector2[] s_uvPick = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
 
             public List<Triangle> Create(Vector3 position, Quaternion rotation, byte color, bool moreAvg)
             {
@@ -176,7 +176,7 @@ namespace Vurbiri.Colonization
 
                 Vector3 pick = rotation * new Vector3(offsetSide, height, offsetSide) + position;
                 for (int i = 0; i < countVertex; i++)
-                    triangles.Add(new(color, UV_PICK, baseTop.Next(i), baseTop[i], pick));
+                    triangles.Add(new(color, s_uvPick, baseTop.Next(i), baseTop[i], pick));
 
                 return triangles;
             }

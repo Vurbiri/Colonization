@@ -15,12 +15,10 @@ namespace VurbiriEditor.Colonization.Actors
 
         [SerializeField] private DemonsSettingsScriptable _demonsSettings;
 
-        private static readonly Vector2 wndMinSize = new(650f, 800f);
-
         [MenuItem(MENU, false, 11)]
         private static void ShowWindow()
         {
-            GetWindow<DemonsSettingsWindow>(true, NAME).minSize = wndMinSize;
+            GetWindow<DemonsSettingsWindow>(true, NAME).minSize = new(650f, 800f);
         }
 
         public void CreateGUI()
