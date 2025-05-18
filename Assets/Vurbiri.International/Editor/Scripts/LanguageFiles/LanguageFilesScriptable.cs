@@ -2,8 +2,10 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using static Vurbiri.Storage;
 
 namespace Vurbiri.International.Editor
 {
@@ -11,14 +13,9 @@ namespace Vurbiri.International.Editor
 
     internal class LanguageFilesScriptable : AGetOrCreateScriptableObject<LanguageFilesScriptable>
     {
+        private const string META_EXP = ".meta";
+
         [SerializeField] private List<string> _files;
-
-        //private string[] _folders;
-
-        public void Init()
-        {
-            //_folders = LoadObjectFromResourceJson<List<LanguageType>>(FILE_LANG).Select(l => l.Folder).ToArray();
-        }
 
         public void OnAdded(IEnumerable<int> indexes)
         {
@@ -28,7 +25,8 @@ namespace Vurbiri.International.Editor
 
         public void Load()
         {
-            _files = new(LanguageFiles.names);
+            _files = LoadObjectFromResourceJson<List<string>>(FILE_FILES);
+            LanguageFiles.Set(_files);
             EditorUtility.SetDirty(this);
         }
 
@@ -52,19 +50,19 @@ namespace Vurbiri.International.Editor
         public bool Save()
         {
             for (int i = _files.Count - 1; i >= 0; i--)
-            {
                 if (!CheckValue(_files[i], i))
                     _files.RemoveAt(i);
-            }
 
             if (_files.Count == 0)
                 return false;
+
+            Rename();
 
             File.WriteAllText(FileUtil.GetPhysicalPath(FILE_FILES_PATH), JsonConvert.SerializeObject(_files, Formatting.Indented), utf8WithoutBom);
             
             return true;
 
-            #region Local: CheckValue(..)
+            #region Local: CheckValue(..), Rename()
             //=================================
             bool CheckValue(string value, int index)
             {
@@ -77,6 +75,33 @@ namespace Vurbiri.International.Editor
 
                 return true;
             }
+            //=================================
+            void Rename()
+            {
+                var folders = LoadObjectFromResourceJson<List<LanguageType>>(FILE_LANG)
+                    .Select(l => FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER.Concat(l.Folder, "/"))).GroupBy(f => f).Select(g => g.First()).ToArray();
+
+                int count = Mathf.Min(_files.Count, LanguageFiles.count);
+                for (int i = 0; i < count; i++)
+                {
+                    if (_files[i] != LanguageFiles.names[i])
+                    {
+                        foreach (var folder in folders)
+                        {
+                            string src = folder.Concat(LanguageFiles.names[i], JSON_EXP);
+                            string dst = folder.Concat(_files[i], JSON_EXP);
+                            
+                            if (File.Exists(src))
+                            {
+                                FileUtil.MoveFileOrDirectory(src, dst);
+                                FileUtil.MoveFileOrDirectory(src.Concat(META_EXP), dst.Concat(META_EXP));
+                                Debug.Log($"Moved <i>{src}</i> <b>--></b> <i>{dst}</i>");
+                            }
+                        }
+                    }
+                }
+            }
+            
             #endregion
         }
 

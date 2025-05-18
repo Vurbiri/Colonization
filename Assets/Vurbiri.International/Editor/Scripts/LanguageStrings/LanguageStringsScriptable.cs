@@ -64,7 +64,6 @@ namespace Vurbiri.International.Editor
         {
             if (string.IsNullOrEmpty(_loadFile))
             {
-                //_strings.RemoveRange(indexes.First(), indexes.Count());
                 _strings.Clear();
                 return;
             }
@@ -147,15 +146,15 @@ namespace Vurbiri.International.Editor
                     strings[i].Add(key, str.GetText(i));
             }
 
-            string path, folder = FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER);
+            string folder = FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER);
             for (int i = 0; i < _count; i++)
             {
-                path = Path.Combine(folder, _languages[i].Folder, _selectFile.ToString().Concat(JSON_EXP));
-                FileInfo fileInfo = new(path);
+                FileInfo fileInfo = new(Path.Combine(folder, _languages[i].Folder, _selectFile.ToString().Concat(JSON_EXP)));
                 if (!fileInfo.Exists)
                     fileInfo.Directory.Create();
                 
-                File.WriteAllText(path, JsonConvert.SerializeObject(strings[i], Formatting.Indented), utf8WithoutBom);
+                File.WriteAllText(fileInfo.FullName, JsonConvert.SerializeObject(strings[i], Formatting.Indented), utf8WithoutBom);
+                Debug.Log($"Saved <i>{fileInfo.FullName}</i>");
             }
 
             EditorUtility.SetDirty(this);

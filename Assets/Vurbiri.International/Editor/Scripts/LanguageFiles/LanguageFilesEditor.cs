@@ -19,7 +19,6 @@ namespace Vurbiri.International.Editor
         public override VisualElement CreateInspectorGUI()
         {
             var settings = LanguageFilesScriptable.GetOrCreateSelf();
-            settings.Init();
 
             var root = _treeAsset.CloneTree();
 
