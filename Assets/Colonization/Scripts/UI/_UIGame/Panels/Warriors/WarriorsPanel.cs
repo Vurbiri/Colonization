@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\WarriorsPanel.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Warriors\WarriorsPanel.cs
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
@@ -10,7 +10,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class WarriorsPanel : ATogglePanel<WarriorButton>
+    sealed public class WarriorsPanel : ATogglePanel<CurrentMax, WarriorButton>
     {
         [SerializeField] private Transform _buttonRepository;
         [SerializeField] private IdArray<WarriorId, Sprite> _sprites = new();
@@ -28,8 +28,9 @@ namespace Vurbiri.Colonization.UI
 
             maxWarrior.Subscribe(FillingPool);
             warriors.Subscribe(AddWarrior);
-             
-            Init(warriors.CountReactive, maxWarrior, colors, hint);
+
+            InitToggle(warriors.CountReactive);
+            _widget.Init(warriors.CountReactive, maxWarrior, colors, hint);
         }
 
         private void FillingPool(int max)
@@ -60,7 +61,6 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-
         protected override void OnValidate()
         {
             base.OnValidate();

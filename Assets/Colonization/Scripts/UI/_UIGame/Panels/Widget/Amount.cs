@@ -1,5 +1,4 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\Amount.cs
-using TMPro;
 using UnityEngine;
 using Vurbiri.International;
 using Vurbiri.Reactive;
@@ -12,21 +11,18 @@ namespace Vurbiri.Colonization.UI
         private const string AMOUNT = "{0}{1,2}</color><space=0.05em>|<space=0.05em>{2,-2}";
 
         [SerializeField] private string _keyOver;
-        [Space]
-        [SerializeField] private TextMeshProUGUI _textTMP;
 
         private Localization _localization;
         private ReactiveCombination<int, int> _reactiveAmountMax;
-        private string _colorNormal, _colorOver;
+        private string _colorNormal, _colorNormalHint, _colorOver;
 
-        public void Init(IReactiveValue<int> amount, IReactiveValue<int> max, ProjectColors settings, CanvasHint hint)
+        public void Init(IReactiveValue<int> amount, IReactiveValue<int> max, ProjectColors colors, CanvasHint hint)
         {
-            base.Init(hint);
+            base.Init(colors, hint);
 
-            _colorNormal = settings.TextPositiveTag;
-            _colorOver = settings.TextNegativeTag;
-
-            _textTMP.color = settings.PanelText;
+            _colorNormal = colors.PanelTextTag;
+            _colorNormalHint = colors.HintDefaultTag;
+            _colorOver = colors.TextNegativeTag;
 
             _localization = Localization.Instance;
             _reactiveAmountMax = new(amount, max, SetAmountMax);
@@ -34,20 +30,16 @@ namespace Vurbiri.Colonization.UI
 
         private void SetAmountMax(int amount, int max)
         {
-            string color, over;
             if(amount > max)
             {
-                color = _colorOver;
-                over = _localization.GetText(_getText.id, _keyOver);
+                _valueTMP.text = string.Format(AMOUNT, _colorOver, Mathf.Min(amount, 99), max);
+                _text = _localization.GetFormatText(_getText.id, _getText.key, _colorOver, amount, max).Concat(_localization.GetText(_getText.id, _keyOver));
             }
             else 
             {
-                color = _colorNormal;
-                over = string.Empty;
+                _valueTMP.text = string.Format(AMOUNT, _colorNormal, amount, max);
+                _text = _localization.GetFormatText(_getText.id, _getText.key, _colorNormalHint, amount, max);
             }
-
-            _textTMP.text = string.Format(AMOUNT, color, Mathf.Min(amount, 99), max);
-            _text = _localization.GetFormatText(_getText.id, _getText.key, color, amount, max).Concat(over);
         }
 
         private void OnDestroy()
@@ -56,17 +48,10 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        public Vector2 Size => ((RectTransform)transform).sizeDelta;
         public void Init_Editor(Vector3 position, ProjectColors settings)
         {
-            ((RectTransform)transform).localPosition = position;
-
-            _textTMP.color = settings.PanelText;
-        }
-        private void OnValidate()
-        {
-            if (_textTMP == null)
-                _textTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "TextTMP");
+            Init_Editor(settings);
+            transform.localPosition = position;
         }
 #endif
     }

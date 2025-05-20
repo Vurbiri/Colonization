@@ -11,39 +11,47 @@ namespace Vurbiri.Colonization.UI
     {
         private const string PROFIT = "{0} {1}";
 
+        [SerializeField] private string _keyProfit;
         [Space]
-        [SerializeField] private TextMeshProUGUI _countTMP;
         [SerializeField] private TextMeshProUGUI _profitTMP;
 
         private Localization _localization;
-        private ReactiveCombination<int, int> _reactiveCurrentMax;
+        private ReactiveCombination<int, int> _reactiveCurrentMax, _reactiveProfit;
 
-        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors colors, CanvasHint hint)
+        private string _textCurrentMax, _textProfit;
+
+        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, IReactiveValue<int> activeProfit, IReactiveValue<int> passiveProfit, ProjectColors colors, CanvasHint hint)
         {
-            base.Init(hint);
-            _countTMP.color = colors.PanelText;
+            base.Init(colors, hint);
 
             _localization = Localization.Instance;
             _reactiveCurrentMax = new(current, max, SetCurrentMax);
+            _reactiveProfit = new(activeProfit, passiveProfit, SetProfit);
         }
 
         private void SetCurrentMax(int current, int max)
         {
-            _countTMP.text = string.Format(CurrentMax.COUNT, current, max);
-            _text = _localization.GetFormatText(_getText.id, _getText.key, current, max);
+            _valueTMP.text = string.Format(CurrentMax.COUNT, current, max);
+            _textCurrentMax = _localization.GetFormatText(_getText.id, _getText.key, current, max);
+            _text = string.Concat(_textCurrentMax, _textProfit);
+        }
+        private void SetProfit(int active, int passive)
+        {
+            _profitTMP.text = string.Format(PROFIT, active, passive);
+            _textProfit = _localization.GetFormatText(_getText.id, _keyProfit, active, passive);
+            _text = string.Concat(_textCurrentMax, _textProfit);
+        }
+
+        private void OnDestroy()
+        {
+            _reactiveCurrentMax.Dispose();
+            _reactiveProfit.Dispose();
         }
 
 #if UNITY_EDITOR
-        public Vector2 Size => ((RectTransform)transform).rect.size;
-        public void Init_Editor(ProjectColors settings)
+        protected override void OnValidate()
         {
-            _countTMP.color = settings.PanelText;
-        }
-
-        protected virtual void OnValidate()
-        {
-            if (_countTMP == null)
-                _countTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "TextTMP");
+            base.OnValidate();
             if (_profitTMP == null)
                 _profitTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "ProfitTMP");
         }

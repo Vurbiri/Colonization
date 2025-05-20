@@ -1,5 +1,6 @@
 //Assets\Vurbiri.UI\Editor\Editors\VToggleEditor.cs
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
@@ -7,16 +8,13 @@ using UnityEngine.UI;
 using Vurbiri.UI;
 using static UnityEditor.EditorGUI;
 using static UnityEditor.EditorGUILayout;
-using static Vurbiri.UI.VToggle;
+using static Vurbiri.UI.AVToggle;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(VToggle)), CanEditMultipleObjects]
-    sealed public class VToggleEditor : VSelectableEditor
+    [CustomEditor(typeof(AVToggle), true), CanEditMultipleObjects]
+    public class AVToggleEditor : VSelectableEditor
     {
-        private const string NAME = VUI_CONST_ED.TOGGLE, RESOURCE = "VToggle";
-        private const string MENU = VUI_CONST_ED.NAME_CREATE_MENU + NAME;
-
         private const float MIN_DURATION = 0f, MAX_DURATION = 1f;
 
         private static readonly string s_durationLabels = "Checkmark Fade Duration";
@@ -36,20 +34,22 @@ namespace VurbiriEditor.UI
 
         private readonly AnimBool _showSwitchType = new(), _showColorType = new();
 
-        private VToggle _toggle;
+        private AVToggle _toggle;
         private int _selectedCount;
-        private VToggle[] _toggles;
+        private AVToggle[] _toggles;
         private SwitchingType _switchingType;
+
+        protected override bool IsDerivedEditor => GetType() != typeof(AVToggle);
 
         protected override void OnEnable()
         {
-            _toggle = (VToggle)target;
+            _toggle = (AVToggle)target;
             _switchingType = _toggle.Switching;
 
             _selectedCount = targets.Length;
-            _toggles = new VToggle[_selectedCount];
+            _toggles = new AVToggle[_selectedCount];
             for (int i = 0; i < _selectedCount; i++)
-                _toggles[i] = (VToggle)targets[i];
+                _toggles[i] = (AVToggle)targets[i];
 
             _isOnProperty           = serializedObject.FindProperty("_isOn");
             _durationProperty       = serializedObject.FindProperty("_fadeDuration");
@@ -68,6 +68,21 @@ namespace VurbiriEditor.UI
             _showColorType.valueChanged.AddListener(Repaint);
 
             base.OnEnable();
+        }
+
+        protected override HashSet<string> GetExcludePropertyPaths()
+        {
+            var exclude = base.GetExcludePropertyPaths();
+            exclude.Add(_isOnProperty.propertyPath);
+            exclude.Add(_durationProperty.propertyPath);
+            exclude.Add(_switchingTypeProperty.propertyPath);
+            exclude.Add(_checkmarkOnProperty.propertyPath);
+            exclude.Add(_checkmarkOffProperty.propertyPath);
+            exclude.Add(_colorOnProperty.propertyPath);
+            exclude.Add(_colorOffProperty.propertyPath);
+            exclude.Add(_groupProperty.propertyPath);
+            exclude.Add(_onValueChangedProperty.propertyPath);
+            return exclude;
         }
 
         protected override void OnDisable()
@@ -158,8 +173,5 @@ namespace VurbiriEditor.UI
             Space();
             PropertyField(_onValueChangedProperty);
         }
-
-        [MenuItem(MENU, false, VUI_CONST_ED.CREATE_MENU_PRIORITY)]
-        public static void CreateFromMenu(MenuCommand command) => Utility.CreateObjectFromResources(RESOURCE, NAME, command.context as GameObject);
     }
 }

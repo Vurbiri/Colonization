@@ -8,34 +8,32 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public abstract class ATogglePanel<T> : ASinglyPanel<CurrentMax> where T : APanelButton
+    public abstract class ATogglePanel<TWidget, TButton> : ASinglyPanel<TWidget> where TWidget :AHintWidget where TButton : APanelButton
     {
         [SerializeField] protected VToggle _toggle;
         [Space]
-        [SerializeField] protected T _buttonPrefab;
+        [SerializeField] protected TButton _buttonPrefab;
         [SerializeField] protected Transform _buttonContainer;
 
-        protected readonly List<T> _buttons = new();
+        protected readonly List<TButton> _buttons = new();
         protected InputController _inputController;
-        private Coroutine _coroutine;
+        private Coroutine _coroutineToggle;
 
-        protected void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors colors, CanvasHint hint)
+        protected void InitToggle(IReactive<int> current)
         {
             current.Subscribe(count => _toggle.interactable = count > 0);
             _toggle.AddListener(OnToggle);
-
-            _widget.Init(current, max, colors, hint);
         }
 
         private void OnToggle(bool isOn)
         {
-            if (_coroutine != null)
-                StopCoroutine(_coroutine);
+            if (_coroutineToggle != null)
+                StopCoroutine(_coroutineToggle);
 
             if (isOn)
-                _coroutine = StartCoroutine(Enable_Cn());
+                _coroutineToggle = StartCoroutine(Enable_Cn());
             else
-                _coroutine = StartCoroutine(Disable_Cn());
+                _coroutineToggle = StartCoroutine(Disable_Cn());
 
 
             #region Local: Enable_Cn(), Disable_Cn()
@@ -45,7 +43,7 @@ namespace Vurbiri.Colonization.UI
                 for (int i = 0; i < _buttons.Count; i++)
                     yield return _buttons[i].Enable();
 
-                _coroutine = null;
+                _coroutineToggle = null;
             }
             //=================================
             IEnumerator Disable_Cn()
@@ -53,7 +51,7 @@ namespace Vurbiri.Colonization.UI
                 for (int i = _buttons.Count - 1; i >= 0; i--)
                     yield return _buttons[i].Disable();
 
-                _coroutine = null;
+                _coroutineToggle = null;
             }
             #endregion
         }

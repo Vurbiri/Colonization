@@ -1,6 +1,4 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\CurrentMax.cs
-using TMPro;
-using UnityEngine;
 using Vurbiri.International;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
@@ -11,16 +9,12 @@ namespace Vurbiri.Colonization.UI
     {
         public const string COUNT = "{0,2}<space=0.05em>|<space=0.05em>{1,-2}";
 
-        [Space]
-        [SerializeField] private TextMeshProUGUI _countTMP;
-
         private Localization _localization;
         private ReactiveCombination<int, int> _reactiveCurrentMax;
 
         public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors colors, CanvasHint hint)
         {
-            base.Init(hint);
-            _countTMP.color = colors.PanelText;
+            base.Init(colors, hint);
 
             _localization = Localization.Instance;
             _reactiveCurrentMax = new(current, max, SetCurrentMax);
@@ -28,7 +22,7 @@ namespace Vurbiri.Colonization.UI
 
         private void SetCurrentMax(int current, int max)
         {
-            _countTMP.text = string.Format(COUNT, current, max);
+            _valueTMP.text = string.Format(COUNT, current, max);
             _text = _localization.GetFormatText(_getText.id, _getText.key, current, max);
         }
 
@@ -36,19 +30,5 @@ namespace Vurbiri.Colonization.UI
         {
             _reactiveCurrentMax.Dispose();
         }
-
-#if UNITY_EDITOR
-        public Vector2 Size => ((RectTransform)transform).rect.size;
-        public void Init_Editor(ProjectColors settings)
-        {
-            _countTMP.color = settings.PanelText;
-        }
-
-        protected virtual void OnValidate()
-        {
-            if (_countTMP == null)
-                _countTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "TextTMP");
-        }
-#endif
     }
 }

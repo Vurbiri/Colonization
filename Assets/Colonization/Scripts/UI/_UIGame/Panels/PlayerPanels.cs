@@ -1,4 +1,4 @@
-﻿//Assets\Colonization\Scripts\UI\_UIGame\Panels\PlayerPanels.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\PlayerPanels.cs
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Controllers;
@@ -9,10 +9,12 @@ namespace Vurbiri.Colonization.UI
     public partial class PlayerPanels : MonoBehaviour
 	{
         [Space]
-        [SerializeField] private IdArray<EdificeGroupId, AEdificesPanel> _edifices;
-        [SerializeField] private RoadsPanel _roads;
-        [Space]
         [SerializeField] private WarriorsPanel _warriors;
+        [Space]
+        [SerializeField] private ColoniesPanel _colonies;
+        [SerializeField] private PortsPanel _ports;
+        [SerializeField] private ShrinesPanel _shrines;
+        [SerializeField] private RoadsPanel _roads;
         [Space]
         [SerializeField] private CurrenciesPanel _currencies;
         [SerializeField] private BloodPanel _blood;
@@ -25,17 +27,18 @@ namespace Vurbiri.Colonization.UI
         {
             var currencies = player.Resources;
 
-            for (int i = 0; i < EdificeGroupId.Count; i++)
-                _edifices[i].Init(player, _sprites, colors, inputController, hint);
-            _roads.Init(player, colors, hint);
-
             _warriors.Init(player, colors, inputController, hint);
+
+            _colonies.Init(player, _sprites, colors, inputController, hint);
+            _ports.Init(player, _sprites, colors, inputController, hint);
+            _shrines.Init(player, _sprites, colors, inputController, hint);
+            _roads.Init(player, colors, hint);
 
             _currencies.Init(_directionPopup, currencies, colors, hint);
             _blood.Init(_directionPopup, currencies, colors, hint);
 
 
-            Destroy(gameObject);
+            Destroy(this);
         }
     }
 }

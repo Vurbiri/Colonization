@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Abstract\AEdificeButton.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Edifices\Abstract\AEdificeButton.cs
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
 

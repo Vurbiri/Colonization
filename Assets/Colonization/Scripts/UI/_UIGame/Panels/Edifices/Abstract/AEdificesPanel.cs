@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Abstract\EdificesPanel.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Edifices\Abstract\AEdificesPanel.cs
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Controllers;
@@ -7,24 +7,22 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public abstract class AEdificesPanel : ATogglePanel<AEdificeButton>
+    public abstract class AEdificesPanel<TWidget, TButton> : ATogglePanel<TWidget, TButton> where TWidget : AHintWidget where TButton : AEdificeButton
     {
         [Space]
         [SerializeField] protected Id<EdificeGroupId> _id;
 
-        protected IdArray<EdificeId, Sprite> _sprites;
+        private IdArray<EdificeId, Sprite> _sprites;
 
-        public virtual void Init(Human player, IdArray<EdificeId, Sprite> sprites, ProjectColors colors, InputController inputController, CanvasHint hint)
+        public abstract void Init(Human player, IdArray<EdificeId, Sprite> sprites, ProjectColors colors, InputController inputController, CanvasHint hint);
+
+        protected void InitEdifice(ReactiveList<Crossroad> edifices, IdArray<EdificeId, Sprite> sprites, InputController inputController)
         {
             _sprites = sprites;
             _inputController = inputController;
 
-            var edifices = player.GetEdifices(_id);
-            var maxEdifices = player.GetAbility(_id.ToState());
-
             edifices.Subscribe(AddEdifice);
-
-            Init(edifices.CountReactive, maxEdifices, colors, hint);
+            InitToggle(edifices.CountReactive);
         }
 
         private void AddEdifice(int index, Crossroad crossroad, TypeEvent typeEvent)
@@ -40,6 +38,5 @@ namespace Vurbiri.Colonization.UI
                 _buttons[index].OnChange(crossroad, _sprites[crossroad.Id]);
             }
         }
-
     }
 }

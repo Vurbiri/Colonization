@@ -1,4 +1,4 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Button\WarriorButton.cs
+//Assets\Colonization\Scripts\UI\_UIGame\Panels\Warriors\WarriorButton.cs
 using System;
 using System.Collections;
 using TMPro;
@@ -13,7 +13,6 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    [RequireComponent(typeof(CanvasGroup))]
     sealed public class WarriorButton : APanelButton
     {
         private const char AP_CHAR = '+';

@@ -33,7 +33,8 @@ namespace Vurbiri.Colonization.EntryPoint
 
             Message.Log("Start Init Project");
 
-            diContainer.AddInstance(Localization.Instance).SetFiles(_localizationFiles);
+            Localization.Instance.SetFiles(_localizationFiles);
+
             diContainer.AddInstance(coroutine = Coroutines.Create("Project Coroutine", true));
             diContainer.AddInstance(_settings);
             diContainer.AddInstance(_settingsColorScriptable.Colors);

@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public abstract class ASinglyPanel<T> : MonoBehaviour where T : CurrentMax
+    public abstract class ASinglyPanel<TWidget> : MonoBehaviour where TWidget : AHintWidget
     {
-        [SerializeField] protected T _widget;
+        [SerializeField] protected TWidget _widget;
 
 #if UNITY_EDITOR
         public virtual RectTransform UpdateVisuals_Editor(float pixelsPerUnit, Vector2 padding, ProjectColors colors)
@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.UI
         protected virtual void OnValidate()
         {
             if (_widget == null)
-                _widget = GetComponentInChildren<T>();
+                _widget = GetComponentInChildren<TWidget>();
         }
 #endif
     }

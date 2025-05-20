@@ -41,7 +41,7 @@ namespace Vurbiri.UI
                 if (_interactableIcon != value)
                 {
                     _interactableIcon = value;
-                    if (value != null)
+                    if (_interactableIcon != null)
                         _interactableIcon.CrossFadeAlpha(base.interactable ? 0f : 1f, colors.fadeDuration, true);
                 }
             }

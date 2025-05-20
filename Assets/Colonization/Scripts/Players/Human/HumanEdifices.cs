@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
             public readonly ReactiveList<Crossroad> colonies;
             public readonly ReactiveList<Crossroad> ports;
 
-            public int ShrinePassiveProfit => _shrinePassiveProfit.Value * shrines.Count;
+            public int ShrinePassiveProfit => _shrinePassiveProfit.Value * (shrines.Count + 1);
             public int ShrineProfit => _shrineProfit.Value * shrines.Count;
 
             public bool Interactable

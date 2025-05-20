@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\Abstract\AHintWidget.cs
 using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Vurbiri.International;
@@ -10,6 +11,8 @@ namespace Vurbiri.Colonization.UI
     [RequireComponent(typeof(UnityEngine.UI.Graphic))]
     public abstract class AHintWidget : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        [SerializeField] protected TextMeshProUGUI _valueTMP;
+        [Space]
         [SerializeField] protected FileIdAndKey _getText;
 
         private CanvasHint _hint;
@@ -19,8 +22,9 @@ namespace Vurbiri.Colonization.UI
 
         protected string _text;
 
-        protected void Init(CanvasHint hint)
+        protected void Init(ProjectColors colors, CanvasHint hint)
         {
+            _valueTMP.color = colors.PanelText;
             _hint = hint;
             _thisTransform = transform;
 
@@ -50,5 +54,19 @@ namespace Vurbiri.Colonization.UI
             if (_isShowingHint)
                 _isShowingHint = !_hint.Hide();
         }
+
+#if UNITY_EDITOR
+        public Vector2 Size => ((RectTransform)transform).rect.size;
+        public void Init_Editor(ProjectColors colors)
+        {
+            _valueTMP.color = colors.PanelText;
+        }
+
+        protected virtual void OnValidate()
+        {
+            if (_valueTMP == null)
+                _valueTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "TextTMP");
+        }
+#endif
     }
 }

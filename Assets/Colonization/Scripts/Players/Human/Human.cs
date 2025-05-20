@@ -120,8 +120,6 @@ namespace Vurbiri.Colonization
 
         public void Profit(int hexId, ACurrencies freeGroundRes)
         {
-            _resources.AddBlood(_edifices.ShrinePassiveProfit);
-
             if (hexId == CONST.GATE_ID)
             {
                 _resources.AddBlood(_edifices.ShrineProfit);
@@ -137,6 +135,8 @@ namespace Vurbiri.Colonization
 
         public void StartTurn()
         {
+            _resources.AddBlood(_edifices.ShrinePassiveProfit);
+
             _edifices.Interactable = _isPlayer;
 
             foreach (var warrior in _warriors)
@@ -151,7 +151,7 @@ namespace Vurbiri.Colonization
         public void BuyPerk(int typePerk, int idPerk)
         {
             if(_perks.TryAdd(typePerk, idPerk, out int cost))
-                _resources.Add(CurrencyId.Mana, -cost);
+                _resources.Add(CurrencyId.Blood, -cost);
         }
 
         public ReactiveList<Crossroad> GetEdifices(Id<EdificeGroupId> id) => _edifices.edifices[id];

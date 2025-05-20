@@ -1,19 +1,18 @@
 //Assets\Vurbiri.UI\Runtime\UIElements\VToggleGroup.cs
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
 #if UNITY_EDITOR
     [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.TOGGLE_GROUP, VUI_CONST_ED.TOGGLE_ORDER), DisallowMultipleComponent]
 #endif
-    sealed public class VToggleGroup : UIBehaviour
+    public class VToggleGroup : MonoBehaviour
     {
-        [SerializeField] private bool _allowSwitchOff = false;
+        [SerializeField] protected bool _allowSwitchOff = false;
 
-        private readonly List<VToggle> _toggles = new();
-        private VToggle _onToggle;
+        protected readonly List<AVToggle> _toggles = new();
+        protected AVToggle _onToggle;
 
         public bool AllowSwitchOff 
         { 
@@ -33,7 +32,7 @@ namespace Vurbiri.UI
         }
 
         public bool IsActiveToggle => _onToggle != null;
-        public VToggle ActiveToggle => _onToggle;
+        public AVToggle ActiveToggle => _onToggle;
 
         private VToggleGroup() { }
 
@@ -46,7 +45,7 @@ namespace Vurbiri.UI
             _onToggle = null;
         }
 
-        internal void RegisterToggle(VToggle toggle)
+        internal void RegisterToggle(AVToggle toggle)
         {
             if (_toggles.Contains(toggle)) return;
 
@@ -71,7 +70,7 @@ namespace Vurbiri.UI
             }
         }
 
-        internal void UnregisterToggle(VToggle toggle)
+        internal void UnregisterToggle(AVToggle toggle)
         {
             if (!_toggles.Remove(toggle) || !isActiveAndEnabled | _onToggle != toggle) 
                 return;
@@ -84,7 +83,7 @@ namespace Vurbiri.UI
             }
         }
 
-        internal bool CanSetValue(VToggle toggle, bool value)
+        internal bool CanSetValue(AVToggle toggle, bool value)
         {
             if (!(isActiveAndEnabled & toggle.isActiveAndEnabled))
                 return true;
@@ -105,16 +104,13 @@ namespace Vurbiri.UI
             return true;
         }
 
-        protected override void OnDisable()
+        protected virtual void OnDisable()
         {
             _onToggle = null;
-            base.OnDisable();
         }
 
-        protected override void OnEnable()
+        protected virtual void OnEnable()
         {
-            base.OnEnable();
-
             int count = _toggles.Count;
             _onToggle = null;
 
@@ -145,10 +141,8 @@ namespace Vurbiri.UI
         }
 
 #if UNITY_EDITOR
-        protected override void OnValidate()
+        protected virtual void OnValidate()
         {
-            base.OnValidate();
-
             if (isActiveAndEnabled && !Application.isPlaying && _toggles.Count > 1)
             {
                 if (_onToggle == null)

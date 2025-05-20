@@ -8,6 +8,8 @@ namespace Vurbiri.UI
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class FPSCounter : MonoBehaviour
     {
+        private const string TEXT = "FPS: {0,3}\nAvg: {1,4:N1}\nMax: {2,3}\nMin: {3,3}";
+
         [SerializeField] private float _updateInterval = 0.2f;
         [SerializeField] private int _cacheMaxSize = 128;
         [SerializeField] private FPSGraph _graph;
@@ -18,8 +20,6 @@ namespace Vurbiri.UI
         private int _fps = 0, _fpsMax = int.MinValue, _fpsMin = int.MaxValue;
         private float _fpsAvg = 0f;
         private Queue<int> _cache;
-
-        private const string TEXT = "FPS: {0}\nAvg: {1:N1}\nMax: {2}\nMin: {3}";
 
         private void Start()
         {

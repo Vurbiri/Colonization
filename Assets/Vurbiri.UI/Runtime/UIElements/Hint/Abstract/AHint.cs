@@ -80,6 +80,7 @@ namespace Vurbiri.UI
             }
 
             SetHint(text);
+            yield return null;
             SetPosition(position, offset);
 
             float alpha = _thisCanvasGroup.alpha;
@@ -103,6 +104,8 @@ namespace Vurbiri.UI
 
             _hintTransform.sizeDelta = size;
             _backTransform.sizeDelta = size + _padding;
+
+            //_backTransform.ForceUpdateRectTransforms();
         }
 
         private IEnumerator Hide_Cn()

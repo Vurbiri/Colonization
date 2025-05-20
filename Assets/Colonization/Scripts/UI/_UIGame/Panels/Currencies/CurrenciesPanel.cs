@@ -55,7 +55,6 @@ namespace Vurbiri.Colonization.UI
             return thisRectTransform;
         }
 
-
         private void OnValidate()
         {
             if (_currencies == null || _currencies.Length != CurrencyId.CountMain)

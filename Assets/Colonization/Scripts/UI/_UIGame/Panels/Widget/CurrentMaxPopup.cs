@@ -7,6 +7,7 @@ namespace Vurbiri.Colonization.UI
 {
     sealed public class CurrentMaxPopup : CurrentMax
     {
+        [Space]
         [SerializeField] private PopupWidgetUI _popup;
 
         public void Init(IReactiveValue<int> current, IReactiveValue<int> max, ProjectColors settings, Direction2 offsetPopup, CanvasHint hint)
