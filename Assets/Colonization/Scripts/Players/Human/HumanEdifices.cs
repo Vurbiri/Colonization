@@ -45,9 +45,9 @@ namespace Vurbiri.Colonization
                 _portsProfit = _abilities[HumanAbilityId.PortsProfit];
                 _compensationRes = _abilities[HumanAbilityId.CompensationRes];
 
-                edifices[EdificeGroupId.Shrine] = shrines = new(CONST.MAX_EDIFICES[EdificeGroupId.Shrine]);
-                edifices[EdificeGroupId.Colony] = colonies = new(CONST.MAX_EDIFICES[EdificeGroupId.Colony]);
-                edifices[EdificeGroupId.Port] = ports = new(CONST.MAX_EDIFICES[EdificeGroupId.Port]);
+                edifices[EdificeGroupId.Shrine] = shrines = new(CONST.MAX_EDIFICES);
+                edifices[EdificeGroupId.Colony] = colonies = new(CONST.MAX_EDIFICES);
+                edifices[EdificeGroupId.Port] = ports = new(CONST.MAX_EDIFICES);
             }
 
             public Edifices(Human parent, Dictionary<int, List<EdificeLoadData>> data, Crossroads crossroads, bool isPlayerTurn) : this(parent._abilities)

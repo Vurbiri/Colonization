@@ -1,11 +1,10 @@
 //Assets\Colonization\Scripts\Characteristics\Skills\Skills.cs
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
-using Vurbiri.International;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -20,27 +19,26 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private int _blockValue = 10;
         [SerializeField] private SkillSettings[] _skillsSettings;
         
-        [NonSerialized] private SkillUI[] _skillsUI;
+        [NonSerialized] private ReadOnlyCollection<SkillUI> _skillsUI;
         [NonSerialized] private HitEffects[][] _effectsHits;
         [NonSerialized] private BlockUI _blockUI;
 
         public BlockUI BlockUI => _blockUI ??= new(_blockCost, _blockValue);
-        public IReadOnlyList<SkillUI> SkillsUI
+        public ReadOnlyCollection<SkillUI> SkillsUI
         {
             get
             {
                 if (_skillsUI != null)  
                     return _skillsUI;
 
-                var hintTextColor = SceneContainer.Get<ProjectColors>();
-                var language = SceneContainer.Get<Localization>();
+                var colors = SceneContainer.Get<ProjectColors>();
                 int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
-                _skillsUI = new SkillUI[countSkills];
+                SkillUI[] skillsUI = new SkillUI[countSkills];
 
                 for (int i = 0; i < countSkills; i++)
-                    _skillsUI[i] = _skillsSettings[i].GetSkillUI(language, hintTextColor);
+                    skillsUI[i] = _skillsSettings[i].GetSkillUI(colors);
 
-                return _skillsUI;
+                return _skillsUI = new(skillsUI);
             }
         }
         public IReadOnlyList<SkillSettings> Settings => _skillsSettings;

@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.UI
             _cost = cost;
             _cash = _player.Resources;
             _parent = parent;
-            _unsubscriber = SceneContainer.Get<Localization>().Subscribe(SetText);
+            _unsubscriber = Localization.Instance.Subscribe(SetText);
         }
 
         public virtual void Setup(Crossroad crossroad)

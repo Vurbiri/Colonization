@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Vurbiri.International;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -9,12 +10,14 @@ namespace Vurbiri.Colonization.UI
     [RequireComponent(typeof(UnityEngine.UI.Graphic))]
     public abstract class AHintWidget : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        [SerializeField] protected FileIdAndKey _getText;
+
         private CanvasHint _hint;
         private bool _isShowingHint = false;
         private Transform _thisTransform;
         protected Vector3 _offsetHint;
 
-        protected string _text = "-= Test CanvasHint & AHintWidget =-";
+        protected string _text;
 
         protected void Init(CanvasHint hint)
         {

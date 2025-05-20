@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Vurbiri.Reactive
 {
     [Serializable]
-	public class UniSigner :  Signer
+	public class UniSigner : Signer
 	{
         [SerializeField] private Listener[] _listeners;
 

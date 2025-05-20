@@ -3,7 +3,6 @@ using System;
 using System.Text;
 using Vurbiri.International;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 using static Vurbiri.Colonization.Characteristics.EffectsFactory;
 
 namespace Vurbiri.Colonization.UI
@@ -33,7 +32,7 @@ namespace Vurbiri.Colonization.UI
             _hexColorPlus = hintTextColor.TextPositiveTag;
             _hexColorMinus = hintTextColor.TextNegativeTag;
 
-            _unsubscriber = SceneContainer.Get<Localization>().Subscribe(SetTexts);
+            _unsubscriber = Localization.Instance.Subscribe(SetTexts);
         }
 
         public string GetText(bool isUse)
@@ -50,11 +49,11 @@ namespace Vurbiri.Colonization.UI
             StringBuilder sb = new(SIZE << 1);
             sb.AppendLine(localization.GetText(FILE, BLOCK_KEY));
             sb.Append(_hexColorPlus);
-            sb.AppendLine(localization.GetTextFormat(FILE, BLOCK_DESK_KEY, _value, BLOCK_DURATION));
+            sb.AppendLine(localization.GetFormatText(FILE, BLOCK_DESK_KEY, _value, BLOCK_DURATION));
             sb.Append(TAG_COLOR_OFF);
 
             _textMain = sb.ToString();
-            _textAP = localization.GetTextFormat(FILE, AP_KEY, _cost);
+            _textAP = localization.GetFormatText(FILE, AP_KEY, _cost);
 
             _capacity = _textMain.Length + +_hexColorPlus.Length + _textAP.Length;
         }

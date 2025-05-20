@@ -1,7 +1,6 @@
 //Assets\Colonization\Scripts\Characteristics\Effects\HitEffects\HitEffectSettings.cs
 using UnityEngine;
 using Vurbiri.Colonization.UI;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -48,7 +47,7 @@ namespace Vurbiri.Colonization.Characteristics
             return new TargetHealEffect(_value);
         }
                
-        public AEffectsUI CreateEffectUI(ProjectColors hintTextColor)
+        public AEffectsUI CreateEffectUI(ProjectColors colors)
         {
             string deskKey = DESK_EFFECTS_KEYS[_descKeyId];
             
@@ -59,7 +58,7 @@ namespace Vurbiri.Colonization.Characteristics
             {
                 bool isNotPiercing = _pierce == 0;
 
-                hexColor = hintTextColor.TextDefaultTag;
+                hexColor = colors.TextDefaultTag;
                 value = _value.ToString("#;#;0");
 
                 if (_reflectValue <= 0)
@@ -73,19 +72,19 @@ namespace Vurbiri.Colonization.Characteristics
                 if (isPositive)
                 {
                     descKeyReflect = REFLECT_MINUS;
-                    hexColorReflect = hintTextColor.TextNegativeTag;
+                    hexColorReflect = colors.TextNegativeTag;
                 }
                 else
                 {
                     descKeyReflect = REFLECT_PLUS;
-                    hexColorReflect = hintTextColor.TextPositiveTag;
+                    hexColorReflect = colors.TextPositiveTag;
                 }
 
                 if (isNotPiercing) return new ReflectEffectUI(deskKey, value, hexColor, descKeyReflect, _reflectValue, hexColorReflect);
                 return new ReflectPenetrationEffectUI(deskKey, value, _pierce, hexColor, descKeyReflect, _reflectValue, hexColorReflect);
             }
 
-            hexColor = isPositive ? hintTextColor.TextPositiveTag : hintTextColor.TextNegativeTag;
+            hexColor = isPositive ? colors.TextPositiveTag : colors.TextNegativeTag;
             value = ValueToString(isPositive);
 
             if (_duration > 0)

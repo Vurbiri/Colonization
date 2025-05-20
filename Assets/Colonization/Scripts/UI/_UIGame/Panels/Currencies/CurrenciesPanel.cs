@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.UI
             float offset = cSize.x + space;
             for (int i = 0; i < CurrencyId.CountMain; i++)
             {
-                _currencies[i].Init_Editor(pos, colors);
+                _currencies[i].Init_Editor(i, pos, colors);
                 pos.x += offset;
             }
 

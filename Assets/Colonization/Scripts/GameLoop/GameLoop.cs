@@ -15,6 +15,8 @@ namespace Vurbiri.Colonization
         private InputController _inputController;
         private Hexagons _hexagons;
 
+        public void Test() => Debug.Log("TEST");
+
         public void Init(TurnQueue turnQueue, InputController inputController)
         {
             _dices = new();

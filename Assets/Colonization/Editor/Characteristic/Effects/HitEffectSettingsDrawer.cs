@@ -274,7 +274,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     {  
                         key = "Healing"; 
                         GUI.contentColor = _positive;
-                        DrawLabel(localization.GetTextFormat(FILE, key, strValue).Delete("<b>", "</b>"));
+                        DrawLabel(localization.GetFormatText(FILE, key, strValue).Delete("<b>", "</b>"));
                     }
                     else
                     {
@@ -282,12 +282,12 @@ namespace VurbiriEditor.Colonization.Characteristics
                         if (pierce == 0)
                         {
                             key = "Damage";
-                            DrawLabel(localization.GetTextFormat(FILE, key, strValue).Delete("<b>", "</b>"));
+                            DrawLabel(localization.GetFormatText(FILE, key, strValue).Delete("<b>", "</b>"));
                         }
                         else
                         {
                             key = "DamagePierce";
-                            DrawLabel(localization.GetTextFormat(FILE, key, strValue, pierce).Delete("<b>", "</b>").Replace("\n", " "));
+                            DrawLabel(localization.GetFormatText(FILE, key, strValue, pierce).Delete("<b>", "</b>").Replace("\n", " "));
                         }
                     }
                 }
@@ -298,7 +298,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     if (duration > 0)
                     {
                         key = ActorAbilityId.Names[targetAbility].Concat("Temp");
-                        DrawLabel(localization.GetTextFormat(FILE, key, strValue, duration).Delete("<b>", "</b>"));
+                        DrawLabel(localization.GetFormatText(FILE, key, strValue, duration).Delete("<b>", "</b>"));
                     }
                     else 
                     {
@@ -306,7 +306,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                         if (mod == TypeModifierId.TotalPercent & targetAbility == CurrentHP) 
                             key = "CurrentHPOfMaxPerm";
 
-                        DrawLabel(localization.GetTextFormat(FILE, key, strValue).Delete("<b>", "</b>"));
+                        DrawLabel(localization.GetFormatText(FILE, key, strValue).Delete("<b>", "</b>"));
                     }
                 }
                 
@@ -322,7 +322,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     { key = REFLECT_MINUS; GUI.contentColor = _negative; }
                     else
                     { key = REFLECT_PLUS; GUI.contentColor = _positive; }
-                    DrawLabel(localization.GetTextFormat(FILE, key, GetInt(P_REFLECT)).Delete("<b>", "</b>"));
+                    DrawLabel(localization.GetFormatText(FILE, key, GetInt(P_REFLECT)).Delete("<b>", "</b>"));
                 }
 
                 GUI.contentColor = defaultColor;

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         public ISigner<IMenu, bool> Init(WorldHint hint)
         {
             base.Init(hint, OnClick, false);
-            _unLanguage = SceneContainer.Get<Localization>().Subscribe(SetText);
+            _unLanguage = Localization.Instance.Subscribe(SetText);
             
             return _signer;
         }

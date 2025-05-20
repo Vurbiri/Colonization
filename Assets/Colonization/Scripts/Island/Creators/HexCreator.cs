@@ -1,6 +1,5 @@
 //Assets\Colonization\Scripts\Island\IslandCreator\HexCreator.cs
 using UnityEngine;
-using Vurbiri.Collections;
 using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
@@ -42,15 +41,15 @@ namespace Vurbiri.Colonization
     //==========================================================================
     sealed public class HexGenerator : HexCreator
     {
-        private readonly ShuffleLoopArray<int> _groundIDs, _waterIDs, _surfaceIDs;
+        private readonly SequenceRandomIds _groundIDs, _waterIDs, _surfaceIDs;
         private Chance _chanceWater = CHANCE_WATER;
         private bool _isWater = false;
 
         public HexGenerator(Hexagons land, HexagonSpawner spawner, GameplayStorage storage) : base(land, spawner, storage)
         {
-            _groundIDs = new(HEX_IDS); 
-            _waterIDs = new(HEX_IDS);
-            _surfaceIDs = new((new int[SurfaceId.CountGround]).FillIncrement());
+            _groundIDs  = new(HEX_IDS); 
+            _waterIDs   = new(HEX_IDS);
+            _surfaceIDs = new(SurfaceId.CountGround);
         }
 
         public override Hexagon Gate

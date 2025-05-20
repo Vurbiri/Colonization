@@ -131,7 +131,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SPA_C2_Mana
+      name: SPA_C2_Wood
       rect:
         serializedVersion: 2
         x: 0
@@ -173,7 +173,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SPA_C4_Wood
+      name: SPA_C4_Mana
       rect:
         serializedVersion: 2
         x: 0
@@ -248,9 +248,9 @@ TextureImporter:
     nameFileIdTable:
       SPA_C0_Gold: 154608346
       SPA_C1_Food: 598156101
-      SPA_C2_Mana: 151240869
+      SPA_C2_Wood: 151240869
       SPA_C3_Ore: 2129698128
-      SPA_C4_Wood: 1783508809
+      SPA_C4_Mana: 1783508809
       SPA_C5_Blood: 262252795
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

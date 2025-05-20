@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Reactive;
 using static Vurbiri.Storage;
@@ -75,22 +76,18 @@ namespace Vurbiri.International
             for (int i = 0; i < _countFiles; i++)
             {
                 if (fileIds[i])
-                {
-                    if (_text[i] == null)
-                        LoadingFile(i, _currentLanguage);
-                }
+                    LoadFile(i);
                 else
-                {
                     _text[i] = null;
-                }
             }
 
             GC.Collect();
         }
 
-        public bool LoadFile(int fileId)
+        public void LoadFile(int fileId)
         {
-            return _text[fileId] != null || LoadingFile(fileId, _currentLanguage);
+            if(_text[fileId] == null) 
+                LoadingFile(fileId, _currentLanguage);
         }
 
         public void UnloadFile(int fileId)
@@ -120,86 +117,51 @@ namespace Vurbiri.International
 
         public string GetText(int fileId, string key)
         {
+            string output;
             var dictionary = _text[fileId];
             if (dictionary == null)
             {
-                Message.Log($"ERROR! File '{_files[fileId]}' not loaded.");
-                return key;
+                Message.Log(output = $"File '{_files[fileId]}' not loaded.");
             }
-            if (!dictionary.TryGetValue(key, out string str))
+            else if (!dictionary.TryGetValue(key, out output))
             {
-                Message.Log($"ERROR! Key '{key}' not found in file '{_files[fileId]}'.");
-                return key;
+                Message.Log(output = $"Key '{key}' not found in file '{_files[fileId]}'.");
             }
 
-            return str;
+            return output;
         }
 
         public string GetText(string key)
         {
+            string output;
             for (int i = 0; i < _countFiles; i++)
-            {
-                if (_text[i] != null && _text[i].TryGetValue(key, out string str))
-                    return str;
-            }
+                if (_text[i] != null && _text[i].TryGetValue(key, out output))
+                    return output;
 
-            Message.Log($"ERROR! Key '{key}' not found.");
-            return key;
+            Message.Log(output = $"Key '{key}' not found.");
+            return output;
         }
 
-        public string GetTextFormat(int fileId, string key, params object[] args) => string.Format(GetText(fileId, key), args);
-        public string GetTextFormat(int fileId, string key, object arg0, object arg1, object arg2) => string.Format(GetText(fileId, key), arg0, arg1, arg2);
-        public string GetTextFormat(int fileId, string key, object arg0, object arg1) => string.Format(GetText(fileId, key), arg0, arg1);
-        public string GetTextFormat(int fileId, string key, object arg0) => string.Format(GetText(fileId, key), arg0);
+        public string GetFormatText(int fileId, string key, params object[] args) => string.Format(GetText(fileId, key), args);
+        public string GetFormatText(int fileId, string key, object arg0, object arg1, object arg2) => string.Format(GetText(fileId, key), arg0, arg1, arg2);
+        public string GetFormatText(int fileId, string key, object arg0, object arg1) => string.Format(GetText(fileId, key), arg0, arg1);
+        public string GetFormatText(int fileId, string key, object arg0) => string.Format(GetText(fileId, key), arg0);
 
-        private bool SetLanguage(LanguageType type)
+        private void SetLanguage(LanguageType type)
         {
             for (int i = 0; i < _countFiles; i++)
-            {
-                if(_text[i] != null)
-                    if (!LoadingFile(i, type))
-                        return false;
-            }
+                if (_text[i] != null)
+                    LoadingFile(i, type);
 
             _currentLanguage = type;
             _changed.Invoke(this);
-            return true;
         }
 
-        protected bool LoadingFile(int fileId, LanguageType type)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void LoadingFile(int fileId, LanguageType type)
         {
             if (TryLoadObjectFromResourceJson(string.Concat(type.Folder, "/", _files[fileId]), out Dictionary<string, string> load))
-            {
-                var current = _text[fileId];
-                if (current != null)
-                {
-                    foreach (var item in load)
-                        current[item.Key] = item.Value;
-                }
-                else
-                {
-                    _text[fileId] = new(load, new StringComparer());
-                }
-                return true;
-            }
-            return false;
+                _text[fileId] = load; //new(load, StringComparer.OrdinalIgnoreCase)
         }
-
-        #region Nested: StringComparer
-        //***********************************************************
-        public class StringComparer : IEqualityComparer<string>
-        {
-            public bool Equals(string str1, string str2)
-            {
-                return str1.ToLowerInvariant() == str2.ToLowerInvariant();
-            }
-            public int GetHashCode(string str)
-            {
-                return str.ToLowerInvariant().GetHashCode();
-            }
-
-        }
-        #endregion
-
     }
 }

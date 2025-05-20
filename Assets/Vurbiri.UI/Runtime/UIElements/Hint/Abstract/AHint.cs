@@ -14,20 +14,22 @@ namespace Vurbiri.UI
         [Space]
         [SerializeField, MinMax(0f, 5f)] private WaitRealtime _timeDelay = 1.5f;
         [SerializeField, Range(1f, 20f)] private float _fadeSpeed = 4f;
-        [SerializeField] private float _maxWidth;
         [SerializeField] private Vector2 _padding;
 
         protected RectTransform _backTransform;
         private RectTransform _hintTransform;
         private CanvasGroup _thisCanvasGroup;
         private Coroutine _coroutineShow, _coroutineHide;
-        private Vector2 _size;
+        private Vector2 _defaultSize;
         
         public virtual void Init(Color backColor, Color textColor)
         {
             _backTransform = _backImage.rectTransform;
             _hintTransform = _hintTMP.rectTransform;
             _thisCanvasGroup = GetComponent<CanvasGroup>();
+            _defaultSize = _hintTransform.sizeDelta;
+
+            _hintTMP.enableWordWrapping = true;
 
             _backImage.color = backColor;
 
@@ -93,25 +95,14 @@ namespace Vurbiri.UI
 
         private void SetHint(string text)
         {
-            _hintTMP.enableWordWrapping = false;
+            _hintTransform.sizeDelta = _defaultSize;
             _hintTMP.text = text;
             _hintTMP.ForceMeshUpdate();
 
-            _size = _hintTMP.textBounds.size;
+            Vector2 size = _hintTMP.textBounds.size;
 
-            if (_size.x > _maxWidth)
-            {
-                _size.x = _maxWidth;
-                _backTransform.sizeDelta = _size;
-
-                _hintTMP.enableWordWrapping = true;
-                _hintTMP.ForceMeshUpdate();
-
-                _size = _hintTMP.textBounds.size;
-            }
-
-            _hintTransform.sizeDelta = _size;
-            _backTransform.sizeDelta = _size + _padding;
+            _hintTransform.sizeDelta = size;
+            _backTransform.sizeDelta = size + _padding;
         }
 
         private IEnumerator Hide_Cn()
@@ -137,10 +128,21 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
         protected virtual void OnValidate()
         {
+            if (Application.isPlaying) return;
+
             if (_backImage == null)
                 _backImage = GetComponent<Image>();
             if (_hintTMP == null)
                 _hintTMP = GetComponentInChildren<TextMeshProUGUI>();
+
+            Rebuild();
+        }
+
+        public async void Rebuild()
+        {
+           await System.Threading.Tasks.Task.Delay(2);
+           if (!Application.isPlaying)
+              _backImage.rectTransform.sizeDelta = _hintTMP.rectTransform.sizeDelta + _padding;
         }
 #endif
     }

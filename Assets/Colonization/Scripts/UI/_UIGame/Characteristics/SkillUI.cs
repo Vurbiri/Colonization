@@ -4,7 +4,6 @@ using System.Text;
 using UnityEngine;
 using Vurbiri.International;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -30,16 +29,16 @@ namespace Vurbiri.Colonization.UI
         public Sprite Sprite => _sprite;
         public int Cost => _cost;
 
-        public void Init(Localization language, ProjectColors hintTextColor, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf)
+        public void Init(ProjectColors colors, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf)
         {
-            _hexColor = hintTextColor.HintDefaultTag;
-            _hexColorPlus = hintTextColor.TextPositiveTag;
-            _hexColorMinus = hintTextColor.TextNegativeTag;
+            _hexColor = colors.HintDefaultTag;
+            _hexColorPlus = colors.TextPositiveTag;
+            _hexColorMinus = colors.TextNegativeTag;
 
             _effectsTarget = effectsTarget;
             _effectsSelf = effectsSelf;
 
-            _unsubscriber = language.Subscribe(SetTexts);
+            _unsubscriber = Localization.Instance.Subscribe(SetTexts);
         }
 
         public string GetText(bool isUse)
@@ -80,7 +79,7 @@ namespace Vurbiri.Colonization.UI
             }
 
             _textMain = sb.ToString();
-            _textAP = localization.GetTextFormat(FILE, AP_KEY, _cost);
+            _textAP = localization.GetFormatText(FILE, AP_KEY, _cost);
 
             _capacity = _textMain.Length + +_hexColorPlus.Length + _textAP.Length;
         }

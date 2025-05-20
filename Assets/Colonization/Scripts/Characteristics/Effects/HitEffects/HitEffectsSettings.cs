@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -20,11 +19,11 @@ namespace Vurbiri.Colonization.Characteristics
             return new HitEffects(_effects, parent.TypeId, parent.Id, skillId, startEffectId);
         }
 
-        public void CreateEffectsHitUI(ProjectColors hintTextColor, IList<AEffectsUI> target, IList<AEffectsUI> self)
+        public void CreateEffectsHitUI(ProjectColors colors, List<AEffectsUI> target, List<AEffectsUI> self)
 		{
 			int count = _effects.Length;
             HitEffectSettings effect;
-            IList<AEffectsUI> list;
+            List<AEffectsUI> list;
 
             for (int i = 0; i < count; i++)
             {
@@ -33,7 +32,7 @@ namespace Vurbiri.Colonization.Characteristics
                 if (effect.IsSelf)
                     list = self;
 
-                list.Add(effect.CreateEffectUI(hintTextColor));
+                list.Add(effect.CreateEffectUI(colors));
             }
         }
 

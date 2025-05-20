@@ -1,5 +1,6 @@
 //Assets\Colonization\Scripts\CONSTS\CONST.cs
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -12,10 +13,10 @@ namespace Vurbiri.Colonization
         public const int CHANCE_WATER = MAX_CIRCLES * MAX_CIRCLES;
 
         public const int DEFAULT_MAX_ACTORS = 6;
-        public static readonly IReadOnlyList<int> MAX_EDIFICES = new int[] { 6, 4, 3 };
+        public const int MAX_EDIFICES = 6;
 
         public const int GATE_ID = 13;
-        public static readonly IReadOnlyList<int> HEX_IDS = new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };
+        public static readonly int[] HEX_IDS = { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };
 
         public const float PI = Mathf.PI;
         public const float TAU = 2f * PI;
@@ -37,30 +38,30 @@ namespace Vurbiri.Colonization
         public const float HEX_DIAMETER_IN = HEX_DIAMETER_OUT * COS_30;
         public const float HEX_RADIUS_IN = HEX_DIAMETER_IN * 0.5f;
 
-        public static readonly IReadOnlyList<Vector3> VERTEX_DIRECTIONS;
-        public static readonly IReadOnlyList<Vector3> SIDE_DIRECTIONS;
+        public static readonly ReadOnlyCollection<Vector3> VERTEX_DIRECTIONS;
+        public static readonly ReadOnlyCollection<Vector3> SIDE_DIRECTIONS;
 
-        public static readonly IReadOnlyList<float> COS_HEX = new float[] { COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 };
-        public static readonly IReadOnlyList<float> SIN_HEX = new float[] { -SIN_30, SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90 };
-        public static readonly IReadOnlyList<float> COS_HEX_DIRECT = new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60};
-        public static readonly IReadOnlyList<float> SIN_HEX_DIRECT = new float[] { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 };
+        public static readonly ReadOnlyCollection<float> COS_HEX = new(new float[] { COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 });
+        public static readonly ReadOnlyCollection<float> SIN_HEX = new(new float[] { -SIN_30, SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90 });
+        public static readonly ReadOnlyCollection<float> COS_HEX_DIRECT = new(new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60});
+        public static readonly ReadOnlyCollection<float> SIN_HEX_DIRECT = new(new float[] { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 });
         
-        public static readonly IReadOnlyDictionary<Key, Quaternion> ACTOR_ROTATIONS;
+        public static readonly ReadOnlyDictionary<Key, Quaternion> ACTOR_ROTATIONS;
 
-        public static readonly IReadOnlyList<Quaternion> LINK_ROTATIONS 
-            = new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, -120f, 0f), Quaternion.Euler(0f, 0f, 0f) };
+        public static readonly ReadOnlyCollection<Quaternion> LINK_ROTATIONS 
+            = new(new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, -120f, 0f), Quaternion.Euler(0f, 0f, 0f) });
 
         static CONST()
         {
             Vector3[] directions = new Vector3[HEX_COUNT_VERTICES];
             for (int i = 0; i < HEX_COUNT_VERTICES; i++)
                 directions[i] = new Vector3(COS_HEX[i], 0, SIN_HEX[i]);
-            VERTEX_DIRECTIONS = directions;
+            VERTEX_DIRECTIONS = new(directions);
 
             directions = new Vector3[HEX.SIDES];
             for (int i = 0; i < HEX.SIDES; i++)
                 directions[i] = new Vector3(COS_HEX_DIRECT[i], 0, SIN_HEX_DIRECT[i]);
-            SIDE_DIRECTIONS = directions;
+            SIDE_DIRECTIONS = new(directions);
 
             Dictionary<Key, Quaternion> quaternions = new(HEX.SIDES);
             float angle = 90f;
@@ -69,7 +70,7 @@ namespace Vurbiri.Colonization
                 quaternions[HEX.NEAR[i]] = Quaternion.Euler(0f, angle, 0f);
                 angle -= 60f;
             }
-            ACTOR_ROTATIONS = quaternions;
+            ACTOR_ROTATIONS = new(quaternions);
         }
     }
 }

@@ -106,5 +106,69 @@ namespace Vurbiri.Reactive
             _unsubscribers.Unsubscribe();
         }
     }
+    //=======================================================================================
+    public class ReactiveCombination<TA, TB, TC, TD> : IReactive<TA, TB, TC, TD>, IDisposable
+    {
+        private TA _valueA;
+        private TB _valueB;
+        private TC _valueC;
+        private TD _valueD;
+        private readonly Unsubscribers _unsubscribers;
+        private readonly Signer<TA, TB, TC, TD> _signer = new();
 
+        public ReactiveCombination(IReactiveValue<TA> reactiveA, IReactiveValue<TB> reactiveB, IReactiveValue<TC> reactiveC, IReactiveValue<TD> reactiveD)
+        {
+            _unsubscribers = new(3);
+
+            _valueA = reactiveA.Value;
+            _valueB = reactiveB.Value;
+            _valueC = reactiveC.Value;
+            _valueD = reactiveD.Value;
+
+            _unsubscribers += reactiveA.Subscribe(value => _signer.Invoke(_valueA = value, _valueB, _valueC, _valueD), false);
+            _unsubscribers += reactiveB.Subscribe(value => _signer.Invoke(_valueA, _valueB = value, _valueC, _valueD), false);
+            _unsubscribers += reactiveC.Subscribe(value => _signer.Invoke(_valueA, _valueB, _valueC = value, _valueD), false);
+            _unsubscribers += reactiveD.Subscribe(value => _signer.Invoke(_valueA, _valueB, _valueC, _valueD = value), false);
+        }
+        public ReactiveCombination(IReactive<TA> reactiveA, IReactive<TB> reactiveB, IReactive<TC> reactiveC, IReactive<TD> reactiveD)
+        {
+            _unsubscribers = new(3);
+
+            _unsubscribers += reactiveA.Subscribe(value => _signer.Invoke(_valueA = value, _valueB, _valueC, _valueD));
+            _unsubscribers += reactiveB.Subscribe(value => _signer.Invoke(_valueA, _valueB = value, _valueC, _valueD));
+            _unsubscribers += reactiveC.Subscribe(value => _signer.Invoke(_valueA, _valueB, _valueC = value, _valueD));
+            _unsubscribers += reactiveD.Subscribe(value => _signer.Invoke(_valueA, _valueB, _valueC, _valueD = value));
+        }
+
+        public ReactiveCombination(IReactiveValue<TA, TB> reactiveAB, IReactiveValue<TC, TD> reactiveCD)
+        {
+            _unsubscribers = new(2);
+
+            _valueA = reactiveAB.ValueA;
+            _valueB = reactiveAB.ValueB;
+            _valueC = reactiveCD.ValueA;
+            _valueD = reactiveCD.ValueB;
+
+            _unsubscribers += reactiveAB.Subscribe((valueA, valueB) => _signer.Invoke(_valueA = valueA, _valueB = valueB, _valueC, _valueD), false);
+            _unsubscribers += reactiveCD.Subscribe((valueC, valueD) => _signer.Invoke(_valueA, _valueB, _valueC = valueC, _valueD = valueD), false);
+        }
+        public ReactiveCombination(IReactive<TA, TB> reactiveAB, IReactive<TC, TD> reactiveCD)
+        {
+            _unsubscribers = new(2);
+
+            _unsubscribers += reactiveAB.Subscribe((valueA, valueB) => _signer.Invoke(_valueA = valueA, _valueB = valueB, _valueC, _valueD));
+            _unsubscribers += reactiveCD.Subscribe((valueC, valueD) => _signer.Invoke(_valueA, _valueB, _valueC = valueC, _valueD = valueD));
+        }
+
+        public Unsubscriber Subscribe(Action<TA, TB, TC, TD> action, bool instantGetValue = true)
+        {
+            if (instantGetValue) action(_valueA, _valueB, _valueC, _valueD);
+            return _signer.Add(action);
+        }
+
+        public void Dispose()
+        {
+            _unsubscribers.Unsubscribe();
+        }
+    }
 }

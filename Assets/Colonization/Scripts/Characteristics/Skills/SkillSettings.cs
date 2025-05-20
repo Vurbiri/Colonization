@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
-using Vurbiri.International;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -45,15 +43,15 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
 
-        public SkillUI GetSkillUI(Localization language, ProjectColors hintTextColor)
+        public SkillUI GetSkillUI(ProjectColors colors)
         {
             int countHits = _effectsHitsSettings.Length;
             List<AEffectsUI> targetEffectsUI = new(countHits), selfEffectsUI = new(countHits);
 
             for (int i = 0; i < countHits; i++)
-                _effectsHitsSettings[i].CreateEffectsHitUI(hintTextColor, targetEffectsUI, selfEffectsUI);
+                _effectsHitsSettings[i].CreateEffectsHitUI(colors, targetEffectsUI, selfEffectsUI);
 
-            _ui.Init(language, hintTextColor, targetEffectsUI.ToArray(), selfEffectsUI.ToArray());
+            _ui.Init(colors, targetEffectsUI.ToArray(), selfEffectsUI.ToArray());
 
             return _ui;
         }
