@@ -12,27 +12,27 @@ namespace Vurbiri.Reactive
 
 
         #region Arithmetic
-        public void Increment() => _signer.Invoke(++_value);
-        public void Decrement() => _signer.Invoke(--_value);
+        public void Increment() => _subscriber.Invoke(++_value);
+        public void Decrement() => _subscriber.Invoke(--_value);
         public void Add(int value)
         {
             if (value != 0)
-                _signer.Invoke(_value += value);
+                _subscriber.Invoke(_value += value);
         }
         public void Remove(int value)
         {
             if (value != 0)
-                _signer.Invoke(_value -= value);
+                _subscriber.Invoke(_value -= value);
         }
         public void Multiply(int value)
         {
             if (value != 1)
-                _signer.Invoke(_value *= value);
+                _subscriber.Invoke(_value *= value);
         }
         public void Divide(int value)
         {
             if (value != 1)
-                _signer.Invoke(_value /= value);
+                _subscriber.Invoke(_value /= value);
         }
         #endregion
 

@@ -11,8 +11,6 @@ namespace Vurbiri.Colonization.EntryPoint
     [System.Serializable]
     public class GameplayInitObjects
     {
-        public GameLoop game;
-        [Space]
         public Prices prices;
         [Space]
         public Camera mainCamera;
@@ -23,23 +21,26 @@ namespace Vurbiri.Colonization.EntryPoint
         [Space]
         public PoolEffectsBarFactory poolEffectsBar;
 
+        public GameLoop game;
         public DIContainer diContainer;
         public GameplayStorage storage;
         public GameplayTriggerBus triggerBus;
         public InputController inputController;
-        public TurnQueue turnQueue;
+        public Hexagons hexagons;
+        public Crossroads crossroads;
         public Players players;
-
-        public void FillingContainer(DIContainer diContainer, bool isLoad)
+        
+        public void FillingContainer(DIContainer diContainer)
         {
             this.diContainer = diContainer;
+            GameState gameState = diContainer.Get<GameState>();
 
             diContainer.AddInstance(Coroutines.Create("Gameplay Coroutines"));
-            diContainer.AddInstance(storage = new(isLoad));
+            diContainer.AddInstance(storage = new(gameState.IsLoad));
             diContainer.AddInstance<GameplayTriggerBus, GameplayEventBus>(triggerBus = new());
             diContainer.AddInstance(inputController = new(mainCamera, inputControllerSettings));
-            diContainer.AddInstance(turnQueue = TurnQueue.Create(storage));
-            diContainer.AddInstance(Diplomacy.Create(storage, turnQueue));
+            diContainer.AddInstance<GameEvents>(game = GameLoop.Create(gameState, inputController));
+            diContainer.AddInstance(Diplomacy.Create(storage, game));
             diContainer.AddInstance(poolEffectsBar.Create());
             diContainer.AddInstance(cameraController.Init(mainCamera, triggerBus, inputController.CameraActions));
 
@@ -48,13 +49,12 @@ namespace Vurbiri.Colonization.EntryPoint
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(turnQueue, players, hintWorld, prices, mainCamera, triggerBus);
+        public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(game, players, hintWorld, prices, mainCamera, triggerBus);
 
 
 #if UNITY_EDITOR
         public void OnValidate()
         {
-            EUtility.SetObject(ref game);
             EUtility.SetScriptable(ref prices);
             EUtility.SetObject(ref mainCamera);
             EUtility.SetObject(ref cameraController);

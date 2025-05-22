@@ -1,7 +1,5 @@
 //Assets\Colonization\Scripts\EntryPoint\Gameplay\Steps\GameplayStart.cs
 using System.Collections;
-using Vurbiri.Colonization.Controllers;
-using Vurbiri.Colonization.Storage;
 using Vurbiri.EntryPoint;
 
 namespace Vurbiri.Colonization.EntryPoint
@@ -9,25 +7,16 @@ namespace Vurbiri.Colonization.EntryPoint
     sealed internal class GameplayStart : ALoadingStep
     {
         private readonly GameLoop _game;
-        private readonly InputController _inputController;
-        private readonly TurnQueue _turnQueue;
-        private readonly GameplayStorage _storage;
 
-        public GameplayStart(GameplayInitObjects objects) : base(string.Empty)
+        public GameplayStart(GameLoop game) : base(string.Empty)
         {
-            _game = objects.game;
-            _inputController = objects.inputController;
-            _turnQueue = objects.turnQueue;
-            _storage = objects.storage;
+            _game = game;
         }
 
         public override IEnumerator GetEnumerator()
         {
-            _game.Init(_turnQueue, _inputController);
-
             yield return null;
-
-            _storage.Save();
+            _game.Start();
         }
     }
 }

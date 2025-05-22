@@ -17,7 +17,7 @@ namespace Vurbiri.UI
         [SerializeField] private Color _colorOn = Color.green;
         [SerializeField] private Color _colorOff = Color.red;
         [SerializeField] private VToggleGroup _group;
-        [SerializeField] private UniSigner<bool> _onValueChanged = new();
+        [SerializeField] private UniSubscription<bool> _onValueChanged = new();
 
         private EnumFlags<SelectionState> _stateFilterOn = false, _stateFilterOff = false;
         private ITransitionEffect _transitionEffect = new EmptyEffect();
@@ -145,7 +145,7 @@ namespace Vurbiri.UI
         }
         #endregion
 
-        public Unsubscriber AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _isOn);
+        public Unsubscription AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _isOn);
         public void RemoveListener(Action<bool> action) => _onValueChanged.Remove(action);
 
         public void SetColors(Color colorOn, Color colorOff)

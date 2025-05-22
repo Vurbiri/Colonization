@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri
@@ -23,34 +22,23 @@ namespace Vurbiri
             s_count = values.Length;
             s_maskValue = ~(-1 << s_count);
 
-#if UNITY_EDITOR
             Throw.IfGreater(s_count, 32);
             int value, oldValue = -1;
             for (int i = 0; i < s_count; i++)
             {
-                value = values[i].ToInt();
+                value = values[i].GetHashCode();
                 if ((value - oldValue) != 1)
-                    Errors.Message("The wrong type. Enum values must be equal to or greater than zero and in sequence.");
+                    throw new($"The wrong type '{typeof(T).Name}'. Enum values must be equal to or greater than zero and in sequence.");
                 oldValue = value;
             }
-#endif
         }
 
         [SerializeField] private int _value;
 
         public readonly int Count => s_count;
 
-        public readonly bool this[int i]
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => ((_value >> i) & 1) > 0;
-        }
-
-        public readonly bool this[T e] 
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => ((_value >> e.ToInt()) & 1) > 0;
-        }
+        public readonly bool this[int i] => ((_value >> i) & 1) > 0;
+        public readonly bool this[T e] => ((_value >> e.GetHashCode()) & 1) > 0;
 
         #region Constructors
         public EnumFlags(int value)
@@ -60,7 +48,7 @@ namespace Vurbiri
         }
         public EnumFlags(T value)
         {
-            _value = 1 << value.ToInt();
+            _value = 1 << value.GetHashCode();
         }
         public EnumFlags(bool all)
         {
@@ -74,7 +62,7 @@ namespace Vurbiri
         }
         private EnumFlags(int value, T e, bool operation)
         {
-            _value = operation ? value |= 1 << e.ToInt() : value ^= 1 << e.ToInt();
+            _value = operation ? value |= 1 << e.GetHashCode() : value ^= 1 << e.GetHashCode();
         }
         #endregion
 
@@ -86,7 +74,7 @@ namespace Vurbiri
 
             if (obj is EnumFlags<T> flags) return Equals(flags);
             if (obj is int i) return Equals(i);
-            if (obj is T e) return Equals(e.ToInt());
+            if (obj is T e) return Equals(e.GetHashCode());
 
             return false;
         }
@@ -105,11 +93,11 @@ namespace Vurbiri
         public static bool operator ==(int i, EnumFlags<T> flags) => ((flags._value >> i) & 1) > 0;
         public static bool operator !=(int i, EnumFlags<T> flags) => ((flags._value >> i) & 1) == 0;
 
-        public static bool operator ==(EnumFlags<T> flags, T e) => ((flags._value >> e.ToInt()) & 1) > 0;
-        public static bool operator !=(EnumFlags<T> flags, T e) => ((flags._value >> e.ToInt()) & 1) == 0;
+        public static bool operator ==(EnumFlags<T> flags, T e) => ((flags._value >> e.GetHashCode()) & 1) > 0;
+        public static bool operator !=(EnumFlags<T> flags, T e) => ((flags._value >> e.GetHashCode()) & 1) == 0;
 
-        public static bool operator ==(T e, EnumFlags<T> flags) => ((flags._value >> e.ToInt()) & 1) > 0;
-        public static bool operator !=(T e, EnumFlags<T> flags) => ((flags._value >> e.ToInt()) & 1) == 0;
+        public static bool operator ==(T e, EnumFlags<T> flags) => ((flags._value >> e.GetHashCode()) & 1) > 0;
+        public static bool operator !=(T e, EnumFlags<T> flags) => ((flags._value >> e.GetHashCode()) & 1) == 0;
 
         public static EnumFlags<T> operator |(EnumFlags<T> flags, int i) => new(flags._value, i, true);
         public static EnumFlags<T> operator |(int i, EnumFlags<T> flags) => new(flags._value, i, true);

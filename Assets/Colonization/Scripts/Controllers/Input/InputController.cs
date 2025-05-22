@@ -43,6 +43,8 @@ namespace Vurbiri.Colonization.Controllers
 
             _inputActions.Gameplay.LeftClick.performed += OnClickLeft;
             _inputActions.Gameplay.RightClick.performed += OnClickRight;
+
+            DisableAll();
         }
 
         public void EnableAll()

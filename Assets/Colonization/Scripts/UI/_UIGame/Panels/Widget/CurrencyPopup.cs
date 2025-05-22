@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupWidgetUI _popup;
 
-        private Unsubscribers _unsubscribers;
+        private Unsubscriptions _unsubscribers;
 
         public void Init(int id, ACurrenciesReactive count, ProjectColors colors, Direction2 offsetPopup, CanvasHint hint)
         {

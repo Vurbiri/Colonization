@@ -22,7 +22,7 @@ namespace Vurbiri.UI
         [SerializeField] protected T _minValue;
         [SerializeField] protected T _maxValue;
         [SerializeField] protected T _step;
-        [SerializeField] private UniSigner<T> _onValueChanged = new();
+        [SerializeField] private UniSubscription<T> _onValueChanged = new();
 
         protected float _normalizedValue;
         private int _axis;
@@ -122,7 +122,7 @@ namespace Vurbiri.UI
         }
         #endregion
 
-        public Unsubscriber AddListener(Action<T> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _value);
+        public Unsubscription AddListener(Action<T> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _value);
         public void RemoveListener(Action<T> action) => _onValueChanged.Remove(action);
 
         public bool SetMinMax(T min, T max)

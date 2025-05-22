@@ -118,7 +118,7 @@ namespace Vurbiri
         #endregion
 
         #region Save(..)
-        public void SaveAll(Action<bool> callback)
+        public void Save(Action<bool> callback)
         {
             _cnQueue.Enqueue(SaveToFile_Cn(callback));
         }

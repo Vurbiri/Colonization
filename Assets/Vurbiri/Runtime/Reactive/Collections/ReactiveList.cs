@@ -16,7 +16,7 @@ namespace Vurbiri.Reactive.Collections
         
         private readonly IEqualityComparer<T> _comparer;
 
-        private readonly Signer<int, T, TypeEvent> _signer = new();
+        private readonly Subscription<int, T, TypeEvent> _subscriber = new();
 
         public T this[int index] 
         {
@@ -24,7 +24,7 @@ namespace Vurbiri.Reactive.Collections
             set
             {
                 _values[index] = value;
-                _signer.Invoke(index, value, TypeEvent.Change);
+                _subscriber.Invoke(index, value, TypeEvent.Change);
             }
         }
 
@@ -87,14 +87,14 @@ namespace Vurbiri.Reactive.Collections
         }
         #endregion
 
-        public void Signal(int index) => _signer.Invoke(index, _values[index], TypeEvent.Change);
+        public void Signal(int index) => _subscriber.Invoke(index, _values[index], TypeEvent.Change);
 
         public void Signal(T item)
         {
             int index = IndexOf(item);
 
             if (index >= 0)
-                _signer.Invoke(index, _values[index], TypeEvent.Change);
+                _subscriber.Invoke(index, _values[index], TypeEvent.Change);
         }
 
         public void AddOrChange(T item)
@@ -103,7 +103,7 @@ namespace Vurbiri.Reactive.Collections
 
             if (index >= 0)
             {
-                _signer.Invoke(index, item, TypeEvent.Change);
+                _subscriber.Invoke(index, item, TypeEvent.Change);
                 return;
             }
 
@@ -111,7 +111,7 @@ namespace Vurbiri.Reactive.Collections
         }
 
         #region IReadOnlyReactiveList
-        public Unsubscriber Subscribe(Action<int, T, TypeEvent> action, bool instantGetValue = true)
+        public Unsubscription Subscribe(Action<int, T, TypeEvent> action, bool instantGetValue = true)
         {
             if (instantGetValue)
             {
@@ -119,7 +119,7 @@ namespace Vurbiri.Reactive.Collections
                     action(i, _values[i], TypeEvent.Subscribe);
             }
 
-            return _signer.Add(action);
+            return _subscriber.Add(action);
         }
         #endregion
 
@@ -130,7 +130,7 @@ namespace Vurbiri.Reactive.Collections
                 GrowArray();
 
             _values[_count] = item;
-            _signer.Invoke(_count, item, TypeEvent.Add);
+            _subscriber.Invoke(_count, item, TypeEvent.Add);
 
             _count.Value++;
         }
@@ -146,7 +146,7 @@ namespace Vurbiri.Reactive.Collections
                 _values[i] = _values[i - 1];
 
             _values[index] = item;
-            _signer.Invoke(index, item, TypeEvent.Insert);
+            _subscriber.Invoke(index, item, TypeEvent.Insert);
 
             _count.Value++;
         }
@@ -189,7 +189,7 @@ namespace Vurbiri.Reactive.Collections
 
             _values[_count] = default;
 
-            _signer.Invoke(index, temp, TypeEvent.Remove);
+            _subscriber.Invoke(index, temp, TypeEvent.Remove);
             _count.Signal();
         }
 
@@ -197,7 +197,7 @@ namespace Vurbiri.Reactive.Collections
         {
             for (int i = 0; i < _count; i++)
             {
-                _signer.Invoke(i, _values[i], TypeEvent.Remove);
+                _subscriber.Invoke(i, _values[i], TypeEvent.Remove);
                 _values[i] = default;
             }
 

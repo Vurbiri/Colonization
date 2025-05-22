@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
         private int Index { set => _transform.localPosition = _startPosition + _offsetPosition * value; }
         private int Duration { set => _durationTMP.text = new(CHAR, value); }
 
-        private Unsubscribers _unsubscribers;
+        private Unsubscriptions _unsubscribers;
 
         public EffectsBar(EffectsBarFactory initObj, Action<EffectsBar, bool> callback) : base(initObj.gameObject, callback)
         {

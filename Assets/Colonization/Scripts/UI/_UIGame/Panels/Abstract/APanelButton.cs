@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
 
         protected IInteractable _attach;
         protected float _targetAlpha;
-        protected Unsubscribers _unsubscribers = new();
+        protected Unsubscriptions _unsubscribers = new();
         
         private InputController _inputController;
         private Coroutine _activeCn;

@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
 
         private readonly RBool _canCancel = new();
 
-        private Unsubscriber _unsubscriber;
+        private Unsubscription _unsubscriber;
         #endregion
 
         #region Property

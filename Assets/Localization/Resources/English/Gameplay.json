@@ -4,11 +4,11 @@
   "BuildRoad": "Build a road",
   "Build": "Build",
   "Upgrade": "Upgrade to",
-  "Shrine": "Magic flame",
-  "PortOne": "Small port",
+  "Shrine": "Magic Flame",
+  "PortOne": "Small Port",
   "PortTwo": "Port",
-  "LighthouseOne": "Small lighthouse",
-  "LighthouseTwo": "Lighthouse",
+  "LighthouseOne": "Small Beacon",
+  "LighthouseTwo": "Beacon",
   "Camp": "Camp",
   "Town": "Town",
   "City": "City",
@@ -18,9 +18,9 @@
   "Wood": "Wood",
   "Ore": "Ore",
   "Mana": "Mana",
-  "Blood": "Demon blood",
+  "Blood": "Demon Blood",
   "CurrentMaxHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>",
   "AmountHint": "Current:<b>{0}{1,3}</color></b>\nMaximum:<b>{2,3}</b>",
-  "AmountOverHint": "\n<align=\"justified\"><size=85%>(if it's <b>13</b>, resources over the maximum will be burned)</size></align>",
-  "ShrinesProfitHint": ""
+  "AmountOverHint": "\n<align=\"justified\"><size=85%>if it's <b>13</b>, you will lose <b>{0}</b> resource(s)</size></align>",
+  "ShrinesProfitHint": "\n<align=\"left\"><size=80%>\nDemon Blood gain:\n if it's 13:     <b>{0}</b> per Magic Flame\r\n if Demons turn: <b>{1}</b> + <b>{1}</b> per Magic Flame</size></align>"
 }

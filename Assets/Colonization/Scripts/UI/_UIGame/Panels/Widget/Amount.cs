@@ -33,7 +33,8 @@ namespace Vurbiri.Colonization.UI
             if(amount > max)
             {
                 _valueTMP.text = string.Format(AMOUNT, _colorOver, Mathf.Min(amount, 99), max);
-                _text = _localization.GetFormatText(_getText.id, _getText.key, _colorOver, amount, max).Concat(_localization.GetText(_getText.id, _keyOver));
+                _text = _localization.GetFormatText(_getText.id, _getText.key, _colorOver, amount, max)
+                                     .Concat(_localization.GetFormatText(_getText.id, _keyOver, amount - max));
             }
             else 
             {

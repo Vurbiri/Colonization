@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
 
         protected ACurrencies _cost;
         protected ACurrencies _cash;
-        protected Unsubscriber _unsubscriber;
+        protected Unsubscription _unsubscriber;
         protected string _caption;
         protected Human _player;
         protected AWorldMenu _parent;

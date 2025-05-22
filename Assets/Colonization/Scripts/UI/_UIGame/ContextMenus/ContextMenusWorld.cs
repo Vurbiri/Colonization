@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
 
         private Camera _camera;
         private RectTransform _thisRectTransform;
-        private Unsubscribers _unsubscribers = new(9);
+        private Unsubscriptions _unsubscribers = new(9);
         private bool _isPlayerTurn;
         private IMenu _currentOpenMenu;
 
@@ -43,7 +43,8 @@ namespace Vurbiri.Colonization.UI
 
             _unsubscribers += settings.eventBus.EventUnselect.Add(OnClose);
 
-            _unsubscribers += settings.turn.Subscribe(OnTurn);
+            settings.game.Subscribe(GameModeId.EndTurn, OnEndTurn);
+            settings.game.Subscribe(GameModeId.Play, OnGamePlay);
         }
 
         private void OnSelectCrossroad(Crossroad crossroad)
@@ -72,10 +73,14 @@ namespace Vurbiri.Colonization.UI
                 _currentOpenMenu.CloseInstant();
         }
 
-        private void OnTurn(TurnQueue turn)
+        private void OnEndTurn(TurnQueue turnQueue, int dice)
         {
-            _isPlayerTurn = turn.CurrentId == PlayerId.Player;
+            _isPlayerTurn = false;
             OnClose(false);
+        }
+        private void OnGamePlay(TurnQueue turnQueue, int dice)
+        {
+            _isPlayerTurn = turnQueue.IsCurrentPlayer;
         }
 
         private void ToPosition(Vector3 position)

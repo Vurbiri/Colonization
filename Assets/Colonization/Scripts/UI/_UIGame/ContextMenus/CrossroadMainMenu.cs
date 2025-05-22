@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         private CrossroadWarriorsMenu _warriorsMenu;
         private Human _player;
 
-        public ISigner<IMenu, bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
+        public ISubscription<IMenu, bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;

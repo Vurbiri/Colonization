@@ -6,7 +6,7 @@ using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor.Reactive
 {
-    [CustomPropertyDrawer(typeof(UniSigner))]
+    [CustomPropertyDrawer(typeof(UniSubscription))]
 	public class UniSignerDrawer : PropertyDrawer
 	{
 		#region Consts
@@ -41,15 +41,15 @@ namespace VurbiriEditor.Reactive
         }
 	}
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UniSigner<>))]
+    [CustomPropertyDrawer(typeof(UniSubscription<>))]
     sealed public class UniSignerDrawerT : UniSignerDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UniSigner<,>))]
+    [CustomPropertyDrawer(typeof(UniSubscription<,>))]
     sealed public class UniSignerDrawerTT : UniSignerDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UniSigner<,,>))]
+    [CustomPropertyDrawer(typeof(UniSubscription<,,>))]
     sealed public class UniSignerDrawerTTT : UniSignerDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UniSigner<,,,>))]
+    [CustomPropertyDrawer(typeof(UniSubscription<,,,>))]
     sealed public class UniSignerDrawerTTTT : UniSignerDrawer { }
 }

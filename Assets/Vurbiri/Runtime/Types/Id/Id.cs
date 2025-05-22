@@ -21,7 +21,7 @@ namespace Vurbiri
             _id = id;
         }
 
-        public void Next() => _id = ++_id % IdType<T>.Count;
+        public int Next() => _id = ++_id % IdType<T>.Count;
 
         public override readonly string ToString() => _id.ToString();
         public readonly bool Equals(Id<T> other) => _id == other._id;

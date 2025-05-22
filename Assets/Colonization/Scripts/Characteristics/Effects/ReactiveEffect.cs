@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization.Characteristics
                 _value = other._value;
             }
 
-            _signer.Invoke(this, TypeEvent.Change);
+            _eventChanged.Invoke(this, TypeEvent.Change);
 
             return true;
         }
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization.Characteristics
                 return;
             }
 
-            _signer.Invoke(this, TypeEvent.Change);
+            _eventChanged.Invoke(this, TypeEvent.Change);
         }
 
         public override bool Equals(ReactiveEffect other)

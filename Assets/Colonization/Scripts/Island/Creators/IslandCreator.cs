@@ -29,13 +29,13 @@ namespace Vurbiri.Colonization
         public string Description => Localization.Instance.GetText(Files.Main, "IslandCreationStep");
         public float Weight => 5f;
 
-        public IslandCreator Init(GameplayInitObjects objects)
+        public IslandCreator Init(GameplayInitObjects init)
         {
-            _storage = objects.storage;
-            _hexagonSpawner.Init(objects.mainCamera, objects.triggerBus);
+            _storage = init.storage;
+            _hexagonSpawner.Init(init.mainCamera, init.triggerBus);
 
-            objects.diContainer.AddInstance(_hexagons = new());
-            objects.diContainer.AddInstance(_crossroads = new(_crossroadsContainer, _edificePrefabs, objects.triggerBus));
+            init.hexagons   = _hexagons   = new(init.game);
+            init.crossroads = _crossroads = new(_crossroadsContainer, _edificePrefabs, init.triggerBus);
 
             var shape = _psFog.shape;
             shape.radius = _ratioFogSize * MAX_CIRCLES;

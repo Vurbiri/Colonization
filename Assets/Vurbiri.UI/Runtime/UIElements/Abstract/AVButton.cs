@@ -9,7 +9,7 @@ namespace Vurbiri.UI
 {
     public abstract class AVButton : VSelectable, IPointerClickHandler, ISubmitHandler
     {
-        [SerializeField] protected UniSigner _onClick = new();
+        [SerializeField] protected UniSubscription _onClick = new();
 
         protected override void Start()
         {
@@ -18,7 +18,7 @@ namespace Vurbiri.UI
             _onClick.Init();
         }
 
-        public Unsubscriber AddListener(Action action) => _onClick.Add(action);
+        public Unsubscription AddListener(Action action) => _onClick.Add(action);
         public void RemoveListener(Action action) => _onClick.Remove(action);
 
         private bool Press()

@@ -9,8 +9,6 @@ namespace Vurbiri.Colonization
         public void TriggerActorSelect(Actor actor) => _actorSelect.Invoke(actor);
         public void TriggerUnselect(bool isEquals) => _unselect.Invoke(isEquals);
 
-        public void TriggerActorKilling(Id<PlayerId> self, Id<PlayerId> target, int actorId) => _actorKilling.Invoke(self, target, actorId);
-
         public void TriggerHexagonShowDistance(bool show) => _hexagonShowDistance.Invoke(show);
         public void TriggerHexagonShow(bool show) => _hexagonShow.Invoke(show);
     }

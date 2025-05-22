@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         private CrossroadMainMenu _mainMen;
         private Crossroad _currentCrossroad;
 
-        public ISigner<IMenu, bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
+        public ISubscription<IMenu, bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
         {
             ACurrencies roadCost = settings.prices.Road;
             _mainMen = mainMenu;

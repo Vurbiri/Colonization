@@ -14,13 +14,13 @@ namespace Vurbiri.Reactive
         [SerializeField, JsonProperty("vB")]
         private TB _valueB;
 
-        private readonly Signer<TA, TB> _signer = new();
+        private readonly Subscription<TA, TB> _subscriber = new();
 
         private readonly IEqualityComparer<TA> _comparerA;
         private readonly IEqualityComparer<TB> _comparerB;
 
-        public TA ValueA { get => _valueA; set { if (!_comparerA.Equals(_valueA, value)) { _valueA = value; _signer.Invoke(_valueA, _valueB); } } }
-        public TB ValueB { get => _valueB; set { if (!_comparerB.Equals(_valueB, value)) { _valueB = value; _signer.Invoke(_valueA, _valueB); } } }
+        public TA ValueA { get => _valueA; set { if (!_comparerA.Equals(_valueA, value)) { _valueA = value; _subscriber.Invoke(_valueA, _valueB); } } }
+        public TB ValueB { get => _valueB; set { if (!_comparerB.Equals(_valueB, value)) { _valueB = value; _subscriber.Invoke(_valueA, _valueB); } } }
 
         public ReactiveValues()
         {
@@ -40,15 +40,15 @@ namespace Vurbiri.Reactive
             _comparerB = EqualityComparer<TB>.Default;
         }
 
-        public Unsubscriber Subscribe(Action<TA, TB> action, bool instantGetValue = true)
+        public Unsubscription Subscribe(Action<TA, TB> action, bool instantGetValue = true)
         {
             if (instantGetValue)
                 action(_valueA, _valueB);
 
-            return _signer.Add(action);
+            return _subscriber.Add(action);
         }
 
-        public void Signal() => _signer.Invoke(_valueA, _valueB);
+        public void Signal() => _subscriber.Invoke(_valueA, _valueB);
 
     }
 }

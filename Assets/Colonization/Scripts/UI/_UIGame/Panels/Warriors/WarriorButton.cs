@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.UI
        
         private Coroutine _moveCn;
         private Vector3 _targetPosition;
-        private readonly Signer<WarriorButton> _eventRemove = new();
+        private readonly Subscription<WarriorButton> _eventRemove = new();
 
         public int Index
         { 

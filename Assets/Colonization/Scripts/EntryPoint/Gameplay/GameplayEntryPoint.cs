@@ -1,6 +1,5 @@
 //Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
 using UnityEngine;
-using Vurbiri.Colonization.Storage;
 using Vurbiri.EntryPoint;
 using Vurbiri.International;
 using Vurbiri.Reactive;
@@ -22,23 +21,22 @@ namespace Vurbiri.Colonization.EntryPoint
         [Header("══════ TEST ══════")]
         [SerializeField] private bool _isLoad;
 
-        public override ISigner<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param)
+        public override ISubscription<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param)
         {
             DIContainer diContainer = containers.Container;
 
-            GameState gameplaySettings = diContainer.Get<GameState>();
+            GameState gameState = diContainer.Get<GameState>();
             Localization.Instance.SetFiles(_localizationFiles);
 
-            if (!_isLoad)
-                diContainer.Get<ProjectStorage>().Clear();
+            gameState.IsLoad = _isLoad;
 
-            _initObjects.FillingContainer(diContainer, _isLoad);
+            _initObjects.FillingContainer(diContainer);
                         
             loading.Add(_islandCreator.Init(_initObjects));
             loading.Add(new CreatePlayers(_initObjects));
             loading.Add(_initUI.Init(_initObjects));
             loading.Add(new ClearResources());
-            loading.Add(new GameplayStart(_initObjects));
+            loading.Add(new GameplayStart(_initObjects.game));
 
             Destroy(this);
 
@@ -53,7 +51,6 @@ namespace Vurbiri.Colonization.EntryPoint
             EUtility.SetObject(ref _initUI);
 
             _initObjects.OnValidate();
-            
         }
 #endif
     }

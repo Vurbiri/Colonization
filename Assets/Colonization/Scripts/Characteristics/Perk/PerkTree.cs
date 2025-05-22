@@ -14,8 +14,8 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly IReadOnlyList<Perk>[] _perks = new IReadOnlyList<Perk>[TypePerksId.Count];
         private readonly RInt[] _progress = new RInt[TypePerksId.Count];
         private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[TypePerksId.Count];
-        private readonly Signer<Perk> _eventPerk = new();
-        private readonly Signer<IEnumerable<IEnumerable<int>>> _eventHashSet = new();
+        private readonly Subscription<Perk> _eventPerk = new();
+        private readonly Subscription<IEnumerable<IEnumerable<int>>> _eventHashSet = new();
 
         public IReactiveValue<int> EconomicProgress => _progress[TypePerksId.Economic];
         public IReactiveValue<int> MilitaryProgress => _progress[TypePerksId.Military];
@@ -55,14 +55,14 @@ namespace Vurbiri.Colonization.Characteristics
             return new(settings.economicPerks, settings.militaryPerks);
         }
 
-        public Unsubscriber Subscribe(Action<Perk> action, bool instantGetValue = true)
+        public Unsubscription Subscribe(Action<Perk> action, bool instantGetValue = true)
         {
             for (int type = 0; instantGetValue & type < TypePerksId.Count; type++)
                 foreach (int id in _learnedPerks[type]) action(_perks[type][id]);
 
             return _eventPerk.Add(action);
         }
-        public Unsubscriber Subscribe(Action<IEnumerable<IEnumerable<int>>> action, bool instantGetValue = true)
+        public Unsubscription Subscribe(Action<IEnumerable<IEnumerable<int>>> action, bool instantGetValue = true)
         {
             return _eventHashSet.Add(action, instantGetValue, _learnedPerks);
         }

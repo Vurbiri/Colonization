@@ -1,47 +1,29 @@
 //Assets\Colonization\Scripts\GameLoop\TurnQueue.cs
-using System;
-using Vurbiri.Colonization.Storage;
-using Vurbiri.Reactive;
-
 namespace Vurbiri.Colonization
 {
-    public partial class TurnQueue : IReactive<TurnQueue>
+    public struct TurnQueue
     {
-        private Id<PlayerId> _previousId, _currentId;
-        private int _turn;
-        private readonly Signer<TurnQueue> _eventNext = new();
+        public Id<PlayerId> currentId;
+        public int round;
 
-        public int Turn => _turn;
-        public Id<PlayerId> PreviousId => _previousId;
-        public Id<PlayerId> CurrentId => _currentId;
-        public bool IsCurrentPlayer => _currentId == PlayerId.Player;
+        public readonly bool IsCurrentPlayer => currentId == PlayerId.Player;
 
-        private TurnQueue() 
+        public TurnQueue(int current)
         {
-            _previousId = PlayerId.None; _currentId = PlayerId.Player; _turn = 1;
-        }
-        public TurnQueue(int previousId, int currentId, int turn)
-        {
-            _previousId = previousId; _currentId = currentId; _turn = turn;
+            this.currentId = current;
+            this.round = 0;
         }
 
-        public static TurnQueue Create(GameplayStorage storage)
+        public TurnQueue(int currentId, int round)
         {
-            bool isLoad;
-            if(!(isLoad = storage.TryGetTurnQueue(out TurnQueue turn))) turn = new();
-            storage.TurnQueueBind(turn, !isLoad);
-
-            return turn;
+            this.currentId = currentId;
+            this.round = round;
         }
-
-        public Unsubscriber Subscribe(Action<TurnQueue> action, bool instantGetValue = true) => _eventNext.Add(action, instantGetValue, this);
 
         public void Next()
         {
-            _previousId = _currentId; _currentId.Next();
-            if (_currentId == 0) _turn++;
-
-            _eventNext.Invoke(this);
+            if (currentId.Next() == 0) 
+                round++;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.UI
         private Quaternion _lastCameraRotation;
         private string _defaultCurrencyText;
         private Coroutine _fadeCoroutine, _profitCoroutine;
-        private Unsubscriber _unsubscriber;
+        private Unsubscription _unsubscriber;
 
         private bool IsShow
         {

@@ -41,11 +41,12 @@ namespace Vurbiri.Colonization.Actors
         private StateMachineSelectable _stateMachine;
         private BlockState _blockState;
 
+        private readonly Subscription<Id<PlayerId>, int> _eventKilled = new();
         private readonly RBool _interactable = new(false);
         private readonly RBool _canCancel = new(false);
 
         private Coroutine _deathCoroutine;
-        private Unsubscribers _unsubscribers = new();
+        private Unsubscriptions _unsubscribers = new();
         #endregion
 
         #region Propirties
@@ -61,6 +62,7 @@ namespace Vurbiri.Colonization.Actors
         public ActorSkin Skin => _skin;
         public IReactiveSet<ReactiveEffect> Effects => _effects;
         public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
+        public ISubscription<Id<PlayerId>, int> OnKilled => _eventKilled;
         public bool IsMainProfit => _profitMain.Next();
         public bool IsAdvProfit => _profitAdv.Next();
         #endregion
@@ -102,7 +104,7 @@ namespace Vurbiri.Colonization.Actors
             int delta = _abilities.AddPerk(effect);
 
             if(delta != 0 & _deathCoroutine == null)
-                _signer.Invoke(this, TypeEvent.Change);
+                _eventChanged.Invoke(this, TypeEvent.Change);
 
             return delta;
         }
@@ -144,7 +146,7 @@ namespace Vurbiri.Colonization.Actors
         #region Target
         private void ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
-            _stateMachine.SetState<BecomeTargetState>();
+            _stateMachine.SetState<TargetState>();
             _diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
 
@@ -153,7 +155,7 @@ namespace Vurbiri.Colonization.Actors
             if (_deathCoroutine == null)
             {
                 _stateMachine.ToPrevState();
-                _signer.Invoke(this, TypeEvent.Change);
+                _eventChanged.Invoke(this, TypeEvent.Change);
             }
         }
         #endregion
@@ -170,10 +172,10 @@ namespace Vurbiri.Colonization.Actors
         private void OnBuff(IPerk perk)
         {
             if (_abilities.AddPerk(perk) != 0)
-                _signer.Invoke(this, TypeEvent.Change);
+                _eventChanged.Invoke(this, TypeEvent.Change);
         }
 
-        private void RedirectEvents(ReactiveEffect item, TypeEvent type) => _signer.Invoke(this, TypeEvent.Change);
-        private void Signal() => _signer.Invoke(this, TypeEvent.Change);
+        private void RedirectEvents(ReactiveEffect item, TypeEvent type) => _eventChanged.Invoke(this, TypeEvent.Change);
+        private void Signal() => _eventChanged.Invoke(this, TypeEvent.Change);
     }
 }

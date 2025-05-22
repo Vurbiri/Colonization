@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         private Coroutine _coroutine;
         private float _targetAlpha;
 
-        protected readonly Signer<IMenu, bool> _eventActive = new();
+        protected readonly Subscription<IMenu, bool> _eventActive = new();
 
 
         private void Awake()

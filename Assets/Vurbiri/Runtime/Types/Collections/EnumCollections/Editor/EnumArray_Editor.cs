@@ -13,8 +13,8 @@ namespace Vurbiri.Collections
             if (Application.isPlaying)
                 return;
 
-            if (_values.Length != count)
-                Array.Resize(ref _values, count);
+            if (_values.Length != s_count)
+                Array.Resize(ref _values, s_count);
         }
         public void OnAfterDeserialize() { }
     }

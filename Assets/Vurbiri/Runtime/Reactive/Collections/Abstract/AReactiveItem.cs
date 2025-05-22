@@ -5,27 +5,27 @@ namespace Vurbiri.Reactive.Collections
 {
     public abstract class AReactiveItem<T> : IReactiveItem<T>, IEquatable<T> where T : AReactiveItem<T>
 	{
-        protected readonly Signer<T, TypeEvent> _signer = new();
+        protected readonly Subscription<T, TypeEvent> _eventChanged = new();
         protected int _index = -1;
 
-        public int Index { get => _index; set { _index = value; _signer.Invoke((T)this, TypeEvent.Reindex); } }
+        public int Index { get => _index; set { _index = value; _eventChanged.Invoke((T)this, TypeEvent.Reindex); } }
 
         public void Adding(Action<T, TypeEvent> action, int index)
         {
             _index = index;
             action((T)this, TypeEvent.Add);
-            _signer.Add(action);
+            _eventChanged.Add(action);
         }
 
-        public Unsubscriber Subscribe(Action<T, TypeEvent> action, bool instantGetValue = true)
+        public Unsubscription Subscribe(Action<T, TypeEvent> action, bool instantGetValue = true)
         {
             if (instantGetValue) action((T)this, TypeEvent.Subscribe);
-            return _signer.Add(action);
+            return _eventChanged.Add(action);
         }
 
         public virtual void Removing()
         {
-            _signer.Invoke((T)this, TypeEvent.Remove);
+            _eventChanged.Invoke((T)this, TypeEvent.Remove);
             _index = -1;
         }
 

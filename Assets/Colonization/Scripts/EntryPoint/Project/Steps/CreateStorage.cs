@@ -13,8 +13,8 @@ namespace Vurbiri.Colonization.EntryPoint
         private readonly Coroutines _coroutine;
         private readonly ILoadingScreen _loadingScreen;
         private readonly LogOnPanel _logOnPanel;
-        private readonly YandexSDK _ysdk;
-        private readonly Settings _settings;
+        private YandexSDK _ysdk;
+        private Settings _settings;
         private ProjectStorage _projectStorage;
 
         public CreateStorage(DIContainer diContainer, Coroutines coroutine, ILoadingScreen loadingScreen, LogOnPanel logOnPanel) : base("StorageCreationStep")
@@ -23,12 +23,13 @@ namespace Vurbiri.Colonization.EntryPoint
             _coroutine = coroutine;
             _loadingScreen = loadingScreen;
             _logOnPanel = logOnPanel;
-            _ysdk = _diContainer.Get<YandexSDK>();
-            _settings = _diContainer.Get<Settings>();
         }
 
         public override IEnumerator GetEnumerator()
         {
+            _ysdk = _diContainer.Get<YandexSDK>();
+            _settings = _diContainer.Get<Settings>();
+
             yield return _coroutine.Run(CreateStorage_Cn());
             if (!_ysdk.IsLogOn)
             {
@@ -41,12 +42,6 @@ namespace Vurbiri.Colonization.EntryPoint
         }
 
         private IEnumerator CreateStorage_Cn()
-        {
-            yield return _coroutine.Run(CreateStorageService_Cn());
-            _settings.Init(_ysdk, _projectStorage);
-        }
-
-        private IEnumerator CreateStorageService_Cn()
         {
             if (Create(out IStorageService storage))
             {
@@ -61,6 +56,8 @@ namespace Vurbiri.Colonization.EntryPoint
 
             _diContainer.ReplaceInstance(storage);
             _diContainer.ReplaceInstance(_projectStorage = new(storage));
+
+            _settings.Init(_ysdk, _projectStorage);
 
             #region Local: Create(..), Creator()
             // =====================

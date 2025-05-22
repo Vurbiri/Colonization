@@ -28,7 +28,7 @@ namespace Vurbiri.UI
             [Space]
             [SerializeField] private bool _closeCurrentMenu = true;
             [SerializeField] private GameObject _openMenu;
-            [SerializeField] private UniSigner _otherActions;
+            [SerializeField] private UniSubscription _otherActions;
 
             public void Setup(GameObject closeMenu)
             {

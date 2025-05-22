@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Actors
         private Transform _barTransform;
 		private int _currentValue = int.MinValue, _maxValue;
         private PopupWidget3D _popup;
-        private Unsubscribers _unsubscribers;
+        private Unsubscriptions _unsubscribers;
 
         public bool IsVisible => _backgroundBar.isVisible || _barSprite.isVisible;
 

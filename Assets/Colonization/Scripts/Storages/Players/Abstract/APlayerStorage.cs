@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Storage
         protected readonly IStorageService _storage;
         protected readonly string _strId;
         protected readonly string _keyArtefact;
-        protected Unsubscribers _unsubscribers = new();
+        protected Unsubscriptions _unsubscribers = new();
 
         public APlayerStorage(int id, IStorageService storage)
         {

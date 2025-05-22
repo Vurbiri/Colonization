@@ -13,7 +13,7 @@ namespace Vurbiri.International.UI
         [SerializeField] private FileId _file;
         [SerializeField] private string _key;
 
-        private Unsubscriber _subscribe;
+        private Unsubscription _subscribe;
 
         public TMP_Text Text => _text;
 

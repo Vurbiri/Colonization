@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Actors
         private readonly int _orderLevel;
         private readonly Actor _actor;
         private readonly Transform _transform;
-        private readonly Unsubscribers _unsubscribers;
+        private readonly Unsubscriptions _unsubscribers;
 
         public EffectsBarPanel(Actor actor, IdArray<ActorAbilityId, Sprite> sprites, Transform transform, int orderLevel)
 		{

@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private SystemLanguage _idLang = SystemLanguage.Russian;
         [SerializeField] private int _quality = 2;
 
-        private readonly Signer<Profile> _signer = new();
+        private readonly Subscription<Profile> _eventChanged = new();
         private Localization _localization;
 
         public SystemLanguage Language { get => _idLang; set => _localization.SwitchLanguage(value); }
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
             //_idLang = ysdk.IsInitialize ? _localization.IdFromCode(ysdk.Lang) : Application.systemLanguage;
         }
 
-        public Unsubscriber Subscribe(Action<Profile> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, this);
+        public Unsubscription Subscribe(Action<Profile> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
         public void Apply()
         {
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
             changed |= _quality != level;
             _quality = level;
 
-            if (changed) _signer.Invoke(this);
+            if (changed) _eventChanged.Invoke(this);
         }
 
         public void Cancel()

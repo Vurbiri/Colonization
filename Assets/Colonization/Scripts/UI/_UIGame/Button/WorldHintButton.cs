@@ -10,7 +10,7 @@ namespace Vurbiri.UI
     {
         [SerializeField] private FileIdAndKey _getText;
 
-        private Unsubscriber _unsubscriber;
+        private Unsubscription _unsubscriber;
 
         public void Init(Vector3 localPosition, WorldHint hint, Action action)
         {

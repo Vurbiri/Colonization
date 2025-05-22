@@ -5,10 +5,10 @@ namespace Vurbiri.Reactive
 {
     public abstract class AReactiveValue<T> : IReactiveValue<T>
     {
-        protected readonly Signer<T> _signer = new();
+        protected readonly Subscription<T> _subscriber = new();
 
         public abstract T Value { get; protected set; }
 
-        public Unsubscriber Subscribe(Action<T> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, Value);
+        public Unsubscription Subscribe(Action<T> action, bool instantGetValue = true) => _subscriber.Add(action, instantGetValue, Value);
     }
 }

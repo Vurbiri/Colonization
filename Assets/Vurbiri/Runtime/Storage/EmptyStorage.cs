@@ -15,7 +15,7 @@ namespace Vurbiri
             return null;
         }
 
-        public void SaveAll(Action<bool> callback = null) => callback?.Invoke(false);
+        public void Save(Action<bool> callback = null) => callback?.Invoke(false);
         public void Save<T>(string key, T data, JsonSerializerSettings settings = null) { }
         public void Save<T>(string key, T data, JsonConverter converter) { }
 

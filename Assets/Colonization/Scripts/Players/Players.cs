@@ -11,45 +11,55 @@ namespace Vurbiri.Colonization
     {
         private readonly Human[] _humans = new Human[PlayerId.HumansCount];
         private readonly Satan _satan;
+        private readonly Hexagons hexagons;
 
         public Human Player => _humans[PlayerId.Player];
         public Satan Satan => _satan;
         public Human this[int index] => _humans[index];
 
         #region Constructor
-        public Players(Settings settings, TurnQueue turn, GameplayStorage storage)
+        public Players(Settings settings, GameEvents game, Hexagons hexagons, Crossroads crossroads, GameplayStorage storage)
         {
-            Hexagons land = SceneContainer.Get<Hexagons>();
             HumanStorage[] playerStorages = storage.Humans;
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
-                _humans[i] = new(i, playerStorages[i], settings, land, turn);
+                _humans[i] = new(i, playerStorages[i], settings, hexagons, crossroads);
 
-            _satan = new(storage.Satan, settings, land, turn, _humans);
+            _satan = new(storage.Satan, settings, hexagons, _humans);
+
+            game.Subscribe(GameModeId.EndTurn, OnEndTurn);
+            game.Subscribe(GameModeId.StartTurn, OnStartTurn);
+            game.Subscribe(GameModeId.Profit, OnProfit);
+            game.Subscribe(GameModeId.Play, OnPlay);
         }
         #endregion
 
-        public void EndTurn(int playerId)
+        public void OnEndTurn(TurnQueue turnQueue, int hexId)
         {
-            if(playerId == PlayerId.Satan)
+            if (turnQueue.currentId == PlayerId.Satan)
                 _satan.EndTurn();
             else
-                _humans[playerId].EndTurn();
+                _humans[turnQueue.currentId.Value].EndTurn();
         }
-
-        public void Profit(int hexId, ACurrencies freeGroundRes)
+        public void OnStartTurn(TurnQueue turnQueue, int hexId)
+        {
+            if (turnQueue.currentId == PlayerId.Satan)
+                _satan.StartTurn();
+            else
+                _humans[turnQueue.currentId.Value].StartTurn();
+        }
+        public void OnProfit(TurnQueue turnQueue, int hexId)
         {
             _satan.Profit(hexId);
             for (int i = 0; i < PlayerId.HumansCount; i++)
-                _humans[i].Profit(hexId, freeGroundRes);
+                _humans[i].Profit(hexId);
         }
-
-        public void StartTurn(int playerId)
+        public void OnPlay(TurnQueue turnQueue, int hexId)
         {
-            if (playerId == PlayerId.Satan)
-                _satan.StartTurn();
+            if (turnQueue.currentId == PlayerId.Satan)
+                _satan.Play();
             else
-                _humans[playerId].StartTurn();
+                _humans[turnQueue.currentId.Value].Play();
         }
 
         public void Dispose()

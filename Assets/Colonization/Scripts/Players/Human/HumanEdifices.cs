@@ -50,11 +50,11 @@ namespace Vurbiri.Colonization
                 edifices[EdificeGroupId.Port] = ports = new(CONST.MAX_EDIFICES);
             }
 
-            public Edifices(Human parent, Dictionary<int, List<EdificeLoadData>> data, Crossroads crossroads, bool isPlayerTurn) : this(parent._abilities)
+            public Edifices(Human parent, Dictionary<int, List<EdificeLoadData>> data, Crossroads crossroads) : this(parent._abilities)
             {
                 var abilityWall = _abilities[HumanAbilityId.WallDefence];
                 for (int i = 0; i < EdificeGroupId.Count; i++)
-                    CreateEdifices(edifices[i], data[i], parent._id, crossroads, abilityWall, isPlayerTurn);
+                    CreateEdifices(edifices[i], data[i], parent._id, crossroads, abilityWall);
             }
 
             public CurrenciesLite ProfitFromEdifices(int hexId)
@@ -91,7 +91,7 @@ namespace Vurbiri.Colonization
                 return _abilities.IsGreater(nextGroup.ToState(), edifices[nextGroup].Count);
             }
 
-            private void CreateEdifices(ReactiveList<Crossroad> values, List<EdificeLoadData> loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall, bool isPlayerTurn)
+            private void CreateEdifices(ReactiveList<Crossroad> values, List<EdificeLoadData> loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)
             {
                 int count = loadData.Count;
                 EdificeLoadData data; Crossroad crossroad;
@@ -103,7 +103,7 @@ namespace Vurbiri.Colonization
                     if (data.isWall)
                         crossroad.BuyWall(playerId, abilityWall);
                     values.Add(crossroad);
-                    crossroad.Interactable = isPlayerTurn;
+                    crossroad.Interactable = false;
                 }
             }
         }

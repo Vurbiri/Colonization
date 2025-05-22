@@ -1,21 +1,17 @@
 //Assets\Colonization\Scripts\Storages\GameplayStorage.cs
-using System;
 using System.Collections.Generic;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Storage
 {
-    public class GameplayStorage : IDisposable
-	{
+    sealed public class GameplayStorage : AStorage
+    {
         private readonly HumanStorage[] _humanStorages = new HumanStorage[PlayerId.HumansCount];
         private readonly SatanStorage _satanStorage;
-        private readonly IStorageService _storage;
         private readonly bool _isLoad;
-        private Unsubscribers _unsubscribers = new();
 
-        public GameplayStorage(bool isLoad)
+        public GameplayStorage(bool isLoad) : base(SceneContainer.Get<IStorageService>())
         {
-            _storage = SceneContainer.Get<IStorageService>();
             _isLoad = isLoad;
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
@@ -28,42 +24,31 @@ namespace Vurbiri.Colonization.Storage
         public HumanStorage[] Humans => _humanStorages;
         public SatanStorage Satan => _satanStorage;
 
-        public void Save() => _storage.SaveAll();
-
         #region Load
-        public HexLoadData GetHexData(Key key) => _storage.Get<HexLoadData>(key.ToSaveKey());
-
         public bool TryGetDiplomacyData(out int[] data)
         {
             data = null;
             return _isLoad && _storage.TryGet(SAVE_KEYS.DIPLOMANCY, out data);
         }
 
-        public bool TryGetTurnQueue(out TurnQueue turn)
-        {
-            turn = null;
-            return _isLoad && _storage.TryGet(SAVE_KEYS.TURNS_QUEUE, out turn);
-        }
+        public HexLoadData GetHexData(Key key) => _storage.Get<HexLoadData>(key.ToSaveKey());
         #endregion
 
         #region Bind
+        public void DiplomacyBind(IReactive<IReadOnlyList<int>> reactive)
+        {
+            _unsubscribers += reactive.Subscribe(diplomacy => _storage.Set(SAVE_KEYS.DIPLOMANCY, diplomacy), !_isLoad);
+        }
+
         public void HexagonsBind(IReactive<Hexagon> reactive)
         {
             _unsubscribers += reactive.Subscribe(hex => _storage.Set(hex.Key.ToSaveKey(), hex), false);
         }
-        public void DiplomacyBind(IReactive<IReadOnlyList<int>> reactive, bool instantGetValue)
-        {
-            _unsubscribers += reactive.Subscribe(diplomacy => _storage.Set(SAVE_KEYS.DIPLOMANCY, diplomacy), instantGetValue);
-        }
-        public void TurnQueueBind(IReactive<TurnQueue> reactive, bool instantGetValue)
-        {
-            _unsubscribers += reactive.Subscribe(turn => _storage.Set(SAVE_KEYS.TURNS_QUEUE, turn), instantGetValue);
-        }
         #endregion
 
-        public void Dispose()
+        public override void Dispose()
         {
-            _unsubscribers.Unsubscribe();
+            base.Dispose();
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 _humanStorages[i].Dispose();
         }

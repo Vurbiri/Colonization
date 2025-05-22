@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.Actors
             _owner = initData.owner;
             _skin = settings.InstantiateActorSkin(transform);
             _currentHex = startHex;
-            IsPlayerTurn = initData.IsPlayerTurn;
+            IsPlayerTurn = false;
 
             #region Abilities
             _abilities = settings.Abilities;
@@ -71,7 +71,7 @@ namespace Vurbiri.Colonization.Actors
             Skills skills = settings.Skills;
             _stateMachine = new();
             _stateMachine.SetDefaultState(new IdleState(this));
-            _stateMachine.AddState(new BecomeTargetState());
+            _stateMachine.AddState(new TargetState());
             skills.CreateStates(this);
             #endregion
 

@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         protected ACurrency[] _values = new ACurrency[CountAll];
         protected RInt _amount = new(0);
         protected Ability _maxValueMain, _maxValueBlood;
-        protected readonly Signer<ACurrencies> _signer = new();
+        protected readonly Subscription<ACurrencies> _eventChanged = new();
 
         public override int Amount => _amount.Value;
         public IReactiveValue<int> AmountCurrent => _amount;
@@ -68,9 +68,9 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Reactive
-        public Unsubscriber Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, this);
-        public Unsubscriber Subscribe(int index, Action<int> action, bool instantGetValue = true) => _values[index].Subscribe(action, instantGetValue);
-        public Unsubscriber Subscribe(Id<CurrencyId> id, Action<int> action, bool instantGetValue = true) => _values[id.Value].Subscribe(action, instantGetValue);
+        public Unsubscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        public Unsubscription Subscribe(int index, Action<int> action, bool instantGetValue = true) => _values[index].Subscribe(action, instantGetValue);
+        public Unsubscription Subscribe(Id<CurrencyId> id, Action<int> action, bool instantGetValue = true) => _values[id.Value].Subscribe(action, instantGetValue);
         #endregion
 
         public override IEnumerator<int> GetEnumerator()
@@ -127,7 +127,7 @@ namespace Vurbiri.Colonization
                 {
                     value = Mathf.Clamp(value, 0, _max.Value);
                     if (value != _value)
-                        _signer.Invoke(_value = value);
+                        _subscriber.Invoke(_value = value);
                 }
             }
 
@@ -142,7 +142,7 @@ namespace Vurbiri.Colonization
             {
                 value = Mathf.Clamp(value, 0, _max.Value);
                 if (value != _value)
-                    _signer.Invoke(_value = value);
+                    _subscriber.Invoke(_value = value);
                 return 0;
             }
 
@@ -169,7 +169,7 @@ namespace Vurbiri.Colonization
                 protected set
                 {
                     if (value != _value)
-                        _signer.Invoke(_value = value);
+                        _subscriber.Invoke(_value = value);
                 }
             }
 
@@ -181,7 +181,7 @@ namespace Vurbiri.Colonization
             public abstract int Increment();
             public abstract int SilentDecrement();
 
-            public void Signal() => _signer.Invoke(_value);
+            public void Signal() => _subscriber.Invoke(_value);
 
            
             public static explicit operator int(ACurrency currency) => currency._value;

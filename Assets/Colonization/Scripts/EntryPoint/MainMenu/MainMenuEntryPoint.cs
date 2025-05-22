@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.EntryPoint
     {
         [SerializeField] private SceneId _nextScene;
 
-        public override ISigner<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param)
+        public override ISubscription<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param)
         {
             Debug.Log("MainMenu Enter");
             loading.Add(Exit_Cn());

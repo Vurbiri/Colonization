@@ -5,19 +5,19 @@ namespace Vurbiri.Colonization.EntryPoint
 {
     sealed internal class CreatePlayers : ALocalizationLoadingStep
     {
-        private readonly GameplayInitObjects _objects;
+        private readonly GameplayInitObjects _init;
 
         public CreatePlayers(GameplayInitObjects objects) : base("PlayersCreationStep")
         {
-            _objects = objects;
+            _init = objects;
         }
 
         public override IEnumerator GetEnumerator()
         {
-            _objects.diContainer.AddInstance(_objects.players = new Players(_objects.playersSettings, _objects.turnQueue, _objects.storage));
+            _init.diContainer.AddInstance(_init.players = new Players(_init.playersSettings, _init.game, _init.hexagons, _init.crossroads, _init.storage));
             yield return null;
-            _objects.playersSettings.Dispose();
-            _objects.playersSettings = null;
+            _init.playersSettings.Dispose();
+            _init.playersSettings = null;
 
             yield break;
         }

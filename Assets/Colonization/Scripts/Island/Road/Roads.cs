@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         private readonly RInt _count = new(0);
         private readonly Coroutines _coroutines;
 
-        private readonly Signer<Roads> _signer = new();
+        private readonly Subscription<Roads> _eventChanged = new();
         #endregion
 
         public int Count => _count.Value;
@@ -63,10 +63,10 @@ namespace Vurbiri.Colonization
         }
 
         #region Reactive
-        public Unsubscriber Subscribe(Action<Roads> action, bool calling = false)
+        public Unsubscription Subscribe(Action<Roads> action, bool calling = false)
         {
             if (calling) action(this);
-            return _signer.Add(action);
+            return _eventChanged.Add(action);
         }
         #endregion
 
@@ -89,7 +89,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            _signer.Invoke(this);
+            _eventChanged.Invoke(this);
         }
     }
 }

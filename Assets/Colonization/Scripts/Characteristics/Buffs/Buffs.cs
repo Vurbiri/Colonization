@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Characteristics
     sealed public class Buffs : ABuffs<Buff>, IReactive<IReadOnlyList<int>>
     {
         private readonly int[] _levels;
-        private readonly Signer<IReadOnlyList<int>> _subscriberLevels = new();
+        private readonly Subscription<IReadOnlyList<int>> _changeLevels = new();
         private IndexRnd _rIndex;
 
         private Buffs(IReadOnlyList<BuffSettings> settings)
@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Characteristics
             _buffs = new Buff[count];
 
             for (int i = 0; i < count; i++)
-                _buffs[i] = new(_signer, settings[i]);
+                _buffs[i] = new(_subscriber, settings[i]);
         }
 
         private Buffs(IReadOnlyList<BuffSettings> settings, int[] levels)
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.Characteristics
             _buffs = new Buff[count];
 
             for (int i = 0; i < count; i++)
-                _buffs[i] = new(_signer, settings[i], _levels[i] = levels[i]);
+                _buffs[i] = new(_subscriber, settings[i], _levels[i] = levels[i]);
         }
 
         public static Buffs Create(IReadOnlyList<BuffSettings> settings, APlayerLoadData loadData)
@@ -53,10 +53,10 @@ namespace Vurbiri.Colonization.Characteristics
                 _levels[_rIndex.Current]++;
             }
 
-            _subscriberLevels.Invoke(_levels);
+            _changeLevels.Invoke(_levels);
         }
 
-        public Unsubscriber Subscribe(System.Action<IReadOnlyList<int>> action, bool instantGetValue = true) => _subscriberLevels.Add(action, instantGetValue, _levels);
+        public Unsubscription Subscribe(System.Action<IReadOnlyList<int>> action, bool instantGetValue = true) => _changeLevels.Add(action, instantGetValue, _levels);
 
     }
 }

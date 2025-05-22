@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Actors
 		[SerializeField] private TextMeshPro _maxValueTMP;
         [SerializeField] private TextMeshPro _currentValueTMP;
 
-        private Unsubscribers _unsubscribers;
+        private Unsubscriptions _unsubscribers;
 
         public void Init(IReadOnlyAbilities<ActorAbilityId> abilities, int orderLevel)
         {

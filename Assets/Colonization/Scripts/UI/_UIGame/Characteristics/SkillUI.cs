@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
         private string _hexColor, _hexColorPlus, _hexColorMinus;
         private int _capacity;
 
-        private Unsubscriber _unsubscriber;
+        private Unsubscription _unsubscriber;
 
         public Sprite Sprite => _sprite;
         public int Cost => _cost;

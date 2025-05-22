@@ -23,9 +23,9 @@ namespace Vurbiri.Colonization
         private readonly DemonsSpawner _spawner;
         private readonly ReactiveSet<Actor> _demons;
 
-        private readonly Signer<Satan> _eventSelf = new();
-        private readonly Signer<Win> _eventWin = new();
-        private readonly Unsubscribers _unsubscribers = new();
+        private readonly Subscription<Satan> _eventSelf = new();
+        private readonly Subscription<Win> _eventWin = new();
+        private readonly Unsubscriptions _unsubscribers = new();
 
         public IReactiveValue<int> Level => _level;
         public IReactiveValue<int> Curse => _curse;
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Satan(SatanStorage storage, Players.Settings settings, Hexagons hexagons, TurnQueue turn, IReadOnlyList<Human> humans)
+        public Satan(SatanStorage storage, Players.Settings settings, Hexagons hexagons, IReadOnlyList<Human> humans)
         {
             _states = SettingsFile.Load<SatanAbilities>();
 
@@ -54,9 +54,10 @@ namespace Vurbiri.Colonization
             _leveling = new(settings.demonBuffs.Settings, _level);
             _artefact = Buffs.Create(settings.artefact.Settings, loadData);
 
-            _spawner = new(_level, new(_leveling, _artefact, turn), settings, hexagons[Key.Zero], loadData.state.spawn);
+            _spawner = new(_level, new(_leveling, _artefact), settings, hexagons[Key.Zero], loadData.state.spawn);
 
             _demons = new(loadData.state.maxDemons);
+            _demons.Subscribe((actor, evt) => { if (evt == TypeEvent.Add) actor.OnKilled.Add(ActorKill); }, false);
             for (int i = loadData.actors.Count - 1; i >= 0; i--)
                 _demons.Add(_spawner.Load(loadData.actors[i], hexagons));
 
@@ -65,8 +66,6 @@ namespace Vurbiri.Colonization
                 _unsubscribers += humans[i].Perks.Subscribe(OnAddPerk, false);
                 _unsubscribers += humans[i].Shrines.Subscribe(OnAddShrine, false);
             }
-
-            _unsubscribers += SceneContainer.Get<GameplayEventBus>().EventActorKilling + ActorKilling;
 
             storage.StateBind(this, !loadData.isLoaded);
             storage.ArtefactBind(_artefact, !loadData.isLoaded);
@@ -85,7 +84,7 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public Unsubscriber Subscribe(Action<Satan> action, bool instantGetValue) => _eventSelf.Add(action, instantGetValue, this);
+        public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventSelf.Add(action, instantGetValue, this);
 
         public void EndTurn()
         {
@@ -116,6 +115,10 @@ namespace Vurbiri.Colonization
                 demon.EffectsUpdate(_states.gateDefense);
 
             AddCurse(CursePerTurn);
+        }
+
+        public void Play()
+        {
         }
 
         public void AddBalance(int value)
@@ -150,9 +153,9 @@ namespace Vurbiri.Colonization
             _demons.Dispose();
         }
 
-        private void ActorKilling(Id<PlayerId> self, Id<PlayerId> target, int actorId)
+        private void ActorKill(Id<PlayerId> target, int actorId)
         {
-            UnityEngine.Debug.Log($"ActorKilling: {self}, {target}, {actorId}");
+            UnityEngine.Debug.Log($"ActorKilling: {target}, {actorId}");
         }
     }
 }

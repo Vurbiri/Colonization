@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         private readonly int[] _values;
         private readonly DiplomacySettings _settings;
 
-        private readonly Signer<IReadOnlyList<int>> _eventChanged = new();
+        private readonly Subscription<IReadOnlyList<int>> _eventChanged = new();
 
         private int this[Id<PlayerId> idA, Id<PlayerId> idB]
         {
@@ -32,25 +32,24 @@ namespace Vurbiri.Colonization
         }
 
         #region Constructors
-        private Diplomacy(TurnQueue turn) : this(new int[PlayerId.HumansCount], turn)
+        private Diplomacy() : this(new int[PlayerId.HumansCount])
         {
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 _values[i] = _settings.defaultValue;
         }
-        private Diplomacy(int[] values, TurnQueue turn)
+        private Diplomacy(int[] values)
         {
             _settings = SettingsFile.Load<DiplomacySettings>();
             _values = values;
-
-            turn.Subscribe(OnNextTurn, false);
         }
 
-        public static Diplomacy Create(GameplayStorage storage, TurnQueue turn)
+        public static Diplomacy Create(GameplayStorage storage, GameEvents game)
         {
-            bool isLoad = storage.TryGetDiplomacyData(out int[] data);
+            Diplomacy diplomacy = storage.TryGetDiplomacyData(out int[] data) ? new(data) : new();
+            storage.DiplomacyBind(diplomacy);
 
-            Diplomacy diplomacy = isLoad ? new(data, turn) : new(turn);
-            storage.DiplomacyBind(diplomacy, !isLoad);
+            game.Subscribe(GameModeId.Play, diplomacy.OnGamePlay);
+
             return diplomacy;
         }
         #endregion
@@ -104,16 +103,16 @@ namespace Vurbiri.Colonization
             _eventChanged.Invoke(_values);
         }
 
-        public Unsubscriber Subscribe(Action<IReadOnlyList<int>> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _values);
+        public Unsubscription Subscribe(Action<IReadOnlyList<int>> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _values);
 
-        private void OnNextTurn(TurnQueue turn)
+        private void OnGamePlay(TurnQueue turnQueue, int dice)
         {
-            int current = turn.CurrentId.Value;
+            int currentId = turnQueue.currentId.Value;
 
-            if (current == PlayerId.Player | current == PlayerId.Satan)
+            if (currentId == PlayerId.Player | currentId == PlayerId.Satan)
                 return;
 
-            this[current - 1] = _values[current - 1] + _settings.penaltyPerRound;
+            this[currentId - 1] = _values[currentId - 1] + _settings.penaltyPerRound;
             this[PlayerId.AI_01, PlayerId.AI_02] += UnityEngine.Random.Range(_settings.penaltyPerRound, 1 - _settings.penaltyPerRound);
 
             _eventChanged.Invoke(_values);

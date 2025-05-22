@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                 return;
 
             _amount.Value += _values[index].Add(value);
-            _signer.Invoke(this);
+            _eventChanged.Invoke(this);
         }
         public void Add(Id<CurrencyId> id, int value) => Add(id.Value, value);
 
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
                 return;
 
             _values[Blood].Add(value);
-            _signer.Invoke(this);
+            _eventChanged.Invoke(this);
         }
 
         public void AddFrom(ACurrencies other)
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
                 _values[i].Add(other[i]);
 
             _amount.Add(other.Amount);
-            _signer.Invoke(this);
+            _eventChanged.Invoke(this);
         }
 
         public void Pay(ACurrencies cost)
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
                 amount += _values[i].Add(-cost[i]);
 
             _amount.Value = amount;
-            _signer.Invoke(this);
+            _eventChanged.Invoke(this);
         }
 
         public void ClampMain()
@@ -106,7 +106,7 @@ namespace Vurbiri.Colonization
                 _values[index].Signal();
 
             _amount.Value = amount;
-            _signer.Invoke(this);
+            _eventChanged.Invoke(this);
         }
 
         public void Clear()
@@ -115,7 +115,7 @@ namespace Vurbiri.Colonization
                 _values[i].Set(0);
 
             _amount.Value = 0;
-            _signer.Invoke(this);
+            _eventChanged.Invoke(this);
         }
     }
 }

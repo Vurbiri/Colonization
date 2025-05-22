@@ -13,7 +13,7 @@ namespace Vurbiri.Reactive
         [SerializeField, JsonProperty("value")]
         private T _value;
 
-        private readonly Signer<T> _signer = new();
+        private readonly Subscription<T> _subscriber = new();
         private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
         public T Value 
@@ -23,7 +23,7 @@ namespace Vurbiri.Reactive
             set 
             {
                 if(!_comparer.Equals(_value, value))
-                    _signer.Invoke(_value = value);
+                    _subscriber.Invoke(_value = value);
             } 
         }
 
@@ -47,9 +47,9 @@ namespace Vurbiri.Reactive
             _comparer = comparer;
         }
 
-        public Unsubscriber Subscribe(Action<T> action, bool instantGetValue = true) => _signer.Add(action, instantGetValue, _value);
+        public Unsubscription Subscribe(Action<T> action, bool instantGetValue = true) => _subscriber.Add(action, instantGetValue, _value);
 
-        public void Signal() => _signer.Invoke(_value);
+        public void Signal() => _subscriber.Invoke(_value);
 
 
         public static explicit operator ReactiveValue<T>(T value) => new(value);

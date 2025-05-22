@@ -22,7 +22,7 @@ namespace Vurbiri
         public bool Set<T>(string key, T data, JsonSerializerSettings settings = null);
         public bool Set<T>(string key, T data, JsonConverter converter);
 
-        public void SaveAll(Action<bool> callback = null);
+        public void Save(Action<bool> callback = null);
         public void Save<T>(string key, T data, JsonSerializerSettings settings = null);
         public void Save<T>(string key, T data, JsonConverter converter);
 

@@ -8,16 +8,16 @@ namespace Vurbiri.Colonization.UI
     sealed public class ButtonCancel : AWorldHintButton, IMenu
     {
         private ICancel _cancelledObj;
-        private Unsubscriber _unLanguage, _unAction;
+        private Unsubscription _unLanguage, _unAction;
 
-        private readonly Signer<IMenu, bool> _signer = new();
+        private readonly Subscription<IMenu, bool> _subscriber = new();
 
-        public ISigner<IMenu, bool> Init(WorldHint hint)
+        public ISubscription<IMenu, bool> Init(WorldHint hint)
         {
             base.Init(hint, OnClick, false);
             _unLanguage = Localization.Instance.Subscribe(SetText);
             
-            return _signer;
+            return _subscriber;
         }
 
         public void Setup(ICancel cancelledObj)
@@ -48,12 +48,12 @@ namespace Vurbiri.Colonization.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            _signer.Invoke(this, true);
+            _subscriber.Invoke(this, true);
         }
         protected override void OnDisable()
         {
             base.OnDisable();
-            _signer.Invoke(this, false);
+            _subscriber.Invoke(this, false);
         }
         protected override void OnDestroy()
         {

@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
         private HexagonMark _mark;
         private IProfit _profit;
         private bool _isGate, _isWater;
-        private readonly Signer<int> _changeID = new();
+        private readonly Subscription<int> _changeID = new();
 
         private Actor _owner = null;
         private Id<PlayerId> _ownerId = PlayerId.None;
@@ -99,7 +99,7 @@ namespace Vurbiri.Colonization
         public void Unselect(ISelectable newSelectable) { }
         #endregion
 
-        public Unsubscriber Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
+        public Unsubscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 
         public void AddNeighborAndCreateCrossroadLink(Hexagon neighbor)
         {
@@ -129,12 +129,14 @@ namespace Vurbiri.Colonization
         #region Profit
         public bool SetAndGetFreeProfit(out int currencyId)
         {
+            currencyId = _profit.Set();
+
             if (_isWater)
-                _hexagonCaption.Profit(_profit.Set());
+                _hexagonCaption.Profit(_profit.Value);
             else
                 _hexagonCaption.Profit();
 
-            return (currencyId = _profit.Value) != CurrencyId.Blood && !IsOwnedByColony;
+            return IsOwnedByColony;
         }
         public void ResetProfit() => _hexagonCaption.ResetProfit();
 
