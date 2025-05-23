@@ -1,21 +1,17 @@
 //Assets\Colonization\Scripts\GameLoop\GameLoop.cs
-using Vurbiri.Colonization.Controllers;
-
 namespace Vurbiri.Colonization
 {
     sealed public partial class GameLoop : GameEvents
     {
+        private Id<GameModeId> _gameMode;
         private TurnQueue _turnQueue;
         private int _hexId;
 
         private GameState _gameState;
-        private InputController _inputController;
-
-        private Id<GameModeId> _gameMode;
 
         private GameLoop()
         {
-            _gameMode = GameModeId.Play; //GameModeId.Start
+            _gameMode = GameModeId.Play; //GameModeId.Init
             _turnQueue = new(PlayerId.Player);
             _hexId = -1;
         }
@@ -27,7 +23,7 @@ namespace Vurbiri.Colonization
             _hexId = hexId;
         }
 
-        public static GameLoop Create(GameState gameState, InputController inputController)
+        public static GameLoop Create(GameState gameState)
         {
             if (!gameState.TryGetGame(out GameLoop instance))
             {
@@ -39,22 +35,31 @@ namespace Vurbiri.Colonization
                 instance._changingGameModes[i] += (_, _) => { };
 
             instance._gameState = gameState;
-            instance._inputController = inputController;
             return instance;
         }
 
         public void Start()
         {
-            _inputController.EnableAll();
-            _inputController.GameplayMap = _turnQueue.IsCurrentPlayer;
-
+            _gameState.Start();
             Change(_gameMode);
         }
 
-        public override void EndTurn()
+        public void Init()
         {
-            _inputController.GameplayMap = false;
+            _turnQueue.Next();
+            if(_turnQueue.currentId != PlayerId.HumansCount)
+                Change(GameModeId.Init);
+            else
+                StartTurn();
+        }
 
+        public void Play()
+        {
+            Change(GameModeId.Play);
+        }
+
+        public void EndTurn()
+        {
             Change(GameModeId.EndTurn);
         }
 
@@ -82,19 +87,11 @@ namespace Vurbiri.Colonization
             Change(GameModeId.Profit);
         }
 
-        public void Play()
-        {
-            _inputController.GameplayMap = _turnQueue.IsCurrentPlayer;
-            
-            Change(GameModeId.Play);
-        }
-
         private void Change(Id<GameModeId> gameMode)
         {
             _changingGameModes[_gameMode = gameMode].Invoke(_turnQueue, _hexId);
             _gameState.SaveGame(this);
         }
-
 
         //public void EndTurnPlayer()
         //{

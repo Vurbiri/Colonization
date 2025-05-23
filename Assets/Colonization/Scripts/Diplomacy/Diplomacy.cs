@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization
         public static Diplomacy Create(GameplayStorage storage, GameEvents game)
         {
             Diplomacy diplomacy = storage.TryGetDiplomacyData(out int[] data) ? new(data) : new();
-            storage.DiplomacyBind(diplomacy);
+            storage.BindDiplomacy(diplomacy);
 
             game.Subscribe(GameModeId.Play, diplomacy.OnGamePlay);
 

@@ -1,5 +1,4 @@
 ﻿//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayInitObjects.cs
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Storage;
@@ -16,8 +15,8 @@ namespace Vurbiri.Colonization.EntryPoint
         public Camera mainCamera;
         public CameraController cameraController;
         [Header("══════ Init data for classes ══════")]
-        public Players.Settings playersSettings;
-        public InputController.Settings inputControllerSettings;
+        [SerializeField] private Players.Settings _playersSettings;
+        [SerializeField] private InputController.Settings _inputControllerSettings;
         [Space]
         public PoolEffectsBarFactory poolEffectsBar;
 
@@ -30,26 +29,40 @@ namespace Vurbiri.Colonization.EntryPoint
         public Crossroads crossroads;
         public Players players;
         
-        public void FillingContainer(DIContainer diContainer)
+        public void CreateObjectsAndFillingContainer(DIContainer diContainer)
         {
             this.diContainer = diContainer;
             GameState gameState = diContainer.Get<GameState>();
 
+            diContainer.AddInstance<GameEvents>(game = GameLoop.Create(gameState));
+
             diContainer.AddInstance(Coroutines.Create("Gameplay Coroutines"));
             diContainer.AddInstance(storage = new(gameState.IsLoad));
             diContainer.AddInstance<GameplayTriggerBus, GameplayEventBus>(triggerBus = new());
-            diContainer.AddInstance(inputController = new(mainCamera, inputControllerSettings));
-            diContainer.AddInstance<GameEvents>(game = GameLoop.Create(gameState, inputController));
+            diContainer.AddInstance(inputController = new(game, mainCamera, _inputControllerSettings));
             diContainer.AddInstance(Diplomacy.Create(storage, game));
             diContainer.AddInstance(poolEffectsBar.Create());
             diContainer.AddInstance(cameraController.Init(mainCamera, triggerBus, inputController.CameraActions));
 
-            inputControllerSettings = null;
+            _inputControllerSettings = null;
             poolEffectsBar = null;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(game, players, hintWorld, prices, mainCamera, triggerBus);
+
+        public Players.Settings GetPlayersSettings()
+        {
+            _playersSettings.hexagons = hexagons;
+            _playersSettings.crossroads = crossroads;
+
+            return _playersSettings;
+        }
+
+        public void PlayersSettingsDispose()
+        {
+            _playersSettings.Dispose();
+            _playersSettings = null;
+        }
 
 
 #if UNITY_EDITOR
@@ -59,7 +72,7 @@ namespace Vurbiri.Colonization.EntryPoint
             EUtility.SetObject(ref mainCamera);
             EUtility.SetObject(ref cameraController);
 
-            playersSettings.OnValidate();
+            _playersSettings.OnValidate();
             poolEffectsBar.OnValidate();
         }
 #endif

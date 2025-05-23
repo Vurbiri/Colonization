@@ -80,7 +80,7 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_roadButtons.Filling < _roadButtons.Count)
+            if (_roadButtons.Fullness < _roadButtons.Count)
                 _roadButtons.ReplaceRange(GetComponentsInChildren<ButtonBuildRoad>());
         }
 #endif

@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_graphicSides.Filling < _graphicSides.Count)
+            if (_graphicSides.Fullness < _graphicSides.Count)
                 _graphicSides.ReplaceRange(GetComponentsInChildren<WallGate>());
         }
 #endif

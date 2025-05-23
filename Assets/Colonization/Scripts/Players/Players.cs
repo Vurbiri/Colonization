@@ -9,64 +9,40 @@ namespace Vurbiri.Colonization
 {
     public class Players : IDisposable
     {
-        private readonly Human[] _humans = new Human[PlayerId.HumansCount];
-        private readonly Satan _satan;
-        private readonly Hexagons hexagons;
+        private readonly IPlayerController[] _players = new IPlayerController[PlayerId.Count];
 
-        public Human Player => _humans[PlayerId.Player];
-        public Satan Satan => _satan;
-        public Human this[int index] => _humans[index];
+        public Human Player { get; }
+        public Satan Satan { get; }
 
-        #region Constructor
-        public Players(Settings settings, GameEvents game, Hexagons hexagons, Crossroads crossroads, GameplayStorage storage)
+        public Players(Settings settings, GameLoop game, GameplayStorage storage)
         {
             HumanStorage[] playerStorages = storage.Humans;
+            Human[] humans = new Human[PlayerId.HumansCount];
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
-                _humans[i] = new(i, playerStorages[i], settings, hexagons, crossroads);
+                _players[i] = humans[i] = new(i, playerStorages[i], settings);
+            
+            _players[PlayerId.Satan] = Satan = new(storage.Satan, settings, humans);
+            
+            Player = humans[PlayerId.Player];
 
-            _satan = new(storage.Satan, settings, hexagons, _humans);
+            game.Subscribe(GameModeId.Init,      (turn, _) => _players[turn.currentId.Value].Init());
+            game.Subscribe(GameModeId.Play,      (turn, _) => _players[turn.currentId.Value].Play());
+            game.Subscribe(GameModeId.EndTurn,   (turn, _) => _players[turn.currentId.Value].EndTurn());
+            game.Subscribe(GameModeId.StartTurn, (turn, _) => _players[turn.currentId.Value].StartTurn());
+            game.Subscribe(GameModeId.Profit,    OnProfit);
+        }
 
-            game.Subscribe(GameModeId.EndTurn, OnEndTurn);
-            game.Subscribe(GameModeId.StartTurn, OnStartTurn);
-            game.Subscribe(GameModeId.Profit, OnProfit);
-            game.Subscribe(GameModeId.Play, OnPlay);
-        }
-        #endregion
-
-        public void OnEndTurn(TurnQueue turnQueue, int hexId)
-        {
-            if (turnQueue.currentId == PlayerId.Satan)
-                _satan.EndTurn();
-            else
-                _humans[turnQueue.currentId.Value].EndTurn();
-        }
-        public void OnStartTurn(TurnQueue turnQueue, int hexId)
-        {
-            if (turnQueue.currentId == PlayerId.Satan)
-                _satan.StartTurn();
-            else
-                _humans[turnQueue.currentId.Value].StartTurn();
-        }
         public void OnProfit(TurnQueue turnQueue, int hexId)
         {
-            _satan.Profit(hexId);
-            for (int i = 0; i < PlayerId.HumansCount; i++)
-                _humans[i].Profit(hexId);
-        }
-        public void OnPlay(TurnQueue turnQueue, int hexId)
-        {
-            if (turnQueue.currentId == PlayerId.Satan)
-                _satan.Play();
-            else
-                _humans[turnQueue.currentId.Value].Play();
+            for (int i = 0; i < PlayerId.Count; i++)
+                _players[i].Profit(turnQueue.currentId, hexId);
         }
 
         public void Dispose()
         {
-            _satan.Dispose();
-            for (int i = 0; i < PlayerId.HumansCount; i++)
-                _humans[i].Dispose();
+            for (int i = 0; i < PlayerId.Count; i++)
+                _players[i].Dispose();
         }
 
         #region Nested: Settings
@@ -86,6 +62,9 @@ namespace Vurbiri.Colonization
             [Space]
             public BuffsScriptable artefact;
             public Transform actorsContainer;
+
+            public Hexagons hexagons;
+            public Crossroads crossroads;
 
             public void Dispose()
             {

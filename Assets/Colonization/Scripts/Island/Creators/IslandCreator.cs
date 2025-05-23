@@ -51,6 +51,8 @@ namespace Vurbiri.Colonization
             yield return Create_Cn(HexCreator.Factory(_hexagons, _hexagonSpawner, _storage));
             yield return Setup_Cn();
 
+            _crossroads.EndCreate();
+
             _hexagonSpawner.Dispose();
             _hexagonSpawner = null;
 
@@ -105,7 +107,7 @@ namespace Vurbiri.Colonization
         {
             _hexagonSpawner.OnValidate();
 
-            if (_edificePrefabs.Filling < _edificePrefabs.Count)
+            if (_edificePrefabs.Fullness < _edificePrefabs.Count)
                 _edificePrefabs.ReplaceRange(EUtility.FindPrefabs<AEdifice>());
             if (_crossroadsContainer == null)
                 _crossroadsContainer = EUtility.GetComponentInChildren<Transform>(this, "Crossroads");

@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.Storage
             _keyArtefact = P_BUFFS.Concat(_strId); 
         }
 
-        public void ActorsBind(IReactiveSet<Actor> actors)
+        public void BindActors(IReactiveSet<Actor> actors)
         {
             _unsubscribers += actors.Subscribe(OnActors);
 
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization.Storage
             //==============================
             #endregion
         }
-        public void ArtefactBind(IReactive<IReadOnlyList<int>> currencies, bool instantGetValue)
+        public void BindArtefact(IReactive<IReadOnlyList<int>> currencies, bool instantGetValue)
         {
             _unsubscribers += currencies.Subscribe(value => _storage.Set(_keyArtefact, value), instantGetValue);
         }

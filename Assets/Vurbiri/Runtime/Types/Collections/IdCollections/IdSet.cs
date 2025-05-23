@@ -14,7 +14,7 @@ namespace Vurbiri.Collections
         [SerializeField] private int _count;
         private readonly int _capacity = IdType<TId>.Count;
 
-        public int Filling => _count;
+        public int Fullness => _count;
         public int Count => _capacity;
 
         public TValue this[int id] { get => _values[id]; set => Replace(value); }

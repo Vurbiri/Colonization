@@ -30,13 +30,13 @@ namespace Vurbiri.Colonization.EntryPoint
 
             gameState.IsLoad = _isLoad;
 
-            _initObjects.FillingContainer(diContainer);
+            _initObjects.CreateObjectsAndFillingContainer(diContainer);
                         
             loading.Add(_islandCreator.Init(_initObjects));
             loading.Add(new CreatePlayers(_initObjects));
             loading.Add(_initUI.Init(_initObjects));
             loading.Add(new ClearResources());
-            loading.Add(new GameplayStart(_initObjects.game));
+            loading.Add(new GameplayStart(_initObjects.game, _initObjects.inputController));
 
             Destroy(this);
 

@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
             if (!storage.TryLoadAndBindPGameState(out var instance))
             {
                 instance = new();
-                storage.GameStateBind(instance, true);
+                storage.BindGameState(instance, true);
             }
 
             diContainer.AddInstance(instance);
@@ -68,6 +68,7 @@ namespace Vurbiri.Colonization
         public void Start()
         {
             _isLoad = true;
+            _storage.Set(SAVE_KEYS.GAME_STATE, this);
         }
 
         public void Reset()

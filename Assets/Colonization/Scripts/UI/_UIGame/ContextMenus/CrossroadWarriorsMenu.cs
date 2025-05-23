@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_buttons.Filling < _buttons.Count)
+            if (_buttons.Fullness < _buttons.Count)
                 _buttons.ReplaceRange(GetComponentsInChildren<ButtonRecruiting>());
         }
 #endif

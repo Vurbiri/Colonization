@@ -36,12 +36,12 @@ namespace Vurbiri.Colonization.Storage
         {
             if(_storage.TryGet(GAME_STATE, out state))
             {
-                GameStateBind(state, false);
+                BindGameState(state, false);
                 return true;
             }
             return false;
         }
-        public void GameStateBind(IReactive<GameState> reactive, bool instantGetValue)
+        public void BindGameState(IReactive<GameState> reactive, bool instantGetValue)
         {
             _unsubscribers += reactive.Subscribe(self => _storage.Set(GAME_STATE, self), instantGetValue);
         }

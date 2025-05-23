@@ -9,7 +9,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Satan : IReactive<Satan>
+    public partial class Satan : IPlayerController, IReactive<Satan>
     {
         private readonly RInt _level;
         private readonly RInt _curse;
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Satan(SatanStorage storage, Players.Settings settings, Hexagons hexagons, IReadOnlyList<Human> humans)
+        public Satan(SatanStorage storage, Players.Settings settings, IReadOnlyList<Human> humans)
         {
             _states = SettingsFile.Load<SatanAbilities>();
 
@@ -54,12 +54,12 @@ namespace Vurbiri.Colonization
             _leveling = new(settings.demonBuffs.Settings, _level);
             _artefact = Buffs.Create(settings.artefact.Settings, loadData);
 
-            _spawner = new(_level, new(_leveling, _artefact), settings, hexagons[Key.Zero], loadData.state.spawn);
+            _spawner = new(_level, new(_leveling, _artefact), settings, loadData.state.spawn);
 
             _demons = new(loadData.state.maxDemons);
             _demons.Subscribe((actor, evt) => { if (evt == TypeEvent.Add) actor.OnKilled.Add(ActorKill); }, false);
             for (int i = loadData.actors.Count - 1; i >= 0; i--)
-                _demons.Add(_spawner.Load(loadData.actors[i], hexagons));
+                _demons.Add(_spawner.Load(loadData.actors[i], settings.hexagons));
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
             {
@@ -68,8 +68,8 @@ namespace Vurbiri.Colonization
             }
 
             storage.StateBind(this, !loadData.isLoaded);
-            storage.ArtefactBind(_artefact, !loadData.isLoaded);
-            storage.ActorsBind(_demons);
+            storage.BindArtefact(_artefact, !loadData.isLoaded);
+            storage.BindActors(_demons);
 
             storage.LoadData = null;
 
@@ -85,6 +85,11 @@ namespace Vurbiri.Colonization
         }
 
         public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventSelf.Add(action, instantGetValue, this);
+
+        public void Init()
+        {
+
+        }
 
         public void EndTurn()
         {
@@ -103,7 +108,7 @@ namespace Vurbiri.Colonization
             _artefact.Next(countBuffs);
         }
 
-        public void Profit(int hexId)
+        public void Profit(Id<PlayerId> id, int hexId)
         {
             if (hexId == CONST.GATE_ID)
                 AddCurse(_states.curseProfit + _level * _states.curseProfitPerLevel);

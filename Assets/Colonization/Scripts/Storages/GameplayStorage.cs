@@ -35,12 +35,12 @@ namespace Vurbiri.Colonization.Storage
         #endregion
 
         #region Bind
-        public void DiplomacyBind(IReactive<IReadOnlyList<int>> reactive)
+        public void BindDiplomacy(IReactive<IReadOnlyList<int>> reactive)
         {
             _unsubscribers += reactive.Subscribe(diplomacy => _storage.Set(SAVE_KEYS.DIPLOMANCY, diplomacy), !_isLoad);
         }
 
-        public void HexagonsBind(IReactive<Hexagon> reactive)
+        public void BindHexagons(IReactive<Hexagon> reactive)
         {
             _unsubscribers += reactive.Subscribe(hex => _storage.Set(hex.Key.ToSaveKey(), hex), false);
         }

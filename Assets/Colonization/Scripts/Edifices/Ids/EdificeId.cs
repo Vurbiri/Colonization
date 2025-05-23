@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
 
         public static int GetId(int countWater, bool isGate) => countWater switch
         {
-            0 when isGate  => Shrine,
+            0 when  isGate => Shrine,
             0 when !isGate => Camp,
             1              => PortOne,
             2              => PortTwo,

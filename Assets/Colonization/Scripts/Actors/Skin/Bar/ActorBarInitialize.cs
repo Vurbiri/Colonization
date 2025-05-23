@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization.Actors
                 _apBar = GetComponentInChildren<APBar>();
             if (_moveBar == null)
                 _moveBar = GetComponentInChildren<MoveBar>();
-            if (_valueBars == null || _valueBars.Filling < 2)
+            if (_valueBars == null || _valueBars.Fullness < 2)
                 _valueBars.ReplaceRange(GetComponentsInChildren<ValueBar>());
             if (_popup == null)
                 _popup = GetComponentInChildren<PopupWidget3D>();

@@ -14,12 +14,9 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override IEnumerator GetEnumerator()
         {
-            _init.diContainer.AddInstance(_init.players = new Players(_init.playersSettings, _init.game, _init.hexagons, _init.crossroads, _init.storage));
+            _init.diContainer.AddInstance(_init.players = new Players(_init.GetPlayersSettings(), _init.game, _init.storage));
             yield return null;
-            _init.playersSettings.Dispose();
-            _init.playersSettings = null;
-
-            yield break;
+            _init.PlayersSettingsDispose();
         }
     }
 }

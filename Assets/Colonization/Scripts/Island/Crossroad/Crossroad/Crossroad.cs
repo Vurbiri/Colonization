@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    sealed public partial class Crossroad : IDisposable, IInteractable
+    sealed public partial class Crossroad : IDisposable, IInteractable, IEquatable<Crossroad>
     {
         #region Fields
         public const int HEX_COUNT = 3;
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
         private readonly RBool _interactable = new(true);
 
         private readonly GameplayTriggerBus _triggerBus;
-        private readonly IReadOnlyList<AEdifice> _prefabs;
+        private readonly IdSet<EdificeId, AEdifice> _prefabs;
         private readonly List<Hexagon> _hexagons = new(HEX_COUNT);
         private readonly IdSet<LinkId, CrossroadLink> _links = new();
 
@@ -41,15 +41,17 @@ namespace Vurbiri.Colonization
         public Id<EdificeGroupId> GroupId => _states.groupId;
         public Id<EdificeId> NextId => _states.nextId;
         public Id<EdificeGroupId> NextGroupId => _states.nextGroupId;
+        public bool IsGate => _isGate;
+        public bool IsBreach => _countWater > 0;
         public bool IsPort => _states.groupId == EdificeGroupId.Port;
         public bool IsColony => _states.groupId == EdificeGroupId.Colony;
         public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
         public bool IsWall => _isWall;
-        public IEnumerable<CrossroadLink> Links => _links;
+        public IdSet<LinkId, CrossroadLink> Links => _links;
         public List<Hexagon> Hexagons => _hexagons;
         #endregion
 
-        public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IReadOnlyList<AEdifice> prefabs, GameplayTriggerBus triggerBus)
+        public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IdSet<EdificeId, AEdifice> prefabs, GameplayTriggerBus triggerBus)
         {
             _key = key;
             Position = position;
@@ -57,7 +59,7 @@ namespace Vurbiri.Colonization
 
             _triggerBus = triggerBus;
 
-            _edifice = Object.Instantiate(_prefabs[EdificeId.Empty], position, rotation, container);
+            _edifice = Object.Instantiate(prefabs[EdificeId.Empty], position, rotation, container);
             _states = _edifice.Settings;
             _edifice.Selectable = this;
         }
@@ -92,17 +94,16 @@ namespace Vurbiri.Colonization
         public void Cancel() => Unselect(null);
         #endregion
 
-        public bool AddHexagon(Hexagon hexagon)
+        public bool AddHexagon(Hexagon hexagon, out bool ending)
         {
             _isGate |= hexagon.IsGate;
-
-            if (hexagon.IsWater) _countWater++;
+            if (hexagon.IsWater)  _countWater++;
 
             if (_hexagons.Count < (HEX_COUNT - 1) | _countWater < HEX_COUNT)
             {
                 _hexagons.Add(hexagon);
 
-                if (_hexagons.Count == HEX_COUNT)
+                if (ending = _hexagons.Count == HEX_COUNT)
                     _countFreeLink = _countWater <= 1 ? _isGate ? 1 : 3 : 2;
 
                 return true;
@@ -110,8 +111,9 @@ namespace Vurbiri.Colonization
 
             for(int i = 0; i < _hexagons.Count; i++)
                 _hexagons[i].CrossroadRemove(this);
+            
             Object.Destroy(_edifice.gameObject);
-            return false;
+            return ending = false;
         }
 
         public void SetCaptionHexagonsActive(bool active)
@@ -128,7 +130,7 @@ namespace Vurbiri.Colonization
         {
             _links.Add(link);
 
-            if (_countFreeLink == _links.Filling)
+            if (_countFreeLink == _links.Fullness)
             {
                 _states.SetNextId(EdificeId.GetId(_countWater, _isGate));
                 _edifice.Init(_owner, _isWall, _links, _edifice);
@@ -262,7 +264,7 @@ namespace Vurbiri.Colonization
 
         public bool IsFullyOwned(Id<PlayerId> playerId)
         {
-            if (_links.Filling <= 1)
+            if (_links.Fullness <= 1)
                 return false;
 
             if (_countFreeLink > 0)
@@ -324,7 +326,10 @@ namespace Vurbiri.Colonization
         #endregion
         #endregion
 
-        public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
+        public bool Equals(ISelectable other) => other is Crossroad cross && cross._key == _key;
+        public bool Equals(Crossroad other) => other is not null && other._key == _key;
+        public override int GetHashCode() => _key.GetHashCode();
+
         public void Dispose()
         {
             _unsubscriber?.Unsubscribe();

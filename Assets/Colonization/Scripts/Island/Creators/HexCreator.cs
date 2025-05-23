@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
             get
             {
                 Hexagon hex = Create(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
-                _storage.HexagonsBind(_land);
+                _storage.BindHexagons(_land);
                 return hex;
             }
         }
@@ -87,6 +87,6 @@ namespace Vurbiri.Colonization
             return Create(keyHex, data.id, data.surfaceId, position);
         }
 
-        public override void Finish() => _storage.HexagonsBind(_land);
+        public override void Finish() => _storage.BindHexagons(_land);
     }
 }

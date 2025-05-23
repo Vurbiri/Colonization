@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.Controllers
 
         public ISelectable SelectableObject => _selectObj;
 
-        public InputController(Camera camera, Settings settings)
+        public InputController(GameEvents events, Camera camera, Settings settings)
         {
             _camera = camera;
             _layerMaskRight = settings.layerMaskRight;
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.Controllers
             _distance = settings.distance;
 
             _inputActions = new();
-            _inputActions.Enable();
+            //_inputActions.Enable();
 
             _gameplayMap = _inputActions.Gameplay;
             _cameraMap = _inputActions.Camera;
@@ -44,16 +44,22 @@ namespace Vurbiri.Colonization.Controllers
             _inputActions.Gameplay.LeftClick.performed += OnClickLeft;
             _inputActions.Gameplay.RightClick.performed += OnClickRight;
 
-            DisableAll();
+            events.Subscribe(GameModeId.Play, (turn, _) => EnableGameplayAndCamera(turn.IsCurrentPlayer));
+            events.Subscribe(GameModeId.Init, (turn, _) => EnableGameplayAndCamera(turn.IsCurrentPlayer));
+            events.Subscribe(GameModeId.WaitRoll, (turn, _) => EnableGameplayAndCamera(turn.IsCurrentPlayer));
+
+            events.Subscribe(GameModeId.EndTurn, (_, _) => { _gameplayMap.Disable(); _cameraMap.Disable(); });
         }
 
-        public void EnableAll()
+        public void Enable()
         {
-            _gameplayMap.Enable(); _cameraMap.Enable(); _UIMap.Enable();
+            _inputActions.Enable();
+            //_gameplayMap.Enable(); _cameraMap.Enable(); _UIMap.Enable();
         }
         public void DisableAll()
         {
-            _gameplayMap.Disable(); _cameraMap.Disable(); _UIMap.Disable();
+            _inputActions.Disable();
+            //_gameplayMap.Disable(); _cameraMap.Disable(); _UIMap.Disable();
         }
 
         public void Select(ISelectable selectObj)
@@ -63,7 +69,7 @@ namespace Vurbiri.Colonization.Controllers
             _selectObj.Select();
         }
 
-        public void Dispose() => _inputActions?.Disable();
+        public void Dispose() => _inputActions.Disable();
 
         private void OnClickLeft(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskLeft);
         private void OnClickRight(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskRight);
@@ -86,6 +92,17 @@ namespace Vurbiri.Colonization.Controllers
             #endregion
         }
 
+        private void EnableGameplayAndCamera(bool enable)
+        {
+            if (enable)
+            {
+                _gameplayMap.Enable(); _cameraMap.Enable();
+            }
+            else
+            {
+                _gameplayMap.Disable(); _cameraMap.Disable();
+            }
+        }
 
         #region Nested: Settings
         //***********************************

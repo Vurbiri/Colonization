@@ -102,12 +102,9 @@ namespace Vurbiri.Reactive.Collections
             int index = IndexOf(item);
 
             if (index >= 0)
-            {
                 _subscriber.Invoke(index, item, TypeEvent.Change);
-                return;
-            }
-
-            Add(item);
+            else
+                Add(item);
         }
 
         #region IReadOnlyReactiveList
