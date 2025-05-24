@@ -9,7 +9,7 @@ using static VurbiriEditor.CONST_EDITOR;
 namespace VurbiriEditor
 {
     [InitializeOnLoad]
-    public class PathToCSFiles : AssetModificationProcessor
+    public class PathToCSFiles //: AssetModificationProcessor
     {
 		#region Consts
 		private const string MENU_NAME = "Path To CSFiles/", MENU = MENU_PATH + MENU_NAME;
@@ -17,16 +17,16 @@ namespace VurbiriEditor
         private const string MENU_NAME_REMOVE = "Remove path", MENU_COMMAND_REMOVE = MENU + MENU_NAME_REMOVE;
         private const string MENU_NAME_AUTO = "Auto", MENU_COMMAND_AUTO = MENU + MENU_NAME_AUTO;
         private const string MASK = "*" + CS_EXT, COMMENT = @"//", START = COMMENT + ASSETS;
-        private const string KEY_SAVE = "PTCS_AUTO";
         #endregion
 
         private static uint s_count;
         private static bool s_isAuto = false;
+        private static readonly string s_key_save = Application.productName + "_PTCS_AUTO";
 
         static PathToCSFiles()
         {
-            if (EditorPrefs.HasKey(KEY_SAVE))
-                s_isAuto = EditorPrefs.GetBool(KEY_SAVE);
+            if (EditorPrefs.HasKey(s_key_save))
+                s_isAuto = EditorPrefs.GetBool(s_key_save);
         }
 
         [MenuItem(MENU_COMMAND_ADD)]
@@ -61,7 +61,7 @@ namespace VurbiriEditor
         {
             s_isAuto = !s_isAuto;
 
-            EditorPrefs.SetBool(KEY_SAVE, s_isAuto);
+            EditorPrefs.SetBool(s_key_save, s_isAuto);
             SetChecked();
             Log();
         }

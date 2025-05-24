@@ -11,11 +11,11 @@ namespace VurbiriEditor
         private const string MENU_NAME = "Custom keywords/", MENU = MENU_PATH + MENU_NAME;
         private const string MENU_NAME_ENABLE = "Enable", MENU_COMMAND_ENABLE = MENU + MENU_NAME_ENABLE;
         private const string MENU_NAME_DISABLE = "Disable", MENU_COMMAND_DISABLE = MENU + MENU_NAME_DISABLE;
-        private const string KEY_SAVE = "CSTK_ENABLE";
         private const string WINDOW = "Window", EDITOR = "Editor", DRAWER = "Drawer";
 		#endregion
 
 		private static bool s_enabled = true;
+        private static readonly string s_key_save = Application.productName + "_CSTK_ENABLE";
 
         [MenuItem(MENU_COMMAND_ENABLE, false, 35)]
         private static void CommandEnable()
@@ -78,7 +78,7 @@ namespace VurbiriEditor
 
 		private static void Save()
 		{
-            EditorPrefs.SetBool(KEY_SAVE, s_enabled);
+            EditorPrefs.SetBool(s_key_save, s_enabled);
 
             SetChecked();
         }
@@ -86,8 +86,8 @@ namespace VurbiriEditor
         [InitializeOnLoadMethod]
         private static void Load()
 		{
-            if (EditorPrefs.HasKey(KEY_SAVE))
-                s_enabled = EditorPrefs.GetBool(KEY_SAVE);
+            if (EditorPrefs.HasKey(s_key_save))
+                s_enabled = EditorPrefs.GetBool(s_key_save);
             
             SetChecked(); 
         }

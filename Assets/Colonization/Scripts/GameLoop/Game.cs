@@ -1,40 +1,41 @@
+using Vurbiri.Colonization.Storage;
+
 namespace Vurbiri.Colonization
 {
-    sealed public partial class GameLoop : GameEvents
+    sealed public partial class Game : GameEvents, System.IDisposable
     {
+        private static Game s_instance;
+
         private Id<GameModeId> _gameMode;
         private TurnQueue _turnQueue;
         private int _hexId;
 
         private GameState _gameState;
 
-        private GameLoop()
+        private Game() : base()
         {
             _gameMode = GameModeId.Play; //GameModeId.Init
             _turnQueue = new(PlayerId.Player);
             _hexId = -1;
         }
 
-        private GameLoop(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId)
+        private Game(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId) : base()
         {
             _gameMode = gameMode;
             _turnQueue = turnQueue;
             _hexId = hexId;
         }
 
-        public static GameLoop Create(GameState gameState)
+        public static Game Create(GameState gameState)
         {
-            if (!gameState.TryGetGame(out GameLoop instance))
+            if (s_instance == null)
             {
-                instance = new();
-                gameState.SaveGame(instance);
+                if (!gameState.TryGetGame(out s_instance))
+                    s_instance = new();
+
+                s_instance._gameState = gameState;
             }
-
-            for (int i = 0; i < GameModeId.Count; i++)
-                instance._changingGameModes[i] += (_, _) => { };
-
-            instance._gameState = gameState;
-            return instance;
+            return s_instance;
         }
 
         public void Start()
@@ -89,26 +90,13 @@ namespace Vurbiri.Colonization
         private void Change(Id<GameModeId> gameMode)
         {
             _changingGameModes[_gameMode = gameMode].Invoke(_turnQueue, _hexId);
-            _gameState.SaveGame(this);
+            _gameState.Storage.Save(SAVE_KEYS.GAME, this);
         }
 
-        //public void EndTurnPlayer()
-        //{
-        //    _players.EndTurn(_turnQueue.currentId.Value);
-
-        //    _dice.Roll();
-        //    ACurrencies free = _hexagons.Profit(_dice.last, _dice.current);
-        //    _players.Profit(_dice.current, free);
-
-        //    _turnQueue.Next();
-
-        //    int currentId = _turnQueue.currentId.Value;
-
-        //    //_diplomacy.StartTurn(currentId);
-        //    _players.StartTurn(currentId);
-        //    _inputController.GameplayMap = _turnQueue.IsCurrentPlayer;
-        //    _players.Play(currentId);
-        //}
+        public void Dispose()
+        {
+            s_instance = null;
+        }
     }
 
 

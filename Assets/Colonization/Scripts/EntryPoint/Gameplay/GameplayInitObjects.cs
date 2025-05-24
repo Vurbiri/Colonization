@@ -19,7 +19,8 @@ namespace Vurbiri.Colonization.EntryPoint
         [Space]
         public PoolEffectsBarFactory poolEffectsBar;
 
-        public GameLoop game;
+        public Game game;
+
         public DIContainer diContainer;
         public GameplayStorage storage;
         public GameplayTriggerBus triggerBus;
@@ -27,13 +28,16 @@ namespace Vurbiri.Colonization.EntryPoint
         public Hexagons hexagons;
         public Crossroads crossroads;
         public Players players;
-        
+
+        private Score _score;
+
         public void CreateObjectsAndFillingContainer(DIContainer diContainer)
         {
             this.diContainer = diContainer;
             GameState gameState = diContainer.Get<GameState>();
 
-            diContainer.AddInstance<GameEvents>(game = GameLoop.Create(gameState));
+            diContainer.AddInstance<GameEvents>(game = Game.Create(gameState));
+            diContainer.AddInstance(_score = new(gameState));
 
             diContainer.AddInstance(Coroutines.Create("Gameplay Coroutines"));
             diContainer.AddInstance(storage = new(gameState.IsLoad));
@@ -53,6 +57,7 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             _playersSettings.hexagons = hexagons;
             _playersSettings.crossroads = crossroads;
+            _playersSettings.score = _score;
 
             return _playersSettings;
         }

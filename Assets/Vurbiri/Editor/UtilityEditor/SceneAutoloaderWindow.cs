@@ -10,11 +10,11 @@ namespace VurbiriEditor
         #region Consts
         private const string NAME = "Scene Autoloader", MENU = MENU_PATH + NAME;
         private const string LABEL_SCENE = "Start scene", LABEL_SAVE = "Save assets when playing";
-        private const string KEY_SAVE = "MSA_SaveScene", KEY_PATH = "MSA_PathScene";
         public const string SCENE_TYPE = "t:Scene";
         #endregion
 
         private static bool s_isSaveScene = true;
+        private static readonly string s_key_save = Application.productName + "_MSA_SaveScene", s_key_path = Application.productName + "_MSA_PathScene";
 
         private readonly System.Type _typeSceneAsset = typeof(SceneAsset);
         private SceneAsset _sceneAsset;
@@ -58,14 +58,14 @@ namespace VurbiriEditor
 
             if (_sceneAsset != EditorSceneManager.playModeStartScene)
             {
-                EditorPrefs.SetString(KEY_PATH, _sceneAsset != null ? AssetDatabase.GetAssetPath(_sceneAsset) : string.Empty);
+                EditorPrefs.SetString(s_key_path, _sceneAsset != null ? AssetDatabase.GetAssetPath(_sceneAsset) : string.Empty);
                 EditorSceneManager.playModeStartScene = _sceneAsset;
             }
         }
 
         private void OnDisable()
         {
-            EditorPrefs.SetBool(KEY_SAVE, s_isSaveScene);
+            EditorPrefs.SetBool(s_key_save, s_isSaveScene);
         }
 
         [InitializeOnLoadMethod]
@@ -95,12 +95,12 @@ namespace VurbiriEditor
                 return;
             }
 
-            if (EditorPrefs.HasKey(KEY_SAVE))
-                s_isSaveScene = EditorPrefs.GetBool(KEY_SAVE);
+            if (EditorPrefs.HasKey(s_key_save))
+                s_isSaveScene = EditorPrefs.GetBool(s_key_save);
 
             string path = null;
-            if (EditorPrefs.HasKey(KEY_PATH))
-                path = EditorPrefs.GetString(KEY_PATH);
+            if (EditorPrefs.HasKey(s_key_path))
+                path = EditorPrefs.GetString(s_key_path);
 
             if (string.IsNullOrEmpty(path))
             {

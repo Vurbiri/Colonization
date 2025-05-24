@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         public Human Player { get; }
         public Satan Satan { get; }
 
-        public Players(Settings settings, GameLoop game, GameplayStorage storage)
+        public Players(Settings settings, Game game, GameplayStorage storage)
         {
             HumanStorage[] playerStorages = storage.Humans;
             Human[] humans = new Human[PlayerId.HumansCount];
@@ -62,6 +62,7 @@ namespace Vurbiri.Colonization
             public BuffsScriptable artefact;
             public Transform actorsContainer;
 
+            public Score score;
             public Hexagons hexagons;
             public Crossroads crossroads;
 

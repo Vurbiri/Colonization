@@ -13,18 +13,18 @@ namespace Vurbiri.EntryPoint.Editor
         private const string MENU_NAME_SET = "Set Execution Order", MENU_COMMAND_SET = MENU + MENU_NAME_SET;
         private const string MENU_NAME_AUTO = "Auto", MENU_COMMAND_AUTO = MENU + MENU_NAME_AUTO;
         private const string CS_EXT = ".cs";
-        private const string KEY_SAVE = "EPEO_AUTO";
         #endregion
 
         private static bool s_isAuto = true;
+        private static readonly string s_key_save = Application.productName + "_EPEO_AUTO";
 
         private static readonly Type s_monoType = typeof(MonoBehaviour);
         private static readonly Type s_sceneType = typeof(ASceneEntryPoint), _projectType = typeof(AProjectEntryPoint);
 
         static EntryPointExecutionOrder()
         {
-            if (EditorPrefs.HasKey(KEY_SAVE))
-                s_isAuto = EditorPrefs.GetBool(KEY_SAVE);
+            if (EditorPrefs.HasKey(s_key_save))
+                s_isAuto = EditorPrefs.GetBool(s_key_save);
         }
 
         [MenuItem(MENU_COMMAND_SET)]
@@ -41,7 +41,7 @@ namespace Vurbiri.EntryPoint.Editor
         {
             s_isAuto = !s_isAuto;
 
-            EditorPrefs.SetBool(KEY_SAVE, s_isAuto);
+            EditorPrefs.SetBool(s_key_save, s_isAuto);
             SetChecked();
             Log();
         }
@@ -106,7 +106,7 @@ namespace Vurbiri.EntryPoint.Editor
         {
             string state = s_isAuto ? "Enable" : "Disable";
             string color = s_isAuto ? "green" : "red";
-            Debug.Log($"<color={color}>[EntryPointExecutionOrder] <b>{state}<b></color>");
+            Debug.Log($"<color={color}>[EntryPointExecutionOrder] <b>{state}</b></color>");
         }
     }
 }

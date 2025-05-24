@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
         private readonly ExchangeRate _exchange;
         private readonly Prices _prices;
 
-        private readonly PlayerScore _score;
+        private readonly Score _score;
 
         private readonly Edifices _edifices;
         private readonly Roads _roads;
@@ -51,9 +51,9 @@ namespace Vurbiri.Colonization
         {
             _id = playerId;
             _isPlayer = playerId == PlayerId.Player;
+            _score = settings.score;
             _coroutines = SceneContainer.Get<Coroutines>();
-            _score = SceneContainer.Get<Id<PlayerId>, PlayerScore >(playerId);
-
+            
             var loadData = storage.LoadData;
             var visual = SceneContainer.Get<HumansMaterials>()[playerId];
 
@@ -180,7 +180,7 @@ namespace Vurbiri.Colonization
                 _edifices.edifices[crossroad.GroupId].AddOrChange(crossroad);
 
                 _resources.Pay(_prices.Edifices[edificeId]);
-                _score.Build(edificeId);
+                _score.Build(_id.Value, edificeId);
             }
         }
 
@@ -246,12 +246,12 @@ namespace Vurbiri.Colonization
         {
             if (target == PlayerId.Satan)
             {
-                _score.DemonKill(actorId);
+                _score.DemonKill(_id.Value, actorId);
                 _resources.AddBlood(actorId + 1);
             }
             else if (target != _id)
             {
-                _score.WarriorKill(actorId);
+                _score.WarriorKill(_id.Value, actorId);
             }
         }
     }

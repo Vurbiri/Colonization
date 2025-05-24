@@ -8,6 +8,12 @@ namespace Vurbiri.Colonization
     {
         protected readonly IdArray<GameModeId, ChangingGameMode> _changingGameModes = new();
 
+        protected GameEvents() 
+        {
+            for (int i = 0; i < GameModeId.Count; i++)
+                _changingGameModes[i] += (_, _) => { };
+        }
+
         public void Subscribe(Id<GameModeId> gameMode, ChangingGameMode onChanging) => _changingGameModes[gameMode] += onChanging;
 
     }

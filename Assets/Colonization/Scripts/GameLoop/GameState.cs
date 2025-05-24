@@ -4,12 +4,12 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
+    using static SAVE_KEYS;
+
     public partial class GameState : IReactive<GameState>
     {
         private bool _isLoad;
         private int _maxScore;
-        private readonly int[] _score;
-        private readonly ScoreSettings _scoreSettings;
         private bool _isFirstStart;
 
         private ProjectStorage _storage;
@@ -20,22 +20,31 @@ namespace Vurbiri.Colonization
             get => _isLoad;
             set { if (!value) Reset(); else _isLoad = true; }
         }
+        public int MaxScore
+        {
+            get => _maxScore;
+            set
+            {
+                if(value > _maxScore)
+                {
+                    _maxScore = value;
+                    _storage.Set(GAME_STATE, this);
+                }
+            }
+        }
 
         public bool IsFirstStart => _isFirstStart;
+        public AStorage Storage => _storage;
 
         private GameState()
         {
             _isLoad = false;
-            _score = new int[PlayerId.HumansCount];
-            _scoreSettings = SettingsFile.Load<ScoreSettings>();
             _isFirstStart = true;
         }
-        private GameState(bool isLoad, int maxScore, int[] score)
+        private GameState(bool isLoad, int maxScore)
         {
             _isLoad = isLoad;
             _maxScore = maxScore;
-            _score = score;
-            _scoreSettings = SettingsFile.Load<ScoreSettings>();
             _isFirstStart = false;
         }
 
@@ -46,47 +55,39 @@ namespace Vurbiri.Colonization
                 instance = new();
                 storage.BindGameState(instance, true);
             }
-
-            diContainer.AddInstance(instance);
-            diContainer.AddFactory<Id<PlayerId>, PlayerScore>(instance.GetPlayerScore);
             instance._storage = storage;
 
-            return instance;
+            return diContainer.AddInstance(instance);
         }
 
         public Unsubscription Subscribe(Action<GameState> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
-
-        public bool TryGetGame(out GameLoop game)
-        {
-            game = null;
-            return _isLoad && _storage.TryGet(SAVE_KEYS.GAME, out game);
-        }
-        public void SaveGame(GameLoop game) => _storage.Save(SAVE_KEYS.GAME, game);
-
         public void Start()
         {
             _isLoad = true;
-            _storage.Set(SAVE_KEYS.GAME_STATE, this);
+            _storage.Set(GAME_STATE, this);
         }
 
         public void Reset()
         {
             _isLoad = false;
-            _maxScore = Math.Max(_maxScore, _score[PlayerId.Player]);
-            for (int i = 0; i < PlayerId.HumansCount; i++)
-                _score[i] = 0;
             _isFirstStart = false;
 
             _storage.Clear();
-            _storage.Save(SAVE_KEYS.GAME_STATE, this);
+            _storage.Save(GAME_STATE, this);
         }
 
-        private PlayerScore GetPlayerScore(Id<PlayerId> id)
+        public bool TryGetGame(out Game game)
         {
-            PlayerScore playerScore = new(id.Value, _score, _scoreSettings);
-            playerScore.Subscribe(_ => _eventChanged.Invoke(this), false);
-            return playerScore;
+            game = null;
+            return _isLoad && _storage.TryGet(GAME, out game);
+        }
+        public int[] GetScoreData(int defaultSize)
+        {
+            if (_isLoad && _storage.TryGet(SCORE, out int[] data))
+                return data;
+
+            return new int[defaultSize];
         }
     }
 }
