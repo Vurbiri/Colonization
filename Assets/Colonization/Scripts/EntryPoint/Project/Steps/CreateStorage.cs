@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Project\Steps\CreateStorage.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,11 +46,11 @@ namespace Vurbiri.Colonization.EntryPoint
             {
                 bool result = false;
                 yield return storage.Load_Cn((b) => result = b);
-                Message.Log(result ? "Сохранения загружены" : "Сохранения не найдены");
+                Message.Log(result ? "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" : "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
             }
             else
             {
-                Message.Log("StorageService не определён");
+                Message.Log("StorageService пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
             }
 
             _diContainer.ReplaceInstance(storage);

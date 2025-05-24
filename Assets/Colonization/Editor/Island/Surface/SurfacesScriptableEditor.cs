@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Island\Surface\SurfacesScriptableEditor.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

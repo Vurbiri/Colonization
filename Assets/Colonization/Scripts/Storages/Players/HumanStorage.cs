@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\Players\HumanStorage.cs
 using System.Collections.Generic;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;

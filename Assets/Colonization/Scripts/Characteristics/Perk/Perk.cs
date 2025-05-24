@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Perk\Perk.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Characteristics

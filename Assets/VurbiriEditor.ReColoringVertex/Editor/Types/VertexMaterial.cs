@@ -1,4 +1,3 @@
-//Assets\VurbiriEditor.ReColoringVertex\Editor\Types\VertexMaterial.cs
 using System;
 using UnityEngine;
 

@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\UtilityEditor\STYLES.cs
 using UnityEditor;
 using UnityEngine;
 

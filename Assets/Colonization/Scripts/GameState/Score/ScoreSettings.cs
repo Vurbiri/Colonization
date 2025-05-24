@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Score\ScoreSettings.cs
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 

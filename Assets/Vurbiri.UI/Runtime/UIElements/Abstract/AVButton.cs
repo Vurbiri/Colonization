@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Abstract\AVButton.cs
 using System;
 using System.Collections;
 using UnityEngine;

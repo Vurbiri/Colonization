@@ -1,4 +1,3 @@
-//Assets\Vurbiri.International\Runtime\Utility\CONST_L.cs
 namespace Vurbiri.International
 {
     public static class CONST_L

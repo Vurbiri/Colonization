@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Types\Collections\IdCollections\Abstract\ADrawerGetConstFieldName.cs
 using System;
 using System.Reflection;
 using UnityEditor;

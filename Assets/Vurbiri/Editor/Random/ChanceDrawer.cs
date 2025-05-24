@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Random\ChanceDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

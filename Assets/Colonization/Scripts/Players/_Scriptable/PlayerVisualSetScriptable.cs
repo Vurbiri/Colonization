@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Players\_Scriptable\PlayerVisualSetScriptable.cs
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 

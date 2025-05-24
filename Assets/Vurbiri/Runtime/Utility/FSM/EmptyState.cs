@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\FSM\EmptyState.cs
 namespace Vurbiri.FSM
 {
     public class EmptyState : AState

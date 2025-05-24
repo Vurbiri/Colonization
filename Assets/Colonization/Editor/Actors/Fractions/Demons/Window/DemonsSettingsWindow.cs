@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Actors\Fractions\Demons\Window\DemonsSettingsWindow.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;

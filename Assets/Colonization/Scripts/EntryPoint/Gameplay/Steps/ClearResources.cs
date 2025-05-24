@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Gameplay\Steps\ClearResources.cs
 using System;
 using System.Collections;
 using UnityEngine;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\HitEffects\Abstract\AHitEffect.cs
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics

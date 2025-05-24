@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\SatanAbilities.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     [System.Serializable]

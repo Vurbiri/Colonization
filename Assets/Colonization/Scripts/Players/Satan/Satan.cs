@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Players\Satan\Satan.cs
 using System;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Actors;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Project\Steps\EndLoadScene.cs
 using System.Collections;
 using UnityEngine;
 using Vurbiri.EntryPoint;

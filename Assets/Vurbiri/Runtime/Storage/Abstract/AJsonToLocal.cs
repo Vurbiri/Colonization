@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Storage\Abstract\AJsonToLocal.cs
 using System;
 using UnityEngine;
 

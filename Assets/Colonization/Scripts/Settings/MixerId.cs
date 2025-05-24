@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Settings\MixerId.cs
 namespace Vurbiri.Colonization
 {
     public abstract class MixerId : IdType<MixerId>

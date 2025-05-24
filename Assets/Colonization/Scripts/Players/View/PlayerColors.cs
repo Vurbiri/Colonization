@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Players\View\PlayerColors.cs
 using System;
 using UnityEngine;
 using Vurbiri.Reactive;

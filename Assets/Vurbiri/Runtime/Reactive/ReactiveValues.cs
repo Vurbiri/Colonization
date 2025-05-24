@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Reactive\ReactiveValues.cs
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

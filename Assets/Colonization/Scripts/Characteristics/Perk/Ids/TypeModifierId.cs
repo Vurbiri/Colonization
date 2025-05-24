@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Perk\Ids\TypeModifierId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class TypeModifierId : IdType<TypeModifierId>

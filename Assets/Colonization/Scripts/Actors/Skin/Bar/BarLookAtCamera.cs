@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\Bar\BarLookAtCamera.cs
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
 

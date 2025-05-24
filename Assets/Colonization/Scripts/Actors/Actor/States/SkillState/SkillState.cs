@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Actor\States\SkillState\SkillState.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

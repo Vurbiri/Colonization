@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Utility\Files.cs
 namespace Vurbiri.Colonization
 {
 	public static class Files

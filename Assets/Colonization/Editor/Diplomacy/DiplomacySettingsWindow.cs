@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Diplomacy\DiplomacySettingsWindow.cs
 using UnityEditor;
 using Vurbiri.Colonization;
 using static VurbiriEditor.Colonization.CONST_EDITOR;

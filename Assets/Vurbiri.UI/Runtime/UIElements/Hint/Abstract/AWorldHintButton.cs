@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Hint\Abstract\AWorldHintButton.cs
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\Banners\Banners.cs
 using UnityEngine;
 
 namespace Vurbiri

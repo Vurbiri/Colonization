@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\Extensions\ExtensionsLayerMask.cs
 using UnityEngine;
 
 namespace Vurbiri

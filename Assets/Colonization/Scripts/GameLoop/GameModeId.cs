@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\GameLoop\GameModeId.cs
 namespace Vurbiri.Colonization
 {
     public abstract class GameModeId : IdType<GameModeId>

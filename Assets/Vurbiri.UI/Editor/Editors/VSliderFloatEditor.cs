@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Editor\Editors\VSliderEditor.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.UI;

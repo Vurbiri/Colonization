@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EventBus\GameplayEventBus.cs
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
 

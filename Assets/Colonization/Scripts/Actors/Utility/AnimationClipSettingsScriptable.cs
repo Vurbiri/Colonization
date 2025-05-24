@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Utility\AnimationClipSettingsScriptable.cs
 #if UNITY_EDITOR
 
 using UnityEngine;

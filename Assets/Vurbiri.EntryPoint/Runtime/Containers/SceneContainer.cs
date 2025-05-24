@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Runtime\Containers\SceneContainer.cs
 namespace Vurbiri
 {
     public class SceneContainer

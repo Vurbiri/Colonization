@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Editor\PlayerPanels_Editor.cs
 #if UNITY_EDITOR
 
 using UnityEngine;

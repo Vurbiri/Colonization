@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Currencies\Profit\ProfitArray.cs
 using System.Collections.Generic;
 using UnityEngine;
 

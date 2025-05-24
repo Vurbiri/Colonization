@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\SFX\Abstract\AActorSFX.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Utility\ScaleBlock.cs
 using System;
 using UnityEngine;
 

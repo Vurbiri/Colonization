@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Reactive\UniSigner\UniSignerDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Reactive;

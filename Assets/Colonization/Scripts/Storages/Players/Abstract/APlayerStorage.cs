@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\Players\Abstract\APlayerStorage.cs
 using System;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Actors;

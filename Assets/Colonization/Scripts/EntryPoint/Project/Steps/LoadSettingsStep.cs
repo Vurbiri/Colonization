@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Project\Steps\LoadSettingsStep.cs
 using System.Collections;
 using Vurbiri.Colonization.Storage;
 

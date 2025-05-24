@@ -1,4 +1,3 @@
-//Assets\Vurbiri.MeshCreated\Primitives\Triangle.cs
 using System.Collections.Generic;
 using UnityEngine;
 

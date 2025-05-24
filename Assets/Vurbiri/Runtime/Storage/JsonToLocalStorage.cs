@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Storage\JsonToLocalStorage.cs
 using UnityEngine;
 
 namespace Vurbiri

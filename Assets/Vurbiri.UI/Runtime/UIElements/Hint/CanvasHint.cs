@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Hint\CanvasHint.cs
 using UnityEngine;
 
 namespace Vurbiri.UI

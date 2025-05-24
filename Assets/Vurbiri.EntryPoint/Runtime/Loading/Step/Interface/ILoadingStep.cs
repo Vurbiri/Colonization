@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Runtime\Loading\Step\Interface\ILoadingStep.cs
 using System.Collections;
 
 namespace Vurbiri.EntryPoint

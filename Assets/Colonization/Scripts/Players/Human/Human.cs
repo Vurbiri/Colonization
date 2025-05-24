@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Players\Player\Human.cs
 using System;
 using System.Collections;
 using Vurbiri.Colonization.Actors;
@@ -132,7 +131,7 @@ namespace Vurbiri.Colonization
 
         public void Profit(Id<PlayerId> id, int hexId)
         {
-            if(_id == id)
+            if(id == PlayerId.Satan)
                 _resources.AddBlood(_edifices.ShrinePassiveProfit);
 
             if (hexId == CONST.GATE_ID)

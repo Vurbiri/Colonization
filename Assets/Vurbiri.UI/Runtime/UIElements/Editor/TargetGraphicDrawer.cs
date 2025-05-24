@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Editor\TargetGraphicDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using static UnityEditor.EditorGUI;

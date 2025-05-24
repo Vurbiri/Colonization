@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Skills\Skills.cs
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

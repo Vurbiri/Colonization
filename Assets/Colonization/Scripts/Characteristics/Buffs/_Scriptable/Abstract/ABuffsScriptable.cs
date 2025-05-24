@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Buffs\_Scriptable\Abstract\ABuffsScriptable.cs
 using System.Collections.Generic;
 using UnityEngine;
 

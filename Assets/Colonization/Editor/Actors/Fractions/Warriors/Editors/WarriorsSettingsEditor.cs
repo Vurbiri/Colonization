@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Actors\Fractions\Warriors\Editors\WarriorsSettingsEditor.cs
 using UnityEditor;
 using UnityEngine.UIElements;
 using Vurbiri.Colonization.Actors;

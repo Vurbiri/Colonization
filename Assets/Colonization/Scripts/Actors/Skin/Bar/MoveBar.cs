@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\Bar\MoveBar.cs
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;

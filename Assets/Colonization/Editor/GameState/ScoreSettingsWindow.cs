@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\GameState\ScoreSettingsWindow.cs
 using UnityEditor;
 using Vurbiri.Colonization;
 using static VurbiriEditor.Colonization.CONST_EDITOR;

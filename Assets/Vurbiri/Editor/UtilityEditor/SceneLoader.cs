@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\UtilityEditor\SceneLoader.cs
 using System;
 using UnityEditor;
 using UnityEditor.SceneManagement;

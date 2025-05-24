@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Web\Yandex\YandexSDK.cs
 #if !UNITY_EDITOR
 using System.Collections;
 #endif

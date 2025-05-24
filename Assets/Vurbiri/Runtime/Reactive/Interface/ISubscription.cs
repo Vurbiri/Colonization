@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\Interface\ISubscriber.cs
 using System;
 
 namespace Vurbiri.Reactive

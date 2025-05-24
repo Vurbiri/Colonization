@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\Effect.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public class Effect : IPerk

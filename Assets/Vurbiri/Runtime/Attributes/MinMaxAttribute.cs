@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Random\Attributes\MinMaxAttribute.cs
 using System;
 using UnityEngine;
 

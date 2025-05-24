@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\Utility\Version.cs
 using UnityEngine;
 
 namespace Vurbiri.UI

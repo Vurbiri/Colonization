@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Currencies\Profit\ProfitSingle.cs
 namespace Vurbiri.Colonization
 {
     public class ProfitSingle : IProfit

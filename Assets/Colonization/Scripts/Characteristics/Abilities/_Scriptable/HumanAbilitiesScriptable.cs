@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\_Scriptable\HumanAbilitiesScriptable.cs
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Reactive;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Abstract\ATogglePanel.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

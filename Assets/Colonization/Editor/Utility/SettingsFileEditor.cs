@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Utility\SettingsFileEditor.cs
 using Newtonsoft.Json;
 using System;
 using System.IO;

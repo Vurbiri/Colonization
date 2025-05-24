@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Runtime\Loading\Step\LoadSceneStep.cs
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

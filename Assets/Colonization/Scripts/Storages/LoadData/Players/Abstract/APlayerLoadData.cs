@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\LoadData\Players\Abstract\APlayerLoadData.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Storage

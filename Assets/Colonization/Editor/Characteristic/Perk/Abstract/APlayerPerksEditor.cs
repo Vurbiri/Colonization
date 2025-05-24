@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Characteristic\Perk\Abstract\APlayerPerksEditor.cs
 using System;
 using System.Collections.Generic;
 using System.Reflection;

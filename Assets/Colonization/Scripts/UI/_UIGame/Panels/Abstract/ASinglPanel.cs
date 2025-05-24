@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Abstract\ASinglyPanel.cs
 using UnityEngine;
 using UnityEngine.UI;
 

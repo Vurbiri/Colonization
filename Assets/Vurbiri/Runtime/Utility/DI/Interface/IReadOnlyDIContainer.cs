@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\DI\Interface\IReadOnlyDIContainer.cs
 namespace Vurbiri
 {
     public interface IReadOnlyDIContainer

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Surface\Village.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Skills\SkillSettings.cs
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;

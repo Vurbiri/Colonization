@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Edifices\EdificeSettings.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

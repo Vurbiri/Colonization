@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\Exception\Errors.cs
 using Newtonsoft.Json;
 using System;
 

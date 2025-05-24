@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\ActorSkin_Editor.cs
 #if UNITY_EDITOR
 
 using System;

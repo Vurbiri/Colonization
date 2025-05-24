@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\States\ReactState.cs
 namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin

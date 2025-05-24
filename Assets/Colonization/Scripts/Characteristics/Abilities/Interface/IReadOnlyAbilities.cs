@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\Interface\IReadOnlyAbilities.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Characteristics

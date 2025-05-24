@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Editor\Editors\VBarIntEditor.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.UI;

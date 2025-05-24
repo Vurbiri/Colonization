@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\Message.cs
 namespace Vurbiri
 {
     public enum MessageType

@@ -1,4 +1,3 @@
-//Assets\VurbiriEditor.ReColoringVertex\Editor\Drawers\PaletteVertexScriptableEditor.cs
 using UnityEditor;
 using UnityEngine;
 

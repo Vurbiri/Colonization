@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\AbilitiesSet.cs
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;

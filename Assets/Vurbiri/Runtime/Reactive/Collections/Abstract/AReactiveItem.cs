@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\Collections\Abstract\AReactiveItem.cs
 using System;
 
 namespace Vurbiri.Reactive.Collections

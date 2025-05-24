@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\Converters\CrossroadConverter.cs
 using Newtonsoft.Json;
 using System;
 using Vurbiri.Colonization.Storage;

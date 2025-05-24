@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\Converters\PlayerColorsConverter.cs
 using Newtonsoft.Json;
 using System;
 using UnityEngine;

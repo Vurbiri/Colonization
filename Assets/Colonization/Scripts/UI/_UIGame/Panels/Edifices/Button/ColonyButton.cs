@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Edifices\Button\ColonyButton.cs
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;

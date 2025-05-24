@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\VButton.cs
 using UnityEngine;
 
 namespace Vurbiri.UI

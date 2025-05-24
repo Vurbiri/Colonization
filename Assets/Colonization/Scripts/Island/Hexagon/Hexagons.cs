@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Hexagon\Hexagons.cs
 using System;
 using System.Collections.Generic;
 using Vurbiri.Reactive;

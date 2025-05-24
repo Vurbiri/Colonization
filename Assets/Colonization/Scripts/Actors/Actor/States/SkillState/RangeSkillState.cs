@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Actor\States\SkillState\RangeSkillState.cs
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Characteristics;

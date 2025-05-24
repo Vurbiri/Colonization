@@ -1,4 +1,3 @@
-//Assets\VurbiriEditor.ReColoringVertex\Editor\CONST_RCV.cs
 using System;
 using UnityEngine;
 

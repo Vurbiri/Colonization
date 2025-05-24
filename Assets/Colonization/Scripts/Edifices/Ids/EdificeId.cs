@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Edifices\Ids\EdificeId.cs
 namespace Vurbiri.Colonization
 {
     public abstract class EdificeId : IdType<EdificeId>

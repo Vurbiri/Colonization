@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Singleton\AClosedSingleton.cs
 using UnityEngine;
 
 namespace Vurbiri

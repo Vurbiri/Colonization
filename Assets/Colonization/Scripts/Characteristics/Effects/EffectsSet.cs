@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\EffectsSet.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

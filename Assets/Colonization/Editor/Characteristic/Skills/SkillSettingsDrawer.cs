@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Characteristic\Skills\SkillSettingsDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
@@ -132,7 +131,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                             _position.y += _height * HitEffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j), j);
                     }
                     if (effectsProperty.isExpanded)
-                        _position.y += _height * 1.8f; // "+ -" панель
+                        _position.y += _height * 1.8f; // "+ -" пїЅпїЅпїЅпїЅпїЅпїЅ
                 }
                 
             }

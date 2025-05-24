@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\UniSigner\Listener.cs
 using System;
 
 namespace Vurbiri.Reactive

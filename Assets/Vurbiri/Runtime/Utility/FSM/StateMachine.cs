@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\FSM\StateMachine.cs
 namespace Vurbiri.FSM
 {
     public class StateMachine : StateMachine<AState>

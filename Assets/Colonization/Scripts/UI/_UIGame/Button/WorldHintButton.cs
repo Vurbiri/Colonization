@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Button\WorldHintButton.cs
 using System;
 using UnityEngine;
 using Vurbiri.International;

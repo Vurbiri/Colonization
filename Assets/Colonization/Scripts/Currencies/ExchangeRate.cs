@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Currencies\ExchangeRate.cs
 using System;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;

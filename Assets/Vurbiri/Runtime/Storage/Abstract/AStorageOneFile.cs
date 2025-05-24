@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Storage\Abstract\AStorageOneFile.cs
 using Newtonsoft.Json;
 using System;
 using System.Collections;

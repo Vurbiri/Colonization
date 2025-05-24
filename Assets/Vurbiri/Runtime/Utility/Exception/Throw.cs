@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\Exception\Throw.cs
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;

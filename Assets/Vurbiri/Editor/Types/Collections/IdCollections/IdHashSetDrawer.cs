@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Types\Collections\IdCollections\IdHashSetDrawer.cs
 using System;
 using System.Collections.Generic;
 using UnityEditor;

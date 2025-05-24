@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Types\Collections\IdCollections\IdArrayDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Collections;

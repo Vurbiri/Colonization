@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\UniSigner\Abstract\AListener.cs
 using System;
 using System.Reflection;
 using UnityEngine;

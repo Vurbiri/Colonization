@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Attributes\MinMaxDrawer.cs
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;

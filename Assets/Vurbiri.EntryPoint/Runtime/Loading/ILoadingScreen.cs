@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Runtime\Loading\ILoadingScreen.cs
 using System.Collections;
 
 namespace Vurbiri.EntryPoint

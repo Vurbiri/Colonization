@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\UtilityEditor\ScriptTemplatesKeywords.cs
 using System.IO;
 using UnityEditor;
 using UnityEngine;

@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Reactive\Interface\IReactive.cs
 using System;
 
 namespace Vurbiri.Reactive

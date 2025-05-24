@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Edifices\Button\PortButton.cs
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;

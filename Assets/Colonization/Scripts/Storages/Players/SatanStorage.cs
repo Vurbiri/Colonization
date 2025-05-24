@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\Players\SatanStorage.cs
 using System.Collections.Generic;
 using Vurbiri.Reactive;
 

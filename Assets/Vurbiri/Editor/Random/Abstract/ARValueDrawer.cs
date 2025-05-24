@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Random\Abstract\ARValueDrawer.cs
 using UnityEditor;
 using UnityEngine;
 

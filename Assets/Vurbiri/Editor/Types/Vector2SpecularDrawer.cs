@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\ReColoringVertex\Drawers\Vector2SpecularDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

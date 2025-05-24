@@ -1,4 +1,3 @@
-//Assets\Vurbiri.International\Editor\Scripts\LanguageFiles\LanguageFilesScriptable.cs
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;

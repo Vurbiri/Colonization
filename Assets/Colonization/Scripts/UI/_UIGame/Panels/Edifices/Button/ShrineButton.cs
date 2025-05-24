@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Edifices\Button\ShrineButton.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.UI

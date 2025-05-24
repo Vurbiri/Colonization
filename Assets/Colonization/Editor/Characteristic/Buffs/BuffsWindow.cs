@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Characteristic\Buffs\BuffsWindow.cs
 using UnityEditor;
 using Vurbiri.Colonization.Characteristics;
 

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\Bar\EffectsUI\EffectsBarPanel.cs
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;

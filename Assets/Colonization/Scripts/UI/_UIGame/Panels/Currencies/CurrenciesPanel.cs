@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\CurrenciesPanel.cs
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.UI;

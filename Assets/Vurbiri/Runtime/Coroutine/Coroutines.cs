@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Coroutine\Coroutines.cs
 using System;
 using System.Collections;
 using UnityEngine;

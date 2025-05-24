@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Surface\_Scriptable\SurfacesScriptable.cs
 using UnityEngine;
 using Vurbiri.Collections;
 

@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Random\Attributes\MaxAttribute.cs
 using System;
 
 namespace Vurbiri

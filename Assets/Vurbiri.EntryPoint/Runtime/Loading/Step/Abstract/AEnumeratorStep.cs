@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Runtime\Loading\Step\Abstract\AEnumeratorStep.cs
 using System.Collections;
 
 namespace Vurbiri.EntryPoint

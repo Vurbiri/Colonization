@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\ChanceAbility.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     sealed public class ChanceAbility<TId> : Ability<TId> where TId : AbilityId<TId>

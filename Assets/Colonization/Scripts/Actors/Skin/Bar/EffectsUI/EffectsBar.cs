@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\Bar\EffectsUI\EffectsBar.cs
 using System;
 using TMPro;
 using UnityEngine;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Players\PlayerColorsDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization;

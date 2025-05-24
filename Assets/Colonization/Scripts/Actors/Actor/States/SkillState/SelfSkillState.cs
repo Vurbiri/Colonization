@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Actor\States\SkillState\SelfBuffState.cs
 namespace Vurbiri.Colonization.Actors
 {
     using Characteristics;

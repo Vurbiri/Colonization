@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\SFX\Hit\HitRangeParticleSFX.cs
 using System.Collections;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;

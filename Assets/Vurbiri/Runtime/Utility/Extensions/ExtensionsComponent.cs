@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\Extensions\ExtensionsComponent.cs
 using UnityEngine;
 
 namespace Vurbiri

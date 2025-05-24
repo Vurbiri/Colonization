@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\Behaviours\Abstract\AExitBehaviour.cs
 using System;
 using UnityEngine;
 

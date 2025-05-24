@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\Utility\RaycastTargetObject.cs
 using UnityEngine;
 using UnityEngine.UI;
 

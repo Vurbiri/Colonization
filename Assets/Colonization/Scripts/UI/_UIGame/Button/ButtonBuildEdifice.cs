@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Button\ButtonBuildEdifice.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;

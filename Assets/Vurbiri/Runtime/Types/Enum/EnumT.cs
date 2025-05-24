@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Enum\EnumT.cs
 using System;
 
 namespace Vurbiri

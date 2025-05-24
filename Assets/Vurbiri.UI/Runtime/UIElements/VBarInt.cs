@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\VBarInt.cs
 using UnityEngine;
 
 namespace Vurbiri.UI

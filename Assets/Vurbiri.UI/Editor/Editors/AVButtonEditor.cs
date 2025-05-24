@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Editor\Editors\AVButtonEditor.cs
 using System.Collections.Generic;
 using UnityEditor;
 using Vurbiri.UI;

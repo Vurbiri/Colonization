@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\UtilityEditor\AllRendererWindow.cs
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;

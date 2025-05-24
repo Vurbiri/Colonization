@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\Converters\Road\RoadConverter.cs
 using Newtonsoft.Json;
 
 namespace Vurbiri.Colonization

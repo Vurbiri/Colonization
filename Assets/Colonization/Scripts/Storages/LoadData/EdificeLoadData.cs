@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\LoadData\EdificeLoadData.cs
 using Newtonsoft.Json;
 
 namespace Vurbiri.Colonization.Storage

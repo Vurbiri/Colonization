@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Coroutine\WaitResult.cs
 using UnityEngine;
 
 namespace Vurbiri

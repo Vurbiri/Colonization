@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\Pool\IPooledObject.cs
 using UnityEngine;
 
 namespace Vurbiri

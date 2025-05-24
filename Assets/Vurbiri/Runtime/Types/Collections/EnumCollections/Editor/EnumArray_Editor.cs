@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Collections\EnumCollections\Editor\EnumArray_Editor.cs
 #if UNITY_EDITOR
 
 using System;

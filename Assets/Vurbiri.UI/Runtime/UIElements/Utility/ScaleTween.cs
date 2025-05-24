@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Utility\ScaleTween.cs
 using System.Collections;
 using UnityEngine;
 

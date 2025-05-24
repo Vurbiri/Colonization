@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\TemporaryEffects\TargetTemporaryEffect.cs
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics

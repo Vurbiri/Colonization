@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Types\Collections\EnumCollections\EnumArrayDrawer.cs
 using System;
 using UnityEditor;
 using UnityEngine;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\LoadData\Players\SatanState.cs
 using Newtonsoft.Json;
 
 namespace Vurbiri.Colonization.Storage

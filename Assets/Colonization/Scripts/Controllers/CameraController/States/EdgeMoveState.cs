@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Controllers\CameraController\States\EdgeMoveState.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Controllers

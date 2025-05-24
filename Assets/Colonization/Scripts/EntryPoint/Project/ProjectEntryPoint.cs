@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Project\ProjectEntryPoint.cs
 using Vurbiri.EntryPoint;
 using Vurbiri.International;
 

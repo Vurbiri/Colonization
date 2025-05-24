@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\Collections\ListReactiveItems.cs
 using Newtonsoft.Json;
 using System;
 using System.Collections;

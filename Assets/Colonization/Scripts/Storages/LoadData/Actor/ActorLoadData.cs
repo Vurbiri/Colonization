@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\LoadData\Actor\ActorLoadData.cs
 using Newtonsoft.Json;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;

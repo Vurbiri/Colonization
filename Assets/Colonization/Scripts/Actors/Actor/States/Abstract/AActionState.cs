@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Actor\States\Abstract\AActionState.cs
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors

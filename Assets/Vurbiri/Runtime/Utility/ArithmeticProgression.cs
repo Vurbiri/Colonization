@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\ArithmeticProgression.cs
 namespace Vurbiri
 {
     public class ArithmeticProgression

@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Utility\LandMeshSave.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

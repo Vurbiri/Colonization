@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Types\Reactive\ReactiveValueDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Reactive;

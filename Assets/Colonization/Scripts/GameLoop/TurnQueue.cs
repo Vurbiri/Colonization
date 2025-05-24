@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\GameLoop\TurnQueue.cs
 namespace Vurbiri.Colonization
 {
     public struct TurnQueue

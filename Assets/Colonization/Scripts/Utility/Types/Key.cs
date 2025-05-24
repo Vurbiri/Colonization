@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Utility\Types\Key.cs
 using Newtonsoft.Json;
 using System;
 using UnityEngine;

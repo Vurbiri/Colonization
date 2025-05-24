@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Formulas.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public static class Formulas

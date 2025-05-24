@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\States\Abstract\ASkinState.cs
 using UnityEngine;
 using Vurbiri.FSM;
 

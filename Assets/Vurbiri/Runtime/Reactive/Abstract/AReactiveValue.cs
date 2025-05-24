@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\Abstract\AReactiveValue.cs
 using System;
 
 namespace Vurbiri.Reactive

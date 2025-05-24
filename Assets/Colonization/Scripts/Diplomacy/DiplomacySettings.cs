@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Diplomacy\DiplomacySettings.cs
 namespace Vurbiri.Colonization
 {
     [System.Serializable]

@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Utility\TransitionEffects\SwitchEffect.cs
 using UnityEngine;
 using UnityEngine.UI;
 

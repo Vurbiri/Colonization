@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Editor\Editors\VToggleGroupEditor.cs
 using UnityEditor;
 using Vurbiri.UI;
 

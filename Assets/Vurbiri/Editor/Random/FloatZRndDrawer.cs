@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Random\FloatZRndDrawer.cs
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;

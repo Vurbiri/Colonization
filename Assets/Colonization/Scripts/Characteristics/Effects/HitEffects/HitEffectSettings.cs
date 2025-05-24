@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\HitEffects\HitEffectSettings.cs
 using UnityEngine;
 using Vurbiri.Colonization.UI;
 

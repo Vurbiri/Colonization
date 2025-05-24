@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Editor\Utility\TargetGraphicProperty.cs
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;

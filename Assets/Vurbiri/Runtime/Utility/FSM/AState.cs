@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Utility\FSM\AState.cs
 namespace Vurbiri.FSM
 {
     public abstract class AState : IState

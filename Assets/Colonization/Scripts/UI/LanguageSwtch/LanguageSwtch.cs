@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\LanguageSwtch\LanguageSwitch.cs
 using UnityEngine;
 using Vurbiri.UI;
 

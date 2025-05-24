@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Actors\Utility\ActorUtility.cs
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Warriors\WarriorButton.cs
 using System;
 using System.Collections;
 using TMPro;

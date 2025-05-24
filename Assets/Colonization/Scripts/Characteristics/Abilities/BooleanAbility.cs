@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\BooleanAbility.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     sealed public class BooleanAbility<TId> : AAbilitySettable<TId> where TId : AbilityId<TId>

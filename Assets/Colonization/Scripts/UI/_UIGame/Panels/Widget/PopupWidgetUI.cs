@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\PopupWidgetUI.cs
 using System.Collections;
 using TMPro;
 using UnityEngine;

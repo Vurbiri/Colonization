@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Fractions\Demons\DemonsSpawner.cs
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\Converters\GameStateConvrter.cs
 using Newtonsoft.Json;
 using System;
 

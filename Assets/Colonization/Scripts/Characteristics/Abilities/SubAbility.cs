@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\SubAbility.cs
 using System;
 using Vurbiri.Collections;
 

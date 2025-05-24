@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Collections\IdCollections\IdArray.cs
 using Newtonsoft.Json;
 using System;
 using System.Collections;

@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Coroutine\WaitFrames.cs
 namespace Vurbiri
 {
     public class WaitFrames : UnityEngine.CustomYieldInstruction

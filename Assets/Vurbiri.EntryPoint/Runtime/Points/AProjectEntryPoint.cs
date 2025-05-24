@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Runtime\Points\AProjectEntryPoint.cs
 using UnityEngine;
 
 namespace Vurbiri.EntryPoint

@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\Types\Abstract\ARType.cs
 using Newtonsoft.Json;
 using System;
 using System.Runtime.CompilerServices;

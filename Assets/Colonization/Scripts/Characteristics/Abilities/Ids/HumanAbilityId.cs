@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\Ids\HumanAbilityId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public class HumanAbilityId : AbilityId<HumanAbilityId>

@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Reactive\ReactiveCombination.cs
 using System;
 
 namespace Vurbiri.Reactive

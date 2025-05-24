@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Utility\Interfaces\ICancel.cs
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization

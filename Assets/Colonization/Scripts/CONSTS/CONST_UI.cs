@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\CONSTS\CONST_UI.cs
 namespace Vurbiri.Colonization.UI
 {
     public static class CONST_UI

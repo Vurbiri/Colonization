@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Random\IntRnd.cs
 using UnityEngine;
 
 namespace Vurbiri

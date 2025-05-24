@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Perk\_Scriptable\EconomicPerksScriptable.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     //[CreateAssetMenu(fileName = "EconomicPerks", menuName = "Vurbiri/Colonization/Characteristics/Perks/Economic", order = 51)]

@@ -1,4 +1,3 @@
-//Assets\Vurbiri.International\Runtime\Utility\FileIds.cs
 using System;
 using UnityEngine;
 

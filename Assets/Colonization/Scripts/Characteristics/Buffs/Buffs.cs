@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Buffs\Buffs.cs
 using System.Collections.Generic;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;

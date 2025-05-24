@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\Editor\VUI_CONST_ED.cs
 namespace Vurbiri.UI
 {
     public static class VUI_CONST_ED

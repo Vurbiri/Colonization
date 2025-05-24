@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Utility\Extensions\ExtensionsMaterial.cs
 using UnityEngine;
 
 public static class ExtensionsMaterial

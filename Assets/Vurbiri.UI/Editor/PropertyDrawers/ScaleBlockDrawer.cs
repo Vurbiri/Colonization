@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Editor\PropertyDrawers\ScaleBlockDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using static UnityEditor.EditorGUI;

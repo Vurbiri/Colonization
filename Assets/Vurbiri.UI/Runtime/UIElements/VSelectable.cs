@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\VSelectable.cs
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Characteristic\Abilities\Windows\SatanAbilitiesWindow.cs
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;

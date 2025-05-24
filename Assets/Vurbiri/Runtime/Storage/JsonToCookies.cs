@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Storage\JsonToCookies.cs
 using UnityEngine;
 
 namespace Vurbiri

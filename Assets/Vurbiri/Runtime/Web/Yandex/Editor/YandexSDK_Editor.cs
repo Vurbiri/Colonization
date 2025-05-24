@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Web\Yandex\Editor\YandexSDK_Editor.cs
 #if UNITY_EDITOR
 
 using System.Collections.Generic;

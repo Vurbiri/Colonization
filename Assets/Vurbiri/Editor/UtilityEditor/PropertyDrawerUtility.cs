@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\UtilityEditor\PropertyDrawerUtility.cs
 using System;
 using System.Collections.Generic;
 using UnityEditor;

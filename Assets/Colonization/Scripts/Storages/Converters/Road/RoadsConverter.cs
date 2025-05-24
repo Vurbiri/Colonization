@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\Converters\Road\RoadsConverter.cs
 using Newtonsoft.Json;
 using System;
 

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Edifices\ShrinesPanel.cs
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;

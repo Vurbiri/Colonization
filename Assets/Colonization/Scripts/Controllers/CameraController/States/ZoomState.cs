@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Controllers\CameraController\States\ZoomState.cs
 using System.Collections;
 using UnityEngine;
 

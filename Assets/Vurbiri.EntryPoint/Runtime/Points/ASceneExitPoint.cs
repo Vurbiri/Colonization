@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Runtime\Points\ASceneExitPoint.cs
 using Vurbiri.Reactive;
 
 namespace Vurbiri.EntryPoint

@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Utility\Abstract\ASettingsWindow.cs
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;

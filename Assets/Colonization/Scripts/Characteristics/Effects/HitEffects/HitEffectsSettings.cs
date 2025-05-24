@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\HitEffects\HitEffectsSettings.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;

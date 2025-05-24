@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\Abstract\AAbilityChange.cs
 using System;
 
 namespace Vurbiri.Colonization.Characteristics

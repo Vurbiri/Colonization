@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Reactive\Interface\IReactiveValue.cs
 namespace Vurbiri.Reactive
 {
     public interface IReactiveValue<out T> : IReactive<T>

@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\Collections\Interface\IReactiveCollections.cs
 using System;
 using System.Collections.Generic;
 

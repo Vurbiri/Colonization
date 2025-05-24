@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Enum\EnumFilter.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

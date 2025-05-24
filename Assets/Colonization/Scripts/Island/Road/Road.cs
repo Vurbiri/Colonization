@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Road\Road.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\Abstract\AHintWidget.cs
 using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;

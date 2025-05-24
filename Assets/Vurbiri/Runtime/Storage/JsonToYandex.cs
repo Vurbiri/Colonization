@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Storage\JsonToYandex.cs
 using UnityEngine;
 
 namespace Vurbiri

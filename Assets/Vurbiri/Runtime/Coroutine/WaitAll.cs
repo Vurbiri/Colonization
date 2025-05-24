@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Coroutine\WaitAll.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

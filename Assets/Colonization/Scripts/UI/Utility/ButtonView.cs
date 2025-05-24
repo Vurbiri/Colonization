@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\Utility\ButtonView.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.UI

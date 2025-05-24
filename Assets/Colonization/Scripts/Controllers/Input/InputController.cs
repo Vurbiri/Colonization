@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Controllers\Input\InputController.cs
 using System;
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;

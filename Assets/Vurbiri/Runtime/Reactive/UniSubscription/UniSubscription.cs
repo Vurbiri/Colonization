@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\UniSigner\UniSigner.cs
 using System;
 using UnityEngine;
 

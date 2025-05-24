@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Coroutine\Abstract\AWaitTime.cs
 namespace Vurbiri
 {
     [System.Serializable]

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\IslandCreator\HexCreator.cs
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 

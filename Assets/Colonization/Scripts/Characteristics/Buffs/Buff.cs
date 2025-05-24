@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Buffs\Buff.cs
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics

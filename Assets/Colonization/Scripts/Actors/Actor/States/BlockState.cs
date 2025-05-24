@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Actor\States\BlockState.cs
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 

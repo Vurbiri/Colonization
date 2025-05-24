@@ -1,4 +1,3 @@
-//Assets\Vurbiri.International\Editor\Scripts\LanguageFiles\LanguageFiles.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.International.Editor

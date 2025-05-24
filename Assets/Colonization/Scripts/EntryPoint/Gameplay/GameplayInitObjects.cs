@@ -1,4 +1,3 @@
-﻿//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayInitObjects.cs
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Storage;

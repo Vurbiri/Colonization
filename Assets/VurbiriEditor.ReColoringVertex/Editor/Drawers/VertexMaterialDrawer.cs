@@ -1,4 +1,3 @@
-//Assets\VurbiriEditor.ReColoringVertex\Editor\Drawers\VertexMaterialDrawer.cs
 using UnityEditor;
 using UnityEngine;
 

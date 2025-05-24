@@ -1,4 +1,3 @@
-﻿//Assets\Vurbiri\Editor\UtilityEditor\HierarchySeparator.cs
 using UnityEditor;
 using UnityEngine;
 

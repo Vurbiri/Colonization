@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Editor\Editors\VSelectableEditor.cs
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;

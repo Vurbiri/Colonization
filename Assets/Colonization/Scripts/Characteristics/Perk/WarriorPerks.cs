@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Perk\WarriorPerks.cs
 using System;
 using System.Collections.Generic;
 using Vurbiri.Reactive;

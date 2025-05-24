@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\EntryPoint\GameplayEntryPointWindow.cs
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\GameState\GameState.cs
 using System;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;

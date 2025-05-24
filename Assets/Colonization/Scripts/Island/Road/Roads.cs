@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Road\Roads.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

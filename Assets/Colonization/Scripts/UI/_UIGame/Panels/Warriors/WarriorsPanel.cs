@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Warriors\WarriorsPanel.cs
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;

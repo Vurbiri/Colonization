@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Abstract\ALocalizationLoadingStep.cs
 using System.Collections;
 using Vurbiri.EntryPoint;
 using Vurbiri.International;

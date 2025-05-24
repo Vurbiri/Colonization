@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\States\BoolSwitchState.cs
 namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin

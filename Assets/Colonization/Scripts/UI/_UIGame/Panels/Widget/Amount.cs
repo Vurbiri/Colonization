@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\Amount.cs
 using UnityEngine;
 using Vurbiri.International;
 using Vurbiri.Reactive;

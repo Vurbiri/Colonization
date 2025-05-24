@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Random\SysRandom.cs
 using System;
 
 namespace Vurbiri

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\CurrentMax.cs
 using Vurbiri.International;
 using Vurbiri.Reactive;
 using Vurbiri.UI;

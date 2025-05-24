@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\VBarArithmetic.cs
 using System;
 using UnityEngine;
 

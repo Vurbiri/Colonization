@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Currencies\CurrenciesLiteDrawer.cs
 namespace VurbiriEditor.Colonization
 {
     using UnityEditor;

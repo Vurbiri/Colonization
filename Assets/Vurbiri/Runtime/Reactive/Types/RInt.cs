@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\Types\RInt.cs
 using Newtonsoft.Json;
 using System;
 

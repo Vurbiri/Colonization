@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Web\Yandex\YMoney_DllImport.cs
 using System.Runtime.InteropServices;
 
 namespace Vurbiri

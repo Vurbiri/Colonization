@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\ActorInitData.cs
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Land\LandMesh.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\ProjectStorage.cs
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Storage

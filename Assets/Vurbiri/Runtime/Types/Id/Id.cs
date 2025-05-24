@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Id\Id.cs
 using Newtonsoft.Json;
 using System;
 using UnityEngine;

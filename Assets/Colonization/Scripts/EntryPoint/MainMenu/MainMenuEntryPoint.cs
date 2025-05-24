@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Menu\MenuEntryPoint.cs
 using System.Collections;
 using UnityEngine;
 using Vurbiri.EntryPoint;

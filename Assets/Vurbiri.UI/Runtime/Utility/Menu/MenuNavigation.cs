@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\Utility\Menu\MenuNavigation.cs
 using UnityEngine;
 using Vurbiri.Reactive;
 

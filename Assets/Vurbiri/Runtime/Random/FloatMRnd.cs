@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Random\FloatMRnd.cs
 using UnityEngine;
 
 namespace Vurbiri

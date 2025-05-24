@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Characteristics\Effects\ReflectEffectUI.cs
 using System.Text;
 using Vurbiri.International;
 

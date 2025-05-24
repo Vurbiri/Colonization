@@ -1,4 +1,3 @@
-//Assets\Vurbiri.International\Editor\Scripts\FileId\FileIdAndKeyDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using static UnityEditor.EditorGUI;

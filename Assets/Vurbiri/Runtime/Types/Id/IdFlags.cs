@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Id\IdFlags.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

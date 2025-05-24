@@ -1,4 +1,3 @@
-//Assets\Vurbiri.International\Editor\Scripts\InitDataCreate.cs
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;

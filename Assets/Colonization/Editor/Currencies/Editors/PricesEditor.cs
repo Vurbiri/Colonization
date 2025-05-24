@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Currencies\Editors\PricesEditor.cs
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;

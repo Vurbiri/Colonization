@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Characteristic\Abilities\Editors\HumanAbilitiesEditor.cs
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Abstract\APanelButton.cs
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;

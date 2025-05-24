@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\UtilityEditor\VurbiriEditorGUI.cs
 using UnityEditor;
 using UnityEngine;
 

@@ -1,4 +1,3 @@
-//Assets\Vurbiri.MeshCreated\BoundUV.cs
 using UnityEngine;
 
 namespace Vurbiri.CreatingMesh

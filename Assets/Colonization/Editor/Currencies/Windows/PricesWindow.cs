@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Currencies\Windows\PricesWindow.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.Colonization;

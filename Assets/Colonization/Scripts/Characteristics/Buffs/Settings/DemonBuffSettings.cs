@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Buffs\Settings\DemonBuffSettings.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     [System.Serializable]

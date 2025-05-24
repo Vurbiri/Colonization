@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\AbilityModifier\Interface\IAbilityModifier.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public interface IAbilityModifier : IValueId<TypeModifierId>

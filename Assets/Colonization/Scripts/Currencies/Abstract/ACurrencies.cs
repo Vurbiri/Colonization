@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Currencies\Abstract\ACurrencies.cs
 using System.Collections;
 using System.Collections.Generic;
 

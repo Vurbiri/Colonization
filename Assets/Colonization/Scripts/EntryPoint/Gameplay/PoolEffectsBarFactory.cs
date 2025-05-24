@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Gameplay\PoolEffectsBarFactory.cs
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 

@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Abstract\AVToggle.cs
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;

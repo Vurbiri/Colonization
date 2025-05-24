@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Editor\Utility\VToggleCreator.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri.UI;

@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Coroutine\AWaitTimeDrawer.cs
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EventBus\GameplayTriggerBus.cs
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization

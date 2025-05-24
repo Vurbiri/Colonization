@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Fractions\Demons\DemonInitializer.cs
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 

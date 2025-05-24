@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\Editor\CurrencyIcon.cs
 using System;
 using UnityEngine;
 using UnityEngine.UI;

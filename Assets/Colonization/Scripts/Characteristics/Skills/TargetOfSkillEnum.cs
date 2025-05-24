@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Skills\TargetOfSkillEnum.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public enum TargetOfSkill

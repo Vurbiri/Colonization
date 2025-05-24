@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\Converters\ReactiveEffectConverter.cs
 using Newtonsoft.Json;
 using System;
 

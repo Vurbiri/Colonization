@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Fractions\Warriors\Scriptable\WarriorsSettingsScriptable.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;

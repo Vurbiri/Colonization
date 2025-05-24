@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Edifices\Abstract\AEdificeGraphic.cs
 using System.Collections.Generic;
 using UnityEngine;
 

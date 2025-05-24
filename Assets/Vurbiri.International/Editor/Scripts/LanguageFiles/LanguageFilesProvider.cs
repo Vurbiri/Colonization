@@ -1,4 +1,3 @@
-//Assets\Vurbiri.International\Editor\Scripts\LanguageFiles\LanguageFilesProvider.cs
 using UnityEditor;
 
 namespace Vurbiri.International.Editor

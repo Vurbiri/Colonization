@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\UtilityEditor\PathToCSFiles.cs
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +14,7 @@ namespace VurbiriEditor
 		#region Consts
 		private const string MENU_NAME = "Path To CSFiles/", MENU = MENU_PATH + MENU_NAME;
         private const string MENU_NAME_ADD = "Add path", MENU_COMMAND_ADD = MENU + MENU_NAME_ADD;
+        private const string MENU_NAME_REMOVE = "Remove path", MENU_COMMAND_REMOVE = MENU + MENU_NAME_REMOVE;
         private const string MENU_NAME_AUTO = "Auto", MENU_COMMAND_AUTO = MENU + MENU_NAME_AUTO;
         private const string MASK = "*" + CS_EXT, COMMENT = @"//", START = COMMENT + ASSETS;
         private const string KEY_SAVE = "PTCS_AUTO";
@@ -38,9 +38,22 @@ namespace VurbiriEditor
                 return;
 
             s_count = 0;
-            Search(path);
+            SearchAndCreate(path);
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog(MENU_NAME_ADD, $"Изменено {s_count} файлов", "OK");
+        }
+        [MenuItem(MENU_COMMAND_REMOVE)]
+        private static void CommandRemove()
+        {
+            string path = EditorUtility.OpenFolderPanel(MENU_NAME_REMOVE, Application.dataPath, "");
+
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            s_count = 0;
+            SearchAndRemove(path);
+            AssetDatabase.Refresh();
+            EditorUtility.DisplayDialog(MENU_NAME_REMOVE, $"Очищено {s_count} файлов", "OK");
         }
 
         [MenuItem(MENU_COMMAND_AUTO, false, 12)]
@@ -96,13 +109,22 @@ namespace VurbiriEditor
             return AssetMoveResult.DidMove;
         }
 
-        private static void Search(string path)
+        private static void SearchAndCreate(string path)
         {
             foreach (string dir in Directory.GetDirectories(path))
-                Search(dir);
+                SearchAndCreate(dir);
 
             foreach (string file in Directory.GetFiles(path, MASK))
                 CreateComment(file);
+        }
+
+        private static void SearchAndRemove(string path)
+        {
+            foreach (string dir in Directory.GetDirectories(path))
+                SearchAndRemove(dir);
+
+            foreach (string file in Directory.GetFiles(path, MASK))
+                RemoveComment(file);
         }
 
         private static void CreateComment(string path)
@@ -112,13 +134,37 @@ namespace VurbiriEditor
 
             string firstLine = File.ReadLines(path, utf8WithoutBom).First();
 
-            if (firstLine == null || firstLine.Length == 0)
+            if (string.IsNullOrEmpty(firstLine))
                 return;
 
             if (firstLine.StartsWith(START))
                 Replace(path, comment);
             else
                 Add(path, comment);
+
+            s_count++;
+        }
+
+        private static void RemoveComment(string path)
+        {
+            string[] lines = File.ReadAllLines(path, utf8WithoutBom);
+            int length = lines.Length;
+
+            if (length == 0 || !lines[0].StartsWith(START))
+                return;
+
+            if (--length == 0)
+            {
+                File.WriteAllText(path, string.Empty, utf8WithoutBom);
+            }
+            else
+            {
+                string[] newLines = new string[length];
+                for (int i = 0; i < length; i++)
+                    newLines[i] = lines[i + 1];
+
+                File.WriteAllLines(path, newLines, utf8WithoutBom);
+            }
 
             s_count++;
         }

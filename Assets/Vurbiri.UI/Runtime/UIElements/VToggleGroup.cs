@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\VToggleGroup.cs
 using System.Collections.Generic;
 using UnityEngine;
 

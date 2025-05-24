@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Edifices\Ids\EdificeGroupId.cs
 namespace Vurbiri.Colonization
 {
     using Characteristics;

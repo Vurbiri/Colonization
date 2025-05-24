@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Abstract\AWorldMenu.cs
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Reactive;

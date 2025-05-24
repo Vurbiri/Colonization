@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\GameLoop\GameEvents.cs
 using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization

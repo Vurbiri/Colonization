@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Id\AIdType.cs
 using System;
 using System.Collections.Generic;
 using System.Reflection;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\Settings\ButtonSettings.cs
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI

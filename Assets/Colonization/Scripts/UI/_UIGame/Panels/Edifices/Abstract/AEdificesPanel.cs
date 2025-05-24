@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Edifices\Abstract\AEdificesPanel.cs
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Controllers;

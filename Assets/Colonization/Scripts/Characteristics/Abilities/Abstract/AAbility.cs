@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\Abstract\AAbility.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class AAbility<TId> : Ability, IValueId<TId> where TId : AbilityId<TId>

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Perk\PerkTree.cs
 using System;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Storage;

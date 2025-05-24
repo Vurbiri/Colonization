@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Perk\_Scriptable\Abstract\APlayerPerksScriptable.cs
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;

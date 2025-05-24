@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Buffs\Abstract\ABuffs.cs
 using System;
 using Vurbiri.Reactive;
 

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\CONSTS\HEX.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.Colonization

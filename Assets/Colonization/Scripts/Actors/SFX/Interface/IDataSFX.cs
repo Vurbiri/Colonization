@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\SFX\Interface\IActorSFX.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

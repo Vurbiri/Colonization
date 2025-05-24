@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\SFX\Hit\Scriptables\HitSoundsScriptableSFX.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors

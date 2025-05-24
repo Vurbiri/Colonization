@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\GameLoop\GameLoop.cs
 namespace Vurbiri.Colonization
 {
     sealed public partial class GameLoop : GameEvents

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Edifices\Water\LighthouseOneGraphic.cs
 using System.Collections.Generic;
 using UnityEngine;
 

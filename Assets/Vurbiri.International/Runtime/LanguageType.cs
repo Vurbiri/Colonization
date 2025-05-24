@@ -1,4 +1,3 @@
-//Assets\Vurbiri.International\Runtime\LanguageType.cs
 using Newtonsoft.Json;
 using System;
 using UnityEngine;

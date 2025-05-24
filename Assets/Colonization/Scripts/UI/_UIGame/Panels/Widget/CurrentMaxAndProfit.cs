@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\CurrentMaxAndProfit.cs
 using TMPro;
 using UnityEngine;
 using Vurbiri.International;

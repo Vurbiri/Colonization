@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Settings\Profile.cs
 using System;
 using UnityEngine;
 using Vurbiri.International;

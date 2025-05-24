@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\CONSTS\CONST_EDITOR.cs
 using System.Text;
 
 namespace VurbiriEditor.Colonization

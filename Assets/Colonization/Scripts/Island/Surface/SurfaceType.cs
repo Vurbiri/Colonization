@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Surface\SurfaceType.cs
 using System;
 using UnityEngine;
 

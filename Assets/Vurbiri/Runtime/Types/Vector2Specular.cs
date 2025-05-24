@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Vector2Specular.cs
 using UnityEngine;
 
 namespace Vurbiri

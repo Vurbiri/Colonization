@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Types\EnumFlagsDrawer.cs
 using System;
 using UnityEditor;
 using UnityEngine;

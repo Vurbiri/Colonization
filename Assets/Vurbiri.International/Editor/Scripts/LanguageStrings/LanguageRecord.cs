@@ -1,4 +1,3 @@
-//Assets\Vurbiri.International\Editor\Scripts\LanguageStrings\LanguageRecord.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;

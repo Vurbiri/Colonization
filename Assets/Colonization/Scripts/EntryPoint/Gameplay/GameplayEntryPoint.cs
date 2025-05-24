@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Gameplay\GameplayEntryPoint.cs
 using UnityEngine;
 using Vurbiri.EntryPoint;
 using Vurbiri.International;

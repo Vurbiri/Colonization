@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\ActorId.cs
 
 namespace Vurbiri.Colonization.Actors
 {

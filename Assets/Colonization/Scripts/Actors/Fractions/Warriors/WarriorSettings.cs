@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Fractions\Warriors\WarriorSettings.cs
 namespace Vurbiri.Colonization.Actors
 {
     [System.Serializable]

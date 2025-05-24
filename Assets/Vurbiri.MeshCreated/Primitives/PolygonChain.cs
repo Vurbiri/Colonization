@@ -1,4 +1,3 @@
-//Assets\Vurbiri.MeshCreated\Primitives\PolygonChain.cs
 using System.Collections.Generic;
 using UnityEngine;
 

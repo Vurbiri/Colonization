@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\SFX\Hit\HitParticleSFX.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors

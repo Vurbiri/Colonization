@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\Signer.cs
 using System;
 using System.Collections.Generic;
 

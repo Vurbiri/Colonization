@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Types\ColorHSVDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

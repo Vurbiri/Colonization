@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Players\View\HumanMaterial.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

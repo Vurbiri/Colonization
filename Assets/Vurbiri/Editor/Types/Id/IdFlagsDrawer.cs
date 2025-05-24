@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Types\Id\IdFlagsDrawer.cs
 using System;
 using System.Reflection;
 using UnityEditor;

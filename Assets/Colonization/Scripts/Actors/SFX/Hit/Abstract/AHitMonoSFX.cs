@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\SFX\Hit\Abstract\AHitMonoSFX.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors

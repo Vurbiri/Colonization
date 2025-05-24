@@ -1,4 +1,3 @@
-//Assets\Vurbiri.MeshCreated\_Interface\IPrimitive.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.CreatingMesh

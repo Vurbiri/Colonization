@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Project\ProjectInitialization.cs
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Vurbiri.Colonization.UI;

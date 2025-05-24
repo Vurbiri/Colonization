@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\Utility\FPSCounter\FPSCounter.cs
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;

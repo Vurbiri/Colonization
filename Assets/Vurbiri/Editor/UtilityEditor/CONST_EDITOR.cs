@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\UtilityEditor\CONST_EDITOR.cs
 using System.Text;
 
 namespace VurbiriEditor

@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\EntryPoint\LoadingScreen\LoadingScreen.cs
 using System;
 using System.Collections;
 using TMPro;

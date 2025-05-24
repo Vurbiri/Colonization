@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\RoadsPanel.cs
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.UI;
 

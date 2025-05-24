@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\CrossroadMainMenu.cs
 using UnityEngine;
 using Vurbiri.Reactive;
 using Vurbiri.UI;

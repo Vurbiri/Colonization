@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Utility\ColorTween.cs
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;

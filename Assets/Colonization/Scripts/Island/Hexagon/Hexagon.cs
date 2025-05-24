@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Hexagon\Hexagon.cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;

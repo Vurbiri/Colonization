@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Hexagon\HexagonCaption.cs
 using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Text;

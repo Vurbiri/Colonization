@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Actor\Actor.cs
 using System;
 using System.Collections;
 using UnityEngine;

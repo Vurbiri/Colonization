@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Players\Players.cs
 using System;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;

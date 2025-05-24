@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\SFX\Warrior\WarriorWizardSFX.cs
 using System.Collections;
 using UnityEngine;
 

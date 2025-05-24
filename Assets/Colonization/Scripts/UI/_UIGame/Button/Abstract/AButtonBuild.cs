@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Button\Abstract\AButtonBuild.cs
 using System;
 using System.Globalization;
 using System.Text;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Perk\Ids\TargetOfPerkId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class TargetOfPerkId : IdType<TargetOfPerkId>

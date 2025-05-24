@@ -1,4 +1,3 @@
-//Assets\VurbiriEditor.ReColoringVertex\Editor\Window\ReColoringVertexWindow.cs
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;

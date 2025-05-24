@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Runtime\Loading\Loading.cs
 using System;
 using System.Collections;
 using System.Collections.Generic;

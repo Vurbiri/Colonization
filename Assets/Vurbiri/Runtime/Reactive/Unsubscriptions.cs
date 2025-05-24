@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Reactive\Unsubscriptions.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.Reactive

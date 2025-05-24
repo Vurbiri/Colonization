@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\IslandCreator\IslandCreator.cs
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Collections;

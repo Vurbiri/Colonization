@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Editor\Editors\VBarArithmeticEditor.cs
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;

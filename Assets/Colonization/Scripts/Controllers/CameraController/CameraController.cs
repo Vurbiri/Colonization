@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Controllers\CameraController\CameraController.cs
 using System;
 using UnityEngine;
 using Vurbiri.FSM;

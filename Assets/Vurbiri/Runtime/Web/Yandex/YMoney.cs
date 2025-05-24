@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Web\Yandex\YMoney.cs
 namespace Vurbiri
 {
     public partial class YMoney : ASingleton<YMoney>

@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Runtime\Loading\Step\PostLoadSceneStep.cs
 namespace Vurbiri.EntryPoint
 {
     sealed internal class PostLoadSceneStep : AEnumeratorStep

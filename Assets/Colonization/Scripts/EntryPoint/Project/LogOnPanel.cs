@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Project\LogOnPanel.cs
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;

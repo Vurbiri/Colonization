@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Characteristic\Buffs\Abstract\ABuffsWindow.cs
 using System;
 using System.Collections.Generic;
 using UnityEditor;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Characteristic\Effects\HitEffectSettingsDrawer.cs
 using System;
 using System.Collections.Generic;
 using UnityEditor;

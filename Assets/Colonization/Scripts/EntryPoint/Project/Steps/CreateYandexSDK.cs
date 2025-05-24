@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Project\Steps\CreateYandexSDK.cs
 using System.Collections;
 
 namespace Vurbiri.Colonization.EntryPoint

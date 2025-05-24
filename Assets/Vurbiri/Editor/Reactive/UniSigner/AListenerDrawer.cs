@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Reactive\UniSigner\AListenerDrawer.cs
 using System;
 using System.Collections.Generic;
 using System.Reflection;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Gameplay\Steps\InitUI.cs
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.UI;

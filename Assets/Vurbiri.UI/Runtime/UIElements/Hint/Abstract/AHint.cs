@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Hint\Abstract\AHint.cs
 using System.Collections;
 using TMPro;
 using UnityEngine;

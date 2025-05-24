@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Currencies\BloodPanel.cs
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI

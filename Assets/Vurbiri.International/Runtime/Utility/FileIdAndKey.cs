@@ -1,4 +1,3 @@
-//Assets\Vurbiri.International\Runtime\Utility\FileIdAndKey.cs
 using System;
 
 namespace Vurbiri.International

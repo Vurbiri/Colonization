@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Editor\EntryPointExecutionOrder.cs
 using System;
 using UnityEditor;
 using UnityEngine;

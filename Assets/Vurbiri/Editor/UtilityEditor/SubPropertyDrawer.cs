@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\UtilityEditor\SubPropertyDrawer.cs
 using UnityEditor;
 using UnityEngine;
 

@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Diplomacy\DiplomacySettingsDrawer.cs
 using UnityEditor;
 using Vurbiri.Colonization;
 

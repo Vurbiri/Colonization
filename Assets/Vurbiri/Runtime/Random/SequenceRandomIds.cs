@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Random\SequenceRandomIds.cs
 using UnityEngine;
 
 namespace Vurbiri

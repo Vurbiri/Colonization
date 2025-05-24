@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Surface\Utility\WindmillBladesRotation.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

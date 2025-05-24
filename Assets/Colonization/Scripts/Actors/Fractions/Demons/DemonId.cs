@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Fractions\Demons\DemonId.cs
 
 namespace Vurbiri.Colonization.Actors
 {

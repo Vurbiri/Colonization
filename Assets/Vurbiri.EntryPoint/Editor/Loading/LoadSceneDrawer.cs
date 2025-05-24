@@ -1,4 +1,3 @@
-//Assets\Vurbiri.EntryPoint\Editor\Loading\LoadSceneDrawer.cs
 using UnityEditor;
 using VurbiriEditor;
 

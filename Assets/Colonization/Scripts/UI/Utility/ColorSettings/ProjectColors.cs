@@ -1,4 +1,3 @@
-﻿//Assets\Colonization\Scripts\UI\Utility\ColorSettings\ProjectColors.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization.UI

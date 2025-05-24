@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Types\Enum\EnumFilterDrawer.cs
 using System;
 using UnityEditor;
 using UnityEngine;

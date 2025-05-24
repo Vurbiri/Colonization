@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Abstract\AVBar.cs
 using System;
 using UnityEngine;
 

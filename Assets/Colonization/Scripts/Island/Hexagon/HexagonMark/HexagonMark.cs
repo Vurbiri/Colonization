@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Hexagon\HexagonMark\HexagonMark.cs
 using System;
 using UnityEngine;
 using Object = UnityEngine.Object;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\Bar\PopupWidget3D.cs
 using System.Collections;
 using TMPro;
 using UnityEngine;

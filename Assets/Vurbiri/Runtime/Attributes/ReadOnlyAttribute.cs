@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Attributes\ReadOnlyAttribute.cs
 using System;
 using UnityEngine;
 

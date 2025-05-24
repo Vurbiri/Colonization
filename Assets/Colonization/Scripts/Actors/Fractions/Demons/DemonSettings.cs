@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Fractions\Demons\DemonSettings.cs
 namespace Vurbiri.Colonization.Actors
 {
     [System.Serializable]

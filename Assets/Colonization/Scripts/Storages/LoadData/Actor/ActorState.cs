@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\LoadData\Actor\ActorState.cs
 namespace Vurbiri.Colonization.Storage
 {
     public readonly struct ActorState

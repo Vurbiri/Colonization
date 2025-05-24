@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\ActorSkin.cs
 using System;
 using UnityEngine;
 using Vurbiri.FSM;
@@ -118,7 +117,7 @@ namespace Vurbiri.Colonization.Actors
 
         private BoolSwitchState CreateBoolState(string nameParam) => new(nameParam, this, _idBoolState++);
 
-        // UNITY_EDITOR смотри в ActorSkin_Editor
+        // UNITY_EDITOR пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ ActorSkin_Editor
 
         #region Nested: TimingSkillSettings
         //*******************************************************

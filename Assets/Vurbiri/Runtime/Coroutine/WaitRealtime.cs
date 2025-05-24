@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Coroutine\WaitRealtime.cs
 using System.Runtime.CompilerServices;
 
 namespace Vurbiri

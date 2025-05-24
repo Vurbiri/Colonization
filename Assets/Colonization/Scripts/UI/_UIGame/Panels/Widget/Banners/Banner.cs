@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\Panels\Widget\Banners\Banner.cs
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;

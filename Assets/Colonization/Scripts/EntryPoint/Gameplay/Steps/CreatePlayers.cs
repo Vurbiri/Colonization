@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Gameplay\Steps\CreatePlayers.cs
 using System.Collections;
 
 namespace Vurbiri.Colonization.EntryPoint

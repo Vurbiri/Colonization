@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Perk\Ids\TypePerkTreeId.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class TypePerksId : IdType<TypePerksId>

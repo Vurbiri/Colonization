@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Actor\States\TargetState.cs
 using Vurbiri.Colonization.FSMSelectable;
 
 namespace Vurbiri.Colonization.Actors

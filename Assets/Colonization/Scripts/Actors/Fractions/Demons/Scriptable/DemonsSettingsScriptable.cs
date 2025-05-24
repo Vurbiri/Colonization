@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Fractions\Demons\Scriptable\DemonsSettingsScriptable.cs
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;

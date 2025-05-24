@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Currencies\Currencies.cs
 using System.Collections.Generic;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;

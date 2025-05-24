@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\LoadData\Players\HumanLoadData.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Storage

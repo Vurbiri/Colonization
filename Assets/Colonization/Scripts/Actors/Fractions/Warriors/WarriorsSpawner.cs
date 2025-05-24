@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Fractions\Warriors\WarriorsSpawner.cs
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 

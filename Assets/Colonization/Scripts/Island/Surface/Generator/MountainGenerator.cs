@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Island\Surface\Generator\MountainGenerator.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

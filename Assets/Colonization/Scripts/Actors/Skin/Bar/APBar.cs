@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\Bar\APBar.cs
 using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;

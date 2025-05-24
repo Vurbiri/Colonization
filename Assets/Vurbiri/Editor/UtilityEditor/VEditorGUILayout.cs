@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\UtilityEditor\VEditorGUILayout.cs
 using System;
 using UnityEditor;
 using UnityEngine;

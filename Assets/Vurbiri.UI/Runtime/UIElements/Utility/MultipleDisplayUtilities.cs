@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Runtime\UIElements\Utility\MultipleDisplayUtilities.cs
 using UnityEngine;
 using UnityEngine.EventSystems;
 

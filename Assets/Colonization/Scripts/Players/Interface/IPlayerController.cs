@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Players\Interface\IPlayerController.cs
 namespace Vurbiri.Colonization
 {
 	public interface IPlayerController : System.IDisposable

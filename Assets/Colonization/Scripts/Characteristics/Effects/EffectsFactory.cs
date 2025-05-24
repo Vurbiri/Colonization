@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Effects\EffectsFactory.cs
 namespace Vurbiri.Colonization.Characteristics
 {
     public class EffectsFactory

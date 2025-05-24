@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\CONSTS\SAVE_KEYS.cs
 namespace Vurbiri.Colonization.Storage
 {
     public static class SAVE_KEYS

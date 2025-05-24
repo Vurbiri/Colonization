@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Edifices\Urban\Urban.cs
 using System.Collections.Generic;
 using UnityEngine;
 

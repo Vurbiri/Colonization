@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Types\Reactive\Abstract\AReactiveValueMono.cs
 using System;
 using UnityEngine;
 

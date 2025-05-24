@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Characteristic\Perk\Editors\EconomicPerksEditor.cs
 using UnityEditor;
 using UnityEngine.UIElements;
 using Vurbiri.Colonization.Characteristics;

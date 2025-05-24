@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Currencies\_Scriptable\Prices.cs
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;

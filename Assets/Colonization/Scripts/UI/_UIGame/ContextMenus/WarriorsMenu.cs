@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\UI\_UIGame\ContextMenus\WarriorsMenu.cs
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;

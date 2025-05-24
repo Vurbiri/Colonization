@@ -1,4 +1,3 @@
-//Assets\Colonization\Editor\Characteristic\Perk\Windows\EconomicPerksWindow.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Score\Score.cs
 using System;
 using Vurbiri.Reactive;
 

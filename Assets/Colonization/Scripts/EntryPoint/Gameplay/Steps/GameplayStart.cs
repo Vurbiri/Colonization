@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\Gameplay\Steps\GameplayStart.cs
 using System.Collections;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.EntryPoint;

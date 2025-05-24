@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Abilities\Abstract\Ability.cs
 using System;
 using Vurbiri.Reactive;
 

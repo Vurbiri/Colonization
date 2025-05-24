@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Controllers\Interface\IPositionable.cs
 using UnityEngine;
 
 namespace Vurbiri.Colonization

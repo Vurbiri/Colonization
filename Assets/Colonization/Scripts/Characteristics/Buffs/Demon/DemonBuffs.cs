@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Characteristics\Buffs\Demon\DemonBuffs.cs
 using System.Collections.Generic;
 
 namespace Vurbiri.Colonization.Characteristics

@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Editor\Attributes\ReadOnlyDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;

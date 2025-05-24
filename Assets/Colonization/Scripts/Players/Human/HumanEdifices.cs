@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Players\Player\HumanEdifices.cs
 using System.Collections.Generic;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;

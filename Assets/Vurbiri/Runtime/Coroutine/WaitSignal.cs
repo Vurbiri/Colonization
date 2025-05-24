@@ -1,4 +1,3 @@
-//Assets\Vurbiri\Runtime\Coroutine\WaitSignal.cs
 using UnityEngine;
 
 namespace Vurbiri

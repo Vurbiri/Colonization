@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\EntryPoint\SceneExitPoint.cs
 using Vurbiri.EntryPoint;
 
 namespace Vurbiri.Colonization.EntryPoint

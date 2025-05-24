@@ -1,4 +1,3 @@
-//Assets\Vurbiri.UI\Editor\Editors\Abstract\AVBarEditor.cs
 using System;
 using UnityEditor;
 using UnityEditor.AnimatedValues;

@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Settings\Settings.cs
 using System;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;

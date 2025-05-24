@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Storages\AStorage.cs
 using System;
 using Vurbiri.Reactive;
 

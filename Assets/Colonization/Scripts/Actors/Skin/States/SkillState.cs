@@ -1,4 +1,3 @@
-//Assets\Colonization\Scripts\Actors\Skin\States\SkillState.cs
 using System.Collections;
 using UnityEngine;
 
