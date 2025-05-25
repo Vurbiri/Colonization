@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Storage
@@ -23,7 +22,29 @@ namespace Vurbiri.Colonization.Storage
         public HumanStorage[] Humans => _humanStorages;
         public SatanStorage Satan => _satanStorage;
 
+        public void SaveGame(Game game) => _storage.Save(SAVE_KEYS.GAME, game);
+
         #region Load
+        public bool TryGetGame(out Game game)
+        {
+            game = null;
+            return _isLoad && _storage.TryGet(SAVE_KEYS.GAME, out game);
+        }
+        
+        public int[] GetScoreData(int defaultSize)
+        {
+            if (_isLoad && _storage.TryGet(SAVE_KEYS.SCORE, out int[] data))
+                return data;
+
+            return new int[defaultSize];
+        }
+        public int GetBalanceValue(int defaultValue)
+        {
+            if (_isLoad && _storage.TryGet(SAVE_KEYS.BALANCE, out int value))
+                return value;
+
+            return defaultValue;
+        }
         public bool TryGetDiplomacyData(out int[] data)
         {
             data = null;
@@ -34,7 +55,15 @@ namespace Vurbiri.Colonization.Storage
         #endregion
 
         #region Bind
-        public void BindDiplomacy(IReactive<IReadOnlyList<int>> reactive)
+        public void BindScore(IReactive<int[]> reactive)
+        {
+            _unsubscribers += reactive.Subscribe(scoreData => _storage.Set(SAVE_KEYS.SCORE, scoreData), !_isLoad);
+        }
+        public void BindBalance(IReactive<int> reactive)
+        {
+            _unsubscribers += reactive.Subscribe(balance => _storage.Set(SAVE_KEYS.BALANCE, balance), !_isLoad);
+        }
+        public void BindDiplomacy(IReactive<int[]> reactive)
         {
             _unsubscribers += reactive.Subscribe(diplomacyData => _storage.Set(SAVE_KEYS.DIPLOMANCY, diplomacyData), !_isLoad);
         }

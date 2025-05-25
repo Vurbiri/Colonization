@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public static class ExtensionsCollection
+    public static class CollectionExtensions
     {
         public static int LeftIndex<T>(this IReadOnlyCollection<T> self, int index) => (index == 0 ? self.Count : index) - 1;
         public static int RightIndex<T>(this IReadOnlyCollection<T> self, int index) => (index + 1) % self.Count;

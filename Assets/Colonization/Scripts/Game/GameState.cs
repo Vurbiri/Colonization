@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         private bool _isLoad;
         private int _maxScore;
-        private bool _isFirstStart;
+        private bool _isTutarial;
 
         private ProjectStorage _storage;
         private readonly Subscription<GameState> _eventChanged = new();
@@ -18,34 +18,22 @@ namespace Vurbiri.Colonization
         public bool IsLoad
         {
             get => _isLoad;
-            set { if (!value) Reset(); else _isLoad = true; }
+            set { if (!value) Reset(0); else _isLoad = true; }
         }
-        public int MaxScore
-        {
-            get => _maxScore;
-            set
-            {
-                if(value > _maxScore)
-                {
-                    _maxScore = value;
-                    _storage.Set(GAME_STATE, this);
-                }
-            }
-        }
+        public int MaxScore => _maxScore;
 
-        public bool IsFirstStart => _isFirstStart;
-        public AStorage Storage => _storage;
+        public bool IsFirstStart => _isTutarial;
 
         private GameState()
         {
             _isLoad = false;
-            _isFirstStart = true;
+            _isTutarial = true;
         }
         private GameState(bool isLoad, int maxScore)
         {
             _isLoad = isLoad;
             _maxScore = maxScore;
-            _isFirstStart = false;
+            _isTutarial = false;
         }
 
         public static GameState Create(ProjectStorage storage, DIContainer diContainer)
@@ -70,24 +58,20 @@ namespace Vurbiri.Colonization
 
         public void Reset()
         {
+            int score = 0;
+            if (_isLoad && _storage.TryGet(SCORE, out int[] scores))
+                score = scores[PlayerId.Player];
+
+            Reset(score);
+        }
+        public void Reset(int score)
+        {
             _isLoad = false;
-            _isFirstStart = false;
+            if (score > _maxScore)  _maxScore = score;
 
             _storage.Clear();
             _storage.Save(GAME_STATE, this);
         }
 
-        public bool TryGetGame(out Game game)
-        {
-            game = null;
-            return _isLoad && _storage.TryGet(GAME, out game);
-        }
-        public int[] GetScoreData(int defaultSize)
-        {
-            if (_isLoad && _storage.TryGet(SCORE, out int[] data))
-                return data;
-
-            return new int[defaultSize];
-        }
     }
 }

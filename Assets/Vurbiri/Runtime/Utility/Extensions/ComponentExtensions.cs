@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public static class ExtensionsComponent
+    public static class ComponentExtensions
 	{
 
         public static bool TryGetComponentInChildren<T>(this Component self, out T component, bool includeInactive = true)

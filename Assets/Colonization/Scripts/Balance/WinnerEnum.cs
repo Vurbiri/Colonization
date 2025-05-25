@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-    public enum Win
+    public enum Winner
 	{
 		Human,
 		Satan

@@ -2,7 +2,6 @@ namespace Vurbiri.Colonization
 {
     public abstract class GameModeId : IdType<GameModeId>
     {
-        public const int End       = -1;
         public const int Init      = 0;
         public const int Play      = 1;
         public const int EndTurn   = 2;
@@ -10,7 +9,7 @@ namespace Vurbiri.Colonization
         public const int WaitRoll  = 4;
         public const int Roll      = 5;
         public const int Profit    = 6;
-        
+        public const int End       = 7;
 
         static GameModeId() => RunConstructor();
     }

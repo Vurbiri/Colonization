@@ -15,6 +15,5 @@ namespace Vurbiri.Colonization
         }
 
         public void Subscribe(Id<GameModeId> gameMode, ChangingGameMode onChanging) => _changingGameModes[gameMode] += onChanging;
-
     }
 }

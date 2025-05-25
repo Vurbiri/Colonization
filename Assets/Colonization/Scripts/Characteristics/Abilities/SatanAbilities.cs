@@ -10,12 +10,6 @@ namespace Vurbiri.Colonization.Characteristics
         public int curseProfitPerLevel = 3;
         public int cursePerTurn = 13;
 
-        public int minBalance = -666;
-        public int maxBalance = 666;
-        public int balancePerDemon = -3;
-        public int balancePerPerk = -1;
-        public int balancePerShrine = 15;
-
         public int ratioRewardCurse = 50;
         public int ratioPenaltyCurse = 15;
 

@@ -1,17 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class Diplomacy : IReactive<IReadOnlyList<int>>
+    public class Diplomacy : IReactive<int[]>
 	{
         private readonly int[] _values;
         private readonly DiplomacySettings _settings;
 
-        private readonly Subscription<IReadOnlyList<int>> _eventChanged = new();
+        private readonly Subscription<int[]> _eventChanged = new();
 
         private int this[Id<PlayerId> idA, Id<PlayerId> idB]
         {
@@ -30,28 +29,20 @@ namespace Vurbiri.Colonization
             }
         }
 
-        #region Constructors
-        private Diplomacy() : this(new int[PlayerId.HumansCount])
-        {
-            for (int i = 0; i < PlayerId.HumansCount; i++)
-                _values[i] = _settings.defaultValue;
-        }
-        private Diplomacy(int[] values)
+        public Diplomacy(GameplayStorage storage, GameEvents game)
         {
             _settings = SettingsFile.Load<DiplomacySettings>();
-            _values = values;
+
+            if (!storage.TryGetDiplomacyData(out _values))
+            {
+                _values = new int[PlayerId.HumansCount];
+                for (int i = 0; i < PlayerId.HumansCount; i++)
+                    _values[i] = _settings.defaultValue;
+            }
+            storage.BindDiplomacy(this);
+
+            game.Subscribe(GameModeId.Play, OnGamePlay);
         }
-
-        public static Diplomacy Create(GameplayStorage storage, GameEvents game)
-        {
-            Diplomacy diplomacy = storage.TryGetDiplomacyData(out int[] data) ? new(data) : new();
-            storage.BindDiplomacy(diplomacy);
-
-            game.Subscribe(GameModeId.Play, diplomacy.OnGamePlay);
-
-            return diplomacy;
-        }
-        #endregion
 
         public Relation GetRelation(Id<PlayerId> idA, Id<PlayerId> idB)
 		{
@@ -102,7 +93,7 @@ namespace Vurbiri.Colonization
             _eventChanged.Invoke(_values);
         }
 
-        public Unsubscription Subscribe(Action<IReadOnlyList<int>> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _values);
+        public Unsubscription Subscribe(Action<int[]> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _values);
 
         private void OnGamePlay(TurnQueue turnQueue, int dice)
         {

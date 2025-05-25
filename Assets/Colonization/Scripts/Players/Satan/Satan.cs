@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
@@ -12,7 +11,7 @@ namespace Vurbiri.Colonization
     {
         private readonly RInt _level;
         private readonly RInt _curse;
-        private readonly RInt _balance;
+        private readonly Balance _balance;
         
         private readonly SatanAbilities _states;
 
@@ -22,13 +21,14 @@ namespace Vurbiri.Colonization
         private readonly DemonsSpawner _spawner;
         private readonly ReactiveSet<Actor> _demons;
 
-        private readonly Subscription<Satan> _eventSelf = new();
-        private readonly Subscription<Win> _eventWin = new();
+        private readonly Subscription<Satan> _eventChanged = new();
         private readonly Unsubscriptions _unsubscribers = new();
+
+        private readonly Action endTurn;
 
         public IReactiveValue<int> Level => _level;
         public IReactiveValue<int> Curse => _curse;
-        public IReactiveValue<int> Balance => _balance;
+        public IReactive<int> Balance => _balance;
 
         public int MaxCurse => _states.maxCurse + _level * _states.maxCursePerLevel;
         public int CursePerTurn
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Satan(SatanStorage storage, Players.Settings settings, IReadOnlyList<Human> humans)
+        public Satan(SatanStorage storage, Players.Settings settings, Action endTurn)
         {
             _states = SettingsFile.Load<SatanAbilities>();
 
@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
 
             _level = new(loadData.state.level);
             _curse = new(loadData.state.curse);
-            _balance = new(loadData.state.balance);
+            _balance = settings.balance;
 
             _leveling = new(settings.demonBuffs.Settings, _level);
             _artefact = Buffs.Create(settings.artefact.Settings, loadData);
@@ -60,60 +60,47 @@ namespace Vurbiri.Colonization
             for (int i = loadData.actors.Count - 1; i >= 0; i--)
                 _demons.Add(_spawner.Load(loadData.actors[i], settings.hexagons));
 
-            for (int i = 0; i < PlayerId.HumansCount; i++)
-            {
-                _unsubscribers += humans[i].Perks.Subscribe(OnAddPerk, false);
-                _unsubscribers += humans[i].Shrines.Subscribe(OnAddShrine, false);
-            }
-
             storage.StateBind(this, !loadData.isLoaded);
             storage.BindArtefact(_artefact, !loadData.isLoaded);
             storage.BindActors(_demons);
 
             storage.LoadData = null;
-
-            #region Local: OnPerk(..), OnShrineBuild(..)
-            //=================================
-            void OnAddPerk(Perk perk) => AddBalance(_states.balancePerPerk);
-            //=================================
-            void OnAddShrine(int index, Crossroad crossroad, TypeEvent type)
-            {
-                if (type == TypeEvent.Add) AddBalance(_states.balancePerShrine);
-            }
-            #endregion
+            
+            
+            this.endTurn = endTurn;
         }
 
-        public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventSelf.Add(action, instantGetValue, this);
+        public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);
 
-        public void Init()
+        public void OnInit()
         {
-
+            endTurn();
         }
 
-        public void EndTurn()
+        public void OnEndTurn()
         {
             int countBuffs = 0, balance = 0;
             foreach(var demon in _demons)
             {
                 if (demon.IsMainProfit)
-                    balance += (demon.Id + 1) * _states.balancePerDemon;
+                    balance += (demon.Id + 1);
                 if (demon.IsAdvProfit)
                     countBuffs++;
 
                 demon.StatesUpdate();
             }
 
-            AddBalance(balance);
+            _balance.DemonCurse(balance);
             _artefact.Next(countBuffs);
         }
 
-        public void Profit(Id<PlayerId> id, int hexId)
+        public void OnProfit(Id<PlayerId> id, int hexId)
         {
             if (hexId == CONST.GATE_ID)
                 AddCurse(_states.curseProfit + _level * _states.curseProfitPerLevel);
         }
 
-        public void StartTurn()
+        public void OnStartTurn()
         {
             foreach (var demon in _demons)
                 demon.EffectsUpdate(_states.gateDefense);
@@ -121,20 +108,8 @@ namespace Vurbiri.Colonization
             AddCurse(CursePerTurn);
         }
 
-        public void Play()
+        public void OnPlay()
         {
-        }
-
-        public void AddBalance(int value)
-        {
-            _balance.Add(value);
-
-            if (_balance <= _states.minBalance)
-                _eventWin.Invoke(Win.Satan);
-            if (_balance >= _states.maxBalance)
-                _eventWin.Invoke(Win.Human);
-
-            _eventSelf.Invoke(this);
         }
 
         private void AddCurse(int value)
@@ -148,7 +123,7 @@ namespace Vurbiri.Colonization
                 _level.Increment();
             }
 
-            _eventSelf.Invoke(this);
+            _eventChanged.Invoke(this);
         }
 
         public void Dispose()

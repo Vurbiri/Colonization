@@ -1,0 +1,8 @@
+{
+  "min": -666,
+  "max": 666,
+  "defaultValue": 0,
+  "penaltyPerDemon": -3,
+  "penaltyPerPerk": -1,
+  "rewardPerShrine": 15
+}

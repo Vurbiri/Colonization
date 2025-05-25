@@ -5,11 +5,6 @@
   "curseProfit": 33,
   "curseProfitPerLevel": 3,
   "cursePerTurn": 13,
-  "minBalance": -666,
-  "maxBalance": 666,
-  "balancePerDemon": -3,
-  "balancePerPerk": -1,
-  "balancePerShrine": 15,
   "ratioRewardCurse": 50,
   "ratioPenaltyCurse": 15
 }

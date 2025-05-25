@@ -1,6 +1,6 @@
 namespace Vurbiri
 {
-    public static class ExtensionsString 
+    public static class StringExtensions 
     {
         public static string Concat(this string self, string str) => string.Concat(self, str);
         public static string Concat(this string self, string strA, string strB) => string.Concat(self, strA, strB);

@@ -22,20 +22,17 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override ISubscription<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param)
         {
-            DIContainer diContainer = containers.Container;
+            containers.Container.Get<GameState>().IsLoad = _isLoad;
 
-            GameState gameState = diContainer.Get<GameState>();
             Localization.Instance.SetFiles(_localizationFiles);
 
-            gameState.IsLoad = _isLoad;
-
-            _initObjects.CreateObjectsAndFillingContainer(diContainer);
+            _initObjects.CreateObjectsAndFillingContainer(containers.Container);
                         
             loading.Add(_islandCreator.Init(_initObjects));
             loading.Add(new CreatePlayers(_initObjects));
             loading.Add(_initUI.Init(_initObjects));
             loading.Add(new ClearResources());
-            loading.Add(new GameplayStart(_initObjects.game, _initObjects.inputController));
+            loading.Add(new GameplayStart(_initObjects));
 
             Destroy(this);
 

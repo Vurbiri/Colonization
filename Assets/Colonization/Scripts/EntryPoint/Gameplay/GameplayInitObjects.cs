@@ -22,6 +22,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public Game game;
 
         public DIContainer diContainer;
+        public GameState gameState;
         public GameplayStorage storage;
         public GameplayTriggerBus triggerBus;
         public InputController inputController;
@@ -30,20 +31,25 @@ namespace Vurbiri.Colonization.EntryPoint
         public Players players;
 
         private Score _score;
+        private Balance _balance;
 
         public void CreateObjectsAndFillingContainer(DIContainer diContainer)
         {
             this.diContainer = diContainer;
-            GameState gameState = diContainer.Get<GameState>();
+            gameState = diContainer.Get<GameState>();
 
-            diContainer.AddInstance<GameEvents>(game = Game.Create(gameState));
-            diContainer.AddInstance(_score = new(gameState));
+            diContainer.AddInstance(storage = new(gameState.IsLoad));
+
+            diContainer.AddInstance<GameEvents>(game = Game.Create(storage));
 
             diContainer.AddInstance(Coroutines.Create("Gameplay Coroutines"));
-            diContainer.AddInstance(storage = new(gameState.IsLoad));
             diContainer.AddInstance<GameplayTriggerBus, GameplayEventBus>(triggerBus = new());
             diContainer.AddInstance(inputController = new(game, mainCamera, _inputControllerSettings));
-            diContainer.AddInstance(Diplomacy.Create(storage, game));
+
+            diContainer.AddInstance(_score = new Score(storage));
+            diContainer.AddInstance(_balance = new Balance(storage, game));
+            diContainer.AddInstance(new Diplomacy(storage, game));
+
             diContainer.AddInstance(poolEffectsBar.Create());
             diContainer.AddInstance(cameraController.Init(mainCamera, triggerBus, inputController.CameraActions));
 
@@ -58,6 +64,7 @@ namespace Vurbiri.Colonization.EntryPoint
             _playersSettings.hexagons = hexagons;
             _playersSettings.crossroads = crossroads;
             _playersSettings.score = _score;
+            _playersSettings.balance = _balance;
 
             return _playersSettings;
         }

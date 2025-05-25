@@ -15,14 +15,14 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private CanvasHint _canvasHint;
         [SerializeField] private PlayerPanels _playerPanelsUI;
 
-        private GameplayInitObjects _initObjects;
+        private GameplayInitObjects _init;
 
         public string Description => Localization.Instance.GetText(Files.Main, "InitUIStep");
         public float Weight => 0.2f;
 
-        public InitUI Init(GameplayInitObjects objects)
+        public InitUI Init(GameplayInitObjects init)
         {
-            _initObjects = objects;
+            _init = init;
 
             return this;
         }
@@ -32,14 +32,14 @@ namespace Vurbiri.Colonization.EntryPoint
             ProjectColors colors = SceneContainer.Get<ProjectColors>();
 
             _worldHint.Init(colors.HinBack ,colors.HintDefault);
-            _contextMenusWorld.Init(_initObjects.GetContextMenuSettings(_worldHint));
+            _contextMenusWorld.Init(_init.GetContextMenuSettings(_worldHint));
             yield return null;
             _canvasHint.Init(colors.HinBack, colors.HintDefault);
-            _playerPanelsUI.Init(_initObjects.players.Player, colors, _initObjects.inputController, _canvasHint);
+            _playerPanelsUI.Init(_init.players.Player, colors, _init.inputController, _canvasHint);
             yield return null;
 
             Destroy(gameObject);
-            _initObjects = null;
+            _init = null;
         }
 
 #if UNITY_EDITOR

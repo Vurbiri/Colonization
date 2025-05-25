@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public static class ExtensionsColor
+    public static class ColorExtensions
     {
         public static Color Brightness(this Color self, float brightness)
         {

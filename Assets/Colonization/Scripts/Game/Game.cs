@@ -10,15 +10,9 @@ namespace Vurbiri.Colonization
         private TurnQueue _turnQueue;
         private int _hexId;
 
-        private GameState _gameState;
+        private GameplayStorage _storage;
 
-        private Game() : base()
-        {
-            _gameMode = GameModeId.Play; //GameModeId.Init
-            _turnQueue = new(PlayerId.Player);
-            _hexId = -1;
-        }
-
+        private Game() : this(GameModeId.Play/*Init*/, new(PlayerId.Player), -1) { }
         private Game(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId) : base()
         {
             _gameMode = gameMode;
@@ -26,31 +20,28 @@ namespace Vurbiri.Colonization
             _hexId = hexId;
         }
 
-        public static Game Create(GameState gameState)
+        public static Game Create(GameplayStorage storage)
         {
             if (s_instance == null)
             {
-                if (!gameState.TryGetGame(out s_instance))
+                if (!storage.TryGetGame(out s_instance))
                     s_instance = new();
 
-                s_instance._gameState = gameState;
+                s_instance._storage = storage;
             }
             return s_instance;
         }
 
         public void Start()
         {
-            _gameState.Start();
             Change(_gameMode);
         }
 
         public void Init()
         {
             _turnQueue.Next();
-            if(_turnQueue.currentId != PlayerId.HumansCount)
-                Change(GameModeId.Init);
-            else
-                StartTurn();
+
+            Change(GameModeId.Init);
         }
 
         public void Play()
@@ -87,10 +78,16 @@ namespace Vurbiri.Colonization
             Change(GameModeId.Profit);
         }
 
+        public void End(Winner winner)
+        {
+            Change(GameModeId.End);
+        }
+
         private void Change(Id<GameModeId> gameMode)
         {
-            _changingGameModes[_gameMode = gameMode].Invoke(_turnQueue, _hexId);
-            _gameState.Storage.Save(SAVE_KEYS.GAME, this);
+            _gameMode = gameMode;
+            _changingGameModes[gameMode].Invoke(_turnQueue, _hexId);
+            _storage.SaveGame(this);
         }
 
         public void Dispose()

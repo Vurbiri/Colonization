@@ -7,7 +7,7 @@ namespace VurbiriEditor.Colonization
     public class DiplomacySettingsWindow : ASettingsWindow<DiplomacySettings>
 	{
 		#region Consts
-		private const string NAME = "Diplomacy", MENU = MENU_PATH + NAME;
+		private const string NAME = "Diplomacy", MENU = MENU_GS_PATH + NAME;
     #endregion
 
         [MenuItem(MENU, false, 30)]

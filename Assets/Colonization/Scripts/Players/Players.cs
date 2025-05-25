@@ -21,27 +21,27 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 _players[i] = humans[i] = new(i, playerStorages[i], settings);
             
-            _players[PlayerId.Satan] = Satan = new(storage.Satan, settings, humans);
+            _players[PlayerId.Satan] = Satan = new(storage.Satan, settings, game.EndTurn);
             
             Player = humans[PlayerId.Player];
 
-            game.Subscribe(GameModeId.Init,      (turn, _) => _players[turn.currentId.Value].Init());
-            game.Subscribe(GameModeId.Play,      (turn, _) => _players[turn.currentId.Value].Play());
-            game.Subscribe(GameModeId.EndTurn,   (turn, _) => _players[turn.currentId.Value].EndTurn());
-            game.Subscribe(GameModeId.StartTurn, (turn, _) => _players[turn.currentId.Value].StartTurn());
+            game.Subscribe(GameModeId.Init,      (turn, _) => _players[turn.currentId.Value].OnInit());
+            game.Subscribe(GameModeId.Play,      (turn, _) => _players[turn.currentId.Value].OnPlay());
+            game.Subscribe(GameModeId.EndTurn,   (turn, _) => _players[turn.currentId.Value].OnEndTurn());
+            game.Subscribe(GameModeId.StartTurn, (turn, _) => _players[turn.currentId.Value].OnStartTurn());
             game.Subscribe(GameModeId.Profit,    OnProfit);
-        }
-
-        public void OnProfit(TurnQueue turnQueue, int hexId)
-        {
-            for (int i = 0; i < PlayerId.Count; i++)
-                _players[i].Profit(turnQueue.currentId, hexId);
         }
 
         public void Dispose()
         {
             for (int i = 0; i < PlayerId.Count; i++)
                 _players[i].Dispose();
+        }
+
+        private void OnProfit(TurnQueue turnQueue, int hexId)
+        {
+            for (int i = 0; i < PlayerId.Count; i++)
+                _players[i].OnProfit(turnQueue.currentId, hexId);
         }
 
         #region Nested: Settings
@@ -63,6 +63,7 @@ namespace Vurbiri.Colonization
             public Transform actorsContainer;
 
             public Score score;
+            public Balance balance;
             public Hexagons hexagons;
             public Crossroads crossroads;
 

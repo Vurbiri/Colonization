@@ -99,16 +99,19 @@ namespace Vurbiri.Colonization
             storage.LoadData = null;
 
             settings.crossroads.BindEdifices(_edifices.edifices, instantGetValue);
+
+            settings.balance.BindShrines(_edifices.shrines);
+            settings.balance.BindPerks(_perks);
         }
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
 
-        public void Init()
+        public void OnInit()
         {
 
         }
 
-        public void EndTurn()
+        public void OnEndTurn()
         {
             int countBuffs = 0;
             CurrenciesLite profit = new();
@@ -129,7 +132,7 @@ namespace Vurbiri.Colonization
             _edifices.Interactable = false;
         }
 
-        public void Profit(Id<PlayerId> id, int hexId)
+        public void OnProfit(Id<PlayerId> id, int hexId)
         {
             if(id == PlayerId.Satan)
                 _resources.AddBlood(_edifices.ShrinePassiveProfit);
@@ -147,7 +150,7 @@ namespace Vurbiri.Colonization
             _resources.AddFrom(_edifices.ProfitFromEdifices(hexId));
         }
 
-        public void StartTurn()
+        public void OnStartTurn()
         {
             foreach (var warrior in _warriors)
                 warrior.EffectsUpdate();
@@ -155,7 +158,7 @@ namespace Vurbiri.Colonization
             _exchange.Update();
         }
 
-        public void Play()
+        public void OnPlay()
         {
             _edifices.Interactable = _isPlayer;
             foreach (var warrior in _warriors)
