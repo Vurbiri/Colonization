@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace Vurbiri.Reactive.Collections
 {
@@ -22,16 +21,15 @@ namespace Vurbiri.Reactive.Collections
             get => _values [index];
             set
             {
-                _values[index] = value;
-                _subscriber.Invoke(index, value, TypeEvent.Change);
+                if (!_comparer.Equals(_values[index], value))
+                {
+                    _values[index] = value;
+                    _subscriber.Invoke(index, value, TypeEvent.Change);
+                }
             }
         }
 
-        public int Count
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _count;
-        }
+        public int Count => _count.Value;
         public IReactiveValue<int> CountReactive => _count;
         public bool IsReadOnly => false;
 
@@ -206,13 +204,9 @@ namespace Vurbiri.Reactive.Collections
                 array[i] = _values[i];
         }
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            for (int i = 0; i < _count; i++)
-                yield return _values[i];
-        }
+        public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_values);
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<T>(_values);
         #endregion
 
         private void GrowArray()

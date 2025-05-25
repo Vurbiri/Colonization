@@ -122,7 +122,7 @@ namespace Vurbiri.Colonization
             public override int Value 
             { 
                 get => _value; 
-                protected set
+                set
                 {
                     value = Mathf.Clamp(value, 0, _max.Value);
                     if (value != _value)
@@ -160,17 +160,6 @@ namespace Vurbiri.Colonization
         //*******************************************************
         protected abstract class ACurrency : AReactiveValue<int>, IEquatable<ACurrency>, IComparable<ACurrency>
         {
-            protected int _value;
-
-            public override int Value
-            {
-                get => _value;
-                protected set
-                {
-                    if (value != _value)
-                        _subscriber.Invoke(_value = value);
-                }
-            }
 
             public ACurrency(int value) => _value = value;
 

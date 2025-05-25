@@ -9,7 +9,6 @@ namespace Vurbiri.Reactive
         public RInt() : base(0) { }
         public RInt(int value) : base(value) { }
 
-
         #region Arithmetic
         public void Increment() => _subscriber.Invoke(++_value);
         public void Decrement() => _subscriber.Invoke(--_value);

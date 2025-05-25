@@ -42,12 +42,8 @@ namespace Vurbiri.Collections
                 _values[i] = list[i];
         }
 
-        public IEnumerator<TValue> GetEnumerator()
-        {
-            for (int i = 0; i < _count; i++)
-                yield return _values[i];
-        }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values);
+        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values);
 
         public static implicit operator IdArray<TId, TValue>(TValue[] value) => new(value);
         public static implicit operator IdArray<TId, TValue>(List<TValue> value) => new(value);

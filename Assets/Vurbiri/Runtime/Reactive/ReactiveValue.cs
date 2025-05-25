@@ -1,27 +1,21 @@
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Reactive
 {
-    [Serializable, JsonObject(MemberSerialization.OptIn)]
-    sealed public class ReactiveValue<T> : IReactiveValue<T>
+    [Serializable]
+    public class ReactiveValue<T> : IReactiveValue<T> where T : IEquatable<T>
     {
-        [SerializeField, JsonProperty("value")]
-        private T _value;
+        [SerializeField] protected T _value;
 
-        private readonly Subscription<T> _subscriber = new();
-        private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
+        protected readonly Subscription<T> _subscriber = new();
 
         public T Value 
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _value; 
             set 
             {
-                if(!_comparer.Equals(_value, value))
+                if(!_value.Equals(value))
                     _subscriber.Invoke(_value = value);
             } 
         }
@@ -38,20 +32,12 @@ namespace Vurbiri.Reactive
             _value = value;
         }
 
-        public ReactiveValue(T value, IEqualityComparer<T> comparer)
-        {
-            Throw.IfNull(comparer);
-
-            _value = value;
-            _comparer = comparer;
-        }
-
         public Unsubscription Subscribe(Action<T> action, bool instantGetValue = true) => _subscriber.Add(action, instantGetValue, _value);
 
         public void Signal() => _subscriber.Invoke(_value);
 
 
-        public static explicit operator ReactiveValue<T>(T value) => new(value);
+        public static implicit operator ReactiveValue<T>(T value) => new(value);
         public static implicit operator T(ReactiveValue<T> value) => value._value;
     }
 }

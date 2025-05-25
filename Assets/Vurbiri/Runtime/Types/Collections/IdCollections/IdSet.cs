@@ -125,9 +125,8 @@ namespace Vurbiri.Collections
         //***********************************
         public class IdSetEnumerator : IEnumerator<TValue>
         {
-            private readonly TValue[] _values;
-            private readonly int _capacity;
-            private int _cursor = -1;
+            private readonly IdSet<TId, TValue> _parent;
+            private int _cursor = 0;
             private TValue _current;
 
             public TValue Current => _current;
@@ -135,16 +134,15 @@ namespace Vurbiri.Collections
 
             public IdSetEnumerator(IdSet<TId, TValue> parent)
             {
-                _values = parent._values;
-                _capacity = parent._capacity;
+                _parent = parent;
             }
 
             public bool MoveNext()
             {
-                if (++_cursor >= _capacity)
+                if (_cursor >= _parent._capacity)
                     return false;
 
-                _current = _values[_cursor];
+                _current = _parent._values[_cursor++];
 
                 if (_current == null)
                     return MoveNext();
@@ -152,7 +150,7 @@ namespace Vurbiri.Collections
                 return true;
             }
 
-            public void Reset() => _cursor = -1;
+            public void Reset() => _cursor = 0;
 
             public void Dispose() { }
         }
