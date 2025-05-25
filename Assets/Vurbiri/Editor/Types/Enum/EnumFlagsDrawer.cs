@@ -20,67 +20,66 @@ namespace Vurbiri.Editor
 		{
 			position.height = EditorGUIUtility.singleLineHeight;
 
-            if (!TryGetTypeEnum(position, out Type enumType)) return;
+            if (!TryGetTypeEnum(out Type enumType))
+            {
+                HelpBox(position, "Type definition error", UnityEditor.MessageType.Error);
+                return;
+            }
 
-            if (enumType != _type & _names == null)
+            if (enumType != _type || _names == null)
             {
                 _type = enumType;
                 _names = enumType.GetEnumNames();
-            }
-            int count = _names.Length;
-            if (count > MAX_COUNT)
-            {
-                HelpBox(position, $"Count of flags is greater than {MAX_COUNT}", UnityEditor.MessageType.Error);
-                return;
+                if (_names.Length > MAX_COUNT)
+                {
+                    HelpBox(position, $"Count of flags is greater than {MAX_COUNT}", UnityEditor.MessageType.Error);
+                    return;
+                }
             }
 
             SerializedProperty valueProperty = mainProperty.FindPropertyRelative(P_VALUE);
 
             BeginProperty(position, label, mainProperty);
             {
-                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, _names) & ~(-1 << count);
+                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, _names) & ~(-1 << _names.Length);
             }
             EndProperty();
         }
 		
 		public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
 		{
-			return (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing) * 1f;
+			return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 		}
 
-		private bool TryGetTypeEnum(Rect position, out Type enumType)
+		private bool TryGetTypeEnum(out Type enumType)
 		{
-			enumType = fieldInfo.FieldType;
-			if (enumType.IsArray) enumType = enumType.GetElementType();
+            var fieldType = fieldInfo.FieldType;
+			if (fieldType.IsArray) fieldType = fieldType.GetElementType();
 
-			Type[] arguments = enumType.GetGenericArguments();
+			var arguments = fieldType.GetGenericArguments();
 			if (arguments != null && arguments.Length == 1)
 			{
-				enumType = enumType.GetGenericArguments()[0];
-                if (enumType != null && enumType.IsEnum)
-				{
-					if(VerificationValues(position, enumType)) 
-						return true;
-
-                    enumType = null;
-                    return false;
-                }
+				enumType = arguments[0];
+                if (VerificationType(enumType))
+                    return true;
             }
 
-            HelpBox(position, "Failed to determine type", UnityEditor.MessageType.Error);
+            enumType = null;
             return false;
         }
-		private bool VerificationValues(Rect position, Type enumType)
+
+		private static bool VerificationType(Type enumType)
 		{
+            if(enumType == null || !enumType.IsEnum)
+                return false;
+            
             int value, oldValue = -1;
             foreach (var em in enumType.GetEnumValues())
 			{
                 value = Convert.ToInt32(em);
                 if ((value - oldValue) != 1)
-                {
-                    HelpBox(position, "The wrong type", UnityEditor.MessageType.Error);
                     return false;
-				}
+
                 oldValue = value;
             }
 			return true;

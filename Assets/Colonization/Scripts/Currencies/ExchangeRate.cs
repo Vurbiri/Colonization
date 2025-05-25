@@ -15,13 +15,13 @@ namespace Vurbiri.Colonization
 
         private ExchangeRate(AbilitiesSet<HumanAbilityId> abilities)
         {
-            Subscribe(abilities);
+            SubscribeToAbilities(abilities);
             _exchange = new();
             Update();
         }
-        private ExchangeRate(int[] data, AbilitiesSet<HumanAbilityId> abilities) : this(abilities)
+        private ExchangeRate(int[] data, AbilitiesSet<HumanAbilityId> abilities)
         {
-            Subscribe(abilities);
+            SubscribeToAbilities(abilities);
             _exchange = new(data);
         }
 
@@ -38,6 +38,8 @@ namespace Vurbiri.Colonization
         {
             for (int i = 0; i < CurrencyId.Count; i++)
                 _exchange.Set(i, _rate - _chance.Select(1));
+
+            _eventChanged.Invoke(_exchange);
         }
 
         public void Dispose()
@@ -45,7 +47,7 @@ namespace Vurbiri.Colonization
             _unsubscribers.Unsubscribe();
         }
 
-        private void Subscribe(AbilitiesSet<HumanAbilityId> abilities)
+        private void SubscribeToAbilities(AbilitiesSet<HumanAbilityId> abilities)
         {
             _unsubscribers += abilities[HumanAbilityId.ExchangeRate].Subscribe(v => _rate = v);
             _unsubscribers += abilities[HumanAbilityId.ExchangeSaleChance].Subscribe(v => _chance.Value += v);

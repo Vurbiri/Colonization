@@ -15,7 +15,7 @@ namespace Vurbiri.Reactive.Collections
         protected readonly Subscription<T, TypeEvent> _subscriber = new();
 
         public int Capacity => _capacity;
-        public int Count => _count;
+        public int Count => _count.Value;
         public IReactiveValue<int> CountReactive => _count;
 
         #region Constructors
@@ -83,8 +83,8 @@ namespace Vurbiri.Reactive.Collections
             return index >= 0 & index < _capacity && EqualityComparer<T>.Default.Equals(_values[index], item);
         }
 
-        public IEnumerator<T> GetEnumerator() => new Enumerator(this);
-        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
+        public IEnumerator<T> GetEnumerator() => new SetEnumerator<T>(_values);
+        IEnumerator IEnumerable.GetEnumerator() => new SetEnumerator<T>(_values);
 
         public void Dispose()
         {
@@ -121,42 +121,5 @@ namespace Vurbiri.Reactive.Collections
                 array[i] = _values[i];
             _values = array;
         }
-
-        #region Nested classes: IdSetEnumerator
-        //***********************************
-        public class Enumerator : IEnumerator<T>
-        {
-            private readonly T[] _values;
-            private readonly int _capacity;
-            private int _cursor = -1;
-            private T _current;
-
-            public T Current => _current;
-            object IEnumerator.Current => _current;
-
-            public Enumerator(ReactiveSet<T> parent)
-            {
-                _values = parent._values;
-                _capacity = parent._capacity;
-            }
-
-            public bool MoveNext()
-            {
-                if (++_cursor >= _capacity)
-                    return false;
-
-                _current = _values[_cursor];
-
-                if (_current == null)
-                    return MoveNext();
-
-                return true;
-            }
-
-            public void Reset() => _cursor = -1;
-
-            public void Dispose() { }
-        }
-        #endregion
     }
 }

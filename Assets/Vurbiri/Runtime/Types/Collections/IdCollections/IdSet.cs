@@ -118,42 +118,7 @@ namespace Vurbiri.Collections
             return values;
         }
 
-        public IEnumerator<TValue> GetEnumerator() => new IdSetEnumerator(this);
-        IEnumerator IEnumerable.GetEnumerator() => new IdSetEnumerator(this);
-
-        #region Nested classes: IdSetEnumerator
-        //***********************************
-        public class IdSetEnumerator : IEnumerator<TValue>
-        {
-            private readonly IdSet<TId, TValue> _parent;
-            private int _cursor = 0;
-            private TValue _current;
-
-            public TValue Current => _current;
-            object IEnumerator.Current => _current;
-
-            public IdSetEnumerator(IdSet<TId, TValue> parent)
-            {
-                _parent = parent;
-            }
-
-            public bool MoveNext()
-            {
-                if (_cursor >= _parent._capacity)
-                    return false;
-
-                _current = _parent._values[_cursor++];
-
-                if (_current == null)
-                    return MoveNext();
-
-                return true;
-            }
-
-            public void Reset() => _cursor = 0;
-
-            public void Dispose() { }
-        }
-        #endregion
+        public IEnumerator<TValue> GetEnumerator() => new SetEnumerator<TValue>(_values);
+        IEnumerator IEnumerable.GetEnumerator() => new SetEnumerator<TValue>(_values);
     }
 }

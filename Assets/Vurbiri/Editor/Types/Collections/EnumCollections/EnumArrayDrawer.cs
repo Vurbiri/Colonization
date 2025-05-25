@@ -9,12 +9,12 @@ namespace VurbiriEditor
     public class EnumArrayDrawer : PropertyDrawer
     {
         private const int INDEX_TYPE = 0;
-        protected const float Y_SPACE = 2f;
+        private const float Y_SPACE = 2f;
         private const string NAME_ARRAY = "_values";
 
-        protected Rect _position;
-        protected SerializedProperty _propertyValues;
-        protected int _count;
+        private Rect _position;
+        private SerializedProperty _propertyValues;
+        private int _count;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -26,7 +26,7 @@ namespace VurbiriEditor
             {
                 _propertyValues = property.FindPropertyRelative(NAME_ARRAY);
                 _count = _propertyValues.arraySize;
-                string[] names = Enum.GetNames(GetTypeEnum());
+                string[] names = Enum.GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
 
                 EditorGUI.indentLevel++;
                 for (int i = 0; i < _count; i++)
@@ -60,8 +60,6 @@ namespace VurbiriEditor
             //=================================
             #endregion
         }
-
-        protected virtual Type GetTypeEnum() => fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE];
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
