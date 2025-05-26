@@ -15,9 +15,9 @@ namespace Vurbiri.Colonization.UI
         private Unsubscription _unsubscriber;
         private string _caption;
 
-        public void Init(Vector3 localPosition, ButtonSettings settings, ACurrencies cost, Action action)
+        public void Init(ButtonSettings settings, ACurrencies cost, Action action)
         {
-            base.Init(localPosition, settings, action);
+            base.Init(settings, action);
             _cost = cost;
             _cash = settings.player.Resources;
             _unsubscriber = Localization.Instance.Subscribe(SetText);

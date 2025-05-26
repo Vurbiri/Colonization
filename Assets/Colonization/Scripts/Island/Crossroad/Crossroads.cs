@@ -23,6 +23,8 @@ namespace Vurbiri.Colonization
 
         public Crossroad this[Key key] => _crossroads[key];
 
+        public int BreachCount => _breach.Count;
+
         public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs, GameplayTriggerBus triggerBus)
         {
             _container = container;
@@ -74,6 +76,14 @@ namespace Vurbiri.Colonization
             _angles = null;
             Debug.Log($"Breach = {_breach.Count}, Gate = {_gate.Count}");
             _breach.TrimExcess();
+        }
+
+        public Crossroad GetRandomPort()
+        {
+            int i = Random.Range(0, _breach.Count);
+            foreach ( var breach in _breach )
+                if (i-- == 0) return breach;
+            return null;
         }
 
         public void BindEdifices(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive, bool instantGetValue)

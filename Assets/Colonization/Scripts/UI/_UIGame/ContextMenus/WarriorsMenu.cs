@@ -8,8 +8,6 @@ namespace Vurbiri.Colonization.UI
     sealed public class WarriorsMenu : AWorldMenu
     {
         [Space]
-        [SerializeField] private float _distanceOfButtons = 5f;
-        [Space]
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
         [Space]
         [SerializeField] private WorldHintButton _buttonClose;
@@ -17,21 +15,19 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private WorldHintButton _buttonMovement;
         [SerializeField] private ButtonBlock _buttonBlock;
         [SerializeField] private ButtonSkill[] _buttonsSkill;
+        [SerializeField] private Positions[] _buttonPositions;
 
         private int _countButtonsSkill;
         private Actor _currentWarrior;
 
-        private Vector3[][] _buttonPositions;
-
         public ISubscription<IMenu, bool> Init(ContextMenuSettings settings)
         {
-            CreatePositionButtons();
-            Vector3 distance = new(0f, _distanceOfButtons, 0f);
-
             _buttonClose.Init(settings.hint, Close);
-            _buttonMovement.Init(-distance, settings.hint, OnMovement);
-            _buttonBlock.Init(distance, settings.hint, OnBlock);
+            
+            _buttonMovement.Init(settings.hint, OnMovement);
+            _buttonBlock.Init(settings.hint, OnBlock);
 
+            _countButtonsSkill = _buttonsSkill.Length;
             for (int i = 0; i < _countButtonsSkill; i++)
                 _buttonsSkill[i].Init(settings, this);
 
@@ -72,13 +68,48 @@ namespace Vurbiri.Colonization.UI
             _currentWarrior.Block();
         }
 
-        private void CreatePositionButtons()
+        #region Nested struct Positions
+        //**********************************************************
+        [System.Serializable]
+        private struct Positions
         {
-            _countButtonsSkill = _buttonsSkill.Length;
-            _buttonPositions = new Vector3[_countButtonsSkill + 1][];
+            public Vector3[] vectors;
+
+            public readonly Vector3 this[int index]
+            {
+                get => vectors[index];
+                set => vectors[index] = value;
+            }
+
+            public Positions(Vector3[] values) => vectors = values;
+
+            public static implicit operator Positions(Vector3[] values) => new(values);
+        }
+        #endregion
+
+#if UNITY_EDITOR
+        public override void SetButtonPosition(float buttonDistance)
+        {
+            _buttonClose.transform.localPosition = Vector3.zero;
+
+            Vector3 distance = new(0f, buttonDistance, 0f);
+            _buttonMovement.transform.localPosition = -distance;
+            _buttonBlock.transform.localPosition = distance;
+
+            CreatePositionButtons(distance);
+
+            int count = _buttonsSkill.Length;
+            for (int i = 0; i < count; i++)
+                _buttonsSkill[i].transform.localPosition = _buttonPositions[count][i];
+        }
+
+        private void CreatePositionButtons(Vector3 distance)
+        {
             float angle;
-            Vector3 distance = new(0f, _distanceOfButtons, 0f);
-            for (int i = 0, j, right, left; i <= _countButtonsSkill; i++)
+            int countButton = _buttonsSkill.Length, right, left;
+            _buttonPositions = new Positions[countButton + 1];
+
+            for (int i = 0, j; i <= countButton; i++)
             {
                 _buttonPositions[i] = new Vector3[i];
                 left = i >> 1; right = i - left;
@@ -93,7 +124,6 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
-#if UNITY_EDITOR
         private void OnValidate()
         {
             if(_buttonsSkill == null || _buttonsSkill.Length == 0)

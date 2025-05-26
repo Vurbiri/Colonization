@@ -7,24 +7,22 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Satan : IPlayerController, IReactive<Satan>
+    public partial class Satan : IReactive<Satan>
     {
-        private readonly RInt _level;
-        private readonly RInt _curse;
-        private readonly Balance _balance;
+        protected readonly RInt _level;
+        protected readonly RInt _curse;
+        protected readonly Balance _balance;
         
-        private readonly SatanAbilities _states;
+        protected readonly SatanAbilities _states;
 
-        private readonly DemonBuffs _leveling;
-        private readonly Buffs _artefact;
+        protected readonly DemonBuffs _leveling;
+        protected readonly Buffs _artefact;
 
-        private readonly DemonsSpawner _spawner;
-        private readonly ReactiveSet<Actor> _demons;
+        protected readonly DemonsSpawner _spawner;
+        protected readonly ReactiveSet<Actor> _demons;
 
-        private readonly Subscription<Satan> _eventChanged = new();
-        private readonly Unsubscriptions _unsubscribers = new();
-
-        private readonly Action endTurn;
+        protected readonly Subscription<Satan> _eventChanged = new();
+        protected readonly Unsubscriptions _unsubscribers = new();
 
         public IReactiveValue<int> Level => _level;
         public IReactiveValue<int> Curse => _curse;
@@ -40,7 +38,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Satan(SatanStorage storage, Players.Settings settings, Action endTurn)
+        public Satan(SatanStorage storage, Players.Settings settings)
         {
             _states = SettingsFile.Load<SatanAbilities>();
 
@@ -65,54 +63,11 @@ namespace Vurbiri.Colonization
             storage.BindActors(_demons);
 
             storage.LoadData = null;
-            
-            
-            this.endTurn = endTurn;
         }
 
         public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);
-
-        public void OnInit()
-        {
-            endTurn();
-        }
-
-        public void OnEndTurn()
-        {
-            int countBuffs = 0, balance = 0;
-            foreach(var demon in _demons)
-            {
-                if (demon.IsMainProfit)
-                    balance += (demon.Id + 1);
-                if (demon.IsAdvProfit)
-                    countBuffs++;
-
-                demon.StatesUpdate();
-            }
-
-            _balance.DemonCurse(balance);
-            _artefact.Next(countBuffs);
-        }
-
-        public void OnProfit(Id<PlayerId> id, int hexId)
-        {
-            if (hexId == CONST.GATE_ID)
-                AddCurse(_states.curseProfit + _level * _states.curseProfitPerLevel);
-        }
-
-        public void OnStartTurn()
-        {
-            foreach (var demon in _demons)
-                demon.EffectsUpdate(_states.gateDefense);
-
-            AddCurse(CursePerTurn);
-        }
-
-        public void OnPlay()
-        {
-        }
-
-        private void AddCurse(int value)
+        
+        protected void AddCurse(int value)
         {
             _curse.Add(value);
 
@@ -132,7 +87,7 @@ namespace Vurbiri.Colonization
             _demons.Dispose();
         }
 
-        private void ActorKill(Id<PlayerId> target, int actorId)
+        protected void ActorKill(Id<PlayerId> target, int actorId)
         {
             UnityEngine.Debug.Log($"ActorKilling: {target}, {actorId}");
         }

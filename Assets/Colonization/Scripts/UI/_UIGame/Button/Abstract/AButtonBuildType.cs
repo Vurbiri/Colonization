@@ -19,9 +19,9 @@ namespace Vurbiri.Colonization.UI
 
         public Id<T> Id => _id;
 
-        public virtual void Init(ButtonSettings settings, ACurrencies cost, AWorldMenu parent, Vector3 localPosition = default)
+        public virtual void Init(ButtonSettings settings, ACurrencies cost, AWorldMenu parent)
         {
-            base.Init(localPosition, settings, OnClick);
+            base.Init(settings, OnClick);
             
             _player = settings.player;
             _cost = cost;

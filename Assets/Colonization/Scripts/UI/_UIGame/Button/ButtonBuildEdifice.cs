@@ -18,9 +18,9 @@ namespace Vurbiri.Colonization.UI
         private IReadOnlyList<ACurrencies> _edificePrices;
         private ACurrencies _cash;
 
-        public void Init(Vector3 localPosition, ButtonSettings settings, IReadOnlyList<ACurrencies> edificePrices, Action action)
+        public void Init(ButtonSettings settings, IReadOnlyList<ACurrencies> edificePrices, Action action)
         {
-            base.Init(localPosition, settings, action);
+            base.Init(settings, action);
             _localization = Localization.Instance;
             _edificePrices = edificePrices;
             _cash = settings.player.Resources;
@@ -49,6 +49,9 @@ namespace Vurbiri.Colonization.UI
         protected override void OnValidate()
         {
             base.OnValidate();
+
+            if (_buttonIcon == null)
+                _buttonIcon = EUtility.GetComponentInChildren<Image>(this, "Icon");
 
             for (int i = 0; i < EdificeId.Count; i++)
             {

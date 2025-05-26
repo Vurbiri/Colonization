@@ -130,5 +130,12 @@ namespace Vurbiri.Colonization.UI
             if (_targetAlpha > 0.1f)
                 _eventActive.Invoke(this, false);
         }
+
+#if UNITY_EDITOR
+
+        public virtual void SetButtonPosition(float buttonDistance)
+        {
+        }
+#endif
     }
 }

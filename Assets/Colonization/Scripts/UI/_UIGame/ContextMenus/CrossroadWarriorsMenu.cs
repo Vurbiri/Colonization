@@ -9,8 +9,6 @@ namespace Vurbiri.Colonization.UI
     sealed public class CrossroadWarriorsMenu : AWorldMenu
     {
         [Space]
-        [SerializeField] private float _distanceOfButtons = 5f;
-        [Space]
         [SerializeField] private WorldHintButton _buttonBack;
         [Space]
         [SerializeField] private IdSet<WarriorId, ButtonRecruiting> _buttons;
@@ -24,10 +22,8 @@ namespace Vurbiri.Colonization.UI
 
             _buttonBack.Init(settings.hint, OnClose);
 
-            float angle = 360 / WarriorId.Count;
-            Vector3 distance = new(0f, _distanceOfButtons, 0f);
             for (int i = 0; i < WarriorId.Count; i++)
-                _buttons[i].Init(settings, warriorPrices[i], this, Quaternion.Euler(0f, 0f, -angle * i) * distance);
+                _buttons[i].Init(settings, warriorPrices[i], this);
 
             base.CloseInstant();
 
@@ -49,8 +45,21 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
+
+        public override void SetButtonPosition(float buttonDistance)
+        {
+            _buttonBack.transform.localPosition = Vector3.zero;
+
+            float angle = 360 / WarriorId.Count;
+            Vector3 distance = new(0f, buttonDistance, 0f);
+            for (int i = 0; i < WarriorId.Count; i++)
+                _buttons[i].transform.localPosition = Quaternion.Euler(0f, 0f, -angle * i) * distance;
+        }
+
         private void OnValidate()
         {
+            if (_buttonBack == null)
+                _buttonBack = GetComponentInChildren<WorldHintButton>();
             if (_buttons.Fullness < _buttons.Count)
                 _buttons.ReplaceRange(GetComponentsInChildren<ButtonRecruiting>());
         }

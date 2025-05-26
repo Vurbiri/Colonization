@@ -11,13 +11,6 @@ namespace Vurbiri.UI
 
         private Unsubscription _unsubscriber;
 
-        public void Init(Vector3 localPosition, WorldHint hint, Action action)
-        {
-            base.Init(localPosition, hint, action, true);
-
-            _unsubscriber = Localization.Instance.Subscribe(SetText);
-        }
-
         public void Init(WorldHint hint, Action action)
         {
             base.Init(hint, action, true);

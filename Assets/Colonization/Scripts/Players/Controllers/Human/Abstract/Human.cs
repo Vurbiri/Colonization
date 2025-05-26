@@ -9,29 +9,29 @@ using static Vurbiri.Colonization.Characteristics.HumanAbilityId;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Human : IPlayerController, IDisposable
+    public abstract partial class Human : IDisposable
     {
         #region Fields
-        private readonly Coroutines _coroutines;
+        protected readonly Coroutines _coroutines;
 
-        private readonly Id<PlayerId> _id;
-        private readonly bool _isPlayer;
-        private readonly Currencies _resources;
-        private readonly ExchangeRate _exchange;
-        private readonly Prices _prices;
+        protected readonly Id<PlayerId> _id;
+        protected readonly bool _isPlayer;
+        protected readonly Currencies _resources;
+        protected readonly ExchangeRate _exchange;
+        protected readonly Prices _prices;
 
-        private readonly Score _score;
+        protected readonly Score _score;
 
-        private readonly Edifices _edifices;
-        private readonly Roads _roads;
+        protected readonly Edifices _edifices;
+        protected readonly Roads _roads;
 
-        private readonly AbilitiesSet<HumanAbilityId> _abilities;
-        private readonly Buffs _artefact;
-        private readonly PerkTree _perks;
+        protected readonly AbilitiesSet<HumanAbilityId> _abilities;
+        protected readonly Buffs _artefact;
+        protected readonly PerkTree _perks;
 
-        private readonly WarriorsSpawner _spawner;
-        private readonly ReactiveSet<Actor> _warriors = new(6);
-        private readonly Unsubscription _unsubscriber;
+        protected readonly WarriorsSpawner _spawner;
+        protected readonly ReactiveSet<Actor> _warriors = new(6);
+        protected readonly Unsubscription _unsubscriber;
         #endregion
 
         public ACurrenciesReactive Resources => _resources;
@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization
             _id = playerId;
             _isPlayer = playerId == PlayerId.Player;
             _score = settings.score;
-            _coroutines = SceneContainer.Get<Coroutines>();
+            _coroutines = settings.coroutines;
             
             var loadData = storage.LoadData;
             var visual = SceneContainer.Get<HumansMaterials>()[playerId];
@@ -106,65 +106,6 @@ namespace Vurbiri.Colonization
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
 
-        public void OnInit()
-        {
-
-        }
-
-        public void OnEndTurn()
-        {
-            int countBuffs = 0;
-            CurrenciesLite profit = new();
-            foreach (var warrior in _warriors)
-            {
-                if (warrior.IsMainProfit)
-                    profit.Increment(warrior.Hexagon.SurfaceId);
-                if (warrior.IsAdvProfit)
-                    countBuffs++;
-
-                warrior.StatesUpdate();
-                warrior.IsPlayerTurn = false;
-            }
-
-            _resources.AddFrom(profit);
-            _artefact.Next(countBuffs);
-
-            _edifices.Interactable = false;
-        }
-
-        public void OnProfit(Id<PlayerId> id, int hexId)
-        {
-            if(id == PlayerId.Satan)
-                _resources.AddBlood(_edifices.ShrinePassiveProfit);
-
-            if (hexId == CONST.GATE_ID)
-            {
-                _resources.AddBlood(_edifices.ShrineProfit);
-                _resources.ClampMain();
-                return;
-            }
-
-            if (_abilities.IsTrue(IsFreeGroundRes))
-                _resources.AddFrom(Hexagons.FreeResources);
-
-            _resources.AddFrom(_edifices.ProfitFromEdifices(hexId));
-        }
-
-        public void OnStartTurn()
-        {
-            foreach (var warrior in _warriors)
-                warrior.EffectsUpdate();
-
-            _exchange.Update();
-        }
-
-        public void OnPlay()
-        {
-            _edifices.Interactable = _isPlayer;
-            foreach (var warrior in _warriors)
-                warrior.IsPlayerTurn = _isPlayer;
-        }
-
         public ReactiveList<Crossroad> GetEdifices(Id<EdificeGroupId> id) => _edifices.edifices[id];
 
         public void BuyPerk(int typePerk, int idPerk)
@@ -185,6 +126,16 @@ namespace Vurbiri.Colonization
                 _resources.Pay(_prices.Edifices[edificeId]);
                 _score.Build(_id.Value, edificeId);
             }
+        }
+
+        public bool BuildPort(Crossroad crossroad)
+        {
+            if (crossroad.NextGroupId == EdificeGroupId.Port && crossroad.BuyUpgrade(_id))
+            {
+                _edifices.edifices[crossroad.GroupId].Add(crossroad);
+                return true;
+            }
+            return false;
         }
 
         public bool CanWallBuild(Crossroad crossroad) => _abilities.IsTrue(IsWall) && crossroad.CanWallBuild(_id);
@@ -226,7 +177,7 @@ namespace Vurbiri.Colonization
             _warriors.Add(warrior);
         }
 
-        private IEnumerator Recruiting_Cn(Id<WarriorId> id, Crossroad crossroad)
+        protected IEnumerator Recruiting_Cn(Id<WarriorId> id, Crossroad crossroad)
         {
             WaitResult<Hexagon> result = crossroad.GetHexagonForRecruiting_Wait();
             yield return result;
@@ -245,7 +196,7 @@ namespace Vurbiri.Colonization
             _warriors.Dispose();
         }
 
-        private void ActorKill(Id<PlayerId> target, int actorId)
+        protected void ActorKill(Id<PlayerId> target, int actorId)
         {
             if (target == PlayerId.Satan)
             {

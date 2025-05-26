@@ -19,6 +19,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private Players.Settings _playersSettings;
         [SerializeField] private InputController.Settings _inputControllerSettings;
 
+        private Coroutines _coroutines;
         private Score _score;
         private Balance _balance;
 
@@ -39,11 +40,11 @@ namespace Vurbiri.Colonization.EntryPoint
             diContainer = container;
             gameState = container.Get<GameState>();
 
+            container.AddInstance(_coroutines = Coroutines.Create("Gameplay Coroutines"));
             container.AddInstance(storage = new(gameState.IsLoad));
 
-            container.AddInstance<GameEvents>(game = Game.Create(storage));
-
-            container.AddInstance(Coroutines.Create("Gameplay Coroutines"));
+            container.AddInstance<GameEvents>(game = Game.Create(storage, _coroutines));
+                        
             container.AddInstance<GameplayTriggerBus, GameplayEventBus>(triggerBus = new());
             container.AddInstance(inputController = new(game, _mainCamera, _inputControllerSettings));
 
@@ -65,10 +66,11 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public Players.Settings GetPlayersSettings()
         {
-            _playersSettings.hexagons = hexagons;
-            _playersSettings.crossroads = crossroads;
+            _playersSettings.coroutines = _coroutines;
             _playersSettings.score = _score;
             _playersSettings.balance = _balance;
+            _playersSettings.hexagons = hexagons;
+            _playersSettings.crossroads = crossroads;
 
             return _playersSettings;
         }

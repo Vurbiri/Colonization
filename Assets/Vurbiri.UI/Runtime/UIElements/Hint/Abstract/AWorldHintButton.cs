@@ -15,12 +15,6 @@ namespace Vurbiri.UI
         protected Transform _thisTransform;
         protected string _text;
 
-        protected virtual void Init(Vector3 localPosition, WorldHint hint, Action action, bool active)
-        {
-            Init(hint, action, active);
-            _thisTransform.localPosition = localPosition;
-        }
-
         protected virtual void Init(WorldHint hint, Action action, bool active)
         {
             _hint = hint;

@@ -16,14 +16,16 @@ namespace Vurbiri.Colonization
         public Players(Settings settings, Game game, GameplayStorage storage)
         {
             HumanStorage[] playerStorages = storage.Humans;
-            Human[] humans = new Human[PlayerId.HumansCount];
 
-            for (int i = 0; i < PlayerId.HumansCount; i++)
-                _players[i] = humans[i] = new(i, playerStorages[i], settings);
-            
-            _players[PlayerId.Satan] = Satan = new(storage.Satan, settings, game.EndTurn);
-            
-            Player = humans[PlayerId.Player];
+            PlayerController playerController = new(playerStorages, settings);
+            _players[PlayerId.Player] = playerController; Player = playerController;
+
+            for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
+                _players[i] = new AIController(game, i, playerStorages[i], settings);
+
+            SatanController satanController = new(game, storage.Satan, settings);
+            _players[PlayerId.Satan] = satanController;  Satan = satanController;
+ 
 
             game.Subscribe(GameModeId.Init,      (turn, _) => _players[turn.currentId.Value].OnInit());
             game.Subscribe(GameModeId.Play,      (turn, _) => _players[turn.currentId.Value].OnPlay());
@@ -62,6 +64,7 @@ namespace Vurbiri.Colonization
             public BuffsScriptable artefact;
             public Transform actorsContainer;
 
+            public Coroutines coroutines;
             public Score score;
             public Balance balance;
             public Hexagons hexagons;

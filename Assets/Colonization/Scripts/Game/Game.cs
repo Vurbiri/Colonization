@@ -1,3 +1,5 @@
+using System.Collections;
+using UnityEngine;
 using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
@@ -10,10 +12,11 @@ namespace Vurbiri.Colonization
         private TurnQueue _turnQueue;
         private int _hexId;
         private GameplayStorage _storage;
+        private Coroutines _coroutines;
 
         public Id<GameModeId> GameMode => _gameMode;
 
-        private Game() : this(GameModeId.Play/*Init*/, new(PlayerId.Player), -1) { }
+        private Game() : this(GameModeId.Init, new(PlayerId.Player), -1) { }
         private Game(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId) : base()
         {
             _gameMode = gameMode;
@@ -21,7 +24,7 @@ namespace Vurbiri.Colonization
             _hexId = hexId;
         }
 
-        public static Game Create(GameplayStorage storage)
+        public static Game Create(GameplayStorage storage, Coroutines coroutines)
         {
             if (s_instance == null)
             {
@@ -29,63 +32,81 @@ namespace Vurbiri.Colonization
                     s_instance = new();
 
                 s_instance._storage = storage;
+                s_instance._coroutines = coroutines;
             }
             return s_instance;
         }
 
         public void Start()
         {
-            Change(_gameMode);
+            _coroutines.Run(Change_Cn(_gameMode));
         }
 
         public void Init()
         {
             _turnQueue.Next();
 
-            Change(GameModeId.Init);
+            _coroutines.Run(Change_Cn(GameModeId.Init));
         }
 
         public void Play()
         {
-            Change(GameModeId.Play);
+            _coroutines.Run(Change_Cn(GameModeId.Play));
         }
 
         public void EndTurn()
         {
-            Change(GameModeId.EndTurn);
+            _coroutines.Run(Change_Cn(GameModeId.EndTurn));
+
+            // !!!!!!!!!!!! TEMP
+            StartTurn();
         }
 
         public void StartTurn()
         {
             _turnQueue.Next();
 
-            Change(GameModeId.StartTurn);
+            _coroutines.Run(Change_Cn(GameModeId.StartTurn));
+
+            // !!!!!!!!!!!! TEMP
+            WaitRoll();
         }
 
         public void WaitRoll()
         {
-            Change(GameModeId.WaitRoll);
+            _coroutines.Run(Change_Cn(GameModeId.WaitRoll));
+
+            // !!!!!!!!!!!! TEMP
+            Roll(Random.Range(3, 16));
         }
 
         public void Roll(int newValue)
         {
             _hexId = newValue;
 
-            Change(GameModeId.Roll);
+            _coroutines.Run(Change_Cn(GameModeId.Roll));
+
+            // !!!!!!!!!!!! TEMP
+            Profit();
         }
 
         public void Profit()
         {
-            Change(GameModeId.Profit);
+            _coroutines.Run(Change_Cn(GameModeId.Profit));
+
+            // !!!!!!!!!!!! TEMP
+            Play();
         }
 
         public void End(Winner winner)
         {
-            Change(GameModeId.End);
+            _coroutines.Run(Change_Cn(GameModeId.End));
         }
 
-        private void Change(Id<GameModeId> gameMode)
+        private IEnumerator Change_Cn(Id<GameModeId> gameMode)
         {
+            yield return null;
+
             _gameMode = gameMode;
             _changingGameModes[gameMode].Invoke(_turnQueue, _hexId);
             _storage.SaveGame(this);

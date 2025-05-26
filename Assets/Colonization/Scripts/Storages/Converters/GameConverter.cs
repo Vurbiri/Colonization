@@ -3,6 +3,7 @@ using System;
 
 namespace Vurbiri.Colonization
 {
+    [JsonConverter(typeof(Converter))]
     public partial class Game
     {
         sealed public class Converter : AJsonConverter<Game>

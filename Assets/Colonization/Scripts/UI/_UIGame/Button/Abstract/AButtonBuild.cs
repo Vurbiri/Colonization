@@ -17,9 +17,9 @@ namespace Vurbiri.Colonization.UI
 
         public Vector3 LocalPosition { set => _thisTransform.localPosition = value; }
 
-        protected virtual void Init(Vector3 localPosition, ButtonSettings settings, Action action)
+        protected virtual void Init(ButtonSettings settings, Action action)
         {
-            base.Init(localPosition, settings.hint, action, true);
+            base.Init(settings.hint, action, true);
 
             _hexColorPlus = settings.colorSettings.TextPositiveTag;
             _hexColorMinus = settings.colorSettings.TextNegativeTag;
