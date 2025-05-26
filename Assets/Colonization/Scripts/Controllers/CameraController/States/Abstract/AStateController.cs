@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Controllers
         private abstract class AStateController<T> : AState where T : struct
         {
             protected readonly CameraController _controller;
-            protected readonly Transform _controllerTransform;
+            protected readonly CameraTransform _cameraTransform;
 
             protected Coroutine _coroutine;
 
@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.Controllers
             protected AStateController(CameraController controller) : base(controller._machine)
             {
                 _controller = controller;
-                _controllerTransform = _controller._thisTransform;
+                _cameraTransform = controller._cameraTransform;
             }
 
             public override void Exit()

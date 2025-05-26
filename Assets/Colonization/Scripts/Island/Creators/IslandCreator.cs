@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
         public IslandCreator Init(GameplayInitObjects init)
         {
             _storage = init.storage;
-            _hexagonSpawner.Init(init.mainCamera, init.triggerBus);
+            _hexagonSpawner.Init(init.cameraTransform.Camera, init.triggerBus);
 
             init.hexagons   = _hexagons   = new(init.game);
             init.crossroads = _crossroads = new(_crossroadsContainer, _edificePrefabs, init.triggerBus);

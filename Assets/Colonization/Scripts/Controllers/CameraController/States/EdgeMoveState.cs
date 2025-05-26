@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.Controllers
                 }
             }
             
-            public EdgeMoveState(CameraController controller, Movement movement, float edge, Camera camera) : base(controller, movement, camera)
+            public EdgeMoveState(CameraController controller, Movement movement, float edge) : base(controller, movement)
             {
                 _edge = edge;
             }

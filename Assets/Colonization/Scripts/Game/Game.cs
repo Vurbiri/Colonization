@@ -9,8 +9,9 @@ namespace Vurbiri.Colonization
         private Id<GameModeId> _gameMode;
         private TurnQueue _turnQueue;
         private int _hexId;
-
         private GameplayStorage _storage;
+
+        public Id<GameModeId> GameMode => _gameMode;
 
         private Game() : this(GameModeId.Play/*Init*/, new(PlayerId.Player), -1) { }
         private Game(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId) : base()

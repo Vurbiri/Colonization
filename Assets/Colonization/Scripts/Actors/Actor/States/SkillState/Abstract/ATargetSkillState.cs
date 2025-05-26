@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.Actors
             protected readonly RBool _isCancel;
             protected readonly WaitForSecondsRealtime _waitRealtime = new(0.6f);
             protected readonly Relation _relationTarget;
-            // !!!!!!!!!!!!!!!!!!!!! ������� _relationRealTarget
+            // !!!!!!!!!!!!!!!!!!!!! удалить _relationRealTarget
             protected readonly Relation _relationRealTarget;
 
             protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<HitEffects> effects, int cost, int id) : 
@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.Actors
             {
                 _isCancel = parent._canCancel;
                 _relationTarget = targetActor.ToRelation();
-                Debug.Log("������� _relationTarget = Relation.Friend; � _relationRealTarget");
+                Debug.Log("удалить _relationTarget = Relation.Friend; и _relationRealTarget");
                 _relationRealTarget = _relationTarget;
                 _relationTarget = Relation.Friend;
             }

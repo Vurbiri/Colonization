@@ -1,6 +1,5 @@
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -15,13 +14,10 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private WarriorsMenu _warriorsMenu;
         [Space]
         [SerializeField] private ButtonCancel _buttonCancel;
-        [Space]
-        [SerializeField] private LookAtCamera _lookAtCamera;
 
         private Camera _camera;
         private RectTransform _thisRectTransform;
-        private Unsubscriptions _unsubscribers = new(9);
-        private bool _isPlayerTurn;
+        private bool _isPlayerTurn, _lookAtEnabled;
         private IMenu _currentOpenMenu;
 
         public void Init(ContextMenuSettings settings)
@@ -29,18 +25,18 @@ namespace Vurbiri.Colonization.UI
             _camera = settings.camera;
             _thisRectTransform = GetComponent<RectTransform>();
 
-            _lookAtCamera.Init(_camera);
+            _buttonCancel  .Init(settings.hint).Add(OnActiveMenu);
+            _crossroadMenu .Init(settings, _roadsMenu, _recruitingMenu).Add(OnActiveMenu);
+            _recruitingMenu.Init(settings, _crossroadMenu).Add(OnActiveMenu);
+            _roadsMenu     .Init(settings, _crossroadMenu).Add(OnActiveMenu);
+            _warriorsMenu  .Init(settings).Add(OnActiveMenu);
 
-            _unsubscribers += _buttonCancel.Init(settings.hint).Add(OnActiveMenu);
-            _unsubscribers += _crossroadMenu.Init(_roadsMenu, _recruitingMenu, settings).Add(OnActiveMenu);
-            _unsubscribers += _recruitingMenu.Init(_crossroadMenu, settings).Add(OnActiveMenu);
-            _unsubscribers += _roadsMenu.Init(_crossroadMenu, settings).Add(OnActiveMenu);
-            _unsubscribers += _warriorsMenu.Init(settings).Add(OnActiveMenu);
+            settings.eventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
+            settings.eventBus.EventActorSelect.Add(OnSelectWarrior);
 
-            _unsubscribers += settings.eventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
-            _unsubscribers += settings.eventBus.EventActorSelect.Add(OnSelectWarrior);
+            settings.eventBus.EventUnselect.Add(OnClose);
 
-            _unsubscribers += settings.eventBus.EventUnselect.Add(OnClose);
+            settings.cameraTransform.Subscribe(LookAtCamera);
 
             settings.game.Subscribe(GameModeId.EndTurn, OnEndTurn);
             settings.game.Subscribe(GameModeId.Play, OnGamePlay);
@@ -89,23 +85,24 @@ namespace Vurbiri.Colonization.UI
                 _thisRectTransform.anchoredPosition = localPoint;
         }
 
+        private void LookAtCamera(Transform cameraTransform)
+        {
+            if(_lookAtEnabled)
+                _thisRectTransform.rotation = Quaternion.LookRotation(cameraTransform.forward);
+        }
+
         private void OnActiveMenu(IMenu menu, bool value)
         {
             if (value)
             {
                 _currentOpenMenu = menu;
-                _lookAtCamera.enabled = true;
+                _lookAtEnabled = true;
             }
             else if (_currentOpenMenu == menu)
             {
                 _currentOpenMenu = null;
-                _lookAtCamera.enabled = false;
+                _lookAtEnabled = false;
             }
-        }
-
-        private void OnDestroy()
-        {
-            _unsubscribers.Unsubscribe();
         }
 
 #if UNITY_EDITOR
@@ -123,8 +120,6 @@ namespace Vurbiri.Colonization.UI
                 _warriorsMenu = GetComponentInChildren<WarriorsMenu>();
             if (_buttonCancel == null)
                 _buttonCancel = GetComponentInChildren<ButtonCancel>();
-            if (_lookAtCamera == null)
-                _lookAtCamera = GetComponent<LookAtCamera>();
         }
 #endif
     }

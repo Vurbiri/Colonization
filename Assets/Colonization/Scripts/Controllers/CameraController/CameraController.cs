@@ -16,25 +16,22 @@ namespace Vurbiri.Colonization.Controllers
         [SerializeField, Range(1f, 50f)] private float _edge = 14f;
         [SerializeField] private bool _isEdgeMove;
 
-        private Transform _thisTransform;
+        private CameraTransform _cameraTransform;
         private readonly StateMachine _machine = new();
         private MoveState _moveState;
         private EdgeMoveState _edgeMoveState;
         private MoveToTargetState _moveToTargetState;
         private ZoomState _zoomState;
 
-        public Camera MainCamera { get; private set; }
-
-        public CameraController Init(Camera camera, GameplayTriggerBus eventBus, InputControlAction.CameraActions cameraActions)
+        public CameraController Init(CameraTransform camera, GameplayTriggerBus eventBus, InputControlAction.CameraActions cameraActions)
         {
-            MainCamera = camera;
-            _thisTransform = transform;
+            _cameraTransform = camera;
 
             #region States
-            _moveState          = new(this, _movement, camera);
-            _edgeMoveState      = new(this, _movement, _edge, camera);
+            _moveState          = new(this, _movement);
+            _edgeMoveState      = new(this, _movement, _edge);
             _moveToTargetState  = new(this, _movementTo);
-            _zoomState          = new(this, _zoom, camera, eventBus);
+            _zoomState          = new(this, _zoom, eventBus);
             #endregion
 
             #region Subscribe
@@ -48,8 +45,6 @@ namespace Vurbiri.Colonization.Controllers
             eventBus.EventCrossroadSelect.Add(OnMoveToPosition);
             eventBus.EventActorSelect.Add(OnMoveToPosition);
             #endregion
-
-            camera.transform.LookAt(_thisTransform);
 
             return this;
         }
@@ -73,7 +68,7 @@ namespace Vurbiri.Colonization.Controllers
 
         private void OnRotate(CallbackContext ctx)
         {
-            _thisTransform.localRotation *= Quaternion.Euler(0f, _speedRotation * ctx.ReadValue<float>(), 0f);
+            _cameraTransform.Rotate(_speedRotation * ctx.ReadValue<float>());
         }
 
         private void OnEdgeMove(CallbackContext ctx)

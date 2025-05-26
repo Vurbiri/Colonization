@@ -14,7 +14,7 @@ namespace VurbiriEditor
 	{
         #region Consts
         private const string PATH_IMAGE = "ed_iconSceneLoader";
-        private const string NAME = "Scenes Switching", MENU = MENU_PATH + NAME;
+        private const string NAME = "Scenes Switch", MENU = MENU_PATH + NAME;
         #endregion
 
         private static SceneField s_sceneField;

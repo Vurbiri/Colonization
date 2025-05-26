@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void Init(params IRendererVisible[] renderers)
 		{
-            _cameraTransform = SceneContainer.Get<CameraController>().MainCamera.transform;
+            _cameraTransform = SceneContainer.Get<CameraTransform>().Transform;
             _thisTransform = transform;
 
             _renderers = renderers;
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.Actors
                     break;
             }
 
-            if (!isVisible || (_lastCameraPosition == _cameraTransform.position && _lastRotation == transform.rotation))
+            if (!isVisible || (_lastCameraPosition == _cameraTransform.position && _lastRotation == _thisTransform.rotation))
                 return;
 
             _lastCameraPosition = _cameraTransform.position;

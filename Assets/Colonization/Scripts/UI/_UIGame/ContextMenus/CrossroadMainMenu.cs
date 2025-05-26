@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
         private CrossroadWarriorsMenu _warriorsMenu;
         private Human _player;
 
-        public ISubscription<IMenu, bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu, ContextMenuSettings settings)
+        public ISubscription<IMenu, bool> Init(ContextMenuSettings settings, CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu)
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;

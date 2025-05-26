@@ -9,55 +9,59 @@ namespace Vurbiri.Colonization.EntryPoint
     [System.Serializable]
     public class GameplayInitObjects
     {
-        public Prices prices;
+        [SerializeField] private Prices _prices;
         [Space]
-        public Camera mainCamera;
-        public CameraController cameraController;
+        [SerializeField] private Camera _mainCamera;
+        [SerializeField] private CameraController _cameraController;
+        [Space]
+        [SerializeField] private PoolEffectsBarFactory _poolEffectsBar;
         [Header("══════ Init data for classes ══════")]
         [SerializeField] private Players.Settings _playersSettings;
         [SerializeField] private InputController.Settings _inputControllerSettings;
-        [Space]
-        public PoolEffectsBarFactory poolEffectsBar;
+
+        private Score _score;
+        private Balance _balance;
 
         public Game game;
 
         public DIContainer diContainer;
         public GameState gameState;
         public GameplayStorage storage;
+        public CameraTransform cameraTransform;
         public GameplayTriggerBus triggerBus;
         public InputController inputController;
         public Hexagons hexagons;
         public Crossroads crossroads;
         public Players players;
 
-        private Score _score;
-        private Balance _balance;
-
-        public void CreateObjectsAndFillingContainer(DIContainer diContainer)
+        public void CreateObjectsAndFillingContainer(DIContainer container)
         {
-            this.diContainer = diContainer;
-            gameState = diContainer.Get<GameState>();
+            diContainer = container;
+            gameState = container.Get<GameState>();
 
-            diContainer.AddInstance(storage = new(gameState.IsLoad));
+            container.AddInstance(storage = new(gameState.IsLoad));
 
-            diContainer.AddInstance<GameEvents>(game = Game.Create(storage));
+            container.AddInstance<GameEvents>(game = Game.Create(storage));
 
-            diContainer.AddInstance(Coroutines.Create("Gameplay Coroutines"));
-            diContainer.AddInstance<GameplayTriggerBus, GameplayEventBus>(triggerBus = new());
-            diContainer.AddInstance(inputController = new(game, mainCamera, _inputControllerSettings));
+            container.AddInstance(Coroutines.Create("Gameplay Coroutines"));
+            container.AddInstance<GameplayTriggerBus, GameplayEventBus>(triggerBus = new());
+            container.AddInstance(inputController = new(game, _mainCamera, _inputControllerSettings));
 
-            diContainer.AddInstance(_score = new Score(storage));
-            diContainer.AddInstance(_balance = new Balance(storage, game));
-            diContainer.AddInstance(new Diplomacy(storage, game));
+            container.AddInstance(_score = new Score(storage));
+            container.AddInstance(_balance = new Balance(storage, game));
+            container.AddInstance(new Diplomacy(storage, game));
 
-            diContainer.AddInstance(poolEffectsBar.Create());
-            diContainer.AddInstance(cameraController.Init(mainCamera, triggerBus, inputController.CameraActions));
+            container.AddInstance(cameraTransform = new(_mainCamera));
+            container.AddInstance(_poolEffectsBar.Create());
+            
+            _cameraController.Init(cameraTransform, triggerBus, inputController.CameraActions);
 
+            _cameraController = null;
             _inputControllerSettings = null;
-            poolEffectsBar = null;
+            _poolEffectsBar = null;
         }
 
-        public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(game, players, hintWorld, prices, mainCamera, triggerBus);
+        public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(game, players, hintWorld, _prices, cameraTransform, triggerBus);
 
         public Players.Settings GetPlayersSettings()
         {
@@ -79,12 +83,12 @@ namespace Vurbiri.Colonization.EntryPoint
 #if UNITY_EDITOR
         public void OnValidate()
         {
-            EUtility.SetScriptable(ref prices);
-            EUtility.SetObject(ref mainCamera);
-            EUtility.SetObject(ref cameraController);
+            EUtility.SetScriptable(ref _prices);
+            EUtility.SetObject(ref _mainCamera);
+            EUtility.SetObject(ref _cameraController);
 
             _playersSettings.OnValidate();
-            poolEffectsBar.OnValidate();
+            _poolEffectsBar.OnValidate();
         }
 #endif
     }

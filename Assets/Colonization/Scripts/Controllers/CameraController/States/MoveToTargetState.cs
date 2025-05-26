@@ -25,16 +25,10 @@ namespace Vurbiri.Colonization.Controllers
 
             private IEnumerator MoveToTarget_Cn()
             {
-                Vector3 velocity = Vector3.zero;
-                do
-                {
-                    _controllerTransform.position = Vector3.SmoothDamp(_controllerTransform.position, _targetPosition, ref velocity, _stt.smoothTime);
+                while (_cameraTransform.MoveToTarget(_targetPosition, _stt.smoothTime, _stt.sqrVelocityMin))
                     yield return null;
-                }
-                while (velocity.sqrMagnitude > _stt.sqrVelocityMin);
 
                 _coroutine = null;
-
                 _fsm.ToDefaultState();
             }
         }

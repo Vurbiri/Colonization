@@ -15,28 +15,25 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private IdSet<LinkId, ButtonBuildRoad> _roadButtons;
 
         private RectTransform _thisTransform;
-        private Transform _cameraTransform;
-        private Vector3 _lastCameraPosition;
         private Vector2 _localPoint;
         private CrossroadMainMenu _mainMen;
         private Crossroad _currentCrossroad;
 
-        public ISubscription<IMenu, bool> Init(CrossroadMainMenu mainMenu, ContextMenuSettings settings)
+        public ISubscription<IMenu, bool> Init(ContextMenuSettings settings, CrossroadMainMenu mainMenu)
         {
-            ACurrencies roadCost = settings.prices.Road;
             _mainMen = mainMenu;
             _camera = settings.camera;
+            _thisTransform = GetComponent<RectTransform>();
 
             _buttonBack.Init(settings.hint, OnClose);
 
-            _thisTransform = GetComponent<RectTransform>();
-            _cameraTransform = _camera.transform;
-
+            ACurrencies roadCost = settings.prices.Road;
             foreach (var button in _roadButtons)
                 button.Init(settings, roadCost, this);
 
-            base.CloseInstant();
+            settings.cameraTransform.Subscribe(LookAtCamera, false);
 
+            CloseInstant();
             return _eventActive;
         }
 
@@ -52,8 +49,6 @@ namespace Vurbiri.Colonization.UI
                         button.LocalPosition = _localPoint;
             }
 
-            _lastCameraPosition = _cameraTransform.position;
-
             base.Open();
         }
 
@@ -63,17 +58,22 @@ namespace Vurbiri.Colonization.UI
             _mainMen.Open();
         }
 
-        private void Update()
+        protected override void Disable()
         {
-            if (_currentCrossroad == null || _lastCameraPosition == _cameraTransform.position)
-                return;
+            base.Disable();
+            _currentCrossroad = null;
+        }
 
-            foreach (var link in _currentCrossroad.Links)
+        private void LookAtCamera(Transform cameraTransform)
+        {
+            if (_currentCrossroad != null)
             {
-                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(link.Position), _camera, out _localPoint))
-                    _roadButtons[link.Id].LocalPosition = _localPoint;
+                foreach (var link in _currentCrossroad.Links)
+                {
+                    if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, _camera.WorldToScreenPoint(link.Position), _camera, out _localPoint))
+                        _roadButtons[link.Id].LocalPosition = _localPoint;
+                }
             }
-            _lastCameraPosition = _cameraTransform.position;
         }
 
 #if UNITY_EDITOR

@@ -5,26 +5,26 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        sealed private class ZoomState : AStateControllerCamera<float>
+        sealed private class ZoomState : AStateController<float>
         {
-            private GameplayTriggerBus _eventBus;
-            private readonly Zoom _stt;
+            private readonly GameplayTriggerBus _eventBus;
+            private readonly Zoom _settings;
             private float _heightZoom;
             private bool _isShow;
 
             public override float InputValue 
             {
                 get => _heightZoom;
-                set => _heightZoom = Mathf.Clamp(_heightZoom - value * _stt.steepZoomRate, _stt.heightZoomMin, _stt.heightZoomMax); 
+                set => _heightZoom = Mathf.Clamp(_heightZoom - value * _settings.steepZoomRate, _settings.heightZoomMin, _settings.heightZoomMax); 
             }
 
-            public ZoomState(CameraController controller, Zoom zoom, Camera camera, GameplayTriggerBus eventBus) : base(controller, camera)
+            public ZoomState(CameraController controller, Zoom zoom, GameplayTriggerBus eventBus) : base(controller)
             {
-                _stt = zoom;
+                _settings = zoom;
                 _eventBus = eventBus;
 
-                _heightZoom = _cameraTransform.localPosition.y;
-                _isShow = _heightZoom > _stt.heightHexagonShow;
+                _heightZoom = _cameraTransform.Height;
+                _isShow = _heightZoom > _settings.heightHexagonShow;
                 eventBus.TriggerHexagonShowDistance(_isShow);
             }
 
@@ -34,19 +34,20 @@ namespace Vurbiri.Colonization.Controllers
             }
             private IEnumerator Zoom_Cn()
             {
-                Vector3 position = _cameraTransform.localPosition;
+                bool isShow;
+                Vector3 position = _cameraTransform.Position;
                 do
                 {
-                    position.y = Mathf.Lerp(position.y, _heightZoom, Time.deltaTime * _stt.speedZoom);
-                    _cameraTransform.localPosition = position;
-                    _cameraTransform.LookAt(_controllerTransform);
+                    position.y = Mathf.Lerp(position.y, _heightZoom, Time.deltaTime * _settings.speedZoom);
+                    _cameraTransform.Position = position;
 
                     yield return null;
 
-                    if (_heightZoom > _stt.heightHexagonShow != _isShow)
-                        _eventBus.TriggerHexagonShowDistance(_isShow = _heightZoom > _stt.heightHexagonShow);
+                    isShow = position.y > _settings.heightHexagonShow;
+                    if (isShow != _isShow)
+                        _eventBus.TriggerHexagonShowDistance(_isShow = isShow);
                 }
-                while (Mathf.Abs(_heightZoom - position.y) > _stt.speedZoom);
+                while (Mathf.Abs(_heightZoom - position.y) > _settings.speedZoom);
 
                 _coroutine = null;
                 _fsm.ToDefaultState();
