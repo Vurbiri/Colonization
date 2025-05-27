@@ -18,7 +18,7 @@ namespace Vurbiri.International.Editor
             SerializedProperty valueProperty = mainProperty.FindPropertyRelative(F_NAME);
             label = BeginProperty(position, label, mainProperty);
 			{
-                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, LanguageFiles.names) & ~(-1 << LanguageFiles.count);
+                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, LanguageData.fileNames) & ~(-1 << LanguageData.fileCount);
             }
 			EndProperty();
 		}

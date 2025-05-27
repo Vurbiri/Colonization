@@ -67,6 +67,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public Players.Settings GetPlayersSettings()
         {
             _playersSettings.coroutines = _coroutines;
+            _playersSettings.inputController = inputController;
             _playersSettings.score = _score;
             _playersSettings.balance = _balance;
             _playersSettings.hexagons = hexagons;

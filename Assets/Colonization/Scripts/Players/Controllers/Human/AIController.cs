@@ -1,4 +1,5 @@
 using System.Collections;
+using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization
 {
@@ -7,13 +8,15 @@ namespace Vurbiri.Colonization
         private readonly Game _game;
         private readonly Crossroads _crossroads;
         private readonly Hexagons _hexagons;
+        private readonly InputController _inputController;
 
-        public AIController(Game game, Id<PlayerId> playerId, Storage.HumanStorage storage, Players.Settings settings) 
+        public AIController(Game game, Id<PlayerId> playerId, Storage.HumanStorage storage, Players.Settings settings)
             : base(playerId, storage, settings)
         {
             _game = game;
             _crossroads = settings.crossroads;
             _hexagons = settings.hexagons;
+            _inputController = settings.inputController;
         }
 
         public override void OnInit()
@@ -23,19 +26,24 @@ namespace Vurbiri.Colonization
 
         public override void OnPlay()
         {
-            
+
         }
 
         private IEnumerator OnInit_Cn()
         {
-            WaitRealtime waitRealtime = new(1f);
+            WaitRealtime waitRealtime = new(1.5f);
             yield return waitRealtime;
-            while (_crossroads.BreachCount > 0)
+
+            if (_crossroads.BreachCount > 0)
             {
-                if (BuildPort(_crossroads.GetRandomPort()))
-                    break;
+                Crossroad port = _crossroads.GetRandomPort();
+                _inputController.Select(port);
+
+                yield return waitRealtime;
+
+                BuildPort(port);
+                yield return waitRealtime;
             }
-            yield return waitRealtime;
             
             _game.Init();
         }

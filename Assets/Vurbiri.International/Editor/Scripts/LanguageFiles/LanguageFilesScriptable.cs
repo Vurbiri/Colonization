@@ -25,7 +25,7 @@ namespace Vurbiri.International.Editor
         public void Load()
         {
             _files = LoadObjectFromResourceJson<List<string>>(FILE_FILES);
-            LanguageFiles.Set(_files);
+            LanguageData.SetFiles(_files);
             EditorUtility.SetDirty(this);
         }
 
@@ -35,7 +35,7 @@ namespace Vurbiri.International.Editor
             {
                 AssetDatabase.Refresh();
                 Debug.Log($"Saved <i>{FILE_FILES_PATH}</i>");
-                LanguageFiles.Set(_files);
+                LanguageData.SetFiles(_files);
             }
             else
             {
@@ -80,14 +80,14 @@ namespace Vurbiri.International.Editor
                 var folders = LoadObjectFromResourceJson<List<LanguageType>>(FILE_LANG)
                     .Select(l => FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER.Concat(l.Folder, "/"))).GroupBy(f => f).Select(g => g.First()).ToArray();
 
-                int count = Mathf.Min(_files.Count, LanguageFiles.count);
+                int count = Mathf.Min(_files.Count, LanguageData.fileCount);
                 for (int i = 0; i < count; i++)
                 {
-                    if (_files[i] != LanguageFiles.names[i])
+                    if (_files[i] != LanguageData.fileNames[i])
                     {
                         foreach (var folder in folders)
                         {
-                            string src = folder.Concat(LanguageFiles.names[i], JSON_EXP);
+                            string src = folder.Concat(LanguageData.fileNames[i], JSON_EXP);
                             string dst = folder.Concat(_files[i], JSON_EXP);
                             
                             if (File.Exists(src))

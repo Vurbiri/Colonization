@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
@@ -65,6 +66,7 @@ namespace Vurbiri.Colonization
             public Transform actorsContainer;
 
             public Coroutines coroutines;
+            public InputController inputController;
             public Score score;
             public Balance balance;
             public Hexagons hexagons;

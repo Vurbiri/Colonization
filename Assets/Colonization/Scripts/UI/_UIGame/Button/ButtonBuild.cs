@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
     sealed public class ButtonBuild : AButtonBuild
     {
         [Space]
-        [SerializeField] private string _key;
+        [SerializeField, Key(Files.Gameplay)] private string _key;
 
         private ACurrencies _cost;
         private ACurrencies _cash;

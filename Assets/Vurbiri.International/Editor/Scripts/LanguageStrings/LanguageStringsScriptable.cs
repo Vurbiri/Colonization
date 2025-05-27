@@ -86,10 +86,10 @@ namespace Vurbiri.International.Editor
             int idMaxLength = -1, maxLength = -1;
             for (int i = 0; i < _count; i++)
             {
-                path = Path.Combine(folder, _languages[i].Folder, _selectFile.ToString().Concat(JSON_EXP));
+                path = Path.Combine(folder, _languages[i].Folder, _selectFile.Concat(JSON_EXP));
 
                 if (File.Exists(path))
-                    strings[i] = LoadObjectFromResourceJson<Dictionary<string, string>>(Path.Combine(_languages[i].Folder, _selectFile.ToString()));
+                    strings[i] = LoadObjectFromResourceJson<Dictionary<string, string>>(Path.Combine(_languages[i].Folder, _selectFile));
                 else
                     strings[i] = new();
 
@@ -121,7 +121,7 @@ namespace Vurbiri.International.Editor
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();
 
-            return _loadFile = _selectFile.ToString();
+            return _loadFile = _selectFile;
         }
 
         public void Save()
@@ -148,7 +148,7 @@ namespace Vurbiri.International.Editor
             string folder = FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER);
             for (int i = 0; i < _count; i++)
             {
-                FileInfo fileInfo = new(Path.Combine(folder, _languages[i].Folder, _selectFile.ToString().Concat(JSON_EXP)));
+                FileInfo fileInfo = new(Path.Combine(folder, _languages[i].Folder, _loadFile.Concat(JSON_EXP)));
                 if (!fileInfo.Exists)
                     fileInfo.Directory.Create();
                 
@@ -159,6 +159,8 @@ namespace Vurbiri.International.Editor
             EditorUtility.SetDirty(this);
             AssetDatabase.Refresh();
             AssetDatabase.SaveAssets();
+
+            LanguageData.CreateKeys(_loadFile);
         }
 
         public static LanguageStringsScriptable GetOrCreateSelf() => GetOrCreateSelf(LANG_STRING_NAME, LANG_STRING_PATH);

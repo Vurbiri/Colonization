@@ -19,7 +19,7 @@ namespace Vurbiri.International.Editor
 
             root.Q<Label>("Label").text = CONST.PROJECT_STRING_LABEL;
 
-            root.Q<DropdownField>("File").choices = new(LanguageFiles.names);
+            root.Q<DropdownField>("File").choices = new(LanguageData.fileNames);
 
             var list = root.Q<ListView>("Strings");
             list.makeItem = LanguageRecordEditor.CreateInstanceAndGetVisualElement;

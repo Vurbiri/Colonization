@@ -16,7 +16,7 @@ namespace Vurbiri.International.Editor
             SerializedProperty idProperty = mainProperty.FindPropertyRelative(F_NAME);
             label = BeginProperty(position, label, mainProperty);
             {
-                idProperty.intValue = IntPopup(position, label.text, idProperty.intValue, LanguageFiles.names, LanguageFiles.values, EditorStyles.popup);
+                idProperty.intValue = IntPopup(position, label.text, idProperty.intValue, LanguageData.fileNames, LanguageData.fileValues, EditorStyles.popup);
             }
             EndProperty();
         }

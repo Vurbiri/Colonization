@@ -26,6 +26,8 @@ namespace Vurbiri.International.Editor
             File.WriteAllText(FileUtil.GetPhysicalPath(FILE_LANG_PATH), JsonConvert.SerializeObject(_languageTypes, Formatting.Indented), utf8WithoutBom);
             AssetDatabase.Refresh();
             Debug.Log($"Saved <i>{FILE_LANG_PATH}</i>");
+
+            LanguageData.folder = _languageTypes[0].Folder;
         }
 
         public bool Contains(SystemLanguage id)

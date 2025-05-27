@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.UI
     {
         private const string PROFIT = "{0} {1}";
 
-        [SerializeField] private string _keyProfit;
+        [SerializeField, Key(Files.Gameplay)] private string _keyProfit;
         [Space]
         [SerializeField] private TextMeshProUGUI _profitTMP;
 
