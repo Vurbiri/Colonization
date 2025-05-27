@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Controllers
         public Camera Camera { get; }
         public Transform Transform => _cameraTransform;
 
-        public Vector3 Position
+        public Vector3 CameraPosition
         {
             get => _cameraTransform.localPosition;
             set
@@ -26,8 +26,8 @@ namespace Vurbiri.Colonization.Controllers
                 _changedTransform.Invoke(_cameraTransform);
             }
         }
+        public Vector3 ParentPosition => _parentTransform.position;
 
-        public float Height => _cameraTransform.localPosition.y;
 
         public CameraTransform(Camera camera)
         {
@@ -61,6 +61,16 @@ namespace Vurbiri.Colonization.Controllers
         public void Rotate(float angleY)
         {
             _parentTransform.rotation *= Quaternion.Euler(0f, angleY, 0f);
+            _changedTransform.Invoke(_cameraTransform);
+        }
+
+        public void SetCameraAndParentPosition(Vector3 cameraPosition, Vector3 parentPosition)
+        {
+            _parentTransform.position = parentPosition;
+            _cameraTransform.localPosition = cameraPosition;
+            
+            _cameraTransform.LookAt(_parentTransform);
+
             _changedTransform.Invoke(_cameraTransform);
         }
 

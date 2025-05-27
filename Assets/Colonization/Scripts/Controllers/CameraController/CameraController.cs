@@ -7,6 +7,7 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController : MonoBehaviour
     {
+        [SerializeField] private Default _default;
         [SerializeField] private Movement _movement;
         [SerializeField] private MovementToTarget _movementTo;
         [SerializeField] private Zoom _zoom;
@@ -21,16 +22,21 @@ namespace Vurbiri.Colonization.Controllers
         private MoveState _moveState;
         private EdgeMoveState _edgeMoveState;
         private MoveToTargetState _moveToTargetState;
+        private MoveToDefaultState _moveToDefaultState;
         private ZoomState _zoomState;
 
         public CameraController Init(CameraTransform camera, GameplayTriggerBus eventBus, InputControlAction.CameraActions cameraActions)
         {
+            _default.height = Mathf.Clamp(_default.height, _zoom.heightZoomMin, _zoom.heightZoomMax);
+            _zoom.heightHexagonShow = Mathf.Clamp(_zoom.heightHexagonShow, _zoom.heightZoomMin, _zoom.heightZoomMax);
+
             _cameraTransform = camera;
 
             #region States
             _moveState          = new(this, _movement);
             _edgeMoveState      = new(this, _movement, _edge);
             _moveToTargetState  = new(this, _movementTo);
+            _moveToDefaultState = new(this, _default, _zoom, eventBus);
             _zoomState          = new(this, _zoom, eventBus);
             #endregion
 
@@ -46,7 +52,16 @@ namespace Vurbiri.Colonization.Controllers
             eventBus.EventActorSelect.Add(OnMoveToPosition);
             #endregion
 
+            var cameraPosition = _cameraTransform.CameraPosition;
+            cameraPosition.y = _default.height;
+            _cameraTransform.SetCameraAndParentPosition(cameraPosition, Vector3.zero);
+
             return this;
+        }
+
+        public void ToDefaultPosition()
+        {
+            _machine.SetState(_moveToDefaultState);
         }
 
         private void OnMove(CallbackContext ctx)
@@ -54,15 +69,15 @@ namespace Vurbiri.Colonization.Controllers
             if (_machine.CurrentState == _moveToTargetState)
                 return;
 
-            _moveState.InputValue = ctx.ReadValue<Vector2>();
+            _moveState.LinkValue = ctx.ReadValue<Vector2>();
             _machine.SetState(_moveState);
 
         }
-        private void OnMoveCancel(CallbackContext ctx) => _moveState.InputValue = Vector2.zero;
+        private void OnMoveCancel(CallbackContext ctx) => _moveState.LinkValue = Vector2.zero;
 
         private void OnMoveToPosition(IPositionable obj)
         {
-            _moveToTargetState.InputValue = obj.Position;
+            _moveToTargetState.LinkValue = obj.Position;
             _machine.SetState(_moveToTargetState);
         }
 
@@ -76,7 +91,7 @@ namespace Vurbiri.Colonization.Controllers
             if (!_isEdgeMove || !(_machine.IsDefaultState | _machine.CurrentState == _edgeMoveState))
                 return;
 
-            _edgeMoveState.InputValue = ctx.ReadValue<Vector2>();
+            _edgeMoveState.LinkValue = ctx.ReadValue<Vector2>();
 
             if (_edgeMoveState.IsMove)
                 _machine.SetState(_edgeMoveState);
@@ -84,8 +99,8 @@ namespace Vurbiri.Colonization.Controllers
 
         private void OnZoom(CallbackContext ctx)
         {
-            _zoomState.InputValue = ctx.ReadValue<float>();
             _machine.SetState(_zoomState);
+            _zoomState.LinkValue = ctx.ReadValue<float>();
         }
 
 #if UNITY_EDITOR
@@ -99,6 +114,13 @@ namespace Vurbiri.Colonization.Controllers
 
         #region Nested: Movement, MovementToTarget
         //***********************************
+        [Serializable]
+        private class Default
+        {
+            public float height = 329f;
+            [Range(0.2f, 5f)] public float maxTime = 1.5f;
+            [Range(0.1f, 2f)] public float minSpeed = 0.5f;
+        }
         [Serializable]
         private class Movement
         {
@@ -119,9 +141,10 @@ namespace Vurbiri.Colonization.Controllers
         {
             public float speedZoom = 4f;
             public float heightZoomMin = 65f;
-            public float heightZoomMax = 410f;
-            public float heightHexagonShow = 320f;
-            [Range(0.01f, 0.3f)] public float steepZoomRate = 0.1f;
+            public float heightZoomMax = 415f;
+            public float heightHexagonShow = 330f;
+            [Range(0.25f, 3.5f)] public float minDeltaHeight = 1.25f;
+            [Range(0.01f, 0.3f)] public float steepZoomRate = 0.125f;
         }
         //***********************************
         #endregion

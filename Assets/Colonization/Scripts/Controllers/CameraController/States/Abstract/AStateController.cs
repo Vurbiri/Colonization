@@ -5,14 +5,14 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        private abstract class AStateController<T> : AState where T : struct
+        private abstract class AStateController<T> : AState
         {
             protected readonly CameraController _controller;
             protected readonly CameraTransform _cameraTransform;
 
             protected Coroutine _coroutine;
 
-            public abstract T InputValue { get;  set; }
+            public abstract T LinkValue { get;  set; }
 
             protected AStateController(CameraController controller) : base(controller._machine)
             {
