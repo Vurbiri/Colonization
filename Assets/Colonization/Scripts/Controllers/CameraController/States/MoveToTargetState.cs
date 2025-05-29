@@ -5,12 +5,14 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        sealed private class MoveToTargetState : AStateController<Vector3>
+        sealed private class MoveToTargetState : ACameraState<Vector3>
         {
+            private readonly WaitSignal _waitSignal = new();
             private readonly MovementToTarget _settings;
             private Vector3 _targetPosition;
 
-            public override Vector3 LinkValue { get => _targetPosition; set => _targetPosition = value; }
+            public override Vector3 InputValue { get => _targetPosition; set => _targetPosition = value; }
+            public WaitSignal Signal => _waitSignal;
 
             public MoveToTargetState(CameraController controller, MovementToTarget movementTo) : base(controller)
             {
@@ -19,6 +21,8 @@ namespace Vurbiri.Colonization.Controllers
 
             public override void Enter()
             {
+                _waitSignal.Reset();
+
                 _coroutine = _controller.StartCoroutine(MoveToTarget_Cn());
             }
 
@@ -29,6 +33,12 @@ namespace Vurbiri.Colonization.Controllers
 
                 _coroutine = null;
                 _fsm.ToDefaultState();
+            }
+
+            public override void Exit()
+            {
+                base.Exit();
+                _waitSignal.Send();
             }
         }
     }

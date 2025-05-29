@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Actors
         {
             private readonly GameplayTriggerBus _triggerBus;
 
-            public IdleState(Actor parent) : base(parent, TypeIdKey.Get<IdleState>(0)) 
+            public IdleState(Actor parent) : base(parent) 
             {
                 _triggerBus = parent._triggerBus;
             }

@@ -9,16 +9,17 @@ namespace Vurbiri.Colonization.Actors
 
     public abstract partial class Actor
     {
-        public void AddMoveState(float speed) => _stateMachine.AddState(new MoveState(speed, this));
-        public void AddBlockState(int cost, int value) => _stateMachine.AddState(_blockState = new BlockState(cost, value, this));
+        public void AddMoveState(float speed) => _moveState = new(speed, this);
+        public void AddBlockState(int cost, int value) => _blockState = new(cost, value, this);
+        public void SetCountState(int count) => _skillState = new ASkillState[count];
         public void AddSkillState(IReadOnlyList<HitEffects> effects, SkillSettings skill, float speedRun, int id)
         {
-            _stateMachine.AddState(ASkillState.Create(effects, skill, speedRun, id, this));
+            _skillState[id] = ASkillState.Create(effects, skill, speedRun, id, this);
         }
         public HitEffects[] AddSkillState(SkillSettings skill, float speedRun, int id)
         {
             HitEffects[] effects = skill.CreateEffectsHit(this, id);
-            _stateMachine.AddState(ASkillState.Create(effects, skill, speedRun, id, this));
+            _skillState[id] = ASkillState.Create(effects, skill, speedRun, id, this);
             return effects;
         }
 
@@ -67,14 +68,11 @@ namespace Vurbiri.Colonization.Actors
             #endregion
 
             #region States
-            Skills skills = settings.Skills;
-            _stateMachine = new();
             _stateMachine.SetDefaultState(new IdleState(this));
-            _stateMachine.AddState(new TargetState());
-            skills.CreateStates(this);
-            #endregion
+            settings.Skills.CreateStates(this);
 
             _skin.EventStart += _stateMachine.ToDefaultState;
+            #endregion
 
             _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
             _currentHex.EnterActor(this);

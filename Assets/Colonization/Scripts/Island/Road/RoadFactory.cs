@@ -8,9 +8,9 @@ namespace Vurbiri.Colonization
         [SerializeField] private Road _prefabRoad;
         [SerializeField] private Transform _container;
 
-        public Road Create(Crossroad start, Crossroad end, Gradient gradient)
+        public Road Create(Gradient gradient)
         {
-            return Object.Instantiate(_prefabRoad, _container, false).Init(start, end, gradient);
+            return Object.Instantiate(_prefabRoad, _container, false).Init(gradient);
         }
 
 #if UNITY_EDITOR

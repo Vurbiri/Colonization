@@ -13,10 +13,10 @@ namespace Vurbiri.Colonization.Actors
             private Coroutine _coroutine;
 
             public ActorSkin targetSkin;
-            public readonly WaitSignal waitActivate = new();
+            public readonly WaitSignal signal = new();
             public readonly WaitTime[] waitHits;
 
-            public SkillState(string stateName, ActorSkin parent, TimingSkillSettings timing, int id = 0) : base(stateName, parent, id)
+            public SkillState(string stateName, ActorSkin parent, TimingSkillSettings timing, int id = 0) : base(stateName, parent)
             {
                 _id = id;
                 _countHits = timing.hitTimes.Length;
@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization.Actors
 
                     _coroutine = null;
                 }
-                waitActivate.Reset();
+                signal.Reset();
 
                 _animator.SetBool(_idParam, false);
             }
@@ -58,13 +58,13 @@ namespace Vurbiri.Colonization.Actors
                     yield return waitHits[i];
 
                     yield return _sfx.Hit(_id, i, targetSkin);
-                    waitActivate.Send();
+                    signal.Send();
                 }
 
                 yield return _waitEnd;
 
                 _coroutine = null;
-                waitActivate.Send();
+                signal.Send();
             }
         }
     }

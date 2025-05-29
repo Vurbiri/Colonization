@@ -2,13 +2,9 @@ using System;
 
 namespace Vurbiri.FSM
 {
-    public interface IState : IDisposable, IEquatable<IState>
+    public interface IState : IDisposable
     {
-        public TypeIdKey Key { get;  }
-
         public void Enter();
-
-        public void Update();
 
         public void Exit();
     }

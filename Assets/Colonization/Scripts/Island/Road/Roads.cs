@@ -11,11 +11,12 @@ namespace Vurbiri.Colonization
     {
         #region Fields
         private readonly Id<PlayerId> _id;
-        private readonly Gradient _gradient = new();
         private readonly RoadFactory _factory;
         private readonly List<Road> _roadsLists = new();
         private readonly RInt _count = new(0);
         private readonly Coroutines _coroutines;
+        private readonly GradientAlphaKey[] _alphas  = { new (1.0f, 0.0f), new (1.0f, 1.0f) };
+        private readonly GradientColorKey[] _colors = new GradientColorKey[2];
 
         private readonly Subscription<Roads> _eventChanged = new();
         #endregion
@@ -28,37 +29,32 @@ namespace Vurbiri.Colonization
             _id = id;
             _factory = factory;
             _coroutines = coroutines;
-
-            var alphas = new GradientAlphaKey[] { new(1.0f, 0.0f), new(1.0f, 1.0f) };
-            var colors = new GradientColorKey[] { new(color, 0.0f), new(color, 1.0f) };
-            _gradient.SetKeys(colors, alphas);
+            _colors[0] = new(color, 0.0f); _colors[1] = new(color, 1.0f);
         }
 
-        public void Build(CrossroadLink link)
+        public ReturnSignal Build(CrossroadLink link, bool isSFX = false)
         {
             link.RoadBuilt(_id);
             _count.Increment();
 
-            if (!AddRoadLine(link))
-                _roadsLists.Add(_factory.Create(link.Start, link.End, _gradient));
+            ReturnSignal returnSignal;
 
-            #region Local: AddRoadLine(..)
-            //=================================
-            bool AddRoadLine(CrossroadLink link)
-            {
-                for (int i = _roadsLists.Count - 1; i >= 0; i--)
-                    if (_roadsLists[i].TryAdd(link.Start, link.End))
-                        return true;
+            for (int i = _roadsLists.Count - 1; i >= 0; i--)
+                if (returnSignal = _roadsLists[i].TryAdd(link.Start, link.End, isSFX))
+                    return returnSignal;
 
-                return false;
-            }
-            #endregion
+            Road road = _factory.Create(new() { colorKeys = _colors, alphaKeys = _alphas });
+            returnSignal = road.CreateFirst(link.Start, link.End, isSFX);
+            _roadsLists.Add(road);
+
+            return returnSignal;
         }
 
-        public void BuildAndUnion(CrossroadLink link)
+        public ReturnSignal BuildAndUnion(CrossroadLink link)
         {
-            Build(link);
-            _coroutines.Run(TryUnion_Cn());
+            ReturnSignal returnSignal = Build(link, true);
+            _coroutines.Run(TryUnion_Cn(returnSignal));
+            return returnSignal;
         }
 
         #region Reactive
@@ -69,9 +65,10 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        private IEnumerator TryUnion_Cn()
+        private IEnumerator TryUnion_Cn(WaitSignal signal)
         {
-            yield return null;
+            yield return signal;
+
             Road roadLine;
             for (int i = _roadsLists.Count - 1; i > 0; i--)
             {
@@ -82,7 +79,7 @@ namespace Vurbiri.Colonization
                     {
                         _roadsLists.Remove(roadLine);
                         Object.Destroy(roadLine.gameObject);
-                        _coroutines.Run(TryUnion_Cn());
+                        _coroutines.Run(TryUnion_Cn(null));
                         yield break;
                     }
                 }

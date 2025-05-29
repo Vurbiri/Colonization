@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
-using static Vurbiri.Colonization.Characteristics.Skills;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -14,11 +13,14 @@ namespace Vurbiri.Colonization.Actors
             protected readonly Transform _parentTransform;
             protected readonly IReadOnlyList<HitEffects> _effectsHint;
             protected readonly int _countHits;
+            protected readonly WaitSignal _waitSignal = new();
 
             protected Coroutine _coroutineAction;
             protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
-            public ASkillState(Actor parent, IReadOnlyList<HitEffects> effects, int cost, int id) : base(parent, cost, TypeIdKey.Get<ASkillState>(id))
+            public WaitSignal Signal => _waitSignal;
+
+            public ASkillState(Actor parent, IReadOnlyList<HitEffects> effects, int cost, int id) : base(parent, cost)
             {
                 _id = id;
                 _parentTransform = _actor._thisTransform;
@@ -42,6 +44,7 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
+                _waitSignal.Reset();
                 _coroutineAction = _actor.StartCoroutine(Actions_Cn());
             }
 
@@ -52,6 +55,7 @@ namespace Vurbiri.Colonization.Actors
                     _actor.StopCoroutine(_coroutineAction);
                     _coroutineAction = null;
                 }
+                _waitSignal.Send();
             }
 
             protected void ToExit()

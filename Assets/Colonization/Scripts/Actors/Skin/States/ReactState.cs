@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed protected class ReactState : ASkinState
         {
-            private bool _isExit = true;
+            private bool _isExit = true, _isRun = false;
 
             public ReactState(ActorSkin parent) : base(T_REACT, parent)
             {
@@ -12,25 +12,31 @@ namespace Vurbiri.Colonization.Actors
                     behaviour.EventExit += OnEventExit;
             }
 
-            public override void Update()
+            public void Repeat()
             {
-                _isExit = false;
-                _animator.SetTrigger(_idParam);
+                if (_isRun)
+                {
+                    _isExit = false;
+                    _animator.SetTrigger(_idParam);
+                }
             }
 
             public override void Enter()
             {
+                _isRun = _isExit = true;
                 _animator.SetTrigger(_idParam);
             }
 
             public override void Exit()
             {
                 _animator.ResetTrigger(_idParam);
+                _isRun = false;
             }
 
             private void OnEventExit()
             {
-                if (_isExit) _fsm.ToPrevState();
+                if (_isExit) 
+                    _fsm.ToPrevState();
                 _isExit = true;
             }
         }

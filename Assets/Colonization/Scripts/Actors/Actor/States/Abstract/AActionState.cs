@@ -11,14 +11,7 @@ namespace Vurbiri.Colonization.Actors
             private readonly SubAbility<ActorAbilityId> _currentAP;
             private readonly AbilityValue _costAP;
             
-            public AActionState(Actor parent, int cost = 0, int id = 0) : base(parent, id)
-            {
-                _isPlayer = parent._owner == PlayerId.Player;
-                _move = parent._move;
-                _currentAP = parent._currentAP;
-                _costAP = new(TypeModifierId.Addition, cost);
-            }
-            public AActionState(Actor parent, int cost, TypeIdKey key) : base(parent, key)
+            public AActionState(Actor parent, int cost = 0) : base(parent)
             {
                 _isPlayer = parent._owner == PlayerId.Player;
                 _move = parent._move;

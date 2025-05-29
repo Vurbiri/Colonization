@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Controllers
         {
             private readonly float _edge;
 
-            public override Vector2 LinkValue 
+            public override Vector2 InputValue 
             { 
                 get => _moveDirection; 
                 set

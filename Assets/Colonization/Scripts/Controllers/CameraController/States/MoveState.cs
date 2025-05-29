@@ -5,13 +5,13 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        private class MoveState : AStateController<Vector2>
+        private class MoveState : ACameraState<Vector2>
         {
             protected const float MIN_VALUE = 0.1f;
             private readonly Movement _settings;
             protected Vector2 _moveDirection;
 
-            public override Vector2 LinkValue { get => _moveDirection; set => _moveDirection = value; }
+            public override Vector2 InputValue { get => _moveDirection; set => _moveDirection = value; }
             public bool IsMove => _moveDirection.sqrMagnitude > MIN_VALUE;
 
             public MoveState(CameraController controller, Movement movement) : base(controller)

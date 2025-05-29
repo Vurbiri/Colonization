@@ -23,8 +23,6 @@ namespace Vurbiri.Colonization.Actors
         private Transform _thisTransform;
         
         private readonly StateMachine _stateMachine = new();
-        private int _idBoolState = 0;
-
         private BoolSwitchState _moveState, _runState, _blockState;
         private SkillState[] _skillStates;
         private DeathState _deathState;
@@ -48,11 +46,10 @@ namespace Vurbiri.Colonization.Actors
         {
             _thisTransform = transform;
 
-            _stateMachine.SetDefaultState(CreateBoolState(B_IDLE));
-
-            _moveState = CreateBoolState(B_MOVE);
-            _runState = CreateBoolState(B_RUN);
-            _blockState = CreateBoolState(B_BLOCK);
+            _stateMachine.SetDefaultState(new BoolSwitchState(B_IDLE, this));
+            _moveState = new(B_MOVE, this);
+            _runState = new(B_RUN, this);
+            _blockState = new(B_BLOCK, this);
 
             int count = _timings.Length;
             _skillStates = new SkillState[count];
@@ -81,12 +78,12 @@ namespace Vurbiri.Colonization.Actors
             SkillState skill = _skillStates[index];
             skill.targetSkin = targetActorSkin;
             _stateMachine.SetState(skill);
-            return skill.waitActivate;
+            return skill.signal;
         }
 
         public void React(AudioClip clip)
         {
-            _stateMachine.Update();
+            _reactState.Repeat();
             _stateMachine.SetState(_reactState);
 
             if (clip != null)
@@ -115,9 +112,8 @@ namespace Vurbiri.Colonization.Actors
             _deathState.Dispose();
         }
 
-        private BoolSwitchState CreateBoolState(string nameParam) => new(nameParam, this, _idBoolState++);
 
-        // UNITY_EDITOR ������ � ActorSkin_Editor
+        // UNITY_EDITOR смотри в ActorSkin_Editor
 
         #region Nested: TimingSkillSettings
         //*******************************************************

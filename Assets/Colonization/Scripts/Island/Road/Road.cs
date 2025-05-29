@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -10,116 +13,219 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private float _offsetY = 0.0125f;
         [Space]
-        [SerializeField, MinMax(1, 6)] private IntRnd _rangeCount = new(2, 5);
+        [SerializeField, MinMax(2, 7)] private IntRnd _rangeCount = new(3, 6);
         [SerializeField, MinMax(0.1f, 0.3f)] private FloatRnd _rateWave = new(0.12f, 0.24f);
         [SerializeField, MinMax(0.5f, 1.5f)] private FloatRnd _lengthFluctuation = new(0.85f, 1.15f);
         [Space]
         [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureXRange = new(0.6f, 0.9f);
         [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureYRange = new(0.4f, 1f);
+        [Space]
+        [SerializeField, Range(0.1f, 10f)] private float _buildingSpeed = 1.5f;
 
-        private readonly LinkList<Crossroad> _crossroads = new();
-        private readonly LinkList<Vector3> _points = new();
+        private readonly WaitSignal _waitSignal = new();
+        private List<Key> _keys = new(32);
+        private Points _points;
         private Vector2 _textureScale;
         private float _textureScaleX;
 
-        public Road Init(Crossroad start, Crossroad end, Gradient gradient)
+        private Gradient _gradient;
+        private Coroutine _coroutineSFX;
+        private readonly GradientAlphaKey[] _alphaKeys = { new(1f, 0f), new(1f, 0.5f), new(0f, 1f) };
+        private GradientAlphaKey[] _defaultAlphaKey;
+
+        private GradientAlphaKey[] LineAlphaKeys { set { _gradient.alphaKeys = value; _roadRenderer.colorGradient = _gradient; } }
+
+        public Road Init(Gradient gradient)
         {
             _rateWave = new(_rateWave, _widthRoad);
 
-
-            _crossroads.Add(start, end);
-
-            InitLineRenderer(start.Position, gradient);
-            CreateLine(start.Position, end.Position);
+            _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
+            _roadRenderer.colorGradient = gradient;
+            _defaultAlphaKey = gradient.alphaKeys;
+            _gradient = gradient;
+            _textureScale = new Vector2(_textureXRange, _textureYRange);
+            _textureScaleX = _textureScale.x;
 
             return this;
-
-            #region Local: InitLineRenderer(...)
-            //=================================
-            void InitLineRenderer(Vector3 start, Gradient gradient)
-            {
-                _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
-                _roadRenderer.colorGradient = gradient;
-                _textureScale = new Vector2(_textureXRange, _textureYRange);
-                _textureScaleX = _textureScale.x;
-                
-                start.y = _offsetY;
-                _points.Add(start);
-            }
-            #endregion
         }
 
-        public bool TryAdd(Crossroad start, Crossroad end)
+        public ReturnSignal CreateFirst(Crossroad start, Crossroad end, bool isSFX)
         {
-            if (start == _crossroads.First)
-                AddFirst(end);
-            else if (start == _crossroads.Last)
-                AddLast(end);
+            _keys.Add(start.Key); _keys.Add(end.Key);
+
+            _points = new(_roadRenderer, start.Position, end.Position);
+            LineTextureScale();
+
+            return isSFX ? StartSFX(LinkListMode.End) : true;
+        }
+
+        public ReturnSignal TryAdd(Crossroad start, Crossroad end, bool isSFX)
+        {
+            LinkListMode mode;
+
+            if (start.Equals(_keys[0]))
+            {
+                _keys.Insert(0, end.Key);
+                _points.Insert(start.Position, end.Position);
+                mode = LinkListMode.Zero;
+            }
+            else if (start.Equals(_keys[^1]))
+            {
+                _keys.Add(end.Key);
+                _points.Add(start.Position, end.Position);
+                mode = LinkListMode.End;
+            }
             else
+            {
                 return false;
-
-            CreateLine(start.Position, end.Position);
-
-            return true;
-            #region Local: AddFirst(), AddLast()
-            //=================================
-            void AddFirst(Crossroad end)
-            {
-                _crossroads.AddToFirst(end);
-                _points.Mode = LinkListMode.First;
             }
-            //=================================
-            void AddLast(Crossroad end)
-            {
-                _crossroads.AddToLast(end);
-                _points.Mode = LinkListMode.Last;
-            }
-            #endregion
+
+            LineTextureScale();
+
+            return isSFX ? StartSFX(mode) : true;
         }
 
         public Road Union(Road other)
         {
-            if (_points.Count < other._points.Count)
-                return other.Union(this);
-
-            if (!(_crossroads.Union(other._crossroads) && _points.Union(other._points)))
+            if (!(Union(other._keys) && _points.Union(other._points)))
                 return null;
 
             _textureScale = _textureScale + other._textureScale;
             _textureScale.y *= 0.5f;
-            _textureScaleX = _textureScale.x / (_crossroads.Count - 1);
+            _textureScaleX = _textureScale.x / (_keys.Count - 1);
 
-            SetLineRenderer();
+             LineTextureScale();
 
-            return other;
+             return other;
         }
 
-        private void CreateLine(Vector3 start, Vector3 end)
+        private void CreateLine(Vector3 start, Vector3 end, LinkListMode mode)
         {
             start.y = end.y = _offsetY;
 
-            int count = _rangeCount;
-            Vector3 step = (end - start) / (count + 1), offsetSide = Vector3.Cross(Vector3.up, step.normalized);
+            int addCount = _rangeCount, currentCount = _roadRenderer.positionCount;
+            Vector3 step = (end - start) / addCount, offsetSide = Vector3.Cross(Vector3.up, step.normalized);
             float sign = Chance.Select(1f, -1f), signStep = -1f;
 
-            for (int i = 0; i < count; i++)
+            if (mode == LinkListMode.End)
             {
-                sign *= signStep;
-                start += _lengthFluctuation * step + _rateWave * sign * offsetSide;
-                _points.Add(start);
+                while(addCount --> 1)
+                {
+                    sign *= signStep;
+                    start += _lengthFluctuation * step + _rateWave * sign * offsetSide;
+                    SetPosition(currentCount++, start);
+                }
+                SetPosition(currentCount++, end);
             }
-            _points.Add(end);
+            else
+            {
 
-            SetLineRenderer();
+
+            }
+
+             
         }
 
-        private void SetLineRenderer()
+        private void SetPosition(int index, Vector3 point)
         {
-            _textureScale.x = _textureScaleX * (_crossroads.Count - 1);
+            _roadRenderer.positionCount = index + 1;
+            _roadRenderer.SetPosition(index, point);
+        }
 
+        private void LineTextureScale()
+        {
+            _textureScale.x = _textureScaleX * (_keys.Count - 1);
             _roadRenderer.textureScale = _textureScale;
-            _roadRenderer.positionCount = _points.Count;
-            _roadRenderer.SetPositions(_points.ToArray());
+        }
+
+        private WaitSignal StartSFX(LinkListMode mode)
+        {
+            if(_coroutineSFX != null)
+            {
+                StopCoroutine(_coroutineSFX);
+                StopSFX();
+            }
+            _coroutineSFX = StartCoroutine(BuildSFX_Cn(mode));
+            return _waitSignal;
+        }
+
+        private void StopSFX()
+        {
+            LineAlphaKeys = _defaultAlphaKey;
+            _waitSignal.Send();
+            _coroutineSFX = null;
+        }
+
+        private IEnumerator BuildSFX_Cn(LinkListMode mode)
+        {
+            float count = _keys.Count;
+            if (count <= 1f) yield break;
+
+            float start = (count - 2f) / (count - 1f), end = 1f;
+            if(mode == LinkListMode.Zero)
+            {
+                start = 1f - start; end = 0f;
+            }
+            float progress = 0f;
+
+            _alphaKeys[0] .alpha = end;
+            _alphaKeys[^1].alpha = 1f - end;
+            while (progress < 1f)
+            {
+                _alphaKeys[1].time = Mathf.Lerp(start, end, progress);
+                LineAlphaKeys = _alphaKeys;
+                progress += Time.deltaTime * _buildingSpeed;
+                yield return null;
+            }
+
+            StopSFX();
+        }
+
+        private bool Union(List<Key> other)
+        {
+            int selfEndIndex = _keys.Count - 1;
+            Key selfEnd = _keys[selfEndIndex], otherZero = other[0];
+            if (selfEnd == otherZero)
+            {
+                _keys.RemoveAt(selfEndIndex);
+                _keys.AddRange(other);
+                return true;
+            }
+
+            int otherEndIndex = other.Count - 1;
+            Key selfZero = _keys[0], otherEnd = other[otherEndIndex];
+            if (selfZero == otherEnd)
+            {
+                other.RemoveAt(otherEndIndex);
+                other.AddRange(_keys);
+                _keys = other;
+                return true;
+            }
+
+            if (selfEnd == otherEnd)
+            {
+                other.RemoveAt(otherEndIndex);
+                other.Reverse();
+                _keys.AddRange(other);
+                return true;
+            }
+
+            if (selfZero == otherZero)
+            {
+                _keys.Reverse();
+                _keys.RemoveAt(selfEndIndex);
+                other.AddRange(_keys);
+                _keys = other;
+                return true;
+            }
+
+            return false;
+        }
+
+        private enum LinkListMode
+        {
+            Zero,
+            End
         }
 
 #if UNITY_EDITOR
@@ -129,6 +235,5 @@ namespace Vurbiri.Colonization
                 _roadRenderer = GetComponentInChildren<LineRenderer>();
         }
 #endif
-
     }
 }

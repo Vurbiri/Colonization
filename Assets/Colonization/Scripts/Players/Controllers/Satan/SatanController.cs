@@ -1,4 +1,5 @@
 using System.Collections;
+using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization
 {
@@ -6,11 +7,13 @@ namespace Vurbiri.Colonization
 	{
         private readonly Game _game;
         private readonly Coroutines _coroutines;
+        private readonly CameraController _cameraController;
 
         public SatanController(Game game, Storage.SatanStorage storage, Players.Settings settings) : base(storage, settings)
         {
             _game = game;
             _coroutines = settings.coroutines;
+            _cameraController = settings.cameraController;
         }
 
         public void OnInit()

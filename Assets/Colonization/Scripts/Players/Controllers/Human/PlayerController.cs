@@ -8,7 +8,6 @@ namespace Vurbiri.Colonization
 
         public override void OnPlay()
         {
-            UnityEngine.Debug.Log("PlayerController - OnPlay");
             _edifices.Interactable = true;
             foreach (var warrior in _warriors)
                 warrior.IsPlayerTurn = true;

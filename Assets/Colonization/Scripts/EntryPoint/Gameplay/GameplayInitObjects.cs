@@ -52,12 +52,10 @@ namespace Vurbiri.Colonization.EntryPoint
             container.AddInstance(_balance = new Balance(storage, game));
             container.AddInstance(new Diplomacy(storage, game));
 
-            container.AddInstance(cameraTransform = new(_mainCamera));
             container.AddInstance(_poolEffectsBar.Create());
-            
+            container.AddInstance(cameraTransform = new(_mainCamera));
             _cameraController.Init(cameraTransform, triggerBus, inputController.CameraActions);
 
-            _cameraController = null;
             _inputControllerSettings = null;
             _poolEffectsBar = null;
         }
@@ -67,7 +65,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public Players.Settings GetPlayersSettings()
         {
             _playersSettings.coroutines = _coroutines;
-            _playersSettings.inputController = inputController;
+            _playersSettings.cameraController = _cameraController;
             _playersSettings.score = _score;
             _playersSettings.balance = _balance;
             _playersSettings.hexagons = hexagons;

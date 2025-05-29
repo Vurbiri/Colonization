@@ -5,15 +5,17 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        sealed private class MoveToDefaultState : AStateController<WaitSignal>
+        sealed private class MoveToDefaultState : ACameraState<float>
         {
             private readonly WaitSignal _waitSignal = new();
             private readonly GameplayTriggerBus _eventBus;
             private readonly Zoom _zoom;
             private readonly Default _default;
             private readonly float _sqrRatioParentDistance, _maxSqrDistance, _minSqrDistance;
+            private float _ratioSpeed = 1f;
 
-            public override WaitSignal LinkValue { get => _waitSignal; set { } }
+            public override float InputValue { get => _ratioSpeed; set => _ratioSpeed = value; }
+            public WaitSignal Signal => _waitSignal;
 
             public MoveToDefaultState(CameraController controller, Default settings, Zoom zoom, GameplayTriggerBus eventBus) : base(controller)
             {
@@ -39,7 +41,7 @@ namespace Vurbiri.Colonization.Controllers
 
                 if(sqrDistance > _minSqrDistance)
                 {
-                    float speed = Mathf.Sqrt(_maxSqrDistance / sqrDistance) * _default.maxTime;
+                    float speed = Mathf.Sqrt(_maxSqrDistance / sqrDistance) * _default.maxTime * _ratioSpeed;
                     _coroutine = _controller.StartCoroutine(MoveToDefault_Cn(parentPosition, cameraPosition, speed));
                 }
                 else

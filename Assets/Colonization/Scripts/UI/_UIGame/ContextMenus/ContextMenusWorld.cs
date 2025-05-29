@@ -123,6 +123,8 @@ namespace Vurbiri.Colonization.UI
             Vector3 screenPosition = _camera.WorldToScreenPoint(position);
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasTransform, screenPosition, _camera, out Vector2 localPoint))
                 _thisRectTransform.anchoredPosition = localPoint;
+            
+            LookAtCamera(_camera.transform);
         }
 
         private void LookAtCamera(Transform cameraTransform)

@@ -5,13 +5,13 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController
     {
-        sealed private class ZoomState : AStateController<float>
+        sealed private class ZoomState : ACameraState<float>
         {
             private readonly GameplayTriggerBus _eventBus;
             private readonly Zoom _settings;
             private float _heightZoom;
  
-            public override float LinkValue 
+            public override float InputValue 
             {
                 get => _heightZoom;
                 set => _heightZoom = Mathf.Clamp(_heightZoom - value * _settings.steepZoomRate, _settings.heightZoomMin, _settings.heightZoomMax); 

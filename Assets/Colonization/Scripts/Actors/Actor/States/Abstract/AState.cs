@@ -9,13 +9,7 @@ namespace Vurbiri.Colonization.Actors
             protected readonly Actor _actor;
             protected readonly ActorSkin _skin;
 
-            public AState(Actor parent, int id = 0) : base(parent._stateMachine, id)
-            {
-                _actor = parent;
-                _skin = parent._skin;
-            }
-
-            public AState(Actor parent, TypeIdKey key) : base(parent._stateMachine, key)
+            public AState(Actor parent) : base(parent._stateMachine)
             {
                 _actor = parent;
                 _skin = parent._skin;

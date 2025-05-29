@@ -17,6 +17,7 @@ namespace Vurbiri.Colonization.Actors
             private WaitSignal _waitHexagon;
             private Hexagon _targetHex;
             private Coroutine _coroutineAction;
+            private readonly WaitSignal _waitSignal = new();
 
             public MoveState(float speed, Actor parent) : base(parent)
             {
@@ -25,9 +26,13 @@ namespace Vurbiri.Colonization.Actors
                 _isCancel = parent._canCancel;
             }
 
+            public WaitSignal Signal => _waitSignal;
+
             public override void Enter()
             {
-                if(_isPlayer)
+                _waitSignal.Reset();
+
+                if (_isPlayer)
                     _coroutineAction = _actor.StartCoroutine(SelectHexagon_Cn());
                 else
                     _coroutineAction = _actor.StartCoroutine(SelectHexagonAI_Cn());
@@ -44,6 +49,8 @@ namespace Vurbiri.Colonization.Actors
                 _parentTransform.localPosition = _actor._currentHex.Position;
                 _waitHexagon = null;
                 _targetHex = null;
+
+                _waitSignal.Send();
             }
 
             public override void Unselect(ISelectable newSelectable)

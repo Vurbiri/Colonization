@@ -28,7 +28,6 @@ namespace Vurbiri.Colonization.Controllers
         public CameraController Init(CameraTransform camera, GameplayTriggerBus eventBus, InputControlAction.CameraActions cameraActions)
         {
             _default.height = Mathf.Clamp(_default.height, _zoom.heightZoomMin, _zoom.heightZoomMax);
-            _zoom.heightHexagonShow = Mathf.Clamp(_zoom.heightHexagonShow, _zoom.heightZoomMin, _zoom.heightZoomMax);
 
             _cameraTransform = camera;
 
@@ -62,6 +61,14 @@ namespace Vurbiri.Colonization.Controllers
         public void ToDefaultPosition()
         {
             _machine.SetState(_moveToDefaultState);
+            //return _moveToDefaultState.Signal;
+        }
+
+        public WaitSignal ToPosition(Vector3 position)
+        {
+            _moveToTargetState.InputValue = position;
+            _machine.SetState(_moveToTargetState);
+            return _moveToTargetState.Signal;
         }
 
         private void OnMove(CallbackContext ctx)
@@ -69,15 +76,15 @@ namespace Vurbiri.Colonization.Controllers
             if (_machine.CurrentState == _moveToTargetState)
                 return;
 
-            _moveState.LinkValue = ctx.ReadValue<Vector2>();
+            _moveState.InputValue = ctx.ReadValue<Vector2>();
             _machine.SetState(_moveState);
 
         }
-        private void OnMoveCancel(CallbackContext ctx) => _moveState.LinkValue = Vector2.zero;
+        private void OnMoveCancel(CallbackContext ctx) => _moveState.InputValue = Vector2.zero;
 
         private void OnMoveToPosition(IPositionable obj)
         {
-            _moveToTargetState.LinkValue = obj.Position;
+            _moveToTargetState.InputValue = obj.Position;
             _machine.SetState(_moveToTargetState);
         }
 
@@ -91,7 +98,7 @@ namespace Vurbiri.Colonization.Controllers
             if (!_isEdgeMove || !(_machine.IsDefaultState | _machine.CurrentState == _edgeMoveState))
                 return;
 
-            _edgeMoveState.LinkValue = ctx.ReadValue<Vector2>();
+            _edgeMoveState.InputValue = ctx.ReadValue<Vector2>();
 
             if (_edgeMoveState.IsMove)
                 _machine.SetState(_edgeMoveState);
@@ -100,7 +107,7 @@ namespace Vurbiri.Colonization.Controllers
         private void OnZoom(CallbackContext ctx)
         {
             _machine.SetState(_zoomState);
-            _zoomState.LinkValue = ctx.ReadValue<float>();
+            _zoomState.InputValue = ctx.ReadValue<float>();
         }
 
 #if UNITY_EDITOR

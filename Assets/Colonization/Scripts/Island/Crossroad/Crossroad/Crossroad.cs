@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    sealed public partial class Crossroad : IDisposable, IInteractable, IEquatable<Crossroad>
+    sealed public partial class Crossroad : IDisposable, IInteractable, IEquatable<Crossroad>, IEquatable<Key>
     {
         #region Fields
         public const int HEX_COUNT = 3;
@@ -327,6 +327,7 @@ namespace Vurbiri.Colonization
 
         public bool Equals(ISelectable other) => other is Crossroad cross && cross._key == _key;
         public bool Equals(Crossroad other) => other is not null && other._key == _key;
+        public bool Equals(Key key) => key == _key;
         public override int GetHashCode() => _key.GetHashCode();
 
         public void Dispose()

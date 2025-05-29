@@ -42,24 +42,25 @@ namespace Vurbiri.Colonization.Characteristics
         }
         public IReadOnlyList<SkillSettings> Settings => _skillsSettings;
 
-        public void CreateStates(Actor parent)
+        public void CreateStates(Actor actor)
         {
-            parent.AddMoveState(_speedWalk);
-            parent.AddBlockState(_blockCost, _blockValue << ActorAbilityId.SHIFT_ABILITY);
+            actor.AddMoveState(_speedWalk);
+            actor.AddBlockState(_blockCost, _blockValue << ActorAbilityId.SHIFT_ABILITY);
 
             int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
+            actor.SetCountState(countSkills);
 
             if (_effectsHits != null)
             {
                 for (int i = 0; i < countSkills; i++)
-                    parent.AddSkillState(_effectsHits[i], _skillsSettings[i], _speedRun, i);
-
-                return;
+                    actor.AddSkillState(_effectsHits[i], _skillsSettings[i], _speedRun, i);
             }
-
-            _effectsHits = new HitEffects[countSkills][];
-            for (int i = 0; i < countSkills; i++)
-                _effectsHits[i] = parent.AddSkillState(_skillsSettings[i], _speedRun, i);
+            else
+            {
+                _effectsHits = new HitEffects[countSkills][];
+                for (int i = 0; i < countSkills; i++)
+                    _effectsHits[i] = actor.AddSkillState(_skillsSettings[i], _speedRun, i);
+            }
         }
 
         public void Dispose()

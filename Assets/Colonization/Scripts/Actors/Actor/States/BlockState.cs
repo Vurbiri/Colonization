@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
 
             public bool Enabled => _actor._effects.Contains(_code);
 
-            public BlockState(int cost, int value, Actor parent) : base(parent, cost, TypeIdKey.Get<BlockState>(0))
+            public BlockState(int cost, int value, Actor parent) : base(parent, cost)
             {
                 _code = new(parent.TypeId, parent.Id, EffectsFactory.BLOCK_SKILL_ID, EffectsFactory.BLOCK_EFFECT_ID);
                 _value = value;

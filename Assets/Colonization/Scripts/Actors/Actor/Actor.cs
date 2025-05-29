@@ -37,8 +37,13 @@ namespace Vurbiri.Colonization.Actors
 
         private EffectsSet _effects;
 
-        private StateMachineSelectable _stateMachine;
+        #region States
+        private readonly StateMachineSelectable _stateMachine = new();
+        private readonly TargetState _targetState = new();
+        private MoveState _moveState;
         private BlockState _blockState;
+        private ASkillState[] _skillState;
+        #endregion
 
         private readonly Subscription<Id<PlayerId>, int> _eventKilled = new();
         private readonly RBool _interactable = new(false);
@@ -79,9 +84,17 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         #region States
-        public void Move() => _stateMachine.SetState<MoveState>();
         public void Block() => _stateMachine.SetState(_blockState);
-        public void UseSkill(int id) => _stateMachine.SetState<ASkillState>(id);
+        public WaitSignal Move()
+        {
+            _stateMachine.SetState(_moveState);
+            return _moveState.Signal;
+        }
+        public WaitSignal UseSkill(int id)
+        {
+            _stateMachine.SetState(_skillState[id]);
+            return _skillState[id].Signal;
+        }
         #endregion
 
         public Relation GetRelation(Id<PlayerId> id) => _diplomacy.GetRelation(id, _owner);
@@ -145,7 +158,7 @@ namespace Vurbiri.Colonization.Actors
         #region Target
         private void ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
-            _stateMachine.SetState<TargetState>();
+            _stateMachine.SetState(_targetState);
             _diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
 

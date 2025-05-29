@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
             public Transform actorsContainer;
 
             public Coroutines coroutines;
-            public InputController inputController;
+            public CameraController cameraController;
             public Score score;
             public Balance balance;
             public Hexagons hexagons;
