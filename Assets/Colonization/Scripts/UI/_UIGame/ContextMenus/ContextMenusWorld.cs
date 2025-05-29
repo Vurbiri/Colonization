@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
@@ -17,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private ButtonCancel _buttonCancel;
 
-        private Camera _camera;
+        private CameraTransform _cameraTransform;
         private RectTransform _thisRectTransform;
         private bool _isPlayerTurn, _lookAtEnabled;
         private IMenu _currentOpenMenu;
@@ -28,7 +29,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(ContextMenuSettings settings)
         {
-            _camera = settings.camera;
+            _cameraTransform = settings.cameraTransform;
             _thisRectTransform = GetComponent<RectTransform>();
 
             _buttonCancel  .Init(settings.hint).Add(OnActiveMenu);
@@ -65,7 +66,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (_isPlayerTurn & crossroad.Interactable & _currentOpenMenu == null)
             {
-                ToPosition(crossroad.Position);
+                _cameraTransform.TransformToLocalPosition(_thisRectTransform, _canvasTransform, crossroad.Position);
                 _crossroadMenu.Open(crossroad);
                 _buttonCancel.Setup(crossroad);
             }
@@ -74,7 +75,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (_isPlayerTurn & crossroad.Interactable & _currentOpenMenu == null)
             {
-                ToPosition(crossroad.Position);
+                _cameraTransform.TransformToLocalPosition(_thisRectTransform, _canvasTransform, crossroad.Position);
                 _initMenu.Open(crossroad);
                 _buttonCancel.Setup(crossroad);
             }
@@ -84,7 +85,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (actor.Interactable & _currentOpenMenu == null)
             {
-                ToPosition(actor.Position);
+                _cameraTransform.TransformToLocalPosition(_thisRectTransform, _canvasTransform, actor.Position);
                 _warriorsMenu.Open(actor);
                 _buttonCancel.Setup(actor);
             }
@@ -116,15 +117,6 @@ namespace Vurbiri.Colonization.UI
 
                 _unsubscription = null; _game = null; _eventBus = null; _initMenu = null;
             }
-        }
-
-        private void ToPosition(Vector3 position)
-        {
-            Vector3 screenPosition = _camera.WorldToScreenPoint(position);
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasTransform, screenPosition, _camera, out Vector2 localPoint))
-                _thisRectTransform.anchoredPosition = localPoint;
-            
-            LookAtCamera(_camera.transform);
         }
 
         private void LookAtCamera(Transform cameraTransform)

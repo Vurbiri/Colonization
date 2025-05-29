@@ -8,12 +8,13 @@ namespace Vurbiri.Colonization.Controllers
     {
         private const float MIN_SQR_MAGNITUDE = 1E-05f;
 
+        private readonly Camera _camera;
         private readonly Transform _cameraTransform, _parentTransform;
         private readonly SphereBounds _bounds = new(CONST.HEX_DIAMETER_IN * CONST.MAX_CIRCLES);
         private readonly Subscription<Transform> _changedTransform = new();
         private Vector3 _velocity = Vector3.zero;
 
-        public Camera Camera { get; }
+        public Camera Camera => _camera;
         public Transform Transform => _cameraTransform;
 
         public Vector3 CameraPosition
@@ -31,7 +32,7 @@ namespace Vurbiri.Colonization.Controllers
 
         public CameraTransform(Camera camera)
         {
-            Camera = camera;
+            _camera = camera;
 
             _cameraTransform = camera.transform;
             _parentTransform = _cameraTransform.parent;
@@ -112,6 +113,16 @@ namespace Vurbiri.Colonization.Controllers
 
             return new(direction.x * rightX + direction.y * forwardX, 0f, direction.x * rightZ + direction.y * forwardZ);
         }
+
+        public void TransformToLocalPosition(RectTransform target, RectTransform canvas, Vector3 worldPosition)
+        {
+            Vector3 screenPosition = _camera.WorldToScreenPoint(worldPosition);
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, screenPosition, _camera, out Vector2 localPoint))
+                target.anchoredPosition = localPoint;
+
+            target.rotation = Quaternion.LookRotation(_cameraTransform.forward);
+        }
+
 
         public Unsubscription Subscribe(Action<Transform> action, bool instantGetValue = true) => _changedTransform.Add(action, instantGetValue, _cameraTransform);
        

@@ -16,10 +16,10 @@ namespace Vurbiri.Colonization
 
             public static void WriteJsonArray(JsonWriter writer, Road value)
             {
-                int count = value._keys.Count;
+                int count = value._links.Count;
                 writer.WriteStartArray();
                 for (int i = 0; i < count; i++)
-                    Key.Converter.WriteJsonArray(writer, value._keys[i]);
+                    Key.Converter.WriteJsonArray(writer, value._links[i].Key);
                 writer.WriteEndArray();
             }
         }

@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization
             _prefabs = null;
             _vertices = null;
             _angles = null;
-            Debug.Log($"Breach = {_breach.Count}, Gate = {_gate.Count}");
+
             _breach.TrimExcess();
         }
 

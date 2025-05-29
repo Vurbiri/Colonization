@@ -27,7 +27,6 @@ namespace Vurbiri.Colonization
             SatanController satanController = new(game, storage.Satan, settings);
             _players[PlayerId.Satan] = satanController;  Satan = satanController;
  
-
             game.Subscribe(GameModeId.Init,      (turn, _) => _players[turn.currentId.Value].OnInit());
             game.Subscribe(GameModeId.Play,      (turn, _) => _players[turn.currentId.Value].OnPlay());
             game.Subscribe(GameModeId.EndTurn,   (turn, _) => _players[turn.currentId.Value].OnEndTurn());

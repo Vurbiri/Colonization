@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Reactive;
-using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
@@ -14,10 +13,8 @@ namespace Vurbiri.Colonization
         private readonly RoadFactory _factory;
         private readonly List<Road> _roadsLists = new();
         private readonly RInt _count = new(0);
+        private readonly Gradient _gradient;
         private readonly Coroutines _coroutines;
-        private readonly GradientAlphaKey[] _alphas  = { new (1.0f, 0.0f), new (1.0f, 1.0f) };
-        private readonly GradientColorKey[] _colors = new GradientColorKey[2];
-
         private readonly Subscription<Roads> _eventChanged = new();
         #endregion
 
@@ -29,7 +26,10 @@ namespace Vurbiri.Colonization
             _id = id;
             _factory = factory;
             _coroutines = coroutines;
-            _colors[0] = new(color, 0.0f); _colors[1] = new(color, 1.0f);
+
+            GradientAlphaKey[] alphas = { new(1.0f, 0.0f), new(1.0f, 1.0f) };
+            GradientColorKey[] colors = { new(color, 0.0f), new(color, 1.0f) };
+            _gradient = new() { colorKeys = colors, alphaKeys = alphas };
         }
 
         public ReturnSignal Build(CrossroadLink link, bool isSFX = false)
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
                 if (returnSignal = _roadsLists[i].TryAdd(link.Start, link.End, isSFX))
                     return returnSignal;
 
-            Road road = _factory.Create(new() { colorKeys = _colors, alphaKeys = _alphas });
+            Road road = _factory.Create(_gradient, _roadsLists.Count);
             returnSignal = road.CreateFirst(link.Start, link.End, isSFX);
             _roadsLists.Add(road);
 
@@ -69,20 +69,22 @@ namespace Vurbiri.Colonization
         {
             yield return signal;
 
-            Road roadLine;
+            Road currentLine, removingLine;
             for (int i = _roadsLists.Count - 1; i > 0; i--)
             {
+                currentLine = _roadsLists[i];
                 for (int j = i - 1; j >= 0; j--)
                 {
-                    roadLine = _roadsLists[i].Union(_roadsLists[j]);
-                    if (roadLine != null)
+                    removingLine = currentLine.Union(_roadsLists[j]);
+                    if (removingLine != null)
                     {
-                        _roadsLists.Remove(roadLine);
-                        Object.Destroy(roadLine.gameObject);
+                        _roadsLists.Remove(removingLine);
+                        removingLine.Destroy();
                         _coroutines.Run(TryUnion_Cn(null));
                         yield break;
                     }
                 }
+                currentLine.SortingOrder = i;
             }
 
             _eventChanged.Invoke(this);

@@ -1,28 +1,28 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
     public partial class Road : MonoBehaviour
     {
+        private const int BASE_ORDER = 32;
+
         [SerializeField] private LineRenderer _roadRenderer;
         [Space]
         [SerializeField, Range(0.5f, 1.5f)] private float _widthRoad = 0.95f;
         [Space]
-        //[SerializeField] private float _offsetY = 0.0125f;
-        //[SerializeField, MinMax(2, 7)] private IntRnd _rangeCount = new(3, 6);
-        //[SerializeField, MinMax(0.5f, 1.5f)] private FloatRnd _lengthFluctuation = new(0.85f, 1.15f);
-        [SerializeField, MinMax(0.1f, 0.3f)] private FloatRnd _rateWave = new(0.12f, 0.24f);
+        [SerializeField, MinMax(2, 7)] private IntRnd _rangeCount = new(3, 6);
+        [SerializeField, MinMax(0.5f, 1.5f)] private FloatRnd _lengthFluctuation = new(0.85f, 1.15f);
+        [SerializeField, MinMax(0.1f, 0.32f)] private FloatRnd _rateWave = new(0.19f, 0.27f);
         [Space]
         [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureXRange = new(0.6f, 0.9f);
         [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureYRange = new(0.4f, 1f);
         [Space]
-        [SerializeField, Range(0.1f, 10f)] private float _buildingSpeed = 1.5f;
+        [SerializeField, Range(0.1f, 4f)] private float _buildingSpeed = 2f;
 
         private readonly WaitSignal _waitSignal = new();
-        private List<Key> _keys = new(16);
+        private Links _links;
         private Points _points;
         private Vector2 _textureScale;
         private float _textureScaleX;
@@ -34,14 +34,18 @@ namespace Vurbiri.Colonization
 
         private GradientAlphaKey[] LineAlphaKeys { set { _gradient.alphaKeys = value; _roadRenderer.colorGradient = _gradient; } }
 
-        public Road Init(Gradient gradient)
+        public int SortingOrder { set =>  _roadRenderer.sortingOrder = BASE_ORDER - value; }
+        public int Count => _links.Count;
+
+        public Road Init(Gradient gradient, int id)
         {
             _rateWave = new(_rateWave, _widthRoad);
 
+            _roadRenderer.sortingOrder = BASE_ORDER - id;
             _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
             _roadRenderer.colorGradient = gradient;
             _defaultAlphaKey = gradient.alphaKeys;
-            _gradient = gradient;
+            _gradient = _roadRenderer.colorGradient;
             _textureScale = new Vector2(_textureXRange, _textureYRange);
             _textureScaleX = _textureScale.x;
 
@@ -50,29 +54,28 @@ namespace Vurbiri.Colonization
 
         public ReturnSignal CreateFirst(Crossroad start, Crossroad end, bool isSFX)
         {
-            _keys.Add(start.Key); _keys.Add(end.Key);
-
-            _points = new(_roadRenderer, new(_rateWave, _widthRoad), start.Position, end.Position);
+            _links = new(start, end);
+            _points = new(this, _roadRenderer, start.Position, end.Position);
             SetTextureScale();
 
-            return isSFX ? StartSFX(LinkMode.Add) : true;
+            return isSFX ? StartSFX() : true;
         }
 
         public ReturnSignal TryAdd(Crossroad start, Crossroad end, bool isSFX)
         {
-            LinkMode mode;
+            bool inverse;
 
-            if (start.Equals(_keys[^1]))
+            if (start ==_links.End)
             {
-                _keys.Add(end.Key);
+                _links.Add(end);
                 _points.Add(start.Position, end.Position);
-                mode = LinkMode.Add;
+                inverse = false;
             }
-            else if (start.Equals(_keys[0]))
+            else if (start == _links.Start)
             {
-                _keys.Insert(0, end.Key);
+                _links.Insert(end);
                 _points.Insert(start.Position, end.Position);
-                mode = LinkMode.Insert;
+                inverse = true;
             }
             else
             {
@@ -81,37 +84,42 @@ namespace Vurbiri.Colonization
 
             SetTextureScale();
 
-            return isSFX ? StartSFX(mode) : true;
+            return isSFX ? StartSFX(inverse) : true;
         }
 
         public Road Union(Road other)
         {
-            if (!(Union(other._keys) && _points.Union(other._points)))
+            if (!Union(other._links, other._points))
                 return null;
 
             _textureScale = _textureScale + other._textureScale;
             _textureScale.y *= 0.5f;
-            _textureScaleX = _textureScale.x / (_keys.Count - 1);
+            _textureScaleX = _textureScale.x / (_links.Count - 1);
 
-             SetTextureScale();
+            SetTextureScale();
 
-             return other;
+            return other;
+        }
+
+        public void Destroy()
+        {
+            Destroy(gameObject);
         }
 
         private void SetTextureScale()
         {
-            _textureScale.x = _textureScaleX * (_keys.Count - 1);
+            _textureScale.x = _textureScaleX * (_links.Count - 1);
             _roadRenderer.textureScale = _textureScale;
         }
 
-        private WaitSignal StartSFX(LinkMode mode)
+        private WaitSignal StartSFX(bool inverse = false)
         {
             if(_coroutineSFX != null)
             {
                 StopCoroutine(_coroutineSFX);
                 StopSFX();
             }
-            _coroutineSFX = StartCoroutine(BuildSFX_Cn(mode));
+            _coroutineSFX = StartCoroutine(BuildSFX_Cn(inverse));
             return _waitSignal;
         }
 
@@ -122,13 +130,13 @@ namespace Vurbiri.Colonization
             _coroutineSFX = null;
         }
 
-        private IEnumerator BuildSFX_Cn(LinkMode mode)
+        private IEnumerator BuildSFX_Cn(bool inverse)
         {
-            float count = _keys.Count;
+            float count = _links.Count;
             if (count <= 1f) yield break;
 
             float start = (count - 2f) / (count - 1f), end = 1f;
-            if(mode == LinkMode.Insert)
+            if(inverse)
             {
                 start = 1f - start; end = 0f;
             }
@@ -147,51 +155,39 @@ namespace Vurbiri.Colonization
             StopSFX();
         }
 
-        private bool Union(List<Key> other)
+        private bool Union(Links links, Points points)
         {
-            int selfEndIndex = _keys.Count - 1;
-            Key selfEnd = _keys[selfEndIndex], otherZero = other[0];
-            if (selfEnd == otherZero)
+            Crossroad selfEnd = _links.End, otherStart = links.Start;
+            if (selfEnd == otherStart)
             {
-                _keys.RemoveAt(selfEndIndex);
-                _keys.AddRange(other);
+                _links.AddRange(links);
+                _points.AddRange(points);
                 return true;
             }
 
-            int otherEndIndex = other.Count - 1;
-            Key selfZero = _keys[0], otherEnd = other[otherEndIndex];
-            if (selfZero == otherEnd)
+            Crossroad selfStart = _links.Start, otherEnd = links.End;
+            if (selfStart == otherEnd)
             {
-                other.RemoveAt(otherEndIndex);
-                other.AddRange(_keys);
-                _keys = other;
+                _links.InsertRange(links);
+                _points.InsertRange(points);
                 return true;
             }
 
             if (selfEnd == otherEnd)
             {
-                other.RemoveAt(otherEndIndex);
-                other.Reverse();
-                _keys.AddRange(other);
+                _links.AddReverseRange(links);
+                _points.AddReverseRange(points);
                 return true;
             }
 
-            if (selfZero == otherZero)
+            if (selfStart == otherStart)
             {
-                _keys.Reverse();
-                _keys.RemoveAt(selfEndIndex);
-                other.AddRange(_keys);
-                _keys = other;
+                _links.InsertReverseRange(links);
+                _points.InsertReverseRange(points);
                 return true;
             }
 
             return false;
-        }
-
-        private enum LinkMode
-        {
-            Add,
-            Insert
         }
 
 #if UNITY_EDITOR
