@@ -11,11 +11,10 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField, Range(0.5f, 1.5f)] private float _widthRoad = 0.95f;
         [Space]
-        [SerializeField] private float _offsetY = 0.0125f;
-        [Space]
-        [SerializeField, MinMax(2, 7)] private IntRnd _rangeCount = new(3, 6);
+        //[SerializeField] private float _offsetY = 0.0125f;
+        //[SerializeField, MinMax(2, 7)] private IntRnd _rangeCount = new(3, 6);
+        //[SerializeField, MinMax(0.5f, 1.5f)] private FloatRnd _lengthFluctuation = new(0.85f, 1.15f);
         [SerializeField, MinMax(0.1f, 0.3f)] private FloatRnd _rateWave = new(0.12f, 0.24f);
-        [SerializeField, MinMax(0.5f, 1.5f)] private FloatRnd _lengthFluctuation = new(0.85f, 1.15f);
         [Space]
         [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureXRange = new(0.6f, 0.9f);
         [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureYRange = new(0.4f, 1f);
@@ -23,7 +22,7 @@ namespace Vurbiri.Colonization
         [SerializeField, Range(0.1f, 10f)] private float _buildingSpeed = 1.5f;
 
         private readonly WaitSignal _waitSignal = new();
-        private List<Key> _keys = new(32);
+        private List<Key> _keys = new(16);
         private Points _points;
         private Vector2 _textureScale;
         private float _textureScaleX;
@@ -53,34 +52,34 @@ namespace Vurbiri.Colonization
         {
             _keys.Add(start.Key); _keys.Add(end.Key);
 
-            _points = new(_roadRenderer, start.Position, end.Position);
-            LineTextureScale();
+            _points = new(_roadRenderer, new(_rateWave, _widthRoad), start.Position, end.Position);
+            SetTextureScale();
 
-            return isSFX ? StartSFX(LinkListMode.End) : true;
+            return isSFX ? StartSFX(LinkMode.Add) : true;
         }
 
         public ReturnSignal TryAdd(Crossroad start, Crossroad end, bool isSFX)
         {
-            LinkListMode mode;
+            LinkMode mode;
 
-            if (start.Equals(_keys[0]))
-            {
-                _keys.Insert(0, end.Key);
-                _points.Insert(start.Position, end.Position);
-                mode = LinkListMode.Zero;
-            }
-            else if (start.Equals(_keys[^1]))
+            if (start.Equals(_keys[^1]))
             {
                 _keys.Add(end.Key);
                 _points.Add(start.Position, end.Position);
-                mode = LinkListMode.End;
+                mode = LinkMode.Add;
+            }
+            else if (start.Equals(_keys[0]))
+            {
+                _keys.Insert(0, end.Key);
+                _points.Insert(start.Position, end.Position);
+                mode = LinkMode.Insert;
             }
             else
             {
                 return false;
             }
 
-            LineTextureScale();
+            SetTextureScale();
 
             return isSFX ? StartSFX(mode) : true;
         }
@@ -94,51 +93,18 @@ namespace Vurbiri.Colonization
             _textureScale.y *= 0.5f;
             _textureScaleX = _textureScale.x / (_keys.Count - 1);
 
-             LineTextureScale();
+             SetTextureScale();
 
              return other;
         }
 
-        private void CreateLine(Vector3 start, Vector3 end, LinkListMode mode)
-        {
-            start.y = end.y = _offsetY;
-
-            int addCount = _rangeCount, currentCount = _roadRenderer.positionCount;
-            Vector3 step = (end - start) / addCount, offsetSide = Vector3.Cross(Vector3.up, step.normalized);
-            float sign = Chance.Select(1f, -1f), signStep = -1f;
-
-            if (mode == LinkListMode.End)
-            {
-                while(addCount --> 1)
-                {
-                    sign *= signStep;
-                    start += _lengthFluctuation * step + _rateWave * sign * offsetSide;
-                    SetPosition(currentCount++, start);
-                }
-                SetPosition(currentCount++, end);
-            }
-            else
-            {
-
-
-            }
-
-             
-        }
-
-        private void SetPosition(int index, Vector3 point)
-        {
-            _roadRenderer.positionCount = index + 1;
-            _roadRenderer.SetPosition(index, point);
-        }
-
-        private void LineTextureScale()
+        private void SetTextureScale()
         {
             _textureScale.x = _textureScaleX * (_keys.Count - 1);
             _roadRenderer.textureScale = _textureScale;
         }
 
-        private WaitSignal StartSFX(LinkListMode mode)
+        private WaitSignal StartSFX(LinkMode mode)
         {
             if(_coroutineSFX != null)
             {
@@ -156,13 +122,13 @@ namespace Vurbiri.Colonization
             _coroutineSFX = null;
         }
 
-        private IEnumerator BuildSFX_Cn(LinkListMode mode)
+        private IEnumerator BuildSFX_Cn(LinkMode mode)
         {
             float count = _keys.Count;
             if (count <= 1f) yield break;
 
             float start = (count - 2f) / (count - 1f), end = 1f;
-            if(mode == LinkListMode.Zero)
+            if(mode == LinkMode.Insert)
             {
                 start = 1f - start; end = 0f;
             }
@@ -222,10 +188,10 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        private enum LinkListMode
+        private enum LinkMode
         {
-            Zero,
-            End
+            Add,
+            Insert
         }
 
 #if UNITY_EDITOR
