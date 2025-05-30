@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-    sealed public class UrbanGraphic : AEdificeGraphicReColor
+    sealed public class UrbanGraphic : AEdificeGraphic
     {
 
     }

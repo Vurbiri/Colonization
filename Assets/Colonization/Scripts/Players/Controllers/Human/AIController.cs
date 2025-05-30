@@ -31,16 +31,13 @@ namespace Vurbiri.Colonization
 
         private IEnumerator OnInit_Cn()
         {
-            //WaitRealtime waitRealtime = new(0.5f);
-            //yield return waitRealtime;
-            yield return null;
+            yield return new WaitRealtime(0.5f);
 
             if (_crossroads.BreachCount > 0)
             {
                 Crossroad port = _crossroads.GetRandomPort();
-                //yield return _cameraController.ToPosition(port.Position);
-                BuildPort(port);
-                //yield return waitRealtime.Restart(1.5f);
+                yield return _cameraController.ToPosition(port.Position);
+                yield return BuildPort(port).signal;
             }
             
             _game.Init();

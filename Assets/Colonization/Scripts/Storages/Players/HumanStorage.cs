@@ -38,8 +38,8 @@ namespace Vurbiri.Colonization.Storage
                 for (int i = 0; i < EdificeGroupId.Count; i++)
                 {
                     strI = i.ToString(); load = isLoad;
-                    loadData = new(MAX_EDIFICES); keys = new string[MAX_EDIFICES];
-                    for (int j = 0; j < MAX_EDIFICES; j++)
+                    loadData = new(DEFAULT_MAX_EDIFICES); keys = new string[DEFAULT_MAX_EDIFICES];
+                    for (int j = 0; j < DEFAULT_MAX_EDIFICES; j++)
                     {
                         keys[j] = key = P_EDIFICES.Concat(_strId, strI, j.ToString());
                         if (load = (load && _storage.TryGet(key, out data)))

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.EntryPoint;
@@ -12,12 +12,12 @@ namespace Vurbiri.Colonization
 
     public partial class IslandCreator : MonoBehaviour, ILoadingStep
     {
-        [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private HexagonSpawner _hexagonSpawner;
         [Space]
         [SerializeField] private ParticleSystem _psFog;
         [SerializeField] private float _ratioFogSize = 55f;
-        [Space]
+        [Header("═════ CROSSROADS ═════")]
+        [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private IdSet<EdificeId, AEdifice> _edificePrefabs;
         
         private Hexagons _hexagons;

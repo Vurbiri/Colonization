@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
@@ -8,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
         protected Transform _thisTransform, _parent;
 
         public abstract IHitSFX Init(IDataSFX parent);
-        public abstract CustomYieldInstruction Hit(ActorSkin target);
+        public abstract IEnumerator Hit(ActorSkin target);
 
         protected void Init()
         {

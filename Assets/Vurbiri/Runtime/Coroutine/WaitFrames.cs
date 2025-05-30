@@ -1,6 +1,6 @@
 namespace Vurbiri
 {
-    public class WaitFrames : UnityEngine.CustomYieldInstruction
+    public class WaitFrames : System.Collections.IEnumerator
     {
         private ushort _waitFrames;
         private ushort _waitUntilFrames;
@@ -11,16 +11,15 @@ namespace Vurbiri
             set { _waitFrames = value; _waitUntilFrames = _waitFrames; }
         }
 
-        public override bool keepWaiting
-        {
-            get
-            {
-                if (--_waitUntilFrames > 0)
-                    return true;
+        public object Current => null;
 
-                _waitUntilFrames = _waitFrames;
-                return false;
-            }
+        public bool MoveNext()
+        {
+            if (--_waitUntilFrames > 0)
+                return true;
+
+            _waitUntilFrames = _waitFrames;
+            return false;
         }
 
         public WaitFrames(ushort frames)  => Frames = frames;
@@ -31,6 +30,6 @@ namespace Vurbiri
             return this;
         }
 
-        public override void Reset() => _waitUntilFrames = _waitFrames;
+        public void Reset() => _waitUntilFrames = _waitFrames;
     }
 }

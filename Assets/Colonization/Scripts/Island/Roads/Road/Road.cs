@@ -42,17 +42,20 @@ namespace Vurbiri.Colonization
             _rateWave = new(_rateWave, _widthRoad);
 
             _roadRenderer.sortingOrder = BASE_ORDER - id;
+
             _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
+
             _roadRenderer.colorGradient = gradient;
             _defaultAlphaKey = gradient.alphaKeys;
             _gradient = _roadRenderer.colorGradient;
+
             _textureScale = new Vector2(_textureXRange, _textureYRange);
             _textureScaleX = _textureScale.x;
 
             return this;
         }
 
-        public ReturnSignal CreateFirst(Crossroad start, Crossroad end, bool isSFX)
+        public ReturnSignal Create(Crossroad start, Crossroad end, bool isSFX)
         {
             _links = new(start, end);
             _points = new(this, _roadRenderer, start.Position, end.Position);
@@ -89,21 +92,44 @@ namespace Vurbiri.Colonization
 
         public Road Union(Road other)
         {
-            if (!Union(other._links, other._points))
-                return null;
+            Crossroad selfEnd = _links.End, otherStart = other._links.Start;
+            if (selfEnd == otherStart)
+            {
+                _links.AddRange(other._links);
+                _points.AddRange(other._points);
+                UnionTextureScale(other);
+                return other;
+            }
 
-            _textureScale = _textureScale + other._textureScale;
-            _textureScale.y *= 0.5f;
-            _textureScaleX = _textureScale.x / (_links.Count - 1);
+            Crossroad selfStart = _links.Start, otherEnd = other._links.End;
+            if (selfEnd == otherEnd)
+            {
+                _links.AddReverseRange(other._links);
+                _points.AddReverseRange(other._points);
+                UnionTextureScale(other);
+                return other;
+            }
 
-            SetTextureScale();
+            if (selfStart == otherEnd | selfStart == otherStart)
+            {
+                return other.Union(this);
+            }
 
-            return other;
+            return null;
         }
 
         public void Destroy()
         {
             Destroy(gameObject);
+        }
+
+        private void UnionTextureScale(Road other)
+        {
+            _textureScale = _textureScale + other._textureScale;
+            _textureScale.y *= 0.5f;
+            _textureScaleX = _textureScale.x / (_links.Count - 1);
+
+            SetTextureScale();
         }
 
         private void SetTextureScale()
@@ -120,7 +146,7 @@ namespace Vurbiri.Colonization
                 StopSFX();
             }
             _coroutineSFX = StartCoroutine(BuildSFX_Cn(inverse));
-            return _waitSignal;
+            return _waitSignal.Restart();
         }
 
         private void StopSFX()
@@ -153,41 +179,6 @@ namespace Vurbiri.Colonization
             }
 
             StopSFX();
-        }
-
-        private bool Union(Links links, Points points)
-        {
-            Crossroad selfEnd = _links.End, otherStart = links.Start;
-            if (selfEnd == otherStart)
-            {
-                _links.AddRange(links);
-                _points.AddRange(points);
-                return true;
-            }
-
-            Crossroad selfStart = _links.Start, otherEnd = links.End;
-            if (selfStart == otherEnd)
-            {
-                _links.InsertRange(links);
-                _points.InsertRange(points);
-                return true;
-            }
-
-            if (selfEnd == otherEnd)
-            {
-                _links.AddReverseRange(links);
-                _points.AddReverseRange(points);
-                return true;
-            }
-
-            if (selfStart == otherStart)
-            {
-                _links.InsertReverseRange(links);
-                _points.InsertReverseRange(points);
-                return true;
-            }
-
-            return false;
         }
 
 #if UNITY_EDITOR

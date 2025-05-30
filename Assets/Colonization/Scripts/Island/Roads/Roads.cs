@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
                     return returnSignal;
 
             Road road = _factory.Create(_gradient, _roadsLists.Count);
-            returnSignal = road.CreateFirst(link.Start, link.End, isSFX);
+            returnSignal = road.Create(link.Start, link.End, isSFX);
             _roadsLists.Add(road);
 
             return returnSignal;
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
         public ReturnSignal BuildAndUnion(CrossroadLink link)
         {
             ReturnSignal returnSignal = Build(link, true);
-            _coroutines.Run(TryUnion_Cn(returnSignal));
+            _coroutines.Run(TryUnion_Cn(returnSignal.signal));
             return returnSignal;
         }
 

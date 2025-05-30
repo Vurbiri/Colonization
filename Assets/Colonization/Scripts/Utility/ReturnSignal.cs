@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization
 		{
 			this.signal = signal;
             this.result = true;
-            signal.Reset();
         }
         public ReturnSignal(bool result)
 		{
@@ -18,9 +17,8 @@ namespace Vurbiri.Colonization
 		}
 
 		public static implicit operator bool(ReturnSignal signal) => signal.result;
-        public static implicit operator ReturnSignal(bool result) => new(result);
 
-        public static implicit operator WaitSignal(ReturnSignal signal) => signal.signal;
+        public static implicit operator ReturnSignal(bool result) => new(result);
         public static implicit operator ReturnSignal(WaitSignal signal) => new(signal);
     }
 }

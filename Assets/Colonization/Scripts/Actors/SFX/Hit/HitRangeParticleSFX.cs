@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.Actors
             return this;
         }
 
-        public override CustomYieldInstruction Hit(ActorSkin target)
+        public override IEnumerator Hit(ActorSkin target)
         {
             Bounds bounds = target.Bounds;
             Vector3 targetPosition = target.transform.position;

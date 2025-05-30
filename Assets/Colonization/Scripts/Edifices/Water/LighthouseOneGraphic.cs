@@ -9,12 +9,12 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private Mesh _altMesh;
 
-        public override void Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
+        public override WaitSignal Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links, bool isSFX)
         {
             if (Chance.Rolling())
                 GetComponent<MeshFilter>().sharedMesh = _altMesh;
 
-            base.Init(playerId, links);
+            return base.Init(playerId, links, isSFX);
         }
     }
 }

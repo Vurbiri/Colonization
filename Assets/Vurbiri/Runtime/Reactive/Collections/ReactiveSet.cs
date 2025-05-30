@@ -8,8 +8,10 @@ namespace Vurbiri.Reactive.Collections
     [JsonArray]
     public class ReactiveSet<T> : IReactiveSet<T> where T : class, IReactiveItem<T>
     {
+        private const int BASE_CAPACITY = 7;
+
         protected T[] _values;
-        protected int _capacity = 4;
+        protected int _capacity = BASE_CAPACITY;
         protected readonly RInt _count = new(0);
 
         protected readonly Subscription<T, TypeEvent> _subscriber = new();
@@ -51,7 +53,13 @@ namespace Vurbiri.Reactive.Collections
         {
             if (_count == _capacity)
             {
-                GrowArray();
+                _capacity = _capacity << 1 | BASE_CAPACITY;
+
+                T[] array = new T[_capacity];
+                for (int i = 0; i < _count; i++)
+                    array[i] = _values[i];
+                _values = array;
+
                 AddItem(item, _count);
                 return;
             }
@@ -80,11 +88,8 @@ namespace Vurbiri.Reactive.Collections
             if (item == null) return false;
 
             int index = item.Index;
-            return index >= 0 & index < _capacity && EqualityComparer<T>.Default.Equals(_values[index], item);
+            return index >= 0 & index < _capacity && _values[index].Equals(item);
         }
-
-        public IEnumerator<T> GetEnumerator() => new SetEnumerator<T>(_values);
-        IEnumerator IEnumerable.GetEnumerator() => new SetEnumerator<T>(_values);
 
         public void Dispose()
         {
@@ -93,6 +98,9 @@ namespace Vurbiri.Reactive.Collections
 
             _values = null;
         }
+
+        public IEnumerator<T> GetEnumerator() => new SetEnumerator<T>(_values);
+        IEnumerator IEnumerable.GetEnumerator() => new SetEnumerator<T>(_values);
 
         private void AddItem(T item, int index)
         {
@@ -110,16 +118,6 @@ namespace Vurbiri.Reactive.Collections
             }
 
             _subscriber.Invoke(item, operation);
-        }
-
-        private void GrowArray()
-        {
-            _capacity = _capacity << 1 | 4;
-
-            T[] array = new T[_capacity];
-            for (int i = 0; i < _count; i++)
-                array[i] = _values[i];
-            _values = array;
         }
     }
 }

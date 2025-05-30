@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri
@@ -10,7 +11,11 @@ namespace Vurbiri
         [SerializeField, JsonProperty("id")]
         private int _id;
 
-        public readonly int Value => _id;
+        public readonly int Value
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _id;
+        }
 
         [JsonConstructor]
         public Id(int id)

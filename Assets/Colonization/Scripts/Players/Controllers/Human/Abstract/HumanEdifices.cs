@@ -44,9 +44,9 @@ namespace Vurbiri.Colonization
                 _portsProfit = _abilities[HumanAbilityId.PortsProfit];
                 _compensationRes = _abilities[HumanAbilityId.CompensationRes];
 
-                edifices[EdificeGroupId.Shrine] = shrines = new(CONST.MAX_EDIFICES);
-                edifices[EdificeGroupId.Colony] = colonies = new(CONST.MAX_EDIFICES);
-                edifices[EdificeGroupId.Port] = ports = new(CONST.MAX_EDIFICES);
+                edifices[EdificeGroupId.Shrine] = shrines = new(CONST.DEFAULT_MAX_EDIFICES);
+                edifices[EdificeGroupId.Colony] = colonies = new(CONST.DEFAULT_MAX_EDIFICES);
+                edifices[EdificeGroupId.Port] = ports = new(CONST.DEFAULT_MAX_EDIFICES);
             }
 
             public Edifices(Human parent, Dictionary<int, List<EdificeLoadData>> data, Crossroads crossroads) : this(parent._abilities)
@@ -98,7 +98,7 @@ namespace Vurbiri.Colonization
                 {
                     data = loadData[i];
                     crossroad = crossroads[data.key];
-                    crossroad.BuildEdifice(playerId, data.id);
+                    crossroad.BuildEdifice(playerId, data.id, false);
                     if (data.isWall)
                         crossroad.BuyWall(playerId, abilityWall);
                     values.Add(crossroad);

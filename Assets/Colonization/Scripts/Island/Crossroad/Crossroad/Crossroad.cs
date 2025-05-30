@@ -132,7 +132,7 @@ namespace Vurbiri.Colonization
             if (_countFreeLink == _links.Fullness)
             {
                 _states.SetNextId(EdificeId.GetId(_countWater, _isGate));
-                _edifice.Init(_owner, _isWall, _links, _edifice);
+                _edifice.Init(_owner, _isWall, _links, _edifice, false);
             }
         }
 
@@ -220,20 +220,23 @@ namespace Vurbiri.Colonization
             }
             #endregion
         }
-        public bool BuyUpgrade(Id<PlayerId> playerId)
+        public ReturnSignal BuyUpgrade(Id<PlayerId> playerId)
         {
             if (!_states.isUpgrade | (_states.id != EdificeId.Empty & _owner != playerId))
                 return false;
 
-            BuildEdifice(playerId, _states.nextId.Value);
-            return true;
+            return BuildEdifice(playerId, _states.nextId.Value, true); ;
         }
-        public void BuildEdifice(Id<PlayerId> playerId, int buildId)
+        public WaitSignal BuildEdifice(Id<PlayerId> playerId, int buildId, bool isSFX)
         {
+            var oldEdifice = _edifice;
             _owner = playerId;
-            _edifice = Object.Instantiate(_prefabs[buildId]).Init(_owner, _isWall, _links, _edifice);
+            _edifice = Object.Instantiate(_prefabs[buildId]);
+
+            var signal = _edifice.Init(_owner, _isWall, _links, oldEdifice, isSFX);
             _states = _edifice.Settings;
             _states.isBuildWall = _states.isBuildWall && !_isWall;
+            return signal;
         }
 
         public bool CanWallBuild(Id<PlayerId> playerId) => _owner == playerId & _states.isBuildWall & !_isWall;
@@ -261,20 +264,29 @@ namespace Vurbiri.Colonization
             _edifice.AddRoad(id, _isWall);
         }
 
-        public bool IsFullyOwned(Id<PlayerId> playerId)
+        public bool IsDeadEnd(Id<PlayerId> playerId, out CrossroadLink link)
         {
-            if (_links.Fullness <= 1)
+            link = null;
+            if (_states.id != EdificeId.Empty)
                 return false;
 
-            if (_countFreeLink > 0)
-                return _owner == playerId;
+            foreach (var l in _links)
+            {
+                if (l.Owner == playerId)
+                {
+                    if(link != null)
+                    {
+                        link = null;
+                        return false;
+                    }
+                    
+                    link = l;
+                }
+            }
 
-            foreach (var link in _links)
-                if (link.Owner != playerId)
-                    return false;
-
-            return true;
+            return link != null;
         }
+
         public bool IsRoadConnect(Id<PlayerId> playerId)
         {
             if (_owner == playerId)

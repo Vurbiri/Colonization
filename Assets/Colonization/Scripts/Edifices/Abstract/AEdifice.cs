@@ -16,18 +16,18 @@ namespace Vurbiri.Colonization
         public ISelectable Selectable { get; set; }
         public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = value; }
 
-        public virtual AEdifice Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice)
+        public virtual WaitSignal Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice oldEdifice, bool isSFX)
         {
-            Selectable = edifice.Selectable;
-            transform.SetParent(edifice.transform.parent);
-            transform.SetLocalPositionAndRotation(edifice.transform);
+            Destroy(oldEdifice.gameObject);
 
-            if (edifice._graphic != null)
-                _graphic.transform.localRotation = edifice._graphic.transform.localRotation;
-            _graphic.Init(playerId, links);
+            Selectable = oldEdifice.Selectable;
+            transform.SetParent(oldEdifice.transform.parent);
+            transform.SetLocalPositionAndRotation(oldEdifice.transform);
 
-            Destroy(edifice.gameObject);
-            return this;
+            if (oldEdifice._graphic != null)
+                _graphic.transform.localRotation = oldEdifice._graphic.transform.localRotation;
+
+            return _graphic.Init(playerId, links, isSFX);
         }
 
         public virtual bool WallBuild(Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links) => false;

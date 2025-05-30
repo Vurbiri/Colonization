@@ -116,9 +116,10 @@ namespace Vurbiri.Colonization
 
         #region Edifice
         public bool CanEdificeUpgrade(Crossroad crossroad) => _edifices.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
-        public void BuyEdificeUpgrade(Crossroad crossroad)
+        public WaitSignal BuyEdificeUpgrade(Crossroad crossroad)
         {
-            if (crossroad.BuyUpgrade(_id))
+            ReturnSignal returnSignal = crossroad.BuyUpgrade(_id);
+            if (returnSignal)
             {
                 int edificeId = crossroad.Id.Value;
                 _edifices.edifices[crossroad.GroupId].AddOrChange(crossroad);
@@ -126,14 +127,17 @@ namespace Vurbiri.Colonization
                 _resources.Pay(_prices.Edifices[edificeId]);
                 _score.Build(_id.Value, edificeId);
             }
+            return returnSignal.signal;
         }
 
-        public bool BuildPort(Crossroad crossroad)
+        public ReturnSignal BuildPort(Crossroad crossroad)
         {
-            if (crossroad.NextGroupId == EdificeGroupId.Port && crossroad.BuyUpgrade(_id))
+            if (crossroad.NextGroupId == EdificeGroupId.Port)
             {
-                _edifices.edifices[crossroad.GroupId].Add(crossroad);
-                return true;
+                ReturnSignal returnSignal = crossroad.BuyUpgrade(_id);
+                if (returnSignal)
+                    _edifices.edifices[crossroad.GroupId].Add(crossroad);
+                return returnSignal;
             }
             return false;
         }

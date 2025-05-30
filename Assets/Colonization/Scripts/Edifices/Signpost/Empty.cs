@@ -5,9 +5,9 @@ namespace Vurbiri.Colonization
 {
     sealed public class Empty : AEdifice
     {
-        public override AEdifice Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice)
+        public override WaitSignal Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice, bool isSFX)
         {
-            return this;
+            return null;
         }
 
 

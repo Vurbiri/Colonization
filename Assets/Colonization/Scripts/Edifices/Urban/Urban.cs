@@ -8,10 +8,8 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private Wall _wall;
 
-        public override AEdifice Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice)
+        public override WaitSignal Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice, bool isSFX)
         {
-
-            base.Init(playerId, isWall, links, edifice);
 
             if (edifice.Id == EdificeId.Empty)
             {
@@ -28,7 +26,7 @@ namespace Vurbiri.Colonization
             if (isWall)
                 _wall = Instantiate(_wall, transform).Init(playerId, links);
 
-            return this;
+            return base.Init(playerId, isWall, links, edifice, isSFX);
         }
 
         public override bool WallBuild(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)

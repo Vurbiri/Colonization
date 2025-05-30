@@ -1,16 +1,19 @@
-using UnityEngine;
-
 namespace Vurbiri
 {
-    public abstract class WaitResult<T> : CustomYieldInstruction
+    public abstract class WaitResult<T> : System.Collections.IEnumerator
     {
         protected bool _keepWaiting = true;
         protected T _value;
 
+        public object Current => _value;
         public T Value => _value;
-        sealed public override bool keepWaiting => _keepWaiting;
 
-        sealed public override void Reset() => _keepWaiting = true;
+        public bool MoveNext() => _keepWaiting;
+        public void Reset()
+        {
+            _keepWaiting = true;
+            _value = default;
+        }
     }
 
     public class WaitResultSource<T> : WaitResult<T>

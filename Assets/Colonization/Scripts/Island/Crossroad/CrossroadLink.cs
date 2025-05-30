@@ -4,13 +4,7 @@ namespace Vurbiri.Colonization
 {
     public class CrossroadLink : IValueId<LinkId>
     {
-        public Id<LinkId> Id => _id;
-        public bool IsWater => _isWater;
-        public Vector3 Position => _middle;
-        public Id<PlayerId> Owner { get => _owner; set => _owner = value; }
-
-        public Crossroad Start => _start;
-        public Crossroad End => _end;
+        private static readonly Key[] s_nearCross = { new(2, -1), new(2, 1), new(0, 2), new(-2, 1), new(-2, -1), new(0, -2) };
 
         private Crossroad _start, _end;
         private Id<PlayerId> _owner;
@@ -18,7 +12,13 @@ namespace Vurbiri.Colonization
         private readonly bool _isWater;
         private readonly Vector3 _middle;
 
-        private static readonly Key[] s_nearCross = { new(2, -1), new(2, 1), new(0, 2), new(-2, 1), new(-2, -1), new(0, -2) };
+        public Id<LinkId> Id => _id;
+        public bool IsWater => _isWater;
+        public Vector3 Position => _middle;
+        public Id<PlayerId> Owner { get => _owner; set => _owner = value; }
+
+        public Crossroad Start => _start;
+        public Crossroad End => _end;
 
         private CrossroadLink(Id<LinkId> id, Crossroad start, Crossroad end, bool isWater)
         {

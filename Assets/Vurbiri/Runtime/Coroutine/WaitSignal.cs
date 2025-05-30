@@ -1,15 +1,20 @@
-using UnityEngine;
-
 namespace Vurbiri
 {
-    sealed public class WaitSignal : CustomYieldInstruction
+    sealed public class WaitSignal : System.Collections.IEnumerator
     {
-        public override bool keepWaiting => _keepWaiting;
         private bool _keepWaiting;
+
+        public object Current => null;
 
         public WaitSignal() => _keepWaiting = true;
 
+        public bool MoveNext() => _keepWaiting;
         public void Send() => _keepWaiting = false;
-        public override void Reset() => _keepWaiting = true;
+        public void Reset() => _keepWaiting = true;
+        public WaitSignal Restart()
+        {
+            _keepWaiting = true;
+            return this;
+        }
     }
 }

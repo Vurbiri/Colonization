@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.Actors
 
         public virtual void Block(bool isActive) { }
 
-        public virtual CustomYieldInstruction Hit(int idSkill, int idHit, ActorSkin target) => _hitsSFX[idSkill, idHit].Hit(target);
+        public virtual IEnumerator Hit(int idSkill, int idHit, ActorSkin target) => _hitsSFX[idSkill, idHit].Hit(target);
 
         public virtual void Death() { }
 

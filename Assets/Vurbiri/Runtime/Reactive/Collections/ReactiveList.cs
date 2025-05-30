@@ -6,22 +6,22 @@ using System.Collections.Generic;
 namespace Vurbiri.Reactive.Collections
 {
     [JsonArray]
-    public class ReactiveList<T> : IList<T>, IReactiveList<T>
+    public class ReactiveList<T> : IList<T>, IReactiveList<T> where T : IEquatable<T>
     {
+        private const int BASE_CAPACITY = 7;
+
         private T[] _values;
-        private int _capacity = 4;
+        private int _capacity = BASE_CAPACITY;
         protected readonly RInt _count = new(0);
-        
-        private readonly IEqualityComparer<T> _comparer;
 
         private readonly Subscription<int, T, TypeEvent> _subscriber = new();
 
         public T this[int index] 
         {
-            get => _values [index];
+            get => _values[index];
             set
             {
-                if (!_comparer.Equals(_values[index], value))
+                if (!_values[index].Equals(value))
                 {
                     _values[index] = value;
                     _subscriber.Invoke(index, value, TypeEvent.Change);
@@ -36,46 +36,17 @@ namespace Vurbiri.Reactive.Collections
         #region Constructors
         public ReactiveList()
         {
-            _comparer = EqualityComparer<T>.Default;
-            _values = new T[_capacity];
-        }
-        public ReactiveList(IEqualityComparer<T> comparer)
-        {
-            Throw.IfNull(comparer);
-
-            _comparer = comparer;
             _values = new T[_capacity];
         }
 
         public ReactiveList(int capacity)
         {
-            _comparer = EqualityComparer<T>.Default;
-            _capacity = capacity;
-            _values = new T[_capacity];
-        }
-        public ReactiveList(int capacity, IEqualityComparer<T> comparer)
-        {
-            Throw.IfNull(comparer);
-
-            _comparer = comparer;
             _capacity = capacity;
             _values = new T[_capacity];
         }
 
         public ReactiveList(IReadOnlyList<T> values)
         {
-            _comparer = EqualityComparer<T>.Default;
-            _capacity = _count.Value = values.Count;
-            _values = new T[_capacity];
-
-            for (int i = 0; i < _capacity; i++)
-                _values[i] = values[i];
-        }
-        public ReactiveList(IReadOnlyList<T> values, IEqualityComparer<T> comparer)
-        {
-            Throw.IfNull(comparer);
-
-            _comparer = comparer;
             _capacity = _count.Value = values.Count;
             _values = new T[_capacity];
 
@@ -148,7 +119,7 @@ namespace Vurbiri.Reactive.Collections
         public bool Contains(T item)
         {
             for (int i = 0; i < _count; i++)
-                if (_comparer.Equals(_values[i], item))
+                if (_values[i].Equals(item))
                     return true;
 
             return false;
@@ -157,7 +128,7 @@ namespace Vurbiri.Reactive.Collections
         public int IndexOf(T item)
         {
             for (int i = 0; i < _count; i++)
-                if (_comparer.Equals(_values[i], item))
+                if (_values[i].Equals(item))
                     return i;
 
             return -1;
@@ -211,7 +182,7 @@ namespace Vurbiri.Reactive.Collections
 
         private void GrowArray()
         {
-            _capacity = _capacity << 1 | 4;
+            _capacity = _capacity << 1 | BASE_CAPACITY;
 
             T[] array = new T[_capacity];
             for(int i = 0; i < _count; i++)

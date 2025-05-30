@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
@@ -11,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
             _clip = clip;
         }
 
-        public CustomYieldInstruction Hit(ActorSkin target)
+        public IEnumerator Hit(ActorSkin target)
         {
             target.React(_clip);
             return null;

@@ -1,26 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Vurbiri
 {
-    sealed public class WaitAll : CustomYieldInstruction
+    sealed public class WaitAll : IEnumerator
     {
         private readonly List<IEnumerator> _coroutines;
 
         public int Count => _coroutines.Count;
-
-        public override bool keepWaiting
-        {
-            get
-            {
-                for(int i = _coroutines.Count - 1; i >= 0; i--)
-                    if (!_coroutines[i].MoveNext())
-                        _coroutines.RemoveAt(i);
-
-                return _coroutines.Count != 0;
-            }
-        }
+        public object Current => null;
 
         public WaitAll()
         {
@@ -42,6 +30,15 @@ namespace Vurbiri
         public WaitAll(IEnumerable<IEnumerator> coroutines)
         {
             _coroutines = new(coroutines);
+        }
+
+        public bool MoveNext()
+        {
+            for (int i = _coroutines.Count - 1; i >= 0; i--)
+                if (!_coroutines[i].MoveNext())
+                    _coroutines.RemoveAt(i);
+
+            return _coroutines.Count != 0;
         }
 
         public WaitAll Add(IEnumerator coroutine)
@@ -66,7 +63,7 @@ namespace Vurbiri
             return this;
         }
 
-        public override void Reset()
+        public void Reset()
         {
             _coroutines.Clear();
         }

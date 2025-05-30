@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
@@ -19,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
             return this;
         }
 
-        public override CustomYieldInstruction Hit(ActorSkin target)
+        public override IEnumerator Hit(ActorSkin target)
         {
             _thisTransform.SetParent(target.Transform, false);
             _thisGO.SetActive(true);

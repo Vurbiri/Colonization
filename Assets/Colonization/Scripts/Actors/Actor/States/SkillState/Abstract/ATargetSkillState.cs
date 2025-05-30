@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
             protected Actor _target;
             protected WaitSignal _waitActor;
             protected readonly RBool _isCancel;
-            protected readonly WaitForSecondsRealtime _waitRealtime = new(0.6f);
+            protected readonly WaitRealtime _waitRealtime = new(0.6f);
             protected readonly Relation _relationTarget;
             // !!!!!!!!!!!!!!!!!!!!! удалить _relationRealTarget
             protected readonly Relation _relationRealTarget;
@@ -94,7 +94,7 @@ namespace Vurbiri.Colonization.Actors
 
             protected override IEnumerator ApplySkill_Cn()
             {
-                CustomYieldInstruction wait = _skin.Skill(_id, _target._skin);
+                IEnumerator wait = _skin.Skill(_id, _target._skin);
 
                 for (int i = 0; i < _countHits; i++)
                 {
