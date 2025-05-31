@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Vurbiri.Colonization.Actors;
 
 namespace VurbiriEditor.Colonization.Actors
@@ -30,10 +31,13 @@ namespace VurbiriEditor.Colonization.Actors
                     return;
             }
 
-            rootVisualElement.Add(DemonsSettingsEditor.CreateCachedEditorAndBind(_demonsSettings));
+            var root = DemonsSettingsEditor.CreateCachedEditorAndBind(_demonsSettings);
+            root.Q<Button>("Apply").clicked += Apply;
+
+            rootVisualElement.Add(root);
         }
 
-        private void OnDisable()
+        private void Apply()
         {
             if (_demonsSettings != null)
                 ActorUtility.OverrideClips(_demonsSettings.Settings);

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
         [SerializeField] protected EdificeSettings _settings;
         [Space]
         [SerializeField] protected AEdificeGraphic _graphic;
-        [SerializeField] protected Collider _thisCollider;
+        [SerializeField] protected SphereCollider _thisCollider;
 
         public Id<EdificeId> Id => _settings.id;
         public EdificeSettings Settings => _settings;
@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
                 _graphic = GetComponentInChildren<AEdificeGraphic>();
 
             if (_thisCollider == null)
-                _thisCollider = GetComponent<Collider>();
+                _thisCollider = GetComponent<SphereCollider>();
         }
 #endif
     }

@@ -86,6 +86,19 @@ namespace VurbiriEditor.UI
             else EditorGUILayout.Space(_height);
         }
 
+        public void DrawGUILayout()
+        {
+            GUIContent label = new(_scaleBlockProperty.displayName);
+
+            if (_scaleBlockProperty.isExpanded = EditorGUILayout.Foldout(_scaleBlockProperty.isExpanded, label))
+            {
+                indentLevel++;
+                for (int i = 0; i < COLORS_COUNT; i++)
+                    VectorFieldGUILayout(_scaleProperties[i]);
+                indentLevel--;
+            }
+        }
+
         private static void VectorField(Rect position, SerializedProperty vector, SerializedProperty editMode)
         {
             bool mode = editMode.boolValue;
@@ -140,6 +153,27 @@ namespace VurbiriEditor.UI
             sizeButton.width = EditorGUIUtility.singleLineHeight;
             sizeButton.x = EditorGUIUtility.labelWidth;
             return sizeButton;
+        }
+
+        private static void VectorFieldGUILayout(SerializedProperty vector)
+        {
+            Vector3 oldScale = vector.vector3Value;
+
+            BeginChangeCheck();
+            EditorGUILayout.PropertyField(vector);
+            if (EndChangeCheck())
+            {
+                Vector3 newScale = vector.vector3Value;
+                for (int i = 0; i < AXIS_COUNT; i++)
+                {
+                    if (oldScale[i] != newScale[i])
+                    {
+                        float value = newScale[i];
+                        vector.vector3Value = new(value, value, value);
+                        return;
+                    }
+                }
+            }
         }
     }
 }

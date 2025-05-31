@@ -15,6 +15,7 @@ namespace VurbiriEditor.Colonization.Actors
 
         private const string NAME = "Animation Clips Settings", MENU = MENU_PATH + NAME;
         private const string NAME_MELEE = "Melee", NAME_SHIELD = "Shield", NAME_WIZAED = "Wizard";
+        private const string NAME_BUTTON = "Apply";
 
         private readonly List<Editor> _editors = new();
 
@@ -60,6 +61,8 @@ namespace VurbiriEditor.Colonization.Actors
                     _editors.Add(editor);
             }
 
+            root.Q<Button>(NAME_BUTTON).clicked += Apply;
+
             rootVisualElement.Add(root);
         }
 
@@ -82,6 +85,13 @@ namespace VurbiriEditor.Colonization.Actors
             }
         }
 
+        private void Apply()
+        {
+            var warriorsSettings = EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
+            if (warriorsSettings != null)
+                ActorUtility.OverrideClips(warriorsSettings.Settings);
+        }
+
         private void OnDisable()
         {
             foreach (var editor in _editors)
@@ -89,9 +99,7 @@ namespace VurbiriEditor.Colonization.Actors
 
             _editors.Clear();
 
-            var warriorsSettings = EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
-            if (warriorsSettings != null)
-                ActorUtility.OverrideClips(warriorsSettings.Settings);
+            
         }
     }
 }

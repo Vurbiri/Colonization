@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
             _settings.profit = 0;
 
             if (_thisCollider == null)
-                _thisCollider = GetComponent<Collider>();
+                _thisCollider = GetComponent<SphereCollider>();
         }
 #endif
     }

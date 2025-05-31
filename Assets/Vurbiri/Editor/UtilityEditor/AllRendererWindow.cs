@@ -11,14 +11,16 @@ namespace VurbiriEditor
     internal class AllRendererWindow : EditorWindow
     {
         private const string NAME = "All Renderer Settings", MENU = MENU_PATH + NAME;
-
-        private Vector2 _scrollPos;
+                
         [SerializeField] private List<Renderer> _renderersPrefabs;
-        [SerializeField] private Renderer[] _renderersScene;
+        [SerializeField] private List<Renderer> _renderersScene;
+
         private MotionVectorGenerationMode _motionVector = MotionVectorGenerationMode.Object;
         private LightProbeUsage _probeUsage;
-        SerializedObject _self;
-        SerializedProperty _propertyPrefabs, _propertyScenes;
+        private SerializedObject _self;
+        private SerializedProperty _propertyPrefabs, _propertyScenes;
+        private Vector2 _scrollPos;
+        private bool _isSave;
 
         [MenuItem(MENU)]
         private static void ShowWindow()
@@ -32,8 +34,12 @@ namespace VurbiriEditor
             _propertyScenes = _self.FindProperty("_renderersScene");
             _propertyPrefabs = _self.FindProperty("_renderersPrefabs");
 
-            _renderersScene = FindObjectsByType<Renderer>(FindObjectsInactive.Include ,FindObjectsSortMode.None);
+            _renderersScene = new(FindObjectsByType<Renderer>(FindObjectsInactive.Include ,FindObjectsSortMode.None));
             _renderersPrefabs = EUtility.FindComponentsPrefabs<Renderer>();
+
+            for (int i = _renderersScene.Count - 1; i >= 0; i--)
+                if (PrefabUtility.IsPartOfAnyPrefab(_renderersScene[i].gameObject))
+                    _renderersScene.RemoveAt(i);
 
             _self.Update();
 
@@ -52,9 +58,16 @@ namespace VurbiriEditor
 
             BeginWindows();
             DrawParams();
-            DrawBottom();
+            DrawButton();
             DrawRenderer();
             EndWindows();
+
+            if (_isSave)
+            {
+                AssetDatabase.SaveAssets();
+                EditorSceneManager.SaveOpenScenes();
+                _isSave = false;
+            }
 
             #region Local: DrawParams(), DrawRenderer(), DrawBottom()
             //=================================
@@ -80,28 +93,36 @@ namespace VurbiriEditor
                 EditorGUILayout.EndVertical();
             }
             //=================================
-            void DrawBottom()
+            void DrawButton()
             {
                 if (GUILayout.Button("Apply"))
                 {
                     _self.ApplyModifiedProperties();
 
-                    foreach (Renderer renderer in _renderersPrefabs)
-                    {
-                        renderer.motionVectorGenerationMode = _motionVector;
-                        renderer.lightProbeUsage = _probeUsage;
-                    }
-                    foreach (Renderer renderer in _renderersScene)
-                    {
-                        renderer.motionVectorGenerationMode = _motionVector;
-                        renderer.lightProbeUsage = _probeUsage;
-                    }
-
-                    EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
-                    AssetDatabase.SaveAssets();
+                    _renderersPrefabs.ForEach(Apply);
+                    _renderersScene.ForEach(Apply);
                 }
 
                 EditorGUILayout.Space();
+
+                #region Local: Apply(..)
+                //=================================
+                void Apply(Renderer renderer)
+                {
+                    bool isSave = false;
+                    if (isSave |= renderer.motionVectorGenerationMode != _motionVector)
+                        renderer.motionVectorGenerationMode = _motionVector;
+                    if (isSave |= renderer.lightProbeUsage != _probeUsage)
+                        renderer.lightProbeUsage = _probeUsage;
+
+                    if (isSave)
+                    {
+                        EditorUtility.SetDirty(renderer);
+                        Debug.Log($"Applied to <b>{renderer.gameObject.name}</b>");
+                        _isSave = true;
+                    }
+                }
+                #endregion
             }
             #endregion
         }
@@ -111,6 +132,8 @@ namespace VurbiriEditor
             _renderersScene = null;
             _renderersPrefabs = null;
             _self.Update();
+
+            AssetDatabase.SaveAssets();
         }
     }
 }

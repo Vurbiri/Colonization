@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Vurbiri.Colonization.Actors;
 
 namespace VurbiriEditor.Colonization.Actors
@@ -30,10 +31,13 @@ namespace VurbiriEditor.Colonization.Actors
                     return;
             }
 
-            rootVisualElement.Add(WarriorsSettingsEditor.CreateCachedEditorAndBind(_warriorsSettings));
+            var root = WarriorsSettingsEditor.CreateCachedEditorAndBind(_warriorsSettings);
+            root.Q<Button>("Apply").clicked += Apply;
+
+            rootVisualElement.Add(root);
         }
 
-        private void OnDisable()
+        private void Apply()
         {
             if (_warriorsSettings != null)
                 ActorUtility.OverrideClips(_warriorsSettings.Settings);

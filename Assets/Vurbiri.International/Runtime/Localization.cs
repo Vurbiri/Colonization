@@ -51,7 +51,7 @@ namespace Vurbiri.International
         }
 
 #if UNITY_EDITOR
-        public Localization(int fileId) : base() => LoadFile(fileId);
+        public Localization(int fileId) : this() => LoadFile(fileId);
 #endif
 
         public Unsubscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, sendCallback, this);
@@ -85,7 +85,7 @@ namespace Vurbiri.International
 
         public void LoadFile(int fileId)
         {
-            if(_text[fileId] == null) 
+            if (_text[fileId] == null) 
                 LoadingFile(fileId, _currentLanguage);
         }
 

@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization
         private const int BASE_ORDER = 32;
 
         [SerializeField] private LineRenderer _roadRenderer;
+        [SerializeField] private AudioSource _audioSource;
         [Space]
         [SerializeField, Range(0.5f, 1.5f)] private float _widthRoad = 0.95f;
         [Space]
@@ -170,6 +171,8 @@ namespace Vurbiri.Colonization
 
             _alphaKeys[0] .alpha = end;
             _alphaKeys[^1].alpha = 1f - end;
+
+            _audioSource.Play();
             while (progress < 1f)
             {
                 _alphaKeys[1].time = Mathf.Lerp(start, end, progress);
@@ -186,6 +189,15 @@ namespace Vurbiri.Colonization
         {
             if(_roadRenderer == null)
                 _roadRenderer = GetComponentInChildren<LineRenderer>();
+            if (_audioSource == null)
+                _audioSource = GetComponent<AudioSource>();
+
+            if (Application.isPlaying) return;
+
+            if (_audioSource.playOnAwake)
+                _audioSource.playOnAwake = false;
+            if (_audioSource.loop)
+                _audioSource.loop = false;
         }
 #endif
     }
