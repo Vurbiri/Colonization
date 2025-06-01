@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
         [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureXRange = new(0.6f, 0.9f);
         [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureYRange = new(0.4f, 1f);
         [Space]
-        [SerializeField, Range(0.1f, 4f)] private float _buildingSpeed = 2f;
+        [SerializeField, Range(2f, 6f)] private float _buildingSpeed = 4.1f;
 
         private readonly WaitSignal _waitSignal = new();
         private Links _links;

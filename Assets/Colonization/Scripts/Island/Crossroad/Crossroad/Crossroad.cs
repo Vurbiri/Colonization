@@ -240,18 +240,22 @@ namespace Vurbiri.Colonization
         }
 
         public bool CanWallBuild(Id<PlayerId> playerId) => _owner == playerId & _states.isBuildWall & !_isWall;
-        public bool BuyWall(Id<PlayerId> playerId, IReactive<int> abilityWall)
+        public ReturnSignal BuyWall(Id<PlayerId> playerId, IReactive<int> abilityWall, bool isSFX)
         {
-            if (!_states.isBuildWall | _isWall | _owner != playerId || !_edifice.WallBuild(playerId, _links))
+            if (!_states.isBuildWall | _isWall | _owner != playerId)
                 return false;
 
-            _states.isBuildWall = !(_isWall = true);
-            _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d);
+            ReturnSignal returnSignal = _edifice.WallBuild(playerId, _links, isSFX);
+            if (returnSignal)
+            {
+                _states.isBuildWall = !(_isWall = true);
+                _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d);
 
-            for (int i = 0; i < _hexagons.Count; i++)
-                _hexagons[i].BuildWall(playerId);
+                for (int i = 0; i < _hexagons.Count; i++)
+                    _hexagons[i].BuildWall(playerId);
+            }
 
-            return true;
+            return returnSignal;
         }
 
         #endregion

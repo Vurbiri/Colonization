@@ -63,14 +63,12 @@ namespace Vurbiri.Colonization
 
             if(Application.isPlaying) return;
 
-            if(_audioSource.playOnAwake)
-                _audioSource.playOnAwake = false;
-            if (_audioSource.loop)
-                _audioSource.loop = false;
+            if(_audioSource.playOnAwake || _audioSource.loop)
+                _audioSource.playOnAwake = _audioSource.loop = false;
 
             ParticleSystem.MainModule main = _particleSystem.main;
-            if (main.playOnAwake)
-                main.playOnAwake = false;
+            if (main.playOnAwake || main.loop)
+                main.playOnAwake = main.loop = false;
             if (main.stopAction != ParticleSystemStopAction.Destroy)
                 main.stopAction = ParticleSystemStopAction.Destroy;
 
@@ -80,7 +78,7 @@ namespace Vurbiri.Colonization
             if (sphereCollider == null)
                 return;
 
-            float radius = sphereCollider.radius;
+            float radius = sphereCollider.radius * 0.9f;
             var shape = _particleSystem.shape;
             shape.radius = radius;
             var emission = _particleSystem.emission;

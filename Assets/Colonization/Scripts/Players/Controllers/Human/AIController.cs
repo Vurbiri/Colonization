@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
 
         public override void OnInit()
         {
-            _coroutines.Run(OnInit_Cn());
+            _coroutines.Run(OnInitFast_Cn());
         }
 
         public override void OnPlay()
@@ -42,5 +42,20 @@ namespace Vurbiri.Colonization
             
             _game.Init();
         }
+
+        private IEnumerator OnInitFast_Cn()
+        {
+            yield return new WaitFrames(2);
+
+            if (_crossroads.BreachCount > 0)
+            {
+                Crossroad port = _crossroads.GetRandomPort();
+                BuildPort(port);
+                yield return null;
+            }
+
+            _game.Init();
+        }
+
     }
 }

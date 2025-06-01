@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization
 
         public override WaitSignal Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice edifice, bool isSFX)
         {
-
             if (edifice.Id == EdificeId.Empty)
             {
                 foreach (var link in links)
@@ -24,15 +23,21 @@ namespace Vurbiri.Colonization
             }
 
             if (isWall)
-                _wall = Instantiate(_wall, transform).Init(playerId, links);
+                _wall = edifice.WallTransfer(transform);
 
             return base.Init(playerId, isWall, links, edifice, isSFX);
         }
 
-        public override bool WallBuild(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links)
+        public override Wall WallTransfer(Transform newParent)
         {
-            _wall = Instantiate(_wall, transform).Init(playerId, links);
-            return true;
+            _wall.transform.SetParent(newParent, false);
+            return _wall;
+        }
+
+        public override ReturnSignal WallBuild(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links, bool isSFX)
+        {
+            _wall = Instantiate(_wall, transform);
+            return _wall.Init(playerId, links, isSFX);
         }
 
         public override void AddRoad(Id<LinkId> linkId, bool isWall)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -16,16 +17,16 @@ namespace VurbiriEditor.Colonization
 		private const string NAME = "World Buttons Settings", MENU = MENU_UI_PATH + NAME;
         #endregion
 
-        [SerializeField] private List<AWorldHintButton> _buttonsPrefabs;
-        [SerializeField] private List<AWorldHintButton> _buttonsScene;
+        [SerializeField] private List<AWorldHintButton> _prefabs;
+        [SerializeField] private List<AWorldHintButton> _scene;
 
         [SerializeField] private ColorBlock _colorBlock;
-        [SerializeField] private ScaleBlock _scaleBlock;
+        [SerializeField] private ScaleBlockFloat _scaleBlock;
+        private ScaleBlock _scaleBlockVector;
 
         private SerializedObject _self;
-        private SerializedProperty _propertyPrefabs, _propertyScenes;
+        private SerializedProperty _propertyPrefabs, _propertyScenes, _scaleBlockDrawer;
         private ColorBlockDrawer _colorBlockDrawer;
-        private ScaleBlockDrawer _scaleBlockDrawer;
 
         private Vector2 _scrollPosParams, _scrollPosButtons;
         private bool _isSave;
@@ -39,27 +40,28 @@ namespace VurbiriEditor.Colonization
 		private void OnEnable()
 		{
             _self = new(this);
-            _propertyPrefabs = _self.FindProperty("_buttonsPrefabs");
-            _propertyScenes = _self.FindProperty("_buttonsScene");
+            _propertyPrefabs = _self.FindProperty("_prefabs");
+            _propertyScenes = _self.FindProperty("_scene");
+
             _colorBlockDrawer = new(_self.FindProperty("_colorBlock"));
-            _scaleBlockDrawer = new(_self.FindProperty("_scaleBlock"));
+            _scaleBlockDrawer = _self.FindProperty("_scaleBlock");
 
-            _buttonsPrefabs = EUtility.FindComponentsPrefabs<AWorldHintButton>();
-            _buttonsScene = new(FindObjectsByType<AWorldHintButton>(FindObjectsInactive.Include, FindObjectsSortMode.None));
+            _prefabs = EUtility.FindComponentsPrefabs<AWorldHintButton>();
+            _scene = new(FindObjectsByType<AWorldHintButton>(FindObjectsInactive.Include, FindObjectsSortMode.None));
 
-            for (int i = _buttonsPrefabs.Count - 1; i >= 0; i--)
-                if (PrefabUtility.IsPartOfVariantPrefab(_buttonsPrefabs[i]) && !PrefabUtility.IsAddedComponentOverride(_buttonsPrefabs[i]))
-                    _buttonsPrefabs.RemoveAt(i);
+            for (int i = _prefabs.Count - 1; i >= 0; i--)
+                if (PrefabUtility.IsPartOfVariantPrefab(_prefabs[i]) && !PrefabUtility.IsAddedComponentOverride(_prefabs[i]))
+                    _prefabs.RemoveAt(i);
 
-            for (int i = _buttonsScene.Count - 1; i >= 0; i--)
-                if (PrefabUtility.IsPartOfAnyPrefab(_buttonsScene[i].gameObject))
-                    _buttonsScene.RemoveAt(i);
+            for (int i = _scene.Count - 1; i >= 0; i--)
+                if (PrefabUtility.IsPartOfAnyPrefab(_scene[i].gameObject))
+                    _scene.RemoveAt(i);
 
-            if (_buttonsPrefabs != null || _buttonsPrefabs.Count != 0)
+            if (_prefabs != null || _prefabs.Count != 0)
             {
-                AWorldHintButton button = _buttonsPrefabs[0];
+                AWorldHintButton button = _prefabs[0];
                 _colorBlock = button.colors;
-                _scaleBlock = button.Scales;
+                _scaleBlock = _scaleBlockVector = button.Scales;
             }
 
             _self.Update();
@@ -67,7 +69,7 @@ namespace VurbiriEditor.Colonization
 		
 		private void OnGUI()
 		{
-            if (_buttonsScene == null)
+            if (_scene == null)
                 return;
 
             BeginWindows();
@@ -86,7 +88,7 @@ namespace VurbiriEditor.Colonization
                 EditorSceneManager.SaveOpenScenes();
                 _isSave = false;
             }
-
+ 
             #region Local: DrawParams(), DrawRenderer(), DrawBottom()
             //=================================
             void DrawParams()
@@ -96,7 +98,7 @@ namespace VurbiriEditor.Colonization
 
                 _colorBlockDrawer.DrawGUILayout();
                 EditorGUILayout.Space();
-                _scaleBlockDrawer.DrawGUILayout();
+                EditorGUILayout.PropertyField(_scaleBlockDrawer);
 
                 EditorGUILayout.EndScrollView();
                 EditorGUILayout.EndVertical();
@@ -122,11 +124,17 @@ namespace VurbiriEditor.Colonization
                 {
                     _self.ApplyModifiedProperties();
 
-                    foreach (var button in _buttonsPrefabs)
+                    _scaleBlockVector = _scaleBlock;
+                    _scaleBlockVector.fadeDuration = _colorBlock.fadeDuration;
+
+                    foreach (var button in _prefabs)
                         Apply(button, "Prefab");
 
-                    foreach (var button in _buttonsScene)
+                    foreach (var button in _scene)
                         Apply(button, "Scene object");
+
+                    if(!_isSave)
+                        Debug.Log("<b>No buttons with other parameters.</b>");
                 }
 
                 EditorGUILayout.Space();
@@ -139,8 +147,8 @@ namespace VurbiriEditor.Colonization
                     
                     if (isSave |= button.colors != _colorBlock)
                         button.colors = _colorBlock;
-                    if (isSave |= button.Scales != _scaleBlock)
-                        button.Scales = _scaleBlock;
+                    if (isSave |= button.Scales != _scaleBlockVector)
+                        button.Scales = _scaleBlockVector;
 
                     var navigation = button.navigation;
 
@@ -164,10 +172,50 @@ namespace VurbiriEditor.Colonization
 
         private void OnDisable()
 		{
-            _buttonsScene = null;
-            _buttonsPrefabs = null;
+            _scene = null;
+            _prefabs = null;
             _self.Update();
 
         }
-	}
+
+
+        [Serializable]
+        private struct ScaleBlockFloat
+        {
+            [Range(0.75f, 1.25f)] public float normal;
+            [Range(0.75f, 1.25f)] public float highlighted;
+            [Range(0.75f, 1.25f)] public float pressed;
+            [Range(0.75f, 1.25f)] public float selected;
+            [Range(0.75f, 1.25f)] public float disabled;
+            private float _fadeDuration;
+
+            public static implicit operator ScaleBlock(ScaleBlockFloat value)
+            {
+                ScaleBlock scaleBlock = new()
+                {
+                    normal = new(value.normal, value.normal, value.normal),
+                    highlighted = new(value.highlighted, value.highlighted, value.highlighted),
+                    pressed = new(value.pressed, value.pressed, value.pressed),
+                    selected = new(value.selected, value.selected, value.selected),
+                    disabled = new(value.disabled, value.disabled, value.disabled),
+                    fadeDuration = value._fadeDuration
+                };
+                return scaleBlock;
+            }
+            public static implicit operator ScaleBlockFloat(ScaleBlock value)
+            {
+                ScaleBlockFloat scaleBlock = new()
+                {
+                    normal = value.normal.x, 
+                    highlighted = value.highlighted.x, 
+                    pressed = value.pressed.x,
+                    selected = value.selected.x,
+                    disabled = value.disabled.x,
+                    _fadeDuration = value.fadeDuration
+                }; 
+                return scaleBlock;
+            }
+        }
+
+    }
 }

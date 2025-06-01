@@ -69,7 +69,6 @@ namespace VurbiriEditor.UI
 
         public void DrawGUILayout()
         {
-            EditorGUILayout.PropertyField(_colorMultiplierProperty);
             EditorGUILayout.Slider(_fadeDurationProperty, 0f, 1f);
             EditorGUILayout.Space();
 

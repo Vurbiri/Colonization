@@ -100,7 +100,7 @@ namespace Vurbiri.Colonization
                     crossroad = crossroads[data.key];
                     crossroad.BuildEdifice(playerId, data.id, false);
                     if (data.isWall)
-                        crossroad.BuyWall(playerId, abilityWall);
+                        crossroad.BuyWall(playerId, abilityWall, false);
                     values.Add(crossroad);
                     crossroad.Interactable = false;
                 }

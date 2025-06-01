@@ -20,9 +20,11 @@ namespace Vurbiri.Colonization
         {
             Destroy(oldEdifice.gameObject);
 
+            Transform thisTransform = transform, oldTransform = oldEdifice.transform;
+
             Selectable = oldEdifice.Selectable;
-            transform.SetParent(oldEdifice.transform.parent);
-            transform.SetLocalPositionAndRotation(oldEdifice.transform);
+            thisTransform.SetParent(oldTransform.parent);
+            thisTransform.SetLocalPositionAndRotation(oldTransform.localPosition, oldTransform.localRotation);
 
             if (oldEdifice._graphic != null)
                 _graphic.transform.localRotation = oldEdifice._graphic.transform.localRotation;
@@ -30,9 +32,9 @@ namespace Vurbiri.Colonization
             return _graphic.Init(playerId, links, isSFX);
         }
 
-        public virtual bool WallBuild(Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links) => false;
+        public virtual ReturnSignal WallBuild(Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links, bool isSFX) => false;
+        public virtual Wall WallTransfer(Transform newParent) => null;
         public virtual void AddRoad(Id<LinkId> linkId, bool isWall) { }
-
 
 #if UNITY_EDITOR
         protected virtual void OnValidate()

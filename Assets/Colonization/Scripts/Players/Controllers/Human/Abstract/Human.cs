@@ -143,13 +143,15 @@ namespace Vurbiri.Colonization
         }
 
         public bool CanWallBuild(Crossroad crossroad) => _abilities.IsTrue(IsWall) && crossroad.CanWallBuild(_id);
-        public void BuyWall(Crossroad crossroad)
+        public WaitSignal BuyWall(Crossroad crossroad)
         {
-            if (crossroad.BuyWall(_id, _abilities[WallDefence]))
+            ReturnSignal returnSignal = crossroad.BuyWall(_id, _abilities[WallDefence], true);
+            if (returnSignal)
             {
                 _resources.Pay(_prices.Wall);
                 _edifices.edifices[crossroad.GroupId].Signal(crossroad);
             }
+            return returnSignal.signal;
         }
         #endregion
 

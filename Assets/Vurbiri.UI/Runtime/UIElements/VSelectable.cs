@@ -224,6 +224,10 @@ namespace Vurbiri.UI
         {
             if (!Application.isPlaying)
             {
+
+                if (transition == Transition.ColorTint && _scales.fadeDuration != colors.fadeDuration)
+                    _scales.fadeDuration = colors.fadeDuration;
+
                 _scaleTween = _scaleTween.ReCreate(this, _scalingTarget, _scaling);
                 if (!_scaling && _scalingTarget != null)
                     _scalingTarget.localScale = Vector3.one;

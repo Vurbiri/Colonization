@@ -86,19 +86,6 @@ namespace VurbiriEditor.UI
             else EditorGUILayout.Space(_height);
         }
 
-        public void DrawGUILayout()
-        {
-            GUIContent label = new(_scaleBlockProperty.displayName);
-
-            if (_scaleBlockProperty.isExpanded = EditorGUILayout.Foldout(_scaleBlockProperty.isExpanded, label))
-            {
-                indentLevel++;
-                for (int i = 0; i < COLORS_COUNT; i++)
-                    VectorFieldGUILayout(_scaleProperties[i]);
-                indentLevel--;
-            }
-        }
-
         private static void VectorField(Rect position, SerializedProperty vector, SerializedProperty editMode)
         {
             bool mode = editMode.boolValue;
