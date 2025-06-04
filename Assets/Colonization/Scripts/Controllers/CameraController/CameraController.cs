@@ -58,10 +58,10 @@ namespace Vurbiri.Colonization.Controllers
             return this;
         }
 
-        public void ToDefaultPosition()
+        public WaitSignal ToDefaultPosition_Wait()
         {
             _machine.SetState(_moveToDefaultState);
-            //return _moveToDefaultState.Signal;
+            return _moveToDefaultState.Signal;
         }
 
         public WaitSignal ToPosition(Vector3 position)

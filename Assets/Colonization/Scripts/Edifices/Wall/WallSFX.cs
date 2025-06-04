@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization
 
             while (progress < 1f)
             {
-                scale.y = progress += Time.deltaTime * _showSpeed;
+                scale.y = progress += Time.unscaledDeltaTime * _showSpeed;
                 transform.localScale = scale;
                 yield return null;
             }

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
 
     public class Crossroads
     {
-        private readonly Dictionary<Key, Crossroad> _crossroads = new(HEX.SIDES * MAX_CIRCLES * MAX_CIRCLES);
+        private readonly Dictionary<Key, Crossroad> _crossroads = new(MAX_CROSSROADS);
 
         private readonly HashSet<Crossroad> _breach = new(HEX.SIDES * (MAX_CIRCLES + HEX.SIDES));
         private readonly HashSet<Crossroad> _gate = new(HEX.SIDES);

@@ -177,7 +177,7 @@ namespace Vurbiri.Colonization
             {
                 _alphaKeys[1].time = Mathf.Lerp(start, end, progress);
                 LineAlphaKeys = _alphaKeys;
-                progress += Time.deltaTime * _buildingSpeed;
+                progress += Time.unscaledDeltaTime * _buildingSpeed;
                 yield return null;
             }
 

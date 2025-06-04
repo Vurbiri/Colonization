@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization
     {
         public const int MAX_CIRCLES = 4;
         public const int MAX_HEXAGONS = ((HEX.SIDES * MAX_CIRCLES * (MAX_CIRCLES + 1)) >> 1) + 1;
+        public const int MAX_CROSSROADS = HEX.SIDES * MAX_CIRCLES * MAX_CIRCLES;
 
         public const int CHANCE_WATER = MAX_CIRCLES * MAX_CIRCLES;
 

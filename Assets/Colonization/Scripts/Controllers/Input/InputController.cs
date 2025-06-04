@@ -43,9 +43,9 @@ namespace Vurbiri.Colonization.Controllers
             _inputActions.Gameplay.LeftClick.performed += OnClickLeft;
             _inputActions.Gameplay.RightClick.performed += OnClickRight;
 
-            events.Subscribe(GameModeId.Play, (turn, _) => EnableGameplayAndCamera(turn.IsCurrentPlayer));
-            events.Subscribe(GameModeId.Init, (turn, _) => EnableGameplayAndCamera(turn.IsCurrentPlayer));
-            events.Subscribe(GameModeId.WaitRoll, (turn, _) => EnableGameplayAndCamera(turn.IsCurrentPlayer));
+            events.Subscribe(GameModeId.Play, (turn, _) => EnableGameplayAndCamera(turn.IsPlayer));
+            events.Subscribe(GameModeId.Landing, (turn, _) => EnableGameplayAndCamera(turn.IsPlayer));
+            events.Subscribe(GameModeId.WaitRoll, (turn, _) => EnableGameplayAndCamera(turn.IsPlayer));
 
             events.Subscribe(GameModeId.EndTurn, (_, _) => { _gameplayMap.Disable(); _cameraMap.Disable(); });
         }

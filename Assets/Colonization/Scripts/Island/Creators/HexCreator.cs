@@ -18,11 +18,11 @@ namespace Vurbiri.Colonization
 			_land = land;
             _spawner = spawner;
 			_storage = storage;
-		}
+        }
 
         public static HexCreator Factory(Hexagons land, HexagonSpawner spawner, GameplayStorage storage)
         {
-            if(storage.Load) return new HexLoader(land, spawner, storage);
+            if (storage.Load) return new HexLoader(land, spawner, storage);
                              return new HexGenerator(land, spawner, storage);
         }
 

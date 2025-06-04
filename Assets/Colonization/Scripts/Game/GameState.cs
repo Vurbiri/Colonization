@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         private bool _isLoad;
         private int _maxScore;
-        private bool _isTutarial;
+        private bool _isTutorial;
 
         private ProjectStorage _storage;
         private readonly Subscription<GameState> _eventChanged = new();
@@ -22,23 +22,23 @@ namespace Vurbiri.Colonization
         }
         public int MaxScore => _maxScore;
 
-        public bool IsFirstStart => _isTutarial;
+        public bool IsTutorial => _isTutorial;
 
         private GameState()
         {
             _isLoad = false;
-            _isTutarial = true;
+            _isTutorial = true;
         }
         private GameState(bool isLoad, int maxScore)
         {
             _isLoad = isLoad;
             _maxScore = maxScore;
-            _isTutarial = false;
+            _isTutorial = false;
         }
 
         public static GameState Create(ProjectStorage storage, DIContainer diContainer)
         {
-            if (!storage.TryLoadAndBindPGameState(out var instance))
+            if (!storage.TryLoadAndBindGameState(out var instance))
             {
                 instance = new();
                 storage.BindGameState(instance, true);

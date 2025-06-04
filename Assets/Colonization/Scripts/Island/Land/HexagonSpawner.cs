@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private LandMesh _landMesh;
         [Space]
-        [SerializeField] private Transform _wordContainer;
+        [SerializeField] private Transform _landContainer;
 
         private Pool<HexagonMark> _poolMarks;
         private GameplayEventBus _eventBus;
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
             _landMesh.Init();
 
             _eventBus = eventBus;
-            _poolMarks = new(_prefabHexMark.Create, _wordContainer, HEX.SIDES);
+            _poolMarks = new(_prefabHexMark.Create, _landContainer, HEX.SIDES);
 
             _cameraTransform = camera.transform;
             _colorSettings = SceneContainer.Get<ProjectColors>();
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
         public Hexagon Spawn(Key key, int id, int surfaceId, Vector3 position)
         {
             SurfaceType surface = _surfaces[surfaceId];
-            Hexagon hex = Object.Instantiate(_prefabHex, position, Quaternion.identity, _wordContainer);
+            Hexagon hex = Object.Instantiate(_prefabHex, position, Quaternion.identity, _landContainer);
             hex.Init(key, id, _poolMarks, surface);
             hex.Caption.Init(id, surface.Currencies, _cameraTransform, _colorSettings, _eventBus);
 
@@ -64,8 +64,8 @@ namespace Vurbiri.Colonization
             EUtility.SetScriptable(ref _surfaces);
             EUtility.SetObject(ref _landMesh);
 
-            if (_wordContainer == null && _landMesh != null)
-                _wordContainer = _landMesh.transform;
+            if (_landContainer == null && _landMesh != null)
+                _landContainer = _landMesh.transform;
         }
 #endif
     }

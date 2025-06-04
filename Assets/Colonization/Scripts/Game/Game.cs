@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
 
         public Id<GameModeId> GameMode => _gameMode;
 
-        private Game() : this(GameModeId.Init, new(PlayerId.Player), -1) { }
+        private Game() : this(GameModeId.Landing, new(PlayerId.Player), -1) { }
         private Game(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId) : base()
         {
             _gameMode = gameMode;
@@ -39,34 +39,36 @@ namespace Vurbiri.Colonization
 
         public void Start()
         {
-            _coroutines.Run(Change_Cn(_gameMode));
+            _coroutines.Run(SetGameMode_Cn(_gameMode));
         }
 
-        public void Init()
+        public void Landing()
         {
             _turnQueue.Next();
 
-            _coroutines.Run(Change_Cn(GameModeId.Init));
+            _coroutines.Run(SetGameMode_Cn(GameModeId.Landing));
+        }
+
+        public void EndLanding()
+        {
+            _coroutines.Run(SetGameMode_Cn(GameModeId.EndLanding));
         }
 
         public void Play()
         {
-            _coroutines.Run(Change_Cn(GameModeId.Play));
+            _coroutines.Run(SetGameMode_Cn(GameModeId.Play));
         }
 
         public void EndTurn()
         {
-            _coroutines.Run(Change_Cn(GameModeId.EndTurn));
-
-            // !!!!!!!!!!!! TEMP
-            StartTurn();
+            _coroutines.Run(SetGameMode_Cn(GameModeId.EndTurn));
         }
 
         public void StartTurn()
         {
             _turnQueue.Next();
 
-            _coroutines.Run(Change_Cn(GameModeId.StartTurn));
+            _coroutines.Run(SetGameMode_Cn(GameModeId.StartTurn));
 
             // !!!!!!!!!!!! TEMP
             WaitRoll();
@@ -74,7 +76,7 @@ namespace Vurbiri.Colonization
 
         public void WaitRoll()
         {
-            _coroutines.Run(Change_Cn(GameModeId.WaitRoll));
+            _coroutines.Run(SetGameMode_Cn(GameModeId.WaitRoll));
 
             // !!!!!!!!!!!! TEMP
             Roll(Random.Range(3, 16));
@@ -84,7 +86,7 @@ namespace Vurbiri.Colonization
         {
             _hexId = newValue;
 
-            _coroutines.Run(Change_Cn(GameModeId.Roll));
+            _coroutines.Run(SetGameMode_Cn(GameModeId.Roll));
 
             // !!!!!!!!!!!! TEMP
             Profit();
@@ -92,7 +94,7 @@ namespace Vurbiri.Colonization
 
         public void Profit()
         {
-            _coroutines.Run(Change_Cn(GameModeId.Profit));
+            _coroutines.Run(SetGameMode_Cn(GameModeId.Profit));
 
             // !!!!!!!!!!!! TEMP
             Play();
@@ -100,10 +102,10 @@ namespace Vurbiri.Colonization
 
         public void End(Winner winner)
         {
-            _coroutines.Run(Change_Cn(GameModeId.End));
+            _coroutines.Run(SetGameMode_Cn(GameModeId.End));
         }
 
-        private IEnumerator Change_Cn(Id<GameModeId> gameMode)
+        private IEnumerator SetGameMode_Cn(Id<GameModeId> gameMode)
         {
             yield return null;
 

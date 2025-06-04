@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization.Controllers
 
         public bool MoveToTarget(Vector3 target, float smoothTime, float maxSqrVelocity)
         {
-            _parentTransform.position = Vector3.SmoothDamp(_parentTransform.position, target, ref _velocity, smoothTime, float.PositiveInfinity, Time.deltaTime);
+            _parentTransform.position = Vector3.SmoothDamp(_parentTransform.position, target, ref _velocity, smoothTime, float.PositiveInfinity, Time.unscaledDeltaTime);
             if (_velocity.sqrMagnitude > maxSqrVelocity)
             {
                 _changedTransform.Invoke(_cameraTransform);

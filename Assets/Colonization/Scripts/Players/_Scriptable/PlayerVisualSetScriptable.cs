@@ -12,6 +12,8 @@ namespace Vurbiri.Colonization
         [SerializeField] private Material _defaultMaterialUnlit;
         [Space]
         [SerializeField] private Material _defaultMaterialWarrior;
+        [Space]
+        [SerializeField] private PlayerNames _nameKeys;
 
         public void Init(ProjectStorage storage, DIContainer container)
         {
@@ -19,6 +21,7 @@ namespace Vurbiri.Colonization
 
             container.AddInstance(_colors);
             container.AddInstance(new HumansMaterials(_colors, _defaultMaterialLit, _defaultMaterialUnlit, _defaultMaterialWarrior));
+            container.AddInstance(_nameKeys.Init(storage, container.Get<YandexSDK>()));
 
             Resources.UnloadAsset(this);
         }
@@ -26,9 +29,13 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
+            _colors.OnValidate();
+
             EUtility.SetAsset(ref _defaultMaterialLit, "M_BasePlayersLit");
             EUtility.SetAsset(ref _defaultMaterialUnlit, "M_BasePlayersUnlit");
             EUtility.SetAsset(ref _defaultMaterialWarrior, "M_Warrior_Base");
+
+            _nameKeys.OnValidate();
         }
 #endif
     }

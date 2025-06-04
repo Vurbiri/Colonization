@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization.UI
 
             if (_endInit)
             {
-                _game.Init();
+                _game.EndLanding();
                 Destroy(gameObject);
             }
         }

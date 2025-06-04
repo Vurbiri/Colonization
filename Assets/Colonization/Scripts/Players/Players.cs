@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
             SatanController satanController = new(game, storage.Satan, settings);
             _players[PlayerId.Satan] = satanController;  Satan = satanController;
  
-            game.Subscribe(GameModeId.Init,      (turn, _) => _players[turn.currentId.Value].OnInit());
+            game.Subscribe(GameModeId.Landing,      (turn, _) => _players[turn.currentId.Value].OnInit());
             game.Subscribe(GameModeId.Play,      (turn, _) => _players[turn.currentId.Value].OnPlay());
             game.Subscribe(GameModeId.EndTurn,   (turn, _) => _players[turn.currentId.Value].OnEndTurn());
             game.Subscribe(GameModeId.StartTurn, (turn, _) => _players[turn.currentId.Value].OnStartTurn());
@@ -64,8 +64,8 @@ namespace Vurbiri.Colonization
             public BuffsScriptable artefact;
             public Transform actorsContainer;
 
-            public Coroutines coroutines;
-            public CameraController cameraController;
+            [NonSerialized] public Coroutines coroutines;
+            [NonSerialized] public CameraController cameraController;
             public Score score;
             public Balance balance;
             public Hexagons hexagons;

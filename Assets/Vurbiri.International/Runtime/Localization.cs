@@ -133,10 +133,12 @@ namespace Vurbiri.International
         public string GetText(string key)
         {
             string output;
-            for (int i = 0; i < _countFiles; i++)
-                if (_text[i] != null && _text[i].TryGetValue(key, out output))
-                    return output;
-
+            if (!string.IsNullOrEmpty(key))
+            {
+                for (int i = 0; i < _countFiles; i++)
+                    if (_text[i] != null && _text[i].TryGetValue(key, out output))
+                        return output;
+            }
             Message.Log(output = $"Key '{key}' not found.");
             return output;
         }

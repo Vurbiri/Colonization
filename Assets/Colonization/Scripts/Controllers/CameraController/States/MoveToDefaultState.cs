@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization.Controllers
                 
                 while (progress < 1f)
                 {
-                    progress = Mathf.Clamp01(progress + Time.deltaTime * speed);
+                    progress = Mathf.Clamp01(progress + Time.unscaledDeltaTime * speed);
 
                     cameraPosition.y = startHeight + deltaHeight * progress;
                     _cameraTransform.SetCameraAndParentPosition(cameraPosition, startParentPosition * (1f - progress));

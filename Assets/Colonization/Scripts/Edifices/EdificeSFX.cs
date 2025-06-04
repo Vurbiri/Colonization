@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
 
             while (progress > 0f)
             {
-                progress -= Time.deltaTime * _dropSpeed;
+                progress -= Time.unscaledDeltaTime * _dropSpeed;
                 position.y = _height * progress;
                 transform.localPosition = position;
                 yield return null;

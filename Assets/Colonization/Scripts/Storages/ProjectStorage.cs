@@ -12,26 +12,30 @@ namespace Vurbiri.Colonization.Storage
 
         public ProjectStorage(IStorageService storage) : base(storage) { }
 
-        public bool SetAndBindAudioMixer(AudioMixer<MixerId> mixer)
+        public void SetAndBindAudioMixer(AudioMixer<MixerId> mixer)
         {
-            bool instantGetValue = !_storage.TryPopulate<AudioMixer<MixerId>>(VOLUMES, new AudioMixer<MixerId>.Converter(mixer));
-            _unsubscribers += mixer.Subscribe(self => _storage.Set(VOLUMES, self, _mixerConverter), instantGetValue);
-            return instantGetValue;
+            _storage.TryPopulate<AudioMixer<MixerId>>(VOLUMES, new AudioMixer<MixerId>.Converter(mixer));
+            _unsubscribers += mixer.Subscribe(self => _storage.Set(VOLUMES, self, _mixerConverter), false);
         }
-        public bool SetAndBindProfile(Profile profile)
+        public void SetAndBindProfile(Profile profile)
         {
-            bool instantGetValue = !_storage.TryPopulate<Profile>(PROFILE, new Profile.Converter(profile));
-            _unsubscribers += profile.Subscribe(self => _storage.Set(PROFILE, self, _profileConverter), instantGetValue);
-            return instantGetValue;
+            _storage.TryPopulate<Profile>(PROFILE, new Profile.Converter(profile));
+            _unsubscribers += profile.Subscribe(self => _storage.Set(PROFILE, self, _profileConverter), false);
         }
         public void SetAndBindPlayerColors(PlayerColors colors)
         {
-            bool instantGetValue = !_storage.TryPopulate<PlayerColors>(COLORS, new PlayerColors.Converter(colors));
-            _unsubscribers += colors.Subscribe(self => _storage.Set(COLORS, self, _colorsConverter), instantGetValue);
+            _storage.TryPopulate<PlayerColors>(COLORS, new PlayerColors.Converter(colors));
+            _unsubscribers += colors.Subscribe(self => _storage.Set(COLORS, self, _colorsConverter), false);
+        }
+
+        public bool TryLoadPlayerNames(out string[] names) => _storage.TryGet(NAMES, out names);
+        public void BindPlayerNames(IReactive<string[]> reactive)
+        {
+            _unsubscribers += reactive.Subscribe(names => _storage.Set(NAMES, names), false);
         }
 
 
-        public bool TryLoadAndBindPGameState(out GameState state)
+        public bool TryLoadAndBindGameState(out GameState state)
         {
             if(_storage.TryGet(GAME_STATE, out state))
             {

@@ -5,32 +5,45 @@ using Vurbiri.Reactive;
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
-    public partial class PlayerColors : IReactive<PlayerColors>
-	{
-        [SerializeField] private Color[] _colors;// = { new(0.38f, 0.21f, 0.77f), new(0.64f, 0.89f, 0.08f), new(0.35f, 0.91f, 0.43f), new(0.5686275f, 0f, 0f) };
+    public partial class PlayerColors : IReactive<PlayerColors>, IEquatable<Color[]>
+    {
+        [SerializeField] private Color[] _colors;
 
         private readonly Subscription<PlayerColors> _eventThisChanged = new();
-        private readonly Subscription<Color> _eventColorChanged = new();
 
-        public Color this[int index] 
-        { 
-            get => _colors[index];
+        public Color this[int index] => _colors[index];
+        public Color this[Id<PlayerId> id] => this[id.Value];
+
+        public Color[] Colors
+        {
+            get => _colors;
             set
             {
-                if (_colors[index] != value)
+                if(!this.Equals(value))
                 {
-                    _colors[index] = value;
-                    _eventColorChanged.Invoke(value);
+                    _colors = value;
                     _eventThisChanged.Invoke(this);
                 }
             }
         }
-        public Color this[Id<PlayerId> id] => this[id.Value];
 
         public Unsubscription Subscribe(Action<PlayerColors> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, this);
-        public Unsubscription Subscribe(int index, Action<Color> action, bool instantGetValue = true)
+
+        public bool Equals(Color[] colors)
         {
-            return _eventColorChanged.Add(action, instantGetValue, _colors[index]);
+            for(int i = 0; i < PlayerId.Count; i++)
+                if(_colors[i] != colors[i])
+                    return false;
+
+            return true;
         }
+
+#if UNITY_EDITOR
+        public void OnValidate()
+        {
+            _colors ??= new Color[] { new(0.38f, 0.21f, 0.77f), new(0.64f, 0.89f, 0.08f), new(0.35f, 0.72f, 0.43f), new(0.57f, 0f, 0f) };
+
+        }
+#endif
     }
 }

@@ -46,10 +46,10 @@ namespace Vurbiri.Colonization.UI
             settings.eventBus.EventUnselect.Add(OnClose);
             settings.eventBus.EventActorSelect.Add(OnSelectWarrior);
 
-            if (settings.game.GameMode == GameModeId.Init)
+            if (settings.game.GameMode == GameModeId.Landing)
             {
                 _game = settings.game;
-                _game.Subscribe(GameModeId.Init, OnInit);
+                _game.Subscribe(GameModeId.Landing, OnInit);
 
                 _eventBus = settings.eventBus;
                 _initMenu.Init(settings).Add(OnActiveMenu);
@@ -104,14 +104,14 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnGamePlay(TurnQueue turnQueue, int dice)
         {
-            _isPlayerTurn = turnQueue.IsCurrentPlayer;
+            _isPlayerTurn = turnQueue.IsPlayer;
         }
         private void OnInit(TurnQueue turnQueue, int dice)
         {
-            _isPlayerTurn = turnQueue.IsCurrentPlayer;
-            if (!turnQueue.IsCurrentPlayer && _unsubscription != null)
+            _isPlayerTurn = turnQueue.IsPlayer;
+            if (!turnQueue.IsPlayer && _unsubscription != null)
             {
-                _game.Unsubscribe(GameModeId.Init, OnInit);
+                _game.Unsubscribe(GameModeId.Landing, OnInit);
                 _unsubscription.Unsubscribe();
                 _eventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
 

@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization.UI
             {
                 _thisTransform.localPosition = Vector3.Lerp(_positionStart, _positionEnd, lerpVector);
 
-                delta = Time.deltaTime * _speed;
+                delta = Time.unscaledDeltaTime * _speed;
                 lerpVector += delta;
 
                 if (lerpVector > _startHide)

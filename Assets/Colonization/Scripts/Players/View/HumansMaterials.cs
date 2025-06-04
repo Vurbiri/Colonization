@@ -12,10 +12,15 @@ namespace Vurbiri.Colonization
         public HumansMaterials(PlayerColors colors, Material materialLit, Material materialUnlit, Material materialWarriors)
         {
             for (int i = 0; i < PlayerId.HumansCount; i++)
-            {
                 _humansVisual[i] = new(new(materialLit), new(materialUnlit), new(materialWarriors));
-                colors.Subscribe(i, _humansVisual[i].SetColor);
-            }
+
+            colors.Subscribe(SetColors);
+        }
+
+        private void SetColors(PlayerColors colors)
+        {
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                _humansVisual[i].SetColor(colors[i]);
         }
     }
 }

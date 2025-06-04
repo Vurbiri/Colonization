@@ -42,6 +42,8 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < HEX.SIDES; i++)
                 _sides[i] = HEX_DIAMETER_IN * SIDE_DIRECTIONS[i];
 
+            transform.hierarchyCapacity = (MAX_HEXAGONS + MAX_CROSSROADS + (DEFAULT_MAX_ACTORS << 2)) << 2;
+
             return this;
         }
 

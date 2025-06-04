@@ -20,11 +20,10 @@ namespace Vurbiri.Colonization
             _storage = storage;
             _profile.Init(ysdk);
 
-            bool isSave = storage.SetAndBindAudioMixer(_mixer);
-            isSave |=     storage.SetAndBindProfile(_profile);
+            storage.SetAndBindAudioMixer(_mixer);
+            storage.SetAndBindProfile(_profile);
 
             Cancel();
-            if (isSave) storage.Save();
         }
 
         public void Apply()

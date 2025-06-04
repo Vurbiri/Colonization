@@ -80,6 +80,8 @@ namespace Vurbiri.International.Editor
 
         public string Load()
         {
+            _loadFile = _selectFile;
+
             Dictionary<string, string>[] strings = new Dictionary<string, string>[_count];
 
             string path, folder = FileUtil.GetPhysicalPath(OUT_RESOURCE_FOLDER);
@@ -121,7 +123,7 @@ namespace Vurbiri.International.Editor
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();
 
-            return _loadFile = _selectFile;
+            return _loadFile;
         }
 
         public void Save()

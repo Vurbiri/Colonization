@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private Prices _prices;
         [Space]
         [SerializeField] private Camera _mainCamera;
-        [SerializeField] private CameraController _cameraController;
+        public CameraController cameraController;
         [Space]
         [SerializeField] private PoolEffectsBarFactory _poolEffectsBar;
         [Header("══════ Init data for classes ══════")]
@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             container.AddInstance(_poolEffectsBar.Create());
             container.AddInstance(cameraTransform = new(_mainCamera));
-            _cameraController.Init(cameraTransform, triggerBus, inputController.CameraActions);
+            cameraController.Init(cameraTransform, triggerBus, inputController.CameraActions);
 
             _inputControllerSettings = null;
             _poolEffectsBar = null;
@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public Players.Settings GetPlayersSettings()
         {
             _playersSettings.coroutines = _coroutines;
-            _playersSettings.cameraController = _cameraController;
+            _playersSettings.cameraController = cameraController;
             _playersSettings.score = _score;
             _playersSettings.balance = _balance;
             _playersSettings.hexagons = hexagons;
@@ -86,7 +86,7 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             EUtility.SetScriptable(ref _prices);
             EUtility.SetObject(ref _mainCamera);
-            EUtility.SetObject(ref _cameraController);
+            EUtility.SetObject(ref cameraController);
 
             _playersSettings.OnValidate();
             _poolEffectsBar.OnValidate();
