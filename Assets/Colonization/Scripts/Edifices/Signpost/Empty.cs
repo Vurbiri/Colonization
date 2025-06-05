@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
@@ -23,9 +22,6 @@ namespace Vurbiri.Colonization
             _settings.isUpgrade = true;
 
             _settings.profit = 0;
-
-            if (_thisCollider == null)
-                _thisCollider = GetComponent<SphereCollider>();
         }
 #endif
     }

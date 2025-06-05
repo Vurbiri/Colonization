@@ -4,14 +4,15 @@ namespace Vurbiri.Colonization
 {
 	public abstract class AHumanController : Human,  IPlayerController
 	{
+        protected readonly Hexagons _hexagons;
+
         protected AHumanController(Id<PlayerId> playerId, Storage.HumanStorage storage, Players.Settings settings) : base(playerId, storage, settings)
         {
+            _hexagons = settings.hexagons;
         }
 
-        public virtual void OnInit()
-        {
-
-        }
+        public virtual void OnLanding() { }
+        public virtual void OnEndLanding() { }
 
         public virtual void OnEndTurn()
         {
@@ -45,7 +46,7 @@ namespace Vurbiri.Colonization
             }
 
             if (_abilities.IsTrue(HumanAbilityId.IsFreeGroundRes))
-                _resources.AddFrom(Hexagons.FreeResources);
+                _resources.AddFrom(_hexagons.FreeResources);
 
             _resources.AddFrom(_edifices.ProfitFromEdifices(hexId));
         }
@@ -59,5 +60,6 @@ namespace Vurbiri.Colonization
         }
 
         public abstract void OnPlay();
+
     }
 }

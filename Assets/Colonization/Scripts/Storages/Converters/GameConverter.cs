@@ -4,19 +4,19 @@ using System;
 namespace Vurbiri.Colonization
 {
     [JsonConverter(typeof(Converter))]
-    public partial class Game
+    public partial class GameLoop
     {
-        sealed public class Converter : AJsonConverter<Game>
+        sealed public class Converter : AJsonConverter<GameLoop>
         {
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 var data = serializer.Deserialize<int[]>(reader);
 
                 int i = 0;
-                return new Game(data[i++], new(data[i++], data[i++]), data[i++]);
+                return new GameLoop(data[i++], new(data[i++], data[i++]), data[i++]);
             }
 
-            protected override void WriteJson(JsonWriter writer, Game game, JsonSerializer serializer)
+            protected override void WriteJson(JsonWriter writer, GameLoop game, JsonSerializer serializer)
             {
                 writer.WriteStartArray();
                 {

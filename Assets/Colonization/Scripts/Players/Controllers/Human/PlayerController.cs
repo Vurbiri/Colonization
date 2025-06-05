@@ -6,6 +6,8 @@ namespace Vurbiri.Colonization
         {
         }
 
+        public override void OnEndLanding() => _edifices.Interactable = false;
+
         public override void OnPlay()
         {
             _edifices.Interactable = true;

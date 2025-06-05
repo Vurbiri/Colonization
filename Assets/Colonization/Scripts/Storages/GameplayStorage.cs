@@ -22,10 +22,10 @@ namespace Vurbiri.Colonization.Storage
         public HumanStorage[] Humans => _humanStorages;
         public SatanStorage Satan => _satanStorage;
 
-        public void SaveGame(Game game) => _storage.Save(SAVE_KEYS.GAME, game);
+        public void SaveGame(GameLoop game) => _storage.Save(SAVE_KEYS.GAME, game);
 
         #region Load
-        public bool TryGetGame(out Game game)
+        public bool TryGetGame(out GameLoop game)
         {
             game = null;
             return _isLoad && _storage.TryGet(SAVE_KEYS.GAME, out game);

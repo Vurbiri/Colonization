@@ -7,8 +7,6 @@ namespace Vurbiri.Colonization
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     sealed public class Wall : MonoBehaviour
     {
-        [SerializeField] private WallSFX _wallSFX;
-        [Space]
         [SerializeField, Range(0, 5)] private int _idMaterial;
         [Space]
         [SerializeField] private IdSet<LinkId, WallGate> _graphicSides;
@@ -22,7 +20,8 @@ namespace Vurbiri.Colonization
 
             gameObject.SetActive(true);
 
-            return isSFX ? _wallSFX.Run(transform) : _wallSFX.Destroy();
+            var wallSFX = GetComponentInChildren<WallSFX>();
+            return isSFX ? wallSFX.Run(transform) : wallSFX.Destroy();
         }
 
         public void AddRoad(Id<LinkId> linkId) => _graphicSides[linkId].Open(true);
@@ -30,8 +29,8 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if(_wallSFX == null)
-                _wallSFX = GetComponentInChildren<WallSFX>();
+            if (Application.isPlaying) return;
+
             if (_graphicSides.Fullness < _graphicSides.Count)
                 _graphicSides.ReplaceRange(GetComponentsInChildren<WallGate>());
         }

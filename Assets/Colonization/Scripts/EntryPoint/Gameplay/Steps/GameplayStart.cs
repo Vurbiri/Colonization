@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.EntryPoint
 {
     sealed internal class GameplayStart : ALoadingStep
     {
-        private readonly Game _game;
+        private readonly GameLoop _game;
         private readonly GameState _gameState;
         private readonly InputController _inputController;
         
@@ -22,7 +22,8 @@ namespace Vurbiri.Colonization.EntryPoint
             yield return null;
             _gameState.Start();
             _inputController.Enable();
-            _game.Start();
+            
+            yield return _game.Start();
         }
     }
 }

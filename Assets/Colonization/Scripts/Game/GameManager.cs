@@ -10,10 +10,10 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField, Range(1f, 3f)] private float _initDelay = 1.75f;
 
-        private Game _game;
+        private GameLoop _game;
         private CameraController _camera;
 
-        public void Init(Game game, CameraController camera)
+        public void Init(GameLoop game, CameraController camera)
 		{
             _label.Init();
 
@@ -25,7 +25,9 @@ namespace Vurbiri.Colonization.UI
 
             game.Subscribe(GameModeId.EndTurn, OnEndTurn);
             game.Subscribe(GameModeId.StartTurn, OnStartTurn);
-
+            game.Subscribe(GameModeId.WaitRoll, OnWaitRoll);
+            game.Subscribe(GameModeId.Roll, OnRoll);
+            game.Subscribe(GameModeId.Profit, OnProfit);
         }
 
         private void OnLanding(TurnQueue turnQueue, int hexId)
@@ -36,13 +38,20 @@ namespace Vurbiri.Colonization.UI
 
         private void OnEndLanding(TurnQueue turnQueue, int hexId)
         {
-            StartCoroutine(OnEndLanding_Cn(turnQueue.IsPlayer ? new(_initDelay) : null));
+            StartCoroutine(OnEndLanding_Cn(turnQueue.IsPlayer));
 
             //Local
-            IEnumerator OnEndLanding_Cn(WaitRealtime pause)
+            IEnumerator OnEndLanding_Cn(bool isPlayer)
             {
-                yield return pause;
-                _game.Landing();
+                if (isPlayer)
+                {
+                    WaitRealtime wait = new(_initDelay);
+                    yield return wait;
+                    yield return _camera.ToDefaultPosition_Wait();
+                    yield return wait.Restart(_initDelay * 0.5f);
+                }
+                yield return null;
+                yield return _game.Landing();
             }
         }
 
@@ -54,7 +63,7 @@ namespace Vurbiri.Colonization.UI
             IEnumerator OnEndTurn_Cn()
             {
                 yield return _camera.ToDefaultPosition_Wait();
-                _game.StartTurn();
+                yield return _game.StartTurn();
             }
         }
 
@@ -66,15 +75,23 @@ namespace Vurbiri.Colonization.UI
             IEnumerator OnStartTurn_Cn(int turn, int id)
             {
                 yield return _label.StartTurn_Wait(turn, id);
-                _game.WaitRoll();
+                yield return _game.WaitRoll();
             }
         }
 
-        private IEnumerator SetGameMode_Cn(Id<GameModeId> gameMode)
+        public void OnWaitRoll(TurnQueue turnQueue, int hexId)
         {
-            yield return null;
+            StartCoroutine(_game.Roll(Random.Range(3, 16)));
+        }
 
-            
+        public void OnRoll(TurnQueue turnQueue, int hexId)
+        {
+            StartCoroutine(_game.Profit());
+        }
+
+        private void OnProfit(TurnQueue turnQueue, int dice)
+        {
+            StartCoroutine(_game.Play());
         }
 
 #if UNITY_EDITOR

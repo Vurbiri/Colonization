@@ -8,13 +8,13 @@ namespace Vurbiri.Colonization
 	public class Balance : AReactive<int>
 	{
         private readonly BalanceSettings _settings;
-        private readonly Game _game;
+        private readonly GameLoop _game;
         private readonly Subscription<Winner> _eventGameOver = new();
 
         public int Value => _value;
         public ISubscription<Winner> OnGameOver => _eventGameOver;
 
-        public Balance(GameplayStorage storage, Game game)
+        public Balance(GameplayStorage storage, GameLoop game)
         {
             _settings = SettingsFile.Load<BalanceSettings>();
             _value = storage.GetBalanceValue(_settings.defaultValue);

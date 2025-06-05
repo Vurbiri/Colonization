@@ -9,27 +9,31 @@ namespace Vurbiri.Colonization
         [SerializeField] protected EdificeSettings _settings;
         [Space]
         [SerializeField] protected AEdificeGraphic _graphic;
-        [SerializeField] protected SphereCollider _thisCollider;
+
+        protected Transform _graphicTransform;
 
         public Id<EdificeId> Id => _settings.id;
         public EdificeSettings Settings => _settings;
         public ISelectable Selectable { get; set; }
-        public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = value; }
 
         public virtual WaitSignal Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice oldEdifice, bool isSFX)
         {
-            Destroy(oldEdifice.gameObject);
-
+            _graphicTransform = _graphic.transform;
             Transform thisTransform = transform, oldTransform = oldEdifice.transform;
-
+            
             Selectable = oldEdifice.Selectable;
             thisTransform.SetParent(oldTransform.parent);
             thisTransform.SetLocalPositionAndRotation(oldTransform.localPosition, oldTransform.localRotation);
 
-            if (oldEdifice._graphic != null)
-                _graphic.transform.localRotation = oldEdifice._graphic.transform.localRotation;
+            if (oldEdifice._graphicTransform != null)
+                _graphicTransform.localRotation = oldEdifice._graphicTransform.localRotation;
 
-            return _graphic.Init(playerId, links, isSFX);
+            var wait = _graphic.Init(playerId, links, isSFX);
+
+            _graphic = null;
+            Destroy(oldEdifice.gameObject);
+
+            return wait;
         }
 
         public virtual ReturnSignal WallBuild(Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links, bool isSFX) => false;
@@ -39,6 +43,8 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         protected virtual void OnValidate()
         {
+            if (Application.isPlaying) return;
+                        
             _settings.groupId = _settings.id.ToGroup();
             _settings.nextGroupId = _settings.nextId.ToGroup();
 
@@ -59,9 +65,6 @@ namespace Vurbiri.Colonization
 
             if (_graphic == null)
                 _graphic = GetComponentInChildren<AEdificeGraphic>();
-
-            if (_thisCollider == null)
-                _thisCollider = GetComponent<SphereCollider>();
         }
 #endif
     }

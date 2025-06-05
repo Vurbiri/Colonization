@@ -5,21 +5,19 @@ namespace Vurbiri.Colonization
 {
     sealed public class AIController : AHumanController
     {
-        private readonly Game _game;
+        private readonly GameLoop _game;
         private readonly Crossroads _crossroads;
-        private readonly Hexagons _hexagons;
         private readonly CameraController _cameraController;
 
-        public AIController(Game game, Id<PlayerId> playerId, Storage.HumanStorage storage, Players.Settings settings)
+        public AIController(GameLoop game, Id<PlayerId> playerId, Storage.HumanStorage storage, Players.Settings settings)
             : base(playerId, storage, settings)
         {
             _game = game;
             _crossroads = settings.crossroads;
-            _hexagons = settings.hexagons;
             _cameraController = settings.cameraController;
         }
 
-        public override void OnInit()
+        public override void OnLanding()
         {
             _coroutines.Run(OnInit_Cn());
         }
@@ -39,8 +37,8 @@ namespace Vurbiri.Colonization
                 yield return _cameraController.ToPosition(port.Position);
                 yield return BuildPort(port).signal;
             }
-            
-            _game.EndLanding();
+
+            _coroutines.Run(_game.EndLanding());
         }
 
         private IEnumerator OnInitFast_Cn()
@@ -54,7 +52,7 @@ namespace Vurbiri.Colonization
                 yield return null;
             }
 
-            _game.EndLanding();
+            _coroutines.Run(_game.EndLanding());
         }
 
     }

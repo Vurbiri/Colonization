@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.EntryPoint
         private Score _score;
         private Balance _balance;
 
-        public Game game;
+        public GameLoop game;
 
         public DIContainer diContainer;
         public GameState gameState;
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.EntryPoint
             container.AddInstance(_coroutines = Coroutines.Create("Gameplay Coroutines"));
             container.AddInstance(storage = new(gameState.IsLoad));
 
-            container.AddInstance<GameEvents>(game = Game.Create(storage, _coroutines));
+            container.AddInstance<GameEvents>(game = GameLoop.Create(storage));
                         
             container.AddInstance<GameplayTriggerBus, GameplayEventBus>(triggerBus = new());
             container.AddInstance(inputController = new(game, _mainCamera, _inputControllerSettings));

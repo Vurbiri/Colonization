@@ -12,14 +12,11 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField, Range(5f, 15f)] private float _onSpeed = 9f;
         [SerializeField, Range(0.1f, 1.5f)] private float _offSpeed = 0.9f;
-        [Space]
         [SerializeField, MinMax(1f, 5f)] private WaitRealtime _showTime = 2f;
-        [Space]
-        [SerializeField, MinMax(1f, 5f)] private WaitRealtime _delayStartTurn = 1.1f;
-
 
         private TextMeshProUGUI _label;
         private CanvasRenderer _renderer;
+        private WaitRealtime _delayStartTurn;
 
         private string _landingText, _startTurnText;
 
@@ -31,6 +28,8 @@ namespace Vurbiri.Colonization.UI
             _label = GetComponent<TextMeshProUGUI>();
             _renderer = _label.canvasRenderer;
             _renderer.SetAlpha(0f);
+
+            _delayStartTurn = new((1f/_onSpeed + _showTime.Time + 1f/_offSpeed) * 0.51f);
 
             _names = SceneContainer.Get<PlayerNames>();
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri
@@ -8,7 +7,6 @@ namespace Vurbiri
     public static class Throw
 	{
         #region ArgumentNull
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void IfNull<T>(T value) where T : class
         {
             if (value == null) Errors.ArgumentNull();

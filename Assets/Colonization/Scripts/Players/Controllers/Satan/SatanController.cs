@@ -1,25 +1,25 @@
-using System.Collections;
 using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization
 {
 	sealed public class SatanController : Satan,  IPlayerController
 	{
-        private readonly Game _game;
+        private readonly GameLoop _game;
         private readonly Coroutines _coroutines;
         private readonly CameraController _cameraController;
 
-        public SatanController(Game game, Storage.SatanStorage storage, Players.Settings settings) : base(storage, settings)
+        public SatanController(GameLoop game, Storage.SatanStorage storage, Players.Settings settings) : base(storage, settings)
         {
             _game = game;
             _coroutines = settings.coroutines;
             _cameraController = settings.cameraController;
         }
 
-        public void OnInit()
+        public void OnLanding()
         {
-            _coroutines.Run(OnInit_Cn());
+            _coroutines.Run(_game.EndTurn());
         }
+        public void OnEndLanding() { }
 
         public void OnEndTurn()
         {
@@ -55,10 +55,5 @@ namespace Vurbiri.Colonization
             AddCurse(CursePerTurn);
         }
 
-        private IEnumerator OnInit_Cn()
-        {
-            yield return null;
-            _game.EndTurn();
-        }
     }
 }

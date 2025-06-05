@@ -11,9 +11,10 @@ namespace Vurbiri.Colonization
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
         private readonly Dictionary<int, List<Key>> _hexagonsIdForKey;
         private readonly Subscription<Hexagon> _eventChanged = new();
+        private readonly CurrenciesLite _freeResources = new();
 
         public Hexagon this[Key key] => _hexagons[key];
-        public static CurrenciesLite FreeResources { get; private set; }
+        public CurrenciesLite FreeResources => _freeResources;
 
         public Hexagons(GameEvents events)
         {
@@ -42,7 +43,7 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            FreeResources = null;
+            
         }
 
         private void OnEndTurn(TurnQueue turnQueue, int id)
@@ -55,14 +56,11 @@ namespace Vurbiri.Colonization
         }
         private void OnRoll(TurnQueue turnQueue, int id)
         {
-            CurrenciesLite freeResources = new();
+            _freeResources.Clear();
             foreach (var key in _hexagonsIdForKey[id])
                 if (_hexagons[key].SetAndGetFreeProfit(out int currencyId))
-                    freeResources.Increment(currencyId);
-
-            FreeResources = freeResources;
+                    _freeResources.Increment(currencyId);
         }
-
 
         public static implicit operator Dictionary<Key, Hexagon>(Hexagons hexagons) => hexagons._hexagons;
     }

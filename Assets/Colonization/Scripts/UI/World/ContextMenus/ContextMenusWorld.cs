@@ -50,6 +50,7 @@ namespace Vurbiri.Colonization.UI
             {
                 _game = settings.game;
                 _game.Subscribe(GameModeId.Landing, OnInit);
+                _game.Subscribe(GameModeId.EndLanding, OnEndInit);
 
                 _eventBus = settings.eventBus;
                 _initMenu.Init(settings).Add(OnActiveMenu);
@@ -109,14 +110,18 @@ namespace Vurbiri.Colonization.UI
         private void OnInit(TurnQueue turnQueue, int dice)
         {
             _isPlayerTurn = turnQueue.IsPlayer;
-            if (!turnQueue.IsPlayer && _unsubscription != null)
-            {
-                _game.Unsubscribe(GameModeId.Landing, OnInit);
-                _unsubscription.Unsubscribe();
-                _eventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
+        }
 
-                _unsubscription = null; _game = null; _eventBus = null; _initMenu = null;
-            }
+        private void OnEndInit(TurnQueue turnQueue, int dice)
+        {
+            _isPlayerTurn = false;
+
+            _game.Unsubscribe(GameModeId.Landing, OnInit);
+            _game.Unsubscribe(GameModeId.EndLanding, OnEndInit);
+            _unsubscription.Unsubscribe();
+            _eventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
+
+            _unsubscription = null; _game = null; _eventBus = null; _initMenu = null;
         }
 
         private void LookAtCamera(Transform cameraTransform)

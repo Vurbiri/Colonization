@@ -18,7 +18,7 @@ namespace VurbiriEditor
 		{
             if (attribute is not MinMaxAttribute range || _excludeTypes.Contains(fieldInfo.FieldType))
             {
-                EditorGUILayout.PropertyField(mainProperty, label, true);
+                EditorGUI.PropertyField(position, mainProperty, label, true);
                 return;
             }
 
@@ -39,7 +39,7 @@ namespace VurbiriEditor
 
             if (minProperty == null | maxProperty == null || minProperty.propertyType != maxProperty.propertyType)
             {
-                EditorGUILayout.PropertyField(mainProperty, label, true);
+                EditorGUI.PropertyField(position, mainProperty, label, true);
                 return;
             }
 
@@ -56,17 +56,9 @@ namespace VurbiriEditor
             }
             else
             {
-                EditorGUILayout.PropertyField(mainProperty, label, true);
+                EditorGUI.PropertyField(position, mainProperty, label, true);
             }
             EditorGUI.EndProperty();
-        }
-
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-        {
-            if (attribute is not MinMaxAttribute || fieldInfo.FieldType == typeof(IntRnd))
-                return 0f;
-
-            return base.GetPropertyHeight(property, label);
         }
     }
 }

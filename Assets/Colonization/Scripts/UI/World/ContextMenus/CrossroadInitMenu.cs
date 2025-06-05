@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 
@@ -12,7 +13,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ButtonInit _buttonInit;
 
         private Crossroad _currentCrossroad;
-        private Game _game;
+        private GameLoop _game;
         private Human _player;
         private bool _endInit = false;
 
@@ -48,16 +49,19 @@ namespace Vurbiri.Colonization.UI
             base.Disable();
 
             if (_endInit)
-            {
-                _game.EndLanding();
-                Destroy(gameObject);
-            }
+                StartCoroutine(OnEndLanding_Cn());
         }
 
         private void OnUpgrade()
         {
             base.Close();
             _endInit = _player.BuildPort(_currentCrossroad);
+        }
+
+        private IEnumerator OnEndLanding_Cn()
+        {
+            yield return _game.EndLanding();
+            Destroy(gameObject);
         }
 
 #if UNITY_EDITOR

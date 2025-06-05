@@ -19,8 +19,6 @@ namespace Vurbiri.Colonization
             return isSFX ? _edificeSFX.Run(transform) : _edificeSFX.Destroy();
         }
 
-        public virtual void AddRoad(Id<LinkId> linkId) { }
-
 #if UNITY_EDITOR
         protected void OnValidate()
         {

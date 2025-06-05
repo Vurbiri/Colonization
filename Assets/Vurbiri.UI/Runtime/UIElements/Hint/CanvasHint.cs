@@ -6,22 +6,23 @@ namespace Vurbiri.UI
     sealed public class CanvasHint : AHint
     {
         [SerializeField] private float _edgeX = 5f;
-
-        private RectTransform _parentRectTransform;
+        [Space]
+        [SerializeField] private RectTransform _canvasRectTransform;
 
         public override void Init(Color backColor, Color textColor)
         {
             base.Init(backColor, textColor);
 
-            _parentRectTransform = (RectTransform)_backTransform.parent;
+            if(_canvasRectTransform != transform.parent)
+                transform.SetParent(_canvasRectTransform);
         }
 
         protected override void SetPosition(Vector3 position, Vector3 offset)
         {
-            position = _parentRectTransform.InverseTransformPoint(position);
+            position = _canvasRectTransform.InverseTransformPoint(position);
 
             Vector2 thisSize = _backTransform.sizeDelta * 0.5f;
-            Vector2 parentSize = _parentRectTransform.sizeDelta * 0.5f;
+            Vector2 parentSize = _canvasRectTransform.sizeDelta * 0.5f;
 
             float delta = position.x - thisSize.x - _edgeX + parentSize.x;
             if (delta > 0f)
@@ -39,5 +40,15 @@ namespace Vurbiri.UI
 
             _backTransform.localPosition = position + offset;
         }
+
+#if UNITY_EDITOR
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+
+            if (_canvasRectTransform == null)
+                _canvasRectTransform = (RectTransform)transform.parent;
+        }
+#endif
     }
 }

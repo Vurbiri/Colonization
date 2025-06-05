@@ -75,6 +75,14 @@ namespace Vurbiri.Colonization
             _amount += value;
         }
 
+        public void Clear()
+        {
+            for (int i = 0; i < CountAll; i++)
+                _values[i] = 0;
+
+            _amount = 0;
+        }
+
         public override IEnumerator<int> GetEnumerator()
         {
             for (int i = 0; i < CountAll; i++)

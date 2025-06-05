@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         public Human Player { get; }
         public Satan Satan { get; }
 
-        public Players(Settings settings, Game game, GameplayStorage storage)
+        public Players(Settings settings, GameLoop game, GameplayStorage storage)
         {
             HumanStorage[] playerStorages = storage.Humans;
 
@@ -27,11 +27,12 @@ namespace Vurbiri.Colonization
             SatanController satanController = new(game, storage.Satan, settings);
             _players[PlayerId.Satan] = satanController;  Satan = satanController;
  
-            game.Subscribe(GameModeId.Landing,      (turn, _) => _players[turn.currentId.Value].OnInit());
-            game.Subscribe(GameModeId.Play,      (turn, _) => _players[turn.currentId.Value].OnPlay());
-            game.Subscribe(GameModeId.EndTurn,   (turn, _) => _players[turn.currentId.Value].OnEndTurn());
-            game.Subscribe(GameModeId.StartTurn, (turn, _) => _players[turn.currentId.Value].OnStartTurn());
-            game.Subscribe(GameModeId.Profit,    OnProfit);
+            game.Subscribe(GameModeId.Landing,    (turn, _) => _players[turn.currentId.Value].OnLanding());
+            game.Subscribe(GameModeId.EndLanding, (turn, _) => _players[turn.currentId.Value].OnEndLanding());
+            game.Subscribe(GameModeId.EndTurn,    (turn, _) => _players[turn.currentId.Value].OnEndTurn());
+            game.Subscribe(GameModeId.StartTurn,  (turn, _) => _players[turn.currentId.Value].OnStartTurn());
+            game.Subscribe(GameModeId.Profit,     OnProfit);
+            game.Subscribe(GameModeId.Play,       (turn, _) => _players[turn.currentId.Value].OnPlay());
         }
 
         public void Dispose()

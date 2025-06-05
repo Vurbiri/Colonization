@@ -16,7 +16,7 @@ namespace Vurbiri.UI
         [SerializeField] private Vector2 _padding;
 
         protected RectTransform _backTransform;
-        private RectTransform _hintTransform;
+        protected RectTransform _hintTransform;
         private CanvasGroup _thisCanvasGroup;
         private Coroutine _coroutineShow, _coroutineHide;
         private Vector2 _defaultSize;

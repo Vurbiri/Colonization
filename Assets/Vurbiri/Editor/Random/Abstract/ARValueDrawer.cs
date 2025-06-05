@@ -31,7 +31,5 @@ namespace VurbiriEditor
 
             return (sizeLabel, sizeMin, sizeSlider, sizeMax);
         }
-
-        //public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => EditorGUIUtility.singleLineHeight;
     }
 }
