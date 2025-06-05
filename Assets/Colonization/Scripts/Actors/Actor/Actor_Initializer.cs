@@ -25,28 +25,29 @@ namespace Vurbiri.Colonization.Actors
 
         public void Init(ActorSettings settings, ActorInitData initData, BoxCollider collider, Hexagon startHex)
         {
-            _typeId = settings.TypeId;
-            _id = settings.Id;
-            _owner = initData.owner;
-            _skin = settings.InstantiateActorSkin(transform);
-            _currentHex = startHex;
+            _thisTransform = transform;
+            _thisCollider  = collider;
+
+            _typeId      = settings.TypeId;
+            _id          = settings.Id;
+            _owner       = initData.owner;
+            _skin        = settings.InstantiateActorSkin(transform);
+            _currentHex  = startHex;
             IsPlayerTurn = false;
 
             #region Abilities
-            _abilities = settings.Abilities;
+            _abilities   = settings.Abilities;
 
-            _currentHP = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
-            _currentAP = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
-            _move = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
-            _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP, _move);
-            _profitAdv = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP, _move);
+            _currentHP   = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
+            _currentAP   = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
+            _move        = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
+            _profitMain  = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP, _move);
+            _profitAdv   = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP, _move);
+            _isProfitAdv = _abilities.ReplaceToBoolean(ActorAbilityId.IsProfitAdv);
 
             for (int i = 0; i < initData.buffs.Length; i++)
                 _unsubscribers += initData.buffs[i].Subscribe(OnBuff);
             #endregion
-
-            _thisTransform = transform;
-            _thisCollider = collider;
 
             #region Bounds
             Bounds bounds = _skin.Bounds;
@@ -58,7 +59,7 @@ namespace Vurbiri.Colonization.Actors
 
             #region Get Services
             _triggerBus = initData.triggerBus;
-            _diplomacy = initData.diplomacy;
+            _diplomacy  = initData.diplomacy;
             #endregion
 
             #region Effects

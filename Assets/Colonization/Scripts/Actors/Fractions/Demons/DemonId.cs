@@ -9,6 +9,6 @@ namespace Vurbiri.Colonization.Actors
         public const int Fatty  = 3;
         public const int Boss   = 4;
 
-        static DemonId() => RunConstructor();
+        static DemonId() => ConstructorRun();
 	}
 }

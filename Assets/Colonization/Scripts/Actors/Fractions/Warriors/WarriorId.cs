@@ -7,17 +7,17 @@ namespace Vurbiri.Colonization.Actors
         public const int Militia    = 0;
         public const int Solder     = 1;
         public const int Wizard     = 2;
-        public const int Saboteur   = 3;
+        public const int Warlock    = 3;
         public const int Knight     = 4;
 
-        static WarriorId() => RunConstructor();
+        static WarriorId() => ConstructorRun();
 
         public static int ToState(int id) => id switch
         {
             Militia     => HumanAbilityId.IsMilitia,
             Solder      => HumanAbilityId.IsSolder,
             Wizard      => HumanAbilityId.IsWizard,
-            Saboteur    => HumanAbilityId.IsSaboteur,
+            Warlock     => HumanAbilityId.IsWarlock,
             Knight      => HumanAbilityId.IsKnight,
             _           => Errors.ArgumentOutOfRange("WarriorId", id),
         };

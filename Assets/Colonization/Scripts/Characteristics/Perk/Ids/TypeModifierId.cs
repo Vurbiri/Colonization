@@ -6,6 +6,6 @@ namespace Vurbiri.Colonization.Characteristics
         public const int Addition       = 1;
         public const int TotalPercent   = 2;
 
-        static TypeModifierId() => RunConstructor();
+        static TypeModifierId() => ConstructorRun();
     }
 }

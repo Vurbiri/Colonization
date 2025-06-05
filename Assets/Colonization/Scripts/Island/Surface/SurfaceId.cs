@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
 
         [NotId] public const int CountGround = 5;
 
-        static SurfaceId() => RunConstructor();
+        static SurfaceId() => ConstructorRun();
         private SurfaceId() { }
     }
 }

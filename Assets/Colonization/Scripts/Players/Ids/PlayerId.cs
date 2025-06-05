@@ -11,6 +11,6 @@ namespace Vurbiri.Colonization
         [NotId] public const int HumansCount = 3;
         [NotId] public const int AICount = 2;
 
-        static PlayerId() => RunConstructor();
+        static PlayerId() => ConstructorRun();
     }
 }

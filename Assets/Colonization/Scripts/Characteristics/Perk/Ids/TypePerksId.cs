@@ -5,6 +5,6 @@ namespace Vurbiri.Colonization.Characteristics
         public const int Economic = 0;
         public const int Military = 1;
 
-        static TypePerksId() => RunConstructor();
+        static TypePerksId() => ConstructorRun();
     }
 }

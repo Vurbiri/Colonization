@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.UI
     {
         public void Init(Human player, ProjectColors colors, CanvasHint hint)
         {
-            _widget.Init(player.Roads.CountReactive, player.GetAbility(HumanAbilityId.MaxRoads), colors, hint);
+            _widget.Init(player.Roads.CountReactive, player.GetAbility(HumanAbilityId.MaxRoad), colors, hint);
 
             Destroy(this);
         }

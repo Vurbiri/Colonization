@@ -7,6 +7,6 @@ namespace Vurbiri.Colonization
         public const int SFX = 2;
         public const int Ambient = 3;
 
-        static MixerId() => RunConstructor();
+        static MixerId() => ConstructorRun();
 	}
 }

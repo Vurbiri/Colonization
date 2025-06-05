@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         public const int LighthouseOne  = 7;
         public const int LighthouseTwo  = 8;
         
-        static EdificeId() => RunConstructor();
+        static EdificeId() => ConstructorRun();
 
         public static int ToGroup(int id) => id switch
         {

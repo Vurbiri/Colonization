@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
@@ -7,10 +8,10 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public class PerkTree : IReactive<Perk>, IReactive<IEnumerable<IEnumerable<int>>>
     {
-        public const int MIN_LEVEL = 0, MAX_LEVEL = 6, RATIO_PROGRESS_PER_LEVEL = 2;
-        public const int MIN_PROGRESS = 0, MAX_PROGRESS = RATIO_PROGRESS_PER_LEVEL * MAX_LEVEL * (MAX_LEVEL + 1) >> 1;
+        public const int MIN_LEVEL = 0, MAX_LEVEL = 5, RATIO_PROGRESS_PER_LEVEL = 2;
+        public const int MIN_PROGRESS = 0, MAX_PROGRESS = MAX_LEVEL * (MAX_LEVEL + 1);
 
-        private readonly IReadOnlyList<Perk>[] _perks = new IReadOnlyList<Perk>[TypePerksId.Count];
+        private readonly ReadOnlyCollection<Perk>[] _perks = new ReadOnlyCollection<Perk>[TypePerksId.Count];
         private readonly RInt[] _progress = new RInt[TypePerksId.Count];
         private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[TypePerksId.Count];
         private readonly Subscription<Perk> _eventPerk = new();
@@ -57,7 +58,8 @@ namespace Vurbiri.Colonization.Characteristics
         public Unsubscription Subscribe(Action<Perk> action, bool instantGetValue = true)
         {
             for (int type = 0; instantGetValue & type < TypePerksId.Count; type++)
-                foreach (int id in _learnedPerks[type]) action(_perks[type][id]);
+                foreach (int id in _learnedPerks[type]) 
+                    action(_perks[type][id]);
 
             return _eventPerk.Add(action);
         }

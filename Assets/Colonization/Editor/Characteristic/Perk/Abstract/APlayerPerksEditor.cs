@@ -17,13 +17,16 @@ namespace VurbiriEditor.Colonization.Characteristics
         [SerializeField] private VisualTreeAsset _treePerkVT;
 
         #region Consts
-        private const string P_PERKS = "_perks", P_ARRAY = "_values", P_ID = "_id";
-        private const string P_LEVEL = "_level", P_TARGET_OBJ = "_targetObject", P_TARGET_AB = "_targetAbility", P_TYPE_OP = "_typeModifier";
+        private const string P_PERKS = "_perks";
+        private const string P_ID = "_id", P_LEVEL = "_level", P_TARGET_OBJ = "_targetObject", P_TARGET_AB = "_targetAbility", P_TYPE_OP = "_typeModifier";
         private const string P_POS = "_position", P_SPRITE = "_sprite", P_KEY_DESC = "_keyDescription";
         private const string P_TYPE = "_type", P_VALUE = "_value", P_COST = "_cost";
         private const string U_CONTAINER = "Container", U_LABEL = "Label";
         private const string PREFF_KEY_DESC = "Perk";
         #endregion
+
+        private readonly string[][] _ability = { HumanAbilityId.Names, ActorAbilityId.Names };
+        private readonly NamesAndValues _modifier = new(TypeModifierId.Names, TypeModifierId.Values);
 
         protected VisualElement CreateGUI<TId>(string captionText) where TId : APerkId<TId>
         {
@@ -31,17 +34,20 @@ namespace VurbiriEditor.Colonization.Characteristics
             root.Q<Label>(U_LABEL).text = captionText;
             var container = root.Q<VisualElement>(U_CONTAINER);
 
-            SerializedProperty propertyPerks = serializedObject.FindProperty(P_PERKS).FindPropertyRelative(P_ARRAY);
+            SerializedProperty propertyPerks = serializedObject.FindProperty(P_PERKS);
+            propertyPerks.arraySize = APerkId<TId>.Count;
+            serializedObject.ApplyModifiedProperties();
 
             VisualElement element;
             for (int i = 0; i < APerkId<TId>.Count; i++)
             {
                 int id = i;
                 SerializedProperty propertyPerk = propertyPerks.GetArrayElementAtIndex(i);
-                
+                string name = APerkId<TId>.GetName(i);
+
                 element = _treePerkVT.Instantiate(propertyPerk.propertyPath);
-                element.Q<Label>(U_LABEL).text = APerkId<TId>.GetName(i);
-                element.Q<IMGUIContainer>(U_CONTAINER).onGUIHandler = () => IMGUIPerk<TId>(id, propertyPerk);
+                element.Q<Label>(U_LABEL).text = name;
+                element.Q<IMGUIContainer>(U_CONTAINER).onGUIHandler = () => IMGUIPerk<TId>(id, propertyPerk, name);
 
                 container.Add(element);
             }
@@ -49,7 +55,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             return root;
         }
 
-        private void IMGUIPerk<TId>(int id, SerializedProperty propertyPerk) 
+        private void IMGUIPerk<TId>(int id, SerializedProperty propertyPerk, string name) 
             where TId : APerkId<TId>
         {
             Type type = typeof(TId);
@@ -59,33 +65,48 @@ namespace VurbiriEditor.Colonization.Characteristics
             propertyPerk.FindPropertyRelative(P_ID).intValue = id;
             propertyPerk.FindPropertyRelative(P_TYPE).intValue = type == typeof(EconomicPerksId) ? TypePerksId.Economic : TypePerksId.Military;
 
-            BeginVertical(GUI.skin.window);
-            indentLevel++;
+            int target = -1, ability = -1;
+            string abilityName = name.Split('_')[0];
+            for (int i = 0; i < TargetOfPerkId.Count; i++)
+            {
+               if((ability = Array.IndexOf(_ability[i], abilityName)) >= 0)
+               {
+                    target = i; break;
+               }
+            }
 
-            int target = DrawId(P_TARGET_OBJ, typeof(TargetOfPerkId));
-            
+            if (target < 0 | ability < 0)
+            {
+                HelpBox($"Не верное имя {name}", UnityEditor.MessageType.Error);
+                return;
+            }
+
+            DrawEndSet(P_TARGET_OBJ, target, TargetOfPerkId.Names[target]);
+            DrawEndSet(P_TARGET_AB, ability, _ability[target][ability]);
+           
+            DrawValue(target, ability);
+            DrawId(P_TYPE_OP, _modifier);
+
             Space();
             int level = DrawIntSlider(P_LEVEL, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
             propertyPerk.FindPropertyRelative(P_COST).intValue = level + 1;
-            
-            Space();
-            int ability = DrawId(P_TARGET_AB, target == TargetOfPerkId.Player ? typeof(HumanAbilityId) : typeof(ActorAbilityId));
-            DrawValue(target, ability);
-            DrawId(P_TYPE_OP, typeof(TypeModifierId));
 
-            Space();
             DrawPosition(P_POS, level, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
-            DrawDesc();
+            Space();
+            DrawDesc(name);
             SerializedProperty property = propertyPerk.FindPropertyRelative(P_SPRITE);
             property.objectReferenceValue = ObjectField(property.displayName, property.objectReferenceValue, typeof(Sprite), false);
-
-            indentLevel--;
-            Space();
-            EndVertical();
 
             serializedObject.ApplyModifiedProperties();
 
             #region Local: DrawIntSlider(..), DrawId(..), DrawValue(..), DrawDesc(..)
+            //================================================================
+            void DrawEndSet(string nameProperty, int value, string text)
+            {
+                SerializedProperty property = propertyPerk.FindPropertyRelative(nameProperty);
+                property.intValue = value;
+                LabelField(property.displayName, text);
+            }
             //================================================================
             int DrawIntSlider(string nameProperty, int min, int max)
             {
@@ -98,15 +119,14 @@ namespace VurbiriEditor.Colonization.Characteristics
             void DrawPosition(string nameProperty, int level, int min, int max)
             {
                 SerializedProperty property = propertyPerk.FindPropertyRelative(nameProperty);
-                int value = IntSlider(property.displayName, Mathf.Clamp(property.vector2IntValue.y, min, max), min, max);
-                property.vector2IntValue = new(level, value);            
+                int value = IntSlider(property.displayName, Mathf.Clamp((int)property.vector2Value.y, min, max), min, max);
+                property.vector2Value = new(level, value);            
             }
             //================================================================
-            int DrawId(string nameProperty, Type t_field, bool isNone = false, int miss = -1)
+            int DrawId(string nameProperty, NamesAndValues types)
             {
-                var (names, values) = GetNamesAndValues(t_field, isNone, miss);
                 SerializedProperty property = propertyPerk.FindPropertyRelative(nameProperty);
-                property.intValue = IntPopup(property.displayName, property.intValue, names, values);
+                property.intValue = IntPopup(property.displayName, property.intValue, types.names, types.values);
                 return property.intValue;
             }
             //================================================================
@@ -119,12 +139,12 @@ namespace VurbiriEditor.Colonization.Characteristics
                     property.intValue = IntField(property.displayName, property.intValue);
             }
             //================================================================
-            void DrawDesc()
+            void DrawDesc(string name)
             {
                 SerializedProperty property = propertyPerk.FindPropertyRelative(P_KEY_DESC);
 
                 if (string.IsNullOrEmpty(property.stringValue))
-                    property.stringValue = PREFF_KEY_DESC.Concat(APerkId<TId>.GetName(id));
+                    property.stringValue = PREFF_KEY_DESC.Concat(name);
 
                 property.stringValue = TextField(property.displayName, property.stringValue);
                 Space();
@@ -161,6 +181,18 @@ namespace VurbiriEditor.Colonization.Characteristics
             }
 
             return (names.ToArray(), values.ToArray());
+        }
+
+        private readonly struct NamesAndValues
+        {
+            public readonly string[] names;
+            public readonly int[] values;
+
+            public NamesAndValues(string[] names, int[] values)
+            {
+                this.names = names;
+                this.values = values;
+            }
         }
     }
 }

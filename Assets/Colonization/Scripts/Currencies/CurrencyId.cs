@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         [NotId] public const int CountMain = 5;
         [NotId] public const int CountAll = 6;
 
-        static CurrencyId() => RunConstructor();
+        static CurrencyId() => ConstructorRun();
         private CurrencyId() { }
     }
 }

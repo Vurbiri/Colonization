@@ -12,6 +12,6 @@ namespace Vurbiri.Colonization
         public const int Play       = 7;
         public const int End        = 8;
 
-        static GameModeId() => RunConstructor();
+        static GameModeId() => ConstructorRun();
     }
 }

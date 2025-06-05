@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         public const int Port    =  2;
         
 
-        static EdificeGroupId() => RunConstructor();
+        static EdificeGroupId() => ConstructorRun();
         private EdificeGroupId() { }
 
         public static int ToState(int id) => id switch

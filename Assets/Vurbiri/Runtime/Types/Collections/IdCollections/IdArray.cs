@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Vurbiri.Collections
@@ -13,6 +14,8 @@ namespace Vurbiri.Collections
         private readonly int _count = IdType<TId>.Count;
 
         public int Count => _count;
+
+        public ReadOnlyCollection<TValue> Values => new(_values);
 
         public TValue this[Id<TId> id] { get => _values[id.Value]; set => _values[id.Value] = value; }
         public TValue this[int index] { get => _values[index]; set => _values[index] = value; }

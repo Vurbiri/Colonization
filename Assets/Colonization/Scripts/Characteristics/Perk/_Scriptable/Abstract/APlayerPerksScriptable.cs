@@ -1,13 +1,14 @@
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
-using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
     public class APlayerPerksScriptable<T> : ScriptableObjectDisposable where T : APerkId<T>
     {
-        [SerializeField] private IdArray<T, Perk> _perks;
+        [SerializeField] private Perk[] _perks;
+        private ReadOnlyCollection<Perk> _readOnlyPerks;
 
-        public IReadOnlyList<Perk> Perks => _perks;
+        public ReadOnlyCollection<Perk> Perks => _readOnlyPerks ??= new(_perks);
+
     }
 }

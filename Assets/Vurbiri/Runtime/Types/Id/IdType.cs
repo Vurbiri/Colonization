@@ -97,6 +97,6 @@ namespace Vurbiri
             }
         }
 #endif
-        protected static void RunConstructor() { }
+        protected static void ConstructorRun() { }
     }
 }
