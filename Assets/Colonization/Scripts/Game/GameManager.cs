@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
 	{
         [SerializeField] private ScreenLabel _label;
         [Space]
-        [SerializeField, Range(1f, 3f)] private float _initDelay = 1.75f;
+        [SerializeField, Range(1f, 3f)] private float _landingDelay = 1.75f;
 
         private GameLoop _game;
         private CameraController _camera;
@@ -45,10 +45,10 @@ namespace Vurbiri.Colonization.UI
             {
                 if (isPlayer)
                 {
-                    WaitRealtime wait = new(_initDelay);
+                    WaitRealtime wait = new(_landingDelay);
                     yield return wait;
                     yield return _camera.ToDefaultPosition_Wait();
-                    yield return wait.Restart(_initDelay * 0.5f);
+                    yield return wait.Restart(_landingDelay * 0.5f);
                 }
                 yield return null;
                 yield return _game.Landing();

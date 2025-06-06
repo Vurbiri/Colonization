@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization.Storage
             _unsubscribers += reactive.Subscribe(currencies => _storage.Set(_keyExchange, currencies), instantGetValue);
         }
 
-        public void BindPerks(IReactive<IEnumerable<IEnumerable<int>>> reactive, bool instantGetValue)
+        public void BindPerks(IReactive<HashSet<int>[]> reactive, bool instantGetValue)
         {
             _unsubscribers += reactive.Subscribe(perks => _storage.Set(_keyPerks, perks), instantGetValue);
         }

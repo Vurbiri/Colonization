@@ -12,7 +12,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string NAME = "Economic", MENU = MENU_PERKS_PATH + NAME;
         #endregion
 
-        [SerializeField] private EconomicPerksScriptable _perks;
+        [SerializeField] private PerksScriptable _perks;
 
         private Editor _editor;
 
@@ -25,7 +25,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         public void CreateGUI()
         {
             if (_perks == null)
-                _perks = EUtility.FindAnyScriptable<EconomicPerksScriptable>();
+                _perks = EUtility.FindAnyScriptable<PerksScriptable>();
 
             rootVisualElement.Add(EconomicPerksEditor.CreateEditorAndBind(_perks, out _editor));
         }

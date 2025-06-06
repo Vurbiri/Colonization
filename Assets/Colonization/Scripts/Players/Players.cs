@@ -55,8 +55,7 @@ namespace Vurbiri.Colonization
             public WarriorInitializer warriorPrefab;
             public Prices prices;
             public HumanAbilitiesScriptable humanStates;
-            public EconomicPerksScriptable economicPerks;
-            public MilitaryPerksScriptable militaryPerks;
+            public PerksScriptable perks;
             public RoadFactory roadFactory;
             [Space]
             public DemonInitializer demonPrefab;
@@ -75,11 +74,10 @@ namespace Vurbiri.Colonization
             public void Dispose()
             {
                 humanStates.Dispose();
-                economicPerks.Dispose();
-                militaryPerks.Dispose();
+                perks.Dispose();
                 demonBuffs.Dispose();
                 artefact.Dispose();
-                humanStates = null; economicPerks = null; militaryPerks = null;
+                humanStates = null; perks = null;
                 demonBuffs = null; artefact = null;
             }
 
@@ -93,8 +91,7 @@ namespace Vurbiri.Colonization
 
                 EUtility.SetScriptable(ref prices);
                 EUtility.SetScriptable(ref humanStates);
-                EUtility.SetScriptable(ref economicPerks);
-                EUtility.SetScriptable(ref militaryPerks);
+                EUtility.SetScriptable(ref perks);
                 EUtility.SetScriptable(ref demonBuffs);
                 EUtility.SetScriptable(ref artefact);
 

@@ -4,8 +4,8 @@ using Vurbiri.Colonization.Characteristics;
 
 namespace VurbiriEditor.Colonization.Characteristics
 {
-    [CustomEditor(typeof(EconomicPerksScriptable), true)]
-    internal class EconomicPerksEditor : APlayerPerksEditor<EconomicPerksEditor>
+    [CustomEditor(typeof(PerksScriptable), true)]
+    internal class EconomicPerksEditor : APerksEditor<EconomicPerksEditor>
     {
         public override VisualElement CreateInspectorGUI() => CreateGUI<EconomicPerksId>("Economic Perks");
     }

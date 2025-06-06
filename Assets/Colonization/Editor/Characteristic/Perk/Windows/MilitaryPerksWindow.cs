@@ -1,18 +1,18 @@
+using UnityEditor;
+using UnityEngine;
+using Vurbiri;
+using Vurbiri.Colonization.Characteristics;
+using static VurbiriEditor.Colonization.CONST_EDITOR;
+
 namespace VurbiriEditor.Colonization.Characteristics
 {
-    using UnityEditor;
-    using UnityEngine;
-    using Vurbiri;
-    using Vurbiri.Colonization.Characteristics;
-    using static CONST_EDITOR;
-
     public class MilitaryPerksWindow : EditorWindow
     {
         #region Consts
         private const string NAME = "Military", MENU = MENU_PERKS_PATH + NAME;
         #endregion
 
-        [SerializeField] private MilitaryPerksScriptable _perks;
+        [SerializeField] private PerksScriptable _perks;
 
         private Editor _editor;
 
@@ -25,7 +25,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         public void CreateGUI()
         {
             if (_perks == null)
-                _perks = EUtility.FindAnyScriptable<MilitaryPerksScriptable>();
+                _perks = EUtility.FindAnyScriptable<PerksScriptable>();
 
             rootVisualElement.Add(MilitaryPerksEditor.CreateEditorAndBind(_perks, out _editor));
         }

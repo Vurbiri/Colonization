@@ -20,7 +20,7 @@
   "Mana": "Mana",
   "Blood": "Demon Blood",
   "LandingLabel": "Landing\n<size=85%><color={0}>{1}</color></size>",
-  "StartTurnLabel": "Turn{0}\n<size=85%><color={1}>{2}</color></size>",
+  "StartTurnLabel": "Turn {0}\n<size=85%><color={1}>{2}</color></size>",
   "CurrentMaxHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>",
   "AmountHint": "Current:<b>{0}{1,3}</color></b>\nMaximum:<b>{2,3}</b>",
   "AmountOverHint": "\n<align=\"justified\"><size=85%>\nif it's <b>13</b>, you will lose <b>{0}</b> resource(s)</size></align>",

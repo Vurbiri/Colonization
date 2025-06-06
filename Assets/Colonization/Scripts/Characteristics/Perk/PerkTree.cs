@@ -6,7 +6,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class PerkTree : IReactive<Perk>, IReactive<IEnumerable<IEnumerable<int>>>
+    public class PerkTree : IReactive<Perk>, IReactive<HashSet<int>[]>
     {
         public const int MIN_LEVEL = 0, MAX_LEVEL = 5, RATIO_PROGRESS_PER_LEVEL = 2;
         public const int MIN_PROGRESS = 0, MAX_PROGRESS = MAX_LEVEL * (MAX_LEVEL + 1);
@@ -15,33 +15,29 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly RInt[] _progress = new RInt[TypePerksId.Count];
         private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[TypePerksId.Count];
         private readonly Subscription<Perk> _eventPerk = new();
-        private readonly Subscription<IEnumerable<IEnumerable<int>>> _eventHashSet = new();
+        private readonly Subscription<HashSet<int>[]> _eventHashSet = new();
 
-        public IReactiveValue<int> EconomicProgress => _progress[TypePerksId.Economic];
-        public IReactiveValue<int> MilitaryProgress => _progress[TypePerksId.Military];
+        public RInt EconomicProgress => _progress[TypePerksId.Economic];
+        public RInt MilitaryProgress => _progress[TypePerksId.Military];
 
-        private PerkTree(EconomicPerksScriptable economicPerks, MilitaryPerksScriptable militaryPerks)
+        private PerkTree(PerksScriptable perks)
         {
-            _perks[TypePerksId.Economic] = economicPerks.Perks;
-            _perks[TypePerksId.Military] = militaryPerks.Perks;
-
             for (int t = 0; t < TypePerksId.Count; t++)
             {
-                _learnedPerks[t] = new();
+                _perks[t] = perks[t];
+                _learnedPerks[t] = new(EconomicPerksId.Count);
                 _progress[t] = new(MIN_PROGRESS);
             }
         }
 
-        private PerkTree(EconomicPerksScriptable economicPerks, MilitaryPerksScriptable militaryPerks, int[][] perks)
+        private PerkTree(PerksScriptable perks, int[][] learnedPerks)
         {
-            _perks[TypePerksId.Economic] = economicPerks.Perks;
-            _perks[TypePerksId.Military] = militaryPerks.Perks;
-
             for (int t = 0, progress = 0; t < TypePerksId.Count; t++, progress = 0)
             {
-                _learnedPerks[t] = new(perks[t]);
+                _perks[t] = perks[t];
+                _learnedPerks[t] = new(learnedPerks[t]);
 
-                for (int i = perks[t].Length - 1; i >= 0; i--)
+                for (int i = learnedPerks[t].Length - 1; i >= 0; i--)
                     progress += _perks[t][i].Cost;
 
                 _progress[t] = new(Math.Min(progress, MAX_PROGRESS));
@@ -51,8 +47,8 @@ namespace Vurbiri.Colonization.Characteristics
         public static PerkTree Create(Players.Settings settings, HumanLoadData loadData)
         {
             if (loadData.isLoaded & loadData.perks != null) 
-                return new(settings.economicPerks, settings.militaryPerks, loadData.perks);
-            return new(settings.economicPerks, settings.militaryPerks);
+                return new(settings.perks, loadData.perks);
+            return new(settings.perks);
         }
 
         public Unsubscription Subscribe(Action<Perk> action, bool instantGetValue = true)
@@ -63,7 +59,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             return _eventPerk.Add(action);
         }
-        public Unsubscription Subscribe(Action<IEnumerable<IEnumerable<int>>> action, bool instantGetValue = true)
+        public Unsubscription Subscribe(Action<HashSet<int>[]> action, bool instantGetValue = true)
         {
             return _eventHashSet.Add(action, instantGetValue, _learnedPerks);
         }
@@ -72,7 +68,8 @@ namespace Vurbiri.Colonization.Characteristics
         {
             if (!_learnedPerks[typePerk].Add(idPerk))
             {
-                cost = 0; return false;
+                cost = 0; 
+                return false;
             }
             
             Perk perk = _perks[typePerk][idPerk];
