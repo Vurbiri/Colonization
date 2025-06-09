@@ -1,6 +1,4 @@
 using UnityEngine;
-using Vurbiri.International;
-using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -10,31 +8,18 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupWidgetUI _popup;
 
-        private Unsubscriptions _unsubscribers;
-
         public void Init(int id, ACurrenciesReactive count, ProjectColors colors, Direction2 offsetPopup, CanvasHint hint)
         {
             base.Init(colors, hint);
             _popup.Init(colors, offsetPopup);
 
             _unsubscribers += count.Subscribe(id, SetValue);
-            _unsubscribers += Localization.Instance.Subscribe(SetHintText);
         }
 
-        private void SetValue(int count)
+        private void SetValue(int current, int delta)
         {
-            _popup.Run(count);
-            _valueTMP.text = count.ToString();
-        }
-
-        private void SetHintText(Localization localization)
-        {
-            _text = localization.GetText(_getText.id, _getText.key);
-        }
-
-        private void OnDestroy()
-        {
-            _unsubscribers?.Unsubscribe();
+            _popup.Run(delta);
+            _valueTMP.text = current.ToString();
         }
 
 #if UNITY_EDITOR

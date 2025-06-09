@@ -2,17 +2,17 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class EconomicPerksId : APerkId<EconomicPerksId>
     {
-        public const int MaxBlood_1             =  0;
-        public const int MaxBlood_2             =  1;
-        public const int MaxBlood_3             =  2;
-        public const int ShrineProfit_1         =  3;
-        public const int ShrinePassiveProfit_1  =  4;
-
-        public const int MaxMainResources_1     =  5;
-        public const int MaxMainResources_2     =  6;
-        public const int MaxMainResources_3     =  7;
-        public const int IsFreeGroundRes_1      =  8;
-        public const int CompensationRes_1      =  9;
+        public const int MaxMainResources_1     =  0;
+        public const int MaxMainResources_2     =  1;
+        public const int MaxMainResources_3     =  2;
+        public const int CompensationRes_1      =  3;
+        public const int IsFreeGroundRes_1      =  4;
+        
+        public const int MaxBlood_1             =  5;
+        public const int MaxBlood_2             =  6;
+        public const int MaxBlood_3             =  7;
+        public const int ShrineProfit_1         =  8;
+        public const int ShrinePassiveProfit_1  =  9;
 
         public const int IsWall_1               = 10;
         public const int MaxColony_1            = 11;
@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Characteristics
         public const int WallDefence_1          = 13;
 
         public const int IsLighthouse_1         = 14;
-        public const int PortsProfit_1          = 15;
+        public const int PortsProfitShift_1     = 15;
         public const int MaxPort_1              = 16;
 
         public const int MaxRoad_1              = 17;

@@ -22,7 +22,6 @@ namespace Vurbiri.Colonization.UI
         private GameObject _thisGameObject;
         private string _stringPlus, _stringMinus;
         private CoroutinesQueue _queue;
-        private int _prevValue = int.MinValue;
 
         public void Init(ProjectColors settings, Vector3 direction)
         {
@@ -41,20 +40,13 @@ namespace Vurbiri.Colonization.UI
             _thisGameObject.SetActive(false);
         }
 
-        public void Run(int value)
+        public void Run(int delta)
         {
-            int delta = value - _prevValue;
-
-            if (_prevValue < 0 || delta == 0)
+            if (delta != 0)
             {
-                _prevValue = value;
-                return;
+                _thisGameObject.SetActive(true);
+                _queue.Enqueue(Run_Cn(string.Format(delta > 0 ? _stringPlus : _stringMinus, delta)));
             }
-
-            _thisGameObject.SetActive(true);
-            _queue.Enqueue(Run_Cn(string.Format(delta > 0 ? _stringPlus : _stringMinus, delta)));
-
-            _prevValue = value;
         }
 
         private IEnumerator Run_Cn(string text)

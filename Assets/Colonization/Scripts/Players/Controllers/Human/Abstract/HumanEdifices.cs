@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
                 _abilities = abilities;
                 _shrinePassiveProfit = _abilities[HumanAbilityId.ShrinePassiveProfit];
                 _shrineProfit = _abilities[HumanAbilityId.ShrineProfit];
-                _portsProfit = _abilities[HumanAbilityId.PortsProfit];
+                _portsProfit = _abilities[HumanAbilityId.PortsProfitShift];
                 _compensationRes = _abilities[HumanAbilityId.CompensationRes];
 
                 edifices[EdificeGroupId.Shrine] = shrines = new(CONST.DEFAULT_MAX_EDIFICES);

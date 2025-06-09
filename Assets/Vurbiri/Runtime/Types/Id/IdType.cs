@@ -74,6 +74,9 @@ namespace Vurbiri
                 Debug.LogError($"Не найдено public const int полей. Класс: {typeId.Name}");
 
             //Message.Log($"Create {typeId.Name}. min: {Min}, count: {Count}");
+
+            //Debug.Log($"{typeId.Name} --> {typeId.BaseType.Name} ({typeId.Namespace})");
+
         }
 
         

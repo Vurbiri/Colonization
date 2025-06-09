@@ -11,9 +11,9 @@ namespace Vurbiri.Colonization.UI
 
         [SerializeField, Key(Files.Gameplay)] private string _keyOver;
 
-        private Localization _localization;
         private ReactiveCombination<int, int> _reactiveAmountMax;
         private string _colorNormal, _colorNormalHint, _colorOver;
+        private string _textNormalHint, _textOverHint;
 
         public void Init(IReactiveValue<int> amount, IReactiveValue<int> max, ProjectColors colors, CanvasHint hint)
         {
@@ -23,7 +23,6 @@ namespace Vurbiri.Colonization.UI
             _colorNormalHint = colors.HintDefaultTag;
             _colorOver = colors.TextNegativeTag;
 
-            _localization = Localization.Instance;
             _reactiveAmountMax = new(amount, max, SetAmountMax);
         }
 
@@ -32,18 +31,24 @@ namespace Vurbiri.Colonization.UI
             if(amount > max)
             {
                 _valueTMP.text = string.Format(AMOUNT, _colorOver, Mathf.Min(amount, 99), max);
-                _text = _localization.GetFormatText(_getText.id, _getText.key, _colorOver, amount, max)
-                                     .Concat(_localization.GetFormatText(_getText.id, _keyOver, amount - max));
+                _text = string.Format(_textNormalHint, _colorOver, amount, max).Concat(string.Format(_textOverHint, amount - max));
             }
             else 
             {
                 _valueTMP.text = string.Format(AMOUNT, _colorNormal, amount, max);
-                _text = _localization.GetFormatText(_getText.id, _getText.key, _colorNormalHint, amount, max);
+                _text = string.Format(_textNormalHint, _colorNormalHint, amount, max);
             }
         }
 
-        private void OnDestroy()
+        protected override void SetLocalizationText(Localization localization)
         {
+            _textNormalHint = localization.GetText(_getText.id, _getText.key);
+            _textOverHint = localization.GetText(_getText.id, _keyOver);
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
             _reactiveAmountMax.Dispose();
         }
 

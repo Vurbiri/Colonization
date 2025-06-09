@@ -20,25 +20,6 @@ namespace Vurbiri.Colonization
             return new(prices.HumanDefault, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
         }
 
-        public void Add(int index, int value)
-        {
-            if (value == 0)
-                return;
-
-            _amount.Value += _values[index].Add(value);
-            _eventChanged.Invoke(this);
-        }
-        public void Add(Id<CurrencyId> id, int value) => Add(id.Value, value);
-
-        public void AddBlood(int value)
-        {
-            if (value == 0)
-                return;
-
-            _values[Blood].Add(value);
-            _eventChanged.Invoke(this);
-        }
-
         public void AddFrom(ACurrencies other)
         {
             if (other.Amount == 0)
@@ -48,6 +29,15 @@ namespace Vurbiri.Colonization
                 _values[i].Add(other[i]);
 
             _amount.Add(other.Amount);
+            _eventChanged.Invoke(this);
+        }
+
+        public void AddBlood(int value)
+        {
+            if (value <= 0)
+                return;
+
+            _values[Blood].Add(value);
             _eventChanged.Invoke(this);
         }
 
@@ -64,57 +54,61 @@ namespace Vurbiri.Colonization
             _eventChanged.Invoke(this);
         }
 
+        public void PayInBlood(int value)
+        {
+            if (value <= 0)
+                return;
+
+            _values[Blood].Add(-value);
+            _eventChanged.Invoke(this);
+        }
+
         public void ClampMain()
         {
-            int amount = _amount.Value, maxMain = _maxValueMain.Value;
+            int amount = _amount.Value, maxMain = _maxAmount.Value;
 
             if (amount <= maxMain)
                 return;
 
-            int indexMax = 0, index;
-            ACurrency max = _values[indexMax], temp;
-            for (index = 1; index < CountMain; index++)
-            {
-                temp = _values[index];
-                if (temp > max | (temp == max && Chance.Rolling()))
-                {
-                    indexMax = index;
-                    max = temp;
-                }
-            }
-
-            index = indexMax;
+            int[] values = ConvertToInt(_values);
+            int maxIndex = 0;
             do
             {
-                amount += max.SilentDecrement();
-                do
-                {
-                    index = ++index % CountMain;
-                    temp = _values[index];
-                    if (temp > max)
-                    {
-                        indexMax = index;
-                        max = temp;
-                    }
-                }
-                while (index != indexMax);
+                maxIndex = FindMaxIndex(values, maxIndex);
+                values[maxIndex]--;
             } 
-            while (amount > maxMain);
+            while (--amount > maxMain);
 
-            for (index = 0; index < CountMain; index++)
-                _values[index].Signal();
+            for (int index = 0; index < CountMain; index++)
+                _values[index].Set(values[index]);
 
             _amount.Value = amount;
             _eventChanged.Invoke(this);
-        }
 
-        public void Clear()
-        {
-            for (int i = 0; i < CountAll; i++)
-                _values[i].Set(0);
+            #region Local: ConvertToInt(), FindMaxIndex()
+            //=================================
+            static int[] ConvertToInt(ACurrency[] values)
+            {
+                int[] array = new int[CountMain];
+                for (int i = 0; i < CountMain; i++)
+                    array[i] = values[i].Value;
 
-            _amount.Value = 0;
-            _eventChanged.Invoke(this);
+                return array;
+            }
+            //=================================
+            static int FindMaxIndex(int[] values, int maxIndex = 0)
+            {
+                int index, count = CountMain;
+                while (count --> 1)
+                {
+                    index = (maxIndex + count) % CountMain;
+                    if (values[index] > values[maxIndex] || (values[index] == values[maxIndex] && Chance.Rolling()))
+                        maxIndex = index;
+                }
+
+                return maxIndex;
+            }
+            #endregion
         }
     }
 }

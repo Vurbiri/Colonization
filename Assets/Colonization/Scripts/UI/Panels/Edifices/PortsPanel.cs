@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
         {
             var edifices = player.GetEdifices(_id);
             var maxEdifices = player.GetAbility(_id.ToState());
-            var portsProfit = player.GetAbility(HumanAbilityId.PortsProfit);
+            var portsProfit = player.GetAbility(HumanAbilityId.PortsProfitShift);
 
             InitEdifice(edifices, sprites, inputController);
             _widget.Init(edifices.CountReactive, maxEdifices, portsProfit, colors, hint);

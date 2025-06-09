@@ -111,7 +111,7 @@ namespace Vurbiri.Colonization
         public void BuyPerk(int typePerk, int idPerk)
         {
             if (_perks.TryAdd(typePerk, idPerk, out int cost))
-                _resources.Add(CurrencyId.Blood, -cost);
+                _resources.PayInBlood(cost);
         }
 
         #region Edifice

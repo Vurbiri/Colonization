@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < CurrencyId.CountMain; i++)
                 _currencies[i].Init(i, currencies, colors, directionPopup, hint);
 
-            _amount.Init(currencies.AmountCurrent, currencies.AmountMax, colors, hint);
+            _amount.Init(currencies.CurrentAmount, currencies.MaxAmount, colors, hint);
 
             Destroy(this);
         }

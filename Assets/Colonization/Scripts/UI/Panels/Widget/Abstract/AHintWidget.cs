@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Vurbiri.International;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -17,8 +18,9 @@ namespace Vurbiri.Colonization.UI
         private CanvasHint _hint;
         private bool _isShowingHint = false;
         private Transform _thisTransform;
-        protected Vector3 _offsetHint;
 
+        protected Vector3 _offsetHint;
+        protected Unsubscriptions _unsubscribers;
         protected string _text;
 
         protected void Init(ProjectColors colors, CanvasHint hint)
@@ -29,6 +31,8 @@ namespace Vurbiri.Colonization.UI
 
             float offset = ((RectTransform)_thisTransform).rect.height * 0.5f;
             _offsetHint = new(0f, offset, 0f);
+
+            _unsubscribers += Localization.Instance.Subscribe(SetLocalizationText);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -47,12 +51,23 @@ namespace Vurbiri.Colonization.UI
             Hide();
         }
 
+        protected virtual void OnDestroy()
+        {
+            _unsubscribers?.Unsubscribe();
+        }
+
+        protected virtual void SetLocalizationText(Localization localization)
+        {
+            _text = localization.GetText(_getText.id, _getText.key);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Hide()
         {
             if (_isShowingHint)
                 _isShowingHint = !_hint.Hide();
         }
+
 
 #if UNITY_EDITOR
         public Vector2 Size => ((RectTransform)transform).rect.size;
