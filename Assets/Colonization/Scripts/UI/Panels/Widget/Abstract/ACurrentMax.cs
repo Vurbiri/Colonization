@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.UI
         protected string _textHint;
         protected TCombination _reactiveCurrentMax;
 
-        protected virtual void SetCurrentMax(int current, int max)
+        protected void SetCurrentMax(int current, int max)
         {
             _valueTMP.text = string.Format(COUNT, current, max);
             _text = string.Format(_textHint, current, max);
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _reactiveCurrentMax.Dispose();
+            _reactiveCurrentMax?.Dispose();
         }
     }
 }

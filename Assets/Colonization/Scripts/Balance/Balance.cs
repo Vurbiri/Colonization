@@ -1,4 +1,3 @@
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
@@ -23,16 +22,13 @@ namespace Vurbiri.Colonization
             _eventGameOver.Add(game.End);
         }
 
-        public void DemonCurse(int value) => AddBalance(_settings.penaltyPerDemon * value);
+        public void DemonCurse(int value) => AddBalance(_settings.penaltyPerDemon * -value);
 
         public void BindShrines(ReactiveList<Crossroad> shrines)
         {
             shrines.Subscribe((_, _, _) => AddBalance(_settings.rewardPerShrine), false);
         }
-        public void BindPerks(PerkTree perks)
-        {
-            perks.Subscribe((Perk perk) => AddBalance(_settings.penaltyPerPerk * perk.Cost), false);
-        }
+        public void BindBlood(IReactive<int, int> blood) => blood.Subscribe(OnPayInBlood, false);
 
         private void AddBalance(int value)
         {
@@ -47,6 +43,12 @@ namespace Vurbiri.Colonization
                 if (_value >= _settings.max)
                     _eventGameOver.Invoke(Winner.Human);
             }
+        }
+
+        private void OnPayInBlood(int current, int delta)
+        {
+            if (delta < 0)
+                AddBalance(_settings.penaltyPerBlood * delta);
         }
 
         public static implicit operator int(Balance balance) => balance._value;

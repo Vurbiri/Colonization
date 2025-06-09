@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         public override int Amount => _amount.Value;
         public IReactiveValue<int> CurrentAmount => _amount;
         public IReactiveValue<int> MaxAmount => _maxAmount;
-        public IReactive<int, int> CurrentBlood => _values[CurrencyId.Blood];
+        public IReactive<int, int> Blood => _values[CurrencyId.Blood];
         public IReactiveValue<int> MaxBlood => _maxBlood;
 
         public override int this[int index] { get => _values[index].Value; }
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
                 _values[i] = new CurrencyMain(value);
                 amount += value;
             }
-            _values[Blood] = new CurrencyBlood(array[Blood], maxValueBlood);
+            _values[CurrencyId.Blood] = new CurrencyBlood(array[CurrencyId.Blood], maxValueBlood);
 
             _amount.SilentValue = amount;
         }
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < CountMain; i++)
                 _values[i] = new CurrencyMain(other[i]);
 
-            _values[Blood] = new CurrencyBlood(other[Blood], maxValueBlood);
+            _values[CurrencyId.Blood] = new CurrencyBlood(other[CurrencyId.Blood], maxValueBlood);
 
             _amount.SilentValue = other.Amount;
         }
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < CountMain; i++)
                 _values[i] = new CurrencyMain();
 
-            _values[Blood] = new CurrencyBlood(maxValueBlood);
+            _values[CurrencyId.Blood] = new CurrencyBlood(maxValueBlood);
         }
         #endregion
 

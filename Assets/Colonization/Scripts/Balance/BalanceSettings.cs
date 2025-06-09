@@ -6,8 +6,8 @@ namespace Vurbiri.Colonization
         public int min = -666;
         public int max = 666;
         public int defaultValue = 0;
-        public int penaltyPerDemon = -3;
-        public int penaltyPerPerk = -1;
+        public int penaltyPerDemon = 3;
+        public int penaltyPerBlood = 1;
         public int rewardPerShrine = 15;
     }
 }

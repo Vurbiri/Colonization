@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         private string _colorNormal, _colorNormalHint, _colorOver;
         private string _textNormalHint, _textOverHint;
 
-        public void Init(IReactiveValue<int> amount, IReactiveValue<int> max, ProjectColors colors, CanvasHint hint)
+        public void Init(IReactive<int> amount, IReactive<int> max, ProjectColors colors, CanvasHint hint)
         {
             base.Init(colors, hint);
 

@@ -5,14 +5,14 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-	public class CurrentMaxAndRateProfit : ACurrentMax<ReactiveCombination<int, int, int>>
+    sealed public class CurrentMaxAndRateProfit : ACurrentMax<ReactiveCombination<int, int, int>>
     {
         private const string RATE = "x{0}";
 
         [Space]
         [SerializeField] private TextMeshProUGUI _profitTMP;
 
-        public void Init(IReactiveValue<int> current, IReactiveValue<int> max, IReactiveValue<int> rateProfit, ProjectColors colors, CanvasHint hint)
+        public void Init(IReactive<int> current, IReactive<int> max, IReactive<int> rateProfit, ProjectColors colors, CanvasHint hint)
         {
             base.Init(colors, hint);
 

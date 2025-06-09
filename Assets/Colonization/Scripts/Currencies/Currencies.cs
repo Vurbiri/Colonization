@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
             if (value <= 0)
                 return;
 
-            _values[Blood].Add(value);
+            _values[CurrencyId.Blood].Add(value);
             _eventChanged.Invoke(this);
         }
 
@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
             if (value <= 0)
                 return;
 
-            _values[Blood].Add(-value);
+            _values[CurrencyId.Blood].Add(-value);
             _eventChanged.Invoke(this);
         }
 

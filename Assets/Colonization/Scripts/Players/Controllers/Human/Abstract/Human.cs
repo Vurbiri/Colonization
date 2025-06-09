@@ -101,7 +101,7 @@ namespace Vurbiri.Colonization
             settings.crossroads.BindEdifices(_edifices.edifices, instantGetValue);
 
             settings.balance.BindShrines(_edifices.shrines);
-            settings.balance.BindPerks(_perks);
+            settings.balance.BindBlood(_resources.Blood);
         }
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
