@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -11,7 +12,10 @@ namespace VurbiriEditor
     internal class AllRendererWindow : EditorWindow
     {
         private const string NAME = "All Renderer Settings", MENU = MENU_PATH + NAME;
-                
+
+        private readonly Type[] _types = {typeof(MeshRenderer), typeof(SkinnedMeshRenderer), typeof(SpriteRenderer), typeof(ParticleSystemRenderer) };
+        private readonly string[] _names;
+
         [SerializeField] private List<Renderer> _renderersPrefabs;
         [SerializeField] private List<Renderer> _renderersScene;
 
@@ -21,6 +25,15 @@ namespace VurbiriEditor
         private SerializedProperty _propertyPrefabs, _propertyScenes;
         private Vector2 _scrollPos;
         private bool _isSave;
+        private int[] _typeId = new int[2];
+
+        public AllRendererWindow()
+        {
+            int count = _types.Length;
+            _names = new string[count];
+            for (int i = 0; i < count; i++)
+                _names[i] = _types[i].Name;
+        }
 
         [MenuItem(MENU)]
         private static void ShowWindow()
@@ -58,7 +71,7 @@ namespace VurbiriEditor
 
             BeginWindows();
             DrawParams();
-            DrawButton();
+            DrawApply();
             DrawRenderer();
             EndWindows();
 
@@ -85,15 +98,48 @@ namespace VurbiriEditor
                 EditorGUILayout.BeginVertical(GUI.skin.window);
                 _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
 
+                DrawSelect(_renderersScene, 0);
                 EditorGUILayout.PropertyField(_propertyScenes);
                 EditorGUILayout.Space();
+                DrawSelect(_renderersPrefabs, 1);
                 EditorGUILayout.PropertyField(_propertyPrefabs);
 
                 EditorGUILayout.EndScrollView();
                 EditorGUILayout.EndVertical();
             }
             //=================================
-            void DrawButton()
+            void DrawSelect(List<Renderer> renderers, int indexTypeId)
+            {
+                bool onClick;
+                Rect rect = EditorGUILayout.BeginVertical();
+                {
+                    rect.height = EditorGUIUtility.singleLineHeight;
+                    Rect position = rect;
+
+                    position.width = rect.width * 0.5f - 1f;
+                    onClick = GUI.Button(position, "Select");
+
+                    position.x = rect.width * 0.5f + 1f;
+                    _typeId[indexTypeId] = EditorGUI.Popup(position, _typeId[indexTypeId], _names);
+
+                    EditorGUILayout.Space(rect.height);
+                }
+                EditorGUILayout.EndVertical();
+                if (onClick)
+                {
+                    List<GameObject> gameObjects = new(renderers.Count);
+
+                    Type type = _types[_typeId[indexTypeId]];
+                    foreach (var renderer in renderers)
+                        if (renderer.GetType() == type)
+                            gameObjects.Add(renderer.gameObject);
+
+                    Selection.objects = gameObjects.ToArray();
+                    Debug.Log($"Selected <b>{gameObjects.Count}</b> object(s)");
+                }
+            }
+            //=================================
+            void DrawApply()
             {
                 if (GUILayout.Button("Apply"))
                 {

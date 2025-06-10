@@ -76,6 +76,7 @@ namespace VurbiriEditor.Colonization
             EditorGUILayout.BeginVertical(STYLES.borderLight);
             
             DrawParams();
+            
             DrawApply();
             DrawButtons();
 
