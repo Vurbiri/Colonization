@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
 
         public override void OnLanding()
         {
-            _coroutines.Run(OnInit_Cn());
+            _coroutines.Run(OnInitFast_Cn());
         }
 
         public override void OnPlay()

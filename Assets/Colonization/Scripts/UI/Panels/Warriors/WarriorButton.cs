@@ -67,6 +67,8 @@ namespace Vurbiri.Colonization.UI
             _maxAP_TMP.color = _colorOff;
             _currentAP_TMP.color = _colorOn;
 
+            _hpBar.Init();
+
             InitClick(inputController);
 
             return this;
@@ -124,13 +126,6 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-
-            _hpBar.OnEnable();
-        }
-
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -154,13 +149,12 @@ namespace Vurbiri.Colonization.UI
             public void SetMaxHP(int maxHP) => Set(_currentHP, maxHP);
             public void SetCurrentHP(int currentHP) => Set(currentHP, _maxHP);
 
-            public void OnEnable() => _fill.anchorMin = Vector2.zero;
+            public void Init() => _fill.anchorMin = Vector2.zero;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void Set(float currentHP, float maxHP)
             {
-                _currentHP = currentHP;
-                _maxHP = maxHP; 
+                _currentHP = currentHP; _maxHP = maxHP;
                 _fill.anchorMax = new(currentHP / maxHP, 1f);
             }
 
@@ -179,6 +173,8 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
 
+            _hpBar.OnValidate(this);
+
             if (_icon == null)
                 _icon = EUtility.GetComponentInChildren<Image>(this, "Icon");
             if (_maxAP_TMP == null)
@@ -187,8 +183,6 @@ namespace Vurbiri.Colonization.UI
                 _currentAP_TMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "AP_TMP");
             if (_moveIcon == null)
                 _moveIcon = EUtility.GetComponentInChildren<Image>(this, "MoveIcon");
-
-            _hpBar.OnValidate(this);
         }
 #endif
     }
