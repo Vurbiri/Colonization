@@ -18,7 +18,7 @@ namespace VurbiriEditor.Colonization
         private const string NAME = "Currencies Icons", MENU = MENU_UI_PATH + NAME;
         private const string PROPERTY_ICONS = "_icons";
         private const string BUTTON_NAME = "Create Atlas";
-        private const string DEFAULT_PATH = "Assets/Colonization/Graphics/";
+        private const string DEFAULT_PATH = "Assets/Colonization/Graphics/2D/Icons/Currencies";
         private const string DEFAULT_NAME = "IconCurrency_Atlas";
         private const string EXP = "png";
         #endregion

@@ -8,14 +8,12 @@ namespace VurbiriEditor.Reactive
     [CustomPropertyDrawer(typeof(UniSubscription))]
 	public class UniSignerDrawer : PropertyDrawer
 	{
-		#region Consts
-		private const string P_NAME = "_listeners";
-		#endregion
-		
-		sealed public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
+        private readonly string F_NAME = "_listeners";
+
+        sealed public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
 			position.height = EditorGUIUtility.singleLineHeight;
-            SerializedProperty propertyArray = mainProperty.FindPropertyRelative(P_NAME);
+            SerializedProperty propertyArray = mainProperty.FindPropertyRelative(F_NAME);
 
             BeginProperty(position, label, mainProperty);
 			{
@@ -28,7 +26,7 @@ namespace VurbiriEditor.Reactive
 		{
             float height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             float rate = 3.2f;
-            SerializedProperty propertyArray = mainProperty.FindPropertyRelative(P_NAME);
+            SerializedProperty propertyArray = mainProperty.FindPropertyRelative(F_NAME);
 
             if(!propertyArray.isExpanded)
                 return height;

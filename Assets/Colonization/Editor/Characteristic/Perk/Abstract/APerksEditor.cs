@@ -37,8 +37,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             SerializedProperty propertyPerks = serializedObject.FindProperty(P_PERKS[typePerks]);
             propertyPerks.arraySize = APerkId<TId>.Count;
             serializedObject.ApplyModifiedProperties();
-
-            
+                        
             for (int i = 0; i < APerkId<TId>.Count; i++)
             {
                 int id = i;
@@ -136,13 +135,17 @@ namespace VurbiriEditor.Colonization.Characteristics
             {
                 SerializedProperty property = propertyPerk.FindPropertyRelative(P_VALUE);
                 string name = "Value";
-                int min = -1, max = 10, shift = 0;
 
                 if (mod == PerkModifierId.Enable)
                 {
-                    property.intValue = 1; return;
+                    property.intValue = 1;
+                    BeginDisabledGroup(true);
+                        Toggle(name, true);
+                    EndDisabledGroup();
+                    return;
                 }
 
+                int min = -1, max = 10, shift = 0;
                 if (mod == PerkModifierId.Percent)
                 {
                     name = "Value (%)";

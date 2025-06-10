@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,6 @@ using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
 
         [SerializeField] private float _speedMove = 4f;
         [Space]
-        [SerializeField] private VBarInt _hpBar;
+        [SerializeField] private HPBar _hpBar;
         [SerializeField] private TextMeshProUGUI _maxAP_TMP;
         [SerializeField] private TextMeshProUGUI _currentAP_TMP;
         [SerializeField] private Graphic _moveIcon;
@@ -79,12 +79,12 @@ namespace Vurbiri.Colonization.UI
             _unsubscribers += actor.Subscribe(OnChangeActor, false);
 
             var abilities = actor.Abilities;
-            _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe((maxHP) => _hpBar.MaxValue = maxHP);
-            _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe((currentHP) => _hpBar.Value = currentHP);
+            _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe(_hpBar.SetMaxHP);
+            _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(_hpBar.SetCurrentHP);
             _unsubscribers += abilities[ActorAbilityId.MaxAP].Subscribe(maxAP => _maxAP_TMP.text = new(AP_CHAR, maxAP));
             _unsubscribers += abilities[ActorAbilityId.CurrentAP].Subscribe(currentAP => _currentAP_TMP.text = new(AP_CHAR, currentAP));
-            _unsubscribers += abilities[ActorAbilityId.IsMove].Subscribe(move => _moveIcon.canvasRenderer.SetColor(move > 0 ? _colorOn : _colorOff));
-
+            _unsubscribers += abilities[ActorAbilityId.IsMove].Subscribe(move => _moveIcon.color = move > 0 ? _colorOn : _colorOff);
+            
             _thisTransform.SetParent(_container);
             _thisTransform.localPosition = _offset * index;
 
@@ -124,6 +124,13 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            _hpBar.OnEnable();
+        }
+
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -136,13 +143,42 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
+        #region Nested class HPBar
+        [Serializable]
+        private class HPBar
+        {
+            [SerializeField] private RectTransform _fill;
+            private float _currentHP;
+            private float _maxHP = 100;
+
+            public void SetMaxHP(int maxHP) => Set(_currentHP, maxHP);
+            public void SetCurrentHP(int currentHP) => Set(currentHP, _maxHP);
+
+            public void OnEnable() => _fill.anchorMin = Vector2.zero;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private void Set(float currentHP, float maxHP)
+            {
+                _currentHP = currentHP;
+                _maxHP = maxHP; 
+                _fill.anchorMax = new(currentHP / maxHP, 1f);
+            }
+
+#if UNITY_EDITOR
+            public void OnValidate(Component parent)
+            {
+                if (_fill == null)
+                    _fill = EUtility.GetComponentInChildren<RectTransform>(parent, "Fill");
+            }
+#endif
+        }
+        #endregion
+
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
 
-            if (_hpBar == null)
-                _hpBar = GetComponentInChildren<VBarInt>();
             if (_icon == null)
                 _icon = EUtility.GetComponentInChildren<Image>(this, "Icon");
             if (_maxAP_TMP == null)
@@ -151,6 +187,8 @@ namespace Vurbiri.Colonization.UI
                 _currentAP_TMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "AP_TMP");
             if (_moveIcon == null)
                 _moveIcon = EUtility.GetComponentInChildren<Image>(this, "MoveIcon");
+
+            _hpBar.OnValidate(this);
         }
 #endif
     }

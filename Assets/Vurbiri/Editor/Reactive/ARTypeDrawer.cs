@@ -7,7 +7,7 @@ namespace VurbiriEditor.Reactive
     [CustomPropertyDrawer(typeof(ARType<>), true)]
 	public class ARTypeDrawer : PropertyDrawer
 	{
-		private const string P_NAME = "_value";
+		private readonly string P_NAME = "_value";
 		
 		public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{

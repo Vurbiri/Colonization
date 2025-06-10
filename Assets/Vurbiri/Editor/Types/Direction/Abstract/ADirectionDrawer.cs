@@ -5,7 +5,7 @@ namespace VurbiriEditor
 {
     public abstract class ADirectionDrawer<T> : PropertyDrawer
     {
-        protected const string NAME_VALUE = "_dir";
+        protected readonly string NAME_VALUE = "_dir";
 
         protected abstract string[] Names { get; }
         protected abstract int[] Indexes { get; }

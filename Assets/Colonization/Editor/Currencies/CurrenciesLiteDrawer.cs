@@ -7,10 +7,10 @@ namespace VurbiriEditor.Colonization
     [CustomPropertyDrawer(typeof(CurrenciesLite))]
     public class CurrenciesLiteDrawer : PropertyDrawer
     {
-        private const int MAX_VALUE = 15;
-        private const float Y_SPACE = 2f, BUTTON_RATE_POS = 1.1f, BUTTON_OFFSET = 10f, BUTTON_CLEAR_SIZE = 60f, BUTTON_PLUSMINUS_SIZE = 20f;
-        private const float LABEL_SIZE = 100f, LABEL_OFFSET = 15f;
-        private const string NAME_ARRAY = "_values", NAME_AMOUNT = "_amount", BUTTON_CLEAR = "Clear", BUTTON_PLUS = "+", BUTTON_MINUS = "-";
+        private readonly int MAX_VALUE = 15;
+        private readonly float Y_SPACE = 2f, BUTTON_RATE_POS = 1.1f, BUTTON_OFFSET = 10f, BUTTON_CLEAR_SIZE = 60f, BUTTON_PLUSMINUS_SIZE = 20f;
+        private readonly float LABEL_SIZE = 100f, LABEL_OFFSET = 15f;
+        private readonly string NAME_ARRAY = "_values", NAME_AMOUNT = "_amount", BUTTON_CLEAR = "Clear", BUTTON_PLUS = "+", BUTTON_MINUS = "-";
         private readonly Color[] colors = { new(0.72f, 0.6f, 0f, 1f), Color.yellow, Color.green, Color.gray, new(0.33f, 0.28f, 1f, 1f), Color.red };
 
         private Rect _position;

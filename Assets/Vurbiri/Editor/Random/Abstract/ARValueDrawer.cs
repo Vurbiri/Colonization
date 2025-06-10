@@ -7,7 +7,7 @@ namespace VurbiriEditor
     {
         private const float OFFSET_SIZE_LABEL = 20f, SIZE_VALUE = 50f, BIGSIZE_VALUE = 85f, SIZE_SPACE = 5f;
 
-        protected (Rect, Rect, Rect) CalkPosition(Rect position)
+        protected static (Rect, Rect, Rect) CalkPosition(Rect position)
         {
             Rect sizeLabel = position, sizeMin = position, sizeMax = position;
             sizeLabel.width = EditorGUIUtility.labelWidth + OFFSET_SIZE_LABEL;
@@ -18,7 +18,7 @@ namespace VurbiriEditor
             return (sizeLabel, sizeMin, sizeMax);
         }
 
-        protected (Rect, Rect, Rect, Rect) CalkPositionSlider(Rect position)
+        protected static (Rect, Rect, Rect, Rect) CalkPositionSlider(Rect position)
         {
             Rect sizeLabel = position, sizeMin = position, sizeMax = position, sizeSlider = position;
             sizeLabel.width = EditorGUIUtility.labelWidth + OFFSET_SIZE_LABEL;

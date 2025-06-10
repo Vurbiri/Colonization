@@ -7,7 +7,7 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(Chance))]
     public class ChanceDrawer : PropertyDrawer
     {
-        private const string NAME_VALUE = "_value", NAME_ENT = "_negentropy";
+        private readonly string NAME_VALUE = "_value", NAME_ENT = "_negentropy";
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

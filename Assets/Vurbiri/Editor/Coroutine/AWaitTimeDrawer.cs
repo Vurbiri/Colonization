@@ -9,7 +9,7 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(AWaitTime), true)]
 	public class AWaitTimeDrawer : PropertyDrawer
 	{
-        private const string F_NAME = "_waitTime";
+        private readonly string F_NAME = "_waitTime";
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{

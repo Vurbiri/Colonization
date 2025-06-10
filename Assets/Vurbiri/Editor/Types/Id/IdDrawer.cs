@@ -10,10 +10,8 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(Id<>), true)]
     public class IdDrawer : PropertyDrawer
     {
-        #region Consts
-        private const string NAME_VALUE = "_id";
-        private const string TP_DNAMES = "DisplayNames", TP_VALUES = "Values";
-        #endregion
+        private readonly string NAME_VALUE = "_id";
+        private readonly string TP_DNAMES = "DisplayNames", TP_VALUES = "Values";
 
         private Type _type;
         private string[] _names;

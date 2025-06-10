@@ -8,9 +8,9 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(EnumArray<,>))]
     public class EnumArrayDrawer : PropertyDrawer
     {
-        private const int INDEX_TYPE = 0;
-        private const float Y_SPACE = 2f;
-        private const string NAME_ARRAY = "_values";
+        private readonly int INDEX_TYPE = 0;
+        private readonly float Y_SPACE = EditorGUIUtility.standardVerticalSpacing;
+        private readonly string NAME_ARRAY = "_values";
 
         private Rect _position;
         private SerializedProperty _propertyValues;

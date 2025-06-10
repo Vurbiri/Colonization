@@ -8,11 +8,8 @@ namespace VurbiriEditor.Colonization
 	[CustomPropertyDrawer(typeof(PlayerNames))]
 	public class PlayerNamesDrawer : PropertyDrawer
 	{
-		#region Consts
-		private const string F_NAME = "_nameKeys";
-		#endregion
-
-		private readonly GUIContent[] labels = { new(PlayerId.PositiveNames[0]), new(PlayerId.PositiveNames[1]), new(PlayerId.PositiveNames[2]),new(PlayerId.PositiveNames[3]) };
+        private readonly string F_NAME = "_nameKeys";
+        private readonly GUIContent[] labels = { new(PlayerId.PositiveNames[0]), new(PlayerId.PositiveNames[1]), new(PlayerId.PositiveNames[2]),new(PlayerId.PositiveNames[3]) };
 
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 		

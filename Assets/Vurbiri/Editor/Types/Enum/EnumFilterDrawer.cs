@@ -8,10 +8,8 @@ namespace Vurbiri.Editor
     [CustomPropertyDrawer(typeof(EnumFilter<>))]
 	public class EnumFilterDrawer : PropertyDrawer
 	{
-        #region Consts
-        private const int MAX_COUNT = 32;
-        private const string P_VALUE = "_value";
-        #endregion
+        private readonly int MAX_COUNT = 32;
+        private readonly string P_VALUE = "_value";
 
         private Type _type;
         private string[] _names;

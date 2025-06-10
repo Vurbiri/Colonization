@@ -8,7 +8,7 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(IntRnd))]
     public class IntRndDrawer : ARValueDrawer
     {
-        private const string NAME_MIN = "_min", NAME_MAX = "_max";
+        private readonly string NAME_MIN = "_min", NAME_MAX = "_max";
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

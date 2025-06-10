@@ -14,9 +14,9 @@ namespace VurbiriEditor.Reactive
 	sealed public class AListenerDrawer : PropertyDrawer
     {
         #region Settings
-        private const bool DRAW_STATIC = true;
+        private readonly bool DRAW_STATIC = true;
         
-        private const string L_OBJECT = "Game Object", L_TARGET = "Target Object", L_METHOD = "Method";
+        private readonly string L_OBJECT = "Game Object", L_TARGET = "Target Object", L_METHOD = "Method";
 
         private readonly string[] _excludeStart = { "set_", "<set_" };
         private readonly string[] _excludeEnd = { "Dirty" };
@@ -24,15 +24,15 @@ namespace VurbiriEditor.Reactive
         #endregion
 
         #region Consts
-        private const string P_TARGET = "_target", P_METHOD_NAME = "_methodName";
         private const string F_NONE = "None", F_PARAM_OPEN = "(", F_PARAM_CLOSE = ")", F_PARAM_SEPARATOR = ", ";
-        private const string F_GENERIC_OPEN = "<", F_GENERIC_CLOSE = ">";
-        private const char F_GENERIC_SEPARATOR = '`';
-        private const string M_VOID = "void "; 
+        private const string M_VOID = "void ";
         private const string M_PUBLIC = "public ", M_PRIVATE = "private ", M_PROTECTED = "protected ", M_INTERNAL = "internal ", M_STATIC = "static ";
-
-        private static readonly int s_preNameMaxLength = M_PROTECTED.Length + M_INTERNAL.Length + M_STATIC.Length + M_VOID.Length;
-        private static readonly Type s_gameObjectType = typeof(GameObject), _voidType = typeof(void);
+        private readonly string P_TARGET = "_target", P_METHOD_NAME = "_methodName";
+        private readonly string F_GENERIC_OPEN = "<", F_GENERIC_CLOSE = ">";
+        private readonly char F_GENERIC_SEPARATOR = '`';
+       
+        private readonly int s_preNameMaxLength = M_PROTECTED.Length + M_INTERNAL.Length + M_STATIC.Length + M_VOID.Length;
+        private readonly Type s_gameObjectType = typeof(GameObject), _voidType = typeof(void);
         #endregion
 
         #region Cache

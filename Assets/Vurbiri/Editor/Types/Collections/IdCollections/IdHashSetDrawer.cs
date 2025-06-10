@@ -11,14 +11,12 @@ namespace VurbiriEditor.Collections
     [CustomPropertyDrawer(typeof(IdSet<,>))]
     internal class IdHashSetDrawer : AIdCollectionDrawer
     {
-        #region Consts
-        public const float BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
-        public const string NAME_COUNT = "_count", LABEL_EMPTY = "-----";
-        public const string BUTTON_CHILD = "Set children", BUTTON_PREFAB = "Set prefabs", BUTTON_ASSET = "Set assets", BUTTON_CLEAR = "Clear";
-        #endregion
+        public readonly float BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
+        public readonly string NAME_COUNT = "_count", LABEL_EMPTY = "-----";
+        public readonly string BUTTON_CHILD = "Set children", BUTTON_PREFAB = "Set prefabs", BUTTON_ASSET = "Set assets", BUTTON_CLEAR = "Clear";
 
-        public static readonly Color colorNull = new(1f, 0.65f, 0f, 1f);
-        public static readonly Type typeObject = typeof(UnityEngine.Object), typeMono = typeof(MonoBehaviour);
+        public readonly Color colorNull = new(1f, 0.65f, 0f, 1f);
+        public readonly Type typeObject = typeof(UnityEngine.Object), typeMono = typeof(MonoBehaviour);
 
         private int _countMax = 0;
 

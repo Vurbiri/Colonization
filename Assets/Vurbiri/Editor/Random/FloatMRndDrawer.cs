@@ -8,7 +8,7 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(FloatMRnd))]
     public class FloatMRndDrawer : ARValueDrawer
     {
-        private const string NAME_VALUE = "_value";
+        private readonly string NAME_VALUE = "_value";
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

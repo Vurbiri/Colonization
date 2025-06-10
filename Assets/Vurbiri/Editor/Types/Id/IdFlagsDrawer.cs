@@ -10,11 +10,9 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(IdFlags<>))]
 	public class IdFlagsDrawer : PropertyDrawer
 	{
-        #region Consts
-        private const int MAX_COUNT = 32;
-        private const string P_NAME = "_id";
-        private const string TF_MIN = "Min", TP_NAMES = "Names";
-        #endregion
+        private readonly int MAX_COUNT = 32;
+        private readonly string P_NAME = "_id";
+        private readonly string TF_MIN = "Min", TP_NAMES = "Names";
 
         private Type _type;
         private string[] _names;

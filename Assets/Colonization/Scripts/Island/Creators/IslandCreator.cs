@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private HexagonSpawner _hexagonSpawner;
         [Space]
         [SerializeField] private ParticleSystem _psFog;
-        [SerializeField] private float _ratioFogSize = 55f;
+        [SerializeField] private float _ratioFogSize = 60f;
         [Header("═════ CROSSROADS ═════")]
         [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private IdSet<EdificeId, AEdifice> _edificePrefabs;

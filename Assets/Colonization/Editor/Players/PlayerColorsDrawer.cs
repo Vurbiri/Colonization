@@ -8,9 +8,7 @@ namespace VurbiriEditor.Colonization
     [CustomPropertyDrawer(typeof(PlayerColors))]
 	public class PlayerColorsDrawer : PropertyDrawer
 	{
-		#region Consts
-		private const string P_NAME = "_colors";
-        #endregion
+        private readonly string P_NAME = "_colors";
 
         private readonly string[] _names = PlayerId.PositiveNames;
         private readonly int _count = PlayerId.Count;

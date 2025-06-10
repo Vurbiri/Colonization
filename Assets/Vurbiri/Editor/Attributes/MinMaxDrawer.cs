@@ -8,9 +8,7 @@ namespace VurbiriEditor
     [CustomPropertyDrawer(typeof(MinMaxAttribute))]
 	public class MinMaxDrawer : ARValueDrawer
     {
-        #region Consts
-        private const string NAME_X = "x", NAME_Y = "y";
-        #endregion
+        private readonly string NAME_X = "x", NAME_Y = "y";
 
         private readonly HashSet<System.Type> _excludeTypes = new() { typeof(IntRnd), typeof(WaitRealtime), typeof(WaitTime) };
 

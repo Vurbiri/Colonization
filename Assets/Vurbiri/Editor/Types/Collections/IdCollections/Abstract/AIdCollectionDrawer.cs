@@ -7,9 +7,9 @@ namespace VurbiriEditor.Collections
     public abstract class AIdCollectionDrawer : PropertyDrawer
     {
         #region Consts
-        private const string TP_NAMES = "PositiveNames";
-        protected const int INDEX_TYPE = 0, INDEX_VALUE = 1;
-        protected const string NAME_ARRAY = "_values";
+        private readonly string TP_NAMES = "PositiveNames";
+        protected readonly int INDEX_TYPE = 0, INDEX_VALUE = 1;
+        protected readonly string NAME_ARRAY = "_values";
         #endregion
 
         private Type _type;
