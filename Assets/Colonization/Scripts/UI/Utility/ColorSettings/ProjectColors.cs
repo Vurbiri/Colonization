@@ -1,24 +1,28 @@
 using UnityEngine;
+using Vurbiri.Collections;
+using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.UI
 {
     [System.Serializable]
     public class ProjectColors
 	{
-        [Header("┌──────────── Panel ─────────────────────")]
-        [SerializeField] private Color _panelBack = Color.blue;
-        [SerializeField] private Color _panelText = Color.white;
+        [Header("┌────────────────────────────────────────")]
+        [SerializeField] private IdArray<ActorAbilityId, Color> _ability;
+        [Header("├──────────── Panel ─────────────────────")]
+        [SerializeField] private Color _panelBack;
+        [SerializeField] private Color _panelText;
         [Header("├──────────── Hint ─────────────────────"), Space]
-        [SerializeField] private Color _hintBack = new(0.985f, 0.882f, 0.725f);
-        [SerializeField] private Color _hintDefault = Color.black;
+        [SerializeField] private Color _hintBack;// = new(0.985f, 0.882f, 0.725f);
+        [SerializeField] private Color _hintDefault;
         [Header("├──────────── Text ─────────────────────"), Space]
-        [SerializeField] private Color _textDefault = Color.blue;
-        [SerializeField] private Color _textPositive = Color.green;
-        [SerializeField] private Color _textNegative = Color.red;
-        [Header("└────────────────────────────────────"), Space]
-#pragma warning disable 414
-        [SerializeField, ReadOnly] private string _endColors = "   Цвета проекта   ";
-#pragma warning restore 414
+        [SerializeField] private Color _textDefault;
+        [SerializeField] private Color _textPositive;
+        [SerializeField] private Color _textNegative;
+//        [Header("└────────────────────────────────────"), Space]
+//#pragma warning disable 414
+//        [SerializeField, ReadOnly] private string _endColors = "   Цвета проекта   ";
+//#pragma warning restore 414
 
         private string _panelTextTag;
         private string _hintDefaultTag;
@@ -26,6 +30,8 @@ namespace Vurbiri.Colonization.UI
 
         //private const string TAG_COLOR_FORMAT = "<color={0}>";
         private const string TAG_COLOR_FORMAT_LITE = "<{0}>";
+
+        public IdArray<ActorAbilityId, Color> Ability => _ability;
 
         public Color PanelBack => _panelBack;
         public Color PanelText => _panelText;
@@ -56,7 +62,7 @@ namespace Vurbiri.Colonization.UI
             return this;
         }
 
-        public Color GetColor(bool isPositive) => isPositive ? _textPositive : _textNegative;
+        public Color GetTextColor(bool isPositive) => isPositive ? _textPositive : _textNegative;
         public string GetHexColor(bool isPositive) => isPositive ? _textPositiveTag : _textNegativeTag;
     }
 }

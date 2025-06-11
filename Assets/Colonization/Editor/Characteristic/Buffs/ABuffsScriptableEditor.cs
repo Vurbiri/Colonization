@@ -6,10 +6,6 @@ namespace VurbiriEditor.Colonization
     [CustomEditor(typeof(ABuffsScriptable<>), true), CanEditMultipleObjects]
 	public class ABuffsScriptableEditor : Editor
 	{
-		#region Consts
-		
-		#endregion
-		
 		protected SerializedProperty _serializedProperty;
 		
 		private void OnEnable()
@@ -19,11 +15,9 @@ namespace VurbiriEditor.Colonization
 		
 		public override void OnInspectorGUI()
 		{
-            UnityEditor.EditorGUI.BeginDisabledGroup(true);
-
-            EditorGUILayout.PropertyField(_serializedProperty);
-
-            UnityEditor.EditorGUI.EndDisabledGroup();
+            EditorGUI.BeginDisabledGroup(true);
+			EditorGUILayout.PropertyField(_serializedProperty);
+			EditorGUI.EndDisabledGroup();
         }
 	}
 }

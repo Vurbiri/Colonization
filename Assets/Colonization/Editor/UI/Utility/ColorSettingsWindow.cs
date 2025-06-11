@@ -14,8 +14,10 @@ namespace VurbiriEditor.Colonization.UI
 		[SerializeField] private ColorSettingsScriptable _scriptable;
 		
 		private Editor _editor;
-		
-		[MenuItem(MENU, false, 40)]
+		private Vector2 _scroll;
+
+
+        [MenuItem(MENU, false, 40)]
 		private static void ShowWindow()
 		{
 			GetWindow<ColorSettingsWindow>(true, NAME);
@@ -31,8 +33,10 @@ namespace VurbiriEditor.Colonization.UI
 		private void OnGUI()
 		{
 			BeginWindows();
-			_editor.OnInspectorGUI();
-			EndWindows();
+            _scroll = EditorGUILayout.BeginScrollView(_scroll);
+            _editor.OnInspectorGUI();
+            EditorGUILayout.EndScrollView();
+            EndWindows();
 		}
 		
 		private void OnDisable()

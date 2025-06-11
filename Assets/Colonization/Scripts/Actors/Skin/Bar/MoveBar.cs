@@ -1,4 +1,5 @@
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 
@@ -12,9 +13,11 @@ namespace Vurbiri.Colonization.Actors
 
         public bool IsVisible => _moveSprite.isVisible;
 
-        public void Init(IReadOnlyAbilities<ActorAbilityId> abilities, int orderLevel)
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, int orderLevel)
         {
             _moveSprite.sortingOrder += orderLevel;
+            _moveSprite.color = colors[ActorAbilityId.IsMove];
+
             _unsubscriber = abilities[ActorAbilityId.IsMove].Subscribe(value => _moveSprite.enabled = value > 0);
         }
 

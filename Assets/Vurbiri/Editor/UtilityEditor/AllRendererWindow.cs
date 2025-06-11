@@ -20,7 +20,10 @@ namespace VurbiriEditor
         [SerializeField] private List<Renderer> _renderersScene;
 
         private MotionVectorGenerationMode _motionVector = MotionVectorGenerationMode.Object;
-        private LightProbeUsage _probeUsage;
+        private LightProbeUsage _lightProbe;
+        private ReflectionProbeUsage _reflectionProbe;
+        private bool _occlusion;
+
         private SerializedObject _self;
         private SerializedProperty _propertyPrefabs, _propertyScenes;
         private Vector2 _scrollPos;
@@ -61,7 +64,9 @@ namespace VurbiriEditor
 
             Renderer renderer = _renderersPrefabs[^1];
             _motionVector = renderer.motionVectorGenerationMode;
-            _probeUsage = renderer.lightProbeUsage;
+            _lightProbe = renderer.lightProbeUsage; 
+            _reflectionProbe = renderer.reflectionProbeUsage;
+            _occlusion = renderer.allowOcclusionWhenDynamic;
         }
 
         private void OnGUI()
@@ -88,7 +93,9 @@ namespace VurbiriEditor
             {
                 EditorGUILayout.Space(12);
                 _motionVector = (MotionVectorGenerationMode)EditorGUILayout.EnumPopup("Motion Vectors", _motionVector);
-                _probeUsage = (LightProbeUsage)EditorGUILayout.EnumPopup("Light Probes", _probeUsage);
+                _lightProbe = (LightProbeUsage)EditorGUILayout.EnumPopup("Light Probes", _lightProbe);
+                _reflectionProbe = (ReflectionProbeUsage)EditorGUILayout.EnumPopup("Reflection Probes", _reflectionProbe);
+                _occlusion = EditorGUILayout.Toggle("Dynamic Occlusion", _occlusion);
                 EditorGUILayout.Space();
             }
             //=================================
@@ -158,8 +165,12 @@ namespace VurbiriEditor
                     bool isSave = false;
                     if (isSave |= renderer.motionVectorGenerationMode != _motionVector)
                         renderer.motionVectorGenerationMode = _motionVector;
-                    if (isSave |= renderer.lightProbeUsage != _probeUsage)
-                        renderer.lightProbeUsage = _probeUsage;
+                    if (isSave |= renderer.lightProbeUsage != _lightProbe)
+                        renderer.lightProbeUsage = _lightProbe;
+                    if (isSave |= renderer.reflectionProbeUsage != _reflectionProbe)
+                        renderer.reflectionProbeUsage = _reflectionProbe;
+                    if (isSave |= renderer.allowOcclusionWhenDynamic != _occlusion)
+                        renderer.allowOcclusionWhenDynamic = _occlusion;
 
                     if (isSave)
                     {

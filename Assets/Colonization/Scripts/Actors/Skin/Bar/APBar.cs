@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 
@@ -14,10 +15,13 @@ namespace Vurbiri.Colonization.Actors
 
         private Unsubscriptions _unsubscribers;
 
-        public void Init(IReadOnlyAbilities<ActorAbilityId> abilities, int orderLevel)
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, int orderLevel)
         {
             _maxValueTMP.sortingOrder += orderLevel;
             _currentValueTMP.sortingOrder += orderLevel;
+
+            _maxValueTMP.color = colors[ActorAbilityId.MaxAP];
+            _currentValueTMP.color = colors[ActorAbilityId.CurrentAP];
 
             _unsubscribers += abilities[ActorAbilityId.MaxAP].Subscribe(value => _maxValueTMP.text = new(CHAR, value));
             _unsubscribers += abilities[ActorAbilityId.CurrentAP].Subscribe(value => _currentValueTMP.text = new(CHAR, value));

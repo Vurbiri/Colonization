@@ -22,7 +22,8 @@ namespace VurbiriEditor.Colonization
         private readonly IdArray<ActorAbilityId, AnimBool> _showSettings = new(() => new());
         protected readonly List<int> _values = new(new int[] { -1, 0});
         protected readonly List<string> _names = new( new string[]{ "None", "Percent"});
-        protected readonly HashSet<int> _excludeAbility = new(new int[] { ActorAbilityId.CurrentHP, ActorAbilityId.CurrentAP, ActorAbilityId.IsMove });
+        protected readonly HashSet<int> _excludeAbility = new(new int[] 
+            { ActorAbilityId.CurrentHP, ActorAbilityId.CurrentAP, ActorAbilityId.IsMove, ActorAbilityId.IsProfitAdv });
 
         protected virtual void OnEnable()
         {
@@ -71,7 +72,7 @@ namespace VurbiriEditor.Colonization
             void DrawSave()
             {
                 Space(10);
-                BeginHorizontal(GUI.skin.button);
+                BeginHorizontal(/*GUI.skin.button*/);
                 Space(15);
                 _isSave = ToggleLeft("Save", _isSave);
                 EndHorizontal();

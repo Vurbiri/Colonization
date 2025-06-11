@@ -14,8 +14,8 @@ namespace Vurbiri.Colonization.Actors
     {
         private const char CHAR = '-';
 
-        private readonly Vector3 _startPosition = new(3.6f, 0.9f, 0f);
-        private readonly Vector3 _offsetPosition = new(-0.7f, 0f, 0f);
+        private readonly Vector3 _startPosition;
+        private readonly Vector3 _offsetPosition;
         private readonly SpriteRenderer _sprite;
         private readonly TextMeshPro _durationTMP;
 
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.Actors
             _durationTMP.sortingOrder += orderLevel;
 
             _sprite.sprite = sprites[effect.TargetAbility];
-            _sprite.color = colors.GetColor(effect.IsPositive);
+            _sprite.color = colors.GetTextColor(effect.IsPositive);
 
             Index = effect.Index;
             Duration = effect.Duration;

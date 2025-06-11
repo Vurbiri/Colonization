@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
@@ -21,12 +22,14 @@ namespace Vurbiri.Colonization.Actors
 
         public Id<ActorAbilityId> Id => _ability;
 
-        public void Init(IReadOnlyAbilities<ActorAbilityId> abilities, PopupWidget3D popup, int orderLevel)
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, PopupWidget3D popup, int orderLevel)
         {
             _popup = popup;
 
             _sprite.sortingOrder += orderLevel;
             _valueTMP.sortingOrder += orderLevel;
+
+            _sprite.color = colors[_ability];
 
             _unsubscriber = abilities[_ability].Subscribe(SetValue);
             

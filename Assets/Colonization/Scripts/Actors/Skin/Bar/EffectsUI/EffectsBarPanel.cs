@@ -17,11 +17,11 @@ namespace Vurbiri.Colonization.Actors
         private readonly Transform _transform;
         private readonly Unsubscriptions _unsubscribers;
 
-        public EffectsBarPanel(Actor actor, IdArray<ActorAbilityId, Sprite> sprites, Transform transform, int orderLevel)
+        public EffectsBarPanel(Actor actor, IdArray<ActorAbilityId, Sprite> sprites, ProjectColors colors, Transform transform, int orderLevel)
 		{
             _poolEffectsUI = SceneContainer.Get<Pool<EffectsBar>>();
             _sprites = sprites;
-            _colors = SceneContainer.Get<ProjectColors>();
+            _colors = colors;
             _orderLevel = orderLevel;
             _actor = actor;
             _transform = transform;

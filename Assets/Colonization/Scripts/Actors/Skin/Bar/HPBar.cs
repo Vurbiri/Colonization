@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
@@ -25,15 +26,17 @@ namespace Vurbiri.Colonization.Actors
 
         public bool IsVisible => _backgroundBar.isVisible || _barSprite.isVisible;
 
-        public void Init(IReadOnlyAbilities<ActorAbilityId> abilities, PopupWidget3D popup, Color color, int orderLevel)
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, Color color, PopupWidget3D popup, int orderLevel)
 		{
             _popup = popup;
 
             _backgroundBar.size = _barSprite.size = new(SP_WIDTH, SP_HIGHT);
             _barTransform = _barSprite.transform;
             _barSprite.color = color;
+            _backgroundBar.color = colors[ActorAbilityId.MaxHP];
+            _hpSprite.color = colors[ActorAbilityId.CurrentHP];
 
-			_backgroundBar.sortingOrder += orderLevel;
+            _backgroundBar.sortingOrder += orderLevel;
             _barSprite.sortingOrder += orderLevel;
             _hpSprite.sortingOrder += orderLevel;
             _maxValueTMP.sortingOrder += orderLevel;

@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Characteristics
         public const int Attack_2           =  5;
         public const int Attack_3           =  6;
         public const int Attack_4           =  7;
-        public const int Attack_5           =  8;
+        public const int Pierce_1           =  8;
 
         public const int IsSolder_1         =  9;
         public const int IsWizard_1         = 10;

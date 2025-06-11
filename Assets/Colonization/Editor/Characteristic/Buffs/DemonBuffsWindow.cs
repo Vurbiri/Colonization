@@ -12,7 +12,7 @@ namespace VurbiriEditor.Colonization
         #endregion
 
 
-        [MenuItem(MENU, false, 12)]
+        [MenuItem(MENU, false, 14)]
         private static void ShowWindow()
 		{
 			GetWindow<DemonBuffsWindow>(true, NAME).minSize = new(300f, 500f); ;

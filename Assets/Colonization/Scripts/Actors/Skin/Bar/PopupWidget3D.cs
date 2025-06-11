@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.UI
 
         private Color Color { set => _sprite.color = _valueTMP.color = value; }
 
-        public void Init(IdArray<ActorAbilityId, Sprite> sprites, int orderLevel)
+        public void Init(IdArray<ActorAbilityId, Sprite> sprites, ProjectColors colors, int orderLevel)
         {
             _sprite.sortingOrder += orderLevel;
             _valueTMP.sortingOrder += orderLevel;
@@ -42,10 +42,8 @@ namespace Vurbiri.Colonization.UI
             _sprites = sprites;
             _queue = new(this, () => _thisGameObject.SetActive(false));
 
-            ProjectColors settings = SceneContainer.Get<ProjectColors>();
-
-            _colorPlusStart = _colorPlusEnd = settings.TextPositive;
-            _colorMinusStart = _colorMinusEnd = settings.TextNegative;
+            _colorPlusStart = _colorPlusEnd = colors.TextPositive;
+            _colorMinusStart = _colorMinusEnd = colors.TextNegative;
             _colorPlusEnd.a = _colorMinusEnd.a = _minAlpha;
 
             _scaleColorSpeed = 1f / (1f - _startHide);

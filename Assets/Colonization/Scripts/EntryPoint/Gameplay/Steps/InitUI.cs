@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public IEnumerator GetEnumerator()
         {
-            ProjectColors colors = SceneContainer.Get<ProjectColors>();
+            var colors = SceneContainer.Get<ProjectColors>();
 
             _gameManager.Init(_init.game, _init.cameraController);
 

@@ -2,7 +2,7 @@
   "OnTarget": "<u>On target:</u>",
   "OnSelf": "<u>On yourself:</u>",
   "Damage": "Damage <b>{0}%</b>",
-  "DamagePierce": "Damage <b>{0}%</b>\npierces <b>{1}%</b> of defence",
+  "DamagePierce": "Damage <b>{0}%</b>\npierces <b>+{1}%</b> of defence",
   "Healing": "Healing <b>{0}%</b>",
   "MaxHPTemp": "Maximum HP <b>{0}</b> for <b>{1}</b> turn",
   "HPPerTurnTemp": "Regeneration <b>{0}</b> for <b>{1}</b> turn",
