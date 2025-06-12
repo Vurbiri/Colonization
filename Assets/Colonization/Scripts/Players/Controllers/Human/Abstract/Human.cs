@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
         protected readonly Roads _roads;
 
         protected readonly AbilitiesSet<HumanAbilityId> _abilities;
-        protected readonly Buffs _artefact;
+        protected readonly Artefact _artefact;
         protected readonly PerkTree _perks;
 
         protected readonly WarriorsSpawner _spawner;
@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization
 
             _resources = Currencies.Create(_abilities, _prices, loadData);
             _exchange = ExchangeRate.Create(_abilities, loadData);
-            _artefact = Buffs.Create(settings.artefact.Settings, loadData);
+            _artefact = Artefact.Create(settings.artefact, loadData);
 
             _spawner = new(new(playerId, _artefact, new(_perks)), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
 

@@ -11,12 +11,12 @@ namespace Vurbiri.Colonization
         public readonly GameplayTriggerBus triggerBus;
         public readonly IReactive<IPerk>[] buffs;
 
-        public ActorInitData(Id<PlayerId> owner, Buffs artefact, WarriorPerks perks) : this(owner)
+        public ActorInitData(Id<PlayerId> owner, Artefact artefact, WarriorPerks perks) : this(owner)
         {
             buffs = new IReactive<IPerk>[] { artefact, perks };
         }
 
-        public ActorInitData(DemonBuffs leveling, Buffs artefact) : this(PlayerId.Satan)
+        public ActorInitData(DemonLeveling leveling, Artefact artefact) : this(PlayerId.Satan)
         {
             buffs = new IReactive<IPerk>[] { leveling, artefact };
         }

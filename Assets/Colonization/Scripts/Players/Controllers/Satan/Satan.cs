@@ -15,8 +15,8 @@ namespace Vurbiri.Colonization
         
         protected readonly SatanAbilities _states;
 
-        protected readonly DemonBuffs _leveling;
-        protected readonly Buffs _artefact;
+        protected readonly DemonLeveling _leveling;
+        protected readonly Artefact _artefact;
 
         protected readonly DemonsSpawner _spawner;
         protected readonly ReactiveSet<Actor> _demons;
@@ -48,8 +48,8 @@ namespace Vurbiri.Colonization
             _curse = new(loadData.state.curse);
             _balance = settings.balance;
 
-            _leveling = new(settings.demonBuffs.Settings, _level);
-            _artefact = Buffs.Create(settings.artefact.Settings, loadData);
+            _leveling = new(settings.demonLeveling, _level);
+            _artefact = Artefact.Create(settings.artefact, loadData);
 
             _spawner = new(_level, new(_leveling, _artefact), settings, loadData.state.spawn);
 

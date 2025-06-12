@@ -131,7 +131,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                             _position.y += _height * HitEffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j), j);
                     }
                     if (effectsProperty.isExpanded)
-                        _position.y += _height * 1.8f; // "+ -" ������
+                        _position.y += _height * 1.8f;
                 }
                 
             }

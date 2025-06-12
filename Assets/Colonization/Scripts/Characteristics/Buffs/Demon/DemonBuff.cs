@@ -6,9 +6,9 @@ namespace Vurbiri.Colonization.Characteristics
     {
         private readonly int _levelUP;
 
-        public DemonBuff(Subscription<IPerk> subscriber, DemonBuffSettings settings, int level) : base(subscriber, settings, settings.value * level / settings.levelUP)
+        public DemonBuff(Subscription<IPerk> subscriber, BuffSettings settings, int level) : base(subscriber, settings, settings.value * level / settings.advance)
         {
-            _levelUP = settings.levelUP;
+            _levelUP = settings.advance;
         }
 
         public void Next(int level)

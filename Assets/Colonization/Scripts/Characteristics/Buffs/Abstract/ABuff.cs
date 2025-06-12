@@ -7,8 +7,8 @@ namespace Vurbiri.Colonization.Characteristics
         protected readonly Subscription<IPerk> _subscriber;
         protected readonly Effect _base, _current;
 
-        public IPerk Base => _base;
-        public IPerk Current => _current;
+        public Effect Base => _base;
+        public Effect Current => _current;
 
         public ABuff(Subscription<IPerk> subscriber, BuffSettings settings)
         {

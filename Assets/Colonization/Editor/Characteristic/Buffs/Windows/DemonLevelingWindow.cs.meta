@@ -5,7 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
-  - _scriptable: {fileID: 11400000, guid: 006e3224d0608a743bb5ce55fd81851d, type: 2}
+  - _scriptable: {fileID: 11400000, guid: fea568a84f5382f45b7a51ff9b393a14, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

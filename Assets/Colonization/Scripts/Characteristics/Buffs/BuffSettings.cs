@@ -6,6 +6,7 @@ namespace Vurbiri.Colonization.Characteristics
         public int targetAbility;
         public int typeModifier;
         public int value;
+        public int advance;
 
         public BuffSettings() => typeModifier = -1;
 
@@ -14,6 +15,7 @@ namespace Vurbiri.Colonization.Characteristics
             targetAbility = other.targetAbility;
             typeModifier = other.typeModifier;
             value = other.value;
+            advance = other.advance;
         }
     }
 }

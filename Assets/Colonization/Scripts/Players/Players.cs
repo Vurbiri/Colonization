@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
             public RoadFactory roadFactory;
             [Space]
             public DemonInitializer demonPrefab;
-            public DemonBuffsScriptable demonBuffs;
+            public BuffsScriptable demonLeveling;
             [Space]
             public BuffsScriptable artefact;
             public Transform actorsContainer;
@@ -75,10 +75,10 @@ namespace Vurbiri.Colonization
             {
                 humanStates.Dispose();
                 perks.Dispose();
-                demonBuffs.Dispose();
+                demonLeveling.Dispose();
                 artefact.Dispose();
                 humanStates = null; perks = null;
-                demonBuffs = null; artefact = null;
+                demonLeveling = null; artefact = null;
             }
 
 #if UNITY_EDITOR
@@ -92,8 +92,8 @@ namespace Vurbiri.Colonization
                 EUtility.SetScriptable(ref prices);
                 EUtility.SetScriptable(ref humanStates);
                 EUtility.SetScriptable(ref perks);
-                EUtility.SetScriptable(ref demonBuffs);
-                EUtility.SetScriptable(ref artefact);
+                EUtility.SetScriptable(ref demonLeveling, "DemonLevelingSettings");
+                EUtility.SetScriptable(ref artefact, "ArtefactSettings");
 
                 EUtility.SetObject(ref actorsContainer, "Actors");
             }
