@@ -15,8 +15,10 @@ namespace Vurbiri.Colonization.Characteristics
         public void Next(int level)
         {
             if (level <= _maxLevel)
+            {
                 for (int i = _buffs.Length - 1; i >= 0; i--)
                     _buffs[i].Next(level);
+            }
         }
     }
 }

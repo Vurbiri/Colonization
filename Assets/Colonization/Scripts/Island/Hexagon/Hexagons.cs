@@ -43,7 +43,6 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            
         }
 
         private void OnEndTurn(TurnQueue turnQueue, int id)
@@ -58,7 +57,7 @@ namespace Vurbiri.Colonization
         {
             _freeResources.Clear();
             foreach (var key in _hexagonsIdForKey[id])
-                if (_hexagons[key].SetAndGetFreeProfit(out int currencyId))
+                if (_hexagons[key].SetProfitAndTryGetFreeProfit(out int currencyId))
                     _freeResources.Increment(currencyId);
         }
 

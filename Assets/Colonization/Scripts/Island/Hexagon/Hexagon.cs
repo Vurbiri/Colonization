@@ -44,26 +44,14 @@ namespace Vurbiri.Colonization
         public HashSet<Crossroad> Crossroads => _crossroads;
         public HashSet<Hexagon> Neighbors => _neighbors;
         public HexagonCaption Caption => _hexagonCaption;
-        public bool IsOwnedByPort
+        public bool CannotBuildPort
         {
             get
             {
-                if (_isGate | !_isWater) return false;
+                if (_isGate | !_isWater) return true;
 
                 foreach (var crossroad in _crossroads)
                     if (crossroad.IsPort) return true;
-
-                return false;
-            }
-        }
-        public bool IsOwnedByColony
-        {
-            get
-            {
-                if (_isGate | _isWater) return false;
-
-                foreach (var crossroad in _crossroads)
-                    if (crossroad.IsColony) return true;
 
                 return false;
             }
@@ -127,16 +115,27 @@ namespace Vurbiri.Colonization
         public void SetCaptionActive(bool active) => _hexagonCaption.SetActive(active);
 
         #region Profit
-        public bool SetAndGetFreeProfit(out int currencyId)
+        public bool SetProfitAndTryGetFreeProfit(out int currencyId)
         {
             currencyId = _profit.Set();
 
-            if (_isWater)
-                _hexagonCaption.Profit(_profit.Value);
-            else
+            if (!_isWater)
+            {
                 _hexagonCaption.Profit();
 
-            return IsOwnedByColony;
+                if (!_isGate)
+                {
+                    foreach (var crossroad in _crossroads)
+                        if (crossroad.IsColony) return false;
+                    
+                    return true;
+                }
+
+                return false;
+            }
+
+            _hexagonCaption.Profit(_profit.Value);
+            return false;
         }
         public void ResetProfit() => _hexagonCaption.ResetProfit();
 

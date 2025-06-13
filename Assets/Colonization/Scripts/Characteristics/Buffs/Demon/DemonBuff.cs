@@ -13,11 +13,11 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Next(int level)
         {
-            if (level % _levelUP != 0)
-                return;
-
-            _current.Add(_base);
-            _subscriber.Invoke(_base);
+            if (level % _levelUP == 0)
+            {
+                _current.Add(_base);
+                _subscriber.Invoke(_base);
+            }
         }
     }
 }
