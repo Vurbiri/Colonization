@@ -16,20 +16,7 @@ namespace VurbiriEditor.Colonization.Characteristics
     [CustomPropertyDrawer(typeof(HitEffectSettings))]
     public class HitEffectSettingsDrawer : PropertyDrawerUtility
     {
-        private static readonly WeakReference<Localization> s_weakLocalization = new(new(Files.Actors));
-        private static Localization Localization
-        {
-            get
-            {
-                if (!s_weakLocalization.TryGetTarget(out Localization localization))
-                {
-                    localization = new(Files.Actors);
-                    s_weakLocalization.SetTarget(localization);
-                }
-                return localization;
-            }
-        }
-       
+      
         #region Consts
         private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID ="Void Effect {0}";
         private const string P_IS_SELF = "_isSelf", P_TARGET_ABILITY = "_targetAbility", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
@@ -254,7 +241,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             //==============================================
             void SetAndDrawDesc(bool isUsedAttack, int targetAbility)
             {
-                Localization localization = Localization;
+                var localization = Localization.ForEditor(Files.Actors);
 
                 _position.x += 35;
 

@@ -24,7 +24,7 @@ namespace VurbiriEditor.Colonization
         private readonly IdArray<ActorAbilityId, BuffSettings> _settings = new(() => new());
         private readonly IdArray<ActorAbilityId, AnimBool> _showSettings = new(() => new());
         private readonly string[] _names = { "None", "Percent", "Add" };
-        private readonly int[] _values = { -1, 0, 1 };
+        private readonly int[] _values = { -1, TypeModifierId.BasePercent, TypeModifierId.Addition };
 
         private string _advanceName;
         private int _advanceMax;
@@ -133,12 +133,14 @@ namespace VurbiriEditor.Colonization
             bool DrawValues(BuffSettings settings)
             {
                 int oldValue = settings.value, oldAdvance = settings.advance;
+                int shift = 0;
+                if(settings.typeModifier == TypeModifierId.Addition && settings.targetAbility <= ActorAbilityId.MAX_ID_SHIFT_ABILITY)
+                    shift = ActorAbilityId.SHIFT_ABILITY;
 
-                settings.value = DrawValue("Value", settings.value, MIN_VALUE, MAX_VALUE);
+                settings.value = DrawValue("Value", settings.value >> shift, MIN_VALUE, MAX_VALUE) << shift;
                 settings.advance = DrawValue(_advanceName, settings.advance, MIN_VALUE, _advanceMax);
 
                 return oldValue != settings.value | oldAdvance != settings.advance;
-
                 
             }
             //=================================

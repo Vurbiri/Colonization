@@ -2,12 +2,20 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    public class ReactiveCombination<TA, TB> : IReactive<TA, TB>, IDisposable
+    public interface ICombination : IDisposable
+    {
+        public void Signal();
+    }
+
+    public class ReactiveCombination<TA, TB> : IReactiveValue<TA, TB>, ICombination
     {
         private TA _valueA;
         private TB _valueB;
         private readonly Subscription<TA, TB> _subscriber = new();
         private readonly Unsubscriptions _unsubscribers = new(2);
+
+        public TA ValueA => _valueA;
+        public TB ValueB => _valueB;
 
         public ReactiveCombination(IReactive<TA> reactiveA, IReactive<TB> reactiveB)
         {
@@ -26,19 +34,25 @@ namespace Vurbiri.Reactive
             return _subscriber.Add(action);
         }
 
+        public void Signal() => _subscriber.Invoke(_valueA, _valueB);
+
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
         }
     }
     //=======================================================================================
-    public class ReactiveCombination<TA, TB, TC> : IReactive<TA, TB, TC>, IDisposable
+    public class ReactiveCombination<TA, TB, TC> : IReactiveValue<TA, TB, TC>, ICombination
     {
         private TA _valueA;
         private TB _valueB;
         private TC _valueC;
         private readonly Unsubscriptions _unsubscribers;
         private readonly Subscription<TA, TB, TC> _subscriber = new();
+
+        public TA ValueA => _valueA;
+        public TB ValueB => _valueB;
+        public TC ValueC => _valueC;
 
         public ReactiveCombination(IReactive<TA> reactiveA, IReactive<TB> reactiveB, IReactive<TC> reactiveC)
         {
@@ -87,13 +101,15 @@ namespace Vurbiri.Reactive
             return _subscriber.Add(action);
         }
 
+        public void Signal() => _subscriber.Invoke(_valueA, _valueB, _valueC);
+
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
         }
     }
     //=======================================================================================
-    public class ReactiveCombination<TA, TB, TC, TD> : IReactive<TA, TB, TC, TD>, IDisposable
+    public class ReactiveCombination<TA, TB, TC, TD> : IReactiveValue<TA, TB, TC, TD>, ICombination
     {
         private TA _valueA;
         private TB _valueB;
@@ -101,6 +117,11 @@ namespace Vurbiri.Reactive
         private TD _valueD;
         private readonly Unsubscriptions _unsubscribers;
         private readonly Subscription<TA, TB, TC, TD> _subscriber = new();
+
+        public TA ValueA => _valueA;
+        public TB ValueB => _valueB;
+        public TC ValueC => _valueC;
+        public TD ValueD => _valueD;
 
         public ReactiveCombination(IReactive<TA> reactiveA, IReactive<TB> reactiveB, IReactive<TC> reactiveC, IReactive<TD> reactiveD)
         {
@@ -136,6 +157,8 @@ namespace Vurbiri.Reactive
             if (instantGetValue) action(_valueA, _valueB, _valueC, _valueD);
             return _subscriber.Add(action);
         }
+
+        public void Signal() => _subscriber.Invoke(_valueA, _valueB, _valueC, _valueD);
 
         public void Dispose()
         {

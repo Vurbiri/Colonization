@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         public static readonly string[] DESK_EFFECTS_KEYS =
         { "Damage", "DamagePierce", "Healing", "MaxHPTemp", "HPPerTurnTemp", "AttackTemp", "DefenseTemp", "CurrentHPPerm", "CurrentHPOfMaxPerm", "CurrentAPPerm", "IsMovePerm" };
 
-        public static readonly string[] KEYS_NAME_SKILLS = { "Attack", "MagicAttack", "Sweep", "Combo", "Heal" };
+        public static readonly string[] KEYS_NAME_SKILLS = { "Strike", "MagicStrike", "Sweep", "Combo", "Heal" };
 
         public const string PRESENT = "%", PLUS = "+", MINUS = "-";
     }

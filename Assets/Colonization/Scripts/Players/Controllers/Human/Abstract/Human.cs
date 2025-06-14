@@ -45,6 +45,7 @@ namespace Vurbiri.Colonization
 
         public Roads Roads => _roads;
 
+        public Artefact Artefact => _artefact;
         public PerkTree Perks => _perks;
 
         public Human(Id<PlayerId> playerId, HumanStorage storage, Players.Settings settings)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
@@ -49,9 +50,9 @@ namespace Vurbiri.Colonization.Storage
             //==============================
             #endregion
         }
-        public void BindArtefact(IReactive<IReadOnlyList<int>> currencies, bool instantGetValue)
+        public void BindArtefact(IReactive<Artefact> currencies, bool instantGetValue)
         {
-            _unsubscribers += currencies.Subscribe(value => _storage.Set(_keyArtefact, value), instantGetValue);
+            _unsubscribers += currencies.Subscribe(artefact => _storage.Set(_keyArtefact, artefact.Levels), instantGetValue);
         }
 
         public void Dispose()

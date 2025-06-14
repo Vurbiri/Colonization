@@ -17,4 +17,12 @@ namespace Vurbiri.Reactive
         public TB ValueB { get; }
         public TC ValueC { get; }
     }
+
+    public interface IReactiveValue<out TA, out TB, out TC, out TD> : IReactive<TA, TB, TC, TD>
+    {
+        public TA ValueA { get; }
+        public TB ValueB { get; }
+        public TC ValueC { get; }
+        public TD ValueD { get; }
+    }
 }

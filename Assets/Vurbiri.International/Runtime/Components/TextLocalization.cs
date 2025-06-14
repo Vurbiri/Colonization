@@ -9,8 +9,7 @@ namespace Vurbiri.International.UI
     {
         [SerializeField] private TMP_Text _text;
         [Space]
-        [SerializeField] private FileId _file;
-        [SerializeField] private string _key;
+        [SerializeField] private FileIdAndKey _getText;
 
         private Unsubscription _subscribe;
 
@@ -18,20 +17,21 @@ namespace Vurbiri.International.UI
 
         private void Start()
         {
-            _subscribe += Localization.Instance.Subscribe(SetText);
+            _subscribe ??= Localization.Instance.Subscribe(SetText);
         }
 
         public void Setup(FileId file, string key)
         {
-            _file = file;
-            _key = key;
-
-            _subscribe += Localization.Instance.Subscribe(SetText);
+            _getText = new(file, key);
+            if (_subscribe == null)
+                _subscribe = Localization.Instance.Subscribe(SetText);
+            else
+                _text.text = Localization.Instance.GetText(_getText);
         }
 
-        private void SetText(Localization localization) => _text.text = localization.GetText(_file, _key);
+        private void SetText(Localization localization) => _text.text = localization.GetText(_getText);
 
-        private void OnDestroy() => _subscribe.Unsubscribe();
+        private void OnDestroy() => _subscribe?.Unsubscribe();
 
 #if UNITY_EDITOR
         private void OnValidate()

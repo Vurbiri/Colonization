@@ -44,6 +44,7 @@ namespace Vurbiri.Colonization.UI
         {
             _textNormalHint = localization.GetText(_getText.id, _getText.key);
             _textOverHint = localization.GetText(_getText.id, _keyOver);
+            _reactiveAmountMax?.Signal();
         }
 
         protected override void OnDestroy()

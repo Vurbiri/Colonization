@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.UI
             var languages = profile.Localization.Languages;
 
             foreach (var item in languages)
-                if (!item.Equals(SystemLanguage.Unknown))
+                if (item != SystemLanguage.Unknown)
                     Instantiate(_langPrefab, transform).Setup(profile, item, _toggleGroup, _isSave);
 
             Destroy(this);

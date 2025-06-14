@@ -1,4 +1,9 @@
 {
+  "MaxHP": "Health",
+  "HPPerTurn": "Regeneration",
+  "Attack": "Attack",
+  "Defense": "Defense",
+  "Pierce": "Pierce",
   "OnTarget": "<u>On target:</u>",
   "OnSelf": "<u>On yourself:</u>",
   "Damage": "Damage <b>{0}%</b>",
@@ -23,8 +28,8 @@
   "Warlock": "Warlock",
   "Knight": "Knight",
   "Block": "<b>Protection</b>",
-  "Attack": "<b>Strike</b>",
-  "MagicAttack": "<b>Magic Strike</b>",
+  "Strike": "<b>Strike</b>",
+  "MagicStrike": "<b>Magic Strike</b>",
   "Sweep": "<b>Sweep</b>",
   "Combo": "<b>Multistrike</b>",
   "Heal": "<b>Healing</b>"

@@ -85,15 +85,8 @@ namespace Vurbiri.Colonization.UI
 
         private void SetText(Localization localization)
 		{
-            _landingText = localization.GetText(_landingKey);
-            _startTurnText = localization.GetText(_startTurnKey);
+            _landingText = localization.GetText(Files.Gameplay, _landingKey);
+            _startTurnText = localization.GetText(Files.Gameplay, _startTurnKey);
         }
-		
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-			
-        }
-#endif
 	}
 }

@@ -1,9 +1,9 @@
-using System;
 using Vurbiri.International;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-	public abstract class ACurrentMax<TCombination> : AHintWidget where TCombination : IDisposable
+	public abstract class ACurrentMax<TCombination> : AHintWidget where TCombination : ICombination
     {
         protected const string COUNT = "{0,2}<space=0.05em>|<space=0.05em>{1,-2}";
 
@@ -19,6 +19,7 @@ namespace Vurbiri.Colonization.UI
         protected override void SetLocalizationText(Localization localization)
         {
             _textHint = localization.GetText(_getText.id, _getText.key);
+            _reactiveCurrentMax?.Signal();
         }
 
         protected override void OnDestroy()

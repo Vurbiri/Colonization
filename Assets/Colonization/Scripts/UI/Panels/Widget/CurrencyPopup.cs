@@ -1,4 +1,5 @@
 using UnityEngine;
+using Vurbiri.International;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -20,6 +21,11 @@ namespace Vurbiri.Colonization.UI
         {
             _popup.Run(delta);
             _valueTMP.text = current.ToString();
+        }
+
+        protected override void SetLocalizationText(Localization localization)
+        {
+            _text = localization.GetText(_getText.id, _getText.key);
         }
 
 #if UNITY_EDITOR

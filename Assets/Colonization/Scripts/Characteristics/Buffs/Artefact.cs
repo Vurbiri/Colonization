@@ -4,14 +4,15 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    sealed public class Artefact : ABuffs<Buff>, IReactive<IReadOnlyList<int>>
+    sealed public class Artefact : ABuffs<Buff>, IReactive<Artefact>
     {
-        private readonly RInt _level = new(0);
+        private int _level = 0;
         private readonly int[] _levels;
-        private readonly Subscription<IReadOnlyList<int>> _changeLevels = new();
+        private readonly Subscription<Artefact> _changeLevels = new();
         private readonly RandomIndex _rIndex;
 
-        public RInt Level => _level;
+        public int Level => _level;
+        public int[] Levels => _levels;
 
         #region Constructors
         private Artefact(int maxLevel, List<BuffSettings> settings) : base(maxLevel)
@@ -34,7 +35,7 @@ namespace Vurbiri.Colonization.Characteristics
             for (int i = settings.Count - 1; i >= 0; i--)
             {
                 _buffs[i] = new(_subscriber, settings[i], _levels[i] = levels[i]);
-                _level.Add(levels[i]);
+                _level += levels[i];
             }
         }
 
@@ -48,7 +49,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Next(int count)
         {
-            count = System.Math.Min(count, _maxLevel - _level.Value);
+            count = System.Math.Min(count, _maxLevel - _level);
 
             if (count <= 0) return;
             
@@ -59,13 +60,15 @@ namespace Vurbiri.Colonization.Characteristics
                 _levels[index]++;
             }
 
-            _changeLevels.Invoke(_levels);
-            _level.Add(count);
+            _level += count;
+
+            _changeLevels.Invoke(this);
+            
         }
 
-        public Unsubscription Subscribe(System.Action<IReadOnlyList<int>> action, bool instantGetValue = true)
+        public Unsubscription Subscribe(System.Action<Artefact> action, bool instantGetValue = true)
         {
-            return _changeLevels.Add(action, instantGetValue, _levels);
+            return _changeLevels.Add(action, instantGetValue, this);
         }
 
         #region Nested class RandomIndex

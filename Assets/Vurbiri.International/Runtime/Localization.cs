@@ -25,8 +25,8 @@ namespace Vurbiri.International
         public SystemLanguage CurrentId => _currentLanguage.Id;
         public int CountFiles => _countFiles;
 
-        static Localization() => s_instance = new();
-        private Localization() 
+        static Localization() => s_instance = new(0);
+        private Localization(int fileId) 
         {
             _files = LoadObjectFromResourceJson<string[]>(CONST_L.FILE_FILES);
             Throw.IfLengthZero(_files);
@@ -37,9 +37,9 @@ namespace Vurbiri.International
             _text = new Dictionary<string, string>[_countFiles];
 
             _defaultLanguage = _languages[0];
-            for (int i = _languages.Count - 1; i >= 0; i--)
+            for (int i = _languages.Count - 1; i > 0; i--)
             {
-                if (_languages[i].Equals(SystemLanguage.Unknown))
+                if (_languages[i] == SystemLanguage.Unknown)
                 {
                     _defaultLanguage = _languages[i];
                     break;
@@ -47,12 +47,8 @@ namespace Vurbiri.International
             }
 
             SetLanguage(_defaultLanguage);
-            LoadFile(0);
+            LoadFile(fileId);
         }
-
-#if UNITY_EDITOR
-        public Localization(int fileId) : this() => LoadFile(fileId);
-#endif
 
         public Unsubscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, sendCallback, this);
 
@@ -61,7 +57,7 @@ namespace Vurbiri.International
             if (!string.IsNullOrEmpty(code))
             {
                 for (int i = _languages.Count - 1; i >= 0; i--)
-                    if (_languages[i].Code.ToLowerInvariant() == code.ToLowerInvariant())
+                    if (_languages[i].CodeEquals(code))
                         return _languages[i].Id;
             }
 
@@ -74,10 +70,8 @@ namespace Vurbiri.International
         {
             for (int i = 0; i < _countFiles; i++)
             {
-                if (fileIds[i])
-                    LoadFile(i);
-                else
-                    _text[i] = null;
+                if (fileIds[i])  LoadFile(i);
+                else            _text[i] = null;
             }
 
             GC.Collect();
@@ -95,16 +89,14 @@ namespace Vurbiri.International
             GC.Collect();
         }
 
-        public void SwitchLanguage(string code) => SwitchLanguage(IdFromCode(code));
-
         public void SwitchLanguage(SystemLanguage id)
         {
-            if (_currentLanguage.Equals(id))
+            if (_currentLanguage == id)
                 return;
 
             for (int i = _languages.Count - 1; i >= 0; i--)
             {
-                if (_languages[i].Equals(id))
+                if (_languages[i] == id)
                 {
                     SetLanguage(_languages[i]);
                     return;
@@ -113,6 +105,8 @@ namespace Vurbiri.International
 
             SetLanguage(_defaultLanguage);
         }
+
+        public string GetText(FileIdAndKey idAndKey) => GetText(idAndKey.id, idAndKey.key);
 
         public string GetText(int fileId, string key)
         {
@@ -164,5 +158,29 @@ namespace Vurbiri.International
             if (TryLoadObjectFromResourceJson(string.Concat(type.Folder, "/", _files[fileId]), out Dictionary<string, string> load))
                 _text[fileId] = load; //new(load, StringComparer.OrdinalIgnoreCase)
         }
+
+
+#if UNITY_EDITOR
+        private static WeakReference<Localization> s_weakLocalization;
+        public static Localization ForEditor(int fileId)
+        {
+            Localization localization;
+            if (s_weakLocalization == null)
+            {
+                localization = new(fileId);
+                s_weakLocalization = new(localization);
+            }
+            else if (!s_weakLocalization.TryGetTarget(out localization))
+            {
+                localization = new(fileId);
+                s_weakLocalization.SetTarget(localization);
+            }
+            else
+            {
+                localization.LoadFile(fileId);
+            }
+            return localization;
+        }
+#endif
     }
 }

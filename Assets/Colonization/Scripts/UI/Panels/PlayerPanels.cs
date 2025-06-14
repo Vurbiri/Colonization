@@ -18,6 +18,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private CurrenciesPanel _currencies;
         [SerializeField] private BloodPanel _blood;
         [Space]
+        [SerializeField] private ArtefactPanel _artefactPanel;
+        [Space]
         [SerializeField] private Direction2 _directionPopup;
         [Space]
         [SerializeField] private IdArray<EdificeId, Sprite> _sprites;
@@ -36,6 +38,7 @@ namespace Vurbiri.Colonization.UI
             _currencies.Init(_directionPopup, currencies, colors, hint);
             _blood.Init(_directionPopup, currencies, colors, hint);
 
+            _artefactPanel.Init(player, hint);
 
             Destroy(this);
         }

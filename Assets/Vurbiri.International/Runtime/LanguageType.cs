@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Vurbiri.International
 {
     [Serializable]
-    public class LanguageType : IEquatable<SystemLanguage>
+    sealed public class LanguageType : IEquatable<SystemLanguage>
     {
         [SerializeField] private SystemLanguage _id;
         [SerializeField] private string _code;
@@ -38,6 +38,19 @@ namespace Vurbiri.International
             return _sprite;
         }
 
+        public bool CodeEquals(string code) => _code.ToLowerInvariant() == code.ToLowerInvariant();
         public bool Equals(SystemLanguage id) => _id == id;
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj is LanguageType type) return type._id == _id;
+            if (obj is SystemLanguage id) return id == _id;
+            return false;
+        }
+
+        public override int GetHashCode() => _id.GetHashCode();
+
+        public static bool operator ==(LanguageType type, SystemLanguage id) => type._id == id;
+        public static bool operator !=(LanguageType type, SystemLanguage id) => type._id != id;
     }
 }

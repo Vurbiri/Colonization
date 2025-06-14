@@ -26,19 +26,6 @@ namespace Vurbiri.Colonization.UI
             _text = string.Format(_textHint, current, max, active, passive);
         }
 
-        //private void SetCurrentMax(int current, int max)
-        //{
-        //    _valueTMP.text = string.Format(CurrentMax.COUNT, current, max);
-        //    _textCurrentMax = _localization.GetFormatText(_getText.id, _getText.key, current, max);
-        //    _text = string.Concat(_textCurrentMax, _textProfit);
-        //}
-        //private void SetProfit(int active, int passive)
-        //{
-        //    _profitTMP.text = string.Format(PROFIT, active, passive);
-        //    _textProfit = _localization.GetFormatText(_getText.id, _keyProfit, active, passive);
-        //    _text = string.Concat(_textCurrentMax, _textProfit);
-        //}
-
 
 #if UNITY_EDITOR
         protected override void OnValidate()
