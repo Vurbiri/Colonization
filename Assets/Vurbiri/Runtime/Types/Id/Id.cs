@@ -53,8 +53,10 @@ namespace Vurbiri
         public static bool operator ==(Id<T> id, int value) => id._id == value;
         public static bool operator !=(Id<T> id, int value) => id._id != value;
 
-        public static bool operator ==(int value, Id<T> id) => value == id._id;
-        public static bool operator !=(int value, Id<T> id) => value == id._id;
+        public static bool operator >(Id<T> id, int value) => id._id > value;
+        public static bool operator <(Id<T> id, int value) => id._id < value;
+        public static bool operator >=(Id<T> id, int value) => id._id >= value;
+        public static bool operator <=(Id<T> id, int value) => id._id <= value;
 
         public static int operator +(Id<T> a, Id<T> b) => a._id + b._id;
         public static int operator +(Id<T> id, int value) => id._id + value;

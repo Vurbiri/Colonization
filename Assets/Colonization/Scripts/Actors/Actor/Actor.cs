@@ -24,7 +24,6 @@ namespace Vurbiri.Colonization.Actors
         private BooleanAbility<ActorAbilityId> _move;
         private ChanceAbility<ActorAbilityId> _profitMain;
         private ChanceAbility<ActorAbilityId> _profitAdv;
-        private BooleanAbility<ActorAbilityId> _isProfitAdv;
         #endregion
 
         private Hexagon _currentHex;
@@ -69,7 +68,7 @@ namespace Vurbiri.Colonization.Actors
         public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
         public ISubscription<Id<PlayerId>, int> OnKilled => _eventKilled;
         public bool IsMainProfit => _profitMain.Next();
-        public bool IsAdvProfit => _isProfitAdv.IsValue && _profitAdv.Next();
+        public bool IsAdvProfit => _profitAdv.Next();
         #endregion
 
         #region IInteractable

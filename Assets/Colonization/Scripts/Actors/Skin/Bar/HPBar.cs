@@ -16,12 +16,11 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private SpriteRenderer _hpSprite;
         [SerializeField] private TextMeshPro _maxValueTMP;
         [SerializeField] private TextMeshPro _currentValueTMP;
-        [Space]
-        [SerializeField] private Id<ActorAbilityId> _ability;
 
         private Transform _barTransform;
 		private int _currentValue = int.MinValue, _maxValue;
         private PopupWidget3D _popup;
+        private Sprite _sprite;
         private Unsubscriptions _unsubscribers;
 
         public bool IsVisible => _backgroundBar.isVisible || _barSprite.isVisible;
@@ -41,6 +40,8 @@ namespace Vurbiri.Colonization.Actors
             _hpSprite.sortingOrder += orderLevel;
             _maxValueTMP.sortingOrder += orderLevel;
             _currentValueTMP.sortingOrder += orderLevel;
+
+            _sprite = _hpSprite.sprite;
 
             _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe(SetMaxValue);
             _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(SetCurrentValue);
@@ -62,8 +63,7 @@ namespace Vurbiri.Colonization.Actors
                 _barSprite.size = new(size, SP_HIGHT);
                 _barTransform.localPosition = new((size - SP_WIDTH) * 0.5f, 0f, 0f);
 
-                if(_currentValue > 0)
-                    _popup.Run((value - _currentValue) >> ActorAbilityId.SHIFT_ABILITY, _ability);
+                _popup.Run((value - _currentValue) >> ActorAbilityId.SHIFT_ABILITY, _sprite);
 
                 _currentValue = value;
             }

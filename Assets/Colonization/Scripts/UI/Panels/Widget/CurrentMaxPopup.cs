@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
     sealed public class CurrentMaxPopup : ACurrentMax<ReactiveCombination<int, int, int>>
     {
         [Space]
-        [SerializeField] private PopupWidgetUI _popup;
+        [SerializeField] private PopupTextWidgetUI _popup;
 
         public void Init(IReactive<int, int> current, IReactive<int> max, ProjectColors colors, Direction2 offsetPopup, CanvasHint hint)
         {
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
             if (_popup == null)
-                _popup = GetComponentInChildren<PopupWidgetUI>(true);
+                _popup = GetComponentInChildren<PopupTextWidgetUI>(true);
         }
 #endif
     }

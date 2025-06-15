@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             _value += perk.Value;
         }
-
-        public override string ToString() => $"{GetType().Name}: targetID = {_targetAbility}, modifierID = {_typeModifier}, value = {_value}.";
+        
+        public static Effect operator *(Effect effect, int ratio) => new(effect._targetAbility, effect._typeModifier, effect._value * ratio);
     }
 }

@@ -44,14 +44,16 @@ namespace Vurbiri.Colonization
         public HashSet<Crossroad> Crossroads => _crossroads;
         public HashSet<Hexagon> Neighbors => _neighbors;
         public HexagonCaption Caption => _hexagonCaption;
-        public bool CannotBuildPort
+        public bool IsPort
         {
             get
             {
-                if (_isGate | !_isWater) return true;
-
-                foreach (var crossroad in _crossroads)
-                    if (crossroad.IsPort) return true;
+                if (_isWater)
+                {
+                    foreach (var crossroad in _crossroads)
+                        if (crossroad.IsPort) 
+                            return true;
+                }
 
                 return false;
             }

@@ -30,7 +30,7 @@ namespace VurbiriEditor.Colonization
         private int _advanceMax;
 
         protected readonly HashSet<int> _excludeAbility = new(new int[]
-            { ActorAbilityId.CurrentHP, ActorAbilityId.CurrentAP, ActorAbilityId.IsMove, ActorAbilityId.IsProfitAdv });
+            { ActorAbilityId.CurrentHP, ActorAbilityId.CurrentAP, ActorAbilityId.IsMove });
 
         protected void Enable(string scriptableName, string advanceName, int advanceMax)
         {
@@ -149,7 +149,7 @@ namespace VurbiriEditor.Colonization
             #endregion
         }
 
-        private void OnDisable()
+        protected void Disable(bool isSorting)
         {
             for (int i = 0; i < ActorAbilityId.Count; i++)
                 _showSettings[i].valueChanged.RemoveListener(Repaint);
@@ -160,6 +160,8 @@ namespace VurbiriEditor.Colonization
             serializedObject.FindProperty("_maxLevel").intValue = _maxLevel;
 
             _scriptable.SetValues_EditorOnly(_maxLevel, _settings);
+            if (isSorting)
+                _scriptable.Sort_EditorOnly();
 
             new SerializedObject(_scriptable).Update();
             EditorUtility.SetDirty(_scriptable);

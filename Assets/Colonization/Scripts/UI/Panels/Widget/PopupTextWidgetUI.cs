@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Vurbiri.Colonization.UI
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
-    public class PopupWidgetUI : MonoBehaviour
+    public class PopupTextWidgetUI : MonoBehaviour
     {
         [SerializeField] protected TextMeshProUGUI _thisTMP;
         [Space]
@@ -74,7 +74,6 @@ namespace Vurbiri.Colonization.UI
                 yield return null;
             }
         }
-
 
 #if UNITY_EDITOR
         private void OnValidate()

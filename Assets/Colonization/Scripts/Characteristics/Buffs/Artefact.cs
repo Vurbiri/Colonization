@@ -7,32 +7,37 @@ namespace Vurbiri.Colonization.Characteristics
     sealed public class Artefact : ABuffs<Buff>, IReactive<Artefact>
     {
         private int _level = 0;
-        private readonly int[] _levels;
+        private readonly int[] _levels, _add;
         private readonly Subscription<Artefact> _changeLevels = new();
         private readonly RandomIndex _rIndex;
+        private readonly int _count;
 
+        public int BuffsCount => _count;
         public int Level => _level;
         public int[] Levels => _levels;
 
         #region Constructors
         private Artefact(int maxLevel, List<BuffSettings> settings) : base(maxLevel)
         {
+            _count = settings.Count;
             _rIndex = new(settings);
-            _levels = new int[settings.Count];
-            _buffs = new Buff[settings.Count];
+
+            _levels = new int[_count];
+            _add = new int[_count];
+            _buffs = new Buff[_count];
         }
 
         private Artefact(BuffsScriptable buffs) : this(buffs.MaxLevel, buffs.Settings)
         {
             var settings = buffs.Settings;
-            for (int i = settings.Count - 1; i >= 0; i--)
+            for (int i = 0; i < _count; i++)
                 _buffs[i] = new(_subscriber, settings[i]);
         }
 
         private Artefact(BuffsScriptable buffs, int[] levels) : this(buffs.MaxLevel, buffs.Settings)
         {
             var settings = buffs.Settings;
-            for (int i = settings.Count - 1; i >= 0; i--)
+            for (int i = 0; i < _count; i++)
             {
                 _buffs[i] = new(_subscriber, settings[i], _levels[i] = levels[i]);
                 _level += levels[i];
@@ -53,17 +58,22 @@ namespace Vurbiri.Colonization.Characteristics
 
             if (count <= 0) return;
             
-            for (int i = 0, index; i < count; i++)
-            {
-                index = _rIndex.Next();
-                _buffs[index].Next();
-                _levels[index]++;
-            }
+            for (int i = 0; i < count; i++)
+                _add[_rIndex.Next()]++;
 
+            for (int i = 0, add; i < _count; i++)
+            {
+                add = _add[i];
+                if (add > 0)
+                {
+                    _add[i] = 0;
+                    _buffs[i].Next(add);
+                    _levels[i] += add;
+                }
+            }
             _level += count;
 
             _changeLevels.Invoke(this);
-            
         }
 
         public Unsubscription Subscribe(System.Action<Artefact> action, bool instantGetValue = true)
@@ -92,9 +102,11 @@ namespace Vurbiri.Colonization.Characteristics
             public int Next()
             {
                 int weight = UnityEngine.Random.Range(0, _maxWeight);
+
                 for (int i = 0; i < _count; i++)
-                    if(weight <  _weights[i])
+                    if (weight < _weights[i])
                         return i;
+
                 return -1;
             }
         }

@@ -1,4 +1,3 @@
-using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
@@ -24,7 +23,6 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                Debug.Log($"Enter BlockState {_effects.Contains(_code)} {_skin.name}");
                 if (!_effects.Contains(_code))
                 {
                     _skin.Block(true);

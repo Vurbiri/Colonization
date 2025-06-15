@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.Actors
                 s_orderLevel = short.MinValue;
             s_orderLevel += s_incOrderLevel;
 
-            _popup.Init(_sprites, projectColors, s_orderLevel);
+            _popup.Init(projectColors, s_orderLevel);
 
             _hpBar.Init(abilities, abilitiesColors, SceneContainer.Get<PlayerColors>()[actor.Owner], _popup, s_orderLevel);
             _apBar.Init(abilities, abilitiesColors, s_orderLevel);

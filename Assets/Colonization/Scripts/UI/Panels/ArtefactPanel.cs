@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
@@ -14,30 +15,51 @@ namespace Vurbiri.Colonization.UI
 	sealed public class ArtefactPanel : AHintElement, IDisposable
     {
         private const string NAME = "{0,-13}";
-        
-        [SerializeField, ReadOnly] private Part[] _parts;
+
+        [SerializeField, Range(1f, 10f)] private float _showSpeed = 5f;
+        [SerializeField, Range(0.5f, 3f)] private float _showDuration = 1.75f;
+        [SerializeField, Range(0.5f, 2.5f)] private float _hideSpeed = 0.75f;
+        [Space]
+        [SerializeField, ReadOnly] private Ability[] _abilities;
         [SerializeField, ReadOnly] private Level _level;
 
         private Unsubscriptions _unsubscribers = new();
+        private readonly Stack<WaitRealtime> _timers = new(4);
+
+        // TEST
+        Artefact _artefact;
+        public void Test() => _artefact.Next(UnityEngine.Random.Range(2, 10));
+        // TEST
 
         public void Init(Human player, CanvasHint hint)
         {
             base.Init(hint, 0.48f);
 
+            _level.Init(player.Artefact.MaxLevel);
+            for (int i = _abilities.Length - 1; i >= 0; i--)
+            {
+                _abilities[i].Init(this);
+                _timers.Push(new(_showDuration));
+            }
+
             _unsubscribers += Localization.Instance.Subscribe(SetLocalizationText);
             _unsubscribers += player.Artefact.Subscribe(SetHintValues);
 
-            //_unsubscribers += player.GetAbility(HumanAbilityId.is)
-            Debug.LogWarning("!!!  IsProfitAdv в HumanAbilityId а не в ActorAbilityId");
+            _unsubscribers += player.GetAbility(HumanAbilityId.IsArtefact).Subscribe(value => gameObject.SetActive(value > 0));
+            
+            // TEST
+            Debug.Log("Удалить Тесты в ArtefactPanel");
+            _artefact = player.Artefact;
+            // TEST
         }
 
         private void SetLocalizationText(Localization localization)
         {
-            int count = _parts.Length;
+            int count = _abilities.Length;
             StringBuilder stringBuilder = new(20 * (count + 1));
 
-            for (int i = _parts.Length - 1; i >= 0; i--)
-                _parts[i].SetHintText(localization, stringBuilder);
+            for (int i = _abilities.Length - 1; i >= 0; i--)
+                _abilities[i].SetHintText(localization, stringBuilder);
             stringBuilder.AppendLine();
             _level.SetHintText(localization, stringBuilder);
 
@@ -50,7 +72,7 @@ namespace Vurbiri.Colonization.UI
             StringBuilder stringBuilder = new(20 * (count + 1));
 
             for (int i = 0; i < count; i++)
-                _parts[i].SetHintValue(levels[i], stringBuilder);
+                _abilities[i].SetHintValue(levels[i], stringBuilder);
             stringBuilder.AppendLine();
             _level.SetHintValue(artefact.Level, stringBuilder);
             
@@ -62,6 +84,37 @@ namespace Vurbiri.Colonization.UI
             _unsubscribers.Unsubscribe();
         }
 
+        private void ShowProfit(TextMeshProUGUI tmp, int profit)
+        {
+            if(profit != 0)
+            {
+                tmp.text = profit.ToString();
+                StartCoroutine(ShowProfit_Cn(tmp.canvasRenderer, _timers.Pop()));
+            }
+        }
+        private IEnumerator ShowProfit_Cn(CanvasRenderer renderer, WaitRealtime waitRealtime)
+        {
+            float alpha = 0f;
+            while (alpha < 1f)
+            {
+                alpha += Time.unscaledDeltaTime * _showSpeed;
+                renderer.SetAlpha(alpha);
+                yield return null;
+            }
+            renderer.SetAlpha(alpha = 1f);
+
+            yield return waitRealtime.Restart();
+            _timers.Push(waitRealtime);
+
+            while (alpha > 0f)
+            {
+                alpha -= Time.unscaledDeltaTime * _hideSpeed;
+                renderer.SetAlpha(alpha);
+                yield return null;
+            }
+            renderer.SetAlpha(0f);
+        }
+
         #region Nested structs Level, Part
         //*************************************************
         [Serializable]
@@ -71,10 +124,12 @@ namespace Vurbiri.Colonization.UI
 
             [SerializeField] private TextMeshProUGUI _levelTMP;
             [SerializeField] private string _hintKey;
-            [SerializeField] private int _maxLevel;
 
             private string _hintText;
+            private int _maxLevel;
             private int _level;
+
+            public void Init(int maxLevel) => _maxLevel = maxLevel;
 
             public void SetHintText(Localization localization, StringBuilder sb)
             {
@@ -97,28 +152,35 @@ namespace Vurbiri.Colonization.UI
             }
 
 #if UNITY_EDITOR
-            public void Init_Editor(int maxLevel, Component parent)
+            public void Init_Editor(Component parent, ProjectColors colors)
             {
-                _maxLevel = maxLevel;
                 _hintKey = "Level";
                 if (_levelTMP == null)
                     _levelTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(parent, "LevelTMP");
+                _levelTMP.color = colors.TextDark;
             }
-            public readonly Color TextColor_Editor { set => _levelTMP.color = value; }
 #endif
         }
         //*************************************************
         [Serializable]
-        private struct Part
+        private struct Ability
         {
-            private const string VALUE = "+{0}%";
+            private const string VALUE = "+{0,2}%";
 
             [SerializeField] private TextMeshProUGUI _valueTMP;
+            [SerializeField] private TextMeshProUGUI _valueDeltaTMP;
             [SerializeField] private string _hintKey;
             [SerializeField] private int _baseValue;
 
+            private ArtefactPanel _parent;
             private string _hintText;
             private int _value;
+
+            public void Init(ArtefactPanel parent)
+            {
+                _parent = parent;
+                _valueDeltaTMP.canvasRenderer.SetAlpha(0.0f);
+            }
 
             public void SetHintText(Localization localization, StringBuilder sb)
             {
@@ -134,41 +196,42 @@ namespace Vurbiri.Colonization.UI
 
             public void SetHintValue(int level, StringBuilder stringBuilder)
             {
-                _value = level * _baseValue;
-                _valueTMP.text = _value.ToString();
+                int newValue = level * _baseValue;
+                _valueTMP.text = newValue.ToString();
 
-                stringBuilder.AppendFormat(_hintText, _value);
+                stringBuilder.AppendFormat(_hintText, newValue);
                 stringBuilder.AppendLine();
+
+                _parent.ShowProfit(_valueDeltaTMP, newValue - _value);
+                _value = newValue;
             }
 
 #if UNITY_EDITOR
-            public void Init_Editor(BuffSettings settings, Component parent)
+            public void Init_Editor(BuffSettings settings, Component parent, ProjectColors colors)
             {
                 _hintKey = ActorAbilityId.Names[settings.targetAbility];
                 _baseValue = settings.value;
                 if (settings.typeModifier == TypeModifierId.Addition && settings.targetAbility <= ActorAbilityId.MAX_ID_SHIFT_ABILITY)
                     _baseValue >>= ActorAbilityId.SHIFT_ABILITY;
 
-                if (_valueTMP == null)
-                    _valueTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(parent, _hintKey.Concat("TMP"));
+                string name = _hintKey.Concat("TMP");
+                if (_valueTMP == null || _valueTMP.gameObject.name != name)
+                    _valueTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(parent, name);
+                name = _hintKey.Concat("DeltaTMP");
+                if (_valueDeltaTMP == null || _valueDeltaTMP.gameObject.name != name)
+                    _valueDeltaTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(parent, name);
+
+                _valueTMP.color = colors.PanelText;
+                _valueDeltaTMP.color = colors.TextPositive;
             }
-            public readonly Color TextColor_Editor { set => _valueTMP.color = value; }
 #endif
         }
         #endregion
 
 #if UNITY_EDITOR
 
-        public RectTransform UpdateVisuals_Editor(float side, ProjectColors colors)
+        public RectTransform UpdateVisuals_Editor(float side)
         {
-            Image image = GetComponent<Image>();
-            image.color = colors.PanelBack;
-
-            _level.TextColor_Editor = colors.TextDark;
-
-            for (int i = 0; i < _parts.Length; i++)
-                _parts[i].TextColor_Editor = colors.PanelText;
-
             RectTransform thisRectTransform = (RectTransform)transform;
             thisRectTransform.sizeDelta = new(side, side);
 
@@ -177,21 +240,26 @@ namespace Vurbiri.Colonization.UI
 
         [Header("┌──────────── Editor ─────────────────────")]
         [SerializeField] private BuffsScriptable _settings;
+        [SerializeField] private ColorSettingsScriptable _colorSettings;
 
         private void OnValidate()
         {
             EUtility.SetScriptable(ref _settings, "ArtefactSettings");
+            EUtility.SetScriptable(ref _colorSettings);
+
             List<BuffSettings> settings = _settings.Settings;
+            var colors = _colorSettings.Colors;
 
-            _level.Init_Editor(_settings.MaxLevel, this);
+            GetComponent<Image>().color = colors.PanelBack;
 
-            if (_parts == null || _parts.Length != settings.Count)
-                _parts = new Part[settings.Count];
+            _level.Init_Editor(this, colors);
+
+            if (_abilities == null || _abilities.Length != settings.Count)
+                _abilities = new Ability[settings.Count];
 
             for (int i = 0; i < settings.Count; i++)
-                _parts[i].Init_Editor(settings[i], this);
+                _abilities[i].Init_Editor(settings[i], this, colors);
         }
 #endif
-
     }
 }

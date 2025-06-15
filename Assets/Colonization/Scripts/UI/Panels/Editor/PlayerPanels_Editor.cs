@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.UI
             RectTransform rectRoads      = _roads.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, colors);
             RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, _spaceIn, colors);
             RectTransform rectBlood      = _blood.UpdateVisuals_Editor(_pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectArtefact   = _artefactPanel.UpdateVisuals_Editor(rectBlood.rect.height, colors);
+            RectTransform rectArtefact   = _artefactPanel.UpdateVisuals_Editor(rectBlood.rect.height);
 
             //=======
 

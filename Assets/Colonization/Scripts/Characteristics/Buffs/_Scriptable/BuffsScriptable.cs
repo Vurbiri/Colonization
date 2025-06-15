@@ -24,6 +24,28 @@ namespace Vurbiri.Colonization.Characteristics
                     _settings.Add(values[i]);
             }
         }
+
+        public void Sort_EditorOnly()
+        {
+            for (int i = 0, index; i < _settings.Count;)
+            {
+                index = AbilityToIndex(_settings[i].targetAbility, i);
+                if (index != i)
+                    (_settings[i], _settings[index]) = (_settings[index], _settings[i]);
+                else
+                    i++;
+            }
+
+            // Local
+            static int AbilityToIndex(int ability, int index) => ability switch
+            {
+                ActorAbilityId.Defense   => 0,
+                ActorAbilityId.HPPerTurn => 1,
+                ActorAbilityId.Attack    => 2,
+                ActorAbilityId.Pierce    => 3,
+                _ => index
+            };
+        }
 #endif
     }
 }

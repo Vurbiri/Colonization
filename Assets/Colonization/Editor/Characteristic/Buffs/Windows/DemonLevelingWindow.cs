@@ -16,5 +16,9 @@ namespace VurbiriEditor.Colonization
         {
             base.Enable("DemonLevelingSettings", "Level Up", 30);
         }
+        private void OnDisable()
+        {
+            base.Disable(false);
+        }
     }
 }

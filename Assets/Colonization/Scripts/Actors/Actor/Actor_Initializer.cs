@@ -43,7 +43,6 @@ namespace Vurbiri.Colonization.Actors
             _move        = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
             _profitMain  = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP, _move);
             _profitAdv   = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP, _move);
-            _isProfitAdv = _abilities.ReplaceToBoolean(ActorAbilityId.IsProfitAdv);
 
             for (int i = 0; i < initData.buffs.Length; i++)
                 _unsubscribers += initData.buffs[i].Subscribe(OnBuff);

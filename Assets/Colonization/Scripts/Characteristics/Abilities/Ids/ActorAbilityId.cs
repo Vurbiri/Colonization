@@ -13,8 +13,7 @@ namespace Vurbiri.Colonization.Characteristics
         public const int IsMove      =  8;
         public const int ProfitMain  =  9;
         public const int ProfitAdv   = 10;
-        public const int IsProfitAdv = 11;
-        public const int Pierce      = 12;
+        public const int Pierce      = 11;
 
         [NotId] public const int SHIFT_ABILITY = 10;
         [NotId] public const int MAX_ID_SHIFT_ABILITY = Defense;

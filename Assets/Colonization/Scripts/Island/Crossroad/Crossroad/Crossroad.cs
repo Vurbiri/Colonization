@@ -199,9 +199,9 @@ namespace Vurbiri.Colonization
             {
                 if (_countFreeLink == 0 && !IsRoadConnect(playerId))
                     return false;
-
+                
                 for (int i = 0; i < HEX_COUNT; i++)
-                    if (_hexagons[i].CannotBuildPort)
+                    if (_hexagons[i].IsPort)
                         return false;
 
                 return true;

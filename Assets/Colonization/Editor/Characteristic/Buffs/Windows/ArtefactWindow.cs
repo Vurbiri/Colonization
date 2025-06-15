@@ -15,10 +15,16 @@ namespace VurbiriEditor.Colonization
 
         private void OnEnable()
         {
+            _excludeAbility.Add(ActorAbilityId.MaxHP);
             _excludeAbility.Add(ActorAbilityId.MaxAP); _excludeAbility.Add(ActorAbilityId.APPerTurn);
             _excludeAbility.Add(ActorAbilityId.ProfitMain); _excludeAbility.Add(ActorAbilityId.ProfitAdv);
             
             base.Enable("ArtefactSettings", "Weight", 100);
+        }
+
+        private void OnDisable()
+        {
+            base.Disable(true);
         }
     }
 }

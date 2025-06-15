@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.UI
     sealed public class CurrencyPopup : AHintWidget
     {
         [Space]
-        [SerializeField] private PopupWidgetUI _popup;
+        [SerializeField] private PopupTextWidgetUI _popup;
 
         public void Init(int id, ACurrenciesReactive count, ProjectColors colors, Direction2 offsetPopup, CanvasHint hint)
         {
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
             if (_popup == null)
-                _popup = GetComponentInChildren<PopupWidgetUI>(true);
+                _popup = GetComponentInChildren<PopupTextWidgetUI>(true);
         }
 #endif
     }

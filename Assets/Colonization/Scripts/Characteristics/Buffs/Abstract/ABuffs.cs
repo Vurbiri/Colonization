@@ -9,6 +9,8 @@ namespace Vurbiri.Colonization.Characteristics
         protected readonly Subscription<IPerk> _subscriber = new();
         protected T[] _buffs;
 
+        public int MaxLevel => _maxLevel;
+
         protected ABuffs(int maxLevel) => _maxLevel = maxLevel;
 
         public Unsubscription Subscribe(Action<IPerk> action, bool instantGetValue = true)

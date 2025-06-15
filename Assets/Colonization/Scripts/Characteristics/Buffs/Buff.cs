@@ -8,10 +8,11 @@ namespace Vurbiri.Colonization.Characteristics
 
         public Buff(Subscription<IPerk> subscriber, BuffSettings settings, int level) : base(subscriber, settings, settings.value * level) { }
 
-        public void Next()
+        public void Next(int count)
         {
-            _current.Add(_base);
-            _subscriber.Invoke(_base);
+            Effect add = _base * count;
+            _current.Add(add);
+            _subscriber.Invoke(add);
         }
     }
 }

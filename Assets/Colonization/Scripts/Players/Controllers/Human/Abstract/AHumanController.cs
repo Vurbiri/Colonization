@@ -18,11 +18,12 @@ namespace Vurbiri.Colonization
         {
             int countBuffs = 0;
             CurrenciesLite profit = new();
+            bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
             foreach (var warrior in _warriors)
             {
                 if (warrior.IsMainProfit)
                     profit.Increment(warrior.Hexagon.SurfaceId);
-                if (warrior.IsAdvProfit)
+                if (isArtefact && warrior.IsAdvProfit)
                     countBuffs++;
 
                 warrior.StatesUpdate();
