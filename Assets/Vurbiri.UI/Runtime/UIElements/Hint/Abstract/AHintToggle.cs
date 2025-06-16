@@ -1,40 +1,35 @@
-using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
-    public abstract class AWorldHintButton : AVButton
-    {
+	public abstract class AHintToggle : AVToggle
+	{
+        private AHint _hint;
         private bool _isShowingHint = false;
+        private Vector3 _offsetHint;
 
-        protected WorldHint _hint;
-        protected Vector3 _offsetHint;
-        protected GameObject _thisGameObject;
         protected Transform _thisTransform;
         protected string _text;
 
-        protected virtual void Init(WorldHint hint, Action action, bool active, float ratioHeight = 0.5263f)
+        protected void Init(AHint hint, float ratioHeight)
         {
             _hint = hint;
-
-            _thisGameObject = gameObject;
             _thisTransform = transform;
 
-            _onClick.Add(action);
+            RectTransform thisRectTransform = (RectTransform)_thisTransform;
+            Vector2 pivot = thisRectTransform.pivot;
+            Vector2 size = thisRectTransform.rect.size;
 
-            float offset = ((RectTransform)_thisTransform).rect.height * ratioHeight;
-            _offsetHint = new(0f, offset, 0f);
-
-            _thisGameObject.SetActive(active);
+            _offsetHint = new(size.x * (0.5f - pivot.x), size.y * (0.5f - pivot.y + ratioHeight), 0f);
         }
 
         sealed public override void OnPointerEnter(PointerEventData eventData)
         {
             base.OnPointerEnter(eventData);
             if (!_isShowingHint)
-                _isShowingHint = _hint.Show(_text, _thisTransform.localPosition, _offsetHint);
+                _isShowingHint = _hint.Show(_text, _thisTransform.position, _offsetHint);
         }
         sealed public override void OnPointerExit(PointerEventData eventData)
         {

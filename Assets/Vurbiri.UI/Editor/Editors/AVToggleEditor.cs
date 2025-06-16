@@ -38,7 +38,7 @@ namespace VurbiriEditor.UI
         private AVToggle[] _toggles;
         private SwitchingType _switchingType;
 
-        protected override bool IsDerivedEditor => GetType() != typeof(AVToggle);
+        protected override bool IsDerivedEditor => GetType() != typeof(AVToggleEditor);
 
         protected override void OnEnable()
         {

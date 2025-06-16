@@ -254,9 +254,7 @@ namespace Vurbiri.Colonization.UI
 
             _level.Init_Editor(this, colors);
 
-            if (_abilities == null || _abilities.Length != settings.Count)
-                _abilities = new Ability[settings.Count];
-
+            EUtility.SetArray(ref _abilities, settings.Count);
             for (int i = 0; i < settings.Count; i++)
                 _abilities[i].Init_Editor(settings[i], this, colors);
         }

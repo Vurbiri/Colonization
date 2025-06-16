@@ -118,9 +118,9 @@ namespace VurbiriEditor.Colonization.Characteristics
             void DrawPosition(int level)
             {
                 SerializedProperty property = propertyPerk.FindPropertyRelative(P_POS);
-                int value = Mathf.Clamp((int)property.vector2Value.y, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
+                int value = Mathf.Clamp((int)property.vector3Value.y, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
                 value = IntSlider(property.displayName, value, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
-                property.vector2Value = new(level, value);            
+                property.vector3Value = new(level, value, 0f);            
             }
             //================================================================
             int DrawModifier()
@@ -163,9 +163,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             {
                 SerializedProperty property = propertyPerk.FindPropertyRelative(P_KEY_DESC);
 
-                if (string.IsNullOrEmpty(property.stringValue))
-                    property.stringValue = PREFF_KEY_DESC.Concat(name);
-
+                property.stringValue = PREFF_KEY_DESC.Concat(name);
                 property.stringValue = TextField(property.displayName, property.stringValue);
             }
             //================================================================

@@ -63,11 +63,9 @@ namespace Vurbiri
                 self.RemoveRange(size, count - size);
         }
 
-        public static T First<T>(this IReadOnlyCollection<T> self)
+        public static T Any<T>(this IEnumerable<T> self)
         {
-            Throw.IfLengthZero<T>(self);
-
-            IEnumerator<T> enumerator = self.GetEnumerator();
+            using IEnumerator<T> enumerator = self.GetEnumerator();
             enumerator.MoveNext();
 
             return enumerator.Current;

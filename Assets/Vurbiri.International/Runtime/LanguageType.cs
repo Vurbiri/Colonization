@@ -42,7 +42,8 @@ namespace Vurbiri.International
         public bool Equals(SystemLanguage id) => _id == id;
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(this, obj)) return true;
+            if (obj is null) return false;
+            if (ReferenceEquals(obj, this)) return true;
             if (obj is LanguageType type) return type._id == _id;
             if (obj is SystemLanguage id) return id == _id;
             return false;

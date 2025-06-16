@@ -157,6 +157,13 @@ namespace Vurbiri.UI
             _transitionEffect.PlayInstant(_isOn);
         }
 
+        public void LeaveGroup()
+        {
+            if (_group != null)
+                _group.UnregisterToggle(this);
+            _group = null;
+        }
+
         internal void SetFromGroup(bool value)
         {
             if (_isOn == value) return;

@@ -47,6 +47,12 @@ namespace Vurbiri
                 LogErrorFind<T>("asset", name);
         }
 
+        public static void SetArray<T>(ref T[] arr, int length)
+        {
+            if (arr == null || arr.Length != length)
+                arr = new T[length];
+        }
+
         // ********************************************
 
         public static T GetComponentInChildren<T>(Component parent, string name) where T : Component

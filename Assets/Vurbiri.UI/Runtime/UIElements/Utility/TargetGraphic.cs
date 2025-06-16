@@ -7,7 +7,7 @@ namespace Vurbiri.UI
     public partial class VSelectable
     {
         [Serializable]
-        protected class TargetGraphic
+        protected class TargetGraphic : IEquatable<Graphic>
         {
             [SerializeField] private Graphic _graphic;
             [SerializeField] private EnumFlags<SelectionState> _stateFilter = true;
@@ -69,6 +69,8 @@ namespace Vurbiri.UI
 
                 return false;
             }
+            public bool Equals(Graphic graphic) => _graphic == graphic;
+
             public override int GetHashCode() => _graphic.GetHashCode();
         }
     }

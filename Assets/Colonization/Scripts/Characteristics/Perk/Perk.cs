@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.Characteristics
 #if UNITY_EDITOR
 
         public int perkModifier;
-        public Vector2 position;
+        public Vector3 position;
         public string keyDescription;
         public Sprite sprite;
 #endif
