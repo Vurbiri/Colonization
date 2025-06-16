@@ -18,5 +18,16 @@ namespace Vurbiri.Colonization
         public CurrenciesLite Wall => _wall;
         public IdArray<EdificeId, CurrenciesLite> Edifices => _edifices;
         public IdArray<WarriorId, CurrenciesLite> Warriors => _warriors;
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            _playersDefault ??= new();
+            _roads ??= new();
+            _wall ??= new();
+            _edifices ??= new(() => new());
+            _warriors ??= new(() => new());
+        }
+#endif
     }
 }

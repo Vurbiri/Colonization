@@ -115,7 +115,7 @@ namespace Vurbiri.Colonization.UI
             renderer.SetAlpha(0f);
         }
 
-        #region Nested structs Level, Part
+        #region Nested structs Level, Ability
         //*************************************************
         [Serializable]
         private struct Level
@@ -165,7 +165,7 @@ namespace Vurbiri.Colonization.UI
         [Serializable]
         private struct Ability
         {
-            private const string VALUE = "+{0,2}%";
+            private const string VALUE = "{0,3:+#;;0}%";
 
             [SerializeField] private TextMeshProUGUI _valueTMP;
             [SerializeField] private TextMeshProUGUI _valueDeltaTMP;

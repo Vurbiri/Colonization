@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.UI
 {
 	public abstract class ACurrentMax<TCombination> : AHintWidget where TCombination : ICombination
     {
-        protected const string COUNT = "{0,2}<space=0.05em>|<space=0.05em>{1,-2}";
+        protected const string COUNT = "{0,2}|{1,-2}^";
 
         protected string _textHint;
         protected TCombination _reactiveCurrentMax;
