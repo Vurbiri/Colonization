@@ -1,0 +1,39 @@
+using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
+using Vurbiri.International;
+using Vurbiri.Reactive;
+using Vurbiri.UI;
+
+namespace Vurbiri.Colonization.UI
+{
+	public abstract class APerkHint : AHintElement
+    {
+        [SerializeField, ReadOnly] protected string _key;
+        [SerializeField, ReadOnly] protected string _cost;
+
+        private Unsubscription _unsubscriber;
+
+        public virtual void Init(Perk perk, CanvasHint hint)
+        {
+            base.Init(hint, 0.48f);
+            _unsubscriber = Localization.Instance.Subscribe(SetLocalizationText);
+        }
+
+        protected abstract void SetLocalizationText(Localization localization);
+
+        public void Dispose()
+        {
+            _unsubscriber.Unsubscribe();
+        }
+
+#if UNITY_EDITOR
+        public void Init_Editor(Perk perk)
+        {
+            UnityEditor.SerializedObject so = new(this);
+            so.FindProperty("_key").stringValue = perk.keyDescription;
+            so.FindProperty("_cost").stringValue = $"<color=red>{perk.Cost}</color><space=0.1em><sprite={CurrencyId.Blood}>";
+            so.ApplyModifiedProperties();
+        }
+#endif
+    }
+}

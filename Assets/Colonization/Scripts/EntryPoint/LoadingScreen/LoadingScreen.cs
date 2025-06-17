@@ -98,15 +98,12 @@ namespace Vurbiri.Colonization.UI
         protected override void OnValidate()
         {
             base.OnValidate();
-            
-            if(_canvasGroup == null)
-                _canvasGroup = GetComponent<CanvasGroup>();
-            if (_descText == null)
-                _descText = GetComponentInChildren<TextMeshProUGUI>();
-            if (_fillBar == null)
-                _fillBar = EUtility.GetComponentInChildren<RectTransform>(this, "Value");
-            if (_indicator == null)
-                _indicator = EUtility.GetComponentInChildren<Graphic>(this, "Indicator");
+
+            EUtility.SetComponent(ref _canvasGroup, this);
+
+            EUtility.SetChildren(ref _descText, this);
+            EUtility.SetChildren(ref _fillBar, this, "Value");
+            EUtility.SetChildren(ref _indicator, this, "Indicator");
         }
 #endif
     }

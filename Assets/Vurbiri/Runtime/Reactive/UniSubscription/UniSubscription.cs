@@ -33,7 +33,7 @@ namespace Vurbiri.Reactive
     {
         [SerializeField] private Listener<T>[] _listeners;
 
-        public void Init()
+        public void Init(T value)
         {
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
@@ -44,7 +44,7 @@ namespace Vurbiri.Reactive
             {
                 if (_listeners[i].TryCreateDelegate(out Action<T> action))
                 {
-                    actions -= action;
+                    action(value);
                     actions += action;
                 }
             }
@@ -58,7 +58,7 @@ namespace Vurbiri.Reactive
     {
         [SerializeField] private Listener<TA, TB>[] _listeners;
 
-        public void Init()
+        public void Init(TA valueA, TB valueB)
         {
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
@@ -69,7 +69,7 @@ namespace Vurbiri.Reactive
             {
                 if (_listeners[i].TryCreateDelegate(out Action<TA, TB> action))
                 {
-                    actions -= action;
+                    action(valueA, valueB);
                     actions += action;
                 }
             }
@@ -83,7 +83,7 @@ namespace Vurbiri.Reactive
     {
         [SerializeField] private Listener<TA, TB, TC>[] _listeners;
 
-        public void Init()
+        public void Init(TA valueA, TB valueB, TC valueC)
         {
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
@@ -94,7 +94,7 @@ namespace Vurbiri.Reactive
             {
                 if (_listeners[i].TryCreateDelegate(out Action<TA, TB, TC> action))
                 {
-                    actions -= action;
+                    action(valueA, valueB, valueC);
                     actions += action;
                 }
             }
@@ -108,7 +108,7 @@ namespace Vurbiri.Reactive
     {
         [SerializeField] private Listener<TA, TB, TC, TD>[] _listeners;
 
-        public void Init()
+        public void Init(TA valueA, TB valueB, TC valueC, TD valueD)
         {
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
@@ -119,7 +119,7 @@ namespace Vurbiri.Reactive
             {
                 if (_listeners[i].TryCreateDelegate(out Action<TA, TB, TC, TD> action))
                 {
-                    actions -= action;
+                    action(valueA, valueB, valueC, valueD);
                     actions += action;
                 }
             }

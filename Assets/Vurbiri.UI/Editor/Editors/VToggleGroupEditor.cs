@@ -1,27 +1,28 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 using Vurbiri.UI;
 using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(VToggleGroup), true)]
+    [CustomEditor(typeof(VToggleGroup<>), true)]
 	public class VToggleGroupEditor : Editor
 	{
         private const int EXECUTION_ORDER = VUI_CONST_ED.TOGGLE_GROUP_EXECUTION_ORDER;
 
         private SerializedProperty _allowSwitchOffProperty;
-        private VToggleGroup _toggleGroup;
+        private SerializedProperty _onValueChangedProperty;
 
         protected readonly List<SerializedProperty> _childrenProperties = new();
         protected bool _defaultDraw = true;
 
         protected virtual void OnEnable()
 		{
-            _toggleGroup = target as VToggleGroup;
             _allowSwitchOffProperty = serializedObject.FindProperty("_allowSwitchOff");
+            _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
-            MonoScript monoScript = MonoScript.FromMonoBehaviour(_toggleGroup);
+            MonoScript monoScript = MonoScript.FromMonoBehaviour((MonoBehaviour)target);
             if (monoScript != null && MonoImporter.GetExecutionOrder(monoScript) != EXECUTION_ORDER)
                 MonoImporter.SetExecutionOrder(monoScript, EXECUTION_ORDER);
 
@@ -35,12 +36,9 @@ namespace VurbiriEditor.UI
             DrawChildrenProperties();
 
             Space(1f);
-            EditorGUI.BeginChangeCheck();
-                PropertyField(_allowSwitchOffProperty);
-            if (EditorGUI.EndChangeCheck())
-                _toggleGroup.AllowSwitchOff = _allowSwitchOffProperty.boolValue;
-
-            Space(1f);
+            PropertyField(_allowSwitchOffProperty);
+            Space();
+            PropertyField(_onValueChangedProperty);
 
             serializedObject.ApplyModifiedProperties();
 		}
@@ -78,6 +76,7 @@ namespace VurbiriEditor.UI
             {
                 serializedObject.FindProperty("m_Script").propertyPath,
                 _allowSwitchOffProperty.propertyPath,
+                _onValueChangedProperty.propertyPath
             };
         }
     }

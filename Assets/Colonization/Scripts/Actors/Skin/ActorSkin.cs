@@ -112,9 +112,6 @@ namespace Vurbiri.Colonization.Actors
             _deathState.Dispose();
         }
 
-
-        // UNITY_EDITOR смотри в ActorSkin_Editor
-
         #region Nested: TimingSkillSettings
         //*******************************************************
         [System.Serializable]
@@ -124,5 +121,17 @@ namespace Vurbiri.Colonization.Actors
             public float remainingTime;
         }
         #endregion
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            EUtility.SetComponent(ref _animator, this);
+            EUtility.SetComponent(ref _sfx, this);
+            EUtility.SetChildren(ref _mesh, this);
+
+            if (_animator != null)
+                _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)[A_DEATH].length;
+        }
+#endif
     }
 }

@@ -285,7 +285,7 @@ namespace Vurbiri.UI
             Normalized(_value);
             UpdateVisuals();
 
-            _onValueChanged.Init();
+            _onValueChanged.Init(_value);
         }
 
         sealed protected override void OnEnable()

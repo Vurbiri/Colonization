@@ -4,8 +4,8 @@ using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
-	public abstract class AHintToggle : AVToggle
-	{
+	public abstract class AHintToggle<TToggle> : VToggle<TToggle> where TToggle : AHintToggle<TToggle>
+    {
         private AHint _hint;
         private bool _isShowingHint = false;
         private Vector3 _offsetHint;
@@ -13,7 +13,7 @@ namespace Vurbiri.UI
         protected Transform _thisTransform;
         protected string _text;
 
-        protected void Init(AHint hint, float ratioHeight)
+        protected void Init(AHint hint, float ratioHeight = 0.5f)
         {
             _hint = hint;
             _thisTransform = transform;

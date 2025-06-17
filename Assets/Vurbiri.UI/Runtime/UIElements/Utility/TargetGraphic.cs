@@ -28,17 +28,16 @@ namespace Vurbiri.UI
 
             public bool Validate() => (_isValid = _graphic != null) && _stateFilter != EnumFlags<SelectionState>.None;
 
-            public void SetGraphicColor(Color color) => _graphic.color = color;
-
-            public void SetColor(int state, Color targetColor)
+            public void SetColor(Color color) => _graphic.canvasRenderer.SetColor(color);
+            public void SetColor(int state, Color color)
             {
                 if (_isValid & _stateFilter[state])
-                    _graphic.canvasRenderer.SetColor(targetColor);
+                    _graphic.canvasRenderer.SetColor(color);
             }
-            public void SetColor(SelectionState state, Color targetColor)
+            public void SetColor(SelectionState state, Color color)
             {
                 if (_isValid & _stateFilter[state])
-                    _graphic.canvasRenderer.SetColor(targetColor);
+                    _graphic.canvasRenderer.SetColor(color);
             }
 
             public void CrossFadeColor(int state, Color targetColor, float duration)

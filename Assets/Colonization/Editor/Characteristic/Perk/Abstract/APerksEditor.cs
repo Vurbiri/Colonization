@@ -14,6 +14,9 @@ namespace VurbiriEditor.Colonization.Characteristics
         [SerializeField] private VisualTreeAsset _treePerksVT;
         [SerializeField] private VisualTreeAsset _treePerkVT;
 
+        private readonly int MIN_LEVEL = PerkTree.MIN_LEVEL, MAX_LEVEL = PerkTree.MAX_LEVEL;
+        private readonly int MIN_POS = PerkTree.MIN_LEVEL, MAX_POS = PerkTree.MAX_LEVEL;
+
         private readonly string[] P_PERKS = { "_economicPerks", "_militaryPerks" };
         private readonly string P_ID = "_id", P_LEVEL = "_level", P_TARGET_OBJ = "_targetObject", P_TARGET_AB = "_targetAbility";
         private readonly string P_TYPE = "_type", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_COST = "_cost";
@@ -28,7 +31,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 
         protected VisualElement CreateGUI<TId>(string captionText) where TId : APerkId<TId>
         {
-            int typePerks = typeof(TId) == typeof(EconomicPerksId) ? TypePerksId.Economic : TypePerksId.Military;
+            int typePerks = typeof(TId) == typeof(EconomicPerksId) ? TypeOfPerksId.Economic : TypeOfPerksId.Military;
 
             var root = _treePerksVT.CloneTree();
             root.Q<Label>(U_LABEL).text = captionText;
@@ -87,8 +90,8 @@ namespace VurbiriEditor.Colonization.Characteristics
             DrawValue(mod, target, ability);
             Space();
 
-            int level = DrawLevel();
-            DrawPosition(level);
+            DrawLevel();
+            DrawPosition();
             Space();
 
             DrawDesc(abilityName);
@@ -106,21 +109,21 @@ namespace VurbiriEditor.Colonization.Characteristics
                 LabelField(property.displayName, text);
             }
             //================================================================
-            int DrawLevel()
+            void DrawLevel()
             {
                 SerializedProperty property = propertyPerk.FindPropertyRelative(P_LEVEL);
-                int value = Mathf.Clamp(property.intValue, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
-                property.intValue = value = IntSlider(property.displayName, value, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
+                int value = Mathf.Clamp(property.intValue, MIN_LEVEL, MAX_LEVEL);
+                property.intValue = value = IntSlider(property.displayName, value, MIN_LEVEL, MAX_LEVEL);
+
                 propertyPerk.FindPropertyRelative(P_COST).intValue = value + 1;
-                return value;
             }
             //================================================================
-            void DrawPosition(int level)
+            void DrawPosition()
             {
                 SerializedProperty property = propertyPerk.FindPropertyRelative(P_POS);
-                int value = Mathf.Clamp((int)property.vector3Value.y, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
-                value = IntSlider(property.displayName, value, PerkTree.MIN_LEVEL, PerkTree.MAX_LEVEL);
-                property.vector3Value = new(level, value, 0f);            
+                int value = Mathf.Clamp(property.intValue, MIN_POS, MAX_POS);
+                value = IntSlider(property.displayName, value, MIN_POS, MAX_POS);
+                property.intValue = value;            
             }
             //================================================================
             int DrawModifier()
@@ -162,9 +165,8 @@ namespace VurbiriEditor.Colonization.Characteristics
             void DrawDesc(string name)
             {
                 SerializedProperty property = propertyPerk.FindPropertyRelative(P_KEY_DESC);
-
                 property.stringValue = PREFF_KEY_DESC.Concat(name);
-                property.stringValue = TextField(property.displayName, property.stringValue);
+                TextField(property.displayName, property.stringValue);
             }
             //================================================================
             void DrawSprite()

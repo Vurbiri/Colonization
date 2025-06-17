@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
         public string Description => Localization.Instance.GetText(Files.Main, "IslandCreationStep");
         public float Weight => 5f;
 
-        public IslandCreator Init(GameplayInitObjects init)
+        public ILoadingStep Init(GameplayInitObjects init)
         {
             _storage = init.storage;
             _hexagonSpawner.Init(init.cameraTransform.Camera, init.triggerBus);
@@ -110,10 +110,9 @@ namespace Vurbiri.Colonization
 
             if (_edificePrefabs.Fullness < _edificePrefabs.Count)
                 _edificePrefabs.ReplaceRange(EUtility.FindPrefabs<AEdifice>());
-            if (_crossroadsContainer == null)
-                _crossroadsContainer = EUtility.GetComponentInChildren<Transform>(this, "Crossroads");
-            if (_psFog == null)
-                _psFog = GetComponentInChildren<ParticleSystem>();
+
+            EUtility.SetChildren(ref _psFog, this);
+            EUtility.SetChildren(ref _crossroadsContainer, this, "Crossroads");
         }
 #endif
     }

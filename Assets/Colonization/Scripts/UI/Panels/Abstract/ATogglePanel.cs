@@ -73,12 +73,9 @@ namespace Vurbiri.Colonization.UI
         protected override void OnValidate()
         {
             base.OnValidate();
-            
-            if (_toggle == null)
-                _toggle = GetComponent<VToggle>();
-            if (_buttonContainer == null)
-                _buttonContainer = EUtility.GetComponentInChildren<Transform>(this, "ButtonContainer");
 
+            EUtility.SetComponent(ref _toggle, this);
+            EUtility.SetChildren(ref _buttonContainer, this, "ButtonContainer");
             EUtility.SetPrefab(ref _buttonPrefab);
         }
 #endif

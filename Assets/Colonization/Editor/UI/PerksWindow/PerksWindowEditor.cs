@@ -24,6 +24,9 @@ namespace VurbiriEditor.Colonization
             
             EditorGUILayout.Space();
 
+            if (GUILayout.Button("Setup"))
+                _perksWindow.Setup_Editor();
+            EditorGUILayout.Space();
             if (GUILayout.Button("Create"))
                 _perksWindow.Create_Editor();
             if (GUILayout.Button("Delete"))

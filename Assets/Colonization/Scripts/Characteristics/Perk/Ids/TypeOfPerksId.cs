@@ -1,10 +1,10 @@
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class TypePerksId : IdType<TypePerksId>
+    public abstract class TypeOfPerksId : IdType<TypeOfPerksId>
     {
         public const int Economic = 0;
         public const int Military = 1;
 
-        static TypePerksId() => ConstructorRun();
+        static TypeOfPerksId() => ConstructorRun();
     }
 }

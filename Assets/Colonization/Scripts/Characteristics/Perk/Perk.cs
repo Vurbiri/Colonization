@@ -5,8 +5,8 @@ namespace Vurbiri.Colonization.Characteristics
     [System.Serializable]
     public class Perk : IPerk
     {
-        [SerializeField] private int _id;
         [SerializeField] private int _type;
+        [SerializeField] private int _id;
         [SerializeField] private int _level = PerkTree.MIN_LEVEL;
         [SerializeField] private int _targetObject;
         [SerializeField] private int _targetAbility;
@@ -14,20 +14,20 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private int _typeModifier;
         [SerializeField] private int _cost = PerkTree.MIN_LEVEL + 1;
 
-        public int Id => _id;
         public int Type => _type;
+        public int Id => _id;
         public int Level => _level;
+        public int Points => _level * (_level + 1);
         public Id<TargetOfPerkId> TargetObject => _targetObject;
         public int TargetAbility => _targetAbility;
         public int Value => _value;
         public Id<TypeModifierId> TypeModifier => _typeModifier;
         public int Cost => _cost;
 
-
 #if UNITY_EDITOR
 
         public int perkModifier;
-        public Vector3 position;
+        public int position;
         public string keyDescription;
         public Sprite sprite;
 #endif

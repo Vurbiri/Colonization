@@ -7,12 +7,11 @@ using UnityEngine.UI;
 using Vurbiri.UI;
 using static UnityEditor.EditorGUI;
 using static UnityEditor.EditorGUILayout;
-using static Vurbiri.UI.AVToggle;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(AVToggle), true), CanEditMultipleObjects]
-    public class AVToggleEditor : VSelectableEditor
+    [CustomEditor(typeof(VToggle<>), true), CanEditMultipleObjects]
+    public class VToggleTEditor : VSelectableEditor
     {
         private const float MIN_DURATION = 0f, MAX_DURATION = 1f;
 
@@ -33,22 +32,14 @@ namespace VurbiriEditor.UI
 
         private readonly AnimBool _showSwitchType = new(), _showColorType = new();
 
-        private AVToggle _toggle;
         private int _selectedCount;
-        private AVToggle[] _toggles;
-        private SwitchingType _switchingType;
+          private SwitchingType _switchingType;
 
-        protected override bool IsDerivedEditor => GetType() != typeof(AVToggleEditor);
+        protected override bool IsDerivedEditor => GetType() != typeof(VToggleTEditor);
 
         protected override void OnEnable()
         {
-            _toggle = (AVToggle)target;
-            _switchingType = _toggle.Switching;
-
-            _selectedCount = targets.Length;
-            _toggles = new AVToggle[_selectedCount];
-            for (int i = 0; i < _selectedCount; i++)
-                _toggles[i] = (AVToggle)targets[i];
+            _selectedCount          = targets.Length;
 
             _isOnProperty           = serializedObject.FindProperty("_isOn");
             _durationProperty       = serializedObject.FindProperty("_fadeDuration");
@@ -59,6 +50,8 @@ namespace VurbiriEditor.UI
             _colorOffProperty       = serializedObject.FindProperty("_colorOff");
             _groupProperty          = serializedObject.FindProperty("_group");
             _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
+
+            _switchingType          = (SwitchingType)_switchingTypeProperty.enumValueIndex;
 
             _showSwitchType.value   = _switchingType == SwitchingType.SwitchCheckmark;
             _showColorType.value    = _switchingType == SwitchingType.ColorCheckmark;
@@ -98,15 +91,7 @@ namespace VurbiriEditor.UI
 
             BeginDisabledGroup(_selectedCount > 1 && (_groupProperty.objectReferenceValue != null | _groupProperty.hasMultipleDifferentValues));
             {
-                BeginChangeCheck();
                 PropertyField(_isOnProperty);
-                if (EndChangeCheck())
-                {
-                    foreach (var toggle in _toggles)
-                        toggle.IsOn = _isOnProperty.boolValue;
-
-                    _isOnProperty.boolValue = _toggle.IsOn;
-                }
             }
             EndDisabledGroup();
             //============================================================
@@ -142,28 +127,7 @@ namespace VurbiriEditor.UI
             Space();
             indentLevel--;
             //============================================================
-            BeginChangeCheck();
             PropertyField(_groupProperty);
-            if (EndChangeCheck())
-            {
-                VToggleGroup group = _groupProperty.objectReferenceValue as VToggleGroup;
-                
-                foreach (var toggle in _toggles)
-                    toggle.Group = group;
-
-                if (!Application.isPlaying && group != null)
-                {
-                    serializedObject.ApplyModifiedProperties();
-                    foreach (var toggle in _toggles)
-                    {
-                        if (group.IsActiveToggle)
-                            toggle.IsOn = group.ActiveToggle == toggle;
-                        else if (!group.AllowSwitchOff)
-                            toggle.IsOn = true;
-                    }
-                    serializedObject.Update();
-                }
-            }
             Space();
         }
 

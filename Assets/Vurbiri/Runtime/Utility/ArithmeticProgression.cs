@@ -16,6 +16,9 @@ namespace Vurbiri
         public int Item(int n) => _a0 + _d * n;
         public int MinStep(int value) => (value - _a0) / _d;
         public int Sum(int n) => ((_a0 << 1) + _d * n) * (n + 1) >> 1;
+
+        public static int Sum(int a0, int d, int n) => ((a0 << 1) + d * n) * (n + 1) >> 1;
+        public static int Sum(int d, int n) => d * n * (n + 1) >> 1;
     }
 
     public class ArithmeticProgressionF

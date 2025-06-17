@@ -77,6 +77,7 @@ namespace Vurbiri.EntryPoint
 
                 _currentWeight += _currentStep.Weight;
                 _screen.Progress = _currentWeight / _maxWeight;
+
                 _currentStep = null;
             }
 

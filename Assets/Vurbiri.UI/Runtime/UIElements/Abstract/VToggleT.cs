@@ -6,25 +6,33 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-	public abstract class AVToggle : VSelectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
+    public enum SwitchingType
+    {
+        OnOffCheckmark,
+        SwitchCheckmark,
+        ColorCheckmark
+    }
+
+    public abstract class VToggle<TToggle> : VSelectable, IPointerClickHandler, ISubmitHandler, ICanvasElement where TToggle : VToggle<TToggle>
     {
         [SerializeField] protected bool _isOn;
         [SerializeField] private float _fadeDuration = 0.125f;
         [SerializeField] private SwitchingType _switchingType;
-        [SerializeField] private Graphic _checkmarkOn;
-        [SerializeField] private Graphic _checkmarkOff;
+        [SerializeField] protected Graphic _checkmarkOn;
+        [SerializeField] protected Graphic _checkmarkOff;
         [SerializeField] private Color _colorOn = Color.green;
         [SerializeField] private Color _colorOff = Color.red;
-        [SerializeField] private VToggleGroup _group;
-        [SerializeField] private UniSubscription<bool> _onValueChanged = new();
+        [SerializeField] protected VToggleGroup<TToggle> _group;
+        [SerializeField] protected UniSubscription<bool> _onValueChanged = new();
 
+        private readonly TToggle _this;
         private EnumFlags<SelectionState> _stateFilterOn = false, _stateFilterOff = false;
         private ITransitionEffect _transitionEffect = new EmptyEffect();
 
         #region Properties
         public bool IsOn { get => _isOn; set => SetValue(value, true); }
         public bool SilentIsOn { get => _isOn; set => SetValue(value, false); }
-        public VToggleGroup Group
+        public VToggleGroup<TToggle> Group
         {
             get => _group;
             set
@@ -32,12 +40,12 @@ namespace Vurbiri.UI
                 if (_group == value) return;
 
                 if (_group != null)
-                    _group.UnregisterToggle(this);
+                    _group.UnregisterToggle(_this);
 
                 _group = value;
 
                 if (value != null && isActiveAndEnabled)
-                    value.RegisterToggle(this);
+                    value.RegisterToggle(_this);
 
                 _transitionEffect.PlayInstant(_isOn);
             }
@@ -106,6 +114,11 @@ namespace Vurbiri.UI
         }
         #endregion
 
+        protected VToggle() : base()
+        {
+            _this = (TToggle)this;
+        }
+
         #region Awake, Start
         protected override void Awake()
         {
@@ -133,14 +146,14 @@ namespace Vurbiri.UI
             }
 
             _transitionEffect = TransitionEffectCreate();
-
+            
             base.Awake();
         }
         protected override void Start()
         {
             base.Start();
 
-            _onValueChanged.Init();
+            _onValueChanged.Init(_isOn);
         }
         #endregion
 
@@ -160,7 +173,7 @@ namespace Vurbiri.UI
         public void LeaveGroup()
         {
             if (_group != null)
-                _group.UnregisterToggle(this);
+                _group.UnregisterToggle(_this);
             _group = null;
         }
 
@@ -171,13 +184,13 @@ namespace Vurbiri.UI
             _isOn = value;
             _transitionEffect.Play(_isOn);
 
-            UISystemProfilerApi.AddMarker("VToggle.onValueChanged", this);
+            UISystemProfilerApi.AddMarker("VToggle.onValueChanged", _this);
             _onValueChanged.Invoke(_isOn);
         }
 
         private void SetValue(bool value, bool sendCallback)
         {
-            if (_isOn == value || (_group != null && !_group.CanSetValue(this, value)))
+            if (_isOn == value || (_group != null && !_group.CanSetValue(_this, value)))
                 return;
 
             _isOn = value;
@@ -185,7 +198,7 @@ namespace Vurbiri.UI
 
             if (sendCallback)
             {
-                UISystemProfilerApi.AddMarker("VToggle.onValueChanged", this);
+                UISystemProfilerApi.AddMarker("VToggle.onValueChanged", _this);
                 _onValueChanged.Invoke(_isOn);
             }
         }
@@ -225,7 +238,7 @@ namespace Vurbiri.UI
             base.OnEnable();
 
             if (_group != null)
-                _group.RegisterToggle(this);
+                _group.RegisterToggle(_this);
 
             _transitionEffect.PlayInstant(_isOn);
         }
@@ -233,7 +246,7 @@ namespace Vurbiri.UI
         protected override void OnDisable()
         {
             if (_group != null)
-                _group.UnregisterToggle(this);
+                _group.UnregisterToggle(_this);
 
             _transitionEffect.Stop();
 
@@ -292,6 +305,9 @@ namespace Vurbiri.UI
         #endregion
 
 #if UNITY_EDITOR
+        
+        private VToggleGroup<TToggle> _groupEditor;
+        private bool _isOnEditor;
         protected override void OnValidate()
         {
             if (!Application.isPlaying)
@@ -299,21 +315,32 @@ namespace Vurbiri.UI
                 _transitionEffect = TransitionEffectCreate();
                 _stateFilterOn = _checkmarkOn != null;
                 _stateFilterOff = _checkmarkOff != null;
+
+                if (_groupEditor != _group)
+                {
+                    if (_groupEditor != null)
+                        _groupEditor.UnregisterToggle(_this);
+
+                    if (_group != null && isActiveAndEnabled)
+                        _group.RegisterToggle(_this);
+
+                    _groupEditor = _group;
+
+                    _transitionEffect.PlayInstant(_isOn);
+                }
+
+                if (_groupEditor != null & _isOnEditor != _isOn)
+                {
+                    _isOn = _isOnEditor;
+                    SetValue(!_isOn, false);
+
+                    _isOnEditor = _isOn;
+                    _transitionEffect.PlayInstant(_isOn);
+                }
             }
 
             base.OnValidate();
         }
 #endif
-
-        #region Nested: SwitchingType
-        //***********************************
-        public enum SwitchingType
-        {
-            OnOffCheckmark,
-            SwitchCheckmark,
-            ColorCheckmark
-        }
-        #endregion
-
 	}
 }

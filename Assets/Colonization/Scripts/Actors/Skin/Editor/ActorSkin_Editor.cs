@@ -42,19 +42,6 @@ namespace Vurbiri.Colonization.Actors
                 _timings[i] = new();
         }
 
-        private void OnValidate()
-        {
-            if (_animator == null)
-                _animator = GetComponent<Animator>();
-            if (_sfx == null)
-                _sfx = GetComponent<AActorSFX>();
-            if (_mesh == null)
-                _mesh = GetComponentInChildren<SkinnedMeshRenderer>();
-
-            if (_animator != null)
-                _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)[A_DEATH].length;
-        }
-
         public void OnDrawGizmosSelected()
         {
             Gizmos.matrix = Matrix4x4.identity;

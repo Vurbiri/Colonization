@@ -53,6 +53,28 @@ namespace Vurbiri
                 arr = new T[length];
         }
 
+        public static void SetComponent<T>(ref T component, Component parent) where T : Component
+        {
+            if (component != null) return;
+            component = parent.GetComponent<T>();
+            if (component == null)
+                LogErrorFind<T>("component", parent.gameObject.name);
+        }
+        public static void SetChildren<T>(ref T component, Component parent) where T : Component
+        {
+            if (component != null) return;
+            component = parent.GetComponentInChildren<T>();
+            if (component == null)
+                LogErrorFind<T>("component", null);
+        }
+        public static void SetChildren<T>(ref T component, Component parent, string name) where T : Component
+        {
+            if (component != null) return;
+            component = parent.GetComponentsInChildren<T>().Where(t => t.gameObject.name == name).First();
+            if (component == null)
+                LogErrorFind<T>("component", name);
+        }
+
         // ********************************************
 
         public static T GetComponentInChildren<T>(Component parent, string name) where T : Component
