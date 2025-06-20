@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
 {
     using static CONST_UI;
 
-    public abstract class AButtonBuild : AWorldHintButton
+    public abstract class AButtonBuild : AHintButton3D
     {
         private string _hexColorPlus, _hexColorMinus;
 

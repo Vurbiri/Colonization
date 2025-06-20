@@ -7,7 +7,6 @@ namespace Vurbiri.Colonization.UI
 {
     public partial class PlayerPanels : MonoBehaviour
 	{
-        [Space]
         [SerializeField] private WarriorsPanel _warriors;
         [Space]
         [SerializeField] private ColoniesPanel _colonies;

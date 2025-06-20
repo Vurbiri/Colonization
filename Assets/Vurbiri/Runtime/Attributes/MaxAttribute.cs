@@ -1,9 +1,10 @@
 using System;
+using UnityEngine;
 
 namespace Vurbiri
 {
     [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
-    public class MaxAttribute : Attribute
+    public class MaxAttribute : PropertyAttribute
     {
         public readonly float max;
 

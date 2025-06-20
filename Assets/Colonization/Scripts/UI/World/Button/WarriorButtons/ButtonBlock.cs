@@ -4,7 +4,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class ButtonBlock : AWorldHintButton
+    public class ButtonBlock : AHintButton3D
     {
         public void Init(WorldHint hint, Action action)
         {

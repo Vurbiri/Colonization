@@ -12,8 +12,6 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private int _typePerkId;
         [SerializeField, ReadOnly] private int _perkId;
         [SerializeField, ReadOnly] private APerkHint _hint;
-        [Space]
-        [SerializeField] private Color _colorLearn;
 
         private ReactiveCombination<int, int, int> _combination;
         private int _cost, _points;
@@ -27,6 +25,26 @@ namespace Vurbiri.Colonization.UI
             _combination = new(perkTree.GetProgress(_typePerkId), blood, OnInteractable);
 
             _hint.Init(perk, hint);
+        }
+
+        public void Learn(Human player, Color colorLearn)
+        {
+            _combination.Dispose();
+            transition = Transition.None;
+
+            player.BuyPerk(_typePerkId, _perkId);
+            
+            LeaveGroup();
+
+            Color white = Color.white;
+            for (int i = _targetGraphics.Count - 1; i >= 0; i--)
+                _targetGraphics[i].SetColor(white);
+            
+            _checkmarkOn.canvasRenderer.SetColor(white);
+            _checkmarkOn.color = colorLearn;
+
+            Destroy(_interactableIcon.gameObject);
+            Destroy(this);
         }
 
         private void OnInteractable(int progress, int blood, int deltaBlood)

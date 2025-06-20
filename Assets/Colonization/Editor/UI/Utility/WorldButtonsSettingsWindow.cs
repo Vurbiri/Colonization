@@ -17,8 +17,8 @@ namespace VurbiriEditor.Colonization
 		private const string NAME = "World Buttons Settings", MENU = MENU_UI_PATH + NAME;
         #endregion
 
-        [SerializeField] private List<AWorldHintButton> _prefabs;
-        [SerializeField] private List<AWorldHintButton> _scene;
+        [SerializeField] private List<AHintButton3D> _prefabs;
+        [SerializeField] private List<AHintButton3D> _scene;
 
         [SerializeField] private ColorBlock _colorBlock;
         [SerializeField] private ScaleBlockFloat _scaleBlock;
@@ -46,8 +46,8 @@ namespace VurbiriEditor.Colonization
             _colorBlockDrawer = new(_self.FindProperty("_colorBlock"));
             _scaleBlockDrawer = _self.FindProperty("_scaleBlock");
 
-            _prefabs = EUtility.FindComponentsPrefabs<AWorldHintButton>();
-            _scene = new(FindObjectsByType<AWorldHintButton>(FindObjectsInactive.Include, FindObjectsSortMode.None));
+            _prefabs = EUtility.FindComponentsPrefabs<AHintButton3D>();
+            _scene = new(FindObjectsByType<AHintButton3D>(FindObjectsInactive.Include, FindObjectsSortMode.None));
 
             for (int i = _prefabs.Count - 1; i >= 0; i--)
                 if (PrefabUtility.IsPartOfVariantPrefab(_prefabs[i]) && !PrefabUtility.IsAddedComponentOverride(_prefabs[i]))
@@ -59,7 +59,7 @@ namespace VurbiriEditor.Colonization
 
             if (_prefabs != null || _prefabs.Count != 0)
             {
-                AWorldHintButton button = _prefabs[0];
+                AHintButton3D button = _prefabs[0];
                 _colorBlock = button.colors;
                 _scaleBlock = _scaleBlockVector = button.Scales;
             }
@@ -142,7 +142,7 @@ namespace VurbiriEditor.Colonization
 
                 #region Local: Apply(..)
                 //=================================
-                void Apply(AWorldHintButton button, string type)
+                void Apply(AHintButton3D button, string type)
                 {
                     bool isSave = false;
                     

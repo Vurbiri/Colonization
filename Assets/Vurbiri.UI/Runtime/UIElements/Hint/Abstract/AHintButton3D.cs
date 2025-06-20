@@ -5,12 +5,12 @@ using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
-    public abstract class AWorldHintButton : AVButton
+    public abstract class AHintButton3D : AVButton
     {
+        private WorldHint _hint;
         private bool _isShowingHint = false;
+        private Vector3 _offsetHint;
 
-        protected WorldHint _hint;
-        protected Vector3 _offsetHint;
         protected GameObject _thisGameObject;
         protected Transform _thisTransform;
         protected string _text;
@@ -18,15 +18,16 @@ namespace Vurbiri.UI
         protected virtual void Init(WorldHint hint, Action action, bool active, float ratioHeight = 0.5263f)
         {
             _hint = hint;
-
             _thisGameObject = gameObject;
             _thisTransform = transform;
 
+            RectTransform thisRectTransform = (RectTransform)_thisTransform;
+            Vector2 pivot = thisRectTransform.pivot;
+            Vector2 size = thisRectTransform.rect.size;
+
+            _offsetHint = new(size.x * (0.5f - pivot.x), size.y * (0.5f - pivot.y + ratioHeight), 0f);
+
             _onClick.Add(action);
-
-            float offset = ((RectTransform)_thisTransform).rect.height * ratioHeight;
-            _offsetHint = new(0f, offset, 0f);
-
             _thisGameObject.SetActive(active);
         }
 

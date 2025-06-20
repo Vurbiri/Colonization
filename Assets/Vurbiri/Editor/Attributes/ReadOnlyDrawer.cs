@@ -11,15 +11,18 @@ namespace VurbiriEditor
 		{
             if (attribute is not ReadOnlyAttribute)
             {
-                EditorGUILayout.PropertyField(mainProperty, label, true);
+                EditorGUI.PropertyField(position, mainProperty, label, true);
                 return;
             }
 
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(mainProperty, label, true);
+            EditorGUI.PropertyField(position, mainProperty, label, true);
             EditorGUI.EndDisabledGroup();
 		}
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 0f;
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return EditorGUIUtility.singleLineHeight * property.CountInProperty();
+        }
 	}
 }

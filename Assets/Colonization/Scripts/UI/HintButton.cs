@@ -6,23 +6,23 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class WorldHintButton : AHintButton3D
+    sealed public class HintButton : AHintButton2D
     {
         [SerializeField] private FileIdAndKey _getText;
 
         private Unsubscription _unsubscriber;
 
-        public void Init(WorldHint hint, Action action)
+        public void Init(CanvasHint hint, Action action)
         {
-            base.Init(hint, action, true);
+            base.Init(hint, 0.5f);
 
+            _onClick.Add(action);
             _unsubscriber = Localization.Instance.Subscribe(SetLocalizationText);
         }
-
-        public void Setup(bool isEnable, bool interactable = true)
+        public void Init(CanvasHint hint)
         {
-            this.interactable = interactable;
-            _thisGameObject.SetActive(isEnable);
+            base.Init(hint, 0.5f);
+            _unsubscriber = Localization.Instance.Subscribe(SetLocalizationText);
         }
 
         private void SetLocalizationText(Localization localization) => _text = localization.GetText(_getText.id, _getText.key);

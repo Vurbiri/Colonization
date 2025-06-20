@@ -10,15 +10,7 @@ namespace Vurbiri.Colonization.UI
 {
 	public partial class PerksWindow
     {
-        public RectTransform UpdateVisuals_Editor(float side)
-        {
-            RectTransform thisRectTransform = (RectTransform)transform;
-            thisRectTransform.sizeDelta = new(side, side);
-
-            return thisRectTransform;
-        }
-
-        [Header("┌──────────── Editor ─────────────────────")]
+        [StartEditor]
         [SerializeField, Range(2f, 10f)] private float _border = 5f;
         [SerializeField, Range(20f, 60f)] private float _treeSpace = 40f;
         [Space]
@@ -32,12 +24,17 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private PerkToggle _prefab;
         [SerializeField, HideInInspector] private PerkToggle[] _economic = new PerkToggle[EconomicPerksId.Count];
         [SerializeField, HideInInspector] private PerkToggle[] _military = new PerkToggle[MilitaryPerksId.Count];
+#pragma warning disable 414
+        [SerializeField, EndEditor] private bool _endEditor;
+#pragma warning restore 414
 
         protected override void OnValidate()
         {
             base.OnValidate();
 
             _allowSwitchOff = true;
+
+            EUtility.SetChildren(ref _learnButton, this, "LearnButton");
 
             EUtility.SetChildren(ref _economicContainer, this, "Economic");
             EUtility.SetChildren(ref _militaryContainer, this, "Military");

@@ -4,16 +4,16 @@ using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
-	public abstract class AHintToggle<TToggle> : VToggle<TToggle> where TToggle : AHintToggle<TToggle>
+	public abstract class AHintButton2D : AVButton
     {
-        private AHint _hint;
+        private CanvasHint _hint;
         private bool _isShowingHint = false;
         private Vector3 _offsetHint;
 
         protected Transform _thisTransform;
         protected string _text;
 
-        protected void Init(AHint hint, float ratioHeight)
+        protected void Init(CanvasHint hint, float ratioHeight)
         {
             _hint = hint;
             _thisTransform = transform;

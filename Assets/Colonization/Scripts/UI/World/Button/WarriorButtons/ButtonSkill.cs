@@ -5,7 +5,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class ButtonSkill : AWorldHintButton
+    sealed public class ButtonSkill : AHintButton3D
     {
         [Space]
         [SerializeField] private Image _iconImage;

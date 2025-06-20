@@ -4,7 +4,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class ButtonCancel : AWorldHintButton, IMenu
+    sealed public class ButtonCancel : AHintButton3D, IMenu
     {
         private ICancel _cancelledObj;
         private Unsubscription _unLanguage, _unAction;
