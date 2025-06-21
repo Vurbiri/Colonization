@@ -31,8 +31,21 @@ namespace Vurbiri.Colonization.UI
                 return;
             }
             
-            interactable = _cash >= _cost;
+            Interactable = _cash >= _cost;
+            SetTextHint(_caption, _cash, _cost);
 
+            _thisGameObject.SetActive(true);
+        }
+
+        public void Setup(bool isEnable, bool isUnlock)
+        {
+            if (!isEnable)
+            {
+                _thisGameObject.SetActive(false);
+                return;
+            }
+
+            CombineInteractable(isUnlock, _cash >= _cost);
             SetTextHint(_caption, _cash, _cost);
 
             _thisGameObject.SetActive(true);

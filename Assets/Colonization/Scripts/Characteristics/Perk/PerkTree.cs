@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public class PerkTree : IReactive<Perk>, IReactive<HashSet<int>[]>
     {
-        public const int MIN_LEVEL = 0, MAX_LEVEL = 5, PROGRESS_PER_LEVEL = 2;
+        public const int MIN_LEVEL = 0, MAX_LEVEL = 6, PROGRESS_PER_LEVEL = 2;
         public const int MIN_PROGRESS = 0, MAX_PROGRESS = MAX_LEVEL * (MAX_LEVEL + 1);
 
         private readonly ReadOnlyCollection<Perk>[] _perks = new ReadOnlyCollection<Perk>[TypeOfPerksId.Count];

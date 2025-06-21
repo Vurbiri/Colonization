@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
             _cash = settings.player.Resources;
         }
 
-        public void Setup(bool isEnable, int edificeId)
+        public void Setup(bool isEnable, bool isUnlock, int edificeId)
         {
             if (!isEnable)
             {
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.UI
             ButtonView view = _edificeView[edificeId];
             ACurrencies cost = _edificePrices[edificeId];
 
-            interactable = _cash >= cost;
+            CombineInteractable(isUnlock, _cash >= cost);
             _buttonIcon.sprite = view.sprite;
 
             SetTextHint(_localization.GetText(Files.Gameplay, view.keyName), _cash, cost);

@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.UI
     {
         public void Init(Direction2 directionPopup, ACurrenciesReactive currencies, ProjectColors colors, CanvasHint hint)
         {
-            _widget.Init(currencies.Blood, currencies.MaxBlood, colors, directionPopup, hint);
+            _widget.Init(currencies.Get(CurrencyId.Blood), currencies.MaxBlood, colors, directionPopup, hint);
 
             Destroy(this);
         }

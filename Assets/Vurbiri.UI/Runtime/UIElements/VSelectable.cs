@@ -19,7 +19,7 @@ namespace Vurbiri.UI
         private ScaleTween _scaleTween = new();
 
         #region Properties
-        public new bool interactable
+        public bool Interactable
         {
             get => base.interactable;
             set
@@ -32,6 +32,7 @@ namespace Vurbiri.UI
                 }
             }
         }
+
         public Graphic InteractableIcon
         {
             get => _interactableIcon;
@@ -92,6 +93,13 @@ namespace Vurbiri.UI
         #endregion
 
         public Graphic GetTargetGraphic(int index) => _targetGraphics[index].Graphic;
+
+        public void CombineInteractable(bool mainInteractable, bool advInteractable)
+        {
+            base.interactable = mainInteractable & advInteractable;
+            if (_interactableIcon != null)
+                _interactableIcon.CrossFadeAlpha(mainInteractable ? 0f : 1f, colors.fadeDuration, true);
+        }
 
         protected override void Awake()
         {

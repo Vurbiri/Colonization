@@ -72,22 +72,21 @@ namespace Vurbiri.Colonization
             public bool CanEdificeUpgrade(Crossroad crossroad)
             {
                 Id<EdificeGroupId> nextGroup = crossroad.NextGroupId;
-                Id<EdificeId> id = crossroad.NextId;
-
-                if(nextGroup == EdificeGroupId.None) return false;
 
                 if (crossroad.GroupId != EdificeGroupId.None)
-                {
-                    if ((id == EdificeId.LighthouseOne | id == EdificeId.LighthouseTwo) && !_abilities.IsTrue(HumanAbilityId.IsLighthouse))
-                        return false;
-
-                    if (id == EdificeId.City && !_abilities.IsTrue(HumanAbilityId.IsCity))
-                        return false;
-
-                    return true;
-                }
+                    return nextGroup != EdificeGroupId.None;
 
                 return _abilities.IsGreater(nextGroup.ToState(), edifices[nextGroup].Count);
+            }
+            public bool IsEdificeUnlock(Id<EdificeId> id)
+            {
+                if ((id == EdificeId.LighthouseOne | id == EdificeId.LighthouseTwo))
+                    return _abilities.IsTrue(HumanAbilityId.IsLighthouse);
+
+                if (id == EdificeId.City)
+                    return _abilities.IsTrue(HumanAbilityId.IsCity);
+
+                return true;
             }
 
             private void CreateEdifices(ReactiveList<Crossroad> values, List<EdificeLoadData> loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)

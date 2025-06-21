@@ -102,7 +102,9 @@ namespace Vurbiri.Colonization
             settings.crossroads.BindEdifices(_edifices.edifices, instantGetValue);
 
             settings.balance.BindShrines(_edifices.shrines);
-            settings.balance.BindBlood(_resources.Blood);
+            settings.balance.BindBlood(_resources.Get(CurrencyId.Blood));
+
+            _resources.AddBlood(77);
         }
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
@@ -117,6 +119,7 @@ namespace Vurbiri.Colonization
 
         #region Edifice
         public bool CanEdificeUpgrade(Crossroad crossroad) => _edifices.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
+        public bool IsEdificeUnlock(Id<EdificeId> id) => _edifices.IsEdificeUnlock(id);
         public WaitSignal BuyEdificeUpgrade(Crossroad crossroad)
         {
             ReturnSignal returnSignal = crossroad.BuyUpgrade(_id);
@@ -143,7 +146,8 @@ namespace Vurbiri.Colonization
             return false;
         }
 
-        public bool CanWallBuild(Crossroad crossroad) => _abilities.IsTrue(IsWall) && crossroad.CanWallBuild(_id);
+        public bool CanWallBuild(Crossroad crossroad) => crossroad.CanWallBuild(_id);
+        public bool IsWallUnlock() => _abilities.IsTrue(IsWall);
         public WaitSignal BuyWall(Crossroad crossroad)
         {
             ReturnSignal returnSignal = crossroad.BuyWall(_id, _abilities[WallDefence], true);

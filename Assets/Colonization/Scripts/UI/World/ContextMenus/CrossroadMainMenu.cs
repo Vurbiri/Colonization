@@ -1,6 +1,5 @@
 using UnityEngine;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -42,8 +41,8 @@ namespace Vurbiri.Colonization.UI
             _currentCrossroad = crossroad;
 
             _buttonRecruiting.Setup(_player.CanAnyRecruiting(crossroad));
-            _buttonUpgrade.Setup(_player.CanEdificeUpgrade(crossroad), crossroad.NextId.Value);
-            _buttonWall.Setup(_player.CanWallBuild(crossroad));
+            _buttonUpgrade.Setup(_player.CanEdificeUpgrade(crossroad), _player.IsEdificeUnlock(crossroad.NextId), crossroad.NextId.Value);
+            _buttonWall.Setup(_player.CanWallBuild(crossroad), _player.IsWallUnlock());
             _buttonRoads.Setup(_player.CanRoadBuild(crossroad));
 
             base.Open();

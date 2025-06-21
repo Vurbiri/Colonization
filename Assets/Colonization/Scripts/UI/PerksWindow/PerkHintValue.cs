@@ -15,15 +15,18 @@ namespace Vurbiri.Colonization.UI
             base.Init(perk, hint);
         }
 
-        protected override void SetLocalizationText(Localization localization)
+        protected override void SetTextAndCost(Localization localization)
         {
             StringBuilder stringBuilder = new();
             stringBuilder.AppendFormat(localization.GetText(Files.Gameplay, _key), _value);
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine();
             stringBuilder.Append(_cost);
 
             _text = stringBuilder.ToString(); ;
+        }
+        protected override void SetText(Localization localization)
+        {
+            _text = localization.GetFormatText(Files.Gameplay, _key, _value);
         }
     }
 }

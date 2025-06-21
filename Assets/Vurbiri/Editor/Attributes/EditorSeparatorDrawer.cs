@@ -20,9 +20,10 @@ namespace VurbiriEditor
                 Rect rect = position; rect.x -= 8f;
                 EditorGUI.DropShadowLabel(rect, startEditor.separator, EditorStyles.boldLabel);
                 position.y += position.height * _ratio;
+                label.text = text;
             }
 
-            EditorGUI.PropertyField(position, mainProperty, new(text), true);
+            EditorGUI.PropertyField(position, mainProperty, label, true);
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

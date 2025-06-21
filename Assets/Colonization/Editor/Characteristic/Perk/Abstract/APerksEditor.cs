@@ -14,8 +14,8 @@ namespace VurbiriEditor.Colonization.Characteristics
         [SerializeField] private VisualTreeAsset _treePerksVT;
         [SerializeField] private VisualTreeAsset _treePerkVT;
 
-        private readonly int MIN_LEVEL = PerkTree.MIN_LEVEL, MAX_LEVEL = PerkTree.MAX_LEVEL;
-        private readonly int MIN_POS = PerkTree.MIN_LEVEL, MAX_POS = PerkTree.MAX_LEVEL;
+        private readonly int MIN_LEVEL = PerkTree.MIN_LEVEL, MAX_LEVEL = PerkTree.MAX_LEVEL - 1;
+        private readonly int MIN_POS = 0, MAX_POS = 5;
 
         private readonly string[] P_PERKS = { "_economicPerks", "_militaryPerks" };
         private readonly string P_ID = "_id", P_LEVEL = "_level", P_TARGET_OBJ = "_targetObject", P_TARGET_AB = "_targetAbility";

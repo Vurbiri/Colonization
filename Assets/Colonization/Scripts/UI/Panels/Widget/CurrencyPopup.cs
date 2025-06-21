@@ -9,19 +9,17 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
-        public void Init(int id, ACurrenciesReactive count, ProjectColors colors, Direction2 offsetPopup, CanvasHint hint)
+        public void Init(int id, ACurrenciesReactive currencies, ProjectColors colors, Direction2 offsetPopup, CanvasHint hint)
         {
             base.Init(colors, hint);
             _popup.Init(colors, offsetPopup);
 
-            _unsubscribers += count.Subscribe(id, SetValue);
+            var currency = currencies.Get(id);
+            _unsubscribers += currency.Subscribe(SetValue);
+            _unsubscribers += currency.SubscribeDelta(_popup.Run);
         }
 
-        private void SetValue(int current, int delta)
-        {
-            _popup.Run(delta);
-            _valueTMP.text = current.ToString();
-        }
+        private void SetValue(int value) => _valueTMP.text = value.ToString();
 
         protected override void SetLocalizationText(Localization localization)
         {

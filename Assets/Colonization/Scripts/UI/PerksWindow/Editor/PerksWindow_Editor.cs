@@ -1,84 +1,111 @@
 ﻿#if UNITY_EDITOR
 
-
-
+using TMPro;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.UI
 {
 	public partial class PerksWindow
     {
+        #region SerializeField
         [StartEditor]
-        [SerializeField, Range(2f, 10f)] private float _border = 5f;
+        [SerializeField] private Vector2 _border = new(10f, 10f);
         [SerializeField, Range(20f, 60f)] private float _treeSpace = 40f;
         [Space]
-        [SerializeField] private Vector2 _perkSpace = new(11f, 11f);
+        [SerializeField, Range(5f, 20f)] private float _perkSpace = 11f;
         [Space]
-        [SerializeField] private RectTransform _economicContainer;
-        [SerializeField] private RectTransform _militaryContainer;
-        [Space]
-        [SerializeField, ReadOnly] private PerksScriptable _perks;
-        [SerializeField, ReadOnly] private ColorSettingsScriptable _colorSettings;
-        [SerializeField, ReadOnly] private PerkToggle _prefab;
-        [SerializeField, HideInInspector] private PerkToggle[] _economic = new PerkToggle[EconomicPerksId.Count];
-        [SerializeField, HideInInspector] private PerkToggle[] _military = new PerkToggle[MilitaryPerksId.Count];
+        [SerializeField, HideInInspector] private RectTransform _mainContainer;
+        [SerializeField, HideInInspector] private RectTransform _economicContainer;
+        [SerializeField, HideInInspector] private RectTransform _militaryContainer;
+        [SerializeField, HideInInspector] private RectTransform _separatorsContainer;
+
+        [SerializeField, HideInInspector] private PerksScriptable _perks;
+        [SerializeField, HideInInspector] private ColorSettingsScriptable _colorSettings;
+
+        [SerializeField, HideInInspector] private PerkToggle _perkPrefab;
+        [SerializeField, HideInInspector] private TextMeshProUGUI _separatorPrefab;
+
+        [SerializeField, HideInInspector] private PerkToggle[] _economic;
+        [SerializeField, HideInInspector] private PerkToggle[] _military;
+
+        [SerializeField, HideInInspector] private TextMeshProUGUI[] _separators;
 #pragma warning disable 414
         [SerializeField, EndEditor] private bool _endEditor;
 #pragma warning restore 414
+        #endregion
 
-        protected override void OnValidate()
-        {
-            base.OnValidate();
+        private readonly int _countSeparators = PerkTree.MAX_LEVEL + 1;
 
-            _allowSwitchOff = true;
+        private Vector2 PerkSize => _perkPrefab.rectTransform.sizeDelta;
 
-            EUtility.SetChildren(ref _learnButton, this, "LearnButton");
-
-            EUtility.SetChildren(ref _economicContainer, this, "Economic");
-            EUtility.SetChildren(ref _militaryContainer, this, "Military");
-
-            EUtility.SetScriptable(ref _perks);
-            EUtility.SetScriptable(ref _colorSettings);
-            EUtility.SetPrefab(ref _prefab);
-            EUtility.SetArray(ref _economic, EconomicPerksId.Count);
-            EUtility.SetArray(ref _military, MilitaryPerksId.Count);
-        }
         public void Setup_Editor()
         {
-            Setup_Editor(_economic, TypeOfPerksId.Economic, EconomicPerksId.Count, _economicContainer);
-            Setup_Editor(_military, TypeOfPerksId.Military, MilitaryPerksId.Count, _militaryContainer);
+            SetupPerks_Editor(_economic, TypeOfPerksId.Economic, EconomicPerksId.Count, _economicContainer);
+            SetupPerks_Editor(_military, TypeOfPerksId.Military, MilitaryPerksId.Count, _militaryContainer);
 
             float sizeX = _economicContainer.sizeDelta.x + _treeSpace;
-            ((RectTransform)transform).sizeDelta = new(sizeX * 2f + _border, _economicContainer.sizeDelta.y + _border);
+            Vector2 mainSize = new(sizeX * 2f, _economicContainer.sizeDelta.y);
+            
+            _mainContainer.sizeDelta = mainSize + _border;
 
             sizeX += _treeSpace;
             _economicContainer.anchoredPosition = new(sizeX * -0.5f, 0f);
             _militaryContainer.anchoredPosition = new(sizeX * 0.5f, 0f);
 
-            GetComponent<Image>().color = _colorSettings.Colors.PanelBack;
+            _separatorsContainer.sizeDelta = mainSize;
+
+            Vector2 position = new(0f, PerkSize.y + _perkSpace);
+            Vector2 offset = new(0f, -_separatorsContainer.pivot.y * mainSize.y);
+            SerializedObject so;;
+            for (int i = 0; i < _countSeparators; i++)
+            {
+                _separators[i].rectTransform.anchoredPosition = position * i + offset;
+                so = new(_separators[i]);
+                so.FindProperty("m_text").stringValue = (i * (i + 1)).ToString();
+                so.ApplyModifiedProperties();
+            }
+
+            //GetComponent<Image>().color = _colorSettings.Colors.PanelBack;
         }
 
         public void Create_Editor()
         {
-            Delete_Editor(_economic, EconomicPerksId.Count);
-            Delete_Editor(_military, MilitaryPerksId.Count);
+            Delete_Editor();
 
-            Create_Editor(_economic, EconomicPerksId.Count, _economicContainer);
-            Create_Editor(_military, MilitaryPerksId.Count, _militaryContainer);
+            CreatePerks_Editor(_economic, EconomicPerksId.Count, _economicContainer);
+            CreatePerks_Editor(_military, MilitaryPerksId.Count, _militaryContainer);
+
+            for (int i = 0; i < _countSeparators; i++)
+            {
+                if (_separators[i] == null)
+                {
+                    _separators[i] = (TextMeshProUGUI)UnityEditor.PrefabUtility.InstantiatePrefab(_separatorPrefab);
+                    _separators[i].rectTransform.SetParent(_separatorsContainer, false);
+                }
+            }
 
             Setup_Editor();
         }
         public void Delete_Editor()
         {
-            Delete_Editor(_economic, EconomicPerksId.Count);
-            Delete_Editor(_military, MilitaryPerksId.Count);
+            DeletePerks_Editor(_economic, EconomicPerksId.Count);
+            DeletePerks_Editor(_military, MilitaryPerksId.Count);
+
+            for (int i = 0; i < _countSeparators; i++)
+            {
+                if (_separators[i] != null)
+                    DestroyImmediate(_separators[i].gameObject);
+                _separators[i] = null;
+            }
         }
-        public void Setup_Editor(PerkToggle[] perks, int typePerkId, int count, RectTransform container)
+
+        private void SetupPerks_Editor(PerkToggle[] perks, int typePerkId, int count, RectTransform container)
         {
-            Vector2 perkSize = perks[0].rectTransform.sizeDelta + _perkSpace;
-            container.sizeDelta = perkSize * (PerkTree.MAX_LEVEL + 1) + _perkSpace * 0.5f;
+            Vector2 perkSpace = new(_perkSpace, _perkSpace);
+            Vector2 perkSize = PerkSize + perkSpace;
+            container.sizeDelta = perkSize * PerkTree.MAX_LEVEL;
 
             Vector2 offset = Vector2.zero - container.pivot;
             offset = container.sizeDelta * offset - perkSize * offset;
@@ -96,18 +123,18 @@ namespace Vurbiri.Colonization.UI
                 perkToggle.Init_Editor(perk, this);
             }
         }
-        private void Create_Editor(PerkToggle[] perks, int count, Transform parent)
+        private void CreatePerks_Editor(PerkToggle[] perks, int count, Transform parent)
         {
             for (int i = 0; i < count; i++)
             {
                 if (perks[i] == null)
                 {
-                    perks[i] = (PerkToggle)UnityEditor.PrefabUtility.InstantiatePrefab(_prefab);
+                    perks[i] = (PerkToggle)UnityEditor.PrefabUtility.InstantiatePrefab(_perkPrefab);
                     perks[i].rectTransform.SetParent(parent, false);
                 }
             }
         }
-        public void Delete_Editor(PerkToggle[] perks, int count)
+        private void DeletePerks_Editor(PerkToggle[] perks, int count)
         {
             for (int i = 0; i < count; i++)
             {
@@ -115,6 +142,37 @@ namespace Vurbiri.Colonization.UI
                     DestroyImmediate(perks[i].gameObject);
                 perks[i] = null;
             }
+        }
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+
+            _allowSwitchOff = true;
+
+            EUtility.SetComponent(ref _canvasGroup, this);
+
+            EUtility.SetObject(ref _perksButton, "PerksButton");
+            EUtility.SetChildren(ref _closeButton, this, "CloseButton");
+            EUtility.SetChildren(ref _learnButton, this, "LearnButton");
+            
+            _progressBars ??= new();
+
+            EUtility.SetComponent(ref _mainContainer, this);
+            EUtility.SetChildren(ref _economicContainer, this, "Economic");
+            EUtility.SetChildren(ref _militaryContainer, this, "Military");
+            EUtility.SetChildren(ref _separatorsContainer, this, "Separators");
+
+            EUtility.SetScriptable(ref _perks);
+            EUtility.SetScriptable(ref _colorSettings);
+
+            EUtility.SetPrefab(ref _perkPrefab);
+            EUtility.SetPrefab(ref _separatorPrefab, "PUI_PerkSeparator");
+
+            EUtility.SetArray(ref _economic, EconomicPerksId.Count);
+            EUtility.SetArray(ref _military, MilitaryPerksId.Count);
+
+            EUtility.SetArray(ref _separators, _countSeparators);
         }
     }
 }

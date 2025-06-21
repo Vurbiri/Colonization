@@ -16,10 +16,17 @@ namespace Vurbiri.Colonization.UI
         public virtual void Init(Perk perk, CanvasHint hint)
         {
             base.Init(hint, 0.48f);
-            _unsubscriber = Localization.Instance.Subscribe(SetLocalizationText);
+            _unsubscriber = Localization.Instance.Subscribe(SetTextAndCost);
         }
 
-        protected abstract void SetLocalizationText(Localization localization);
+        public void Learn()
+        {
+            _unsubscriber ^= Localization.Instance.Subscribe(SetText);
+            _cost = null;
+        }
+
+        protected abstract void SetTextAndCost(Localization localization);
+        protected abstract void SetText(Localization localization);
 
         public void Dispose()
         {

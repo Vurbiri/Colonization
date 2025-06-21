@@ -8,6 +8,11 @@ namespace Vurbiri.Colonization
 {
     using static CurrencyId;
 
+    public interface ICurrency : IReactiveValue<int>
+    {
+        public Unsubscription SubscribeDelta(Action<int> action);
+    }
+
     public abstract class ACurrenciesReactive : ACurrencies, IReactive<ACurrencies>
     {
         protected ACurrency[] _values = new ACurrency[CountAll];
@@ -18,7 +23,6 @@ namespace Vurbiri.Colonization
         public override int Amount => _amount.Value;
         public IReactiveValue<int> CurrentAmount => _amount;
         public IReactiveValue<int> MaxAmount => _maxAmount;
-        public IReactive<int, int> Blood => _values[CurrencyId.Blood];
         public IReactiveValue<int> MaxBlood => _maxBlood;
 
         public override int this[int index] { get => _values[index].Value; }
@@ -37,7 +41,7 @@ namespace Vurbiri.Colonization
                 _values[i] = new CurrencyMain(value);
                 amount += value;
             }
-            _values[CurrencyId.Blood] = new CurrencyBlood(array[CurrencyId.Blood], maxValueBlood);
+            _values[Blood] = new CurrencyBlood(array[Blood], maxValueBlood);
 
             _amount.SilentValue = amount;
         }
@@ -49,28 +53,16 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < CountMain; i++)
                 _values[i] = new CurrencyMain(other[i]);
 
-            _values[CurrencyId.Blood] = new CurrencyBlood(other[CurrencyId.Blood], maxValueBlood);
+            _values[Blood] = new CurrencyBlood(other[Blood], maxValueBlood);
 
             _amount.SilentValue = other.Amount;
         }
-
-        public ACurrenciesReactive(Ability maxValueMain, Ability maxValueBlood)
-        {
-            _maxAmount = maxValueMain;
-            _maxBlood = maxValueBlood;
-
-            for (int i = 0; i < CountMain; i++)
-                _values[i] = new CurrencyMain();
-
-            _values[CurrencyId.Blood] = new CurrencyBlood(maxValueBlood);
-        }
         #endregion
 
-        #region Reactive
         public Unsubscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
-        public Unsubscription Subscribe(int index, Action<int, int> action, bool instantGetValue = true) => _values[index].Subscribe(action, instantGetValue);
-        public Unsubscription Subscribe(Id<CurrencyId> id, Action<int, int> action, bool instantGetValue = true) => _values[id.Value].Subscribe(action, instantGetValue);
-        #endregion
+
+        public ICurrency Get(int index) => _values[index];
+        public ICurrency Get(Id<CurrencyId> id) => _values[id.Value];
 
         public override IEnumerator<int> GetEnumerator()
         {
@@ -92,7 +84,8 @@ namespace Vurbiri.Colonization
                 {
                     delta = value - _value;
                     _value = value;
-                    _changeValue.Invoke(_value, delta);
+                    _changeValue.Invoke(_value);
+                    _deltaValue.Invoke(delta);
                 }
                 return delta;
             }
@@ -101,7 +94,8 @@ namespace Vurbiri.Colonization
                 if (delta != 0)
                 {
                     _value += delta;
-                    _changeValue.Invoke(_value, delta);
+                    _changeValue.Invoke(_value);
+                    _deltaValue.Invoke(delta);
                 }
                 return delta;
             }
@@ -125,7 +119,9 @@ namespace Vurbiri.Colonization
                 {
                     int delta = value - _value;
                     _value = value;
-                    _changeValue.Invoke(_value, delta);
+
+                    _changeValue.Invoke(value);
+                    _deltaValue.Invoke(delta);
                 }
                 return 0;
             }
@@ -133,10 +129,11 @@ namespace Vurbiri.Colonization
             public override int Add(int delta) => Set(_value + delta);
         }
         //*******************************************************
-        protected abstract class ACurrency : IReactive<int, int>, IEquatable<ACurrency>, IComparable<ACurrency>
+        protected abstract class ACurrency : ICurrency, IEquatable<ACurrency>, IComparable<ACurrency>
         {
             protected int _value;
-            protected readonly Subscription<int, int> _changeValue = new();
+            protected readonly Subscription<int> _changeValue = new();
+            protected readonly Subscription<int> _deltaValue = new();
 
             public int Value => _value;
 
@@ -145,9 +142,8 @@ namespace Vurbiri.Colonization
             public abstract int Set(int value);
             public abstract int Add(int value);
 
-            public Unsubscription Subscribe(Action<int, int> action, bool instantGetValue = true) => _changeValue.Add(action, instantGetValue, _value, 0);
-           
-            public static explicit operator int(ACurrency currency) => currency._value;
+            public Unsubscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeValue.Add(action, instantGetValue, _value);
+            public Unsubscription SubscribeDelta(Action<int> action) => _deltaValue.Add(action);
 
             public bool Equals(ACurrency other) => other is not null && _value == other._value;
             public int CompareTo(ACurrency other) => -_value.CompareTo(other._value);

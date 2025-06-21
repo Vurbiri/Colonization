@@ -13,57 +13,65 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private int _perkId;
         [SerializeField, ReadOnly] private APerkHint _hint;
 
-        private ReactiveCombination<int, int, int> _combination;
+        private ReactiveCombination<int, int> _combination;
         private int _cost, _points;
 
-        public void Init(PerkTree perkTree, IReactive<int, int> blood, CanvasHint hint)
+        public void Init(PerkTree perkTree, IReactive<int> blood, CanvasHint hint, Color colorLearn)
         {
             Perk perk = perkTree[_typePerkId, _perkId];
+            _hint.Init(perk, hint);
+
+            if(perkTree.IsPerkLearned(_typePerkId, _perkId))
+            {
+                Learn(colorLearn);
+                return;
+            }
+
             _cost = perk.Cost;
             _points = perk.Points;
 
             _combination = new(perkTree.GetProgress(_typePerkId), blood, OnInteractable);
-
-            _hint.Init(perk, hint);
         }
 
-        public void Learn(Human player, Color colorLearn)
+        public void BuyPerk(Human player, Color colorLearn)
         {
-            _combination.Dispose();
+            player.BuyPerk(_typePerkId, _perkId);
+            Learn(colorLearn);
+        }
+
+        private void Learn(Color colorLearn)
+        {
             transition = Transition.None;
 
-            player.BuyPerk(_typePerkId, _perkId);
-            
             LeaveGroup();
 
             Color white = Color.white;
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 _targetGraphics[i].SetColor(white);
-            
+
             _checkmarkOn.canvasRenderer.SetColor(white);
             _checkmarkOn.color = colorLearn;
+
+            _hint.Learn();
 
             Destroy(_interactableIcon.gameObject);
             Destroy(this);
         }
 
-        private void OnInteractable(int progress, int blood, int deltaBlood)
+        private void OnInteractable(int progress, int blood)
         {
-            interactable = progress >= _points & blood >= _cost;
+            CombineInteractable(progress >= _points, blood >= _cost);
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
-#if UNITY_EDITOR
-            if (Application.isPlaying)
-#endif
-            _combination.Dispose();
+            _combination?.Dispose();
         }
 
 #if UNITY_EDITOR
-        [Header("┌───────────── Editor ─────────────────────")]
+        [StartEditor]
         public RectTransform rectTransform;
 
         protected override void OnValidate()

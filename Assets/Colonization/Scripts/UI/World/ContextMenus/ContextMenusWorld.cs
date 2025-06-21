@@ -145,7 +145,7 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        [Header("┌──────────── Editor ─────────────────────")]
+        [StartEditor]
         [SerializeField, Range(3f, 8f)] private float _buttonDistance = 5f;
 
         private void OnValidate()

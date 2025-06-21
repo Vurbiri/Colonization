@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
         {
             shrines.Subscribe((_, _, _) => AddBalance(_settings.rewardPerShrine), false);
         }
-        public void BindBlood(IReactive<int, int> blood) => blood.Subscribe(OnPayInBlood, false);
+        public void BindBlood(ICurrency blood) => blood.SubscribeDelta(OnPayInBlood);
 
         private void AddBalance(int value)
         {
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        private void OnPayInBlood(int current, int delta)
+        private void OnPayInBlood(int delta)
         {
             if (delta < 0)
                 AddBalance(_settings.penaltyPerBlood * delta);
