@@ -12,16 +12,12 @@ namespace Vurbiri.Colonization.UI
 
         private Unsubscription _unsubscriber;
 
-        public void Init(CanvasHint hint, Action action)
+        public void Init(CanvasHint hint, Action action, bool interactable = true)
         {
             base.Init(hint, 0.5f);
 
             _onClick.Add(action);
-            _unsubscriber = Localization.Instance.Subscribe(SetLocalizationText);
-        }
-        public void Init(CanvasHint hint)
-        {
-            base.Init(hint, 0.5f);
+            Interactable = interactable;
             _unsubscriber = Localization.Instance.Subscribe(SetLocalizationText);
         }
 

@@ -85,9 +85,9 @@ namespace Vurbiri.Colonization.UI
         public void Init_Editor(Perk perk, PerksWindow group)
         {
             UnityEditor.SerializedObject so = new(this);
-            so.FindProperty("_typePerkId").intValue = perk.Type;
-            so.FindProperty("_perkId").intValue = perk.Id;
-            so.FindProperty("_group").objectReferenceValue = group;
+            so.FindProperty(nameof(_typePerkId)).intValue = perk.Type;
+            so.FindProperty(nameof(_perkId)).intValue = perk.Id;
+            so.FindProperty(nameof(_group)).objectReferenceValue = group;
             so.ApplyModifiedProperties();
 
             var icon = EUtility.GetComponentInChildren<Image>(this, "Icon");

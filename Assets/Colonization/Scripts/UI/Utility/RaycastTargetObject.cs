@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
         protected override void Start()
         {
             base.Start();
-            canvasRenderer.SetColor(new(0f, 0f, 0f, 0f));
+            canvasRenderer.SetAlpha(0f);
         }
 
 #if UNITY_EDITOR

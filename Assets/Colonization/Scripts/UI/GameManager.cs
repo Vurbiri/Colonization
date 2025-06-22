@@ -1,21 +1,25 @@
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
 	public class GameManager : MonoBehaviour
 	{
+        [SerializeField, Range(1f, 3f)] private float _landingDelay = 1.75f;
+        [Space]
         [SerializeField] private ScreenLabel _label;
         [Space]
-        [SerializeField, Range(1f, 3f)] private float _landingDelay = 1.75f;
+        [SerializeField] private Controlled _controlled;
 
         private GameLoop _game;
         private CameraController _camera;
 
-        public void Init(GameLoop game, CameraController camera)
+        public void Init(GameLoop game, CameraController camera, Human player)
 		{
             _label.Init();
+            _controlled.Init(player);
 
             _game = game;
             _camera = camera;
@@ -57,6 +61,8 @@ namespace Vurbiri.Colonization.UI
 
         private void OnEndTurn(TurnQueue turnQueue, int hexId)
         {
+            _controlled.Disable();
+
             StartCoroutine(OnEndTurn_Cn());
 
             //Local
@@ -92,14 +98,55 @@ namespace Vurbiri.Colonization.UI
 
         private void OnProfit(TurnQueue turnQueue, int dice)
         {
+            if (turnQueue.IsPlayer)
+                _controlled.Enable();
+
             StartCoroutine(_game.Play());
         }
+
+        #region Nested class Controlled
+        [System.Serializable]
+        private class Controlled
+        {
+            [SerializeField] private CanvasHint _hint;
+
+            [SerializeField] private PerksWindow _perksWindow;
+            [SerializeField] private HintButton _perksButton;
+
+            public void Init(Human player)
+            {
+                _perksWindow.Init(player, _hint);
+                _perksButton.Init(_hint, _perksWindow.Switch/*, false*/);
+            }
+            public void Enable()
+            {
+                _perksButton.Interactable = true;
+            }
+            public void Disable()
+            {
+                _perksButton.Interactable = false;
+                _perksWindow.Close();
+            }
+
+#if UNITY_EDITOR
+            public void OnValidate()
+            {
+                EUtility.SetObject(ref _hint);
+
+                EUtility.SetObject(ref _perksWindow);
+                EUtility.SetObject(ref _perksButton, "PerksButton");
+            }
+#endif
+        }
+        #endregion
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
             EUtility.SetObject(ref _label);
+
+            _controlled.OnValidate();
         }
 #endif
-	}
+    }
 }

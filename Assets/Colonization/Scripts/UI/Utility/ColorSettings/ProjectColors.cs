@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization.UI
         public Color PanelText => _panelText;
         public string PanelTextTag => _panelTextTag;
 
-        public Color HinBack => _hintBack;
+        public Color HintBack => _hintBack;
         public Color HintDefault => _hintDefault;
         public string HintDefaultTag => _hintDefaultTag;
 

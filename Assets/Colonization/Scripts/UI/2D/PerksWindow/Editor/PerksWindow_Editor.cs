@@ -150,9 +150,8 @@ namespace Vurbiri.Colonization.UI
 
             _allowSwitchOff = true;
 
-            EUtility.SetComponent(ref _canvasGroup, this);
+            _switcher.OnValidate(this);
 
-            EUtility.SetObject(ref _perksButton, "PerksButton");
             EUtility.SetChildren(ref _closeButton, this, "CloseButton");
             EUtility.SetChildren(ref _learnButton, this, "LearnButton");
             
