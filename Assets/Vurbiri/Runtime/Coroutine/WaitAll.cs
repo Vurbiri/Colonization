@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Vurbiri
 {
-    sealed public class WaitAll : IEnumerator
+    public class WaitAll : IEnumerator
     {
         private readonly List<IEnumerator> _coroutines;
 

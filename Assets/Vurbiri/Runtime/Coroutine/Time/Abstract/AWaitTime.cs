@@ -1,7 +1,9 @@
+using System.Collections;
+
 namespace Vurbiri
 {
     [System.Serializable]
-    public abstract class AWaitTime : System.Collections.IEnumerator
+    public abstract class AWaitTime : IEnumerator
     {
         [UnityEngine.SerializeField] private float _waitTime;
         private float _waitUntilTime = -1f;
@@ -28,13 +30,13 @@ namespace Vurbiri
             return flag;
         }
 
-        public AWaitTime Restart(float value)
+        public IEnumerator Restart(float value)
         {
             _waitTime = value;
             _waitUntilTime = ApplicationTime + _waitTime;
             return this;
         }
-        public AWaitTime Restart()
+        public IEnumerator Restart()
         {
             _waitUntilTime = ApplicationTime + _waitTime;
             return this;

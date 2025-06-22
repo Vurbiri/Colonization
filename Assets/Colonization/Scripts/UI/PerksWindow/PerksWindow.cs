@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.UI;
@@ -20,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Color _colorLearn;
 
         private Human _player;
-        private Coroutine _coroutine;
+        private WaitSwitchFloat _waitLerp;
 
         protected override void Start()
         {
@@ -33,6 +32,8 @@ namespace Vurbiri.Colonization.UI
         public void Init(Human player, CanvasHint hint)
         {
             _player = player;
+
+            _waitLerp = new(0f, 1f, _speedSwitch, _canvasGroup.GetSetor<float>("alpha"));
 
             _perksButton.Init(hint, Switch);
             _closeButton.Init(hint, Close);
@@ -74,31 +75,12 @@ namespace Vurbiri.Colonization.UI
             if (_canvasGroup.blocksRaycasts == open)
                 return;
 
-            if (_coroutine != null)
-                StopCoroutine(_coroutine);
+            if (_waitLerp.IsRunning)
+                StopCoroutine(_waitLerp);
 
             SetAllTogglesOff();
             _canvasGroup.blocksRaycasts = open;
-            _coroutine = StartCoroutine(Switch_Cn(open ? 1f : 0f));
-
-            #region Local: Close_Cn()
-            //=================================
-            IEnumerator Switch_Cn(float end)
-            {
-                float start = _canvasGroup.alpha;
-                float progress = 0f;
-
-                while (progress < 0)
-                {
-                    progress += Time.unscaledDeltaTime * _speedSwitch;
-                    _canvasGroup.alpha = start + (end - start) * progress;
-                    yield return null;
-                }
-
-                _canvasGroup.alpha = end;
-                _coroutine = null;
-            }
-            #endregion
+            StartCoroutine(open ? _waitLerp.Forward(_canvasGroup.alpha) : _waitLerp.Backward(_canvasGroup.alpha));
         }
     }
 }
