@@ -9,13 +9,14 @@ namespace Vurbiri.Colonization.EntryPoint
 {
     sealed internal class InitUI : MonoBehaviour, ILoadingStep
     {
-        [SerializeField] private GameManager _gameManager;
+        [SerializeField] private UIManagers _managers;
         [Space]
         [SerializeField] private WorldHint _worldHint;
         [SerializeField] private ContextMenusWorld _contextMenusWorld;
         [Space]
         [SerializeField] private CanvasHint _canvasHint;
         [SerializeField] private PlayerPanels _playerPanelsUI;
+        
 
         private GameplayInitObjects _init;
 
@@ -34,7 +35,7 @@ namespace Vurbiri.Colonization.EntryPoint
             var colors = SceneContainer.Get<ProjectColors>();
             var player = _init.players.Player;
 
-            _gameManager.Init(_init.game, _init.cameraController, player);
+            _managers.Init(_init.game, _init.cameraController, player, _canvasHint);
             yield return null;
             _worldHint.Init(colors.HintBack ,colors.HintDefault);
             _contextMenusWorld.Init(_init.GetContextMenuSettings(_worldHint));
@@ -50,7 +51,7 @@ namespace Vurbiri.Colonization.EntryPoint
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            EUtility.SetObject(ref _gameManager);
+            EUtility.SetObject(ref _managers);
 
             EUtility.SetObject(ref _worldHint);
             EUtility.SetObject(ref _contextMenusWorld);

@@ -1,26 +1,25 @@
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-	public class GameManager : MonoBehaviour
+    [System.Serializable]
+    public class GameManager
 	{
         [SerializeField, Range(1f, 3f)] private float _landingDelay = 1.75f;
         [Space]
         [SerializeField] private ScreenLabel _label;
-        [Space]
-        [SerializeField] private Controlled _controlled;
 
+        private MonoBehaviour _mono;
         private GameLoop _game;
         private CameraController _camera;
 
-        public void Init(GameLoop game, CameraController camera, Human player)
+        public void Init(GameLoop game, CameraController camera, MonoBehaviour mono)
 		{
             _label.Init();
-            _controlled.Init(player);
 
+            _mono = mono;
             _game = game;
             _camera = camera;
 
@@ -42,7 +41,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnEndLanding(TurnQueue turnQueue, int hexId)
         {
-            StartCoroutine(OnEndLanding_Cn(turnQueue.IsPlayer));
+            _mono.StartCoroutine(OnEndLanding_Cn(turnQueue.IsPlayer));
 
             //Local
             IEnumerator OnEndLanding_Cn(bool isPlayer)
@@ -61,9 +60,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnEndTurn(TurnQueue turnQueue, int hexId)
         {
-            _controlled.Disable();
-
-            StartCoroutine(OnEndTurn_Cn());
+            _mono.StartCoroutine(OnEndTurn_Cn());
 
             //Local
             IEnumerator OnEndTurn_Cn()
@@ -75,7 +72,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnStartTurn(TurnQueue turnQueue, int hexId)
         {
-            StartCoroutine(OnStartTurn_Cn(turnQueue.round, turnQueue.currentId.Value));
+            _mono.StartCoroutine(OnStartTurn_Cn(turnQueue.round, turnQueue.currentId.Value));
 
             //Local
             IEnumerator OnStartTurn_Cn(int turn, int id)
@@ -88,64 +85,23 @@ namespace Vurbiri.Colonization.UI
         public void OnWaitRoll(TurnQueue turnQueue, int hexId)
         {
             //StartCoroutine(_game.Roll(Random.Range(3, 16)));
-            StartCoroutine(_game.Roll(13));
+            _mono.StartCoroutine(_game.Roll(13));
         }
 
         public void OnRoll(TurnQueue turnQueue, int hexId)
         {
-            StartCoroutine(_game.Profit());
+            _mono.StartCoroutine(_game.Profit());
         }
 
         private void OnProfit(TurnQueue turnQueue, int dice)
         {
-            if (turnQueue.IsPlayer)
-                _controlled.Enable();
-
-            StartCoroutine(_game.Play());
+            _mono.StartCoroutine(_game.Play());
         }
 
-        #region Nested class Controlled
-        [System.Serializable]
-        private class Controlled
-        {
-            [SerializeField] private CanvasHint _hint;
-
-            [SerializeField] private PerksWindow _perksWindow;
-            [SerializeField] private HintButton _perksButton;
-
-            public void Init(Human player)
-            {
-                _perksWindow.Init(player, _hint);
-                _perksButton.Init(_hint, _perksWindow.Switch/*, false*/);
-            }
-            public void Enable()
-            {
-                _perksButton.Interactable = true;
-            }
-            public void Disable()
-            {
-                _perksButton.Interactable = false;
-                _perksWindow.Close();
-            }
-
 #if UNITY_EDITOR
-            public void OnValidate()
-            {
-                EUtility.SetObject(ref _hint);
-
-                EUtility.SetObject(ref _perksWindow);
-                EUtility.SetObject(ref _perksButton, "PerksButton");
-            }
-#endif
-        }
-        #endregion
-
-#if UNITY_EDITOR
-        private void OnValidate()
+        public void OnValidate()
         {
             EUtility.SetObject(ref _label);
-
-            _controlled.OnValidate();
         }
 #endif
     }
