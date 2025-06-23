@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization
 
             public Edifices(Human parent, Dictionary<int, List<EdificeLoadData>> data, Crossroads crossroads) : this(parent._abilities)
             {
-                var abilityWall = _abilities[HumanAbilityId.WallDefence];
+                var abilityWall = _abilities[HumanAbilityId.WallDefense];
                 for (int i = 0; i < EdificeGroupId.Count; i++)
                     CreateEdifices(edifices[i], data[i], parent._id, crossroads, abilityWall);
             }

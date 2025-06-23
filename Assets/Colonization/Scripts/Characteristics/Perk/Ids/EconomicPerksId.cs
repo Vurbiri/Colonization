@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.Characteristics
         public const int IsWall_1               = 10;
         public const int MaxColony_1            = 11;
         public const int IsCity_1               = 12;
-        public const int WallDefence_1          = 13;
+        public const int WallDefense_1          = 13;
 
         public const int IsLighthouse_1         = 14;
         public const int PortsProfitShift_1     = 15;

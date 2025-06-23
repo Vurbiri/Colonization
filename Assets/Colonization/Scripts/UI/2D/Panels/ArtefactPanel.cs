@@ -16,6 +16,8 @@ namespace Vurbiri.Colonization.UI
     {
         private const string NAME = "{0,-13}";
 
+        [SerializeField] private FileIdAndKey _getText;
+        [Space]
         [SerializeField, Range(1f, 10f)] private float _showSpeed = 5f;
         [SerializeField, Range(0.5f, 3f)] private float _showDuration = 1.75f;
         [SerializeField, Range(0.5f, 2.5f)] private float _hideSpeed = 0.75f;
@@ -23,6 +25,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private Ability[] _abilities;
         [SerializeField, ReadOnly] private Level _level;
 
+        private string _name;
         private Unsubscriptions _unsubscribers = new();
         private readonly Stack<WaitRealtime> _timers = new(4);
 
@@ -56,7 +59,10 @@ namespace Vurbiri.Colonization.UI
         private void SetLocalizationText(Localization localization)
         {
             int count = _abilities.Length;
-            StringBuilder stringBuilder = new(20 * (count + 1));
+            StringBuilder stringBuilder = new(22 * (count + 1));
+
+            stringBuilder.AppendLine(_name = localization.GetText(_getText));
+            stringBuilder.AppendLine();
 
             for (int i = _abilities.Length - 1; i >= 0; i--)
                 _abilities[i].SetHintText(localization, stringBuilder);
@@ -69,7 +75,10 @@ namespace Vurbiri.Colonization.UI
         private void SetHintValues(Artefact artefact)
         {
             int[] levels = artefact.Levels; int count = levels.Length;
-            StringBuilder stringBuilder = new(20 * (count + 1));
+            StringBuilder stringBuilder = new(22 * (count + 1));
+
+            stringBuilder.AppendLine(_name);
+            stringBuilder.AppendLine();
 
             for (int i = 0; i < count; i++)
                 _abilities[i].SetHintValue(levels[i], stringBuilder);

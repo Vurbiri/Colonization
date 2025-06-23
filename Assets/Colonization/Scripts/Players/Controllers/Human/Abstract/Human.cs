@@ -150,7 +150,7 @@ namespace Vurbiri.Colonization
         public bool IsWallUnlock() => _abilities.IsTrue(IsWall);
         public WaitSignal BuyWall(Crossroad crossroad)
         {
-            ReturnSignal returnSignal = crossroad.BuyWall(_id, _abilities[WallDefence], true);
+            ReturnSignal returnSignal = crossroad.BuyWall(_id, _abilities[WallDefense], true);
             if (returnSignal)
             {
                 _resources.Pay(_prices.Wall);

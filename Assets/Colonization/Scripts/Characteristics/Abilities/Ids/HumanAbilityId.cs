@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Characteristics
         public const int IsWarlock              = 17;
         public const int IsKnight               = 18;
         public const int IsWall                 = 19;
-        public const int WallDefence            = 20;
+        public const int WallDefense            = 20;
         public const int IsLighthouse           = 21;
         public const int IsCity                 = 22;
         public const int IsArtefact             = 23;
