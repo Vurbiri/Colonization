@@ -18,7 +18,7 @@
   "Food": "Food",
   "Wood": "Wood",
   "Ore": "Ore",
-  "Mana": "Mana",
+  "Mana": "Crystals",
   "Blood": "Demon Blood",
   "LandingLabel": "Landing\n<size=85%><color={0}>{1}</color></size>",
   "StartTurnLabel": "Turn{0}\n<size=85%><color={1}>{2}</color></size>",

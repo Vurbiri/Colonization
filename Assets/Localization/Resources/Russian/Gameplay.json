@@ -18,7 +18,7 @@
   "Food": "Пища",
   "Wood": "Дерево",
   "Ore": "Руда",
-  "Mana": "Мана",
+  "Mana": "Кристаллы",
   "Blood": "Кровь демона",
   "LandingLabel": "Высадка\n<size=85%><color={0}>{1}</color></size>",
   "StartTurnLabel": "Ход {0}\n<size=85%><color={1}>{2}</color></size>",

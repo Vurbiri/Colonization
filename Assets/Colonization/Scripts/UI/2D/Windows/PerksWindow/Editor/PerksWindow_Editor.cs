@@ -3,6 +3,7 @@
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.UI
@@ -39,6 +40,13 @@ namespace Vurbiri.Colonization.UI
         private readonly int _countSeparators = PerkTree.MAX_LEVEL + 1;
 
         private Vector2 PerkSize => _perkPrefab.rectTransform.sizeDelta;
+
+        public void UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors)
+        {
+            Image image = GetComponent<Image>();
+            image.color = colors.PanelBack.SetAlpha(1f);
+            image.pixelsPerUnitMultiplier = pixelsPerUnit;
+        }
 
         public void Setup_Editor()
         {

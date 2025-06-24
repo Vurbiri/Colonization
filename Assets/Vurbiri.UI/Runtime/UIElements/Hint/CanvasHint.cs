@@ -9,9 +9,9 @@ namespace Vurbiri.UI
         [Space]
         [SerializeField] private RectTransform _canvasRectTransform;
 
-        public override void Init(Color backColor, Color textColor)
+        public override void Init()
         {
-            base.Init(backColor, textColor);
+            base.Init();
 
             if(_canvasRectTransform != transform.parent)
                 transform.SetParent(_canvasRectTransform);
@@ -42,12 +42,23 @@ namespace Vurbiri.UI
         }
 
 #if UNITY_EDITOR
+        public override void UpdateVisuals_Editor(Color backColor, Color textColor)
+        {
+            base.UpdateVisuals_Editor(backColor, textColor);
+
+            if (_canvasRectTransform != null && _canvasRectTransform != transform.parent)
+                transform.SetParent(_canvasRectTransform);
+        }
+
+
         protected override void OnValidate()
         {
             base.OnValidate();
 
             if (_canvasRectTransform == null)
-                _canvasRectTransform = (RectTransform)transform.parent;
+            {
+                _canvasRectTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+            }
         }
 #endif
     }

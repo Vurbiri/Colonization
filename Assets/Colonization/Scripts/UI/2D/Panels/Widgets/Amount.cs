@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(IReactive<int> amount, IReactive<int> max, ProjectColors colors, CanvasHint hint)
         {
-            base.Init(colors, hint);
+            base.Init(hint);
 
             _colorNormal = colors.PanelTextTag;
             _colorNormalHint = colors.HintDefaultTag;

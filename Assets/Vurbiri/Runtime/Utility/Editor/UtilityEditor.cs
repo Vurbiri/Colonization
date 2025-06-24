@@ -18,7 +18,16 @@ namespace Vurbiri
 
             obj = string.IsNullOrEmpty(name) ? Object.FindAnyObjectByType<T>(FindObjectsInactive.Include) : FindObjectByName<T>(name);
             if (obj == null)
-                LogErrorFind<T>("object", name);
+                LogErrorFind<T>("object", string.IsNullOrEmpty(name) ? typeof(T).Name : name);
+        }
+        public static void SetObjects<T>(ref T[] arr, int count = -1) where T : Component
+        {
+            if (arr != null && (arr.Length == count)) 
+                return;
+
+            arr = Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            if (arr == null || (count > 0 & arr.Length != count))
+                LogErrorFind<T>("objects", typeof(T).Name);
         }
 
         public static void SetPrefab<T>(ref T obj, string name = null) where T : MonoBehaviour

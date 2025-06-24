@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
     public class Hexagons : IReactive<Hexagon>, IDisposable
     {
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
-        private readonly Dictionary<int, List<Key>> _hexagonsIdForKey;
+        private readonly List<Key>[] _hexagonsIdForKey = new List<Key>[HEX_IDS[^1] + 1];
         private readonly Subscription<Hexagon> _eventChanged = new();
         private readonly CurrenciesLite _freeResources = new();
 
@@ -19,7 +19,6 @@ namespace Vurbiri.Colonization
         public Hexagons(GameEvents events)
         {
             int count = HEX_IDS.Length, capacity = MAX_HEXAGONS / count + 1;
-            _hexagonsIdForKey = new(count + 1);
 
             for (int i = 0; i < count; i++)
                 _hexagonsIdForKey[HEX_IDS[i]] = new List<Key>(capacity);
@@ -49,16 +48,20 @@ namespace Vurbiri.Colonization
         {
             if (id > 0)
             {
-                foreach (var key in _hexagonsIdForKey[id])
-                    _hexagons[key].ResetProfit();
+                var keys = _hexagonsIdForKey[id];
+                for(int i = keys.Count - 1; i >= 0; i--)
+                    _hexagons[keys[i]].ResetProfit();
             }
         }
         private void OnRoll(TurnQueue turnQueue, int id)
         {
             _freeResources.Clear();
-            foreach (var key in _hexagonsIdForKey[id])
-                if (_hexagons[key].SetProfitAndTryGetFreeProfit(out int currencyId))
+            var keys = _hexagonsIdForKey[id];
+            for (int i = keys.Count - 1; i >= 0; i--)
+            {
+                if (_hexagons[keys[i]].SetProfitAndTryGetFreeProfit(out int currencyId))
                     _freeResources.Increment(currencyId);
+            }
         }
 
         public static implicit operator Dictionary<Key, Hexagon>(Hexagons hexagons) => hexagons._hexagons;

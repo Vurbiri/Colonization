@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
 {
     sealed public class ShrinesPanel : AEdificesPanel<CurrentMaxAndProfit, ShrineButton>
     {
-        public override void Init(Human player, IdArray<EdificeId, Sprite> sprites, ProjectColors colors, InputController inputController, CanvasHint hint)
+        public void Init(Human player, IdArray<EdificeId, Sprite> sprites, InputController inputController, CanvasHint hint)
         {
             var edifices = player.GetEdifices(_id);
             var maxEdifices = player.GetAbility(_id.ToState());
@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
             var passiveProfit = player.GetAbility(HumanAbilityId.ShrinePassiveProfit);
 
             InitEdifice(edifices, sprites, inputController);
-            _widget.Init(edifices.CountReactive, maxEdifices, activeProfit, passiveProfit, colors, hint);
+            _widget.Init(edifices.CountReactive, maxEdifices, activeProfit, passiveProfit, hint);
         }
     }
 }

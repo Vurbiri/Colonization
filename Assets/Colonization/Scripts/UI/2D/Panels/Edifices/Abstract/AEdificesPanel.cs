@@ -2,7 +2,6 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive.Collections;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -12,8 +11,6 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected Id<EdificeGroupId> _id;
 
         private IdArray<EdificeId, Sprite> _sprites;
-
-        public abstract void Init(Human player, IdArray<EdificeId, Sprite> sprites, ProjectColors colors, InputController inputController, CanvasHint hint);
 
         protected void InitEdifice(ReactiveList<Crossroad> edifices, IdArray<EdificeId, Sprite> sprites, InputController inputController)
         {

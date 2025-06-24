@@ -1,6 +1,7 @@
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
+using VurbiriEditor.Colonization;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -13,7 +14,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Color _panelBack;
         [SerializeField] private Color _panelText;
         [Header("├──────────── Hint ─────────────────────"), Space]
-        [SerializeField] private Color _hintBack;// = new(0.985f, 0.882f, 0.725f);
+        [SerializeField] private Color _hintBack;
         [SerializeField] private Color _hintDefault;
         [Header("├──────────── Text ─────────────────────"), Space]
         [SerializeField] private Color _textDefault;
@@ -23,6 +24,7 @@ namespace Vurbiri.Colonization.UI
 
         private string _panelTextTag;
         private string _hintDefaultTag;
+
         private string _textDefaultTag, _textPositiveTag, _textNegativeTag;
 
         //private const string TAG_COLOR_FORMAT = "<color={0}>";
@@ -50,7 +52,6 @@ namespace Vurbiri.Colonization.UI
         public ProjectColors Init()
         {
             _panelTextTag = string.Format(TAG_COLOR_FORMAT_LITE, _panelText.ToHex());
-
             _hintDefaultTag = string.Format(TAG_COLOR_FORMAT_LITE, _hintDefault.ToHex());
 
             _textDefaultTag = string.Format(TAG_COLOR_FORMAT_LITE, _textDefault.ToHex());
@@ -62,5 +63,15 @@ namespace Vurbiri.Colonization.UI
 
         public Color GetTextColor(bool isPositive) => isPositive ? _textPositive : _textNegative;
         public string GetHexColor(bool isPositive) => isPositive ? _textPositiveTag : _textNegativeTag;
+
+#if UNITY_EDITOR
+        public void SetColors_Editor(UISettings_Editor.Colors colors)
+        {
+            _panelBack = colors.panelBack;
+            _panelText = colors.panelText;
+            _hintBack = colors.hintBack;
+            _hintDefault = colors.hintText;
+        }
+#endif
     }
 }

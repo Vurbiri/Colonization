@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
 
         private Stack<WarriorButton> _buttonPool;
 
-        public void Init(Human player, ProjectColors colors, InputController inputController, CanvasHint hint)
+        public void Init(Human player, InputController inputController, CanvasHint hint)
         {
             _inputController = inputController;
 
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
             warriors.Subscribe(AddWarrior);
 
             InitToggle(warriors.CountReactive);
-            _widget.Init(warriors.CountReactive, maxWarrior, colors, hint);
+            _widget.Init(warriors.CountReactive, maxWarrior, hint);
         }
 
         private void FillingPool(int max)

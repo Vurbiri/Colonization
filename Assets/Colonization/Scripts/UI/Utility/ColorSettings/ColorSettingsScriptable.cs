@@ -1,4 +1,5 @@
 using UnityEngine;
+using VurbiriEditor.Colonization;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -9,5 +10,12 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ProjectColors _colors;
 
 		public ProjectColors Colors => _colors.Init();
+
+#if UNITY_EDITOR
+        public void SetColors_Editor(UISettings_Editor.Colors colors)
+        {
+            _colors.SetColors_Editor(colors);
+        }
+#endif
     }
 }

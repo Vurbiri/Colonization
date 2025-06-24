@@ -12,9 +12,9 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private TextMeshProUGUI _profitTMP;
 
-        public void Init(IReactive<int> current, IReactive<int> max, IReactive<int> active, IReactive<int> passive, ProjectColors colors, CanvasHint hint)
+        public void Init(IReactive<int> current, IReactive<int> max, IReactive<int> active, IReactive<int> passive, CanvasHint hint)
         {
-            base.Init(colors, hint);
+            base.Init(hint);
 
             _reactiveCurrentMax = new(current, max, active, passive, SetCurrentMaxProfit);
         }

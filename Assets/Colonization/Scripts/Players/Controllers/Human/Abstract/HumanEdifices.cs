@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
             {
                 set
                 {
-                    for(int j = 0; j < EdificeGroupId.Count; j++)
+                    for (int j = 0; j < EdificeGroupId.Count; j++)
                     {
                         var list = edifices[j];
                         for (int i = list.Count - 1; i >= 0; i--)
@@ -58,13 +58,20 @@ namespace Vurbiri.Colonization
 
             public CurrenciesLite ProfitFromEdifices(int hexId)
             {
+                CurrenciesLite profit = ProfitFromPorts(hexId);
+
+                for (int i = colonies.Count - 1; i >= 0; i--)
+                    profit += colonies[i].ProfitFromColony(hexId, _compensationRes.Value);
+
+                return profit;
+            }
+
+            public CurrenciesLite ProfitFromPorts(int hexId)
+            {
                 CurrenciesLite profit = new();
 
-                for (int i = 0; i < ports.Count; i++)
+                for (int i = ports.Count - 1; i >= 0; i--)
                     profit += ports[i].ProfitFromPort(hexId, _portsProfit.Value);
-
-                for (int i = 0; i < colonies.Count; i++)
-                    profit += colonies[i].ProfitFromColony(hexId, _compensationRes.Value);
 
                 return profit;
             }

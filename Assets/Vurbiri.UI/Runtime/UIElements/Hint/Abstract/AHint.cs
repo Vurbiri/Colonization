@@ -10,6 +10,7 @@ namespace Vurbiri.UI
     {
         [SerializeField] private Image _backImage;
         [SerializeField] private TextMeshProUGUI _hintTMP;
+        [SerializeField] private CanvasGroup _canvasGroup;
         [Space]
         [SerializeField, MinMax(0f, 5f)] private WaitRealtime _timeDelay = 1.5f;
         [SerializeField, Range(1f, 20f)] private float _fadeSpeed = 4f;
@@ -17,25 +18,19 @@ namespace Vurbiri.UI
 
         protected RectTransform _backTransform;
         protected RectTransform _hintTransform;
-        private CanvasGroup _thisCanvasGroup;
         private Coroutine _coroutineShow, _coroutineHide;
         private Vector2 _defaultSize;
         
-        public virtual void Init(Color backColor, Color textColor)
+        public virtual void Init()
         {
             _backTransform = _backImage.rectTransform;
             _hintTransform = _hintTMP.rectTransform;
-            _thisCanvasGroup = GetComponent<CanvasGroup>();
             _defaultSize = _hintTransform.sizeDelta;
 
             _hintTMP.enableWordWrapping = true;
-
-            _backImage.color = backColor;
-
-            _hintTMP.color = textColor;
             _hintTMP.overflowMode = TextOverflowModes.Overflow;
 
-            _thisCanvasGroup.alpha = 0f;
+            _canvasGroup.alpha = 0f;
             _backImage = null;
         }
 
@@ -82,14 +77,14 @@ namespace Vurbiri.UI
             yield return null;
             SetPosition(position, offset);
 
-            float alpha = _thisCanvasGroup.alpha;
+            float alpha = _canvasGroup.alpha;
             while (alpha < 1f)
             {
-                _thisCanvasGroup.alpha = alpha += Time.unscaledDeltaTime * _fadeSpeed;
+                _canvasGroup.alpha = alpha += Time.unscaledDeltaTime * _fadeSpeed;
                 yield return null;
             }
 
-            _thisCanvasGroup.alpha = 1f;
+            _canvasGroup.alpha = 1f;
             _coroutineShow = null;
         }
 
@@ -109,33 +104,39 @@ namespace Vurbiri.UI
 
         private IEnumerator Hide_Cn()
         {
-            float alpha = _thisCanvasGroup.alpha;
+            float alpha = _canvasGroup.alpha;
             while (alpha > 0f)
             {
-                _thisCanvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _fadeSpeed;
+                _canvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _fadeSpeed;
                 yield return null;
             }
 
-            _thisCanvasGroup.alpha = 0f;
+            _canvasGroup.alpha = 0f;
             _coroutineHide = null;
         }
 
         private void OnDisable()
         {
-            _thisCanvasGroup.alpha = 0f;
+            _canvasGroup.alpha = 0f;
             _coroutineHide = null;
             _coroutineShow = null;
         }
 
 #if UNITY_EDITOR
+
+        public virtual void UpdateVisuals_Editor(Color backColor, Color textColor)
+        {
+            _backImage.color = backColor;
+            _hintTMP.color = textColor;
+        }
+
         protected virtual void OnValidate()
         {
             if (Application.isPlaying) return;
 
-            if (_backImage == null)
-                _backImage = GetComponent<Image>();
-            if (_hintTMP == null)
-                _hintTMP = GetComponentInChildren<TextMeshProUGUI>();
+            EUtility.SetComponent(ref _backImage, this);
+            EUtility.SetChildren(ref _hintTMP, this);
+            EUtility.SetComponent(ref _canvasGroup, this);
 
             Rebuild();
         }

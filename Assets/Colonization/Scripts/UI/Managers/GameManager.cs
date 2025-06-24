@@ -84,8 +84,8 @@ namespace Vurbiri.Colonization.UI
 
         public void OnWaitRoll(TurnQueue turnQueue, int hexId)
         {
-            //StartCoroutine(_game.Roll(Random.Range(3, 16)));
-            _mono.StartCoroutine(_game.Roll(13));
+            _mono.StartCoroutine(_game.Roll(Random.Range(3, 16)));
+            //_mono.StartCoroutine(_game.Roll(13));
         }
 
         public void OnRoll(TurnQueue turnQueue, int hexId)

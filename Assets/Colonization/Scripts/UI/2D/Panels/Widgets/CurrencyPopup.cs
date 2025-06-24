@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(int id, ACurrenciesReactive currencies, ProjectColors colors, Direction2 offsetPopup, CanvasHint hint)
         {
-            base.Init(colors, hint);
+            base.Init(hint);
             _popup.Init(colors, offsetPopup);
 
             var currency = currencies.Get(id);

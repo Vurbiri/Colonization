@@ -15,9 +15,8 @@ namespace Vurbiri.Colonization.UI
 
         protected Unsubscriptions _unsubscribers;
 
-        protected void Init(ProjectColors colors, CanvasHint hint)
+        protected void Init(CanvasHint hint)
         {
-            _valueTMP.color = colors.PanelText;
             base.Init(hint, 0.5f);
 
             _unsubscribers += Localization.Instance.Subscribe(SetLocalizationText);

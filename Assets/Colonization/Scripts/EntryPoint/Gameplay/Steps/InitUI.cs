@@ -7,7 +7,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
-    sealed internal class InitUI : MonoBehaviour, ILoadingStep
+    public class InitUI : MonoBehaviour, ILoadingStep
     {
         [SerializeField] private UIManagers _managers;
         [Space]
@@ -15,9 +15,8 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private ContextMenusWorld _contextMenusWorld;
         [Space]
         [SerializeField] private CanvasHint _canvasHint;
-        [SerializeField] private PlayerPanels _playerPanelsUI;
+        [SerializeField] private PlayerPanels _playerPanels;
         
-
         private GameplayInitObjects _init;
 
         public string Description => Localization.Instance.GetText(Files.Main, "InitUIStep");
@@ -37,11 +36,11 @@ namespace Vurbiri.Colonization.EntryPoint
 
             _managers.Init(_init.game, _init.cameraController, player, _canvasHint);
             yield return null;
-            _worldHint.Init(colors.HintBack ,colors.HintDefault);
+            _worldHint.Init();
             _contextMenusWorld.Init(_init.GetContextMenuSettings(_worldHint));
             yield return null;
-            _canvasHint.Init(colors.HintBack, colors.HintDefault);
-            _playerPanelsUI.Init(player, colors, _init.inputController, _canvasHint);
+            _canvasHint.Init();
+            _playerPanels.Init(player, colors, _init.inputController, _canvasHint);
             yield return null;
 
             Destroy(gameObject);
@@ -51,13 +50,16 @@ namespace Vurbiri.Colonization.EntryPoint
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            EUtility.SetObject(ref _managers);
+            if (!Application.isPlaying)
+            {
+                EUtility.SetObject(ref _managers);
 
-            EUtility.SetObject(ref _worldHint);
-            EUtility.SetObject(ref _contextMenusWorld);
+                EUtility.SetObject(ref _worldHint);
+                EUtility.SetObject(ref _contextMenusWorld);
 
-            EUtility.SetObject(ref _canvasHint);
-            EUtility.SetObject(ref _playerPanelsUI);
+                EUtility.SetObject(ref _canvasHint);
+                EUtility.SetObject(ref _playerPanels);
+            }
         }
 #endif
     }

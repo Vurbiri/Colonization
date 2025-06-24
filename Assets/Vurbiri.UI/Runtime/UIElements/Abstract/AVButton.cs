@@ -22,12 +22,14 @@ namespace Vurbiri.UI
 
         private bool Press()
         {
-            if (!IsActive() || !IsInteractable())
-                return false;
-
-            UISystemProfilerApi.AddMarker("VButton.onClick", this);
-            _onClick.Invoke();
-            return true;
+            if (IsActive() && IsInteractable())
+            {
+                UISystemProfilerApi.AddMarker("VButton.onClick", this);
+                _onClick.Invoke();
+                return true;
+            }
+            
+            return false;
         }
 
         public void OnPointerClick(PointerEventData eventData)

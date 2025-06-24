@@ -103,8 +103,6 @@ namespace Vurbiri.Colonization
 
             settings.balance.BindShrines(_edifices.shrines);
             settings.balance.BindBlood(_resources.Get(CurrencyId.Blood));
-
-            _resources.AddBlood(77);
         }
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
@@ -114,7 +112,12 @@ namespace Vurbiri.Colonization
         public void BuyPerk(int typePerk, int idPerk)
         {
             if (_perks.TryAdd(typePerk, idPerk, out int cost))
+            {
                 _resources.PayInBlood(cost);
+                 
+                if (typePerk == TypeOfPerksId.Economic | (idPerk >= EconomicPerksId.ExchangeSaleChance_1 & idPerk <= EconomicPerksId.ExchangeRate_1))
+                    _exchange.Update();
+            }
         }
 
         #region Edifice

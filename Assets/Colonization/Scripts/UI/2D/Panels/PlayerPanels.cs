@@ -27,12 +27,12 @@ namespace Vurbiri.Colonization.UI
         {
             var currencies = player.Resources;
 
-            _warriors.Init(player, colors, inputController, hint);
+            _warriors.Init(player, inputController, hint);
 
-            _colonies.Init(player, _sprites, colors, inputController, hint);
-            _ports.Init(player, _sprites, colors, inputController, hint);
-            _shrines.Init(player, _sprites, colors, inputController, hint);
-            _roads.Init(player, colors, hint);
+            _colonies.Init(player, _sprites, inputController, hint);
+            _ports.Init(player, _sprites, inputController, hint);
+            _shrines.Init(player, _sprites, inputController, hint);
+            _roads.Init(player, hint);
 
             _currencies.Init(_directionPopup, currencies, colors, hint);
             _blood.Init(_directionPopup, currencies, colors, hint);

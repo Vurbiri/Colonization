@@ -5,9 +5,9 @@ namespace Vurbiri.Colonization.UI
 {
     sealed public class RoadsPanel : ASinglyPanel<CurrentMax>
     {
-        public void Init(Human player, ProjectColors colors, CanvasHint hint)
+        public void Init(Human player, CanvasHint hint)
         {
-            _widget.Init(player.Roads.CountReactive, player.GetAbility(HumanAbilityId.MaxRoad), colors, hint);
+            _widget.Init(player.Roads.CountReactive, player.GetAbility(HumanAbilityId.MaxRoad), hint);
 
             Destroy(this);
         }
