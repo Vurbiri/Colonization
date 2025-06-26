@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -12,9 +11,9 @@ namespace VurbiriEditor
 	{
         private readonly int MAX_COUNT = 32;
         private readonly string P_NAME = "_id";
-        private readonly string TF_MIN = "Min", TP_NAMES = "Names";
 
         private Type _type;
+        private int _count;
         private string[] _names;
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
@@ -29,8 +28,8 @@ namespace VurbiriEditor
             {
                 HelpBox(position, $"Error values", UnityEditor.MessageType.Error); return;
             }
-            int count = _names.Length;
-            if (count > MAX_COUNT)
+            
+            if (_count > MAX_COUNT)
             {
                 HelpBox(position, $"Count of flags is greater than {MAX_COUNT}", UnityEditor.MessageType.Error); return;
             }
@@ -38,7 +37,7 @@ namespace VurbiriEditor
             SerializedProperty valueProperty = mainProperty.FindPropertyRelative(P_NAME);
             BeginProperty(position, label, mainProperty);
             {
-                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, _names) & ~(-1 << count);
+                valueProperty.intValue = MaskField(position, label, valueProperty.intValue, _names) & ~(-1 << _count);
             }
             EndProperty();
 		}
@@ -62,21 +61,17 @@ namespace VurbiriEditor
 
         private bool TryGetNames(Type typeId)
         {
-            if (typeId == _type & _names != null) return true;
+            if(IdTypesCache.GetMin(typeId) > 0)
+                return false;
+            
+            if (typeId == _type & _names != null) 
+                return true;
 
             _type = typeId;
 
-            typeId = typeId.BaseType;
-            PropertyInfo namesProperty = null; FieldInfo minField = null;
-            while (typeId != null & (namesProperty == null | minField == null))
-            {
-                minField = typeId.GetField(TF_MIN);
-                namesProperty = typeId.GetProperty(TP_NAMES);
-                typeId = typeId.BaseType;
-            }
+            _count = IdTypesCache.GetCount(typeId);
+            _names = IdTypesCache.GetNames(typeId);
 
-            if (namesProperty == null | minField == null || (int)minField.GetValue(null) < 0) return false;
-            _names = (string[])namesProperty.GetValue(null);
             return _names != null;
         }
     }

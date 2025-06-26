@@ -44,14 +44,10 @@ namespace Vurbiri.Colonization
         {
             base.OnValidate();
 
-            if (_buttonIcon == null)
-                _buttonIcon = EUtility.GetComponentInChildren<Image>(this, "Icon");
+            this.SetChildren(ref _buttonIcon, "Icon");
 
-            if (_portOneView.sprite == null)
-                _portOneView.sprite = EUtility.FindAnyAsset<Sprite>("SP_IconPortOne");
-
-            if (_portTwoView.sprite == null)
-                _portTwoView.sprite = EUtility.FindAnyAsset<Sprite>("SP_IconPortTwo");
+            EUtility.SetAsset(ref _portOneView.sprite, "SP_IconPortOne");
+            EUtility.SetAsset(ref _portTwoView.sprite, "SP_IconPortTwo");
 
             if (string.IsNullOrEmpty(_portOneView.keyName))
                 _portOneView.keyName = "PortOne";

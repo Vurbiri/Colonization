@@ -111,8 +111,8 @@ namespace Vurbiri.Colonization
             if (_edificePrefabs.Fullness < _edificePrefabs.Count)
                 _edificePrefabs.ReplaceRange(EUtility.FindPrefabs<AEdifice>());
 
-            EUtility.SetChildren(ref _psFog, this);
-            EUtility.SetChildren(ref _crossroadsContainer, this, "Crossroads");
+            this.SetChildren(ref _psFog);
+            this.SetChildren(ref _crossroadsContainer, "Crossroads");
         }
 #endif
     }

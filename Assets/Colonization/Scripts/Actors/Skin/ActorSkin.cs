@@ -125,9 +125,9 @@ namespace Vurbiri.Colonization.Actors
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            EUtility.SetComponent(ref _animator, this);
-            EUtility.SetComponent(ref _sfx, this);
-            EUtility.SetChildren(ref _mesh, this);
+            this.SetComponent(ref _animator);
+            this.SetComponent(ref _sfx);
+            this.SetChildren(ref _mesh);
 
             if (_animator != null)
                 _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)[A_DEATH].length;

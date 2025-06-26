@@ -62,40 +62,45 @@ namespace Vurbiri
                 arr = new T[length];
         }
 
-        public static void SetComponent<T>(ref T component, Component parent) where T : Component
+        public static void SetComponent<T>(this Component self, ref T component) where T : Component
         {
             if (component != null) return;
-            component = parent.GetComponent<T>();
+            component = self.GetComponent<T>();
             if (component == null)
-                LogErrorFind<T>("component", parent.gameObject.name);
+                LogErrorFind<T>("component", self.gameObject.name);
         }
-        public static void SetChildren<T>(ref T component, Component parent) where T : Component
+        public static void SetChildren<T>(this Component self, ref T component) where T : Component
         {
             if (component != null) return;
-            component = parent.GetComponentInChildren<T>();
+            component = self.GetComponentInChildren<T>();
             if (component == null)
                 LogErrorFind<T>("component", null);
         }
-        public static void SetChildren<T>(ref T component, Component parent, string name) where T : Component
+        public static void SetChildren<T>(this Component self, ref T component, string name) where T : Component
         {
             if (component != null) return;
-            component = parent.GetComponentsInChildren<T>().Where(t => t.gameObject.name == name).First();
+            component = self.GetComponentInChildren<T>(name);
             if (component == null)
                 LogErrorFind<T>("component", name);
         }
 
         // ********************************************
 
-        public static T GetComponentInChildren<T>(Component parent, string name) where T : Component
+        public static T GetComponentInChildren<T>(this Component self, string name) where T : Component
         {
-            return parent.GetComponentsInChildren<T>().Where(t => t.gameObject.name == name).First();
+            foreach (var component in self.GetComponentsInChildren<T>())
+                if (component.gameObject.name == name) return component;
+            return null;
         }
 
         // ********************************************
 
         public static T FindObjectByName<T>(string name) where T : Component
         {
-            return Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(t => t.gameObject.name == name).First();
+            //return Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None).Where(t => t.gameObject.name == name).First();
+            foreach (var component in Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                if (component.gameObject.name == name) return component;
+            return null;
         }
 
         public static T FindAnyPrefab<T>() where T : MonoBehaviour
@@ -186,6 +191,22 @@ namespace Vurbiri
             return null;
         }
 
+        public static T[] FindAllAssets<T>(string name) where T : Object
+        {
+            foreach (var guid in FindGUIDAssets<T>(name))
+                if (TryLoadAllAssetsAtGUID<T>(guid, out T[] assets))
+                    return assets;
+
+            return new T[0];
+        }
+
+        public static Sprite FindMultipleSprite(string name)
+        {
+            foreach (var sprite in FindAllAssets<Sprite>(name))
+                if (sprite.name == name) return sprite;
+            return null;
+        }
+
         // ********************************************
 
         public static string[] FindGUIDPrefabs() => AssetDatabase.FindAssets(TYPE_PREFAB, ASSET_FOLDERS);
@@ -197,6 +218,11 @@ namespace Vurbiri
         {
             obj = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));
             return obj != null;
+        }
+        public static bool TryLoadAllAssetsAtGUID<T>(string guid, out T[] arr) where T : Object
+        {
+            arr = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GUIDToAssetPath(guid)).OfType<T>().ToArray();
+            return arr != null && arr.Length > 0;
         }
 
         public static bool IsStartEditor => EditorApplication.timeSinceStartup < 120f;

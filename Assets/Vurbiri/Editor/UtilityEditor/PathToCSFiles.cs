@@ -111,19 +111,13 @@ namespace VurbiriEditor
 
         private static void SearchAndCreate(string path)
         {
-            foreach (string dir in Directory.GetDirectories(path))
-                SearchAndCreate(dir);
-
-            foreach (string file in Directory.GetFiles(path, MASK))
+            foreach (string file in Directory.GetFiles(path, MASK, SearchOption.AllDirectories))
                 CreateComment(file);
         }
 
         private static void SearchAndRemove(string path)
         {
-            foreach (string dir in Directory.GetDirectories(path))
-                SearchAndRemove(dir);
-
-            foreach (string file in Directory.GetFiles(path, MASK))
+            foreach (string file in Directory.GetFiles(path, MASK, SearchOption.AllDirectories))
                 RemoveComment(file);
         }
 

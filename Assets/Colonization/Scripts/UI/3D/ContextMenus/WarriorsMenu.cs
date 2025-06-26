@@ -1,7 +1,6 @@
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -128,10 +127,9 @@ namespace Vurbiri.Colonization.UI
         {
             if(_buttonsSkill == null || _buttonsSkill.Length == 0)
                 _buttonsSkill = GetComponentsInChildren<ButtonSkill>();
-            if (_warriorsSettings == null)
-                _warriorsSettings = EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
-            if (_buttonBlock == null)
-                _buttonBlock = GetComponentInChildren<ButtonBlock>();
+
+            this.SetChildren(ref _buttonBlock);
+            EUtility.SetScriptable(ref _warriorsSettings);
         }
 #endif
     }

@@ -30,7 +30,6 @@ namespace VurbiriEditor.Collections
             Type typeValue = fieldInfo.FieldType.GetGenericArguments()[INDEX_VALUE];
             SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
             SerializedProperty propertyCount = property.FindPropertyRelative(NAME_COUNT);
-            int count = propertyValues.arraySize;
 
             SetPositiveNames();
             _countMax = _names.Length;
@@ -43,7 +42,7 @@ namespace VurbiriEditor.Collections
 
                     EditorGUI.indentLevel++;
 
-                    for (int i = 0; i < count; i++)
+                    for (int i = 0; i < _count; i++)
                     {
                         propertyCurrent = propertyValues.GetArrayElementAtIndex(i);
                         if (propertyCurrent.objectReferenceValue != null)
@@ -181,14 +180,14 @@ namespace VurbiriEditor.Collections
             void SetValues(IReadOnlyList<Object> array)
             {
                 for (int index = 0; index < array.Count; index++)
-                    propertyValues.GetArrayElementAtIndex(index % count).objectReferenceValue = array[index];
+                    propertyValues.GetArrayElementAtIndex(index % _count).objectReferenceValue = array[index];
 
                 propertyCount.intValue = array.Count;
             }
             //=================================
             void Clear()
             {
-                for (int index = 0; index < count; index++)
+                for (int index = 0; index < _count; index++)
                     propertyValues.GetArrayElementAtIndex(index).objectReferenceValue = null;
 
                 propertyCount.intValue = 0;

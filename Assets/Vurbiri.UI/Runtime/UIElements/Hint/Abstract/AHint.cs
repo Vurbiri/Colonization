@@ -133,9 +133,9 @@ namespace Vurbiri.UI
 
         protected virtual void OnValidate()
         {
-            EUtility.SetComponent(ref _backImage, this);
-            EUtility.SetChildren(ref _hintTMP, this);
-            EUtility.SetComponent(ref _canvasGroup, this);
+            this.SetComponent(ref _backImage);
+            this.SetChildren(ref _hintTMP);
+            this.SetComponent(ref _canvasGroup);
         }
 #endif
     }

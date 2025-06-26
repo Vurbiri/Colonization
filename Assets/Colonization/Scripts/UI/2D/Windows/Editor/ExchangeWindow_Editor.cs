@@ -32,9 +32,9 @@ namespace Vurbiri.Colonization.UI
 
         private void OnValidate()
         {
-            EUtility.SetComponent(ref _mainContainer, this);
-            EUtility.SetChildren(ref _bankContainer, this, "Bank");
-            EUtility.SetChildren(ref _playerContainer, this, "Player");
+            this.SetComponent(ref _mainContainer);
+            this.SetChildren(ref _bankContainer, "Bank");
+            this.SetChildren(ref _playerContainer, "Player");
         }
     }
 }

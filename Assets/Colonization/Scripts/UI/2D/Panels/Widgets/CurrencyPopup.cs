@@ -33,9 +33,14 @@ namespace Vurbiri.Colonization.UI
             Init_Editor(settings);
             transform.localPosition = position;
 
-            UnityEditor.SerializedObject self = new(this);
-            self.FindProperty("_getText").FindPropertyRelative("key").stringValue = CurrencyId.Names[id];
-            self.ApplyModifiedProperties();
+            string name = CurrencyId.Names[id];
+            UnityEditor.SerializedObject so = new(this);
+            so.FindProperty("_getText").FindPropertyRelative("key").stringValue = name;
+            so.ApplyModifiedProperties();
+
+            so = new(EUtility.GetComponentInChildren<UnityEngine.UI.Image>(this, "Icon"));
+            so.FindProperty("m_Sprite").objectReferenceValue = EUtility.FindMultipleSprite($"SPA_C{id}_{name}");
+            so.ApplyModifiedProperties();
         }
 
         protected override void OnValidate()

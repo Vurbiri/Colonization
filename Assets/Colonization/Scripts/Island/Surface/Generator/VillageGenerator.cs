@@ -188,9 +188,10 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class MeshMaterial
         {
+#pragma warning disable 649
             public ColorRnd32 color;
             public Vector2Specular specular;
-
+#pragma warning restore 649
             public void Roll() => color.Next();
         }
         #endregion

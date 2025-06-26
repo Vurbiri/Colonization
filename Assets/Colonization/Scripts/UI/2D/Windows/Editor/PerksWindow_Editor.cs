@@ -158,15 +158,15 @@ namespace Vurbiri.Colonization.UI
 
             _switcher.OnValidate(this);
 
-            EUtility.SetChildren(ref _closeButton, this, "CloseButton");
-            EUtility.SetChildren(ref _learnButton, this, "LearnButton");
+            this.SetChildren(ref _closeButton, "CloseButton");
+            this.SetChildren(ref _learnButton, "LearnButton");
             
             _progressBars ??= new();
 
-            EUtility.SetComponent(ref _mainContainer, this);
-            EUtility.SetChildren(ref _economicContainer, this, "Economic");
-            EUtility.SetChildren(ref _militaryContainer, this, "Military");
-            EUtility.SetChildren(ref _separatorsContainer, this, "Separators");
+            this.SetComponent(ref _mainContainer);
+            this.SetChildren(ref _economicContainer, "Economic");
+            this.SetChildren(ref _militaryContainer, "Military");
+            this.SetChildren(ref _separatorsContainer, "Separators");
 
             EUtility.SetScriptable(ref _perks);
             EUtility.SetScriptable(ref _colorSettings);

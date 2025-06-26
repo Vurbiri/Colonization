@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         public void OnValidate(MonoBehaviour parent)
         {
-            EUtility.SetComponent(ref _canvasGroup, parent);
+            parent.SetComponent(ref _canvasGroup);
         }
 #endif
     }

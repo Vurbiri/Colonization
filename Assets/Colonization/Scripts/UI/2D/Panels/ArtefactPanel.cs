@@ -164,8 +164,7 @@ namespace Vurbiri.Colonization.UI
             public void Init_Editor(Component parent, ProjectColors colors)
             {
                 _hintKey = "Level";
-                if (_levelTMP == null)
-                    _levelTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(parent, "LevelTMP");
+                parent.SetChildren(ref _levelTMP, "LevelTMP");
                 _levelTMP.color = colors.TextDark;
             }
 #endif

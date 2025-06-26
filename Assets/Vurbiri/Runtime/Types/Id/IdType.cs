@@ -11,17 +11,14 @@ namespace Vurbiri
         public readonly static int Count;
 
 #if UNITY_EDITOR
-        private readonly static List<string> _names;
-        private readonly static List<string> _positiveNames;
-        private readonly static List<string> _displayNames;
-        private readonly static List<int> _values;
+        private readonly static IdTypeData _data;
 
-        public static string[] Names => _names.ToArray();
-        public static string[] PositiveNames => _positiveNames.ToArray();
-        public static string[] DisplayNames => _displayNames.ToArray();
-        public static int[] Values => _values.ToArray();
+        public static string[] Names => _data.names.ToArray();
+        public static string[] PositiveNames => _data.positiveNames.ToArray();
+        public static string[] DisplayNames => _data.displayNames.ToArray();
+        public static int[] Values => _data.values.ToArray();
 
-        public static string GetName(Id<T> id) => _names[id.Value - Min];
+        public static string GetName(Id<T> id) => _data.names[id.Value - Min];
 
         static IdType()
         {
@@ -31,10 +28,7 @@ namespace Vurbiri
             if (fields.Length == 0)
                 Debug.LogError($"Нет public static полей. Класс: {typeId.Name}");
 
-            _names = new(fields.Length);
-            _positiveNames = new(fields.Length);
-            _displayNames = new(fields.Length);
-            _values = new(fields.Length);
+            _data = new(fields.Length);
 
             Count = 0;
             int value;
@@ -58,28 +52,19 @@ namespace Vurbiri
                     Debug.LogError($"Неверное значение поля: {typeId.Name}.{field.Name} = {value} должно быть {oldValue + 1}");
                 }
 
-                if (value >= 0)
-                {
+                if (value >= 0) 
                     Count++;
-                    _positiveNames.Add(field.Name);
-                }
 
                 oldValue = value;
-                _names.Add(field.Name);
-                _displayNames.Add($"{field.Name} ({value})");
-                _values.Add(value);
+
+                _data.Add(field.Name, value);
             }
 
             if (Count == 0)
                 Debug.LogError($"Не найдено public const int полей. Класс: {typeId.Name}");
 
-            //Message.Log($"Create {typeId.Name}. min: {Min}, count: {Count}");
-
-            //Debug.Log($"{typeId.Name} --> {typeId.BaseType.Name} ({typeId.Namespace})");
-
+            IdTypesCache.Add(typeId, Count, Min, _data);
         }
-
-        
 #else
         static IdType()
         {
@@ -102,4 +87,56 @@ namespace Vurbiri
 #endif
         protected static void ConstructorRun() { }
     }
+
+#if UNITY_EDITOR
+    public static class IdTypesCache
+    {
+        private static readonly List<Type> _types = new();
+        private static readonly Dictionary<Type, IdTypeData> _dates = new();
+        private static readonly Dictionary<Type, int> _counts = new();
+        private static readonly Dictionary<Type, int> _mins = new();
+
+        public static IReadOnlyList<Type> Types => _types;
+
+        public static int GetCount(Type type) => _counts[type];
+        public static int GetMin(Type type) => _mins[type];
+
+        public static string[] GetNames(Type type) => _dates[type].names.ToArray();
+        public static string[] GetPositiveNames(Type type) => _dates[type].positiveNames.ToArray();
+        public static string[] GetDisplayNames(Type type) => _dates[type].displayNames.ToArray();
+        public static int[] GetValues(Type type) => _dates[type].values.ToArray();
+
+        internal static void Add(Type type, int count, int min, IdTypeData data)
+        {
+            _types.Add(type);
+            _counts[type] = count;
+            _mins[type] = min;
+            _dates[type] = data;
+        }
+    }
+
+    internal class IdTypeData
+    {
+        public readonly List<string> names;
+        public readonly List<string> positiveNames;
+        public readonly List<string> displayNames;
+        public readonly List<int> values;
+
+        public IdTypeData(int capacity)
+        {
+            names = new(capacity);
+            positiveNames = new(capacity);
+            displayNames = new(capacity);
+            values = new(capacity);
+        }
+
+        public void Add(string name, int value)
+        {
+            names.Add(name);
+            if (value >= 0) positiveNames.Add(name);
+            displayNames.Add($"{name} ({value})");
+            values.Add(value);
+        }
+    }
+#endif
 }

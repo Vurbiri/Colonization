@@ -99,11 +99,11 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
 
-            EUtility.SetComponent(ref _canvasGroup, this);
+            this.SetComponent(ref _canvasGroup);
 
-            EUtility.SetChildren(ref _descText, this);
-            EUtility.SetChildren(ref _fillBar, this, "Value");
-            EUtility.SetChildren(ref _indicator, this, "Indicator");
+            this.SetChildren(ref _descText);
+            this.SetChildren(ref _fillBar, "Value");
+            this.SetChildren(ref _indicator, "Indicator");
         }
 #endif
     }

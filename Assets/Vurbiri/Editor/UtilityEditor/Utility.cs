@@ -17,8 +17,8 @@ namespace VurbiriEditor
         {
             var typeField = typeof(CustomPropertyDrawer).GetField("m_Type", BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var type in TypeCache.GetTypesDerivedFrom<PropertyDrawer>())
-                foreach (var custom in type.GetCustomAttributes<CustomPropertyDrawer>(true))
-                    if (TypesEquals(propertyType, (Type)typeField.GetValue(custom)))
+                foreach (var attribute in type.GetCustomAttributes<CustomPropertyDrawer>(true))
+                    if (TypesEquals(propertyType, (Type)typeField.GetValue(attribute)))
                         return true;
             return false;
         }

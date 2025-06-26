@@ -99,16 +99,11 @@ namespace Vurbiri.Colonization.UI
 
         private void OnValidate()
         {
-            if (_buttonClose == null)
-                _buttonClose = EUtility.GetComponentInChildren<WorldHintButton>(this, "ButtonClose");
-            if (_buttonUpgrade == null)
-                _buttonUpgrade = GetComponentInChildren<ButtonBuildEdifice>();
-            if (_buttonRecruiting == null)
-                _buttonRecruiting = EUtility.GetComponentInChildren<WorldHintButton>(this, "ButtonRecruiting");
-            if (_buttonWall == null)
-                _buttonWall = EUtility.GetComponentInChildren<ButtonBuild>(this, "ButtonBuildWall");
-            if (_buttonRoads == null)
-                _buttonRoads = EUtility.GetComponentInChildren<ButtonBuild>(this, "ButtonBuildRoads");
+            this.SetChildren(ref _buttonClose, "ButtonClose");
+            this.SetChildren(ref _buttonUpgrade);
+            this.SetChildren(ref _buttonRecruiting, "ButtonRecruiting");
+            this.SetChildren(ref _buttonWall, "ButtonBuildWall");
+            this.SetChildren(ref _buttonRoads, "ButtonBuildRoads");
         }
 #endif
     }

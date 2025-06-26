@@ -1,0 +1,76 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
+using UnityEditor;
+using UnityEngine;
+using Vurbiri;
+using static VurbiriEditor.CONST_EDITOR;
+
+namespace VurbiriEditor
+{
+    public class IdTypeEditorWindow : EditorWindow
+    {
+        private const string NAME = "IdType Editor", MENU = MENU_PATH + NAME;
+
+        private readonly List<string> _paths = new();
+        private string[] _namesIdType;
+
+        [MenuItem(MENU, false, 2)]
+        private static void ShowWindow()
+        {
+            GetWindow<IdTypeEditorWindow>(true, NAME);
+        }
+
+        private void OnEnable()
+        {
+            string mask = "*" + CS_EXT;
+            string classPattern = @"\bclass\s+{0}\s*:";
+
+            var derivatives = IdTypesCache.Types;
+            List<string> names = new(derivatives.Count);
+            for (int i = derivatives.Count - 1; i >= 0; i--)
+            {
+                if (!derivatives[i].IsNested)
+                    names.Add(derivatives[i].Name);
+            }
+
+            _namesIdType = names.ToArray();
+
+            foreach (string file in Directory.GetFiles(Application.dataPath, mask, SearchOption.AllDirectories))
+            {
+                string fileContent = File.ReadAllText(file);
+                for (int i = names.Count - 1; i >= 0; i--)
+                {
+                    if (Regex.IsMatch(fileContent, string.Format(classPattern, names[i])))
+                    {
+                        _paths.Add(FileUtil.GetPhysicalPath(file));
+                        names.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void OnGUI()
+        {
+            BeginWindows();
+            Draw();
+            EndWindows();
+
+            #region Local: Draw
+            //=================================
+            void Draw()
+            {
+                for (int i = _paths.Count - 1; i >= 0; i--)
+                    EditorGUILayout.LabelField(_namesIdType[i], _paths[i]);
+
+            }
+            #endregion
+        }
+
+        private void OnDisable()
+        {
+
+        }
+    }
+}

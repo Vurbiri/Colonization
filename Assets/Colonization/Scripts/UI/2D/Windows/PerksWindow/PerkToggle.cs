@@ -78,8 +78,8 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
 
-            EUtility.SetComponent(ref _hint, this);
-            EUtility.SetComponent(ref rectTransform, this);
+            this.SetComponent(ref _hint);
+            this.SetComponent(ref rectTransform);
         }
 
         public void Init_Editor(Perk perk, PerksWindow group)
@@ -90,7 +90,7 @@ namespace Vurbiri.Colonization.UI
             so.FindProperty(nameof(_group)).objectReferenceValue = group;
             so.ApplyModifiedProperties();
 
-            var icon = EUtility.GetComponentInChildren<Image>(this, "Icon");
+            var icon = this.GetComponentInChildren<Image>("Icon");
             so = new(icon);
             so.FindProperty("m_Sprite").objectReferenceValue = perk.sprite;
             so.ApplyModifiedProperties();

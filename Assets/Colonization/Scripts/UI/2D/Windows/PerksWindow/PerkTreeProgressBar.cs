@@ -46,8 +46,8 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            EUtility.SetChildren(ref _valueRect, this, "BarValue");
-            EUtility.SetChildren(ref _valueTMP, this);
+            this.SetChildren(ref _valueRect, "BarValue");
+            this.SetChildren(ref _valueTMP);
 
             RectTransform rectTransform = GetComponent<RectTransform>();
             float offset = rectTransform.sizeDelta.x;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ namespace Vurbiri.Colonization.UI
     [RequireComponent(typeof(Image))]
     public class SimpleHoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
+        [SerializeField] private bool _interactable = true;
         [SerializeField, MinMax(0.1f, 2.5f)] private WaitRealtime _clickPeriod = 0.4f;
         [Space]
         [SerializeField] private Image _target;
@@ -18,8 +20,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(0.01f, 0.5f)] private float _fadeDuration = 0.1f;
         
         private readonly Subscription _onClick = new();
-        private bool _interactable = true, _inside, _hold;
-        private Coroutine _clickCoroutine;
+        private bool _inside, _hold;
 
         public bool Interactable
         {
@@ -46,27 +47,35 @@ namespace Vurbiri.Colonization.UI
             {
                 _hold = true;
                 _target.CrossFadeColor(_colors[StateId.Hold], _fadeDuration, true, true);
-                _clickCoroutine ??= StartCoroutine(Hold_Cn());
+                StartCoroutine(Hold_Cn());
             }
         }
         public void OnPointerUp(PointerEventData eventData)
         {
             _hold = false;
-            if (_interactable)
-                _target.CrossFadeColor(_colors[_inside ? StateId.Inside : StateId.Normal], _fadeDuration, true, true);
+            SetColor(_colors[_inside ? StateId.Inside : StateId.Normal]);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
             _inside = true;
-            if (_interactable)
-                _target.CrossFadeColor(_colors[StateId.Inside], _fadeDuration, true, true);
+            SetColor(_colors[StateId.Inside]);
         }
         public void OnPointerExit(PointerEventData eventData)
         {
             _inside = false;
-            if (_interactable)
-                _target.CrossFadeColor(_colors[StateId.Normal], _fadeDuration, true, true);
+            SetColor(_colors[StateId.Normal]);
+        }
+
+        public void CopyFrom(SimpleHoldButton other)
+        {
+            if (other == null)
+                return;
+
+            _clickPeriod = other._clickPeriod;
+            _fadeDuration = other._fadeDuration;
+
+            _colors = new(other._colors);
         }
 
         private IEnumerator Hold_Cn()
@@ -76,7 +85,13 @@ namespace Vurbiri.Colonization.UI
                 _onClick.Invoke();
                 yield return _clickPeriod.Restart();
             }
-            _clickCoroutine = null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void SetColor(Color color)
+        {
+            if (_interactable)
+                _target.CrossFadeColor(color, _fadeDuration, true, true);
         }
 
         private void OnEnable()
@@ -102,29 +117,16 @@ namespace Vurbiri.Colonization.UI
         #endregion
 
 #if UNITY_EDITOR
+
+        public RectTransform RectTransformE => _target.rectTransform;
+
         private void OnValidate()
         {
-            EUtility.SetComponent(ref _target, this);
-        }
-
-        public void CopyFrom_Editor(SimpleHoldButton other)
-        {
-            if(other == null || Equals(other))
-                return;
-            
-            _clickPeriod = other._clickPeriod;
-            _fadeDuration = other._fadeDuration;
-
-            _colors = new(other._colors);
-        }
-
-        private bool Equals(SimpleHoldButton other)
-        {
-            for(int i = 0; i < StateId.Count; i++)
-                if (_colors[i] != other._colors[i])
-                    return false;
-
-            return _clickPeriod == other._clickPeriod & _fadeDuration == other._fadeDuration;
+            if (!Application.isPlaying)
+            {
+                this.SetComponent(ref _target);
+                _target.canvasRenderer.SetColor(_colors[_interactable ? StateId.Normal : StateId.Disabled]);
+            }
         }
 #endif
     }

@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -11,7 +10,6 @@ namespace VurbiriEditor
     public class IdDrawer : PropertyDrawer
     {
         private readonly string NAME_VALUE = "_id";
-        private readonly string TP_DNAMES = "DisplayNames", TP_VALUES = "Values";
 
         private Type _type;
         private string[] _names;
@@ -54,19 +52,9 @@ namespace VurbiriEditor
 
             _type = typeId;
 
-            typeId = typeId.BaseType;
-            PropertyInfo displayNamesProperty = null, valuesProperty = null;
-            while (typeId != null & (displayNamesProperty == null | valuesProperty == null))
-            {
-                displayNamesProperty = typeId.GetProperty(TP_DNAMES);
-                valuesProperty = typeId.GetProperty(TP_VALUES);
-                typeId = typeId.BaseType;
-            }
+            _names = IdTypesCache.GetDisplayNames(typeId);
+            _values = IdTypesCache.GetValues(typeId);
 
-            if (displayNamesProperty == null | valuesProperty == null) return false;
-
-            _names = (string[])displayNamesProperty.GetValue(null);
-            _values = (int[])valuesProperty.GetValue(null);
             return _names != null & _values != null;
         }
     }

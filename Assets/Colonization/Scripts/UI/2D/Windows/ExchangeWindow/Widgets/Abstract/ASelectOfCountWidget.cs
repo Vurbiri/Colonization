@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
 		[SerializeField] private TextMeshProUGUI _textValue;
 		[SerializeField] private SimpleHoldButton _leftButton;
 		[SerializeField] private SimpleHoldButton _rightButton;
-		[SerializeField] private Image _icon;
+		[SerializeField] protected Image _icon;
 
         protected int _count;
 
@@ -51,14 +51,39 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
 
+        private Rect _size;
+        public Rect Size { get { SetSize(); return _size; } }
+
         protected virtual void OnValidate()
         {
-			EUtility.SetChildren(ref _textValue, this);
-			EUtility.SetChildren(ref _leftButton, this, "LeftButton");
-			EUtility.SetChildren(ref _rightButton, this, "RightButton");
-			EUtility.SetChildren(ref _icon, this);
+            this.SetChildren(ref _textValue);
+            this.SetChildren(ref _leftButton, "LeftButton");
+            this.SetChildren(ref _rightButton, "RightButton");
+            this.SetChildren(ref _icon, "Icon");
 
-            _leftButton.CopyFrom_Editor(_rightButton);
+            _leftButton.CopyFrom(_rightButton);
+
+            SetSize();
+        }
+
+        protected virtual void SetSize()
+        {
+            var mainSize = ((RectTransform)transform).sizeDelta;
+            var buttonRect = _rightButton.RectTransformE;
+            var iconRect = _icon.rectTransform;
+
+            _size.size = mainSize;
+            _size.width += (buttonRect.sizeDelta.x + Mathf.Abs(buttonRect.anchoredPosition.x)) * 2f;
+            _size.height += iconRect.sizeDelta.y + Mathf.Abs(iconRect.anchoredPosition.y);
+
+            _size.position = new(0f, (_size.height - mainSize.y) * 0.5f);
+        }
+
+        public void OnDrawGizmos()
+        {
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireCube(_size.center - _size.size * 0.5f, _size.size);
         }
 #endif
     }

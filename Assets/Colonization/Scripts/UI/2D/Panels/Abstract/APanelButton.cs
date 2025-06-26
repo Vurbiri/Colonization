@@ -123,8 +123,8 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
 
-            EUtility.SetComponent(ref _canvasGroup, this);
-            EUtility.SetChildren(ref _icon, this, "Icon");
+            this.SetComponent(ref _canvasGroup);
+            this.SetChildren(ref _icon, "Icon");
         }
 #endif
     }

@@ -74,8 +74,8 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnValidate();
 
-            EUtility.SetComponent(ref _toggle, this);
-            EUtility.SetChildren(ref _buttonContainer, this, "ButtonContainer");
+            this.SetComponent(ref _toggle);
+            this.SetChildren(ref _buttonContainer, "ButtonContainer");
             EUtility.SetPrefab(ref _buttonPrefab);
         }
 #endif

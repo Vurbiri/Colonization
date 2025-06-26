@@ -41,15 +41,7 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
 
-        [StartEditor] public Rect size;
-
-
-        public void OnDrawGizmosSelected()
-        {
-            Gizmos.matrix = Matrix4x4.identity;
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireCube(transform.position, new Vector3(size.size.x, size.size.y, 0.01f));
-        }
+        
 #endif
     }
 }

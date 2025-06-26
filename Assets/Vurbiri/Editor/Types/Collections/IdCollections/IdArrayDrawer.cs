@@ -28,12 +28,11 @@ namespace VurbiriEditor.Collections
                             _propertyField = VEditorGUI.DefaultPropertyField;
                     }
 
-                    int count = _names.Length;
-                    propertyValues.arraySize = count;
+                    propertyValues.arraySize = _count;
 
                     position.y += _height;
                     EditorGUI.indentLevel++;
-                    for (int i = 0; i < count; i++)
+                    for (int i = 0; i < _count; i++)
                         position = _propertyField(position, propertyValues.GetArrayElementAtIndex(i), _names[i]);
                     EditorGUI.indentLevel--;
                 }

@@ -197,12 +197,12 @@ namespace Vurbiri.Colonization.UI
         {
             if (_currencyText == null || _currencyTextRenderer == null)
             {
-                _currencyText = EUtility.GetComponentInChildren<TextMeshPro>(this, "Currency_Text(TMP)");
+                _currencyText = this.GetComponentInChildren<TextMeshPro>("Currency_Text(TMP)");
                 _currencyTextRenderer = _currencyText.renderer;
             }
             if (_idText == null || _idTextRenderer == null)
             {
-                _idText = EUtility.GetComponentInChildren<TextMeshPro>(this, "Id_Text(TMP)");
+                _idText = this.GetComponentInChildren<TextMeshPro>("Id_Text(TMP)");
                 _idTextRenderer = _idText.renderer;
             }
 
