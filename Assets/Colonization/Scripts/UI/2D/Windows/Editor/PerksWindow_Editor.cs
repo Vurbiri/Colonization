@@ -74,8 +74,6 @@ namespace Vurbiri.Colonization.UI
                 so.FindProperty("m_text").stringValue = (i * (i + 1)).ToString();
                 so.ApplyModifiedProperties();
             }
-
-            //GetComponent<Image>().color = _colorSettings.Colors.PanelBack;
         }
 
         public void Create_Editor()

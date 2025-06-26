@@ -239,25 +239,12 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
 
-        public RectTransform UpdateVisuals_Editor(float side)
-        {
-            RectTransform thisRectTransform = (RectTransform)transform;
-            thisRectTransform.sizeDelta = new(side, side);
-
-            return thisRectTransform;
-        }
-
-        [Header("┌──────────── Editor ─────────────────────")]
+        [StartEditor]
         [SerializeField] private BuffsScriptable _settings;
-        [SerializeField] private ColorSettingsScriptable _colorSettings;
 
-        private void OnValidate()
+        public RectTransform UpdateVisuals_Editor(float side, ProjectColors colors)
         {
-            EUtility.SetScriptable(ref _settings, "ArtefactSettings");
-            EUtility.SetScriptable(ref _colorSettings);
-
             List<BuffSettings> settings = _settings.Settings;
-            var colors = _colorSettings.Colors;
 
             GetComponent<Image>().color = colors.PanelBack;
 
@@ -266,6 +253,16 @@ namespace Vurbiri.Colonization.UI
             EUtility.SetArray(ref _abilities, settings.Count);
             for (int i = 0; i < settings.Count; i++)
                 _abilities[i].Init_Editor(settings[i], this, colors);
+
+            RectTransform thisRectTransform = (RectTransform)transform;
+            thisRectTransform.sizeDelta = new(side, side);
+
+            return thisRectTransform;
+        }
+
+        private void OnValidate()
+        {
+            EUtility.SetScriptable(ref _settings, "ArtefactSettings");
         }
 #endif
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 using Vurbiri.Colonization.UI;
 using VurbiriEditor.UI;
 
-namespace VurbiriEditor.Colonization
+namespace VurbiriEditor.Colonization.UI
 {
 	[CustomEditor(typeof(PerksWindow), true)]
 	public class PerksWindowEditor : VToggleGroupEditor

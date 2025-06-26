@@ -32,7 +32,7 @@ namespace VurbiriEditor.Collections
             SerializedProperty propertyCount = property.FindPropertyRelative(NAME_COUNT);
             int count = propertyValues.arraySize;
 
-            GetPositiveNames();
+            SetPositiveNames();
             _countMax = _names.Length;
 
             label = EditorGUI.BeginProperty(position, label, property);

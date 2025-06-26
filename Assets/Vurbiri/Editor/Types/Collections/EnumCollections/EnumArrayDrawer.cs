@@ -3,18 +3,20 @@ using UnityEditor;
 using UnityEngine;
 using Vurbiri.Collections;
 
-namespace VurbiriEditor
+namespace VurbiriEditor.Collections
 {
     [CustomPropertyDrawer(typeof(EnumArray<,>))]
-    public class EnumArrayDrawer : PropertyDrawer
+    sealed public class EnumArrayDrawer : PropertyDrawer
     {
-        private readonly int INDEX_TYPE = 0;
-        private readonly float Y_SPACE = EditorGUIUtility.standardVerticalSpacing;
+        private readonly int INDEX_TYPE = 0, INDEX_VALUE = 1;
         private readonly string NAME_ARRAY = "_values";
 
-        private Rect _position;
-        private SerializedProperty _propertyValues;
-        private int _count;
+        private Type _enumType;
+        private string[] _names;
+        private Func<Rect, SerializedProperty, string, Rect> _propertyField;
+
+        private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+        private readonly float _ySpace = EditorGUIUtility.standardVerticalSpacing;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -22,58 +24,55 @@ namespace VurbiriEditor
 
             label = EditorGUI.BeginProperty(position, label, property);
 
-            if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
+            if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label) && property.hasChildren)
             {
-                _propertyValues = property.FindPropertyRelative(NAME_ARRAY);
-                _count = _propertyValues.arraySize;
-                string[] names = Enum.GetNames(fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE]);
+                SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
+                int count = propertyValues.arraySize;
 
+                SetNamesAndDrawer(propertyValues);
+
+                position.y += _height;
                 EditorGUI.indentLevel++;
-                for (int i = 0; i < _count; i++)
-                    DrawField(_propertyValues.GetArrayElementAtIndex(i), names[i]);
+                for (int i = 0; i < count; i++)
+                    position = _propertyField(position, propertyValues.GetArrayElementAtIndex(i), _names[i]);
                 EditorGUI.indentLevel--;
             }
 
             EditorGUI.EndProperty();
-
-            _position = position;
-
-            #region Local: DrawField(...)
-            //=================================
-            void DrawField(SerializedProperty prop, string name)
-            {
-                position.y += position.height + Y_SPACE;
-                EditorGUI.PropertyField(position, prop, new GUIContent(name));
-                if (prop.hasVisibleChildren)
-                {
-                    int count = prop.Copy().CountInProperty() - 1;
-                    EditorGUI.indentLevel++;
-                    while (prop.NextVisible(true) && count > 0)
-                    {
-                        position.y += position.height + Y_SPACE;
-                        EditorGUI.PropertyField(position, prop, new GUIContent(prop.displayName));
-                        count--;
-                    }
-                    EditorGUI.indentLevel--;
-                }
-            }
-            //=================================
-            #endregion
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            float rate = 1.01f;
+            float height = _height;
 
-            if (property.isExpanded)
+            if (property.isExpanded && property.hasChildren)
             {
-                _propertyValues = property.FindPropertyRelative(NAME_ARRAY);
-                _count = _propertyValues.arraySize;
-                for (int i = 0; i < _count; i++)
-                    rate += _propertyValues.GetArrayElementAtIndex(i).CountInProperty();
+                SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
+                int count = propertyValues.arraySize;
+                for (int i = 0; i < count; i++)
+                    height += EditorGUI.GetPropertyHeight(propertyValues.GetArrayElementAtIndex(i)) + _ySpace;
             }
-            
-            return (EditorGUIUtility.singleLineHeight + Y_SPACE) * rate;
+
+            return height;
+        }
+
+        private void SetNamesAndDrawer(SerializedProperty property)
+        {
+            Type enumType = fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE];
+            bool isNewType = enumType != _enumType;
+
+            if (isNewType | _names == null) 
+                _names = Enum.GetNames(enumType);
+
+            if (isNewType | _propertyField == null)
+            {
+                if (Utility.IsUnityProperty(property.GetArrayElementAtIndex(0)) || Utility.IsCustomProperty(fieldInfo.FieldType.GetGenericArguments()[INDEX_VALUE]))
+                    _propertyField = VEditorGUI.CustomPropertyField;
+                else
+                    _propertyField = VEditorGUI.DefaultPropertyField;
+            }
+
+            _enumType = enumType;
         }
     }
 }

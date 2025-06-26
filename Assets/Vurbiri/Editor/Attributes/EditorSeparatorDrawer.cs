@@ -28,10 +28,7 @@ namespace VurbiriEditor
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            float ratio = _ratio;
-            ratio += property.CountInProperty();
-
-            return EditorGUIUtility.singleLineHeight * ratio;
+            return EditorGUI.GetPropertyHeight(property) + EditorGUIUtility.singleLineHeight * _ratio;
         }
     }
 

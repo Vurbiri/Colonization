@@ -101,7 +101,6 @@ namespace Vurbiri.Colonization.UI
         }
         #endregion
 
-
 #if UNITY_EDITOR
         private void OnValidate()
         {

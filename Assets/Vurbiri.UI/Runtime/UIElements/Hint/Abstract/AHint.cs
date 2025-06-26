@@ -123,29 +123,19 @@ namespace Vurbiri.UI
         }
 
 #if UNITY_EDITOR
-
         public virtual void UpdateVisuals_Editor(Color backColor, Color textColor)
         {
             _backImage.color = backColor;
             _hintTMP.color = textColor;
+
+            _backImage.rectTransform.sizeDelta = _hintTMP.rectTransform.sizeDelta + _padding;
         }
 
         protected virtual void OnValidate()
         {
-            if (Application.isPlaying) return;
-
             EUtility.SetComponent(ref _backImage, this);
             EUtility.SetChildren(ref _hintTMP, this);
             EUtility.SetComponent(ref _canvasGroup, this);
-
-            Rebuild();
-        }
-
-        public async void Rebuild()
-        {
-           await System.Threading.Tasks.Task.Delay(2);
-           if (!Application.isPlaying)
-              _backImage.rectTransform.sizeDelta = _hintTMP.rectTransform.sizeDelta + _padding;
         }
 #endif
     }

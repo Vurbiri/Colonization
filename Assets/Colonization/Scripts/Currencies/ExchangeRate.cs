@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
     public class ExchangeRate : IReactive<CurrenciesLite>, IDisposable
     {
         private readonly CurrenciesLite _exchange;
-        private readonly Subscription<CurrenciesLite> _eventChanged = new();
+        private readonly Subscription<CurrenciesLite> _changeValue = new();
         private Unsubscriptions _unsubscribers = new();
         private Chance _chance;
         private int _rate;
@@ -32,14 +32,14 @@ namespace Vurbiri.Colonization
             return new(abilities);
         }
 
-        public Unsubscription Subscribe(Action<CurrenciesLite> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _exchange);
+        public Unsubscription Subscribe(Action<CurrenciesLite> action, bool instantGetValue = true) => _changeValue.Add(action, instantGetValue, _exchange);
 
         public void Update()
         {
             for (int i = 0; i < CurrencyId.Count; i++)
                 _exchange.Set(i, _rate - _chance.Select(1));
 
-            _eventChanged.Invoke(_exchange);
+            _changeValue.Invoke(_exchange);
         }
 
         public void Dispose()

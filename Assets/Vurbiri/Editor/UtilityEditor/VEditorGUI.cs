@@ -7,6 +7,9 @@ namespace VurbiriEditor
     {
         private const float OFFSET_SIZE_LABEL = 20f, SIZE_VALUE = 50f, SIZE_SPACE = 5f;
 
+        private static readonly float s_height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+        private static readonly float s_ySpace = EditorGUIUtility.standardVerticalSpacing;
+
         public static bool MinMaxSlider(Rect position, GUIContent label, SerializedProperty minProperty, SerializedProperty maxProperty, float min, float max)
         {
             if (minProperty.propertyType != SerializedPropertyType.Float) return false;
@@ -59,6 +62,44 @@ namespace VurbiriEditor
             maxProperty.intValue = Mathf.RoundToInt(maxValue);
 
             return true;
+        }
+
+        public static Rect CustomPropertyField(Rect position, SerializedProperty property, string name)
+        {
+            EditorGUI.PropertyField(position, property, new GUIContent(name));
+            position.y += EditorGUI.GetPropertyHeight(property) + s_ySpace;
+            return position;
+        }
+
+        public static Rect DefaultPropertyField(Rect position, SerializedProperty property, string name)
+        {
+            EditorGUI.PropertyField(position, property, new GUIContent(name));
+
+            if (property.hasVisibleChildren)
+            {
+                position.y += s_height;
+                int count = property.Copy().CountInProperty() - 1;
+
+                EditorGUI.indentLevel++;
+                while (property.NextVisible(true) && count > 0)
+                {
+                    count--;
+                    EditorGUI.PropertyField(position, property, new GUIContent(property.displayName));
+
+                    if (property.hasVisibleChildren)
+                        position.y += s_height;
+                    else
+                        position.y += EditorGUI.GetPropertyHeight(property) + s_ySpace;
+
+                }
+                EditorGUI.indentLevel--;
+            }
+            else
+            {
+                position.y += EditorGUI.GetPropertyHeight(property) + s_ySpace;
+            }
+            return position;
+
         }
 
 
