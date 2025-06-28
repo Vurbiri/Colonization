@@ -20,6 +20,8 @@
   "Ore": "Ore",
   "Mana": "Crystals",
   "Blood": "Demon Blood",
+  "Exchange": "Exchange",
+  "Bank": "Bank",
   "LandingLabel": "Landing\n<size=85%><color={0}>{1}</color></size>",
   "StartTurnLabel": "Turn{0}\n<size=85%><color={1}>{2}</color></size>",
   "CurrentMaxHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>",

@@ -104,7 +104,7 @@ namespace Vurbiri.Colonization.UI
             _hold = _inside = false;
         }
 
-        #region Nested SelectionStateId
+        #region Nested StateId
         private abstract class StateId : IdType<StateId>
         {
             public const int Normal   = 0;

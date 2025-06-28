@@ -20,6 +20,8 @@
   "Ore": "Руда",
   "Mana": "Кристаллы",
   "Blood": "Кровь демона",
+  "Exchange": "Обмен",
+  "Bank": "Банк",
   "LandingLabel": "Высадка\n<size=85%><color={0}>{1}</color></size>",
   "StartTurnLabel": "Ход {0}\n<size=85%><color={1}>{2}</color></size>",
   "CurrentMaxHint": "<align=\"left\">В наличии:<b>{0,2}</b>\r\nМаксимум: <b>{1,2}</b></align>",

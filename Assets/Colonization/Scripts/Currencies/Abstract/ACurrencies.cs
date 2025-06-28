@@ -22,14 +22,14 @@ namespace Vurbiri.Colonization
             if (left.Amount < right.Amount)
                 return false;
 
-            for (int i = 0; i < CountMain; i++)
+            for (int i = 0; i < MainCount; i++)
                 if (left[i] < right[i])
                     return false;
             return true;
         }
         public static bool operator <=(ACurrencies left, ACurrencies right)
         {
-            for (int i = 0; i < CountMain; i++)
+            for (int i = 0; i < MainCount; i++)
                 if (left[i] > right[i])
                     return false;
             return true;

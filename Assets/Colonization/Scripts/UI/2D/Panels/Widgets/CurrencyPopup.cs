@@ -28,9 +28,9 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
 
-        public void Init_Editor(int id, Vector3 position, ProjectColors settings)
+        public void Init_Editor(int id, Vector3 position, ProjectColors colors)
         {
-            Init_Editor(settings);
+            Init_Editor(colors);
             transform.localPosition = position;
 
             string name = CurrencyId.Names[id];
@@ -38,9 +38,12 @@ namespace Vurbiri.Colonization.UI
             so.FindProperty("_getText").FindPropertyRelative("key").stringValue = name;
             so.ApplyModifiedProperties();
 
+            name = $"{id}_{name}";
             so = new(EUtility.GetComponentInChildren<UnityEngine.UI.Image>(this, "Icon"));
-            so.FindProperty("m_Sprite").objectReferenceValue = EUtility.FindMultipleSprite($"SPA_C{id}_{name}");
+            so.FindProperty("m_Sprite").objectReferenceValue = EUtility.FindMultipleSprite("SPA_C".Concat(name));
             so.ApplyModifiedProperties();
+
+            gameObject.name = name;
         }
 
         protected override void OnValidate()

@@ -59,20 +59,22 @@ namespace VurbiriEditor
             return typeId != null;
         }
 
-        private bool TryGetNames(Type typeId)
+        private bool TryGetNames(Type idType)
         {
-            if(IdTypesCache.GetMin(typeId) > 0)
+            if(!(IdTypesCache.Contain(idType) && IdTypesCache.GetMin(idType) >= 0))
                 return false;
-            
-            if (typeId == _type & _names != null) 
-                return true;
 
-            _type = typeId;
+            bool isInit = _type == idType & _names != null;
 
-            _count = IdTypesCache.GetCount(typeId);
-            _names = IdTypesCache.GetNames(typeId);
+            if (!isInit)
+            {
+                _type = idType;
+                _count = IdTypesCache.GetCount(idType);
+                _names = IdTypesCache.GetNames(idType);
+                isInit = true;
+            }
 
-            return _names != null;
+            return isInit;
         }
     }
 }

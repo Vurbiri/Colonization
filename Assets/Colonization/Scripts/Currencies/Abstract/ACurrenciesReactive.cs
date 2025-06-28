@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
             _maxBlood = maxValueBlood;
 
             int value, amount = 0;
-            for (int i = 0; i < CountMain; i++)
+            for (int i = 0; i < MainCount; i++)
             {
                 value = array[i];
                 _values[i] = new CurrencyMain(value);
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
             _maxAmount = maxValueMain;
             _maxBlood = maxValueBlood;
 
-            for (int i = 0; i < CountMain; i++)
+            for (int i = 0; i < MainCount; i++)
                 _values[i] = new CurrencyMain(other[i]);
 
             _values[Blood] = new CurrencyBlood(other[Blood], maxValueBlood);

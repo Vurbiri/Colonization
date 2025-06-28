@@ -12,12 +12,11 @@ namespace Vurbiri.Colonization.UI
     {
         #region SerializeField
         [StartEditor]
-        [SerializeField] private Vector2 _border = new(10f, 10f);
-        [SerializeField, Range(20f, 60f)] private float _treeSpace = 40f;
+        [SerializeField] private Vector2 _border = new(20f, 90f);
+        [SerializeField, Range(20f, 60f)] private float _treeSpace = 48f;
         [Space]
-        [SerializeField, Range(5f, 20f)] private float _perkSpace = 11f;
+        [SerializeField, Range(5f, 20f)] private float _perkSpace = 10.5f;
         [Space]
-        [SerializeField, HideInInspector] private RectTransform _mainContainer;
         [SerializeField, HideInInspector] private RectTransform _economicContainer;
         [SerializeField, HideInInspector] private RectTransform _militaryContainer;
         [SerializeField, HideInInspector] private RectTransform _separatorsContainer;
@@ -39,13 +38,16 @@ namespace Vurbiri.Colonization.UI
 
         private readonly int _countSeparators = PerkTree.MAX_LEVEL + 1;
 
-        private Vector2 PerkSize => _perkPrefab.rectTransform.sizeDelta;
+        private Vector2 PerkSize => _perkPrefab.rectTransform.sizeDelta + new Vector2(_perkSpace, _perkSpace);
 
         public void UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors)
         {
+            Color color = colors.PanelBack.SetAlpha(1f);
             Image image = GetComponent<Image>();
-            image.color = colors.PanelBack.SetAlpha(1f);
+            image.color = color;
             image.pixelsPerUnitMultiplier = pixelsPerUnit;
+
+            _closeButton.Color = color;
         }
 
         public void Setup_Editor()
@@ -56,7 +58,7 @@ namespace Vurbiri.Colonization.UI
             float sizeX = _economicContainer.sizeDelta.x + _treeSpace;
             Vector2 mainSize = new(sizeX * 2f, _economicContainer.sizeDelta.y);
             
-            _mainContainer.sizeDelta = mainSize + _border;
+            GetComponent<RectTransform>().sizeDelta = mainSize + _border;
 
             sizeX += _treeSpace;
             _economicContainer.anchoredPosition = new(sizeX * -0.5f, 0f);
@@ -64,7 +66,7 @@ namespace Vurbiri.Colonization.UI
 
             _separatorsContainer.sizeDelta = mainSize;
 
-            Vector2 position = new(0f, PerkSize.y + _perkSpace);
+            Vector2 position = new(0f, PerkSize.y);
             Vector2 offset = new(0f, -_separatorsContainer.pivot.y * mainSize.y);
             SerializedObject so;;
             for (int i = 0; i < _countSeparators; i++)
@@ -84,13 +86,7 @@ namespace Vurbiri.Colonization.UI
             CreatePerks_Editor(_military, MilitaryPerksId.Count, _militaryContainer);
 
             for (int i = 0; i < _countSeparators; i++)
-            {
-                if (_separators[i] == null)
-                {
-                    _separators[i] = (TextMeshProUGUI)UnityEditor.PrefabUtility.InstantiatePrefab(_separatorPrefab);
-                    _separators[i].rectTransform.SetParent(_separatorsContainer, false);
-                }
-            }
+                _separators[i] = EUtility.InstantiatePrefab(_separatorPrefab, _separatorsContainer);
 
             Setup_Editor();
         }
@@ -100,17 +96,12 @@ namespace Vurbiri.Colonization.UI
             DeletePerks_Editor(_military, MilitaryPerksId.Count);
 
             for (int i = 0; i < _countSeparators; i++)
-            {
-                if (_separators[i] != null)
-                    DestroyImmediate(_separators[i].gameObject);
-                _separators[i] = null;
-            }
+                EUtility.DestroyGameObject(ref _separators[i]);
         }
 
         private void SetupPerks_Editor(PerkToggle[] perks, int typePerkId, int count, RectTransform container)
         {
-            Vector2 perkSpace = new(_perkSpace, _perkSpace);
-            Vector2 perkSize = PerkSize + perkSpace;
+            Vector2 perkSize = PerkSize;
             container.sizeDelta = perkSize * PerkTree.MAX_LEVEL;
 
             Vector2 offset = Vector2.zero - container.pivot;
@@ -123,31 +114,19 @@ namespace Vurbiri.Colonization.UI
                 perkToggle = perks[i];
 
                 Vector2 positionPerk = new(perk.position, perk.Level);
-
                 perkToggle.rectTransform.anchoredPosition = perkSize * positionPerk + offset;
-
                 perkToggle.Init_Editor(perk, this);
             }
         }
         private void CreatePerks_Editor(PerkToggle[] perks, int count, Transform parent)
         {
             for (int i = 0; i < count; i++)
-            {
-                if (perks[i] == null)
-                {
-                    perks[i] = (PerkToggle)UnityEditor.PrefabUtility.InstantiatePrefab(_perkPrefab);
-                    perks[i].rectTransform.SetParent(parent, false);
-                }
-            }
+                perks[i] = EUtility.InstantiatePrefab(_perkPrefab, parent);
         }
         private void DeletePerks_Editor(PerkToggle[] perks, int count)
         {
             for (int i = 0; i < count; i++)
-            {
-                if(perks[i] != null)
-                    DestroyImmediate(perks[i].gameObject);
-                perks[i] = null;
-            }
+                EUtility.DestroyGameObject(ref perks[i]);
         }
 
         protected override void OnValidate()
@@ -158,12 +137,11 @@ namespace Vurbiri.Colonization.UI
 
             _switcher.OnValidate(this);
 
-            this.SetChildren(ref _closeButton, "CloseButton");
-            this.SetChildren(ref _learnButton, "LearnButton");
-            
+            this.SetChildren(ref _learnButton);
+            this.SetChildren(ref _closeButton);
+
             _progressBars ??= new();
 
-            this.SetComponent(ref _mainContainer);
             this.SetChildren(ref _economicContainer, "Economic");
             this.SetChildren(ref _militaryContainer, "Military");
             this.SetChildren(ref _separatorsContainer, "Separators");

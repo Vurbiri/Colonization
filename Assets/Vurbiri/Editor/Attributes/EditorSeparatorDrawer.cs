@@ -18,7 +18,7 @@ namespace VurbiriEditor
             if (attribute is StartEditorAttribute startEditor)
             {
                 Rect rect = position; rect.x -= 8f;
-                EditorGUI.DropShadowLabel(rect, startEditor.separator, EditorStyles.boldLabel);
+                EditorGUI.DropShadowLabel(rect, startEditor.separator, EditorStyles.largeLabel);
                 position.y += position.height * _ratio;
                 label.text = text;
             }
@@ -46,7 +46,7 @@ namespace VurbiriEditor
             position.height = EditorGUIUtility.singleLineHeight;
             position.x -= 8f; position.y -= EditorGUIUtility.singleLineHeight * 0.45f;
 
-            EditorGUI.DropShadowLabel(position, endEditor.separator, EditorStyles.boldLabel);
+            EditorGUI.DropShadowLabel(position, endEditor.separator, EditorStyles.largeLabel);
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => EditorGUIUtility.singleLineHeight * 1.45f;

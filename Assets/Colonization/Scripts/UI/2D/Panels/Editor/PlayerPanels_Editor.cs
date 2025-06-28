@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.UI
 {
     public partial class PlayerPanels
     {
-        [StartEditor, Header("Panels In")]
+        [StartEditor]
         [SerializeField] private Vector2 _paddingIn = new(14f, 12f);
         [SerializeField, Range(1f, 10f)] private float _spaceIn = 4f;
         [Header("Between")]

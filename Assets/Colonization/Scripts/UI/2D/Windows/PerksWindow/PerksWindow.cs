@@ -1,31 +1,34 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-	sealed public partial class PerksWindow : VToggleGroup<PerkToggle>
+    sealed public partial class PerksWindow : VToggleGroup<PerkToggle>
     {
         [SerializeField] private Switcher _switcher;
         [Space]
-        [SerializeField] private HintButton _closeButton;
         [SerializeField] private HintButton _learnButton;
+        [SerializeField] private SimpleButton _closeButton;
         [Space]
         [SerializeField] private IdSet<TypeOfPerksId, PerkTreeProgressBar> _progressBars;
         [Space]
         [SerializeField] private Color _colorLearn;
 
+        private Action _onOpen;
         private Human _player;
 
-        public void Init(Human player, CanvasHint hint)
+        public void Init(Human player, CanvasHint hint, Action onOpen)
         {
             _switcher.Init(this);
 
             _player = player;
+            _onOpen = onOpen;
 
-            _closeButton.Init(hint, Close);
             _learnButton.Init(hint, OnLearn);
+            _closeButton.AddListener(Close);
 
             PerkTree perkTree = player.Perks;
             var blood = player.Resources.Get(CurrencyId.Blood);
@@ -36,7 +39,7 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < TypeOfPerksId.Count; i++)
                 _progressBars[i].Init(perkTree.GetProgress(i));
 
-            
+
             _onValueChanged.Add(toggle => _learnButton.Interactable = toggle != null, _activeToggle);
 
             _progressBars = null; _closeButton = null;
@@ -44,17 +47,19 @@ namespace Vurbiri.Colonization.UI
 
         public void Close()
         {
-            SetAllTogglesOff();
             _switcher.Switch(false);
+            SetAllTogglesOff();
         }
         public void Open()
         {
             _switcher.Switch(true);
+            _onOpen();
         }
         public void Switch()
         {
-            _switcher.Switch();
-            if (!_switcher.Open)
+            if (_switcher.Switch())
+                _onOpen();
+            else
                 SetAllTogglesOff();
         }
 

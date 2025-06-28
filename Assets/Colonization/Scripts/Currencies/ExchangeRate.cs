@@ -13,6 +13,9 @@ namespace Vurbiri.Colonization
         private Chance _chance;
         private int _rate;
 
+        public int this[int index] => _exchange[index];
+        public int this[Id<PlayerId> id] => _exchange[id.Value];
+
         private ExchangeRate(AbilitiesSet<HumanAbilityId> abilities)
         {
             SubscribeToAbilities(abilities);

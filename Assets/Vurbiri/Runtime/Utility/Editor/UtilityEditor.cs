@@ -12,6 +12,22 @@ namespace Vurbiri
         public const string TYPE_PREFAB = "t:Prefab";
         public readonly static string[] ASSET_FOLDERS = new string[] { "Assets" };
 
+        public static T InstantiatePrefab<T>(T prefab, Transform parent) where T : Component
+        {
+            T temp = (T)PrefabUtility.InstantiatePrefab(prefab);
+            temp.transform.SetParent(parent, false);
+            return temp;
+        }
+
+        public static void DestroyGameObject<T>(ref T component) where T : Component
+        {
+            if (component != null)
+                Object.DestroyImmediate(component.gameObject);
+            component = null;
+        }
+
+        // ********************************************
+
         public static void SetObject<T>(ref T obj, string name = null) where T : Component
         {
             if (obj != null) return;

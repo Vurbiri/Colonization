@@ -20,15 +20,17 @@ namespace VurbiriEditor.Collections
         protected bool SetPositiveNames()
         {
             Type idType = fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE];
-            bool isOldId = idType == _idType;
+            bool isInit = idType == _idType & _names != null;
 
-            if (isOldId & _names != null) 
-                return true;
-
-            _idType = idType;
-            _count = IdTypesCache.GetCount(idType);
-            _names = IdTypesCache.GetPositiveNames(idType);
-            return isOldId;
+            if (!isInit && IdTypesCache.Contain(idType))
+            {
+                _idType = idType;
+                _count = IdTypesCache.GetCount(idType);
+                _names = IdTypesCache.GetPositiveNames(idType);
+                isInit = true;
+            }
+            
+            return isInit;
         }
     }
 }

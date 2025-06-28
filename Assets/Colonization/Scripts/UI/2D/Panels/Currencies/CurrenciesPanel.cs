@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(Direction2 directionPopup, ACurrenciesReactive currencies, ProjectColors colors, CanvasHint hint)
         {
-            for (int i = 0; i < CurrencyId.CountMain; i++)
+            for (int i = 0; i < CurrencyId.MainCount; i++)
                 _currencies[i].Init(i, currencies, colors, directionPopup, hint);
 
             _amount.Init(currencies.CurrentAmount, currencies.MaxAmount, colors, hint);
@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.UI
             Vector3 pos = new(posX, posY, 0f);
 
             float offset = cSize.x + space;
-            for (int i = 0; i < CurrencyId.CountMain; i++)
+            for (int i = 0; i < CurrencyId.MainCount; i++)
             {
                 _currencies[i].Init_Editor(i, pos, colors);
                 pos.x += offset;
@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnValidate()
         {
-            if (_currencies == null || _currencies.Length != CurrencyId.CountMain)
+            if (_currencies == null || _currencies.Length != CurrencyId.MainCount)
                 _currencies = GetComponentsInChildren<CurrencyPopup>();
             if (_amount == null)
                 _amount = GetComponentInChildren<Amount>();

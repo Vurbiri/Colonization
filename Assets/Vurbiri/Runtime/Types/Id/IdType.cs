@@ -52,11 +52,10 @@ namespace Vurbiri
                     Debug.LogError($"Неверное значение поля: {typeId.Name}.{field.Name} = {value} должно быть {oldValue + 1}");
                 }
 
-                if (value >= 0) 
+                if (value >= 0)
                     Count++;
 
                 oldValue = value;
-
                 _data.Add(field.Name, value);
             }
 
@@ -91,12 +90,14 @@ namespace Vurbiri
 #if UNITY_EDITOR
     public static class IdTypesCache
     {
-        private static readonly List<Type> _types = new();
+        private static readonly HashSet<Type> _types = new();
         private static readonly Dictionary<Type, IdTypeData> _dates = new();
         private static readonly Dictionary<Type, int> _counts = new();
         private static readonly Dictionary<Type, int> _mins = new();
 
-        public static IReadOnlyList<Type> Types => _types;
+        public static IReadOnlyCollection<Type> Types => _types;
+
+        public static bool Contain(Type type) => _types.Contains(type);
 
         public static int GetCount(Type type) => _counts[type];
         public static int GetMin(Type type) => _mins[type];
@@ -108,10 +109,12 @@ namespace Vurbiri
 
         internal static void Add(Type type, int count, int min, IdTypeData data)
         {
-            _types.Add(type);
-            _counts[type] = count;
-            _mins[type] = min;
-            _dates[type] = data;
+            if (_types.Add(type))
+            {
+                _counts[type] = count;
+                _mins[type] = min;
+                _dates[type] = data;
+            }
         }
     }
 

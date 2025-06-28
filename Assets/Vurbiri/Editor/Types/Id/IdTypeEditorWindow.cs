@@ -26,12 +26,11 @@ namespace VurbiriEditor
             string mask = "*" + CS_EXT;
             string classPattern = @"\bclass\s+{0}\s*:";
 
-            var derivatives = IdTypesCache.Types;
-            List<string> names = new(derivatives.Count);
-            for (int i = derivatives.Count - 1; i >= 0; i--)
+            List<string> names = new();
+            foreach (var type in IdTypesCache.Types)
             {
-                if (!derivatives[i].IsNested)
-                    names.Add(derivatives[i].Name);
+                if (!type.IsNested)
+                    names.Add(type.Name);
             }
 
             _namesIdType = names.ToArray();

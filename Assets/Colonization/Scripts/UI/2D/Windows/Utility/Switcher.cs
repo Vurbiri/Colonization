@@ -23,10 +23,12 @@ namespace Vurbiri.Colonization.UI
             _waitLerp = new(0f, 1f, _speedSwitch, _canvasGroup.GetSetor<float>(nameof(_canvasGroup.alpha)));
         }
 
-        public void Switch()
+        public bool Switch()
         {
             _canvasGroup.blocksRaycasts = _isOpen = !_isOpen;
             StartCoroutine(_isOpen);
+
+            return _isOpen;
         }
 
         public void Switch(bool open)

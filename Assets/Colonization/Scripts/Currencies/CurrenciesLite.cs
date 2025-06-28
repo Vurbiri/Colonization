@@ -21,13 +21,17 @@ namespace Vurbiri.Colonization
         public CurrenciesLite() { }
         public CurrenciesLite(int[] array)
         {
-            int value;
             for (int i = 0; i < CountAll; i++)
             {
-                value = array[i];
-                _values[i] = value;
-                _amount += value;
+                _values[i] = array[i];
+                _amount += array[i];
             }
+        }
+        public CurrenciesLite(CurrenciesLite other)
+        {
+            for (int i = 0; i < CountAll; i++)
+                _values[i] = other._values[i];
+            _amount = other._amount;
         }
 
         public void Increment(int index)
@@ -48,7 +52,7 @@ namespace Vurbiri.Colonization
             _amount += value;
         }
 
-        public void AddFrom(CurrenciesLite other)
+        public void Add(CurrenciesLite other)
         {
             if (other._amount == 0)
                 return;
@@ -63,7 +67,7 @@ namespace Vurbiri.Colonization
             if (_amount == 0)
                 return;
 
-            for (int i = 0; i < CountMain; i++)
+            for (int i = 0; i < MainCount; i++)
                 _values[i] *= ratio;
 
             _amount *= ratio;
@@ -71,7 +75,7 @@ namespace Vurbiri.Colonization
 
         public void RandomMainAdd(int value)
         {
-            _values[Random.Range(0, CountMain)] += value;
+            _values[Random.Range(0, MainCount)] += value;
             _amount += value;
         }
 
@@ -93,14 +97,42 @@ namespace Vurbiri.Colonization
         {
             if(a == null | b == null) return null;
 
-            if (a._amount == 0) return b;
-            if (b._amount == 0) return a;
+            if (a._amount == 0) return new(b);
+            if (b._amount == 0) return new(a);
 
+            CurrenciesLite sum = new();
             for (int i = 0; i < CountAll; i++)
-                a._values[i] += b._values[i];
-            a._amount += b._amount;
+                sum._values[i] = a._values[i] + b._values[i];
+            sum._amount = a._amount + b._amount;
 
-            return a;
+            return sum;
+        }
+        public static CurrenciesLite operator -(CurrenciesLite a, CurrenciesLite b)
+        {
+            if (a == null | b == null) return null;
+
+            if (a._amount == 0) return -b;
+            if (b._amount == 0) return new(a);
+
+            CurrenciesLite diff = new();
+            for (int i = 0; i < CountAll; i++)
+                diff._values[i] = a._values[i] - b._values[i];
+            diff._amount = a._amount - b._amount;
+
+            return diff;
+        }
+
+        public static CurrenciesLite operator -(CurrenciesLite a)
+        {
+            if (a == null) return null;
+            if (a._amount == 0) return new();
+
+            CurrenciesLite neg = new();
+            for (int i = 0; i < CountAll; i++)
+                neg._values[i] = -a._values[i];
+            neg._amount = -a._amount;
+
+            return neg;
         }
     }
 }

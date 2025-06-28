@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.UI
             sb.AppendFormat(CultureInfo.InvariantCulture, TAG_CSPACE, SPACE);
 
             int costV;
-            for (int i = 0; i < CurrencyId.CountMain; i++)
+            for (int i = 0; i < CurrencyId.MainCount; i++)
             {
                 costV = cost[i];
                 if (costV <= 0)

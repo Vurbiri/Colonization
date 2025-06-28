@@ -21,7 +21,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
 
-    public interface ISubscription<out T> : IUnsubscribed<Action<T>>
+    public interface ISubscription<T> : IUnsubscribed<Action<T>>
     {
         public Unsubscription Add(Action<T> action);
 
@@ -34,7 +34,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
 
-    public interface ISubscription<out TA, out TB> : IUnsubscribed<Action<TA, TB>>
+    public interface ISubscription<TA, TB> : IUnsubscribed<Action<TA, TB>>
     {
         public Unsubscription Add(Action<TA, TB> action);
 

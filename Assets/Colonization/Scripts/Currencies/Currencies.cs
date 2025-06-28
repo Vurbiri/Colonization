@@ -79,7 +79,7 @@ namespace Vurbiri.Colonization
             } 
             while (--amount > maxMain);
 
-            for (int index = 0; index < CountMain; index++)
+            for (int index = 0; index < MainCount; index++)
                 _values[index].Set(values[index]);
 
             _amount.Value = amount;
@@ -89,8 +89,8 @@ namespace Vurbiri.Colonization
             //=================================
             static int[] ConvertToInt(ACurrency[] values)
             {
-                int[] array = new int[CountMain];
-                for (int i = 0; i < CountMain; i++)
+                int[] array = new int[MainCount];
+                for (int i = 0; i < MainCount; i++)
                     array[i] = values[i].Value;
 
                 return array;
@@ -98,10 +98,10 @@ namespace Vurbiri.Colonization
             //=================================
             static int FindMaxIndex(int[] values, int maxIndex = 0)
             {
-                int index, count = CountMain;
+                int index, count = MainCount;
                 while (count --> 1)
                 {
-                    index = (maxIndex + count) % CountMain;
+                    index = (maxIndex + count) % MainCount;
                     if (values[index] > values[maxIndex] || (values[index] == values[maxIndex] && Chance.Rolling()))
                         maxIndex = index;
                 }

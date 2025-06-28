@@ -1,29 +1,16 @@
 using System;
-using System.Runtime.CompilerServices;
-using UnityEngine;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-	public class PlayerCurrencyWidget : ASelectOfCountWidget
+	sealed public class PlayerCurrencyWidget : ASelectCurrencyCountWidget
     {
-        [Space]
-        [SerializeField] private Id<CurrencyId> _id; 
-        
         private Unsubscription _unsubscriber;
-        private readonly Subscription<int, int> _changeCount = new();
 
         public void Init(ACurrenciesReactive currencies, Action<int, int> action)
         {
             _unsubscriber = currencies.Get(_id).Subscribe(SetMax);
             _changeCount.Add(action);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected override void SetValue(int value)
-        {
-            base.SetValue(value);
-            _changeCount.Invoke(_id.Value, value);
         }
 
         private void SetMax(int value)
@@ -41,7 +28,6 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
 
-        
 #endif
     }
 }

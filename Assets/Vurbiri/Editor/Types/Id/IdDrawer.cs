@@ -17,11 +17,11 @@ namespace VurbiriEditor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            if (!TryGetType(out Type typeId))
+            if (!TryGetType(out Type idType))
             {
                 HelpBox(position, "Failed to determine type", UnityEditor.MessageType.Error); return;
             }
-            if (!TryGetNamesAndValues(typeId))
+            if (!TryGetNamesAndValues(idType))
             {
                 HelpBox(position, $"Error values", UnityEditor.MessageType.Error); return;
             }
@@ -34,28 +34,31 @@ namespace VurbiriEditor
             EndProperty();
         }
 
-        private bool TryGetType(out Type typeId)
+        private bool TryGetType(out Type idType)
         {
-            typeId = fieldInfo.FieldType;
-            if (typeId.IsArray) typeId = typeId.GetElementType();
+            idType = fieldInfo.FieldType;
+            if (idType.IsArray) idType = idType.GetElementType();
 
-            Type[] arg = typeId.GetGenericArguments();
+            Type[] arg = idType.GetGenericArguments();
             if (arg == null || arg.Length != 1) return false;
-            typeId = typeId.GetGenericArguments()[0];
+            idType = idType.GetGenericArguments()[0];
 
-            return typeId != null;
+            return idType != null;
         }
 
-        private bool TryGetNamesAndValues(Type typeId)
+        private bool TryGetNamesAndValues(Type idType)
         {
-            if (typeId == _type & _names != null & _values != null) return true;
+            bool isInit = _type == idType & _names != null & _values != null;
 
-            _type = typeId;
+            if (!isInit && IdTypesCache.Contain(idType))
+            {
+                _type = idType;
+                _names = IdTypesCache.GetDisplayNames(idType);
+                _values = IdTypesCache.GetValues(idType);
+                isInit = true;
+            }
 
-            _names = IdTypesCache.GetDisplayNames(typeId);
-            _values = IdTypesCache.GetValues(typeId);
-
-            return _names != null & _values != null;
+            return isInit;
         }
     }
 }

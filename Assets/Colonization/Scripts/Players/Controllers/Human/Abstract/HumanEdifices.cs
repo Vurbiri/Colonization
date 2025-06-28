@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
                 CurrenciesLite profit = ProfitFromPorts(hexId);
 
                 for (int i = colonies.Count - 1; i >= 0; i--)
-                    profit += colonies[i].ProfitFromColony(hexId, _compensationRes.Value);
+                    profit.Add(colonies[i].ProfitFromColony(hexId, _compensationRes.Value));
 
                 return profit;
             }
@@ -71,7 +71,7 @@ namespace Vurbiri.Colonization
                 CurrenciesLite profit = new();
 
                 for (int i = ports.Count - 1; i >= 0; i--)
-                    profit += ports[i].ProfitFromPort(hexId, _portsProfit.Value);
+                    profit.Add(ports[i].ProfitFromPort(hexId, _portsProfit.Value));
 
                 return profit;
             }

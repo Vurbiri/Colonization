@@ -17,6 +17,7 @@ namespace VurbiriEditor.Colonization
         [SerializeField, HideInInspector] private AHint[] _hints;
         [SerializeField, HideInInspector] private PlayerPanels _playerPanels;
         [SerializeField, HideInInspector] private PerksWindow _perksWindow;
+        [SerializeField, HideInInspector] private ExchangeWindow _exchangeWindow;
         [EndEditor] public bool endEditor;
 
         private void Awake()
@@ -33,6 +34,7 @@ namespace VurbiriEditor.Colonization
 
             _playerPanels.UpdateVisuals_Editor(_pixelsPerUnitForPanels, colors);
             _perksWindow.UpdateVisuals_Editor(_pixelsPerUnitForPanels, colors);
+            _exchangeWindow.UpdateVisuals_Editor(_pixelsPerUnitForPanels, colors);
         }
 
         public void Rebuild(CanvasUpdate executing)
@@ -54,6 +56,7 @@ namespace VurbiriEditor.Colonization
                 EUtility.SetObjects(ref _hints, 2);
                 EUtility.SetObject(ref _playerPanels);
                 EUtility.SetObject(ref _perksWindow);
+                EUtility.SetObject(ref _exchangeWindow);
 
                 if (!PrefabUtility.IsPartOfPrefabAsset(this))
                     CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
