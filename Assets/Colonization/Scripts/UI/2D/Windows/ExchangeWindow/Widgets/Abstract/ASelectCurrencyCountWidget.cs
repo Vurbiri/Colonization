@@ -110,7 +110,7 @@ namespace Vurbiri.Colonization.UI
             this.SetComponent(ref _panel);
             this.SetChildren(ref _icon, "Icon");
 
-            _leftButton.CopyFrom(_rightButton);
+            _leftButton.CopyFrom_Editor(_rightButton);
 
             SetBounds();
         }

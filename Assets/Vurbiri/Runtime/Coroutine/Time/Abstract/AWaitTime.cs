@@ -30,6 +30,9 @@ namespace Vurbiri
             return flag;
         }
 
+        public void Add(float value) => _waitTime += value;
+        public void Multiply(float value) => _waitTime *= value;
+
         public IEnumerator Restart(float value)
         {
             _waitTime = value;

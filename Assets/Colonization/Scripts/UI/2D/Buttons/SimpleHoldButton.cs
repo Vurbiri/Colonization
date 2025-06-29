@@ -13,7 +13,8 @@ namespace Vurbiri.Colonization.UI
     public class SimpleHoldButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private bool _interactable = true;
-        [SerializeField, MinMax(0.1f, 2.5f)] private WaitRealtime _clickPeriod = 0.4f;
+        [SerializeField, Range(0.1f, 1f)] private float _period = 0.4f;
+        [SerializeField, Inverse(0.05f, 0.95f)] private float _acceleration = 0.87f;
         [Space]
         [SerializeField] private Image _target;
         [SerializeField] private IdArray<StateId, Color> _colors = new(Color.white);
@@ -21,6 +22,7 @@ namespace Vurbiri.Colonization.UI
         
         private readonly Subscription _onClick = new();
         private bool _inside, _hold;
+        private WaitRealtime _clickPeriod;
 
         public float FadeDuration { get => _fadeDuration; set => _fadeDuration = value; }
 
@@ -71,23 +73,14 @@ namespace Vurbiri.Colonization.UI
             SetColor(_colors[StateId.Normal]);
         }
 
-        public void CopyFrom(SimpleHoldButton other)
-        {
-            if (other == null)
-                return;
-
-            _clickPeriod = other._clickPeriod;
-            _fadeDuration = other._fadeDuration;
-
-            _colors = new(other._colors);
-        }
-
         private IEnumerator Hold_Cn()
         {
+            _clickPeriod.Time = _period;
             while (_interactable & _hold & _inside)
             {
                 _onClick.Invoke();
                 yield return _clickPeriod.Restart();
+                _clickPeriod.Multiply(_acceleration);
             }
         }
 
@@ -96,6 +89,11 @@ namespace Vurbiri.Colonization.UI
         {
             if (_interactable)
                 _target.CrossFadeColor(color, _fadeDuration, true, true);
+        }
+
+        private void Awake()
+        {
+            _clickPeriod = _period;
         }
 
         private void OnEnable()
@@ -131,6 +129,18 @@ namespace Vurbiri.Colonization.UI
                 this.SetComponent(ref _target);
                 _target.canvasRenderer.SetColor(_colors[_interactable ? StateId.Normal : StateId.Disabled]);
             }
+        }
+
+        public void CopyFrom_Editor(SimpleHoldButton other)
+        {
+            if (other == null)
+                return;
+
+            _period = other._period;
+            _acceleration = other._acceleration;
+            _fadeDuration = other._fadeDuration;
+
+            _colors = new(other._colors);
         }
 #endif
     }
