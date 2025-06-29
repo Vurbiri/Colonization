@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -6,7 +8,8 @@ namespace Vurbiri.Colonization.UI
     {
         [Space]
         [SerializeField] private Color _rateColor = Color.white;
-        
+
+        private readonly Subscription<int, int, int> _changeCount = new();
         private int _rate;
         private string _formatValue;
 
@@ -17,16 +20,24 @@ namespace Vurbiri.Colonization.UI
             base.Awake();
         }
 
+        public void Init(Action<int, int, int> action)
+        {
+            _changeCount.Add(action);
+        }
+
         public void SetRate(int rate)
         {
             _rate = rate;
             ValueToString();
         }
 
+        protected override void SetValue(int value)
+        {
+            base.SetValue(value);
+
+            _changeCount.Invoke(_id.Value, value, value * _rate);
+        }
+
         protected override void ValueToString() => _textValue.text = string.Format(_formatValue, _count, _rate);
-
-#if UNITY_EDITOR
-
-#endif
     }
 }

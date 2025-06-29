@@ -1,4 +1,6 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -12,9 +14,10 @@ namespace Vurbiri.Colonization.UI
         private WaitSwitchFloat _waitLerp;
         private MonoBehaviour _parent;
 
-        public bool Open => _isOpen;
+        public readonly Subscription onOpen = new();
+        public readonly Subscription onClose = new();
 
-        public void Init(MonoBehaviour parent, bool open = false)
+        public void Init(MonoBehaviour parent, bool open)
         {
             _parent = parent;
             _canvasGroup.blocksRaycasts = _isOpen = open;
@@ -23,21 +26,23 @@ namespace Vurbiri.Colonization.UI
             _waitLerp = new(0f, 1f, _speedSwitch, _canvasGroup.GetSetor<float>(nameof(_canvasGroup.alpha)));
         }
 
-        public bool Switch()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Switch()
         {
             _canvasGroup.blocksRaycasts = _isOpen = !_isOpen;
             StartCoroutine(_isOpen);
-
-            return _isOpen;
+            
+            if (_isOpen) 
+                onOpen.Invoke();
+            else
+                onClose.Invoke();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Switch(bool open)
         {
-            if (_isOpen == open)
-                return;
-
-            _canvasGroup.blocksRaycasts = _isOpen = open;
-            StartCoroutine(open);
+            if (_isOpen != open)
+                Switch();
         }
 
         private void StartCoroutine(bool open)

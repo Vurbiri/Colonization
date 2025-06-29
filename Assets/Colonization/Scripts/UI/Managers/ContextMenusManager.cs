@@ -5,9 +5,11 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-    public class ContextMenusWorld : MonoBehaviour
+    [System.Serializable]
+    public class ContextMenusManager
     {
         [SerializeField] private RectTransform _canvasTransform;
+        [SerializeField] private RectTransform _menusTransform;
         [Space]
         [SerializeField] private CrossroadInitMenu _initMenu;
         [SerializeField] private CrossroadMainMenu _crossroadMenu;
@@ -19,7 +21,6 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ButtonCancel _buttonCancel;
 
         private CameraTransform _cameraTransform;
-        private RectTransform _thisRectTransform;
         private bool _isPlayerTurn, _lookAtEnabled;
         private IMenu _currentOpenMenu;
 
@@ -30,7 +31,6 @@ namespace Vurbiri.Colonization.UI
         public void Init(ContextMenuSettings settings)
         {
             _cameraTransform = settings.cameraTransform;
-            _thisRectTransform = GetComponent<RectTransform>();
 
             _buttonCancel  .Init(settings.hint).Add(OnActiveMenu);
             _crossroadMenu .Init(settings, _roadsMenu, _recruitingMenu).Add(OnActiveMenu);
@@ -67,7 +67,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (_isPlayerTurn & crossroad.Interactable & _currentOpenMenu == null)
             {
-                _cameraTransform.TransformToLocalPosition(_thisRectTransform, _canvasTransform, crossroad.Position);
+                _cameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
                 _crossroadMenu.Open(crossroad);
                 _buttonCancel.Setup(crossroad);
             }
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (_isPlayerTurn & crossroad.Interactable & _currentOpenMenu == null)
             {
-                _cameraTransform.TransformToLocalPosition(_thisRectTransform, _canvasTransform, crossroad.Position);
+                _cameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
                 _initMenu.Open(crossroad);
                 _buttonCancel.Setup(crossroad);
             }
@@ -86,7 +86,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (actor.Interactable & _currentOpenMenu == null)
             {
-                _cameraTransform.TransformToLocalPosition(_thisRectTransform, _canvasTransform, actor.Position);
+                _cameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, actor.Position);
                 _warriorsMenu.Open(actor);
                 _buttonCancel.Setup(actor);
             }
@@ -127,7 +127,7 @@ namespace Vurbiri.Colonization.UI
         private void LookAtCamera(Transform cameraTransform)
         {
             if(_lookAtEnabled)
-                _thisRectTransform.rotation = Quaternion.LookRotation(cameraTransform.forward);
+                _menusTransform.rotation = Quaternion.LookRotation(cameraTransform.forward);
         }
 
         private void OnActiveMenu(IMenu menu, bool value)
@@ -148,25 +148,26 @@ namespace Vurbiri.Colonization.UI
         [StartEditor]
         [SerializeField, Range(3f, 8f)] private float _buttonDistance = 5f;
 
-        private void OnValidate()
+        public void OnValidate()
         {
-            if (Application.isPlaying) return;
+            if(Application.isPlaying) return;
+            
+            EUtility.SetObject(ref _canvasTransform, "CanvasWorld");
 
-            if (_canvasTransform == null)
-                _canvasTransform = transform.parent.GetComponent<RectTransform>();
-            if (_initMenu == null)
-                _initMenu = GetComponentInChildren<CrossroadInitMenu>();
-            if (_crossroadMenu == null)
-                _crossroadMenu = GetComponentInChildren<CrossroadMainMenu>();
-            if (_recruitingMenu == null)
-                _recruitingMenu = GetComponentInChildren<CrossroadWarriorsMenu>();
-            if (_roadsMenu == null)
-                _roadsMenu = GetComponentInChildren<CrossroadRoadsMenu>();
-            if (_warriorsMenu == null)
-                _warriorsMenu = GetComponentInChildren<WarriorsMenu>();
-            if (_buttonCancel == null)
-                _buttonCancel = GetComponentInChildren<ButtonCancel>();
+            _canvasTransform.SetChildren(ref _menusTransform, "ContextMenusWorld");
 
+            _canvasTransform.SetChildren(ref _initMenu);
+            _canvasTransform.SetChildren(ref _crossroadMenu);
+            _canvasTransform.SetChildren(ref _recruitingMenu);
+            _canvasTransform.SetChildren(ref _roadsMenu);
+            _canvasTransform.SetChildren(ref _warriorsMenu);
+            _canvasTransform.SetChildren(ref _buttonCancel);
+
+            SetDistance();
+        }
+
+        private void SetDistance()
+        {
             _initMenu.SetButtonPosition(_buttonDistance);
             _crossroadMenu.SetButtonPosition(_buttonDistance);
             _recruitingMenu.SetButtonPosition(_buttonDistance);

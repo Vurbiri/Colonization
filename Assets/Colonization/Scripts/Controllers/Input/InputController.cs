@@ -20,12 +20,6 @@ namespace Vurbiri.Colonization.Controllers
 
         public InputControlAction.CameraActions CameraActions => _cameraMap;
 
-        public bool GameplayMap { get => _gameplayMap.enabled;  set { if (value) _gameplayMap.Enable(); else _gameplayMap.Disable(); } }
-        public bool CameraMap { get => _cameraMap.enabled; set { if (value) _cameraMap.Enable(); else _cameraMap.Disable(); } }
-        public bool UIMap { get => _UIMap.enabled; set { if (value) _UIMap.Enable(); else _UIMap.Disable(); } }
-
-        public ISelectable SelectableObject => _selectObj;
-
         public InputController(GameEvents events, Camera camera, Settings settings)
         {
             _camera = camera;
@@ -34,7 +28,6 @@ namespace Vurbiri.Colonization.Controllers
             _distance = settings.distance;
 
             _inputActions = new();
-            //_inputActions.Enable();
 
             _gameplayMap = _inputActions.Gameplay;
             _cameraMap = _inputActions.Camera;
@@ -43,22 +36,26 @@ namespace Vurbiri.Colonization.Controllers
             _inputActions.Gameplay.LeftClick.performed += OnClickLeft;
             _inputActions.Gameplay.RightClick.performed += OnClickRight;
 
-            events.Subscribe(GameModeId.Play, (turn, _) => EnableGameplayAndCamera(turn.IsPlayer));
-            events.Subscribe(GameModeId.Landing, (turn, _) => EnableGameplayAndCamera(turn.IsPlayer));
-            events.Subscribe(GameModeId.WaitRoll, (turn, _) => EnableGameplayAndCamera(turn.IsPlayer));
+            events.Subscribe(GameModeId.Play, (turn, _) => UIMode(turn.IsNotPlayer));
+            events.Subscribe(GameModeId.Landing, (turn, _) => UIMode(turn.IsNotPlayer));
+            events.Subscribe(GameModeId.WaitRoll, (turn, _) => UIMode(turn.IsNotPlayer));
 
-            events.Subscribe(GameModeId.EndTurn, (_, _) => { _gameplayMap.Disable(); _cameraMap.Disable(); });
+            events.Subscribe(GameModeId.EndTurn, (_, _) => { UIMode(true); });
         }
 
-        public void Enable()
+        public void Enable() => _inputActions.Enable();
+        public void Disable() => _inputActions.Disable();
+
+        public void UIMode(bool enable)
         {
-            _inputActions.Enable();
-            //_gameplayMap.Enable(); _cameraMap.Enable(); _UIMap.Enable();
-        }
-        public void DisableAll()
-        {
-            _inputActions.Disable();
-            //_gameplayMap.Disable(); _cameraMap.Disable(); _UIMap.Disable();
+            if (enable)
+            {
+                _gameplayMap.Disable(); _cameraMap.Disable();
+            }
+            else
+            {
+                _gameplayMap.Enable(); _cameraMap.Enable();
+            }
         }
 
         public void Select(ISelectable selectObj)
@@ -66,6 +63,12 @@ namespace Vurbiri.Colonization.Controllers
             _selectObj?.Unselect(selectObj);
             _selectObj = selectObj;
             _selectObj.Select();
+        }
+
+        public void Unselect()
+        {
+            _selectObj?.Unselect(null);
+            _selectObj = null;
         }
 
         public void Dispose() => _inputActions.Disable();
@@ -89,18 +92,6 @@ namespace Vurbiri.Colonization.Controllers
                 return selectObj != null;
             }
             #endregion
-        }
-
-        private void EnableGameplayAndCamera(bool enable)
-        {
-            if (enable)
-            {
-                _gameplayMap.Enable(); _cameraMap.Enable();
-            }
-            else
-            {
-                _gameplayMap.Disable(); _cameraMap.Disable();
-            }
         }
 
         #region Nested: Settings

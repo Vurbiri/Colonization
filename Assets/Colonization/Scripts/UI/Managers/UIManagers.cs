@@ -1,5 +1,5 @@
 using UnityEngine;
-using Vurbiri.Colonization.Controllers;
+using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -7,18 +7,21 @@ namespace Vurbiri.Colonization.UI
 	public class UIManagers : MonoBehaviour
 	{
         [SerializeField] private GameManager _game;
+        [SerializeField] private ContextMenusManager _contextMenus;
         [SerializeField] private WindowsManager _windows;
 
-        public void Init(GameLoop game, CameraController camera, Human player, CanvasHint hint)
+        public void Init(GameplayInitObjects init, CanvasHint hint, ContextMenuSettings settings)
         {
-            _game.Init(game, camera, this);
-            _windows.Init(game, player, hint);
+            _game.Init(init.game, init.cameraController, this);
+            _contextMenus.Init(settings);
+            _windows.Init(init, hint);
         }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
             _game.OnValidate();
+            _contextMenus.OnValidate();
             _windows.OnValidate();
         }
 #endif

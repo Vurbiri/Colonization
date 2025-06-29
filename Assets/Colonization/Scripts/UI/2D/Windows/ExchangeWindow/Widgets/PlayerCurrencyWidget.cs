@@ -5,6 +5,7 @@ namespace Vurbiri.Colonization.UI
 {
 	sealed public class PlayerCurrencyWidget : ASelectCurrencyCountWidget
     {
+        private readonly Subscription<int, int> _changeCount = new();
         private Unsubscription _unsubscriber;
 
         public void Init(ACurrenciesReactive currencies, Action<int, int> action)
@@ -13,11 +14,19 @@ namespace Vurbiri.Colonization.UI
             _changeCount.Add(action);
         }
 
+        protected override void SetValue(int value)
+        {
+            base.SetValue(value);
+
+            _changeCount.Invoke(_id.Value, value);
+        }
+
         private void SetMax(int value)
         {
             _max = value;
+            CrossFadeColor();
 
-            if(_count > _max)
+            if (_count > _max)
             {
                 _count = _max;
                 SetValue(_count);

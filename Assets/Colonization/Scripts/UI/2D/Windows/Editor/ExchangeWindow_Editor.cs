@@ -11,9 +11,8 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Vector2 _widgetSpace = new(10f, 10f);
         [Space]
-        [SerializeField, HideInInspector] private RectTransform _mainContainer;
-        [SerializeField, HideInInspector] private RectTransform _bankContainer;
-        [SerializeField, HideInInspector] private RectTransform _playerContainer;
+        [SerializeField, HideInInspector] private RectTransform _mainContainer, _bankContainer, _playerContainer;
+        [SerializeField, HideInInspector] private RectTransform _bankAmountContainer, _playerAmountContainer;
 
         [SerializeField, HideInInspector] private BankCurrencyWidget _bankPrefab;
         [SerializeField, HideInInspector] private PlayerCurrencyWidget _playerPrefab;
@@ -29,6 +28,10 @@ namespace Vurbiri.Colonization.UI
             image.pixelsPerUnitMultiplier = pixelsPerUnit;
 
             _closeButton.Color = color;
+
+            _colors.zero = colors.TextDefault;
+            _colors.negative = colors.TextNegative;
+            _colors.positive = colors.TextPositive;
         }
 
         public void Setup_Editor()
@@ -85,6 +88,11 @@ namespace Vurbiri.Colonization.UI
             _switcher.OnValidate(this);
 
             this.SetChildren(ref _containerVisual);
+
+            this.SetChildren(ref _bankAmountContainer, "BankAmount"); 
+            _bankAmountContainer.SetChildren(ref _bankAmount);
+            this.SetChildren(ref _playerAmountContainer, "PlayerAmount");
+            _playerAmountContainer.SetChildren(ref _playerAmount);
 
             this.SetChildren(ref _applyButton, "ApplyButton");
             this.SetChildren(ref _resetButton, "ResetButton");

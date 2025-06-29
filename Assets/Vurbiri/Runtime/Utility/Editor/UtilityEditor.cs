@@ -30,11 +30,12 @@ namespace Vurbiri
 
         public static void SetObject<T>(ref T obj, string name = null) where T : Component
         {
-            if (obj != null) return;
+            bool notName = string.IsNullOrEmpty(name);
+            if (obj != null && (notName || obj.gameObject.name == name)) return;
 
-            obj = string.IsNullOrEmpty(name) ? Object.FindAnyObjectByType<T>(FindObjectsInactive.Include) : FindObjectByName<T>(name);
+            obj = notName ? Object.FindAnyObjectByType<T>(FindObjectsInactive.Include) : FindObjectByName<T>(name); ;
             if (obj == null)
-                LogErrorFind<T>("object", string.IsNullOrEmpty(name) ? typeof(T).Name : name);
+                LogErrorFind<T>("object", notName ? typeof(T).Name : name);
         }
         public static void SetObjects<T>(ref T[] arr, int count = -1) where T : Component
         {
@@ -48,9 +49,10 @@ namespace Vurbiri
 
         public static void SetPrefab<T>(ref T obj, string name = null) where T : MonoBehaviour
         {
+            bool notName = string.IsNullOrEmpty(name);
             if (obj != null) return;
 
-            obj = string.IsNullOrEmpty(name) ? FindAnyPrefab<T>() : FindAnyPrefab<T>(name);
+            obj = notName ? FindAnyPrefab<T>() : FindAnyPrefab<T>(name);
             if (obj == null)
                 LogErrorFind<T>("prefab", name);
         }
@@ -94,7 +96,7 @@ namespace Vurbiri
         }
         public static void SetChildren<T>(this Component self, ref T component, string name) where T : Component
         {
-            if (component != null) return;
+            if (component != null && component.gameObject.name == name) return;
             component = self.GetComponentInChildren<T>(name);
             if (component == null)
                 LogErrorFind<T>("component", name);

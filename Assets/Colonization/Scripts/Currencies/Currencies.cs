@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             return new(prices.HumanDefault, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
         }
 
-        public void AddFrom(ACurrencies other)
+        public void Add(ACurrencies other)
         {
             if (other.Amount == 0)
                 return;

@@ -5,9 +5,9 @@ using UnityEngine;
 namespace Vurbiri.Colonization.UI
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
-    public class PopupTextWidgetUI : MonoBehaviour
+    sealed public class PopupTextWidgetUI : MonoBehaviour
     {
-        [SerializeField] protected TextMeshProUGUI _thisTMP;
+        [SerializeField] private TextMeshProUGUI _thisTMP;
         [Space]
         [SerializeField, Range(0.1f, 2f)] private float _speed = 0.6f;
         [Space]
@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.UI
         private float _scaleColorSpeed;
         private Vector3 _positionStart, _positionEnd;
         private GameObject _thisGameObject;
-        private string _stringPlus, _stringMinus;
+        private Color _colorPlus, _colorMinus;
         private CoroutinesQueue _queue;
 
         public void Init(ProjectColors settings, Vector3 direction)
@@ -31,8 +31,8 @@ namespace Vurbiri.Colonization.UI
             _positionStart = _thisTransform.localPosition;
             _positionEnd = _positionStart + direction * _distance;
 
-            _stringPlus = settings.TextPositiveTag.Concat(" +{0}");
-            _stringMinus = settings.TextNegativeTag.Concat(" {0}");
+            _colorPlus = settings.TextPositive;
+            _colorMinus = settings.TextNegative;
 
             _scaleColorSpeed = 1f / (1f - _startHide);
 
@@ -45,30 +45,31 @@ namespace Vurbiri.Colonization.UI
             if (delta != 0)
             {
                 _thisGameObject.SetActive(true);
-                _queue.Enqueue(Run_Cn(string.Format(delta > 0 ? _stringPlus : _stringMinus, delta)));
+                _queue.Enqueue(Run_Cn(delta > 0 ? _colorPlus : _colorMinus, delta.ToString("+#;-#;0")));
             }
         }
 
-        private IEnumerator Run_Cn(string text)
+        private IEnumerator Run_Cn(Color textColor, string text)
         {
-            float lerpVector = 0f, lerpColor = 0f, delta;
+            float lerpVector = 0f, lerpAlpha = 0f, deltaTime;
             Color color = Color.white;
 
             _thisTMP.canvasRenderer.SetColor(color);
             _thisTMP.text = text;
+            _thisTMP.color = textColor;
 
             while (lerpVector < 1f)
             {
                 _thisTransform.localPosition = Vector3.Lerp(_positionStart, _positionEnd, lerpVector);
 
-                delta = Time.unscaledDeltaTime * _speed;
-                lerpVector += delta;
+                deltaTime = Time.unscaledDeltaTime * _speed;
+                lerpVector += deltaTime;
 
                 if (lerpVector > _startHide)
                 {
-                    color.a = Mathf.Lerp(1f, _minAlpha, lerpColor);
+                    color.a = Mathf.Lerp(1f, _minAlpha, lerpAlpha);
                     _thisTMP.canvasRenderer.SetColor(color);
-                    lerpColor += delta * _scaleColorSpeed;
+                    lerpAlpha += deltaTime * _scaleColorSpeed;
                 }
 
                 yield return null;

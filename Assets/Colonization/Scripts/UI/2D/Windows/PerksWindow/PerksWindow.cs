@@ -1,12 +1,12 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public partial class PerksWindow : VToggleGroup<PerkToggle>
+    sealed public partial class PerksWindow : VToggleGroup<PerkToggle>, IWindow
     {
         [SerializeField] private Switcher _switcher;
         [Space]
@@ -17,15 +17,17 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Color _colorLearn;
 
-        private Action _onOpen;
         private Human _player;
 
-        public void Init(Human player, CanvasHint hint, Action onOpen)
+        public ISubscription OnOpen => _switcher.onOpen;
+        public ISubscription OnClose => _switcher.onClose;
+
+        public void Init(Human player, CanvasHint hint, bool open)
         {
-            _switcher.Init(this);
+            _switcher.Init(this, open);
+            _switcher.onClose.Add(SetAllTogglesOff);
 
             _player = player;
-            _onOpen = onOpen;
 
             _learnButton.Init(hint, OnLearn);
             _closeButton.AddListener(Close);
@@ -45,23 +47,9 @@ namespace Vurbiri.Colonization.UI
             _progressBars = null; _closeButton = null;
         }
 
-        public void Close()
-        {
-            _switcher.Switch(false);
-            SetAllTogglesOff();
-        }
-        public void Open()
-        {
-            _switcher.Switch(true);
-            _onOpen();
-        }
-        public void Switch()
-        {
-            if (_switcher.Switch())
-                _onOpen();
-            else
-                SetAllTogglesOff();
-        }
+        public void Close() => _switcher.Switch(false);
+        public void Open() => _switcher.Switch(true);
+        public void Switch() => _switcher.Switch();
 
         private void OnLearn()
         {

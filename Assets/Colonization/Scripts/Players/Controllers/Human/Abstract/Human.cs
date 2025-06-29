@@ -120,6 +120,8 @@ namespace Vurbiri.Colonization
             }
         }
 
+        public void AddResources(CurrenciesLite value) => _resources.Add(value);
+
         #region Edifice
         public bool CanEdificeUpgrade(Crossroad crossroad) => _edifices.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
         public bool IsEdificeUnlock(Id<EdificeId> id) => _edifices.IsEdificeUnlock(id);

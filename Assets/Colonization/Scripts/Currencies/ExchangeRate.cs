@@ -5,10 +5,10 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public class ExchangeRate : IReactive<CurrenciesLite>, IDisposable
+    public class ExchangeRate : IReactive<ACurrencies>, IDisposable
     {
         private readonly CurrenciesLite _exchange;
-        private readonly Subscription<CurrenciesLite> _changeValue = new();
+        private readonly Subscription<ACurrencies> _changeValue = new();
         private Unsubscriptions _unsubscribers = new();
         private Chance _chance;
         private int _rate;
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
             return new(abilities);
         }
 
-        public Unsubscription Subscribe(Action<CurrenciesLite> action, bool instantGetValue = true) => _changeValue.Add(action, instantGetValue, _exchange);
+        public Unsubscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _changeValue.Add(action, instantGetValue, _exchange);
 
         public void Update()
         {

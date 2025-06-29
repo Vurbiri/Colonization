@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
                 warrior.IsPlayerTurn = false;
             }
 
-            _resources.AddFrom(profit);
+            _resources.Add(profit);
             _artefact.Next(countBuffs);
         }
 
@@ -47,9 +47,9 @@ namespace Vurbiri.Colonization
             }
 
             if (_abilities.IsTrue(HumanAbilityId.IsFreeGroundRes))
-                _resources.AddFrom(_hexagons.FreeResources);
+                _resources.Add(_hexagons.FreeResources);
 
-            _resources.AddFrom(_edifices.ProfitFromEdifices(hexId));
+            _resources.Add(_edifices.ProfitFromEdifices(hexId));
         }
 
         public void OnStartTurn()

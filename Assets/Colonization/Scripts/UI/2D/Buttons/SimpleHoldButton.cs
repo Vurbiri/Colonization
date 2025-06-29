@@ -22,6 +22,10 @@ namespace Vurbiri.Colonization.UI
         private readonly Subscription _onClick = new();
         private bool _inside, _hold;
 
+        public float FadeDuration { get => _fadeDuration; set => _fadeDuration = value; }
+
+        public Color ColorDisabled => _colors[StateId.Disabled];
+
         public bool Interactable
         {
             get => _interactable;

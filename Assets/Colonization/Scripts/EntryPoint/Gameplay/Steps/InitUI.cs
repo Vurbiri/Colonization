@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private UIManagers _managers;
         [Space]
         [SerializeField] private WorldHint _worldHint;
-        [SerializeField] private ContextMenusWorld _contextMenusWorld;
+        [SerializeField] private ContextMenusManager _contextMenusWorld;
         [Space]
         [SerializeField] private CanvasHint _canvasHint;
         [SerializeField] private PlayerPanels _playerPanels;
@@ -34,12 +34,11 @@ namespace Vurbiri.Colonization.EntryPoint
             var colors = SceneContainer.Get<ProjectColors>();
             var player = _init.players.Player;
 
-            _managers.Init(_init.game, _init.cameraController, player, _canvasHint);
-            yield return null;
             _worldHint.Init();
-            _contextMenusWorld.Init(_init.GetContextMenuSettings(_worldHint));
-            yield return null;
             _canvasHint.Init();
+            yield return null;
+            _managers.Init(_init, _canvasHint, _init.GetContextMenuSettings(_worldHint));
+            yield return null;
             _playerPanels.Init(player, colors, _init.inputController, _canvasHint);
             yield return null;
 
@@ -53,10 +52,7 @@ namespace Vurbiri.Colonization.EntryPoint
             if (!Application.isPlaying)
             {
                 EUtility.SetObject(ref _managers);
-
                 EUtility.SetObject(ref _worldHint);
-                EUtility.SetObject(ref _contextMenusWorld);
-
                 EUtility.SetObject(ref _canvasHint);
                 EUtility.SetObject(ref _playerPanels);
             }
