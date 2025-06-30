@@ -48,10 +48,8 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_particleSystem == null)
-                _particleSystem = GetComponent<ParticleSystem>();
-            if (_audioSource == null)
-                _audioSource = GetComponent<AudioSource>();
+            this.SetComponent(ref _particleSystem);
+            this.SetComponent(ref _audioSource);
 
             if (Application.isPlaying) return;
 
@@ -60,7 +58,7 @@ namespace Vurbiri.Colonization
             if (_audioSource.loop)
                 _audioSource.loop = false;
 
-            ParticleSystem.MainModule main = _particleSystem.main;
+            var main = _particleSystem.main;
             if (main.playOnAwake || main.loop)
                 main.playOnAwake = main.loop = false;
             if (main.stopAction != ParticleSystemStopAction.Destroy)

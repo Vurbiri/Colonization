@@ -16,6 +16,12 @@ namespace Vurbiri.Colonization
             private int _capacity = BASE_CAPACITY;
             private int _count;
 
+            public Vector3 this[int index] => _values[index];
+
+            public int Count => _count;
+            public Vector3 Start => _values[0];
+            public Vector3 End => _values[_count];
+
             public Points(Road road, LineRenderer roadRenderer, Vector3 start, Vector3 end)
             {
                 _roadRenderer = roadRenderer;
@@ -136,6 +142,8 @@ namespace Vurbiri.Colonization
 
             public bool Remove(Vector3 point)
             {
+                point.y = OFFSET_Y;
+
                 int i = _count;
                 while (i --> 0)
                 {
@@ -151,6 +159,8 @@ namespace Vurbiri.Colonization
 
             public bool Extract(Vector3 point)
             {
+                point.y = OFFSET_Y;
+
                 for (int i = 0; i < _count; i++)
                 {
                     if (_values[i] == point)

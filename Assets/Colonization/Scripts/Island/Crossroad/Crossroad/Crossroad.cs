@@ -267,6 +267,23 @@ namespace Vurbiri.Colonization
             _countFreeLink--;
             _edifice.AddRoad(id, _isWall);
         }
+        public void RoadRemove()
+        {
+            _countFreeLink++;
+        }
+
+        public bool IsDeadEnd(Id<PlayerId> playerId)
+        {
+            if (_states.id != EdificeId.Empty)
+                return false;
+
+            int count = 0;
+            foreach (var link in _links)
+                if (link.Owner == playerId)
+                    count++;
+
+            return count <= 1;
+        }
 
         public bool IsDeadEnd(Id<PlayerId> playerId, out CrossroadLink link)
         {

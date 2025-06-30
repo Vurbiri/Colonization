@@ -34,6 +34,8 @@ namespace Vurbiri.Colonization
         protected readonly Unsubscription _unsubscriber;
         #endregion
 
+        public Id<PlayerId> Id => _id;
+
         public ACurrenciesReactive Resources => _resources;
         public ExchangeRate Exchange => _exchange;
 
@@ -99,6 +101,8 @@ namespace Vurbiri.Colonization
 
             settings.balance.BindShrines(_edifices.shrines);
             settings.balance.BindBlood(_resources.Get(CurrencyId.Blood));
+
+            settings.playersEquipment.Add(this);
         }
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];

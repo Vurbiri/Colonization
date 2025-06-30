@@ -63,6 +63,12 @@ namespace Vurbiri.Colonization
             _start.RoadBuilt(_id);
             _end.RoadBuilt(_id);
         }
+        public void RoadRemove()
+        {
+            _owner = PlayerId.None;
+            _start.RoadRemove();
+            _end.RoadRemove();
+        }
 
         public Crossroad Other(Crossroad crossroad) => crossroad == _start ? _end : _start;
 

@@ -27,6 +27,8 @@ namespace Vurbiri.Colonization
         public IReactiveValue<int> Level => _level;
         public IReactiveValue<int> Curse => _curse;
 
+        public ReadOnlyReactiveSet<Actor> Demons => _demons;
+
         public int MaxCurse => _states.maxCurse + _level * _states.maxCursePerLevel;
         public int CursePerTurn
         {
@@ -62,6 +64,8 @@ namespace Vurbiri.Colonization
             storage.BindActors(_demons);
 
             storage.LoadData = null;
+
+            settings.playersEquipment.Add(this);
         }
 
         public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);

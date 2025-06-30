@@ -101,6 +101,13 @@ namespace Vurbiri
             if (component == null)
                 LogErrorFind<T>("component", name);
         }
+        public static void SetChildrens<T>(this Component self, ref T[] components, int length) where T : Component
+        {
+            if (components != null && components.Length == length) return;
+            components = self.GetComponentsInChildren<T>();
+            if (components == null || components.Length != length)
+                LogErrorFind<T>("component", null);
+        }
 
         // ********************************************
 

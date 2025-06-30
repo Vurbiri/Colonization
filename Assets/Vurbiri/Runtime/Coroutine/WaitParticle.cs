@@ -3,11 +3,13 @@ using UnityEngine;
 
 namespace Vurbiri
 {
+    [System.Serializable]
     public class WaitParticle : IEnumerator
     {
-        private readonly ParticleSystem _particleSystem;
+        [SerializeField] private ParticleSystem _particleSystem;
 
         public object Current => null;
+        public ParticleSystem ParticleSystem => _particleSystem;
 
         public WaitParticle(ParticleSystem particleSystem)
         {

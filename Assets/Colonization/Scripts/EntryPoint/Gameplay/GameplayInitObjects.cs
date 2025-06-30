@@ -54,6 +54,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             container.AddInstance(_poolEffectsBar.Create());
             container.AddInstance(cameraTransform = new(_mainCamera));
+            
             cameraController.Init(cameraTransform, triggerBus, inputController.CameraActions);
 
             _inputControllerSettings = null;
@@ -70,6 +71,8 @@ namespace Vurbiri.Colonization.EntryPoint
             _playersSettings.balance = _balance;
             _playersSettings.hexagons = hexagons;
             _playersSettings.crossroads = crossroads;
+
+            _playersSettings.Init();
 
             return _playersSettings;
         }

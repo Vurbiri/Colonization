@@ -57,9 +57,25 @@ namespace Vurbiri.Colonization
             return returnSignal;
         }
 
+        public bool AreThereDeadEnds()
+        {
+            for (int i = _roadsLists.Count - 1; i >= 0; i--)
+                if (_roadsLists[i].AreThereDeadEnd(_id.Value))
+                    return true;
+            return false;
+        }
         public void RemoveDeadEnds()
         {
+            Road line; int removeCount = 0;
+            for (int i = _roadsLists.Count - 1; i >= 0; i--)
+            {
+                line = _roadsLists[i];
+                removeCount += line.RemoveDeadEnds(_id.Value);
 
+                if (line.Count <= 1)
+                    _roadsLists.RemoveAt(i);
+            }
+            _count.Remove(removeCount);
         }
 
         #region Reactive

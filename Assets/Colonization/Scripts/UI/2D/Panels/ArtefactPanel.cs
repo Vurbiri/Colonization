@@ -31,7 +31,12 @@ namespace Vurbiri.Colonization.UI
 
         // TEST
         Artefact _artefact;
-        public void Test() => _artefact.Next(UnityEngine.Random.Range(2, 10));
+        Human _player;
+        public void Test()
+        {
+            //_artefact.Next(UnityEngine.Random.Range(2, 10));
+            _player.Roads.RemoveDeadEnds();
+        }
         // TEST
 
         public void Init(Human player, CanvasHint hint)
@@ -53,6 +58,7 @@ namespace Vurbiri.Colonization.UI
             // TEST
             Debug.Log("Удалить Тесты в ArtefactPanel");
             _artefact = player.Artefact;
+            _player = player;
             // TEST
         }
 
