@@ -57,6 +57,11 @@ namespace Vurbiri.Colonization
             return returnSignal;
         }
 
+        public void RemoveDeadEnds()
+        {
+
+        }
+
         #region Reactive
         public Unsubscription Subscribe(Action<Roads> action, bool calling = false)
         {

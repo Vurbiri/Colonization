@@ -26,7 +26,6 @@ namespace Vurbiri.Colonization
 
         public IReactiveValue<int> Level => _level;
         public IReactiveValue<int> Curse => _curse;
-        public IReactive<int> Balance => _balance;
 
         public int MaxCurse => _states.maxCurse + _level * _states.maxCursePerLevel;
         public int CursePerTurn

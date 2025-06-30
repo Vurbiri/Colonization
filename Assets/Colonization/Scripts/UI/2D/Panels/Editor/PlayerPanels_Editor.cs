@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization.UI
     public partial class PlayerPanels
     {
         [StartEditor]
+        [SerializeField, Range(1f, 2f)] private float _pixelsPerUnitRate = 1.1f;
+        [Space]
         [SerializeField] private Vector2 _paddingIn = new(14f, 12f);
         [SerializeField, Range(1f, 10f)] private float _spaceIn = 4f;
         [Header("Between")]
@@ -17,6 +19,7 @@ namespace Vurbiri.Colonization.UI
 
         public void UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors)
         {
+            pixelsPerUnit *= _pixelsPerUnitRate;
             var advPadding = _spaceOut * _advRatioSpaceOut;
 
             RectTransform thisRectTransform = (RectTransform)transform;

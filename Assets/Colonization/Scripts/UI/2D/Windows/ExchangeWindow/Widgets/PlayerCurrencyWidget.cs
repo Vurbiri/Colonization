@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
             _changeCount.Invoke(_id.Value, value);
         }
 
-        private void SetMax(int value)
+        public void SetMax(int value)
         {
             _max = value;
             CrossFadeColor();

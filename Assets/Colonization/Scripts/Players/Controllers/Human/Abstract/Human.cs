@@ -30,18 +30,14 @@ namespace Vurbiri.Colonization
         protected readonly PerkTree _perks;
 
         protected readonly WarriorsSpawner _spawner;
-        protected readonly ReactiveSet<Actor> _warriors = new(6);
+        protected readonly ReactiveSet<Actor> _warriors = new(CONST.DEFAULT_MAX_ACTORS);
         protected readonly Unsubscription _unsubscriber;
         #endregion
 
         public ACurrenciesReactive Resources => _resources;
         public ExchangeRate Exchange => _exchange;
 
-        public ReactiveSet<Actor> Warriors => _warriors;
-
-        public ReactiveList<Crossroad> Shrines => _edifices.shrines;
-        public ReactiveList<Crossroad> Ports => _edifices.ports;
-        public ReactiveList<Crossroad> Colonies => _edifices.colonies;
+        public ReadOnlyReactiveSet<Actor> Warriors => _warriors;
 
         public Roads Roads => _roads;
 
@@ -107,7 +103,7 @@ namespace Vurbiri.Colonization
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
 
-        public ReactiveList<Crossroad> GetEdifices(Id<EdificeGroupId> id) => _edifices.edifices[id];
+        public ReadOnlyReactiveList<Crossroad> GetEdifices(Id<EdificeGroupId> id) => _edifices.edifices[id];
 
         public void BuyPerk(int typePerk, int idPerk)
         {

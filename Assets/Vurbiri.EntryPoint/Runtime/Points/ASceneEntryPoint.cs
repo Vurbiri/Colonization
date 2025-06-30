@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Vurbiri.Reactive;
 
@@ -7,15 +6,16 @@ namespace Vurbiri.EntryPoint
     public abstract class ASceneEntryPoint : MonoBehaviour
     {
         private static ASceneEntryPoint s_instance;
+        private static readonly Subscription<ASceneEntryPoint> s_sceneLoaded = new();
 
-        public static event Action<ASceneEntryPoint> EventLoaded;
+        public static ISubscription<ASceneEntryPoint> EventLoaded => s_sceneLoaded;
 
         private void Awake()
         {
             if (s_instance == null)
             {
                 s_instance = this;
-                EventLoaded?.Invoke(this);
+                s_sceneLoaded.Invoke(this);
                 return;
             }
 

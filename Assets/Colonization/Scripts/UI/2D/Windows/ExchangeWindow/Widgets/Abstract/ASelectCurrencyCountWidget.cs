@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.UI
 
         public bool Interactable
         {
-            get => _interactable;
+            get => _interactable & _max > _min;
             set
             {
                 if (_interactable != value)
@@ -41,15 +41,15 @@ namespace Vurbiri.Colonization.UI
 
         public void ResetCount()
         {
-            Interactable = true;
-            if (_count != _min)
-                SetValue(_min);
+            _interactable = true;
+            CrossFadeColor();
+            SetValue(_min);
         }
 
         protected virtual void Awake()
         {
             _fadeDuration = _rightButton.FadeDuration;
-            _colorDisabled = _rightButton.ColorDisabled;
+            _colorDisabled = _rightButton.DisabledColor;
 
             Interactable = true;
 

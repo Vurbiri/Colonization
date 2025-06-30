@@ -1,22 +1,13 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Vurbiri.Reactive.Collections
 {
     [JsonArray]
-    public class ReactiveList<T> : IList<T>, IReactiveList<T> where T : IEquatable<T>
+    public class ReactiveList<T> : ReadOnlyReactiveList<T>, IList<T> where T : IEquatable<T>
     {
-        private const int BASE_CAPACITY = 7;
-
-        private T[] _values;
-        private int _capacity = BASE_CAPACITY;
-        protected readonly RInt _count = new(0);
-
-        private readonly Subscription<int, T, TypeEvent> _subscriber = new();
-
-        public T this[int index] 
+        public new T this[int index] 
         {
             get => _values[index];
             set
@@ -28,10 +19,6 @@ namespace Vurbiri.Reactive.Collections
                 }
             }
         }
-
-        public int Count => _count.Value;
-        public IReactiveValue<int> CountReactive => _count;
-        public bool IsReadOnly => false;
 
         #region Constructors
         public ReactiveList()
@@ -75,19 +62,6 @@ namespace Vurbiri.Reactive.Collections
                 Add(item);
         }
 
-        #region IReadOnlyReactiveList
-        public Unsubscription Subscribe(Action<int, T, TypeEvent> action, bool instantGetValue = true)
-        {
-            if (instantGetValue)
-            {
-                for (int i = 0; i < _count; i++)
-                    action(i, _values[i], TypeEvent.Subscribe);
-            }
-
-            return _subscriber.Add(action);
-        }
-        #endregion
-
         #region IList
         public void Add(T item)
         {
@@ -114,15 +88,6 @@ namespace Vurbiri.Reactive.Collections
             _subscriber.Invoke(index, item, TypeEvent.Insert);
 
             _count.Value++;
-        }
-
-        public bool Contains(T item)
-        {
-            for (int i = 0; i < _count; i++)
-                if (_values[i].Equals(item))
-                    return true;
-
-            return false;
         }
 
         public int IndexOf(T item)
@@ -174,10 +139,6 @@ namespace Vurbiri.Reactive.Collections
             for (int i = arrayIndex; i < _count; i++)
                 array[i] = _values[i];
         }
-
-        public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_values);
-
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<T>(_values);
         #endregion
 
         private void GrowArray()

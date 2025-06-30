@@ -26,7 +26,10 @@ namespace Vurbiri.Colonization.UI
 
         public float FadeDuration { get => _fadeDuration; set => _fadeDuration = value; }
 
-        public Color ColorDisabled => _colors[StateId.Disabled];
+        public Color NormalColor    { get => _colors[StateId.Normal];   set => _colors[StateId.Normal]   = value; }
+        public Color InsideColor    { get => _colors[StateId.Inside];   set => _colors[StateId.Inside]   = value; }
+        public Color HoldColor      { get => _colors[StateId.Hold];     set => _colors[StateId.Hold]     = value; }
+        public Color DisabledColor  { get => _colors[StateId.Disabled]; set => _colors[StateId.Disabled] = value; }
 
         public bool Interactable
         {

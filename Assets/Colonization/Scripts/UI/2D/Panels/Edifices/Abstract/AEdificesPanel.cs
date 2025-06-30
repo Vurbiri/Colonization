@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
 
         private IdArray<EdificeId, Sprite> _sprites;
 
-        protected void InitEdifice(ReactiveList<Crossroad> edifices, IdArray<EdificeId, Sprite> sprites, InputController inputController)
+        protected void InitEdifice(ReadOnlyReactiveList<Crossroad> edifices, IdArray<EdificeId, Sprite> sprites, InputController inputController)
         {
             _sprites = sprites;
             _inputController = inputController;

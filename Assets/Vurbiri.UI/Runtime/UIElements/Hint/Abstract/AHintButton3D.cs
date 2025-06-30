@@ -12,18 +12,17 @@ namespace Vurbiri.UI
         private Vector3 _offsetHint;
 
         protected GameObject _thisGameObject;
-        protected Transform _thisTransform;
         protected string _text;
 
         protected virtual void Init(WorldHint hint, Action action, bool active, float ratioHeight = 0.5263f)
         {
             _hint = hint;
             _thisGameObject = gameObject;
-            _thisTransform = transform;
+            if (_rectTransform == null)
+                _rectTransform = (RectTransform)transform;
 
-            RectTransform thisRectTransform = (RectTransform)_thisTransform;
-            Vector2 pivot = thisRectTransform.pivot;
-            Vector2 size = thisRectTransform.rect.size;
+            Vector2 pivot = _rectTransform.pivot;
+            Vector2 size = _rectTransform.rect.size;
 
             _offsetHint = new(size.x * (0.5f - pivot.x), size.y * (0.5f - pivot.y + ratioHeight), 0f);
 
@@ -35,7 +34,7 @@ namespace Vurbiri.UI
         {
             base.OnPointerEnter(eventData);
             if (!_isShowingHint)
-                _isShowingHint = _hint.Show(_text, _thisTransform.localPosition, _offsetHint);
+                _isShowingHint = _hint.Show(_text, _rectTransform.localPosition, _offsetHint);
         }
         sealed public override void OnPointerExit(PointerEventData eventData)
         {

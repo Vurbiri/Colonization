@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         private const int MIN_SIZE = 64, MAX_SIZE = 256;
         private const float SPACE = 0.1f;
 
-        public Vector3 LocalPosition { set => _thisTransform.localPosition = value; }
+        public Vector3 LocalPosition { set => _rectTransform.localPosition = value; }
 
         protected virtual void Init(ButtonSettings settings, Action action)
         {

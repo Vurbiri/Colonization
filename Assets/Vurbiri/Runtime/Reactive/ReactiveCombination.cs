@@ -152,6 +152,19 @@ namespace Vurbiri.Reactive
             _subscriber.Add(action);
         }
 
+        public ReactiveCombination(IReactive<TA, TB, TC> reactiveABC, IReactive<TD> reactiveD)
+        {
+            _unsubscribers = new(2);
+
+            _unsubscribers += reactiveABC.Subscribe((valueA, valueB, valueC) => _subscriber.Invoke(_valueA = valueA, _valueB = valueB, _valueC = valueC, _valueD));
+            _unsubscribers += reactiveD.Subscribe(value => _subscriber.Invoke(_valueA, _valueB, _valueC, _valueD = value));
+        }
+        public ReactiveCombination(IReactive<TA, TB, TC> reactiveABC, IReactive<TD> reactiveD, Action<TA, TB, TC, TD> action) : this(reactiveABC, reactiveD)
+        {
+            action(_valueA, _valueB, _valueC, _valueD);
+            _subscriber.Add(action);
+        }
+
         public Unsubscription Subscribe(Action<TA, TB, TC, TD> action, bool instantGetValue = true)
         {
             if (instantGetValue) action(_valueA, _valueB, _valueC, _valueD);

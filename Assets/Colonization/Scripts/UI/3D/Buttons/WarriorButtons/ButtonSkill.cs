@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.UI
         {
             bool isUse = actor.ActionPoint >= skillUI.Cost;
 
-            _thisTransform.localPosition = localPosition;
+            _rectTransform.localPosition = localPosition;
 
             _currentActor = actor;
             _idSkill = idSkill;

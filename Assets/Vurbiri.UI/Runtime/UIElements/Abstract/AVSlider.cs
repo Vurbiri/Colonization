@@ -27,7 +27,6 @@ namespace Vurbiri.UI
         private int _axis;
         private bool _reverseValue;
 
-        private RectTransform _thisRectTransform;
         private Image _fillImage;
         private RectTransform _fillContainerRect;
         private RectTransform _handleContainerRect;
@@ -176,7 +175,7 @@ namespace Vurbiri.UI
         {
             _fillContainerRect = null;
             _fillImage = null;
-            if (_fillRect != null & _fillRect != _thisRectTransform && _fillRect.parent != null)
+            if (_fillRect != null & _fillRect != _rectTransform && _fillRect.parent != null)
             {
                 _fillContainerRect = (RectTransform)_fillRect.parent;
                 _fillImage = _fillRect.GetComponent<Image>();
@@ -191,7 +190,7 @@ namespace Vurbiri.UI
         {
             _handleContainerRect = null;
 
-            if (_handleRect != null & _handleRect != _thisRectTransform && _handleRect.parent != null)
+            if (_handleRect != null & _handleRect != _rectTransform && _handleRect.parent != null)
                 _handleContainerRect = (RectTransform)_handleRect.parent;
             else
                 _handleRect = null;
@@ -264,8 +263,8 @@ namespace Vurbiri.UI
             _axis = (direction == Direction.LeftToRight | direction == Direction.RightToLeft) ? HORIZONTAL : VERTICAL;
             _reverseValue = direction == Direction.RightToLeft | direction == Direction.TopToBottom;
 
-            if (flipLayout & _axis != oldAxis) RectTransformUtility.FlipLayoutAxes(_thisRectTransform, true, true);
-            if (flipLayout & _reverseValue != oldReverse) RectTransformUtility.FlipLayoutOnAxis(_thisRectTransform, _axis, true, true);
+            if (flipLayout & _axis != oldAxis) RectTransformUtility.FlipLayoutAxes(_rectTransform, true, true);
+            if (flipLayout & _reverseValue != oldReverse) RectTransformUtility.FlipLayoutOnAxis(_rectTransform, _axis, true, true);
         }
         #endregion
 
@@ -273,7 +272,7 @@ namespace Vurbiri.UI
         sealed protected override void Awake()
         {
             base.Awake();
-            _thisRectTransform = (RectTransform)transform;
+
             UpdateFillRectReferences();
             UpdateHandleRectReferences();
         }
@@ -452,7 +451,6 @@ namespace Vurbiri.UI
 
             if (!Application.isPlaying)
             {
-                _thisRectTransform = (RectTransform)transform;
                 UpdateFillRectReferences();
                 UpdateHandleRectReferences();
 

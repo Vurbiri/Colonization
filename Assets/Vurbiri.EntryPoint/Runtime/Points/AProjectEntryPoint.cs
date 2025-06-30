@@ -30,7 +30,7 @@ namespace Vurbiri.EntryPoint
 
             _loading = Loading.Create(this, Screen);
 
-            ASceneEntryPoint.EventLoaded += EnterScene;
+            ASceneEntryPoint.EventLoaded.Add(EnterScene);
         }
 
         private void LoadScene(ExitParam param)

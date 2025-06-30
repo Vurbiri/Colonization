@@ -22,8 +22,7 @@ namespace Vurbiri.Colonization.UI
         private InputController _inputController;
         private Coroutine _activeCn;
 
-        public RectTransform RectTransform => (RectTransform)transform;
-        public Vector3 Offset => new(0f, RectTransform.sizeDelta.y * 1.08f, 0f);
+        public Vector3 Offset => new(0f, _rectTransform.sizeDelta.y * 1.08f, 0f);
 
         protected void InitClick(InputController inputController)
         {

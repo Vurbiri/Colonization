@@ -19,17 +19,18 @@ namespace VurbiriEditor
             position.height = EditorGUIUtility.singleLineHeight;
 
             label = BeginProperty(position, label, mainProperty);
-
-            if (mainProperty.propertyType == SerializedPropertyType.Float)
             {
-                mainProperty.floatValue = Mathf.Clamp(mainProperty.floatValue, inverse.minF, inverse.maxF);
-                mainProperty.floatValue = inverse.offsetF - Slider(position, label, inverse.offsetF - mainProperty.floatValue, inverse.minF, inverse.maxF);
+                if (mainProperty.propertyType == SerializedPropertyType.Float)
+                {
+                    float value = inverse.offsetF - Mathf.Clamp(mainProperty.floatValue, inverse.minF, inverse.maxF);
+                    mainProperty.floatValue = inverse.offsetF - Slider(position, label, value, inverse.minF, inverse.maxF);
 
-            }
-            else
-            {
-                mainProperty.intValue = Mathf.Clamp(mainProperty.intValue, inverse.minI, inverse.maxI);
-                mainProperty.intValue = inverse.offsetI - IntSlider(position, label, inverse.offsetI - mainProperty.intValue, inverse.minI, inverse.maxI);
+                }
+                else
+                {
+                    int value = inverse.offsetI - Mathf.Clamp(mainProperty.intValue, inverse.minI, inverse.maxI);
+                    mainProperty.intValue = inverse.offsetI - IntSlider(position, label, value, inverse.minI, inverse.maxI);
+                }
             }
             EndProperty();
         }

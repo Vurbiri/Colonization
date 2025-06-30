@@ -17,6 +17,7 @@ namespace Vurbiri.UI
         [SerializeField] private ScaleBlock _scales = ScaleBlock.defaultScaleBlock;
 
         private ScaleTween _scaleTween = new();
+        protected RectTransform _rectTransform;
 
         #region Properties
         public bool Interactable
@@ -32,7 +33,6 @@ namespace Vurbiri.UI
                 }
             }
         }
-
         public Graphic InteractableIcon
         {
             get => _interactableIcon;
@@ -90,6 +90,17 @@ namespace Vurbiri.UI
         }
 
         public int TargetGraphicCount => _targetGraphics.Count;
+
+        public RectTransform RectTransform
+        {
+            get
+            {
+#if UNITY_EDITOR
+                if (!Application.isPlaying) this.SetComponent(ref _rectTransform);
+#endif
+                return _rectTransform;
+            }
+        }
         #endregion
 
         public Graphic GetTargetGraphic(int index) => _targetGraphics[index].Graphic;
@@ -106,6 +117,7 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
 #endif
+            _rectTransform = (RectTransform)transform;
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 if (!_targetGraphics[i].Validate()) 
@@ -232,6 +244,7 @@ namespace Vurbiri.UI
         {
             if (!Application.isPlaying)
             {
+                this.SetComponent(ref _rectTransform);
 
                 if (transition == Transition.ColorTint && _scales.fadeDuration != colors.fadeDuration)
                     _scales.fadeDuration = colors.fadeDuration;
