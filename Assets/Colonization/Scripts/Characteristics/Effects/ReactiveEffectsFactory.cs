@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class EffectsFactory
+    public class ReactiveEffectsFactory
     {
         private const int ABILITY = ActorAbilityId.Defense;
         private const int MOD = TypeModifierId.Addition;

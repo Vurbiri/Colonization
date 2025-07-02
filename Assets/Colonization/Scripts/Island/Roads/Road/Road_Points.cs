@@ -176,6 +176,13 @@ namespace Vurbiri.Colonization
                 return false;
             }
 
+            public void Clear()
+            {
+                _count = 0;
+                _roadRenderer.positionCount = _count;
+                _roadRenderer.SetPositions(new Vector3[0]);
+            }
+
             private void SetPositions()
             {
                 _roadRenderer.positionCount = _count;

@@ -32,13 +32,24 @@ namespace Vurbiri.Colonization
             _eventChanged.Invoke(this);
         }
 
+        public void AddMain(int currencyId, int value)
+        {
+            if (value != 0)
+            {
+                _values[currencyId].Add(value);
+                
+                _amount.Add(value);
+                _eventChanged.Invoke(this);
+            }
+        }
+
         public void AddBlood(int value)
         {
-            if (value <= 0)
-                return;
-
-            _values[CurrencyId.Blood].Add(value);
-            _eventChanged.Invoke(this);
+            if (value != 0)
+            {
+                _values[Blood].Add(value);
+                _eventChanged.Invoke(this);
+            }
         }
 
         public void Pay(ACurrencies cost)

@@ -11,6 +11,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] protected int _min;
         [SerializeField] protected int _max;
+        [SerializeField] protected int _step;
         [Space]
         [SerializeField] protected TextMeshProUGUI _textValue;
         [Space]
@@ -78,8 +79,8 @@ namespace Vurbiri.Colonization.UI
             _icon.CrossFadeColor(color, _fadeDuration, true, true);
         }
 
-        private void OnRightClick() => SetValue(_count + 1);
-        private void OnLeftClick() => SetValue(_count - 1);
+        private void OnRightClick() => SetValue(_count + _step);
+        private void OnLeftClick() => SetValue(_count - _step);
 
 #if UNITY_EDITOR
         private Rect _bounds;

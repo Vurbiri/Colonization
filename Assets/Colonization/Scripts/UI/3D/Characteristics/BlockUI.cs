@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Vurbiri.International;
 using Vurbiri.Reactive;
-using static Vurbiri.Colonization.Characteristics.EffectsFactory;
+using static Vurbiri.Colonization.Characteristics.ReactiveEffectsFactory;
 
 namespace Vurbiri.Colonization.UI
 {

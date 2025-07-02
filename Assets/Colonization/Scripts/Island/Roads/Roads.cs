@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
     public partial class Roads : IReactive<Roads>
     {
         #region Fields
-        private readonly Id<PlayerId> _id;
+        private readonly int _id;
         private readonly RoadFactory _factory;
         private readonly List<Road> _roadsLists = new();
         private readonly RInt _count = new(0);
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
 
         public Roads(Id<PlayerId> id, Color color, RoadFactory factory, Coroutines coroutines)
         {
-            _id = id;
+            _id = id.Value;
             _factory = factory;
             _coroutines = coroutines;
 
@@ -57,12 +57,12 @@ namespace Vurbiri.Colonization
             return returnSignal;
         }
 
-        public bool AreThereDeadEnds()
+        public int DeadEndsCount()
         {
+            int deadEndsCount = 0;
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
-                if (_roadsLists[i].AreThereDeadEnd(_id.Value))
-                    return true;
-            return false;
+                deadEndsCount += _roadsLists[i].DeadEndsCount(_id);
+            return deadEndsCount;
         }
         public void RemoveDeadEnds()
         {
@@ -70,12 +70,17 @@ namespace Vurbiri.Colonization
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
             {
                 line = _roadsLists[i];
-                removeCount += line.RemoveDeadEnds(_id.Value);
+                removeCount += line.RemoveDeadEnds(_id);
 
-                if (line.Count <= 1)
+                if (line.Count < 2)
                     _roadsLists.RemoveAt(i);
             }
-            _count.Remove(removeCount);
+
+            if (removeCount > 0)
+            {
+                _eventChanged.Invoke(this);
+                _count.Remove(removeCount);
+            }
         }
 
         #region Reactive
@@ -100,7 +105,7 @@ namespace Vurbiri.Colonization
                     if (removingLine != null)
                     {
                         _roadsLists.Remove(removingLine);
-                        removingLine.Destroy();
+                        removingLine.Disable();
                         _coroutines.Run(TryUnion_Cn(null));
                         yield break;
                     }

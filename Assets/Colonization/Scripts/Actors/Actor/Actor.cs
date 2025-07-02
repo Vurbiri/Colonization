@@ -62,6 +62,7 @@ namespace Vurbiri.Colonization.Actors
         public bool CanMove => _move.IsValue;
         public bool IsIdle => _stateMachine.IsDefaultState;
         public bool IsBlock => _blockState.Enabled;
+        public bool IsWounded => _currentHP.IsNotMax;
         public bool IsDead => _currentHP.Value <= 0;
         public ActorSkin Skin => _skin;
         public IReactiveSet<ReactiveEffect> Effects => _effects;
@@ -132,7 +133,7 @@ namespace Vurbiri.Colonization.Actors
         public void EffectsUpdate(int defense)
         {
             _effects.Next();
-            _effects.Add(EffectsFactory.CreateWallDefenceEffect(defense));
+            _effects.Add(ReactiveEffectsFactory.CreateWallDefenceEffect(defense));
 
             _stateMachine.ToDefaultState();
         }
@@ -140,8 +141,8 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         #region WallDefence
-        public void AddWallDefenceEffect(int maxDefense) => _effects.Add(EffectsFactory.CreateWallDefenceEffect(maxDefense));
-        public void RemoveWallDefenceEffect() => _effects.Remove(EffectsFactory.WallEffectCode);
+        public void AddWallDefenceEffect(int maxDefense) => _effects.Add(ReactiveEffectsFactory.CreateWallDefenceEffect(maxDefense));
+        public void RemoveWallDefenceEffect() => _effects.Remove(ReactiveEffectsFactory.WallEffectCode);
         #endregion
 
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);

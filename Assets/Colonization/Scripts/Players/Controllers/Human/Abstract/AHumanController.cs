@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
 	{
         protected readonly Hexagons _hexagons;
 
-        protected AHumanController(Id<PlayerId> playerId, Storage.HumanStorage storage, Players.Settings settings) : base(playerId, storage, settings)
+        protected AHumanController(int playerId, Storage.HumanStorage storage, Players.Settings settings) : base(playerId, storage, settings)
         {
             _hexagons = settings.hexagons;
         }

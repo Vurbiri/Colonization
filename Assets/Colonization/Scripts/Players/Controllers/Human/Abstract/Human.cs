@@ -14,12 +14,13 @@ namespace Vurbiri.Colonization
         #region Fields
         protected readonly Coroutines _coroutines;
 
-        protected readonly Id<PlayerId> _id;
+        protected readonly int _id;
         protected readonly bool _isPlayer;
         protected readonly Currencies _resources;
         protected readonly ExchangeRate _exchange;
         protected readonly Prices _prices;
 
+        protected readonly Balance _balance;
         protected readonly Score _score;
 
         protected readonly Edifices _edifices;
@@ -46,10 +47,11 @@ namespace Vurbiri.Colonization
         public Artefact Artefact => _artefact;
         public PerkTree Perks => _perks;
 
-        public Human(Id<PlayerId> playerId, HumanStorage storage, Players.Settings settings)
+        public Human(int playerId, HumanStorage storage, Players.Settings settings)
         {
             _id = playerId;
             _isPlayer = playerId == PlayerId.Player;
+            _balance = settings.balance;
             _score = settings.score;
             _coroutines = settings.coroutines;
             
@@ -109,6 +111,13 @@ namespace Vurbiri.Colonization
 
         public ReadOnlyReactiveList<Crossroad> GetEdifices(Id<EdificeGroupId> id) => _edifices.edifices[id];
 
+        public void BuyOrder(int order, int price)
+        {
+            _balance.AddBalance(order);
+            _score.OnAddOrder(_id, order);
+            _resources.AddMain(CurrencyId.Mana, -price);
+        }
+
         public void BuyPerk(int typePerk, int idPerk)
         {
             if (_perks.TryAdd(typePerk, idPerk, out int cost))
@@ -134,7 +143,7 @@ namespace Vurbiri.Colonization
                 _edifices.edifices[crossroad.GroupId].AddOrChange(crossroad);
 
                 _resources.Pay(_prices.Edifices[edificeId]);
-                _score.Build(_id.Value, edificeId);
+                _score.OnBuild(_id, edificeId);
             }
             return returnSignal.signal;
         }
@@ -216,12 +225,12 @@ namespace Vurbiri.Colonization
         {
             if (target == PlayerId.Satan)
             {
-                _score.DemonKill(_id.Value, actorId);
+                _score.OnDemonKill(_id, actorId);
                 _resources.AddBlood(actorId + 1);
             }
             else if (target != _id)
             {
-                _score.WarriorKill(_id.Value, actorId);
+                _score.OnWarriorKill(_id, actorId);
             }
         }
     }

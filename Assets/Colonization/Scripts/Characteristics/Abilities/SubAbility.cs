@@ -8,6 +8,9 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly Ability _restore;
         private readonly IdArray<TypeModifierId, Func<int, int>> _modifiers = new();
 
+        public bool IsMax => _value == _maxValue;
+        public bool IsNotMax => _value < _maxValue;
+
         public SubAbility(AAbility<TId> self, Ability max, Ability restore) : base(self)
         {
             _modifiers[TypeModifierId.BasePercent] = OnBasePercent;

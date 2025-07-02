@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
         }
         public void BindBlood(ICurrency blood) => blood.SubscribeDelta(OnPayInBlood);
 
-        private void AddBalance(int value)
+        public void AddBalance(int value)
         {
             if (value != 0)
             {

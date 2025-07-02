@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
@@ -8,8 +9,9 @@ namespace Vurbiri.Colonization
     {
         private const int BASE_ORDER = 32;
         private const int R_SFX_COUNT = 2;
+        private const float CLIP_DELAY = 0.5f;
 
-        private static bool s_playRemoveClip;
+        private static Coroutine s_playRemoveClip;
 
         [SerializeField] private LineRenderer _roadRenderer;
         [SerializeField] private AudioSource _audioSource;
@@ -25,42 +27,46 @@ namespace Vurbiri.Colonization
         [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureXRange = new(0.6f, 0.9f);
         [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _textureYRange = new(0.4f, 1f);
         [Space]
-        [SerializeField, Range(2f, 6f)] private float _buildingSpeed = 4.1f;
+        [SerializeField, Range(2f, 6f)] private float _buildingSpeed = 4.3f;
 
+        private readonly Subscription<Road> _onDisable = new();
+        private readonly WaitRealtime _waitClip = new(CLIP_DELAY);
         private readonly WaitSignal _waitSignal = new();
+        private Transform _thisTransform;
         private readonly Transform[] _particleTransforms = new Transform[R_SFX_COUNT];
         private Links _links;
         private Points _points;
         private Vector2 _textureScale;
         private float _textureScaleX;
-
+                
         private Gradient _gradient;
         private Coroutine _coroutineBuildSFX, _coroutineRemoveSFX;
         private readonly GradientAlphaKey[] _alphaKeys = { new(1f, 0f), new(1f, 0.5f), new(0f, 1f) };
         private GradientAlphaKey[] _defaultAlphaKey;
-
         private GradientAlphaKey[] LineAlphaKeys { set { _gradient.alphaKeys = value; _roadRenderer.colorGradient = _gradient; } }
+
+        public Transform Transform => _thisTransform;
 
         public int SortingOrder { set =>  _roadRenderer.sortingOrder = BASE_ORDER - value; }
         public int Count => _links.Count;
 
-        public Road Init(Gradient gradient, int id)
+        public Road Init(Gradient gradient, int id, Action<Road> onDisable)
         {
-            _rateWave = new(_rateWave, _widthRoad);
+            Setup(gradient, id);
 
-            _roadRenderer.sortingOrder = BASE_ORDER - id;
-
-            _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
-
-            _roadRenderer.colorGradient = gradient;
-            _defaultAlphaKey = gradient.alphaKeys;
-            _gradient = _roadRenderer.colorGradient;
-
-            _textureScale = new Vector2(_textureXRange, _textureYRange);
-            _textureScaleX = _textureScale.x;
-
+            _onDisable.Add(onDisable);
+            _thisTransform = transform;
             for (int i = 0; i < R_SFX_COUNT; i++)
                 _particleTransforms[i] = _removeSFX[i].ParticleSystem.transform;
+
+            return this;
+        }
+
+        public Road Setup(Gradient gradient, int id, Transform parent)
+        {
+            _thisTransform.SetParent(parent, false);
+
+            Setup(gradient, id);
 
             return this;
         }
@@ -100,7 +106,13 @@ namespace Vurbiri.Colonization
             return isSFX ? StartSFX(inverse) : true;
         }
 
-        public bool AreThereDeadEnd(int playerId) => _links.End.IsDeadEnd(playerId) || _links.Start.IsDeadEnd(playerId);
+        public int DeadEndsCount(int playerId)
+        {
+            int deadEndsCount = 0;
+            if (_links.End.IsDeadEnd(playerId))   deadEndsCount++;
+            if (_links.Start.IsDeadEnd(playerId)) deadEndsCount++;
+            return deadEndsCount;
+        }
         public int RemoveDeadEnds(int playerId)
         {
             int removeCount = 0;
@@ -151,9 +163,10 @@ namespace Vurbiri.Colonization
             return null;
         }
 
-        public void Destroy()
+        public void Disable()
         {
-            Destroy(gameObject);
+            _points.Clear();
+            _onDisable.Invoke(this);
         }
 
         private void RoadRemove(CrossroadLink link, int index)
@@ -163,6 +176,7 @@ namespace Vurbiri.Colonization
             _removeSFX[index].Play();
 
             _coroutineRemoveSFX ??= StartCoroutine(RemoveSFX_Cn());
+            s_playRemoveClip ??= StartCoroutine(PlayRemoveClip_Cn());
         }
 
         private void UnionTextureScale(Road other)
@@ -227,21 +241,36 @@ namespace Vurbiri.Colonization
 
         private IEnumerator RemoveSFX_Cn()
         {
-            if(!s_playRemoveClip)
-            {
-                s_playRemoveClip = true;
-                _audioSource.PlayOneShot(_removeClip);
-            }
-            
             for (int i = 0; i < R_SFX_COUNT; i++)
                 yield return _removeSFX[i];
 
-            s_playRemoveClip = false;
+            _coroutineRemoveSFX = null;
 
             if (_links.Count < 2)
-                Destroy(gameObject);
-            else
-                _coroutineRemoveSFX = null;
+                Disable();
+        }
+
+        private IEnumerator PlayRemoveClip_Cn()
+        {
+            _audioSource.PlayOneShot(_removeClip);
+            yield return _waitClip.Restart();
+            s_playRemoveClip = null;
+        }
+
+        private void Setup(Gradient gradient, int id)
+        {
+            _rateWave = new(_rateWave, _widthRoad);
+
+            _roadRenderer.sortingOrder = BASE_ORDER - id;
+
+            _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
+
+            _roadRenderer.colorGradient = gradient;
+            _defaultAlphaKey = gradient.alphaKeys;
+            _gradient = _roadRenderer.colorGradient;
+
+            _textureScale = new Vector2(_textureXRange, _textureYRange);
+            _textureScaleX = _textureScale.x;
         }
 
 #if UNITY_EDITOR
@@ -255,22 +284,12 @@ namespace Vurbiri.Colonization
                 var particles = GetComponentsInChildren<ParticleSystem>();
                 _removeSFX = new WaitParticle[R_SFX_COUNT];
                 for (int i = 0; i < R_SFX_COUNT; i++)
+                {
                     _removeSFX[i] = new(particles[i]);
+                    var shape = particles[i].shape;
+                    shape.radius = CONST.HEX_RADIUS_OUT * 0.5f;
+                }
             }
-
-            if (Application.isPlaying) return;
-
-            if (_audioSource.playOnAwake)
-                _audioSource.playOnAwake = false;
-            if (_audioSource.loop)
-                _audioSource.loop = false;
-            
-            for (int i = 0; i < R_SFX_COUNT; i++)
-            {
-                var shape = _removeSFX[i].ParticleSystem.shape;
-                shape.radius = CONST.HEX_RADIUS_OUT * 0.5f;
-            }
-
         }
 #endif
     }

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
 
             public BlockState(int cost, int value, Actor parent) : base(parent, cost)
             {
-                _code = new(parent.TypeId, parent.Id, EffectsFactory.BLOCK_SKILL_ID, EffectsFactory.BLOCK_EFFECT_ID);
+                _code = new(parent.TypeId, parent.Id, ReactiveEffectsFactory.BLOCK_SKILL_ID, ReactiveEffectsFactory.BLOCK_EFFECT_ID);
                 _value = value;
                 _effects = parent._effects;
                 _triggerBus = parent._triggerBus;
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.Actors
                 if (!_effects.Contains(_code))
                 {
                     _skin.Block(true);
-                    _effects.Add(EffectsFactory.CreateBlockEffect(_code, _value));
+                    _effects.Add(ReactiveEffectsFactory.CreateBlockEffect(_code, _value));
                     Pay();
                 }
 

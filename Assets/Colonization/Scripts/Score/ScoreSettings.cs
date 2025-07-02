@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization
 		public IdArray<WarriorId, int> killWarrior;
         public IdArray<DemonId, int> killDemon;
         public IdArray<EdificeId, int> buildEdifice;
+        public int perOrder;
 
     }
 }

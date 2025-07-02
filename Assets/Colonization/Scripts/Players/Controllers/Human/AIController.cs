@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
         private readonly Crossroads _crossroads;
         private readonly CameraController _cameraController;
 
-        public AIController(GameLoop game, Id<PlayerId> playerId, Storage.HumanStorage storage, Players.Settings settings)
+        public AIController(GameLoop game, int playerId, Storage.HumanStorage storage, Players.Settings settings)
             : base(playerId, storage, settings)
         {
             _game = game;

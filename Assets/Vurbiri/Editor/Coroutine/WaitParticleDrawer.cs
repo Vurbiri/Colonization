@@ -13,17 +13,12 @@ namespace VurbiriEditor
 		public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
 			position.height = EditorGUIUtility.singleLineHeight;
-			
-			BeginProperty(position, label, mainProperty);
+
+            label = BeginProperty(position, label, mainProperty);
 			{
-				PropertyField(position, mainProperty.FindPropertyRelative(F_NAME));
-			}
+                ObjectField(position, mainProperty.FindPropertyRelative(F_NAME), typeof(ParticleSystem), label);
+            }
 			EndProperty();
-		}
-		
-		public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
-		{
-			return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 		}
 	}
 }
