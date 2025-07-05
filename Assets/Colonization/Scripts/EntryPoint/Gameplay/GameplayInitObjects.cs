@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization.EntryPoint
             container.AddInstance(poolEffectsBar.Create());
             container.AddInstance(cameraTransform = new(mainCamera));
             
-            cameraController.Init(cameraTransform, triggerBus, inputController.CameraActions);
+            cameraController.Init(cameraTransform, triggerBus, inputController);
 
             _inputControllerSettings = null;
             poolEffectsBar = null;

@@ -4,11 +4,9 @@ namespace Vurbiri.Colonization
     {
         private abstract class APlayerSpell : ASpell
         {
-            protected readonly int _playerId;
-
-            public APlayerSpell(int playerId)
+            protected APlayerSpell(SpellBook book, int type, int id)
             {
-                _playerId = playerId;
+                book._spells[type][id] = this;
             }
         }
     }

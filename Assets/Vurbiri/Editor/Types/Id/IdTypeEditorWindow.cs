@@ -12,8 +12,8 @@ namespace VurbiriEditor
     {
         private const string NAME = "IdType Editor", MENU = MENU_PATH + NAME;
 
-        private readonly List<string> _paths = new();
-        private string[] _namesIdType;
+        private readonly List<string> _paths = new(), _names = new();
+        //private string[] _namesIdType;
 
         [MenuItem(MENU, false, 10)]
         private static void ShowWindow()
@@ -33,7 +33,7 @@ namespace VurbiriEditor
                     names.Add(type.Name);
             }
 
-            _namesIdType = names.ToArray();
+            //_namesIdType = names.ToArray();
 
             foreach (string file in Directory.GetFiles(Application.dataPath, mask, SearchOption.AllDirectories))
             {
@@ -42,6 +42,7 @@ namespace VurbiriEditor
                 {
                     if (Regex.IsMatch(fileContent, string.Format(classPattern, names[i])))
                     {
+                        _names.Add(names[i]);
                         _paths.Add(FileUtil.GetPhysicalPath(file));
                         names.RemoveAt(i);
                         break;
@@ -61,7 +62,7 @@ namespace VurbiriEditor
             void Draw()
             {
                 for (int i = _paths.Count - 1; i >= 0; i--)
-                    EditorGUILayout.LabelField(_namesIdType[i], _paths[i]);
+                    EditorGUILayout.LabelField(_names[i], _paths[i]);
 
             }
             #endregion

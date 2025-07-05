@@ -10,6 +10,7 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly Id<TypeModifierId> _typeModifier;
         private int _value;
         private int _duration;
+        private int _skip;
 
         public EffectCode Code => _code;
         public int TargetAbility => _targetAbility;
@@ -18,13 +19,16 @@ namespace Vurbiri.Colonization.Characteristics
         public int Duration => _duration;
         public bool IsPositive => _value > 0;
 
-        public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration)
+        public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, bool isSkip)
+            : this(code, targetAbility, typeModifier, value, duration, isSkip ? 1 : 0) { }
+        public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, int skip)
         {
             _code = code;
             _targetAbility = targetAbility;
             _typeModifier = typeModifier;
             _value = value;
             _duration = duration;
+            _skip = skip;
         }
 
         public bool Update(ReactiveEffect other, Func<IPerk, int> addPerk, out int delta)
@@ -36,7 +40,10 @@ namespace Vurbiri.Colonization.Characteristics
             bool changeDuration = _duration < other._duration;
             bool changeValue = _value != other._value;
 
-            if(!changeDuration & !changeValue)
+            if (_skip < other._skip)
+                _skip = other._skip;
+
+            if (!changeDuration & !changeValue)
                 return true;
 
             if (changeDuration)
@@ -55,6 +62,9 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Next()
         {
+            if (_skip --> 0)
+                return;
+
             if (--_duration == 0)
             {
                 Removing(); 

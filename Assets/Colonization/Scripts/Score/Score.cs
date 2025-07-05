@@ -19,10 +19,10 @@ namespace Vurbiri.Colonization
 
         public Unsubscription Subscribe(Action<int[]> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _values);
 
-        public void OnDemonKill(int playerId, int demonId) => Add(playerId, _settings.killDemon[demonId]);
-        public void OnWarriorKill(int playerId, int warriorId) => Add(playerId, _settings.killWarrior[warriorId]);
-        public void OnBuild(int playerId, int edificeId) => Add(playerId, _settings.buildEdifice[edificeId]);
-        public void OnAddOrder(int playerId, int order) => Add(playerId, order * _settings.perOrder);
+        public void ForKillingDemon(int playerId, int demonId) => Add(playerId, _settings.killDemon[demonId]);
+        public void ForKillingWarrior(int playerId, int warriorId) => Add(playerId, _settings.killWarrior[warriorId]);
+        public void ForBuilding(int playerId, int edificeId) => Add(playerId, _settings.buildEdifice[edificeId]);
+        public void ForAddingOrder(int playerId, int order) => Add(playerId, order * _settings.perOrder);
 
         private void Add(int playerId, int value)
         {

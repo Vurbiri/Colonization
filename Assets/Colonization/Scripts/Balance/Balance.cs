@@ -1,3 +1,4 @@
+using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
@@ -22,15 +23,15 @@ namespace Vurbiri.Colonization
             _eventGameOver.Add(game.End);
         }
 
-        public void DemonCurse(int value) => AddBalance(_settings.penaltyPerDemon * -value);
+        public void ForCurse(int value) => Add(_settings.penaltyPerDemon * -value);
 
-        public void BindShrines(ReactiveList<Crossroad> shrines)
-        {
-            shrines.Subscribe((_, _, _) => AddBalance(_settings.rewardPerShrine), false);
-        }
+        public void BindWarriors(ReadOnlyReactiveSet<Actor> warriors) => warriors.Subscribe(OnKillingWarrior, false);
+        public void BindDemons(ReadOnlyReactiveSet<Actor> demons) => demons.Subscribe(OnKillingDemon, false);
+
+        public void BindShrines(ReadOnlyReactiveList<Crossroad> shrines) => shrines.Subscribe((_, _, _) => Add(_settings.rewardPerShrine), false);
         public void BindBlood(ICurrency blood) => blood.SubscribeDelta(OnPayInBlood);
 
-        public void AddBalance(int value)
+        public void Add(int value)
         {
             if (value != 0)
             {
@@ -45,10 +46,22 @@ namespace Vurbiri.Colonization
             }
         }
 
+        private void OnKillingWarrior(Actor actor, TypeEvent op)
+        {
+            if (op == TypeEvent.Remove)
+                Add(_settings.killWarrior[actor.Id]);
+        }
+
+        private void OnKillingDemon(Actor actor, TypeEvent op)
+        {
+            if (op == TypeEvent.Remove)
+                Add(_settings.killDemon[actor.Id]);
+        }
+
         private void OnPayInBlood(int delta)
         {
             if (delta < 0)
-                AddBalance(_settings.penaltyPerBlood * delta);
+                Add(_settings.penaltyPerBlood * delta);
         }
 
         public static implicit operator int(Balance balance) => balance._value;

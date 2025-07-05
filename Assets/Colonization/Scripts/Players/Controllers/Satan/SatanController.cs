@@ -1,3 +1,4 @@
+using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization
@@ -13,6 +14,11 @@ namespace Vurbiri.Colonization
             _game = game;
             _coroutines = settings.coroutines;
             _cameraController = settings.cameraController;
+        }
+
+        public void ActorKill(Id<ActorTypeId> type, int id)
+        {
+            UnityEngine.Debug.Log($"ActorKilling: {type}, {id}");
         }
 
         public void OnLanding()
@@ -34,7 +40,7 @@ namespace Vurbiri.Colonization
                 demon.StatesUpdate();
             }
 
-            _balance.DemonCurse(balance);
+            _balance.ForCurse(balance);
             _artefact.Next(countBuffs);
         }
 

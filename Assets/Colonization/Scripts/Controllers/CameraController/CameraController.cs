@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.Controllers
         private MoveToDefaultState _moveToDefaultState;
         private ZoomState _zoomState;
 
-        public CameraController Init(CameraTransform camera, GameplayTriggerBus eventBus, InputControlAction.CameraActions cameraActions)
+        public CameraController Init(CameraTransform camera, GameplayTriggerBus eventBus, InputController inputController)
         {
             _default.height = Mathf.Clamp(_default.height, _zoom.heightZoomMin, _zoom.heightZoomMax);
 
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.Controllers
             #endregion
 
             #region Subscribe
-
+            var cameraActions = inputController.CameraActions;
             cameraActions.Move.performed     += OnMove;
             cameraActions.Move.canceled      += OnMoveCancel;
             cameraActions.Rotate.performed   += OnRotate;

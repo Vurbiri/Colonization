@@ -2,15 +2,18 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        sealed private class Order : APlayerSpell
+        sealed private class Order : ASharedSpell
         {
-            public Order(int playerId) : base(playerId) { }
+            private Order() { }
 
-            public override bool Cast(SpellParam param)
+            public override bool Cast(SpellParam param, CurrenciesLite resources)
             {
-                s_humans[_playerId].BuyOrder(param.iValueA * s_settings.orderPerMana, param.iValueA);
+                s_humans[param.playerId].AddOrder(param.valueA * s_settings.orderPerMana);
+                resources.Add(CurrencyId.Mana, -param.valueA + s_costs[TypeOfPerksId.Economic][EconomicSpellId.Order]);
                 return true;
             }
+
+            public static void Create() => s_sharedSpells[TypeOfPerksId.Economic][ EconomicSpellId.Order] = new Order();
         }
     }
 }

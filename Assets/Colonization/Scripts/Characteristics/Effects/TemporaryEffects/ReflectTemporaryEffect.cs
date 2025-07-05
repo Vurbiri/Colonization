@@ -15,8 +15,8 @@ namespace Vurbiri.Colonization.Characteristics
         public override int Apply(Actor self, Actor target)
         {
             int temp = _value;
-            _value = _reflectMod.Apply(target.AddEffect(new(_code, _targetAbility, _typeModifier, _value, _duration)));
-            self.AddEffect(new(_code, _targetAbility, _typeModifier, _value, _duration));
+            _value = _reflectMod.Apply(target.AddEffect(new(_code, _targetAbility, _typeModifier, _value, _duration, self.Owner != target.Owner)));
+            self.AddEffect(new(_code, _targetAbility, _typeModifier, _value, _duration, 0));
             return _value = temp;
         }
     }

@@ -4,11 +4,8 @@ namespace Vurbiri.Colonization
     {
         private abstract class ASpell
         {
-            public bool canUse = true;
-
-            public virtual void Update() {}
-
-            public abstract bool Cast(SpellParam param);
+           
+            public abstract bool Cast(SpellParam param, CurrenciesLite resources);
 
         }
     }

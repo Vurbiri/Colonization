@@ -13,9 +13,9 @@ namespace Vurbiri.Colonization.Characteristics
 
         public int Count => _effects.Length;
 
-        public HitEffects CreateEffectsHit(Actor parent, int skillId, int startEffectId)
+        public HitEffects CreateEffectsHit(Actor parent, int skillId, int effectId)
         {
-            return new HitEffects(_effects, parent.TypeId, parent.Id, skillId, startEffectId);
+            return new HitEffects(_effects, parent.TypeId, parent.Id, skillId, effectId);
         }
 
         public void CreateEffectsHitUI(ProjectColors colors, List<AEffectsUI> target, List<AEffectsUI> self)

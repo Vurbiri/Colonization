@@ -7,12 +7,12 @@ namespace Vurbiri.Colonization.Characteristics
 		private readonly AHitEffect[] _effects;
         private readonly int _count;
 
-        public HitEffects(HitEffectSettings[] setting, int sourceId, int actorId, int skillId, int startEffectId)
+        public HitEffects(HitEffectSettings[] setting, int actorType, int actorId, int skillId, int startEffectId)
         {
             _count = setting.Length;
             _effects = new AHitEffect[_count];
             for (int i = 0; i < _count; i++)
-                _effects[i] = setting[i].CreateEffect(new(sourceId, actorId, skillId, startEffectId + i));
+                _effects[i] = setting[i].CreateEffect(new(actorType, actorId, skillId, startEffectId + i));
         }
         public HitEffects(AHitEffect[] effects)
         {

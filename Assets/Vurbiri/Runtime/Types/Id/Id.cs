@@ -44,7 +44,7 @@ namespace Vurbiri
         public readonly int CompareTo(Id<T> other) => _id - other._id;
         public readonly int CompareTo(int value) => _id - value;
 
-        public static explicit operator int(Id<T> id) => id._id;
+        public static implicit operator int(Id<T> id) => id._id;
         public static implicit operator Id<T>(int value) => new(value);
 
         public static bool operator ==(Id<T> a, Id<T> b) => a._id == b._id;

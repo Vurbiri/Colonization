@@ -2,20 +2,20 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public class ReactiveEffectsFactory
     {
-        private const int ABILITY = ActorAbilityId.Defense;
-        private const int MOD = TypeModifierId.Addition;
-        
-        public const int SHIFT_WALL = ActorAbilityId.SHIFT_ABILITY + 3, WALL_DURATION = 3;
-        public const int BLOCK_DURATION = 1, BLOCK_SKILL_ID = 7, BLOCK_EFFECT_ID = 0;
-        public static readonly EffectCode WallEffectCode = new(3, 0, 0, 0);
+        public const int WALL_TYPE = 2, SPELL_TYPE = 3;
 
-        public static ReactiveEffect CreateBlockEffect(EffectCode code, int value) => new(code, ABILITY, MOD, value, BLOCK_DURATION);
+        public const int WALL_DURATION = 1, WALL_SKIP = 9, WALL_ADD_SHIFT = 3, WALL_SHIFT = ActorAbilityId.SHIFT_ABILITY + WALL_ADD_SHIFT;
+        public static readonly EffectCode WallEffectCode = new(WALL_TYPE, 0, 0, 0);
+
+        public const int BLOCK_DURATION = 1, BLOCK_SKIP = 0, BLOCK_SKILL_ID = 7, BLOCK_EFFECT_ID = 0;
+        
+        public static ReactiveEffect CreateBlockEffect(EffectCode code, int value) => new(code, ActorAbilityId.Defense, TypeModifierId.Addition, value, BLOCK_DURATION, BLOCK_SKIP);
 
         public static ReactiveEffect CreateWallDefenceEffect(int value)
         {
             if(value <= 0) return null;
 
-            return new(WallEffectCode, ABILITY, MOD, value << SHIFT_WALL, WALL_DURATION);
+            return new(WallEffectCode, ActorAbilityId.Defense, TypeModifierId.Addition, value << WALL_SHIFT, WALL_DURATION, WALL_SKIP);
         }
     }
 }

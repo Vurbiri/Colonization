@@ -55,21 +55,21 @@ namespace Vurbiri.Colonization
             _spawner = new(_level, new(_leveling, _artefact), settings, loadData.state.spawn);
 
             _demons = new(loadData.state.maxDemons);
-            _demons.Subscribe((actor, evt) => { if (evt == TypeEvent.Add) actor.OnKilled.Add(ActorKill); }, false);
             for (int i = loadData.actors.Count - 1; i >= 0; i--)
                 _demons.Add(_spawner.Load(loadData.actors[i], settings.hexagons));
+
+            _balance.BindDemons(_demons);
 
             storage.StateBind(this, !loadData.isLoaded);
             storage.BindArtefact(_artefact, !loadData.isLoaded);
             storage.BindActors(_demons);
-
             storage.LoadData = null;
 
             SpellBook.AddSatan(this);
         }
 
         public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);
-        
+
         protected void AddCurse(int value)
         {
             _curse.Add(value);
@@ -88,11 +88,6 @@ namespace Vurbiri.Colonization
         {
             _unsubscribers.Unsubscribe();
             _demons.Dispose();
-        }
-
-        protected void ActorKill(Id<PlayerId> target, int actorId)
-        {
-            UnityEngine.Debug.Log($"ActorKilling: {target}, {actorId}");
         }
     }
 }

@@ -102,7 +102,7 @@ namespace Vurbiri.Colonization.Actors
                     _effectsHint[i].Apply(_actor, _target);
                     if (_target.IsDead)
                     {
-                        _actor._eventKilled.Invoke(_target._owner, _target._id);
+                        _actor.Killed(_target._typeId, _target._id);
                         wait = _waitRealtime;
                         break;
                     }

@@ -81,7 +81,6 @@ namespace Vurbiri.Colonization
                 for (int i = loadData.actors.Count - 1; i >= 0; i--)
                 {
                     warrior = _spawner.Load(loadData.actors[i], settings.hexagons);
-                    warrior.OnKilled.Add(ActorKill);
                     _warriors.Add(warrior);
                 }
             }
@@ -92,6 +91,10 @@ namespace Vurbiri.Colonization
 
             _spellBook = new(this);
 
+            _balance.BindWarriors(_warriors);
+            _balance.BindShrines(_edifices.shrines);
+            _balance.BindBlood(_resources.Get(CurrencyId.Blood));
+
             bool instantGetValue = !loadData.isLoaded;
             storage.BindCurrencies(_resources, instantGetValue);
             storage.BindExchange(_exchange, instantGetValue);
@@ -100,30 +103,28 @@ namespace Vurbiri.Colonization
             storage.BindArtefact(_artefact, instantGetValue);
             storage.BindEdifices(_edifices.edifices, instantGetValue);
             storage.BindActors(_warriors);
-
             storage.LoadData = null;
 
             settings.crossroads.BindEdifices(_edifices.edifices, instantGetValue);
-
-            settings.balance.BindShrines(_edifices.shrines);
-            settings.balance.BindBlood(_resources.Get(CurrencyId.Blood));
         }
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
 
         public ReadOnlyReactiveList<Crossroad> GetEdifices(Id<EdificeGroupId> id) => _edifices.edifices[id];
 
-        public void BuyOrder(int order, int price)
+        public void AddOrder(int order)
         {
-            _balance.AddBalance(order);
-            _score.OnAddOrder(_id, order);
-            _resources.AddMain(CurrencyId.Mana, -price);
+            if (order > 0)
+            {
+                _balance.Add(order);
+                _score.ForAddingOrder(_id, order);
+            }
         }
 
         public void BuyCast(int type, int id, SpellParam param)
         {
-            if(_spellBook.TryCast(type, id, param, out int cost))
-                _resources.AddMain(CurrencyId.Mana, -cost);
+            param.playerId = _id;
+            _resources.Add(_spellBook.Cast(type, id, param));
         }
 
         public void BuyPerk(int typePerk, int idPerk)
@@ -138,8 +139,7 @@ namespace Vurbiri.Colonization
         }
 
         public void AddResources(CurrenciesLite value) => _resources.Add(value);
-
-
+        
         #region Edifice
         public bool CanEdificeUpgrade(Crossroad crossroad) => _edifices.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
         public bool IsEdificeUnlock(Id<EdificeId> id) => _edifices.IsEdificeUnlock(id);
@@ -152,7 +152,7 @@ namespace Vurbiri.Colonization
                 _edifices.edifices[crossroad.GroupId].AddOrChange(crossroad);
 
                 _resources.Pay(_prices.Edifices[edificeId]);
-                _score.OnBuild(_id, edificeId);
+                _score.ForBuilding(_id, edificeId);
             }
             return returnSignal.signal;
         }
@@ -205,7 +205,6 @@ namespace Vurbiri.Colonization
             _resources.Pay(_prices.Warriors[id.Value]);
 
             Warrior warrior = _spawner.Create(id, hexagon);
-            warrior.OnKilled.Add(ActorKill);
             warrior.IsPlayerTurn = _isPlayer;
             
             _warriors.Add(warrior);
@@ -228,19 +227,6 @@ namespace Vurbiri.Colonization
             _unsubscriber.Unsubscribe();
             _exchange.Dispose();
             _warriors.Dispose();
-        }
-
-        protected void ActorKill(Id<PlayerId> target, int actorId)
-        {
-            if (target == PlayerId.Satan)
-            {
-                _score.OnDemonKill(_id, actorId);
-                _resources.AddBlood(actorId + 1);
-            }
-            else if (target != _id)
-            {
-                _score.OnWarriorKill(_id, actorId);
-            }
         }
     }
 }

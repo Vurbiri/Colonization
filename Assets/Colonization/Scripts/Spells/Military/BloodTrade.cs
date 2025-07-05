@@ -2,27 +2,22 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        sealed private class BloodTrade : APlayerSpell
+        sealed private class BloodTrade : ASharedSpell
         {
-            private readonly CurrenciesLite _res = new();
-            
-            public BloodTrade(int playerId) : base(playerId) 
-            {
-                s_humans[_playerId].Resources.Get(CurrencyId.Blood).Subscribe(value => canUse = value >= s_settings.bloodTradePay);
-            }
+            private BloodTrade() { }
 
-            public override bool Cast(SpellParam param)
+            public static void Create() => s_sharedSpells[TypeOfPerksId.Military][MilitarySpellId.BloodTrade] = new BloodTrade();
+
+            public override bool Cast(SpellParam param, CurrenciesLite resources)
             {
-                if (canUse)
+                int blood = param.valueA - (param.valueA % s_settings.bloodTradePay);
+                if (s_humans[param.playerId].Resources[CurrencyId.Blood] >= blood)
                 {
-                    _res.Clear();
-                    int blood = param.iValueA - (param.iValueA % s_settings.bloodTradePay);
-                    _res.Set(CurrencyId.Blood, -blood);
-                    _res.RandomAddRangeMain(blood / s_settings.bloodTradePay * s_settings.bloodTradeBay);
-
-                    s_humans[_playerId].AddResources(_res);
+                    resources.Set(CurrencyId.Blood, -blood);
+                    resources.RandomAddRangeMain(blood / s_settings.bloodTradePay * s_settings.bloodTradeBay);
+                    return true;
                 }
-                return canUse;
+                return false;
             }
         }
     }

@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
     public abstract partial class Actor : AReactiveItemMono<Actor>, IInteractable, IDisposable
     {
         #region Fields
-        private int _typeId;
+        private Id<ActorTypeId> _typeId;
         private int _id;
         private Id<PlayerId> _owner;
         private bool _isPlayerTurn;
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.Actors
         private ASkillState[] _skillState;
         #endregion
 
-        private readonly Subscription<Id<PlayerId>, int> _eventKilled = new();
+        //private readonly Subscription<Id<PlayerId>, int> _eventKilled = new();
         private readonly RBool _interactable = new(false);
         private readonly RBool _canCancel = new(false);
 
@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         #region Propirties
-        public int TypeId => _typeId;
+        public Id<ActorTypeId> TypeId => _typeId;
         public int Id => _id;
         public Id<PlayerId> Owner => _owner;
         public Hexagon Hexagon => _currentHex;
@@ -67,7 +67,6 @@ namespace Vurbiri.Colonization.Actors
         public ActorSkin Skin => _skin;
         public IReactiveSet<ReactiveEffect> Effects => _effects;
         public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
-        public ISubscription<Id<PlayerId>, int> OnKilled => _eventKilled;
         public bool IsMainProfit => _profitMain.Next();
         public bool IsAdvProfit => _profitAdv.Next();
         #endregion
@@ -172,7 +171,9 @@ namespace Vurbiri.Colonization.Actors
             }
         }
         #endregion
-        
+
+        private void Killed(Id<ActorTypeId> type, int id) => _triggerBus.TriggerActorKill(_owner, type, id);
+
         private IEnumerator Death_Cn()
         {
             _currentHex.ExitActor();

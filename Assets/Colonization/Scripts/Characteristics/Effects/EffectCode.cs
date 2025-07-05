@@ -10,9 +10,9 @@ namespace Vurbiri.Colonization.Characteristics
 
         private readonly int _code;
 
-        public EffectCode(int sourceId, int actorId, int skillId, int effectId)
+        public EffectCode(int sourceType, int sourceId, int skillId, int effectId)
 		{
-            _code = (sourceId & MASK) << OFFSET_3 | (actorId & MASK) << OFFSET_2 | (skillId & MASK) << OFFSET_1 | (effectId & MASK);
+            _code = (sourceType & MASK) << OFFSET_3 | (sourceId & MASK) << OFFSET_2 | (skillId & MASK) << OFFSET_1 | (effectId & MASK);
         }
 
         public EffectCode(EffectCode effectKey) => _code = effectKey._code;
@@ -20,10 +20,10 @@ namespace Vurbiri.Colonization.Characteristics
 
         public int Value => _code;
 
-        public int SourceId  => _code >> OFFSET_3 & MASK;
-        public int ActorId   => _code >> OFFSET_2 & MASK;
-        public int SkillId   => _code >> OFFSET_1 & MASK;
-        public int EffectId  => _code & MASK;
+        public int SourceType  => _code >> OFFSET_3 & MASK;
+        public int SourceId    => _code >> OFFSET_2 & MASK;
+        public int SkillId     => _code >> OFFSET_1 & MASK;
+        public int EffectId    => _code & MASK;
 
 
         public static implicit operator EffectCode(int value) => new(value);
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public override string ToString()
         {
-            return $"Code: {_code} [SourceId: {SourceId}, ActorId: {ActorId}, SkillId: {SkillId}, EffectId: {EffectId}]";
+            return $"Code: {_code} [SourceType: {SourceType}, SourceId: {SourceId}, SkillId: {SkillId}, EffectId: {EffectId}]";
         }
 
     }

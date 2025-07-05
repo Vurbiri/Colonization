@@ -9,6 +9,6 @@ namespace Vurbiri.Colonization.Characteristics
         {
         }
 
-        public override int Apply(Actor self, Actor target) => target.AddEffect(new(_code, _targetAbility, _typeModifier, _value, _duration));
+        public override int Apply(Actor self, Actor target) => target.AddEffect(new(_code, _targetAbility, _typeModifier, _value, _duration, self.Owner != target.Owner));
     }
 }

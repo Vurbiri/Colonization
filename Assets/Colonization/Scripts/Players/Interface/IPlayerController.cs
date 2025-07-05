@@ -1,7 +1,11 @@
+using Vurbiri.Colonization.Actors;
+
 namespace Vurbiri.Colonization
 {
 	public interface IPlayerController : System.IDisposable
 	{
+        public void ActorKill(Id<ActorTypeId> type, int id);
+
         public void OnLanding();
         public void OnEndLanding();
         public void OnPlay();

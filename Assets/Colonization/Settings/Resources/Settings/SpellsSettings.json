@@ -1,10 +1,12 @@
 {
   "orderPerMana": 0,
+  "bloodTradePay": 0,
+  "bloodTradeBay": 0,
   "healRandomValue": 0,
-  "economicSpellsCost": [
+  "economicCost": [
     0
   ],
-  "militarySpellsCost": [
+  "militaryCost": [
     0,
     0
   ]

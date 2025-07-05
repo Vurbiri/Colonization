@@ -1,3 +1,6 @@
+using Vurbiri.Collections;
+using Vurbiri.Colonization.Actors;
+
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
@@ -9,5 +12,7 @@ namespace Vurbiri.Colonization
         public int penaltyPerDemon = 3;
         public int penaltyPerBlood = 1;
         public int rewardPerShrine = 15;
+        public IdArray<WarriorId, int> killWarrior;
+        public IdArray<DemonId, int> killDemon;
     }
 }

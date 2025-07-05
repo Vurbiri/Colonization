@@ -1,3 +1,4 @@
+using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization
@@ -9,6 +10,19 @@ namespace Vurbiri.Colonization
         protected AHumanController(int playerId, Storage.HumanStorage storage, Players.Settings settings) : base(playerId, storage, settings)
         {
             _hexagons = settings.hexagons;
+        }
+
+        public void ActorKill(Id<ActorTypeId> type, int id)
+        {
+            if (type == ActorTypeId.Demon)
+            {
+                _score.ForKillingDemon(_id, id);
+                _resources.AddBlood(id + 1);
+            }
+            else
+            {
+                _score.ForKillingWarrior(_id, id);
+            }
         }
 
         public virtual void OnLanding() { }

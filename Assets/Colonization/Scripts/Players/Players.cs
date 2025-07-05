@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         public Human Player { get; }
         public Satan Satan { get; }
 
-        public Players(Settings settings, GameLoop game, GameplayStorage storage)
+        public Players(Settings settings, GameLoop game, GameplayEventBus eventBus, GameplayStorage storage)
         {
             SpellBook.Init(settings.coroutines, settings.cameraController);
             HumanStorage[] playerStorages = storage.Humans;
@@ -34,6 +34,8 @@ namespace Vurbiri.Colonization
             game.Subscribe(GameModeId.StartTurn,  (turn, _) => _players[turn.currentId.Value].OnStartTurn());
             game.Subscribe(GameModeId.Profit,     OnProfit);
             game.Subscribe(GameModeId.Play,       (turn, _) => _players[turn.currentId.Value].OnPlay());
+
+            eventBus.EventActorKill.Add((killer, deadType, deadId) => _players[killer].ActorKill(deadType, deadId));
         }
 
         public void Dispose()
