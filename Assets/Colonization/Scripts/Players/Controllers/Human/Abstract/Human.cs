@@ -26,6 +26,8 @@ namespace Vurbiri.Colonization
         protected readonly Edifices _edifices;
         protected readonly Roads _roads;
 
+        protected readonly SpellBook _spellBook;
+
         protected readonly AbilitiesSet<HumanAbilityId> _abilities;
         protected readonly Artefact _artefact;
         protected readonly PerkTree _perks;
@@ -35,7 +37,7 @@ namespace Vurbiri.Colonization
         protected readonly Unsubscription _unsubscriber;
         #endregion
 
-        public Id<PlayerId> Id => _id;
+        public int Id => _id;
 
         public ACurrenciesReactive Resources => _resources;
         public ExchangeRate Exchange => _exchange;
@@ -88,6 +90,8 @@ namespace Vurbiri.Colonization
                 _edifices = new(_abilities);
             }
 
+            _spellBook = new(this);
+
             bool instantGetValue = !loadData.isLoaded;
             storage.BindCurrencies(_resources, instantGetValue);
             storage.BindExchange(_exchange, instantGetValue);
@@ -103,8 +107,6 @@ namespace Vurbiri.Colonization
 
             settings.balance.BindShrines(_edifices.shrines);
             settings.balance.BindBlood(_resources.Get(CurrencyId.Blood));
-
-            settings.playersEquipment.Add(this);
         }
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
@@ -116,6 +118,12 @@ namespace Vurbiri.Colonization
             _balance.AddBalance(order);
             _score.OnAddOrder(_id, order);
             _resources.AddMain(CurrencyId.Mana, -price);
+        }
+
+        public void BuyCast(int type, int id, SpellParam param)
+        {
+            if(_spellBook.TryCast(type, id, param, out int cost))
+                _resources.AddMain(CurrencyId.Mana, -cost);
         }
 
         public void BuyPerk(int typePerk, int idPerk)
@@ -130,6 +138,7 @@ namespace Vurbiri.Colonization
         }
 
         public void AddResources(CurrenciesLite value) => _resources.Add(value);
+
 
         #region Edifice
         public bool CanEdificeUpgrade(Crossroad crossroad) => _edifices.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);

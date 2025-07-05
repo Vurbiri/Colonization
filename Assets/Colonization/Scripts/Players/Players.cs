@@ -10,15 +10,14 @@ namespace Vurbiri.Colonization
     public class Players : IDisposable
     {
         private readonly IPlayerController[] _players = new IPlayerController[PlayerId.Count];
-        private readonly PlayersEquipment _playersEquipment;
 
         public Human Player { get; }
         public Satan Satan { get; }
 
         public Players(Settings settings, GameLoop game, GameplayStorage storage)
         {
+            SpellBook.Init(settings.coroutines, settings.cameraController);
             HumanStorage[] playerStorages = storage.Humans;
-            _playersEquipment = settings.playersEquipment;
 
             PlayerController playerController = new(playerStorages, settings);
             _players[PlayerId.Player] = playerController; Player = playerController;
@@ -39,6 +38,8 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
+            SpellBook.Clear();
+
             for (int i = 0; i < PlayerId.Count; i++)
                 _players[i].Dispose();
         }
@@ -66,19 +67,12 @@ namespace Vurbiri.Colonization
             public BuffsScriptable artefact;
             public Transform actorsContainer;
 
-            [NonSerialized] public PlayersEquipment playersEquipment;
-
             [NonSerialized] public Coroutines coroutines;
             [NonSerialized] public CameraController cameraController;
             [NonSerialized] public Score score;
             [NonSerialized] public Balance balance;
             [NonSerialized] public Hexagons hexagons;
             [NonSerialized] public Crossroads crossroads;
-
-            public void Init()
-            {
-                playersEquipment = new(prices);
-            }
 
             public void Dispose()
             {

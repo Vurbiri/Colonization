@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
@@ -34,7 +33,7 @@ namespace Vurbiri.Colonization.UI
             }
             else
             {
-                float level = ((int)Math.Sqrt(1.0 + (progress << 2)) - 1) >> 1;
+                float level = ((int)System.Math.Sqrt(1.0 + (progress << 2)) - 1) >> 1;
                 normalizedValue = _normalizedPart * (progress / (2f * (level  + 1f)) + 0.5f * level);
             }
 

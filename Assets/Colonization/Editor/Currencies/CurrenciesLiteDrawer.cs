@@ -27,13 +27,13 @@ namespace VurbiriEditor.Colonization
             if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label))
             {
                 SerializedProperty propertyValues = property.FindPropertyRelative(NAME_ARRAY);
-                propertyValues.arraySize = CurrencyId.CountAll;
+                propertyValues.arraySize = CurrencyId.AllCount;
 
                 Color prevColor = GUI.color;
                 SerializedProperty propertyElement;
                 propertyAmount.intValue = 0;
                 EditorGUI.indentLevel++;
-                for (int index = 0; index < CurrencyId.CountAll; index++)
+                for (int index = 0; index < CurrencyId.AllCount; index++)
                 {
                     GUI.color = colors[index];
                     propertyElement = propertyValues.GetArrayElementAtIndex(index);
@@ -91,7 +91,7 @@ namespace VurbiriEditor.Colonization
             //=================================
             void Clear(SerializedProperty values, SerializedProperty amount)
             {
-                for (int index = 0; index < CurrencyId.CountAll; index++)
+                for (int index = 0; index < CurrencyId.AllCount; index++)
                     values.GetArrayElementAtIndex(index).intValue = 0;
 
                 amount.intValue = 0;
@@ -101,7 +101,7 @@ namespace VurbiriEditor.Colonization
             {
                 SerializedProperty propertyElement;
                 amount.intValue = 0;
-                for (int index = 0; index < CurrencyId.CountAll - 1; index++)
+                for (int index = 0; index < CurrencyId.AllCount - 1; index++)
                 {
                     propertyElement = values.GetArrayElementAtIndex(index);
                     if ((propertyElement.intValue += add) < 0)

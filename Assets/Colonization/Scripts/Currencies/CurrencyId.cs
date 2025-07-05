@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         public const int Blood = 5;
 
         [NotId] public const int MainCount = 5;
-        [NotId] public const int CountAll = 6;
+        [NotId] public const int AllCount = 6;
 
         static CurrencyId() => ConstructorRun();
         private CurrencyId() { }

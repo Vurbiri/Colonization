@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization
 
             storage.LoadData = null;
 
-            settings.playersEquipment.Add(this);
+            SpellBook.AddSatan(this);
         }
 
         public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);

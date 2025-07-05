@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     [Serializable]
     sealed public class CurrenciesLite : ACurrencies
     {
-        [SerializeField] private int[] _values = new int[CountAll];
+        [SerializeField] private int[] _values = new int[AllCount];
         [SerializeField] private int _amount = 0;
 
         public override int Amount { get => _amount;}
@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
         public CurrenciesLite() { }
         public CurrenciesLite(int[] array)
         {
-            for (int i = 0; i < CountAll; i++)
+            for (int i = 0; i < AllCount; i++)
             {
                 _values[i] = array[i];
                 _amount += array[i];
@@ -29,12 +29,12 @@ namespace Vurbiri.Colonization
         }
         public CurrenciesLite(CurrenciesLite other)
         {
-            for (int i = 0; i < CountAll; i++)
+            for (int i = 0; i < AllCount; i++)
                 _values[i] = other._values[i];
             _amount = other._amount;
         }
 
-        public void Increment(int index)
+        public void IncrementMain(int index)
         {
             _values[index]++;
             _amount++;
@@ -42,27 +42,33 @@ namespace Vurbiri.Colonization
 
         public void Set(int index, int value)
         {
-            _amount += value - _values[index];
+            if (index != Blood)
+                _amount += value - _values[index];
+
             _values[index] = value;
         }
 
         public void Add(int index, int value)
         {
+            if (index != Blood)
+                _amount += value;
+
             _values[index] += value;
-            _amount += value;
+            
         }
 
         public void Add(CurrenciesLite other)
         {
-            if (other._amount == 0)
-                return;
-
-            for (int i = 0; i < CountAll; i++)
-                _values[i] += other._values[i];
-            _amount += other._amount;
+            if (other._amount != 0)
+            {
+                for (int i = 0; i < MainCount; i++)
+                    _values[i] += other._values[i];
+                _amount += other._amount;
+            }
+            _values[Blood] += other._values[Blood];
         }
 
-        public void Multiply(int ratio)
+        public void MultiplyMain(int ratio)
         {
             if (_amount == 0)
                 return;
@@ -73,15 +79,21 @@ namespace Vurbiri.Colonization
             _amount *= ratio;
         }
 
-        public void RandomMainAdd(int value)
+        public void RandomAddMain(int value)
         {
             _values[Random.Range(0, MainCount)] += value;
             _amount += value;
         }
+        public void RandomAddRangeMain(int count)
+        {
+            for (int i = 0; i < count; i++)
+                _values[Random.Range(0, MainCount)]++;
+            _amount += count;
+        }
 
         public void Clear()
         {
-            for (int i = 0; i < CountAll; i++)
+            for (int i = 0; i < AllCount; i++)
                 _values[i] = 0;
 
             _amount = 0;
@@ -89,7 +101,7 @@ namespace Vurbiri.Colonization
 
         public override IEnumerator<int> GetEnumerator()
         {
-            for (int i = 0; i < CountAll; i++)
+            for (int i = 0; i < AllCount; i++)
                 yield return _values[i];
         }
 
@@ -101,7 +113,7 @@ namespace Vurbiri.Colonization
             if (b._amount == 0) return new(a);
 
             CurrenciesLite sum = new();
-            for (int i = 0; i < CountAll; i++)
+            for (int i = 0; i < AllCount; i++)
                 sum._values[i] = a._values[i] + b._values[i];
             sum._amount = a._amount + b._amount;
 
@@ -115,7 +127,7 @@ namespace Vurbiri.Colonization
             if (b._amount == 0) return new(a);
 
             CurrenciesLite diff = new();
-            for (int i = 0; i < CountAll; i++)
+            for (int i = 0; i < AllCount; i++)
                 diff._values[i] = a._values[i] - b._values[i];
             diff._amount = a._amount - b._amount;
 
@@ -128,7 +140,7 @@ namespace Vurbiri.Colonization
             if (a._amount == 0) return new();
 
             CurrenciesLite neg = new();
-            for (int i = 0; i < CountAll; i++)
+            for (int i = 0; i < AllCount; i++)
                 neg._values[i] = -a._values[i];
             neg._amount = -a._amount;
 

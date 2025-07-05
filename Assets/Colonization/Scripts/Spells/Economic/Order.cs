@@ -2,15 +2,14 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        private class Order : ASpell
+        sealed private class Order : APlayerSpell
         {
-            public Order(SpellBook book) : base(book) { }
+            public Order(int playerId) : base(playerId) { }
 
-            public override bool Init(int playerID) => true;
-
-            public override void Cast(SpellParameters param)
+            public override bool Cast(SpellParam param)
             {
-                _book._humans[param.playerId].BuyOrder(param.iValueA * _book._settings.orderPerMana, param.iValueA);
+                s_humans[_playerId].BuyOrder(param.iValueA * s_settings.orderPerMana, param.iValueA);
+                return true;
             }
         }
     }

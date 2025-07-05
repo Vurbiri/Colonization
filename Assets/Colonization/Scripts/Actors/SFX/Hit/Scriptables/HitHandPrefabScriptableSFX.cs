@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
             if (_prefab == null)
                 return new HitEmptySFX();
 
-            return Instantiate(_prefab, parent.RightHand).Init(parent);
+            return Instantiate(_prefab, parent.Adv).Init(parent);
         }
     }
 }

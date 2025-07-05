@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Vurbiri
@@ -13,7 +12,13 @@ namespace Vurbiri
         public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
 
         public static T Rand<T>(this IReadOnlyList<T> self) => self[Random.Range(0, self.Count)];
-        public static T Rand<T>(this IReadOnlyList<T> self, int startIndex) => self[Random.Range(startIndex, self.Count)];
+        public static T RandE<T>(this ICollection<T> self)
+        {
+            int index = Random.Range(0, self.Count);
+            using IEnumerator<T> enumerator = self.GetEnumerator();
+            while (enumerator.MoveNext() & index --> 0) { }
+            return enumerator.Current;
+        }
 
         public static int FirstNullIndex<T>(this IReadOnlyList<T> self) where T : class
         {
@@ -21,20 +26,6 @@ namespace Vurbiri
                 if (self[i] == null)
                     return i;
             return -1;
-        }
-
-        public static void FillDefault<T>(this IList<T> self, T value = default)
-        {
-            for (int i = 0; i < self.Count; i++)
-                self[i] = value;
-        }
-
-        public static IList<int> FillIncrement(this IList<int> self, int start = 0)
-        {
-            for (int i = 0, v = start; i < self.Count; i++, v++)
-                self[i] = v;
-
-            return self;
         }
 
         public static T[] ToArray<T>(this ICollection<T> self)
@@ -48,19 +39,15 @@ namespace Vurbiri
         {
             int count = self.Count;
 
-            if (size == count)
-                return;
-
             if (size > count)
             {
-                if (size > self.Capacity)
-                    self.Capacity = size;
-                self.AddRange(Enumerable.Repeat<T>(new(), size - count));
-                return;
+                if (size > self.Capacity)  self.Capacity = size;
+                while (self.Count != size) self.Add(new());
             }
-
-            if (size < count)
+            else if (size < count)
+            {
                 self.RemoveRange(size, count - size);
+            }
         }
 
         public static T Any<T>(this IEnumerable<T> self)

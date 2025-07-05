@@ -9,12 +9,15 @@ namespace Vurbiri.Colonization.EntryPoint
     [System.Serializable]
     public class GameplayInitObjects
     {
-        [SerializeField] private Prices _prices;
+        public Prices prices;
         [Space]
-        [SerializeField] private Camera _mainCamera;
+        public Camera mainCamera;
         public CameraController cameraController;
         [Space]
-        [SerializeField] private PoolEffectsBarFactory _poolEffectsBar;
+        public Transform sharedRepository;
+        public AudioSource sharedAudioSource;
+        [Space]
+        public PoolEffectsBarFactory poolEffectsBar;
         [Header("══════ Init data for classes ══════")]
         [SerializeField] private Players.Settings _playersSettings;
         [SerializeField] private InputController.Settings _inputControllerSettings;
@@ -46,33 +49,33 @@ namespace Vurbiri.Colonization.EntryPoint
             container.AddInstance<GameEvents>(game = GameLoop.Create(storage));
                         
             container.AddInstance<GameplayTriggerBus, GameplayEventBus>(triggerBus = new());
-            container.AddInstance(inputController = new(game, _mainCamera, _inputControllerSettings));
+            container.AddInstance(inputController = new(game, mainCamera, _inputControllerSettings));
 
             container.AddInstance(_score = new Score(storage));
             container.AddInstance(_balance = new Balance(storage, game));
             container.AddInstance(new Diplomacy(storage, game));
 
-            container.AddInstance(_poolEffectsBar.Create());
-            container.AddInstance(cameraTransform = new(_mainCamera));
+            container.AddInstance(poolEffectsBar.Create());
+            container.AddInstance(cameraTransform = new(mainCamera));
             
             cameraController.Init(cameraTransform, triggerBus, inputController.CameraActions);
 
             _inputControllerSettings = null;
-            _poolEffectsBar = null;
+            poolEffectsBar = null;
         }
 
-        public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(game, players, hintWorld, _prices, cameraTransform, triggerBus);
+        public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(game, players, hintWorld, prices, cameraTransform, triggerBus);
 
         public Players.Settings GetPlayersSettings()
         {
+            _playersSettings.roadFactory.Init(sharedRepository);
+
             _playersSettings.coroutines = _coroutines;
             _playersSettings.cameraController = cameraController;
             _playersSettings.score = _score;
             _playersSettings.balance = _balance;
             _playersSettings.hexagons = hexagons;
             _playersSettings.crossroads = crossroads;
-
-            _playersSettings.Init();
 
             return _playersSettings;
         }
@@ -87,12 +90,14 @@ namespace Vurbiri.Colonization.EntryPoint
 #if UNITY_EDITOR
         public void OnValidate()
         {
-            EUtility.SetScriptable(ref _prices);
-            EUtility.SetObject(ref _mainCamera);
+            EUtility.SetScriptable(ref prices);
+            EUtility.SetObject(ref mainCamera);
             EUtility.SetObject(ref cameraController);
+            EUtility.SetObject(ref sharedRepository, "SharedRepository");
+            EUtility.SetObject(ref sharedAudioSource, "SharedAudioSource");
 
             _playersSettings.OnValidate();
-            _poolEffectsBar.OnValidate();
+            poolEffectsBar.OnValidate();
         }
 #endif
     }

@@ -164,18 +164,18 @@ namespace Vurbiri.Colonization
                     countEnemy++;
 
                 if (hex.TryGetProfit(idHex, false, out int currencyId))
-                    profit.Increment(currencyId);
+                    profit.IncrementMain(currencyId);
             }
 
             if (profit.Amount == 0)
             {
                 if (countEnemy == 0)
-                    profit.RandomMainAdd(compensationRes);
+                    profit.RandomAddMain(compensationRes);
 
                 return profit;
             }
 
-            profit.Multiply(Mathf.Max(_states.profit - Mathf.Max(countEnemy - _defenceWall, 0), 0));
+            profit.MultiplyMain(Mathf.Max(_states.profit - Mathf.Max(countEnemy - _defenceWall, 0), 0));
             return profit;
         }
         #endregion

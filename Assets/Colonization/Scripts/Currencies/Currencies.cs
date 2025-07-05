@@ -25,11 +25,23 @@ namespace Vurbiri.Colonization
             if (other.Amount == 0)
                 return;
 
-            for (int i = 0; i < CountAll; i++)
+            for (int i = 0; i < AllCount; i++)
                 _values[i].Add(other[i]);
 
             _amount.Add(other.Amount);
             _eventChanged.Invoke(this);
+        }
+
+        public void Add(int currencyId, int value)
+        {
+            if (value != 0)
+            {
+                _values[currencyId].Add(value);
+
+                if (currencyId != Blood)
+                    _amount.Add(value);
+                _eventChanged.Invoke(this);
+            }
         }
 
         public void AddMain(int currencyId, int value)
@@ -58,7 +70,7 @@ namespace Vurbiri.Colonization
                 return;
 
             int amount = _amount.Value;
-            for (int i = 0; i < CountAll; i++)
+            for (int i = 0; i < AllCount; i++)
                 amount += _values[i].Add(-cost[i]);
 
             _amount.Value = amount;

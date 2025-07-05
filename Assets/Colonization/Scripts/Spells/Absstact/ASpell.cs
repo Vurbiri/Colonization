@@ -4,16 +4,11 @@ namespace Vurbiri.Colonization
     {
         private abstract class ASpell
         {
-            protected readonly SpellBook _book;
+            public bool canUse = true;
 
-            public ASpell(SpellBook book)
-            {
-                _book = book;
-            }
+            public virtual void Update() {}
 
-            public abstract bool Init(int playerID);
-
-            public abstract void Cast(SpellParameters param);
+            public abstract bool Cast(SpellParam param);
 
         }
     }

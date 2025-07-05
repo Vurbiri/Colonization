@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
     public abstract class ACurrenciesReactive : ACurrencies, IReactive<ACurrencies>
     {
-        protected ACurrency[] _values = new ACurrency[CountAll];
+        protected ACurrency[] _values = new ACurrency[AllCount];
         protected RInt _amount = new(0);
         protected Ability _maxAmount, _maxBlood;
         protected readonly Subscription<ACurrencies> _eventChanged = new();
@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
 
         public override IEnumerator<int> GetEnumerator()
         {
-            for (int i = 0; i < CountAll; i++)
+            for (int i = 0; i < AllCount; i++)
                 yield return _values[i].Value;
         }
 

@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.Actors
         protected AudioSource _audioSource;
 
         public Transform Main => _thisTransform;
-        public Transform RightHand => _rightHand;
+        public Transform Adv => _rightHand;
         public AudioSource AudioSource => _audioSource;
 
         protected virtual void Awake()
@@ -60,9 +60,9 @@ namespace Vurbiri.Colonization.Actors
 
             public IHitSFX this[int x, int y] => _instances[_hits[x][y]];
 
-            public HitsSFX(IReadOnlyList<int> countHits, IReadOnlyList<ScriptableSFX> scriptables, IDataSFX parent)
+            public HitsSFX(int[] countHits, List<ScriptableSFX> scriptables, IDataSFX parent)
             {
-                int count = countHits.Count, countIDs;
+                int count = countHits.Length, countIDs;
                 _hits = new int[count][];
                 for (int i = 0; i < count; i++)
                     _hits[i] = new int[countHits[i]];
@@ -70,7 +70,7 @@ namespace Vurbiri.Colonization.Actors
                 count = scriptables.Count;
                 _instances = new IHitSFX[count];
 
-                ScriptableSFX scriptable; IReadOnlyList<ID> ids; ID id;
+                ScriptableSFX scriptable; List<ID> ids; ID id;
                 for (int i = 0; i < count; i++)
                 {
                     scriptable = scriptables[i];
@@ -134,7 +134,7 @@ namespace Vurbiri.Colonization.Actors
             [SerializeField] private AHitScriptableSFX _sfx;
             [SerializeField] private List<ID> _ids = new();
 
-            public IReadOnlyList<ID> IDs => _ids;
+            public List<ID> IDs => _ids;
 
             public ScriptableSFX(AHitScriptableSFX sfx)
             {

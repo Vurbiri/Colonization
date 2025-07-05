@@ -1,0 +1,11 @@
+{
+  "orderPerMana": 0,
+  "healRandomValue": 0,
+  "economicSpellsCost": [
+    0
+  ],
+  "militarySpellsCost": [
+    0,
+    0
+  ]
+}

@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
             foreach (var warrior in _warriors)
             {
                 if (warrior.IsMainProfit)
-                    profit.Increment(warrior.Hexagon.SurfaceId);
+                    profit.IncrementMain(warrior.Hexagon.SurfaceId);
                 if (isArtefact && warrior.IsAdvProfit)
                     countBuffs++;
 

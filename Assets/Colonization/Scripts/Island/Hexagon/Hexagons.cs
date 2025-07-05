@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization
             for (int i = keys.Count - 1; i >= 0; i--)
             {
                 if (_hexagons[keys[i]].SetProfitAndTryGetFreeProfit(out int currencyId))
-                    _freeResources.Increment(currencyId);
+                    _freeResources.IncrementMain(currencyId);
             }
         }
 

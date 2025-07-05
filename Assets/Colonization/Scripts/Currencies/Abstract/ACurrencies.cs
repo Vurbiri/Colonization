@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 
     public abstract class ACurrencies : IReadOnlyList<int>
     {
-        public int Count => CountAll;
+        public int Count => AllCount;
         public abstract int Amount { get ; }
 
         public abstract int this[int index] { get; }

@@ -8,9 +8,12 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private Road _prefabRoad;
         [SerializeField] private Transform _container;
-        [SerializeField] private Transform _repository;
+        
+        private Transform _repository;
 
         private readonly Stack<Road> _roads = new();
+
+        public void Init(Transform repository) => _repository = repository;
 
         public Road Create(Gradient gradient, int id)
         {

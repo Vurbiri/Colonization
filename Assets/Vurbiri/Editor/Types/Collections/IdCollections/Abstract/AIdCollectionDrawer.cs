@@ -19,7 +19,10 @@ namespace VurbiriEditor.Collections
 
         protected bool SetPositiveNames()
         {
-            Type idType = fieldInfo.FieldType.GetGenericArguments()[INDEX_TYPE];
+            Type idType = fieldInfo.FieldType;
+            if (idType.IsArray) idType = idType.GetElementType();
+            idType = idType.GetGenericArguments()[INDEX_TYPE];
+
             bool isInit = idType == _idType & _names != null;
 
             if (!isInit && IdTypesCache.Contain(idType))
