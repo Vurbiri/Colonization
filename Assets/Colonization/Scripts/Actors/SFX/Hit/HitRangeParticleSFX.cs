@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Actors
         public override IEnumerator Hit(ActorSkin target)
         {
             Bounds bounds = target.Bounds;
-            Vector3 targetPosition = target.transform.position;
+            Vector3 targetPosition = target.Transform.position;
             targetPosition.y += bounds.extents.y;
 
             float time = (Vector3.Distance(_thisTransform.position, targetPosition) - bounds.extents.z) / _avgSpeed;

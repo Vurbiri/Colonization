@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
-using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
@@ -51,9 +50,8 @@ namespace Vurbiri.Colonization
 
             public Edifices(Human parent, Dictionary<int, List<EdificeLoadData>> data, Crossroads crossroads) : this(parent._abilities)
             {
-                var abilityWall = _abilities[HumanAbilityId.WallDefense];
                 for (int i = 0; i < EdificeGroupId.Count; i++)
-                    CreateEdifices(edifices[i], data[i], parent._id, crossroads, abilityWall);
+                    CreateEdifices(edifices[i], data[i], parent._id, crossroads);
             }
 
             public CurrenciesLite ProfitFromEdifices(int hexId)
@@ -96,7 +94,7 @@ namespace Vurbiri.Colonization
                 return true;
             }
 
-            private void CreateEdifices(ReactiveList<Crossroad> values, List<EdificeLoadData> loadData, Id<PlayerId> playerId, Crossroads crossroads, IReactive<int> abilityWall)
+            private void CreateEdifices(ReactiveList<Crossroad> values, List<EdificeLoadData> loadData, Id<PlayerId> playerId, Crossroads crossroads)
             {
                 int count = loadData.Count;
                 EdificeLoadData data; Crossroad crossroad;
@@ -106,7 +104,7 @@ namespace Vurbiri.Colonization
                     crossroad = crossroads[data.key];
                     crossroad.BuildEdifice(playerId, data.id, false);
                     if (data.isWall)
-                        crossroad.BuyWall(playerId, abilityWall, false);
+                        crossroad.BuildWall(playerId, false);
                     values.Add(crossroad);
                     crossroad.Interactable = false;
                 }

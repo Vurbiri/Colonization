@@ -5,15 +5,14 @@ namespace Vurbiri.Colonization
         sealed private class Order : ASharedSpell
         {
             private Order() { }
+            public static void Create() => s_sharedSpells[TypeOfPerksId.Economic][EconomicSpellId.Order] = new Order();
 
             public override bool Cast(SpellParam param, CurrenciesLite resources)
             {
                 s_humans[param.playerId].AddOrder(param.valueA * s_settings.orderPerMana);
-                resources.Add(CurrencyId.Mana, -param.valueA + s_costs[TypeOfPerksId.Economic][EconomicSpellId.Order]);
+                resources.Add(CurrencyId.Mana, s_costs[TypeOfPerksId.Economic][EconomicSpellId.Order] - param.valueA);
                 return true;
             }
-
-            public static void Create() => s_sharedSpells[TypeOfPerksId.Economic][ EconomicSpellId.Order] = new Order();
         }
     }
 }

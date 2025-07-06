@@ -45,5 +45,10 @@ namespace Vurbiri.Colonization
             if (isWall && _wall != null)
                 _wall.AddRoad(linkId);
         }
+        public override void RemoveRoad(Id<LinkId> linkId, bool isWall)
+        {
+            if (isWall && _wall != null)
+                _wall.RemoveRoad(linkId);
+        }
     }
 }

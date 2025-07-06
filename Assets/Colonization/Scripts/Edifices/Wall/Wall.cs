@@ -25,6 +25,7 @@ namespace Vurbiri.Colonization
         }
 
         public void AddRoad(Id<LinkId> linkId) => _graphicSides[linkId].Open(true);
+        public void RemoveRoad(Id<LinkId> linkId) => _graphicSides[linkId].Open(false);
 
 #if UNITY_EDITOR
         private void OnValidate()

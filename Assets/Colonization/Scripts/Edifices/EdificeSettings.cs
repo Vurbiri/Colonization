@@ -11,10 +11,11 @@ namespace Vurbiri.Colonization
         public Id<EdificeId> nextId;
         public Id<EdificeGroupId> nextGroupId;
         [Space]
-        [Range(0, 3)] public int profit;
+        public int profit;
         [Space]
         public bool isUpgrade;
         public bool isBuildWall;
+        public int wallDefense;
 
         public void SetNextId(Id<EdificeId> id)
         {

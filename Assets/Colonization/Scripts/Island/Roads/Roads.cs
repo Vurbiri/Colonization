@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization
                 deadEndsCount += _roadsLists[i].DeadEndsCount(_id);
             return deadEndsCount;
         }
-        public void RemoveDeadEnds()
+        public bool RemoveDeadEnds()
         {
             Road line; int removeCount = 0;
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
@@ -80,7 +80,9 @@ namespace Vurbiri.Colonization
             {
                 _eventChanged.Invoke(this);
                 _count.Remove(removeCount);
+                return true;
             }
+            return false;
         }
 
         #region Reactive

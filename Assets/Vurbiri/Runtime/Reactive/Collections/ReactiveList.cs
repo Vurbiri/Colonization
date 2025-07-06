@@ -42,16 +42,6 @@ namespace Vurbiri.Reactive.Collections
         }
         #endregion
 
-        public void Signal(int index) => _subscriber.Invoke(index, _values[index], TypeEvent.Change);
-
-        public void Signal(T item)
-        {
-            int index = IndexOf(item);
-
-            if (index >= 0)
-                _subscriber.Invoke(index, _values[index], TypeEvent.Change);
-        }
-
         public void AddOrChange(T item)
         {
             int index = IndexOf(item);
@@ -70,8 +60,7 @@ namespace Vurbiri.Reactive.Collections
 
             _values[_count] = item;
             _subscriber.Invoke(_count, item, TypeEvent.Add);
-
-            _count.Value++;
+            _count.Increment();
         }
 
         public void Insert(int index, T item)
@@ -86,17 +75,7 @@ namespace Vurbiri.Reactive.Collections
 
             _values[index] = item;
             _subscriber.Invoke(index, item, TypeEvent.Insert);
-
-            _count.Value++;
-        }
-
-        public int IndexOf(T item)
-        {
-            for (int i = 0; i < _count; i++)
-                if (_values[i].Equals(item))
-                    return i;
-
-            return -1;
+            _count.Increment();
         }
         
         public bool Remove(T item)

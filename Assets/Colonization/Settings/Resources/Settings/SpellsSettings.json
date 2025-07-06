@@ -1,9 +1,13 @@
 {
   "orderPerMana": 0,
+  "blessBasa": 0,
+  "blessPerRes": 0,
+  "blessDuration": 0,
   "bloodTradePay": 0,
   "bloodTradeBay": 0,
   "healRandomValue": 0,
   "economicCost": [
+    0,
     0
   ],
   "militaryCost": [

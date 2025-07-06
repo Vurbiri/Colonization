@@ -17,7 +17,6 @@ namespace Vurbiri.Colonization
         private EdificeSettings _states;
         private Id<PlayerId> _owner = PlayerId.None;
         private bool _isWall = false;
-        private int _defenceWall = 0;
         private readonly RBool _interactable = new(true);
 
         private readonly GameplayTriggerBus _triggerBus;
@@ -46,6 +45,7 @@ namespace Vurbiri.Colonization
         public bool IsColony => _states.groupId == EdificeGroupId.Colony;
         public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
         public bool IsWall => _isWall;
+        public int WallDefense => _states.wallDefense;
         public IdSet<LinkId, CrossroadLink> Links => _links;
         public List<Hexagon> Hexagons => _hexagons;
         #endregion
@@ -121,7 +121,7 @@ namespace Vurbiri.Colonization
                 _hexagons[i].SetCaptionActive(active);
         }
 
-        public int GetDefense(Id<PlayerId> playerId) => playerId == _owner ? _defenceWall : -1;
+        public int GetDefense(Id<PlayerId> playerId) => playerId == _owner ? _states.wallDefense : -1;
 
         #region Link
         public bool ContainsLink(int id) => _links.ContainsKey(id);
@@ -175,7 +175,7 @@ namespace Vurbiri.Colonization
                 return profit;
             }
 
-            profit.MultiplyMain(Mathf.Max(_states.profit - Mathf.Max(countEnemy - _defenceWall, 0), 0));
+            profit.MultiplyMain(Mathf.Max(_states.profit - Mathf.Max(countEnemy - _states.wallDefense, 0), 0));
             return profit;
         }
         #endregion
@@ -239,8 +239,9 @@ namespace Vurbiri.Colonization
             return signal;
         }
 
+        public bool CanWallBuild() => _states.isBuildWall & !_isWall;
         public bool CanWallBuild(Id<PlayerId> playerId) => _owner == playerId & _states.isBuildWall & !_isWall;
-        public ReturnSignal BuyWall(Id<PlayerId> playerId, IReactive<int> abilityWall, bool isSFX)
+        public ReturnSignal BuildWall(Id<PlayerId> playerId, bool isSFX)
         {
             if (!_states.isBuildWall | _isWall | _owner != playerId)
                 return false;
@@ -249,8 +250,6 @@ namespace Vurbiri.Colonization
             if (returnSignal)
             {
                 _states.isBuildWall = !(_isWall = true);
-                _unsubscriber = abilityWall.Subscribe(d => _defenceWall = d);
-
                 for (int i = 0; i < _hexagons.Count; i++)
                     _hexagons[i].BuildWall(playerId);
             }
@@ -267,9 +266,10 @@ namespace Vurbiri.Colonization
             _countFreeLink--;
             _edifice.AddRoad(id, _isWall);
         }
-        public void RoadRemove()
+        public void RoadRemove(Id<LinkId> id)
         {
             _countFreeLink++;
+            _edifice.RemoveRoad(id, _isWall);
         }
 
         public bool IsDeadEnd(Id<PlayerId> playerId)

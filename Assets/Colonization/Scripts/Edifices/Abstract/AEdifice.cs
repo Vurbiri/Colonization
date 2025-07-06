@@ -39,6 +39,7 @@ namespace Vurbiri.Colonization
         public virtual ReturnSignal WallBuild(Id<PlayerId> owner, IReadOnlyList<CrossroadLink> links, bool isSFX) => false;
         public virtual Wall WallTransfer(Transform newParent) => null;
         public virtual void AddRoad(Id<LinkId> linkId, bool isWall) { }
+        public virtual void RemoveRoad(Id<LinkId> linkId, bool isWall) { }
 
 #if UNITY_EDITOR
         protected virtual void OnValidate()
@@ -54,14 +55,29 @@ namespace Vurbiri.Colonization
                 || (_settings.groupId == EdificeGroupId.Colony && _settings.id != EdificeId.City);
 
             _settings.profit = 0;
+            _settings.wallDefense = 0;
             if (_settings.id == EdificeId.Camp || _settings.id == EdificeId.PortOne || _settings.id == EdificeId.PortTwo)
+            {
                 _settings.profit = 1;
+            }
             else if (_settings.id == EdificeId.Town || _settings.groupId == EdificeGroupId.Port)
+            {
                 _settings.profit = 2;
+            }
             else if (_settings.id == EdificeId.City)
+            {
                 _settings.profit = 3;
+                _settings.wallDefense = 2;
+            }
             else
+            {
                 _settings.profit = 0;
+            }
+
+            if (_settings.id == EdificeId.Town)
+            {
+                _settings.wallDefense = 1;
+            }
 
             if (_graphic == null)
                 _graphic = GetComponentInChildren<AEdificeGraphic>();

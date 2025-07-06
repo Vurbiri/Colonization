@@ -18,13 +18,12 @@ namespace Vurbiri.Colonization
 				_heal = new(ActorAbilityId.CurrentHP, TypeModifierId.TotalPercent, s_settings.healRandomValue);
                 _sfx = sfx;
             }
-
             public static void Create(IHitSFX sfx) => s_sharedSpells[TypeOfPerksId.Military][MilitarySpellId.HealRandom] = new HealRandomActor(sfx);
 
             public override bool Cast(SpellParam param, CurrenciesLite resources)
             {
                 _wounded.Clear();
-                for (int i = 0; i < PlayerId.HumansCount; i++)
+                for (int i = 0; i < PlayerId.Count; i++)
                 {
                     foreach (Actor actor in s_actors[i])
                     {

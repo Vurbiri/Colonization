@@ -12,7 +12,6 @@ namespace Vurbiri.Colonization
         private static readonly SpellCosts s_costs;
 
         private static readonly Human[] s_humans = new Human[PlayerId.HumansCount];
-        private static readonly Roads[] s_roads = new Roads[PlayerId.HumansCount];
         private static readonly ReadOnlyReactiveSet<Actor>[] s_actors = new ReactiveSet<Actor>[PlayerId.Count];
         private static readonly ASharedSpell[][] s_sharedSpells = { new ASharedSpell[EconomicSpellId.Count], new ASharedSpell[MilitarySpellId.Count] };
 
@@ -38,7 +37,6 @@ namespace Vurbiri.Colonization
             mana = human.Resources.Get(CurrencyId.Mana);
             
             s_humans[id] = human;
-            s_roads[id] = human.Roads;
             s_actors[id] = human.Warriors;
         }
 
@@ -73,7 +71,7 @@ namespace Vurbiri.Colonization
         {
             for (int i = 0; i < PlayerId.HumansCount; i++)
             {
-                s_humans[i] = null; s_roads[i] = null; s_actors[i] = null;
+                s_humans[i] = null; s_actors[i] = null;
             }
             s_actors[PlayerId.Satan] = null;
             s_coroutines = null; s_cameraController = null;
