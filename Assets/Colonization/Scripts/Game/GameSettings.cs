@@ -6,14 +6,14 @@ namespace Vurbiri.Colonization
 {
     using static SAVE_KEYS;
 
-    public partial class GameState : IReactive<GameState>
+    public partial class GameSettings : IReactive<GameSettings>
     {
         private bool _isLoad;
         private int _maxScore;
         private bool _isTutorial;
 
         private ProjectStorage _storage;
-        private readonly Subscription<GameState> _eventChanged = new();
+        private readonly Subscription<GameSettings> _eventChanged = new();
 
         public bool IsLoad
         {
@@ -24,19 +24,19 @@ namespace Vurbiri.Colonization
 
         public bool IsTutorial => _isTutorial;
 
-        private GameState()
+        private GameSettings()
         {
             _isLoad = false;
             _isTutorial = true;
         }
-        private GameState(bool isLoad, int maxScore)
+        private GameSettings(bool isLoad, int maxScore)
         {
             _isLoad = isLoad;
             _maxScore = maxScore;
             _isTutorial = false;
         }
 
-        public static GameState Create(ProjectStorage storage, DIContainer diContainer)
+        public static GameSettings Create(ProjectStorage storage, DIContainer diContainer)
         {
             if (!storage.TryLoadAndBindGameState(out var instance))
             {
@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
             return diContainer.AddInstance(instance);
         }
 
-        public Unsubscription Subscribe(Action<GameState> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        public Unsubscription Subscribe(Action<GameSettings> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
         public void Start()
         {
@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization
         {
             int score = 0;
             if (_isLoad && _storage.TryGet(SCORE, out int[] scores))
-                score = scores[PlayerId.Player];
+                score = scores[PlayerId.Person];
 
             Reset(score);
         }

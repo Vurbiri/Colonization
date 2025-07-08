@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Actors
             
             public AActionState(Actor parent, int cost = 0) : base(parent)
             {
-                _isPlayer = parent._owner == PlayerId.Player;
+                _isPlayer = parent._owner == PlayerId.Person;
                 _move = parent._move;
                 _currentAP = parent._currentAP;
                 _costAP = new(TypeModifierId.Addition, cost);

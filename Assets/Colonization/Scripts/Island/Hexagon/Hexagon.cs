@@ -36,6 +36,7 @@ namespace Vurbiri.Colonization
         public int SurfaceId => _surfaceId;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
+        public bool IsGround => !_isGate & !_isWater;
         public Actor Owner => _owner;
         public bool IsOwner => _ownerId != PlayerId.None;
         public bool CanDemonEnter => !_isWater & _ownerId == PlayerId.None;
@@ -141,6 +142,7 @@ namespace Vurbiri.Colonization
         }
         public void ResetProfit() => _hexagonCaption.ResetProfit();
 
+        public Id<CurrencyId> GetProfit() => _profit.Value;
         public bool TryGetProfit(int hexId, bool isPort, out int currencyId)
         {
             currencyId = _profit.Value;
@@ -212,7 +214,7 @@ namespace Vurbiri.Colonization
         public void SetOwnerUnselectable()
         {
             SetUnselectable();
-            if (_ownerId != PlayerId.Player & _ownerId != PlayerId.None)
+            if (_ownerId != PlayerId.Person & _ownerId != PlayerId.None)
                 _owner.RaycastTarget = false;
         }
         #endregion

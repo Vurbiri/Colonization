@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override ISubscription<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param)
         {
-            containers.Container.Get<GameState>().IsLoad = _isLoad;
+            containers.Container.Get<GameSettings>().IsLoad = _isLoad;
 
             Localization.Instance.SetFiles(_localizationFiles);
 

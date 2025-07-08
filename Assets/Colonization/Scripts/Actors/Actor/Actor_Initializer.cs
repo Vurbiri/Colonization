@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Actors
             _owner       = initData.owner;
             _skin        = settings.InstantiateActorSkin(transform);
             _currentHex  = startHex;
-            IsPlayerTurn = false;
+            IsPersonTurn = false;
 
             #region Abilities
             _abilities   = settings.Abilities;
@@ -56,10 +56,8 @@ namespace Vurbiri.Colonization.Actors
             _extentsZ = bounds.extents.z;
             #endregion
 
-            #region Get Services
             _triggerBus = initData.triggerBus;
-            _diplomacy  = initData.diplomacy;
-            #endregion
+            _diplomacy = Player.States.diplomacy;
 
             #region Effects
             _effects = new(_abilities);

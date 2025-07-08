@@ -36,9 +36,9 @@ namespace Vurbiri.Colonization.Controllers
             _inputActions.Gameplay.LeftClick.performed += OnClickLeft;
             _inputActions.Gameplay.RightClick.performed += OnClickRight;
 
-            events.Subscribe(GameModeId.Play, (turn, _) => UIMode(turn.IsNotPlayer));
-            events.Subscribe(GameModeId.Landing, (turn, _) => UIMode(turn.IsNotPlayer));
-            events.Subscribe(GameModeId.WaitRoll, (turn, _) => UIMode(turn.IsNotPlayer));
+            events.Subscribe(GameModeId.Play, (turn, _) => UIMode(turn.IsNotPerson));
+            events.Subscribe(GameModeId.Landing, (turn, _) => UIMode(turn.IsNotPerson));
+            events.Subscribe(GameModeId.WaitRoll, (turn, _) => UIMode(turn.IsNotPerson));
 
             events.Subscribe(GameModeId.EndTurn, (_, _) => { UIMode(true); });
         }

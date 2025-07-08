@@ -105,11 +105,11 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnGamePlay(TurnQueue turnQueue, int dice)
         {
-            _isPlayerTurn = turnQueue.IsPlayer;
+            _isPlayerTurn = turnQueue.IsPerson;
         }
         private void OnInit(TurnQueue turnQueue, int dice)
         {
-            _isPlayerTurn = turnQueue.IsPlayer;
+            _isPlayerTurn = turnQueue.IsPerson;
         }
 
         private void OnEndInit(TurnQueue turnQueue, int dice)

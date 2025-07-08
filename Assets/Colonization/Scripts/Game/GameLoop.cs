@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
  
         public Id<GameModeId> GameMode => _gameMode;
 
-        private GameLoop() : this(GameModeId.Landing, new(PlayerId.Player), -1) { }
+        private GameLoop() : this(GameModeId.Landing, new(PlayerId.Person), -1) { }
         private GameLoop(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId) : base()
         {
             _gameMode = gameMode;

@@ -99,7 +99,7 @@ namespace Vurbiri.Colonization
         {
             int currentId = turnQueue.currentId.Value;
 
-            if (currentId == PlayerId.Player | currentId == PlayerId.Satan)
+            if (currentId == PlayerId.Person | currentId == PlayerId.Satan)
                 return;
 
             this[currentId - 1] = _values[currentId - 1] + _settings.penaltyPerRound;

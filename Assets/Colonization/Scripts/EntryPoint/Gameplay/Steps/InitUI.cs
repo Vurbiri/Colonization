@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public IEnumerator GetEnumerator()
         {
             var colors = SceneContainer.Get<ProjectColors>();
-            var player = _init.players.Player;
+            var player = _init.players.Person;
 
             _worldHint.Init();
             _canvasHint.Init();

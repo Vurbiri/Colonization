@@ -17,12 +17,12 @@ namespace Vurbiri.Colonization.Actors
 
         public int Potential => _potential;
 
-        public DemonsSpawner(IReactiveValue<int> level, ActorInitData initData, Players.Settings settings, int potential)
+        public DemonsSpawner(IReactiveValue<int> level, ActorInitData initData, Player.Settings settings, Hexagon startHex, int potential)
         {
             _initData = initData;
             _demonPrefab = settings.demonPrefab;
             _container = settings.actorsContainer;
-            _startHex = settings.hexagons[Key.Zero];
+            _startHex = startHex;
             _potential = potential;
 
             level.Subscribe(value => _potential += value, false);

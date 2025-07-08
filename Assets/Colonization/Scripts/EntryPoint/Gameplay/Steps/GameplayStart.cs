@@ -7,13 +7,13 @@ namespace Vurbiri.Colonization.EntryPoint
     sealed internal class GameplayStart : ALoadingStep
     {
         private readonly GameLoop _game;
-        private readonly GameState _gameState;
+        private readonly GameSettings _gameState;
         private readonly InputController _inputController;
         
         public GameplayStart(GameplayInitObjects init) : base(string.Empty)
         {
             _game = init.game;
-            _gameState = init.gameState;
+            _gameState = init.gameSettings;
             _inputController = init.inputController;
         }
 

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Vurbiri.Colonization
 {
@@ -13,8 +13,11 @@ namespace Vurbiri.Colonization
         public static readonly Key Right     = new( 2,  0); // Right + Right
         public static readonly Key RightUp   = new( 1,  1); // Right + Up
 
-        public static readonly IReadOnlyList<Key> NEAR = new Key[] { Right, RightUp, LeftUp, Left, LeftDown, RightDown };
-        public static readonly IReadOnlyList<Key> NEAR_TWO;
+        public static readonly ReadOnlyCollection<Key> NEAR = new(new Key[] { Right, RightUp, LeftUp, Left, LeftDown, RightDown });
+        public static readonly ReadOnlyCollection<Key> NEAR_TWO;
+        public static readonly ReadOnlyCollection<Key> NEAR_THREE;
+
+        public static readonly ReadOnlyCollection<Key>[] NEARS;
 
         static HEX()
         {
@@ -26,7 +29,24 @@ namespace Vurbiri.Colonization
                 nearTwo[j] = key + key;
                 nearTwo[j + 1] = key + NEAR.Next(i);
             }
-            NEAR_TWO = nearTwo;
+            NEAR_TWO = new(nearTwo);
+
+            Key[] nearThree = new Key[SIDES * 3];
+            key = NEAR[0];
+            nearThree[^1] = key + nearTwo[^1];
+            nearThree[0]  = key + nearTwo[0];
+            nearThree[1]  = key + nearTwo[1];
+
+            for (int i = 1, j = 2, k = 3; i < SIDES; i++, j = i * 2, k = i * 3)
+            {
+                key = NEAR[i];
+                nearThree[k] = key + nearTwo[j];
+                nearThree[k - 1] = key + nearTwo[j - 1];
+                nearThree[k + 1] = key + nearTwo[j + 1];
+            }
+            NEAR_THREE = new(nearThree);
+
+            NEARS = new ReadOnlyCollection<Key>[] { NEAR, NEAR_TWO, NEAR_THREE };
         }
     }
 }

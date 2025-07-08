@@ -3,14 +3,29 @@
   "blessBasa": 0,
   "blessPerRes": 0,
   "blessDuration": 0,
+  "wrathBasa": 0,
+  "wrathPerRes": 0,
+  "wrathPierce": 0,
   "bloodTradePay": 0,
   "bloodTradeBay": 0,
   "healRandomValue": 0,
+  "reductionFromWall": 0,
+  "chanceMarauding": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
   "economicCost": [
+    0,
     0,
     0
   ],
   "militaryCost": [
+    0,
+    0,
+    0,
     0,
     0
   ]

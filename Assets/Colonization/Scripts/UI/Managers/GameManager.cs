@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnEndLanding(TurnQueue turnQueue, int hexId)
         {
-            _mono.StartCoroutine(OnEndLanding_Cn(turnQueue.IsPlayer));
+            _mono.StartCoroutine(OnEndLanding_Cn(turnQueue.IsPerson));
 
             //Local
             IEnumerator OnEndLanding_Cn(bool isPlayer)

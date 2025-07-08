@@ -13,8 +13,8 @@ namespace Vurbiri.Colonization.UI
 		
 		public void Init()
 		{
-			var color = SceneContainer.Get<PlayerColors>()[PlayerId.Player];
-            _caption.text = SceneContainer.Get<PlayerNames>()[PlayerId.Player];
+			var color = SceneContainer.Get<PlayerColors>()[PlayerId.Person];
+            _caption.text = SceneContainer.Get<PlayerNames>()[PlayerId.Person];
             _caption.color = color;
 
             color.a = _borderAlpha;

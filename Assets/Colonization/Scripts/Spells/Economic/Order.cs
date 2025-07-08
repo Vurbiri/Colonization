@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
 
             public override bool Cast(SpellParam param, CurrenciesLite resources)
             {
-                s_humans[param.playerId].AddOrder(param.valueA * s_settings.orderPerMana);
+                Player.States.AddOrder(param.playerId, param.valueA * s_settings.orderPerMana);
                 resources.Add(CurrencyId.Mana, s_costs[TypeOfPerksId.Economic][EconomicSpellId.Order] - param.valueA);
                 return true;
             }

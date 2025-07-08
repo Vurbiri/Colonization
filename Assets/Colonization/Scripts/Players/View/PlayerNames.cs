@@ -77,7 +77,7 @@ namespace Vurbiri.Colonization
                 if (!string.IsNullOrEmpty(_customNames[index]))
                     return _customNames[index];
 
-                if (index == PlayerId.Player & _ysdk.IsLogOn)
+                if (index == PlayerId.Person & _ysdk.IsLogOn)
                 {
                     string name = _ysdk.PlayerName;
                     if (!string.IsNullOrEmpty(name))

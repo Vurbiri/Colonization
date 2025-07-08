@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
         private Id<ActorTypeId> _typeId;
         private int _id;
         private Id<PlayerId> _owner;
-        private bool _isPlayerTurn;
+        private bool _isPersonTurn;
 
         #region Abilities
         private AbilitiesSet<ActorAbilityId> _abilities;
@@ -75,9 +75,9 @@ namespace Vurbiri.Colonization.Actors
         public Vector3 Position => _thisTransform.position;
         public RBool CanCancel => _canCancel;
         public RBool InteractableReactive => _interactable;
-        public bool Interactable { get => _interactable.Value; private set => _thisCollider.enabled = _interactable.Value = _isPlayerTurn & value; }
+        public bool Interactable { get => _interactable.Value; private set => _thisCollider.enabled = _interactable.Value = _isPersonTurn & value; }
         public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = value; }
-        public bool IsPlayerTurn { get => _isPlayerTurn; set => _interactable.Value = _isPlayerTurn = value; }
+        public bool IsPersonTurn { get => _isPersonTurn; set => _interactable.Value = _isPersonTurn = value; }
         public void Select() => _stateMachine.Select();
         public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
         public void Cancel() => _stateMachine.Cancel();

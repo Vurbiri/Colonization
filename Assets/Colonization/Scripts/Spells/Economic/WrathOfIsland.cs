@@ -15,12 +15,12 @@ namespace Vurbiri.Colonization
             private readonly List<Actor> _targets = new(8);
             private readonly IHitSFX _sfx;
 
-            private WrathOfIsland(IHitSFX sfx, GameplayTriggerBus triggerBus)
+            private WrathOfIsland(IHitSFX sfx)
             {
-                _damage = new (sfx, triggerBus);
+                _damage = new (sfx);
             }
 
-            public static void Create(IHitSFX sfx, GameplayTriggerBus triggerBus) => s_sharedSpells[TypeOfPerksId.Economic][EconomicSpellId.Wrath] = new WrathOfIsland(sfx, triggerBus);
+            public static void Create(IHitSFX sfx) => s_sharedSpells[TypeOfPerksId.Economic][EconomicSpellId.Wrath] = new WrathOfIsland(sfx);
 
             public override bool Cast(SpellParam param, CurrenciesLite resources)
             {
@@ -58,15 +58,13 @@ namespace Vurbiri.Colonization
         sealed private class SpellDamager : Effect
         {
             private readonly IHitSFX _sfx;
-            private readonly GameplayTriggerBus _triggerBus;
             private readonly AbilityModifierPercent _pierce;
             
             public int damage, playerId;
 
-            public SpellDamager(IHitSFX sfx, GameplayTriggerBus triggerBus) : base(ActorAbilityId.CurrentHP, TypeModifierId.Addition, 0)
+            public SpellDamager(IHitSFX sfx) : base(ActorAbilityId.CurrentHP, TypeModifierId.Addition, 0)
             {
                 _sfx = sfx;
-                _triggerBus = triggerBus;
                 _pierce = new(100 - s_settings.wrathPierce);
             }
 
@@ -78,7 +76,7 @@ namespace Vurbiri.Colonization
                 target.ApplyEffect(this);
 
                 if (target.IsDead & target.Owner != playerId)
-                    _triggerBus.TriggerActorKill(playerId, target.TypeId, target.Id);
+                    s_triggerBus.TriggerActorKill(playerId, target.TypeId, target.Id);
             }
         }
     }

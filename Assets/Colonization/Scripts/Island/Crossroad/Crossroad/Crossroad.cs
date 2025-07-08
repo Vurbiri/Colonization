@@ -35,6 +35,7 @@ namespace Vurbiri.Colonization
 
         #region Property
         public Key Key => _key;
+        public Id<PlayerId> Owner => _owner;
         public Id<EdificeId> Id => _states.id;
         public Id<EdificeGroupId> GroupId => _states.groupId;
         public Id<EdificeId> NextId => _states.nextId;
@@ -45,7 +46,6 @@ namespace Vurbiri.Colonization
         public bool IsColony => _states.groupId == EdificeGroupId.Colony;
         public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
         public bool IsWall => _isWall;
-        public int WallDefense => _states.wallDefense;
         public IdSet<LinkId, CrossroadLink> Links => _links;
         public List<Hexagon> Hexagons => _hexagons;
         #endregion
@@ -121,7 +121,8 @@ namespace Vurbiri.Colonization
                 _hexagons[i].SetCaptionActive(active);
         }
 
-        public int GetDefense(Id<PlayerId> playerId) => playerId == _owner ? _states.wallDefense : -1;
+        public int GetDefense() => _isWall ? _states.wallDefense : 0;
+        public int GetDefense(Id<PlayerId> playerId) => (playerId == _owner & _isWall) ? _states.wallDefense : 0;
 
         #region Link
         public bool ContainsLink(int id) => _links.ContainsKey(id);

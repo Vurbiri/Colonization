@@ -6,8 +6,7 @@ namespace Vurbiri.Colonization
     public class ActorInitData
 	{
         public readonly Id<PlayerId> owner;
-        public readonly bool isPlayerOwned;
-        public readonly Diplomacy diplomacy;
+        public readonly bool isPersonOwned;
         public readonly GameplayTriggerBus triggerBus;
         public readonly IReactive<IPerk>[] buffs;
 
@@ -24,8 +23,7 @@ namespace Vurbiri.Colonization
         private ActorInitData(Id<PlayerId> owner)
         {
             this.owner = owner;
-            isPlayerOwned = owner == PlayerId.Player;
-            diplomacy = SceneContainer.Get<Diplomacy>();
+            isPersonOwned = owner == PlayerId.Person;
             triggerBus = SceneContainer.Get<GameplayTriggerBus>();
         }
     }

@@ -13,8 +13,11 @@ namespace Vurbiri.Colonization
         private readonly Subscription<Hexagon> _eventChanged = new();
         private readonly CurrenciesLite _freeResources = new();
 
+        private int _groundCount = 0;
+
         public Hexagon this[Key key] => _hexagons[key];
         public CurrenciesLite FreeResources => _freeResources;
+        public int GroundCount => _groundCount;
 
         public Hexagons(GameEvents events)
         {
@@ -34,6 +37,8 @@ namespace Vurbiri.Colonization
 
             _hexagons.Add(key, hex);
             _hexagonsIdForKey[id].Add(key);
+
+            if (hex.IsGround) _groundCount++;
 
             return hex;
         }

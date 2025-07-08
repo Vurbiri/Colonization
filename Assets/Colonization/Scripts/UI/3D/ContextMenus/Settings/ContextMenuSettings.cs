@@ -12,14 +12,14 @@ namespace Vurbiri.Colonization.UI
         public readonly CameraTransform cameraTransform;
         public readonly GameplayEventBus eventBus;
 
-        public ContextMenuSettings(GameLoop game, Players players, WorldHint hint, Prices prices, CameraTransform cameraTransform, GameplayEventBus eventBus)
-            : base(players.Player, hint)
+        public ContextMenuSettings(GameLoop game, Players players, WorldHint hint, CameraTransform cameraTransform, GameplayEventBus eventBus)
+            : base(players.Person, hint)
         {
             this.game = game;
-            this.prices = prices;
             this.cameraTransform = cameraTransform;
             this.eventBus = eventBus;
 
+            prices = Player.States.prices;
             camera = cameraTransform.Camera;
         }
     }

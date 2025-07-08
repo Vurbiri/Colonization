@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.Characteristics
                 _progress[t] = new(Math.Min(progress, MAX_PROGRESS));
             }
         }
-        public static PerkTree Create(Players.Settings settings, HumanLoadData loadData)
+        public static PerkTree Create(Player.Settings settings, HumanLoadData loadData)
         {
             if (loadData.isLoaded & loadData.perks != null) 
                 return new(settings.perks, loadData.perks);

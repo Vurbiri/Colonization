@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
             _windows = new IWindow[] { _perksWindow, _exchangeWindow };
             _inputController = init.inputController;
 
-            Human player = init.players.Player;
+            Human player = init.players.Person;
 
             Debug.Log("WindowsManager - убрать комментарии - /*, false*/");
 
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnPlay(TurnQueue turnQueue, int hexId)
         {
-            if (turnQueue.IsNotPlayer) return;
+            if (turnQueue.IsNotPerson) return;
 
             for (int i = 0; i < COUNT; i++)
                 _buttons[i].Interactable = true;

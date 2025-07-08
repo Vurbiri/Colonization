@@ -5,23 +5,19 @@ namespace Vurbiri.Colonization
 {
 	public abstract class AHumanController : Human,  IPlayerController
 	{
-        protected readonly Hexagons _hexagons;
 
-        protected AHumanController(int playerId, Storage.HumanStorage storage, Players.Settings settings) : base(playerId, storage, settings)
-        {
-            _hexagons = settings.hexagons;
-        }
+        protected AHumanController(int playerId, Settings settings) : base(playerId, settings) { }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
         {
             if (type == ActorTypeId.Demon)
             {
-                _score.ForKillingDemon(_id, id);
-                _resources.AddBlood(id + 1);
+                s_states.score.ForKillingDemon(_id, id);
+                _resources.AddBlood(id);
             }
             else
             {
-                _score.ForKillingWarrior(_id, id);
+                s_states.score.ForKillingWarrior(_id, id);
             }
         }
 
@@ -33,7 +29,7 @@ namespace Vurbiri.Colonization
             int countBuffs = 0;
             CurrenciesLite profit = new();
             bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
-            foreach (var warrior in _warriors)
+            foreach (var warrior in _actors)
             {
                 if (warrior.IsMainProfit)
                     profit.IncrementMain(warrior.Hexagon.SurfaceId);
@@ -41,7 +37,7 @@ namespace Vurbiri.Colonization
                     countBuffs++;
 
                 warrior.StatesUpdate();
-                warrior.IsPlayerTurn = false;
+                warrior.IsPersonTurn = false;
             }
 
             _resources.Add(profit);
@@ -61,14 +57,14 @@ namespace Vurbiri.Colonization
             }
 
             if (_abilities.IsTrue(HumanAbilityId.IsFreeGroundRes))
-                _resources.Add(_hexagons.FreeResources);
+                _resources.Add(s_hexagons.FreeResources);
 
             _resources.Add(_edifices.ProfitFromEdifices(hexId));
         }
 
         public void OnStartTurn()
         {
-            foreach (var warrior in _warriors)
+            foreach (var warrior in _actors)
                 warrior.EffectsUpdate();
 
             _exchange.Update();

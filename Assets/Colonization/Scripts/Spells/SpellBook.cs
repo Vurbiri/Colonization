@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Controllers;
+using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Reactive.Collections;
 using static Vurbiri.Colonization.TypeOfPerksId;
 
@@ -15,10 +16,10 @@ namespace Vurbiri.Colonization
         private static readonly ReadOnlyReactiveSet<Actor>[] s_actors = new ReactiveSet<Actor>[PlayerId.Count];
         private static readonly ASharedSpell[][] s_sharedSpells = { new ASharedSpell[EconomicSpellId.Count], new ASharedSpell[MilitarySpellId.Count] };
 
+        private static GameplayTriggerBus s_triggerBus;
         private static Coroutines s_coroutines;
         private static CameraController s_cameraController;
         
-        private readonly ICurrency mana;
         private readonly CurrenciesLite _resources = new();
         private readonly APlayerSpell[][] _spells = { new APlayerSpell[EconomicSpellId.Count], new APlayerSpell[MilitarySpellId.Count] };
 
@@ -34,30 +35,31 @@ namespace Vurbiri.Colonization
         public SpellBook(Human human)
         {
             int id = human.Id;
-            mana = human.Resources.Get(CurrencyId.Mana);
             
             s_humans[id] = human;
             s_actors[id] = human.Warriors;
         }
 
-        public CurrenciesLite Cast(int type, int id, SpellParam param)
+        public CurrenciesLite Cast(int type, int id, int mana, SpellParam param)
         {
             _resources.Clear();
 
             int cost = s_costs[type][id];
             ASpell spell = s_sharedSpells[type][id]; spell ??= _spells[type][id];
-            if (mana.Value >= cost && spell.Cast(param, _resources))
+            if (mana >= cost && spell.Cast(param, _resources))
                 _resources.Add(CurrencyId.Mana, -cost);
 
             return _resources;
         }
 
-        public static void Init(Coroutines coroutines, CameraController cameraController)
+        public static void Init(GameplayInitObjects init)
         {
-            s_coroutines = coroutines;
-            s_cameraController = cameraController;
+            s_coroutines = init.coroutines;
+            s_triggerBus = init.triggerBus;
+            s_cameraController = init.cameraController;
 
             Order.Create();
+            SummonWarlock.Create(init.hexagons);
 
             BloodTrade.Create();
         }
@@ -71,10 +73,12 @@ namespace Vurbiri.Colonization
         {
             for (int i = 0; i < PlayerId.HumansCount; i++)
             {
-                s_humans[i] = null; s_actors[i] = null;
+                s_humans[i] = null; 
+                s_actors[i] = null;
             }
             s_actors[PlayerId.Satan] = null;
-            s_coroutines = null; s_cameraController = null;
+
+            s_coroutines = null; s_triggerBus = null; s_cameraController = null;
 
             for (int i = 0; i < EconomicSpellId.Count; i++)
                 s_sharedSpells[Economic][i] = null;

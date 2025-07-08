@@ -5,8 +5,8 @@ namespace Vurbiri.Colonization
         public Id<PlayerId> currentId;
         public int round;
 
-        public readonly bool IsPlayer => currentId == PlayerId.Player;
-        public readonly bool IsNotPlayer => currentId != PlayerId.Player;
+        public readonly bool IsPerson => currentId == PlayerId.Person;
+        public readonly bool IsNotPerson => currentId != PlayerId.Person;
         public readonly bool IsSatan => currentId == PlayerId.Satan;
 
         public TurnQueue(int current)

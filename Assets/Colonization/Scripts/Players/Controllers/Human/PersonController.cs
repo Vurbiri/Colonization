@@ -1,8 +1,8 @@
 namespace Vurbiri.Colonization
 {
-    sealed public class PlayerController : AHumanController
+    sealed public class PersonController : AHumanController
     {
-        public PlayerController(Storage.HumanStorage[] storages, Players.Settings settings) : base(PlayerId.Player, storages[PlayerId.Player], settings)
+        public PersonController(Settings settings) : base(PlayerId.Person, settings)
         {
         }
 
@@ -11,8 +11,8 @@ namespace Vurbiri.Colonization
         public override void OnPlay()
         {
             _edifices.Interactable = true;
-            foreach (var warrior in _warriors)
-                warrior.IsPlayerTurn = true;
+            foreach (var warrior in _actors)
+                warrior.IsPersonTurn = true;
         }
 
         public override void OnEndTurn()

@@ -1,19 +1,11 @@
 using Vurbiri.Colonization.Actors;
-using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization
 {
 	sealed public class SatanController : Satan,  IPlayerController
 	{
-        private readonly GameLoop _game;
-        private readonly Coroutines _coroutines;
-        private readonly CameraController _cameraController;
-
-        public SatanController(GameLoop game, Storage.SatanStorage storage, Players.Settings settings) : base(storage, settings)
+        public SatanController(Settings settings) : base(settings)
         {
-            _game = game;
-            _coroutines = settings.coroutines;
-            _cameraController = settings.cameraController;
         }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
@@ -23,7 +15,7 @@ namespace Vurbiri.Colonization
 
         public void OnLanding()
         {
-            _coroutines.Run(_game.EndTurn());
+            s_coroutines.Run(s_game.EndTurn());
         }
         public void OnEndLanding() { }
 
@@ -40,7 +32,7 @@ namespace Vurbiri.Colonization
                 demon.StatesUpdate();
             }
 
-            _balance.ForCurse(balance);
+            s_states.balance.ForCurse(balance);
             _artefact.Next(countBuffs);
         }
 
