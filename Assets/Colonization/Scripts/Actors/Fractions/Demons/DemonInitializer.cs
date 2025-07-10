@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
 
         public Demon Init(int id, ActorInitData initData, Hexagon startHex)
         {
-            _demon.Init(_demonSettings[id], initData, _collider, startHex);
+            _demon.Setup(_demonSettings[id], initData, _collider, startHex);
             _collider.enabled = false;
 
             Destroy(this);

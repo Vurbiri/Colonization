@@ -26,6 +26,8 @@ namespace Vurbiri.Colonization
         [Header("Marauding")]
         public float reductionFromWall;
         public IdArray<WarriorId, int> chanceMarauding;
+        [Header("SwapId")]
+        public Color swapHexColor;
         [Space]
         public IdArray<EconomicSpellId, int> economicCost;
         public IdArray<MilitarySpellId, int> militaryCost;

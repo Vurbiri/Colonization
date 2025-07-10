@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization.Actors
                 _isCancel.False();
 
                 foreach (var hex in targets)
-                    hex.SetOwnerUnselectable();
+                    hex.SetOtherOwnerUnselectable();
 
                 if (_target == null)
                     yield break;
@@ -102,7 +102,7 @@ namespace Vurbiri.Colonization.Actors
                     _effectsHint[i].Apply(_actor, _target);
                     if (_target.IsDead)
                     {
-                        _actor.Killed(_target._typeId, _target._id);
+                        s_triggerBus.TriggerActorKill(_actor._owner, _target._typeId, _target._id);
                         wait = _waitRealtime;
                         break;
                     }

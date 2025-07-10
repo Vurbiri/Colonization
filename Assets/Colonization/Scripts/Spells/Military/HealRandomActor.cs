@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
             private IEnumerator Cast_Cn(Actor target)
             {
                 yield return s_cameraController.ToPosition(target.Position);
-                yield return _sfx.Hit(target.Skin);
+                _sfx.Hit(target.Skin);
                 target.ApplyEffect(_heal);
             }
         }

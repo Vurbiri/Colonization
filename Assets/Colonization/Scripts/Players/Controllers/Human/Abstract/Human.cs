@@ -11,7 +11,6 @@ namespace Vurbiri.Colonization
     public abstract partial class Human : Player, IDisposable
     {
         #region Fields
-        
         protected readonly Currencies _resources;
         protected readonly ExchangeRate _exchange;
 
@@ -58,7 +57,7 @@ namespace Vurbiri.Colonization
             _exchange = ExchangeRate.Create(_abilities, loadData);
             _artefact = Artefact.Create(settings.artefact, loadData);
 
-            _spawner = new(new(playerId, _artefact, new(_perks)), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
+            _spawner = new(new(playerId, new(_perks), _artefact), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
 
             if (loadData.isLoaded)
             {

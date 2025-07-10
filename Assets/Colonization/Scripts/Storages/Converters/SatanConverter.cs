@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
     [JsonConverter(typeof(Converter))]
     public partial class Satan
 	{
-		sealed public class Converter : AJsonConverter<Satan>
+		sealed public class Converter : AJsonConverter<Satan, SatanLoadState>
         {
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {

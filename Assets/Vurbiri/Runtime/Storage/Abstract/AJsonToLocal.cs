@@ -5,9 +5,7 @@ namespace Vurbiri
 {
     public abstract class AJsonToLocal : AStorageOneFile
     {
-        protected AJsonToLocal(string key, MonoBehaviour monoBehaviour) : base(key, monoBehaviour)
-        {
-        }
+        protected AJsonToLocal(string key, MonoBehaviour monoBehaviour) : base(key, monoBehaviour) { }
 
         protected abstract string GetStorage();
         protected abstract bool SetStorage();

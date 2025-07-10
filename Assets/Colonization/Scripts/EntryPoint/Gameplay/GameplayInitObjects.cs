@@ -58,11 +58,12 @@ namespace Vurbiri.Colonization.EntryPoint
             _inputControllerSettings = null;
             poolEffectsBar = null;
         }
-
-        public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(game, players, hintWorld, cameraTransform, triggerBus);
+        
+        public void AddHexagons(Hexagons hexagons) => diContainer.AddInstance(this.hexagons = hexagons);
+        public void AddCrossroads(Crossroads crossroads) => diContainer.AddInstance(this.crossroads = crossroads);
 
         public Player.Settings GetPlayerSettings() => _playerSettings.Init(this);
-
+        public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(game, players, hintWorld, cameraTransform, triggerBus);
 
 #if UNITY_EDITOR
         public void OnValidate()

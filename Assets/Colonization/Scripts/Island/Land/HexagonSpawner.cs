@@ -9,24 +9,21 @@ namespace Vurbiri.Colonization
     public class HexagonSpawner : System.IDisposable
     {
         [SerializeField] private Hexagon _prefabHex;
-        [SerializeField] private HexagonMarkFactory _prefabHexMark;
         [SerializeField] private SurfacesScriptable _surfaces;
         [Space]
         [SerializeField] private LandMesh _landMesh;
-        [Space]
-        [SerializeField] private Transform _landContainer;
 
-        private Pool<HexagonMark> _poolMarks;
         private GameplayEventBus _eventBus;
         private Transform _cameraTransform;
+        private Transform _landContainer;
         private ProjectColors _colorSettings;
 
         public HexagonSpawner Init(Camera camera, GameplayEventBus eventBus)
         {
+            _landContainer = _landMesh.transform;
             _landMesh.Init();
-
+            
             _eventBus = eventBus;
-            _poolMarks = new(_prefabHexMark.Create, _landContainer, HEX.SIDES);
 
             _cameraTransform = camera.transform;
             _colorSettings = SceneContainer.Get<ProjectColors>();
@@ -38,7 +35,7 @@ namespace Vurbiri.Colonization
         {
             SurfaceType surface = _surfaces[surfaceId];
             Hexagon hex = Object.Instantiate(_prefabHex, position, Quaternion.identity, _landContainer);
-            hex.Init(key, id, _poolMarks, surface);
+            hex.Setup(key, id, surface);
             hex.Caption.Init(id, surface.Currencies, _cameraTransform, _colorSettings, _eventBus);
 
             _landMesh.AddHexagon(key, position, surfaceId);
@@ -60,12 +57,8 @@ namespace Vurbiri.Colonization
         public void OnValidate()
         {
             EUtility.SetPrefab(ref _prefabHex);
-            EUtility.SetPrefab(ref _prefabHexMark);
             EUtility.SetScriptable(ref _surfaces);
             EUtility.SetObject(ref _landMesh);
-
-            if (_landContainer == null && _landMesh != null)
-                _landContainer = _landMesh.transform;
         }
 #endif
     }

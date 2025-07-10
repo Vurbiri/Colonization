@@ -9,7 +9,7 @@
   "bloodTradePay": 0,
   "bloodTradeBay": 0,
   "healRandomValue": 0,
-  "reductionFromWall": 0,
+  "reductionFromWall": 0.0,
   "chanceMarauding": [
     0,
     0,
@@ -17,12 +17,20 @@
     0,
     0
   ],
+  "swapHexColor": [
+    0.957,
+    0.937,
+    0.18,
+    1.0
+  ],
   "economicCost": [
+    0,
     0,
     0,
     0
   ],
   "militaryCost": [
+    0,
     0,
     0,
     0,

@@ -19,7 +19,8 @@ namespace Vurbiri.Colonization
         private static GameplayTriggerBus s_triggerBus;
         private static Coroutines s_coroutines;
         private static CameraController s_cameraController;
-        
+        private static Hexagons s_hexagons;
+
         private readonly CurrenciesLite _resources = new();
         private readonly APlayerSpell[][] _spells = { new APlayerSpell[EconomicSpellId.Count], new APlayerSpell[MilitarySpellId.Count] };
 
@@ -57,9 +58,10 @@ namespace Vurbiri.Colonization
             s_coroutines = init.coroutines;
             s_triggerBus = init.triggerBus;
             s_cameraController = init.cameraController;
+            s_hexagons = init.hexagons;
 
             Order.Create();
-            SummonWarlock.Create(init.hexagons);
+            SummonWarlock.Create();
 
             BloodTrade.Create();
         }
@@ -78,7 +80,7 @@ namespace Vurbiri.Colonization
             }
             s_actors[PlayerId.Satan] = null;
 
-            s_coroutines = null; s_triggerBus = null; s_cameraController = null;
+            s_coroutines = null; s_triggerBus = null; s_cameraController = null; s_hexagons = null;
 
             for (int i = 0; i < EconomicSpellId.Count; i++)
                 s_sharedSpells[Economic][i] = null;

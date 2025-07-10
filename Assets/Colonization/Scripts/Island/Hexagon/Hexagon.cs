@@ -13,11 +13,13 @@ namespace Vurbiri.Colonization
         [SerializeField] private Collider _thisCollider;
 
         #region Fields
+        private static GameplayTriggerBus s_triggerBus;
+        private static Pool<HexagonMark> s_poolMarks;
+
         private Key _key;
         private int _id;
         private int _surfaceId;
         private Transform _thisTransform;
-        private Pool<HexagonMark> _poolMarks;
         private HexagonMark _mark;
         private IProfit _profit;
         private bool _isGate, _isWater;
@@ -61,13 +63,12 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        #region Init
-        public void Init(Key key, int id, Pool<HexagonMark> poolMarks, SurfaceType surface)
+        #region Setup
+        public void Setup(Key key, int id, SurfaceType surface)
         {
             _thisTransform = transform; Position = _thisTransform.localPosition;
             _key = key;
             _id = id;
-            _poolMarks = poolMarks;
 
             _surfaceId = surface.Id.Value;
             _profit = surface.Profit;
@@ -81,16 +82,17 @@ namespace Vurbiri.Colonization
             {
                 Destroy(_thisCollider);
                 _thisCollider = null;
-                _poolMarks = null;
             }
         }
-
-        #region ISelectable
-        public void Select() { }
-        public void Unselect(ISelectable newSelectable) { }
-        #endregion
-
-        public Unsubscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
+        
+        public static void Init(Pool<HexagonMark> poolMarks, GameplayTriggerBus triggerBus)
+        {
+            s_poolMarks = poolMarks; s_triggerBus = triggerBus;
+        }
+        public static void Clear()
+        {
+            s_poolMarks = null; s_triggerBus = null;
+        }
 
         public void AddNeighborAndCreateCrossroadLink(Hexagon neighbor)
         {
@@ -114,6 +116,13 @@ namespace Vurbiri.Colonization
         public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
         public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
         #endregion
+
+        #region ISelectable
+        public void Select() => s_triggerBus.TriggerHexagonSelect(this);
+        public void Unselect(ISelectable newSelectable) { }
+        #endregion
+
+        public Unsubscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 
         public void SetCaptionActive(bool active) => _hexagonCaption.SetActive(active);
 
@@ -190,7 +199,7 @@ namespace Vurbiri.Colonization
             if(_isGate | _isWater | _owner != null)
                 return false;
 
-            _mark = _poolMarks.Get(_thisTransform, false).View(true);
+            _mark = s_poolMarks.Get(_thisTransform, false).View(true);
             _thisCollider.enabled = true;
             return true;
         }
@@ -199,7 +208,7 @@ namespace Vurbiri.Colonization
             if (_isWater | _owner == null || !_owner.IsCanUseSkill(id, typeAction, out bool isFriendly))
                 return false;
 
-            _mark = _poolMarks.Get(_thisTransform, false).View(isFriendly);
+            _mark = s_poolMarks.Get(_thisTransform, false).View(isFriendly);
             _thisCollider.enabled = _owner.RaycastTarget = true;
             return true;
         }
@@ -207,15 +216,35 @@ namespace Vurbiri.Colonization
         {
             if (_mark == null | _isWater) return;
 
-            _poolMarks.Return(_mark);
+            s_poolMarks.Return(_mark);
             _thisCollider.enabled = false;
             _mark = null;
         }
-        public void SetOwnerUnselectable()
+        public void SetOtherOwnerUnselectable()
         {
             SetUnselectable();
             if (_ownerId != PlayerId.Person & _ownerId != PlayerId.None)
                 _owner.RaycastTarget = false;
+        }
+
+        public void SetSelectableForSwap()
+        {
+            _mark = s_poolMarks.Get(_thisTransform, false).View(true);
+            _thisCollider.enabled = true;
+            _hexagonCaption.SetActive(true);
+        }
+        public void SetSelectedForSwap(Color color)
+        {
+            _mark.View(false);
+            _thisCollider.enabled = false;
+            _hexagonCaption.IdColor = color;
+        }
+        public void SetUnselectableForSwap()
+        {
+            s_poolMarks.Return(_mark);
+            _thisCollider.enabled = false;
+            _hexagonCaption.SetActive(false);
+            _mark = null;
         }
         #endregion
 

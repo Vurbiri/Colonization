@@ -4,10 +4,9 @@ using Vurbiri.Colonization.Storage;
 
 namespace Vurbiri.Colonization
 {
-    [JsonConverter(typeof(Converter))]
     public partial class Crossroad
 	{
-		public class Converter : AJsonConverter<Crossroad>
+		sealed public class Converter : AJsonConverter<Crossroad, EdificeLoadData>
         {
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {

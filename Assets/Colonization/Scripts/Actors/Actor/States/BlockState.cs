@@ -8,7 +8,6 @@ namespace Vurbiri.Colonization.Actors
         {
             private readonly EffectCode _code;
             private readonly EffectsSet _effects;
-            private readonly GameplayTriggerBus _triggerBus;
             private readonly int _value;
 
             public bool Enabled => _actor._effects.Contains(_code);
@@ -18,7 +17,6 @@ namespace Vurbiri.Colonization.Actors
                 _code = new(parent.TypeId, parent.Id, ReactiveEffectsFactory.BLOCK_SKILL_ID, ReactiveEffectsFactory.BLOCK_EFFECT_ID);
                 _value = value;
                 _effects = parent._effects;
-                _triggerBus = parent._triggerBus;
             }
 
             public override void Enter()
@@ -41,10 +39,10 @@ namespace Vurbiri.Colonization.Actors
                     _skin.Block(false);
             }
 
-            public override void Select() => _triggerBus.TriggerActorSelect(_actor);
+            public override void Select() => s_triggerBus.TriggerActorSelect(_actor);
             public override void Unselect(ISelectable newSelectable)
             {
-                _triggerBus.TriggerUnselect(_actor.Equals(newSelectable));
+                s_triggerBus.TriggerUnselect(_actor.Equals(newSelectable));
             }
         }
     }

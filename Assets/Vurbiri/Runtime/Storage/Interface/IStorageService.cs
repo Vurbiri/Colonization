@@ -6,6 +6,12 @@ namespace Vurbiri
 {
     public interface IStorageService
     {
+        static IStorageService()
+        {
+            
+        }
+        
+        
         public bool IsValid { get; }
 
         public IEnumerator Load_Cn(Action<bool> callback);

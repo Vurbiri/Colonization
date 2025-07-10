@@ -30,6 +30,7 @@ namespace Vurbiri.Colonization
 
         public static void Clear()
         {
+            SpellBook.Clear(); Actor.Clear();
             s_hexagons = null; s_crossroads = null; s_game = null;
             s_cameraController = null; s_coroutines = null;
             s_states.Dispose();
@@ -67,8 +68,9 @@ namespace Vurbiri.Colonization
                 s_cameraController = init.cameraController;
                 s_coroutines = init.coroutines;
 
-                roadFactory.Init(init.sharedRepository);
                 SpellBook.Init(init);
+                Actor.Init(s_states.diplomacy, init.triggerBus);
+                roadFactory.Init(init.sharedRepository);
 
                 storage = init.storage;
                 triggerBus = init.triggerBus;

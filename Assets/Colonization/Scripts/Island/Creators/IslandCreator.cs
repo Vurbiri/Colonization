@@ -12,10 +12,12 @@ namespace Vurbiri.Colonization
 
     public partial class IslandCreator : MonoBehaviour, ILoadingStep
     {
-        [SerializeField] private HexagonSpawner _hexagonSpawner;
-        [Space]
         [SerializeField] private ParticleSystem _psFog;
         [SerializeField] private float _ratioFogSize = 60f;
+        [Header("═════ HEXAGONS ═════")]
+        [SerializeField] private Transform _landContainer;
+        [SerializeField] private HexagonSpawner _hexagonSpawner;
+        [SerializeField] private HexagonMarkFactory _prefabHexMark;
         [Header("═════ CROSSROADS ═════")]
         [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private IdSet<EdificeId, AEdifice> _edificePrefabs;
@@ -33,8 +35,8 @@ namespace Vurbiri.Colonization
             _storage = init.storage;
             _hexagonSpawner.Init(init.cameraTransform.Camera, init.triggerBus);
 
-            init.hexagons   = _hexagons   = new(init.game);
-            init.crossroads = _crossroads = new(_crossroadsContainer, _edificePrefabs, init.triggerBus);
+            init.AddHexagons(_hexagons = new(init.game, new Pool<HexagonMark>(_prefabHexMark.Create, _landContainer, HEX.SIDES), init.triggerBus));
+            init.AddCrossroads(_crossroads = new(_crossroadsContainer, _edificePrefabs, init.triggerBus));
 
             var shape = _psFog.shape;
             shape.radius = _ratioFogSize * MAX_CIRCLES;
@@ -111,7 +113,9 @@ namespace Vurbiri.Colonization
             if (_edificePrefabs.Fullness < _edificePrefabs.Count)
                 _edificePrefabs.ReplaceRange(EUtility.FindPrefabs<AEdifice>());
 
+            EUtility.SetPrefab(ref _prefabHexMark);
             this.SetChildren(ref _psFog);
+            this.SetChildren(ref _landContainer, "Land");
             this.SetChildren(ref _crossroadsContainer, "Crossroads");
         }
 #endif

@@ -6,25 +6,18 @@ namespace Vurbiri.Colonization
     public class ActorInitData
 	{
         public readonly Id<PlayerId> owner;
-        public readonly bool isPersonOwned;
-        public readonly GameplayTriggerBus triggerBus;
         public readonly IReactive<IPerk>[] buffs;
 
-        public ActorInitData(Id<PlayerId> owner, Artefact artefact, WarriorPerks perks) : this(owner)
-        {
-            buffs = new IReactive<IPerk>[] { artefact, perks };
-        }
-
-        public ActorInitData(DemonLeveling leveling, Artefact artefact) : this(PlayerId.Satan)
-        {
-            buffs = new IReactive<IPerk>[] { leveling, artefact };
-        }
-
-        private ActorInitData(Id<PlayerId> owner)
+        public ActorInitData(Id<PlayerId> owner, WarriorPerks perks, Artefact artefact)
         {
             this.owner = owner;
-            isPersonOwned = owner == PlayerId.Person;
-            triggerBus = SceneContainer.Get<GameplayTriggerBus>();
+            buffs = new IReactive<IPerk>[] { perks, artefact };
+        }
+
+        public ActorInitData(DemonLeveling leveling, Artefact artefact)
+        {
+            owner = PlayerId.Satan;
+            buffs = new IReactive<IPerk>[] { leveling, artefact };
         }
     }
 }

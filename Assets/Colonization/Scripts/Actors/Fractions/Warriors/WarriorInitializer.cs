@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
 
         public Warrior Init(Id<WarriorId> id, ActorInitData initData, Material material, Hexagon startHex)
         {
-            _warrior.Init(_warriorsSettings[id], initData, _collider, startHex);
+            _warrior.Setup(_warriorsSettings[id], initData, _collider, startHex);
             return Setup(_warrior.Skin.Mesh, material);
         }
 
@@ -35,13 +35,10 @@ namespace Vurbiri.Colonization.Actors
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_warrior == null)
-                _warrior = GetComponent<Warrior>();
-            if (_collider == null)
-                _collider = GetComponent<BoxCollider>();
-
+            this.SetChildren(ref _warrior);
+            this.SetChildren(ref _collider);
             EUtility.SetScriptable(ref _warriorsSettings);
         }
 #endif
-        }
+    }
 }

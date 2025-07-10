@@ -34,7 +34,6 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            SpellBook.Clear();
             Player.Clear();
 
             for (int i = 0; i < PlayerId.Count; i++)

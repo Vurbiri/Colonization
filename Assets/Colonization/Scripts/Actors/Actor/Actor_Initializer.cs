@@ -23,7 +23,16 @@ namespace Vurbiri.Colonization.Actors
             return effects;
         }
 
-        public void Init(ActorSettings settings, ActorInitData initData, BoxCollider collider, Hexagon startHex)
+        public static void Init(Diplomacy diplomacy, GameplayTriggerBus triggerBus)
+        {
+            s_diplomacy = diplomacy; s_triggerBus = triggerBus;
+        }
+        public static void Clear()
+        {
+            s_diplomacy = null; s_triggerBus = null;
+        }
+
+        public void Setup(ActorSettings settings, ActorInitData initData, BoxCollider collider, Hexagon startHex)
         {
             _thisTransform = transform;
             _thisCollider  = collider;
@@ -56,9 +65,6 @@ namespace Vurbiri.Colonization.Actors
             _extentsZ = bounds.extents.z;
             #endregion
 
-            _triggerBus = initData.triggerBus;
-            _diplomacy = Player.States.diplomacy;
-
             #region Effects
             _effects = new(_abilities);
             _currentHP.Subscribe(hp => { if (hp <= 0) _deathCoroutine = StartCoroutine(Death_Cn()); });
@@ -79,7 +85,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void Load(ActorSettings settings, ActorInitData initData, BoxCollider collider, Hexagon startHex, ActorLoadData data)
         {
-            Init(settings, initData, collider, startHex);
+            Setup(settings, initData, collider, startHex);
 
             _currentHP.Set(data.state.currentHP);
             _currentAP.Set(data.state.currentAP);

@@ -12,15 +12,16 @@ namespace Vurbiri.Colonization
         #region Fields
         public const int HEX_COUNT = 3;
 
+        private static GameplayTriggerBus s_triggerBus;
+        private static IdSet<EdificeId, AEdifice> s_prefabs;
+
         private readonly Key _key;
         private AEdifice _edifice;
         private EdificeSettings _states;
         private Id<PlayerId> _owner = PlayerId.None;
         private bool _isWall = false;
         private readonly RBool _interactable = new(true);
-
-        private readonly GameplayTriggerBus _triggerBus;
-        private readonly IdSet<EdificeId, AEdifice> _prefabs;
+                
         private readonly List<Hexagon> _hexagons = new(HEX_COUNT);
         private readonly IdSet<LinkId, CrossroadLink> _links = new();
 
@@ -29,8 +30,6 @@ namespace Vurbiri.Colonization
         private WaitResultSource<Hexagon> _waitHexagon;
 
         private readonly RBool _canCancel = new();
-
-        private Unsubscription _unsubscriber;
         #endregion
 
         #region Property
@@ -50,17 +49,23 @@ namespace Vurbiri.Colonization
         public List<Hexagon> Hexagons => _hexagons;
         #endregion
 
-        public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation, IdSet<EdificeId, AEdifice> prefabs, GameplayTriggerBus triggerBus)
+        public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation)
         {
             _key = key;
             Position = position;
-            _prefabs = prefabs;
 
-            _triggerBus = triggerBus;
-
-            _edifice = Object.Instantiate(prefabs[EdificeId.Empty], position, rotation, container);
+            _edifice = Object.Instantiate(s_prefabs[EdificeId.Empty], position, rotation, container);
             _states = _edifice.Settings;
             _edifice.Selectable = this;
+        }
+
+        public static void Init(IdSet<EdificeId, AEdifice> prefabs, GameplayTriggerBus triggerBus)
+        {
+            s_prefabs = prefabs; s_triggerBus = triggerBus;
+        }
+        public static void Clear()
+        {
+            s_prefabs = null; s_triggerBus = null;
         }
 
         #region IInteractable
@@ -71,13 +76,13 @@ namespace Vurbiri.Colonization
         public void Select()
         {
             if (_interactable.Value)
-                _triggerBus.TriggerCrossroadSelect(this);
+                s_triggerBus.TriggerCrossroadSelect(this);
         }
         public void Unselect(ISelectable newSelectable)
         {
             if (!_interactable.Value) return;
             
-            _triggerBus.TriggerUnselect(Equals(newSelectable));
+            s_triggerBus.TriggerUnselect(Equals(newSelectable));
 
             if (_waitHexagon != null)
             {
@@ -232,7 +237,7 @@ namespace Vurbiri.Colonization
         {
             var oldEdifice = _edifice;
             _owner = playerId;
-            _edifice = Object.Instantiate(_prefabs[buildId]);
+            _edifice = Object.Instantiate(s_prefabs[buildId]);
 
             var signal = _edifice.Init(_owner, _isWall, _links, oldEdifice, isSFX);
             _states = _edifice.Settings;
@@ -366,7 +371,7 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            _unsubscriber?.Unsubscribe();
+            
         }
     }
 }

@@ -38,6 +38,13 @@ namespace Vurbiri.Colonization.UI
             get => _showDistance | _showProfit | _showMode & _isEnable;
         }
 
+        public int Id { set => _idText.text = value.ToString(); }
+        public Color IdColor
+        {
+            get => _idText.color;
+            set => _idText.color = value;
+        }
+
         public void Init(int id, IdFlags<CurrencyId> flags, Transform cameraTransform, ProjectColors colorSettings, GameplayEventBus eventBus)
         {
             _thisGameObject = gameObject;

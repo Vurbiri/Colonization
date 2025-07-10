@@ -4,6 +4,7 @@ namespace Vurbiri.Colonization
 {
     public class GameplayTriggerBus : GameplayEventBus
     {
+        public void TriggerHexagonSelect(Hexagon hexagon) => _hexagonSelect.Invoke(hexagon);
         public void TriggerCrossroadSelect(Crossroad crossroad) => _crossroadSelect.Invoke(crossroad);
         public void TriggerActorSelect(Actor actor) => _actorSelect.Invoke(actor);
         public void TriggerActorKill(Id<PlayerId> killer, Id<ActorTypeId> deadType, int deadId) => _actorKill.Invoke(killer, deadType, deadId);

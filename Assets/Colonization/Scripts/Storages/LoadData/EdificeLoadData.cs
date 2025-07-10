@@ -1,8 +1,5 @@
-using Newtonsoft.Json;
-
 namespace Vurbiri.Colonization.Storage
 {
-    [JsonConverter(typeof(Crossroad.Converter))]
     public class EdificeLoadData
 	{
 		public readonly Key key;

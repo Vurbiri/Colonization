@@ -12,11 +12,13 @@ namespace Vurbiri.Colonization.Actors
     public abstract partial class Actor : AReactiveItemMono<Actor>, IInteractable, IDisposable
     {
         #region Fields
+        private static Diplomacy s_diplomacy;
+        private static GameplayTriggerBus s_triggerBus;
+
         private Id<ActorTypeId> _typeId;
         private int _id;
         private Id<PlayerId> _owner;
         private bool _isPersonTurn;
-
         #region Abilities
         private AbilitiesSet<ActorAbilityId> _abilities;
         private SubAbility<ActorAbilityId> _currentHP;
@@ -31,8 +33,7 @@ namespace Vurbiri.Colonization.Actors
         private ActorSkin _skin;
         private Transform _thisTransform;
         private Collider _thisCollider;
-        private Diplomacy _diplomacy;
-        private GameplayTriggerBus _triggerBus;
+                
         private float _extentsZ;
 
         private EffectsSet _effects;
@@ -45,7 +46,6 @@ namespace Vurbiri.Colonization.Actors
         private ASkillState[] _skillState;
         #endregion
 
-        //private readonly Subscription<Id<PlayerId>, int> _eventKilled = new();
         private readonly RBool _interactable = new(false);
         private readonly RBool _canCancel = new(false);
 
@@ -97,7 +97,7 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
-        public Relation GetRelation(Id<PlayerId> id) => _diplomacy.GetRelation(id, _owner);
+        public Relation GetRelation(Id<PlayerId> id) => s_diplomacy.GetRelation(id, _owner);
         public bool IsCanUseSkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
             if(!(_stateMachine.IsDefaultState || _blockState.Enabled))
@@ -106,7 +106,7 @@ namespace Vurbiri.Colonization.Actors
                 return false;
             }
             
-            return _diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
+            return s_diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
         #region Effect
@@ -144,6 +144,17 @@ namespace Vurbiri.Colonization.Actors
         public void RemoveWallDefenceEffect() => _effects.Remove(ReactiveEffectsFactory.WallEffectCode);
         #endregion
 
+        public void SetHexagonSelectableForSwap()
+        {
+            _currentHex.SetSelectableForSwap();
+            Interactable = false;
+        }
+        public void SetHexagonsSelectableForSwap()
+        {
+            _currentHex.SetUnselectableForSwap();
+            Interactable = _stateMachine.IsDefaultState;
+        }
+
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
         sealed public override void Dispose()
@@ -159,7 +170,7 @@ namespace Vurbiri.Colonization.Actors
         private void ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
             _stateMachine.SetState(_targetState);
-            _diplomacy.ActorsInteraction(_owner, initiator, relation);
+            s_diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
 
         private void FromTargetState()
@@ -171,8 +182,6 @@ namespace Vurbiri.Colonization.Actors
             }
         }
         #endregion
-
-        private void Killed(Id<ActorTypeId> type, int id) => _triggerBus.TriggerActorKill(_owner, type, id);
 
         private IEnumerator Death_Cn()
         {

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Vurbiri.Colonization
@@ -17,7 +19,7 @@ namespace Vurbiri.Colonization
         public static readonly ReadOnlyCollection<Key> NEAR_TWO;
         public static readonly ReadOnlyCollection<Key> NEAR_THREE;
 
-        public static readonly ReadOnlyCollection<Key>[] NEARS;
+        public static readonly HearHexagons NEARS;
 
         static HEX()
         {
@@ -46,7 +48,26 @@ namespace Vurbiri.Colonization
             }
             NEAR_THREE = new(nearThree);
 
-            NEARS = new ReadOnlyCollection<Key>[] { NEAR, NEAR_TWO, NEAR_THREE };
+            NEARS = new (NEAR, NEAR_TWO, NEAR_THREE);
+        }
+
+        public class HearHexagons : IReadOnlyList<ReadOnlyCollection<Key>>
+        {
+            private readonly ReadOnlyCollection<Key>[] _values;
+
+            public Key Random => _values.Rand().Rand();
+
+            public int Count => 3;
+
+            public ReadOnlyCollection<Key> this[int index] => _values[index];
+
+            public HearHexagons(ReadOnlyCollection<Key> a, ReadOnlyCollection<Key> b, ReadOnlyCollection<Key> c)
+            {
+                _values = new ReadOnlyCollection<Key>[] { a, b, c };
+            }
+
+            public IEnumerator<ReadOnlyCollection<Key>> GetEnumerator() => new ArrayEnumerator<ReadOnlyCollection<Key>>(_values);
+            IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<ReadOnlyCollection<Key>>(_values);
         }
     }
 }

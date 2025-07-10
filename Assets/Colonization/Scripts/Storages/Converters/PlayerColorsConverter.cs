@@ -39,9 +39,9 @@ namespace Vurbiri.Colonization
                     {
                         color = colors._colors[i];
 
-                        writer.WriteValue(color.r);
-                        writer.WriteValue(color.g);
-                        writer.WriteValue(color.b);
+                        writer.WriteValue(Math.Round(color.r, 2));
+                        writer.WriteValue(Math.Round(color.g, 2));
+                        writer.WriteValue(Math.Round(color.b, 2));
                     }
                     writer.WriteEndArray();
                 }

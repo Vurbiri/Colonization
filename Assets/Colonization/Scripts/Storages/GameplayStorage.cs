@@ -12,6 +12,8 @@ namespace Vurbiri.Colonization.Storage
         {
             _isLoad = isLoad;
 
+            ContractResolver.Add(new GameLoop.Converter(), new Crossroad.Converter());
+
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 _humanStorages[i] = new(i, _storage, isLoad);
 

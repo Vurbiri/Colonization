@@ -4,12 +4,7 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed protected class IdleState : AState
         {
-            private readonly GameplayTriggerBus _triggerBus;
-
-            public IdleState(Actor parent) : base(parent) 
-            {
-                _triggerBus = parent._triggerBus;
-            }
+            public IdleState(Actor parent) : base(parent) { }
 
             public override void Enter()
             {
@@ -22,10 +17,10 @@ namespace Vurbiri.Colonization.Actors
                 _actor.Interactable = false;
             }
 
-            public override void Select() => _triggerBus.TriggerActorSelect(_actor);
+            public override void Select() => s_triggerBus.TriggerActorSelect(_actor);
             public override void Unselect(ISelectable newSelectable)
             {
-                _triggerBus.TriggerUnselect(_actor.Equals(newSelectable));
+                s_triggerBus.TriggerUnselect(_actor.Equals(newSelectable));
             }
         }
     }

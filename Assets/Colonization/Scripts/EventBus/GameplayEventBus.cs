@@ -5,6 +5,7 @@ namespace Vurbiri.Colonization
 {
     public abstract class GameplayEventBus
     {
+        protected readonly Subscription<Hexagon> _hexagonSelect = new();
         protected readonly Subscription<Crossroad> _crossroadSelect = new();
         protected readonly Subscription<Actor> _actorSelect = new();
         protected readonly Subscription<Id<PlayerId>, Id<ActorTypeId>, int> _actorKill = new();
@@ -13,6 +14,7 @@ namespace Vurbiri.Colonization
         protected readonly Subscription<bool> _hexagonShowDistance = new();
         protected readonly Subscription<bool> _hexagonShow = new();
 
+        public ISubscription<Hexagon> EventHexagonSelect => _hexagonSelect;
         public ISubscription<Crossroad> EventCrossroadSelect => _crossroadSelect;
         public ISubscription<Actor> EventActorSelect => _actorSelect;
         public ISubscription<Id<PlayerId>, Id<ActorTypeId>, int> EventActorKill => _actorKill;

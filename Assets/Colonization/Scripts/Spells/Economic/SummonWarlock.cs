@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using UnityEngine;
 using Vurbiri.Colonization.Actors;
+using static Vurbiri.Colonization.HEX;
 
 namespace Vurbiri.Colonization
 {
@@ -10,16 +10,13 @@ namespace Vurbiri.Colonization
         sealed private class SummonWarlock : ASharedSpell
         {
             private readonly int _max;
-            private readonly Hexagons _hexagons;
 
-            private SummonWarlock(Hexagons hexagons)
+            private SummonWarlock()
             {
-                _hexagons = hexagons;
-                _max = hexagons.GroundCount / 3;
-                Debug.Log($"GroundCount: {hexagons.GroundCount}");
+                _max = s_hexagons.GroundCount / 2;
             }
 
-            public static void Create(Hexagons hexagons) => s_sharedSpells[TypeOfPerksId.Economic][EconomicSpellId.SummonWarlock] = new SummonWarlock(hexagons);
+            public static void Create() => s_sharedSpells[TypeOfPerksId.Economic][EconomicSpellId.SummonWarlock] = new SummonWarlock();
 
             public override bool Cast(SpellParam param, CurrenciesLite resources)
             {
@@ -30,24 +27,24 @@ namespace Vurbiri.Colonization
                 for (int i = 0; i < PlayerId.Count; i++)
                     count += s_actors[i].Count;
 
-                if (count == _hexagons.GroundCount) 
+                if (count == s_hexagons.GroundCount) 
                     return false;
 
                 Hexagon hexagon;
                 if (count <= _max)
                 {
-                    while (!(hexagon = _hexagons[HEX.NEARS.Rand().Rand()]).CanWarriorEnter) ;
+                    while (!(hexagon = s_hexagons[HEX.NEARS.Random]).CanWarriorEnter);
                 }
                 else
                 {
-                    List<Hexagon> free = new(_hexagons.GroundCount - count);
+                    List<Hexagon> free = new(s_hexagons.GroundCount - count);
                     ReadOnlyCollection<Key> keys;
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < NEARS.Count; i++)
                     {
                         keys = HEX.NEARS[i];
                         for (int j = keys.Count - 1; j >= 0; j--)
                         {
-                            hexagon = _hexagons[keys[j]];
+                            hexagon = s_hexagons[keys[j]];
                             if (hexagon.CanWarriorEnter)
                                 free.Add(hexagon);
                         }
@@ -56,6 +53,7 @@ namespace Vurbiri.Colonization
                 }
 
                 s_humans[param.playerId].RecruitingFree(WarriorId.Warlock, hexagon);
+                s_cameraController.ToPosition(hexagon.Position);
 
                 return true;
             }

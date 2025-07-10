@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
@@ -7,7 +8,7 @@ namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public class Crossroads
+    public class Crossroads : IDisposable
     {
         private readonly Dictionary<Key, Crossroad> _crossroads = new(MAX_CROSSROADS);
 
@@ -15,8 +16,6 @@ namespace Vurbiri.Colonization
         private readonly HashSet<Crossroad> _gate = new(HEX.SIDES);
 
         private Transform _container;
-        private IdSet<EdificeId, AEdifice> _prefabs;
-        private readonly GameplayTriggerBus _triggerBus;
        
         private Vector3[] _vertices = new Vector3[HEX_COUNT_VERTICES];
         private Quaternion[] _angles = { Quaternion.Euler(0, 180, 0), Quaternion.identity };
@@ -28,8 +27,8 @@ namespace Vurbiri.Colonization
         public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs, GameplayTriggerBus triggerBus)
         {
             _container = container;
-            _prefabs = prefabs;
-            _triggerBus = triggerBus;
+
+            Crossroad.Init(prefabs, triggerBus);
 
             for (int i = 0; i < HEX_COUNT_VERTICES; i++)
                 _vertices[i] = HEX_RADIUS_OUT * VERTEX_DIRECTIONS[i];
@@ -49,7 +48,7 @@ namespace Vurbiri.Colonization
                     if (isLastCircle)
                         continue;
 
-                    cross = new(key, _container, position, _angles[i % 2], _prefabs, _triggerBus);
+                    cross = new(key, _container, position, _angles[i % 2]);
                     _crossroads.Add(key, cross);
                 }
 
@@ -71,7 +70,6 @@ namespace Vurbiri.Colonization
         public void EndCreate()
         {
             _container = null;
-            _prefabs = null;
             _vertices = null;
             _angles = null;
 
@@ -80,7 +78,7 @@ namespace Vurbiri.Colonization
 
         public Crossroad GetRandomPort()
         {
-            int i = Random.Range(0, _breach.Count);
+            int i = UnityEngine.Random.Range(0, _breach.Count);
             foreach ( var breach in _breach )
                 if (i-- == 0) return breach;
             return null;
@@ -90,6 +88,11 @@ namespace Vurbiri.Colonization
         {
             edificesReactive[EdificeGroupId.Port].Subscribe(OnAddPort, instantGetValue);
             edificesReactive[EdificeGroupId.Shrine].Subscribe((_, cross, _) => _gate.Remove(cross), instantGetValue);
+        }
+
+        public void Dispose()
+        {
+            Crossroad.Clear();
         }
 
         private void OnAddPort(int index, Crossroad crossroad, TypeEvent operation)
