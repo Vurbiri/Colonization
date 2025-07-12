@@ -126,6 +126,13 @@ namespace Vurbiri.Colonization
 
         public void SetCaptionActive(bool active) => _hexagonCaption.SetActive(active);
 
+        public void NewId(int id, Color color)
+        {
+            _id = id;
+            _hexagonCaption.NewId(id, color);
+            _changeID.Invoke(id);
+        }
+
         #region Profit
         public bool SetProfitAndTryGetFreeProfit(out int currencyId)
         {

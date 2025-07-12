@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
             int countBuffs = 0;
             CurrenciesLite profit = new();
             bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
-            foreach (var warrior in _actors)
+            foreach (var warrior in _warriors)
             {
                 if (warrior.IsMainProfit)
                     profit.IncrementMain(warrior.Hexagon.SurfaceId);
@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization
 
         public void OnStartTurn()
         {
-            foreach (var warrior in _actors)
+            foreach (var warrior in _warriors)
                 warrior.EffectsUpdate();
 
             _exchange.Update();

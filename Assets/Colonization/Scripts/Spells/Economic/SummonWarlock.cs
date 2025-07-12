@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        sealed private class SummonWarlock : ASharedSpell
+        sealed private class SummonWarlock : ASpell
         {
             private readonly int _max;
 
@@ -16,19 +16,19 @@ namespace Vurbiri.Colonization
                 _max = s_hexagons.GroundCount / 2;
             }
 
-            public static void Create() => s_sharedSpells[TypeOfPerksId.Economic][EconomicSpellId.SummonWarlock] = new SummonWarlock();
+            public static void Create() => s_spells[TypeOfPerksId.Economic][EconomicSpellId.SummonWarlock] = new SummonWarlock();
 
-            public override bool Cast(SpellParam param, CurrenciesLite resources)
+            public override void Cast(SpellParam param, CurrenciesLite resources)
             {
                 if (s_humans[param.playerId].IsMaxWarriors)
-                    return false;
+                    return;
 
                 int count = 0;
                 for (int i = 0; i < PlayerId.Count; i++)
                     count += s_actors[i].Count;
 
                 if (count == s_hexagons.GroundCount) 
-                    return false;
+                    return;
 
                 Hexagon hexagon;
                 if (count <= _max)
@@ -52,10 +52,10 @@ namespace Vurbiri.Colonization
                     hexagon = free.Rand();
                 }
 
+                s_humans[param.playerId].AddResources(resources);
                 s_humans[param.playerId].RecruitingFree(WarriorId.Warlock, hexagon);
-                s_cameraController.ToPosition(hexagon.Position);
 
-                return true;
+                s_cameraController.ToPosition(hexagon.Position);
             }
         }
     }

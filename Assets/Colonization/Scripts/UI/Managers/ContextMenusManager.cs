@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Controllers;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -21,12 +20,11 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ButtonCancel _buttonCancel;
 
         private CameraTransform _cameraTransform;
-        private bool _isPlayerTurn, _lookAtEnabled;
+        private bool _enable, _isNotCast, _lookAtEnabled;
         private IMenu _currentOpenMenu;
 
         private GameEvents _game;
         private GameplayEventBus _eventBus;
-        private Unsubscription _unsubscription;
 
         public void Init(ContextMenuSettings settings)
         {
@@ -39,6 +37,8 @@ namespace Vurbiri.Colonization.UI
             _warriorsMenu  .Init(settings).Add(OnActiveMenu);
 
             settings.cameraTransform.Subscribe(LookAtCamera);
+
+            settings.player.SpellBook.IsCastReactive.Subscribe(value => _isNotCast = !value);
 
             settings.game.Subscribe(GameModeId.EndTurn, OnEndTurn);
             settings.game.Subscribe(GameModeId.Play, OnGamePlay);
@@ -54,18 +54,18 @@ namespace Vurbiri.Colonization.UI
 
                 _eventBus = settings.eventBus;
                 _initMenu.Init(settings).Add(OnActiveMenu);
-                _unsubscription = _eventBus.EventCrossroadSelect.Add(OnInitCrossroad);
+                _eventBus.EventCrossroadSelect.Add(OnInitCrossroad);
             }
             else
             {
                 settings.eventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
-                _initMenu = null;
+                Object.Destroy(_initMenu.gameObject);  _initMenu = null;
             }
         }
 
         private void OnSelectCrossroad(Crossroad crossroad)
         {
-            if (_isPlayerTurn & crossroad.Interactable & _currentOpenMenu == null)
+            if (_enable & _isNotCast & crossroad.Interactable & _currentOpenMenu == null)
             {
                 _cameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
                 _crossroadMenu.Open(crossroad);
@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnInitCrossroad(Crossroad crossroad)
         {
-            if (_isPlayerTurn & crossroad.Interactable & _currentOpenMenu == null)
+            if (_enable & _isNotCast & crossroad.Interactable & _currentOpenMenu == null)
             {
                 _cameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
                 _initMenu.Open(crossroad);
@@ -84,7 +84,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnSelectWarrior(Actor actor)
         {
-            if (actor.Interactable & _currentOpenMenu == null)
+            if (_enable & _isNotCast & actor.Interactable & _currentOpenMenu == null)
             {
                 _cameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, actor.Position);
                 _warriorsMenu.Open(actor);
@@ -97,31 +97,31 @@ namespace Vurbiri.Colonization.UI
             if (!isEquals & _currentOpenMenu != null)
                 _currentOpenMenu.CloseInstant();
         }
-
         private void OnEndTurn(TurnQueue turnQueue, int dice)
         {
-            _isPlayerTurn = false;
+            _enable = false;
             OnClose(false);
         }
         private void OnGamePlay(TurnQueue turnQueue, int dice)
         {
-            _isPlayerTurn = turnQueue.IsPerson;
+            _enable = turnQueue.IsPerson;
         }
         private void OnInit(TurnQueue turnQueue, int dice)
         {
-            _isPlayerTurn = turnQueue.IsPerson;
+            _enable = turnQueue.IsPerson;
         }
 
         private void OnEndInit(TurnQueue turnQueue, int dice)
         {
-            _isPlayerTurn = false;
+            _enable = false;
 
             _game.Unsubscribe(GameModeId.Landing, OnInit);
             _game.Unsubscribe(GameModeId.EndLanding, OnEndInit);
-            _unsubscription.Unsubscribe();
+
+            _eventBus.EventCrossroadSelect.Remove(OnInitCrossroad);
             _eventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
 
-            _unsubscription = null; _game = null; _eventBus = null; _initMenu = null;
+           _game = null; _eventBus = null; _initMenu = null;
         }
 
         private void LookAtCamera(Transform cameraTransform)

@@ -5,52 +5,68 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        sealed private class SwapId : ASharedSpell
+        sealed private class SwapId : ASpell
         {
             private readonly WaitResultSource<Hexagon> _waitHexagon = new();
-            private readonly CurrenciesLite _cost = new();
             private Unsubscription _unsubscription;
+            private Hexagon _selectedA;
 
-            private SwapId() 
-            {
-                _cost.Add(CurrencyId.Mana, -s_costs[TypeOfPerksId.Military][MilitarySpellId.SwapId]);
-            }
-            public static void Create() => s_sharedSpells[TypeOfPerksId.Military][MilitarySpellId.SwapId] = new SwapId();
+            private SwapId() { }
+            public static void Create() => s_spells[TypeOfPerksId.Military][MilitarySpellId.SwapId] = new SwapId();
 
-            public override bool Cast(SpellParam param, CurrenciesLite resources)
+            public override void Cast(SpellParam param, CurrenciesLite resources)
             {
                 if (s_actors[param.playerId].Count < 2)
-                    return false;
+                    return;
 
-                if(param.playerId == PlayerId.Person)
+                if (s_actors[param.playerId].Count == 2)
                 {
                     foreach (var actor in s_actors[param.playerId])
+                    {
+                        if(_selectedA == null)
+                            _selectedA = actor.Hexagon;
+                        else
+                            Swap(param.playerId, actor.Hexagon, resources);
+                    }
+                    return;
+                }
+
+                s_coroutines.Run(Cast_Cn(param.playerId, resources));
+               
+            }
+
+            private IEnumerator Cast_Cn(int playerId, CurrenciesLite resources)
+            {
+                if (playerId == PlayerId.Person)
+                {
+                    foreach (var actor in s_actors[playerId])
                         actor.SetHexagonSelectableForSwap();
                 }
 
-                s_coroutines.Run(Cast_Cn(param.playerId));
-
-                _waitHexagon.Cancel();
                 _unsubscription = s_triggerBus.EventHexagonSelect.Add(hexagon => _waitHexagon.SetResult(hexagon));
 
-                return false;
-            }
+                yield return _waitHexagon.Cancel();
+                _selectedA = _waitHexagon.Value;
+                _selectedA.SetSelectedForSwap(s_settings.swapHexColor);
 
-            private IEnumerator Cast_Cn(int playerId)
-            {
-                Hexagon selectedA, selectedB;
-
-                yield return _waitHexagon;
-                selectedA = _waitHexagon.Value;
-                selectedA.SetSelectedForSwap(s_settings.swapHexColor);
-
-                _waitHexagon.Cancel();
-                yield return _waitHexagon;
-                selectedB = _waitHexagon.Value;
-
+                yield return _waitHexagon.Cancel();
                 _unsubscription.Unsubscribe();
+
+                if (playerId == PlayerId.Person)
+                {
+                    foreach (var actor in s_actors[playerId])
+                        actor.SetHexagonUnselectableForSwap();
+                }
+
+                Swap(playerId, _waitHexagon.Value, resources);
             }
 
+            private void Swap(int playerId, Hexagon selectedB, CurrenciesLite resources)
+            {
+                s_hexagons.SwapId(_selectedA, selectedB, s_settings.swapHexColor);
+                s_humans[playerId].AddResources(resources);
+                _selectedA = null;
+            }
         }
     }
 }

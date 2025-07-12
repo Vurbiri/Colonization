@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
         protected readonly PerkTree _perks;
 
         protected readonly WarriorsSpawner _spawner;
-        protected readonly ReactiveSet<Actor> _actors = new(CONST.DEFAULT_MAX_ACTORS);
+        protected readonly ReactiveSet<Actor> _warriors = new(CONST.DEFAULT_MAX_ACTORS);
         protected readonly Unsubscription _unsubscriber;
         #endregion
 
@@ -33,13 +33,14 @@ namespace Vurbiri.Colonization
         public ACurrenciesReactive Resources => _resources;
         public ExchangeRate Exchange => _exchange;
 
-        public ReadOnlyReactiveSet<Actor> Warriors => _actors;
-        public bool IsMaxWarriors => _abilities.IsGreater(MaxWarrior, _actors.Count);
+        public ReadOnlyReactiveSet<Actor> Warriors => _warriors;
+        public bool IsMaxWarriors => _abilities.IsGreater(MaxWarrior, _warriors.Count);
 
         public Roads Roads => _roads;
 
         public Artefact Artefact => _artefact;
         public PerkTree Perks => _perks;
+        public SpellBook SpellBook => _spellBook;
 
         public Human(int playerId, Settings settings) : base(playerId)
         {
@@ -65,7 +66,7 @@ namespace Vurbiri.Colonization
                 storage.PopulateRoads(_roads, s_crossroads);
 
                 for (int i = loadData.actors.Count - 1; i >= 0; i--)
-                    _actors.Add(_spawner.Load(loadData.actors[i], s_hexagons));
+                    _warriors.Add(_spawner.Load(loadData.actors[i], s_hexagons));
             }
             else
             {
@@ -74,7 +75,7 @@ namespace Vurbiri.Colonization
 
             _spellBook = new(this);
 
-            s_states.balance.BindWarriors(_actors);
+            s_states.balance.BindWarriors(_warriors);
             s_states.balance.BindShrines(_edifices.shrines);
             s_states.balance.BindBlood(_resources.Get(CurrencyId.Blood));
 
@@ -85,7 +86,7 @@ namespace Vurbiri.Colonization
             storage.BindRoads(_roads, instantGetValue);
             storage.BindArtefact(_artefact, instantGetValue);
             storage.BindEdifices(_edifices.edifices, instantGetValue);
-            storage.BindActors(_actors);
+            storage.BindActors(_warriors);
             storage.LoadData = null;
 
             s_crossroads.BindEdifices(_edifices.edifices, instantGetValue);
@@ -94,12 +95,6 @@ namespace Vurbiri.Colonization
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
 
         public ReadOnlyReactiveList<Crossroad> GetEdifices(Id<EdificeGroupId> id) => _edifices.edifices[id];
-
-        public void BuyCast(int type, int id, SpellParam param)
-        {
-            param.playerId = _id;
-            _resources.Add(_spellBook.Cast(type, id, _resources[CurrencyId.Mana], param));
-        }
 
         public void BuyPerk(int typePerk, int idPerk)
         {
@@ -169,7 +164,7 @@ namespace Vurbiri.Colonization
         #region Warriors
         public bool CanAnyRecruiting(Crossroad crossroad)
         {
-            return _abilities.IsGreater(MaxWarrior, _actors.Count) && crossroad.CanRecruiting(_id);
+            return _abilities.IsGreater(MaxWarrior, _warriors.Count) && crossroad.CanRecruiting(_id);
         }
         public bool CanRecruiting(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
 
@@ -184,7 +179,7 @@ namespace Vurbiri.Colonization
             Warrior warrior = _spawner.Create(id, hexagon);
             warrior.IsPersonTurn = _isPerson;
 
-            _actors.Add(warrior);
+            _warriors.Add(warrior);
         }
 
         protected IEnumerator Recruiting_Cn(Id<WarriorId> id, Crossroad crossroad)
@@ -203,7 +198,7 @@ namespace Vurbiri.Colonization
         {
             _unsubscriber.Unsubscribe();
             _exchange.Dispose();
-            _actors.Dispose();
+            _warriors.Dispose();
         }
     }
 }

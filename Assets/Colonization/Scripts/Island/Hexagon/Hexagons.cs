@@ -45,6 +45,20 @@ namespace Vurbiri.Colonization
             return hex;
         }
 
+        public void SwapId(Hexagon hexA, Hexagon hexB, UnityEngine.Color color)
+        {
+            int idA = hexA.ID, idB = hexB.ID;
+
+            hexA.NewId(idB, color); hexB.NewId(idA, color);
+
+            var keys = _hexagonsIdForKey[idA];
+            keys.Remove(hexA.Key); keys.Add(hexB.Key);
+            keys = _hexagonsIdForKey[idB];
+            keys.Remove(hexB.Key); keys.Add(hexA.Key);
+
+            _eventChanged.Invoke(hexA); _eventChanged.Invoke(hexB);
+        }
+
         public Unsubscription Subscribe(Action<Hexagon> action, bool instantGetValue = true) => _eventChanged.Add(action);
 
         public void Dispose()

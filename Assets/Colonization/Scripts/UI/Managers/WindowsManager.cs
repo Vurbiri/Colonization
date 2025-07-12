@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
             _windows = new IWindow[] { _perksWindow, _exchangeWindow };
             _inputController = init.inputController;
 
-            Human player = init.players.Person;
+            var player = init.players.Person;
 
             Debug.Log("WindowsManager - убрать комментарии - /*, false*/");
 
@@ -42,24 +42,25 @@ namespace Vurbiri.Colonization.UI
             _perksWindow.OnOpen.Add(_exchangeWindow.Close);
             _exchangeWindow.OnOpen.Add(_perksWindow.Close);
 
-            init.game.Subscribe(GameModeId.EndTurn, OnEndTurn);
-            init.game.Subscribe(GameModeId.Play, OnPlay);
+            player.Interactable.Subscribe(OnInteractable);
 
             _perksWindow = null; _exchangeWindow = null;
         }
-        private void OnPlay(TurnQueue turnQueue, int hexId)
-        {
-            if (turnQueue.IsNotPerson) return;
 
-            for (int i = 0; i < COUNT; i++)
-                _buttons[i].Interactable = true;
-        }
-        private void OnEndTurn(TurnQueue turnQueue, int hexId)
+        private void OnInteractable(bool interactable)
         {
-            for (int i = 0; i < COUNT; i++)
+            if (interactable)
             {
-                _buttons[i].Interactable = false;
-                _windows[i].Close();
+                for (int i = 0; i < COUNT; i++)
+                    _buttons[i].Interactable = true;
+            }
+            else
+            {
+                for (int i = 0; i < COUNT; i++)
+                {
+                    _buttons[i].Interactable = false;
+                    _windows[i].Close();
+                }
             }
         }
 

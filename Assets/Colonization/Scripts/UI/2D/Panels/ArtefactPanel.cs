@@ -35,7 +35,11 @@ namespace Vurbiri.Colonization.UI
         public void Test()
         {
             //_artefact.Next(UnityEngine.Random.Range(2, 10));
-            _player.Roads.RemoveDeadEnds();
+            //_player.Roads.RemoveDeadEnds();
+            CurrenciesLite resources = new();
+            resources.Set(CurrencyId.Mana, -2);
+            resources.Mix(_player.Resources);
+            _player.AddResources(resources);
         }
         // TEST
 

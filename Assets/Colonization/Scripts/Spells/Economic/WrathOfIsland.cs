@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        sealed private class WrathOfIsland : ASharedSpell
+        sealed private class WrathOfIsland : ASpell
         {
             private readonly EffectCode _attackEffectCode  = new(SPELL_TYPE, TypeOfPerksId.Economic, WRATH_SKILL_ID, 0);
             private readonly SpellDamager _damage;
@@ -20,9 +20,9 @@ namespace Vurbiri.Colonization
                 _damage = new (sfx);
             }
 
-            public static void Create(IHitSFX sfx) => s_sharedSpells[TypeOfPerksId.Economic][EconomicSpellId.Wrath] = new WrathOfIsland(sfx);
+            public static void Create(IHitSFX sfx) => s_spells[TypeOfPerksId.Economic][EconomicSpellId.Wrath] = new WrathOfIsland(sfx);
 
-            public override bool Cast(SpellParam param, CurrenciesLite resources)
+            public override void Cast(SpellParam param, CurrenciesLite resources)
             {
                 _targets.Clear();
                 for (int i = 0, surface; i < PlayerId.HumansCount; i++)
@@ -34,6 +34,7 @@ namespace Vurbiri.Colonization
                             _targets.Add(actor);
                     }
                 }
+
                 if (_targets.Count > 0)
                 {
                     _damage.playerId = param.playerId;
@@ -42,16 +43,18 @@ namespace Vurbiri.Colonization
                     s_coroutines.Run(Cast_Cn());
 
                     resources.Add(CurrencyId.Wood, -param.valueA); resources.Add(CurrencyId.Ore, -param.valueB);
-                    return true;
+                    s_humans[param.playerId].AddResources(resources);
                 }
-
-                return false;
             }
 
             private IEnumerator Cast_Cn()
             {
+                s_isCast.True();
+
                 for (int i = _targets.Count - 1; i >= 0; i--)
                     yield return _damage.Apply_Cn(_targets[i]);
+
+                s_isCast.False();
             }
         }
 

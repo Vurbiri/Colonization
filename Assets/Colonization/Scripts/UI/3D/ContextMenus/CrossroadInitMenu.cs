@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -75,10 +74,8 @@ namespace Vurbiri.Colonization.UI
 
         private void OnValidate()
         {
-            if (_buttonClose == null)
-                _buttonClose = GetComponentInChildren<WorldHintButton>();
-            if (_buttonInit == null)
-                _buttonInit = GetComponentInChildren<ButtonInit>();
+            this.SetChildren(ref _buttonClose);
+            this.SetChildren(ref _buttonInit);
         }
 #endif
 

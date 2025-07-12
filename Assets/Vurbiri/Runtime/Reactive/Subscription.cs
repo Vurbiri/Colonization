@@ -7,7 +7,7 @@ namespace Vurbiri.Reactive
     {
         protected Action actions;
 
-        public Subscription() => actions += Empty;
+        public Subscription() => actions = Empty;
 
         public Unsubscription Add(Action action)
         {
@@ -21,6 +21,7 @@ namespace Vurbiri.Reactive
         public void Invoke() => actions();
 
         public void Remove(Action action) => actions -= action;
+        public void Clear() => actions = Empty;
 
         private static void Empty() { }
     }
@@ -30,7 +31,7 @@ namespace Vurbiri.Reactive
     {
         protected Action<T> actions;
 
-        public Subscription() => actions += Empty;
+        public Subscription() => actions = Empty;
 
         public Unsubscription Add(Action<T> action)
         {
@@ -124,6 +125,7 @@ namespace Vurbiri.Reactive
         public void Invoke(T value) => actions.Invoke(value);
 
         public void Remove(Action<T> action) => actions -= action;
+        public void Clear() => actions = Empty;
 
         private static void Empty(T t) { }
     }
@@ -132,7 +134,7 @@ namespace Vurbiri.Reactive
     {
         protected Action<TA, TB> actions;
 
-        public Subscription() => actions += Empty;
+        public Subscription() => actions = Empty;
 
         public Unsubscription Add(Action<TA, TB> action)
         {
@@ -168,6 +170,7 @@ namespace Vurbiri.Reactive
         public void Invoke(TA valueA, TB valueB) => actions.Invoke(valueA, valueB);
 
         public void Remove(Action<TA, TB> action) => actions -= action;
+        public void Clear() => actions = Empty;
 
         private static void Empty(TA ta, TB tb) { }
     }
@@ -176,7 +179,7 @@ namespace Vurbiri.Reactive
     {
         protected Action<TA, TB, TC> actions;
 
-        public Subscription() => actions += Empty;
+        public Subscription() => actions = Empty;
 
         public Unsubscription Add(Action<TA, TB, TC> action)
         {
@@ -212,6 +215,7 @@ namespace Vurbiri.Reactive
         public void Invoke(TA valueA, TB valueB, TC valueC) => actions.Invoke(valueA, valueB, valueC);
 
         public void Remove(Action<TA, TB, TC> action) => actions -= action;
+        public void Clear() => actions = Empty;
 
         private static void Empty(TA ta, TB tb, TC tc) { }
     }
@@ -220,7 +224,7 @@ namespace Vurbiri.Reactive
     {
         protected Action<TA, TB, TC, TD> actions;
 
-        public Subscription() => actions += Empty;
+        public Subscription() => actions = Empty;
 
         public Unsubscription Add(Action<TA, TB, TC, TD> action)
         {
@@ -256,6 +260,7 @@ namespace Vurbiri.Reactive
         public void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => actions.Invoke(valueA, valueB, valueC, valueD);
 
         public void Remove(Action<TA, TB, TC, TD> action) => actions -= action;
+        public void Clear() => actions = Empty;
 
         private static void Empty(TA ta, TB tb, TC tc, TD td) { }
     }

@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 {
 	public partial class SpellBook
 	{
-        sealed private class HealRandomActor : ASharedSpell
+        sealed private class HealRandomActor : ASpell
         {
             private readonly Effect _heal;
             private readonly IHitSFX _sfx;
@@ -18,9 +18,9 @@ namespace Vurbiri.Colonization
 				_heal = new(ActorAbilityId.CurrentHP, TypeModifierId.TotalPercent, s_settings.healRandomValue);
                 _sfx = sfx;
             }
-            public static void Create(IHitSFX sfx) => s_sharedSpells[TypeOfPerksId.Military][MilitarySpellId.HealRandom] = new HealRandomActor(sfx);
+            public static void Create(IHitSFX sfx) => s_spells[TypeOfPerksId.Military][MilitarySpellId.HealRandom] = new HealRandomActor(sfx);
 
-            public override bool Cast(SpellParam param, CurrenciesLite resources)
+            public override void Cast(SpellParam param, CurrenciesLite resources)
             {
                 _wounded.Clear();
                 for (int i = 0; i < PlayerId.Count; i++)
@@ -33,19 +33,19 @@ namespace Vurbiri.Colonization
                 }
 
                 if (_wounded.Count > 0)
-                {
-                    s_coroutines.Run(Cast_Cn(_wounded.Rand()));
-                    return true;
-                }
-
-                return false;
+                    s_coroutines.Run(Cast_Cn(_wounded.Rand(), param.playerId, resources));
             }
 
-            private IEnumerator Cast_Cn(Actor target)
+            private IEnumerator Cast_Cn(Actor target, int playerId, CurrenciesLite resources)
             {
+                s_isCast.True();
+
                 yield return s_cameraController.ToPosition(target.Position);
                 _sfx.Hit(target.Skin);
                 target.ApplyEffect(_heal);
+
+                s_humans[playerId].AddResources(resources);
+                s_isCast.False();
             }
         }
 	}

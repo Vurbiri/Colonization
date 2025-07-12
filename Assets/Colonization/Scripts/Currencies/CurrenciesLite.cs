@@ -91,12 +91,38 @@ namespace Vurbiri.Colonization
             _amount += count;
         }
 
+        public void Mix(ACurrencies other, int idMax = MainCount - 1)
+        {
+            int count = 0;
+            for (int i = 0; i < idMax; i++)
+            {
+                count += other[i] + _values[i];
+                _values[i] = -other[i];
+            }
+
+            int add, addMax;
+            while (count > 0)
+            {
+                addMax = 2 + count >> 2;
+                _values[Random.Range(0, idMax)] += (add = Random.Range(1, addMax));
+                count -= add;
+            }
+        }
+
         public void Clear()
         {
             for (int i = 0; i < AllCount; i++)
                 _values[i] = 0;
 
             _amount = 0;
+        }
+
+        public void Clear(int index)
+        {
+            if (index != Blood)
+                _amount -= _values[index];
+
+            _values[index] = 0;
         }
 
         public override IEnumerator<int> GetEnumerator()

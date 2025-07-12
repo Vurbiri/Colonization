@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.EntryPoint;
+using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 using static Vurbiri.Colonization.TypeOfPerksId;
 
@@ -14,17 +15,22 @@ namespace Vurbiri.Colonization
 
         private static readonly Human[] s_humans = new Human[PlayerId.HumansCount];
         private static readonly ReadOnlyReactiveSet<Actor>[] s_actors = new ReactiveSet<Actor>[PlayerId.Count];
-        private static readonly ASharedSpell[][] s_sharedSpells = { new ASharedSpell[EconomicSpellId.Count], new ASharedSpell[MilitarySpellId.Count] };
+        private static readonly ASpell[][] s_spells = { new ASpell[EconomicSpellId.Count], new ASpell[MilitarySpellId.Count] };
+
+        private static readonly RBool s_isCast = new(false);
 
         private static GameplayTriggerBus s_triggerBus;
         private static Coroutines s_coroutines;
         private static CameraController s_cameraController;
         private static Hexagons s_hexagons;
 
+        private readonly ICurrency _mana;
         private readonly CurrenciesLite _resources = new();
-        private readonly APlayerSpell[][] _spells = { new APlayerSpell[EconomicSpellId.Count], new APlayerSpell[MilitarySpellId.Count] };
 
         public static SpellCosts Costs => s_costs;
+
+        public RBool IsCastReactive => s_isCast;
+        public bool IsCast { get => s_isCast.Value; set => s_isCast.Value = value; }
 
         static SpellBook()
         {
@@ -39,18 +45,20 @@ namespace Vurbiri.Colonization
             
             s_humans[id] = human;
             s_actors[id] = human.Warriors;
+
+            _mana = human.Resources.Get(CurrencyId.Mana);
         }
 
-        public CurrenciesLite Cast(int type, int id, int mana, SpellParam param)
+        public void Cast(int type, int id, SpellParam param)
         {
-            _resources.Clear();
-
             int cost = s_costs[type][id];
-            ASpell spell = s_sharedSpells[type][id]; spell ??= _spells[type][id];
-            if (mana >= cost && spell.Cast(param, _resources))
-                _resources.Add(CurrencyId.Mana, -cost);
 
-            return _resources;
+            if (_mana.Value >= cost & s_isCast)
+            {
+                _resources.Clear();
+                _resources.Set(CurrencyId.Mana, -cost);
+                s_spells[type][id].Cast(param, _resources);
+            }
         }
 
         public static void Init(GameplayInitObjects init)
@@ -73,6 +81,8 @@ namespace Vurbiri.Colonization
 
         public static void Clear()
         {
+            s_isCast.UnsubscribeAll();
+
             for (int i = 0; i < PlayerId.HumansCount; i++)
             {
                 s_humans[i] = null; 
@@ -83,11 +93,12 @@ namespace Vurbiri.Colonization
             s_coroutines = null; s_triggerBus = null; s_cameraController = null; s_hexagons = null;
 
             for (int i = 0; i < EconomicSpellId.Count; i++)
-                s_sharedSpells[Economic][i] = null;
+                s_spells[Economic][i] = null;
             for (int i = 0; i < MilitarySpellId.Count; i++)
-                s_sharedSpells[Military][i] = null;
+                s_spells[Military][i] = null;
         }
     }
+
     public class SpellCosts : ReadOnlyCollection<ReadOnlyCollection<int>>
     {
         public SpellCosts(ReadOnlyCollection<int> e, ReadOnlyCollection<int> m) : base(new ReadOnlyCollection<int>[] { e, m }) { }

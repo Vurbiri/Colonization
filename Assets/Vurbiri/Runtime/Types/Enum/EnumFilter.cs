@@ -85,7 +85,7 @@ namespace Vurbiri
         public static EnumFilter<T> operator |(EnumFilter<T> filter, T e) => new(filter._value |= 1 << s_ids[e]);
         public static EnumFilter<T> operator |(T e, EnumFilter<T> filter) => new(filter._value |= 1 << s_ids[e]);
 
-        public static EnumFilter<T> operator ^(EnumFilter<T> filter, T e) => new(filter._value ^= 1 << s_ids[e]);
-        public static EnumFilter<T> operator ^(T e, EnumFilter<T> filter) => new(filter._value ^= 1 << s_ids[e]);
+        public static EnumFilter<T> operator ^(EnumFilter<T> filter, T e) => new(filter._value &= ~(1 << s_ids[e]));
+        public static EnumFilter<T> operator ^(T e, EnumFilter<T> filter) => new(filter._value &= ~(1 << s_ids[e]));
     }
 }

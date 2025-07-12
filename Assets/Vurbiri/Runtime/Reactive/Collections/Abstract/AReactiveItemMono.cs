@@ -8,7 +8,7 @@ namespace Vurbiri.Reactive.Collections
         protected readonly Subscription<T, TypeEvent> _eventChanged = new();
         protected int _index = -1;
 
-        public int Index { get => _index; set { _index = value; _eventChanged.Invoke((T)this, TypeEvent.Reindex); } }
+        public int Index => _index;
 
         public void Adding(Action<T, TypeEvent> action, int index)
         {

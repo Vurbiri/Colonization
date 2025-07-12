@@ -58,11 +58,11 @@ namespace Vurbiri
         private IdFlags(int id, int i, bool operation)
         {
             Throw.IfOutOfRange(i, 0, IdType<T>.Count);
-            _id = operation ? id |= 1 << i : id ^= 1 << i;
+            _id = operation ? id |= 1 << i : id &= ~(1 << i);
         }
         private IdFlags(int id, Id<T> i, bool operation)
         {
-            _id = operation ? id |= 1 << i.Value : id ^= 1 << i.Value;
+            _id = operation ? id |= 1 << i.Value : id &= ~(1 << i.Value);
         }
         #endregion
 

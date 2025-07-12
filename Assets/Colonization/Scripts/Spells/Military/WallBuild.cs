@@ -4,14 +4,14 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        sealed private class WallBuild : ASharedSpell
+        sealed private class WallBuild : ASpell
         {
             private readonly List<int> _canWall = new(CONST.DEFAULT_MAX_EDIFICES);
 
             private WallBuild() { }
-            public static void Create() => s_sharedSpells[TypeOfPerksId.Military][MilitarySpellId.WallBuild] = new WallBuild();
+            public static void Create() => s_spells[TypeOfPerksId.Military][MilitarySpellId.WallBuild] = new WallBuild();
 
-            public override bool Cast(SpellParam param, CurrenciesLite resources)
+            public override void Cast(SpellParam param, CurrenciesLite resources)
             {
                 _canWall.Clear();
                 var colonies = s_humans[param.playerId].GetEdifices(EdificeGroupId.Colony);
@@ -28,11 +28,9 @@ namespace Vurbiri.Colonization
                     if (colonies[index].BuildWall(param.playerId, true))
                     {
                         colonies.Signal(index);
-                        return true;
+                        s_humans[param.playerId].AddResources(resources);
                     }
                 }
-
-                return false;
             }
         }
     }

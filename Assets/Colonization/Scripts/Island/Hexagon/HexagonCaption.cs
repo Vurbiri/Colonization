@@ -19,23 +19,24 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private TextMeshPro _idText;
         [SerializeField] private Renderer _idTextRenderer;
         [Space]
-        [SerializeField, MinMax(10f, 180f)] private WaitRealtime _timeShowProfit = 60f;
+        [SerializeField, MinMax(1f, 60f)] private WaitRealtime _timeShowNewId = 12.5f;
+        [SerializeField, MinMax(1f, 60f)] private WaitRealtime _timeShowProfit = 25f;
         [SerializeField, Range(0.1f, 100f)] private float _fadeSpeed = 10f;
 
         private bool _isShow = true, _isEnable = true;
-        private bool _showDistance, _showProfit, _showMode;
+        private bool _showDistance, _showProfit, _showMode, _showNewId;
         private GameObject _thisGameObject;
         private Color _colorNormal, _colorProfit;
         private Transform _thisTransform, _cameraTransform;
         private Quaternion _lastCameraRotation;
         private string _defaultCurrencyText;
-        private Coroutine _fadeCoroutine, _profitCoroutine;
+        private Coroutine _fadeCoroutine, _profitCoroutine, _newIdCoroutine;
         private Unsubscription _unsubscriber;
 
         private bool IsShow
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _showDistance | _showProfit | _showMode & _isEnable;
+            get => _showDistance | _showProfit | _showMode | _showNewId & _isEnable;
         }
 
         public int Id { set => _idText.text = value.ToString(); }
@@ -67,13 +68,44 @@ namespace Vurbiri.Colonization.UI
 
             SetActive();
 
-            _unsubscriber = eventBus.EventHexagonShowDistance.Add(OnShow);
+            _unsubscriber = eventBus.EventHexagonShowDistance.Add(OnShowDistance);
             _unsubscriber = eventBus.EventHexagonShow.Add(OnCaptionEnable);
+        }
+
+        public void NewId(int id, Color color)
+        {
+            StopCoroutine(ref _profitCoroutine);
+
+            _showProfit = false;
+            _showNewId = true;
+
+            _idText.text = id.ToString();
+            _idText.color = color;
+
+            SetActive();
+            StartCoroutine(ref _newIdCoroutine, NewIdOff_Cn());
+
+            #region Local: NewIdOff_Cn()
+            //=================================
+            IEnumerator NewIdOff_Cn()
+            {
+                yield return _timeShowNewId.Restart();
+                _idText.color = _colorNormal;
+                _showNewId = false;
+                _newIdCoroutine = null;
+
+                SetActive();
+            }
+            #endregion
         }
 
         public void Profit()
         {
+            StopCoroutine(ref _newIdCoroutine);
+
+            _showNewId = false;
             _showProfit = true;
+
             _idText.color = _colorProfit;
             SetActive();
             StartCoroutine(ref _profitCoroutine, ProfitOff_Cn());
@@ -84,6 +116,7 @@ namespace Vurbiri.Colonization.UI
             {
                 yield return _timeShowProfit.Restart();
                 _showProfit = false;
+                _profitCoroutine = null;
                 SetActive();
             }
             #endregion
@@ -113,7 +146,7 @@ namespace Vurbiri.Colonization.UI
             if (IsShow) Show(); else Hide();
         }
 
-        private void OnShow(bool value)
+        private void OnShowDistance(bool value)
         {
             _showDistance = value;
             SetActive();
@@ -146,6 +179,7 @@ namespace Vurbiri.Colonization.UI
                 }
 
                 _thisTransform.localScale = Vector3.one;
+                _fadeCoroutine = null;
             }
             #endregion
         }
@@ -171,6 +205,7 @@ namespace Vurbiri.Colonization.UI
                 }
 
                 _thisTransform.localScale = Vector3.zero;
+                _fadeCoroutine = null;
                 _thisGameObject.SetActive(false);
             }
             #endregion
@@ -183,6 +218,15 @@ namespace Vurbiri.Colonization.UI
                 StopCoroutine(coroutine);
 
             coroutine = StartCoroutine(rutune);
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void StopCoroutine(ref Coroutine coroutine)
+        {
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+                coroutine = null;
+            }
         }
 
         private void Update()

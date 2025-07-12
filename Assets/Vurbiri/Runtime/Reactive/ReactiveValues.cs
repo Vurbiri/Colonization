@@ -46,7 +46,8 @@ namespace Vurbiri.Reactive
 
             return _subscriber.Add(action);
         }
-
+        public void Unsubscribe(Action<TA, TB> action) => _subscriber.Remove(action);
+        public void UnsubscribeAll() => _subscriber.Clear();
         public void Signal() => _subscriber.Invoke(_valueA, _valueB);
 
     }

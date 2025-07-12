@@ -33,7 +33,8 @@ namespace Vurbiri.Reactive
         }
 
         public Unsubscription Subscribe(Action<T> action, bool instantGetValue = true) => _subscriber.Add(action, instantGetValue, _value);
-
+        public void Unsubscribe(Action<T> action) => _subscriber.Remove(action);
+        public void UnsubscribeAll() => _subscriber.Clear();
         public void Signal() => _subscriber.Invoke(_value);
 
 

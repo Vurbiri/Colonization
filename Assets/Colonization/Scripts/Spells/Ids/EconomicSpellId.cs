@@ -6,6 +6,7 @@ namespace Vurbiri.Colonization
         public const int Blessing = 1;
         public const int Wrath = 2;
         public const int SummonWarlock = 3;
+        public const int ResourcesMix = 4;
 
         static EconomicSpellId() => ConstructorRun();
     }

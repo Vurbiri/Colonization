@@ -149,7 +149,7 @@ namespace Vurbiri.Colonization.Actors
             _currentHex.SetSelectableForSwap();
             Interactable = false;
         }
-        public void SetHexagonsSelectableForSwap()
+        public void SetHexagonUnselectableForSwap()
         {
             _currentHex.SetUnselectableForSwap();
             Interactable = _stateMachine.IsDefaultState;
