@@ -12,26 +12,27 @@ namespace Vurbiri.UI
         [SerializeField] private TextMeshProUGUI _hintTMP;
         [SerializeField] private CanvasGroup _canvasGroup;
         [Space]
-        [SerializeField, MinMax(0f, 5f)] private WaitRealtime _timeDelay = 1.5f;
-        [SerializeField, Range(1f, 20f)] private float _fadeSpeed = 4f;
+        [SerializeField] private Vector2 _maxSize;
         [SerializeField] private Vector2 _padding;
+        [Space]
+        [SerializeField, MinMax(0f, 5f)] private WaitRealtime _timeDelay = 1.5f;
+        [SerializeField] private WaitSwitchFloat _waitSwitch;
 
         protected RectTransform _backTransform;
         protected RectTransform _hintTransform;
         private Coroutine _coroutineShow, _coroutineHide;
-        private Vector2 _defaultSize;
         
         public virtual void Init()
         {
+            _canvasGroup.alpha = 0f;
+
             _backTransform = _backImage.rectTransform;
             _hintTransform = _hintTMP.rectTransform;
-            _defaultSize = _hintTransform.sizeDelta;
 
             _hintTMP.enableWordWrapping = true;
             _hintTMP.overflowMode = TextOverflowModes.Overflow;
 
-            _canvasGroup.alpha = 0f;
-            _backImage = null;
+            _waitSwitch.Init();
         }
 
         public bool Show(string text, Vector3 position, Vector3 offset)
@@ -39,26 +40,23 @@ namespace Vurbiri.UI
             bool result;
             if (result = !string.IsNullOrEmpty(text) & gameObject.activeInHierarchy)
             {
-                if (_coroutineShow != null)
-                    StopCoroutine(_coroutineShow);
-
+                StopCoroutine(ref _coroutineShow);
                 _coroutineShow = StartCoroutine(Show_Cn(text, position, offset));
             }
             return result;
         }
-
-
         public bool Hide()
         {
-            if (_coroutineShow != null)
-            {
-                StopCoroutine(_coroutineShow);
-                _coroutineShow = null;
-            }
-
+            StopCoroutine(ref _coroutineShow);
             _coroutineHide ??= StartCoroutine(Hide_Cn());
 
             return true;
+        }
+
+        public void SetColors(Color backColor, Color textColor)
+        {
+            _backImage.color = backColor;
+            _hintTMP.color = textColor;
         }
 
         protected abstract void SetPosition(Vector3 position, Vector3 offset);
@@ -67,30 +65,9 @@ namespace Vurbiri.UI
         {
             yield return _timeDelay.Restart();
 
-            if (_coroutineHide != null)
-            {
-                StopCoroutine(_coroutineHide);
-                _coroutineHide = null;
-            }
+            StopCoroutine(ref _coroutineHide);
 
-            SetHint(text);
-            yield return null;
-            SetPosition(position, offset);
-
-            float alpha = _canvasGroup.alpha;
-            while (alpha < 1f)
-            {
-                _canvasGroup.alpha = alpha += Time.unscaledDeltaTime * _fadeSpeed;
-                yield return null;
-            }
-
-            _canvasGroup.alpha = 1f;
-            _coroutineShow = null;
-        }
-
-        private void SetHint(string text)
-        {
-            _hintTransform.sizeDelta = _defaultSize;
+            _hintTransform.sizeDelta = _maxSize;
             _hintTMP.text = text;
             _hintTMP.ForceMeshUpdate();
 
@@ -99,20 +76,26 @@ namespace Vurbiri.UI
             _hintTransform.sizeDelta = size;
             _backTransform.sizeDelta = size + _padding;
 
-            //_backTransform.ForceUpdateRectTransforms();
+            yield return null;
+            SetPosition(position, offset);
+
+            yield return _waitSwitch.Forward(_canvasGroup.alpha);
+            _coroutineShow = null;
         }
 
         private IEnumerator Hide_Cn()
         {
-            float alpha = _canvasGroup.alpha;
-            while (alpha > 0f)
-            {
-                _canvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _fadeSpeed;
-                yield return null;
-            }
-
-            _canvasGroup.alpha = 0f;
+            yield return _waitSwitch.Backward(_canvasGroup.alpha);
             _coroutineHide = null;
+        }
+
+        private void StopCoroutine(ref Coroutine coroutine)
+        {
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+                coroutine = null;
+            }
         }
 
         private void OnDisable()
@@ -125,17 +108,20 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
         public virtual void UpdateVisuals_Editor(Color backColor, Color textColor)
         {
-            _backImage.color = backColor;
-            _hintTMP.color = textColor;
+            SetColors(backColor, textColor);
 
-            _backImage.rectTransform.sizeDelta = _hintTMP.rectTransform.sizeDelta + _padding;
+            _hintTMP.rectTransform.sizeDelta = _maxSize;
+            _backImage.rectTransform.sizeDelta = _maxSize + _padding;
         }
 
         protected virtual void OnValidate()
         {
-            this.SetComponent(ref _backImage);
+            this.SetChildren(ref _backImage);
             this.SetChildren(ref _hintTMP);
             this.SetComponent(ref _canvasGroup);
+
+            if(!_waitSwitch.IsValid_Editor)
+                _waitSwitch.OnValidate(0f, 1f, _canvasGroup.GetSetor<float>(nameof(_canvasGroup.alpha)));
         }
 #endif
     }

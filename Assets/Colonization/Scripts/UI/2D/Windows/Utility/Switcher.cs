@@ -8,10 +8,9 @@ namespace Vurbiri.Colonization.UI
 	public class Switcher
 	{
         [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField] private float _speedSwitch = 8f;
+        [SerializeField] private WaitSwitchFloat _waitSwitch;
 
         private bool _isOpen;
-        private WaitSwitchFloat _waitLerp;
         private MonoBehaviour _parent;
 
         public readonly Subscription onOpen = new();
@@ -23,7 +22,7 @@ namespace Vurbiri.Colonization.UI
             _canvasGroup.blocksRaycasts = _isOpen = open;
             _canvasGroup.alpha = open ? 1f : 0f;
 
-            _waitLerp = new(0f, 1f, _speedSwitch, _canvasGroup.GetSetor<float>(nameof(_canvasGroup.alpha)));
+            _waitSwitch.Init();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -47,16 +46,19 @@ namespace Vurbiri.Colonization.UI
 
         private void StartCoroutine(bool open)
         {
-            if (_waitLerp.IsRunning)
-                _parent.StopCoroutine(_waitLerp);
+            if (_waitSwitch.IsRunning)
+                _parent.StopCoroutine(_waitSwitch);
 
-            _parent.StartCoroutine(open ? _waitLerp.Forward(_canvasGroup.alpha) : _waitLerp.Backward(_canvasGroup.alpha));
+            _parent.StartCoroutine(open ? _waitSwitch.Forward(_canvasGroup.alpha) : _waitSwitch.Backward(_canvasGroup.alpha));
         }
 
 #if UNITY_EDITOR
         public void OnValidate(MonoBehaviour parent)
         {
             parent.SetComponent(ref _canvasGroup);
+
+            if (!_waitSwitch.IsValid_Editor)
+                _waitSwitch.OnValidate(0f, 1f, _canvasGroup.GetSetor<float>(nameof(_canvasGroup.alpha)));
         }
 #endif
     }

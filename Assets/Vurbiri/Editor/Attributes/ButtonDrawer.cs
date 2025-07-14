@@ -13,8 +13,6 @@ namespace VurbiriEditor
         private string _methodName;
         private Action _action;
 
-        private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
         {
             position.height = EditorGUIUtility.singleLineHeight;
@@ -22,23 +20,23 @@ namespace VurbiriEditor
             EditorGUI.PropertyField(position, mainProperty, label, true);
             if (attribute is ButtonAttribute button)
             {
-                position.y += _height;
+                position.y += EditorGUI.GetPropertyHeight(mainProperty) + EditorGUIUtility.standardVerticalSpacing;
                 object target = mainProperty.serializedObject.targetObject;
-                if ((target != _target || _methodName != button.methodName || _action == null) && !TryCreateDelegate(target, button.methodName))
+                if ((target != _target | _methodName != button.methodName | _action == null) && !TryCreateDelegate(target, button.methodName))
                 {
                     EditorGUI.HelpBox(position, $"Failed to retrieve method {button.methodName}", UnityEditor.MessageType.Error);
                     return;
                 }
-                if (GUI.Button(position, button.methodName))
+                if (GUI.Button(position, button.caption))
                     _action();
             }
         }
 
         public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
         {
-            float height = EditorGUI.GetPropertyHeight(mainProperty); ;
+            float height = EditorGUI.GetPropertyHeight(mainProperty);
             if (attribute is ButtonAttribute)
-                height += _height;
+                height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
             return height;
         }

@@ -56,9 +56,10 @@ namespace Vurbiri.UI
             base.OnValidate();
 
             if (_canvasRectTransform == null)
-            {
                 _canvasRectTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
-            }
+
+            if (_canvasRectTransform != transform.parent)
+                transform.SetParent(_canvasRectTransform);
         }
 #endif
     }

@@ -210,7 +210,7 @@ namespace VurbiriEditor.UI
             _showAnimTransition.target = !_transitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.Animation;
 
             Space(1f);
-            EditorGUI.indentLevel++;
+
             // ========= ColorTint =================================
             if (BeginFadeGroup(_showColorTint.faded))
             {
@@ -256,8 +256,6 @@ namespace VurbiriEditor.UI
                 _scaleBlockDrawer.Draw(!colorTintMode);
             }
             EndFadeGroup();
-
-            EditorGUI.indentLevel--;
 
             EndVertical();
         }

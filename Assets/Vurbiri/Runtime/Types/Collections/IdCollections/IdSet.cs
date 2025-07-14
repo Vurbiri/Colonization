@@ -37,12 +37,10 @@ namespace Vurbiri.Collections
 
         public bool TryAdd(TValue value)
         {
-            int index = value.Id.Value;
-
-            if (_values[index] != null)
+            if (_values[value.Id] != null)
                 return false;
 
-            _values[index] = value;
+            _values[value.Id] = value;
             _count++;
             return true;
         }
@@ -52,17 +50,15 @@ namespace Vurbiri.Collections
             if (TryAdd(value)) 
                 return;
 
-            Errors.AddItem(value.ToString());
+            Errors.AddItem(value?.ToString());
         }
 
         public void Replace(TValue value)
         {
-            int index = value.Id.Value;
-
-            if (_values[index] == null)
+            if (_values[value.Id] == null)
                 _count++;
 
-            _values[index] = value;
+            _values[value.Id] = value;
         }
 
         public void ReplaceRange(IEnumerable<TValue> collection)
@@ -77,45 +73,25 @@ namespace Vurbiri.Collections
             int start = index;
             do
             {
-                index = ++index % _capacity;
+                index = (index + 1) % _capacity;
                 value = _values[index];
                 if (value != null)
                     return value;
             }
             while (index != start);
 
-            return value;
+            return null;
         }
 
         public bool TryGetValue(int index, out TValue value)
         {
-            foreach (TValue v in this)
-            {
-                if (index-- == 0)
-                {
-                    value = v;
-                    return v != null;
-                }
-            }
-            value = null;
-            return false;
-
+            value = _values[index];
+            return value != null;
         }
-        public bool TryGetValue(Id<TId> id, out TValue value) => TryGetValue(id.Value, out value);
-
-        public List<TValue> GetRange(int start, int end)
+        public bool TryGetValue(Id<TId> id, out TValue value)
         {
-            List<TValue> values = new(end - start + 1);
-            TValue value;
-
-            for (int i = start; i <= end; i++)
-            {
-                value = _values[i];
-                if (value != null)
-                    values.Add(value);
-            }
-
-            return values;
+            value = _values[id];
+            return value != null;
         }
 
         public IEnumerator<TValue> GetEnumerator() => new SetEnumerator<TValue>(_values);

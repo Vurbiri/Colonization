@@ -35,14 +35,17 @@ namespace VurbiriEditor
             borderLight = new()
             {
                 name = "borderLight",
-                border = new(4, 4, 4, 4),
-                padding = new(6, 6, 6, 6)
+                border = new(2, 2, 2, 2),
+                padding = new(12, 6, 6, 6)
 
             };
-            borderLight.normal.background = Border(new Color32(66, 66, 66, 255));
+            borderLight.normal.background = Border(new Color32(77, 77, 77, 255));
 
-            borderDark = new(borderLight);
-            borderDark.normal.background = Border(new Color32(46, 46, 46, 255), new Color32(52, 52, 52, 255));
+            borderDark = new(borderLight)
+            {
+                name = "borderDark"
+            };
+            borderDark.normal.background = Border(new Color32(33, 33, 33, 255), new Color32(52, 52, 52, 255));
 
             flatButton = new()
             {
@@ -68,7 +71,7 @@ namespace VurbiriEditor
             return pixels.ToTexture(size);
         }
 
-        public static Texture2D Border(Color32 colorBorder, int size = 16, int border = 2)
+        public static Texture2D Border(Color32 colorBorder, int size = 8, int border = 1)
         {
             int borderMin = border, borderMax = size - border;
             Color32[] pixels = new Color32[size * size];
@@ -92,7 +95,7 @@ namespace VurbiriEditor
             return pixels.ToTexture(size);
         }
 
-        public static Texture2D Border(Color32 colorBorder, Color32 colorMain, int size = 16, int border = 2)
+        public static Texture2D Border(Color32 colorBorder, Color32 colorMain, int size = 8, int border = 1)
         {
             int borderMin = border, borderMax = size - border;
             Color32[] pixels = new Color32[size * size];

@@ -22,7 +22,7 @@ namespace Vurbiri
 
             if (request.result != Result.Success || request.downloadHandler == null)
             {
-                Message.Log("==== UnityWebRequest: " + request.error);
+                Log.Msg("==== UnityWebRequest: " + request.error);
                 callback?.Invoke(Return<Texture>.Empty);
                 yield break;
             }
@@ -43,7 +43,7 @@ namespace Vurbiri
             }
             catch (Exception ex)
             {
-                Message.Log($"--- Не удалось загрузить объект {typeof(T).Name} по пути {path} ---\n".Concat(ex.Message));
+                Log.Msg($"--- Не удалось загрузить объект {typeof(T).Name} по пути {path} ---\n".Concat(ex.Message));
                 obj = default;
                 return false;
             }

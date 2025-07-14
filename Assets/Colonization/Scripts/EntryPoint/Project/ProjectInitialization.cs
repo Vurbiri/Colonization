@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.EntryPoint
             AsyncOperation operation = SceneManager.LoadSceneAsync(_startScene);
             operation.allowSceneActivation = false;
 
-            Message.Log("Start Init Project");
+            Log.Msg("Start Init Project");
 
             Localization.Instance.SetFiles(_localizationFiles);
 

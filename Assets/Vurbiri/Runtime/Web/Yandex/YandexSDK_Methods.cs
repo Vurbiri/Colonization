@@ -13,17 +13,17 @@ namespace Vurbiri
             yield return (waitResult = InitYsdk());
             if (!waitResult.Value)
             {
-                Message.Log("YandexSDK - initialization error!");
+                Log.Msg("YandexSDK - initialization error!");
                 yield break;
             }
 
             yield return (waitResult = InitPlayer());
             if (!waitResult.Value)
-                Message.Log("Player - initialization error!");
+                Log.Msg("Player - initialization error!");
 
             yield return (waitResult = InitLeaderboards());
             if (!waitResult.Value)
-                Message.Log("Leaderboards - initialization error!");
+                Log.Msg("Leaderboards - initialization error!");
         }
 
         public IEnumerator Authorization_Cn(Action<bool> callback)
@@ -87,7 +87,7 @@ namespace Vurbiri
             }
             catch (Exception ex)
             {
-                Message.Log(ex.Message);
+                Log.Msg(ex.Message);
             }
 
             return result;

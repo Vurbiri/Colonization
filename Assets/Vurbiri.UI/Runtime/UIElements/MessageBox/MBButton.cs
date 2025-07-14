@@ -3,32 +3,34 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Vurbiri.Reactive;
-
 namespace Vurbiri.UI
 {
-    public abstract class AVButton : VSelectable, IPointerClickHandler, ISubmitHandler
+	sealed public class MBButton : VSelectable, IValueId<MBButtonId>, IPointerClickHandler, ISubmitHandler
     {
-        [SerializeField] protected UniSubscription _onClick = new();
+		[SerializeField] private Id<MBButtonId> _id;
 
-        protected override void Start()
+        private readonly Subscription<int> _onClick = new();
+
+        public Id<MBButtonId> Id => _id;
+
+        public void Init(Vector2 size)
         {
-            base.Start();
-
-            _onClick.Init();
+            var rectTransform = (RectTransform)transform;
+            rectTransform.sizeDelta = size;
         }
 
-        public Unsubscription AddListener(Action action) => _onClick.Add(action);
-        public void RemoveListener(Action action) => _onClick.Remove(action);
+        public Unsubscription AddListener(Action<int> action) => _onClick.Add(action);
+        public void RemoveListener(Action<int> action) => _onClick.Remove(action);
 
         private bool Press()
         {
             if (IsActive() && IsInteractable())
             {
                 UISystemProfilerApi.AddMarker("VButton.onClick", this);
-                _onClick.Invoke();
+                _onClick.Invoke(_id);
                 return true;
             }
-            
+
             return false;
         }
 

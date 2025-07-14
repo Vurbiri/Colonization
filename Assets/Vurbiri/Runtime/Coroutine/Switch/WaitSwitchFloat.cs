@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Vurbiri
 {
+    [Serializable]
     sealed public class WaitSwitchFloat : AWaitSwitchFloat
     {
         protected override float DeltaTime

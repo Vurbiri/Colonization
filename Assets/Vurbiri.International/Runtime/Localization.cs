@@ -114,11 +114,11 @@ namespace Vurbiri.International
             var dictionary = _text[fileId];
             if (dictionary == null)
             {
-                Message.Log(output = $"File '{_files[fileId]}' not loaded.");
+                Log.Msg(output = $"File '{_files[fileId]}' not loaded.");
             }
             else if (!dictionary.TryGetValue(key, out output))
             {
-                Message.Log(output = $"Key '{key}' not found in file '{_files[fileId]}'.");
+                Log.Msg(output = $"Key '{key}' not found in file '{_files[fileId]}'.");
             }
 
             return output;
@@ -133,7 +133,7 @@ namespace Vurbiri.International
                     if (_text[i] != null && _text[i].TryGetValue(key, out output))
                         return output;
             }
-            Message.Log(output = $"Key '{key}' not found.");
+            Log.Msg(output = $"Key '{key}' not found.");
             return output;
         }
 

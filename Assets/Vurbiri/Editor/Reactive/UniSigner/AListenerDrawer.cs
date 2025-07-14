@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 using Vurbiri.Reactive;
 using static UnityEditor.EditorGUI;
 using Object = UnityEngine.Object;
@@ -18,7 +20,10 @@ namespace VurbiriEditor.Reactive
         
         private readonly string L_OBJECT = "Game Object", L_TARGET = "Target Object", L_METHOD = "Method";
 
-        private readonly string[] _excludeStart = { "set_", "<set_" };
+        private const float OFFSET = 2f;
+        private readonly Color _color = new(.25f, .25f, .25f);
+
+        private readonly string[] _excludeStart = { /*"set_", */"<set_" };
         private readonly string[] _excludeEnd = { "Dirty" };
         private readonly HashSet<string> _excludeVoidMethod = new(new string[] { "Awake", "Start", "OnEnable", "Update", "FixedUpdate", "LateUpdate", "OnDisable", "OnDestroy", "OnValidate", "Reset", "OnBeforeSerialize", "OnAfterDeserialize", "Finalize", "SendTransformChangedScale", "StopAnimation" });
         #endregion
@@ -67,9 +72,9 @@ namespace VurbiriEditor.Reactive
             _position = position;
             _key = label.text;
 
-            SerializedProperty propertyName = mainProperty.FindPropertyRelative(P_METHOD_NAME);
             SerializedProperty propertyTarget = mainProperty.FindPropertyRelative(P_TARGET);
-
+            SerializedProperty propertyName = mainProperty.FindPropertyRelative(P_METHOD_NAME);
+            
             GameObject parentObject;
             Object targetObject = propertyTarget.objectReferenceValue;
 
@@ -79,40 +84,75 @@ namespace VurbiriEditor.Reactive
                 parentObject = gameObject;
             else
                 _gameObjectCache.TryGetValue(_key, out parentObject);
-
+                        
             BeginProperty(_position, label, mainProperty);
             {
-                parentObject = DrawGameObject(parentObject, L_OBJECT);
-
-                if (parentObject != null)
+                bool isArray = fieldInfo.FieldType.IsArray;
+                if (isArray || DrawFoldout(mainProperty, label))
                 {
-                    bool update = !(SetArguments() && _gameObjectCache.TryGetValue(_key, out GameObject tempObject) & tempObject == parentObject);
-                    CreateObjectsData(parentObject, update);
+                    bool isParent, isTarget = false;
+                    DrawBackground(isArray);
 
-                    targetObject = propertyTarget.objectReferenceValue = DrawTargetObject(targetObject, out int index);
-                    
-                    if (targetObject != null)
-                        DrawMethodsNames(propertyName, _methodsValues[index], _methodsNames[index]);
-                    else
+                    parentObject = DrawGameObject(parentObject, L_OBJECT);
+
+                    if (isParent = parentObject != null)
+                    {
+                        bool update = !(SetArguments() && _gameObjectCache.TryGetValue(_key, out GameObject tempObject) & tempObject == parentObject);
+                        CreateObjectsData(parentObject, update);
+
+                        targetObject = propertyTarget.objectReferenceValue = DrawTargetObject(targetObject, out int index);
+                        if (isTarget = targetObject != null)
+                            DrawMethodsNames(propertyName, _methodsValues[index], _methodsNames[index]);
+                    }
+
+                    if(!isParent)
+                    {
+                        propertyTarget.objectReferenceValue = null;
+                        DrawLabelNone(propertyTarget.displayName);
+                    }
+                    if (!isTarget)
+                    {
                         propertyName.stringValue = string.Empty;
+                        DrawLabelNone(propertyName.displayName);
+                    }
+
+                    _gameObjectCache[_key] = parentObject;
                 }
                 else
                 {
-                    propertyTarget.objectReferenceValue = null;
-                    propertyName.stringValue = string.Empty;
+                    DrawLabel(targetObject, propertyName.stringValue);
                 }
-
-                _gameObjectCache[_key] = parentObject;
             }
             EndProperty();
         }
 
         sealed public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return _height * 3f;
+            if (fieldInfo.FieldType.IsArray)
+                return _height * 3f;
+            if (property.isExpanded)
+                return _height * 4f;
+            return _height;
         }
 
         #region Drawers
+        private void DrawBackground(bool isArray)
+        {
+            if (isArray)
+                return;
+
+            Rect position = _position;
+            position.height = _height * 3f;
+            position.x -= OFFSET; position.width += OFFSET * 2f;
+            position.y -= OFFSET; position.height += OFFSET * 2f;
+            DrawRect(position, _color);
+        }
+        private bool DrawFoldout(SerializedProperty property, GUIContent label)
+        {
+            property.isExpanded = Foldout(_position, property.isExpanded, label);
+            _position.y += _height;
+            return property.isExpanded;
+        }
         private GameObject DrawGameObject(GameObject obj, string displayName)
         {
             return ObjectField(_position, displayName, obj, s_gameObjectType, true) as GameObject;
@@ -136,6 +176,31 @@ namespace VurbiriEditor.Reactive
                 property.stringValue = string.Empty;
             else
                 property.stringValue = values[index];
+        }
+        private void DrawLabelNone(string name)
+        {
+            _position.y += _height;
+            LabelField(_position, name, "---");
+        }
+        private void DrawLabel(Object obj, string method)
+        {
+            string msg = "[None]";
+            if (obj != null)
+            {
+                msg = obj.name.Concat(".", obj.GetType().Name);
+                if (!string.IsNullOrEmpty(method))
+                {
+                    if (string.IsNullOrEmpty(_params)) SetArguments();
+                    msg = msg.Concat(".", method, _params);
+                }
+                else
+                {
+                    msg = msg.Concat(".[None]");
+                }
+            }
+            _position.y -= _height;
+            _position.x += EditorGUIUtility.labelWidth; _position.width -= EditorGUIUtility.labelWidth;
+            DropShadowLabel(_position, msg, EditorStyles.boldLabel);
         }
         #endregion
 
