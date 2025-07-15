@@ -3,104 +3,137 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Collections;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-	public class MessageBox : MonoBehaviour
+    [RequireComponent(typeof(CanvasGroup))]
+    public class MessageBox : MonoBehaviour
     {
-        [SerializeField] private Image _backImage;
-        [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField] private RectTransform _canvasRectTransform;
-        [SerializeField] private TextMeshProUGUI _hintTMP;
-        [Header("Window")]
-        [SerializeField] private Vector2 _maxSize;
-        [SerializeField] private Vector2 _padding;
-        [Header("Buttons")]
-        
-        [SerializeField] private RectTransform _buttonsRectTransform;
-        [SerializeField] private Vector2 _buttonSize;
-        [SerializeField] private Vector2 _buttonPadding;
-        [SerializeField] private IdSet<MBButtonId, MBButton> _buttons;
-        [Space]
-        [SerializeField, Range(1f, 20f)] private float _fadeSpeed = 4f;
+        private static MessageBox _instance;
 
-        private RectTransform _backTransform;
-        private RectTransform _hintTransform;
+        [SerializeField] private CanvasGroupSwitcher _waitSwitch;
+        [Header("Window")]
+        [SerializeField] private Image _windowImage;
+        [SerializeField] private Vector2 _windowPadding;
+        [Header("Text")]
+        [SerializeField] private TextMeshProUGUI _textTMP;
+        [SerializeField] private Vector2 _textMaxSize;
+        [SerializeField] private Vector2 _textPadding;
+        [Header("Buttons")]
+        [SerializeField] private RectTransform _buttonsRectTransform;
+        [SerializeField] private Vector2 _buttonBounds;
+        [SerializeField] private IdSet<MBButtonId, MBButton> _buttons;
+
+        private readonly Subscription<Id<MBButtonId>> _onClick = new();
+        private readonly WaitResultSource<Id<MBButtonId>> _waitResult = new();
+
+        private RectTransform _windowRectTransform;
+        private RectTransform _textRectTransform;
         private Coroutine _coroutineShow, _coroutineHide;
 
-        private IEnumerator Show_Cn(string text)
+        private Id<MBButtonId>[] _currentIds = new Id<MBButtonId>[0];
+
+        private void Awake()
         {
-            if (_coroutineHide != null)
+            if (_instance == null)
             {
-                StopCoroutine(_coroutineHide);
-                _coroutineHide = null;
+                _instance = this;
+                DontDestroyOnLoad(gameObject);
+
+                _waitSwitch.Init();
+
+                _windowRectTransform = _windowImage.rectTransform;
+                _textRectTransform = _textTMP.rectTransform;
+
+                _textTMP.enableWordWrapping = true;
+                _textTMP.overflowMode = TextOverflowModes.Overflow;
+
+                for (int i = 0; i < MBButtonId.Count; i++)
+                    _buttons[i].Init().Add(OnClick);
             }
-
-            _hintTransform.sizeDelta = _maxSize;
-            _hintTMP.text = text;
-            _hintTMP.ForceMeshUpdate();
-
-            Vector2 size = _hintTMP.textBounds.size;
-
-            _hintTransform.sizeDelta = size;
-            _backTransform.sizeDelta = size + _padding;
-
-            yield return null;
-
-            float alpha = _canvasGroup.alpha;
-            while (alpha < 1f)
+            else
             {
-                _canvasGroup.alpha = alpha += Time.unscaledDeltaTime * _fadeSpeed;
-                yield return null;
+                Destroy(gameObject);
             }
-
-            _canvasGroup.alpha = 1f;
-            _coroutineShow = null;
         }
 
-        private void Init()
+        public static WaitResult<Id<MBButtonId>> Show(string text, params Id<MBButtonId>[] buttonIds) => _instance.Setup(text, buttonIds);
+
+        private WaitResult<Id<MBButtonId>> Setup(string text, params Id<MBButtonId>[] buttonIds)
         {
-            _backTransform = _backImage.rectTransform;
-            _hintTransform = _hintTMP.rectTransform;
+            for (int i = _currentIds.Length - 1; i >= 0; i--)
+                _buttons[_currentIds[i]].SetActive(false);
 
-            _hintTMP.enableWordWrapping = true;
-            _hintTMP.overflowMode = TextOverflowModes.Overflow;
+            _currentIds = buttonIds;
 
-            _canvasGroup.alpha = 0f;
+            int count = buttonIds.Length;
+            float start = (1 - count) * 0.5f * _buttonBounds.x;
+            for (int i = 0; i < count; i++)
+                _buttons[buttonIds[i]].Setup(new Vector3(start + _buttonBounds.x * i, 0f, 0f));
+
+            Vector2 buttonsSize = new(_buttonBounds.x * count, _buttonBounds.y);
+            _buttonsRectTransform.sizeDelta = buttonsSize;
+
+            _textRectTransform.sizeDelta = _textMaxSize;
+            _textTMP.text = text;
+            _textTMP.ForceMeshUpdate();
+
+            Vector2 textSize = _textTMP.textBounds.size;
+            _textRectTransform.sizeDelta = (textSize += _textPadding);
+
+            _buttonsRectTransform.localPosition = new(0f, -textSize.y * 0.5f, 0f);
+            _textRectTransform.localPosition = new(0f, buttonsSize.y * 0.5f, 0f);
+
+            _windowRectTransform.sizeDelta = new(Mathf.Max(buttonsSize.x, textSize.x) + _windowPadding.x, buttonsSize.y + textSize.y + _windowPadding.y);
+
+            StopCoroutine(ref _coroutineHide);
+            _coroutineShow ??= StartCoroutine(Show_Cn());
+
+            return _waitResult.Restart();
+
+            #region Local: Show_Cn()
+            //=================================
+            IEnumerator Show_Cn()
+            {
+                yield return _waitSwitch.Show();
+
+                _coroutineShow = null;
+            }
+            #endregion
         }
 
-        private void SetHint(string text)
+        private void OnClick(Id<MBButtonId> id)
         {
-            _hintTransform.sizeDelta = _maxSize;
-            _hintTMP.text = text;
-            _hintTMP.ForceMeshUpdate();
-
-            Vector2 size = _hintTMP.textBounds.size;
-
-            _hintTransform.sizeDelta = size;
-            _backTransform.sizeDelta = size + _padding;
-
-            //_backTransform.ForceUpdateRectTransforms();
+            _waitResult.SetResult(id);
+            _onClick.Invoke(id);
         }
+        
+
+        private void StopCoroutine(ref Coroutine coroutine)
+        {
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+                coroutine = null;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_instance == this)
+                _instance = null;
+        }
+
 
 #if UNITY_EDITOR
 
-        public void UpdateVisuals_Editor(Color backColor, Color textColor)
-        {
-            //SetColors(backColor, textColor);
-
-            _hintTMP.rectTransform.sizeDelta = _maxSize;
-            _backImage.rectTransform.sizeDelta = _maxSize + _padding;
-        }
-
         private void OnValidate()
         {
-            this.SetChildren(ref _backImage);
-            this.SetChildren(ref _hintTMP);
-            //this.SetComponent(ref _canvasGroup);
+            this.SetChildren(ref _windowImage);
+            this.SetChildren(ref _textTMP);
 
-            if (_canvasRectTransform == null)
-                _canvasRectTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+            _waitSwitch.OnValidate(this);
         }
 #endif
     }

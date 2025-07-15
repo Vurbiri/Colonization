@@ -9,21 +9,18 @@ using Object = UnityEngine.Object;
 namespace VurbiriEditor.Collections
 {
     [CustomPropertyDrawer(typeof(IdSet<,>))]
-    internal class IdHashSetDrawer : AIdCollectionDrawer
+    internal class IdSetDrawer : AIdCollectionDrawer
     {
         public readonly float BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
         public readonly string NAME_COUNT = "_count", LABEL_EMPTY = "-----";
-        public readonly string BUTTON_CHILD = "Set children", BUTTON_PREFAB = "Set prefabs", BUTTON_ASSET = "Set assets", BUTTON_CLEAR = "Clear";
+        public readonly string BUTTON_CHILD = "Set childrens", BUTTON_PREFAB = "Set prefabs", BUTTON_ASSET = "Set assets", BUTTON_CLEAR = "Clear";
 
         public readonly Color colorNull = new(1f, 0.65f, 0f, 1f);
         public readonly Type typeObject = typeof(UnityEngine.Object), typeMono = typeof(MonoBehaviour);
 
-        private int _countMax = 0;
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             position.height = EditorGUIUtility.singleLineHeight;
-            position.y += _ySpace;
 
             Color prevColor = GUI.color;
             Rect startPosition = position;
@@ -32,7 +29,6 @@ namespace VurbiriEditor.Collections
             SerializedProperty propertyCount = property.FindPropertyRelative(NAME_COUNT);
 
             SetPositiveNames();
-            _countMax = _names.Length;
 
             label = EditorGUI.BeginProperty(position, label, property);
             {
@@ -102,9 +98,9 @@ namespace VurbiriEditor.Collections
                 startPosition.x = EditorGUIUtility.currentViewWidth - LABEL_SIZE - 20f;
                 startPosition.width = LABEL_SIZE;
 
-                if (propertyCount.intValue < _countMax)
+                if (propertyCount.intValue < _count)
                     GUI.color = colorNull;
-                EditorGUI.LabelField(startPosition, $"{propertyCount.intValue} / {_countMax}", style);
+                EditorGUI.LabelField(startPosition, $"{propertyCount.intValue} / {_count}", style);
                 GUI.color = prevColor;
             }
             //=================================
@@ -202,7 +198,7 @@ namespace VurbiriEditor.Collections
             if (property.isExpanded)
             {
                 float countCurrent = property.FindPropertyRelative(NAME_COUNT).intValue;
-                if (countCurrent < _countMax)
+                if (countCurrent < _count)
                     countCurrent += 1f;
 
                 rate += countCurrent;

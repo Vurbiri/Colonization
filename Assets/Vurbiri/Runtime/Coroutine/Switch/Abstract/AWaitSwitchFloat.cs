@@ -25,11 +25,8 @@ namespace Vurbiri
 
         public AWaitSwitchFloat(float min, float max, float speed, Action<float> update)
         {
-            _min = min;
-            _max = max;
-            _speed = speed;
-            _update = update;
-            _setMethod = null;
+            _min = min; _max = max; _speed = speed;
+            _update = update; _setMethod = null;
         }
         public void Init()
         {

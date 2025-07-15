@@ -9,14 +9,10 @@ namespace Vurbiri
         public T Value => _value;
 
         public bool MoveNext() => _keepWaiting;
-        public void Reset()
-        {
-            _keepWaiting = true;
-            _value = default;
-        }
+        public void Reset() { }
     }
 
-    public class WaitResultSource<T> : WaitResult<T>
+    sealed public class WaitResultSource<T> : WaitResult<T>
     {
         public static WaitResultSource<T> Empty { get; } = new(default);
 
@@ -46,12 +42,26 @@ namespace Vurbiri
             return new();
         }
 
+        public WaitResult<T> Restart()
+        {
+            _keepWaiting = true;
+            _value = default;
+
+            return this;
+        }
+
         public WaitResult<T> Cancel()
         {
             _value = default;
             _keepWaiting = false;
 
             return this;
+        }
+
+        public new void Reset()
+        {
+            _keepWaiting = true;
+            _value = default;
         }
     }
 }

@@ -9,18 +9,32 @@ namespace Vurbiri.UI
     {
 		[SerializeField] private Id<MBButtonId> _id;
 
-        private readonly Subscription<int> _onClick = new();
+        private readonly Subscription<Id<MBButtonId>> _onClick = new();
+        private RectTransform _thisRectTransform;
+        private GameObject _thisObject;
 
         public Id<MBButtonId> Id => _id;
 
-        public void Init(Vector2 size)
+        public ISubscription<Id<MBButtonId>> Init()
         {
-            var rectTransform = (RectTransform)transform;
-            rectTransform.sizeDelta = size;
+            _thisRectTransform = (RectTransform)transform;
+            _thisObject = gameObject;
+            _thisObject.SetActive(false);
+
+            return _onClick;
         }
 
-        public Unsubscription AddListener(Action<int> action) => _onClick.Add(action);
-        public void RemoveListener(Action<int> action) => _onClick.Remove(action);
+        public Unsubscription AddListener(Action<Id<MBButtonId>> action) => _onClick.Add(action);
+        public void RemoveListener(Action<Id<MBButtonId>> action) => _onClick.Remove(action);
+        
+        public void Setup(Vector3 position)
+        {
+            _thisRectTransform.localPosition = position;
+            _thisObject.SetActive(true);
+        }
+
+
+        public void SetActive(bool active) => _thisObject.SetActive(active);
 
         private bool Press()
         {

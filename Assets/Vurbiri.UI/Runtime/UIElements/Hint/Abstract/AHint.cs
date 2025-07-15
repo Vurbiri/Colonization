@@ -10,13 +10,12 @@ namespace Vurbiri.UI
     {
         [SerializeField] private Image _backImage;
         [SerializeField] private TextMeshProUGUI _hintTMP;
-        [SerializeField] private CanvasGroup _canvasGroup;
         [Space]
         [SerializeField] private Vector2 _maxSize;
         [SerializeField] private Vector2 _padding;
         [Space]
         [SerializeField, MinMax(0f, 5f)] private WaitRealtime _timeDelay = 1.5f;
-        [SerializeField] private WaitSwitchFloat _waitSwitch;
+        [SerializeField] private CanvasGroupSwitcher _waitSwitch;
 
         protected RectTransform _backTransform;
         protected RectTransform _hintTransform;
@@ -24,15 +23,13 @@ namespace Vurbiri.UI
         
         public virtual void Init()
         {
-            _canvasGroup.alpha = 0f;
+            _waitSwitch.Init();
 
             _backTransform = _backImage.rectTransform;
             _hintTransform = _hintTMP.rectTransform;
 
             _hintTMP.enableWordWrapping = true;
             _hintTMP.overflowMode = TextOverflowModes.Overflow;
-
-            _waitSwitch.Init();
         }
 
         public bool Show(string text, Vector3 position, Vector3 offset)
@@ -79,13 +76,13 @@ namespace Vurbiri.UI
             yield return null;
             SetPosition(position, offset);
 
-            yield return _waitSwitch.Forward(_canvasGroup.alpha);
+            yield return _waitSwitch.Show();
             _coroutineShow = null;
         }
 
         private IEnumerator Hide_Cn()
         {
-            yield return _waitSwitch.Backward(_canvasGroup.alpha);
+            yield return _waitSwitch.Hide();
             _coroutineHide = null;
         }
 
@@ -100,7 +97,7 @@ namespace Vurbiri.UI
 
         private void OnDisable()
         {
-            _canvasGroup.alpha = 0f;
+            _waitSwitch.Alpha = 0f;
             _coroutineHide = null;
             _coroutineShow = null;
         }
@@ -118,10 +115,8 @@ namespace Vurbiri.UI
         {
             this.SetChildren(ref _backImage);
             this.SetChildren(ref _hintTMP);
-            this.SetComponent(ref _canvasGroup);
 
-            if(!_waitSwitch.IsValid_Editor)
-                _waitSwitch.OnValidate(0f, 1f, _canvasGroup.GetSetor<float>(nameof(_canvasGroup.alpha)));
+            _waitSwitch.OnValidate(this);
         }
 #endif
     }

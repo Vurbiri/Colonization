@@ -45,11 +45,11 @@ namespace Vurbiri.Colonization
 
                 _unsubscription = s_triggerBus.EventHexagonSelect.Add(hexagon => _waitHexagon.SetResult(hexagon));
 
-                yield return _waitHexagon.Cancel();
+                yield return _waitHexagon.Restart();
                 _selectedA = _waitHexagon.Value;
                 _selectedA.SetSelectedForSwap(s_settings.swapHexColor);
 
-                yield return _waitHexagon.Cancel();
+                yield return _waitHexagon.Restart();
                 _unsubscription.Unsubscribe();
 
                 if (playerId == PlayerId.Person)
