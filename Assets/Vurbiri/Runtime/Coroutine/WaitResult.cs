@@ -12,9 +12,11 @@ namespace Vurbiri
         public void Reset() { }
     }
 
-    sealed public class WaitResultSource<T> : WaitResult<T>
+    public class WaitResultSource<T> : WaitResult<T>
     {
         public static WaitResultSource<T> Empty { get; } = new(default);
+
+        public bool IsRunning => _keepWaiting;
 
         public WaitResultSource()
         {

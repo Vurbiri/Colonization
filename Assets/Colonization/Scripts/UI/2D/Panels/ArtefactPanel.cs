@@ -42,11 +42,12 @@ namespace Vurbiri.Colonization.UI
             //resources.Set(CurrencyId.Mana, -2);
             //resources.Mix(_player.Resources);
             //_player.AddResources(resources);
+                       
 
             if (_i == 3) _i = 0;
-            if (_i == 0) MessageBox.Show("The use of the Random class makes this unsuitable for anything security related, such as creating passwords.", MBButtonId.Ok, MBButtonId.No);
-            if (_i == 1) MessageBox.Show("Note", MBButtonId.Ok, MBButtonId.Cancel, MBButtonId.No);
-            if (_i == 2) MessageBox.Show("While this technically answers the question, it's output is very misleading.", MBButtonId.Ok);
+            if (_i == 0) MessageBox.Open("The use of the Random class makes this unsuitable for anything security related, such as creating passwords.", MBButtonId.Ok, MBButtonId.No);
+            if (_i == 1) MessageBox.Open("Note", MBButtonId.Ok, MBButtonId.Cancel, MBButtonId.No);
+            if (_i == 2) MessageBox.Open("While this technically answers the question, it's output is very misleading.", MBButtonId.Ok);
 
             _i++;
         }

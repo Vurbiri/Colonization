@@ -1,17 +1,17 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Collections;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-    [RequireComponent(typeof(CanvasGroup))]
     public class MessageBox : MonoBehaviour
     {
-        private static MessageBox _instance;
-
+        private static MessageBox s_instance;
+        private static readonly Queue<Task> s_tasks = new();
+        
         [SerializeField] private CanvasGroupSwitcher _waitSwitch;
         [Header("Window")]
         [SerializeField] private Image _windowImage;
@@ -24,24 +24,22 @@ namespace Vurbiri.UI
         [SerializeField] private RectTransform _buttonsRectTransform;
         [SerializeField] private Vector2 _buttonBounds;
         [SerializeField] private IdSet<MBButtonId, MBButton> _buttons;
-
-        private readonly Subscription<Id<MBButtonId>> _onClick = new();
-        private readonly WaitResultSource<Id<MBButtonId>> _waitResult = new();
-
+        
         private RectTransform _windowRectTransform;
         private RectTransform _textRectTransform;
         private Coroutine _coroutineShow, _coroutineHide;
 
+        private WaitButtonSource _currentWait;
         private Id<MBButtonId>[] _currentIds = new Id<MBButtonId>[0];
 
         private void Awake()
         {
-            if (_instance == null)
+            if (s_instance == null)
             {
-                _instance = this;
+                s_instance = this;
                 DontDestroyOnLoad(gameObject);
 
-                _waitSwitch.Init();
+                _waitSwitch.Disable();
 
                 _windowRectTransform = _windowImage.rectTransform;
                 _textRectTransform = _textTMP.rectTransform;
@@ -58,12 +56,26 @@ namespace Vurbiri.UI
             }
         }
 
-        public static WaitResult<Id<MBButtonId>> Show(string text, params Id<MBButtonId>[] buttonIds) => _instance.Setup(text, buttonIds);
+        public static WaitButton Open(string text, params Id<MBButtonId>[] buttonIds)
+        {
+            Throw.IfLengthZero(buttonIds, "buttonIds");
+            
+            if (s_instance._currentWait != null)
+                return new Task(text, buttonIds).waitResult;
+            else
+                return s_instance.Setup(text, buttonIds, new());
+        }
 
-        private WaitResult<Id<MBButtonId>> Setup(string text, params Id<MBButtonId>[] buttonIds)
+        internal static void Abort(WaitButton wait)
+        {
+            if (s_instance._currentWait == wait)
+                s_instance.Hide();
+        }
+
+        private WaitButton Setup(string text, Id<MBButtonId>[] buttonIds, WaitButtonSource waitResult)
         {
             for (int i = _currentIds.Length - 1; i >= 0; i--)
-                _buttons[_currentIds[i]].SetActive(false);
+                _buttons[_currentIds[i]].Deactivate();
 
             _currentIds = buttonIds;
 
@@ -87,44 +99,88 @@ namespace Vurbiri.UI
 
             _windowRectTransform.sizeDelta = new(Mathf.Max(buttonsSize.x, textSize.x) + _windowPadding.x, buttonsSize.y + textSize.y + _windowPadding.y);
 
-            StopCoroutine(ref _coroutineHide);
             _coroutineShow ??= StartCoroutine(Show_Cn());
 
-            return _waitResult.Restart();
+            return _currentWait = waitResult;
 
             #region Local: Show_Cn()
-            //=================================
+            //--------------------------------
             IEnumerator Show_Cn()
             {
+                yield return _coroutineHide;
                 yield return _waitSwitch.Show();
-
                 _coroutineShow = null;
             }
+            //--------------------------------
+            #endregion
+        }
+
+        private void Hide()
+        {
+            _currentWait = null;
+
+            if (_coroutineShow != null)
+            {
+                StopCoroutine(_coroutineShow);
+                _coroutineShow = null;
+            }
+
+            _coroutineHide ??= StartCoroutine(Hide_Cn());
+
+            #region Local: Hide_Cn()
+            //--------------------------------
+            IEnumerator Hide_Cn()
+            {
+                yield return _waitSwitch.Hide();
+                _coroutineHide = null;
+                
+                if (s_tasks.Count > 0)
+                    s_tasks.Dequeue().Run(this);
+            }
+            //--------------------------------
             #endregion
         }
 
         private void OnClick(Id<MBButtonId> id)
         {
-            _waitResult.SetResult(id);
-            _onClick.Invoke(id);
-        }
-        
+            _currentWait.SetResult(id);
 
-        private void StopCoroutine(ref Coroutine coroutine)
-        {
-            if (coroutine != null)
-            {
-                StopCoroutine(coroutine);
-                coroutine = null;
-            }
+            Hide();
         }
 
         private void OnDestroy()
         {
-            if (_instance == this)
-                _instance = null;
+            if (s_instance == this)
+                s_instance = null;
         }
 
+        #region Nested: Task()
+        //*************************************************************************
+        private class Task
+        {
+            public readonly string text;
+            public readonly Id<MBButtonId>[] buttonIds;
+            public readonly WaitButtonSource waitResult;
+
+            public Task(string text, Id<MBButtonId>[] buttonIds)
+            {
+                this.text = text;
+                this.buttonIds = buttonIds;
+                this.waitResult = new();
+
+                s_tasks.Enqueue(this);
+            }
+
+            public void Run(MessageBox parent)
+            {
+                if (waitResult.IsWait)
+                    parent.Setup(text, buttonIds, waitResult);
+                else if (s_tasks.Count > 0)
+                    s_tasks.Dequeue().Run(parent);
+            }
+        }
+        //*************************************************************************
+        #endregion
 
 #if UNITY_EDITOR
 
@@ -133,7 +189,8 @@ namespace Vurbiri.UI
             this.SetChildren(ref _windowImage);
             this.SetChildren(ref _textTMP);
 
-            _waitSwitch.OnValidate(this);
+            if(_waitSwitch.CanvasGroup == null)
+                _waitSwitch.OnValidate(GetComponentInChildren<CanvasGroup>());
         }
 #endif
     }

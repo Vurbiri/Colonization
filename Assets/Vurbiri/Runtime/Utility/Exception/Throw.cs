@@ -15,6 +15,11 @@ namespace Vurbiri
         {
             if (value == null) Errors.ArgumentNull(paramName);
         }
+        public static void IfNullOrEmpty<T>(IReadOnlyCollection<T> collection, string paramName)
+        {
+            if (collection == null) Errors.ArgumentNull(paramName);
+            if (collection.Count == 0) Errors.Rank($"Dimensionality [{paramName}] is zero");
+        }
         #endregion
 
         public static void IfIndexOutOfRange(int index, int maxExclude)
@@ -81,6 +86,10 @@ namespace Vurbiri
         public static void IfLengthZero<T>(IReadOnlyCollection<T> value)
         {
             if (value.Count == 0) Errors.Rank("Dimensionality is zero");
+        }
+        public static void IfLengthZero<T>(IReadOnlyCollection<T> value, string paramName)
+        {
+            if (value.Count == 0) Errors.Rank($"Dimensionality [{paramName}] is zero");
         }
         #endregion
     }

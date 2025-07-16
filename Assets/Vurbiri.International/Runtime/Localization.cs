@@ -29,9 +29,9 @@ namespace Vurbiri.International
         private Localization(int fileId) 
         {
             _files = LoadObjectFromResourceJson<string[]>(CONST_L.FILE_FILES);
-            Throw.IfLengthZero(_files);
+            Throw.IfLengthZero(_files, "_files");
             _languages = new(LoadObjectFromResourceJson<LanguageType[]>(CONST_L.FILE_LANG));
-            Throw.IfLengthZero(_languages);
+            Throw.IfLengthZero(_languages, "_languages");
 
             _countFiles = _files.Length;
             _text = new Dictionary<string, string>[_countFiles];

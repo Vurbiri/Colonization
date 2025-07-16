@@ -33,20 +33,7 @@ namespace Vurbiri.UI
             _thisObject.SetActive(true);
         }
 
-
-        public void SetActive(bool active) => _thisObject.SetActive(active);
-
-        private bool Press()
-        {
-            if (IsActive() && IsInteractable())
-            {
-                UISystemProfilerApi.AddMarker("VButton.onClick", this);
-                _onClick.Invoke(_id);
-                return true;
-            }
-
-            return false;
-        }
+        public void Deactivate() => _thisObject.SetActive(false);
 
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -59,21 +46,35 @@ namespace Vurbiri.UI
             if (Press())
             {
                 DoStateTransition(SelectionState.Pressed, false);
-                StartCoroutine(OnFinishSubmit());
+                StartCoroutine(OnFinishSubmit_Cn());
             }
+
+            #region Local: OnFinishSubmit_Cn()
+            //=================================
+            IEnumerator OnFinishSubmit_Cn()
+            {
+                float fadeTime = colors.fadeDuration;
+
+                while (fadeTime > 0f)
+                {
+                    fadeTime -= Time.unscaledDeltaTime;
+                    yield return null;
+                }
+
+                DoStateTransition(currentSelectionState, false);
+            }
+            #endregion
         }
 
-        private IEnumerator OnFinishSubmit()
+        private bool Press()
         {
-            float fadeTime = colors.fadeDuration;
-
-            while (fadeTime > 0f)
+            if (IsActive() && IsInteractable())
             {
-                fadeTime -= Time.unscaledDeltaTime;
-                yield return null;
+                _onClick.Invoke(_id);
+                return true;
             }
 
-            DoStateTransition(currentSelectionState, false);
+            return false;
         }
     }
 }

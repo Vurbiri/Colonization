@@ -35,7 +35,7 @@ namespace VurbiriEditor
             borderLight = new()
             {
                 name = "borderLight",
-                border = new(2, 2, 2, 2),
+                border = new(4, 4, 4, 4),
                 padding = new(12, 6, 6, 6)
 
             };

@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         public void Init(MonoBehaviour parent, bool open)
         {
             _parent = parent;
-            _canvasSwitcher.Init(_isOpen = open);
+            _canvasSwitcher.Set(_isOpen = open);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -51,7 +51,8 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         public void OnValidate(MonoBehaviour parent)
         {
-            _canvasSwitcher.OnValidate(parent);
+            if (_canvasSwitcher.CanvasGroup == null)
+                _canvasSwitcher.OnValidate(parent.GetComponentInChildren<CanvasGroup>());
         }
 #endif
     }

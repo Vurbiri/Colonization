@@ -10,8 +10,8 @@ namespace Vurbiri.UI
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private float _speed;
 
-        private float _start = 0f, _end = 1f, _sign = 1f;
-        private float _progress;
+        private float _start, _end, _sign;
+        private float _progress = 1f;
 
         public object Current => null;
         public bool IsRunning => _progress < 1f;
@@ -24,21 +24,22 @@ namespace Vurbiri.UI
         {
             _speed = speed;
             _canvasGroup = canvasGroup;
-            Init();
+            Disable();
         }
-
-        public void Init()
-        {
-            _canvasGroup.alpha = 0f;
-            _canvasGroup.blocksRaycasts = false;
-        }
-        public void Init(bool show)
+        public void Set(bool show)
         {
             _canvasGroup.blocksRaycasts = show;
-            _canvasGroup.alpha = _start = show ? 1f : 0f;
-            _end = 1f - _start; _sign = _end - _start;
+            _canvasGroup.alpha = _end = show ? 1f : 0f;
+            _start = 1f - _end;
         }
 
+        public void Disable()
+        {
+            _canvasGroup.blocksRaycasts = false;
+            _canvasGroup.alpha = 0f;
+            _start = 1f; _end = 0f;
+        }
+        
         public bool MoveNext()
         {
             _progress += Time.unscaledDeltaTime * _speed;
@@ -73,9 +74,9 @@ namespace Vurbiri.UI
         }
 
 #if UNITY_EDITOR
-        public void OnValidate(Component parent)
+        public void OnValidate(CanvasGroup canvasGroup)
         {
-            parent.SetComponent(ref _canvasGroup);
+            _canvasGroup = canvasGroup;
             if (_speed < 0.1f) _speed = 0.1f;
         }
 #endif

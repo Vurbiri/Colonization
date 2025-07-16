@@ -23,7 +23,7 @@ namespace Vurbiri.UI
         
         public virtual void Init()
         {
-            _waitSwitch.Init();
+            _waitSwitch.Disable();
 
             _backTransform = _backImage.rectTransform;
             _hintTransform = _hintTMP.rectTransform;
@@ -116,7 +116,8 @@ namespace Vurbiri.UI
             this.SetChildren(ref _backImage);
             this.SetChildren(ref _hintTMP);
 
-            _waitSwitch.OnValidate(this);
+            if (_waitSwitch.CanvasGroup == null)
+                _waitSwitch.OnValidate(GetComponentInChildren<CanvasGroup>());
         }
 #endif
     }
