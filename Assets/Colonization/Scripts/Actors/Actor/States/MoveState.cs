@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed protected class MoveState : AActionState
         {
-            private readonly float _speed;
+            private readonly ScaledMoveUsingLerp _move;
             private readonly Transform _parentTransform;
             private readonly RBool _isCancel;
             private WaitSignal _waitHexagon;
@@ -21,8 +21,8 @@ namespace Vurbiri.Colonization.Actors
 
             public MoveState(float speed, Actor parent) : base(parent)
             {
-                _speed = speed;
                 _parentTransform = parent._thisTransform;
+                _move = new(_parentTransform, speed);
                 _isCancel = parent._canCancel;
             }
 
@@ -46,7 +46,8 @@ namespace Vurbiri.Colonization.Actors
                     _coroutineAction = null;
                 }
 
-                _parentTransform.localPosition = _actor._currentHex.Position;
+                _move.Skip();
+
                 _waitHexagon = null;
                 _targetHex = null;
 
@@ -114,26 +115,17 @@ namespace Vurbiri.Colonization.Actors
 
             private IEnumerator Move_Cn()
             {
-                Hexagon currentHex = _actor._currentHex;
+                var currentHex = _actor._currentHex;
+                currentHex.ExitActor();
+                
+                _actor._currentHex = _targetHex;
+                _moveAbility.Off();
+                 _skin.Move();
 
                 _parentTransform.localRotation = ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
-                Vector3 start = currentHex.Position, end = _targetHex.Position;
+                yield return _move.Run(currentHex.Position, _targetHex.Position);
 
-                currentHex.ExitActor();
-                _actor._currentHex = currentHex = _targetHex;
-                _move.Off();
-                
-                _skin.Move();
-
-                float _progress = 0f;
-                while (_progress <= 1f)
-                {
-                    yield return null;
-                    _progress += _speed * Time.deltaTime;
-                    _parentTransform.localPosition = Vector3.Lerp(start, end, _progress);
-                }
-
-                currentHex.EnterActor(_actor);
+                _targetHex.EnterActor(_actor);
 
                 ToExit();
             }

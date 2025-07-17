@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
@@ -16,7 +15,8 @@ namespace Vurbiri.Colonization.UI
     {
         private const char AP_CHAR = '+';
 
-        [SerializeField] private float _speedMove = 4f;
+        [Space]
+        [SerializeField] private MoveUsingLerp _move;
         [Space]
         [SerializeField] private HPBar _hpBar;
         [SerializeField] private TextMeshProUGUI _maxAP_TMP;
@@ -29,9 +29,6 @@ namespace Vurbiri.Colonization.UI
         private Vector3 _offset;
 
         private Transform _thisTransform, _container, _repository;
-       
-        private Coroutine _moveCn;
-        private Vector3 _targetPosition;
         private readonly Subscription<WarriorButton> _eventRemove = new();
 
         public int Index
@@ -42,17 +39,14 @@ namespace Vurbiri.Colonization.UI
                 if (value != _index)
                 {
                     _index = value;
-
-                    if (_moveCn != null)
-                        StopCoroutine(_moveCn);
-                    _moveCn = StartCoroutine(Move_Cn(_offset * value));
+                    _move.Run(this, _offset * value);
                 }
             }
         }
 
         public WarriorButton Init(InputController inputController, Transform container, Action<WarriorButton> action)
         {
-            _thisTransform = transform;
+            _thisTransform = _move.Transform;
             _container = container;
 
             _offset = Offset;
@@ -95,24 +89,6 @@ namespace Vurbiri.Colonization.UI
             if (isOn) Enable();
         }
 
-        public IEnumerator Move_Cn(Vector3 targetPosition)
-        {
-            Vector3 startPosition = _thisTransform.localPosition;
-            _targetPosition = targetPosition;
-
-            float progress = 0f;
-
-            while (progress < 1f)
-            {
-                progress += Time.unscaledDeltaTime * _speedMove;
-                _thisTransform.localPosition = Vector3.Lerp(startPosition, targetPosition, progress);
-                yield return null;
-            }
-
-            _thisTransform.localPosition = targetPosition;
-            _moveCn = null;
-        }
-
         private void OnChangeActor(Actor actor, TypeEvent typeEvent)
         {
             if (typeEvent == TypeEvent.Remove)
@@ -130,12 +106,7 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnDisable();
 
-            if (_moveCn != null)
-            {
-                StopCoroutine(_moveCn);
-                _thisTransform.localPosition = _targetPosition;
-                _moveCn = null;
-            }
+            _move.Skip();
         }
 
         #region Nested class HPBar
@@ -159,11 +130,7 @@ namespace Vurbiri.Colonization.UI
             }
 
 #if UNITY_EDITOR
-            public void OnValidate(Component parent)
-            {
-                if (_fill == null)
-                    _fill = EUtility.GetComponentInChildren<RectTransform>(parent, "Fill");
-            }
+            public void OnValidate(Component parent) => parent.SetChildren(ref _fill, "Fill");
 #endif
         }
         #endregion
@@ -175,14 +142,10 @@ namespace Vurbiri.Colonization.UI
 
             _hpBar.OnValidate(this);
 
-            if (_icon == null)
-                _icon = EUtility.GetComponentInChildren<Image>(this, "Icon");
-            if (_maxAP_TMP == null)
-                _maxAP_TMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "MaxAP_TMP");
-            if (_currentAP_TMP == null)
-                _currentAP_TMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "AP_TMP");
-            if (_moveIcon == null)
-                _moveIcon = EUtility.GetComponentInChildren<Image>(this, "MoveIcon");
+            this.SetChildren(ref _icon, "Icon");
+            this.SetChildren(ref _maxAP_TMP, "MaxAP_TMP");
+            this.SetChildren(ref _currentAP_TMP, "AP_TMP");
+            this.SetChildren(ref _moveIcon, "MoveIcon");
         }
 #endif
     }

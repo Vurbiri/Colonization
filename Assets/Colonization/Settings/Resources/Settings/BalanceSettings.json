@@ -4,5 +4,19 @@
   "defaultValue": 0,
   "penaltyPerDemon": 3,
   "penaltyPerBlood": 1,
-  "rewardPerShrine": 15
+  "rewardPerShrine": 15,
+  "killWarrior": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "killDemon": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
 }

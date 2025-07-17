@@ -62,13 +62,15 @@ namespace Vurbiri.Colonization.Actors
 
             protected IEnumerator Movement_Cn(Vector3 start, Vector3 end, float speed, float path)
             {
+                Vector3 delta = end - start;
                 float progress = 0f;
-                while (progress <= path)
+                while (progress < path)
                 {
+                    progress += Time.deltaTime * speed;
+                    _parentTransform.localPosition = new(start.x + delta.x * progress, start.y + delta.y * progress, start.z + delta.z * progress);
                     yield return null;
-                    progress += speed * Time.deltaTime;
-                    _parentTransform.localPosition = Vector3.Lerp(start, end, progress);
                 }
+                _parentTransform.localPosition = new(start.x + delta.x * path, start.y + delta.y * path, start.z + delta.z * path);
             }
         }
     }

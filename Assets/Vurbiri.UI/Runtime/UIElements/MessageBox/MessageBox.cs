@@ -56,6 +56,12 @@ namespace Vurbiri.UI
             }
         }
 
+        public static void SetColors(Color windowColor, Color textColor)
+        {
+            s_instance._windowImage.color = windowColor;
+            s_instance._textTMP.color = textColor;
+        }
+
         public static WaitButton Open(string text, params Id<MBButtonId>[] buttonIds)
         {
             Throw.IfLengthZero(buttonIds, "buttonIds");

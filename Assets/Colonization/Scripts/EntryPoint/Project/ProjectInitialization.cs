@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.International;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -27,6 +28,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public void Init(DIContainer diContainer, Loading loading)
         {
             Coroutines coroutine;
+            ProjectColors colors;
             AsyncOperation operation = SceneManager.LoadSceneAsync(_startScene);
             operation.allowSceneActivation = false;
 
@@ -36,7 +38,9 @@ namespace Vurbiri.Colonization.EntryPoint
 
             diContainer.AddInstance(coroutine = Coroutines.Create("Project Coroutine", true));
             diContainer.AddInstance(_settings);
-            diContainer.AddInstance(_settingsColorScriptable.Colors);
+            diContainer.AddInstance(colors = _settingsColorScriptable.Colors);
+
+            MessageBox.SetColors(colors.PanelBack, colors.TextDefault);
 
             //Banners.InstanceF.Initialize();
 
