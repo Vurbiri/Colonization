@@ -20,7 +20,7 @@ namespace Vurbiri
             catch (Exception ex)
             {
                 waitResult.SetResult(null);
-                Log.Msg(ex.Message);
+                Log.Info(ex.Message);
             }
 
             return waitResult;
@@ -37,7 +37,7 @@ namespace Vurbiri
             catch (Exception ex)
             {
                 waitResult.SetResult(false);
-                Log.Msg(ex.Message);
+                Log.Info(ex.Message);
             }
 
             return waitResult;

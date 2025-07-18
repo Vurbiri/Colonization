@@ -1,18 +1,17 @@
 using System;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
 	public abstract class WaitButton : System.Collections.IEnumerator
     {
-        protected readonly Subscription<Id<MBButtonId>> _onResult = new();
+        protected Action<Id<MBButtonId>> _onResult;
         protected bool _keepWaiting;
         protected Id<MBButtonId> _id;
 
         public object Current => null;
         public Id<MBButtonId> Id => _id;
 
-        public Unsubscription AddListener(Action<Id<MBButtonId>> action) => _onResult.Add(action);
+        public void AddListener(Action<Id<MBButtonId>> action) => _onResult += action;
 
         public bool MoveNext() => _keepWaiting;
         public void Reset() 
@@ -35,8 +34,7 @@ namespace Vurbiri.UI
         {
             _id = result;
             _keepWaiting = false;
-
-            _onResult.Invoke(result);
+            _onResult?.Invoke(result);
         }
     }
 }

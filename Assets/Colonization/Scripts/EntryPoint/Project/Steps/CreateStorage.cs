@@ -46,11 +46,11 @@ namespace Vurbiri.Colonization.EntryPoint
             {
                 bool result = false;
                 yield return storage.Load_Cn((b) => result = b);
-                Log.Msg(result ? "Сохранение загружено" : "Сохранение не найдено");
+                Log.Info(result ? "Сохранение загружено" : "Сохранение не найдено");
             }
             else
             {
-                Log.Msg("StorageService не определён");
+                Log.Info("StorageService не определён");
             }
 
             _diContainer.ReplaceInstance(storage);

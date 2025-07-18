@@ -1,10 +1,11 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace Vurbiri
 {
     public class Banners : ASingleton<Banners>
     {
-        [SerializeField] private Banner _prefab;
+        //[SerializeField] private Banner _prefab;
         [SerializeField] private Transform _container;
         [SerializeField] private Transform _repository;
         [Space]

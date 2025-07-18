@@ -17,8 +17,7 @@ namespace Vurbiri.UI
         [SerializeField, MinMax(0f, 5f)] private WaitRealtime _timeDelay = 1.5f;
         [SerializeField] private CanvasGroupSwitcher _waitSwitch;
 
-        protected RectTransform _backTransform;
-        protected RectTransform _hintTransform;
+        protected RectTransform _backTransform, _hintTransform;
         private Coroutine _coroutineShow, _coroutineHide;
         
         public virtual void Init()

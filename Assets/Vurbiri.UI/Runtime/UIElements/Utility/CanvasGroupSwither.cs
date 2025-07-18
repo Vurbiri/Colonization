@@ -31,6 +31,7 @@ namespace Vurbiri.UI
             _canvasGroup.blocksRaycasts = show;
             _canvasGroup.alpha = _end = show ? 1f : 0f;
             _start = 1f - _end;
+            _progress = 1f;
         }
 
         public void Disable()
@@ -38,6 +39,7 @@ namespace Vurbiri.UI
             _canvasGroup.blocksRaycasts = false;
             _canvasGroup.alpha = 0f;
             _start = 1f; _end = 0f;
+            _progress = 1f;
         }
         
         public bool MoveNext()

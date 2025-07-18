@@ -1,17 +1,35 @@
+using UnityEngine;
+
 namespace Vurbiri
 {
-    public enum MessageType
-    {
-        Normal,
-        Warning,
-        Error,
-        FatalError
-    }
-
     public static class Log
     {
-        public static void Msg(string msg) => UtilityJS.Log(msg);
-        public static void Error(string msg) => UtilityJS.Error(msg);
+        public static void Info(string msg)
+        {
+#if UNITY_EDITOR
+            Debug.Log(msg);
+#else
+            UtilityJS.Log(msg);
+#endif
+        }
+
+        public static void Warning(string msg)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning(msg);
+#else
+            UtilityJS.Log(msg);
+#endif
+        }
+
+        public static void Error(string msg)
+        {
+#if UNITY_EDITOR
+            Debug.LogError(msg);
+#else
+            UtilityJS.Error(msg);
+#endif
+        }
     }
 }
 

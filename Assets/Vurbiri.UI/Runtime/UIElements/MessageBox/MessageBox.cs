@@ -25,8 +25,7 @@ namespace Vurbiri.UI
         [SerializeField] private Vector2 _buttonBounds;
         [SerializeField] private IdSet<MBButtonId, MBButton> _buttons;
         
-        private RectTransform _windowRectTransform;
-        private RectTransform _textRectTransform;
+        private RectTransform _windowRectTransform, _textRectTransform;
         private Coroutine _coroutineShow, _coroutineHide;
 
         private WaitButtonSource _currentWait;
@@ -58,8 +57,8 @@ namespace Vurbiri.UI
 
         public static void SetColors(Color windowColor, Color textColor)
         {
-            s_instance._windowImage.color = windowColor;
-            s_instance._textTMP.color = textColor;
+            s_instance._windowImage.color = windowColor.SetAlpha(1f);
+            s_instance._textTMP.color = textColor.SetAlpha(1f);
         }
 
         public static WaitButton Open(string text, params Id<MBButtonId>[] buttonIds)
@@ -189,7 +188,6 @@ namespace Vurbiri.UI
         #endregion
 
 #if UNITY_EDITOR
-
         private void OnValidate()
         {
             this.SetChildren(ref _windowImage);

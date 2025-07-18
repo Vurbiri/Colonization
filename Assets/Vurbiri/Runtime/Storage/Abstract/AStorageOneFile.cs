@@ -105,7 +105,7 @@ namespace Vurbiri
                 }
                 return true;
             }
-            catch (Exception ex) { Log.Msg(ex.Message); }
+            catch (Exception ex) { Log.Info(ex.Message); }
 
             return false;
         }
@@ -235,7 +235,7 @@ namespace Vurbiri
             if (!string.IsNullOrEmpty(json))
             {
                 try { result = JsonConvert.DeserializeObject<T>(json); }
-                catch (Exception ex) { Log.Msg(ex.Message); }
+                catch (Exception ex) { Log.Info(ex.Message); }
             }
             return result != null;
         }
@@ -245,7 +245,7 @@ namespace Vurbiri
             if (!string.IsNullOrEmpty(json))
             {
                 try { result = JsonConvert.DeserializeObject<T>(json, converter); }
-                catch (Exception ex) { Log.Msg(ex.Message); }
+                catch (Exception ex) { Log.Info(ex.Message); }
             }
 
             return result != null;
@@ -260,7 +260,7 @@ namespace Vurbiri
                     JsonConvert.DeserializeObject<T>(json, converter);
                     return true;
                 }
-                catch (Exception ex) { Log.Msg(ex.Message); }
+                catch (Exception ex) { Log.Info(ex.Message); }
             }
 
             return false;
@@ -278,7 +278,7 @@ namespace Vurbiri
                     JsonConvert.PopulateObject(json, target, settings);
                     return true;
                 }
-                catch (Exception ex) { Log.Msg(ex.Message); }
+                catch (Exception ex) { Log.Info(ex.Message); }
             }
             return false;
         }
