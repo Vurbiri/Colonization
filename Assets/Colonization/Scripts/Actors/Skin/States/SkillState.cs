@@ -8,19 +8,19 @@ namespace Vurbiri.Colonization.Actors
         sealed protected class SkillState : ASkinState
         {
             private readonly int _id;
-            private readonly WaitTime _waitEnd;
+            private readonly WaitScaledTime _waitEnd;
             private readonly int _countHits;
             private Coroutine _coroutine;
 
             public ActorSkin targetSkin;
             public readonly WaitSignal signal = new();
-            public readonly WaitTime[] waitHits;
+            public readonly WaitScaledTime[] waitHits;
 
             public SkillState(string stateName, ActorSkin parent, TimingSkillSettings timing, int id = 0) : base(stateName, parent)
             {
                 _id = id;
                 _countHits = timing.hitTimes.Length;
-                waitHits = new WaitTime[_countHits];
+                waitHits = new WaitScaledTime[_countHits];
 
                 for (int i = 0; i < _countHits; i++)
                     waitHits[i] = new(timing.hitTimes[i]);

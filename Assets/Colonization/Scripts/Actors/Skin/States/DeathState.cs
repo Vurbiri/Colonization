@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -7,13 +6,16 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed protected class DeathState : ASkinState
         {
-            private readonly WaitForSecondsRealtime _waitEndAnimation;
-
+            private readonly WaitSignal _waitStartAnimation = new();
+            private readonly WaitRealtime _waitEndAnimation;
+            
             public readonly WaitSignal waitActivate = new();
 
             public DeathState(ActorSkin parent, float duration) : base(B_DEATH, parent)
             {
                 _waitEndAnimation = new(duration);
+
+                _animator.GetBehaviour<DeathBehaviour>().EventEnter += OnEventEnter;
             }
 
             public override void Enter()
@@ -25,11 +27,16 @@ namespace Vurbiri.Colonization.Actors
 
             private IEnumerator Death_Cn()
             {
-                yield return new WaitForSecondsRealtime(0.1f);
-                _animator.SetBool(_idParam, false);
+                yield return _waitStartAnimation;
                 yield return _waitEndAnimation;
                 yield return _sfx.Death_Cn();
                 waitActivate.Send();
+            }
+
+            private void OnEventEnter()
+            {
+                _animator.SetBool(_idParam, false);
+                _waitStartAnimation.Send();
             }
         }
     }

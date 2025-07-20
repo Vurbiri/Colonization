@@ -1,10 +1,11 @@
 namespace Vurbiri
 {
-    sealed public class WaitSignal : System.Collections.IEnumerator
+    sealed public class WaitSignal : IWait
     {
         private bool _keepWaiting;
 
         public object Current => null;
+        public bool IsRunning => _keepWaiting;
 
         public WaitSignal() => _keepWaiting = true;
 

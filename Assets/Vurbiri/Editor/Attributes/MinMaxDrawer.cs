@@ -10,7 +10,7 @@ namespace VurbiriEditor
     {
         private readonly string NAME_X = "x", NAME_Y = "y";
 
-        private readonly HashSet<System.Type> _excludeTypes = new() { typeof(IntRnd), typeof(WaitRealtime), typeof(WaitTime) };
+        private readonly HashSet<System.Type> _excludeTypes = new() { typeof(IntRnd), typeof(WaitRealtime), typeof(WaitScaledTime) };
 
         public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{

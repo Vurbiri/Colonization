@@ -1,12 +1,20 @@
+using System.Collections;
+
 namespace Vurbiri
 {
-    public abstract class WaitResult<T> : System.Collections.IEnumerator
+    public static class WaitResult
+    {
+        public static WaitResult<T> Instant<T>(T result) => new WaitResultSource<T>(result, false);
+    }
+
+    public abstract class WaitResult<T> : IWait
     {
         protected bool _keepWaiting = true;
         protected T _value;
 
         public object Current => _value;
         public T Value => _value;
+        public bool IsRunning => _keepWaiting;
 
         public bool MoveNext() => _keepWaiting;
         public void Reset() { }
@@ -14,18 +22,22 @@ namespace Vurbiri
 
     public class WaitResultSource<T> : WaitResult<T>
     {
-        public static WaitResultSource<T> Empty { get; } = new(default);
-
-        public bool IsRunning => _keepWaiting;
+        private T _default;
 
         public WaitResultSource()
         {
             _keepWaiting = true;
+            _default = default;
         }
-        public WaitResultSource(T result)
+        public WaitResultSource(T defaultValue)
         {
-            _value = result;
+            _keepWaiting = true;
+            _default = defaultValue;
+        }
+        internal WaitResultSource(T value, bool plug)
+        {
             _keepWaiting = false;
+            _value = value;
         }
 
         public WaitResult<T> SetResult(T result)
@@ -38,24 +50,24 @@ namespace Vurbiri
 
         public WaitResultSource<T> Recreate()
         {
-            _value = default;
+            _value = _default;
             _keepWaiting = false;
 
-            return new();
+            return new(_default);
         }
 
-        public WaitResult<T> Restart()
+        public IEnumerator Restart()
         {
             _keepWaiting = true;
-            _value = default;
+            _value = _default;
 
             return this;
         }
 
         public WaitResult<T> Cancel()
         {
-            _value = default;
             _keepWaiting = false;
+            _value = _default;
 
             return this;
         }
@@ -63,7 +75,7 @@ namespace Vurbiri
         public new void Reset()
         {
             _keepWaiting = true;
-            _value = default;
+            _value = _default;
         }
     }
 }

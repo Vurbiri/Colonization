@@ -23,9 +23,12 @@ namespace Vurbiri.Colonization.Actors
             _maxValueTMP.color = colors[ActorAbilityId.MaxAP];
             _currentValueTMP.color = colors[ActorAbilityId.CurrentAP];
 
-            _unsubscribers += abilities[ActorAbilityId.MaxAP].Subscribe(value => _maxValueTMP.text = new(CHAR, value));
-            _unsubscribers += abilities[ActorAbilityId.CurrentAP].Subscribe(value => _currentValueTMP.text = new(CHAR, value));
+            _unsubscribers += abilities[ActorAbilityId.MaxAP].Subscribe(SetMaxValue);
+            _unsubscribers += abilities[ActorAbilityId.CurrentAP].Subscribe(SetCurrentValue);
         }
+
+        private void SetMaxValue(int value) => _maxValueTMP.text = new(CHAR, value);
+        private void SetCurrentValue(int value) => _currentValueTMP.text = new(CHAR, value);
 
         private void OnDestroy()
         {

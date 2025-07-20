@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private TextMeshPro _valueTMP;
         
-        private int _currentValue = int.MinValue;
+        private int _currentValue = int.MaxValue;
         private int _shift;
         private PopupWidget3D _popup;
         private Sprite _sprite;
@@ -36,18 +36,15 @@ namespace Vurbiri.Colonization.Actors
 
             _shift = _ability <= ActorAbilityId.MAX_ID_SHIFT_ABILITY ? ActorAbilityId.SHIFT_ABILITY : 0;
             _unsubscriber = abilities[_ability].Subscribe(SetValue);
-            
-            #region Local: SetValue(..)
-            //=================================
-            void SetValue(int value)
-            {
-                value >>= _shift;
-                _valueTMP.text = value.ToString();
+        }
 
-                _popup.Run(value - _currentValue, _sprite);
-                _currentValue = value;
-            }
-            #endregion
+        private void SetValue(int value)
+        {
+            value >>= _shift;
+            _valueTMP.text = value.ToString();
+
+            _popup.Run(value - _currentValue, _sprite);
+            _currentValue = value;
         }
 
         private void OnDestroy()

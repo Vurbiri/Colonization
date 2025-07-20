@@ -18,8 +18,10 @@ namespace Vurbiri.Colonization.Actors
             _moveSprite.sortingOrder += orderLevel;
             _moveSprite.color = colors[ActorAbilityId.IsMove];
 
-            _unsubscriber = abilities[ActorAbilityId.IsMove].Subscribe(value => _moveSprite.enabled = value > 0);
+            _unsubscriber = abilities[ActorAbilityId.IsMove].Subscribe(SetMove);
         }
+
+        private void SetMove(int value) => _moveSprite.enabled = value > 0;
 
         private void OnDestroy()
         {

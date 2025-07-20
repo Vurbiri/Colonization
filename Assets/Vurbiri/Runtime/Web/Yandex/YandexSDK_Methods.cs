@@ -28,8 +28,6 @@ namespace Vurbiri
 
         public IEnumerator Authorization_Cn(Action<bool> callback)
         {
-            ///Message.BannersClear();
-
             WaitResult<bool> waitResult;
 
             if (!IsPlayer)

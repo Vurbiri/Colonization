@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.UI
 
             StartCoroutine(Label_Cn());
 
-            yield return _delayStartTurn;
+            yield return _delayStartTurn.Restart();
         }
 
         private IEnumerator Label_Cn()
@@ -81,7 +81,6 @@ namespace Vurbiri.Colonization.UI
 
             _renderer.SetAlpha(0f);
         }
-
 
         private void SetText(Localization localization)
 		{

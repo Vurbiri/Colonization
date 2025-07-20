@@ -1,15 +1,15 @@
-using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri
 {
     [System.Serializable]
-    public class WaitParticle : IEnumerator
+    public class WaitParticle : IWait
     {
         [SerializeField] private ParticleSystem _particleSystem;
 
         public object Current => null;
         public ParticleSystem ParticleSystem => _particleSystem;
+        public bool IsRunning => _particleSystem.isPlaying;
 
         public WaitParticle(ParticleSystem particleSystem)
         {

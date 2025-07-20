@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private TextMeshPro _currentValueTMP;
 
         private Transform _barTransform;
-		private int _currentValue = int.MinValue, _maxValue;
+		private int _currentValue = int.MaxValue, _maxValue = int.MaxValue;
         private PopupWidget3D _popup;
         private Sprite _sprite;
         private Unsubscriptions _unsubscribers;
@@ -29,10 +29,13 @@ namespace Vurbiri.Colonization.Actors
 		{
             _popup = popup;
 
-            _backgroundBar.size = _barSprite.size = new(SP_WIDTH, SP_HIGHT);
-            _barTransform = _barSprite.transform;
-            _barSprite.color = color;
+            _backgroundBar.size = new(SP_WIDTH, SP_HIGHT);
             _backgroundBar.color = colors[ActorAbilityId.MaxHP];
+
+            _barSprite.size = new(SP_WIDTH, SP_HIGHT);
+            _barSprite.color = color;
+
+            _barTransform = _barSprite.transform;
             _hpSprite.color = colors[ActorAbilityId.CurrentHP];
 
             _backgroundBar.sortingOrder += orderLevel;
@@ -45,29 +48,27 @@ namespace Vurbiri.Colonization.Actors
 
             _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe(SetMaxValue);
             _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(SetCurrentValue);
+        }
 
-            #region Local: SetMaxValue(..), SetCurrentValue(..)
-            //=================================
-            void SetMaxValue(int value)
-            {
-                _maxValueTMP.text = (value >> ActorAbilityId.SHIFT_ABILITY).ToString();
-                _maxValue = value;
-                SetCurrentValue(_currentValue);
-            }
-            //=================================
-            void SetCurrentValue(int value)
-            {
-                _currentValueTMP.text = (value >> ActorAbilityId.SHIFT_ABILITY).ToString();
+        private void SetMaxValue(int value)
+        {
+            _maxValueTMP.text = (value >> ActorAbilityId.SHIFT_ABILITY).ToString();
+            _maxValue = value;
+            SetCurrentValue(_currentValue);
+        }
 
-                float size = SP_WIDTH * value / _maxValue;
-                _barSprite.size = new(size, SP_HIGHT);
-                _barTransform.localPosition = new((size - SP_WIDTH) * 0.5f, 0f, 0f);
+        private void SetCurrentValue(int value)
+        {
+            int shiftedValue = value >> ActorAbilityId.SHIFT_ABILITY;
+            _currentValueTMP.text = shiftedValue.ToString();
 
-                _popup.Run((value - _currentValue) >> ActorAbilityId.SHIFT_ABILITY, _sprite);
+            float width = SP_WIDTH * value / _maxValue;
+            _barSprite.size = new(width, SP_HIGHT);
+            _barTransform.localPosition = new((width - SP_WIDTH) * 0.5f, 0f, 0f);
 
-                _currentValue = value;
-            }
-            #endregion
+            _popup.Run(shiftedValue - _currentValue, _sprite);
+
+            _currentValue = shiftedValue;
         }
 
         private void OnDestroy()

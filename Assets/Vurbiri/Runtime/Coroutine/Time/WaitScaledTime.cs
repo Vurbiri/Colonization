@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 namespace Vurbiri
 {
     [System.Serializable]
-    sealed public class WaitTime : AWaitTime
+    sealed public class WaitScaledTime : AWaitTime
     {
         protected override float ApplicationTime
         {
@@ -11,8 +11,8 @@ namespace Vurbiri
             get => UnityEngine.Time.time;
         }
 
-        public WaitTime(float time) : base(time) { }
+        public WaitScaledTime(float time) : base(time) { }
 
-        public static implicit operator WaitTime(float time) => new(time);
+        public static implicit operator WaitScaledTime(float time) => new(time);
     }
 }

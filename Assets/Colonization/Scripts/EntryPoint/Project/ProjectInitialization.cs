@@ -42,8 +42,6 @@ namespace Vurbiri.Colonization.EntryPoint
 
             MessageBox.SetColors(colors.PanelBack, colors.TextDefault);
 
-            //Banners.InstanceF.Initialize();
-
             loading.Add(new CreateYandexSDK(diContainer, coroutine, _leaderboardName));
             loading.Add(new CreateStorage(diContainer, coroutine, _loadingScreen, _logOnPanel));
             loading.Add(new LoadSettingsStep(diContainer, _playerVisualSetScriptable));

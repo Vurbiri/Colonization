@@ -2,11 +2,12 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-	public class WaitAudio
-	{
+	public class WaitAudio : IWait
+    {
         private readonly AudioSource _audioSource;
 
         public object Current => null;
+        public bool IsRunning => _audioSource.isPlaying;
 
         public WaitAudio(AudioSource audioSource) => _audioSource = audioSource;
 

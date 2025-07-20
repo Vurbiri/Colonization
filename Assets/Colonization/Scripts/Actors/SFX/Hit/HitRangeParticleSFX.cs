@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
         private AudioSource _audioSource;
         private ParticleSystem _particle;
         private MainModule _main;
-        private readonly WaitTime _waitTime = new(0f);
+        private readonly WaitScaledTime _waitTime = new(0f);
         private readonly WaitSignal _waitActivate = new();
         private float _avgSpeed;
 

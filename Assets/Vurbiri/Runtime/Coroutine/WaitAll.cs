@@ -3,12 +3,13 @@ using System.Collections.Generic;
 
 namespace Vurbiri
 {
-    public class WaitAll : IEnumerator
+    public class WaitAll : IWait
     {
         private readonly List<IEnumerator> _coroutines;
 
-        public int Count => _coroutines.Count;
         public object Current => null;
+        public int Count => _coroutines.Count;
+        public bool IsRunning => _coroutines.Count != 0;
 
         public WaitAll()
         {
@@ -41,31 +42,33 @@ namespace Vurbiri
             return _coroutines.Count != 0;
         }
 
-        public WaitAll Add(IEnumerator coroutine)
+        public IEnumerator Add(IEnumerator coroutine)
         {
             _coroutines.Add(coroutine);
             return this;
         }
-        public WaitAll Add(IEnumerator coroutine1, IEnumerator coroutine2)
+        public IEnumerator Add(IEnumerator coroutine1, IEnumerator coroutine2)
         {
             _coroutines.Add(coroutine1);
             _coroutines.Add(coroutine2);
             return this;
         }
-        public WaitAll Add(params IEnumerator[] coroutines)
+        public IEnumerator Add(params IEnumerator[] coroutines)
         {
             _coroutines.AddRange(coroutines);
             return this;
         }
-        public WaitAll AddRange(IEnumerable<IEnumerator> coroutines)
+        public IEnumerator AddRange(IEnumerable<IEnumerator> coroutines)
         {
             _coroutines.AddRange(coroutines);
             return this;
         }
 
-        public void Reset()
+        public void Clear()
         {
             _coroutines.Clear();
         }
+
+        public void Reset() { }
     }
 }

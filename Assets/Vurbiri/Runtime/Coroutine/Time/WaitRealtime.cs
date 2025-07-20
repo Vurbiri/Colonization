@@ -5,6 +5,7 @@ namespace Vurbiri
     [System.Serializable]
     sealed public class WaitRealtime : AWaitTime
     {
+
         protected override float ApplicationTime
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

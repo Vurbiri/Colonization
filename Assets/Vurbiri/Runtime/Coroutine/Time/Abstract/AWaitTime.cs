@@ -3,48 +3,42 @@ using System.Collections;
 namespace Vurbiri
 {
     [System.Serializable]
-    public abstract class AWaitTime : IEnumerator
+    public abstract class AWaitTime : IWait
     {
         [UnityEngine.SerializeField] private float _waitTime;
-        private float _waitUntilTime = -1f;
+        private float _waitUntilTime;
+        private bool _isRunning;
+
+        protected abstract float ApplicationTime { get; }
 
         public object Current => null;
-        protected abstract float ApplicationTime { get; }
-        public float Time
-        {
-            get => _waitTime;
-            set { _waitTime = value; _waitUntilTime = -1f; }
-        }
+        public float Time => _waitTime;
+        public float CurrentTime => _waitUntilTime;
+
+        public bool IsRunning => _isRunning;
 
         public AWaitTime(float time) => _waitTime = time;
 
         public bool MoveNext()
         {
-            if (_waitUntilTime < 0f)
-                _waitUntilTime = ApplicationTime + _waitTime;
+            if (!_isRunning)
+                _waitUntilTime = _waitTime + ApplicationTime;
 
-            bool flag = ApplicationTime < _waitUntilTime;
-            if (!flag)
-                _waitUntilTime = -1f;
-
-            return flag;
+            return _isRunning = _waitUntilTime > ApplicationTime;
         }
-
-        public void Add(float value) => _waitTime += value;
-        public void Multiply(float value) => _waitTime *= value;
 
         public IEnumerator Restart(float value)
         {
             _waitTime = value;
-            _waitUntilTime = ApplicationTime + _waitTime;
+            _isRunning = false;
             return this;
         }
         public IEnumerator Restart()
         {
-            _waitUntilTime = ApplicationTime + _waitTime;
+            _isRunning = false;
             return this;
         }
 
-        public void Reset() => _waitUntilTime = -1f;
+        public void Reset() => _isRunning = false;
     }
 }

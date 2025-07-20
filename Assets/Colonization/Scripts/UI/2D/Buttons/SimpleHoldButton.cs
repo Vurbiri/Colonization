@@ -78,12 +78,12 @@ namespace Vurbiri.Colonization.UI
 
         private IEnumerator Hold_Cn()
         {
-            _clickPeriod.Time = _period;
+            float time = _period;
             while (_interactable & _hold & _inside)
             {
                 _onClick.Invoke();
-                yield return _clickPeriod.Restart();
-                _clickPeriod.Multiply(_acceleration);
+                yield return _clickPeriod.Restart(time);
+                time *= _acceleration;
             }
         }
 

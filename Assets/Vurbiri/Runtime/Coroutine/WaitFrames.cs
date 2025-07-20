@@ -1,35 +1,39 @@
+using System.Collections;
+
 namespace Vurbiri
 {
-    public class WaitFrames : System.Collections.IEnumerator
+    public class WaitFrames : IWait
     {
         private ushort _waitFrames;
-        private ushort _waitUntilFrames;
-
-        public ushort Frames
-        {
-            get => _waitFrames;
-            set { _waitFrames = value; _waitUntilFrames = _waitFrames; }
-        }
+        private ushort _currentFrames;
+        private bool _isRunning;
 
         public object Current => null;
+        public bool IsRunning => _isRunning;
 
         public bool MoveNext()
         {
-            if (--_waitUntilFrames > 0)
-                return true;
+            if (!_isRunning)
+                _currentFrames = _waitFrames;
 
-            _waitUntilFrames = _waitFrames;
-            return false;
+            return _isRunning = _currentFrames --> 0;
         }
 
-        public WaitFrames(ushort frames)  => Frames = frames;
+        public WaitFrames(ushort frames)  => _waitFrames = frames;
 
-        public WaitFrames Restart(ushort value)
+        public IEnumerator Restart()
         {
-            Frames = value;
+            _isRunning = false;
             return this;
         }
 
-        public void Reset() => _waitUntilFrames = _waitFrames;
+        public IEnumerator Restart(ushort value)
+        {
+            _waitFrames = value;
+            _isRunning = false;
+            return this;
+        }
+
+        public void Reset() => _isRunning = false;
     }
 }

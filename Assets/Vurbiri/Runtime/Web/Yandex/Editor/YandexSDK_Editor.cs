@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Result = Vurbiri.WaitResult;
 
 namespace Vurbiri
 {
@@ -20,20 +21,20 @@ namespace Vurbiri
         public bool IsPlayer => IsInitialize && _isPlayer;
         public bool IsLeaderboard => IsLogOn && _isLeaderboard;
 
-        public WaitResult<bool> InitYsdk() => new WaitResultSource<bool>(_isInitialize);
+        public WaitResult<bool> InitYsdk() => Result.Instant(_isInitialize);
         public void LoadingAPI_Ready() { }
-        public WaitResult<bool> InitPlayer() => new WaitResultSource<bool>(_isPlayer);
+        public WaitResult<bool> InitPlayer() => Result.Instant(_isPlayer);
         public WaitResult<bool> LogOn()
         {
             IsLogOn = true;
-            return new WaitResultSource<bool>(IsLogOn); ;
+            return Result.Instant(IsLogOn); ;
         }
-        public WaitResult<bool> InitLeaderboards() => new WaitResultSource<bool>(IsLeaderboard);
+        public WaitResult<bool> InitLeaderboards() => Result.Instant(IsLeaderboard);
         public string GetPlayerAvatarURL(AvatarSize size) => string.Empty;
 
-        public WaitResultSource<Return<PlayerRecord>> GetPlayerResult() => new(new Return<PlayerRecord>(new PlayerRecord(6, 1)));
-        public WaitResult<bool> SetScore(long score) => new WaitResultSource<bool>(true);
-        public WaitResultSource<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 0, AvatarSize size = AvatarSize.Small)
+        public WaitResult<Return<PlayerRecord>> GetPlayerResult() => Result.Instant(new Return<PlayerRecord>(new PlayerRecord(6, 1)));
+        public WaitResult<bool> SetScore(long score) => Result.Instant(true);
+        public WaitResult<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 0, AvatarSize size = AvatarSize.Small)
         {
             Debug.Log(_lbName);
 
@@ -54,10 +55,10 @@ namespace Vurbiri
 
             Leaderboard l = new(2, list.ToArray());
 
-            return new(new Return<Leaderboard>(l));
+            return Result.Instant(new Return<Leaderboard>(l));
         }
 
-        public WaitResultSource<Return<Leaderboard>> GetLeaderboardTest()
+        public WaitResult<Return<Leaderboard>> GetLeaderboardTest()
         {
             List<LeaderboardRecord> list = new()
         {
@@ -74,32 +75,32 @@ namespace Vurbiri
 
             Leaderboard l = new(2, list.ToArray());
 
-            return new(new Return<Leaderboard>(l));
+            return Result.Instant(new Return<Leaderboard>(l));
         }
 
-        public WaitResultSource<bool> Save(string key, string data)
+        public WaitResult<bool> Save(string key, string data)
         {
             using StreamWriter sw = new(Path.Combine(Application.persistentDataPath, key));
             sw.Write(data);
 
-            return new(true);
+            return Result.Instant(true);
         }
-        public WaitResultSource<string> Load(string key)
+        public WaitResult<string> Load(string key)
         {
             string path = Path.Combine(Application.persistentDataPath, key);
             if (File.Exists(path))
             {
                 using StreamReader sr = new(path);
-                return new(sr.ReadToEnd());
+                return Result.Instant(sr.ReadToEnd());
             }
-            return new(string.Empty);
+            return Result.Instant(string.Empty);
         }
 
-        public WaitResultSource<bool> CanReview() => new(IsLogOn);
-        public WaitResultSource<bool> RequestReview() => new(true);
+        public WaitResult<bool> CanReview() => Result.Instant(IsLogOn);
+        public WaitResult<bool> RequestReview() => Result.Instant(true);
 
-        public WaitResultSource<bool> CanShortcut() => new(IsLogOn);
-        public WaitResultSource<bool> CreateShortcut() => new(IsLogOn);
+        public WaitResult<bool> CanShortcut() => Result.Instant(IsLogOn);
+        public WaitResult<bool> CreateShortcut() => Result.Instant(IsLogOn);
 
     }
 }

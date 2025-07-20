@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public abstract class AMoveUsingLerp : IEnumerator
+    public abstract class AMoveUsingLerp : IWait
     {
         [SerializeField] private Transform _transform;
         [SerializeField] private float _speed;
@@ -61,6 +61,14 @@ namespace Vurbiri
                 _isRunning = false;
                 _progress = 1f;
                 _transform.localPosition = _end;
+            }
+        }
+        public void Stop()
+        {
+            if (_isRunning)
+            {
+                _isRunning = false;
+                _progress = 1f;
             }
         }
 
