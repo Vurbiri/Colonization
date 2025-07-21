@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.EntryPoint
         
         private GameplayInitObjects _init;
 
-        public string Description => Localization.Instance.GetText(Files.Main, "InitUIStep");
+        public string Description => Localization.Instance.GetText(LangFiles.Main, "InitUIStep");
         public float Weight => 0.2f;
 
         public InitUI Init(GameplayInitObjects init)

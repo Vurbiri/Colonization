@@ -7,8 +7,8 @@ namespace Vurbiri.Colonization.UI
 {
 	public class ScreenLabel : MonoBehaviour
 	{
-        [SerializeField, Key(Files.Gameplay)] private string _landingKey;
-        [SerializeField, Key(Files.Gameplay)] private string _startTurnKey;
+        [SerializeField, Key(LangFiles.Gameplay)] private string _landingKey;
+        [SerializeField, Key(LangFiles.Gameplay)] private string _startTurnKey;
         [Space]
         [SerializeField, Range(5f, 15f)] private float _onSpeed = 9f;
         [SerializeField, Range(0.1f, 1.5f)] private float _offSpeed = 0.9f;
@@ -84,8 +84,8 @@ namespace Vurbiri.Colonization.UI
 
         private void SetText(Localization localization)
 		{
-            _landingText = localization.GetText(Files.Gameplay, _landingKey);
-            _startTurnText = localization.GetText(Files.Gameplay, _startTurnKey);
+            _landingText = localization.GetText(LangFiles.Gameplay, _landingKey);
+            _startTurnText = localization.GetText(LangFiles.Gameplay, _startTurnKey);
         }
 	}
 }

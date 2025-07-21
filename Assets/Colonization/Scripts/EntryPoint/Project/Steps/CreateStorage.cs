@@ -29,14 +29,14 @@ namespace Vurbiri.Colonization.EntryPoint
             _ysdk = _diContainer.Get<YandexSDK>();
             _settings = _diContainer.Get<Settings>();
 
-            yield return _coroutine.Run(CreateStorage_Cn());
+            yield return _coroutine.StartCoroutine(CreateStorage_Cn());
             if (!_ysdk.IsLogOn)
             {
-                yield return _coroutine.Run(_loadingScreen.SmoothOff());
-                yield return _coroutine.Run(_logOnPanel.TryLogOn_Cn(_ysdk, _settings, _projectStorage));
-                yield return _coroutine.Run(_loadingScreen.SmoothOn());
+                yield return _coroutine.StartCoroutine(_loadingScreen.SmoothOff());
+                yield return _coroutine.StartCoroutine(_logOnPanel.TryLogOn_Cn(_ysdk, _settings, _projectStorage));
+                yield return _coroutine.StartCoroutine(_loadingScreen.SmoothOn());
                 if (_ysdk.IsLogOn)
-                    yield return _coroutine.Run(CreateStorage_Cn());
+                    yield return _coroutine.StartCoroutine(CreateStorage_Cn());
             }
         }
 

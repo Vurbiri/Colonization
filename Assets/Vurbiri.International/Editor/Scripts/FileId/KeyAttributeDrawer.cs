@@ -21,21 +21,24 @@ namespace Vurbiri.International.Editor
                 return;
             }
 			
-			
 			position.height = EditorGUIUtility.singleLineHeight;
 			
 			label = BeginProperty(position, label, mainProperty);
 			{
                 string[] keys = LanguageData.keys[key.fileId];
-                int index = Mathf.Max(0, Popup(position, label.text, System.Array.IndexOf(keys, mainProperty.stringValue), keys));
-                mainProperty.stringValue = keys[index];
+				int index = Popup(position, label.text, System.Array.IndexOf(keys, mainProperty.stringValue), keys);
+                mainProperty.stringValue = keys[Mathf.Max(0, index)];
             }
 			EndProperty();
 		}
 		
 		public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
 		{
-			return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-		}
+            if (attribute is KeyAttribute)
+	            return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+
+			return EditorGUI.GetPropertyHeight(mainProperty, label);
+
+        }
 	}
 }

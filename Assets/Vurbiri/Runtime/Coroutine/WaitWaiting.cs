@@ -10,7 +10,7 @@ namespace Vurbiri
 
         public WaitWaiting(IWait waiting) => _waiting = waiting;
 
-        public bool MoveNext() => _waiting.IsRunning;
+        public bool MoveNext() => _waiting.IsWait;
 
         public IEnumerator ReSetup(IWait waiting)
         {

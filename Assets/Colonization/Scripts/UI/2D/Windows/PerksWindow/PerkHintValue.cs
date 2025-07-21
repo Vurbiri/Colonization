@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         protected override void SetTextAndCost(Localization localization)
         {
             StringBuilder stringBuilder = new();
-            stringBuilder.AppendFormat(localization.GetText(Files.Gameplay, _key), _value);
+            stringBuilder.AppendFormat(localization.GetText(LangFiles.Gameplay, _key), _value);
             stringBuilder.AppendLine();
             stringBuilder.Append(_cost);
 
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         }
         protected override void SetText(Localization localization)
         {
-            _text = localization.GetFormatText(Files.Gameplay, _key, _value);
+            _text = localization.GetFormatText(LangFiles.Gameplay, _key, _value);
         }
     }
 }

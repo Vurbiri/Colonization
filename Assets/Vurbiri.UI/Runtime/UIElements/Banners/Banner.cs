@@ -124,7 +124,7 @@ namespace Vurbiri.UI
         {
             yield return _waitSwitch.Show();
             yield return delay;
-            while (_move.IsRunning) yield return null;
+            while (_move.IsWait) yield return null;
             yield return _waitSwitch.Hide();
 
             _coroutine = null;

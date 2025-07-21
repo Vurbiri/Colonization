@@ -9,7 +9,7 @@ namespace Vurbiri
 
         public object Current => null;
         public ParticleSystem ParticleSystem => _particleSystem;
-        public bool IsRunning => _particleSystem.isPlaying;
+        public bool IsWait => _particleSystem.isPlaying;
 
         public WaitParticle(ParticleSystem particleSystem)
         {

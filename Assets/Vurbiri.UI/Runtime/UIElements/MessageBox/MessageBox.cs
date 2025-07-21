@@ -66,7 +66,7 @@ namespace Vurbiri.UI
             Throw.IfLengthZero(buttonIds, "buttonIds");
             
             if (s_instance._currentWait != null)
-                return new Task(text, buttonIds).waitResult;
+                return new Task(text, buttonIds).waitButton;
             else
                 return s_instance.Setup(text, buttonIds, new());
         }
@@ -165,21 +165,21 @@ namespace Vurbiri.UI
         {
             public readonly string text;
             public readonly Id<MBButtonId>[] buttonIds;
-            public readonly WaitButtonSource waitResult;
+            public readonly WaitButtonSource waitButton;
 
             public Task(string text, Id<MBButtonId>[] buttonIds)
             {
                 this.text = text;
                 this.buttonIds = buttonIds;
-                this.waitResult = new();
+                this.waitButton = new();
 
                 s_tasks.Enqueue(this);
             }
 
             public void Run(MessageBox parent)
             {
-                if (waitResult.IsWait)
-                    parent.Setup(text, buttonIds, waitResult);
+                if (waitButton.IsWait)
+                    parent.Setup(text, buttonIds, waitButton);
                 else if (s_tasks.Count > 0)
                     s_tasks.Dequeue().Run(parent);
             }

@@ -7,7 +7,7 @@ namespace Vurbiri
         private readonly AudioSource _audioSource;
 
         public object Current => null;
-        public bool IsRunning => _audioSource.isPlaying;
+        public bool IsWait => _audioSource.isPlaying;
 
         public WaitAudio(AudioSource audioSource) => _audioSource = audioSource;
 

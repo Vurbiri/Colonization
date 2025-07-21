@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-	public static class Files
+	public static class LangFiles
 	{
 		public const int Main = 0;
         public const int Gameplay = 1;

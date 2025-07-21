@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
     sealed public class ButtonBuild : AButtonBuild
     {
         [Space]
-        [SerializeField, Key(Files.Gameplay)] private string _key;
+        [SerializeField, Key(LangFiles.Gameplay)] private string _key;
 
         private ACurrencies _cost;
         private ACurrencies _cash;
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.UI
             _thisGameObject.SetActive(true);
         }
 
-        private void SetText(Localization localization) => _caption = localization.GetText(Files.Gameplay, _key);
+        private void SetText(Localization localization) => _caption = localization.GetText(LangFiles.Gameplay, _key);
 
         protected override void OnDestroy()
         {

@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
             SpellBook.Clear(); Actor.Clear();
             s_hexagons = null; s_crossroads = null; s_game = null;
             s_cameraController = null; s_coroutines = null;
-            s_states.Dispose();
+            s_states.Clear();
         }
 
         #region Nested: Settings

@@ -7,7 +7,7 @@ namespace Vurbiri
     {
         [UnityEngine.SerializeField] private float _waitTime;
         private float _waitUntilTime;
-        private bool _isRunning;
+        private bool _isWait;
 
         protected abstract float ApplicationTime { get; }
 
@@ -15,30 +15,30 @@ namespace Vurbiri
         public float Time => _waitTime;
         public float CurrentTime => _waitUntilTime;
 
-        public bool IsRunning => _isRunning;
+        public bool IsWait => _isWait;
 
         public AWaitTime(float time) => _waitTime = time;
 
         public bool MoveNext()
         {
-            if (!_isRunning)
+            if (!_isWait)
                 _waitUntilTime = _waitTime + ApplicationTime;
 
-            return _isRunning = _waitUntilTime > ApplicationTime;
+            return _isWait = _waitUntilTime > ApplicationTime;
         }
 
         public IEnumerator Restart(float value)
         {
             _waitTime = value;
-            _isRunning = false;
+            _isWait = false;
             return this;
         }
         public IEnumerator Restart()
         {
-            _isRunning = false;
+            _isWait = false;
             return this;
         }
 
-        public void Reset() => _isRunning = false;
+        public void Reset() => _isWait = false;
     }
 }

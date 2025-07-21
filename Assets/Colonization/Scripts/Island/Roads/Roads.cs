@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
         public ReturnSignal BuildAndUnion(CrossroadLink link)
         {
             ReturnSignal returnSignal = Build(link, true);
-            _coroutines.Run(TryUnion_Cn(returnSignal.signal));
+            _coroutines.StartCoroutine(TryUnion_Cn(returnSignal.signal));
             return returnSignal;
         }
 
@@ -108,7 +108,7 @@ namespace Vurbiri.Colonization
                     {
                         _roadsLists.Remove(removingLine);
                         removingLine.Disable();
-                        _coroutines.Run(TryUnion_Cn(null));
+                        _coroutines.StartCoroutine(TryUnion_Cn(null));
                         yield break;
                     }
                 }

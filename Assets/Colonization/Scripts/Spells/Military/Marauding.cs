@@ -56,6 +56,11 @@ namespace Vurbiri.Colonization
 
                 _currencies[param.playerId] = temp;
             }
+
+            public override void Clear()
+            {
+                s_spells[TypeOfPerksId.Military][MilitarySpellId.Marauding] = null;
+            }
         }
     }
 }

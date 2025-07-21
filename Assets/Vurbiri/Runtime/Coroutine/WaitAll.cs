@@ -9,7 +9,7 @@ namespace Vurbiri
 
         public object Current => null;
         public int Count => _coroutines.Count;
-        public bool IsRunning => _coroutines.Count != 0;
+        public bool IsWait => _coroutines.Count != 0;
 
         public WaitAll()
         {

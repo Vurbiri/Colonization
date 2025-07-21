@@ -11,14 +11,14 @@ namespace Vurbiri
 
         private Vector3 _start, _end, _delta;
         private float _progress = 1f;
-        private bool _isRunning;
+        private bool _isWait;
 
         protected abstract float DeltaTime { get; }
 
         public Transform Transform => _transform;
 
         public object Current => null;
-        public bool IsRunning => _isRunning;
+        public bool IsWait => _isWait;
 
         public AMoveUsingLerp(Transform transform, float speed)
         {
@@ -28,12 +28,12 @@ namespace Vurbiri
         public bool MoveNext()
         {
             _progress += DeltaTime * _speed;
-            if (_isRunning = _progress < 1f)
+            if (_isWait = _progress < 1f)
                 _transform.localPosition = new(_start.x + _delta.x * _progress, _start.y + _delta.y * _progress, _start.z + _delta.z * _progress);
             else
                 _transform.localPosition = _end;
             
-            return _isRunning;
+            return _isWait;
         }
 
         public IEnumerator Run(Vector3 target)
@@ -50,24 +50,24 @@ namespace Vurbiri
         public void Run(MonoBehaviour mono, Vector3 target)
         {
             Set(_transform.localPosition, target);
-            if (!_isRunning)
+            if (!_isWait)
                 mono.StartCoroutine(this);
         }
 
         public void Skip()
         {
-            if (_isRunning)
+            if (_isWait)
             {
-                _isRunning = false;
+                _isWait = false;
                 _progress = 1f;
                 _transform.localPosition = _end;
             }
         }
         public void Stop()
         {
-            if (_isRunning)
+            if (_isWait)
             {
-                _isRunning = false;
+                _isWait = false;
                 _progress = 1f;
             }
         }

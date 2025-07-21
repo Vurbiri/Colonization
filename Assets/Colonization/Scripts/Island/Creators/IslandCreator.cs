@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
         private GameplayStorage _storage;
         private readonly Vector3[] _sides = new Vector3[HEX.SIDES];
 
-        public string Description => Localization.Instance.GetText(Files.Main, "IslandCreationStep");
+        public string Description => Localization.Instance.GetText(LangFiles.Main, "IslandCreationStep");
         public float Weight => 5f;
 
         public ILoadingStep Init(GameplayInitObjects init)

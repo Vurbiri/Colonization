@@ -1,8 +1,6 @@
-using System;
-
 namespace Vurbiri.Colonization
 {
-    public struct GameStates : IDisposable
+    public struct GameStates
     {
         public Balance balance;
         public Score score;
@@ -18,9 +16,9 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void Dispose()
+        public void Clear()
         {
-            balance = null; score = null; diplomacy = null;
+            balance = null; score = null; diplomacy = null; prices = null;
         }
     }
 }

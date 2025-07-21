@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using static Vurbiri.Colonization.TypeOfPerksId;
 
 namespace Vurbiri.Colonization
 {
@@ -7,9 +8,15 @@ namespace Vurbiri.Colonization
         sealed private class WallBuild : ASpell
         {
             private readonly List<int> _canWall = new(CONST.DEFAULT_MAX_EDIFICES);
-
-            private WallBuild() { }
-            public static void Create() => s_spells[TypeOfPerksId.Military][MilitarySpellId.WallBuild] = new WallBuild();
+            private readonly CurrenciesLite _cost;
+            private WallBuild(Prices prices) 
+            {
+                _cost = new(prices.Wall)
+                {
+                    { CurrencyId.Mana, s_costs[Military][MilitarySpellId.WallBuild] }
+                };
+            }
+            public static void Create(Prices prices) => s_spells[Military][MilitarySpellId.WallBuild] = new WallBuild(prices);
 
             public override void Cast(SpellParam param, CurrenciesLite resources)
             {
@@ -25,12 +32,13 @@ namespace Vurbiri.Colonization
                 if (_canWall.Count > 0)
                 {
                     int index = _canWall.Rand();
-                    if (colonies[index].BuildWall(param.playerId, true))
-                    {
-                        colonies.Signal(index);
-                        s_humans[param.playerId].AddResources(resources);
-                    }
+                    s_humans[param.playerId].BuyWall(colonies[index], _cost);
                 }
+            }
+
+            public override void Clear()
+            {
+                s_spells[Military][MilitarySpellId.WallBuild] = null;
             }
         }
     }

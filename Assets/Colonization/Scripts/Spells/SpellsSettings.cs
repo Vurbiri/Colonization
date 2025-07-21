@@ -1,6 +1,7 @@
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization
 {
@@ -28,6 +29,7 @@ namespace Vurbiri.Colonization
         public IdArray<WarriorId, int> chanceMarauding;
         [Header("SwapId")]
         public Color swapHexColor;
+        public FileIdAndKey swapText;
         [Space]
         public IdArray<EconomicSpellId, int> economicCost;
         public IdArray<MilitarySpellId, int> militaryCost;

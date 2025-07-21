@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri
@@ -19,10 +18,6 @@ namespace Vurbiri
 
             return gObj.AddComponent<Coroutines>();
         }
-
-        public Coroutine Run(IEnumerator routine) => StartCoroutine(routine);
-
-        public void Stop(Coroutine routine) => StopCoroutine(routine);
 
         public void Dispose()
         {

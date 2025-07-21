@@ -167,7 +167,7 @@ namespace Vurbiri.Colonization.UI
             public void SetHintText(Localization localization, StringBuilder sb)
             {
                 StringBuilder stringBuilder = new(20);
-                stringBuilder.AppendFormat(NAME, localization.GetText(Files.Gameplay, _hintKey));
+                stringBuilder.AppendFormat(NAME, localization.GetText(LangFiles.Gameplay, _hintKey));
                 stringBuilder.Append(VALUE);
                 stringBuilder.Append(_maxLevel);
 
@@ -217,7 +217,7 @@ namespace Vurbiri.Colonization.UI
             public void SetHintText(Localization localization, StringBuilder sb)
             {
                 StringBuilder stringBuilder = new(18);
-                stringBuilder.AppendFormat(NAME, localization.GetText(Files.Actors, _hintKey));
+                stringBuilder.AppendFormat(NAME, localization.GetText(LangFiles.Actors, _hintKey));
                 stringBuilder.Append(VALUE);
 
                 _hintText = stringBuilder.ToString();

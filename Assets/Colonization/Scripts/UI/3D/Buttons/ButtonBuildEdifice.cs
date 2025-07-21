@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.UI
             CombineInteractable(isUnlock, _cash >= cost);
             _buttonIcon.sprite = view.sprite;
 
-            SetTextHint(_localization.GetText(Files.Gameplay, view.keyName), _cash, cost);
+            SetTextHint(_localization.GetText(LangFiles.Gameplay, view.keyName), _cash, cost);
 
             _thisGameObject.SetActive(true);
         }

@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.EntryPoint
         private readonly string _key;
 
         public float Weight => _weight;
-        public string Description => Localization.Instance.GetText(Files.Main, _key);
+        public string Description => Localization.Instance.GetText(LangFiles.Main, _key);
 
         protected ALocalizationLoadingStep(string key)
         {

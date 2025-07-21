@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Vurbiri.Colonization.Actors;
-using static Vurbiri.Colonization.HEX;
+using static Vurbiri.Colonization.TypeOfPerksId;
 
 namespace Vurbiri.Colonization
 {
@@ -10,13 +10,18 @@ namespace Vurbiri.Colonization
         sealed private class SummonWarlock : ASpell
         {
             private readonly int _max;
+            private readonly CurrenciesLite _cost;
 
-            private SummonWarlock()
+            private SummonWarlock(Prices prices)
             {
-                _max = s_hexagons.GroundCount / 2;
+                _max = s_hexagons.GroundCount >> 1;
+                _cost = new(prices.Warriors[WarriorId.Warlock])
+                {
+                    { CurrencyId.Mana, s_costs[Economic][EconomicSpellId.SummonWarlock] }
+                };
             }
 
-            public static void Create() => s_spells[TypeOfPerksId.Economic][EconomicSpellId.SummonWarlock] = new SummonWarlock();
+            public static void Create(Prices prices) => s_economicSpells[EconomicSpellId.SummonWarlock] = new SummonWarlock(prices);
 
             public override void Cast(SpellParam param, CurrenciesLite resources)
             {
@@ -39,7 +44,7 @@ namespace Vurbiri.Colonization
                 {
                     List<Hexagon> free = new(s_hexagons.GroundCount - count);
                     ReadOnlyCollection<Key> keys;
-                    for (int i = 0; i < NEARS.Count; i++)
+                    for (int i = 0; i < HEX.NEARS.Count; i++)
                     {
                         keys = HEX.NEARS[i];
                         for (int j = keys.Count - 1; j >= 0; j--)
@@ -52,10 +57,14 @@ namespace Vurbiri.Colonization
                     hexagon = free.Rand();
                 }
 
-                s_humans[param.playerId].AddResources(resources);
-                s_humans[param.playerId].RecruitingFree(WarriorId.Warlock, hexagon);
+                s_humans[param.playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
 
                 s_cameraController.ToPosition(hexagon.Position);
+            }
+
+            public override void Clear()
+            {
+                s_economicSpells[EconomicSpellId.SummonWarlock] = null;
             }
         }
     }

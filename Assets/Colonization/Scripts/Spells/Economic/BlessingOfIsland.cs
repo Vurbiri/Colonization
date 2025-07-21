@@ -38,11 +38,16 @@ namespace Vurbiri.Colonization
                 if (_blessed.Count > 0)
                 {
                     int value = Mathf.RoundToInt((s_settings.blessBasa + (param.valueA + param.valueB) * s_settings.blessPerRes) / (float)_blessed.Count);
-                    s_coroutines.Run(Cast_Cn(param.playerId, value));
+                    s_coroutines.StartCoroutine(Cast_Cn(param.playerId, value));
                     
                     resources.Add(CurrencyId.Gold, -param.valueA); resources.Add(CurrencyId.Food, -param.valueB);
                     s_humans[param.playerId].AddResources(resources);
                 }
+            }
+
+            public override void Clear()
+            {
+                s_spells[TypeOfPerksId.Economic][EconomicSpellId.Blessing] = null;
             }
 
             private IEnumerator Cast_Cn(int playerId, int value)

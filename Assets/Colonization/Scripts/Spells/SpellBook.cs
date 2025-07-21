@@ -4,7 +4,6 @@ using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
-using static Vurbiri.Colonization.TypeOfPerksId;
 
 namespace Vurbiri.Colonization
 {
@@ -15,7 +14,9 @@ namespace Vurbiri.Colonization
 
         private static readonly Human[] s_humans = new Human[PlayerId.HumansCount];
         private static readonly ReadOnlyReactiveSet<Actor>[] s_actors = new ReactiveSet<Actor>[PlayerId.Count];
-        private static readonly ASpell[][] s_spells = { new ASpell[EconomicSpellId.Count], new ASpell[MilitarySpellId.Count] };
+        private static readonly ASpell[][] s_spells = { s_economicSpells = new ASpell[EconomicSpellId.Count], s_militarySpells = new ASpell[MilitarySpellId.Count] };
+        private static readonly ASpell[] s_economicSpells;
+        private static readonly ASpell[] s_militarySpells;
 
         private static readonly RBool s_isCast = new(false);
 
@@ -53,7 +54,7 @@ namespace Vurbiri.Colonization
         {
             int cost = s_costs[type][id];
 
-            if (_mana.Value >= cost & s_isCast)
+            if (_mana.Value >= cost & !s_isCast)
             {
                 _resources.Clear();
                 _resources.Set(CurrencyId.Mana, -cost);
@@ -69,7 +70,7 @@ namespace Vurbiri.Colonization
             s_hexagons = init.hexagons;
 
             Order.Create();
-            SummonWarlock.Create();
+            SummonWarlock.Create(init.prices);
 
             BloodTrade.Create();
         }
@@ -93,9 +94,9 @@ namespace Vurbiri.Colonization
             s_coroutines = null; s_triggerBus = null; s_cameraController = null; s_hexagons = null;
 
             for (int i = 0; i < EconomicSpellId.Count; i++)
-                s_spells[Economic][i] = null;
+                s_economicSpells[i].Clear();
             for (int i = 0; i < MilitarySpellId.Count; i++)
-                s_spells[Military][i] = null;
+                s_militarySpells[i].Clear();
         }
     }
 

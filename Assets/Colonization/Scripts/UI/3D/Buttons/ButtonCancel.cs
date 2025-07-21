@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.UI
             _cancelledObj = null;
         }
 
-        private void SetText(Localization localization) => _text = localization.GetText(Files.Main, "Cancel");
+        private void SetText(Localization localization) => _text = localization.GetText(LangFiles.Main, "Cancel");
 
         protected override void OnEnable()
         {

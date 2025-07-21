@@ -18,6 +18,11 @@ namespace Vurbiri.Colonization
                     s_humans[param.playerId].AddResources(resources);
                 }
             }
+
+            public override void Clear()
+            {
+                s_spells[TypeOfPerksId.Military][MilitarySpellId.BloodTrade] = null;
+            }
         }
     }
 }

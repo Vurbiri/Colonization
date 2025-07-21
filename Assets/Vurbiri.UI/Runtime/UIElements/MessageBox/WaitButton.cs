@@ -2,38 +2,40 @@ using System;
 
 namespace Vurbiri.UI
 {
-	public abstract class WaitButton : System.Collections.IEnumerator
+	public abstract class WaitButton : IWait
     {
         protected Action<Id<MBButtonId>> _onResult;
-        protected bool _keepWaiting;
+        protected bool _isWait;
         protected Id<MBButtonId> _id;
 
         public object Current => null;
         public Id<MBButtonId> Id => _id;
+        public bool IsWait => _isWait;
 
         public void AddListener(Action<Id<MBButtonId>> action) => _onResult += action;
 
-        public bool MoveNext() => _keepWaiting;
+        public bool MoveNext() => _isWait;
         public void Reset() 
         {
-            _keepWaiting = false;
-            MessageBox.Abort(this);
+            if (_isWait)
+            {
+                _isWait = false;
+                MessageBox.Abort(this);
+            }
         }
     }
 
     public class WaitButtonSource : WaitButton
     {
-        public bool IsWait => _keepWaiting;
-
         public WaitButtonSource()
         {
-            _keepWaiting = true;
+            _isWait = true;
         }
 
         public void SetResult(Id<MBButtonId> result)
         {
             _id = result;
-            _keepWaiting = false;
+            _isWait = false;
             _onResult?.Invoke(result);
         }
     }

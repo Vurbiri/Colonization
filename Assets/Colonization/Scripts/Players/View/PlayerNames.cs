@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
     [System.Serializable]
     public class PlayerNames : IReactive<string[]>, IEquatable<string[]>, IDisposable
 	{
-        [SerializeField, Key(Files.Main)] private string[] _nameKeys;
+        [SerializeField, Key(LangFiles.Main)] private string[] _nameKeys;
         private string[] _customNames;
         private YandexSDK _ysdk;
         private Localization _localization;
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
             return this;
         }
 
-        public string GetDefaultName(int index) => _localization.GetText(Files.Main, _nameKeys[index]);
+        public string GetDefaultName(int index) => _localization.GetText(LangFiles.Main, _nameKeys[index]);
 
         public Unsubscription Subscribe(Action<string[]> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, _customNames);
 
@@ -84,7 +84,7 @@ namespace Vurbiri.Colonization
                         return name;
                 }
 
-                return _localization.GetText(Files.Main, _nameKeys[index]);
+                return _localization.GetText(LangFiles.Main, _nameKeys[index]);
             }
         }
 

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
     {
         private const string AMOUNT = "{0}{1,2}</color><space=0.05em>|<space=0.05em>{2,-2}";
 
-        [SerializeField, Key(Files.Gameplay)] private string _keyOver;
+        [SerializeField, Key(LangFiles.Gameplay)] private string _keyOver;
 
         private ReactiveCombination<int, int> _reactiveAmountMax;
         private string _colorNormal, _colorNormalHint, _colorOver;

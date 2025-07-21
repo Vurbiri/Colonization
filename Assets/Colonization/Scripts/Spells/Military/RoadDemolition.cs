@@ -16,6 +16,11 @@ namespace Vurbiri.Colonization
                 if(isDemolition)
                     s_humans[param.playerId].AddResources(resources);
             }
+
+            public override void Clear()
+            {
+                s_spells[TypeOfPerksId.Military][MilitarySpellId.RoadDemolition] = null;
+            }
         }
     }
 }

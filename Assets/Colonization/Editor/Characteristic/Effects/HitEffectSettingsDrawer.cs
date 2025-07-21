@@ -241,7 +241,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             //==============================================
             void SetAndDrawDesc(bool isUsedAttack, int targetAbility)
             {
-                var localization = Localization.ForEditor(Files.Actors);
+                var localization = Localization.ForEditor(LangFiles.Actors);
 
                 _position.x += 35;
 

@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.UI
 
             if (_getText.key == string.Empty)
             {
-                _getText.id = Files.Gameplay;
+                _getText.id = LangFiles.Gameplay;
                 _getText.key = "Road";
             }
         }

@@ -12,6 +12,11 @@ namespace Vurbiri.Colonization
                 resources.Mix(s_humans[param.playerId].Resources);
                 s_humans[param.playerId].AddResources(resources);
             }
+
+            public override void Clear()
+            {
+                s_spells[TypeOfPerksId.Economic][EconomicSpellId.ResourcesMix] = null;
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
             ButtonView view = edificeId == EdificeId.PortOne ? _portOneView : _portTwoView;
 
             _buttonIcon.sprite = view.sprite;
-            _text = _localization.GetText(Files.Gameplay, view.keyName);
+            _text = _localization.GetText(LangFiles.Gameplay, view.keyName);
 
             _thisGameObject.SetActive(true);
         }

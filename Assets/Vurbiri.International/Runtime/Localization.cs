@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Reactive;
 using static Vurbiri.Storage;
@@ -12,8 +11,6 @@ namespace Vurbiri.International
     {
         private static readonly Localization s_instance;
 
-        private readonly int _countFiles;
-        private readonly string[] _files;
         private readonly Dictionary<string, string>[] _text;
         private readonly ReadOnlyCollection<LanguageType> _languages;
         private readonly Subscription<Localization> _changed = new();
@@ -23,18 +20,14 @@ namespace Vurbiri.International
         public static Localization Instance => s_instance;
         public ReadOnlyCollection<LanguageType> Languages => _languages;
         public SystemLanguage CurrentId => _currentLanguage.Id;
-        public int CountFiles => _countFiles;
 
         static Localization() => s_instance = new(0);
         private Localization(int fileId) 
         {
-            _files = LoadObjectFromResourceJson<string[]>(CONST_L.FILE_FILES);
-            Throw.IfLengthZero(_files, "_files");
             _languages = new(LoadObjectFromResourceJson<LanguageType[]>(CONST_L.FILE_LANG));
             Throw.IfLengthZero(_languages, "_languages");
 
-            _countFiles = _files.Length;
-            _text = new Dictionary<string, string>[_countFiles];
+            _text = new Dictionary<string, string>[Files.Count];
 
             _defaultLanguage = _languages[0];
             for (int i = _languages.Count - 1; i > 0; i--)
@@ -51,6 +44,7 @@ namespace Vurbiri.International
         }
 
         public Unsubscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, sendCallback, this);
+        public void Unsubscribe(Action<Localization> action) => _changed.Remove(action);
 
         public SystemLanguage IdFromCode(string code)
         {
@@ -68,7 +62,7 @@ namespace Vurbiri.International
 
         public void SetFiles(FileIds fileIds)
         {
-            for (int i = 0; i < _countFiles; i++)
+            for (int i = 0; i < Files.Count; i++)
             {
                 if (fileIds[i])  LoadFile(i);
                 else            _text[i] = null;
@@ -79,8 +73,8 @@ namespace Vurbiri.International
 
         public void LoadFile(int fileId)
         {
-            if (_text[fileId] == null) 
-                LoadingFile(fileId, _currentLanguage);
+            if (_text[fileId] == null && Files.Load(_currentLanguage.Folder, fileId, out Dictionary<string, string> load))
+                _text[fileId] = load;
         }
 
         public void UnloadFile(int fileId)
@@ -114,11 +108,11 @@ namespace Vurbiri.International
             var dictionary = _text[fileId];
             if (dictionary == null)
             {
-                Log.Info(output = $"File '{_files[fileId]}' not loaded.");
+                Log.Info(output = $"File '{Files.GetName(fileId)}' not loaded.");
             }
             else if (!dictionary.TryGetValue(key, out output))
             {
-                Log.Info(output = $"Key '{key}' not found in file '{_files[fileId]}'.");
+                Log.Info(output = $"Key '{key}' not found in file '{Files.GetName(fileId)}'.");
             }
 
             return output;
@@ -129,7 +123,7 @@ namespace Vurbiri.International
             string output;
             if (!string.IsNullOrEmpty(key))
             {
-                for (int i = 0; i < _countFiles; i++)
+                for (int i = 0; i < Files.Count; i++)
                     if (_text[i] != null && _text[i].TryGetValue(key, out output))
                         return output;
             }
@@ -144,20 +138,21 @@ namespace Vurbiri.International
 
         private void SetLanguage(LanguageType type)
         {
-            for (int i = 0; i < _countFiles; i++)
-                if (_text[i] != null)
-                    LoadingFile(i, type);
+            string folder = type.Folder;
+            for (int i = 0; i < Files.Count; i++)
+                if (_text[i] != null && Files.Load(folder, i, out Dictionary<string, string> load))
+                    _text[i] = load;
 
             _currentLanguage = type;
             _changed.Invoke(this);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void LoadingFile(int fileId, LanguageType type)
-        {
-            if (TryLoadObjectFromResourceJson(string.Concat(type.Folder, "/", _files[fileId]), out Dictionary<string, string> load))
-                _text[fileId] = load; //new(load, StringComparer.OrdinalIgnoreCase)
-        }
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //private void LoadingFile(int fileId, LanguageType type)
+        //{
+        //    if (Files.Load(type.Folder, fileId, out Dictionary<string, string> load))
+        //        _text[fileId] = load; //new(load, StringComparer.OrdinalIgnoreCase)
+        //}
 
 
 #if UNITY_EDITOR

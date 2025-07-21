@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
 
         public int Id => _id;
 
-        public ACurrenciesReactive Resources => _resources;
+        public Currencies Resources => _resources;
         public ExchangeRate Exchange => _exchange;
 
         public ReadOnlyReactiveSet<Actor> Warriors => _warriors;
@@ -140,12 +140,13 @@ namespace Vurbiri.Colonization
 
         public bool CanWallBuild(Crossroad crossroad) => crossroad.CanWallBuild(_id);
         public bool IsWallUnlock() => _abilities.IsTrue(IsWall);
-        public WaitSignal BuyWall(Crossroad crossroad)
+        public WaitSignal BuyWall(Crossroad crossroad) => BuyWall(crossroad, s_states.prices.Wall);
+        public WaitSignal BuyWall(Crossroad crossroad, CurrenciesLite cost)
         {
             ReturnSignal returnSignal = crossroad.BuildWall(_id, true);
             if (returnSignal)
             {
-                _resources.Pay(s_states.prices.Wall);
+                _resources.Pay(cost);
                 _edifices.edifices[crossroad.GroupId].Signal(crossroad);
             }
             return returnSignal.signal;
@@ -168,14 +169,11 @@ namespace Vurbiri.Colonization
         }
         public bool CanRecruiting(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
 
-        public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => s_coroutines.Run(Recruiting_Cn(id, crossroad));
-        public void Recruiting(Id<WarriorId> id, Hexagon hexagon)
+        public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => s_coroutines.StartCoroutine(Recruiting_Cn(id, crossroad));
+        public void Recruiting(Id<WarriorId> id, Hexagon hexagon) => Recruiting(id, hexagon, s_states.prices.Warriors[id.Value]);
+        public void Recruiting(Id<WarriorId> id, Hexagon hexagon, CurrenciesLite cost)
         {
-            _resources.Pay(s_states.prices.Warriors[id.Value]);
-            RecruitingFree(id, hexagon);
-        }
-        public void RecruitingFree(Id<WarriorId> id, Hexagon hexagon)
-        {
+            _resources.Pay(cost);
             Warrior warrior = _spawner.Create(id, hexagon);
             warrior.IsPersonTurn = _isPerson;
 

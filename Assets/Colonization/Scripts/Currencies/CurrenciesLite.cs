@@ -109,6 +109,24 @@ namespace Vurbiri.Colonization
             }
         }
 
+        public void Inverse()
+        {
+            for (int i = 0; i < AllCount; i++)
+                _values[i] = -_values[i];
+
+            _amount = -_amount;
+        }
+
+        public void Inverse(int index)
+        {
+            int value = -_values[index];
+
+            if (index != Blood)
+                _amount += value << 1;
+
+            _values[index] = value;
+        }
+
         public void Clear()
         {
             for (int i = 0; i < AllCount; i++)

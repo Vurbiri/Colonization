@@ -9,14 +9,14 @@ namespace Vurbiri
 
     public abstract class WaitResult<T> : IWait
     {
-        protected bool _keepWaiting = true;
+        protected bool _isWait = true;
         protected T _value;
 
         public object Current => _value;
         public T Value => _value;
-        public bool IsRunning => _keepWaiting;
+        public bool IsWait => _isWait;
 
-        public bool MoveNext() => _keepWaiting;
+        public bool MoveNext() => _isWait;
         public void Reset() { }
     }
 
@@ -26,24 +26,24 @@ namespace Vurbiri
 
         public WaitResultSource()
         {
-            _keepWaiting = true;
+            _isWait = true;
             _default = default;
         }
         public WaitResultSource(T defaultValue)
         {
-            _keepWaiting = true;
+            _isWait = true;
             _default = defaultValue;
         }
         internal WaitResultSource(T value, bool plug)
         {
-            _keepWaiting = false;
+            _isWait = false;
             _value = value;
         }
 
         public WaitResult<T> SetResult(T result)
         {
             _value = result;
-            _keepWaiting = false;
+            _isWait = false;
 
             return this;
         }
@@ -51,14 +51,14 @@ namespace Vurbiri
         public WaitResultSource<T> Recreate()
         {
             _value = _default;
-            _keepWaiting = false;
+            _isWait = false;
 
             return new(_default);
         }
 
         public IEnumerator Restart()
         {
-            _keepWaiting = true;
+            _isWait = true;
             _value = _default;
 
             return this;
@@ -66,7 +66,7 @@ namespace Vurbiri
 
         public WaitResult<T> Cancel()
         {
-            _keepWaiting = false;
+            _isWait = false;
             _value = _default;
 
             return this;
@@ -74,7 +74,7 @@ namespace Vurbiri
 
         public new void Reset()
         {
-            _keepWaiting = true;
+            _isWait = true;
             _value = _default;
         }
     }

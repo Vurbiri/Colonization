@@ -59,5 +59,6 @@
   "PerkIsWarlock": "You can recruit Warlocks",
   "PerkIsKnight": "You can recruit Knights",
   "PerkMaxWarrior": "Maximum number of warriors <b>+{0}</b>",
-  "PerkIsArtefact": "You can find fragments of the Artifact of Power"
+  "PerkIsArtefact": "You can find fragments of the Artifact of Power",
+  "SpellSwapIdMsg": "Select two hexagons."
 }

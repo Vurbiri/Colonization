@@ -33,7 +33,12 @@ namespace Vurbiri.Colonization
                 }
 
                 if (_wounded.Count > 0)
-                    s_coroutines.Run(Cast_Cn(_wounded.Rand(), param.playerId, resources));
+                    s_coroutines.StartCoroutine(Cast_Cn(_wounded.Rand(), param.playerId, resources));
+            }
+
+            public override void Clear()
+            {
+                s_spells[TypeOfPerksId.Military][MilitarySpellId.HealRandom] = null;
             }
 
             private IEnumerator Cast_Cn(Actor target, int playerId, CurrenciesLite resources)
