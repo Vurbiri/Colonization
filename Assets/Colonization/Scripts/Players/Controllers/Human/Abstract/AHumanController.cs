@@ -5,19 +5,18 @@ namespace Vurbiri.Colonization
 {
 	public abstract class AHumanController : Human,  IPlayerController
 	{
-
         protected AHumanController(int playerId, Settings settings) : base(playerId, settings) { }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
         {
             if (type == ActorTypeId.Demon)
             {
-                s_states.score.ForKillingDemon(_id, id);
+                GameContainer.Score.ForKillingDemon(_id, id);
                 _resources.AddBlood(id);
             }
             else
             {
-                s_states.score.ForKillingWarrior(_id, id);
+                GameContainer.Score.ForKillingWarrior(_id, id);
             }
         }
 
@@ -29,7 +28,7 @@ namespace Vurbiri.Colonization
             int countBuffs = 0;
             CurrenciesLite profit = new();
             bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
-            foreach (var warrior in _warriors)
+            foreach (var warrior in _actors)
             {
                 if (warrior.IsMainProfit)
                     profit.IncrementMain(warrior.Hexagon.SurfaceId);
@@ -57,14 +56,14 @@ namespace Vurbiri.Colonization
             }
 
             if (_abilities.IsTrue(HumanAbilityId.IsFreeGroundRes))
-                _resources.Add(s_hexagons.FreeResources);
+                _resources.Add(GameContainer.Hexagons.FreeResources);
 
             _resources.Add(_edifices.ProfitFromEdifices(hexId));
         }
 
         public void OnStartTurn()
         {
-            foreach (var warrior in _warriors)
+            foreach (var warrior in _actors)
                 warrior.EffectsUpdate();
 
             _exchange.Update();

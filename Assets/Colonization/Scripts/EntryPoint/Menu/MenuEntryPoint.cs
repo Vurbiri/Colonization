@@ -1,28 +1,26 @@
 using System.Collections;
-using UnityEngine;
 using Vurbiri.EntryPoint;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
-    public class MainMenuEntryPoint : ASceneEntryPoint
+    public class MenuEntryPoint : ASceneEntryPoint
     {
-        [SerializeField] private SceneId _nextScene;
+        [UnityEngine.SerializeField] private SceneId _nextScene;
 
         public override ISubscription<ExitParam> Enter(Loading loading, AEnterParam param)
         {
-            var container = new MainMenuContainer(new());
-            Debug.Log("MainMenu Enter");
-            Debug.Log(MainMenuContainer.Settings.Profile.Quality);
+            var container = new MenuContainer(new());
+            print("MainMenu Enter");
             loading.Add(Exit_Cn());
             return new SceneExitPoint(_nextScene, container).EventExit;
         }
 
         private IEnumerator Exit_Cn()
         {
-            yield return new WaitForSecondsRealtime(.5f);
+            yield return new WaitRealtime(.5f);
             SceneExitPoint.Exit();
-            Debug.Log("MainMenu Exit");
+            print("MainMenu Exit");
         }
     }
 }

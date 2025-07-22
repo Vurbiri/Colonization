@@ -2,7 +2,7 @@ using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization
 {
-    public class GameplayTriggerBus : GameplayEventBus
+    public class GameTriggerBus : GameEventBus
     {
         public void TriggerHexagonSelect(Hexagon hexagon) => _hexagonSelect.Invoke(hexagon);
         public void TriggerCrossroadSelect(Crossroad crossroad) => _crossroadSelect.Invoke(crossroad);

@@ -12,9 +12,6 @@ namespace Vurbiri.Colonization.Actors
     public abstract partial class Actor : AReactiveItemMono<Actor>, IInteractable, IDisposable
     {
         #region Fields
-        private static Diplomacy s_diplomacy;
-        private static GameplayTriggerBus s_triggerBus;
-
         private Id<ActorTypeId> _typeId;
         private int _id;
         private Id<PlayerId> _owner;
@@ -97,7 +94,7 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
-        public Relation GetRelation(Id<PlayerId> id) => s_diplomacy.GetRelation(id, _owner);
+        public Relation GetRelation(Id<PlayerId> id) => GameContainer.Diplomacy.GetRelation(id, _owner);
         public bool IsCanUseSkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
             if(!(_stateMachine.IsDefaultState || _blockState.Enabled))
@@ -106,7 +103,7 @@ namespace Vurbiri.Colonization.Actors
                 return false;
             }
             
-            return s_diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
+            return GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
         #region Effect
@@ -170,7 +167,7 @@ namespace Vurbiri.Colonization.Actors
         private void ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
             _stateMachine.SetState(_targetState);
-            s_diplomacy.ActorsInteraction(_owner, initiator, relation);
+            GameContainer.Diplomacy.ActorsInteraction(_owner, initiator, relation);
         }
 
         private void FromTargetState()

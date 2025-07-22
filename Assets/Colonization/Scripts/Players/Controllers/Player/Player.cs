@@ -2,38 +2,30 @@ using System;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.Controllers;
-using Vurbiri.Colonization.EntryPoint;
-using Vurbiri.Colonization.Storage;
+using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
 	public abstract class Player
     {
-		protected static GameStates s_states;
-        protected static Hexagons s_hexagons;
-        protected static Crossroads s_crossroads;
-        protected static GameLoop s_game;
-        protected static CameraController s_cameraController;
-        
         protected readonly int _id;
         protected readonly bool _isPerson;
 
-        public static GameStates States => s_states;
+        protected readonly ReactiveSet<Actor> _actors;
 
-        protected Player(int playerId)
+        public int Id => _id;
+        public ReadOnlyReactiveSet<Actor> Actors => _actors;
+
+        protected Player(int playerId, int actorCapacity)
         {
             _id = playerId;
             _isPerson = playerId == PlayerId.Person;
+
+            _actors = new(actorCapacity);
         }
 
-        public static void Clear()
-        {
-            SpellBook.Clear(); Actor.Clear();
-            s_hexagons = null; s_crossroads = null; s_game = null;
-            s_cameraController = null;
-            s_states.Clear();
-        }
+        public static void Init()  => SpellBook.Init();
+        public static void Clear() => SpellBook.Clear();
 
         #region Nested: Settings
         //***********************************
@@ -51,31 +43,6 @@ namespace Vurbiri.Colonization
             public BuffsScriptable artefact;
             public Transform actorsContainer;
 
-            [NonSerialized] public GameplayStorage storage;
-            [NonSerialized] public GameplayTriggerBus triggerBus;
-
-            public Settings Init(GameplayContent init)
-            {
-                s_states.score = new Score(init.storage);
-                s_states.balance = new Balance(init.storage, init.gameLoop);
-                s_states.diplomacy = new Diplomacy(init.storage, init.gameLoop);
-                s_states.prices = init.prices;
-
-                s_hexagons = init.hexagons;
-                s_crossroads = init.crossroads;
-                s_game = init.gameLoop;
-                s_cameraController = init.cameraController;
-
-                SpellBook.Init(init);
-                Actor.Init(s_states.diplomacy, init.triggerBus);
-                roadFactory.Init(init.sharedRepository);
-
-                storage = init.storage;
-                triggerBus = init.triggerBus;
-
-                return this;
-            }
-
             public void Dispose()
             {
                 humanAbilities.Dispose(); perks.Dispose(); demonLeveling.Dispose(); artefact.Dispose();
@@ -85,7 +52,8 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
             public void OnValidate()
             {
-                roadFactory?.OnValidate();
+                roadFactory ??= new();
+                roadFactory.OnValidate();
 
                 EUtility.SetPrefab(ref warriorPrefab);
                 EUtility.SetPrefab(ref demonPrefab);

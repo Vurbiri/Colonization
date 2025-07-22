@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Diplomacy(GameplayStorage storage, GameEvents game)
+        public Diplomacy(GameStorage storage, GameEvents gameEvents)
         {
             _settings = SettingsFile.Load<DiplomacySettings>();
 
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
             }
             storage.BindDiplomacy(this);
 
-            game.Subscribe(GameModeId.Play, OnGamePlay);
+            gameEvents.Subscribe(GameModeId.Play, OnGamePlay);
         }
 
         public Relation GetRelation(Id<PlayerId> idA, Id<PlayerId> idB)

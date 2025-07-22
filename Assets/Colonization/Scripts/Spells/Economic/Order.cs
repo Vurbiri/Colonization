@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
 
             public override void Cast(SpellParam param, CurrenciesLite resources)
             {
-                Player.States.AddOrder(param.playerId, param.valueA * s_settings.orderPerMana);
+                s_humans[param.playerId].AddOrder(param.valueA * s_settings.orderPerMana);
                 resources.Set(CurrencyId.Mana, -param.valueA);
 
                 s_humans[param.playerId].AddResources(resources);

@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.EntryPoint;
-using Vurbiri.Colonization.Storage;
 using Vurbiri.EntryPoint;
 using Vurbiri.International;
 
@@ -24,34 +22,34 @@ namespace Vurbiri.Colonization
         
         private Hexagons _hexagons;
         private Crossroads _crossroads;
-        private GameplayStorage _storage;
         private readonly Vector3[] _sides = new Vector3[HEX.SIDES];
+        private readonly Vector3[] _delta = new Vector3[HEX.SIDES];
 
         public string Description => Localization.Instance.GetText(LangFiles.Main, "IslandCreationStep");
         public float Weight => 5f;
 
-        public ILoadingStep Init(GameplayContent content)
+        public ILoadingStep Init(out Hexagons hexagons, out Crossroads crossroads)
         {
-            _storage = content.storage;
-            _hexagonSpawner.Init(content.cameraTransform.Camera, content.triggerBus);
+            _hexagonSpawner.Init();
 
-            content.hexagons   = _hexagons = new(content.gameLoop, new Pool<HexagonMark>(_prefabHexMark.Create, _landContainer, HEX.SIDES), content.triggerBus);
-            content.crossroads = _crossroads = new(_crossroadsContainer, _edificePrefabs, content.triggerBus);
+            hexagons   = _hexagons = new(new Pool<HexagonMark>(_prefabHexMark.Create, _landContainer, HEX.SIDES));
+            crossroads = _crossroads = new(_crossroadsContainer, _edificePrefabs);
 
-            var shape = _psFog.shape;
-            shape.radius = _ratioFogSize * MAX_CIRCLES;
+            var shape = _psFog.shape; shape.radius = _ratioFogSize * MAX_CIRCLES;
 
             for (int i = 0; i < HEX.SIDES; i++)
                 _sides[i] = HEX_DIAMETER_IN * SIDE_DIRECTIONS[i];
+            for (int i = 0; i < HEX.SIDES; i++)
+                _delta[i] = _sides.Next(i) - _sides[i];
 
-            transform.hierarchyCapacity = (MAX_HEXAGONS + MAX_CROSSROADS + (DEFAULT_MAX_ACTORS << 2)) << 2;
+            transform.hierarchyCapacity = (MAX_HEXAGONS + MAX_CROSSROADS + (DEFAULT_MAX_ACTORS << 5) + 4) << 2;
 
             return this;
         }
 
         public IEnumerator GetEnumerator()
         {
-            yield return Create_Cn(HexCreator.Factory(_hexagons, _hexagonSpawner, _storage));
+            yield return Create_Cn(HexCreator.Factory(_hexagons, _hexagonSpawner, GameContainer.Storage));
             yield return Setup_Cn();
 
             _crossroads.EndCreate();
@@ -66,27 +64,28 @@ namespace Vurbiri.Colonization
         {
             int circle = 0;
             bool isLastCircle = false;
-            Vector3 positionPrev, positionNext, positionCurrent;
+            Vector3 prevPosition, nextPosition, deltaPosition, currentPosition;
 
             Hexagon hex = hexCreator.Gate;
-            _crossroads.CreateCrossroads(Vector3.zero, hex, false);
+            _crossroads.CrossroadCreate(Vector3.zero, hex, false);
 
             while (!isLastCircle)
             {
                 isLastCircle = ++circle == MAX_CIRCLES;
-                positionNext = _sides[0] * circle;
+                nextPosition = _sides[0] * circle;
 
-                for (int i = 0; i < HEX.SIDES; i++)
+                for (int side = 0; side < HEX.SIDES; side++)
                 {
-                    positionPrev = positionNext;
-                    positionNext = _sides.Next(i) * circle;
+                    prevPosition  = nextPosition;
+                    nextPosition  = _sides.Next(side) * circle;
+                    deltaPosition = _delta[side];
 
-                    for (int j = 0; j < circle; j++)
+                    for (int step = 0; step < circle; step++)
                     {
-                        positionCurrent = Vector3.Lerp(positionPrev, positionNext, (float)j / circle);
+                        currentPosition = prevPosition + deltaPosition * step;
 
-                        hex = hexCreator.Create(positionCurrent, circle, j != 0);
-                        _crossroads.CreateCrossroads(positionCurrent, hex, isLastCircle);
+                        hex = hexCreator.Create(currentPosition, circle, step != 0);
+                        _crossroads.CrossroadCreate(currentPosition, hex, isLastCircle);
 
                         yield return null;
                     }

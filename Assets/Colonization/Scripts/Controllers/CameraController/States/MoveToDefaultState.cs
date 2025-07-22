@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Controllers
         sealed private class MoveToDefaultState : ACameraState<float>
         {
             private readonly WaitSignal _waitSignal = new();
-            private readonly GameplayTriggerBus _eventBus;
+            private readonly GameTriggerBus _eventBus;
             private readonly Zoom _zoom;
             private readonly Default _default;
             private readonly float _sqrRatioParentDistance, _maxSqrDistance, _minSqrDistance;
@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.Controllers
             public override float InputValue { get => _ratioSpeed; set => _ratioSpeed = value; }
             public WaitSignal Signal => _waitSignal;
 
-            public MoveToDefaultState(CameraController controller, Default settings, Zoom zoom, GameplayTriggerBus eventBus) : base(controller)
+            public MoveToDefaultState(CameraController controller, Default settings, Zoom zoom, GameTriggerBus eventBus) : base(controller)
             {
                 _default = settings;
                 _zoom = zoom;

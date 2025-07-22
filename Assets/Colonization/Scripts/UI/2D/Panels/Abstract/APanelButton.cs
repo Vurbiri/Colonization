@@ -1,7 +1,7 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 
@@ -19,16 +19,12 @@ namespace Vurbiri.Colonization.UI
         protected float _targetAlpha;
         protected Unsubscriptions _unsubscribers = new();
         
-        private InputController _inputController;
         private Coroutine _activeCn;
 
         public Vector3 Offset => new(0f, _rectTransform.sizeDelta.y * 1.08f, 0f);
 
-        protected void InitClick(InputController inputController)
-        {
-            _inputController = inputController;
-            _onClick.Add(OnSelect);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void InitClick() => _onClick.Add(OnSelect);
 
         protected void Attach(IInteractable attach, Sprite sprite)
         {
@@ -95,7 +91,7 @@ namespace Vurbiri.Colonization.UI
         private void OnSelect()
         {
             if (_attach != null && _attach.Interactable)
-                _inputController.Select(_attach);
+                GameContainer.InputController.Select(_attach);
         }
 
         protected override void OnDisable()

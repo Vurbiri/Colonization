@@ -9,8 +9,8 @@ namespace Vurbiri.Colonization.Controllers
     public class InputController : IDisposable
     {
         private readonly Camera _camera;
-        private readonly int _layerMaskRight, _layerMaskLeft;
-        private readonly float _distance = 900f;
+        private readonly int _layerMaskRight;
+        private readonly float _distance;
         private readonly InputControlAction _inputActions;
 
         private ISelectable _selectObj;
@@ -24,7 +24,6 @@ namespace Vurbiri.Colonization.Controllers
         {
             _camera = camera;
             _layerMaskRight = settings.layerMaskRight;
-            _layerMaskLeft = settings.layerMaskLeft;
             _distance = settings.distance;
 
             _inputActions = new();
@@ -33,7 +32,6 @@ namespace Vurbiri.Colonization.Controllers
             _cameraMap = _inputActions.Camera;
             _UIMap = _inputActions.UI;
 
-            _inputActions.Gameplay.LeftClick.performed += OnClickLeft;
             _inputActions.Gameplay.RightClick.performed += OnClickRight;
 
             events.Subscribe(GameModeId.Play, (turn, _) => UIMode(turn.IsNotPerson));
@@ -71,15 +69,13 @@ namespace Vurbiri.Colonization.Controllers
             _selectObj = null;
         }
 
-        public void Dispose() => _inputActions.Disable();
+        public void Dispose() => _inputActions.Dispose();
 
-        private void OnClickLeft(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskLeft);
-        private void OnClickRight(CallbackContext ctx) => OnClick(ctx.ReadValue<Vector2>(), _layerMaskRight);
-        private void OnClick(Vector2 position, int layerMask)
+        private void OnClickRight(CallbackContext ctx) 
         {
-            Ray ray = _camera.ScreenPointToRay(position);
+            Ray ray = _camera.ScreenPointToRay(ctx.ReadValue<Vector2>());
 
-            if (Physics.Raycast(ray, out RaycastHit hit, _distance, layerMask) && TryGetSelectable(hit.collider, out ISelectable selectObj))
+            if (Physics.Raycast(ray, out RaycastHit hit, _distance, _layerMaskRight) && TryGetSelectable(hit.collider, out ISelectable selectObj))
                 Select(selectObj);
 
             #region Local: TryGetSelectable(..)
@@ -100,7 +96,6 @@ namespace Vurbiri.Colonization.Controllers
         public class Settings
         {
             public LayerMask layerMaskRight;
-            public LayerMask layerMaskLeft;
             public float distance = 900f;
         }
         #endregion

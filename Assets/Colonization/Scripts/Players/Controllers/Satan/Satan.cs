@@ -2,7 +2,6 @@ using System;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
-using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -12,12 +11,12 @@ namespace Vurbiri.Colonization
         protected readonly RInt _curse;
         
         protected readonly SatanAbilities _states;
+        protected readonly Balance _balance;
 
         protected readonly DemonLeveling _leveling;
         protected readonly Artefact _artefact;
 
         protected readonly DemonsSpawner _spawner;
-        protected readonly ReactiveSet<Actor> _demons;
 
         protected readonly Subscription<Satan> _eventChanged = new();
         protected readonly Unsubscriptions _unsubscribers = new();
@@ -25,21 +24,19 @@ namespace Vurbiri.Colonization
         public IReactiveValue<int> Level => _level;
         public IReactiveValue<int> Curse => _curse;
 
-        public ReadOnlyReactiveSet<Actor> Demons => _demons;
-
         public int MaxCurse => _states.maxCurse + _level * _states.maxCursePerLevel;
         public int CursePerTurn
         {
             get
             {
-                int ratio = (s_states.balance > 0 ? _states.ratioPenaltyCurse : _states.ratioRewardCurse) >> SatanAbilities.SHIFT_RATIO;
-                return _states.cursePerTurn - s_states.balance * ratio;
+                int ratio = (_balance > 0 ? _states.ratioPenaltyCurse : _states.ratioRewardCurse) >> SatanAbilities.SHIFT_RATIO;
+                return _states.cursePerTurn - _balance * ratio;
             }
         }
 
-        protected Satan(Settings settings) : base(PlayerId.Satan)
+        protected Satan(Settings settings) : base(PlayerId.Satan, CONST.DEFAULT_MAX_ACTORS << 1)
         {
-            var storage = settings.storage.Satan;
+            var storage = GameContainer.Storage.Satan;
             _states = SettingsFile.Load<SatanAbilities>();
 
             var loadData = storage.LoadData;
@@ -50,17 +47,17 @@ namespace Vurbiri.Colonization
             _leveling = new(settings.demonLeveling, _level);
             _artefact = Artefact.Create(settings.artefact, loadData);
 
-            _spawner = new(_level, new(_leveling, _artefact), settings, s_hexagons[Key.Zero], loadData.state.spawn);
+            _spawner = new(_level, new(_leveling, _artefact), settings, GameContainer.Hexagons[Key.Zero], loadData.state.spawn);
 
-            _demons = new(loadData.state.maxDemons);
             for (int i = loadData.actors.Count - 1; i >= 0; i--)
-                _demons.Add(_spawner.Load(loadData.actors[i], s_hexagons));
+                _actors.Add(_spawner.Load(loadData.actors[i]));
 
-            s_states.balance.BindDemons(_demons);
+            _balance = GameContainer.Balance;
+            _balance.BindDemons(_actors);
 
             storage.StateBind(this, !loadData.isLoaded);
             storage.BindArtefact(_artefact, !loadData.isLoaded);
-            storage.BindActors(_demons);
+            storage.BindActors(_actors);
             storage.LoadData = null;
 
             SpellBook.AddSatan(this);
@@ -85,7 +82,7 @@ namespace Vurbiri.Colonization
         public void Dispose()
         {
             _unsubscribers.Unsubscribe();
-            _demons.Dispose();
+            _actors.Dispose();
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
-using Vurbiri.Reactive.Collections;
 using static Vurbiri.Colonization.Characteristics.HumanAbilityId;
 
 namespace Vurbiri.Colonization
@@ -24,17 +23,13 @@ namespace Vurbiri.Colonization
         protected readonly PerkTree _perks;
 
         protected readonly WarriorsSpawner _spawner;
-        protected readonly ReactiveSet<Actor> _warriors = new(CONST.DEFAULT_MAX_ACTORS);
         protected readonly Unsubscription _unsubscriber;
         #endregion
-
-        public int Id => _id;
 
         public Currencies Resources => _resources;
         public ExchangeRate Exchange => _exchange;
 
-        public ReadOnlyReactiveSet<Actor> Warriors => _warriors;
-        public bool IsMaxWarriors => _abilities.IsGreater(MaxWarrior, _warriors.Count);
+        public bool IsMaxWarriors => _abilities.IsGreater(MaxWarrior, _actors.Count);
 
         public Roads Roads => _roads;
 
@@ -42,19 +37,19 @@ namespace Vurbiri.Colonization
         public PerkTree Perks => _perks;
         public SpellBook SpellBook => _spellBook;
 
-        public Human(int playerId, Settings settings) : base(playerId)
+        public Human(int playerId, Settings settings) : base(playerId, CONST.DEFAULT_MAX_ACTORS)
         {
-            var storage = settings.storage.Humans[playerId];
+            var storage = GameContainer.Storage.Humans[playerId];
             
             var loadData = storage.LoadData;
-            var visual = SceneContainer.Get<HumansMaterials>()[playerId];
+            var visual = GameContainer.Materials[playerId];
 
             _perks = PerkTree.Create(settings, loadData);
             _abilities = settings.humanAbilities.Get(_perks);
 
             _roads = new(playerId, visual.color, settings.roadFactory);
 
-            _resources = Currencies.Create(_abilities, s_states.prices.HumanDefault, loadData);
+            _resources = Currencies.Create(_abilities, GameContainer.Prices.HumanDefault, loadData);
             _exchange = ExchangeRate.Create(_abilities, loadData);
             _artefact = Artefact.Create(settings.artefact, loadData);
 
@@ -62,11 +57,11 @@ namespace Vurbiri.Colonization
 
             if (loadData.isLoaded)
             {
-                _edifices = new(this, loadData.edifices, s_crossroads);
-                storage.PopulateRoads(_roads, s_crossroads);
+                _edifices = new(this, loadData.edifices);
+                storage.PopulateRoads(_roads, GameContainer.Crossroads);
 
                 for (int i = loadData.actors.Count - 1; i >= 0; i--)
-                    _warriors.Add(_spawner.Load(loadData.actors[i], s_hexagons));
+                    _actors.Add(_spawner.Load(loadData.actors[i]));
             }
             else
             {
@@ -75,9 +70,10 @@ namespace Vurbiri.Colonization
 
             _spellBook = new(this);
 
-            s_states.balance.BindWarriors(_warriors);
-            s_states.balance.BindShrines(_edifices.shrines);
-            s_states.balance.BindBlood(_resources.Get(CurrencyId.Blood));
+            var balance = GameContainer.Balance;
+            balance.BindWarriors(_actors);
+            balance.BindShrines(_edifices.shrines);
+            balance.BindBlood(_resources.Get(CurrencyId.Blood));
 
             bool instantGetValue = !loadData.isLoaded;
             storage.BindCurrencies(_resources, instantGetValue);
@@ -86,10 +82,10 @@ namespace Vurbiri.Colonization
             storage.BindRoads(_roads, instantGetValue);
             storage.BindArtefact(_artefact, instantGetValue);
             storage.BindEdifices(_edifices.edifices, instantGetValue);
-            storage.BindActors(_warriors);
+            storage.BindActors(_actors);
             storage.LoadData = null;
 
-            s_crossroads.BindEdifices(_edifices.edifices, instantGetValue);
+            GameContainer.Crossroads.BindEdifices(_edifices.edifices, instantGetValue);
         }
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
@@ -107,6 +103,15 @@ namespace Vurbiri.Colonization
             }
         }
 
+        public void AddOrder(int order)
+        {
+            if (order > 0)
+            {
+                GameContainer.Balance.Add(order);
+                GameContainer.Score.ForAddingOrder(_id, order);
+            }
+        }
+
         public void AddResources(CurrenciesLite value) => _resources.Add(value);
         
         #region Edifice
@@ -120,8 +125,8 @@ namespace Vurbiri.Colonization
                 int edificeId = crossroad.Id.Value;
                 _edifices.edifices[crossroad.GroupId].AddOrChange(crossroad);
 
-                _resources.Pay(s_states.prices.Edifices[edificeId]);
-                s_states.score.ForBuilding(_id, edificeId);
+                _resources.Pay(GameContainer.Prices.Edifices[edificeId]);
+                GameContainer.Score.ForBuilding(_id, edificeId);
             }
             return returnSignal.signal;
         }
@@ -140,7 +145,7 @@ namespace Vurbiri.Colonization
 
         public bool CanWallBuild(Crossroad crossroad) => crossroad.CanWallBuild(_id);
         public bool IsWallUnlock() => _abilities.IsTrue(IsWall);
-        public WaitSignal BuyWall(Crossroad crossroad) => BuyWall(crossroad, s_states.prices.Wall);
+        public WaitSignal BuyWall(Crossroad crossroad) => BuyWall(crossroad, GameContainer.Prices.Wall);
         public WaitSignal BuyWall(Crossroad crossroad, CurrenciesLite cost)
         {
             ReturnSignal returnSignal = crossroad.BuildWall(_id, true);
@@ -157,7 +162,7 @@ namespace Vurbiri.Colonization
         public bool CanRoadBuild(Crossroad crossroad) => _abilities.IsGreater(MaxRoad, _roads.Count) && crossroad.CanRoadBuild(_id);
         public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
         {
-            _resources.Pay(s_states.prices.Road);
+            _resources.Pay(GameContainer.Prices.Road);
             _roads.BuildAndUnion(crossroad.GetLinkAndSetStart(linkId));
         }
         #endregion
@@ -165,19 +170,19 @@ namespace Vurbiri.Colonization
         #region Warriors
         public bool CanAnyRecruiting(Crossroad crossroad)
         {
-            return _abilities.IsGreater(MaxWarrior, _warriors.Count) && crossroad.CanRecruiting(_id);
+            return _abilities.IsGreater(MaxWarrior, _actors.Count) && crossroad.CanRecruiting(_id);
         }
         public bool CanRecruiting(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
 
-        public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => Recruiting_Cn(id, crossroad).Run();
-        public void Recruiting(Id<WarriorId> id, Hexagon hexagon) => Recruiting(id, hexagon, s_states.prices.Warriors[id.Value]);
+        public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => Recruiting_Cn(id, crossroad).Start();
+        public void Recruiting(Id<WarriorId> id, Hexagon hexagon) => Recruiting(id, hexagon, GameContainer.Prices.Warriors[id.Value]);
         public void Recruiting(Id<WarriorId> id, Hexagon hexagon, CurrenciesLite cost)
         {
             _resources.Pay(cost);
             Warrior warrior = _spawner.Create(id, hexagon);
             warrior.IsPersonTurn = _isPerson;
 
-            _warriors.Add(warrior);
+            _actors.Add(warrior);
         }
 
         protected IEnumerator Recruiting_Cn(Id<WarriorId> id, Crossroad crossroad)
@@ -196,7 +201,7 @@ namespace Vurbiri.Colonization
         {
             _unsubscriber.Unsubscribe();
             _exchange.Dispose();
-            _warriors.Dispose();
+            _actors.Dispose();
         }
     }
 }

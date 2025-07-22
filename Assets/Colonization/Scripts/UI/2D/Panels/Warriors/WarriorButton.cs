@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
@@ -44,7 +43,7 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
-        public WarriorButton Init(InputController inputController, Transform container, Action<WarriorButton> action)
+        public WarriorButton Init(Transform container, Action<WarriorButton> action)
         {
             _thisTransform = _move.Transform;
             _container = container;
@@ -63,7 +62,7 @@ namespace Vurbiri.Colonization.UI
 
             _hpBar.Init();
 
-            InitClick(inputController);
+            InitClick();
 
             return this;
         }

@@ -11,16 +11,16 @@ namespace Vurbiri.Colonization
 
         protected Hexagons _land;
         protected HexagonSpawner _spawner;
-        protected GameplayStorage _storage;
+        protected GameStorage _storage;
             			
-		public HexCreator(Hexagons land, HexagonSpawner spawner, GameplayStorage storage)
+		public HexCreator(Hexagons land, HexagonSpawner spawner, GameStorage storage)
 		{
 			_land = land;
             _spawner = spawner;
 			_storage = storage;
         }
 
-        public static HexCreator Factory(Hexagons land, HexagonSpawner spawner, GameplayStorage storage)
+        public static HexCreator Factory(Hexagons land, HexagonSpawner spawner, GameStorage storage)
         {
             if (storage.Load) return new HexLoader(land, spawner, storage);
                              return new HexGenerator(land, spawner, storage);
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
         private Chance _chanceWater = CHANCE_WATER;
         private bool _isWater = false;
 
-        public HexGenerator(Hexagons land, HexagonSpawner spawner, GameplayStorage storage) : base(land, spawner, storage)
+        public HexGenerator(Hexagons land, HexagonSpawner spawner, GameStorage storage) : base(land, spawner, storage)
         {
             _groundIDs  = new(HEX_IDS); 
             _waterIDs   = new(HEX_IDS);
@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization
     //==========================================================================
     sealed public class HexLoader : HexCreator
     {
-        public HexLoader(Hexagons land, HexagonSpawner spawner, GameplayStorage storage) : base(land, spawner, storage) { }
+        public HexLoader(Hexagons land, HexagonSpawner spawner, GameStorage storage) : base(land, spawner, storage) { }
 
         public override Hexagon Gate => Create(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
 

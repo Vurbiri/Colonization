@@ -2,7 +2,6 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {

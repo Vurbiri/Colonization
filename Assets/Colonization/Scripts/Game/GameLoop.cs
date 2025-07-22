@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
         private Id<GameModeId> _gameMode;
         private TurnQueue _turnQueue;
         private int _hexId;
-        private GameplayStorage _storage;
+        private GameStorage _storage;
  
         public Id<GameModeId> GameMode => _gameMode;
 
@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
             _hexId = hexId;
         }
 
-        public static GameLoop Create(GameplayStorage storage)
+        public static GameLoop Create(GameStorage storage)
         {
             if (!storage.TryGetGame(out GameLoop instance))
                 instance = new();

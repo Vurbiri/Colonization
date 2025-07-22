@@ -12,7 +12,6 @@ namespace Vurbiri.Colonization
         #region Fields
         public const int HEX_COUNT = 3;
 
-        private static GameplayTriggerBus s_triggerBus;
         private static IdSet<EdificeId, AEdifice> s_prefabs;
 
         private readonly Key _key;
@@ -59,14 +58,8 @@ namespace Vurbiri.Colonization
             _edifice.Selectable = this;
         }
 
-        public static void Init(IdSet<EdificeId, AEdifice> prefabs, GameplayTriggerBus triggerBus)
-        {
-            s_prefabs = prefabs; s_triggerBus = triggerBus;
-        }
-        public static void Clear()
-        {
-            s_prefabs = null; s_triggerBus = null;
-        }
+        public static void Init(IdSet<EdificeId, AEdifice> prefabs) => s_prefabs = prefabs;
+        public static void Clear() => s_prefabs = null;
 
         #region IInteractable
         public Vector3 Position { get; }
@@ -76,13 +69,13 @@ namespace Vurbiri.Colonization
         public void Select()
         {
             if (_interactable.Value)
-                s_triggerBus.TriggerCrossroadSelect(this);
+                GameContainer.TriggerBus.TriggerCrossroadSelect(this);
         }
         public void Unselect(ISelectable newSelectable)
         {
             if (!_interactable.Value) return;
-            
-            s_triggerBus.TriggerUnselect(Equals(newSelectable));
+
+            GameContainer.TriggerBus.TriggerUnselect(Equals(newSelectable));
 
             if (_waitHexagon != null)
             {

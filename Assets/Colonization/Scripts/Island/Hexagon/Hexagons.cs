@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
         public CurrenciesLite FreeResources => _freeResources;
         public int GroundCount => _groundCount;
 
-        public Hexagons(GameEvents events, Pool<HexagonMark> poolMarks, GameplayTriggerBus triggerBus)
+        public Hexagons(Pool<HexagonMark> poolMarks)
         {
             int count = HEX_IDS.Length, capacity = MAX_HEXAGONS / count + 1;
 
@@ -27,10 +27,10 @@ namespace Vurbiri.Colonization
                 _hexagonsIdForKey[HEX_IDS[i]] = new List<Key>(capacity);
             _hexagonsIdForKey[GATE_ID] = new List<Key>(1);
 
-            events.Subscribe(GameModeId.EndTurn, OnEndTurn);
-            events.Subscribe(GameModeId.Roll, OnRoll);
+            GameContainer.GameEvents.Subscribe(GameModeId.EndTurn, OnEndTurn);
+            GameContainer.GameEvents.Subscribe(GameModeId.Roll, OnRoll);
 
-            Hexagon.Init(poolMarks, triggerBus);
+            Hexagon.Init(poolMarks);
         }
 
         public Hexagon Add(Key key, int id, Hexagon hex)

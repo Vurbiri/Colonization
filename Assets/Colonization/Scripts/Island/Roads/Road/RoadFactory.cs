@@ -9,11 +9,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private Road _prefabRoad;
         [SerializeField] private Transform _container;
         
-        private Transform _repository;
-
         private readonly Stack<Road> _roads = new();
-
-        public void Init(Transform repository) => _repository = repository;
 
         public Road Create(Gradient gradient, int id)
         {
@@ -26,7 +22,7 @@ namespace Vurbiri.Colonization
         private void OnDisable(Road road)
         {
             _roads.Push(road);
-            road.Transform.SetParent(_repository, false);
+            road.Transform.SetParent(GameContainer.Repository, false);
         }
 
 #if UNITY_EDITOR
@@ -34,7 +30,6 @@ namespace Vurbiri.Colonization
         {
             EUtility.SetPrefab(ref _prefabRoad);
             EUtility.SetObject(ref _container, "Roads");
-            EUtility.SetObject(ref _repository, "SharedRepository");
         }
 #endif
     }

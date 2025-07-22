@@ -27,8 +27,7 @@ namespace Vurbiri.Colonization.Actors
 		{
             var actor = GetComponentInParent<Actor>();
             var abilities = actor.Abilities;
-            var projectColors = SceneContainer.Get<ProjectColors>();
-            var abilitiesColors = projectColors.Ability;
+            var abilitiesColors = GameContainer.UI.Colors.Ability;
 
             transform.localPosition = new(0f, actor.Skin.Bounds.size.y + _offset, 0f);
 
@@ -36,9 +35,9 @@ namespace Vurbiri.Colonization.Actors
                 s_orderLevel = short.MinValue;
             s_orderLevel += s_incOrderLevel;
 
-            _popup.Init(projectColors, s_orderLevel);
+            _popup.Init(GameContainer.UI.Colors, s_orderLevel);
 
-            _hpBar.Init(abilities, abilitiesColors, SceneContainer.Get<PlayerColors>()[actor.Owner], _popup, s_orderLevel);
+            _hpBar.Init(abilities, abilitiesColors, GameContainer.PlayerColors[actor.Owner], _popup, s_orderLevel);
             _apBar.Init(abilities, abilitiesColors, s_orderLevel);
             _moveBar.Init(abilities, abilitiesColors, s_orderLevel);
 
@@ -47,7 +46,7 @@ namespace Vurbiri.Colonization.Actors
 
             _look.Init(_hpBar, _moveBar);
 
-            new EffectsBarPanel(actor, _sprites, projectColors, transform, s_orderLevel);
+            new EffectsBarPanel(actor, _sprites, transform, s_orderLevel);
 
             Destroy(this);
         }

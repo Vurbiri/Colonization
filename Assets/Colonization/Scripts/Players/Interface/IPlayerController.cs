@@ -1,9 +1,12 @@
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
 	public interface IPlayerController : System.IDisposable
 	{
+        ReadOnlyReactiveSet<Actor> Actors { get; }
+
         public void ActorKill(Id<ActorTypeId> type, int id);
 
         public void OnLanding();

@@ -1,6 +1,5 @@
 using UnityEngine;
 using Vurbiri.Colonization.EntryPoint;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -10,11 +9,11 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ContextMenusManager _contextMenus;
         [SerializeField] private WindowsManager _windows;
 
-        public void Init(GameplayContent init, CanvasHint hint, ContextMenuSettings settings)
+        public void Init(GameContent content)
         {
-            _game.Init(init.gameLoop, init.cameraController, this);
-            _contextMenus.Init(settings);
-            _windows.Init(init, hint);
+            _game.Init(content.gameLoop, content.cameraController, this);
+            _contextMenus.Init(new(content.players, content.worldHint, content.cameraTransform));
+            _windows.Init(content);
         }
 
 #if UNITY_EDITOR

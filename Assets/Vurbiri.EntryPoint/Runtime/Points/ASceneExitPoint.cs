@@ -21,6 +21,11 @@ namespace Vurbiri.EntryPoint
         }
 
         public static void Exit() => s_instance.OnExit();
+        public static void Exit(ExitParam exitParam)
+        {
+            s_instance._exitParam = exitParam;
+            s_instance.OnExit();
+        }
 
         protected virtual void OnExit()
         {

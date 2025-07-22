@@ -23,15 +23,6 @@ namespace Vurbiri.Colonization.Actors
             return effects;
         }
 
-        public static void Init(Diplomacy diplomacy, GameplayTriggerBus triggerBus)
-        {
-            s_diplomacy = diplomacy; s_triggerBus = triggerBus;
-        }
-        public static void Clear()
-        {
-            s_diplomacy = null; s_triggerBus = null;
-        }
-
         public void Setup(ActorSettings settings, ActorInitData initData, BoxCollider collider, Hexagon startHex)
         {
             _thisTransform = transform;

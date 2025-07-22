@@ -13,7 +13,6 @@ namespace Vurbiri.Colonization
         [SerializeField] private Collider _thisCollider;
 
         #region Fields
-        private static GameplayTriggerBus s_triggerBus;
         private static Pool<HexagonMark> s_poolMarks;
 
         private Key _key;
@@ -85,14 +84,8 @@ namespace Vurbiri.Colonization
             }
         }
         
-        public static void Init(Pool<HexagonMark> poolMarks, GameplayTriggerBus triggerBus)
-        {
-            s_poolMarks = poolMarks; s_triggerBus = triggerBus;
-        }
-        public static void Clear()
-        {
-            s_poolMarks = null; s_triggerBus = null;
-        }
+        public static void Init(Pool<HexagonMark> poolMarks) => s_poolMarks = poolMarks;
+        public static void Clear() => s_poolMarks = null;
 
         public void AddNeighborAndCreateCrossroadLink(Hexagon neighbor)
         {
@@ -118,7 +111,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ISelectable
-        public void Select() => s_triggerBus.TriggerHexagonSelect(this);
+        public void Select() => GameContainer.TriggerBus.TriggerHexagonSelect(this);
         public void Unselect(ISelectable newSelectable) { }
         #endregion
 

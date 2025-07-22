@@ -1,5 +1,4 @@
 using UnityEngine;
-using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -13,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
 
         public void Init(params IRendererVisible[] renderers)
 		{
-            _cameraTransform = SceneContainer.Get<CameraTransform>().Transform;
+            _cameraTransform = GameContainer.CameraTransform.Transform;
             _thisTransform = transform;
 
             _renderers = renderers;

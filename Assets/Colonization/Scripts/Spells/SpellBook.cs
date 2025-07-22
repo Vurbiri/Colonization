@@ -1,7 +1,5 @@
 using System.Collections.ObjectModel;
 using Vurbiri.Colonization.Actors;
-using Vurbiri.Colonization.Controllers;
-using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
@@ -19,10 +17,6 @@ namespace Vurbiri.Colonization
         private static readonly ASpell[] s_militarySpells;
 
         private static readonly RBool s_isCast = new(false);
-
-        private static GameplayTriggerBus s_triggerBus;
-        private static CameraController s_cameraController;
-        private static Hexagons s_hexagons;
 
         private readonly ICurrency _mana;
         private readonly CurrenciesLite _resources = new();
@@ -44,7 +38,7 @@ namespace Vurbiri.Colonization
             int id = human.Id;
             
             s_humans[id] = human;
-            s_actors[id] = human.Warriors;
+            s_actors[id] = human.Actors;
 
             _mana = human.Resources.Get(CurrencyId.Mana);
         }
@@ -63,21 +57,17 @@ namespace Vurbiri.Colonization
 
         public void Cancel(int type, int id) => s_spells[type][id].Cancel();
 
-        public static void Init(GameplayContent init)
+        public static void Init()
         {
-            s_triggerBus = init.triggerBus;
-            s_cameraController = init.cameraController;
-            s_hexagons = init.hexagons;
-
             Order.Create();
-            SummonWarlock.Create(init.prices);
+            SummonWarlock.Create();
 
             BloodTrade.Create();
         }
         
         public static void AddSatan(Satan satan)
         {
-            s_actors[PlayerId.Satan] = satan.Demons;
+            s_actors[PlayerId.Satan] = satan.Actors;
         }
 
         public static void Clear()
@@ -90,8 +80,6 @@ namespace Vurbiri.Colonization
                 s_actors[i] = null;
             }
             s_actors[PlayerId.Satan] = null;
-
-           s_triggerBus = null; s_cameraController = null; s_hexagons = null;
 
             for (int i = 0; i < EconomicSpellId.Count; i++)
                 s_economicSpells[i] = null;

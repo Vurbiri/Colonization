@@ -12,13 +12,11 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ButtonInit _buttonInit;
 
         private Crossroad _currentCrossroad;
-        private GameLoop _game;
         private Human _player;
         private bool _endInit = false;
 
         public ISubscription<IMenu, bool> Init(ContextMenuSettings settings)
         {
-            _game = settings.game;
             _player = settings.player;
 
             _buttonClose.Init(settings.hint, Close);
@@ -59,7 +57,7 @@ namespace Vurbiri.Colonization.UI
 
         private IEnumerator OnEndLanding_Cn()
         {
-            yield return _game.EndLanding();
+            yield return GameContainer.GameLoop.EndLanding();
             Destroy(gameObject);
         }
 

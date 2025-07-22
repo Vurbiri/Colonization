@@ -15,14 +15,14 @@ namespace Vurbiri.Colonization
 
         public void OnLanding()
         {
-            s_game.EndTurn().Run();
+            GameContainer.GameLoop.EndTurn().Start();
         }
         public void OnEndLanding() { }
 
         public void OnEndTurn()
         {
             int countBuffs = 0, balance = 0;
-            foreach (var demon in _demons)
+            foreach (var demon in _actors)
             {
                 if (demon.IsMainProfit)
                     balance += (demon.Id + 1);
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
                 demon.StatesUpdate();
             }
 
-            s_states.balance.ForCurse(balance);
+            GameContainer.Balance.ForCurse(balance);
             _artefact.Next(countBuffs);
         }
 
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
 
         public void OnStartTurn()
         {
-            foreach (var demon in _demons)
+            foreach (var demon in _actors)
                 demon.EffectsUpdate(_states.gateDefense);
         }
 

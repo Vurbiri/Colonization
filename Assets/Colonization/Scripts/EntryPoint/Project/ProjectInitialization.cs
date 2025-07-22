@@ -18,6 +18,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [Space]
         [SerializeField] private string _leaderboardName = "lbColonization";
         [Space]
+        [SerializeField] private Prices _prices;
         [SerializeField] private ColorSettingsScriptable _settingsColorScriptable;
         [SerializeField] private PlayerVisualSetScriptable _playerVisualSetScriptable;
         [Space]
@@ -35,6 +36,7 @@ namespace Vurbiri.Colonization.EntryPoint
             Localization.Instance.SetFiles(_localizationFiles);
 
             content.settings = _settings;
+            content.prices = _prices;
             content.projectColors = _settingsColorScriptable.Colors;
 
             MessageBox.SetColors(content.projectColors.PanelBack, content.projectColors.TextDefault);
@@ -53,6 +55,7 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             EUtility.SetObject(ref _logOnPanel);
             EUtility.SetObject(ref _loadingScreen);
+            EUtility.SetScriptable(ref _prices);
             EUtility.SetScriptable(ref _settingsColorScriptable);
             EUtility.SetScriptable(ref _playerVisualSetScriptable);
 

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
         public override WaitSignal Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links, bool isSFX)
         {
-            HumanMaterials visual = SceneContainer.Get<HumansMaterials>()[playerId];
+            HumanMaterials visual = GameContainer.Materials[playerId];
 
             GetComponent<MeshRenderer>().SetSharedMaterial(visual.materialUnlit, _idMaterial);
 

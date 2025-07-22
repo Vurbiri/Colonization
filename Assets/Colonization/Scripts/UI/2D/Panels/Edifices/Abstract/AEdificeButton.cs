@@ -1,11 +1,10 @@
 using UnityEngine;
-using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization.UI
 {
     public abstract class AEdificeButton : APanelButton
     {
-        public virtual void Init(Crossroad crossroad, InputController inputController, int index, Sprite sprite, bool isOn)
+        public virtual void Init(Crossroad crossroad, int index, Sprite sprite, bool isOn)
         {
             _canvasGroup.alpha = _targetAlpha = 0f;
             _canvasGroup.blocksRaycasts = false;
@@ -13,7 +12,7 @@ namespace Vurbiri.Colonization.UI
             transform.localPosition = Offset * index;
 
             Attach(crossroad, sprite);
-            InitClick(inputController);
+            InitClick();
 
             if (isOn) Enable();
         }

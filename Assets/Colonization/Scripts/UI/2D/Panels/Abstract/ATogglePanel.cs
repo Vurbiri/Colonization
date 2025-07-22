@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 
@@ -15,7 +14,6 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected Transform _buttonContainer;
 
         protected readonly List<TButton> _buttons = new();
-        protected InputController _inputController;
         private Coroutine _coroutineToggle;
 
         protected void InitToggle(IReactive<int> current)

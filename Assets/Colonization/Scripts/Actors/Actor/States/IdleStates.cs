@@ -17,11 +17,8 @@ namespace Vurbiri.Colonization.Actors
                 _actor.Interactable = false;
             }
 
-            public override void Select() => s_triggerBus.TriggerActorSelect(_actor);
-            public override void Unselect(ISelectable newSelectable)
-            {
-                s_triggerBus.TriggerUnselect(_actor.Equals(newSelectable));
-            }
+            public override void Select() => GameContainer.TriggerBus.TriggerActorSelect(_actor);
+            public override void Unselect(ISelectable newSelectable) => GameContainer.TriggerBus.TriggerUnselect(_actor.Equals(newSelectable));
         }
     }
 }

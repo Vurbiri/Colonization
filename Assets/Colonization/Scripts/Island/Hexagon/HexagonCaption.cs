@@ -46,15 +46,15 @@ namespace Vurbiri.Colonization.UI
             set => _idText.color = value;
         }
 
-        public void Init(int id, IdFlags<CurrencyId> flags, Transform cameraTransform, ProjectColors colorSettings, GameplayEventBus eventBus)
+        public void Init(int id, IdFlags<CurrencyId> flags)
         {
             _thisGameObject = gameObject;
             _thisTransform = transform;
-            _cameraTransform = cameraTransform;
+            _cameraTransform = GameContainer.CameraTransform.Transform;
             _lastCameraRotation = Quaternion.identity;
 
-            _colorNormal = colorSettings.TextDefault;
-            _colorProfit = id != CONST.GATE_ID ? colorSettings.TextPositive : colorSettings.TextNegative;
+            _colorNormal = GameContainer.UI.Colors.TextDefault;
+            _colorProfit = id != CONST.GATE_ID ? GameContainer.UI.Colors.TextPositive : GameContainer.UI.Colors.TextNegative;
 
             StringBuilder sb = new(TAG_SPRITE_LENGTH * CurrencyId.Count);
 
@@ -68,8 +68,8 @@ namespace Vurbiri.Colonization.UI
 
             SetActive();
 
-            _unsubscriber = eventBus.EventHexagonShowDistance.Add(OnShowDistance);
-            _unsubscriber = eventBus.EventHexagonShow.Add(OnCaptionEnable);
+            _unsubscriber = GameContainer.EventBus.EventHexagonShowDistance.Add(OnShowDistance);
+            _unsubscriber = GameContainer.EventBus.EventHexagonShow.Add(OnCaptionEnable);
         }
 
         public void NewId(int id, Color color)

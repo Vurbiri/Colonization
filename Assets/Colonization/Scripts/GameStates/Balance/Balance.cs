@@ -8,19 +8,18 @@ namespace Vurbiri.Colonization
 	public class Balance : AReactive<int>
 	{
         private readonly BalanceSettings _settings;
-        private readonly GameLoop _game;
         private readonly Subscription<Winner> _eventGameOver = new();
 
         public int Value => _value;
         public ISubscription<Winner> OnGameOver => _eventGameOver;
 
-        public Balance(GameplayStorage storage, GameLoop game)
+        public Balance(GameStorage storage, GameLoop gameLoop)
         {
             _settings = SettingsFile.Load<BalanceSettings>();
             _value = storage.GetBalanceValue(_settings.defaultValue);
             storage.BindBalance(this);
 
-            _eventGameOver.Add(game.End);
+            _eventGameOver.Add(gameLoop.End);
         }
 
         public void ForCurse(int value) => Add(_settings.penaltyPerDemon * -value);

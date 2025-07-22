@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
                 var data = serializer.Deserialize<int[]>(reader);
 
                 int i = 0;
-                return new SatanLoadState(data[i++], data[i++], data[i++], data[i]);
+                return new SatanLoadState(data[i++], data[i++], data[i]);
             }
 
             protected override void WriteJson(JsonWriter writer, Satan satan, JsonSerializer serializer)
@@ -23,7 +23,6 @@ namespace Vurbiri.Colonization
                 writer.WriteValue(satan._level);
                 writer.WriteValue(satan._curse);
                 writer.WriteValue(satan._spawner.Potential);
-                writer.WriteValue(satan._demons.Capacity);
                 writer.WriteEndArray();
             }
         }

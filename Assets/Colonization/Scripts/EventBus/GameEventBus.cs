@@ -3,7 +3,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    public abstract class GameplayEventBus
+    public abstract class GameEventBus
     {
         protected readonly Subscription<Hexagon> _hexagonSelect = new();
         protected readonly Subscription<Crossroad> _crossroadSelect = new();

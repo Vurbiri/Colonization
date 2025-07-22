@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.Controllers
         private MoveToDefaultState _moveToDefaultState;
         private ZoomState _zoomState;
 
-        public CameraController Init(CameraTransform camera, GameplayTriggerBus eventBus, InputController inputController)
+        public CameraController Init(CameraTransform camera, GameTriggerBus eventBus, InputController inputController)
         {
             _default.height = Mathf.Clamp(_default.height, _zoom.heightZoomMin, _zoom.heightZoomMax);
 

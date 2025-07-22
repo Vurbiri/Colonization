@@ -17,33 +17,31 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private CanvasHint _canvasHint;
         [SerializeField] private PlayerPanels _playerPanels;
         
-        private GameplayInitObjects _init;
+        private GameContent _content;
 
         public string Description => Localization.Instance.GetText(LangFiles.Main, "InitUIStep");
         public float Weight => 0.2f;
 
-        public InitUI Init(GameplayInitObjects init)
+        public ILoadingStep Init(GameContent content)
         {
-            _init = init;
+            _content = content;
+
+            content.worldHint = _worldHint;
+            content.canvasHint = _canvasHint;
 
             return this;
         }
 
         public IEnumerator GetEnumerator()
         {
-            var colors = SceneContainer.Get<ProjectColors>();
-            var player = _init.content.players.Person;
-
             _worldHint.Init();
             _canvasHint.Init();
             yield return null;
-            _managers.Init(_init.content, _canvasHint, _init.GetContextMenuSettings(_worldHint));
-            yield return null;
-            _playerPanels.Init(player, colors, _init.content.inputController, _canvasHint);
+            _managers.Init(_content);
+            _playerPanels.Init();
             yield return null;
 
             Destroy(gameObject);
-            _init = null;
         }
 
 #if UNITY_EDITOR

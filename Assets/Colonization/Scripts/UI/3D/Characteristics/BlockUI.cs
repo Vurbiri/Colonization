@@ -27,9 +27,8 @@ namespace Vurbiri.Colonization.UI
             _cost = cost;
             _value = value > 0 ? $"+{value}" : value.ToString();
 
-            var hintTextColor = SceneContainer.Get<ProjectColors>();
-            _hexColorPlus = hintTextColor.TextPositiveTag;
-            _hexColorMinus = hintTextColor.TextNegativeTag;
+            _hexColorPlus  = GameContainer.UI.Colors.TextPositiveTag;
+            _hexColorMinus = GameContainer.UI.Colors.TextNegativeTag;
 
             _unsubscriber = Localization.Instance.Subscribe(SetTexts);
         }

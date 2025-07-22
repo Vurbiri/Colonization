@@ -3,7 +3,6 @@ using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive.Collections;
 using Vurbiri.UI;
 
@@ -16,11 +15,9 @@ namespace Vurbiri.Colonization.UI
 
         private Stack<WarriorButton> _buttonPool;
 
-        public void Init(Human player, InputController inputController, CanvasHint hint)
+        public void Init(Human player, CanvasHint hint)
         {
-            _inputController = inputController;
-
-            var warriors = player.Warriors;
+            var warriors = player.Actors;
             var maxWarrior = player.GetAbility(HumanAbilityId.MaxWarrior);
 
             _buttonPool = new(maxWarrior.Value);
@@ -36,7 +33,7 @@ namespace Vurbiri.Colonization.UI
         {
             for (int i = _buttons.Count + _buttonPool.Count; i < max; i++)
             {
-                _buttonPool.Push(Instantiate(_buttonPrefab, _buttonRepository, false).Init(_inputController, _buttonContainer, ToPool));
+                _buttonPool.Push(Instantiate(_buttonPrefab, _buttonRepository, false).Init(_buttonContainer, ToPool));
             }
         }
 

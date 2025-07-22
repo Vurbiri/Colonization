@@ -6,12 +6,10 @@ namespace Vurbiri.Colonization
     {
         sealed private class Marauding : ASpell
         {
-            private readonly Diplomacy _diplomacy;
             private readonly CurrenciesLite[] _currencies = new CurrenciesLite[PlayerId.HumansCount];
 
             private Marauding() 
             {
-                _diplomacy = Player.States.diplomacy;
                 for (int i = 0; i < PlayerId.HumansCount; i++)
                     _currencies[i] = new();
             }
@@ -33,7 +31,7 @@ namespace Vurbiri.Colonization
                     foreach (var crossroad in actor.Hexagon.Crossroads)
                     {
                         enemyId = crossroad.Owner;
-                        if (crossroad.IsColony && _diplomacy.GetRelation(param.playerId, enemyId) == Relation.Enemy)
+                        if (crossroad.IsColony && GameContainer.Diplomacy.GetRelation(param.playerId, enemyId) == Relation.Enemy)
                         {
                             temp = _currencies[enemyId];
                             ratioChance = 1f - s_settings.reductionFromWall * crossroad.GetDefense();

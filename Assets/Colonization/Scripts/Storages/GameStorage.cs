@@ -2,13 +2,13 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Storage
 {
-    sealed public class GameplayStorage : AStorage
+    sealed public class GameStorage : AStorage
     {
         private readonly HumanStorage[] _humanStorages = new HumanStorage[PlayerId.HumansCount];
         private readonly SatanStorage _satanStorage;
         private readonly bool _isLoad;
 
-        public GameplayStorage(bool isLoad) : base(SceneContainer.Get<IStorageService>())
+        public GameStorage(bool isLoad) : base(GameContainer.StorageService)
         {
             _isLoad = isLoad;
 

@@ -1,7 +1,5 @@
 using UnityEngine;
-using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.EntryPoint;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -17,14 +15,12 @@ namespace Vurbiri.Colonization.UI
 
         private IWindow[] _windows;
         private int _openWindowsCount;
-        private InputController _inputController;
 
-        public void Init(GameplayContent init, CanvasHint hint)
+        public void Init(GameContent content)
         {
             _windows = new IWindow[] { _perksWindow, _exchangeWindow };
-            _inputController = init.inputController;
 
-            var player = init.players.Person;
+            var player = content.players.Person;
 
             Debug.Log("WindowsManager - убрать комментарии - /*, false*/");
 
@@ -32,11 +28,11 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < COUNT; i++)
             {
                 window = _windows[i];
-                window.Init(player, hint, false);
+                window.Init(player, content.canvasHint, false);
                 window.OnOpen.Add(OnOpenWindow);
                 window.OnClose.Add(OnCloseWindow);
 
-                _buttons[i].Init(hint, window.Switch/*, false*/);
+                _buttons[i].Init(content.canvasHint, window.Switch/*, false*/);
             }
 
             _perksWindow.OnOpen.Add(_exchangeWindow.Close);
@@ -68,14 +64,14 @@ namespace Vurbiri.Colonization.UI
         {
             if (_openWindowsCount++ == 0)
             {
-                _inputController.Unselect();
-                _inputController.UIMode(true);
+                GameContainer.InputController.Unselect();
+                GameContainer.InputController.UIMode(true);
             }
         }
         private void OnCloseWindow()
         {
             if (--_openWindowsCount == 0)
-                _inputController.UIMode(false);
+                GameContainer.InputController.UIMode(false);
         }
 
 #if UNITY_EDITOR

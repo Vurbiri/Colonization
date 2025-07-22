@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
         {
             this.player = player;
             this.hint = hint;
-            colorSettings = SceneContainer.Get<ProjectColors>();
+            colorSettings = GameContainer.UI.Colors;
         }
     }
 }

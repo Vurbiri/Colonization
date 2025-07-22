@@ -1,7 +1,5 @@
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Controllers;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -23,15 +21,18 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private IdArray<EdificeId, Sprite> _sprites;
 
-        public void Init(Human player, ProjectColors colors, InputController inputController, CanvasHint hint)
+        public void Init()
         {
+            var player = GameContainer.Players.Person;
             var currencies = player.Resources;
+            var colors = GameContainer.UI.Colors;
+            var hint = GameContainer.UI.CanvasHint;
 
-            _warriors.Init(player, inputController, hint);
+            _warriors.Init(player, hint);
 
-            _colonies.Init(player, _sprites, inputController, hint);
-            _ports.Init(player, _sprites, inputController, hint);
-            _shrines.Init(player, _sprites, inputController, hint);
+            _colonies.Init(player, _sprites, hint);
+            _ports.Init(player, _sprites, hint);
+            _shrines.Init(player, _sprites, hint);
             _roads.Init(player, hint);
 
             _currencies.Init(_directionPopup, currencies, colors, hint);

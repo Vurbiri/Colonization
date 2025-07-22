@@ -31,9 +31,9 @@ namespace Vurbiri.Colonization.UI
 
             _delayStartTurn = new((1f/_onSpeed + _showTime.Time + 1f/_offSpeed) * 0.51f);
 
-            _names = SceneContainer.Get<PlayerNames>();
+            _names = GameContainer.PlayerNames;
 
-            var colors = SceneContainer.Get<PlayerColors>();
+            var colors = GameContainer.PlayerColors;
             for (int i = 0; i < PlayerId.Count; i++)
                 _hexColors[i] = colors[i].ToHex();
 

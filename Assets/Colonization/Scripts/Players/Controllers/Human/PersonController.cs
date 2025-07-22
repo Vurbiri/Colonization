@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         public PersonController(Settings settings) : base(PlayerId.Person, settings)
         {
             _spellBook.IsCastReactive.Subscribe(_interactable.BindSpells);
-            _warriors.Subscribe(_interactable.BindActors);
+            _actors.Subscribe(_interactable.BindActors);
         }
 
         public override void OnEndLanding()
@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
         {
             _edifices.Interactable = true;
 
-            foreach (var warrior in _warriors)
+            foreach (var warrior in _actors)
                 warrior.IsPersonTurn = true;
 
             _interactable.Turn = true;

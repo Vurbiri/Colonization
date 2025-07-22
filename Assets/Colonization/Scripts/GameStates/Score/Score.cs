@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         private readonly ScoreSettings _settings;
         private readonly Subscription<int[]> _eventChanged = new();
 
-        public Score(GameplayStorage storage)
+        public Score(GameStorage storage)
         {
             _settings = SettingsFile.Load<ScoreSettings>();
             _values = storage.GetScoreData(PlayerId.HumansCount);

@@ -29,5 +29,13 @@ namespace Vurbiri.EntryPoint
         {
             sceneEntryPoint.Enter(_loading, _currentEnterParam).Add(LoadScene);
         }
+
+        protected override void OnDestroy()
+        {
+            if (s_instance == this)
+                _container.Dispose();
+
+            base.OnDestroy();
+        }
     }
 }

@@ -5,7 +5,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
-    sealed public class GameplayEntryPoint : ASceneEntryPoint
+    sealed public class GameEntryPoint : ASceneEntryPoint
     {
         [SerializeField] private SceneId _nextScene;
         [Space]
@@ -14,7 +14,8 @@ namespace Vurbiri.Colonization.EntryPoint
         [Space]
         [SerializeField] private FileIds _localizationFiles = new(true);
         [Space]
-        [SerializeField] private GameplayInitObjects _initObjects;
+        [SerializeField] private GameContentInit _contentInit;
+        [SerializeField] private Player.Settings _playerSettings;
 
         [Space]
         [Header("══════ TEST ══════")]
@@ -22,22 +23,23 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override ISubscription<ExitParam> Enter(Loading loading, AEnterParam param)
         {
-            GameplayContent content = new();
-            GameplayContainer.GameSettings.IsLoad = _isLoad;
+            GameContent content = new();
+            GameContainer container = new(content);
+            GameContainer.GameSettings.IsLoad = _isLoad;
 
             Localization.Instance.SetFiles(_localizationFiles);
 
-            _initObjects.CreateObjectsAndFillingContainer(content);
+            _contentInit.CreateObjectsAndFillingContainer(content);
                         
-            loading.Add(_islandCreator.Init(content));
-            loading.Add(new CreatePlayers(_initObjects));
-            loading.Add(_initUI.Init(_initObjects));
+            loading.Add(_islandCreator.Init(out content.hexagons, out content.crossroads));
+            loading.Add(new CreatePlayers(content, _playerSettings));
+            loading.Add(_initUI.Init(content));
             loading.Add(new ClearResources());
             loading.Add(new GameplayStart());
 
             Destroy(this);
 
-            return new SceneExitPoint(_nextScene, new GameplayContainer(content)).EventExit;
+            return new SceneExitPoint(_nextScene, container).EventExit;
         }
 
 
@@ -47,7 +49,8 @@ namespace Vurbiri.Colonization.EntryPoint
             EUtility.SetObject(ref _islandCreator);
             EUtility.SetObject(ref _initUI);
 
-            _initObjects.OnValidate();
+            _contentInit.OnValidate();
+            _playerSettings.OnValidate();
         }
 #endif
     }

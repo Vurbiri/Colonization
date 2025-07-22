@@ -23,9 +23,9 @@ namespace Vurbiri.Colonization.Actors
             return Object.Instantiate(_warriorPrefab, _container).Init(id, _initData, _material, startHex);
         }
 
-        public Warrior Load(ActorLoadData data, Hexagons land)
+        public Warrior Load(ActorLoadData data)
         {
-            return Object.Instantiate(_warriorPrefab, _container).Load(data, _initData, _material, land[data.keyHex]);
+            return Object.Instantiate(_warriorPrefab, _container).Load(data, _initData, _material, GameContainer.Hexagons[data.keyHex]);
         }
     }
 }

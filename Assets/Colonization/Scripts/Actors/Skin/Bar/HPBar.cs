@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.Actors
             _popup = popup;
 
             _backgroundBar.size = new(SP_WIDTH, SP_HIGHT);
-            _backgroundBar.color = colors[ActorAbilityId.MaxHP];
+            _backgroundBar.color = GameContainer.UI.Colors.Ability[ActorAbilityId.MaxHP];
 
             _barSprite.size = new(SP_WIDTH, SP_HIGHT);
             _barSprite.color = color;

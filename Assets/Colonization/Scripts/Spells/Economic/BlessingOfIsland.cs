@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
                 if (_blessed.Count > 0)
                 {
                     int value = Mathf.RoundToInt((s_settings.blessBasa + (param.valueA + param.valueB) * s_settings.blessPerRes) / (float)_blessed.Count);
-                    Cast_Cn(param.playerId, value).Run();
+                    Cast_Cn(param.playerId, value).Start();
                     
                     resources.Add(CurrencyId.Gold, -param.valueA); resources.Add(CurrencyId.Food, -param.valueB);
                     s_humans[param.playerId].AddResources(resources);

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -11,9 +10,9 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private TextMeshProUGUI[] _hexIds;
         [SerializeField] private GameObject _wall;
 
-        public override void Init(Crossroad crossroad, InputController inputController, int index, Sprite sprite, bool isOn)
+        public override void Init(Crossroad crossroad, int index, Sprite sprite, bool isOn)
         {
-            base.Init(crossroad, inputController, index, sprite, isOn);
+            base.Init(crossroad, index, sprite, isOn);
 
             List<Hexagon> hexagons = crossroad.Hexagons;
             for (int i = 0; i < Crossroad.HEX_COUNT; i++)

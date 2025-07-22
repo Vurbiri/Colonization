@@ -7,17 +7,15 @@ namespace Vurbiri.Colonization
         private readonly IPlayerController[] _players = new IPlayerController[PlayerId.Count];
 
         public PersonController Person { get; }
-        public Satan Satan { get; }
 
         public Players(Player.Settings settings, GameLoop game)
         {
-            _players[PlayerId.Person] = Person = new PersonController(settings);
+            _players[PlayerId.Person] = Person = new(settings);
 
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
                 _players[i] = new AIController(i, settings);
 
-            SatanController satanController = new(settings);
-            _players[PlayerId.Satan] = satanController;  Satan = satanController;
+            _players[PlayerId.Satan] = new SatanController(settings);
 
             game.Subscribe(GameModeId.Landing,    (turn, _) => _players[turn.currentId.Value].OnLanding());
             game.Subscribe(GameModeId.EndLanding, (turn, _) => _players[turn.currentId.Value].OnEndLanding());
@@ -26,7 +24,9 @@ namespace Vurbiri.Colonization
             game.Subscribe(GameModeId.Profit,     OnProfit);
             game.Subscribe(GameModeId.Play,       (turn, _) => _players[turn.currentId.Value].OnPlay());
 
-            settings.triggerBus.EventActorKill.Add((killer, deadType, deadId) => _players[killer].ActorKill(deadType, deadId));
+            GameContainer.EventBus.EventActorKill.Add((killer, deadType, deadId) => _players[killer].ActorKill(deadType, deadId));
+
+            Player.Init();
 
             settings.Dispose();
         }

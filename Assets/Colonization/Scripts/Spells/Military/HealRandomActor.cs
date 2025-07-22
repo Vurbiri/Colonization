@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
                 }
 
                 if (_wounded.Count > 0)
-                    Cast_Cn(_wounded.Rand(), param.playerId, resources).Run();
+                    Cast_Cn(_wounded.Rand(), param.playerId, resources).Start();
             }
 
             public override void Clear()
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
             {
                 s_isCast.True();
 
-                yield return s_cameraController.ToPosition(target.Position);
+                yield return GameContainer.CameraController.ToPosition(target.Position);
                 _sfx.Hit(target.Skin);
                 target.ApplyEffect(_heal);
 

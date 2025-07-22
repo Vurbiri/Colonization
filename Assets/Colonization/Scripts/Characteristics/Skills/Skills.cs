@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.Characteristics
                 if (_skillsUI != null)  
                     return _skillsUI;
 
-                var colors = SceneContainer.Get<ProjectColors>();
+                var colors = GameContainer.UI.Colors;
                 int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
                 SkillUI[] skillsUI = new SkillUI[countSkills];
 

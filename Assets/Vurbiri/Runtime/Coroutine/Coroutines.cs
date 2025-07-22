@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public class Coroutines : MonoBehaviour
+    sealed public class Coroutines : MonoBehaviour
     {
         internal static Coroutines s_instance;
 
@@ -32,7 +32,7 @@ namespace Vurbiri
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Coroutine Run(IEnumerator routine) => s_instance.StartCoroutine(routine);
+        public static Coroutine Start(IEnumerator routine) => s_instance.StartCoroutine(routine);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Stop(Coroutine coroutine) => s_instance.StopCoroutine(coroutine);
@@ -47,7 +47,7 @@ namespace Vurbiri
     public static class CoroutineExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Coroutine Run(this IEnumerator self) => Coroutines.s_instance.StartCoroutine(self);
+        public static Coroutine Start(this IEnumerator self) => Coroutines.s_instance.StartCoroutine(self);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Stop(this Coroutine self) => Coroutines.s_instance.StopCoroutine(self);
     }

@@ -13,14 +13,15 @@ namespace Vurbiri.Colonization.EntryPoint
         public PlayerColors playerColors;
         public PlayerNames playerNames;
         public HumansMaterials humansMaterials;
+        public Prices prices;
 
         public IStorageService storageService;
         public ProjectStorage projectStorage;
         public YandexSDK ysdk;
 
-        public void Dispose()
+        public void Dispose() 
         {
-            throw new System.NotImplementedException();
+            projectStorage.Dispose();
         }
     }
 }

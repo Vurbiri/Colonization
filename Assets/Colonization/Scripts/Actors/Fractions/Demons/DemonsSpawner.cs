@@ -44,9 +44,9 @@ namespace Vurbiri.Colonization.Actors
             return true;
         }
 
-        public Demon Load(ActorLoadData data, Hexagons land)
+        public Demon Load(ActorLoadData data)
         {
-            return Object.Instantiate(_demonPrefab, _container).Load(data, _initData, land[data.keyHex]);
+            return Object.Instantiate(_demonPrefab, _container).Load(data, _initData, GameContainer.Hexagons[data.keyHex]);
         }
     }
 }

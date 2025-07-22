@@ -24,17 +24,17 @@ namespace Vurbiri.Colonization
 
         public int BreachCount => _breach.Count;
 
-        public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs, GameplayTriggerBus triggerBus)
+        public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs)
         {
             _container = container;
 
-            Crossroad.Init(prefabs, triggerBus);
+            Crossroad.Init(prefabs);
 
             for (int i = 0; i < HEX_COUNT_VERTICES; i++)
                 _vertices[i] = HEX_RADIUS_OUT * VERTEX_DIRECTIONS[i];
         }
 
-        public void CreateCrossroads(Vector3 positionHex, Hexagon hex, bool isLastCircle)
+        public void CrossroadCreate(Vector3 positionHex, Hexagon hex, bool isLastCircle)
         {
             Crossroad cross; Key key; Vector3 position;
             for (int i = 0; i < HEX.SIDES; i++)

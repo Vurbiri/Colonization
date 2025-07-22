@@ -3,7 +3,6 @@ using TMPro;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.UI;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 using Object = UnityEngine.Object;
@@ -37,13 +36,13 @@ namespace Vurbiri.Colonization.Actors
             Object.Destroy(initObj);
         }
 
-        public void Init(ReactiveEffect effect, Actor actor, IdArray<ActorAbilityId, Sprite> sprites, ProjectColors colors, int orderLevel)
+        public void Init(ReactiveEffect effect, Actor actor, IdArray<ActorAbilityId, Sprite> sprites, int orderLevel)
         {
             _sprite.sortingOrder += orderLevel;
             _durationTMP.sortingOrder += orderLevel;
 
             _sprite.sprite = sprites[effect.TargetAbility];
-            _sprite.color = colors.GetTextColor(effect.IsPositive);
+            _sprite.color = GameContainer.UI.Colors.GetTextColor(effect.IsPositive);
 
             Index = effect.Index;
             Duration = effect.Duration;

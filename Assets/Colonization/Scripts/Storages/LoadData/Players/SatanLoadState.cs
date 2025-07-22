@@ -8,19 +8,14 @@ namespace Vurbiri.Colonization.Storage
         public readonly int level;
         public readonly int curse;
         public readonly int spawn;
-        public readonly int maxDemons;
 
-        public SatanLoadState()
-        {
-            maxDemons = CONST.DEFAULT_MAX_ACTORS;
-        }
+        public SatanLoadState() { }
 
-        public SatanLoadState(int level, int curse, int spawn, int maxDemons)
+        public SatanLoadState(int level, int curse, int spawn)
         {
             this.level = level;
             this.curse = curse;
             this.spawn = spawn;
-            this.maxDemons = maxDemons;
         }
     }
 }

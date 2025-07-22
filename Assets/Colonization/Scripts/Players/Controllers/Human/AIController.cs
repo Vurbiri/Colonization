@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
 
         public override void OnLanding()
         {
-            OnInitFast_Cn().Run();
+            OnInitFast_Cn().Start();
         }
 
         public override void OnPlay()
@@ -22,28 +22,28 @@ namespace Vurbiri.Colonization
         {
             yield return null;
 
-            if (s_crossroads.BreachCount > 0)
+            if (GameContainer.Crossroads.BreachCount > 0)
             {
-                Crossroad port = s_crossroads.GetRandomPort();
-                yield return s_cameraController.ToPosition(port.Position);
+                Crossroad port = GameContainer.Crossroads.GetRandomPort();
+                yield return GameContainer.CameraController.ToPosition(port.Position);
                 yield return BuildPort(port).signal;
             }
 
-            s_game.EndLanding().Run();
+            GameContainer.GameLoop.EndLanding().Start();
         }
 
         private IEnumerator OnInitFast_Cn()
         {
             yield return null;
 
-            if (s_crossroads.BreachCount > 0)
+            if (GameContainer.Crossroads.BreachCount > 0)
             {
-                Crossroad port = s_crossroads.GetRandomPort();
+                Crossroad port = GameContainer.Crossroads.GetRandomPort();
                 BuildPort(port);
                 yield return null;
             }
 
-            s_game.EndLanding().Run();
+            GameContainer.GameLoop.EndLanding().Start();
         }
 
     }

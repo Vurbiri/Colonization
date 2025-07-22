@@ -1,28 +1,25 @@
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
     sealed public class CrossroadRoadsMenu : AWorldMenu
     {
-        [Space]
-        [SerializeField] private Camera _camera;
-        [Space]
         [SerializeField] private WorldHintButton _buttonBack;
         [Space]
         [SerializeField] private IdSet<LinkId, ButtonBuildRoad> _roadButtons;
 
         private RectTransform _thisTransform;
         private Vector2 _localPoint;
+        private Camera _camera;
         private CrossroadMainMenu _mainMen;
         private Crossroad _currentCrossroad;
 
         public ISubscription<IMenu, bool> Init(ContextMenuSettings settings, CrossroadMainMenu mainMenu)
         {
             _mainMen = mainMenu;
-            _camera = settings.camera;
+            _camera = settings.cameraTransform.Camera;
             _thisTransform = GetComponent<RectTransform>();
 
             _buttonBack.Init(settings.hint, OnClose);

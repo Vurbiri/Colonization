@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
                 if (_coroutine == null)
                 {
                     _currentPlayer = param.playerId;
-                    _coroutine = Cast_Cn(resources).Run();
+                    _coroutine = Cast_Cn(resources).Start();
                 }
                
             }
@@ -69,14 +69,13 @@ namespace Vurbiri.Colonization
                     _waitButton.AddListener(Cancel);
                 }
 
-                _unsubscription = s_triggerBus.EventHexagonSelect.Add(hexagon => _waitHexagon.SetResult(hexagon));
+                _unsubscription = GameContainer.EventBus.EventHexagonSelect.Add(hexagon => _waitHexagon.SetResult(hexagon));
 
                 yield return _waitHexagon.Restart();
                 _selectedA = _waitHexagon.Value;
                 _selectedA.SetSelectedForSwap(s_settings.swapHexColor);
 
                 yield return _waitHexagon.Restart();
-                _unsubscription.Unsubscribe();
 
                 Swap(_currentPlayer, _waitHexagon.Value, resources);
                 EndCast();
@@ -90,6 +89,9 @@ namespace Vurbiri.Colonization
 
             private void EndCast()
             {
+                _unsubscription?.Unsubscribe();
+                _unsubscription = null;
+
                 if (_currentPlayer == PlayerId.Person)
                 {
                     _waitButton.Reset();
@@ -104,7 +106,7 @@ namespace Vurbiri.Colonization
 
             private void Swap(int playerId, Hexagon selectedB, CurrenciesLite resources)
             {
-                s_hexagons.SwapId(_selectedA, selectedB, s_settings.swapHexColor);
+                GameContainer.Hexagons.SwapId(_selectedA, selectedB, s_settings.swapHexColor);
                 s_humans[playerId].AddResources(resources);
                 _selectedA = null;
             }

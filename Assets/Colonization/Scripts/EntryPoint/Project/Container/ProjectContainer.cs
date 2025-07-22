@@ -19,11 +19,12 @@ namespace Vurbiri.Colonization.EntryPoint
             get => s_projectContent.gameSettings;
         }
 
-        public static ProjectColors ProjectColors
+        public static Prices Prices
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_projectContent.projectColors;
+            get => s_projectContent.prices;
         }
+
         public static PlayerColors PlayerColors
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -52,15 +53,18 @@ namespace Vurbiri.Colonization.EntryPoint
             get => s_projectContent.ysdk;
         }
 
-        public ProjectContainer() { }
-        public ProjectContainer(ProjectContent content)
+        public class UI
         {
-            s_projectContent ??= content;
+            public static ProjectColors Colors
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => s_projectContent.projectColors;
+            }
         }
 
-        public virtual void Dispose()
-        {
-            s_projectContent.Dispose();
-        }
+        public ProjectContainer() { }
+        public ProjectContainer(ProjectContent content) => s_projectContent ??= content;
+
+        public virtual void Dispose() => s_projectContent.Dispose();
     }
 }

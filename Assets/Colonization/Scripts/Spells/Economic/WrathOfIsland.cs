@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
                     _damage.playerId = param.playerId;
                     _damage.damage = (s_settings.wrathBasa + (param.valueA + param.valueB) * s_settings.wrathPerRes << ActorAbilityId.SHIFT_ABILITY) / _targets.Count;
 
-                    Cast_Cn().Run();
+                    Cast_Cn().Start();
 
                     resources.Add(CurrencyId.Wood, -param.valueA); resources.Add(CurrencyId.Ore, -param.valueB);
                     s_humans[param.playerId].AddResources(resources);
@@ -84,7 +84,7 @@ namespace Vurbiri.Colonization
                 target.ApplyEffect(this);
 
                 if (target.IsDead & target.Owner != playerId)
-                    s_triggerBus.TriggerActorKill(playerId, target.TypeId, target.Id);
+                    GameContainer.TriggerBus.TriggerActorKill(playerId, target.TypeId, target.Id);
             }
         }
     }

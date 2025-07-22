@@ -13,10 +13,10 @@ namespace Vurbiri.Colonization.EntryPoint
         public override IEnumerator GetEnumerator()
         {
             yield return null;
-            GameplayContainer.GameSettings.Start();
-            GameplayContainer.InputController.Enable();
+            GameContainer.GameSettings.Start();
+            GameContainer.InputController.Enable();
             
-            yield return GameplayContainer.Game.Start();
+            yield return GameContainer.GameLoop.Start();
         }
     }
 }

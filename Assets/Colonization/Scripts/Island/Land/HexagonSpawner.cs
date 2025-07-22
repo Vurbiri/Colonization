@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization
 {
@@ -13,20 +12,12 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private LandMesh _landMesh;
 
-        private GameplayEventBus _eventBus;
-        private Transform _cameraTransform;
         private Transform _landContainer;
-        private ProjectColors _colorSettings;
 
-        public HexagonSpawner Init(Camera camera, GameplayEventBus eventBus)
+        public HexagonSpawner Init()
         {
             _landContainer = _landMesh.transform;
             _landMesh.Init();
-            
-            _eventBus = eventBus;
-
-            _cameraTransform = camera.transform;
-            _colorSettings = SceneContainer.Get<ProjectColors>();
 
             return this;
         }
@@ -36,7 +27,7 @@ namespace Vurbiri.Colonization
             SurfaceType surface = _surfaces[surfaceId];
             Hexagon hex = Object.Instantiate(_prefabHex, position, Quaternion.identity, _landContainer);
             hex.Setup(key, id, surface);
-            hex.Caption.Init(id, surface.Currencies, _cameraTransform, _colorSettings, _eventBus);
+            hex.Caption.Init(id, surface.Currencies);
 
             _landMesh.AddHexagon(key, position, surfaceId);
 

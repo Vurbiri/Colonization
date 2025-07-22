@@ -48,10 +48,10 @@ namespace Vurbiri.Colonization
                 edifices[EdificeGroupId.Port] = ports = new(CONST.DEFAULT_MAX_EDIFICES);
             }
 
-            public Edifices(Human parent, Dictionary<int, List<EdificeLoadData>> data, Crossroads crossroads) : this(parent._abilities)
+            public Edifices(Human parent, Dictionary<int, List<EdificeLoadData>> data) : this(parent._abilities)
             {
                 for (int i = 0; i < EdificeGroupId.Count; i++)
-                    CreateEdifices(edifices[i], data[i], parent._id, crossroads);
+                    CreateEdifices(edifices[i], data[i], parent._id, GameContainer.Crossroads);
             }
 
             public CurrenciesLite ProfitFromEdifices(int hexId)
