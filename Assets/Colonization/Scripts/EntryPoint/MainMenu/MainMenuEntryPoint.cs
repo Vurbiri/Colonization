@@ -9,11 +9,13 @@ namespace Vurbiri.Colonization.EntryPoint
     {
         [SerializeField] private SceneId _nextScene;
 
-        public override ISubscription<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param)
+        public override ISubscription<ExitParam> Enter(Loading loading, AEnterParam param)
         {
+            var container = new MainMenuContainer(new());
             Debug.Log("MainMenu Enter");
+            Debug.Log(MainMenuContainer.Settings.Profile.Quality);
             loading.Add(Exit_Cn());
-            return new SceneExitPoint(_nextScene, containers).EventExit;
+            return new SceneExitPoint(_nextScene, container).EventExit;
         }
 
         private IEnumerator Exit_Cn()

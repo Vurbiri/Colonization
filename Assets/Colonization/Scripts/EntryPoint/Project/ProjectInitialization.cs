@@ -25,26 +25,23 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public ILoadingScreen Screen => _loadingScreen;
 
-        public void Init(DIContainer diContainer, Loading loading)
+        public void Init(ProjectContent content, Loading loading, MonoBehaviour mono)
         {
-            Coroutines coroutine;
-            ProjectColors colors;
-            AsyncOperation operation = SceneManager.LoadSceneAsync(_startScene);
+             AsyncOperation operation = SceneManager.LoadSceneAsync(_startScene);
             operation.allowSceneActivation = false;
 
             Log.Info("Start Init Project");
 
             Localization.Instance.SetFiles(_localizationFiles);
 
-            diContainer.AddInstance(coroutine = Coroutines.Create("Project Coroutine", true));
-            diContainer.AddInstance(_settings);
-            diContainer.AddInstance(colors = _settingsColorScriptable.Colors);
+            content.settings = _settings;
+            content.projectColors = _settingsColorScriptable.Colors;
 
-            MessageBox.SetColors(colors.PanelBack, colors.TextDefault);
+            MessageBox.SetColors(content.projectColors.PanelBack, content.projectColors.TextDefault);
 
-            loading.Add(new CreateYandexSDK(diContainer, coroutine, _leaderboardName));
-            loading.Add(new CreateStorage(diContainer, coroutine, _loadingScreen, _logOnPanel));
-            loading.Add(new LoadSettingsStep(diContainer, _playerVisualSetScriptable));
+            loading.Add(new CreateYandexSDK(content, mono, _leaderboardName));
+            loading.Add(new CreateStorage(content, mono, _loadingScreen, _logOnPanel));
+            loading.Add(new LoadSettingsStep(content, _playerVisualSetScriptable));
             loading.Add(new EndLoadScene(operation));
 
             Destroy(this);

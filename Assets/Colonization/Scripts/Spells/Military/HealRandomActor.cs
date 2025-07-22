@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
                 }
 
                 if (_wounded.Count > 0)
-                    s_coroutines.StartCoroutine(Cast_Cn(_wounded.Rand(), param.playerId, resources));
+                    Cast_Cn(_wounded.Rand(), param.playerId, resources).Run();
             }
 
             public override void Clear()

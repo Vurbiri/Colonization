@@ -30,13 +30,13 @@ namespace Vurbiri.Colonization
         public string Description => Localization.Instance.GetText(LangFiles.Main, "IslandCreationStep");
         public float Weight => 5f;
 
-        public ILoadingStep Init(GameplayInitObjects init)
+        public ILoadingStep Init(GameplayContent content)
         {
-            _storage = init.storage;
-            _hexagonSpawner.Init(init.cameraTransform.Camera, init.triggerBus);
+            _storage = content.storage;
+            _hexagonSpawner.Init(content.cameraTransform.Camera, content.triggerBus);
 
-            init.AddHexagons(_hexagons = new(init.game, new Pool<HexagonMark>(_prefabHexMark.Create, _landContainer, HEX.SIDES), init.triggerBus));
-            init.AddCrossroads(_crossroads = new(_crossroadsContainer, _edificePrefabs, init.triggerBus));
+            content.hexagons   = _hexagons = new(content.gameLoop, new Pool<HexagonMark>(_prefabHexMark.Create, _landContainer, HEX.SIDES), content.triggerBus);
+            content.crossroads = _crossroads = new(_crossroadsContainer, _edificePrefabs, content.triggerBus);
 
             var shape = _psFog.shape;
             shape.radius = _ratioFogSize * MAX_CIRCLES;

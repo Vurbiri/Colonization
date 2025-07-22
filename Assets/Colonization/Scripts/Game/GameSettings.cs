@@ -1,4 +1,5 @@
 using System;
+using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
@@ -36,16 +37,16 @@ namespace Vurbiri.Colonization
             _isTutorial = false;
         }
 
-        public static GameSettings Create(ProjectStorage storage, DIContainer diContainer)
+        public static void Create(ProjectContent content)
         {
-            if (!storage.TryLoadAndBindGameState(out var instance))
+            if (!content.projectStorage.TryLoadAndBindGameState(out var instance))
             {
                 instance = new();
-                storage.BindGameState(instance, true);
+                content.projectStorage.BindGameState(instance, true);
             }
-            instance._storage = storage;
+            instance._storage = content.projectStorage;
 
-            return diContainer.AddInstance(instance);
+            content.gameSettings = instance;
         }
 
         public Unsubscription Subscribe(Action<GameSettings> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);

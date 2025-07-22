@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
         public void OnLanding()
         {
-            s_coroutines.StartCoroutine(s_game.EndTurn());
+            s_game.EndTurn().Run();
         }
         public void OnEndLanding() { }
 

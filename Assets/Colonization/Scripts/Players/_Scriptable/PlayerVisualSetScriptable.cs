@@ -1,5 +1,5 @@
 using UnityEngine;
-using Vurbiri.Colonization.Storage;
+using Vurbiri.Colonization.EntryPoint;
 
 namespace Vurbiri.Colonization
 {
@@ -15,13 +15,13 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField] private PlayerNames _nameKeys;
 
-        public void Init(ProjectStorage storage, DIContainer container)
+        public void Init(ProjectContent content)
         {
-            storage.SetAndBindPlayerColors(_colors);
+            content.projectStorage.SetAndBindPlayerColors(_colors);
 
-            container.AddInstance(_colors);
-            container.AddInstance(new HumansMaterials(_colors, _defaultMaterialLit, _defaultMaterialUnlit, _defaultMaterialWarrior));
-            container.AddInstance(_nameKeys.Init(storage, container.Get<YandexSDK>()));
+            content.playerColors = _colors;
+            content.playerNames = _nameKeys.Init(content.projectStorage, content.ysdk);
+            content.humansMaterials = new(_colors, _defaultMaterialLit, _defaultMaterialUnlit, _defaultMaterialWarrior);
 
             Resources.UnloadAsset(this);
         }

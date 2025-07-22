@@ -10,9 +10,9 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ContextMenusManager _contextMenus;
         [SerializeField] private WindowsManager _windows;
 
-        public void Init(GameplayInitObjects init, CanvasHint hint, ContextMenuSettings settings)
+        public void Init(GameplayContent init, CanvasHint hint, ContextMenuSettings settings)
         {
-            _game.Init(init.game, init.cameraController, this);
+            _game.Init(init.gameLoop, init.cameraController, this);
             _contextMenus.Init(settings);
             _windows.Init(init, hint);
         }

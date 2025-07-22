@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override IEnumerator GetEnumerator()
         {
-            _init.diContainer.AddInstance(_init.players = new Players(_init.GetPlayerSettings(), _init.game));
+            _init.content.players = new Players(_init.GetPlayerSettings(), _init.content.gameLoop);
             yield return null;
         }
     }

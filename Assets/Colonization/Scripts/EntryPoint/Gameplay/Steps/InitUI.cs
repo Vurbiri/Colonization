@@ -32,14 +32,14 @@ namespace Vurbiri.Colonization.EntryPoint
         public IEnumerator GetEnumerator()
         {
             var colors = SceneContainer.Get<ProjectColors>();
-            var player = _init.players.Person;
+            var player = _init.content.players.Person;
 
             _worldHint.Init();
             _canvasHint.Init();
             yield return null;
-            _managers.Init(_init, _canvasHint, _init.GetContextMenuSettings(_worldHint));
+            _managers.Init(_init.content, _canvasHint, _init.GetContextMenuSettings(_worldHint));
             yield return null;
-            _playerPanels.Init(player, colors, _init.inputController, _canvasHint);
+            _playerPanels.Init(player, colors, _init.content.inputController, _canvasHint);
             yield return null;
 
             Destroy(gameObject);

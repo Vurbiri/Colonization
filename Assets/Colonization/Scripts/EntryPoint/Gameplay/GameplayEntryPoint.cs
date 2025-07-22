@@ -20,23 +20,24 @@ namespace Vurbiri.Colonization.EntryPoint
         [Header("══════ TEST ══════")]
         [SerializeField] private bool _isLoad;
 
-        public override ISubscription<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param)
+        public override ISubscription<ExitParam> Enter(Loading loading, AEnterParam param)
         {
-            containers.Container.Get<GameSettings>().IsLoad = _isLoad;
+            GameplayContent content = new();
+            GameplayContainer.GameSettings.IsLoad = _isLoad;
 
             Localization.Instance.SetFiles(_localizationFiles);
 
-            _initObjects.CreateObjectsAndFillingContainer(containers.Container);
+            _initObjects.CreateObjectsAndFillingContainer(content);
                         
-            loading.Add(_islandCreator.Init(_initObjects));
+            loading.Add(_islandCreator.Init(content));
             loading.Add(new CreatePlayers(_initObjects));
             loading.Add(_initUI.Init(_initObjects));
             loading.Add(new ClearResources());
-            loading.Add(new GameplayStart(_initObjects));
+            loading.Add(new GameplayStart());
 
             Destroy(this);
 
-            return new SceneExitPoint(_nextScene, containers).EventExit;
+            return new SceneExitPoint(_nextScene, new GameplayContainer(content)).EventExit;
         }
 
 

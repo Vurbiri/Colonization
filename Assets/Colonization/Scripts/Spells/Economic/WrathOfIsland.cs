@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
                     _damage.playerId = param.playerId;
                     _damage.damage = (s_settings.wrathBasa + (param.valueA + param.valueB) * s_settings.wrathPerRes << ActorAbilityId.SHIFT_ABILITY) / _targets.Count;
 
-                    s_coroutines.StartCoroutine(Cast_Cn());
+                    Cast_Cn().Run();
 
                     resources.Add(CurrencyId.Wood, -param.valueA); resources.Add(CurrencyId.Ore, -param.valueB);
                     s_humans[param.playerId].AddResources(resources);

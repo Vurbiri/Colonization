@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization
             public abstract void Cast(SpellParam param, CurrenciesLite resources);
 
             public abstract void Clear();
+
+            public virtual void Cancel() { }
         }
     }
 }

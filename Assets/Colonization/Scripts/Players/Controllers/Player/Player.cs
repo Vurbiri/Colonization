@@ -15,7 +15,6 @@ namespace Vurbiri.Colonization
         protected static Crossroads s_crossroads;
         protected static GameLoop s_game;
         protected static CameraController s_cameraController;
-        protected static Coroutines s_coroutines;
         
         protected readonly int _id;
         protected readonly bool _isPerson;
@@ -32,7 +31,7 @@ namespace Vurbiri.Colonization
         {
             SpellBook.Clear(); Actor.Clear();
             s_hexagons = null; s_crossroads = null; s_game = null;
-            s_cameraController = null; s_coroutines = null;
+            s_cameraController = null;
             s_states.Clear();
         }
 
@@ -55,18 +54,17 @@ namespace Vurbiri.Colonization
             [NonSerialized] public GameplayStorage storage;
             [NonSerialized] public GameplayTriggerBus triggerBus;
 
-            public Settings Init(GameplayInitObjects init)
+            public Settings Init(GameplayContent init)
             {
                 s_states.score = new Score(init.storage);
-                s_states.balance = new Balance(init.storage, init.game);
-                s_states.diplomacy = new Diplomacy(init.storage, init.game);
+                s_states.balance = new Balance(init.storage, init.gameLoop);
+                s_states.diplomacy = new Diplomacy(init.storage, init.gameLoop);
                 s_states.prices = init.prices;
 
                 s_hexagons = init.hexagons;
                 s_crossroads = init.crossroads;
-                s_game = init.game;
+                s_game = init.gameLoop;
                 s_cameraController = init.cameraController;
-                s_coroutines = init.coroutines;
 
                 SpellBook.Init(init);
                 Actor.Init(s_states.diplomacy, init.triggerBus);

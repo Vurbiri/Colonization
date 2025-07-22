@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
 
         public override void OnLanding()
         {
-            s_coroutines.StartCoroutine(OnInitFast_Cn());
+            OnInitFast_Cn().Run();
         }
 
         public override void OnPlay()
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
                 yield return BuildPort(port).signal;
             }
 
-            s_coroutines.StartCoroutine(s_game.EndLanding());
+            s_game.EndLanding().Run();
         }
 
         private IEnumerator OnInitFast_Cn()
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
                 yield return null;
             }
 
-            s_coroutines.StartCoroutine(s_game.EndLanding());
+            s_game.EndLanding().Run();
         }
 
     }

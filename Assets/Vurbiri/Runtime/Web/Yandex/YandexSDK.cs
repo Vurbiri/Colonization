@@ -2,17 +2,18 @@
 using System.Collections;
 #endif
 
+using UnityEngine;
 
 namespace Vurbiri
 {
     public partial class YandexSDK
     {
         private readonly string _lbName = "lbColonization";
-        private readonly Coroutines _coroutines;
+        private readonly MonoBehaviour _mono;
 
-        public YandexSDK(Coroutines coroutine, string lbName)
+        public YandexSDK(MonoBehaviour mono, string lbName)
         {
-            _coroutines = coroutine;
+            _mono = mono;
             if(!string.IsNullOrEmpty(lbName))
                 _lbName = lbName;
         }
@@ -42,7 +43,7 @@ namespace Vurbiri
         public WaitResult<Return<PlayerRecord>> GetPlayerResult() 
         {
             WaitResultSource<Return<PlayerRecord>> wait = new();
-            _coroutines.Run(GetPlayerResult_Cn(wait));
+            _mono.StartCoroutine(GetPlayerResult_Cn(wait));
             return wait;
 
             #region Local: GetPlayerResult_Cn()
@@ -63,7 +64,7 @@ namespace Vurbiri
         public WaitResult<Return<Leaderboard>> GetLeaderboard(int quantityTop, bool includeUser = false, int quantityAround = 1, AvatarSize size = AvatarSize.Medium)
         {
             WaitResultSource<Return<Leaderboard>> wait = new();
-            _coroutines.Run(GetLeaderboardCoroutine(wait));
+            _mono.StartCoroutine(GetLeaderboardCoroutine(wait));
             return wait;
 
             #region Local Function

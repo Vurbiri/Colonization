@@ -4,32 +4,37 @@ namespace Vurbiri
 {
     public class AClosedSingleton<T> : MonoBehaviour where T : AClosedSingleton<T>
     {
-        protected static T _instance;
+        protected static T s_instance;
 
         protected virtual void Awake()
         {
-            if (_instance == null)
-                _instance = (T)this;
+            if (s_instance == null)
+            {
+                s_instance = (T)this;
+                DontDestroyOnLoad(gameObject);
+            }
             else
+            {
                 Destroy(gameObject);
+            }
         }
 
         protected virtual void OnDestroy()
         {
-            if (_instance == this)
-                _instance = null;
+            if (s_instance == this)
+                s_instance = null;
         }
 
 #if UNITY_EDITOR
         protected virtual void OnValidate()
         {
-            if (Application.isPlaying || _instance != null) return;
+            if (Application.isPlaying || s_instance != null) return;
 
             T[] instances = FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
             if (instances.Length > 1)
             {
-                _instance = instances[0];
+                s_instance = instances[0];
                 System.Text.StringBuilder sb = new();
                 sb.AppendLine($"<color=orange><b>[Singleton]</b> Number of objects type <b>{typeof(T).Name}</b> = <b>{instances.Length}</b></color>");
                 foreach (T instance in instances)

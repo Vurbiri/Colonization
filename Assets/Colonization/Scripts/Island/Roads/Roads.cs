@@ -14,18 +14,16 @@ namespace Vurbiri.Colonization
         private readonly List<Road> _roadsLists = new();
         private readonly RInt _count = new(0);
         private readonly Gradient _gradient;
-        private readonly Coroutines _coroutines;
         private readonly Subscription<Roads> _eventChanged = new();
         #endregion
 
         public int Count => _count.Value;
         public IReactiveValue<int> CountReactive => _count;
 
-        public Roads(Id<PlayerId> id, Color color, RoadFactory factory, Coroutines coroutines)
+        public Roads(Id<PlayerId> id, Color color, RoadFactory factory)
         {
             _id = id.Value;
             _factory = factory;
-            _coroutines = coroutines;
 
             GradientAlphaKey[] alphas = { new(1.0f, 0.0f), new(1.0f, 1.0f) };
             GradientColorKey[] colors = { new(color, 0.0f), new(color, 1.0f) };
@@ -53,7 +51,7 @@ namespace Vurbiri.Colonization
         public ReturnSignal BuildAndUnion(CrossroadLink link)
         {
             ReturnSignal returnSignal = Build(link, true);
-            _coroutines.StartCoroutine(TryUnion_Cn(returnSignal.signal));
+            TryUnion_Cn(returnSignal.signal).Run();
             return returnSignal;
         }
 
@@ -108,7 +106,7 @@ namespace Vurbiri.Colonization
                     {
                         _roadsLists.Remove(removingLine);
                         removingLine.Disable();
-                        _coroutines.StartCoroutine(TryUnion_Cn(null));
+                        TryUnion_Cn(null).Run();
                         yield break;
                     }
                 }

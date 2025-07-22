@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
                 if (_coroutine == null)
                 {
                     _currentPlayer = param.playerId;
-                    _coroutine = s_coroutines.StartCoroutine(Cast_Cn(resources));
+                    _coroutine = Cast_Cn(resources).Run();
                 }
                
             }
@@ -84,7 +84,7 @@ namespace Vurbiri.Colonization
 
             private void Cancel(Id<MBButtonId> id)
             {
-                s_coroutines.StopCoroutine(_coroutine);
+                _coroutine.Stop();
                 EndCast();
             }
 

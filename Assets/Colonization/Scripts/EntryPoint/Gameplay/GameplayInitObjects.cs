@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
-using Vurbiri.Colonization.Storage;
 using Vurbiri.Colonization.UI;
 using Vurbiri.UI;
 
@@ -22,48 +20,34 @@ namespace Vurbiri.Colonization.EntryPoint
         [Header("══════ Init data for classes ══════")]
         [SerializeField] private Player.Settings _playerSettings;
         [SerializeField] private InputController.Settings _inputControllerSettings;
+                
+        public GameplayContent content;
 
-
-        [NonSerialized] public Coroutines coroutines;
-        public GameLoop game;
-        
-        public DIContainer diContainer;
-        public GameSettings gameSettings;
-        public GameplayStorage storage;
-        public CameraTransform cameraTransform;
-        public GameplayTriggerBus triggerBus;
-        public InputController inputController;
-        public Hexagons hexagons;
-        public Crossroads crossroads;
-        public Players players;
-
-        public void CreateObjectsAndFillingContainer(DIContainer container)
+        public void CreateObjectsAndFillingContainer(GameplayContent content)
         {
-            diContainer = container;
-            gameSettings = container.Get<GameSettings>();
+            this.content = content;
 
-            container.AddInstance(coroutines = Coroutines.Create("Gameplay Coroutines"));
-            container.AddInstance(storage = new(gameSettings.IsLoad));
-
-            container.AddInstance<GameEvents>(game = GameLoop.Create(storage));
-                        
-            container.AddInstance<GameplayTriggerBus, GameplayEventBus>(triggerBus = new());
-            container.AddInstance(inputController = new(game, mainCamera, _inputControllerSettings));
-
-            container.AddInstance(poolEffectsBar.Create());
-            container.AddInstance(cameraTransform = new(mainCamera));
-            
-            cameraController.Init(cameraTransform, triggerBus, inputController);
+            content.storage = new(GameplayContainer.GameSettings.IsLoad);
+            content.gameLoop = GameLoop.Create(content.storage);
+            content.triggerBus = new();
+            content.inputController = new(content.gameLoop, mainCamera, _inputControllerSettings);
+            content.poolEffectsBar = poolEffectsBar.Create();
+            content.cameraTransform = new(mainCamera);
+            content.mainCamera = mainCamera;
+            content.cameraController = cameraController.Init(content.cameraTransform, content.triggerBus, content.inputController);
+            content.prices = prices;
+            content.sharedRepository = sharedRepository;
+            content.sharedAudioSource = sharedAudioSource;
 
             _inputControllerSettings = null;
             poolEffectsBar = null;
         }
         
-        public void AddHexagons(Hexagons hexagons) => diContainer.AddInstance(this.hexagons = hexagons);
-        public void AddCrossroads(Crossroads crossroads) => diContainer.AddInstance(this.crossroads = crossroads);
+        public void AddHexagons(Hexagons hexagons) => content.hexagons = hexagons;
+        public void AddCrossroads(Crossroads crossroads) => content.crossroads = crossroads;
 
-        public Player.Settings GetPlayerSettings() => _playerSettings.Init(this);
-        public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(game, players, hintWorld, cameraTransform, triggerBus);
+        public Player.Settings GetPlayerSettings() => _playerSettings.Init(content);
+        public ContextMenuSettings GetContextMenuSettings(WorldHint hintWorld) => new(content.gameLoop, content.players, hintWorld, content.cameraTransform, content.triggerBus);
 
 #if UNITY_EDITOR
         public void OnValidate()

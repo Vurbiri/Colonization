@@ -8,35 +8,29 @@ namespace Vurbiri.Colonization.EntryPoint
 {
     sealed internal class CreateStorage : ALocalizationLoadingStep
     {
-        private readonly DIContainer _diContainer;
-        private readonly Coroutines _coroutine;
+        private readonly ProjectContent _content;
+        private readonly MonoBehaviour _mono;
         private readonly ILoadingScreen _loadingScreen;
         private readonly LogOnPanel _logOnPanel;
-        private YandexSDK _ysdk;
-        private Settings _settings;
-        private ProjectStorage _projectStorage;
 
-        public CreateStorage(DIContainer diContainer, Coroutines coroutine, ILoadingScreen loadingScreen, LogOnPanel logOnPanel) : base("StorageCreationStep")
+        public CreateStorage(ProjectContent content, MonoBehaviour mono, ILoadingScreen loadingScreen, LogOnPanel logOnPanel) : base("StorageCreationStep")
         {
-            _diContainer = diContainer;
-            _coroutine = coroutine;
+            _content = content;
+            _mono = mono;
             _loadingScreen = loadingScreen;
             _logOnPanel = logOnPanel;
         }
 
         public override IEnumerator GetEnumerator()
         {
-            _ysdk = _diContainer.Get<YandexSDK>();
-            _settings = _diContainer.Get<Settings>();
-
-            yield return _coroutine.StartCoroutine(CreateStorage_Cn());
-            if (!_ysdk.IsLogOn)
+            yield return _mono.StartCoroutine(CreateStorage_Cn());
+            if (!_content.ysdk.IsLogOn)
             {
-                yield return _coroutine.StartCoroutine(_loadingScreen.SmoothOff());
-                yield return _coroutine.StartCoroutine(_logOnPanel.TryLogOn_Cn(_ysdk, _settings, _projectStorage));
-                yield return _coroutine.StartCoroutine(_loadingScreen.SmoothOn());
-                if (_ysdk.IsLogOn)
-                    yield return _coroutine.StartCoroutine(CreateStorage_Cn());
+                yield return _mono.StartCoroutine(_loadingScreen.SmoothOff());
+                yield return _mono.StartCoroutine(_logOnPanel.TryLogOn_Cn(_content.ysdk, _content.settings, _content.projectStorage));
+                yield return _mono.StartCoroutine(_loadingScreen.SmoothOn());
+                if (_content.ysdk.IsLogOn)
+                    yield return _mono.StartCoroutine(CreateStorage_Cn());
             }
         }
 
@@ -53,10 +47,10 @@ namespace Vurbiri.Colonization.EntryPoint
                 Log.Info("StorageService не определён");
             }
 
-            _diContainer.ReplaceInstance(storage);
-            _diContainer.ReplaceInstance(_projectStorage = new(storage));
+            _content.storageService = storage;
+            _content.projectStorage = new(storage);
 
-            _settings.Init(_ysdk, _projectStorage);
+            _content.settings.Init(_content.ysdk, _content.projectStorage);
 
             #region Local: Create(..), Creator()
             // =====================
@@ -76,9 +70,9 @@ namespace Vurbiri.Colonization.EntryPoint
             // =====================
             IEnumerator<IStorageService> Creator()
             {
-                MonoBehaviour monoBehaviour = _coroutine;
+                MonoBehaviour monoBehaviour = _mono;
 
-                yield return new JsonToYandex(SAVE_KEYS.PROJECT, monoBehaviour, _ysdk);
+                yield return new JsonToYandex(SAVE_KEYS.PROJECT, monoBehaviour, _content.ysdk);
                 yield return new JsonToLocalStorage(SAVE_KEYS.PROJECT, monoBehaviour);
                 yield return new JsonToCookies(SAVE_KEYS.PROJECT, monoBehaviour);
             }

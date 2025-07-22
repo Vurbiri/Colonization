@@ -8,7 +8,8 @@ namespace Vurbiri
 
         public SceneContainer(IReadOnlyDIContainer parent)
         {
-            Dispose(); s_container = new(parent);
+            s_container?.Dispose();
+            s_container = new(parent);
         }
 
         public static T Get<T>() => s_container.Get<T>();

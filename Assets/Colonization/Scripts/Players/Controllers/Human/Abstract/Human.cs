@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization
             _perks = PerkTree.Create(settings, loadData);
             _abilities = settings.humanAbilities.Get(_perks);
 
-            _roads = new(playerId, visual.color, settings.roadFactory, s_coroutines);
+            _roads = new(playerId, visual.color, settings.roadFactory);
 
             _resources = Currencies.Create(_abilities, s_states.prices.HumanDefault, loadData);
             _exchange = ExchangeRate.Create(_abilities, loadData);
@@ -169,7 +169,7 @@ namespace Vurbiri.Colonization
         }
         public bool CanRecruiting(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
 
-        public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => s_coroutines.StartCoroutine(Recruiting_Cn(id, crossroad));
+        public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => Recruiting_Cn(id, crossroad).Run();
         public void Recruiting(Id<WarriorId> id, Hexagon hexagon) => Recruiting(id, hexagon, s_states.prices.Warriors[id.Value]);
         public void Recruiting(Id<WarriorId> id, Hexagon hexagon, CurrenciesLite cost)
         {

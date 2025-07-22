@@ -21,7 +21,6 @@ namespace Vurbiri.Colonization
         private static readonly RBool s_isCast = new(false);
 
         private static GameplayTriggerBus s_triggerBus;
-        private static Coroutines s_coroutines;
         private static CameraController s_cameraController;
         private static Hexagons s_hexagons;
 
@@ -62,9 +61,10 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public static void Init(GameplayInitObjects init)
+        public void Cancel(int type, int id) => s_spells[type][id].Cancel();
+
+        public static void Init(GameplayContent init)
         {
-            s_coroutines = init.coroutines;
             s_triggerBus = init.triggerBus;
             s_cameraController = init.cameraController;
             s_hexagons = init.hexagons;
@@ -91,12 +91,12 @@ namespace Vurbiri.Colonization
             }
             s_actors[PlayerId.Satan] = null;
 
-            s_coroutines = null; s_triggerBus = null; s_cameraController = null; s_hexagons = null;
+           s_triggerBus = null; s_cameraController = null; s_hexagons = null;
 
             for (int i = 0; i < EconomicSpellId.Count; i++)
-                s_economicSpells[i].Clear();
+                s_economicSpells[i] = null;
             for (int i = 0; i < MilitarySpellId.Count; i++)
-                s_militarySpells[i].Clear();
+                s_militarySpells[i] = null;
         }
     }
 

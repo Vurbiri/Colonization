@@ -16,13 +16,14 @@ namespace Vurbiri.EntryPoint
             {
                 s_instance = this;
                 s_sceneLoaded.Invoke(this);
-                return;
             }
-
-            Destroy(gameObject);
+            else
+            {
+                Destroy(gameObject);
+            }
         }
 
-        public abstract ISubscription<ExitParam> Enter(SceneContainer containers, Loading loading, AEnterParam param);
+        public abstract ISubscription<ExitParam> Enter(Loading loading, AEnterParam param);
 
         protected virtual void OnDestroy()
         {

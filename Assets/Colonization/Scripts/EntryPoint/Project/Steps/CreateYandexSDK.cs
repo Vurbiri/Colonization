@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEngine;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -6,10 +7,9 @@ namespace Vurbiri.Colonization.EntryPoint
     {
         private readonly YandexSDK _ysdk;
 
-        public CreateYandexSDK(DIContainer diContainer, Coroutines coroutine, string lbName) : base("YandexStep")
+        public CreateYandexSDK(ProjectContent content, MonoBehaviour mono, string lbName) : base("YandexStep")
         {
-            _ysdk = new(coroutine, lbName);
-            diContainer.AddInstance(_ysdk);
+            content.ysdk = _ysdk = new(mono, lbName);
         }
 
         public override IEnumerator GetEnumerator() => _ysdk.Init_Cn();

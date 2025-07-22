@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         private int _openWindowsCount;
         private InputController _inputController;
 
-        public void Init(GameplayInitObjects init, CanvasHint hint)
+        public void Init(GameplayContent init, CanvasHint hint)
         {
             _windows = new IWindow[] { _perksWindow, _exchangeWindow };
             _inputController = init.inputController;

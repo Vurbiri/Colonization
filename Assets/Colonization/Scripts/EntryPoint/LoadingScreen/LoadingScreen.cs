@@ -27,9 +27,8 @@ namespace Vurbiri.Colonization.UI
         protected override void Awake()
         {
             base.Awake();
-            if (_instance == this)
+            if (s_instance == this)
             {
-                DontDestroyOnLoad(gameObject);
                 _graphics = new Graphic[] { _descText, _indicator, _fillBar.parent.GetComponent<Graphic>() };
                 _indicator = null;
 
