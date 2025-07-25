@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public ProjectColors projectColors;
         public PlayerColors playerColors;
         public PlayerNames playerNames;
+        public PlayerUINames playerUINames;
         public HumansMaterials humansMaterials;
         public Prices prices;
 
@@ -21,7 +22,9 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public void Dispose() 
         {
+            playerUINames.Dispose();
             projectStorage.Dispose();
+            playerNames.Dispose();
         }
     }
 }

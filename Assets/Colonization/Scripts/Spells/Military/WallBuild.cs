@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using static Vurbiri.Colonization.TypeOfPerksId;
 
 namespace Vurbiri.Colonization
 {
@@ -7,39 +6,38 @@ namespace Vurbiri.Colonization
     {
         sealed private class WallBuild : ASpell
         {
-            private readonly List<int> _canWall = new(CONST.DEFAULT_MAX_EDIFICES);
-            private readonly CurrenciesLite _cost;
-            private WallBuild(Prices prices) 
-            {
-                _cost = new(prices.Wall)
-                {
-                    { CurrencyId.Mana, s_costs[Military][MilitarySpellId.WallBuild] }
-                };
-            }
-            public static void Create(Prices prices) => s_spells[Military][MilitarySpellId.WallBuild] = new WallBuild(prices);
+            private readonly List<Crossroad> _canWall = new(CONST.DEFAULT_MAX_EDIFICES);
 
-            public override void Cast(SpellParam param, CurrenciesLite resources)
+            private WallBuild(int type, int id) : base(type, id)
+            {
+                _cost.Add(GameContainer.Prices.Wall);
+            }
+            public static void Create() => new WallBuild(TypeOfPerksId.Military, MilitarySpellId.WallBuild);
+
+            public override bool Prep(SpellParam param)
             {
                 _canWall.Clear();
-                var colonies = s_humans[param.playerId].GetEdifices(EdificeGroupId.Colony);
-
-                for (int i = colonies.Count - 1; i >= 0; i--)
+                if (s_humans[param.playerId].IsPay(_cost))
                 {
-                    if (colonies[i].CanWallBuild())
-                        _canWall.Add(i);
+                    var colonies = s_humans[param.playerId].GetEdifices(EdificeGroupId.Colony);
+                    for (int i = colonies.Count - 1; i >= 0; i--)
+                    {
+                        if (colonies[i].CanWallBuild())
+                            _canWall.Add(colonies[i]);
+                    }
                 }
-
-                if (_canWall.Count > 0)
-                {
-                    int index = _canWall.Rand();
-                    s_humans[param.playerId].BuyWall(colonies[index], _cost);
-                }
+                return _canCast = _canWall.Count > 0;
             }
 
-            public override void Clear()
+            public override void Cast(SpellParam param)
             {
-                s_spells[Military][MilitarySpellId.WallBuild] = null;
+                if (_canCast)
+                {
+                    s_humans[param.playerId].BuyWall(_canWall.Rand(), _cost);
+                    _canCast = false;
+                }
             }
+
         }
     }
 }

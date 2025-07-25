@@ -7,20 +7,20 @@ namespace Vurbiri.Colonization
 {
 	public partial class SpellBook
 	{
-        sealed private class HealRandomActor : ASpell
+        sealed private class Zeal : ASpell
         {
             private readonly Effect _heal;
             private readonly IHitSFX _sfx;
             private readonly List<Actor> _wounded = new(CONST.DEFAULT_MAX_ACTORS * PlayerId.Count);
 
-            private HealRandomActor(IHitSFX sfx)
+            private Zeal(IHitSFX sfx, int type, int id) : base(type, id)
             {
 				_heal = new(ActorAbilityId.CurrentHP, TypeModifierId.TotalPercent, s_settings.healRandomValue);
                 _sfx = sfx;
             }
-            public static void Create(IHitSFX sfx) => s_spells[TypeOfPerksId.Military][MilitarySpellId.HealRandom] = new HealRandomActor(sfx);
+            public static void Create(IHitSFX sfx) => new Zeal(sfx, TypeOfPerksId.Military, MilitarySpellId.Zeal);
 
-            public override void Cast(SpellParam param, CurrenciesLite resources)
+            public override void Cast(SpellParam param)
             {
                 _wounded.Clear();
                 for (int i = 0; i < PlayerId.Count; i++)
@@ -33,15 +33,11 @@ namespace Vurbiri.Colonization
                 }
 
                 if (_wounded.Count > 0)
-                    Cast_Cn(_wounded.Rand(), param.playerId, resources).Start();
+                    Cast_Cn(_wounded.Rand(), param.playerId).Start();
             }
 
-            public override void Clear()
-            {
-                s_spells[TypeOfPerksId.Military][MilitarySpellId.HealRandom] = null;
-            }
 
-            private IEnumerator Cast_Cn(Actor target, int playerId, CurrenciesLite resources)
+            private IEnumerator Cast_Cn(Actor target, int playerId)
             {
                 s_isCast.True();
 
@@ -49,7 +45,6 @@ namespace Vurbiri.Colonization
                 _sfx.Hit(target.Skin);
                 target.ApplyEffect(_heal);
 
-                s_humans[playerId].AddResources(resources);
                 s_isCast.False();
             }
         }

@@ -7,7 +7,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-    using static CONST_UI;
+    using static TAG;
 
     public class HexagonCaption : MonoBehaviour
     {
@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization.UI
             StringBuilder sb = new(TAG_SPRITE_LENGTH * CurrencyId.Count);
 
             for (int i = 0; i < CurrencyId.Count; i++)
-                if (flags[i]) sb.AppendFormat(TAG_SPRITE, i);
+                if (flags[i]) sb.AppendFormat(SPRITE, i);
 
             _currencyText.text = _defaultCurrencyText = sb.ToString();
 
@@ -124,7 +124,7 @@ namespace Vurbiri.Colonization.UI
         }
         public void Profit(int currency)
         {
-            _currencyText.text = string.Format(TAG_SPRITE, currency);
+            _currencyText.text = string.Format(SPRITE, currency);
             Profit();
         }
         public void ResetProfit()

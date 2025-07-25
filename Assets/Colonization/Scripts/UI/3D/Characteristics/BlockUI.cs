@@ -6,7 +6,7 @@ using static Vurbiri.Colonization.Characteristics.ReactiveEffectsFactory;
 
 namespace Vurbiri.Colonization.UI
 {
-    using static CONST_UI;
+    using static TAG;
     using static CONST_UI_LNG_KEYS;
 
     public class BlockUI : IDisposable
@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization.UI
             sb.AppendLine(localization.GetText(FILE, BLOCK_KEY));
             sb.Append(_hexColorPlus);
             sb.AppendLine(localization.GetFormatText(FILE, BLOCK_DESK_KEY, _value, BLOCK_DURATION));
-            sb.Append(TAG_COLOR_OFF);
+            sb.Append(COLOR_OFF);
 
             _textMain = sb.ToString();
             _textAP = localization.GetFormatText(FILE, AP_KEY, _cost);

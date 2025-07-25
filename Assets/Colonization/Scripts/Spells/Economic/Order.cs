@@ -1,24 +1,30 @@
+using static Vurbiri.Colonization.CurrencyId;
+
 namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
         sealed private class Order : ASpell
         {
-            private Order() { }
-            public static void Create() => s_spells[TypeOfPerksId.Economic][EconomicSpellId.Order] = new Order();
+            private Order(int type, int id) : base(type, id) { }
 
-            public override void Cast(SpellParam param, CurrenciesLite resources)
+            public static void Create() => new Order(TypeOfPerksId.Economic, EconomicSpellId.Order);
+
+            public override bool Prep(SpellParam param)
             {
-                s_humans[param.playerId].AddOrder(param.valueA * s_settings.orderPerMana);
-                resources.Set(CurrencyId.Mana, -param.valueA);
-
-                s_humans[param.playerId].AddResources(resources);
+                _cost.Set(Mana, param.valueA);
+                return _canCast = s_humans[param.playerId].IsPay(_cost);
             }
 
-            public override void Clear()
+            public override void Cast(SpellParam param)
             {
-                s_spells[TypeOfPerksId.Economic][EconomicSpellId.Order] = null;
+                if (_canCast)
+                {
+                    s_humans[param.playerId].AddOrder(param.valueA * s_settings.orderPerMana, _cost);
+                    _canCast = false;
+                }
             }
+
         }
     }
 }

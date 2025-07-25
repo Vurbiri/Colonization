@@ -21,7 +21,7 @@
   "IsMovePerm": "{0} movement",
   "ReflectPlus": "<b>{0}%</b> life leech",
   "ReflectMinus": "Takes <b>{0}%</b> of the heal HP",
-  "AP": "<b>{0} AP</b>",
+  "AP": "<b>{0}<space=0.3em>AP</b>",
   "Movement": "Movement",
   "RecruitingWarriors": "Recruitment",
   "Militia": "Militiaman",

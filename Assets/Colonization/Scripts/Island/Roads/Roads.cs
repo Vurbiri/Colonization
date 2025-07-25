@@ -55,6 +55,13 @@ namespace Vurbiri.Colonization
             return returnSignal;
         }
 
+        public bool ThereDeadEnds()
+        {
+            for (int i = _roadsLists.Count - 1; i >= 0; i--)
+               if(_roadsLists[i].ThereDeadEnds(_id)) return true;
+            
+            return false;
+        }
         public int DeadEndsCount()
         {
             int deadEndsCount = 0;
@@ -74,13 +81,13 @@ namespace Vurbiri.Colonization
                     _roadsLists.RemoveAt(i);
             }
 
-            if (removeCount > 0)
+            bool result = removeCount > 0;
+            if (result)
             {
                 _eventChanged.Invoke(this);
                 _count.Remove(removeCount);
-                return true;
             }
-            return false;
+            return result;
         }
 
         #region Reactive

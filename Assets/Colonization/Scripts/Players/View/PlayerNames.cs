@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.International;
 using Vurbiri.Reactive;
@@ -7,15 +8,13 @@ using Vurbiri.Reactive;
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
-    public class PlayerNames : IReactive<string[]>, IEquatable<string[]>, IDisposable
+    public class PlayerNames : IReactive<PlayerNames>, IEquatable<string[]>, IDisposable
 	{
         [SerializeField, Key(LangFiles.Main)] private string[] _nameKeys;
         private string[] _customNames;
-        private YandexSDK _ysdk;
-        private Localization _localization;
 
         private readonly string[] _names = new string[PlayerId.Count];
-        private readonly Subscription<string[]> _eventThisChanged = new();
+        private readonly Subscription<PlayerNames> _eventThisChanged = new();
         private Unsubscription _unsubscription;
 
         public string this[Id<PlayerId> id] => _names[id.Value];
@@ -26,32 +25,29 @@ namespace Vurbiri.Colonization
             get => _customNames;
             set
             {
-                if (!this.Equals(value))
+                if (!Equals(value))
                 {
                     _customNames = value;
-                    SetNames();
-                    _eventThisChanged.Invoke(_customNames);
+                    SetNames(Localization.Instance);
                 }
             }
         }
 
-        public PlayerNames Init(ProjectStorage storage, YandexSDK ysdk)
+        public PlayerNames Init(ProjectStorage storage)
         {
-            _localization = Localization.Instance;
-            _ysdk = ysdk;
-
             bool notLoad = !storage.TryLoadPlayerNames(out _customNames);
-            if (notLoad) _customNames = new string[PlayerId.Count];
-            storage.BindPlayerNames(this);
+            if (notLoad) 
+                _customNames = new string[PlayerId.Count];
 
-            _unsubscription = _localization.Subscribe(_ => SetNames());
+            _unsubscription = Localization.Instance.Subscribe(SetNames);
+            storage.BindPlayerNames(this);
 
             return this;
         }
 
-        public string GetDefaultName(int index) => _localization.GetText(LangFiles.Main, _nameKeys[index]);
+        public string GetDefaultName(int index) => Localization.Instance.GetText(LangFiles.Main, _nameKeys[index]);
 
-        public Unsubscription Subscribe(Action<string[]> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, _customNames);
+        public Unsubscription Subscribe(Action<PlayerNames> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, this);
 
         public bool Equals(string[] customNames)
         {
@@ -66,26 +62,20 @@ namespace Vurbiri.Colonization
             _unsubscription?.Unsubscribe();
         }
 
-        private void SetNames()
+        private void SetNames(Localization localization)
         {
-            for (int i = 0; i < PlayerId.Count; i++)
-                _names[i] = GetName(i);
-
-            // Local 
-            string GetName(int index)
+            string temp;
+            for (int index = 0; index < PlayerId.Count; index++)
             {
-                if (!string.IsNullOrEmpty(_customNames[index]))
-                    return _customNames[index];
-
-                if (index == PlayerId.Person & _ysdk.IsLogOn)
+                if (string.IsNullOrEmpty(temp = _customNames[index]))
                 {
-                    string name = _ysdk.PlayerName;
-                    if (!string.IsNullOrEmpty(name))
-                        return name;
+                    if (index != PlayerId.Person || !ProjectContainer.YSDK.IsLogOn || string.IsNullOrEmpty(temp = ProjectContainer.YSDK.PlayerName))
+                        temp = localization.GetText(LangFiles.Main, _nameKeys[index]);
                 }
-
-                return _localization.GetText(LangFiles.Main, _nameKeys[index]);
+                _names[index] = temp;
             }
+
+            _eventThisChanged.Invoke(this);
         }
 
 #if UNITY_EDITOR

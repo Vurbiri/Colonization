@@ -20,7 +20,8 @@ namespace Vurbiri.Colonization
             content.projectStorage.SetAndBindPlayerColors(_colors);
 
             content.playerColors = _colors;
-            content.playerNames = _nameKeys.Init(content.projectStorage, content.ysdk);
+            content.playerNames = _nameKeys.Init(content.projectStorage);
+            content.playerUINames = new(_colors, _nameKeys);
             content.humansMaterials = new(_colors, _defaultMaterialLit, _defaultMaterialUnlit, _defaultMaterialWarrior);
 
             Resources.UnloadAsset(this);

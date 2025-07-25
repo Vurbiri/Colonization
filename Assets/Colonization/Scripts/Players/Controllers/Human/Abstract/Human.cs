@@ -29,7 +29,8 @@ namespace Vurbiri.Colonization
         public Currencies Resources => _resources;
         public ExchangeRate Exchange => _exchange;
 
-        public bool IsMaxWarriors => _abilities.IsGreater(MaxWarrior, _actors.Count);
+        public bool IsOverResources => _abilities.IsLess(MaxMainResources, _resources.Amount);
+        public bool IsMaxWarriors => _abilities.IsLessOrEqual(MaxWarrior, _actors.Count);
 
         public Roads Roads => _roads;
 
@@ -96,24 +97,29 @@ namespace Vurbiri.Colonization
         {
             if (_perks.TryAdd(typePerk, idPerk, out int cost))
             {
-                _resources.PayInBlood(cost);
+                _resources.RemoveBlood(cost);
                  
                 if (typePerk == TypeOfPerksId.Economic | (idPerk >= EconomicPerksId.ExchangeSaleChance_1 & idPerk <= EconomicPerksId.ExchangeRate_1))
                     _exchange.Update();
             }
         }
 
-        public void AddOrder(int order)
+        public void AddOrder(int order, CurrenciesLite cost)
         {
             if (order > 0)
             {
                 GameContainer.Balance.Add(order);
                 GameContainer.Score.ForAddingOrder(_id, order);
+                _resources.Remove(cost);
             }
         }
 
+        #region Resources
         public void AddResources(CurrenciesLite value) => _resources.Add(value);
-        
+        public bool IsPay(CurrenciesLite value) => _resources >= value;
+        public void Pay(CurrenciesLite value) => _resources.Remove(value);
+        #endregion
+
         #region Edifice
         public bool CanEdificeUpgrade(Crossroad crossroad) => _edifices.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
         public bool IsEdificeUnlock(Id<EdificeId> id) => _edifices.IsEdificeUnlock(id);
@@ -125,7 +131,7 @@ namespace Vurbiri.Colonization
                 int edificeId = crossroad.Id.Value;
                 _edifices.edifices[crossroad.GroupId].AddOrChange(crossroad);
 
-                _resources.Pay(GameContainer.Prices.Edifices[edificeId]);
+                _resources.Remove(GameContainer.Prices.Edifices[edificeId]);
                 GameContainer.Score.ForBuilding(_id, edificeId);
             }
             return returnSignal.signal;
@@ -151,7 +157,7 @@ namespace Vurbiri.Colonization
             ReturnSignal returnSignal = crossroad.BuildWall(_id, true);
             if (returnSignal)
             {
-                _resources.Pay(cost);
+                _resources.Remove(cost);
                 _edifices.edifices[crossroad.GroupId].Signal(crossroad);
             }
             return returnSignal.signal;
@@ -162,7 +168,7 @@ namespace Vurbiri.Colonization
         public bool CanRoadBuild(Crossroad crossroad) => _abilities.IsGreater(MaxRoad, _roads.Count) && crossroad.CanRoadBuild(_id);
         public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
         {
-            _resources.Pay(GameContainer.Prices.Road);
+            _resources.Remove(GameContainer.Prices.Road);
             _roads.BuildAndUnion(crossroad.GetLinkAndSetStart(linkId));
         }
         #endregion
@@ -178,7 +184,7 @@ namespace Vurbiri.Colonization
         public void Recruiting(Id<WarriorId> id, Hexagon hexagon) => Recruiting(id, hexagon, GameContainer.Prices.Warriors[id.Value]);
         public void Recruiting(Id<WarriorId> id, Hexagon hexagon, CurrenciesLite cost)
         {
-            _resources.Pay(cost);
+            _resources.Remove(cost);
             Warrior warrior = _spawner.Create(id, hexagon);
             warrior.IsPersonTurn = _isPerson;
 

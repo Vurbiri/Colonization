@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.Characteristics.ReactiveEffectsFactory;
+using static Vurbiri.Colonization.CurrencyId;
 
 namespace Vurbiri.Colonization
 {
@@ -15,41 +16,44 @@ namespace Vurbiri.Colonization
             private readonly List<Actor> _targets = new(8);
             private readonly IHitSFX _sfx;
 
-            private WrathOfIsland(IHitSFX sfx)
+            private WrathOfIsland(IHitSFX sfx, int type, int id) : base(type, id)
             {
-                _damage = new (sfx);
+                _sfx = sfx;
             }
 
-            public static void Create(IHitSFX sfx) => s_spells[TypeOfPerksId.Economic][EconomicSpellId.Wrath] = new WrathOfIsland(sfx);
+            public static void Create(IHitSFX sfx) => new WrathOfIsland(sfx, TypeOfPerksId.Economic, EconomicSpellId.Wrath);
 
-            public override void Cast(SpellParam param, CurrenciesLite resources)
+            public override bool Prep(SpellParam param)
             {
                 _targets.Clear();
-                for (int i = 0, surface; i < PlayerId.HumansCount; i++)
+                _cost.Set(Wood, param.valueA); _cost.Set(Ore, param.valueB);
+
+                if (s_humans[param.playerId].IsPay(_cost))
                 {
-                    foreach (Actor actor in s_actors[i])
+                    for (int i = 0, surface; i < PlayerId.HumansCount; i++)
                     {
-                        surface = actor.Hexagon.SurfaceId;
-                        if (surface == SurfaceId.Forest | surface == SurfaceId.Mountain)
-                            _targets.Add(actor);
+                        foreach (Actor actor in s_actors[i])
+                        {
+                            surface = actor.Hexagon.SurfaceId;
+                            if (surface == SurfaceId.Forest | surface == SurfaceId.Mountain)
+                                _targets.Add(actor);
+                        }
                     }
                 }
+                return _canCast = _targets.Count > 0;
+            }
 
-                if (_targets.Count > 0)
+            public override void Cast(SpellParam param)
+            {
+                if (_canCast)
                 {
                     _damage.playerId = param.playerId;
                     _damage.damage = (s_settings.wrathBasa + (param.valueA + param.valueB) * s_settings.wrathPerRes << ActorAbilityId.SHIFT_ABILITY) / _targets.Count;
 
+                    s_humans[param.playerId].Pay(_cost);
                     Cast_Cn().Start();
-
-                    resources.Add(CurrencyId.Wood, -param.valueA); resources.Add(CurrencyId.Ore, -param.valueB);
-                    s_humans[param.playerId].AddResources(resources);
+                    _canCast = false;
                 }
-            }
-
-            public override void Clear()
-            {
-                s_spells[TypeOfPerksId.Economic][EconomicSpellId.Wrath] = null;
             }
 
             private IEnumerator Cast_Cn()

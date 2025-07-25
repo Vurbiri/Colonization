@@ -20,9 +20,6 @@ namespace Vurbiri.Colonization.UI
 
         private string _landingText, _startTurnText;
 
-        private PlayerNames _names;
-        private readonly string[] _hexColors = new string[PlayerId.Count];
-
         public void Init()
 		{
             _label = GetComponent<TextMeshProUGUI>();
@@ -31,26 +28,20 @@ namespace Vurbiri.Colonization.UI
 
             _delayStartTurn = new((1f/_onSpeed + _showTime.Time + 1f/_offSpeed) * 0.51f);
 
-            _names = GameContainer.PlayerNames;
-
-            var colors = GameContainer.PlayerColors;
-            for (int i = 0; i < PlayerId.Count; i++)
-                _hexColors[i] = colors[i].ToHex();
-
             Localization.Instance.Subscribe(SetText);
 
         }
 
         public void Landing(int id)
         {
-            _label.text = string.Format(_landingText, _hexColors[id], _names[id] );
+            _label.text = string.Format(_landingText, GameContainer.UI.PlayerNames[id]);
 
             StartCoroutine(Label_Cn());
         }
 
         public IEnumerator StartTurn_Wait(int turn, int id)
         {
-            _label.text = string.Format(_startTurnText, turn, _hexColors[id], _names[id]);
+            _label.text = string.Format(_startTurnText, turn, GameContainer.UI.PlayerNames[id]);
 
             StartCoroutine(Label_Cn());
 

@@ -21,7 +21,6 @@ namespace Vurbiri.Colonization.UI
         private AEffectsUI[] _effectsSelf;
         private string _textMain, _textAP;
         private string _hexColor, _hexColorPlus, _hexColorMinus;
-        private int _capacity;
 
         private Unsubscription _unsubscriber;
 
@@ -40,14 +39,7 @@ namespace Vurbiri.Colonization.UI
             _unsubscriber = Localization.Instance.Subscribe(SetTexts);
         }
 
-        public string GetText(bool isUse)
-        {
-            StringBuilder sb = new(_textMain, _capacity);
-            sb.Append(isUse ? _hexColorPlus : _hexColorMinus);
-            sb.Append(_textAP);
-
-            return sb.ToString();
-        }
+        public string GetText(bool isUse) => string.Concat(_textMain, isUse ? _hexColorPlus : _hexColorMinus, _textAP);
 
         private void SetTexts(Localization localization)
         {
@@ -79,8 +71,6 @@ namespace Vurbiri.Colonization.UI
 
             _textMain = sb.ToString();
             _textAP = localization.GetFormatText(FILE, AP_KEY, _cost);
-
-            _capacity = _textMain.Length + +_hexColorPlus.Length + _textAP.Length;
         }
 
         public void Dispose()

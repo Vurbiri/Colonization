@@ -60,6 +60,11 @@ namespace Vurbiri.Colonization.EntryPoint
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => s_projectContent.projectColors;
             }
+            public static PlayerUINames PlayerNames
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => s_projectContent.playerUINames;
+            }
         }
 
         public ProjectContainer() { }

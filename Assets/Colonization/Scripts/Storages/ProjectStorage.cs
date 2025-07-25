@@ -29,9 +29,9 @@ namespace Vurbiri.Colonization.Storage
         }
 
         public bool TryLoadPlayerNames(out string[] names) => _storage.TryGet(NAMES, out names);
-        public void BindPlayerNames(IReactive<string[]> reactive)
+        public void BindPlayerNames(IReactive<PlayerNames> reactive)
         {
-            _unsubscribers += reactive.Subscribe(names => _storage.Set(NAMES, names), false);
+            _unsubscribers += reactive.Subscribe(names => _storage.Set(NAMES, names.CustomNames), false);
         }
 
 

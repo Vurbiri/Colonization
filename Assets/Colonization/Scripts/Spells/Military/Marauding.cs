@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Vurbiri.Colonization
 {
     public partial class SpellBook
@@ -8,56 +6,55 @@ namespace Vurbiri.Colonization
         {
             private readonly CurrenciesLite[] _currencies = new CurrenciesLite[PlayerId.HumansCount];
 
-            private Marauding() 
+            private Marauding(int type, int id) : base(type, id)
             {
                 for (int i = 0; i < PlayerId.HumansCount; i++)
                     _currencies[i] = new();
             }
-            public static void Create() => s_spells[TypeOfPerksId.Military][MilitarySpellId.Marauding] = new Marauding();
+            public static void Create() => new Marauding(TypeOfPerksId.Military, MilitarySpellId.Marauding);
 
-            public override void Cast(SpellParam param, CurrenciesLite resources)
+            public override bool Prep(SpellParam param)
             {
-                if(s_actors[param.playerId].Count == 0)
-                    return;
+                var human = s_humans[param.playerId];
+                return _canCast = human.IsPay(_cost) & human.Actors.Count > 0;
+            }
 
-                int enemyId, currencyId; float ratioChance;
-                CurrenciesLite temp;
-
-                for (int i = 0; i < PlayerId.HumansCount; i++)
-                    _currencies[i].Clear();
-
-                foreach (var actor in s_actors[param.playerId])
+            public override void Cast(SpellParam param)
+            {
+                if (_canCast)
                 {
-                    foreach (var crossroad in actor.Hexagon.Crossroads)
-                    {
-                        enemyId = crossroad.Owner;
-                        if (crossroad.IsColony && GameContainer.Diplomacy.GetRelation(param.playerId, enemyId) == Relation.Enemy)
-                        {
-                            temp = _currencies[enemyId];
-                            ratioChance = 1f - s_settings.reductionFromWall * crossroad.GetDefense();
-                            currencyId = actor.Hexagon.GetProfit();
+                    int enemyId, currencyId, chance;
+                    CurrenciesLite enemy, self = _currencies[param.playerId];
 
-                            if (s_humans[enemyId].Resources[currencyId] > -temp[currencyId] && Chance.Rolling(Mathf.RoundToInt(s_settings.chanceMarauding[actor.Id] * ratioChance)))
+                    for (int i = 0; i < PlayerId.HumansCount; i++)
+                        _currencies[i].Clear();
+
+                    foreach (var actor in s_actors[param.playerId])
+                    {
+                        foreach (var crossroad in actor.Hexagon.Crossroads)
+                        {
+                            enemyId = crossroad.Owner;
+                            if (crossroad.IsColony && GameContainer.Diplomacy.GetRelation(param.playerId, enemyId) == Relation.Enemy)
                             {
-                                temp.Add(currencyId, -1);
-                                resources.Add(currencyId, 1);
+                                enemy = _currencies[enemyId];
+                                chance = 100 - s_settings.reductionFromWall * crossroad.GetDefense();
+                                currencyId = actor.Hexagon.GetProfit();
+
+                                if (s_humans[enemyId].Resources[currencyId] > -enemy[currencyId] && Chance.Rolling(chance))
+                                {
+                                    enemy.Add(currencyId, -1);
+                                    self.Add(currencyId, 1);
+                                }
                             }
                         }
                     }
+
+                    s_humans[param.playerId].Pay(_cost);
+                    for (int i = 0; i < PlayerId.HumansCount; i++)
+                        s_humans[i].AddResources(_currencies[i]);
+
+                    _canCast = false;
                 }
-
-                temp = _currencies[param.playerId];
-                _currencies[param.playerId] = resources;
-
-                for (int i = 0; i < PlayerId.HumansCount; i++)
-                    s_humans[i].AddResources(_currencies[i]);
-
-                _currencies[param.playerId] = temp;
-            }
-
-            public override void Clear()
-            {
-                s_spells[TypeOfPerksId.Military][MilitarySpellId.Marauding] = null;
             }
         }
     }

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Text;
+using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 
@@ -22,35 +24,41 @@ namespace Vurbiri.Colonization
 
         public void Add(ACurrencies other)
         {
-            if (other.Amount == 0)
-                return;
+            if (other.Amount != 0)
+            {
 
-            for (int i = 0; i < AllCount; i++)
-                _values[i].Add(other[i]);
+                for (int i = 0; i < AllCount; i++)
+                    _values[i].Add(other[i]);
 
-            _amount.Add(other.Amount);
-            _eventChanged.Invoke(this);
+                _amount.Add(other.Amount);
+                _eventChanged.Invoke(this);
+            }
+        }
+        public void Remove(ACurrencies other)
+        {
+            if (other.Amount != 0)
+            {
+                for (int i = 0; i < AllCount; i++)
+                    _values[i].Add(-other[i]);
+
+                _amount.Add(-other.Amount);
+                _eventChanged.Invoke(this);
+            }
         }
 
         public void Add(int currencyId, int value)
         {
             if (value != 0)
             {
-                _values[currencyId].Add(value);
-
-                if (currencyId != Blood)
-                    _amount.Add(value);
+                _amount.Value += _values[currencyId].Add(value);
                 _eventChanged.Invoke(this);
             }
         }
-
-        public void AddMain(int currencyId, int value)
+        public void Remove(int currencyId, int value)
         {
             if (value != 0)
             {
-                _values[currencyId].Add(value);
-                
-                _amount.Add(value);
+                _amount.Value += _values[currencyId].Add(-value);
                 _eventChanged.Invoke(this);
             }
         }
@@ -63,50 +71,35 @@ namespace Vurbiri.Colonization
                 _eventChanged.Invoke(this);
             }
         }
-
-        public void Pay(ACurrencies cost)
+        public void RemoveBlood(int value)
         {
-            if (cost.Amount == 0)
-                return;
-
-            int amount = _amount.Value;
-            for (int i = 0; i < AllCount; i++)
-                amount += _values[i].Add(-cost[i]);
-
-            _amount.Value = amount;
-            _eventChanged.Invoke(this);
-        }
-
-        public void PayInBlood(int value)
-        {
-            if (value <= 0)
-                return;
-
-            _values[CurrencyId.Blood].Add(-value);
-            _eventChanged.Invoke(this);
+            if (value != 0)
+            {
+                _values[Blood].Add(-value);
+                _eventChanged.Invoke(this);
+            }
         }
 
         public void ClampMain()
         {
-            int amount = _amount.Value, maxMain = _maxAmount.Value;
+            int delta = _amount.Value - _maxAmount.Value;
 
-            if (amount <= maxMain)
-                return;
-
-            int[] values = ConvertToInt(_values);
-            int maxIndex = 0;
-            do
+            if (delta > 0)
             {
-                maxIndex = FindMaxIndex(values, maxIndex);
-                values[maxIndex]--;
-            } 
-            while (--amount > maxMain);
+                int[] values = ConvertToInt(_values);
+                int maxIndex = 0;
+                while (delta --> 0)
+                {
+                    maxIndex = FindMaxIndex(values, maxIndex);
+                    values[maxIndex]--;
+                }
 
-            for (int index = 0; index < MainCount; index++)
-                _values[index].Set(values[index]);
+                for (int index = 0; index < MainCount; index++)
+                    _values[index].Set(values[index]);
 
-            _amount.Value = amount;
-            _eventChanged.Invoke(this);
+                _amount.Value = _maxAmount.Value;
+                _eventChanged.Invoke(this);
+            }
 
             #region Local: ConvertToInt(), FindMaxIndex()
             //=================================
@@ -119,12 +112,12 @@ namespace Vurbiri.Colonization
                 return array;
             }
             //=================================
-            static int FindMaxIndex(int[] values, int maxIndex = 0)
+            static int FindMaxIndex(int[] values, int startIndex)
             {
-                int index, count = MainCount;
-                while (count --> 1)
+                int index, maxIndex = startIndex, step = 1;
+                for(; step < MainCount; step++)
                 {
-                    index = (maxIndex + count) % MainCount;
+                    index = (startIndex + step) % MainCount;
                     if (values[index] > values[maxIndex] || (values[index] == values[maxIndex] && Chance.Rolling()))
                         maxIndex = index;
                 }
@@ -132,6 +125,54 @@ namespace Vurbiri.Colonization
                 return maxIndex;
             }
             #endregion
+        }
+
+        public void RandomAddMain(int count)
+        {
+            if (count > 0)
+            {
+                int[] values = GetRandomMain(count);
+                for (int index = 0; index < MainCount; index++)
+                    _values[index].Add(values[index]);
+
+                _amount.Value += count;
+                _eventChanged.Invoke(this);
+            }
+        }
+
+        public void ShuffleMain()
+        {
+            int count = _amount.Value;
+            if (count > 0)
+            {
+                int[] values = GetRandomMain(count);
+                for (int index = 0; index < MainCount; index++)
+                    _values[index].Set(values[index]);
+
+                _eventChanged.Invoke(this);
+            }
+        }
+
+        private int[] GetRandomMain(int count)
+        {
+            int[] values = new int[MainCount]; int add;
+            while (count > 0)
+            {
+                add = Random.Range(1, 2 + (count >> 2));
+                values[Random.Range(0, MainCount)] += add;
+                count -= add;
+            }
+
+            return values;
+        }
+
+        public void MainToStringBuilder(StringBuilder sb)
+        {
+            for (int i = 0; i < MainCount; i++)
+                sb.AppendFormat(TAG.CURRENCY, i, _values[i].ToString());
+
+            sb.Append(" ");
+            sb.Append(_amount.ToString()); sb.Append("/"); sb.Append(_maxAmount.ToString());
         }
     }
 }

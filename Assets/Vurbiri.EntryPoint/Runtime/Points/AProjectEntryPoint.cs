@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Vurbiri.EntryPoint
@@ -7,12 +8,12 @@ namespace Vurbiri.EntryPoint
         [SerializeField] private LoadScene _emptyScene;
 
         private AEnterParam _currentEnterParam;
-        private IContainer _container;
+        private IDisposable _container;
         protected Loading _loading;
 
         protected abstract string LoadingDesc { get; }
 
-        protected void Init(IContainer container, ILoadingScreen screen)
+        protected void Init(IDisposable container, ILoadingScreen screen)
         {
             _container = container;
             _loading = Loading.Create(this, screen);

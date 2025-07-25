@@ -1,27 +1,34 @@
+using static Vurbiri.Colonization.CurrencyId;
+
 namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
         sealed private class BloodTrade : ASpell
         {
-            private BloodTrade() { }
-            public static void Create() => s_spells[TypeOfPerksId.Military][MilitarySpellId.BloodTrade] = new BloodTrade();
+            private BloodTrade(int type, int id) : base(type, id) { }
+            public static void Create() => new BloodTrade(TypeOfPerksId.Military, MilitarySpellId.BloodTrade);
 
-            public override void Cast(SpellParam param, CurrenciesLite resources)
+            public override bool Prep(SpellParam param)
             {
                 int blood = param.valueA - (param.valueA % s_settings.bloodTradePay);
-                if (blood > 0)
+                if (_canCast = blood > 0)
                 {
-                    resources.Set(CurrencyId.Blood, -blood);
-                    resources.RandomAddRangeMain(blood / s_settings.bloodTradePay * s_settings.bloodTradeBay);
-                    
-                    s_humans[param.playerId].AddResources(resources);
+                    _cost.Set(Blood, blood);
+                    _canCast = s_humans[param.playerId].IsPay(_cost);
                 }
+                return _canCast;
             }
 
-            public override void Clear()
+            public override void Cast(SpellParam param)
             {
-                s_spells[TypeOfPerksId.Military][MilitarySpellId.BloodTrade] = null;
+                if (_canCast)
+                {
+                    var resources = s_humans[param.playerId].Resources;
+                    resources.Remove(_cost);
+                    resources.RandomAddMain(param.valueA / s_settings.bloodTradePay * s_settings.bloodTradeBay);
+                    _canCast = false;
+                }
             }
         }
     }

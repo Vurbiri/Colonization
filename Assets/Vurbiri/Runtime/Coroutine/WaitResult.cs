@@ -22,7 +22,7 @@ namespace Vurbiri
 
     public class WaitResultSource<T> : WaitResult<T>
     {
-        private T _default;
+        private readonly T _default;
 
         public WaitResultSource()
         {

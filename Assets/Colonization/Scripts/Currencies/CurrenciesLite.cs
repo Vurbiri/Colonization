@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -70,13 +71,13 @@ namespace Vurbiri.Colonization
 
         public void MultiplyMain(int ratio)
         {
-            if (_amount == 0)
-                return;
+            if (_amount != 0)
+            {
+                for (int i = 0; i < MainCount; i++)
+                    _values[i] *= ratio;
 
-            for (int i = 0; i < MainCount; i++)
-                _values[i] *= ratio;
-
-            _amount *= ratio;
+                _amount *= ratio;
+            }
         }
 
         public void RandomAddMain(int value)
@@ -91,42 +92,6 @@ namespace Vurbiri.Colonization
             _amount += count;
         }
 
-        public void Mix(ACurrencies other, int idMax = MainCount - 1)
-        {
-            int count = 0;
-            for (int i = 0; i < idMax; i++)
-            {
-                count += other[i] + _values[i];
-                _values[i] = -other[i];
-            }
-
-            int add, addMax;
-            while (count > 0)
-            {
-                addMax = 2 + count >> 2;
-                _values[Random.Range(0, idMax)] += (add = Random.Range(1, addMax));
-                count -= add;
-            }
-        }
-
-        public void Inverse()
-        {
-            for (int i = 0; i < AllCount; i++)
-                _values[i] = -_values[i];
-
-            _amount = -_amount;
-        }
-
-        public void Inverse(int index)
-        {
-            int value = -_values[index];
-
-            if (index != Blood)
-                _amount += value << 1;
-
-            _values[index] = value;
-        }
-
         public void Clear()
         {
             for (int i = 0; i < AllCount; i++)
@@ -135,12 +100,18 @@ namespace Vurbiri.Colonization
             _amount = 0;
         }
 
-        public void Clear(int index)
+        public void MainToStringBuilder(StringBuilder sb, string hexColorPlus, string hexColorMinus)
         {
-            if (index != Blood)
-                _amount -= _values[index];
-
-            _values[index] = 0;
+            if (_amount != 0)
+            {
+                for (int i = 0, resource; i < MainCount; i++)
+                {
+                    resource = _values[i];
+                    if (resource != 0)
+                        sb.AppendFormat(TAG.COLOR_CURRENCY, i, _values[i].ToString("+#;-#;0"), resource > 0 ? hexColorPlus : hexColorMinus);
+                }
+                sb.Append(TAG.COLOR_OFF);
+            }
         }
 
         public override IEnumerator<int> GetEnumerator()

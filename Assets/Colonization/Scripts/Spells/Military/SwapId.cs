@@ -19,44 +19,48 @@ namespace Vurbiri.Colonization
             private string _text;
             private int _currentPlayer;
 
-            private SwapId() 
+            private SwapId(int type, int id) : base(type, id)
             {
                 Localization.Instance.Subscribe(SetText);
             }
-            public static void Create() => s_spells[TypeOfPerksId.Military][MilitarySpellId.SwapId] = new SwapId();
+            public static void Create() =>  new SwapId(TypeOfPerksId.Military, MilitarySpellId.SwapId);
 
-            public override void Cast(SpellParam param, CurrenciesLite resources)
+            public override bool Prep(SpellParam param)
             {
-                if (s_actors[param.playerId].Count < 2)
-                    return;
-
-                if (s_actors[param.playerId].Count == 2)
-                {
-                    foreach (var actor in s_actors[param.playerId])
-                    {
-                        if(_selectedA == null)
-                            _selectedA = actor.Hexagon;
-                        else
-                            Swap(param.playerId, actor.Hexagon, resources);
-                    }
-                    return;
-                }
-
-                if (_coroutine == null)
-                {
-                    _currentPlayer = param.playerId;
-                    _coroutine = Cast_Cn(resources).Start();
-                }
-               
+                var human = s_humans[param.playerId];
+                return _canCast = human.IsPay(_cost) & human.Actors.Count >= 2 & _coroutine == null;
             }
 
-            public override void Clear()
+            public override void Cast(SpellParam param)
+            {
+                if (_canCast)
+                {
+                    if (s_actors[param.playerId].Count == 2)
+                    {
+                        foreach (var actor in s_actors[param.playerId])
+                        {
+                            if (_selectedA == null)
+                                _selectedA = actor.Hexagon;
+                            else
+                                Swap(param.playerId, actor.Hexagon);
+                        }
+                    }
+                    else
+                    {
+                        _currentPlayer = param.playerId;
+                        _coroutine = Cast_Cn().Start();
+                    }
+                    _canCast = false;
+                }
+            }
+
+            public override void Clear(int type, int id)
             {
                 Localization.Instance.Unsubscribe(SetText);
-                s_spells[TypeOfPerksId.Military][MilitarySpellId.SwapId] = null;
+                s_spells[type][id] = null;
             }
 
-            private IEnumerator Cast_Cn(CurrenciesLite resources)
+            private IEnumerator Cast_Cn()
             {
                 s_isCast.True();
 
@@ -77,7 +81,7 @@ namespace Vurbiri.Colonization
 
                 yield return _waitHexagon.Restart();
 
-                Swap(_currentPlayer, _waitHexagon.Value, resources);
+                Swap(_currentPlayer, _waitHexagon.Value);
                 EndCast();
             }
 
@@ -104,10 +108,10 @@ namespace Vurbiri.Colonization
                 s_isCast.False();
             }
 
-            private void Swap(int playerId, Hexagon selectedB, CurrenciesLite resources)
+            private void Swap(int playerId, Hexagon selectedB)
             {
                 GameContainer.Hexagons.SwapId(_selectedA, selectedB, s_settings.swapHexColor);
-                s_humans[playerId].AddResources(resources);
+                s_humans[playerId].Pay(_cost);
                 _selectedA = null;
             }
 

@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.UI
         public bool Setup(Crossroad crossroad, out CrossroadLink link)
         {
             link = crossroad.GetLink(_id);
-            if (link == null /*|| link.Owner.Value >= 0*/)
+            if (link == null)
             {
                 _thisGameObject.SetActive(false);
                 return false;
@@ -13,7 +13,6 @@ namespace Vurbiri.Colonization.UI
 
             Setup(crossroad);
             CombineInteractable(link.Owner.Value < 0, _cash >= _cost);
-            //interactable = _cash >= _cost;
 
             _thisGameObject.SetActive(true);
             return true;

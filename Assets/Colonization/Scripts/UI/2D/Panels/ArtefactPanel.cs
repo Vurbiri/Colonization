@@ -33,7 +33,6 @@ namespace Vurbiri.Colonization.UI
         Artefact _artefact;
         Human _player;
 
-        int _i = 0;
         public void Test()
         {
             //_artefact.Next(UnityEngine.Random.Range(2, 10));
@@ -43,17 +42,8 @@ namespace Vurbiri.Colonization.UI
             //resources.Mix(_player.Resources);
             //_player.AddResources(resources);
 
-            if (_i == 3) _i = 0;
-            
-            if (_i == 0) Banner.Open("The use of the Random class makes this unsuitable for anything security related, such as creating passwords.", Type(), Time());
-            if (_i == 1) Banner.Open("Note", Type(), Time());
-            if (_i == 2) Banner.Open("While this technically answers the question, it's output is very misleading.", Type(), Time());
-            //if (_i == 3) Banner.Clear();
-
-            _i++;
-
-            int Type() => UnityEngine.Random.Range(0, MessageTypeId.Count);
-            float Time() => UnityEngine.Random.Range(2f, 8f);
+            SpellParam param = new(0);
+            SpellBook.Cast(TypeOfPerksId.Military, MilitarySpellId.Spying, param);
         }
         // TEST
 

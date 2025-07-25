@@ -1,3 +1,4 @@
+using System;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.EntryPoint
@@ -6,14 +7,14 @@ namespace Vurbiri.EntryPoint
     {
         private static ASceneExitPoint s_instance;
 
-        private readonly IContainer _sceneContainer;
+        private readonly IDisposable _sceneContainer;
         private readonly Subscription<ExitParam> _eventExit = new();
 
         protected ExitParam _exitParam;
 
         public ISubscription<ExitParam> EventExit => _eventExit;
 
-        public ASceneExitPoint(ExitParam exitParam, IContainer sceneContainer)
+        public ASceneExitPoint(ExitParam exitParam, IDisposable sceneContainer)
         {
             _exitParam = exitParam;
             _sceneContainer = sceneContainer;

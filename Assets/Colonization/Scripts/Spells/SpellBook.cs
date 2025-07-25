@@ -12,16 +12,15 @@ namespace Vurbiri.Colonization
 
         private static readonly Human[] s_humans = new Human[PlayerId.HumansCount];
         private static readonly ReadOnlyReactiveSet<Actor>[] s_actors = new ReactiveSet<Actor>[PlayerId.Count];
+
         private static readonly ASpell[][] s_spells = { s_economicSpells = new ASpell[EconomicSpellId.Count], s_militarySpells = new ASpell[MilitarySpellId.Count] };
         private static readonly ASpell[] s_economicSpells;
         private static readonly ASpell[] s_militarySpells;
 
         private static readonly RBool s_isCast = new(false);
+        private static readonly WaitResult<bool> s_defaultResult = WaitResult.Instant(false);
 
-        private readonly ICurrency _mana;
-        private readonly CurrenciesLite _resources = new();
-
-        public static SpellCosts Costs => s_costs;
+        public ASpell this[int type, int id] => s_spells[type][id];
 
         public RBool IsCastReactive => s_isCast;
         public bool IsCast { get => s_isCast.Value; set => s_isCast.Value = value; }
@@ -39,30 +38,26 @@ namespace Vurbiri.Colonization
             
             s_humans[id] = human;
             s_actors[id] = human.Actors;
-
-            _mana = human.Resources.Get(CurrencyId.Mana);
         }
 
-        public void Cast(int type, int id, SpellParam param)
+        public static void Cast(int type, int id, SpellParam param)
         {
-            int cost = s_costs[type][id];
-
-            if (_mana.Value >= cost & !s_isCast)
-            {
-                _resources.Clear();
-                _resources.Set(CurrencyId.Mana, -cost);
-                s_spells[type][id].Cast(param, _resources);
-            }
+            var spell = s_spells[type][id];
+            if(!s_isCast && spell.Prep(param)) 
+                spell.Cast(param);
         }
 
-        public void Cancel(int type, int id) => s_spells[type][id].Cancel();
+        public void Cancel(int type, int id)
+        {
+            if(s_isCast) s_spells[type][id].Cancel();
+        }
 
         public static void Init()
         {
             Order.Create();
             SummonWarlock.Create();
 
-            BloodTrade.Create();
+            BloodTrade.Create(); Spying.Create();
         }
         
         public static void AddSatan(Satan satan)
@@ -82,9 +77,9 @@ namespace Vurbiri.Colonization
             s_actors[PlayerId.Satan] = null;
 
             for (int i = 0; i < EconomicSpellId.Count; i++)
-                s_economicSpells[i] = null;
+                s_economicSpells[i].Clear(TypeOfPerksId.Economic, i);
             for (int i = 0; i < MilitarySpellId.Count; i++)
-                s_militarySpells[i] = null;
+                s_militarySpells[i].Clear(TypeOfPerksId.Military, i);
         }
     }
 

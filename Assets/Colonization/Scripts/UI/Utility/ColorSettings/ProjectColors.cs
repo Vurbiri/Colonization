@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.UI
         private string _textDefaultTag, _textPositiveTag, _textNegativeTag;
 
         //private const string TAG_COLOR_FORMAT = "<color={0}>";
-        private const string TAG_COLOR_FORMAT_LITE = "<{0}>";
+        private const string TAG_COLOR_FORMAT = "<{0}>";
 
         public IdArray<ActorAbilityId, Color> Ability => _ability;
 
@@ -51,12 +51,12 @@ namespace Vurbiri.Colonization.UI
 
         public ProjectColors Init()
         {
-            _panelTextTag = string.Format(TAG_COLOR_FORMAT_LITE, _panelText.ToHex());
-            _hintDefaultTag = string.Format(TAG_COLOR_FORMAT_LITE, _hintDefault.ToHex());
+            _panelTextTag = string.Format(TAG_COLOR_FORMAT, _panelText.ToHex());
+            _hintDefaultTag = string.Format(TAG_COLOR_FORMAT, _hintDefault.ToHex());
 
-            _textDefaultTag = string.Format(TAG_COLOR_FORMAT_LITE, _textDefault.ToHex());
-            _textPositiveTag = string.Format(TAG_COLOR_FORMAT_LITE, _textPositive.ToHex());
-            _textNegativeTag = string.Format(TAG_COLOR_FORMAT_LITE, _textNegative.ToHex());
+            _textDefaultTag = string.Format(TAG_COLOR_FORMAT, _textDefault.ToHex());
+            _textPositiveTag = string.Format(TAG_COLOR_FORMAT, _textPositive.ToHex());
+            _textNegativeTag = string.Format(TAG_COLOR_FORMAT, _textNegative.ToHex());
 
             return this;
         }

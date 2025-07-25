@@ -42,7 +42,9 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
         public bool IsGreater(Id<TId> stateId, int value) => _abilities[stateId].Value > value;
+        public bool IsGreaterOrEqual(Id<TId> stateId, int value) => _abilities[stateId].Value >= value;
         public bool IsLess(Id<TId> stateId, int value) => _abilities[stateId].Value < value;
+        public bool IsLessOrEqual(Id<TId> stateId, int value) => _abilities[stateId].Value <= value;
 
         public bool IsTrue(Id<TId> stateId) => _abilities[stateId].IsValue;
 

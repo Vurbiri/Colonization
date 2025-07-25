@@ -106,6 +106,7 @@ namespace Vurbiri.Colonization
             return isSFX ? StartSFX(inverse) : true;
         }
 
+        public bool ThereDeadEnds(int playerId) => _links.End.IsDeadEnd(playerId) || _links.Start.IsDeadEnd(playerId);
         public int DeadEndsCount(int playerId)
         {
             int deadEndsCount = 0;

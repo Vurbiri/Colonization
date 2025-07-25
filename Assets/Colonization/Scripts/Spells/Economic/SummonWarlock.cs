@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Vurbiri.Colonization.Actors;
-using static Vurbiri.Colonization.TypeOfPerksId;
 
 namespace Vurbiri.Colonization
 {
@@ -9,63 +8,64 @@ namespace Vurbiri.Colonization
     {
         sealed private class SummonWarlock : ASpell
         {
-            private readonly int _max;
-            private readonly CurrenciesLite _cost;
+            private readonly int _half, _max;
+            private int _count;
 
-            private SummonWarlock()
+            private SummonWarlock(int type, int id) : base(type, id)
             {
-                _max = GameContainer.Hexagons.GroundCount >> 1;
-                _cost = new(GameContainer.Prices.Warriors[WarriorId.Warlock])
-                {
-                    { CurrencyId.Mana, s_costs[Economic][EconomicSpellId.SummonWarlock] }
-                };
+                _max = GameContainer.Hexagons.GroundCount;
+                _half = _max - (_max >> 1);
+                _cost.Add(GameContainer.Prices.Warriors[WarriorId.Warlock]);
             }
 
-            public static void Create() => s_economicSpells[EconomicSpellId.SummonWarlock] = new SummonWarlock();
+            public static void Create() => new SummonWarlock(TypeOfPerksId.Economic, EconomicSpellId.SummonWarlock);
 
-            public override void Cast(SpellParam param, CurrenciesLite resources)
+            public override bool Prep(SpellParam param)
             {
-                if (s_humans[param.playerId].IsMaxWarriors)
-                    return;
-
-                int count = 0;
-                for (int i = 0; i < PlayerId.Count; i++)
-                    count += s_actors[i].Count;
-
-                var hexagons = GameContainer.Hexagons;
-                if (count == hexagons.GroundCount) 
-                    return;
-
-                Hexagon hexagon;
-                if (count <= _max)
+                _canCast = false;
+                var human = s_humans[param.playerId];
+                if (!human.IsMaxWarriors & human.IsPay(_cost))
                 {
-                    while (!(hexagon = hexagons[HEX.NEARS.Random]).CanWarriorEnter);
+                    _count = 0;
+                    for (int i = 0; i < PlayerId.Count; i++)
+                        _count += s_actors[i].Count;
+
+                    _canCast = _count < _max;
                 }
-                else
+                return _canCast;
+            }
+
+            public override void Cast(SpellParam param)
+            {
+                if (_canCast)
                 {
-                    List<Hexagon> free = new(hexagons.GroundCount - count);
-                    ReadOnlyCollection<Key> keys;
-                    for (int i = 0; i < HEX.NEARS.Count; i++)
+                    Hexagons hexagons = GameContainer.Hexagons; Hexagon hexagon;
+                    if (_count <= _half)
                     {
-                        keys = HEX.NEARS[i];
-                        for (int j = keys.Count - 1; j >= 0; j--)
-                        {
-                            hexagon = hexagons[keys[j]];
-                            if (hexagon.CanWarriorEnter)
-                                free.Add(hexagon);
-                        }
+                        while (!(hexagon = hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
                     }
-                    hexagon = free.Rand();
+                    else
+                    {
+                        List<Hexagon> free = new(_max - _count);
+                        ReadOnlyCollection<Key> keys;
+                        for (int i = 0; i < HEX.NEARS.Count; i++)
+                        {
+                            keys = HEX.NEARS[i];
+                            for (int j = keys.Count - 1; j >= 0; j--)
+                            {
+                                hexagon = hexagons[keys[j]];
+                                if (hexagon.CanWarriorEnter)
+                                    free.Add(hexagon);
+                            }
+                        }
+                        hexagon = free.Rand();
+                    }
+
+                    s_humans[param.playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
+                    _canCast = false;
+
+                    GameContainer.CameraController.ToPosition(hexagon.Position);
                 }
-
-                s_humans[param.playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
-
-                GameContainer.CameraController.ToPosition(hexagon.Position);
-            }
-
-            public override void Clear()
-            {
-                s_economicSpells[EconomicSpellId.SummonWarlock] = null;
             }
         }
     }

@@ -21,7 +21,7 @@
   "IsMovePerm": "{0} перемещение",
   "ReflectPlus": "<b>{0}%</b> похищения жизни",
   "ReflectMinus": "Забирает <b>{0}%</b> от излеченных ОЗ",
-  "AP": "<b>{0} ОД</b>",
+  "AP": "<b>{0}<space=0.3em>ОД</b>",
   "Movement": "Перемещение",
   "RecruitingWarriors": "Вербовка",
   "Militia": "Ополченец",

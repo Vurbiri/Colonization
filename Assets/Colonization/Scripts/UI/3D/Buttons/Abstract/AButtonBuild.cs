@@ -1,19 +1,17 @@
 using System;
-using System.Globalization;
 using System.Text;
 using UnityEngine;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    using static CONST_UI;
+    using static TAG;
 
     public abstract class AButtonBuild : AHintButton3D
     {
         private string _hexColorPlus, _hexColorMinus;
 
-        private const int MIN_SIZE = 64, MAX_SIZE = 256;
-        private const float SPACE = 0.1f;
+        private const int MIN_SIZE = 64, MAX_SIZE = 364;
 
         public Vector3 LocalPosition { set => _rectTransform.localPosition = value; }
 
@@ -29,21 +27,14 @@ namespace Vurbiri.Colonization.UI
         {
             StringBuilder sb = new(cost.Amount > 0 ? MAX_SIZE : MIN_SIZE);
             sb.AppendLine(caption);
-            sb.AppendFormat(CultureInfo.InvariantCulture, TAG_CSPACE, SPACE);
 
             int costV;
             for (int i = 0; i < CurrencyId.MainCount; i++)
             {
                 costV = cost[i];
-                if (costV <= 0)
-                    continue;
-
-                sb.Append(TAG_COLOR_WHITE);
-                sb.AppendFormat(TAG_SPRITE, i);
-                sb.Append(costV > cash[i] ? _hexColorMinus : _hexColorPlus);
-                sb.Append(costV.ToString());
+                if (costV > 0)
+                    sb.AppendFormat(COLOR_CURRENCY, i, costV.ToString(), costV > cash[i] ? _hexColorMinus : _hexColorPlus);
             }
-            sb.Append(TAG_CSPACE_OFF);
 
             _text = sb.ToString();
         }

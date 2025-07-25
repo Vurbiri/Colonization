@@ -13,6 +13,8 @@ namespace Vurbiri.Colonization.Characteristics
 
         public Unsubscription Subscribe(Action<int> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _value);
 
+        public override string ToString() => _value.ToString();
+
         public static implicit operator int(Ability ability) => ability._value;
         public static implicit operator bool(Ability ability) => ability._value > 0;
     }

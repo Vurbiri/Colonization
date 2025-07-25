@@ -142,8 +142,8 @@ namespace Vurbiri.Colonization.UI
 
             _progressBars ??= new();
 
-            this.SetChildren(ref _economicContainer, "Economic");
-            this.SetChildren(ref _militaryContainer, "Military");
+            this.SetChildren(ref _economicContainer, "EconomicPerks");
+            this.SetChildren(ref _militaryContainer, "MilitaryPerks");
             this.SetChildren(ref _separatorsContainer, "Separators");
 
             EUtility.SetScriptable(ref _perks);
