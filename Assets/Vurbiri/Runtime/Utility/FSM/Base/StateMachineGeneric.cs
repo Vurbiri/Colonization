@@ -12,6 +12,8 @@ namespace Vurbiri.FSM
         public TState PrevState => _previousState;
 
         public bool IsDefaultState => _currentState.Equals(_defaultState);
+        public bool IsCurrentState(TState state) => _currentState.Equals(state);
+        public bool IsCurrentOrDefaultState(TState state) => _currentState.Equals(_defaultState) | _currentState.Equals(state);
 
         public StateMachine(TState startState)
         {

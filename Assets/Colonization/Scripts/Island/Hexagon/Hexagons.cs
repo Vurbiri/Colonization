@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Vurbiri.Reactive;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
@@ -45,16 +46,18 @@ namespace Vurbiri.Colonization
             return hex;
         }
 
-        public void SwapId(Hexagon hexA, Hexagon hexB, UnityEngine.Color color)
+        public void SwapId(Hexagon hexA, Hexagon hexB, UnityEngine.Color color, float showTime)
         {
             int idA = hexA.ID, idB = hexB.ID;
 
-            hexA.NewId(idB, color); hexB.NewId(idA, color);
+            hexA.NewId(idB, color, showTime); hexB.NewId(idA, color, showTime);
 
             var keys = _hexagonsIdForKey[idA];
             keys.Remove(hexA.Key); keys.Add(hexB.Key);
             keys = _hexagonsIdForKey[idB];
             keys.Remove(hexB.Key); keys.Add(hexA.Key);
+
+            Banner.Open($"{idA:D2} <-> {idB:D2}", color, showTime);
 
             _eventChanged.Invoke(hexA); _eventChanged.Invoke(hexB);
         }

@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization
         public int penaltyPerRound = -1;
         public int rewardForBuff = 10;
         public int rewardForPresent = 5;
+        public int penaltyForMarauding = -7;
         public int penaltyForFireOnEnemy = -5;
         public int penaltyForFriendlyFire = -10;
     }

@@ -9,24 +9,29 @@
   "bloodTradePay": 0,
   "bloodTradeBay": 0,
   "healRandomValue": 0,
-  "reductionFromWall": 0,
-  "maraudingCount": [
-    0,
-    0,
-    0,
-    0,
-    0
+  "maraudingText": [
+    "1",
+    "SpellMaraudingMsg"
   ],
-  "swapHexColor": [
-    0.0,
-    0.0,
-    0.0,
-    1.0
+  "reductionFromWall": 33,
+  "maraudingCount": [
+    1,
+    2,
+    1,
+    2,
+    3
   ],
   "swapText": [
     "1",
     "SpellSwapIdMsg"
   ],
+  "swapHexColor": [
+    0.521568656,
+    0.368627459,
+    0.258823544,
+    1.0
+  ],
+  "swapShowTime": 13.0,
   "economicCost": [
     0,
     0,
@@ -36,11 +41,11 @@
   ],
   "militaryCost": [
     0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    1,
+    2,
+    3,
+    3,
+    4,
+    5
   ]
 }

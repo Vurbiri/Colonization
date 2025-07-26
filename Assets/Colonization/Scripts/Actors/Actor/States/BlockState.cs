@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Actors
             private readonly EffectsSet _effects;
             private readonly int _value;
 
-            public bool Enabled => _actor._effects.Contains(_code);
+            public bool IsApplied => _actor._effects.Contains(_code);
 
             public BlockState(int cost, int value, Actor parent) : base(parent, cost)
             {

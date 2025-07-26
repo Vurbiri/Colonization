@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnSelectWarrior(Actor actor)
         {
-            if (_enable & _isNotCast & actor.Interactable & _currentOpenMenu == null)
+            if (_enable & _isNotCast & actor.CanUseSkills & _currentOpenMenu == null)
             {
                 _cameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, actor.Position);
                 _warriorsMenu.Open(actor);

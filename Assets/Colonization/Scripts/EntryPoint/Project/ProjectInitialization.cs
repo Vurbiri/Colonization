@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization.EntryPoint
             content.prices = _prices;
             content.projectColors = _settingsColorScriptable.Colors;
 
-            MessageBox.SetColors(content.projectColors.PanelBack, content.projectColors.TextDefault);
+            SetColors(content.projectColors);
 
             loading.Add(new CreateYandexSDK(content, mono, _leaderboardName));
             loading.Add(new CreateStorage(content, mono, _loadingScreen, _logOnPanel));
@@ -48,6 +48,17 @@ namespace Vurbiri.Colonization.EntryPoint
 
             Destroy(this);
             _settingsColorScriptable.Dispose();
+        }
+
+        private static void SetColors(ProjectColors colors)
+        {
+            MessageBox.SetColors(colors.PanelBack, colors.TextDefault);
+
+            Banner.Colors[MessageTypeId.Info] = colors.TextDefault;
+            Banner.Colors[MessageTypeId.Warning] = colors.TextWarning;
+            Banner.Colors[MessageTypeId.Error] = colors.TextNegative;
+            Banner.Colors[MessageTypeId.Profit] = colors.TextPositive;
+
         }
 
 #if UNITY_EDITOR

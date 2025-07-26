@@ -100,7 +100,7 @@ namespace Vurbiri.Colonization
             _amount = 0;
         }
 
-        public void MainToStringBuilder(StringBuilder sb, string hexColorPlus, string hexColorMinus)
+        public void MainToStringBuilder(StringBuilder sb, string hexPlusColor, string hexMinusColor)
         {
             if (_amount != 0)
             {
@@ -108,10 +108,15 @@ namespace Vurbiri.Colonization
                 {
                     resource = _values[i];
                     if (resource != 0)
-                        sb.AppendFormat(TAG.COLOR_CURRENCY, i, _values[i].ToString("+#;-#;0"), resource > 0 ? hexColorPlus : hexColorMinus);
+                        sb.AppendFormat(TAG.COLOR_CURRENCY, i, resource.ToString("+#;-#;0"), resource > 0 ? hexPlusColor : hexMinusColor);
                 }
                 sb.Append(TAG.COLOR_OFF);
             }
+        }
+        public void MainToStringBuilder(StringBuilder sb)
+        {
+            for (int i = 0; i < MainCount; i++)
+                sb.AppendFormat(TAG.CURRENCY, i, _values[i].ToString("+#;-#;0"));
         }
 
         public override IEnumerator<int> GetEnumerator()

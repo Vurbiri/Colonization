@@ -37,6 +37,7 @@ namespace Vurbiri.Colonization
 
                 warrior.StatesUpdate();
                 warrior.IsPersonTurn = false;
+                warrior.Interactable = false;
             }
 
             _resources.Add(profit);

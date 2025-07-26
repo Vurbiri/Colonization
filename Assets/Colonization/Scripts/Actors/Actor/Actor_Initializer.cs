@@ -34,6 +34,7 @@ namespace Vurbiri.Colonization.Actors
             _skin        = settings.InstantiateActorSkin(transform);
             _currentHex  = startHex;
             IsPersonTurn = false;
+            Interactable = false;
 
             #region Abilities
             _abilities   = settings.Abilities;
@@ -85,7 +86,7 @@ namespace Vurbiri.Colonization.Actors
             for (int i = data.effects.Length - 1; i >= 0; i--)
                 _effects.Add(data.effects[i]);
 
-            if (_blockState.Enabled)
+            if (_blockState.IsApplied)
             {
                 _skin.EventStart -= _stateMachine.ToDefaultState;
                 _skin.EventStart += Block;

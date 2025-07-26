@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
             Order.Create();
             SummonWarlock.Create();
 
-            BloodTrade.Create(); Spying.Create();
+            BloodTrade.Create(); Spying.Create(); WallBuild.Create(); Marauding.Create(); RoadDemolition.Create(); SwapId.Create();
         }
         
         public static void AddSatan(Satan satan)

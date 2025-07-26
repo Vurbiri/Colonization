@@ -5,10 +5,7 @@ namespace Vurbiri.Colonization
         public abstract class ASpell
         {
             protected readonly CurrenciesLite _cost = new();
-            protected string _output;
             protected bool _canCast;
-
-            public string Output => _output; 
 
             protected ASpell(int type, int id)
             {

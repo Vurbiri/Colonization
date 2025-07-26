@@ -119,10 +119,10 @@ namespace Vurbiri.Colonization
 
         public void SetCaptionActive(bool active) => _hexagonCaption.SetActive(active);
 
-        public void NewId(int id, Color color)
+        public void NewId(int id, Color color, float showTime)
         {
             _id = id;
-            _hexagonCaption.NewId(id, color);
+            _hexagonCaption.NewId(id, color, showTime);
             _changeID.Invoke(id);
         }
 
@@ -190,7 +190,7 @@ namespace Vurbiri.Colonization
                 _owner.AddWallDefenceEffect(GetMaxDefense());
         }
 
-        public bool IsEnemy(Id<PlayerId> id) => _owner != null && _owner.GetRelation(id) == Relation.Enemy;
+        public bool IsEnemy(Id<PlayerId> id) => _owner != null && GameContainer.Diplomacy.GetRelation(_ownerId, id) == Relation.Enemy;
         #endregion
 
         #region Set(Un)Selectable
@@ -205,7 +205,7 @@ namespace Vurbiri.Colonization
         }
         public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
         {
-            if (_isWater | _owner == null || !_owner.IsCanUseSkill(id, typeAction, out bool isFriendly))
+            if (_isWater | _owner == null || !_owner.IsCanApplySkill(id, typeAction, out bool isFriendly))
                 return false;
 
             _mark = s_poolMarks.Get(_thisTransform, false).View(isFriendly);
@@ -214,11 +214,12 @@ namespace Vurbiri.Colonization
         }
         public void SetUnselectable()
         {
-            if (_mark == null | _isWater) return;
-
-            s_poolMarks.Return(_mark);
-            _thisCollider.enabled = false;
-            _mark = null;
+            if (_mark != null & !_isWater)
+            {
+                s_poolMarks.Return(_mark);
+                _thisCollider.enabled = false;
+                _mark = null;
+            }
         }
         public void SetOtherOwnerUnselectable()
         {
@@ -237,8 +238,9 @@ namespace Vurbiri.Colonization
         {
             _mark.View(false);
             _thisCollider.enabled = false;
-            _hexagonCaption.IdColor = color;
+            _hexagonCaption.SetColor(color);
         }
+        public void ResetCaptionColor() => _hexagonCaption.ResetColor();
         public void SetUnselectableForSwap()
         {
             s_poolMarks.Return(_mark);

@@ -25,11 +25,13 @@ namespace Vurbiri.Colonization
         [Header("HealRandom")]
         public int healRandomValue;
         [Header("Marauding")]
+        public FileIdAndKey maraudingText;
         public int reductionFromWall;
         public IdArray<WarriorId, int> maraudingCount;
         [Header("SwapId")]
-        public Color swapHexColor;
         public FileIdAndKey swapText;
+        public Color swapHexColor;
+        public float swapShowTime;
         [Space]
         public IdArray<EconomicSpellId, int> economicCost;
         public IdArray<MilitarySpellId, int> militaryCost;

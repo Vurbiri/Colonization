@@ -13,11 +13,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Setup(Actor actor, BlockUI blockUI)
         {
-            bool isUse = actor.ActionPoint >= blockUI.Cost;
-
-            interactable = isUse;
-            _text = blockUI.GetText(isUse);
-
+            _text = blockUI.GetText(interactable = actor.ActionPoint >= blockUI.Cost);
             _thisGameObject.SetActive(true);
         }
     }

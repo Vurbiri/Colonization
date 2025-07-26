@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.UI
 
         // TEST
         Artefact _artefact;
-        Human _player;
+        PersonController _player;
 
         public void Test()
         {
@@ -42,12 +42,19 @@ namespace Vurbiri.Colonization.UI
             //resources.Mix(_player.Resources);
             //_player.AddResources(resources);
 
-            SpellParam param = new(0);
-            SpellBook.Cast(TypeOfPerksId.Military, MilitarySpellId.Spying, param);
+            if (_player.Interactable.Value)
+            {
+                SpellParam param = new(0);
+                SpellBook.Cast(TypeOfPerksId.Military, MilitarySpellId.SwapId, param);
+            }
+            else
+            {
+                Debug.LogWarning($"player.Interactable: {_player.Interactable.Value}");
+            }
         }
         // TEST
 
-        public void Init(Human player, CanvasHint hint)
+        public void Init(PersonController player, CanvasHint hint)
         {
             base.Init(hint, 0.48f);
 

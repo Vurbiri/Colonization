@@ -29,7 +29,6 @@ namespace Vurbiri.Colonization
         public Currencies Resources => _resources;
         public ExchangeRate Exchange => _exchange;
 
-        public bool IsOverResources => _abilities.IsLess(MaxMainResources, _resources.Amount);
         public bool IsMaxWarriors => _abilities.IsLessOrEqual(MaxWarrior, _actors.Count);
 
         public Roads Roads => _roads;

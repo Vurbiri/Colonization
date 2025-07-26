@@ -19,6 +19,7 @@ namespace Vurbiri.Colonization.UI
         [Header("├──────────── Text ─────────────────────"), Space]
         [SerializeField] private Color _textDefault;
         [SerializeField] private Color _textDark;
+        [SerializeField] private Color _textWarning;
         [SerializeField] private Color _textPositive;
         [SerializeField] private Color _textNegative;
 
@@ -42,6 +43,7 @@ namespace Vurbiri.Colonization.UI
 
         public Color TextDefault => _textDefault;
         public Color TextDark => _textDark;
+        public Color TextWarning => _textWarning;
         public Color TextPositive => _textPositive;
         public Color TextNegative => _textNegative;
                

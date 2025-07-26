@@ -35,21 +35,9 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    if (s_actors[param.playerId].Count == 2)
-                    {
-                        foreach (var actor in s_actors[param.playerId])
-                        {
-                            if (_selectedA == null)
-                                _selectedA = actor.Hexagon;
-                            else
-                                Swap(param.playerId, actor.Hexagon);
-                        }
-                    }
-                    else
-                    {
-                        _currentPlayer = param.playerId;
-                        _coroutine = Cast_Cn().Start();
-                    }
+                    _currentPlayer = param.playerId;
+                    _coroutine = Cast_Cn().Start();
+
                     _canCast = false;
                 }
             }
@@ -81,13 +69,17 @@ namespace Vurbiri.Colonization
 
                 yield return _waitHexagon.Restart();
 
-                Swap(_currentPlayer, _waitHexagon.Value);
+                GameContainer.Hexagons.SwapId(_selectedA, _waitHexagon.Value, s_settings.swapHexColor, s_settings.swapShowTime);
+                
+                s_humans[_currentPlayer].Pay(_cost);
                 EndCast();
             }
 
             private void Cancel(Id<MBButtonId> id)
             {
                 _coroutine.Stop();
+                if(_selectedA != null) _selectedA.ResetCaptionColor();
+
                 EndCast();
             }
 
@@ -105,14 +97,8 @@ namespace Vurbiri.Colonization
 
                 _coroutine = null;
                 _selectedA = null;
+                _currentPlayer = PlayerId.None;
                 s_isCast.False();
-            }
-
-            private void Swap(int playerId, Hexagon selectedB)
-            {
-                GameContainer.Hexagons.SwapId(_selectedA, selectedB, s_settings.swapHexColor);
-                s_humans[playerId].Pay(_cost);
-                _selectedA = null;
             }
 
             private void SetText(Localization localization) => _text = localization.GetText(s_settings.swapText);

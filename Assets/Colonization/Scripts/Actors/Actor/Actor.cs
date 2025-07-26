@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
         private Id<ActorTypeId> _typeId;
         private int _id;
         private Id<PlayerId> _owner;
-        private bool _isPersonTurn;
+        private bool _isPersonTurn, _canUseSkills;
         #region Abilities
         private AbilitiesSet<ActorAbilityId> _abilities;
         private SubAbility<ActorAbilityId> _currentHP;
@@ -57,8 +57,8 @@ namespace Vurbiri.Colonization.Actors
         public Hexagon Hexagon => _currentHex;
         public int ActionPoint => _currentAP.Value;
         public bool CanMove => _move.IsValue;
-        public bool IsIdle => _stateMachine.IsDefaultState;
-        public bool IsBlock => _blockState.Enabled;
+        public bool CanUseSkills => _canUseSkills & _isPersonTurn;
+        public bool CanBlock => !_blockState.IsApplied;
         public bool IsWounded => _currentHP.IsNotMax;
         public bool IsDead => _currentHP.Value <= 0;
         public ActorSkin Skin => _skin;
@@ -72,9 +72,9 @@ namespace Vurbiri.Colonization.Actors
         public Vector3 Position => _thisTransform.position;
         public RBool CanCancel => _canCancel;
         public RBool InteractableReactive => _interactable;
-        public bool Interactable { get => _interactable.Value; private set => _thisCollider.enabled = _interactable.Value = _isPersonTurn & value; }
+        public bool Interactable { get => _interactable.Value; set => _thisCollider.enabled = _interactable.Value = _isPersonTurn & value; }
         public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = value; }
-        public bool IsPersonTurn { get => _isPersonTurn; set => _interactable.Value = _isPersonTurn = value; }
+        public bool IsPersonTurn { get => _isPersonTurn; set => _isPersonTurn = value; }
         public void Select() => _stateMachine.Select();
         public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
         public void Cancel() => _stateMachine.Cancel();
@@ -94,16 +94,9 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
-        public Relation GetRelation(Id<PlayerId> id) => GameContainer.Diplomacy.GetRelation(id, _owner);
-        public bool IsCanUseSkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
+        public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
-            if(!(_stateMachine.IsDefaultState || _blockState.Enabled))
-            {
-                isFriendly = false;
-                return false;
-            }
-            
-            return GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
+            return _stateMachine.IsCurrentOrDefaultState(_blockState) & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
         #region Effect
@@ -149,7 +142,7 @@ namespace Vurbiri.Colonization.Actors
         public void SetHexagonUnselectableForSwap()
         {
             _currentHex.SetUnselectableForSwap();
-            Interactable = _stateMachine.IsDefaultState;
+            Interactable = _stateMachine.IsCurrentOrDefaultState(_blockState);
         }
 
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);

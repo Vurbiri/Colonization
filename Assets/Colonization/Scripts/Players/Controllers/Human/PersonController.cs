@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         private readonly RInteractable _interactable = new();
 
-        public IReactive<bool> Interactable => _interactable;
+        public IReactiveValue<bool> Interactable => _interactable;
 
         public PersonController(Settings settings) : base(PlayerId.Person, settings)
         {
@@ -29,7 +29,10 @@ namespace Vurbiri.Colonization
             _edifices.Interactable = true;
 
             foreach (var warrior in _actors)
+            {
                 warrior.IsPersonTurn = true;
+                warrior.Interactable = true;
+            }
 
             _interactable.Turn = true;
         }
@@ -42,7 +45,7 @@ namespace Vurbiri.Colonization
             base.OnEndTurn();
         }
 
-        private class RInteractable : IReactive<bool>
+        private class RInteractable : IReactiveValue<bool>
         {
             private int _actors;
             private bool _spells, _isTurn = true;
@@ -70,8 +73,7 @@ namespace Vurbiri.Colonization
             {
                 bool old = Value;
                 _spells = !cast;
-                if (old != Value)
-                    _change.Invoke(!old);
+                if (old != Value) _change.Invoke(!old);
             }
 
             public void BindActors(Actor actor, TypeEvent op)
@@ -93,8 +95,7 @@ namespace Vurbiri.Colonization
                 if (value) _actors &= ~(1 << index);
                 else _actors |= 1 << index;
 
-                if (old != Value)
-                    _change.Invoke(!old);
+                if (old != Value) _change.Invoke(!old);
             }
         }
     }

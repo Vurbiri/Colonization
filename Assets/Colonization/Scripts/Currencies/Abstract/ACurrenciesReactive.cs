@@ -25,6 +25,8 @@ namespace Vurbiri.Colonization
         public IReactiveValue<int> MaxAmount => _maxAmount;
         public IReactiveValue<int> MaxBlood => _maxBlood;
 
+        public bool IsOverResources => _maxAmount.Value < _amount.Value;
+
         public override int this[int index] { get => _values[index].Value; }
         public override int this[Id<CurrencyId> id] { get => _values[id.Value].Value; }
 

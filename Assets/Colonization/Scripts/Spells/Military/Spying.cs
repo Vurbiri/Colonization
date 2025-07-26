@@ -11,12 +11,11 @@ namespace Vurbiri.Colonization
         {
             private readonly CurrenciesLite _add = new();
             private readonly Id<MBButtonId>[] _buttons = { MBButtonId.Ok };
-            private readonly string _hexColor, _hexColorPlus, _hexColorMinus;
+            private readonly string _hexColorPlus, _hexColorMinus;
 
-            private Spying(int type, int id) : base(type, id) 
+            private Spying(int type, int id) : base(type, id)
             {
                 var colors = GameContainer.UI.Colors;
-                _hexColor = colors.HintDefaultTag;
                 _hexColorPlus = colors.TextPositiveTag;
                 _hexColorMinus = colors.TextNegativeTag;
             }
@@ -35,30 +34,28 @@ namespace Vurbiri.Colonization
                     {
                         if (playerId != param.playerId)
                         {
-                            if (s_humans[playerId].IsOverResources)
+                            other = s_humans[playerId].Resources;
+                            if (other.IsOverResources)
                             {
-                                other = s_humans[playerId].Resources;
-                                if (other.Amount > 0)
-                                {
-                                    currencyId = Random.Range(0, CurrencyId.MainCount);
-                                    while (other[currencyId] <= 0)
-                                        currencyId = (currencyId + 1) % CurrencyId.MainCount;
+                                currencyId = Random.Range(0, CurrencyId.MainCount);
+                                while (other[currencyId] <= 0)
+                                    currencyId = (currencyId + 1) % CurrencyId.MainCount;
 
-                                    other.Remove(currencyId, 1);
-                                    _add.Add(currencyId, 1);
-                                }
-                                if (isPerson)
-                                {
-                                    sb.AppendLine(GameContainer.UI.PlayerNames[playerId]);
-                                    other.MainToStringBuilder(sb);
-                                    sb.AppendLine(); sb.AppendLine();
-                                }
+                                other.Remove(currencyId, 1);
+                                _add.Add(currencyId, 1);
+
+                            }
+                            if (isPerson)
+                            {
+                                sb.AppendLine(GameContainer.UI.PlayerNames[playerId]);
+                                other.MainToStringBuilder(sb);
+                                sb.AppendLine(); sb.AppendLine();
                             }
                         }
                     }
 
                     self.Remove(_cost);
-                    if(_add.Amount > 0)
+                    if (_add.Amount > 0)
                     {
                         self.Add(_add);
                         if (isPerson) _add.MainToStringBuilder(sb, _hexColorPlus, _hexColorMinus);

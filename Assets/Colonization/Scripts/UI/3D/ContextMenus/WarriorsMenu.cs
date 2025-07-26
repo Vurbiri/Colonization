@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         public ISubscription<IMenu, bool> Init(ContextMenuSettings settings)
         {
             _buttonClose.Init(settings.hint, Close);
-            
+
             _buttonMovement.Init(settings.hint, OnMovement);
             _buttonBlock.Init(settings.hint, OnBlock);
 
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.UI
                 _buttonsSkill[i].Init(settings, this);
 
             base.CloseInstant();
-            
+
             return _eventActive;
         }
 
@@ -43,10 +43,8 @@ namespace Vurbiri.Colonization.UI
             _buttonMovement.Setup(true, _currentWarrior.CanMove);
             _buttonBlock.Setup(actor, skills.BlockUI);
 
-            var skillsUI = skills.SkillsUI;
-            int count = skillsUI.Count, index = 0;
-            
-            for (; index < count; index++)
+            int index = 0; var skillsUI = skills.SkillsUI;
+            for (int count = skillsUI.Count; index < count; index++)
                 _buttonsSkill[index].Setup(actor, index, skillsUI[index], _buttonPositions[count][index]);
 
             for (; index < _countButtonsSkill; index++)
@@ -125,7 +123,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnValidate()
         {
-            if(_buttonsSkill == null || _buttonsSkill.Length == 0)
+            if (_buttonsSkill == null || _buttonsSkill.Length == 0)
                 _buttonsSkill = GetComponentsInChildren<ButtonSkill>();
 
             this.SetChildren(ref _buttonBlock);

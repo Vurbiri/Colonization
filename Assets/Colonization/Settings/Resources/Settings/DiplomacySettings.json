@@ -5,6 +5,7 @@
   "penaltyPerRound": -1,
   "rewardForBuff": 10,
   "rewardForPresent": 5,
+  "penaltyForMarauding": -7,
   "penaltyForFireOnEnemy": -5,
   "penaltyForFriendlyFire": -10
 }

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
         public Material greenMaterial;
         public Material redMaterial;
 
-        public HexagonMark Create(Transform repository, Action<HexagonMark, bool> callback) => new(Instantiate(this, repository), callback);
+        public HexagonMark Create(Transform repository, Action<HexagonMark, bool> deactivate) => new(Instantiate(this, repository), deactivate);
 
 #if UNITY_EDITOR
         public void OnValidate()

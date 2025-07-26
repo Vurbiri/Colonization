@@ -8,12 +8,12 @@ namespace Vurbiri
     {
         protected readonly Stack<T> _pool;
         private readonly Transform _repository;
-        private readonly Func<Transform, Action<T, bool>, T> _factory;
+        private readonly Func<Transform, Action<T, bool>, T> f_factory;
 
         public Pool(Func<Transform, Action<T, bool>, T> factory, Transform repository, int size)
         {
             _pool = new(size);
-            _factory = factory;
+            f_factory = factory;
             _repository = repository;
             for (int i = 0; i < size; i++)
                 _pool.Push(factory(repository, OnDeactivate));
@@ -30,7 +30,7 @@ namespace Vurbiri
         public T Get()
         {
             if (_pool.Count > 0) return _pool.Pop();
-            return _factory(_repository, OnDeactivate);
+            return f_factory(_repository, OnDeactivate);
         }
 
         public List<T> Get(int count, Transform parent, bool worldPositionStays = false)

@@ -33,6 +33,8 @@ namespace Vurbiri.UI
         private Coroutine _coroutine;
         private int _index;
 
+        public static IdArray<MessageTypeId, Color> Colors => s_colors;
+
         internal static void Init(BannerInitialize init)
         {
             s_maxSize = init.maxSize; s_padding = init.padding; 
@@ -43,24 +45,25 @@ namespace Vurbiri.UI
             for (int i = 0; i < init.startCount; i++)
                 s_pool.Push(Instantiate(s_prefab, s_container, false).Init());
         }
-
-        public static void Open(string text, Id<MessageTypeId> typeId, IEnumerator delay, bool oneScene = false)
+        public static void Open(string text, Color color, IEnumerator delay, bool oneScene = false)
         {
             Banner banner;
-            if (s_pool.Count > 0) 
+            if (s_pool.Count > 0)
                 banner = s_pool.Pop();
-            else 
+            else
                 banner = Instantiate(s_prefab, s_container, false).Init();
 
-            banner.Setup(s_banners.Count, text, s_colors[typeId], delay, oneScene);
+            banner.Setup(s_banners.Count, text, color, delay, oneScene);
             s_banners.Add(banner);
         }
-        public static WaitRealtime Open(string text, Id<MessageTypeId> typeId, float time, bool oneScene = false)
+        public static void Open(string text, Id<MessageTypeId> typeId, IEnumerator delay, bool oneScene = false) => Open(text, s_colors[typeId], delay, oneScene);
+        public static WaitRealtime Open(string text, Color color, float time, bool oneScene = false)
         {
             WaitRealtime waitTime = new(time);
-            Open(text, typeId, waitTime, oneScene);
+            Open(text, color, waitTime, oneScene);
             return waitTime;
         }
+        public static WaitRealtime Open(string text, Id<MessageTypeId> typeId, float time, bool oneScene = false) => Open(text, s_colors[typeId], time, oneScene);
 
         public static void Clear()
         {

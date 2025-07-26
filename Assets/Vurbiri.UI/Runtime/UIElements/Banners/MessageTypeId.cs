@@ -5,7 +5,8 @@ namespace Vurbiri.UI
 		public const int Info	 = 0;
         public const int Warning = 1;
         public const int Error	 = 2;
-				
-		static MessageTypeId() => ConstructorRun();
+        public const int Profit  = 3;
+
+        static MessageTypeId() => ConstructorRun();
 	}
 }

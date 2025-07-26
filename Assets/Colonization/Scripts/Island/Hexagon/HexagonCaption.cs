@@ -19,14 +19,15 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private TextMeshPro _idText;
         [SerializeField] private Renderer _idTextRenderer;
         [Space]
-        [SerializeField, MinMax(1f, 60f)] private WaitRealtime _timeShowNewId = 12.5f;
         [SerializeField, MinMax(1f, 60f)] private WaitRealtime _timeShowProfit = 25f;
         [SerializeField, Range(0.1f, 100f)] private float _fadeSpeed = 10f;
+
+        private readonly WaitRealtime _timeShowNewId = new(10f);
 
         private bool _isShow = true, _isEnable = true;
         private bool _showDistance, _showProfit, _showMode, _showNewId;
         private GameObject _thisGameObject;
-        private Color _colorNormal, _colorProfit;
+        private Color _colorNormal, _colorProfit, _cache;
         private Transform _thisTransform, _cameraTransform;
         private Quaternion _lastCameraRotation;
         private string _defaultCurrencyText;
@@ -40,11 +41,6 @@ namespace Vurbiri.Colonization.UI
         }
 
         public int Id { set => _idText.text = value.ToString(); }
-        public Color IdColor
-        {
-            get => _idText.color;
-            set => _idText.color = value;
-        }
 
         public void Init(int id, IdFlags<CurrencyId> flags)
         {
@@ -53,7 +49,7 @@ namespace Vurbiri.Colonization.UI
             _cameraTransform = GameContainer.CameraTransform.Transform;
             _lastCameraRotation = Quaternion.identity;
 
-            _colorNormal = GameContainer.UI.Colors.TextDefault;
+            _colorNormal = _cache = GameContainer.UI.Colors.TextDefault;
             _colorProfit = id != CONST.GATE_ID ? GameContainer.UI.Colors.TextPositive : GameContainer.UI.Colors.TextNegative;
 
             StringBuilder sb = new(TAG_SPRITE_LENGTH * CurrencyId.Count);
@@ -72,7 +68,7 @@ namespace Vurbiri.Colonization.UI
             _unsubscriber = GameContainer.EventBus.EventHexagonShow.Add(OnCaptionEnable);
         }
 
-        public void NewId(int id, Color color)
+        public void NewId(int id, Color color, float showTime)
         {
             StopCoroutine(ref _profitCoroutine);
 
@@ -82,6 +78,8 @@ namespace Vurbiri.Colonization.UI
             _idText.text = id.ToString();
             _idText.color = color;
 
+            _timeShowNewId.Restart(showTime);
+
             SetActive();
             StartCoroutine(ref _newIdCoroutine, NewIdOff_Cn());
 
@@ -89,8 +87,7 @@ namespace Vurbiri.Colonization.UI
             //=================================
             IEnumerator NewIdOff_Cn()
             {
-                yield return _timeShowNewId.Restart();
-                _idText.color = _colorNormal;
+                yield return _timeShowNewId;
                 _showNewId = false;
                 _newIdCoroutine = null;
 
@@ -98,6 +95,13 @@ namespace Vurbiri.Colonization.UI
             }
             #endregion
         }
+
+        public void SetColor(Color value)
+        {
+            _cache = _idText.color;
+            _idText.color = value;
+        }
+        public void ResetColor() => _idText.color = _cache;
 
         public void Profit()
         {

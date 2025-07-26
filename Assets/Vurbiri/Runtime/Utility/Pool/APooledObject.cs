@@ -8,14 +8,14 @@ namespace Vurbiri
         protected readonly GameObject _gameObject;
         protected readonly Transform _transform;
         protected readonly T _self;
-        private readonly Action<T, bool> eventDeactivate;
+        private readonly Action<T, bool> a_deactivate;
 
-        public APooledObject(GameObject gameObject, Action<T, bool> callback)
+        public APooledObject(GameObject gameObject, Action<T, bool> deactivate)
         {
             _gameObject = gameObject;
             _transform = gameObject.transform;
             _self = (T)this;
-            eventDeactivate = callback;
+            a_deactivate = deactivate;
 
             _gameObject.SetActive(false);
         }
@@ -23,7 +23,7 @@ namespace Vurbiri
         public void ToPool(bool worldPositionStays = false)
         {
             _gameObject.SetActive(false);
-            eventDeactivate(_self, worldPositionStays);
+            a_deactivate(_self, worldPositionStays);
         }
 
         public void SetParent(Transform parent, bool worldPositionStays = false)

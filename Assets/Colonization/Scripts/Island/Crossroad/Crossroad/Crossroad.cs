@@ -183,14 +183,14 @@ namespace Vurbiri.Colonization
         #region Edifice
         public bool CanUpgrade(Id<PlayerId> playerId)
         {
-            return _states.isUpgrade && (_owner == playerId ||
+            return _states.isUpgrade && (_owner == playerId || (_owner == PlayerId.None &&
             _states.nextGroupId.Value switch
             {
                 EdificeGroupId.Shrine => IsRoadConnect(playerId),
-                EdificeGroupId.Port => WaterCheck(),
+                EdificeGroupId.Port   => WaterCheck(),
                 EdificeGroupId.Colony => NeighborCheck(playerId),
                 _ => false
-            });
+            }));
 
             #region Local: WaterCheck(), NeighborCheck()
             //=================================
@@ -343,10 +343,6 @@ namespace Vurbiri.Colonization
             int emptyCount = empty.Count;
             if (emptyCount == 0)
                 return _waitHexagon.Cancel();
-
-            Debug.Log("Сразу ли спаунить на одной ???");
-            if (emptyCount == 1)
-                return _waitHexagon.SetResult(empty[0]);
 
             for (int i = 0; i < emptyCount; i++)
                 empty[i].TrySetSelectableFree();
