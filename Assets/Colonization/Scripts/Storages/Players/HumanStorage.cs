@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Storage
             _keyResources = P_RESOURCES.Concat(_strId); _keyExchange = P_EXCHANGE.Concat(_strId);
             _keyRoads = P_ROADS.Concat(_strId); _keyPerks = P_PERKS.Concat(_strId);
 
-            var actors = InitActors(DEFAULT_MAX_ACTORS, isLoad);
+            var actors = InitActors(DEFAULT_MAX_WARRIOR, isLoad);
             var edifices = CreateEdificesLoadData(isLoad);
 
             if (isLoad) 

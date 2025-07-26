@@ -1,41 +1,50 @@
 {
-  "orderPerMana": 0,
+  "orderPerMana": 5,
   "blessBasa": 0,
   "blessPerRes": 0,
   "blessDuration": 0,
   "wrathBasa": 0,
   "wrathPerRes": 0,
   "wrathPierce": 0,
-  "bloodTradePay": 0,
-  "bloodTradeBay": 0,
-  "healRandomValue": 0,
+  "sacrificeText": [
+    "0",
+    "── None ──"
+  ],
+  "sacrificeHPPercent": 0,
+  "sacrificePierce": 0,
+  "bloodTradePay": 3,
+  "bloodTradeBay": 2,
   "maraudingText": [
     "1",
     "SpellMaraudingMsg"
   ],
-  "reductionFromWall": 33,
+  "reductionFromWall": 30,
   "maraudingCount": [
     1,
     2,
     1,
     2,
-    3
+    1
   ],
   "swapText": [
     "1",
     "SpellSwapIdMsg"
   ],
   "swapHexColor": [
-    0.521568656,
-    0.368627459,
-    0.258823544,
+    0.270588249,
+    0.270588249,
+    1.0,
     1.0
   ],
   "swapShowTime": 13.0,
+  "zealPercentHeal": 15,
+  "zealAddAP": 4,
   "economicCost": [
-    0,
-    0,
-    0,
+    1,
+    2,
+    3,
+    4,
+    1,
     0,
     0
   ],

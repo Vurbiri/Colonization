@@ -36,16 +36,11 @@ namespace Vurbiri.Colonization.UI
         public void Test()
         {
             //_artefact.Next(UnityEngine.Random.Range(2, 10));
-            //_player.Roads.RemoveDeadEnds();
-            //CurrenciesLite resources = new();
-            //resources.Set(CurrencyId.Mana, -2);
-            //resources.Mix(_player.Resources);
-            //_player.AddResources(resources);
 
             if (_player.Interactable.Value)
             {
-                SpellParam param = new(0);
-                SpellBook.Cast(TypeOfPerksId.Military, MilitarySpellId.SwapId, param);
+                SpellParam param = new(0, UnityEngine.Random.Range(0, 5));
+                SpellBook.Cast(EconomicSpellId.Type, EconomicSpellId.HalvingResources, param);
             }
             else
             {

@@ -7,8 +7,7 @@ namespace Vurbiri.Colonization
         sealed private class Order : ASpell
         {
             private Order(int type, int id) : base(type, id) { }
-
-            public static void Create() => new Order(TypeOfPerksId.Economic, EconomicSpellId.Order);
+            public static void Create() => new Order(EconomicSpellId.Type, EconomicSpellId.Order);
 
             public override bool Prep(SpellParam param)
             {

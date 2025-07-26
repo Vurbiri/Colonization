@@ -6,7 +6,7 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-	public abstract class Player
+	public abstract class Player : IDisposable
     {
         protected readonly int _id;
         protected readonly bool _isPerson;
@@ -26,6 +26,11 @@ namespace Vurbiri.Colonization
 
         public static void Init()  => SpellBook.Init();
         public static void Clear() => SpellBook.Clear();
+
+        public virtual void Dispose()
+        {
+            _actors.Dispose();
+        }
 
         #region Nested: Settings
         //***********************************

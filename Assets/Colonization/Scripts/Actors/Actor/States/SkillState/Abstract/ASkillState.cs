@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization.Actors
                 _fsm.ToDefaultState();
             }
 
-            protected override void Pay()
+            sealed protected override void Pay()
             {
                 base.Pay();
                 _actor.Signal();

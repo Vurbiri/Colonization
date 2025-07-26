@@ -12,8 +12,9 @@ namespace Vurbiri.Colonization
 
         public const int CHANCE_WATER = MAX_CIRCLES * MAX_CIRCLES;
 
-        public const int DEFAULT_MAX_ACTORS = 7;
-        public const int DEFAULT_MAX_EDIFICES = 7;
+        public const int DEFAULT_MAX_WARRIOR = 5;
+        public const int DEFAULT_MAX_DEMONS = DEFAULT_MAX_WARRIOR << 1;
+        public const int DEFAULT_MAX_EDIFICES = 6;
 
         public const int GATE_ID = 13;
         public static readonly int[] HEX_IDS = { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };

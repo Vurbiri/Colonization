@@ -1,3 +1,5 @@
+using System.Text;
+using Vurbiri.UI;
 using static Vurbiri.Colonization.CurrencyId;
 
 namespace Vurbiri.Colonization
@@ -6,27 +8,34 @@ namespace Vurbiri.Colonization
     {
         sealed private class BloodTrade : ASpell
         {
+            private int _blood;
+
             private BloodTrade(int type, int id) : base(type, id) { }
-            public static void Create() => new BloodTrade(TypeOfPerksId.Military, MilitarySpellId.BloodTrade);
+            public static void Create() => new BloodTrade(MilitarySpellId.Type, MilitarySpellId.BloodTrade);
 
             public override bool Prep(SpellParam param)
             {
-                int blood = param.valueA - (param.valueA % s_settings.bloodTradePay);
-                if (_canCast = blood > 0)
-                {
-                    _cost.Set(Blood, blood);
-                    _canCast = s_humans[param.playerId].IsPay(_cost);
-                }
-                return _canCast;
+                _blood = param.valueA - (param.valueA % s_settings.bloodTradePay);
+                return _canCast = _blood > 0 && s_humans[param.playerId].Resources[Blood] >= _blood;
             }
 
             public override void Cast(SpellParam param)
             {
                 if (_canCast)
                 {
+                    _cost.RandomAddRange(_blood / s_settings.bloodTradePay * s_settings.bloodTradeBay);
+
                     var resources = s_humans[param.playerId].Resources;
-                    resources.Remove(_cost);
-                    resources.RandomAddMain(param.valueA / s_settings.bloodTradePay * s_settings.bloodTradeBay);
+                    resources.Remove(Blood, _blood);
+                    resources.Add(_cost);
+
+                    if (param.playerId == PlayerId.Person)
+                    {
+                        StringBuilder sb = new(200); _cost.MainPlusToStringBuilder(sb);
+                        Banner.Open(sb.ToString(), MessageTypeId.Profit, 15f);
+                    }
+
+                    _cost.Clear();
                     _canCast = false;
                 }
             }

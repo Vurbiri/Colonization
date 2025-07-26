@@ -21,8 +21,7 @@ namespace Vurbiri.Colonization
             get
             {
                 int x = Math.Abs(_x), y = Math.Abs(_y);
-                if (y - x < 0) return (x + y) >> 1;
-                return y;
+                return (y - x < 0) ? (x + y) >> 1 : y;
             }
         }
 
@@ -51,6 +50,12 @@ namespace Vurbiri.Colonization
         public static Key operator +(Key a, Key b) => new(a._x + b._x, a._y + b._y);
         public static Key operator -(Key a, Key b) => new(a._x - b._x, a._y - b._y);
         public static Key operator -(Key a) => new(-a._x, -a._y);
+
+        public static int operator ^(Key a, Key b)
+        {
+            int x = Math.Abs(a._x - b._x), y = Math.Abs(a._y - b._y);
+            return (y - x < 0) ? (x + y) >> 1 : y;
+        }
 
         public static Key operator *(Key k, int i) => new(k._x * i, k._y * i);
         public static Key operator *(int i, Key k) => new(k._x * i, k._y * i);

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 
@@ -24,9 +23,8 @@ namespace Vurbiri.Colonization
 
         public void Add(ACurrencies other)
         {
-            if (other.Amount != 0)
+            if (!other.IsEmpty)
             {
-
                 for (int i = 0; i < AllCount; i++)
                     _values[i].Add(other[i]);
 
@@ -36,7 +34,7 @@ namespace Vurbiri.Colonization
         }
         public void Remove(ACurrencies other)
         {
-            if (other.Amount != 0)
+            if (!other.IsEmpty)
             {
                 for (int i = 0; i < AllCount; i++)
                     _values[i].Add(-other[i]);
@@ -127,43 +125,15 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public void RandomAddMain(int count)
+        public void Halving(int currencyId)
         {
-            if (count > 0)
+            int value = _values[currencyId].Value;
+            if (value > 0)
             {
-                int[] values = GetRandomMain(count);
-                for (int index = 0; index < MainCount; index++)
-                    _values[index].Add(values[index]);
-
-                _amount.Value += count;
+                value >>= 1;
+                _amount.Value += _values[currencyId].Set(value);
                 _eventChanged.Invoke(this);
             }
-        }
-
-        public void ShuffleMain()
-        {
-            int count = _amount.Value;
-            if (count > 0)
-            {
-                int[] values = GetRandomMain(count);
-                for (int index = 0; index < MainCount; index++)
-                    _values[index].Set(values[index]);
-
-                _eventChanged.Invoke(this);
-            }
-        }
-
-        private int[] GetRandomMain(int count)
-        {
-            int[] values = new int[MainCount]; int add;
-            while (count > 0)
-            {
-                add = Random.Range(1, 2 + (count >> 2));
-                values[Random.Range(0, MainCount)] += add;
-                count -= add;
-            }
-
-            return values;
         }
 
         public void MainToStringBuilder(StringBuilder sb)

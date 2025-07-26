@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < HEX.SIDES; i++)
                 _delta[i] = _sides.Next(i) - _sides[i];
 
-            transform.hierarchyCapacity = (MAX_HEXAGONS + MAX_CROSSROADS + (DEFAULT_MAX_ACTORS << 5) + 4) << 2;
+            transform.hierarchyCapacity = (MAX_HEXAGONS + MAX_CROSSROADS + (DEFAULT_MAX_WARRIOR << 5) + 4) << 2;
 
             return this;
         }

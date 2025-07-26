@@ -20,11 +20,12 @@ namespace Vurbiri.Colonization
         public int Count => _count.Value;
         public IReactiveValue<int> CountReactive => _count;
 
-        public Roads(Id<PlayerId> id, Color color, RoadFactory factory)
+        public Roads(Id<PlayerId> id, RoadFactory factory)
         {
             _id = id.Value;
             _factory = factory;
 
+            Color color = GameContainer.PlayerColors[id];
             GradientAlphaKey[] alphas = { new(1.0f, 0.0f), new(1.0f, 1.0f) };
             GradientColorKey[] colors = { new(color, 0.0f), new(color, 1.0f) };
             _gradient = new() { colorKeys = colors, alphaKeys = alphas };

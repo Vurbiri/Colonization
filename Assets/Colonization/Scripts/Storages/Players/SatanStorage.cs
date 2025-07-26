@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Storage
             if (!(isLoad && storage.TryGet(P_SATAN, out SatanLoadState state)))
                 state = new();
 
-            List<ActorLoadData> actors = InitActors(CONST.DEFAULT_MAX_ACTORS << 1, isLoad);
+            List<ActorLoadData> actors = InitActors(CONST.DEFAULT_MAX_DEMONS, isLoad);
 
             if (isLoad) LoadData = new(storage.Get<int[]>(_keyArtefact), state, actors);
             else        LoadData = new(state);

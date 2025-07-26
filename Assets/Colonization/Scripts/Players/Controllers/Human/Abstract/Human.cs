@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Reactive;
 using static Vurbiri.Colonization.Characteristics.HumanAbilityId;
 
 namespace Vurbiri.Colonization
@@ -23,7 +22,6 @@ namespace Vurbiri.Colonization
         protected readonly PerkTree _perks;
 
         protected readonly WarriorsSpawner _spawner;
-        protected readonly Unsubscription _unsubscriber;
         #endregion
 
         public Currencies Resources => _resources;
@@ -37,23 +35,21 @@ namespace Vurbiri.Colonization
         public PerkTree Perks => _perks;
         public SpellBook SpellBook => _spellBook;
 
-        public Human(int playerId, Settings settings) : base(playerId, CONST.DEFAULT_MAX_ACTORS)
+        public Human(int playerId, Settings settings) : base(playerId, CONST.DEFAULT_MAX_WARRIOR)
         {
             var storage = GameContainer.Storage.Humans[playerId];
-            
             var loadData = storage.LoadData;
-            var visual = GameContainer.Materials[playerId];
 
             _perks = PerkTree.Create(settings, loadData);
             _abilities = settings.humanAbilities.Get(_perks);
 
-            _roads = new(playerId, visual.color, settings.roadFactory);
+            _roads = new(playerId, settings.roadFactory);
 
             _resources = Currencies.Create(_abilities, GameContainer.Prices.HumanDefault, loadData);
             _exchange = ExchangeRate.Create(_abilities, loadData);
             _artefact = Artefact.Create(settings.artefact, loadData);
 
-            _spawner = new(new(playerId, new(_perks), _artefact), settings.warriorPrefab, visual.materialWarriors, settings.actorsContainer);
+            _spawner = new(new(playerId, new(_perks), _artefact), settings.warriorPrefab, settings.actorsContainer);
 
             if (loadData.isLoaded)
             {
@@ -202,11 +198,10 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public void Dispose()
+        sealed override public void Dispose()
         {
-            _unsubscriber.Unsubscribe();
+            base.Dispose();
             _exchange.Dispose();
-            _actors.Dispose();
         }
     }
 }

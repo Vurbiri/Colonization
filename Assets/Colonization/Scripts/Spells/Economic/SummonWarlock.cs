@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
                 _cost.Add(GameContainer.Prices.Warriors[WarriorId.Warlock]);
             }
 
-            public static void Create() => new SummonWarlock(TypeOfPerksId.Economic, EconomicSpellId.SummonWarlock);
+            public static void Create() => new SummonWarlock(EconomicSpellId.Type, EconomicSpellId.SummonWarlock);
 
             public override bool Prep(SpellParam param)
             {

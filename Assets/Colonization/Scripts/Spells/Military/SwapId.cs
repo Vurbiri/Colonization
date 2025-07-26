@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             {
                 Localization.Instance.Subscribe(SetText);
             }
-            public static void Create() =>  new SwapId(TypeOfPerksId.Military, MilitarySpellId.SwapId);
+            public static void Create() =>  new SwapId(MilitarySpellId.Type, MilitarySpellId.SwapId);
 
             public override bool Prep(SpellParam param)
             {
@@ -48,6 +48,15 @@ namespace Vurbiri.Colonization
                 s_spells[type][id] = null;
             }
 
+            public override void Cancel()
+            {
+                _coroutine.Stop();
+                if (_selectedA != null) _selectedA.ResetCaptionColor();
+
+                EndCast();
+            }
+            private void Cancel(Id<MBButtonId> id) => Cancel();
+
             private IEnumerator Cast_Cn()
             {
                 s_isCast.True();
@@ -55,14 +64,13 @@ namespace Vurbiri.Colonization
                 if (_currentPlayer == PlayerId.Person)
                 {
                     foreach (var actor in s_actors[_currentPlayer])
-                        actor.SetHexagonSelectableForSwap();
+                        actor.SetHexagonSelectable();
 
                     _waitButton = MessageBox.Open(_text, _buttons);
                     _waitButton.AddListener(Cancel);
                 }
 
                 _unsubscription = GameContainer.EventBus.EventHexagonSelect.Add(hexagon => _waitHexagon.SetResult(hexagon));
-
                 yield return _waitHexagon.Restart();
                 _selectedA = _waitHexagon.Value;
                 _selectedA.SetSelectedForSwap(s_settings.swapHexColor);
@@ -75,13 +83,7 @@ namespace Vurbiri.Colonization
                 EndCast();
             }
 
-            private void Cancel(Id<MBButtonId> id)
-            {
-                _coroutine.Stop();
-                if(_selectedA != null) _selectedA.ResetCaptionColor();
-
-                EndCast();
-            }
+            
 
             private void EndCast()
             {
@@ -92,7 +94,7 @@ namespace Vurbiri.Colonization
                 {
                     _waitButton.Reset();
                     foreach (var actor in s_actors[_currentPlayer])
-                        actor.SetHexagonUnselectableForSwap();
+                        actor.SetHexagonUnselectable();
                 }
 
                 _coroutine = null;

@@ -59,6 +59,7 @@ namespace Vurbiri.Colonization.Actors
         public bool CanMove => _move.IsValue;
         public bool CanUseSkills => _canUseSkills & _isPersonTurn;
         public bool CanBlock => !_blockState.IsApplied;
+        public int CurrentHP => _currentHP.Value;
         public bool IsWounded => _currentHP.IsNotMax;
         public bool IsDead => _currentHP.Value <= 0;
         public ActorSkin Skin => _skin;
@@ -73,7 +74,7 @@ namespace Vurbiri.Colonization.Actors
         public RBool CanCancel => _canCancel;
         public RBool InteractableReactive => _interactable;
         public bool Interactable { get => _interactable.Value; set => _thisCollider.enabled = _interactable.Value = _isPersonTurn & value; }
-        public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = value; }
+        public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = _isPersonTurn | value; }
         public bool IsPersonTurn { get => _isPersonTurn; set => _isPersonTurn = value; }
         public void Select() => _stateMachine.Select();
         public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
@@ -134,12 +135,12 @@ namespace Vurbiri.Colonization.Actors
         public void RemoveWallDefenceEffect() => _effects.Remove(ReactiveEffectsFactory.WallEffectCode);
         #endregion
 
-        public void SetHexagonSelectableForSwap()
+        public void SetHexagonSelectable()
         {
             _currentHex.SetSelectableForSwap();
             Interactable = false;
         }
-        public void SetHexagonUnselectableForSwap()
+        public void SetHexagonUnselectable()
         {
             _currentHex.SetUnselectableForSwap();
             Interactable = _stateMachine.IsCurrentOrDefaultState(_blockState);
@@ -173,7 +174,7 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
-        private IEnumerator Death_Cn()
+        public IEnumerator Death_Cn()
         {
             _currentHex.ExitActor();
             _unsubscribers.Unsubscribe();

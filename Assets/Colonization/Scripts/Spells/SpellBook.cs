@@ -54,8 +54,7 @@ namespace Vurbiri.Colonization
 
         public static void Init()
         {
-            Order.Create();
-            SummonWarlock.Create();
+            Order.Create(); SummonWarlock.Create(); ShuffleResources.Create(); HalvingResources.Create();
 
             BloodTrade.Create(); Spying.Create(); WallBuild.Create(); Marauding.Create(); RoadDemolition.Create(); SwapId.Create();
         }

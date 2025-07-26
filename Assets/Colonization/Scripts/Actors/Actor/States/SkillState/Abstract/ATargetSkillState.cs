@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
@@ -43,12 +44,23 @@ namespace Vurbiri.Colonization.Actors
                 if (_waitActor == null)
                     return;
 
-                if (newSelectable is Hexagon hex)
-                    _target = CheckTarget(hex.Owner);
-                else
-                    _target = CheckTarget(newSelectable as Actor);
-
+                _target = CheckTarget(newSelectable as Actor);
                 _waitActor.Send();
+
+                #region Local: CheckTarget(..)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                Actor CheckTarget(Actor target)
+                {
+                    if (target != null)
+                    {
+                        if ((target._currentHex.Key ^ _actor._currentHex.Key) == 1 & target.IsCanApplySkill(_actor._owner, _relationTarget, out _))
+                            target.ToTargetState(_actor._owner, _relationTarget);
+                        else
+                            target = null;
+                    }
+                    return target;
+                }
+                #endregion
             }
 
             protected IEnumerator SelectActor_Cn(Action<bool> callback)
@@ -68,7 +80,7 @@ namespace Vurbiri.Colonization.Actors
                 _isCancel.False();
 
                 foreach (var hex in targets)
-                    hex.SetOtherOwnerUnselectable();
+                    hex.SetOwnerUnselectable();
 
                 if (_target == null)
                     yield break;
@@ -118,20 +130,6 @@ namespace Vurbiri.Colonization.Actors
                 _parentTransform.localRotation = ACTOR_ROTATIONS[targetHex.Key - currentHex.Key];
                 if (_relationRealTarget == Relation.Enemy)
                     _target._thisTransform.localRotation = ACTOR_ROTATIONS[currentHex.Key - targetHex.Key];
-            }
-
-            private Actor CheckTarget(Actor target)
-            {
-                if (target == null)
-                    return null;
-
-                Key key = target._currentHex.Key - _actor._currentHex.Key;
-
-                if (target == _actor | key.Distance != 1 || !target.IsCanApplySkill(_actor._owner, _relationTarget, out _))
-                    return null;
-
-                target.ToTargetState(_actor._owner, _relationTarget);
-                return target;
             }
         }
     }

@@ -6,8 +6,6 @@ namespace Vurbiri.Colonization.Actors
 {
     public class DemonsSpawner
 	{
-        private const int SHIFT_ID = 5;
-        
         private readonly ActorInitData _initData;
         private readonly DemonInitializer _demonPrefab;
         private readonly Hexagon _startHex;
@@ -36,8 +34,9 @@ namespace Vurbiri.Colonization.Actors
                 return false;
             }
 
+            int minId = Mathf.Min(_potential >> 2, DemonId.Fatty);
             int maxId = Mathf.Min(_potential, DemonId.Count);
-            int id = Random.Range(0, maxId << SHIFT_ID) % maxId;
+            int id = Random.Range(minId, maxId);
             _potential -= (id + 1);
 
             demon = Object.Instantiate(_demonPrefab, _container).Init(id, _initData, _startHex);

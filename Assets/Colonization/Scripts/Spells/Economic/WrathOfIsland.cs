@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
     {
         sealed private class WrathOfIsland : ASpell
         {
-            private readonly EffectCode _attackEffectCode  = new(SPELL_TYPE, TypeOfPerksId.Economic, WRATH_SKILL_ID, 0);
+            private readonly EffectCode _attackEffectCode  = new(SPELL_TYPE, EconomicSpellId.Type, WRATH_SKILL_ID, 0);
             private readonly SpellDamager _damage;
             private readonly List<Actor> _targets = new(8);
             private readonly IHitSFX _sfx;
@@ -19,9 +19,10 @@ namespace Vurbiri.Colonization
             private WrathOfIsland(IHitSFX sfx, int type, int id) : base(type, id)
             {
                 _sfx = sfx;
+                _damage = new(sfx);
             }
 
-            public static void Create(IHitSFX sfx) => new WrathOfIsland(sfx, TypeOfPerksId.Economic, EconomicSpellId.Wrath);
+            public static void Create(IHitSFX sfx) => new WrathOfIsland(sfx, EconomicSpellId.Type, EconomicSpellId.Wrath);
 
             public override bool Prep(SpellParam param)
             {

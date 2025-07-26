@@ -7,15 +7,15 @@ namespace Vurbiri.Colonization.Actors
     {
         private readonly ActorInitData _initData;
         private readonly WarriorInitializer _warriorPrefab;
-        private readonly Material _material;
         private readonly Transform _container;
+        private readonly Material _material;
 
-        public WarriorsSpawner(ActorInitData initData, WarriorInitializer warriorPrefab, Material material, Transform container)
+        public WarriorsSpawner(ActorInitData initData, WarriorInitializer warriorPrefab, Transform container)
         {
             _initData = initData;
             _warriorPrefab = warriorPrefab;
-            _material = material;
             _container = container;
+            _material = GameContainer.Materials[initData.owner].materialWarriors;
         }
 
         public Warrior Create(Id<WarriorId> id, Hexagon startHex)

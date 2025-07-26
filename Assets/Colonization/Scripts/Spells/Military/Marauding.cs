@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         sealed private class Marauding : ASpell
         {
             private readonly CurrenciesLite[] _currencies = new CurrenciesLite[PlayerId.HumansCount];
-            private readonly Stack<Occupation> _occupations = new(CONST.DEFAULT_MAX_EDIFICES);
+            private readonly Stack<Occupation> _occupations = new(CONST.DEFAULT_MAX_EDIFICES << 1);
             private string _text;
 
             private Marauding(int type, int id) : base(type, id)
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
                 for (int i = 0; i < PlayerId.HumansCount; i++)
                     _currencies[i] = new();
             }
-            public static void Create() => new Marauding(TypeOfPerksId.Military, MilitarySpellId.Marauding);
+            public static void Create() => new Marauding(MilitarySpellId.Type, MilitarySpellId.Marauding);
 
             public override bool Prep(SpellParam param)
             {

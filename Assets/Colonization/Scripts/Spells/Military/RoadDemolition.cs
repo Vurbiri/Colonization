@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization
         sealed private class RoadDemolition : ASpell
         {
             private RoadDemolition(int type, int id) : base(type, id) { }
-            public static void Create() => new RoadDemolition(TypeOfPerksId.Military, MilitarySpellId.RoadDemolition);
+            public static void Create() => new RoadDemolition(MilitarySpellId.Type, MilitarySpellId.RoadDemolition);
 
             public override bool Prep(SpellParam param)
             {

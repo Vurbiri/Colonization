@@ -11,15 +11,9 @@ namespace Vurbiri.Colonization
         {
             private readonly CurrenciesLite _add = new();
             private readonly Id<MBButtonId>[] _buttons = { MBButtonId.Ok };
-            private readonly string _hexColorPlus, _hexColorMinus;
 
-            private Spying(int type, int id) : base(type, id)
-            {
-                var colors = GameContainer.UI.Colors;
-                _hexColorPlus = colors.TextPositiveTag;
-                _hexColorMinus = colors.TextNegativeTag;
-            }
-            public static void Create() => new Spying(TypeOfPerksId.Military, MilitarySpellId.Spying);
+            private Spying(int type, int id) : base(type, id) { }
+            public static void Create() => new Spying(MilitarySpellId.Type, MilitarySpellId.Spying);
 
             public override void Cast(SpellParam param)
             {
@@ -58,7 +52,7 @@ namespace Vurbiri.Colonization
                     if (_add.Amount > 0)
                     {
                         self.Add(_add);
-                        if (isPerson) _add.MainToStringBuilder(sb, _hexColorPlus, _hexColorMinus);
+                        if (isPerson) _add.MainToStringBuilder(sb, GameContainer.UI.Colors.TextPositiveTag, GameContainer.UI.Colors.TextNegativeTag);
                         _add.Clear();
                     }
 

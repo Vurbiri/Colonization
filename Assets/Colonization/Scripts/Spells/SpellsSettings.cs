@@ -18,12 +18,14 @@ namespace Vurbiri.Colonization
         public int wrathBasa;
         public int wrathPerRes;
         public int wrathPierce;
-
+        [Header("Sacrifice")]
+        public FileIdAndKey sacrificeText;
+        public int sacrificeHPPercent;
+        public int sacrificePierce;
+        [Space]
         [Header("BloodTrade")]
         public int bloodTradePay;
         public int bloodTradeBay;
-        [Header("HealRandom")]
-        public int healRandomValue;
         [Header("Marauding")]
         public FileIdAndKey maraudingText;
         public int reductionFromWall;
@@ -32,7 +34,10 @@ namespace Vurbiri.Colonization
         public FileIdAndKey swapText;
         public Color swapHexColor;
         public float swapShowTime;
-        [Space]
+        [Header("Zeal")]
+        public int zealPercentHeal;
+        public int zealAddAP;
+        [Space(15f)]
         public IdArray<EconomicSpellId, int> economicCost;
         public IdArray<MilitarySpellId, int> militaryCost;
     }

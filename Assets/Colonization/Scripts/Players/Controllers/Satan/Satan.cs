@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
         protected readonly DemonsSpawner _spawner;
 
         protected readonly Subscription<Satan> _eventChanged = new();
-        protected readonly Unsubscriptions _unsubscribers = new();
+
 
         public IReactiveValue<int> Level => _level;
         public IReactiveValue<int> Curse => _curse;
@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        protected Satan(Settings settings) : base(PlayerId.Satan, CONST.DEFAULT_MAX_ACTORS << 1)
+        protected Satan(Settings settings) : base(PlayerId.Satan, CONST.DEFAULT_MAX_DEMONS)
         {
             var storage = GameContainer.Storage.Satan;
             _states = SettingsFile.Load<SatanAbilities>();
@@ -77,12 +77,6 @@ namespace Vurbiri.Colonization
             }
 
             _eventChanged.Invoke(this);
-        }
-
-        public void Dispose()
-        {
-            _unsubscribers.Unsubscribe();
-            _actors.Dispose();
         }
     }
 }

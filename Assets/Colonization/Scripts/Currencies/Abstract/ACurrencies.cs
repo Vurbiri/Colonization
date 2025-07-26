@@ -10,11 +10,12 @@ namespace Vurbiri.Colonization
         public int Count => AllCount;
         public abstract int Amount { get ; }
 
+        public abstract bool IsEmpty { get; }
+
         public abstract int this[int index] { get; }
         public abstract int this[Id<CurrencyId> id] { get; }
 
         public abstract IEnumerator<int> GetEnumerator();
-
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public static bool operator >=(ACurrencies left, ACurrencies right)

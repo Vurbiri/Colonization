@@ -14,9 +14,10 @@ namespace Vurbiri.Colonization
         [SerializeField] private int[] _values = new int[AllCount];
         [SerializeField] private int _amount = 0;
 
-        public override int Amount { get => _amount;}
+        public override int Amount => _amount;
+        public override bool IsEmpty => _amount == 0 & _values[CurrencyId.Blood] == 0;
 
-        public override int this[int index] { get => _values[index]; }
+        public override int this[int index] { get => _values[index];}
         public override int this[Id<CurrencyId> id] { get => _values[id.Value]; }
 
         public CurrenciesLite() { }
@@ -85,11 +86,18 @@ namespace Vurbiri.Colonization
             _values[Random.Range(0, MainCount)] += value;
             _amount += value;
         }
-        public void RandomAddRangeMain(int count)
+
+        public void RandomAddRange(int count, int maxId = MainCount)
         {
-            for (int i = 0; i < count; i++)
-                _values[Random.Range(0, MainCount)]++;
             _amount += count;
+            int sign = count < 0 ? -1 : 1; count = sign * count;
+
+            for (int add, index; count > 0; count -= add)
+            {
+                index = Random.Range(0, maxId);
+                add   = Random.Range(1, 2 + (count >> 2));
+                _values[index] += sign * add;
+            }
         }
 
         public void Clear()
@@ -111,6 +119,18 @@ namespace Vurbiri.Colonization
                         sb.AppendFormat(TAG.COLOR_CURRENCY, i, resource.ToString("+#;-#;0"), resource > 0 ? hexPlusColor : hexMinusColor);
                 }
                 sb.Append(TAG.COLOR_OFF);
+            }
+        }
+        public void MainPlusToStringBuilder(StringBuilder sb)
+        {
+            if (_amount > 0)
+            {
+                for (int i = 0, resource; i < MainCount; i++)
+                {
+                    resource = _values[i];
+                    if (resource > 0)
+                        sb.AppendFormat(TAG.CURRENCY, i, resource.ToString("+#;-#;0"));
+                }
             }
         }
         public void MainToStringBuilder(StringBuilder sb)

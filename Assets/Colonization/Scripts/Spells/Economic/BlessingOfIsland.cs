@@ -12,8 +12,8 @@ namespace Vurbiri.Colonization
     {
         sealed private class BlessingOfIsland : ASpell
         {
-            private readonly EffectCode _attackEffectCode = new(SPELL_TYPE, TypeOfPerksId.Economic, BLESS_SKILL_ID, 0);
-            private readonly EffectCode _defenseEffectCode = new(SPELL_TYPE, TypeOfPerksId.Economic, BLESS_SKILL_ID, 1);
+            private readonly EffectCode _attackEffectCode = new(SPELL_TYPE, EconomicSpellId.Type, BLESS_SKILL_ID, 0);
+            private readonly EffectCode _defenseEffectCode = new(SPELL_TYPE, EconomicSpellId.Type, BLESS_SKILL_ID, 1);
             private readonly List<Actor> _blessed = new(8);
             private readonly IHitSFX _sfx;
 
@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
             {
                 _sfx = sfx;
             }
-            public static void Create(IHitSFX sfx) => new BlessingOfIsland(sfx, TypeOfPerksId.Economic, EconomicSpellId.Blessing);
+            public static void Create(IHitSFX sfx) => new BlessingOfIsland(sfx, EconomicSpellId.Type, EconomicSpellId.Blessing);
 
             public override bool Prep(SpellParam param)
             {

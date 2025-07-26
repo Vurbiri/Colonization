@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
             {
                 _cost.Add(GameContainer.Prices.Wall);
             }
-            public static void Create() => new WallBuild(TypeOfPerksId.Military, MilitarySpellId.WallBuild);
+            public static void Create() => new WallBuild(MilitarySpellId.Type, MilitarySpellId.WallBuild);
 
             public override bool Prep(SpellParam param)
             {

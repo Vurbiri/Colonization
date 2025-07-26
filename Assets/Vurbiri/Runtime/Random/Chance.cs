@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri
@@ -15,11 +16,11 @@ namespace Vurbiri
 
         public bool Roll
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if(_value == 0) return false;
-                if((_negentropy += _value) <= 0) return false;
-                if(_negentropy < MAX_CHANCE && Random.Range(0, MAX_CHANCE) >= _negentropy) return false;
+                if((_negentropy += _value) <= 0 || (_negentropy < MAX_CHANCE && Random.Range(0, MAX_CHANCE) >= _negentropy)) 
+                    return false;
 
                 _negentropy -= MAX_CHANCE;
                 return true;
@@ -31,19 +32,22 @@ namespace Vurbiri
             _value = Mathf.Clamp(value, 0, MAX_CHANCE);
             _negentropy = SysRandom.Next(MAX_CHANCE);
         }
-
         public Chance(int value, int negentropy)
         {
             _value = Mathf.Clamp(value, 0, MAX_CHANCE);
             _negentropy = negentropy;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Select<T>(T trueValue, T falseValue) => Roll ? trueValue : falseValue;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Select<T>(T trueValue) => Roll ? trueValue : default;
 
         #region Static methods
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Rolling(int value = 50) => value > 0 && (value >= MAX_CHANCE || Random.Range(0, MAX_CHANCE) < value);
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Select<T>(T trueValue, T falseValue, int value = 50)
         {
             return (value > 0 && (value >= MAX_CHANCE || Random.Range(0, MAX_CHANCE) < value)) ? trueValue : falseValue;

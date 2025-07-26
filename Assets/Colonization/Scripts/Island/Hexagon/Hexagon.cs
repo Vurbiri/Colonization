@@ -203,31 +203,34 @@ namespace Vurbiri.Colonization
             _thisCollider.enabled = true;
             return true;
         }
-        public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
-        {
-            if (_isWater | _owner == null || !_owner.IsCanApplySkill(id, typeAction, out bool isFriendly))
-                return false;
-
-            _mark = s_poolMarks.Get(_thisTransform, false).View(isFriendly);
-            _thisCollider.enabled = _owner.RaycastTarget = true;
-            return true;
-        }
         public void SetUnselectable()
         {
             if (_mark != null & !_isWater)
             {
-                s_poolMarks.Return(_mark);
+                s_poolMarks.Return(_mark); _mark = null;
                 _thisCollider.enabled = false;
-                _mark = null;
             }
         }
-        public void SetOtherOwnerUnselectable()
+
+        public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
         {
-            SetUnselectable();
-            if (_ownerId != PlayerId.Person & _ownerId != PlayerId.None)
-                _owner.RaycastTarget = false;
+            if (_isWater | _ownerId == PlayerId.None || !_owner.IsCanApplySkill(id, typeAction, out bool isFriendly))
+                return false;
+
+            _mark = s_poolMarks.Get(_thisTransform, false).View(isFriendly);
+            _owner.RaycastTarget = true;
+            return true;
         }
 
+        public void SetOwnerUnselectable()
+        {
+            if (_mark != null & !_isWater & _ownerId != PlayerId.None)
+            {
+                s_poolMarks.Return(_mark); _mark = null;
+                _owner.RaycastTarget = false;
+            }
+        }
+        
         public void SetSelectableForSwap()
         {
             _mark = s_poolMarks.Get(_thisTransform, false).View(true);
