@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization
                     s_humans[param.playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
                     _canCast = false;
 
-                    GameContainer.CameraController.ToPosition(hexagon.Position);
+                    GameContainer.CameraController.ToPosition(hexagon);
                 }
             }
         }

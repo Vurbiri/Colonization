@@ -1,8 +1,10 @@
 using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.International;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
+using static Vurbiri.Colonization.GameContainer;
 
 namespace Vurbiri.Colonization
 {
@@ -21,8 +23,8 @@ namespace Vurbiri.Colonization
             private int _currentPlayer;
 
             private Sacrifice(int type, int id) : base(type, id) 
-            { 
-            
+            {
+                Localization.Instance.Subscribe(SetText);
             }
             public static void Create() => new Sacrifice(EconomicSpellId.Type, EconomicSpellId.Sacrifice);
 
@@ -58,11 +60,18 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
+                    s_isCast.True();
                     _currentPlayer = param.playerId;
                     _coroutine = Cast_Cn().Start();
 
                     _canCast = false;
                 }
+            }
+
+            public override void Clear(int type, int id)
+            {
+                Localization.Instance.Unsubscribe(SetText);
+                s_spells[type][id] = null;
             }
 
             public override void Cancel()
@@ -74,27 +83,37 @@ namespace Vurbiri.Colonization
 
             private IEnumerator Cast_Cn()
             {
-                s_isCast.True();
 
                 if (_currentPlayer == PlayerId.Person)
                 {
-                    foreach (var actor in s_actors[_currentPlayer])
-                        actor.SetHexagonSelectable();
+                    foreach (var actor in s_actors[PlayerId.Person])
+                        actor.Hexagon.ShowMark(false);
 
                     _waitButton = MessageBox.Open(_text, _buttons);
                     _waitButton.AddListener(Cancel);
                 }
 
-                _unsubscription = GameContainer.EventBus.EventActorSelect.Add(actor => _waitActor.SetResult(actor));
+                EventBus.EventActorSelect.Add(SetActor);
                 yield return _waitActor.Restart();
 
                 if (_currentPlayer == PlayerId.Person)
                 {
                     _waitButton.Reset();
-                    foreach (var actor in s_actors[_currentPlayer])
-                        actor.SetHexagonUnselectable();
+                    foreach (var actor in s_actors[PlayerId.Person])
+                        actor.Hexagon.HideMark();
                 }
+
+                EventBus.EventActorSelect.Remove(SetActor);
+
+                var sacrifice = _waitActor.Value;
+
+                CameraController.ToPosition(sacrifice.Position);
+                yield return sacrifice.Death_Cn();
+                yield return CameraController.ToPosition(_target.Position);
             }
+
+            private void SetText(Localization localization) => _text = localization.GetText(s_settings.sacrificeText);
+            private void SetActor(Actor actor) => _waitActor.SetResult(actor);
         }
     }
 }

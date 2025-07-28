@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization
                 for (int i = _blessed.Count - 1, skip; i >= 0; i--)
                 {
                     target = _blessed[i];
-                    yield return _sfx.Hit(target.Skin);
+                    yield return _sfx.Hit(null, target.Skin);
 
                     skip = target.Owner != playerId ? 1 : 0;
                     target.AddEffect(new(_attackEffectCode, ActorAbilityId.Attack, TypeModifierId.TotalPercent, value, s_settings.blessDuration, skip));

@@ -85,7 +85,7 @@ namespace Vurbiri.Colonization
             {
                 _value = -Formulas.Damage(damage, _pierce.Apply(target.Abilities[ActorAbilityId.Defense].Value));
 
-                yield return _sfx.Hit(target.Skin);
+                yield return _sfx.Hit(null, target.Skin);
                 target.ApplyEffect(this);
 
                 if (target.IsDead & target.Owner != playerId)

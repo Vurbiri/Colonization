@@ -10,7 +10,7 @@ namespace VurbiriEditor.Colonization.Actors
     public class WarriorsSettingsWindow : EditorWindow
     {
         #region Consts
-        private const string NAME = "Warriors Settings", MENU = MENU_CH_PATH + "Actors/" + NAME;
+        private const string NAME = "Warriors Settings", MENU = MENU_ACTORS_PATH + NAME;
         #endregion
 
         [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;

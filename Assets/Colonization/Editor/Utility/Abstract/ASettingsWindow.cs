@@ -31,9 +31,11 @@ namespace VurbiriEditor.Colonization
                 LabelField(_label, STYLES.H1);
 
                 BeginVertical(GUI.skin.box);
+                {
                     _scrollPos = BeginScrollView(_scrollPos);
-                        PropertyField(_serializedProperty);
+                    PropertyField(_serializedProperty);
                     EndScrollView();
+                }
                 EndVertical();
             }
             EndWindows();

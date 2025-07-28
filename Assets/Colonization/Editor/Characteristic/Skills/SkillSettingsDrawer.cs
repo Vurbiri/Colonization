@@ -118,7 +118,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                         effectsProperty.InsertArrayElementAtIndex(0);
 
                     UnityEditor.EditorGUI.indentLevel--;
-                    DrawObject<AHitScriptableSFX>(SFXsProperty.GetArrayElementAtIndex(i), $"SFX Hit {i}");
+                    DrawObject<APrefabSFXFactory>(SFXsProperty.GetArrayElementAtIndex(i), $"SFX Hit {i}");
                     UnityEditor.EditorGUI.indentLevel++;
                     _position.y += _height;
                     UnityEditor.EditorGUI.PropertyField(_position, effectsProperty, new GUIContent($"Hit {i}"));

@@ -81,13 +81,13 @@ namespace Vurbiri.Colonization.Actors
             return skill.signal;
         }
 
-        public void React(AudioClip clip)
+        public void Impact(AudioClip clip)
         {
             _reactState.Repeat();
             _stateMachine.SetState(_reactState);
 
             if (clip != null)
-                _sfx.React(clip);
+                _sfx.Impact(clip);
         }
 
         public WaitSignal Death()

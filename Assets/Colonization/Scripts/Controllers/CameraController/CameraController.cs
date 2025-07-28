@@ -70,6 +70,7 @@ namespace Vurbiri.Colonization.Controllers
             _machine.SetState(_moveToTargetState);
             return _moveToTargetState.Signal;
         }
+        public WaitSignal ToPosition(IPositionable obj) => ToPosition(obj.Position);
 
         private void OnMove(CallbackContext ctx)
         {

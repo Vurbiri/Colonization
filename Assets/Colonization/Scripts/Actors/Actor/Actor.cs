@@ -146,6 +146,15 @@ namespace Vurbiri.Colonization.Actors
             Interactable = _stateMachine.IsCurrentOrDefaultState(_blockState);
         }
 
+        public IEnumerator Death_Cn()
+        {
+            _currentHex.ExitActor(); _unsubscribers.Unsubscribe();
+
+            Removing();
+            yield return _skin.Death();
+            Dispose();
+        }
+
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
         sealed public override void Dispose()
@@ -173,15 +182,6 @@ namespace Vurbiri.Colonization.Actors
             }
         }
         #endregion
-
-        public IEnumerator Death_Cn()
-        {
-            _currentHex.ExitActor();
-            _unsubscribers.Unsubscribe();
-            Removing();
-            yield return _skin.Death();
-            Dispose();
-        }
 
         private void OnBuff(IPerk perk)
         {

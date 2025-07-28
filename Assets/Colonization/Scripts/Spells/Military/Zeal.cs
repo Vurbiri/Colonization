@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization
                 s_isCast.True();
 
                 yield return GameContainer.CameraController.ToPosition(target.Position);
-                _sfx.Hit(target.Skin);
+                _sfx.Hit(null, target.Skin);
                 target.ApplyEffect(_heal);
 
                 s_isCast.False();

@@ -193,6 +193,15 @@ namespace Vurbiri.Colonization
         public bool IsEnemy(Id<PlayerId> id) => _owner != null && GameContainer.Diplomacy.GetRelation(_ownerId, id) == Relation.Enemy;
         #endregion
 
+        public void ShowMark(bool isGreenMark) => _mark ??= s_poolMarks.Get(_thisTransform, false).View(isGreenMark);
+        public void HideMark()
+        {
+            if (_mark != null)
+            {
+                s_poolMarks.Return(_mark); _mark = null;
+            }
+        }
+
         #region Set(Un)Selectable
         public bool TrySetSelectableFree()
         {
@@ -221,7 +230,6 @@ namespace Vurbiri.Colonization
             _owner.RaycastTarget = true;
             return true;
         }
-
         public void SetOwnerUnselectable()
         {
             if (_mark != null & !_isWater & _ownerId != PlayerId.None)
