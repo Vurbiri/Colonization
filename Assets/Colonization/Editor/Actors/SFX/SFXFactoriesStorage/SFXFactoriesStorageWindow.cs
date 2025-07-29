@@ -9,13 +9,13 @@ namespace VurbiriEditor.Colonization
 {
 	public class SFXFactoriesStorageWindow : EditorWindow
 	{
-		#region Consts
 		private const string NAME = "SFX Factories", MENU = MENU_ACTORS_PATH + NAME;
-		#endregion
-		
-		[SerializeField] private SFXFactoriesStorage _scriptable;
-		
-		private Editor _editor;
+        
+		private readonly string _defaultPath = "Assets/Colonization/HitSFX", _defaultName = "FactoriesStorage";
+
+        [SerializeField] private SFXFactoriesStorage _scriptable;
+
+        private Editor _editor;
 
         [MenuItem(MENU)]
 		private static void ShowWindow()
@@ -27,18 +27,31 @@ namespace VurbiriEditor.Colonization
 		{
 			if(_scriptable == null)
 				_scriptable = EUtility.FindAnyScriptable<SFXFactoriesStorage>();
-			
-			_editor = Editor.CreateEditor(_scriptable);		
+            
+			if (_scriptable != null)
+                _editor = Editor.CreateEditor(_scriptable);		
 		}
 		
 		private void OnGUI()
 		{
 			BeginWindows();
 			{
-				Space(10f);
-				LabelField(NAME, STYLES.H1);
-
-                _editor.OnInspectorGUI();
+                Space(10f);
+                LabelField(NAME, STYLES.H1);
+                if (_editor == null)
+				{
+					if (GUILayout.Button("Create"))
+					{
+                        _scriptable = EUtility.CreateScriptable<SFXFactoriesStorage>(_defaultName, _defaultPath);
+                        if (_scriptable != null)
+                            _editor = Editor.CreateEditor(_scriptable);
+                    }
+                }
+				else
+				{
+                    _editor.OnInspectorGUI();
+                }
+					
             }
 			EndWindows();
 		}

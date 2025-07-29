@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
@@ -10,10 +9,9 @@ namespace Vurbiri.Colonization.Actors
     {
         [SerializeField] protected float _heightDeath = -3.5f;
         [SerializeField] protected float _durationDeath = 1f;
-        [ReadOnly, SerializeField] protected HitsSFXSettings _scriptablesSFX = new();
+        [ReadOnly, SerializeField] protected SkillSFX[] _skillSFX;
 
         protected Transform _thisTransform;
-        protected HitsSFX _hitsSFX;
         protected AudioSource _audioSource;
 
         public abstract Transform StartTransform { get; }
@@ -23,16 +21,13 @@ namespace Vurbiri.Colonization.Actors
 		{
             _thisTransform = transform;
             _audioSource = GetComponent<AudioSource>();
-
-            _hitsSFX = _scriptablesSFX.GetHitsSFX();
-            _scriptablesSFX = null;
         }
 
         public virtual void Impact(AudioClip clip) => _audioSource.PlayOneShot(clip);
 
         public virtual void Block(bool isActive) { }
 
-        public virtual IEnumerator Hit(int idSkill, int idHit, ActorSkin target) => _hitsSFX[idSkill, idHit].Hit(this, target);
+        public virtual IEnumerator Hit(int idSkill, int idHit, ActorSkin target) => GameContainer.HitSFX.Hit(_skillSFX[idSkill][idHit], this, target);
 
         public virtual void Death() { }
 
@@ -48,141 +43,40 @@ namespace Vurbiri.Colonization.Actors
             }
         }
 
-        #region Nested: HitsSFX
-        //***********************************
-        protected class HitsSFX
-        {
-            private readonly IHitSFX[] _instances;
-            private readonly int[][] _hits;
-
-            public IHitSFX this[int x, int y] => _instances[_hits[x][y]];
-
-            public HitsSFX(int[] countHits, List<ScriptableSFX> scriptables)
-            {
-                int count = countHits.Length, countIDs;
-                _hits = new int[count][];
-                for (int i = 0; i < count; i++)
-                    _hits[i] = new int[countHits[i]];
-
-                count = scriptables.Count;
-                _instances = new IHitSFX[count];
-
-                ScriptableSFX scriptable; List<ID> ids; ID id;
-                for (int i = 0; i < count; i++)
-                {
-                    scriptable = scriptables[i];
-
-                    _instances[i] = scriptable.Instantiate();
-
-                    ids = scriptable.IDs;
-                    countIDs = ids.Count;
-                    for (int j = 0; j < countIDs; j++)
-                    {
-                        id = ids[j];
-                        _hits[id.skill][id.hit] = i;
-                    }
-                }
-            }
-        }
-        #endregion
-        #region Nested: HitsSFXSettings
+        #region Nested: SkillSFX
         //***********************************
         [Serializable]
-        protected class HitsSFXSettings
+        protected class SkillSFX
         {
-            [SerializeField] private List<ScriptableSFX> _scriptables;
-            [SerializeField] private int[] _countHits;
+            [SerializeField] private string[] _hitSFX;
 
-            public HitsSFX GetHitsSFX() => new(_countHits, _scriptables);
+            public string this[int index] => _hitSFX[index];
 
 #if UNITY_EDITOR
-            public void SetCountSkills(int count)
+            public void SetSize_Ed(int count)
             {
-                _countHits = new int[count];
-                _scriptables = new();
+                if (_hitSFX == null || _hitSFX.Length != count)
+                    _hitSFX = new string[count];
             }
-
-            public void SetCountHits(int idSkill, int count)
-            {
-                _countHits[idSkill] = count;
-            }
-
-            public void Add(int idSkill, int idHit, ScriptableSFX scriptables)
-            {
-                if (_scriptables == null)
-                    return;
-
-                int index = _scriptables.IndexOf(scriptables);
-                if(index == -1)
-                    _scriptables.Add(scriptables);
-                else
-                    scriptables = _scriptables[index];
-
-                scriptables.IDAdd(new(idSkill, idHit));
-            }
+            public void SetValue_Ed(int index, string value) => _hitSFX[index] = value;
 #endif
-        }
-        #endregion
-        #region Nested: ScriptableSFX
-        //***********************************
-        [Serializable]
-        protected class ScriptableSFX : IEquatable<ScriptableSFX>
-        {
-            [SerializeField] private APrefabSFXFactory _sfx;
-            [SerializeField] private List<ID> _ids = new();
 
-            public List<ID> IDs => _ids;
-
-            public ScriptableSFX(APrefabSFXFactory sfx)
-            {
-                _sfx = sfx;
-            }
-
-            public void IDAdd(ID id) => _ids.Add(id);
-
-            public IHitSFX Instantiate()
-            {
-                if (_sfx == null)
-                    return new EmptySFX();
-
-                return _sfx.Create();
-            }
-
-            public bool Equals(ScriptableSFX other)
-            {
-                if(other is null) return false;
-
-                return _sfx == other._sfx;
-            }
-            public override bool Equals(object obj) => Equals(obj as ScriptableSFX);
-            public override int GetHashCode()=> _sfx.GetHashCode();
-
-            public static bool operator ==(ScriptableSFX a, ScriptableSFX b) => (a is null & b is null) || (a is not null && a.Equals(b));
-            public static bool operator !=(ScriptableSFX a, ScriptableSFX b) => !(a is null & b is null) && !(a is not null && a.Equals(b));
-        }
-        #endregion
-        #region Nested: ID
-        //***********************************
-        [Serializable]
-        protected class ID
-        {
-            public int skill;
-            public int hit;
-
-            public ID(int skillID, int hitID)
-            {
-                skill = skillID;
-                hit = hitID;
-            }
         }
         #endregion
 
 #if UNITY_EDITOR
 
-        public void SetCountSkillsSFX_EditorOnly(int count) => _scriptablesSFX.SetCountSkills(count);
-        public void SetCountHitsSFX_EditorOnly(int idSkill, int count) => _scriptablesSFX.SetCountHits(idSkill, count);
-
-        public void SetSkillSFX_EditorOnly(int idSkill, int idHit, APrefabSFXFactory sfx) => _scriptablesSFX.Add(idSkill, idHit, new(sfx));
+        public void SetCountSkillsSFX_Ed(int count)
+        {
+            if (_skillSFX == null || _skillSFX.Length != count)
+            {
+                _skillSFX = new SkillSFX[count];
+                for (int i = 0; i < count; i++)
+                    _skillSFX[i] = new();
+            }
+        }
+        public void SetCountHitsSFX_Ed(int idSkill, int count) => _skillSFX[idSkill].SetSize_Ed(count);
+        public void SetSkillSFX_Ed(int idSkill, int idHit, string sfx) => _skillSFX[idSkill].SetValue_Ed(idHit, sfx);
 #endif
     }
 }

@@ -43,7 +43,7 @@ namespace VurbiriEditor.Colonization
 
 		private void UpdateFactories()
 		{
-            _target.Update_Editor();
+            _target.Update_Ed();
             serializedObject.Update();
 
             _factories.Clear();

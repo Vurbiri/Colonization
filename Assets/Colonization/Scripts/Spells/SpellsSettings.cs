@@ -11,6 +11,7 @@ namespace Vurbiri.Colonization
         [Header("Order")]
         public int orderPerMana;
         [Header("Blessing")]
+        public HitSFXName blessSFX;
         public int blessBasa;
         public int blessPerRes;
         public int blessDuration;

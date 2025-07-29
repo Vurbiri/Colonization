@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,13 +10,11 @@ namespace Vurbiri.Colonization.Actors
 
         private ParticleSystem _particle;
 
-        public override IHitSFX Init()
+        public override IHitSFX Init(Action<AMonoSFX> deactivate)
 		{
-            base.Init();
-            
             _particle = GetComponent<ParticleSystem>();
 
-            return this;
+            return base.Init(deactivate); ;
         }
 
         public override IEnumerator Hit(IUserSFX user, ActorSkin target)
@@ -30,7 +29,7 @@ namespace Vurbiri.Colonization.Actors
 
         private void OnParticleSystemStopped()
         {
-            _thisTransform.SetParent(_parent, false);
+            a_deactivate(this);
         }
 	}
 }

@@ -22,7 +22,7 @@ namespace VurbiriEditor.Colonization
             
             MeshFilter meshFilter = EUtility.FindObjectByName<MeshFilter>("Land");
 
-            string path = UnityEditor.EditorUtility.SaveFilePanelInProject(NAME, "LandMesh_001", "mesh", "", "Assets/Colonization/Graphics/3D/");
+            string path = EditorUtility.SaveFilePanelInProject(NAME, "LandMesh_001", "mesh", "", "Assets/Colonization/Graphics/3D/");
 
             if (meshFilter == null | string.IsNullOrEmpty(path))
                 Debug.LogWarning($"MeshFilter: {meshFilter}. Path: {path}");

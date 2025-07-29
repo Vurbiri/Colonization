@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
@@ -15,16 +16,14 @@ namespace Vurbiri.Colonization.Actors
         private readonly WaitSignal _waitActivate = new();
         private float _avgSpeed;
 
-        public override IHitSFX Init()
+        public override IHitSFX Init(Action<AMonoSFX> deactivate)
         {
-            base.Init();
-
             _particle = GetComponent<ParticleSystem>();
             _main = _particle.main;
 
             _avgSpeed = (_main.startSpeed.constantMin + _main.startSpeed.constantMax) / 2f;
 
-            return this;
+            return base.Init(deactivate); ;
         }
 
         public override IEnumerator Hit(IUserSFX user, ActorSkin target)
@@ -56,8 +55,8 @@ namespace Vurbiri.Colonization.Actors
             target.Impact(_clipHit);
 
             yield return _waitTime.Restart(0.25f);
-            
-            _thisTransform.SetParent(_parent, false);
+
+            a_deactivate(this);
         }
 
     }

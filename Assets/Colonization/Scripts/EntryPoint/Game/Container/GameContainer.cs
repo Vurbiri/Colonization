@@ -99,6 +99,12 @@ namespace Vurbiri.Colonization
             get => s_content.sharedAudioSource;
         }
 
+        public static SFXStorage HitSFX
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => s_content.actorSFXs;
+        }
+
         public new class UI : ProjectContainer.UI
         {
             public static WorldHint WorldHint

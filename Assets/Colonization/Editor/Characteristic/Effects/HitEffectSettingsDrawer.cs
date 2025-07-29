@@ -41,7 +41,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private readonly HashSet<int> _nonReflect = new() { CurrentAP, IsMove };
         #endregion
 
-        private readonly Color _positive = new(0.5f, 1f, 0.3f, 1f), _negative = new(1f, 0.5f, 0.3f, 1f);
+        private readonly Color _positive = new(0.5f, 1f, 0.3f, 1f), _negative = new(1f, 0.5f, 0.3f, 1f), _void = new(0.1f, 0.1f, 0.1f, 1f);
 
         protected override void OnGUI()
         {
@@ -103,7 +103,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if (property.intValue < 0)
                     return (NAME_NEGATIVE, _negative);
 
-                return (NAME_VOID, new(0.1f, 0.1f, 0.1f, 1f));
+                return (NAME_VOID, _void);
             }
             //==============================================
             void GetTargetSkill(out bool isTargetSkillSelf, out bool isTargetSkillEnemy)
@@ -115,13 +115,17 @@ namespace VurbiriEditor.Colonization.Characteristics
             //==============================================
             void DrawUsedAttack(bool isTarget, bool isTargetEnemy)
             {
+                                
                 Space();
                 indentLevel++;
 
                 SetInt(P_TARGET_ABILITY, CurrentHP);
                 SetInt(P_TYPE_OP, TypeModifierId.TotalPercent);
 
-                DrawRateValue("Attack (%)", 5, 300, 100, isTargetEnemy ? -1 : 1);
+                if (isTargetEnemy)
+                    DrawRateValue("Attack (%)", 5, 300, 100, -1);
+                else
+                    DrawRateValue("Heal (%)", 5, 300, 100, 1);
 
                 if (isTargetEnemy)
                     DrawInt(P_PIERCE, "Pierce (%)", 0, 100);

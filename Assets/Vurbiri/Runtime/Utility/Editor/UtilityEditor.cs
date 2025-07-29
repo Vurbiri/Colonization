@@ -39,7 +39,7 @@ namespace Vurbiri
         }
         public static void SetObjects<T>(ref T[] arr, int count = -1) where T : Component
         {
-            if (arr != null && (arr.Length == count)) 
+            if (arr != null && (arr.Length == count))
                 return;
 
             arr = Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -147,8 +147,8 @@ namespace Vurbiri
         public static GameObject FindAnyPrefab(string name)
         {
             foreach (var guid in FindGUIDPrefabs(name))
-               return LoadMainAssetAtGUID(guid);
-            
+                return LoadMainAssetAtGUID(guid);
+
             return null;
         }
 
@@ -197,6 +197,21 @@ namespace Vurbiri
                     list.Add(scriptable);
 
             return list;
+        }
+
+        public static T CreateScriptable<T>(string defaultName, string defaultPath) where T : ScriptableObject
+        {
+            string path = EditorUtility.SaveFilePanelInProject("", defaultName, "asset", "", defaultPath);
+            if (!string.IsNullOrEmpty(path))
+            {
+                T asset = ScriptableObject.CreateInstance<T>();
+
+                AssetDatabase.CreateAsset(asset, path);
+                AssetDatabase.SaveAssets();
+
+                return asset;
+            }
+            return null;
         }
 
         public static T FindAnyAsset<T>() where T : Object

@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private TextMeshPro _currentValueTMP;
 
         private Transform _barTransform;
-		private int _currentValue = int.MaxValue, _maxValue = int.MaxValue;
+		private int _currentValue = int.MaxValue >> ActorAbilityId.SHIFT_ABILITY, _maxValue = int.MaxValue;
         private PopupWidget3D _popup;
         private Sprite _sprite;
         private Unsubscriptions _unsubscribers;
@@ -46,29 +46,31 @@ namespace Vurbiri.Colonization.Actors
 
             _sprite = _hpSprite.sprite;
 
-            _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe(SetMaxValue);
-            _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(SetCurrentValue);
+            _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe(OnMaxValue);
+            _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(OnValue);
         }
 
-        private void SetMaxValue(int value)
+        private void OnMaxValue(int value)
         {
-            _maxValueTMP.text = (value >> ActorAbilityId.SHIFT_ABILITY).ToString();
+            value >>= ActorAbilityId.SHIFT_ABILITY;
+            _maxValueTMP.text = value.ToString();
             _maxValue = value;
+
             SetCurrentValue(_currentValue);
         }
+        private void OnValue(int value) => SetCurrentValue(value >> ActorAbilityId.SHIFT_ABILITY);
 
         private void SetCurrentValue(int value)
         {
-            int shiftedValue = value >> ActorAbilityId.SHIFT_ABILITY;
-            _currentValueTMP.text = shiftedValue.ToString();
+            _currentValueTMP.text = value.ToString();
 
             float width = SP_WIDTH * value / _maxValue;
             _barSprite.size = new(width, SP_HIGHT);
             _barTransform.localPosition = new((width - SP_WIDTH) * 0.5f, 0f, 0f);
 
-            _popup.Run(shiftedValue - _currentValue, _sprite);
+            _popup.Run(value - _currentValue, _sprite);
 
-            _currentValue = shiftedValue;
+            _currentValue = value;
         }
 
         private void OnDestroy()

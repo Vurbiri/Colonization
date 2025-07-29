@@ -24,6 +24,8 @@ namespace Vurbiri.Colonization.EntryPoint
         public Crossroads crossroads;
         public Players players;
 
+        public SFXStorage actorSFXs;
+
         public Pool<EffectsBar> poolEffectsBar;
 
         public WorldHint worldHint;

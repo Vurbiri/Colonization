@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.Characteristics
 
 #if UNITY_EDITOR
         public AnimationClipSettingsScriptable clipSettings;
-        public APrefabSFXFactory[] SFXHits;
+        public HitSFXName[] hitSFXs;
 #endif
 
         public TargetOfSkill Target => _target;

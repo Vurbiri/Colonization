@@ -1,5 +1,6 @@
 {
-  "orderPerMana": 5,
+  "orderPerMana": 0,
+  "blessSFX": "Buff",
   "blessBasa": 0,
   "blessPerRes": 0,
   "blessDuration": 0,
@@ -12,49 +13,49 @@
   ],
   "sacrificeHPPercent": 0,
   "sacrificePierce": 0,
-  "bloodTradePay": 3,
-  "bloodTradeBay": 2,
+  "bloodTradePay": 0,
+  "bloodTradeBay": 0,
   "maraudingText": [
-    "1",
-    "SpellMaraudingMsg"
+    "0",
+    "── None ──"
   ],
-  "reductionFromWall": 30,
+  "reductionFromWall": 0,
   "maraudingCount": [
-    1,
-    2,
-    1,
-    2,
-    1
+    0,
+    0,
+    0,
+    0,
+    0
   ],
   "swapText": [
-    "1",
-    "SpellSwapIdMsg"
+    "0",
+    "── None ──"
   ],
   "swapHexColor": [
-    0.270588249,
-    0.270588249,
-    1.0,
-    1.0
+    0.0,
+    0.0,
+    0.0,
+    0.0
   ],
-  "swapShowTime": 13.0,
-  "zealPercentHeal": 15,
-  "zealAddAP": 4,
+  "swapShowTime": 0.0,
+  "zealPercentHeal": 0,
+  "zealAddAP": 0,
   "economicCost": [
-    1,
-    2,
-    3,
-    4,
-    1,
+    0,
+    0,
+    0,
+    0,
+    0,
     0,
     0
   ],
   "militaryCost": [
     0,
-    1,
-    2,
-    3,
-    3,
-    4,
-    5
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
   ]
 }

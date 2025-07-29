@@ -4,7 +4,7 @@ namespace Vurbiri
 {
     public static class WaitResult
     {
-        public static WaitResult<T> Instant<T>(T result) => new WaitResultSource<T>(result, false);
+        public static WaitResult<T> Instant<T>(T result) => new WaitResultSource<T>(false, result);
     }
 
     public abstract class WaitResult<T> : IWait
@@ -18,6 +18,8 @@ namespace Vurbiri
 
         public bool MoveNext() => _isWait;
         public void Reset() { }
+
+        public static implicit operator T(WaitResult<T> wait) => wait._value;
     }
 
     public class WaitResultSource<T> : WaitResult<T>
@@ -34,24 +36,24 @@ namespace Vurbiri
             _isWait = true;
             _default = defaultValue;
         }
-        internal WaitResultSource(T value, bool plug)
+        internal WaitResultSource(bool isWait, T value)
         {
-            _isWait = false;
+            _isWait = isWait;
             _value = value;
         }
 
         public WaitResult<T> SetResult(T result)
         {
-            _value = result;
             _isWait = false;
+            _value = result;
 
             return this;
         }
 
         public WaitResultSource<T> Recreate()
         {
-            _value = _default;
             _isWait = false;
+            _value = _default;
 
             return new(_default);
         }

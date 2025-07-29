@@ -14,7 +14,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string NAME_ELEMENT = "Skill {0}";
         private const string P_RANGE = "_range", P_DISTANCE = "_distance", P_TARGET = "_target", P_COST = "_cost";
         private const string P_HITS = "_effectsHitsSettings", P_UI = "_ui";
-        private const string P_CLIP = "clipSettings", P_SFX = "SFXHits";
+        private const string P_CLIP = "clipSettings", P_SFX = "hitSFXs";
         private const string P_EFFECTS = "_effects";
         private const string P_SPRITE = "_sprite", P_KEY_NAME = "_idNameKey", P_COST_UI = "_cost";
         private const string P_CHILD_TARGET = "_parentTarget";
@@ -69,7 +69,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
                     indentLevel--;
 
-                    DrawLine(40f);
+                    
                     DrawHits(clip.hitTimes.Length, target);
                  }
 
@@ -79,7 +79,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             indentLevel--;
             EndProperty();
 
-            #region Local: DrawButton(...)
+            #region Local: DrawButton(..), DrawHits(..)
             //=================================
             void DrawButton(UnityEngine.Object activeObject)
             {
@@ -107,8 +107,10 @@ namespace VurbiriEditor.Colonization.Characteristics
                 SerializedProperty SFXsProperty = GetProperty(P_SFX);
                 SerializedProperty hitsProperty = GetProperty(P_HITS);
 
-                SFXsProperty.arraySize = count;
-                hitsProperty.arraySize = count;
+                if (SFXsProperty.arraySize != count) SFXsProperty.arraySize = count;
+                if (hitsProperty.arraySize != count) hitsProperty.arraySize = count;
+
+                Color lineColor;
                 
                 SerializedProperty effectsProperty, effectProperty;
                 for (int i = 0; i < count; i++)
@@ -117,11 +119,22 @@ namespace VurbiriEditor.Colonization.Characteristics
                     if (effectsProperty.arraySize == 0)
                         effectsProperty.InsertArrayElementAtIndex(0);
 
-                    UnityEditor.EditorGUI.indentLevel--;
-                    DrawObject<APrefabSFXFactory>(SFXsProperty.GetArrayElementAtIndex(i), $"SFX Hit {i}");
-                    UnityEditor.EditorGUI.indentLevel++;
+                    lineColor = target switch
+                    {
+                        TargetOfSkill.Enemy  => Color.red,
+                        TargetOfSkill.Friend => Color.green,
+                        TargetOfSkill.Self   => Color.magenta,
+                        _                    => Color.gray,
+                    };
+
+                    DrawLine(lineColor, 40f);
+
+                    indentLevel--;
                     _position.y += _height;
-                    UnityEditor.EditorGUI.PropertyField(_position, effectsProperty, new GUIContent($"Hit {i}"));
+                    PropertyField(_position, SFXsProperty.GetArrayElementAtIndex(i), new GUIContent($"SFX Hit {i}"));
+                    indentLevel++;
+                    _position.y += _height;
+                    PropertyField(_position, effectsProperty, new GUIContent($"Hit {i}"));
                     
                     for (int j = 0; j < effectsProperty.arraySize; j++)
                     {
