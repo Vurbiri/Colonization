@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
@@ -29,10 +28,9 @@ namespace Vurbiri.Colonization
         [Space]
         [SerializeField, Range(2f, 6f)] private float _buildingSpeed = 4.3f;
 
-        private readonly Subscription<Road> _onDisable = new();
+        private Action<Road> a_onDisable;
         private readonly WaitRealtime _waitClip = new(CLIP_DELAY);
         private readonly WaitSignal _waitSignal = new();
-        private Transform _thisTransform;
         private readonly Transform[] _particleTransforms = new Transform[R_SFX_COUNT];
         private Links _links;
         private Points _points;
@@ -45,28 +43,35 @@ namespace Vurbiri.Colonization
         private GradientAlphaKey[] _defaultAlphaKey;
         private GradientAlphaKey[] LineAlphaKeys { set { _gradient.alphaKeys = value; _roadRenderer.colorGradient = _gradient; } }
 
-        public Transform Transform => _thisTransform;
-
         public int SortingOrder { set =>  _roadRenderer.sortingOrder = BASE_ORDER - value; }
         public int Count => _links.Count;
 
         public Road Init(Gradient gradient, int id, Action<Road> onDisable)
         {
-            Setup(gradient, id);
-
-            _onDisable.Add(onDisable);
-            _thisTransform = transform;
+            a_onDisable = onDisable;
             for (int i = 0; i < R_SFX_COUNT; i++)
                 _particleTransforms[i] = _removeSFX[i].ParticleSystem.transform;
 
-            return this;
+
+            return Setup(gradient, id);
         }
 
-        public Road Setup(Gradient gradient, int id, Transform parent)
+        public Road Setup(Gradient gradient, int id)
         {
-            _thisTransform.SetParent(parent, false);
+            _rateWave = new(_rateWave, _widthRoad);
 
-            Setup(gradient, id);
+            _roadRenderer.sortingOrder = BASE_ORDER - id;
+
+            _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
+
+            _roadRenderer.colorGradient = gradient;
+            _defaultAlphaKey = gradient.alphaKeys;
+            _gradient = _roadRenderer.colorGradient;
+
+            _textureScale = new Vector2(_textureXRange, _textureYRange);
+            _textureScaleX = _textureScale.x;
+
+            gameObject.SetActive(true);
 
             return this;
         }
@@ -167,7 +172,8 @@ namespace Vurbiri.Colonization
         public void Disable()
         {
             _points.Clear();
-            _onDisable.Invoke(this);
+            gameObject.SetActive(false);
+            a_onDisable.Invoke(this);
         }
 
         private void RoadRemove(CrossroadLink link, int index)
@@ -256,22 +262,6 @@ namespace Vurbiri.Colonization
             _audioSource.PlayOneShot(_removeClip);
             yield return _waitClip.Restart();
             s_playRemoveClip = null;
-        }
-
-        private void Setup(Gradient gradient, int id)
-        {
-            _rateWave = new(_rateWave, _widthRoad);
-
-            _roadRenderer.sortingOrder = BASE_ORDER - id;
-
-            _roadRenderer.startWidth = _roadRenderer.endWidth = _widthRoad;
-
-            _roadRenderer.colorGradient = gradient;
-            _defaultAlphaKey = gradient.alphaKeys;
-            _gradient = _roadRenderer.colorGradient;
-
-            _textureScale = new Vector2(_textureXRange, _textureYRange);
-            _textureScaleX = _textureScale.x;
         }
 
 #if UNITY_EDITOR

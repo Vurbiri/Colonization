@@ -40,16 +40,13 @@ namespace Vurbiri.Colonization.Characteristics
 
         private void OnMaxChange(int value)
         {
-            int delta = value - _maxValue;
-            if (delta == 0)
-                return;
+            if (value != _maxValue)
+            {
+                int current = (int)Math.Round((double)_value * value / _maxValue);
+                _maxValue = value;
 
-            _maxValue = value;
-
-            if (delta > 0)
-                Set(_value + delta);
-            else
-                Set(_value);
+                Set(current);
+            }
         }
     }
 }

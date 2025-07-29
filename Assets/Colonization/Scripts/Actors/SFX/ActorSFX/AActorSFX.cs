@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
         protected Transform _thisTransform;
         protected AudioSource _audioSource;
 
-        public abstract Transform StartTransform { get; }
+        public abstract Vector3 StartPosition { get; }
         public AudioSource AudioSource => _audioSource;
 
         protected virtual void Awake()

@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
 {
     public interface IUserSFX
 	{
-        public Transform StartTransform { get; }
+        public Vector3 StartPosition { get; }
         public AudioSource AudioSource { get; }
 	}
 }

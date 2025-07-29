@@ -5,23 +5,23 @@ namespace Vurbiri.Reactive
 {
     public class Subscription : ISubscription
     {
-        protected Action actions;
+        protected Action a_delegate;
 
-        public Subscription() => actions = Empty;
+        public Subscription() => a_delegate = Empty;
 
         public Unsubscription Add(Action action)
         {
             Throw.IfNull(action, "action");
             
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action>(this, action);
         }
 
-        public void Invoke() => actions();
+        public void Invoke() => a_delegate();
 
-        public void Remove(Action action) => actions -= action;
-        public void Clear() => actions = Empty;
+        public void Remove(Action action) => a_delegate -= action;
+        public void Clear() => a_delegate = Empty;
 
         private static void Empty() { }
     }
@@ -29,16 +29,16 @@ namespace Vurbiri.Reactive
 
     public class Subscription<T> : ISubscription<T>
     {
-        protected Action<T> actions;
+        protected Action<T> a_delegate;
 
-        public Subscription() => actions = Empty;
+        public Subscription() => a_delegate = Empty;
 
         public Unsubscription Add(Action<T> action)
         {
             Throw.IfNull(action, "action");
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<T>>(this, action);
         }
 
@@ -48,8 +48,8 @@ namespace Vurbiri.Reactive
 
             action(value);
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<T>>(this, action);
         }
 
@@ -59,8 +59,8 @@ namespace Vurbiri.Reactive
 
             if (instantGetValue) action(value);
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<T>>(this, action);
         }
 
@@ -72,8 +72,8 @@ namespace Vurbiri.Reactive
             for (int i = 0; i < count; i++)
                 action(values[i]);
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<T>>(this, action);
         }
 
@@ -88,8 +88,8 @@ namespace Vurbiri.Reactive
                     action(values[i]);
             }
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<T>>(this, action);
         }
 
@@ -101,8 +101,8 @@ namespace Vurbiri.Reactive
             for (int i = 0; i < count; i++)
                 action(get(values[i]));
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<T>>(this, action);
         }
 
@@ -117,31 +117,31 @@ namespace Vurbiri.Reactive
                     action(get(values[i]));
             }
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<T>>(this, action);
         }
 
-        public void Invoke(T value) => actions.Invoke(value);
+        public void Invoke(T value) => a_delegate.Invoke(value);
 
-        public void Remove(Action<T> action) => actions -= action;
-        public void Clear() => actions = Empty;
+        public void Remove(Action<T> action) => a_delegate -= action;
+        public void Clear() => a_delegate = Empty;
 
         private static void Empty(T t) { }
     }
     //=======================================================================================
     public class Subscription<TA, TB> : ISubscription<TA, TB>
     {
-        protected Action<TA, TB> actions;
+        protected Action<TA, TB> a_delegate;
 
-        public Subscription() => actions = Empty;
+        public Subscription() => a_delegate = Empty;
 
         public Unsubscription Add(Action<TA, TB> action)
         {
             Throw.IfNull(action, "action");
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<TA, TB>>(this, action);
         }
 
@@ -151,8 +151,8 @@ namespace Vurbiri.Reactive
 
             action(valueA, valueB);
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<TA, TB>>(this, action);
         }
 
@@ -162,31 +162,31 @@ namespace Vurbiri.Reactive
 
             if (instantGetValue) action(valueA, valueB);
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<TA, TB>>(this, action);
         }
 
-        public void Invoke(TA valueA, TB valueB) => actions.Invoke(valueA, valueB);
+        public void Invoke(TA valueA, TB valueB) => a_delegate.Invoke(valueA, valueB);
 
-        public void Remove(Action<TA, TB> action) => actions -= action;
-        public void Clear() => actions = Empty;
+        public void Remove(Action<TA, TB> action) => a_delegate -= action;
+        public void Clear() => a_delegate = Empty;
 
         private static void Empty(TA ta, TB tb) { }
     }
     //=======================================================================================
     public class Subscription<TA, TB, TC> : ISubscription<TA, TB, TC>
     {
-        protected Action<TA, TB, TC> actions;
+        protected Action<TA, TB, TC> a_delegate;
 
-        public Subscription() => actions = Empty;
+        public Subscription() => a_delegate = Empty;
 
         public Unsubscription Add(Action<TA, TB, TC> action)
         {
             Throw.IfNull(action, "action");
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<TA, TB, TC>>(this, action);
         }
 
@@ -196,8 +196,8 @@ namespace Vurbiri.Reactive
 
             action(valueA, valueB, valueC);
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<TA, TB, TC>>(this, action);
         }
 
@@ -207,31 +207,31 @@ namespace Vurbiri.Reactive
 
             if (instantGetValue) action(valueA, valueB, valueC);
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<TA, TB, TC>>(this, action);
         }
 
-        public void Invoke(TA valueA, TB valueB, TC valueC) => actions.Invoke(valueA, valueB, valueC);
+        public void Invoke(TA valueA, TB valueB, TC valueC) => a_delegate.Invoke(valueA, valueB, valueC);
 
-        public void Remove(Action<TA, TB, TC> action) => actions -= action;
-        public void Clear() => actions = Empty;
+        public void Remove(Action<TA, TB, TC> action) => a_delegate -= action;
+        public void Clear() => a_delegate = Empty;
 
         private static void Empty(TA ta, TB tb, TC tc) { }
     }
     //=======================================================================================
     public class Subscription<TA, TB, TC, TD> : ISubscription<TA, TB, TC, TD>
     {
-        protected Action<TA, TB, TC, TD> actions;
+        protected Action<TA, TB, TC, TD> a_delegate;
 
-        public Subscription() => actions = Empty;
+        public Subscription() => a_delegate = Empty;
 
         public Unsubscription Add(Action<TA, TB, TC, TD> action)
         {
             Throw.IfNull(action, "action");
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<TA, TB, TC, TD>>(this, action);
         }
 
@@ -241,8 +241,8 @@ namespace Vurbiri.Reactive
 
             action(valueA, valueB, valueC, valueD);
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<TA, TB, TC, TD>>(this, action);
         }
 
@@ -252,15 +252,15 @@ namespace Vurbiri.Reactive
 
             if (instantGetValue) action(valueA, valueB, valueC, valueD);
 
-            actions -= action;
-            actions += action;
+            a_delegate -= action;
+            a_delegate += action;
             return new Unsubscription<Action<TA, TB, TC, TD>>(this, action);
         }
 
-        public void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => actions.Invoke(valueA, valueB, valueC, valueD);
+        public void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => a_delegate.Invoke(valueA, valueB, valueC, valueD);
 
-        public void Remove(Action<TA, TB, TC, TD> action) => actions -= action;
-        public void Clear() => actions = Empty;
+        public void Remove(Action<TA, TB, TC, TD> action) => a_delegate -= action;
+        public void Clear() => a_delegate = Empty;
 
         private static void Empty(TA ta, TB tb, TC tc, TD td) { }
     }

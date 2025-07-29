@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization.Actors
 
         private async static void SetNames_Ed()
         {
-            await System.Threading.Tasks.Task.Delay(5);
+            await System.Threading.Tasks.Task.Delay(3);
             if (!Application.isPlaying)
                 SetNames_Ed(EUtility.FindScriptables<ASFXFactory>());
         }

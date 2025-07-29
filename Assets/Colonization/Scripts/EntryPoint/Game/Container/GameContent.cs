@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public WorldHint worldHint;
         public CanvasHint canvasHint;
 
-        public Transform sharedRepository;
+        public Transform sharedContainer;
         public AudioSource sharedAudioSource;
 
         public void Init(Camera camera, InputController.Settings input, CameraController controller)

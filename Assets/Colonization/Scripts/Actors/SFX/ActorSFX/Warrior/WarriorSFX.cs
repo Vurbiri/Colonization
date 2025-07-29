@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] protected float _startScale = 0.01f;
         [SerializeField] protected float _durationScaling = 0.8f;
 
-        public override Transform StartTransform => null;
+        public override Vector3 StartPosition { get; } = Vector3.zero;
 
         protected virtual IEnumerator Start()
         {

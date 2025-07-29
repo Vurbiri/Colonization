@@ -14,15 +14,9 @@ namespace Vurbiri.Colonization
         public Road Create(Gradient gradient, int id)
         {
             if (_roads.Count == 0) 
-                return Object.Instantiate(_prefabRoad, _container, false).Init(gradient, id, OnDisable);
+                return Object.Instantiate(_prefabRoad, _container, false).Init(gradient, id, _roads.Push);
 
-            return _roads.Pop().Setup(gradient, id, _container);
-        }
-
-        private void OnDisable(Road road)
-        {
-            _roads.Push(road);
-            road.Transform.SetParent(GameContainer.Repository, false);
+            return _roads.Pop().Setup(gradient, id);
         }
 
 #if UNITY_EDITOR

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private Camera _mainCamera;
         [SerializeField] private CameraController _cameraController;
         [Space]
-        [SerializeField] private Transform _sharedRepository;
+        [SerializeField] private Transform _sharedContainer;
         [SerializeField] private AudioSource _sharedAudioSource;
         [Space]
         [SerializeField] private Actors.SFXFactoriesStorage _actorSFXFactory;
@@ -19,8 +19,8 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public void CreateObjectsAndFillingContainer(GameContent content)
         {
-            _sharedRepository.gameObject.SetActive(false);
-            content.sharedRepository = _sharedRepository;
+            _sharedContainer.gameObject.SetActive(true);
+            content.sharedContainer = _sharedContainer;
             content.sharedAudioSource = _sharedAudioSource;
 
             content.Init(_mainCamera, _inputControllerSettings, _cameraController);
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.EntryPoint
             
             EUtility.SetObject(ref _mainCamera);
             EUtility.SetObject(ref _cameraController);
-            EUtility.SetObject(ref _sharedRepository, "SharedRepository");
+            EUtility.SetObject(ref _sharedContainer, "SharedContainer");
             EUtility.SetObject(ref _sharedAudioSource, "SharedAudioSource");
             
             EUtility.SetScriptable(ref _actorSFXFactory);

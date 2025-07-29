@@ -88,10 +88,10 @@ namespace Vurbiri.Colonization
             get => s_content.diplomacy;
         }
 
-        public static Transform Repository
+        public static Transform Container
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.sharedRepository;
+            get => s_content.sharedContainer;
         }
         public static AudioSource AudioSource
         {

@@ -16,16 +16,8 @@ namespace Vurbiri.Colonization.Actors
 
         protected virtual void OnValidate()
         {
-            if(Application.isPlaying) return;
-            
-            if (string.IsNullOrEmpty(_name))
-            {
-                var name = this.name.Delete("ASFX_");
-                _name = name;
-                Debug.Log($"[FactorySFX] Задано имя <b>\"{_name}\"</b>.");
-            }
-
-            ValidateName_Ed();
+            if(!Application.isPlaying)
+                ValidateName_Ed();
         }
 
         private async void ValidateName_Ed()
@@ -33,6 +25,13 @@ namespace Vurbiri.Colonization.Actors
             do
                 await System.Threading.Tasks.Task.Delay(1);
             while (SFXFactoriesStorage.names_ed == null) ;
+
+            if (string.IsNullOrEmpty(_name))
+            {
+                var name = this.name.Delete("ASFX_");
+                _name = name;
+                Debug.Log($"[FactorySFX] Задано имя <b>\"{_name}\"</b>.");
+            }
 
             if (nameIndex_ed < 0)
             {

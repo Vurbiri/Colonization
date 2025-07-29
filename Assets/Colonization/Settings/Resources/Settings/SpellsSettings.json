@@ -8,16 +8,16 @@
   "wrathPerRes": 0,
   "wrathPierce": 0,
   "sacrificeText": [
-    "0",
-    "── None ──"
+    "1",
+    "Wall"
   ],
   "sacrificeHPPercent": 0,
   "sacrificePierce": 0,
   "bloodTradePay": 0,
   "bloodTradeBay": 0,
   "maraudingText": [
-    "0",
-    "── None ──"
+    "1",
+    "SpellMaraudingMsg"
   ],
   "reductionFromWall": 0,
   "maraudingCount": [
@@ -28,8 +28,8 @@
     0
   ],
   "swapText": [
-    "0",
-    "── None ──"
+    "1",
+    "SpellMaraudingMsg"
   ],
   "swapHexColor": [
     0.0,

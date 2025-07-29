@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.UI
             if (_player.Interactable.Value)
             {
                 SpellParam param = new(0, UnityEngine.Random.Range(0, 5));
-                SpellBook.Cast(EconomicSpellId.Type, EconomicSpellId.HalvingResources, param);
+                SpellBook.Cast(MilitarySpellId.Type, MilitarySpellId.RoadDemolition, param);
             }
             else
             {
