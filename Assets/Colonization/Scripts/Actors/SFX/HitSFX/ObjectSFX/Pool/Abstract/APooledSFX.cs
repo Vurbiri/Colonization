@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
             Disable();
         }
 
-        public abstract IEnumerator Hit(IUserSFX user, ActorSkin target);
+        public abstract IEnumerator Hit(ISFXUser user, ActorSkin target);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

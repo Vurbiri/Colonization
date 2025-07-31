@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Reactive;
 
@@ -19,7 +20,9 @@ namespace Vurbiri.Colonization.Controllers
 
         public Vector3 CameraPosition
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _cameraTransform.localPosition;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set
             {
                 _cameraTransform.localPosition = value;
@@ -40,12 +43,14 @@ namespace Vurbiri.Colonization.Controllers
             _cameraTransform.LookAt(_parentTransform);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Move(Vector3 offset)
         {
             _parentTransform.position = _bounds.ClosestPoint(_parentTransform.position + offset);
             _changedTransform.Invoke(_cameraTransform);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveToTarget(Vector3 target, float smoothTime, float maxSqrVelocity)
         {
             _parentTransform.position = Vector3.SmoothDamp(_parentTransform.position, target, ref _velocity, smoothTime, float.PositiveInfinity, Time.unscaledDeltaTime);
@@ -59,12 +64,14 @@ namespace Vurbiri.Colonization.Controllers
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Rotate(float angleY)
         {
             _parentTransform.rotation *= Quaternion.Euler(0f, angleY, 0f);
             _changedTransform.Invoke(_cameraTransform);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetCameraAndParentPosition(Vector3 cameraPosition, Vector3 parentPosition)
         {
             _parentTransform.position = parentPosition;
@@ -114,6 +121,7 @@ namespace Vurbiri.Colonization.Controllers
             return new(direction.x * rightX + direction.y * forwardX, 0f, direction.x * rightZ + direction.y * forwardZ);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void TransformToLocalPosition(RectTransform target, RectTransform canvas, Vector3 worldPosition)
         {
             Vector3 screenPosition = _camera.WorldToScreenPoint(worldPosition);

@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
@@ -18,7 +17,7 @@ namespace Vurbiri.Colonization
         private static readonly ASpell[] s_militarySpells;
 
         private static readonly RBool s_isCast = new(false);
-        private static readonly WaitResult<bool> s_defaultResult = WaitResult.Instant(false);
+        private static SharedSFXUser s_sfxUser;
 
         public ASpell this[int type, int id] => s_spells[type][id];
 
@@ -54,7 +53,9 @@ namespace Vurbiri.Colonization
 
         public static void Init()
         {
-            Order.Create(); SummonWarlock.Create(); ShuffleResources.Create(); HalvingResources.Create();
+            s_sfxUser = new();
+
+            Order.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); ShuffleResources.Create(); HalvingResources.Create();
 
             BloodTrade.Create(); Spying.Create(); WallBuild.Create(); Marauding.Create(); RoadDemolition.Create(); SwapId.Create();
         }
@@ -66,6 +67,7 @@ namespace Vurbiri.Colonization
 
         public static void Clear()
         {
+            s_sfxUser = null;
             s_isCast.UnsubscribeAll();
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
@@ -82,8 +84,4 @@ namespace Vurbiri.Colonization
         }
     }
 
-    public class SpellCosts : ReadOnlyCollection<ReadOnlyCollection<int>>
-    {
-        public SpellCosts(ReadOnlyCollection<int> e, ReadOnlyCollection<int> m) : base(new ReadOnlyCollection<int>[] { e, m }) { }
-    }
 }

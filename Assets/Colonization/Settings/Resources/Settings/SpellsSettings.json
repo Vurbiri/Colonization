@@ -1,15 +1,16 @@
 {
   "orderPerMana": 0,
-  "blessSFX": "Buff",
-  "blessBasa": 0,
-  "blessPerRes": 0,
-  "blessDuration": 0,
-  "wrathBasa": 0,
-  "wrathPerRes": 0,
-  "wrathPierce": 0,
+  "blessSFX": "ShortBuffWait",
+  "blessBasa": 5,
+  "blessPerRes": 2,
+  "blessDuration": 2,
+  "wrathSFX": "WrathOfIsland",
+  "wrathBasa": 50,
+  "wrathPerRes": 2,
+  "wrathPierce": 25,
   "sacrificeText": [
     "1",
-    "Wall"
+    "SpellSacrificeMsg"
   ],
   "sacrificeHPPercent": 0,
   "sacrificePierce": 0,
@@ -19,7 +20,7 @@
     "1",
     "SpellMaraudingMsg"
   ],
-  "reductionFromWall": 0,
+  "reductionFromWall": 30,
   "maraudingCount": [
     0,
     0,
@@ -29,7 +30,7 @@
   ],
   "swapText": [
     "1",
-    "SpellMaraudingMsg"
+    "SpellSwapIdMsg"
   ],
   "swapHexColor": [
     0.0,

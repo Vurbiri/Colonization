@@ -4,6 +4,6 @@ namespace Vurbiri.Colonization.Actors
     {
         public const string NAME = "Empty";
 
-        public System.Collections.IEnumerator Hit(IUserSFX user, ActorSkin target) => null;
+        public System.Collections.IEnumerator Hit(ISFXUser user, ActorSkin target) => null;
     }
 }

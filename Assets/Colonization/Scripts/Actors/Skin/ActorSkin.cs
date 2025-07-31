@@ -33,6 +33,7 @@ namespace Vurbiri.Colonization.Actors
         public Transform Transform => _thisTransform;
         public SkinnedMeshRenderer Mesh => _mesh;
         public Bounds Bounds => _bounds;
+        public AActorSFX ActorSFX => _sfx;
 
         private void Start()
         {

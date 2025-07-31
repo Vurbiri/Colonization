@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
 
-namespace Vurbiri.Colonization
+namespace Vurbiri.Colonization.Actors
 {
-    sealed public class InstantHitParticle : APooledSFX, IEnumerator
+	public class InstantHitParticle : APooledSFX, IEnumerator
     {
         private readonly AudioClip _clip;
         private readonly ParticleSystem _particle;
@@ -18,12 +17,12 @@ namespace Vurbiri.Colonization
             _particle = creator.particle;
         }
 
-        public override IEnumerator Hit(IUserSFX user, ActorSkin target)
+        public override IEnumerator Hit(ISFXUser user, ActorSkin target)
         {
             Enable(target.Transform.position);
 
+            target.Impact(_clip);
             _particle.Play();
-            user.AudioSource.PlayOneShot(_clip);
 
             this.Start();
 

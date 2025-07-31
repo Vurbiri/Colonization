@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
             _clip = clip;
         }
 
-        public IEnumerator Hit(IUserSFX user, ActorSkin target)
+        public IEnumerator Hit(ISFXUser user, ActorSkin target)
         {
             target.Impact(_clip);
             return null;

@@ -60,6 +60,7 @@
   "PerkIsKnight": "You can recruit Knights",
   "PerkMaxWarrior": "Maximum number of warriors <b>+{0}</b>",
   "PerkIsArtefact": "You can find fragments of the Artifact of Power",
+  "SpellSacrificeMsg": "Select a victim for sacrifice",
   "SpellSwapIdMsg": "Select two hexagons",
   "SpellMaraudingMsg": "Stolen"
 }

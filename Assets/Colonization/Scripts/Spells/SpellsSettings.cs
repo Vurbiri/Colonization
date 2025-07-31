@@ -16,6 +16,7 @@ namespace Vurbiri.Colonization
         public int blessPerRes;
         public int blessDuration;
         [Header("Wrath")]
+        public HitSFXName wrathSFX;
         public int wrathBasa;
         public int wrathPerRes;
         public int wrathPierce;

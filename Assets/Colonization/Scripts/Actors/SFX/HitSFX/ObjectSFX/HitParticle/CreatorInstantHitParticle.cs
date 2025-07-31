@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    sealed public class CreatorRangeParticleSFX : AMonoCreatorSFX
+	public class CreatorInstantHitParticle : AMonoCreatorSFX
     {
-        public AudioClip clipRun, clipHit;
+        public AudioClip clip;
         public ParticleSystem particle;
 
-        public override APooledSFX Create(Action<APooledSFX> deactivate) => new RangeParticleSFX(this, deactivate);
+        public override APooledSFX Create(Action<APooledSFX> deactivate) => new InstantHitParticle(this, deactivate);
 
 #if UNITY_EDITOR
         private void OnValidate()

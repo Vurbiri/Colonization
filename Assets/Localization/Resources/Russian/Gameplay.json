@@ -60,6 +60,7 @@
   "PerkIsKnight": "Можно рекрутировать Рыцарей",
   "PerkMaxWarrior": "Максимальное число воинов <b>+{0}</b>",
   "PerkIsArtefact": "Можно находить осколки Артефакта силы",
+  "SpellSacrificeMsg": "Выберите жертву",
   "SpellSwapIdMsg": "Выберите два гексагона",
   "SpellMaraudingMsg": "Украдено"
 }

@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
-using static Vurbiri.Colonization.Characteristics.ReactiveEffectsFactory;
 using static Vurbiri.Colonization.CurrencyId;
 
 namespace Vurbiri.Colonization
@@ -11,18 +11,11 @@ namespace Vurbiri.Colonization
     {
         sealed private class WrathOfIsland : ASpell
         {
-            private readonly EffectCode _attackEffectCode  = new(SPELL_TYPE, EconomicSpellId.Type, WRATH_SKILL_ID, 0);
-            private readonly SpellDamager _damage;
+            private readonly SpellDamager _damage = new();
             private readonly List<Actor> _targets = new(8);
-            private readonly IHitSFX _sfx;
 
-            private WrathOfIsland(IHitSFX sfx, int type, int id) : base(type, id)
-            {
-                _sfx = sfx;
-                _damage = new(sfx);
-            }
-
-            public static void Create(IHitSFX sfx) => new WrathOfIsland(sfx, EconomicSpellId.Type, EconomicSpellId.Wrath);
+            private WrathOfIsland(int type, int id) : base(type, id) { }
+            public static void Create() => new WrathOfIsland(EconomicSpellId.Type, EconomicSpellId.Wrath);
 
             public override bool Prep(SpellParam param)
             {
@@ -52,45 +45,32 @@ namespace Vurbiri.Colonization
                     _damage.damage = (s_settings.wrathBasa + (param.valueA + param.valueB) * s_settings.wrathPerRes << ActorAbilityId.SHIFT_ABILITY) / _targets.Count;
 
                     s_humans[param.playerId].Pay(_cost);
+
+                    s_isCast.True();
                     Cast_Cn().Start();
+
                     _canCast = false;
                 }
             }
 
             private IEnumerator Cast_Cn()
             {
-                s_isCast.True();
+                int index; Actor target; Vector3 position = GameContainer.CameraTransform.ParentPosition;
+                while (_targets.Count > 0)
+                {
+                    index = FindNearest(position, _targets);
+                    target = _targets[index]; position = target.Position; _targets.RemoveAt(index);
 
-                for (int i = _targets.Count - 1; i >= 0; i--)
-                    yield return _damage.Apply_Cn(_targets[i]);
+                    //yield return GameContainer.CameraController.ToPosition(position);
+                    GameContainer.CameraController.ToPosition(position);
+
+                    _damage.Apply(target);
+
+                    yield return GameContainer.HitSFX.Hit(s_settings.wrathSFX, s_sfxUser, target.Skin);
+                }
 
                 s_isCast.False();
             }
         }
-
-        sealed private class SpellDamager : Effect
-        {
-            private readonly IHitSFX _sfx;
-            private readonly AbilityModifierPercent _pierce;
-            
-            public int damage, playerId;
-
-            public SpellDamager(IHitSFX sfx) : base(ActorAbilityId.CurrentHP, TypeModifierId.Addition, 0)
-            {
-                _sfx = sfx;
-                _pierce = new(100 - s_settings.wrathPierce);
-            }
-
-            public IEnumerator Apply_Cn(Actor target)
-            {
-                _value = -Formulas.Damage(damage, _pierce.Apply(target.Abilities[ActorAbilityId.Defense].Value));
-
-                yield return _sfx.Hit(null, target.Skin);
-                target.ApplyEffect(this);
-
-                if (target.IsDead & target.Owner != playerId)
-                    GameContainer.TriggerBus.TriggerActorKill(playerId, target.TypeId, target.Id);
-            }
-        }
-    }
+    } 
 }

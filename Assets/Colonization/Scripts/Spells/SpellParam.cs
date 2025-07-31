@@ -17,5 +17,11 @@ namespace Vurbiri.Colonization
             this.valueA = valueA;
             valueB = 0;
         }
+        public SpellParam(int playerId, int valueA, int valueB)
+        {
+            this.playerId = playerId;
+            this.valueA = valueA;
+            this.valueB = valueB;
+        }
     }
 }

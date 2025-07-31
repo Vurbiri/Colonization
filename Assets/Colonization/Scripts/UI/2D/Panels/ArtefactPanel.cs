@@ -5,6 +5,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using Vurbiri.Reactive;
@@ -32,15 +33,24 @@ namespace Vurbiri.Colonization.UI
         // TEST
         Artefact _artefact;
         PersonController _player;
+        bool _spawn = false;
 
         public void Test()
         {
             //_artefact.Next(UnityEngine.Random.Range(2, 10));
 
+            if (!_spawn)
+            {
+                _player.SpawnTest(WarriorId.Wizard, 5);
+                _spawn = true;
+                return;
+            }
+
             if (_player.Interactable.Value)
             {
-                SpellParam param = new(0, UnityEngine.Random.Range(0, 5));
-                SpellBook.Cast(MilitarySpellId.Type, MilitarySpellId.RoadDemolition, param);
+                //SpellParam param = new(0, UnityEngine.Random.Range(0, 5), UnityEngine.Random.Range(0, 5));+
+                SpellParam param = new(0);
+                SpellBook.Cast(EconomicSpellId.Type, EconomicSpellId.Wrath, param);
             }
             else
             {

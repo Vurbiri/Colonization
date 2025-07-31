@@ -43,23 +43,22 @@ namespace Vurbiri.Colonization.Actors
                 var names = SFXFactoriesStorage.names_ed;
                 var oldName = names[nameIndex_ed];
 
-                if (oldName != _name)
+                names[nameIndex_ed] = string.Empty;
+
+                for (int i = names.Length - 1; i >= 0; i--)
                 {
-                    names[nameIndex_ed] = string.Empty;
-
-                    for (int i = names.Length - 1; i >= 0; i--)
+                    if (_name == names[i])
                     {
-                        if (_name == names[i])
-                        {
-                            Debug.LogWarning($"[FactorySFX] Имя <b>\"{names[i]}\"</b> занято.");
-                            _name = name.Delete("ASFX_").Concat("_", nameIndex_ed.ToString("D2"));
-                            i = names.Length;
-                        }
+                        Debug.LogWarning($"[FactorySFX] Имя <b>\"{names[i]}\"</b> занято.");
+                        _name = name.Delete("ASFX_").Concat("_", nameIndex_ed.ToString("D2"));
+                        i = names.Length;
                     }
-
-                    Debug.LogWarning($"[FactorySFX] Имя <b>\"{oldName}\"</b> заменено на <b>\"{_name}\"</b>.");
-                    SFXFactoriesStorage.names_ed[nameIndex_ed] = _name;
                 }
+ 
+                SFXFactoriesStorage.names_ed[nameIndex_ed] = _name;
+
+                if (oldName != _name)
+                    Debug.LogWarning($"[FactorySFX] Имя <b>\"{oldName}\"</b> заменено на <b>\"{_name}\"</b>.");
             }
         }
 #endif

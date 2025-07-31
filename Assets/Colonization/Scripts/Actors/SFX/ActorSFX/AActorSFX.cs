@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(AudioSource))]
-    public abstract class AActorSFX : MonoBehaviour, IUserSFX
+    public abstract class AActorSFX : MonoBehaviour, ISFXUser
     {
         [SerializeField] protected float _heightDeath = -3.5f;
         [SerializeField] protected float _durationDeath = 1f;

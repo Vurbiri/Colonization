@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    sealed public class RangeParticleSFX : APooledSFX
+    sealed public class RangeHitParticle : APooledSFX
     {
         private readonly AudioClip _clipRun, _clipHit;
         private readonly ParticleSystem _particle;
@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Actors
         private readonly float _avgSpeed;
         private ParticleSystem.MainModule _main;
 
-        public RangeParticleSFX(CreatorRangeParticleSFX creator, Action<APooledSFX> deactivate) : base(creator, deactivate)
+        public RangeHitParticle(CreatorRangeHitParticle creator, Action<APooledSFX> deactivate) : base(creator, deactivate)
         {
             _clipRun = creator.clipRun; _clipHit = creator.clipHit;
             _particle = creator.particle;
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Actors
             _avgSpeed = (_main.startSpeed.constantMin + _main.startSpeed.constantMax) * 0.5f;
         }
 
-        public override IEnumerator Hit(IUserSFX user, ActorSkin target)
+        public override IEnumerator Hit(ISFXUser user, ActorSkin target)
         {
             Bounds bounds = target.Bounds;
             Vector3 targetPosition = target.Transform.position;

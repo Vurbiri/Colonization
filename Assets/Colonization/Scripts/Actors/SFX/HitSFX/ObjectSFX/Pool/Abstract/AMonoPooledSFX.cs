@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
         protected GameObject _thisGameObject;
         private Action<AMonoPooledSFX> a_deactivate;
 
-        public abstract IEnumerator Hit(IUserSFX user, ActorSkin target);
+        public abstract IEnumerator Hit(ISFXUser user, ActorSkin target);
 
         public virtual AMonoPooledSFX Init(Action<AMonoPooledSFX>  deactivate)
         {

@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Actors
                 Create();
         }
 
-        public IEnumerator Hit(IUserSFX user, ActorSkin target) => (_pool.Count > 0 ? _pool.Pop() : Create()).Hit(user, target);
+        public IEnumerator Hit(ISFXUser user, ActorSkin target) => (_pool.Count > 0 ? _pool.Pop() : Create()).Hit(user, target);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

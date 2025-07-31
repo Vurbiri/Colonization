@@ -39,10 +39,10 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    Hexagons hexagons = GameContainer.Hexagons; Hexagon hexagon;
+                    Hexagon hexagon;
                     if (_count <= _half)
                     {
-                        while (!(hexagon = hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
+                        while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter);
                     }
                     else
                     {
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
                             keys = HEX.NEARS[i];
                             for (int j = keys.Count - 1; j >= 0; j--)
                             {
-                                hexagon = hexagons[keys[j]];
+                                hexagon = GameContainer.Hexagons[keys[j]];
                                 if (hexagon.CanWarriorEnter)
                                     free.Add(hexagon);
                             }

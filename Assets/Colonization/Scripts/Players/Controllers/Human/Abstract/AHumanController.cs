@@ -7,6 +7,21 @@ namespace Vurbiri.Colonization
 	{
         protected AHumanController(int playerId, Settings settings) : base(playerId, settings) { }
 
+        // TSET !!!!!!!!!!!!!!
+        public void SpawnTest(int id, int count)
+        {
+            UnityEngine.Debug.Log("SpawnTest");
+            Hexagon hexagon;
+            for (int i = 0; i < count; i++)
+            {
+                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
+                Warrior warrior = _spawner.Create(id, hexagon);
+                warrior.IsPersonTurn = _isPerson;
+
+                _actors.Add(warrior);
+            }
+        }
+
         public void ActorKill(Id<ActorTypeId> type, int id)
         {
             if (type == ActorTypeId.Demon)
