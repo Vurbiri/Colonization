@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
     public class ProjectColors
 	{
         [Header("┌─────────────────────────────────────")]
-        [SerializeField] private IdArray<ActorAbilityId, Color> _ability;
+        [SerializeField] private ReadOnlyIdArray<ActorAbilityId, Color> _abilities;
         [Header("├──────────── Panel ─────────────────────")]
         [SerializeField] private Color _panelBack;
         [SerializeField] private Color _panelText;
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.UI
         //private const string TAG_COLOR_FORMAT = "<color={0}>";
         private const string TAG_COLOR_FORMAT = "<{0}>";
 
-        public IdArray<ActorAbilityId, Color> Ability => _ability;
+        public ReadOnlyIdArray<ActorAbilityId, Color> Ability => _abilities;
 
         public Color PanelBack => _panelBack;
         public Color PanelText => _panelText;

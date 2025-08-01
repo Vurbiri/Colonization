@@ -85,13 +85,13 @@ namespace Vurbiri
 
             if (_nameParams == null)
             {
-                _nameParams = new(IdType<T>.Names);
+                _nameParams = new(IdType<T>.Names_Ed);
             }
             else
             {
                 for (int i = 0; i < IdType<T>.Count; i++)
                     if (string.IsNullOrEmpty(_nameParams[i]))
-                        _nameParams[i] = IdType<T>.Names[i];
+                        _nameParams[i] = IdType<T>.Names_Ed[i];
             }
         }
 #endif

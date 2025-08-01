@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.UI
             Init_Editor(colors);
             transform.localPosition = position;
 
-            string name = CurrencyId.Names[id];
+            string name = CurrencyId.Names_Ed[id];
             UnityEditor.SerializedObject so = new(this);
             so.FindProperty("_getText").FindPropertyRelative("key").stringValue = name;
             so.ApplyModifiedProperties();

@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.UI
 
             if (!_spawn)
             {
-                person.SpawnTest(WarriorId.Militia, 2);
+                person.SpawnTest(WarriorId.Wizard, 2);
                 GameContainer.Players.AI[0].SpawnTest(WarriorId.Militia, 3);
                 _spawn = true;
                 return;
@@ -244,7 +244,7 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
             public void Init_Editor(BuffSettings settings, Component parent, ProjectColors colors)
             {
-                _hintKey = ActorAbilityId.Names[settings.targetAbility];
+                _hintKey = ActorAbilityId.Names_Ed[settings.targetAbility];
                 _baseValue = settings.value;
                 if (settings.typeModifier == TypeModifierId.Addition && settings.targetAbility <= ActorAbilityId.MAX_ID_SHIFT_ABILITY)
                     _baseValue >>= ActorAbilityId.SHIFT_ABILITY;

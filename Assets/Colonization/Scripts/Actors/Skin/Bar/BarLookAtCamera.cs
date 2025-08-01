@@ -5,29 +5,34 @@ namespace Vurbiri.Colonization.Actors
 {
     public class BarLookAtCamera : MonoBehaviour
 	{
-        private Transform _thisTransform;
-        private GameObject _thisGameObject;
-        private bool _isActive = true;
+        private Transform _thisTransform, _actorTransform;
+        private Vector3 _cameraForward;
+        private bool _isActive;
         private SpriteRenderer _renderer;
 
-        public void Init(SpriteRenderer renderer)
+        public void Init(Transform actorTransform, SpriteRenderer renderer)
 		{
             _thisTransform = transform;
-            _thisGameObject = gameObject;
+            _isActive = gameObject.activeSelf;
+            _actorTransform = actorTransform;
             _renderer = renderer;
 
             GameContainer.CameraTransform.Subscribe(OnUpdate);
-            _thisTransform.rotation = Quaternion.LookRotation(GameContainer.CameraTransform.Transform.forward, Vector3.up);
         }
 
         private void OnUpdate(Transform transform)
         {
             bool isActive = transform.position.y < CameraController.heightShow;
             if(_isActive != isActive)
-                _thisGameObject.SetActive(_isActive = isActive);
+                gameObject.SetActive(_isActive = isActive);
 
-            if (isActive && _renderer.isVisible)
-                _thisTransform.rotation = Quaternion.LookRotation(transform.forward, Vector3.up);
+            _cameraForward = transform.forward;
+        }
+
+        private void Update()
+        {
+            if (_actorTransform.hasChanged && _renderer.isVisible)
+                _thisTransform.rotation = Quaternion.LookRotation(_cameraForward, Vector3.up);
         }
 
         private void OnDestroy()

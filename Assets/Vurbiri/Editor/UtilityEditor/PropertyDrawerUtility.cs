@@ -459,10 +459,10 @@ namespace VurbiriEditor
         protected (string[] names, int[] values) GetNamesAndValues<T>(bool isNone) where T : IdType<T>
         {
             if (!isNone)
-                return (IdType<T>.Names, IdType<T>.Values);
+                return (IdType<T>.Names_Ed, IdType<T>.Values_Ed);
 
-            List<string> names = new(IdType<T>.Names);
-            List<int> values = new(IdType<T>.Values);
+            List<string> names = new(IdType<T>.Names_Ed);
+            List<int> values = new(IdType<T>.Values_Ed);
 
             names.Insert(0, "None");
             values.Insert(0, -1);

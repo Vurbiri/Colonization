@@ -1,5 +1,7 @@
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.EntryPoint;
@@ -30,6 +32,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public WorldHint worldHint;
         public CanvasHint canvasHint;
+        public ReadOnlyIdArray<ActorAbilityId, Sprite> abilities;
 
         public Transform sharedContainer;
         public AudioSource sharedAudioSource;

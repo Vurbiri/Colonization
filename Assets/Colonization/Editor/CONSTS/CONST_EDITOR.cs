@@ -14,6 +14,9 @@ namespace VurbiriEditor.Colonization
         public const string MENU_BUFFS_PATH = MENU_CH_PATH + "Buffs/";
         public const int SPACE_WND = 8;
 
+        public const string SETTINGS_PATH = "Assets/Colonization/Settings/";
+        public const string SETTINGS_UI_PATH = SETTINGS_PATH + "UI/";
+
         public static readonly Encoding utf8WithoutBom = new UTF8Encoding(false);
     }
 }

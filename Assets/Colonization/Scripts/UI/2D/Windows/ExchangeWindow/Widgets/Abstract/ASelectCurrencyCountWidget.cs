@@ -94,7 +94,7 @@ namespace Vurbiri.Colonization.UI
             so.FindProperty("_id").FindPropertyRelative("_id").intValue = id;
             so.ApplyModifiedProperties();
 
-            string name = $"{id}_{CurrencyId.Names[id]}";
+            string name = $"{id}_{CurrencyId.Names_Ed[id]}";
             so = new(_icon);
             so.FindProperty("m_Sprite").objectReferenceValue = EUtility.FindMultipleSprite("SPA_C".Concat(name));
             so.ApplyModifiedProperties();

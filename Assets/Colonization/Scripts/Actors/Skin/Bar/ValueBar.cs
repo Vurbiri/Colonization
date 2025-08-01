@@ -7,7 +7,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class ValueBar : MonoBehaviour, IRendererVisible, IValueId<ActorAbilityId>
+    public class ValueBar : MonoBehaviour, IValueId<ActorAbilityId>
     {
         [SerializeField] private Id<ActorAbilityId> _ability;
 		[Space]
@@ -20,11 +20,9 @@ namespace Vurbiri.Colonization.Actors
         private Sprite _sprite;
         private Unsubscription _unsubscriber;
 
-        public bool IsVisible => _spriteRenderer.isVisible;
-
         public Id<ActorAbilityId> Id => _ability;
 
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, PopupWidget3D popup, int orderLevel)
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, PopupWidget3D popup, int orderLevel)
         {
             _popup = popup;
 

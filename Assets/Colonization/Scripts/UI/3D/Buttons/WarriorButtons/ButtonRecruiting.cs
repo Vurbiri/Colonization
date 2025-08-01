@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.UI
             base.OnValidate();
 
             _getText.id = LangFiles.Actors;
-            _getText.key = WarriorId.GetName(_id);
+            _getText.key = WarriorId.GetName_Ed(_id);
         }
 #endif
     }

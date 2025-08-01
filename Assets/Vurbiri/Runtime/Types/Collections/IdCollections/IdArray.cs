@@ -8,45 +8,54 @@ using UnityEngine;
 namespace Vurbiri.Collections
 {
     [Serializable, JsonArray]
-    sealed public class IdArray<TId, TValue> : IReadOnlyList<TValue> where TId : IdType<TId>
+    public class ReadOnlyIdArray<TId, TValue> : IReadOnlyList<TValue> where TId : IdType<TId>
     {
-        [SerializeField] private TValue[] _values;
-        private readonly int _count = IdType<TId>.Count;
+        [SerializeField] protected TValue[] _values = new TValue[IdType<TId>.Count];
 
-        public int Count => _count;
+        public int Count => IdType<TId>.Count;
 
         public ReadOnlyCollection<TValue> Values => new(_values);
 
-        public TValue this[Id<TId> id] { get => _values[id.Value]; set => _values[id.Value] = value; }
-        public TValue this[int index] { get => _values[index]; set => _values[index] = value; }
+        public TValue this[Id<TId> id] => _values[id.Value];
+        public TValue this[int index] => _values[index];
 
-        public IdArray()
+        protected ReadOnlyIdArray() {}
+        public ReadOnlyIdArray(TValue defaultValue)
         {
-            _values = new TValue[_count];
-        }
-
-        public IdArray(TValue defaultValue) : this()
-        {
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < IdType<TId>.Count; i++)
                 _values[i] = defaultValue;
         }
-
-        public IdArray(Func<TValue> factory) : this()
+        public ReadOnlyIdArray(Func<TValue> factory)
         {
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < IdType<TId>.Count; i++)
                 _values[i] = factory();
         }
-
         [JsonConstructor]
-        public IdArray(IReadOnlyList<TValue> list) : this() 
+        public ReadOnlyIdArray(IReadOnlyList<TValue> list)
         {
-            int count = _count <= list.Count ? _count : list.Count;
+            int count = Mathf.Min(IdType<TId>.Count, list.Count);
             for (int i = 0; i < count; i++)
                 _values[i] = list[i];
         }
 
         public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values);
         IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values);
+
+        public static implicit operator ReadOnlyIdArray<TId, TValue>(TValue[] value) => new(value);
+        public static implicit operator ReadOnlyIdArray<TId, TValue>(List<TValue> value) => new(value);
+    }
+
+    [Serializable, JsonArray]
+    public class IdArray<TId, TValue> : ReadOnlyIdArray<TId, TValue> where TId : IdType<TId>
+    {
+        public new TValue this[Id<TId> id] { get => _values[id.Value]; set => _values[id.Value] = value; }
+        public new TValue this[int index] { get => _values[index]; set => _values[index] = value; }
+
+        [JsonConstructor]
+        public IdArray(IReadOnlyList<TValue> list) : base(list) { }
+        public IdArray() { }
+        public IdArray(TValue defaultValue) : base(defaultValue) { }
+        public IdArray(Func<TValue> factory) : base(factory) { }
 
         public static implicit operator IdArray<TId, TValue>(TValue[] value) => new(value);
         public static implicit operator IdArray<TId, TValue>(List<TValue> value) => new(value);

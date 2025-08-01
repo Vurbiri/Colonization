@@ -38,7 +38,7 @@ namespace VurbiriEditor.Colonization
                     GUI.color = colors[index];
                     propertyElement = propertyValues.GetArrayElementAtIndex(index);
                     position.y += position.height + Y_SPACE;
-                    propertyElement.intValue = EditorGUI.IntSlider(position, CurrencyId.Names[index], propertyElement.intValue, 0, MAX_VALUE);
+                    propertyElement.intValue = EditorGUI.IntSlider(position, CurrencyId.Names_Ed[index], propertyElement.intValue, 0, MAX_VALUE);
 
                     if (index != CurrencyId.Blood)
                         propertyAmount.intValue += propertyElement.intValue;

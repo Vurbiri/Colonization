@@ -13,12 +13,12 @@ namespace Vurbiri
 #if UNITY_EDITOR
         private readonly static IdTypeData _data;
 
-        public static string[] Names => _data.names.ToArray();
-        public static string[] PositiveNames => _data.positiveNames.ToArray();
-        public static string[] DisplayNames => _data.displayNames.ToArray();
-        public static int[] Values => _data.values.ToArray();
+        public static string[] Names_Ed => _data.names.ToArray();
+        public static string[] PositiveNames_Ed => _data.positiveNames.ToArray();
+        public static string[] DisplayNames_Ed => _data.displayNames.ToArray();
+        public static int[] Values_Ed => _data.values.ToArray();
 
-        public static string GetName(Id<T> id) => _data.names[id.Value - Min];
+        public static string GetName_Ed(Id<T> id) => _data.names[id.Value - Min];
 
         static IdType()
         {
@@ -62,7 +62,7 @@ namespace Vurbiri
             if (Count == 0)
                 Debug.LogError($"Не найдено public const int полей. Класс: {typeId.Name}");
 
-            IdTypesCache.Add(typeId, Count, Min, _data);
+            IdTypesCacheEditor.Add(typeId, Count, Min, _data);
         }
 #else
         static IdType()
@@ -88,7 +88,7 @@ namespace Vurbiri
     }
 
 #if UNITY_EDITOR
-    public static class IdTypesCache
+    public static class IdTypesCacheEditor
     {
         private static readonly HashSet<Type> _types = new();
         private static readonly Dictionary<Type, IdTypeData> _dates = new();

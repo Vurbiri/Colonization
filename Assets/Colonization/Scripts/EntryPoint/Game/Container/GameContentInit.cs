@@ -1,5 +1,6 @@
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
+using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -12,6 +13,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private Transform _sharedContainer;
         [SerializeField] private AudioSource _sharedAudioSource;
         [Space]
+        [SerializeField] private SpritesOfAbilitiesScriptable _spritesOfAbilities;
         [SerializeField] private Actors.SFXFactoriesStorage _actorSFXFactory;
         [Space]
         [SerializeField] private PoolEffectsBarFactory _poolEffectsBar;
@@ -25,10 +27,12 @@ namespace Vurbiri.Colonization.EntryPoint
 
             content.Init(_mainCamera, _inputControllerSettings, _cameraController);
 
+            content.abilities = _spritesOfAbilities;
             content.actorSFXs = _actorSFXFactory.Create();
             content.poolEffectsBar = _poolEffectsBar.Create();
 
-            _actorSFXFactory = null; _inputControllerSettings = null; _poolEffectsBar = null;
+            _spritesOfAbilities = null; _actorSFXFactory = null;
+            _inputControllerSettings = null; _poolEffectsBar = null;
         }
 
 #if UNITY_EDITOR
@@ -40,7 +44,8 @@ namespace Vurbiri.Colonization.EntryPoint
             EUtility.SetObject(ref _cameraController);
             EUtility.SetObject(ref _sharedContainer, "SharedContainer");
             EUtility.SetObject(ref _sharedAudioSource, "SharedAudioSource");
-            
+
+            EUtility.SetScriptable(ref _spritesOfAbilities);
             EUtility.SetScriptable(ref _actorSFXFactory);
 
             _poolEffectsBar.OnValidate();

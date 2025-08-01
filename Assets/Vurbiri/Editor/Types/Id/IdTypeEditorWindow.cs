@@ -27,7 +27,7 @@ namespace VurbiriEditor
             string classPattern = @"\bclass\s+{0}\s*:";
 
             List<string> names = new();
-            foreach (var type in IdTypesCache.Types)
+            foreach (var type in IdTypesCacheEditor.Types)
             {
                 if (!type.IsNested)
                     names.Add(type.Name);

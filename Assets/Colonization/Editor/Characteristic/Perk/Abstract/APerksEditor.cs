@@ -28,7 +28,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private readonly string U_CONTAINER = "Container", U_LABEL = "Label", U_FOLDOUT = "Foldout";
         
         private readonly Type _spriteType = typeof(Sprite);
-        private readonly string[][] _ability = { HumanAbilityId.Names, ActorAbilityId.Names };
+        private readonly string[][] _ability = { HumanAbilityId.Names_Ed, ActorAbilityId.Names_Ed };
                 
         protected VisualElement CreateGUI<TId>(string captionText) where TId : APerkId<TId>
         {
@@ -46,7 +46,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             {
                 int id = i;
                 SerializedProperty propertyPerk = propertyPerks.GetArrayElementAtIndex(i);
-                string name = APerkId<TId>.GetName(i);
+                string name = APerkId<TId>.GetName_Ed(i);
 
                 VisualElement element = _treePerkVT.Instantiate(propertyPerk.propertyPath);
                 element.Q<Label>(U_LABEL).text = name;
@@ -84,7 +84,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             propertyPerk.FindPropertyRelative(P_ID).intValue = id;
             propertyPerk.FindPropertyRelative(P_TYPE).intValue = typePerks;
 
-            DrawEndSet(P_TARGET_OBJ, target, TargetOfPerkId.Names[target]);
+            DrawEndSet(P_TARGET_OBJ, target, TargetOfPerkId.Names_Ed[target]);
             DrawEndSet(P_TARGET_AB, ability, _ability[target][ability]);
 
             int mod = DrawModifier();
@@ -130,7 +130,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             int DrawModifier()
             {
                 SerializedProperty modProperty = propertyPerk.FindPropertyRelative(P_PERK_MOD);
-                int value = modProperty.intValue = IntPopup(modProperty.displayName, modProperty.intValue, PerkModifierId.Names, TypeModifierId.Values);
+                int value = modProperty.intValue = IntPopup(modProperty.displayName, modProperty.intValue, PerkModifierId.Names_Ed, TypeModifierId.Values_Ed);
                 propertyPerk.FindPropertyRelative(P_TYPE_OP).intValue = PerkModifierId.ToTypeModifier(value);
                 return value;
             }

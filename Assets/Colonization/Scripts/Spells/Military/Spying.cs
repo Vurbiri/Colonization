@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization
         sealed public class Spying : ASpell
         {
             private readonly CurrenciesLite _add = new();
-            private readonly Id<MBButtonId>[] _buttons = { MBButtonId.Ok };
 
             private Spying(int type, int id) : base(type, id) { }
             public static void Create() => new Spying(MilitarySpellId.Type, MilitarySpellId.Spying);
@@ -67,7 +66,7 @@ namespace Vurbiri.Colonization
             {
                 s_isCast.True();
 
-                yield return MessageBox.Open(text, _buttons);
+                yield return MessageBox.Open(text, MBButton.Ok);
 
                 s_isCast.False();
             }

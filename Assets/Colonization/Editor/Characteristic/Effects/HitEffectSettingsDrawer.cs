@@ -26,14 +26,14 @@ namespace VurbiriEditor.Colonization.Characteristics
         #endregion
 
         #region Values
-        private readonly string[] _namesAbilitiesDuration = { ActorAbilityId.Names[MaxHP], ActorAbilityId.Names[HPPerTurn], ActorAbilityId.Names[Attack],
-                                                               ActorAbilityId.Names[Defense] };
+        private readonly string[] _namesAbilitiesDuration = { ActorAbilityId.Names_Ed[MaxHP], ActorAbilityId.Names_Ed[HPPerTurn], ActorAbilityId.Names_Ed[Attack],
+                                                               ActorAbilityId.Names_Ed[Defense] };
         private readonly int[] _valuesAbilitiesDuration = { MaxHP, HPPerTurn, Attack, Defense };
 
         private readonly string[] _namesModifiersDuration = { "Flat", "Percent" };
         private readonly int[] _valuesModifiersDuration = { TypeModifierId.Addition, TypeModifierId.TotalPercent };
 
-        private readonly string[] _namesAbilitiesInstant = { ActorAbilityId.Names[CurrentHP], ActorAbilityId.Names[CurrentAP], ActorAbilityId.Names[IsMove] };
+        private readonly string[] _namesAbilitiesInstant = { ActorAbilityId.Names_Ed[CurrentHP], ActorAbilityId.Names_Ed[CurrentAP], ActorAbilityId.Names_Ed[IsMove] };
         private readonly int[] _valuesAbilitiesInstant = { CurrentHP, CurrentAP, IsMove };
 
         private readonly string[] _namesModifiersCurrentHP = { "Percent of CurrentHP", "Flat", "Percent of MaxHP" };
@@ -182,7 +182,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 if (usedAbility == CurrentHP)
                 {
-                    if (DrawIntPopup(P_TYPE_OP, _namesModifiersCurrentHP, ActorAbilityId.Values) == TypeModifierId.Addition)
+                    if (DrawIntPopup(P_TYPE_OP, _namesModifiersCurrentHP, ActorAbilityId.Values_Ed) == TypeModifierId.Addition)
                         DrawShiftValue("Value", -75, 75);
                     else
                         DrawInt(P_VALUE, "Value (%)", -100, 100);
@@ -287,12 +287,12 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                     if (duration > 0)
                     {
-                        key = ActorAbilityId.Names[targetAbility].Concat("Temp");
+                        key = ActorAbilityId.Names_Ed[targetAbility].Concat("Temp");
                         DrawLabel(localization.GetFormatText(FILE, key, strValue, duration).Delete("<b>", "</b>"));
                     }
                     else 
                     {
-                        key = ActorAbilityId.Names[targetAbility].Concat("Perm");
+                        key = ActorAbilityId.Names_Ed[targetAbility].Concat("Perm");
                         if (mod == TypeModifierId.TotalPercent & targetAbility == CurrentHP) 
                             key = "CurrentHPOfMaxPerm";
 

@@ -114,7 +114,7 @@ namespace VurbiriEditor.Colonization
                 BeginVertical(GUI.skin.box);
                 Space();
 
-                LabelField(ActorAbilityId.Names[id], STYLES.H2);
+                LabelField(ActorAbilityId.Names_Ed[id], STYLES.H2);
                 Space();
                 settings.typeModifier = IntPopup("Modifier", oldTypeModifier, _names, _values);
                 showSetting.target = settings.typeModifier >= 0;

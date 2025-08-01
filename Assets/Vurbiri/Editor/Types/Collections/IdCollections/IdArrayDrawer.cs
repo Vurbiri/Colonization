@@ -5,7 +5,7 @@ using Vurbiri.Collections;
 
 namespace VurbiriEditor.Collections
 {
-    [CustomPropertyDrawer(typeof(IdArray<,>))]
+    [CustomPropertyDrawer(typeof(ReadOnlyIdArray<,>), true)]
     sealed public class IdArrayDrawer : AIdCollectionDrawer
     {
         private Func<Rect, SerializedProperty, string, Rect> _propertyField;

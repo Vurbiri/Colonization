@@ -25,11 +25,11 @@ namespace VurbiriEditor.Collections
 
             bool isInit = idType == _idType & _names != null;
 
-            if (!isInit && IdTypesCache.Contain(idType))
+            if (!isInit && IdTypesCacheEditor.Contain(idType))
             {
                 _idType = idType;
-                _count = IdTypesCache.GetCount(idType);
-                _names = IdTypesCache.GetPositiveNames(idType);
+                _count = IdTypesCacheEditor.GetCount(idType);
+                _names = IdTypesCacheEditor.GetPositiveNames(idType);
                 isInit = true;
             }
             

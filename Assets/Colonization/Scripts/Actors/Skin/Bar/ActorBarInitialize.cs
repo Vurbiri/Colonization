@@ -15,13 +15,12 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private HPBar _hpBar;
         [SerializeField] private APBar _apBar;
         [SerializeField] private MoveBar _moveBar;
+        [SerializeField] private SpriteRenderer _moveSprite;
         [SerializeField] private IdSet<ActorAbilityId, ValueBar> _valueBars;
         [Space]
         [SerializeField] private PopupWidget3D _popup;
         [Space]
         [SerializeField] private BarLookAtCamera _look;
-        [Space]
-        [SerializeField] private IdArray<ActorAbilityId, Sprite> _sprites;
 
         private void Start()
 		{
@@ -37,7 +36,6 @@ namespace Vurbiri.Colonization.Actors
 
             _popup.Init(GameContainer.UI.Colors, s_orderLevel);
 
-            //_hpBar.Init(abilities, abilitiesColors, GameContainer.PlayerColors[actor.Owner], _popup, s_orderLevel);
             _hpBar.Init(abilities, abilitiesColors, _popup, s_orderLevel);
             _apBar.Init(abilities, abilitiesColors, s_orderLevel);
             _moveBar.Init(abilities, abilitiesColors, s_orderLevel);
@@ -45,9 +43,9 @@ namespace Vurbiri.Colonization.Actors
             foreach (var bar in _valueBars)
                 bar.Init(abilities, abilitiesColors, _popup, s_orderLevel);
 
-            _look.Init(_hpBar.Renderer);
+            _look.Init(actor.transform, _hpBar.Renderer);
 
-            new EffectsBarPanel(actor, _sprites, transform, s_orderLevel);
+            new EffectsBarPanel(actor, transform, s_orderLevel);
 
             Destroy(this);
         }

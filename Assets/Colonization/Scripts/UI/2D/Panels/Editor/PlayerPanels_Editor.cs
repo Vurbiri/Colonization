@@ -70,7 +70,7 @@ namespace Vurbiri.Colonization.UI
                 for (int i = 0; i < EdificeId.Count; i++)
                 {
                     if (i > 0 && _sprites[i] == null)
-                        _sprites[i] = EUtility.FindAnyAsset<Sprite>($"SP_Icon{EdificeId.GetName(i)}");
+                        _sprites[i] = EUtility.FindAnyAsset<Sprite>($"SP_Icon{EdificeId.GetName_Ed(i)}");
                 }
             }
         }

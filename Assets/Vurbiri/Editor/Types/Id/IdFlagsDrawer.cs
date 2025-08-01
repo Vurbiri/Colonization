@@ -61,7 +61,7 @@ namespace VurbiriEditor
 
         private bool TryGetNames(Type idType)
         {
-            if(!(IdTypesCache.Contain(idType) && IdTypesCache.GetMin(idType) >= 0))
+            if(!(IdTypesCacheEditor.Contain(idType) && IdTypesCacheEditor.GetMin(idType) >= 0))
                 return false;
 
             bool isInit = _type == idType & _names != null;
@@ -69,8 +69,8 @@ namespace VurbiriEditor
             if (!isInit)
             {
                 _type = idType;
-                _count = IdTypesCache.GetCount(idType);
-                _names = IdTypesCache.GetNames(idType);
+                _count = IdTypesCacheEditor.GetCount(idType);
+                _names = IdTypesCacheEditor.GetNames(idType);
                 isInit = true;
             }
 

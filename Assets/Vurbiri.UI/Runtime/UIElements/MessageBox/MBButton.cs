@@ -7,7 +7,11 @@ namespace Vurbiri.UI
 {
 	sealed public class MBButton : VSelectable, IValueId<MBButtonId>, IPointerClickHandler, ISubmitHandler
     {
-		[SerializeField] private Id<MBButtonId> _id;
+        public static readonly Id<MBButtonId>[] Cancel = { MBButtonId.Cancel };
+        public static readonly Id<MBButtonId>[] Ok = { MBButtonId.Ok };
+        public static readonly Id<MBButtonId>[] OkNo = { MBButtonId.Ok, MBButtonId.No };
+
+        [SerializeField] private Id<MBButtonId> _id;
 
         private readonly Subscription<Id<MBButtonId>> _onClick = new();
         private RectTransform _thisRectTransform;

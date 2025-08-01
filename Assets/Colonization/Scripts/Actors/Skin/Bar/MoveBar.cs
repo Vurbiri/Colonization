@@ -5,15 +5,13 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class MoveBar : MonoBehaviour, IRendererVisible
+    public class MoveBar : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer _moveSprite;
 
         private Unsubscription _unsubscriber;
 
-        public bool IsVisible => _moveSprite.isVisible;
-
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, int orderLevel)
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, int orderLevel)
         {
             _moveSprite.sortingOrder += orderLevel;
             _moveSprite.color = colors[ActorAbilityId.IsMove];
@@ -31,8 +29,7 @@ namespace Vurbiri.Colonization.Actors
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_moveSprite == null)
-                _moveSprite = GetComponent<SpriteRenderer>();
+            this.SetComponent(ref _moveSprite);
         }
 #endif
 	}

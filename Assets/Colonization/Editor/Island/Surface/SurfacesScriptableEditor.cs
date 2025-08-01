@@ -47,7 +47,7 @@ namespace VurbiriEditor.Colonization
                 EditorGUILayout.Space();
                 EditorGUILayout.BeginVertical(GUI.skin.window);
                 UnityEditor.EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(_serializedProperty.GetArrayElementAtIndex(i), new GUIContent(IdType<SurfaceId>.Names[i]));
+                EditorGUILayout.PropertyField(_serializedProperty.GetArrayElementAtIndex(i), new GUIContent(IdType<SurfaceId>.Names_Ed[i]));
                 EditorGUILayout.Space();
                 UnityEditor.EditorGUI.indentLevel--;
                 EditorGUILayout.EndVertical();

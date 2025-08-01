@@ -11,7 +11,6 @@ namespace Vurbiri.Colonization
         sealed private class SwapId : ASpell
         {
             private readonly WaitResultSource<Hexagon> _waitHexagon = new();
-            private readonly Id<MBButtonId>[] _buttons = { MBButtonId.Cancel };
             private WaitButton _waitButton;
             private Coroutine _coroutine;
             private Hexagon _selectedA;
@@ -69,7 +68,7 @@ namespace Vurbiri.Colonization
                     foreach (var actor in s_actors[PlayerId.Person])
                         actor.SetHexagonSelectable();
 
-                    _waitButton = MessageBox.Open(_text, _buttons);
+                    _waitButton = MessageBox.Open(_text, MBButton.Cancel);
                     _waitButton.AddListener(Cancel);
                 }
 
@@ -92,13 +91,12 @@ namespace Vurbiri.Colonization
 
                 if (_currentPlayer == PlayerId.Person)
                 {
-                    _waitButton.Reset();
+                    _waitButton.Reset(); _waitButton = null;
                     foreach (var actor in s_actors[PlayerId.Person])
                         actor.SetHexagonUnselectable();
                 }
 
-                _coroutine = null;
-                _selectedA = null;
+                _coroutine = null; _selectedA = null; 
                 _currentPlayer = PlayerId.None;
                 s_isCast.False();
             }

@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             content.settings = _settings;
             content.prices = _prices;
-            content.projectColors = _settingsColorScriptable.Colors;
+            content.projectColors = _settingsColorScriptable;
 
             SetColors(content.projectColors);
 
@@ -47,7 +47,6 @@ namespace Vurbiri.Colonization.EntryPoint
             loading.Add(new EndLoadScene(operation));
 
             Destroy(this);
-            _settingsColorScriptable.Dispose();
         }
 
         private static void SetColors(ProjectColors colors)

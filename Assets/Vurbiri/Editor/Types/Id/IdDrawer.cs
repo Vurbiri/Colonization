@@ -50,11 +50,11 @@ namespace VurbiriEditor
         {
             bool isInit = _type == idType & _names != null & _values != null;
 
-            if (!isInit && IdTypesCache.Contain(idType))
+            if (!isInit && IdTypesCacheEditor.Contain(idType))
             {
                 _type = idType;
-                _names = IdTypesCache.GetDisplayNames(idType);
-                _values = IdTypesCache.GetValues(idType);
+                _names = IdTypesCacheEditor.GetDisplayNames(idType);
+                _values = IdTypesCacheEditor.GetValues(idType);
                 isInit = true;
             }
 

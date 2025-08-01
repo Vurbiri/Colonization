@@ -7,7 +7,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class HPBar : MonoBehaviour, IRendererVisible
+    public class HPBar : MonoBehaviour
     {
 		private const float SP_WIDTH = 8f, SP_HIGHT = 1f;
 
@@ -23,16 +23,9 @@ namespace Vurbiri.Colonization.Actors
         private Sprite _sprite;
         private Unsubscriptions _unsubscribers;
 
-        public bool IsVisible => _backgroundBar.isVisible;
         public SpriteRenderer Renderer => _backgroundBar;
 
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, Color color, PopupWidget3D popup, int orderLevel)
-		{
-            Init(abilities, colors, popup, orderLevel);
-            _barSprite.color = color;
-        }
-
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, PopupWidget3D popup, int orderLevel)
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, PopupWidget3D popup, int orderLevel)
         {
             _popup = popup;
 

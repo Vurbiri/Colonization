@@ -11,7 +11,7 @@ namespace VurbiriEditor.Colonization
 	{
 		private const string NAME = "SFX Factories", MENU = MENU_ACTORS_PATH + NAME;
         
-		private readonly string _defaultPath = "Assets/Colonization/HitSFX", _defaultName = "FactoriesStorage";
+		private readonly string _defaultPath = "Assets/Colonization/HitSFX";
 
         [SerializeField] private SFXFactoriesStorage _scriptable;
 
@@ -25,8 +25,7 @@ namespace VurbiriEditor.Colonization
 		
 		private void OnEnable()
 		{
-			if(_scriptable == null)
-				_scriptable = EUtility.FindAnyScriptable<SFXFactoriesStorage>();
+            EUtility.SetScriptable(ref _scriptable);
             
 			if (_scriptable != null)
                 _editor = Editor.CreateEditor(_scriptable);		
@@ -42,7 +41,7 @@ namespace VurbiriEditor.Colonization
 				{
 					if (GUILayout.Button("Create"))
 					{
-                        _scriptable = EUtility.CreateScriptable<SFXFactoriesStorage>(_defaultName, _defaultPath);
+                        _scriptable = EUtility.CreateScriptable<SFXFactoriesStorage>(NAME, _defaultPath);
                         if (_scriptable != null)
                             _editor = Editor.CreateEditor(_scriptable);
                     }

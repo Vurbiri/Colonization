@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
 
         private Unsubscriptions _unsubscribers;
 
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, int orderLevel)
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, int orderLevel)
         {
             _maxValueTMP.sortingOrder += orderLevel;
             _currentValueTMP.sortingOrder += orderLevel;

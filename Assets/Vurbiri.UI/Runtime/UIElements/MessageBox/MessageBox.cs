@@ -11,7 +11,7 @@ namespace Vurbiri.UI
     {
         private static MessageBox s_instance;
         private static readonly Queue<Task> s_tasks = new();
-        
+
         [SerializeField] private CanvasGroupSwitcher _waitSwitch;
         [Header("Window")]
         [SerializeField] private Image _windowImage;

@@ -10,7 +10,7 @@ namespace VurbiriEditor.Colonization
 	{
         private readonly string P_NAME = "_colors";
 
-        private readonly string[] _names = PlayerId.PositiveNames;
+        private readonly string[] _names = PlayerId.PositiveNames_Ed;
         private readonly int _count = PlayerId.Count;
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 

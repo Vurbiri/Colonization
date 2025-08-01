@@ -1,6 +1,8 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.EntryPoint;
 using Vurbiri.Colonization.Storage;
@@ -116,6 +118,12 @@ namespace Vurbiri.Colonization
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => s_content.canvasHint;
+            }
+
+            public static ReadOnlyIdArray<ActorAbilityId, Sprite> SpritesOfAbilities
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => s_content.abilities;
             }
 
             public static Pool<EffectsBar> EffectsBar

@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
         {
             _id = id;
 
-            _prefabSurface = EUtility.FindAnyPrefab<ASurface>($"P_{IdType<SurfaceId>.Names[id]}");
+            _prefabSurface = EUtility.FindAnyPrefab<ASurface>($"P_{IdType<SurfaceId>.Names_Ed[id]}");
 
             if (id < SurfaceId.Water)
                 _profits = id;

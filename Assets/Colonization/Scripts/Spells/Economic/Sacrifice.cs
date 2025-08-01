@@ -14,7 +14,6 @@ namespace Vurbiri.Colonization
         public class Sacrifice : ASpell
         {
             private readonly WaitResultSource<Actor> _waitActor = new();
-            private readonly Id<MBButtonId>[] _buttons = { MBButtonId.Cancel };
             private readonly SpellDamager _damage;
             private WaitButton _waitButton;
             private Actor _target;
@@ -77,9 +76,12 @@ namespace Vurbiri.Colonization
 
             public override void Cancel()
             {
-                _coroutine.Stop();
-                EndSelect();
-                EndCast();
+                if (_coroutine != null)
+                {
+                    _coroutine.Stop();
+                    EndSelect();
+                    EndCast();
+                }
             }
             private void Cancel(Id<MBButtonId> id) => Cancel();
 
@@ -100,7 +102,7 @@ namespace Vurbiri.Colonization
                             actor.Hexagon.ShowMark(false);
                     }
 
-                    _waitButton = MessageBox.Open(_text, _buttons);
+                    _waitButton = MessageBox.Open(_text, MBButton.Cancel);
                     _waitButton.AddListener(Cancel);
                 }
 
@@ -137,9 +139,9 @@ namespace Vurbiri.Colonization
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void EndCast()
             {
-                _coroutine = null;
-                _target = null;
+                _coroutine = null; _target = null; _waitButton = null;
                 _currentPlayer = PlayerId.None;
+
                 s_isCast.False();
             }
 
