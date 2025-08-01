@@ -4,7 +4,7 @@ using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public partial class ActorSkin : MonoBehaviour, IDisposable
+    public partial class ActorSkin : MonoBehaviour
     {
         [SerializeField] private Bounds _bounds;
         [Space]
@@ -91,27 +91,13 @@ namespace Vurbiri.Colonization.Actors
                 _sfx.Impact(clip);
         }
 
-        public WaitSignal Death()
+        public WaitStateSource<Actor.DeathState> Death()
         {
             _stateMachine.SetState(_deathState);
-            return _deathState.waitActivate;
+            return _deathState.waitState;
         }
 
         public float GetFirsHitTime(int skillId) => _skillStates[skillId].waitHits[0].Time;
-
-        public void Dispose()
-        {
-            _animator.GetBehaviour<SpawnBehaviour>().EventExit -= EventStart;
-
-            _stateMachine.Dispose();
-            for (int i = 0; i < _skillStates.Length; i++)
-                _skillStates[i].Dispose();
-            _moveState.Dispose();
-            _runState.Dispose();
-            _blockState.Dispose();
-            _reactState.Dispose();
-            _deathState.Dispose();
-        }
 
         #region Nested: TimingSkillSettings
         //*******************************************************

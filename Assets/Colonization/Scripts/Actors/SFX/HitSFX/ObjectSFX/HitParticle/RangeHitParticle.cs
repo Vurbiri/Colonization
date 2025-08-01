@@ -11,12 +11,14 @@ namespace Vurbiri.Colonization.Actors
         private readonly WaitScaledTime _waitTime = new(0f);
         private readonly WaitSignal _waitActivate = new();
         private readonly float _avgSpeed;
+        private readonly float _targetHeightRate;
         private ParticleSystem.MainModule _main;
 
         public RangeHitParticle(CreatorRangeHitParticle creator, Action<APooledSFX> deactivate) : base(creator, deactivate)
         {
             _clipRun = creator.clipRun; _clipHit = creator.clipHit;
             _particle = creator.particle;
+            _targetHeightRate = creator.targetHeightRate;
 
             _main = _particle.main;
             _avgSpeed = (_main.startSpeed.constantMin + _main.startSpeed.constantMax) * 0.5f;
@@ -26,7 +28,7 @@ namespace Vurbiri.Colonization.Actors
         {
             Bounds bounds = target.Bounds;
             Vector3 targetPosition = target.Transform.position;
-            targetPosition.y += bounds.extents.y * 1.1f;
+            targetPosition.y += bounds.extents.y * _targetHeightRate;
 
             Enable(user.StartPosition);
             _transform.LookAt(targetPosition);

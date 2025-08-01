@@ -23,6 +23,8 @@ namespace Vurbiri.Reactive.Collections
                 action((T)this, TypeEvent.Subscribe);
             return _eventChanged.Add(action);
         }
+        public void Unsubscribe(Action<T, TypeEvent> action) => _eventChanged.Remove(action);
+        public void UnsubscribeAll() => _eventChanged.Clear();
 
         public virtual void Removing()
         {

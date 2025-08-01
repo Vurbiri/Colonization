@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Vurbiri.Reactive
 {
     [Serializable, JsonObject(MemberSerialization.OptIn)]
-    public abstract class ARType<T> : IReactiveValue<T>, IEquatable<T>, IEquatable<ARType<T>>, IComparable<T>, IComparable<ARType<T>> 
+    public abstract class ARType<T> : IReactiveValue<T>, IEquatable<T>, IEquatable<ARType<T>>, IComparable<T>, IComparable<ARType<T>>
     where T : struct, IEquatable<T>, IComparable<T>
     {
         [SerializeField, JsonProperty("value")]
@@ -45,7 +45,6 @@ namespace Vurbiri.Reactive
         }
 
         public override int GetHashCode() => _value.GetHashCode();
-
         public override string ToString() => _value.ToString();
 
         #region Comparison operator

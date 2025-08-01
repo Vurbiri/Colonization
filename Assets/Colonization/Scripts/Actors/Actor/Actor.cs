@@ -11,6 +11,11 @@ namespace Vurbiri.Colonization.Actors
     [RequireComponent(typeof(BoxCollider))]
     public abstract partial class Actor : AReactiveItemMono<Actor>, IInteractable, IDisposable
     {
+        public enum DeathState
+        {
+            None, Start, Animation, SFX
+        }
+
         #region Fields
         private Id<ActorTypeId> _typeId;
         private int _id;
@@ -46,7 +51,7 @@ namespace Vurbiri.Colonization.Actors
         private readonly RBool _interactable = new(false);
         private readonly RBool _canCancel = new(false);
 
-        private Coroutine _deathCoroutine;
+        private WaitState<DeathState> _deathState;
         private Unsubscriptions _unsubscribers = new();
         #endregion
 
@@ -106,7 +111,7 @@ namespace Vurbiri.Colonization.Actors
         {
             int delta = _abilities.AddPerk(effect);
 
-            if(delta != 0 & _deathCoroutine == null)
+            if(delta != 0 & _deathState == null)
                 _eventChanged.Invoke(this, TypeEvent.Change);
 
             return delta;
@@ -146,21 +151,29 @@ namespace Vurbiri.Colonization.Actors
             Interactable = _stateMachine.IsCurrentOrDefaultState(_blockState);
         }
 
-        public IEnumerator Death_Cn()
+        public WaitStateSource<DeathState> Death()
         {
-            _currentHex.ExitActor(); _unsubscribers.Unsubscribe();
+            _currentHex.ExitActor();
+            _unsubscribers.Unsubscribe();
 
-            Removing();
-            yield return _skin.Death();
-            Dispose();
+            var state = _skin.Death(); _deathState = state.SetWaitState(DeathState.SFX);
+            Removing(); 
+            StartCoroutine(Death_Cn());
+
+            return state;
+
+            // Local
+            IEnumerator Death_Cn()
+            {
+                yield return _deathState;
+                Dispose();
+            }
         }
 
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
         sealed public override void Dispose()
         {
-            _skin.Dispose();
-            _stateMachine.Dispose();
             _effects.Dispose();
 
             Destroy(gameObject);
@@ -175,7 +188,7 @@ namespace Vurbiri.Colonization.Actors
 
         private void FromTargetState()
         {
-            if (_deathCoroutine == null)
+            if (_deathState == null)
             {
                 _stateMachine.ToPrevState();
                 _eventChanged.Invoke(this, TypeEvent.Change);

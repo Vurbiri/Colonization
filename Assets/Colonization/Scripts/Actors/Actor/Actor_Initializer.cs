@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization.Actors
 
             #region Effects
             _effects = new(_abilities);
-            _currentHP.Subscribe(hp => { if (hp <= 0) _deathCoroutine = StartCoroutine(Death_Cn()); });
+            _currentHP.Subscribe(hp => { if (hp <= 0) Death(); });
             _effects.Subscribe(RedirectEvents);
             #endregion
 

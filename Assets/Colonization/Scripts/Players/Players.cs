@@ -7,13 +7,14 @@ namespace Vurbiri.Colonization
         private readonly IPlayerController[] _players = new IPlayerController[PlayerId.Count];
 
         public PersonController Person { get; }
+        public AIController[] AI { get; } = new AIController[2];
 
         public Players(Player.Settings settings, GameLoop game)
         {
             _players[PlayerId.Person] = Person = new(settings);
 
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
-                _players[i] = new AIController(i, settings);
+                _players[i] = AI[i-1] =new AIController(i, settings);
 
             _players[PlayerId.Satan] = new SatanController(settings);
 

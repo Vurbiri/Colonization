@@ -32,34 +32,36 @@ namespace Vurbiri.Colonization.UI
 
         // TEST
         Artefact _artefact;
-        PersonController _player;
         bool _spawn = false;
 
         public void Test()
         {
             //_artefact.Next(UnityEngine.Random.Range(2, 10));
 
+            var person = GameContainer.Players.Person;
+
             if (!_spawn)
             {
-                _player.SpawnTest(WarriorId.Wizard, 5);
+                person.SpawnTest(WarriorId.Wizard, 2);
+                GameContainer.Players.AI[0].SpawnTest(WarriorId.Militia, 3);
                 _spawn = true;
                 return;
             }
 
-            if (_player.Interactable.Value)
+            if (person.Interactable.Value)
             {
                 //SpellParam param = new(0, UnityEngine.Random.Range(0, 5), UnityEngine.Random.Range(0, 5));+
                 SpellParam param = new(0);
-                SpellBook.Cast(EconomicSpellId.Type, EconomicSpellId.Wrath, param);
+                SpellBook.Cast(EconomicSpellId.Type, EconomicSpellId.Sacrifice, param);
             }
             else
             {
-                Debug.LogWarning($"player.Interactable: {_player.Interactable.Value}");
+                Debug.LogWarning($"player.Interactable: {person.Interactable.Value}");
             }
         }
         // TEST
 
-        public void Init(PersonController player, CanvasHint hint)
+        public void Init(Human player, CanvasHint hint)
         {
             base.Init(hint, 0.48f);
 
@@ -78,7 +80,6 @@ namespace Vurbiri.Colonization.UI
             // TEST
             Debug.Log("Удалить Тесты в ArtefactPanel");
             _artefact = player.Artefact;
-            _player = player;
             // TEST
         }
 

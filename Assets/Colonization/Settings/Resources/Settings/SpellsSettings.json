@@ -12,8 +12,10 @@
     "1",
     "SpellSacrificeMsg"
   ],
-  "sacrificeHPPercent": 0,
-  "sacrificePierce": 0,
+  "sacrificeKnifeSFX": "Sacrifice",
+  "sacrificeTargetSFX": "SacrificeTarget",
+  "sacrificeHPPercent": 110,
+  "sacrificePierce": 15,
   "bloodTradePay": 0,
   "bloodTradeBay": 0,
   "maraudingText": [

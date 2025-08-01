@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization
         {
             s_sfxUser = new();
 
-            Order.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); ShuffleResources.Create(); HalvingResources.Create();
+            Order.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); ShuffleResources.Create(); HalvingResources.Create(); Sacrifice.Create();
 
             BloodTrade.Create(); Spying.Create(); WallBuild.Create(); Marauding.Create(); RoadDemolition.Create(); SwapId.Create();
         }

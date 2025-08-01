@@ -22,6 +22,8 @@ namespace Vurbiri.Colonization
         public int wrathPierce;
         [Header("Sacrifice")]
         public FileIdAndKey sacrificeText;
+        public HitSFXName sacrificeKnifeSFX;
+        public HitSFXName sacrificeTargetSFX;
         public int sacrificeHPPercent;
         public int sacrificePierce;
         [Space]

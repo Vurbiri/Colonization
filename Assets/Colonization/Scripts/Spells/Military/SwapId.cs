@@ -86,8 +86,6 @@ namespace Vurbiri.Colonization
                 EndCast();
             }
 
-            
-
             private void EndCast()
             {
                 EventBus.EventHexagonSelect.Remove(SetHexagon);

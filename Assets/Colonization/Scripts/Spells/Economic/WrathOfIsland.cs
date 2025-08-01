@@ -11,10 +11,13 @@ namespace Vurbiri.Colonization
     {
         sealed private class WrathOfIsland : ASpell
         {
-            private readonly SpellDamager _damage = new();
+            private readonly SpellDamager _damage;
             private readonly List<Actor> _targets = new(8);
 
-            private WrathOfIsland(int type, int id) : base(type, id) { }
+            private WrathOfIsland(int type, int id) : base(type, id) 
+            {
+                _damage = new(s_settings.wrathPierce);
+            }
             public static void Create() => new WrathOfIsland(EconomicSpellId.Type, EconomicSpellId.Wrath);
 
             public override bool Prep(SpellParam param)
@@ -42,7 +45,7 @@ namespace Vurbiri.Colonization
                 if (_canCast)
                 {
                     _damage.playerId = param.playerId;
-                    _damage.damage = (s_settings.wrathBasa + (param.valueA + param.valueB) * s_settings.wrathPerRes << ActorAbilityId.SHIFT_ABILITY) / _targets.Count;
+                    _damage.attack = (s_settings.wrathBasa + (param.valueA + param.valueB) * s_settings.wrathPerRes << ActorAbilityId.SHIFT_ABILITY) / _targets.Count;
 
                     s_humans[param.playerId].Pay(_cost);
 
@@ -63,9 +66,7 @@ namespace Vurbiri.Colonization
 
                     //yield return GameContainer.CameraController.ToPosition(position);
                     GameContainer.CameraController.ToPosition(position);
-
                     _damage.Apply(target);
-
                     yield return GameContainer.HitSFX.Hit(s_settings.wrathSFX, s_sfxUser, target.Skin);
                 }
 

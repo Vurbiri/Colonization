@@ -1,9 +1,10 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.International;
-using Vurbiri.Reactive;
 using Vurbiri.UI;
+using static Vurbiri.Colonization.Actors.Actor;
 using static Vurbiri.Colonization.GameContainer;
 
 namespace Vurbiri.Colonization
@@ -12,18 +13,18 @@ namespace Vurbiri.Colonization
     {
         public class Sacrifice : ASpell
         {
-            
             private readonly WaitResultSource<Actor> _waitActor = new();
             private readonly Id<MBButtonId>[] _buttons = { MBButtonId.Cancel };
-            private Actor _target;
+            private readonly SpellDamager _damage;
             private WaitButton _waitButton;
+            private Actor _target;
             private Coroutine _coroutine;
-            private Unsubscription _unsubscription;
             private string _text;
             private int _currentPlayer;
 
             private Sacrifice(int type, int id) : base(type, id) 
             {
+                _damage = new(s_settings.sacrificePierce);
                 Localization.Instance.Subscribe(SetText);
             }
             public static void Create() => new Sacrifice(EconomicSpellId.Type, EconomicSpellId.Sacrifice);
@@ -77,13 +78,13 @@ namespace Vurbiri.Colonization
             public override void Cancel()
             {
                 _coroutine.Stop();
-                //EndCast();
+                EndSelect();
+                EndCast();
             }
             private void Cancel(Id<MBButtonId> id) => Cancel();
 
             private IEnumerator Cast_Cn()
             {
-
                 if (_currentPlayer == PlayerId.Person)
                 {
                     foreach (var actor in s_actors[PlayerId.Person])
@@ -96,20 +97,40 @@ namespace Vurbiri.Colonization
                 EventBus.EventActorSelect.Add(SetActor);
                 yield return _waitActor.Restart();
 
+                EndSelect();
+
+                var sacrifice = _waitActor.Value;
+                _damage.attack = sacrifice.CurrentHP * s_settings.sacrificeHPPercent / 100;
+
+                CameraController.ToPosition(sacrifice.Position);
+                yield return GameContainer.HitSFX.Hit(s_settings.sacrificeKnifeSFX, s_sfxUser, sacrifice.Skin);
+                yield return sacrifice.Death().SetWaitState(DeathState.Animation);
+
+                yield return CameraController.ToPosition(_target.Position);
+                _damage.Apply(_target);
+                yield return GameContainer.HitSFX.Hit(s_settings.sacrificeTargetSFX, s_sfxUser, _target.Skin);
+
+                EndCast();
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private void EndSelect()
+            {
+                EventBus.EventActorSelect.Remove(SetActor);
                 if (_currentPlayer == PlayerId.Person)
                 {
                     _waitButton.Reset();
                     foreach (var actor in s_actors[PlayerId.Person])
                         actor.Hexagon.HideMark();
                 }
-
-                EventBus.EventActorSelect.Remove(SetActor);
-
-                var sacrifice = _waitActor.Value;
-
-                CameraController.ToPosition(sacrifice.Position);
-                yield return sacrifice.Death_Cn();
-                yield return CameraController.ToPosition(_target.Position);
+            }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private void EndCast()
+            {
+                _coroutine = null;
+                _target = null;
+                _currentPlayer = PlayerId.None;
+                s_isCast.False();
             }
 
             private void SetText(Localization localization) => _text = localization.GetText(s_settings.sacrificeText);

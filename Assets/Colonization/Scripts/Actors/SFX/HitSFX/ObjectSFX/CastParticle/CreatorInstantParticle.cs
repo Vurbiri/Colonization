@@ -7,6 +7,7 @@ namespace Vurbiri.Colonization.Actors
     {
         public AudioClip clip;
         public ParticleSystem particle;
+        public float targetHeightRate;
 
         public override APooledSFX Create(Action<APooledSFX> deactivate) => new InstantParticle(this, deactivate);
 

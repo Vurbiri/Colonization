@@ -36,16 +36,16 @@ namespace Vurbiri.Colonization
         {
             private readonly AbilityModifierPercent _pierce;
 
-            public int damage, playerId;
+            public int attack, playerId;
 
-            public SpellDamager() : base(ActorAbilityId.CurrentHP, TypeModifierId.Addition, 0)
+            public SpellDamager(int pierce) : base(ActorAbilityId.CurrentHP, TypeModifierId.Addition, 0)
             {
-                _pierce = new(100 - s_settings.wrathPierce);
+                _pierce = new(100 - pierce);
             }
 
             public void Apply(Actor target)
             {
-                _value = -Formulas.Damage(damage, _pierce.Apply(target.Abilities[ActorAbilityId.Defense].Value));
+                _value = -Formulas.Damage(attack, _pierce.Apply(target.Abilities[ActorAbilityId.Defense].Value));
 
                 target.ApplyEffect(this);
                 if (target.IsDead & target.Owner != playerId)

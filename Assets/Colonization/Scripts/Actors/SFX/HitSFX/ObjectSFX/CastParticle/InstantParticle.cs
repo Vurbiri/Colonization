@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization.Actors
     {
         private readonly AudioClip _clip;
         private readonly ParticleSystem _particle;
+        private readonly float _targetHeightRate;
 
         public object Current => null;
 
@@ -15,11 +16,15 @@ namespace Vurbiri.Colonization.Actors
         {
             _clip = creator.clip;
             _particle = creator.particle;
+            _targetHeightRate = creator.targetHeightRate;
         }
 
         public override IEnumerator Hit(ISFXUser user, ActorSkin target)
         {
-            Enable(target.Transform.position);
+            Vector3 targetPosition = target.Transform.position;
+            targetPosition.y += target.Bounds.extents.y * _targetHeightRate;
+
+            Enable(targetPosition);
 
             target.ActorSFX.AudioSource.PlayOneShot(_clip);
             _particle.Play();
