@@ -4,6 +4,7 @@ using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.CurrencyId;
+using static Vurbiri.Colonization.GameContainer;
 
 namespace Vurbiri.Colonization
 {
@@ -64,10 +65,9 @@ namespace Vurbiri.Colonization
                     index = FindNearest(position, _targets);
                     target = _targets[index]; position = target.Position; _targets.RemoveAt(index);
 
-                    //yield return GameContainer.CameraController.ToPosition(position);
-                    GameContainer.CameraController.ToPosition(position);
+                    CameraController.ToPosition(position, true);
                     _damage.Apply(target);
-                    yield return GameContainer.HitSFX.Hit(s_settings.wrathSFX, s_sfxUser, target.Skin);
+                    yield return HitSFX.Hit(s_settings.wrathSFX, s_sfxUser, target.Skin);
                 }
 
                 s_isCast.False();

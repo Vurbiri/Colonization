@@ -133,6 +133,7 @@ namespace Vurbiri.Colonization.Controllers
 
 
         public Unsubscription Subscribe(Action<Transform> action, bool instantGetValue = true) => _changedTransform.Add(action, instantGetValue, _cameraTransform);
-       
+        public void Unsubscribe(Action<Transform> action) => _changedTransform.Remove(action);
+
     }
 }

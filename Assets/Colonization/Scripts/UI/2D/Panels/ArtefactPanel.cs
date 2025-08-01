@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.UI
 
             if (!_spawn)
             {
-                person.SpawnTest(WarriorId.Wizard, 2);
+                person.SpawnTest(WarriorId.Militia, 2);
                 GameContainer.Players.AI[0].SpawnTest(WarriorId.Militia, 3);
                 _spawn = true;
                 return;

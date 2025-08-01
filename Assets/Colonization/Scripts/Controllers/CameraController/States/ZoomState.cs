@@ -34,17 +34,12 @@ namespace Vurbiri.Colonization.Controllers
             private IEnumerator Zoom_Cn()
             {
                 Vector3 position = _cameraTransform.CameraPosition;
-                bool isShow = position.y > _settings.heightHexagonShow;
 
                 do
                 {
                     position.y = Mathf.Lerp(position.y, _heightZoom, Time.deltaTime * _settings.speedZoom);
                     _cameraTransform.CameraPosition = position;
-
                     yield return null;
-
-                    if (isShow != position.y > _settings.heightHexagonShow)
-                        _eventBus.TriggerHexagonShowDistance(isShow = !isShow);
                 }
                 while (Mathf.Abs(_heightZoom - position.y) > _settings.minDeltaHeight);
 

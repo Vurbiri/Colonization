@@ -23,20 +23,26 @@ namespace Vurbiri.Colonization.Actors
         private Sprite _sprite;
         private Unsubscriptions _unsubscribers;
 
-        public bool IsVisible => _backgroundBar.isVisible || _barSprite.isVisible;
+        public bool IsVisible => _backgroundBar.isVisible;
+        public SpriteRenderer Renderer => _backgroundBar;
 
         public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, Color color, PopupWidget3D popup, int orderLevel)
 		{
+            Init(abilities, colors, popup, orderLevel);
+            _barSprite.color = color;
+        }
+
+        public void Init(AbilitiesSet<ActorAbilityId> abilities, IdArray<ActorAbilityId, Color> colors, PopupWidget3D popup, int orderLevel)
+        {
             _popup = popup;
 
             _backgroundBar.size = new(SP_WIDTH, SP_HIGHT);
             _backgroundBar.color = GameContainer.UI.Colors.Ability[ActorAbilityId.MaxHP];
 
             _barSprite.size = new(SP_WIDTH, SP_HIGHT);
-            _barSprite.color = color;
 
             _barTransform = _barSprite.transform;
-            _hpSprite.color = colors[ActorAbilityId.CurrentHP];
+            _hpSprite.color = colors[ActorAbilityId.CurrentHP]; ;
 
             _backgroundBar.sortingOrder += orderLevel;
             _barSprite.sortingOrder += orderLevel;

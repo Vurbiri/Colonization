@@ -37,14 +37,15 @@ namespace Vurbiri.Colonization.Actors
 
             _popup.Init(GameContainer.UI.Colors, s_orderLevel);
 
-            _hpBar.Init(abilities, abilitiesColors, GameContainer.PlayerColors[actor.Owner], _popup, s_orderLevel);
+            //_hpBar.Init(abilities, abilitiesColors, GameContainer.PlayerColors[actor.Owner], _popup, s_orderLevel);
+            _hpBar.Init(abilities, abilitiesColors, _popup, s_orderLevel);
             _apBar.Init(abilities, abilitiesColors, s_orderLevel);
             _moveBar.Init(abilities, abilitiesColors, s_orderLevel);
 
             foreach (var bar in _valueBars)
                 bar.Init(abilities, abilitiesColors, _popup, s_orderLevel);
 
-            _look.Init(_hpBar, _moveBar);
+            _look.Init(_hpBar.Renderer);
 
             new EffectsBarPanel(actor, _sprites, transform, s_orderLevel);
 
@@ -54,18 +55,16 @@ namespace Vurbiri.Colonization.Actors
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_hpBar == null)
-                _hpBar = GetComponentInChildren<HPBar>();
-            if (_apBar == null)
-                _apBar = GetComponentInChildren<APBar>();
-            if (_moveBar == null)
-                _moveBar = GetComponentInChildren<MoveBar>();
-            if (_valueBars == null || _valueBars.Fullness < 2)
+            this.SetChildren(ref _hpBar);
+            this.SetChildren(ref _apBar);
+            this.SetChildren(ref _moveBar);
+            this.SetChildren(ref _popup);
+
+            this.SetComponent(ref _look);
+
+            _valueBars ??= new();
+            if (_valueBars.Fullness < 2)
                 _valueBars.ReplaceRange(GetComponentsInChildren<ValueBar>());
-            if (_popup == null)
-                _popup = GetComponentInChildren<PopupWidget3D>();
-            if (_look == null)
-                _look = GetComponent<BarLookAtCamera>();
         }
 #endif
 	}

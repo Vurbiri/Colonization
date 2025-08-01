@@ -7,6 +7,9 @@ namespace Vurbiri.Colonization.Controllers
 {
     public partial class CameraController : MonoBehaviour
     {
+        public static float heightShow;
+
+        [SerializeField] private float _heightShow = 330f;
         [SerializeField] private Default _default;
         [SerializeField] private Movement _movement;
         [SerializeField] private MovementToTarget _movementTo;
@@ -27,6 +30,7 @@ namespace Vurbiri.Colonization.Controllers
 
         public CameraController Init(CameraTransform camera, GameTriggerBus eventBus, InputController inputController)
         {
+            heightShow = _heightShow;
             _default.height = Mathf.Clamp(_default.height, _zoom.heightZoomMin, _zoom.heightZoomMax);
 
             _cameraTransform = camera;
@@ -58,19 +62,19 @@ namespace Vurbiri.Colonization.Controllers
             return this;
         }
 
-        public WaitSignal ToDefaultPosition_Wait()
+        public WaitSignal ToDefaultPosition(bool block)
         {
-            _machine.SetState(_moveToDefaultState);
+            _machine.SetState(_moveToDefaultState, block);
             return _moveToDefaultState.Signal;
         }
 
-        public WaitSignal ToPosition(Vector3 position)
+        public WaitSignal ToPosition(Vector3 position, bool block)
         {
             _moveToTargetState.InputValue = position;
-            _machine.SetState(_moveToTargetState);
+            _machine.SetState(_moveToTargetState, block);
             return _moveToTargetState.Signal;
         }
-        public WaitSignal ToPosition(IPositionable obj) => ToPosition(obj.Position);
+        public WaitSignal ToPosition(IPositionable obj) => ToPosition(obj.Position, false);
 
         private void OnMove(CallbackContext ctx)
         {
@@ -150,7 +154,6 @@ namespace Vurbiri.Colonization.Controllers
             public float speedZoom = 4f;
             public float heightZoomMin = 65f;
             public float heightZoomMax = 415f;
-            public float heightHexagonShow = 330f;
             [Range(0.25f, 3.5f)] public float minDeltaHeight = 1.25f;
             [Range(0.01f, 0.3f)] public float steepZoomRate = 0.125f;
         }

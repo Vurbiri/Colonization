@@ -11,7 +11,6 @@ namespace Vurbiri.Colonization
         protected readonly Subscription<Id<PlayerId>, Id<ActorTypeId>, int> _actorKill = new();
         protected readonly Subscription<bool> _unselect = new();
 
-        protected readonly Subscription<bool> _hexagonShowDistance = new();
         protected readonly Subscription<bool> _hexagonShow = new();
 
         public ISubscription<Hexagon> EventHexagonSelect => _hexagonSelect;
@@ -20,7 +19,6 @@ namespace Vurbiri.Colonization
         public ISubscription<Id<PlayerId>, Id<ActorTypeId>, int> EventActorKill => _actorKill;
         public ISubscription<bool> EventUnselect => _unselect;
 
-        public ISubscription<bool> EventHexagonShowDistance => _hexagonShowDistance;
         public ISubscription<bool> EventHexagonShow => _hexagonShow;
     }
 }

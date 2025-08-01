@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization.UI
                 {
                     WaitRealtime wait = new(_landingDelay);
                     yield return wait;
-                    yield return _camera.ToDefaultPosition_Wait();
+                    yield return _camera.ToDefaultPosition(true);
                     yield return wait.Restart(_landingDelay * 0.5f);
                 }
                 yield return null;
@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization.UI
             //Local
             IEnumerator OnEndTurn_Cn()
             {
-                yield return _camera.ToDefaultPosition_Wait();
+                yield return _camera.ToDefaultPosition(true);
                 yield return _game.StartTurn();
             }
         }

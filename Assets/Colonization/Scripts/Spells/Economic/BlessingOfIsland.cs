@@ -5,6 +5,7 @@ using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.Characteristics.ReactiveEffectsFactory;
 using static Vurbiri.Colonization.CurrencyId;
+using static Vurbiri.Colonization.GameContainer;
 
 namespace Vurbiri.Colonization
 {
@@ -62,14 +63,13 @@ namespace Vurbiri.Colonization
                     index = FindNearest(position, _blessed);
                     target = _blessed[index]; position = target.Position;
 
-                    //yield return GameContainer.CameraController.ToPosition(position);
-                    GameContainer.CameraController.ToPosition(position);
+                    CameraController.ToPosition(position, true);
 
                     skip = target.Owner != playerId ? 1 : 0;
                     target.AddEffect(new(_attackEffectCode, ActorAbilityId.Attack, TypeModifierId.TotalPercent, value, s_settings.blessDuration, skip));
                     target.AddEffect(new(_defenseEffectCode, ActorAbilityId.Defense, TypeModifierId.TotalPercent, value, s_settings.blessDuration, skip));
 
-                    yield return GameContainer.HitSFX.Hit(s_settings.blessSFX, s_sfxUser, target.Skin);
+                    yield return HitSFX.Hit(s_settings.blessSFX, s_sfxUser, target.Skin);
 
                     _blessed.RemoveAt(index);
                 }

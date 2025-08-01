@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using Vurbiri.Colonization.Controllers;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
@@ -28,8 +29,8 @@ namespace Vurbiri.Colonization.UI
         private bool _showDistance, _showProfit, _showMode, _showNewId;
         private GameObject _thisGameObject;
         private Color _normalColor, _profitColor, _prevColor;
-        private Transform _thisTransform, _cameraTransform;
-        private Quaternion _lastCameraRotation;
+        private Transform _thisTransform;
+        private float _lastAngle;
         private string _defaultCurrencyText;
         private Coroutine _fadeCoroutine, _profitCoroutine, _newIdCoroutine;
         private Unsubscription _unsubscriber;
@@ -46,8 +47,6 @@ namespace Vurbiri.Colonization.UI
         {
             _thisGameObject = gameObject;
             _thisTransform = transform;
-            _cameraTransform = GameContainer.CameraTransform.Transform;
-            _lastCameraRotation = Quaternion.identity;
 
             _normalColor = _prevColor = GameContainer.UI.Colors.TextDefault;
             _profitColor = id != CONST.GATE_ID ? GameContainer.UI.Colors.TextPositive : GameContainer.UI.Colors.TextNegative;
@@ -64,7 +63,7 @@ namespace Vurbiri.Colonization.UI
 
             SetActive();
 
-            _unsubscriber = GameContainer.EventBus.EventHexagonShowDistance.Add(OnShowDistance);
+            _unsubscriber = GameContainer.CameraTransform.Subscribe(OnUpdate);
             _unsubscriber = GameContainer.EventBus.EventHexagonShow.Add(OnCaptionEnable);
         }
 
@@ -96,11 +95,13 @@ namespace Vurbiri.Colonization.UI
             #endregion
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetColor(Color value)
         {
             _prevColor = _idText.color;
             _idText.color = value;
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ResetColor() => _idText.color = _prevColor;
 
         public void Profit()
@@ -126,6 +127,7 @@ namespace Vurbiri.Colonization.UI
             #endregion
 
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Profit(int currency)
         {
             _currencyText.text = string.Format(SPRITE, currency);
@@ -139,22 +141,20 @@ namespace Vurbiri.Colonization.UI
             SetActive();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetActive(bool isShow)
         {
             _showMode = isShow;
             SetActive();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetActive()
         {
             if (IsShow) Show(); else Hide();
         }
 
-        private void OnShowDistance(bool value)
-        {
-            _showDistance = value;
-            SetActive();
-        }
+
         private void OnCaptionEnable(bool value)
         {
             _isEnable = value;
@@ -166,7 +166,9 @@ namespace Vurbiri.Colonization.UI
             if (_isShow) return;
             
             _isShow = true;
+            _thisTransform.localRotation = Quaternion.Euler(ANGLE_X, _lastAngle, 0f);
             _thisGameObject.SetActive(true);
+
             StartCoroutine(ref _fadeCoroutine, Show_Cn());
 
             #region Local: Show_Cn()
@@ -233,13 +235,18 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
-        private void Update()
+        private void OnUpdate(Transform transform)
         {
-            if ((_idTextRenderer.isVisible & _currencyTextRenderer.isVisible) && _lastCameraRotation != _cameraTransform.rotation)
+            bool showDistance = transform.position.y > CameraController.heightShow;
+            if (_showDistance != showDistance)
             {
-                _lastCameraRotation = _cameraTransform.rotation;
-                _thisTransform.localRotation = Quaternion.Euler(ANGLE_X, _lastCameraRotation.eulerAngles.y, 0f);
+                _showDistance = showDistance;
+                SetActive();
             }
+
+            _lastAngle = transform.eulerAngles.y;
+            if (_isShow && (_idTextRenderer.isVisible & _currencyTextRenderer.isVisible))
+                _thisTransform.localRotation = Quaternion.Euler(ANGLE_X, _lastAngle, 0f);
         }
 
         private void OnDestroy()

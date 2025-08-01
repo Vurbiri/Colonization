@@ -20,6 +20,35 @@ namespace Vurbiri.Reactive.Collections
         public int Count => _count.Value;
         public IReactiveValue<int> CountReactive => _count;
 
+        public T First
+        {
+            get
+            {
+                if (_count != 0)
+                {
+                    for (int i = 0; i < _capacity; i++)
+                        if (_values[i] != null)
+                            return _values[i];
+                }
+                return null;
+            }
+        }
+
+        public T Random
+        {
+            get
+            {
+                if (_count != 0)
+                {
+                    int index = UnityEngine.Random.Range(0, _count);
+                    for (int i = 0; i < _capacity; i++)
+                        if (_values[i] != null && index-- == 0)
+                            return _values[i];
+                }
+                return null;
+            }
+        }
+
         #region IReactiveCollection
         public Unsubscription Subscribe(Action<T, TypeEvent> action, bool instantGetValue = true)
         {
@@ -40,18 +69,6 @@ namespace Vurbiri.Reactive.Collections
         {
             int index = item != null ? item.Index : -1;
             return index >= 0 & index < _capacity && _values[index].Equals(item);
-        }
-
-        public T GetRandom()
-        {
-            if(_count != 0)
-            {
-                int index = UnityEngine.Random.Range(0, _count);
-                for (int i = 0; i < _capacity; i++)
-                    if (_values[i] != null && index-- == 0)
-                        return _values[i];
-            }
-            return null;
         }
 
         public void Dispose()

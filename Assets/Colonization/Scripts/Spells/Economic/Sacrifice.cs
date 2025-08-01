@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
                     var actors = s_actors[PlayerId.Satan];
                     if (actors.Count > 0)
                     {
-                        _target = actors.GetRandom();
+                        _target = actors.Random;
                     }
                     else
                     {
@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
                             if (actors.Count > 0 & GameContainer.Diplomacy.GetRelation(param.playerId, playerId) == Relation.Enemy)
                             {
                                 if(_target == null || Chance.Rolling())
-                                    _target = actors.GetRandom();
+                                    _target = actors.Random;
                             }
                         }
                     }
@@ -87,8 +87,18 @@ namespace Vurbiri.Colonization
             {
                 if (_currentPlayer == PlayerId.Person)
                 {
-                    foreach (var actor in s_actors[PlayerId.Person])
+                    var actors = s_actors[PlayerId.Person];
+                    if (actors.Count == 1)
+                    {
+                        var actor = actors.First;
                         actor.Hexagon.ShowMark(false);
+                        CameraController.ToPosition(actor.Position, true);
+                    }
+                    else
+                    {
+                        foreach (var actor in actors)
+                            actor.Hexagon.ShowMark(false);
+                    }
 
                     _waitButton = MessageBox.Open(_text, _buttons);
                     _waitButton.AddListener(Cancel);
@@ -102,13 +112,13 @@ namespace Vurbiri.Colonization
                 var sacrifice = _waitActor.Value;
                 _damage.attack = sacrifice.CurrentHP * s_settings.sacrificeHPPercent / 100;
 
-                CameraController.ToPosition(sacrifice.Position);
-                yield return GameContainer.HitSFX.Hit(s_settings.sacrificeKnifeSFX, s_sfxUser, sacrifice.Skin);
+                CameraController.ToPosition(sacrifice.Position, true);
+                yield return HitSFX.Hit(s_settings.sacrificeKnifeSFX, s_sfxUser, sacrifice.Skin);
                 yield return sacrifice.Death().SetWaitState(DeathState.Animation);
 
-                yield return CameraController.ToPosition(_target.Position);
+                yield return CameraController.ToPosition(_target.Position, true);
                 _damage.Apply(_target);
-                yield return GameContainer.HitSFX.Hit(s_settings.sacrificeTargetSFX, s_sfxUser, _target.Skin);
+                yield return HitSFX.Hit(s_settings.sacrificeTargetSFX, s_sfxUser, _target.Skin);
 
                 EndCast();
             }

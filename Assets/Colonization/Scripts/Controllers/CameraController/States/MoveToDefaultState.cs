@@ -57,7 +57,6 @@ namespace Vurbiri.Colonization.Controllers
                 float progress = 0f;
                 float speed = maxSpeed, deltaSpeed = _default.minSpeed - maxSpeed;
                 float startHeight = cameraPosition.y, deltaHeight = _default.height - startHeight;
-                bool isShow = startHeight > _zoom.heightHexagonShow;
                 
                 while (progress < 1f)
                 {
@@ -69,9 +68,6 @@ namespace Vurbiri.Colonization.Controllers
                     speed = maxSpeed + deltaSpeed * progress;
 
                     yield return null;
-  
-                    if (isShow != cameraPosition.y > _zoom.heightHexagonShow)
-                        _eventBus.TriggerHexagonShowDistance(isShow = !isShow);
                 }
 
                 cameraPosition.y = _default.height;

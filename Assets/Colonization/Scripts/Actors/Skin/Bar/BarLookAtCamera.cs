@@ -1,38 +1,38 @@
 using UnityEngine;
+using Vurbiri.Colonization.Controllers;
 
 namespace Vurbiri.Colonization.Actors
 {
     public class BarLookAtCamera : MonoBehaviour
 	{
-        private Transform _cameraTransform, _thisTransform;
-        private Vector3 _lastCameraPosition = -Vector3.up, _up = Vector3.up;
-        private Quaternion _lastRotation;
-        private IRendererVisible[] _renderers;
-        private int _renderersCount;
+        private Transform _thisTransform;
+        private GameObject _thisGameObject;
+        private bool _isActive = true;
+        private SpriteRenderer _renderer;
 
-        public void Init(params IRendererVisible[] renderers)
+        public void Init(SpriteRenderer renderer)
 		{
-            _cameraTransform = GameContainer.CameraTransform.Transform;
             _thisTransform = transform;
+            _thisGameObject = gameObject;
+            _renderer = renderer;
 
-            _renderers = renderers;
-            _renderersCount = renderers.Length;
+            GameContainer.CameraTransform.Subscribe(OnUpdate);
+            _thisTransform.rotation = Quaternion.LookRotation(GameContainer.CameraTransform.Transform.forward, Vector3.up);
         }
 
-        private void Update()
+        private void OnUpdate(Transform transform)
         {
-            bool isVisible = false;
-            for(int i = 0; i < _renderersCount; i++)
-            {
-                if(isVisible = _renderers[i].IsVisible)
-                    break;
-            }
+            bool isActive = transform.position.y < CameraController.heightShow;
+            if(_isActive != isActive)
+                _thisGameObject.SetActive(_isActive = isActive);
 
-            if (!isVisible || (_lastCameraPosition == _cameraTransform.position && _lastRotation == _thisTransform.rotation))
-                return;
+            if (isActive && _renderer.isVisible)
+                _thisTransform.rotation = Quaternion.LookRotation(transform.forward, Vector3.up);
+        }
 
-            _lastCameraPosition = _cameraTransform.position;
-            _thisTransform.rotation = _lastRotation = Quaternion.LookRotation(_cameraTransform.forward, _up);
+        private void OnDestroy()
+        {
+            GameContainer.CameraTransform.Unsubscribe(OnUpdate);
         }
     }
 }

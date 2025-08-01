@@ -8,6 +8,8 @@ namespace Vurbiri.FSM
         protected TState _previousState;
         protected TState _defaultState;
 
+        protected bool _block;
+
         public TState CurrentState => _currentState;
         public TState PrevState => _previousState;
 
@@ -23,13 +25,17 @@ namespace Vurbiri.FSM
             _currentState.Enter();
         }
 
-        public void SetState(TState newState)
+        public void Block() => _block = true;
+        public void Unblock() => _block = false;
+
+        public void SetState(TState newState, bool block = false)
         {
-            if (!_currentState.Equals(newState))
+            if (!(_block | _currentState.Equals(newState)))
             {
                 _previousState = _currentState;
                 _currentState.Exit();
                 _currentState = newState;
+                _block = block;
                 _currentState.Enter();
             }
         }
@@ -40,6 +46,7 @@ namespace Vurbiri.FSM
             {
                 _currentState.Exit();
                 _currentState = _previousState;
+                _block = false;
                 _currentState.Enter();
             }
         }
@@ -51,6 +58,7 @@ namespace Vurbiri.FSM
                 _previousState = _currentState;
                 _currentState.Exit();
                 _currentState = _defaultState;
+                _block = false;
                 _currentState.Enter();
             }
         }
