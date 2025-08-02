@@ -61,8 +61,6 @@ namespace Vurbiri.Colonization
 
             private IEnumerator Cast_Cn()
             {
-                
-
                 if (_currentPlayer == PlayerId.Person)
                 {
                     foreach (var actor in s_actors[PlayerId.Person])

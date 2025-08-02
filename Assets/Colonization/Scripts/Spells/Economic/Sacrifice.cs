@@ -23,6 +23,7 @@ namespace Vurbiri.Colonization
 
             private Sacrifice(int type, int id) : base(type, id) 
             {
+                _cost.Set(CurrencyId.Blood, s_settings.sacrificeBloodCost);
                 _damage = new(s_settings.sacrificePierce);
                 Localization.Instance.Subscribe(SetText);
             }

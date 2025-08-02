@@ -60,7 +60,8 @@
   "PerkIsKnight": "Можно рекрутировать Рыцарей",
   "PerkMaxWarrior": "Максимальное число воинов <b>+{0}</b>",
   "PerkIsArtefact": "Можно находить осколки Артефакта силы",
-  "SpellSacrificeMsg": "Выберите жертву",
-  "SpellSwapIdMsg": "Выберите два гексагона",
-  "SpellMaraudingMsg": "Украдено"
+  "SpellSacrificeMsg": "<align=\"center\"><size=105%><b>Жертвоприношение</b></size>\n\nВыберите жертву</align>",
+  "SpellSwapIdMsg": "<align=\"center\"><size=105%><b>Обмен</b></size>\n\nВыберите два гексагона</align>",
+  "SpellMaraudingMsg": "<align=\"center\"><size=105%><b>Мародерство</b></size>\n\nУкрадено</align>",
+  "SpellZealMsg": "<align=\"center\"><size=105%><b>Рвение</b></size>\n\nВыберите воина</align>"
 }

@@ -43,7 +43,8 @@ namespace Vurbiri.Colonization.UI
             if (!_spawn)
             {
                 person.SpawnTest(WarriorId.Wizard, 2);
-                GameContainer.Players.AI[0].SpawnTest(WarriorId.Militia, 3);
+                person.SpawnTest(WarriorId.Militia, 2);
+                //GameContainer.Players.AI[0].SpawnTest(WarriorId.Militia, 3);
                 _spawn = true;
                 return;
             }
@@ -52,7 +53,7 @@ namespace Vurbiri.Colonization.UI
             {
                 //SpellParam param = new(0, UnityEngine.Random.Range(0, 5), UnityEngine.Random.Range(0, 5));+
                 SpellParam param = new(0);
-                SpellBook.Cast(EconomicSpellId.Type, EconomicSpellId.Sacrifice, param);
+                SpellBook.Cast(MilitarySpellId.Type, MilitarySpellId.Zeal, param);
             }
             else
             {

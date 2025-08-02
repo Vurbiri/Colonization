@@ -60,7 +60,8 @@
   "PerkIsKnight": "You can recruit Knights",
   "PerkMaxWarrior": "Maximum number of warriors <b>+{0}</b>",
   "PerkIsArtefact": "You can find fragments of the Artifact of Power",
-  "SpellSacrificeMsg": "Select a victim for sacrifice",
-  "SpellSwapIdMsg": "Select two hexagons",
-  "SpellMaraudingMsg": "Stolen"
+  "SpellSacrificeMsg": "<align=\"center\"><size=105%><b>Sacrifice</b></size>\n\nSelect a victim</align>",
+  "SpellSwapIdMsg": "<align=\"center\"><size=105%><b>Swap</b></size>\n\nSelect two hexagons</align>",
+  "SpellMaraudingMsg": "<align=\"center\"><size=105%><b>Marauding</b></size>\n\nStolen</align>",
+  "SpellZealMsg": "<align=\"center\"><size=105%><b>Zeal</b></size>\n\nSelect a warrior</align>"
 }

@@ -24,6 +24,7 @@ namespace Vurbiri.Colonization
         public FileIdAndKey sacrificeText;
         public HitSFXName sacrificeKnifeSFX;
         public HitSFXName sacrificeTargetSFX;
+        public int sacrificeBloodCost;
         public int sacrificeHPPercent;
         public int sacrificePierce;
         [Space]
@@ -39,6 +40,8 @@ namespace Vurbiri.Colonization
         public Color swapHexColor;
         public float swapShowTime;
         [Header("Zeal")]
+        public FileIdAndKey zealText;
+        public HitSFXName zealSFX;
         public int zealPercentHeal;
         public int zealAddAP;
         [Space(15f)]
