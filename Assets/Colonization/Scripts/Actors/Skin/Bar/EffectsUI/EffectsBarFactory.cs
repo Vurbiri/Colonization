@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization.Actors.UI
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class EffectsBarFactory : MonoBehaviour

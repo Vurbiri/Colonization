@@ -1,6 +1,7 @@
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Actors.UI;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.Storage;

@@ -29,8 +29,10 @@ namespace Vurbiri.Colonization.UI
 
         private Color Color { set => _sprite.color = _valueTMP.color = value; }
 
-        public void Init(ProjectColors colors, int orderLevel)
+        public void Init(int orderLevel)
         {
+            var colors = GameContainer.UI.Colors;
+
             _sprite.sortingOrder += orderLevel;
             _valueTMP.sortingOrder += orderLevel;
 

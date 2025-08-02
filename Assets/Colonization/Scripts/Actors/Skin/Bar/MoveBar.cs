@@ -3,34 +3,24 @@ using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization.Actors.UI
 {
-    public class MoveBar : MonoBehaviour
+    public class MoveBar : System.IDisposable
     {
-        [SerializeField] private SpriteRenderer _moveSprite;
+        private readonly SpriteRenderer _moveSprite;
+        private readonly Unsubscription _unsubscriber;
 
-        private Unsubscription _unsubscriber;
-
-        public void Init(AbilitiesSet<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, int orderLevel)
+        public MoveBar(SpriteRenderer moveSprite, AbilitiesSet<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, int orderLevel)
         {
-            _moveSprite.sortingOrder += orderLevel;
-            _moveSprite.color = colors[ActorAbilityId.IsMove];
+            moveSprite.sortingOrder += orderLevel;
+            moveSprite.color = colors[ActorAbilityId.IsMove];
 
+            _moveSprite   = moveSprite;
             _unsubscriber = abilities[ActorAbilityId.IsMove].Subscribe(SetMove);
         }
 
+        public void Dispose() => _unsubscriber.Unsubscribe();
+        
         private void SetMove(int value) => _moveSprite.enabled = value > 0;
-
-        private void OnDestroy()
-        {
-            _unsubscriber?.Unsubscribe();
-        }
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            this.SetComponent(ref _moveSprite);
-        }
-#endif
-	}
+    }
 }

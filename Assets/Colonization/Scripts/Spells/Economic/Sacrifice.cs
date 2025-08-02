@@ -119,7 +119,7 @@ namespace Vurbiri.Colonization
                 yield return sacrifice.Death().SetWaitState(DeathState.Animation);
 
                 yield return CameraController.ToPosition(_target.Position, true);
-                _damage.Apply(_target);
+                _damage.Apply(_target); s_humans[_currentPlayer].Pay(_cost);
                 yield return HitSFX.Hit(s_settings.sacrificeTargetSFX, s_sfxUser, _target.Skin);
 
                 EndCast();

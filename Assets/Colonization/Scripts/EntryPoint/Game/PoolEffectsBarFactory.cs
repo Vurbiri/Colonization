@@ -1,5 +1,5 @@
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Actors.UI;
 
 namespace Vurbiri.Colonization.EntryPoint
 {

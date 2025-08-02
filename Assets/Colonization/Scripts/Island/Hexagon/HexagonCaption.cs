@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization.UI
 
             SetActive();
 
-            _unsubscriber = GameContainer.CameraTransform.Subscribe(OnUpdate);
+            _unsubscriber = GameContainer.CameraTransform.Subscribe(OnChangeCamera);
             _unsubscriber = GameContainer.EventBus.EventHexagonShow.Add(OnCaptionEnable);
         }
 
@@ -235,7 +235,7 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
-        private void OnUpdate(Transform transform)
+        private void OnChangeCamera(Transform transform)
         {
             bool showDistance = transform.position.y > CameraController.heightShow;
             if (_showDistance != showDistance)

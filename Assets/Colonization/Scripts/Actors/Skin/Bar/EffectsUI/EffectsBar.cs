@@ -6,7 +6,7 @@ using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 using Object = UnityEngine.Object;
 
-namespace Vurbiri.Colonization.Actors
+namespace Vurbiri.Colonization.Actors.UI
 {
     sealed public class EffectsBar : APooledObject<EffectsBar>
     {
@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization.Actors
             Index = effect.Index;
             Duration = effect.Duration;
 
-            _unsubscribers += actor.Subscribe((item, type) => { if (type == TypeEvent.Remove) Destroy(); }, false);
+            _unsubscribers += actor.Subscribe(OnRemoveActor, false);
             _unsubscribers += effect.Subscribe(OnChangeEffect, false);
 
             Enable();
@@ -58,6 +58,11 @@ namespace Vurbiri.Colonization.Actors
             ToPool();
         }
 
+        private void OnRemoveActor(Actor actor, TypeEvent type)
+        {
+            if (type == TypeEvent.Remove)
+                Destroy();
+        }
         private void OnChangeEffect(ReactiveEffect effect, TypeEvent operation)
         {
             switch (operation)

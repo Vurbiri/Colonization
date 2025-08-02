@@ -38,14 +38,19 @@ namespace Vurbiri.Colonization.Characteristics
         private int OnAddition(int value) => _value + value;
         private int OnTotalPercent(int value) => _value + _maxValue * value / 100;
 
-        private void OnMaxChange(int value)
+        private void OnMaxChange(int newMaxValue)
         {
-            if (value != _maxValue)
-            {
-                int current = (int)Math.Round((double)_value * value / _maxValue);
-                _maxValue = value;
+            int oldMaxValue = _maxValue, currentValue = _value;
+            _maxValue = newMaxValue;
 
-                Set(current);
+            if (newMaxValue > oldMaxValue)
+                currentValue = (int)Math.Round((double)currentValue * newMaxValue / oldMaxValue);
+            currentValue = Math.Clamp(currentValue, 0, newMaxValue);
+
+            if(currentValue != _value)
+            {
+                _value = currentValue;
+                _eventChanged.Invoke(currentValue);
             }
         }
     }
