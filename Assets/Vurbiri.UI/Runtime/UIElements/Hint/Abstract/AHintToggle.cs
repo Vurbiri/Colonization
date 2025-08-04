@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
-	public abstract class AHintToggle<TToggle> : VToggle<TToggle> where TToggle : AHintToggle<TToggle>
+	public abstract class AHintToggle<TToggle> : VToggleGraphic<TToggle> where TToggle : AHintToggle<TToggle>
     {
         private AHint _hint;
         private bool _isShowingHint = false;

@@ -42,9 +42,9 @@ namespace Vurbiri.Colonization.UI
 
             if (!_spawn)
             {
-                person.SpawnTest(WarriorId.Wizard, 2);
-                person.SpawnTest(WarriorId.Militia, 2);
-                //GameContainer.Players.AI[0].SpawnTest(WarriorId.Militia, 3);
+                person.SpawnTest(WarriorId.Wizard, 4);
+                //person.SpawnTest(WarriorId.Militia, 2);
+                //GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 3);
                 _spawn = true;
                 return;
             }
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization.UI
             {
                 //SpellParam param = new(0, UnityEngine.Random.Range(0, 5), UnityEngine.Random.Range(0, 5));+
                 SpellParam param = new(0);
-                SpellBook.Cast(MilitarySpellId.Type, MilitarySpellId.Zeal, param);
+                SpellBook.Cast(MilitarySpellId.Type, MilitarySpellId.SwapId, param);
             }
             else
             {
@@ -62,16 +62,18 @@ namespace Vurbiri.Colonization.UI
         }
         // TEST
 
-        public void Init(Human player, CanvasHint hint)
+        public void Init()
         {
-            base.Init(hint, 0.48f);
+            base.Init(GameContainer.UI.CanvasHint, 0.48f);
 
+            var player = GameContainer.Players.Person;
             _level.Init(player.Artefact.MaxLevel);
             for (int i = _abilities.Length - 1; i >= 0; i--)
             {
                 _abilities[i].Init(this);
                 _timers.Push(new(_showDuration));
             }
+
 
             _unsubscribers += Localization.Instance.Subscribe(SetLocalizationText);
             _unsubscribers += player.Artefact.Subscribe(SetHintValues);

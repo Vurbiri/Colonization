@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-	public struct SpellParam
+	public class SpellParam
 	{
         public int playerId;
         public int valueA;
@@ -23,5 +23,7 @@ namespace Vurbiri.Colonization
             this.valueA = valueA;
             this.valueB = valueB;
         }
+
+        public void Reset() => valueA = valueB = 0;
     }
 }

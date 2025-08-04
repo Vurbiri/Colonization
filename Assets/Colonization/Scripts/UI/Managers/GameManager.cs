@@ -15,22 +15,22 @@ namespace Vurbiri.Colonization.UI
         private GameLoop _game;
         private CameraController _camera;
 
-        public void Init(GameLoop game, CameraController camera, MonoBehaviour mono)
+        public void Init(MonoBehaviour mono)
 		{
             _label.Init();
 
             _mono = mono;
-            _game = game;
-            _camera = camera;
+            _game = GameContainer.GameLoop;
+            _camera = GameContainer.CameraController;
 
-            game.Subscribe(GameModeId.Landing, OnLanding);
-            game.Subscribe(GameModeId.EndLanding, OnEndLanding);
+            _game.Subscribe(GameModeId.Landing, OnLanding);
+            _game.Subscribe(GameModeId.EndLanding, OnEndLanding);
 
-            game.Subscribe(GameModeId.EndTurn, OnEndTurn);
-            game.Subscribe(GameModeId.StartTurn, OnStartTurn);
-            game.Subscribe(GameModeId.WaitRoll, OnWaitRoll);
-            game.Subscribe(GameModeId.Roll, OnRoll);
-            game.Subscribe(GameModeId.Profit, OnProfit);
+            _game.Subscribe(GameModeId.EndTurn, OnEndTurn);
+            _game.Subscribe(GameModeId.StartTurn, OnStartTurn);
+            _game.Subscribe(GameModeId.WaitRoll, OnWaitRoll);
+            _game.Subscribe(GameModeId.Roll, OnRoll);
+            _game.Subscribe(GameModeId.Profit, OnProfit);
         }
 
         private void OnLanding(TurnQueue turnQueue, int hexId)

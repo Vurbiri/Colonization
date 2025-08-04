@@ -16,20 +16,19 @@ namespace Vurbiri.Colonization.UI
         private Crossroad _currentCrossroad;
         private CrossroadRoadsMenu _roadsMenu;
         private CrossroadWarriorsMenu _warriorsMenu;
-        private Human _player;
 
-        public ISubscription<IMenu, bool> Init(ContextMenuSettings settings, CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu)
+        public ISubscription<IMenu, bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu)
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;
-            _player = settings.player;
 
-            _buttonClose.Init(settings.hint, Close);
+            _buttonClose.Init(Close);
 
-            _buttonUpgrade.Init(settings, settings.prices.Edifices, OnUpgrade);
-            _buttonRecruiting.Init(settings.hint, OnHiring);
-            _buttonWall.Init(settings, settings.prices.Wall, OnWall);
-            _buttonRoads.Init(settings, settings.prices.Road, OnRoads);
+            var prices = GameContainer.Prices;
+            _buttonUpgrade.Init(prices.Edifices, OnUpgrade);
+            _buttonRecruiting.Init(OnHiring);
+            _buttonWall.Init(prices.Wall, OnWall);
+            _buttonRoads.Init(prices.Road, OnRoads);
 
             base.CloseInstant();
 
@@ -40,10 +39,11 @@ namespace Vurbiri.Colonization.UI
         {
             _currentCrossroad = crossroad;
 
-            _buttonRecruiting.Setup(_player.CanAnyRecruiting(crossroad));
-            _buttonUpgrade.Setup(_player.CanEdificeUpgrade(crossroad), _player.IsEdificeUnlock(crossroad.NextId), crossroad.NextId.Value);
-            _buttonWall.Setup(_player.CanWallBuild(crossroad), _player.IsWallUnlock());
-            _buttonRoads.Setup(_player.CanRoadBuild(crossroad));
+            var person = GameContainer.Players.Person;
+            _buttonRecruiting.Setup(person.CanAnyRecruiting(crossroad));
+            _buttonUpgrade.Setup(person.CanEdificeUpgrade(crossroad), person.IsEdificeUnlock(crossroad.NextId), crossroad.NextId.Value);
+            _buttonWall.Setup(person.CanWallBuild(crossroad), person.IsWallUnlock());
+            _buttonRoads.Setup(person.CanRoadBuild(crossroad));
 
             base.Open();
         }
@@ -62,13 +62,13 @@ namespace Vurbiri.Colonization.UI
         private void OnUpgrade()
         {
             base.Close();
-            _player.BuyEdificeUpgrade(_currentCrossroad);
+            GameContainer.Players.Person.BuyEdificeUpgrade(_currentCrossroad);
         }
 
         private void OnWall()
         {
             base.Close();
-            _player.BuyWall(_currentCrossroad);
+            GameContainer.Players.Person.BuyWall(_currentCrossroad);
         }
 
         private void OnRoads()

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
 
@@ -17,32 +16,29 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Color _colorLearn;
 
-        private Human _player;
-
         public ISubscription OnOpen => _switcher.onOpen;
         public ISubscription OnClose => _switcher.onClose;
 
-        public void Init(Human player, CanvasHint hint, bool open)
+        public void Init(bool open)
         {
             _switcher.Init(this, open);
             _switcher.onClose.Add(SetAllTogglesOff);
 
-            _player = player;
-
-            _learnButton.Init(hint, OnLearn);
+            _learnButton.Init(OnLearn);
             _closeButton.AddListener(Close);
 
-            PerkTree perkTree = player.Perks;
-            var blood = player.Resources.Get(CurrencyId.Blood);
+            var person = GameContainer.Players.Person;
+            var perkTree = person.Perks;
+            var blood = person.Resources.Get(CurrencyId.Blood);
 
             foreach (var perk in _toggles)
-                perk.Init(perkTree, blood, hint, _colorLearn);
+                perk.Init(perkTree, blood, _colorLearn);
 
             for (int i = 0; i < TypeOfPerksId.Count; i++)
                 _progressBars[i].Init(perkTree.GetProgress(i));
 
 
-            _onValueChanged.Add(toggle => _learnButton.Interactable = toggle != null, _activeToggle);
+            _onValueChanged.Add(OnButtonInteractable, _activeToggle);
 
             _progressBars = null; _closeButton = null;
         }
@@ -51,12 +47,11 @@ namespace Vurbiri.Colonization.UI
         public void Open() => _switcher.Switch(true);
         public void Switch() => _switcher.Switch();
 
+        private void OnButtonInteractable(PerkToggle toggle) => _learnButton.Interactable = toggle != null;
         private void OnLearn()
         {
             if (_activeToggle)
-            {
-                _activeToggle.BuyPerk(_player, _colorLearn);
-            }
+                _activeToggle.BuyPerk(_colorLearn);
         }
     }
 }

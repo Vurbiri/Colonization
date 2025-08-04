@@ -6,7 +6,7 @@ namespace Vurbiri.UI
     [AddComponentMenu(VUI_CONST_ED.NAME_MENU + VUI_CONST_ED.TOGGLE, VUI_CONST_ED.TOGGLE_ORDER)]
     [RequireComponent(typeof(RectTransform))]
 #endif
-    sealed public class VToggle : VToggle<VToggle>
+    sealed public class VToggle : VToggleGraphic<VToggle>
     {
         
     }

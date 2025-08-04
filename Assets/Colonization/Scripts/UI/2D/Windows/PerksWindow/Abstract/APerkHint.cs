@@ -13,9 +13,9 @@ namespace Vurbiri.Colonization.UI
 
         private Unsubscription _unsubscriber;
 
-        public virtual void Init(Perk perk, CanvasHint hint)
+        public virtual void Init(Perk perk)
         {
-            base.Init(hint, 0.48f);
+            base.Init(GameContainer.UI.CanvasHint, 0.48f);
             _unsubscriber = Localization.Instance.Subscribe(SetTextAndCost);
         }
 

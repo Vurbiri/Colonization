@@ -1,4 +1,5 @@
 using System;
+using Vurbiri.Colonization.EntryPoint;
 
 namespace Vurbiri.Colonization
 {
@@ -6,18 +7,16 @@ namespace Vurbiri.Colonization
     {
         private readonly IPlayerController[] _players = new IPlayerController[PlayerId.Count];
 
-        public PersonController Person { get; }
-        public AIController[] AI { get; } = new AIController[2];
-
-        public Players(Player.Settings settings, GameLoop game)
+        public Players(Player.Settings settings, GameContent content)
         {
-            _players[PlayerId.Person] = Person = new(settings);
+            _players[PlayerId.Person] = content.person = new(settings);
 
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
-                _players[i] = AI[i-1] =new AIController(i, settings);
+                _players[i] = content.ai[i-1] =new AIController(i, settings);
 
-            _players[PlayerId.Satan] = new SatanController(settings);
+            _players[PlayerId.Satan] = content.satan = new SatanController(settings);
 
+            GameLoop game = content.gameLoop;
             game.Subscribe(GameModeId.Landing,    (turn, _) => _players[turn.currentId.Value].OnLanding());
             game.Subscribe(GameModeId.EndLanding, (turn, _) => _players[turn.currentId.Value].OnEndLanding());
             game.Subscribe(GameModeId.EndTurn,    (turn, _) => _players[turn.currentId.Value].OnEndTurn());

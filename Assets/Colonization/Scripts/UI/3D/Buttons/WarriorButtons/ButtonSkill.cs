@@ -14,9 +14,9 @@ namespace Vurbiri.Colonization.UI
         private Actor _currentActor;
         private int _idSkill;
 
-        public void Init(ButtonSettings settings, AWorldMenu parent)
+        public void Init(AWorldMenu parent)
         {
-            Init(settings.hint, OnClick, false);
+            Init(GameContainer.UI.WorldHint, OnClick, false);
 
             _parent = parent;
         }

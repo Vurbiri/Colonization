@@ -1,5 +1,4 @@
 using UnityEngine;
-using Vurbiri.Colonization.EntryPoint;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -16,11 +15,9 @@ namespace Vurbiri.Colonization.UI
         private IWindow[] _windows;
         private int _openWindowsCount;
 
-        public void Init(GameContent content)
+        public void Init()
         {
             _windows = new IWindow[] { _perksWindow, _exchangeWindow };
-
-            var player = content.players.Person;
 
             Debug.Log("WindowsManager - убрать комментарии - /*, false*/");
 
@@ -28,17 +25,17 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < COUNT; i++)
             {
                 window = _windows[i];
-                window.Init(player, content.canvasHint, false);
+                window.Init(false);
                 window.OnOpen.Add(OnOpenWindow);
                 window.OnClose.Add(OnCloseWindow);
 
-                _buttons[i].Init(content.canvasHint, window.Switch/*, false*/);
+                _buttons[i].Init(window.Switch/*, false*/);
             }
 
             _perksWindow.OnOpen.Add(_exchangeWindow.Close);
             _exchangeWindow.OnOpen.Add(_perksWindow.Close);
 
-            player.Interactable.Subscribe(OnInteractable);
+            GameContainer.Players.Person.Interactable.Subscribe(OnInteractable);
 
             _perksWindow = null; _exchangeWindow = null;
         }

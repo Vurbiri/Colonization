@@ -5,36 +5,35 @@ namespace Vurbiri
     public class WaitState<T> : IWait where T : Enum
     {
         private readonly WaitStateSource<T> _source;
-        private readonly T _waitState;
+        private readonly int _waitStateHashCode;
         private bool _isWait;
 
         internal WaitState(WaitStateSource<T> source, T waitValue)
         {
             _source = source;
-            _waitState = waitValue;
+            _waitStateHashCode = waitValue.GetHashCode();
         }
 
-        public T CurrentState => _source._state;
         public object Current => null;
         public bool IsWait => _isWait;
 
-        public bool MoveNext() => _isWait = _waitState.GetHashCode() != _source._state.GetHashCode();
+        public bool MoveNext() => _isWait = _waitStateHashCode != _source._stateHashCode;
         public void Reset() { }
     }
 
     public abstract class WaitStateSource<T> where T : Enum
     {
-        internal T _state;
+        internal int _stateHashCode;
 
         public WaitState<T> SetWaitState(T value) => new(this, value);
     }
 
     public class WaitStateController<T> : WaitStateSource<T> where T : Enum
     {
-        public WaitStateController() => _state = default;
-        public WaitStateController(T defaultValue) => _state = defaultValue;
+        public WaitStateController() => _stateHashCode = default(T).GetHashCode();
+        public WaitStateController(T defaultValue) => _stateHashCode = defaultValue.GetHashCode();
 
-        public void SetState(T value) => _state = value;
-        public void Reset() => _state = default;
+        public void SetState(T value) => _stateHashCode = value.GetHashCode();
+        public void Reset() => _stateHashCode = default(T).GetHashCode();
     }
 }

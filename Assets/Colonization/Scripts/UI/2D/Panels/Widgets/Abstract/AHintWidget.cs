@@ -15,9 +15,9 @@ namespace Vurbiri.Colonization.UI
 
         protected Unsubscriptions _unsubscribers;
 
-        protected void Init(CanvasHint hint)
+        protected void Init()
         {
-            base.Init(hint, 0.5f);
+            base.Init(GameContainer.UI.CanvasHint, 0.5f);
 
             _unsubscribers += Localization.Instance.Subscribe(SetLocalizationText);
         }

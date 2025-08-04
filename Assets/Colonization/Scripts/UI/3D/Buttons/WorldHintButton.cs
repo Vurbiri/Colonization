@@ -12,9 +12,9 @@ namespace Vurbiri.Colonization.UI
 
         private Unsubscription _unsubscriber;
 
-        public void Init(WorldHint hint, Action action)
+        public void Init(Action action)
         {
-            base.Init(hint, action, true);
+            base.Init(GameContainer.UI.WorldHint, action, true);
 
             _unsubscriber = Localization.Instance.Subscribe(SetLocalizationText);
         }

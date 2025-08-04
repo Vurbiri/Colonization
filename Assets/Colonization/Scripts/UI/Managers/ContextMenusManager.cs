@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using Vurbiri.Colonization.Actors;
-using Vurbiri.Colonization.Controllers;
+using static Vurbiri.Colonization.GameContainer;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -19,43 +19,39 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private ButtonCancel _buttonCancel;
 
-        private CameraTransform _cameraTransform;
         private bool _enable, _isNotCast, _lookAtEnabled;
         private IMenu _currentOpenMenu;
 
-        public void Init(ContextMenuSettings settings)
+        public void Init()
         {
-            _cameraTransform = settings.cameraTransform;
+            _buttonCancel  .Init().Add(OnActiveMenu);
+            _crossroadMenu .Init(_roadsMenu, _recruitingMenu).Add(OnActiveMenu);
+            _recruitingMenu.Init(_crossroadMenu).Add(OnActiveMenu);
+            _roadsMenu     .Init(_crossroadMenu).Add(OnActiveMenu);
+            _warriorsMenu  .Init().Add(OnActiveMenu);
 
-            _buttonCancel  .Init(settings.hint).Add(OnActiveMenu);
-            _crossroadMenu .Init(settings, _roadsMenu, _recruitingMenu).Add(OnActiveMenu);
-            _recruitingMenu.Init(settings, _crossroadMenu).Add(OnActiveMenu);
-            _roadsMenu     .Init(settings, _crossroadMenu).Add(OnActiveMenu);
-            _warriorsMenu  .Init(settings).Add(OnActiveMenu);
+            CameraTransform.Subscribe(LookAtCamera);
 
-            settings.cameraTransform.Subscribe(LookAtCamera);
-
-            settings.player.SpellBook.IsCastReactive.Subscribe(value => _isNotCast = !value);
+            GameContainer.Players.Person.SpellBook.IsCastReactive.Subscribe(value => _isNotCast = !value);
 
             var game = GameContainer.GameLoop;
             game.Subscribe(GameModeId.EndTurn, OnEndTurn);
             game.Subscribe(GameModeId.Play, OnGamePlay);
 
-            var bus = GameContainer.EventBus;
-            bus.EventUnselect.Add(OnClose);
-            bus.EventActorSelect.Add(OnSelectWarrior);
+            EventBus.EventUnselect.Add(OnClose);
+            EventBus.EventActorSelect.Add(OnSelectWarrior);
 
             if (game.GameMode == GameModeId.Landing)
             {
                 game.Subscribe(GameModeId.Landing, OnInit);
                 game.Subscribe(GameModeId.EndLanding, OnEndInit);
 
-                _initMenu.Init(settings).Add(OnActiveMenu);
-                bus.EventCrossroadSelect.Add(OnInitCrossroad);
+                _initMenu.Init().Add(OnActiveMenu);
+                EventBus.EventCrossroadSelect.Add(OnInitCrossroad);
             }
             else
             {
-                bus.EventCrossroadSelect.Add(OnSelectCrossroad);
+                EventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
                 Object.Destroy(_initMenu.gameObject);  _initMenu = null;
             }
         }
@@ -64,7 +60,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (_enable & _isNotCast & crossroad.Interactable & _currentOpenMenu == null)
             {
-                _cameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
+                CameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
                 _crossroadMenu.Open(crossroad);
                 _buttonCancel.Setup(crossroad);
             }
@@ -73,7 +69,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (_enable & _isNotCast & crossroad.Interactable & _currentOpenMenu == null)
             {
-                _cameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
+                CameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
                 _initMenu.Open(crossroad);
                 _buttonCancel.Setup(crossroad);
             }
@@ -83,7 +79,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (_enable & _isNotCast & actor.CanUseSkills & _currentOpenMenu == null)
             {
-                _cameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, actor.Position);
+                CameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, actor.Position);
                 _warriorsMenu.Open(actor);
                 _buttonCancel.Setup(actor);
             }
@@ -115,8 +111,8 @@ namespace Vurbiri.Colonization.UI
             GameContainer.GameEvents.Unsubscribe(GameModeId.Landing, OnInit);
             GameContainer.GameEvents.Unsubscribe(GameModeId.EndLanding, OnEndInit);
 
-            GameContainer.EventBus.EventCrossroadSelect.Remove(OnInitCrossroad);
-            GameContainer.EventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
+            EventBus.EventCrossroadSelect.Remove(OnInitCrossroad);
+            EventBus.EventCrossroadSelect.Add(OnSelectCrossroad);
 
            _initMenu = null;
         }

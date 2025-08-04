@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -9,12 +8,12 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private CurrencyPopup[] _currencies;
         [SerializeField] private Amount _amount;
 
-        public void Init(Direction2 directionPopup, ACurrenciesReactive currencies, ProjectColors colors, CanvasHint hint)
+        public void Init(Direction2 directionPopup, ACurrenciesReactive currencies)
         {
             for (int i = 0; i < CurrencyId.MainCount; i++)
-                _currencies[i].Init(i, currencies, colors, directionPopup, hint);
+                _currencies[i].Init(i, currencies, directionPopup);
 
-            _amount.Init(currencies.CurrentAmount, currencies.MaxAmount, colors, hint);
+            _amount.Init(currencies.CurrentAmount, currencies.MaxAmount);
 
             Destroy(this);
         }

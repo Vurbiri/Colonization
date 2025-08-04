@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri.Collections;
@@ -14,16 +13,14 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private IdArray<EdificeId, ButtonView> _edificeView;
 
-        private Localization _localization;
-        private IReadOnlyList<ACurrencies> _edificePrices;
+        private ReadOnlyIdArray<EdificeId, CurrenciesLite> _edificePrices;
         private ACurrencies _cash;
 
-        public void Init(ButtonSettings settings, IReadOnlyList<ACurrencies> edificePrices, Action action)
+        public void Init(ReadOnlyIdArray<EdificeId, CurrenciesLite> edificePrices, Action action)
         {
-            base.Init(settings, action);
-            _localization = Localization.Instance;
+            base.Init(action);
             _edificePrices = edificePrices;
-            _cash = settings.player.Resources;
+            _cash = GameContainer.Players.Person.Resources;
         }
 
         public void Setup(bool isEnable, bool isUnlock, int edificeId)
@@ -40,7 +37,7 @@ namespace Vurbiri.Colonization.UI
             CombineInteractable(isUnlock, _cash >= cost);
             _buttonIcon.sprite = view.sprite;
 
-            SetTextHint(_localization.GetText(LangFiles.Gameplay, view.keyName), _cash, cost);
+            SetTextHint(Localization.Instance.GetText(LangFiles.Gameplay, view.keyName), _cash, cost);
 
             _thisGameObject.SetActive(true);
         }

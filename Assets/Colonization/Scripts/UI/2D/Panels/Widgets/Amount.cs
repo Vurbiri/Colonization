@@ -1,7 +1,6 @@
 using UnityEngine;
 using Vurbiri.International;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -15,10 +14,11 @@ namespace Vurbiri.Colonization.UI
         private string _colorNormal, _colorNormalHint, _colorOver;
         private string _textNormalHint, _textOverHint;
 
-        public void Init(IReactive<int> amount, IReactive<int> max, ProjectColors colors, CanvasHint hint)
+        public void Init(IReactive<int> amount, IReactive<int> max)
         {
-            base.Init(hint);
+            base.Init();
 
+            var colors = GameContainer.UI.Colors;
             _colorNormal = colors.PanelTextTag;
             _colorNormalHint = colors.HintDefaultTag;
             _colorOver = colors.TextNegativeTag;

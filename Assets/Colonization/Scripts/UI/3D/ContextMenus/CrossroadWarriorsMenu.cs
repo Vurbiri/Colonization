@@ -14,15 +14,15 @@ namespace Vurbiri.Colonization.UI
 
         private CrossroadMainMenu _mainMenu;
 
-        public ISubscription<IMenu, bool> Init(ContextMenuSettings settings, CrossroadMainMenu mainMenu)
+        public ISubscription<IMenu, bool> Init(CrossroadMainMenu mainMenu)
         {
-            var warriorPrices = settings.prices.Warriors;
+            var warriorPrices = GameContainer.Prices.Warriors;
             _mainMenu = mainMenu;
 
-            _buttonBack.Init(settings.hint, OnClose);
+            _buttonBack.Init(OnClose);
 
             for (int i = 0; i < WarriorId.Count; i++)
-                _buttons[i].Init(settings, warriorPrices[i], this);
+                _buttons[i].Init(warriorPrices[i], this);
 
             base.CloseInstant();
 

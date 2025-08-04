@@ -172,8 +172,7 @@ namespace Vurbiri.UI
             this.SetChildren(ref _textTMP);
             this.SetChildren(ref _outline);
 
-            if (_waitSwitch.CanvasGroup == null)
-                _waitSwitch.OnValidate(GetComponentInChildren<CanvasGroup>());
+            _waitSwitch.OnValidate(this);
         }
 #endif
     }

@@ -16,8 +16,8 @@ namespace Vurbiri.Colonization
         public CurrenciesLite HumanDefault => _playersDefault;
         public CurrenciesLite Road => _roads;
         public CurrenciesLite Wall => _wall;
-        public IdArray<EdificeId, CurrenciesLite> Edifices => _edifices;
-        public IdArray<WarriorId, CurrenciesLite> Warriors => _warriors;
+        public ReadOnlyIdArray<EdificeId, CurrenciesLite> Edifices => _edifices;
+        public ReadOnlyIdArray<WarriorId, CurrenciesLite> Warriors => _warriors;
 
 #if UNITY_EDITOR
         private void OnValidate()

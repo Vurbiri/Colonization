@@ -1,13 +1,12 @@
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
     sealed public class CurrentMax : ACurrentMax<ReactiveCombination<int, int>>
     {
-        public void Init(IReactive<int> current, IReactive<int> max, CanvasHint hint)
+        public void Init(IReactive<int> current, IReactive<int> max)
         {
-            base.Init(hint);
+            base.Init();
             _reactiveCurrentMax = new(current, max, SetCurrentMax);
         }
     }

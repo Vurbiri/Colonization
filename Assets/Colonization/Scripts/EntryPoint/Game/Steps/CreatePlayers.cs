@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override IEnumerator GetEnumerator()
         {
-            _content.players = new Players(_playerSettings, _content.gameLoop);
+            _content.players = new Players(_playerSettings, _content);
             yield return null;
         }
     }

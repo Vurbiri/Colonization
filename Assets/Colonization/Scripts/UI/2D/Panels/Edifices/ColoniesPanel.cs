@@ -1,18 +1,18 @@
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
     sealed public class ColoniesPanel : AEdificesPanel<CurrentMax, ColonyButton>
     {
-        public void Init(Human player, IdArray<EdificeId, Sprite> sprites, CanvasHint hint)
+        public void Init(IdArray<EdificeId, Sprite> sprites)
         {
+            var player = GameContainer.Players.Person;
             var edifices = player.GetEdifices(_id);
             var maxEdifices = player.GetAbility(_id.ToState());
 
             InitEdifice(edifices, sprites);
-            _widget.Init(edifices.CountReactive, maxEdifices, hint);
+            _widget.Init(edifices.CountReactive, maxEdifices);
         }
     }
 }

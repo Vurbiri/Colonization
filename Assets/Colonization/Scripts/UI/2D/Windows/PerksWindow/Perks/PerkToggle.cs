@@ -7,7 +7,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-	sealed public class PerkToggle : VToggle<PerkToggle>
+	sealed public class PerkToggle : VToggleGraphic<PerkToggle>
     {
         [SerializeField, ReadOnly] private int _typePerkId;
         [SerializeField, ReadOnly] private int _perkId;
@@ -16,10 +16,10 @@ namespace Vurbiri.Colonization.UI
         private ReactiveCombination<int, int> _combination;
         private int _cost, _points;
 
-        public void Init(PerkTree perkTree, IReactive<int> blood, CanvasHint hint, Color colorLearn)
+        public void Init(PerkTree perkTree, IReactive<int> blood, Color colorLearn)
         {
             Perk perk = perkTree[_typePerkId, _perkId];
-            _hint.Init(perk, hint);
+            _hint.Init(perk);
 
             if(perkTree.IsPerkLearned(_typePerkId, _perkId))
             {
@@ -33,9 +33,9 @@ namespace Vurbiri.Colonization.UI
             _combination = new(perkTree.GetProgress(_typePerkId), blood, OnInteractable);
         }
 
-        public void BuyPerk(Human player, Color colorLearn)
+        public void BuyPerk(Color colorLearn)
         {
-            player.BuyPerk(_typePerkId, _perkId);
+            GameContainer.Players.Person.BuyPerk(_typePerkId, _perkId);
             Learn(colorLearn);
         }
 

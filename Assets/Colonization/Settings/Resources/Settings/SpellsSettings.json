@@ -36,12 +36,12 @@
     "SpellSwapIdMsg"
   ],
   "swapHexColor": [
-    0.0,
-    0.0,
-    0.0,
-    0.0
+    0.213,
+    0.213,
+    0.426,
+    1.0
   ],
-  "swapShowTime": 0.0,
+  "swapShowTime": 2.0,
   "zealText": [
     "1",
     "SpellZealMsg"

@@ -13,19 +13,17 @@ namespace Vurbiri.Colonization.UI
         protected ACurrencies _cash;
         protected Unsubscription _unsubscriber;
         protected string _caption;
-        protected Human _player;
         protected AWorldMenu _parent;
         protected Crossroad _currentCrossroad;
 
         public Id<T> Id => _id;
 
-        public virtual void Init(ButtonSettings settings, ACurrencies cost, AWorldMenu parent)
+        public virtual void Init(ACurrencies cost, AWorldMenu parent)
         {
-            base.Init(settings, OnClick);
+            base.Init(OnClick);
             
-            _player = settings.player;
             _cost = cost;
-            _cash = _player.Resources;
+            _cash = GameContainer.Players.Person.Resources;
             _parent = parent;
             _unsubscriber = Localization.Instance.Subscribe(SetText);
         }

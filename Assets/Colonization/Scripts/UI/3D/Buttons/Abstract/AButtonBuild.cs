@@ -15,12 +15,12 @@ namespace Vurbiri.Colonization.UI
 
         public Vector3 LocalPosition { set => _rectTransform.localPosition = value; }
 
-        protected virtual void Init(ButtonSettings settings, Action action)
+        protected virtual void Init(Action action)
         {
-            base.Init(settings.hint, action, true);
+            base.Init(GameContainer.UI.WorldHint, action, true);
 
-            _hexColorPlus = settings.colorSettings.TextPositiveTag;
-            _hexColorMinus = settings.colorSettings.TextNegativeTag;
+            _hexColorPlus = GameContainer.UI.Colors.TextPositiveTag;
+            _hexColorMinus = GameContainer.UI.Colors.TextNegativeTag;
         }
 
         protected void SetTextHint(string caption, ACurrencies cash, ACurrencies cost)

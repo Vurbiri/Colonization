@@ -1,6 +1,5 @@
 using UnityEngine;
 using Vurbiri.International;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -9,10 +8,10 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
-        public void Init(int id, ACurrenciesReactive currencies, ProjectColors colors, Direction2 offsetPopup, CanvasHint hint)
+        public void Init(int id, ACurrenciesReactive currencies, Direction2 offsetPopup)
         {
-            base.Init(hint);
-            _popup.Init(colors, offsetPopup);
+            base.Init();
+            _popup.Init(offsetPopup);
 
             var currency = currencies.Get(id);
             _unsubscribers += currency.Subscribe(SetValue);

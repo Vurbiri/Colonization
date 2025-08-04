@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.UI
         private Color _colorPlus, _colorMinus;
         private CoroutinesQueue _queue;
 
-        public void Init(ProjectColors settings, Vector3 direction)
+        public void Init(Vector3 direction)
         {
             _thisTransform = transform;
             _thisGameObject = gameObject;
@@ -31,8 +31,8 @@ namespace Vurbiri.Colonization.UI
             _positionStart = _thisTransform.localPosition;
             _positionEnd = _positionStart + direction * _distance;
 
-            _colorPlus = settings.TextPositive;
-            _colorMinus = settings.TextNegative;
+            _colorPlus = GameContainer.UI.Colors.TextPositive;
+            _colorMinus = GameContainer.UI.Colors.TextNegative;
 
             _scaleColorSpeed = 1f / (1f - _startHide);
 

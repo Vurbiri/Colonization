@@ -12,15 +12,12 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private ButtonInit _buttonInit;
 
         private Crossroad _currentCrossroad;
-        private Human _player;
         private bool _endInit = false;
 
-        public ISubscription<IMenu, bool> Init(ContextMenuSettings settings)
+        public ISubscription<IMenu, bool> Init()
         {
-            _player = settings.player;
-
-            _buttonClose.Init(settings.hint, Close);
-            _buttonInit.Init(settings, OnUpgrade);
+            _buttonClose.Init(Close);
+            _buttonInit.Init(OnUpgrade);
 
             base.CloseInstant();
 
@@ -30,7 +27,7 @@ namespace Vurbiri.Colonization.UI
         public void Open(Crossroad crossroad)
         {
             _currentCrossroad = crossroad;
-            bool buttonEnable = _player.CanEdificeUpgrade(crossroad) & crossroad.NextGroupId == EdificeGroupId.Port;
+            bool buttonEnable = GameContainer.Players.Person.CanEdificeUpgrade(crossroad) & crossroad.NextGroupId == EdificeGroupId.Port;
             _buttonInit.Setup(buttonEnable, crossroad.NextId.Value);
             base.Open();
         }
@@ -52,7 +49,7 @@ namespace Vurbiri.Colonization.UI
         private void OnUpgrade()
         {
             base.Close();
-            _endInit = _player.BuildPort(_currentCrossroad);
+            _endInit = GameContainer.Players.Person.BuildPort(_currentCrossroad);
         }
 
         private IEnumerator OnEndLanding_Cn()

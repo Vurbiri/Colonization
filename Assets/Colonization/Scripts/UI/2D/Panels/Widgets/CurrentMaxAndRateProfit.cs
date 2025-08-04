@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -12,10 +11,9 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private TextMeshProUGUI _profitTMP;
 
-        public void Init(IReactive<int> current, IReactive<int> max, IReactive<int> rateProfit, CanvasHint hint)
+        public void Init(IReactive<int> current, IReactive<int> max, IReactive<int> rateProfit)
         {
-            base.Init(hint);
-
+            base.Init();
             _reactiveCurrentMax = new(current, max, rateProfit, SetCurrentMaxRateProfit);
         }
 

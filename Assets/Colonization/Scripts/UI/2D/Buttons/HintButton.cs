@@ -12,9 +12,9 @@ namespace Vurbiri.Colonization.UI
 
         private Unsubscription _unsubscriber;
 
-        public void Init(CanvasHint hint, Action action, bool interactable = true)
+        public void Init(Action action, bool interactable = true)
         {
-            base.Init(hint, 0.5f);
+            base.Init(GameContainer.UI.CanvasHint, 0.5f);
 
             _onClick.Add(action);
             Interactable = interactable;

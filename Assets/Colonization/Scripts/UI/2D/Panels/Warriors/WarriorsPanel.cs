@@ -4,7 +4,6 @@ using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive.Collections;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -15,8 +14,9 @@ namespace Vurbiri.Colonization.UI
 
         private Stack<WarriorButton> _buttonPool;
 
-        public void Init(Human player, CanvasHint hint)
+        public void Init()
         {
+            var player = GameContainer.Players.Person;
             var warriors = player.Actors;
             var maxWarrior = player.GetAbility(HumanAbilityId.MaxWarrior);
 
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
             warriors.Subscribe(AddWarrior);
 
             InitToggle(warriors.CountReactive);
-            _widget.Init(warriors.CountReactive, maxWarrior, hint);
+            _widget.Init(warriors.CountReactive, maxWarrior);
         }
 
         private void FillingPool(int max)

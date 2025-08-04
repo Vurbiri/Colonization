@@ -1,13 +1,13 @@
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
     sealed public class RoadsPanel : ASinglyPanel<CurrentMax>
     {
-        public void Init(Human player, CanvasHint hint)
+        public void Init()
         {
-            _widget.Init(player.Roads.CountReactive, player.GetAbility(HumanAbilityId.MaxRoad), hint);
+            var player = GameContainer.Players.Person;
+            _widget.Init(player.Roads.CountReactive, player.GetAbility(HumanAbilityId.MaxRoad));
 
             Destroy(this);
         }

@@ -23,22 +23,19 @@ namespace Vurbiri.Colonization.UI
 
         public void Init()
         {
-            var player = GameContainer.Players.Person;
-            var currencies = player.Resources;
-            var colors = GameContainer.UI.Colors;
-            var hint = GameContainer.UI.CanvasHint;
+            var currencies = GameContainer.Players.Person.Resources;
 
-            _warriors.Init(player, hint);
+            _warriors.Init();
 
-            _colonies.Init(player, _sprites, hint);
-            _ports.Init(player, _sprites, hint);
-            _shrines.Init(player, _sprites, hint);
-            _roads.Init(player, hint);
+            _colonies.Init(_sprites);
+            _ports.Init(_sprites);
+            _shrines.Init(_sprites);
+            _roads.Init();
 
-            _currencies.Init(_directionPopup, currencies, colors, hint);
-            _blood.Init(_directionPopup, currencies, colors, hint);
+            _currencies.Init(_directionPopup, currencies);
+            _blood.Init(_directionPopup, currencies);
 
-            _artefactPanel.Init(player, hint);
+            _artefactPanel.Init();
 
             Destroy(this);
         }

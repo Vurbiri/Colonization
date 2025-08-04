@@ -11,9 +11,9 @@ namespace Vurbiri.Colonization.UI
 
         private readonly Subscription<IMenu, bool> _subscriber = new();
 
-        public ISubscription<IMenu, bool> Init(WorldHint hint)
+        public ISubscription<IMenu, bool> Init()
         {
-            base.Init(hint, OnClick, false);
+            base.Init(GameContainer.UI.WorldHint, OnClick, false);
             _unLanguage = Localization.Instance.Subscribe(SetText);
             
             return _subscriber;

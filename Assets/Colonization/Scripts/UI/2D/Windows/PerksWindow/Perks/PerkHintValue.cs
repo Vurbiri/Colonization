@@ -1,7 +1,6 @@
 using System.Text;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -9,10 +8,10 @@ namespace Vurbiri.Colonization.UI
     {
 		private int _value;
 
-        public override void Init(Perk perk, CanvasHint hint)
+        public override void Init(Perk perk)
         {
             _value = perk.Value;
-            base.Init(perk, hint);
+            base.Init(perk);
         }
 
         protected override void SetTextAndCost(Localization localization)

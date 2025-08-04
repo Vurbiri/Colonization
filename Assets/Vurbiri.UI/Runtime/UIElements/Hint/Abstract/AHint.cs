@@ -115,8 +115,7 @@ namespace Vurbiri.UI
             this.SetChildren(ref _backImage);
             this.SetChildren(ref _hintTMP);
 
-            if (_waitSwitch.CanvasGroup == null)
-                _waitSwitch.OnValidate(GetComponentInChildren<CanvasGroup>());
+            _waitSwitch.OnValidate(this);
         }
 #endif
     }

@@ -6,9 +6,9 @@ namespace Vurbiri.Colonization.UI
 {
     public class ButtonBlock : AHintButton3D
     {
-        public void Init(WorldHint hint, Action action)
+        public void Init(Action action)
         {
-            base.Init(hint, action, true);
+            base.Init(GameContainer.UI.WorldHint, action, true);
         }
 
         public void Setup(Actor actor, BlockUI blockUI)

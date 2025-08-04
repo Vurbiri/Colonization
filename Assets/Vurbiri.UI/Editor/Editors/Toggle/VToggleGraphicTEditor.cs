@@ -10,8 +10,8 @@ using static UnityEditor.EditorGUILayout;
 
 namespace VurbiriEditor.UI
 {
-    [CustomEditor(typeof(VToggle<>), true), CanEditMultipleObjects]
-    public class VToggleTEditor : VSelectableEditor
+    [CustomEditor(typeof(VToggleGraphic<>), true), CanEditMultipleObjects]
+    sealed public class VToggleGraphicTEditor : VToggleBaseTEditor
     {
         private const float MIN_DURATION = 0f, MAX_DURATION = 1f;
 
@@ -20,36 +20,27 @@ namespace VurbiriEditor.UI
 
         private static readonly Type s_graphicType = typeof(Graphic);
 
-        private SerializedProperty _isOnProperty;
         private SerializedProperty _durationProperty;
         private SerializedProperty _switchingTypeProperty;
         private SerializedProperty _checkmarkOnProperty;
         private SerializedProperty _checkmarkOffProperty;
         private SerializedProperty _colorOnProperty;
         private SerializedProperty _colorOffProperty;
-        private SerializedProperty _groupProperty;
-        private SerializedProperty _onValueChangedProperty;
 
         private readonly AnimBool _showSwitchType = new(), _showColorType = new();
 
-        private int _selectedCount;
-          private SwitchingType _switchingType;
+        private SwitchingType _switchingType;
 
-        protected override bool IsDerivedEditor => GetType() != typeof(VToggleTEditor);
+        protected override bool IsDerivedEditor => GetType() != typeof(VToggleGraphicTEditor);
 
         protected override void OnEnable()
         {
-            _selectedCount          = targets.Length;
-
-            _isOnProperty           = serializedObject.FindProperty("_isOn");
             _durationProperty       = serializedObject.FindProperty("_fadeDuration");
             _switchingTypeProperty  = serializedObject.FindProperty("_switchingType");
             _checkmarkOnProperty    = serializedObject.FindProperty("_checkmarkOn");
             _checkmarkOffProperty   = serializedObject.FindProperty("_checkmarkOff");
             _colorOnProperty        = serializedObject.FindProperty("_colorOn");
             _colorOffProperty       = serializedObject.FindProperty("_colorOff");
-            _groupProperty          = serializedObject.FindProperty("_group");
-            _onValueChangedProperty = serializedObject.FindProperty("_onValueChanged");
 
             _switchingType          = (SwitchingType)_switchingTypeProperty.enumValueIndex;
 
@@ -65,15 +56,12 @@ namespace VurbiriEditor.UI
         protected override HashSet<string> GetExcludePropertyPaths()
         {
             var exclude = base.GetExcludePropertyPaths();
-            exclude.Add(_isOnProperty.propertyPath);
             exclude.Add(_durationProperty.propertyPath);
             exclude.Add(_switchingTypeProperty.propertyPath);
             exclude.Add(_checkmarkOnProperty.propertyPath);
             exclude.Add(_checkmarkOffProperty.propertyPath);
             exclude.Add(_colorOnProperty.propertyPath);
             exclude.Add(_colorOffProperty.propertyPath);
-            exclude.Add(_groupProperty.propertyPath);
-            exclude.Add(_onValueChangedProperty.propertyPath);
             return exclude;
         }
 
@@ -84,16 +72,8 @@ namespace VurbiriEditor.UI
             base.OnDisable();
         }
 
-        protected override void CustomMiddlePropertiesGUI()
+        protected override void TogglePropertiesGUI()
         {
-            serializedObject.ApplyModifiedProperties();
-            serializedObject.Update();
-
-            BeginDisabledGroup(_selectedCount > 1 && (_groupProperty.objectReferenceValue != null | _groupProperty.hasMultipleDifferentValues));
-            {
-                PropertyField(_isOnProperty);
-            }
-            EndDisabledGroup();
             //============================================================
             Slider(_durationProperty, MIN_DURATION, MAX_DURATION, s_durationLabels);
             //============================================================
@@ -126,15 +106,6 @@ namespace VurbiriEditor.UI
             EndFadeGroup();
             Space();
             indentLevel--;
-            //============================================================
-            PropertyField(_groupProperty);
-            Space();
-        }
-
-        protected override void CustomEndPropertiesGUI()
-        {
-            Space();
-            PropertyField(_onValueChangedProperty);
         }
     }
 }

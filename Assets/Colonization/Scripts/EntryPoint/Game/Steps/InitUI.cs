@@ -16,16 +16,12 @@ namespace Vurbiri.Colonization.EntryPoint
         [Space]
         [SerializeField] private CanvasHint _canvasHint;
         [SerializeField] private PlayerPanels _playerPanels;
-        
-        private GameContent _content;
 
         public string Description => Localization.Instance.GetText(LangFiles.Main, "InitUIStep");
         public float Weight => 0.2f;
 
         public ILoadingStep Init(GameContent content)
         {
-            _content = content;
-
             content.worldHint = _worldHint;
             content.canvasHint = _canvasHint;
 
@@ -36,9 +32,12 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             _worldHint.Init();
             _canvasHint.Init();
+
             yield return null;
-            _managers.Init(_content);
+
+            _managers.Init();
             _playerPanels.Init();
+
             yield return null;
 
             Destroy(gameObject);

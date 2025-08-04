@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnClick()
         {
             _parent.Close();
-            _player.BuyRoad(_currentCrossroad, _id);
+            GameContainer.Players.Person.BuyRoad(_currentCrossroad, _id);
         }
 
 #if UNITY_EDITOR

@@ -15,12 +15,9 @@ namespace Vurbiri.Colonization
         [SerializeField] private ButtonView _portOneView;
         [SerializeField] private ButtonView _portTwoView;
 
-        private Localization _localization;
-
-        public void Init(ButtonSettings settings, Action action)
+        public void Init(Action action)
         {
-            base.Init(settings.hint, action, false);
-            _localization = Localization.Instance;
+            base.Init(GameContainer.UI.WorldHint, action, false);
         }
 
         public void Setup(bool isEnable, int edificeId)
@@ -34,7 +31,7 @@ namespace Vurbiri.Colonization
             ButtonView view = edificeId == EdificeId.PortOne ? _portOneView : _portTwoView;
 
             _buttonIcon.sprite = view.sprite;
-            _text = _localization.GetText(LangFiles.Gameplay, view.keyName);
+            _text = Localization.Instance.GetText(LangFiles.Gameplay, view.keyName);
 
             _thisGameObject.SetActive(true);
         }

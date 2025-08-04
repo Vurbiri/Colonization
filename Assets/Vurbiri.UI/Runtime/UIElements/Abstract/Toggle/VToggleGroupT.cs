@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-    public abstract class VToggleGroup<TToggle> : MonoBehaviour where TToggle : VToggle<TToggle>
+    public abstract class VToggleGroup<TToggle> : MonoBehaviour where TToggle : VToggleBase<TToggle>
     {
         [SerializeField] protected bool _allowSwitchOff = false;
         [SerializeField] protected UniSubscription<TToggle> _onValueChanged = new();
@@ -37,6 +38,8 @@ namespace Vurbiri.UI
         public Unsubscription AddListener(Action<TToggle> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _activeToggle);
         public void RemoveListener(Action<TToggle> action) => _onValueChanged.Remove(action);
 
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetAllTogglesOff()
         {
             if (_activeToggle != null)
@@ -47,11 +50,13 @@ namespace Vurbiri.UI
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetToggle(TToggle toggle)
         {
             _activeToggle = toggle;
             _onValueChanged.Invoke(toggle);
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ActivateToggle(TToggle toggle)
         {
             _activeToggle = toggle;

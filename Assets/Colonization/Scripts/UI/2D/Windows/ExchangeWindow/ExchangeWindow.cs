@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -22,8 +21,6 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField, ReadOnly] private BankCurrencyWidget[] _bankCurrencies;
         [SerializeField, ReadOnly] private PlayerCurrencyWidget[] _playerCurrencies;
-        
-        private Human _player;
 
         private readonly CurrenciesLite _bankTrade = new();
         private readonly CurrenciesLite _price = new(), _pay = new();
@@ -31,25 +28,23 @@ namespace Vurbiri.Colonization.UI
         public ISubscription OnOpen => _switcher.onOpen;
         public ISubscription OnClose => _switcher.onClose;
 
-        public void Init(Human player, CanvasHint hint, bool open)
+        public void Init(bool open)
         {
             _switcher.Init(this, open);
             _switcher.onClose.Add(ResetValues);
 
-            _player = player;
-
-            _applyButton.Init(hint, Apply);
-            _resetButton.Init(hint, ResetValues);
+            _applyButton.Init(Apply);
+            _resetButton.Init(ResetValues);
             _closeButton.AddListener(Close);
 
-            var resources = player.Resources;
+            var resources = GameContainer.Players.Person.Resources;
             for (int i = 0; i < CurrencyId.MainCount; i++)
             {
                 _bankCurrencies[i].Init(OnBankChangeCount);
                 _playerCurrencies[i].Init(resources, OnPlayerChangeCount);
             }
 
-            player.Exchange.Subscribe(OnChangeRates);
+            GameContainer.Players.Person.Exchange.Subscribe(OnChangeRates);
 
             _containerVisual.Init();
             _containerVisual = null;
@@ -86,7 +81,7 @@ namespace Vurbiri.Colonization.UI
 
         private void Apply()
         {
-            _player.AddResources(_bankTrade - _pay);
+            GameContainer.Players.Person.AddResources(_bankTrade - _pay);
             ResetValues();
         }
 

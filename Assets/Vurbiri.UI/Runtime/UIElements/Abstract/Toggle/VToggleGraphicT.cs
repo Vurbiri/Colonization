@@ -1,8 +1,6 @@
-using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
@@ -13,43 +11,19 @@ namespace Vurbiri.UI
         ColorCheckmark
     }
 
-    public abstract class VToggle<TToggle> : VSelectable, IPointerClickHandler, ISubmitHandler, ICanvasElement where TToggle : VToggle<TToggle>
+    public abstract class VToggleGraphic<TToggle> : VToggleBase<TToggle>, ICanvasElement where TToggle : VToggleGraphic<TToggle>
     {
-        [SerializeField] protected bool _isOn;
         [SerializeField] private float _fadeDuration = 0.125f;
         [SerializeField] private SwitchingType _switchingType;
         [SerializeField] protected Graphic _checkmarkOn;
         [SerializeField] protected Graphic _checkmarkOff;
         [SerializeField] private Color _colorOn = Color.green;
         [SerializeField] private Color _colorOff = Color.red;
-        [SerializeField] protected VToggleGroup<TToggle> _group;
-        [SerializeField] protected UniSubscription<bool> _onValueChanged = new();
 
-        private readonly TToggle _this;
         private EnumFlags<SelectionState> _stateFilterOn = false, _stateFilterOff = false;
         private ITransitionEffect _transitionEffect = new EmptyEffect();
 
         #region Properties
-        public bool IsOn { get => _isOn; set => SetValue(value, true); }
-        public bool SilentIsOn { get => _isOn; set => SetValue(value, false); }
-        public VToggleGroup<TToggle> Group
-        {
-            get => _group;
-            set
-            {
-                if (_group == value) return;
-
-                if (_group != null)
-                    _group.UnregisterToggle(_this);
-
-                _group = value;
-
-                if (value != null && isActiveAndEnabled)
-                    value.RegisterToggle(_this);
-
-                _transitionEffect.PlayInstant(_isOn);
-            }
-        }
         public float CheckmarkFadeDuration
         {
             get => _fadeDuration;
@@ -114,12 +88,8 @@ namespace Vurbiri.UI
         }
         #endregion
 
-        protected VToggle() : base()
-        {
-            _this = (TToggle)this;
-        }
+        protected VToggleGraphic() : base() { }
 
-        #region Awake, Start
         protected override void Awake()
         {
 #if UNITY_EDITOR
@@ -149,16 +119,6 @@ namespace Vurbiri.UI
             
             base.Awake();
         }
-        protected override void Start()
-        {
-            base.Start();
-
-            _onValueChanged.Init(_isOn);
-        }
-        #endregion
-
-        public Unsubscription AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _isOn);
-        public void RemoveListener(Action<bool> action) => _onValueChanged.Remove(action);
 
         public void SetColors(Color colorOn, Color colorOff)
         {
@@ -167,104 +127,42 @@ namespace Vurbiri.UI
             _colorOn = colorOn; _colorOff = colorOff;
 
             _transitionEffect.ColorsUpdate(colorOn, colorOff);
-            _transitionEffect.PlayInstant(_isOn);
+            UpdateVisualInstant();
         }
 
-        public void LeaveGroup()
-        {
-            if (_group != null)
-                _group.UnregisterToggle(_this);
-            _group = null;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        sealed protected override void UpdateVisual() => _transitionEffect.Play(_isOn);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        sealed protected override void UpdateVisualInstant() => _transitionEffect.PlayInstant(_isOn);
 
-        internal void SetFromGroup(bool value)
-        {
-            if (_isOn == value) return;
-
-            _isOn = value;
-            _transitionEffect.Play(_isOn);
-
-            UISystemProfilerApi.AddMarker("VToggle.onValueChanged", _this);
-            _onValueChanged.Invoke(_isOn);
-        }
-
-        private void SetValue(bool value, bool sendCallback)
-        {
-            if (_isOn == value || (_group != null && !_group.CanSetValue(_this, value)))
-                return;
-
-            _isOn = value;
-            _transitionEffect.Play(_isOn);
-
-            if (sendCallback)
-            {
-                UISystemProfilerApi.AddMarker("VToggle.onValueChanged", _this);
-                _onValueChanged.Invoke(_isOn);
-            }
-        }
-
-        protected override void StartScaleTween(Vector3 targetScale, float duration)
+        sealed protected override void StartScaleTween(Vector3 targetScale, float duration)
         {
             base.StartScaleTween(targetScale, duration);
 
             _transitionEffect.StateTransitionClear();
         }
-        protected override void StartColorTween(int intState, Vector3 targetScale, Color targetColor, float duration)
+        sealed protected override void StartColorTween(int intState, Vector3 targetScale, Color targetColor, float duration)
         {
             base.StartColorTween(intState, targetScale, targetColor, duration);
 
             if (_stateFilterOn[intState]) _transitionEffect.StateTransitionOn(targetColor, duration);
             if (_stateFilterOff[intState]) _transitionEffect.StateTransitionOff(targetColor, duration);
         }
-        protected override void DoSpriteSwap(Vector3 targetScale, Sprite targetSprite, float duration)
+        sealed protected override void DoSpriteSwap(Vector3 targetScale, Sprite targetSprite, float duration)
         {
             base.DoSpriteSwap(targetScale, targetSprite, duration);
 
             _transitionEffect.StateTransitionClear();
         }
 
-        private void InternalToggle()
-        {
-            if (!isActiveAndEnabled || !IsInteractable())
-                return;
-
-            SetValue(!_isOn, true);
-        }
-
-        #region Calls
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-
-            if (_group != null)
-                _group.RegisterToggle(_this);
-
-            _transitionEffect.PlayInstant(_isOn);
-        }
-
         protected override void OnDisable()
         {
-            if (_group != null)
-                _group.UnregisterToggle(_this);
-
             _transitionEffect.Stop();
 
             base.OnDisable();
         }
 
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (eventData.button == PointerEventData.InputButton.Left)
-                InternalToggle();
-        }
-
-        public void OnSubmit(BaseEventData eventData)
-        {
-            InternalToggle();
-        }
-
-        protected override void OnDidApplyAnimationProperties()
+        sealed protected override void OnDidApplyAnimationProperties()
         {
             // Check if isOn has been changed by the animation. Unfortunately there is no way to check if we don't have a graphic.
             if (_transitionEffect.IsValid)
@@ -279,7 +177,6 @@ namespace Vurbiri.UI
 
             base.OnDidApplyAnimationProperties();
         }
-        #endregion
 
         private ITransitionEffect TransitionEffectCreate()
         {
@@ -305,9 +202,6 @@ namespace Vurbiri.UI
         #endregion
 
 #if UNITY_EDITOR
-        
-        private VToggleGroup<TToggle> _groupEditor;
-        private bool _isOnEditor;
         protected override void OnValidate()
         {
             if (!Application.isPlaying)
@@ -315,28 +209,6 @@ namespace Vurbiri.UI
                 _transitionEffect = TransitionEffectCreate();
                 _stateFilterOn = _checkmarkOn != null;
                 _stateFilterOff = _checkmarkOff != null;
-
-                if (_groupEditor != _group)
-                {
-                    if (_groupEditor != null)
-                        _groupEditor.UnregisterToggle(_this);
-
-                    if (_group != null && isActiveAndEnabled)
-                        _group.RegisterToggle(_this);
-
-                    _groupEditor = _group;
-
-                    _transitionEffect.PlayInstant(_isOn);
-                }
-
-                if (_groupEditor != null & _isOnEditor != _isOn)
-                {
-                    _isOn = _isOnEditor;
-                    SetValue(!_isOn, false);
-
-                    _isOnEditor = _isOn;
-                    _transitionEffect.PlayInstant(_isOn);
-                }
             }
 
             base.OnValidate();

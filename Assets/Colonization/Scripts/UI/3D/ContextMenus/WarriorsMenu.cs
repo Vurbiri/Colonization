@@ -19,16 +19,16 @@ namespace Vurbiri.Colonization.UI
         private int _countButtonsSkill;
         private Actor _currentWarrior;
 
-        public ISubscription<IMenu, bool> Init(ContextMenuSettings settings)
+        public ISubscription<IMenu, bool> Init()
         {
-            _buttonClose.Init(settings.hint, Close);
+            _buttonClose.Init(Close);
 
-            _buttonMovement.Init(settings.hint, OnMovement);
-            _buttonBlock.Init(settings.hint, OnBlock);
+            _buttonMovement.Init(OnMovement);
+            _buttonBlock.Init(OnBlock);
 
             _countButtonsSkill = _buttonsSkill.Length;
             for (int i = 0; i < _countButtonsSkill; i++)
-                _buttonsSkill[i].Init(settings, this);
+                _buttonsSkill[i].Init(this);
 
             base.CloseInstant();
 

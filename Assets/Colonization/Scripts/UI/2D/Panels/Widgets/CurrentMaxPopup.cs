@@ -1,7 +1,6 @@
 using UnityEngine;
 using Vurbiri.International;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -10,10 +9,10 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
-        public void Init(ICurrency blood, IReactive<int> max, ProjectColors colors, Direction2 offsetPopup, CanvasHint hint)
+        public void Init(ICurrency blood, IReactive<int> max, Direction2 offsetPopup)
         {
-            base.Init(hint);
-            _popup.Init(colors, offsetPopup);
+            base.Init();
+            _popup.Init(offsetPopup);
 
             _reactiveCurrentMax = new(blood, max, SetCurrentMax);
             _unsubscribers += blood.SubscribeDelta(_popup.Run);

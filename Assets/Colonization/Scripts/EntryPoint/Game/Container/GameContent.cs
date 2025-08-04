@@ -25,7 +25,11 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public Hexagons hexagons;
         public Crossroads crossroads;
+
         public Players players;
+        public PersonController person;
+        public AIController[] ai = new AIController[2];
+        public SatanController satan;
 
         public SFXStorage actorSFXs;
 

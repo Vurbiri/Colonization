@@ -16,19 +16,20 @@ namespace Vurbiri.Colonization.UI
         private CrossroadMainMenu _mainMen;
         private Crossroad _currentCrossroad;
 
-        public ISubscription<IMenu, bool> Init(ContextMenuSettings settings, CrossroadMainMenu mainMenu)
+        public ISubscription<IMenu, bool> Init(CrossroadMainMenu mainMenu)
         {
             _mainMen = mainMenu;
-            _camera = settings.cameraTransform.Camera;
             _thisTransform = GetComponent<RectTransform>();
 
-            _buttonBack.Init(settings.hint, OnClose);
+            _buttonBack.Init(OnClose);
 
-            ACurrencies roadCost = settings.prices.Road;
+            var roadCost = GameContainer.Prices.Road;
             foreach (var button in _roadButtons)
-                button.Init(settings, roadCost, this);
+                button.Init(roadCost, this);
 
-            settings.cameraTransform.Subscribe(LookAtCamera, false);
+            var cameraTransform = GameContainer.CameraTransform;
+            _camera = cameraTransform.Camera;
+            cameraTransform.Subscribe(LookAtCamera, false);
 
             CloseInstant();
             return _eventActive;
