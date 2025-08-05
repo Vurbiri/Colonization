@@ -2,11 +2,12 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-	public abstract class VToggleBase<TToggle> : VSelectable, IPointerClickHandler, ISubmitHandler where TToggle : VToggleBase<TToggle>
+	public abstract class VToggleBase<TToggle> : VSelectable, IPointerClickHandler, ISubmitHandler  where TToggle : VToggleBase<TToggle>
     {
         [SerializeField] protected bool _isOn;
         [SerializeField] protected VToggleGroup<TToggle> _group;
@@ -127,34 +128,50 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
         private VToggleGroup<TToggle> _groupEditor;
         private bool _isOnEditor;
+
+        #region ICanvasElement
+        public void Rebuild(CanvasUpdate executing)
+        {
+
+        }
+        public void LayoutComplete() { }
+        public void GraphicUpdateComplete() { }
+        #endregion
+
+
         protected override void OnValidate()
         {
+            base.OnValidate();
+
             if (!Application.isPlaying)
+                OnValidateAsync();
+        }
+
+        protected virtual async void OnValidateAsync()
+        {
+            await System.Threading.Tasks.Task.Delay(2);
+
+            if (_groupEditor != _group)
             {
-                if (_groupEditor != _group)
-                {
-                    if (_groupEditor != null)
-                        _groupEditor.UnregisterToggle(_this);
+                if (_groupEditor != null)
+                    _groupEditor.UnregisterToggle(_this);
 
-                    if (_group != null && isActiveAndEnabled)
-                        _group.RegisterToggle(_this);
+                if (_group != null && isActiveAndEnabled)
+                    _group.RegisterToggle(_this);
 
-                    _groupEditor = _group;
+                _groupEditor = _group;
 
-                    UpdateVisualInstant();
-                }
-
-                if (_groupEditor != null & _isOnEditor != _isOn)
-                {
-                    _isOn = _isOnEditor;
-                    SetValue(!_isOn, false);
-
-                    _isOnEditor = _isOn;
-                    UpdateVisualInstant();
-                }
+                UpdateVisualInstant();
             }
 
-            base.OnValidate();
+            if (_isOnEditor != _isOn)
+            {
+                _isOn = _isOnEditor;
+                SetValue(!_isOn, false);
+
+                _isOnEditor = _isOn;
+                UpdateVisualInstant();
+            }
         }
 #endif
     }

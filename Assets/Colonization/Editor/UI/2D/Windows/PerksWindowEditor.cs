@@ -25,12 +25,12 @@ namespace VurbiriEditor.Colonization.UI
             EditorGUILayout.Space();
 
             if (GUILayout.Button("Setup"))
-                _perksWindow.Setup_Editor();
+                _perksWindow.Setup_Ed();
             EditorGUILayout.Space();
             if (GUILayout.Button("Create"))
-                _perksWindow.Create_Editor();
+                _perksWindow.Create_Ed();
             if (GUILayout.Button("Delete"))
-                _perksWindow.Delete_Editor();
+                _perksWindow.Delete_Ed();
 
         }
 	}

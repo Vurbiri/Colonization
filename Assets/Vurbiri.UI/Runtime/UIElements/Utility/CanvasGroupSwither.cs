@@ -88,6 +88,11 @@ namespace Vurbiri.UI
             parent.SetChildren(ref canvasGroup);
             if (speed < MIN_SPEED) speed = MIN_SPEED;
         }
+        public void OnValidate(MonoBehaviour parent, float minSpeed)
+        {
+            parent.SetChildren(ref canvasGroup);
+            if (speed < minSpeed) speed = minSpeed;
+        }
         public void OnValidate(MonoBehaviour parent, string name)
         {
             parent.SetChildren(ref canvasGroup, name);

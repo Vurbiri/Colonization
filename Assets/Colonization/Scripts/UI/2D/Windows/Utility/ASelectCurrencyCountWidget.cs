@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] protected Id<CurrencyId> _id;
         [Space]
-        [SerializeField] protected int _min;
         [SerializeField] protected int _max;
         [SerializeField] protected int _step;
         [Space]
@@ -28,14 +27,15 @@ namespace Vurbiri.Colonization.UI
 
         public bool Interactable
         {
-            get => _interactable & _max > _min;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _interactable & _max >= _step;
             set
             {
                 if (_interactable != value)
                 {
                     _interactable = value;
                     CrossFadeColor();
-                    SetValue(_min);
+                    SetValue(0);
                 }
             }
         }
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization.UI
         {
             _interactable = true;
             CrossFadeColor();
-            SetValue(_min);
+            SetValue(0);
         }
 
         protected virtual void Awake()
@@ -58,13 +58,35 @@ namespace Vurbiri.Colonization.UI
             _rightButton.AddListener(OnRightClick);
         }
 
+        public void SetMax(int value)
+        {
+            _max = value;
+            CrossFadeColor();
+
+            if (_count > _max)
+            {
+                value = _max - (_max % _step);
+                SetValue(value);
+            }
+        }
+
+        public void SetStep(int value)
+        {
+            _step = value;
+            CrossFadeColor();
+
+            value = _count - (_count % _step);
+            if (_count != value)
+                SetValue(value);
+        }
+
         protected virtual void SetValue(int value)
         {
             _count = value;
             ValueToString();
 
-            _leftButton.Interactable = _count > _min & _interactable;
-            _rightButton.Interactable = _count < _max & _interactable;
+            _leftButton.Interactable = (_count - _step) >= 0 & _interactable;
+            _rightButton.Interactable = (_count + _step) <= _max & _interactable;
         }
 
         protected virtual void ValueToString() => _textValue.text = _count.ToString();
@@ -72,7 +94,7 @@ namespace Vurbiri.Colonization.UI
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void CrossFadeColor()
         {
-            Color color = _interactable & _max > _min ? _colorEnabled : _colorDisabled;
+            Color color = Interactable ? _colorEnabled : _colorDisabled;
 
             _textValue.CrossFadeColor(color, _fadeDuration, true, true);
             _panel.CrossFadeColor(color, _fadeDuration, true, true);
@@ -86,7 +108,9 @@ namespace Vurbiri.Colonization.UI
         private Rect _bounds;
         public Rect Bounds { get { SetBounds(); return _bounds; } }
 
-        public virtual void Init_Editor(int id, Vector3 position)
+        [SerializeField, StartEditor] private bool _centerY;
+
+        public virtual void Init_Ed(int id, Vector3 position)
         {
             transform.localPosition = position;
 
@@ -102,6 +126,16 @@ namespace Vurbiri.Colonization.UI
             gameObject.name = name;
         }
 
+        public void SetStep_Ed(int value)
+        {
+            if (value > 0)
+            {
+                UnityEditor.SerializedObject so = new(this);
+                so.FindProperty("_step").intValue = value;
+                so.ApplyModifiedProperties();
+            }
+        }
+
         protected virtual void OnValidate()
         {
             this.SetChildren(ref _textValue, "Value_TMP");
@@ -113,12 +147,16 @@ namespace Vurbiri.Colonization.UI
 
             _leftButton.CopyFrom_Editor(_rightButton);
 
+            if (_step <= 0) _step = 1;
+            if (_max < 0) _max = 0;
+
             SetBounds();
         }
 
         private void SetBounds()
         {
-            var mainSize = ((RectTransform)transform).sizeDelta;
+            var rectTransform = (RectTransform)transform;
+            var mainSize = rectTransform.sizeDelta;
             var buttonRect = _rightButton.RectTransformE;
             var iconRect = _icon.rectTransform;
 
@@ -126,10 +164,19 @@ namespace Vurbiri.Colonization.UI
             _bounds.width += (buttonRect.sizeDelta.x + Mathf.Abs(buttonRect.anchoredPosition.x)) * 2f;
             _bounds.height += iconRect.sizeDelta.y + Mathf.Abs(iconRect.anchoredPosition.y);
 
+            float y;
             if (_icon.transform.position.y > transform.position.y)
-                _bounds.position = new(0f, (_bounds.height - mainSize.y) * 0.5f);
+                y = (_bounds.height - mainSize.y) * 0.5f;
             else
-                _bounds.position = new(0f, (mainSize.y - _bounds.height) * 0.5f);
+                y = (mainSize.y - _bounds.height) * 0.5f;
+            _bounds.position = new(0f, y);
+
+            if (_centerY)
+            {
+                var position = rectTransform.anchoredPosition;
+                position.y = -y;
+                rectTransform.anchoredPosition = position;
+            }
         }
 
         public void OnDrawGizmosSelected()

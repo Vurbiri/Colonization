@@ -59,7 +59,6 @@ namespace Vurbiri.Colonization
 
                     if (isPerson) Cast_Cn(sb.ToString()).Start();
                 }
-
             }
 
             private IEnumerator Cast_Cn(string text)

@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.UI
                 _progressBars[i].Init(perkTree.GetProgress(i));
 
 
-            _onValueChanged.Add(OnButtonInteractable, _activeToggle);
+            _onValueChanged.Add(OnValueChanged, _activeToggle);
 
             _progressBars = null; _closeButton = null;
         }
@@ -47,7 +47,10 @@ namespace Vurbiri.Colonization.UI
         public void Open() => _switcher.Switch(true);
         public void Switch() => _switcher.Switch();
 
-        private void OnButtonInteractable(PerkToggle toggle) => _learnButton.Interactable = toggle != null;
+        private void OnValueChanged(PerkToggle toggle)
+        {
+            _learnButton.Interactable = toggle != null;
+        }
         private void OnLearn()
         {
             if (_activeToggle)

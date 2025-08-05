@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization.UI
 {
-	public class SpellButton  
+	public class SpellBookWindow
 	{
 		
 	}

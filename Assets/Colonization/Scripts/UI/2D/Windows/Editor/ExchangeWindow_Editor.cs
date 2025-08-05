@@ -47,8 +47,8 @@ namespace Vurbiri.Colonization.UI
 
             for (int i = 0; i < CurrencyId.MainCount; i++)
             {
-                _bankCurrencies[i].Init_Editor(i, bankStart + widgetSize * i);
-                _playerCurrencies[i].Init_Editor(i, playerStart + widgetSize * i);
+                _bankCurrencies[i].Init_Ed(i, bankStart + widgetSize * i);
+                _playerCurrencies[i].Init_Ed(i, playerStart + widgetSize * i);
             }
 
             value = containerSize.y + _centerSpace;

@@ -3,22 +3,25 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-	sealed public class PlayerCurrencyWidget : ASelectCurrencyCountWidget
+	sealed public class SpellCurrencyWidget : ASelectCurrencyCountWidget
     {
-        private Action<int, int> a_changeCount;
+        private Action<int> a_changeCount;
         private Unsubscription _unsubscriber;
 
-        public void Init(ACurrenciesReactive currencies, Action<int, int> action)
+        public void Init(ACurrenciesReactive currencies, Action<int> action)
         {
             _unsubscriber = currencies.Get(_id).Subscribe(SetMax);
             a_changeCount = action;
-            action(_id, _count);
+            action(_count);
         }
 
         protected override void SetValue(int value)
         {
+            bool changed = _count != value;
             base.SetValue(value);
-            a_changeCount?.Invoke(_id.Value, value);
+
+            if (changed  & a_changeCount != null)
+                a_changeCount(_count);
         }
 
         private void OnDestroy() => _unsubscriber?.Unsubscribe();

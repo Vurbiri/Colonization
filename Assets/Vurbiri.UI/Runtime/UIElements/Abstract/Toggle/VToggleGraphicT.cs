@@ -11,7 +11,7 @@ namespace Vurbiri.UI
         ColorCheckmark
     }
 
-    public abstract class VToggleGraphic<TToggle> : VToggleBase<TToggle>, ICanvasElement where TToggle : VToggleGraphic<TToggle>
+    public abstract class VToggleGraphic<TToggle> : VToggleBase<TToggle> where TToggle : VToggleGraphic<TToggle>
     {
         [SerializeField] private float _fadeDuration = 0.125f;
         [SerializeField] private SwitchingType _switchingType;
@@ -194,12 +194,6 @@ namespace Vurbiri.UI
 
             return new EmptyEffect();
         }
-
-        #region ICanvasElement
-        public void Rebuild(CanvasUpdate executing) { }
-        public void LayoutComplete() { }
-        public void GraphicUpdateComplete() { }
-        #endregion
 
 #if UNITY_EDITOR
         protected override void OnValidate()

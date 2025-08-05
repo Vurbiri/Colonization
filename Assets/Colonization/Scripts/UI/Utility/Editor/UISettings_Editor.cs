@@ -33,7 +33,7 @@ namespace VurbiriEditor.Colonization
                 _hints[i].UpdateVisuals_Editor(_colors.hintBack, _colors.hintText);
 
             _playerPanels.UpdateVisuals_Editor(_pixelsPerUnitForPanels, colors);
-            _perksWindow.UpdateVisuals_Editor(_pixelsPerUnitForPanels, colors);
+            _perksWindow.UpdateVisuals_Ed(_pixelsPerUnitForPanels, colors);
             _exchangeWindow.UpdateVisuals_Editor(_pixelsPerUnitForPanels, colors);
         }
 
