@@ -1,4 +1,3 @@
-using System.Text;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 
@@ -16,16 +15,11 @@ namespace Vurbiri.Colonization.UI
 
         protected override void SetTextAndCost(Localization localization)
         {
-            StringBuilder stringBuilder = new();
-            stringBuilder.AppendFormat(localization.GetText(LangFiles.Gameplay, _key), _value);
-            stringBuilder.AppendLine();
-            stringBuilder.Append(_cost);
-
-            _text = stringBuilder.ToString(); ;
+            _hintText = string.Concat(localization.GetFormatText(LangFiles.Gameplay, _key, _value), _cost);
         }
         protected override void SetText(Localization localization)
         {
-            _text = localization.GetFormatText(LangFiles.Gameplay, _key, _value);
+            _hintText = localization.GetFormatText(LangFiles.Gameplay, _key, _value);
         }
     }
 }

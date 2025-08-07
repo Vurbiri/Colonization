@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization
 {
@@ -8,6 +9,7 @@ namespace Vurbiri.Colonization
     {
         sealed private class SummonWarlock : ASpell
         {
+            private readonly string _strCost;
             private readonly int _half, _max;
             private int _count;
 
@@ -16,6 +18,7 @@ namespace Vurbiri.Colonization
                 _max = GameContainer.Hexagons.GroundCount;
                 _half = _max - (_max >> 1);
                 _cost.Add(GameContainer.Prices.Warriors[WarriorId.Warlock]);
+                _strCost = _cost.MainPlusToString();
             }
 
             public static void Create() => new SummonWarlock(EconomicSpellId.Type, EconomicSpellId.SummonWarlock);
@@ -24,7 +27,7 @@ namespace Vurbiri.Colonization
             {
                 _canCast = false;
                 var human = s_humans[param.playerId];
-                if (!human.IsMaxWarriors & human.IsPay(_cost))
+                if (!s_isCast & !human.IsMaxWarriors && human.IsPay(_cost))
                 {
                     _count = 0;
                     for (int i = 0; i < PlayerId.Count; i++)
@@ -61,12 +64,15 @@ namespace Vurbiri.Colonization
                         hexagon = free.Rand();
                     }
 
+                    ShowNameSpell(param.playerId);
                     s_humans[param.playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
                     _canCast = false;
 
                     GameContainer.CameraController.ToPosition(hexagon);
                 }
             }
+
+            protected override string GetDesc(Localization localization) => localization.GetText(FILE, _descKey);
         }
     }
 }

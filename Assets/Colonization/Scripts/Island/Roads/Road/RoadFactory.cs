@@ -7,9 +7,12 @@ namespace Vurbiri.Colonization
     public class RoadFactory
     {
         [SerializeField] private Road _prefabRoad;
+        [SerializeField] private RoadSFX _roadSFX;
         [SerializeField] private Transform _container;
         
         private readonly Stack<Road> _roads = new();
+
+        public RoadSFX RoadSFX => _roadSFX;
 
         public Road Create(Gradient gradient, int id)
         {
@@ -23,6 +26,7 @@ namespace Vurbiri.Colonization
         public void OnValidate()
         {
             EUtility.SetPrefab(ref _prefabRoad);
+            EUtility.SetObject(ref _roadSFX);
             EUtility.SetObject(ref _container, "Roads");
         }
 #endif

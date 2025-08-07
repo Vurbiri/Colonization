@@ -41,7 +41,8 @@ namespace Vurbiri.International.Editor
 
         private static void CreateKeys(int idFile)
         {
-            var dict = Storage.LoadObjectFromResourceJson<Dictionary<string, string>>(string.Concat(folder, "/", fileNames[idFile]));
+            string path = string.Concat(folder, "/", fileNames[idFile]);
+            if (!Storage.TryLoadObjectFromResourceJson(path, out Dictionary<string, string> dict, false)) dict = new();
 
             keys[idFile] = new string[dict.Count + 1];
 

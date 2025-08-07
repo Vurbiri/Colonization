@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization
 	{
         private static readonly SpellsSettings s_settings;
         private static readonly SpellCosts s_costs;
+        private static readonly SpellKeys s_keys;
 
         private static readonly Human[] s_humans = new Human[PlayerId.HumansCount];
         private static readonly ReadOnlyReactiveSet<Actor>[] s_actors = new ReactiveSet<Actor>[PlayerId.Count];
@@ -21,14 +22,15 @@ namespace Vurbiri.Colonization
 
         public ASpell this[int type, int id] => s_spells[type][id];
 
-        public RBool IsCastReactive => s_isCast;
-        public bool IsCast { get => s_isCast.Value; set => s_isCast.Value = value; }
+        public RBool IsCast => s_isCast;
 
         static SpellBook()
         {
             s_settings = SettingsFile.Load<SpellsSettings>();
             s_costs = new(s_settings.economicCost.Values, s_settings.militaryCost.Values);
+            s_keys  = new(s_settings.economicKey.Values, s_settings.militaryKey.Values);
             s_settings.economicCost = null; s_settings.militaryCost = null;
+            s_settings.economicKey = null; s_settings.militaryKey = null;
         }
 
         public SpellBook(Human human)
@@ -46,7 +48,7 @@ namespace Vurbiri.Colonization
                 spell.Cast(param);
         }
 
-        public void Cancel(int type, int id)
+        public static void Cancel(int type, int id)
         {
             if(s_isCast) s_spells[type][id].Cancel();
         }
@@ -55,8 +57,7 @@ namespace Vurbiri.Colonization
         {
             s_sfxUser = new();
 
-            Order.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); ShuffleResources.Create(); HalvingResources.Create(); Sacrifice.Create();
-
+            Order.Create(); RandomHealing.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); ShuffleResources.Create(); Sacrifice.Create();
             BloodTrade.Create(); Spying.Create(); WallBuild.Create(); Marauding.Create(); RoadDemolition.Create(); SwapId.Create(); Zeal.Create();
         }
         
@@ -68,7 +69,7 @@ namespace Vurbiri.Colonization
         public static void Clear()
         {
             s_sfxUser = null;
-            s_isCast.UnsubscribeAll();
+            s_isCast.UnsubscribeAll(); s_isCast.SilentValue = false;
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
             {

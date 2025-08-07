@@ -129,8 +129,34 @@ namespace Vurbiri.Colonization
                 {
                     resource = _values[i];
                     if (resource > 0)
-                        sb.AppendFormat(TAG.CURRENCY, i, resource.ToString("+#;-#;0"));
+                        sb.AppendFormat(TAG.CURRENCY, i, resource);
                 }
+            }
+        }
+        public string MainPlusToString()
+        {
+            StringBuilder sb = new();
+            sb.AppendLine();
+            MainPlusToStringBuilder(sb);
+            return sb.ToString();
+        }
+        public string PlusToString()
+        {
+            if (_amount > 0 | _values[Blood] != 0)
+            {
+                StringBuilder sb = new();
+                sb.AppendLine();
+                for (int i = 0, resource; i < AllCount; i++)
+                {
+                    resource = _values[i];
+                    if (resource > 0)
+                        sb.AppendFormat(TAG.CURRENCY, i, resource);
+                }
+                return sb.ToString();
+            }
+            else
+            {
+                return string.Empty;
             }
         }
         public void MainToStringBuilder(StringBuilder sb)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Text;
 using UnityEngine;
+using Vurbiri.International;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
@@ -10,8 +11,12 @@ namespace Vurbiri.Colonization
         sealed public class Spying : ASpell
         {
             private readonly CurrenciesLite _add = new();
+            private readonly string _strCost;
 
-            private Spying(int type, int id) : base(type, id) { }
+            private Spying(int type, int id) : base(type, id) 
+            {
+                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
+            }
             public static void Create() => new Spying(MilitarySpellId.Type, MilitarySpellId.Spying);
 
             public override void Cast(SpellParam param)
@@ -21,7 +26,12 @@ namespace Vurbiri.Colonization
                     _add.Clear();
                     Currencies self = s_humans[param.playerId].Resources, other;
                     bool isPerson = param.playerId == PlayerId.Person;
-                    StringBuilder sb = null; if (isPerson) sb = new("<align=\"center\">", 666);
+                    StringBuilder sb = null;
+                    if (isPerson)
+                    {
+                        sb = new(TAG.ALING_CENTER, 666);
+                        sb.AppendLine(_strName); sb.AppendLine();
+                    }
 
                     for (int playerId = 0, currencyId; playerId < PlayerId.HumansCount; playerId++)
                     {
@@ -51,13 +61,18 @@ namespace Vurbiri.Colonization
                     if (_add.Amount > 0)
                     {
                         self.Add(_add);
-                        if (isPerson) _add.MainToStringBuilder(sb, GameContainer.UI.Colors.TextPositiveTag, GameContainer.UI.Colors.TextNegativeTag);
+                        if (isPerson) 
+                            _add.MainToStringBuilder(sb, GameContainer.UI.Colors.TextPositiveTag, GameContainer.UI.Colors.TextNegativeTag);
                         _add.Clear();
                     }
 
-                    _canCast = false;
 
-                    if (isPerson) Cast_Cn(sb.ToString()).Start();
+                    if (isPerson) 
+                        Cast_Cn(sb.ToString()).Start();
+                    else
+                        Banner.Open(_strName, MessageTypeId.Warning, 6f);
+
+                    _canCast = false;
                 }
             }
 
@@ -69,6 +84,8 @@ namespace Vurbiri.Colonization
 
                 s_isCast.False();
             }
+
+            protected override string GetDesc(Localization localization) => string.Concat(localization.GetText(FILE, _descKey), _strCost);
         }
     }
 }

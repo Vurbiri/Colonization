@@ -1,15 +1,23 @@
+using System.Collections;
+using Vurbiri.International;
+
 namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
         sealed private class RoadDemolition : ASpell
         {
-            private RoadDemolition(int type, int id) : base(type, id) { }
+            private readonly string _strCost;
+
+            private RoadDemolition(int type, int id) : base(type, id) 
+            {
+                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
+            }
             public static void Create() => new RoadDemolition(MilitarySpellId.Type, MilitarySpellId.RoadDemolition);
 
             public override bool Prep(SpellParam param)
             {
-                if (s_humans[param.playerId].IsPay(_cost))
+                if (!s_isCast && s_humans[param.playerId].IsPay(_cost))
                 {
                     for (int i = 0; i < PlayerId.HumansCount; i++)
                         if (s_humans[i].Roads.ThereDeadEnds())
@@ -22,13 +30,25 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    for (int i = 0; i < PlayerId.HumansCount; i++)
-                        s_humans[i].Roads.RemoveDeadEnds();
+                    s_isCast.True();
 
                     s_humans[param.playerId].Pay(_cost);
+                    ShowNameSpell(param.playerId);
+                    Cast_Cn().Start();
+
                     _canCast = false;
                 }
             }
+
+            private IEnumerator Cast_Cn()
+            {
+                for (int i = 0; i < PlayerId.HumansCount; i++)
+                    yield return s_humans[i].Roads.RemoveDeadEnds_Cn();
+
+                s_isCast.False();
+            }
+
+            protected override string GetDesc(Localization localization) => string.Concat(localization.GetText(FILE, _descKey), _strCost);
         }
     }
 }

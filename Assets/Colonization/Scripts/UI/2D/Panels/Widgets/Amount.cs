@@ -31,12 +31,12 @@ namespace Vurbiri.Colonization.UI
             if(amount > max)
             {
                 _valueTMP.text = string.Format(AMOUNT, _colorOver, Mathf.Min(amount, 99), max);
-                _text = string.Format(_textNormalHint, _colorOver, amount, max).Concat(string.Format(_textOverHint, amount - max));
+                _hintText = string.Format(_textNormalHint, _colorOver, amount, max).Concat(string.Format(_textOverHint, amount - max));
             }
             else 
             {
                 _valueTMP.text = string.Format(AMOUNT, _colorNormal, amount, max);
-                _text = string.Format(_textNormalHint, _colorNormalHint, amount, max);
+                _hintText = string.Format(_textNormalHint, _colorNormalHint, amount, max);
             }
         }
 

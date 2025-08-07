@@ -11,7 +11,7 @@ namespace Vurbiri.UI
         private Vector3 _offsetHint;
 
         protected Transform _thisTransform;
-        protected string _text;
+        protected string _hintText;
 
         protected void Init(AHint hint, float ratioHeight)
         {
@@ -28,7 +28,7 @@ namespace Vurbiri.UI
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (!_isShowingHint)
-                _isShowingHint = _hint.Show(_text, _thisTransform.position, _offsetHint);
+                _isShowingHint = _hint.Show(_hintText, _thisTransform.position, _offsetHint);
         }
 
         public void OnPointerExit(PointerEventData eventData)

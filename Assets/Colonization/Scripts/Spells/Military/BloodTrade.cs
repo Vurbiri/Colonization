@@ -1,4 +1,5 @@
 using System.Text;
+using Vurbiri.International;
 using Vurbiri.UI;
 using static Vurbiri.Colonization.CurrencyId;
 
@@ -16,7 +17,7 @@ namespace Vurbiri.Colonization
             public override bool Prep(SpellParam param)
             {
                 _blood = param.valueA - (param.valueA % s_settings.bloodTradePay);
-                return _canCast = _blood > 0 && s_humans[param.playerId].Resources[Blood] >= _blood;
+                return _canCast = !s_isCast & _blood > 0 && s_humans[param.playerId].Resources[Blood] >= _blood;
             }
 
             public override void Cast(SpellParam param)
@@ -31,14 +32,24 @@ namespace Vurbiri.Colonization
 
                     if (param.playerId == PlayerId.Person)
                     {
-                        StringBuilder sb = new(200); _cost.MainPlusToStringBuilder(sb);
+                        StringBuilder sb = new(220); 
+                        sb.Append(TAG.ALING_CENTER);
+                        sb.AppendLine(_strName);
+                        _cost.MainPlusToStringBuilder(sb);
+                        sb.AppendLine(TAG.ALING_OFF);
                         Banner.Open(sb.ToString(), MessageTypeId.Profit, 15f);
+                    }
+                    else
+                    {
+                        Banner.Open(_strName, MessageTypeId.Warning, 5f);
                     }
 
                     _cost.Clear();
                     _canCast = false;
                 }
             }
+
+            protected override string GetDesc(Localization localization) => localization.GetFormatText(FILE, _descKey, s_settings.bloodTradePay, s_settings.bloodTradeBay);
         }
     }
 }

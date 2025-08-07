@@ -7,7 +7,7 @@ namespace VurbiriEditor.Colonization
 {
     public abstract class ASettingsWindow<T> : EditorWindow
 	{
-        [SerializeField] private T _settings;
+        [SerializeField] protected T _settings;
 
         private string _label;
         private SerializedObject _serializedObject;

@@ -9,6 +9,9 @@ namespace Vurbiri.Colonization
 
         public const string COLOR_OFF = "</color>";
 
+        public const string ALING_CENTER = "<align=\"center\">";
+        public const string ALING_OFF = "</align>";
+
         //public const string TAG_CSPACE = "<cspace={0}em>";
         //public const string TAG_CSPACE_VALUE = "<cspace=0.1em>";
         //public const string TAG_CSPACE_OFF = "</cspace>";

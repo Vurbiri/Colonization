@@ -47,7 +47,7 @@ namespace Vurbiri
                 LogErrorFind<T>("objects", typeof(T).Name);
         }
 
-        public static void SetPrefab<T>(ref T obj, string name = null) where T : MonoBehaviour
+        public static void SetPrefab<T>(ref T obj, string name = null) where T : Component
         {
             bool notName = string.IsNullOrEmpty(name);
             if (obj != null) return;
@@ -128,7 +128,15 @@ namespace Vurbiri
             return null;
         }
 
-        public static T FindAnyPrefab<T>() where T : MonoBehaviour
+        public static List<T> FindObjectsByName<T>(string name) where T : Component
+        {
+            List<T> components = new();
+            foreach (var component in Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                if (component.gameObject.name == name) components.Add(component);
+            return components;
+        }
+
+        public static T FindAnyPrefab<T>() where T : Component
         {
             foreach (var guid in FindGUIDPrefabs())
                 if (LoadMainAssetAtGUID(guid).TryGetComponent<T>(out T component))
@@ -136,7 +144,7 @@ namespace Vurbiri
 
             return null;
         }
-        public static T FindAnyPrefab<T>(string name) where T : MonoBehaviour
+        public static T FindAnyPrefab<T>(string name) where T : Component
         {
             foreach (var guid in FindGUIDPrefabs(name))
                 if (LoadMainAssetAtGUID(guid).TryGetComponent<T>(out T component))

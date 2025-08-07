@@ -1,7 +1,6 @@
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
-using Vurbiri.International;
 
 namespace Vurbiri.Colonization
 {
@@ -10,6 +9,9 @@ namespace Vurbiri.Colonization
     {
         [Header("Order")]
         public int orderPerMana;
+        [Header("RandomHealing")]
+        public HitSFXName healSFX;
+        public int healPercentValue;
         [Header("Blessing")]
         public HitSFXName blessSFX;
         public int blessBasa;
@@ -21,7 +23,6 @@ namespace Vurbiri.Colonization
         public int wrathPerRes;
         public int wrathPierce;
         [Header("Sacrifice")]
-        public FileIdAndKey sacrificeText;
         public HitSFXName sacrificeKnifeSFX;
         public HitSFXName sacrificeTargetSFX;
         public int sacrificeBloodCost;
@@ -32,21 +33,21 @@ namespace Vurbiri.Colonization
         public int bloodTradePay;
         public int bloodTradeBay;
         [Header("Marauding")]
-        public FileIdAndKey maraudingText;
         public int reductionFromWall;
         public IdArray<WarriorId, int> maraudingCount;
         [Header("SwapId")]
-        public FileIdAndKey swapText;
         public Color swapHexColor;
         public float swapShowTime;
         [Header("Zeal")]
-        public FileIdAndKey zealText;
         public HitSFXName zealSFX;
         public int zealPercentHeal;
         public int zealAddAP;
-        [Space(15f)]
-        public IdArray<EconomicSpellId, int> economicCost;
-        public IdArray<MilitarySpellId, int> militaryCost;
+        [Header("Cost")]
+        public ReadOnlyIdArray<EconomicSpellId, int> economicCost;
+        public ReadOnlyIdArray<MilitarySpellId, int> militaryCost;
+        [Header("Hint")]
+        public IdArray<EconomicSpellId, string> economicKey;
+        public IdArray<MilitarySpellId, string> militaryKey;
     }
 }
 

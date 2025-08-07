@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.UI
 
             CameraTransform.Subscribe(LookAtCamera);
 
-            GameContainer.Players.Person.SpellBook.IsCastReactive.Subscribe(value => _isNotCast = !value);
+            GameContainer.Players.Person.SpellBook.IsCast.Subscribe(value => _isNotCast = !value);
 
             var game = GameContainer.GameLoop;
             game.Subscribe(GameModeId.EndTurn, OnEndTurn);

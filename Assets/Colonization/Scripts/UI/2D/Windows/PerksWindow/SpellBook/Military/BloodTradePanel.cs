@@ -10,11 +10,13 @@ namespace Vurbiri.Colonization
 
         private BloodTradePanel() : base(MilitarySpellId.Type, MilitarySpellId.BloodTrade) { }
 
-        public override void Init(SpellBook spellBook, Currencies resources, Action closeWindow)
+        public override SpellBook.ASpell Init(SpellBook spellBook, Currencies resources, Action closeWindow)
         {
-            base.Init(spellBook, resources, closeWindow);
+            base.Init(spellBook, closeWindow);
 
             _blood.Init(resources, ChangedBlood);
+
+            return _spell;
         }
 
         protected override void StateReset()

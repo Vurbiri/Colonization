@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -7,15 +8,8 @@ namespace Vurbiri.Colonization
     public partial class Road : MonoBehaviour
     {
         private const int BASE_ORDER = 32;
-        private const int R_SFX_COUNT = 2;
-        private const float CLIP_DELAY = 0.5f;
-
-        private static Coroutine s_playRemoveClip;
 
         [SerializeField] private LineRenderer _roadRenderer;
-        [SerializeField] private AudioSource _audioSource;
-        [SerializeField] private AudioClip _removeClip;
-        [SerializeField] private WaitParticle[] _removeSFX;
         [Space]
         [SerializeField, Range(0.5f, 1.5f)] private float _widthRoad = 0.95f;
         [Space]
@@ -29,29 +23,24 @@ namespace Vurbiri.Colonization
         [SerializeField, Range(2f, 6f)] private float _buildingSpeed = 4.3f;
 
         private Action<Road> a_onDisable;
-        private readonly WaitRealtime _waitClip = new(CLIP_DELAY);
+        private readonly List<CrossroadLink> _removeLinks = new(2);
         private readonly WaitSignal _waitSignal = new();
-        private readonly Transform[] _particleTransforms = new Transform[R_SFX_COUNT];
         private Links _links;
         private Points _points;
         private Vector2 _textureScale;
         private float _textureScaleX;
                 
         private Gradient _gradient;
-        private Coroutine _coroutineBuildSFX, _coroutineRemoveSFX;
+        private Coroutine _coroutineBuildSFX;
         private readonly GradientAlphaKey[] _alphaKeys = { new(1f, 0f), new(1f, 0.5f), new(0f, 1f) };
         private GradientAlphaKey[] _defaultAlphaKey;
         private GradientAlphaKey[] LineAlphaKeys { set { _gradient.alphaKeys = value; _roadRenderer.colorGradient = _gradient; } }
 
         public int SortingOrder { set =>  _roadRenderer.sortingOrder = BASE_ORDER - value; }
-        public int Count => _links.Count;
 
         public Road Init(Gradient gradient, int id, Action<Road> onDisable)
         {
             a_onDisable = onDisable;
-            for (int i = 0; i < R_SFX_COUNT; i++)
-                _particleTransforms[i] = _removeSFX[i].ParticleSystem.transform;
-
 
             return Setup(gradient, id);
         }
@@ -112,33 +101,47 @@ namespace Vurbiri.Colonization
         }
 
         public bool ThereDeadEnds(int playerId) => _links.End.IsDeadEnd(playerId) || _links.Start.IsDeadEnd(playerId);
-        public int DeadEndsCount(int playerId)
+
+        public List<CrossroadLink> GetDeadEnds(int playerId)
         {
-            int deadEndsCount = 0;
-            if (_links.End.IsDeadEnd(playerId))   deadEndsCount++;
-            if (_links.Start.IsDeadEnd(playerId)) deadEndsCount++;
-            return deadEndsCount;
+            _removeLinks.Clear();
+
+            if (_links.Start.IsDeadEnd(playerId, out CrossroadLink link))
+            {
+                link.RoadRemove(TypeLink.Start);
+                _removeLinks.Add(link);
+            }
+            if (_links.End.IsDeadEnd(playerId, out link))
+            {
+                link.RoadRemove(TypeLink.End);
+                _removeLinks.Add(link);
+            }
+
+            return _removeLinks;
         }
-        public int RemoveDeadEnds(int playerId)
+
+        public bool Remove(CrossroadLink link)
         {
-            int removeCount = 0;
-            if (_links.End.IsDeadEnd(playerId, out CrossroadLink link))
+            if (_links.Count <= 2)
+            {
+                Disable();
+                return true;
+            }
+
+            if (link.Type == TypeLink.End)
             {
                 _links.Remove();
                 _points.Remove(_links.End.Position);
-                RoadRemove(link, removeCount++);
             }
-            if (_links.Start.IsDeadEnd(playerId, out link))
+            else if (link.Type == TypeLink.Start)
             {
                 _links.Extract();
                 _points.Extract(_links.Start.Position);
-                RoadRemove(link, removeCount++);
             }
 
-            if (removeCount > 0)
-                SetTextureScale();
+            SetTextureScale();
 
-            return removeCount;
+            return false;
         }
 
         public Road Union(Road other)
@@ -171,19 +174,10 @@ namespace Vurbiri.Colonization
 
         public void Disable()
         {
-            _points.Clear();
+            _links = null;
+            _points.Clear(); _points = null;
             gameObject.SetActive(false);
             a_onDisable.Invoke(this);
-        }
-
-        private void RoadRemove(CrossroadLink link, int index)
-        {
-            link.RoadRemove();
-            _particleTransforms[index].SetLocalPositionAndRotation(link.Position, CONST.LINK_ROTATIONS[link.Id.Value]);
-            _removeSFX[index].Play();
-
-            _coroutineRemoveSFX ??= StartCoroutine(RemoveSFX_Cn());
-            s_playRemoveClip ??= StartCoroutine(PlayRemoveClip_Cn());
         }
 
         private void UnionTextureScale(Road other)
@@ -234,7 +228,6 @@ namespace Vurbiri.Colonization
             _alphaKeys[0] .alpha = end;
             _alphaKeys[^1].alpha = 1f - end;
 
-            _audioSource.Play();
             while (progress < 1f)
             {
                 _alphaKeys[1].time = Mathf.Lerp(start, end, progress);
@@ -246,41 +239,10 @@ namespace Vurbiri.Colonization
             StopSFX();
         }
 
-        private IEnumerator RemoveSFX_Cn()
-        {
-            for (int i = 0; i < R_SFX_COUNT; i++)
-                yield return _removeSFX[i];
-
-            _coroutineRemoveSFX = null;
-
-            if (_links.Count < 2)
-                Disable();
-        }
-
-        private IEnumerator PlayRemoveClip_Cn()
-        {
-            _audioSource.PlayOneShot(_removeClip);
-            yield return _waitClip.Restart();
-            s_playRemoveClip = null;
-        }
-
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            this.SetComponent(ref _audioSource);
             this.SetChildren(ref _roadRenderer);
-
-            if(_removeSFX == null || _removeSFX.Length != R_SFX_COUNT)
-            {
-                var particles = GetComponentsInChildren<ParticleSystem>();
-                _removeSFX = new WaitParticle[R_SFX_COUNT];
-                for (int i = 0; i < R_SFX_COUNT; i++)
-                {
-                    _removeSFX[i] = new(particles[i]);
-                    var shape = particles[i].shape;
-                    shape.radius = CONST.HEX_RADIUS_OUT * 0.5f;
-                }
-            }
         }
 #endif
     }

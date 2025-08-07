@@ -1,29 +1,23 @@
 {
   "orderPerMana": 0,
-  "blessSFX": "ShortBuffWait",
-  "blessBasa": 5,
-  "blessPerRes": 2,
-  "blessDuration": 2,
+  "healSFX": "Empty",
+  "healPercentValue": 0,
+  "blessSFX": "ShortBuff",
+  "blessBasa": 0,
+  "blessPerRes": 0,
+  "blessDuration": 0,
   "wrathSFX": "WrathOfIsland",
-  "wrathBasa": 50,
-  "wrathPerRes": 2,
-  "wrathPierce": 25,
-  "sacrificeText": [
-    "1",
-    "SpellSacrificeMsg"
-  ],
+  "wrathBasa": 0,
+  "wrathPerRes": 0,
+  "wrathPierce": 0,
   "sacrificeKnifeSFX": "Sacrifice",
   "sacrificeTargetSFX": "SacrificeTarget",
   "sacrificeBloodCost": 0,
-  "sacrificeHPPercent": 110,
-  "sacrificePierce": 15,
+  "sacrificeHPPercent": 0,
+  "sacrificePierce": 0,
   "bloodTradePay": 0,
   "bloodTradeBay": 0,
-  "maraudingText": [
-    "1",
-    "SpellMaraudingMsg"
-  ],
-  "reductionFromWall": 30,
+  "reductionFromWall": 0,
   "maraudingCount": [
     0,
     0,
@@ -31,24 +25,16 @@
     0,
     0
   ],
-  "swapText": [
-    "1",
-    "SpellSwapIdMsg"
-  ],
   "swapHexColor": [
-    0.213,
-    0.213,
-    0.426,
+    0.325999975,
+    0.325999975,
+    0.65199995,
     1.0
   ],
-  "swapShowTime": 2.0,
-  "zealText": [
-    "1",
-    "SpellZealMsg"
-  ],
+  "swapShowTime": 0.0,
   "zealSFX": "Buff",
-  "zealPercentHeal": 15,
-  "zealAddAP": 4,
+  "zealPercentHeal": 0,
+  "zealAddAP": 0,
   "economicCost": [
     0,
     0,
@@ -65,6 +51,24 @@
     0,
     0,
     0,
-    1
+    0
+  ],
+  "economicKey": [
+    "Order",
+    "RandomHealing",
+    "Blessing",
+    "Wrath",
+    "SummonWarlock",
+    "ShuffleResources",
+    "Sacrifice"
+  ],
+  "militaryKey": [
+    "BloodTrade",
+    "Spying",
+    "WallBuild",
+    "Marauding",
+    "RoadDemolition",
+    "SwapId",
+    "Zeal"
   ]
 }

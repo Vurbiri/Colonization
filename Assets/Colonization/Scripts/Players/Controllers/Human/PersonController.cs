@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
 
         public PersonController(Settings settings) : base(PlayerId.Person, settings)
         {
-            _spellBook.IsCastReactive.Subscribe(_interactable.BindSpells);
+            _spellBook.IsCast.Subscribe(_interactable.BindSpells);
             _actors.Subscribe(_interactable.BindActors);
         }
 

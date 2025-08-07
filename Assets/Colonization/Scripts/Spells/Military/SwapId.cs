@@ -11,22 +11,24 @@ namespace Vurbiri.Colonization
         sealed private class SwapId : ASpell
         {
             private readonly WaitResultSource<Hexagon> _waitHexagon = new();
+            private readonly string _msgKey, _strCost;
+            private string _strMsg;
             private WaitButton _waitButton;
             private Coroutine _coroutine;
             private Hexagon _selectedA;
-            private string _text;
             private int _currentPlayer;
 
             private SwapId(int type, int id) : base(type, id)
             {
-                Localization.Instance.Subscribe(SetText);
+                _msgKey = string.Concat(s_keys[type][id], "Msg");
+                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
             }
             public static void Create() =>  new SwapId(MilitarySpellId.Type, MilitarySpellId.SwapId);
 
             public override bool Prep(SpellParam param)
             {
                 var human = s_humans[param.playerId];
-                return _canCast = human.IsPay(_cost) & human.Actors.Count >= 2 & _coroutine == null;
+                return _canCast = !s_isCast && human.IsPay(_cost) & human.Actors.Count >= 2 & _coroutine == null;
             }
 
             public override void Cast(SpellParam param)
@@ -39,12 +41,6 @@ namespace Vurbiri.Colonization
 
                     _canCast = false;
                 }
-            }
-
-            public override void Clear(int type, int id)
-            {
-                Localization.Instance.Unsubscribe(SetText);
-                s_spells[type][id] = null;
             }
 
             public override void Cancel()
@@ -66,7 +62,7 @@ namespace Vurbiri.Colonization
                     foreach (var actor in s_actors[PlayerId.Person])
                         actor.SetHexagonSelectable();
 
-                    _waitButton = MessageBox.Open(_text, MBButton.Cancel);
+                    _waitButton = MessageBox.Open(_strMsg, MBButton.Cancel);
                     _waitButton.AddListener(Cancel);
                 }
 
@@ -99,8 +95,14 @@ namespace Vurbiri.Colonization
                 s_isCast.False();
             }
 
-            private void SetText(Localization localization) => _text = localization.GetText(s_settings.swapText);
             private void SetHexagon(Hexagon hexagon) => _waitHexagon.SetResult(hexagon);
+
+            protected override string GetDesc(Localization localization)
+            {
+                _strMsg = string.Concat(TAG.ALING_CENTER, _strName, "\n", localization.GetText(FILE, _msgKey), TAG.ALING_OFF);
+
+                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.sacrificeHPPercent, s_settings.sacrificePierce), _strCost);
+            }
         }
     }
 }

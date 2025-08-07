@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
 
         protected override void SetLocalizationText(Localization localization)
         {
-            _text = localization.GetText(_getText.id, _getText.key);
+            _hintText = localization.GetText(_getText.id, _getText.key);
         }
 
 #if UNITY_EDITOR

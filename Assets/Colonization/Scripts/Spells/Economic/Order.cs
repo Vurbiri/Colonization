@@ -1,3 +1,4 @@
+using Vurbiri.International;
 using static Vurbiri.Colonization.CurrencyId;
 
 namespace Vurbiri.Colonization
@@ -12,7 +13,7 @@ namespace Vurbiri.Colonization
             public override bool Prep(SpellParam param)
             {
                 _cost.Set(Mana, param.valueA);
-                return _canCast = s_humans[param.playerId].IsPay(_cost);
+                return _canCast = !s_isCast && s_humans[param.playerId].IsPay(_cost);
             }
 
             public override void Cast(SpellParam param)
@@ -20,10 +21,12 @@ namespace Vurbiri.Colonization
                 if (_canCast)
                 {
                     s_humans[param.playerId].AddOrder(param.valueA * s_settings.orderPerMana, _cost);
+                    ShowNameSpell(param.playerId);
                     _canCast = false;
                 }
             }
 
+            protected override string GetDesc(Localization localization) => localization.GetFormatText(FILE, _descKey, s_settings.orderPerMana);
         }
     }
 }

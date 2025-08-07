@@ -36,15 +36,20 @@ namespace Vurbiri.Colonization
             link.RoadBuilt(_id);
             _count.Increment();
 
-            ReturnSignal returnSignal;
+            ReturnSignal returnSignal = false;
 
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
                 if (returnSignal = _roadsLists[i].TryAdd(link.Start, link.End, isSFX))
-                    return returnSignal;
+                    break;
 
-            Road road = _factory.Create(_gradient, _roadsLists.Count);
-            returnSignal = road.Create(link.Start, link.End, isSFX);
-            _roadsLists.Add(road);
+            if (!returnSignal)
+            {
+                Road road = _factory.Create(_gradient, _roadsLists.Count);
+                returnSignal = road.Create(link.Start, link.End, isSFX);
+                _roadsLists.Add(road);
+            }
+
+            if(isSFX) _factory.RoadSFX.Build(link);
 
             return returnSignal;
         }
@@ -63,32 +68,33 @@ namespace Vurbiri.Colonization
             
             return false;
         }
-        public int DeadEndsCount()
+
+        public IEnumerator RemoveDeadEnds_Cn()
         {
-            int deadEndsCount = 0;
-            for (int i = _roadsLists.Count - 1; i >= 0; i--)
-                deadEndsCount += _roadsLists[i].DeadEndsCount(_id);
-            return deadEndsCount;
-        }
-        public bool RemoveDeadEnds()
-        {
+            List<CrossroadLink> removeLinks; CrossroadLink link;
             Road line; int removeCount = 0;
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
             {
                 line = _roadsLists[i];
-                removeCount += line.RemoveDeadEnds(_id);
+                removeLinks = line.GetDeadEnds(_id);
 
-                if (line.Count < 2)
-                    _roadsLists.RemoveAt(i);
+                for (int j = removeLinks.Count - 1; j >= 0; j--)
+                {
+                    removeCount++;
+                    link = removeLinks[j];
+
+                    yield return GameContainer.CameraController.ToPosition(link.Position, true);
+
+                    if (line.Remove(link)) _roadsLists.RemoveAt(i);
+                    yield return _factory.RoadSFX.Remove_Cn(link);
+                }
             }
 
-            bool result = removeCount > 0;
-            if (result)
+            if (removeCount > 0)
             {
                 _eventChanged.Invoke(this);
                 _count.Remove(removeCount);
             }
-            return result;
         }
 
         #region Reactive

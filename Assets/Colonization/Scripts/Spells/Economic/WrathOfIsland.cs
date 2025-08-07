@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.International;
 using static Vurbiri.Colonization.CurrencyId;
 using static Vurbiri.Colonization.GameContainer;
 
@@ -14,10 +15,12 @@ namespace Vurbiri.Colonization
         {
             private readonly SpellDamager _damage;
             private readonly List<Actor> _targets = new(8);
+            private readonly string _strCost;
 
             private WrathOfIsland(int type, int id) : base(type, id) 
             {
                 _damage = new(s_settings.wrathPierce);
+                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, Mana, _cost[Mana]));
             }
             public static void Create() => new WrathOfIsland(EconomicSpellId.Type, EconomicSpellId.Wrath);
 
@@ -26,7 +29,7 @@ namespace Vurbiri.Colonization
                 _targets.Clear();
                 _cost.Set(Wood, param.valueA); _cost.Set(Ore, param.valueB);
 
-                if (s_humans[param.playerId].IsPay(_cost))
+                if (!s_isCast && s_humans[param.playerId].IsPay(_cost))
                 {
                     for (int i = 0, surface; i < PlayerId.HumansCount; i++)
                     {
@@ -45,13 +48,15 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
+                    int count = _targets.Count;
                     _damage.playerId = param.playerId;
-                    _damage.attack = (s_settings.wrathBasa + (param.valueA + param.valueB) * s_settings.wrathPerRes << ActorAbilityId.SHIFT_ABILITY) / _targets.Count;
-
-                    s_humans[param.playerId].Pay(_cost);
+                    _damage.attack = ((s_settings.wrathBasa + (param.valueA + param.valueB) * s_settings.wrathPerRes << ActorAbilityId.SHIFT_ABILITY)) / count;
 
                     s_isCast.True();
+
                     Cast_Cn().Start();
+                    ShowNameSpell(param.playerId, 3f + 2f * count);
+                    s_humans[param.playerId].Pay(_cost);
 
                     _canCast = false;
                 }
@@ -71,6 +76,11 @@ namespace Vurbiri.Colonization
                 }
 
                 s_isCast.False();
+            }
+
+            protected override string GetDesc(Localization localization)
+            {
+                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.wrathBasa, s_settings.wrathPerRes, s_settings.wrathPierce), _strCost);
             }
         }
     } 

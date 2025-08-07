@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri
@@ -18,14 +19,20 @@ namespace Vurbiri
 
         public bool MoveNext() => _particleSystem.isPlaying;
 
-        public void Play() => _particleSystem.Play();
+        public IEnumerator Play()
+        {
+            Reset(); _particleSystem.Play();
+            return this;
+        }
         public void Stop() => _particleSystem.Stop();
 
         public void Reset()
         {
-            _particleSystem.Stop();
-            _particleSystem.Clear();
-            _particleSystem.Play();
+            if (_particleSystem.isPlaying)
+            {
+                _particleSystem.Stop();
+                _particleSystem.Clear();
+            }
         }
     }
 }

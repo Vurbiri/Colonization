@@ -14,26 +14,27 @@ namespace Vurbiri.Colonization
         sealed private class Zeal : ASpell
         {
             private readonly WaitResultSource<Actor> _waitActor = new();
-            private readonly Effect _heal, _addAP, _move;
+            private readonly string _msgKey, _strCost;
+            private string _strMsg;
+            private readonly Effect _addAP, _move;
             private WaitButton _waitButton;
             private Coroutine _coroutine;
-            private string _text;
             private int _currentPlayer;
 
             private Zeal(int type, int id) : base(type, id)
             {
-				_heal  = new(ActorAbilityId.CurrentHP, TypeModifierId.TotalPercent, s_settings.zealPercentHeal);
-                _addAP = new(ActorAbilityId.CurrentAP, TypeModifierId.Addition,     s_settings.zealAddAP);
-                _move  = new(ActorAbilityId.IsMove,    TypeModifierId.Addition,     1);
+                _addAP = new(ActorAbilityId.CurrentAP, TypeModifierId.Addition, s_settings.zealAddAP);
+                _move  = new(ActorAbilityId.IsMove,    TypeModifierId.Addition, 1);
 
-                Localization.Instance.Subscribe(SetText);
+                _msgKey = string.Concat(s_keys[type][id], "Msg");
+                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
             }
             public static void Create() => new Zeal(MilitarySpellId.Type, MilitarySpellId.Zeal);
 
             public override bool Prep(SpellParam param)
             {
                 var human = s_humans[param.playerId];
-                return _canCast = human.IsPay(_cost) & human.Actors.Count > 0 & _coroutine == null;
+                return _canCast = !s_isCast && human.IsPay(_cost) & human.Actors.Count > 0 & _coroutine == null;
             }
 
             public override void Cast(SpellParam param)
@@ -46,12 +47,6 @@ namespace Vurbiri.Colonization
 
                     _canCast = false;
                 }
-            }
-
-            public override void Clear(int type, int id)
-            {
-                Localization.Instance.Unsubscribe(SetText);
-                s_spells[type][id] = null;
             }
 
             public override void Cancel()
@@ -82,7 +77,7 @@ namespace Vurbiri.Colonization
                             actor.Hexagon.ShowMark(true);
                     }
 
-                    _waitButton = MessageBox.Open(_text, MBButton.Cancel);
+                    _waitButton = MessageBox.Open(_strMsg, MBButton.Cancel);
                     _waitButton.AddListener(Cancel);
                 }
 
@@ -95,7 +90,7 @@ namespace Vurbiri.Colonization
 
                 yield return CameraController.ToPosition(target.Position, true);
 
-                target.ApplyEffect(_heal); target.ApplyEffect(_addAP); target.ApplyEffect(_move);
+                target.ApplyEffect(_addAP); target.ApplyEffect(_move);
                 s_humans[_currentPlayer].Pay(_cost);
 
                 yield return HitSFX.Hit(s_settings.zealSFX, s_sfxUser, target.Skin);
@@ -123,8 +118,14 @@ namespace Vurbiri.Colonization
                 s_isCast.False();
             }
 
-            private void SetText(Localization localization) => _text = localization.GetText(s_settings.zealText);
             private void SetActor(Actor actor) => _waitActor.SetResult(actor);
+
+            protected override string GetDesc(Localization localization)
+            {
+                _strMsg = string.Concat(TAG.ALING_CENTER, _strName, "\n", localization.GetText(FILE, _msgKey), TAG.ALING_OFF);
+
+                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.sacrificeHPPercent, s_settings.sacrificePierce), _strCost);
+            }
         }
 	}
 }

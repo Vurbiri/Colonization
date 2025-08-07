@@ -5,7 +5,7 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Controllers
 {
-	public class CameraTransform : IReactive<Transform>
+    public class CameraTransform : IReactive<Transform>
     {
         private const float MIN_SQR_MAGNITUDE = 1E-05f;
 
@@ -30,7 +30,11 @@ namespace Vurbiri.Colonization.Controllers
                 _changedTransform.Invoke(_cameraTransform);
             }
         }
-        public Vector3 ParentPosition => _parentTransform.position;
+        public Vector3 ParentPosition
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _parentTransform.position;
+        }
 
 
         public CameraTransform(Camera camera)
@@ -60,6 +64,8 @@ namespace Vurbiri.Colonization.Controllers
                 return true;
             }
 
+            _parentTransform.position = target;
+            _changedTransform.Invoke(_cameraTransform);
             _velocity = Vector3.zero;
             return false;
         }
@@ -76,7 +82,7 @@ namespace Vurbiri.Colonization.Controllers
         {
             _parentTransform.position = parentPosition;
             _cameraTransform.localPosition = cameraPosition;
-            
+
             _cameraTransform.LookAt(_parentTransform);
 
             _changedTransform.Invoke(_cameraTransform);
@@ -93,11 +99,11 @@ namespace Vurbiri.Colonization.Controllers
             float rightX = (1f - (rotation.y * rotY + rotation.z * rotZ));
             float rightZ = rotation.x * rotZ - rotation.w * rotY;
 
-            float magnitude = rightX * rightX + rightZ * rightZ; 
+            float magnitude = rightX * rightX + rightZ * rightZ;
             if (magnitude > MIN_SQR_MAGNITUDE)
             {
                 magnitude = (float)Math.Sqrt(magnitude);
-                rightX /= magnitude; rightZ /= magnitude;  
+                rightX /= magnitude; rightZ /= magnitude;
             }
             else
             {

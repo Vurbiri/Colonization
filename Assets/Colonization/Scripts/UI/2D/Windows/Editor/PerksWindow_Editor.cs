@@ -17,8 +17,10 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Vector2 _perkSpace = new(10.5f, 13.5f);
         [Space]
-        [SerializeField, HideInInspector] private RectTransform _economicContainer;
-        [SerializeField, HideInInspector] private RectTransform _militaryContainer;
+        [SerializeField, HideInInspector] private RectTransform _economicPerksContainer;
+        [SerializeField, HideInInspector] private RectTransform _militaryPerksContainer;
+        [SerializeField, HideInInspector] private RectTransform _economicSpellsContainer;
+        [SerializeField, HideInInspector] private RectTransform _militarySpellsContainer;
         [SerializeField, HideInInspector] private RectTransform _separatorsContainer;
 
         [SerializeField, HideInInspector] private PerksScriptable _perks;
@@ -30,8 +32,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, HideInInspector] private PerkToggle[] _economicPerks;
         [SerializeField, HideInInspector] private PerkToggle[] _militaryPerks;
 
-        [SerializeField, HideInInspector] private ASpellToggle[] _economicSpells;
-        [SerializeField, HideInInspector] private ASpellToggle[] _militarySpells;
+        [SerializeField, HideInInspector] private SpellToggle[] _economicSpells;
+        [SerializeField, HideInInspector] private SpellToggle[] _militarySpells;
 
         [SerializeField, HideInInspector] private TextMeshProUGUI[] _separators;
 #pragma warning disable 414
@@ -55,17 +57,17 @@ namespace Vurbiri.Colonization.UI
 
         public void Setup_Ed()
         {
-            SetupPerks_Ed(_economicPerks, TypeOfPerksId.Economic, EconomicPerksId.Count, _economicContainer);
-            SetupPerks_Ed(_militaryPerks, TypeOfPerksId.Military, MilitaryPerksId.Count, _militaryContainer);
+            SetupPerks_Ed(_economicPerks, TypeOfPerksId.Economic, EconomicPerksId.Count, _economicPerksContainer);
+            SetupPerks_Ed(_militaryPerks, TypeOfPerksId.Military, MilitaryPerksId.Count, _militaryPerksContainer);
 
-            float sizeX = _economicContainer.sizeDelta.x + _treeSpace;
-            Vector2 mainSize = new(sizeX * 2f, _economicContainer.sizeDelta.y);
+            float sizeX = _economicPerksContainer.sizeDelta.x + _treeSpace;
+            Vector2 mainSize = new(sizeX * 2f, _economicPerksContainer.sizeDelta.y);
             
             GetComponent<RectTransform>().sizeDelta = mainSize + _border;
 
             sizeX += _treeSpace;
-            _economicContainer.anchoredPosition = new(sizeX * -0.5f, 0f);
-            _militaryContainer.anchoredPosition = new(sizeX * 0.5f, 0f);
+            _economicPerksContainer.anchoredPosition = new(sizeX * -0.5f, 0f);
+            _militaryPerksContainer.anchoredPosition = new(sizeX * 0.5f, 0f);
 
             _separatorsContainer.sizeDelta = mainSize;
 
@@ -91,11 +93,10 @@ namespace Vurbiri.Colonization.UI
         {
             Delete_Ed();
 
-            CreatePerks_Ed(_economicPerks, EconomicPerksId.Count, _economicContainer);
-            CreatePerks_Ed(_militaryPerks, MilitaryPerksId.Count, _militaryContainer);
+            CreatePerks_Ed(_economicPerks, EconomicPerksId.Count, _economicPerksContainer);
+            CreatePerks_Ed(_militaryPerks, MilitaryPerksId.Count, _militaryPerksContainer);
 
-            for (int i = 0; i < _countLevels; i++)
-                _separators[i] = EUtility.InstantiatePrefab(_separatorPrefab, _separatorsContainer);
+            CreateSeparators_Ed();
 
             CreateSpells_Ed();
 
@@ -103,11 +104,10 @@ namespace Vurbiri.Colonization.UI
         }
         public void Delete_Ed()
         {
-            DeletePerks_Ed(_economicPerks, EconomicPerksId.Count);
-            DeletePerks_Ed(_militaryPerks, MilitaryPerksId.Count);
+            DeletePerks_Ed(_economicPerks, EconomicPerksId.Count, _economicPerksContainer);
+            DeletePerks_Ed(_militaryPerks, MilitaryPerksId.Count, _militaryPerksContainer);
 
-            for (int i = 0; i < _countLevels; i++)
-                EUtility.DestroyGameObject(ref _separators[i]);
+            DeleteSeparators_Ed();
         }
 
         private void SetupPerks_Ed(PerkToggle[] perks, int typePerkId, int count, RectTransform container)
@@ -134,17 +134,36 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < count; i++)
                 perks[i] = EUtility.InstantiatePrefab(_perkPrefab, parent);
         }
-        private void DeletePerks_Ed(PerkToggle[] perks, int count)
+        private void DeletePerks_Ed(PerkToggle[] perks, int count, Transform parent)
         {
             for (int i = 0; i < count; i++)
                 EUtility.DestroyGameObject(ref perks[i]);
-        }
 
+            perks = parent.GetComponentsInChildren<PerkToggle>(true);
+            for (int i = perks.Length - 1; i >= 0; i--)
+                Object.DestroyImmediate(perks[i].gameObject);
+        }
         private void CreateSpells_Ed()
         {
-            ASpellToggle[][] spells = { _economicSpells, _militarySpells };
-            foreach (var spell in FindObjectsByType<ASpellToggle>(FindObjectsSortMode.None))
+            SpellToggle[][] spells = { _economicSpells, _militarySpells };
+            foreach (var spell in FindObjectsByType<SpellToggle>(FindObjectsSortMode.None))
                 spells[spell.Type][spell.Id] = spell;
+        }
+
+        private void DeleteSeparators_Ed()
+        {
+            for (int i = 0; i < _countLevels; i++)
+                EUtility.DestroyGameObject(ref _separators[i]);
+
+            while (_separatorsContainer.childCount > 0)
+                Object.DestroyImmediate(_separatorsContainer.GetChild(0).gameObject);
+              
+        }
+
+        private void CreateSeparators_Ed()
+        {
+            for (int i = 0; i < _countLevels; i++)
+                _separators[i] = EUtility.InstantiatePrefab(_separatorPrefab, _separatorsContainer);
         }
 
         protected override void OnValidate()
@@ -160,8 +179,10 @@ namespace Vurbiri.Colonization.UI
 
             _progressBars ??= new();
 
-            this.SetChildren(ref _economicContainer, "EconomicPerks");
-            this.SetChildren(ref _militaryContainer, "MilitaryPerks");
+            this.SetChildren(ref _economicPerksContainer, "EconomicPerks");
+            this.SetChildren(ref _militaryPerksContainer, "MilitaryPerks");
+            this.SetChildren(ref _economicSpellsContainer, "EconomicSpellToggles");
+            this.SetChildren(ref _militarySpellsContainer, "MilitarySpellToggles");
             this.SetChildren(ref _separatorsContainer, "Separators");
 
             EUtility.SetScriptable(ref _perks);

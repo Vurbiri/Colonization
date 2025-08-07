@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization.Controllers
             _machine.SetState(_moveToTargetState, block);
             return _moveToTargetState.Signal;
         }
-        public WaitSignal ToPosition(IPositionable obj) => ToPosition(obj.Position, false);
+        public WaitSignal ToPosition(IPositionable obj) => ToPosition(obj.Position, true);
 
         private void OnMove(CallbackContext ctx)
         {
@@ -145,7 +145,7 @@ namespace Vurbiri.Colonization.Controllers
         private class MovementToTarget
         {
             [Range(0.05f, 1f)] public float smoothTime = 0.35f;
-            [Range(0.01f, 0.5f)] public float sqrVelocityMin = 0.2f;
+            [Range(0.01f, 0.9f)] public float sqrVelocityMin = 0.5f;
         }
         //***********************************
         [Serializable]

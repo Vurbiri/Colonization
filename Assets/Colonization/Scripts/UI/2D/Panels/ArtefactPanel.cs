@@ -5,7 +5,6 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using Vurbiri.Reactive;
@@ -32,7 +31,7 @@ namespace Vurbiri.Colonization.UI
 
         // TEST
         Artefact _artefact;
-        bool _spawn = false;
+        //bool _spawn = false;
 
         public void Test()
         {
@@ -40,20 +39,20 @@ namespace Vurbiri.Colonization.UI
 
             var person = GameContainer.Players.Person;
 
-            if (!_spawn)
-            {
-                person.SpawnTest(WarriorId.Wizard, 4);
-                //person.SpawnTest(WarriorId.Militia, 2);
-                //GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 3);
-                _spawn = true;
-                return;
-            }
+            //if (!_spawn)
+            //{
+            //    person.SpawnTest(WarriorId.Wizard, 4);
+            //    //person.SpawnTest(WarriorId.Militia, 2);
+            //    //GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 3);
+            //    _spawn = true;
+            //    return;
+            //}
 
             if (person.Interactable.Value)
             {
                 //SpellParam param = new(0, UnityEngine.Random.Range(0, 5), UnityEngine.Random.Range(0, 5));+
                 SpellParam param = new(0);
-                SpellBook.Cast(MilitarySpellId.Type, MilitarySpellId.SwapId, param);
+                SpellBook.Cast(MilitarySpellId.Type, MilitarySpellId.RoadDemolition, param);
             }
             else
             {
@@ -99,7 +98,7 @@ namespace Vurbiri.Colonization.UI
             stringBuilder.AppendLine();
             _level.SetHintText(localization, stringBuilder);
 
-            _text = stringBuilder.ToString();
+            _hintText = stringBuilder.ToString();
         }
 
         private void SetHintValues(Artefact artefact)
@@ -115,7 +114,7 @@ namespace Vurbiri.Colonization.UI
             stringBuilder.AppendLine();
             _level.SetHintValue(artefact.Level, stringBuilder);
             
-            _text = stringBuilder.ToString();
+            _hintText = stringBuilder.ToString();
         }
 
         public void Dispose()

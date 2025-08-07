@@ -13,14 +13,17 @@ namespace Vurbiri.Colonization
         {
             private readonly CurrenciesLite[] _currencies = new CurrenciesLite[PlayerId.HumansCount];
             private readonly Stack<Occupation> _occupations = new(CONST.DEFAULT_MAX_EDIFICES << 1);
-            private string _text;
+            private readonly string _msgKey, _strCost;
+            private string _strMsg;
 
             private Marauding(int type, int id) : base(type, id)
             {
-                Localization.Instance.Subscribe(SetText);
                 _currencies = new CurrenciesLite[PlayerId.HumansCount];
                 for (int i = 0; i < PlayerId.HumansCount; i++)
                     _currencies[i] = new();
+
+                _msgKey = string.Concat(s_keys[type][id], "Msg");
+                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
             }
             public static void Create() => new Marauding(MilitarySpellId.Type, MilitarySpellId.Marauding);
 
@@ -28,7 +31,7 @@ namespace Vurbiri.Colonization
             {
                 _occupations.Clear(); 
                 var human = s_humans[param.playerId];
-                if (human.IsPay(_cost) & human.Actors.Count > 0)
+                if (!s_isCast && human.IsPay(_cost) & human.Actors.Count > 0)
                 {
                     List<Hexagon> hexagons;
                     for (int playerId = 0; playerId < PlayerId.HumansCount; playerId++)
@@ -63,7 +66,7 @@ namespace Vurbiri.Colonization
 
                     if (isPerson)
                     {
-                        StringBuilder sb = new(200); sb.AppendLine(_text); Occupation.self.MainToStringBuilder(sb);
+                        StringBuilder sb = new(200); sb.AppendLine(_strMsg); Occupation.self.MainToStringBuilder(sb);
                         int amount = _currencies[PlayerId.Person].Amount;
                         Banner.Open(sb.ToString(), amount == 0 ? MessageTypeId.Warning : amount > 0 ? MessageTypeId.Profit : MessageTypeId.Error, 15f);
                     }
@@ -80,12 +83,16 @@ namespace Vurbiri.Colonization
 
             public override void Clear(int type, int id)
             {
-                Localization.Instance.Unsubscribe(SetText);
+                base.Clear(type, id);
                 Occupation.self = null;
-                s_spells[type][id] = null;
             }
 
-            private void SetText(Localization localization) => _text = localization.GetText(s_settings.maraudingText);
+            protected override string GetDesc(Localization localization)
+            {
+                _strMsg = string.Concat(TAG.ALING_CENTER, _strName, "\n", localization.GetText(FILE, _msgKey), TAG.ALING_OFF);
+
+                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.sacrificeHPPercent, s_settings.sacrificePierce), _strCost);
+            }
 
             #region Nested: Occupation
             // =====================================================

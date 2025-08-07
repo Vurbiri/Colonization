@@ -21,7 +21,9 @@ namespace Vurbiri.Colonization.UI
             _typeId = type; _id = id;
         }
 
-        public virtual void Init(SpellBook spellBook, Currencies resources, Action closeWindow)
+        public abstract SpellBook.ASpell Init(SpellBook spellBook, Currencies resources, Action closeWindow);
+
+        protected void Init(SpellBook spellBook, Action closeWindow)
         {
             _spell = spellBook[_typeId, _id];
 
@@ -64,9 +66,7 @@ namespace Vurbiri.Colonization.UI
         
         public void SetPosition_Ed(Vector2 position)
         {
-            var rectTransform = (RectTransform)transform;
-            position.x = rectTransform.sizeDelta.x * 0.5f - 1f;
-            rectTransform.anchoredPosition = position;
+            transform.localPosition = position;
         }
 
         protected virtual void OnValidate()

@@ -14,25 +14,28 @@ namespace Vurbiri.Colonization
         public class Sacrifice : ASpell
         {
             private readonly WaitResultSource<Actor> _waitActor = new();
+            private readonly string _msgKey, _strCost;
+            private string _strMsg;
             private readonly SpellDamager _damage;
             private WaitButton _waitButton;
             private Actor _target;
             private Coroutine _coroutine;
-            private string _text;
             private int _currentPlayer;
 
             private Sacrifice(int type, int id) : base(type, id) 
             {
                 _cost.Set(CurrencyId.Blood, s_settings.sacrificeBloodCost);
                 _damage = new(s_settings.sacrificePierce);
-                Localization.Instance.Subscribe(SetText);
+
+                _msgKey = string.Concat(s_keys[type][id], "Msg");
+                _strCost = _cost.PlusToString();
             }
             public static void Create() => new Sacrifice(EconomicSpellId.Type, EconomicSpellId.Sacrifice);
 
             public override bool Prep(SpellParam param)
             {
                 _canCast = false;
-                if (_coroutine == null && s_actors[param.playerId].Count > 0 && s_humans[param.playerId].IsPay(_cost))
+                if (!s_isCast & _coroutine == null && s_actors[param.playerId].Count > 0 && s_humans[param.playerId].IsPay(_cost))
                 {
                     _target = null;
                     var actors = s_actors[PlayerId.Satan];
@@ -69,12 +72,6 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            public override void Clear(int type, int id)
-            {
-                Localization.Instance.Unsubscribe(SetText);
-                s_spells[type][id] = null;
-            }
-
             public override void Cancel()
             {
                 if (_coroutine != null)
@@ -103,8 +100,12 @@ namespace Vurbiri.Colonization
                             actor.Hexagon.ShowMark(false);
                     }
 
-                    _waitButton = MessageBox.Open(_text, MBButton.Cancel);
+                    _waitButton = MessageBox.Open(_strMsg, MBButton.Cancel);
                     _waitButton.AddListener(Cancel);
+                }
+                else
+                {
+                    Banner.Open(_strName, MessageTypeId.Warning, 6f);
                 }
 
                 EventBus.EventActorSelect.Add(SetActor);
@@ -146,8 +147,14 @@ namespace Vurbiri.Colonization
                 s_isCast.False();
             }
 
-            private void SetText(Localization localization) => _text = localization.GetText(s_settings.sacrificeText);
             private void SetActor(Actor actor) => _waitActor.SetResult(actor);
+
+            protected override string GetDesc(Localization localization)
+            {
+                _strMsg = string.Concat(TAG.ALING_CENTER, _strName, "\n", localization.GetText(FILE, _msgKey), TAG.ALING_OFF);
+
+                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.sacrificeHPPercent, s_settings.sacrificePierce), _strCost);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.International;
 using static Vurbiri.Colonization.Characteristics.ReactiveEffectsFactory;
 using static Vurbiri.Colonization.CurrencyId;
 using static Vurbiri.Colonization.GameContainer;
@@ -16,8 +17,12 @@ namespace Vurbiri.Colonization
             private readonly EffectCode _attackEffectCode = new(SPELL_TYPE, EconomicSpellId.Type, BLESS_SKILL_ID, 0);
             private readonly EffectCode _defenseEffectCode = new(SPELL_TYPE, EconomicSpellId.Type, BLESS_SKILL_ID, 1);
             private readonly List<Actor> _blessed = new(8);
+            private readonly string _strCost;
 
-            private BlessingOfIsland(int type, int id) : base(type, id) { }
+            private BlessingOfIsland(int type, int id) : base(type, id) 
+            {
+                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, Mana, _cost[Mana]));
+            }
             public static void Create() => new BlessingOfIsland(EconomicSpellId.Type, EconomicSpellId.Blessing);
 
             public override bool Prep(SpellParam param)
@@ -25,7 +30,7 @@ namespace Vurbiri.Colonization
                 _blessed.Clear();
                 _cost.Set(Gold, param.valueA); _cost.Set(Food, param.valueB);
 
-                if (s_humans[param.playerId].IsPay(_cost))
+                if (!s_isCast && s_humans[param.playerId].IsPay(_cost))
                 {
                     for (int i = 0, surface; i < PlayerId.Count; i++)
                     {
@@ -44,13 +49,15 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    int value = Mathf.RoundToInt((s_settings.blessBasa + (param.valueA + param.valueB) * s_settings.blessPerRes) / (float)_blessed.Count);
-
-                    s_humans[param.playerId].Pay(_cost);
+                    float count = _blessed.Count;
+                    int value = Mathf.RoundToInt((s_settings.blessBasa + (param.valueA + param.valueB) * s_settings.blessPerRes) / count);
 
                     s_isCast.True();
+
                     Cast_Cn(param.playerId, value).Start();
-                    
+                    ShowNameSpell(param.playerId, 3f + 2f * count);
+                    s_humans[param.playerId].Pay(_cost);
+
                     _canCast = false;
                 }
             }
@@ -75,6 +82,11 @@ namespace Vurbiri.Colonization
                 }
 
                 s_isCast.False();
+            }
+
+            protected override string GetDesc(Localization localization)
+            {
+                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.blessBasa, s_settings.blessPerRes, s_settings.blessDuration), _strCost);
             }
         }
     }

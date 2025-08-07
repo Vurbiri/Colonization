@@ -278,7 +278,7 @@ namespace Vurbiri.Colonization
 
             int count = 0;
             foreach (var link in _links)
-                if (link.Owner == playerId)
+                if (link.owner == playerId)
                     count++;
 
             return count <= 1;
@@ -292,7 +292,7 @@ namespace Vurbiri.Colonization
 
             foreach (var l in _links)
             {
-                if (l.Owner == playerId)
+                if (l.owner == playerId)
                 {
                     if(link != null)
                     {
@@ -313,7 +313,7 @@ namespace Vurbiri.Colonization
                 return true;
 
             foreach (var link in _links)
-                if (link.Owner == playerId)
+                if (link.owner == playerId)
                     return true;
 
             return false;

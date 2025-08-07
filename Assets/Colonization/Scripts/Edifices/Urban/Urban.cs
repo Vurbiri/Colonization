@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
             {
                 foreach (var link in links)
                 {
-                    if (link.Owner == playerId)
+                    if (link.owner == playerId)
                     {
                         _graphic.transform.localRotation = CONST.LINK_ROTATIONS[link.Id.Value];
                         break;

@@ -12,6 +12,10 @@ namespace Vurbiri.Colonization
     {
         public SpellCosts(ReadOnlyCollection<int> e, ReadOnlyCollection<int> m) : base(new ReadOnlyCollection<int>[] { e, m }) { }
     }
+    public class SpellKeys : ReadOnlyCollection<ReadOnlyCollection<string>>
+    {
+        public SpellKeys(ReadOnlyCollection<string> e, ReadOnlyCollection<string> m) : base(new ReadOnlyCollection<string>[] { e, m }) { }
+    }
 
     public partial class SpellBook
     {
