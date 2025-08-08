@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
 {
-    sealed public partial class Crossroad : IDisposable, IInteractable, IEquatable<Crossroad>, IEquatable<Key>
+    sealed public partial class Crossroad : IInteractable, IEquatable<Crossroad>, IEquatable<Key>
     {
         #region Fields
         public const int HEX_COUNT = 3;
@@ -287,20 +287,20 @@ namespace Vurbiri.Colonization
         public bool IsDeadEnd(Id<PlayerId> playerId, out CrossroadLink link)
         {
             link = null;
-            if (_states.id != EdificeId.Empty)
-                return false;
-
-            foreach (var l in _links)
+            if (_owner != playerId)
             {
-                if (l.owner == playerId)
+                foreach (var l in _links)
                 {
-                    if(link != null)
+                    if (l.owner == playerId)
                     {
-                        link = null;
-                        return false;
+                        if (link != null)
+                        {
+                            link = null;
+                            return false;
+                        }
+
+                        link = l;
                     }
-                    
-                    link = l;
                 }
             }
 
@@ -357,11 +357,6 @@ namespace Vurbiri.Colonization
         public bool Equals(Crossroad other) => other is not null && other._key == _key;
         public bool Equals(Key key) => key == _key;
         public override int GetHashCode() => _key.GetHashCode();
-
-        public void Dispose()
-        {
-            
-        }
     }
 }
 

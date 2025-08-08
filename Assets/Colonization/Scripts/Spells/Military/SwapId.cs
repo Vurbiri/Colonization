@@ -8,21 +8,15 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        sealed private class SwapId : ASpell
+        sealed private class SwapId : AMsgSpell
         {
             private readonly WaitResultSource<Hexagon> _waitHexagon = new();
-            private readonly string _msgKey, _strCost;
-            private string _strMsg;
             private WaitButton _waitButton;
             private Coroutine _coroutine;
             private Hexagon _selectedA;
             private int _currentPlayer;
 
-            private SwapId(int type, int id) : base(type, id)
-            {
-                _msgKey = string.Concat(s_keys[type][id], "Msg");
-                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
-            }
+            private SwapId(int type, int id) : base(type, id) => SetManaCost();
             public static void Create() =>  new SwapId(MilitarySpellId.Type, MilitarySpellId.SwapId);
 
             public override bool Prep(SpellParam param)
@@ -65,6 +59,10 @@ namespace Vurbiri.Colonization
                     _waitButton = MessageBox.Open(_strMsg, MBButton.Cancel);
                     _waitButton.AddListener(Cancel);
                 }
+                else
+                {
+                    Banner.Open(_strName, MessageTypeId.Warning, 6f);
+                }
 
                 EventBus.EventHexagonSelect.Add(SetHexagon);
                 yield return _waitHexagon.Restart();
@@ -99,9 +97,9 @@ namespace Vurbiri.Colonization
 
             protected override string GetDesc(Localization localization)
             {
-                _strMsg = string.Concat(TAG.ALING_CENTER, _strName, "\n", localization.GetText(FILE, _msgKey), TAG.ALING_OFF);
+                SetMsg(localization);
 
-                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.sacrificeHPPercent, s_settings.sacrificePierce), _strCost);
+                return string.Concat(localization.GetText(FILE, _descKey), _strCost);
             }
         }
     }

@@ -11,12 +11,8 @@ namespace Vurbiri.Colonization
         sealed public class Spying : ASpell
         {
             private readonly CurrenciesLite _add = new();
-            private readonly string _strCost;
 
-            private Spying(int type, int id) : base(type, id) 
-            {
-                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
-            }
+            private Spying(int type, int id) : base(type, id) => SetManaCost();
             public static void Create() => new Spying(MilitarySpellId.Type, MilitarySpellId.Spying);
 
             public override void Cast(SpellParam param)

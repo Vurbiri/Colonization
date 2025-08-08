@@ -8,7 +8,6 @@ namespace Vurbiri.Colonization
         sealed private class WallBuild : ASpell
         {
             private readonly List<Crossroad> _canWall = new(CONST.DEFAULT_MAX_EDIFICES);
-            private readonly string _strCost;
 
             private WallBuild(int type, int id) : base(type, id)
             {

@@ -11,11 +11,9 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        public class Sacrifice : ASpell
+        sealed private class Sacrifice : AMsgSpell
         {
             private readonly WaitResultSource<Actor> _waitActor = new();
-            private readonly string _msgKey, _strCost;
-            private string _strMsg;
             private readonly SpellDamager _damage;
             private WaitButton _waitButton;
             private Actor _target;
@@ -27,7 +25,6 @@ namespace Vurbiri.Colonization
                 _cost.Set(CurrencyId.Blood, s_settings.sacrificeBloodCost);
                 _damage = new(s_settings.sacrificePierce);
 
-                _msgKey = string.Concat(s_keys[type][id], "Msg");
                 _strCost = _cost.PlusToString();
             }
             public static void Create() => new Sacrifice(EconomicSpellId.Type, EconomicSpellId.Sacrifice);
@@ -151,7 +148,7 @@ namespace Vurbiri.Colonization
 
             protected override string GetDesc(Localization localization)
             {
-                _strMsg = string.Concat(TAG.ALING_CENTER, _strName, "\n", localization.GetText(FILE, _msgKey), TAG.ALING_OFF);
+                SetMsg(localization);
 
                 return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.sacrificeHPPercent, s_settings.sacrificePierce), _strCost);
             }

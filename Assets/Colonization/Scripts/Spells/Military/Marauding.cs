@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using Vurbiri.Colonization.Actors;
@@ -9,21 +8,17 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        sealed private class Marauding : ASpell
+        sealed private class Marauding : AMsgSpell
         {
             private readonly CurrenciesLite[] _currencies = new CurrenciesLite[PlayerId.HumansCount];
             private readonly Stack<Occupation> _occupations = new(CONST.DEFAULT_MAX_EDIFICES << 1);
-            private readonly string _msgKey, _strCost;
-            private string _strMsg;
 
             private Marauding(int type, int id) : base(type, id)
             {
-                _currencies = new CurrenciesLite[PlayerId.HumansCount];
                 for (int i = 0; i < PlayerId.HumansCount; i++)
                     _currencies[i] = new();
 
-                _msgKey = string.Concat(s_keys[type][id], "Msg");
-                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
+                SetManaCost();
             }
             public static void Create() => new Marauding(MilitarySpellId.Type, MilitarySpellId.Marauding);
 
@@ -66,7 +61,8 @@ namespace Vurbiri.Colonization
 
                     if (isPerson)
                     {
-                        StringBuilder sb = new(200); sb.AppendLine(_strMsg); Occupation.self.MainToStringBuilder(sb);
+                        StringBuilder sb = new(200); 
+                        sb.AppendLine(_strMsg); Occupation.self.MainToStringBuilder(sb);
                         int amount = _currencies[PlayerId.Person].Amount;
                         Banner.Open(sb.ToString(), amount == 0 ? MessageTypeId.Warning : amount > 0 ? MessageTypeId.Profit : MessageTypeId.Error, 15f);
                     }
@@ -78,20 +74,15 @@ namespace Vurbiri.Colonization
                     }
 
                     _canCast = false;
+                    Occupation.self = null;
                 }
-            }
-
-            public override void Clear(int type, int id)
-            {
-                base.Clear(type, id);
-                Occupation.self = null;
             }
 
             protected override string GetDesc(Localization localization)
             {
-                _strMsg = string.Concat(TAG.ALING_CENTER, _strName, "\n", localization.GetText(FILE, _msgKey), TAG.ALING_OFF);
+                SetMsg(localization);
 
-                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.sacrificeHPPercent, s_settings.sacrificePierce), _strCost);
+                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.reductionFromWall), _strCost);
             }
 
             #region Nested: Occupation
@@ -118,9 +109,8 @@ namespace Vurbiri.Colonization
 
                     if (currency > -enemy[currencyId] && Chance.Rolling(100 - s_settings.reductionFromWall * _colony.GetDefense()))
                     {
-                        currency = Math.Min(currency, s_settings.maraudingCount[_actor.Id]);
-                        enemy.Add(currencyId, -currency);
-                        self.Add(currencyId, currency);
+                        enemy.Add(currencyId, -1);
+                        self.Add(currencyId, 1);
 
                         GameContainer.Diplomacy.Marauding(enemyId, _actor.Owner);
                     }

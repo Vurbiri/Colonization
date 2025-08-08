@@ -8,14 +8,13 @@ namespace Vurbiri.Colonization
         sealed private class ShuffleResources : ASpell
         {
             private readonly int _mana;
-            private readonly string _strCost;
 
             private ShuffleResources(int type, int id) : base(type, id) 
             {
                 _mana = _cost[Mana];
                 _strCost = "\n".Concat(string.Format(TAG.CURRENCY, Mana, _mana));
             }
-            public static void Create() => new ShuffleResources(EconomicSpellId.Type, EconomicSpellId.ShuffleResources);
+            public static void Create() => new ShuffleResources(EconomicSpellId.Type, EconomicSpellId.Transmutation);
             public override bool Prep(SpellParam param)
             {
                 var resources = s_humans[param.playerId].Resources;

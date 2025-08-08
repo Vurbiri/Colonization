@@ -1,5 +1,5 @@
 {
-  "OrderName": "<b>Order<b>",
+  "OrderName": "<b>Prayer<b>",
   "OrderDesc": "Increases order by <b>{0}</b> per Mana Crystal",
   "RandomHealingName": "<b>Random Healing<b>",
   "RandomHealingDesc": "Restores <b>{0}</b>% health to a random unit (including opponents and demons)",
@@ -9,8 +9,8 @@
   "WrathDesc": "All units located in the forest or on rocks receive <b>{0}</b> damage with <b>{2}</b>% Breaking, plus <b>{1}</b> damage for each additional resource invested (damage is divided among all affected units)",
   "SummonWarlockName": "<b>Summoning a Warlock<b>",
   "SummonWarlockDesc": "Summons a warlock to a random hexagon",
-  "ShuffleResourcesName": "<b>Transmutation<b>",
-  "ShuffleResourcesDesc": "Randomly transforms Gold, Food, Wood, and Ore into each other.",
+  "TransmutationName": "<b>Transmutation<b>",
+  "TransmutationDesc": "Randomly transforms Gold, Food, Wood, and Ore into each other.",
   "SacrificeName": "<b>Sacrifice<b>",
   "SacrificeDesc": "Sacrifice your warrior. A random enemy (demons in priority) will take damage equal to <b>{0}</b>% of the victim's current health, with <b>{1}</b>% Breaking",
   "SacrificeMsg": "Select a victim",
@@ -20,9 +20,15 @@
   "SpyingDesc": "Shows opponents' resources; if their amount exceeds the maximum, steals a random resource",
   "WallBuildName": "<b>Wall<b>",
   "WallBuildDesc": "Builds a wall in a Town or City",
+  "MaraudingName": "<b>Marauding<b>",
+  "MaraudingDesc": "A warrior captures a resource from a hexagon that belongs to an enemy colony (the initial chance is <b>100</b>%, Wall Protection reduces the probability by <b>{0}</b>%)",
+  "MaraudingMsg": "Captured",
   "RoadDemolitionName": "<b>Demolition<b>",
-  "RoadDemolitionDesc": "Demolishes dead ends of roads",
-  "SwapIdMsg": "<align=\"center\"><size=105%><b>Swap</b></size>\n\nSelect two hexagons</align>",
-  "MaraudingMsg": "<align=\"center\"><size=105%><b>Marauding</b></size>\n\nStolen</align>",
-  "ZealMsg": "<align=\"center\"><size=105%><b>Zeal</b></size>\n\nSelect a warrior</align>"
+  "RoadDemolitionDesc": "Demolishes dead ends\n<seze=85%>dead end - the end of a road that does not connect to another road or building belonging to the same player</size>",
+  "SwapIdName": "<b>Swap<b>",
+  "SwapIdDesc": "Swaps the numbers of the two hexagons on which the player's warriors are located",
+  "SwapIdMsg": "Select two hexagons",
+  "ZealName": "<b>Zeal<b>",
+  "ZealDesc": "Gives the specified warrior <b>{0}</b> Action Points and the ability to move",
+  "ZealMsg": "Select a warrior"
 }

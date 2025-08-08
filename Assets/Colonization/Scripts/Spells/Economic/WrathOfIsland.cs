@@ -15,12 +15,11 @@ namespace Vurbiri.Colonization
         {
             private readonly SpellDamager _damage;
             private readonly List<Actor> _targets = new(8);
-            private readonly string _strCost;
 
             private WrathOfIsland(int type, int id) : base(type, id) 
             {
                 _damage = new(s_settings.wrathPierce);
-                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, Mana, _cost[Mana]));
+                SetManaCost();
             }
             public static void Create() => new WrathOfIsland(EconomicSpellId.Type, EconomicSpellId.Wrath);
 

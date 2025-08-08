@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization
     {
         sealed private class SummonWarlock : ASpell
         {
-            private readonly string _strCost;
             private readonly int _half, _max;
             private int _count;
 

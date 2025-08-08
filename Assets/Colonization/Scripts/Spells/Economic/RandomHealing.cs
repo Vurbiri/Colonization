@@ -11,14 +11,13 @@ namespace Vurbiri.Colonization
         sealed private class RandomHealing : ASpell
         {
             private readonly List<Actor> _wounded = new(CONST.DEFAULT_MAX_WARRIOR << 2);
-            private readonly string _strCost;
             private readonly Effect _heal;
 
             private RandomHealing(int type, int id) : base(type, id) 
             {
                 _heal = new(ActorAbilityId.CurrentHP, TypeModifierId.TotalPercent, s_settings.healPercentValue);
 
-                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
+                SetManaCost();
             }
             public static void Create() => new RandomHealing(EconomicSpellId.Type, EconomicSpellId.RandomHealing);
 

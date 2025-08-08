@@ -7,12 +7,7 @@ namespace Vurbiri.Colonization
     {
         sealed private class RoadDemolition : ASpell
         {
-            private readonly string _strCost;
-
-            private RoadDemolition(int type, int id) : base(type, id) 
-            {
-                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
-            }
+            private RoadDemolition(int type, int id) : base(type, id) => SetManaCost();
             public static void Create() => new RoadDemolition(MilitarySpellId.Type, MilitarySpellId.RoadDemolition);
 
             public override bool Prep(SpellParam param)

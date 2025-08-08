@@ -17,12 +17,8 @@ namespace Vurbiri.Colonization
             private readonly EffectCode _attackEffectCode = new(SPELL_TYPE, EconomicSpellId.Type, BLESS_SKILL_ID, 0);
             private readonly EffectCode _defenseEffectCode = new(SPELL_TYPE, EconomicSpellId.Type, BLESS_SKILL_ID, 1);
             private readonly List<Actor> _blessed = new(8);
-            private readonly string _strCost;
 
-            private BlessingOfIsland(int type, int id) : base(type, id) 
-            {
-                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, Mana, _cost[Mana]));
-            }
+            private BlessingOfIsland(int type, int id) : base(type, id) => SetManaCost();
             public static void Create() => new BlessingOfIsland(EconomicSpellId.Type, EconomicSpellId.Blessing);
 
             public override bool Prep(SpellParam param)

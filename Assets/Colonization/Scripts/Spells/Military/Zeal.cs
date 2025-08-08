@@ -11,11 +11,9 @@ namespace Vurbiri.Colonization
 {
 	public partial class SpellBook
 	{
-        sealed private class Zeal : ASpell
+        sealed private class Zeal : AMsgSpell
         {
             private readonly WaitResultSource<Actor> _waitActor = new();
-            private readonly string _msgKey, _strCost;
-            private string _strMsg;
             private readonly Effect _addAP, _move;
             private WaitButton _waitButton;
             private Coroutine _coroutine;
@@ -26,8 +24,7 @@ namespace Vurbiri.Colonization
                 _addAP = new(ActorAbilityId.CurrentAP, TypeModifierId.Addition, s_settings.zealAddAP);
                 _move  = new(ActorAbilityId.IsMove,    TypeModifierId.Addition, 1);
 
-                _msgKey = string.Concat(s_keys[type][id], "Msg");
-                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
+                SetManaCost();
             }
             public static void Create() => new Zeal(MilitarySpellId.Type, MilitarySpellId.Zeal);
 
@@ -80,6 +77,10 @@ namespace Vurbiri.Colonization
                     _waitButton = MessageBox.Open(_strMsg, MBButton.Cancel);
                     _waitButton.AddListener(Cancel);
                 }
+                else
+                {
+                    Banner.Open(_strName, MessageTypeId.Warning, 6f);
+                }
 
                 EventBus.EventActorSelect.Add(SetActor);
                 yield return _waitActor.Restart();
@@ -122,9 +123,9 @@ namespace Vurbiri.Colonization
 
             protected override string GetDesc(Localization localization)
             {
-                _strMsg = string.Concat(TAG.ALING_CENTER, _strName, "\n", localization.GetText(FILE, _msgKey), TAG.ALING_OFF);
+                SetMsg(localization);
 
-                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.sacrificeHPPercent, s_settings.sacrificePierce), _strCost);
+                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.zealAddAP), _strCost);
             }
         }
 	}

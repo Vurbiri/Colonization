@@ -11,10 +11,11 @@ namespace Vurbiri.Colonization
         {
             protected const int FILE = LangFiles.Spells;
 
+            private Action<string> a_onHint;
+
             protected readonly CurrenciesLite _cost = new();
             protected readonly string _nameKey, _descKey;
-            protected string _strName;
-            protected Action<string> a_onHint;
+            protected string _strCost, _strName;
             protected bool _canCast;
 
             public event Action<string> OnHint
@@ -47,6 +48,9 @@ namespace Vurbiri.Colonization
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            protected void SetManaCost() => _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             protected void ShowNameSpell(int playerId, float duration = 5f) => Banner.Open(_strName, playerId == PlayerId.Person ? MessageTypeId.Profit : MessageTypeId.Warning, duration);
 
             protected abstract string GetDesc(Localization localization);
@@ -54,7 +58,7 @@ namespace Vurbiri.Colonization
             private void SetHint(Localization localization)
             {
                 _strName = localization.GetText(FILE, _nameKey);
-                a_onHint(string.Concat(_strName, "\n", GetDesc(localization)));
+                a_onHint(string.Concat(_strName, "\n \n", GetDesc(localization)));
             }
 
             private void Empty(string hint) { }

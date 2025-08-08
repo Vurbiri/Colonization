@@ -34,13 +34,11 @@ namespace Vurbiri.Colonization
         public int bloodTradeBay;
         [Header("Marauding")]
         public int reductionFromWall;
-        public IdArray<WarriorId, int> maraudingCount;
         [Header("SwapId")]
         public Color swapHexColor;
         public float swapShowTime;
         [Header("Zeal")]
         public HitSFXName zealSFX;
-        public int zealPercentHeal;
         public int zealAddAP;
         [Header("Cost")]
         public ReadOnlyIdArray<EconomicSpellId, int> economicCost;

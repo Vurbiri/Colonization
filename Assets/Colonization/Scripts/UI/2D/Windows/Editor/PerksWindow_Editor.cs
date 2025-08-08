@@ -4,6 +4,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.UI
@@ -16,6 +17,11 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(20f, 60f)] private float _treeSpace = 48f;
         [Space]
         [SerializeField] private Vector2 _perkSpace = new(10.5f, 13.5f);
+        [Space]
+        [SerializeField] IdArray<EconomicSpellId, Sprite> _economicSpellSprites;
+        [SerializeField] IdArray<EconomicSpellId, Vector2> _economicSpellSpritesSizeOffset;
+        [SerializeField] IdArray<MilitarySpellId, Sprite> _militarySpellSprites;
+        [SerializeField] IdArray<MilitarySpellId, Vector2> _militarySpellSpritesSizeOffset;
         [Space]
         [SerializeField, HideInInspector] private RectTransform _economicPerksContainer;
         [SerializeField, HideInInspector] private RectTransform _militaryPerksContainer;
