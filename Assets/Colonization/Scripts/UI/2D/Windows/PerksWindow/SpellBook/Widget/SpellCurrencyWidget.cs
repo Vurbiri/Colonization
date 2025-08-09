@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
@@ -25,5 +26,22 @@ namespace Vurbiri.Colonization.UI
         }
 
         private void OnDestroy() => _unsubscriber?.Unsubscribe();
+
+#if UNITY_EDITOR
+        [SerializeField, HideInInspector] private int _oldId = -1;
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+
+            if (!UnityEditor.PrefabUtility.IsPartOfPrefabAsset(this) & _oldId != _id)
+            {
+                UnityEditor.SerializedObject so = new(this);
+                so.FindProperty("_oldId").intValue = _id;
+                so.ApplyModifiedProperties();
+
+                SetSpite_Ed();
+            }
+        }
+#endif
     }
 }

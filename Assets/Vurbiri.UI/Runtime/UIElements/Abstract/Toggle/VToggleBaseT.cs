@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
@@ -68,7 +67,12 @@ namespace Vurbiri.UI
             if (_isOn == value) return;
 
             _isOn = value;
-            UpdateVisual();
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                UpdateVisualInstant();
+            else
+#endif
+                UpdateVisual();
 
             UISystemProfilerApi.AddMarker("VToggle.onValueChanged", _this);
             _onValueChanged.Invoke(_isOn);
@@ -80,7 +84,13 @@ namespace Vurbiri.UI
                 return;
 
             _isOn = value;
-            UpdateVisual();
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                UpdateVisualInstant();
+            else
+#endif
+                UpdateVisual();
 
             if (sendCallback)
             {
@@ -129,21 +139,11 @@ namespace Vurbiri.UI
         private VToggleGroup<TToggle> _groupEditor;
         private bool _isOnEditor;
 
-        #region ICanvasElement
-        public void Rebuild(CanvasUpdate executing)
-        {
-
-        }
-        public void LayoutComplete() { }
-        public void GraphicUpdateComplete() { }
-        #endregion
-
-
         protected override void OnValidate()
         {
             base.OnValidate();
 
-            if (!Application.isPlaying)
+            if (!Application.isPlaying && isActiveAndEnabled)
                 OnValidateAsync();
         }
 

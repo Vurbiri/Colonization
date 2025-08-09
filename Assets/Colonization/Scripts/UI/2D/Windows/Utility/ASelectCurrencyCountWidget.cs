@@ -118,12 +118,7 @@ namespace Vurbiri.Colonization.UI
             so.FindProperty("_id").FindPropertyRelative("_id").intValue = id;
             so.ApplyModifiedProperties();
 
-            string name = $"{id}_{CurrencyId.Names_Ed[id]}";
-            so = new(_icon);
-            so.FindProperty("m_Sprite").objectReferenceValue = EUtility.FindMultipleSprite("SPA_C".Concat(name));
-            so.ApplyModifiedProperties();
-
-            gameObject.name = name;
+            SetSpite_Ed();
         }
 
         public void SetStep_Ed(int value)
@@ -151,6 +146,17 @@ namespace Vurbiri.Colonization.UI
             if (_max < 0) _max = 0;
 
             SetBounds();
+        }
+
+        protected void SetSpite_Ed()
+        {
+            string name = $"{_id}_{CurrencyId.Names_Ed[_id]}";
+
+            UnityEditor.SerializedObject so = new(_icon);
+            so.FindProperty("m_Sprite").objectReferenceValue = EUtility.FindMultipleSprite("SPA_C".Concat(name));
+            so.ApplyModifiedProperties();
+
+            gameObject.name = name;
         }
 
         private void SetBounds()
