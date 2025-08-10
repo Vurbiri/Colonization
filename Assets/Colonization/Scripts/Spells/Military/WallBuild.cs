@@ -12,23 +12,27 @@ namespace Vurbiri.Colonization
             private WallBuild(int type, int id) : base(type, id)
             {
                 _cost.Add(GameContainer.Prices.Wall);
-                _strCost = _cost.MainPlusToString();
+                _strCost = _cost.MainPlusToString(COST_COUNT_LINE);
             }
             public static void Create() => new WallBuild(MilitarySpellId.Type, MilitarySpellId.WallBuild);
 
             public override bool Prep(SpellParam param)
             {
-                _canWall.Clear();
-                if (!s_isCast && s_humans[param.playerId].IsPay(_cost))
+                if (_canCast = !s_isCast)
                 {
-                    var colonies = s_humans[param.playerId].GetEdifices(EdificeGroupId.Colony);
-                    for (int i = colonies.Count - 1; i >= 0; i--)
+                    _canWall.Clear();
+                    if (s_humans[param.playerId].IsPay(_cost))
                     {
-                        if (colonies[i].CanWallBuild())
-                            _canWall.Add(colonies[i]);
+                        var colonies = s_humans[param.playerId].GetEdifices(EdificeGroupId.Colony);
+                        for (int i = colonies.Count - 1; i >= 0; i--)
+                        {
+                            if (colonies[i].CanWallBuild())
+                                _canWall.Add(colonies[i]);
+                        }
                     }
+                    _canCast = _canWall.Count > 0;
                 }
-                return _canCast = _canWall.Count > 0;
+                return _canCast;
             }
 
             public override void Cast(SpellParam param)
@@ -39,7 +43,7 @@ namespace Vurbiri.Colonization
                     s_humans[param.playerId].BuyWall(colony, _cost);
 
                     GameContainer.CameraController.ToPosition(colony);
-                    ShowNameSpell(param.playerId);
+                    ShowSpellName(param.playerId);
 
                     _canCast = false;
                 }

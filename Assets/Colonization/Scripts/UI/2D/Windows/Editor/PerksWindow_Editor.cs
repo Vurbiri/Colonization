@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -33,6 +34,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, HideInInspector] private ColorSettingsScriptable _colorSettings;
 
         [SerializeField, HideInInspector] private PerkToggle _perkPrefab;
+        [SerializeField, HideInInspector] private SpellToggle _spellPrefab;
         [SerializeField, HideInInspector] private TextMeshProUGUI _separatorPrefab;
 
         [SerializeField, HideInInspector] private PerkToggle[] _economicPerks;
@@ -63,6 +65,8 @@ namespace Vurbiri.Colonization.UI
 
         public void Setup_Ed()
         {
+            print("[PerksWindow] Setup");
+
             SetupPerks_Ed(_economicPerks, TypeOfPerksId.Economic, EconomicPerksId.Count, _economicPerksContainer);
             SetupPerks_Ed(_militaryPerks, TypeOfPerksId.Military, MilitaryPerksId.Count, _militaryPerksContainer);
 
@@ -88,16 +92,16 @@ namespace Vurbiri.Colonization.UI
                 so.FindProperty("m_text").stringValue = (i * (i + 1)).ToString();
                 so.ApplyModifiedProperties();
 
-                if(_economicSpells[i] != null)
-                    _economicSpells[i].SetPosition_Ed(current);
-                if (_militarySpells[i] != null)
-                    _militarySpells[i].SetPosition_Ed(current);
+                _economicSpells[i].Setup_Ed(current, _economicSpellSprites[i], _economicSpellSpritesSizeOffset[i]);
+                _militarySpells[i].Setup_Ed(current, _militarySpellSprites[i], _militarySpellSpritesSizeOffset[i]);
             }
         }
 
         public void Create_Ed()
         {
             Delete_Ed();
+
+            print("[PerksWindow] Create");
 
             CreatePerks_Ed(_economicPerks, EconomicPerksId.Count, _economicPerksContainer);
             CreatePerks_Ed(_militaryPerks, MilitaryPerksId.Count, _militaryPerksContainer);
@@ -110,8 +114,13 @@ namespace Vurbiri.Colonization.UI
         }
         public void Delete_Ed()
         {
-            DeletePerks_Ed(_economicPerks, EconomicPerksId.Count, _economicPerksContainer);
-            DeletePerks_Ed(_militaryPerks, MilitaryPerksId.Count, _militaryPerksContainer);
+            print("[PerksWindow] Delete");
+            
+            DeleteT_Ed(_economicPerks, EconomicPerksId.Count, _economicPerksContainer);
+            DeleteT_Ed(_militaryPerks, MilitaryPerksId.Count, _militaryPerksContainer);
+
+            DeleteT_Ed(_economicSpells, EconomicSpellId.Count, _economicSpellsContainer);
+            DeleteT_Ed(_militarySpells, MilitarySpellId.Count, _militarySpellsContainer);
 
             DeleteSeparators_Ed();
         }
@@ -140,20 +149,36 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < count; i++)
                 perks[i] = EUtility.InstantiatePrefab(_perkPrefab, parent);
         }
-        private void DeletePerks_Ed(PerkToggle[] perks, int count, Transform parent)
-        {
-            for (int i = 0; i < count; i++)
-                EUtility.DestroyGameObject(ref perks[i]);
 
-            perks = parent.GetComponentsInChildren<PerkToggle>(true);
-            for (int i = perks.Length - 1; i >= 0; i--)
-                Object.DestroyImmediate(perks[i].gameObject);
-        }
         private void CreateSpells_Ed()
         {
-            SpellToggle[][] spells = { _economicSpells, _militarySpells };
-            foreach (var spell in FindObjectsByType<SpellToggle>(FindObjectsSortMode.None))
-                spells[spell.Type][spell.Id] = spell;
+            var panels = new Dictionary<SpellId, SpellPanel>(14);
+            foreach (var panel in GetComponentsInChildren<SpellPanel>())
+                panels.Add(panel.SpellId_Ed, panel);
+
+            SpellId spellId = new(EconomicSpellId.Type, 0);
+            for (spellId.id = 0; spellId.id < EconomicSpellId.Count; spellId.id++)
+                _economicSpells[spellId.id] = EUtility.InstantiatePrefab(_spellPrefab, _economicSpellsContainer).Init_Editor(panels[spellId], _spellBook);
+
+            spellId.type = MilitarySpellId.Type;
+            for (spellId.id = 0; spellId.id < MilitarySpellId.Count; spellId.id++)
+                _militarySpells[spellId.id] = EUtility.InstantiatePrefab(_spellPrefab, _militarySpellsContainer).Init_Editor(panels[spellId], _spellBook);
+        }
+        
+        private void DeleteT_Ed<T>(T[] objects, int count, Transform parent) where T : MonoBehaviour
+        {
+            for (int i = 0; i < count; i++)
+                EUtility.DestroyGameObject(ref objects[i]);
+
+            objects = parent.GetComponentsInChildren<T>(true);
+            for (int i = objects.Length - 1; i >= 0; i--)
+                DestroyImmediate(objects[i].gameObject);
+        }
+
+        private void CreateSeparators_Ed()
+        {
+            for (int i = 0; i < _countLevels; i++)
+                _separators[i] = EUtility.InstantiatePrefab(_separatorPrefab, _separatorsContainer);
         }
 
         private void DeleteSeparators_Ed()
@@ -166,17 +191,13 @@ namespace Vurbiri.Colonization.UI
               
         }
 
-        private void CreateSeparators_Ed()
-        {
-            for (int i = 0; i < _countLevels; i++)
-                _separators[i] = EUtility.InstantiatePrefab(_separatorPrefab, _separatorsContainer);
-        }
-
         protected override void OnValidate()
         {
             base.OnValidate();
 
             _allowSwitchOff = true;
+
+            this.SetChildren(ref _spellBook);
 
             _switcher.OnValidate(this);
 
@@ -195,6 +216,7 @@ namespace Vurbiri.Colonization.UI
             EUtility.SetScriptable(ref _colorSettings);
 
             EUtility.SetPrefab(ref _perkPrefab);
+            EUtility.SetPrefab(ref _spellPrefab);
             EUtility.SetPrefab(ref _separatorPrefab, "PUI_PerkSeparator");
 
             EUtility.SetArray(ref _economicPerks, EconomicPerksId.Count);

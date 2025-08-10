@@ -9,7 +9,8 @@ namespace Vurbiri.Colonization
     {
         public abstract class ASpell
         {
-            protected const int FILE = LangFiles.Spells;
+            protected const int FILE = LangFiles.Spells, COST_COUNT_LINE = 1;
+            protected const string NAME_LINE = "\n \n", COST_LINE = "\n";
 
             private Action<string> a_onHint;
 
@@ -48,17 +49,17 @@ namespace Vurbiri.Colonization
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            protected void SetManaCost() => _strCost = "\n".Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
+            protected void SetManaCost() => _strCost = COST_LINE.Concat(string.Format(TAG.CURRENCY, CurrencyId.Mana, _cost[CurrencyId.Mana]));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            protected void ShowNameSpell(int playerId, float duration = 5f) => Banner.Open(_strName, playerId == PlayerId.Person ? MessageTypeId.Profit : MessageTypeId.Warning, duration);
+            protected void ShowSpellName(int playerId, float duration = 5f) => Banner.Open(_strName, playerId == PlayerId.Person ? MessageTypeId.Profit : MessageTypeId.Warning, duration);
 
             protected abstract string GetDesc(Localization localization);
 
             private void SetHint(Localization localization)
             {
                 _strName = localization.GetText(FILE, _nameKey);
-                a_onHint(string.Concat(_strName, "\n \n", GetDesc(localization)));
+                a_onHint(string.Concat(_strName, NAME_LINE, GetDesc(localization)));
             }
 
             private void Empty(string hint) { }

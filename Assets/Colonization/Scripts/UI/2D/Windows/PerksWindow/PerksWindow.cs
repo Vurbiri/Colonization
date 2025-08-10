@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization.UI
 {
     sealed public partial class PerksWindow : VToggleGroup<PerkToggle>, IWindow
     {
+        [SerializeField] private SpellBookGroup _spellBook;
+        [Space]
         [SerializeField] private Switcher _switcher;
         [Space]
         [SerializeField] private HintButton _learnButton;
@@ -21,8 +23,11 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(bool open)
         {
+            _allowSwitchOff = true;
+
             _switcher.Init(this, open);
             _switcher.onClose.Add(SetAllTogglesOff);
+            _switcher.onClose.Add(_spellBook.SetAllTogglesOff);
 
             _learnButton.Init(OnLearn);
             _closeButton.AddListener(Close);
@@ -34,9 +39,10 @@ namespace Vurbiri.Colonization.UI
             foreach (var perk in _toggles)
                 perk.Init(perkTree, blood, _colorLearn);
 
+            _spellBook.Init(perkTree, person.SpellBook, Close, OnSpellBookChanged);
+
             for (int i = 0; i < TypeOfPerksId.Count; i++)
                 _progressBars[i].Init(perkTree.GetProgress(i));
-
 
             _onValueChanged.Add(OnValueChanged, _activeToggle);
 
@@ -49,7 +55,20 @@ namespace Vurbiri.Colonization.UI
 
         private void OnValueChanged(PerkToggle toggle)
         {
-            _learnButton.Interactable = toggle != null;
+            if (toggle != null)
+            {
+                _learnButton.Interactable = true;
+                _spellBook.SetAllTogglesOff();
+            }
+            else
+            {
+                _learnButton.Interactable = toggle != null;
+            }
+        }
+        private void OnSpellBookChanged(SpellToggle toggle)
+        {
+            if (toggle != null)
+                SetAllTogglesOff();
         }
         private void OnLearn()
         {

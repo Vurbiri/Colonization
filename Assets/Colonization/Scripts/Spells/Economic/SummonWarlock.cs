@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
                 _max = GameContainer.Hexagons.GroundCount;
                 _half = _max - (_max >> 1);
                 _cost.Add(GameContainer.Prices.Warriors[WarriorId.Warlock]);
-                _strCost = _cost.MainPlusToString();
+                _strCost = _cost.MainPlusToString(COST_COUNT_LINE);
             }
 
             public static void Create() => new SummonWarlock(EconomicSpellId.Type, EconomicSpellId.SummonWarlock);
@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization
                         hexagon = free.Rand();
                     }
 
-                    ShowNameSpell(param.playerId);
+                    ShowSpellName(param.playerId);
                     s_humans[param.playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
                     _canCast = false;
 
@@ -71,7 +71,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            protected override string GetDesc(Localization localization) => localization.GetText(FILE, _descKey);
+            protected override string GetDesc(Localization localization) => string.Concat(localization.GetText(FILE, _descKey), _strCost);
         }
     }
 }

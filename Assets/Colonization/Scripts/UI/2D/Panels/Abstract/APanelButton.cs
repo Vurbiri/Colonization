@@ -24,14 +24,18 @@ namespace Vurbiri.Colonization.UI
         public Vector3 Offset => new(0f, _rectTransform.sizeDelta.y * 1.08f, 0f);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void InitClick() => _onClick.Add(OnSelect);
+        protected void InitInternal()
+        {
+            _onClick.Add(OnSelect);
+            GameContainer.InputController.Subscribe(OnUIMode, false);
+        }
 
         protected void Attach(IInteractable attach, Sprite sprite)
         {
             _icon.sprite = sprite;
             _attach = attach;
 
-            _unsubscribers += attach.InteractableReactive.Subscribe((value) => interactable = value);
+            _unsubscribers += attach.InteractableReactive.Subscribe(OnAttachInteractable);
         }
 
         #region Enable/Disable
@@ -88,11 +92,13 @@ namespace Vurbiri.Colonization.UI
         }
         #endregion
 
-        private void OnSelect()
+        private void OnAttachInteractable(bool value) => interactable = value & !GameContainer.InputController.UIModeEnabled;
+        private void OnUIMode(bool value)
         {
-            if (_attach != null && _attach.Interactable)
-                GameContainer.InputController.Select(_attach);
-        }
+            if(_attach != null)
+                interactable = !value & _attach.Interactable;
+        } 
+        private void OnSelect() => GameContainer.InputController.Select(_attach);
 
         protected override void OnDisable()
         {
@@ -110,6 +116,7 @@ namespace Vurbiri.Colonization.UI
         sealed protected override void OnDestroy()
         {
             base.OnDestroy();
+            GameContainer.InputController.Unsubscribe(OnUIMode);
             _unsubscribers.Unsubscribe();
         }
 

@@ -23,19 +23,22 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                _wounded.Clear();
-                if(!s_isCast && s_humans[param.playerId].IsPay(_cost))
+                if (_canCast = !s_isCast)
                 {
-                    for(int playerId = 0; playerId < PlayerId.Count; playerId++)
+                    _wounded.Clear();
+                    if (s_humans[param.playerId].IsPay(_cost))
                     {
-                        foreach (Actor actor in s_actors[playerId])
+                        for (int playerId = 0; playerId < PlayerId.Count; playerId++)
                         {
-                            if(actor.IsWounded)
-                                _wounded.Add(actor);
+                            foreach (Actor actor in s_actors[playerId])
+                            {
+                                if (actor.IsWounded) _wounded.Add(actor);
+                            }
                         }
                     }
+                    _canCast = _wounded.Count > 0;
                 }
-                return _canCast = _wounded.Count > 0;
+                return _canCast;
             }
 
             public override void Cast(SpellParam param)
@@ -45,7 +48,7 @@ namespace Vurbiri.Colonization
                     s_isCast.True();
                     
                     Cast_Cn(_wounded.Rand()).Start();
-                    ShowNameSpell(param.playerId);
+                    ShowSpellName(param.playerId);
                     s_humans[param.playerId].Pay(_cost);
 
                     _canCast = false;
@@ -64,7 +67,7 @@ namespace Vurbiri.Colonization
 
             protected override string GetDesc(Localization localization)
             {
-                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.orderPerMana), _strCost);
+                return string.Concat(localization.GetFormatText(FILE, _descKey, s_settings.healPercentValue), _strCost);
             }
         }
     }

@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
             transform.localPosition = Offset * index;
 
             Attach(crossroad, sprite);
-            InitClick();
+            InitInternal();
 
             if (isOn) Enable();
         }

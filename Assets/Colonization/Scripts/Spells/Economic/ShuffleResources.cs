@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
             private ShuffleResources(int type, int id) : base(type, id) 
             {
                 _mana = _cost[Mana];
-                _strCost = "\n".Concat(string.Format(TAG.CURRENCY, Mana, _mana));
+                _strCost = COST_LINE.Concat(string.Format(TAG.CURRENCY, Mana, _mana));
             }
             public static void Create() => new ShuffleResources(EconomicSpellId.Type, EconomicSpellId.Transmutation);
             public override bool Prep(SpellParam param)
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
                 if(_canCast)
                 {
                     _cost.RandomAddRange(-_cost.Amount + _mana, MainCount - 1);
-                    ShowNameSpell(param.playerId);
+                    ShowSpellName(param.playerId);
                     s_humans[param.playerId].Pay(_cost);
 
                     _canCast = false;

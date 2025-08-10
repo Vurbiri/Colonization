@@ -249,6 +249,7 @@ namespace Vurbiri.UI
                 if (transition == Transition.ColorTint && _scales.fadeDuration != colors.fadeDuration)
                     _scales.fadeDuration = colors.fadeDuration;
 
+                _scaleTween ??= new();
                 _scaleTween = _scaleTween.ReCreate(this, _scalingTarget, _scaling);
                 if (!_scaling && _scalingTarget != null)
                     _scalingTarget.localScale = Vector3.one;

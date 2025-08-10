@@ -36,6 +36,20 @@ namespace Vurbiri.Colonization
             return output;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void FindActorsOnSurface(List<Actor> actors, int surfaceA, int surfaceB)
+        {
+            for (int i = 0, surface; i < PlayerId.Count; i++)
+            {
+                foreach (Actor actor in s_actors[i])
+                {
+                    surface = actor.Hexagon.SurfaceId;
+                    if (surface == surfaceA | surface == surfaceB)
+                        actors.Add(actor);
+                }
+            }
+        }
+
         sealed private class SpellDamager : Effect
         {
             private readonly AbilityModifierPercent _pierce;

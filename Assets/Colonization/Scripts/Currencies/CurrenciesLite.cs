@@ -133,19 +133,19 @@ namespace Vurbiri.Colonization
                 }
             }
         }
-        public string MainPlusToString()
+        public string MainPlusToString(int countLine)
         {
             StringBuilder sb = new();
-            sb.AppendLine();
+            while (countLine --> 0) sb.AppendLine();
             MainPlusToStringBuilder(sb);
             return sb.ToString();
         }
-        public string PlusToString()
+        public string PlusToString(int countLine)
         {
             if (_amount > 0 | _values[Blood] != 0)
             {
                 StringBuilder sb = new();
-                sb.AppendLine();
+                while (countLine-- > 0) sb.AppendLine();
                 for (int i = 0, resource; i < AllCount; i++)
                 {
                     resource = _values[i];

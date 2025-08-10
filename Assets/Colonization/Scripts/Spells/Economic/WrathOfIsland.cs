@@ -25,22 +25,17 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                _targets.Clear();
-                _cost.Set(Wood, param.valueA); _cost.Set(Ore, param.valueB);
-
-                if (!s_isCast && s_humans[param.playerId].IsPay(_cost))
+                if (_canCast = !s_isCast)
                 {
-                    for (int i = 0, surface; i < PlayerId.HumansCount; i++)
-                    {
-                        foreach (Actor actor in s_actors[i])
-                        {
-                            surface = actor.Hexagon.SurfaceId;
-                            if (surface == SurfaceId.Forest | surface == SurfaceId.Mountain)
-                                _targets.Add(actor);
-                        }
-                    }
+                    _targets.Clear();
+                    _cost.Set(Wood, param.valueA); _cost.Set(Ore, param.valueB);
+
+                    if (s_humans[param.playerId].IsPay(_cost))
+                        FindActorsOnSurface(_targets, SurfaceId.Forest, SurfaceId.Mountain);
+
+                    _canCast = _targets.Count > 0;
                 }
-                return _canCast = _targets.Count > 0;
+                return _canCast;
             }
 
             public override void Cast(SpellParam param)
@@ -54,7 +49,7 @@ namespace Vurbiri.Colonization
                     s_isCast.True();
 
                     Cast_Cn().Start();
-                    ShowNameSpell(param.playerId, 3f + 2f * count);
+                    ShowSpellName(param.playerId, 3f + 2f * count);
                     s_humans[param.playerId].Pay(_cost);
 
                     _canCast = false;

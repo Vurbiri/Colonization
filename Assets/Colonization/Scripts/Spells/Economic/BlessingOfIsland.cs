@@ -23,22 +23,17 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                _blessed.Clear();
-                _cost.Set(Gold, param.valueA); _cost.Set(Food, param.valueB);
-
-                if (!s_isCast && s_humans[param.playerId].IsPay(_cost))
+                if (_canCast = !s_isCast)
                 {
-                    for (int i = 0, surface; i < PlayerId.Count; i++)
-                    {
-                        foreach (Actor actor in s_actors[i])
-                        {
-                            surface = actor.Hexagon.SurfaceId;
-                            if (surface == SurfaceId.Village | surface == SurfaceId.Field)
-                                _blessed.Add(actor);
-                        }
-                    }
+                    _blessed.Clear();
+                    _cost.Set(Gold, param.valueA); _cost.Set(Food, param.valueB);
+
+                    if (s_humans[param.playerId].IsPay(_cost))
+                        FindActorsOnSurface(_blessed, SurfaceId.Village, SurfaceId.Field);
+
+                    _canCast = _blessed.Count > 0;
                 }
-                return _canCast = _blessed.Count > 0;
+                return _canCast;
             }
 
             public override void Cast(SpellParam param)
@@ -51,7 +46,7 @@ namespace Vurbiri.Colonization
                     s_isCast.True();
 
                     Cast_Cn(param.playerId, value).Start();
-                    ShowNameSpell(param.playerId, 3f + 2f * count);
+                    ShowSpellName(param.playerId, 3f + 2f * count);
                     s_humans[param.playerId].Pay(_cost);
 
                     _canCast = false;
@@ -60,7 +55,7 @@ namespace Vurbiri.Colonization
 
             private IEnumerator Cast_Cn(int playerId, int value)
             {
-                int index, skip;  Actor target; Vector3 position = GameContainer.CameraTransform.ParentPosition;
+                int index, skip;  Actor target; Vector3 position = CameraTransform.ParentPosition;
                 while (_blessed.Count > 0)
                 {
                     index = FindNearest(position, _blessed);

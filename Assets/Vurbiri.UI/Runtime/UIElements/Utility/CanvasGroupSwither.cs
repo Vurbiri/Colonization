@@ -19,6 +19,11 @@ namespace Vurbiri.UI
         public bool IsRunning => _progress < 1f;
         public float Alpha { get => canvasGroup.alpha; set => canvasGroup.alpha = value; }
         public bool BlocksRaycasts { get => canvasGroup.blocksRaycasts; set => canvasGroup.blocksRaycasts = value; }
+        public bool IsShow
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return _end > 0.95f; }
+        }
 
         public CanvasGroupSwitcher(CanvasGroup canvasGroup, float speed)
         {
@@ -59,7 +64,7 @@ namespace Vurbiri.UI
             }
 
             canvasGroup.alpha = _end;
-            canvasGroup.blocksRaycasts = _end > 0.5f;
+            canvasGroup.blocksRaycasts = IsShow;
             return false;
         }
 

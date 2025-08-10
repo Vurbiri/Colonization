@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
-        public WarriorButton Init(Transform container, Action<WarriorButton> action)
+        public WarriorButton Init(Transform container, Action<WarriorButton> toPool)
         {
             _thisTransform = _move.Transform;
             _container = container;
@@ -55,14 +55,14 @@ namespace Vurbiri.Colonization.UI
 
             _repository = _thisTransform.parent;
 
-            _eventRemove.Add(action);
+            _eventRemove.Add(toPool);
 
             _maxAP_TMP.color = _colorOff;
             _currentAP_TMP.color = _colorOn;
 
             _hpBar.Init();
 
-            InitClick();
+            InitInternal();
 
             return this;
         }

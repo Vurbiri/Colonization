@@ -1,31 +1,32 @@
 using System;
 using UnityEngine;
 using Vurbiri.UI;
+using static Vurbiri.Colonization.SpellBook;
 
 namespace Vurbiri.Colonization.UI
 {
-	public abstract class ASpellPanel : MonoBehaviour
+	public class SpellPanel : MonoBehaviour
 	{
-        [SerializeField] private CanvasGroupSwitcher _switcher;
+        [SerializeField] protected SpellId _spellId;
+        [SerializeField] protected CanvasGroupSwitcher _switcher;
         [SerializeField] protected VButton _applyButton;
 
-        protected readonly int _typeId, _id;
         protected readonly SpellParam _spellParam = new(PlayerId.Person);
-        protected SpellBook.ASpell _spell;
+        protected ASpell _spell;
 
-        public int Type => _typeId;
-        public int Id => _id;
+        public int Type => _spellId.type;
+        public int Id => _spellId.id;
 
-        protected ASpellPanel(int type, int id) : base() 
+        public ASpell Init(SpellBook spellBook, Action closeWindow)
         {
-            _typeId = type; _id = id;
+            InitInternal(spellBook, closeWindow);
+
+            return _spell;
         }
 
-        public abstract SpellBook.ASpell Init(SpellBook spellBook, Currencies resources, Action closeWindow);
-
-        protected void Init(SpellBook spellBook, Action closeWindow)
+        protected virtual void InitInternal(SpellBook spellBook, Action closeWindow)
         {
-            _spell = spellBook[_typeId, _id];
+            _spell = spellBook[_spellId];
 
             _applyButton.AddListener(closeWindow);
             _applyButton.AddListener(Apply);
@@ -63,16 +64,23 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        
-        public void SetPosition_Ed(Vector2 position)
+
+        public int Points_Ed => _spellId.id * (_spellId.id + 1);
+        public SpellId SpellId_Ed => _spellId;
+
+        public string Setup_Ed(Vector2 position)
         {
             transform.localPosition = position;
+
+            string skillName = $"{_spellId.id}_{(_spellId.type == EconomicSpellId.Type ? EconomicSpellId.Names_Ed[_spellId.id] : MilitarySpellId.Names_Ed[_spellId.id])}";
+            gameObject.name = skillName.Concat("Panel");
+            return skillName;
         }
 
         protected virtual void OnValidate()
         {
             this.SetChildren(ref _applyButton);
-            _switcher.OnValidate(this, 6);
+            _switcher?.OnValidate(this, 6);
         }
 #endif
     }

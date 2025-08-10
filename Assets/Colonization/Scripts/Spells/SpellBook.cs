@@ -21,6 +21,7 @@ namespace Vurbiri.Colonization
         private static SharedSFXUser s_sfxUser;
 
         public ASpell this[int type, int id] => s_spells[type][id];
+        public ASpell this[SpellId spellId] => s_spells[spellId.type][spellId.id];
 
         public RBool IsCast => s_isCast;
 

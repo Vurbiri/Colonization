@@ -24,27 +24,31 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                _occupations.Clear(); 
-                var human = s_humans[param.playerId];
-                if (!s_isCast && human.IsPay(_cost) & human.Actors.Count > 0)
+                if (_canCast = !s_isCast)
                 {
-                    List<Hexagon> hexagons;
-                    for (int playerId = 0; playerId < PlayerId.HumansCount; playerId++)
+                    _occupations.Clear();
+                    var human = s_humans[param.playerId];
+                    if (human.IsPay(_cost) & human.Actors.Count > 0)
                     {
-                        if (GameContainer.Diplomacy.GetRelation(param.playerId, playerId) == Relation.Enemy)
+                        List<Hexagon> hexagons;
+                        for (int playerId = 0; playerId < PlayerId.HumansCount; playerId++)
                         {
-                            var colonies = s_humans[playerId].GetEdifices(EdificeGroupId.Colony);
-                            for(int c = colonies.Count - 1; c >= 0; c--)
+                            if (GameContainer.Diplomacy.GetRelation(param.playerId, playerId) == Relation.Enemy)
                             {
-                                hexagons = colonies[c].Hexagons;
-                                for (int h = 0; h < Crossroad.HEX_COUNT; h++)
-                                    if (hexagons[h].IsOwner)
-                                        _occupations.Push(new(hexagons[h].Owner, colonies[c]));
+                                var colonies = s_humans[playerId].GetEdifices(EdificeGroupId.Colony);
+                                for (int c = colonies.Count - 1; c >= 0; c--)
+                                {
+                                    hexagons = colonies[c].Hexagons;
+                                    for (int h = 0; h < Crossroad.HEX_COUNT; h++)
+                                        if (hexagons[h].IsOwner)
+                                            _occupations.Push(new(hexagons[h].Owner, colonies[c]));
+                                }
                             }
                         }
                     }
+                    _canCast = _occupations.Count > 0;
                 }
-                return _canCast = _occupations.Count > 0;
+                return _canCast;
             }
 
             public override void Cast(SpellParam param)

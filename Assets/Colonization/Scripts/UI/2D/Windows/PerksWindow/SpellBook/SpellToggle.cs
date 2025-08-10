@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.UI;
 
@@ -9,34 +10,24 @@ namespace Vurbiri.Colonization.UI
 {
 	public class SpellToggle : VToggleBase<SpellToggle>, IPointerEnterHandler, IPointerExitHandler
     {
-        [SerializeField, ReadOnly] private ASpellPanel _panel;
+        [SerializeField, ReadOnly] private SpellPanel _panel;
         [SerializeField, ReadOnly] private int _points;
 
-        private readonly int _typeId, _id;
         private CanvasHint _hint;
         protected string _hintText;
         private bool _isShowingHint = false;
         private Vector3 _offsetHint;
 
         protected Transform _thisTransform;
-       
-        public int Type => _typeId;
-        public int Id => _id;
 
-        protected SpellToggle(int type, int id) : base() 
-        {
-            _typeId = type; _id = id;
-            _points = id * (id + 1);
-        }
-
-        public void Init(PerkTree perkTree, SpellBook spellBook, Currencies resources, Action closeWindow)
+        public void Init(PerkTree perkTree, SpellBook spellBook, Action closeWindow)
         {
             _hint = GameContainer.UI.CanvasHint;
             _thisTransform = transform;
             _offsetHint = new(0f, ((RectTransform)_thisTransform).rect.size.y * 0.48f, 0f);
 
-            perkTree.GetProgress(_typeId).Subscribe(OnInteractable);
-            _panel.Init(spellBook, resources, closeWindow).OnHint += SetText;
+            perkTree.GetProgress(_panel.Type).Subscribe(OnInteractable);
+            _panel.Init(spellBook, closeWindow).OnHint += SetText;
         }
 
         private void SetText(string hintText) => _hintText = hintText;
@@ -68,9 +59,21 @@ namespace Vurbiri.Colonization.UI
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        sealed protected override void UpdateVisual() => _panel.Switch(_isOn);
+        sealed protected override void UpdateVisual()
+        {
+#if UNITY_EDITOR
+            if (_panel != null)
+#endif
+                _panel.Switch(_isOn);
+        }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        sealed protected override void UpdateVisualInstant() => _panel.SwitchInstant(_isOn);
+        sealed protected override void UpdateVisualInstant()
+        {
+#if UNITY_EDITOR
+            if (_panel != null)
+#endif
+                _panel.SwitchInstant(_isOn);
+        }
 
         private void OnInteractable(int progress)
         {
@@ -79,28 +82,29 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
 
-        public void SetPosition_Ed(Vector2 position)
+        public void Setup_Ed(Vector2 position, Sprite sprite, Vector2 sizeOffset)
         {
             transform.localPosition = position;
-            if (_panel != null)
-                _panel.SetPosition_Ed(position);
+            gameObject.name = _panel.Setup_Ed(position);
+
+            var icon = this.GetComponentInChildren<Image>("Icon");
+            UnityEditor.SerializedObject so = new(icon);
+            so.FindProperty("m_Sprite").objectReferenceValue = sprite;
+            so.ApplyModifiedProperties();
+
+            icon.rectTransform.sizeDelta = new(sizeOffset.x, sizeOffset.x);
+            icon.rectTransform.anchoredPosition = new(0f, sizeOffset.y);
         }
 
-        protected override void OnValidate()
+        public SpellToggle Init_Editor(SpellPanel panel, SpellBookGroup group)
         {
-            if (_panel == null)
-            {
-                foreach(var panel in FindObjectsByType<BloodTradePanel>(FindObjectsSortMode.None))
-                {
-                    if(panel.Type == _typeId & panel.Id == _id)
-                    {
-                        _panel = panel;
-                        break;
-                    }
-                }
-            }
+            UnityEditor.SerializedObject so = new(this);
+            so.FindProperty(nameof(_points)).intValue = panel.Points_Ed;
+            so.FindProperty(nameof(_panel)).objectReferenceValue = panel;
+            so.FindProperty(nameof(_group)).objectReferenceValue = group;
+            so.ApplyModifiedProperties();
 
-            base.OnValidate();
+            return this;
         }
 #endif
     }

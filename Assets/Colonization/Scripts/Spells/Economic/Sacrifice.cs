@@ -25,14 +25,14 @@ namespace Vurbiri.Colonization
                 _cost.Set(CurrencyId.Blood, s_settings.sacrificeBloodCost);
                 _damage = new(s_settings.sacrificePierce);
 
-                _strCost = _cost.PlusToString();
+                _strCost = _cost.PlusToString(COST_COUNT_LINE);
             }
             public static void Create() => new Sacrifice(EconomicSpellId.Type, EconomicSpellId.Sacrifice);
 
             public override bool Prep(SpellParam param)
             {
                 _canCast = false;
-                if (!s_isCast & _coroutine == null && s_actors[param.playerId].Count > 0 && s_humans[param.playerId].IsPay(_cost))
+                if (!s_isCast && s_actors[param.playerId].Count > 0 && s_humans[param.playerId].IsPay(_cost))
                 {
                     _target = null;
                     var actors = s_actors[PlayerId.Satan];

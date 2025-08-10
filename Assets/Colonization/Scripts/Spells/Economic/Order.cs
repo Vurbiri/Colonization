@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
                 if (_canCast)
                 {
                     s_humans[param.playerId].AddOrder(param.valueA * s_settings.orderPerMana, _cost);
-                    ShowNameSpell(param.playerId);
+                    ShowSpellName(param.playerId);
                     _canCast = false;
                 }
             }

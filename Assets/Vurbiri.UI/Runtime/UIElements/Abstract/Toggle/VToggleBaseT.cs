@@ -143,13 +143,15 @@ namespace Vurbiri.UI
         {
             base.OnValidate();
 
-            if (!Application.isPlaying && isActiveAndEnabled)
-                OnValidateAsync();
+           OnValidateAsync();
         }
 
         protected virtual async void OnValidateAsync()
         {
             await System.Threading.Tasks.Task.Delay(2);
+
+            if (Application.isPlaying || !isActiveAndEnabled)
+                return;
 
             if (_groupEditor != _group)
             {
