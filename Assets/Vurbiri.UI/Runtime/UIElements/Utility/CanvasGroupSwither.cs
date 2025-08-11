@@ -4,67 +4,83 @@ using UnityEngine;
 
 namespace Vurbiri.UI
 {
-	[System.Serializable]
-	public class CanvasGroupSwitcher : IEnumerator
+    [System.Serializable]
+    public class CanvasGroupSwitcher : IEnumerator
     {
         public const float MIN_SPEED = 0.05f;
 
-        public CanvasGroup canvasGroup;
-        public float speed;
+        [SerializeField] private CanvasGroup _canvasGroup;
+        [SerializeField] private float _speed;
 
         private float _start, _end, _sign;
         private float _progress = 1f;
 
         public object Current => null;
-        public bool IsRunning => _progress < 1f;
-        public float Alpha { get => canvasGroup.alpha; set => canvasGroup.alpha = value; }
-        public bool BlocksRaycasts { get => canvasGroup.blocksRaycasts; set => canvasGroup.blocksRaycasts = value; }
+
+        public bool Valid => _canvasGroup != null;
+        public float Alpha => _canvasGroup.alpha;
+        public bool BlocksRaycasts => _canvasGroup.blocksRaycasts;
+        public bool IsRunning
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _progress < 1f;
+        }
         public bool IsShow
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return _end > 0.95f; }
+            get => _end > 0.95f;
+        }
+        public float Speed
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _speed;
+            set
+            {
+                if (value < MIN_SPEED) value = MIN_SPEED;
+                _speed = value;
+            }
         }
 
         public CanvasGroupSwitcher(CanvasGroup canvasGroup, float speed)
         {
-            this.speed = speed;
-            this.canvasGroup = canvasGroup;
+            _speed = speed;
+            _canvasGroup = canvasGroup;
             Disable();
         }
 
         public void Set(bool show)
         {
-            canvasGroup.blocksRaycasts = show;
-            canvasGroup.alpha = _end = show ? 1f : 0f;
+            _canvasGroup.blocksRaycasts = show;
+            _canvasGroup.alpha = _end = show ? 1f : 0f;
             _start = 1f - _end;
             _progress = 1f;
         }
         public void Enable()
         {
-            canvasGroup.blocksRaycasts = true;
-            canvasGroup.alpha = 1f;
+            _canvasGroup.blocksRaycasts = true;
+            _canvasGroup.alpha = 1f;
             _start = 0f; _end = 1f;
             _progress = 1f;
         }
         public void Disable()
         {
-            canvasGroup.blocksRaycasts = false;
-            canvasGroup.alpha = 0f;
+            _canvasGroup.blocksRaycasts = false;
+            _canvasGroup.alpha = 0f;
             _start = 1f; _end = 0f;
             _progress = 1f;
         }
-        
+
         public bool MoveNext()
         {
-            _progress += Time.unscaledDeltaTime * speed;
+            _progress += Time.unscaledDeltaTime * _speed;
             if (_progress < 1f)
             {
-                canvasGroup.alpha = _start + _sign * _progress;
+                _canvasGroup.alpha = _start + _sign * _progress;
                 return true;
             }
 
-            canvasGroup.alpha = _end;
-            canvasGroup.blocksRaycasts = IsShow;
+            _canvasGroup.alpha = _end;
+            _canvasGroup.blocksRaycasts = IsShow;
             return false;
         }
 
@@ -81,27 +97,32 @@ namespace Vurbiri.UI
         private IEnumerator Set(float start, float end)
         {
             _start = start; _end = end; _sign = end - start;
-            _progress = (canvasGroup.alpha - _start) / _sign;
+            _progress = (_canvasGroup.alpha - _start) / _sign;
 
-            canvasGroup.blocksRaycasts = false;
+            _canvasGroup.blocksRaycasts = false;
             return this;
         }
 
 #if UNITY_EDITOR
         public void OnValidate(MonoBehaviour parent)
         {
-            parent.SetChildren(ref canvasGroup);
-            if (speed < MIN_SPEED) speed = MIN_SPEED;
+            parent.SetChildren(ref _canvasGroup);
+            if (_speed < MIN_SPEED) _speed = MIN_SPEED;
         }
         public void OnValidate(MonoBehaviour parent, float minSpeed)
         {
-            parent.SetChildren(ref canvasGroup);
-            if (speed < minSpeed) speed = minSpeed;
+            parent.SetChildren(ref _canvasGroup);
+            if (_speed < minSpeed) _speed = minSpeed;
         }
         public void OnValidate(MonoBehaviour parent, string name)
         {
-            parent.SetChildren(ref canvasGroup, name);
-            if (speed < MIN_SPEED) speed = MIN_SPEED;
+            parent.SetChildren(ref _canvasGroup, name);
+            if (_speed < MIN_SPEED) _speed = MIN_SPEED;
+        }
+        public void OnValidate(MonoBehaviour parent, string name, float minSpeed)
+        {
+            parent.SetChildren(ref _canvasGroup, name);
+            if (_speed < minSpeed) _speed = minSpeed;
         }
 #endif
     }

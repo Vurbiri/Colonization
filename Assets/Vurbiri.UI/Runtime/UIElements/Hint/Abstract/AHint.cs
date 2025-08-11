@@ -96,7 +96,7 @@ namespace Vurbiri.UI
 
         private void OnDisable()
         {
-            _waitSwitch.Alpha = 0f;
+            _waitSwitch.Disable();
             _coroutineHide = null;
             _coroutineShow = null;
         }
@@ -115,7 +115,7 @@ namespace Vurbiri.UI
             this.SetChildren(ref _backImage);
             this.SetChildren(ref _hintTMP);
 
-            _waitSwitch.OnValidate(this);
+            _waitSwitch.OnValidate(this, 8);
         }
 #endif
     }

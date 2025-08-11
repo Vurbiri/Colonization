@@ -9,25 +9,8 @@ namespace Vurbiri.UI
 
         public float SwitchingSpeed
         {
-            get => _switcher.speed;
-            set
-            {
-                if (value < CanvasGroupSwitcher.MIN_SPEED)
-                    value = CanvasGroupSwitcher.MIN_SPEED;
-                _switcher.speed = value;
-            }
-        }
-        public CanvasGroup CanvasGroup
-        {
-            get => _switcher.canvasGroup;
-            set
-            {
-                if (value != null)
-                {
-                    _switcher.canvasGroup = value;
-                    UpdateVisualInstant();
-                }
-            }
+            get => _switcher.Speed;
+            set => _switcher.Speed = value;
         }
 
         protected VToggleAlpha() : base() { }
@@ -38,15 +21,19 @@ namespace Vurbiri.UI
         {
             if (_switcher.IsRunning)
                 StopCoroutine(_switcher);
-
-            StartCoroutine(_isOn ? _switcher.Show() : _switcher.Hide());
+            if (_switcher.Valid)
+                StartCoroutine(_isOn ? _switcher.Show() : _switcher.Hide());
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        sealed protected override void UpdateVisualInstant() => _switcher.Set(_isOn);
+        sealed protected override void UpdateVisualInstant()
+        {
+            if (_switcher.Valid)
+                _switcher.Set(_isOn);
+        }
 
         sealed protected override void OnDidApplyAnimationProperties()
         {
-            bool value = _switcher.BlocksRaycasts;
+            bool value = _switcher.IsShow;
             if (_isOn != value)
             {
                 _isOn = value;
@@ -60,7 +47,7 @@ namespace Vurbiri.UI
         protected override void OnValidate()
         {
             if (!Application.isPlaying)
-                _switcher.OnValidate(this);
+                _switcher.OnValidate(this, 6);
 
             base.OnValidate();
         }

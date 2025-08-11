@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
@@ -40,7 +39,7 @@ namespace Vurbiri.Colonization.Characteristics
                 return _skillsUI = new(skillsUI);
             }
         }
-        public IReadOnlyList<SkillSettings> Settings => _skillsSettings;
+        public SkillSettings[] Settings => _skillsSettings;
 
         public void CreateStates(Actor actor)
         {
@@ -67,11 +66,25 @@ namespace Vurbiri.Colonization.Characteristics
         {
             _blockUI?.Dispose();
 
-            if (_skillsUI == null)
-                return;
-
-            foreach (var skillUI in _skillsUI)
-                skillUI.Dispose();
+            if (_skillsUI != null)
+            {
+                foreach (var skillUI in _skillsUI)
+                    skillUI.Dispose();
+            }
         }
+
+#if UNITY_EDITOR
+        [SerializeField] private int _swapA = -1;
+        [SerializeField] private int _swapB = -1;
+
+        public void Swap_Ed()
+        {
+            int count = _skillsSettings.Length;
+            if (_swapA != _swapB && _swapA >= 0 & _swapB >= 0 && _swapA < count & _swapB < count)
+                (_skillsSettings[_swapA], _skillsSettings[_swapB]) = (_skillsSettings[_swapB], _skillsSettings[_swapA]);
+
+            _swapA = _swapB = -1;
+        }
+#endif
     }
 }

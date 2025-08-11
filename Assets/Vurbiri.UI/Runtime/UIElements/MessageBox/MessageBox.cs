@@ -193,7 +193,7 @@ namespace Vurbiri.UI
             this.SetChildren(ref _windowImage);
             this.SetChildren(ref _textTMP);
 
-            _waitSwitch.OnValidate(this);
+            _waitSwitch.OnValidate(this, 5.8f);
         }
 #endif
     }

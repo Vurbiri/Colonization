@@ -70,6 +70,12 @@ namespace Vurbiri.Colonization
             get => s_content.crossroads;
         }
 
+        public static Players Players
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => s_content.players;
+        }
+
         public static Balance Balance
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -101,23 +107,6 @@ namespace Vurbiri.Colonization
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => s_content.actorSFXs;
-        }
-
-        public class Players
-        {
-            public static PersonController Person
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => s_content.person;
-            }
-            public static SatanController Satan
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => s_content.satan;
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static AIController GetAI(Id<PlayerId> id) => s_content.ai[id.Value - PlayerId.AI_01];
         }
 
         public new class UI : ProjectContainer.UI

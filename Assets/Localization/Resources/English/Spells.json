@@ -21,7 +21,7 @@
   "WallBuildName": "<b>Wall</b>",
   "WallBuildDesc": "Builds a wall in a Town or City",
   "MaraudingName": "<b>Marauding</b>",
-  "MaraudingDesc": "<align=\"justified\">Warriors are trying to steal a resource from opponents corresponding to the hexagon on which they are stationed and which belongs to the enemy colony (the initial chance is <b>100</b>%, wall protection reduces the probability by <b>{0}</b>%)</align>",
+  "MaraudingDesc": "<align=\"justified\">Warriors are trying to steal from opponents a resource corresponding to the hexagon on which they are stationed and which belongs to the enemy colony (the initial chance is <b>100</b>%, wall protection reduces the probability by <b>{0}</b>%)</align>",
   "MaraudingMsg": "Captured",
   "RoadDemolitionName": "<b>Demolition</b>",
   "RoadDemolitionDesc": "Demolishes dead ends\n<size=85%>dead end - the end of a road that does not connect to another road or building belonging to the same player</size>",

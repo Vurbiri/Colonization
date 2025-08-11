@@ -5,16 +5,16 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        sealed private class ShuffleResources : ASpell
+        sealed private class Transmutation : ASpell
         {
             private readonly int _mana;
 
-            private ShuffleResources(int type, int id) : base(type, id) 
+            private Transmutation(int type, int id) : base(type, id) 
             {
                 _mana = _cost[Mana];
                 _strCost = COST_LINE.Concat(string.Format(TAG.CURRENCY, Mana, _mana));
             }
-            public static void Create() => new ShuffleResources(EconomicSpellId.Type, EconomicSpellId.Transmutation);
+            public static void Create() => new Transmutation(EconomicSpellId.Type, EconomicSpellId.Transmutation);
             public override bool Prep(SpellParam param)
             {
                 var resources = s_humans[param.playerId].Resources;
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            protected override string GetDesc(Localization localization) => localization.GetText(FILE, _descKey);
+            protected override string GetDesc(Localization localization) => string.Concat(localization.GetText(FILE, _descKey), _strCost);
         }
     }
 }

@@ -1,7 +1,10 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
+using Vurbiri.Colonization;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.International;
 using static UnityEditor.EditorGUI;
 using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
@@ -11,7 +14,6 @@ namespace VurbiriEditor.Colonization.Characteristics
     public class SkillSettingsDrawer : PropertyDrawerUtility
     {
         #region Consts
-        private const string NAME_ELEMENT = "Skill {0}";
         private const string P_RANGE = "_range", P_DISTANCE = "_distance", P_TARGET = "_target", P_COST = "_cost";
         private const string P_HITS = "_effectsHitsSettings", P_UI = "_ui";
         private const string P_CLIP = "clipSettings", P_SFX = "hitSFXs";
@@ -20,11 +22,14 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_CHILD_TARGET = "_parentTarget";
         #endregion
 
+        private readonly Color _positive = new(0.5f, 1f, 0.3f, 1f), _negative = new(1f, 0.5f, 0.3f, 1f);
+
         protected override void OnGUI()
         {
-            int id = IdFromLabel();
-            if (id >= 0)
-                _label.text = string.Format(NAME_ELEMENT, id);
+            SerializedProperty uiProperty = GetProperty(P_UI);
+            SerializedProperty idNameProperty = GetProperty(uiProperty, P_KEY_NAME);
+
+            SetName(idNameProperty);
 
             BeginProperty();
             indentLevel++;
@@ -41,7 +46,6 @@ namespace VurbiriEditor.Colonization.Characteristics
                     DrawButton(clip);
 
                     SerializedProperty costProperty = GetProperty(P_COST);
-                    SerializedProperty uiProperty = GetProperty(P_UI);
 
                     DrawLine(40f);
                     indentLevel++;
@@ -65,7 +69,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     Space(2f);
                     DrawLabel("UI:");
                     indentLevel++;
-                    DrawIntPopupRelative(uiProperty, P_KEY_NAME, KEYS_NAME_SKILLS);
+                    DrawIntPopup(idNameProperty, KEYS_NAME_SKILLS);
                     DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
                     indentLevel--;
 
@@ -79,7 +83,15 @@ namespace VurbiriEditor.Colonization.Characteristics
             indentLevel--;
             EndProperty();
 
-            #region Local: DrawButton(..), DrawHits(..)
+            #region Local: SetName(..), DrawButton(..), DrawHits(..)
+            //=================================
+            void SetName(SerializedProperty property)
+            {
+                string name = Localization.ForEditor(LangFiles.Actors).GetText(KEYS_NAME_SKILLS[property.intValue]).Delete("<b>", "</b>");
+                int id = IdFromLabel();
+                if (id >= 0) name = string.Concat($"[{id}] ", name);
+                _label.text = name;
+            }
             //=================================
             void DrawButton(UnityEngine.Object activeObject)
             {
@@ -121,8 +133,8 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                     lineColor = target switch
                     {
-                        TargetOfSkill.Enemy  => Color.red,
-                        TargetOfSkill.Friend => Color.green,
+                        TargetOfSkill.Enemy  => _negative,
+                        TargetOfSkill.Friend => _positive,
                         TargetOfSkill.Self   => Color.magenta,
                         _                    => Color.gray,
                     };
@@ -172,7 +184,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                         effectsProperty = hitsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
                         if (effectsProperty.isExpanded)
                         {
-                            rate += 1.8f;
+                            rate += 2f;
                             for (int j = 0; j < effectsProperty.arraySize; j++)
                                 rate += HitEffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j), j);
                         }

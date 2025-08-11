@@ -9,8 +9,8 @@ namespace Vurbiri.Colonization
     {
         public abstract class ASpell
         {
-            protected const int FILE = LangFiles.Spells, COST_COUNT_LINE = 1;
-            protected const string NAME_LINE = "\n \n", COST_LINE = "\n";
+            protected const int FILE = LangFiles.Spells, COST_COUNT_LINE = 2;
+            protected const string NAME_LINE = "\n\n", COST_LINE = "\n\n";
 
             private Action<string> a_onHint;
 

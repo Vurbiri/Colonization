@@ -19,7 +19,7 @@ namespace Vurbiri.International
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Load(string folder, int fileId, out Dictionary<string, string> load)
+        public static bool TryLoad(string folder, int fileId, out Dictionary<string, string> load)
         {
             return TryLoadObjectFromResourceJson(string.Concat(folder, "/", s_files[fileId]), out load);
         }

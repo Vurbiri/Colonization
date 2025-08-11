@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         public void OnValidate(MonoBehaviour parent)
         {
-            _canvasSwitcher.OnValidate(parent);
+            _canvasSwitcher.OnValidate(parent, 6);
         }
 #endif
     }

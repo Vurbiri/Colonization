@@ -7,9 +7,9 @@ namespace Vurbiri.Colonization.UI
     {
         public void Init(IdArray<EdificeId, Sprite> sprites)
         {
-            var player = GameContainer.Players.Person;
-            var edifices = player.GetEdifices(_id);
-            var maxEdifices = player.GetAbility(_id.ToState());
+            var person = GameContainer.Players.Person;
+            var edifices = person.GetEdifices(_id);
+            var maxEdifices = person.GetAbility(_id.ToState());
 
             InitEdifice(edifices, sprites);
             _widget.Init(edifices.CountReactive, maxEdifices);

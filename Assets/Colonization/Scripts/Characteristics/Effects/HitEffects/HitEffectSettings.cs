@@ -18,10 +18,6 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private int _reflectValue;
         [SerializeField] private int _descKeyId;
 
-#if UNITY_EDITOR
-        [SerializeField] private TargetOfSkill _parentTarget;
-#endif
-
         public bool IsSelf => _isSelf;
 
         public AHitEffect CreateEffect(EffectCode code)
@@ -108,6 +104,11 @@ namespace Vurbiri.Colonization.Characteristics
                 return isPositive ? $"{PLUS}{value}{present}" : $"{value}{present}";
             }
             #endregion
+
         }
+
+#if UNITY_EDITOR
+        [SerializeField] private TargetOfSkill _parentTarget;
+#endif
     }
 }

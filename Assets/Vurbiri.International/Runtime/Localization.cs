@@ -73,7 +73,7 @@ namespace Vurbiri.International
 
         public void LoadFile(int fileId)
         {
-            if (_text[fileId] == null && Files.Load(_currentLanguage.Folder, fileId, out Dictionary<string, string> load))
+            if (_text[fileId] == null && Files.TryLoad(_currentLanguage.Folder, fileId, out Dictionary<string, string> load))
                 _text[fileId] = load;
         }
 
@@ -85,19 +85,19 @@ namespace Vurbiri.International
 
         public void SwitchLanguage(SystemLanguage id)
         {
-            if (_currentLanguage == id)
-                return;
-
-            for (int i = _languages.Count - 1; i >= 0; i--)
+            if (_currentLanguage != id)
             {
-                if (_languages[i] == id)
+                for (int i = _languages.Count - 1; i >= 0; i--)
                 {
-                    SetLanguage(_languages[i]);
-                    return;
+                    if (_languages[i] == id)
+                    {
+                        SetLanguage(_languages[i]);
+                        return;
+                    }
                 }
-            }
 
-            SetLanguage(_defaultLanguage);
+                SetLanguage(_defaultLanguage);
+            }
         }
 
         public string GetText(FileIdAndKey idAndKey) => GetText(idAndKey.id, idAndKey.key);
@@ -140,7 +140,7 @@ namespace Vurbiri.International
         {
             string folder = type.Folder;
             for (int i = 0; i < Files.Count; i++)
-                if (_text[i] != null && Files.Load(folder, i, out Dictionary<string, string> load))
+                if (_text[i] != null && Files.TryLoad(folder, i, out Dictionary<string, string> load))
                     _text[i] = load;
 
             _currentLanguage = type;

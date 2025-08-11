@@ -6,8 +6,8 @@ namespace Vurbiri.Colonization.UI
     {
         public void Init()
         {
-            var player = GameContainer.Players.Person;
-            _widget.Init(player.Roads.CountReactive, player.GetAbility(HumanAbilityId.MaxRoad));
+            var person = GameContainer.Players.Person;
+            _widget.Init(person.Roads.CountReactive, person.GetAbility(HumanAbilityId.MaxRoad));
 
             Destroy(this);
         }

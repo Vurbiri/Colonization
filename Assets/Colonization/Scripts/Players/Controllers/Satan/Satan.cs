@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization
             storage.BindActors(_actors);
             storage.LoadData = null;
 
-            SpellBook.AddSatan(this);
+            SpellBook.AddSatanActors(_actors);
         }
 
         public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);

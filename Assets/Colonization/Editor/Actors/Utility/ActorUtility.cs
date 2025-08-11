@@ -31,7 +31,10 @@ namespace VurbiriEditor.Colonization.Actors
                 animator = (AnimatorOverrideController)actorSkin.GetComponent<Animator>().runtimeAnimatorController;
                 actorSFX = actorSkin.GetComponent<AActorSFX>();
                 skills = settings.Skills;
-                int countSkills = skills.Settings.Count, i;
+
+                skills.Swap_Ed();
+
+                int countSkills = skills.Settings.Length, i;
 
                 actorSkin.SetCountSkills_EditorOnly(countSkills);
                 actorSFX.SetCountSkillsSFX_Ed(countSkills);

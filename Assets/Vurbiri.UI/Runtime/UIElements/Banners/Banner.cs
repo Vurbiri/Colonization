@@ -172,7 +172,7 @@ namespace Vurbiri.UI
             this.SetChildren(ref _textTMP);
             this.SetChildren(ref _outline);
 
-            _waitSwitch.OnValidate(this);
+            _waitSwitch.OnValidate(this, 7);
         }
 #endif
     }

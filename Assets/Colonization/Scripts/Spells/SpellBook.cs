@@ -42,14 +42,14 @@ namespace Vurbiri.Colonization
             s_actors[id] = human.Actors;
         }
 
-        public static void Cast(int type, int id, SpellParam param)
+        public void Cast(int type, int id, SpellParam param)
         {
             var spell = s_spells[type][id];
-            if(!s_isCast && spell.Prep(param)) 
+            if(spell.Prep(param)) 
                 spell.Cast(param);
         }
 
-        public static void Cancel(int type, int id)
+        public void Cancel(int type, int id)
         {
             if(s_isCast) s_spells[type][id].Cancel();
         }
@@ -58,14 +58,11 @@ namespace Vurbiri.Colonization
         {
             s_sfxUser = new();
 
-            Order.Create(); RandomHealing.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); ShuffleResources.Create(); Sacrifice.Create();
+            Order.Create(); RandomHealing.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); Transmutation.Create(); Sacrifice.Create();
             BloodTrade.Create(); Spying.Create(); WallBuild.Create(); Marauding.Create(); RoadDemolition.Create(); SwapId.Create(); Zeal.Create();
         }
         
-        public static void AddSatan(Satan satan)
-        {
-            s_actors[PlayerId.Satan] = satan.Actors;
-        }
+        public static void AddSatanActors(ReadOnlyReactiveSet<Actor> actors) => s_actors[PlayerId.Satan] = actors;
 
         public static void Clear()
         {

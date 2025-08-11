@@ -1,5 +1,5 @@
 using System;
-using Vurbiri.Colonization.EntryPoint;
+using System.Runtime.CompilerServices;
 
 namespace Vurbiri.Colonization
 {
@@ -7,16 +7,33 @@ namespace Vurbiri.Colonization
     {
         private readonly IPlayerController[] _players = new IPlayerController[PlayerId.Count];
 
-        public Players(Player.Settings settings, GameContent content)
+        private readonly PersonController _person;
+        private readonly AIController[] _ai = new AIController[PlayerId.AICount];
+        private readonly SatanController _satan;
+
+        public PersonController Person
         {
-            _players[PlayerId.Person] = content.person = new(settings);
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _person;
+        }
+        public SatanController Satan
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _satan;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public AIController GetAI(Id<PlayerId> id) => _ai[id.Value - PlayerId.AI_01];
+
+        public Players(Player.Settings settings, GameLoop game)
+        {
+            _players[PlayerId.Person] = _person = new(settings);
 
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
-                _players[i] = content.ai[i-1] =new AIController(i, settings);
+                _players[i] = _ai[i - PlayerId.AI_01] = new(i, settings);
 
-            _players[PlayerId.Satan] = content.satan = new SatanController(settings);
+            _players[PlayerId.Satan] = _satan = new(settings);
 
-            GameLoop game = content.gameLoop;
             game.Subscribe(GameModeId.Landing,    (turn, _) => _players[turn.currentId.Value].OnLanding());
             game.Subscribe(GameModeId.EndLanding, (turn, _) => _players[turn.currentId.Value].OnEndLanding());
             game.Subscribe(GameModeId.EndTurn,    (turn, _) => _players[turn.currentId.Value].OnEndTurn());

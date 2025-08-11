@@ -40,7 +40,11 @@ namespace VurbiriEditor.Colonization.Actors
         private void Apply()
         {
             if (_warriorsSettings != null)
+            {
                 ActorUtility.OverrideClips(_warriorsSettings.Settings);
+                this.Repaint();
+            }
+            
         }
     }
 }

@@ -31,18 +31,18 @@ namespace Vurbiri.Colonization.UI
         private readonly Stack<WaitRealtime> _timers = new(4);
 
         // TEST
-        Artefact _artefact;
-
         public void Test()
         {
+            Debug.Log("Удалить Тесты в ArtefactPanel");
+
             //_artefact.Next(UnityEngine.Random.Range(2, 10));
 
             var person = GameContainer.Players.Person;
 
-            person.SpawnTest(WarriorId.Wizard, 2);
-            person.SpawnTest(WarriorId.Militia, 2);
-            GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 2);
-            GameContainer.Players.GetAI(PlayerId.AI_02).SpawnTest(WarriorId.Wizard, 2);
+            //person.SpawnTest(WarriorId.Wizard, 2);
+            person.SpawnTest(WarriorId.Militia, 4);
+            //GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 2);
+            //GameContainer.Players.GetAI(PlayerId.AI_02).SpawnTest(WarriorId.Wizard, 2);
 
         }
         // TEST
@@ -51,8 +51,8 @@ namespace Vurbiri.Colonization.UI
         {
             base.Init(GameContainer.UI.CanvasHint, 0.48f);
 
-            var player = GameContainer.Players.Person;
-            _level.Init(player.Artefact.MaxLevel);
+            var person = GameContainer.Players.Person;
+            _level.Init(person.Artefact.MaxLevel);
             for (int i = _abilities.Length - 1; i >= 0; i--)
             {
                 _abilities[i].Init(this);
@@ -61,14 +61,9 @@ namespace Vurbiri.Colonization.UI
 
 
             _unsubscribers += Localization.Instance.Subscribe(SetLocalizationText);
-            _unsubscribers += player.Artefact.Subscribe(SetHintValues);
+            _unsubscribers += person.Artefact.Subscribe(SetHintValues);
 
-            _unsubscribers += player.GetAbility(HumanAbilityId.IsArtefact).Subscribe(value => gameObject.SetActive(value > 0));
-            
-            // TEST
-            Debug.Log("Удалить Тесты в ArtefactPanel");
-            _artefact = player.Artefact;
-            // TEST
+            _unsubscribers += person.GetAbility(HumanAbilityId.IsArtefact).Subscribe(value => gameObject.SetActive(value > 0));
         }
 
         private void SetLocalizationText(Localization localization)

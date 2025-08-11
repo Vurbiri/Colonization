@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
@@ -74,7 +75,9 @@ namespace Vurbiri.Colonization.UI
 
             public readonly Vector3 this[int index]
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => vectors[index];
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 set => vectors[index] = value;
             }
 
@@ -109,7 +112,8 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0, j; i <= countButton; i++)
             {
                 _buttonPositions[i] = new Vector3[i];
-                left = i >> 1; right = i - left;
+                //left = i >> 1; right = i - left;
+                right = i >> 1; left = i - right;
 
                 angle = 180f / (left + 1);
                 for (j = 0; j < left; j++)

@@ -71,8 +71,7 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
-        [StartEditor]
-        public RectTransform rectTransform;
+        [HideInInspector] public RectTransform rectTransform;
 
         protected override void OnValidate()
         {

@@ -34,5 +34,8 @@
   "MagicStrike": "<b>Magic Strike</b>",
   "Sweep": "<b>Sweep</b>",
   "Combo": "<b>Multistrike</b>",
-  "Heal": "<b>Healing</b>"
+  "Heal": "<b>Healing</b>",
+  "Sparks": "<b>Sparks</b>",
+  "Battlecry": "<b>Battle cry</b>",
+  "Fortify": "<b>Fortify</b>"
 }

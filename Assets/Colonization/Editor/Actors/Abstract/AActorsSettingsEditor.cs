@@ -4,7 +4,6 @@ using UnityEngine.UIElements;
 using Vurbiri;
 using Vurbiri.Colonization.Actors;
 
-//Assets\Colonization\Editor\Actors\Abstract\AActorsSettingsEditor.cs
 namespace VurbiriEditor.Colonization.Actors
 {
     public abstract class AActorsSettingsEditor<T> : AEditorGetVE<T> where T : AActorsSettingsEditor<T>
