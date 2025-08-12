@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Controllers
 {
     public class CameraTransform : IReactive<Transform>
     {
-        private const float MIN_SQR_MAGNITUDE = 1E-05f;
+        private const float MIN_SQR_MAGNITUDE = 1E-06f;
 
         private readonly Camera _camera;
         private readonly Transform _cameraTransform, _parentTransform;
@@ -64,9 +64,6 @@ namespace Vurbiri.Colonization.Controllers
                 return true;
             }
 
-            _parentTransform.position = target;
-            _changedTransform.Invoke(_cameraTransform);
-            _velocity = Vector3.zero;
             return false;
         }
 
@@ -96,35 +93,25 @@ namespace Vurbiri.Colonization.Controllers
             float rotY = rotation.y * 2f;
             float rotZ = rotation.z * 2f;
 
-            float rightX = (1f - (rotation.y * rotY + rotation.z * rotZ));
-            float rightZ = rotation.x * rotZ - rotation.w * rotY;
+            Vector2 right = Normalize((1f - (rotation.y * rotY + rotation.z * rotZ)), rotation.x * rotZ - rotation.w * rotY);
+            Vector2 forward = Normalize(rotation.x * rotZ + rotation.w * rotY, (1f - (rotation.x * rotX + rotation.y * rotY)));
 
-            float magnitude = rightX * rightX + rightZ * rightZ;
-            if (magnitude > MIN_SQR_MAGNITUDE)
-            {
-                magnitude = (float)Math.Sqrt(magnitude);
-                rightX /= magnitude; rightZ /= magnitude;
-            }
-            else
-            {
-                rightX = rightZ = 0f;
-            }
+            return new(direction.x * right.x + direction.y * forward.x, 0f, direction.x * right.y + direction.y * forward.y);
 
-            float forwardX = rotation.x * rotZ + rotation.w * rotY;
-            float forwardZ = (1f - (rotation.x * rotX + rotation.y * rotY));
-
-            magnitude = forwardX * forwardX + forwardZ * forwardZ;
-            if (magnitude > MIN_SQR_MAGNITUDE)
+            #region Local Normalize(..)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Vector2 Normalize(float x, float y)
             {
-                magnitude = (float)Math.Sqrt(magnitude);
-                forwardX /= magnitude; forwardZ /= magnitude;
-            }
-            else
-            {
-                forwardX = forwardZ = 0f;
-            }
+                float magnitude = x * x + y * y;
+                if (magnitude > MIN_SQR_MAGNITUDE)
+                {
+                    magnitude = (float)Math.Sqrt(magnitude);
+                    return new(x / magnitude, y / magnitude);
+                }
 
-            return new(direction.x * rightX + direction.y * forwardX, 0f, direction.x * rightZ + direction.y * forwardZ);
+                return Vector2.zero;
+            }
+            #endregion
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
             private readonly WaitSignal _waitStartAnimation = new();
             private readonly WaitRealtime _waitEndAnimation;
             
-            public readonly WaitStateController<Actor.DeathState> waitState = new(Actor.DeathState.None);
+            public readonly WaitStateController<Actor.DeathStage> waitState = new(Actor.DeathStage.None);
 
             public DeathState(ActorSkin parent, float duration) : base(B_DEATH, parent)
             {
@@ -27,12 +27,12 @@ namespace Vurbiri.Colonization.Actors
 
             private IEnumerator Death_Cn()
             {
-                waitState.SetState(Actor.DeathState.Start);
+                waitState.SetState(Actor.DeathStage.Start);
                 yield return _waitStartAnimation;
                 yield return _waitEndAnimation;
-                waitState.SetState(Actor.DeathState.Animation);
+                waitState.SetState(Actor.DeathStage.Animation);
                 yield return _sfx.Death_Cn();
-                waitState.SetState(Actor.DeathState.SFX);
+                waitState.SetState(Actor.DeathStage.SFX);
             }
 
             private void OnEventEnter()

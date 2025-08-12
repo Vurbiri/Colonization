@@ -20,13 +20,6 @@ namespace Vurbiri.Colonization.Actors
                 _rangeSkill = range;
             }
 
-            public override void Exit()
-            {
-                base.Exit();
-
-                _parentTransform.localPosition = _actor._currentHex.Position;
-            }
-
             protected override IEnumerator Actions_Cn()
             {
                 bool isTarget = false;
@@ -54,9 +47,7 @@ namespace Vurbiri.Colonization.Actors
             protected IEnumerator Run_Cn(Vector3 start, Vector3 end, float path)
             {
                 yield return null;
-
                 _skin.Run();
-
                 yield return Movement_Cn(start, end, _speedRun, path);
             }
 

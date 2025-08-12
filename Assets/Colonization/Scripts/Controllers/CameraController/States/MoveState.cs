@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Controllers
@@ -12,7 +13,12 @@ namespace Vurbiri.Colonization.Controllers
             protected Vector2 _moveDirection;
 
             public override Vector2 InputValue { get => _moveDirection; set => _moveDirection = value; }
-            public bool IsMove => _moveDirection.sqrMagnitude > MIN_VALUE;
+            public bool IsMove
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _moveDirection.sqrMagnitude > MIN_VALUE;
+            }
+           
 
             public MoveState(CameraController controller, Movement movement) : base(controller)
             {
@@ -35,6 +41,7 @@ namespace Vurbiri.Colonization.Controllers
                     {
                         if(speed < _settings.speedMoveMax) 
                             speed += Time.deltaTime * _settings.accelerationMove;
+
                         relativelyDirection = _cameraTransform.ToRelatively(_moveDirection);
                     }
                     else if (speed > MIN_VALUE)
@@ -43,15 +50,14 @@ namespace Vurbiri.Colonization.Controllers
                     }
                     else
                     {
-                        break;
+                        _coroutine = null;
+                        _fsm.ToDefaultState();
+                        yield break;
                     }
 
                     _cameraTransform.Move(speed * Time.deltaTime * relativelyDirection);
                     yield return null;
                 }
-
-                _coroutine = null;
-                _fsm.ToDefaultState();
             }
         }
     }

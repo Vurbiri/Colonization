@@ -60,14 +60,16 @@ namespace Vurbiri.Colonization.UI
             if (countSelf > 0)
             {
                 if (countTarget > 0)
-                {
-                    sb.Append(_hexColor);
-                    sb.AppendLine(localization.GetText(FILE, ON_SELF));
-                }
+                    sb.AppendLine();
+
+                sb.Append(_hexColor);
+                sb.AppendLine(localization.GetText(FILE, ON_SELF));
 
                 for (int i = 0; i < countSelf; i++)
                     _effectsSelf[i].GetText(localization, sb);
             }
+
+            sb.AppendLine();
 
             _textMain = sb.ToString();
             _textAP = localization.GetFormatText(FILE, AP_KEY, _cost);

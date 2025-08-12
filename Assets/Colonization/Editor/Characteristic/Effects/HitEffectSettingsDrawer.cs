@@ -27,8 +27,8 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         #region Values
         private readonly string[] _namesAbilitiesDuration = { ActorAbilityId.Names_Ed[MaxHP], ActorAbilityId.Names_Ed[HPPerTurn], ActorAbilityId.Names_Ed[Attack],
-                                                               ActorAbilityId.Names_Ed[Defense] };
-        private readonly int[] _valuesAbilitiesDuration = { MaxHP, HPPerTurn, Attack, Defense };
+                                                               ActorAbilityId.Names_Ed[Defense],  ActorAbilityId.Names_Ed[APPerTurn]};
+        private readonly int[] _valuesAbilitiesDuration = { MaxHP, HPPerTurn, Attack, Defense, APPerTurn };
 
         private readonly string[] _namesModifiersDuration = { "Flat", "Percent" };
         private readonly int[] _valuesModifiersDuration = { TypeModifierId.Addition, TypeModifierId.TotalPercent };
@@ -163,12 +163,18 @@ namespace VurbiriEditor.Colonization.Characteristics
                 Space();
                 indentLevel++;
 
-                int typeModifierId = DrawIntPopup(P_TYPE_OP, _namesModifiersDuration, _valuesModifiersDuration);
-
-                if (typeModifierId == TypeModifierId.TotalPercent)
-                    DrawInt(P_VALUE, "Value (%)", -200, 200, 100);
-                else 
-                    DrawShiftValue("Value", -50, 50);
+                if (usedAbility == APPerTurn)
+                {
+                    SetInt(P_TYPE_OP, TypeModifierId.Addition);
+                    DrawInt(P_VALUE, "Value", -2, 2);
+                }
+                else
+                {
+                    if (DrawIntPopup(P_TYPE_OP, _namesModifiersDuration, _valuesModifiersDuration) == TypeModifierId.TotalPercent)
+                        DrawInt(P_VALUE, "Value (%)", -200, 200, 100);
+                    else
+                        DrawShiftValue("Value", -50, 50);
+                }
 
                 indentLevel--;
 

@@ -33,10 +33,10 @@ namespace Vurbiri.Colonization.Actors
                 if (skill.Target == TargetOfSkill.Self)
                     return new SelfSkillState(parent, effects, skill.Cost, id);
 
-                if (skill.Range <= 0.01f)
+                if (skill.Range < 0.01f)
                     return new RangeSkillState(parent, skill.Target, effects, skill.Cost, id);
 
-                if (skill.Distance <= 0.01f)
+                if (skill.Distance < 0.01f)
                     return new SkillState(parent, skill.Target, effects, skill.Range, speedRun, skill.Cost, id);
 
                 return new MovementSkillState(parent, skill.Target, effects, skill.Distance, skill.Range, speedRun, skill.Cost, id);

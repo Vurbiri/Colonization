@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.FSMSelectable;
@@ -11,7 +10,7 @@ namespace Vurbiri.Colonization.Actors
     [RequireComponent(typeof(BoxCollider))]
     public abstract partial class Actor : AReactiveItemMono<Actor>, IInteractable, IDisposable
     {
-        public enum DeathState
+        public enum DeathStage
         {
             None, Start, Animation, SFX
         }
@@ -46,12 +45,12 @@ namespace Vurbiri.Colonization.Actors
         private MoveState _moveState;
         private BlockState _blockState;
         private ASkillState[] _skillState;
+        private DeathState _deathState;
         #endregion
 
         private readonly RBool _interactable = new(false);
         private readonly RBool _canCancel = new(false);
 
-        private WaitState<DeathState> _deathState;
         private Unsubscriptions _unsubscribers = new();
         #endregion
 
@@ -151,27 +150,23 @@ namespace Vurbiri.Colonization.Actors
             Interactable = _stateMachine.IsCurrentOrDefaultState(_blockState);
         }
 
-        public WaitStateSource<DeathState> Death()
+        public WaitStateSource<DeathStage> Death()
         {
-            _currentHex.ExitActor();
-            _unsubscribers.Unsubscribe();
+            _stateMachine.SetState(_deathState = new(this));
 
-            var state = _skin.Death(); _deathState = state.SetWaitState(DeathState.SFX);
-            Removing(); 
-            StartCoroutine(Death_Cn());
-
-            return state;
-
-            // Local
-            IEnumerator Death_Cn()
-            {
-                yield return _deathState;
-                Dispose();
-            }
+            return _deathState.stage;
         }
 
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
+        sealed public override void Removing()
+        {
+            _currentHex.ExitActor();
+            _unsubscribers.Unsubscribe();
+
+            _eventChanged.Invoke(this, TypeEvent.Remove);
+            _index = -1;
+        }
         sealed public override void Dispose()
         {
             _effects.Dispose();

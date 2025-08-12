@@ -39,8 +39,11 @@ namespace Vurbiri.Colonization.UI
 
             var person = GameContainer.Players.Person;
 
-            //person.SpawnTest(WarriorId.Wizard, 2);
-            person.SpawnTest(WarriorId.Militia, 4);
+            person.SpawnTest(WarriorId.Wizard, HEX.Left);
+            person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
+            person.SpawnTest(WarriorId.Militia, HEX.LeftUp);
+
+            person.SpawnTest(WarriorId.Militia, 1);
             //GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 2);
             //GameContainer.Players.GetAI(PlayerId.AI_02).SpawnTest(WarriorId.Wizard, 2);
 

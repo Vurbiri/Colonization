@@ -21,6 +21,18 @@ namespace Vurbiri.Colonization
                 _actors.Add(warrior);
             }
         }
+        public void SpawnTest(int id, Key key)
+        {
+            UnityEngine.Debug.Log("SpawnTest");
+            Hexagon hexagon;
+            if ((hexagon = GameContainer.Hexagons[key]).CanWarriorEnter)
+            {
+                Warrior warrior = _spawner.Create(id, hexagon);
+                warrior.IsPersonTurn = _isPerson;
+
+                _actors.Add(warrior);
+            }
+        }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
         {

@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Actors
             protected Actor _target;
             protected WaitSignal _waitActor;
             protected readonly RBool _isCancel;
-            protected readonly WaitRealtime _waitRealtime = new(0.6f);
+            protected readonly WaitRealtime _waitRealtime = new(0.3f);
             protected readonly Relation _relationTarget;
             // !!!!!!!!!!!!!!!!!!!!! удалить _relationRealTarget
             protected readonly Relation _relationRealTarget;
@@ -31,15 +31,23 @@ namespace Vurbiri.Colonization.Actors
                 _relationTarget = Relation.Friend;
             }
 
-            public override void Exit()
+            sealed public override void Enter()
+            {
+                _waitActor = null;
+                _target = null;
+
+                base.Enter();
+            }
+
+            sealed public override void Exit()
             {
                 base.Exit();
 
-                _waitActor = null;
-                _target = null;
+                if(_target != null)
+                    _target.FromTargetState();
             }
 
-            public override void Unselect(ISelectable newSelectable)
+            sealed public override void Unselect(ISelectable newSelectable)
             {
                 if (_waitActor == null)
                     return;
@@ -104,7 +112,7 @@ namespace Vurbiri.Colonization.Actors
                 callback(true);
             }
 
-            protected override IEnumerator ApplySkill_Cn()
+            sealed protected override IEnumerator ApplySkill_Cn()
             {
                 IEnumerator wait = _skin.Skill(_id, _target._skin);
 
@@ -112,16 +120,19 @@ namespace Vurbiri.Colonization.Actors
                 {
                     yield return wait;
                     _effectsHint[i].Apply(_actor, _target);
+
                     if (_target.IsDead)
                     {
                         GameContainer.TriggerBus.TriggerActorKill(_actor._owner, _target._typeId, _target._id);
                         wait = _waitRealtime;
-                        break;
+                        i = _countHits;
                     }
+
                     wait.Reset();
                 }
+
                 yield return wait;
-                _target.FromTargetState();
+                _target.FromTargetState(); _target = null;
             }
 
             private void RotateActors()

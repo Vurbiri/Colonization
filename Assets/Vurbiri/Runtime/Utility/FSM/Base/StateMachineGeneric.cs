@@ -42,11 +42,10 @@ namespace Vurbiri.FSM
 
         public void ToPrevState()
         {
-            if (!_currentState.Equals(_previousState))
+            if (!(_block | _currentState.Equals(_previousState)))
             {
                 _currentState.Exit();
                 _currentState = _previousState;
-                _block = false;
                 _currentState.Enter();
             }
         }

@@ -91,7 +91,7 @@ namespace Vurbiri.Colonization.Actors
                 _sfx.Impact(clip);
         }
 
-        public WaitStateSource<Actor.DeathState> Death()
+        public WaitStateSource<Actor.DeathStage> Death()
         {
             _stateMachine.SetState(_deathState);
             return _deathState.waitState;

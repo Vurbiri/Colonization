@@ -4,7 +4,7 @@
   "RandomHealingName": "<b>Random Healing</b>",
   "RandomHealingDesc": "Restores <b>{0}</b>% health to a random unit (including opponents and demons)",
   "BlessingName": "<b>Blessing Of Island</b>",
-  "BlessingDesc": "<align=\"justified\">All units located in the village or on the field receive a <b>{0}</b>% increase in Attack and Defense for <b>{2}</b> turn(s), plus <b>{1}</b>% for each additional resource invested (the gain percentage decreases in proportion to the number of reinforced units)</align>",
+  "BlessingDesc": "<align=\"justified\">All units located in the village or on the field receive a <b>{0}</b>% increase in Attack and Defense for <b>{2}</b> round(s), plus <b>{1}</b>% for each additional resource invested (the gain percentage decreases in proportion to the number of reinforced units)</align>",
   "WrathName": "<b>Wrath Of Island</b>",
   "WrathDesc": "<align=\"justified\">All units located in the forest or on rocks receive <b>{0}</b> damage with <b>{2}</b>% Breaking, plus <b>{1}</b> damage for each additional resource invested (damage is divided among all affected units)</align>",
   "SummonWarlockName": "<b>Summoning a Warlock</b>",
