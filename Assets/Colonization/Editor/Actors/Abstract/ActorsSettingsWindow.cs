@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri;
 using Vurbiri.Colonization.Actors;
+
+
 namespace VurbiriEditor.Colonization.Actors
 {
 	public abstract class ActorsSettingsWindow<TScriptable, TId, TValue> : EditorWindow 

@@ -6,7 +6,7 @@ namespace VurbiriEditor.Colonization.Actors
 {
     using static CONST_EDITOR;
 
-    public class DemonsSettingsWindow : ActorsSettingsWindow<DemonsSettingsScriptable, DemonId, DemonSettings>
+    sealed public class DemonsSettingsWindow : ActorsSettingsWindow<DemonsSettingsScriptable, DemonId, DemonSettings>
     {
         private const string NAME = "Demons Settings", MENU = MENU_ACTORS_PATH + NAME;
 

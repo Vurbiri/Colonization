@@ -6,7 +6,7 @@ namespace VurbiriEditor.Colonization.Actors
 {
     using static CONST_EDITOR;
 
-    public class WarriorsSettingsWindow : ActorsSettingsWindow<WarriorsSettingsScriptable, WarriorId, WarriorSettings>
+    sealed public class WarriorsSettingsWindow : ActorsSettingsWindow<WarriorsSettingsScriptable, WarriorId, WarriorSettings>
     {
         private const string NAME = "Warriors Settings", MENU = MENU_ACTORS_PATH + NAME;
 

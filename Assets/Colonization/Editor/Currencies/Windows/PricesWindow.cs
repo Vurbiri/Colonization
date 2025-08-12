@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 using Vurbiri.Colonization;
 
 namespace VurbiriEditor.Colonization
@@ -8,9 +9,7 @@ namespace VurbiriEditor.Colonization
 
     public class PricesWindow : EditorWindow
     {
-        #region Consts
         private const string NAME = "Prices", MENU = MENU_PATH + NAME;
-        #endregion
 
         [SerializeField] private Prices _prices;
 
@@ -24,8 +23,11 @@ namespace VurbiriEditor.Colonization
         {
             if (_prices == null)
             {
-                Debug.Log("Нет PricesScriptable");
-                return;
+                _prices = EUtility.FindAnyScriptable<Prices>();
+                if (_prices == null)
+                    _prices = EUtility.CreateScriptable<Prices>("Prices", "Assets/Colonization/Settings");
+                else
+                    Debug.LogWarning($"Set Prices");
             }
 
             rootVisualElement.Add(PricesEditor.CreateCachedEditorAndBind(_prices));

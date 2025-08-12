@@ -209,7 +209,7 @@ namespace Vurbiri
 
         public static T CreateScriptable<T>(string defaultName, string defaultPath) where T : ScriptableObject
         {
-            string path = EditorUtility.SaveFilePanelInProject("", defaultName, "asset", "", defaultPath);
+            string path = EditorUtility.SaveFilePanelInProject("Create Scriptable", defaultName, "asset", "", defaultPath);
             if (!string.IsNullOrEmpty(path))
             {
                 T asset = ScriptableObject.CreateInstance<T>();
