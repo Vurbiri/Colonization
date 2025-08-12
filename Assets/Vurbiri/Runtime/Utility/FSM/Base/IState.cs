@@ -1,8 +1,6 @@
-using System;
-
 namespace Vurbiri.FSM
 {
-    public interface IState : IDisposable
+    public interface IState
     {
         public void Enter();
 

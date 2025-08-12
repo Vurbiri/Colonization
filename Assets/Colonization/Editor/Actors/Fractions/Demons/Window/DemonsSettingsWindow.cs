@@ -32,15 +32,27 @@ namespace VurbiriEditor.Colonization.Actors
             }
 
             var root = DemonsSettingsEditor.CreateCachedEditorAndBind(_demonsSettings);
+            root.Q<Button>("Refresh").clicked += Refresh;
             root.Q<Button>("Apply").clicked += Apply;
 
             rootVisualElement.Add(root);
         }
 
+        private void Refresh()
+        {
+            rootVisualElement.Clear();
+            CreateGUI();
+
+            this.Repaint();
+        }
+
         private void Apply()
         {
             if (_demonsSettings != null)
+            {
                 ActorUtility.OverrideClips(_demonsSettings.Settings);
+                this.Repaint();
+            }
         }
     }
 }

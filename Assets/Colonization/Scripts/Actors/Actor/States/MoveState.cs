@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization.Actors
             private void ToExit()
             {
                 _coroutineAction = null;
-                _fsm.ToDefaultState();
+                GetOutOfThisState();
             }
 
             private IEnumerator SelectHexagon_Cn()

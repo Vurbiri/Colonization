@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization.Controllers
                 while (Mathf.Abs(_heightZoom - position.y) > _settings.minDeltaHeight);
 
                 _coroutine = null;
-                _fsm.ToDefaultState();
+                GetOutOfThisState();
             }
         }
     }

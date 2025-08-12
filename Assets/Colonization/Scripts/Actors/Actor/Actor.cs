@@ -152,7 +152,7 @@ namespace Vurbiri.Colonization.Actors
 
         public WaitStateSource<DeathStage> Death()
         {
-            _stateMachine.SetState(_deathState = new(this));
+            _stateMachine.SetState(_deathState = new(this), true);
 
             return _deathState.stage;
         }
@@ -165,14 +165,13 @@ namespace Vurbiri.Colonization.Actors
             _unsubscribers.Unsubscribe();
 
             _eventChanged.Invoke(this, TypeEvent.Remove);
+            _eventChanged.Clear();
             _index = -1;
-        }
-        sealed public override void Dispose()
-        {
-            _effects.Dispose();
 
-            Destroy(gameObject);
+            _effects.Dispose();
         }
+
+        sealed public override void Dispose() { }
 
         #region Target
         private void ToTargetState(Id<PlayerId> initiator, Relation relation)

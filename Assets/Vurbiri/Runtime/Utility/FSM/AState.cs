@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Vurbiri.FSM
 {
     public abstract class AState : IState
@@ -12,7 +14,9 @@ namespace Vurbiri.FSM
         public virtual void Enter() { }
         public virtual void Exit() { }
 
-        public virtual void Dispose() { }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void GetOutOfThisState() => _fsm.GetOutState(this);
 
     }
 }

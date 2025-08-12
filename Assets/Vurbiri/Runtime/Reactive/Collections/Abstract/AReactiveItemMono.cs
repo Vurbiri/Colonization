@@ -29,6 +29,7 @@ namespace Vurbiri.Reactive.Collections
         public virtual void Removing()
         {
             _eventChanged.Invoke((T)this, TypeEvent.Remove);
+            _eventChanged.Clear();
             _index = -1;
         }
 

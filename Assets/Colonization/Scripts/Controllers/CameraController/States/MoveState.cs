@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.Controllers
                     else
                     {
                         _coroutine = null;
-                        _fsm.ToDefaultState();
+                        GetOutOfThisState();
                         yield break;
                     }
 

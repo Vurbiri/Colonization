@@ -34,11 +34,11 @@ namespace Vurbiri.Colonization.Actors
                 }
 
                 Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
-
                 float distance = _distanceMove + _target._extentsZ;
-                float path = 1f - distance / HEX_DIAMETER_IN;
 
-                yield return Run_Cn(currentHex.Position, targetHex.Position, path);
+                if(distance > HEX_DIAMETER_IN) distance = HEX_DIAMETER_IN;
+                else yield return Run_Cn(currentHex.Position, targetHex.Position, 1f - distance / HEX_DIAMETER_IN);
+
                 yield return ApplyMovementSkill_Cn(_parentTransform.localPosition, targetHex.Position, distance);
                 yield return Run_Cn(_parentTransform.localPosition, currentHex.Position, 1f);
 

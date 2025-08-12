@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization.Actors
             protected void ToExit()
             {
                 _coroutineAction = null;
-                _fsm.ToDefaultState();
+                GetOutOfThisState();
             }
 
             sealed protected override void Pay()

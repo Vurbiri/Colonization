@@ -1,8 +1,6 @@
-using System;
-
 namespace Vurbiri.FSM
 {
-    public class StateMachine<TState> : IDisposable where TState : IState
+    public class StateMachine<TState> where TState : IState
     {
         protected TState _currentState;
         protected TState _previousState;
@@ -39,6 +37,17 @@ namespace Vurbiri.FSM
                 _currentState.Enter();
             }
         }
+        public void GetOutState(TState currentState)
+        {
+            if (_currentState.Equals(currentState))
+            {
+                _previousState = _currentState;
+                _currentState.Exit();
+                _currentState = _defaultState;
+                _block = false;
+                _currentState.Enter();
+            }
+        }
 
         public void ToPrevState()
         {
@@ -63,7 +72,5 @@ namespace Vurbiri.FSM
         }
          
         public void SetDefaultState(TState state) => _defaultState = state;
-
-        public virtual void Dispose() { }
     }
 }

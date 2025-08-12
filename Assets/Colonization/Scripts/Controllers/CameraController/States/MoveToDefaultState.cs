@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization.Controllers
                 {
                     cameraPosition.y = _default.height;
                     _cameraTransform.SetCameraAndParentPosition(cameraPosition, Vector3.zero);
-                    _fsm.ToDefaultState();
+                    GetOutOfThisState();
                 }
             }
 
@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization.Controllers
                 _cameraTransform.SetCameraAndParentPosition(cameraPosition, Vector3.zero);
 
                 _coroutine = null;
-                _fsm.ToDefaultState();
+                GetOutOfThisState();
             }
 
             public override void Exit()

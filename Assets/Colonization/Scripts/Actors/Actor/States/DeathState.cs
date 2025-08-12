@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.Actors
             IEnumerator Death_Cn(WaitState<DeathStage> wait)
             {
                 yield return wait;
-                _actor.Dispose();
+                Destroy(_actor.gameObject);
             }
         }
     }

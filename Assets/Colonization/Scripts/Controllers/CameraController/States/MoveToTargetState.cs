@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.Controllers
                     yield return null;
 
                 _coroutine = null;
-                _fsm.ToDefaultState();
+                GetOutOfThisState();
             }
 
             public override void Exit()

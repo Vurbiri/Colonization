@@ -40,21 +40,23 @@ namespace Vurbiri.Colonization.Characteristics
 
         public int Add(ReactiveEffect effect)
         {
-            if (effect == null)
-                return 0;
-            
-            for (int i = 0; i < _count; i++)
-                if (_values[i].Update(effect, _abilities.AddPerk, out int delta))
-                    return delta;
+            if (_values != null & effect != null)
+            {
+                for (int i = 0; i < _count; i++)
+                    if (_values[i].Update(effect, _abilities.AddPerk, out int delta))
+                        return delta;
 
-            if (_count == _capacity)
-                GrowArray();
+                if (_count == _capacity)
+                    GrowArray();
 
-            _values[_count] = effect;
-            effect.Adding(RedirectEvents, _count);
-            _count.Increment();
+                _values[_count] = effect;
+                effect.Adding(RedirectEvents, _count);
+                _count.Increment();
 
-            return _abilities.AddPerk(effect);
+                return _abilities.AddPerk(effect);
+            }
+
+            return 0;
         }
                 
         public void Remove(EffectCode code)
@@ -86,9 +88,10 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Dispose()
         {
+            _eventChanged.Clear();
             for (int i = 0; i < _count; i++)
                 _values[i].Dispose();
-
+            
             _values = null;
         }
 

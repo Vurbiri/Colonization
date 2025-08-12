@@ -1,10 +1,11 @@
+using System.Runtime.CompilerServices;
 using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.FSMSelectable
 {
     public class ASelectableState : IState
     {
-        protected readonly StateMachineSelectable _fsm;
+        private readonly StateMachineSelectable _fsm;
 
         public ASelectableState(StateMachineSelectable fsm)
         {
@@ -18,6 +19,8 @@ namespace Vurbiri.Colonization.FSMSelectable
         public virtual void Select() { }
         public virtual void Unselect(ISelectable newSelectable) { }
 
-        public virtual void Dispose() { }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void GetOutOfThisState() => _fsm.GetOutState(this);
     }
 }

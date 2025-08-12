@@ -32,9 +32,18 @@ namespace VurbiriEditor.Colonization.Actors
             }
 
             var root = WarriorsSettingsEditor.CreateCachedEditorAndBind(_warriorsSettings);
+            root.Q<Button>("Refresh").clicked += Refresh;
             root.Q<Button>("Apply").clicked += Apply;
 
             rootVisualElement.Add(root);
+        }
+
+        private void Refresh()
+        {
+            rootVisualElement.Clear();
+            CreateGUI();
+
+            this.Repaint();
         }
 
         private void Apply()
@@ -44,7 +53,6 @@ namespace VurbiriEditor.Colonization.Actors
                 ActorUtility.OverrideClips(_warriorsSettings.Settings);
                 this.Repaint();
             }
-            
         }
     }
 }
