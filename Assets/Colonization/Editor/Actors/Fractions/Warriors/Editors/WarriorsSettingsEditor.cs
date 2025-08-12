@@ -5,7 +5,7 @@ using Vurbiri.Colonization.Actors;
 namespace VurbiriEditor.Colonization.Actors
 {
     [CustomEditor(typeof(WarriorsSettingsScriptable), true)]
-    public class WarriorsSettingsEditor : AActorsSettingsEditor<WarriorsSettingsEditor>
+    public class WarriorsSettingsEditor : ActorsSettingsEditor<WarriorsSettingsEditor>
     {
         public override VisualElement CreateInspectorGUI() => CreateGUI<WarriorId>("Warrior Settings");
     }

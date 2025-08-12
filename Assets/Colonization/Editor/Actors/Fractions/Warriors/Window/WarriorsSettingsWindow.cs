@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri.Colonization.Actors;
 
@@ -7,13 +6,9 @@ namespace VurbiriEditor.Colonization.Actors
 {
     using static CONST_EDITOR;
 
-    public class WarriorsSettingsWindow : EditorWindow
+    public class WarriorsSettingsWindow : ActorsSettingsWindow<WarriorsSettingsScriptable, WarriorId, WarriorSettings>
     {
-        #region Consts
         private const string NAME = "Warriors Settings", MENU = MENU_ACTORS_PATH + NAME;
-        #endregion
-
-        [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
 
         [MenuItem(MENU, false, 10)]
         private static void ShowWindow()
@@ -21,38 +16,6 @@ namespace VurbiriEditor.Colonization.Actors
             GetWindow<WarriorsSettingsWindow>(true, NAME).minSize = new(650f, 800f);
         }
 
-        public void CreateGUI()
-        {
-            if (_warriorsSettings == null)
-            {
-                Debug.LogWarning("Set WarriorsSettingsScriptable");
-                _warriorsSettings = Vurbiri.EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
-                if (_warriorsSettings == null)
-                    return;
-            }
-
-            var root = WarriorsSettingsEditor.CreateCachedEditorAndBind(_warriorsSettings);
-            root.Q<Button>("Refresh").clicked += Refresh;
-            root.Q<Button>("Apply").clicked += Apply;
-
-            rootVisualElement.Add(root);
-        }
-
-        private void Refresh()
-        {
-            rootVisualElement.Clear();
-            CreateGUI();
-
-            this.Repaint();
-        }
-
-        private void Apply()
-        {
-            if (_warriorsSettings != null)
-            {
-                ActorUtility.OverrideClips(_warriorsSettings.Settings);
-                this.Repaint();
-            }
-        }
+        protected override VisualElement CreateEditor(WarriorsSettingsScriptable settings) => WarriorsSettingsEditor.CreateCachedEditorAndBind(settings);
     }
 }

@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 using Vurbiri.Colonization.Actors;
 
@@ -7,13 +6,9 @@ namespace VurbiriEditor.Colonization.Actors
 {
     using static CONST_EDITOR;
 
-    public class DemonsSettingsWindow : EditorWindow
+    public class DemonsSettingsWindow : ActorsSettingsWindow<DemonsSettingsScriptable, DemonId, DemonSettings>
     {
-        #region Consts
         private const string NAME = "Demons Settings", MENU = MENU_ACTORS_PATH + NAME;
-        #endregion
-
-        [SerializeField] private DemonsSettingsScriptable _demonsSettings;
 
         [MenuItem(MENU, false, 11)]
         private static void ShowWindow()
@@ -21,38 +16,6 @@ namespace VurbiriEditor.Colonization.Actors
             GetWindow<DemonsSettingsWindow>(true, NAME).minSize = new(650f, 800f);
         }
 
-        public void CreateGUI()
-        {
-            if (_demonsSettings == null)
-            {
-                Debug.LogWarning("Set DemonsSettingsScriptable");
-                _demonsSettings = Vurbiri.EUtility.FindAnyScriptable<DemonsSettingsScriptable>();
-                if (_demonsSettings == null)
-                    return;
-            }
-
-            var root = DemonsSettingsEditor.CreateCachedEditorAndBind(_demonsSettings);
-            root.Q<Button>("Refresh").clicked += Refresh;
-            root.Q<Button>("Apply").clicked += Apply;
-
-            rootVisualElement.Add(root);
-        }
-
-        private void Refresh()
-        {
-            rootVisualElement.Clear();
-            CreateGUI();
-
-            this.Repaint();
-        }
-
-        private void Apply()
-        {
-            if (_demonsSettings != null)
-            {
-                ActorUtility.OverrideClips(_demonsSettings.Settings);
-                this.Repaint();
-            }
-        }
+        protected override VisualElement CreateEditor(DemonsSettingsScriptable settings) => DemonsSettingsEditor.CreateCachedEditorAndBind(settings);
     }
 }

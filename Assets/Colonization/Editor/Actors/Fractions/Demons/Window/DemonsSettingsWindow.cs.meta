@@ -5,7 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
-  - _demonsSettings: {fileID: 11400000, guid: 830931b15b939954eb53024ab5a58216, type: 2}
+  - _actorsSettings: {fileID: 11400000, guid: 830931b15b939954eb53024ab5a58216, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

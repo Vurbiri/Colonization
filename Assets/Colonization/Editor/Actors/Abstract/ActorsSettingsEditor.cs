@@ -6,7 +6,7 @@ using Vurbiri.Colonization.Actors;
 
 namespace VurbiriEditor.Colonization.Actors
 {
-    public abstract class AActorsSettingsEditor<T> : AEditorGetVE<T> where T : AActorsSettingsEditor<T>
+    public abstract class ActorsSettingsEditor<T> : AEditorGetVE<T> where T : ActorsSettingsEditor<T>
     {
         [SerializeField] private VisualTreeAsset _treeActorsSettingsScriptable;
         [SerializeField] private VisualTreeAsset _treeActorSettings;
