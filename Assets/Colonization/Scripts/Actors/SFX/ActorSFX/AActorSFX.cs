@@ -57,6 +57,8 @@ namespace Vurbiri.Colonization.Actors
             {
                 if (_hitSFX == null || _hitSFX.Length != count)
                     _hitSFX = new string[count];
+
+                print("Убрать массив эффектов ???");
             }
             public void SetValue_Ed(int index, string value) => _hitSFX[index] = value;
 #endif

@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization.Actors
 {
     using static CONST;
 
+    [RequireComponent(typeof(BoxCollider))]
     public abstract partial class Actor
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,21 +30,29 @@ namespace Vurbiri.Colonization.Actors
             return effects;
         }
 
-        public void Setup(ActorSettings settings, ActorInitData initData, BoxCollider collider, Hexagon startHex)
+        public void Setup(ActorSettings settings, ActorInitData initData, Hexagon startHex)
         {
             _thisTransform = transform;
-            _thisCollider  = collider;
+            _thisCollider = GetComponent<BoxCollider>();
 
             _typeId      = settings.TypeId;
             _id          = settings.Id;
             _owner       = initData.owner;
-            _skin        = settings.InstantiateActorSkin(transform);
+            _skin        = settings.InstantiateActorSkin(_owner, transform);
             _currentHex  = startHex;
             IsPersonTurn = false;
             Interactable = false;
 
+            #region Bounds
+            Bounds bounds = _skin.Bounds;
+            _thisCollider.size = bounds.size;
+            _thisCollider.center = bounds.center;
+
+            _extentsZ = bounds.extents.z;
+            #endregion
+
             #region Abilities
-            _abilities   = settings.Abilities;
+            _abilities = settings.Abilities;
 
             _currentHP   = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
             _currentAP   = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
@@ -55,13 +64,7 @@ namespace Vurbiri.Colonization.Actors
                 _unsubscribers += initData.buffs[i].Subscribe(OnBuff);
             #endregion
 
-            #region Bounds
-            Bounds bounds = _skin.Bounds;
-            collider.size = bounds.size;
-            collider.center = bounds.center;
-
-            _extentsZ = bounds.extents.z;
-            #endregion
+            
 
             #region Effects
             _effects = new(_abilities);
@@ -81,10 +84,8 @@ namespace Vurbiri.Colonization.Actors
             gameObject.SetActive(true);
         }
 
-        public void Load(ActorSettings settings, ActorInitData initData, BoxCollider collider, Hexagon startHex, ActorLoadData data)
+        public void SetLoadData(ActorLoadData data)
         {
-            Setup(settings, initData, collider, startHex);
-
             _currentHP.Set(data.state.currentHP);
             _currentAP.Set(data.state.currentAP);
             _move.Set(data.state.move);

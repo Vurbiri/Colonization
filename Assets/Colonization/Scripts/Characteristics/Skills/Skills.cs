@@ -85,6 +85,12 @@ namespace Vurbiri.Colonization.Characteristics
 
             _swapA = _swapB = -1;
         }
+
+        public void SetTypeActor_Ed(int type)
+        {
+            for (int i = 0; i < _skillsSettings.Length; i++)
+                _skillsSettings[i].typeActor_ed = type;
+        }
 #endif
     }
 }

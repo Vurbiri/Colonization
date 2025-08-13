@@ -14,7 +14,7 @@ namespace Vurbiri.Collections
 
         public int Count => IdType<TId>.Count;
 
-        public ReadOnlyCollection<TValue> Values => new(_values);
+        public ReadOnlyCollection<TValue> ReadOnlyValues => new(_values);
 
         public TValue this[Id<TId> id] => _values[id.Value];
         public TValue this[int index] => _values[index];
@@ -48,6 +48,8 @@ namespace Vurbiri.Collections
     [Serializable, JsonArray]
     public class IdArray<TId, TValue> : ReadOnlyIdArray<TId, TValue> where TId : IdType<TId>
     {
+        public TValue[] Values => _values;
+
         public new TValue this[Id<TId> id] { get => _values[id.Value]; set => _values[id.Value] = value; }
         public new TValue this[int index] { get => _values[index]; set => _values[index] = value; }
 

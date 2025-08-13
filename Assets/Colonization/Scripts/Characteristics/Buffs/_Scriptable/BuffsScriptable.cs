@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Characteristics
         public List<BuffSettings> Settings => _settings;
 
 #if UNITY_EDITOR
-        public void SetValues_EditorOnly(int maxLevel, IReadOnlyList<BuffSettings> values)
+        public void SetValues_Ed(int maxLevel, IReadOnlyList<BuffSettings> values)
         {
             _maxLevel = maxLevel;
 
@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.Characteristics
             }
         }
 
-        public void Sort_EditorOnly()
+        public void Sort_Ed()
         {
             for (int i = 0, index; i < _settings.Count;)
             {

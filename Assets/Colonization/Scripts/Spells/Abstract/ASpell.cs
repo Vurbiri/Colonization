@@ -28,8 +28,9 @@ namespace Vurbiri.Colonization
             protected ASpell(int type, int id)
             {
                 _cost.Set(CurrencyId.Mana, s_costs[type][id]);
-                _nameKey = string.Concat(s_keys[type][id], "Name");
-                _descKey = string.Concat(s_keys[type][id], "Desc");
+                string key = s_keys[type][id];
+                _nameKey = string.Concat(key, "Name");
+                _descKey = string.Concat(key, "Desc");
                 a_onHint = Empty;
 
                 Localization.Instance.Subscribe(SetHint, false);

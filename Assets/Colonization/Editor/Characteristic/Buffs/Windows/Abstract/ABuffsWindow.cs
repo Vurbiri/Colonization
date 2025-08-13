@@ -159,9 +159,9 @@ namespace VurbiriEditor.Colonization
             SerializedObject serializedObject = new(_scriptable);
             serializedObject.FindProperty("_maxLevel").intValue = _maxLevel;
 
-            _scriptable.SetValues_EditorOnly(_maxLevel, _settings);
+            _scriptable.SetValues_Ed(_maxLevel, _settings);
             if (isSorting)
-                _scriptable.Sort_EditorOnly();
+                _scriptable.Sort_Ed();
 
             new SerializedObject(_scriptable).Update();
             EditorUtility.SetDirty(_scriptable);

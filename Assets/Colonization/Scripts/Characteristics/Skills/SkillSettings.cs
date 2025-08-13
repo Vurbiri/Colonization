@@ -16,8 +16,9 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private SkillUI _ui;
 
 #if UNITY_EDITOR
-        public AnimationClipSettingsScriptable clipSettings;
+        public AnimationClipSettingsScriptable clipSettings_ed;
         public HitSFXName[] hitSFXs;
+        public int typeActor_ed;
 #endif
 
         public TargetOfSkill Target => _target;
@@ -40,7 +41,6 @@ namespace Vurbiri.Colonization.Characteristics
 
             return effects;
         }
-
 
         public SkillUI GetSkillUI(ProjectColors colors)
         {

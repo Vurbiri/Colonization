@@ -4,10 +4,10 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [NotId] public const int Type = TypeOfPerksId.Military;
 
-        public const int MaxHP_1          =  0;
-        public const int MaxHP_2          =  1;
-        public const int HPPerTurn_1      =  2;
-        public const int HPPerTurn_2      =  3;
+        public const int Defense_1        =  0;
+        public const int Defense_2        =  1;
+        public const int Defense_3        =  2;
+        public const int HPPerTurn_1      =  3;
 
         public const int Attack_1         =  4;
         public const int Attack_2         =  5;
@@ -26,10 +26,10 @@ namespace Vurbiri.Colonization.Characteristics
         public const int APPerTurn_1      = 15;
         public const int MaxAP_1          = 16;
 
-        public const int Defense_1        = 17;
-        public const int Defense_2        = 18;
-        public const int Defense_3        = 19;
-        public const int Defense_4        = 20;
+        public const int MaxHP_1          = 17;
+        public const int MaxHP_2          = 18;
+        public const int MaxHP_3          = 19;
+        public const int MaxHP_4          = 20;
 
         public const int ProfitMain_1     = 21;
         public const int ProfitMain_2     = 22;

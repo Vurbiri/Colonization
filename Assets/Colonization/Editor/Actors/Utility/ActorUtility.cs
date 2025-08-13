@@ -24,7 +24,7 @@ namespace VurbiriEditor.Colonization.Actors
 
             foreach (var settings in listSettings)
             {
-                actorSkin = settings.PrefabSkin;
+                actorSkin = settings.PrefabSkin_Ed;
                 if (actorSkin == null)
                     continue;
 
@@ -42,7 +42,7 @@ namespace VurbiriEditor.Colonization.Actors
                 for (i = 0; i < countSkills; i++)
                 {
                     skillSettings = skills.Settings[i];
-                    clipSettings = skillSettings.clipSettings;
+                    clipSettings = skillSettings.clipSettings_ed;
 
                     if (animator[A_SKILLS[i]] != clipSettings.clip)
                         animator[A_SKILLS[i]] = clipSettings.clip;

@@ -15,6 +15,14 @@ namespace Vurbiri.Colonization
     {
         private static GameContent s_content;
 
+        public GameContainer(GameContent content) => s_content ??= content;
+
+        public override void Dispose()
+        {
+            s_content.Dispose();
+            s_content = null;
+        }
+
         public static GameStorage Storage
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -68,6 +76,12 @@ namespace Vurbiri.Colonization
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => s_content.crossroads;
+        }
+
+        public static ActorsFactory ActorsFactory
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => s_content.actorsFactory;
         }
 
         public static Players Players
@@ -133,18 +147,6 @@ namespace Vurbiri.Colonization
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => s_content.poolEffectsBar;
             }
-        }
-
-
-        public GameContainer(GameContent content)
-        {
-            s_content ??= content;
-        }
-
-        public override void Dispose()
-        {
-            s_content.Dispose();
-            s_content = null;
         }
     }
 }

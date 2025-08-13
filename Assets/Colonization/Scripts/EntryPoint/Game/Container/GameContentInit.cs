@@ -1,11 +1,12 @@
 using UnityEngine;
+using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
     [System.Serializable]
-    public class GameContentInit
+    public class GameContentInit : System.IDisposable
     {
         [SerializeField] private Camera _mainCamera;
         [SerializeField] private CameraController _cameraController;
@@ -14,7 +15,8 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private AudioSource _sharedAudioSource;
         [Space]
         [SerializeField] private SpritesOfAbilitiesScriptable _spritesOfAbilities;
-        [SerializeField] private Actors.SFXFactoriesStorage _actorSFXFactory;
+        [SerializeField] private ActorsFactory.Settings _actorsFactory;
+        [SerializeField] private SFXFactoriesStorage _actorSFXFactory;
         [Space]
         [SerializeField] private PoolEffectsBarFactory _poolEffectsBar;
         [SerializeField] private InputController.Settings _inputControllerSettings;
@@ -25,12 +27,16 @@ namespace Vurbiri.Colonization.EntryPoint
             content.sharedContainer = _sharedContainer;
             content.sharedAudioSource = _sharedAudioSource;
 
-            content.Init(_mainCamera, _inputControllerSettings, _cameraController);
+            content.Init(_mainCamera, _inputControllerSettings, _cameraController, _actorsFactory);
 
             content.abilities = _spritesOfAbilities;
             content.actorSFXs = _actorSFXFactory.Create();
             content.poolEffectsBar = _poolEffectsBar.Create();
+        }
 
+        public void Dispose()
+        {
+            _actorsFactory.Dispose(); _actorsFactory = null;
             _spritesOfAbilities = null; _actorSFXFactory = null;
             _inputControllerSettings = null; _poolEffectsBar = null;
         }
@@ -48,6 +54,7 @@ namespace Vurbiri.Colonization.EntryPoint
             EUtility.SetScriptable(ref _spritesOfAbilities);
             EUtility.SetScriptable(ref _actorSFXFactory);
 
+            _actorsFactory.OnValidate();
             _poolEffectsBar.OnValidate();
         }
 #endif

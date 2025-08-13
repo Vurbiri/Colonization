@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
             _exchange = ExchangeRate.Create(_abilities, loadData);
             _artefact = Artefact.Create(settings.artefact, loadData);
 
-            _spawner = new(new(playerId, new(_perks), _artefact), settings.warriorPrefab, settings.actorsContainer);
+            _spawner = new(new(playerId, new(_perks), _artefact));
 
             if (loadData.isLoaded)
             {
@@ -180,10 +180,10 @@ namespace Vurbiri.Colonization
         public void Recruiting(Id<WarriorId> id, Hexagon hexagon, CurrenciesLite cost)
         {
             _resources.Remove(cost);
-            Warrior warrior = _spawner.Create(id, hexagon);
-            warrior.IsPersonTurn = _isPerson;
+            Actor actor = _spawner.Create(id, hexagon);
+            actor.IsPersonTurn = _isPerson;
 
-            _actors.Add(warrior);
+            _actors.Add(actor);
         }
 
         protected IEnumerator Recruiting_Cn(Id<WarriorId> id, Crossroad crossroad)

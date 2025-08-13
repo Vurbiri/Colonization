@@ -43,9 +43,12 @@ namespace Vurbiri.Colonization.Actors
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }
 
-        public ActorSkin Init()
+        public ActorSkin Init(Id<PlayerId> owner)
         {
             _thisTransform = transform;
+
+            if (owner != PlayerId.Satan)
+                _mesh.sharedMaterial = GameContainer.Materials[owner].materialWarriors;
 
             _stateMachine.SetDefaultState(new BoolSwitchState(B_IDLE, this));
             _moveState = new(B_MOVE, this);

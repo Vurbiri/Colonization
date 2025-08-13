@@ -22,7 +22,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_IS_SELF = "_isSelf", P_TARGET_ABILITY = "_targetAbility", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
         private const string P_USED_ATTACK = "_useAttack", P_PIERCE = "_pierce", P_REFLECT = "_reflectValue";
         private const string P_DESC_KEY = "_descKeyId";
-        private const string P_PARENT_TARGET = "_parentTarget";
+        private const string P_PARENT_TARGET = "_parentTarget_ed";
         #endregion
 
         #region Values

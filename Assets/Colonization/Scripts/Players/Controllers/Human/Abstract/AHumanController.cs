@@ -15,10 +15,10 @@ namespace Vurbiri.Colonization
             for (int i = 0; i < count; i++)
             {
                 while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
-                Warrior warrior = _spawner.Create(id, hexagon);
-                warrior.IsPersonTurn = _isPerson;
+                Actor actor = _spawner.Create(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
 
-                _actors.Add(warrior);
+                _actors.Add(actor);
             }
         }
         public void SpawnTest(int id, Key key)
@@ -27,10 +27,10 @@ namespace Vurbiri.Colonization
             Hexagon hexagon;
             if ((hexagon = GameContainer.Hexagons[key]).CanWarriorEnter)
             {
-                Warrior warrior = _spawner.Create(id, hexagon);
-                warrior.IsPersonTurn = _isPerson;
+                Actor actor = _spawner.Create(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
 
-                _actors.Add(warrior);
+                _actors.Add(actor);
             }
         }
 

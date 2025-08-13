@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
             _leveling = new(settings.demonLeveling, _level);
             _artefact = Artefact.Create(settings.artefact, loadData);
 
-            _spawner = new(_level, new(_leveling, _artefact), settings, GameContainer.Hexagons[Key.Zero], loadData.state.spawn);
+            _spawner = new(_level, new(_leveling, _artefact), GameContainer.Hexagons[Key.Zero], loadData.state.spawn);
 
             for (int i = loadData.actors.Count - 1; i >= 0; i--)
                 _actors.Add(_spawner.Load(loadData.actors[i]));

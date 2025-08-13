@@ -108,7 +108,7 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
 #if UNITY_EDITOR
-        [SerializeField] private TargetOfSkill _parentTarget;
+        [SerializeField] private TargetOfSkill _parentTarget_ed;
 #endif
     }
 }

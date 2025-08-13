@@ -8,8 +8,6 @@ namespace Vurbiri.Colonization.UI
     sealed public class WarriorsMenu : AWorldMenu
     {
         [Space]
-        [SerializeField] private WarriorsSettingsScriptable _warriorsSettings;
-        [Space]
         [SerializeField] private WorldHintButton _buttonClose;
         [Space]
         [SerializeField] private WorldHintButton _buttonMovement;
@@ -39,7 +37,7 @@ namespace Vurbiri.Colonization.UI
         public void Open(Actor actor)
         {
             _currentWarrior = actor;
-            var skills = _warriorsSettings[actor.Id].Skills;
+            var skills = GameContainer.ActorsFactory[actor].Skills;
 
             _buttonMovement.Setup(true, _currentWarrior.CanMove);
             _buttonBlock.Setup(actor, skills.BlockUI);
@@ -131,7 +129,6 @@ namespace Vurbiri.Colonization.UI
                 _buttonsSkill = GetComponentsInChildren<ButtonSkill>();
 
             this.SetChildren(ref _buttonBlock);
-            EUtility.SetScriptable(ref _warriorsSettings);
         }
 #endif
     }

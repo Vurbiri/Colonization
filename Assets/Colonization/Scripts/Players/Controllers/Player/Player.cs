@@ -37,17 +37,13 @@ namespace Vurbiri.Colonization
         [Serializable]
         public class Settings : IDisposable
         {
-            public WarriorInitializer warriorPrefab;
+            public BuffsScriptable artefact;
+            [Space]
             public HumanAbilitiesScriptable humanAbilities;
             public PerksScriptable perks;
             public RoadFactory roadFactory;
             [Space]
-            public DemonInitializer demonPrefab;
             public BuffsScriptable demonLeveling;
-            [Space]
-            public BuffsScriptable artefact;
-            public Transform actorsContainer;
-
             public void Dispose()
             {
                 humanAbilities.Dispose(); perks.Dispose(); demonLeveling.Dispose(); artefact.Dispose();
@@ -60,15 +56,10 @@ namespace Vurbiri.Colonization
                 roadFactory ??= new();
                 roadFactory.OnValidate();
 
-                EUtility.SetPrefab(ref warriorPrefab);
-                EUtility.SetPrefab(ref demonPrefab);
-
                 EUtility.SetScriptable(ref humanAbilities);
                 EUtility.SetScriptable(ref perks);
                 EUtility.SetScriptable(ref demonLeveling, "DemonLevelingSettings");
                 EUtility.SetScriptable(ref artefact, "ArtefactSettings");
-
-                EUtility.SetObject(ref actorsContainer, "Actors");
             }
 #endif
         }

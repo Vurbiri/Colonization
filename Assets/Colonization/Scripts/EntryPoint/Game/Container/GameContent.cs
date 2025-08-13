@@ -19,6 +19,8 @@ namespace Vurbiri.Colonization.EntryPoint
         public CameraTransform cameraTransform;
         public CameraController cameraController;
 
+        public ActorsFactory actorsFactory;
+
         public Balance balance;
         public Score score;
         public Diplomacy diplomacy;
@@ -39,7 +41,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public Transform sharedContainer;
         public AudioSource sharedAudioSource;
 
-        public void Init(Camera camera, InputController.Settings input, CameraController controller)
+        public void Init(Camera camera, InputController.Settings input, CameraController controller, ActorsFactory.Settings actorsSettings)
         {
             storage = new(GameContainer.GameSettings.IsLoad);
             gameLoop = GameLoop.Create(storage);
@@ -47,6 +49,8 @@ namespace Vurbiri.Colonization.EntryPoint
             inputController = new(gameLoop, camera, input);
             cameraTransform = new(camera);
             cameraController = controller.Init(cameraTransform, triggerBus, inputController);
+
+            actorsFactory = new(actorsSettings);
 
             balance = new(storage, gameLoop);
             score = new(storage);
@@ -59,6 +63,7 @@ namespace Vurbiri.Colonization.EntryPoint
             inputController.Dispose();
             hexagons.Dispose();
             crossroads.Dispose();
+            actorsFactory.Dispose();
             players.Dispose();
         }
     }

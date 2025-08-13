@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Actors
         public AbilitiesSet<ActorAbilityId> Abilities => new(_abilities, ActorAbilityId.SHIFT_ABILITY, ActorAbilityId.MAX_ID_SHIFT_ABILITY);
         public Skills Skills => _skills;
 
-        public ActorSkin InstantiateActorSkin(Transform parent) => UnityEngine.Object.Instantiate(_prefabActorSkin, parent).Init();
+        public ActorSkin InstantiateActorSkin(Id<PlayerId> owner, Transform parent) => UnityEngine.Object.Instantiate(_prefabActorSkin, parent).Init(owner);
 
         public void Dispose()
         {
@@ -26,7 +26,12 @@ namespace Vurbiri.Colonization.Actors
         }
 
 #if UNITY_EDITOR
-        public ActorSkin PrefabSkin => _prefabActorSkin;
+        public ActorSkin PrefabSkin_Ed => _prefabActorSkin;
+
+        public void SetTypeActor_Ed()
+        {
+            _skills.SetTypeActor_Ed(TypeId);
+        }
 #endif
     }
 }

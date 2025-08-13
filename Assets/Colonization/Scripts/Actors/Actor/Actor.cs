@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Actors
 
         private ActorSkin _skin;
         private Transform _thisTransform;
-        private Collider _thisCollider;
+        private BoxCollider _thisCollider;
                 
         private float _extentsZ;
 

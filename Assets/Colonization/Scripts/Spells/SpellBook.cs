@@ -7,8 +7,8 @@ namespace Vurbiri.Colonization
     public partial class SpellBook
 	{
         private static readonly SpellsSettings s_settings;
-        private static readonly SpellCosts s_costs;
-        private static readonly SpellKeys s_keys;
+        private static readonly int[][] s_costs;
+        private static readonly string[][] s_keys;
 
         private static readonly Human[] s_humans = new Human[PlayerId.HumansCount];
         private static readonly ReadOnlyReactiveSet<Actor>[] s_actors = new ReactiveSet<Actor>[PlayerId.Count];
@@ -28,8 +28,8 @@ namespace Vurbiri.Colonization
         static SpellBook()
         {
             s_settings = SettingsFile.Load<SpellsSettings>();
-            s_costs = new(s_settings.economicCost.Values, s_settings.militaryCost.Values);
-            s_keys  = new(s_settings.economicKey.Values, s_settings.militaryKey.Values);
+            s_costs = new int[][] { s_settings.economicCost.Values, s_settings.militaryCost.Values };
+            s_keys  = new string[][] { s_settings.economicKey.Values, s_settings.militaryKey.Values };
             s_settings.economicCost = null; s_settings.militaryCost = null;
             s_settings.economicKey = null; s_settings.militaryKey = null;
         }
@@ -71,15 +71,14 @@ namespace Vurbiri.Colonization
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
             {
-                s_humans[i] = null; 
-                s_actors[i] = null;
+                s_humans[i] = null; s_actors[i] = null;
             }
             s_actors[PlayerId.Satan] = null;
 
             for (int i = 0; i < EconomicSpellId.Count; i++)
-                s_economicSpells[i].Clear(TypeOfPerksId.Economic, i);
+                s_economicSpells[i].Clear(EconomicSpellId.Type, i);
             for (int i = 0; i < MilitarySpellId.Count; i++)
-                s_militarySpells[i].Clear(TypeOfPerksId.Military, i);
+                s_militarySpells[i].Clear(MilitarySpellId.Type, i);
         }
     }
 
