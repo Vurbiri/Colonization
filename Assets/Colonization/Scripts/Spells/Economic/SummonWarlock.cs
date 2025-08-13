@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.International;
 
@@ -49,11 +49,11 @@ namespace Vurbiri.Colonization
                     else
                     {
                         List<Hexagon> free = new(_max - _count);
-                        ReadOnlyCollection<Key> keys;
+                        ReadOnlyArray<Key> keys;
                         for (int i = 0; i < HEX.NEARS.Count; i++)
                         {
                             keys = HEX.NEARS[i];
-                            for (int j = keys.Count - 1; j >= 0; j--)
+                            for (int j = 0; j < keys.Count; j++)
                             {
                                 hexagon = GameContainer.Hexagons[keys[j]];
                                 if (hexagon.CanWarriorEnter)

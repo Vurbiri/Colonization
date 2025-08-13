@@ -1,14 +1,14 @@
+using System.Collections;
+using Vurbiri.Collections;
+using Vurbiri.Colonization.Characteristics;
+
 namespace Vurbiri.Colonization.Actors
 {
-    using Characteristics;
-    using System.Collections;
-    using System.Collections.Generic;
-
     public abstract partial class Actor
 	{
         sealed protected class SelfSkillState : ASkillState
         {
-            public SelfSkillState(Actor parent, IReadOnlyList<HitEffects> effects, int cost, int id) : base(parent, effects, cost, id)
+            public SelfSkillState(Actor parent, ReadOnlyArray<HitEffects> effects, int cost, int id) : base(parent, effects, cost, id)
             {
             }
 

@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
             _id = id.Value;
             _factory = factory;
 
-            Color color = GameContainer.PlayerColors[id];
+            Color color = GameContainer.UI.PlayerColors[id];
             GradientAlphaKey[] alphas = { new(1.0f, 0.0f), new(1.0f, 1.0f) };
             GradientColorKey[] colors = { new(color, 0.0f), new(color, 1.0f) };
             _gradient = new() { colorKeys = colors, alphaKeys = alphas };

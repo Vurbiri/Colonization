@@ -20,7 +20,6 @@ namespace Vurbiri
 
         public int Count => _count.Value;
         public IReactiveValue<int> CountReactive => _count;
-        public bool IsReadOnly => false;
 
         public Unsubscription Subscribe(Action<int, T, TypeEvent> action, bool instantGetValue = true)
         {
@@ -72,7 +71,6 @@ namespace Vurbiri
         }
 
         public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_values);
-
         IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<T>(_values);
     }
 }

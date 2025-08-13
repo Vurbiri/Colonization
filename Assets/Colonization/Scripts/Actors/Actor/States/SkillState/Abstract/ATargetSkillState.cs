@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using static Vurbiri.Colonization.CONST;
@@ -21,7 +22,7 @@ namespace Vurbiri.Colonization.Actors
             // !!!!!!!!!!!!!!!!!!!!! удалить _relationRealTarget
             protected readonly Relation _relationRealTarget;
 
-            protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<HitEffects> effects, int cost, int id) : 
+            protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, ReadOnlyArray<HitEffects> effects, int cost, int id) : 
                 base(parent, effects, cost, id)
             {
                 _isCancel = parent._canCancel;

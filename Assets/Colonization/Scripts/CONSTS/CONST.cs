@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -39,17 +40,17 @@ namespace Vurbiri.Colonization
         public const float HEX_DIAMETER_IN = HEX_DIAMETER_OUT * COS_30;
         public const float HEX_RADIUS_IN = HEX_DIAMETER_IN * 0.5f;
 
-        public static readonly ReadOnlyCollection<Vector3> VERTEX_DIRECTIONS;
-        public static readonly ReadOnlyCollection<Vector3> SIDE_DIRECTIONS;
+        public static readonly ReadOnlyArray<Vector3> VERTEX_DIRECTIONS;
+        public static readonly ReadOnlyArray<Vector3> SIDE_DIRECTIONS;
 
-        public static readonly ReadOnlyCollection<float> COS_HEX = new(new float[] { COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 });
-        public static readonly ReadOnlyCollection<float> SIN_HEX = new(new float[] { -SIN_30, SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90 });
-        public static readonly ReadOnlyCollection<float> COS_HEX_DIRECT = new(new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60});
-        public static readonly ReadOnlyCollection<float> SIN_HEX_DIRECT = new(new float[] { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 });
+        public static readonly ReadOnlyArray<float> COS_HEX = new(new float[] { COS_30, COS_30, COS_90, -COS_30, -COS_30, -COS_90 });
+        public static readonly ReadOnlyArray<float> SIN_HEX = new(new float[] { -SIN_30, SIN_30, SIN_90, SIN_30, -SIN_30, -SIN_90 });
+        public static readonly ReadOnlyArray<float> COS_HEX_DIRECT = new(new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60});
+        public static readonly ReadOnlyArray<float> SIN_HEX_DIRECT = new(new float[] { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 });
         
         public static readonly ReadOnlyDictionary<Key, Quaternion> ACTOR_ROTATIONS;
 
-        public static readonly ReadOnlyCollection<Quaternion> LINK_ROTATIONS 
+        public static readonly ReadOnlyArray<Quaternion> LINK_ROTATIONS 
             = new(new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, -120f, 0f), Quaternion.Euler(0f, 0f, 0f) });
 
         static CONST()

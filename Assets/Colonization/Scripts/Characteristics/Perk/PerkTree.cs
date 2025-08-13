@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 
@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Characteristics
         public const int MIN_LEVEL = 0, MAX_LEVEL = 6;
         public const int MIN_PROGRESS = 0, MAX_PROGRESS = MAX_LEVEL * (MAX_LEVEL + 1);
 
-        private readonly ReadOnlyCollection<Perk>[] _perks = new ReadOnlyCollection<Perk>[TypeOfPerksId.Count];
+        private readonly ReadOnlyArray<Perk>[] _perks = new ReadOnlyArray<Perk>[TypeOfPerksId.Count];
         private readonly RInt[] _progress = new RInt[TypeOfPerksId.Count];
         private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[TypeOfPerksId.Count];
         private readonly Subscription<Perk> _eventPerk = new();

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Reactive;
 using static Vurbiri.Storage;
 
@@ -12,13 +12,13 @@ namespace Vurbiri.International
         private static readonly Localization s_instance;
 
         private readonly Dictionary<string, string>[] _text;
-        private readonly ReadOnlyCollection<LanguageType> _languages;
+        private readonly ReadOnlyArray<LanguageType> _languages;
         private readonly Subscription<Localization> _changed = new();
         private readonly LanguageType _defaultLanguage;
         private LanguageType _currentLanguage;
 
         public static Localization Instance => s_instance;
-        public ReadOnlyCollection<LanguageType> Languages => _languages;
+        public ReadOnlyArray<LanguageType> Languages => _languages;
         public SystemLanguage CurrentId => _currentLanguage.Id;
 
         static Localization() => s_instance = new(0);
@@ -50,7 +50,7 @@ namespace Vurbiri.International
         {
             if (!string.IsNullOrEmpty(code))
             {
-                for (int i = _languages.Count - 1; i >= 0; i--)
+                for (int i = 0; i < _languages.Count; i++)
                     if (_languages[i].CodeEquals(code))
                         return _languages[i].Id;
             }
@@ -87,7 +87,7 @@ namespace Vurbiri.International
         {
             if (_currentLanguage != id)
             {
-                for (int i = _languages.Count - 1; i >= 0; i--)
+                for (int i = 0; i < _languages.Count; i++)
                 {
                     if (_languages[i] == id)
                     {

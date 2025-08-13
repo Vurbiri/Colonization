@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization.Characteristics
@@ -13,9 +12,9 @@ namespace Vurbiri.Colonization.Characteristics
 
         public int Count => _effects.Length;
 
-        public HitEffects CreateEffectsHit(Actor parent, int skillId, int effectId)
+        public HitEffects CreateEffectsHit(int actorType, int actorId, int skillId, int effectId)
         {
-            return new HitEffects(_effects, parent.TypeId, parent.Id, skillId, effectId);
+            return new HitEffects(_effects, actorType, actorId, skillId, effectId);
         }
 
         public void CreateEffectsHitUI(ProjectColors colors, List<AEffectsUI> target, List<AEffectsUI> self)

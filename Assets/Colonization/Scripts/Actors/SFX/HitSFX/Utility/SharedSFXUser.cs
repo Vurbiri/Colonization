@@ -5,6 +5,6 @@ namespace Vurbiri.Colonization.Actors
     public class SharedSFXUser : ISFXUser
     {
         public Vector3 StartPosition => Vector3.zero;
-        public AudioSource AudioSource => GameContainer.AudioSource;
+        public AudioSource AudioSource => GameContainer.SharedAudioSource;
     }
 }

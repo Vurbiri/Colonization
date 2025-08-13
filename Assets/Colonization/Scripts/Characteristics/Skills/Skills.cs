@@ -1,6 +1,6 @@
 using System;
-using System.Collections.ObjectModel;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
 
@@ -17,29 +17,47 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private int _blockValue = 10;
         [SerializeField] private SkillSettings[] _skillsSettings;
         
-        [NonSerialized] private ReadOnlyCollection<SkillUI> _skillsUI;
-        [NonSerialized] private HitEffects[][] _effectsHits;
+        [NonSerialized] private ReadOnlyArray<SkillUI> _skillsUI;
+        [NonSerialized] private ReadOnlyArray<HitEffects>[] _effectsHits;
         [NonSerialized] private BlockUI _blockUI;
 
-        public BlockUI BlockUI => _blockUI ??= new(_blockCost, _blockValue);
-        public ReadOnlyCollection<SkillUI> SkillsUI
-        {
-            get
-            {
-                if (_skillsUI != null)  
-                    return _skillsUI;
+        public BlockUI BlockUI => _blockUI;
+        public ReadOnlyArray<SkillUI> SkillsUI => _skillsUI;
+        public SkillSettings[] Settings => _skillsSettings;
 
+        public void Init(int actorType, int actorId)
+        {
+            SkillSettings skill;
+            int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
+
+            _effectsHits = new ReadOnlyArray<HitEffects>[countSkills];
+
+            if (actorType == ActorTypeId.Warrior)
+            {
+                _blockUI = new(_blockCost, _blockValue);
+
+                var skillsUI = new SkillUI[countSkills];
                 var colors = GameContainer.UI.Colors;
-                int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
-                SkillUI[] skillsUI = new SkillUI[countSkills];
 
                 for (int i = 0; i < countSkills; i++)
-                    skillsUI[i] = _skillsSettings[i].GetSkillUI(colors);
+                {
+                    skill = _skillsSettings[i];
+                    skillsUI[i]     = skill.GetSkillUI(colors);
+                    _effectsHits[i] = skill.CreateEffectsHit(actorType, actorId, i);
+                }
 
-                return _skillsUI = new(skillsUI);
+                _skillsUI = new(skillsUI);
+            }
+            else
+            {
+                for (int i = 0; i < countSkills; i++)
+                {
+                    skill = _skillsSettings[i];
+                    skill.RemoveSkillUI();
+                    _effectsHits[i] = skill.CreateEffectsHit(actorType, actorId, i);
+                }
             }
         }
-        public SkillSettings[] Settings => _skillsSettings;
 
         public void CreateStates(Actor actor)
         {
@@ -47,19 +65,10 @@ namespace Vurbiri.Colonization.Characteristics
             actor.AddBlockState(_blockCost, _blockValue << ActorAbilityId.SHIFT_ABILITY);
 
             int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
-            actor.SetCountState(countSkills);
 
-            if (_effectsHits != null)
-            {
-                for (int i = 0; i < countSkills; i++)
-                    actor.AddSkillState(_effectsHits[i], _skillsSettings[i], _speedRun, i);
-            }
-            else
-            {
-                _effectsHits = new HitEffects[countSkills][];
-                for (int i = 0; i < countSkills; i++)
-                    _effectsHits[i] = actor.AddSkillState(_skillsSettings[i], _speedRun, i);
-            }
+            actor.SetCountState(countSkills);
+            for (int i = 0; i < countSkills; i++)
+                actor.AddSkillState(_effectsHits[i], _skillsSettings[i], _speedRun, i);
         }
 
         public void Dispose()

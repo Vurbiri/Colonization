@@ -20,6 +20,11 @@ namespace Vurbiri.Colonization.Actors
 
         public ActorSkin InstantiateActorSkin(Id<PlayerId> owner, Transform parent) => UnityEngine.Object.Instantiate(_prefabActorSkin, parent).Init(owner);
 
+        public void Init()
+        {
+            _skills.Init(TypeId, _id);
+        }
+
         public void Dispose()
         {
             _skills.Dispose();

@@ -1,5 +1,6 @@
-using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -8,13 +9,14 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [SerializeField] private Perk[] _economicPerks;
         [SerializeField] private Perk[] _militaryPerks;
-        private ReadOnlyCollection<Perk>[] _readOnlyPerks;
+        private ReadOnlyArray<Perk>[] _readOnlyPerks;
 
-        public ReadOnlyCollection<Perk> this[int index]
+        public ReadOnlyArray<Perk> this[int index]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                _readOnlyPerks ??= new ReadOnlyCollection<Perk>[] { new(_economicPerks), new(_militaryPerks) };
+                _readOnlyPerks ??= new ReadOnlyArray<Perk>[] { new(_economicPerks), new(_militaryPerks) };
                 return _readOnlyPerks[index];
             }
         }

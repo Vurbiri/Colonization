@@ -16,11 +16,11 @@ namespace Vurbiri.Colonization.Actors
 
         public TSettings[] Init()
         {
+            for (int i = 0; i < ActorId<TId>.Count; i++)
+                _settings[i].Init();
+
             return _settings.Values;
         }
-
-
-        public static implicit operator TSettings[](ActorSettingsScriptable<TId, TSettings> actorSettings) => actorSettings._settings.Values;
 
 #if UNITY_EDITOR
         private void OnValidate()

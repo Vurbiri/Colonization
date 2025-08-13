@@ -6,20 +6,14 @@ namespace Vurbiri
 {
     public static class CollectionExtensions
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int LeftIndex<T>(this IReadOnlyCollection<T> self, int index) => (index == 0 ? self.Count : index) - 1;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int RightIndex<T>(this IReadOnlyCollection<T> self, int index) => (index + 1) % self.Count;
+        [MethodImpl(256)] public static int LeftIndex<T>(this IReadOnlyCollection<T> self, int index) => (index == 0 ? self.Count : index) - 1;
+        [MethodImpl(256)] public static int RightIndex<T>(this IReadOnlyCollection<T> self, int index) => (index + 1) % self.Count;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Prev<T>(this IReadOnlyList<T> self, int index) => self[(index == 0 ? self.Count : index) - 1];
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
+        [MethodImpl(256)] public static T Prev<T>(this IReadOnlyList<T> self, int index) => self[(index == 0 ? self.Count : index) - 1];
+        [MethodImpl(256)] public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Rand<T>(this IReadOnlyList<T> self) => self[Random.Range(0, self.Count)];
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T RandE<T>(this ICollection<T> self)
+        [MethodImpl(256)] public static T Rand<T>(this IReadOnlyList<T> self) => self[Random.Range(0, self.Count)];
+        [MethodImpl(256)] public static T RandE<T>(this ICollection<T> self)
         {
             int index = Random.Range(0, self.Count);
             using IEnumerator<T> enumerator = self.GetEnumerator();

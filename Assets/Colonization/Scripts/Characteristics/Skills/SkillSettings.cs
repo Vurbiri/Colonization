@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
 
@@ -26,7 +27,7 @@ namespace Vurbiri.Colonization.Characteristics
         public float Distance => _distance;
         public int Cost => _cost;
 
-        public HitEffects[] CreateEffectsHit(Actor parent, int skillId)
+        public ReadOnlyArray<HitEffects> CreateEffectsHit(int actorType, int actorId, int skillId)
         {
             int countHits = _effectsHitsSettings.Length;
             HitEffects[] effects = new HitEffects[countHits];
@@ -35,11 +36,11 @@ namespace Vurbiri.Colonization.Characteristics
             for (int i = 0, u = 0; i < countHits; i++)
             {
                 effectsHitSettings = _effectsHitsSettings[i];
-                effects[i] = effectsHitSettings.CreateEffectsHit(parent, skillId, u);
+                effects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, skillId, u);
                 u += effectsHitSettings.Count;
             }
 
-            return effects;
+            return new(effects);
         }
 
         public SkillUI GetSkillUI(ProjectColors colors)
@@ -53,6 +54,11 @@ namespace Vurbiri.Colonization.Characteristics
             _ui.Init(colors, targetEffectsUI.ToArray(), selfEffectsUI.ToArray());
 
             return _ui;
+        }
+
+        public void RemoveSkillUI()
+        {
+            _ui = null;
         }
     }
 }

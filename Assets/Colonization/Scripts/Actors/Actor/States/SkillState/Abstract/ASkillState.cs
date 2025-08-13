@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
         {
             protected readonly int _id;
             protected readonly Transform _parentTransform;
-            protected readonly IReadOnlyList<HitEffects> _effectsHint;
+            protected readonly ReadOnlyArray<HitEffects> _effectsHint;
             protected readonly int _countHits;
             protected readonly WaitSignal _waitSignal = new();
 
@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
 
             public WaitSignal Signal => _waitSignal;
 
-            public ASkillState(Actor parent, IReadOnlyList<HitEffects> effects, int cost, int id) : base(parent, cost)
+            public ASkillState(Actor parent, ReadOnlyArray<HitEffects> effects, int cost, int id) : base(parent, cost)
             {
                 _id = id;
                 _parentTransform = _actor._thisTransform;
@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.Actors
                 _countHits = _effectsHint.Count;
             }
 
-            public static ASkillState Create(IReadOnlyList<HitEffects> effects, SkillSettings skill, float speedRun, int id, Actor parent)
+            public static ASkillState Create(ReadOnlyArray<HitEffects> effects, SkillSettings skill, float speedRun, int id, Actor parent)
             {
                 if (skill.Target == TargetOfSkill.Self)
                     return new SelfSkillState(parent, effects, skill.Cost, id);

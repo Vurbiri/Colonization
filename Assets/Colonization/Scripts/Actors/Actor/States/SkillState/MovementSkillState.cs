@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.CONST;
 
@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Actors
             private readonly float _distanceMove;
             private readonly float _timeToHit;
 
-            public MovementSkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<HitEffects> effects, float distance, float range, float speedRun, int cost, int id) : base(parent, targetActor, effects, range, speedRun, cost, id)
+            public MovementSkillState(Actor parent, TargetOfSkill targetActor, ReadOnlyArray<HitEffects> effects, float distance, float range, float speedRun, int cost, int id) : base(parent, targetActor, effects, range, speedRun, cost, id)
             {
                 _distanceMove = distance;
                 _timeToHit = _skin.GetFirsHitTime(id);

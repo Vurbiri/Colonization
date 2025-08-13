@@ -14,10 +14,11 @@ namespace Vurbiri
 
         object IEnumerator.Current => _current;
 
-        public ArrayEnumerator(T[] values)
+        public ArrayEnumerator(T[] values) : this(values, values.Length) { }
+        public ArrayEnumerator(T[] values, int count)
         {
             _values = values;
-            _count = values.Length;
+            _count = count;
         }
 
         public bool MoveNext()

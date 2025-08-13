@@ -7,6 +7,8 @@ namespace Vurbiri.Reactive.Collections
     [JsonArray]
     public class ReactiveList<T> : ReadOnlyReactiveList<T>, IList<T> where T : IEquatable<T>
     {
+        public bool IsReadOnly => false;
+
         public new T this[int index] 
         {
             get => _values[index];

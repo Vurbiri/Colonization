@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Collections
@@ -12,12 +12,24 @@ namespace Vurbiri.Collections
     {
         [SerializeField] protected TValue[] _values = new TValue[IdType<TId>.Count];
 
-        public int Count => IdType<TId>.Count;
+        public int Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => IdType<TId>.Count;
+        }
 
-        public ReadOnlyCollection<TValue> ReadOnlyValues => new(_values);
+        public ReadOnlyArray<TValue> ReadOnlyValues => new(_values);
 
-        public TValue this[Id<TId> id] => _values[id.Value];
-        public TValue this[int index] => _values[index];
+        public TValue this[Id<TId> id]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _values[id.Value];
+        }
+        public TValue this[int index]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _values[index];
+        }
 
         protected ReadOnlyIdArray() {}
         public ReadOnlyIdArray(TValue defaultValue)
@@ -38,8 +50,8 @@ namespace Vurbiri.Collections
                 _values[i] = list[i];
         }
 
-        public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values);
+        public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, IdType<TId>.Count);
+        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, IdType<TId>.Count);
 
         public static implicit operator ReadOnlyIdArray<TId, TValue>(TValue[] value) => new(value);
         public static implicit operator ReadOnlyIdArray<TId, TValue>(List<TValue> value) => new(value);
@@ -50,8 +62,20 @@ namespace Vurbiri.Collections
     {
         public TValue[] Values => _values;
 
-        public new TValue this[Id<TId> id] { get => _values[id.Value]; set => _values[id.Value] = value; }
-        public new TValue this[int index] { get => _values[index]; set => _values[index] = value; }
+        public new TValue this[Id<TId> id]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _values[id.Value];
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set => _values[id.Value] = value;
+        }
+        public new TValue this[int index]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _values[index];
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set => _values[index] = value;
+        }
 
         [JsonConstructor]
         public IdArray(IReadOnlyList<TValue> list) : base(list) { }

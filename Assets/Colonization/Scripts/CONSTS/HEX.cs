@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -15,9 +15,9 @@ namespace Vurbiri.Colonization
         public static readonly Key Right     = new( 2,  0); // Right + Right
         public static readonly Key RightUp   = new( 1,  1); // Right + Up
 
-        public static readonly ReadOnlyCollection<Key> NEAR = new(new Key[] { Right, RightUp, LeftUp, Left, LeftDown, RightDown });
-        public static readonly ReadOnlyCollection<Key> NEAR_TWO;
-        public static readonly ReadOnlyCollection<Key> NEAR_THREE;
+        public static readonly ReadOnlyArray<Key> NEAR = new(new Key[] { Right, RightUp, LeftUp, Left, LeftDown, RightDown });
+        public static readonly ReadOnlyArray<Key> NEAR_TWO;
+        public static readonly ReadOnlyArray<Key> NEAR_THREE;
 
         public static readonly HearHexagons NEARS;
 
@@ -51,23 +51,23 @@ namespace Vurbiri.Colonization
             NEARS = new (NEAR, NEAR_TWO, NEAR_THREE);
         }
 
-        public class HearHexagons : IReadOnlyList<ReadOnlyCollection<Key>>
+        public class HearHexagons : IReadOnlyList<ReadOnlyArray<Key>>
         {
-            private readonly ReadOnlyCollection<Key>[] _values;
+            private readonly ReadOnlyArray<Key>[] _values;
 
             public Key Random => _values.Rand().Rand();
 
             public int Count => 3;
 
-            public ReadOnlyCollection<Key> this[int index] => _values[index];
+            public ReadOnlyArray<Key> this[int index] => _values[index];
 
-            public HearHexagons(ReadOnlyCollection<Key> a, ReadOnlyCollection<Key> b, ReadOnlyCollection<Key> c)
+            public HearHexagons(ReadOnlyArray<Key> a, ReadOnlyArray<Key> b, ReadOnlyArray<Key> c)
             {
-                _values = new ReadOnlyCollection<Key>[] { a, b, c };
+                _values = new ReadOnlyArray<Key>[] { a, b, c };
             }
 
-            public IEnumerator<ReadOnlyCollection<Key>> GetEnumerator() => new ArrayEnumerator<ReadOnlyCollection<Key>>(_values);
-            IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<ReadOnlyCollection<Key>>(_values);
+            public IEnumerator<ReadOnlyArray<Key>> GetEnumerator() => new ArrayEnumerator<ReadOnlyArray<Key>>(_values, 3);
+            IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<ReadOnlyArray<Key>>(_values, 3);
         }
     }
 }

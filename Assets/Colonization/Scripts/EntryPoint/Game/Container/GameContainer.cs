@@ -15,138 +15,46 @@ namespace Vurbiri.Colonization
     {
         private static GameContent s_content;
 
-        public GameContainer(GameContent content) => s_content ??= content;
+        public static GameStorage Storage               { [MethodImpl(Inline)] get => s_content.storage; }
+        public static GameLoop GameLoop                 { [MethodImpl(Inline)] get => s_content.gameLoop; }
+        public static GameEvents GameEvents             { [MethodImpl(Inline)] get => s_content.gameLoop; }
+        public static GameTriggerBus TriggerBus         { [MethodImpl(Inline)] get => s_content.triggerBus; }
+        public static GameEventBus EventBus             { [MethodImpl(Inline)] get => s_content.triggerBus; }
 
+        public static InputController InputController   { [MethodImpl(Inline)] get => s_content.inputController; }
+        public static CameraController CameraController { [MethodImpl(Inline)] get => s_content.cameraController; }
+        public static CameraTransform CameraTransform   { [MethodImpl(Inline)] get => s_content.cameraTransform; }
+        
+        public static Hexagons Hexagons                 { [MethodImpl(Inline)] get => s_content.hexagons; }
+        public static Crossroads Crossroads             { [MethodImpl(Inline)] get => s_content.crossroads; }
+
+        public static ActorsFactory ActorsFactory       { [MethodImpl(Inline)] get => s_content.actorsFactory; }
+
+        public static Players Players                   { [MethodImpl(Inline)] get => s_content.players; }
+        public static Balance Balance                   { [MethodImpl(Inline)] get => s_content.balance; }
+        public static Score Score                       { [MethodImpl(Inline)] get => s_content.score; }
+        public static Diplomacy Diplomacy               { [MethodImpl(Inline)] get => s_content.diplomacy; }
+
+        public static Transform SharedContainer         { [MethodImpl(Inline)] get => s_content.sharedContainer; }
+        public static AudioSource SharedAudioSource     { [MethodImpl(Inline)] get => s_content.sharedAudioSource; }
+
+        public static SFXStorage HitSFX                 { [MethodImpl(Inline)] get => s_content.actorSFXs; }
+
+        public new class UI : ProjectContainer.UI
+        {
+            public static WorldHint WorldHint                                           { [MethodImpl(Inline)] get => s_content.worldHint; }
+            public static CanvasHint CanvasHint                                         { [MethodImpl(Inline)] get => s_content.canvasHint; }
+
+            public static ReadOnlyIdArray<ActorAbilityId, Sprite> SpritesOfAbilities    { [MethodImpl(Inline)] get => s_content.abilities; }
+ 
+            public static Pool<EffectsBar> EffectsBar                                   { [MethodImpl(Inline)] get => s_content.poolEffectsBar; }
+         }
+
+        public GameContainer(GameContent content) => s_content ??= content;
         public override void Dispose()
         {
             s_content.Dispose();
             s_content = null;
-        }
-
-        public static GameStorage Storage
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.storage;
-        }
-
-        public static GameLoop GameLoop
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.gameLoop;
-        }
-        public static GameEvents GameEvents
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.gameLoop;
-        }
-
-        public static GameTriggerBus TriggerBus
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.triggerBus;
-        }
-        public static GameEventBus EventBus
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.triggerBus;
-        }
-
-        public static InputController InputController
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.inputController;
-        }
-        public static CameraController CameraController
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.cameraController;
-        }
-        public static CameraTransform CameraTransform
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.cameraTransform;
-        }
-        
-        public static Hexagons Hexagons
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.hexagons;
-        }
-        public static Crossroads Crossroads
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.crossroads;
-        }
-
-        public static ActorsFactory ActorsFactory
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.actorsFactory;
-        }
-
-        public static Players Players
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.players;
-        }
-
-        public static Balance Balance
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.balance;
-        }
-        public static Score Score
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.score;
-        }
-        public static Diplomacy Diplomacy
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.diplomacy;
-        }
-
-        public static Transform Container
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.sharedContainer;
-        }
-        public static AudioSource AudioSource
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.sharedAudioSource;
-        }
-
-        public static SFXStorage HitSFX
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => s_content.actorSFXs;
-        }
-
-        public new class UI : ProjectContainer.UI
-        {
-            public static WorldHint WorldHint
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => s_content.worldHint;
-            }
-            public static CanvasHint CanvasHint
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => s_content.canvasHint;
-            }
-
-            public static ReadOnlyIdArray<ActorAbilityId, Sprite> SpritesOfAbilities
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => s_content.abilities;
-            }
-
-            public static Pool<EffectsBar> EffectsBar
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => s_content.poolEffectsBar;
-            }
         }
     }
 }

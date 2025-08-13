@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.CONST;
 
@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Actors
             protected readonly float _speedRun;
             protected readonly float _rangeSkill;
 
-            public SkillState(Actor parent, TargetOfSkill targetActor, IReadOnlyList<HitEffects> effects, float range, float speedRun, int cost, int id) : 
+            public SkillState(Actor parent, TargetOfSkill targetActor, ReadOnlyArray<HitEffects> effects, float range, float speedRun, int cost, int id) : 
                 base(parent, targetActor, effects, cost, id)
             {
                 _speedRun = speedRun;
