@@ -1,18 +1,16 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
     public static class TransformExtensions
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetLocalPositionAndRotation(this Transform self, Transform other)
+        [Impl(256)] public static void SetLocalPositionAndRotation(this Transform self, Transform other)
         {
             self.SetLocalPositionAndRotation(other.localPosition, other.localRotation);
         }
         
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetPositionAndRotation(this Transform self, Transform other)
+        [Impl(256)] public static void SetPositionAndRotation(this Transform self, Transform other)
         {
             self.SetPositionAndRotation(other.position, other.rotation);
         }

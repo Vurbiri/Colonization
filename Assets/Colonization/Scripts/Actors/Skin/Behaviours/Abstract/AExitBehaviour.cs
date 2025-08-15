@@ -7,6 +7,10 @@ namespace Vurbiri.Colonization.Actors
     {
         public event Action EventExit;
 
-        public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) => EventExit?.Invoke();
+        public AExitBehaviour() : base() => EventExit = Empty;
+
+        public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) => EventExit.Invoke();
+
+        private void Empty() { }
     }
 }

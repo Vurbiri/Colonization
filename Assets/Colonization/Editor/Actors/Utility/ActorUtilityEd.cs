@@ -7,9 +7,9 @@ using static Vurbiri.Colonization.Characteristics.Skills;
 
 namespace VurbiriEditor.Colonization.Actors
 {
-    public class ActorUtility
+    public class ActorUtilityEd
 	{
-        public static readonly string[] A_SKILLS = { "A_Skill_0", "A_Skill_1", "A_Skill_2", "A_Skill_3" };
+        private static readonly string[] A_SKILLS = { "A_Skill_0", "A_Skill_1", "A_Skill_2", "A_Skill_3" };
 
         public static void OverrideClips(IReadOnlyList<ActorSettings> listSettings)
         {
@@ -36,7 +36,7 @@ namespace VurbiriEditor.Colonization.Actors
 
                 int countSkills = skills.Settings.Length, i;
 
-                actorSkin.SetCountSkills_EditorOnly(countSkills);
+                actorSkin.SetCountSkills_Ed(countSkills);
                 actorSFX.SetCountSkillsSFX_Ed(countSkills);
 
                 for (i = 0; i < countSkills; i++)
@@ -53,7 +53,7 @@ namespace VurbiriEditor.Colonization.Actors
                     for (int j = 0; j < countHits; j++)
                         actorSFX.SetSkillSFX_Ed(i, j, skillSettings.hitSFXs[j]);
 
-                    actorSkin.SetTimings_EditorOnly(clipSettings, i);
+                    actorSkin.SetTimings_Ed(clipSettings, i);
                 }
 
                 for (; i < COUNT_SKILLS_MAX; i++)

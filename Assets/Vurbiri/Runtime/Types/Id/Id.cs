@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
@@ -13,23 +13,23 @@ namespace Vurbiri
 
         public readonly int Value
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _id;
+            [Impl(256)] get => _id;
         }
 
-        [JsonConstructor]
+        [JsonConstructor, Impl(256)]
         public Id(int id)
         {
-            Throw.IfOutOfRange(id, IdType<T>.Min, IdType<T>.Count);
+            if (id < IdType<T>.Min | id >= IdType<T>.Count)
+                Errors.ArgumentOutOfRange($"Value {id} is less than {IdType<T>.Min} or greater than or equal to {IdType<T>.Count}");
 
             _id = id;
         }
 
-        public int Next() => _id = ++_id % IdType<T>.Count;
+        [Impl(256)] public int Next() => _id = ++_id % IdType<T>.Count;
 
-        public override readonly string ToString() => _id.ToString();
-        public readonly bool Equals(Id<T> other) => _id == other._id;
-        public readonly bool Equals(int value) => _id == value;
+        [Impl(256)] public override readonly string ToString() => _id.ToString();
+        [Impl(256)] public readonly bool Equals(Id<T> other) => _id == other._id;
+        [Impl(256)] public readonly bool Equals(int value) => _id == value;
         public override readonly bool Equals(object obj)
         {
             if (obj is null) return false;
@@ -41,29 +41,29 @@ namespace Vurbiri
         }
         public override readonly int GetHashCode() => _id.GetHashCode();
 
-        public readonly int CompareTo(Id<T> other) => _id - other._id;
-        public readonly int CompareTo(int value) => _id - value;
+        [Impl(256)] public readonly int CompareTo(Id<T> other) => _id - other._id;
+        [Impl(256)] public readonly int CompareTo(int value) => _id - value;
 
-        public static implicit operator int(Id<T> id) => id._id;
-        public static implicit operator Id<T>(int value) => new(value);
+        [Impl(256)] public static implicit operator int(Id<T> id) => id._id;
+        [Impl(256)] public static implicit operator Id<T>(int value) => new(value);
 
-        public static bool operator ==(Id<T> a, Id<T> b) => a._id == b._id;
-        public static bool operator !=(Id<T> a, Id<T> b) => a._id != b._id;
+        [Impl(256)] public static bool operator ==(Id<T> a, Id<T> b) => a._id == b._id;
+        [Impl(256)] public static bool operator !=(Id<T> a, Id<T> b) => a._id != b._id;
 
-        public static bool operator ==(Id<T> id, int value) => id._id == value;
-        public static bool operator !=(Id<T> id, int value) => id._id != value;
+        [Impl(256)] public static bool operator ==(Id<T> id, int value) => id._id == value;
+        [Impl(256)] public static bool operator !=(Id<T> id, int value) => id._id != value;
 
-        public static bool operator >(Id<T> id, int value) => id._id > value;
-        public static bool operator <(Id<T> id, int value) => id._id < value;
-        public static bool operator >=(Id<T> id, int value) => id._id >= value;
-        public static bool operator <=(Id<T> id, int value) => id._id <= value;
+        [Impl(256)] public static bool operator >(Id<T> id, int value) => id._id > value;
+        [Impl(256)] public static bool operator <(Id<T> id, int value) => id._id < value;
+        [Impl(256)] public static bool operator >=(Id<T> id, int value) => id._id >= value;
+        [Impl(256)] public static bool operator <=(Id<T> id, int value) => id._id <= value;
 
-        public static int operator +(Id<T> a, Id<T> b) => a._id + b._id;
-        public static int operator +(Id<T> id, int value) => id._id + value;
-        public static int operator +(int value, Id<T> id) => value + id._id;
+        [Impl(256)] public static int operator +(Id<T> a, Id<T> b) => a._id + b._id;
+        [Impl(256)] public static int operator +(Id<T> id, int value) => id._id + value;
+        [Impl(256)] public static int operator +(int value, Id<T> id) => value + id._id;
 
-        public static int operator -(Id<T> a, Id<T> b) => a._id - b._id;
-        public static int operator -(Id<T> id, int value) => id._id - value;
-        public static int operator -(int value, Id<T> id) => value - id._id;
+        [Impl(256)] public static int operator -(Id<T> a, Id<T> b) => a._id - b._id;
+        [Impl(256)] public static int operator -(Id<T> id, int value) => id._id - value;
+        [Impl(256)] public static int operator -(int value, Id<T> id) => value - id._id;
     }
 }

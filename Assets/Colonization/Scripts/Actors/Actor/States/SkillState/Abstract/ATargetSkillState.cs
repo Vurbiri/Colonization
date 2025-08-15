@@ -50,23 +50,18 @@ namespace Vurbiri.Colonization.Actors
 
             sealed public override void Unselect(ISelectable newSelectable)
             {
-                if (_waitActor == null)
-                    return;
-
-                _target = CheckTarget(newSelectable as Actor);
-                _waitActor.Send();
-
-                #region Local: CheckTarget(..)
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                Actor CheckTarget(Actor target)
+                if (_waitActor != null)
                 {
-                    if (target != null)
-                    {
-                        if ((target._currentHex.Key ^ _actor._currentHex.Key) == 1 & target.IsCanApplySkill(_actor._owner, _relationTarget, out _))
-                            target.ToTargetState(_actor._owner, _relationTarget);
-                        else
-                            target = null;
-                    }
+                    _target = GetTarget(newSelectable as Actor);
+                    _waitActor.Send();
+                }
+
+                #region Local: GetTarget(..)
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                Actor GetTarget(Actor target)
+                {
+                    if (target == null || (target._currentHex.Key ^ _actor._currentHex.Key) != 1 || !target.ToTargetState(_actor._owner, _relationTarget))
+                        target = null;
                     return target;
                 }
                 #endregion
@@ -126,14 +121,14 @@ namespace Vurbiri.Colonization.Actors
                     {
                         GameContainer.TriggerBus.TriggerActorKill(_actor._owner, _target._typeId, _target._id);
                         wait = _waitRealtime;
-                        i = _countHits;
+                        break;
                     }
 
                     wait.Reset();
                 }
 
                 yield return wait;
-                _target.FromTargetState(); _target = null;
+                //_target.FromTargetState(); _target = null;
             }
 
             private void RotateActors()

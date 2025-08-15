@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization.Actors
             #endregion
 
             #region States
-            _stateMachine.SetDefaultState(new IdleState(this));
+            _stateMachine.AssignDefaultState(new IdleState(this));
             settings.Skills.CreateStates(this);
 
             _skin.EventStart += _stateMachine.ToDefaultState;

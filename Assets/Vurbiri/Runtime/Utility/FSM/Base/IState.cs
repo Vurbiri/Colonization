@@ -1,6 +1,6 @@
 namespace Vurbiri.FSM
 {
-    public interface IState
+    public interface IState 
     {
         public void Enter();
 

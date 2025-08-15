@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.International
 {
@@ -8,11 +9,11 @@ namespace Vurbiri.International
     {
         [SerializeField] private int _id;
 
-        public FileId(int id) => _id = id;
+        [Impl(256)] public FileId(int id) => _id = id;
 
-        public override readonly string ToString() => _id.ToString();
-        public readonly bool Equals(FileId other) => _id == other._id;
-        public readonly bool Equals(int value) => _id == value;
+        [Impl(256)] public override readonly string ToString() => _id.ToString();
+        [Impl(256)] public readonly bool Equals(FileId other) => _id == other._id;
+        [Impl(256)] public readonly bool Equals(int value) => _id == value;
         public override readonly bool Equals(object obj)
         {
             if (obj is null) return false;
@@ -27,16 +28,16 @@ namespace Vurbiri.International
         public readonly int CompareTo(FileId other) => _id - other._id;
         public readonly int CompareTo(int value) => _id - value;
 
-        public static implicit operator int(FileId id) => id._id;
-        public static implicit operator FileId(int value) => new(value);
+        [Impl(256)] public static implicit operator int(FileId id) => id._id;
+        [Impl(256)] public static implicit operator FileId(int value) => new(value);
 
-        public static bool operator ==(FileId a, FileId b) => a._id == b._id;
-        public static bool operator !=(FileId a, FileId b) => a._id != b._id;
+        [Impl(256)] public static bool operator ==(FileId a, FileId b) => a._id == b._id;
+        [Impl(256)] public static bool operator !=(FileId a, FileId b) => a._id != b._id;
 
-        public static bool operator ==(FileId id, int value) => id._id == value;
-        public static bool operator !=(FileId id, int value) => id._id != value;
+        [Impl(256)] public static bool operator ==(FileId id, int value) => id._id == value;
+        [Impl(256)] public static bool operator !=(FileId id, int value) => id._id != value;
 
-        public static bool operator ==(int value, FileId id) => value == id._id;
-        public static bool operator !=(int value, FileId id) => value == id._id;
+        [Impl(256)] public static bool operator ==(int value, FileId id) => value == id._id;
+        [Impl(256)] public static bool operator !=(int value, FileId id) => value == id._id;
     }
 }

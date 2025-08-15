@@ -1,10 +1,11 @@
+using System;
 using System.Runtime.CompilerServices;
 
 namespace Vurbiri.FSM
 {
-    public abstract class AState : IState
+    public abstract class AState : IState, IEquatable<AState>
     {
-        protected readonly StateMachine _fsm;
+        private readonly StateMachine _fsm;
 
         public AState(StateMachine fsm)
         {
@@ -17,6 +18,11 @@ namespace Vurbiri.FSM
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void GetOutOfThisState() => _fsm.GetOutState(this);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void GetOutToPrevState() => _fsm.GetOutToPrevState(this);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(AState other) => ReferenceEquals(this, other);
     }
 }

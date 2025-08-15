@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
     [System.Serializable]
     public class SkillUI : IDisposable
     {
-        [SerializeField] private int _idNameKey;
+        [SerializeField] private string _keyName;
         [SerializeField] private Sprite _sprite;
         [SerializeField] private int _cost;
 
@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization.UI
             int countTarget = _effectsTarget.Length, countSelf = _effectsSelf.Length;
 
             StringBuilder sb = new(SIZE + countTarget * SIZE + countSelf * SIZE);
-            sb.AppendLine(localization.GetText(FILE, KEYS_NAME_SKILLS[_idNameKey]));
+            sb.AppendLine(localization.GetText(FILE, _keyName));
 
             if (countTarget > 0)
             {

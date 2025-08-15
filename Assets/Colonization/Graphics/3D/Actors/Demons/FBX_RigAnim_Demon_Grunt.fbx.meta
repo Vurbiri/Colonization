@@ -34,7 +34,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -43,7 +43,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Empty
+      name: ZA_Demon_Grunt_Empty
       takeName: Take 001
       internalID: 1827226128182048838
       firstFrame: 0
@@ -72,7 +72,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Spawn
+      name: A_Demon_Grunt_Spawn
       takeName: Take 001
       internalID: -998496362607748373
       firstFrame: 0
@@ -101,7 +101,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Idle
+      name: A_Demon_Grunt_Idle
       takeName: Take 001
       internalID: 3060872287085348379
       firstFrame: 134
@@ -130,7 +130,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Turn
+      name: ZA_Demon_Grunt_Turn
       takeName: Take 001
       internalID: 6641085478485924818
       firstFrame: 275
@@ -159,7 +159,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Walk
+      name: A_Demon_Grunt_Walk
       takeName: Take 001
       internalID: -5059006814000262888
       firstFrame: 368
@@ -188,7 +188,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: BackPedal
+      name: A_Demon_Grunt_BackPedal
       takeName: Take 001
       internalID: 6234510843852800090
       firstFrame: 461
@@ -217,7 +217,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: StrafeLeft
+      name: ZA_Demon_Grunt_StrafeLeft
       takeName: Take 001
       internalID: -6788666626592393668
       firstFrame: 554
@@ -246,7 +246,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: StrafeRight
+      name: ZA_Demon_Grunt_StrafeRight
       takeName: Take 001
       internalID: 1702301948168947093
       firstFrame: 647
@@ -275,7 +275,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Run
+      name: A_Demon_Grunt_Run
       takeName: Take 001
       internalID: 9093586079265926502
       firstFrame: 733
@@ -304,7 +304,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: RunPunch
+      name: A_Demon_Grunt_RunPunch
       takeName: Take 001
       internalID: -4045831500588228705
       firstFrame: 805
@@ -333,7 +333,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Jump
+      name: ZA_Demon_Grunt_Jump
       takeName: Take 001
       internalID: 7731641710072435382
       firstFrame: 853
@@ -362,7 +362,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Roar
+      name: A_Demon_Grunt_Roar
       takeName: Take 001
       internalID: -6577145938085917429
       firstFrame: 885
@@ -391,7 +391,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Rage
+      name: A_Demon_Grunt_Rage
       takeName: Take 001
       internalID: -5912188926831197812
       firstFrame: 943
@@ -420,7 +420,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: HeadBash
+      name: A_Demon_Grunt_HeadBash
       takeName: Take 001
       internalID: -8608414141577764740
       firstFrame: 1051
@@ -449,7 +449,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: SwipeAttack
+      name: A_Demon_Grunt_SwipeAttack
       takeName: Take 001
       internalID: -4068993222697286061
       firstFrame: 1090
@@ -478,7 +478,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: BackhandedSmash
+      name: A_Demon_Grunt_BackhandedSmash
       takeName: Take 001
       internalID: -1531913693838268206
       firstFrame: 1133
@@ -507,7 +507,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: HitBack
+      name: A_Demon_Grunt_HitBack
       takeName: Take 001
       internalID: 7892081000819541804
       firstFrame: 1166
@@ -536,7 +536,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: HitLeft
+      name: A_Demon_Grunt_HitLeft
       takeName: Take 001
       internalID: 6847978154046896615
       firstFrame: 1202
@@ -565,7 +565,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: HitRight
+      name: A_Demon_Grunt_HitRight
       takeName: Take 001
       internalID: 5627386185723231546
       firstFrame: 1238
@@ -594,7 +594,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: HitFront
+      name: A_Demon_Grunt_HitFront
       takeName: Take 001
       internalID: 4495542927842965080
       firstFrame: 1274
@@ -623,7 +623,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Death
+      name: A_Demon_Grunt_Death
       takeName: Take 001
       internalID: -2579233435032347502
       firstFrame: 1310

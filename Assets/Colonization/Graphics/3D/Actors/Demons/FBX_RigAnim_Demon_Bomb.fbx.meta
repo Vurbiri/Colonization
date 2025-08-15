@@ -24,7 +24,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -33,7 +33,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: A_Demon_Bomb_Empty
+      name: ZA_Demon_Bomb_Empty
       takeName: Take 001
       internalID: 1827226128182048838
       firstFrame: 1
@@ -149,7 +149,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Explode
+      name: A_Demon_Bomb_Explode
       takeName: Take 001
       internalID: -5059006814000262888
       firstFrame: 160
@@ -178,7 +178,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: HitRight
+      name: A_Demon_Bomb_HitRight
       takeName: Take 001
       internalID: 6234510843852800090
       firstFrame: 175
@@ -207,7 +207,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: HitLeft
+      name: A_Demon_Bomb_HitLeft
       takeName: Take 001
       internalID: -6788666626592393668
       firstFrame: 204
@@ -236,7 +236,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: HitFront
+      name: A_Demon_Bomb_HitFront
       takeName: Take 001
       internalID: 1702301948168947093
       firstFrame: 233
@@ -265,7 +265,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Attack_1
+      name: A_Demon_Bomb_Attack_1
       takeName: Take 001
       internalID: 9093586079265926502
       firstFrame: 274
@@ -294,7 +294,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Attack_2
+      name: A_Demon_Bomb_Attack_2
       takeName: Take 001
       internalID: -4045831500588228705
       firstFrame: 303
@@ -323,7 +323,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Attack_3
+      name: A_Demon_Bomb_Attack_3
       takeName: Take 001
       internalID: 7731641710072435382
       firstFrame: 348
@@ -352,7 +352,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Attack_3_Loop
+      name: ZA_Demon_Bomb_Attack_3_Loop
       takeName: Take 001
       internalID: -6577145938085917429
       firstFrame: 351
@@ -381,7 +381,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Jump
+      name: ZA_Demon_Bomb_Jump
       takeName: Take 001
       internalID: -5912188926831197812
       firstFrame: 388
@@ -410,7 +410,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Death
+      name: A_Demon_Bomb_Death
       takeName: Take 001
       internalID: -8608414141577764740
       firstFrame: 444
@@ -439,7 +439,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: TurnRight
+      name: ZA_Demon_Bomb_TurnRight
       takeName: Take 001
       internalID: -4068993222697286061
       firstFrame: 504
@@ -468,7 +468,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: TurnLeft
+      name: ZA_Demon_Bomb_TurnLeft
       takeName: Take 001
       internalID: -1531913693838268206
       firstFrame: 538
@@ -497,7 +497,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Run
+      name: A_Demon_Bomb_Run
       takeName: Take 001
       internalID: 7892081000819541804
       firstFrame: 573
@@ -526,7 +526,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: StrafeLeft
+      name: ZA_Demon_Bomb_StrafeLeft
       takeName: Take 001
       internalID: 6847978154046896615
       firstFrame: 595
@@ -555,7 +555,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: StrafeRight
+      name: ZA_Demon_Bomb_StrafeRight
       takeName: Take 001
       internalID: 5627386185723231546
       firstFrame: 611
@@ -584,7 +584,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: BackPedal
+      name: A_Demon_Bomb_BackPedal
       takeName: Take 001
       internalID: 4495542927842965080
       firstFrame: 625

@@ -78,12 +78,11 @@ namespace Vurbiri.Colonization.Controllers
 
         private void OnMove(CallbackContext ctx)
         {
-            if (_machine.CurrentState == _moveToTargetState)
-                return;
-
-            _moveState.InputValue = ctx.ReadValue<Vector2>();
-            _machine.SetState(_moveState);
-
+            if (!_machine.IsSet(_moveToTargetState))
+            {
+                _moveState.InputValue = ctx.ReadValue<Vector2>();
+                _machine.SetState(_moveState);
+            }
         }
         private void OnMoveCancel(CallbackContext ctx) => _moveState.InputValue = Vector2.zero;
 
@@ -100,13 +99,13 @@ namespace Vurbiri.Colonization.Controllers
 
         private void OnEdgeMove(CallbackContext ctx)
         {
-            if (!_isEdgeMove || !(_machine.IsDefaultState | _machine.CurrentState == _edgeMoveState))
-                return;
+            if (_isEdgeMove && _machine.IsSetOrDefault(_edgeMoveState))
+            {
+                _edgeMoveState.InputValue = ctx.ReadValue<Vector2>();
 
-            _edgeMoveState.InputValue = ctx.ReadValue<Vector2>();
-
-            if (_edgeMoveState.IsMove)
-                _machine.SetState(_edgeMoveState);
+                if (_edgeMoveState.IsMove)
+                    _machine.SetState(_edgeMoveState);
+            }
         }
 
         private void OnZoom(CallbackContext ctx)

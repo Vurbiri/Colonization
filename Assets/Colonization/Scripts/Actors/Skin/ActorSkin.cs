@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Vurbiri.FSM;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -35,6 +36,7 @@ namespace Vurbiri.Colonization.Actors
         public Bounds Bounds => _bounds;
         public AActorSFX ActorSFX => _sfx;
 
+
         private void Start()
         {
             _reactState = new(this);
@@ -50,7 +52,7 @@ namespace Vurbiri.Colonization.Actors
             if (owner != PlayerId.Satan)
                 _mesh.sharedMaterial = GameContainer.Materials[owner].materialWarriors;
 
-            _stateMachine.SetDefaultState(new BoolSwitchState(B_IDLE, this));
+            _stateMachine.AssignDefaultState(new BoolSwitchState(B_IDLE, this));
             _moveState = new(B_MOVE, this);
             _runState = new(B_RUN, this);
             _blockState = new(B_BLOCK, this);
@@ -64,20 +66,20 @@ namespace Vurbiri.Colonization.Actors
 
             return this;
         }
-        
-        public void Idle() => _stateMachine.ToDefaultState();
 
-        public virtual void Block(bool isActive)
+        [Impl(256)] public void Idle() => _stateMachine.ToDefaultState();
+
+        [Impl(256)] public virtual void Block(bool isActive)
         {
-            if (isActive) _stateMachine.SetState(_blockState);
+            if (isActive)
+                _stateMachine.SetState(_blockState);
             _sfx.Block(isActive);
         }
 
-        public void Move() => _stateMachine.SetState(_moveState);
+        [Impl(256)] public void Move() => _stateMachine.SetState(_moveState);
+        [Impl(256)] public void Run() => _stateMachine.SetState(_runState);
 
-        public void Run() => _stateMachine.SetState(_runState);
-
-        public virtual WaitSignal Skill(int index, ActorSkin targetActorSkin)
+        [Impl(256)] public WaitSignal Skill(int index, ActorSkin targetActorSkin)
         {
             SkillState skill = _skillStates[index];
             skill.targetSkin = targetActorSkin;
@@ -85,22 +87,23 @@ namespace Vurbiri.Colonization.Actors
             return skill.signal;
         }
 
-        public void Impact(AudioClip clip)
+        [Impl(256)] public void Impact(AudioClip clip)
         {
             _reactState.Repeat();
-            _stateMachine.SetState(_reactState);
+            _stateMachine.SetState(_reactState, true);
 
             if (clip != null)
                 _sfx.Impact(clip);
         }
 
-        public WaitStateSource<Actor.DeathStage> Death()
+        [Impl(256)] public WaitStateSource<Actor.DeathStage> Death()
         {
-            _stateMachine.SetState(_deathState);
+            _stateMachine.ForceSetState(_deathState);
             return _deathState.waitState;
         }
 
-        public float GetFirsHitTime(int skillId) => _skillStates[skillId].waitHits[0].Time;
+        [Impl(256)] public float GetFirsHitTime(int skillId) => _skillStates[skillId].waitHits[0].Time;
+
 
         #region Nested: TimingSkillSettings
         //*******************************************************

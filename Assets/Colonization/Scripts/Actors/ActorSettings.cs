@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Actors
 #if UNITY_EDITOR
         public ActorSkin PrefabSkin_Ed => _prefabActorSkin;
 
-        public void SetTypeActor_Ed()
+        public void Init_Ed()
         {
             _skills.SetTypeActor_Ed(TypeId);
         }

@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.Actors
         private void OnValidate()
         {
             for (int i = 0; i < ActorId<TId>.Count; i++)
-                _settings[i].SetTypeActor_Ed();
+                _settings[i].Init_Ed();
         }
 #endif
     }

@@ -1,19 +1,18 @@
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
+
 namespace Vurbiri.FSM
 {
-    public class StateMachine<TState> where TState : IState
+    public class StateMachine<TState> where TState : IState, System.IEquatable<TState>
     {
         protected TState _currentState;
         protected TState _previousState;
         protected TState _defaultState;
 
-        protected bool _block;
+        private bool _block;
 
         public TState CurrentState => _currentState;
         public TState PrevState => _previousState;
-
         public bool IsDefaultState => _currentState.Equals(_defaultState);
-        public bool IsCurrentState(TState state) => _currentState.Equals(state);
-        public bool IsCurrentOrDefaultState(TState state) => _currentState.Equals(_defaultState) | _currentState.Equals(state);
 
         public StateMachine(TState startState)
         {
@@ -23,54 +22,67 @@ namespace Vurbiri.FSM
             _currentState.Enter();
         }
 
-        public void Block() => _block = true;
-        public void Unblock() => _block = false;
+        [Impl(256)] public void AssignDefaultState(TState state) => _defaultState = state;
 
-        public void SetState(TState newState, bool block = false)
+        [Impl(256)] public bool IsSet(TState state) => _currentState.Equals(state);
+        [Impl(256)] public bool IsSetOrDefault(TState state) => _currentState.Equals(state) | _currentState.Equals(_defaultState);
+
+        [Impl(256)] public void Block() => _block = true;
+        [Impl(256)] public void Unblock() => _block = false;
+
+        public bool SetState(TState newState, bool block = false)
         {
-            if (!(_block | _currentState.Equals(newState)))
-            {
-                _previousState = _currentState;
-                _currentState.Exit();
-                _currentState = newState;
-                _block = block;
-                _currentState.Enter();
-            }
+            bool isSet = !_block;
+            if (isSet)
+                ForceSetState(newState, block);
+            return isSet;
         }
+
+        public void ForceSetState(TState newState, bool block = false)
+        {
+            _block = block;
+            if (!_currentState.Equals(newState))
+                SetStateAndSavePrev(newState);
+        }
+
         public void GetOutState(TState currentState)
         {
             if (_currentState.Equals(currentState))
             {
-                _previousState = _currentState;
-                _currentState.Exit();
-                _currentState = _defaultState;
                 _block = false;
-                _currentState.Enter();
+                SetStateAndSavePrev(_defaultState);
             }
         }
-
-        public void ToPrevState()
+        public void GetOutToPrevState(TState currentState)
         {
-            if (!(_block | _currentState.Equals(_previousState)))
+            if (_currentState.Equals(currentState))
             {
-                _currentState.Exit();
-                _currentState = _previousState;
-                _currentState.Enter();
+                _block = false;
+                SetStateInternal(_previousState);
             }
         }
 
         public void ToDefaultState()
         {
-            if (!_currentState.Equals(_defaultState))
-            {
-                _previousState = _currentState;
-                _currentState.Exit();
-                _currentState = _defaultState;
-                _block = false;
-                _currentState.Enter();
-            }
+            if (!(_block | _currentState.Equals(_defaultState)))
+                SetStateAndSavePrev(_defaultState);
         }
-         
-        public void SetDefaultState(TState state) => _defaultState = state;
+        public void ToPrevState()
+        {
+            if (!(_block | _currentState.Equals(_previousState)))
+                SetStateInternal(_previousState);
+        }
+
+        [Impl(256)] private void SetStateAndSavePrev(TState state)
+        {
+            _previousState = _currentState;
+            SetStateInternal(state);
+        }
+        [Impl(256)]private void SetStateInternal(TState state)
+        {
+            _currentState.Exit();
+            _currentState = state;
+            state.Enter();
+        }
     }
 }

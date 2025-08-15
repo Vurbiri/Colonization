@@ -7,6 +7,10 @@ namespace Vurbiri.Colonization.Actors
     {
         public event Action EventEnter;
 
-        public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) => EventEnter?.Invoke();
+        public AEnterBehaviour() : base() => EventEnter = Empty;
+
+        public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) => EventEnter.Invoke();
+
+        private void Empty() { }
     }
 }

@@ -6,7 +6,6 @@ using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using static UnityEditor.EditorGUI;
-using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
 namespace VurbiriEditor.Colonization.Characteristics
 {
@@ -17,9 +16,11 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_RANGE = "_range", P_DISTANCE = "_distance", P_TARGET = "_target", P_COST = "_cost";
         private const string P_HITS = "_effectsHitsSettings", P_UI = "_ui";
         private const string P_EFFECTS = "_effects";
-        private const string P_SPRITE = "_sprite", P_KEY_NAME = "_idNameKey", P_COST_UI = "_cost";
-        private const string P_CHILD_TARGET = "_parentTarget_ed";
-        private const string P_CLIP = "clipSettings_ed", P_SFX = "hitSFXs", P_TYPE = "typeActor_ed";
+        private const string P_SPRITE = "_sprite", P_KEY_NAME = "_keyName", P_COST_UI = "_cost";
+        private const string P_CHILD_TARGET = "_parentTarget_ed", P_CLIP = "clipSettings_ed", P_SFX = "hitSFXs", P_TYPE = "typeActor_ed";
+
+        private static readonly string[] KEYS_NAME_SKILLS =
+        { "Strike", "Channel", "Sweep", "Combo", "Heal", "Sparks", "Battlecry", "Fortify", "Enhancement", "Kick", "Leap" };
         #endregion
 
         private readonly Color _positive = new(0.5f, 1f, 0.3f, 1f), _negative = new(1f, 0.5f, 0.3f, 1f);
@@ -29,9 +30,9 @@ namespace VurbiriEditor.Colonization.Characteristics
             bool isWarrior = GetProperty(P_TYPE).intValue == ActorTypeId.Warrior;
 
             SerializedProperty uiProperty = GetProperty(P_UI);
-            SerializedProperty idNameProperty = GetProperty(uiProperty, P_KEY_NAME);
+            SerializedProperty keyNameProperty = GetProperty(uiProperty, P_KEY_NAME);
 
-            SetName(idNameProperty, isWarrior);
+            SetName(keyNameProperty, isWarrior);
 
             BeginProperty();
             indentLevel++;
@@ -73,13 +74,13 @@ namespace VurbiriEditor.Colonization.Characteristics
                         Space(2f);
                         DrawLabel("UI:");
                         indentLevel++;
-                        DrawIntPopup(idNameProperty, KEYS_NAME_SKILLS);
+                        DrawStringPopup(keyNameProperty, KEYS_NAME_SKILLS);
                         DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
                         indentLevel--;
                     }
                     else
                     {
-                        idNameProperty.intValue = 0;
+                        keyNameProperty.stringValue = null;
                         uiProperty.FindPropertyRelative(P_SPRITE).objectReferenceValue = null;
                     }
 
@@ -96,7 +97,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             //=================================
             void SetName(SerializedProperty property, bool isWarrior)
             {
-                string name = isWarrior ? Localization.ForEditor(LangFiles.Actors).GetText(KEYS_NAME_SKILLS[property.intValue]).Delete("<b>", "</b>") : "Skill";
+                string name = isWarrior ? Localization.ForEditor(LangFiles.Actors).GetText(property.stringValue).Delete("<b>", "</b>") : "Skill";
                 int id = IdFromLabel();
                 if (id >= 0) name = string.Concat($"[{id}] ", name);
                 _label.text = name;

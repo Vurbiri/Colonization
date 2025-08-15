@@ -77,8 +77,8 @@ namespace Vurbiri.Colonization.Characteristics
 
             if (_skillsUI != null)
             {
-                foreach (var skillUI in _skillsUI)
-                    skillUI.Dispose();
+                for (int i = 0; i < _skillsUI.Count; i++)
+                    _skillsUI[i].Dispose();
             }
         }
 

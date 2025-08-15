@@ -89,19 +89,19 @@ namespace Vurbiri.Colonization.Actors
         public void Block() => _stateMachine.SetState(_blockState);
         public WaitSignal Move()
         {
-            _stateMachine.SetState(_moveState);
+            _stateMachine.SetState(_moveState, true);
             return _moveState.Signal;
         }
         public WaitSignal UseSkill(int id)
         {
-            _stateMachine.SetState(_skillState[id]);
+            _stateMachine.SetState(_skillState[id], true);
             return _skillState[id].Signal;
         }
         #endregion
 
         public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
-            return _stateMachine.IsCurrentOrDefaultState(_blockState) & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
+            return _stateMachine.IsSetOrDefault(_blockState) & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
         #region Effect
@@ -147,12 +147,12 @@ namespace Vurbiri.Colonization.Actors
         public void SetHexagonUnselectable()
         {
             _currentHex.SetUnselectableForSwap();
-            Interactable = _stateMachine.IsCurrentOrDefaultState(_blockState);
+            Interactable = _stateMachine.IsSetOrDefault(_blockState);
         }
 
         public WaitStateSource<DeathStage> Death()
         {
-            _stateMachine.SetState(_deathState = new(this), true);
+            _stateMachine.ForceSetState(_deathState = new(this), true);
 
             return _deathState.stage;
         }
@@ -174,17 +174,19 @@ namespace Vurbiri.Colonization.Actors
         sealed public override void Dispose() { }
 
         #region Target
-        private void ToTargetState(Id<PlayerId> initiator, Relation relation)
+        private bool ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
-            _stateMachine.SetState(_targetState);
-            GameContainer.Diplomacy.ActorsInteraction(_owner, initiator, relation);
+            bool isSet = GameContainer.Diplomacy.IsCanActorsInteraction(initiator, _owner, relation, out _) && _stateMachine.SetState(_targetState, true);
+            if(isSet)
+                GameContainer.Diplomacy.ActorsInteraction(_owner, initiator, relation);
+            return isSet;
         }
 
         private void FromTargetState()
         {
             if (_deathState == null)
             {
-                _stateMachine.ToPrevState();
+                _stateMachine.GetOutToPrevState(_targetState);
                 _eventChanged.Invoke(this, TypeEvent.Change);
             }
         }

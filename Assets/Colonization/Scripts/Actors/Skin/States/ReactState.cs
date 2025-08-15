@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed protected class ReactState : ASkinState
         {
-            private bool _isExit = true, _isRun = false;
+            private bool _isExit = false, _isRun = false;
 
             public ReactState(ActorSkin parent) : base(T_REACT, parent)
             {
@@ -35,9 +35,9 @@ namespace Vurbiri.Colonization.Actors
 
             private void OnEventExit()
             {
-                if (_isExit) 
-                    _fsm.ToPrevState();
-                _isExit = true;
+                if (_isRun & _isExit)
+                    GetOutToPrevState();
+                _isExit = _isRun;
             }
         }
     }

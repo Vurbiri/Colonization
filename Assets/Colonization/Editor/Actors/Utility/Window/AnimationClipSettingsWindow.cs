@@ -89,7 +89,7 @@ namespace VurbiriEditor.Colonization.Actors
         {
             var warriorsSettings = EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
             if (warriorsSettings != null)
-                ActorUtility.OverrideClips(warriorsSettings.Settings);
+                ActorUtilityEd.OverrideClips(warriorsSettings.Settings);
         }
 
         private void OnDisable()

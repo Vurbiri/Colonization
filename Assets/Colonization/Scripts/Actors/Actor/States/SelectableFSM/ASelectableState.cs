@@ -1,9 +1,10 @@
+using System;
 using System.Runtime.CompilerServices;
 using Vurbiri.FSM;
 
 namespace Vurbiri.Colonization.FSMSelectable
 {
-    public class ASelectableState : IState
+    public abstract class ASelectableState : IState, IEquatable<ASelectableState>
     {
         private readonly StateMachineSelectable _fsm;
 
@@ -22,5 +23,11 @@ namespace Vurbiri.Colonization.FSMSelectable
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void GetOutOfThisState() => _fsm.GetOutState(this);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void GetOutToPrevState() => _fsm.GetOutToPrevState(this);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(ASelectableState other) => ReferenceEquals(this, other);
     }
 }

@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Vurbiri.International
 {
@@ -10,7 +11,8 @@ namespace Vurbiri.International
 		public int id;
 		public string key;
 
-		public FileIdAndKey(int id, string key)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public FileIdAndKey(int id, string key)
 		{
 			this.id = id;
 			this.key = key;

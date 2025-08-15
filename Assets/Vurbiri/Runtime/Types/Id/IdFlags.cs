@@ -34,7 +34,6 @@ namespace Vurbiri
         {
             Throw.IfOutOfRange(value, 0, IdType<T>.Count);
             _id = 1 << value;
-            
         }
         public IdFlags(Id<T> id)
         {

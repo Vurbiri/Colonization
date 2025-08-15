@@ -26,7 +26,8 @@ namespace VurbiriEditor.Colonization.Actors
 
             var root = CreateEditor(_actorsSettings);
             root.Q<Button>("Refresh").clicked += Refresh;
-            root.Q<Button>("Apply").clicked += Apply;
+            root.Q<Button>("ApplyUp").clicked += Apply;
+            root.Q<Button>("ApplyDown").clicked += Apply;
 
             rootVisualElement.Add(root);
         }
@@ -43,7 +44,7 @@ namespace VurbiriEditor.Colonization.Actors
         {
             if (_actorsSettings != null)
             {
-                ActorUtility.OverrideClips(_actorsSettings.Settings);
+                ActorUtilityEd.OverrideClips(_actorsSettings.Settings);
                 Repaint();
             }
         }

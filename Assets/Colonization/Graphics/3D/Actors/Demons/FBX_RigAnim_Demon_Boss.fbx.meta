@@ -44,7 +44,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -53,7 +53,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Empty
+      name: ZA_Demon_Boss_Empty
       takeName: Take 001
       internalID: 1827226128182048838
       firstFrame: 1999.9999
@@ -82,7 +82,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Spawn
+      name: A_Demon_Boss_Spawn
       takeName: Take 001
       internalID: -998496362607748373
       firstFrame: 876
@@ -111,7 +111,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Idle
+      name: A_Demon_Boss_Idle
       takeName: Take 001
       internalID: 3060872287085348379
       firstFrame: 1056
@@ -140,7 +140,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Death
+      name: A_Demon_Boss_Death
       takeName: Take 001
       internalID: 6641085478485924818
       firstFrame: 796
@@ -169,7 +169,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Walk
+      name: A_Demon_Boss_Walk
       takeName: Take 001
       internalID: -5059006814000262888
       firstFrame: 2
@@ -198,7 +198,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: RunIntro
+      name: ZA_Demon_Boss_RunIntro
       takeName: Take 001
       internalID: 6234510843852800090
       firstFrame: 62
@@ -227,7 +227,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Run
+      name: A_Demon_Boss_Run
       takeName: Take 001
       internalID: -6788666626592393668
       firstFrame: 76
@@ -256,7 +256,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: RunOutro
+      name: ZA_Demon_Boss_RunOutro
       takeName: Take 001
       internalID: 1702301948168947093
       firstFrame: 111
@@ -285,7 +285,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: TurnRight
+      name: ZA_Demon_Boss_TurnRight
       takeName: Take 001
       internalID: 9093586079265926502
       firstFrame: 705
@@ -314,7 +314,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: TurnLeft
+      name: ZA_Demon_Boss_TurnLeft
       takeName: Take 001
       internalID: -4045831500588228705
       firstFrame: 727
@@ -343,7 +343,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: StrafeRightIntro
+      name: ZA_Demon_Boss_StrafeRightIntro
       takeName: Take 001
       internalID: 7731641710072435382
       firstFrame: 363
@@ -372,7 +372,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: StrafeRight
+      name: ZA_Demon_Boss_StrafeRight
       takeName: Take 001
       internalID: -6577145938085917429
       firstFrame: 379
@@ -401,7 +401,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: StrafeRightOutro
+      name: ZA_Demon_Boss_StrafeRightOutro
       takeName: Take 001
       internalID: -5912188926831197812
       firstFrame: 415
@@ -430,7 +430,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: StrafeLeftIntro
+      name: ZA_Demon_Boss_StrafeLeftIntro
       takeName: Take 001
       internalID: -8608414141577764740
       firstFrame: 423
@@ -459,7 +459,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: StrafeLeft
+      name: ZA_Demon_Boss_StrafeLeft
       takeName: Take 001
       internalID: -4068993222697286061
       firstFrame: 434
@@ -488,7 +488,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: StrafeLeftOutro
+      name: ZA_Demon_Boss_StrafeLeftOutro
       takeName: Take 001
       internalID: -1531913693838268206
       firstFrame: 470
@@ -517,7 +517,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: BackPedal
+      name: A_Demon_Boss_BackPedal
       takeName: Take 001
       internalID: 7892081000819541804
       firstFrame: 749
@@ -546,7 +546,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Jump
+      name: ZA_Demon_Boss_Jump
       takeName: Take 001
       internalID: 6847978154046896615
       firstFrame: 482
@@ -575,7 +575,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: HitFront
+      name: A_Demon_Boss_HitFront
       takeName: Take 001
       internalID: 5627386185723231546
       firstFrame: 273
@@ -604,7 +604,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: HitLeft
+      name: A_Demon_Boss_HitLeft
       takeName: Take 001
       internalID: 4495542927842965080
       firstFrame: 295
@@ -633,7 +633,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: HitRight
+      name: A_Demon_Boss_HitRight
       takeName: Take 001
       internalID: -2579233435032347502
       firstFrame: 327
@@ -662,7 +662,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: Roar
+      name: A_Demon_Boss_Roar
       takeName: Take 001
       internalID: 5295392480170021266
       firstFrame: 132
@@ -691,7 +691,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: SwipeAttack
+      name: A_Demon_Boss_SwipeAttack
       takeName: Take 001
       internalID: 7816922862777709331
       firstFrame: 234
@@ -720,7 +720,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: SwipeAttackUpper
+      name: A_Demon_Boss_SwipeAttackUpper
       takeName: Take 001
       internalID: 2031056115031433330
       firstFrame: 936
@@ -749,7 +749,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: OverheadSmash
+      name: A_Demon_Boss_OverheadSmash
       takeName: Take 001
       internalID: 5970547076685445538
       firstFrame: 533
@@ -778,7 +778,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: GrabAndEat
+      name: A_Demon_Boss_GrabAndEat
       takeName: Take 001
       internalID: -5729363228569848670
       firstFrame: 611

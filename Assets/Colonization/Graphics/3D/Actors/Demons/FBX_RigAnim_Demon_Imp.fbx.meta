@@ -34,7 +34,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -43,7 +43,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: A_Demon_Imp_BindPose
+      name: ZA_Demon_Imp_BindPose
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 5862543501114407046
       firstFrame: 2
@@ -72,7 +72,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Imp_IdlePose
+      name: ZA_Demon_Imp_IdlePose
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -116377980659431767
       firstFrame: 7
