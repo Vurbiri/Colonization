@@ -100,6 +100,16 @@ namespace Vurbiri.Colonization.Characteristics
             for (int i = 0; i < _skillsSettings.Length; i++)
                 _skillsSettings[i].typeActor_ed = type;
         }
+
+        public bool UpdateName_Ed(string oldName, string newName)
+        {
+            bool output = false;
+            for (int i = 0; i < _skillsSettings.Length; i++)
+                output |= _skillsSettings[i].UpdateName_Ed(oldName, newName);
+
+            return output;
+        }
+
 #endif
     }
 }

@@ -40,10 +40,10 @@ namespace Vurbiri.Colonization.UI
             var person = GameContainer.Players.Person;
 
             person.SpawnTest(WarriorId.Warlock, HEX.RightUp);
-            person.SpawnTest(WarriorId.Wizard, HEX.Left);
-            person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
+            person.SpawnTest(WarriorId.Militia, HEX.Left);
+            person.SpawnTest(WarriorId.Militia, HEX.LeftDown);
             //person.SpawnTest(WarriorId.Militia, HEX.LeftUp);
-            person.SpawnTest(WarriorId.Wizard, HEX.LeftUp);
+            person.SpawnTest(WarriorId.Militia, HEX.LeftUp);
             person.SpawnTest(WarriorId.Warlock, new Key(-4, 0));
             //GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 2);
             //GameContainer.Players.GetAI(PlayerId.AI_02).SpawnTest(WarriorId.Wizard, 2);

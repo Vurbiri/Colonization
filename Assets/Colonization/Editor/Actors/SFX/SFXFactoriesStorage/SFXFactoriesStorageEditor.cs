@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 using Vurbiri.Colonization.Actors;
 using static UnityEditor.EditorGUILayout;
 
@@ -70,7 +71,8 @@ namespace VurbiriEditor.Colonization
 
 			public void Draw()
 			{
-                if (_property.isExpanded = BeginFoldoutHeaderGroup(_property.isExpanded, SFXFactoriesStorage.names_ed[_nameIndex]))
+                string name = _nameIndex.ToString("D2").Concat(" ", SFXFactoriesStorage.names_ed[_nameIndex]);
+                if (_property.isExpanded = BeginFoldoutHeaderGroup(_property.isExpanded, name))
                 {
                     BeginVertical(GUI.skin.box);
                     {

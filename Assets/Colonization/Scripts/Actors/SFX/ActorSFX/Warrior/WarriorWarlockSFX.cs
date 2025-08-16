@@ -6,7 +6,10 @@ namespace Vurbiri.Colonization.Actors
     sealed public class WarriorWarlockSFX : WarriorSFX
     {
         [Space]
+        [SerializeField] private Transform _rightHand;
         [SerializeField] private ParticleSystem _particle;
+
+        public override Vector3 StartPosition => _rightHand.position;
 
         protected override IEnumerator Start()
         {
@@ -23,7 +26,8 @@ namespace Vurbiri.Colonization.Actors
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            this.SetChildren(ref _particle);
+            this.SetChildren(ref _rightHand, "RightHand");
+            this.SetChildren(ref _particle, "PS_Flame");
         }
 #endif
     }

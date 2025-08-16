@@ -16,12 +16,6 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private HitEffectsSettings[] _effectsHitsSettings;
         [SerializeField] private SkillUI _ui;
 
-#if UNITY_EDITOR
-        public AnimationClipSettingsScriptable clipSettings_ed;
-        public HitSFXName[] hitSFXs;
-        public int typeActor_ed;
-#endif
-
         public TargetOfSkill Target => _target;
         public float Range => _range;
         public float Distance => _distance;
@@ -60,5 +54,21 @@ namespace Vurbiri.Colonization.Characteristics
         {
             _ui = null;
         }
+
+#if UNITY_EDITOR
+        public AnimationClipSettingsScriptable clipSettings_ed;
+        public HitSFXName[] hitSFXs;
+        public int typeActor_ed;
+
+        public bool UpdateName_Ed(string oldName, string newName)
+        {
+            bool output = false;
+            for (int i = 0; i < hitSFXs.Length; i++)
+                output |= hitSFXs[i].Update_Ed(oldName, newName);
+
+            return output;
+        }
+
+#endif
     }
 }

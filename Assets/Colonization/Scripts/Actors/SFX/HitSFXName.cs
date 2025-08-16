@@ -29,5 +29,18 @@ namespace Vurbiri.Colonization.Actors
             }
         }
         #endregion
+
+#if UNITY_EDITOR
+
+        public bool Update_Ed(string oldValue, string newValue)
+        {
+            bool output;
+            if (output = oldValue == _value)
+                _value = newValue;
+
+            return output;
+        }
+
+#endif
     }
 }

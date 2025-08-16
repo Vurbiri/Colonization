@@ -20,7 +20,7 @@ namespace VurbiriEditor.Colonization
         [MenuItem(MENU)]
 		private static void ShowWindow()
 		{
-			GetWindow<SFXFactoriesStorageWindow>(true, NAME);
+			GetWindow<SFXFactoriesStorageWindow>(NAME);
 		}
 		
 		private void OnEnable()

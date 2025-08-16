@@ -37,6 +37,7 @@ namespace Vurbiri.Colonization.Actors
         {
             _skills.SetTypeActor_Ed(TypeId);
         }
+        public bool UpdateName_Ed(string oldName, string newName) => _skills.UpdateName_Ed(oldName, newName);
 #endif
     }
 }

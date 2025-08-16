@@ -162,13 +162,14 @@ namespace VurbiriEditor.Colonization.Characteristics
                     {
                         effectProperty = effectsProperty.GetArrayElementAtIndex(j);
                         GetProperty(effectProperty, P_CHILD_TARGET).SetEnum(target);
+
                         if (effectsProperty.isExpanded)
-                            _position.y += _height * HitEffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j), j);
+                            _position.y += _height * HitEffectSettingsDrawer.GetPropertyRateHeight(effectProperty, j);
                     }
+
                     if (effectsProperty.isExpanded)
                         _position.y += _height * 1.8f;
                 }
-                
             }
             #endregion
         }
@@ -192,11 +193,11 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                     for (int i = 0; i < hitsProperty.arraySize; i++)
                     {
-                        rate += 2f;
+                        rate += 2.3f;
                         effectsProperty = hitsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
                         if (effectsProperty.isExpanded)
                         {
-                            rate += 2f;
+                            rate += 1.8f;
                             for (int j = 0; j < effectsProperty.arraySize; j++)
                                 rate += HitEffectSettingsDrawer.GetPropertyRateHeight(effectsProperty.GetArrayElementAtIndex(j), j);
                         }

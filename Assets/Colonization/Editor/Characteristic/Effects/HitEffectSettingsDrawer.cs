@@ -350,9 +350,9 @@ namespace VurbiriEditor.Colonization.Characteristics
         public static float GetPropertyRateHeight(SerializedProperty property, int id)
         {
             if (!property.isExpanded)
-                return 1f;
+                return 1.1f;
             
-            float size = 10.6f;
+            float size = 11f;
             int targetAbility = GetProperty(P_TARGET_ABILITY).intValue;
             bool isTarget = !GetProperty(P_IS_SELF).boolValue;
             bool isTargetEnemy = isTarget && GetProperty(P_PARENT_TARGET).GetEnum<TargetOfSkill>() == TargetOfSkill.Enemy;

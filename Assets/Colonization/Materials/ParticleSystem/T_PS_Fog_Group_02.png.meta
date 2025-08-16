@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 42c28b299aadd464b81a691a95ed3c6d
+guid: dd21a16dfc363764c936085c90d6c79f
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 128
+  spritePixelsToUnits: 512
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -69,10 +69,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 128
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: T_PS_Fire_0
+      name: T_PS_ Fog_Group_03_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 64
-        width: 64
-        height: 64
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9a163a628bc8e29458560af3ce6d6f51
-      internalID: -974956368
+      spriteID: 4b18f575176f51040a2be9c8327eec76
+      internalID: -1860786914
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_PS_Fire_1
+      name: T_PS_ Fog_Group_03_1
       rect:
         serializedVersion: 2
-        x: 64
-        y: 64
-        width: 64
-        height: 64
+        x: 256
+        y: 256
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,20 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4452108fddb876144b9392260745000c
-      internalID: 1827311581
+      spriteID: 5b96886b180f7de4187d13da031b3974
+      internalID: 54347917
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_PS_Fire_2
+      name: T_PS_ Fog_Group_03_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,20 +166,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 03d29071d1dafb74ca67490165afe3b2
-      internalID: 1793236663
+      spriteID: 693a53b902e12aa47953b263598d74dd
+      internalID: -1503973016
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: T_PS_Fire_3
+      name: T_PS_ Fog_Group_03_3
       rect:
         serializedVersion: 2
-        x: 64
+        x: 256
         y: 0
-        width: 64
-        height: 64
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,8 +187,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5b5773704aaa59645a641cc73ccb76a6
-      internalID: 815120743
+      spriteID: baec14664cfb6fb44b4f9401a34af870
+      internalID: 1796796325
       vertices: []
       indices: 
       edges: []
@@ -204,10 +204,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      T_PS_Fire_0: -974956368
-      T_PS_Fire_1: 1827311581
-      T_PS_Fire_2: 1793236663
-      T_PS_Fire_3: 815120743
+      T_PS_ Fog_Group_03_0: -1860786914
+      T_PS_ Fog_Group_03_1: 54347917
+      T_PS_ Fog_Group_03_2: -1503973016
+      T_PS_ Fog_Group_03_3: 1796796325
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

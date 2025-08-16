@@ -23,6 +23,16 @@ namespace Vurbiri.Colonization.Actors
             for (int i = 0; i < ActorId<TId>.Count; i++)
                 _settings[i].Init_Ed();
         }
+
+        public void UpdateName_Ed(string oldName, string newName)
+        {
+            bool isDirty = false;
+            for (int i = 0; i < ActorId<TId>.Count; i++)
+                isDirty |= _settings[i].UpdateName_Ed(oldName, newName);
+
+            if(isDirty)
+                UnityEditor.EditorUtility.SetDirty(this);
+        }
 #endif
     }
 }

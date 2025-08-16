@@ -61,6 +61,18 @@ namespace Vurbiri.Colonization.Actors
                 print("Убрать массив эффектов ???");
             }
             public void SetValue_Ed(int index, string value) => _hitSFX[index] = value;
+
+            public bool Update_Ed(string oldSFX, string newSFX)
+            {
+                if (_hitSFX == null) return false;
+
+                bool isDirty = false;
+                for (int i = 0; i < _hitSFX.Length; i++)
+                    if (isDirty |= (oldSFX == _hitSFX[i]))
+                        _hitSFX[i] = newSFX;
+
+                return isDirty;
+            }
 #endif
 
         }
@@ -79,6 +91,18 @@ namespace Vurbiri.Colonization.Actors
         }
         public void SetCountHitsSFX_Ed(int idSkill, int count) => _skillSFX[idSkill].SetSize_Ed(count);
         public void SetSkillSFX_Ed(int idSkill, int idHit, string sfx) => _skillSFX[idSkill].SetValue_Ed(idHit, sfx);
+
+        public void UpdateSFX_Ed(string oldSFX, string newSFX)
+        {
+            if (_skillSFX == null) return;
+
+            bool isDirty = false;
+            for (int i = 0; i < _skillSFX.Length; i++)
+                isDirty |= _skillSFX[i].Update_Ed(oldSFX, newSFX);
+
+            if(isDirty)
+                UnityEditor.EditorUtility.SetDirty(gameObject);
+        }
 #endif
     }
 }

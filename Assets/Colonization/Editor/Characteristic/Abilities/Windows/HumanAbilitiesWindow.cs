@@ -17,7 +17,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         [MenuItem(MENU, false, 21)]
         private static void ShowWindow()
         {
-            GetWindow<HumanAbilitiesWindow>(true, NAME).minSize = new(225f, 300f);
+            GetWindow<HumanAbilitiesWindow>(NAME).minSize = new(225f, 300f);
         }
 
         public void CreateGUI()
