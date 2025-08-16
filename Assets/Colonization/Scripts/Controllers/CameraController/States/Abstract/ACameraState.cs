@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.FSM;
 
@@ -28,6 +30,9 @@ namespace Vurbiri.Colonization.Controllers
                     _coroutine = null;
                 }
             }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)] 
+            protected Coroutine StartCoroutine(IEnumerator routine) => _controller.StartCoroutine(routine);
         }
     }
 }

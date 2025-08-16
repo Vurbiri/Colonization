@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Controllers
 {
@@ -8,26 +8,21 @@ namespace Vurbiri.Colonization.Controllers
     {
         private class MoveState : ACameraState<Vector2>
         {
-            protected const float MIN_VALUE = 0.1f;
+            private const float MIN_VALUE = 0.1f;
             private readonly Movement _settings;
             protected Vector2 _moveDirection;
 
-            public override Vector2 InputValue { get => _moveDirection; set => _moveDirection = value; }
-            public bool IsMove
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => _moveDirection.sqrMagnitude > MIN_VALUE;
-            }
+            public override Vector2 InputValue { [Impl(256)] get => _moveDirection; [Impl(256)] set => _moveDirection = value; }
+            public bool IsMove { [Impl(256)] get => _moveDirection.sqrMagnitude > MIN_VALUE; }
            
-
-            public MoveState(CameraController controller, Movement movement) : base(controller)
+            public MoveState(CameraController controller) : base(controller)
             {
-                _settings = movement;
+                _settings = controller._movement;
             }
 
             public override void Enter()
             {
-                _coroutine = _controller.StartCoroutine(Move_Cn());
+                _coroutine = StartCoroutine(Move_Cn());
             }
 
             private IEnumerator Move_Cn()

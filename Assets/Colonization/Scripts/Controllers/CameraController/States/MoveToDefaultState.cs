@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Controllers
 {
@@ -8,23 +9,21 @@ namespace Vurbiri.Colonization.Controllers
         sealed private class MoveToDefaultState : ACameraState<float>
         {
             private readonly WaitSignal _waitSignal = new();
-            private readonly GameTriggerBus _eventBus;
             private readonly Zoom _zoom;
             private readonly Default _default;
             private readonly float _sqrRatioParentDistance, _maxSqrDistance, _minSqrDistance;
             private float _ratioSpeed = 1f;
 
-            public override float InputValue { get => _ratioSpeed; set => _ratioSpeed = value; }
-            public WaitSignal Signal => _waitSignal;
+            public override float InputValue { [Impl(256)] get => _ratioSpeed; [Impl(256)] set => _ratioSpeed = value; }
+            public WaitSignal Signal { [Impl(256)] get => _waitSignal; }
 
-            public MoveToDefaultState(CameraController controller, Default settings, Zoom zoom, GameTriggerBus eventBus) : base(controller)
+            public MoveToDefaultState(CameraController controller) : base(controller)
             {
-                _default = settings;
-                _zoom = zoom;
-                _eventBus = eventBus;
+                _default = controller._default;
+                _zoom = controller._zoom;
 
                 float widthDistance = CONST.HEX_DIAMETER_IN * CONST.MAX_CIRCLES;
-                float heightDistance = settings.height - zoom.heightZoomMin - zoom.minDeltaHeight * 0.9f;
+                float heightDistance = _default.height - _zoom.heightZoomMin - _zoom.minDeltaHeight * 0.9f;
                 _maxSqrDistance = heightDistance * heightDistance;
                 _sqrRatioParentDistance = _maxSqrDistance / (widthDistance * widthDistance);
                 _minSqrDistance = _maxSqrDistance * 0.001f;
@@ -42,7 +41,7 @@ namespace Vurbiri.Colonization.Controllers
                 if(sqrDistance > _minSqrDistance)
                 {
                     float speed = Mathf.Sqrt(_maxSqrDistance / sqrDistance) * _default.maxTime * _ratioSpeed;
-                    _coroutine = _controller.StartCoroutine(MoveToDefault_Cn(parentPosition, cameraPosition, speed));
+                    _coroutine = StartCoroutine(MoveToDefault_Cn(parentPosition, cameraPosition, speed));
                 }
                 else
                 {

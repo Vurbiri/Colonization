@@ -36,11 +36,11 @@ namespace Vurbiri.Colonization.Controllers
             _cameraTransform = camera;
 
             #region States
-            _moveState          = new(this, _movement);
-            _edgeMoveState      = new(this, _movement, _edge);
-            _moveToTargetState  = new(this, _movementTo);
-            _moveToDefaultState = new(this, _default, _zoom, eventBus);
-            _zoomState          = new(this, _zoom, eventBus);
+            _moveState          = new(this);
+            _edgeMoveState      = new(this);
+            _moveToTargetState  = new(this);
+            _moveToDefaultState = new(this);
+            _zoomState          = new(this);
             #endregion
 
             #region Subscribe

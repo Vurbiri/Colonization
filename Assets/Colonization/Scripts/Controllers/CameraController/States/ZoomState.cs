@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Controllers
@@ -7,21 +8,20 @@ namespace Vurbiri.Colonization.Controllers
     {
         sealed private class ZoomState : ACameraState<float>
         {
-            private readonly GameTriggerBus _eventBus;
             private readonly Zoom _settings;
             private float _heightZoom;
  
             public override float InputValue 
             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => _heightZoom;
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 set => _heightZoom = Mathf.Clamp(_heightZoom - value * _settings.steepZoomRate, _settings.heightZoomMin, _settings.heightZoomMax); 
             }
 
-            public ZoomState(CameraController controller, Zoom zoom, GameTriggerBus eventBus) : base(controller)
+            public ZoomState(CameraController controller) : base(controller)
             {
-                _settings = zoom;
-                _eventBus = eventBus;
-
+                _settings = controller._zoom;
                 _heightZoom = _cameraTransform.CameraPosition.y;
             }
 
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.Controllers
             {
                 _heightZoom = _cameraTransform.CameraPosition.y;
 
-                _coroutine = _controller.StartCoroutine(Zoom_Cn());
+                _coroutine = StartCoroutine(Zoom_Cn());
             }
             private IEnumerator Zoom_Cn()
             {

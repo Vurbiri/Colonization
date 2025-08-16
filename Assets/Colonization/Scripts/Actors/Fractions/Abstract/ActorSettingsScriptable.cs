@@ -7,12 +7,7 @@ namespace Vurbiri.Colonization.Actors
 	{
         [SerializeField] private IdArray<TId, TSettings> _settings;
 
-        public abstract Id<ActorTypeId> TypeId { get; }
-
         public ReadOnlyIdArray<TId, TSettings> Settings => _settings;
-
-        public TSettings this[Id<TId> id] => _settings[id];
-        public TSettings this[int index] => _settings[index];
 
         public TSettings[] Init()
         {

@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
             _exchange = ExchangeRate.Create(_abilities, loadData);
             _artefact = Artefact.Create(settings.artefact, loadData);
 
-            _spawner = new(new(playerId, new(_perks), _artefact));
+            _spawner = new(new(playerId, new WarriorPerks(_perks), _artefact));
 
             if (loadData.isLoaded)
             {

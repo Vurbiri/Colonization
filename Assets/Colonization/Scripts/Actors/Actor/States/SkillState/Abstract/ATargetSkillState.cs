@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Reactive;
 using static Vurbiri.Colonization.CONST;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -14,18 +13,28 @@ namespace Vurbiri.Colonization.Actors
     {
         protected abstract class ATargetSkillState : ASkillState
         {
-            protected Actor _target;
-            protected WaitSignal _waitActor;
-            protected readonly RBool _isCancel;
-            protected readonly WaitRealtime _waitRealtime = new(0.3f);
-            protected readonly Relation _relationTarget;
+            private Actor _target;
+            private WaitSignal _waitActor;
+            private readonly WaitRealtime _waitRealtime = new(0.3f);
+            private readonly Relation _relationTarget;
             // !!!!!!!!!!!!!!!!!!!!! удалить _relationRealTarget
-            protected readonly Relation _relationRealTarget;
+            private readonly Relation _relationRealTarget;
+
+            #region Propirties
+            protected Hexagon TargetHex { [Impl(256)] get => _target._currentHex; }
+
+            protected Key KeyActor { [Impl(256)] get => _actor._currentHex.Key; }
+            protected Key KeyTarget { [Impl(256)] get => _target._currentHex.Key; }
+
+            protected float TargetOffset { [Impl(256)] get => _target._extentsZ; }
+
+            protected Id<PlayerId> Owner { [Impl(256)] get => _actor._owner; }
+            #endregion
 
             protected ATargetSkillState(Actor parent, TargetOfSkill targetActor, ReadOnlyArray<HitEffects> effects, int cost, int id) : 
                 base(parent, effects, cost, id)
             {
-                _isCancel = parent._canCancel;
+
                 _relationTarget = targetActor.ToRelation();
                 Debug.Log("удалить _relationTarget = Relation.Friend; и _relationRealTarget");
                 _relationRealTarget = _relationTarget;
@@ -52,36 +61,28 @@ namespace Vurbiri.Colonization.Actors
             {
                 if (_waitActor != null)
                 {
-                    _target = GetTarget(newSelectable as Actor);
+                    _target = newSelectable as Actor;
+                    if (_target != null && ((KeyTarget ^ KeyActor) != 1 || !_target.ToTargetState(Owner, _relationTarget)))
+                        _target = null;
+
                     _waitActor.Send();
                 }
-
-                #region Local: GetTarget(..)
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                Actor GetTarget(Actor target)
-                {
-                    if (target == null || (target._currentHex.Key ^ _actor._currentHex.Key) != 1 || !target.ToTargetState(_actor._owner, _relationTarget))
-                        target = null;
-                    return target;
-                }
-                #endregion
             }
 
             protected IEnumerator SelectActor_Cn(Action<bool> callback)
             {
-                Hexagon currentHex = _actor._currentHex;
                 List<Hexagon> targets = new(HEX.SIDES);
 
-                foreach (var hex in currentHex.Neighbors)
-                    if (hex.TrySetOwnerSelectable(_actor._owner, _relationTarget))
+                foreach (var hex in ActorHex.Neighbors)
+                    if (hex.TrySetOwnerSelectable(Owner, _relationTarget))
                         targets.Add(hex);
 
                 if (targets.Count == 0)
                     yield break;
 
-                _isCancel.True();
+                IsCancel.True();
                 yield return _waitActor = new();
-                _isCancel.False();
+                IsCancel.False();
 
                 foreach (var hex in targets)
                     hex.SetOwnerUnselectable();
@@ -119,7 +120,7 @@ namespace Vurbiri.Colonization.Actors
 
                     if (_target.IsDead)
                     {
-                        GameContainer.TriggerBus.TriggerActorKill(_actor._owner, _target._typeId, _target._id);
+                        GameContainer.TriggerBus.TriggerActorKill(Owner, _target._typeId, _target._id);
                         wait = _waitRealtime;
                         break;
                     }
@@ -131,12 +132,11 @@ namespace Vurbiri.Colonization.Actors
                 //_target.FromTargetState(); _target = null;
             }
 
-            private void RotateActors()
+            [Impl(256)] private void RotateActors()
             {
-                Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
-                _parentTransform.localRotation = ACTOR_ROTATIONS[targetHex.Key - currentHex.Key];
+                ActorRotation = ACTOR_ROTATIONS[KeyTarget - KeyActor];
                 if (_relationRealTarget == Relation.Enemy)
-                    _target._thisTransform.localRotation = ACTOR_ROTATIONS[currentHex.Key - targetHex.Key];
+                    _target._thisTransform.localRotation = ACTOR_ROTATIONS[KeyActor - KeyTarget];
             }
         }
     }

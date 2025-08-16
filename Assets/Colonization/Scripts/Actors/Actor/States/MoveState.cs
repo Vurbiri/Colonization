@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -12,18 +11,14 @@ namespace Vurbiri.Colonization.Actors
         sealed protected class MoveState : AActionState
         {
             private readonly ScaledMoveUsingLerp _move;
-            private readonly Transform _parentTransform;
-            private readonly RBool _isCancel;
+            private readonly WaitSignal _waitSignal = new();
             private WaitSignal _waitHexagon;
             private Hexagon _targetHex;
             private Coroutine _coroutineAction;
-            private readonly WaitSignal _waitSignal = new();
 
             public MoveState(float speed, Actor parent) : base(parent)
             {
-                _parentTransform = parent._thisTransform;
-                _move = new(_parentTransform, speed);
-                _isCancel = parent._canCancel;
+                _move = new(parent._thisTransform, speed);
             }
 
             public WaitSignal Signal => _waitSignal;
@@ -33,16 +28,16 @@ namespace Vurbiri.Colonization.Actors
                 _waitSignal.Reset();
 
                 if (_isPlayer)
-                    _coroutineAction = _actor.StartCoroutine(SelectHexagon_Cn());
+                    _coroutineAction = StartCoroutine(SelectHexagon_Cn());
                 else
-                    _coroutineAction = _actor.StartCoroutine(SelectHexagonAI_Cn());
+                    _coroutineAction = StartCoroutine(SelectHexagonAI_Cn());
             }
 
             public override void Exit()
             {
                 if (_coroutineAction != null)
                 {
-                    _actor.StopCoroutine(_coroutineAction);
+                    StopCoroutine(_coroutineAction);
                     _coroutineAction = null;
                 }
 
@@ -71,10 +66,8 @@ namespace Vurbiri.Colonization.Actors
 
             private IEnumerator SelectHexagon_Cn()
             {
-                Hexagon currentHex = _actor._currentHex;
-
                 List<Hexagon> empty = new(HEX.SIDES);
-                foreach (var hex in currentHex.Neighbors)
+                foreach (var hex in ActorHex.Neighbors)
                     if (hex.TrySetSelectableFree())
                         empty.Add(hex);
 
@@ -84,9 +77,9 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
                 }
 
-                _isCancel.True();
+                IsCancel.True();
                 yield return _waitHexagon = new();
-                _isCancel.False();
+                IsCancel.False();
 
                 foreach (var hex in empty)
                     hex.SetUnselectable();
@@ -97,7 +90,7 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
                 }
 
-                _coroutineAction = _actor.StartCoroutine(Move_Cn());
+                _coroutineAction = StartCoroutine(Move_Cn());
             }
 
             private IEnumerator SelectHexagonAI_Cn()
@@ -110,22 +103,22 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
                 }
 
-                _coroutineAction = _actor.StartCoroutine(Move_Cn());
+                _coroutineAction = StartCoroutine(Move_Cn());
             }
 
             private IEnumerator Move_Cn()
             {
-                var currentHex = _actor._currentHex;
-                currentHex.ExitActor();
-                
-                _actor._currentHex = _targetHex;
-                _moveAbility.Off();
-                 _skin.Move();
+                var currentHex = ActorHex;
 
-                _parentTransform.localRotation = ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
+                ActorHex.ExitActor();
+                ActorHex = _targetHex;
+
+                Moving.Off(); _skin.Move();
+
+                ActorRotation = ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
                 yield return _move.Run(currentHex.Position, _targetHex.Position);
 
-                _targetHex.EnterActor(_actor);
+                ActorHex.EnterActor(_actor);
 
                 ToExit();
             }

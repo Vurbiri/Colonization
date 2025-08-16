@@ -1,4 +1,7 @@
+using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -7,15 +10,34 @@ namespace Vurbiri.Colonization.Actors
         protected abstract class AActionState : AState
         {
             protected readonly bool _isPlayer;
-            protected readonly BooleanAbility<ActorAbilityId> _moveAbility;
-            private readonly SubAbility<ActorAbilityId> _currentAP;
             private readonly AbilityValue _costAP;
-            
+
+            #region Propirties
+            private SubAbility<ActorAbilityId> AP { [Impl(256)] get => _actor._currentAP; }
+            protected BooleanAbility<ActorAbilityId> Moving { [Impl(256)] get => _actor._move; }
+
+            protected RBool IsCancel { [Impl(256)] get => _actor._canCancel; }
+
+            protected Vector3 ActorPosition
+            {
+                [Impl(256)] get => _actor._thisTransform.localPosition;
+                [Impl(256)] set => _actor._thisTransform.localPosition = value;
+            }
+            protected Quaternion ActorRotation
+            {
+                [Impl(256)] set => _actor._thisTransform.localRotation = value;
+            }
+
+            protected Hexagon ActorHex 
+            { 
+                [Impl(256)] get => _actor._currentHex;
+                [Impl(256)] set => _actor._currentHex = value;
+            }
+            #endregion
+
             public AActionState(Actor parent, int cost = 0) : base(parent)
             {
                 _isPlayer = parent._owner == PlayerId.Person;
-                _moveAbility = parent._move;
-                _currentAP = parent._currentAP;
                 _costAP = new(TypeModifierId.Addition, cost);
             }
 
@@ -23,8 +45,8 @@ namespace Vurbiri.Colonization.Actors
 
             protected virtual void Pay()
             {
-                _moveAbility.Off();
-                _currentAP.RemoveModifier(_costAP);
+                Moving.Off();
+                AP.RemoveModifier(_costAP);
             }
         }
     }

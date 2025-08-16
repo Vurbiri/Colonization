@@ -33,25 +33,27 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
                 }
 
-                Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
-                float distance = _distanceMove + _target._extentsZ;
+                Vector3 actorHexPos = ActorHex.Position, targetHexPos = TargetHex.Position;
+                float distance = _distanceMove + TargetOffset;
 
-                if(distance > HEX_DIAMETER_IN) distance = HEX_DIAMETER_IN;
-                else yield return Run_Cn(currentHex.Position, targetHex.Position, 1f - distance / HEX_DIAMETER_IN);
+                if(distance > HEX_DIAMETER_IN) 
+                    distance = HEX_DIAMETER_IN;
+                else 
+                    yield return Run_Cn(actorHexPos, targetHexPos, 1f - distance / HEX_DIAMETER_IN);
 
-                yield return ApplyMovementSkill_Cn(_parentTransform.localPosition, targetHex.Position, distance);
-                yield return Run_Cn(_parentTransform.localPosition, currentHex.Position, 1f);
+                yield return ApplyMovementSkill_Cn(ActorPosition, targetHexPos, distance);
+                yield return Run_Cn(ActorPosition, actorHexPos, 1f);
 
                 ToExit();
             }
 
             private IEnumerator ApplyMovementSkill_Cn(Vector3 start, Vector3 end, float remainingDistance)
             {
-                float distance = _rangeSkill + _target._extentsZ;
+                float distance = _rangeSkill + TargetOffset;
                 float path = 1f - distance / remainingDistance;
                 float speed = path / _timeToHit;
                 
-                _actor.StartCoroutine(Movement_Cn(start, end, speed, path));
+                StartCoroutine(Movement_Cn(start, end, speed, path));
 
                 yield return ApplySkill_Cn();
             }

@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Actors
             public readonly WaitSignal signal = new();
             public readonly WaitScaledTime[] waitHits;
 
-            public SkillState(string stateName, ActorSkin parent, TimingSkillSettings timing, int id = 0) : base(stateName, parent)
+            public SkillState(string stateName, ActorSkin parent, TimingSkillSettings timing, int id) : base(stateName, parent)
             {
                 _id = id;
                 _countHits = timing.hitTimes.Length;
@@ -30,15 +30,15 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                _animator.SetBool(_idParam, true);
-                _coroutine = _parent.StartCoroutine(StartSkill_Cn());
+                AnimationEnable();
+                _coroutine = StartCoroutine(StartSkill_Cn());
             }
 
             public override void Exit()
             {
                 if (_coroutine != null)
                 {
-                    _parent.StopCoroutine(_coroutine);
+                    StopCoroutine(_coroutine);
 
                     _waitEnd.Reset();
                     for (int i = 0; i < _countHits; i++)
@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization.Actors
                 }
                 signal.Reset();
 
-                _animator.SetBool(_idParam, false);
+                AnimationDisable();
             }
 
             private IEnumerator StartSkill_Cn()
@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization.Actors
                 {
                     yield return waitHits[i];
 
-                    yield return _sfx.Hit(_id, i, targetSkin);
+                    yield return SFX.Hit(_id, i, targetSkin);
                     signal.Send();
                 }
 

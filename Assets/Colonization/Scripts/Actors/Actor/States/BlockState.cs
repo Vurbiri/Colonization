@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
@@ -7,40 +8,46 @@ namespace Vurbiri.Colonization.Actors
         sealed protected class BlockState : AActionState
         {
             private readonly EffectCode _code;
-            private readonly EffectsSet _effects;
             private readonly int _value;
 
-            public bool IsApplied => _actor._effects.Contains(_code);
+            public bool IsApplied
+             {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _actor._effects.Contains(_code);
+            }
 
-            public BlockState(int cost, int value, Actor parent) : base(parent, cost)
+        public BlockState(int cost, int value, Actor parent) : base(parent, cost)
             {
                 _code = new(parent.TypeId, parent.Id, ReactiveEffectsFactory.BLOCK_SKILL_ID, ReactiveEffectsFactory.BLOCK_EFFECT_ID);
                 _value = value;
-                _effects = parent._effects;
             }
 
             public override void Enter()
             {
-                if (!_effects.Contains(_code))
-                {
-                    _skin.Block(true);
-                    _effects.Add(ReactiveEffectsFactory.CreateBlockEffect(_code, _value));
-                    Pay();
-                }
+                if (!IsApplied)
+                    AddEffect();
 
-                _actor.Interactable = true;
+                ActorInteractable = true;
             }
 
             public override void Exit()
             {
-                _actor.Interactable = false;
+                ActorInteractable = false;
 
-                if (!_effects.Contains(_code))
+                if (!IsApplied)
                     _skin.Block(false);
             }
 
             public override void Select() => GameContainer.TriggerBus.TriggerActorSelect(_actor);
             public override void Unselect(ISelectable newSelectable) => GameContainer.TriggerBus.TriggerUnselect(_actor.Equals(newSelectable));
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private void AddEffect()
+            {
+                _skin.Block(true);
+                _actor._effects.Add(ReactiveEffectsFactory.CreateBlockEffect(_code, _value));
+                Pay();
+            }
         }
     }
 }

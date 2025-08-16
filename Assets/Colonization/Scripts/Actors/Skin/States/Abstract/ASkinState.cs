@@ -1,5 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using Vurbiri.FSM;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -7,18 +9,28 @@ namespace Vurbiri.Colonization.Actors
     {
         protected class ASkinState : AState
         {
-            protected readonly ActorSkin _parent;
-            protected readonly Animator _animator;
-            protected readonly AActorSFX _sfx;
-            protected readonly int _idParam;
+            private readonly ActorSkin _parent;
+            private readonly int _idParam;
+
+            protected AActorSFX SFX { [Impl(256)] get => _parent._sfx; }
 
             public ASkinState(string stateName, ActorSkin parent) : base(parent._stateMachine)
             {
                 _parent = parent;
-                _animator = parent._animator;
-                _sfx = parent._sfx;
                 _idParam = Animator.StringToHash(stateName);
             }
+
+            [Impl(256)] protected DeathBehaviour GetDeathBehaviour() => _parent._animator.GetBehaviour<DeathBehaviour>();
+            [Impl(256)] protected ReactBehaviour[] GeReactBehaviours() => _parent._animator.GetBehaviours<ReactBehaviour>();
+
+            [Impl(256)] protected void AnimationEnable() => _parent._animator.SetBool(_idParam, true);
+            [Impl(256)] protected void AnimationDisable() => _parent._animator.SetBool(_idParam, false);
+
+            [Impl(256)] protected void SetTrigger() => _parent._animator.SetTrigger(_idParam);
+            [Impl(256)] protected void ResetTrigger() => _parent._animator.ResetTrigger(_idParam);
+
+            [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => _parent.StartCoroutine(routine);
+            [Impl(256)] protected void StopCoroutine(Coroutine routine) => _parent.StopCoroutine(routine);
         }
     }
 }

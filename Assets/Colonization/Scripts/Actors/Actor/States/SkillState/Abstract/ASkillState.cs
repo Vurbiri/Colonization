@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -10,7 +11,6 @@ namespace Vurbiri.Colonization.Actors
         protected abstract partial class ASkillState : AActionState
         {
             protected readonly int _id;
-            protected readonly Transform _parentTransform;
             protected readonly ReadOnlyArray<HitEffects> _effectsHint;
             protected readonly int _countHits;
             protected readonly WaitSignal _waitSignal = new();
@@ -18,12 +18,11 @@ namespace Vurbiri.Colonization.Actors
             protected Coroutine _coroutineAction;
             protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
-            public WaitSignal Signal => _waitSignal;
+            public WaitSignal Signal { [Impl(256)] get => _waitSignal; }
 
             public ASkillState(Actor parent, ReadOnlyArray<HitEffects> effects, int cost, int id) : base(parent, cost)
             {
                 _id = id;
-                _parentTransform = _actor._thisTransform;
                 _effectsHint = effects;
                 _countHits = _effectsHint.Count;
             }
@@ -45,14 +44,14 @@ namespace Vurbiri.Colonization.Actors
             public override void Enter()
             {
                 _waitSignal.Reset();
-                _coroutineAction = _actor.StartCoroutine(Actions_Cn());
+                _coroutineAction = StartCoroutine(Actions_Cn());
             }
 
             public override void Exit()
             {
                 if (_coroutineAction != null)
                 {
-                    _actor.StopCoroutine(_coroutineAction);
+                    StopCoroutine(_coroutineAction);
                     _coroutineAction = null;
                 }
                 _waitSignal.Send();

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Controllers
 {
@@ -11,19 +12,19 @@ namespace Vurbiri.Colonization.Controllers
             private readonly MovementToTarget _settings;
             private Vector3 _targetPosition;
 
-            public override Vector3 InputValue { get => _targetPosition; set => _targetPosition = value; }
-            public WaitSignal Signal => _waitSignal;
+            public override Vector3 InputValue { [Impl(256)] get => _targetPosition; [Impl(256)] set => _targetPosition = value; }
+            public WaitSignal Signal { [Impl(256)] get => _waitSignal; }
 
-            public MoveToTargetState(CameraController controller, MovementToTarget movementTo) : base(controller)
+            public MoveToTargetState(CameraController controller) : base(controller)
             {
-                _settings = movementTo;
+                _settings = controller._movementTo;
             }
 
             public override void Enter()
             {
                 _waitSignal.Reset();
 
-                _coroutine = _controller.StartCoroutine(MoveToTarget_Cn());
+                _coroutine = StartCoroutine(MoveToTarget_Cn());
             }
 
             private IEnumerator MoveToTarget_Cn()

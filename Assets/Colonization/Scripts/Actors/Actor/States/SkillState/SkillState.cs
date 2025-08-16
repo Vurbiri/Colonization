@@ -34,12 +34,12 @@ namespace Vurbiri.Colonization.Actors
                     yield break;
                 }
 
-                Hexagon currentHex = _actor._currentHex, targetHex = _target._currentHex;
-                float path = 1f - (_rangeSkill + _target._extentsZ) / HEX_DIAMETER_IN;
+                Vector3 actorHexPos = ActorHex.Position, targetHexPos = TargetHex.Position;
+                float path = 1f - (_rangeSkill + TargetOffset) / HEX_DIAMETER_IN;
 
-                yield return Run_Cn(currentHex.Position, targetHex.Position, path);
+                yield return Run_Cn(actorHexPos, targetHexPos, path);
                 yield return ApplySkill_Cn();
-                yield return Run_Cn(_parentTransform.localPosition, currentHex.Position, 1f);
+                yield return Run_Cn(ActorPosition, actorHexPos, 1f);
                 
                 ToExit();
             }
@@ -58,10 +58,10 @@ namespace Vurbiri.Colonization.Actors
                 while (progress < path)
                 {
                     progress += Time.deltaTime * speed;
-                    _parentTransform.localPosition = new(start.x + delta.x * progress, start.y + delta.y * progress, start.z + delta.z * progress);
+                    ActorPosition = new(start.x + delta.x * progress, start.y + delta.y * progress, start.z + delta.z * progress);
                     yield return null;
                 }
-                _parentTransform.localPosition = new(start.x + delta.x * path, start.y + delta.y * path, start.z + delta.z * path);
+                ActorPosition = new(start.x + delta.x * path, start.y + delta.y * path, start.z + delta.z * path);
             }
         }
     }

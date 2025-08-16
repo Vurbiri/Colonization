@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
 
             public ReactState(ActorSkin parent) : base(T_REACT, parent)
             {
-                foreach (var behaviour in _animator.GetBehaviours<ReactBehaviour>())
+                foreach (var behaviour in GeReactBehaviours())
                     behaviour.EventExit += OnEventExit;
             }
 
@@ -17,19 +17,19 @@ namespace Vurbiri.Colonization.Actors
                 if (_isRun)
                 {
                     _isExit = false;
-                    _animator.SetTrigger(_idParam);
+                    SetTrigger();
                 }
             }
 
             public override void Enter()
             {
                 _isRun = _isExit = true;
-                _animator.SetTrigger(_idParam);
+                SetTrigger();
             }
 
             public override void Exit()
             {
-                _animator.ResetTrigger(_idParam);
+                ResetTrigger();
                 _isRun = false;
             }
 

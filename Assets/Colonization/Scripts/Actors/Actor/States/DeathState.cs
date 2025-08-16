@@ -15,7 +15,8 @@ namespace Vurbiri.Colonization.Actors
                 stage = _skin.Death();
 
                 _actor.Removing();
-                _actor.StartCoroutine(Death_Cn(stage.SetWaitState(DeathStage.SFX)));
+
+                StartCoroutine(Death_Cn(stage.SetWaitState(DeathStage.SFX)));
             }
 
             IEnumerator Death_Cn(WaitState<DeathStage> wait)

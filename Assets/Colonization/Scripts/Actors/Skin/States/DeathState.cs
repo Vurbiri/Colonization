@@ -15,14 +15,14 @@ namespace Vurbiri.Colonization.Actors
             {
                 _waitEndAnimation = new(duration);
 
-                _animator.GetBehaviour<DeathBehaviour>().EventEnter += OnEventEnter;
+                GetDeathBehaviour().EventEnter += OnEventEnter;
             }
 
             public override void Enter()
             {
-                _animator.SetBool(_idParam, true);
-                _sfx.Death();
-                _parent.StartCoroutine(Death_Cn());
+                AnimationEnable();
+                SFX.Death();
+                StartCoroutine(Death_Cn());
             }
 
             private IEnumerator Death_Cn()
@@ -31,13 +31,13 @@ namespace Vurbiri.Colonization.Actors
                 yield return _waitStartAnimation;
                 yield return _waitEndAnimation;
                 waitState.SetState(Actor.DeathStage.Animation);
-                yield return _sfx.Death_Cn();
+                yield return SFX.Death_Cn();
                 waitState.SetState(Actor.DeathStage.SFX);
             }
 
             private void OnEventEnter()
             {
-                _animator.SetBool(_idParam, false);
+                AnimationDisable();
                 _waitStartAnimation.Send();
             }
         }

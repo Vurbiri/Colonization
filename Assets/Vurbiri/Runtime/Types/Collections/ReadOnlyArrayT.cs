@@ -39,10 +39,15 @@ namespace Vurbiri.Collections
         [Impl(256)] public int LeftIndex(int index) => (index == 0 ? _count : index) - 1;
         [Impl(256)] public int RightIndex(int index) => (index + 1) % _count;
 
-        public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, _count);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, _count);
+        [Impl(256)] public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, _count);
+        [Impl(256)] IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, _count);
 
-        public void OnAfterDeserialize() => _count = _values.Length;
-        public void OnBeforeSerialize() { }
-    }
+        public void OnAfterDeserialize() => _count = _values != null ? _values.Length : -1;
+        public void OnBeforeSerialize() 
+        {
+#if UNITY_EDITOR
+            OnAfterDeserialize();
+#endif
+        }
+}
 }

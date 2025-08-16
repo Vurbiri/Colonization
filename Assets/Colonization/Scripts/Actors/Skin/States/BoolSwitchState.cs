@@ -11,12 +11,12 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                _animator.SetBool(_idParam, true);
+                AnimationEnable();
             }
 
             public override void Exit()
             {
-                _animator.SetBool(_idParam, false);
+                AnimationDisable();
             }
         }
     }

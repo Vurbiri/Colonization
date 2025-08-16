@@ -36,9 +36,9 @@ namespace Vurbiri.Colonization.Actors
         public Bounds Bounds => _bounds;
         public AActorSFX ActorSFX => _sfx;
 
-
         private void Start()
         {
+            // тут, потому что в них используется GetBehaviour<T>()
             _reactState = new(this);
             _deathState = new(this, _durationDeath);
 
