@@ -11,12 +11,12 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                AnimationEnable();
+                EnableAnimation();
             }
 
             public override void Exit()
             {
-                AnimationDisable();
+                DisableAnimation();
             }
         }
     }

@@ -9,28 +9,26 @@ namespace Vurbiri.Colonization.Characteristics
     [System.Serializable]
     public class Skills : IDisposable
     {
-        public const int COUNT_SKILLS_MAX = 4;
-
         [SerializeField] private float _speedWalk = 0.45f;
         [SerializeField] private float _speedRun = 0.65f;
         [SerializeField] private int _blockCost = 2;
         [SerializeField] private int _blockValue = 10;
         [SerializeField] private SkillSettings[] _skillsSettings;
-        
-        [NonSerialized] private ReadOnlyArray<SkillUI> _skillsUI;
-        [NonSerialized] private ReadOnlyArray<HitEffects>[] _effectsHits;
+
+        [SerializeField] private ReadOnlyArray<string> _hitSfxNames;
+        [SerializeField] private ReadOnlyArray<AnimationTime> _timings;
+
         [NonSerialized] private BlockUI _blockUI;
+        [NonSerialized] private ReadOnlyArray<SkillUI> _skillsUI;
 
         public BlockUI BlockUI => _blockUI;
         public ReadOnlyArray<SkillUI> SkillsUI => _skillsUI;
-        public SkillSettings[] Settings => _skillsSettings;
+        public ReadOnlyArray<string> HitSfxNames => _hitSfxNames;
+        public ReadOnlyArray<AnimationTime> Timings => _timings;
 
         public void Init(int actorType, int actorId)
         {
-            SkillSettings skill;
-            int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
-
-            _effectsHits = new ReadOnlyArray<HitEffects>[countSkills];
+            int countSkills = _skillsSettings.Length;
 
             if (actorType == ActorTypeId.Warrior)
             {
@@ -40,22 +38,14 @@ namespace Vurbiri.Colonization.Characteristics
                 var colors = GameContainer.UI.Colors;
 
                 for (int i = 0; i < countSkills; i++)
-                {
-                    skill = _skillsSettings[i];
-                    skillsUI[i]     = skill.GetSkillUI(colors);
-                    _effectsHits[i] = skill.CreateEffectsHit(actorType, actorId, i);
-                }
+                    skillsUI[i] = _skillsSettings[i].Init(colors, actorType, actorId, i);
 
                 _skillsUI = new(skillsUI);
             }
             else
             {
                 for (int i = 0; i < countSkills; i++)
-                {
-                    skill = _skillsSettings[i];
-                    skill.RemoveSkillUI();
-                    _effectsHits[i] = skill.CreateEffectsHit(actorType, actorId, i);
-                }
+                    _skillsSettings[i].Init(actorType, actorId, i);
             }
         }
 
@@ -64,11 +54,11 @@ namespace Vurbiri.Colonization.Characteristics
             actor.AddMoveState(_speedWalk);
             actor.AddBlockState(_blockCost, _blockValue << ActorAbilityId.SHIFT_ABILITY);
 
-            int countSkills = Math.Min(_skillsSettings.Length, COUNT_SKILLS_MAX);
+            int countSkills = _skillsSettings.Length;
 
             actor.SetCountState(countSkills);
             for (int i = 0; i < countSkills; i++)
-                actor.AddSkillState(_effectsHits[i], _skillsSettings[i], _speedRun, i);
+                actor.AddSkillState(_skillsSettings[i], _speedRun, i);
         }
 
         public void Dispose()
@@ -83,32 +73,65 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
 #if UNITY_EDITOR
+
+        public const int COUNT_SKILLS_MAX = 4;
+        private static readonly string[] A_SKILLS = { "A_Skill_0", "A_Skill_1", "A_Skill_2", "A_Skill_3" };
+
         [SerializeField] private int _swapA = -1;
         [SerializeField] private int _swapB = -1;
 
-        public void Swap_Ed()
+        public void OnValidate(int type)
         {
-            int count = _skillsSettings.Length;
-            if (_swapA != _swapB && _swapA >= 0 & _swapB >= 0 && _swapA < count & _swapB < count)
-                (_skillsSettings[_swapA], _skillsSettings[_swapB]) = (_skillsSettings[_swapB], _skillsSettings[_swapA]);
+            if (_skillsSettings.Length > COUNT_SKILLS_MAX)
+                Array.Resize(ref _skillsSettings, COUNT_SKILLS_MAX);
 
-            _swapA = _swapB = -1;
-        }
-
-        public void SetTypeActor_Ed(int type)
-        {
             for (int i = 0; i < _skillsSettings.Length; i++)
                 _skillsSettings[i].typeActor_ed = type;
         }
 
         public bool UpdateName_Ed(string oldName, string newName)
         {
-            bool output = false;
+            bool changed = false;
             for (int i = 0; i < _skillsSettings.Length; i++)
-                output |= _skillsSettings[i].UpdateName_Ed(oldName, newName);
+            {
+                if(changed |= _skillsSettings[i].hitSFXName_ed.Update_Ed(oldName, newName))
+                    _hitSfxNames.SetValue_EditorOnly(i, newName);
+            }
 
-            return output;
+            return changed;
         }
+
+        public void UpdateAnimation_Ed(AnimatorOverrideController animator)
+        {
+           
+            int countSkills = _skillsSettings.Length;
+            if (_swapA != _swapB && _swapA >= 0 & _swapB >= 0 && _swapA < countSkills & _swapB < countSkills)
+                (_skillsSettings[_swapA], _skillsSettings[_swapB]) = (_skillsSettings[_swapB], _skillsSettings[_swapA]);
+            _swapA = _swapB = -1;
+
+            var sfxNames = new string[countSkills]; var timings = new AnimationTime[countSkills];
+            SkillSettings skillSettings; int index;
+
+            for (index = 0; index < countSkills; index++)
+            {
+                skillSettings = _skillsSettings[index];
+
+                sfxNames[index] = skillSettings.hitSFXName_ed;
+                timings[index] = new(skillSettings.clipSettings_ed);
+
+                if (animator[A_SKILLS[index]] != skillSettings.clipSettings_ed.clip)
+                    animator[A_SKILLS[index]] = skillSettings.clipSettings_ed.clip;
+            }
+
+            for (; index < COUNT_SKILLS_MAX; index++)
+                if (animator[A_SKILLS[index]].name != A_SKILLS[index])
+                    animator[A_SKILLS[index]] = null;
+
+            _hitSfxNames = sfxNames;
+            _timings = timings;
+        }
+
+
 
 #endif
     }

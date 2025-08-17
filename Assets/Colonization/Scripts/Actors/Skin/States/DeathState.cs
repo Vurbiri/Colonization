@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                AnimationEnable();
+                EnableAnimation();
                 SFX.Death();
                 StartCoroutine(Death_Cn());
             }
@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.Actors
 
             private void OnEventEnter()
             {
-                AnimationDisable();
+                DisableAnimation();
                 _waitStartAnimation.Send();
             }
         }

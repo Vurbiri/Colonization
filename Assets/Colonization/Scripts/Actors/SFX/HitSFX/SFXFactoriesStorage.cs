@@ -27,12 +27,11 @@ namespace Vurbiri.Colonization.Actors
 #if UNITY_EDITOR
         public static string[] names_ed;
 
-        private static SFXFactoriesStorage s_self;
-        private static WarriorsSettingsScriptable s_warriorsSettings;
-        private static DemonsSettingsScriptable s_demonsSettings;
-        private static List<AActorSFX> s_actorSFXs;
+        private static SFXFactoriesStorage s_self_ed;
+        private static WarriorsSettingsScriptable s_warriorsSettings_ed;
+        private static DemonsSettingsScriptable s_demonsSettings_ed;
 
-        static SFXFactoriesStorage() => SetStaticField();
+        static SFXFactoriesStorage() => SetStaticField_Ed();
 
         public static void SetName_Ed(int nameIndex, string newName)
         {
@@ -42,40 +41,26 @@ namespace Vurbiri.Colonization.Actors
 
             names_ed[nameIndex] = newName;
 
-            s_warriorsSettings.UpdateName_Ed(oldName, newName);
-            s_demonsSettings.UpdateName_Ed(oldName, newName);
-            foreach (var stt in s_actorSFXs)
-                stt.UpdateSFX_Ed(oldName, newName);
+            s_warriorsSettings_ed.UpdateName_Ed(oldName, newName);
+            s_demonsSettings_ed.UpdateName_Ed(oldName, newName);
 
             UnityEditor.AssetDatabase.SaveAssets();
             Debug.LogWarning($"[FactorySFX] Имя <b>\"{oldName}\"</b> заменено на <b>\"{newName}\"</b>.");
         }
 
-        public static void UpdateS_Ed() => s_self.Update_Ed();
-        public void Update_Ed()
+        public static void UpdateS_Ed()
         {
             if (!Application.isPlaying)
-            {
-                var factories = EUtility.FindScriptables<ASFXFactory>();
-                _factories = factories.ToArray();
-
-                SetNames_Ed(factories);
-            }
+                s_self_ed.Update_Ed();
         }
-
-        private void OnValidate()
+        public void Update_Ed()
         {
-            if (!Application.isPlaying || _factories == null || _factories.Length == 0)
-            {
-                var factories = EUtility.FindScriptables<ASFXFactory>();
-                _factories = factories.ToArray();
-               
-                SetNames_Ed(factories);
-            }
-        }
+            var factories = EUtility.FindScriptables<ASFXFactory>();
+            _factories = factories.ToArray();
 
-        private static void SetNames_Ed(List<ASFXFactory> factories)
-        {
+            EUtility.SetScriptable(ref s_warriorsSettings_ed);
+            EUtility.SetScriptable(ref s_demonsSettings_ed);
+
             names_ed = new string[factories.Count + 1];
             names_ed[0] = EmptySFX.NAME; ASFXFactory factory;
 
@@ -95,21 +80,22 @@ namespace Vurbiri.Colonization.Actors
             if (isDirty) UnityEditor.AssetDatabase.SaveAssets();
         }
 
-        private async static void SetStaticField()
+        private void OnValidate()
+        {
+            if (!Application.isPlaying || _factories == null || _factories.Length == 0)
+                Update_Ed();
+        }
+
+        private async static void SetStaticField_Ed()
         {
             await System.Threading.Tasks.Task.Delay(2);
             if (!Application.isPlaying)
             {
-                s_self = EUtility.FindAnyScriptable<SFXFactoriesStorage>();
-                while (s_self == null)
-                    s_self = EUtility.CreateScriptable<SFXFactoriesStorage>("FactoriesStorage", "Assets/Colonization/HitSFX");
+                s_self_ed = EUtility.FindAnyScriptable<SFXFactoriesStorage>();
+                while (s_self_ed == null)
+                    s_self_ed = EUtility.CreateScriptable<SFXFactoriesStorage>("FactoriesStorage", "Assets/Colonization/HitSFX");
 
-                SetNames_Ed(EUtility.FindScriptables<ASFXFactory>());
-
-                s_warriorsSettings = EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
-                s_demonsSettings = EUtility.FindAnyScriptable<DemonsSettingsScriptable>();
-
-                s_actorSFXs = EUtility.FindComponentsPrefabs<AActorSFX>();
+                UpdateS_Ed();
             }
         }
 #endif

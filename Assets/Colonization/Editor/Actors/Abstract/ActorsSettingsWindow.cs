@@ -44,7 +44,7 @@ namespace VurbiriEditor.Colonization.Actors
         {
             if (_actorsSettings != null)
             {
-                ActorUtilityEd.OverrideClips(_actorsSettings.Settings);
+                _actorsSettings.UpdateAnimation_Ed();
                 Repaint();
             }
         }

@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using UnityEngine;
 using Vurbiri.International;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -22,12 +21,10 @@ namespace Vurbiri.Colonization.UI
         private string _textMain, _textAP;
         private string _hexColor, _hexColorPlus, _hexColorMinus;
 
-        private Unsubscription _unsubscriber;
-
         public Sprite Sprite => _sprite;
         public int Cost => _cost;
 
-        public void Init(ProjectColors colors, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf)
+        public SkillUI Init(ProjectColors colors, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf)
         {
             _hexColor = colors.HintDefaultTag;
             _hexColorPlus = colors.TextPositiveTag;
@@ -36,7 +33,9 @@ namespace Vurbiri.Colonization.UI
             _effectsTarget = effectsTarget;
             _effectsSelf = effectsSelf;
 
-            _unsubscriber = Localization.Instance.Subscribe(SetTexts);
+            Localization.Instance.Subscribe(SetTexts);
+
+            return this;
         }
 
         public string GetText(bool isUse) => string.Concat(_textMain, isUse ? _hexColorPlus : _hexColorMinus, _textAP);
@@ -77,7 +76,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Dispose()
         {
-            _unsubscriber?.Unsubscribe();
+            Localization.Instance.Unsubscribe(SetTexts);
         }
     }
 }

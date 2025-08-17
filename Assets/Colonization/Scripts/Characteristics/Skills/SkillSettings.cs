@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -16,15 +18,18 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private HitEffectsSettings[] _effectsHitsSettings;
         [SerializeField] private SkillUI _ui;
 
-        public TargetOfSkill Target => _target;
-        public float Range => _range;
-        public float Distance => _distance;
-        public int Cost => _cost;
+        [NonSerialized] private ReadOnlyArray<HitEffects> _hitEffects;
 
-        public ReadOnlyArray<HitEffects> CreateEffectsHit(int actorType, int actorId, int skillId)
+        public TargetOfSkill Target { [Impl(256)] get => _target; }
+        public float Range { [Impl(256)] get => _range; }
+        public float Distance { [Impl(256)] get => _distance; }
+        public int Cost { [Impl(256)] get => _cost; }
+        public ReadOnlyArray<HitEffects> HitEffects { [Impl(256)] get => _hitEffects; }
+
+        public void Init(int actorType, int actorId, int skillId)
         {
             int countHits = _effectsHitsSettings.Length;
-            HitEffects[] effects = new HitEffects[countHits];
+            var effects = new HitEffects[countHits];
             HitEffectsSettings effectsHitSettings;
 
             for (int i = 0, u = 0; i < countHits; i++)
@@ -34,41 +39,37 @@ namespace Vurbiri.Colonization.Characteristics
                 u += effectsHitSettings.Count;
             }
 
-            return new(effects);
+            _hitEffects = new(effects);
+            _ui = null; _effectsHitsSettings = null;
         }
 
-        public SkillUI GetSkillUI(ProjectColors colors)
+        public SkillUI Init(ProjectColors colors, int actorType, int actorId, int skillId)
         {
             int countHits = _effectsHitsSettings.Length;
+            var effects = new HitEffects[countHits];
             List<AEffectsUI> targetEffectsUI = new(countHits), selfEffectsUI = new(countHits);
+            HitEffectsSettings effectsHitSettings;
 
-            for (int i = 0; i < countHits; i++)
-                _effectsHitsSettings[i].CreateEffectsHitUI(colors, targetEffectsUI, selfEffectsUI);
+            for (int i = 0, u = 0; i < countHits; i++)
+            {
+                effectsHitSettings = _effectsHitsSettings[i];
+                effectsHitSettings.CreateEffectsHitUI(colors, targetEffectsUI, selfEffectsUI);
+                effects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, skillId, u);
+                
+                u += effectsHitSettings.Count;
+            }
 
-            _ui.Init(colors, targetEffectsUI.ToArray(), selfEffectsUI.ToArray());
+            var ui = _ui.Init(colors, targetEffectsUI.ToArray(), selfEffectsUI.ToArray());
+            _hitEffects = new(effects);
 
-            return _ui;
-        }
-
-        public void RemoveSkillUI()
-        {
-            _ui = null;
+            _ui = null; _effectsHitsSettings = null;
+            return ui;
         }
 
 #if UNITY_EDITOR
         public AnimationClipSettingsScriptable clipSettings_ed;
-        public HitSFXName[] hitSFXs;
+        public HitSFXName hitSFXName_ed;
         public int typeActor_ed;
-
-        public bool UpdateName_Ed(string oldName, string newName)
-        {
-            bool output = false;
-            for (int i = 0; i < hitSFXs.Length; i++)
-                output |= hitSFXs[i].Update_Ed(oldName, newName);
-
-            return output;
-        }
-
 #endif
     }
 }

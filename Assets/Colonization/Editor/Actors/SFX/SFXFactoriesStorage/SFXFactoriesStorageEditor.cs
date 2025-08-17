@@ -21,11 +21,15 @@ namespace VurbiriEditor.Colonization
             _serializedProperty = serializedObject.FindProperty("_factories");
 
 			UpdateFactories();
+
+            EditorApplication.playModeStateChanged += OnModeStateChanged;
         }
 		
 		public override void OnInspectorGUI()
 		{
-			serializedObject.Update();
+            if (Application.isPlaying) return;
+
+            serializedObject.Update();
             
             Space(0.5f);
 			if (GUILayout.Button("Update"))
@@ -42,7 +46,12 @@ namespace VurbiriEditor.Colonization
             serializedObject.ApplyModifiedProperties();
 		}
 
-		private void UpdateFactories()
+        private void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnModeStateChanged;
+        }
+
+        private void UpdateFactories()
 		{
             _target.Update_Ed();
             serializedObject.Update();
@@ -53,6 +62,12 @@ namespace VurbiriEditor.Colonization
             for (int i = 0, j = 1; i < _serializedProperty.arraySize; i++, j++)
 				_factories.Add(new(j, _serializedProperty.GetArrayElementAtIndex(i)));
 
+        }
+
+        private void OnModeStateChanged(PlayModeStateChange change)
+        {
+            if (change == PlayModeStateChange.ExitingPlayMode)
+                UpdateFactories();
         }
 
         #region Nested Factory

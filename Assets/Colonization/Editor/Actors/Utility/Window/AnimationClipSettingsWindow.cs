@@ -89,7 +89,7 @@ namespace VurbiriEditor.Colonization.Actors
         {
             var warriorsSettings = EUtility.FindAnyScriptable<WarriorsSettingsScriptable>();
             if (warriorsSettings != null)
-                ActorUtilityEd.OverrideClips(warriorsSettings.Settings);
+                warriorsSettings.UpdateAnimation_Ed();
         }
 
         private void OnDisable()
@@ -98,8 +98,6 @@ namespace VurbiriEditor.Colonization.Actors
                 DestroyImmediate(editor);
 
             _editors.Clear();
-
-            
         }
     }
 }

@@ -17,13 +17,11 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_HITS = "_effectsHitsSettings", P_UI = "_ui";
         private const string P_EFFECTS = "_effects";
         private const string P_SPRITE = "_sprite", P_KEY_NAME = "_keyName", P_COST_UI = "_cost";
-        private const string P_CHILD_TARGET = "_parentTarget_ed", P_CLIP = "clipSettings_ed", P_SFX = "hitSFXs", P_TYPE = "typeActor_ed";
+        private const string P_CHILD_TARGET = "_parentTarget_ed", P_CLIP = "clipSettings_ed", P_SFX = "hitSFXName_ed", P_TYPE = "typeActor_ed";
 
         private static readonly string[] KEYS_NAME_SKILLS =
         { "Strike", "Channel", "Sweep", "Combo", "Heal", "Sparks", "Battlecry", "Fortify", "Enhancement", "Kick", "Leap" };
         #endregion
-
-        private readonly Color _positive = new(0.5f, 1f, 0.3f, 1f), _negative = new(1f, 0.5f, 0.3f, 1f);
 
         protected override void OnGUI()
         {
@@ -126,14 +124,17 @@ namespace VurbiriEditor.Colonization.Characteristics
             {
                 if (count <= 0) return;
 
-                SerializedProperty SFXsProperty = GetProperty(P_SFX);
+                SerializedProperty SFXProperty = GetProperty(P_SFX);
                 SerializedProperty hitsProperty = GetProperty(P_HITS);
 
-                if (SFXsProperty.arraySize != count) SFXsProperty.arraySize = count;
                 if (hitsProperty.arraySize != count) hitsProperty.arraySize = count;
 
-                Color lineColor;
+                DrawLine(40f); indentLevel--;
+                _position.y += _height;
                 
+                PropertyField(_position, SFXProperty);
+                _position.y += _ySpace;
+
                 SerializedProperty effectsProperty, effectProperty;
                 for (int i = 0; i < count; i++)
                 {
@@ -141,20 +142,6 @@ namespace VurbiriEditor.Colonization.Characteristics
                     if (effectsProperty.arraySize == 0)
                         effectsProperty.InsertArrayElementAtIndex(0);
 
-                    lineColor = target switch
-                    {
-                        TargetOfSkill.Enemy  => _negative,
-                        TargetOfSkill.Friend => _positive,
-                        TargetOfSkill.Self   => Color.magenta,
-                        _                    => Color.gray,
-                    };
-
-                    DrawLine(lineColor, 40f);
-
-                    indentLevel--;
-                    _position.y += _height;
-                    PropertyField(_position, SFXsProperty.GetArrayElementAtIndex(i), new GUIContent($"SFX Hit {i}"));
-                    indentLevel++;
                     _position.y += _height;
                     PropertyField(_position, effectsProperty, new GUIContent($"Hit {i}"));
                     
@@ -170,6 +157,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     if (effectsProperty.isExpanded)
                         _position.y += _height * 1.8f;
                 }
+                indentLevel++;
             }
             #endregion
         }
@@ -186,14 +174,14 @@ namespace VurbiriEditor.Colonization.Characteristics
                 {
                     bool isWarrior = property.FindPropertyRelative(P_TYPE).intValue == ActorTypeId.Warrior;
 
-                    if (isWarrior) rate += 13.1f; else rate += 9.8f;
+                    if (isWarrior) rate += 14.2f; else rate += 11.0f;
 
                     SerializedProperty hitsProperty = property.FindPropertyRelative(P_HITS);
                     SerializedProperty effectsProperty;
 
                     for (int i = 0; i < hitsProperty.arraySize; i++)
                     {
-                        rate += 2.3f;
+                        rate += 1.1f;
                         effectsProperty = hitsProperty.GetArrayElementAtIndex(i).FindPropertyRelative(P_EFFECTS);
                         if (effectsProperty.isExpanded)
                         {

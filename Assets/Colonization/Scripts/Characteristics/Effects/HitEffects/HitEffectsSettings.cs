@@ -33,7 +33,5 @@ namespace Vurbiri.Colonization.Characteristics
                 list.Add(effect.CreateEffectUI(colors));
             }
         }
-
-		public static implicit operator HitEffectSettings[](HitEffectsSettings packetSettings) => packetSettings._effects;
     }
 }

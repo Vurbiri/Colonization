@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using Vurbiri.Collections;
 
@@ -21,7 +22,7 @@ namespace Vurbiri.Colonization.Actors
         private void OnValidate()
         {
             for (int i = 0; i < ActorId<TId>.Count; i++)
-                _settings[i].Init_Ed();
+                _settings[i].OnValidate();
         }
 
         public void UpdateName_Ed(string oldName, string newName)
@@ -32,6 +33,16 @@ namespace Vurbiri.Colonization.Actors
 
             if(isDirty)
                 UnityEditor.EditorUtility.SetDirty(this);
+        }
+
+        public void UpdateAnimation_Ed()
+        {
+            for (int i = 0; i < ActorId<TId>.Count; i++)
+                _settings[i].UpdateAnimation_Ed();
+
+
+            UnityEditor.EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
         }
 #endif
     }

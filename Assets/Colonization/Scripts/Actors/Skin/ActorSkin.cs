@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Vurbiri.Colonization.Characteristics;
 using Vurbiri.FSM;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -11,9 +12,7 @@ namespace Vurbiri.Colonization.Actors
         [Space]
         [SerializeField] private AActorSFX _sfx;
         [SerializeField] private Animator _animator;
-        [SerializeField] private SkinnedMeshRenderer _mesh;
-        [ReadOnly, SerializeField] TimingSkillSettings[] _timings;
-        [ReadOnly, SerializeField] float _durationDeath;
+        [ReadOnly, SerializeField] private float _durationDeath;
 
         #region CONST
         private const string B_IDLE = "bIdle", B_MOVE = "bMove", B_RUN = "bRun", B_BLOCK = "bBlock", B_DEATH = "bDeath";
@@ -31,10 +30,9 @@ namespace Vurbiri.Colonization.Actors
 
         public event Action EventStart;
 
-        public Transform Transform => _thisTransform;
-        public SkinnedMeshRenderer Mesh => _mesh;
-        public Bounds Bounds => _bounds;
-        public AActorSFX ActorSFX => _sfx;
+        public Transform Transform { [Impl(256)] get => _thisTransform; }
+        public Bounds Bounds { [Impl(256)] get => _bounds; }
+        public AActorSFX ActorSFX { [Impl(256)] get => _sfx; }
 
         private void Start()
         {
@@ -45,24 +43,24 @@ namespace Vurbiri.Colonization.Actors
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }
 
-        public ActorSkin Init(Id<PlayerId> owner)
+        public ActorSkin Init(Id<PlayerId> owner, Skills skills)
         {
             _thisTransform = transform;
-
+            
             if (owner != PlayerId.Satan)
-                _mesh.sharedMaterial = GameContainer.Materials[owner].materialWarriors;
+                GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = GameContainer.Materials[owner].materialWarriors;
 
             _stateMachine.AssignDefaultState(new BoolSwitchState(B_IDLE, this));
-            _moveState = new(B_MOVE, this);
-            _runState = new(B_RUN, this);
+            _moveState  = new(B_MOVE,  this);
+            _runState   = new(B_RUN,   this);
             _blockState = new(B_BLOCK, this);
 
-            int count = _timings.Length;
-            _skillStates = new SkillState[count];
-            for (int i = 0; i < count; i++)
-                _skillStates[i] = new(B_SKILLS[i], this, _timings[i], i);
+            var timings = skills.Timings;
+            _skillStates = new SkillState[timings.Count];
+            for (int i = 0; i < timings.Count; i++)
+                _skillStates[i] = new(B_SKILLS[i], this, timings[i], i);
 
-            _timings = null;
+            _sfx.Init(skills.HitSfxNames);
 
             return this;
         }
@@ -82,9 +80,9 @@ namespace Vurbiri.Colonization.Actors
         [Impl(256)] public WaitSignal Skill(int index, ActorSkin targetActorSkin)
         {
             SkillState skill = _skillStates[index];
-            skill.targetSkin = targetActorSkin;
             _stateMachine.SetState(skill);
-            return skill.signal;
+
+            return skill.Setup(targetActorSkin);
         }
 
         [Impl(256)] public void Impact(AudioClip clip)
@@ -102,28 +100,24 @@ namespace Vurbiri.Colonization.Actors
             return _deathState.waitState;
         }
 
-        [Impl(256)] public float GetFirsHitTime(int skillId) => _skillStates[skillId].waitHits[0].Time;
+        [Impl(256)] public float GetFirsHitTime(int skillId) => _skillStates[skillId].FirsHitTime;
 
-
-        #region Nested: TimingSkillSettings
-        //*******************************************************
-        [System.Serializable]
-        protected class TimingSkillSettings
-        {
-            public float[] hitTimes;
-            public float remainingTime;
-        }
-        #endregion
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
             this.SetComponent(ref _animator);
             this.SetComponent(ref _sfx);
-            this.SetChildren(ref _mesh);
 
             if (_animator != null)
-                _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)[A_DEATH].length;
+                _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)["A_Death"].length;
+        }
+
+        public void OnDrawGizmosSelected()
+        {
+            Gizmos.matrix = Matrix4x4.identity;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(_bounds.center, _bounds.size);
         }
 #endif
     }

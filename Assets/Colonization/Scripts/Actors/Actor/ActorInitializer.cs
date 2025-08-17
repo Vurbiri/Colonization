@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 
@@ -14,9 +13,9 @@ namespace Vurbiri.Colonization.Actors
         [MethodImpl(256)] public void AddMoveState(float speed) => _moveState = new(speed, this);
         [MethodImpl(256)] public void AddBlockState(int cost, int value) => _blockState = new(cost, value, this);
         [MethodImpl(256)] public void SetCountState(int count) => _skillState = new ASkillState[count];
-        [MethodImpl(256)] public void AddSkillState(ReadOnlyArray<HitEffects> effects, SkillSettings skill, float speedRun, int id)
+        [MethodImpl(256)] public void AddSkillState(SkillSettings skill, float speedRun, int id)
         {
-            _skillState[id] = ASkillState.Create(effects, skill, speedRun, id, this);
+            _skillState[id] = ASkillState.Create(skill, speedRun, id, this);
         }
 
         public void Setup(ActorSettings settings, ActorInitData initData, Hexagon startHex)
@@ -61,7 +60,7 @@ namespace Vurbiri.Colonization.Actors
 
             #region States
             _stateMachine.AssignDefaultState(new IdleState(this));
-            settings.Skills.CreateStates(this);
+            settings.CreateStates(this);
 
             _skin.EventStart += _stateMachine.ToDefaultState;
             #endregion

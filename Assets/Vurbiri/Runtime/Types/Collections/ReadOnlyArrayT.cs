@@ -10,8 +10,8 @@ namespace Vurbiri.Collections
     [Serializable, JsonArray]
     public class ReadOnlyArray<TValue> : IReadOnlyList<TValue>, ISerializationCallbackReceiver
     {
-        [SerializeField] 
-        private TValue[] _values;
+        [SerializeField] private TValue[] _values;
+        
         private int _count;
 
         public TValue this[int index]
@@ -42,6 +42,8 @@ namespace Vurbiri.Collections
         [Impl(256)] public IEnumerator<TValue> GetEnumerator() => new ArrayEnumerator<TValue>(_values, _count);
         [Impl(256)] IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<TValue>(_values, _count);
 
+        [Impl(256)] public static implicit operator ReadOnlyArray<TValue>(TValue[] values) => new(values);
+
         public void OnAfterDeserialize() => _count = _values != null ? _values.Length : -1;
         public void OnBeforeSerialize() 
         {
@@ -49,5 +51,9 @@ namespace Vurbiri.Collections
             OnAfterDeserialize();
 #endif
         }
-}
+
+#if UNITY_EDITOR
+        public void SetValue_EditorOnly(int index, TValue value) => _values[index] = value;
+#endif
+    }
 }

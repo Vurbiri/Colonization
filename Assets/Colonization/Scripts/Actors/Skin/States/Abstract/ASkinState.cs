@@ -23,8 +23,8 @@ namespace Vurbiri.Colonization.Actors
             [Impl(256)] protected DeathBehaviour GetDeathBehaviour() => _parent._animator.GetBehaviour<DeathBehaviour>();
             [Impl(256)] protected ReactBehaviour[] GeReactBehaviours() => _parent._animator.GetBehaviours<ReactBehaviour>();
 
-            [Impl(256)] protected void AnimationEnable() => _parent._animator.SetBool(_idParam, true);
-            [Impl(256)] protected void AnimationDisable() => _parent._animator.SetBool(_idParam, false);
+            [Impl(256)] protected void EnableAnimation() => _parent._animator.SetBool(_idParam, true);
+            [Impl(256)] protected void DisableAnimation() => _parent._animator.SetBool(_idParam, false);
 
             [Impl(256)] protected void SetTrigger() => _parent._animator.SetTrigger(_idParam);
             [Impl(256)] protected void ResetTrigger() => _parent._animator.ResetTrigger(_idParam);

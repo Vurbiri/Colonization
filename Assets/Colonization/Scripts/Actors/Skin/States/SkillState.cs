@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -8,29 +9,34 @@ namespace Vurbiri.Colonization.Actors
         sealed protected class SkillState : ASkinState
         {
             private readonly int _id;
+            private readonly WaitSignal _signal = new();
+            private readonly WaitScaledTime[] _waitHits;
             private readonly WaitScaledTime _waitEnd;
             private readonly int _countHits;
             private Coroutine _coroutine;
+            private ActorSkin _targetSkin;
 
-            public ActorSkin targetSkin;
-            public readonly WaitSignal signal = new();
-            public readonly WaitScaledTime[] waitHits;
+            public float FirsHitTime { [Impl(256)] get => _waitHits[0].Time; }
 
-            public SkillState(string stateName, ActorSkin parent, TimingSkillSettings timing, int id) : base(stateName, parent)
+            public SkillState(string stateName, ActorSkin parent, AnimationTime timing, int id) : base(stateName, parent)
             {
                 _id = id;
-                _countHits = timing.hitTimes.Length;
-                waitHits = new WaitScaledTime[_countHits];
 
-                for (int i = 0; i < _countHits; i++)
-                    waitHits[i] = new(timing.hitTimes[i]);
+                _waitHits = timing.WaitHits;
+                _waitEnd = timing.WaitEnd;
 
-                _waitEnd = new(timing.remainingTime);
+                _countHits = _waitHits.Length;
+            }
+
+            [Impl(256)] public WaitSignal Setup(ActorSkin targetSkin)
+            {
+                _targetSkin = targetSkin;
+                return _signal;
             }
 
             public override void Enter()
             {
-                AnimationEnable();
+                EnableAnimation();
                 _coroutine = StartCoroutine(StartSkill_Cn());
             }
 
@@ -42,29 +48,29 @@ namespace Vurbiri.Colonization.Actors
 
                     _waitEnd.Reset();
                     for (int i = 0; i < _countHits; i++)
-                        waitHits[i].Reset();
+                        _waitHits[i].Reset();
 
                     _coroutine = null;
                 }
-                signal.Reset();
+                _signal.Reset();
 
-                AnimationDisable();
+                DisableAnimation();
             }
 
             private IEnumerator StartSkill_Cn()
             {
                 for (int i = 0; i < _countHits; i++)
                 {
-                    yield return waitHits[i];
+                    yield return _waitHits[i];
 
-                    yield return SFX.Hit(_id, i, targetSkin);
-                    signal.Send();
+                    yield return SFX.Hit(_id, i, _targetSkin);
+                    _signal.Send();
                 }
 
                 yield return _waitEnd;
 
                 _coroutine = null;
-                signal.Send();
+                _signal.Send();
             }
         }
     }
