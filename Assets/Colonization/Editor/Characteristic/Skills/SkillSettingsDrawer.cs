@@ -20,7 +20,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_CHILD_TARGET = "_parentTarget_ed", P_CLIP = "clipSettings_ed", P_SFX = "hitSFXName_ed", P_TYPE = "typeActor_ed";
 
         private static readonly string[] KEYS_NAME_SKILLS =
-        { "Strike", "Channel", "Sweep", "Combo", "Heal", "Sparks", "Battlecry", "Fortify", "Enhancement", "Kick", "Leap" };
+        { "Strike", "Channel", "Sweep", "Combo", "Heal", "Sparks", "Toxin", "Battlecry", "Fortify", "Enhancement", "Kick", "Leap" };
         #endregion
 
         protected override void OnGUI()

@@ -44,7 +44,10 @@ namespace Vurbiri.Colonization.Actors
                 prevTime = currentTime;
             }
 
-            _remainingTime = clipSettings.totalTime - prevTime;
+            if(clipSettings.totalTimeRatio < 99.99f)
+                totalTime *= clipSettings.totalTimeRatio / 100f;
+
+            _remainingTime = totalTime - prevTime;
         }
 #endif
     }

@@ -15,9 +15,10 @@ namespace Vurbiri.Colonization.Actors
 
         public AnimationClip clip;
         public float totalTime;
+        public float totalTimeRatio = 100f;
         public float[] hitTimes = new float[1];
-        public float range = -1;
-        public float distance = -1;
+        public float range = -1f;
+        public float distance = -1f;
 
         [MenuItem(MENU, true)]
         private static bool ValidateSelection()
@@ -112,9 +113,13 @@ namespace Vurbiri.Colonization.Actors
         private void OnValidate()
         {
             if (clip == null)
-            {
                 clip = EUtility.FindAnyAsset<AnimationClip>(name.Replace("ACS_", "A_"));
-            }
+
+            if (clip != null && totalTime < 0.1f)
+                totalTime = clip.length;
+
+            if (totalTimeRatio > 100f)
+                totalTimeRatio = 100f;
         }
     }
 }

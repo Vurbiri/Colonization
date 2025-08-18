@@ -8,7 +8,7 @@ namespace VurbiriEditor.Colonization.Actors
 
     sealed public class DemonsSettingsWindow : ActorsSettingsWindow<DemonsSettingsScriptable, DemonId, DemonSettings>
     {
-        private const string NAME = "Demons Settings", MENU = MENU_ACTORS_PATH + NAME;
+        private const string NAME = "Demons Settings", MENU = MENU_AC_PATH + NAME;
 
         [MenuItem(MENU, false, 11)]
         private static void ShowWindow()

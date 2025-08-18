@@ -7,17 +7,20 @@ namespace Vurbiri.Colonization.Actors
 {
 	public abstract class APooledSFX : IHitSFX 
     {
-        protected readonly Transform _transform;
-        protected readonly GameObject _gameObject;
         private readonly Action<APooledSFX> a_deactivate;
 
-        public APooledSFX(MonoBehaviour parent, Action<APooledSFX> deactivate)
+        protected readonly Transform _transform;
+        protected readonly GameObject _gameObject;
+        
+        public APooledSFX(Component creator, Action<APooledSFX> deactivate)
         {
-            _transform  = parent.transform;
-            _gameObject = parent.gameObject;
             a_deactivate = deactivate;
 
+            _transform  = creator.transform;
+            _gameObject = creator.gameObject;
+
             Disable();
+            UnityEngine.Object.Destroy(creator);
         }
 
         public abstract IEnumerator Hit(ISFXUser user, ActorSkin target);

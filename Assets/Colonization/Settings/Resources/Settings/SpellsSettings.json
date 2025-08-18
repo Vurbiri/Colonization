@@ -10,7 +10,7 @@
   "wrathBasa": 15,
   "wrathPerRes": 5,
   "wrathPierce": 5,
-  "sacrificeKnifeSFX": "Sacrifice",
+  "sacrificeKnifeSFX": "SacrificeVictim",
   "sacrificeTargetSFX": "SacrificeTarget",
   "sacrificeBloodCost": 2,
   "sacrificeHPPercent": 125,

@@ -9,7 +9,7 @@ namespace VurbiriEditor.Colonization
 {
 	public class SFXFactoriesStorageWindow : EditorWindow
 	{
-		private const string NAME = "SFX Factories", MENU = MENU_ACTORS_PATH + NAME;
+		private const string NAME = "SFX Factories", MENU = MENU_AC_PATH + NAME;
         
 		private readonly string _defaultPath = "Assets/Colonization/HitSFX";
 

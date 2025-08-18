@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
         [ReadOnly, SerializeField] private float _durationDeath;
 
         #region CONST
-        private const string B_IDLE = "bIdle", B_MOVE = "bMove", B_RUN = "bRun", B_BLOCK = "bBlock", B_DEATH = "bDeath";
+        private const string B_IDLE = "bIdle", B_MOVE = "bMove", B_RUN = "bRun", B_BLOCK = "bBlock", B_DEATH = "bDeath", B_SPEC = "bSpecial";
         private static readonly string[] B_SKILLS = { "bSkill_0", "bSkill_1", "bSkill_2", "bSkill_3" };
         private const string T_REACT = "tReact";
         #endregion
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
         private Transform _thisTransform;
         
         private readonly StateMachine _stateMachine = new();
-        private BoolSwitchState _moveState, _runState, _blockState;
+        private BoolSwitchState _moveState, _runState, _blockState, _specState;
         private SkillState[] _skillStates;
         private DeathState _deathState;
         private ReactState _reactState;
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.Actors
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }
 
-        public ActorSkin Init(Id<PlayerId> owner, Skills skills)
+        public virtual ActorSkin Init(Id<PlayerId> owner, Skills skills)
         {
             _thisTransform = transform;
             
@@ -54,6 +54,7 @@ namespace Vurbiri.Colonization.Actors
             _moveState  = new(B_MOVE,  this);
             _runState   = new(B_RUN,   this);
             _blockState = new(B_BLOCK, this);
+            _specState  = new(B_SPEC,  this);
 
             var timings = skills.Timings;
             _skillStates = new SkillState[timings.Count];
@@ -85,6 +86,8 @@ namespace Vurbiri.Colonization.Actors
             return skill.Setup(targetActorSkin);
         }
 
+        [Impl(256)] public void SpecialSkill() => _stateMachine.SetState(_specState);
+
         [Impl(256)] public void Impact(AudioClip clip)
         {
             _reactState.Repeat();
@@ -113,11 +116,19 @@ namespace Vurbiri.Colonization.Actors
                 _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)["A_Death"].length;
         }
 
-        public void OnDrawGizmosSelected()
+        //public void OnDrawGizmosSelected()
+        //{
+        //    Gizmos.matrix = Matrix4x4.identity;
+        //    Gizmos.color = Color.red;
+        //    Gizmos.DrawWireCube(_bounds.center, _bounds.size);
+        //}
+
+        public void OnDrawGizmos()
         {
             Gizmos.matrix = Matrix4x4.identity;
             Gizmos.color = Color.red;
             Gizmos.DrawWireCube(_bounds.center, _bounds.size);
+            Gizmos.DrawSphere(_bounds.center, 0.1f);
         }
 #endif
     }

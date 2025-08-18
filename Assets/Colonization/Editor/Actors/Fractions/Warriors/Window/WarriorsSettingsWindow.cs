@@ -8,7 +8,7 @@ namespace VurbiriEditor.Colonization.Actors
 
     sealed public class WarriorsSettingsWindow : ActorsSettingsWindow<WarriorsSettingsScriptable, WarriorId, WarriorSettings>
     {
-        private const string NAME = "Warriors Settings", MENU = MENU_ACTORS_PATH + NAME;
+        private const string NAME = "Warriors Settings", MENU = MENU_AC_PATH + NAME;
 
         [MenuItem(MENU, false, 10)]
         private static void ShowWindow()

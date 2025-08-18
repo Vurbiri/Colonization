@@ -13,13 +13,13 @@ namespace VurbiriEditor.Colonization.Actors
     {
         [SerializeField] private VisualTreeAsset _treeAnimationClipSettingsWindow;
 
-        private const string NAME = "Animation Clips Settings", MENU = MENU_PATH + NAME;
+        private const string NAME = "Animation Clips Settings", MENU = MENU_AC_PATH + NAME;
         private const string NAME_MELEE = "Melee", NAME_SHIELD = "Shield", NAME_WIZAED = "Wizard";
         private const string NAME_BUTTON = "Apply";
 
         private readonly List<Editor> _editors = new();
 
-        [MenuItem(MENU, false, 51)]
+        [MenuItem(MENU)]
         public static void ShowWindow()
         {
             GetWindow<AnimationClipSettingsWindow>(true, NAME).minSize = new(370f, 500f);

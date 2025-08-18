@@ -94,10 +94,12 @@ namespace Vurbiri.Colonization.Characteristics
             bool changed = false;
             for (int i = 0; i < _skillsSettings.Length; i++)
             {
-                if(changed |= _skillsSettings[i].hitSFXName_ed.Update_Ed(oldName, newName))
+                if (_skillsSettings[i].hitSFXName_ed.Update_Ed(oldName, newName))
+                {
+                    changed = true;
                     _hitSfxNames.SetValue_EditorOnly(i, newName);
+                }
             }
-
             return changed;
         }
 

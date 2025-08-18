@@ -97,6 +97,10 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.SetState(_skillState[id], true);
             return _skillState[id].Signal;
         }
+        public virtual WaitSignal UseSpecialSkill()
+        {
+            return null;
+        }
         #endregion
 
         public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)

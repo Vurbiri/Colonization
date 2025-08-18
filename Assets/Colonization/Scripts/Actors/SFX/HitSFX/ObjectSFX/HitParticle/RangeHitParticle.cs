@@ -10,6 +10,7 @@ namespace Vurbiri.Colonization.Actors
         private readonly ParticleSystem _particle;
         private readonly WaitScaledTime _waitTime = new(0f);
         private readonly WaitSignal _waitActivate = new();
+        private readonly float _lifetimeRate, _lifetimeMinRate, _lifetimeMaxRate;
         private readonly float _avgSpeed;
         private readonly float _targetHeightRate;
         private ParticleSystem.MainModule _main;
@@ -18,10 +19,19 @@ namespace Vurbiri.Colonization.Actors
         {
             _clipRun = creator.clipRun; _clipHit = creator.clipHit;
             _particle = creator.particle;
+            _lifetimeRate = creator.particleLifetimeRate;
             _targetHeightRate = creator.targetHeightRate;
 
             _main = _particle.main;
-            _avgSpeed = (_main.startSpeed.constantMin + _main.startSpeed.constantMax) * 0.5f;
+            var temptMinMax = _main.startSpeed;
+            _avgSpeed = (temptMinMax.constantMin + temptMinMax.constantMax) * 0.5f;
+
+            temptMinMax = _main.startLifetime;
+            float lifetimeMin = temptMinMax.constantMin, lifetimeMax = temptMinMax.constantMax;
+            float avgLife = (lifetimeMin + lifetimeMax) * 0.5f;
+            _lifetimeMinRate = lifetimeMin / avgLife; _lifetimeMaxRate = lifetimeMax / avgLife;
+
+            UnityEngine.Object.Destroy(creator);
         }
 
         public override IEnumerator Hit(ISFXUser user, ActorSkin target)
@@ -34,8 +44,8 @@ namespace Vurbiri.Colonization.Actors
             _transform.LookAt(targetPosition);
 
             float hitTime = (Vector3.Distance(_transform.position, targetPosition) - bounds.extents.z) / _avgSpeed;
-            float particleTime = hitTime * 1.1f;
-            _main.startLifetime = particleTime * 1.1f;
+            float particleTime = hitTime * _lifetimeRate;
+            _main.startLifetime = new(particleTime * _lifetimeMinRate, particleTime *= _lifetimeMaxRate);
             _main.duration = particleTime * 1.1f;
 
             _particle.Play();

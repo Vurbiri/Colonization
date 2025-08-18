@@ -7,17 +7,19 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract class AMonoPooledSFX : MonoBehaviour, IHitSFX
     {
+        private Action<AMonoPooledSFX> a_deactivate;
+
         protected Transform _thisTransform;
         protected GameObject _thisGameObject;
-        private Action<AMonoPooledSFX> a_deactivate;
 
         public abstract IEnumerator Hit(ISFXUser user, ActorSkin target);
 
         public virtual AMonoPooledSFX Init(Action<AMonoPooledSFX>  deactivate)
         {
+            a_deactivate = deactivate;
+
             _thisTransform  = transform;
             _thisGameObject = gameObject;
-            a_deactivate = deactivate;
 
             Disable();
             return this;
