@@ -50,24 +50,26 @@ namespace Vurbiri.Colonization.Actors
 
         public static void UpdateS_Ed()
         {
+            while (s_self_ed == null)
+                s_self_ed = EUtility.FindAnyScriptable<SFXFactoriesStorage>();
+
             if (!Application.isPlaying)
                 s_self_ed.Update_Ed();
         }
         public void Update_Ed()
         {
             var factories = EUtility.FindScriptables<ASFXFactory>();
-            _factories = factories.ToArray();
+            bool isDirty = false;
 
             EUtility.SetScriptable(ref s_warriorsSettings_ed);
             EUtility.SetScriptable(ref s_demonsSettings_ed);
 
             names_ed = new string[factories.Count + 1];
-            names_ed[0] = EmptySFX.NAME; ASFXFactory factory;
+            names_ed[0] = EmptySFX.NAME; 
 
-            bool isDirty = false;
             for (int i = 0, j = 1; i < factories.Count; i++, j++)
             {
-                factory = factories[i];
+                ASFXFactory factory = factories[i];
                 names_ed[j] = factory.Name;
                 if (factory.index_ed != j)
                 {
@@ -77,13 +79,25 @@ namespace Vurbiri.Colonization.Actors
                 }
             }
 
-            if (isDirty) UnityEditor.AssetDatabase.SaveAssets();
+            if (isDirty || _factories == null || _factories.Length != factories.Count)
+            {
+                _factories = factories.ToArray();
+                UnityEditor.EditorUtility.SetDirty(this);
+                UnityEditor.AssetDatabase.SaveAssets();
+            }
         }
 
         private void OnValidate()
         {
-            if (!Application.isPlaying || _factories == null || _factories.Length == 0)
-                Update_Ed();
+            if (!Application.isPlaying)
+                UpdateAsync_Ed();
+        }
+
+        private async void UpdateAsync_Ed()
+        {
+            await System.Threading.Tasks.Task.Delay(1);
+            if (!Application.isPlaying)
+                UpdateS_Ed();
         }
 
         private async static void SetStaticField_Ed()

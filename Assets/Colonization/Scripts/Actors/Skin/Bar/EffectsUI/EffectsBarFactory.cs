@@ -6,11 +6,10 @@ namespace Vurbiri.Colonization.Actors.UI
     [RequireComponent(typeof(SpriteRenderer))]
     public class EffectsBarFactory : MonoBehaviour
 	{
-        public Vector3 startPosition = new(3.6f, -0.9f, 0f);
-        public Vector3 offsetPosition = new(-0.7f, 0f, 0f);
-        [Space]
-        public int orderLevel = 0;
+        [NonSerialized] private EffectsBar.Settings _settings;
 
-        public EffectsBar Create(Transform repository, Action<EffectsBar, bool> callback) => new(Instantiate(this, repository), callback);
+        public EffectsBar Create(Transform repository, Action<EffectsBar, bool> callback) => new(Instantiate(this, repository), _settings, callback);
+
+        public void CreateSettings(Vector2 startPosition, Vector2 offsetPosition, int maxIndex) => _settings = new(startPosition, offsetPosition, maxIndex);
     }
 }

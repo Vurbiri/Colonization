@@ -43,8 +43,7 @@ namespace Vurbiri.Colonization.Characteristics
             int oldMaxValue = _maxValue, currentValue = _value;
             _maxValue = newMaxValue;
 
-            if (newMaxValue > oldMaxValue)
-                currentValue = (int)Math.Round((double)currentValue * newMaxValue / oldMaxValue);
+            currentValue = (int)Math.Round((double)currentValue * newMaxValue / oldMaxValue);
             currentValue = Math.Clamp(currentValue, 0, newMaxValue);
 
             if(currentValue != _value)

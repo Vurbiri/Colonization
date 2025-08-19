@@ -14,9 +14,8 @@ namespace VurbiriEditor.Colonization.Actors
         [SerializeField] private VisualTreeAsset _treeAnimationClipSettingsWindow;
 
         private const string NAME = "Animation Clips Settings", MENU = MENU_AC_PATH + NAME;
-        private const string NAME_MELEE = "Melee", NAME_SHIELD = "Shield", NAME_WIZAED = "Wizard";
-        private const string NAME_BUTTON = "Apply";
-
+        
+        private readonly string[] WARRIOR_NAMES = { "Melee", "Shield", "Wizard" };
         private readonly List<Editor> _editors = new();
 
         [MenuItem(MENU)]
@@ -34,44 +33,54 @@ namespace VurbiriEditor.Colonization.Actors
 
             var root = _treeAnimationClipSettingsWindow.CloneTree();
 
-            var containerMelee = root.Q<ScrollView>(NAME_MELEE);
-            var containerShield = root.Q<ScrollView>(NAME_SHIELD);
-            var containerWizard = root.Q<ScrollView>(NAME_WIZAED);
+            Dictionary<string, ScrollView> containers = new(8);
+
+            for(int i = 0; i < 3; i++)
+                containers["ACS_Warrior_".Concat(WARRIOR_NAMES[i])] = root.Q<ScrollView>(WARRIOR_NAMES[i]);
+
+            for (int i = 0; i < DemonId.Count; i++)
+                containers["ACS_Demon_".Concat(DemonId.Names_Ed[i])] = root.Q<ScrollView>(DemonId.Names_Ed[i]);
 
             AnimationClipSettingsScriptable clip;
-            Editor editor;
+            Editor editor; string name;
 
             for (int i = settings.Count - 1; i >= 0; i--)
             {
-                clip = settings[i];
                 editor = null;
 
-                NameSynchronization(clip);
+                if (string.IsNullOrEmpty(name = NameSynchronization(clip = settings[i])))
+                {
+                    Debug.LogWarning($"[AnimationClips] Клип <b>{clip.name}</b> не назначен.");
+                    continue;
+                }
 
-                if (clip.name.Contains(NAME_MELEE))
-                    containerMelee.Add(AnimationClipSettingsEditor.CreateEditorAndBind(clip, out editor));
+                foreach(var container in containers)
+                {
+                    if (name.StartsWith(container.Key))
+                    {
+                        container.Value.Add(AnimationClipSettingsEditor.CreateEditorAndBind(clip, out editor));
+                        break;
+                    }
+                }
 
-                if (clip.name.Contains(NAME_SHIELD))
-                    containerShield.Add(AnimationClipSettingsEditor.CreateEditorAndBind(clip, out editor));
-
-                if (clip.name.Contains(NAME_WIZAED))
-                    containerWizard.Add(AnimationClipSettingsEditor.CreateEditorAndBind(clip, out editor));
-
-                if (editor)
+                if (editor) 
                     _editors.Add(editor);
+                else
+                    Debug.LogWarning($"[AnimationClips] Клип <b>{name}</b> не идентифицирован.");
             }
 
-            root.Q<Button>(NAME_BUTTON).clicked += Apply;
+            root.Q<Button>("Apply_1").clicked += Apply;
+            root.Q<Button>("Apply_2").clicked += Apply;
 
             rootVisualElement.Add(root);
         }
 
-        private void NameSynchronization(AnimationClipSettingsScriptable scriptable)
+        private string NameSynchronization(AnimationClipSettingsScriptable scriptable)
         {
             AnimationClip clip = scriptable.clip;
 
             if (clip == null)
-                return;
+                return null;
 
             string newName = clip.name.Insert(1, "CS");
 
@@ -80,9 +89,9 @@ namespace VurbiriEditor.Colonization.Actors
                 string path = AssetDatabase.GetAssetPath(scriptable);
                 AssetDatabase.RenameAsset(path, newName);
                 scriptable.name = newName;
-
-                //Selection.activeObject = scriptable;
             }
+
+            return scriptable.name;
         }
 
         private void Apply()

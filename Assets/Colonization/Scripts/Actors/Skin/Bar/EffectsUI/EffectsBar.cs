@@ -4,6 +4,7 @@ using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization.Actors.UI
@@ -12,33 +13,29 @@ namespace Vurbiri.Colonization.Actors.UI
     {
         private const char CHAR = '-';
 
-        private readonly Vector3 _startPosition;
-        private readonly Vector3 _offsetPosition;
+        private readonly Settings _settings;
         private readonly SpriteRenderer _sprite;
         private readonly TextMeshPro _durationTMP;
 
-        private int Index { set => _transform.localPosition = _startPosition + _offsetPosition * value; }
-        private int Duration { set => _durationTMP.text = new(CHAR, value); }
+        private int Duration { [Impl(256)] set => _durationTMP.text = new(CHAR, value); }
+        private int Index { [Impl(256)] set => _transform.localPosition = _settings.GetPosition(value); }
 
         private Unsubscriptions _unsubscribers;
 
-        public EffectsBar(EffectsBarFactory initObj, Action<EffectsBar, bool> callback) : base(initObj.gameObject, callback)
+        public EffectsBar(Component initObj, Settings settings, Action<EffectsBar, bool> callback) : base(initObj.gameObject, callback)
         {
-            _startPosition = initObj.startPosition;
-            _offsetPosition = initObj.offsetPosition;
+            _settings = settings;
+
             _sprite = initObj.GetComponent<SpriteRenderer>();
             _durationTMP = initObj.GetComponentInChildren<TextMeshPro>();
-
-            _sprite.sortingOrder = initObj.orderLevel;
-            _durationTMP.sortingOrder = initObj.orderLevel;
 
             Object.Destroy(initObj);
         }
 
         public void Init(ReactiveEffect effect, Actor actor, int orderLevel)
         {
-            _sprite.sortingOrder += orderLevel;
-            _durationTMP.sortingOrder += orderLevel;
+            _sprite.sortingOrder = orderLevel;
+            _durationTMP.sortingOrder = orderLevel;
 
             _sprite.sprite = GameContainer.UI.SpritesOfAbilities[effect.TargetAbility];
             _sprite.color = GameContainer.UI.Colors.GetTextColor(effect.IsPositive);
@@ -52,7 +49,7 @@ namespace Vurbiri.Colonization.Actors.UI
             Enable();
         }
 
-        private void Destroy()
+        [Impl(256)] private void Destroy()
         {
             _unsubscribers?.Unsubscribe();
             ToPool();
@@ -78,5 +75,31 @@ namespace Vurbiri.Colonization.Actors.UI
                     return;
             }
         }
+
+        #region Nested: Settings
+        //***********************************
+        public class Settings
+        {
+            private readonly Vector2 _start;
+            private readonly Vector2 _offset;
+            private readonly int _maxIndex;
+
+            [Impl(256)]
+            public Settings(Vector2 startPosition, Vector2 offsetPosition, int maxIndex)
+            {
+                _start = startPosition;
+                _offset = offsetPosition;
+                _maxIndex = maxIndex;
+            }
+
+            [Impl(256)]
+            public Vector3 GetPosition(int index)
+            {
+                int x = index % _maxIndex, y = index / _maxIndex;
+                return new(_start.x + _offset.x * x, _start.y + _offset.y * y, 0f);
+            }
+        }
+        //***********************************
+        #endregion
     }
 }

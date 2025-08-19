@@ -27,8 +27,8 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         #region Values
         private readonly string[] _namesAbilitiesDuration = { ActorAbilityId.Names_Ed[MaxHP], ActorAbilityId.Names_Ed[HPPerTurn], ActorAbilityId.Names_Ed[Attack],
-                                                               ActorAbilityId.Names_Ed[Defense],  ActorAbilityId.Names_Ed[APPerTurn]};
-        private readonly int[] _valuesAbilitiesDuration = { MaxHP, HPPerTurn, Attack, Defense, APPerTurn };
+                                                               ActorAbilityId.Names_Ed[Defense], ActorAbilityId.Names_Ed[Pierce], ActorAbilityId.Names_Ed[APPerTurn]};
+        private readonly int[] _valuesAbilitiesDuration = { MaxHP, HPPerTurn, Attack, Defense, Pierce, APPerTurn };
 
         private readonly string[] _namesModifiersDuration = { "Flat", "Percent" };
         private readonly int[] _valuesModifiersDuration = { TypeModifierId.Addition, TypeModifierId.TotalPercent };
@@ -166,14 +166,16 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if (usedAbility == APPerTurn)
                 {
                     SetInt(P_TYPE_OP, TypeModifierId.Addition);
-                    DrawInt(P_VALUE, "Value", -2, 2);
+                    DrawFlatValue(-2, 2);
                 }
                 else
                 {
                     if (DrawIntPopup(P_TYPE_OP, _namesModifiersDuration, _valuesModifiersDuration) == TypeModifierId.TotalPercent)
-                        DrawInt(P_VALUE, "Value (%)", -200, 200, 100);
+                        DrawPercentValue(-200, 200, 100);
+                    else if (usedAbility == Pierce)
+                        DrawFlatValue(-50, 50);
                     else
-                        DrawShiftValue("Value", -50, 50);
+                        DrawShiftValue(-50, 50);
                 }
 
                 indentLevel--;
@@ -189,16 +191,16 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if (usedAbility == CurrentHP)
                 {
                     if (DrawIntPopup(P_TYPE_OP, _namesModifiersCurrentHP, ActorAbilityId.Values_Ed) == TypeModifierId.Addition)
-                        DrawShiftValue("Value", -75, 75);
+                        DrawShiftValue(-75, 75);
                     else
-                        DrawInt(P_VALUE, "Value (%)", -100, 100);
+                        DrawPercentValue(-100, 100);
                 }
                 else
                 {
                     SetInt(P_TYPE_OP, TypeModifierId.Addition);
 
                     if (usedAbility == CurrentAP)
-                        DrawInt(P_VALUE, "Value", -5, 5);
+                        DrawFlatValue(-5, 5);
                     else
                         DrawMoveValue();
                 }
@@ -222,13 +224,17 @@ namespace VurbiriEditor.Colonization.Characteristics
                 property.intValue = IntSlider(_position, displayName, defaultValue, min, max) * rate;
             }
             //==============================================
-            void DrawShiftValue(string displayName, int min, int max)
+            void DrawPercentValue(int min, int max, int defaultValue = 0) => DrawInt(P_VALUE, "Value (%)", min, max, defaultValue);
+            //==============================================
+            void DrawFlatValue(int min, int max, int defaultValue = 0) => DrawInt(P_VALUE, "Value", min, max, defaultValue);
+            //==============================================
+            void DrawShiftValue(int min, int max)
             {
                 SerializedProperty property = GetProperty(P_VALUE);
                 int value = property.intValue >> SHIFT_ABILITY;  
 
                 _position.y += _height;
-                property.intValue = IntSlider(_position, displayName, Mathf.Clamp(value, min, max), min, max) << SHIFT_ABILITY;
+                property.intValue = IntSlider(_position, "Value", Mathf.Clamp(value, min, max), min, max) << SHIFT_ABILITY;
             }
             //==============================================
             void DrawMoveValue()
