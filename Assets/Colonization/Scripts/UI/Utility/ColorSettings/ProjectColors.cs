@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         private string _panelTextTag;
         private string _hintDefaultTag;
 
-        private string _textDefaultTag, _textPositiveTag, _textNegativeTag;
+        private string _textDefaultTag, _textWarningTag, _textPositiveTag, _textNegativeTag;
 
         //private const string TAG_COLOR_FORMAT = "<color={0}>";
         private const string TAG_COLOR_FORMAT = "<{0}>";
@@ -48,6 +48,7 @@ namespace Vurbiri.Colonization.UI
         public Color TextNegative => _textNegative;
                
         public string TextDefaultTag => _textDefaultTag;
+        public string TextWarningTag => _textWarningTag;
         public string TextPositiveTag => _textPositiveTag;
         public string TextNegativeTag => _textNegativeTag;
 
@@ -57,6 +58,7 @@ namespace Vurbiri.Colonization.UI
             _hintDefaultTag = string.Format(TAG_COLOR_FORMAT, _hintDefault.ToHex());
 
             _textDefaultTag = string.Format(TAG_COLOR_FORMAT, _textDefault.ToHex());
+            _textWarningTag = string.Format(TAG_COLOR_FORMAT, _textWarning.ToHex());
             _textPositiveTag = string.Format(TAG_COLOR_FORMAT, _textPositive.ToHex());
             _textNegativeTag = string.Format(TAG_COLOR_FORMAT, _textNegative.ToHex());
 

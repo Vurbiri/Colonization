@@ -10,6 +10,8 @@
   "OnSelf": "<u>On yourself:</u>",
   "Damage": "Damage <b>{0}%</b>",
   "DamagePierce": "Damage <b>{0}%</b>\nbreaking defense <b>+{1}%</b>",
+  "HolyDamage": "Damage to Demons <b>{0}%</b>",
+  "HolyDamagePierce": "Damage to Demons <b>{0}%</b>\nbreaking defense <b>+{1}%</b>",
   "Healing": "Healing <b>{0}%</b>",
   "MaxHPTemp": "Maximum HP <b>{0}</b> for <b>{1}</b> round(s)",
   "HPPerTurnTemp": "Regeneration <b>{0}</b> for <b>{1}</b> round(s)",

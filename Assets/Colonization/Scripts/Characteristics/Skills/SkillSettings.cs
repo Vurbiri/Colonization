@@ -43,23 +43,29 @@ namespace Vurbiri.Colonization.Characteristics
             _ui = null; _effectsHitsSettings = null;
         }
 
-        public SkillUI Init(ProjectColors colors, int actorType, int actorId, int skillId)
+        public SkillUI Init(ProjectColors colors, SeparatorEffectUI separator, int actorType, int actorId, int skillId)
         {
             int countHits = _effectsHitsSettings.Length;
             var effects = new HitEffects[countHits];
             List<AEffectsUI> targetEffectsUI = new(countHits), selfEffectsUI = new(countHits);
+            int targetEffectsCount, selfEffectsCount; 
             HitEffectsSettings effectsHitSettings;
 
             for (int i = 0, u = 0; i < countHits; i++)
             {
                 effectsHitSettings = _effectsHitsSettings[i];
-                effectsHitSettings.CreateEffectsHitUI(colors, targetEffectsUI, selfEffectsUI);
                 effects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, skillId, u);
-                
+
+                targetEffectsCount = targetEffectsUI.Count; selfEffectsCount = selfEffectsUI.Count;
+                effectsHitSettings.CreateEffectsHitUI(colors, targetEffectsUI, selfEffectsUI);
+
+                if (targetEffectsCount != targetEffectsUI.Count) targetEffectsUI.Add(separator);
+                if (selfEffectsCount != selfEffectsUI.Count) selfEffectsUI.Add(separator);
+
                 u += effectsHitSettings.Count;
             }
 
-            var ui = _ui.Init(colors, targetEffectsUI.ToArray(), selfEffectsUI.ToArray());
+            var ui = _ui.Init(colors, targetEffectsUI.ToArray(), selfEffectsUI.ToArray(), separator);
             _hitEffects = new(effects);
 
             _ui = null; _effectsHitsSettings = null;

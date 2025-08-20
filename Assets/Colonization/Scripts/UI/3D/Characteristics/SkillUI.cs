@@ -14,17 +14,18 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Sprite _sprite;
         [SerializeField] private int _cost;
 
-        private const int SIZE = 64;
+        private const int SIZE = 78;
 
         private AEffectsUI[] _effectsTarget;
         private AEffectsUI[] _effectsSelf;
+        private SeparatorEffectUI _separator;
         private string _textMain, _textAP;
         private string _hexColor, _hexColorPlus, _hexColorMinus;
 
         public Sprite Sprite => _sprite;
         public int Cost => _cost;
 
-        public SkillUI Init(ProjectColors colors, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf)
+        public SkillUI Init(ProjectColors colors, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf, SeparatorEffectUI separator)
         {
             _hexColor = colors.HintDefaultTag;
             _hexColorPlus = colors.TextPositiveTag;
@@ -32,6 +33,7 @@ namespace Vurbiri.Colonization.UI
 
             _effectsTarget = effectsTarget;
             _effectsSelf = effectsSelf;
+            _separator = separator;
 
             Localization.Instance.Subscribe(SetTexts);
 
@@ -46,29 +48,28 @@ namespace Vurbiri.Colonization.UI
 
             StringBuilder sb = new(SIZE + countTarget * SIZE + countSelf * SIZE);
             sb.AppendLine(localization.GetText(FILE, _keyName));
+            _separator.GetText(sb);
 
             if (countTarget > 0)
             {
                 if (countSelf > 0)
+                {
+                    sb.Append(_hexColor);
                     sb.AppendLine(localization.GetText(FILE, ON_TARGET));
+                }
 
                 for (int i = 0; i < countTarget; i++)
-                    _effectsTarget[i].GetText(localization, sb);
+                   _effectsTarget[i].GetText(localization, sb);
             }
 
             if (countSelf > 0)
             {
-                if (countTarget > 0)
-                    sb.AppendLine();
-
                 sb.Append(_hexColor);
                 sb.AppendLine(localization.GetText(FILE, ON_SELF));
 
                 for (int i = 0; i < countSelf; i++)
                     _effectsSelf[i].GetText(localization, sb);
             }
-
-            sb.AppendLine();
 
             _textMain = sb.ToString();
             _textAP = localization.GetFormatText(FILE, AP_KEY, _cost);

@@ -32,14 +32,14 @@ namespace Vurbiri.Colonization.Characteristics
 
             if (actorType == ActorTypeId.Warrior)
             {
-                _blockUI = new(_blockCost, _blockValue);
-
                 var skillsUI = new SkillUI[countSkills];
                 var colors = GameContainer.UI.Colors;
+                var separator = new SeparatorEffectUI(colors);
 
                 for (int i = 0; i < countSkills; i++)
-                    skillsUI[i] = _skillsSettings[i].Init(colors, actorType, actorId, i);
+                    skillsUI[i] = _skillsSettings[i].Init(colors, separator, actorType, actorId, i);
 
+                _blockUI = new(colors, separator, _blockCost, _blockValue);
                 _skillsUI = new(skillsUI);
             }
             else

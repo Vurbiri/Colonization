@@ -10,6 +10,7 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [SerializeField] private bool _isSelf;
         [SerializeField] private bool _useAttack = true;
+        [SerializeField] private bool _holyAttack;
         [SerializeField] private int _duration;
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
@@ -32,7 +33,12 @@ namespace Vurbiri.Colonization.Characteristics
             bool isReflect = _reflectValue > 0;
 
             if (_value < 0)
-                    return isReflect ? new ReflectAttackEffect(_value, _pierce, _reflectValue) : new AttackEffect(_value, _pierce);
+            {
+                if(_holyAttack)
+                    return isReflect ? new ReflectHolyAttackEffect(_value, _pierce, _reflectValue) : new HolyAttackEffect(_value, _pierce);
+
+                return isReflect ? new ReflectAttackEffect(_value, _pierce, _reflectValue) : new AttackEffect(_value, _pierce);
+            }
 
             if (_isSelf)
                 return new SelfHealEffect(_value);
@@ -53,7 +59,7 @@ namespace Vurbiri.Colonization.Characteristics
             {
                 bool isNotPiercing = _pierce == 0;
 
-                hexColor = colors.TextDefaultTag;
+                hexColor = _holyAttack ? colors.TextWarningTag : colors.TextDefaultTag;
                 value = _value.ToString("#;#;0");
 
                 if (_reflectValue <= 0)
@@ -109,6 +115,7 @@ namespace Vurbiri.Colonization.Characteristics
 
 #if UNITY_EDITOR
         [SerializeField] private TargetOfSkill _parentTarget_ed;
+        [SerializeField] private bool _isWarrior_ed;
 #endif
     }
 }

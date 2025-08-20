@@ -83,6 +83,7 @@ namespace VurbiriEditor
         protected bool GetBool(string nameChildren) => _mainProperty.FindPropertyRelative(nameChildren).boolValue;
 
         protected void SetBool(string nameChildren, bool value) => _mainProperty.FindPropertyRelative(nameChildren).boolValue = value;
+        protected void SetBool(SerializedProperty parent, string nameChildren, bool value) => parent.FindPropertyRelative(nameChildren).boolValue = value;
         #endregion
         //----------------------------------------------------------------
         #region SetLabelBool
@@ -274,6 +275,7 @@ namespace VurbiriEditor
         protected T GetEnum<T>(string nameChildren) where T : Enum => _mainProperty.FindPropertyRelative(nameChildren).enumValueIndex.ToEnum<T>();
 
         protected void SetEnum<T>(string nameChildren, T value) where T : Enum => _mainProperty.FindPropertyRelative(nameChildren).enumValueIndex = value.ToInt();
+        protected void SetEnum<T>(SerializedProperty parent, string nameChildren, T value) where T : Enum => parent.FindPropertyRelative(nameChildren).enumValueIndex = value.ToInt();
         #endregion
         //----------------------------------------------------------------
         #region SetLabelBool

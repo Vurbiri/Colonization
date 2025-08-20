@@ -17,7 +17,8 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_HITS = "_effectsHitsSettings", P_UI = "_ui";
         private const string P_EFFECTS = "_effects";
         private const string P_SPRITE = "_sprite", P_KEY_NAME = "_keyName", P_COST_UI = "_cost";
-        private const string P_CHILD_TARGET = "_parentTarget_ed", P_CLIP = "clipSettings_ed", P_SFX = "hitSFXName_ed", P_TYPE = "typeActor_ed";
+        private const string P_CLIP = "clipSettings_ed", P_SFX = "hitSFXName_ed", P_TYPE = "typeActor_ed";
+        private const string P_CHILD_TARGET = "_parentTarget_ed", P_CHILD_TYPE = "_isWarrior_ed";
 
         private static readonly string[] KEYS_NAME_SKILLS =
         { "Strike", "Channel", "Sweep", "Combo", "Heal", "Sparks", "Toxin", "Swarm", "Battlecry", "Fortify", "Enhancement", "Kick", "Leap" };
@@ -82,7 +83,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                         uiProperty.FindPropertyRelative(P_SPRITE).objectReferenceValue = null;
                     }
 
-                    DrawHits(clip.hitTimes.Length, target);
+                    DrawHits(clip.hitTimes.Length, target, isWarrior);
                  }
 
                 indentLevel--;
@@ -120,7 +121,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 _position.y += _ySpace * 2f;
             }
             //=================================
-            void DrawHits(int count, TargetOfSkill target)
+            void DrawHits(int count, TargetOfSkill target, bool isWarrior)
             {
                 if (count <= 0) return;
 
@@ -148,7 +149,8 @@ namespace VurbiriEditor.Colonization.Characteristics
                     for (int j = 0; j < effectsProperty.arraySize; j++)
                     {
                         effectProperty = effectsProperty.GetArrayElementAtIndex(j);
-                        GetProperty(effectProperty, P_CHILD_TARGET).SetEnum(target);
+                        SetEnum(effectProperty, P_CHILD_TARGET, target);
+                        SetBool(effectProperty, P_CHILD_TYPE, isWarrior);
 
                         if (effectsProperty.isExpanded)
                             _position.y += _height * HitEffectSettingsDrawer.GetPropertyRateHeight(effectProperty, j);

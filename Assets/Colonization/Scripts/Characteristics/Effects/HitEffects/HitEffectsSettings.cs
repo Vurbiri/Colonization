@@ -21,16 +21,11 @@ namespace Vurbiri.Colonization.Characteristics
 		{
 			int count = _effects.Length;
             HitEffectSettings effect;
-            List<AEffectsUI> list;
 
             for (int i = 0; i < count; i++)
             {
                 effect = _effects[i];
-                list = target;
-                if (effect.IsSelf)
-                    list = self;
-
-                list.Add(effect.CreateEffectUI(colors));
+                (effect.IsSelf ? self : target).Add(effect.CreateEffectUI(colors));
             }
         }
     }

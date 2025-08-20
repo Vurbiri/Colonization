@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
@@ -20,9 +19,9 @@ namespace VurbiriEditor.Colonization.Characteristics
         #region Consts
         private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID ="Void Effect {0}";
         private const string P_IS_SELF = "_isSelf", P_TARGET_ABILITY = "_targetAbility", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
-        private const string P_USED_ATTACK = "_useAttack", P_PIERCE = "_pierce", P_REFLECT = "_reflectValue";
+        private const string P_USED_ATTACK = "_useAttack", P_HOLY_ATTACK = "_holyAttack", P_PIERCE = "_pierce", P_REFLECT = "_reflectValue";
         private const string P_DESC_KEY = "_descKeyId";
-        private const string P_PARENT_TARGET = "_parentTarget_ed";
+        private const string P_PARENT_TARGET = "_parentTarget_ed", P_PARENT_TYPE = "_isWarrior_ed";
         #endregion
 
         #region Values
@@ -38,7 +37,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         private readonly string[] _namesModifiersCurrentHP = { "Percent of CurrentHP", "Flat", "Percent of MaxHP" };
 
-        private readonly HashSet<int> _nonReflect = new() { CurrentAP, IsMove };
+        //private readonly HashSet<int> _nonReflect = new() { CurrentAP, IsMove };
         #endregion
 
         private readonly Color _positive = new(0.5f, 1f, 0.3f, 1f), _negative = new(1f, 0.5f, 0.3f, 1f), _void = new(0.1f, 0.1f, 0.1f, 1f);
@@ -68,13 +67,18 @@ namespace VurbiriEditor.Colonization.Characteristics
                 bool isTargetEnemy = isTargetSkillEnemy & isTarget;
 
                 Space();
-                if ((isNotDuration = DrawInt(P_DUR, 0, 3) <= 0) & id == 0 && (isUsedAttack = DrawBool(P_USED_ATTACK, isTargetEnemy ? "Is Attack" : "Is Heal")))
+
+                isNotDuration = DrawInt(P_DUR, 0, 3) <= 0;
+
+                if (isNotDuration & id < 2 && (isUsedAttack = IsUsedAttack(id, isTargetEnemy, GetBool(P_PARENT_TYPE))))
                 {
-                    DrawUsedAttack(isTarget, isTargetEnemy);
+                    DrawUsedAttack(true, true);
                 }
                 else
                 {
-                    SetBool(P_USED_ATTACK, isUsedAttack = false);
+                    isUsedAttack = false;
+                    SetBool(P_USED_ATTACK, false);
+                    SetBool(P_HOLY_ATTACK, false);
                     SetInt(P_PIERCE, 0);
                     SetInt(P_REFLECT, 0);
                 }
@@ -113,9 +117,25 @@ namespace VurbiriEditor.Colonization.Characteristics
                 isTargetSkillEnemy = parentTarget == TargetOfSkill.Enemy;
             }
             //==============================================
+            bool IsUsedAttack(int id, bool isTargetEnemy, bool isWarrior)
+            {
+                if (id == 0)
+                {
+                    SetBool(P_HOLY_ATTACK, false);
+                    return DrawBool(P_USED_ATTACK, isTargetEnemy ? "Is Attack" : "Is Heal");
+                }
+
+                if (isTargetEnemy & isWarrior)
+                {
+                    SetBool(P_USED_ATTACK, true);
+                    return DrawBool(P_HOLY_ATTACK, "Is Holy Attack");
+                }
+
+                return false;
+            }
+            //==============================================
             void DrawUsedAttack(bool isTarget, bool isTargetEnemy)
             {
-                                
                 Space();
                 indentLevel++;
 
@@ -280,15 +300,16 @@ namespace VurbiriEditor.Colonization.Characteristics
                     }
                     else
                     {
+                        key = GetBool(P_HOLY_ATTACK) ? "Holy" : string.Empty;
                         int pierce = GetInt(P_PIERCE);
                         if (pierce == 0)
                         {
-                            key = "Damage";
+                            key = key.Concat("Damage");
                             DrawLabel(localization.GetFormatText(FILE, key, strValue).Delete("<b>", "</b>"));
                         }
                         else
                         {
-                            key = "DamagePierce";
+                            key = key.Concat("DamagePierce");
                             DrawLabel(localization.GetFormatText(FILE, key, strValue, pierce).Delete("<b>", "</b>").Replace("\n", " "));
                         }
                     }
@@ -363,11 +384,11 @@ namespace VurbiriEditor.Colonization.Characteristics
             bool isTarget = !GetProperty(P_IS_SELF).boolValue;
             bool isTargetEnemy = isTarget && GetProperty(P_PARENT_TARGET).GetEnum<TargetOfSkill>() == TargetOfSkill.Enemy;
             bool isUsedAttack = GetProperty(P_USED_ATTACK).boolValue;
-
+            //bool isWarrior = GetProperty(P_PARENT_TYPE).boolValue;
 
             if (!isTargetEnemy & isUsedAttack)
                 size -= 1f;
-            else if (id == 0 & !isUsedAttack)
+            else if (id < 2 & !isUsedAttack)
                 size += targetAbility != CurrentHP ? 0f : 1f;
             else if (targetAbility != CurrentHP && GetProperty(P_DUR).intValue == 0)
                 size -= 1f;
