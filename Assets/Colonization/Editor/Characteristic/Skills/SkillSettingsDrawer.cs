@@ -1,11 +1,11 @@
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
-using Vurbiri.Colonization;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using static UnityEditor.EditorGUI;
+using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
 namespace VurbiriEditor.Colonization.Characteristics
 {
@@ -96,7 +96,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             //=================================
             void SetName(SerializedProperty property, bool isWarrior)
             {
-                string name = isWarrior ? Localization.ForEditor(LangFiles.Actors).GetText(property.stringValue).Delete("<b>", "</b>") : "Skill";
+                string name = isWarrior ? Localization.ForEditor(FILE).GetText(FILE, property.stringValue).Delete("<b>", "</b>") : "Skill";
                 int id = IdFromLabel();
                 if (id >= 0) name = string.Concat($"[{id}] ", name);
                 _label.text = name;

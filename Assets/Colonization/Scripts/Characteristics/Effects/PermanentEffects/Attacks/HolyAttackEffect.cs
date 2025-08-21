@@ -2,15 +2,29 @@ using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    sealed public class HolyAttackEffect : AttackEffect
+    using static ActorAbilityId;
+
+    public class HolyAttackEffect : AHitEffect
     {
-        public HolyAttackEffect(int value, int pierce) : base(value, pierce)
+        private readonly AbilityModifierPercent _damageToHuman, _damageToDemon;
+        private readonly AbilityModifierPercent _pierce;
+
+        public HolyAttackEffect(int value, int holy, int pierce) : base(CurrentHP, TypeModifierId.Addition)
         {
+            _damageToHuman = new(-value + holy);
+            _damageToDemon = new(-value + holy);
+            _pierce = new(100 - pierce);
         }
 
         public override int Apply(Actor self, Actor target)
         {
-           return target.TypeId == ActorTypeId.Demon ? base.Apply(self, target) : 0;
+            var damage = target.TypeId != ActorTypeId.Demon ? _damageToDemon : _damageToHuman;
+
+            _pierce.Add(-self.Abilities[Pierce].Value);
+            _value = -Formulas.Damage(damage.Apply(self.Abilities[Attack].Value), _pierce.Apply(target.Abilities[Defense].Value));
+            _pierce.Add(self.Abilities[Pierce].Value);
+
+            return target.ApplyEffect(this);
         }
     }
 }

@@ -9,9 +9,5 @@ namespace Vurbiri.Colonization.UI
         public const string REFLECT_PLUS = "ReflectPlus", REFLECT_MINUS = "ReflectMinus";
 
         public const string PRESENT = "%", PLUS = "+", MINUS = "-";
-
-        public static readonly string[] DESK_EFFECTS_KEYS =
-        { "Damage", "DamagePierce", "Healing", "MaxHPTemp", "HPPerTurnTemp", "AttackTemp", "DefenseTemp", "CurrentHPPerm", "CurrentHPOfMaxPerm", "CurrentAPPerm", "IsMovePerm", "APPerTurnTemp", "PierceTemp", "HolyDamage", "HolyPierce" };
-       
     }
 }

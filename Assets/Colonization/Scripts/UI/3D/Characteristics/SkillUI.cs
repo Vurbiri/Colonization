@@ -22,6 +22,7 @@ namespace Vurbiri.Colonization.UI
         private string _textMain, _textAP;
         private string _hexColor, _hexColorPlus, _hexColorMinus;
 
+        public string Name => _keyName;
         public Sprite Sprite => _sprite;
         public int Cost => _cost;
 

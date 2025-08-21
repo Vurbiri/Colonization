@@ -23,6 +23,8 @@ namespace Vurbiri.Colonization.Actors
             _targetHeightRate = creator.targetHeightRate;
 
             _main = _particle.main;
+            _main.loop = false;
+
             var temptMinMax = _main.startSpeed;
             _avgSpeed = (temptMinMax.constantMin + temptMinMax.constantMax) * 0.5f;
 

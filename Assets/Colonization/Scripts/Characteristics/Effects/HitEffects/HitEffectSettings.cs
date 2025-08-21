@@ -10,14 +10,14 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [SerializeField] private bool _isSelf;
         [SerializeField] private bool _useAttack = true;
-        [SerializeField] private bool _holyAttack;
         [SerializeField] private int _duration;
         [SerializeField] private int _targetAbility;
         [SerializeField] private int _typeModifier;
         [SerializeField] private int _value;
         [SerializeField] private int _pierce;
+        [SerializeField] private int _holy;
         [SerializeField] private int _reflectValue;
-        [SerializeField] private int _descKeyId;
+        [SerializeField] private string _descKey;
 
         public bool IsSelf => _isSelf;
 
@@ -34,8 +34,8 @@ namespace Vurbiri.Colonization.Characteristics
 
             if (_value < 0)
             {
-                if(_holyAttack)
-                    return isReflect ? new ReflectHolyAttackEffect(_value, _pierce, _reflectValue) : new HolyAttackEffect(_value, _pierce);
+                if(_holy > 0)
+                    return isReflect ? new ReflectHolyAttackEffect(_value, _holy, _pierce, _reflectValue) : new HolyAttackEffect(_value, _holy, _pierce);
 
                 return isReflect ? new ReflectAttackEffect(_value, _pierce, _reflectValue) : new AttackEffect(_value, _pierce);
             }
@@ -50,48 +50,39 @@ namespace Vurbiri.Colonization.Characteristics
                
         public AEffectsUI CreateEffectUI(ProjectColors colors)
         {
-            string deskKey = DESK_EFFECTS_KEYS[_descKeyId];
-            
+            AEffectsUI output;
             bool isPositive = _value > 0;
             string hexColor, value;
 
             if (_useAttack)
             {
-                bool isNotPiercing = _pierce == 0;
-
-                hexColor = _holyAttack ? colors.TextWarningTag : colors.TextDefaultTag;
-                value = _value.ToString("#;#;0");
+                AEffectsUI reflect;
 
                 if (_reflectValue <= 0)
-                {
-                    if (isNotPiercing) return new PermEffectUI(deskKey, value, hexColor);
-                    return new PenetrationEffectUI(deskKey, value, _pierce, hexColor);
-                }
-
-                string descKeyReflect, hexColorReflect;
-
-                if (isPositive)
-                {
-                    descKeyReflect = REFLECT_MINUS;
-                    hexColorReflect = colors.TextNegativeTag;
-                }
+                    reflect = new EmptyEffectUI();
                 else
-                {
-                    descKeyReflect = REFLECT_PLUS;
-                    hexColorReflect = colors.TextPositiveTag;
-                }
+                    reflect = isPositive ? new MainEffectUI(REFLECT_MINUS, _reflectValue, colors.TextNegativeTag) : new MainEffectUI(REFLECT_PLUS, _reflectValue, colors.TextPositiveTag);
 
-                if (isNotPiercing) return new ReflectEffectUI(deskKey, value, hexColor, descKeyReflect, _reflectValue, hexColorReflect);
-                return new ReflectPenetrationEffectUI(deskKey, value, _pierce, hexColor, descKeyReflect, _reflectValue, hexColorReflect);
+                hexColor = colors.TextDefaultTag;
+                value = _value.ToString("#;#;0");
+
+                if (_holy > 0)
+                    output = _pierce > 0 ? new MainAddTwoEffectUI(_descKey, value, _holy, _pierce, hexColor, reflect) : new MainAddOneEffectUI(_descKey, value, _holy, hexColor, reflect);
+                else
+                    output = _pierce > 0 ? new MainAddOneEffectUI(_descKey, value, _pierce, hexColor, reflect)        : new MainEffectUI(_descKey, value, hexColor, reflect);
+            }
+            else
+            {
+                hexColor = isPositive ? colors.TextPositiveTag : colors.TextNegativeTag;
+                value = ValueToString(isPositive);
+
+                if (_duration > 0)
+                    output = new MainAddOneEffectUI(_descKey, value, _duration, hexColor);
+                else
+                    output = new MainEffectUI(_descKey, value, hexColor);
             }
 
-            hexColor = isPositive ? colors.TextPositiveTag : colors.TextNegativeTag;
-            value = ValueToString(isPositive);
-
-            if (_duration > 0)
-                return new TempEffectUI(deskKey, value, _duration, hexColor);
-
-            return new PermEffectUI(deskKey, value, hexColor);
+            return output;
 
             #region Local: ValueToString(..)
             //==============================================

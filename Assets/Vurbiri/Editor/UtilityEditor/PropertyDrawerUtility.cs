@@ -456,6 +456,12 @@ namespace VurbiriEditor
         protected SerializedProperty GetProperty(SerializedProperty parent, string nameChildren) => parent.FindPropertyRelative(nameChildren);
         #endregion
         //================================================================
+        #region GetString, SetString
+        protected string GetString(string nameChildren) => _mainProperty.FindPropertyRelative(nameChildren).stringValue;
+
+        protected void SetString(string nameChildren, string value) => _mainProperty.FindPropertyRelative(nameChildren).stringValue = value;
+        protected void SetString(SerializedProperty parent, string nameChildren, string value) => parent.FindPropertyRelative(nameChildren).stringValue = value;
+        #endregion
         #region Utilities
 
         protected (string[] names, int[] values) GetNamesAndValues<T>(bool isNone) where T : IdType<T>

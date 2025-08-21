@@ -6,7 +6,8 @@ namespace Vurbiri.Colonization.Characteristics
 
     public class AttackEffect : AHitEffect
     {
-        private readonly AbilityModifierPercent _damage, _pierce;
+        private readonly AbilityModifierPercent _pierce;
+        private readonly AbilityModifierPercent _damage;
 
         public AttackEffect(int value, int pierce) : base(CurrentHP, TypeModifierId.Addition)
         {

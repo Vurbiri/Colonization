@@ -60,18 +60,27 @@ namespace Vurbiri.Colonization.Characteristics
             return true;
         }
 
+        public void Degrade(int duration, bool isPositive)
+        {
+            if(_value > 0 == isPositive)
+            {
+                _duration -= duration;
+                if (_duration <= 0)
+                    Removing();
+                else
+                    _eventChanged.Invoke(this, TypeEvent.Change);
+            }
+        }
+
         public void Next()
         {
             if (_skip --> 0)
                 return;
 
             if (--_duration == 0)
-            {
-                Removing(); 
-                return;
-            }
-
-            _eventChanged.Invoke(this, TypeEvent.Change);
+                Removing();
+            else
+                _eventChanged.Invoke(this, TypeEvent.Change);
         }
 
         public override bool Equals(ReactiveEffect other)

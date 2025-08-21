@@ -86,6 +86,12 @@ namespace Vurbiri.Colonization.Characteristics
                 _values[i].Next();
         }
 
+        public void Degrade(int duration, bool isPositive)
+        {
+            for (int i = _count - 1; i >= 0; i--)
+                _values[i].Degrade(duration, isPositive);
+        }
+
         public void Dispose()
         {
             _eventChanged.Clear();
