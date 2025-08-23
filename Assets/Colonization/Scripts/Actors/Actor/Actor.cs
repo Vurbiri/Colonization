@@ -119,7 +119,7 @@ namespace Vurbiri.Colonization.Actors
 
             return delta;
         }
-        public void RemoveEffects(int duration, bool isPositive) => _effects.Degrade(duration, isPositive);
+        public void ClearEffects(int duration, Id<ClearEffectsId> type) => _effects.Degrade(duration, type);
         #endregion
 
         #region Start/End turn

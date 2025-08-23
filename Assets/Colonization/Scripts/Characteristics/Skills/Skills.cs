@@ -28,25 +28,25 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Init(int actorType, int actorId)
         {
+            if (actorType != ActorTypeId.Warrior)
+            {
+                Debug.Log("Не создавать демонов");
+                return;
+            }
+
             int countSkills = _skillsSettings.Length;
 
+            var skillsUI = new SkillUI[countSkills];
+            var colors = GameContainer.UI.Colors;
+            var separator = new SeparatorEffectUI(colors);
+
+            for (int i = 0; i < countSkills; i++)
+                skillsUI[i] = _skillsSettings[i].Init(colors, separator, actorType, actorId, i);
+
+            _skillsUI = new(skillsUI);
+
             if (actorType == ActorTypeId.Warrior)
-            {
-                var skillsUI = new SkillUI[countSkills];
-                var colors = GameContainer.UI.Colors;
-                var separator = new SeparatorEffectUI(colors);
-
-                for (int i = 0; i < countSkills; i++)
-                    skillsUI[i] = _skillsSettings[i].Init(colors, separator, actorType, actorId, i);
-
                 _blockUI = new(colors, separator, _blockCost, _blockValue);
-                _skillsUI = new(skillsUI);
-            }
-            else
-            {
-                for (int i = 0; i < countSkills; i++)
-                    _skillsSettings[i].Init(actorType, actorId, i);
-            }
         }
 
         public void CreateStates(Actor actor)

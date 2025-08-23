@@ -26,28 +26,11 @@ namespace Vurbiri.Colonization.Characteristics
         public int Cost { [Impl(256)] get => _cost; }
         public ReadOnlyArray<HitEffects> HitEffects { [Impl(256)] get => _hitEffects; }
 
-        public void Init(int actorType, int actorId, int skillId)
-        {
-            int countHits = _effectsHitsSettings.Length;
-            var effects = new HitEffects[countHits];
-            HitEffectsSettings effectsHitSettings;
-
-            for (int i = 0, u = 0; i < countHits; i++)
-            {
-                effectsHitSettings = _effectsHitsSettings[i];
-                effects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, skillId, u);
-                u += effectsHitSettings.Count;
-            }
-
-            _hitEffects = new(effects);
-            _ui = null; _effectsHitsSettings = null;
-        }
-
         public SkillUI Init(ProjectColors colors, SeparatorEffectUI separator, int actorType, int actorId, int skillId)
         {
             int countHits = _effectsHitsSettings.Length;
             var effects = new HitEffects[countHits];
-            List<AEffectsUI> targetEffectsUI = new(countHits), selfEffectsUI = new(countHits);
+            List<AEffectUI> targetEffectsUI = new(countHits), selfEffectsUI = new(countHits);
             int targetEffectsCount, selfEffectsCount; 
             HitEffectsSettings effectsHitSettings;
 

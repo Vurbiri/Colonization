@@ -21,6 +21,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_USED_ATTACK = "_useAttack", P_HOLY = "_holy", P_PIERCE = "_pierce", P_REFLECT = "_reflectValue";
         private const string P_DESC_KEY = "_descKey";
         private const string P_PARENT_TARGET = "_parentTarget_ed", P_PARENT_TYPE = "_isWarrior_ed";
+
         #endregion
 
         #region Values
@@ -31,8 +32,8 @@ namespace VurbiriEditor.Colonization.Characteristics
         private readonly string[] _namesModifiersDuration = { "Flat", "Percent" };
         private readonly int[] _valuesModifiersDuration = { TypeModifierId.Addition, TypeModifierId.TotalPercent };
 
-        private readonly string[] _namesAbilitiesInstant = { ActorAbilityId.Names_Ed[CurrentHP], ActorAbilityId.Names_Ed[CurrentAP], ActorAbilityId.Names_Ed[IsMove] };
-        private readonly int[] _valuesAbilitiesInstant = { CurrentHP, CurrentAP, IsMove };
+        private readonly string[] _namesAbilitiesInstant = { ActorAbilityId.Names_Ed[CurrentHP], ActorAbilityId.Names_Ed[CurrentAP], ActorAbilityId.Names_Ed[IsMove], "Clear Effects" };
+        private readonly int[] _valuesAbilitiesInstant = { CurrentHP, CurrentAP, IsMove, ClearEffectsId.Code };
 
         private readonly string[] _namesModifiersCurrentHP = { "Percent of CurrentHP", "Flat", "Percent of MaxHP" };
         #endregion
@@ -76,7 +77,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     SetInt(P_TYPE_OP, TypeModifierId.TotalPercent);
 
                     if (isTargetEnemy)
-                        DrawForEnemy(GetProperty(P_PARENT_TYPE).boolValue);
+                        DrawForEnemy();
                     else
                         DrawForFriend();
 
@@ -130,10 +131,10 @@ namespace VurbiriEditor.Colonization.Characteristics
                 SetInt(P_REFLECT, 0);
             }
             //==============================================
-            void DrawForEnemy(bool isWarrior)
+            void DrawForEnemy()
             {
                 DrawAttack(5, 300, 100);
-                if(isWarrior)
+                if(GetProperty(P_PARENT_TYPE).boolValue)
                     DrawInt(P_HOLY, "Holy (%)", 0, 305);
                 else
                     SetInt(P_HOLY, 0);
@@ -204,12 +205,17 @@ namespace VurbiriEditor.Colonization.Characteristics
                     else
                         DrawPercentValue(-100, 100);
                 }
+                else if (usedAbility == ClearEffectsId.Code)
+                {
+                    DrawId<ClearEffectsId>(P_TYPE_OP);
+                    DrawFlatValue(1, 3, 1);
+                }
                 else
                 {
                     SetInt(P_TYPE_OP, TypeModifierId.Addition);
 
                     if (usedAbility == CurrentAP)
-                        DrawFlatValue(-5, 5);
+                        DrawFlatValue(-3, 3);
                     else
                         DrawMoveValue();
                 }
@@ -225,7 +231,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 int value = property.intValue * -1;
 
                 if (value < min | value > max)
-                    defaultValue = Mathf.Clamp(defaultValue, min, max);
+                    defaultValue = Mathf.Clamp(value, min, max);
                 else
                     defaultValue = value;
 
@@ -264,7 +270,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 property.intValue = values[0];
             }
             //==============================================
-            void SetAndDrawDesc(bool isUsedAttack, int targetAbility)
+            void SetAndDrawDesc(bool isUsedAttack, int ability)
             {
                 var localization = Localization.ForEditor(LangFiles.Actors);
 
@@ -272,81 +278,56 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 Color defaultColor = GUI.contentColor;
                 int value = GetInt(P_VALUE);
-                bool isPositive = value > 0;
-                int duration = GetInt(P_DUR);
-                int mod = GetInt(P_TYPE_OP);
-
                 string key;
-                string strValue = ValueToString(value, targetAbility, mod, isUsedAttack);
 
                 if (isUsedAttack)
                 {
-                    if(isPositive)
-                    {  
-                        key = "Healing"; 
-                        GUI.contentColor = _positive;
-                        DrawLabel(localization.GetFormatText(FILE, key, strValue).Delete("<b>", "</b>"));
-                    }
+                    if (value > 0)
+                        key = GetAndDrawHealDesc(localization, value, GetInt(P_REFLECT));
                     else
-                    {
-                        key = DrawAttackDesc(localization, strValue);
-                    }
+                        key = GetAndDrawAttackDesc(localization, value, GetInt(P_REFLECT));
                 }
                 else
                 {
-                    GUI.contentColor = isPositive ? _positive : _negative;
+                    int duration = GetInt(P_DUR);
+
+                    GUI.contentColor = value > 0 ? _positive : _negative;
 
                     if (duration > 0)
                     {
-                        key = ActorAbilityId.Names_Ed[targetAbility].Concat("Temp");
-                        DrawLabel(localization.GetFormatText(FILE, key, strValue, duration).Delete("<b>", "</b>"));
+                        key = ActorAbilityId.Names_Ed[ability].Concat("Temp");
+                        DrawLabel(localization.GetFormatText(FILE, key, HitEffectSettings.ValueToString(value, ability, GetInt(P_TYPE_OP)), duration).Delete("<b>", "</b>"));
                     }
                     else 
                     {
-                        key = ActorAbilityId.Names_Ed[targetAbility].Concat("Perm");
-                        if (mod == TypeModifierId.TotalPercent & targetAbility == CurrentHP) 
-                            key = "CurrentHPOfMaxPerm";
-
-                        DrawLabel(localization.GetFormatText(FILE, key, strValue).Delete("<b>", "</b>"));
+                        key = GetAndDrawPermDesc(localization, value, ability);
                     }
                 }
 
                 // Set Desc
                 SetString(P_DESC_KEY, key);
 
-                if(GetInt(P_REFLECT) > 0)
-                {
-                    if (isPositive)
-                    { key = REFLECT_MINUS; GUI.contentColor = _negative; }
-                    else
-                    { key = REFLECT_PLUS; GUI.contentColor = _positive; }
-                    DrawLabel(localization.GetFormatText(FILE, key, GetInt(P_REFLECT)).Delete("<b>", "</b>"));
-                }
-
                 GUI.contentColor = defaultColor;
                 _position.x -= 35;
             }
             //==============================================
-            string ValueToString(int value, int targetAbility, int typeModifier, bool isUsedAttack)
+            string GetAndDrawHealDesc(Localization localization, int value, int reflect)
             {
-                bool isPositive = value > 0;
-
-                if (targetAbility == IsMove)
-                    return isPositive ? PLUS : MINUS;
-                if (isUsedAttack)
-                    return isPositive ? value.ToString() : (-value).ToString();
-
-                bool isPresent = !(typeModifier == TypeModifierId.Addition);
-                string present = isPresent ? PRESENT : string.Empty;
-
-                if (!isPresent & targetAbility <= MAX_ID_SHIFT_ABILITY)
-                    value >>= SHIFT_ABILITY;
-
-                return isPositive ? $"{PLUS}{value}{present}" : $"{value}{present}";
+                string key = "Healing";
+                GUI.contentColor = _positive;
+                DrawLabel(localization.GetFormatText(FILE, key, value).Delete("<b>", "</b>"));
+                if (reflect > 0)
+                {
+                    GUI.contentColor = _negative;
+                    DrawLabel(localization.GetFormatText(FILE, REFLECT_MINUS, GetInt(P_REFLECT)).Delete("<b>", "</b>"));
+                }
+                return key;
             }
             //==============================================
-            string DrawAttackDesc(Localization localization, string strValue)
+            string GetAndDrawAttackDesc(Localization localization, int value, int reflect)
             {
+                value = -value;
+
                 string key;
                 int holy = GetInt(P_HOLY);
                 int pierce = GetInt(P_PIERCE);
@@ -355,12 +336,12 @@ namespace VurbiriEditor.Colonization.Characteristics
                     if (holy == 0)
                     {
                         key = "Damage";
-                        DrawLabel(localization.GetFormatText(FILE, key, strValue).Delete("<b>", "</b>"));
+                        DrawLabel(localization.GetFormatText(FILE, key, value).Delete("<b>", "</b>"));
                     }
                     else
                     {
                         key = "HolyDamage";
-                        DrawLabel(localization.GetFormatText(FILE, key, strValue, holy).Delete("<b>", "</b>"));
+                        DrawLabel(localization.GetFormatText(FILE, key, value, holy).Delete("<b>", "</b>"));
                     }
                 }
                 else
@@ -369,18 +350,60 @@ namespace VurbiriEditor.Colonization.Characteristics
                     if (holy == 0)
                     {
                         key = "DamagePierce";
-                        desc = localization.GetFormatText(FILE, key, strValue, pierce).Delete("<b>", "</b>");
+                        desc = localization.GetFormatText(FILE, key, value, pierce).Delete("<b>", "</b>");
                         
                     }
                     else
                     {
                         key = "HolyDamagePierce";
-                        desc = localization.GetFormatText(FILE, key, strValue, holy, pierce).Delete("<b>", "</b>");
+                        desc = localization.GetFormatText(FILE, key, value, holy, pierce).Delete("<b>", "</b>");
                     }
 
                     foreach(var str in desc.Split("\n"))
                         DrawLabel(str);
                 }
+
+                if (reflect > 0)
+                {
+                    GUI.contentColor = _positive;
+                    DrawLabel(localization.GetFormatText(FILE, REFLECT_PLUS, GetInt(P_REFLECT)).Delete("<b>", "</b>"));
+                }
+
+                return key;
+            }
+            //==============================================
+            string GetAndDrawPermDesc(Localization localization, int value, int ability)
+            {
+                string key;
+                int mod = GetInt(P_TYPE_OP);
+
+                if (ability == CurrentHP)
+                {
+                    key = mod == TypeModifierId.TotalPercent ? "CurrentHPOfMaxPerm" : "CurrentHPPerm";
+                    DrawLabel(localization.GetFormatText(FILE, key, HitEffectSettings.ValueToString(value, ability, GetInt(P_TYPE_OP))).Delete("<b>", "</b>"));
+                }
+                else if (ability == CurrentAP)
+                {
+                    key = "CurrentAPPerm";
+                    DrawLabel(localization.GetFormatText(FILE, key, value.ToString("+#;-#;0")).Delete("<b>", "</b>"));
+
+                }
+                else if (ability == IsMove)
+                {
+                    key = value > 0 ? "MovePlus" : "MoveMinus";
+                    DrawLabel(localization.GetText(FILE, key));
+                }
+                else
+                {
+                    key = "ClearEffects".Concat(ClearEffectsId.Names_Ed[mod]);
+
+                    if (mod == ClearEffectsId.Positive) GUI.contentColor = _negative;
+                    else if (mod == ClearEffectsId.Negative) GUI.contentColor = _positive;
+                    else GUI.contentColor = Color.cyan;
+
+                    DrawLabel(localization.GetFormatText(FILE, key, value).Delete("<b>", "</b>"));
+                }
+
                 return key;
             }
             #endregion

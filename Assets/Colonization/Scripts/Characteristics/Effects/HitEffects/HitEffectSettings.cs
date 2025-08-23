@@ -23,85 +23,111 @@ namespace Vurbiri.Colonization.Characteristics
 
         public AHitEffect CreateEffect(EffectCode code)
         {
-            if (_duration > 0)
-                return _isSelf ? new SelfTemporaryEffect(code, _targetAbility, _typeModifier, _value, _duration) :
-                                 new TargetTemporaryEffect(code, _targetAbility, _typeModifier, _value, _duration);
-
-            if (!_useAttack)
-                return _isSelf ? new SelfEffect(_targetAbility, _typeModifier, _value) : new TargetEffect(_targetAbility, _typeModifier, _value);
-
-            bool isReflect = _reflectValue > 0;
-
-            if (_value < 0)
-            {
-                if(_holy > 0)
-                    return isReflect ? new ReflectHolyAttackEffect(_value, _holy, _pierce, _reflectValue) : new HolyAttackEffect(_value, _holy, _pierce);
-
-                return isReflect ? new ReflectAttackEffect(_value, _pierce, _reflectValue) : new AttackEffect(_value, _pierce);
-            }
-
-            if (_isSelf)
-                return new SelfHealEffect(_value);
-            if (isReflect)
-                return new ReflectHealEffect(_value, _reflectValue);
-
-            return new TargetHealEffect(_value);
-        }
-               
-        public AEffectsUI CreateEffectUI(ProjectColors colors)
-        {
-            AEffectsUI output;
-            bool isPositive = _value > 0;
-            string hexColor, value;
+            AHitEffect output;
 
             if (_useAttack)
             {
-                AEffectsUI reflect;
+                bool isReflect = _reflectValue > 0;
+
+                if (_value < 0)
+                {
+                    if (_holy > 0)
+                        output = isReflect ? new ReflectHolyAttackEffect(_value, _holy, _pierce, _reflectValue) : new HolyAttackEffect(_value, _holy, _pierce);
+                    else
+                        output = isReflect ? new ReflectAttackEffect(_value, _pierce, _reflectValue) : new AttackEffect(_value, _pierce);
+                }
+                else
+                {
+                    if (_isSelf)
+                        output = new SelfHealEffect(_value);
+                    else
+                        output = isReflect ? new ReflectHealEffect(_value, _reflectValue) : new TargetHealEffect(_value);
+                }
+            }
+            else if (_duration > 0)
+            {
+                output = _isSelf ? new AddSelfEffect(code, _targetAbility, _typeModifier, _value, _duration): new AddTargetEffect(code, _targetAbility, _typeModifier, _value, _duration);
+            }
+            else if (_targetAbility == ClearEffectsId.Code)
+            {
+                output = _isSelf ? new SelfClearEffect(_typeModifier, _value) : new TargetClearEffect(_typeModifier, _value);
+            }
+            else
+            {
+                output = _isSelf ? new ApplySelfEffect(_targetAbility, _typeModifier, _value) : new ApplyTargetEffect(_targetAbility, _typeModifier, _value);
+            }
+
+            return output;
+        }
+               
+        public AEffectUI CreateEffectUI(ProjectColors colors)
+        {
+            AEffectUI output;
+            string hexColor, value;
+
+            if (string.IsNullOrEmpty(_descKey))
+                Debug.LogWarning("Key null or empty!");
+
+            if (_useAttack)
+            {
+                AEffectUI reflect;
 
                 if (_reflectValue <= 0)
                     reflect = new EmptyEffectUI();
                 else
-                    reflect = isPositive ? new MainEffectUI(REFLECT_MINUS, _reflectValue, colors.TextNegativeTag) : new MainEffectUI(REFLECT_PLUS, _reflectValue, colors.TextPositiveTag);
+                    reflect = _value > 0 ? new ValueEffectUI(REFLECT_MINUS, _reflectValue, colors.TextNegativeTag) : new ValueEffectUI(REFLECT_PLUS, _reflectValue, colors.TextPositiveTag);
 
                 hexColor = colors.TextDefaultTag;
                 value = _value.ToString("#;#;0");
 
                 if (_holy > 0)
-                    output = _pierce > 0 ? new MainAddTwoEffectUI(_descKey, value, _holy, _pierce, hexColor, reflect) : new MainAddOneEffectUI(_descKey, value, _holy, hexColor, reflect);
+                    output = _pierce > 0 ? new ThreeValuesEffectUI(_descKey, value, _holy, _pierce, hexColor, reflect) : new TwoValuesEffectUI(_descKey, value, _holy, hexColor, reflect);
                 else
-                    output = _pierce > 0 ? new MainAddOneEffectUI(_descKey, value, _pierce, hexColor, reflect)        : new MainEffectUI(_descKey, value, hexColor, reflect);
+                    output = _pierce > 0 ? new TwoValuesEffectUI(_descKey, value, _pierce, hexColor, reflect) : new ValueEffectUI(_descKey, value, hexColor, reflect);
+            }
+            else if (_targetAbility == ClearEffectsId.Code)
+            {
+                output = new ValueEffectUI(_descKey, _value, ClearEffectsId.ColorSelection(colors, _typeModifier));
             }
             else
             {
-                hexColor = isPositive ? colors.TextPositiveTag : colors.TextNegativeTag;
-                value = ValueToString(isPositive);
+                hexColor = _value > 0 ? colors.TextPositiveTag : colors.TextNegativeTag;
 
-                if (_duration > 0)
-                    output = new MainAddOneEffectUI(_descKey, value, _duration, hexColor);
+                if (_targetAbility == ActorAbilityId.IsMove)
+                {
+                    output = new EffectUI(_descKey, hexColor);
+                }
                 else
-                    output = new MainEffectUI(_descKey, value, hexColor);
+                {
+                    value = ValueToString(_value, _targetAbility, _typeModifier);
+
+                    if (_duration > 0)
+                        output = new TwoValuesEffectUI(_descKey, value, _duration, hexColor);
+                    else
+                        output = new ValueEffectUI(_descKey, value, hexColor);
+                }
             }
 
             return output;
+        }
 
-            #region Local: ValueToString(..)
-            //==============================================
-            string ValueToString(bool isPositive)
+        public static string ValueToString(int value, int ability, int modifier)
+        {
+            string output;
+
+            if (modifier == TypeModifierId.Addition)
             {
-                if (_targetAbility == ActorAbilityId.IsMove)
-                    return isPositive ? PLUS : MINUS;
-
-                int value = _value;
-                bool isPresent = !(_typeModifier == TypeModifierId.Addition);
-                string present = isPresent ? PRESENT : string.Empty;
-
-                if (!isPresent & _targetAbility <= ActorAbilityId.MAX_ID_SHIFT_ABILITY)
+                if (ability <= ActorAbilityId.MAX_ID_SHIFT_ABILITY)
                     value >>= ActorAbilityId.SHIFT_ABILITY;
 
-                return isPositive ? $"{PLUS}{value}{present}" : $"{value}{present}";
+                output = value.ToString("+#;-#;0");
             }
-            #endregion
+            else
+            {
+                output = value.ToString("+#;-#;0").Concat("%");
+            }
 
+            return output;
         }
 
 #if UNITY_EDITOR

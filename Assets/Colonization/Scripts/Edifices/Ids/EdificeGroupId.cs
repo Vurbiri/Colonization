@@ -1,6 +1,7 @@
 namespace Vurbiri.Colonization
 {
     using Characteristics;
+    using System.Runtime.CompilerServices;
 
     public class EdificeGroupId : IdType<EdificeGroupId>
     {
@@ -24,6 +25,7 @@ namespace Vurbiri.Colonization
 
     public static class ExtensionsEdificeGroupId
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int ToState(this Id<EdificeGroupId> self) => EdificeGroupId.ToState(self.Value);
     }
 }

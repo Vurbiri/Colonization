@@ -4,7 +4,7 @@ using Vurbiri.International;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class SeparatorEffectUI : AEffectsUI
+    sealed public class SeparatorEffectUI : AEffectUI
     {
         private readonly string _hexColor;
 

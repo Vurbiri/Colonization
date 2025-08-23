@@ -86,10 +86,19 @@ namespace Vurbiri.Colonization.Characteristics
                 _values[i].Next();
         }
 
-        public void Degrade(int duration, bool isPositive)
+        public void Degrade(int duration, Id<ClearEffectsId> type)
         {
-            for (int i = _count - 1; i >= 0; i--)
-                _values[i].Degrade(duration, isPositive);
+            if(type == ClearEffectsId.All)
+            {
+                for (int i = _count - 1; i >= 0; i--)
+                    _values[i].Degrade(duration);
+            }
+            else
+            {
+                bool isPositive = type == ClearEffectsId.Positive;
+                for (int i = _count - 1; i >= 0; i--)
+                    _values[i].Degrade(duration, isPositive);
+            }
         }
 
         public void Dispose()

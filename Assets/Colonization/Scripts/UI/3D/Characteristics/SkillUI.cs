@@ -16,8 +16,8 @@ namespace Vurbiri.Colonization.UI
 
         private const int SIZE = 78;
 
-        private AEffectsUI[] _effectsTarget;
-        private AEffectsUI[] _effectsSelf;
+        private AEffectUI[] _effectsTarget;
+        private AEffectUI[] _effectsSelf;
         private SeparatorEffectUI _separator;
         private string _textMain, _textAP;
         private string _hexColor, _hexColorPlus, _hexColorMinus;
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         public Sprite Sprite => _sprite;
         public int Cost => _cost;
 
-        public SkillUI Init(ProjectColors colors, AEffectsUI[] effectsTarget, AEffectsUI[] effectsSelf, SeparatorEffectUI separator)
+        public SkillUI Init(ProjectColors colors, AEffectUI[] effectsTarget, AEffectUI[] effectsSelf, SeparatorEffectUI separator)
         {
             _hexColor = colors.HintDefaultTag;
             _hexColorPlus = colors.TextPositiveTag;

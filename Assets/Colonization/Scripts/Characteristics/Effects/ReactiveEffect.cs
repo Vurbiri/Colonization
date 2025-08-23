@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
@@ -62,14 +63,18 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Degrade(int duration, bool isPositive)
         {
-            if(_value > 0 == isPositive)
-            {
-                _duration -= duration;
-                if (_duration <= 0)
-                    Removing();
-                else
-                    _eventChanged.Invoke(this, TypeEvent.Change);
-            }
+            if (_value > 0 == isPositive)
+                Degrade(duration);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Degrade(int duration)
+        {
+            _duration -= duration;
+            if (_duration <= 0)
+                Removing();
+            else
+                _eventChanged.Invoke(this, TypeEvent.Change);
         }
 
         public void Next()

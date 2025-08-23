@@ -26,12 +26,10 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         protected override void OnGUI()
         {
-            bool isWarrior = GetProperty(P_TYPE).intValue == ActorTypeId.Warrior;
-
             SerializedProperty uiProperty = GetProperty(P_UI);
             SerializedProperty keyNameProperty = GetProperty(uiProperty, P_KEY_NAME);
 
-            SetName(keyNameProperty, isWarrior);
+            SetName(keyNameProperty);
 
             BeginProperty();
             indentLevel++;
@@ -66,24 +64,16 @@ namespace VurbiriEditor.Colonization.Characteristics
                     Space();
                     DrawInt(costProperty, 1, 4, 1);
 
-                    if (isWarrior)
-                    {
-                        GetProperty(uiProperty, P_COST_UI).intValue = costProperty.intValue;
+                    GetProperty(uiProperty, P_COST_UI).intValue = costProperty.intValue;
 
-                        Space(2f);
-                        DrawLabel("UI:");
-                        indentLevel++;
-                        DrawStringPopup(keyNameProperty, KEYS_NAME_SKILLS);
-                        DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
-                        indentLevel--;
-                    }
-                    else
-                    {
-                        keyNameProperty.stringValue = null;
-                        uiProperty.FindPropertyRelative(P_SPRITE).objectReferenceValue = null;
-                    }
+                    Space(2f);
+                    DrawLabel("UI:");
+                    indentLevel++;
+                    DrawStringPopup(keyNameProperty, KEYS_NAME_SKILLS);
+                    DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
+                    indentLevel--;
 
-                    DrawHits(clip.hitTimes.Length, target, isWarrior);
+                    DrawHits(clip.hitTimes.Length, target);
                  }
 
                 indentLevel--;
@@ -94,9 +84,10 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             #region Local: SetName(..), DrawButton(..), DrawHits(..)
             //=================================
-            void SetName(SerializedProperty property, bool isWarrior)
+            void SetName(SerializedProperty property)
             {
-                string name = isWarrior ? Localization.ForEditor(FILE).GetText(FILE, property.stringValue).Delete("<b>", "</b>") : "Skill";
+                //string name = isWarrior ? Localization.ForEditor(FILE).GetText(FILE, property.stringValue).Delete("<b>", "</b>") : "Skill";
+                string name = Localization.ForEditor(FILE).GetText(FILE, property.stringValue).Delete("<b>", "</b>");
                 int id = IdFromLabel();
                 if (id >= 0) name = string.Concat($"[{id}] ", name);
                 _label.text = name;
@@ -113,22 +104,22 @@ namespace VurbiriEditor.Colonization.Characteristics
                 positionButton.width = viewWidth - 125f;
 
                 if (GUI.Button(positionButton, "Select Clip Settings".ToUpper()))
-                {
-                    //AnimationClipSettingsWindow.ShowWindow();
                     Selection.activeObject = activeObject;
-                }
 
                 _position.y += _ySpace * 2f;
             }
             //=================================
-            void DrawHits(int count, TargetOfSkill target, bool isWarrior)
+            void DrawHits(int count, TargetOfSkill target)
             {
                 if (count <= 0) return;
 
                 SerializedProperty SFXProperty = GetProperty(P_SFX);
                 SerializedProperty hitsProperty = GetProperty(P_HITS);
 
-                if (hitsProperty.arraySize != count) hitsProperty.arraySize = count;
+                bool isWarrior = GetProperty(P_TYPE).intValue == ActorTypeId.Warrior;
+
+                if (hitsProperty.arraySize != count)
+                    hitsProperty.arraySize = count;
 
                 DrawLine(40f); indentLevel--;
                 _position.y += _height;
@@ -174,9 +165,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 AnimationClipSettingsScriptable clipSett = property.FindPropertyRelative(P_CLIP).objectReferenceValue as AnimationClipSettingsScriptable;
                 if (clipSett != null && clipSett.clip != null)
                 {
-                    bool isWarrior = property.FindPropertyRelative(P_TYPE).intValue == ActorTypeId.Warrior;
-
-                    if (isWarrior) rate += 14.2f; else rate += 11.0f;
+                    rate += 14.2f;
 
                     SerializedProperty hitsProperty = property.FindPropertyRelative(P_HITS);
                     SerializedProperty effectsProperty;
