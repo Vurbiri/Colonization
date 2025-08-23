@@ -25,8 +25,6 @@ namespace Vurbiri.Colonization.Characteristics
         public int SkillId     => _code >> OFFSET_1 & MASK;
         public int EffectId    => _code & MASK;
 
-
-        public static implicit operator EffectCode(int value) => new(value);
         public static implicit operator int(EffectCode effectKey) => effectKey._code;
 
         public override int GetHashCode() => _code;

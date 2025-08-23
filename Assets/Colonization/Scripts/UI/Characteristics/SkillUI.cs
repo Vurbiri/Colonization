@@ -7,26 +7,21 @@ namespace Vurbiri.Colonization.UI
 {
     using static CONST_UI_LNG_KEYS;
 
-    [System.Serializable]
-    public class SkillUI : IDisposable
+    public class SkillUI : SkillUISettings, IDisposable
     {
-        [SerializeField] private string _keyName;
-        [SerializeField] private Sprite _sprite;
-        [SerializeField] private int _cost;
-
         private const int SIZE = 78;
 
-        private AEffectUI[] _effectsTarget;
-        private AEffectUI[] _effectsSelf;
-        private SeparatorEffectUI _separator;
+        private readonly AEffectUI[] _effectsTarget;
+        private readonly AEffectUI[] _effectsSelf;
+        private readonly SeparatorEffectUI _separator;
+        private readonly string _hexColor, _hexColorPlus, _hexColorMinus;
         private string _textMain, _textAP;
-        private string _hexColor, _hexColorPlus, _hexColorMinus;
 
-        public string Name => _keyName;
+        public string Key => _keyName;
         public Sprite Sprite => _sprite;
         public int Cost => _cost;
 
-        public SkillUI Init(ProjectColors colors, AEffectUI[] effectsTarget, AEffectUI[] effectsSelf, SeparatorEffectUI separator)
+        public SkillUI(SkillUISettings settings, ProjectColors colors, AEffectUI[] effectsTarget, AEffectUI[] effectsSelf, SeparatorEffectUI separator) : base(settings)
         {
             _hexColor = colors.HintDefaultTag;
             _hexColorPlus = colors.TextPositiveTag;
@@ -37,8 +32,6 @@ namespace Vurbiri.Colonization.UI
             _separator = separator;
 
             Localization.Instance.Subscribe(SetTexts);
-
-            return this;
         }
 
         public string GetText(bool isUse) => string.Concat(_textMain, isUse ? _hexColorPlus : _hexColorMinus, _textAP);

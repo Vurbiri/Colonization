@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private float _distance;
         [SerializeField] private int _cost;
         [SerializeField] private HitEffectsSettings[] _effectsHitsSettings;
-        [SerializeField] private SkillUI _ui;
+        [SerializeField] private SkillUISettings _ui;
 
         [NonSerialized] private ReadOnlyArray<HitEffects> _hitEffects;
 
@@ -28,16 +28,16 @@ namespace Vurbiri.Colonization.Characteristics
 
         public SkillUI Init(ProjectColors colors, SeparatorEffectUI separator, int actorType, int actorId, int skillId)
         {
-            int countHits = _effectsHitsSettings.Length;
-            var effects = new HitEffects[countHits];
-            List<AEffectUI> targetEffectsUI = new(countHits), selfEffectsUI = new(countHits);
+            int hitsCount = _effectsHitsSettings.Length;
+            var effects = new HitEffects[hitsCount];
+            List<AEffectUI> targetEffectsUI = new(hitsCount), selfEffectsUI = new(hitsCount);
             int targetEffectsCount, selfEffectsCount; 
             HitEffectsSettings effectsHitSettings;
 
-            for (int i = 0, u = 0; i < countHits; i++)
+            for (int i = 0, effectsCount = 0; i < hitsCount; i++)
             {
                 effectsHitSettings = _effectsHitsSettings[i];
-                effects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, skillId, u);
+                effects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, skillId, effectsCount);
 
                 targetEffectsCount = targetEffectsUI.Count; selfEffectsCount = selfEffectsUI.Count;
                 effectsHitSettings.CreateEffectsHitUI(colors, targetEffectsUI, selfEffectsUI);
@@ -45,13 +45,17 @@ namespace Vurbiri.Colonization.Characteristics
                 if (targetEffectsCount != targetEffectsUI.Count) targetEffectsUI.Add(separator);
                 if (selfEffectsCount != selfEffectsUI.Count) selfEffectsUI.Add(separator);
 
-                u += effectsHitSettings.Count;
+                effectsCount += effectsHitSettings.Count;
             }
 
-            var ui = _ui.Init(colors, targetEffectsUI.ToArray(), selfEffectsUI.ToArray(), separator);
             _hitEffects = new(effects);
+            SkillUI ui = new(_ui, colors, targetEffectsUI.ToArray(), selfEffectsUI.ToArray(), separator);
 
-            _ui = null; _effectsHitsSettings = null;
+#if !UNITY_EDITOR
+            _ui = null; 
+            _effectsHitsSettings = null;
+#endif
+
             return ui;
         }
 

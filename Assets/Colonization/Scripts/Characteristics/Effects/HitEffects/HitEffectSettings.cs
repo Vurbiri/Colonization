@@ -65,9 +65,6 @@ namespace Vurbiri.Colonization.Characteristics
             AEffectUI output;
             string hexColor, value;
 
-            if (string.IsNullOrEmpty(_descKey))
-                Debug.LogWarning("Key null or empty!");
-
             if (_useAttack)
             {
                 AEffectUI reflect;

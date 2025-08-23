@@ -23,6 +23,9 @@ namespace Vurbiri.Colonization.Actors
 
         public void Init()
         {
+#if UNITY_EDITOR
+            if (_prefabActorSkin != null)
+#endif
             _skills.Init(TypeId, _id);
         }
 

@@ -28,12 +28,6 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Init(int actorType, int actorId)
         {
-            if (actorType != ActorTypeId.Warrior)
-            {
-                Debug.Log("Не создавать демонов");
-                return;
-            }
-
             int countSkills = _skillsSettings.Length;
 
             var skillsUI = new SkillUI[countSkills];
@@ -105,7 +99,6 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void UpdateAnimation_Ed(AnimatorOverrideController animator)
         {
-           
             int countSkills = _skillsSettings.Length;
             if (_swapA != _swapB && _swapA >= 0 & _swapB >= 0 && _swapA < countSkills & _swapB < countSkills)
                 (_skillsSettings[_swapA], _skillsSettings[_swapB]) = (_skillsSettings[_swapB], _skillsSettings[_swapA]);
@@ -132,9 +125,6 @@ namespace Vurbiri.Colonization.Characteristics
             _hitSfxNames = sfxNames;
             _timings = timings;
         }
-
-
-
 #endif
     }
 }
