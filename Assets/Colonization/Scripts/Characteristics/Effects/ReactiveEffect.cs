@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.Characteristics
         public bool IsPositive => _value > 0;
 
         public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, bool isSkip)
-                       : this(code, targetAbility, typeModifier, value, duration, isSkip ? 1 : 0) { }
+            : this(code, targetAbility, typeModifier, value, duration, isSkip ? 1 : 0) { }
         public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, int skip)
         {
             _code = code;
@@ -96,6 +96,15 @@ namespace Vurbiri.Colonization.Characteristics
         }
         public override void Dispose() {}
 
+        public override int GetHashCode() => _code;
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+                return true;
+
+            return obj is ReactiveEffect other && _code == other._code;
+        }
+
         public static Effect operator -(ReactiveEffect left, ReactiveEffect right)
         {
             if(left == null | right == null)
@@ -114,5 +123,9 @@ namespace Vurbiri.Colonization.Characteristics
 
             return new(right._targetAbility, right._typeModifier, left._value + right._value);
         }
+
+        public static bool operator ==(ReactiveEffect effect, EffectCode code) => effect._code == code;
+        public static bool operator !=(ReactiveEffect effect, EffectCode code) => effect._code != code;
+
     }
 }

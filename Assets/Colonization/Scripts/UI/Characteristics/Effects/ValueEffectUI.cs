@@ -6,14 +6,16 @@ namespace Vurbiri.Colonization.UI
 {
     sealed public class ValueEffectUI : AValueEffectUI
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ValueEffectUI(string descKey, string value, string hexColor, AEffectUI advEffect) : base(descKey, value, hexColor, advEffect) { }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ValueEffectUI(string descKey, string value, string hexColor) : base(descKey, value, hexColor, new EmptyEffectUI()) { }
+        private readonly string _value;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ValueEffectUI(string descKey, int value, string hexColor) : base(descKey, value.ToString(), hexColor, new EmptyEffectUI()) { }
+        public ValueEffectUI(string descKey, string value, string hexColor, AEffectUI advEffect) : base(descKey, hexColor, advEffect) => _value = value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ValueEffectUI(string descKey, string value, string hexColor) : base(descKey, hexColor, EffectUI.Empty) => _value = value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ValueEffectUI(string descKey, int value, string hexColor) : base(descKey, hexColor, EffectUI.Empty) => _value = value.ToString();
 
         public override void GetText(Localization language, StringBuilder sb)
         {

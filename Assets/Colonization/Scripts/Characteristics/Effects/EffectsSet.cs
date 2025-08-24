@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization.Characteristics
         {
             for (int i = 0; i < _count; i++)
             {
-                if (_values[i].Code == code)
+                if (_values[i] == code)
                 {
                     _values[i].Removing();
                     return;
@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization.Characteristics
         public bool Contains(EffectCode code)
         {
             for (int i = 0; i < _count; i++)
-                if (_values[i].Code == code)
+                if (_values[i] == code)
                     return true;
 
             return false;

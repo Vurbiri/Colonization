@@ -21,7 +21,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_CHILD_TARGET = "_parentTarget_ed", P_CHILD_TYPE = "_isWarrior_ed";
 
         private static readonly string[] KEYS_NAME_SKILLS =
-        { "Strike", "Channel", "Sweep", "Combo", "Heal", "Sparks", "Toxin", "Swarm", "Battlecry", "Fortify", "Enhancement", "Kick", "Leap" };
+        { "Strike", "Sweep", "Combo", "Heal", "Sparks", "Toxin", "Swarm", "Battlecry", "Fortify", "WeaponEnhancement", "ArmorEnhancement", "Kick", "Leap" };
         #endregion
 
         protected override void OnGUI()

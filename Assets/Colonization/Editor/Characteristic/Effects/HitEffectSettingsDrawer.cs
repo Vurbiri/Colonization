@@ -90,7 +90,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 }
 
                 if (!isUsedAttack)
-                    targetAbility = DrawDirectEffect(!isNotDuration);
+                    targetAbility = DrawTargetEffect(!isNotDuration);
 
                 Space(3f);
 
@@ -150,7 +150,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 DrawInt(P_REFLECT, "Loss (%)", 0, 200);
             }
             //==============================================
-            int DrawDirectEffect(bool isDuration)
+            int DrawTargetEffect(bool isDuration)
             {
                 SerializedProperty targetAbility = GetProperty(P_TARGET_ABILITY);
                 

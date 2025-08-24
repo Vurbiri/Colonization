@@ -2,34 +2,32 @@ using System;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class AbilityModifierAdd : IAbilityModifier
+    public abstract class AbilityModifier
     {
-        private int _value = 0;
-        
-        public Id<TypeModifierId> Id => TypeModifierId.Addition;
+        protected int _value = 0;
 
-        public int Value { get => _value; set => _value = value; }
+        public int Value => _value;
 
-        public AbilityModifierAdd() { }
-        public AbilityModifierAdd(int value) => _value = value;
+        protected AbilityModifier(int value) => _value = value;
 
-        public int Apply(int value) => value + _value;
-        
+        public abstract int Apply(int value);
+
         public void Add(int value) => _value += value;
     }
-        
-    public class AbilityModifierPercent : IAbilityModifier
+
+    sealed public class AbilityModifierAdd : AbilityModifier
     {
-        private int _value = 100;
+        public AbilityModifierAdd() : base(0) { }
+        public AbilityModifierAdd(int value) : base(value) { }
 
-        public Id<TypeModifierId> Id => TypeModifierId.BasePercent;
-        public int Value { get => _value; set => _value = value; }
+        public override int Apply(int value) => Math.Max(value + _value, 0);
+    }
+        
+    sealed public class AbilityModifierPercent : AbilityModifier
+    {
+        public AbilityModifierPercent() : base(100) { }
+        public AbilityModifierPercent(int value) : base(value) { }
 
-        public AbilityModifierPercent() { }
-        public AbilityModifierPercent(int value) => _value = value;
-
-        public int Apply(int value) => (int)Math.Round(Math.Max(value * _value, 0) / 100.0);
-
-        public void Add(int value) => _value += value;
+        public override int Apply(int value) => (int)Math.Round(Math.Max(value * _value, 0) / 100.0);
     }
 }

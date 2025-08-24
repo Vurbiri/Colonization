@@ -15,7 +15,6 @@ namespace Vurbiri.Colonization.Characteristics
             _code = (sourceType & MASK) << OFFSET_3 | (sourceId & MASK) << OFFSET_2 | (skillId & MASK) << OFFSET_1 | (effectId & MASK);
         }
 
-        public EffectCode(EffectCode effectKey) => _code = effectKey._code;
         public EffectCode(int value) => _code = value;
 
         public int Value => _code;

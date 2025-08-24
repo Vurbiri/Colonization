@@ -70,7 +70,7 @@ namespace Vurbiri.Colonization.Characteristics
                 AEffectUI reflect;
 
                 if (_reflectValue <= 0)
-                    reflect = new EmptyEffectUI();
+                    reflect = EffectUI.Empty;
                 else
                     reflect = _value > 0 ? new ValueEffectUI(REFLECT_MINUS, _reflectValue, colors.TextNegativeTag) : new ValueEffectUI(REFLECT_PLUS, _reflectValue, colors.TextPositiveTag);
 
@@ -78,9 +78,9 @@ namespace Vurbiri.Colonization.Characteristics
                 value = _value.ToString("#;#;0");
 
                 if (_holy > 0)
-                    output = _pierce > 0 ? new ThreeValuesEffectUI(_descKey, value, _holy, _pierce, hexColor, reflect) : new TwoValuesEffectUI(_descKey, value, _holy, hexColor, reflect);
+                    output = _pierce > 0 ? new ValuesEffectUI(_descKey, value, _holy, _pierce, hexColor, reflect) : new ValuesEffectUI(_descKey, value, _holy, hexColor, reflect);
                 else
-                    output = _pierce > 0 ? new TwoValuesEffectUI(_descKey, value, _pierce, hexColor, reflect) : new ValueEffectUI(_descKey, value, hexColor, reflect);
+                    output = _pierce > 0 ? new ValuesEffectUI(_descKey, value, _pierce, hexColor, reflect) : new ValueEffectUI(_descKey, value, hexColor, reflect);
             }
             else if (_targetAbility == ClearEffectsId.Code)
             {
@@ -99,7 +99,7 @@ namespace Vurbiri.Colonization.Characteristics
                     value = ValueToString(_value, _targetAbility, _typeModifier);
 
                     if (_duration > 0)
-                        output = new TwoValuesEffectUI(_descKey, value, _duration, hexColor);
+                        output = new ValuesEffectUI(_descKey, value, _duration, hexColor);
                     else
                         output = new ValueEffectUI(_descKey, value, hexColor);
                 }

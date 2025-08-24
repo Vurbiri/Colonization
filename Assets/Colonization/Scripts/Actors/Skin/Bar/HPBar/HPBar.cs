@@ -49,6 +49,7 @@ namespace Vurbiri.Colonization.Actors.UI
 
         private void SetCurrentValue(int value)
         {
+            value = Mathf.Max(value, 1);
             _currentValueTMP.text = value.ToString();
 
             float width = SP_WIDTH * value / _maxValue;

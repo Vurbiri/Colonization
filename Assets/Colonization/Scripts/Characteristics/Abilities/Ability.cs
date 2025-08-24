@@ -5,15 +5,15 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public class Ability<TId> : AAbility<TId> where TId : AbilityId<TId>
     {
-        private readonly IdArray<TypeModifierId, IAbilityModifier> _modifiers = new();
+        private readonly IdArray<TypeModifierId, AbilityModifier> _modifiers = new();
         protected readonly int _baseValue;
 
         public Ability(Id<TId> id, int baseValue) : base(id, baseValue)
         {
             _baseValue = baseValue;
 
-            _modifiers[TypeModifierId.BasePercent] = new AbilityModifierPercent();
-            _modifiers[TypeModifierId.Addition] = new AbilityModifierAdd();
+            _modifiers[TypeModifierId.BasePercent]  = new AbilityModifierPercent();
+            _modifiers[TypeModifierId.Addition]     = new AbilityModifierAdd();
             _modifiers[TypeModifierId.TotalPercent] = new AbilityModifierPercent();
         }
 
