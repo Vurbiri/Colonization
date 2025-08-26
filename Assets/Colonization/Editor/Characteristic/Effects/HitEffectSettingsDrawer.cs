@@ -60,7 +60,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if (isTargetSkillSelf)
                     SetBool(P_IS_SELF, true);
                 else
-                    isTarget = !DrawBool(P_IS_SELF);
+                    isTarget = !(isTargetSkillSelf = DrawBool(P_IS_SELF));
 
                 bool isTargetEnemy = isTargetSkillEnemy & isTarget;
 
@@ -78,6 +78,8 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                     if (isTargetEnemy)
                         DrawForEnemy();
+                    else if(isTargetSkillSelf)
+                        DrawForSelf();
                     else
                         DrawForFriend();
 
@@ -148,6 +150,14 @@ namespace VurbiriEditor.Colonization.Characteristics
                 SetInt(P_HOLY, 0);
                 SetInt(P_PIERCE, 0);
                 DrawInt(P_REFLECT, "Loss (%)", 0, 200);
+            }
+            //==============================================
+            void DrawForSelf()
+            {
+                DrawInt(P_VALUE, "Heal (%)", 5, 300, 100);
+                SetInt(P_HOLY, 0);
+                SetInt(P_PIERCE, 0);
+                SetInt(P_REFLECT, 0);
             }
             //==============================================
             int DrawTargetEffect(bool isDuration)
@@ -421,21 +431,25 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             if (GetProperty(P_USED_ATTACK).boolValue)
             {
-                size += 1f;
                 if (target != TargetOfSkill.Self)
                 {
                     size += 1f;
-                    if (target == TargetOfSkill.Enemy && !GetProperty(P_IS_SELF).boolValue)
-                    {
+                    if (!GetProperty(P_IS_SELF).boolValue)
+                    { 
                         size += 1f;
-                        if (GetProperty(P_PARENT_TYPE).boolValue)
+                        if (target == TargetOfSkill.Enemy)
+                        {
                             size += 1f;
-                        if (GetProperty(P_PIERCE).intValue > 0)
+                            if (GetProperty(P_PARENT_TYPE).boolValue)
+                                size += 1f;
+                            if (GetProperty(P_PIERCE).intValue > 0)
+                                size += 1f;
+                        }
+
+                        if (GetProperty(P_REFLECT).intValue > 0)
                             size += 1f;
                     }
                 }
-                if (GetProperty(P_REFLECT).intValue > 0)
-                    size += 1f;
             }
             else
             {

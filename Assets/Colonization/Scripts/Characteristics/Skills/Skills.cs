@@ -39,7 +39,8 @@ namespace Vurbiri.Colonization.Characteristics
 
             _skillsUI = new(skillsUI);
 
-            if (actorType == ActorTypeId.Warrior)
+            UnityEngine.Debug.Log("Убрать коммент");
+            //if (actorType == ActorTypeId.Warrior)
                 _blockUI = new(colors, separator, _blockCost, _blockValue);
         }
 
@@ -99,6 +100,8 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void UpdateAnimation_Ed(AnimatorOverrideController animator)
         {
+            if (animator == null) return;
+            
             int countSkills = _skillsSettings.Length;
             if (_swapA != _swapB && _swapA >= 0 & _swapB >= 0 && _swapA < countSkills & _swapB < countSkills)
                 (_skillsSettings[_swapA], _skillsSettings[_swapB]) = (_skillsSettings[_swapB], _skillsSettings[_swapA]);

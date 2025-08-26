@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
     public class AnimationClipSettingsScriptable : ScriptableObject
     {
         private const string MENU = "Assets/Extract AnimationClip", WARRIOR = "Warrior", DEMON = "Demon";
-        private static readonly string[] s_exclude = { "ZA_", "MA_" };
+        private static readonly string[] s_exclude = { "ZA_", "MA_", "RA_" };
         private static readonly string[] s_folders = { "Melee", "Shield", "Wizard" };
         private static readonly System.Type s_type = typeof(AnimationClipSettingsScriptable);
 
@@ -23,28 +23,16 @@ namespace Vurbiri.Colonization.Actors
         [MenuItem(MENU, true)]
         private static bool ValidateSelection()
         {
-            string animationName;
             foreach (var obj in Selection.objects)
-            {
-                if (obj is not AnimationClip animation)
-                    return false;
+                if (ObjectValidate(obj, out _))
+                    return true;
 
-                animationName = animation.name;
-                foreach (var str in s_exclude)
-                    if (animationName.StartsWith(str))
-                        return false;
-
-                if (EUtility.FindAnyScriptable<AnimationClipSettingsScriptable>(animationName.Replace("A_", "ACS_")) != null)
-                    return false;
-            }
-
-            return true;
+            return false;
         }
 
         [MenuItem(MENU, false, 11)]
         private static void Creator()
         {
-            string settingsName;
             AnimationClipSettingsScriptable settings;
             bool isCreate = false;
 
@@ -52,13 +40,15 @@ namespace Vurbiri.Colonization.Actors
             {
                 if (obj is AnimationClip animation)
                 {
-                    settingsName = animation.name.Replace("A_", "ACS_");
-                    settings = CreateScriptable(settingsName);
-                    if (settings != null)
+                    if (ObjectValidate(obj, out string settingsName))
                     {
-                        isCreate = true;
-                        settings.clip = animation;
-                        settings.name = settingsName;
+                        settings = CreateScriptable(settingsName);
+                        if (settings != null)
+                        {
+                            isCreate = true;
+                            settings.clip = animation;
+                            settings.name = settingsName;
+                        }
                     }
                 }
             }
@@ -108,6 +98,23 @@ namespace Vurbiri.Colonization.Actors
                 return false;
             }
             #endregion
+        }
+
+        private static bool ObjectValidate(Object obj, out string settingsName)
+        {
+            settingsName = null;
+            if (obj is not AnimationClip clip)
+                return false;
+
+            foreach (var str in s_exclude)
+                if (clip.name.StartsWith(str))
+                    return false;
+
+            settingsName = clip.name.Replace("A_", "ACS_");
+            if (EUtility.FindAnyScriptable<AnimationClipSettingsScriptable>(settingsName) != null)
+                return false;
+
+            return true;
         }
 
         private void OnValidate()

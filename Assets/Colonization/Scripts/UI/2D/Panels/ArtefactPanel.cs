@@ -38,13 +38,16 @@ namespace Vurbiri.Colonization.UI
             //_artefact.Next(UnityEngine.Random.Range(2, 10));
 
             var person = GameContainer.Players.Person;
+            var satan = GameContainer.Players.Satan;
 
-            person.SpawnTest(WarriorId.Solder, HEX.RightUp);
-            person.SpawnTest(WarriorId.Solder, HEX.Left);
-            person.SpawnTest(WarriorId.Warlock, HEX.LeftDown);
-            //person.SpawnTest(WarriorId.Militia, HEX.LeftUp);
-            person.SpawnTest(WarriorId.Warlock, HEX.LeftUp);
-            person.SpawnTest(WarriorId.Warlock, new Key(-4, 0));
+            person.SpawnTest(WarriorId.Warlock, HEX.RightUp);
+            person.SpawnDemonTest(DemonId.Imp, HEX.Left);
+            person.SpawnTest(WarriorId.Militia, HEX.LeftDown);
+            person.SpawnDemonTest(DemonId.Imp, HEX.LeftUp);
+            person.SpawnDemonTest(DemonId.Imp, new Key(0, 0));
+            //person.SpawnTest(WarriorId.Knight, new Key(-4, 0));
+
+
             //GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 2);
             //GameContainer.Players.GetAI(PlayerId.AI_02).SpawnTest(WarriorId.Wizard, 2);
 

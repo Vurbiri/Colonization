@@ -25,10 +25,10 @@ namespace Vurbiri.Colonization.Actors
             _main = _particle.main;
             _main.loop = false;
 
-            var temptMinMax = _main.startSpeed;
-            _avgSpeed = (temptMinMax.constantMin + temptMinMax.constantMax) * 0.5f;
+            _avgSpeed = _main.startSpeed.GetAvgSpeed();
+            if (_avgSpeed < 0.01f) _avgSpeed = _particle.velocityOverLifetime.z.GetAvgSpeed();
 
-            temptMinMax = _main.startLifetime;
+            var temptMinMax = _main.startLifetime;
             float lifetimeMin = temptMinMax.constantMin, lifetimeMax = temptMinMax.constantMax;
             float avgLife = (lifetimeMin + lifetimeMax) * 0.5f;
             _lifetimeMinRate = lifetimeMin / avgLife; _lifetimeMaxRate = lifetimeMax / avgLife;

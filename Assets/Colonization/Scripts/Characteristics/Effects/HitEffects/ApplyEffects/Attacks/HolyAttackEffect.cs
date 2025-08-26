@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public HolyAttackEffect(int value, int holy, int pierce) : base(CurrentHP, TypeModifierId.Addition)
         {
-            _damageToHuman = new(-value + holy);
+            _damageToHuman = new(-value);
             _damageToDemon = new(-value + holy);
             _pierce = new(100 - pierce);
         }

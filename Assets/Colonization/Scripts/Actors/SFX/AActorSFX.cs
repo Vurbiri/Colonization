@@ -4,7 +4,7 @@ using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Actors
 {
-    [RequireComponent(typeof(AudioSource))]
+    [RequireComponent(typeof(AudioSource)), DisallowMultipleComponent]
     public abstract class AActorSFX : MonoBehaviour, ISFXUser
     {
         [SerializeField] protected float _heightDeath = -3.5f;

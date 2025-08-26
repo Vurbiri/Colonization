@@ -21,7 +21,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private const string P_CHILD_TARGET = "_parentTarget_ed", P_CHILD_TYPE = "_isWarrior_ed";
 
         private static readonly string[] KEYS_NAME_SKILLS =
-        { "Strike", "Sweep", "Combo", "Heal", "Sparks", "Toxin", "Swarm", "Battlecry", "Fortify", "WeaponEnhancement", "ArmorEnhancement", "Kick", "Leap" };
+        { "Strike", "Sweep", "Combo", "Heal", "Sparks", "Toxin", "Bolt", "Swarm", "Battlecry", "Fortify", "WeaponEnhancement", "ArmorEnhancement", "Kick", "Leap" };
         #endregion
 
         protected override void OnGUI()
@@ -43,9 +43,9 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 if (clip != null && clip.clip != null)
                 {
-                    DrawButton(clip);
-
                     SerializedProperty costProperty = GetProperty(P_COST);
+
+                    DrawButton(clip);
 
                     DrawLine(40f);
                     indentLevel++;
@@ -64,6 +64,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     Space();
                     DrawInt(costProperty, 1, 4, 1);
 
+
                     GetProperty(uiProperty, P_COST_UI).intValue = costProperty.intValue;
 
                     Space(2f);
@@ -74,7 +75,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     indentLevel--;
 
                     DrawHits(clip.hitTimes.Length, target);
-                 }
+                }
 
                 indentLevel--;
             }
@@ -86,8 +87,12 @@ namespace VurbiriEditor.Colonization.Characteristics
             //=================================
             void SetName(SerializedProperty property)
             {
-                //string name = isWarrior ? Localization.ForEditor(FILE).GetText(FILE, property.stringValue).Delete("<b>", "</b>") : "Skill";
-                string name = Localization.ForEditor(FILE).GetText(FILE, property.stringValue).Delete("<b>", "</b>");
+                string name;
+                if (string.IsNullOrEmpty(property.stringValue))
+                    name = "None";
+                else
+                    name = Localization.ForEditor(FILE).GetText(FILE, property.stringValue).Delete("<b>", "</b>");
+
                 int id = IdFromLabel();
                 if (id >= 0) name = string.Concat($"[{id}] ", name);
                 _label.text = name;

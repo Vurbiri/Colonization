@@ -22,25 +22,25 @@ namespace Vurbiri.Colonization.Actors.UI
         private int _selfOrderLevel;
         private Actor _actor;
         private Transform _thisTransform, _actorTransform;
+        private GameObject _thisGameObject;
         private Vector3 _cameraForward;
         private bool _isActive;
         private SpriteRenderer _renderer;
-        private Unsubscriptions _unsubscribers;
+        private Unsubscriptions _unsubscribers = new();
 
-        private void Start()
+        private void Awake()
         {
             _actor = GetComponentInParent<Actor>();
             _actorTransform = _actor.transform;
             _thisTransform = transform;
-            _isActive = gameObject.activeSelf;
+            _thisGameObject = gameObject;
 
             _settings.Init(this, _actor);
 
-            _unsubscribers += GameContainer.CameraTransform.Subscribe(OnChangeCamera);
-            _unsubscribers += _actor.Subscribe(OnRemoveActor, false);
-            _unsubscribers += _actor.Effects.Subscribe(OnAddEffect);
+            _actor.Skin.EventStart += OnStart;
 
             _settings = null;
+            _thisGameObject.SetActive(_isActive = false);
         }
 
         private void Update()
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization.Actors.UI
         {
             bool isActive = transform.position.y < CameraController.heightShow;
             if (_isActive != isActive)
-                gameObject.SetActive(_isActive = isActive);
+                _thisGameObject.SetActive(_isActive = isActive);
 
             _cameraForward = transform.forward;
         }
@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization.Actors.UI
         private void OnRemoveActor(Actor actor, TypeEvent type)
         {
             if (type == TypeEvent.Remove)
-                Destroy(gameObject);
+                Destroy(_thisGameObject);
         }
 
         private void OnDestroy()
@@ -79,6 +79,17 @@ namespace Vurbiri.Colonization.Actors.UI
         }
 
         private void Add(IDisposable item) => _bars.Add(item);
+
+        private void OnStart()
+        {
+            //_isActive = GameContainer.CameraTransform.CameraPosition.y < CameraController.heightShow;
+            //_thisGameObject.SetActive(_isActive);
+            _actor.Skin.EventStart -= OnStart;
+
+            _unsubscribers += GameContainer.CameraTransform.Subscribe(OnChangeCamera);
+            _unsubscribers += _actor.Subscribe(OnRemoveActor, false);
+            _unsubscribers += _actor.Effects.Subscribe(OnAddEffect);
+        }
 
         #region Nested: Settings
         //***********************************

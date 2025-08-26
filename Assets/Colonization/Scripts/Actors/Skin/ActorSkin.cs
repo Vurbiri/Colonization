@@ -6,6 +6,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
+    [DisallowMultipleComponent]
     public partial class ActorSkin : MonoBehaviour
     {
         [SerializeField] private Bounds _bounds;
@@ -43,11 +44,13 @@ namespace Vurbiri.Colonization.Actors
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }
 
-        public virtual ActorSkin Init(Id<PlayerId> owner, Skills skills)
+        public virtual ActorSkin Init(Id<PlayerId> owner, int type, Skills skills)
         {
             _thisTransform = transform;
-            
-            if (owner != PlayerId.Satan)
+
+            print("Убрать ActorTypeId");
+            //if (owner != PlayerId.Satan)
+            if (type == ActorTypeId.Warrior)
                 GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = GameContainer.Materials[owner].materialWarriors;
 
             _stateMachine.AssignDefaultState(new BoolSwitchState(B_IDLE, this));

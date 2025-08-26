@@ -449,7 +449,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Imp_Attack_1
+      name: RA_Demon_Imp_Attack_1
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -446548913267839981
       firstFrame: 770
@@ -478,7 +478,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Imp_Attack_2
+      name: RA_Demon_Imp_Attack_2
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 8406559838421361848
       firstFrame: 790
@@ -594,7 +594,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Imp_Death
+      name: RA_Demon_Imp_Death
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 7187447139602393397
       firstFrame: 980
@@ -654,7 +654,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 3.5
+    globalScale: 4
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -709,7 +709,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 3.5
+    globalScale: 4
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

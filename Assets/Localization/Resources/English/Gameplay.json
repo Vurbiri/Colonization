@@ -57,7 +57,7 @@
   "PerkIsSolder": "You can recruit Soldiers",
   "PerkIsWizard": "You can recruit Wizards",
   "PerkIsWarlock": "You can recruit Warlocks",
-  "PerkIsKnight": "You can recruit Knights",
+  "PerkIsKnight": "You can recruit Paladins",
   "PerkMaxWarrior": "Maximum number of warriors <b>+{0}</b>",
   "PerkIsArtefact": "You can find fragments of the Artifact of Power",
 }

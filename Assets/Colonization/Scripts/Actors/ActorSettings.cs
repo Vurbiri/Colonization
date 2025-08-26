@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Actors
         public AbilitiesSet<ActorAbilityId> Abilities => new(_abilities, ActorAbilityId.SHIFT_ABILITY, ActorAbilityId.MAX_ID_SHIFT_ABILITY);
         public Skills Skills => _skills;
 
-        public ActorSkin InstantiateActorSkin(Id<PlayerId> owner, Transform parent) => UnityEngine.Object.Instantiate(_prefabActorSkin, parent).Init(owner, _skills);
+        public ActorSkin InstantiateActorSkin(Id<PlayerId> owner, Transform parent) => UnityEngine.Object.Instantiate(_prefabActorSkin, parent).Init(owner, TypeId, _skills);
         public void CreateStates(Actor actor) => _skills.CreateStates(actor);
 
         public void Init()
@@ -35,10 +35,20 @@ namespace Vurbiri.Colonization.Actors
         }
 
 #if UNITY_EDITOR
-        public void OnValidate() => _skills.OnValidate(TypeId);
-
-        public bool UpdateName_Ed(string oldName, string newName) => _skills.UpdateName_Ed(oldName, newName);
-        public void UpdateAnimation_Ed() => _skills.UpdateAnimation_Ed((AnimatorOverrideController)_prefabActorSkin.GetComponent<Animator>().runtimeAnimatorController);
+        public void OnValidate()
+        {
+            if (_prefabActorSkin)
+                _skills.OnValidate(TypeId);
+        }
+        public bool UpdateName_Ed(string oldName, string newName)
+        {
+            return _prefabActorSkin ? _skills.UpdateName_Ed(oldName, newName) : false;
+        }
+        public void UpdateAnimation_Ed()
+        {
+            if(_prefabActorSkin)
+                _skills.UpdateAnimation_Ed(_prefabActorSkin.GetComponent<Animator>().runtimeAnimatorController as AnimatorOverrideController);
+        }
 #endif
     }
 }
