@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
             {
                 if (_currentPlayer == PlayerId.Person)
                 {
-                    var actors = s_actors[PlayerId.Person];
+                    var actors = GameContainer.Actors[PlayerId.Person];
                     if (actors.Count == 1)
                     {
                         var actor = actors.First;
@@ -106,7 +106,7 @@ namespace Vurbiri.Colonization
                 if (_currentPlayer == PlayerId.Person)
                 {
                     _waitButton.Reset();
-                    foreach (var actor in s_actors[PlayerId.Person])
+                    foreach (var actor in GameContainer.Actors[PlayerId.Person])
                         actor.Hexagon.HideMark();
                 }
             }

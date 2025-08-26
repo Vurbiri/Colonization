@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
                 {
                     _count = 0;
                     for (int i = 0; i < PlayerId.Count; i++)
-                        _count += s_actors[i].Count;
+                        _count += GameContainer.Actors[i].Count;
 
                     _canCast = _count < _max;
                 }

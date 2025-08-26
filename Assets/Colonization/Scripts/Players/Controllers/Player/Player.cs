@@ -11,17 +11,13 @@ namespace Vurbiri.Colonization
         protected readonly int _id;
         protected readonly bool _isPerson;
 
-        protected readonly ReactiveSet<Actor> _actors;
-
         public int Id => _id;
-        public ReadOnlyReactiveSet<Actor> Actors => _actors;
+        public ReadOnlyReactiveSet<Actor> Actors => GameContainer.Actors[_id];
 
-        protected Player(int playerId, int actorCapacity)
+        protected Player(int playerId)
         {
             _id = playerId;
             _isPerson = playerId == PlayerId.Person;
-
-            _actors = new(actorCapacity);
         }
 
         public static void Init()  => SpellBook.Init();
@@ -29,7 +25,6 @@ namespace Vurbiri.Colonization
 
         public virtual void Dispose()
         {
-            _actors.Dispose();
         }
 
         #region Nested: Settings

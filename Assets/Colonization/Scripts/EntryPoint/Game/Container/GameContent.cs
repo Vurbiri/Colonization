@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             actorsFactory = new(actorsSettings);
 
-            balance = new(storage, gameLoop);
+            balance = new(storage, gameLoop, actorsFactory);
             score = new(storage);
             diplomacy = new(storage, gameLoop);
         }

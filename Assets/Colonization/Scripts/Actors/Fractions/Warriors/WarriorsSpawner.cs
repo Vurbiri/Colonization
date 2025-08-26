@@ -15,16 +15,16 @@ namespace Vurbiri.Colonization.Actors
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Actor Create(Id<WarriorId> id, Hexagon startHex)
         {
-            return GameContainer.ActorsFactory.Create(ActorTypeId.Warrior, id, _initData, startHex);
+            return GameContainer.Actors.Create(ActorTypeId.Warrior, id, _initData, startHex);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Actor CreateDemon(Id<DemonId> id, Hexagon startHex)
         {
-            return GameContainer.ActorsFactory.Create(ActorTypeId.Demon, id, _initData, startHex);
+            return GameContainer.Actors.Create(ActorTypeId.Demon, id, _initData, startHex);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Actor Load(ActorLoadData loadData) => GameContainer.ActorsFactory.Load(ActorTypeId.Warrior, _initData, loadData);
+        public Actor Load(ActorLoadData loadData) => GameContainer.Actors.Load(ActorTypeId.Warrior, _initData, loadData);
     }
 }

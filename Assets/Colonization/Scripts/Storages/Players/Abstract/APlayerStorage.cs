@@ -11,22 +11,26 @@ namespace Vurbiri.Colonization.Storage
 
     public abstract class APlayerStorage : IDisposable
     {
-        protected List<string> _keysActors;
+        private List<string> _keysActors;
 
         protected readonly IStorageService _storage;
         protected readonly string _strId;
         protected readonly string _keyArtefact;
         protected Unsubscriptions _unsubscribers = new();
 
-        public APlayerStorage(int id, IStorageService storage)
+        public APlayerStorage(int id, IStorageService storage, int countActors)
         {
             _storage = storage;
 
             _strId = id.ToString();
             _keyArtefact = P_BUFFS.Concat(_strId); 
+
+            _keysActors = new(countActors);
+            for (int i = 0; i < countActors; i++)
+                _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
         }
 
-        public void BindActors(IReactiveSet<Actor> actors)
+        public void BindActors(ReadOnlyReactiveSet<Actor> actors)
         {
             _unsubscribers += actors.Subscribe(OnActors);
 
@@ -46,6 +50,14 @@ namespace Vurbiri.Colonization.Storage
                         _storage.Set(_keysActors[actor.Index], actor);
                         return;
                 }
+            }
+            //==============================
+            string GetNewKey(int index)
+            {
+                for (int i = _keysActors.Count; i <= index; i++)
+                    _keysActors.Add(P_ACTORS.Concat(_strId, i.ToString()));
+
+                return _keysActors[index];
             }
             //==============================
             #endregion
@@ -72,7 +84,5 @@ namespace Vurbiri.Colonization.Storage
             }
             return actors;
         }
-
-        protected abstract string GetNewKey(int index);
     }
 }

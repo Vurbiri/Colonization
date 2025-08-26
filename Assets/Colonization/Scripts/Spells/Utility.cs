@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
         {
             for (int i = 0, surface; i < PlayerId.Count; i++)
             {
-                foreach (Actor actor in s_actors[i])
+                foreach (Actor actor in GameContainer.Actors[i])
                 {
                     surface = actor.Hexagon.SurfaceId;
                     if (surface == surfaceA | surface == surfaceB)

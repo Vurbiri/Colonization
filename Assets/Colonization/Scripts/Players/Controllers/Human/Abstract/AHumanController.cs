@@ -17,8 +17,6 @@ namespace Vurbiri.Colonization
                 while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
                 Actor actor = _spawner.Create(id, hexagon);
                 actor.IsPersonTurn = _isPerson;
-
-                _actors.Add(actor);
             }
         }
         public void SpawnTest(Id<WarriorId> id, Key key)
@@ -29,8 +27,6 @@ namespace Vurbiri.Colonization
             {
                 Actor actor = _spawner.Create(id, hexagon);
                 actor.IsPersonTurn = _isPerson;
-
-                _actors.Add(actor);
             }
         }
         public void SpawnDemonTest(Id<DemonId> id, Key key)
@@ -41,8 +37,6 @@ namespace Vurbiri.Colonization
             {
                 Actor actor = _spawner.CreateDemon(id, hexagon);
                 actor.IsPersonTurn = _isPerson;
-
-                _actors.Add(actor);
             }
         }
 
@@ -67,7 +61,7 @@ namespace Vurbiri.Colonization
             int countBuffs = 0;
             CurrenciesLite profit = new();
             bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
-            foreach (var warrior in _actors)
+            foreach (var warrior in Actors)
             {
                 if (warrior.IsMainProfit)
                     profit.IncrementMain(warrior.Hexagon.SurfaceId);
@@ -103,7 +97,7 @@ namespace Vurbiri.Colonization
 
         public void OnStartTurn()
         {
-            foreach (var warrior in _actors)
+            foreach (var warrior in Actors)
                 warrior.EffectsUpdate();
 
             _exchange.Update();

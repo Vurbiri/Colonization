@@ -43,8 +43,8 @@ namespace Vurbiri.Colonization.UI
             person.SpawnTest(WarriorId.Warlock, HEX.RightUp);
             person.SpawnDemonTest(DemonId.Imp, HEX.Left);
             person.SpawnTest(WarriorId.Militia, HEX.LeftDown);
-            person.SpawnDemonTest(DemonId.Imp, HEX.LeftUp);
-            person.SpawnDemonTest(DemonId.Imp, new Key(0, 0));
+            person.SpawnDemonTest(DemonId.Fatty, HEX.LeftUp);
+            person.SpawnDemonTest(DemonId.Fatty, new Key(0, 0));
             //person.SpawnTest(WarriorId.Knight, new Key(-4, 0));
 
 

@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
             {
                 if (_currentPlayer == PlayerId.Person)
                 {
-                    foreach (var actor in s_actors[PlayerId.Person])
+                    foreach (var actor in GameContainer.Actors[PlayerId.Person])
                         actor.SetHexagonSelectable();
 
                     _waitButton = MessageBox.Open(_strMsg, MBButton.Cancel);
@@ -84,7 +84,7 @@ namespace Vurbiri.Colonization
                 if (_currentPlayer == PlayerId.Person)
                 {
                     _waitButton.Reset(); _waitButton = null;
-                    foreach (var actor in s_actors[PlayerId.Person])
+                    foreach (var actor in GameContainer.Actors[PlayerId.Person])
                         actor.SetHexagonUnselectable();
                 }
 

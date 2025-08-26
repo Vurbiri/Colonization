@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
         public Currencies Resources => _resources;
         public ExchangeRate Exchange => _exchange;
 
-        public bool IsMaxWarriors => _abilities.IsLessOrEqual(MaxWarrior, _actors.Count);
+        public bool IsMaxWarriors => _abilities.IsLessOrEqual(MaxWarrior, Actors.Count);
 
         public Roads Roads => _roads;
 
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
         public PerkTree Perks => _perks;
         public SpellBook SpellBook => _spellBook;
 
-        public Human(int playerId, Settings settings) : base(playerId, CONST.DEFAULT_MAX_WARRIOR)
+        public Human(int playerId, Settings settings) : base(playerId)
         {
             var storage = GameContainer.Storage.Humans[playerId];
             var loadData = storage.LoadData;
@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
                 storage.PopulateRoads(_roads, GameContainer.Crossroads);
 
                 for (int i = loadData.actors.Count - 1; i >= 0; i--)
-                    _actors.Add(_spawner.Load(loadData.actors[i]));
+                    _spawner.Load(loadData.actors[i]);
             }
             else
             {
@@ -67,7 +67,6 @@ namespace Vurbiri.Colonization
             _spellBook = new(this);
 
             var balance = GameContainer.Balance;
-            balance.BindWarriors(_actors);
             balance.BindShrines(_edifices.shrines);
             balance.BindBlood(_resources.Get(CurrencyId.Blood));
 
@@ -78,7 +77,7 @@ namespace Vurbiri.Colonization
             storage.BindRoads(_roads, instantGetValue);
             storage.BindArtefact(_artefact, instantGetValue);
             storage.BindEdifices(_edifices.edifices, instantGetValue);
-            storage.BindActors(_actors);
+            storage.BindActors(Actors);
             storage.LoadData = null;
 
             GameContainer.Crossroads.BindEdifices(_edifices.edifices, instantGetValue);
@@ -171,7 +170,7 @@ namespace Vurbiri.Colonization
         #region Warriors
         public bool CanAnyRecruiting(Crossroad crossroad)
         {
-            return _abilities.IsGreater(MaxWarrior, _actors.Count) && crossroad.CanRecruiting(_id);
+            return _abilities.IsGreater(MaxWarrior, Actors.Count) && crossroad.CanRecruiting(_id);
         }
         public bool CanRecruiting(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
 
@@ -182,8 +181,6 @@ namespace Vurbiri.Colonization
             _resources.Remove(cost);
             Actor actor = _spawner.Create(id, hexagon);
             actor.IsPersonTurn = _isPerson;
-
-            _actors.Add(actor);
         }
 
         protected IEnumerator Recruiting_Cn(Id<WarriorId> id, Crossroad crossroad)

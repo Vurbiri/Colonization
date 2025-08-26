@@ -1,6 +1,5 @@
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
-using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -11,7 +10,6 @@ namespace Vurbiri.Colonization
         private static readonly string[][] s_keys;
 
         private static readonly Human[] s_humans = new Human[PlayerId.HumansCount];
-        private static readonly ReadOnlyReactiveSet<Actor>[] s_actors = new ReactiveSet<Actor>[PlayerId.Count];
 
         private static readonly ASpell[][] s_spells = { s_economicSpells = new ASpell[EconomicSpellId.Count], s_militarySpells = new ASpell[MilitarySpellId.Count] };
         private static readonly ASpell[] s_economicSpells;
@@ -39,7 +37,6 @@ namespace Vurbiri.Colonization
             int id = human.Id;
             
             s_humans[id] = human;
-            s_actors[id] = human.Actors;
         }
 
         public void Cast(int type, int id, SpellParam param)
@@ -61,8 +58,6 @@ namespace Vurbiri.Colonization
             Order.Create(); RandomHealing.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); Transmutation.Create(); Sacrifice.Create();
             BloodTrade.Create(); Spying.Create(); WallBuild.Create(); Marauding.Create(); RoadDemolition.Create(); SwapId.Create(); Zeal.Create();
         }
-        
-        public static void AddSatanActors(ReadOnlyReactiveSet<Actor> actors) => s_actors[PlayerId.Satan] = actors;
 
         public static void Clear()
         {
@@ -70,10 +65,7 @@ namespace Vurbiri.Colonization
             s_isCast.UnsubscribeAll(); s_isCast.SilentValue = false;
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
-            {
-                s_humans[i] = null; s_actors[i] = null;
-            }
-            s_actors[PlayerId.Satan] = null;
+                s_humans[i] = null;
 
             for (int i = 0; i < EconomicSpellId.Count; i++)
                 s_economicSpells[i].Clear(EconomicSpellId.Type, i);

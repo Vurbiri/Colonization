@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Storage
 
         public HumanLoadData LoadData { get; set; }
 
-        public HumanStorage(int id, IStorageService storage, bool isLoad) : base(id, storage)
+        public HumanStorage(int id, IStorageService storage, bool isLoad) : base(id, storage, DEFAULT_MAX_WARRIOR)
         {
             _keyResources = P_RESOURCES.Concat(_strId); _keyExchange = P_EXCHANGE.Concat(_strId);
             _keyRoads = P_ROADS.Concat(_strId); _keyPerks = P_PERKS.Concat(_strId);
@@ -88,7 +88,5 @@ namespace Vurbiri.Colonization.Storage
             }
             #endregion
         }
-
-        protected override string GetNewKey(int index) => _keysActors[index];
     }
 }

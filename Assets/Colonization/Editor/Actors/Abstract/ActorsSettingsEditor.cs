@@ -21,6 +21,7 @@ namespace VurbiriEditor.Colonization.Actors
             root.Q<Label>(U_LABEL).text = captionText;
             var container = root.Q<VisualElement>(U_CONTAINER);
 
+            serializedObject.Update();
             SerializedProperty propertyValues = serializedObject.FindProperty(P_SETTINGS).FindPropertyRelative(P_ARRAY);
 
             SerializedProperty propertyValue, propertySkills;
@@ -36,6 +37,8 @@ namespace VurbiriEditor.Colonization.Actors
                 element.Q<VisualElement>(U_SKILLS).Add(_treeSkillsVT.Instantiate(propertySkills.propertyPath));
                 container.Add(element);
             }
+
+            serializedObject.ApplyModifiedProperties();
 
             return root;
         }

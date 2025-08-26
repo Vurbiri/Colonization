@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
         public void OnEndTurn()
         {
             int countBuffs = 0, balance = 0;
-            foreach (var demon in _actors)
+            foreach (var demon in Actors)
             {
                 if (demon.IsMainProfit)
                     balance += (demon.Id + 1);
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
 
         public void OnStartTurn()
         {
-            foreach (var demon in _actors)
+            foreach (var demon in Actors)
                 demon.EffectsUpdate(_states.gateDefense);
         }
 

@@ -115,8 +115,8 @@ namespace Vurbiri.Colonization.Actors
             this.SetComponent(ref _animator);
             this.SetComponent(ref _sfx);
 
-            if (_animator != null)
-                _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)["A_Death"].length;
+            if (_animator != null && _animator.runtimeAnimatorController != null)
+                _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)["A_Death"].length * 0.95f;
         }
 
         //public void OnDrawGizmosSelected()
@@ -131,7 +131,7 @@ namespace Vurbiri.Colonization.Actors
             Gizmos.matrix = Matrix4x4.identity;
             Gizmos.color = Color.red;
             Gizmos.DrawWireCube(_bounds.center, _bounds.size);
-            Gizmos.DrawSphere(_bounds.center, 0.1f);
+            Gizmos.DrawSphere(_bounds.center, 0.2f);
         }
 #endif
     }

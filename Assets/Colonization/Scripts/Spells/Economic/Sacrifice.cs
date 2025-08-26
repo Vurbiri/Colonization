@@ -32,10 +32,12 @@ namespace Vurbiri.Colonization
             public override bool Prep(SpellParam param)
             {
                 _canCast = false;
-                if (!s_isCast && s_actors[param.playerId].Count > 0 && s_humans[param.playerId].IsPay(_cost))
+                var allActors = GameContainer.Actors;
+                
+                if (!s_isCast && allActors[param.playerId].Count > 0 && s_humans[param.playerId].IsPay(_cost))
                 {
                     _target = null;
-                    var actors = s_actors[PlayerId.Satan];
+                    var actors = allActors[PlayerId.Satan];
                     if (actors.Count > 0)
                     {
                         _target = actors.Random;
@@ -44,7 +46,7 @@ namespace Vurbiri.Colonization
                     {
                         for (int playerId = 0; playerId < PlayerId.HumansCount; playerId++)
                         {
-                            actors = s_actors[playerId];
+                            actors = allActors[playerId];
                             if (actors.Count > 0 & GameContainer.Diplomacy.GetRelation(param.playerId, playerId) == Relation.Enemy)
                             {
                                 if(_target == null || Chance.Rolling())
@@ -84,7 +86,7 @@ namespace Vurbiri.Colonization
             {
                 if (_currentPlayer == PlayerId.Person)
                 {
-                    var actors = s_actors[PlayerId.Person];
+                    var actors = GameContainer.Actors[PlayerId.Person];
                     if (actors.Count == 1)
                     {
                         var actor = actors.First;
@@ -131,7 +133,7 @@ namespace Vurbiri.Colonization
                 if (_currentPlayer == PlayerId.Person)
                 {
                     _waitButton.Reset();
-                    foreach (var actor in s_actors[PlayerId.Person])
+                    foreach (var actor in GameContainer.Actors[PlayerId.Person])
                         actor.Hexagon.HideMark();
                 }
             }

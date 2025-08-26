@@ -46,15 +46,15 @@ ModelImporter:
       name: ZA_Demon_Grunt_Empty
       takeName: Take 001
       internalID: 1827226128182048838
-      firstFrame: 0
-      lastFrame: 1
+      firstFrame: 134
+      lastFrame: 135
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -304,7 +304,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Grunt_RunPunch
+      name: A_Demon_Grunt_Special_Run
       takeName: Take 001
       internalID: -4045831500588228705
       firstFrame: 805
@@ -362,7 +362,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Grunt_Roar
+      name: A_Demon_Grunt_Cast_Roar
       takeName: Take 001
       internalID: -6577145938085917429
       firstFrame: 885
@@ -391,7 +391,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Grunt_Rage
+      name: A_Demon_Grunt_Cast_Rage
       takeName: Take 001
       internalID: -5912188926831197812
       firstFrame: 943
@@ -420,7 +420,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Grunt_HeadBash
+      name: A_Demon_Grunt_Attack_HeadBash
       takeName: Take 001
       internalID: -8608414141577764740
       firstFrame: 1051
@@ -449,7 +449,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Grunt_SwipeAttack
+      name: A_Demon_Grunt_Attack_Swipe
       takeName: Take 001
       internalID: -4068993222697286061
       firstFrame: 1090
@@ -478,7 +478,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Grunt_BackhandedSmash
+      name: A_Demon_Grunt_Attack_Smash
       takeName: Take 001
       internalID: -1531913693838268206
       firstFrame: 1133
@@ -507,7 +507,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Grunt_HitBack
+      name: ZA_Demon_Grunt_HitBack
       takeName: Take 001
       internalID: 7892081000819541804
       firstFrame: 1166
@@ -594,7 +594,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Grunt_HitFront
+      name: ZA_Demon_Grunt_HitFront
       takeName: Take 001
       internalID: 4495542927842965080
       firstFrame: 1274
@@ -623,7 +623,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Grunt_Death
+      name: RA_Demon_Grunt_Death
       takeName: Take 001
       internalID: -2579233435032347502
       firstFrame: 1310
@@ -651,7 +651,7 @@ ModelImporter:
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
-    isReadable: 1
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
     globalScale: 4

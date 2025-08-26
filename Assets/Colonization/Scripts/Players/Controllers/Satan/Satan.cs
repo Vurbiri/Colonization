@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        protected Satan(Settings settings) : base(PlayerId.Satan, CONST.DEFAULT_MAX_DEMONS)
+        protected Satan(Settings settings) : base(PlayerId.Satan)
         {
             var storage = GameContainer.Storage.Satan;
             _states = SettingsFile.Load<SatanAbilities>();
@@ -50,17 +50,12 @@ namespace Vurbiri.Colonization
             _spawner = new(_level, new(PlayerId.Satan, _leveling, _artefact), GameContainer.Hexagons[Key.Zero], loadData.state.spawn);
 
             for (int i = loadData.actors.Count - 1; i >= 0; i--)
-                _actors.Add(_spawner.Load(loadData.actors[i]));
-
-            _balance = GameContainer.Balance;
-            _balance.BindDemons(_actors);
+                _spawner.Load(loadData.actors[i]);
 
             storage.StateBind(this, !loadData.isLoaded);
             storage.BindArtefact(_artefact, !loadData.isLoaded);
-            storage.BindActors(_actors);
+            storage.BindActors(Actors);
             storage.LoadData = null;
-
-            SpellBook.AddSatanActors(_actors);
         }
 
         public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);

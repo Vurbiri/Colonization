@@ -34,6 +34,7 @@ namespace Vurbiri.Colonization
 
             _players[PlayerId.Satan] = _satan = new(settings);
 
+
             game.Subscribe(GameModeId.Landing,    (turn, _) => _players[turn.currentId.Value].OnLanding());
             game.Subscribe(GameModeId.EndLanding, (turn, _) => _players[turn.currentId.Value].OnEndLanding());
             game.Subscribe(GameModeId.EndTurn,    (turn, _) => _players[turn.currentId.Value].OnEndTurn());

@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
                     {
                         for (int playerId = 0; playerId < PlayerId.Count; playerId++)
                         {
-                            foreach (Actor actor in s_actors[playerId])
+                            foreach (var actor in GameContainer.Actors[playerId])
                             {
                                 if (actor.IsWounded) _wounded.Add(actor);
                             }

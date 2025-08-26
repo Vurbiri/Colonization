@@ -333,7 +333,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_Roar
+      name: A_Demon_Fatty_Cast_Roar
       takeName: Take 001
       internalID: 7731641710072435382
       firstFrame: 804
@@ -362,7 +362,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_BellyShove
+      name: A_Demon_Fatty_Attack_BellyShove
       takeName: Take 001
       internalID: -6577145938085917429
       firstFrame: 862
@@ -391,7 +391,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_PoisonBreath
+      name: A_Demon_Fatty_Special_PoisonBreath
       takeName: Take 001
       internalID: -5912188926831197812
       firstFrame: 907
@@ -420,7 +420,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_SwipeAttack
+      name: A_Demon_Fatty_Attack_Swipe
       takeName: Take 001
       internalID: -8608414141577764740
       firstFrame: 972
@@ -449,7 +449,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_HornBash
+      name: A_Demon_Fatty_Attack_HornBash
       takeName: Take 001
       internalID: -4068993222697286061
       firstFrame: 1007
@@ -478,7 +478,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_HitBack
+      name: ZA_Demon_Fatty_HitBack
       takeName: Take 001
       internalID: -1531913693838268206
       firstFrame: 1045
@@ -565,7 +565,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_HitFront
+      name: ZA_Demon_Fatty_HitFront
       takeName: Take 001
       internalID: 5627386185723231546
       firstFrame: 1111
@@ -622,10 +622,10 @@ ModelImporter:
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
-    isReadable: 1
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 3
+    globalScale: 3.3
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -680,7 +680,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 3
+    globalScale: 0.033
     rootMotionBoneName: Root_M
     hasTranslationDoF: 0
     hasExtraRoot: 0

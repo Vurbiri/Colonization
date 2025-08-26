@@ -36,11 +36,11 @@ namespace Vurbiri.Colonization.Actors
             int id = Random.Range(minId, maxId);
             _potential -= (id + 1);
 
-            demon = GameContainer.ActorsFactory.Create(ActorTypeId.Demon, id, _initData, _startHex);
+            demon = GameContainer.Actors.Create(ActorTypeId.Demon, id, _initData, _startHex);
             return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Actor Load(ActorLoadData loadData) => GameContainer.ActorsFactory.Load(ActorTypeId.Demon, _initData, loadData);
+        public Actor Load(ActorLoadData loadData) => GameContainer.Actors.Load(ActorTypeId.Demon, _initData, loadData);
     }
 }

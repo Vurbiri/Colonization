@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.UI
         public void Open(Actor actor)
         {
             _currentWarrior = actor;
-            var skills = GameContainer.ActorsFactory[actor].Skills;
+            var skills = GameContainer.Actors.GetSkills(actor);
 
             _buttonMovement.Setup(true, _currentWarrior.CanMove);
             _buttonBlock.Setup(actor, skills.BlockUI);

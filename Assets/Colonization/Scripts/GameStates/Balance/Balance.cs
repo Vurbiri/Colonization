@@ -13,19 +13,20 @@ namespace Vurbiri.Colonization
         public int Value => _value;
         public ISubscription<Winner> OnGameOver => _eventGameOver;
 
-        public Balance(GameStorage storage, GameLoop gameLoop)
+        public Balance(GameStorage storage, GameLoop gameLoop, ActorsFactory actorsFactory)
         {
             _settings = SettingsFile.Load<BalanceSettings>();
             _value = storage.GetBalanceValue(_settings.defaultValue);
             storage.BindBalance(this);
 
             _eventGameOver.Add(gameLoop.End);
+
+            actorsFactory[PlayerId.Satan].Subscribe(OnKillingDemon, false);
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                actorsFactory[i].Subscribe(OnKillingWarrior, false);
         }
 
         public void ForCurse(int value) => Add(_settings.penaltyPerDemon * -value);
-
-        public void BindWarriors(ReadOnlyReactiveSet<Actor> warriors) => warriors.Subscribe(OnKillingWarrior, false);
-        public void BindDemons(ReadOnlyReactiveSet<Actor> demons) => demons.Subscribe(OnKillingDemon, false);
 
         public void BindShrines(ReadOnlyReactiveList<Crossroad> shrines) => shrines.Subscribe((_, _, _) => Add(_settings.rewardPerShrine), false);
         public void BindBlood(ICurrency blood) => blood.SubscribeDelta(OnPayInBlood);
