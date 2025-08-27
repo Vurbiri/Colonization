@@ -6,10 +6,10 @@ namespace Vurbiri.Colonization
     [Serializable]
 	public class SurfaceType
 	{
-        [HideInInspector, SerializeField] private Id<SurfaceId> _id;
+        [ReadOnly, SerializeField] private Id<SurfaceId> _id;
         [Space]
         [SerializeField] private IdFlags<CurrencyId> _profits;
-        [SerializeField] private ASurface _prefabSurface;
+        [SerializeField] private GameObject _prefabSurface;
 
         private IProfit _profit;
 
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
         public void Create(Transform parent)
         {
             if (_prefabSurface != null)
-                UnityEngine.Object.Instantiate(_prefabSurface, parent).Init();
+                UnityEngine.Object.Instantiate(_prefabSurface, parent);
         }
 
 #if UNITY_EDITOR
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
         {
             _id = id;
 
-            _prefabSurface = EUtility.FindAnyPrefab<ASurface>($"P_{IdType<SurfaceId>.Names_Ed[id]}");
+            _prefabSurface = EUtility.FindAnyPrefab($"P_{IdType<SurfaceId>.Names_Ed[id]}");
 
             if (id < SurfaceId.Water)
                 _profits = id;

@@ -1,27 +1,43 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.CreatingMesh;
+using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
-    sealed public class VillageGenerator : ASurfaceGenerator
+    public class Village : MonoBehaviour
     {
-        [SerializeField, Range(0.05f, 1f)] private float _density = 0.39f;
-        [SerializeField, Range(0.05f, 1f)] private float _ratioOffset = 0.17f;
-        
+        [SerializeField, Range(0.1f, 1f)] private float _ratioSize; // = 0.7f;
+        [Space]
+        [SerializeField] private FloatMRnd _offsetAngle; // = 15f;
+        [Space]
+        [SerializeField] private MeshFilter _windmillMeshFilter;
+        [Space]
+        [SerializeField] private Mesh _meshWindmill01;
+        [SerializeField] private Mesh _meshWindmill02;
+        [SerializeField] private float _windmillOffsetDistance; // = 0.6f;
+        [Space]
+        [SerializeField, Range(0.05f, 1f)] private float _density; // = 0.39f;
+        [SerializeField, Range(0.05f, 1f)] private float _ratioOffset; // = 0.17f;
+        [Space]
         [SerializeField] private Hut _hut;
 
-        private const string NAME_MESH = "MH_Village_";
         private static int s_id = 0;
 
-        public override void Generate(float size)
+        private void Start()
         {
+            float size = HEX_RADIUS_IN * _ratioSize;
+
+            _windmillMeshFilter.sharedMesh = Chance.Select(_meshWindmill01, _meshWindmill02);
+            _windmillMeshFilter.transform.localPosition = new(0f, 0f, size - _windmillOffsetDistance);
+
+            transform.localRotation = Quaternion.Euler(0f, _offsetAngle + 60f * Random.Range(0, 6) + 30f, 0f);
+
             float sizeSqr = size * size, step = size * _density;
             FloatMRnd offset = step * _ratioOffset;
             float height = -size, width, x, z;
 
-            CustomMesh customMesh = new(NAME_MESH.Concat(s_id++), Vector2.one, false);
+            CustomMesh customMesh = new("MH_Village_".Concat(s_id++), Vector2.one, false);
             _hut.Init();
 
             while (height < size)
@@ -41,6 +57,8 @@ namespace Vurbiri.Colonization
             }
 
             GetComponent<MeshFilter>().sharedMesh = customMesh.GetMesh();
+
+            Destroy(this);
         }
 
         #region Nested: Hut, MeshMaterial
@@ -48,21 +66,21 @@ namespace Vurbiri.Colonization
         [System.Serializable]
         private class Hut
         {
-            [SerializeField] private float _startHeight = -0.1f;
-            [SerializeField] private FloatRnd _baseHalfSizeWidth = new(0.4f, 0.5f);
-            [SerializeField] private FloatRnd _baseHalfSizeLength = new(0.5f, 0.725f);
-            [SerializeField] private FloatRnd _heightRange = new(1.1f, 1.3f);
-            [SerializeField] private FloatRnd _ratioFoundationRange = new(0.12f, 0.15f);
-            [SerializeField] private FloatRnd _ratioWallRange = new(0.7f, 0.8f);
+            [SerializeField] private float _startHeight; // = -0.1f;
+            [SerializeField] private FloatRnd _baseHalfSizeWidth; // = new(0.4f, 0.5f);
+            [SerializeField] private FloatRnd _baseHalfSizeLength; // = new(0.5f, 0.725f);
+            [SerializeField] private FloatRnd _heightRange; // = new(1.1f, 1.3f);
+            [SerializeField] private FloatRnd _ratioFoundationRange; // = new(0.12f, 0.15f);
+            [SerializeField] private FloatRnd _ratioWallRange; // = new(0.7f, 0.8f);
             [Space]
-            [SerializeField] private float _ratioWindow = 0.45f;
-            [SerializeField] private Vector3 _halfSizeWindow = new(0f, 0.115f, 0.16f);
+            [SerializeField] private float _ratioWindow; // = 0.45f;
+            [SerializeField] private Vector3 _halfSizeWindow; // = new(0f, 0.115f, 0.16f);
             [Space]
-            [SerializeField] private float _heightDoor = 0.725f;
-            [SerializeField] private float _halfWidthDoor = 0.17f;
+            [SerializeField] private float _heightDoor; // = 0.725f;
+            [SerializeField] private float _halfWidthDoor; //= 0.17f;
             [Space]
-            [SerializeField] private FloatZRnd _rotationYRange = 360f;
-            [Space]
+            [SerializeField] private FloatZRnd _rotationYRange; // = 360f;
+            [Header("Colors")]
             [SerializeField] private MeshMaterial _base;
             [SerializeField] private MeshMaterial _wall;
             [SerializeField] private MeshMaterial _roof;
@@ -83,9 +101,9 @@ namespace Vurbiri.Colonization
 
             public void Init()
             {
-                _doorBase = new Vector3[] 
+                _doorBase = new Vector3[]
                 {
-                    new(_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, 0f, 0f), new(_halfWidthDoor, 0f, 0f) 
+                    new(_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, _heightDoor, 0f), new(-_halfWidthDoor, 0f, 0f), new(_halfWidthDoor, 0f, 0f)
                 };
 
                 _windowBase[0] = _halfSizeWindow;
@@ -103,9 +121,9 @@ namespace Vurbiri.Colonization
                 _base.Roll(); _wall.Roll(); _roof.Roll(); _roofWall.Roll(); _doorMaterial.Roll();
 
                 float x = _baseHalfSizeWidth, z = _baseHalfSizeLength;
-                Vector3[] _baseBottom = new Vector3[] 
-                { 
-                    new(x, _startHeight, z), new(-x, _startHeight, z), new(-x, _startHeight, -z), new(x, _startHeight, -z) 
+                Vector3[] _baseBottom = new Vector3[]
+                {
+                    new(x, _startHeight, z), new(-x, _startHeight, z), new(-x, _startHeight, -z), new(x, _startHeight, -z)
                 };
 
                 float height = _heightRange;
@@ -139,7 +157,7 @@ namespace Vurbiri.Colonization
 
                 Vector3 roofPointA = (_wallTop[0] + _wallTop[1]) * 0.5f;
                 Vector3 roofPointB = (_wallTop[2] + _wallTop[3]) * 0.5f;
-                roofPointA.y  =roofPointB.y = height;
+                roofPointA.y = roofPointB.y = height;
 
                 Vector3[] roofA = new Vector3[] { _wallTop[0], roofPointA, _wallTop[1] };
                 Vector3[] roofB = new Vector3[] { _wallTop[3], roofPointB, _wallTop[2] };

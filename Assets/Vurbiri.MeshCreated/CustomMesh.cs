@@ -26,7 +26,6 @@ namespace Vurbiri.CreatingMesh
 
         public void AddTriangle(Triangle triangle)
         {
-
             for (int t = 0, index; t < Triangle.COUNT_VERTICES; t++)
             {
                 index = _vertices.Add(triangle.Vertices[t]);

@@ -5,25 +5,26 @@ using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
-    [RequireComponent(typeof(MeshFilter))]
-    sealed public class MountainGenerator : ASurfaceGenerator
+    public class Mountain : MonoBehaviour
     {
-        [SerializeField, Range(0.5f, 1.5f)] private float _density = 0.9f;
+        [SerializeField, Range(0.1f, 1f)] private float _ratioSize; // = 0.74f;
         [Space]
-        [SerializeField] private int _countCircle = 4;
-        [SerializeField, Range(50, 100)] private int _ratioChanceRock = 95;
-        [SerializeField] private float _stepRatioRadius = 0.85f;
-        [SerializeField] private float _ratioOffset = 0.2f;
+        [SerializeField, Range(0.5f, 1.5f)] private float _density; // = 1.1f;
+        [Space]
+        [SerializeField] private int _countCircle; // = 4;
+        [SerializeField, Range(50, 100)] private int _ratioChanceRock; // = 95;
+        [SerializeField] private float _stepRatioRadius; // = 0.85f;
+        [SerializeField] private float _ratioOffset; // = 0.2f;
         [Space, Space]
         [SerializeField] private Rock _rock;
 
-        private const string NAME_MESH = "MH_Mountain_";
         private static int s_id = 0;
 
-        public override void Generate(float size)
+        private void Start()
         {
-            CustomMesh customMesh = new(NAME_MESH + (s_id++), Vector2.one, false);
+            CustomMesh customMesh = new("MH_Mountain_".Concat(s_id++), Vector2.one, false);
 
+            float size = HEX_RADIUS_IN * _ratioSize;
             _rock.Radius = size * (_stepRatioRadius - 1f) / (Mathf.Pow(_stepRatioRadius, _countCircle) - 1f);
 
             float ratioHeight = 1f, ratioRadius = 1f;
@@ -59,24 +60,27 @@ namespace Vurbiri.Colonization
             }
 
             GetComponent<MeshFilter>().sharedMesh = customMesh.GetMesh();
+
+            Destroy(this);
         }
+
 
         #region Nested: Rock
         //*******************************************************
         [System.Serializable]
         private class Rock
         {
-            [SerializeField, MinMax(3, MAX_VERTEX)] private IntRnd _countVertexRange = new(5, MAX_VERTEX);
+            [SerializeField, MinMax(3, MAX_VERTEX)] private IntRnd _countVertexRange; // = new(5, MAX_VERTEX);
             [Space]
-            [SerializeField] private float _startHeight = -0.1f;
-            [SerializeField, MinMax(0.5f, 3f)] private FloatRnd _heightRangeHigh = new(1.1f, 2f);
-            [SerializeField, MinMax(0.1f, 3f)] private FloatRnd _heightRangeLow = new(0.4f, 1.3f);
+            [SerializeField] private float _startHeight; // = -0.1f;
+            [SerializeField, MinMax(0.5f, 3f)] private FloatRnd _heightRangeHigh; // = new(1.1f, 2f);
+            [SerializeField, MinMax(0.1f, 3f)] private FloatRnd _heightRangeLow; // = new(0.4f, 1.3f);
             [Space]
-            [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _ratioRadiusRange = new(0.65f, 0.9f);
+            [SerializeField, MinMax(0.1f, 2f)] private FloatRnd _ratioRadiusRange; // = new(0.65f, 0.9f);
             [Space]
-            [SerializeField, MinMax(0.01f, 0.5f)] private FloatRnd _ratioOffsetRange = new(0.075f, 0.15f);
+            [SerializeField, MinMax(0.01f, 0.5f)] private FloatRnd _ratioOffsetRange; // = new(0.075f, 0.15f);
             [Space]
-            [SerializeField] private byte _color = 211;
+            [SerializeField] private byte _color; // = 211;
 
             private const int MAX_VERTEX = 6;
 
@@ -119,7 +123,7 @@ namespace Vurbiri.Colonization
                 _triangles.AddRange(PolygonChain.CreateBarycentric(_color, bottom, top, true));
 
                 for (int i = 0; i < countVertex; i++)
-                    _triangles.Add(new(s_barycentricColors, s_uvPick, top.Next(i), top[i], positionTop ));
+                    _triangles.Add(new(s_barycentricColors, s_uvPick, top.Next(i), top[i], positionTop));
 
                 return _triangles;
             }

@@ -9,15 +9,15 @@ namespace Vurbiri.Colonization.Controllers
     {
         public static float heightShow;
 
-        [SerializeField] private float _heightShow = 330f;
+        [SerializeField] private float _heightShow; // = 330f;
         [SerializeField] private Default _default;
         [SerializeField] private Movement _movement;
         [SerializeField] private MovementToTarget _movementTo;
         [SerializeField] private Zoom _zoom;
         [Header("Rotation")]
-        [SerializeField] private float _speedRotation = 2f;
+        [SerializeField] private float _speedRotation; // = 2f;
         [Header("Edge")]
-        [SerializeField, Range(1f, 50f)] private float _edge = 14f;
+        [SerializeField, Range(1f, 50f)] private float _edge; // = 14f;
         [SerializeField] private bool _isEdgeMove;
 
         private CameraTransform _cameraTransform;
@@ -128,33 +128,33 @@ namespace Vurbiri.Colonization.Controllers
         [Serializable]
         private class Default
         {
-            public float height = 329f;
-            [Range(0.2f, 5f)] public float maxTime = 1.5f;
-            [Range(0.1f, 2f)] public float minSpeed = 0.5f;
+            public float height; // = 329f;
+            [Range(0.2f, 5f)] public float maxTime; // = 1.5f;
+            [Range(0.1f, 2f)] public float minSpeed; // = 0.5f;
         }
         [Serializable]
         private class Movement
         {
-            public float speedMoveMax = 40f;
-            public float accelerationMove = 25f;
-            public float dampingMove = 75f;
+            public float speedMoveMax; // = 40f;
+            public float accelerationMove; //= 25f;
+            public float dampingMove; // = 75f;
         }
         //***********************************
         [Serializable]
         private class MovementToTarget
         {
-            [Range(0.05f, 1f)] public float smoothTime = 0.35f;
-            [Range(0.01f, 0.9f)] public float sqrVelocityMin = 0.5f;
+            [Range(0.05f, 1f)] public float smoothTime; // = 0.35f;
+            [Range(0.01f, 0.9f)] public float sqrVelocityMin; // = 0.5f;
         }
         //***********************************
         [Serializable]
         private class Zoom
         {
-            public float speedZoom = 4f;
-            public float heightZoomMin = 65f;
-            public float heightZoomMax = 415f;
-            [Range(0.25f, 3.5f)] public float minDeltaHeight = 1.25f;
-            [Range(0.01f, 0.3f)] public float steepZoomRate = 0.125f;
+            public float speedZoom; // = 4f;
+            public float heightZoomMin; // = 65f;
+            public float heightZoomMax; // = 415f;
+            [Range(0.25f, 3.5f)] public float minDeltaHeight; // = 1.25f;
+            [Range(0.01f, 0.3f)] public float steepZoomRate; // = 0.125f;
         }
         //***********************************
         #endregion

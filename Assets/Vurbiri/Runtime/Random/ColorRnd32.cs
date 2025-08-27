@@ -10,7 +10,6 @@ namespace Vurbiri
         [SerializeField, Range(0f, 1f)] private float _range = 0.2f;
         [SerializeField] private bool _isAlphaRandom = false;
 
-        public Color32 Color => _currentColor;
         public Color32 Roll
         {
             get
