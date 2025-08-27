@@ -67,7 +67,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void EndCreate()
+        public void FinishCreate()
         {
             _container = null;
             _vertices = null;

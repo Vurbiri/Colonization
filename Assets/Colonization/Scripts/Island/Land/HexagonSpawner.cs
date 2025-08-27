@@ -36,12 +36,12 @@ namespace Vurbiri.Colonization
 
         public IEnumerator HexagonsNeighbors_Cn(Dictionary<Key, Hexagon> hexagons) => _landMesh.HexagonsNeighbors_Cn(hexagons);
 
-        public IEnumerator FinishCreate_Cn() => _landMesh.SetMesh_Cn();
+        public void FinishCreate() => _landMesh.SetMesh();
 
         public void Dispose()
         {
-            _landMesh.Dispose(); _landMesh = null;
-            _surfaces.Dispose(); _surfaces = null;
+            _landMesh.Dispose();
+            _surfaces.Dispose();
         }
 
 #if UNITY_EDITOR

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.CreatingMesh;
@@ -6,7 +5,7 @@ using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
-    public class ForestGenerator : ASurfaceGenerator
+    sealed public class ForestGenerator : ASurfaceGenerator
     {
         [SerializeField, Range(0.01f, 0.3f)] private float _offsetY = 0.1f;
         [SerializeField, Range(1f, 3.5f)] private float _sparsity = 2.05f;
@@ -46,41 +45,9 @@ namespace Vurbiri.Colonization
                 radius += step;
             }
 
-            GetComponent<MeshFilter>().sharedMesh = customMesh.ToMesh();
+            GetComponent<MeshFilter>().sharedMesh = customMesh.GetMesh();
         }
-
-        public override IEnumerator Generate_Cn(float size)
-        {
-            CustomMesh customMesh = new(NAME_MESH.Concat(s_id++), /*HEX_DIAMETER_IN **/ Vector2.one, false);
-            float step = _spruce.RadiusAvg * _sparsity, radius = step;
-            float angle, angleStep;
-            FloatMRnd offsetAngle;
-            float x, z;
-
-            customMesh.AddTriangles(_spruce.Create(new(step * _offsetRange, _offsetY, step * _offsetRange), _colorRange.Roll, _specular));
-            yield return null;
-
-            while (radius < size)
-            {
-                angle = 0f;
-                angleStep = step / radius;
-                offsetAngle = angleStep * _offsetRange;
-                while (angle < TAU)
-                {
-                    x = Mathf.Cos(angle + offsetAngle) * radius + step * _offsetRange;
-                    z = Mathf.Sin(angle + offsetAngle) * radius + step * _offsetRange;
-                    customMesh.AddTriangles(_spruce.Create(new(x, _offsetY, z), _colorRange.Roll, _specular));
-                    angle += angleStep;
-                    yield return null;
-                }
-
-                radius += step;
-                yield return null;
-            }
-
-            yield return StartCoroutine(customMesh.ToMesh_Cn(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
-        }
-
+        
         #region Nested: Spruce
         //*******************************************************
         [System.Serializable]

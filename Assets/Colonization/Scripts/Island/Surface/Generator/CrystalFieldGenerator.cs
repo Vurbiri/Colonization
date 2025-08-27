@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.CreatingMesh;
@@ -6,7 +5,7 @@ using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
-    public class CrystalFieldGenerator : ASurfaceGenerator
+    sealed public class CrystalFieldGenerator : ASurfaceGenerator
     {
         [Space]
         [SerializeField, Range(0.01f, 0.5f)] private float _offsetY = 0.125f;
@@ -44,41 +43,7 @@ namespace Vurbiri.Colonization
                     customMesh.AddTriangles(druse[i]);
             }
 
-            GetComponent<MeshFilter>().sharedMesh = customMesh.ToMesh();
-        }
-        public override IEnumerator Generate_Cn(float radius)
-        {
-            CustomMesh customMesh = new(NAME_MESH.Concat(s_id++), Vector2.one, false);
-
-            FloatMRnd offsetRadius = radius * _ratioOffsetXZ;
-
-            int i, count;
-            List<Triangle>[] druse;
-
-            druse = _druse.Create(new(offsetRadius, -_offsetY, offsetRadius), true);
-            count = druse.Length;
-            for (i = 0; i < count; i++)
-            {
-                customMesh.AddTriangles(druse[i]);
-                yield return null;
-            }
-
-            float x, z;
-            for (int k = 0; k < COUNT_DRUSE; k++)
-            {
-                x = COS_HEX_DIRECT[k] * radius + offsetRadius;
-                z = SIN_HEX_DIRECT[k] * radius + offsetRadius;
-
-                druse = _druse.Create(new(x, -_offsetY, z), false);
-                count = druse.Length;
-                for (i = 0; i < count; i++)
-                {
-                    customMesh.AddTriangles(druse[i]);
-                    yield return null;
-                }
-            }
-
-            yield return StartCoroutine(customMesh.ToMesh_Cn(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
+            GetComponent<MeshFilter>().sharedMesh = customMesh.GetMesh();
         }
 
         #region Nested: Druse, Cristal

@@ -50,12 +50,12 @@ namespace Vurbiri.Colonization
         public IEnumerator GetEnumerator()
         {
             yield return Create_Cn(HexCreator.Factory(_hexagons, _hexagonSpawner, GameContainer.Storage));
-            yield return Setup_Cn();
+            yield return _hexagonSpawner.HexagonsNeighbors_Cn(_hexagons);
 
-            _crossroads.EndCreate();
+            _hexagonSpawner.FinishCreate();
+            _crossroads.FinishCreate();
 
             _hexagonSpawner.Dispose();
-            _hexagonSpawner = null;
 
             Destroy(this);
         }
@@ -93,15 +93,6 @@ namespace Vurbiri.Colonization
             }
 
             hexCreator.Finish();
-        }
-
-        private IEnumerator Setup_Cn()
-        {
-            yield return null;
-            yield return StartCoroutine(_hexagonSpawner.HexagonsNeighbors_Cn(_hexagons));
-            yield return null;
-            yield return StartCoroutine(_hexagonSpawner.FinishCreate_Cn());
-            yield return null;
         }
 
 #if UNITY_EDITOR

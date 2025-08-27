@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.CreatingMesh;
 
 namespace Vurbiri.Colonization
 {
-    public class VillageGenerator : ASurfaceGenerator
+    sealed public class VillageGenerator : ASurfaceGenerator
     {
         [SerializeField, Range(0.05f, 1f)] private float _density = 0.39f;
         [SerializeField, Range(0.05f, 1f)] private float _ratioOffset = 0.17f;
@@ -41,37 +40,7 @@ namespace Vurbiri.Colonization
                 height += step;
             }
 
-            GetComponent<MeshFilter>().sharedMesh = customMesh.ToMesh();
-        }
-        public override IEnumerator Generate_Cn(float size)
-        {
-            float sizeSqr = size * size, step = size * _density;
-            FloatMRnd offset = step * _ratioOffset;
-            float height = -size, width, x, z;
-
-            CustomMesh customMesh = new(NAME_MESH.Concat(s_id++), Vector2.one, false);
-            _hut.Init();
-
-            while (height < size)
-            {
-                width = -size;
-                while (width < size)
-                {
-                    x = width + offset;
-                    z = height + offset;
-                    // ↓ место для мельницы ↓
-                    if (x * x + z * z < sizeSqr && !(z > size - step & (x > -step & x < step)))
-                    {
-                        customMesh.AddTriangles(_hut.Create(new(x, 0f, z)));
-                        yield return null;
-                    }
-
-                    width += step;
-                }
-                height += step;
-            }
-
-            yield return StartCoroutine(customMesh.ToMesh_Cn(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
+            GetComponent<MeshFilter>().sharedMesh = customMesh.GetMesh();
         }
 
         #region Nested: Hut, MeshMaterial

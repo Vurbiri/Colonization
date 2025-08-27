@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
         public void Create(Transform parent)
         {
             if (_prefabSurface != null)
-                UnityEngine.Object.Instantiate(_prefabSurface, parent).Init(_id == SurfaceId.Mountain);
+                UnityEngine.Object.Instantiate(_prefabSurface, parent).Init();
         }
 
 #if UNITY_EDITOR

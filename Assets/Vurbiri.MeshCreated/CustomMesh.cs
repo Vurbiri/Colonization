@@ -1,7 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Vurbiri.CreatingMesh
 {
@@ -27,75 +26,39 @@ namespace Vurbiri.CreatingMesh
 
         public void AddTriangle(Triangle triangle)
         {
-            int count, vIndex;
-            Vertex vertex;
-            bool isNotAddVertex = false;
 
-            for (int t = 0; t < Triangle.COUNT_VERTICES; t++)
+            for (int t = 0, index; t < Triangle.COUNT_VERTICES; t++)
             {
-                count = _vertices.Count;
-                vertex = triangle.Vertices[t];
-
-                for (vIndex = 0; vIndex < count; vIndex++)
-                {
-                    if (isNotAddVertex = vertex == _vertices[vIndex])
-                        break;
-                }
-
-                if (!isNotAddVertex)
-                    _vertices.Add(vertex);
-
-                _triangles.Add(vIndex);
+                index = _vertices.Add(triangle.Vertices[t]);
+                _triangles.Add(index);
             }
         }
 
-        public Mesh ToMesh(bool tangents = false, bool isOptimize = true, bool isReadable = false)
+        public Mesh GetMesh(bool optimize = false, bool tangents = false, bool isReadable = false)
         {
             Mesh mesh = new() { name = _name };
 
             _vertices.SetupMesh(mesh);
 
-            mesh.SetTriangles(_triangles, 0);
-            mesh.RecalculateBounds();
+            mesh.SetTriangles(_triangles, 0, _triangles.Count, 0, false, 0);
+
+            if (optimize)
+                mesh.Optimize();
             if (tangents)
                 mesh.RecalculateTangents();
-            if (isOptimize)
-                mesh.Optimize();
-            if (!isReadable)
-                mesh.UploadMeshData(true);
+
+            mesh.RecalculateBounds();
+            mesh.UploadMeshData(!isReadable);
 
             return mesh;
-        }
-
-        public IEnumerator ToMesh_Cn(Action<Mesh> callback, bool tangents = false, bool isOptimize = true, bool isReadable = false)
-        {
-            Mesh mesh = new() { name = _name };
-
-            yield return _vertices.SetupMesh_Cn(mesh);
-
-            mesh.SetTriangles(_triangles, 0);
-            yield return null;
-
-            mesh.RecalculateBounds();
-
-            yield return null;
-            if (tangents)
-                mesh.RecalculateTangents();
-            yield return null;
-            if (isOptimize)
-                mesh.Optimize();
-            yield return null;
-            if (!isReadable)
-                mesh.UploadMeshData(true);
-            yield return null;
-
-            callback?.Invoke(mesh);
         }
 
         #region Nested: Vertices
         //***********************************
         private class Vertices
         {
+            private readonly Dictionary<int, int> _indexes = new();
+
             private readonly List<Vector3> _positions = new();
             private readonly List<Vector3> _normals = new();
             private readonly List<Vector2> _uvs = new();
@@ -107,7 +70,6 @@ namespace Vurbiri.CreatingMesh
             private int _count = 0;
 
             public int Count => _count;
-            public Vertex this[int index] => new(_positions[index], _normals[index], _colors[index], _uvs[index]);
 
             public Vertices(Vector2 sizeBound, bool convertUV)
             {
@@ -115,34 +77,32 @@ namespace Vurbiri.CreatingMesh
                 _convertUV = convertUV;
             }
 
-            public void Add(Vertex v)
+            public int Add(Vertex vertex)
             {
-                _positions.Add(v.position);
-                _normals.Add(v.normal);
-                _colors.Add(v.color);
-                _uvs.Add(_convertUV ? _boundsUV.ConvertToUV(v.uv) : v.uv);
+                int hashCode = vertex.GetHashCode();
+                bool doNotContain = !_indexes.TryGetValue(hashCode, out int index);
 
-                _count++;
+                if (doNotContain || vertex.position != _positions[index] || vertex.normal != _normals[index] || !vertex.color.IsEquals(_colors[index]))
+                {
+                    _positions.Add(vertex.position);
+                    _normals.Add(vertex.normal);
+                    _colors.Add(vertex.color);
+                    _uvs.Add(_convertUV ? _boundsUV.ConvertToUV(vertex.uv) : vertex.uv);
+
+                    _indexes[hashCode] = index = _count++;
+                }
+
+                return index;
             }
 
             public void SetupMesh(Mesh mesh)
             {
-                mesh.SetVertices(_positions);
-                mesh.SetNormals(_normals);
-                mesh.SetUVs(0, _uvs);
-                mesh.SetColors(_colors);
-            }
+                const MeshUpdateFlags flags = (MeshUpdateFlags)15;
 
-            public IEnumerator SetupMesh_Cn(Mesh mesh)
-            {
-                mesh.SetVertices(_positions);
-                yield return null;
-                mesh.SetNormals(_normals);
-                yield return null;
-                mesh.SetUVs(0, _uvs);
-                yield return null;
-                mesh.SetColors(_colors);
-                yield return null;
+                mesh.SetVertices(_positions, 0, _count, flags);
+                mesh.SetNormals(_normals, 0, _count, flags);
+                mesh.SetUVs(0, _uvs, 0, _count, flags);
+                mesh.SetColors(_colors, 0, _count, flags);
             }
         }
         #endregion

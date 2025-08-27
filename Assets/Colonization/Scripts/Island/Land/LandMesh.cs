@@ -61,23 +61,23 @@ namespace Vurbiri.Colonization
                     for (int i = 0; i < HEX.SIDES; i++)
                         if (hexagons.TryGetValue(hex.Key + HEX.NEAR[i], out Hexagon neighbor))
                             hex.AddNeighborAndCreateCrossroadLink(neighbor);
-
-                    continue;
                 }
-
-                for (int i = 0; i < HEX.SIDES; i++)
+                else
                 {
-                    if (hexagons.TryGetValue(hex.Key + HEX.NEAR[i], out Hexagon neighbor))
+                    for (int i = 0; i < HEX.SIDES; i++)
                     {
-                        hex.AddNeighborAndCreateCrossroadLink(neighbor);
+                        if (hexagons.TryGetValue(hex.Key + HEX.NEAR[i], out Hexagon neighbor))
+                        {
+                            hex.AddNeighborAndCreateCrossroadLink(neighbor);
 
-                        verticesNear[i] = GetVertexSide(hex.Key, neighbor.Key, i);
-                        waterNear[i] = neighbor.IsWater;
+                            verticesNear[i] = GetVertexSide(hex.Key, neighbor.Key, i);
+                            waterNear[i] = neighbor.IsWater;
+                        }
                     }
-                }
 
-                _customMesh.AddTriangles(_hexagons[hex.Key].CreateBorder(verticesNear, waterNear, colorCoast));
-                yield return null;
+                    _customMesh.AddTriangles(_hexagons[hex.Key].CreateBorder(verticesNear, waterNear, colorCoast));
+                    yield return null;
+                }
             }
 
             #region Local: GetVertexSide(..)
@@ -90,9 +90,9 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public IEnumerator SetMesh_Cn()
+        public void SetMesh()
         {
-            yield return StartCoroutine(_customMesh.ToMesh_Cn(m => _thisMeshFilter.sharedMesh = m));
+            _thisMeshFilter.sharedMesh = _customMesh.GetMesh();
 
             _customMesh = null;
             _hexagons = null;

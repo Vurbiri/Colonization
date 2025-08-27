@@ -21,5 +21,10 @@ namespace Vurbiri
             self.a = alpha;
             return self;
         }
+
+        [Impl(256)] public static bool IsEquals(this Color32 self, Color32 other)
+        {
+            return self.r == other.r & self.g == other.g & self.b == other.b & self.a == other.a;
+        }
     }
 }

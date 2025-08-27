@@ -12,8 +12,6 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private UIManagers _managers;
         [Space]
         [SerializeField] private WorldHint _worldHint;
-        [SerializeField] private ContextMenusManager _contextMenusWorld;
-        [Space]
         [SerializeField] private CanvasHint _canvasHint;
         [SerializeField] private PlayerPanels _playerPanels;
 

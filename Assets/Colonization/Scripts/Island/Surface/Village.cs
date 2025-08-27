@@ -13,14 +13,14 @@ namespace Vurbiri.Colonization
         [SerializeField] private Mesh _meshWindmill02;
         [SerializeField] private float _windmillOffsetDistance = 0.6f;
 
-        public override void Init(bool oneFrame)
+        public override void Init()
         {
             transform.localRotation = Quaternion.Euler(0f, _offsetAngle + 60f * Random.Range(0, 6) + 30f, 0f);
                         
             _windmillMeshFilter.sharedMesh = Chance.Select(_meshWindmill01, _meshWindmill02);
             _windmillMeshFilter.transform.localPosition = new(0f, 0f, CONST.HEX_RADIUS_IN * _ratioSize - _windmillOffsetDistance);
 
-            base.Init(oneFrame);
+            base.Init();
         }
     }
 }

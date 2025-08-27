@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.CreatingMesh;
@@ -7,7 +6,7 @@ using static Vurbiri.Colonization.CONST;
 namespace Vurbiri.Colonization
 {
     [RequireComponent(typeof(MeshFilter))]
-    public class MountainGenerator : ASurfaceGenerator
+    sealed public class MountainGenerator : ASurfaceGenerator
     {
         [SerializeField, Range(0.5f, 1.5f)] private float _density = 0.9f;
         [Space]
@@ -59,51 +58,7 @@ namespace Vurbiri.Colonization
                 offset = step * _ratioOffset;
             }
 
-            GetComponent<MeshFilter>().sharedMesh = customMesh.ToMesh();
-
-        }
-
-        public override IEnumerator Generate_Cn(float size)
-        {
-            CustomMesh customMesh = new(NAME_MESH + (s_id++), Vector2.one, false);
-
-            _rock.Radius = size * (_stepRatioRadius - 1f) / (Mathf.Pow(_stepRatioRadius, _countCircle) - 1f);
-
-            float ratioHeight = 1f, ratioRadius = 1f;
-            float radiusAvg = _rock.RadiusAvg * _density, step = radiusAvg, radius = step;
-            float angle, angleStep, angleOffset;
-            bool isHigh = Chance.Rolling();
-            Chance chance;
-            FloatMRnd offset = step * _ratioOffset;
-            Vector3 position;
-
-            for (int i = 0; i < _countCircle; i++)
-            {
-                angleStep = 2f * _density * step / radius;
-                angleOffset = FloatZRnd.Rolling(angleStep);
-                angle = TAU + angleOffset;
-                chance = ((_countCircle << 1) - i) * _ratioChanceRock / (_countCircle << 1);
-
-                while (angle > angleStep)
-                {
-                    if (chance.Roll)
-                    {
-                        position = new(Mathf.Cos(angle) * radius + offset, 0f, Mathf.Sin(angle) * radius + offset);
-                        customMesh.AddTriangles( _rock.Create(position, isHigh, ratioHeight, ratioRadius));
-                        isHigh = !isHigh;
-                        yield return null;
-                    }
-                    angle -= angleStep;
-                }
-
-                ratioRadius *= _stepRatioRadius;
-                step = radiusAvg * ratioRadius;
-                radius += step;
-                offset = step * _ratioOffset;
-            }
-
-            yield return StartCoroutine(customMesh.ToMesh_Cn(mesh => GetComponent<MeshFilter>().sharedMesh = mesh));
-
+            GetComponent<MeshFilter>().sharedMesh = customMesh.GetMesh();
         }
 
         #region Nested: Rock

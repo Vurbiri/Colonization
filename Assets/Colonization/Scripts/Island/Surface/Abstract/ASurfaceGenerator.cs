@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -7,7 +6,5 @@ namespace Vurbiri.Colonization
     public abstract class ASurfaceGenerator : MonoBehaviourDisposable
     {
         public abstract void Generate(float size);
-
-        public abstract IEnumerator Generate_Cn(float size);
     }
 }
