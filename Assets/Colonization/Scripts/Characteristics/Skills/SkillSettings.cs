@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private float _distance;
         [SerializeField] private int _cost;
         [SerializeField] private HitEffectsSettings[] _effectsHitsSettings;
-        [SerializeField] private SkillUISettings _ui;
+        [SerializeField] private SkillUI.Settings _ui;
 
         [NonSerialized] private ReadOnlyArray<HitEffects> _hitEffects;
 
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization.Characteristics
             }
 
             _hitEffects = new(effects);
-            SkillUI ui = new(_ui, colors, targetEffectsUI.ToArray(), selfEffectsUI.ToArray(), separator);
+            SkillUI ui = new(colors, separator, _cost, _ui, targetEffectsUI.ToArray(), selfEffectsUI.ToArray());
 
 #if !UNITY_EDITOR
             _ui = null; 

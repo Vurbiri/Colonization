@@ -10,13 +10,17 @@ namespace Vurbiri.Colonization.Actors
     [RequireComponent(typeof(BoxCollider))]
     public abstract partial class Actor
     {
+        public abstract void AddSpecSkillState(int cost, int value);
+        
+
         [MethodImpl(256)] public void AddMoveState(float speed) => _moveState = new(speed, this);
-        [MethodImpl(256)] public void AddBlockState(int cost, int value) => _blockState = new(cost, value, this);
         [MethodImpl(256)] public void SetCountState(int count) => _skillState = new ASkillState[count];
         [MethodImpl(256)] public void AddSkillState(SkillSettings skill, float speedRun, int id)
         {
             _skillState[id] = ASkillState.Create(skill, speedRun, id, this);
         }
+
+       
 
         public void Setup(ActorSettings settings, ActorInitData initData, Hexagon startHex)
         {
@@ -26,7 +30,7 @@ namespace Vurbiri.Colonization.Actors
             _typeId      = settings.TypeId;
             _id          = settings.Id;
             _owner       = initData.owner;
-            _skin        = settings.InstantiateActorSkin(_owner, transform);
+            _skin        = settings.InstantiateActorSkin(_owner, _thisTransform);
             _currentHex  = startHex;
             IsPersonTurn = false;
             Interactable = false;
@@ -79,11 +83,9 @@ namespace Vurbiri.Colonization.Actors
             for (int i = data.effects.Length - 1; i >= 0; i--)
                 _effects.Add(data.effects[i]);
 
-            if (_blockState.IsApplied)
-            {
-                _skin.EventStart -= _stateMachine.ToDefaultState;
-                _skin.EventStart += Block;
-            }
+            PostLoad();
         }
+
+        protected virtual void PostLoad() { }
     }
 }

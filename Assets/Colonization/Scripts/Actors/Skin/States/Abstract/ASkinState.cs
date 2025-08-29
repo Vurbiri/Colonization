@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
             private readonly ActorSkin _parent;
             private readonly int _idParam;
 
-            protected AActorSFX SFX { [Impl(256)] get => _parent._sfx; }
+            protected ActorSFX SFX { [Impl(256)] get => _parent._sfx; }
 
             public ASkinState(string stateName, ActorSkin parent) : base(parent._stateMachine)
             {

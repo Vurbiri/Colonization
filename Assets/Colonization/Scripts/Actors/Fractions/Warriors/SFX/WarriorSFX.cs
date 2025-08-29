@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class WarriorSFX : AActorSFX
+    public class WarriorSFX : ActorSFX
     {
         [Space]
         [SerializeField] protected float _startScale = 0.01f;
@@ -24,5 +24,7 @@ namespace Vurbiri.Colonization.Actors
             }
             _thisTransform.localScale = Vector3.one;
         }
+
+        public virtual void Block(bool isActive) { }
     }
 }

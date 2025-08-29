@@ -12,8 +12,6 @@ namespace Vurbiri.Colonization
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class LandMesh : MonoBehaviour, IDisposable
     {
-        [SerializeField] private string _nameMesh = "MH_Land";
-        [Space]
         [SerializeField, Range(0.1f, 1.5f)] private float _rateTilingMaterial = 0.69f;
         [Space]
         [SerializeField] private IdArray<SurfaceId, Color32> _colors = new(Color.black);
@@ -30,7 +28,7 @@ namespace Vurbiri.Colonization
         {
             _thisMeshFilter = GetComponent<MeshFilter>();
             _hexagons = new(MAX_HEXAGONS);
-            _customMesh = new(_nameMesh, (2f * MAX_CIRCLES * HEX_DIAMETER_IN) * Vector2.one);
+            _customMesh = new("MH_Land", (2f * MAX_CIRCLES * HEX_DIAMETER_IN) * Vector2.one);
 
             GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTilingMaterial * MAX_CIRCLES);
 

@@ -51,6 +51,7 @@ namespace Vurbiri.Colonization
         {
             yield return Create_Cn(HexCreator.Factory(_hexagons, _hexagonSpawner, GameContainer.Storage));
             yield return _hexagonSpawner.HexagonsNeighbors_Cn(_hexagons);
+            yield return null;
 
             _hexagonSpawner.FinishCreate();
             _crossroads.FinishCreate();
@@ -58,6 +59,8 @@ namespace Vurbiri.Colonization
             _hexagonSpawner.Dispose();
 
             Destroy(this);
+
+            yield return null;
         }
 
         private IEnumerator Create_Cn(HexCreator hexCreator)

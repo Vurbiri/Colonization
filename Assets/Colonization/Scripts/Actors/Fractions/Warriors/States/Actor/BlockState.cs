@@ -3,9 +3,9 @@ using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public abstract partial class Actor
-	{
-        sealed protected class BlockState : AActionState
+    public partial class Warrior
+    {
+        sealed private class BlockState : AActionState<WarriorSkin>
         {
             private readonly EffectCode _code;
             private readonly int _value;
@@ -13,10 +13,10 @@ namespace Vurbiri.Colonization.Actors
             public bool IsApplied
              {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => _actor._effects.Contains(_code);
+                get => ActorEffects.Contains(_code);
             }
 
-        public BlockState(int cost, int value, Actor parent) : base(parent, cost)
+            public BlockState(int cost, int value, Warrior parent) : base(parent, (WarriorSkin)parent._skin, cost)
             {
                 _code = new(parent.TypeId, parent.Id, ReactiveEffectsFactory.BLOCK_SKILL_ID, ReactiveEffectsFactory.BLOCK_EFFECT_ID);
                 _value = value;
@@ -25,7 +25,11 @@ namespace Vurbiri.Colonization.Actors
             public override void Enter()
             {
                 if (!IsApplied)
-                    AddEffect();
+                {
+                    _skin.Block(true);
+                    ActorEffects.Add(ReactiveEffectsFactory.CreateBlockEffect(_code, _value));
+                    Pay();
+                }
 
                 ActorInteractable = true;
             }
@@ -40,14 +44,6 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Select() => GameContainer.TriggerBus.TriggerActorSelect(_actor);
             public override void Unselect(ISelectable newSelectable) => GameContainer.TriggerBus.TriggerUnselect(_actor.Equals(newSelectable));
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void AddEffect()
-            {
-                _skin.Block(true);
-                _actor._effects.Add(ReactiveEffectsFactory.CreateBlockEffect(_code, _value));
-                Pay();
-            }
         }
     }
 }

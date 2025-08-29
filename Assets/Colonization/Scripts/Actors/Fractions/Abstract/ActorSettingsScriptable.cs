@@ -19,6 +19,7 @@ namespace Vurbiri.Colonization.Actors
         }
 
 #if UNITY_EDITOR
+
         private void OnValidate()
         {
             for (int i = 0; i < ActorId<TId>.Count; i++)

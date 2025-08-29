@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
 
     public abstract partial class Actor
     {
-        sealed protected class MoveState : AActionState
+        sealed protected class MoveState : AActionState<ActorSkin>
         {
             private readonly ScaledMoveUsingLerp _move;
             private readonly WaitSignal _waitSignal = new();
@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Actors
             private Hexagon _targetHex;
             private Coroutine _coroutineAction;
 
-            public MoveState(float speed, Actor parent) : base(parent)
+            public MoveState(float speed, Actor parent) : base(parent, parent._skin)
             {
                 _move = new(parent._thisTransform, speed);
             }

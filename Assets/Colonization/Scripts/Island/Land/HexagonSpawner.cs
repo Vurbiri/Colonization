@@ -35,7 +35,6 @@ namespace Vurbiri.Colonization
         }
 
         public IEnumerator HexagonsNeighbors_Cn(Dictionary<Key, Hexagon> hexagons) => _landMesh.HexagonsNeighbors_Cn(hexagons);
-
         public void FinishCreate() => _landMesh.SetMesh();
 
         public void Dispose()

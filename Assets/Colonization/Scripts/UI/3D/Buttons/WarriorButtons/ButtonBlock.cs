@@ -11,9 +11,9 @@ namespace Vurbiri.Colonization.UI
             base.Init(GameContainer.UI.WorldHint, action, true);
         }
 
-        public void Setup(Actor actor, BlockUI blockUI)
+        public void Setup(Actor actor, ASkillUI skillUI)
         {
-            _text = blockUI.GetText(interactable = actor.ActionPoint >= blockUI.Cost);
+            _text = skillUI.GetText(interactable = actor.ActionPoint >= skillUI.Cost);
             _thisGameObject.SetActive(true);
         }
     }

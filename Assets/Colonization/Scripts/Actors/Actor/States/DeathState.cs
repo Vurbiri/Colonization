@@ -4,11 +4,11 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        sealed protected class DeathState : AState
+        sealed protected class DeathState : AState<ActorSkin>
         {
             public WaitStateSource<DeathStage> stage;
 
-            public DeathState(Actor parent) : base(parent) { }
+            public DeathState(Actor parent) : base(parent, parent._skin) { }
             
             public override void Enter()
             {

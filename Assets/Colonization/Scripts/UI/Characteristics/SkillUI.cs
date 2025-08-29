@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using UnityEngine;
 using Vurbiri.International;
@@ -7,41 +6,36 @@ namespace Vurbiri.Colonization.UI
 {
     using static CONST_UI_LNG_KEYS;
 
-    public class SkillUI : SkillUISettings, IDisposable
+    public class SkillUI : ASkillUI
     {
-        private const int SIZE = 78;
-
         private readonly AEffectUI[] _effectsTarget;
         private readonly AEffectUI[] _effectsSelf;
-        private readonly SeparatorEffectUI _separator;
-        private readonly string _hexColor, _hexColorPlus, _hexColorMinus;
-        private string _textMain, _textAP;
+        private readonly string _hexColor;
+        private readonly Settings _settings;
 
-        public string Key => _keyName;
-        public Sprite Sprite => _sprite;
-        public int Cost => _cost;
+        public string Key => _settings.keySkillName;
+        public Sprite Sprite => _settings.sprite;
 
-        public SkillUI(SkillUISettings settings, ProjectColors colors, AEffectUI[] effectsTarget, AEffectUI[] effectsSelf, SeparatorEffectUI separator) : base(settings)
+
+        public SkillUI(ProjectColors colors, SeparatorEffectUI separator, int cost, Settings settings, AEffectUI[] effectsTarget, AEffectUI[] effectsSelf) 
+            : base(colors, separator, cost)
         {
             _hexColor = colors.HintDefaultTag;
-            _hexColorPlus = colors.TextPositiveTag;
-            _hexColorMinus = colors.TextNegativeTag;
+
+            _settings = settings;
 
             _effectsTarget = effectsTarget;
             _effectsSelf = effectsSelf;
-            _separator = separator;
 
             Localization.Instance.Subscribe(SetTexts);
         }
-
-        public string GetText(bool isUse) => string.Concat(_textMain, isUse ? _hexColorPlus : _hexColorMinus, _textAP);
 
         private void SetTexts(Localization localization)
         {
             int countTarget = _effectsTarget.Length, countSelf = _effectsSelf.Length;
 
             StringBuilder sb = new(SIZE + countTarget * SIZE + countSelf * SIZE);
-            sb.AppendLine(localization.GetText(FILE, _keyName));
+            sb.AppendLine(localization.GetText(FILE, _settings.keySkillName));
             _separator.GetText(sb);
 
             if (countTarget > 0)
@@ -69,9 +63,18 @@ namespace Vurbiri.Colonization.UI
             _textAP = localization.GetFormatText(FILE, AP_KEY, _cost);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Localization.Instance.Unsubscribe(SetTexts);
+        }
+
+        // Nested
+        //******************************************************************
+        [System.Serializable]
+        public class Settings
+        {
+            public string keySkillName;
+            public Sprite sprite;
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.UI
             var skills = GameContainer.Actors.GetSkills(actor);
 
             _buttonMovement.Setup(true, _currentWarrior.CanMove);
-            _buttonBlock.Setup(actor, skills.BlockUI);
+            _buttonBlock.Setup(actor, skills.SpecSkillUI);
 
             int index = 0; var skillsUI = skills.SkillsUI;
             for (int count = skillsUI.Count; index < count; index++)
@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization.UI
         public void OnBlock()
         {
             base.Close();
-            _currentWarrior.Block();
+            _currentWarrior.UseSpecSkill();
         }
 
         #region Nested struct Positions

@@ -7,20 +7,20 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        protected abstract class AState : ASelectableState
+        protected abstract class AState<T> : ASelectableState where T : ActorSkin
         {
             protected readonly Actor _actor;
-            protected readonly ActorSkin _skin;
+            protected readonly T _skin;
 
             protected bool ActorInteractable
             {
                 [Impl(256)] set => _actor.Interactable = value;
             }
 
-            public AState(Actor parent) : base(parent._stateMachine)
+            public AState(Actor parent, T skin) : base(parent._stateMachine)
             {
                 _actor = parent;
-                _skin = parent._skin;
+                _skin = skin;
             }
 
             [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => _actor.StartCoroutine(routine);

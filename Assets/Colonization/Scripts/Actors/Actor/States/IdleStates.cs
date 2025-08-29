@@ -2,9 +2,9 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        sealed protected class IdleState : AState
+        sealed protected class IdleState : AState<ActorSkin>
         {
-            public IdleState(Actor parent) : base(parent) { }
+            public IdleState(Actor parent) : base(parent, parent._skin) { }
 
             public override void Enter()
             {

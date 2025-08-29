@@ -5,7 +5,7 @@ using Vurbiri.Collections;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(AudioSource)), DisallowMultipleComponent]
-    public abstract class AActorSFX : MonoBehaviour, ISFXUser
+    public abstract class ActorSFX : MonoBehaviour, ISFXUser
     {
         [SerializeField] protected float _heightDeath = -3.5f;
         [SerializeField] protected float _durationDeath = 1f;
@@ -17,22 +17,20 @@ namespace Vurbiri.Colonization.Actors
         public abstract Vector3 StartPosition { get; }
         public AudioSource AudioSource => _audioSource;
 
-        public virtual void Init(ReadOnlyArray<string> hitSFX)
+        public void Init(ReadOnlyArray<string> hitSFX)
 		{
             _thisTransform = transform;
             _audioSource = GetComponent<AudioSource>();
             _hitSFX = hitSFX;
         }
 
-        public virtual void Impact(AudioClip clip) => _audioSource.PlayOneShot(clip);
+        public void Impact(AudioClip clip) => _audioSource.PlayOneShot(clip);
 
-        public virtual void Block(bool isActive) { }
-
-        public virtual IEnumerator Hit(int idSkill, int idHit, ActorSkin target) => GameContainer.HitSFX.Hit(_hitSFX[idSkill], this, target);
+        public IEnumerator Hit(int idSkill, ActorSkin target) => GameContainer.HitSFX.Hit(_hitSFX[idSkill], this, target);
 
         public virtual void Death() { }
 
-        public virtual IEnumerator Death_Cn()
+        public IEnumerator Death_Cn()
         {
             Vector3 position = _thisTransform.localPosition;
             float speed = _heightDeath / _durationDeath;

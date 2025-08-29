@@ -27,13 +27,12 @@ namespace Vurbiri.Colonization
 
         public Players(Player.Settings settings, GameLoop game)
         {
-            _players[PlayerId.Person] = _person = new(settings);
+             _players[PlayerId.Person] = _person = new(settings);
 
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
                 _players[i] = _ai[i - PlayerId.AI_01] = new(i, settings);
 
             _players[PlayerId.Satan] = _satan = new(settings);
-
 
             game.Subscribe(GameModeId.Landing,    (turn, _) => _players[turn.currentId.Value].OnLanding());
             game.Subscribe(GameModeId.EndLanding, (turn, _) => _players[turn.currentId.Value].OnEndLanding());

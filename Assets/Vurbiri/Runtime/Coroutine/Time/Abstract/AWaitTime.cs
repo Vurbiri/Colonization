@@ -7,7 +7,7 @@ namespace Vurbiri
     public abstract class AWaitTime : IWait
     {
         [UnityEngine.SerializeField] private float _waitTime;
-        private float _deltaTime;
+        private float _offsetTime;
         private float _waitUntilTime;
         private bool _isWait;
 
@@ -24,34 +24,34 @@ namespace Vurbiri
         public bool MoveNext()
         {
             if (!_isWait)
-                _waitUntilTime = _waitTime + _deltaTime + ApplicationTime;
+                _waitUntilTime = _waitTime + _offsetTime + ApplicationTime;
 
             return _isWait = _waitUntilTime > ApplicationTime;
         }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator Restart(float value) => Restart(value, 0f);
+        public IEnumerator Restart(float value) => OffsetRestart(value, 0f);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator Restart(float value, float delta)
+        public IEnumerator OffsetRestart(float value, float offset)
         {
             _waitTime = value;
-            _deltaTime = delta;
+            _offsetTime = offset;
             _isWait = false;
             return this;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator Restart()
         {
-            _deltaTime = 0f;
+            _offsetTime = 0f;
             _isWait = false;
             return this;
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator RestartUsingDelta(float delta)
+        public IEnumerator OffsetRestart(float offset)
         {
-            _deltaTime = delta;
+            _offsetTime = offset;
             _isWait = false;
             return this;
         }

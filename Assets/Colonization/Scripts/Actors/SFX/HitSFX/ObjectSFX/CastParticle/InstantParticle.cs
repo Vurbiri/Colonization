@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.Actors
 
             Enable(targetPosition);
 
-            target.ActorSFX.AudioSource.PlayOneShot(_clip);
+            target.ActorSFX.Impact(_clip);
             _particle.Play();
 
             this.Start();

@@ -16,34 +16,33 @@ namespace Vurbiri.Colonization.Actors
         }
 
         #region Fields
-        private Id<ActorTypeId> _typeId;
-        private int _id;
-        private Id<PlayerId> _owner;
+        protected Id<ActorTypeId> _typeId;
+        protected int _id;
+        protected Id<PlayerId> _owner;
         private bool _isPersonTurn, _canUseSkills;
         #region Abilities
-        private AbilitiesSet<ActorAbilityId> _abilities;
-        private SubAbility<ActorAbilityId> _currentHP;
-        private SubAbility<ActorAbilityId> _currentAP;
-        private BooleanAbility<ActorAbilityId> _move;
-        private ChanceAbility<ActorAbilityId> _profitMain;
-        private ChanceAbility<ActorAbilityId> _profitAdv;
+        protected AbilitiesSet<ActorAbilityId> _abilities;
+        protected SubAbility<ActorAbilityId> _currentHP;
+        protected SubAbility<ActorAbilityId> _currentAP;
+        protected BooleanAbility<ActorAbilityId> _move;
+        protected ChanceAbility<ActorAbilityId> _profitMain;
+        protected ChanceAbility<ActorAbilityId> _profitAdv;
         #endregion
 
-        private Hexagon _currentHex;
+        protected Hexagon _currentHex;
 
-        private ActorSkin _skin;
-        private Transform _thisTransform;
-        private BoxCollider _thisCollider;
-                
-        private float _extentsZ;
+        protected ActorSkin _skin;
+        protected Transform _thisTransform;
+        protected BoxCollider _thisCollider;
 
-        private EffectsSet _effects;
+        protected float _extentsZ;
+
+        protected EffectsSet _effects;
 
         #region States
-        private readonly StateMachineSelectable _stateMachine = new();
+        protected readonly StateMachineSelectable _stateMachine = new();
         private readonly TargetState _targetState = new();
         private MoveState _moveState;
-        private BlockState _blockState;
         private ASkillState[] _skillState;
         private DeathState _deathState;
         #endregion
@@ -62,7 +61,6 @@ namespace Vurbiri.Colonization.Actors
         public int ActionPoint => _currentAP.Value;
         public bool CanMove => _move.IsValue;
         public bool CanUseSkills => _canUseSkills & _isPersonTurn;
-        public bool CanBlock => !_blockState.IsApplied;
         public int CurrentHP => _currentHP.Value;
         public bool IsWounded => _currentHP.IsNotMax;
         public bool IsDead => _currentHP.Value <= 0;
@@ -85,8 +83,11 @@ namespace Vurbiri.Colonization.Actors
         public void Cancel() => _stateMachine.Cancel();
         #endregion
 
+        public abstract bool IsAvailableStateMachine { get; }
+
         #region States
-        public void Block() => _stateMachine.SetState(_blockState);
+        public abstract WaitSignal UseSpecSkill();
+
         public WaitSignal Move()
         {
             _stateMachine.SetState(_moveState, true);
@@ -97,15 +98,11 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.SetState(_skillState[id], true);
             return _skillState[id].Signal;
         }
-        public virtual WaitSignal UseSpecialSkill()
-        {
-            return null;
-        }
         #endregion
 
         public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
-            return _stateMachine.IsSetOrDefault(_blockState) & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
+            return IsAvailableStateMachine & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
         #region Effect
@@ -152,7 +149,7 @@ namespace Vurbiri.Colonization.Actors
         public void SetHexagonUnselectable()
         {
             _currentHex.SetUnselectableForSwap();
-            Interactable = _stateMachine.IsSetOrDefault(_blockState);
+            Interactable = IsAvailableStateMachine;
         }
 
         public WaitStateSource<DeathStage> Death()

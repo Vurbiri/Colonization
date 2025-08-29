@@ -7,24 +7,24 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri.Colonization.Actors
 {
     [DisallowMultipleComponent]
-    public partial class ActorSkin : MonoBehaviour
+    public abstract partial class ActorSkin : MonoBehaviour
     {
         [SerializeField] private Bounds _bounds;
         [Space]
-        [SerializeField] private AActorSFX _sfx;
         [SerializeField] private Animator _animator;
         [ReadOnly, SerializeField] private float _durationDeath;
 
         #region CONST
-        private const string B_IDLE = "bIdle", B_MOVE = "bMove", B_RUN = "bRun", B_BLOCK = "bBlock", B_DEATH = "bDeath", B_SPEC = "bSpecial";
+        private const string B_IDLE = "bIdle", B_MOVE = "bMove", B_RUN = "bRun", B_DEATH = "bDeath", B_SPEC = "bSpecial";
         private static readonly string[] B_SKILLS = { "bSkill_0", "bSkill_1", "bSkill_2", "bSkill_3" };
         private const string T_REACT = "tReact";
         #endregion
 
-        private Transform _thisTransform;
-        
-        private readonly StateMachine _stateMachine = new();
-        private BoolSwitchState _moveState, _runState, _blockState, _specState;
+        protected Transform _thisTransform;
+        protected ActorSFX _sfx;
+
+        protected readonly StateMachine _stateMachine = new();
+        protected BoolSwitchState _moveState, _runState, _specState;
         private SkillState[] _skillStates;
         private DeathState _deathState;
         private ReactState _reactState;
@@ -33,7 +33,8 @@ namespace Vurbiri.Colonization.Actors
 
         public Transform Transform { [Impl(256)] get => _thisTransform; }
         public Bounds Bounds { [Impl(256)] get => _bounds; }
-        public AActorSFX ActorSFX { [Impl(256)] get => _sfx; }
+        public ActorSFX ActorSFX { [Impl(256)] get => _sfx; }
+
 
         private void Start()
         {
@@ -44,40 +45,27 @@ namespace Vurbiri.Colonization.Actors
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }
 
-        public virtual ActorSkin Init(Id<PlayerId> owner, int type, Skills skills)
-        {
-            _thisTransform = transform;
+        public abstract ActorSkin Init(Id<PlayerId> owner, Skills skills);
 
-            print("Убрать ActorTypeId");
-            //if (owner != PlayerId.Satan)
-            if (type == ActorTypeId.Warrior)
-                GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = GameContainer.Materials[owner].materialWarriors;
+        protected void Init(Skills skills, ActorSFX sfx)
+        {
+            sfx.Init(skills.HitSfxNames);
+
+            _thisTransform = transform;
+            _sfx = sfx;
 
             _stateMachine.AssignDefaultState(new BoolSwitchState(B_IDLE, this));
             _moveState  = new(B_MOVE,  this);
             _runState   = new(B_RUN,   this);
-            _blockState = new(B_BLOCK, this);
             _specState  = new(B_SPEC,  this);
 
             var timings = skills.Timings;
             _skillStates = new SkillState[timings.Count];
             for (int i = 0; i < timings.Count; i++)
                 _skillStates[i] = new(B_SKILLS[i], this, timings[i], i);
-
-            _sfx.Init(skills.HitSfxNames);
-
-            return this;
         }
 
         [Impl(256)] public void Idle() => _stateMachine.ToDefaultState();
-
-        [Impl(256)] public virtual void Block(bool isActive)
-        {
-            if (isActive)
-                _stateMachine.SetState(_blockState);
-            _sfx.Block(isActive);
-        }
-
         [Impl(256)] public void Move() => _stateMachine.SetState(_moveState);
         [Impl(256)] public void Run() => _stateMachine.SetState(_runState);
 
@@ -89,15 +77,12 @@ namespace Vurbiri.Colonization.Actors
             return skill.Setup(targetActorSkin);
         }
 
-        [Impl(256)] public void SpecialSkill() => _stateMachine.SetState(_specState);
+        [Impl(256)] public void SpecSkill() => _stateMachine.SetState(_specState);
 
         [Impl(256)] public void Impact(AudioClip clip)
         {
-            _reactState.Repeat();
+            _reactState.Impact(clip);
             _stateMachine.SetState(_reactState, true);
-
-            if (clip != null)
-                _sfx.Impact(clip);
         }
 
         [Impl(256)] public WaitStateSource<Actor.DeathStage> Death()
@@ -113,7 +98,6 @@ namespace Vurbiri.Colonization.Actors
         private void OnValidate()
         {
             this.SetComponent(ref _animator);
-            this.SetComponent(ref _sfx);
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
                 _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)["A_Death"].length * 0.95f;

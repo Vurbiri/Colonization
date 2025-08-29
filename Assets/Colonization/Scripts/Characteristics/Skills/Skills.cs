@@ -9,19 +9,19 @@ namespace Vurbiri.Colonization.Characteristics
     [System.Serializable]
     public class Skills : IDisposable
     {
-        [SerializeField] private float _speedWalk = 0.45f;
-        [SerializeField] private float _speedRun = 0.65f;
-        [SerializeField] private int _blockCost = 2;
-        [SerializeField] private int _blockValue = 10;
+        [SerializeField] private float _speedWalk; // = 0.45f;
+        [SerializeField] private float _speedRun; // = 0.65f;
+        [SerializeField] private int _blockCost; // = 2;
+        [SerializeField] private int _blockValue; // = 10;
         [SerializeField] private SkillSettings[] _skillsSettings;
 
         [SerializeField] private ReadOnlyArray<string> _hitSfxNames;
         [SerializeField] private ReadOnlyArray<AnimationTime> _timings;
 
-        [NonSerialized] private BlockUI _blockUI;
+        [NonSerialized] private ASkillUI _specSkillUI;
         [NonSerialized] private ReadOnlyArray<SkillUI> _skillsUI;
 
-        public BlockUI BlockUI => _blockUI;
+        public ASkillUI SpecSkillUI => _specSkillUI;
         public ReadOnlyArray<SkillUI> SkillsUI => _skillsUI;
         public ReadOnlyArray<string> HitSfxNames => _hitSfxNames;
         public ReadOnlyArray<AnimationTime> Timings => _timings;
@@ -39,15 +39,16 @@ namespace Vurbiri.Colonization.Characteristics
 
             _skillsUI = new(skillsUI);
 
-            UnityEngine.Debug.Log("Убрать коммент");
-            //if (actorType == ActorTypeId.Warrior)
-                _blockUI = new(colors, separator, _blockCost, _blockValue);
+            if (actorType == ActorTypeId.Warrior)
+                _specSkillUI = new BlockUI(colors, separator, _blockCost, _blockValue);
+            else
+                _specSkillUI = new SpecSkillUI(colors, separator);
         }
 
         public void CreateStates(Actor actor)
         {
             actor.AddMoveState(_speedWalk);
-            actor.AddBlockState(_blockCost, _blockValue << ActorAbilityId.SHIFT_ABILITY);
+            actor.AddSpecSkillState(_blockCost, _blockValue << ActorAbilityId.SHIFT_ABILITY);
 
             int countSkills = _skillsSettings.Length;
 
@@ -58,7 +59,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Dispose()
         {
-            _blockUI?.Dispose();
+            _specSkillUI?.Dispose();
 
             if (_skillsUI != null)
             {
@@ -74,9 +75,12 @@ namespace Vurbiri.Colonization.Characteristics
 
         [SerializeField] private int _swapA = -1;
         [SerializeField] private int _swapB = -1;
+        [SerializeField] private string _specSkillName_ed = "Block";
 
         public void OnValidate(int type)
         {
+            _specSkillName_ed = type == ActorTypeId.Warrior ? "Block" : "Spec Skill";
+
             if (_skillsSettings.Length > COUNT_SKILLS_MAX)
                 Array.Resize(ref _skillsSettings, COUNT_SKILLS_MAX);
 

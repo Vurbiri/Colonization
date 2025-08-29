@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Vurbiri.Colonization.Actors
 {
     public partial class ActorSkin
@@ -12,13 +14,16 @@ namespace Vurbiri.Colonization.Actors
                     behaviour.EventExit += OnEventExit;
             }
 
-            public void Repeat()
+            public void Impact(AudioClip clip)
             {
                 if (_isRun)
                 {
                     _isExit = false;
                     SetTrigger();
                 }
+
+                if (clip != null)
+                    SFX.Impact(clip);
             }
 
             public override void Enter()

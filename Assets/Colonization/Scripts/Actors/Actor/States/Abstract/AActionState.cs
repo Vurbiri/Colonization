@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        protected abstract class AActionState : AState
+        protected abstract class AActionState<T> : AState<T> where T : ActorSkin
         {
             protected readonly bool _isPlayer;
             private readonly AbilityValue _costAP;
@@ -33,9 +33,13 @@ namespace Vurbiri.Colonization.Actors
                 [Impl(256)] get => _actor._currentHex;
                 [Impl(256)] set => _actor._currentHex = value;
             }
+            protected EffectsSet ActorEffects
+            {
+                [Impl(256)] get => _actor._effects;
+            }
             #endregion
 
-            public AActionState(Actor parent, int cost = 0) : base(parent)
+            public AActionState(Actor parent, T skin, int cost = 0) : base(parent, skin)
             {
                 _isPlayer = parent._owner == PlayerId.Person;
                 _costAP = new(TypeModifierId.Addition, cost);

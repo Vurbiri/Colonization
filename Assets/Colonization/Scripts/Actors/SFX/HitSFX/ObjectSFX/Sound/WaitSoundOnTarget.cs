@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Actors
         public IEnumerator Hit(ISFXUser user, ActorSkin target)
         {
             
-            target.ActorSFX.AudioSource.PlayOneShot(_clip);
+            target.ActorSFX.Impact(_clip);
             _waitUntilTime = Time.realtimeSinceStartup + _clip.length;
             this.Start();
             

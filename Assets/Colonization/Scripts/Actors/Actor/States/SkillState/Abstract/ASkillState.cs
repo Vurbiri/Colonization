@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
 	{
-        protected abstract partial class ASkillState : AActionState
+        protected abstract partial class ASkillState : AActionState<ActorSkin>
         {
             protected readonly int _id;
             protected readonly ReadOnlyArray<HitEffects> _effectsHint;
@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
 
             public WaitSignal Signal { [Impl(256)] get => _waitSignal; }
 
-            public ASkillState(Actor parent, ReadOnlyArray<HitEffects> effects, int cost, int id) : base(parent, cost)
+            public ASkillState(Actor parent, ReadOnlyArray<HitEffects> effects, int cost, int id) : base(parent, parent._skin, cost)
             {
                 _id = id;
                 _effectsHint = effects;

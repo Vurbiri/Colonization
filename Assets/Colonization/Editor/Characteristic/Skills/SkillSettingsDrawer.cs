@@ -9,14 +9,14 @@ using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
 
 namespace VurbiriEditor.Colonization.Characteristics
 {
-    [CustomPropertyDrawer(typeof(SkillSettings))]
+    [CustomPropertyDrawer(typeof(SkillSettings), false)]
     public class SkillSettingsDrawer : PropertyDrawerUtility
     {
         #region Consts
         private const string P_RANGE = "_range", P_DISTANCE = "_distance", P_TARGET = "_target", P_COST = "_cost";
         private const string P_HITS = "_effectsHitsSettings", P_UI = "_ui";
         private const string P_EFFECTS = "_effects";
-        private const string P_SPRITE = "_sprite", P_KEY_NAME = "_keyName", P_COST_UI = "_cost";
+        private const string P_SPRITE_UI = "sprite", P_KEY_NAME_UI = "keySkillName";
         private const string P_CLIP = "clipSettings_ed", P_SFX = "hitSFXName_ed", P_TYPE = "typeActor_ed";
         private const string P_CHILD_TARGET = "_parentTarget_ed", P_CHILD_TYPE = "_isWarrior_ed";
 
@@ -27,7 +27,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         protected override void OnGUI()
         {
             SerializedProperty uiProperty = GetProperty(P_UI);
-            SerializedProperty keyNameProperty = GetProperty(uiProperty, P_KEY_NAME);
+            SerializedProperty keyNameProperty = GetProperty(uiProperty, P_KEY_NAME_UI);
 
             SetName(keyNameProperty);
 
@@ -40,10 +40,11 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 Space();
                 var clip = DrawObject<AnimationClipSettingsScriptable>(P_CLIP, false);
+                int hitsCount;
 
                 if (clip != null && clip.clip != null)
                 {
-                    SerializedProperty costProperty = GetProperty(P_COST);
+                    hitsCount = clip.hitTimes.Length;
 
                     DrawButton(clip);
 
@@ -62,19 +63,16 @@ namespace VurbiriEditor.Colonization.Characteristics
                     TargetOfSkill target = DrawEnum<TargetOfSkill>(P_TARGET);
 
                     Space();
-                    DrawInt(costProperty, 1, 4, 1);
-
-
-                    GetProperty(uiProperty, P_COST_UI).intValue = costProperty.intValue;
+                    DrawInt(P_COST, 1, 4, 1);
 
                     Space(2f);
                     DrawLabel("UI:");
                     indentLevel++;
                     DrawStringPopup(keyNameProperty, KEYS_NAME_SKILLS);
-                    DrawObjectRelative<Sprite>(uiProperty, P_SPRITE, true);
+                    DrawObjectRelative<Sprite>(uiProperty, P_SPRITE_UI, true);
                     indentLevel--;
 
-                    DrawHits(clip.hitTimes.Length, target);
+                    DrawHits(hitsCount, target);
                 }
 
                 indentLevel--;
@@ -98,21 +96,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 _label.text = name;
             }
             //=================================
-            void DrawButton(UnityEngine.Object activeObject)
-            {
-                _position.y += _height;
-                Rect positionButton = _position;
-                float viewWidth = EditorGUIUtility.currentViewWidth;
-
-                positionButton.height += _ySpace * 2f;
-                positionButton.x = 100f;
-                positionButton.width = viewWidth - 125f;
-
-                if (GUI.Button(positionButton, "Select Clip Settings".ToUpper()))
-                    Selection.activeObject = activeObject;
-
-                _position.y += _ySpace * 2f;
-            }
+            
             //=================================
             void DrawHits(int count, TargetOfSkill target)
             {
@@ -190,6 +174,22 @@ namespace VurbiriEditor.Colonization.Characteristics
             }
 
             return (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing) * rate;
+        }
+
+        protected void DrawButton(UnityEngine.Object activeObject)
+        {
+            _position.y += _height;
+            Rect positionButton = _position;
+            float viewWidth = EditorGUIUtility.currentViewWidth;
+
+            positionButton.height += _ySpace * 2f;
+            positionButton.x = 100f;
+            positionButton.width = viewWidth - 125f;
+
+            if (GUI.Button(positionButton, "Select Clip Settings".ToUpper()))
+                Selection.activeObject = activeObject;
+
+            _position.y += _ySpace * 2f;
         }
     }
 }
