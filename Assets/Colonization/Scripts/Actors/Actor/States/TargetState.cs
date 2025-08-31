@@ -4,10 +4,13 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        sealed protected class TargetState : ASelectableState
+        public abstract partial class AStates<TActor, TSkin>
         {
-            public TargetState() : base(null)
+            sealed protected class TargetState : ASelectableState
             {
+                public TargetState() : base(null)
+                {
+                }
             }
         }
     }

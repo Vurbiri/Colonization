@@ -45,16 +45,16 @@ namespace Vurbiri.Colonization.Characteristics
                 _specSkillUI = new SpecSkillUI(colors, separator);
         }
 
-        public void CreateStates(Actor actor)
+        public void CreateStates<TActor, TSkin>(Actor.AStates<TActor, TSkin> states) where TActor : Actor where TSkin : ActorSkin
         {
-            actor.AddMoveState(_speedWalk);
-            actor.AddSpecSkillState(_blockCost, _blockValue << ActorAbilityId.SHIFT_ABILITY);
+            states.AddMoveState(_speedWalk);
+            states.AddSpecSkillState(_blockCost, _blockValue << ActorAbilityId.SHIFT_ABILITY);
 
             int countSkills = _skillsSettings.Length;
 
-            actor.SetCountState(countSkills);
+            states.SetCountState(countSkills);
             for (int i = 0; i < countSkills; i++)
-                actor.AddSkillState(_skillsSettings[i], _speedRun, i);
+                states.AddSkillState(_skillsSettings[i], _speedRun, i);
         }
 
         public void Dispose()

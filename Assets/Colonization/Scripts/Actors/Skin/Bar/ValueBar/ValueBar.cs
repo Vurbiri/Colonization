@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Actors.UI
 
         private int _currentValue = int.MaxValue;
 
-        public ValueBar(int id, TextMeshPro value, PopupWidget3D popup, Sprite sprite, AbilitiesSet<ActorAbilityId> abilities)
+        public ValueBar(int id, TextMeshPro value, PopupWidget3D popup, Sprite sprite, ReadOnlyAbilities<ActorAbilityId> abilities)
         {
             _valueTMP = value; _sprite = sprite; _popup = popup;
 

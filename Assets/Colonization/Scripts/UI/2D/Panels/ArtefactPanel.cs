@@ -40,11 +40,13 @@ namespace Vurbiri.Colonization.UI
             var person = GameContainer.Players.Person;
             var satan = GameContainer.Players.Satan;
 
-            person.SpawnTest(WarriorId.Warlock, HEX.RightUp);
-            person.SpawnDemonTest(DemonId.Imp, HEX.Left);
-            person.SpawnTest(WarriorId.Militia, HEX.LeftDown);
-            person.SpawnDemonTest(DemonId.Fatty, HEX.LeftUp);
-            person.SpawnDemonTest(DemonId.Boss, new Key(0, 0));
+            person.SpawnTest(WarriorId.Knight, HEX.RightUp);
+            person.SpawnTest(WarriorId.Warlock, HEX.Left);
+            //person.SpawnDemonTest(DemonId.Imp, HEX.Left);
+            person.SpawnTest(WarriorId.Solder, HEX.LeftDown);
+            person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
+            //person.SpawnDemonTest(DemonId.Fatty, HEX.LeftUp);
+            person.SpawnDemonTest(DemonId.Bomb, new Key(0, 0));
             //person.SpawnTest(WarriorId.Knight, new Key(-4, 0));
 
 

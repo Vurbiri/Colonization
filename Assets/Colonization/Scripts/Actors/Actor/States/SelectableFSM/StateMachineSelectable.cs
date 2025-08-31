@@ -1,4 +1,5 @@
 using Vurbiri.FSM;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.FSMSelectable
 {
@@ -12,10 +13,10 @@ namespace Vurbiri.Colonization.FSMSelectable
         {
         }
 
-        public void Cancel() => _currentState.Cancel();
+        [Impl(256)] public void Cancel() => _currentState.Cancel();
 
-        public void Select() => _currentState.Select();
+        [Impl(256)] public void Select() => _currentState.Select();
 
-        public void Unselect(ISelectable newSelectable) => _currentState.Unselect(newSelectable);
+        [Impl(256)] public void Unselect(ISelectable newSelectable) => _currentState.Unselect(newSelectable);
     }
 }

@@ -1,6 +1,5 @@
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -9,6 +8,6 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [SerializeField] private IdArray<HumanAbilityId, int> _abilities;
 
-        public AbilitiesSet<HumanAbilityId> Get(IReactive<Perk> perks) => new(_abilities, perks);
+        public AbilitiesSet<HumanAbilityId> Get(PerkTree perks) => new(_abilities, perks);
     }
 }

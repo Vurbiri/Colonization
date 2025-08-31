@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors.UI
         private readonly TextMeshPro _currentValueTMP;
         private readonly Unsubscriptions _unsubscribers;
 
-        public APBar(TextMeshPro maxValue, TextMeshPro currentValue, AbilitiesSet<ActorAbilityId> abilities)
+        public APBar(TextMeshPro maxValue, TextMeshPro currentValue, ReadOnlyAbilities<ActorAbilityId> abilities)
         {
             _maxValueTMP = maxValue;
             _currentValueTMP = currentValue;

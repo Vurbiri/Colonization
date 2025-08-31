@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Colonization.FSMSelectable;
+using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
     {
         public enum DeathStage
         {
-            None, Start, Animation, SFX
+            None, Start, EndAnimation, End
         }
 
         #region Fields
@@ -20,6 +20,9 @@ namespace Vurbiri.Colonization.Actors
         protected int _id;
         protected Id<PlayerId> _owner;
         private bool _isPersonTurn, _canUseSkills;
+
+        private float _extentsZ;
+
         #region Abilities
         protected AbilitiesSet<ActorAbilityId> _abilities;
         protected SubAbility<ActorAbilityId> _currentHP;
@@ -31,21 +34,12 @@ namespace Vurbiri.Colonization.Actors
 
         protected Hexagon _currentHex;
 
-        protected ActorSkin _skin;
         protected Transform _thisTransform;
         protected BoxCollider _thisCollider;
 
-        protected float _extentsZ;
-
         protected EffectsSet _effects;
 
-        #region States
-        protected readonly StateMachineSelectable _stateMachine = new();
-        private readonly TargetState _targetState = new();
-        private MoveState _moveState;
-        private ASkillState[] _skillState;
-        private DeathState _deathState;
-        #endregion
+        protected AStates _states;
 
         private readonly RBool _interactable = new(false);
         private readonly RBool _canCancel = new(false);
@@ -64,9 +58,10 @@ namespace Vurbiri.Colonization.Actors
         public int CurrentHP => _currentHP.Value;
         public bool IsWounded => _currentHP.IsNotMax;
         public bool IsDead => _currentHP.Value <= 0;
-        public ActorSkin Skin => _skin;
-        public IReactiveSet<ReactiveEffect> Effects => _effects;
-        public AbilitiesSet<ActorAbilityId> Abilities => _abilities;
+        public ActorSkin Skin => _states.Skin;
+        public AStates Action => _states;
+        public ReactiveEffects Effects => _effects;
+        public ReadOnlyAbilities<ActorAbilityId> Abilities => _abilities;
         public bool IsMainProfit => _profitMain.Next();
         public bool IsAdvProfit => _profitAdv.Next();
         #endregion
@@ -77,32 +72,71 @@ namespace Vurbiri.Colonization.Actors
         public RBool InteractableReactive => _interactable;
         public bool Interactable { get => _interactable.Value; set => _thisCollider.enabled = _interactable.Value = _isPersonTurn & value; }
         public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = _isPersonTurn | value; }
-        public bool IsPersonTurn { get => _isPersonTurn; set => _isPersonTurn = value; }
-        public void Select() => _stateMachine.Select();
-        public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
-        public void Cancel() => _stateMachine.Cancel();
+        public bool IsPersonTurn { set => _isPersonTurn = value; }
+       
+        public void Select() => _states.Select();
+        public void Unselect(ISelectable newSelectable) => _states.Unselect(newSelectable);
+        public void Cancel() => _states.Cancel();
         #endregion
 
-        public abstract bool IsAvailableStateMachine { get; }
+        #region Setup
+        protected abstract AStates StatesCreate(ActorSettings settings);
 
-        #region States
-        public abstract WaitSignal UseSpecSkill();
-
-        public WaitSignal Move()
+        public void Setup(ActorSettings settings, ActorInitData initData, Hexagon startHex)
         {
-            _stateMachine.SetState(_moveState, true);
-            return _moveState.Signal;
+            _thisTransform = transform;
+            _thisCollider = GetComponent<BoxCollider>();
+
+            _typeId = settings.TypeId;
+            _id = settings.Id;
+            _owner = initData.owner;
+            _currentHex = startHex;
+            IsPersonTurn = false;
+            Interactable = false;
+
+            #region Abilities
+            _abilities = settings.Abilities;
+
+            _currentHP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
+            _currentAP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
+            _move       = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
+            _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP, _move);
+            _profitAdv  = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP, _move);
+
+            for (int i = 0; i < initData.buffs.Count; i++)
+                _unsubscribers += initData.buffs[i].Subscribe(OnBuff);
+            #endregion
+
+            #region Effects
+            _effects = new(_abilities);
+
+            _currentHP.Subscribe(Death, false);
+            _effects.Subscribe(RedirectEvents);
+            #endregion
+
+            _states = StatesCreate(settings);
+
+            _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, CONST.ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
+            _currentHex.EnterActor(this);
+            gameObject.SetActive(true);
         }
-        public WaitSignal UseSkill(int id)
+
+        public void SetLoadData(ActorLoadData data)
         {
-            _stateMachine.SetState(_skillState[id], true);
-            return _skillState[id].Signal;
+            _currentHP.Set(data.state.currentHP);
+            _currentAP.Set(data.state.currentAP);
+            _move.Set(data.state.move);
+
+            for (int i = data.effects.Length - 1; i >= 0; i--)
+                _effects.Add(data.effects[i]);
+
+            _states.Load();
         }
         #endregion
 
         public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
-            return IsAvailableStateMachine & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
+            return _states.IsAvailable & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
         #region Effect
@@ -111,7 +145,7 @@ namespace Vurbiri.Colonization.Actors
         {
             int delta = _abilities.AddPerk(effect);
 
-            if(delta != 0 & _deathState == null)
+            if(delta != 0 & _states.IsNotDead)
                 _eventChanged.Invoke(this, TypeEvent.Change);
 
             return delta;
@@ -131,7 +165,7 @@ namespace Vurbiri.Colonization.Actors
             _effects.Next();
             _effects.Add(ReactiveEffectsFactory.CreateWallDefenceEffect(defense));
 
-            _stateMachine.ToDefaultState();
+            _states.ToDefault();
         }
         public void EffectsUpdate() => EffectsUpdate(_currentHex.GetMaxDefense());
         #endregion
@@ -149,15 +183,11 @@ namespace Vurbiri.Colonization.Actors
         public void SetHexagonUnselectable()
         {
             _currentHex.SetUnselectableForSwap();
-            Interactable = IsAvailableStateMachine;
+            Interactable = _states.IsAvailable;
         }
 
-        public WaitStateSource<DeathStage> Death()
-        {
-            _stateMachine.ForceSetState(_deathState = new(this), true);
-
-            return _deathState.stage;
-        }
+        public WaitStateSource<DeathStage> Death() => _states.Death();
+        private void Death(int hp) { if (hp <= 0) _states.Death(); }
 
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
@@ -178,7 +208,7 @@ namespace Vurbiri.Colonization.Actors
         #region Target
         private bool ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
-            bool isSet = GameContainer.Diplomacy.IsCanActorsInteraction(initiator, _owner, relation, out _) && _stateMachine.SetState(_targetState, true);
+            bool isSet = GameContainer.Diplomacy.IsCanActorsInteraction(initiator, _owner, relation, out _) && _states.ToTarget();
             if(isSet)
                 GameContainer.Diplomacy.ActorsInteraction(_owner, initiator, relation);
             return isSet;
@@ -186,11 +216,8 @@ namespace Vurbiri.Colonization.Actors
 
         private void FromTargetState()
         {
-            if (_deathState == null)
-            {
-                _stateMachine.GetOutToPrevState(_targetState);
+            if (_states.FromTarget())
                 _eventChanged.Invoke(this, TypeEvent.Change);
-            }
         }
         #endregion
 

@@ -6,26 +6,22 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    sealed public class EffectsSet : IReactiveSet<ReactiveEffect>, IReadOnlyList<ReactiveEffect>
+    public abstract class ReactiveEffects : IReactiveSet<ReactiveEffect>
     {
-        private readonly AbilitiesSet<ActorAbilityId> _abilities;
-        private ReactiveEffect[] _values;
-        private int _capacity = 4;
-        private readonly RInt _count = new(0);
-        private readonly Subscription<ReactiveEffect, TypeEvent> _eventChanged = new();
-        
-        public ReactiveEffect this[int index] => _values[index];
-
+        protected readonly AbilitiesSet<ActorAbilityId> _abilities;
+        protected ReactiveEffect[] _values;
+        protected int _capacity = 4;
+        protected readonly RInt _count = new(0);
+        protected readonly Subscription<ReactiveEffect, TypeEvent> _eventChanged = new();
         public int Count => _count;
         public IReactiveValue<int> CountReactive => _count;
 
-        public EffectsSet(AbilitiesSet<ActorAbilityId> abilities)
+        protected ReactiveEffects(AbilitiesSet<ActorAbilityId> abilities)
         {
             _values = new ReactiveEffect[_capacity];
             _abilities = abilities;
         }
 
-        #region IReactiveCollection
         public Unsubscription Subscribe(Action<ReactiveEffect, TypeEvent> action, bool instantGetValue = true)
         {
             if (instantGetValue)
@@ -36,7 +32,22 @@ namespace Vurbiri.Colonization.Characteristics
 
             return _eventChanged.Add(action);
         }
-        #endregion
+
+        public IEnumerator<ReactiveEffect> GetEnumerator()
+        {
+            for (int i = 0; i < _count; i++)
+                yield return _values[i];
+        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    }
+
+    sealed public class EffectsSet : ReactiveEffects, IReadOnlyList<ReactiveEffect>, IDisposable
+    {
+       
+        public ReactiveEffect this[int index] => _values[index];
+
+        public EffectsSet(AbilitiesSet<ActorAbilityId> abilities) : base(abilities) { }
 
         public int Add(ReactiveEffect effect)
         {
@@ -109,13 +120,6 @@ namespace Vurbiri.Colonization.Characteristics
             
             _values = null;
         }
-
-        public IEnumerator<ReactiveEffect> GetEnumerator()
-        {
-            for(int i = 0; i < _count; i++)
-                yield return _values[i];
-        }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private void RemoveItem(ReactiveEffect effect)
         {

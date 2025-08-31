@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
+using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -18,12 +19,12 @@ namespace Vurbiri.Colonization.Actors
         public AbilitiesSet<ActorAbilityId> Abilities => new(_abilities, ActorAbilityId.SHIFT_ABILITY, ActorAbilityId.MAX_ID_SHIFT_ABILITY);
         public Skills Skills => _skills;
 
-        public ActorSkin InstantiateActorSkin(Id<PlayerId> owner, Transform parent) => UnityEngine.Object.Instantiate(_prefabActorSkin, parent, false).Init(owner, _skills);
-        public T InstantiateActorSkin<T>(Id<PlayerId> owner, Transform parent) where T : ActorSkin
+        public T InstantiateSkin<T>(Id<PlayerId> owner, Transform parent) where T : ActorSkin
         {
-            return (T)UnityEngine.Object.Instantiate(_prefabActorSkin, parent, false).Init(owner, _skills);
+            T skin = (T)Object.Instantiate((Object)_prefabActorSkin, parent, false);
+            skin.Init(owner, _skills);
+            return skin;
         }
-        public void CreateStates(Actor actor) => _skills.CreateStates(actor);
 
         public void Init()
         {

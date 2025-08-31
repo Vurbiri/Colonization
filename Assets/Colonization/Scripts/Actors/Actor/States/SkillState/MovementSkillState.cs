@@ -8,54 +8,53 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        sealed protected class MovementSkillState : SkillState
+        public abstract partial class AStates<TActor, TSkin>
         {
-            private readonly float _distanceMove;
-            private readonly float _timeToHit;
-
-            public MovementSkillState(Actor parent, TargetOfSkill targetActor, ReadOnlyArray<HitEffects> effects, float distance, float range, float speedRun, int cost, int id) : base(parent, targetActor, effects, range, speedRun, cost, id)
+            sealed protected class MovementSkillState : SkillState
             {
-                _distanceMove = distance;
-                _timeToHit = _skin.GetFirsHitTime(id);
-            }
+                private readonly float _distanceMove;
+                private readonly float _timeToHit;
 
-            protected override IEnumerator Actions_Cn()
-            {
-                bool isTarget = false;
-                if (_isPlayer)
-                    yield return SelectActor_Cn(b => isTarget = b);
-                else
-                    yield return SelectActorAI_Cn(b => isTarget = b);
-
-                if (!isTarget)
+                public MovementSkillState(AStates<TActor, TSkin> parent, TargetOfSkill targetActor, ReadOnlyArray<HitEffects> effects, float distance, float range, float speedRun, int cost, int id) : base(parent, targetActor, effects, range, speedRun, cost, id)
                 {
-                    ToExit();
-                    yield break;
+                    _distanceMove = distance;
+                    _timeToHit = parent._skin.GetFirsHitTime(id);
                 }
 
-                Vector3 actorHexPos = ActorHex.Position, targetHexPos = TargetHex.Position;
-                float distance = _distanceMove + TargetOffset;
+                protected override IEnumerator Actions_Cn()
+                {
+                    yield return SelectActor_Cn();
 
-                if(distance > HEX_DIAMETER_IN) 
-                    distance = HEX_DIAMETER_IN;
-                else 
-                    yield return Run_Cn(actorHexPos, targetHexPos, 1f - distance / HEX_DIAMETER_IN);
+                    if (_target == null)
+                    {
+                        ToExit();
+                        yield break;
+                    }
 
-                yield return ApplyMovementSkill_Cn(ActorPosition, targetHexPos, distance);
-                yield return Run_Cn(ActorPosition, actorHexPos, 1f);
+                    Vector3 actorHexPos = CurrentHex.Position, targetHexPos = TargetHex.Position;
+                    float distance = _distanceMove + TargetOffset;
 
-                ToExit();
-            }
+                    if (distance > HEX_DIAMETER_IN)
+                        distance = HEX_DIAMETER_IN;
+                    else
+                        yield return Run_Cn(actorHexPos, targetHexPos, 1f - distance / HEX_DIAMETER_IN);
 
-            private IEnumerator ApplyMovementSkill_Cn(Vector3 start, Vector3 end, float remainingDistance)
-            {
-                float distance = _rangeSkill + TargetOffset;
-                float path = 1f - distance / remainingDistance;
-                float speed = path / _timeToHit;
-                
-                StartCoroutine(Movement_Cn(start, end, speed, path));
+                    yield return ApplyMovementSkill_Cn(Position, targetHexPos, distance);
+                    yield return Run_Cn(Position, actorHexPos, 1f);
 
-                yield return ApplySkill_Cn();
+                    ToExit();
+                }
+
+                private IEnumerator ApplyMovementSkill_Cn(Vector3 start, Vector3 end, float remainingDistance)
+                {
+                    float distance = _rangeSkill + TargetOffset;
+                    float path = 1f - distance / remainingDistance;
+                    float speed = path / _timeToHit;
+
+                    StartCoroutine(Movement_Cn(start, end, speed, path));
+
+                    yield return ApplySkill_Cn();
+                }
             }
         }
     }

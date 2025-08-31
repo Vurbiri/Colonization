@@ -55,13 +55,13 @@ namespace Vurbiri.Colonization.UI
         private void OnMovement()
         {
             base.Close();
-            _currentWarrior.Move();
+            _currentWarrior.Action.Move();
         }
 
         public void OnBlock()
         {
             base.Close();
-            _currentWarrior.UseSpecSkill();
+            _currentWarrior.Action.UseSpecSkill();
         }
 
         #region Nested struct Positions

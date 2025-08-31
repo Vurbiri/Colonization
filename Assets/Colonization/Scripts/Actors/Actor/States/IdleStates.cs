@@ -2,23 +2,26 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        sealed protected class IdleState : AState<ActorSkin>
+        public abstract partial class AStates<TActor, TSkin>
         {
-            public IdleState(Actor parent) : base(parent, parent._skin) { }
-
-            public override void Enter()
+            sealed protected class IdleState : AState
             {
-                _skin.Idle();
-                ActorInteractable = _actor._canUseSkills = true;
-            }
+                public IdleState(AStates<TActor, TSkin> parent) : base(parent) { }
 
-            public override void Exit()
-            {
-                ActorInteractable = _actor._canUseSkills = false;
-            }
+                public override void Enter()
+                {
+                    Skin.Idle();
+                    Actor.Interactable = Actor._canUseSkills = true;
+                }
 
-            public override void Select() => GameContainer.TriggerBus.TriggerActorSelect(_actor);
-            public override void Unselect(ISelectable newSelectable) => GameContainer.TriggerBus.TriggerUnselect(_actor.Equals(newSelectable));
+                public override void Exit()
+                {
+                    Actor.Interactable = Actor._canUseSkills = false;
+                }
+
+                public override void Select() => GameContainer.TriggerBus.TriggerActorSelect(Actor);
+                public override void Unselect(ISelectable newSelectable) => GameContainer.TriggerBus.TriggerUnselect(Actor.Equals(newSelectable));
+            }
         }
     }
 }

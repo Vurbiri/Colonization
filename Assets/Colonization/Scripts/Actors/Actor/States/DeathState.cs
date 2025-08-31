@@ -4,25 +4,28 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        sealed protected class DeathState : AState<ActorSkin>
+        public abstract partial class AStates<TActor, TSkin>
         {
-            public WaitStateSource<DeathStage> stage;
-
-            public DeathState(Actor parent) : base(parent, parent._skin) { }
-            
-            public override void Enter()
+            sealed protected class DeathState : AState
             {
-                stage = _skin.Death();
+                public WaitStateSource<DeathStage> stage;
 
-                _actor.Removing();
+                public DeathState(AStates<TActor, TSkin> parent) : base(parent) { }
 
-                StartCoroutine(Death_Cn(stage.SetWaitState(DeathStage.SFX)));
-            }
+                public override void Enter()
+                {
+                    stage = Skin.Death();
 
-            IEnumerator Death_Cn(WaitState<DeathStage> wait)
-            {
-                yield return wait;
-                Destroy(_actor.gameObject);
+                    Actor.Removing();
+
+                    StartCoroutine(Death_Cn(stage.SetWaitState(DeathStage.End)));
+                }
+
+                IEnumerator Death_Cn(WaitState<DeathStage> wait)
+                {
+                    yield return wait;
+                    Destroy(Actor.gameObject);
+                }
             }
         }
     }

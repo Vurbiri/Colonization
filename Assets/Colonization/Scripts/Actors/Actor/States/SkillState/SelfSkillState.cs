@@ -6,33 +6,36 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
 	{
-        sealed protected class SelfSkillState : ASkillState
+        public abstract partial class AStates<TActor, TSkin>
         {
-            public SelfSkillState(Actor parent, ReadOnlyArray<HitEffects> effects, int cost, int id) : base(parent, effects, cost, id)
+            sealed protected class SelfSkillState : ASkillState
             {
-            }
-
-            protected override IEnumerator Actions_Cn()
-            {
-                yield return ApplySkill_Cn();
-                ToExit();
-            }
-
-            protected override IEnumerator ApplySkill_Cn()
-            {
-                Pay();
-
-                WaitSignal wait = _skin.Skill(_id, _skin);
-
-                for (int i = 0; i < _countHits; i++)
+                public SelfSkillState(AStates<TActor, TSkin> parent, ReadOnlyArray<HitEffects> effects, int cost, int id) : base(parent, effects, cost, id)
                 {
-                    yield return wait;
-                    _effectsHint[i].Apply(_actor, _actor);
-                    wait.Reset();
                 }
-                yield return wait;
-            }
 
+                protected override IEnumerator Actions_Cn()
+                {
+                    yield return ApplySkill_Cn();
+                    ToExit();
+                }
+
+                protected override IEnumerator ApplySkill_Cn()
+                {
+                    Pay();
+
+                    WaitSignal wait = Skin.Skill(_id, Skin);
+
+                    for (int i = 0; i < _countHits; i++)
+                    {
+                        yield return wait;
+                        _effectsHint[i].Apply(Actor, Actor);
+                        wait.Reset();
+                    }
+                    yield return wait;
+                }
+
+            }
         }
 	}
 }

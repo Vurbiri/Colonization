@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors.UI
 
         public Id<ActorAbilityId> Id => _ability;
 
-        public ValueBar Get(AbilitiesSet<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, PopupWidget3D popup, int orderLevel)
+        public ValueBar Get(ReadOnlyAbilities<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, PopupWidget3D popup, int orderLevel)
         {
             _spriteRenderer.color = colors[_ability];
 

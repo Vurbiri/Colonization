@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Actors.UI
 
         public SpriteRenderer Renderer => _backgroundBar;
 
-        public HPBar Get(AbilitiesSet<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, PopupWidget3D popup, int orderLevel)
+        public HPBar Get(ReadOnlyAbilities<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, PopupWidget3D popup, int orderLevel)
         {
             Vector2 size = new(HPBar.SP_WIDTH, HPBar.SP_HIGHT);
 

@@ -1,18 +1,10 @@
-
 namespace Vurbiri.Colonization.Actors
 {
-    sealed public class Demon : Actor
+    sealed public partial class Demon : Actor
     {
-        public override bool IsAvailableStateMachine => _stateMachine.IsDefaultState;
-
-        public override void AddSpecSkillState(int cost, int value)
+        protected override AStates StatesCreate(ActorSettings settings)
         {
-            
-        }
-
-        public override WaitSignal UseSpecSkill()
-        {
-            return null;
+            return new DemonStates(this, settings);
         }
     }
 }

@@ -45,21 +45,25 @@ namespace Vurbiri.FSM
                 SetStateAndSavePrev(newState);
         }
 
-        public void GetOutState(TState currentState)
+        public bool GetOutState(TState currentState)
         {
-            if (_currentState.Equals(currentState))
+            bool output = _currentState.Equals(currentState);
+            if (output)
             {
                 _block = false;
                 SetStateAndSavePrev(_defaultState);
             }
+            return output;
         }
-        public void GetOutToPrevState(TState currentState)
+        public bool GetOutToPrevState(TState currentState)
         {
-            if (_currentState.Equals(currentState))
+            bool output = _currentState.Equals(currentState);
+            if (output)
             {
                 _block = false;
                 SetStateInternal(_previousState);
             }
+            return output;
         }
 
         public void ToDefaultState()

@@ -71,14 +71,6 @@ namespace Vurbiri.Reactive.Collections
             return index >= 0 & index < _capacity && _values[index].Equals(item);
         }
 
-        public void Dispose()
-        {
-            for (int i = 0; i < _capacity; i++)
-                _values[i]?.Dispose();
-
-            _values = null;
-        }
-
         public IEnumerator<T> GetEnumerator() => new SetEnumerator<T>(_values);
         IEnumerator IEnumerable.GetEnumerator() => new SetEnumerator<T>(_values);
     }

@@ -4,11 +4,10 @@ namespace Vurbiri.Colonization.Actors
 {
     public class DemonSkin : ActorSkin
     {
-        public override ActorSkin Init(Id<PlayerId> owner, Skills skills)
+        public override void Init(Id<PlayerId> owner, Skills skills)
         {
             base.Init(skills, GetComponent<DemonSFX>());
 
-            return this;
         }
     }
 }

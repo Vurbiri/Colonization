@@ -8,119 +8,122 @@ namespace Vurbiri.Colonization.Actors
 
     public abstract partial class Actor
     {
-        sealed protected class MoveState : AActionState<ActorSkin>
+        public abstract partial class AStates<TActor, TSkin>
         {
-            private readonly ScaledMoveUsingLerp _move;
-            private readonly WaitSignal _waitSignal = new();
-            private WaitSignal _waitHexagon;
-            private Hexagon _targetHex;
-            private Coroutine _coroutineAction;
-
-            public MoveState(float speed, Actor parent) : base(parent, parent._skin)
+            sealed protected class MoveState : AActionState
             {
-                _move = new(parent._thisTransform, speed);
-            }
+                private readonly ScaledMoveUsingLerp _move;
+                
+                private WaitSignal _waitHexagon;
+                private Hexagon _targetHex;
+                private Coroutine _coroutine;
 
-            public WaitSignal Signal => _waitSignal;
+                public readonly WaitSignal signal = new();
 
-            public override void Enter()
-            {
-                _waitSignal.Reset();
-
-                if (_isPlayer)
-                    _coroutineAction = StartCoroutine(SelectHexagon_Cn());
-                else
-                    _coroutineAction = StartCoroutine(SelectHexagonAI_Cn());
-            }
-
-            public override void Exit()
-            {
-                if (_coroutineAction != null)
+                public MoveState(float speed, AStates<TActor, TSkin> parent) : base(parent)
                 {
-                    StopCoroutine(_coroutineAction);
-                    _coroutineAction = null;
+                    _move = new(Actor._thisTransform, speed);
                 }
 
-                _move.Skip();
-
-                _waitHexagon = null;
-                _targetHex = null;
-
-                _waitSignal.Send();
-            }
-
-            public override void Unselect(ISelectable newSelectable)
-            {
-                if (_waitHexagon == null)
-                    return;
-
-                _targetHex = newSelectable as Hexagon;
-                _waitHexagon.Send();
-            }
-
-            private void ToExit()
-            {
-                _coroutineAction = null;
-                GetOutOfThisState();
-            }
-
-            private IEnumerator SelectHexagon_Cn()
-            {
-                List<Hexagon> empty = new(HEX.SIDES);
-                foreach (var hex in ActorHex.Neighbors)
-                    if (hex.TrySetSelectableFree())
-                        empty.Add(hex);
-
-                if (empty.Count == 0)
+                public override void Enter()
                 {
+                    signal.Reset();
+
+                    if (_isPerson)
+                        _coroutine = StartCoroutine(PersonSelectHexagon_Cn());
+                    else
+                        _coroutine = StartCoroutine(AISelectHexagon_Cn());
+                }
+
+                public override void Exit()
+                {
+                    if (_coroutine != null)
+                    {
+                        StopCoroutine(_coroutine);
+                        _coroutine = null;
+                    }
+
+                    _move.Skip();
+
+                    _waitHexagon = null;
+                    _targetHex = null;
+
+                    signal.Send();
+                }
+
+                public override void Unselect(ISelectable newSelectable)
+                {
+                    if (_waitHexagon == null)
+                        return;
+
+                    _targetHex = newSelectable as Hexagon;
+                    _waitHexagon.Send();
+                }
+
+                private void ToExit()
+                {
+                    _coroutine = null;
+                    GetOutOfThisState();
+                }
+
+                private IEnumerator PersonSelectHexagon_Cn()
+                {
+                    List<Hexagon> empty = new(HEX.SIDES);
+                    foreach (var hex in CurrentHex.Neighbors)
+                        if (hex.TrySetSelectableFree())
+                            empty.Add(hex);
+
+                    if (empty.Count == 0)
+                    {
+                        ToExit();
+                        yield break;
+                    }
+
+                    IsCancel.True();
+                    yield return _waitHexagon = new();
+                    IsCancel.False();
+
+                    for (int i = empty.Count - 1; i >= 0; i--)
+                        empty[i].SetUnselectable();
+
+                    if (_targetHex == null)
+                    {
+                        ToExit();
+                        yield break;
+                    }
+
+                    _coroutine = StartCoroutine(Move_Cn());
+                }
+
+                private IEnumerator AISelectHexagon_Cn()
+                {
+                    yield return _waitHexagon = new();
+
+                    if (_targetHex == null)
+                    {
+                        ToExit();
+                        yield break;
+                    }
+
+                    _coroutine = StartCoroutine(Move_Cn());
+                }
+
+                private IEnumerator Move_Cn()
+                {
+                    var currentHex = CurrentHex;
+
+                    CurrentHex.ExitActor();
+                    CurrentHex = _targetHex;
+
+                    Moving.Off(); Skin.Move();
+
+                    Rotation = ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
+                    yield return _move.Run(currentHex.Position, _targetHex.Position);
+
+                    CurrentHex.EnterActor(Actor);
+
                     ToExit();
-                    yield break;
                 }
-
-                IsCancel.True();
-                yield return _waitHexagon = new();
-                IsCancel.False();
-
-                foreach (var hex in empty)
-                    hex.SetUnselectable();
-
-                if (_targetHex == null)
-                {
-                    ToExit(); 
-                    yield break;
-                }
-
-                _coroutineAction = StartCoroutine(Move_Cn());
-            }
-
-            private IEnumerator SelectHexagonAI_Cn()
-            {
-                yield return _waitHexagon = new();
-
-                if (_targetHex == null)
-                {
-                    ToExit();
-                    yield break;
-                }
-
-                _coroutineAction = StartCoroutine(Move_Cn());
-            }
-
-            private IEnumerator Move_Cn()
-            {
-                var currentHex = ActorHex;
-
-                ActorHex.ExitActor();
-                ActorHex = _targetHex;
-
-                Moving.Off(); _skin.Move();
-
-                ActorRotation = ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
-                yield return _move.Run(currentHex.Position, _targetHex.Position);
-
-                ActorHex.EnterActor(_actor);
-
-                ToExit();
             }
         }
     }

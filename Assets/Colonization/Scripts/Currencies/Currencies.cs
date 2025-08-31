@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         private Currencies(ACurrencies other, Ability maxValueMain, Ability maxValueBlood) : base(other, maxValueMain, maxValueBlood) { }
         #endregion
 
-        public static Currencies Create(AbilitiesSet<HumanAbilityId> abilities, CurrenciesLite resDefault, HumanLoadData loadData)
+        public static Currencies Create(ReadOnlyAbilities<HumanAbilityId> abilities, CurrenciesLite resDefault, HumanLoadData loadData)
         {
             if (loadData.isLoaded & loadData.resources != null) 
                 return new(loadData.resources, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);

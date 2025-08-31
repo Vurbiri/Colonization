@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Actors.UI
         private readonly SpriteRenderer _moveSprite;
         private readonly Unsubscription _unsubscriber;
 
-        public MoveBar(SpriteRenderer moveSprite, AbilitiesSet<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, int orderLevel)
+        public MoveBar(SpriteRenderer moveSprite, ReadOnlyAbilities<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, int orderLevel)
         {
             moveSprite.sortingOrder += orderLevel;
             moveSprite.color = colors[ActorAbilityId.IsMove];

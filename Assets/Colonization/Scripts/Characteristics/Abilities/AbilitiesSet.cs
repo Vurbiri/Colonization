@@ -1,20 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public class AbilitiesSet<TId> : IReadOnlyAbilities<TId> where TId : AbilityId<TId>
+    public class ReadOnlyAbilities<TId> : IReadOnlyList<Ability> where TId : AbilityId<TId>
     {
-        private readonly IdArray<TId, AAbility<TId>> _abilities = new();
+        protected readonly IdArray<TId, AAbility<TId>> _abilities = new();
 
         public Ability this[int index] => _abilities[index];
         public Ability this[Id<TId> id] => _abilities[id];
 
         public int Count => AbilityId<TId>.Count;
 
-        public AbilitiesSet(IdArray<TId, int> states, IReactive<Perk> perks)
+        public bool IsGreater(Id<TId> stateId, int value) => _abilities[stateId].Value > value;
+        public bool IsGreaterOrEqual(Id<TId> stateId, int value) => _abilities[stateId].Value >= value;
+        public bool IsLess(Id<TId> stateId, int value) => _abilities[stateId].Value < value;
+        public bool IsLessOrEqual(Id<TId> stateId, int value) => _abilities[stateId].Value <= value;
+
+        public bool IsTrue(Id<TId> stateId) => _abilities[stateId].IsValue;
+
+        public IEnumerator<Ability> GetEnumerator() => _abilities.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _abilities.GetEnumerator();
+    }
+
+
+    public class AbilitiesSet<TId> : ReadOnlyAbilities<TId> where TId : AbilityId<TId>
+    {
+        public AbilitiesSet(IdArray<TId, int> states, PerkTree perks)
         {
             for (int i = 0; i < AbilityId<TId>.Count; i++)
                 _abilities[i] = new Ability<TId>(i, states[i]);
@@ -41,23 +54,8 @@ namespace Vurbiri.Colonization.Characteristics
             return ReplaceTo(id, new SubAbility<TId>(_abilities[id], _abilities[max], _abilities[restore]));
         }
 
-        public bool IsGreater(Id<TId> stateId, int value) => _abilities[stateId].Value > value;
-        public bool IsGreaterOrEqual(Id<TId> stateId, int value) => _abilities[stateId].Value >= value;
-        public bool IsLess(Id<TId> stateId, int value) => _abilities[stateId].Value < value;
-        public bool IsLessOrEqual(Id<TId> stateId, int value) => _abilities[stateId].Value <= value;
-
-        public bool IsTrue(Id<TId> stateId) => _abilities[stateId].IsValue;
-
         public int AddPerk(IPerk perk) => _abilities[perk.TargetAbility].AddModifier(perk);
         public int RemovePerk(IPerk perk) => _abilities[perk.TargetAbility].RemoveModifier(perk);
-
-        public IEnumerator<Ability> GetEnumerator()
-        {
-            for (int i = 0; i < AbilityId<TId>.Count; i++)
-                yield return _abilities[i];
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private T ReplaceTo<T>(Id<TId> id, T newAbility) where T : AAbility<TId>
         {

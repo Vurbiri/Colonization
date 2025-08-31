@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Actors.UI
 
         private int _currentValue = int.MaxValue >> ActorAbilityId.SHIFT_ABILITY, _maxValue = int.MaxValue;
 
-        public HPBar(SpriteRenderer barSprite, TextMeshPro maxValue, TextMeshPro currentValue, PopupWidget3D popup, Sprite sprite, AbilitiesSet<ActorAbilityId> abilities)
+        public HPBar(SpriteRenderer barSprite, TextMeshPro maxValue, TextMeshPro currentValue, PopupWidget3D popup, Sprite sprite, ReadOnlyAbilities<ActorAbilityId> abilities)
         {
             _barSprite = barSprite;
             _barTransform = barSprite.transform;

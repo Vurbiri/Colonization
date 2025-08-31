@@ -1,9 +1,10 @@
 using Newtonsoft.Json;
+using System;
 
 namespace Vurbiri.Reactive.Collections
 {
     [JsonArray]
-    public class ReactiveSet<T> : ReadOnlyReactiveSet<T> where T : class, IReactiveItem<T>
+    public class ReactiveSet<T> : ReadOnlyReactiveSet<T>, IDisposable where T : class, IReactiveItem<T>
     {
         public ReactiveSet()
         {
@@ -66,6 +67,14 @@ namespace Vurbiri.Reactive.Collections
             }
 
             _subscriber.Invoke(item, operation);
+        }
+
+        public void Dispose()
+        {
+            for (int i = 0; i < _capacity; i++)
+                _values[i]?.Dispose();
+
+            _values = null;
         }
     }
 }

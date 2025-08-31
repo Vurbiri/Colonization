@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Actors.UI
         [SerializeField] private TextMeshPro _maxValueTMP;
         [SerializeField] private TextMeshPro _currentValueTMP;
 
-        public APBar Get(AbilitiesSet<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, int orderLevel)
+        public APBar Get(ReadOnlyAbilities<ActorAbilityId> abilities, ReadOnlyIdArray<ActorAbilityId, Color> colors, int orderLevel)
         {
             _maxValueTMP.sortingOrder += orderLevel;
             _currentValueTMP.sortingOrder += orderLevel;

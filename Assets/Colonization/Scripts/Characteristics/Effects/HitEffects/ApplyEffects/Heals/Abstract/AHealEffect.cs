@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Characteristics
             _usedModifier = new(value);
         }
 
-        protected void Init(IReadOnlyAbilities<ActorAbilityId> self)
+        protected void Init(ReadOnlyAbilities<ActorAbilityId> self)
         {
             _value = _usedModifier.Apply(self[ActorAbilityId.Attack].Value);
         }

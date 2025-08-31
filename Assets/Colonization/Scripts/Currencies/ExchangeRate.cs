@@ -16,19 +16,19 @@ namespace Vurbiri.Colonization
         public int this[int index] => _exchange[index];
         public int this[Id<PlayerId> id] => _exchange[id.Value];
 
-        private ExchangeRate(AbilitiesSet<HumanAbilityId> abilities)
+        private ExchangeRate(ReadOnlyAbilities<HumanAbilityId> abilities)
         {
             SubscribeToAbilities(abilities);
             _exchange = new();
             Update();
         }
-        private ExchangeRate(int[] data, AbilitiesSet<HumanAbilityId> abilities)
+        private ExchangeRate(int[] data, ReadOnlyAbilities<HumanAbilityId> abilities)
         {
             SubscribeToAbilities(abilities);
             _exchange = new(data);
         }
 
-        public static ExchangeRate Create(AbilitiesSet<HumanAbilityId> abilities, HumanLoadData loadData)
+        public static ExchangeRate Create(ReadOnlyAbilities<HumanAbilityId> abilities, HumanLoadData loadData)
         {
             if (loadData.isLoaded & loadData.exchange != null)
                 return new(loadData.exchange, abilities);
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
             _unsubscribers.Unsubscribe();
         }
 
-        private void SubscribeToAbilities(AbilitiesSet<HumanAbilityId> abilities)
+        private void SubscribeToAbilities(ReadOnlyAbilities<HumanAbilityId> abilities)
         {
             _unsubscribers += abilities[HumanAbilityId.ExchangeRate].Subscribe(v => _rate = v);
             _unsubscribers += abilities[HumanAbilityId.ExchangeSaleChance].Subscribe(v => _chance.Value += v);

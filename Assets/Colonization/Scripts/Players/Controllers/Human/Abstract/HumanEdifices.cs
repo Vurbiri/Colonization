@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         protected class Edifices
         {
-            private readonly AbilitiesSet<HumanAbilityId> _abilities;
+            private readonly ReadOnlyAbilities<HumanAbilityId> _abilities;
             private readonly Ability _shrinePassiveProfit, _shrineProfit, _portsProfit, _compensationRes;
 
             public readonly IdArray<EdificeGroupId, ReactiveList<Crossroad>> edifices = new();
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            public Edifices(AbilitiesSet<HumanAbilityId> abilities)
+            public Edifices(ReadOnlyAbilities<HumanAbilityId> abilities)
             {
                 _abilities = abilities;
                 _shrinePassiveProfit = _abilities[HumanAbilityId.ShrinePassiveProfit];

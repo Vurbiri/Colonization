@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.UI
         private void OnClick()
         {
             _parent.Close();
-            _currentActor.UseSkill(_idSkill);
+            _currentActor.Action.UseSkill(_idSkill);
         }
     }
 }

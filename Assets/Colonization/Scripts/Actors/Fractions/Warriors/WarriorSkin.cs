@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
     {
         private BlockState _blockState;
 
-        public override ActorSkin Init(Id<PlayerId> owner, Skills skills)
+        public override void Init(Id<PlayerId> owner, Skills skills)
         {
             GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = GameContainer.Materials[owner].materialWarriors;
 
@@ -17,8 +17,6 @@ namespace Vurbiri.Colonization.Actors
             base.Init(skills, sfx);
 
             _blockState = new("bBlock", this, sfx);
-
-            return this;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] 

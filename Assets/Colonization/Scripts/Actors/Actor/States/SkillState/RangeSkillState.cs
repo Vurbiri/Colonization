@@ -6,30 +6,30 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
 	{
-        sealed protected class RangeSkillState : ATargetSkillState
+        public abstract partial class AStates<TActor, TSkin>
         {
-            public RangeSkillState(Actor parent, TargetOfSkill targetActor, ReadOnlyArray<HitEffects> effects, int cost, int id) :
-                base(parent, targetActor, effects, cost, id)
+            sealed protected class RangeSkillState : ATargetSkillState
             {
-
-            }
-
-            protected override IEnumerator Actions_Cn()
-            {
-                bool isTarget = false;
-                if (_isPlayer)
-                    yield return SelectActor_Cn(b => isTarget = b);
-                else
-                    yield return SelectActorAI_Cn(b => isTarget = b);
-
-                if (!isTarget)
+                public RangeSkillState(AStates<TActor, TSkin> parent, TargetOfSkill targetActor, ReadOnlyArray<HitEffects> effects, int cost, int id) :
+                    base(parent, targetActor, effects, cost, id)
                 {
-                    ToExit(); yield break;
+
                 }
 
-                yield return ApplySkill_Cn();
+                protected override IEnumerator Actions_Cn()
+                {
+                    yield return SelectActor_Cn();
 
-                ToExit();
+                    if (_target == null)
+                    {
+                        ToExit();
+                        yield break;
+                    }
+
+                    yield return ApplySkill_Cn();
+
+                    ToExit();
+                }
             }
         }
 	}

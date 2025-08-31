@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
 
         protected readonly SpellBook _spellBook;
 
-        protected readonly AbilitiesSet<HumanAbilityId> _abilities;
+        protected readonly ReadOnlyAbilities<HumanAbilityId> _abilities;
         protected readonly Artefact _artefact;
         protected readonly PerkTree _perks;
 

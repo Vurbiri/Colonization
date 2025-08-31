@@ -30,9 +30,9 @@ namespace Vurbiri.Colonization.Actors
                 waitState.SetState(Actor.DeathStage.Start);
                 yield return _waitStartAnimation;
                 yield return _waitEndAnimation;
-                waitState.SetState(Actor.DeathStage.Animation);
+                waitState.SetState(Actor.DeathStage.EndAnimation);
                 yield return SFX.Death_Cn();
-                waitState.SetState(Actor.DeathStage.SFX);
+                waitState.SetState(Actor.DeathStage.End);
             }
 
             private void OnEventEnter()

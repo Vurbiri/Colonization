@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
         [ReadOnly, SerializeField] private float _durationDeath;
 
         #region CONST
-        private const string B_IDLE = "bIdle", B_MOVE = "bMove", B_RUN = "bRun", B_DEATH = "bDeath", B_SPEC = "bSpecial";
+        private const string B_IDLE = "bIdle", B_MOVE = "bWalk", B_RUN = "bRun", B_DEATH = "bDeath", B_SPEC = "bWalk_Spec";
         private static readonly string[] B_SKILLS = { "bSkill_0", "bSkill_1", "bSkill_2", "bSkill_3" };
         private const string T_REACT = "tReact";
         #endregion
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.Actors
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }
 
-        public abstract ActorSkin Init(Id<PlayerId> owner, Skills skills);
+        public abstract void Init(Id<PlayerId> owner, Skills skills);
 
         protected void Init(Skills skills, ActorSFX sfx)
         {
@@ -95,12 +95,29 @@ namespace Vurbiri.Colonization.Actors
 
 
 #if UNITY_EDITOR
+
+        private UnityEditor.Animations.AnimatorState _state;
+        
         private void OnValidate()
         {
             this.SetComponent(ref _animator);
 
             if (_animator != null && _animator.runtimeAnimatorController != null)
-                _durationDeath = ((AnimatorOverrideController)_animator.runtimeAnimatorController)["A_Death"].length * 0.95f;
+            {
+                var overrideController = (AnimatorOverrideController)_animator.runtimeAnimatorController;
+                if(_state == null) _state = GetState(overrideController.runtimeAnimatorController);
+                _durationDeath = overrideController["A_Death"].length * _state.speed * 0.975f;
+
+                // Local
+                static UnityEditor.Animations.AnimatorState GetState(RuntimeAnimatorController controller)
+                {
+                    foreach(var cState in ((UnityEditor.Animations.AnimatorController)controller).layers[0].stateMachine.states)
+                        if(cState.state.name == "Death")
+                            return cState.state;
+
+                    return new();
+                }
+            }
         }
 
         //public void OnDrawGizmosSelected()

@@ -7,24 +7,23 @@ namespace Vurbiri.Colonization.Actors
 {
     public abstract partial class Actor
     {
-        protected abstract class AState<T> : ASelectableState where T : ActorSkin
+        public abstract partial class AStates<TActor, TSkin>
         {
-            protected readonly Actor _actor;
-            protected readonly T _skin;
-
-            protected bool ActorInteractable
+            protected abstract class AState : ASelectableState
             {
-                [Impl(256)] set => _actor.Interactable = value;
-            }
+                protected readonly AStates<TActor, TSkin> _parent;
 
-            public AState(Actor parent, T skin) : base(parent._stateMachine)
-            {
-                _actor = parent;
-                _skin = skin;
-            }
+                protected TActor Actor { [Impl(256)] get => _parent._actor; }
+                protected TSkin Skin { [Impl(256)] get => _parent._skin; }
+   
+                public AState(AStates<TActor, TSkin> parent) : base(parent._stateMachine)
+                {
+                    _parent = parent;
+                }
 
-            [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => _actor.StartCoroutine(routine);
-            [Impl(256)] protected void StopCoroutine(Coroutine routine) => _actor.StopCoroutine(routine);
+                [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => _parent._actor.StartCoroutine(routine);
+                [Impl(256)] protected void StopCoroutine(Coroutine routine) => _parent._actor.StopCoroutine(routine);
+            }
         }
     }
 }
