@@ -1,3 +1,5 @@
+using Vurbiri.Colonization.Characteristics;
+
 namespace Vurbiri.Colonization.Actors
 {
     public partial class Demon
@@ -16,7 +18,7 @@ namespace Vurbiri.Colonization.Actors
                 return null;
             }
 
-            public override void AddSpecSkillState(int cost, int value) { }
+            public override void AddSpecSkillState(SpecSkillSettings specSkill) { }
 
         }
     }

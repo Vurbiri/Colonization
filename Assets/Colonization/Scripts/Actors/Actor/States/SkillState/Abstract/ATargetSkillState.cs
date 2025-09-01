@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using static Vurbiri.Colonization.CONST;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
@@ -33,11 +32,9 @@ namespace Vurbiri.Colonization.Actors
                 protected Id<PlayerId> Owner { [Impl(256)] get => _parent._actor._owner; }
                 #endregion
 
-                protected ATargetSkillState(AStates<TActor, TSkin> parent, TargetOfSkill targetActor, ReadOnlyArray<HitEffects> effects, int cost, int id) :
-                    base(parent, effects, cost, id)
+                protected ATargetSkillState(AStates<TActor, TSkin> parent, SkillSettings skill, int id) : base(parent, skill, id)
                 {
-
-                    _relationTarget = targetActor.ToRelation();
+                    _relationTarget = skill.Target.ToRelation();
                     Debug.Log("удалить _relationTarget = Relation.Friend; и _relationRealTarget");
                     _relationRealTarget = _relationTarget;
                     _relationTarget = Relation.Friend;

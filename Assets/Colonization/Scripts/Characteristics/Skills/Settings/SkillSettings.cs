@@ -1,30 +1,14 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
-using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Characteristics
 {
     [System.Serializable]
-    public class SkillSettings
+    public class SkillSettings : ASkillSettings
     {
-        [SerializeField] private TargetOfSkill _target;
-        [SerializeField] private float _range;
-        [SerializeField] private float _distance;
-        [SerializeField] private int _cost;
-        [SerializeField] private HitEffectsSettings[] _effectsHitsSettings;
-        [SerializeField] private SkillUI.Settings _ui;
-
-        [NonSerialized] private ReadOnlyArray<HitEffects> _hitEffects;
-
-        public TargetOfSkill Target { [Impl(256)] get => _target; }
-        public float Range { [Impl(256)] get => _range; }
-        public float Distance { [Impl(256)] get => _distance; }
-        public int Cost { [Impl(256)] get => _cost; }
-        public ReadOnlyArray<HitEffects> HitEffects { [Impl(256)] get => _hitEffects; }
+        [SerializeField] protected SkillUI.Settings _ui;
 
         public SkillUI Init(ProjectColors colors, SeparatorEffectUI separator, int actorType, int actorId, int skillId)
         {
@@ -55,14 +39,11 @@ namespace Vurbiri.Colonization.Characteristics
             _ui = null; 
             _effectsHitsSettings = null;
 #endif
-
             return ui;
         }
 
 #if UNITY_EDITOR
-        public AnimationClipSettingsScriptable clipSettings_ed;
         public HitSFXName hitSFXName_ed;
-        public int typeActor_ed;
 #endif
     }
 }

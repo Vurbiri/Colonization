@@ -35,7 +35,6 @@ namespace Vurbiri.Colonization.UI
             _textAP = localization.GetFormatText(FILE, AP_KEY, _cost);
         }
 
-
         public override void Dispose()
         {
             Localization.Instance.Unsubscribe(SetTexts);

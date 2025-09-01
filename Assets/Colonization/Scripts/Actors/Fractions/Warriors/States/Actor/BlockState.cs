@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.Characteristics;
+using static Vurbiri.Colonization.Characteristics.ReactiveEffectsFactory;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -18,10 +19,10 @@ namespace Vurbiri.Colonization.Actors
                     get => ActorEffects.Contains(_code);
                 }
 
-                public BlockState(int cost, int value, WarriorStates parent) : base(parent, cost)
+                public BlockState(WarriorStates parent, SpecSkillSettings specSkill) : base(parent, specSkill.Cost)
                 {
-                    _code = new(parent._actor.TypeId, parent._actor.Id, ReactiveEffectsFactory.BLOCK_SKILL_ID, ReactiveEffectsFactory.BLOCK_EFFECT_ID);
-                    _value = value;
+                    _code = new(parent._actor.TypeId, parent._actor.Id, SPEC_SKILL_ID, 0);
+                    _value = specSkill.Value;
                 }
 
                 public override void Enter()
@@ -29,7 +30,7 @@ namespace Vurbiri.Colonization.Actors
                     if (!IsApplied)
                     {
                         Skin.Block(true);
-                        ActorEffects.Add(ReactiveEffectsFactory.CreateBlockEffect(_code, _value));
+                        ActorEffects.Add(new(_code, ActorAbilityId.Defense, TypeModifierId.Addition, _value, BLOCK_DURATION, BLOCK_SKIP));
                         Pay();
                     }
 

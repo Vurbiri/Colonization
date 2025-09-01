@@ -1,5 +1,4 @@
 using System.Collections;
-using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
@@ -10,11 +9,7 @@ namespace Vurbiri.Colonization.Actors
         {
             sealed protected class RangeSkillState : ATargetSkillState
             {
-                public RangeSkillState(AStates<TActor, TSkin> parent, TargetOfSkill targetActor, ReadOnlyArray<HitEffects> effects, int cost, int id) :
-                    base(parent, targetActor, effects, cost, id)
-                {
-
-                }
+                public RangeSkillState(AStates<TActor, TSkin> parent, SkillSettings skill, int id) : base(parent, skill, id) { }
 
                 protected override IEnumerator Actions_Cn()
                 {

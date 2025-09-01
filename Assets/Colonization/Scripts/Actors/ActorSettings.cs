@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.Actors
         {
             if (_prefabActorSkin)
             {
-                _skills.OnValidate(TypeId);
+                _skills.OnValidate(TypeId, _id);
             }
             else
             {

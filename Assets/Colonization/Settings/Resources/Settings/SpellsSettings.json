@@ -9,7 +9,7 @@
   "wrathSFX": "WrathOfIsland",
   "wrathBasa": 15,
   "wrathPerRes": 5,
-  "wrathPierce": 5,
+  "wrathPierce": 25,
   "sacrificeKnifeSFX": "SacrificeVictim",
   "sacrificeTargetSFX": "SacrificeTarget",
   "sacrificeBloodCost": 2,

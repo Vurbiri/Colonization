@@ -84,7 +84,8 @@ namespace Vurbiri.Colonization.Actors
             [Impl(256)] sealed public override bool ToTarget() => _stateMachine.SetState(_targetState, true);
             [Impl(256)] sealed public override bool FromTarget() => _deathState == null && _stateMachine.GetOutToPrevState(_targetState);
 
-            public abstract void AddSpecSkillState(int cost, int value);
+            public abstract void AddSpecSkillState(SpecSkillSettings specSkill);
+
             [Impl(256)] public void AddMoveState(float speed) => _moveState = new(speed, this);
             [Impl(256)] public void SetCountState(int count) => _skillState = new ASkillState[count];
             [Impl(256)] public void AddSkillState(SkillSettings skill, float speedRun, int id) => _skillState[id] = ASkillState.Create(skill, speedRun, id, this);

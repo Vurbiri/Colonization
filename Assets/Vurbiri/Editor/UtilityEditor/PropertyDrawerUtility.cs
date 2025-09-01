@@ -55,6 +55,11 @@ namespace VurbiriEditor
             _position.y += _height;
             return PropertyField(_position, _mainProperty.FindPropertyRelative(nameChildren), includeChildren);
         }
+        protected bool DrawProperty(string nameChildren, string name, bool includeChildren = false)
+        {
+            _position.y += _height;
+            return PropertyField(_position, _mainProperty.FindPropertyRelative(nameChildren), new(name), includeChildren);
+        }
         #endregion
         //================================================================
         #region Bool
@@ -421,6 +426,13 @@ namespace VurbiriEditor
         { return DrawObject<T>(parent.FindPropertyRelative(nameChildren), isName); }
         protected T DrawObjectRelative<T>(SerializedProperty parent, string nameChildren, string displayName) where T : UnityEngine.Object
         { return DrawObject<T>(parent.FindPropertyRelative(nameChildren), displayName); }
+        //----------------------------------------------------------------
+        #region GetObject
+        protected T GetObject<T>(string nameChildren) where T : UnityEngine.Object
+        {
+            return _mainProperty.FindPropertyRelative(nameChildren).objectReferenceValue as T;
+        }
+        #endregion
         #endregion
         //================================================================
         #region DrawLabel

@@ -1,5 +1,4 @@
 using System.Collections;
-using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
@@ -10,9 +9,7 @@ namespace Vurbiri.Colonization.Actors
         {
             sealed protected class SelfSkillState : ASkillState
             {
-                public SelfSkillState(AStates<TActor, TSkin> parent, ReadOnlyArray<HitEffects> effects, int cost, int id) : base(parent, effects, cost, id)
-                {
-                }
+                public SelfSkillState(AStates<TActor, TSkin> parent, SkillSettings skill, int id) : base(parent, skill, id) { }
 
                 protected override IEnumerator Actions_Cn()
                 {

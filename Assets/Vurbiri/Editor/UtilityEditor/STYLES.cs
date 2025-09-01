@@ -7,6 +7,7 @@ namespace VurbiriEditor
 	{
         public static readonly GUIStyle H1;
         public static readonly GUIStyle H2;
+        public static readonly GUIStyle H3;
         public static readonly GUIStyle borderLight;
         public static readonly GUIStyle borderDark;
         public static readonly GUIStyle flatButton;
@@ -46,6 +47,13 @@ namespace VurbiriEditor
                 name = "borderDark"
             };
             borderDark.normal.background = Border(new Color32(33, 33, 33, 255), new Color32(52, 52, 52, 255));
+
+            H3 = new(borderDark)
+            {
+                name = "H3",
+                alignment = TextAnchor.MiddleCenter,
+            };
+            H3.normal.textColor = new(180, 180, 180);
 
             flatButton = new()
             {

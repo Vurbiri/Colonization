@@ -18,7 +18,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         #region Consts
         private const string NAME_POSITIVE = "Positive Effect {0}", NAME_NEGATIVE = "Negative Effect {0}", NAME_VOID ="Void Effect {0}";
         private const string P_IS_SELF = "_isSelf", P_TARGET_ABILITY = "_targetAbility", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_DUR = "_duration";
-        private const string P_USED_ATTACK = "_useAttack", P_HOLY = "_holy", P_PIERCE = "_pierce", P_REFLECT = "_reflectValue";
+        private const string P_USED_ATTACK = "_useAttack", P_HOLY = "_holy", P_PIERCE = "_pierce", P_REFLECT = "_reflect";
         private const string P_DESC_KEY = "_descKey";
         private const string P_PARENT_TARGET = "_parentTarget_ed", P_PARENT_TYPE = "_isWarrior_ed";
 

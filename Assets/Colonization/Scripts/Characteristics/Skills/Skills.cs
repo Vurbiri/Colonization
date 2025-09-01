@@ -11,8 +11,7 @@ namespace Vurbiri.Colonization.Characteristics
     {
         [SerializeField] private float _speedWalk; // = 0.45f;
         [SerializeField] private float _speedRun; // = 0.65f;
-        [SerializeField] private int _blockCost; // = 2;
-        [SerializeField] private int _blockValue; // = 10;
+        [SerializeField] private SpecSkillSettings _specSkillSettings;
         [SerializeField] private SkillSettings[] _skillsSettings;
 
         [SerializeField] private ReadOnlyArray<string> _hitSfxNames;
@@ -39,19 +38,15 @@ namespace Vurbiri.Colonization.Characteristics
 
             _skillsUI = new(skillsUI);
 
-            if (actorType == ActorTypeId.Warrior)
-                _specSkillUI = new BlockUI(colors, separator, _blockCost, _blockValue);
-            else
-                _specSkillUI = new SpecSkillUI(colors, separator);
+            _specSkillUI = _specSkillSettings.Init(colors, separator, actorType, actorId);
         }
 
         public void CreateStates<TActor, TSkin>(Actor.AStates<TActor, TSkin> states) where TActor : Actor where TSkin : ActorSkin
         {
             states.AddMoveState(_speedWalk);
-            states.AddSpecSkillState(_blockCost, _blockValue << ActorAbilityId.SHIFT_ABILITY);
+            states.AddSpecSkillState(_specSkillSettings);
 
             int countSkills = _skillsSettings.Length;
-
             states.SetCountState(countSkills);
             for (int i = 0; i < countSkills; i++)
                 states.AddSkillState(_skillsSettings[i], _speedRun, i);
@@ -75,11 +70,10 @@ namespace Vurbiri.Colonization.Characteristics
 
         [SerializeField] private int _swapA = -1;
         [SerializeField] private int _swapB = -1;
-        [SerializeField] private string _specSkillName_ed = "Block";
 
-        public void OnValidate(int type)
+        public void OnValidate(int type, int id)
         {
-            _specSkillName_ed = type == ActorTypeId.Warrior ? "Block" : "Spec Skill";
+            _specSkillSettings.OnValidate(type, id);
 
             if (_skillsSettings.Length > COUNT_SKILLS_MAX)
                 Array.Resize(ref _skillsSettings, COUNT_SKILLS_MAX);
@@ -105,7 +99,10 @@ namespace Vurbiri.Colonization.Characteristics
         public void UpdateAnimation_Ed(AnimatorOverrideController animator)
         {
             if (animator == null) return;
-            
+
+            _specSkillSettings.UpdateAnimation_Ed(animator);
+
+
             int countSkills = _skillsSettings.Length;
             if (_swapA != _swapB && _swapA >= 0 & _swapB >= 0 && _swapA < countSkills & _swapB < countSkills)
                 (_skillsSettings[_swapA], _skillsSettings[_swapB]) = (_skillsSettings[_swapB], _skillsSettings[_swapA]);

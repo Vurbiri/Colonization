@@ -1,3 +1,5 @@
+using Vurbiri.Colonization.Characteristics;
+
 namespace Vurbiri.Colonization.Actors
 {
     public partial class Warrior
@@ -15,7 +17,7 @@ namespace Vurbiri.Colonization.Actors
                 Block(); return null;
             }
 
-            public override void AddSpecSkillState(int cost, int value) => _blockState = new(cost, value, this);
+            public override void AddSpecSkillState(SpecSkillSettings specSkill) => _blockState = new(this, specSkill);
 
             public override void Load()
             {

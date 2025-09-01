@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Actors
             }
         }
 
-        private AnimationTime() { }
+        public AnimationTime() { }
 
 
 #if UNITY_EDITOR

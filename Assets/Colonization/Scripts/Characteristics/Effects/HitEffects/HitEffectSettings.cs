@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private int _value;
         [SerializeField] private int _pierce;
         [SerializeField] private int _holy;
-        [SerializeField] private int _reflectValue;
+        [SerializeField] private int _reflect;
         [SerializeField] private string _descKey;
 
         public bool IsSelf => _isSelf;
@@ -27,21 +27,21 @@ namespace Vurbiri.Colonization.Characteristics
 
             if (_useAttack)
             {
-                bool isReflect = _reflectValue > 0;
+                bool isReflect = _reflect > 0;
 
                 if (_value < 0)
                 {
                     if (_holy > 0)
-                        output = isReflect ? new ReflectHolyAttackEffect(_value, _holy, _pierce, _reflectValue) : new HolyAttackEffect(_value, _holy, _pierce);
+                        output = isReflect ? new ReflectHolyAttackEffect(_value, _holy, _pierce, _reflect) : new HolyAttackEffect(_value, _holy, _pierce);
                     else
-                        output = isReflect ? new ReflectAttackEffect(_value, _pierce, _reflectValue) : new AttackEffect(_value, _pierce);
+                        output = isReflect ? new ReflectAttackEffect(_value, _pierce, _reflect) : new AttackEffect(_value, _pierce);
                 }
                 else
                 {
                     if (_isSelf)
                         output = new SelfHealEffect(_value);
                     else
-                        output = isReflect ? new ReflectHealEffect(_value, _reflectValue) : new TargetHealEffect(_value);
+                        output = isReflect ? new ReflectHealEffect(_value, _reflect) : new TargetHealEffect(_value);
                 }
             }
             else if (_duration > 0)
@@ -69,10 +69,10 @@ namespace Vurbiri.Colonization.Characteristics
             {
                 AEffectUI reflect;
 
-                if (_reflectValue <= 0)
+                if (_reflect <= 0)
                     reflect = EffectUI.Empty;
                 else
-                    reflect = _value > 0 ? new ValueEffectUI(REFLECT_MINUS, _reflectValue, colors.TextNegativeTag) : new ValueEffectUI(REFLECT_PLUS, _reflectValue, colors.TextPositiveTag);
+                    reflect = _value > 0 ? new ValueEffectUI(REFLECT_MINUS, _reflect, colors.TextNegativeTag) : new ValueEffectUI(REFLECT_PLUS, _reflect, colors.TextPositiveTag);
 
                 hexColor = colors.TextDefaultTag;
                 value = _value.ToString("#;#;0");
@@ -128,8 +128,10 @@ namespace Vurbiri.Colonization.Characteristics
         }
 
 #if UNITY_EDITOR
+#pragma warning disable 414
         [SerializeField] private TargetOfSkill _parentTarget_ed;
         [SerializeField] private bool _isWarrior_ed;
+#pragma warning restore
 #endif
     }
 }

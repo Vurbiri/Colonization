@@ -20,25 +20,26 @@ namespace Vurbiri.Colonization.Actors
 
                 public readonly WaitSignal signal = new();
 
-                public ASkillState(AStates<TActor, TSkin> parent, ReadOnlyArray<HitEffects> effects, int cost, int id) : base(parent, cost)
+                public ASkillState(AStates<TActor, TSkin> parent, SkillSettings skill, int id) : base(parent, skill.Cost)
                 {
                     _id = id;
-                    _effectsHint = effects;
+                    _effectsHint = skill.HitEffects;
+
                     _countHits = _effectsHint.Count;
                 }
 
                 public static ASkillState Create(SkillSettings skill, float speedRun, int id, AStates<TActor, TSkin> parent)
                 {
                     if (skill.Target == TargetOfSkill.Self)
-                        return new SelfSkillState(parent, skill.HitEffects, skill.Cost, id);
+                        return new SelfSkillState(parent, skill, id);
 
                     if (skill.Range < 0.01f)
-                        return new RangeSkillState(parent, skill.Target, skill.HitEffects, skill.Cost, id);
+                        return new RangeSkillState(parent, skill, id);
 
                     if (skill.Distance < 0.01f)
-                        return new SkillState(parent, skill.Target, skill.HitEffects, skill.Range, speedRun, skill.Cost, id);
+                        return new SkillState(parent, skill, speedRun, id);
 
-                    return new MovementSkillState(parent, skill.Target, skill.HitEffects, skill.Distance, skill.Range, speedRun, skill.Cost, id);
+                    return new MovementSkillState(parent, skill, speedRun, id);
                 }
 
                 public override void Enter()
