@@ -42,11 +42,7 @@ namespace Vurbiri.Colonization.Actors
                     return new MovementSkillState(parent, skill, speedRun, id);
                 }
 
-                public override void Enter()
-                {
-                    signal.Reset();
-                    _coroutineAction = StartCoroutine(Actions_Cn());
-                }
+                public override void Enter() => _coroutineAction = StartCoroutine(Actions_Cn());
 
                 public override void Exit()
                 {

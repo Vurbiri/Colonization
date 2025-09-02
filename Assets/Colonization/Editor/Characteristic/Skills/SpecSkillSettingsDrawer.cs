@@ -9,7 +9,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 	[CustomPropertyDrawer(typeof(SpecSkillSettings))]
     sealed public class SpecSkillSettingsDrawer : ASkillSettingsDrawer
     {
-        private const string P_SFX = "_hitSFXName";
+        private const string P_SFX = "_hitSFXName", P_VALUE = "_value";
         private const string P_ID = "_actorId_Ed";
 
         protected override void OnGUI()
@@ -38,7 +38,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             //=================================
             void DrawBlock()
             {
-                var effectProperty = GetProperty("_value");
+                var effectProperty = GetProperty(P_VALUE);
 
                 _position.y += _ySpace;
                 BeginProperty();
@@ -58,6 +58,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                         Space();
                         DrawInt(P_COST, 0, 4, 1);
+                        DrawInt(P_VALUE, "Adv", -50, 50, 0);
 
                         DrawLine(15f);
                         DrawProperty(P_SFX, "SFX Name");
@@ -96,7 +97,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             }
             else
             {
-                rate = GetPropertyRate(mainProperty, !SpecSkillSettings.nonClip.Contains(mainProperty.FindPropertyRelative(P_ID).intValue), -4.4f);
+                rate = GetPropertyRate(mainProperty, !SpecSkillSettings.nonClip.Contains(mainProperty.FindPropertyRelative(P_ID).intValue), -3.4f);
             }
 
             return _height * rate;

@@ -106,6 +106,15 @@ namespace Vurbiri.Colonization
             return HEX.NEAR.Rand();
         }
 
+        public bool NearNoWarriors()
+        {
+            foreach (var neighbor in _neighbors)
+                if (neighbor._ownerId != PlayerId.None && neighbor._owner.IsWarrior)
+                    return false;
+
+            return true;
+        }
+
         public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
         public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
         #endregion

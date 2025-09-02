@@ -13,10 +13,11 @@ namespace Vurbiri.Colonization.Actors
             GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial = GameContainer.Materials[owner].materialWarriors;
 
             var sfx = GetComponent<WarriorSFX>();
+            sfx.Init(skills.HitSfxNames);
 
-            base.Init(skills, sfx);
+            base.InitInternal(skills.Timings, sfx);
 
-            _blockState = new("bBlock", this, sfx);
+            _blockState = new(this, sfx);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)] 

@@ -10,6 +10,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public bool IsMax => _value == _maxValue;
         public bool IsNotMax => _value < _maxValue;
+        public int Percent => _value * 100 / _maxValue;
 
         public SubAbility(AAbility<TId> self, Ability max, Ability restore) : base(self)
         {

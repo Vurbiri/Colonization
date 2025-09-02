@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Setup(Actor actor, int idSkill, SkillUI skillUI, Vector3 localPosition)
         {
-            bool isUse = actor.ActionPoint >= skillUI.Cost;
+            bool isUse = actor.Action.CanUseSkill(idSkill);
 
             _rectTransform.localPosition = localPosition;
 

@@ -4,6 +4,9 @@ namespace Vurbiri.Colonization.Actors
     {
         protected override AStates StatesCreate(ActorSettings settings)
         {
+            if(_id == DemonId.Imp)
+                return new ImpStates(this, settings);
+
             return new DemonStates(this, settings);
         }
     }

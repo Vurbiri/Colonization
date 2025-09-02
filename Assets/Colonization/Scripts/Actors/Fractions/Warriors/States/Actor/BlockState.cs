@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.Actors
                     get => ActorEffects.Contains(_code);
                 }
 
-                public BlockState(WarriorStates parent, SpecSkillSettings specSkill) : base(parent, specSkill.Cost)
+                public BlockState(SpecSkillSettings specSkill, WarriorStates parent) : base(parent, specSkill.Cost)
                 {
                     _code = new(parent._actor.TypeId, parent._actor.Id, SPEC_SKILL_ID, 0);
                     _value = specSkill.Value;

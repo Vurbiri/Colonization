@@ -6,16 +6,14 @@ namespace Vurbiri.Colonization.UI
     {
         protected const int SIZE = 78;
 
-        protected readonly int _cost;
+        protected readonly string _cost;
         protected readonly string _hexColorPlus, _hexColorMinus;
         protected readonly SeparatorEffectUI _separator;
         protected string _textMain, _textAP;
 
-        public int Cost => _cost;
-
         public ASkillUI(ProjectColors colors, SeparatorEffectUI separator, int cost)
         {
-            _cost = cost;
+            _cost = cost.ToString();
 
             _hexColorPlus = colors.TextPositiveTag;
             _hexColorMinus = colors.TextNegativeTag;

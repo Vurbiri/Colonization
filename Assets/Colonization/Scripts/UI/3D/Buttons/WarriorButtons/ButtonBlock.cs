@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Setup(Actor actor, ASkillUI skillUI)
         {
-            _text = skillUI.GetText(interactable = actor.ActionPoint >= skillUI.Cost);
+            _text = skillUI.GetText(interactable = actor.Action.CanUseSpecSkill());
             _thisGameObject.SetActive(true);
         }
     }

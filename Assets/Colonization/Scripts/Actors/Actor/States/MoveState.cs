@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    using static CONST;
-
     public abstract partial class Actor
     {
         public abstract partial class AStates<TActor, TSkin>
@@ -13,22 +12,16 @@ namespace Vurbiri.Colonization.Actors
             sealed protected class MoveState : AActionState
             {
                 private readonly ScaledMoveUsingLerp _move;
-                
+                private Coroutine _coroutine;
                 private WaitSignal _waitHexagon;
                 private Hexagon _targetHex;
-                private Coroutine _coroutine;
 
                 public readonly WaitSignal signal = new();
 
-                public MoveState(float speed, AStates<TActor, TSkin> parent) : base(parent)
-                {
-                    _move = new(Actor._thisTransform, speed);
-                }
+                public MoveState(float speed, AStates<TActor, TSkin> parent) : base(parent) => _move = new(Actor._thisTransform, speed);
 
                 public override void Enter()
                 {
-                    signal.Reset();
-
                     if (_isPerson)
                         _coroutine = StartCoroutine(PersonSelectHexagon_Cn());
                     else
@@ -51,6 +44,13 @@ namespace Vurbiri.Colonization.Actors
                     signal.Send();
                 }
 
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                private void ToExit()
+                {
+                    _coroutine = null;
+                    GetOutOfThisState();
+                }
+
                 public override void Unselect(ISelectable newSelectable)
                 {
                     if (_waitHexagon == null)
@@ -59,13 +59,7 @@ namespace Vurbiri.Colonization.Actors
                     _targetHex = newSelectable as Hexagon;
                     _waitHexagon.Send();
                 }
-
-                private void ToExit()
-                {
-                    _coroutine = null;
-                    GetOutOfThisState();
-                }
-
+                
                 private IEnumerator PersonSelectHexagon_Cn()
                 {
                     List<Hexagon> empty = new(HEX.SIDES);
@@ -86,26 +80,23 @@ namespace Vurbiri.Colonization.Actors
                     for (int i = empty.Count - 1; i >= 0; i--)
                         empty[i].SetUnselectable();
 
-                    if (_targetHex == null)
-                    {
-                        ToExit();
-                        yield break;
-                    }
-
-                    _coroutine = StartCoroutine(Move_Cn());
+                    Move();
                 }
 
                 private IEnumerator AISelectHexagon_Cn()
                 {
                     yield return _waitHexagon = new();
 
-                    if (_targetHex == null)
-                    {
-                        ToExit();
-                        yield break;
-                    }
+                    Move();
+                }
 
-                    _coroutine = StartCoroutine(Move_Cn());
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                private void Move()
+                {
+                    if (_targetHex == null)
+                        ToExit();
+                    else
+                        _coroutine = StartCoroutine(Move_Cn());
                 }
 
                 private IEnumerator Move_Cn()
@@ -117,7 +108,7 @@ namespace Vurbiri.Colonization.Actors
 
                     Moving.Off(); Skin.Move();
 
-                    Rotation = ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
+                    Rotation = CONST.ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
                     yield return _move.Run(currentHex.Position, _targetHex.Position);
 
                     CurrentHex.EnterActor(Actor);

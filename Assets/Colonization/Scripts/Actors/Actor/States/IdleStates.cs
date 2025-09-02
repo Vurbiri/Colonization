@@ -11,12 +11,12 @@ namespace Vurbiri.Colonization.Actors
                 public override void Enter()
                 {
                     Skin.Idle();
-                    Actor.Interactable = Actor._canUseSkills = true;
+                    Actor.Interactable = true;
                 }
 
                 public override void Exit()
                 {
-                    Actor.Interactable = Actor._canUseSkills = false;
+                    Actor.Interactable = false;
                 }
 
                 public override void Select() => GameContainer.TriggerBus.TriggerActorSelect(Actor);

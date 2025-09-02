@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.Actors
         protected Id<ActorTypeId> _typeId;
         protected int _id;
         protected Id<PlayerId> _owner;
-        private bool _isPersonTurn, _canUseSkills;
+        private bool _isPersonTurn;
 
         private float _extentsZ;
 
@@ -50,16 +50,17 @@ namespace Vurbiri.Colonization.Actors
         #region Propirties
         public Id<ActorTypeId> TypeId => _typeId;
         public int Id => _id;
+        public bool IsWarrior => _typeId == ActorTypeId.Warrior;
         public Id<PlayerId> Owner => _owner;
         public Hexagon Hexagon => _currentHex;
         public int ActionPoint => _currentAP.Value;
         public bool CanMove => _move.IsValue;
-        public bool CanUseSkills => _canUseSkills & _isPersonTurn;
+        public bool CanUseSkills => _states.IsDefault & _isPersonTurn;
         public int CurrentHP => _currentHP.Value;
         public bool IsWounded => _currentHP.IsNotMax;
         public bool IsDead => _currentHP.Value <= 0;
         public ActorSkin Skin => _states.Skin;
-        public AStates Action => _states;
+        public Actions Action => _states;
         public ReactiveEffects Effects => _effects;
         public ReadOnlyAbilities<ActorAbilityId> Abilities => _abilities;
         public bool IsMainProfit => _profitMain.Next();
@@ -110,11 +111,18 @@ namespace Vurbiri.Colonization.Actors
             #region Effects
             _effects = new(_abilities);
 
-            _currentHP.Subscribe(Death, false);
+            _currentHP.Subscribe(OnDeath, false);
             _effects.Subscribe(RedirectEvents);
             #endregion
 
             _states = StatesCreate(settings);
+
+            #region Bounds
+            var bounds = _states.Skin.Bounds;
+            _thisCollider.size = bounds.size;
+            _thisCollider.center = bounds.center;
+            _extentsZ = bounds.extents.z;
+            #endregion
 
             _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, CONST.ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
             _currentHex.EnterActor(this);
@@ -186,9 +194,6 @@ namespace Vurbiri.Colonization.Actors
             Interactable = _states.IsAvailable;
         }
 
-        public WaitStateSource<DeathStage> Death() => _states.Death();
-        private void Death(int hp) { if (hp <= 0) _states.Death(); }
-
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
         sealed public override void Removing()
@@ -226,6 +231,8 @@ namespace Vurbiri.Colonization.Actors
             if (_abilities.AddPerk(perk) != 0)
                 _eventChanged.Invoke(this, TypeEvent.Change);
         }
+
+        private void OnDeath(int hp) { if (hp <= 0) _states.Death(); }
 
         private void RedirectEvents(ReactiveEffect item, TypeEvent type) => _eventChanged.Invoke(this, TypeEvent.Change);
         private void Signal() => _eventChanged.Invoke(this, TypeEvent.Change);

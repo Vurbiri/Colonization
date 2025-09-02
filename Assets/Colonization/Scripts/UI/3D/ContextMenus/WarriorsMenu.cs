@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.UI
             var skills = GameContainer.Actors.GetSkills(actor);
 
             _buttonMovement.Setup(true, _currentWarrior.CanMove);
-            _buttonBlock.Setup(actor, skills.SpecSkillUI);
+            _buttonBlock.Setup(actor, skills.Spec.UI);
 
             int index = 0; var skillsUI = skills.SkillsUI;
             for (int count = skillsUI.Count; index < count; index++)

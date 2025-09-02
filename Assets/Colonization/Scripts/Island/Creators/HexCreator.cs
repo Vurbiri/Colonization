@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
     //==========================================================================
     sealed public class HexGenerator : HexCreator
     {
-        private readonly SequenceRandomIds _groundIDs, _waterIDs, _surfaceIDs;
+        private readonly RandomSequence _groundIDs, _waterIDs, _surfaceIDs;
         private Chance _chanceWater = CHANCE_WATER;
         private bool _isWater = false;
 

@@ -6,8 +6,10 @@ namespace Vurbiri.Colonization.Actors
     {
         public override void Init(Id<PlayerId> owner, Skills skills)
         {
-            base.Init(skills, GetComponent<DemonSFX>());
+            var sfx = GetComponent<DemonSFX>();
+            sfx.Init(skills.HitSfxNames, skills.Spec.SFXName);
 
+            base.InitInternal(skills.Timings, sfx);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.Actors
 
                 protected TActor Actor { [Impl(256)] get => _parent._actor; }
                 protected TSkin Skin { [Impl(256)] get => _parent._skin; }
-   
+
                 public AState(AStates<TActor, TSkin> parent) : base(parent._stateMachine)
                 {
                     _parent = parent;

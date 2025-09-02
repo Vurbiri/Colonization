@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -24,6 +25,8 @@ namespace Vurbiri.Colonization.Actors
             }
             _thisTransform.localScale = Vector3.one;
         }
+
+        public void Init(ReadOnlyArray<string> hitSFX) => InitInternal(hitSFX);
 
         public virtual void Block(bool isActive) { }
     }

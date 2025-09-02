@@ -12,12 +12,14 @@ namespace Vurbiri.Colonization.Actors
 
             public override bool IsAvailable => _stateMachine.IsSetOrDefault(_blockState);
 
+            public override bool CanUseSpecSkill() => _blockState.CanUse;
+
             public override WaitSignal UseSpecSkill()
             {
                 Block(); return null;
             }
 
-            public override void AddSpecSkillState(SpecSkillSettings specSkill) => _blockState = new(this, specSkill);
+            public override void AddSpecSkillState(SpecSkillSettings specSkill, float speedWalk, float speedRun) => _blockState = new(specSkill, this);
 
             public override void Load()
             {

@@ -6,28 +6,53 @@ using Vurbiri.Colonization.UI;
 namespace Vurbiri.Colonization.Characteristics
 {
     [System.Serializable]
-    public class SpecSkillSettings : ASkillSettings
+    public class SpecSkillSettings : ASkillSettings, IDisposable
     {
         [SerializeField] private int _value;
         [SerializeField] private AnimationTime _timing;
         [SerializeField] private HitSFXName _hitSFXName;
 
+        [NonSerialized] private ASkillUI _ui;
+
         public int Value => _value;
+        public string SFXName => _hitSFXName;
+        public AnimationTime Timing => _timing;
+        public ASkillUI UI => _ui;
 
-        public ASkillUI Init(ProjectColors colors, SeparatorEffectUI separator, int actorType, int actorId)
+        public void Init(ProjectColors colors, SeparatorEffectUI separator, int actorType, int actorId)
         {
-            ASkillUI ui;
-
             if (actorType == ActorTypeId.Warrior)
-                ui = new BlockUI(colors, separator, _cost, _value);
+            {
+                _ui = new BlockUI(colors, separator, _cost, _value);
+            }
             else
-                ui = new SpecSkillUI(colors, separator);
+            {
+                int hitsCount = _effectsHitsSettings.Length;
+                var effects = new HitEffects[hitsCount];
+                HitEffectsSettings effectsHitSettings;
+
+                for (int i = 0, effectsCount = 0; i < hitsCount; i++)
+                {
+                    effectsHitSettings = _effectsHitsSettings[i];
+                    effects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, ReactiveEffectsFactory.SPEC_SKILL_ID, effectsCount);
+                    effectsCount += effectsHitSettings.Count;
+                }
+
+                _hitEffects = new(effects);
+
+                _ui = new SpecSkillUI(colors, separator);
+            }
 
 #if !UNITY_EDITOR
             _effectsHitsSettings = null;
 #endif
-            return ui;
         }
+
+        public void Dispose()
+        {
+            _ui?.Dispose();
+        }
+
 
 #if UNITY_EDITOR
 

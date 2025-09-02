@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.FSM;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
-    [DisallowMultipleComponent]
+    //[DisallowMultipleComponent]
     public abstract partial class ActorSkin : MonoBehaviour
     {
         [SerializeField] private Bounds _bounds;
@@ -15,7 +16,7 @@ namespace Vurbiri.Colonization.Actors
         [ReadOnly, SerializeField] private float _durationDeath;
 
         #region CONST
-        private const string B_IDLE = "bIdle", B_MOVE = "bWalk", B_RUN = "bRun", B_DEATH = "bDeath", B_SPEC = "bWalk_Spec";
+        private const string B_IDLE = "bIdle", B_MOVE = "bWalk", B_RUN = "bRun", B_DEATH = "bDeath";
         private static readonly string[] B_SKILLS = { "bSkill_0", "bSkill_1", "bSkill_2", "bSkill_3" };
         private const string T_REACT = "tReact";
         #endregion
@@ -24,7 +25,7 @@ namespace Vurbiri.Colonization.Actors
         protected ActorSFX _sfx;
 
         protected readonly StateMachine _stateMachine = new();
-        protected BoolSwitchState _moveState, _runState, _specState;
+        protected BoolSwitchState _moveState, _runState;
         private SkillState[] _skillStates;
         private DeathState _deathState;
         private ReactState _reactState;
@@ -34,7 +35,6 @@ namespace Vurbiri.Colonization.Actors
         public Transform Transform { [Impl(256)] get => _thisTransform; }
         public Bounds Bounds { [Impl(256)] get => _bounds; }
         public ActorSFX ActorSFX { [Impl(256)] get => _sfx; }
-
 
         private void Start()
         {
@@ -47,19 +47,15 @@ namespace Vurbiri.Colonization.Actors
 
         public abstract void Init(Id<PlayerId> owner, Skills skills);
 
-        protected void Init(Skills skills, ActorSFX sfx)
+        protected void InitInternal(ReadOnlyArray<AnimationTime> timings, ActorSFX sfx)
         {
-            sfx.Init(skills.HitSfxNames);
-
             _thisTransform = transform;
             _sfx = sfx;
 
             _stateMachine.AssignDefaultState(new BoolSwitchState(B_IDLE, this));
             _moveState  = new(B_MOVE,  this);
             _runState   = new(B_RUN,   this);
-            _specState  = new(B_SPEC,  this);
 
-            var timings = skills.Timings;
             _skillStates = new SkillState[timings.Count];
             for (int i = 0; i < timings.Count; i++)
                 _skillStates[i] = new(B_SKILLS[i], this, timings[i], i);
@@ -76,8 +72,6 @@ namespace Vurbiri.Colonization.Actors
 
             return skill.Setup(targetActorSkin);
         }
-
-        [Impl(256)] public void SpecSkill() => _stateMachine.SetState(_specState);
 
         [Impl(256)] public void Impact(AudioClip clip)
         {

@@ -15,7 +15,8 @@ namespace Vurbiri.Colonization.Actors
                 private readonly AbilityValue _costAP;
 
                 #region Propirties
-                private SubAbility<ActorAbilityId> AP { [Impl(256)] get => _parent._actor._currentAP; }
+                protected SubAbility<ActorAbilityId> HP { [Impl(256)] get => _parent._actor._currentHP; }
+                protected SubAbility<ActorAbilityId> AP { [Impl(256)] get => _parent._actor._currentAP; }
                 protected BooleanAbility<ActorAbilityId> Moving { [Impl(256)] get => _parent._actor._move; }
 
                 protected RBool IsCancel { [Impl(256)] get => _parent._actor._canCancel; }
@@ -35,10 +36,10 @@ namespace Vurbiri.Colonization.Actors
                     [Impl(256)] get => _parent._actor._currentHex;
                     [Impl(256)] set => _parent._actor._currentHex = value;
                 }
-                protected EffectsSet ActorEffects
-                {
-                    [Impl(256)] get => _parent._actor._effects;
-                }
+                protected EffectsSet ActorEffects { [Impl(256)] get => _parent._actor._effects; }
+
+                public bool CanUse { [Impl(256)] get => AP >= _costAP.Value; }
+
                 #endregion
 
                 public AActionState(AStates<TActor, TSkin> parent, int cost = 0) : base(parent)
