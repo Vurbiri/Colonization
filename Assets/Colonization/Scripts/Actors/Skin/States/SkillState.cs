@@ -31,14 +31,12 @@ namespace Vurbiri.Colonization.Actors
             [Impl(256)] public WaitSignal Setup(ActorSkin targetSkin)
             {
                 _targetSkin = targetSkin;
-                return _signal;
+                return _signal.Restart();
             }
 
             public override void Enter()
             {
                 EnableAnimation();
-
-                _signal.Reset();
                 _coroutine = StartCoroutine(StartSkill_Cn());
             }
 
