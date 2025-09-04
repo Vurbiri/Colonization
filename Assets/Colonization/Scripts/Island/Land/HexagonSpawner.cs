@@ -28,6 +28,9 @@ namespace Vurbiri.Colonization
             Hexagon hex = Object.Instantiate(_prefabHex, position, Quaternion.identity, _landContainer);
             hex.Setup(key, id, surface);
             hex.Caption.Init(id, surface.Currencies);
+#if UNITY_EDITOR
+            hex.Caption.SetKey_Ed(key);
+#endif
 
             _landMesh.AddHexagon(key, position, surfaceId);
 

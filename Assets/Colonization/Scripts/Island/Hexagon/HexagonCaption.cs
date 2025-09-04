@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.UI
         private bool IsShow
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _showDistance | _showProfit | _showMode | _showNewId & _isEnable;
+            get => (_showDistance | _showProfit | _showMode | _showNewId) & _isEnable;
         }
 
         public int Id { set => _idText.text = value.ToString(); }
@@ -154,7 +154,6 @@ namespace Vurbiri.Colonization.UI
             if (IsShow) Show(); else Hide();
         }
 
-
         private void OnCaptionEnable(bool value)
         {
             _isEnable = value;
@@ -249,12 +248,23 @@ namespace Vurbiri.Colonization.UI
                 _thisTransform.localRotation = Quaternion.Euler(ANGLE_X, _lastAngle, 0f);
         }
 
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //private void TextEnable(bool value)
+        //{
+        //    _currencyText.enabled = value;
+        //    _idText.enabled = value;
+        //}
+
         private void OnDestroy()
         {
             _unsubscriber?.Unsubscribe();
         }
 
 #if UNITY_EDITOR
+
+        [StartEditor]
+        [SerializeField] private TextMeshPro _keyText;
+
         private void OnValidate()
         {
             if (_currencyText == null || _currencyTextRenderer == null)
@@ -269,6 +279,17 @@ namespace Vurbiri.Colonization.UI
             }
 
             transform.localRotation = Quaternion.Euler(ANGLE_X, 0f, 0f);
+        }
+
+        public void SetKey_Ed(Key key)
+        {
+            _keyText.text = key.ToString();
+            _keyText.enabled = false;
+        }
+        public void ShowKey_Ed()
+        {
+            OnCaptionEnable(_keyText.enabled);
+            _keyText.enabled = !_keyText.enabled;
         }
 #endif
     }

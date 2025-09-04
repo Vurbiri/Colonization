@@ -1,12 +1,12 @@
 .style {
-    margin-top: 2px;
-    margin-right: 2px;
-    margin-bottom: 2px;
-    margin-left: 2px;
-    border-left-color: rgb(15, 12, 12);
-    border-right-color: rgb(15, 12, 12);
-    border-top-color: rgb(15, 12, 12);
-    border-bottom-color: rgb(15, 12, 12);
+    margin-top: 1px;
+    margin-right: 1px;
+    margin-bottom: 1px;
+    margin-left: 1px;
+    border-left-color: rgb(26, 26, 26);
+    border-right-color: rgb(26, 26, 26);
+    border-top-color: rgb(26, 26, 26);
+    border-bottom-color: rgb(26, 26, 26);
     border-top-width: 1px;
     border-right-width: 1px;
     border-bottom-width: 1px;
@@ -15,8 +15,8 @@
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
     border-bottom-left-radius: 2px;
-    padding-top: 4px;
-    padding-right: 4px;
-    padding-bottom: 4px;
-    padding-left: 4px;
+    padding-top: 1px;
+    padding-right: 1px;
+    padding-bottom: 1px;
+    padding-left: 1px;
 }

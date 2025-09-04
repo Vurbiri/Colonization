@@ -38,18 +38,29 @@ namespace Vurbiri
 
         public IEnumerator Run(Vector3 target)
         {
-            Set(_transform.localPosition, target);
+            Set(_transform.localPosition, target, _speed);
             return this;
         }
+        public IEnumerator Run(Vector3 target, float speed)
+        {
+            Set(_transform.localPosition, target, speed);
+            return this;
+        }
+
         public IEnumerator Run(Vector3 current, Vector3 target)
         {
-            Set(current, target);
+            Set(current, target, _speed);
+            return this;
+        }
+        public IEnumerator Run(Vector3 current, Vector3 target, float speed)
+        {
+            Set(current, target, speed);
             return this;
         }
 
         public void Run(MonoBehaviour mono, Vector3 target)
         {
-            Set(_transform.localPosition, target);
+            Set(_transform.localPosition, target, _speed);
             if (!_isWait)
                 mono.StartCoroutine(this);
         }
@@ -75,8 +86,9 @@ namespace Vurbiri
         public void Reset() { }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void Set(Vector3 current, Vector3 target)
+        private void Set(Vector3 current, Vector3 target, float speed)
         {
+            _speed    = speed;
             _start    = current; 
             _end      = target; 
             _delta    = _end - _start;

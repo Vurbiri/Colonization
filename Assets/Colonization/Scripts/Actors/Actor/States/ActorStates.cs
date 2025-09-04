@@ -20,8 +20,10 @@ namespace Vurbiri.Colonization.Actors
         public abstract class AStates : Actions
         {
             protected readonly StateMachineSelectable _stateMachine = new();
+            protected int _skillsCount;
             private readonly TargetState _targetState = new();
 
+            public int SkillsCount { [Impl(256)] get => _skillsCount; }
             public bool IsDefault { [Impl(256)] get => _stateMachine.IsDefaultState; }
 
             public abstract ActorSkin Skin { get; }
@@ -85,9 +87,9 @@ namespace Vurbiri.Colonization.Actors
 
             [Impl(256)] public void AddMoveState(float speed) => _moveState = new(speed, this);
 
-            [Impl(256)] public void SetCountState(int count) => _skillState = new ASkillState[count];
+            [Impl(256)] public void SetCountState(int count) => _skillState = new ASkillState[_skillsCount = count];
             [Impl(256)] public void AddSkillState(SkillSettings skill, float speedRun, int id) => _skillState[id] = ASkillState.Create(skill, speedRun, id, this);
-            public abstract void AddSpecSkillState(SpecSkillSettings specSkill, float speedWalk, float speedRun);
+            public abstract void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed);
         }
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 808f4b926c4f4ca47a837dd346411224
+guid: cd6adb1547d201e4cbef852e574aabe8
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: A_Warrior_Shield_RunForward
+      name: A_Warrior_Wizard_Run
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 21
+      lastFrame: 34
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

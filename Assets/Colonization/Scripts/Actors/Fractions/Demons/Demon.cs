@@ -7,6 +7,9 @@ namespace Vurbiri.Colonization.Actors
             if(_id == DemonId.Imp)
                 return new ImpStates(this, settings);
 
+            if (_id == DemonId.Grunt)
+                return new GruntStates(this, settings);
+
             return new DemonStates(this, settings);
         }
     }

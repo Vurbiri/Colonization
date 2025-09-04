@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.Actors
                 return null;
             }
 
-            public override void AddSpecSkillState(SpecSkillSettings specSkill, float speedWalk, float speedRun) { }
+            public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed) { }
 
             public override bool CanUseSpecSkill()
             {

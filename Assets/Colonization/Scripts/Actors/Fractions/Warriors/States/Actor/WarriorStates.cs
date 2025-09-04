@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.Actors
                 Block(); return null;
             }
 
-            public override void AddSpecSkillState(SpecSkillSettings specSkill, float speedWalk, float speedRun) => _blockState = new(specSkill, this);
+            public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed) => _blockState = new(specSkill, this);
 
             public override void Load()
             {

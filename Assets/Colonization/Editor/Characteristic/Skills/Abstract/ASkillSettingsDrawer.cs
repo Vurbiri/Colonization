@@ -25,42 +25,67 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             if (clip != null && clip.clip != null)
             {
-                hitsCount = clip.hitTimes.Length;
+                Rect position = GetPosition(offsetLine);
 
-                DrawButton(clip, offsetLine);
+                DrawButton(ref position, clip);
+
+                position.height = _position.height;
+
+                DrawLabel(ref position, "Total Time", $"{clip.totalTime} c");
+                DrawLabel(ref position, "Hit Time", $"{string.Join("% ", clip.hitTimes)}%");
+                DrawLabel(ref position, "Remaining Time", $"{clip.totalTime * (100f - clip.hitTimes[^1]) / 100f} c");
+
+                _position.y = position.y;
 
                 DrawLine(offsetLine);
-                indentLevel++;
 
-                DrawLabel("Total Time", $"{clip.totalTime} c");
-                DrawLabel("Hit Time", $"{string.Join("% ", clip.hitTimes)}%");
-                DrawLabel("Remaining Time", $"{clip.totalTime * (100f - clip.hitTimes[^1]) / 100f} c");
-                SetLabelFloat(P_RANGE, clip.range);
-                SetLabelFloat(P_DISTANCE, clip.distance);
-                indentLevel--;
+                DrawSlider(P_RANGE, 10f);
+                DrawSlider(P_DISTANCE, 20f);
+
                 DrawLine(offsetLine);
                 Space();
+
+                hitsCount = clip.hitTimes.Length;
             }
 
             return hitsCount;
 
-            #region Local: DrawButton(..)
+            #region Local: GetPosition(..), DrawButton(..), DrawLabel(..), DrawSlider(..)
             //=================================
-            void DrawButton(AnimationClipSettingsScriptable activeObject, float offset)
+            Rect GetPosition(float offset)
             {
-                _position.y += _height;
-                Rect positionButton = _position;
-                const float size = 350f;// EditorGUIUtility.currentViewWidth;
+                const float size = 350f;
+                Rect position = _position;
 
-                positionButton.height += _ySpace * 2f;
-                positionButton.x = (positionButton.width - size) * 0.5f + offset;
-                positionButton.width = size;
+                position.height += _ySpace * 2f;
+                position.x = (position.width - size) * 0.5f + offset;
+                position.width = size;
 
+                return position;
+            }
+            //=================================
+            void DrawButton(ref Rect position, AnimationClipSettingsScriptable activeObject)
+            {
+                position.y += _height;
 
-                if (GUI.Button(positionButton, "Select Clip Settings".ToUpper()))
+                if (GUI.Button(position, "Select Clip Settings".ToUpper()))
                     Selection.activeObject = activeObject;
 
-                _position.y += _ySpace * 2f;
+                position.y += _ySpace * 3f;
+            }
+            //=================================
+            void DrawLabel(ref Rect position, string displayName, string value)
+            {
+                position.y += EditorGUIUtility.singleLineHeight;
+                LabelField(position, displayName, value);
+            }
+            //=================================
+            void DrawSlider(string name, float max)
+            {
+                var property = GetProperty(name);
+                if (Mathf.Approximately(property.floatValue, 0f))
+                    property.floatValue = -1;
+                DrawFloat(property, -1f, max, -1f);
             }
             //=================================
             #endregion
@@ -115,7 +140,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 bool isClip = clipSett != null && clipSett.clip != null;
                 if (isClip | !useClip)
                 {
-                    rate += (isClip ? 14.2f : 6.7f) + offset;
+                    rate += (isClip ? 14f : 6.7f) + offset;
 
                     SerializedProperty hitsProperty = property.FindPropertyRelative(P_HITS);
                     SerializedProperty effectsProperty;

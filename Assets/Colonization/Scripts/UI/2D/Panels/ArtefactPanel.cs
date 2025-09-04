@@ -5,7 +5,6 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using Vurbiri.Reactive;
@@ -29,32 +28,6 @@ namespace Vurbiri.Colonization.UI
         private string _name;
         private Unsubscriptions _unsubscribers = new();
         private readonly Stack<WaitRealtime> _timers = new(4);
-
-        // TEST
-        public void Test()
-        {
-            Debug.Log("Удалить Тесты в ArtefactPanel");
-
-            //_artefact.Next(UnityEngine.Random.Range(2, 10));
-
-            var person = GameContainer.Players.Person;
-            var satan = GameContainer.Players.Satan;
-
-            person.SpawnTest(WarriorId.Knight, HEX.RightUp);
-            //person.SpawnTest(WarriorId.Warlock, HEX.Left);
-            person.SpawnDemonTest(DemonId.Imp, HEX.Left);
-            person.SpawnTest(WarriorId.Solder, HEX.LeftDown);
-            //person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
-            person.SpawnDemonTest(DemonId.Imp, HEX.LeftUp);
-            person.SpawnDemonTest(DemonId.Imp, new Key(0, 0));
-            //person.SpawnTest(WarriorId.Knight, new Key(-4, 0));
-
-
-            //GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 2);
-            //GameContainer.Players.GetAI(PlayerId.AI_02).SpawnTest(WarriorId.Wizard, 2);
-
-        }
-        // TEST
 
         public void Init()
         {

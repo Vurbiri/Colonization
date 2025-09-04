@@ -17,13 +17,12 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             if (GetProperty(P_TYPE).intValue == ActorTypeId.Warrior)
             {
-                LabelField(_position, "Block", STYLES.H3);
+                DrawHeading("Block");
                 DrawBlock();
             }
             else
             {
-                LabelField(_position, "Spec Skill", STYLES.H3);
-                DrawButton();
+                DrawHeading("Spec Skill");
                 if (_mainProperty.isExpanded)
                 {
                     _position.y += _ySpace;
@@ -34,20 +33,36 @@ namespace VurbiriEditor.Colonization.Characteristics
                 }
             }
 
-            #region Local: DrawBlock(), DrawMain(..), DrawButton()
+            #region Local: DrawHeading(..), DrawBlock(), DrawMain(..), DrawButton(..)
+            //=================================
+            void DrawHeading(string caption)
+            {
+                const float offset = 4f;
+                
+                _position.height += offset;
+                LabelField(_position, caption, STYLES.H3);
+                _position.height -= offset;
+                _position.y += offset;
+
+                DrawButton(offset * 0.5f);
+            }
             //=================================
             void DrawBlock()
             {
-                var effectProperty = GetProperty(P_VALUE);
-
-                _position.y += _ySpace;
-                BeginProperty();
+                if (_mainProperty.isExpanded)
                 {
-                    DrawInt(P_COST, 1, 4, 1);
-                    effectProperty.intValue = DrawInt(effectProperty, 5, 60, effectProperty.intValue >> ActorAbilityId.SHIFT_ABILITY) << ActorAbilityId.SHIFT_ABILITY;
+                    var effectProperty = GetProperty(P_VALUE);
+
+                    _position.y += _ySpace;
+                    BeginProperty();
+                    {
+                        DrawInt(P_COST, 1, 4, 1);
+                        effectProperty.intValue = DrawInt(effectProperty, 5, 60, effectProperty.intValue >> ActorAbilityId.SHIFT_ABILITY) << ActorAbilityId.SHIFT_ABILITY;
+                    }
+                    EndProperty();
                 }
-                EndProperty();
-            }//=================================
+            }
+            //=================================
             void DrawMain(int hitsCount)
             {
                 if (hitsCount > 0)
@@ -58,7 +73,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                         Space();
                         DrawInt(P_COST, 0, 4, 1);
-                        DrawInt(P_VALUE, "Adv", -50, 50, 0);
+                        DrawInt(P_VALUE, "Adv Value", -60, 60, 0);
 
                         DrawLine(15f);
                         DrawProperty(P_SFX, "SFX Name");
@@ -70,13 +85,12 @@ namespace VurbiriEditor.Colonization.Characteristics
                 }
             }
             //=================================
-            void DrawButton()
+            void DrawButton(float offset)
             {
                 Rect positionButton = _position;
                 const float size = 49f;
 
-                positionButton.height -= 1.4f;
-                positionButton.y += 0.9f;
+                positionButton.y -= offset;
                 positionButton.x = (positionButton.width - size) + 17f;
                 positionButton.width = size;
 
@@ -90,14 +104,13 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
 		{
-			float rate;
-            if (mainProperty.FindPropertyRelative(P_TYPE).intValue == ActorTypeId.Warrior)
+			float rate = 1.1f;
+            if (mainProperty.isExpanded)
             {
-                rate = 3.1f;
-            }
-            else
-            {
-                rate = GetPropertyRate(mainProperty, !SpecSkillSettings.nonClip.Contains(mainProperty.FindPropertyRelative(P_ID).intValue), -3.4f);
+                if (mainProperty.FindPropertyRelative(P_TYPE).intValue == ActorTypeId.Warrior)
+                    rate = 3.2f;
+                else
+                    rate = GetPropertyRate(mainProperty, !SpecSkillSettings.nonClip.Contains(mainProperty.FindPropertyRelative(P_ID).intValue), -3.27f);
             }
 
             return _height * rate;

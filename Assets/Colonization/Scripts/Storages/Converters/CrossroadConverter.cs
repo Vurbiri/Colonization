@@ -19,8 +19,8 @@ namespace Vurbiri.Colonization
             protected override void WriteJson(JsonWriter writer, Crossroad cross, JsonSerializer serializer)
             {
                 writer.WriteStartArray();
-                writer.WriteValue(cross._key.X);
-                writer.WriteValue(cross._key.Y);
+                writer.WriteValue(cross._key.x);
+                writer.WriteValue(cross._key.y);
                 writer.WriteValue(cross._states.id.Value);
                 writer.WriteValue(cross._isWall ? 1 : 0);
                 writer.WriteEndArray();

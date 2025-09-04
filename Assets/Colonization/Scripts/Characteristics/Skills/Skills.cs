@@ -9,8 +9,9 @@ namespace Vurbiri.Colonization.Characteristics
     [System.Serializable]
     public class Skills : IDisposable
     {
-        [SerializeField] private float _speedWalk; // = 0.45f;
-        [SerializeField] private float _speedRun; // = 0.65f;
+        [SerializeField] private float _runSpeed; // = 0.6f;
+        [SerializeField] private float _walkSpeed; // = 0.6f;
+        [SerializeField] private float _speed; // = 0.6f;
         [SerializeField] private SpecSkillSettings _specSkillSettings;
         [SerializeField] private SkillSettings[] _skillsSettings;
 
@@ -42,13 +43,13 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void CreateStates<TActor, TSkin>(Actor.AStates<TActor, TSkin> states) where TActor : Actor where TSkin : ActorSkin
         {
-            states.AddMoveState(_speedWalk);
-            states.AddSpecSkillState(_specSkillSettings, _speedWalk, _speedRun);
+            states.AddMoveState(_walkSpeed);
+            states.AddSpecSkillState(_specSkillSettings, _runSpeed, _walkSpeed);
 
             int countSkills = _skillsSettings.Length;
             states.SetCountState(countSkills);
             for (int i = 0; i < countSkills; i++)
-                states.AddSkillState(_skillsSettings[i], _speedRun, i);
+                states.AddSkillState(_skillsSettings[i], _runSpeed, i);
         }
 
         public void Dispose()

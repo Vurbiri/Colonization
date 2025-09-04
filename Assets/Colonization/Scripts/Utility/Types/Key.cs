@@ -8,62 +8,61 @@ namespace Vurbiri.Colonization
     [JsonConverter(typeof(Converter))]
     public readonly struct Key : IEquatable<Key>
     {
-        private readonly int _x, _y;
+        public readonly int x, y;
 
         private static readonly Key s_zero = new();
         public static Key Zero => s_zero;
 
-        public readonly int X => _x;
-        public readonly int Y => _y;
+        public readonly bool IsZero => x == 0 & y == 0;
 
-        public readonly int Distance
+        public readonly int Magnitude
         {
             get
             {
-                int x = Math.Abs(_x), y = Math.Abs(_y);
-                return (y - x < 0) ? (x + y) >> 1 : y;
+                int ax = Math.Abs(x), ay = Math.Abs(y);
+                return (ay - ax < 0) ? (ax + ay) >> 1 : ay;
             }
         }
 
         public Key(int x, int y)
         {
-            _x = x; _y = y;
+            this.x = x; this.y = y;
         }
         public Key(float x, float y)
         {
-            _x = Mathf.RoundToInt(x);
-            _y = Mathf.RoundToInt(y);
+            this.x = Mathf.RoundToInt(x);
+            this.y = Mathf.RoundToInt(y);
         }
         public Key(int[] arr)
         {
-            _x = arr[0];
-            _y = arr[1];
+            x = arr[0];
+            y = arr[1];
         }
 
-        public readonly string ToSaveKey() => $"{_x}{_y}";
+        public readonly string ToSaveKey() => $"{x}{y}";
 
-        public readonly bool Equals(Key other) => _x == other._x & _y == other._y;
-        public override readonly bool Equals(object obj) => obj is Key key && _x == key._x & _y == key._y;
+        public readonly bool Equals(Key other) => x == other.x & y == other.y;
+        public override readonly bool Equals(object obj) => obj is Key key && x == key.x & y == key.y;
 
-        public override readonly int GetHashCode() => HashCode.Combine(_x, _y);
+        public override readonly int GetHashCode() => HashCode.Combine(x, y);
 
-        public static Key operator +(Key a, Key b) => new(a._x + b._x, a._y + b._y);
-        public static Key operator -(Key a, Key b) => new(a._x - b._x, a._y - b._y);
-        public static Key operator -(Key a) => new(-a._x, -a._y);
+        public static Key operator +(Key a, Key b) => new(a.x + b.x, a.y + b.y);
+        public static Key operator -(Key a, Key b) => new(a.x - b.x, a.y - b.y);
+        public static Key operator -(Key a) => new(-a.x, -a.y);
 
-        public static int operator ^(Key a, Key b)
+        public static int operator ^(Key a, Key b) // Distance
         {
-            int x = Math.Abs(a._x - b._x), y = Math.Abs(a._y - b._y);
+            int x = Math.Abs(a.x - b.x), y = Math.Abs(a.y - b.y);
             return (y - x < 0) ? (x + y) >> 1 : y;
         }
 
-        public static Key operator *(Key k, int i) => new(k._x * i, k._y * i);
-        public static Key operator *(int i, Key k) => new(k._x * i, k._y * i);
+        public static Key operator *(Key k, int i) => new(k.x * i, k.y * i);
+        public static Key operator /(int i, Key k) => new(k.x / i, k.y / i);
 
-        public static bool operator ==(Key a, Key b) => a._x == b._x & a._y == b._y;
-        public static bool operator !=(Key a, Key b) => a._x != b._x | a._y != b._y;
+        public static bool operator ==(Key a, Key b) => a.x == b.x & a.y == b.y;
+        public static bool operator !=(Key a, Key b) => a.x != b.x | a.y != b.y;
 
-        public override readonly string ToString() => $"[{_x}, {_y}]";
+        public override readonly string ToString() => $"{x},{y}";
 
         #region Nested: Converter
         //***********************************
@@ -82,8 +81,8 @@ namespace Vurbiri.Colonization
             public static void WriteJsonArray(JsonWriter writer, Key value)
             {
                 writer.WriteStartArray();
-                writer.WriteValue(value._x);
-                writer.WriteValue(value._y);
+                writer.WriteValue(value.x);
+                writer.WriteValue(value.y);
                 writer.WriteEndArray();
             }
         }

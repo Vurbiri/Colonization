@@ -21,7 +21,7 @@ namespace VurbiriEditor
                 fontStyle = FontStyle.Bold,
                 fontSize = 15,
             };
-            H1.normal.textColor = new(200, 200, 222);
+            H1.normal.textColor = new(0.75f, 0.75f, 0.8f);
             H1.normal.background = BackgroundColor(new(20, 40, 62, 255));
 
             H2 = new()
@@ -31,7 +31,7 @@ namespace VurbiriEditor
                 fontStyle = FontStyle.Bold,
                 fontSize = 13,
             };
-            H2.normal.textColor = new(120, 180, 222);
+            H2.normal.textColor = new(0.6f, 0.7f, 0.8f);
 
             borderLight = new()
             {
@@ -52,8 +52,10 @@ namespace VurbiriEditor
             {
                 name = "H3",
                 alignment = TextAnchor.MiddleCenter,
+                fontStyle = FontStyle.Bold,
+                fontSize = 13,
             };
-            H3.normal.textColor = new(180, 180, 180);
+            H3.normal.textColor = new(0.7f, 0.35f, 0.3f);
 
             flatButton = new()
             {
@@ -139,5 +141,7 @@ namespace VurbiriEditor
 
             return texture;
         }
+
+        public static void Start() { }
     }
 }

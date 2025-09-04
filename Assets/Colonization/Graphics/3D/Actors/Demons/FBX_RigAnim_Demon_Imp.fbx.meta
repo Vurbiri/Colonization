@@ -72,7 +72,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Imp_Walk
+      name: A_Demon_Imp_Run
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 7977021332590339227
       firstFrame: 181
@@ -101,7 +101,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Imp_Run
+      name: A_Demon_Imp_Walk
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: 8886541931632710349
       firstFrame: 245
@@ -159,7 +159,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Imp_BackWalk
+      name: A_Demon_Imp_RunBack
       takeName: Armature|Armature|Take 001|BaseLayer
       internalID: -1177588366188397721
       firstFrame: 631

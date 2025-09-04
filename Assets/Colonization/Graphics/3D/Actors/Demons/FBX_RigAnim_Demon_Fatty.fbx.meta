@@ -101,7 +101,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_Walk
+      name: A_Demon_Fatty_Run
       takeName: Take 001
       internalID: -5059006814000262888
       firstFrame: 418
@@ -130,7 +130,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_BackPedal
+      name: A_Demon_Fatty_RunBack
       takeName: Take 001
       internalID: 6234510843852800090
       firstFrame: 502
@@ -159,7 +159,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_Run
+      name: A_Demon_Fatty_Walk
       takeName: Take 001
       internalID: 9093586079265926502
       firstFrame: 742

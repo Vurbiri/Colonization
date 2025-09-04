@@ -11,14 +11,19 @@ namespace Vurbiri.Colonization.Actors
             protected abstract class ASpecMoveState : AActionState
             {
                 private readonly ScaledMoveUsingLerp _move;
+                private readonly float _speed;
                 private readonly HitEffects _effectsHint;
+                protected readonly RandomSequence _indexes = new(HEX.SIDES);
                 protected Coroutine _coroutine;
 
                 public readonly WaitSignal signal = new();
 
+                public new bool CanUse => Moving.IsValue;
+
                 public ASpecMoveState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(parent, specSkill.Cost)
                 {
-                    _move = new(Actor._thisTransform, speed);
+                    _speed = speed * 1.5f;
+                    _move = new(Actor._thisTransform, 0f);
                     _effectsHint = specSkill.HitEffects[0];
                 }
 
@@ -54,7 +59,7 @@ namespace Vurbiri.Colonization.Actors
                     yield return Skin.SpecMove();
 
                     Rotation = CONST.ACTOR_ROTATIONS[direction];
-                    yield return _move.Run(currentHex.Position, targetHex.Position);
+                    yield return _move.Run(currentHex.Position, targetHex.Position, _speed / (currentHex.Key ^ targetHex.Key));
 
                     CurrentHex.EnterActor(Actor);
 

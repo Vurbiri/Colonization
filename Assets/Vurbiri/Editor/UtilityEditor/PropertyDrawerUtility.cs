@@ -18,6 +18,8 @@ namespace VurbiriEditor
 
         sealed public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
         {
+            STYLES.Start();
+
             position.height = EditorGUIUtility.singleLineHeight;
             
             _position = position;

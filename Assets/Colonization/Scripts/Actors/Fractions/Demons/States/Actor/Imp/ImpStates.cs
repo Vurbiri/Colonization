@@ -10,9 +10,9 @@ namespace Vurbiri.Colonization.Actors
 
             public ImpStates(Demon actor, ActorSettings settings) : base(actor, settings) { }
 
-            public override void AddSpecSkillState(SpecSkillSettings specSkill, float speedWalk, float speedRun)
+            public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed)
             {
-                _fearState = new(specSkill, speedWalk, this);
+                _fearState = new(specSkill, walkSpeed, this);
             }
 
             public override bool CanUseSpecSkill() => _fearState.CanUse;

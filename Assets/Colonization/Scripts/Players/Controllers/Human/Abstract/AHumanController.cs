@@ -39,6 +39,17 @@ namespace Vurbiri.Colonization
                 actor.IsPersonTurn = _isPerson;
             }
         }
+        public void SpawnDemonTest(int id, int count)
+        {
+            UnityEngine.Debug.Log("SpawnDemonTest");
+            Hexagon hexagon;
+            for (int i = 0; i < count; i++)
+            {
+                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanDemonEnter) ;
+                Actor actor = _spawner.CreateDemon(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
+            }
+        }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
         {

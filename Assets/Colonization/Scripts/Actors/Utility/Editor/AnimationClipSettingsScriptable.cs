@@ -17,8 +17,6 @@ namespace Vurbiri.Colonization.Actors
         public float totalTime;
         public float totalTimeRatio = 100f;
         public float[] hitTimes = new float[1];
-        public float range = -1f;
-        public float distance = -1f;
 
         [MenuItem(MENU, true)]
         private static bool ValidateSelection()

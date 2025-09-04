@@ -439,7 +439,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: A_Demon_Bomb_BackPedal
+      name: A_Demon_Bomb_RunBack
       takeName: Take 001
       internalID: 4495542927842965080
       firstFrame: 625
