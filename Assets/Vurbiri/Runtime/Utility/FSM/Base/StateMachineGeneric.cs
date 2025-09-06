@@ -22,13 +22,13 @@ namespace Vurbiri.FSM
             _currentState.Enter();
         }
 
-        [Impl(256)] public void AssignDefaultState(TState state) => _defaultState = state;
-
         [Impl(256)] public bool IsSet(TState state) => _currentState.Equals(state);
         [Impl(256)] public bool IsSetOrDefault(TState state) => _currentState.Equals(state) | _currentState.Equals(_defaultState);
 
         [Impl(256)] public void Block() => _block = true;
         [Impl(256)] public void Unblock() => _block = false;
+
+        [Impl(256)] public void AssignDefaultState(TState state) => _defaultState = state;
 
         public bool SetState(TState newState, bool block = false)
         {
@@ -66,12 +66,12 @@ namespace Vurbiri.FSM
             return output;
         }
 
-        public void ToDefaultState()
+        [Impl(256)] public void ToDefaultState()
         {
             if (!(_block | _currentState.Equals(_defaultState)))
                 SetStateAndSavePrev(_defaultState);
         }
-        public void ToPrevState()
+        [Impl(256)] public void ToPrevState()
         {
             if (!(_block | _currentState.Equals(_previousState)))
                 SetStateInternal(_previousState);

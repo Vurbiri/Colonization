@@ -16,10 +16,6 @@ namespace Vurbiri.Colonization.Actors
                 protected readonly RandomSequence _indexes = new(HEX.SIDES);
                 protected Coroutine _coroutine;
 
-                public readonly WaitSignal signal = new();
-
-                public new bool CanUse => Moving.IsValue;
-
                 public ASpecMoveState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(parent, specSkill.Cost)
                 {
                     _speed = speed * 1.5f;
@@ -68,6 +64,15 @@ namespace Vurbiri.Colonization.Actors
                 }
 
                 protected abstract bool TryGetTarget(out Hexagon targetHex, out Key direction);
+
+                protected bool NearNoWarriors(Hexagon hexagon)
+                {
+                    foreach (var neighbor in hexagon.Neighbors)
+                        if (neighbor.IsWarrior)
+                            return false;
+
+                    return true;
+                }
             }
         }
     }

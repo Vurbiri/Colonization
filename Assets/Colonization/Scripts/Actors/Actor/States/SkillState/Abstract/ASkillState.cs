@@ -18,8 +18,6 @@ namespace Vurbiri.Colonization.Actors
                 protected Coroutine _coroutineAction;
                 protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
-                public readonly WaitSignal signal = new();
-
                 public ASkillState(AStates<TActor, TSkin> parent, SkillSettings skill, int id) : base(parent, skill.Cost)
                 {
                     _id = id;

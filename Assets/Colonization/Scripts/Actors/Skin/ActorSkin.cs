@@ -42,19 +42,21 @@ namespace Vurbiri.Colonization.Actors
             _reactState = new(this);
             _deathState = new(this, _durationDeath);
 
+            _stateMachine.ToDefaultState();
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }
 
         public abstract void Init(Id<PlayerId> owner, Skills skills);
 
+        [Impl(256)] 
         protected void InitInternal(ReadOnlyArray<AnimationTime> timings, ActorSFX sfx)
         {
             _thisTransform = transform;
             _sfx = sfx;
 
             _stateMachine.AssignDefaultState(new BoolSwitchState(B_IDLE, this));
-            _moveState  = new(B_MOVE,  this);
-            _runState   = new(B_RUN,   this);
+            _moveState = new(B_MOVE, this);
+            _runState = new(B_RUN, this);
 
             _skillStates = new SkillState[timings.Count];
             for (int i = 0; i < timings.Count; i++)
@@ -114,20 +116,21 @@ namespace Vurbiri.Colonization.Actors
             }
         }
 
-        //public void OnDrawGizmosSelected()
-        //{
-        //    Gizmos.matrix = Matrix4x4.identity;
-        //    Gizmos.color = Color.red;
-        //    Gizmos.DrawWireCube(_bounds.center, _bounds.size);
-        //}
-
-        public void OnDrawGizmos()
+        public void OnDrawGizmosSelected()
         {
             Gizmos.matrix = Matrix4x4.identity;
             Gizmos.color = Color.red;
             Gizmos.DrawWireCube(_bounds.center, _bounds.size);
             Gizmos.DrawSphere(_bounds.center, 0.2f);
         }
+
+        //public void OnDrawGizmos()
+        //{
+        //    Gizmos.matrix = Matrix4x4.identity;
+        //    Gizmos.color = Color.red;
+        //    Gizmos.DrawWireCube(_bounds.center, _bounds.size);
+        //    Gizmos.DrawSphere(_bounds.center, 0.2f);
+        //}
 #endif
     }
 }

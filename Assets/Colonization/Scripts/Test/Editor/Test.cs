@@ -15,19 +15,21 @@ namespace Vurbiri.Colonization
             var person = GameContainer.Players.Person;
 
             //person.SpawnTest(WarriorId.Militia, HEX.RightUp);
-            //person.SpawnTest(WarriorId.Solder, HEX.Right);
-            //person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
-            //person.SpawnTest(WarriorId.Warlock, HEX.Left);
+            person.SpawnTest(WarriorId.Solder, HEX.Right);
+            person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
+            person.SpawnTest(WarriorId.Warlock, HEX.Left);
             //person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
 
-            //person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
+            person.SpawnDemonTest(DemonId.Bomb, Key.Zero);
+
+            person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
             //person.SpawnDemonTest(DemonId.Bomb, HEX.Right);
             //person.SpawnDemonTest(DemonId.Grunt, HEX.LeftDown);
             //person.SpawnDemonTest(DemonId.Fatty, HEX.Left);
             //person.SpawnDemonTest(DemonId.Boss, HEX.LeftUp);
 
-            person.SpawnTest(WarriorId.Knight, 2);
-            person.SpawnDemonTest(DemonId.Grunt, 3);
+            //person.SpawnTest(WarriorId.Knight, 2);
+            //person.SpawnDemonTest(DemonId.Bomb, 1);
 
             //person.SpawnDemonTest(DemonId.Imp, 5);
 

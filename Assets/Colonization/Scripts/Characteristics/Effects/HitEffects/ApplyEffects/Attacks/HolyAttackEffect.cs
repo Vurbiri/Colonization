@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public override int Apply(Actor self, Actor target)
         {
-            var damage = target.TypeId == ActorTypeId.Demon ? _damageToDemon : _damageToHuman;
+            var damage = self.TypeId == target.TypeId ? _damageToHuman : _damageToDemon;
 
             _pierce.Add(-self.Abilities[Pierce].Value);
             _value = -Formulas.Damage(damage.Apply(self.Abilities[Attack].Value), _pierce.Apply(target.Abilities[Defense].Value));

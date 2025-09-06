@@ -12,6 +12,7 @@ namespace Vurbiri
         }
 
         public WaitScaledTime(float time) : base(time) { }
+        public WaitScaledTime(AWaitTime waitTime) : base(waitTime) { }
 
         public static implicit operator WaitScaledTime(float time) => new(time);
     }

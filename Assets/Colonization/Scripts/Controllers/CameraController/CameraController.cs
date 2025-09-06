@@ -122,7 +122,7 @@ namespace Vurbiri.Colonization.Controllers
             Gizmos.DrawSphere(transform.position, 2f);
         }
 #endif
-
+#pragma warning disable 649
         #region Nested: Movement, MovementToTarget
         //***********************************
         [Serializable]
@@ -159,4 +159,5 @@ namespace Vurbiri.Colonization.Controllers
         //***********************************
         #endregion
     }
+#pragma warning restore
 }

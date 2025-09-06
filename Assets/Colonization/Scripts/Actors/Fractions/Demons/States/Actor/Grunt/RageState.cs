@@ -10,6 +10,8 @@ namespace Vurbiri.Colonization.Actors
             {
                 private readonly Chance _chance;
 
+                public new bool CanUse => Moving.IsValue;
+
                 public RageState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(specSkill, speed, parent)
                 {
                     _chance = new(specSkill.Value);
@@ -18,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
                 protected override bool TryGetTarget(out Hexagon targetHex, out Key direction)
                 {
                     targetHex = null; direction = new();
-                    if (Moving.IsValue && !CurrentHex.NearNoWarriors() && _chance.Roll)
+                    if (Moving.IsValue && !NearNoWarriors(CurrentHex) && _chance.Roll)
                     {
                         for (int i = 0; i < HEX.SIDES; i++)
                             if (IsEnter(ref targetHex, direction = HEX.NEAR[_indexes[i]]))
@@ -34,7 +36,7 @@ namespace Vurbiri.Colonization.Actors
                         Hexagon temp = GameContainer.Hexagons[CurrentHex.Key + direction];
                         while (temp.CanDemonEnter)
                         {
-                            if (!temp.NearNoWarriors())
+                            if (!NearNoWarriors(temp))
                             {
                                 targetHex = temp;
                                 _indexes.Shuffle();

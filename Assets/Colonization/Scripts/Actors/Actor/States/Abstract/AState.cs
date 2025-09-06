@@ -16,6 +16,12 @@ namespace Vurbiri.Colonization.Actors
                 protected TActor Actor { [Impl(256)] get => _parent._actor; }
                 protected TSkin Skin { [Impl(256)] get => _parent._skin; }
 
+                protected Hexagon CurrentHex
+                {
+                    [Impl(256)] get => _parent._actor._currentHex;
+                    [Impl(256)] set => _parent._actor._currentHex = value;
+                }
+
                 public AState(AStates<TActor, TSkin> parent) : base(parent._stateMachine)
                 {
                     _parent = parent;

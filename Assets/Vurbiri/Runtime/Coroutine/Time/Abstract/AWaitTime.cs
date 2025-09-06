@@ -20,6 +20,7 @@ namespace Vurbiri
         public bool IsWait => _isWait;
 
         public AWaitTime(float time) => _waitTime = time;
+        public AWaitTime(AWaitTime waitTime) => _waitTime = waitTime._waitTime;
 
         public bool MoveNext()
         {

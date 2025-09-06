@@ -14,6 +14,8 @@ namespace Vurbiri.Colonization.Actors
                 protected readonly bool _isPerson;
                 private readonly AbilityValue _costAP;
 
+                public readonly WaitSignal signal = new();
+
                 #region Propirties
                 protected SubAbility<ActorAbilityId> HP { [Impl(256)] get => _parent._actor._currentHP; }
                 protected SubAbility<ActorAbilityId> AP { [Impl(256)] get => _parent._actor._currentAP; }
@@ -31,16 +33,11 @@ namespace Vurbiri.Colonization.Actors
                     [Impl(256)] set => _parent._actor._thisTransform.localRotation = value;
                 }
 
-                protected Hexagon CurrentHex
-                {
-                    [Impl(256)] get => _parent._actor._currentHex;
-                    [Impl(256)] set => _parent._actor._currentHex = value;
-                }
                 protected EffectsSet ActorEffects { [Impl(256)] get => _parent._actor._effects; }
 
                 public bool CanUse { [Impl(256)] get => AP >= _costAP.Value; }
-
                 #endregion
+
 
                 public AActionState(AStates<TActor, TSkin> parent, int cost = 0) : base(parent)
                 {

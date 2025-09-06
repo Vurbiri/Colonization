@@ -10,6 +10,8 @@ namespace Vurbiri.Colonization.Actors
             {
                 private readonly int _hpOffset;
 
+                public new bool CanUse => Moving.IsValue;
+
                 public FearState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(specSkill, speed, parent)
                 {
                     _hpOffset = specSkill.Value;
@@ -18,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
                 protected override bool TryGetTarget(out Hexagon targetHex, out Key direction)
                 {
                     targetHex = null; direction = new();
-                    if (Moving.IsValue && !(Chance.Rolling(HP.Percent + _hpOffset) || CurrentHex.NearNoWarriors()))
+                    if (Moving.IsValue && !(Chance.Rolling(HP.Percent + _hpOffset) || NearNoWarriors(CurrentHex)))
                     {
                         Key currentKey = CurrentHex.Key;
                         Hexagon temp;
@@ -29,7 +31,7 @@ namespace Vurbiri.Colonization.Actors
                             if (temp.CanDemonEnter)
                             {
                                 temp = GameContainer.Hexagons[temp.Key + direction];
-                                if (temp.CanDemonEnter && temp.NearNoWarriors())
+                                if (temp.CanDemonEnter && NearNoWarriors(temp))
                                 {
                                     targetHex = temp;
                                     _indexes.Shuffle();

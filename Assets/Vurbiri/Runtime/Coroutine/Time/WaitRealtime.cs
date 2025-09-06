@@ -13,6 +13,7 @@ namespace Vurbiri
         }
 
         public WaitRealtime(float time) : base(time) { }
+        public WaitRealtime(AWaitTime waitTime) : base(waitTime) { }
 
         public static implicit operator WaitRealtime(float time) => new(time);
     }

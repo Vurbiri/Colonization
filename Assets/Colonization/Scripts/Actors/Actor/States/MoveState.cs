@@ -16,8 +16,6 @@ namespace Vurbiri.Colonization.Actors
                 private WaitSignal _waitHexagon;
                 private Hexagon _targetHex;
 
-                public readonly WaitSignal signal = new();
-
                 public MoveState(float speed, AStates<TActor, TSkin> parent) : base(parent) => _move = new(Actor._thisTransform, speed);
 
                 public override void Enter()

@@ -40,6 +40,7 @@ namespace Vurbiri.Colonization
         public bool IsGround => !_isGate & !_isWater;
         public Actor Owner => _owner;
         public bool IsOwner => _ownerId != PlayerId.None;
+        public bool IsWarrior => _ownerId != PlayerId.None && _owner.IsWarrior;
         public bool CanDemonEnter => !_isWater & _ownerId == PlayerId.None;
         public bool CanWarriorEnter => !_isGate & !_isWater & _ownerId == PlayerId.None;
         public Vector3 Position { get; private set; }
@@ -104,15 +105,6 @@ namespace Vurbiri.Colonization
                     return _key - neighbor._key;
 
             return HEX.NEAR.Rand();
-        }
-
-        public bool NearNoWarriors()
-        {
-            foreach (var neighbor in _neighbors)
-                if (neighbor._ownerId != PlayerId.None && neighbor._owner.IsWarrior)
-                    return false;
-
-            return true;
         }
 
         public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
