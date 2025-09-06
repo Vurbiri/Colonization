@@ -77,7 +77,7 @@ namespace Vurbiri.Colonization.Actors
 
         [Impl(256)] public void Impact(AudioClip clip)
         {
-            _reactState.Impact(clip);
+            _reactState.Setup(clip);
             _stateMachine.SetState(_reactState, true);
         }
 

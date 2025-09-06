@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.Actors
             {
                 yield return _waitHit;
 
-                SFX.Spec(Skin);
+                yield return SFX.Spec(Skin);
 
                 yield return _waitEnd;
                 signal.Send();

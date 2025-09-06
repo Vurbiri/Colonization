@@ -1,37 +1,35 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class InstantParticle : APooledSFX, IEnumerator
+	public abstract class AParticle : APooledSFX, IEnumerator
     {
-        private readonly AudioClip _clip;
+        protected readonly AudioClip _clip;
         private readonly ParticleSystem _particle;
         private readonly float _targetHeightRate;
 
         public object Current => null;
 
-        public InstantParticle(CreatorInstantParticle creator, Action<APooledSFX> deactivate) : base(creator, deactivate)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public AParticle(ACreatorParticle creator, Action<APooledSFX> deactivate) : base(creator, deactivate)
         {
             _clip = creator.clip;
             _particle = creator.particle;
             _targetHeightRate = creator.targetHeightRate;
         }
 
-        public override IEnumerator Hit(ISFXUser user, ActorSkin target)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void Setup(ActorSkin target)
         {
             Vector3 targetPosition = target.Transform.position;
             targetPosition.y += target.Bounds.extents.y * _targetHeightRate;
 
             Enable(targetPosition);
 
-            target.ActorSFX.Impact(_clip);
             _particle.Play();
-
-            this.Start();
-
-            return null;
         }
 
         public bool MoveNext()

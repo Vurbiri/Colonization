@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
                     behaviour.EventExit += OnEventExit;
             }
 
-            public void Impact(AudioClip clip)
+            public void Setup(AudioClip clip)
             {
                 if (_isRun)
                 {
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
                 }
 
                 if (clip != null)
-                    SFX.Impact(clip);
+                    SFX.Play(clip);
             }
 
             public override void Enter()

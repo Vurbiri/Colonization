@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.Actors
             _hitSFX = hitSFX;
         }
 
-        public void Impact(AudioClip clip) => _audioSource.PlayOneShot(clip);
+        public void Play(AudioClip clip) => _audioSource.PlayOneShot(clip);
 
         public IEnumerator Hit(int idSkill, ActorSkin target) => GameContainer.HitSFX.Hit(_hitSFX[idSkill], this, target);
 

@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
 
         protected readonly Transform _transform;
         protected readonly GameObject _gameObject;
-        
+
         public APooledSFX(Component creator, Action<APooledSFX> deactivate)
         {
             a_deactivate = deactivate;
