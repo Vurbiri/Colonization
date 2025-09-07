@@ -28,7 +28,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     _position.y += _ySpace;
                     int hitsCount = 1;
                     if (!SpecSkillSettings.nonClip.Contains(GetProperty(P_ID).intValue))
-                        hitsCount = DrawClip(GetObject<AnimationClipSettingsScriptable>(P_CLIP), 15f);
+                        hitsCount = DrawClip(GetObject<AnimationClipSettingsScriptable>(P_CLIP), 15f, true);
                     DrawMain(hitsCount);
                 }
             }
@@ -101,7 +101,6 @@ namespace VurbiriEditor.Colonization.Characteristics
             #endregion
         }
 
-
         public override float GetPropertyHeight(SerializedProperty mainProperty, GUIContent label)
 		{
 			float rate = 1.1f;
@@ -110,7 +109,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if (mainProperty.FindPropertyRelative(P_TYPE).intValue == ActorTypeId.Warrior)
                     rate = 3.2f;
                 else
-                    rate = GetPropertyRate(mainProperty, !SpecSkillSettings.nonClip.Contains(mainProperty.FindPropertyRelative(P_ID).intValue), -3.27f);
+                    rate = GetPropertyRate(mainProperty, !SpecSkillSettings.nonClip.Contains(mainProperty.FindPropertyRelative(P_ID).intValue), -2.27f);
             }
 
             return _height * rate;

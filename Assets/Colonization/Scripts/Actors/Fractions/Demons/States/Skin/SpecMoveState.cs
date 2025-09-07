@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed private class SpecMoveState : ASpecState
         {
-            public SpecMoveState(ActorSkin parent, DemonSFX sfx) : base("bWalk_Spec", parent, sfx) { }
+            public SpecMoveState(ActorSkin parent, DemonSFX sfx) : base(s_idSpecMove, parent, sfx) { }
 
             public override void Enter() => StartCoroutine(Run_Cn());
 

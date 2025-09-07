@@ -2,7 +2,7 @@ using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
 {
-	sealed public partial class DemonSpecMoveSkin : ActorSkin
+	sealed public partial class DemonSpecMoveSkin : ADemonSkin
     {
         private SpecMoveState _specMoveState;
 

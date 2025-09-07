@@ -2,7 +2,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public partial class ActorSkin
+    public partial class ADemonSkin
     {
         protected abstract class ASpecState : ASkinState
         {
@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Actors
 
             protected new DemonSFX SFX { [Impl(256)] get => _sfx; }
 
-            public ASpecState(string stateName, ActorSkin parent, DemonSFX sfx) : base(stateName, parent) => _sfx = sfx;
+            public ASpecState(int idParam, ActorSkin parent, DemonSFX sfx) : base(idParam, parent) => _sfx = sfx;
 
             sealed public override void Exit() => DisableAnimation();
         }

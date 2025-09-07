@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Actors
 
                 private IEnumerator ApplySkill_Cn()
                 {
-                    IEnumerator wait = Skin.SpecSpawn();
+                    var wait = Skin.SpecSpawn();
 
                     yield return wait;
 

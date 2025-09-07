@@ -91,7 +91,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: ZA_Demon_Bomb_Spawn
+      name: RA_Demon_Bomb_Spawn
       takeName: Take 001
       internalID: 6641085478485924818
       firstFrame: 119
@@ -120,7 +120,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: A_Demon_Bomb_Special_Explode
+      name: RA_Demon_Bomb_Special_Explode
       takeName: Take 001
       internalID: -5059006814000262888
       firstFrame: 160

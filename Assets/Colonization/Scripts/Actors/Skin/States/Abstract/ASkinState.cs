@@ -15,10 +15,10 @@ namespace Vurbiri.Colonization.Actors
             protected ActorSkin Skin { [Impl(256)] get => _parent; }
             protected ActorSFX SFX { [Impl(256)] get => _parent._sfx; }
 
-            public ASkinState(string stateName, ActorSkin parent) : base(parent._stateMachine)
+            [Impl(256)] public ASkinState(int idParam, ActorSkin parent) : base(parent._stateMachine)
             {
                 _parent = parent;
-                _idParam = Animator.StringToHash(stateName);
+                _idParam = idParam;
             }
 
             [Impl(256)] protected DeathBehaviour GetDeathBehaviour() => _parent._animator.GetBehaviour<DeathBehaviour>();

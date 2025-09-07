@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization.Actors
     {
         protected class BoolSwitchState : ASkinState
         {
-            public BoolSwitchState(string stateName, ActorSkin parent) : base(stateName, parent) { }
+            public BoolSwitchState(int idParam, ActorSkin parent) : base(idParam, parent) { }
 
             sealed public override void Enter() => EnableAnimation();
             sealed public override void Exit() => DisableAnimation();

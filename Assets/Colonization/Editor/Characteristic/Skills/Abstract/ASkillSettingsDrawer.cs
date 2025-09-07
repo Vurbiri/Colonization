@@ -17,7 +17,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         protected const string P_SPRITE_UI = "sprite", P_KEY_NAME_UI = "keySkillName";
         protected const string P_CLIP = "clipSettings_ed", P_TYPE = "typeActor_ed";
 
-        protected int DrawClip(AnimationClipSettingsScriptable clip, float offsetLine = 40f)
+        protected int DrawClip(AnimationClipSettingsScriptable clip, float offsetLine = 40f, bool drawName = false)
         {
             Space();
 
@@ -26,6 +26,9 @@ namespace VurbiriEditor.Colonization.Characteristics
             if (clip != null && clip.clip != null)
             {
                 Rect position = GetPosition(offsetLine);
+
+                if(drawName)
+                    DrawName(ref position, clip.name);
 
                 DrawButton(ref position, clip);
 
@@ -72,6 +75,13 @@ namespace VurbiriEditor.Colonization.Characteristics
                     Selection.activeObject = activeObject;
 
                 position.y += _ySpace * 3f;
+            }
+            //=================================
+            void DrawName(ref Rect position, string displayName)
+            {
+                position.y += EditorGUIUtility.singleLineHeight - _ySpace;
+                DropShadowLabel(position, displayName);
+                position.y += _ySpace;
             }
             //=================================
             void DrawLabel(ref Rect position, string displayName, string value)
@@ -140,7 +150,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 bool isClip = clipSett != null && clipSett.clip != null;
                 if (isClip | !useClip)
                 {
-                    rate += (isClip ? 14f : 6.7f) + offset;
+                    rate += (isClip ? 14f : 7.7f) + offset;
 
                     SerializedProperty hitsProperty = property.FindPropertyRelative(P_HITS);
                     SerializedProperty effectsProperty;

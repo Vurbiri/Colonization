@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Actors
 
             public float FirsHitTime { [Impl(256)] get => _waitHits[0].Time; }
 
-            public SkillState(string stateName, ActorSkin parent, AnimationTime timing, int id) : base(stateName, parent)
+            public SkillState(int idParam, ActorSkin parent, AnimationTime timing, int id) : base(idParam, parent)
             {
                 _id = id;
 

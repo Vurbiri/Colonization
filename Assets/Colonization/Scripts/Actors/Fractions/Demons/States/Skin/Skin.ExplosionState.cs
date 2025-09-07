@@ -13,7 +13,6 @@ namespace Vurbiri.Colonization.Actors
             {
                 _waitHit = timing.WaitHits[0];
                 _waitEnd = timing.WaitEnd;
-                UnityEngine.Debug.Log(_waitEnd.Time);
             }
 
             public override void Enter()

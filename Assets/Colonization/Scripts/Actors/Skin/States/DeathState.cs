@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
             
             public readonly WaitStateController<Actor.DeathStage> waitState = new(Actor.DeathStage.None);
 
-            public DeathState(ActorSkin parent, float duration) : base(B_DEATH, parent)
+            public DeathState(ActorSkin parent, float duration) : base(s_idDeath, parent)
             {
                 _waitEndAnimation = new(duration);
 

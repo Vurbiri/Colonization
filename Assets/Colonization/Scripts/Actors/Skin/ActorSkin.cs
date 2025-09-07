@@ -12,13 +12,15 @@ namespace Vurbiri.Colonization.Actors
     {
         [SerializeField] private Bounds _bounds;
         [Space]
-        [SerializeField] private Animator _animator;
+        [SerializeField] protected Animator _animator;
         [ReadOnly, SerializeField] private float _durationDeath;
 
-        #region CONST
-        private const string B_IDLE = "bIdle", B_MOVE = "bWalk", B_RUN = "bRun", B_DEATH = "bDeath";
-        private static readonly string[] B_SKILLS = { "bSkill_0", "bSkill_1", "bSkill_2", "bSkill_3" };
-        private const string T_REACT = "tReact";
+        #region Static
+        private static readonly int s_idIdle = Animator.StringToHash("bIdle"), s_idDeath = Animator.StringToHash("bDeath");
+        private static readonly int s_idMove = Animator.StringToHash("bWalk"), s_idRun = Animator.StringToHash("bRun");
+        private static readonly int[] s_idSkills = 
+            { Animator.StringToHash("bSkill_0"), Animator.StringToHash("bSkill_1"), Animator.StringToHash("bSkill_2"), Animator.StringToHash("bSkill_3") };
+        private static readonly int s_idReact = Animator.StringToHash("tReact");
         #endregion
 
         protected Transform _thisTransform;
@@ -42,7 +44,6 @@ namespace Vurbiri.Colonization.Actors
             _reactState = new(this);
             _deathState = new(this, _durationDeath);
 
-            _stateMachine.ToDefaultState();
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }
 
@@ -54,13 +55,13 @@ namespace Vurbiri.Colonization.Actors
             _thisTransform = transform;
             _sfx = sfx;
 
-            _stateMachine.AssignDefaultState(new BoolSwitchState(B_IDLE, this));
-            _moveState = new(B_MOVE, this);
-            _runState = new(B_RUN, this);
+            _stateMachine.AssignDefaultState(new BoolSwitchState(s_idIdle, this));
+            _moveState = new(s_idMove, this);
+            _runState = new(s_idRun, this);
 
             _skillStates = new SkillState[timings.Count];
             for (int i = 0; i < timings.Count; i++)
-                _skillStates[i] = new(B_SKILLS[i], this, timings[i], i);
+                _skillStates[i] = new(s_idSkills[i], this, timings[i], i);
         }
 
         [Impl(256)] public void Idle() => _stateMachine.ToDefaultState();

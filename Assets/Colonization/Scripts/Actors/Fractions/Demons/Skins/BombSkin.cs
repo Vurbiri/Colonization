@@ -2,7 +2,7 @@ using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization.Actors
 {
-    sealed public partial class BombSkin : ActorSkin
+    sealed public partial class BombSkin : ADemonSkin
     {
         private ExplosionState _explosionState;
 

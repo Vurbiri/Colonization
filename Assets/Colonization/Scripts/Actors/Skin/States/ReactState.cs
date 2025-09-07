@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
         {
             private bool _isExit = false, _isRun = false;
 
-            public ReactState(ActorSkin parent) : base(T_REACT, parent)
+            public ReactState(ActorSkin parent) : base(s_idReact, parent)
             {
                 foreach (var behaviour in GeReactBehaviours())
                     behaviour.EventExit += OnEventExit;
