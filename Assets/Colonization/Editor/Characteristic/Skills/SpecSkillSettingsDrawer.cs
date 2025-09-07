@@ -109,7 +109,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if (mainProperty.FindPropertyRelative(P_TYPE).intValue == ActorTypeId.Warrior)
                     rate = 3.2f;
                 else
-                    rate = GetPropertyRate(mainProperty, !SpecSkillSettings.nonClip.Contains(mainProperty.FindPropertyRelative(P_ID).intValue), -2.27f);
+                    rate = GetPropertyRate(mainProperty, !SpecSkillSettings.nonClip.Contains(mainProperty.FindPropertyRelative(P_ID).intValue), -2.4f);
             }
 
             return _height * rate;

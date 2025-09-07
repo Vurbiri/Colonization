@@ -60,7 +60,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 const float size = 350f;
                 Rect position = _position;
 
-                position.height += _ySpace * 2f;
+                position.height += _yTwoSpace;
                 position.x = (position.width - size) * 0.5f + offset;
                 position.width = size;
 
@@ -74,14 +74,14 @@ namespace VurbiriEditor.Colonization.Characteristics
                 if (GUI.Button(position, "Select Clip Settings".ToUpper()))
                     Selection.activeObject = activeObject;
 
-                position.y += _ySpace * 3f;
+                position.y += _yTwoSpace;
             }
             //=================================
             void DrawName(ref Rect position, string displayName)
             {
-                position.y += EditorGUIUtility.singleLineHeight - _ySpace;
+                position.y += EditorGUIUtility.singleLineHeight - _yTwoSpace;
                 DropShadowLabel(position, displayName);
-                position.y += _ySpace;
+                position.y += _yTwoSpace;
             }
             //=================================
             void DrawLabel(ref Rect position, string displayName, string value)
@@ -150,7 +150,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 bool isClip = clipSett != null && clipSett.clip != null;
                 if (isClip | !useClip)
                 {
-                    rate += (isClip ? 14f : 7.7f) + offset;
+                    rate += (isClip ? 14f : 5.9f) + offset;
 
                     SerializedProperty hitsProperty = property.FindPropertyRelative(P_HITS);
                     SerializedProperty effectsProperty;

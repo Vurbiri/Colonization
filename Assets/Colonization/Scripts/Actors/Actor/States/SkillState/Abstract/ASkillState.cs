@@ -18,11 +18,10 @@ namespace Vurbiri.Colonization.Actors
                 protected Coroutine _coroutineAction;
                 protected readonly WaitForSeconds _waitTargetSkillAnimation, _waitEndSkillAnimation;
 
-                public ASkillState(AStates<TActor, TSkin> parent, SkillSettings skill, int id) : base(parent, skill.Cost)
+                public ASkillState(AStates<TActor, TSkin> parent, SkillSettings skill, int id) : base(parent, id, skill.Cost)
                 {
                     _id = id;
                     _effectsHint = skill.HitEffects;
-
                     _countHits = _effectsHint.Count;
                 }
 

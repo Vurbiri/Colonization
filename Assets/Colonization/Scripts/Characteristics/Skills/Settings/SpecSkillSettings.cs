@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization.Characteristics
                 for (int i = 0, effectsCount = 0; i < hitsCount; i++)
                 {
                     effectsHitSettings = _effectsHitsSettings[i];
-                    effects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, ReactiveEffectsFactory.SPEC_SKILL_ID, effectsCount);
+                    effects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, CONST.SPEC_SKILL_ID, effectsCount);
                     effectsCount += effectsHitSettings.Count;
                 }
 

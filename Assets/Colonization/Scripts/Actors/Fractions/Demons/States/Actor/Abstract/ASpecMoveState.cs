@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Actors
                 protected readonly RandomSequence _indexes = new(HEX.SIDES);
                 protected Coroutine _coroutine;
 
-                public ASpecMoveState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(parent, specSkill.Cost)
+                public ASpecMoveState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(parent, CONST.SPEC_SKILL_ID, specSkill.Cost)
                 {
                     _speed = speed * 1.5f;
                     _move = new(Actor._thisTransform, 0f);

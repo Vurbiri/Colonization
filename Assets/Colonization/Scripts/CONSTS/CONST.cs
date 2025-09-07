@@ -2,11 +2,21 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 using Vurbiri.Collections;
+using Vurbiri.Colonization.Actors;
+using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization
 {
     public static class CONST
     {
+        public const int WALL_TYPE = ActorTypeId.Demon + 1, SPELL_TYPE = WALL_TYPE + 1;
+
+        public const int MOVE_SKILL_ID = 5, SPEC_SKILL_ID = 6;
+        public const int BLESS_SKILL_ID = 0, WRATH_SKILL_ID = 1;
+
+        public const int BLOCK_DURATION = 1, BLOCK_SKIP = 0;
+        public const int WALL_DURATION = 1, WALL_SKIP = 9, WALL_ADD_SHIFT = 3, WALL_SHIFT = ActorAbilityId.SHIFT_ABILITY + WALL_ADD_SHIFT;
+
         public const int MAX_CIRCLES = 4;
         public const int MAX_HEXAGONS = ((HEX.SIDES * MAX_CIRCLES * (MAX_CIRCLES + 1)) >> 1) + 1;
         public const int MAX_CROSSROADS = HEX.SIDES * MAX_CIRCLES * MAX_CIRCLES;

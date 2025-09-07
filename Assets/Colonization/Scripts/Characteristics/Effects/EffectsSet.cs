@@ -33,6 +33,15 @@ namespace Vurbiri.Colonization.Characteristics
             return _eventChanged.Add(action);
         }
 
+        public bool Contains<T>(T code) where T : struct, IEquatable<EffectCode>
+        {
+            for (int i = 0; i < _count; i++)
+                if (code.Equals(_values[i].code))
+                    return true;
+
+            return false;
+        }
+
         public IEnumerator<ReactiveEffect> GetEnumerator()
         {
             for (int i = 0; i < _count; i++)
@@ -80,15 +89,6 @@ namespace Vurbiri.Colonization.Characteristics
                     return;
                 }
             }
-        }
-
-        public bool Contains(EffectCode code)
-        {
-            for (int i = 0; i < _count; i++)
-                if (_values[i] == code)
-                    return true;
-
-            return false;
         }
 
         public void Next()

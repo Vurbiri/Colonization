@@ -1,6 +1,4 @@
-using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
@@ -11,37 +9,21 @@ namespace Vurbiri.Colonization.Actors
         {
             protected abstract class AActionState : AState
             {
-                protected readonly bool _isPerson;
                 private readonly AbilityValue _costAP;
 
+                public readonly SkillCode code;
                 public readonly WaitSignal signal = new();
 
                 #region Propirties
                 protected SubAbility<ActorAbilityId> HP { [Impl(256)] get => _parent._actor._currentHP; }
                 protected SubAbility<ActorAbilityId> AP { [Impl(256)] get => _parent._actor._currentAP; }
-                protected BooleanAbility<ActorAbilityId> Moving { [Impl(256)] get => _parent._actor._move; }
-
-                protected RBool IsCancel { [Impl(256)] get => _parent._actor._canCancel; }
-
-                protected Vector3 Position
-                {
-                    [Impl(256)] get => _parent._actor._thisTransform.localPosition;
-                    [Impl(256)] set => _parent._actor._thisTransform.localPosition = value;
-                }
-                protected Quaternion Rotation
-                {
-                    [Impl(256)] set => _parent._actor._thisTransform.localRotation = value;
-                }
-
                 protected EffectsSet ActorEffects { [Impl(256)] get => _parent._actor._effects; }
-
                 public bool CanUse { [Impl(256)] get => AP >= _costAP.Value; }
                 #endregion
 
-
-                public AActionState(AStates<TActor, TSkin> parent, int cost = 0) : base(parent)
+                public AActionState(AStates<TActor, TSkin> parent, int id, int cost) : base(parent)
                 {
-                    _isPerson = parent._actor._owner == PlayerId.Person;
+                    code = new(parent._actor._typeId, parent._actor._id, id);
                     _costAP = new(TypeModifierId.Addition, cost);
                 }
 

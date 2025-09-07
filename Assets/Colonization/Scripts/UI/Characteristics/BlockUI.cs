@@ -1,6 +1,5 @@
 using System.Text;
 using Vurbiri.International;
-using static Vurbiri.Colonization.Characteristics.ReactiveEffectsFactory;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -26,7 +25,7 @@ namespace Vurbiri.Colonization.UI
             _separator.GetText(sb);
 
             sb.Append(_hexColorPlus);
-            sb.AppendLine(localization.GetFormatText(FILE, BLOCK_DESK_KEY, _value, BLOCK_DURATION));
+            sb.AppendLine(localization.GetFormatText(FILE, BLOCK_DESK_KEY, _value, CONST.BLOCK_DURATION));
             _separator.GetText(sb);
 
             sb.Append(COLOR_OFF);

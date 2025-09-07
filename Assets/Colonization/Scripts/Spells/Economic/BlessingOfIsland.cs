@@ -4,7 +4,7 @@ using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
-using static Vurbiri.Colonization.Characteristics.ReactiveEffectsFactory;
+using static Vurbiri.Colonization.CONST;
 using static Vurbiri.Colonization.CurrencyId;
 using static Vurbiri.Colonization.GameContainer;
 

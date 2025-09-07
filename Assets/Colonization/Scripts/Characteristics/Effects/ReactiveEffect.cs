@@ -6,14 +6,15 @@ namespace Vurbiri.Colonization.Characteristics
 {
     sealed public partial class ReactiveEffect : AReactiveItem<ReactiveEffect>, IPerk, IEquatable<ReactiveEffect>
     {
-        private readonly EffectCode _code;
+        
         private readonly int _targetAbility;
         private readonly Id<TypeModifierId> _typeModifier;
         private int _value;
         private int _duration;
         private int _skip;
 
-        public EffectCode Code => _code;
+        public readonly EffectCode code;
+
         public int TargetAbility => _targetAbility;
         public Id<TypeModifierId> TypeModifier => _typeModifier;
         public int Value => _value;
@@ -24,7 +25,7 @@ namespace Vurbiri.Colonization.Characteristics
             : this(code, targetAbility, typeModifier, value, duration, isSkip ? 1 : 0) { }
         public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, int skip)
         {
-            _code = code;
+            this.code = code;
             _targetAbility = targetAbility;
             _typeModifier = typeModifier;
             _value = value;
@@ -35,7 +36,7 @@ namespace Vurbiri.Colonization.Characteristics
         public bool Update(ReactiveEffect other, Func<IPerk, int> addPerk, out int delta)
         {
             delta = 0;
-            if (_code != other._code)
+            if (code != other.code)
                 return false;
 
             bool changeDuration = _duration < other._duration;
@@ -92,17 +93,17 @@ namespace Vurbiri.Colonization.Characteristics
         {
            if(other is null) return false;
 
-            return _code == other._code;
+            return code == other.code;
         }
         public override void Dispose() {}
 
-        public override int GetHashCode() => _code;
+        public override int GetHashCode() => code;
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))
                 return true;
 
-            return obj is ReactiveEffect other && _code == other._code;
+            return obj is ReactiveEffect other && code == other.code;
         }
 
         public static Effect operator -(ReactiveEffect left, ReactiveEffect right)
@@ -124,8 +125,8 @@ namespace Vurbiri.Colonization.Characteristics
             return new(right._targetAbility, right._typeModifier, left._value + right._value);
         }
 
-        public static bool operator ==(ReactiveEffect effect, EffectCode code) => effect._code == code;
-        public static bool operator !=(ReactiveEffect effect, EffectCode code) => effect._code != code;
+        public static bool operator ==(ReactiveEffect effect, EffectCode code) => effect.code == code;
+        public static bool operator !=(ReactiveEffect effect, EffectCode code) => effect.code != code;
 
     }
 }

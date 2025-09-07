@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Characteristics
             public static void WriteJsonArray(JsonWriter writer, ReactiveEffect effect)
             {
                 writer.WriteStartArray();
-                writer.WriteValue(effect._code);
+                writer.WriteValue(effect.code);
                 writer.WriteValue(effect._targetAbility);
                 writer.WriteValue(effect._typeModifier.Value);
                 writer.WriteValue(effect._value);

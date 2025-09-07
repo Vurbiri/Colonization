@@ -9,12 +9,14 @@ namespace Vurbiri.Colonization.Actors
     {
         public abstract partial class AStates<TActor, TSkin>
         {
-            sealed protected class MoveState : AActionState
+            sealed protected class MoveState : AState
             {
                 private readonly ScaledMoveUsingLerp _move;
                 private Coroutine _coroutine;
                 private WaitSignal _waitHexagon;
                 private Hexagon _targetHex;
+
+                public readonly WaitSignal signal = new();
 
                 public MoveState(float speed, AStates<TActor, TSkin> parent) : base(parent) => _move = new(Actor._thisTransform, speed);
 
