@@ -1,33 +1,26 @@
 using UnityEngine;
-using Vurbiri.Collections;
 
 namespace Vurbiri.UI
 {
 	internal class BannerInitialize : MonoBehaviour
 	{
-		public Banner prefab;
-        public Transform container;
-        public int startCount;
+        [SerializeField] private int _startCount;
         [Space]
-        public Vector2 maxSize;
-        public Vector2 padding;
-        public float space;
-        public Direction2 direction;
-        public float moveSpeed;
+        [SerializeField] private int _space;
+        [SerializeField] private Direction2 _direction;
         [Space]
-        public IdArray<MessageTypeId, Color> colors;
+        [SerializeField] private Banner.Settings _settings;
 
         private void Awake()
         {
-            Banner.Init(this);
+            Banner.Init(_settings.Init(_direction, _space, _startCount));
             Destroy(this);
         }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            EUtility.SetPrefab(ref prefab);
-            this.SetComponent(ref container);
+            _settings.OnValidate(this);
         }
 #endif
     }

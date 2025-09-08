@@ -188,7 +188,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: ZA_Demon_Fatty_Jump
+      name: A_Demon_Fatty_Special_Jump
       takeName: Take 001
       internalID: -4045831500588228705
       firstFrame: 774
@@ -275,7 +275,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: A_Demon_Fatty_Special_PoisonBreath
+      name: ZA_Demon_Fatty_Cast_Roar_2
       takeName: Take 001
       internalID: -5912188926831197812
       firstFrame: 907

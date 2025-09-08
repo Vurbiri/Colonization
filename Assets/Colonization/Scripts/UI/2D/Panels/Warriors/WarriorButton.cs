@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.UI
         private int _index;
         private Vector3 _offset;
 
-        private Transform _thisTransform, _container, _repository;
+        private Transform _container, _repository;
         private readonly Subscription<WarriorButton> _eventRemove = new();
 
         public int Index
@@ -45,15 +45,13 @@ namespace Vurbiri.Colonization.UI
 
         public WarriorButton Init(Transform container, Action<WarriorButton> toPool)
         {
-            _thisTransform = _move.Transform;
             _container = container;
+            _repository = _move.Transform.parent;
 
             _offset = Offset;
 
             _canvasGroup.alpha = _targetAlpha = 0f;
             _canvasGroup.blocksRaycasts = false;
-
-            _repository = _thisTransform.parent;
 
             _eventRemove.Add(toPool);
 
@@ -79,9 +77,9 @@ namespace Vurbiri.Colonization.UI
             _unsubscribers += abilities[ActorAbilityId.MaxAP].Subscribe(maxAP => _maxAP_TMP.text = new(AP_CHAR, maxAP));
             _unsubscribers += abilities[ActorAbilityId.CurrentAP].Subscribe(currentAP => _currentAP_TMP.text = new(AP_CHAR, currentAP));
             _unsubscribers += abilities[ActorAbilityId.IsMove].Subscribe(move => _moveIcon.color = move > 0 ? _colorOn : _colorOff);
-            
-            _thisTransform.SetParent(_container);
-            _thisTransform.localPosition = _offset * index;
+
+            _move.Transform.SetParent(_container);
+            _move.Transform.localPosition = _offset * index;
 
             Attach(actor, sprite);
 
@@ -96,7 +94,7 @@ namespace Vurbiri.Colonization.UI
                 _attach = null;
                 _canvasGroup.alpha = _targetAlpha = 0f;
                 _canvasGroup.blocksRaycasts = false;
-                _thisTransform.SetParent(_repository);
+                _move.Transform.SetParent(_repository);
                 _eventRemove.Invoke(this);
             }
         }

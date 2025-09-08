@@ -7,22 +7,19 @@ namespace Vurbiri
         public static WaitResult<T> Instant<T>(T result) => new WaitResultSource<T>(false, result);
     }
 
-    public abstract class WaitResult<T> : IWait
+    public abstract class WaitResult<T> : Enumerator
     {
         protected bool _isWait = true;
         protected T _value;
 
-        public object Current => _value;
         public T Value => _value;
-        public bool IsWait => _isWait;
 
-        public bool MoveNext() => _isWait;
-        public void Reset() { }
+        sealed public override bool MoveNext() => _isWait;
 
         public static implicit operator T(WaitResult<T> wait) => wait._value;
     }
 
-    public class WaitResultSource<T> : WaitResult<T>
+    sealed public class WaitResultSource<T> : WaitResult<T>
     {
         private readonly T _default;
 

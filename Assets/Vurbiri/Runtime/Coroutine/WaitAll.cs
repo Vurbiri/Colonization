@@ -3,37 +3,19 @@ using System.Collections.Generic;
 
 namespace Vurbiri
 {
-    public class WaitAll : IWait
+    sealed public class WaitAll : Enumerator
     {
         private readonly List<IEnumerator> _coroutines;
 
-        public object Current => null;
         public int Count => _coroutines.Count;
-        public bool IsWait => _coroutines.Count != 0;
 
-        public WaitAll()
-        {
-            _coroutines = new();
-        }
+        public WaitAll() => _coroutines = new();
+        public WaitAll(IEnumerator coroutine) => _coroutines = new() { coroutine };
+        public WaitAll(IEnumerator coroutine1, IEnumerator coroutine2) => _coroutines = new() { coroutine1, coroutine2 };
+        public WaitAll(params IEnumerator[] coroutines) => _coroutines = new(coroutines);
+        public WaitAll(IEnumerable<IEnumerator> coroutines) => _coroutines = new(coroutines);
 
-        public WaitAll(IEnumerator coroutine)
-        {
-            _coroutines = new() { coroutine };
-        }
-        public WaitAll(IEnumerator coroutine1, IEnumerator coroutine2)
-        {
-            _coroutines = new() { coroutine1, coroutine2 };
-        }
-        public WaitAll(params IEnumerator[] coroutines)
-        {
-            _coroutines = new(coroutines);
-        }
-        public WaitAll(IEnumerable<IEnumerator> coroutines)
-        {
-            _coroutines = new(coroutines);
-        }
-
-        public bool MoveNext()
+        public override bool MoveNext()
         {
             for (int i = _coroutines.Count - 1; i >= 0; i--)
                 if (!_coroutines[i].MoveNext())
@@ -68,7 +50,5 @@ namespace Vurbiri
         {
             _coroutines.Clear();
         }
-
-        public void Reset() { }
     }
 }

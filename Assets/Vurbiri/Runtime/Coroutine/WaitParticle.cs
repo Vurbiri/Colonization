@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Vurbiri
 {
     [System.Serializable]
-    public class WaitParticle : IWait
+    public class WaitParticle : IEnumerator
     {
         [SerializeField] private ParticleSystem _particleSystem;
 

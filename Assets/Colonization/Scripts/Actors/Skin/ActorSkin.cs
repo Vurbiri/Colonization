@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private Bounds _bounds;
         [Space]
         [SerializeField] protected Animator _animator;
-        [ReadOnly, SerializeField] private float _durationDeath;
+        [ReadOnly, SerializeField] private WaitRealtime _durationDeath;
 
         #region Static
         private static readonly int s_idIdle = Animator.StringToHash("bIdle"), s_idDeath = Animator.StringToHash("bDeath");
@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.Actors
         {
             // тут, потому что в них используется GetBehaviour<T>()
             _reactState = new(this);
-            _deathState = new(this, _durationDeath);
+            _deathState = new(this);
 
             _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
         }

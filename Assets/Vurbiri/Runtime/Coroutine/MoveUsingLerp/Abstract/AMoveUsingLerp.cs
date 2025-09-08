@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Vurbiri
 {
-    public abstract class AMoveUsingLerp : IWait
+    public abstract class AMoveUsingLerp : Enumerator
     {
         [SerializeField] private Transform _transform;
         [SerializeField] private float _speed;
@@ -15,9 +15,12 @@ namespace Vurbiri
 
         protected abstract float DeltaTime { get; }
 
-        public Transform Transform => _transform;
+        public Transform Transform
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _transform;
+        }
 
-        public object Current => null;
         public bool IsWait => _isWait;
 
         public AMoveUsingLerp(Transform transform, float speed)
@@ -25,7 +28,7 @@ namespace Vurbiri
             _transform = transform; _speed = speed;
         }
 
-        public bool MoveNext()
+        sealed public override bool MoveNext()
         {
             _progress += DeltaTime * _speed;
             if (_isWait = _progress < 1f)
@@ -82,8 +85,6 @@ namespace Vurbiri
                 _progress = 1f;
             }
         }
-
-        public void Reset() { }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Set(Vector3 current, Vector3 target, float speed)

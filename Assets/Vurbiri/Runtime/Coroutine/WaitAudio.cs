@@ -1,8 +1,9 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri
 {
-	public class WaitAudio : IWait
+	public class WaitAudio : IEnumerator
     {
         private readonly AudioSource _audioSource;
 

@@ -1,18 +1,13 @@
-using System.Runtime.CompilerServices;
-
 namespace Vurbiri
 {
     [System.Serializable]
     sealed public class WaitScaledTime : AWaitTime
     {
-        protected override float ApplicationTime
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => UnityEngine.Time.time;
-        }
+        private static readonly System.Func<float> s_time = typeof(UnityEngine.Time).GetStaticGetor<float>(nameof(UnityEngine.Time.time));
 
-        public WaitScaledTime(float time) : base(time) { }
-        public WaitScaledTime(AWaitTime waitTime) : base(waitTime) { }
+        public WaitScaledTime() : base(s_time) { }
+        public WaitScaledTime(float time) : base(time, s_time) { }
+        public WaitScaledTime(AWaitTime time) : base(time, s_time) { }
 
         public static implicit operator WaitScaledTime(float time) => new(time);
     }

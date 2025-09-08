@@ -15,8 +15,9 @@ namespace Vurbiri.Colonization.Actors
         protected AudioSource _audioSource;
 
         public abstract Vector3 StartPosition { get; }
+        public virtual Transform Container => null;
         public AudioSource AudioSource => _audioSource;
-
+        
         protected void InitInternal(ReadOnlyArray<string> hitSFX)
 		{
             _thisTransform = transform;

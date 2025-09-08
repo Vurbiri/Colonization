@@ -7,14 +7,11 @@ namespace Vurbiri.Colonization.Actors
         sealed protected class DeathState : ASkinState
         {
             private readonly WaitSignal _waitStartAnimation = new();
-            private readonly WaitRealtime _waitEndAnimation;
-            
+ 
             public readonly WaitStateController<Actor.DeathStage> waitState = new(Actor.DeathStage.None);
 
-            public DeathState(ActorSkin parent, float duration) : base(s_idDeath, parent)
+            public DeathState(ActorSkin parent) : base(s_idDeath, parent)
             {
-                _waitEndAnimation = new(duration);
-
                 GetDeathBehaviour().EventEnter += OnEventEnter;
             }
 
@@ -29,7 +26,7 @@ namespace Vurbiri.Colonization.Actors
             {
                 waitState.SetState(Actor.DeathStage.Start);
                 yield return _waitStartAnimation;
-                yield return _waitEndAnimation;
+                yield return WaitEndAnimation;
                 waitState.SetState(Actor.DeathStage.EndAnimation);
                 yield return SFX.Death_Cn();
                 waitState.SetState(Actor.DeathStage.End);

@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
     {
         private readonly AudioClip _clipRun, _clipHit;
         private readonly ParticleSystem _particle;
-        private readonly WaitScaledTime _waitTime = new(0f);
+        private readonly WaitScaledTime _waitTime = new();
         private readonly WaitSignal _waitActivate = new();
         private readonly float _lifetimeRate, _lifetimeMinRate, _lifetimeMaxRate;
         private readonly float _avgSpeed;

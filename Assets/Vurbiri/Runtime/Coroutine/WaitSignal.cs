@@ -1,6 +1,6 @@
 namespace Vurbiri
 {
-    sealed public class WaitSignal : IWait
+    sealed public class WaitSignal : System.Collections.IEnumerator
     {
         private bool _isWait;
 

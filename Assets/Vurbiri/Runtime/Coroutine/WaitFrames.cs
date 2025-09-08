@@ -2,16 +2,15 @@ using System.Collections;
 
 namespace Vurbiri
 {
-    public class WaitFrames : IWait
+    sealed public class WaitFrames : Enumerator
     {
         private ushort _waitFrames;
         private ushort _currentFrames;
         private bool _isWait;
 
-        public object Current => null;
         public bool IsWait => _isWait;
 
-        public bool MoveNext()
+        public override bool MoveNext()
         {
             if (!_isWait)
                 _currentFrames = _waitFrames;
@@ -33,7 +32,5 @@ namespace Vurbiri
             _isWait = false;
             return this;
         }
-
-        public void Reset() => _isWait = false;
     }
 }

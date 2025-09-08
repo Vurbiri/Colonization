@@ -14,6 +14,7 @@ namespace Vurbiri.Colonization.Actors
 
             protected ActorSkin Skin { [Impl(256)] get => _parent; }
             protected ActorSFX SFX { [Impl(256)] get => _parent._sfx; }
+            protected Enumerator WaitEndAnimation { [Impl(256)] get => _parent._durationDeath; }
 
             [Impl(256)] public ASkinState(int idParam, ActorSkin parent) : base(parent._stateMachine)
             {

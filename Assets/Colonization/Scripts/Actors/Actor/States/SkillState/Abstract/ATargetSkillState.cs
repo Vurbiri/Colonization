@@ -90,7 +90,7 @@ namespace Vurbiri.Colonization.Actors
                         if (_target.IsDead)
                         {
                             GameContainer.TriggerBus.TriggerActorKill(Owner, _target._typeId, _target._id);
-                            wait = _waitRealtime;
+                            wait = _waitRealtime.Restart();
                             break;
                         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Vurbiri.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.UI
 {
@@ -13,13 +15,8 @@ namespace Vurbiri.UI
         private static readonly List<Banner> s_banners = new();
         private static readonly Stack<Banner> s_pool = new();
 
-        private static Vector2 s_maxSize, s_padding, s_direction, s_space;
+        private static Settings s_settings;
         private static Vector2 s_currentPosition;
-        private static float s_moveSpeed;
-
-        private static Banner s_prefab;
-        private static Transform s_container;
-        private static IdArray<MessageTypeId, Color> s_colors;
 
         [SerializeField] private Image _windowImage;
         [SerializeField] private TextMeshProUGUI _textTMP;
@@ -33,37 +30,24 @@ namespace Vurbiri.UI
         private Coroutine _coroutine;
         private int _index;
 
-        public static IdArray<MessageTypeId, Color> Colors => s_colors;
+        public static IdArray<MessageTypeId, Color> Colors => s_settings.colors;
 
-        internal static void Init(BannerInitialize init)
-        {
-            s_maxSize = init.maxSize; s_padding = init.padding; 
-            s_direction = init.direction; s_space = s_direction * init.space;
-            s_moveSpeed = init.moveSpeed;
-            s_prefab = init.prefab; s_container = init.container; s_colors = init.colors;
+        internal static void Init(Settings settings) => s_settings = settings;
 
-            for (int i = 0; i < init.startCount; i++)
-                s_pool.Push(Instantiate(s_prefab, s_container, false).Init());
-        }
         public static void Open(string text, Color color, IEnumerator delay, bool oneScene = false)
         {
-            Banner banner;
-            if (s_pool.Count > 0)
-                banner = s_pool.Pop();
-            else
-                banner = Instantiate(s_prefab, s_container, false).Init();
-
+            Banner banner = s_pool.Count > 0 ? s_pool.Pop() : s_settings.Create();
             banner.Setup(s_banners.Count, text, color, delay, oneScene);
             s_banners.Add(banner);
         }
-        public static void Open(string text, Id<MessageTypeId> typeId, IEnumerator delay, bool oneScene = false) => Open(text, s_colors[typeId], delay, oneScene);
+        public static void Open(string text, Id<MessageTypeId> typeId, IEnumerator delay, bool oneScene = false) => Open(text, s_settings.colors[typeId], delay, oneScene);
         public static WaitRealtime Open(string text, Color color, float time, bool oneScene = false)
         {
             WaitRealtime waitTime = new(time);
-            Open(text, color, waitTime, oneScene);
+            Open(text, color, waitTime.GetEnumerator(), oneScene);
             return waitTime;
         }
-        public static WaitRealtime Open(string text, Id<MessageTypeId> typeId, float time, bool oneScene = false) => Open(text, s_colors[typeId], time, oneScene);
+        public static WaitRealtime Open(string text, Id<MessageTypeId> typeId, float time, bool oneScene = false) => Open(text, s_settings.colors[typeId], time, oneScene);
 
         public static void Clear()
         {
@@ -73,7 +57,7 @@ namespace Vurbiri.UI
             s_currentPosition = Vector3.zero;
         }
 
-        private Banner Init()
+        private Banner Init(float speed)
         {
             _windowTransform = _windowImage.rectTransform;
             _textTransform = _textTMP.rectTransform;
@@ -82,7 +66,7 @@ namespace Vurbiri.UI
             _textTMP.overflowMode = TextOverflowModes.Overflow;
 
             _waitSwitch.Disable();
-            _move = new(_windowTransform, s_moveSpeed);
+            _move = new(_windowTransform, speed);
 
             return this;
         }
@@ -93,7 +77,7 @@ namespace Vurbiri.UI
 
             _outline.effectColor = color;
 
-            _textTransform.sizeDelta = s_maxSize;
+            _textTransform.sizeDelta = s_settings.maxSize;
             _textTMP.text = text;
             _textTMP.color = color;
             _textTMP.ForceMeshUpdate();
@@ -101,15 +85,15 @@ namespace Vurbiri.UI
             Vector2 size = _textTMP.textBounds.size;
 
             _textTransform.sizeDelta = size;
-            _windowTransform.sizeDelta = size += s_padding;
+            _windowTransform.sizeDelta = size += s_settings.padding;
 
-            _directSize = new(size.x * s_direction.x, size.y * s_direction.y);
+            _directSize = new(size.x * s_settings.direction.x, size.y * s_settings.direction.y);
             _windowTransform.localPosition = new(s_currentPosition.x + _directSize.x * 0.5f, s_currentPosition.y + _directSize.y * 0.5f, 0f);
 
             _coroutine = StartCoroutine(Work_Cn(delay));
             if (oneScene) SceneManager.sceneUnloaded += OnSceneUnloaded;
 
-            s_currentPosition += s_space + _directSize;
+            s_currentPosition += s_settings.space + _directSize;
         }
 
         private void SetPosition(int index)
@@ -120,7 +104,7 @@ namespace Vurbiri.UI
                 _move.Run(this, new(s_currentPosition.x + _directSize.x * 0.5f, s_currentPosition.y + _directSize.y * 0.5f, 0f));
             }
 
-            s_currentPosition += s_space + _directSize;
+            s_currentPosition += s_settings.space + _directSize;
         }
 
         private IEnumerator Work_Cn(IEnumerator delay)
@@ -164,6 +148,48 @@ namespace Vurbiri.UI
 
             EndWork(this);
         }
+
+        #region Nested Settings
+        //******************************************************
+        [System.Serializable]
+        internal class Settings
+        {
+            [SerializeField] private Banner _prefab;
+            [SerializeField] private Transform _container;
+            [Space]
+            [SerializeField] private float _moveSpeed;
+            [Space]
+            public Vector2 maxSize;
+            public Vector2 padding;
+            [Space]
+            public IdArray<MessageTypeId, Color> colors;
+
+            [NonSerialized] public Vector2 direction;
+            [NonSerialized] public Vector2 space;
+
+            public Settings Init(Vector2 direction, float space, int startCount)
+            {
+                this.direction = direction;
+                this.space = direction * space;
+
+                for (int i = 0; i < startCount; i++)
+                    s_pool.Push(Create());
+
+                return this;
+            }
+
+            [Impl(256)] public Banner Create() => Instantiate(_prefab, _container, false).Init(_moveSpeed);
+
+
+#if UNITY_EDITOR
+            internal void OnValidate(BannerInitialize init)
+            { 
+                EUtility.SetPrefab(ref _prefab);
+                init.SetComponent(ref _container);
+            }
+#endif
+        }
+        #endregion
 
 #if UNITY_EDITOR
         private void OnValidate()

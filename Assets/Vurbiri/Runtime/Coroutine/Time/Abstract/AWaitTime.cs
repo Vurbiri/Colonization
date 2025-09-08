@@ -1,62 +1,59 @@
+using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 
 namespace Vurbiri
 {
     [System.Serializable]
-    public abstract class AWaitTime : IWait
+    public abstract class AWaitTime : IEnumerable
     {
         [UnityEngine.SerializeField] private float _waitTime;
-        private float _offsetTime;
-        private float _waitUntilTime;
-        private bool _isWait;
 
-        protected abstract float ApplicationTime { get; }
+        private readonly Timer _timer;
 
-        public object Current => null;
         public float Time => _waitTime;
-        public float CurrentTime => _waitUntilTime;
+        public IEnumerator Current => _timer;
 
-        public bool IsWait => _isWait;
-
-        public AWaitTime(float time) => _waitTime = time;
-        public AWaitTime(AWaitTime waitTime) => _waitTime = waitTime._waitTime;
-
-        public bool MoveNext()
-        {
-            if (!_isWait)
-                _waitUntilTime = _waitTime + _offsetTime + ApplicationTime;
-
-            return _isWait = _waitUntilTime > ApplicationTime;
-        }
+        protected AWaitTime(Func<float> applicationTime) => _timer = new(applicationTime);
+        protected AWaitTime(float time, Func<float> applicationTime) : this(applicationTime) => _waitTime = time;
+        protected AWaitTime(AWaitTime time, Func<float> applicationTime) : this(applicationTime) => _waitTime = time._waitTime;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator Restart(float value) => OffsetRestart(value, 0f);
+        public IEnumerator Restart() => _timer.Set(_waitTime);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator OffsetRestart(float value, float offset)
+        public IEnumerator Restart(float value)
         {
             _waitTime = value;
-            _offsetTime = offset;
-            _isWait = false;
-            return this;
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator Restart()
-        {
-            _offsetTime = 0f;
-            _isWait = false;
-            return this;
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator OffsetRestart(float offset)
-        {
-            _offsetTime = offset;
-            _isWait = false;
-            return this;
+            return _timer.Set(value);
         }
 
-        public void Reset() => _isWait = false;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerator OffsetRestart(float offset) => _timer.Set(_waitTime + offset);
+
+        public IEnumerator GetEnumerator() => _timer.Set(_waitTime);
+
+        public static implicit operator Enumerator(AWaitTime self) => self._timer.Set(self._waitTime);
+
+        #region Nested Timer
+        // *******************************************************
+        sealed private class Timer : Enumerator
+        {
+            private readonly Func<float> _applicationTime;
+            private float _waitUntilTime;
+
+            public Timer(Func<float> applicationTime) => _applicationTime = applicationTime;
+
+            public override bool MoveNext() => _waitUntilTime > _applicationTime();
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Enumerator Set(float time)
+            {
+                _waitUntilTime = time + _applicationTime();
+                return this;
+            }
+        }
+        #endregion
     }
 }
