@@ -42,8 +42,8 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                 DrawLine(offsetLine);
 
-                DrawSlider(P_RANGE, 10f);
-                DrawSlider(P_DISTANCE, 20f);
+                DrawSlider(P_RANGE, 12f);
+                DrawSlider(P_DISTANCE, 22f);
 
                 DrawLine(offsetLine);
                 Space();

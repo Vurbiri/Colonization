@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.Actors
                 protected Key KeyActor { [Impl(256)] get => _parent._actor._currentHex.Key; }
                 protected Key KeyTarget { [Impl(256)] get => _target._currentHex.Key; }
 
-                protected float TargetOffset { [Impl(256)] get => _target._extentsZ; }
+                protected float TargetOffset { [Impl(256)] get => _target._zSize; }
 
                 protected Id<PlayerId> Owner { [Impl(256)] get => _parent._actor._owner; }
                 #endregion

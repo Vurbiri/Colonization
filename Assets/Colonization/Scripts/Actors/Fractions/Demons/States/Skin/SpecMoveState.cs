@@ -6,14 +6,15 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed private class SpecMoveState : ASpecState
         {
-            public SpecMoveState(ActorSkin parent, DemonSFX sfx) : base(s_idSpecMove, parent, sfx) { }
+            public SpecMoveState(ActorSkin parent, DemonSFX sfx) : base(parent, sfx) { }
 
             public override void Enter() => StartCoroutine(Run_Cn());
+            public override void Exit() => DisableAnimation(s_idSpecMove);
 
             private IEnumerator Run_Cn()
             {
                 yield return SFX.Spec(Skin);
-                EnableAnimation();
+                EnableAnimation(s_idSpecMove);
                 signal.Send();
             }
         }

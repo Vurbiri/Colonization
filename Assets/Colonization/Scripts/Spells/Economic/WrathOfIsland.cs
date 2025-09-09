@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
 
                     CameraController.ToPosition(position, true);
                     _damage.Apply(target);
-                    yield return HitSFX.Hit(s_settings.wrathSFX, s_sfxUser, target.Skin);
+                    yield return HitSFX.Hit(s_settings.wrathSFX, null, target.Skin);
                 }
 
                 s_isCast.False();

@@ -1,4 +1,3 @@
-using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
@@ -16,7 +15,6 @@ namespace Vurbiri.Colonization
         private static readonly ASpell[] s_militarySpells;
 
         private static readonly RBool s_isCast = new(false);
-        private static SharedSFXUser s_sfxUser;
 
         public ASpell this[int type, int id] => s_spells[type][id];
         public ASpell this[SpellId spellId] => s_spells[spellId.type][spellId.id];
@@ -53,15 +51,12 @@ namespace Vurbiri.Colonization
 
         public static void Init()
         {
-            s_sfxUser = new();
-
             Order.Create(); RandomHealing.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); Transmutation.Create(); Sacrifice.Create();
             BloodTrade.Create(); Spying.Create(); WallBuild.Create(); Marauding.Create(); RoadDemolition.Create(); SwapId.Create(); Zeal.Create();
         }
 
         public static void Clear()
         {
-            s_sfxUser = null;
             s_isCast.UnsubscribeAll(); s_isCast.SilentValue = false;
 
             for (int i = 0; i < PlayerId.HumansCount; i++)

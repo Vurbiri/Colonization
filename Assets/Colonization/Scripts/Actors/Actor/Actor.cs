@@ -21,8 +21,6 @@ namespace Vurbiri.Colonization.Actors
         protected Id<PlayerId> _owner;
         private bool _isPersonTurn;
 
-        private float _extentsZ;
-
         #region Abilities
         protected AbilitiesSet<ActorAbilityId> _abilities;
         protected SubAbility<ActorAbilityId> _currentHP;
@@ -40,6 +38,8 @@ namespace Vurbiri.Colonization.Actors
         protected EffectsSet _effects;
 
         protected AStates _states;
+
+        private float _zSize;
 
         private readonly RBool _interactable = new(false);
         private readonly RBool _canCancel = new(false);
@@ -117,12 +117,7 @@ namespace Vurbiri.Colonization.Actors
 
             _states = StatesCreate(settings);
 
-            #region Bounds
-            var bounds = _states.Skin.Bounds;
-            _thisCollider.size = bounds.size;
-            _thisCollider.center = bounds.center;
-            _extentsZ = bounds.extents.z;
-            #endregion
+            _zSize = _states.Skin.SetupCollider(_thisCollider);
 
             _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, CONST.ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
             _currentHex.EnterActor(this);

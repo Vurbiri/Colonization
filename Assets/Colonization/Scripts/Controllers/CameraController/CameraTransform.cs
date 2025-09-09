@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Reactive;
@@ -122,6 +123,16 @@ namespace Vurbiri.Colonization.Controllers
                 target.anchoredPosition = localPoint;
 
             target.rotation = Quaternion.LookRotation(_cameraTransform.forward);
+        }
+
+        public IEnumerator Shake_Cn()
+        {
+            MoveUsingLerp move = new(_cameraTransform, 10f);
+
+            Vector3 start = _cameraTransform.localPosition;
+            Vector3 target = new(start.x, start.y * 1.075f, start.z);
+            yield return move.Run(target);
+            yield return move.Run(start);
         }
 
 

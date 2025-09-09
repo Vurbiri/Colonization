@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
     {
         sealed protected class SkillState : ASkinState
         {
-            private readonly int _id;
+            private readonly int _id, _idParam;
             private readonly WaitSignal _signal = new();
             private readonly WaitScaledTime[] _waitHits;
             private readonly WaitScaledTime _waitEnd;
@@ -18,9 +18,10 @@ namespace Vurbiri.Colonization.Actors
 
             public float FirsHitTime { [Impl(256)] get => _waitHits[0].Time; }
 
-            public SkillState(int idParam, ActorSkin parent, AnimationTime timing, int id) : base(idParam, parent)
+            public SkillState(int idParam, ActorSkin parent, AnimationTime timing, int id) : base(parent)
             {
                 _id = id;
+                _idParam = idParam;
 
                 _waitHits = timing.WaitHits;
                 _waitEnd = timing.WaitEnd;
@@ -36,7 +37,7 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                EnableAnimation();
+                EnableAnimation(_idParam);
                 _coroutine = StartCoroutine(StartSkill_Cn());
             }
 
@@ -48,7 +49,7 @@ namespace Vurbiri.Colonization.Actors
                     _coroutine = null;
                 }
 
-                DisableAnimation();
+                DisableAnimation(_idParam);
             }
 
             private IEnumerator StartSkill_Cn()

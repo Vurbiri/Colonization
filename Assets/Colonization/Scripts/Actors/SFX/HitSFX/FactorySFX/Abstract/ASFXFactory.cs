@@ -14,12 +14,19 @@ namespace Vurbiri.Colonization.Actors
 
 #if UNITY_EDITOR
 
+        protected const string FILE_NAME = "ASFX_", MENU = "Vurbiri/ActorSFX/";
+        protected const int ORDER = 49;
+
         [HideInInspector] public int index_ed = -1;
-        
+
+        public abstract TargetForSFX_Ed Target_Ed { get; }
+
         protected virtual void OnValidate()
         {
-            if(!Application.isPlaying)
+            if (!Application.isPlaying)
+            {
                 ValidateName_Ed();
+            }
         }
 
         private async void ValidateName_Ed()

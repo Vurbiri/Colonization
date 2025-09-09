@@ -10,14 +10,14 @@ namespace Vurbiri.Colonization.Actors
  
             public readonly WaitStateController<Actor.DeathStage> waitState = new(Actor.DeathStage.None);
 
-            public DeathState(ActorSkin parent) : base(s_idDeath, parent)
+            public DeathState(ActorSkin parent) : base(parent)
             {
                 GetDeathBehaviour().EventEnter += OnEventEnter;
             }
 
             public override void Enter()
             {
-                EnableAnimation();
+                EnableAnimation(s_idDeath);
                 SFX.Death();
                 StartCoroutine(Death_Cn());
             }
@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization.Actors
 
             private void OnEventEnter()
             {
-                DisableAnimation();
+                DisableAnimation(s_idDeath);
                 _waitStartAnimation.Send();
             }
         }

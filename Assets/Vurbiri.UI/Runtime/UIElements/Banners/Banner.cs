@@ -44,7 +44,7 @@ namespace Vurbiri.UI
         public static WaitRealtime Open(string text, Color color, float time, bool oneScene = false)
         {
             WaitRealtime waitTime = new(time);
-            Open(text, color, waitTime.GetEnumerator(), oneScene);
+            Open(text, color, waitTime, oneScene);
             return waitTime;
         }
         public static WaitRealtime Open(string text, Id<MessageTypeId> typeId, float time, bool oneScene = false) => Open(text, s_settings.colors[typeId], time, oneScene);

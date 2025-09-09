@@ -9,6 +9,6 @@ namespace Vurbiri.Colonization.Actors
 
 		public SFXStorage(Dictionary<string, IHitSFX> SFXs) => _SFXs = SFXs;
 
-        public IEnumerator Hit(string name, ISFXUser user, ActorSkin target) => _SFXs[name].Hit(user, target);
+        public IEnumerator Hit(string name, ActorSFX user, ActorSkin target) => _SFXs[name].Hit(user, target);
     }
 }

@@ -34,9 +34,9 @@ namespace Vurbiri.Colonization.Actors
 
         public event Action EventStart;
 
-        public Transform Transform { [Impl(256)] get => _thisTransform; }
-        public Bounds Bounds { [Impl(256)] get => _bounds; }
-        public ActorSFX ActorSFX { [Impl(256)] get => _sfx; }
+        public ActorSFX SFX { [Impl(256)] get => _sfx; }
+        public Vector3 Size { [Impl(256)] get => _bounds.size; }
+        public Vector3 Extents { [Impl(256)] get => _bounds.extents; }
 
         private void Start()
         {
@@ -49,8 +49,7 @@ namespace Vurbiri.Colonization.Actors
 
         public abstract void Init(Id<PlayerId> owner, Skills skills);
 
-        [Impl(256)] 
-        protected void InitInternal(ReadOnlyArray<AnimationTime> timings, ActorSFX sfx)
+        [Impl(256)] protected void InitInternal(ReadOnlyArray<AnimationTime> timings, ActorSFX sfx)
         {
             _thisTransform = transform;
             _sfx = sfx;
@@ -90,6 +89,20 @@ namespace Vurbiri.Colonization.Actors
 
         [Impl(256)] public float GetFirsHitTime(int skillId) => _skillStates[skillId].FirsHitTime;
 
+        [Impl(256)] public void Play(AudioClip clip) => _sfx.Play(clip);
+        [Impl(256)] public Vector3 GetPosition(float heightRate)
+        {
+            Vector3 position = _thisTransform.position;
+            position.y += _bounds.extents.y * heightRate;
+            return position;
+        }
+
+        [Impl(256)] public float SetupCollider(BoxCollider collider)
+        {
+            collider.size = _bounds.size;
+            collider.center = _bounds.center;
+            return _bounds.extents.z;
+        }
 
 #if UNITY_EDITOR
 

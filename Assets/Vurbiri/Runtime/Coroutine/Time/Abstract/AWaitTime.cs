@@ -5,14 +5,15 @@ using System.Runtime.CompilerServices;
 namespace Vurbiri
 {
     [System.Serializable]
-    public abstract class AWaitTime : IEnumerable
+    public abstract class AWaitTime : Enumerator
     {
         [UnityEngine.SerializeField] private float _waitTime;
 
         private readonly Timer _timer;
+        private bool _isWait;
 
         public float Time => _waitTime;
-        public IEnumerator Current => _timer;
+        public IEnumerator CurrentTimer => _timer;
 
         protected AWaitTime(Func<float> applicationTime) => _timer = new(applicationTime);
         protected AWaitTime(float time, Func<float> applicationTime) : this(applicationTime) => _waitTime = time;
@@ -32,9 +33,13 @@ namespace Vurbiri
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator OffsetRestart(float offset) => _timer.Set(_waitTime + offset);
 
-        public IEnumerator GetEnumerator() => _timer.Set(_waitTime);
+        sealed public override bool MoveNext()
+        {
+            if (!_isWait)
+                _timer.Set(_waitTime);
 
-        public static implicit operator Enumerator(AWaitTime self) => self._timer.Set(self._waitTime);
+            return _isWait = _timer.MoveNext();
+        }
 
         #region Nested Timer
         // *******************************************************
@@ -45,6 +50,7 @@ namespace Vurbiri
 
             public Timer(Func<float> applicationTime) => _applicationTime = applicationTime;
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override bool MoveNext() => _waitUntilTime > _applicationTime();
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

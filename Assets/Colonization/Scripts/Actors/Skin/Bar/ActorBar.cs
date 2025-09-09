@@ -110,7 +110,7 @@ namespace Vurbiri.Colonization.Actors.UI
                 var abilitiesColors = GameContainer.UI.Colors.Ability;
 
                 bar._renderer = _hpBar.Renderer;
-                bar._thisTransform.localPosition = new(0f, actor.Skin.Bounds.size.y + _offset, 0f);
+                bar._thisTransform.localPosition = new(0f, actor.Skin.Size.y + _offset, 0f);
 
                 if (s_orderLevel >= short.MaxValue - (s_incOrderLevel << 1))
                     s_orderLevel = short.MinValue;

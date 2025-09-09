@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class BombSkin
     {
-        sealed private class ExplosionState : ASpecAttackState
+        sealed private class ExplosionState : ASpecState
         {
             private readonly WaitScaledTime _waitHit;
             private readonly WaitScaledTime _waitEnd;
@@ -17,9 +17,11 @@ namespace Vurbiri.Colonization.Actors
 
             public override void Enter()
             {
-                EnableAnimation();
+                EnableAnimation(s_idSpecSkill);
                 StartCoroutine(Run_Cn());
             }
+
+            public override void Exit() => DisableAnimation(s_idSpecSkill);
 
             private IEnumerator Run_Cn()
             {

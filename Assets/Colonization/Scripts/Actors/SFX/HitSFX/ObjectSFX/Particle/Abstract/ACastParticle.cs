@@ -6,13 +6,13 @@ namespace Vurbiri.Colonization.Actors
 	public abstract class ACastParticle : AParticle
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected ACastParticle(ACreatorParticle creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
+        protected ACastParticle(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected new void Setup(ActorSkin target)
         {
             base.Setup(target);
-            target.ActorSFX.Play(_clip);
+            target.Play(_clip);
         }
     }
 }

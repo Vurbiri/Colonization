@@ -14,21 +14,17 @@ namespace Vurbiri.Colonization.Actors
         public object Current => null;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public AParticle(ACreatorParticle creator, Action<APooledSFX> deactivate) : base(creator, deactivate)
+        public AParticle(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate)
         {
-            _clip = creator.clip;
-            _particle = creator.particle;
-            _targetHeightRate = creator.targetHeightRate;
+            _clip = creator.Clip;
+            _particle = creator.Particle;
+            _targetHeightRate = creator.HeightRate;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void Setup(ActorSkin target)
         {
-            Vector3 targetPosition = target.Transform.position;
-            targetPosition.y += target.Bounds.extents.y * _targetHeightRate;
-
-            Enable(targetPosition);
-
+            Enable(target.GetPosition(_targetHeightRate));
             _particle.Play();
         }
 

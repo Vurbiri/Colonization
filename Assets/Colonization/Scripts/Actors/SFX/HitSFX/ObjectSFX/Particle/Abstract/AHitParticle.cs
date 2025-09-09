@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.Actors
 	public abstract class AHitParticle : AParticle
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected AHitParticle(ACreatorParticle creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
+        protected AHitParticle(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected new void Setup(ActorSkin target)

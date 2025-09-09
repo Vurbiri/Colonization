@@ -43,5 +43,10 @@ namespace Vurbiri.Colonization
             foreach (var hex in hexagons.Values)
                 hex.Caption.ShowKey_Ed();
         }
+
+        public void CameraShake()
+        {
+            StartCoroutine(GameContainer.CameraTransform.Shake_Cn());
+        }
     }
 }
