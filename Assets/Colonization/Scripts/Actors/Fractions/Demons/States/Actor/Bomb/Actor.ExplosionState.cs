@@ -30,14 +30,13 @@ namespace Vurbiri.Colonization.Actors
                         if (hex.IsWarrior)
                         {
                             target = hex.Owner;
-                            _effects.Apply(Actor, hex.Owner);
+                            _effects.Apply(Actor, target);
                             target.Skin.Impact(null);
                         }
                     }
 
                     GetOutOfThisState();
                 }
-
             }  
         }
     }

@@ -129,12 +129,10 @@ namespace Vurbiri.Colonization.Controllers
         {
             MoveUsingLerp move = new(_cameraTransform, 10f);
 
-            Vector3 start = _cameraTransform.localPosition;
-            Vector3 target = new(start.x, start.y * 1.075f, start.z);
-            yield return move.Run(target);
+            var start = _cameraTransform.localPosition;
+            yield return move.Run(new(start.x, start.y * 1.07f, start.z));
             yield return move.Run(start);
         }
-
 
         public Unsubscription Subscribe(Action<Transform> action, bool instantGetValue = true) => _changedTransform.Add(action, instantGetValue, _cameraTransform);
         public void Unsubscribe(Action<Transform> action) => _changedTransform.Remove(action);

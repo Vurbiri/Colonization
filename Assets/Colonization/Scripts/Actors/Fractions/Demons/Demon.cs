@@ -4,14 +4,17 @@ namespace Vurbiri.Colonization.Actors
     {
         protected override AStates StatesCreate(ActorSettings settings)
         {
-            if(_id == DemonId.Imp)
+            if (_id == DemonId.Imp)
                 return new ImpStates(this, settings);
 
             if (_id == DemonId.Bomb)
                 return new BombStates(this, settings);
 
-                if (_id == DemonId.Grunt)
-            return new GruntStates(this, settings);
+            if (_id == DemonId.Grunt)
+                return new GruntStates(this, settings);
+
+            if (_id == DemonId.Fatty)
+                return new FattyStates(this, settings);
 
 
 
