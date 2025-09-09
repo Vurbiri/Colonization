@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Controllers
 {
@@ -21,22 +21,15 @@ namespace Vurbiri.Colonization.Controllers
 
         public Vector3 CameraPosition
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _cameraTransform.localPosition;
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set
+            [Impl(256)] get => _cameraTransform.localPosition;
+            [Impl(256)] set
             {
                 _cameraTransform.localPosition = value;
                 _cameraTransform.LookAt(_parentTransform);
                 _changedTransform.Invoke(_cameraTransform);
             }
         }
-        public Vector3 ParentPosition
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _parentTransform.position;
-        }
-
+        public Vector3 ParentPosition { [Impl(256)] get => _parentTransform.position; }
 
         public CameraTransform(Camera camera)
         {
@@ -48,15 +41,13 @@ namespace Vurbiri.Colonization.Controllers
             _cameraTransform.LookAt(_parentTransform);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Move(Vector3 offset)
+        [Impl(256)] public void Move(Vector3 offset)
         {
             _parentTransform.position = _bounds.ClosestPoint(_parentTransform.position + offset);
             _changedTransform.Invoke(_cameraTransform);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool MoveToTarget(Vector3 target, float smoothTime, float maxSqrVelocity)
+        [Impl(256)]public bool MoveToTarget(Vector3 target, float smoothTime, float maxSqrVelocity)
         {
             _parentTransform.position = Vector3.SmoothDamp(_parentTransform.position, target, ref _velocity, smoothTime, float.PositiveInfinity, Time.unscaledDeltaTime);
             if (_velocity.sqrMagnitude > maxSqrVelocity)
@@ -68,15 +59,13 @@ namespace Vurbiri.Colonization.Controllers
             return false;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Rotate(float angleY)
+        [Impl(256)] public void Rotate(float angleY)
         {
             _parentTransform.rotation *= Quaternion.Euler(0f, angleY, 0f);
             _changedTransform.Invoke(_cameraTransform);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetCameraAndParentPosition(Vector3 cameraPosition, Vector3 parentPosition)
+        [Impl(256)] public void SetCameraAndParentPosition(Vector3 cameraPosition, Vector3 parentPosition)
         {
             _parentTransform.position = parentPosition;
             _cameraTransform.localPosition = cameraPosition;
@@ -115,8 +104,7 @@ namespace Vurbiri.Colonization.Controllers
             #endregion
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void TransformToLocalPosition(RectTransform target, RectTransform canvas, Vector3 worldPosition)
+        [Impl(256)] public void TransformToLocalPosition(RectTransform target, RectTransform canvas, Vector3 worldPosition)
         {
             Vector3 screenPosition = _camera.WorldToScreenPoint(worldPosition);
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, screenPosition, _camera, out Vector2 localPoint))
@@ -125,19 +113,9 @@ namespace Vurbiri.Colonization.Controllers
             target.rotation = Quaternion.LookRotation(_cameraTransform.forward);
         }
 
-        public IEnumerator Shake_Cn()
-        {
-            MoveUsingLerp move = new(_cameraTransform, 10f);
-
-            Vector3 start = _cameraTransform.localPosition;
-            Vector3 target = new(start.x, start.y * 1.075f, start.z);
-            yield return move.Run(target);
-            yield return move.Run(start);
-        }
-
-
         public Unsubscription Subscribe(Action<Transform> action, bool instantGetValue = true) => _changedTransform.Add(action, instantGetValue, _cameraTransform);
         public void Unsubscribe(Action<Transform> action) => _changedTransform.Remove(action);
 
+        public static implicit operator Transform(CameraTransform self) => self._cameraTransform;
     }
 }

@@ -12,9 +12,7 @@ namespace Vurbiri.Colonization.Actors
 
             protected new DemonSFX SFX { [Impl(256)] get => _sfx; }
 
-            public ASpecState(ActorSkin parent, DemonSFX sfx) : base(parent) => _sfx = sfx;
-
-            
+            [Impl(256)] public ASpecState(ActorSkin parent, DemonSFX sfx) : base(parent) => _sfx = sfx;
         }
     }
 }

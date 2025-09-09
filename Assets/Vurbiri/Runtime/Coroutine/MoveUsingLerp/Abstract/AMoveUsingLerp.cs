@@ -19,6 +19,13 @@ namespace Vurbiri
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _transform;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set => _transform = value;
+        }
+        public float Speed
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _speed;
         }
 
         public bool IsWait => _isWait;
@@ -95,5 +102,9 @@ namespace Vurbiri
             _delta    = _end - _start;
             _progress = 0f;
         }
+
+#if UNITY_EDITOR
+        public void SetSpeed_Ed(float speed) => _speed = speed;
+#endif
     }
 }

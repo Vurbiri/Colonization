@@ -73,7 +73,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
                         Space();
                         DrawInt(P_COST, 0, 4, 1);
-                        DrawInt(P_VALUE, "Adv Value", -60, 60, 0);
+                        DrawInt(P_VALUE, "Adv Value", -100, 100, 0);
 
                         DrawLine(15f);
                         DrawProperty(P_SFX, "SFX Name");

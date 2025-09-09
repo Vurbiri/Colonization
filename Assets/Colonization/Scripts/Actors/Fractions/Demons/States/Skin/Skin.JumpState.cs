@@ -2,15 +2,19 @@ using System.Collections;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public partial class BombSkin
+    public partial class FattySkin
     {
-        sealed private class ExplosionState : ASpecState
+        sealed private class JumpState : ASkinState
         {
+            private readonly FattySFX _sfx;
             private readonly WaitScaledTime _waitHit;
             private readonly WaitScaledTime _waitEnd;
 
-            public ExplosionState(ActorSkin parent, DemonSFX sfx, AnimationTime timing) : base(parent, sfx) 
+            public readonly WaitSignal signal = new();
+
+            public JumpState(ActorSkin parent, FattySFX sfx, AnimationTime timing) : base(parent)
             {
+                _sfx = sfx;
                 _waitHit = timing.WaitHits[0];
                 _waitEnd = timing.WaitEnd;
             }
@@ -26,7 +30,10 @@ namespace Vurbiri.Colonization.Actors
             private IEnumerator Run_Cn()
             {
                 yield return _waitHit.Restart();
-                yield return SFX.Spec(Skin);
+                signal.Send();
+
+                yield return _sfx.Spec(Skin);
+
                 yield return _waitEnd.Restart();
                 signal.Send();
             }
