@@ -46,11 +46,15 @@ namespace Vurbiri.Colonization
 
             settings.Dispose();
 
+            // Local
+            //=======================================================
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             void AddHuman(int id, AHumanController controller)
             {
                 _controller.Add(id, controller);
                 _humans[id] = controller;
             }
+            //=======================================================
         }
 
         public void Dispose()

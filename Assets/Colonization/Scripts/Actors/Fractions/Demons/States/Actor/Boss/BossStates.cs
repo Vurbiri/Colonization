@@ -4,22 +4,23 @@ namespace Vurbiri.Colonization.Actors
 {
     sealed public partial class Demon
     {
-        public partial class BossStates : ADemonStates<BossSkin>
+        sealed public partial class BossStates : ADemonStates<BossSkin>
         {
-            public BossStates(Demon demon, ActorSettings settings) : base(demon, settings)
+            private EatState _eatState;
+
+            public BossStates(Demon demon, ActorSettings settings) : base(demon, settings) { }
+
+            public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed)
             {
+                _eatState = new(specSkill, this);
             }
+
+            public override bool CanUseSpecSkill() => _eatState.CanUse;
 
             public override WaitSignal UseSpecSkill()
             {
-                return null;
-            }
-
-            public override void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed) { }
-
-            public override bool CanUseSpecSkill()
-            {
-                return false;
+                _stateMachine.SetState(_eatState, true);
+                return _eatState.signal.Restart();
             }
         }
     }

@@ -21,11 +21,15 @@ namespace Vurbiri.Colonization.Actors
                 protected TSkin Skin { [Impl(256)] get => _parent._skin; }
                 protected BooleanAbility<ActorAbilityId> Moving { [Impl(256)] get => _parent._actor._move; }
                 protected RBool IsCancel { [Impl(256)] get => _parent._actor._canCancel; }
+
+                
                 protected Hexagon CurrentHex
                 {
                     [Impl(256)] get => _parent._actor._currentHex;
                     [Impl(256)] set => _parent._actor._currentHex = value;
                 }
+
+                protected Transform Transform { [Impl(256)] get => _parent._actor._thisTransform; }
                 protected Vector3 Position
                 {
                     [Impl(256)] get => _parent._actor._thisTransform.localPosition;

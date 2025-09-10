@@ -459,7 +459,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 1
     - serializedVersion: 16
-      name: A_Demon_Boss_Special_GrabAndEat
+      name: RA_Demon_Boss_Special_GrabAndEat
       takeName: Take 001
       internalID: -5729363228569848670
       firstFrame: 611
