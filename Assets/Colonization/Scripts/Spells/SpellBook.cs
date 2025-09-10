@@ -1,4 +1,5 @@
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -8,16 +9,16 @@ namespace Vurbiri.Colonization
         private static readonly int[][] s_costs;
         private static readonly string[][] s_keys;
 
-        private static readonly Human[] s_humans = new Human[PlayerId.HumansCount];
-
         private static readonly ASpell[][] s_spells = { s_economicSpells = new ASpell[EconomicSpellId.Count], s_militarySpells = new ASpell[MilitarySpellId.Count] };
         private static readonly ASpell[] s_economicSpells;
         private static readonly ASpell[] s_militarySpells;
 
         private static readonly RBool s_isCast = new(false);
 
-        public ASpell this[int type, int id] => s_spells[type][id];
-        public ASpell this[SpellId spellId] => s_spells[spellId.type][spellId.id];
+        private static Human[] Humans { [Impl(256)] get => GameContainer.Players.Humans; }
+
+        public ASpell this[int type, int id] { [Impl(256)] get => s_spells[type][id]; }
+        public ASpell this[SpellId spellId] { [Impl(256)] get => s_spells[spellId.type][spellId.id]; }
 
         public RBool IsCast => s_isCast;
 
@@ -28,13 +29,6 @@ namespace Vurbiri.Colonization
             s_keys  = new string[][] { s_settings.economicKey.Values, s_settings.militaryKey.Values };
             s_settings.economicCost = null; s_settings.militaryCost = null;
             s_settings.economicKey = null; s_settings.militaryKey = null;
-        }
-
-        public SpellBook(Human human)
-        {
-            int id = human.Id;
-            
-            s_humans[id] = human;
         }
 
         public void Cast(int type, int id, SpellParam param)
@@ -60,7 +54,7 @@ namespace Vurbiri.Colonization
             s_isCast.UnsubscribeAll(); s_isCast.SilentValue = false;
 
             for (int i = 0; i < PlayerId.HumansCount; i++)
-                s_humans[i] = null;
+                Humans[i] = null;
 
             for (int i = 0; i < EconomicSpellId.Count; i++)
                 s_economicSpells[i].Clear(EconomicSpellId.Type, i);

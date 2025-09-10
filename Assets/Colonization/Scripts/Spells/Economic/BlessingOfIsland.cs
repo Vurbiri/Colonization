@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
                     _blessed.Clear();
                     _cost.Set(Gold, param.valueA); _cost.Set(Food, param.valueB);
 
-                    if (s_humans[param.playerId].IsPay(_cost))
+                    if (Humans[param.playerId].IsPay(_cost))
                         FindActorsOnSurface(_blessed, SurfaceId.Village, SurfaceId.Field);
 
                     _canCast = _blessed.Count > 0;
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
 
                     Cast_Cn(param.playerId, value).Start();
                     ShowSpellName(param.playerId, 3f + 2f * count);
-                    s_humans[param.playerId].Pay(_cost);
+                    Humans[param.playerId].Pay(_cost);
 
                     _canCast = false;
                 }

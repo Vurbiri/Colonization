@@ -7,50 +7,6 @@ namespace Vurbiri.Colonization
 	{
         protected AHumanController(int playerId, Settings settings) : base(playerId, settings) { }
 
-        // TSET !!!!!!!!!!!!!!
-        public void SpawnTest(int id, int count)
-        {
-            UnityEngine.Debug.Log("SpawnTest");
-            Hexagon hexagon;
-            for (int i = 0; i < count; i++)
-            {
-                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
-                Actor actor = _spawner.Create(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
-            }
-        }
-        public void SpawnTest(Id<WarriorId> id, Key key)
-        {
-            UnityEngine.Debug.Log("SpawnTest");
-            Hexagon hexagon;
-            if ((hexagon = GameContainer.Hexagons[key]).CanWarriorEnter)
-            {
-                Actor actor = _spawner.Create(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
-            }
-        }
-        public void SpawnDemonTest(Id<DemonId> id, Key key)
-        {
-            UnityEngine.Debug.Log("SpawnDemonTest");
-            Hexagon hexagon;
-            if ((hexagon = GameContainer.Hexagons[key]).CanDemonEnter)
-            {
-                Actor actor = _spawner.CreateDemon(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
-            }
-        }
-        public void SpawnDemonTest(int id, int count)
-        {
-            UnityEngine.Debug.Log("SpawnDemonTest");
-            Hexagon hexagon;
-            for (int i = 0; i < count; i++)
-            {
-                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanDemonEnter) ;
-                Actor actor = _spawner.CreateDemon(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
-            }
-        }
-
         public void ActorKill(Id<ActorTypeId> type, int id)
         {
             if (type == ActorTypeId.Demon)

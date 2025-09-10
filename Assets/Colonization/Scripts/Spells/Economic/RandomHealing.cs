@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
                 if (_canCast = !s_isCast)
                 {
                     _wounded.Clear();
-                    if (s_humans[param.playerId].IsPay(_cost))
+                    if (Humans[param.playerId].IsPay(_cost))
                     {
                         for (int playerId = 0; playerId < PlayerId.Count; playerId++)
                         {
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
                     
                     Cast_Cn(_wounded.Rand()).Start();
                     ShowSpellName(param.playerId);
-                    s_humans[param.playerId].Pay(_cost);
+                    Humans[param.playerId].Pay(_cost);
 
                     _canCast = false;
                 }

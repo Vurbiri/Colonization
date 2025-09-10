@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
             public override bool Prep(SpellParam param)
             {
                 _blood = param.valueA - (param.valueA % s_settings.bloodTradePay);
-                return _canCast = !s_isCast & _blood > 0 && s_humans[param.playerId].Resources[Blood] >= _blood;
+                return _canCast = !s_isCast & _blood > 0 && Humans[param.playerId].Resources[Blood] >= _blood;
             }
 
             public override void Cast(SpellParam param)
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
                 {
                     _cost.RandomAddRange(_blood / s_settings.bloodTradePay * s_settings.bloodTradeBay);
 
-                    var resources = s_humans[param.playerId].Resources;
+                    var resources = Humans[param.playerId].Resources;
                     resources.Remove(Blood, _blood);
                     resources.Add(_cost);
 

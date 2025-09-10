@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
                     _targets.Clear();
                     _cost.Set(Wood, param.valueA); _cost.Set(Ore, param.valueB);
 
-                    if (s_humans[param.playerId].IsPay(_cost))
+                    if (Humans[param.playerId].IsPay(_cost))
                         FindActorsOnSurface(_targets, SurfaceId.Forest, SurfaceId.Mountain);
 
                     _canCast = _targets.Count > 0;
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
 
                     Cast_Cn().Start();
                     ShowSpellName(param.playerId, 3f + 2f * count);
-                    s_humans[param.playerId].Pay(_cost);
+                    Humans[param.playerId].Pay(_cost);
 
                     _canCast = false;
                 }

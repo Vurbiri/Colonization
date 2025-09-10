@@ -9,8 +9,9 @@ namespace Vurbiri.Colonization.Actors
             sealed private class FearState : ASpecMoveState
             {
                 private readonly int _hpOffset;
+                private bool _canUse;
 
-                public new bool CanUse => Moving.IsValue;
+                public new bool CanUse => _canUse = Moving.IsValue && !(Chance.Rolling(HP.Percent + _hpOffset) || NearNoWarriors(CurrentHex));
 
                 public FearState(SpecSkillSettings specSkill, float speed, ADemonSpecMoveStates parent) : base(specSkill, speed, parent)
                 {
@@ -20,7 +21,7 @@ namespace Vurbiri.Colonization.Actors
                 protected override bool TryGetTarget(out Hexagon targetHex, out Key direction)
                 {
                     targetHex = null; direction = new();
-                    if (Moving.IsValue && !(Chance.Rolling(HP.Percent + _hpOffset) || NearNoWarriors(CurrentHex)))
+                    if (_canUse)
                     {
                         Key currentKey = CurrentHex.Key;
                         Hexagon temp;
@@ -39,6 +40,7 @@ namespace Vurbiri.Colonization.Actors
                                 }
                             }
                         }
+                        _canUse = false;
                     }
 
                     return targetHex != null;

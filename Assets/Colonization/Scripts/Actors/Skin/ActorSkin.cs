@@ -7,7 +7,7 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
-    //[DisallowMultipleComponent]
+    [DisallowMultipleComponent]
     public abstract partial class ActorSkin : MonoBehaviour
     {
         [SerializeField] private Bounds _bounds;

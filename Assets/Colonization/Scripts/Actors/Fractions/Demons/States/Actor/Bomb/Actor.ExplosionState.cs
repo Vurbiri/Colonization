@@ -20,9 +20,7 @@ namespace Vurbiri.Colonization.Actors
 
                 private IEnumerator ApplySkill_Cn()
                 {
-                    var wait = Skin.SpecSpawn();
-
-                    yield return wait;
+                    yield return Skin.SpecSpawn();
 
                     Actor target;
                     foreach (var hex in CurrentHex.Neighbors)

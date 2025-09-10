@@ -107,7 +107,7 @@ namespace Vurbiri.Colonization
             }
 
             for(int i = 0; i < _hexagons.Count; i++)
-                _hexagons[i].CrossroadRemove(this);
+                _hexagons[i].Crossroads.Remove(this);
             
             Object.Destroy(_edifice.gameObject);
             return ending = false;

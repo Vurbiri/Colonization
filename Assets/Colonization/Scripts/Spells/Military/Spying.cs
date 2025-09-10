@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
                 if (_canCast)
                 {
                     _add.Clear();
-                    Currencies self = s_humans[param.playerId].Resources, other;
+                    Currencies self = Humans[param.playerId].Resources, other;
                     bool isPerson = param.playerId == PlayerId.Person;
                     StringBuilder sb = null;
                     if (isPerson)
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
                     {
                         if (playerId != param.playerId)
                         {
-                            other = s_humans[playerId].Resources;
+                            other = Humans[playerId].Resources;
                             if (other.IsOverResources)
                             {
                                 currencyId = Random.Range(0, CurrencyId.MainCount);

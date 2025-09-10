@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
                 s_spells[type][id] = this;
             }
 
-            public virtual bool Prep(SpellParam param) => _canCast = !s_isCast && s_humans[param.playerId].IsPay(_cost);
+            public virtual bool Prep(SpellParam param) => _canCast = !s_isCast && Humans[param.playerId].IsPay(_cost);
 
             public abstract void Cast(SpellParam param);
 

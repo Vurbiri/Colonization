@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
                 }
 
                 if (cross.AddHexagon(hex, out bool ending))
-                    hex.CrossroadAdd(cross);
+                    hex.Crossroads.Add(cross);
                 else
                     _crossroads.Remove(key);
 

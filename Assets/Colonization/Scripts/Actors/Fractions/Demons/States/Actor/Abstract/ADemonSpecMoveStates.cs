@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 
@@ -6,8 +7,14 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class Demon
     {
-        public abstract partial class ADemonSpecMoveStates
+
+        public abstract class ADemonSpecMoveStates : ADemonStates<DemonSpecMoveSkin>
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            protected ADemonSpecMoveStates(Demon actor, ActorSettings settings) : base(actor, settings) { }
+
+            #region ASpecMoveState
+            //******************************************************************************
             protected abstract class ASpecMoveState : AActionState
             {
                 private readonly ScaledMoveUsingLerp _move;
@@ -47,7 +54,7 @@ namespace Vurbiri.Colonization.Actors
                 {
                     var currentHex = CurrentHex;
 
-                    CurrentHex.ExitActor();
+                    CurrentHex.ActorExit();
                     CurrentHex = targetHex;
 
                     Pay();
@@ -57,23 +64,16 @@ namespace Vurbiri.Colonization.Actors
                     Rotation = CONST.ACTOR_ROTATIONS[direction];
                     yield return _move.Run(currentHex.Position, targetHex.Position, _speed / (currentHex.Key ^ targetHex.Key));
 
-                    CurrentHex.EnterActor(Actor);
+                    CurrentHex.ActorEnter(Actor);
 
                     _coroutine = null;
                     GetOutOfThisState();
                 }
 
                 protected abstract bool TryGetTarget(out Hexagon targetHex, out Key direction);
-
-                protected bool NearNoWarriors(Hexagon hexagon)
-                {
-                    foreach (var neighbor in hexagon.Neighbors)
-                        if (neighbor.IsWarrior)
-                            return false;
-
-                    return true;
-                }
             }
+            //******************************************************************************
+            #endregion
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
             public static void Create() => new Transmutation(EconomicSpellId.Type, EconomicSpellId.Transmutation);
             public override bool Prep(SpellParam param)
             {
-                var resources = s_humans[param.playerId].Resources;
+                var resources = Humans[param.playerId].Resources;
                 if (_canCast = !s_isCast & resources[Mana] >= _mana)
                 {
                     for (int i = 0; i < MainCount - 1; i++)
@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
                 {
                     _cost.RandomAddRange(-_cost.Amount + _mana, MainCount - 1);
                     ShowSpellName(param.playerId);
-                    s_humans[param.playerId].Pay(_cost);
+                    Humans[param.playerId].Pay(_cost);
 
                     _canCast = false;
                 }

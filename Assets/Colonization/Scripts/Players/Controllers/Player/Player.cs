@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
@@ -10,9 +11,12 @@ namespace Vurbiri.Colonization
     {
         protected readonly int _id;
         protected readonly bool _isPerson;
+        protected readonly RBool _interactable = new(false);
 
         public int Id => _id;
         public ReadOnlyReactiveSet<Actor> Actors => GameContainer.Actors[_id];
+
+        public IReactiveValue<bool> Interactable => _interactable;
 
         protected Player(int playerId)
         {

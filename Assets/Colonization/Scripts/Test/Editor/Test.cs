@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             //person.SpawnTest(WarriorId.Warlock, HEX.Left);
             person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
 
-            person.SpawnDemonTest(DemonId.Bomb, Key.Zero);
+            person.SpawnDemonTest(DemonId.Boss, Key.Zero);
 
             //person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
             //person.SpawnDemonTest(DemonId.Bomb, HEX.Right);

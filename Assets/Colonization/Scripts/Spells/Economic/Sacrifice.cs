@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
                 _canCast = false;
                 var allActors = GameContainer.Actors;
                 
-                if (!s_isCast && allActors[param.playerId].Count > 0 && s_humans[param.playerId].IsPay(_cost))
+                if (!s_isCast && allActors[param.playerId].Count > 0 && Humans[param.playerId].IsPay(_cost))
                 {
                     _target = null;
                     var actors = allActors[PlayerId.Satan];
@@ -120,7 +120,7 @@ namespace Vurbiri.Colonization
                 yield return sacrifice.Action.Death().SetWaitState(DeathStage.EndAnimation);
 
                 yield return CameraController.ToPosition(_target.Position, true);
-                _damage.Apply(_target); s_humans[_currentPlayer].Pay(_cost);
+                _damage.Apply(_target); Humans[_currentPlayer].Pay(_cost);
                 yield return HitSFX.Hit(s_settings.sacrificeTargetSFX, null, _target.Skin);
 
                 EndCast();

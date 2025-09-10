@@ -11,8 +11,8 @@ namespace Vurbiri.Colonization.Actors
             sealed private class JumpState : AActionState
             {
                 private readonly HitEffects _effects;
-                private readonly List<Actor> _targets = new();
-                private readonly Chance _chance;
+                private readonly List<Actor> _targets = new(HEX.SIDES);
+                private readonly int _baseChance;
                 private bool _canUse;
 
                 public new bool CanUse
@@ -20,23 +20,21 @@ namespace Vurbiri.Colonization.Actors
                     get
                     {
                         _targets.Clear();
-                        if(base.CanUse && _chance.Roll)
+                        if(base.CanUse)
                         {
                             foreach (var hex in CurrentHex.Neighbors)
-                            {
                                 if (hex.IsWarrior)
                                     _targets.Add(hex.Owner);
-                            }
                         }
 
-                        return _canUse = _targets.Count > 1; 
+                        return _canUse = Chance.Rolling(_baseChance * _targets.Count - 1); 
                     }
                 }
 
                 public JumpState(SpecSkillSettings specSkill, FattyStates parent) : base(parent, CONST.SPEC_SKILL_ID, specSkill.Cost)
                 {
                     _effects = specSkill.HitEffects[0];
-                    _chance = new(specSkill.Value);
+                    _baseChance = specSkill.Value;
                 }
 
                 public override void Enter()

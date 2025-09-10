@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive;
@@ -8,20 +7,19 @@ namespace Vurbiri.Colonization
 {
     sealed public class PersonController : AHumanController
     {
-        private readonly RInteractable _interactable = new();
-
-        public IReactiveValue<bool> Interactable => _interactable;
+        private readonly InteractableController _iController;
 
         public PersonController(Settings settings) : base(PlayerId.Person, settings)
         {
-            _spellBook.IsCast.Subscribe(_interactable.BindSpells);
-            Actors.Subscribe(_interactable.BindActors);
+            _iController = new(_interactable);
+            _spellBook.IsCast.Subscribe(_iController.BindSpells);
+            Actors.Subscribe(_iController.BindActors);
         }
 
         public override void OnEndLanding()
         {
             _edifices.Interactable = false;
-            _interactable.Turn = false;
+            _iController.Turn = false;
         }
 
         public override void OnPlay()
@@ -34,46 +32,48 @@ namespace Vurbiri.Colonization
                 warrior.Interactable = true;
             }
 
-            _interactable.Turn = true;
+            _iController.Turn = true;
         }
 
         public override void OnEndTurn()
         {
-            _interactable.Turn = false;
+            _iController.Turn = false;
             _edifices.Interactable = false;
 
             base.OnEndTurn();
         }
 
-        private class RInteractable : IReactiveValue<bool>
+        #region Nested InteractableController
+        //**********************************************************************************
+        private class InteractableController
         {
+            private readonly RBool _change;
+
             private int _actors;
             private bool _spells, _isTurn = true;
 
-            private readonly Subscription<bool> _change = new();
-
-            public bool Value
+            private bool Value
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => _actors == 0 & _spells & _isTurn;
             }
 
             public bool Turn 
-            {   
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 set
                 {
-                    bool old = Value;
                     _isTurn = value;
-                    if (old != Value)
-                        _change.Invoke(!old);
+                    _change.Value = Value;
                 }
             }
 
+            public InteractableController(RBool change) => _change = change;
+
             public void BindSpells(bool cast)
             {
-                bool old = Value;
                 _spells = !cast;
-                if (old != Value) _change.Invoke(!old);
+                _change.Value = Value;
             }
 
             public void BindActors(Actor actor, TypeEvent op)
@@ -84,19 +84,14 @@ namespace Vurbiri.Colonization
                     SetActors(actor.Index, true);
             }
 
-            public Unsubscription Subscribe(Action<bool> action, bool instantGetValue = true) => _change.Add(action, Value);
-
-            public static implicit operator bool(RInteractable self) => self.Value;
-
             private void SetActors(int index, bool value)
             {
-                bool old = Value;
-
                 if (value) _actors &= ~(1 << index);
                 else _actors |= 1 << index;
 
-                if (old != Value) _change.Invoke(!old);
+                _change.Value = Value;
             }
         }
+        #endregion
     }
 }

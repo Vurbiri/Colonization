@@ -3,7 +3,7 @@ using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Actors
 {
-    sealed public class DemonSFX : ActorSFX
+    sealed public class BossSFX : ActorSFX
     {
         private string _specSFX;
 
