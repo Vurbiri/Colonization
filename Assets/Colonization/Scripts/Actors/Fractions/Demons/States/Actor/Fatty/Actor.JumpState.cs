@@ -59,6 +59,7 @@ namespace Vurbiri.Colonization.Actors
                         _effects.Apply(Actor, target);
                         target.Skin.Impact(null);
                     }
+                    Pay();
 
                     yield return wait;
                     GetOutOfThisState();

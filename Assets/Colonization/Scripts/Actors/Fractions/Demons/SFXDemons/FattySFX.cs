@@ -19,10 +19,10 @@ namespace Vurbiri.Colonization.Actors
             _specSFX = specSFX;
         }
 
-        public IEnumerator Spec(ActorSkin target)
+        public void Spec(ActorSkin target)
         {
             StartCoroutine(CameraShake_Cn());
-            return GameContainer.HitSFX.Hit(_specSFX, this, target);
+            GameContainer.HitSFX.Hit(_specSFX, this, target);
         }
 
         private IEnumerator CameraShake_Cn()

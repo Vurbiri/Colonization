@@ -95,8 +95,8 @@ namespace Vurbiri.Colonization
                 _eventChanged.Invoke(this);
             }
 
-            #region Local: ConvertToInt(), FindMaxIndex()
-            //=================================
+            #region Local: ConvertToInt(..), FindMaxIndex(..)
+            //==============================================
             static int[] ConvertToInt(ACurrency[] values)
             {
                 int[] array = new int[MainCount];
@@ -105,7 +105,7 @@ namespace Vurbiri.Colonization
 
                 return array;
             }
-            //=================================
+            //==============================================
             static int FindMaxIndex(int[] values, int startIndex)
             {
                 int index, maxIndex = startIndex, step = 1;
@@ -119,6 +119,20 @@ namespace Vurbiri.Colonization
                 return maxIndex;
             }
             #endregion
+        }
+
+        public void RandomDecrement()
+        {
+            if(_amount.Value > 0)
+            {
+                int j = UnityEngine.Random.Range(0, MainCount);
+                while(_values[j] == 0)
+                    j = ++j % MainCount;
+                
+                _values[j].Remove(1);
+                _amount.Remove(1);
+                _eventChanged.Invoke(this);
+            }
         }
 
         public void MainToStringBuilder(StringBuilder sb)

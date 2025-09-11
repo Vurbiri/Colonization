@@ -42,11 +42,10 @@ namespace Vurbiri.Colonization.EntryPoint
             {
                 bool result = false;
                 yield return storage.Load_Cn((b) => result = b);
-                Log.Info(result ? "Сохранение загружено" : "Сохранение не найдено");
-            }
-            else
-            {
-                Log.Info("StorageService не определён");
+                if (result)
+                    Log.Info("[StorageService] Save is loaded");
+                else
+                    Log.Info("[StorageService] No save found");
             }
 
             _content.storageService = storage;
@@ -58,15 +57,19 @@ namespace Vurbiri.Colonization.EntryPoint
             // =====================
             bool Create(out IStorageService storage)
             {
+                storage = new EmptyStorage();
                 var creator = Creator();
+
                 while (creator.MoveNext())
                 {
-                    storage = creator.Current;
-                    if (storage.IsValid)
-                        return true;
+                    if (creator.Current.IsValid)
+                    {
+                        storage = creator.Current;
+                        break;
+                    }
                 }
 
-                storage = new EmptyStorage();
+                Log.Info($"[StorageService] Creating storage: {storage.GetType().Name}");
                 return storage.IsValid;
             }
             // =====================
@@ -77,6 +80,7 @@ namespace Vurbiri.Colonization.EntryPoint
                 yield return new JsonToYandex(SAVE_KEYS.PROJECT, monoBehaviour, _content.ysdk);
                 yield return new JsonToLocalStorage(SAVE_KEYS.PROJECT, monoBehaviour);
                 yield return new JsonToCookies(SAVE_KEYS.PROJECT, monoBehaviour);
+                yield return new JsonToHard(SAVE_KEYS.PROJECT, monoBehaviour);
             }
             #endregion
         }

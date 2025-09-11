@@ -149,6 +149,7 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
+        public bool IsUseSkill(SkillCode skillCode) => _effects.Contains(skillCode);
         public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
             return _states.IsAvailable & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);

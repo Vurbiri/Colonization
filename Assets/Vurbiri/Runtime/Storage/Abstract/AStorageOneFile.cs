@@ -23,7 +23,7 @@ namespace Vurbiri
         
         public IEnumerator Load_Cn(Action<bool> callback)
         {
-            WaitResult<string> waitResult = LoadFromFile_Wait();
+            var waitResult = LoadFromFile_Wait();
             yield return waitResult;
 
             string json = waitResult.Value;
@@ -199,7 +199,7 @@ namespace Vurbiri
             if (_modified)
             {
                 _modified = false;
-                WaitResult<bool> waitResult = SaveToFile_Wait();
+                var waitResult = SaveToFile_Wait();
                 yield return waitResult;
 
                 _modified |= !waitResult.Value;
@@ -215,7 +215,7 @@ namespace Vurbiri
             if (_modified)
             {
                 _modified = false;
-                WaitResult<bool> waitResult = SaveToFile_Wait();
+                var waitResult = SaveToFile_Wait();
                 yield return waitResult;
 
                 _modified |= !waitResult.Value;

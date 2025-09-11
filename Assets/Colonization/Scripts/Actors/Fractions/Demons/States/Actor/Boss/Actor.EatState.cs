@@ -14,6 +14,7 @@ namespace Vurbiri.Colonization.Actors
             {
                 private readonly List<Crossroad> _targets = new(HEX.SIDES);
                 private readonly ReadOnlyArray<HitEffects> _effects;
+                private readonly Chance _chance;
                 private readonly int _hpOffset;
                 private bool _canUse;
 
@@ -22,19 +23,19 @@ namespace Vurbiri.Colonization.Actors
                     get
                     {
                         _targets.Clear();
-                        //if (base.CanUse && !Chance.Rolling(HP.Percent + _hpOffset))
-                        //{
-                        //    var crossroads = CurrentHex.Crossroads;
-                        //    Crossroad crossroad;
-                        //    for (int i = 0; i < HEX.SIDES; i++)
-                        //    {
-                        //        crossroad = crossroads[i];
-                        //        if (crossroad.IsColony && GameContainer.Players[crossroad.Owner].Resources.Amount > 0)
-                        //            _targets.Add(crossroad);
-                        //    }
-                        //}
+                        if (base.CanUse && !ActorEffects.Contains(code) && _chance.Roll)
+                        {
+                            var crossroads = CurrentHex.Crossroads;
+                            Crossroad crossroad;
+                            for (int i = 0; i < HEX.SIDES; i++)
+                            {
+                                crossroad = crossroads[i];
+                                if (crossroad.IsColony && GameContainer.Players[crossroad.Owner].Resources.Amount > 0)
+                                    _targets.Add(crossroad);
+                            }
+                        }
 
-                        _targets.AddRange(CurrentHex.Crossroads);
+                        //_targets.AddRange(CurrentHex.Crossroads);
 
                         return _canUse = _targets.Count > 0;
                     }
@@ -43,7 +44,7 @@ namespace Vurbiri.Colonization.Actors
                 public EatState(SpecSkillSettings specSkill, BossStates parent) : base(parent, CONST.SPEC_SKILL_ID, specSkill.Cost)
                 {
                     _effects = specSkill.HitEffects;
-                    _hpOffset = specSkill.Value;
+                    _chance = new(specSkill.Value);
                 }
                 public override void Enter()
                 {
@@ -56,24 +57,31 @@ namespace Vurbiri.Colonization.Actors
                 private IEnumerator ApplySkill_Cn()
                 {
                     _canUse = false;
-
-                    //var colony = _targets.Rand();
-                    var colony = _targets[0];
+                    int countBuff = 1;
+ 
+                    var colony = _targets.Rand();
+                    //var colony = _targets[0];
                     Transform.LookAt(colony.Position, Vector3.up);
 
                     var wait = Skin.SpecSkill();
 
                     yield return wait; wait.Reset();
+                    var resources = GameContainer.Players[colony.Owner].Resources;
+                    resources.RandomDecrement();
+                    if (!colony.IsWall & resources.Amount > 0)
+                    {
+                        resources.RandomDecrement();
+                        countBuff = 2;
+                    }
 
                     yield return wait; wait.Reset();
-
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 0; i < countBuff; i++)
                         _effects[i].Apply(Actor, Actor);
+                    Pay();
 
                     yield return wait;
                     GetOutOfThisState();
                 }
-
             }
         }
     }

@@ -30,9 +30,8 @@ namespace Vurbiri.Colonization.Actors
             private IEnumerator Run_Cn()
             {
                 yield return _waitHit.Restart();
+                _sfx.Spec(Skin);
                 signal.Send();
-
-                yield return _sfx.Spec(Skin);
 
                 yield return _waitEnd.Restart();
                 signal.Send();

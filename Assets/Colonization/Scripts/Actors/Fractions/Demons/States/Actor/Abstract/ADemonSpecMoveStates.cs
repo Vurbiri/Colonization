@@ -57,8 +57,8 @@ namespace Vurbiri.Colonization.Actors
                     CurrentHex.ActorExit();
                     CurrentHex = targetHex;
 
+                   _effectsHint.Apply(Actor, Actor);
                     Pay();
-                    _effectsHint.Apply(Actor, Actor);
                     yield return Skin.SpecMove();
 
                     Rotation = CONST.ACTOR_ROTATIONS[direction];

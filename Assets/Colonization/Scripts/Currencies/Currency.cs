@@ -26,5 +26,8 @@ namespace Vurbiri.Colonization
         public static bool operator <(Currency a, Currency b) => !(a >= b);
         public static bool operator <=(Currency a, Currency b) => (a is null & b is null) || (a is not null & b is not null && a._value <= b._value);
         public static bool operator >(Currency a, Currency b) => !(a <= b);
+
+        public static bool operator ==(Currency a, int b) => a is not null && a._value == b;
+        public static bool operator !=(Currency a, int b) => a is null || a._value != b;
     }
 }

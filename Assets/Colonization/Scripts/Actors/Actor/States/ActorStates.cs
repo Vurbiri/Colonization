@@ -11,6 +11,8 @@ namespace Vurbiri.Colonization.Actors
             public abstract bool CanUseSkill(int id);
             public abstract bool CanUseSpecSkill();
 
+            public abstract SkillCode GetSkillCode(int id);
+
             public abstract WaitSignal Move();
             public abstract WaitSignal UseSkill(int id);
             public abstract WaitSignal UseSpecSkill();
@@ -64,6 +66,8 @@ namespace Vurbiri.Colonization.Actors
             }
 
             sealed public override bool CanUseSkill(int id) => _skillState[id].CanUse;
+
+            sealed public override SkillCode GetSkillCode(int id) => _skillState[id].code;
 
             sealed public override WaitSignal Move()
             {
