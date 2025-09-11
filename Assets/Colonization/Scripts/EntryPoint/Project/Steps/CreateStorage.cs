@@ -15,6 +15,8 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public CreateStorage(ProjectContent content, MonoBehaviour mono, ILoadingScreen loadingScreen, LogOnPanel logOnPanel) : base("StorageCreationStep")
         {
+            IStorageService.Init();
+
             _content = content;
             _mono = mono;
             _loadingScreen = loadingScreen;
@@ -70,7 +72,7 @@ namespace Vurbiri.Colonization.EntryPoint
             // =====================
             IEnumerator<IStorageService> Creator()
             {
-                MonoBehaviour monoBehaviour = _mono;
+                var monoBehaviour = _mono;
 
                 yield return new JsonToYandex(SAVE_KEYS.PROJECT, monoBehaviour, _content.ysdk);
                 yield return new JsonToLocalStorage(SAVE_KEYS.PROJECT, monoBehaviour);

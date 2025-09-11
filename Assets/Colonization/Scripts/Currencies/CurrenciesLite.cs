@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private int _amount = 0;
 
         public override int Amount => _amount;
-        public override bool IsEmpty => _amount == 0 & _values[CurrencyId.Blood] == 0;
+        public override bool IsEmpty => _amount == 0 & _values[Blood] == 0;
 
         public override int this[int index] { get => _values[index];}
         public override int this[Id<CurrencyId> id] { get => _values[id.Value]; }
@@ -23,11 +23,12 @@ namespace Vurbiri.Colonization
         public CurrenciesLite() { }
         public CurrenciesLite(int[] array)
         {
-            for (int i = 0; i < AllCount; i++)
+            for (int i = 0; i < MainCount; i++)
             {
                 _values[i] = array[i];
                 _amount += array[i];
             }
+            _values[Blood] = array[Blood];
         }
         public CurrenciesLite(CurrenciesLite other)
         {

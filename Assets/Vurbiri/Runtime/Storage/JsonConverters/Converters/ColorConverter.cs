@@ -1,17 +1,14 @@
 using Newtonsoft.Json;
-using System;
 using UnityEngine;
 
 namespace Vurbiri
 {
-    public class ColorConverter : AJsonConverter<Color>
+    sealed internal class ColorConverter : AJsonConverter<Color>
 	{
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
         {
             var data = serializer.Deserialize<float[]>(reader);
-
-            int i = 0;
-            return new Color(data[i++], data[i++], data[i++], data[i++]);
+            return new Color(data[0], data[1], data[2], data[3]);
         }
 
         protected override void WriteJson(JsonWriter writer, Color color, JsonSerializer serializer)

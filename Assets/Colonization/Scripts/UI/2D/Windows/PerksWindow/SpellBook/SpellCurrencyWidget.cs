@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
         private Action<int> a_changeCount;
         private Unsubscription _unsubscriber;
 
-        public void Init(ACurrenciesReactive currencies, Action<int> action)
+        public void Init(ReadOnlyCurrencies currencies, Action<int> action)
         {
             _unsubscriber = currencies.Get(_id).Subscribe(SetMax);
             a_changeCount = action;

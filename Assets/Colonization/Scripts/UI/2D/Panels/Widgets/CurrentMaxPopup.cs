@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
-        public void Init(ICurrency blood, IReactive<int> max, Direction2 offsetPopup)
+        public void Init(Currency blood, IReactive<int> max, Direction2 offsetPopup)
         {
             base.Init();
             _popup.Init(offsetPopup);

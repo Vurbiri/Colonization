@@ -31,10 +31,10 @@ namespace Vurbiri.Colonization.Actors
             {
                 yield return _waitHits[0].Restart();
                 _sfx.SpecSkillStart();
+                signal.Send();
 
                 yield return _waitHits[1].Restart();
                 _sfx.SpecSkill(Skin);
-
                 signal.Send();
 
                 yield return _waitEnd.Restart();

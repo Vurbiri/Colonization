@@ -65,6 +65,8 @@ namespace Vurbiri.Colonization.Actors
 
                     yield return wait; wait.Reset();
 
+                    yield return wait; wait.Reset();
+
                     for (int i = 0; i < 2; i++)
                         _effects[i].Apply(Actor, Actor);
 

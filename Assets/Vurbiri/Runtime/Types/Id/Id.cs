@@ -1,26 +1,24 @@
 using Newtonsoft.Json;
 using System;
+using System.Reflection;
 using UnityEngine;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-    [Serializable, JsonObject(MemberSerialization.OptIn)]
+    [Serializable, JsonConverter(typeof(IdGenericConverter))]
     public struct Id<T> : IEquatable<Id<T>>, IEquatable<int>, IComparable<Id<T>>, IComparable<int> where T : IdType<T>
     {
-        [SerializeField, JsonProperty("id")]
-        private int _id;
+        [SerializeField] private int _id;
 
-        public readonly int Value
-        {
-            [Impl(256)] get => _id;
-        }
+        public readonly int Value { [Impl(256)] get => _id; }
 
-        [JsonConstructor, Impl(256)]
-        public Id(int id)
+        [Impl(256)] public Id(int id)
         {
+#if UNITY_EDITOR
             if (id < IdType<T>.Min | id >= IdType<T>.Count)
                 Errors.ArgumentOutOfRange($"Value {id} is less than {IdType<T>.Min} or greater than or equal to {IdType<T>.Count}");
+#endif
 
             _id = id;
         }
@@ -39,7 +37,7 @@ namespace Vurbiri
 
             return false;
         }
-        public override readonly int GetHashCode() => _id.GetHashCode();
+        [Impl(256)] public override readonly int GetHashCode() => _id.GetHashCode();
 
         [Impl(256)] public readonly int CompareTo(Id<T> other) => _id - other._id;
         [Impl(256)] public readonly int CompareTo(int value) => _id - value;
@@ -57,13 +55,23 @@ namespace Vurbiri
         [Impl(256)] public static bool operator <(Id<T> id, int value) => id._id < value;
         [Impl(256)] public static bool operator >=(Id<T> id, int value) => id._id >= value;
         [Impl(256)] public static bool operator <=(Id<T> id, int value) => id._id <= value;
+    }
 
-        [Impl(256)] public static int operator +(Id<T> a, Id<T> b) => a._id + b._id;
-        [Impl(256)] public static int operator +(Id<T> id, int value) => id._id + value;
-        [Impl(256)] public static int operator +(int value, Id<T> id) => value + id._id;
+    sealed internal class IdGenericConverter : JsonConverter
+    {
+        private readonly Type _type = typeof(Id<>);
 
-        [Impl(256)] public static int operator -(Id<T> a, Id<T> b) => a._id - b._id;
-        [Impl(256)] public static int operator -(Id<T> id, int value) => id._id - value;
-        [Impl(256)] public static int operator -(int value, Id<T> id) => value - id._id;
+        public override bool CanConvert(Type objectType) => objectType != null && (objectType.IsGenericType & objectType.GetGenericTypeDefinition() == _type);
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            return Activator.CreateInstance(objectType, serializer.Deserialize<int>(reader));
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            var field = value.GetType().GetField("_id", BindingFlags.NonPublic | BindingFlags.Instance);
+            writer.WriteValue(field.GetValue(value));
+        }
     }
 }
