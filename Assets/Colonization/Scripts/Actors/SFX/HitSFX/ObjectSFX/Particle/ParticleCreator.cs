@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class ParticleCreator : AMonoCreatorSFX
+    sealed public class ParticleCreator : AMonoCreatorSFX
     {
-        [SerializeField] private bool _isImpact;
+        [SerializeField] private SFXType _type;
         [SerializeField] private bool _isWait;
         [Space]
         [SerializeField] private AudioClip _clip;
@@ -16,16 +16,16 @@ namespace Vurbiri.Colonization.Actors
         public ParticleSystem Particle => _particle;
         public float HeightRate => _targetHeightRate;
 
-        public override APooledSFX Create(Action<APooledSFX> deactivate)
+        public override APooledSFX Create(Action<APooledSFX> deactivate) => _type switch
         {
-            if (_isImpact)
-                return _isWait ? new WaitHitParticle(this, deactivate) : new InstantHitParticle(this, deactivate);
-            else
-                return _isWait ? new WaitParticle(this, deactivate) : new InstantParticle(this, deactivate);
-        }
+            SFXType.Impact => _isWait ? new WaitImpactParticle(this, deactivate) : new ImpactParticle(this, deactivate),
+            SFXType.Target => _isWait ? new WaitParticleOnTarget(this, deactivate) : new ParticleOnTarget(this, deactivate),
+            SFXType.User   => _isWait ? new WaitParticleOnUser(this, deactivate) : new ParticleOnUser(this, deactivate),
+            _ => null
+        };
 
 #if UNITY_EDITOR
-        public override TargetForSFX_Ed Target_Ed => TargetForSFX_Ed.Target;
+        public override TargetForSFX_Ed Target_Ed => _type == SFXType.User ? TargetForSFX_Ed.User : TargetForSFX_Ed.Target;
 
         private void OnValidate()
         {

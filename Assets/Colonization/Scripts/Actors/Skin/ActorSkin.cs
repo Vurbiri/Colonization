@@ -90,12 +90,7 @@ namespace Vurbiri.Colonization.Actors
         [Impl(256)] public float GetFirsHitTime(int skillId) => _skillStates[skillId].FirsHitTime;
 
         [Impl(256)] public void Play(AudioClip clip) => _sfx.Play(clip);
-        [Impl(256)] public Vector3 GetPosition(float heightRate)
-        {
-            Vector3 position = _thisTransform.position;
-            position.y += _bounds.extents.y * heightRate;
-            return position;
-        }
+        [Impl(256)] public Vector3 GetPosition(float heightRate) => _thisTransform.position.OffsetY(_bounds.extents.y * heightRate);
 
         [Impl(256)] public float SetupCollider(BoxCollider collider)
         {

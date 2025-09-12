@@ -25,6 +25,7 @@ namespace Vurbiri.Colonization.Actors
         }
 
 #if UNITY_EDITOR
+
         public static string[] names_ed;
 
         private static SFXFactoriesStorage s_self_ed;

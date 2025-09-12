@@ -16,11 +16,11 @@ namespace Vurbiri.Colonization
 
             person.SpawnTest(WarriorId.Militia, HEX.RightUp);
             person.SpawnTest(WarriorId.Solder, HEX.Right);
-            //person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
+            person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
             //person.SpawnTest(WarriorId.Warlock, HEX.Left);
             //person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
 
-            person.SpawnDemonTest(DemonId.Fatty, Key.Zero);
+            person.SpawnDemonTest(DemonId.Bomb, Key.Zero);
 
             //person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
             //person.SpawnDemonTest(DemonId.Bomb, HEX.Right);
@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
             //person.SpawnDemonTest(DemonId.Boss, HEX.LeftUp);
 
             //person.SpawnTest(WarriorId.Knight, 2);
-            person.SpawnDemonTest(DemonId.Boss, 2);
+            //person.SpawnDemonTest(DemonId.Boss, 5);
 
             //person.SpawnDemonTest(DemonId.Imp, 5);
 

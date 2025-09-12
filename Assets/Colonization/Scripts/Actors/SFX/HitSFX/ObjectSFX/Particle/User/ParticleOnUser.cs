@@ -3,13 +3,13 @@ using System.Collections;
 
 namespace Vurbiri.Colonization.Actors
 {
-	sealed public class InstantHitParticle : AHitParticle
+    sealed public class ParticleOnUser : AParticleOnUser
     {
-        public InstantHitParticle(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
+        public ParticleOnUser(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
 
         public override IEnumerator Hit(ActorSFX user, ActorSkin target)
         {
-            Setup(target);
+            Setup(user);
             this.Start();
             return null;
         }

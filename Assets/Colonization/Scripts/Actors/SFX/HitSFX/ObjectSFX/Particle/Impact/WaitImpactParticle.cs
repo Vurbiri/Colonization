@@ -3,9 +3,9 @@ using System.Collections;
 
 namespace Vurbiri.Colonization.Actors
 {
-    sealed public class WaitHitParticle : AHitParticle
+    sealed public class WaitImpactParticle : AImpactParticle
     {
-        public WaitHitParticle(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
+        public WaitImpactParticle(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
 
         public override IEnumerator Hit(ActorSFX user, ActorSkin target)
         {
