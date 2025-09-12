@@ -3,7 +3,7 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    [Serializable, JsonObject(MemberSerialization.OptIn)]
+    [Serializable, JsonConverter(typeof(Converter))]
     sealed public class RInt : ARType<int>
     {
         public RInt() : base(0) { }
@@ -33,8 +33,6 @@ namespace Vurbiri.Reactive
                 _subscriber.Invoke(_value /= value);
         }
         #endregion
-
-        public static explicit operator RInt(int value) => new(value);
 
         public static implicit operator int(RInt value) => value._value;
         public static implicit operator float(RInt value) => value._value;
@@ -72,6 +70,22 @@ namespace Vurbiri.Reactive
         public static float operator /(RInt r, float f) => r._value / f;
         public static float operator /(float f, RInt r) => f / r._value;
 
+        #endregion
+
+        #region Nested JsonConverter
+        //***************************************************
+        sealed public class Converter : AJsonConverter<RInt>
+        {
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                return new RInt(serializer.Deserialize<int>(reader));
+            }
+
+            protected override void WriteJson(JsonWriter writer, RInt value, JsonSerializer serializer)
+            {
+                writer.WriteValue(value._value);
+            }
+        }
         #endregion
     }
 }

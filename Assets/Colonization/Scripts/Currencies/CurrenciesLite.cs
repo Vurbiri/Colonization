@@ -166,11 +166,7 @@ namespace Vurbiri.Colonization
                 sb.AppendFormat(TAG.CURRENCY, i, _values[i].ToString("+#;-#;0"));
         }
 
-        public override IEnumerator<int> GetEnumerator()
-        {
-            for (int i = 0; i < AllCount; i++)
-                yield return _values[i];
-        }
+        public override IEnumerator<int> GetEnumerator() => new ArrayEnumerator<int>(_values, AllCount);
 
         public static CurrenciesLite operator +(CurrenciesLite a, CurrenciesLite b)
         {

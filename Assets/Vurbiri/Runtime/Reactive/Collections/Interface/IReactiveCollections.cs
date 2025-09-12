@@ -8,7 +8,7 @@ namespace Vurbiri.Reactive.Collections
         public IReactiveValue<int> CountReactive { get; }
     }
 
-    public interface IReactiveList<out T> : IReadOnlyList<T>, IReactiveBase<Action<int, T, TypeEvent>>, IDisposable
+    public interface IReactiveList<out T> : IReadOnlyList<T>, IReactiveBase<Action<int, T, TypeEvent>>
     {
         public IReactiveValue<int> CountReactive { get; }
     }

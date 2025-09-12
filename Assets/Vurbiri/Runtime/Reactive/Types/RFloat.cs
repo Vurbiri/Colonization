@@ -3,7 +3,7 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    [Serializable, JsonObject(MemberSerialization.OptIn)]
+    [Serializable, JsonConverter(typeof(Converter))]
     sealed public class RFloat : ARType<float>
     {
         public RFloat() : base(0f) { }
@@ -32,10 +32,7 @@ namespace Vurbiri.Reactive
         }
         #endregion
 
-        public static explicit operator RFloat(float value) => new(value);
-
         public static implicit operator float(RFloat value) => value._value;
-
 
         #region Arithmetic operator
         public static float operator +(RFloat a, RFloat b) => a._value + b._value;
@@ -61,6 +58,22 @@ namespace Vurbiri.Reactive
         public static float operator /(IReactiveValue<float> f, RFloat r) => f.Value / r._value;
         public static float operator /(RFloat r, float f) => r._value / f;
         public static float operator /(float f, RFloat r) => f / r._value;
+        #endregion
+
+        #region Nested JsonConverter
+        //***************************************************
+        sealed public class Converter : AJsonConverter<RFloat>
+        {
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                return new RFloat(serializer.Deserialize<float>(reader));
+            }
+
+            protected override void WriteJson(JsonWriter writer, RFloat value, JsonSerializer serializer)
+            {
+                writer.WriteValue(value._value);
+            }
+        }
         #endregion
     }
 }

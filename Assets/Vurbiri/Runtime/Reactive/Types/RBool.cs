@@ -3,7 +3,7 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    [Serializable, JsonObject(MemberSerialization.OptIn)]
+    [Serializable, JsonConverter(typeof(Converter))]
     sealed public class RBool : ARType<bool>
     {
         public RBool() : base(false) { }
@@ -21,7 +21,6 @@ namespace Vurbiri.Reactive
         }
         public void Negation() => _subscriber.Invoke(_value = !_value);
         
-        public static explicit operator RBool(bool value) => new(value);
         public static implicit operator bool(RBool value) => value._value;
 
         #region Logic operator
@@ -45,5 +44,21 @@ namespace Vurbiri.Reactive
         public static bool operator ^(RBool r, bool i) => r._value ^ i;
         public static bool operator ^(bool i, RBool r) => i ^ r._value;
         #endregion
-    }
+
+        #region Nested JsonConverter
+        //***************************************************
+        sealed public class Converter : AJsonConverter<RBool>
+        {
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                return new RBool(serializer.Deserialize<bool>(reader));
+            }
+
+            protected override void WriteJson(JsonWriter writer, RBool value, JsonSerializer serializer)
+            {
+                writer.WriteValue(value._value);
+            }
+        }
+        #endregion
+        }
 }

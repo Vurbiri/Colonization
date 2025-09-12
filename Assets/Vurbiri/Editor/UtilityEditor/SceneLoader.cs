@@ -42,7 +42,7 @@ namespace VurbiriEditor
 
         public void Update()
         {
-            s_sceneField.SetEnabled(!Application.isPlaying);
+            s_sceneField.SetEnabled(!EditorApplication.isPlayingOrWillChangePlaymode);
         }
 
         private void OnDisable()
@@ -141,19 +141,18 @@ namespace VurbiriEditor
 
             public int IndexItem(string value)
             {
-                for (int i = 0; i < choices.Count; i++)
-                    if (choices[i].Equals(value))
-                        return i;
-                return -1;
+                int i = choices.Count;
+                while (i --> 0 && !choices[i].Equals(value));
+                return i;
             }
 
             private static string FormatItem(Scene scene) => scene.name;
         }
         // ================== Scene ==========================
-        private class Scene : IEquatable<Scene>, IEquatable<string>
+        private class Scene : IEquatable<Scene>, IEquatable<string>, IEquatable<UScene>
         {
-            public string path;
-            public string name;
+            public readonly string path;
+            public readonly string name;
 
             public Scene(string value)
             {
@@ -173,6 +172,7 @@ namespace VurbiriEditor
 
             public bool Equals(string other) => path.Equals(other);
             public bool Equals(Scene other) => other is not null && path.Equals(other.path);
+            public bool Equals(UScene other) => path.Equals(other.path);
 
             public override string ToString() => name;
         }

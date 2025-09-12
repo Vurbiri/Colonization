@@ -32,45 +32,24 @@ namespace Vurbiri
             return _subscriber.Add(action);
         }
 
-        public bool Contains(T item)
-        {
-            for (int i = 0; i < _count; i++)
-                if (_values[i].Equals(item))
-                    return true;
-
-            return false;
-        }
+        public bool Contains(T item) => IndexOf(item) >= 0;
 
         public int IndexOf(T item)
         {
-            for (int i = 0; i < _count; i++)
-                if (_values[i].Equals(item))
-                    return i;
-
-            return -1;
+            int i = _count.Value;
+            while (i --> 0 && !_values[i].Equals(item));
+            return i;
         }
 
         public void Signal(int index) => _subscriber.Invoke(index, _values[index], TypeEvent.Change);
         public void Signal(T item)
         {
             int index = IndexOf(item);
-
             if (index >= 0)
                 _subscriber.Invoke(index, _values[index], TypeEvent.Change);
         }
 
-        public void Dispose()
-        {
-            for (int i = 0; i < _count; i++)
-            {
-                if (_values[i] is not IDisposable disposable)
-                    return;
-
-                disposable.Dispose();
-            }
-        }
-
-        public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_values);
-        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<T>(_values);
+        public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_values, _count.Value);
+        IEnumerator IEnumerable.GetEnumerator() => new ArrayEnumerator<T>(_values, _count.Value);
     }
 }
