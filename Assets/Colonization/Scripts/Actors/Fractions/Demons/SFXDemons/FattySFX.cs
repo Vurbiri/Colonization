@@ -7,10 +7,14 @@ namespace Vurbiri.Colonization.Actors
 	sealed public class FattySFX : ActorSFX
     {
         [Space]
+        [SerializeField] private Transform _mouth;
+        [Space]
         [SerializeField] private MoveUsingLerp _cameraShake;
         [SerializeField] private float _shakePitch = 1.07f;
 
         private string _specSFX;
+
+        public override Transform TargetTransform => _mouth;
 
         public void Init(ReadOnlyArray<string> hitSFX, string specSFX)
         {
@@ -22,7 +26,7 @@ namespace Vurbiri.Colonization.Actors
         public void Spec(ActorSkin target)
         {
             StartCoroutine(CameraShake_Cn());
-            GameContainer.HitSFX.Hit(_specSFX, this, target);
+            StartCoroutine(GameContainer.SFX.Run(_specSFX, this, target));
         }
 
         private IEnumerator CameraShake_Cn()
@@ -35,6 +39,7 @@ namespace Vurbiri.Colonization.Actors
 #if UNITY_EDITOR
         private void OnValidate()
         {
+            this.SetChildren(ref _mouth, "Mouth");
             if (_cameraShake.Speed <= 0f)
                 _cameraShake.SetSpeed_Ed(10f);
         }

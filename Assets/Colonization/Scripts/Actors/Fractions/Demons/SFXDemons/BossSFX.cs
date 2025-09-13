@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.Actors
         public void SpecSkill(ActorSkin target)
         {
             _box.enabled = false;
-            GameContainer.HitSFX.Hit(_specSFX, this, target);
+            StartCoroutine(GameContainer.SFX.Run(_specSFX, this, target));
         }
 
 #if UNITY_EDITOR

@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.Actors
         public SFXStorage Create()
         {
             int count = _factories.Length; ASFXFactory factory;
-            Dictionary<string, IHitSFX> SFXs = new(count + 1);
+            Dictionary<string, ISFX> SFXs = new(count + 1);
             for (int i = 0; i < count; i++)
             {
                 factory = _factories[i];

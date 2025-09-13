@@ -116,12 +116,12 @@ namespace Vurbiri.Colonization
                 _damage.attack = sacrifice.CurrentHP * s_settings.sacrificeHPPercent / 100;
 
                 CameraController.ToPosition(sacrifice.Position, true);
-                yield return HitSFX.Hit(s_settings.sacrificeKnifeSFX, null, sacrifice.Skin);
+                yield return SFX.Run(s_settings.sacrificeKnifeSFX, null, sacrifice.Skin);
                 yield return sacrifice.Action.Death().SetWaitState(DeathStage.EndAnimation);
 
                 yield return CameraController.ToPosition(_target.Position, true);
                 _damage.Apply(_target); Humans[_currentPlayer].Pay(_cost);
-                yield return HitSFX.Hit(s_settings.sacrificeTargetSFX, null, _target.Skin);
+                yield return SFX.Run(s_settings.sacrificeTargetSFX, null, _target.Skin);
 
                 EndCast();
             }

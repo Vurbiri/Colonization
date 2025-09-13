@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.Actors
     {
         public WaitParticleOnUser(ParticleCreator creator, Action<APooledSFX> deactivate) : base(creator, deactivate) { }
 
-        public override IEnumerator Hit(ActorSFX user, ActorSkin target)
+        public override IEnumerator Run(ActorSFX user, ActorSkin target)
         {
             Setup(user);
             return this;

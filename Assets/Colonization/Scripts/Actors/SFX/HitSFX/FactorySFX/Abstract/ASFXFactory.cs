@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
 
         public string Name => _name;
 
-        public abstract IHitSFX Create();
+        public abstract ISFX Create();
 
 
 

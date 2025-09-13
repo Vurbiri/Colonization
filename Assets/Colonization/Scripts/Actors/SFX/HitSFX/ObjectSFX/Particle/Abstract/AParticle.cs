@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization.Actors
         protected readonly AudioClip _clip;
         protected readonly ParticleSystem _particle;
 
-
         public object Current => null;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

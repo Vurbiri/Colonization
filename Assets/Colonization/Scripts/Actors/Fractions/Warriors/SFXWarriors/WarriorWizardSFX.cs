@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private MeshRenderer _magicShield;
         [SerializeField] private ReadOnlyArray<ParticleSystem> _particles;
 
-        public override Vector3 Position => _rightHand.position;
+        public override Transform TargetTransform => _rightHand;
 
         protected override IEnumerator Start()
         {

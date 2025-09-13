@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-	public class WaitSoundOnTarget : IHitSFX
+	public class WaitSoundOnTarget : ISFX
     {
         private readonly AudioClip _clip;
         private readonly WaitRealtime _playTime;
@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Actors
             _playTime = _clip.length;
         }
 
-        public IEnumerator Hit(ActorSFX user, ActorSkin target)
+        public IEnumerator Run(ActorSFX user, ActorSkin target)
         {
             target.Play(_clip);
             return _playTime.Restart();

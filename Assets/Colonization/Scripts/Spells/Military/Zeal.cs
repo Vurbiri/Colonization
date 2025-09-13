@@ -94,7 +94,7 @@ namespace Vurbiri.Colonization
                 target.ApplyEffect(_addAP); target.ApplyEffect(_move);
                 Humans[_currentPlayer].Pay(_cost);
 
-                yield return HitSFX.Hit(s_settings.zealSFX, null, target.Skin);
+                yield return SFX.Run(s_settings.zealSFX, null, target.Skin);
 
                 EndCast();
             }

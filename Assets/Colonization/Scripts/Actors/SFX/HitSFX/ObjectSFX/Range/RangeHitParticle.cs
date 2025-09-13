@@ -36,11 +36,11 @@ namespace Vurbiri.Colonization.Actors
             UnityEngine.Object.Destroy(creator);
         }
 
-        public override IEnumerator Hit(ActorSFX user, ActorSkin target)
+        public override IEnumerator Run(ActorSFX user, ActorSkin target)
         {
             Vector3 targetPosition = target.GetPosition(_targetHeightRate);
 
-            Enable(user.Position);
+            Enable(user.TargetTransform.position);
             _transform.LookAt(targetPosition);
 
             float hitTime = (Vector3.Distance(_transform.position, targetPosition) - target.Extents.z) / _avgSpeed;

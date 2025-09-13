@@ -16,11 +16,12 @@ namespace Vurbiri.Colonization
 
             person.SpawnTest(WarriorId.Militia, HEX.RightUp);
             person.SpawnTest(WarriorId.Solder, HEX.Right);
-            person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
+            //person.SpawnTest(WarriorId.Wizard, HEX.LeftDown);
             //person.SpawnTest(WarriorId.Warlock, HEX.Left);
-            //person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
+            person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
 
-            person.SpawnDemonTest(DemonId.Bomb, Key.Zero);
+            person.SpawnTest(WarriorId.Knight, HEX.Left);
+            person.SpawnDemonTest(DemonId.Boss, Key.Zero);
 
             //person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
             //person.SpawnDemonTest(DemonId.Bomb, HEX.Right);

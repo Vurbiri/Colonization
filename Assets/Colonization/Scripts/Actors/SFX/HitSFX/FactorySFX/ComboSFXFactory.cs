@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private bool _isWait;
         [SerializeField, HideInInspector] private string _nameUser, _nameTarget;
 
-        public override IHitSFX Create() => _isWait ? new WaitComboSFX(_nameUser, _nameTarget, _delayTime) : new ComboSFX(_nameUser, _nameTarget, _delayTime);
+        public override ISFX Create() => _isWait ? new WaitComboSFX(_nameUser, _nameTarget, _delayTime) : new ComboSFX(_nameUser, _nameTarget, _delayTime);
 
 #if UNITY_EDITOR
         public override TargetForSFX_Ed Target_Ed => TargetForSFX_Ed.Combo;

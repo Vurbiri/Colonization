@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
         public static Transform SharedContainer         { [Impl(256)] get => s_content.sharedContainer; }
         public static AudioSource SharedAudioSource     { [Impl(256)] get => s_content.sharedAudioSource; }
 
-        public static SFXStorage HitSFX                 { [Impl(256)] get => s_content.actorSFXs; }
+        public static SFXStorage SFX                    { [Impl(256)] get => s_content.actorSFXs; }
 
         public new class UI : ProjectContainer.UI
         {
