@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
         {
             _profitTMP.text = string.Format(PROFIT, active, passive);
             _valueTMP.text = string.Format(COUNT, current, max);
-            _hintText = string.Format(_textHint, current, max, active, passive);
+            _hintText = string.Format(_localizedText, current, max, active, passive);
         }
 
 

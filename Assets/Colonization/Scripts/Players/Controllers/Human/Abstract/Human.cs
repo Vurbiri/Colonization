@@ -194,6 +194,7 @@ namespace Vurbiri.Colonization
             if (returnSignal)
             {
                 _resources.Remove(cost);
+                GameContainer.Score.ForWall(_id);
                 _edifices.edifices[crossroad.GroupId].Signal(crossroad);
             }
             return returnSignal.signal;
@@ -205,6 +206,7 @@ namespace Vurbiri.Colonization
         public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
         {
             _resources.Remove(GameContainer.Prices.Road);
+            GameContainer.Score.ForRoad(_id);
             _roads.BuildAndUnion(crossroad.GetLinkAndSetStart(linkId));
         }
         #endregion

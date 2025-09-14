@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 
@@ -40,13 +41,18 @@ namespace Vurbiri.Colonization.UI
             _thisGameObject.SetActive(false);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Run(int delta)
         {
             if (delta != 0)
-            {
-                _thisGameObject.SetActive(true);
-                _queue.Enqueue(Run_Cn(delta > 0 ? _colorPlus : _colorMinus, delta.ToString("+#;-#;0")));
-            }
+                ForceRun(delta);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ForceRun(int delta)
+        {
+            _thisGameObject.SetActive(true);
+            _queue.Enqueue(Run_Cn(delta > 0 ? _colorPlus : _colorMinus, delta.ToString("+#;-#;0")));
         }
 
         private IEnumerator Run_Cn(Color textColor, string text)

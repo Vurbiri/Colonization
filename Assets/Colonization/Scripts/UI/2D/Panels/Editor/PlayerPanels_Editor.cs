@@ -31,7 +31,8 @@ namespace Vurbiri.Colonization.UI
             RectTransform rectRoads      = _roads.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
             RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, _spaceIn, colors);
             RectTransform rectBlood      = _blood.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectArtefact   = _artefactPanel.UpdateVisuals_Editor(rectBlood.rect.height, colors);
+            RectTransform rectScore      = _score.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
+            RectTransform rectArtefact   = _artefactPanel.UpdateVisuals_Editor(rectScore.rect.height, colors);
 
             //=======
 
@@ -44,7 +45,8 @@ namespace Vurbiri.Colonization.UI
             rectRoads.localPosition      = position = NextPosition(position, rectShrines, advPadding * .7f);
             rectCurrencies.localPosition = position = NextPosition(position, rectRoads, advPadding);
             rectBlood.localPosition      = position = NextPosition(position, rectCurrencies);
-            rectArtefact.localPosition   = position = NextPosition(position, rectBlood, advPadding);
+            rectScore.localPosition      = position = NextPosition(position, rectBlood);
+            rectArtefact.localPosition   = position = NextPosition(position, rectScore, advPadding);
 
             // Local function
             Vector3 NextPosition(Vector3 current, RectTransform prevPanel, float advOffset = 0f)
@@ -65,6 +67,7 @@ namespace Vurbiri.Colonization.UI
                 EUtility.SetObject(ref _roads);
                 EUtility.SetObject(ref _currencies);
                 EUtility.SetObject(ref _blood);
+                EUtility.SetObject(ref _score);
                 EUtility.SetObject(ref _artefactPanel); 
 
                 for (int i = 0; i < EdificeId.Count; i++)

@@ -20,9 +20,9 @@ namespace Vurbiri.Colonization.UI
 
         protected override void SetLocalizationText(Localization localization)
         {
-            _textHint = localization.GetText(_getText.id, _getText.key);
+            _localizedText = localization.GetText(_getText.id, _getText.key);
             if(_reactiveCurrentMax != null)
-                _hintText = string.Format(_textHint, _reactiveCurrentMax.ValueA, _reactiveCurrentMax.ValueB);
+                _hintText = string.Format(_localizedText, _reactiveCurrentMax.ValueA, _reactiveCurrentMax.ValueB);
         }
 
 

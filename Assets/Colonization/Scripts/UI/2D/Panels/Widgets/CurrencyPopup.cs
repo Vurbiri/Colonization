@@ -48,8 +48,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (_popup == null)
-                _popup = GetComponentInChildren<PopupTextWidgetUI>(true);
+            this.SetChildren(ref _popup);
         }
 #endif
     }

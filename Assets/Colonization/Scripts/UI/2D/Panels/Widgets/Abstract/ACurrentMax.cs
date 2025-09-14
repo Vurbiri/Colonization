@@ -7,18 +7,18 @@ namespace Vurbiri.Colonization.UI
     {
         protected const string COUNT = "{0,2}|{1,-2}^";
 
-        protected string _textHint;
+        protected string _localizedText;
         protected TCombination _reactiveCurrentMax;
 
         protected void SetCurrentMax(int current, int max)
         {
             _valueTMP.text = string.Format(COUNT, current, max);
-            _hintText = string.Format(_textHint, current, max);
+            _hintText = string.Format(_localizedText, current, max);
         }
 
         protected override void SetLocalizationText(Localization localization)
         {
-            _textHint = localization.GetText(_getText.id, _getText.key);
+            _localizedText = localization.GetText(_getText.id, _getText.key);
             _reactiveCurrentMax?.Signal();
         }
 

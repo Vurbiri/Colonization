@@ -9,11 +9,7 @@ namespace VurbiriEditor
     public class SceneDrawer : PropertyDrawer
     {
         protected const string F_SCENE = "_scene";
-
-        protected static string[] nameScenes;
-        protected static int[] idScenes;
-
-        protected readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+        protected static string[] s_names;
 
         static SceneDrawer()
         {
@@ -25,25 +21,22 @@ namespace VurbiriEditor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            SerializedProperty sceneProperty = property.FindPropertyRelative(F_SCENE);
+            var sceneProperty = property.FindPropertyRelative(F_SCENE);
             position.height = EditorGUIUtility.singleLineHeight;
 
             label = EditorGUI.BeginProperty(position, label, property);
-            sceneProperty.intValue = EditorGUI.IntPopup(position, label.text, sceneProperty.intValue, nameScenes, idScenes);
+            {
+                sceneProperty.intValue = EditorGUI.Popup(position, label.text, sceneProperty.intValue, s_names);
+            }
             EditorGUI.EndProperty();
         }
 
         private static void CreateListScenes()
         {
-            int countScenes = EditorBuildSettings.scenes.Length;
-            nameScenes = new string[countScenes];
-            idScenes = new int[countScenes];
-
-            for (int i = 0; i < countScenes; i++)
-            {
-                nameScenes[i] = $"{Path.GetFileNameWithoutExtension(EditorBuildSettings.scenes[i].path)} ({i})";
-                idScenes[i] = i;
-            }
+            int count = EditorBuildSettings.scenes.Length;
+            s_names = new string[count];
+            for (int i = 0; i < count; i++)
+                s_names[i] = $"{Path.GetFileNameWithoutExtension(EditorBuildSettings.scenes[i].path)} ({i})";
         }
     }
 }

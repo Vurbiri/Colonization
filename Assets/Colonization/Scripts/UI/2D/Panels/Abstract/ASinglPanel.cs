@@ -23,8 +23,7 @@ namespace Vurbiri.Colonization.UI
 
         protected virtual void OnValidate()
         {
-            if (_widget == null)
-                _widget = GetComponentInChildren<TWidget>();
+            this.SetChildren(ref _widget);
         }
 #endif
     }

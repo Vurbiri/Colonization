@@ -9,12 +9,6 @@ namespace VurbiriEditor
 	{
 		public override void OnGUI(Rect position, SerializedProperty mainProperty, GUIContent label)
 		{
-            if (attribute is not ReadOnlyAttribute)
-            {
-                EditorGUI.PropertyField(position, mainProperty, label, true);
-                return;
-            }
-
             EditorGUI.BeginDisabledGroup(true);
             EditorGUI.PropertyField(position, mainProperty, label, true);
             EditorGUI.EndDisabledGroup();

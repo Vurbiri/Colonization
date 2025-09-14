@@ -6,7 +6,7 @@ using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor
 {
-    [CustomPropertyDrawer(typeof(AWaitTime), true)]
+	[CustomPropertyDrawer(typeof(AWaitTime), true)]
 	public class AWaitTimeDrawer : PropertyDrawer
 	{
         private readonly string F_NAME = "_waitTime";
@@ -17,6 +17,7 @@ namespace VurbiriEditor
             MinMaxAttribute range = fieldInfo.GetCustomAttribute<MinMaxAttribute>();
 
             position.height = EditorGUIUtility.singleLineHeight;
+
 		
 			label = BeginProperty(position, label, mainProperty);
 			{
