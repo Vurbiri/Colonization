@@ -7,36 +7,36 @@ namespace Vurbiri.Colonization.UI
     public partial class PlayerPanels
     {
         [StartEditor]
-        [SerializeField, Range(1f, 2f)] private float _pixelsPerUnitRate = 1.1f;
+        [Range(1f, 2f)] public float pixelsPerUnitRate = 1.3f;
         [Space]
-        [SerializeField] private Vector2 _paddingIn = new(14f, 12f);
-        [SerializeField, Range(1f, 10f)] private float _spaceIn = 4f;
+        public Vector2 paddingIn = new(6f, 8f);
+        [Range(1f, 10f)] public float spaceIn = 4f;
         [Header("Between")]
-        [SerializeField] private Vector2 _paddingOut = new(15f, 15f);
-        [SerializeField, Range(1f, 20f)] private float _spaceOut = 7f;
-        [SerializeField, Range(0.1f, 1f)] private float _advRatioSpaceOut = 0.4f;
+        public Vector2 paddingOut = new(16f, 15f);
+        [Range(1f, 20f)] public float spaceOut = 6.7f;
+        [Range(0.1f, 1f)] public float advRatioSpaceOut = 0.6f;
         [EndEditor] public bool endEditor;
 
         public void UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors)
         {
-            pixelsPerUnit *= _pixelsPerUnitRate;
-            var advPadding = _spaceOut * _advRatioSpaceOut;
+            pixelsPerUnit *= pixelsPerUnitRate;
+            var advPadding = spaceOut * advRatioSpaceOut;
 
             RectTransform thisRectTransform = (RectTransform)transform;
 
-            RectTransform rectWarriors   = _warriors.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectColonies   = _colonies.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectPorts      = _ports.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectShrines    = _shrines.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectRoads      = _roads.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, _spaceIn, colors);
-            RectTransform rectBlood      = _blood.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
-            RectTransform rectScore      = _score.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
+            RectTransform rectWarriors   = _warriors.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
+            RectTransform rectColonies   = _colonies.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
+            RectTransform rectPorts      = _ports.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
+            RectTransform rectShrines    = _shrines.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
+            RectTransform rectRoads      = _roads.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
+            RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, spaceIn, colors);
+            RectTransform rectBlood      = _blood.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
+            RectTransform rectScore      = _score.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
             RectTransform rectArtefact   = _artefactPanel.UpdateVisuals_Editor(rectScore.rect.height, colors);
 
             //=======
 
-            Vector3 position = -thisRectTransform.rect.size * 0.5f + _paddingOut;
+            Vector3 position = -thisRectTransform.rect.size * 0.5f + paddingOut;
 
             rectWarriors.localPosition   = position;
             rectColonies.localPosition   = position = NextPosition(position, rectWarriors, advPadding);
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.UI
             // Local function
             Vector3 NextPosition(Vector3 current, RectTransform prevPanel, float advOffset = 0f)
             {
-                current.x += prevPanel.rect.width + _spaceOut + advOffset;
+                current.x += prevPanel.rect.width + spaceOut + advOffset;
                 return current;
             }
         }

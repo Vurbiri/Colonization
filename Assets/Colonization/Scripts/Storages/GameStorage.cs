@@ -1,5 +1,3 @@
-using Vurbiri.Reactive;
-
 namespace Vurbiri.Colonization.Storage
 {
     sealed public class GameStorage : AStorage
@@ -33,12 +31,10 @@ namespace Vurbiri.Colonization.Storage
             return _isLoad && _storage.TryGet(SAVE_KEYS.GAME, out game);
         }
         
-        public int[] GetScoreData(int defaultSize)
+        public bool TryGetScore(out Score score)
         {
-            if (_isLoad && _storage.TryGet(SAVE_KEYS.SCORE, out int[] data))
-                return data;
-
-            return new int[defaultSize];
+            score = null;
+            return _isLoad && _storage.TryGet(SAVE_KEYS.SCORE, out score);
         }
         public int GetBalanceValue(int defaultValue)
         {
@@ -47,32 +43,32 @@ namespace Vurbiri.Colonization.Storage
 
             return defaultValue;
         }
-        public bool TryGetDiplomacyData(out int[] data)
+        public bool TryGetDiplomacy(out Diplomacy diplomacy)
         {
-            data = null;
-            return _isLoad && _storage.TryGet(SAVE_KEYS.DIPLOMANCY, out data);
+            diplomacy = null;
+            return _isLoad && _storage.TryGet(SAVE_KEYS.DIPLOMANCY, out diplomacy);
         }
 
         public HexLoadData GetHexData(Key key) => _storage.Get<HexLoadData>(key.ToSaveKey());
         #endregion
 
         #region Bind
-        public void BindScore(IReactive<int[]> reactive)
+        public void BindScore(Score score)
         {
-            _unsubscribers += reactive.Subscribe(scoreData => _storage.Set(SAVE_KEYS.SCORE, scoreData), !_isLoad);
+            _unsubscribers += score.Subscribe(self => _storage.Set(SAVE_KEYS.SCORE, self), !_isLoad);
         }
-        public void BindBalance(IReactive<int> reactive)
+        public void BindBalance(Balance balance)
         {
-            _unsubscribers += reactive.Subscribe(balance => _storage.Set(SAVE_KEYS.BALANCE, balance), !_isLoad);
+            _unsubscribers += balance.Subscribe(balanceData => _storage.Set(SAVE_KEYS.BALANCE, balanceData), !_isLoad);
         }
-        public void BindDiplomacy(IReactive<int[]> reactive)
+        public void BindDiplomacy(Diplomacy diplomacy)
         {
-            _unsubscribers += reactive.Subscribe(diplomacyData => _storage.Set(SAVE_KEYS.DIPLOMANCY, diplomacyData), !_isLoad);
+            _unsubscribers += diplomacy.Subscribe(self => _storage.Set(SAVE_KEYS.DIPLOMANCY, self), !_isLoad);
         }
 
-        public void BindHexagons(IReactive<Hexagon> reactive)
+        public void BindHexagons(Hexagons hexagons)
         {
-            _unsubscribers += reactive.Subscribe(hex => _storage.Set(hex.Key.ToSaveKey(), hex), false);
+            _unsubscribers += hexagons.Subscribe(hex => _storage.Set(hex.Key.ToSaveKey(), hex), false);
         }
         #endregion
 

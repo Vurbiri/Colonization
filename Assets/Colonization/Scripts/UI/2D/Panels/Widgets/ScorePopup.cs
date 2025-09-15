@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.UI
             _unsubscribers += GameContainer.Score.Subscribe(SetValue);
         }
 
-        private void SetValue(int[] values)
+        private void SetValue(Score values)
         {
             int delta = values[PlayerId.Person] - _score;
             if (delta > 0)

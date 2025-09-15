@@ -1,25 +1,26 @@
 using System;
-using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public class Diplomacy : IReactive<int[]>
+    public partial class Diplomacy : IReactive<Diplomacy>
     {
         private readonly int[] _values;
         private readonly DiplomacySettings _settings;
 
-        private readonly Subscription<int[]> _eventChanged = new();
+        private readonly Subscription<Diplomacy> _eventChanged = new();
 
         private int this[Id<PlayerId> idA, Id<PlayerId> idB]
         {
-            get => _values[GetIndex(idA, idB)];
-            set => this[GetIndex(idA, idB)] = value;
+            [Impl(256)] get => _values[GetIndex(idA, idB)];
+            [Impl(256)] set => this[GetIndex(idA, idB)] = value;
         }
         private int this[int index]
         {
-            set
+            [Impl(256)] get => _values[index];
+            [Impl(256)] set
             {
                 value = Math.Clamp(value, _settings.min, _settings.max);
                 if (_values[index] != value)
@@ -27,19 +28,30 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Diplomacy(GameStorage storage, GameEvents gameEvents)
+        private Diplomacy(int[] values)
         {
             _settings = SettingsFile.Load<DiplomacySettings>();
+            _values = values;
+        }
+        private Diplomacy() : this(new int[PlayerId.HumansCount])
+        {
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                _values[i] = _settings.defaultValue;
+        }
 
-            if (!storage.TryGetDiplomacyData(out _values))
-            {
-                _values = new int[PlayerId.HumansCount];
-                for (int i = 0; i < PlayerId.HumansCount; i++)
-                    _values[i] = _settings.defaultValue;
-            }
-            storage.BindDiplomacy(this);
+        public static Diplomacy Create(GameStorage storage, GameEvents gameEvents)
+        {
+            if (!storage.TryGetDiplomacy(out Diplomacy instance))
+                instance = new();
 
-            gameEvents.Subscribe(GameModeId.Play, OnGamePlay);
+            storage.BindDiplomacy(instance);
+            gameEvents.Subscribe(GameModeId.Play, instance.OnGamePlay);
+            return instance;
+        }
+
+        public bool IsPersonFriend(Id<PlayerId> id)
+        {
+            return (id > PlayerId.Person & id != PlayerId.Satan) && this[id - 1] > 0;
         }
 
         public Relation GetRelation(Id<PlayerId> idA, Id<PlayerId> idB)
@@ -82,7 +94,7 @@ namespace Vurbiri.Colonization
                 int index = GetIndex(idA, idB);
                 this[index] = _values[index] + _settings.penaltyForMarauding;
 
-                _eventChanged.Invoke(_values);
+                _eventChanged.Invoke(this);
             }
         }
 
@@ -98,11 +110,11 @@ namespace Vurbiri.Colonization
                 else
                     this[index] = value + _settings.rewardForBuff;
 
-                _eventChanged.Invoke(_values);
+                _eventChanged.Invoke(this);
             }
         }
 
-        public Unsubscription Subscribe(Action<int[]> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _values);
+        public Unsubscription Subscribe(Action<Diplomacy> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
         private void OnGamePlay(TurnQueue turnQueue, int dice)
         {
@@ -112,14 +124,12 @@ namespace Vurbiri.Colonization
                 this[currentId - 1] = _values[currentId - 1] + _settings.penaltyPerRound;
                 this[PlayerId.AI_01, PlayerId.AI_02] += UnityEngine.Random.Range(_settings.penaltyPerRound, 1 - _settings.penaltyPerRound);
 
-                _eventChanged.Invoke(_values);
+                _eventChanged.Invoke(this);
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int GetIndex(int idA, int idB) => idA + idB - 1;
+        [Impl(256)] private int GetIndex(int idA, int idB) => idA + idB - 1;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool Validate(int idA, int idB) => idA != idB & idA > PlayerId.None & idB > PlayerId.None & idA < PlayerId.Satan & idB < PlayerId.Satan;
+        [Impl(256)] private bool Validate(int idA, int idB) => idA != idB & idA > PlayerId.None & idB > PlayerId.None & idA < PlayerId.Satan & idB < PlayerId.Satan;
     }
 }
