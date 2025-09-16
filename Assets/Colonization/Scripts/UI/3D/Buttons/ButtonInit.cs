@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
 
         public void Init(Action action)
         {
-            base.Init(GameContainer.UI.WorldHint, action, false);
+            base.InternalInit(GameContainer.UI.WorldHint, action, false);
         }
 
         public void Setup(bool isEnable, int edificeId)
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
             ButtonView view = edificeId == EdificeId.PortOne ? _portOneView : _portTwoView;
 
             _buttonIcon.sprite = view.sprite;
-            _text = Localization.Instance.GetText(LangFiles.Gameplay, view.keyName);
+            _hintText = Localization.Instance.GetText(LangFiles.Gameplay, view.keyName);
 
             _thisGameObject.SetActive(true);
         }

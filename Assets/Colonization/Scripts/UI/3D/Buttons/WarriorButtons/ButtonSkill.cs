@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(AWorldMenu parent)
         {
-            Init(GameContainer.UI.WorldHint, OnClick, false);
+            InternalInit(GameContainer.UI.WorldHint, OnClick, false);
 
             _parent = parent;
         }
@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.UI
         {
             bool isUse = actor.Action.CanUseSkill(idSkill);
 
-            _rectTransform.localPosition = localPosition;
+            _thisRectTransform.localPosition = localPosition;
 
             _currentActor = actor;
             _idSkill = idSkill;
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.UI
             _iconImage.sprite = skillUI.Sprite;
             interactable = isUse;
 
-            _text = skillUI.GetText(isUse);
+            _hintText = skillUI.GetText(isUse);
 
             _thisGameObject.SetActive(true);
         }

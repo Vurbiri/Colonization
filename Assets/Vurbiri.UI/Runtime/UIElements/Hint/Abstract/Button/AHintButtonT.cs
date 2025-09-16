@@ -1,35 +1,38 @@
+using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
-	public abstract class AHintButton2D : AVButton
+	public abstract class AHintButtonT<THint, TValue> : AVButton<TValue> where THint : AHint
     {
-        private CanvasHint _hint;
+        private THint _hint;
         private bool _isShowingHint = false;
-        private Vector3 _offsetHint;
+        private Vector3 _hintOffset;
 
-        protected string _text;
+        protected string _hintText;
 
-        protected void Init(CanvasHint hint, float ratioHeight)
+        protected void InternalInit(THint hint, float heightRatio)
         {
             _hint = hint;
+            if (_thisRectTransform == null)
+                _thisRectTransform = (RectTransform)transform;
 
-            if(_rectTransform == null)
-                _rectTransform = (RectTransform)transform;
+            _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
+        }
 
-            Vector2 pivot = _rectTransform.pivot;
-            Vector2 size = _rectTransform.rect.size;
-
-            _offsetHint = new(size.x * (0.5f - pivot.x), size.y * (0.5f - pivot.y + ratioHeight), 0f);
+        protected void InternalInit(THint hint, Action<TValue> action, float heightRatio)
+        {
+            InternalInit(hint, heightRatio);
+            _onClick.Add(action);
         }
 
         sealed public override void OnPointerEnter(PointerEventData eventData)
         {
             base.OnPointerEnter(eventData);
             if (!_isShowingHint)
-                _isShowingHint = _hint.Show(_text, _rectTransform.position, _offsetHint);
+                _isShowingHint = _hint.Show(_hintText, _thisRectTransform.position, _hintOffset);
         }
         sealed public override void OnPointerExit(PointerEventData eventData)
         {

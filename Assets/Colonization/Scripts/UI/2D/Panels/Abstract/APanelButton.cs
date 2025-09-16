@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
         
         private Coroutine _activeCn;
 
-        public Vector3 Offset => new(0f, _rectTransform.sizeDelta.y * 1.08f, 0f);
+        public Vector3 Offset => new(0f, _thisRectTransform.sizeDelta.y * 1.08f, 0f);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void InitInternal()

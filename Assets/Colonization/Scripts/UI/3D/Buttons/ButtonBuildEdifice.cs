@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(ReadOnlyIdArray<EdificeId, CurrenciesLite> edificePrices, Action action)
         {
-            base.Init(action);
+            base.InternalInit(action);
             _edificePrices = edificePrices;
             _cash = GameContainer.Players.Person.Resources;
         }

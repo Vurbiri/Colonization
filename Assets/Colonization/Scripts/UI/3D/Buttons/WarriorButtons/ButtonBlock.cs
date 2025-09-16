@@ -8,12 +8,12 @@ namespace Vurbiri.Colonization.UI
     {
         public void Init(Action action)
         {
-            base.Init(GameContainer.UI.WorldHint, action, true);
+            base.InternalInit(GameContainer.UI.WorldHint, action, true);
         }
 
         public void Setup(Actor actor, ASkillUI skillUI)
         {
-            _text = skillUI.GetText(interactable = actor.Action.CanUseSpecSkill());
+            _hintText = skillUI.GetText(interactable = actor.Action.CanUseSpecSkill());
             _thisGameObject.SetActive(true);
         }
     }

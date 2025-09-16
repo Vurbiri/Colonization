@@ -1,0 +1,19 @@
+using System;
+using UnityEngine;
+using Vurbiri.UI;
+
+namespace Vurbiri.Colonization.UI
+{
+    public abstract class AHintButton3D : AHintButton<WorldHint>
+    {
+        protected GameObject _thisGameObject;
+
+        protected virtual void InternalInit(WorldHint hint, Action action, bool active)
+        {
+            base.InternalInit(hint, action, 1.1f/*0.5263f*/);
+
+            _thisGameObject = gameObject;
+            _thisGameObject.SetActive(active);
+        }
+    }
+}

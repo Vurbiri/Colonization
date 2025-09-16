@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init()
         {
-            base.Init(GameContainer.UI.CanvasHint, 0.48f);
+            base.InternalInit(GameContainer.UI.CanvasHint, 0.48f);
 
             var person = GameContainer.Players.Person;
             _level.Init(person.Artefact.MaxLevel);

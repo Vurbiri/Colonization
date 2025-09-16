@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using UnityEngine;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -13,11 +12,11 @@ namespace Vurbiri.Colonization.UI
 
         private const int MIN_SIZE = 64, MAX_SIZE = 364;
 
-        public Vector3 LocalPosition { set => _rectTransform.localPosition = value; }
+        public Vector3 LocalPosition { set => _thisRectTransform.localPosition = value; }
 
-        protected virtual void Init(Action action)
+        protected virtual void InternalInit(Action action)
         {
-            base.Init(GameContainer.UI.WorldHint, action, true);
+            base.InternalInit(GameContainer.UI.WorldHint, action, true);
 
             _hexColorPlus = GameContainer.UI.Colors.TextPositiveTag;
             _hexColorMinus = GameContainer.UI.Colors.TextNegativeTag;
@@ -36,7 +35,7 @@ namespace Vurbiri.Colonization.UI
                     sb.AppendFormat(COLOR_CURRENCY, i, costV.ToString(), costV > cash[i] ? _hexColorMinus : _hexColorPlus);
             }
 
-            _text = sb.ToString();
+            _hintText = sb.ToString();
         }
 
     }

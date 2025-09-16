@@ -1,25 +1,11 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
-    public abstract class AVButton : VSelectable, IPointerClickHandler, ISubmitHandler
+	public abstract class AVButtonBase : VSelectable, IPointerClickHandler, ISubmitHandler
     {
-        [SerializeField] protected UniSubscription _onClick = new();
-
-        protected override void Start()
-        {
-            base.Start();
-
-            _onClick.Init();
-        }
-
-        public Unsubscription AddListener(Action action) => _onClick.Add(action);
-        public void RemoveListener(Action action) => _onClick.Remove(action);
-
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
@@ -51,13 +37,14 @@ namespace Vurbiri.UI
             #endregion
         }
 
+        protected internal abstract void Invoke();
 
         private bool Press()
         {
             if (IsActive() && IsInteractable())
             {
                 UISystemProfilerApi.AddMarker("VButton.onClick", this);
-                _onClick.Invoke();
+                Invoke();
                 return true;
             }
 
