@@ -1,10 +1,9 @@
 using TMPro;
 using UnityEngine;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-	public partial class ExchangeWindow : MonoBehaviour, IWindow
+	public partial class ExchangeWindow : MonoBehaviour
     {
         [SerializeField] private Switcher _switcher;
         [Space]
@@ -25,17 +24,16 @@ namespace Vurbiri.Colonization.UI
         private readonly CurrenciesLite _bankTrade = new();
         private readonly CurrenciesLite _price = new(), _pay = new();
 
-        public ISubscription OnOpen => _switcher.onOpen;
-        public ISubscription OnClose => _switcher.onClose;
-
-        public void Init(bool open)
+        public Switcher Init(HintButton switchButton)
         {
-            _switcher.Init(this, open);
+            _switcher.Init(this);
             _switcher.onClose.Add(ResetValues);
 
             _applyButton.Init(Apply);
             _resetButton.Init(ResetValues);
-            _closeButton.AddListener(Close);
+            _closeButton.AddListener(_switcher.Close);
+            Debug.Log("ExchangeWindow - заменить true на false");
+            switchButton.Init(_switcher.Switch, true);
 
             var resources = GameContainer.Players.Person.Resources;
             for (int i = 0; i < CurrencyId.MainCount; i++)
@@ -48,16 +46,14 @@ namespace Vurbiri.Colonization.UI
 
             _containerVisual.Init();
             _containerVisual = null;
-        }
 
-        public void Close() => _switcher.Switch(false);
-        public void Open() => _switcher.Switch(true);
-        public void Switch() => _switcher.Switch();
+            return _switcher;
+        }
 
         private void OnBankChangeCount(int id, int value, int rateValue)
         {
-            _bankTrade.Set(id, value);
-            _price.Set(id, rateValue);
+            _bankTrade.SetMain(id, value);
+            _price.SetMain(id, rateValue);
 
             _playerCurrencies[id].Interactable = value == 0;
 
@@ -66,7 +62,7 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnPlayerChangeCount(int id, int value)
         {
-            _pay.Set(id, value);
+            _pay.SetMain(id, value);
 
             _playerAmount.text = _pay.Amount.ToString();
             SetState();
@@ -91,7 +87,10 @@ namespace Vurbiri.Colonization.UI
             {
                 _bankCurrencies[i].ResetCount();
                 _playerCurrencies[i].ResetCount();
+                _bankTrade.DirtyReset(i); _price.DirtyReset(i); _pay.DirtyReset(i);
             }
+
+            _bankTrade.ResetAmount(); _price.ResetAmount(); _pay.ResetAmount();
 
             _bankAmount.text = _playerAmount.text = "0";
             _playerAmount.color = _colors.zero;

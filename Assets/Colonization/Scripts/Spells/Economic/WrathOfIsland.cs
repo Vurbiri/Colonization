@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
                 if (_canCast = !s_isCast)
                 {
                     _targets.Clear();
-                    _cost.Set(Wood, param.valueA); _cost.Set(Ore, param.valueB);
+                    _cost.SetMain(Wood, param.valueA); _cost.SetMain(Ore, param.valueB);
 
                     if (Humans[param.playerId].IsPay(_cost))
                         FindActorsOnSurface(_targets, SurfaceId.Forest, SurfaceId.Mountain);

@@ -23,6 +23,7 @@
   "Blood": "Demon Blood",
   "Exchange": "Exchange",
   "Bank": "Bank",
+  "Gift": "Gift",
   "LandingLabel": "Landing\n<size=85%>{0}</size>",
   "StartTurnLabel": "Round {0}\n<size=85%>{1}</size>",
   "CurrentMaxHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>",

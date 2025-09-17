@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization.UI
         {
             _interactable = true;
             CrossFadeColor();
-            SetValue(0);
+            InternalSetValue(0);
         }
 
         protected virtual void Awake()
@@ -80,13 +80,16 @@ namespace Vurbiri.Colonization.UI
                 SetValue(value);
         }
 
-        protected virtual void SetValue(int value)
+        protected abstract void SetValue(int value);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void InternalSetValue(int value)
         {
             _count = value;
             ValueToString();
 
-            _leftButton.Interactable = (_count - _step) >= 0 & _interactable;
-            _rightButton.Interactable = (_count + _step) <= _max & _interactable;
+            _leftButton.Interactable  = (value - _step) >= 0 & _interactable;
+            _rightButton.Interactable = (value + _step) <= _max & _interactable;
         }
 
         protected virtual void ValueToString() => _textValue.text = _count.ToString();

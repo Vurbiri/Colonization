@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
 
         protected override void SetValue(int value)
         {
-            base.SetValue(value);
+            InternalSetValue(value);
             a_changeCount?.Invoke(_id.Value, value);
         }
 

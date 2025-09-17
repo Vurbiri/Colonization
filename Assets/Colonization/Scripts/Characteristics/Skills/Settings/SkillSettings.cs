@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.Characteristics
             }
 
             _hitEffects = new(effects);
-            SkillUI ui = new(colors, separator, _cost, _ui, targetEffectsUI.ToArray(), selfEffectsUI.ToArray());
+            SkillUI ui = new(separator, _cost, _ui, targetEffectsUI.ToArray(), selfEffectsUI.ToArray());
 
 #if !UNITY_EDITOR
             _ui = null; 

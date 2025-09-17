@@ -11,32 +11,29 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Key(LangFiles.Gameplay)] private string _keyOver;
 
         private ReactiveCombination<int, int> _reactiveAmountMax;
-        private string _colorNormal, _colorNormalHint, _colorOver;
         private string _textNormalHint, _textOverHint;
 
         public void Init(IReactive<int> amount, IReactive<int> max)
         {
             base.Init();
 
-            var colors = GameContainer.UI.Colors;
-            _colorNormal = colors.PanelTextTag;
-            _colorNormalHint = colors.HintDefaultTag;
-            _colorOver = colors.TextNegativeTag;
-
             _reactiveAmountMax = new(amount, max, SetAmountMax);
         }
 
         private void SetAmountMax(int amount, int max)
         {
-            if(amount > max)
+            
+            if (amount > max)
             {
-                _valueTMP.text = string.Format(AMOUNT, _colorOver, Mathf.Min(amount, 99), max);
-                _hintText = string.Format(_textNormalHint, _colorOver, amount, max).Concat(string.Format(_textOverHint, amount - max));
+                var color = GameContainer.UI.Colors.TextNegativeTag;
+                _valueTMP.text = string.Format(AMOUNT, color, Mathf.Min(amount, 99), max);
+                _hintText = string.Format(_textNormalHint, color, amount, max).Concat(string.Format(_textOverHint, amount - max));
             }
             else 
             {
-                _valueTMP.text = string.Format(AMOUNT, _colorNormal, amount, max);
-                _hintText = string.Format(_textNormalHint, _colorNormalHint, amount, max);
+                var colors = GameContainer.UI.Colors;
+                _valueTMP.text = string.Format(AMOUNT, colors.PanelTextTag, amount, max);
+                _hintText = string.Format(_textNormalHint, colors.HintTextTag, amount, max);
             }
         }
 

@@ -1,7 +1,7 @@
 {
-  "min": -100,
-  "max": 101,
-  "defaultValue": -25,
+  "min": -99,
+  "max": 100,
+  "defaultValue": -2,
   "penaltyPerRound": -1,
   "rewardForBuff": 10,
   "rewardForGift": 5,

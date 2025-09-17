@@ -7,21 +7,16 @@ namespace Vurbiri.Colonization.UI
         protected const int SIZE = 78;
 
         protected readonly string _cost;
-        protected readonly string _hexColorPlus, _hexColorMinus;
         protected readonly SeparatorEffectUI _separator;
         protected string _textMain, _textAP;
 
-        public ASkillUI(ProjectColors colors, SeparatorEffectUI separator, int cost)
+        public ASkillUI(SeparatorEffectUI separator, int cost)
         {
             _cost = cost.ToString();
-
-            _hexColorPlus = colors.TextPositiveTag;
-            _hexColorMinus = colors.TextNegativeTag;
-
             _separator = separator;
         }
 
-        public string GetText(bool isUse) => string.Concat(_textMain, isUse ? _hexColorPlus : _hexColorMinus, _textAP);
+        public string GetText(bool isUse) => string.Concat(_textMain, GameContainer.UI.Colors.GetHexColor(isUse), _textAP);
 
         public abstract void Dispose();
     }

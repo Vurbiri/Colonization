@@ -145,7 +145,7 @@ namespace Vurbiri.Colonization
             CurrenciesLite profit = new();
             for (int i = 0; i < HEX_COUNT; i++)
                 if (_hexagons[i].TryGetProfit(idHex, true, out int currencyId))
-                    profit.Add(currencyId, _states.profit << shiftProfit);
+                    profit.AddMain(currencyId, _states.profit << shiftProfit);
 
             return profit;
         }

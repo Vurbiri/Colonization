@@ -1,5 +1,4 @@
 using UnityEngine;
-using VurbiriEditor.Colonization;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -16,13 +15,5 @@ namespace Vurbiri.Colonization.UI
             Resources.UnloadAsset(self);
             return self._colors.Init();
         }
-
-
-#if UNITY_EDITOR
-        public void SetColors_Editor(UISettings_Editor.Colors colors)
-        {
-            _colors.SetColors_Editor(colors);
-        }
-#endif
     }
 }

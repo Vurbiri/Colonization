@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
-	public abstract class AHintButtonT<THint, TValue> : AVButton<TValue> where THint : AHint
+	public abstract class AHintButton<THint, TValue> : AVButton<TValue> where THint : AHint
     {
         private THint _hint;
         private bool _isShowingHint = false;

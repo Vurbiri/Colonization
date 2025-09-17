@@ -12,14 +12,18 @@ namespace Vurbiri.Colonization
 
         private readonly Subscription<Diplomacy> _eventChanged = new();
 
-        private int this[Id<PlayerId> idA, Id<PlayerId> idB]
+        public int this[Id<PlayerId> idA, Id<PlayerId> idB]
+        {
+            [Impl(256)] get => _values[GetIndex(idA, idB)];
+            [Impl(256)] set => this[GetIndex(idA, idB)] = value;
+        }
+        public int this[int idA, int idB]
         {
             [Impl(256)] get => _values[GetIndex(idA, idB)];
             [Impl(256)] set => this[GetIndex(idA, idB)] = value;
         }
         private int this[int index]
         {
-            [Impl(256)] get => _values[index];
             [Impl(256)] set
             {
                 value = Math.Clamp(value, _settings.min, _settings.max);
@@ -27,6 +31,9 @@ namespace Vurbiri.Colonization
                     _values[index] = value;
             }
         }
+
+        public int Min { [Impl(256)] get => _settings.min - 1; }
+        public int Max { [Impl(256)] get => _settings.max; }
 
         private Diplomacy(int[] values)
         {
@@ -36,7 +43,7 @@ namespace Vurbiri.Colonization
         private Diplomacy() : this(new int[PlayerId.HumansCount])
         {
             for (int i = 0; i < PlayerId.HumansCount; i++)
-                _values[i] = _settings.defaultValue;
+                _values[i] = _settings.defaultValue + i * 5;
         }
 
         public static Diplomacy Create(GameStorage storage, GameEvents gameEvents)
@@ -49,10 +56,7 @@ namespace Vurbiri.Colonization
             return instance;
         }
 
-        public bool IsPersonFriend(Id<PlayerId> id)
-        {
-            return (id > PlayerId.Person & id != PlayerId.Satan) && this[id - 1] > 0;
-        }
+        public int GetPersonRelation(int id) => _values[id - 1];
 
         public Relation GetRelation(Id<PlayerId> idA, Id<PlayerId> idB)
         {
@@ -85,6 +89,17 @@ namespace Vurbiri.Colonization
                 return !isFriendly;
 
             return isFriendly = true;
+        }
+
+        public void Gift(int idA, int idB)
+        {
+            if (Validate(idA, idB))
+            {
+                int index = GetIndex(idA, idB);
+                this[index] = _values[index] + _settings.penaltyForMarauding;
+
+                _eventChanged.Invoke(this);
+            }
         }
 
         public void Marauding(int idA, int idB)

@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         public void GetText(StringBuilder sb)
         {
             sb.Append(_hexColor);
-            sb.AppendLine("─◈─");
+            sb.AppendLine(CONST_UI.SEPARATOR);
         }
     }
 }

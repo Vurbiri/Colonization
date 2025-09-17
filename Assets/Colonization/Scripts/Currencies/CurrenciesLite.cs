@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 using Random = UnityEngine.Random;
 
 namespace Vurbiri.Colonization
@@ -14,11 +15,11 @@ namespace Vurbiri.Colonization
         [SerializeField] private int[] _values = new int[AllCount];
         [SerializeField] private int _amount = 0;
 
-        public override int Amount => _amount;
-        public override bool IsEmpty => _amount == 0 & _values[Blood] == 0;
+        public override int Amount { [Impl(256)] get => _amount; }
+        public override bool IsEmpty { [Impl(256)] get => _amount == 0 & _values[Blood] == 0; }
 
-        public override int this[int index] { get => _values[index];}
-        public override int this[Id<CurrencyId> id] { get => _values[id.Value]; }
+        public override int this[int index] { [Impl(256)] get => _values[index];}
+        public override int this[Id<CurrencyId> id] { [Impl(256)] get => _values[id.Value]; }
 
         public CurrenciesLite() { }
         public CurrenciesLite(int[] array)
@@ -37,13 +38,16 @@ namespace Vurbiri.Colonization
             _amount = other._amount;
         }
 
-        public void IncrementMain(int index)
+        [Impl(256)] public void IncrementMain(int index)
         {
-            _values[index]++;
-            _amount++;
+            _values[index]++; _amount++;
+        }
+        [Impl(256)] public void DecrementMain(int index)
+        {
+            _values[index]--; _amount--;
         }
 
-        public void Set(int index, int value)
+        [Impl(256)] public void Set(int index, int value)
         {
             if (index != Blood)
                 _amount += value - _values[index];
@@ -51,14 +55,27 @@ namespace Vurbiri.Colonization
             _values[index] = value;
         }
 
-        public void Add(int index, int value)
+        [Impl(256)] public void Add(int index, int value)
         {
             if (index != Blood)
                 _amount += value;
 
             _values[index] += value;
-            
         }
+
+        [Impl(256)] public void SetMain(int index, int value)
+        {
+            _amount += value - _values[index];
+            _values[index] = value;
+        }
+        [Impl(256)] public void AddMain(int index, int value)
+        {
+            _amount += value;
+            _values[index] += value;
+        }
+
+        [Impl(256)] public void SetBlood(int value) => _values[Blood] = value;
+        [Impl(256)] public void AddBlood(int value) => _values[Blood] += value;
 
         public void Add(CurrenciesLite other)
         {
@@ -82,7 +99,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void RandomAddMain(int value)
+        [Impl(256)] public void RandomAddMain(int value)
         {
             _values[Random.Range(0, MainCount)] += value;
             _amount += value;
@@ -108,6 +125,9 @@ namespace Vurbiri.Colonization
 
             _amount = 0;
         }
+
+        [Impl(256)] public void DirtyReset(int index) => _values[index] = 0;
+        [Impl(256)] public void ResetAmount() => _amount = 0;
 
         public void MainToStringBuilder(StringBuilder sb, string hexPlusColor, string hexMinusColor)
         {

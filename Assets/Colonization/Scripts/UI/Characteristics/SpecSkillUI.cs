@@ -2,7 +2,7 @@ namespace Vurbiri.Colonization.UI
 {
     sealed public class SpecSkillUI : ASkillUI
     {
-        public SpecSkillUI(ProjectColors colors, SeparatorEffectUI separator) : base(colors, separator, 0)
+        public SpecSkillUI(SeparatorEffectUI separator) : base(separator, 0)
         {
             _textMain = "Spec Skill"; _textAP = "";
         }

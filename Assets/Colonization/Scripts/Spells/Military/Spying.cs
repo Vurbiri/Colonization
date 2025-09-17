@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
                                     currencyId = (currencyId + 1) % CurrencyId.MainCount;
 
                                 other.Remove(currencyId, 1);
-                                _add.Add(currencyId, 1);
+                                _add.IncrementMain(currencyId);
 
                             }
                             if (isPerson)

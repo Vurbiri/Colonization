@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.UI
@@ -12,8 +13,9 @@ namespace Vurbiri.UI
 
         private Vector3 _startScale = Vector3.one;
         private Vector3 _targetScale = Vector3.one;
-        private float _transitionTime, _currentTime;
+        private float _speed;
         private float _progress = TRANSITION_END;
+        private bool _isRunning;
         private Coroutine _coroutine;
         private DrivenRectTransformTracker _tracker;
 
@@ -22,9 +24,11 @@ namespace Vurbiri.UI
 
         public object Current => null;
 
+        public bool IsRunning => _isRunning;
+
         public ScaleTween()
         { 
-            _isValid = _enable = false;
+            _isValid = _enable = _isRunning = false;
         }
         private ScaleTween(MonoBehaviour target, RectTransform targetTransform)
         {
@@ -58,27 +62,28 @@ namespace Vurbiri.UI
 
         public void Set(Vector3 target, float duration)
         {
+            duration *= _progress;
             if (duration < MIN_DUATION)
                 Set(target);
 
-            if (!(_enable & _isValid)) 
-                return;
-
-            StopCoroutine();
-
-            _startScale = _targetTransform.localScale;
-
-            if (_startScale != target)
+            if (_enable & _isValid)
             {
-                _transitionTime = duration;
-                _currentTime = duration * (TRANSITION_END - _progress);
-                _targetScale = target;
+                StopCoroutine();
 
-                _coroutine = _target.StartCoroutine(this);
-            }
-            else
-            {
-                _progress = TRANSITION_END;
+                _startScale = _targetTransform.localScale;
+
+                if (_startScale != target)
+                {
+                    _targetScale = target;
+                    _speed = 1f / duration;
+                    _progress = 0f;
+     
+                    _coroutine = _target.StartCoroutine(this);
+                }
+                else
+                {
+                    _progress = TRANSITION_END;
+                }
             }
         }
 
@@ -108,28 +113,35 @@ namespace Vurbiri.UI
 
         public bool MoveNext()
         {
-            if (_currentTime < _transitionTime)
+            if (_isRunning = (_progress += _speed * Time.unscaledDeltaTime) < TRANSITION_END)
             {
-                _currentTime += Time.unscaledDeltaTime;
-                _progress = _currentTime / _transitionTime;
-                _targetTransform.localScale = Vector3.Lerp(_startScale, _targetScale, _progress);
-                return true;
+                _targetTransform.localScale = Lerp(_startScale, _targetScale, _progress);
+            }
+            else
+            {
+                _progress = TRANSITION_END;
+                _targetTransform.localScale = _targetScale;
             }
 
-            _progress = TRANSITION_END;
-            _targetTransform.localScale = _targetScale;
-            _coroutine = null;
-            return false;
+            return _isRunning;
+
+            // Local
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static Vector3 Lerp(Vector3 a, Vector3 b, float t)
+            {
+                return new (a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
+            }
         }
 
         public void Reset() { }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void StopCoroutine()
         {
-            if (_coroutine != null)
+            if (_isRunning)
             {
                 _target.StopCoroutine(_coroutine);
-                _coroutine = null;
+                _isRunning = false;
             }
         }
     }

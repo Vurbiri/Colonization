@@ -19,9 +19,10 @@ namespace Vurbiri.Colonization.UI
         protected override void SetValue(int value)
         {
             bool changed = _count != value;
-            base.SetValue(value);
 
-            if (changed  & a_changeCount != null)
+            InternalSetValue(value);
+
+            if (changed & a_changeCount != null)
                 a_changeCount(_count);
         }
 

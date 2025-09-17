@@ -18,6 +18,9 @@ namespace Vurbiri.Colonization
         protected override void StateReset()
         {
             _currency.ResetCount();
+
+            _spellParam.valueA = 0;
+            _applyButton.interactable = false;
         }
 
         private void ChangedCurrency(int value)
@@ -27,7 +30,6 @@ namespace Vurbiri.Colonization
                 _applyButton.interactable = _spell.Prep(_spellParam);
             else
                 _applyButton.interactable = false;
-
         }
 
 #if UNITY_EDITOR

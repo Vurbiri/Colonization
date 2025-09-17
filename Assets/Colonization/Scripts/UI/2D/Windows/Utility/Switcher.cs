@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Reactive;
@@ -10,42 +11,90 @@ namespace Vurbiri.Colonization.UI
 	{
         [SerializeField] private CanvasGroupSwitcher _canvasSwitcher;
 
-        private bool _isOpen;
         private MonoBehaviour _parent;
+        private bool _isOpen;
+        private int _id;
 
-        public readonly Subscription onOpen = new();
+        public readonly Subscription<int> onOpen = new();
         public readonly Subscription onClose = new();
 
-        public void Init(MonoBehaviour parent, bool open)
+        public bool IsOpen => _isOpen;
+
+        public void Init(MonoBehaviour parent)
         {
             _parent = parent;
-            _canvasSwitcher.Set(_isOpen = open);
+            _canvasSwitcher.Set(_isOpen = false);
+        }
+        public Switcher Setup(int id, Action<int> onOpenWindow, Action onCloseWindow)
+        {
+            _id = id;
+            onOpen.Add(onOpenWindow);
+            onClose.Add(onCloseWindow);
+            return this;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Switch()
         {
-            StartCoroutine(_isOpen = !_isOpen);
-            
-            if (_isOpen) 
-                onOpen.Invoke();
+            StopCoroutine();
+
+            if (_isOpen = !_isOpen)
+                InternalOpen();
             else
-                onClose.Invoke();
+                InternalClose();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Switch(bool open)
+        public void Open()
         {
-            if (_isOpen != open)
-                Switch();
+            if (!_isOpen)
+            {
+                _isOpen = true;
+                StopCoroutine();
+                InternalOpen();
+            }
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Close()
+        {
+            if (_isOpen)
+            {
+                _isOpen = false;
+                StopCoroutine();
+                InternalClose();
+            }
         }
 
-        private void StartCoroutine(bool open)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void TryClose(int id)
+        {
+            if (_isOpen & id != _id)
+            {
+                _isOpen = false;
+                StopCoroutine();
+                InternalClose();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void InternalOpen()
+        {
+            _parent.StartCoroutine(_canvasSwitcher.Show());
+            onOpen.Invoke(_id);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void InternalClose()
+        {
+            _parent.StartCoroutine(_canvasSwitcher.Hide());
+            onClose.Invoke();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void StopCoroutine()
         {
             if (_canvasSwitcher.IsRunning)
                 _parent.StopCoroutine(_canvasSwitcher);
-
-            _parent.StartCoroutine(open ? _canvasSwitcher.Show() : _canvasSwitcher.Hide());
         }
 
 #if UNITY_EDITOR

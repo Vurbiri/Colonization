@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField, HideInInspector] private RectTransform _mainContainer, _bankContainer, _playerContainer;
         [SerializeField, HideInInspector] private RectTransform _bankAmountContainer, _playerAmountContainer;
-
+        [SerializeField, HideInInspector] private Image _mainImage;
         [SerializeField, HideInInspector] private BankCurrencyWidget _bankPrefab;
         [SerializeField, HideInInspector] private PlayerCurrencyWidget _playerPrefab;
         [EndEditor] public bool endEditor;
@@ -23,9 +24,9 @@ namespace Vurbiri.Colonization.UI
         public void UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors)
         {
             Color color = colors.PanelBack.SetAlpha(1f);
-            Image image = GetComponent<Image>();
-            image.color = color;
-            image.pixelsPerUnitMultiplier = pixelsPerUnit;
+
+            _mainImage.color = color;
+            _mainImage.pixelsPerUnitMultiplier = pixelsPerUnit;
 
             _closeButton.Color = color;
 
@@ -98,15 +99,26 @@ namespace Vurbiri.Colonization.UI
             this.SetChildren(ref _resetButton, "ResetButton");
             this.SetChildren(ref _closeButton);
 
-            EUtility.SetArray(ref _playerCurrencies, CurrencyId.MainCount);
-            EUtility.SetArray(ref _bankCurrencies, CurrencyId.MainCount);
+            SetWidgets(ref _playerCurrencies);
+            SetWidgets(ref _bankCurrencies);
 
             this.SetComponent(ref _mainContainer);
             this.SetChildren(ref _bankContainer, "Bank");
             this.SetChildren(ref _playerContainer, "Player");
 
+            this.SetComponent(ref _mainImage);
+
             EUtility.SetPrefab(ref _playerPrefab);
             EUtility.SetPrefab(ref _bankPrefab);
+        }
+
+        private void SetWidgets<T>(ref T[] components) where T : ASelectCurrencyCountWidget
+        {
+            if (components == null || components.Length != CurrencyId.MainCount || components[0] == null)
+                components = GetComponentsInChildren<T>();
+
+            if (components.Length != CurrencyId.MainCount)
+                Array.Resize(ref components, CurrencyId.MainCount);
         }
     }
 }

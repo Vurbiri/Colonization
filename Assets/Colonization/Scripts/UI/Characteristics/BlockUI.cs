@@ -3,14 +3,14 @@ using Vurbiri.International;
 
 namespace Vurbiri.Colonization.UI
 {
-    using static CONST_UI_LNG_KEYS;
+    using static CONST_UI;
     using static TAG;
 
     sealed public class BlockUI : ASkillUI
     {
         private readonly string _value;
 
-        public BlockUI(ProjectColors colors, SeparatorEffectUI separator, int cost, int value) : base(colors, separator, cost)
+        public BlockUI(ProjectColors colors, SeparatorEffectUI separator, int cost, int value) : base(separator, cost)
         {
             _value = $"+{value}";
 
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
             sb.AppendLine(localization.GetText(FILE, BLOCK_KEY));
             _separator.GetText(sb);
 
-            sb.Append(_hexColorPlus);
+            sb.Append(GameContainer.UI.Colors.TextPositiveTag);
             sb.AppendLine(localization.GetFormatText(FILE, BLOCK_DESK_KEY, _value, CONST.BLOCK_DURATION));
             _separator.GetText(sb);
 

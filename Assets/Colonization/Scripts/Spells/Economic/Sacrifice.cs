@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
 
             private Sacrifice(int type, int id) : base(type, id) 
             {
-                _cost.Set(CurrencyId.Blood, s_settings.sacrificeBloodCost);
+                _cost.SetBlood(s_settings.sacrificeBloodCost);
                 _damage = new(s_settings.sacrificePierce);
 
                 _strCost = _cost.PlusToString(COST_COUNT_LINE);

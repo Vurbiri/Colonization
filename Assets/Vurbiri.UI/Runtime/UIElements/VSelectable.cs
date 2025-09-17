@@ -139,7 +139,7 @@ namespace Vurbiri.UI
                 _interactableIcon.canvasRenderer.SetAlpha(base.interactable ? 0f : 1f);
         }
 
-        protected override void DoStateTransition(SelectionState state, bool instant)
+        sealed protected override void DoStateTransition(SelectionState state, bool instant)
         {
             if (!gameObject.activeInHierarchy) return;
 

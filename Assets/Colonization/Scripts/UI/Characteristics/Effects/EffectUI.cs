@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         public override void GetText(Localization language, StringBuilder sb)
         {
             sb.Append(_hexColor);
-            sb.AppendLine(language.GetText(CONST_UI_LNG_KEYS.FILE, _descKey));
+            sb.AppendLine(language.GetText(CONST_UI.FILE, _descKey));
         }
 
         // Nested

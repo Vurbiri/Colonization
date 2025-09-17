@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using UnityEngine;
 
@@ -8,19 +7,9 @@ namespace Vurbiri.Colonization.UI
 
     public abstract class AButtonBuild : AHintButton3D
     {
-        private string _hexColorPlus, _hexColorMinus;
-
         private const int MIN_SIZE = 64, MAX_SIZE = 364;
 
         public Vector3 LocalPosition { set => _thisRectTransform.localPosition = value; }
-
-        protected virtual void InternalInit(Action action)
-        {
-            base.InternalInit(GameContainer.UI.WorldHint, action, true);
-
-            _hexColorPlus = GameContainer.UI.Colors.TextPositiveTag;
-            _hexColorMinus = GameContainer.UI.Colors.TextNegativeTag;
-        }
 
         protected void SetTextHint(string caption, ACurrencies cash, ACurrencies cost)
         {
@@ -32,7 +21,7 @@ namespace Vurbiri.Colonization.UI
             {
                 costV = cost[i];
                 if (costV > 0)
-                    sb.AppendFormat(COLOR_CURRENCY, i, costV.ToString(), costV > cash[i] ? _hexColorMinus : _hexColorPlus);
+                    sb.AppendFormat(COLOR_CURRENCY, i, costV.ToString(), GameContainer.UI.Colors.GetHexColor(costV > cash[i]));
             }
 
             _hintText = sb.ToString();

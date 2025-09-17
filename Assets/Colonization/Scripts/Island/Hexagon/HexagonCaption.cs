@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.UI
         private bool _isShow = true, _isEnable = true;
         private bool _showDistance, _showProfit, _showMode, _showNewId;
         private GameObject _thisGameObject;
-        private Color _normalColor, _profitColor, _prevColor;
+        private Color _profitColor, _prevColor;
         private Transform _thisTransform;
         private float _lastAngle;
         private string _defaultCurrencyText;
@@ -48,8 +48,8 @@ namespace Vurbiri.Colonization.UI
             _thisGameObject = gameObject;
             _thisTransform = transform;
 
-            _normalColor = _prevColor = GameContainer.UI.Colors.TextDefault;
-            _profitColor = id != CONST.GATE_ID ? GameContainer.UI.Colors.TextPositive : GameContainer.UI.Colors.TextNegative;
+            _prevColor = GameContainer.UI.Colors.TextDefault;
+            _profitColor =  GameContainer.UI.Colors.GetTextColor(id != CONST.GATE_ID);
 
             StringBuilder sb = new(TAG_SPRITE_LENGTH * CurrencyId.Count);
 
@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization.UI
             _currencyText.text = _defaultCurrencyText = sb.ToString();
 
             _idText.text = id.ToString();
-            _idText.color = _normalColor;
+            _idText.color = GameContainer.UI.Colors.TextDefault;
 
             SetActive();
 
@@ -137,7 +137,7 @@ namespace Vurbiri.Colonization.UI
         {
             _showProfit = false;
             _currencyText.text = _defaultCurrencyText;
-            _idText.color = _normalColor;
+            _idText.color = GameContainer.UI.Colors.TextDefault;
             SetActive();
         }
 

@@ -5,7 +5,7 @@ using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using static UnityEditor.EditorGUI;
-using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
+using static Vurbiri.Colonization.UI.CONST_UI;
 
 namespace VurbiriEditor.Colonization.Characteristics
 {

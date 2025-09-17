@@ -23,6 +23,7 @@
   "Blood": "Кровь демона",
   "Exchange": "Обмен",
   "Bank": "Банк",
+  "Gift": "Подарок",
   "LandingLabel": "Высадка\n<size=85%>{0}</size>",
   "StartTurnLabel": "Ход {0}\n<size=85%>{1}</size>",
   "CurrentMaxHint": "<align=\"left\">В наличии:<b>{0,2}</b>\r\nМаксимум: <b>{1,2}</b></align>",

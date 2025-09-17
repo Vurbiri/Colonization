@@ -13,7 +13,7 @@ namespace Vurbiri.UI
         protected RectTransform _thisRectTransform;
         protected string _hintText;
 
-        protected void InternalInit(AHint hint, float heightRatio)
+        protected void InternalInit(AHint hint, float heightRatio = 0.5263f)
         {
             _hint = hint;
             _thisRectTransform = (RectTransform)transform;

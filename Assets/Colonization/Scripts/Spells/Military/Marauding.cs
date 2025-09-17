@@ -113,8 +113,8 @@ namespace Vurbiri.Colonization
 
                     if (currency > -enemy[currencyId] && Chance.Rolling(100 - s_settings.reductionFromWall * _colony.GetDefense()))
                     {
-                        enemy.Add(currencyId, -1);
-                        self.Add(currencyId, 1);
+                        enemy.DecrementMain(currencyId);
+                        self.IncrementMain(currencyId);
 
                         GameContainer.Diplomacy.Marauding(enemyId, _actor.Owner);
                     }
