@@ -6,7 +6,14 @@ namespace Vurbiri.Colonization
 {
 	public class Test : MonoBehaviour
 	{
-        public void CreateUnits()
+        public void RunTest()
+        {
+            CurrenciesLite gift = new();
+            gift.RandomAddRange(5);
+            GameContainer.Players.Person.Gift(PlayerId.AI_01, gift);
+        }
+        
+        public void Spawn()
         {
             Debug.Log("Удалить Тесты в ArtefactPanel");
 

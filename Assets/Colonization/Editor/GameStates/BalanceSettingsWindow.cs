@@ -6,12 +6,10 @@ namespace VurbiriEditor.Colonization
 {
 	public class BalanceSettingsWindow : ASettingsWindow<BalanceSettings>
     {
-		#region Consts
-		private const string NAME = "Balance", MENU = MENU_GS_PATH + NAME;
-		#endregion
-		
-		[MenuItem(MENU)]
-		private static void ShowWindow()
+        private const string NAME = "Balance", MENU = MENU_GS_PATH + NAME;
+
+        [MenuItem(MENU, false, MENU_GS_ORDER)]
+        private static void ShowWindow()
 		{
 			GetWindow<BalanceSettingsWindow>(true, NAME);
 		}

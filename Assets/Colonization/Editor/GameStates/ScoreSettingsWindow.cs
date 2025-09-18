@@ -6,11 +6,9 @@ namespace VurbiriEditor.Colonization
 {
     public class ScoreSettingsWindow : ASettingsWindow<ScoreSettings>
     {
-		#region Consts
-		private const string NAME = "Score", MENU = MENU_GS_PATH + NAME;
-        #endregion
+        private const string NAME = "Score", MENU = MENU_GS_PATH + NAME;
 
-        [MenuItem(MENU, false, 30)]
+        [MenuItem(MENU, false, MENU_GS_ORDER)]
 		private static void ShowWindow()
 		{
 			GetWindow<ScoreSettingsWindow>(true, NAME);

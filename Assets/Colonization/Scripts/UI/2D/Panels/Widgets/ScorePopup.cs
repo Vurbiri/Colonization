@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         private string _localizedText;
         private int _score;
 
-        public void Init(Direction2 offsetPopup)
+        public void Init(Vector3 offsetPopup)
         {
             base.Init();
             _popup.Init(offsetPopup);
@@ -22,13 +22,13 @@ namespace Vurbiri.Colonization.UI
 
         private void SetValue(Score values)
         {
-            int delta = values[PlayerId.Person] - _score;
-            if (delta > 0)
+            int score = values[PlayerId.Person];
+            if (score != _score)
             {
-                _score = values[PlayerId.Person];
+                _popup.ForceRun(score - _score);
+                _score = score;
                 _valueTMP.text = _score.ToString();
-                _popup.ForceRun(delta);
-                _hintText = string.Format(_localizedText, _score, GameContainer.GameSettings.MaxScore);
+                _hintText = string.Format(_localizedText, score, GameContainer.GameSettings.MaxScore);
             }
         }
 

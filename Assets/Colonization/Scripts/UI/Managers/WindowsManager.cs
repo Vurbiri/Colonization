@@ -5,7 +5,7 @@ namespace Vurbiri.Colonization.UI
 {
     [System.Serializable]
     public class WindowsManager
-	{
+    {
         private const int SWITCHERS_COUNT = 3, BUTTONS_COUNT = 2;
         
         [SerializeField, ReadOnly] private PerksWindow _perksWindow;

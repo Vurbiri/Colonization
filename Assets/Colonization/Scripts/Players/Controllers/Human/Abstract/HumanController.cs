@@ -3,9 +3,11 @@ using Vurbiri.Colonization.Characteristics;
 
 namespace Vurbiri.Colonization
 {
-	public abstract class AHumanController : Human,  IPlayerController
+	public abstract class HumanController : Human,  IPlayerController
 	{
-        protected AHumanController(int playerId, Settings settings) : base(playerId, settings) { }
+        protected readonly WaitResultSource<bool> _waitGift = new();
+
+        protected HumanController(int playerId, Settings settings) : base(playerId, settings) { }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
         {
@@ -19,6 +21,8 @@ namespace Vurbiri.Colonization
                 GameContainer.Score.ForKillingWarrior(_id, id);
             }
         }
+
+        public abstract WaitResult<bool> Gift(int giver, CurrenciesLite gift);
 
         public virtual void OnLanding() { }
         public virtual void OnEndLanding() { }

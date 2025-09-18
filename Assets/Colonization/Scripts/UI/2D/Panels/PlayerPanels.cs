@@ -34,10 +34,11 @@ namespace Vurbiri.Colonization.UI
             _shrines.Init(_sprites);
             _roads.Init();
 
-            _currencies.Init(_directionPopup, currencies);
-            _blood.Init(_directionPopup, currencies);
+            Vector3 directionPopup = _directionPopup;
+            _currencies.Init(directionPopup, currencies);
+            _blood.Init(directionPopup, currencies);
 
-            _score.Init(_directionPopup);
+            _score.Init(directionPopup);
 
             _artefactPanel.Init();
 

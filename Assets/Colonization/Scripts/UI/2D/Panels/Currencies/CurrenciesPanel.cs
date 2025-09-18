@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private CurrencyPopup[] _currencies;
         [SerializeField] private Amount _amount;
 
-        public void Init(Direction2 directionPopup, ReadOnlyCurrencies currencies)
+        public void Init(Vector3 directionPopup, ReadOnlyCurrencies currencies)
         {
             for (int i = 0; i < CurrencyId.MainCount; i++)
                 _currencies[i].Init(i, currencies, directionPopup);

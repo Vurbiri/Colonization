@@ -239,7 +239,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        sealed override public void Dispose()
+        public override void Dispose()
         {
             base.Dispose();
             _exchange.Dispose();

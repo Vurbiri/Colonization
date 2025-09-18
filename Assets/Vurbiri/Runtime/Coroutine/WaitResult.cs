@@ -1,5 +1,3 @@
-using System.Collections;
-
 namespace Vurbiri
 {
     public static class WaitResult
@@ -55,7 +53,7 @@ namespace Vurbiri
             return new(_default);
         }
 
-        public IEnumerator Restart()
+        public WaitResult<T> Restart()
         {
             _isWait = true;
             _value = _default;

@@ -150,6 +150,7 @@ namespace Vurbiri.UI
         }
 
         #region Nested Settings
+#pragma warning disable 649
         //******************************************************
         [System.Serializable]
         internal class Settings
@@ -189,6 +190,7 @@ namespace Vurbiri.UI
             }
 #endif
         }
+#pragma warning restore
         #endregion
 
 #if UNITY_EDITOR

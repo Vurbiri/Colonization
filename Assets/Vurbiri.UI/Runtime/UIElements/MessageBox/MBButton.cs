@@ -1,5 +1,4 @@
 using UnityEngine;
-using Vurbiri.Reactive;
 namespace Vurbiri.UI
 {
 	sealed public class MBButton : AVButton<Id<MBButtonId>>, IValueId<MBButtonId>
@@ -7,17 +6,18 @@ namespace Vurbiri.UI
         public static readonly Id<MBButtonId>[] Cancel = { MBButtonId.Cancel };
         public static readonly Id<MBButtonId>[] Ok = { MBButtonId.Ok };
         public static readonly Id<MBButtonId>[] OkNo = { MBButtonId.Ok, MBButtonId.No };
+        public static readonly Id<MBButtonId>[] OkCancel = { MBButtonId.Ok, MBButtonId.Cancel };
 
         private GameObject _thisObject;
 
         public Id<MBButtonId> Id => _value;
 
-        public ISubscription<Id<MBButtonId>> Init()
+        protected override void Start()
         {
+            base.Start();
+
             _thisObject = gameObject;
             _thisObject.SetActive(false);
-
-            return _onClick;
         }
         
         public void Setup(Vector3 position)

@@ -22,7 +22,7 @@ namespace VurbiriEditor
             }
             if (!TryGetNamesAndValues())
             {
-                HelpBox(position, $"Error values", UnityEditor.MessageType.Error);
+                HelpBox(position, $"Error type", UnityEditor.MessageType.Error);
                 return;
             }
 
@@ -39,7 +39,7 @@ namespace VurbiriEditor
 
             bool isInit = _type == idType & _names != null & _values != null;
 
-            if (!isInit)
+            if (!isInit && IdTypesCacheEditor.Contain(idType))
             {
                 _type = idType;
                 _names = IdTypesCacheEditor.GetDisplayNames(idType);

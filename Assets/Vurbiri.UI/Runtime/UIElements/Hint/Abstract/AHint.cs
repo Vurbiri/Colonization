@@ -24,10 +24,10 @@ namespace Vurbiri.UI
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 GetOffsetHint(RectTransform rectTransform, float heightRatio)
         {
-            Vector2 pivot = rectTransform.pivot;
-            Vector2 size = rectTransform.rect.size;
+            var pivot = rectTransform.pivot;
+            var size = rectTransform.rect.size;
 
-            return new(size.x * (0.5f - pivot.x), size.y * (0.5f - pivot.y + heightRatio), 0f);
+            return new(size.x * Mathf.Abs(0.5f - pivot.x), size.y * (Mathf.Abs(0.5f - pivot.y) + heightRatio), 0f);
         }
 
         public virtual void Init()

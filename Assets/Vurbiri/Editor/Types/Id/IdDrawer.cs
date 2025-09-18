@@ -24,7 +24,7 @@ namespace VurbiriEditor
             }
             if (!TryGetNamesAndValues(idType))
             {
-                HelpBox(position, $"Error values", UnityEditor.MessageType.Error); 
+                HelpBox(position, $"Error type", UnityEditor.MessageType.Error); 
                 return;
             }
 

@@ -9,12 +9,6 @@ namespace Vurbiri.UI
         [SerializeField] protected T _value;
         [SerializeField] protected UniSubscription<T> _onClick = new();
 
-        public T Value
-        {
-            get => _value;
-            set => _value = value;
-        }
-
         protected override void Start()
         {
             base.Start();

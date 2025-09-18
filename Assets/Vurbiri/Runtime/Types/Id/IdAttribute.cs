@@ -8,12 +8,6 @@ namespace Vurbiri
     {
         public readonly Type type;
 
-        public IdAttribute(Type idType)
-        {
-            if (idType != null && IdTypesCacheEditor.Contain(idType))
-                type = idType;
-            else
-                Errors.Argument("idType", idType);
-        }
-	}
+        public IdAttribute(Type idType) => type = idType;
+    }
 }

@@ -16,7 +16,7 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         private Editor _editor;
 
-        [MenuItem(MENU, false, 15)]
+        [MenuItem(MENU, false, MENU_PERKS_ORDER)]
         private static void ShowWindow()
         {
             GetWindow<MilitaryPerksWindow>(false, NAME).minSize = new(375f, 800f);

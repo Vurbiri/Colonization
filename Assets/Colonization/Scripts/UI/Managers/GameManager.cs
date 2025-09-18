@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization.UI
 {
     [System.Serializable]
     public class GameManager
-	{
+    {
         [SerializeField, Range(1f, 3f)] private float _landingDelay = 1.75f;
         [Space]
         [SerializeField] private ScreenLabel _label;

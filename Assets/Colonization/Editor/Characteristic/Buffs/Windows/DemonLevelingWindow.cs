@@ -1,12 +1,13 @@
 using UnityEditor;
+using static VurbiriEditor.Colonization.CONST_EDITOR;
 
 namespace VurbiriEditor.Colonization
 {
     sealed public class DemonLevelingWindow : ABuffsWindow
     {
-        private const string NAME = "Demon Leveling", MENU = CONST_EDITOR.MENU_BUFFS_PATH + NAME;
+        private const string NAME = "Demon Leveling", MENU = MENU_BUFFS_PATH + NAME;
 
-        [MenuItem(MENU, false, 14)]
+        [MenuItem(MENU, false, MENU_BUFFS_ORDER)]
         private static void ShowWindow()
 		{
 			GetWindow<DemonLevelingWindow>(true, NAME).minSize = new(300f, 500f); ;

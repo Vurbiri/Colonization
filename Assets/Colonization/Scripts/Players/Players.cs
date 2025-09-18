@@ -1,33 +1,31 @@
 using System;
 using System.Runtime.CompilerServices;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public class Players : IDisposable
     {
         private readonly PlayersController _controller;
-        private readonly Human[] _humans = new Human[PlayerId.HumansCount];
-        private readonly Satan _satan;
+        private readonly HumanController[] _humans = new HumanController[PlayerId.HumansCount];
+        private readonly SatanController _satan;
 
         public Human this[int id]
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _humans[id];
+            [Impl(256)] get => _humans[id];
         }
-        public Human[] Humans
+        public HumanController Person
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _humans;
+             [Impl(256)] get => _humans[PlayerId.Person];
         }
-        public Human Person
+        public HumanController[] Humans
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _humans[PlayerId.Person];
+            [Impl(256)] get => _humans;
         }
-        public Satan Satan
+
+        public SatanController Satan
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _satan;
+             [Impl(256)] get => _satan;
         }
 
         public Players(Player.Settings settings, GameLoop game)
@@ -38,9 +36,7 @@ namespace Vurbiri.Colonization
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
                 AddHuman(i, new AIController(i, settings));
 
-            SatanController satan = new(settings);
-            _controller.Add(PlayerId.Satan, satan);
-            _satan = satan;
+            _controller.Add(PlayerId.Satan, _satan = new(settings));
 
             Player.Init();
 
@@ -49,7 +45,7 @@ namespace Vurbiri.Colonization
             // Local
             //=======================================================
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            void AddHuman(int id, AHumanController controller)
+            void AddHuman(int id, HumanController controller)
             {
                 _controller.Add(id, controller);
                 _humans[id] = controller;

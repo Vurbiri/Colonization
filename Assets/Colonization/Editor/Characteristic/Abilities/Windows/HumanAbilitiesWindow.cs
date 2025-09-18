@@ -1,20 +1,19 @@
+using UnityEditor;
+using UnityEngine;
+using Vurbiri;
+using Vurbiri.Colonization.Characteristics;
+using static VurbiriEditor.Colonization.CONST_EDITOR;
+
 namespace VurbiriEditor.Colonization.Characteristics
 {
-    using UnityEditor;
-    using UnityEngine;
-    using Vurbiri;
-    using Vurbiri.Colonization.Characteristics;
-    using static CONST_EDITOR;
 
     public class HumanAbilitiesWindow : EditorWindow
     {
-        #region Consts
         private const string NAME = "Human Abilities", MENU = MENU_CH_PATH + NAME;
-        #endregion
 
         [SerializeField] private HumanAbilitiesScriptable _scriptable;
 
-        [MenuItem(MENU, false, 21)]
+        [MenuItem(MENU, false, MENU_CH_ORDER)]
         private static void ShowWindow()
         {
             GetWindow<HumanAbilitiesWindow>(NAME).minSize = new(225f, 300f);

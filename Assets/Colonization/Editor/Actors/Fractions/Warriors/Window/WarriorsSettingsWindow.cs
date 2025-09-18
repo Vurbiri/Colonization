@@ -10,7 +10,7 @@ namespace VurbiriEditor.Colonization.Actors
     {
         private const string NAME = "Warriors Settings", MENU = MENU_AC_PATH + NAME;
 
-        [MenuItem(MENU, false, 10)]
+        [MenuItem(MENU, false, MENU_AC_ORDER)]
         private static void ShowWindow()
         {
             GetWindow<WarriorsSettingsWindow>(true, NAME).minSize = new(650f, 800f);
