@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
         {
             _profitTMP.text = string.Format(RATE, ++rate);
             _valueTMP.text = string.Format(COUNT, current, max);
-            _hintText = string.Format(_textHint, current, max, rate);
+            _hintText = string.Format(_localizedText, current, max, rate);
         }
 
 #if UNITY_EDITOR

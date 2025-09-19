@@ -9,14 +9,12 @@ namespace VurbiriEditor.Colonization
 {
     public class SatanAbilitiesWindow : EditorWindow
 	{
-		#region Consts
-		private const string NAME = "Satan Abilities", MENU = MENU_CH_PATH + NAME;
-        #endregion
+        private const string NAME = "Satan Abilities", MENU = MENU_CH_PATH + NAME;
 
         [SerializeField] private VisualTreeAsset _satanAbilitiesVT;
         [SerializeField] private SatanAbilities _abilities;
 
-        [MenuItem(MENU, false, 21)]
+        [MenuItem(MENU, false, MENU_CH_ORDER)]
 		private static void ShowWindow()
 		{
 			GetWindow<SatanAbilitiesWindow>(true, NAME);

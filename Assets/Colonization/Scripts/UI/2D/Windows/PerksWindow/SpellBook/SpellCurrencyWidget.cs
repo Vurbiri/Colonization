@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
         private Action<int> a_changeCount;
         private Unsubscription _unsubscriber;
 
-        public void Init(ACurrenciesReactive currencies, Action<int> action)
+        public void Init(ReadOnlyCurrencies currencies, Action<int> action)
         {
             _unsubscriber = currencies.Get(_id).Subscribe(SetMax);
             a_changeCount = action;
@@ -19,9 +19,10 @@ namespace Vurbiri.Colonization.UI
         protected override void SetValue(int value)
         {
             bool changed = _count != value;
-            base.SetValue(value);
 
-            if (changed  & a_changeCount != null)
+            InternalSetValue(value);
+
+            if (changed & a_changeCount != null)
                 a_changeCount(_count);
         }
 

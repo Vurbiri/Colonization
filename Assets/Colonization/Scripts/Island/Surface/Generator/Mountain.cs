@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
             float size = HEX_RADIUS_IN * _ratioSize;
             _rock.Radius = size * (_stepRatioRadius - 1f) / (Mathf.Pow(_stepRatioRadius, _countCircle) - 1f);
 
-            float ratioHeight = 1f, ratioRadius = 1f;
+            float heightRatio = 1f, ratioRadius = 1f;
             float radiusAvg = _rock.RadiusAvg * _density, step = radiusAvg, radius = step;
             float angle, angleStep, angleOffset;
             bool isHigh = Chance.Rolling();
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
                     if (chance.Roll)
                     {
                         position = new(Mathf.Cos(angle) * radius + offset, 0f, Mathf.Sin(angle) * radius + offset);
-                        customMesh.AddTriangles(_rock.Create(position, isHigh, ratioHeight, ratioRadius));
+                        customMesh.AddTriangles(_rock.Create(position, isHigh, heightRatio, ratioRadius));
                         isHigh = !isHigh;
                     }
                     angle -= angleStep;
@@ -93,12 +93,12 @@ namespace Vurbiri.Colonization
             private static readonly Vector2[] s_uvPick = { new(0f, 0f), new(1f, 0f), new(0.5f, SIN_60) };
             private static readonly Color32[] s_barycentricColors = { new(255, 0, 0, 255), new(0, 255, 0, 255), new(255, 255, 255, 255) };
 
-            public List<Triangle> Create(Vector3 position, bool isHigh, float ratioHeight, float ratioRadius)
+            public List<Triangle> Create(Vector3 position, bool isHigh, float heightRatio, float ratioRadius)
             {
                 _triangles.Clear();
                 int countVertex = _countVertexRange;
 
-                float height = ratioHeight * (isHigh ? _heightRangeHigh : _heightRangeLow);
+                float height = heightRatio * (isHigh ? _heightRangeHigh : _heightRangeLow);
                 float radius = _radiusRange * ratioRadius;
                 FloatMRnd offsetSide = radius * _ratioOffsetRange;
 

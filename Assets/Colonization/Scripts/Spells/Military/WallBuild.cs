@@ -21,9 +21,9 @@ namespace Vurbiri.Colonization
                 if (_canCast = !s_isCast)
                 {
                     _canWall.Clear();
-                    if (s_humans[param.playerId].IsPay(_cost))
+                    if (Humans[param.playerId].IsPay(_cost))
                     {
-                        var colonies = s_humans[param.playerId].GetEdifices(EdificeGroupId.Colony);
+                        var colonies = Humans[param.playerId].GetEdifices(EdificeGroupId.Colony);
                         for (int i = colonies.Count - 1; i >= 0; i--)
                         {
                             if (colonies[i].CanWallBuild())
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
                 if (_canCast)
                 {
                     var colony = _canWall.Rand();
-                    s_humans[param.playerId].BuyWall(colony, _cost);
+                    Humans[param.playerId].BuyWall(colony, _cost);
 
                     GameContainer.CameraController.ToPosition(colony);
                     ShowSpellName(param.playerId);

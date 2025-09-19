@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Vurbiri.International
 {
-    [Serializable, JsonConverter(typeof(FileIdAndKey.Converter))]
+    [Serializable, JsonConverter(typeof(Converter))]
     public struct FileIdAndKey
 	{
 		public int id;
@@ -19,6 +19,7 @@ namespace Vurbiri.International
 		}
 
         #region Nested Json Converter
+        //***************************************************************************
         sealed public class Converter : AJsonConverter<FileIdAndKey>
         {
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

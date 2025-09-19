@@ -1,9 +1,9 @@
 namespace Vurbiri.Colonization.Actors
 {
-    public class EmptySFX : IHitSFX
+    public class EmptySFX : ISFX
     {
         public const string NAME = "Empty";
 
-        public System.Collections.IEnumerator Hit(ActorSFX user, ActorSkin target) => null;
+        public System.Collections.IEnumerator Run(ActorSFX user, ActorSkin target) => null;
     }
 }

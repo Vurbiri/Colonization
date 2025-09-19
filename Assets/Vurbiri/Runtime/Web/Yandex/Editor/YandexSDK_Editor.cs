@@ -87,13 +87,13 @@ namespace Vurbiri
         }
         public WaitResult<string> Load(string key)
         {
-            string path = Path.Combine(Application.persistentDataPath, key);
+            string path = Path.Combine(Application.persistentDataPath, key), result = string.Empty;
             if (File.Exists(path))
             {
                 using StreamReader sr = new(path);
-                return Result.Instant(sr.ReadToEnd());
+                result = sr.ReadToEnd();
             }
-            return Result.Instant(string.Empty);
+            return Result.Instant(result);
         }
 
         public WaitResult<bool> CanReview() => Result.Instant(IsLogOn);

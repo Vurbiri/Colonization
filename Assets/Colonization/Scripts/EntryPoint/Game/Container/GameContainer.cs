@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
         public static Hexagons Hexagons                 { [Impl(256)] get => s_content.hexagons; }
         public static Crossroads Crossroads             { [Impl(256)] get => s_content.crossroads; }
 
-        public static ActorsFactory Actors       { [Impl(256)] get => s_content.actorsFactory; }
+        public static ActorsFactory Actors              { [Impl(256)] get => s_content.actorsFactory; }
 
         public static Players Players                   { [Impl(256)] get => s_content.players; }
         public static Balance Balance                   { [Impl(256)] get => s_content.balance; }
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
         public static Transform SharedContainer         { [Impl(256)] get => s_content.sharedContainer; }
         public static AudioSource SharedAudioSource     { [Impl(256)] get => s_content.sharedAudioSource; }
 
-        public static SFXStorage HitSFX                 { [Impl(256)] get => s_content.actorSFXs; }
+        public static SFXStorage SFX                    { [Impl(256)] get => s_content.actorSFXs; }
 
         public new class UI : ProjectContainer.UI
         {

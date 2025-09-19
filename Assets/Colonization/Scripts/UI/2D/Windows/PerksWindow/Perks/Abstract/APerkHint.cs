@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
 
         public virtual void Init(Perk perk)
         {
-            base.Init(GameContainer.UI.CanvasHint, 0.48f);
+            base.InternalInit(GameContainer.UI.CanvasHint, 0.48f);
             _unsubscriber = Localization.Instance.Subscribe(SetTextAndCost);
         }
 

@@ -1,11 +1,20 @@
 {
-  "min": -100,
-  "max": 101,
-  "defaultValue": -25,
-  "penaltyPerRound": -1,
+  "min": -99,
+  "max": 100,
+  "great": 75,
+  "defaultValue": 5,
+  "defaultDelta": 10,
+  "personPerRound": [
+    -1,
+    2
+  ],
+  "aiPerRound": [
+    -1,
+    3
+  ],
   "rewardForBuff": 10,
-  "rewardForPresent": 5,
-  "penaltyForMarauding": -7,
-  "penaltyForFireOnEnemy": -5,
-  "penaltyForFriendlyFire": -10
+  "rewardForGift": 5,
+  "penaltyForMarauding": -6,
+  "penaltyForFireOnEnemy": -3,
+  "penaltyForFriendlyFire": -8
 }

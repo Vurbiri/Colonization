@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                var human = s_humans[param.playerId];
+                var human = Humans[param.playerId];
                 return _canCast = !s_isCast && human.IsPay(_cost) & human.Actors.Count > 0 & _coroutine == null;
             }
 
@@ -92,9 +92,9 @@ namespace Vurbiri.Colonization
                 yield return CameraController.ToPosition(target.Position, true);
 
                 target.ApplyEffect(_addAP); target.ApplyEffect(_move);
-                s_humans[_currentPlayer].Pay(_cost);
+                Humans[_currentPlayer].Pay(_cost);
 
-                yield return HitSFX.Hit(s_settings.zealSFX, null, target.Skin);
+                yield return SFX.Run(s_settings.zealSFX, null, target.Skin);
 
                 EndCast();
             }

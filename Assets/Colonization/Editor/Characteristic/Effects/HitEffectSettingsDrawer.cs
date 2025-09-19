@@ -5,7 +5,7 @@ using Vurbiri.Colonization;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using static UnityEditor.EditorGUI;
-using static Vurbiri.Colonization.UI.CONST_UI_LNG_KEYS;
+using static Vurbiri.Colonization.UI.CONST_UI;
 
 namespace VurbiriEditor.Colonization.Characteristics
 {
@@ -42,8 +42,10 @@ namespace VurbiriEditor.Colonization.Characteristics
 
         protected override void OnGUI()
         {
+            var propertyTargetAbility = GetProperty(P_TARGET_ABILITY);
+
             int id = IdFromLabel();
-            var (name, color) = GetSkin();
+            var (name, color) = GetSkin(propertyTargetAbility);
 
             _label.text = string.Format(name, id);
             BeginProperty();
@@ -73,7 +75,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                     Space();
                     indentLevel++;
 
-                    SetInt(P_TARGET_ABILITY, CurrentHP);
+                    propertyTargetAbility.intValue = targetAbility;
                     SetInt(P_TYPE_OP, TypeModifierId.TotalPercent);
 
                     if (isTargetEnemy)
@@ -92,7 +94,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 }
 
                 if (!isUsedAttack)
-                    targetAbility = DrawTargetEffect(!isNotDuration);
+                    targetAbility = DrawTargetEffect(!isNotDuration, propertyTargetAbility);
 
                 Space(3f);
 
@@ -105,17 +107,32 @@ namespace VurbiriEditor.Colonization.Characteristics
 
             #region Local
             //==============================================
-            (string name, Color color) GetSkin()
+            (string name, Color color) GetSkin(SerializedProperty targetAbility)
             {
-                SerializedProperty property = GetProperty(P_VALUE);
+                (string name, Color color) output;
+                if (targetAbility.intValue == ClearEffectsId.Code)
+                {
+                    int mod = GetInt(P_TYPE_OP);
+                    
+                    if (mod == ClearEffectsId.Positive)
+                        output = (NAME_NEGATIVE, _negative);
+                    else if (mod == ClearEffectsId.Negative)
+                        output = (NAME_POSITIVE, _positive);
+                    else
+                        output = (NAME_VOID, _void);
+                }
+                else
+                {
+                    int value = GetInt(P_VALUE);
 
-                if (property.intValue > 0)
-                    return (NAME_POSITIVE, _positive);
-
-                if (property.intValue < 0)
-                    return (NAME_NEGATIVE, _negative);
-
-                return (NAME_VOID, _void);
+                    if (value > 0)
+                        output = (NAME_POSITIVE, _positive);
+                    else if (value < 0)
+                        output = (NAME_NEGATIVE, _negative);
+                    else
+                        output = (NAME_VOID, _void);
+                }
+                return output;
             }
             //==============================================
             void GetTargetSkill(out bool isTargetSkillSelf, out bool isTargetSkillEnemy)
@@ -160,10 +177,8 @@ namespace VurbiriEditor.Colonization.Characteristics
                 SetInt(P_REFLECT, 0);
             }
             //==============================================
-            int DrawTargetEffect(bool isDuration)
+            int DrawTargetEffect(bool isDuration, SerializedProperty targetAbility)
             {
-                SerializedProperty targetAbility = GetProperty(P_TARGET_ABILITY);
-                
                 Space();
                 if (isDuration)
                 {

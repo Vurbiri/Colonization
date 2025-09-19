@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Actors
 
         public override void Init(Id<PlayerId> owner, Skills skills)
         {
-            var sfx = GetComponent<DemonSFX>();
+            var sfx = GetComponent<FattySFX>();
             sfx.Init(skills.HitSfxNames, skills.Spec.SFXName);
 
             _jumpState = new(this, sfx, skills.Spec.Timing);

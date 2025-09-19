@@ -8,27 +8,22 @@ namespace Vurbiri.UI
     {
         private AHint _hint;
         private bool _isShowingHint = false;
-        private Vector3 _offsetHint;
+        private Vector3 _hintOffset;
 
-        protected Transform _thisTransform;
+        protected RectTransform _thisRectTransform;
         protected string _hintText;
 
-        protected void Init(AHint hint, float ratioHeight)
+        protected void InternalInit(AHint hint, float heightRatio = 0.5263f)
         {
             _hint = hint;
-            _thisTransform = transform;
-
-            RectTransform thisRectTransform = (RectTransform)_thisTransform;
-            Vector2 pivot = thisRectTransform.pivot;
-            Vector2 size = thisRectTransform.rect.size;
-
-            _offsetHint = new(size.x * (0.5f - pivot.x), size.y * (0.5f - pivot.y + ratioHeight), 0f);
+            _thisRectTransform = (RectTransform)transform;
+            _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (!_isShowingHint)
-                _isShowingHint = _hint.Show(_hintText, _thisTransform.position, _offsetHint);
+                _isShowingHint = _hint.Show(_hintText, _thisRectTransform.position, _hintOffset);
         }
 
         public void OnPointerExit(PointerEventData eventData)

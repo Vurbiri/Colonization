@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
 
         protected void Init()
         {
-            base.Init(GameContainer.UI.CanvasHint, 0.5f);
+            base.InternalInit(GameContainer.UI.CanvasHint);
 
             _unsubscribers += Localization.Instance.Subscribe(SetLocalizationText);
         }
@@ -38,8 +38,7 @@ namespace Vurbiri.Colonization.UI
 
         protected virtual void OnValidate()
         {
-            if (_valueTMP == null)
-                _valueTMP = EUtility.GetComponentInChildren<TextMeshProUGUI>(this, "TextTMP");
+            this.SetChildren(ref _valueTMP, "TextTMP");
         }
 #endif
     }

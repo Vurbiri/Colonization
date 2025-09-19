@@ -1,65 +1,65 @@
 using System;
 using System.Runtime.CompilerServices;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public class Players : IDisposable
     {
-        private readonly IPlayerController[] _players = new IPlayerController[PlayerId.Count];
-
-        private readonly PersonController _person;
-        private readonly AIController[] _ai = new AIController[PlayerId.AICount];
+        private readonly PlayersController _controller;
+        private readonly HumanController[] _humans = new HumanController[PlayerId.HumansCount];
         private readonly SatanController _satan;
 
-        public PersonController Person
+        public Human this[int id]
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _person;
+            [Impl(256)] get => _humans[id];
         }
-        public SatanController Satan
+        public HumanController Person
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _satan;
+             [Impl(256)] get => _humans[PlayerId.Person];
+        }
+        public HumanController[] Humans
+        {
+            [Impl(256)] get => _humans;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public AIController GetAI(Id<PlayerId> id) => _ai[id.Value - PlayerId.AI_01];
+        public SatanController Satan
+        {
+             [Impl(256)] get => _satan;
+        }
 
         public Players(Player.Settings settings, GameLoop game)
         {
-             _players[PlayerId.Person] = _person = new(settings);
+            _controller = new(game);
 
+            AddHuman(PlayerId.Person, new PersonController(settings));
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
-                _players[i] = _ai[i - PlayerId.AI_01] = new(i, settings);
+                AddHuman(i, new AIController(i, settings));
 
-            _players[PlayerId.Satan] = _satan = new(settings);
-
-            game.Subscribe(GameModeId.Landing,    (turn, _) => _players[turn.currentId.Value].OnLanding());
-            game.Subscribe(GameModeId.EndLanding, (turn, _) => _players[turn.currentId.Value].OnEndLanding());
-            game.Subscribe(GameModeId.EndTurn,    (turn, _) => _players[turn.currentId.Value].OnEndTurn());
-            game.Subscribe(GameModeId.StartTurn,  (turn, _) => _players[turn.currentId.Value].OnStartTurn());
-            game.Subscribe(GameModeId.Profit,     OnProfit);
-            game.Subscribe(GameModeId.Play,       (turn, _) => _players[turn.currentId.Value].OnPlay());
-
-            GameContainer.EventBus.EventActorKill.Add((killer, deadType, deadId) => _players[killer].ActorKill(deadType, deadId));
+            _controller.Add(PlayerId.Satan, _satan = new(settings));
 
             Player.Init();
 
             settings.Dispose();
+
+            // Local
+            //=======================================================
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            void AddHuman(int id, HumanController controller)
+            {
+                _controller.Add(id, controller);
+                _humans[id] = controller;
+            }
+            //=======================================================
         }
 
         public void Dispose()
         {
             Player.Clear();
 
-            for (int i = 0; i < PlayerId.Count; i++)
-                _players[i].Dispose();
-        }
-
-        private void OnProfit(TurnQueue turnQueue, int hexId)
-        {
-            for (int i = 0; i < PlayerId.Count; i++)
-                _players[i].OnProfit(turnQueue.currentId, hexId);
+            _satan.Dispose();
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                _humans[i].Dispose();
         }
     }
 }

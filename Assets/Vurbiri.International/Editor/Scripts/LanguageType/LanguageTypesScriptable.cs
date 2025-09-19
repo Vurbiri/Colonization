@@ -32,11 +32,9 @@ namespace Vurbiri.International.Editor
 
         public bool Contains(SystemLanguage id)
         {
-            for(int i = 0;  i < _languageTypes.Count; i++)
-                if (_languageTypes[i].Id == id)
-                    return true;
-
-            return false;
+            int i = _languageTypes.Count;
+            while (i --> 0 && _languageTypes[i].Id != id);
+            return i >= 0;
         }
 
         public static LanguageTypesScriptable GetOrCreateSelf() => GetOrCreateSelf(LANG_TYPES_NAME, LANG_TYPES_PATH);

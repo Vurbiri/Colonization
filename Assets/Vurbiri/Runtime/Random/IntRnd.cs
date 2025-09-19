@@ -1,8 +1,9 @@
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Vurbiri
 {
-    [System.Serializable]
+    [System.Serializable, JsonConverter(typeof(Converter))]
     public struct IntRnd
     {
         [SerializeField] private int _min;
@@ -51,5 +52,31 @@ namespace Vurbiri
         public static int operator -(IntRnd mm, int value) => Random.Range(mm._min, mm._max) - value;
 
         public override readonly string ToString() => $"(min: {_min}, max: {_max - 1})";
+
+        #region Nested Json Converter
+        //***************************************************************************
+        sealed public class Converter : AJsonConverter<IntRnd>
+        {
+            public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                var data = serializer.Deserialize<int[]>(reader);
+                var value = new IntRnd
+                {
+                    _min = data[0],
+                    _max = data[1]
+                };
+
+                return value;
+            }
+
+            protected override void WriteJson(JsonWriter writer, IntRnd value, JsonSerializer serializer)
+            {
+                writer.WriteStartArray();
+                writer.WriteValue(value._min);
+                writer.WriteValue(value._max);
+                writer.WriteEndArray();
+            }
+        }
+        #endregion
     }
 }

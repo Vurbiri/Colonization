@@ -28,9 +28,9 @@ namespace Vurbiri.Colonization
                 if (_canCast = !s_isCast)
                 {
                     _targets.Clear();
-                    _cost.Set(Wood, param.valueA); _cost.Set(Ore, param.valueB);
+                    _cost.SetMain(Wood, param.valueA); _cost.SetMain(Ore, param.valueB);
 
-                    if (s_humans[param.playerId].IsPay(_cost))
+                    if (Humans[param.playerId].IsPay(_cost))
                         FindActorsOnSurface(_targets, SurfaceId.Forest, SurfaceId.Mountain);
 
                     _canCast = _targets.Count > 0;
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization
 
                     Cast_Cn().Start();
                     ShowSpellName(param.playerId, 3f + 2f * count);
-                    s_humans[param.playerId].Pay(_cost);
+                    Humans[param.playerId].Pay(_cost);
 
                     _canCast = false;
                 }
@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
 
                     CameraController.ToPosition(position, true);
                     _damage.Apply(target);
-                    yield return HitSFX.Hit(s_settings.wrathSFX, null, target.Skin);
+                    yield return SFX.Run(s_settings.wrathSFX, null, target.Skin);
                 }
 
                 s_isCast.False();

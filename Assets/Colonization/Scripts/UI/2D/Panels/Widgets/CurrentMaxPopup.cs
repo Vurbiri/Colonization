@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
-        public void Init(ICurrency blood, IReactive<int> max, Direction2 offsetPopup)
+        public void Init(Currency blood, IReactive<int> max, Vector3 offsetPopup)
         {
             base.Init();
             _popup.Init(offsetPopup);
@@ -20,9 +20,9 @@ namespace Vurbiri.Colonization.UI
 
         protected override void SetLocalizationText(Localization localization)
         {
-            _textHint = localization.GetText(_getText.id, _getText.key);
+            _localizedText = localization.GetText(_getText.id, _getText.key);
             if(_reactiveCurrentMax != null)
-                _hintText = string.Format(_textHint, _reactiveCurrentMax.ValueA, _reactiveCurrentMax.ValueB);
+                _hintText = string.Format(_localizedText, _reactiveCurrentMax.ValueA, _reactiveCurrentMax.ValueB);
         }
 
 

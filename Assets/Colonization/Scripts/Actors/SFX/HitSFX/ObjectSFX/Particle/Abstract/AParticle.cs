@@ -5,11 +5,10 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-	public abstract class AParticle : APooledSFX, IEnumerator
+    public abstract class AParticle : APooledSFX, IEnumerator
     {
         protected readonly AudioClip _clip;
-        private readonly ParticleSystem _particle;
-        private readonly float _targetHeightRate;
+        protected readonly ParticleSystem _particle;
 
         public object Current => null;
 
@@ -18,14 +17,6 @@ namespace Vurbiri.Colonization.Actors
         {
             _clip = creator.Clip;
             _particle = creator.Particle;
-            _targetHeightRate = creator.HeightRate;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void Setup(ActorSkin target)
-        {
-            Enable(target.GetPosition(_targetHeightRate));
-            _particle.Play();
         }
 
         public bool MoveNext()

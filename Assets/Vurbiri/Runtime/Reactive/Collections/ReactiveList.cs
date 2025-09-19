@@ -83,11 +83,10 @@ namespace Vurbiri.Reactive.Collections
         public bool Remove(T item)
         {
             int index = IndexOf(item);
-            if(index < 0) 
-                return false;
+            if(index >= 0)
+                RemoveAt(index);
 
-            RemoveAt(index);
-            return true;
+            return index >= 0;
         }
 
         public void RemoveAt(int index)

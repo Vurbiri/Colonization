@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
             public override bool Prep(SpellParam param)
             {
                 _canCast = false;
-                var human = s_humans[param.playerId];
+                var human = Humans[param.playerId];
                 if (!s_isCast & !human.IsMaxWarriors && human.IsPay(_cost))
                 {
                     _count = 0;
@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization
                     }
 
                     ShowSpellName(param.playerId);
-                    s_humans[param.playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
+                    Humans[param.playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
                     _canCast = false;
 
                     GameContainer.CameraController.ToPosition(hexagon);

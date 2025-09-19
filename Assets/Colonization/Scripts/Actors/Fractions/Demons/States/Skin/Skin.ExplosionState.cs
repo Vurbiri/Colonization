@@ -25,11 +25,9 @@ namespace Vurbiri.Colonization.Actors
 
             private IEnumerator Run_Cn()
             {
-                yield return _waitHit;
-
+                yield return _waitHit.Restart();
                 yield return SFX.Spec(Skin);
-
-                yield return _waitEnd;
+                yield return _waitEnd.Restart();
                 signal.Send();
             }
         }

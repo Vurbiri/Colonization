@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                 if (_canCast = !s_isCast)
                 {
                     _occupations.Clear();
-                    var human = s_humans[param.playerId];
+                    var human = Humans[param.playerId];
                     if (human.IsPay(_cost) & human.Actors.Count > 0)
                     {
                         List<Hexagon> hexagons;
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
                         {
                             if (GameContainer.Diplomacy.GetRelation(param.playerId, playerId) == Relation.Enemy)
                             {
-                                var colonies = s_humans[playerId].GetEdifices(EdificeGroupId.Colony);
+                                var colonies = Humans[playerId].GetEdifices(EdificeGroupId.Colony);
                                 for (int c = colonies.Count - 1; c >= 0; c--)
                                 {
                                     hexagons = colonies[c].Hexagons;
@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
                     while (_occupations.Count > 0)
                         isPerson |= _occupations.Pop().Heist(_currencies);
 
-                    s_humans[param.playerId].Pay(_cost);
+                    Humans[param.playerId].Pay(_cost);
 
                     if (isPerson)
                     {
@@ -73,7 +73,7 @@ namespace Vurbiri.Colonization
 
                     for (int i = 0; i < PlayerId.HumansCount; i++)
                     {
-                        s_humans[i].AddResources(_currencies[i]);
+                        Humans[i].AddResources(_currencies[i]);
                         _currencies[i].Clear();
                     }
 
@@ -108,13 +108,13 @@ namespace Vurbiri.Colonization
                 {
                     int enemyId = _colony.Owner;
                     int currencyId = _actor.Hexagon.GetProfit();
-                    int currency = s_humans[enemyId].Resources[currencyId];
+                    int currency = Humans[enemyId].Resources[currencyId];
                     var enemy = currencies[enemyId];
 
                     if (currency > -enemy[currencyId] && Chance.Rolling(100 - s_settings.reductionFromWall * _colony.GetDefense()))
                     {
-                        enemy.Add(currencyId, -1);
-                        self.Add(currencyId, 1);
+                        enemy.DecrementMain(currencyId);
+                        self.IncrementMain(currencyId);
 
                         GameContainer.Diplomacy.Marauding(enemyId, _actor.Owner);
                     }

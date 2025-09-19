@@ -103,7 +103,7 @@ namespace Vurbiri.Colonization.Actors
                 {
                     var currentHex = CurrentHex;
 
-                    CurrentHex.ExitActor();
+                    CurrentHex.ActorExit();
                     CurrentHex = _targetHex;
 
                     Moving.Off(); Skin.Move();
@@ -111,7 +111,7 @@ namespace Vurbiri.Colonization.Actors
                     Rotation = CONST.ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
                     yield return _move.Run(currentHex.Position, _targetHex.Position);
 
-                    CurrentHex.EnterActor(Actor);
+                    CurrentHex.ActorEnter(Actor);
 
                     ToExit();
                 }

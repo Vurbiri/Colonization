@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -38,7 +39,7 @@ namespace Vurbiri.Colonization
             _middle = (_start.Position + _end.Position) * 0.5f;
         }
 
-        public static void Create(Crossroad[] crossroads, bool isWater)
+        public static void Create(List<Crossroad> crossroads, bool isWater)
         {
             Crossroad start = crossroads[0], end = crossroads[1];
             int id = ToLinkType(end.Key - start.Key);

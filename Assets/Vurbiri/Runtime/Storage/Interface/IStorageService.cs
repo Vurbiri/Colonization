@@ -6,12 +6,20 @@ namespace Vurbiri
 {
     public interface IStorageService
     {
-        static IStorageService()
+        public static void Init()
         {
-            
+#if UNITY_EDITOR
+            if (UnityEngine.Application.isPlaying)
+#endif
+            Log.Info("[StorageService] Settings JsonConvert");
+            JsonConvert.DefaultSettings = GetJsonSerializerSettings;
+
+            static JsonSerializerSettings GetJsonSerializerSettings() => new()
+            {
+                ContractResolver = ContractResolver.Instance
+            };
         }
-        
-        
+
         public bool IsValid { get; }
 
         public IEnumerator Load_Cn(Action<bool> callback);
@@ -38,5 +46,15 @@ namespace Vurbiri
         public void Clear();
         public void Clear(string excludeKey);
         public void Clear(params string[] excludeKeys);
+
+
+#if UNITY_EDITOR
+        [UnityEditor.InitializeOnLoadMethod]
+        private static void Init_Ed()
+        {
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+                Init();
+        }
+#endif
     }
 }

@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization.Storage
 {
     sealed public class HumanLoadData : APlayerLoadData
     {
-        public readonly int[] resources;
+        public readonly CurrenciesLite resources;
         public readonly int[] exchange;
         public readonly Dictionary<int, List<EdificeLoadData>> edifices;
         public readonly int[][] perks;
@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.Storage
                              List<ActorLoadData> warriors) 
             : base(artefact, warriors)
         {
-            this.resources = resources;
+            this.resources = new(resources);
             this.exchange = exchange;
             this.perks = perks;
             this.edifices = edifices;

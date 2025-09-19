@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
 
             private Sacrifice(int type, int id) : base(type, id) 
             {
-                _cost.Set(CurrencyId.Blood, s_settings.sacrificeBloodCost);
+                _cost.SetBlood(s_settings.sacrificeBloodCost);
                 _damage = new(s_settings.sacrificePierce);
 
                 _strCost = _cost.PlusToString(COST_COUNT_LINE);
@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
                 _canCast = false;
                 var allActors = GameContainer.Actors;
                 
-                if (!s_isCast && allActors[param.playerId].Count > 0 && s_humans[param.playerId].IsPay(_cost))
+                if (!s_isCast && allActors[param.playerId].Count > 0 && Humans[param.playerId].IsPay(_cost))
                 {
                     _target = null;
                     var actors = allActors[PlayerId.Satan];
@@ -116,12 +116,12 @@ namespace Vurbiri.Colonization
                 _damage.attack = sacrifice.CurrentHP * s_settings.sacrificeHPPercent / 100;
 
                 CameraController.ToPosition(sacrifice.Position, true);
-                yield return HitSFX.Hit(s_settings.sacrificeKnifeSFX, null, sacrifice.Skin);
+                yield return SFX.Run(s_settings.sacrificeKnifeSFX, null, sacrifice.Skin);
                 yield return sacrifice.Action.Death().SetWaitState(DeathStage.EndAnimation);
 
                 yield return CameraController.ToPosition(_target.Position, true);
-                _damage.Apply(_target); s_humans[_currentPlayer].Pay(_cost);
-                yield return HitSFX.Hit(s_settings.sacrificeTargetSFX, null, _target.Skin);
+                _damage.Apply(_target); Humans[_currentPlayer].Pay(_cost);
+                yield return SFX.Run(s_settings.sacrificeTargetSFX, null, _target.Skin);
 
                 EndCast();
             }

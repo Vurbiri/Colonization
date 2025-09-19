@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.Reactive;
 using static Vurbiri.Colonization.GameContainer;
 
 namespace Vurbiri.Colonization.UI
 {
     [System.Serializable]
-    public class ContextMenusManager
+    public class ContextMenusManager : System.IDisposable
     {
         [SerializeField] private RectTransform _canvasTransform;
         [SerializeField] private RectTransform _menusTransform;
@@ -19,6 +20,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private ButtonCancel _buttonCancel;
 
+        private Unsubscription _subscription;
         private bool _enable, _isNotCast, _lookAtEnabled;
         private IMenu _currentOpenMenu;
 
@@ -30,9 +32,9 @@ namespace Vurbiri.Colonization.UI
             _roadsMenu     .Init(_crossroadMenu).Add(OnActiveMenu);
             _warriorsMenu  .Init().Add(OnActiveMenu);
 
-            CameraTransform.Subscribe(LookAtCamera);
+            _subscription = SpellBook.IsCast.Subscribe(value => _isNotCast = !value);
 
-            GameContainer.Players.Person.SpellBook.IsCast.Subscribe(value => _isNotCast = !value);
+            CameraTransform.Subscribe(LookAtCamera);
 
             var game = GameContainer.GameLoop;
             game.Subscribe(GameModeId.EndTurn, OnEndTurn);
@@ -135,6 +137,10 @@ namespace Vurbiri.Colonization.UI
                 _currentOpenMenu = null;
                 _lookAtEnabled = false;
             }
+        }
+        public void Dispose()
+        {
+            _subscription?.Unsubscribe();
         }
 
 #if UNITY_EDITOR

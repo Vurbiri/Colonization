@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.Characteristics
 
                 _hitEffects = new(effects);
 
-                _ui = new SpecSkillUI(colors, separator);
+                _ui = new SpecSkillUI(separator);
             }
 
 #if !UNITY_EDITOR

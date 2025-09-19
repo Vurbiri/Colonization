@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization
         public void ForCurse(int value) => Add(_settings.penaltyPerDemon * -value);
 
         public void BindShrines(ReadOnlyReactiveList<Crossroad> shrines) => shrines.Subscribe((_, _, _) => Add(_settings.rewardPerShrine), false);
-        public void BindBlood(ICurrency blood) => blood.SubscribeDelta(OnPayInBlood);
+        public void BindBlood(Currency blood) => blood.SubscribeDelta(OnPayInBlood);
 
         public void Add(int value)
         {

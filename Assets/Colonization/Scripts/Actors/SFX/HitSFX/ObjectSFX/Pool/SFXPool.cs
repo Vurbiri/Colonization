@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-	public class SFXPool : IHitSFX
+	public class SFXPool : ISFX
     {
         private readonly AMonoCreatorSFX _prefab;
         private readonly Stack<APooledSFX> _pool;
@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.Actors
                 Create();
         }
 
-        public IEnumerator Hit(ActorSFX user, ActorSkin target) => (_pool.Count > 0 ? _pool.Pop() : Create()).Hit(user, target);
+        public IEnumerator Run(ActorSFX user, ActorSkin target) => (_pool.Count > 0 ? _pool.Pop() : Create()).Run(user, target);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -4,24 +4,20 @@ using Vurbiri.International;
 
 namespace Vurbiri.Colonization.UI
 {
-    using static CONST_UI_LNG_KEYS;
+    using static CONST_UI;
 
     public class SkillUI : ASkillUI
     {
         private readonly AEffectUI[] _effectsTarget;
         private readonly AEffectUI[] _effectsSelf;
-        private readonly string _hexColor;
         private readonly Settings _settings;
 
         public string Key => _settings.keySkillName;
         public Sprite Sprite => _settings.sprite;
 
 
-        public SkillUI(ProjectColors colors, SeparatorEffectUI separator, int cost, Settings settings, AEffectUI[] effectsTarget, AEffectUI[] effectsSelf) 
-            : base(colors, separator, cost)
+        public SkillUI(SeparatorEffectUI separator, int cost, Settings settings, AEffectUI[] effectsTarget, AEffectUI[] effectsSelf) : base(separator, cost)
         {
-            _hexColor = colors.HintDefaultTag;
-
             _settings = settings;
 
             _effectsTarget = effectsTarget;
@@ -42,7 +38,7 @@ namespace Vurbiri.Colonization.UI
             {
                 if (countSelf > 0)
                 {
-                    sb.Append(_hexColor);
+                    sb.Append(GameContainer.UI.Colors.HintTextTag);
                     sb.AppendLine(localization.GetText(FILE, ON_TARGET));
                 }
 
@@ -52,7 +48,7 @@ namespace Vurbiri.Colonization.UI
 
             if (countSelf > 0)
             {
-                sb.Append(_hexColor);
+                sb.Append(GameContainer.UI.Colors.HintTextTag);
                 sb.AppendLine(localization.GetText(FILE, ON_SELF));
 
                 for (int i = 0; i < countSelf; i++)

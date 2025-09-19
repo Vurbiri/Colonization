@@ -5,8 +5,6 @@ namespace VurbiriEditor
 {
     public abstract class SubPropertyDrawer : PropertyDrawer
     {
-        private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             position.height = EditorGUIUtility.singleLineHeight;
@@ -18,15 +16,15 @@ namespace VurbiriEditor
             while (--count > 0)
             {
                 property.Next(true);
-                EditorGUI.PropertyField(position, property, new GUIContent(property.displayName));
-                position.y += _height;
+                EditorGUI.PropertyField(position, property);
+                position.y += EditorGUI.GetPropertyHeight(property) + EditorGUIUtility.standardVerticalSpacing;
             }
             EditorGUI.EndProperty();
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return _height * (property.CountInProperty() - 1);
+            return EditorGUI.GetPropertyHeight(property) - EditorGUIUtility.singleLineHeight;
         }
     }
 }

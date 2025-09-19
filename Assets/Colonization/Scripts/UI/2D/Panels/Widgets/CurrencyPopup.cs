@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
-        public void Init(int id, ACurrenciesReactive currencies, Direction2 offsetPopup)
+        public void Init(int id, ReadOnlyCurrencies currencies, Vector3 offsetPopup)
         {
             base.Init();
             _popup.Init(offsetPopup);
@@ -48,8 +48,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (_popup == null)
-                _popup = GetComponentInChildren<PopupTextWidgetUI>(true);
+            this.SetChildren(ref _popup);
         }
 #endif
     }

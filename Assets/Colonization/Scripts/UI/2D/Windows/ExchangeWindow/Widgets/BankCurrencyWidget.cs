@@ -33,8 +33,7 @@ namespace Vurbiri.Colonization.UI
 
         protected override void SetValue(int value)
         {
-            base.SetValue(value);
-
+            InternalSetValue(value);
             _changeCount.Invoke(_id.Value, value, value * _rate);
         }
 

@@ -68,7 +68,7 @@ namespace Vurbiri.UI
 
             _isOn = value;
 #if UNITY_EDITOR
-            if (!Application.isPlaying)
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
                 UpdateVisualInstant();
             else
 #endif
@@ -86,7 +86,7 @@ namespace Vurbiri.UI
             _isOn = value;
 
 #if UNITY_EDITOR
-            if (!Application.isPlaying)
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
                 UpdateVisualInstant();
             else
 #endif
@@ -150,7 +150,7 @@ namespace Vurbiri.UI
         {
             await System.Threading.Tasks.Task.Delay(2);
 
-            if (Application.isPlaying || !isActiveAndEnabled)
+            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode || this == null || !isActiveAndEnabled)
                 return;
 
             if (_groupEditor != _group)

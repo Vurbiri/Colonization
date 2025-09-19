@@ -107,7 +107,7 @@ namespace Vurbiri.Colonization
             }
 
             for(int i = 0; i < _hexagons.Count; i++)
-                _hexagons[i].CrossroadRemove(this);
+                _hexagons[i].Crossroads.Remove(this);
             
             Object.Destroy(_edifice.gameObject);
             return ending = false;
@@ -145,7 +145,7 @@ namespace Vurbiri.Colonization
             CurrenciesLite profit = new();
             for (int i = 0; i < HEX_COUNT; i++)
                 if (_hexagons[i].TryGetProfit(idHex, true, out int currencyId))
-                    profit.Add(currencyId, _states.profit << shiftProfit);
+                    profit.AddMain(currencyId, _states.profit << shiftProfit);
 
             return profit;
         }

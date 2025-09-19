@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         protected readonly Edifices _edifices;
         protected readonly Roads _roads;
 
-        protected readonly SpellBook _spellBook;
+        protected readonly SpellBook _spellBook = new();
 
         protected readonly ReadOnlyAbilities<HumanAbilityId> _abilities;
         protected readonly Artefact _artefact;
@@ -64,8 +64,6 @@ namespace Vurbiri.Colonization
                 _edifices = new(_abilities);
             }
 
-            _spellBook = new(this);
-
             var balance = GameContainer.Balance;
             balance.BindShrines(_edifices.shrines);
             balance.BindBlood(_resources.Get(CurrencyId.Blood));
@@ -81,6 +79,50 @@ namespace Vurbiri.Colonization
             storage.LoadData = null;
 
             GameContainer.Crossroads.BindEdifices(_edifices.edifices, instantGetValue);
+        }
+
+        // TSET !!!!!!!!!!!!!!
+        public void SpawnTest(int id, int count)
+        {
+            UnityEngine.Debug.Log("SpawnTest");
+            Hexagon hexagon;
+            for (int i = 0; i < count; i++)
+            {
+                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
+                Actor actor = _spawner.Create(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
+            }
+        }
+        public void SpawnTest(Id<WarriorId> id, Key key)
+        {
+            UnityEngine.Debug.Log("SpawnTest");
+            Hexagon hexagon;
+            if ((hexagon = GameContainer.Hexagons[key]).CanWarriorEnter)
+            {
+                Actor actor = _spawner.Create(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
+            }
+        }
+        public void SpawnDemonTest(Id<DemonId> id, Key key)
+        {
+            UnityEngine.Debug.Log("SpawnDemonTest");
+            Hexagon hexagon;
+            if ((hexagon = GameContainer.Hexagons[key]).CanDemonEnter)
+            {
+                Actor actor = _spawner.CreateDemon(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
+            }
+        }
+        public void SpawnDemonTest(int id, int count)
+        {
+            UnityEngine.Debug.Log("SpawnDemonTest");
+            Hexagon hexagon;
+            for (int i = 0; i < count; i++)
+            {
+                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanDemonEnter) ;
+                Actor actor = _spawner.CreateDemon(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
+            }
         }
 
         public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
@@ -152,6 +194,7 @@ namespace Vurbiri.Colonization
             if (returnSignal)
             {
                 _resources.Remove(cost);
+                GameContainer.Score.ForWall(_id);
                 _edifices.edifices[crossroad.GroupId].Signal(crossroad);
             }
             return returnSignal.signal;
@@ -163,6 +206,7 @@ namespace Vurbiri.Colonization
         public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
         {
             _resources.Remove(GameContainer.Prices.Road);
+            GameContainer.Score.ForRoad(_id);
             _roads.BuildAndUnion(crossroad.GetLinkAndSetStart(linkId));
         }
         #endregion
@@ -195,7 +239,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        sealed override public void Dispose()
+        public override void Dispose()
         {
             base.Dispose();
             _exchange.Dispose();

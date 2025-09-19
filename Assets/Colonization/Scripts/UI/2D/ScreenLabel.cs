@@ -29,28 +29,25 @@ namespace Vurbiri.Colonization.UI
             _delayStartTurn = new((1f/_onSpeed + _showTime.Time + 1f/_offSpeed) * 0.51f);
 
             Localization.Instance.Subscribe(SetText);
-
         }
 
         public void Landing(int id)
         {
-            _label.text = string.Format(_landingText, GameContainer.UI.PlayerNames[id]);
-
-            StartCoroutine(Label_Cn());
+            StartCoroutine(Label_Cn(string.Format(_landingText, GameContainer.UI.PlayerNames[id])));
         }
 
         public IEnumerator StartTurn_Wait(int turn, int id)
         {
-            _label.text = string.Format(_startTurnText, turn, GameContainer.UI.PlayerNames[id]);
-
-            StartCoroutine(Label_Cn());
+            StartCoroutine(Label_Cn(string.Format(_startTurnText, turn, GameContainer.UI.PlayerNames[id])));
 
             yield return _delayStartTurn.Restart();
         }
 
-        private IEnumerator Label_Cn()
+        private IEnumerator Label_Cn(string text)
         {
             float alpha = 0f;
+
+            _label.text = text;
 
             while (alpha < 1f)
             {

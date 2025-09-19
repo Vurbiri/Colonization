@@ -29,10 +29,9 @@ namespace Vurbiri.International
         
         public static int IndexOf(string name)
         {
-            for (int i = 0; i < Count; i++)
-                if (s_files[i] == name)
-                    return i;
-            return -1;
+            int i = Count;
+            while (i --> 0 && s_files[i] != name);
+            return i;
         }
     }
 }

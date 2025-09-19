@@ -6,7 +6,7 @@ namespace Vurbiri
     {
         private readonly YandexSDK _ysdk;
 
-        public override bool IsValid => _ysdk != null && _ysdk.IsLogOn;
+        public override bool IsValid => Application.platform == RuntimePlatform.WebGLPlayer && _ysdk != null && _ysdk.IsLogOn;
 
         public JsonToYandex(string key, MonoBehaviour monoBehaviour, YandexSDK ysdk) : base(key, monoBehaviour)
         {

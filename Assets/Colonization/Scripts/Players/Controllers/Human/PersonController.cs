@@ -1,27 +1,57 @@
-using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
+using System.Text;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.International;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization
 {
-    sealed public class PersonController : AHumanController
+    sealed public class PersonController : HumanController
     {
-        private readonly RInteractable _interactable = new();
-
-        public IReactiveValue<bool> Interactable => _interactable;
+        private readonly PersonSettings _settings;
+        private readonly Unsubscriptions _subscriptions;
+        private readonly InteractableController _iController;
+        private string _giftMsg;
 
         public PersonController(Settings settings) : base(PlayerId.Person, settings)
         {
-            _spellBook.IsCast.Subscribe(_interactable.BindSpells);
-            Actors.Subscribe(_interactable.BindActors);
+            _settings = SettingsFile.Load<PersonSettings>();
+            _iController = new(_interactable, _subscriptions);
+            _subscriptions += Localization.Instance.Subscribe(SetLocalizationText);
+        }
+
+        public override WaitResult<bool> Gift(int giver, CurrenciesLite gift)
+        {
+            Gift_Cn(giver, gift).Start();
+            return _waitGift.Restart();
+
+            // Local
+            IEnumerator Gift_Cn(int giver, CurrenciesLite gift)
+            {
+                StringBuilder sb = new(TAG.ALING_CENTER, 256);
+                sb.Append(GameContainer.UI.PlayerNames[giver]); sb.Append(" "); sb.AppendLine(_giftMsg);
+                gift.MainPlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
+
+                yield return MessageBox.Open(sb.ToString(), out WaitButton wait, MBButton.OkNo);
+
+                bool result = wait.Id == MBButtonId.Ok;
+                if (result)
+                {
+                    _resources.Add(gift);
+                    GameContainer.Diplomacy.Gift(_id, giver);
+                }
+
+                _waitGift.SetResult(result);
+            }
         }
 
         public override void OnEndLanding()
         {
             _edifices.Interactable = false;
-            _interactable.Turn = false;
+            _iController.Turn = false;
         }
 
         public override void OnPlay()
@@ -34,49 +64,67 @@ namespace Vurbiri.Colonization
                 warrior.Interactable = true;
             }
 
-            _interactable.Turn = true;
+            _iController.Turn = true;
         }
 
         public override void OnEndTurn()
         {
-            _interactable.Turn = false;
+            _iController.Turn = false;
             _edifices.Interactable = false;
 
             base.OnEndTurn();
         }
 
-        private class RInteractable : IReactiveValue<bool>
+        public override void Dispose()
         {
+            _subscriptions.Unsubscribe();
+            base.Dispose();
+        }
+
+        private void SetLocalizationText(Localization localization)
+        {
+            _giftMsg = localization.GetText(_settings.giftMsg);
+        }
+
+        #region Nested InteractableController
+        //**********************************************************************************
+        private class InteractableController
+        {
+            private readonly RBool _change;
+
             private int _actors;
             private bool _spells, _isTurn = true;
 
-            private readonly Subscription<bool> _change = new();
-
-            public bool Value
+            private bool Value
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => _actors == 0 & _spells & _isTurn;
             }
 
             public bool Turn 
-            {   
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 set
                 {
-                    bool old = Value;
                     _isTurn = value;
-                    if (old != Value)
-                        _change.Invoke(!old);
+                    _change.Value = Value;
                 }
+            }
+
+            public InteractableController(RBool change, Unsubscriptions subscriptions)
+            {
+                _change = change;
+                subscriptions += SpellBook.IsCast.Subscribe(BindSpells);
+                subscriptions += GameContainer.Actors[PlayerId.Person].Subscribe(BindActors);
             }
 
             public void BindSpells(bool cast)
             {
-                bool old = Value;
                 _spells = !cast;
-                if (old != Value) _change.Invoke(!old);
+                _change.Value = Value;
             }
 
-            public void BindActors(Actor actor, TypeEvent op)
+            private void BindActors(Actor actor, TypeEvent op)
             {
                 if(op == TypeEvent.Subscribe | op == TypeEvent.Add)
                     actor.InteractableReactive.Subscribe(value => SetActors(actor.Index, value));
@@ -84,19 +132,14 @@ namespace Vurbiri.Colonization
                     SetActors(actor.Index, true);
             }
 
-            public Unsubscription Subscribe(Action<bool> action, bool instantGetValue = true) => _change.Add(action, Value);
-
-            public static implicit operator bool(RInteractable self) => self.Value;
-
             private void SetActors(int index, bool value)
             {
-                bool old = Value;
-
                 if (value) _actors &= ~(1 << index);
                 else _actors |= 1 << index;
 
-                if (old != Value) _change.Invoke(!old);
+                _change.Value = Value;
             }
         }
+        #endregion
     }
 }

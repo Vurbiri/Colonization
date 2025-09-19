@@ -4,13 +4,17 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class FattySkin
     {
-        sealed private class JumpState : ASpecState
+        sealed private class JumpState : ASkinState
         {
+            private readonly FattySFX _sfx;
             private readonly WaitScaledTime _waitHit;
             private readonly WaitScaledTime _waitEnd;
 
-            public JumpState(ActorSkin parent, DemonSFX sfx, AnimationTime timing) : base(parent, sfx)
+            public readonly WaitSignal signal = new();
+
+            public JumpState(ActorSkin parent, FattySFX sfx, AnimationTime timing) : base(parent)
             {
+                _sfx = sfx;
                 _waitHit = timing.WaitHits[0];
                 _waitEnd = timing.WaitEnd;
             }
@@ -25,12 +29,11 @@ namespace Vurbiri.Colonization.Actors
 
             private IEnumerator Run_Cn()
             {
-                yield return _waitHit;
+                yield return _waitHit.Restart();
+                _sfx.Spec(Skin);
                 signal.Send();
 
-                yield return SFX.Spec(Skin);
-
-                yield return _waitEnd;
+                yield return _waitEnd.Restart();
                 signal.Send();
             }
         }

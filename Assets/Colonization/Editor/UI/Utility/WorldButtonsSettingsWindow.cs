@@ -5,11 +5,12 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri;
+using Vurbiri.Colonization.UI;
 using Vurbiri.UI;
 using VurbiriEditor.UI;
 using static VurbiriEditor.Colonization.CONST_EDITOR;
 
-namespace VurbiriEditor.Colonization
+namespace VurbiriEditor.Colonization.UI
 {
 	public class WorldButtonsSettingsWindow : EditorWindow
 	{

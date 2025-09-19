@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
         private Actor _owner = null;
         private Id<PlayerId> _ownerId = PlayerId.None;
 
-        private readonly HashSet<Crossroad> _crossroads = new(HEX.SIDES);
+        private readonly List<Crossroad> _crossroads = new(HEX.SIDES);
         private readonly HashSet<Hexagon> _neighbors = new(HEX.SIDES);
         #endregion
 
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
         public bool CanDemonEnter => !_isWater & _ownerId == PlayerId.None;
         public bool CanWarriorEnter => !_isGate & !_isWater & _ownerId == PlayerId.None;
         public Vector3 Position { get; private set; }
-        public HashSet<Crossroad> Crossroads => _crossroads;
+        public List<Crossroad> Crossroads => _crossroads;
         public HashSet<Hexagon> Neighbors => _neighbors;
         public HexagonCaption Caption => _hexagonCaption;
         public bool IsPort
@@ -53,8 +53,8 @@ namespace Vurbiri.Colonization
             {
                 if (_isWater)
                 {
-                    foreach (var crossroad in _crossroads)
-                        if (crossroad.IsPort) 
+                    for (int i = _crossroads.Count - 1; i >= 0; i--)
+                        if (_crossroads[i].IsPort) 
                             return true;
                 }
 
@@ -92,23 +92,20 @@ namespace Vurbiri.Colonization
         {
             if (_neighbors.Add(neighbor) & !(_isWater & neighbor._isWater) & !(_isGate | neighbor._isGate))
             {
-                HashSet<Crossroad> set = new(_crossroads);
-                set.IntersectWith(neighbor._crossroads);
-                if (set.Count == 2)
-                    CrossroadLink.Create(set.ToArray(), _isWater | neighbor._isWater);
+                List<Crossroad> link = new(2); Crossroad crossroad;
+                for (int i = _crossroads.Count - 1; i >= 0; i--)
+                {
+                    crossroad = _crossroads[i];
+                    for (int j = neighbor._crossroads.Count - 1; j >= 0; j--)
+                    {
+                        if (neighbor._crossroads[j] == crossroad)
+                            link.Add(crossroad);
+                    }
+                }
+                if (link.Count == 2)
+                    CrossroadLink.Create(link, _isWater | neighbor._isWater);
             }
         }
-        public Key GetNearGroundHexOffset()
-        {
-            foreach (var neighbor in _neighbors)
-                if(neighbor._isWater)
-                    return _key - neighbor._key;
-
-            return HEX.NEAR.Rand();
-        }
-
-        public void CrossroadAdd(Crossroad crossroad) => _crossroads.Add(crossroad);
-        public void CrossroadRemove(Crossroad crossroad) => _crossroads.Remove(crossroad);
         #endregion
 
         #region ISelectable
@@ -128,6 +125,7 @@ namespace Vurbiri.Colonization
         }
 
         #region Profit
+        // true - свободные ресурсы
         public bool SetProfitAndTryGetFreeProfit(out int currencyId)
         {
             currencyId = _profit.Set();
@@ -138,8 +136,9 @@ namespace Vurbiri.Colonization
 
                 if (!_isGate)
                 {
-                    foreach (var crossroad in _crossroads)
-                        if (crossroad.IsColony) return false;
+                    for (int i = _crossroads.Count - 1; i >= 0; i--)
+                        if (_crossroads[i].IsColony) 
+                            return false;
                     
                     return true;
                 }
@@ -161,13 +160,13 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Actor
-        public void EnterActor(Actor actor)
+        public void ActorEnter(Actor actor)
         {
             _owner = actor;
             _ownerId = actor.Owner;
             _owner.AddWallDefenceEffect(GetMaxDefense());
         }
-        public void ExitActor()
+        public void ActorExit()
         {
             _owner.RemoveWallDefenceEffect();
             _owner = null;
@@ -179,8 +178,8 @@ namespace Vurbiri.Colonization
             if (_isGate) return 0;
             
             int max = int.MinValue;
-            foreach (var crossroad in _crossroads)
-                max = Mathf.Max(crossroad.GetDefense(_ownerId), max);
+            for (int i = _crossroads.Count - 1; i >= 0; i--)
+                max = Mathf.Max(_crossroads[i].GetDefense(_ownerId), max);
 
             return max;
         }
@@ -268,11 +267,8 @@ namespace Vurbiri.Colonization
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_hexagonCaption == null)
-                _hexagonCaption = GetComponentInChildren<HexagonCaption>(true);
-
-            if(_thisCollider == null)
-                _thisCollider = GetComponent<Collider>();
+            this.SetChildren(ref _hexagonCaption);
+            this.SetComponent(ref _thisCollider);
         }
 #endif
     }

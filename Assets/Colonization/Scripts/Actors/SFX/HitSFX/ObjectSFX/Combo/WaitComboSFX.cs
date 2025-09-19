@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Vurbiri.Colonization.Actors
 {
-	public class WaitComboSFX : IHitSFX
+	public class WaitComboSFX : ISFX
     {
         private readonly string _nameUser, _nameTarget;
         private readonly WaitRealtime _delay;
@@ -15,12 +15,12 @@ namespace Vurbiri.Colonization.Actors
             _delay = delayTime;
         }
 
-        public IEnumerator Hit(ActorSFX user, ActorSkin target)
+        public IEnumerator Run(ActorSFX user, ActorSkin target)
         {
             _waitAll.Clear();
-            var userSFX = GameContainer.HitSFX.Hit(_nameUser, user, target);
+            _waitAll.Add(GameContainer.SFX.Run(_nameUser, user, target)); 
             yield return _delay;
-            yield return _waitAll.Add(userSFX, GameContainer.HitSFX.Hit(_nameTarget, user, target));
+            yield return _waitAll.Add(GameContainer.SFX.Run(_nameTarget, user, target));
         }
     }
 }

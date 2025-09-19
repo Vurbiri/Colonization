@@ -14,6 +14,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private WorldHint _worldHint;
         [SerializeField] private CanvasHint _canvasHint;
         [SerializeField] private PlayerPanels _playerPanels;
+        [SerializeField] private OpponentPanels _opponentPanels;
 
         public string Description => Localization.Instance.GetText(LangFiles.Main, "InitUIStep");
         public float Weight => 0.2f;
@@ -35,6 +36,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             _managers.Init();
             _playerPanels.Init();
+            _opponentPanels.Init();
 
             yield return null;
 
@@ -50,6 +52,7 @@ namespace Vurbiri.Colonization.EntryPoint
                 EUtility.SetObject(ref _worldHint);
                 EUtility.SetObject(ref _canvasHint);
                 EUtility.SetObject(ref _playerPanels);
+                EUtility.SetObject(ref _opponentPanels);
             }
         }
 #endif

@@ -1,11 +1,12 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 
 namespace Vurbiri.Colonization.UI
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
-    sealed public class PopupTextWidgetUI : MonoBehaviour
+    public class PopupTextWidgetUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI _thisTMP;
         [Space]
@@ -20,7 +21,6 @@ namespace Vurbiri.Colonization.UI
         private float _scaleColorSpeed;
         private Vector3 _positionStart, _positionEnd;
         private GameObject _thisGameObject;
-        private Color _colorPlus, _colorMinus;
         private CoroutinesQueue _queue;
 
         public void Init(Vector3 direction)
@@ -31,22 +31,24 @@ namespace Vurbiri.Colonization.UI
             _positionStart = _thisTransform.localPosition;
             _positionEnd = _positionStart + direction * _distance;
 
-            _colorPlus = GameContainer.UI.Colors.TextPositive;
-            _colorMinus = GameContainer.UI.Colors.TextNegative;
-
             _scaleColorSpeed = 1f / (1f - _startHide);
 
             _queue = new(this, () => _thisGameObject.SetActive(false));
             _thisGameObject.SetActive(false);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Run(int delta)
         {
             if (delta != 0)
-            {
-                _thisGameObject.SetActive(true);
-                _queue.Enqueue(Run_Cn(delta > 0 ? _colorPlus : _colorMinus, delta.ToString("+#;-#;0")));
-            }
+                ForceRun(delta);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ForceRun(int delta)
+        {
+            _thisGameObject.SetActive(true);
+            _queue.Enqueue(Run_Cn(GameContainer.UI.Colors.GetTextColor(delta > 0), delta.ToString("+#;-#;0")));
         }
 
         private IEnumerator Run_Cn(Color textColor, string text)
@@ -79,8 +81,7 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_thisTMP == null)
-                _thisTMP = GetComponent<TextMeshProUGUI>();
+            this.SetComponent(ref _thisTMP);
         }
 #endif
     }

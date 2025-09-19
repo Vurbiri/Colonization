@@ -19,11 +19,13 @@ namespace VurbiriEditor
         {
             if (!TryGetType(out Type idType))
             {
-                HelpBox(position, "Failed to determine type", UnityEditor.MessageType.Error); return;
+                HelpBox(position, "Failed to determine type", UnityEditor.MessageType.Error); 
+                return;
             }
             if (!TryGetNamesAndValues(idType))
             {
-                HelpBox(position, $"Error values", UnityEditor.MessageType.Error); return;
+                HelpBox(position, $"Error type", UnityEditor.MessageType.Error); 
+                return;
             }
 
             SerializedProperty valueProperty = property.FindPropertyRelative(NAME_VALUE);

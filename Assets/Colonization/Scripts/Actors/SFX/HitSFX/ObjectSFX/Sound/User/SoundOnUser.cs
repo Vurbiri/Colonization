@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-    public class SoundOnUser : IHitSFX
+    public class SoundOnUser : ISFX
     {
         private readonly AudioClip _clip;
 
@@ -12,10 +12,10 @@ namespace Vurbiri.Colonization.Actors
             _clip = clip;
         }
 
-        public IEnumerator Hit(ActorSFX user, ActorSkin target)
+        public IEnumerator Run(ActorSFX user, ActorSkin target)
         {
             user.Play(_clip);
-            return null;
+            yield break;
         }
     }
 }

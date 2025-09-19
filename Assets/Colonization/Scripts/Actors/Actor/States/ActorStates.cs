@@ -11,24 +11,25 @@ namespace Vurbiri.Colonization.Actors
             public abstract bool CanUseSkill(int id);
             public abstract bool CanUseSpecSkill();
 
+            public abstract SkillCode GetSkillCode(int id);
+
             public abstract WaitSignal Move();
             public abstract WaitSignal UseSkill(int id);
             public abstract WaitSignal UseSpecSkill();
             public abstract WaitStateSource<DeathStage> Death();
         }
-
+        //============================================================================
         public abstract class AStates : Actions
         {
+            private readonly TargetState _targetState = new();
             protected readonly StateMachineSelectable _stateMachine = new();
             protected int _skillsCount;
-            private readonly TargetState _targetState = new();
 
             public int SkillsCount { [Impl(256)] get => _skillsCount; }
             public bool IsDefault { [Impl(256)] get => _stateMachine.IsDefaultState; }
 
             public abstract ActorSkin Skin { get; }
             public abstract bool IsAvailable { get; }
-            public abstract bool IsNotDead { get; }
 
             [Impl(256)] public void ToDefault() => _stateMachine.ToDefaultState();
 
@@ -37,11 +38,11 @@ namespace Vurbiri.Colonization.Actors
             [Impl(256)] public void Unselect(ISelectable newSelectable) => _stateMachine.Unselect(newSelectable);
 
             [Impl(256)] public bool ToTarget() => _stateMachine.SetState(_targetState, true);
-            [Impl(256)] public bool FromTarget() => IsNotDead && _stateMachine.GetOutToPrevState(_targetState);
+            [Impl(256)] public bool FromTarget() => _stateMachine.GetOutToPrevState(_targetState);
 
             public virtual void Load() { }
         }
-
+        //============================================================================
         public abstract partial class AStates<TActor, TSkin> : AStates where TActor : Actor where TSkin : ActorSkin
         {
             protected readonly TActor _actor;
@@ -52,7 +53,6 @@ namespace Vurbiri.Colonization.Actors
             protected DeathState _deathState;
 
             sealed public override ActorSkin Skin => _skin;
-            sealed public override bool IsNotDead => _deathState == null;
 
             protected AStates(TActor actor, ActorSettings settings)
             {
@@ -66,6 +66,8 @@ namespace Vurbiri.Colonization.Actors
             }
 
             sealed public override bool CanUseSkill(int id) => _skillState[id].CanUse;
+
+            sealed public override SkillCode GetSkillCode(int id) => _skillState[id].code;
 
             sealed public override WaitSignal Move()
             {
@@ -89,6 +91,7 @@ namespace Vurbiri.Colonization.Actors
 
             [Impl(256)] public void SetCountState(int count) => _skillState = new ASkillState[_skillsCount = count];
             [Impl(256)] public void AddSkillState(SkillSettings skill, float speedRun, int id) => _skillState[id] = ASkillState.Create(skill, speedRun, id, this);
+            
             public abstract void AddSpecSkillState(SpecSkillSettings specSkill, float runSpeed, float walkSpeed);
         }
     }

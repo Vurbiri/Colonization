@@ -12,10 +12,10 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                if (!s_isCast && s_humans[param.playerId].IsPay(_cost))
+                if (!s_isCast && Humans[param.playerId].IsPay(_cost))
                 {
                     for (int i = 0; i < PlayerId.HumansCount; i++)
-                        if (s_humans[i].Roads.ThereDeadEnds())
+                        if (Humans[i].Roads.ThereDeadEnds())
                             return _canCast = true;
                 }
                 return _canCast = false;
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                 {
                     s_isCast.True();
 
-                    s_humans[param.playerId].Pay(_cost);
+                    Humans[param.playerId].Pay(_cost);
                     ShowSpellName(param.playerId);
                     Cast_Cn().Start();
 
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
             private IEnumerator Cast_Cn()
             {
                 for (int i = 0; i < PlayerId.HumansCount; i++)
-                    yield return s_humans[i].Roads.RemoveDeadEnds_Cn();
+                    yield return Humans[i].Roads.RemoveDeadEnds_Cn();
 
                 s_isCast.False();
             }

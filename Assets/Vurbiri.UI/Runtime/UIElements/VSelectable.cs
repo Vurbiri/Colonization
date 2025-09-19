@@ -17,7 +17,7 @@ namespace Vurbiri.UI
         [SerializeField] private ScaleBlock _scales = ScaleBlock.defaultScaleBlock;
 
         private ScaleTween _scaleTween = new();
-        protected RectTransform _rectTransform;
+        protected RectTransform _thisRectTransform;
 
         #region Properties
         public bool Interactable
@@ -96,9 +96,9 @@ namespace Vurbiri.UI
             get
             {
 #if UNITY_EDITOR
-                if (!Application.isPlaying) this.SetComponent(ref _rectTransform);
+                if (!Application.isPlaying) this.SetComponent(ref _thisRectTransform);
 #endif
-                return _rectTransform;
+                return _thisRectTransform;
             }
         }
         #endregion
@@ -117,7 +117,7 @@ namespace Vurbiri.UI
 #if UNITY_EDITOR
             if (!Application.isPlaying) return;
 #endif
-            _rectTransform = (RectTransform)transform;
+            _thisRectTransform = (RectTransform)transform;
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 if (!_targetGraphics[i].Validate()) 
@@ -139,7 +139,7 @@ namespace Vurbiri.UI
                 _interactableIcon.canvasRenderer.SetAlpha(base.interactable ? 0f : 1f);
         }
 
-        protected override void DoStateTransition(SelectionState state, bool instant)
+        sealed protected override void DoStateTransition(SelectionState state, bool instant)
         {
             if (!gameObject.activeInHierarchy) return;
 
@@ -244,7 +244,7 @@ namespace Vurbiri.UI
         {
             if (!Application.isPlaying)
             {
-                this.SetComponent(ref _rectTransform);
+                this.SetComponent(ref _thisRectTransform);
 
                 if (transition == Transition.ColorTint && _scales.fadeDuration != colors.fadeDuration)
                     _scales.fadeDuration = colors.fadeDuration;

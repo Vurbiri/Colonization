@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.UI
         public override void GetText(Localization language, StringBuilder sb)
         {
             sb.Append(_hexColor);
-            sb.AppendLine(language.GetFormatText(CONST_UI_LNG_KEYS.FILE, _descKey, _values));
+            sb.AppendLine(language.GetFormatText(CONST_UI.FILE, _descKey, _values));
             _advEffect.GetText(language, sb);
         }
     }

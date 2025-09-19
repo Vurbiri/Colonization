@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
 
         public ISubscription<IMenu, bool> Init()
         {
-            base.Init(GameContainer.UI.WorldHint, OnClick, false);
+            base.InternalInit(GameContainer.UI.WorldHint, OnClick, false);
             _unLanguage = Localization.Instance.Subscribe(SetText);
             
             return _subscriber;
@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization.UI
             _cancelledObj = null;
         }
 
-        private void SetText(Localization localization) => _text = localization.GetText(LangFiles.Main, "Cancel");
+        private void SetText(Localization localization) => _hintText = localization.GetText(LangFiles.Main, "Cancel");
 
         protected override void OnEnable()
         {

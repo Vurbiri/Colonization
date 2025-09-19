@@ -15,6 +15,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private CurrenciesPanel _currencies;
         [SerializeField] private BloodPanel _blood;
         [Space]
+        [SerializeField] private ScorePanel _score;
+        [Space]
         [SerializeField] private ArtefactPanel _artefactPanel;
         [Space]
         [SerializeField] private Direction2 _directionPopup;
@@ -32,8 +34,11 @@ namespace Vurbiri.Colonization.UI
             _shrines.Init(_sprites);
             _roads.Init();
 
-            _currencies.Init(_directionPopup, currencies);
-            _blood.Init(_directionPopup, currencies);
+            Vector3 directionPopup = _directionPopup;
+            _currencies.Init(directionPopup, currencies);
+            _blood.Init(directionPopup, currencies);
+
+            _score.Init(directionPopup);
 
             _artefactPanel.Init();
 

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +20,16 @@ namespace Vurbiri.UI
 
         protected RectTransform _backTransform, _hintTransform;
         private Coroutine _coroutineShow, _coroutineHide;
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector3 GetOffsetHint(RectTransform rectTransform, float heightRatio)
+        {
+            var pivot = rectTransform.pivot;
+            var size = rectTransform.rect.size;
+
+            return new(size.x * Mathf.Abs(0.5f - pivot.x), size.y * (Mathf.Abs(0.5f - pivot.y) + heightRatio), 0f);
+        }
+
         public virtual void Init()
         {
             _waitSwitch.Disable();

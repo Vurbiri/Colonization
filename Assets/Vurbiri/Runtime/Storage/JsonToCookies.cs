@@ -4,7 +4,7 @@ namespace Vurbiri
 {
     sealed public class JsonToCookies : AJsonToLocal
     {
-        public override bool IsValid => UtilityJS.IsCookies();
+        public override bool IsValid => Application.platform == RuntimePlatform.WebGLPlayer && UtilityJS.IsCookies();
 
         public JsonToCookies(string key, MonoBehaviour monoBehaviour) : base(key, monoBehaviour)
         {

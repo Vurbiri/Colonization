@@ -4,7 +4,7 @@ using Vurbiri.Colonization.UI;
 
 namespace VurbiriEditor.Colonization.UI
 {
-	[CustomEditor(typeof(ExchangeWindow), true), CanEditMultipleObjects]
+	[CustomEditor(typeof(ExchangeWindow)), CanEditMultipleObjects]
 	public class ExchangeWindowEditor : Editor
 	{
         private ExchangeWindow _exchangeWindow;

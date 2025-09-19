@@ -1,69 +1,66 @@
 using UnityEngine;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
     [System.Serializable]
     public class WindowsManager
-	{
-        private const int COUNT = 2;
+    {
+        private const int SWITCHERS_COUNT = 3, BUTTONS_COUNT = 2;
         
-        [SerializeField] private PerksWindow _perksWindow;
-        [SerializeField] private ExchangeWindow _exchangeWindow;
+        [SerializeField, ReadOnly] private PerksWindow _perksWindow;
+        [SerializeField, ReadOnly] private HintButton _perksButton;
         [Space]
-        [SerializeField, ReadOnly] private HintButton[] _buttons;
+        [SerializeField, ReadOnly] private ExchangeWindow _exchangeWindow;
+        [SerializeField, ReadOnly] private HintButton _exchangeButton;
+        [Space]
+        [SerializeField, ReadOnly] private GiftWindow _giftWindow;
+        [SerializeField, ReadOnly] private GiftButton[] _giftButtons;
 
-        private IWindow[] _windows;
+        private readonly Switcher[] _switchers = new Switcher[SWITCHERS_COUNT];
+        private AVButtonBase[] _buttons;
         private int _openWindowsCount;
 
         public void Init()
         {
-            _windows = new IWindow[] { _perksWindow, _exchangeWindow };
+            _buttons = new AVButtonBase[BUTTONS_COUNT] { _perksButton, _exchangeButton };
 
-            Debug.Log("WindowsManager - убрать комментарии - /*, false*/");
-
-            IWindow window;
-            for (int i = 0; i < COUNT; i++)
-            {
-                window = _windows[i];
-                window.Init(false);
-                window.OnOpen.Add(OnOpenWindow);
-                window.OnClose.Add(OnCloseWindow);
-
-                _buttons[i].Init(window.Switch/*, false*/);
-            }
-
-            _perksWindow.OnOpen.Add(_exchangeWindow.Close);
-            _exchangeWindow.OnOpen.Add(_perksWindow.Close);
+            int id = 0;
+            _switchers[id] = _perksWindow.Init(_perksButton).Setup(id++, OnOpenWindow, OnCloseWindow);
+            _switchers[id] = _exchangeWindow.Init(_exchangeButton).Setup(id++, OnOpenWindow, OnCloseWindow);
+            _switchers[id] = _giftWindow.Init(_giftButtons).Setup(id++, OnOpenWindow, OnCloseWindow);
 
             GameContainer.Players.Person.Interactable.Subscribe(OnInteractable);
 
-            _perksWindow = null; _exchangeWindow = null;
+            _perksWindow = null; _exchangeWindow = null; _giftWindow = null;
+            _perksButton = null; _exchangeButton = null;
         }
 
         private void OnInteractable(bool interactable)
         {
-            if (interactable)
+            for (int i = 0; i < BUTTONS_COUNT; i++)
+                _buttons[i].Interactable = interactable;
+
+            for (int i = _giftButtons.Length - 1; i >= 0; i--)
+                _giftButtons[i].interactable = interactable;
+
+            if (!interactable)
             {
-                for (int i = 0; i < COUNT; i++)
-                    _buttons[i].Interactable = true;
-            }
-            else
-            {
-                for (int i = 0; i < COUNT; i++)
-                {
-                    _buttons[i].Interactable = false;
-                    _windows[i].Close();
-                }
+                for (int i = 0; i < SWITCHERS_COUNT; i++)
+                    _switchers[i].Close();
             }
         }
 
-        private void OnOpenWindow()
+        private void OnOpenWindow(int id)
         {
             if (_openWindowsCount++ == 0)
             {
                 GameContainer.InputController.Unselect();
                 GameContainer.InputController.UIMode(true);
             }
+
+            for (int i = 0; i < SWITCHERS_COUNT; i++)
+                _switchers[i].TryClose(id);
         }
         private void OnCloseWindow()
         {
@@ -77,11 +74,13 @@ namespace Vurbiri.Colonization.UI
             if (Application.isPlaying) return;
             
             EUtility.SetObject(ref _perksWindow);
-            EUtility.SetObject(ref _exchangeWindow);
+            EUtility.SetObject(ref _perksButton, "PerksButton");
 
-            EUtility.SetArray(ref _buttons, COUNT);
-            EUtility.SetObject(ref _buttons[0], "PerksButton");
-            EUtility.SetObject(ref _buttons[1], "ExchangeButton");
+            EUtility.SetObject(ref _exchangeWindow);
+            EUtility.SetObject(ref _exchangeButton, "ExchangeButton");
+
+            EUtility.SetObject(ref _giftWindow);
+            EUtility.SetObjects(ref _giftButtons);
         }
 #endif
     }

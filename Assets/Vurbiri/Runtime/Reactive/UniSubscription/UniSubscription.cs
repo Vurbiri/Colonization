@@ -45,6 +45,7 @@ namespace Vurbiri.Reactive
                 if (_listeners[i].TryCreateDelegate(out Action<T> action))
                 {
                     action(value);
+                    a_delegate -= action;
                     a_delegate += action;
                 }
             }

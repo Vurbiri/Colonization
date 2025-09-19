@@ -7,6 +7,7 @@ namespace Vurbiri
 	{
         private readonly T[] _values;
         private readonly int _count;
+        private bool _canMoveNext;
         private int _cursor = 0;
         private T _current;
 
@@ -23,17 +24,14 @@ namespace Vurbiri
 
         public bool MoveNext()
         {
-            if (_cursor >= _count)
-                return false;
+            _canMoveNext = _cursor < _count;
+            if (_canMoveNext)
+                _current = _values[_cursor++];
 
-            _current = _values[_cursor++];
-            return true;
+            return _canMoveNext;
         }
 
-        public void Reset()
-        {
-            _cursor = 0;
-        }
+        public void Reset() => _cursor = 0;
 
         public void Dispose() { }
     }

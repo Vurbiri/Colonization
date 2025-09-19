@@ -1,7 +1,7 @@
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
-using VurbiriEditor.Colonization;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Color _panelText;
         [Header("├──────────── Hint ─────────────────────"), Space]
         [SerializeField] private Color _hintBack;
-        [SerializeField] private Color _hintDefault;
+        [SerializeField] private Color _hintText;
         [Header("├──────────── Text ─────────────────────"), Space]
         [SerializeField] private Color _textDefault;
         [SerializeField] private Color _textDark;
@@ -24,58 +24,45 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private Color _textNegative;
 
         private string _panelTextTag;
-        private string _hintDefaultTag;
+        private string _hintTextTag;
 
         private string _textDefaultTag, _textWarningTag, _textPositiveTag, _textNegativeTag;
 
-        //private const string TAG_COLOR_FORMAT = "<color={0}>";
-        private const string TAG_COLOR_FORMAT = "<{0}>";
-
         public ReadOnlyIdArray<ActorAbilityId, Color> Ability => _abilities;
 
-        public Color PanelBack => _panelBack;
-        public Color PanelText => _panelText;
-        public string PanelTextTag => _panelTextTag;
+        public Color PanelBack     { [Impl(256)] get => _panelBack; }
+        public Color PanelText     { [Impl(256)] get => _panelText; }
+        public string PanelTextTag { [Impl(256)] get => _panelTextTag; }
 
-        public Color HintBack => _hintBack;
-        public Color HintDefault => _hintDefault;
-        public string HintDefaultTag => _hintDefaultTag;
+        public Color HintBack     { [Impl(256)] get => _hintBack; }
+        public Color HintText     { [Impl(256)] get => _hintText; }
+        public string HintTextTag { [Impl(256)] get => _hintTextTag; }
 
-        public Color TextDefault => _textDefault;
-        public Color TextDark => _textDark;
-        public Color TextWarning => _textWarning;
-        public Color TextPositive => _textPositive;
-        public Color TextNegative => _textNegative;
-               
-        public string TextDefaultTag => _textDefaultTag;
-        public string TextWarningTag => _textWarningTag;
-        public string TextPositiveTag => _textPositiveTag;
-        public string TextNegativeTag => _textNegativeTag;
+        public Color TextDefault  { [Impl(256)] get => _textDefault; }
+        public Color TextDark     { [Impl(256)] get => _textDark; }
+        public Color TextWarning  { [Impl(256)] get => _textWarning; }
+        public Color TextPositive { [Impl(256)] get => _textPositive; }
+        public Color TextNegative { [Impl(256)] get => _textNegative; }
+
+        public string TextDefaultTag  { [Impl(256)] get => _textDefaultTag; }
+        public string TextWarningTag  { [Impl(256)] get => _textWarningTag; }
+        public string TextPositiveTag { [Impl(256)] get => _textPositiveTag; }
+        public string TextNegativeTag { [Impl(256)] get => _textNegativeTag; }
 
         public ProjectColors Init()
         {
-            _panelTextTag = string.Format(TAG_COLOR_FORMAT, _panelText.ToHex());
-            _hintDefaultTag = string.Format(TAG_COLOR_FORMAT, _hintDefault.ToHex());
+            _panelTextTag = string.Format(TAG.COLOR, _panelText.ToHex());
+            _hintTextTag  = string.Format(TAG.COLOR, _hintText.ToHex());
 
-            _textDefaultTag = string.Format(TAG_COLOR_FORMAT, _textDefault.ToHex());
-            _textWarningTag = string.Format(TAG_COLOR_FORMAT, _textWarning.ToHex());
-            _textPositiveTag = string.Format(TAG_COLOR_FORMAT, _textPositive.ToHex());
-            _textNegativeTag = string.Format(TAG_COLOR_FORMAT, _textNegative.ToHex());
+            _textDefaultTag  = string.Format(TAG.COLOR, _textDefault.ToHex());
+            _textWarningTag  = string.Format(TAG.COLOR, _textWarning.ToHex());
+            _textPositiveTag = string.Format(TAG.COLOR, _textPositive.ToHex());
+            _textNegativeTag = string.Format(TAG.COLOR, _textNegative.ToHex());
 
             return this;
         }
 
-        public Color GetTextColor(bool isPositive) => isPositive ? _textPositive : _textNegative;
-        public string GetHexColor(bool isPositive) => isPositive ? _textPositiveTag : _textNegativeTag;
-
-#if UNITY_EDITOR
-        public void SetColors_Editor(UISettings_Editor.Colors colors)
-        {
-            _panelBack = colors.panelBack;
-            _panelText = colors.panelText;
-            _hintBack = colors.hintBack;
-            _hintDefault = colors.hintText;
-        }
-#endif
+        [Impl(256)] public Color GetTextColor(bool isPositive) => isPositive ? _textPositive : _textNegative;
+        [Impl(256)] public string GetHexColor(bool isPositive) => isPositive ? _textPositiveTag : _textNegativeTag;
     }
 }

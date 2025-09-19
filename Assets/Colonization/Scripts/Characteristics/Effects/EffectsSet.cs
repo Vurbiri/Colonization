@@ -35,18 +35,12 @@ namespace Vurbiri.Colonization.Characteristics
 
         public bool Contains<T>(T code) where T : struct, IEquatable<EffectCode>
         {
-            for (int i = 0; i < _count; i++)
-                if (code.Equals(_values[i].code))
-                    return true;
-
-            return false;
+            int i = _count;
+            while (i --> 0 && !code.Equals(_values[i].code));
+            return i >= 0;
         }
 
-        public IEnumerator<ReactiveEffect> GetEnumerator()
-        {
-            for (int i = 0; i < _count; i++)
-                yield return _values[i];
-        }
+        public IEnumerator<ReactiveEffect> GetEnumerator() => new ArrayEnumerator<ReactiveEffect>(_values, _count);
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     }

@@ -26,9 +26,9 @@ namespace Vurbiri.Colonization
                 if (_canCast = !s_isCast)
                 {
                     _blessed.Clear();
-                    _cost.Set(Gold, param.valueA); _cost.Set(Food, param.valueB);
+                    _cost.SetMain(Gold, param.valueA); _cost.SetMain(Food, param.valueB);
 
-                    if (s_humans[param.playerId].IsPay(_cost))
+                    if (Humans[param.playerId].IsPay(_cost))
                         FindActorsOnSurface(_blessed, SurfaceId.Village, SurfaceId.Field);
 
                     _canCast = _blessed.Count > 0;
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
 
                     Cast_Cn(param.playerId, value).Start();
                     ShowSpellName(param.playerId, 3f + 2f * count);
-                    s_humans[param.playerId].Pay(_cost);
+                    Humans[param.playerId].Pay(_cost);
 
                     _canCast = false;
                 }
@@ -67,7 +67,7 @@ namespace Vurbiri.Colonization
                     target.AddEffect(new(_attackEffectCode, ActorAbilityId.Attack, TypeModifierId.TotalPercent, value, s_settings.blessDuration, skip));
                     target.AddEffect(new(_defenseEffectCode, ActorAbilityId.Defense, TypeModifierId.TotalPercent, value, s_settings.blessDuration, skip));
 
-                    yield return HitSFX.Hit(s_settings.blessSFX, null, target.Skin);
+                    yield return SFX.Run(s_settings.blessSFX, null, target.Skin);
 
                     _blessed.RemoveAt(index);
                 }

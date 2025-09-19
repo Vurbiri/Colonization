@@ -8,23 +8,23 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-	public class SpellToggle : VToggleBase<SpellToggle>, IPointerEnterHandler, IPointerExitHandler
+	sealed public class SpellToggle : VToggleBase<SpellToggle>, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField, ReadOnly] private SpellPanel _panel;
         [SerializeField, ReadOnly] private int _points;
 
         private CanvasHint _hint;
-        protected string _hintText;
+        private string _hintText;
         private bool _isShowingHint = false;
         private Vector3 _offsetHint;
-
-        protected Transform _thisTransform;
 
         public void Init(PerkTree perkTree, SpellBook spellBook, Action closeWindow)
         {
             _hint = GameContainer.UI.CanvasHint;
-            _thisTransform = transform;
-            _offsetHint = new(0f, ((RectTransform)_thisTransform).rect.size.y * 0.48f, 0f);
+            if (_thisRectTransform == null)
+                _thisRectTransform = (RectTransform)transform;
+
+            _offsetHint = new(0f, _thisRectTransform.rect.size.y * 0.48f, 0f);
 
             perkTree.GetProgress(_panel.Type).Subscribe(OnInteractable);
             _panel.Init(spellBook, closeWindow).OnHint += SetText;
@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnPointerEnter(eventData);
             if (!_isShowingHint)
-                _isShowingHint = _hint.Show(_hintText, _thisTransform.position, _offsetHint);
+                _isShowingHint = _hint.Show(_hintText, _thisRectTransform.position, _offsetHint);
         }
 
         public override void OnPointerExit(PointerEventData eventData)

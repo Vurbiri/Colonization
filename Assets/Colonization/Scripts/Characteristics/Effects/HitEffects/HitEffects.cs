@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly int _count;
 
         public AHitEffect this[int index] => _effects[index];
+        public int Count => _count;
 
         public HitEffects(HitEffectSettings[] setting, int actorType, int actorId, int skillId, int startEffectId)
         {

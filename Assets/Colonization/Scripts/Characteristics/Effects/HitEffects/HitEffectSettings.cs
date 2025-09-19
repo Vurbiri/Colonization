@@ -3,7 +3,7 @@ using Vurbiri.Colonization.UI;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    using static CONST_UI_LNG_KEYS;
+    using static CONST_UI;
 
     [System.Serializable]
     public class HitEffectSettings

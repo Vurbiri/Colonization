@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                var human = s_humans[param.playerId];
+                var human = Humans[param.playerId];
                 return _canCast = !s_isCast && human.IsPay(_cost) & human.Actors.Count >= 2 & _coroutine == null;
             }
 
@@ -73,7 +73,7 @@ namespace Vurbiri.Colonization
 
                 GameContainer.Hexagons.SwapId(_selectedA, _waitHexagon.Value, s_settings.swapHexColor, s_settings.swapShowTime);
                 
-                s_humans[_currentPlayer].Pay(_cost);
+                Humans[_currentPlayer].Pay(_cost);
                 EndCast();
             }
 

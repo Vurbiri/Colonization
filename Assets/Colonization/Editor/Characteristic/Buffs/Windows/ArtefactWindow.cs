@@ -1,13 +1,14 @@
 using UnityEditor;
 using Vurbiri.Colonization.Characteristics;
+using static VurbiriEditor.Colonization.CONST_EDITOR;
 
 namespace VurbiriEditor.Colonization
 {
     sealed public class ArtefactWindow : ABuffsWindow
     {
-        private const string NAME = "Artefact", MENU = CONST_EDITOR.MENU_BUFFS_PATH + NAME;
+        private const string NAME = "Artefact", MENU = MENU_BUFFS_PATH + NAME;
 
-        [MenuItem(MENU, false, 13)]
+        [MenuItem(MENU, false, MENU_BUFFS_ORDER)]
         private static void ShowWindow()
         {
             GetWindow<ArtefactWindow>(true, NAME).minSize = new(300f, 300f);

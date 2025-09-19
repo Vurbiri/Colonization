@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private Transform _bone;
         [SerializeField] private ParticleSystem _particle;
 
-        public override Vector3 Position => _bone.position;
+        public override Transform TargetTransform => _bone;
 
         protected override IEnumerator Start()
         {

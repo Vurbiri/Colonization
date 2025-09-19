@@ -16,9 +16,7 @@ namespace Vurbiri.Colonization.Actors
             if (_id == DemonId.Fatty)
                 return new FattyStates(this, settings);
 
-
-
-            return new DemonStates(this, settings);
+            return new BossStates(this, settings);
         }
     }
 }

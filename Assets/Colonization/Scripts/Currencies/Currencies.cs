@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
@@ -7,17 +6,14 @@ namespace Vurbiri.Colonization
 {
     using static CurrencyId;
 
-    sealed public class Currencies : ACurrenciesReactive
+    sealed public class Currencies : ReadOnlyCurrencies
     {
-        #region Constructions
-        private Currencies(IReadOnlyList<int> array, Ability maxValueMain, Ability maxValueBlood) : base(array, maxValueMain, maxValueBlood) { }
-        private Currencies(ACurrencies other, Ability maxValueMain, Ability maxValueBlood) : base(other, maxValueMain, maxValueBlood) { }
-        #endregion
+        private Currencies(ACurrencies other, Ability maxMainValue, Ability maxBloodValue) : base(other, maxMainValue, maxBloodValue) { }
 
         public static Currencies Create(ReadOnlyAbilities<HumanAbilityId> abilities, CurrenciesLite resDefault, HumanLoadData loadData)
         {
-            if (loadData.isLoaded & loadData.resources != null) 
-                return new(loadData.resources, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
+            if (loadData.isLoaded & loadData.resources != null)
+                resDefault = loadData.resources;
             return new(resDefault, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
         }
 
@@ -37,9 +33,9 @@ namespace Vurbiri.Colonization
             if (!other.IsEmpty)
             {
                 for (int i = 0; i < AllCount; i++)
-                    _values[i].Add(-other[i]);
+                    _values[i].Remove(other[i]);
 
-                _amount.Add(-other.Amount);
+                _amount.Remove(other.Amount);
                 _eventChanged.Invoke(this);
             }
         }
@@ -48,7 +44,7 @@ namespace Vurbiri.Colonization
         {
             if (value != 0)
             {
-                _amount.Value += _values[currencyId].Add(value);
+                _amount.Value += _values[currencyId] + value;
                 _eventChanged.Invoke(this);
             }
         }
@@ -56,7 +52,7 @@ namespace Vurbiri.Colonization
         {
             if (value != 0)
             {
-                _amount.Value += _values[currencyId].Add(-value);
+                _amount.Value += _values[currencyId] - value;
                 _eventChanged.Invoke(this);
             }
         }
@@ -73,7 +69,7 @@ namespace Vurbiri.Colonization
         {
             if (value != 0)
             {
-                _values[Blood].Add(-value);
+                _values[Blood].Remove(value);
                 _eventChanged.Invoke(this);
             }
         }
@@ -99,8 +95,8 @@ namespace Vurbiri.Colonization
                 _eventChanged.Invoke(this);
             }
 
-            #region Local: ConvertToInt(), FindMaxIndex()
-            //=================================
+            #region Local: ConvertToInt(..), FindMaxIndex(..)
+            //==============================================
             static int[] ConvertToInt(ACurrency[] values)
             {
                 int[] array = new int[MainCount];
@@ -109,7 +105,7 @@ namespace Vurbiri.Colonization
 
                 return array;
             }
-            //=================================
+            //==============================================
             static int FindMaxIndex(int[] values, int startIndex)
             {
                 int index, maxIndex = startIndex, step = 1;
@@ -125,13 +121,16 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public void Halving(int currencyId)
+        public void RandomDecrement()
         {
-            int value = _values[currencyId].Value;
-            if (value > 0)
+            if(_amount.Value > 0)
             {
-                value >>= 1;
-                _amount.Value += _values[currencyId].Set(value);
+                int j = UnityEngine.Random.Range(0, MainCount);
+                while(_values[j] == 0)
+                    j = ++j % MainCount;
+                
+                _values[j].Remove(1);
+                _amount.Remove(1);
                 _eventChanged.Invoke(this);
             }
         }

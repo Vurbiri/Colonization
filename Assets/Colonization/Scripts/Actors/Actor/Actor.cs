@@ -119,9 +119,21 @@ namespace Vurbiri.Colonization.Actors
 
             _zSize = _states.Skin.SetupCollider(_thisCollider);
 
-            _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, CONST.ACTOR_ROTATIONS[_currentHex.GetNearGroundHexOffset()]);
-            _currentHex.EnterActor(this);
+            _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, CONST.ACTOR_ROTATIONS[GetNearGroundHexOffset(_currentHex)]);
+            _currentHex.ActorEnter(this);
             gameObject.SetActive(true);
+
+            #region Local GetNearGroundHexOffset(..)
+            //===================================================
+            static Key GetNearGroundHexOffset(Hexagon hexagon)
+            {
+                foreach (var neighbor in hexagon.Neighbors)
+                    if (neighbor.IsWater)
+                        return hexagon.Key - neighbor.Key;
+
+                return HEX.NEAR.Rand();
+            }
+            #endregion
         }
 
         public void SetLoadData(ActorLoadData data)
@@ -137,6 +149,7 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
+        public bool IsUseSkill(SkillCode skillCode) => _effects.Contains(skillCode);
         public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
             return _states.IsAvailable & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
@@ -148,7 +161,7 @@ namespace Vurbiri.Colonization.Actors
         {
             int delta = _abilities.AddPerk(effect);
 
-            if(delta != 0 & _states.IsNotDead)
+            if(delta != 0 & _currentHP.IsValue)
                 _eventChanged.Invoke(this, TypeEvent.Change);
 
             return delta;
@@ -193,7 +206,7 @@ namespace Vurbiri.Colonization.Actors
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
         sealed public override void Removing()
         {
-            _currentHex.ExitActor();
+            _currentHex.ActorExit();
             _unsubscribers.Unsubscribe();
 
             _eventChanged.Invoke(this, TypeEvent.Remove);
@@ -216,7 +229,7 @@ namespace Vurbiri.Colonization.Actors
 
         private void FromTargetState()
         {
-            if (_states.FromTarget())
+            if (_currentHP.IsValue && _states.FromTarget())
                 _eventChanged.Invoke(this, TypeEvent.Change);
         }
         #endregion

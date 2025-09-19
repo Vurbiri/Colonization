@@ -2,20 +2,53 @@ using System.Collections;
 
 namespace Vurbiri.Colonization
 {
-    sealed public class AIController : AHumanController
+    sealed public class AIController : HumanController
     {
+        private readonly AISettings _settings;
+        private int _giftRatio;
+
+
         public AIController(int playerId, Settings settings) : base(playerId, settings) 
-        { 
+        {
+            _settings = SettingsFile.Load<AISettings>();
+
+            _giftRatio = _settings.giftRatio;
+        }
+
+        public override WaitResult<bool> Gift(int giver, CurrenciesLite gift)
+        {
+            int amount = gift.Amount * _giftRatio;
+            if (GameContainer.Diplomacy.IsGreatFriend(_id, giver))
+                amount <<= 1;
+            else if(GameContainer.Diplomacy.IsGreatEnemy(_id, giver))
+                amount >>= 1;
+
+            bool result = amount > _resources.Amount;
+            if (result)
+            {
+                _resources.Add(gift);
+                GameContainer.Diplomacy.Gift(_id, giver);
+            }
+
+            return _waitGift.SetResult(result);
         }
 
         public override void OnLanding()
         {
+           
             OnInitFast_Cn().Start();
         }
 
         public override void OnPlay()
         {
 
+        }
+
+        public override void OnEndTurn()
+        {
+            _giftRatio = _settings.giftRatio;
+
+            base.OnEndTurn();
         }
 
         private IEnumerator OnInit_Cn()

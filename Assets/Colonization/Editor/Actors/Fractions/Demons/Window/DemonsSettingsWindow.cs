@@ -10,7 +10,7 @@ namespace VurbiriEditor.Colonization.Actors
     {
         private const string NAME = "Demons Settings", MENU = MENU_AC_PATH + NAME;
 
-        [MenuItem(MENU, false, 11)]
+        [MenuItem(MENU, false, MENU_AC_ORDER)]
         private static void ShowWindow()
         {
             GetWindow<DemonsSettingsWindow>(true, NAME).minSize = new(650f, 800f);

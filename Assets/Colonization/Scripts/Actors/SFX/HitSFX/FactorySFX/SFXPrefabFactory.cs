@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.Actors
         [SerializeField] private AMonoCreatorSFX _prefabCreator;
         [SerializeField] private int _count = 1;
 
-        public override IHitSFX Create() => new SFXPool(_prefabCreator, _count);
+        public override ISFX Create() => new SFXPool(_prefabCreator, _count);
 
 #if UNITY_EDITOR
         public override TargetForSFX_Ed Target_Ed => _prefabCreator != null ? _prefabCreator.Target_Ed : TargetForSFX_Ed.None;

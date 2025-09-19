@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Init(Action action)
         {
-            base.Init(GameContainer.UI.WorldHint, action, true);
+            base.InternalInit(GameContainer.UI.WorldHint, action, true);
 
             _unsubscriber = Localization.Instance.Subscribe(SetLocalizationText);
         }
@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.UI
             _thisGameObject.SetActive(isEnable);
         }
 
-        private void SetLocalizationText(Localization localization) => _text = localization.GetText(_getText.id, _getText.key);
+        private void SetLocalizationText(Localization localization) => _hintText = localization.GetText(_getText.id, _getText.key);
 
         protected override void OnDestroy()
         {

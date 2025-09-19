@@ -32,10 +32,7 @@ namespace Vurbiri
             return true;
         }
 
-        public void Reset()
-        {
-            _cursor = 0;
-        }
+        public void Reset() => _cursor = 0;
 
         public void Dispose() { }
     }

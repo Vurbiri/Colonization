@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Vurbiri.Colonization.Actors
 {
-	public abstract class APooledSFX : IHitSFX 
+	public abstract class APooledSFX : ISFX 
     {
         private readonly Action<APooledSFX> a_deactivate;
 
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Actors
             UnityEngine.Object.Destroy(creator);
         }
 
-        public abstract IEnumerator Hit(ActorSFX user, ActorSkin target);
+        public abstract IEnumerator Run(ActorSFX user, ActorSkin target);
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

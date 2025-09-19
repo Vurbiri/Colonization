@@ -9,7 +9,6 @@ namespace Vurbiri.Colonization
 	{
         sealed public class Converter : AJsonConverter<Hexagon>
         {
-
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
                 int[] data = serializer.Deserialize<int[]>(reader);

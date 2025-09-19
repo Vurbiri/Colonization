@@ -5,10 +5,10 @@ namespace Vurbiri.Colonization.Actors
 {
 	public class SFXStorage
 	{
-		private readonly Dictionary<string, IHitSFX> _SFXs;
+		private readonly Dictionary<string, ISFX> _SFXs;
 
-		public SFXStorage(Dictionary<string, IHitSFX> SFXs) => _SFXs = SFXs;
+		public SFXStorage(Dictionary<string, ISFX> SFXs) => _SFXs = SFXs;
 
-        public IEnumerator Hit(string name, ActorSFX user, ActorSkin target) => _SFXs[name].Hit(user, target);
+        public IEnumerator Run(string name, ActorSFX user, ActorSkin target) => _SFXs[name].Run(user, target);
     }
 }

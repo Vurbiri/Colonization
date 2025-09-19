@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public partial class PerksWindow : VToggleGroup<PerkToggle>, IWindow
+    sealed public partial class PerksWindow : VToggleGroup<PerkToggle>
     {
         [SerializeField] private SpellBookGroup _spellBook;
         [Space]
@@ -18,19 +17,18 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Color _colorLearn;
 
-        public ISubscription OnOpen => _switcher.onOpen;
-        public ISubscription OnClose => _switcher.onClose;
-
-        public void Init(bool open)
+        public Switcher Init(HintButton switchButton)
         {
             _allowSwitchOff = true;
 
-            _switcher.Init(this, open);
+            _switcher.Init(this);
             _switcher.onClose.Add(SetAllTogglesOff);
             _switcher.onClose.Add(_spellBook.SetAllTogglesOff);
 
             _learnButton.Init(OnLearn);
-            _closeButton.AddListener(Close);
+            _closeButton.AddListener(_switcher.Close);
+            Debug.Log("PerksWindow - заменить true на false");
+            switchButton.Init(_switcher.Switch, true);
 
             var person = GameContainer.Players.Person;
             var perkTree = person.Perks;
@@ -39,7 +37,7 @@ namespace Vurbiri.Colonization.UI
             foreach (var perk in _toggles)
                 perk.Init(perkTree, blood, _colorLearn);
 
-            _spellBook.Init(perkTree, person.SpellBook, Close, OnSpellBookChanged);
+            _spellBook.Init(perkTree, person.SpellBook, _switcher.Close, OnSpellBookChanged);
 
             for (int i = 0; i < TypeOfPerksId.Count; i++)
                 _progressBars[i].Init(perkTree.GetProgress(i));
@@ -47,11 +45,9 @@ namespace Vurbiri.Colonization.UI
             _onValueChanged.Add(OnValueChanged, _activeToggle);
 
             _progressBars = null; _closeButton = null;
-        }
 
-        public void Close() => _switcher.Switch(false);
-        public void Open() => _switcher.Switch(true);
-        public void Switch() => _switcher.Switch();
+            return _switcher;
+        }
 
         private void OnValueChanged(PerkToggle toggle)
         {

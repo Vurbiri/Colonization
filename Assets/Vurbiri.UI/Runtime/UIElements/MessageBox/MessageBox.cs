@@ -47,7 +47,7 @@ namespace Vurbiri.UI
                 _textTMP.overflowMode = TextOverflowModes.Overflow;
 
                 for (int i = 0; i < MBButtonId.Count; i++)
-                    _buttons[i].Init().Add(OnClick);
+                    _buttons[i].AddListener(OnClick);
             }
             else
             {
@@ -69,6 +69,10 @@ namespace Vurbiri.UI
                 return new Task(text, buttonIds).waitButton;
             else
                 return s_instance.Setup(text, buttonIds, new());
+        }
+        public static WaitButton Open(string text, out WaitButton waitButton, params Id<MBButtonId>[] buttonIds)
+        {
+             return waitButton = Open(text, buttonIds);
         }
 
         internal static void Abort(WaitButton wait)

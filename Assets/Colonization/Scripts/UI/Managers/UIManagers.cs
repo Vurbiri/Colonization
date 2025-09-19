@@ -15,6 +15,11 @@ namespace Vurbiri.Colonization.UI
             _windows.Init();
         }
 
+        public void OnDestroy()
+        {
+            _contextMenus.Dispose();
+        }
+
 #if UNITY_EDITOR
         private void OnValidate()
         {

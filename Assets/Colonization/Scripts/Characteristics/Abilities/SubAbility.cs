@@ -8,6 +8,7 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly Ability _restore;
         private readonly IdArray<TypeModifierId, Func<int, int>> _modifiers = new();
 
+        public bool IsZero => _value == 0;
         public bool IsMax => _value == _maxValue;
         public bool IsNotMax => _value < _maxValue;
         public int Percent => _value * 100 / _maxValue;

@@ -12,15 +12,15 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                _cost.Set(Mana, param.valueA);
-                return _canCast = !s_isCast && s_humans[param.playerId].IsPay(_cost);
+                _cost.SetMain(Mana, param.valueA);
+                return _canCast = !s_isCast && Humans[param.playerId].IsPay(_cost);
             }
 
             public override void Cast(SpellParam param)
             {
                 if (_canCast)
                 {
-                    s_humans[param.playerId].AddOrder(param.valueA * s_settings.orderPerMana, _cost);
+                    Humans[param.playerId].AddOrder(param.valueA * s_settings.orderPerMana, _cost);
                     ShowSpellName(param.playerId);
                     _canCast = false;
                 }

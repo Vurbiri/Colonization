@@ -1,35 +1,24 @@
-using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using Vurbiri.Reactive;
 namespace Vurbiri.UI
 {
-	sealed public class MBButton : VSelectable, IValueId<MBButtonId>, IPointerClickHandler, ISubmitHandler
+	sealed public class MBButton : AVButton<Id<MBButtonId>>, IValueId<MBButtonId>
     {
         public static readonly Id<MBButtonId>[] Cancel = { MBButtonId.Cancel };
         public static readonly Id<MBButtonId>[] Ok = { MBButtonId.Ok };
         public static readonly Id<MBButtonId>[] OkNo = { MBButtonId.Ok, MBButtonId.No };
+        public static readonly Id<MBButtonId>[] OkCancel = { MBButtonId.Ok, MBButtonId.Cancel };
 
-        [SerializeField] private Id<MBButtonId> _id;
-
-        private readonly Subscription<Id<MBButtonId>> _onClick = new();
-        private RectTransform _thisRectTransform;
         private GameObject _thisObject;
 
-        public Id<MBButtonId> Id => _id;
+        public Id<MBButtonId> Id => _value;
 
-        public ISubscription<Id<MBButtonId>> Init()
+        protected override void Start()
         {
-            _thisRectTransform = (RectTransform)transform;
+            base.Start();
+
             _thisObject = gameObject;
             _thisObject.SetActive(false);
-
-            return _onClick;
         }
-
-        public Unsubscription AddListener(Action<Id<MBButtonId>> action) => _onClick.Add(action);
-        public void RemoveListener(Action<Id<MBButtonId>> action) => _onClick.Remove(action);
         
         public void Setup(Vector3 position)
         {
@@ -38,47 +27,5 @@ namespace Vurbiri.UI
         }
 
         public void Deactivate() => _thisObject.SetActive(false);
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (eventData.button == PointerEventData.InputButton.Left)
-                Press();
-        }
-
-        public void OnSubmit(BaseEventData eventData)
-        {
-            if (Press())
-            {
-                DoStateTransition(SelectionState.Pressed, false);
-                StartCoroutine(OnFinishSubmit_Cn());
-            }
-
-            #region Local: OnFinishSubmit_Cn()
-            //=================================
-            IEnumerator OnFinishSubmit_Cn()
-            {
-                float fadeTime = colors.fadeDuration;
-
-                while (fadeTime > 0f)
-                {
-                    fadeTime -= Time.unscaledDeltaTime;
-                    yield return null;
-                }
-
-                DoStateTransition(currentSelectionState, false);
-            }
-            #endregion
-        }
-
-        private bool Press()
-        {
-            if (IsActive() && IsInteractable())
-            {
-                _onClick.Invoke(_id);
-                return true;
-            }
-
-            return false;
-        }
     }
 }
