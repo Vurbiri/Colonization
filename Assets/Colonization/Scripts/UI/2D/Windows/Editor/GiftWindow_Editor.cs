@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization.UI
 	public partial class GiftWindow
 	{
         [StartEditor]
+        [SerializeField, Range(10f, 30f)] private float _offsetPositionY = 14f;
+        [Space]
         [SerializeField] private Vector2 _border = new(10f, 10f);
         [SerializeField, Range(20f, 60f)] private float _centerSpace = 35f;
         [SerializeField] private Vector2 _widgetSpace = new(10f, 10f);
@@ -17,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, HideInInspector] private PlayerCurrencyWidget _playerPrefab;
         [EndEditor] public bool endEditor;
 
-        public void UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors)
+        public void UpdateVisuals_Editor(float pixelsPerUnit, float pixelsPerUnitCenter, ProjectColors colors, RectTransform panel)
         {
             Color color = colors.PanelBack.SetAlpha(1f);
 
@@ -25,8 +27,14 @@ namespace Vurbiri.Colonization.UI
             _mainImage.pixelsPerUnitMultiplier = pixelsPerUnit;
 
             _centerImage.color = color;
+            _centerImage.pixelsPerUnitMultiplier = pixelsPerUnitCenter;
 
             _closeButton.Color = color;
+
+            var position = panel.localPosition;
+            position.y -= panel.sizeDelta.y + _offsetPositionY;
+
+            _mainContainer.localPosition = position;
         }
 
         public void Setup_Editor()

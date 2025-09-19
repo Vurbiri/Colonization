@@ -56,7 +56,10 @@ namespace Vurbiri.Colonization
         public void Dispose()
         {
             Player.Clear();
-            _controller.Dispose();
+
+            _satan.Dispose();
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                _humans[i].Dispose();
         }
     }
 }

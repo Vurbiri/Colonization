@@ -19,15 +19,17 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
-        private int _relation;
+        private int _relation, _min, _max;
 
         public void Init(Vector3 offsetPopup, Diplomacy diplomacy)
         {
             _popup.Init(offsetPopup);
             base.InternalInit(GameContainer.UI.CanvasHint);
 
+            _min = diplomacy.Min; _max = diplomacy.Max;
+
             diplomacy.Subscribe(OnDiplomacy, false);
-            SetRelation(diplomacy.GetPersonRelation(_id), diplomacy);
+            SetRelation(diplomacy.GetPersonRelation(_id));
 
             _icon.color = GameContainer.UI.PlayerColors[_id]; _icon = null;
         }
@@ -39,11 +41,11 @@ namespace Vurbiri.Colonization.UI
             if (_relation != relation)
             {
                 _popup.ForceRun(relation - _relation);
-                SetRelation(relation, diplomacy);
+                SetRelation(relation);
             }
         }
 
-        private void SetRelation(int relation, Diplomacy diplomacy)
+        private void SetRelation(int relation)
         {
             _relation = relation;
 
@@ -54,13 +56,13 @@ namespace Vurbiri.Colonization.UI
             if (relation > 0)
             {
                 sb.Append(GameContainer.UI.Colors.TextPositiveTag);
-                sb.Append(relation); sb.Append(LINE); sb.Append(diplomacy.Max);
+                sb.Append(relation); sb.Append(LINE); sb.Append(_max);
                 _diplomacy.sprite = _friend;
             }
             else
             {
                 sb.Append(GameContainer.UI.Colors.TextNegativeTag);
-                sb.Append(relation - 1); sb.Append(LINE); sb.Append(diplomacy.Min);
+                sb.Append(relation - 1); sb.Append(LINE); sb.Append(_min);
                 _diplomacy.sprite = _enemy;
             }
 
@@ -68,6 +70,15 @@ namespace Vurbiri.Colonization.UI
         }
 
 #if UNITY_EDITOR
+
+        public Vector2 UpdateVisuals_Editor(float offset)
+        {
+            var rectTransform = (RectTransform)transform.parent;
+            rectTransform.anchoredPosition = new(offset, 0f);
+
+            return rectTransform.sizeDelta;
+        }
+
         private void OnValidate()
         {
             if (Application.isPlaying) return;

@@ -1,8 +1,6 @@
-using System;
-
 namespace Vurbiri.Colonization
 { 
-	public class PlayersController : IDisposable
+	public class PlayersController
 	{
         private readonly IPlayerController[] _players = new IPlayerController[PlayerId.Count];
 
@@ -19,14 +17,6 @@ namespace Vurbiri.Colonization
         }
 
         public void Add(int id, IPlayerController player) => _players[id] = player;
-
-        public void Dispose()
-        {
-            Player.Clear();
-
-            for (int i = 0; i < PlayerId.Count; i++)
-                _players[i].Dispose();
-        }
 
         private void OnProfit(TurnQueue turnQueue, int hexId)
         {

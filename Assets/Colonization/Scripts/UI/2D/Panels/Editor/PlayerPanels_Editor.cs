@@ -7,47 +7,42 @@ namespace Vurbiri.Colonization.UI
     public partial class PlayerPanels
     {
         [StartEditor]
-        public Vector2 paddingIn = new(6f, 8f);
-        [Range(1f, 10f)] public float spaceIn = 4f;
+        [SerializeField] private Vector2 _paddingIn = new(6f, 8f);
+        [SerializeField, Range(1f, 10f)] private float _spaceIn = 4f;
         [Header("Between")]
-        [Range(1f, 20f)] public float spaceOut = 6.7f;
-        [Range(0.1f, 1f)] public float advRatioSpaceOut = 0.6f;
+        [SerializeField, Range(1f, 20f)] private float _spaceOut = 6.7f;
+        [SerializeField, Range(0.1f, 1f)] private float _advRatioSpaceOut = 0.6f;
         [EndEditor] public bool endEditor;
 
-        public void UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors, Vector2 paddingOut)
+        public void UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors, Vector3 position)
         {
-            var advPadding = spaceOut * advRatioSpaceOut;
-
-            RectTransform thisRectTransform = (RectTransform)transform;
-
-            RectTransform rectWarriors   = _warriors.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
-            RectTransform rectColonies   = _colonies.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
-            RectTransform rectPorts      = _ports.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
-            RectTransform rectShrines    = _shrines.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
-            RectTransform rectRoads      = _roads.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
-            RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, spaceIn, colors);
-            RectTransform rectBlood      = _blood.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
-            RectTransform rectScore      = _score.UpdateVisuals_Editor(pixelsPerUnit, paddingIn, colors);
+            RectTransform rectWarriors   = _warriors.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
+            RectTransform rectColonies   = _colonies.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
+            RectTransform rectPorts      = _ports.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
+            RectTransform rectShrines    = _shrines.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
+            RectTransform rectRoads      = _roads.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
+            RectTransform rectCurrencies = _currencies.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, _spaceIn, colors);
+            RectTransform rectBlood      = _blood.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
+            RectTransform rectScore      = _score.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
             RectTransform rectArtefact   = _artefactPanel.UpdateVisuals_Editor(rectScore.rect.height, colors);
 
-            //=======
-
-            Vector3 position = -thisRectTransform.rect.size * 0.5f + paddingOut;
+            //======= Positions
+            var advPadding = _spaceOut * _advRatioSpaceOut;
 
             rectWarriors.localPosition   = position;
             rectColonies.localPosition   = position = NextPosition(position, rectWarriors, advPadding);
             rectPorts.localPosition      = position = NextPosition(position, rectColonies);
             rectShrines.localPosition    = position = NextPosition(position, rectPorts);
-            rectRoads.localPosition      = position = NextPosition(position, rectShrines, advPadding * .7f);
+            rectRoads.localPosition      = position = NextPosition(position, rectShrines, advPadding * _advRatioSpaceOut);
             rectCurrencies.localPosition = position = NextPosition(position, rectRoads, advPadding);
             rectBlood.localPosition      = position = NextPosition(position, rectCurrencies);
-            rectScore.localPosition      = position = NextPosition(position, rectBlood);
+            rectScore.localPosition      = position = NextPosition(position, rectBlood, advPadding);
             rectArtefact.localPosition   = position = NextPosition(position, rectScore, advPadding);
 
             // Local function
             Vector3 NextPosition(Vector3 current, RectTransform prevPanel, float advOffset = 0f)
             {
-                current.x += prevPanel.rect.width + spaceOut + advOffset;
+                current.x += prevPanel.rect.width + _spaceOut + advOffset;
                 return current;
             }
         }

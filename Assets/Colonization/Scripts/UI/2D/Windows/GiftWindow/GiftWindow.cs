@@ -67,11 +67,9 @@ namespace Vurbiri.Colonization.UI
         {
             _gift.SetMain(id, value);
 
-            bool isNotZero = _gift.Amount > 0;
             _playerAmount.text = _gift.Amount.ToString();
 
-            _resetButton.Interactable = isNotZero;
-            _applyButton.Interactable = isNotZero;
+            _resetButton.Interactable = _applyButton.Interactable = _gift.Amount > 0;
         }
 
         private void Apply()

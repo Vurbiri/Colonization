@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         private static HumanController[] Humans { [Impl(256)] get => GameContainer.Players.Humans; }
 
         public ASpell this[int type, int id] { [Impl(256)] get => s_spells[type][id]; }
-        public ASpell this[SpellId spellId] { [Impl(256)] get => s_spells[spellId.type][spellId.id]; }
+        public ASpell this[SpellId spellId]  { [Impl(256)] get => s_spells[spellId.type][spellId.id]; }
 
         public static RBool IsCast => s_isCast;
 
