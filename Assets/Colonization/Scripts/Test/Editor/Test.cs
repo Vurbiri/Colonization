@@ -27,13 +27,13 @@ namespace Vurbiri.Colonization
             //person.SpawnTest(WarriorId.Warlock, HEX.Left);
             person.SpawnTest(WarriorId.Knight, HEX.LeftUp);
 
-            person.SpawnTest(WarriorId.Knight, HEX.Left);
-            person.SpawnDemonTest(DemonId.Boss, Key.Zero);
+            //person.SpawnTest(WarriorId.Knight, HEX.Left);
+            person.SpawnDemonTest(DemonId.Fatty, Key.Zero);
 
             //person.SpawnDemonTest(DemonId.Imp, HEX.RightUp);
             //person.SpawnDemonTest(DemonId.Bomb, HEX.Right);
             //person.SpawnDemonTest(DemonId.Grunt, HEX.LeftDown);
-            //person.SpawnDemonTest(DemonId.Fatty, HEX.Left);
+            person.SpawnDemonTest(DemonId.Fatty, HEX.Left);
             //person.SpawnDemonTest(DemonId.Boss, HEX.LeftUp);
 
             //person.SpawnTest(WarriorId.Knight, 2);
