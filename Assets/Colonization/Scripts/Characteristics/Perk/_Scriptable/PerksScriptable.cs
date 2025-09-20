@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Collections;
@@ -7,18 +8,24 @@ namespace Vurbiri.Colonization.Characteristics
 	//[CreateAssetMenu(fileName = "Perks", menuName = "Vurbiri/Colonization/PerksScriptable", order = 51)]
 	public class PerksScriptable : ScriptableObjectDisposable
     {
-        [SerializeField] private Perk[] _economicPerks;
-        [SerializeField] private Perk[] _militaryPerks;
-        private ReadOnlyArray<Perk>[] _readOnlyPerks;
+        [SerializeField] private ReadOnlyArray<Perk>[] _perks;
 
-        public ReadOnlyArray<Perk> this[int index]
+        public Perk this[int type, int id]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                _readOnlyPerks ??= new ReadOnlyArray<Perk>[] { new(_economicPerks), new(_militaryPerks) };
-                return _readOnlyPerks[index];
-            }
+            get => _perks[type][id];
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator ReadOnlyArray<ReadOnlyArray<Perk>>(PerksScriptable self) => new(self._perks);
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            _perks ??= new ReadOnlyArray<Perk>[2];
+            if (_perks.Length != 2)
+                Array.Resize(ref _perks, 2);
+        }
+#endif
     }
 }

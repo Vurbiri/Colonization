@@ -15,10 +15,10 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] private SpecSkillSettings _specSkillSettings;
         [SerializeField] private SkillSettings[] _skillsSettings;
 
-        [SerializeField] private ReadOnlyArray<string> _hitSfxNames;
-        [SerializeField] private ReadOnlyArray<AnimationTime> _timings;
+        [SerializeField] private Array<string> _hitSfxNames;
+        [SerializeField] private Array<AnimationTime> _timings;
 
-        [NonSerialized] private ReadOnlyArray<SkillUI> _skillsUI;
+        [NonSerialized] private Array<SkillUI> _skillsUI;
 
         public ReadOnlyArray<SkillUI> SkillsUI => _skillsUI;
         public ReadOnlyArray<string> HitSfxNames => _hitSfxNames;
@@ -30,14 +30,13 @@ namespace Vurbiri.Colonization.Characteristics
         {
             int countSkills = _skillsSettings.Length;
 
-            var skillsUI = new SkillUI[countSkills];
+            _skillsUI = new (countSkills);
             var colors = GameContainer.UI.Colors;
             var separator = new SeparatorEffectUI(colors);
 
             for (int i = 0; i < countSkills; i++)
-                skillsUI[i] = _skillsSettings[i].Init(colors, separator, actorType, actorId, i);
+                _skillsUI[i] = _skillsSettings[i].Init(colors, separator, actorType, actorId, i);
 
-            _skillsUI = new(skillsUI);
             _specSkillSettings.Init(colors, separator, actorType, actorId);
         }
 
@@ -90,7 +89,7 @@ namespace Vurbiri.Colonization.Characteristics
                 if (_skillsSettings[i].hitSFXName_ed.Update_Ed(oldName, newName))
                 {
                     changed = true;
-                    _hitSfxNames.SetValue_EditorOnly(i, newName);
+                    _hitSfxNames[i] = newName;
                 }
             }
             return changed;
@@ -108,15 +107,15 @@ namespace Vurbiri.Colonization.Characteristics
                 (_skillsSettings[_swapA], _skillsSettings[_swapB]) = (_skillsSettings[_swapB], _skillsSettings[_swapA]);
             _swapA = _swapB = -1;
 
-            var sfxNames = new string[countSkills]; var timings = new AnimationTime[countSkills];
+            _hitSfxNames = new(countSkills); _timings = new(countSkills);
             SkillSettings skillSettings; int index;
 
             for (index = 0; index < countSkills; index++)
             {
                 skillSettings = _skillsSettings[index];
 
-                sfxNames[index] = skillSettings.hitSFXName_ed;
-                timings[index] = new(skillSettings.clipSettings_ed);
+                _hitSfxNames[index] = skillSettings.hitSFXName_ed;
+                _timings[index] = new(skillSettings.clipSettings_ed);
 
                 if (animator[A_SKILLS[index]] != skillSettings.clipSettings_ed.clip)
                     animator[A_SKILLS[index]] = skillSettings.clipSettings_ed.clip;
@@ -125,9 +124,6 @@ namespace Vurbiri.Colonization.Characteristics
             for (; index < COUNT_SKILLS_MAX; index++)
                 if (animator[A_SKILLS[index]].name != A_SKILLS[index])
                     animator[A_SKILLS[index]] = null;
-
-            _hitSfxNames = sfxNames;
-            _timings = timings;
         }
 #endif
     }

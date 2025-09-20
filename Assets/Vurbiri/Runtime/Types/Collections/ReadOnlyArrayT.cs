@@ -10,9 +10,8 @@ namespace Vurbiri.Collections
     [Serializable, JsonArray]
     public class ReadOnlyArray<TValue> : IReadOnlyList<TValue>, ISerializationCallbackReceiver
     {
-        [SerializeField] private TValue[] _values;
-        
-        private int _count;
+        [SerializeField] protected TValue[] _values;
+        protected int _count;
 
         public TValue this[int index]
         {
@@ -24,12 +23,12 @@ namespace Vurbiri.Collections
             [Impl(256)] get => _count;
         }
 
-        public ReadOnlyArray(TValue[] values)
+        [Impl(256)] public ReadOnlyArray(TValue[] values)
         {
             _values = values;
             _count = values.Length;
         }
-        private ReadOnlyArray() { }
+        protected ReadOnlyArray() { }
 
         [Impl(256)] public TValue Rand() => _values[UnityEngine.Random.Range(0, _count)];
 
@@ -51,9 +50,5 @@ namespace Vurbiri.Collections
             OnAfterDeserialize();
 #endif
         }
-
-#if UNITY_EDITOR
-        public void SetValue_EditorOnly(int index, TValue value) => _values[index] = value;
-#endif
     }
 }

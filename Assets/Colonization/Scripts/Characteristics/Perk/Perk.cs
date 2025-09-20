@@ -30,6 +30,28 @@ namespace Vurbiri.Colonization.Characteristics
         public int position;
         public string keyDescription;
         public Sprite sprite;
+
+        public Perk Clone_Ed()
+        {
+            Perk perk = new()
+            {
+                _type = _type,
+                _id = _id,
+                _level = _level,
+                _targetObject = _targetObject,
+                _targetAbility = _targetAbility,
+                _value = _value,
+                _typeModifier = _typeModifier,
+                _cost = _cost,
+
+                perkModifier = perkModifier,
+                position = position,
+                keyDescription = keyDescription,
+                sprite = sprite
+            };
+
+            return perk;
+        }
 #endif
     }
 }

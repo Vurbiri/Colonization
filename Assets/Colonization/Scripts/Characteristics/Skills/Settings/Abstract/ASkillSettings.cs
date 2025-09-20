@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Characteristics
         [SerializeField] protected int _cost;
         [SerializeField] protected HitEffectsSettings[] _effectsHitsSettings;
 
-        [NonSerialized] protected ReadOnlyArray<HitEffects> _hitEffects;
+        [NonSerialized] protected Array<HitEffects> _hitEffects;
 
         public TargetOfSkill Target { [Impl(256)] get => _target; }
         public float Range { [Impl(256)] get => _range; }

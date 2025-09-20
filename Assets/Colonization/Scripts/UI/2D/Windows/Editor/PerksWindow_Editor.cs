@@ -136,7 +136,7 @@ namespace Vurbiri.Colonization.UI
             Perk perk; PerkToggle perkToggle;
             for (int i = 0; i < count; i++)
             {
-                perk = _perks[typePerkId][i];
+                perk = _perks[typePerkId, i];
                 perkToggle = perks[i];
 
                 Vector2 positionPerk = new(perk.position, perk.Level);

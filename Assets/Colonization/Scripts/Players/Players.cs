@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using Vurbiri.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -7,7 +8,7 @@ namespace Vurbiri.Colonization
     public class Players : IDisposable
     {
         private readonly PlayersController _controller;
-        private readonly HumanController[] _humans = new HumanController[PlayerId.HumansCount];
+        private readonly Array<HumanController> _humans = new(PlayerId.HumansCount);
         private readonly SatanController _satan;
 
         public Human this[int id]
@@ -18,7 +19,7 @@ namespace Vurbiri.Colonization
         {
              [Impl(256)] get => _humans[PlayerId.Person];
         }
-        public HumanController[] Humans
+        public ReadOnlyArray<HumanController> Humans
         {
             [Impl(256)] get => _humans;
         }
@@ -38,8 +39,6 @@ namespace Vurbiri.Colonization
 
             _controller.Add(PlayerId.Satan, _satan = new(settings));
 
-            Player.Init();
-
             settings.Dispose();
 
             // Local
@@ -55,8 +54,6 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            Player.Clear();
-
             _satan.Dispose();
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 _humans[i].Dispose();

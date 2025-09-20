@@ -17,6 +17,8 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             _content.players = new Players(_playerSettings, _content.gameLoop);
             yield return null;
+            SpellBook.Init();
+            yield break;
         }
     }
 }

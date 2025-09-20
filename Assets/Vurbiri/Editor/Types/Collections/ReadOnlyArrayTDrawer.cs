@@ -4,7 +4,7 @@ using Vurbiri.Collections;
 
 namespace VurbiriEditor.Collections
 {
-	[CustomPropertyDrawer(typeof(ReadOnlyArray<>))]
+	[CustomPropertyDrawer(typeof(ReadOnlyArray<>), true)]
 	public class ReadOnlyArrayTDrawer : PropertyDrawer
 	{
 		private readonly string F_VALUES = "_values";

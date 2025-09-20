@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.Characteristics
         public const int MIN_LEVEL = 0, MAX_LEVEL = 6;
         public const int MIN_PROGRESS = 0, MAX_PROGRESS = MAX_LEVEL * (MAX_LEVEL + 1);
 
-        private readonly ReadOnlyArray<Perk>[] _perks = new ReadOnlyArray<Perk>[TypeOfPerksId.Count];
+        private readonly ReadOnlyArray<ReadOnlyArray<Perk>> _perks;
         private readonly RInt[] _progress = new RInt[TypeOfPerksId.Count];
         private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[TypeOfPerksId.Count];
         private readonly Subscription<Perk> _eventPerk = new();
@@ -22,22 +22,25 @@ namespace Vurbiri.Colonization.Characteristics
         #region Constructors
         private PerkTree(PerksScriptable perks)
         {
+            _perks = perks;
             for (int t = 0; t < TypeOfPerksId.Count; t++)
             {
-                _perks[t] = perks[t];
-                _learnedPerks[t] = new(EconomicPerksId.Count);
+                 _learnedPerks[t] = new(EconomicPerksId.Count);
                 _progress[t] = new(MIN_PROGRESS);
             }
         }
         private PerkTree(PerksScriptable perks, int[][] learnedPerks)
         {
+            _perks = perks;
+
+            int[] learned;
             for (int t = 0, progress = 0; t < TypeOfPerksId.Count; t++, progress = 0)
             {
-                _perks[t] = perks[t];
-                _learnedPerks[t] = new(learnedPerks[t]);
+                learned = learnedPerks[t];
+                _learnedPerks[t] = new(learned);
 
-                for (int i = learnedPerks[t].Length - 1; i >= 0; i--)
-                    progress += _perks[t][i].Cost;
+                for (int i = learned.Length - 1; i >= 0; i--)
+                    progress += _perks[t][learned[i]].Cost;
 
                 _progress[t] = new(Math.Min(progress, MAX_PROGRESS));
             }

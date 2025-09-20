@@ -1,3 +1,5 @@
+using UnityEngine.SceneManagement;
+using Vurbiri.Collections;
 using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -15,7 +17,7 @@ namespace Vurbiri.Colonization
 
         private static readonly RBool s_isCast = new(false);
 
-        private static HumanController[] Humans { [Impl(256)] get => GameContainer.Players.Humans; }
+        private static ReadOnlyArray<HumanController> Humans { [Impl(256)] get => GameContainer.Players.Humans; }
 
         public ASpell this[int type, int id] { [Impl(256)] get => s_spells[type][id]; }
         public ASpell this[SpellId spellId]  { [Impl(256)] get => s_spells[spellId.type][spellId.id]; }
@@ -47,19 +49,21 @@ namespace Vurbiri.Colonization
         {
             Order.Create(); RandomHealing.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); Transmutation.Create(); Sacrifice.Create();
             BloodTrade.Create(); Spying.Create(); WallBuild.Create(); Marauding.Create(); RoadDemolition.Create(); SwapId.Create(); Zeal.Create();
+
+            SceneManager.sceneUnloaded += Clear;
         }
 
-        public static void Clear()
+        private static void Clear(Scene scene)
         {
             s_isCast.UnsubscribeAll(); s_isCast.SilentValue = false;
 
-            for (int i = 0; i < PlayerId.HumansCount; i++)
-                Humans[i] = null;
-
             for (int i = 0; i < EconomicSpellId.Count; i++)
+            {
                 s_economicSpells[i].Clear(EconomicSpellId.Type, i);
-            for (int i = 0; i < MilitarySpellId.Count; i++)
                 s_militarySpells[i].Clear(MilitarySpellId.Type, i);
+            }
+
+            SceneManager.sceneUnloaded -= Clear;
         }
     }
 

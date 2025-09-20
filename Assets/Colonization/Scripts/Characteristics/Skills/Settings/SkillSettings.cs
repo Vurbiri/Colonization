@@ -13,7 +13,8 @@ namespace Vurbiri.Colonization.Characteristics
         public SkillUI Init(ProjectColors colors, SeparatorEffectUI separator, int actorType, int actorId, int skillId)
         {
             int hitsCount = _effectsHitsSettings.Length;
-            var effects = new HitEffects[hitsCount];
+            _hitEffects = new (hitsCount);
+
             List<AEffectUI> targetEffectsUI = new(hitsCount), selfEffectsUI = new(hitsCount);
             int targetEffectsCount, selfEffectsCount; 
             HitEffectsSettings effectsHitSettings;
@@ -21,7 +22,7 @@ namespace Vurbiri.Colonization.Characteristics
             for (int i = 0, effectsCount = 0; i < hitsCount; i++)
             {
                 effectsHitSettings = _effectsHitsSettings[i];
-                effects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, skillId, effectsCount);
+                _hitEffects[i] = effectsHitSettings.CreateEffectsHit(actorType, actorId, skillId, effectsCount);
 
                 targetEffectsCount = targetEffectsUI.Count; selfEffectsCount = selfEffectsUI.Count;
                 effectsHitSettings.CreateEffectsHitUI(colors, targetEffectsUI, selfEffectsUI);
@@ -32,7 +33,6 @@ namespace Vurbiri.Colonization.Characteristics
                 effectsCount += effectsHitSettings.Count;
             }
 
-            _hitEffects = new(effects);
             SkillUI ui = new(separator, _cost, _ui, targetEffectsUI.ToArray(), selfEffectsUI.ToArray());
 
 #if !UNITY_EDITOR

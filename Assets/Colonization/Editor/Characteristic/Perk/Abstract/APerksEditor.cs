@@ -18,7 +18,7 @@ namespace VurbiriEditor.Colonization.Characteristics
         private readonly int MIN_LEVEL = PerkTree.MIN_LEVEL, MAX_LEVEL = PerkTree.MAX_LEVEL - 1;
         private readonly int MIN_POS = 0, MAX_POS = 5;
 
-        private readonly string[] P_PERKS = { "_economicPerks", "_militaryPerks" };
+        private readonly string P_PERKS = "_perks", P_PERK_VALUES = "_values";
         private readonly string P_ID = "_id", P_LEVEL = "_level", P_TARGET_OBJ = "_targetObject", P_TARGET_AB = "_targetAbility";
         private readonly string P_TYPE = "_type", P_TYPE_OP = "_typeModifier", P_VALUE = "_value", P_COST = "_cost";
 
@@ -38,7 +38,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             root.Q<Label>(U_LABEL).text = captionText;
             var container = root.Q<VisualElement>(U_CONTAINER);
 
-            SerializedProperty propertyPerks = serializedObject.FindProperty(P_PERKS[typePerks]);
+            SerializedProperty propertyPerks = serializedObject.FindProperty(P_PERKS).GetArrayElementAtIndex(typePerks).FindPropertyRelative(P_PERK_VALUES);
             propertyPerks.arraySize = APerkId<TId>.Count;
             serializedObject.ApplyModifiedProperties();
                         

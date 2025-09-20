@@ -23,9 +23,6 @@ namespace Vurbiri.Colonization
             _isPerson = playerId == PlayerId.Person;
         }
 
-        public static void Init()  => SpellBook.Init();
-        public static void Clear() => SpellBook.Clear();
-
         public virtual void Dispose()
         {
         }
