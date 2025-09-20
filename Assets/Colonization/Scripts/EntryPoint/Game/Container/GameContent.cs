@@ -62,7 +62,6 @@ namespace Vurbiri.Colonization.EntryPoint
             storage.Dispose();
             inputController.Dispose();
             hexagons.Dispose();
-            crossroads.Dispose();
             actorsFactory.Dispose();
             players.Dispose();
         }

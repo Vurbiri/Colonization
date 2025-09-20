@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Vurbiri.Collections;
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 using Object = UnityEngine.Object;
 
 namespace Vurbiri.Colonization
@@ -32,9 +34,9 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Property
-        public Key Key => _key;
-        public Id<PlayerId> Owner => _owner;
-        public Id<EdificeId> Id => _states.id;
+        public Key Key { [Impl(256)] get => _key; }
+        public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
+        public Id<EdificeId> Id { [Impl(256)] get => _states.id; }
         public Id<EdificeGroupId> GroupId => _states.groupId;
         public Id<EdificeId> NextId => _states.nextId;
         public Id<EdificeGroupId> NextGroupId => _states.nextGroupId;
@@ -58,15 +60,23 @@ namespace Vurbiri.Colonization
             _edifice.Selectable = this;
         }
 
-        public static void Init(IdSet<EdificeId, AEdifice> prefabs) => s_prefabs = prefabs;
-        public static void Clear() => s_prefabs = null;
+        [Impl(256)] public static void Init(IdSet<EdificeId, AEdifice> prefabs)
+        {
+            s_prefabs = prefabs;
+            SceneManager.sceneUnloaded += Clear;
+        }
+        private static void Clear(Scene scene)
+        {
+            s_prefabs = null;
+            SceneManager.sceneUnloaded -= Clear;
+        }
 
         #region IInteractable
         public Vector3 Position { get; }
         public RBool InteractableReactive => _interactable;
-        public bool Interactable { get => _interactable.Value; set => _interactable.Value = value; }
+        public bool Interactable { [Impl(256)] get => _interactable.Value; [Impl(256)] set => _interactable.Value = value; }
         public RBool CanCancel => _canCancel;
-        public void Select()
+        [Impl(256)]public void Select()
         {
             if (_interactable.Value)
                 GameContainer.TriggerBus.TriggerCrossroadSelect(this);
@@ -88,7 +98,7 @@ namespace Vurbiri.Colonization
                 _waitHexagon = null;
             }
         }
-        public void Cancel() => Unselect(null);
+        [Impl(256)] public void Cancel() => Unselect(null);
         #endregion
 
         public bool AddHexagon(Hexagon hexagon, out bool ending)
@@ -113,17 +123,17 @@ namespace Vurbiri.Colonization
             return ending = false;
         }
 
-        public void SetCaptionHexagonsActive(bool active)
+        [Impl(256)]public void SetCaptionHexagonsActive(bool active)
         {
             for (int i = 0; i < HEX_COUNT; i++)
                 _hexagons[i].SetCaptionActive(active);
         }
 
-        public int GetDefense() => _isWall ? _states.wallDefense : 0;
-        public int GetDefense(Id<PlayerId> playerId) => (playerId == _owner & _isWall) ? _states.wallDefense : 0;
+        [Impl(256)] public int GetDefense() => _isWall ? _states.wallDefense : 0;
+        [Impl(256)] public int GetDefense(Id<PlayerId> playerId) => (playerId == _owner & _isWall) ? _states.wallDefense : 0;
 
         #region Link
-        public bool ContainsLink(int id) => _links.ContainsKey(id);
+        [Impl(256)] public bool ContainsLink(int id) => _links.ContainsKey(id);
         public void AddLink(CrossroadLink link)
         {
             _links.Add(link);
@@ -135,8 +145,8 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public CrossroadLink GetLink(Id<LinkId> linkId) => _links[linkId];
-        public CrossroadLink GetLinkAndSetStart(Id<LinkId> linkId) => _links[linkId].SetStart(this);
+        [Impl(256)] public CrossroadLink GetLink(Id<LinkId> linkId) => _links[linkId];
+        [Impl(256)] public CrossroadLink GetLinkAndSetStart(Id<LinkId> linkId) => _links[linkId].SetStart(this);
         #endregion
 
         #region Profit
@@ -259,13 +269,13 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Road
-        public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
-        public void RoadBuilt(Id<LinkId> id)
+        [Impl(256)] public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
+        [Impl(256)]public void RoadBuilt(Id<LinkId> id)
         {
             _countFreeLink--;
             _edifice.AddRoad(id, _isWall);
         }
-        public void RoadRemove(Id<LinkId> id)
+        [Impl(256)]public void RoadRemove(Id<LinkId> id)
         {
             _countFreeLink++;
             _edifice.RemoveRoad(id, _isWall);
@@ -353,7 +363,7 @@ namespace Vurbiri.Colonization
         #endregion
         #endregion
 
-        public bool Equals(ISelectable other) => other is Crossroad cross && cross._key == _key;
+        [Impl(256)] public bool Equals(ISelectable other) => ReferenceEquals(this, other);
         public bool Equals(Crossroad other) => other is not null && other._key == _key;
         public bool Equals(Key key) => key == _key;
         public override int GetHashCode() => _key.GetHashCode();

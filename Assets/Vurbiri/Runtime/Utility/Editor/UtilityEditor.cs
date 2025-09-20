@@ -222,6 +222,18 @@ namespace Vurbiri
             return null;
         }
 
+        public static void CheckScriptable<T>(ref T scriptable, string defaultName, string defaultPath) where T : ScriptableObject
+        {
+            if (scriptable == null)
+            {
+                scriptable = FindAnyScriptable<T>();
+                if (scriptable == null)
+                    scriptable = CreateScriptable<T>(defaultName, defaultPath);
+                else
+                    Debug.LogWarning($"Set {typeof(T).Name}");
+            }
+        }
+
         public static T FindAnyAsset<T>() where T : Object
         {
             foreach (var guid in FindGUIDAssets<T>())

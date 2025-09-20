@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Characteristics
 {
@@ -17,7 +18,7 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly Subscription<Perk> _eventPerk = new();
         private readonly Subscription<HashSet<int>[]> _eventHashSet = new();
 
-        public Perk this[int typePerkId, int perkId] => _perks[typePerkId][perkId];
+        public Perk this[int typePerkId, int perkId] { [Impl(256)] get => _perks[typePerkId][perkId]; }
         
         #region Constructors
         private PerkTree(PerksScriptable perks)
@@ -38,14 +39,12 @@ namespace Vurbiri.Colonization.Characteristics
             {
                 learned = learnedPerks[t];
                 _learnedPerks[t] = new(learned);
-
                 for (int i = learned.Length - 1; i >= 0; i--)
                     progress += _perks[t][learned[i]].Cost;
-
                 _progress[t] = new(Math.Min(progress, MAX_PROGRESS));
             }
         }
-        public static PerkTree Create(Player.Settings settings, HumanLoadData loadData)
+        [Impl(256)] public static PerkTree Create(Player.Settings settings, HumanLoadData loadData)
         {
             if (loadData.isLoaded & loadData.perks != null) 
                 return new(settings.perks, loadData.perks);
@@ -53,8 +52,8 @@ namespace Vurbiri.Colonization.Characteristics
         }
         #endregion
 
-        public RInt GetProgress(int typePerkId) => _progress[typePerkId];
-        public bool IsPerkLearned(int typePerkId, int perkId) => _learnedPerks[typePerkId].Contains(perkId);
+        [Impl(256)] public RInt GetProgress(int typePerkId) => _progress[typePerkId];
+        [Impl(256)] public bool IsPerkLearned(int typePerkId, int perkId) => _learnedPerks[typePerkId].Contains(perkId);
 
         #region Subscribe
         public Unsubscription Subscribe(Action<Perk> action, bool instantGetValue = true)
@@ -65,7 +64,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             return _eventPerk.Add(action);
         }
-        public Unsubscription Subscribe(Action<HashSet<int>[]> action, bool instantGetValue = true)
+        [Impl(256)] public Unsubscription Subscribe(Action<HashSet<int>[]> action, bool instantGetValue = true)
         {
             return _eventHashSet.Add(action, instantGetValue, _learnedPerks);
         }

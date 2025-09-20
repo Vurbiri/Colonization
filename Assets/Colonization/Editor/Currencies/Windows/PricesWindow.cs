@@ -21,14 +21,7 @@ namespace VurbiriEditor.Colonization
 
         public void CreateGUI()
         {
-            if (_prices == null)
-            {
-                _prices = EUtility.FindAnyScriptable<Prices>();
-                if (_prices == null)
-                    _prices = EUtility.CreateScriptable<Prices>("Prices", "Assets/Colonization/Settings");
-                else
-                    Debug.LogWarning($"Set Prices");
-            }
+            EUtility.CheckScriptable(ref _prices, "Prices", "Assets/Colonization/Settings");
 
             rootVisualElement.Add(PricesEditor.CreateCachedEditorAndBind(_prices));
         }

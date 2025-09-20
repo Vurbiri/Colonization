@@ -15,14 +15,7 @@ namespace VurbiriEditor.Colonization.Actors
 
         public void CreateGUI()
         {
-            if (_actorsSettings == null)
-            {
-                _actorsSettings = EUtility.FindAnyScriptable<TScriptable>();
-                if (_actorsSettings == null)
-                    _actorsSettings = EUtility.CreateScriptable<TScriptable>(typeof(TValue).Name, "Assets/Colonization/Settings/Characteristics");
-                else
-                    Debug.LogWarning($"Set {typeof(TScriptable).Name}");
-            }
+            EUtility.CheckScriptable<TScriptable>(ref _actorsSettings, typeof(TValue).Name, "Assets/Colonization/Settings/Characteristics");
 
             var root = CreateEditor(_actorsSettings);
             root.Q<Button>("Refresh").clicked += Refresh;

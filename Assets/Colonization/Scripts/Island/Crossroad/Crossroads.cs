@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
@@ -8,7 +7,7 @@ namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public class Crossroads : IDisposable
+    public class Crossroads
     {
         private readonly Dictionary<Key, Crossroad> _crossroads = new(MAX_CROSSROADS);
 
@@ -88,11 +87,6 @@ namespace Vurbiri.Colonization
         {
             edificesReactive[EdificeGroupId.Port].Subscribe(OnAddPort, instantGetValue);
             edificesReactive[EdificeGroupId.Shrine].Subscribe((_, cross, _) => _gate.Remove(cross), instantGetValue);
-        }
-
-        public void Dispose()
-        {
-            Crossroad.Clear();
         }
 
         private void OnAddPort(int index, Crossroad crossroad, TypeEvent operation)
