@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 {
     using static CONST;
 
-    public class Hexagons : IReactive<Hexagon>, IDisposable
+    public class Hexagons : IReactive<Hexagon>
     {
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
         private readonly List<Key>[] _hexagonsIdForKey = new List<Key>[HEX_IDS[^1] + 1];
@@ -63,11 +63,6 @@ namespace Vurbiri.Colonization
         }
 
         public Unsubscription Subscribe(Action<Hexagon> action, bool instantGetValue = true) => _eventChanged.Add(action);
-
-        public void Dispose()
-        {
-            Hexagon.Clear();
-        }
 
         private void OnEndTurn(TurnQueue turnQueue, int id)
         {

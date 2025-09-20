@@ -1,11 +1,11 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using System.Text;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.International;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 using Vurbiri.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -95,16 +95,11 @@ namespace Vurbiri.Colonization
             private int _actors;
             private bool _spells, _isTurn = true;
 
-            private bool Value
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => _actors == 0 & _spells & _isTurn;
-            }
+            private bool Value  { [Impl(256)] get => _actors == 0 & _spells & _isTurn; }
 
             public bool Turn 
             {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                set
+                [Impl(256)] set
                 {
                     _isTurn = value;
                     _change.Value = Value;
@@ -114,6 +109,8 @@ namespace Vurbiri.Colonization
             public InteractableController(RBool change, Unsubscriptions subscriptions)
             {
                 _change = change;
+
+                _isTurn = GameContainer.GameLoop.IsPersonTurn;
                 subscriptions += SpellBook.IsCast.Subscribe(BindSpells);
                 subscriptions += GameContainer.Actors[PlayerId.Person].Subscribe(BindActors);
             }

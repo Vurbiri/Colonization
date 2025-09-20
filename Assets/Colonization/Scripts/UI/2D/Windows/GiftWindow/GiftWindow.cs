@@ -35,9 +35,8 @@ namespace Vurbiri.Colonization.UI
             _resetButton.Init(ResetValues);
             _closeButton.AddListener(_switcher.Close);
 
-            Debug.Log("GiftWindow - заменить true на false");
             for(int i = giftButtons.Length - 1; i >= 0; i--)
-                giftButtons[i].Init(Switch, true);
+                giftButtons[i].Init(Switch);
 
             var resources = GameContainer.Players.Person.Resources;
             for (int i = 0; i < CurrencyId.MainCount; i++)

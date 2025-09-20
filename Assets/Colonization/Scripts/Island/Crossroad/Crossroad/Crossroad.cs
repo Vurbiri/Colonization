@@ -37,9 +37,9 @@ namespace Vurbiri.Colonization
         public Key Key { [Impl(256)] get => _key; }
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
         public Id<EdificeId> Id { [Impl(256)] get => _states.id; }
-        public Id<EdificeGroupId> GroupId => _states.groupId;
-        public Id<EdificeId> NextId => _states.nextId;
-        public Id<EdificeGroupId> NextGroupId => _states.nextGroupId;
+        public Id<EdificeGroupId> GroupId { [Impl(256)] get => _states.groupId; }
+        public Id<EdificeId> NextId { [Impl(256)] get => _states.nextId; }
+        public Id<EdificeGroupId> NextGroupId { [Impl(256)] get => _states.nextGroupId; }
         public bool IsGate => _isGate;
         public bool IsBreach => _countWater > 0;
         public bool IsPort => _states.groupId == EdificeGroupId.Port;
@@ -60,6 +60,7 @@ namespace Vurbiri.Colonization
             _edifice.Selectable = this;
         }
 
+        #region static Init
         [Impl(256)] public static void Init(IdSet<EdificeId, AEdifice> prefabs)
         {
             s_prefabs = prefabs;
@@ -70,13 +71,14 @@ namespace Vurbiri.Colonization
             s_prefabs = null;
             SceneManager.sceneUnloaded -= Clear;
         }
+        #endregion
 
         #region IInteractable
-        public Vector3 Position { get; }
+        public Vector3 Position { [Impl(256)] get; }
         public RBool InteractableReactive => _interactable;
         public bool Interactable { [Impl(256)] get => _interactable.Value; [Impl(256)] set => _interactable.Value = value; }
         public RBool CanCancel => _canCancel;
-        [Impl(256)]public void Select()
+        [Impl(256)] public void Select()
         {
             if (_interactable.Value)
                 GameContainer.TriggerBus.TriggerCrossroadSelect(this);

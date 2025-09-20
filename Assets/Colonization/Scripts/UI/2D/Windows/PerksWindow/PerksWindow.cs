@@ -27,8 +27,7 @@ namespace Vurbiri.Colonization.UI
 
             _learnButton.Init(OnLearn);
             _closeButton.AddListener(_switcher.Close);
-            Debug.Log("PerksWindow - заменить true на false");
-            switchButton.Init(_switcher.Switch, true);
+            switchButton.Init(_switcher.Switch);
 
             var person = GameContainer.Players.Person;
             var perkTree = person.Perks;

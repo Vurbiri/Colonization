@@ -9,11 +9,10 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private FileIdAndKey _getText;
 
-        public void Init(Action action, bool interactable = true)
+        public void Init(Action action)
         {
             base.InternalInit(GameContainer.UI.CanvasHint, action, 0.5f);
 
-            Interactable = interactable;
             Localization.Instance.Subscribe(SetLocalizationText);
         }
 

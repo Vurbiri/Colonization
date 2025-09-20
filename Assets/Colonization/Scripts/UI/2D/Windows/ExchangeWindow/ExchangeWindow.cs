@@ -32,8 +32,7 @@ namespace Vurbiri.Colonization.UI
             _applyButton.Init(Apply);
             _resetButton.Init(ResetValues);
             _closeButton.AddListener(_switcher.Close);
-            Debug.Log("ExchangeWindow - заменить true на false");
-            switchButton.Init(_switcher.Switch, true);
+            switchButton.Init(_switcher.Switch);
 
             var resources = GameContainer.Players.Person.Resources;
             for (int i = 0; i < CurrencyId.MainCount; i++)

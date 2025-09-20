@@ -24,16 +24,17 @@
   "Exchange": "Exchange",
   "Bank": "Bank",
   "LandingLabel": "Landing\n<size=85%>{0}</size>",
-  "StartTurnLabel": "Round {0}\n<size=85%>{1}</size>",
+  "StartTurnLabel": "Turn {0}\n<size=85%>{1}</size>",
+  "EndTurn": "End\nTurn",
   "CurrentMaxHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>",
   "AmountHint": "Current:<b>{0}{1,3}</color></b>\nMaximum:<b>{2,3}</b>",
   "AmountOverHint": "\n<align=\"justified\"><size=85%>\nif <b>{1}</b> fell, you will lose <b>{0}</b> resource(s)</size></align>",
-  "ShrinesProfitHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>\n\n<size=80%>Demon Blood gain:\n if {4} fell:     <b>{2}</b> per Magic Flame\r\n if Demons round: <b>{3}</b> + <b>{3}</b> per Magic Flame</size></align>",
+  "ShrinesProfitHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>\n\n<size=80%>Demon Blood gain:\n if {4} fell:     <b>{2}</b> per Magic Flame\r\n if Demons turn: <b>{3}</b> + <b>{3}</b> per Magic Flame</size></align>",
   "PortProfitHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>\n\n<size=80%>Revenue from ports <b>{2}00%</b></size></align>",
   "Perks": "Ritual",
   "PerkMaxBlood": "Maximum amount of Demon Blood <b>+{0}</b>",
   "PerkShrineProfit": "Demon Blood gain if 13 fell,\n<b>+{0}</b> per Magic Flame",
-  "PerkShrinePassiveProfit": "Demon Blood gain if Demons round,\n<b>+{0}</b> per Magic Flame",
+  "PerkShrinePassiveProfit": "Demon Blood gain if Demons turn,\n<b>+{0}</b> per Magic Flame",
   "PerkMaxMainResources": "Protected resource reserve <b>+{0}</b>",
   "PerkIsFreeGroundRes": "Revenue from island hexes, which does not belong to anyone, goes to you",
   "PerkCompensationRes": "If the non-besieged colony has not generated revenue, one random resource will be received\n*<size=75%>colony is considered to be under siege if enemy warriors occupy its hexes</size>",
@@ -64,5 +65,6 @@
   "Gift": "Gift",
   "GiftOk": "<b>{0}</b> accepted the gift",
   "GiftCancel": "<b>{0}</b> refused the gift",
-  "GiftMsg": "wants to give you a"
+  "GiftMsg": "wants to give you a",
+  "GiftButton": "Present"
 }

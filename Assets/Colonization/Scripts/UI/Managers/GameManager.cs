@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
+using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -9,6 +11,7 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField, Range(1f, 3f)] private float _landingDelay = 1.75f;
         [Space]
+        [SerializeField] private VButton _endTurn;
         [SerializeField] private ScreenLabel _label;
 
         private MonoBehaviour _mono;
@@ -23,6 +26,9 @@ namespace Vurbiri.Colonization.UI
             _game = GameContainer.GameLoop;
             _camera = GameContainer.CameraController;
 
+            _endTurn.AddListener(EndTurn);
+            GameContainer.Players.Person.Interactable.Subscribe(_endTurn.GetSetor<bool>(nameof(_endTurn.Interactable)));
+
             _game.Subscribe(GameModeId.Landing, OnLanding);
             _game.Subscribe(GameModeId.EndLanding, OnEndLanding);
 
@@ -33,15 +39,20 @@ namespace Vurbiri.Colonization.UI
             _game.Subscribe(GameModeId.Profit, OnProfit);
         }
 
+        private void EndTurn()
+        {
+            Run(_game.EndTurn());
+        }
+
         private void OnLanding(TurnQueue turnQueue, int hexId)
         {
-            if(!turnQueue.IsSatan)
+            if (!turnQueue.IsSatan)
                 _label.Landing(turnQueue.currentId.Value);
         }
 
         private void OnEndLanding(TurnQueue turnQueue, int hexId)
         {
-            _mono.StartCoroutine(OnEndLanding_Cn(turnQueue.IsPerson));
+            Run(OnEndLanding_Cn(turnQueue.IsPerson));
 
             //Local
             IEnumerator OnEndLanding_Cn(bool isPlayer)
@@ -60,7 +71,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnEndTurn(TurnQueue turnQueue, int hexId)
         {
-            _mono.StartCoroutine(OnEndTurn_Cn());
+            Run(OnEndTurn_Cn());
 
             //Local
             IEnumerator OnEndTurn_Cn()
@@ -72,7 +83,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnStartTurn(TurnQueue turnQueue, int hexId)
         {
-            _mono.StartCoroutine(OnStartTurn_Cn(turnQueue.round, turnQueue.currentId.Value));
+            Run(OnStartTurn_Cn(turnQueue.turn, turnQueue.currentId.Value));
 
             //Local
             IEnumerator OnStartTurn_Cn(int turn, int id)
@@ -84,23 +95,27 @@ namespace Vurbiri.Colonization.UI
 
         public void OnWaitRoll(TurnQueue turnQueue, int hexId)
         {
-            _mono.StartCoroutine(_game.Roll(Random.Range(3, 16)));
-            //_mono.StartCoroutine(_game.Roll(13));
+            Run(_game.Roll(Random.Range(3, 16)));
+            //Run(_game.Roll(13));
         }
 
         public void OnRoll(TurnQueue turnQueue, int hexId)
         {
-            _mono.StartCoroutine(_game.Profit());
+            Run(_game.Profit());
         }
 
         private void OnProfit(TurnQueue turnQueue, int dice)
         {
-            _mono.StartCoroutine(_game.Play());
+            Run(_game.Play());
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private Coroutine Run(IEnumerator routine) => _mono.StartCoroutine(routine);
 
 #if UNITY_EDITOR
         public void OnValidate()
         {
+            EUtility.SetObject(ref _endTurn, "EndTurnButton");
             EUtility.SetObject(ref _label);
         }
 #endif

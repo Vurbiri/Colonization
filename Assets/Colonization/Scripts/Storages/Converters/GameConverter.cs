@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
                     writer.WriteValue(game._gameMode.Value);
 
                     writer.WriteValue(game._turnQueue.currentId.Value);
-                    writer.WriteValue(game._turnQueue.round);
+                    writer.WriteValue(game._turnQueue.turn);
 
                     writer.WriteValue(game._hexId);
                 }

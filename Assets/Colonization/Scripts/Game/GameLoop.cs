@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization
         private GameStorage _storage;
  
         public Id<GameModeId> GameMode => _gameMode;
+        public bool IsPersonTurn => _gameMode == GameModeId.Play & _turnQueue.IsPerson;
 
         private GameLoop() : this(GameModeId.Landing, new(PlayerId.Person), -1) { }
         private GameLoop(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId) : base()
