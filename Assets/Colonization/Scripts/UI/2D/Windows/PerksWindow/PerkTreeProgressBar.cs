@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.UI
             }
 
             _valueRect.anchorMax = new(1f, normalizedValue);
-            _valueTMP.text = progress.ToString();
+            _valueTMP.text = CONST.NUMBERS_STR[progress];
         }
 
 

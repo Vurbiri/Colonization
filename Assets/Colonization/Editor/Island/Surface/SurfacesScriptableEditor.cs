@@ -32,7 +32,7 @@ namespace VurbiriEditor.Colonization
                 EditorGUILayout.Space();
                 if (GUILayout.Button("Set"))
                 {
-                    _surfaces.Set();
+                    _surfaces.Set_Ed();
                     serializedObject.ApplyModifiedProperties();
                     EditorUtility.SetDirty(_surfaces);
                     AssetDatabase.SaveAssets();

@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using Vurbiri.Reactive;
+using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -19,9 +20,9 @@ namespace Vurbiri.Colonization.UI
 
         private void SetCurrentMaxProfit(int current, int max, int active, int passive)
         {
-            _profitTMP.text = string.Format(PROFIT, active, passive);
-            _valueTMP.text = string.Format(COUNT, current, max);
-            _hintText = string.Format(_localizedText, current, max, active, passive, CONST.GATE_ID);
+            _profitTMP.text = string.Format(PROFIT, NUMBERS_STR[active], NUMBERS_STR[passive]);
+            _valueTMP.text = string.Format(COUNT, NUMBERS_STR[current], NUMBERS_STR[max]);
+            _hintText = string.Format(_localizedText, NUMBERS_STR[current], NUMBERS_STR[max], NUMBERS_STR[active], NUMBERS_STR[passive], NUMBERS_STR[CONST.GATE_ID]);
         }
 
 

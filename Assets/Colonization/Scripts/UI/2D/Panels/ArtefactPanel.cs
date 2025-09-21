@@ -89,7 +89,7 @@ namespace Vurbiri.Colonization.UI
         {
             if(profit != 0)
             {
-                tmp.text = profit.ToString();
+                tmp.text = CONST.NUMBERS_STR[profit];
                 StartCoroutine(ShowProfit_Cn(tmp.canvasRenderer, _timers.Pop()));
             }
         }

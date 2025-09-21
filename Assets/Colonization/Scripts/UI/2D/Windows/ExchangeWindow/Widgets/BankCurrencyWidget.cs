@@ -37,6 +37,6 @@ namespace Vurbiri.Colonization.UI
             _changeCount.Invoke(_id.Value, value, value * _rate);
         }
 
-        protected override void ValueToString() => _textValue.text = string.Format(_formatValue, _count, _rate);
+        protected override void ValueToString() => _textValue.text = string.Format(_formatValue, CONST.NUMBERS_STR[_count], CONST.NUMBERS_STR[_rate]);
     }
 }

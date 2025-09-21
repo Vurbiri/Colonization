@@ -11,12 +11,17 @@ namespace Vurbiri.Colonization
         public SurfaceType this[int index] => _surfaces[index];
         public SurfaceType this[Id<SurfaceId> id] => _surfaces[id];
 
-
-#if UNITY_EDITOR
-        public void Set()
+        public void Init()
         {
             for (int i = 0; i < _surfaces.Count; i++)
-                _surfaces[i].Set(i);
+                _surfaces[i].Init();
+        }
+
+#if UNITY_EDITOR
+        public void Set_Ed()
+        {
+            for (int i = 0; i < _surfaces.Count; i++)
+                _surfaces[i].Set_Ed(i);
         }
 #endif
     }

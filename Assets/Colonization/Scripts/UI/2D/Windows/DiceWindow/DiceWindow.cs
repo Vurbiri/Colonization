@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.UI
 {
 	public class DiceWindow : MonoBehaviour
 	{
-        private const int DICES_COUNT = 2, MIN = 2;
+        private const int DICES_COUNT = 2;
 
         [SerializeField] private FloatRnd _delayAI;
         [SerializeField] private WaitRealtime _openTime;
@@ -22,14 +22,10 @@ namespace Vurbiri.Colonization.UI
         private readonly WaitSignal _waitPerson = new();
         public void Init()
 		{
-            string[] numbers = new string[CONST.DICE];
-            for (int i = 0; i < CONST.DICE; i++)
-                numbers[i] = (i + 1).ToString();
-
             for(int i = 0; i < DICES_COUNT; i++)
-                _dices[i].Init(numbers);
+                _dices[i].Init();
 
-            _stopButton.Interactable = false;
+            _stopButton.interactable = false;
             _stopButton.AddListener(_waitPerson.Send);
 
             GameContainer.GameLoop.Subscribe(GameModeId.WaitRoll, StartRoll);
@@ -45,24 +41,20 @@ namespace Vurbiri.Colonization.UI
 
             _result.text = string.Empty;
 
-            yield return _canvasSwitcher.Show();
-
             for (int i = 0; i < DICES_COUNT; i++)
                 _dices[i].Run();
 
-            yield return null;
+            _stopButton.CombineInteractable(isPerson, isPerson);
 
-            _stopButton.Interactable = isPerson;
-
-            IEnumerator wait = isPerson ? _waitPerson.Restart() : _waitAI.Restart(_delayAI);
-            yield return wait;
+            yield return _canvasSwitcher.Show();
+            yield return isPerson ? _waitPerson.Restart() : _waitAI.Restart(_delayAI);
 
             _stopButton.interactable = false;
 
-            int result = MIN;
+            int result = 0;
             for (int i = 0; i < DICES_COUNT; i++)
                 result += _dices[i].Stop();
-            _result.text = result.ToString();
+            _result.text = CONST.NUMBERS_STR[result];
 
             yield return GameContainer.GameLoop.Roll_Cn(result);
 

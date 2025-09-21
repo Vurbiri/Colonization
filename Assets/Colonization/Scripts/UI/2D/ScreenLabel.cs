@@ -16,7 +16,6 @@ namespace Vurbiri.Colonization.UI
 
         private TextMeshProUGUI _label;
         private CanvasRenderer _renderer;
-        private WaitRealtime _delayStartTurn;
 
         private string _landingText, _startTurnText;
 
@@ -26,8 +25,6 @@ namespace Vurbiri.Colonization.UI
             _renderer = _label.canvasRenderer;
             _renderer.SetAlpha(0f);
 
-            _delayStartTurn = new((1f/_onSpeed + _showTime.Time + 1f/_offSpeed) * 0.51f);
-
             Localization.Instance.Subscribe(SetText);
         }
 
@@ -36,11 +33,9 @@ namespace Vurbiri.Colonization.UI
             StartCoroutine(Label_Cn(string.Format(_landingText, GameContainer.UI.PlayerNames[id])));
         }
 
-        public IEnumerator StartTurn_Wait(int turn, int id)
+        public IEnumerator StartTurn_Cn(int turn, int id)
         {
-            StartCoroutine(Label_Cn(string.Format(_startTurnText, turn, GameContainer.UI.PlayerNames[id])));
-
-            yield return _delayStartTurn.Restart();
+            yield return Label_Cn(string.Format(_startTurnText, turn, GameContainer.UI.PlayerNames[id]));
         }
 
         private IEnumerator Label_Cn(string text)

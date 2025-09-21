@@ -1,17 +1,18 @@
-using System.Collections.Generic;
-using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public class ProfitArray : IProfit
     {
-        private readonly int[] _values;
+        private static Vurbiri.Collections.ReadOnlyArray<int> s_values;
         private int _value = -1;
 
-        public int Value => _value;
+        public IProfit Instance { [Impl(256)] get => new ProfitArray(); }
+        public int Value { [Impl(256)] get => _value; }
 
-        public ProfitArray(List<int> profits) => _values = profits.ToArray();
+        public ProfitArray(IdFlags<CurrencyId> profits) => s_values ??= profits.GetValues().ToArray();
+        private ProfitArray() { }
 
-        public int Set() => _value = _values[Random.Range(0, _values.Length)];
+        [Impl(256)] public int Set() => _value = s_values.Rand();
     }
 }

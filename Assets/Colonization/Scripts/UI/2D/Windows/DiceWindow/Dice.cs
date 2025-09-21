@@ -12,13 +12,11 @@ namespace Vurbiri.Colonization.UI
 		private readonly RandomSequence _roll = new(CONST.DICE);
 
         private bool _isPlaying = false;
-        private string[] _numbers;
         private TextMeshProUGUI _label;
         private int _current;
 
-        public void Init(string[] numbers)
+        public void Init()
         {
-            _numbers = numbers;
             _label = GetComponentInChildren<TextMeshProUGUI>();
         }
 
@@ -32,8 +30,8 @@ namespace Vurbiri.Colonization.UI
 			{
 				while (_isPlaying)
 				{
-					_current = _roll.Next;
-					_label.text = _numbers[_current];
+					_current = _roll.Next + 1;
+					_label.text = CONST.NUMBERS_STR[_current];
 					yield return _waitTime.Restart(_time);
 				}
 			}

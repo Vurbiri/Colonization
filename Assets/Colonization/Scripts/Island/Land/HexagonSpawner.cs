@@ -18,6 +18,7 @@ namespace Vurbiri.Colonization
         {
             _landContainer = _landMesh.transform;
             _landMesh.Init();
+            _surfaces.Init();
 
             return this;
         }

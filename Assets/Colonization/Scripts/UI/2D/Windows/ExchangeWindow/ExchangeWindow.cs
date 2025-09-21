@@ -56,14 +56,14 @@ namespace Vurbiri.Colonization.UI
 
             _playerCurrencies[id].Interactable = value == 0;
 
-            _bankAmount.text = _price.Amount.ToString();
+            _bankAmount.text = CONST.NUMBERS_STR[_price.Amount];
             SetState();
         }
         private void OnPlayerChangeCount(int id, int value)
         {
             _pay.SetMain(id, value);
 
-            _playerAmount.text = _pay.Amount.ToString();
+            _playerAmount.text = CONST.NUMBERS_STR[_pay.Amount];
             SetState();
         }
 
@@ -91,7 +91,7 @@ namespace Vurbiri.Colonization.UI
 
             _bankTrade.ResetAmount(); _price.ResetAmount(); _pay.ResetAmount();
 
-            _bankAmount.text = _playerAmount.text = "0";
+            _bankAmount.text = _playerAmount.text = CONST.NUMBERS_STR[0];
             _playerAmount.color = _colors.zero;
 
             _resetButton.Interactable = _applyButton.Interactable = false;

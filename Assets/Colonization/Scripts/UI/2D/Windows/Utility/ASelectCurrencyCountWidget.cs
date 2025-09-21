@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization.UI
             _rightButton.Interactable = (value + _step) <= _max & _interactable;
         }
 
-        protected virtual void ValueToString() => _textValue.text = _count.ToString();
+        protected virtual void ValueToString() => _textValue.text = CONST.NUMBERS_STR[_count];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void CrossFadeColor()

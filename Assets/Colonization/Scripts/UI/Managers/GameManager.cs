@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization.UI
             //Local
             IEnumerator OnStartTurn_Cn(int turn, int id)
             {
-                yield return _label.StartTurn_Wait(turn, id);
+                yield return _label.StartTurn_Cn(turn, id);
                 yield return GameContainer.GameLoop.WaitRoll_Cn();
             }
         }

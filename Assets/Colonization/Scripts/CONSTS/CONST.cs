@@ -65,6 +65,9 @@ namespace Vurbiri.Colonization
         public static readonly ReadOnlyArray<Quaternion> LINK_ROTATIONS 
             = new(new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, -120f, 0f), Quaternion.Euler(0f, 0f, 0f) });
 
+        public const int MAX_NUMBERS_STR = 256;
+        public static readonly ReadOnlyArray<string> NUMBERS_STR;
+
         static CONST()
         {
             Vector3[] directions = new Vector3[HEX_COUNT_VERTICES];
@@ -85,6 +88,11 @@ namespace Vurbiri.Colonization
                 angle -= 60f;
             }
             ACTOR_ROTATIONS = new(quaternions);
+
+            string[] numbers = new string[MAX_NUMBERS_STR];
+            for (int i = 0; i < MAX_NUMBERS_STR; i++)
+                numbers[i] = i.ToString();
+            NUMBERS_STR = new(numbers);
         }
     }
 }
