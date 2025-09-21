@@ -32,59 +32,57 @@ namespace Vurbiri.Colonization
             return instance;
         }
 
-        public IEnumerator Start()
+        public IEnumerator Start_Cn()
         {
             return SetGameMode_Cn(_gameMode);
         }
 
-        public IEnumerator Landing()
+        public IEnumerator Landing_Cn()
         {
             _turnQueue.Next();
 
             return SetGameModeNotSave_Cn(GameModeId.Landing);
         }
 
-        public IEnumerator EndLanding()
+        public IEnumerator EndLanding_Cn()
         {
             return SetGameModeNotSave_Cn(GameModeId.EndLanding);
         }
 
-        public IEnumerator EndTurn()
+        public IEnumerator EndTurn_Cn()
         {
             return SetGameMode_Cn(GameModeId.EndTurn);
         }
 
-        public IEnumerator StartTurn()
+        public IEnumerator StartTurn_Cn()
         {
             _turnQueue.Next();
 
             return SetGameMode_Cn(GameModeId.StartTurn);
         }
 
-        public IEnumerator WaitRoll()
+        public IEnumerator WaitRoll_Cn()
         {
             return SetGameMode_Cn(GameModeId.WaitRoll);
         }
 
-        public IEnumerator Roll(int newValue)
+        public IEnumerator Roll_Cn(int newValue)
         {
             _hexId = newValue;
-
             return SetGameMode_Cn(GameModeId.Roll);
-
         }
 
-        public IEnumerator Profit()
+        public IEnumerator Profit_Cn()
         {
             return SetGameMode_Cn(GameModeId.Profit);
         }
 
-        public IEnumerator Play()
+        public IEnumerator Play_Cn()
         {
             return SetGameMode_Cn(GameModeId.Play);
         }
 
-        public void End(Winner winner)
+        public void End__Cn(Winner winner)
         {
             _gameMode = GameModeId.End;
             _changingGameModes[GameModeId.End].Invoke(_turnQueue, _hexId);

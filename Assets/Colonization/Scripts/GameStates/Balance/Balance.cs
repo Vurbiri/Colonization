@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
             _value = storage.GetBalanceValue(_settings.defaultValue);
             storage.BindBalance(this);
 
-            _eventGameOver.Add(gameLoop.End);
+            _eventGameOver.Add(gameLoop.End__Cn);
 
             actorsFactory[PlayerId.Satan].Subscribe(OnKillingDemon, false);
             for (int i = 0; i < PlayerId.HumansCount; i++)

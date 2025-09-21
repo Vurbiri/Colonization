@@ -17,12 +17,11 @@ namespace Vurbiri.UI
                 transform.SetParent(_canvasRectTransform);
         }
 
-        protected override void SetPosition(Vector3 position, Vector3 offset)
+        protected override void SetPosition(Transform transform, Vector3 offset)
         {
-            position = _canvasRectTransform.InverseTransformPoint(position);
-
-            Vector2 thisSize = _backTransform.sizeDelta * 0.5f;
-            Vector2 parentSize = _canvasRectTransform.sizeDelta * 0.5f;
+            var position = _canvasRectTransform.InverseTransformPoint(transform.position);
+            var thisSize = _backTransform.sizeDelta * 0.5f;
+            var parentSize = _canvasRectTransform.sizeDelta * 0.5f;
 
             float delta = position.x - thisSize.x - _edgeX + parentSize.x;
             if (delta > 0f)

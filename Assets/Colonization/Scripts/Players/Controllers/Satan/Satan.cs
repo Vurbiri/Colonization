@@ -10,8 +10,7 @@ namespace Vurbiri.Colonization
         protected readonly RInt _level;
         protected readonly RInt _curse;
         
-        protected readonly SatanAbilities _states;
-        protected readonly Balance _balance;
+        protected readonly SatanAbilities _settings;
 
         protected readonly DemonLeveling _leveling;
         protected readonly Artefact _artefact;
@@ -24,20 +23,12 @@ namespace Vurbiri.Colonization
         public IReactiveValue<int> Level => _level;
         public IReactiveValue<int> Curse => _curse;
 
-        public int MaxCurse => _states.maxCurse + _level * _states.maxCursePerLevel;
-        public int CursePerTurn
-        {
-            get
-            {
-                int ratio = (_balance > 0 ? _states.ratioPenaltyCurse : _states.ratioRewardCurse) >> SatanAbilities.SHIFT_RATIO;
-                return _states.cursePerTurn - _balance * ratio;
-            }
-        }
+        public int MaxCurse => _settings.maxCurse + _level * _settings.maxCursePerLevel;
 
         protected Satan(Settings settings) : base(PlayerId.Satan)
         {
             var storage = GameContainer.Storage.Satan;
-            _states = SettingsFile.Load<SatanAbilities>();
+            _settings = SettingsFile.Load<SatanAbilities>();
 
             var loadData = storage.LoadData;
 

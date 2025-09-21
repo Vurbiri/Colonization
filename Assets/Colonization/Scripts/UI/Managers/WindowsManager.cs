@@ -16,6 +16,8 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField, ReadOnly] private GiftWindow _giftWindow;
         [SerializeField, ReadOnly] private GiftButton[] _giftButtons;
+        [Space]
+        [SerializeField, ReadOnly] private DiceWindow _diceWindow;
 
         private readonly Switcher[] _switchers = new Switcher[SWITCHERS_COUNT];
         private AVButtonBase[] _buttons;
@@ -30,9 +32,11 @@ namespace Vurbiri.Colonization.UI
             _switchers[id] = _exchangeWindow.Init(_exchangeButton).Setup(id++, OnOpenWindow, OnCloseWindow);
             _switchers[id] = _giftWindow.Init(_giftButtons).Setup(id++, OnOpenWindow, OnCloseWindow);
 
+            _diceWindow.Init();
+
             GameContainer.Players.Person.Interactable.Subscribe(OnInteractable);
 
-            _perksWindow = null; _exchangeWindow = null; _giftWindow = null;
+            _perksWindow = null; _exchangeWindow = null; _giftWindow = null; _diceWindow = null;
             _perksButton = null; _exchangeButton = null;
         }
 
@@ -56,7 +60,7 @@ namespace Vurbiri.Colonization.UI
             if (_openWindowsCount++ == 0)
             {
                 GameContainer.InputController.Unselect();
-                GameContainer.InputController.UIMode(true);
+                GameContainer.InputController.WindowMode(true);
             }
 
             for (int i = 0; i < SWITCHERS_COUNT; i++)
@@ -65,7 +69,7 @@ namespace Vurbiri.Colonization.UI
         private void OnCloseWindow()
         {
             if (--_openWindowsCount == 0)
-                GameContainer.InputController.UIMode(false);
+                GameContainer.InputController.WindowMode(false);
         }
 
 #if UNITY_EDITOR
@@ -81,6 +85,8 @@ namespace Vurbiri.Colonization.UI
 
             EUtility.SetObject(ref _giftWindow);
             EUtility.SetObjects(ref _giftButtons);
+
+            EUtility.SetObject(ref _diceWindow);
         }
 #endif
     }

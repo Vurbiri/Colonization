@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
             _giftRatio = _settings.giftRatio;
         }
 
-        public override WaitResult<bool> Gift(int giver, CurrenciesLite gift)
+        public override WaitResult<bool> Gift(int giver, CurrenciesLite gift, string msg)
         {
             int amount = gift.Amount * _giftRatio;
             if (GameContainer.Diplomacy.IsGreatFriend(_id, giver))
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
                 yield return BuildPort(port).signal;
             }
 
-            GameContainer.GameLoop.EndLanding().Start();
+            GameContainer.GameLoop.EndLanding_Cn().Start();
         }
 
         private IEnumerator OnInitFast_Cn()
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization
                 yield return null;
             }
 
-            GameContainer.GameLoop.EndLanding().Start();
+            GameContainer.GameLoop.EndLanding_Cn().Start();
         }
 
     }

@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization.UI
 
         private IEnumerator OnEndLanding_Cn()
         {
-            yield return GameContainer.GameLoop.EndLanding();
+            yield return GameContainer.GameLoop.EndLanding_Cn();
             Destroy(gameObject);
         }
 

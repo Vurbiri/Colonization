@@ -27,16 +27,16 @@ namespace VurbiriEditor
 
                 EditorGUI.LabelField(sizeLabel, label);
 
-                min = EditorGUI.FloatField(sizeMin, min);
-                max = EditorGUI.FloatField(sizeMax, max);
+                min = EditorGUI.DelayedFloatField(sizeMin, min);
+                max = EditorGUI.DelayedFloatField(sizeMax, max);
                 EditorGUI.MinMaxSlider(sizeSlider, ref min, ref max, -range.max, range.max);
             }
             else
             {
                 var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
                 EditorGUI.LabelField(sizeLabel, label);
-                min = EditorGUI.FloatField(sizeMin, min);
-                max = EditorGUI.FloatField(sizeMax, max);
+                min = EditorGUI.DelayedFloatField(sizeMin, min);
+                max = EditorGUI.DelayedFloatField(sizeMax, max);
             }
 
             EditorGUI.EndProperty();

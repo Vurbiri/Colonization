@@ -1,14 +1,15 @@
 using System;
 using System.Runtime.CompilerServices;
+using Vurbiri.Colonization.Actors;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
     sealed public partial class ReactiveEffect : AReactiveItem<ReactiveEffect>, IPerk, IEquatable<ReactiveEffect>
     {
-        
         private readonly int _targetAbility;
         private readonly Id<TypeModifierId> _typeModifier;
+        private readonly bool _fixed;
         private int _value;
         private int _duration;
         private int _skip;
@@ -21,7 +22,7 @@ namespace Vurbiri.Colonization.Characteristics
         public int Duration => _duration;
         public bool IsPositive => _value > 0;
 
-        public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, bool isSkip)
+        public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, bool isSkip, bool fix = false)
             : this(code, targetAbility, typeModifier, value, duration, isSkip ? 1 : 0) { }
         public ReactiveEffect(EffectCode code, int targetAbility, Id<TypeModifierId> typeModifier, int value, int duration, int skip)
         {
@@ -31,6 +32,7 @@ namespace Vurbiri.Colonization.Characteristics
             _value = value;
             _duration = duration;
             _skip = skip;
+            _fixed = (code.SourceType == ActorTypeId.Warrior & code.SkillId == CONST.SPEC_SKILL_ID) | code == ReactiveEffectsFactory.WallEffectCode;
         }
 
         public bool Update(ReactiveEffect other, Func<IPerk, int> addPerk, out int delta)
@@ -64,29 +66,20 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Degrade(int duration, bool isPositive)
         {
-            if (_value > 0 == isPositive)
-                Degrade(duration);
+            if (!_fixed & _value > 0 == isPositive)
+                SetDuration(duration);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Degrade(int duration)
         {
-            _duration -= duration;
-            if (_duration <= 0)
-                Removing();
-            else
-                _eventChanged.Invoke(this, TypeEvent.Change);
+            if (!_fixed)
+                SetDuration(duration);
         }
 
         public void Next()
         {
-            if (_skip --> 0)
-                return;
-
-            if (--_duration == 0)
-                Removing();
-            else
-                _eventChanged.Invoke(this, TypeEvent.Change);
+            if (--_skip < 0)
+                SetDuration(1);
         }
 
         public override bool Equals(ReactiveEffect other)
@@ -127,6 +120,16 @@ namespace Vurbiri.Colonization.Characteristics
 
         public static bool operator ==(ReactiveEffect effect, EffectCode code) => effect.code == code;
         public static bool operator !=(ReactiveEffect effect, EffectCode code) => effect.code != code;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void SetDuration(int remove)
+        {
+            _duration -= remove;
+            if (_duration <= 0)
+                Removing();
+            else
+                _eventChanged.Invoke(this, TypeEvent.Change);
+        }
 
     }
 }

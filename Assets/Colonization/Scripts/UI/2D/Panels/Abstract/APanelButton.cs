@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.UI
         protected void InitInternal()
         {
             _onClick.Add(OnSelect);
-            GameContainer.InputController.Subscribe(OnUIMode, false);
+            GameContainer.InputController.IsWindowMode.Subscribe(OnWindowMode, false);
         }
 
         protected void Attach(IInteractable attach, Sprite sprite)
@@ -92,8 +92,8 @@ namespace Vurbiri.Colonization.UI
         }
         #endregion
 
-        private void OnAttachInteractable(bool value) => interactable = value & !GameContainer.InputController.UIModeEnabled;
-        private void OnUIMode(bool value)
+        private void OnAttachInteractable(bool value) => interactable = value & !GameContainer.InputController.IsWindowMode;
+        private void OnWindowMode(bool value)
         {
             if(_attach != null)
                 interactable = !value & _attach.Interactable;
@@ -116,7 +116,7 @@ namespace Vurbiri.Colonization.UI
         sealed protected override void OnDestroy()
         {
             base.OnDestroy();
-            GameContainer.InputController.Unsubscribe(OnUIMode);
+            GameContainer.InputController.IsWindowMode.Unsubscribe(OnWindowMode);
             _unsubscribers.Unsubscribe();
         }
 

@@ -1,10 +1,7 @@
 {
   "gateDefense": 4,
-  "maxCurse": 100,
-  "maxCursePerLevel": 2,
-  "curseProfit": 33,
-  "curseProfitPerLevel": 3,
-  "cursePerTurn": 13,
-  "ratioRewardCurse": 50,
-  "ratioPenaltyCurse": 15
+  "maxCurse": 1000,
+  "maxCursePerLevel": 50,
+  "cursePerTurnBase": 100,
+  "cursePerTurnReward": 200
 }

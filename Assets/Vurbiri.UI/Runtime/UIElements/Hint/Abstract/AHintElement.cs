@@ -23,7 +23,7 @@ namespace Vurbiri.UI
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (!_isShowingHint)
-                _isShowingHint = _hint.Show(_hintText, _thisRectTransform.position, _hintOffset);
+                _isShowingHint = _hint.Show(_hintText, _thisRectTransform, _hintOffset);
         }
 
         public void OnPointerExit(PointerEventData eventData)

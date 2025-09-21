@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization.UI
     {
         private readonly string _value;
 
-        public BlockUI(ProjectColors colors, SeparatorEffectUI separator, int cost, int value) : base(separator, cost)
+        public BlockUI(SeparatorEffectUI separator, int cost, int value) : base(separator, cost)
         {
             _value = $"+{value}";
 

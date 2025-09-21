@@ -1,8 +1,11 @@
+using Vurbiri.International;
+
 namespace Vurbiri.Colonization
 {
     [System.Serializable]
     public class AISettings
 	{
-		public IntRnd giftRatio;
+        public FileIdAndKey giftMsg;
+        public IntRnd giftRatio;
 	}
 }
