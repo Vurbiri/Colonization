@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization.UI
         {
             base.OnPointerEnter(eventData);
             if (!_isShowingHint)
-                _isShowingHint = _hint.Show(_hintText, _thisRectTransform.position, _offsetHint);
+                _isShowingHint = _hint.Show(_hintText, _thisRectTransform, _offsetHint);
         }
 
         public override void OnPointerExit(PointerEventData eventData)

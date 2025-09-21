@@ -11,10 +11,12 @@ namespace Vurbiri.Colonization
         protected GameEvents() 
         {
             for (int i = 0; i < GameModeId.Count; i++)
-                _changingGameModes[i] += (_, _) => { };
+                _changingGameModes[i] = Dummy;
         }
 
         public void Subscribe(Id<GameModeId> gameMode, ChangingGameMode onChanging) => _changingGameModes[gameMode] += onChanging;
         public void Unsubscribe(Id<GameModeId> gameMode, ChangingGameMode onChanging) => _changingGameModes[gameMode] -= onChanging;
+
+        private static void Dummy(TurnQueue turnQueue, int dice) { }
     }
 }

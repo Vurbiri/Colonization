@@ -27,8 +27,10 @@ namespace Vurbiri.Colonization
         public const int DEFAULT_MAX_DEMONS = DEFAULT_MAX_WARRIOR << 1;
         public const int DEFAULT_MAX_EDIFICES = 6;
 
-        public const int GATE_ID = 13;
-        public static readonly int[] HEX_IDS = { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15 };
+        public const int GATE_ID = 7;
+        public static readonly int[] HEX_IDS = { 2, 3, 4, 5, 6, 8, 9, 10, 11, 12 };
+        
+        public const int DICE = 6;
 
         public const float PI = Mathf.PI;
         public const float TAU = 2f * PI;

@@ -69,9 +69,7 @@ namespace Vurbiri.Colonization
         public IEnumerator Roll(int newValue)
         {
             _hexId = newValue;
-
             return SetGameMode_Cn(GameModeId.Roll);
-
         }
 
         public IEnumerator Profit()

@@ -8,23 +8,23 @@ using static UnityEngine.InputSystem.InputAction;
 namespace Vurbiri.Colonization.Controllers
 {
     [Serializable]
-    public class InputController : IReactive<bool>, IDisposable
+    public class InputController : /*IReactive<bool>,*/ IDisposable
     {
         private readonly Camera _camera;
         private readonly int _layerMaskRight;
         private readonly float _distance;
         private readonly InputControlAction _inputActions;
-        private readonly Subscription<bool> _uiModeChange = new();
+        private readonly RBool _windowMode = new(false);
 
         private ISelectable _selectObj;
         private InputControlAction.GameplayActions _gameplayMap;
         private InputControlAction.CameraActions _cameraMap;
         private InputControlAction.UIActions _UIMap;
-        private bool _uiMode;
+        private bool _spectatorMode;
 
         public InputControlAction.CameraActions CameraActions => _cameraMap;
 
-        public bool UIModeEnabled => _uiMode;
+        public RBool IsWindowMode => _windowMode;
 
         public InputController(GameEvents events, Camera camera, Settings settings)
         {
@@ -38,39 +38,32 @@ namespace Vurbiri.Colonization.Controllers
             _cameraMap = _inputActions.Camera;
             _UIMap = _inputActions.UI;
 
-            _uiMode = !(_gameplayMap.enabled | _cameraMap.enabled);
+            SpectatorMode(true);
 
             _inputActions.Gameplay.RightClick.performed += OnClickRight;
 
-            events.Subscribe(GameModeId.Play, (turn, _) => UIMode(turn.IsNotPerson));
-            events.Subscribe(GameModeId.Landing, (turn, _) => UIMode(turn.IsNotPerson));
-            events.Subscribe(GameModeId.WaitRoll, (turn, _) => UIMode(turn.IsNotPerson));
-
-            events.Subscribe(GameModeId.EndTurn, (_, _) => { UIMode(true); });
+            events.Subscribe(GameModeId.Play, SpectatorMode);
+            events.Subscribe(GameModeId.Landing, SpectatorMode);
+            events.Subscribe(GameModeId.EndTurn, SpectatorModeOn);
         }
-
-        public Unsubscription Subscribe(Action<bool> action, bool instantGetValue = true) => _uiModeChange.Add(action, _uiMode, instantGetValue);
-        public void Unsubscribe(Action<bool> action) => _uiModeChange.Remove(action);
 
         public void Enable() => _inputActions.Enable();
         public void Disable() => _inputActions.Disable();
 
-        public void UIMode(bool enable)
+        public void WindowMode(bool enable)
         {
-            if (_uiMode != enable)
+            if (_windowMode != enable)
             {
-                if (enable)
+                if (_windowMode.Value = enable)
                 {
-                    _gameplayMap.Disable(); _cameraMap.Disable();
-                    
+                    _gameplayMap.Disable(); _cameraMap.Disable(); _UIMap.Enable();
                 }
                 else
                 {
-                    _gameplayMap.Enable(); _cameraMap.Enable();
+                    if(!_spectatorMode) 
+                        _gameplayMap.Enable(); 
+                    _cameraMap.Enable();
                 }
-
-                _uiMode = enable;
-                _uiModeChange.Invoke(enable);
             }
         }
 
@@ -89,6 +82,23 @@ namespace Vurbiri.Colonization.Controllers
         }
 
         public void Dispose() => _inputActions.Dispose();
+
+        private void SpectatorModeOn(TurnQueue turnQueue, int hexId) => SpectatorMode(true);
+        private void SpectatorMode(TurnQueue turnQueue, int hexId) => SpectatorMode(turnQueue.IsNotPerson);
+        private void SpectatorMode(bool enable)
+        {
+            if (_spectatorMode != enable)
+            {
+                if (_spectatorMode = enable)
+                {
+                    _gameplayMap.Disable(); _cameraMap.Enable(); _UIMap.Enable();
+                }
+                else
+                {
+                    _gameplayMap.Enable();
+                }
+            }
+        }
 
         private void OnClickRight(CallbackContext ctx) 
         {

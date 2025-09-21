@@ -25,7 +25,7 @@ namespace Vurbiri.UI
         public static Vector3 GetOffsetHint(RectTransform rectTransform, float heightRatio)
         {
             var pivot = rectTransform.pivot;
-            var size = rectTransform.rect.size;
+            var size = rectTransform.sizeDelta;//rect.size;
 
             return new(size.x * Mathf.Abs(0.5f - pivot.x), size.y * (Mathf.Abs(0.5f - pivot.y) + heightRatio), 0f);
         }
@@ -41,13 +41,13 @@ namespace Vurbiri.UI
             _hintTMP.overflowMode = TextOverflowModes.Overflow;
         }
 
-        public bool Show(string text, Vector3 position, Vector3 offset)
+        public bool Show(string text, Transform transform, Vector3 offset)
         {
             bool result;
             if (result = !string.IsNullOrEmpty(text) & gameObject.activeInHierarchy)
             {
                 StopCoroutine(ref _coroutineShow);
-                _coroutineShow = StartCoroutine(Show_Cn(text, position, offset));
+                _coroutineShow = StartCoroutine(Show_Cn(text, transform, offset));
             }
             return result;
         }
@@ -65,9 +65,9 @@ namespace Vurbiri.UI
             _hintTMP.color = textColor;
         }
 
-        protected abstract void SetPosition(Vector3 position, Vector3 offset);
+        protected abstract void SetPosition(Transform transform, Vector3 offset);
 
-        private IEnumerator Show_Cn(string text, Vector3 position, Vector3 offset)
+        private IEnumerator Show_Cn(string text, Transform transform, Vector3 offset)
         {
             yield return _timeDelay.Restart();
 
@@ -83,7 +83,7 @@ namespace Vurbiri.UI
             _backTransform.sizeDelta = size + _padding;
 
             yield return null;
-            SetPosition(position, offset);
+            SetPosition(transform, offset);
 
             yield return _waitSwitch.Show();
             _coroutineShow = null;

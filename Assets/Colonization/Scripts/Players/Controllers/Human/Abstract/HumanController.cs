@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public abstract WaitResult<bool> Gift(int giver, CurrenciesLite gift);
+        public abstract WaitResult<bool> Gift(int giver, CurrenciesLite gift, string msg);
 
         public virtual void OnLanding() { }
         public virtual void OnEndLanding() { }

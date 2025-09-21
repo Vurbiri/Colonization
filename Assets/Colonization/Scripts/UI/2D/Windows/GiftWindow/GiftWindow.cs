@@ -73,7 +73,7 @@ namespace Vurbiri.Colonization.UI
 
         private void Apply()
         {
-            if (GameContainer.Players.Humans[_currentPlayer].Gift(PlayerId.Person, _gift))
+            if (GameContainer.Players.Humans[_currentPlayer].Gift(PlayerId.Person, _gift, null))
             {
                 GameContainer.Players.Person.Pay(_gift);
                 Banner.Open(_ok[_currentPlayer - PlayerId.AI_01], MessageTypeId.Profit, 5f, true);

@@ -30,7 +30,7 @@ namespace Vurbiri
         public Chance(int value)
         {
             _value = Mathf.Clamp(value, 0, MAX_CHANCE);
-            _negentropy = SysRandom.Next(MAX_CHANCE);
+            _negentropy = SysRandom.Range(MAX_CHANCE);
         }
         public Chance(int value, int negentropy)
         {

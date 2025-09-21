@@ -19,11 +19,11 @@ namespace Vurbiri.Colonization.Characteristics
         public AnimationTime Timing => _timing;
         public ASkillUI UI => _ui;
 
-        public void Init(ProjectColors colors, SeparatorEffectUI separator, int actorType, int actorId)
+        public void Init(SeparatorEffectUI separator, int actorType, int actorId)
         {
             if (actorType == ActorTypeId.Warrior)
             {
-                _ui = new BlockUI(colors, separator, _cost, _value);
+                _ui = new BlockUI(separator, _cost, _value >>= ActorAbilityId.SHIFT_ABILITY);
             }
             else
             {

@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
             _giftRatio = _settings.giftRatio;
         }
 
-        public override WaitResult<bool> Gift(int giver, CurrenciesLite gift)
+        public override WaitResult<bool> Gift(int giver, CurrenciesLite gift, string msg)
         {
             int amount = gift.Amount * _giftRatio;
             if (GameContainer.Diplomacy.IsGreatFriend(_id, giver))

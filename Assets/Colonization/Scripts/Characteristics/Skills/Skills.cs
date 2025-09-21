@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization.Characteristics
             for (int i = 0; i < countSkills; i++)
                 _skillsUI[i] = _skillsSettings[i].Init(colors, separator, actorType, actorId, i);
 
-            _specSkillSettings.Init(colors, separator, actorType, actorId);
+            _specSkillSettings.Init(separator, actorType, actorId);
         }
 
         public void CreateStates<TActor, TSkin>(Actor.AStates<TActor, TSkin> states) where TActor : Actor where TSkin : ActorSkin

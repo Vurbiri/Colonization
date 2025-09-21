@@ -20,12 +20,12 @@ namespace VurbiriEditor
             if (min > max) (min, max) = (max, min);
             
             label = EditorGUI.BeginProperty(position, label, property);
-
-            var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
-            EditorGUI.LabelField(sizeLabel, label);
-            minProperty.floatValue = EditorGUI.FloatField(sizeMin, min);
-            maxProperty.floatValue = EditorGUI.FloatField(sizeMax, max);
-
+            {
+                var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
+                EditorGUI.LabelField(sizeLabel, label);
+                minProperty.floatValue = EditorGUI.DelayedFloatField(sizeMin, min);
+                maxProperty.floatValue = EditorGUI.DelayedFloatField(sizeMax, max);
+            }
             EditorGUI.EndProperty();
         }
 

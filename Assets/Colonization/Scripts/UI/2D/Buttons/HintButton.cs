@@ -16,7 +16,10 @@ namespace Vurbiri.Colonization.UI
             Localization.Instance.Subscribe(SetLocalizationText);
         }
 
-        private void SetLocalizationText(Localization localization) => _hintText = localization.GetText(_getText.id, _getText.key);
+        private void SetLocalizationText(Localization localization)
+        {
+            _hintText = localization.GetText(_getText.id, _getText.key);
+        }
 
         protected override void OnDestroy()
         {

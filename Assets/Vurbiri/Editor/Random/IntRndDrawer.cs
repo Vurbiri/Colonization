@@ -30,8 +30,8 @@ namespace VurbiriEditor
 
                 EditorGUI.LabelField(sizeLabel, label);
 
-                min = EditorGUI.FloatField(sizeMin, min);
-                max = EditorGUI.FloatField(sizeMax, max);
+                min = EditorGUI.DelayedFloatField(sizeMin, min);
+                max = EditorGUI.DelayedFloatField(sizeMax, max);
 
                 EditorGUI.MinMaxSlider(sizeSlider, ref min, ref max, rMin, rMax);
 
@@ -45,8 +45,8 @@ namespace VurbiriEditor
                 
                 var (sizeLabel, sizeMin, sizeMax) = CalkPosition(position);
                 EditorGUI.LabelField(sizeLabel, label);
-                min = EditorGUI.IntField(sizeMin, min);
-                max = EditorGUI.IntField(sizeMax, max);
+                min = EditorGUI.DelayedIntField(sizeMin, min);
+                max = EditorGUI.DelayedIntField(sizeMax, max);
 
                 if (min > max) (min, max) = (max, min);
                 minProperty.intValue = min;

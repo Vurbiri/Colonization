@@ -1,18 +1,58 @@
 using System.Collections.Generic;
+using System.Text;
+using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
+using Vurbiri.International;
 
 namespace Vurbiri.Colonization
 {
 	public class Test : MonoBehaviour
 	{
+        [Space]
+        public FileIdAndKey giftMsg;
+
+        private TMP_Dropdown _dropdown;
+
+        private void Start()
+        {
+            _dropdown = GetComponentInChildren<TMP_Dropdown>();
+
+            _dropdown.ClearOptions();
+            _dropdown.AddOptions(new List<string>()
+            {
+                "Spawn",
+                "Gift",
+            });
+            _dropdown.value = 0;
+        }
+
         public void RunTest()
         {
+            switch(_dropdown.value )
+            {
+                case 0: Spawn(); break;
+                case 1: Gift(); break;
+                default: return;
+            }
+        }
+
+        public void Gift()
+        {
+            int giver = PlayerId.AI_01;
+            string text = Localization.Instance.GetText(giftMsg);
+
             CurrenciesLite gift = new();
             gift.RandomAddRange(5);
-            GameContainer.Players.Person.Gift(PlayerId.AI_01, gift);
+
+            StringBuilder sb = new(TAG.ALING_CENTER, 256);
+            sb.Append(GameContainer.UI.PlayerNames[giver]); sb.Append(" "); sb.AppendLine(text);
+            gift.MainPlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
+
+           
+            GameContainer.Players.Person.Gift(giver, gift, sb.ToString());
         }
-        
+
         public void Spawn()
         {
             Debug.Log("Удалить Тесты в ArtefactPanel");

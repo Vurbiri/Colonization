@@ -38,19 +38,40 @@ namespace Vurbiri.Colonization
 
         public void OnProfit(Id<PlayerId> id, int hexId)
         {
+            int progress;
             if (hexId == CONST.GATE_ID)
-                AddCurse(_states.curseProfit + _level * _states.curseProfitPerLevel);
+            {
+                progress = _settings.cursePerTurnReward;
+            }
+            else
+            {
+                if (hexId > CONST.GATE_ID)
+                    hexId = (CONST.GATE_ID << 1) - hexId;
+
+                progress = _settings.cursePerTurnBase * hexId / CONST.GATE_ID;
+            }
+
+            _curse.Add(progress);
+
+            int maxCurse = MaxCurse;
+            if (_curse >= maxCurse)
+            {
+                _curse.Remove(maxCurse);
+                _level.Increment();
+            }
+
+            _eventChanged.Invoke(this);
         }
 
         public void OnStartTurn()
         {
             foreach (var demon in Actors)
-                demon.EffectsUpdate(_states.gateDefense);
+                demon.EffectsUpdate(_settings.gateDefense);
         }
 
         public void OnPlay()
         {
-            AddCurse(CursePerTurn);
+
         }
 
     }
