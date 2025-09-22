@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.UI
         {
             UnityEditor.SerializedObject so = new(this);
             so.FindProperty("_key").stringValue = perk.keyDescription;
-            so.FindProperty("_cost").stringValue = $"\n<color=red>{perk.Cost}</color><space=0.1em><sprite={CurrencyId.Blood}>";
+            so.FindProperty("_cost").stringValue = $"\n{CONST_UI.SEPARATOR}\n<color=red>{perk.Cost}</color><space=0.1em><sprite={CurrencyId.Blood}>";
             so.ApplyModifiedProperties();
 
             gameObject.name = $"{perk.Id:D2}_{perk.keyDescription}";

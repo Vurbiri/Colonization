@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.UI
 
         private Vector2 PlayerWidgetSize => _playerPrefab.Bounds.size + _widgetSpace;
 
-        public void UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors)
+        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors)
         {
             Color color = colors.PanelBack.SetAlpha(1f);
 

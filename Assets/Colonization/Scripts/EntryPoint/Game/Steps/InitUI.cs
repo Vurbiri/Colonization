@@ -35,6 +35,9 @@ namespace Vurbiri.Colonization.EntryPoint
             yield return null;
 
             _managers.Init();
+
+            yield return null;
+
             _playerPanels.Init();
             _opponentPanels.Init();
 

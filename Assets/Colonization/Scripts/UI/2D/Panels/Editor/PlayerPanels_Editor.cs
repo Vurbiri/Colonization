@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(0.1f, 1f)] private float _advRatioSpaceOut = 0.6f;
         [EndEditor] public bool endEditor;
 
-        public void UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors, Vector3 position)
+        public void UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors, Vector3 position)
         {
             RectTransform rectWarriors   = _warriors.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);
             RectTransform rectColonies   = _colonies.UpdateVisuals_Editor(pixelsPerUnit, _paddingIn, colors);

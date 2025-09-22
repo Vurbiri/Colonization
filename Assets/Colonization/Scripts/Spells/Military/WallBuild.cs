@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
             private WallBuild(int type, int id) : base(type, id)
             {
                 _cost.Add(GameContainer.Prices.Wall);
-                _strCost = _cost.MainPlusToString(COST_COUNT_LINE);
+                _strCost = _cost.MainPlusToString(SEPARATOR);
             }
             public static void Create() => new WallBuild(MilitarySpellId.Type, MilitarySpellId.WallBuild);
 

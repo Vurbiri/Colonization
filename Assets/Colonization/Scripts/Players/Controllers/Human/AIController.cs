@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
                 yield return BuildPort(port).signal;
             }
 
-            GameContainer.GameLoop.EndLanding_Cn().Start();
+            GameContainer.GameLoop.EndLanding();
         }
 
         private IEnumerator OnInitFast_Cn()
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization
                 yield return null;
             }
 
-            GameContainer.GameLoop.EndLanding_Cn().Start();
+            GameContainer.GameLoop.EndLanding();
         }
 
     }

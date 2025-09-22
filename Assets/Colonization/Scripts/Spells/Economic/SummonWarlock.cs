@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
                 _max = GameContainer.Hexagons.GroundCount;
                 _half = _max - (_max >> 1);
                 _cost.Add(GameContainer.Prices.Warriors[WarriorId.Warlock]);
-                _strCost = _cost.MainPlusToString(COST_COUNT_LINE);
+                _strCost = _cost.MainPlusToString(SEPARATOR);
             }
 
             public static void Create() => new SummonWarlock(EconomicSpellId.Type, EconomicSpellId.SummonWarlock);

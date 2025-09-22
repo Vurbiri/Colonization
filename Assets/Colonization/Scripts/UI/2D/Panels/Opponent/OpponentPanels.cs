@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField, HideInInspector] private UnityEngine.UI.Image _mainImage;
 
-        public RectTransform UpdateVisuals_Editor(float pixelsPerUnit, ProjectColors colors, Vector2 padding)
+        public RectTransform UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors colors, Vector2 padding)
         {
             Color color = colors.PanelBack.SetAlpha(1f);
 

@@ -37,7 +37,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void Gift()
+        private void Gift()
         {
             int giver = PlayerId.AI_01;
             string text = Localization.Instance.GetText(giftMsg);
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
             GameContainer.Players.Person.Gift(giver, gift, sb.ToString());
         }
 
-        public void Spawn()
+        private void Spawn()
         {
             Debug.Log("Удалить Тесты в ArtefactPanel");
 

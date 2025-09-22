@@ -11,23 +11,10 @@ namespace Vurbiri.Colonization
         private readonly Array<HumanController> _humans = new(PlayerId.HumansCount);
         private readonly SatanController _satan;
 
-        public Human this[int id]
-        {
-            [Impl(256)] get => _humans[id];
-        }
-        public HumanController Person
-        {
-             [Impl(256)] get => _humans[PlayerId.Person];
-        }
-        public ReadOnlyArray<HumanController> Humans
-        {
-            [Impl(256)] get => _humans;
-        }
-
-        public SatanController Satan
-        {
-             [Impl(256)] get => _satan;
-        }
+        public Human this[int id] { [Impl(256)] get => _humans[id]; }
+        public HumanController Person { [Impl(256)] get => _humans[PlayerId.Person]; }
+        public ReadOnlyArray<HumanController> Humans { [Impl(256)] get => _humans;  }
+        public SatanController Satan { [Impl(256)] get => _satan; }
 
         public Players(Player.Settings settings, GameLoop game)
         {

@@ -29,8 +29,9 @@ namespace Vurbiri.Colonization
 
         public const int GATE_ID = 7;
         public static readonly int[] HEX_IDS = { 2, 3, 4, 5, 6, 8, 9, 10, 11, 12 };
-        
-        public const int DICE = 6;
+
+        public const int DICES_COUNT = 2;
+        public const int DICE_MAX = 6;
 
         public const float PI = Mathf.PI;
         public const float TAU = 2f * PI;

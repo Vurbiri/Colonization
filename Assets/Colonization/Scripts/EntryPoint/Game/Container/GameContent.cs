@@ -46,6 +46,7 @@ namespace Vurbiri.Colonization.EntryPoint
             storage = new(GameContainer.GameSettings.IsLoad);
             gameLoop = GameLoop.Create(storage);
             triggerBus = new();
+
             inputController = new(gameLoop, camera, input);
             cameraTransform = new(camera);
             cameraController = controller.Init(cameraTransform, triggerBus, inputController);

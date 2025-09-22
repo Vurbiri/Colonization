@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
         public void OnLanding()
         {
-            GameContainer.GameLoop.EndTurn_Cn().Start();
+            GameContainer.GameLoop.EndTurn();
         }
         public void OnEndLanding() { }
 
@@ -34,6 +34,8 @@ namespace Vurbiri.Colonization
 
             GameContainer.Balance.ForCurse(balance);
             _artefact.Next(countBuffs);
+
+            GameContainer.GameLoop.StartTurn();
         }
 
         public void OnProfit(Id<PlayerId> id, int hexId)

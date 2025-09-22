@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
             private Transmutation(int type, int id) : base(type, id) 
             {
                 _mana = _cost[Mana];
-                _strCost = COST_LINE.Concat(string.Format(TAG.CURRENCY, Mana, _mana));
+                _strCost = SEPARATOR.Concat(string.Format(TAG.CURRENCY, Mana, _mana));
             }
             public static void Create() => new Transmutation(EconomicSpellId.Type, EconomicSpellId.Transmutation);
             public override bool Prep(SpellParam param)

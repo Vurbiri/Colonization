@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public void OnValidate()
         {
             if (Application.isPlaying) return;
-            
+
             EUtility.SetObject(ref _mainCamera);
             EUtility.SetObject(ref _cameraController);
             EUtility.SetObject(ref _sharedContainer, "SharedContainer");

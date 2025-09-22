@@ -46,6 +46,8 @@ namespace Vurbiri.Colonization
 
             _resources.Add(profit);
             _artefact.Next(countBuffs);
+
+            GameContainer.GameLoop.StartTurn();
         }
 
         public void OnProfit(Id<PlayerId> id, int hexId)

@@ -15,11 +15,11 @@ namespace Vurbiri.Colonization.UI
 
         protected override void SetTextAndCost(Localization localization)
         {
-            _hintText = string.Concat(localization.GetFormatText(LangFiles.Gameplay, _key, _value), _cost);
+            _hintText = string.Concat(localization.GetFormatText(LangFiles.Abilities, _key, _value), _cost);
         }
         protected override void SetText(Localization localization)
         {
-            _hintText = localization.GetFormatText(LangFiles.Gameplay, _key, _value);
+            _hintText = localization.GetFormatText(LangFiles.Abilities, _key, _value);
         }
     }
 }

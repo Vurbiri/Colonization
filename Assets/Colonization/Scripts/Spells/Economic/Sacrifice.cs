@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
                 _cost.SetBlood(s_settings.sacrificeBloodCost);
                 _damage = new(s_settings.sacrificePierce);
 
-                _strCost = _cost.PlusToString(COST_COUNT_LINE);
+                _strCost = _cost.PlusToString(SEPARATOR);
             }
             public static void Create() => new Sacrifice(EconomicSpellId.Type, EconomicSpellId.Sacrifice);
 

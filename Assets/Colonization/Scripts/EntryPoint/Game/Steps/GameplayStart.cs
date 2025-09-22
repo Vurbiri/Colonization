@@ -15,8 +15,8 @@ namespace Vurbiri.Colonization.EntryPoint
             yield return null;
             GameContainer.GameSettings.Start();
             GameContainer.InputController.Enable();
-            
-            yield return GameContainer.GameLoop.Start_Cn();
+
+            GameContainer.GameLoop.Start();
         }
     }
 }

@@ -22,6 +22,8 @@ namespace Vurbiri.Colonization
         {
             for (int i = 0; i < PlayerId.Count; i++)
                 _players[i].OnProfit(turnQueue.currentId, hexId);
+
+            GameContainer.GameLoop.Play();
         }
     }
 }

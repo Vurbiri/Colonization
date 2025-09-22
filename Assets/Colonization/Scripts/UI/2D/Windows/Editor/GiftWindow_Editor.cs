@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, HideInInspector] private PlayerCurrencyWidget _playerPrefab;
         [EndEditor] public bool endEditor;
 
-        public void UpdateVisuals_Editor(float pixelsPerUnit, float pixelsPerUnitCenter, ProjectColors colors, RectTransform panel)
+        public void UpdateVisuals_Ed(float pixelsPerUnit, float pixelsPerUnitCenter, ProjectColors colors, RectTransform panel)
         {
             Color color = colors.PanelBack.SetAlpha(1f);
 

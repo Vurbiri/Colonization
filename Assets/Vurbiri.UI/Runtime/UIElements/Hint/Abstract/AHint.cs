@@ -112,7 +112,7 @@ namespace Vurbiri.UI
         }
 
 #if UNITY_EDITOR
-        public virtual void UpdateVisuals_Editor(Color backColor, Color textColor)
+        public virtual void UpdateVisuals_Ed(Color backColor, Color textColor)
         {
             SetColors(backColor, textColor);
 

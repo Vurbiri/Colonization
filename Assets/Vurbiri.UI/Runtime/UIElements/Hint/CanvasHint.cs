@@ -41,9 +41,9 @@ namespace Vurbiri.UI
         }
 
 #if UNITY_EDITOR
-        public override void UpdateVisuals_Editor(Color backColor, Color textColor)
+        public override void UpdateVisuals_Ed(Color backColor, Color textColor)
         {
-            base.UpdateVisuals_Editor(backColor, textColor);
+            base.UpdateVisuals_Ed(backColor, textColor);
 
             if (_canvasRectTransform != null && _canvasRectTransform != transform.parent)
                 transform.SetParent(_canvasRectTransform);

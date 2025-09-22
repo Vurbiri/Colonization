@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
 		[SerializeField] private FloatRnd _time;
 		
 		private readonly WaitRealtime _waitTime = new();
-		private readonly RandomSequence _roll = new(CONST.DICE);
+		private readonly RandomSequence _roll = new(CONST.DICE_MAX);
 
         private bool _isPlaying = false;
         private TextMeshProUGUI _label;

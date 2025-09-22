@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using Vurbiri.International;
+using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -10,22 +11,24 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Key(LangFiles.Gameplay)] private string _landingKey;
         [SerializeField, Key(LangFiles.Gameplay)] private string _startTurnKey;
         [Space]
-        [SerializeField, Range(5f, 15f)] private float _onSpeed = 9f;
-        [SerializeField, Range(0.1f, 1.5f)] private float _offSpeed = 0.9f;
-        [SerializeField, MinMax(1f, 5f)] private WaitRealtime _showTime = 2f;
+        [SerializeField, Range(5f, 15f)] private float _onSpeed; // = 9f;
+        [SerializeField, Range(0.1f, 1.5f)] private float _offSpeed; // = 0.9f;
+        [SerializeField, MinMax(1f, 5f)] private WaitRealtime _showTime; // = 2f;
 
+        private Unsubscription _unsubscription;
         private TextMeshProUGUI _label;
         private CanvasRenderer _renderer;
 
         private string _landingText, _startTurnText;
 
-        public void Init()
+        private void Start()
 		{
             _label = GetComponent<TextMeshProUGUI>();
             _renderer = _label.canvasRenderer;
             _renderer.SetAlpha(0f);
 
-            Localization.Instance.Subscribe(SetText);
+            _unsubscription = Localization.Instance.Subscribe(SetFullText);
+            GameContainer.GameEvents.Subscribe(GameModeId.StartTurn, ReInit);
         }
 
         public void Landing(int id)
@@ -65,10 +68,26 @@ namespace Vurbiri.Colonization.UI
             _renderer.SetAlpha(0f);
         }
 
-        private void SetText(Localization localization)
+        private void ReInit(TurnQueue turnQueue, int hexId)
+        {
+            GameContainer.GameEvents.Unsubscribe(GameModeId.StartTurn, ReInit);
+
+            _unsubscription ^= Localization.Instance.Subscribe(SetText);
+        }
+
+        private void SetFullText(Localization localization)
 		{
             _landingText = localization.GetText(LangFiles.Gameplay, _landingKey);
             _startTurnText = localization.GetText(LangFiles.Gameplay, _startTurnKey);
         }
-	}
+        private void SetText(Localization localization)
+        {
+            _startTurnText = localization.GetText(LangFiles.Gameplay, _startTurnKey);
+        }
+
+        private void OnDestroy()
+        {
+            _unsubscription?.Unsubscribe();
+        }
+    }
 }

@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.EntryPoint
             loading.Add(new GameplayStart());
 
             _contentInit.Dispose();
-            Destroy(this);
+            Destroy(gameObject);
 
             return new SceneExitPoint(_nextScene, container).EventExit;
         }
