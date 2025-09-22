@@ -16,10 +16,12 @@ namespace VurbiriEditor.Colonization
         private const int MIN_VALUE = 1, MAX_VALUE = 5;
         private const int MIN_LEVEL = 10, MAX_LEVEL = 100;
 
+        protected static readonly Vector2 s_minSize = new(450f, 450f);
+
         [SerializeField] private BuffsScriptable _scriptable;
 
         private Vector2 _scrollPos;
-        private bool _isSave;
+        private bool _isSave, _isFixedMaxLevel;
         private int _maxLevel;
         private readonly IdArray<ActorAbilityId, BuffSettings> _settings = new(() => new());
         private readonly IdArray<ActorAbilityId, AnimBool> _showSettings = new(() => new());
@@ -39,7 +41,13 @@ namespace VurbiriEditor.Colonization
             _isSave = false;
 
             if (_scriptable == null)
+            {
                 _scriptable = EUtility.FindAnyScriptable<BuffsScriptable>(scriptableName);
+                if (_scriptable == null)
+                    _scriptable = EUtility.CreateScriptable<BuffsScriptable>(scriptableName, "Assets/Colonization/Settings/Characteristics/Buffs/");
+                else
+                    Debug.LogWarning($"Set {scriptableName}");
+            }
 
             _maxLevel = _scriptable.MaxLevel;
 
@@ -65,6 +73,7 @@ namespace VurbiriEditor.Colonization
                 DrawSave();
 
                 _isSave |= DrawLevel();
+
                 for (int i = 0; i < ActorAbilityId.Count; i++)
                     _isSave |= DrawSettings(i, _settings[i], _showSettings[i]);
             }

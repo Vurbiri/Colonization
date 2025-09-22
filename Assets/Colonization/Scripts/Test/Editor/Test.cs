@@ -23,6 +23,7 @@ namespace Vurbiri.Colonization
             {
                 "Spawn",
                 "Gift",
+                "Artefact",
             });
             _dropdown.value = 0;
         }
@@ -33,8 +34,14 @@ namespace Vurbiri.Colonization
             {
                 case 0: Spawn(); break;
                 case 1: Gift(); break;
+                case 2: Artefact(); break;
                 default: return;
             }
+        }
+
+        private void Artefact()
+        {
+            GameContainer.Players.Person.Artefact.Next(Random.Range(90, 100));
         }
 
         private void Gift()

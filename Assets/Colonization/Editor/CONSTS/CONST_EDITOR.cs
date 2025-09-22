@@ -12,7 +12,7 @@ namespace VurbiriEditor.Colonization
         public const string MENU_AC_PATH = MENU_PATH + "Actors/";
 
         public const string MENU_PERKS_PATH = MENU_CH_PATH + "Perks/";
-        public const string MENU_BUFFS_PATH = MENU_CH_PATH + "Buffs/";
+        public const string MENU_SATAN_PATH = MENU_CH_PATH + "Satan/";
         public const int SPACE_WND = 8;
 
         public const string SETTINGS_PATH = "Assets/Colonization/Settings/";
@@ -22,7 +22,7 @@ namespace VurbiriEditor.Colonization
         public const int MENU_CR_ORDER = 12;
 
         public const int MENU_PERKS_ORDER = 13;
-        public const int MENU_BUFFS_ORDER = 14;
+        public const int MENU_SATAN_ORDER = 14;
         public const int MENU_CH_ORDER = 15;
 
         public const int MENU_GS_ORDER = 30;

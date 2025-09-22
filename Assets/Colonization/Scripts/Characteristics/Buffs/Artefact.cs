@@ -56,24 +56,25 @@ namespace Vurbiri.Colonization.Characteristics
         {
             count = System.Math.Min(count, _maxLevel - _level);
 
-            if (count <= 0) return;
-            
-            for (int i = 0; i < count; i++)
-                _add[_rIndex.Next()]++;
-
-            for (int i = 0, add; i < _count; i++)
+            if (count > 0)
             {
-                add = _add[i];
-                if (add > 0)
-                {
-                    _add[i] = 0;
-                    _buffs[i].Next(add);
-                    _levels[i] += add;
-                }
-            }
-            _level += count;
+                for (int i = 0; i < count; i++)
+                    _add[_rIndex.Next()]++;
 
-            _changeLevels.Invoke(this);
+                for (int i = 0, add; i < _count; i++)
+                {
+                    add = _add[i];
+                    if (add > 0)
+                    {
+                        _add[i] = 0;
+                        _buffs[i].Next(add);
+                        _levels[i] += add;
+                    }
+                }
+                _level += count;
+
+                _changeLevels.Invoke(this);
+            }
         }
 
         public Unsubscription Subscribe(System.Action<Artefact> action, bool instantGetValue = true)

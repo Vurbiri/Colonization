@@ -2,43 +2,41 @@ using System;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class Satan : Player, IReactive<Satan>
     {
-        protected readonly RInt _level;
-        protected readonly RInt _curse;
-        
-        protected readonly SatanAbilities _settings;
-
-        protected readonly DemonLeveling _leveling;
+        protected readonly SatanAbilities _parameters;
+        protected readonly SatanLeveling _leveling;
         protected readonly Artefact _artefact;
 
         protected readonly DemonsSpawner _spawner;
 
         protected readonly Subscription<Satan> _eventChanged = new();
 
+        protected int _curse, _maxCurse;
 
-        public IReactiveValue<int> Level => _level;
-        public IReactiveValue<int> Curse => _curse;
-
-        public int MaxCurse => _settings.maxCurse + _level * _settings.maxCursePerLevel;
+        public int Level { [Impl(256)] get => _leveling.Level; }
+        public int MaxLevel { [Impl(256)] get => _leveling.MaxLevel; }
+        public int Curse { [Impl(256)] get => _curse; }
+        public int MaxCurse { [Impl(256)] get => _maxCurse; }
 
         protected Satan(Settings settings) : base(PlayerId.Satan)
         {
             var storage = GameContainer.Storage.Satan;
-            _settings = SettingsFile.Load<SatanAbilities>();
+            _parameters = SettingsFile.Load<SatanAbilities>();
 
             var loadData = storage.LoadData;
 
-            _level = new(loadData.state.level);
-            _curse = new(loadData.state.curse);
+            _curse = loadData.state.curse;
+            _maxCurse = _parameters.maxCurseBase + loadData.state.level * _parameters.maxCursePerLevel;
 
-            _leveling = new(settings.demonLeveling, _level);
+            _leveling = new(settings.satanLeveling, loadData.state.level);
             _artefact = Artefact.Create(settings.artefact, loadData);
 
-            _spawner = new(_level, new(PlayerId.Satan, _leveling, _artefact), GameContainer.Hexagons[Key.Zero], loadData.state.spawn);
+            _spawner = new(new(PlayerId.Satan, _leveling, _artefact), GameContainer.Hexagons[Key.Zero], loadData.state.spawn);
 
             for (int i = loadData.actors.Count - 1; i >= 0; i--)
                 _spawner.Load(loadData.actors[i]);
@@ -51,18 +49,13 @@ namespace Vurbiri.Colonization
 
         public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);
 
-        protected void AddCurse(int value)
+        [Impl(256)] protected void LevelUp()
         {
-            _curse.Add(value);
+            if(_leveling.Next())
+                _maxCurse = _parameters.maxCurseBase + _leveling.Level * _parameters.maxCursePerLevel;
 
-            int maxCurse = MaxCurse;
-            if (_curse >= maxCurse)
-            {
-                _curse.Remove(maxCurse);
-                _level.Increment();
-            }
-
-            _eventChanged.Invoke(this);
+            _curse -= _maxCurse;
+            _spawner.AddPotential(Math.Min(_parameters.maxPotentialPerLvl, _leveling.Level));
         }
     }
 }

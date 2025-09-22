@@ -41,7 +41,6 @@ namespace Vurbiri.Colonization.UI
                 _timers.Push(new(_showDuration));
             }
 
-
             _unsubscribers += Localization.Instance.Subscribe(SetLocalizationText);
             _unsubscribers += person.Artefact.Subscribe(SetHintValues);
 
@@ -146,10 +145,11 @@ namespace Vurbiri.Colonization.UI
 
             public void SetHintValue(int level, StringBuilder stringBuilder)
             {
-                _level = level;
-                _levelTMP.text = _level.ToString();
+                var strLevel = CONST.NUMBERS_STR[level];
 
-                stringBuilder.AppendFormat(_hintText, level);
+                _level = level;
+                _levelTMP.text = strLevel;
+                stringBuilder.AppendFormat(_hintText, strLevel);
             }
 
 #if UNITY_EDITOR
@@ -165,11 +165,10 @@ namespace Vurbiri.Colonization.UI
         [Serializable]
         private struct Ability
         {
-            private const string VALUE = "{0,3:+#;;0}%";
-
             [SerializeField] private TextMeshProUGUI _valueTMP;
             [SerializeField] private TextMeshProUGUI _valueDeltaTMP;
             [SerializeField] private string _hintKey;
+            [SerializeField] private string _textFormat;
             [SerializeField] private int _baseValue;
 
             private ArtefactPanel _parent;
@@ -186,7 +185,7 @@ namespace Vurbiri.Colonization.UI
             {
                 StringBuilder stringBuilder = new(18);
                 stringBuilder.AppendFormat(NAME, localization.GetText(LangFiles.Actors, _hintKey));
-                stringBuilder.Append(VALUE);
+                stringBuilder.Append(_textFormat);
 
                 _hintText = stringBuilder.ToString();
 
@@ -197,7 +196,8 @@ namespace Vurbiri.Colonization.UI
             public void SetHintValue(int level, StringBuilder stringBuilder)
             {
                 int newValue = level * _baseValue;
-                _valueTMP.text = newValue.ToString();
+                
+                _valueTMP.text = CONST.NUMBERS_STR[newValue];
 
                 stringBuilder.AppendFormat(_hintText, newValue);
                 stringBuilder.AppendLine();
@@ -209,6 +209,8 @@ namespace Vurbiri.Colonization.UI
 #if UNITY_EDITOR
             public void Init_Editor(BuffSettings settings, Component parent, ProjectColors colors)
             {
+                _textFormat = "{0,3:+#;;0}" + (settings.typeModifier == TypeModifierId.Addition ? "\u0019" : "%");
+
                 _hintKey = ActorAbilityId.Names_Ed[settings.targetAbility];
                 _baseValue = settings.value;
                 if (settings.typeModifier == TypeModifierId.Addition && settings.targetAbility <= ActorAbilityId.MAX_ID_SHIFT_ABILITY)

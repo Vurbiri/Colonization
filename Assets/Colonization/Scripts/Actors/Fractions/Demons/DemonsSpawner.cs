@@ -1,7 +1,6 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
-using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -12,15 +11,13 @@ namespace Vurbiri.Colonization.Actors
 
         private int _potential;
 
-        public int Potential => _potential;
+        public int Potential { [Impl(256)] get => _potential; }
 
-        public DemonsSpawner(IReactiveValue<int> level, ActorInitData initData, Hexagon startHex, int potential)
+        public DemonsSpawner(ActorInitData initData, Hexagon startHex, int potential)
         {
             _initData = initData;
             _startHex = startHex;
             _potential = potential;
-
-            level.Subscribe(value => _potential += value, false);
         }
 
         public bool TryCreate(out Actor demon)
@@ -40,7 +37,8 @@ namespace Vurbiri.Colonization.Actors
             return true;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Actor Load(ActorLoadData loadData) => GameContainer.Actors.Load(ActorTypeId.Demon, _initData, loadData);
+        [Impl(256)] public Actor Load(ActorLoadData loadData) => GameContainer.Actors.Load(ActorTypeId.Demon, _initData, loadData);
+
+        [Impl(256)] public void AddPotential(int potential) => _potential += potential;
     }
 }

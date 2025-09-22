@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
 
         public override void OnPlay()
         {
-
+            GameContainer.GameLoop.EndTurn();
         }
 
         public override void OnEndTurn()

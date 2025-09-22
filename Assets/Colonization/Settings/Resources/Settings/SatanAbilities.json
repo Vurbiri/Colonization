@@ -1,7 +1,9 @@
 {
+  "maxLevel": 50,
   "gateDefense": 4,
-  "maxCurse": 1000,
-  "maxCursePerLevel": 50,
+  "maxCurseBase": 1000,
+  "maxCursePerLevel": 20,
   "cursePerTurnBase": 100,
-  "cursePerTurnReward": 200
+  "cursePerTurnReward": 200,
+  "maxPotentialPerLvl": 20
 }

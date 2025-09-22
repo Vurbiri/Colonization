@@ -43,24 +43,20 @@ namespace Vurbiri.Colonization
             int progress;
             if (hexId == CONST.GATE_ID)
             {
-                progress = _settings.cursePerTurnReward;
+                progress = _parameters.cursePerTurnReward;
             }
             else
             {
                 if (hexId > CONST.GATE_ID)
                     hexId = (CONST.GATE_ID << 1) - hexId;
 
-                progress = _settings.cursePerTurnBase * hexId / CONST.GATE_ID;
+                progress = _parameters.cursePerTurnBase * hexId / CONST.GATE_ID;
             }
 
-            _curse.Add(progress);
+            _curse += progress;
 
-            int maxCurse = MaxCurse;
-            if (_curse >= maxCurse)
-            {
-                _curse.Remove(maxCurse);
-                _level.Increment();
-            }
+            if (_curse >= _maxCurse)
+                LevelUp();
 
             _eventChanged.Invoke(this);
         }
@@ -68,13 +64,12 @@ namespace Vurbiri.Colonization
         public void OnStartTurn()
         {
             foreach (var demon in Actors)
-                demon.EffectsUpdate(_settings.gateDefense);
+                demon.EffectsUpdate(_parameters.gateDefense);
         }
 
         public void OnPlay()
         {
-
+            GameContainer.GameLoop.EndTurn();
         }
-
     }
 }

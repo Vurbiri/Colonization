@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             protected override void WriteJson(JsonWriter writer, Satan satan, JsonSerializer serializer)
             {
                 writer.WriteStartArray();
-                writer.WriteValue(satan._level);
+                writer.WriteValue(satan._leveling.Level);
                 writer.WriteValue(satan._curse);
                 writer.WriteValue(satan._spawner.Potential);
                 writer.WriteEndArray();
