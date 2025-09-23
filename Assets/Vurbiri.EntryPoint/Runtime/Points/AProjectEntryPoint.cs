@@ -1,42 +1,56 @@
-using System;
 using UnityEngine;
 
 namespace Vurbiri.EntryPoint
 {
-    public abstract class AProjectEntryPoint : AClosedSingleton<AProjectEntryPoint>
+    public abstract class AProjectEntryPoint : MonoBehaviour
     {
+        protected static AProjectEntryPoint s_instance;
+
         [SerializeField] private LoadScene _emptyScene;
 
-        private AEnterParam _currentEnterParam;
-        private IDisposable _container;
+        private IContainer _container;
         protected Loading _loading;
 
         protected abstract string LoadingDesc { get; }
 
-        protected void Init(IDisposable container, ILoadingScreen screen)
+        private void Awake()
+        {
+            if (s_instance == null)
+            {
+                s_instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        protected void Init(IContainer container, ILoadingScreen screen, IEnterParam enterParam = null)
         {
             _container = container;
             _loading = Loading.Create(this, screen);
+            Transition.Create(LoadScene, enterParam);
             ASceneEntryPoint.EventLoaded.Add(EnterScene);
         }
 
-        private void LoadScene(ExitParam param)
+        private void LoadScene(int nextScene)
         {
-            _currentEnterParam = param.EnterParam;
-            _loading.Add(_emptyScene.Load(), new LoadSceneStep(param.NextScene, LoadingDesc));
+            _loading.Add(_emptyScene.Load(), new LoadSceneStep(nextScene, LoadingDesc));
         }
 
         private void EnterScene(ASceneEntryPoint sceneEntryPoint)
         {
-            sceneEntryPoint.Enter(_loading, _currentEnterParam).Add(LoadScene);
+            sceneEntryPoint.Enter(_loading, Transition.Instance);
         }
 
-        protected override void OnDestroy()
+        private void OnDestroy()
         {
             if (s_instance == this)
+            {
                 _container.Dispose();
-
-            base.OnDestroy();
+                s_instance = null;
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
@@ -9,7 +9,9 @@ namespace Vurbiri
         protected readonly int _count;
         protected int _cursor = 0;
 
-        public int this[int index] => _ids[index];
+        public int this[int index] { [Impl(256)] get => _ids[index]; }
+
+        public int Count { [Impl(256)] get => _count; }
 
         public int Next
         {
@@ -54,7 +56,7 @@ namespace Vurbiri
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Impl(256)]
         public void Shuffle()
         {
             _cursor = 0;

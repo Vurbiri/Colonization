@@ -8,7 +8,7 @@ namespace Vurbiri.EntryPoint
         private static ASceneEntryPoint s_instance;
         private static readonly Subscription<ASceneEntryPoint> s_sceneLoaded = new();
 
-        public static ISubscription<ASceneEntryPoint> EventLoaded => s_sceneLoaded;
+        public static Event<ASceneEntryPoint> EventLoaded => s_sceneLoaded;
 
         private void Awake()
         {
@@ -23,9 +23,9 @@ namespace Vurbiri.EntryPoint
             }
         }
 
-        public abstract ISubscription<ExitParam> Enter(Loading loading, AEnterParam param);
+        public abstract void Enter(Loading loading, Transition transition);
 
-        protected virtual void OnDestroy()
+        private void OnDestroy()
         {
             if (s_instance == this)
                 s_instance = null;

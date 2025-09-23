@@ -34,7 +34,7 @@ namespace Vurbiri
 
             if (instances.Length > 1)
             {
-                s_instance = instances[0];
+                s_instance = instances[^1];
                 System.Text.StringBuilder sb = new();
                 sb.AppendLine($"<color=orange><b>[Singleton]</b> Number of objects type <b>{typeof(T).Name}</b> = <b>{instances.Length}</b></color>");
                 foreach (T instance in instances)

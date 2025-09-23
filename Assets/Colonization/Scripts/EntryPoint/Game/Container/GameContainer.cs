@@ -48,9 +48,16 @@ namespace Vurbiri.Colonization
             public static ReadOnlyIdArray<ActorAbilityId, Sprite> SpritesOfAbilities    { [Impl(256)] get => s_content.abilities; }
  
             public static Pool<EffectsBar> EffectsBar   { [Impl(256)] get => s_content.poolEffectsBar; }
-         }
+        }
 
-        public GameContainer(GameContent content) => s_content ??= content;
+        public GameContainer(GameContent content) => s_content = content;
+        public GameContainer(GameContent content, bool isLoad)
+        {
+            s_content = content;
+            GameSettings.IsLoad = isLoad;
+            UnityEngine.Debug.Log("[GameContainer] Удалить этот конструктор");
+        }
+
         public override void Dispose()
         {
             s_content.Dispose();

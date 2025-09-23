@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization.UI
         private int _countButtonsSkill;
         private Actor _currentWarrior;
 
-        public ISubscription<IMenu, bool> Init()
+        public Event<IMenu, bool> Init()
         {
             _buttonClose.Init(Close);
 

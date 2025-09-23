@@ -7,9 +7,9 @@ namespace Vurbiri.Colonization.UI
 	public class Dice : MonoBehaviour
 	{
 		[SerializeField] private FloatRnd _time;
-		
+
 		private readonly WaitRealtime _waitTime = new();
-		private readonly RandomSequence _roll = new(CONST.DICE_MAX);
+		private RandomSequence _roll;
 
         private bool _isPlaying = false;
         private TextMeshProUGUI _label;
@@ -18,6 +18,7 @@ namespace Vurbiri.Colonization.UI
         public void Init()
         {
             _label = GetComponentInChildren<TextMeshProUGUI>();
+			_roll = new(CONST.DICE);
         }
 
         public void Run()
@@ -30,7 +31,7 @@ namespace Vurbiri.Colonization.UI
 			{
 				while (_isPlaying)
 				{
-					_current = _roll.Next + 1;
+					_current = _roll.Next;
 					_label.text = CONST.NUMBERS_STR[_current];
 					yield return _waitTime.Restart(_time);
 				}

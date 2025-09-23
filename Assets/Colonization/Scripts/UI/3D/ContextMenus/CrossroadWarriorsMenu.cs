@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.UI
 
         private CrossroadMainMenu _mainMenu;
 
-        public ISubscription<IMenu, bool> Init(CrossroadMainMenu mainMenu)
+        public Event<IMenu, bool> Init(CrossroadMainMenu mainMenu)
         {
             var warriorPrices = GameContainer.Prices.Warriors;
             _mainMenu = mainMenu;

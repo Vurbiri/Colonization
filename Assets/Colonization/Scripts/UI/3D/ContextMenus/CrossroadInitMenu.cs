@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
         private Crossroad _currentCrossroad;
         private bool _endInit = false;
 
-        public ISubscription<IMenu, bool> Init()
+        public Event<IMenu, bool> Init()
         {
             _buttonClose.Init(Close);
             _buttonInit.Init(OnUpgrade);

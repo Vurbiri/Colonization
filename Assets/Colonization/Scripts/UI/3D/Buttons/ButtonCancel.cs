@@ -1,6 +1,5 @@
 using Vurbiri.International;
 using Vurbiri.Reactive;
-using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -11,7 +10,7 @@ namespace Vurbiri.Colonization.UI
 
         private readonly Subscription<IMenu, bool> _subscriber = new();
 
-        public ISubscription<IMenu, bool> Init()
+        public Event<IMenu, bool> Init()
         {
             base.InternalInit(GameContainer.UI.WorldHint, OnClick, false);
             _unLanguage = Localization.Instance.Subscribe(SetText);

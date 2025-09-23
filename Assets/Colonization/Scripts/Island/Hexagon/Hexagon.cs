@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
+using Vurbiri.EntryPoint;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
@@ -86,18 +86,11 @@ namespace Vurbiri.Colonization
             }
         }
 
-        #region static Init
         public static void Init(Pool<HexagonMark> poolMarks)
         {
             s_poolMarks = poolMarks;
-            SceneManager.sceneUnloaded += Clear;
+            Transition.OnExit.Add(() => s_poolMarks = null);
         }
-        private static void Clear(Scene scene)
-        {
-            s_poolMarks = null;
-            SceneManager.sceneUnloaded -= Clear;
-        }
-        #endregion
 
         public void AddNeighborAndCreateCrossroadLink(Hexagon neighbor)
         {

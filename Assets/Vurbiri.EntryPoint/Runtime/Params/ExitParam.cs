@@ -3,12 +3,12 @@ namespace Vurbiri.EntryPoint
     public class ExitParam
     {
         private readonly int _nextScene;
-        private readonly AEnterParam _enterParam;
+        private readonly IEnterParam _enterParam;
 
         public int NextScene => _nextScene;
-        public AEnterParam EnterParam => _enterParam;
+        public IEnterParam EnterParam => _enterParam;
 
-        public ExitParam(int nextScene, AEnterParam enterParam = null)
+        public ExitParam(int nextScene, IEnterParam enterParam = null)
         {
             _nextScene = nextScene;
             _enterParam = enterParam;

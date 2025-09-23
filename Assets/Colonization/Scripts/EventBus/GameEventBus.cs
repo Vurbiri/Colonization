@@ -13,12 +13,12 @@ namespace Vurbiri.Colonization
 
         protected readonly Subscription<bool> _hexagonShow = new();
 
-        public ISubscription<Hexagon> EventHexagonSelect => _hexagonSelect;
-        public ISubscription<Crossroad> EventCrossroadSelect => _crossroadSelect;
-        public ISubscription<Actor> EventActorSelect => _actorSelect;
-        public ISubscription<Id<PlayerId>, Id<ActorTypeId>, int> EventActorKill => _actorKill;
-        public ISubscription<bool> EventUnselect => _unselect;
+        public Event<Hexagon> EventHexagonSelect => _hexagonSelect;
+        public Event<Crossroad> EventCrossroadSelect => _crossroadSelect;
+        public Event<Actor> EventActorSelect => _actorSelect;
+        public Event<Id<PlayerId>, Id<ActorTypeId>, int> EventActorKill => _actorKill;
+        public Event<bool> EventUnselect => _unselect;
 
-        public ISubscription<bool> EventHexagonShow => _hexagonShow;
+        public Event<bool> EventHexagonShow => _hexagonShow;
     }
 }

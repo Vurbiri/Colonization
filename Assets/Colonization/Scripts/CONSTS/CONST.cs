@@ -32,6 +32,7 @@ namespace Vurbiri.Colonization
 
         public const int DICES_COUNT = 2;
         public const int DICE_MAX = 6;
+        public static readonly int[] DICE = { 1, 1, 2, 3, 4, 5, 6, 6 };
 
         public const float PI = Mathf.PI;
         public const float TAU = 2f * PI;

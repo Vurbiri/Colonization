@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
         private CrossroadRoadsMenu _roadsMenu;
         private CrossroadWarriorsMenu _warriorsMenu;
 
-        public ISubscription<IMenu, bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu)
+        public Event<IMenu, bool> Init(CrossroadRoadsMenu roadsMenu, CrossroadWarriorsMenu warriorsMenu)
         {
             _roadsMenu = roadsMenu;
             _warriorsMenu = warriorsMenu;

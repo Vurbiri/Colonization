@@ -1,6 +1,5 @@
 using System.Collections;
 using Vurbiri.EntryPoint;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -8,18 +7,17 @@ namespace Vurbiri.Colonization.EntryPoint
     {
         [UnityEngine.SerializeField] private SceneId _nextScene;
 
-        public override ISubscription<ExitParam> Enter(Loading loading, AEnterParam param)
+        public override void Enter(Loading loading, Transition transition)
         {
-            var container = new MenuContainer(new());
+            transition.Setup(_nextScene, new MenuContainer(new()));
             print("MainMenu Enter");
             loading.Add(Exit_Cn());
-            return new SceneExitPoint(_nextScene, container).EventExit;
         }
 
         private IEnumerator Exit_Cn()
         {
             yield return new WaitRealtime(.5f);
-            SceneExitPoint.Exit();
+            Transition.Exit();
             print("MainMenu Exit");
         }
     }

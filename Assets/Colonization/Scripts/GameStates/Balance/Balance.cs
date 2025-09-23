@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
         private readonly Subscription<Winner> _eventGameOver = new();
 
         public int Value => _value;
-        public ISubscription<Winner> OnGameOver => _eventGameOver;
+        public Event<Winner> OnGameOver => _eventGameOver;
 
         public Balance(GameStorage storage, GameLoop gameLoop, ActorsFactory actorsFactory)
         {

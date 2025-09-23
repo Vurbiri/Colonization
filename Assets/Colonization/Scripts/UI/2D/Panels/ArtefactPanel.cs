@@ -232,8 +232,8 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
 
-        [StartEditor]
-        [SerializeField] private BuffsScriptable _settings;
+        //[StartEditor]
+        [SerializeField, HideInInspector] private BuffsScriptable _settings;
 
         public RectTransform UpdateVisuals_Editor(float side, ProjectColors colors)
         {

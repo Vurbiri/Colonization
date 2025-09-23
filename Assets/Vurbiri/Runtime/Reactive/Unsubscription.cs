@@ -13,6 +13,10 @@ namespace Vurbiri.Reactive
         }
     }
 
+    public interface IUnsubscribed<in TDelegate> where TDelegate : Delegate
+    {
+        public void Remove(TDelegate action);
+    }
 
     sealed internal class Unsubscription<TDelegate> : Unsubscription where TDelegate : Delegate
     {

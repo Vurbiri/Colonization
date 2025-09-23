@@ -1,7 +1,6 @@
 using UnityEngine;
 using Vurbiri.EntryPoint;
 using Vurbiri.International;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.EntryPoint
 {
@@ -21,11 +20,10 @@ namespace Vurbiri.Colonization.EntryPoint
         [Header("══════ TEST ══════")]
         [SerializeField] private bool _isLoad;
 
-        public override ISubscription<ExitParam> Enter(Loading loading, AEnterParam param)
+        public override void Enter(Loading loading, Transition transition)
         {
             GameContent content = new();
-            GameContainer container = new(content);
-            GameContainer.GameSettings.IsLoad = _isLoad;
+            transition.Setup(_nextScene, new GameContainer(content, _isLoad));
 
             Localization.Instance.SetFiles(_localizationFiles);
 
@@ -39,10 +37,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             _contentInit.Dispose();
             Destroy(gameObject);
-
-            return new SceneExitPoint(_nextScene, container).EventExit;
         }
-
 
 #if UNITY_EDITOR
         private void OnValidate()

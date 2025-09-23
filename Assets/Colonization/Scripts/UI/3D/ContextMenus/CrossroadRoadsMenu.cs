@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
         private CrossroadMainMenu _mainMen;
         private Crossroad _currentCrossroad;
 
-        public ISubscription<IMenu, bool> Init(CrossroadMainMenu mainMenu)
+        public Event<IMenu, bool> Init(CrossroadMainMenu mainMenu)
         {
             _mainMen = mainMenu;
             _thisTransform = GetComponent<RectTransform>();
