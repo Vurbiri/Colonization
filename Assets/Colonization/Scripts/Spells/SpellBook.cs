@@ -1,5 +1,5 @@
-using UnityEngine.SceneManagement;
 using Vurbiri.Collections;
+using Vurbiri.EntryPoint;
 using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -50,10 +50,10 @@ namespace Vurbiri.Colonization
             Order.Create(); RandomHealing.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); Transmutation.Create(); Sacrifice.Create();
             BloodTrade.Create(); Spying.Create(); WallBuild.Create(); Marauding.Create(); RoadDemolition.Create(); SwapId.Create(); Zeal.Create();
 
-            SceneManager.sceneUnloaded += Clear;
+            Transition.OnExit.Add(Clear);
         }
 
-        private static void Clear(Scene scene)
+        private static void Clear()
         {
             s_isCast.UnsubscribeAll(); s_isCast.SilentValue = false;
 
@@ -62,8 +62,6 @@ namespace Vurbiri.Colonization
                 s_economicSpells[i].Clear(EconomicSpellId.Type, i);
                 s_militarySpells[i].Clear(MilitarySpellId.Type, i);
             }
-
-            SceneManager.sceneUnloaded -= Clear;
         }
     }
 

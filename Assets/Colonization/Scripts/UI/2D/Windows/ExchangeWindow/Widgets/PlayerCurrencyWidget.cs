@@ -21,6 +21,6 @@ namespace Vurbiri.Colonization.UI
             a_changeCount?.Invoke(_id.Value, value);
         }
 
-        private void OnDestroy() => _unsubscriber?.Unsubscribe();
+        private void OnDestroy() => _unsubscriber?.Dispose();
     }
 }

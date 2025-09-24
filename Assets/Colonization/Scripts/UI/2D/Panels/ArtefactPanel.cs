@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private Level _level;
 
         private string _name;
-        private Unsubscriptions _unsubscribers = new();
+        private Unsubscription _unsubscribers;
         private readonly Stack<WaitRealtime> _timers = new(4);
 
         public void Init()
@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Dispose()
         {
-            _unsubscribers.Unsubscribe();
+            _unsubscribers?.Dispose();
         }
 
         private void ShowProfit(TextMeshProUGUI tmp, int profit)

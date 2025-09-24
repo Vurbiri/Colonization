@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Storage
     public abstract class AStorage : IDisposable
     {
         protected readonly IStorageService _storage;
-        protected Unsubscriptions _unsubscribers = new();
+        protected Unsubscription _unsubscribers;
 
         protected AStorage(IStorageService storage)
         {
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.Storage
 
         public virtual void Dispose()
         {
-            _unsubscribers.Unsubscribe();
+            _unsubscribers?.Dispose();
         }
     }
 }

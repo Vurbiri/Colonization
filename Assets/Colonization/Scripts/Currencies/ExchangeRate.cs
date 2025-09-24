@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
     {
         private readonly CurrenciesLite _exchange;
         private readonly Subscription<ACurrencies> _changeValue = new();
-        private Unsubscriptions _unsubscribers = new();
+        private Unsubscription _unsubscribers;
         private Chance _chance;
         private int _rate;
 
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            _unsubscribers.Unsubscribe();
+            _unsubscribers?.Dispose();
         }
 
         private void SubscribeToAbilities(ReadOnlyAbilities<HumanAbilityId> abilities)

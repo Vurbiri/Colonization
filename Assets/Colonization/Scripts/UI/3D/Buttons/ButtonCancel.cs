@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Setup(ICancel cancelledObj)
         {
-            _unAction?.Unsubscribe();
+            _unAction?.Dispose();
 
             _cancelledObj = cancelledObj;
             _unAction = _cancelledObj.CanCancel.Subscribe(_thisGameObject.SetActive);
@@ -29,14 +29,14 @@ namespace Vurbiri.Colonization.UI
         public void CloseInstant()
         {
             _thisGameObject.SetActive(false);
-            _unAction?.Unsubscribe();
+            _unAction?.Dispose();
             _cancelledObj = null;
         }
 
         private void OnClick()
         {
             _thisGameObject.SetActive(false);
-            _unAction?.Unsubscribe();
+            _unAction?.Dispose();
             _cancelledObj?.Cancel();
             _cancelledObj = null;
         }
@@ -56,8 +56,8 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _unLanguage?.Unsubscribe();
-            _unAction?.Unsubscribe();
+            _unLanguage?.Dispose();
+            _unAction?.Dispose();
         }
     }
 }

@@ -87,7 +87,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            _unsubscription?.Unsubscribe();
+            _unsubscription?.Dispose();
         }
     }
 }

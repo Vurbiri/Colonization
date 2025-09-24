@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.Actors.UI
             _unsubscriber = abilities[ActorAbilityId.IsMove].Subscribe(SetMove);
         }
 
-        public void Dispose() => _unsubscriber.Unsubscribe();
+        public void Dispose() => _unsubscriber.Dispose();
         
         private void SetMove(int value) => _moveSprite.enabled = value > 0;
     }

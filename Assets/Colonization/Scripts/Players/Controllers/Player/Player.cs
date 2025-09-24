@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
         protected readonly int _id;
         protected readonly bool _isPerson;
         protected readonly RBool _interactable = new(false);
-        protected readonly Unsubscriptions _subscriptions = new();
+        protected Unsubscription _unsubscriber;
 
         public int Id => _id;
         public ReadOnlyReactiveSet<Actor> Actors => GameContainer.Actors[_id];
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
 
         public virtual void Dispose()
         {
-            _subscriptions.Unsubscribe();
+            _unsubscriber?.Dispose();
         }
 
         #region Nested: Settings

@@ -16,10 +16,6 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private GameContentInit _contentInit;
         [SerializeField] private Player.Settings _playerSettings;
 
-        [Space]
-        [Header("══════ TEST ══════")]
-        [SerializeField] private bool _isLoad;
-
         public override void Enter(Loading loading, Transition transition)
         {
             GameContent content = new();
@@ -40,6 +36,11 @@ namespace Vurbiri.Colonization.EntryPoint
         }
 
 #if UNITY_EDITOR
+
+        [Space]
+        [Header("══════ TEST ══════")]
+        [SerializeField] private bool _isLoad;
+
         private void OnValidate()
         {
             EUtility.SetObject(ref _islandCreator);

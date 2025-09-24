@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
                 a_changeCount(_count);
         }
 
-        private void OnDestroy() => _unsubscriber?.Unsubscribe();
+        private void OnDestroy() => _unsubscriber?.Dispose();
 
 #if UNITY_EDITOR
         [SerializeField, HideInInspector] private int _oldId = -1;

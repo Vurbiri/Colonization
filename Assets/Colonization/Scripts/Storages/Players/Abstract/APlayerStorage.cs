@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Storage
         protected readonly IStorageService _storage;
         protected readonly string _strId;
         protected readonly string _keyArtefact;
-        protected Unsubscriptions _unsubscribers = new();
+        protected Unsubscription _unsubscribers;
 
         public APlayerStorage(int id, IStorageService storage, int countActors)
         {
@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization.Storage
 
         public void Dispose()
         {
-            _unsubscribers.Unsubscribe();
+            _unsubscribers?.Dispose();
         }
 
         protected List<ActorLoadData> InitActors(int max, bool isLoad)

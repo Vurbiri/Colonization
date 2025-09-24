@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] protected FileIdAndKey _getText;
 
-        protected Unsubscriptions _unsubscribers;
+        protected Unsubscription _unsubscribers;
 
         protected void Init()
         {
@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
 
         protected virtual void OnDestroy()
         {
-            _unsubscribers?.Unsubscribe();
+            _unsubscribers?.Dispose();
         }
 
         protected abstract void SetLocalizationText(Localization localization);

@@ -53,9 +53,9 @@ namespace Vurbiri.Colonization.Actors
             for (int i = 0; i < PlayerId.Count; i++)
                 _actors[i].Dispose();
 
-            for (int i = 0; i < ActorTypeId.Count; i++)
-                for (int j = _settings[i].Length; j >= 0; j--)
-                    _settings[i][j].Dispose();
+            for (int a = 0; a < ActorTypeId.Count; a++)
+                for (int j = _settings[a].Length - 1; j >= 0; j--)
+                    _settings[a][j].Dispose();
         }
 
         #region Nested Settings

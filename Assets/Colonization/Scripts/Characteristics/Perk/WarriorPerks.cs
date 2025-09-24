@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Characteristics
 
         public void Dispose()
         {
-            _unsubscriber.Unsubscribe();
+            _unsubscriber.Dispose();
         }
 
         private void OnPerks(Perk perk)

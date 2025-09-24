@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Actors.UI
         private int Duration { [Impl(256)] set => _durationTMP.text = new(CHAR, value); }
         private int Index { [Impl(256)] set => _transform.localPosition = _settings.GetPosition(value); }
 
-        private Unsubscriptions _unsubscribers;
+        private Unsubscription _unsubscribers;
 
         public EffectsBar(Component initObj, Settings settings, Action<EffectsBar, bool> callback) : base(initObj.gameObject, callback)
         {
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.Actors.UI
 
         [Impl(256)] private void Destroy()
         {
-            _unsubscribers?.Unsubscribe();
+            _unsubscribers?.Dispose();
             ToPool();
         }
 

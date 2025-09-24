@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Vurbiri.Collections;
+using Vurbiri.EntryPoint;
 using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 using Object = UnityEngine.Object;
@@ -60,18 +60,11 @@ namespace Vurbiri.Colonization
             _edifice.Selectable = this;
         }
 
-        #region static Init
         [Impl(256)] public static void Init(IdSet<EdificeId, AEdifice> prefabs)
         {
             s_prefabs = prefabs;
-            SceneManager.sceneUnloaded += Clear;
+            Transition.OnExit.Add(() => s_prefabs = null);
         }
-        private static void Clear(Scene scene)
-        {
-            s_prefabs = null;
-            SceneManager.sceneUnloaded -= Clear;
-        }
-        #endregion
 
         #region IInteractable
         public Vector3 Position { [Impl(256)] get; }

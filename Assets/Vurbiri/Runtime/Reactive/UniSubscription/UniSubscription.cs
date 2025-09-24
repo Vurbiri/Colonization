@@ -19,8 +19,8 @@ namespace Vurbiri.Reactive
             {
                 if (_listeners[i].TryCreateDelegate(out Action action))
                 {
-                    a_delegate -= action;
-                    a_delegate += action;
+                    _action -= action;
+                    _action += action;
                 }
             }
 
@@ -45,8 +45,8 @@ namespace Vurbiri.Reactive
                 if (_listeners[i].TryCreateDelegate(out Action<T> action))
                 {
                     action(value);
-                    a_delegate -= action;
-                    a_delegate += action;
+                    _action -= action;
+                    _action += action;
                 }
             }
 
@@ -71,7 +71,7 @@ namespace Vurbiri.Reactive
                 if (_listeners[i].TryCreateDelegate(out Action<TA, TB> action))
                 {
                     action(valueA, valueB);
-                    a_delegate += action;
+                    _action += action;
                 }
             }
 
@@ -96,7 +96,7 @@ namespace Vurbiri.Reactive
                 if (_listeners[i].TryCreateDelegate(out Action<TA, TB, TC> action))
                 {
                     action(valueA, valueB, valueC);
-                    a_delegate += action;
+                    _action += action;
                 }
             }
 
@@ -121,7 +121,7 @@ namespace Vurbiri.Reactive
                 if (_listeners[i].TryCreateDelegate(out Action<TA, TB, TC, TD> action))
                 {
                     action(valueA, valueB, valueC, valueD);
-                    a_delegate += action;
+                    _action += action;
                 }
             }
 

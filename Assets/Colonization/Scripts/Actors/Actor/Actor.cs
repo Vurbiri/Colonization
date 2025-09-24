@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization.Actors
         private readonly RBool _interactable = new(false);
         private readonly RBool _canCancel = new(false);
 
-        private Unsubscriptions _unsubscribers = new();
+        private Unsubscription _unsubscriber;
         #endregion
 
         #region Propirties
@@ -105,7 +105,7 @@ namespace Vurbiri.Colonization.Actors
             _profitAdv  = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP, _move);
 
             for (int i = 0; i < initData.buffs.Count; i++)
-                _unsubscribers += initData.buffs[i].Subscribe(OnBuff);
+                _unsubscriber += initData.buffs[i].Subscribe(OnBuff);
             #endregion
 
             #region Effects
@@ -207,7 +207,7 @@ namespace Vurbiri.Colonization.Actors
         sealed public override void Removing()
         {
             _currentHex.ActorExit();
-            _unsubscribers.Unsubscribe();
+            _unsubscriber?.Dispose();
 
             _eventChanged.Invoke(this, TypeEvent.Remove);
             _eventChanged.Clear();

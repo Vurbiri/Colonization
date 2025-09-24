@@ -2,43 +2,62 @@ using System;
 
 namespace Vurbiri.Reactive
 {
-    public abstract class Unsubscription
-    {
-        public abstract void Unsubscribe();
-
-        public static Unsubscription operator ^(Unsubscription a, Unsubscription b)
-        {
-            a?.Unsubscribe();
-            return b;
-        }
-    }
-
     public interface IUnsubscribed<in TDelegate> where TDelegate : Delegate
     {
         public void Remove(TDelegate action);
     }
 
-    sealed internal class Unsubscription<TDelegate> : Unsubscription where TDelegate : Delegate
+    public class Unsubscription : IDisposable
     {
-        private WeakReference<IUnsubscribed<TDelegate>> _weakSigner;
-        private TDelegate action;
+        private Action _action;
 
-        public Unsubscription(IUnsubscribed<TDelegate> subscriber, TDelegate action)
+        private Unsubscription(Action action) => _action = action;
+
+        internal static Unsubscription Create<T>(IUnsubscribed<T> subscriber, T action) where T : Delegate
         {
-            _weakSigner = new(subscriber);
-            this.action = action;
+            var unsub = new Unsubscribe<T>(subscriber, action);
+            return new(unsub.Invoke);
         }
 
-        public override void Unsubscribe()
+        public void Dispose()
         {
-            if(_weakSigner != null && _weakSigner.TryGetTarget(out IUnsubscribed<TDelegate> signer))
+            _action(); 
+            _action = Dummy;
+        }
+
+        public static Unsubscription operator +(Unsubscription a, Unsubscription b) => new((a?._action + b?._action) ?? Dummy);
+        public static Unsubscription operator ^(Unsubscription a, Unsubscription b)
+        {
+            a?._action();
+            return b;
+        }
+
+        private static void Dummy() { }
+
+        // ******************** Nested ********************************
+        private class Unsubscribe<TDelegate> where TDelegate : Delegate
+        {
+            private WeakReference<IUnsubscribed<TDelegate>> _weakSigner;
+            private TDelegate _action;
+
+            public Unsubscribe(IUnsubscribed<TDelegate> subscriber, TDelegate action)
             {
-                signer.Remove(action);
-
-                _weakSigner.SetTarget(null);
-                _weakSigner = null;
+                _weakSigner = new(subscriber);
+                _action = action;
             }
-            action = null;
+
+            public void Invoke()
+            {
+                if (_weakSigner != null && _weakSigner.TryGetTarget(out IUnsubscribed<TDelegate> signer))
+                {
+                    signer.Remove(_action);
+
+                    _weakSigner.SetTarget(null);
+                    _weakSigner = null;
+                }
+                _action = null;
+            }
         }
+        // ************************************************************
     }
 }

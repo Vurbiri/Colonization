@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.Actors.UI
             _unsubscriber = abilities[id].Subscribe(SetValue);
         }
 
-        public void Dispose() => _unsubscriber.Unsubscribe();
+        public void Dispose() => _unsubscriber.Dispose();
 
         private void SetValue(int value)
         {

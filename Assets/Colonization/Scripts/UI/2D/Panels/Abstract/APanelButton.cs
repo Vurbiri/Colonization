@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
 
         protected IInteractable _attach;
         protected float _targetAlpha;
-        protected Unsubscriptions _unsubscribers = new();
+        protected Unsubscription _unsubscribers;
         
         private Coroutine _activeCn;
 
@@ -116,8 +116,7 @@ namespace Vurbiri.Colonization.UI
         sealed protected override void OnDestroy()
         {
             base.OnDestroy();
-            GameContainer.InputController.IsWindowMode.Unsubscribe(OnWindowMode);
-            _unsubscribers.Unsubscribe();
+            _unsubscribers?.Dispose();
         }
 
 #if UNITY_EDITOR

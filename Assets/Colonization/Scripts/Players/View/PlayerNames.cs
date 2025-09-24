@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
         }
         public void Dispose()
         {
-            _unsubscription?.Unsubscribe();
+            _unsubscription?.Dispose();
         }
 
         private void SetNames(Localization localization)

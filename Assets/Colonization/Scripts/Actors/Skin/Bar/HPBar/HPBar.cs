@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Actors.UI
         private readonly TextMeshPro _currentValueTMP;
         private readonly PopupWidget3D _popup;
         private readonly Sprite _sprite;
-        private readonly Unsubscriptions _unsubscribers;
+        private readonly Unsubscription _unsubscribers;
 
         private int _currentValue = int.MaxValue >> ActorAbilityId.SHIFT_ABILITY, _maxValue = int.MaxValue;
 
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.Actors.UI
             _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(OnValue);
         }
 
-        public void Dispose() => _unsubscribers.Unsubscribe();
+        public void Dispose() => _unsubscribers.Dispose();
 
         private void OnMaxValue(int value)
         {

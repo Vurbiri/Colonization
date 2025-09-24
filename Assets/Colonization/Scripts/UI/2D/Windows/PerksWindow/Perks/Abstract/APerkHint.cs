@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Dispose()
         {
-            _unsubscriber.Unsubscribe();
+            _unsubscriber.Dispose();
         }
 
 #if UNITY_EDITOR

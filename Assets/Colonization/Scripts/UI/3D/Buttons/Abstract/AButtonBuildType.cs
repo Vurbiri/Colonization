@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _unsubscriber?.Unsubscribe();
+            _unsubscriber?.Dispose();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
 
         public PersonController(Settings settings) : base(PlayerId.Person, settings)
         {
-            _iController = new(_interactable, _subscriptions);
+            _iController = new(_interactable, _unsubscriber);
         }
 
         public override WaitResult<bool> Gift(int giver, CurrenciesLite gift, string msg)
@@ -84,7 +84,7 @@ namespace Vurbiri.Colonization
                 }
             }
 
-            public InteractableController(RBool change, Unsubscriptions subscriptions)
+            public InteractableController(RBool change, Unsubscription subscriptions)
             {
                 _change = change;
 

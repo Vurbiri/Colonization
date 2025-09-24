@@ -140,7 +140,7 @@ namespace Vurbiri.Colonization.UI
         }
         public void Dispose()
         {
-            _subscription?.Unsubscribe();
+            _subscription?.Dispose();
         }
 
 #if UNITY_EDITOR

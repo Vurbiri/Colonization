@@ -90,7 +90,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (typeEvent == TypeEvent.Remove)
             {
-                _unsubscribers.Unsubscribe();
+                _unsubscribers.Dispose();
                 _attach = null;
                 _canvasGroup.alpha = _targetAlpha = 0f;
                 _canvasGroup.blocksRaycasts = false;

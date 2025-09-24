@@ -34,7 +34,7 @@ namespace Vurbiri.International.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _subscribe?.Unsubscribe();
+            _subscribe?.Dispose();
         }
     }
 }

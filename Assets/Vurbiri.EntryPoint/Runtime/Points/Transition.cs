@@ -6,7 +6,7 @@ namespace Vurbiri.EntryPoint
     sealed public class Transition
     {
         private static Transition s_instance;
-        private static Action<int> s_eventExit;
+        private static Action<int> s_onExit;
 
         private readonly Subscription _eventExit = new();
         private readonly IEnterParam _enterParam;
@@ -21,7 +21,7 @@ namespace Vurbiri.EntryPoint
 
         internal static void Create(Action<int> onExit, IEnterParam enterParam)
         {
-            s_eventExit = onExit;
+            s_onExit = onExit;
             s_instance = new(enterParam);
         }
 
@@ -48,7 +48,7 @@ namespace Vurbiri.EntryPoint
             _sceneContainer.Dispose();
 
             s_instance = new(_exitParam.EnterParam);
-            s_eventExit.Invoke(_exitParam.NextScene);
+            s_onExit.Invoke(_exitParam.NextScene);
         }
     }
 }

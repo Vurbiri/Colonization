@@ -24,6 +24,7 @@ namespace Vurbiri.Colonization
                 "Spawn",
                 "Gift",
                 "Artefact",
+                "Exit",
             });
             _dropdown.value = 0;
         }
@@ -34,15 +35,12 @@ namespace Vurbiri.Colonization
             {
                 case 0: Spawn(); break;
                 case 1: Gift(); break;
-                case 2: Artefact(); break;
+                case 2: GameContainer.Players.Person.Artefact.Next(UnityEngine.Random.Range(90, 100)); ; break;
+                case 3: Vurbiri.EntryPoint.Transition.Exit(); break;
                 default: return;
             }
         }
 
-        private void Artefact()
-        {
-            GameContainer.Players.Person.Artefact.Next(Random.Range(90, 100));
-        }
 
         private void Gift()
         {
