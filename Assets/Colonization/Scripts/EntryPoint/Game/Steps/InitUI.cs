@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public IEnumerator GetEnumerator()
         {
             _worldHint.Init();
-            _canvasHint.Init();
+            _canvasHint.Init(true);
 
             yield return null;
 

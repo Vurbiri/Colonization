@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization
         {
             s_content = content;
             GameSettings.IsLoad = isLoad;
-            UnityEngine.Debug.Log("[GameContainer] Удалить этот конструктор");
+            UnityEngine.Debug.LogWarning("[GameContainer] Удалить этот конструктор");
         }
 
         public override void Dispose()

@@ -27,6 +27,7 @@ namespace Vurbiri.Reactive
         public Subscription() => _action = Dummy;
 
         public void Invoke() => _action();
+        public void InvokeOneShot() { _action(); _action = Dummy; }
 
         public void Clear() => _action = Dummy;
 
@@ -74,6 +75,7 @@ namespace Vurbiri.Reactive
         public Subscription() => _action = Dummy;
 
         public void Invoke(T value) => _action.Invoke(value);
+        public void InvokeOneShot(T value) { _action(value); _action = Dummy; }
 
         public void Clear() => _action = Dummy;
 
@@ -121,6 +123,7 @@ namespace Vurbiri.Reactive
         public Subscription() => _action = Dummy;
 
         public void Invoke(TA valueA, TB valueB) => _action.Invoke(valueA, valueB);
+        public void InvokeOneShot(TA valueA, TB valueB) { _action(valueA, valueB); _action = Dummy; }
 
         public void Clear() => _action = Dummy;
 
@@ -168,6 +171,7 @@ namespace Vurbiri.Reactive
         public Subscription() => _action = Dummy;
 
         public void Invoke(TA valueA, TB valueB, TC valueC) => _action.Invoke(valueA, valueB, valueC);
+        public void InvokeOneShot(TA valueA, TB valueB, TC valueC) { _action(valueA, valueB, valueC); _action = Dummy; }
 
         public void Clear() => _action = Dummy;
 
@@ -215,6 +219,7 @@ namespace Vurbiri.Reactive
         public Subscription() => _action = Dummy;
 
         public void Invoke(TA valueA, TB valueB, TC valueC, TD valueD) => _action.Invoke(valueA, valueB, valueC, valueD);
+        public void InvokeOneShot(TA valueA, TB valueB, TC valueC, TD valueD) { _action(valueA, valueB, valueC, valueD); _action = Dummy; }
 
         public void Clear() => _action = Dummy;
 

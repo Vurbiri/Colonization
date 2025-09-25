@@ -43,12 +43,5 @@ namespace Vurbiri.Colonization.UI
 			_isPlaying = false;
 			return _current;
 		}
-		
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-			
-        }
-#endif
 	}
 }

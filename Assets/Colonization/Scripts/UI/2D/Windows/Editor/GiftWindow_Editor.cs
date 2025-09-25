@@ -31,10 +31,10 @@ namespace Vurbiri.Colonization.UI
 
             _closeButton.Color = color;
 
-            var position = panel.localPosition;
+            var position = panel.anchoredPosition;
             position.y -= panel.sizeDelta.y + _offsetPositionY;
 
-            _mainContainer.localPosition = position;
+            _mainContainer.anchoredPosition = position;
         }
 
         public void Setup_Editor()

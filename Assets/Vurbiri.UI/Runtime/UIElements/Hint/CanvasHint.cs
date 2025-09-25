@@ -5,16 +5,18 @@ namespace Vurbiri.UI
     [RequireComponent(typeof(CanvasGroup))]
     sealed public class CanvasHint : AHint
     {
-        [SerializeField] private float _edgeX = 5f;
+        [SerializeField] private float _edgeX;
         [Space]
         [SerializeField] private RectTransform _canvasRectTransform;
 
-        public override void Init()
+        public void Init(bool last)
         {
             base.Init();
 
             if(_canvasRectTransform != transform.parent)
                 transform.SetParent(_canvasRectTransform);
+            if(last)
+                transform.SetAsLastSibling();
         }
 
         protected override void SetPosition(Transform transform, Vector3 offset)
@@ -48,7 +50,6 @@ namespace Vurbiri.UI
             if (_canvasRectTransform != null && _canvasRectTransform != transform.parent)
                 transform.SetParent(_canvasRectTransform);
         }
-
 
         protected override void OnValidate()
         {

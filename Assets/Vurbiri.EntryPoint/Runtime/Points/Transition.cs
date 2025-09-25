@@ -44,7 +44,7 @@ namespace Vurbiri.EntryPoint
 
         private void InternalExit()
         {
-            _eventExit.Invoke();
+            _eventExit.InvokeOneShot();
             _sceneContainer.Dispose();
 
             s_instance = new(_exitParam.EnterParam);

@@ -8,16 +8,16 @@ namespace Vurbiri.Colonization.UI
     {
         private const int SWITCHERS_COUNT = 3, BUTTONS_COUNT = 2;
         
-        [SerializeField, ReadOnly] private PerksWindow _perksWindow;
-        [SerializeField, ReadOnly] private HintButton _perksButton;
+        [SerializeField] private PerksWindow _perksWindow;
+        [SerializeField] private HintButton _perksButton;
         [Space]
-        [SerializeField, ReadOnly] private ExchangeWindow _exchangeWindow;
-        [SerializeField, ReadOnly] private HintButton _exchangeButton;
+        [SerializeField] private ExchangeWindow _exchangeWindow;
+        [SerializeField] private HintButton _exchangeButton;
         [Space]
-        [SerializeField, ReadOnly] private GiftWindow _giftWindow;
-        [SerializeField, ReadOnly] private GiftButton[] _giftButtons;
+        [SerializeField] private GiftWindow _giftWindow;
+        [SerializeField] private GiftButton[] _giftButtons;
         [Space]
-        [SerializeField, ReadOnly] private DiceWindow _diceWindow;
+        [SerializeField] private DiceWindow _diceWindow;
 
         private readonly Switcher[] _switchers = new Switcher[SWITCHERS_COUNT];
         private AVButtonBase[] _buttons;

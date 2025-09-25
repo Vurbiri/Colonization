@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 
-using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 
@@ -59,7 +58,6 @@ namespace Vurbiri.Colonization.Actors
 
             #region Local CreateScriptable(..), TrySetPath(..)
             //======================================================
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static AnimationClipSettingsScriptable CreateScriptable(string defaultName)
             {
                 if (!TrySetPath(defaultName, WARRIOR, s_folders, out string path))

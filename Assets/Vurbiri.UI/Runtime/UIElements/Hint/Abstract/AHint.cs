@@ -30,7 +30,7 @@ namespace Vurbiri.UI
             return new(size.x * Mathf.Abs(0.5f - pivot.x), size.y * (Mathf.Abs(0.5f - pivot.y) + heightRatio), 0f);
         }
 
-        public virtual void Init()
+        public void Init()
         {
             _waitSwitch.Disable();
 
