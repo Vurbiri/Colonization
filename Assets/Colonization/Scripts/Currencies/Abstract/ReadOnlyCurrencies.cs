@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
         protected ACurrency[] _values = new ACurrency[AllCount];
         protected RInt _amount = new(0);
         protected Ability _maxAmount, _maxBlood;
-        protected readonly Subscription<ACurrencies> _eventChanged = new();
+        protected readonly VAction<ACurrencies> _changeEvent = new();
 
         sealed public override int Amount => _amount.Value;
         public IReactiveValue<int> CurrentAmount => _amount;
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public Unsubscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, this);
 
         public Currency Get(int index) => _values[index];
         public Currency Get(Id<CurrencyId> id) => _values[id.Value];

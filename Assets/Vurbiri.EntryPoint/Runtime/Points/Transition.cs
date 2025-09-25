@@ -8,7 +8,7 @@ namespace Vurbiri.EntryPoint
         private static Transition s_instance;
         private static Action<int> s_onExit;
 
-        private readonly Subscription _eventExit = new();
+        private readonly VAction _eventExit = new();
         private readonly IEnterParam _enterParam;
         private ExitParam _exitParam;
         private IContainer _sceneContainer;

@@ -1,13 +1,14 @@
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
 	sealed public class OpponentPanel : AHintElement 
 	{
-        private const string LINE = "|";
+        private const string SEPARATOR = "|";
 
         [SerializeField, Id(typeof(PlayerId))] private int _id;
         [Space]
@@ -19,6 +20,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
 
+        private Subscription _unsub;
         private int _relation, _min, _max;
 
         public void Init(Vector3 offsetPopup, Diplomacy diplomacy)
@@ -32,6 +34,7 @@ namespace Vurbiri.Colonization.UI
             SetRelation(diplomacy.GetPersonRelation(_id));
 
             _icon.color = GameContainer.UI.PlayerColors[_id]; _icon = null;
+            _unsub = GameContainer.UI.PlayerNames.Subscribe(_ => SetRelation(_relation), false);
         }
 
         private void OnDiplomacy(Diplomacy diplomacy)
@@ -56,23 +59,30 @@ namespace Vurbiri.Colonization.UI
             if (relation > 0)
             {
                 sb.Append(GameContainer.UI.Colors.TextPositiveTag);
-                sb.Append(relation); sb.Append(LINE); sb.Append(_max);
+                sb.Append(relation); sb.Append(SEPARATOR); sb.Append(_max);
                 _diplomacy.sprite = _friend;
             }
             else
             {
                 sb.Append(GameContainer.UI.Colors.TextNegativeTag);
-                sb.Append(relation - 1); sb.Append(LINE); sb.Append(_min);
+                sb.Append(relation - 1); sb.Append(SEPARATOR); sb.Append(_min);
                 _diplomacy.sprite = _enemy;
             }
-
+            
             _hintText = sb.ToString();
+        }
+
+        private void OnDestroy()
+        {
+            _unsub?.Dispose();
         }
 
 #if UNITY_EDITOR
 
-        public Vector2 UpdateVisuals_Editor(float offset)
+        public Vector2 UpdateVisuals_Editor(PlayerColors playerColors, float offset)
         {
+            _icon.color = playerColors[_id];
+
             var rectTransform = (RectTransform)transform.parent;
             rectTransform.anchoredPosition = new(offset, 0f);
 

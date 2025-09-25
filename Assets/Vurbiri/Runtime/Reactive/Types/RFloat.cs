@@ -13,22 +13,22 @@ namespace Vurbiri.Reactive
         public void Add(float value)
         {
             if (value != 0f)
-                _subscriber.Invoke(_value += value);
+                _changeEvent.Invoke(_value += value);
         }
         public void Remove(float value)
         {
             if (value != 0f)
-                _subscriber.Invoke(_value -= value);
+                _changeEvent.Invoke(_value -= value);
         }
         public void Multiply(float value)
         {
             if (value != 1f)
-                _subscriber.Invoke(_value *= value);
+                _changeEvent.Invoke(_value *= value);
         }
         public void Divide(float value)
         {
             if (value != 1f)
-                _subscriber.Invoke(_value /= value);
+                _changeEvent.Invoke(_value /= value);
         }
         #endregion
 

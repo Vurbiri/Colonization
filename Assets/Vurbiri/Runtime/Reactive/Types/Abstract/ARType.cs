@@ -10,12 +10,12 @@ namespace Vurbiri.Reactive
     {
         [SerializeField] protected T _value;
         
-        protected readonly Subscription<T> _subscriber = new();
+        protected readonly VAction<T> _changeEvent = new();
 
         public T Value
         {
             [Impl(256)] get => _value;
-            [Impl(256)] set { if (!_value.Equals(value)) _subscriber.Invoke(_value = value); }
+            [Impl(256)] set { if (!_value.Equals(value)) _changeEvent.Invoke(_value = value); }
         }
 
         public T SilentValue 
@@ -26,10 +26,10 @@ namespace Vurbiri.Reactive
 
         [Impl(256)] protected ARType(T value) => _value = value;
 
-        public Unsubscription Subscribe(Action<T> action, bool instantGetValue = true) => _subscriber.Add(action, instantGetValue, _value);
-        public void Unsubscribe(Action<T> action) => _subscriber.Remove(action);
-        public void UnsubscribeAll() => _subscriber.Clear();
-        public void Signal() => _subscriber.Invoke(_value);
+        public Subscription Subscribe(Action<T> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, _value);
+        public void Unsubscribe(Action<T> action) => _changeEvent.Remove(action);
+        public void UnsubscribeAll() => _changeEvent.Clear();
+        public void Signal() => _changeEvent.Invoke(_value);
 
         public bool Equals(T other) => _value.Equals(other);
         public bool Equals(ARType<T> other) => other is not null && _value.Equals(other._value);

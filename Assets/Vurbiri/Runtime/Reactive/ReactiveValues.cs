@@ -13,13 +13,13 @@ namespace Vurbiri.Reactive
         [SerializeField, JsonProperty("vB")]
         private TB _valueB;
 
-        private readonly Subscription<TA, TB> _subscriber = new();
+        private readonly VAction<TA, TB> _changeEvent = new();
 
         private readonly IEqualityComparer<TA> _comparerA;
         private readonly IEqualityComparer<TB> _comparerB;
 
-        public TA ValueA { get => _valueA; set { if (!_comparerA.Equals(_valueA, value)) { _valueA = value; _subscriber.Invoke(_valueA, _valueB); } } }
-        public TB ValueB { get => _valueB; set { if (!_comparerB.Equals(_valueB, value)) { _valueB = value; _subscriber.Invoke(_valueA, _valueB); } } }
+        public TA ValueA { get => _valueA; set { if (!_comparerA.Equals(_valueA, value)) { _valueA = value; _changeEvent.Invoke(_valueA, _valueB); } } }
+        public TB ValueB { get => _valueB; set { if (!_comparerB.Equals(_valueB, value)) { _valueB = value; _changeEvent.Invoke(_valueA, _valueB); } } }
 
         public ReactiveValues()
         {
@@ -39,16 +39,16 @@ namespace Vurbiri.Reactive
             _comparerB = EqualityComparer<TB>.Default;
         }
 
-        public Unsubscription Subscribe(Action<TA, TB> action, bool instantGetValue = true)
+        public Subscription Subscribe(Action<TA, TB> action, bool instantGetValue = true)
         {
             if (instantGetValue)
                 action(_valueA, _valueB);
 
-            return _subscriber.Add(action);
+            return _changeEvent.Add(action);
         }
-        public void Unsubscribe(Action<TA, TB> action) => _subscriber.Remove(action);
-        public void UnsubscribeAll() => _subscriber.Clear();
-        public void Signal() => _subscriber.Invoke(_valueA, _valueB);
+        public void Unsubscribe(Action<TA, TB> action) => _changeEvent.Remove(action);
+        public void UnsubscribeAll() => _changeEvent.Clear();
+        public void Signal() => _changeEvent.Invoke(_valueA, _valueB);
 
     }
 }

@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
         private HexagonMark _mark;
         private IProfit _profit;
         private bool _isGate, _isWater;
-        private readonly Subscription<int> _changeID = new();
+        private readonly VAction<int> _changeID = new();
 
         private Actor _owner = null;
         private Id<PlayerId> _ownerId = PlayerId.None;
@@ -117,7 +117,7 @@ namespace Vurbiri.Colonization
         public void Unselect(ISelectable newSelectable) { }
         #endregion
 
-        public Unsubscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
+        public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 
         public void SetCaptionActive(bool active) => _hexagonCaption.SetActive(active);
 

@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
                     _values[i].Add(other[i]);
 
                 _amount.Add(other.Amount);
-                _eventChanged.Invoke(this);
+                _changeEvent.Invoke(this);
             }
         }
         public void Remove(ACurrencies other)
@@ -36,7 +36,7 @@ namespace Vurbiri.Colonization
                     _values[i].Remove(other[i]);
 
                 _amount.Remove(other.Amount);
-                _eventChanged.Invoke(this);
+                _changeEvent.Invoke(this);
             }
         }
 
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
             if (value != 0)
             {
                 _amount.Value += _values[currencyId] + value;
-                _eventChanged.Invoke(this);
+                _changeEvent.Invoke(this);
             }
         }
         public void Remove(int currencyId, int value)
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization
             if (value != 0)
             {
                 _amount.Value += _values[currencyId] - value;
-                _eventChanged.Invoke(this);
+                _changeEvent.Invoke(this);
             }
         }
 
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
             if (value != 0)
             {
                 _values[Blood].Add(value);
-                _eventChanged.Invoke(this);
+                _changeEvent.Invoke(this);
             }
         }
         public void RemoveBlood(int value)
@@ -70,7 +70,7 @@ namespace Vurbiri.Colonization
             if (value != 0)
             {
                 _values[Blood].Remove(value);
-                _eventChanged.Invoke(this);
+                _changeEvent.Invoke(this);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Vurbiri.Colonization
                     _values[index].Set(values[index]);
 
                 _amount.Value = _maxAmount.Value;
-                _eventChanged.Invoke(this);
+                _changeEvent.Invoke(this);
             }
 
             #region Local: ConvertToInt(..), FindMaxIndex(..)
@@ -131,7 +131,7 @@ namespace Vurbiri.Colonization
                 
                 _values[j].Remove(1);
                 _amount.Remove(1);
-                _eventChanged.Invoke(this);
+                _changeEvent.Invoke(this);
             }
         }
 

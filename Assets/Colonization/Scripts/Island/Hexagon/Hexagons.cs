@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
     {
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
         private readonly List<Key>[] _hexagonsIdForKey = new List<Key>[HEX_IDS[^1] + 1];
-        private readonly Subscription<Hexagon> _eventChanged = new();
+        private readonly VAction<Hexagon> _eventChanged = new();
         private readonly CurrenciesLite _freeResources = new();
 
         private int _groundCount = 0;
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
             _eventChanged.Invoke(hexA); _eventChanged.Invoke(hexB);
         }
 
-        public Unsubscription Subscribe(Action<Hexagon> action, bool instantGetValue = true) => _eventChanged.Add(action);
+        public Subscription Subscribe(Action<Hexagon> action, bool instantGetValue = true) => _eventChanged.Add(action);
 
         private void OnEndTurn(TurnQueue turnQueue, int id)
         {

@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.UI;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors.UI
 {
@@ -16,7 +15,7 @@ namespace Vurbiri.Colonization.Actors.UI
         private readonly TextMeshPro _currentValueTMP;
         private readonly PopupWidget3D _popup;
         private readonly Sprite _sprite;
-        private readonly Unsubscription _unsubscribers;
+        private readonly Subscription _subscription;
 
         private int _currentValue = int.MaxValue >> ActorAbilityId.SHIFT_ABILITY, _maxValue = int.MaxValue;
 
@@ -31,11 +30,11 @@ namespace Vurbiri.Colonization.Actors.UI
             _popup = popup;
             _sprite = sprite;
 
-            _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe(OnMaxValue);
-            _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(OnValue);
+            _subscription += abilities[ActorAbilityId.MaxHP].Subscribe(OnMaxValue);
+            _subscription += abilities[ActorAbilityId.CurrentHP].Subscribe(OnValue);
         }
 
-        public void Dispose() => _unsubscribers.Dispose();
+        public void Dispose() => _subscription.Dispose();
 
         private void OnMaxValue(int value)
         {

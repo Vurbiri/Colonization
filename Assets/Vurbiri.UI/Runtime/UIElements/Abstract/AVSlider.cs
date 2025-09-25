@@ -120,7 +120,7 @@ namespace Vurbiri.UI
         }
         #endregion
 
-        public Unsubscription AddListener(Action<T> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _value);
+        public Subscription AddListener(Action<T> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _value);
         public void RemoveListener(Action<T> action) => _onValueChanged.Remove(action);
 
         public bool SetMinMax(T min, T max)

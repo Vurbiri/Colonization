@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         private readonly int[] _values;
         private readonly DiplomacySettings _settings;
 
-        private readonly Subscription<Diplomacy> _eventChanged = new();
+        private readonly VAction<Diplomacy> _eventChanged = new();
 
         public int this[Id<PlayerId> idA, Id<PlayerId> idB]
         {
@@ -115,7 +115,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Unsubscription Subscribe(Action<Diplomacy> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<Diplomacy> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
         private void OnGamePlay(TurnQueue turnQueue, int dice)
         {

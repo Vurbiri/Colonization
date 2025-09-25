@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
             _popup.Init(offsetPopup);
 
             _valueTMP.text = "0";
-            _unsubscribers += GameContainer.Score.Subscribe(SetValue);
+            _subscription += GameContainer.Score.Subscribe(SetValue);
         }
 
         private void SetValue(Score values)

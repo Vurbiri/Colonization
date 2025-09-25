@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private ButtonCancel _buttonCancel;
 
-        private Unsubscription _subscription;
+        private Subscription _subscription;
         private bool _enable, _isNotCast, _lookAtEnabled;
         private IMenu _currentOpenMenu;
 

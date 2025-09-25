@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Vurbiri;
+using Vurbiri.Colonization;
 using Vurbiri.Colonization.UI;
 using Vurbiri.UI;
 
@@ -14,9 +15,12 @@ namespace VurbiriEditor.Colonization
         [SerializeField, Range(1f, 3f)] private float _windowsPixelsPerUnit = 1.6f;
         [SerializeField, Button("UpdateVisual"), Range(1f, 3f)] private float _panelsPixelsPerUnit = 2.1f;
         [Space]
-        [SerializeField] private ProjectColors _colors;
-        [Space]
         [SerializeField, HideInInspector] private ColorSettingsScriptable _colorSettings;
+        [SerializeField, HideInInspector] private PlayerVisualSetScriptable _playerVisual;
+        [Space]
+        [SerializeField] private PlayerColors _playerColors;
+        [SerializeField] private ProjectColors _projectColors;
+        [Space]
         [SerializeField, HideInInspector] private AHint[] _hints;
         [SerializeField, HideInInspector] private PlayerPanels _playerPanels;
         [SerializeField, HideInInspector] private PerksWindow _perksWindow;
@@ -24,6 +28,7 @@ namespace VurbiriEditor.Colonization
         [SerializeField, HideInInspector] private OpponentPanels _opponentPanels;
         [SerializeField, HideInInspector] private GiftWindow _giftWindow;
         [SerializeField, HideInInspector] private DiceWindow _diceWindow;
+        [SerializeField, HideInInspector] private SatanPanel _satanPanel;
         [EndEditor] public bool endEditor;
 
         private void Awake()
@@ -34,16 +39,18 @@ namespace VurbiriEditor.Colonization
         public void UpdateVisual()
         {
             for (int i = 0; i < _hints.Length; i++)
-                _hints[i].UpdateVisuals_Ed(_colors.HintBack, _colors.HintText);
+                _hints[i].UpdateVisuals_Ed(_projectColors.HintBack, _projectColors.HintText);
 
-            _playerPanels.UpdateVisuals_Ed(_panelsPixelsPerUnit, _colors, _screenPadding);
-            _perksWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _colors);
-            _exchangeWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _colors);
+            _playerPanels.UpdateVisuals_Ed(_panelsPixelsPerUnit, _projectColors, _screenPadding);
+            _perksWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _projectColors);
+            _exchangeWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _projectColors);
 
-            var transform = _opponentPanels.UpdateVisuals_Ed(_panelsPixelsPerUnit, _colors, _screenPadding);
-            _giftWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _panelsPixelsPerUnit, _colors, transform);
+            var transform = _opponentPanels.UpdateVisuals_Ed(_panelsPixelsPerUnit, _projectColors, _playerColors, _screenPadding);
+            _giftWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _panelsPixelsPerUnit, _projectColors, transform);
 
-            _diceWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _colors);
+            _diceWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _projectColors);
+
+            _satanPanel.UpdateVisuals_Ed(_playerColors, _screenPadding);
         }
 
         public void Rebuild(CanvasUpdate executing)
@@ -61,6 +68,7 @@ namespace VurbiriEditor.Colonization
             if (!Application.isPlaying)
             {
                 EUtility.SetScriptable(ref _colorSettings);
+                EUtility.SetScriptable(ref _playerVisual);
 
                 EUtility.SetObjects(ref _hints, 2);
                 EUtility.SetObject(ref _playerPanels);
@@ -69,11 +77,13 @@ namespace VurbiriEditor.Colonization
                 EUtility.SetObject(ref _opponentPanels);
                 EUtility.SetObject(ref _giftWindow);
                 EUtility.SetObject(ref _diceWindow);
+                EUtility.SetObject(ref _satanPanel);
 
                 if (!PrefabUtility.IsPartOfPrefabAsset(this))
                     CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
 
-                _colors = _colorSettings.Colors;
+                _projectColors = _colorSettings.Colors;
+                _playerColors = _playerVisual.Colors_Ed;
             }
         }
     }

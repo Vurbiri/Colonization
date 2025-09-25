@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
             _popup.Init(offsetPopup);
 
             _reactiveCurrentMax = new(blood, max, SetCurrentMax);
-            _unsubscribers += blood.SubscribeDelta(_popup.Run);
+            _subscription += blood.SubscribeDelta(_popup.Run);
         }
 
         protected override void SetLocalizationText(Localization localization)

@@ -25,9 +25,9 @@ namespace Vurbiri.UI
         public static Vector3 GetOffsetHint(RectTransform rectTransform, float heightRatio)
         {
             var pivot = rectTransform.pivot;
-            var size = rectTransform.sizeDelta;//rect.size;
+            var size = rectTransform.rect.size;
 
-            return new(size.x * Mathf.Abs(0.5f - pivot.x), size.y * (Mathf.Abs(0.5f - pivot.y) + heightRatio), 0f);
+            return new(size.x * (0.5f - pivot.x), size.y * (Mathf.Abs(0.5f - pivot.y) + heightRatio), 0f);
         }
 
         public void Init()

@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
         private void Set(PlayerColors colors, PlayerNames names)
         {
             for (int i = 0; i < PlayerId.Count; i++)
-                _names[i] = $"<color={colors[i].ToHex()}>{names[i]}</color>";
+                _names[i] = $"<{colors[i].ToHex()}>{names[i]}</color>";
         }
 
         public void Dispose() => _combination.Dispose();

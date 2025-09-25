@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.Characteristics
             _buffs = new DemonBuff[count];
 
             for (int i = 0; i < count; i++)
-                _buffs[i] = new(_subscriber, settings[i], level);
+                _buffs[i] = new(_change, settings[i], level);
         }
 
         public bool Next()

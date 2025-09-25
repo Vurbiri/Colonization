@@ -1,6 +1,5 @@
 using TMPro;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Actors.UI
 {
@@ -10,18 +9,18 @@ namespace Vurbiri.Colonization.Actors.UI
 
         private readonly TextMeshPro _maxValueTMP;
         private readonly TextMeshPro _currentValueTMP;
-        private readonly Unsubscription _unsubscribers;
+        private readonly Subscription _subscription;
 
         public APBar(TextMeshPro maxValue, TextMeshPro currentValue, ReadOnlyAbilities<ActorAbilityId> abilities)
         {
             _maxValueTMP = maxValue;
             _currentValueTMP = currentValue;
 
-            _unsubscribers += abilities[ActorAbilityId.MaxAP].Subscribe(SetMaxValue);
-            _unsubscribers += abilities[ActorAbilityId.CurrentAP].Subscribe(SetCurrentValue);
+            _subscription  = abilities[ActorAbilityId.MaxAP].Subscribe(SetMaxValue);
+            _subscription += abilities[ActorAbilityId.CurrentAP].Subscribe(SetCurrentValue);
         }
 
-        public void Dispose() => _unsubscribers.Dispose();
+        public void Dispose() => _subscription.Dispose();
 
         private void SetMaxValue(int value) => _maxValueTMP.text = new(CHAR, value);
         private void SetCurrentValue(int value) => _currentValueTMP.text = new(CHAR, value);

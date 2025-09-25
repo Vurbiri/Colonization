@@ -25,6 +25,7 @@ namespace Vurbiri.Colonization
                 "Gift",
                 "Artefact",
                 "Exit",
+                "English",
             });
             _dropdown.value = 0;
         }
@@ -37,6 +38,7 @@ namespace Vurbiri.Colonization
                 case 1: Gift(); break;
                 case 2: GameContainer.Players.Person.Artefact.Next(UnityEngine.Random.Range(90, 100)); ; break;
                 case 3: Vurbiri.EntryPoint.Transition.Exit(); break;
+                case 4: Localization.Instance.SwitchLanguage(SystemLanguage.English); break;
                 default: return;
             }
         }

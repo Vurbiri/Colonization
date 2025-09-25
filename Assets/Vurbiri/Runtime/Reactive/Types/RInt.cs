@@ -10,27 +10,27 @@ namespace Vurbiri.Reactive
         public RInt(int value) : base(value) { }
 
         #region Arithmetic
-        public void Increment() => _subscriber.Invoke(++_value);
-        public void Decrement() => _subscriber.Invoke(--_value);
+        public void Increment() => _changeEvent.Invoke(++_value);
+        public void Decrement() => _changeEvent.Invoke(--_value);
         public void Add(int value)
         {
             if (value != 0)
-                _subscriber.Invoke(_value += value);
+                _changeEvent.Invoke(_value += value);
         }
         public void Remove(int value)
         {
             if (value != 0)
-                _subscriber.Invoke(_value -= value);
+                _changeEvent.Invoke(_value -= value);
         }
         public void Multiply(int value)
         {
             if (value != 1)
-                _subscriber.Invoke(_value *= value);
+                _changeEvent.Invoke(_value *= value);
         }
         public void Divide(int value)
         {
             if (value != 1)
-                _subscriber.Invoke(_value /= value);
+                _changeEvent.Invoke(_value /= value);
         }
         #endregion
 

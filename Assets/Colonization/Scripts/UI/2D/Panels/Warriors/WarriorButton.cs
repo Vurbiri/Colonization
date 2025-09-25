@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.UI
         private Vector3 _offset;
 
         private Transform _container, _repository;
-        private readonly Subscription<WarriorButton> _eventRemove = new();
+        private readonly VAction<WarriorButton> _eventRemove = new();
 
         public int Index
         { 
@@ -69,14 +69,14 @@ namespace Vurbiri.Colonization.UI
         {
             _index = index;
 
-            _unsubscribers += actor.Subscribe(OnChangeActor, false);
+            _subscription += actor.Subscribe(OnChangeActor, false);
 
             var abilities = actor.Abilities;
-            _unsubscribers += abilities[ActorAbilityId.MaxHP].Subscribe(_hpBar.SetMaxHP);
-            _unsubscribers += abilities[ActorAbilityId.CurrentHP].Subscribe(_hpBar.SetCurrentHP);
-            _unsubscribers += abilities[ActorAbilityId.MaxAP].Subscribe(maxAP => _maxAP_TMP.text = new(AP_CHAR, maxAP));
-            _unsubscribers += abilities[ActorAbilityId.CurrentAP].Subscribe(currentAP => _currentAP_TMP.text = new(AP_CHAR, currentAP));
-            _unsubscribers += abilities[ActorAbilityId.IsMove].Subscribe(move => _moveIcon.color = move > 0 ? _colorOn : _colorOff);
+            _subscription += abilities[ActorAbilityId.MaxHP].Subscribe(_hpBar.SetMaxHP);
+            _subscription += abilities[ActorAbilityId.CurrentHP].Subscribe(_hpBar.SetCurrentHP);
+            _subscription += abilities[ActorAbilityId.MaxAP].Subscribe(maxAP => _maxAP_TMP.text = new(AP_CHAR, maxAP));
+            _subscription += abilities[ActorAbilityId.CurrentAP].Subscribe(currentAP => _currentAP_TMP.text = new(AP_CHAR, currentAP));
+            _subscription += abilities[ActorAbilityId.IsMove].Subscribe(move => _moveIcon.color = move > 0 ? _colorOn : _colorOff);
 
             _move.Transform.SetParent(_container);
             _move.Transform.localPosition = _offset * index;
@@ -90,7 +90,7 @@ namespace Vurbiri.Colonization.UI
         {
             if (typeEvent == TypeEvent.Remove)
             {
-                _unsubscribers.Dispose();
+                _subscription.Dispose();
                 _attach = null;
                 _canvasGroup.alpha = _targetAlpha = 0f;
                 _canvasGroup.blocksRaycasts = false;

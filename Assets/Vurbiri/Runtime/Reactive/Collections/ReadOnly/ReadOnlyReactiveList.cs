@@ -14,14 +14,14 @@ namespace Vurbiri
         protected int _capacity = BASE_CAPACITY;
         protected readonly RInt _count = new(0);
 
-        protected readonly Subscription<int, T, TypeEvent> _subscriber = new();
+        protected readonly VAction<int, T, TypeEvent> _changeEvent = new();
 
         public T this[int index] => _values[index];
 
         public int Count => _count.Value;
         public IReactiveValue<int> CountReactive => _count;
 
-        public Unsubscription Subscribe(Action<int, T, TypeEvent> action, bool instantGetValue = true)
+        public Subscription Subscribe(Action<int, T, TypeEvent> action, bool instantGetValue = true)
         {
             if (instantGetValue)
             {
@@ -29,7 +29,7 @@ namespace Vurbiri
                     action(i, _values[i], TypeEvent.Subscribe);
             }
 
-            return _subscriber.Add(action);
+            return _changeEvent.Add(action);
         }
 
         public bool Contains(T item) => IndexOf(item) >= 0;
@@ -41,12 +41,12 @@ namespace Vurbiri
             return i;
         }
 
-        public void Signal(int index) => _subscriber.Invoke(index, _values[index], TypeEvent.Change);
+        public void Signal(int index) => _changeEvent.Invoke(index, _values[index], TypeEvent.Change);
         public void Signal(T item)
         {
             int index = IndexOf(item);
             if (index >= 0)
-                _subscriber.Invoke(index, _values[index], TypeEvent.Change);
+                _changeEvent.Invoke(index, _values[index], TypeEvent.Change);
         }
 
         public IEnumerator<T> GetEnumerator() => new ArrayEnumerator<T>(_values, _count.Value);

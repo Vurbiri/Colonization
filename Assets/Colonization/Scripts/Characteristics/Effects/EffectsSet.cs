@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Characteristics
         protected ReactiveEffect[] _values;
         protected int _capacity = 4;
         protected readonly RInt _count = new(0);
-        protected readonly Subscription<ReactiveEffect, TypeEvent> _eventChanged = new();
+        protected readonly VAction<ReactiveEffect, TypeEvent> _eventChanged = new();
         public int Count => _count;
         public IReactiveValue<int> CountReactive => _count;
 
@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Characteristics
             _abilities = abilities;
         }
 
-        public Unsubscription Subscribe(Action<ReactiveEffect, TypeEvent> action, bool instantGetValue = true)
+        public Subscription Subscribe(Action<ReactiveEffect, TypeEvent> action, bool instantGetValue = true)
         {
             if (instantGetValue)
             {

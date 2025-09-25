@@ -25,14 +25,14 @@ namespace Vurbiri.Colonization
             foreach (var demon in Actors)
             {
                 if (demon.IsMainProfit)
-                    balance += (demon.Id + 1);
+                    balance++;
                 if (demon.IsAdvProfit)
                     countBuffs++;
 
                 demon.StatesUpdate();
             }
 
-            GameContainer.Balance.ForCurse(balance);
+            GameContainer.Balance.ForDemonCurse(balance);
             _artefact.Next(countBuffs);
 
             GameContainer.GameLoop.StartTurn();

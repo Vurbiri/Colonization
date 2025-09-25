@@ -14,8 +14,8 @@ namespace Vurbiri.Colonization.UI
             _popup.Init(offsetPopup);
 
             var currency = currencies.Get(id);
-            _unsubscribers += currency.Subscribe(SetValue);
-            _unsubscribers += currency.SubscribeDelta(_popup.Run);
+            _subscription += currency.Subscribe(SetValue);
+            _subscription += currency.SubscribeDelta(_popup.Run);
         }
 
         private void SetValue(int value) => _valueTMP.text = CONST.NUMBERS_STR[value];

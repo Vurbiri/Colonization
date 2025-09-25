@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization.UI
 
         protected IInteractable _attach;
         protected float _targetAlpha;
-        protected Unsubscription _unsubscribers;
+        protected Subscription _subscription;
         
         private Coroutine _activeCn;
 
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.UI
             _icon.sprite = sprite;
             _attach = attach;
 
-            _unsubscribers += attach.InteractableReactive.Subscribe(OnAttachInteractable);
+            _subscription += attach.InteractableReactive.Subscribe(OnAttachInteractable);
         }
 
         #region Enable/Disable
@@ -116,7 +116,7 @@ namespace Vurbiri.Colonization.UI
         sealed protected override void OnDestroy()
         {
             base.OnDestroy();
-            _unsubscribers?.Dispose();
+            _subscription?.Dispose();
         }
 
 #if UNITY_EDITOR

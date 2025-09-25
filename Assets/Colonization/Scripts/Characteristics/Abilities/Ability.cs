@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             _value = Math.Max(_value, 0);
 
-            if (old != _value) _eventChanged.Invoke(_value);
+            if (old != _value) _changeEvent.Invoke(_value);
 
             return _value - old;
         }

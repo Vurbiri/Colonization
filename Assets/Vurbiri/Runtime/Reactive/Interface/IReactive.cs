@@ -4,7 +4,7 @@ namespace Vurbiri.Reactive
 {
     public interface IReactiveBase<in TDelegate> where TDelegate : Delegate
     {
-        public Unsubscription Subscribe(TDelegate action, bool instantGetValue = true);
+        public Subscription Subscribe(TDelegate action, bool instantGetValue = true);
     }
 
     public interface IReactive<T> : IReactiveBase<Action<T>> {}

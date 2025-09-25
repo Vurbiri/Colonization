@@ -6,7 +6,7 @@ namespace Vurbiri.EntryPoint
     public abstract class ASceneEntryPoint : MonoBehaviour
     {
         private static ASceneEntryPoint s_instance;
-        private static readonly Subscription<ASceneEntryPoint> s_sceneLoaded = new();
+        private static readonly VAction<ASceneEntryPoint> s_sceneLoaded = new();
 
         public static Event<ASceneEntryPoint> EventLoaded => s_sceneLoaded;
 

@@ -2,21 +2,22 @@
   "min": -666,
   "max": 666,
   "defaultValue": 0,
-  "penaltyPerDemon": 3,
-  "penaltyPerBlood": 1,
-  "rewardPerShrine": 15,
-  "killWarrior": [
-    0,
-    0,
-    0,
-    0,
-    0
+  "penaltyPerDemon": -3,
+  "penaltyPerSatanLevelUp": -2,
+  "penaltyPerBlood": -1,
+  "penaltyPerKillWarrior": [
+    -1,
+    -1,
+    -2,
+    -2,
+    -3
   ],
-  "killDemon": [
-    0,
-    0,
-    0,
-    0,
-    0
+  "rewardPerShrine": 15,
+  "rewardPerKillDemon": [
+    1,
+    2,
+    3,
+    4,
+    5
   ]
 }

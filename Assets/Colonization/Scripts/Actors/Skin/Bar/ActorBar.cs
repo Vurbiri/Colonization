@@ -5,7 +5,6 @@ using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Controllers;
 using Vurbiri.Colonization.UI;
-using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Actors.UI
@@ -26,7 +25,7 @@ namespace Vurbiri.Colonization.Actors.UI
         private Vector3 _cameraForward;
         private bool _isActive;
         private SpriteRenderer _renderer;
-        private Unsubscription _unsubscriber;
+        private Subscription _subscription;
 
         private void Awake()
         {
@@ -71,7 +70,7 @@ namespace Vurbiri.Colonization.Actors.UI
 
         private void OnDestroy()
         {
-            _unsubscriber?.Dispose();
+            _subscription?.Dispose();
 
             for (int i = _bars.Count - 1; i >= 0; i--)
                 _bars[i].Dispose();
@@ -86,9 +85,9 @@ namespace Vurbiri.Colonization.Actors.UI
             //_thisGameObject.SetActive(_isActive);
             _actor.Skin.EventStart -= OnStart;
 
-            _unsubscriber += GameContainer.CameraTransform.Subscribe(OnChangeCamera);
-            _unsubscriber += _actor.Subscribe(OnRemoveActor, false);
-            _unsubscriber += _actor.Effects.Subscribe(OnAddEffect);
+            _subscription += GameContainer.CameraTransform.Subscribe(OnChangeCamera);
+            _subscription += _actor.Subscribe(OnRemoveActor, false);
+            _subscription += _actor.Effects.Subscribe(OnAddEffect);
         }
 
         #region Nested: Settings

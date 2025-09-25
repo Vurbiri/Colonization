@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
 
         protected ACurrencies _cost;
         protected ACurrencies _cash;
-        protected Unsubscription _unsubscriber;
+        protected Subscription _subscription;
         protected string _caption;
         protected AWorldMenu _parent;
         protected Crossroad _currentCrossroad;
@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization.UI
             _cost = cost;
             _cash = GameContainer.Players.Person.Resources;
             _parent = parent;
-            _unsubscriber = Localization.Instance.Subscribe(SetText);
+            _subscription = Localization.Instance.Subscribe(SetText);
         }
 
         public virtual void Setup(Crossroad crossroad)
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _unsubscriber?.Dispose();
+            _subscription?.Dispose();
         }
     }
 }

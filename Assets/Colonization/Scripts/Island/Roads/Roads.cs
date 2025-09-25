@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         private readonly List<Road> _roadsLists = new();
         private readonly RInt _count = new(0);
         private readonly Gradient _gradient;
-        private readonly Subscription<Roads> _eventChanged = new();
+        private readonly VAction<Roads> _eventChanged = new();
         #endregion
 
         public int Count => _count.Value;
@@ -98,7 +98,7 @@ namespace Vurbiri.Colonization
         }
 
         #region Reactive
-        public Unsubscription Subscribe(Action<Roads> action, bool calling = false)
+        public Subscription Subscribe(Action<Roads> action, bool calling = false)
         {
             if (calling) action(this);
             return _eventChanged.Add(action);

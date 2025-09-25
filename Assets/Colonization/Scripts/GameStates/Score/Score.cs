@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         private readonly int[] _values;
         private readonly ScoreSettings _settings;
-        private readonly Subscription<Score> _eventChanged = new();
+        private readonly VAction<Score> _eventChanged = new();
 
         public int this[int index] { [Impl(256)] get => _values[index]; }
 
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
             return instance;
         }
 
-        public Unsubscription Subscribe(Action<Score> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<Score> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
         public void ForKillingDemon(int playerId, int demonId) => Add(playerId, _settings.killDemon[demonId]);
         public void ForKillingWarrior(int playerId, int warriorId) => Add(playerId, _settings.killWarrior[warriorId]);

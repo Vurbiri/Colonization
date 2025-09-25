@@ -48,7 +48,7 @@ namespace Vurbiri.UI
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Unsubscription AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _isOn);
+        public Subscription AddListener(Action<bool> action, bool instantGetValue = true) => _onValueChanged.Add(action, instantGetValue, _isOn);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RemoveListener(Action<bool> action) => _onValueChanged.Remove(action);
 

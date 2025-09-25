@@ -28,6 +28,9 @@ namespace Vurbiri.Colonization
         }
 
 #if UNITY_EDITOR
+
+        public PlayerColors Colors_Ed => _colors;
+
         private void OnValidate()
         {
             _colors.OnValidate();

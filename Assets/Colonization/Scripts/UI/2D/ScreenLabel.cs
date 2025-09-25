@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(0.1f, 1.5f)] private float _offSpeed; // = 0.9f;
         [SerializeField, MinMax(1f, 5f)] private WaitRealtime _showTime; // = 2f;
 
-        private Unsubscription _unsubscription;
+        private Subscription _subscription;
         private TextMeshProUGUI _label;
         private CanvasRenderer _renderer;
 
@@ -27,18 +27,18 @@ namespace Vurbiri.Colonization.UI
             _renderer = _label.canvasRenderer;
             _renderer.SetAlpha(0f);
 
-            _unsubscription = Localization.Instance.Subscribe(SetFullText);
+            _subscription = Localization.Instance.Subscribe(SetFullText);
             GameContainer.GameEvents.Subscribe(GameModeId.StartTurn, ReInit);
         }
 
         public void Landing(int id)
         {
-            StartCoroutine(Label_Cn(string.Format(_landingText, GameContainer.UI.PlayerNames[id])));
+            StartCoroutine(Label_Cn(string.Format(_landingText, GameContainer.UI.PlayerColorNames[id])));
         }
 
         public IEnumerator StartTurn_Cn(int turn, int id)
         {
-            yield return Label_Cn(string.Format(_startTurnText, turn, GameContainer.UI.PlayerNames[id]));
+            yield return Label_Cn(string.Format(_startTurnText, turn, GameContainer.UI.PlayerColorNames[id]));
         }
 
         private IEnumerator Label_Cn(string text)
@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization.UI
         {
             GameContainer.GameEvents.Unsubscribe(GameModeId.StartTurn, ReInit);
 
-            _unsubscription ^= Localization.Instance.Subscribe(SetText);
+            _subscription ^= Localization.Instance.Subscribe(SetText);
         }
 
         private void SetFullText(Localization localization)
@@ -87,7 +87,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            _unsubscription?.Dispose();
+            _subscription?.Dispose();
         }
     }
 }

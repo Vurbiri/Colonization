@@ -1,21 +1,20 @@
 using Vurbiri.International;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
     sealed public class ButtonCancel : AHintButton3D, IMenu
     {
         private ICancel _cancelledObj;
-        private Unsubscription _unLanguage, _unAction;
+        private Subscription _unLanguage, _unAction;
 
-        private readonly Subscription<IMenu, bool> _subscriber = new();
+        private readonly VAction<IMenu, bool> _changeEvent = new();
 
         public Event<IMenu, bool> Init()
         {
             base.InternalInit(GameContainer.UI.WorldHint, OnClick, false);
             _unLanguage = Localization.Instance.Subscribe(SetText);
             
-            return _subscriber;
+            return _changeEvent;
         }
 
         public void Setup(ICancel cancelledObj)
@@ -46,12 +45,12 @@ namespace Vurbiri.Colonization.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            _subscriber.Invoke(this, true);
+            _changeEvent.Invoke(this, true);
         }
         protected override void OnDisable()
         {
             base.OnDisable();
-            _subscriber.Invoke(this, false);
+            _changeEvent.Invoke(this, false);
         }
         protected override void OnDestroy()
         {

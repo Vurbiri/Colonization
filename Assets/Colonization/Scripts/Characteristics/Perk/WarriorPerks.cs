@@ -7,22 +7,22 @@ namespace Vurbiri.Colonization.Characteristics
     public class WarriorPerks : IReactive<IPerk>
 	{
 		private readonly List<Perk> _perks = new();
-        private readonly Subscription<IPerk> _subscriber = new();
-        private readonly Unsubscription _unsubscriber;
+        private readonly VAction<IPerk> _changeEvent = new();
+        private readonly Subscription _subscription;
 
-        public WarriorPerks(IReactive<Perk> perks) => _unsubscriber = perks.Subscribe(OnPerks);
+        public WarriorPerks(IReactive<Perk> perks) => _subscription = perks.Subscribe(OnPerks);
 
-        public Unsubscription Subscribe(Action<IPerk> action, bool instantGetValue = true)
+        public Subscription Subscribe(Action<IPerk> action, bool instantGetValue = true)
         {
             for(int i = _perks.Count - 1; instantGetValue & i >= 0; i--)
                 action(_perks[i]);
 
-            return _subscriber.Add(action);
+            return _changeEvent.Add(action);
         }
 
         public void Dispose()
         {
-            _unsubscriber.Dispose();
+            _subscription.Dispose();
         }
 
         private void OnPerks(Perk perk)
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.Characteristics
 				return;
 
 			_perks.Add(perk);
-			_subscriber.Invoke(perk);
+			_changeEvent.Invoke(perk);
 		}
     }
 }

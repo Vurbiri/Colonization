@@ -10,13 +10,13 @@ namespace Vurbiri.Colonization.UI
     {
         [SerializeField] private FileIdAndKey _getText;
 
-        private Unsubscription _unsubscriber;
+        private Subscription _subscription;
 
         public void Init(Action action)
         {
             base.InternalInit(GameContainer.UI.WorldHint, action, true);
 
-            _unsubscriber = Localization.Instance.Subscribe(SetLocalizationText);
+            _subscription = Localization.Instance.Subscribe(SetLocalizationText);
         }
 
         public void Setup(bool isEnable, bool interactable = true)
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            _unsubscriber?.Dispose();
+            _subscription?.Dispose();
         }
     }
 }

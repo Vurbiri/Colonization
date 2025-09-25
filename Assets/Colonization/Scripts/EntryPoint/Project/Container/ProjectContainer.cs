@@ -35,6 +35,8 @@ namespace Vurbiri.Colonization.EntryPoint
             { [Impl(256)] get => s_projectContent.playerColors; }
             public static PlayerNames PlayerNames    
             { [Impl(256)] get => s_projectContent.playerNames; }
+            public static PlayerUINames PlayerColorNames
+            { [Impl(256)] get => s_projectContent.playerUINames; }
         }
 
         public ProjectContainer() { }

@@ -13,7 +13,7 @@ namespace Vurbiri.International
 
         private readonly Dictionary<string, string>[] _text;
         private readonly ReadOnlyArray<LanguageType> _languages;
-        private readonly Subscription<Localization> _changed = new();
+        private readonly VAction<Localization> _changed = new();
         private readonly LanguageType _defaultLanguage;
         private LanguageType _currentLanguage;
 
@@ -43,7 +43,7 @@ namespace Vurbiri.International
             LoadFile(fileId);
         }
 
-        public Unsubscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, sendCallback, this);
+        public Subscription Subscribe(Action<Localization> action, bool sendCallback = true) => _changed.Add(action, sendCallback, this);
         public void Unsubscribe(Action<Localization> action) => _changed.Remove(action);
 
         public SystemLanguage IdFromCode(string code)

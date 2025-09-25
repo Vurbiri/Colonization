@@ -1,6 +1,6 @@
 {
   "Level": "Level",
-  "ScoreHint": "Score: <b>{0,4}</b>\nRecord:<b>{1,4}</b",
+  "ScoreHint": "Score: <b>{0,4}</b>\nRecord:<b>{1,4}</b>",
   "Road": "Road",
   "Roads": "Roads",
   "BuildRoad": "Build a road",
@@ -29,12 +29,13 @@
   "CurrentMaxHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>",
   "AmountHint": "Current:<b>{0}{1,3}</color></b>\nMaximum:<b>{2,3}</b>",
   "AmountOverHint": "\n<align=\"justified\"><size=85%>\nif <b>{1}</b> fell, you will lose <b>{0}</b> resource(s)</size></align>",
-  "ShrinesProfitHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>\n\n<size=80%>Demon Blood gain:\n if {4} fell:      <b>{2}</b> per Magic Flame\r\n if Demons turn: <b>{3}</b> + <b>{3}</b> per Magic Flame</size></align>",
-  "PortProfitHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b></align>\n\n<size=80%>Revenue from ports <b>{2}00%</b></size></align>",
+  "ShrinesProfitHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b>\n\n<size=80%>Demon Blood gain:\n if {4} fell:      <b>{2}</b> per Magic Flame\r\n if Demons turn: <b>{3}</b> + <b>{3}</b> per Magic Flame</size></align>",
+  "PortProfitHint": "<align=\"left\">Current:<b>{0,2}</b>\nMaximum:<b>{1,2}</b>\n\n<size=80%>Revenue from ports <b>{2}00%</b></size></align>",
   "Gift": "Gift",
   "GiftOk": "<b>{0}</b> accepted the gift",
   "GiftCancel": "<b>{0}</b> refused the gift",
   "GiftMsg": "wants to give you a",
   "GiftButton": "Present",
-  "Stop": "Stop"
+  "Stop": "Stop",
+  "SatanHint": "Curse:<b>{0,3}</b>|<b>{1}</b>\nPower:<b>{2,3}</b>|<b>{3}</b>"
 }

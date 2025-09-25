@@ -14,7 +14,7 @@ namespace Vurbiri.Reactive.Collections
         protected int _capacity = BASE_CAPACITY;
         protected readonly RInt _count = new(0);
 
-        protected readonly Subscription<T, TypeEvent> _subscriber = new();
+        protected readonly VAction<T, TypeEvent> _changeEvent = new();
 
         public int Capacity => _capacity;
         public int Count => _count.Value;
@@ -50,7 +50,7 @@ namespace Vurbiri.Reactive.Collections
         }
 
         #region IReactiveCollection
-        public Unsubscription Subscribe(Action<T, TypeEvent> action, bool instantGetValue = true)
+        public Subscription Subscribe(Action<T, TypeEvent> action, bool instantGetValue = true)
         {
             if (instantGetValue)
             {
@@ -61,7 +61,7 @@ namespace Vurbiri.Reactive.Collections
                 }
             }
 
-            return _subscriber.Add(action);
+            return _changeEvent.Add(action);
         }
         #endregion
 

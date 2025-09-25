@@ -17,7 +17,7 @@ namespace Vurbiri.Reactive.Collections
                 if (!_values[index].Equals(value))
                 {
                     _values[index] = value;
-                    _subscriber.Invoke(index, value, TypeEvent.Change);
+                    _changeEvent.Invoke(index, value, TypeEvent.Change);
                 }
             }
         }
@@ -49,7 +49,7 @@ namespace Vurbiri.Reactive.Collections
             int index = IndexOf(item);
 
             if (index >= 0)
-                _subscriber.Invoke(index, item, TypeEvent.Change);
+                _changeEvent.Invoke(index, item, TypeEvent.Change);
             else
                 Add(item);
         }
@@ -61,7 +61,7 @@ namespace Vurbiri.Reactive.Collections
                 GrowArray();
 
             _values[_count] = item;
-            _subscriber.Invoke(_count, item, TypeEvent.Add);
+            _changeEvent.Invoke(_count, item, TypeEvent.Add);
             _count.Increment();
         }
 
@@ -76,7 +76,7 @@ namespace Vurbiri.Reactive.Collections
                 _values[i] = _values[i - 1];
 
             _values[index] = item;
-            _subscriber.Invoke(index, item, TypeEvent.Insert);
+            _changeEvent.Invoke(index, item, TypeEvent.Insert);
             _count.Increment();
         }
         
@@ -99,7 +99,7 @@ namespace Vurbiri.Reactive.Collections
 
             _values[_count] = default;
 
-            _subscriber.Invoke(index, temp, TypeEvent.Remove);
+            _changeEvent.Invoke(index, temp, TypeEvent.Remove);
             _count.Signal();
         }
 
@@ -107,7 +107,7 @@ namespace Vurbiri.Reactive.Collections
         {
             for (int i = 0; i < _count; i++)
             {
-                _subscriber.Invoke(i, _values[i], TypeEvent.Remove);
+                _changeEvent.Invoke(i, _values[i], TypeEvent.Remove);
                 _values[i] = default;
             }
 

@@ -6,13 +6,13 @@ namespace Vurbiri.Colonization
     public abstract class Currency : IReactiveValue<int>, IEquatable<Currency>, IComparable<Currency>
     {
         protected int _value;
-        protected readonly Subscription<int> _changeValue = new();
-        protected readonly Subscription<int> _deltaValue = new();
+        protected readonly VAction<int> _changeValue = new();
+        protected readonly VAction<int> _deltaValue = new();
 
         public int Value => _value;
 
-        public Unsubscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeValue.Add(action, instantGetValue, _value);
-        public Unsubscription SubscribeDelta(Action<int> action) => _deltaValue.Add(action);
+        public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeValue.Add(action, instantGetValue, _value);
+        public Subscription SubscribeDelta(Action<int> action) => _deltaValue.Add(action);
 
         public bool Equals(Currency other) => other is not null && _value == other._value;
         public int CompareTo(Currency other) => -_value.CompareTo(other._value);

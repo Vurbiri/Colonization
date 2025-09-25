@@ -12,14 +12,14 @@ namespace Vurbiri.Reactive
         public void True()
         {
             if (_value != true)
-                _subscriber.Invoke(_value = true);
+                _changeEvent.Invoke(_value = true);
         }
         public void False()
         {
             if (_value != false)
-                _subscriber.Invoke(_value = false);
+                _changeEvent.Invoke(_value = false);
         }
-        public void Negation() => _subscriber.Invoke(_value = !_value);
+        public void Negation() => _changeEvent.Invoke(_value = !_value);
         
         public static implicit operator bool(RBool value) => value._value;
 

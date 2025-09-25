@@ -7,11 +7,11 @@ namespace Vurbiri.Colonization.UI
 	sealed public class SpellCurrencyWidget : ASelectCurrencyCountWidget
     {
         private Action<int> a_changeCount;
-        private Unsubscription _unsubscriber;
+        private Subscription _subscription;
 
         public void Init(ReadOnlyCurrencies currencies, Action<int> action)
         {
-            _unsubscriber = currencies.Get(_id).Subscribe(SetMax);
+            _subscription = currencies.Get(_id).Subscribe(SetMax);
             a_changeCount = action;
             action(_count);
         }
@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
                 a_changeCount(_count);
         }
 
-        private void OnDestroy() => _unsubscriber?.Dispose();
+        private void OnDestroy() => _subscription?.Dispose();
 
 #if UNITY_EDITOR
         [SerializeField, HideInInspector] private int _oldId = -1;

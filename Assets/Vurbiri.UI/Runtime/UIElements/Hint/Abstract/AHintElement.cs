@@ -8,7 +8,7 @@ namespace Vurbiri.UI
     {
         private AHint _hint;
         private bool _isShowingHint = false;
-        private Vector3 _hintOffset;
+        protected Vector3 _hintOffset;
 
         protected RectTransform _thisRectTransform;
         protected string _hintText;

@@ -6,12 +6,12 @@ namespace Vurbiri.Colonization.Characteristics
     public abstract class Ability : IReactiveValue<int>
     {
         protected int _value;
-        protected readonly Subscription<int> _eventChanged = new();
+        protected readonly VAction<int> _changeEvent = new();
 
         public int Value => _value;
         public bool IsValue => _value > 0;
 
-        public Unsubscription Subscribe(Action<int> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, _value);
+        public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, _value);
 
         public override string ToString() => _value.ToString();
 

@@ -13,11 +13,11 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, Range(0.01f, 0.5f)] private float _fadeDuration = 0.1f;
 
         private readonly Color _colorNormal = Color.white;
-        private readonly Subscription _onClick = new();
+        private readonly VAction _onClick = new();
 
         public Color Color { set => _target.color = value; }
 
-        public Unsubscription AddListener(Action action) => _onClick.Add(action);
+        public Subscription AddListener(Action action) => _onClick.Add(action);
         public void RemoveListener(Action action) => _onClick.Remove(action);
 
         public void OnPointerClick(PointerEventData eventData)

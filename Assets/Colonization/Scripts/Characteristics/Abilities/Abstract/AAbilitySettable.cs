@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization.Characteristics
             int delta = value - _value;
             _value = value;
 
-            if (delta != 0)  _eventChanged.Invoke(_value);
+            if (delta != 0)  _changeEvent.Invoke(_value);
 
             return delta;
         }

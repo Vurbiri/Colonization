@@ -7,7 +7,7 @@ namespace Vurbiri.Reactive
     {
         [SerializeField] protected T _value;
 
-        protected readonly Subscription<T> _subscriber = new();
+        protected readonly VAction<T> _changeEvent = new();
 
         public virtual T Value
         {
@@ -15,10 +15,10 @@ namespace Vurbiri.Reactive
             set
             {
                 if (!_value.Equals(value))
-                    _subscriber.Invoke(_value = value);
+                    _changeEvent.Invoke(_value = value);
             }
         }
 
-        public Unsubscription Subscribe(Action<T> action, bool instantGetValue = true) => _subscriber.Add(action, instantGetValue, _value);
+        public Subscription Subscribe(Action<T> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, _value);
     }
 }

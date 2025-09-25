@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Storage
 
         public void StateBind(IReactive<Satan> reactive, bool instantGetValue)
         {
-            _unsubscribers += reactive.Subscribe(satan => _storage.Set(P_SATAN, satan), instantGetValue);
+            _subscription += reactive.Subscribe(satan => _storage.Set(P_SATAN, satan), instantGetValue);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.Storage
         protected readonly IStorageService _storage;
         protected readonly string _strId;
         protected readonly string _keyArtefact;
-        protected Unsubscription _unsubscribers;
+        protected Subscription _subscription;
 
         public APlayerStorage(int id, IStorageService storage, int countActors)
         {
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.Storage
 
         public void BindActors(ReadOnlyReactiveSet<Actor> actors)
         {
-            _unsubscribers += actors.Subscribe(OnActors);
+            _subscription += actors.Subscribe(OnActors);
 
             #region Local OnActors(..)
             //==============================
@@ -64,12 +64,12 @@ namespace Vurbiri.Colonization.Storage
         }
         public void BindArtefact(IReactive<Artefact> currencies, bool instantGetValue)
         {
-            _unsubscribers += currencies.Subscribe(artefact => _storage.Set(_keyArtefact, artefact.Levels), instantGetValue);
+            _subscription += currencies.Subscribe(artefact => _storage.Set(_keyArtefact, artefact.Levels), instantGetValue);
         }
 
         public void Dispose()
         {
-            _unsubscribers?.Dispose();
+            _subscription?.Dispose();
         }
 
         protected List<ActorLoadData> InitActors(int max, bool isLoad)

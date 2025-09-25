@@ -12,9 +12,9 @@ namespace Vurbiri.Reactive
     public class RTransform : IReactive<Vector3>, IReactive<Quaternion>, IReactive<Transform>
 	{
 		protected readonly Transform _transform;
-        protected readonly Subscription<Vector3> _changedPosition = new();
-        protected readonly Subscription<Quaternion> _changedRotation = new();
-        protected readonly Subscription<Transform> _changedTransform = new();
+        protected readonly VAction<Vector3> _changedPosition = new();
+        protected readonly VAction<Quaternion> _changedRotation = new();
+        protected readonly VAction<Transform> _changedTransform = new();
 
         public Vector3 position
         {
@@ -35,15 +35,15 @@ namespace Vurbiri.Reactive
             _transform = transform;
         }
 
-        public Unsubscription Subscribe(Action<Vector3> action, bool instantGetValue = true)
+        public Subscription Subscribe(Action<Vector3> action, bool instantGetValue = true)
         {
             return _changedPosition.Add(action, instantGetValue, _transform.position);
         }
-        public Unsubscription Subscribe(Action<Quaternion> action, bool instantGetValue = true)
+        public Subscription Subscribe(Action<Quaternion> action, bool instantGetValue = true)
         {
             return _changedRotation.Add(action, instantGetValue, _transform.rotation);
         }
-        public Unsubscription Subscribe(Action<Transform> action, bool instantGetValue = true)
+        public Subscription Subscribe(Action<Transform> action, bool instantGetValue = true)
         {
             return _changedTransform.Add(action, instantGetValue, _transform);
         }

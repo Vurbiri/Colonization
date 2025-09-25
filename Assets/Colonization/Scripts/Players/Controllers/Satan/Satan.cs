@@ -14,14 +14,15 @@ namespace Vurbiri.Colonization
 
         protected readonly DemonsSpawner _spawner;
 
-        protected readonly Subscription<Satan> _eventChanged = new();
+        protected readonly VAction<Satan> _eventChanged = new();
 
         protected int _curse, _maxCurse;
 
         public int Level { [Impl(256)] get => _leveling.Level; }
         public int MaxLevel { [Impl(256)] get => _leveling.MaxLevel; }
-        public int Curse { [Impl(256)] get => _curse; }
-        public int MaxCurse { [Impl(256)] get => _maxCurse; }
+        public int Curse { [Impl(256)] get => _curse / _parameters.maxCursePerLevel; }
+        public int MaxCurse { [Impl(256)] get => _maxCurse / _parameters.maxCursePerLevel; }
+        public float CursePercent { [Impl(256)] get => (float)_curse/_maxCurse; }
 
         protected Satan(Settings settings) : base(PlayerId.Satan)
         {
@@ -47,7 +48,7 @@ namespace Vurbiri.Colonization
             storage.LoadData = null;
         }
 
-        public Unsubscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<Satan> action, bool instantGetValue) => _eventChanged.Add(action, instantGetValue, this);
 
         [Impl(256)] protected void LevelUp()
         {
@@ -56,6 +57,7 @@ namespace Vurbiri.Colonization
 
             _curse -= _maxCurse;
             _spawner.AddPotential(Math.Min(_parameters.maxPotentialPerLvl, _leveling.Level));
+            GameContainer.Balance.ForSatanLevelUP();
         }
     }
 }

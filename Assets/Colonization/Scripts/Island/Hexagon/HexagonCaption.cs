@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.UI
         private float _lastAngle;
         private string _defaultCurrencyText;
         private Coroutine _fadeCoroutine, _profitCoroutine, _newIdCoroutine;
-        private Unsubscription _unsubscriber;
+        private Subscription _subscription;
 
         private bool IsShow
         {
@@ -63,8 +63,8 @@ namespace Vurbiri.Colonization.UI
 
             SetActive();
 
-            _unsubscriber = GameContainer.CameraTransform.Subscribe(OnChangeCamera);
-            _unsubscriber = GameContainer.EventBus.EventHexagonShow.Add(OnCaptionEnable);
+            _subscription = GameContainer.CameraTransform.Subscribe(OnChangeCamera);
+            _subscription = GameContainer.EventBus.EventHexagonShow.Add(OnCaptionEnable);
         }
 
         public void NewId(int id, Color color, float showTime)
@@ -257,7 +257,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDestroy()
         {
-            _unsubscriber?.Dispose();
+            _subscription?.Dispose();
         }
 
 #if UNITY_EDITOR

@@ -2,7 +2,6 @@ using System;
 using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
-using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 using Object = UnityEngine.Object;
@@ -20,7 +19,7 @@ namespace Vurbiri.Colonization.Actors.UI
         private int Duration { [Impl(256)] set => _durationTMP.text = new(CHAR, value); }
         private int Index { [Impl(256)] set => _transform.localPosition = _settings.GetPosition(value); }
 
-        private Unsubscription _unsubscribers;
+        private Subscription _subscription;
 
         public EffectsBar(Component initObj, Settings settings, Action<EffectsBar, bool> callback) : base(initObj.gameObject, callback)
         {
@@ -43,15 +42,15 @@ namespace Vurbiri.Colonization.Actors.UI
             Index = effect.Index;
             Duration = effect.Duration;
 
-            _unsubscribers += actor.Subscribe(OnRemoveActor, false);
-            _unsubscribers += effect.Subscribe(OnChangeEffect, false);
+            _subscription += actor.Subscribe(OnRemoveActor, false);
+            _subscription += effect.Subscribe(OnChangeEffect, false);
 
             Enable();
         }
 
         [Impl(256)] private void Destroy()
         {
-            _unsubscribers?.Dispose();
+            _subscription?.Dispose();
             ToPool();
         }
 

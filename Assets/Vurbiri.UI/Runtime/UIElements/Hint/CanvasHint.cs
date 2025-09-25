@@ -25,19 +25,20 @@ namespace Vurbiri.UI
             var thisSize = _backTransform.sizeDelta * 0.5f;
             var parentSize = _canvasRectTransform.sizeDelta * 0.5f;
 
-            float delta = position.x - thisSize.x - _edgeX + parentSize.x;
+            position.x += offset.x;
+            float delta = (position.x - thisSize.x - _edgeX) + parentSize.x;
             if (delta > 0f)
             {
-                delta = position.x + thisSize.x + _edgeX - parentSize.x;
+                delta = (position.x + thisSize.x + _edgeX) - parentSize.x;
                 if (delta < 0f)
                     delta = 0f;
             }
 
-            offset.x -= delta;
+            offset.x = -delta;
             offset.y += thisSize.y;
 
             if (position.y > 0f)
-                offset.y *= -1f;
+                offset.y = -offset.y;
 
             _backTransform.localPosition = position + offset;
         }

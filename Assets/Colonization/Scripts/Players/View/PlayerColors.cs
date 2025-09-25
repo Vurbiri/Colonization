@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField] private Color[] _colors;
 
-        private readonly Subscription<PlayerColors> _eventThisChanged = new();
+        private readonly VAction<PlayerColors> _eventThisChanged = new();
 
         public Color this[int index] => _colors[index];
         public Color this[Id<PlayerId> id] => this[id.Value];
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Unsubscription Subscribe(Action<PlayerColors> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<PlayerColors> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, this);
 
         public bool Equals(Color[] colors)
         {

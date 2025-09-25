@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private IdArray<StateId, Color> _colors = new(Color.white);
         [SerializeField, Range(0.01f, 0.5f)] private float _fadeDuration = 0.1f;
         
-        private readonly Subscription _onClick = new();
+        private readonly VAction _onClick = new();
         private bool _inside, _hold;
         private WaitRealtime _clickPeriod;
 
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
-        public Unsubscription AddListener(Action action) => _onClick.Add(action);
+        public Subscription AddListener(Action action) => _onClick.Add(action);
         public void RemoveListener(Action action) => _onClick.Remove(action);
 
         public void OnPointerDown(PointerEventData eventData)

@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         private bool _isTutorial;
 
         private ProjectStorage _storage;
-        private readonly Subscription<GameSettings> _eventChanged = new();
+        private readonly VAction<GameSettings> _eventChanged = new();
 
         public bool IsLoad
         {
@@ -49,7 +49,7 @@ namespace Vurbiri.Colonization
             content.gameSettings = instance;
         }
 
-        public Unsubscription Subscribe(Action<GameSettings> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<GameSettings> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
         public void Start()
         {

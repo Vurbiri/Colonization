@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Color _rateColor = Color.white;
 
-        private readonly Subscription<int, int, int> _changeCount = new();
+        private readonly VAction<int, int, int> _changeCount = new();
         private int _rate;
         private string _formatValue;
 

@@ -11,17 +11,17 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] protected string _key;
         [SerializeField, ReadOnly, Multiline] protected string _cost;
 
-        private Unsubscription _unsubscriber;
+        private Subscription _subscription;
 
         public virtual void Init(Perk perk)
         {
             base.InternalInit(GameContainer.UI.CanvasHint, 0.48f);
-            _unsubscriber = Localization.Instance.Subscribe(SetTextAndCost);
+            _subscription = Localization.Instance.Subscribe(SetTextAndCost);
         }
 
         public void Learn()
         {
-            _unsubscriber ^= Localization.Instance.Subscribe(SetText);
+            _subscription ^= Localization.Instance.Subscribe(SetText);
             _cost = null;
         }
 
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Dispose()
         {
-            _unsubscriber.Dispose();
+            _subscription.Dispose();
         }
 
 #if UNITY_EDITOR

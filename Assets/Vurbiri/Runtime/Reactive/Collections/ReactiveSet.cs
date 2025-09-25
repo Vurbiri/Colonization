@@ -66,7 +66,7 @@ namespace Vurbiri.Reactive.Collections
                 _count.Decrement();
             }
 
-            _subscriber.Invoke(item, operation);
+            _changeEvent.Invoke(item, operation);
         }
 
         public void Dispose()

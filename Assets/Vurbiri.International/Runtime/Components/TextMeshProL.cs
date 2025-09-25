@@ -9,7 +9,7 @@ namespace Vurbiri.International.UI
     {
         [SerializeField] private FileIdAndKey _getText;
 
-        private Unsubscription _subscribe;
+        private Subscription _subscribe;
 
         public void SetKey(FileId file, string key)
         {

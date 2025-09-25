@@ -14,8 +14,8 @@ namespace Vurbiri.Colonization
         private string[] _customNames;
 
         private readonly string[] _names = new string[PlayerId.Count];
-        private readonly Subscription<PlayerNames> _eventThisChanged = new();
-        private Unsubscription _unsubscription;
+        private readonly VAction<PlayerNames> _eventThisChanged = new();
+        private Subscription _subscription;
 
         public string this[Id<PlayerId> id] => _names[id.Value];
         public string this[int index] => _names[index];
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization
             if (notLoad) 
                 _customNames = new string[PlayerId.Count];
 
-            _unsubscription = Localization.Instance.Subscribe(SetNames);
+            _subscription = Localization.Instance.Subscribe(SetNames);
             storage.BindPlayerNames(this);
 
             return this;
@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
 
         public string GetDefaultName(int index) => Localization.Instance.GetText(LangFiles.Main, _nameKeys[index]);
 
-        public Unsubscription Subscribe(Action<PlayerNames> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<PlayerNames> action, bool instantGetValue = true) => _eventThisChanged.Add(action, instantGetValue, this);
 
         public bool Equals(string[] customNames)
         {
@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
         }
         public void Dispose()
         {
-            _unsubscription?.Dispose();
+            _subscription?.Dispose();
         }
 
         private void SetNames(Localization localization)

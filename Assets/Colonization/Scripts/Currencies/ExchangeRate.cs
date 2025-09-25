@@ -8,8 +8,8 @@ namespace Vurbiri.Colonization
     public class ExchangeRate : IReactive<ACurrencies>, IDisposable
     {
         private readonly CurrenciesLite _exchange;
-        private readonly Subscription<ACurrencies> _changeValue = new();
-        private Unsubscription _unsubscribers;
+        private readonly VAction<ACurrencies> _changeValue = new();
+        private Subscription _subscription;
         private Chance _chance;
         private int _rate;
 
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
             return new(abilities);
         }
 
-        public Unsubscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _changeValue.Add(action, instantGetValue, _exchange);
+        public Subscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _changeValue.Add(action, instantGetValue, _exchange);
 
         public void Update()
         {
@@ -47,13 +47,13 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
-            _unsubscribers?.Dispose();
+            _subscription?.Dispose();
         }
 
         private void SubscribeToAbilities(ReadOnlyAbilities<HumanAbilityId> abilities)
         {
-            _unsubscribers += abilities[HumanAbilityId.ExchangeRate].Subscribe(v => _rate = v);
-            _unsubscribers += abilities[HumanAbilityId.ExchangeSaleChance].Subscribe(v => _chance.Value += v);
+            _subscription += abilities[HumanAbilityId.ExchangeRate].Subscribe(v => _rate = v);
+            _subscription += abilities[HumanAbilityId.ExchangeSaleChance].Subscribe(v => _chance.Value += v);
         }
     }
 }

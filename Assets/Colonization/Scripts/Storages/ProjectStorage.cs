@@ -15,23 +15,23 @@ namespace Vurbiri.Colonization.Storage
         public void SetAndBindAudioMixer(AudioMixer<MixerId> mixer)
         {
             _storage.TryPopulate<AudioMixer<MixerId>>(VOLUMES, new AudioMixer<MixerId>.Converter(mixer));
-            _unsubscribers += mixer.Subscribe(self => _storage.Set(VOLUMES, self, _mixerConverter), false);
+            _subscription += mixer.Subscribe(self => _storage.Set(VOLUMES, self, _mixerConverter), false);
         }
         public void SetAndBindProfile(Profile profile)
         {
             _storage.TryPopulate<Profile>(PROFILE, new Profile.Converter(profile));
-            _unsubscribers += profile.Subscribe(self => _storage.Set(PROFILE, self, _profileConverter), false);
+            _subscription += profile.Subscribe(self => _storage.Set(PROFILE, self, _profileConverter), false);
         }
         public void SetAndBindPlayerColors(PlayerColors colors)
         {
             _storage.TryPopulate<PlayerColors>(COLORS, new PlayerColors.Converter(colors));
-            _unsubscribers += colors.Subscribe(self => _storage.Set(COLORS, self, _colorsConverter), false);
+            _subscription += colors.Subscribe(self => _storage.Set(COLORS, self, _colorsConverter), false);
         }
 
         public bool TryLoadPlayerNames(out string[] names) => _storage.TryGet(NAMES, out names);
         public void BindPlayerNames(IReactive<PlayerNames> reactive)
         {
-            _unsubscribers += reactive.Subscribe(names => _storage.Set(NAMES, names.CustomNames), false);
+            _subscription += reactive.Subscribe(names => _storage.Set(NAMES, names.CustomNames), false);
         }
 
 
@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization.Storage
         }
         public void BindGameState(IReactive<GameSettings> reactive, bool instantGetValue)
         {
-            _unsubscribers += reactive.Subscribe(self => _storage.Set(GAME_STATE, self), instantGetValue);
+            _subscription += reactive.Subscribe(self => _storage.Set(GAME_STATE, self), instantGetValue);
         }
     }
 }

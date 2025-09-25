@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization.Characteristics
     {
         private int _level = 0;
         private readonly int[] _levels, _add;
-        private readonly Subscription<Artefact> _changeLevels = new();
+        private readonly VAction<Artefact> _changeLevels = new();
         private readonly RandomIndex _rIndex;
         private readonly int _count;
 
@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.Characteristics
         {
             var settings = buffs.Settings;
             for (int i = 0; i < _count; i++)
-                _buffs[i] = new(_subscriber, settings[i]);
+                _buffs[i] = new(_change, settings[i]);
         }
 
         private Artefact(BuffsScriptable buffs, int[] levels) : this(buffs.MaxLevel, buffs.Settings)
@@ -39,7 +39,7 @@ namespace Vurbiri.Colonization.Characteristics
             var settings = buffs.Settings;
             for (int i = 0; i < _count; i++)
             {
-                _buffs[i] = new(_subscriber, settings[i], _levels[i] = levels[i]);
+                _buffs[i] = new(_change, settings[i], _levels[i] = levels[i]);
                 _level += levels[i];
             }
         }
@@ -77,7 +77,7 @@ namespace Vurbiri.Colonization.Characteristics
             }
         }
 
-        public Unsubscription Subscribe(System.Action<Artefact> action, bool instantGetValue = true)
+        public Subscription Subscribe(System.Action<Artefact> action, bool instantGetValue = true)
         {
             return _changeLevels.Add(action, instantGetValue, this);
         }

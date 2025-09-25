@@ -15,8 +15,8 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly ReadOnlyArray<ReadOnlyArray<Perk>> _perks;
         private readonly RInt[] _progress = new RInt[TypeOfPerksId.Count];
         private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[TypeOfPerksId.Count];
-        private readonly Subscription<Perk> _eventPerk = new();
-        private readonly Subscription<HashSet<int>[]> _eventHashSet = new();
+        private readonly VAction<Perk> _eventPerk = new();
+        private readonly VAction<HashSet<int>[]> _eventHashSet = new();
 
         public Perk this[int typePerkId, int perkId] { [Impl(256)] get => _perks[typePerkId][perkId]; }
         
@@ -56,7 +56,7 @@ namespace Vurbiri.Colonization.Characteristics
         [Impl(256)] public bool IsPerkLearned(int typePerkId, int perkId) => _learnedPerks[typePerkId].Contains(perkId);
 
         #region Subscribe
-        public Unsubscription Subscribe(Action<Perk> action, bool instantGetValue = true)
+        public Subscription Subscribe(Action<Perk> action, bool instantGetValue = true)
         {
             for (int type = 0; instantGetValue & type < TypeOfPerksId.Count; type++)
                 foreach (int id in _learnedPerks[type]) 
@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization.Characteristics
 
             return _eventPerk.Add(action);
         }
-        [Impl(256)] public Unsubscription Subscribe(Action<HashSet<int>[]> action, bool instantGetValue = true)
+        [Impl(256)] public Subscription Subscribe(Action<HashSet<int>[]> action, bool instantGetValue = true)
         {
             return _eventHashSet.Add(action, instantGetValue, _learnedPerks);
         }

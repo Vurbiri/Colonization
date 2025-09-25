@@ -101,14 +101,18 @@ namespace Vurbiri.Colonization.UI
         {
             var ok = localization.GetText(_keyOk);
             var cancel = localization.GetText(_keyCancel);
+            var names = GameContainer.UI.PlayerNames;
 
             string name;
             for (int i = 0; i < PlayerId.AICount; i++)
             {
-                name = GameContainer.UI.PlayerNames[i + PlayerId.AI_01];
+                name = names[i + PlayerId.AI_01];
                 _ok[i] = string.Format(ok, name);
                 _cancel[i] = string.Format(cancel, name);
             }
+
+            if(_currentPlayer != PlayerId.None)
+                _opponentName.text = names[_currentPlayer];
         }
 
         private void OnDestroy()

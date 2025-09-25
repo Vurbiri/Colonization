@@ -14,7 +14,7 @@ namespace Vurbiri.UI
             _onClick.Init();
         }
 
-        public Unsubscription AddListener(Action action) => _onClick.Add(action);
+        public Subscription AddListener(Action action) => _onClick.Add(action);
         public void RemoveListener(Action action) => _onClick.Remove(action);
 
         sealed protected internal override void Invoke() => _onClick.Invoke();

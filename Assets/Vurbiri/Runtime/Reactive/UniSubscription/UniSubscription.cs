@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Vurbiri.Reactive
 {
     [Serializable]
-	public class UniSubscription : Subscription
+	public class UniSubscription : VAction
 	{
         [SerializeField] private Listener[] _listeners;
 
@@ -29,7 +29,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UniSubscription<T> : Subscription<T>
+    public class UniSubscription<T> : VAction<T>
     {
         [SerializeField] private Listener<T>[] _listeners;
 
@@ -55,7 +55,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UniSubscription<TA, TB> : Subscription<TA, TB>
+    public class UniSubscription<TA, TB> : VAction<TA, TB>
     {
         [SerializeField] private Listener<TA, TB>[] _listeners;
 
@@ -80,7 +80,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UniSubscription<TA, TB, TC> : Subscription<TA, TB, TC>
+    public class UniSubscription<TA, TB, TC> : VAction<TA, TB, TC>
     {
         [SerializeField] private Listener<TA, TB, TC>[] _listeners;
 
@@ -105,7 +105,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UniSubscription<TA, TB, TC, TD> : Subscription<TA, TB, TC, TD>
+    public class UniSubscription<TA, TB, TC, TD> : VAction<TA, TB, TC, TD>
     {
         [SerializeField] private Listener<TA, TB, TC, TD>[] _listeners;
 

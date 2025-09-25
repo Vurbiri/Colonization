@@ -5,7 +5,7 @@ namespace Vurbiri.Reactive.Collections
 {
     public abstract class AReactiveItemMono<T> : MonoBehaviour, IReactiveItem<T> where T : AReactiveItemMono<T>
     {
-        protected readonly Subscription<T, TypeEvent> _eventChanged = new();
+        protected readonly VAction<T, TypeEvent> _eventChanged = new();
         protected int _index = -1;
 
         public int Index => _index;
@@ -17,7 +17,7 @@ namespace Vurbiri.Reactive.Collections
             _eventChanged.Add(action);
         }
 
-        public Unsubscription Subscribe(Action<T, TypeEvent> action, bool instantGetValue = true)
+        public Subscription Subscribe(Action<T, TypeEvent> action, bool instantGetValue = true)
         {
             if (instantGetValue)
                 action((T)this, TypeEvent.Subscribe);

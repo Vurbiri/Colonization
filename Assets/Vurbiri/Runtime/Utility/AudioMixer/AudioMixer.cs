@@ -22,7 +22,7 @@ namespace Vurbiri
         [SerializeField] private IdArray<T, float> _volumes = new(0.8f);
         [SerializeField] private IdArray<T, string> _nameParams;
 
-        private readonly Subscription<AudioMixer<T>> _subscriber = new();
+        private readonly VAction<AudioMixer<T>> _changeEvent = new();
 
         public float this[int index] 
         {
@@ -50,7 +50,7 @@ namespace Vurbiri
                 }
             }
 
-            if (changed) _subscriber.Invoke(this);
+            if (changed) _changeEvent.Invoke(this);
         }
 
         public void Cancel()
@@ -59,7 +59,7 @@ namespace Vurbiri
                 this[i] = _volumes[i];
         }
 
-        public Unsubscription Subscribe(Action<AudioMixer<T>> action, bool instantGetValue = true) => _subscriber.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<AudioMixer<T>> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, this);
 
         private float ConvertToDB(float volume)
         {

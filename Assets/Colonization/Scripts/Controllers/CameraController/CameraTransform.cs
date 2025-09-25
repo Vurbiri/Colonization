@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.Controllers
         private readonly Camera _camera;
         private readonly Transform _cameraTransform, _parentTransform;
         private readonly SphereBounds _bounds = new(CONST.HEX_DIAMETER_IN * CONST.MAX_CIRCLES);
-        private readonly Subscription<Transform> _changedTransform = new();
+        private readonly VAction<Transform> _changedTransform = new();
         private Vector3 _velocity = Vector3.zero;
 
         public Camera Camera => _camera;
@@ -113,7 +113,7 @@ namespace Vurbiri.Colonization.Controllers
             target.rotation = Quaternion.LookRotation(_cameraTransform.forward);
         }
 
-        public Unsubscription Subscribe(Action<Transform> action, bool instantGetValue = true) => _changedTransform.Add(action, instantGetValue, _cameraTransform);
+        public Subscription Subscribe(Action<Transform> action, bool instantGetValue = true) => _changedTransform.Add(action, instantGetValue, _cameraTransform);
         public void Unsubscribe(Action<Transform> action) => _changedTransform.Remove(action);
 
         public static implicit operator Transform(CameraTransform self) => self._cameraTransform;

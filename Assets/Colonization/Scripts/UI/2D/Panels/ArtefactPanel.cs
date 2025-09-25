@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private Level _level;
 
         private string _name;
-        private Unsubscription _unsubscribers;
+        private Subscription _subscription;
         private readonly Stack<WaitRealtime> _timers = new(4);
 
         public void Init()
@@ -41,10 +41,10 @@ namespace Vurbiri.Colonization.UI
                 _timers.Push(new(_showDuration));
             }
 
-            _unsubscribers += Localization.Instance.Subscribe(SetLocalizationText);
-            _unsubscribers += person.Artefact.Subscribe(SetHintValues);
+            _subscription += Localization.Instance.Subscribe(SetLocalizationText);
+            _subscription += person.Artefact.Subscribe(SetHintValues);
 
-            _unsubscribers += person.GetAbility(HumanAbilityId.IsArtefact).Subscribe(value => gameObject.SetActive(value > 0));
+            _subscription += person.GetAbility(HumanAbilityId.IsArtefact).Subscribe(value => gameObject.SetActive(value > 0));
         }
 
         private void SetLocalizationText(Localization localization)
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization.UI
             stringBuilder.AppendLine(_name = localization.GetText(_getText));
             stringBuilder.AppendLine();
 
-            for (int i = _abilities.Length - 1; i >= 0; i--)
+            for (int i = 0; i < count; i++)
                 _abilities[i].SetHintText(localization, stringBuilder);
             stringBuilder.AppendLine();
             _level.SetHintText(localization, stringBuilder);
@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization.UI
 
         public void Dispose()
         {
-            _unsubscribers?.Dispose();
+            _subscription?.Dispose();
         }
 
         private void ShowProfit(TextMeshProUGUI tmp, int profit)

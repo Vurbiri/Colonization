@@ -15,8 +15,8 @@ namespace Vurbiri.Colonization.UI
         private bool _isOpen;
         private int _id;
 
-        public readonly Subscription<int> onOpen = new();
-        public readonly Subscription onClose = new();
+        public readonly VAction<int> onOpen = new();
+        public readonly VAction onClose = new();
 
         public bool IsOpen => _isOpen;
 

@@ -13,18 +13,18 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] protected FileIdAndKey _getText;
 
-        protected Unsubscription _unsubscribers;
+        protected Subscription _subscription;
 
         protected void Init()
         {
             base.InternalInit(GameContainer.UI.CanvasHint);
 
-            _unsubscribers += Localization.Instance.Subscribe(SetLocalizationText);
+            _subscription += Localization.Instance.Subscribe(SetLocalizationText);
         }
 
         protected virtual void OnDestroy()
         {
-            _unsubscribers?.Dispose();
+            _subscription?.Dispose();
         }
 
         protected abstract void SetLocalizationText(Localization localization);

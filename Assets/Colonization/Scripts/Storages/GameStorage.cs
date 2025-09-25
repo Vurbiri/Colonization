@@ -55,20 +55,20 @@ namespace Vurbiri.Colonization.Storage
         #region Bind
         public void BindScore(Score score)
         {
-            _unsubscribers += score.Subscribe(self => _storage.Set(SAVE_KEYS.SCORE, self), !_isLoad);
+            _subscription += score.Subscribe(self => _storage.Set(SAVE_KEYS.SCORE, self), !_isLoad);
         }
         public void BindBalance(Balance balance)
         {
-            _unsubscribers += balance.Subscribe(balanceData => _storage.Set(SAVE_KEYS.BALANCE, balanceData), !_isLoad);
+            _subscription += balance.Subscribe(balanceData => _storage.Set(SAVE_KEYS.BALANCE, balanceData), !_isLoad);
         }
         public void BindDiplomacy(Diplomacy diplomacy)
         {
-            _unsubscribers += diplomacy.Subscribe(self => _storage.Set(SAVE_KEYS.DIPLOMANCY, self), !_isLoad);
+            _subscription += diplomacy.Subscribe(self => _storage.Set(SAVE_KEYS.DIPLOMANCY, self), !_isLoad);
         }
 
         public void BindHexagons(Hexagons hexagons)
         {
-            _unsubscribers += hexagons.Subscribe(hex => _storage.Set(hex.Key.ToSaveKey(), hex), false);
+            _subscription += hexagons.Subscribe(hex => _storage.Set(hex.Key.ToSaveKey(), hex), false);
         }
         #endregion
 

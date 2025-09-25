@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization.Characteristics
             if(currentValue != _value)
             {
                 _value = currentValue;
-                _eventChanged.Invoke(currentValue);
+                _changeEvent.Invoke(currentValue);
             }
         }
     }
