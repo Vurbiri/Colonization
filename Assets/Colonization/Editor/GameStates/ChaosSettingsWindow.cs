@@ -4,14 +4,14 @@ using static VurbiriEditor.Colonization.CONST_EDITOR;
 
 namespace VurbiriEditor.Colonization
 {
-	public class BalanceSettingsWindow : ASettingsWindow<BalanceSettings>
+	public class ChaosSettingsWindow : ASettingsWindow<ChaosSettings>
     {
-        private const string NAME = "Balance", MENU = MENU_GS_PATH + NAME;
+        private const string NAME = "Chaos", MENU = MENU_GS_PATH + NAME;
 
         [MenuItem(MENU, false, MENU_GS_ORDER)]
         private static void ShowWindow()
 		{
-			GetWindow<BalanceSettingsWindow>(true, NAME);
+			GetWindow<ChaosSettingsWindow>(true, NAME);
 		}
 	}
 }

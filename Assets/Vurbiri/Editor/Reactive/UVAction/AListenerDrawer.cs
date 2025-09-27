@@ -6,7 +6,6 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 using Vurbiri;
-using Vurbiri.Reactive;
 using static UnityEditor.EditorGUI;
 using Object = UnityEngine.Object;
 

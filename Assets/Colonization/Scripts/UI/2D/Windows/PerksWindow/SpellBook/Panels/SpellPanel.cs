@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected CanvasGroupSwitcher _switcher;
         [SerializeField] protected VButton _applyButton;
 
-        protected readonly SpellParam _spellParam = new(PlayerId.Person);
+        protected SpellParam _spellParam = new(PlayerId.Person);
         protected ASpell _spell;
 
         public int Type => _spellId.type;

@@ -36,9 +36,9 @@ namespace Vurbiri.Colonization.Storage
             score = null;
             return _isLoad && _storage.TryGet(SAVE_KEYS.SCORE, out score);
         }
-        public int GetBalanceValue(int defaultValue)
+        public int GetChaosValue(int defaultValue)
         {
-            if (_isLoad && _storage.TryGet(SAVE_KEYS.BALANCE, out int value))
+            if (_isLoad && _storage.TryGet(SAVE_KEYS.CHAOS, out int value))
                 return value;
 
             return defaultValue;
@@ -57,9 +57,9 @@ namespace Vurbiri.Colonization.Storage
         {
             _subscription += score.Subscribe(self => _storage.Set(SAVE_KEYS.SCORE, self), !_isLoad);
         }
-        public void BindBalance(Balance balance)
+        public void BindChaos(Chaos balance)
         {
-            _subscription += balance.Subscribe(balanceData => _storage.Set(SAVE_KEYS.BALANCE, balanceData), !_isLoad);
+            _subscription += balance.Subscribe(balanceData => _storage.Set(SAVE_KEYS.CHAOS, balanceData), !_isLoad);
         }
         public void BindDiplomacy(Diplomacy diplomacy)
         {

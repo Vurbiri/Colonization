@@ -4,7 +4,7 @@ using System;
 namespace Vurbiri.Reactive
 {
     [Serializable, JsonConverter(typeof(Converter))]
-    sealed public class RFloat : ARType<float>
+    sealed public class RFloat : AReactiveType<float>
     {
         public RFloat() : base(0f) { }
         public RFloat(float value) : base(value) { }

@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
         private readonly List<Hexagon> _hexagons = new(HEX_COUNT);
         private readonly IdSet<LinkId, CrossroadLink> _links = new();
 
-        private int _countFreeLink = 0, _countWater = 0;
+        private int _countFreeLink = 0, _waterCount = 0;
         private bool _isGate = false;
         private WaitResultSource<Hexagon> _waitHexagon;
 
@@ -40,14 +40,15 @@ namespace Vurbiri.Colonization
         public Id<EdificeGroupId> GroupId { [Impl(256)] get => _states.groupId; }
         public Id<EdificeId> NextId { [Impl(256)] get => _states.nextId; }
         public Id<EdificeGroupId> NextGroupId { [Impl(256)] get => _states.nextGroupId; }
-        public bool IsGate => _isGate;
-        public bool IsBreach => _countWater > 0;
-        public bool IsPort => _states.groupId == EdificeGroupId.Port;
-        public bool IsColony => _states.groupId == EdificeGroupId.Colony;
-        public bool IsShrine => _states.groupId == EdificeGroupId.Shrine;
-        public bool IsWall => _isWall;
-        public IdSet<LinkId, CrossroadLink> Links => _links;
-        public List<Hexagon> Hexagons => _hexagons;
+        public int WaterCount { [Impl(256)] get => _waterCount; }
+        public bool IsGate { [Impl(256)] get => _isGate; }
+        public bool IsBreach { [Impl(256)] get => _waterCount > 0; }
+        public bool IsPort { [Impl(256)] get => _states.groupId == EdificeGroupId.Port; }
+        public bool IsColony { [Impl(256)] get => _states.groupId == EdificeGroupId.Colony; }
+        public bool IsShrine { [Impl(256)] get => _states.groupId == EdificeGroupId.Shrine; }
+        public bool IsWall { [Impl(256)] get => _isWall; }
+        public IdSet<LinkId, CrossroadLink> Links { [Impl(256)] get => _links; }
+        public List<Hexagon> Hexagons { [Impl(256)] get => _hexagons; }
         #endregion
 
         public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation)
@@ -68,9 +69,9 @@ namespace Vurbiri.Colonization
 
         #region IInteractable
         public Vector3 Position { [Impl(256)] get; }
-        public RBool InteractableReactive => _interactable;
+        public ReactiveValue<bool> InteractableReactive { [Impl(256)] get => _interactable; }
         public bool Interactable { [Impl(256)] get => _interactable.Value; [Impl(256)] set => _interactable.Value = value; }
-        public RBool CanCancel => _canCancel;
+        public ReactiveValue<bool> CanCancel { [Impl(256)] get => _canCancel; }
         [Impl(256)] public void Select()
         {
             if (_interactable.Value)
@@ -99,14 +100,14 @@ namespace Vurbiri.Colonization
         public bool AddHexagon(Hexagon hexagon, out bool ending)
         {
             _isGate |= hexagon.IsGate;
-            if (hexagon.IsWater)  _countWater++;
+            if (hexagon.IsWater)  _waterCount++;
 
-            if (_hexagons.Count < (HEX_COUNT - 1) | _countWater < HEX_COUNT)
+            if (_hexagons.Count < (HEX_COUNT - 1) | _waterCount < HEX_COUNT)
             {
                 _hexagons.Add(hexagon);
 
                 if (ending = _hexagons.Count == HEX_COUNT)
-                    _countFreeLink = _countWater <= 1 ? _isGate ? 1 : 3 : 2;
+                    _countFreeLink = _waterCount <= 1 ? _isGate ? 1 : 3 : 2;
 
                 return true;
             }
@@ -135,7 +136,7 @@ namespace Vurbiri.Colonization
 
             if (_countFreeLink == _links.Fullness)
             {
-                _states.SetNextId(EdificeId.GetId(_countWater, _isGate));
+                _states.SetNextId(EdificeId.GetId(_waterCount, _isGate));
                 _edifice.Init(_owner, _isWall, _links, _edifice, false);
             }
         }

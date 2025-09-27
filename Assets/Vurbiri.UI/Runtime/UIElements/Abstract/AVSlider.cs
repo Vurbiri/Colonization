@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
@@ -21,7 +20,7 @@ namespace Vurbiri.UI
         [SerializeField] protected T _minValue;
         [SerializeField] protected T _maxValue;
         [SerializeField] protected T _step;
-        [SerializeField] private UniSubscription<T> _onValueChanged = new();
+        [SerializeField] private UVAction<T> _onValueChanged = new();
 
         protected float _normalizedValue;
         private int _axis;

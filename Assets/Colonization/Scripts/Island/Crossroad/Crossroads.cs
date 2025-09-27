@@ -11,8 +11,8 @@ namespace Vurbiri.Colonization
     {
         private readonly Dictionary<Key, Crossroad> _crossroads = new(MAX_CROSSROADS);
 
-        private readonly HashSet<Crossroad> _breach = new(HEX.SIDES * (MAX_CIRCLES + HEX.SIDES));
-        private readonly HashSet<Crossroad> _gate = new(HEX.SIDES);
+        private readonly HashSet<Key> _breach = new(HEX.SIDES * (MAX_CIRCLES + HEX.SIDES));
+        private readonly HashSet<Key> _gate = new(HEX.SIDES);
 
         private Transform _container;
        
@@ -52,16 +52,19 @@ namespace Vurbiri.Colonization
                 }
 
                 if (cross.AddHexagon(hex, out bool ending))
-                    hex.Crossroads.Add(cross);
-                else
-                    _crossroads.Remove(key);
-
-                if (ending)
                 {
-                    if (cross.IsBreach)
-                        _breach.Add(cross);
-                    else if(cross.IsGate)
-                        _gate.Add(cross);
+                    hex.Crossroads.Add(cross);
+                    if (ending)
+                    {
+                        if (cross.IsBreach)
+                            _breach.Add(key);
+                        else if (cross.IsGate)
+                            _gate.Add(key);
+                    }
+                }
+                else
+                {
+                    _crossroads.Remove(key);
                 }
             }
         }
@@ -79,24 +82,30 @@ namespace Vurbiri.Colonization
         {
             int i = UnityEngine.Random.Range(0, _breach.Count);
             foreach ( var breach in _breach )
-                if (i-- == 0) return breach;
+                if (i-- == 0) return _crossroads[breach];
             return null;
         }
 
-        public void BindEdifices(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive, bool instantGetValue)
+        public void BindEdifices(IReadOnlyList<ReadOnlyReactiveList<Crossroad>> edificesReactive, bool instantGetValue)
         {
             edificesReactive[EdificeGroupId.Port].Subscribe(OnAddPort, instantGetValue);
-            edificesReactive[EdificeGroupId.Shrine].Subscribe((_, cross, _) => _gate.Remove(cross), instantGetValue);
+            edificesReactive[EdificeGroupId.Shrine].Subscribe((_, cross, _) => _gate.Remove(cross.Key), instantGetValue);
         }
 
         private void OnAddPort(int index, Crossroad crossroad, TypeEvent operation)
         {
             if (operation == TypeEvent.Add | operation == TypeEvent.Subscribe)
             {
-                List<Hexagon> hexagons = crossroad.Hexagons;
+                var hexagons = crossroad.Hexagons;
                 for (int i = 0; i < Crossroad.HEX_COUNT; i++)
+                {
                     if (hexagons[i].IsWater)
-                        _breach.ExceptWith(hexagons[i].Crossroads);
+                    {
+                        var crossroads = hexagons[i].Crossroads;
+                        for(int j = crossroads.Count - 1; j >= 0; j--)
+                            _breach.Remove(crossroads[j].Key);
+                    }
+                }
             }
         }
     }

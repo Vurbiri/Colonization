@@ -4,7 +4,7 @@ using System;
 namespace Vurbiri.Reactive
 {
     [Serializable, JsonConverter(typeof(Converter))]
-    sealed public class RBool : ARType<bool>
+    sealed public class RBool : AReactiveType<bool>
     {
         public RBool() : base(false) { }
         public RBool(bool value) : base(value) { }

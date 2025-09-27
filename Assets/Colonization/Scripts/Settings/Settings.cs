@@ -34,8 +34,7 @@ namespace Vurbiri.Colonization
 
         public void ApplyAndSave(Action<bool> callback = null)
         {
-            _profile.Apply();
-            _mixer.Apply();
+            Apply();
 
             _storage.Save(callback);
         }

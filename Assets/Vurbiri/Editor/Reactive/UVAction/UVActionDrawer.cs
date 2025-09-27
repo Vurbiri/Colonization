@@ -1,12 +1,12 @@
 using UnityEditor;
 using UnityEngine;
-using Vurbiri.Reactive;
+using Vurbiri;
 using static UnityEditor.EditorGUI;
 
 namespace VurbiriEditor.Reactive
 {
-    [CustomPropertyDrawer(typeof(UniSubscription))]
-	public class UniSignerDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(UVAction))]
+	public class UVActionDrawer : PropertyDrawer
 	{
         private readonly string F_NAME = "_listeners";
 
@@ -38,15 +38,15 @@ namespace VurbiriEditor.Reactive
         }
 	}
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UniSubscription<>))]
-    sealed public class UniSignerDrawerT : UniSignerDrawer { }
+    [CustomPropertyDrawer(typeof(UVAction<>))]
+    sealed public class UVActionDrawerT : UVActionDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UniSubscription<,>))]
-    sealed public class UniSignerDrawerTT : UniSignerDrawer { }
+    [CustomPropertyDrawer(typeof(UVAction<,>))]
+    sealed public class UVActionDrawerTT : UVActionDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UniSubscription<,,>))]
-    sealed public class UniSignerDrawerTTT : UniSignerDrawer { }
+    [CustomPropertyDrawer(typeof(UVAction<,,>))]
+    sealed public class UVActionDrawerTTT : UVActionDrawer { }
     //=======================================================================================
-    [CustomPropertyDrawer(typeof(UniSubscription<,,,>))]
-    sealed public class UniSignerDrawerTTTT : UniSignerDrawer { }
+    [CustomPropertyDrawer(typeof(UVAction<,,,>))]
+    sealed public class UVActionDrawerTTTT : UVActionDrawer { }
 }

@@ -1,13 +1,12 @@
 using System;
 using UnityEngine;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
 	public abstract class AVButton<T> : AVButtonBase
     {
         [SerializeField] protected T _value;
-        [SerializeField] protected UniSubscription<T> _onClick = new();
+        [SerializeField] protected UVAction<T> _onClick = new();
 
         public Event<T> OnClick => _onClick;
 

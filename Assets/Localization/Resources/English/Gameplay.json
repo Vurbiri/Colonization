@@ -37,5 +37,6 @@
   "GiftMsg": "wants to give you a",
   "GiftButton": "Present",
   "Stop": "Stop",
-  "SatanHint": "Curse:<b>{0,3}</b>|<b>{1}</b>\nPower:<b>{2,3}</b>|<b>{3}</b>"
+  "SatanHint": "Curse:<b>{0,3}</b>|<b>{1}</b>\nPower:<b>{2,3}</b>|<b>{3}</b>",
+  "BalanceHint": "Сhaos: <b>{0}</b>|<b>{1}</b>"
 }

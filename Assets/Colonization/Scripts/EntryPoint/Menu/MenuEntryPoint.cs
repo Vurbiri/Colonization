@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override void Enter(Loading loading, Transition transition)
         {
-            transition.Setup(_nextScene, new MenuContainer(new()));
+            transition.Setup(new MenuContainer(new()), _nextScene);
             print("MainMenu Enter");
             loading.Add(Exit_Cn());
         }

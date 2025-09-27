@@ -69,8 +69,8 @@ namespace Vurbiri.Colonization.Actors
 
         #region IInteractable
         public Vector3 Position => _thisTransform.position;
-        public RBool CanCancel => _canCancel;
-        public RBool InteractableReactive => _interactable;
+        public ReactiveValue<bool> CanCancel => _canCancel;
+        public ReactiveValue<bool> InteractableReactive => _interactable;
         public bool Interactable { get => _interactable.Value; set => _thisCollider.enabled = _interactable.Value = _isPersonTurn & value; }
         public bool RaycastTarget { get => _thisCollider.enabled; set => _thisCollider.enabled = _isPersonTurn | value; }
         public bool IsPersonTurn { set => _isPersonTurn = value; }

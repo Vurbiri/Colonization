@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public ActorsFactory actorsFactory;
 
-        public Balance balance;
+        public Chaos chaos;
         public Score score;
         public Diplomacy diplomacy;
 
@@ -53,7 +53,7 @@ namespace Vurbiri.Colonization.EntryPoint
 
             actorsFactory = new(actorsSettings);
 
-            balance = new(storage, gameLoop, actorsFactory);
+            chaos = new(storage, gameLoop, actorsFactory);
             score = Score.Create(storage);
             diplomacy = Diplomacy.Create(storage, gameLoop);
         }

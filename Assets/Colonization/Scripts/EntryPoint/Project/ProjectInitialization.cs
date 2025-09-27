@@ -28,10 +28,10 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public void Init(ProjectContent content, Loading loading, MonoBehaviour mono)
         {
-             AsyncOperation operation = SceneManager.LoadSceneAsync(_startScene);
+            AsyncOperation operation = SceneManager.LoadSceneAsync(_startScene);
             operation.allowSceneActivation = false;
 
-            Log.Info("Start Init Project");
+            Log.Info("[EntryPoint] Start Init Project");
 
             Localization.Instance.SetFiles(_localizationFiles);
 
@@ -53,10 +53,10 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             MessageBox.SetColors(colors.PanelBack, colors.TextDefault);
 
-            Banner.Colors[MessageTypeId.Info] = colors.TextDefault;
+            Banner.Colors[MessageTypeId.Info]    = colors.TextDefault;
             Banner.Colors[MessageTypeId.Warning] = colors.TextWarning;
-            Banner.Colors[MessageTypeId.Error] = colors.TextNegative;
-            Banner.Colors[MessageTypeId.Profit] = colors.TextPositive;
+            Banner.Colors[MessageTypeId.Error]   = colors.TextNegative;
+            Banner.Colors[MessageTypeId.Profit]  = colors.TextPositive;
 
         }
 

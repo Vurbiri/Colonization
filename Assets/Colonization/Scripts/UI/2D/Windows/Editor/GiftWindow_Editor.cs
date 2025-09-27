@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization.UI
 	public partial class GiftWindow
 	{
         [StartEditor]
-        [SerializeField, Range(10f, 30f)] private float _offsetPositionY = 14f;
+        [SerializeField, Range(10f, 50f)] private float _offsetPositionY = 14f;
         [Space]
         [SerializeField] private Vector2 _border = new(10f, 10f);
         [SerializeField, Range(20f, 60f)] private float _centerSpace = 35f;

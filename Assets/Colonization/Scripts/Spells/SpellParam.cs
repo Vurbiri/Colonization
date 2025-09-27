@@ -1,6 +1,6 @@
 namespace Vurbiri.Colonization
 {
-	public class SpellParam
+	public struct SpellParam
 	{
         public int playerId;
         public int valueA;

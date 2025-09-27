@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
     public abstract class VToggleGroup<TToggle> : MonoBehaviour where TToggle : VToggleBase<TToggle>
     {
         [SerializeField] protected bool _allowSwitchOff = false;
-        [SerializeField] protected UniSubscription<TToggle> _onValueChanged = new();
+        [SerializeField] protected UVAction<TToggle> _onValueChanged = new();
 
         protected readonly HashSet<TToggle> _toggles = new();
         protected TToggle _activeToggle;

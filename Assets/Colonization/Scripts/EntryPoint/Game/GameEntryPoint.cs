@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public override void Enter(Loading loading, Transition transition)
         {
             GameContent content = new();
-            transition.Setup(_nextScene, new GameContainer(content, _isLoad));
+            transition.Setup(new GameContainer(content, _isLoad), _nextScene);
 
             Localization.Instance.SetFiles(_localizationFiles);
 

@@ -1,11 +1,16 @@
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization
 {
 	sealed public class SatanController : Satan,  IPlayerController
 	{
-        public SatanController(Settings settings) : base(settings)
+        private int _shrinesCount;
+        
+        public SatanController(Settings settings, ReadOnlyArray<HumanController> humans) : base(settings)
         {
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                humans[i].Shrines.Subscribe((_, _, _) => _shrinesCount++);
         }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
@@ -32,7 +37,7 @@ namespace Vurbiri.Colonization
                 demon.StatesUpdate();
             }
 
-            GameContainer.Balance.ForDemonCurse(balance);
+            GameContainer.Chaos.ForDemonCurse(balance);
             _artefact.Next(countBuffs);
 
             GameContainer.GameLoop.StartTurn();
@@ -40,20 +45,11 @@ namespace Vurbiri.Colonization
 
         public void OnProfit(Id<PlayerId> id, int hexId)
         {
-            int progress;
-            if (hexId == CONST.GATE_ID)
-            {
-                progress = _parameters.cursePerTurnReward;
-            }
-            else
-            {
-                if (hexId > CONST.GATE_ID)
-                    hexId = (CONST.GATE_ID << 1) - hexId;
+            int progress = _parameters.cursePerTurn + _shrinesCount * _parameters.cursePerShrine;
+            if (hexId > CONST.GATE_ID)
+                hexId = (CONST.GATE_ID << 1) - hexId;
 
-                progress = _parameters.cursePerTurnBase * hexId / CONST.GATE_ID;
-            }
-
-            _curse += progress;
+            _curse += progress * hexId / CONST.GATE_ID << hexId / CONST.GATE_ID;
 
             if (_curse >= _maxCurse)
                 LevelUp();

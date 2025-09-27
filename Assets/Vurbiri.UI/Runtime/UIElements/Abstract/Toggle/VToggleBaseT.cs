@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.UI
 {
@@ -10,7 +9,7 @@ namespace Vurbiri.UI
     {
         [SerializeField] protected bool _isOn;
         [SerializeField] protected VToggleGroup<TToggle> _group;
-        [SerializeField] protected UniSubscription<bool> _onValueChanged = new();
+        [SerializeField] protected UVAction<bool> _onValueChanged = new();
 
         protected readonly TToggle _this;
 

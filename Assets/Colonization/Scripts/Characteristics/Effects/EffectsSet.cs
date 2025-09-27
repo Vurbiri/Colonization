@@ -6,15 +6,16 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class ReactiveEffects : IReactiveSet<ReactiveEffect>
+    public abstract class ReactiveEffects : IEnumerable<ReactiveEffect>
     {
         protected readonly AbilitiesSet<ActorAbilityId> _abilities;
         protected ReactiveEffect[] _values;
         protected int _capacity = 4;
         protected readonly RInt _count = new(0);
         protected readonly VAction<ReactiveEffect, TypeEvent> _eventChanged = new();
+        
         public int Count => _count;
-        public IReactiveValue<int> CountReactive => _count;
+        public ReactiveValue<int> CountReactive => _count;
 
         protected ReactiveEffects(AbilitiesSet<ActorAbilityId> abilities)
         {
@@ -44,6 +45,8 @@ namespace Vurbiri.Colonization.Characteristics
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     }
+
+    //**************************************************************************************************
 
     sealed public class EffectsSet : ReactiveEffects, IReadOnlyList<ReactiveEffect>, IDisposable
     {

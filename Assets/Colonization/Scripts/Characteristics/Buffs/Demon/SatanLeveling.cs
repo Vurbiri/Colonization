@@ -22,16 +22,15 @@ namespace Vurbiri.Colonization.Characteristics
 
         public bool Next()
         {
-            if (_level < _maxLevel)
+            bool result = _level < _maxLevel;
+            if (result)
             {
                 _level++;
                 for (int i = _buffs.Length - 1; i >= 0; i--)
                     _buffs[i].Next(_level);
-
-                return true;
             }
 
-            return false;
+            return result;
         }
     }
 }

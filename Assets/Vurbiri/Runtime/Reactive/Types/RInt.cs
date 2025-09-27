@@ -4,7 +4,7 @@ using System;
 namespace Vurbiri.Reactive
 {
     [Serializable, JsonConverter(typeof(Converter))]
-    sealed public class RInt : ARType<int>
+    sealed public class RInt : AReactiveType<int>
     {
         public RInt() : base(0) { }
         public RInt(int value) : base(value) { }

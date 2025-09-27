@@ -7,9 +7,9 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-	public class SatanPanel : AHintElement
+	sealed public class SatanPanel : AHintElement
     {
-        [SerializeField] protected FileIdAndKey _hintKey;
+        [SerializeField] private FileIdAndKey _hintKey;
         [Space]
         [SerializeField] private Image _bar;
         [SerializeField] private Image _icon;
@@ -62,8 +62,9 @@ namespace Vurbiri.Colonization.UI
         {
             _bar.color = _icon.color = playerColors[PlayerId.Satan];
 
-            _padding = new(padding.x, -padding.y);
-            ((RectTransform)transform).anchoredPosition = (1f + 2f * _iconRatio) * _padding;
+            _padding = -padding;
+            var rectTransform = (RectTransform)transform;
+            rectTransform.anchoredPosition = _padding - rectTransform.sizeDelta * _iconRatio;
         }
 
         private void OnValidate()
@@ -80,7 +81,7 @@ namespace Vurbiri.Colonization.UI
         private async void AwaitSet()
         {
             await System.Threading.Tasks.Task.Delay(2);
-            if (Application.isPlaying) return;
+            if (Application.isPlaying || _icon == null || this == null) return;
 
             var rectTransform = (RectTransform)_icon.transform;
             float min = -_iconRatio;
@@ -89,7 +90,7 @@ namespace Vurbiri.Colonization.UI
             rectTransform.anchorMax = new(max, max);
 
             rectTransform = (RectTransform)transform;
-            rectTransform.anchoredPosition = (1f + 2f * _iconRatio) * _padding;
+            rectTransform.anchoredPosition = _padding - rectTransform.sizeDelta * _iconRatio;
         }
 #endif
     }

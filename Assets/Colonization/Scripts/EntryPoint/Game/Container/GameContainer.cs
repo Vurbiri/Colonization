@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization
         public static ActorsFactory Actors              { [Impl(256)] get => s_content.actorsFactory; }
 
         public static Players Players                   { [Impl(256)] get => s_content.players; }
-        public static Balance Balance                   { [Impl(256)] get => s_content.balance; }
+        public static Chaos Chaos                   { [Impl(256)] get => s_content.chaos; }
         public static Score Score                       { [Impl(256)] get => s_content.score; }
         public static Diplomacy Diplomacy               { [Impl(256)] get => s_content.diplomacy; }
 

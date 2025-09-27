@@ -16,9 +16,9 @@ namespace Vurbiri.Colonization
         protected readonly VAction<ACurrencies> _changeEvent = new();
 
         sealed public override int Amount => _amount.Value;
-        public IReactiveValue<int> CurrentAmount => _amount;
-        public IReactiveValue<int> MaxAmount => _maxAmount;
-        public IReactiveValue<int> MaxBlood => _maxBlood;
+        public ReactiveValue<int> CurrentAmount => _amount;
+        public ReactiveValue<int> MaxAmount => _maxAmount;
+        public ReactiveValue<int> MaxBlood => _maxBlood;
 
         public bool IsOverResources => _maxAmount.Value < _amount.Value;
         sealed public override bool IsEmpty => _amount == 0 & _values[Blood].Value == 0;
@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization
                 if (delta != 0)
                 {
                     _value += delta;
-                    _changeValue.Invoke(_value);
+                    _changeEvent.Invoke(_value);
                     _deltaValue.Invoke(delta);
                 }
                 return delta;
@@ -93,7 +93,7 @@ namespace Vurbiri.Colonization
                     int delta = value - _value;
                     _value = value;
 
-                    _changeValue.Invoke(value);
+                    _changeEvent.Invoke(value);
                     _deltaValue.Invoke(delta);
                 }
                 return 0;

@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
                 AddHuman(i, new AIController(i, settings));
 
-            _controller.Add(PlayerId.Satan, _satan = new(settings));
+            _controller.Add(PlayerId.Satan, _satan = new(settings, _humans));
 
             settings.Dispose();
 

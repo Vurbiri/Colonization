@@ -74,7 +74,7 @@ namespace Vurbiri.Colonization.Storage
             _subscription += reactive.Subscribe(perks => _storage.Set(_keyPerks, perks), instantGetValue);
         }
 
-        public void BindEdifices(IReadOnlyList<IReactiveList<Crossroad>> edificesReactive, bool instantGetValue)
+        public void BindEdifices(IReadOnlyList<ReactiveList<Crossroad>> edificesReactive, bool instantGetValue)
         {
             for(int i = 0; i < EdificeGroupId.Count; i++)
                 _subscription += edificesReactive[i].Subscribe(OnEdifice, instantGetValue);

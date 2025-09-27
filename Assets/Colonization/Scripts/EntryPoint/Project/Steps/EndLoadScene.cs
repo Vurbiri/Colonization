@@ -15,6 +15,8 @@ namespace Vurbiri.Colonization.EntryPoint
 
         public override IEnumerator GetEnumerator()
         {
+            Log.Info("[EntryPoint] End Init Project");
+
             _operation.allowSceneActivation = true;
 
             while (!_operation.isDone)

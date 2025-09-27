@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization.UI
             var thisTransform = (RectTransform)transform;
 
             thisTransform.sizeDelta = new(size.x * 2f, size.y);
-            thisTransform.anchoredPosition = -padding;
+            thisTransform.anchoredPosition = new(padding.x, -padding.y);
 
             return thisTransform;
         }

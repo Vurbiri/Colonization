@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
+using Vurbiri.Reactive.Collections;
 using static Vurbiri.Colonization.Characteristics.HumanAbilityId;
 
 namespace Vurbiri.Colonization
@@ -28,6 +29,10 @@ namespace Vurbiri.Colonization
         public ExchangeRate Exchange => _exchange;
 
         public bool IsMaxWarriors => _abilities.IsLessOrEqual(MaxWarrior, Actors.Count);
+
+        public ReadOnlyReactiveList<Crossroad> Ports => _edifices.ports;
+        public ReadOnlyReactiveList<Crossroad> Colonies => _edifices.colonies;
+        public ReadOnlyReactiveList<Crossroad> Shrines => _edifices.shrines;
 
         public Roads Roads => _roads;
 
@@ -64,7 +69,7 @@ namespace Vurbiri.Colonization
                 _edifices = new(_abilities);
             }
 
-            var balance = GameContainer.Balance;
+            var balance = GameContainer.Chaos;
             balance.BindShrines(_edifices.shrines);
             balance.BindBlood(_resources.Get(CurrencyId.Blood));
 
@@ -144,7 +149,7 @@ namespace Vurbiri.Colonization
         {
             if (order > 0)
             {
-                GameContainer.Balance.Add(order);
+                GameContainer.Chaos.Add(-order);
                 GameContainer.Score.ForAddingOrder(_id, order);
                 _resources.Remove(cost);
             }

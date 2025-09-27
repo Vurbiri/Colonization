@@ -6,8 +6,8 @@ namespace Vurbiri.Colonization.Characteristics
         public int gateDefense; // = 4;
         public int maxCurseBase; //  = 1000;
         public int maxCursePerLevel; //  = 20;
-        public int cursePerTurnBase; // = 100;
-        public int cursePerTurnReward; //  = 200;
+        public int cursePerTurn; // = 140;
+        public int cursePerShrine; // = -5;
         public int maxPotentialPerLvl; // = 20;
     }
 }

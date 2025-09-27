@@ -1,5 +1,4 @@
 using System;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.EntryPoint
 {
@@ -11,7 +10,7 @@ namespace Vurbiri.EntryPoint
         private readonly VAction _eventExit = new();
         private readonly IEnterParam _enterParam;
         private ExitParam _exitParam;
-        private IContainer _sceneContainer;
+        private IDisposable _sceneContainer;
 
         public static Event OnExit => s_instance._eventExit;
 
@@ -25,8 +24,8 @@ namespace Vurbiri.EntryPoint
             s_instance = new(enterParam);
         }
 
-        public void Setup(int nextScene, IContainer sceneContainer) => Setup(new ExitParam(nextScene), sceneContainer);
-        public void Setup(ExitParam exitParam, IContainer sceneContainer)
+        public void Setup(IDisposable sceneContainer, int nextScene) => Setup(sceneContainer, new ExitParam(nextScene));
+        public void Setup(IDisposable sceneContainer, ExitParam exitParam)
         {
             _exitParam = exitParam;
             _sceneContainer = sceneContainer;

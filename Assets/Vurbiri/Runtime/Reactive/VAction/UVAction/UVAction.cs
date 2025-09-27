@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-namespace Vurbiri.Reactive
+namespace Vurbiri
 {
     [Serializable]
-	public class UniSubscription : VAction
+	public class UVAction : VAction
 	{
         [SerializeField] private Listener[] _listeners;
 
@@ -29,7 +29,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UniSubscription<T> : VAction<T>
+    public class UVAction<T> : VAction<T>
     {
         [SerializeField] private Listener<T>[] _listeners;
 
@@ -55,7 +55,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UniSubscription<TA, TB> : VAction<TA, TB>
+    public class UVAction<TA, TB> : VAction<TA, TB>
     {
         [SerializeField] private Listener<TA, TB>[] _listeners;
 
@@ -80,7 +80,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UniSubscription<TA, TB, TC> : VAction<TA, TB, TC>
+    public class UVAction<TA, TB, TC> : VAction<TA, TB, TC>
     {
         [SerializeField] private Listener<TA, TB, TC>[] _listeners;
 
@@ -105,7 +105,7 @@ namespace Vurbiri.Reactive
     }
     //=======================================================================================
     [Serializable]
-    public class UniSubscription<TA, TB, TC, TD> : VAction<TA, TB, TC, TD>
+    public class UVAction<TA, TB, TC, TD> : VAction<TA, TB, TC, TD>
     {
         [SerializeField] private Listener<TA, TB, TC, TD>[] _listeners;
 

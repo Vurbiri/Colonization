@@ -1,6 +1,6 @@
 using System;
 
-namespace Vurbiri.Reactive
+namespace Vurbiri
 {
     [Serializable]
     sealed public class Listener : AListener<Action> { public Listener(Action action) : base(action){ }}

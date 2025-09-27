@@ -1,17 +1,10 @@
-using System;
 using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class Ability : IReactiveValue<int>
+    public abstract class Ability : ReactiveValue<int>
     {
-        protected int _value;
-        protected readonly VAction<int> _changeEvent = new();
-
-        public int Value => _value;
         public bool IsValue => _value > 0;
-
-        public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, _value);
 
         public override string ToString() => _value.ToString();
 

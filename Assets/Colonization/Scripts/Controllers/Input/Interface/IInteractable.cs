@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization
 {
     public interface IInteractable : ISelectable, IPositionable, ICancel
     {
-        public RBool InteractableReactive { get; }
+        public ReactiveValue<bool> InteractableReactive { get; }
         public bool Interactable { get; }
     }
 }

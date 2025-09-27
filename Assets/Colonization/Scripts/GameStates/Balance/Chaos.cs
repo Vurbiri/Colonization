@@ -5,21 +5,21 @@ using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
-	public class Balance : AReactive<int>
+	public class Chaos : ReactiveValue<int>
 	{
-        private readonly BalanceSettings _settings;
+        private readonly ChaosSettings _settings;
         private readonly VAction<Winner> _eventGameOver = new();
 
-        public int Value => _value;
         public Event<Winner> OnGameOver => _eventGameOver;
+        public int Max => _settings.max;
 
-        public Balance(GameStorage storage, GameLoop gameLoop, ActorsFactory actorsFactory)
+        public Chaos(GameStorage storage, GameLoop gameLoop, ActorsFactory actorsFactory)
         {
-            _settings = SettingsFile.Load<BalanceSettings>();
+            _settings = SettingsFile.Load<ChaosSettings>();
             _settings.penaltyPerBlood *= -1;
 
-            _value = storage.GetBalanceValue(_settings.defaultValue);
-            storage.BindBalance(this);
+            _value = storage.GetChaosValue(_settings.max >> 1);
+            storage.BindChaos(this);
 
             _eventGameOver.Add(gameLoop.End_Cn);
 
@@ -40,12 +40,12 @@ namespace Vurbiri.Colonization
             {
                 _value += value;
 
-                _eventChanged.Invoke(value);
+                _changeEvent.Invoke(_value);
 
-                if (_value <= _settings.min)
-                    _eventGameOver.Invoke(Winner.Satan);
-                if (_value >= _settings.max)
+                if (_value <= 0)
                     _eventGameOver.Invoke(Winner.Human);
+                if (_value >= _settings.max)
+                    _eventGameOver.Invoke(Winner.Satan);
             }
         }
 
@@ -67,6 +67,6 @@ namespace Vurbiri.Colonization
                 Add(_settings.penaltyPerBlood * delta);
         }
 
-        public static implicit operator int(Balance balance) => balance._value;
+        public static implicit operator int(Chaos balance) => balance._value;
     }
 }

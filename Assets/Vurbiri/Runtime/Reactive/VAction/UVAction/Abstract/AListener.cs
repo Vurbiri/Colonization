@@ -3,7 +3,7 @@ using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Vurbiri.Reactive
+namespace Vurbiri
 {
     [Serializable]
     public abstract class AListener<TDelegate> where TDelegate : Delegate

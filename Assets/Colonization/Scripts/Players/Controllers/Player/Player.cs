@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
 
         public int Id => _id;
         public ReadOnlyReactiveSet<Actor> Actors => GameContainer.Actors[_id];
-        public IReactiveValue<bool> Interactable => _interactable;
+        public ReactiveValue<bool> Interactable => _interactable;
 
         protected Player(int playerId)
         {
