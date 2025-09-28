@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -12,31 +13,30 @@ namespace Vurbiri.Colonization
     {
         private static readonly Key[] s_nearCross = { new(2, -1), new(2, 1), new(0, 2), new(-2, 1), new(-2, -1), new(0, -2) };
 
-        private Crossroad _start, _end;
+        private Key _start, _end;
         private readonly Id<LinkId> _id;
+        private Id<PlayerId> _owner;
         private readonly bool _isWater;
         private readonly Vector3 _middle;
         private TypeLink _type;
-        
-        public Id<PlayerId> owner;
-        
 
-        public Id<LinkId> Id => _id;
-        public bool IsWater => _isWater;
-        public Vector3 Position => _middle;
-        public Crossroad Start => _start;
-        public Crossroad End => _end;
-        public TypeLink Type => _type;
-
+        public Crossroad Start { [Impl(256)] get => GameContainer.Crossroads[_start]; }
+        public Crossroad End { [Impl(256)] get => GameContainer.Crossroads[_end]; }
+        public Id<LinkId> Id { [Impl(256)] get => _id; }
+        public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
+        public bool IsWater { [Impl(256)] get => _isWater; }
+        public Vector3 Position { [Impl(256)] get => _middle; }
+        public TypeLink Type { [Impl(256)] get => _type; }
+        
         private CrossroadLink(Id<LinkId> id, Crossroad start, Crossroad end, bool isWater)
         {
             _id = id;
-            _start = start;
-            _end = end;
+            _start = start.Key;
+            _end = end.Key;
 
-            owner = PlayerId.None;
+            _owner = PlayerId.None;
             _isWater = isWater;
-            _middle = (_start.Position + _end.Position) * 0.5f;
+            _middle = (start.Position + end.Position) * 0.5f;
         }
 
         public static void Create(List<Crossroad> crossroads, bool isWater)
@@ -54,35 +54,33 @@ namespace Vurbiri.Colonization
 
             // Local: ToLinkType(..)
             //=================================
-            static int ToLinkType(Key key) => System.Array.IndexOf(s_nearCross, key) % 3;
+            [Impl(256)] static int ToLinkType(Key key) => System.Array.IndexOf(s_nearCross, key) % 3;
         }
 
-        public CrossroadLink SetStart(Crossroad cross)
+        [Impl(256)] public CrossroadLink SetStart(Key key)
         {
-            if (_start != cross)
+            if (_start != key)
                 (_start, _end) = (_end, _start);
 
             return this;
         }
 
-        public void RoadBuilt(Id<PlayerId> playerId)
+        [Impl(256)] public void RoadBuilt(Id<PlayerId> playerId)
         {
-            owner = playerId;
-            _start.RoadBuilt(_id);
-            _end.RoadBuilt(_id);
+            _owner = playerId;
+            GameContainer.Crossroads.RoadBuilt(_id, _start, _end);
         }
-        public void RoadRemove(TypeLink type)
+        [Impl(256)] public void RoadRemove(TypeLink type)
         {
             _type = type;
-            owner = PlayerId.None;
-            _start.RoadRemove(_id);
-            _end.RoadRemove(_id);
+            _owner = PlayerId.None;
+            GameContainer.Crossroads.RoadRemove(_id, _start, _end);
         }
 
-        public Crossroad Other(Crossroad crossroad) => crossroad == _start ? _end : _start;
+        [Impl(256)] public Crossroad Other(Key key) => GameContainer.Crossroads[key == _start ? _end : _start];
 
-        public bool Contains(Key key) => key == _start.Key || key == _end.Key;
+        [Impl(256)] public bool Contains(Key key) => key == _start | key == _end;
 
-        public override string ToString() => $"({_id}: [{_start.Key} -> {_end.Key}])";
+        [Impl(256)] public override string ToString() => $"({_id}: [{_start} -> {_end}])";
     }
 }

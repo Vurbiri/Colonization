@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
             GetComponent<MeshRenderer>().SetSharedMaterial(GameContainer.Materials[playerId].materialLit, _idMaterial);
 
             foreach (var link in links)
-                _graphicSides[link.Id].Open(link.owner != PlayerId.None);
+                _graphicSides[link.Id].Open(link.Owner != PlayerId.None);
 
             gameObject.SetActive(true);
 

@@ -142,7 +142,7 @@ namespace Vurbiri.Colonization
         }
 
         [Impl(256)] public CrossroadLink GetLink(Id<LinkId> linkId) => _links[linkId];
-        [Impl(256)] public CrossroadLink GetLinkAndSetStart(Id<LinkId> linkId) => _links[linkId].SetStart(this);
+        [Impl(256)] public CrossroadLink GetLinkAndSetStart(Id<LinkId> linkId) => _links[linkId].SetStart(_key);
         #endregion
 
         #region Profit
@@ -217,7 +217,7 @@ namespace Vurbiri.Colonization
                 Crossroad neighbor;
                 foreach (var link in _links)
                 {
-                    neighbor = link.Other(this);
+                    neighbor = link.Other(_key);
                     if (neighbor._states.groupId == EdificeGroupId.Colony)
                         return false;
                 }
@@ -284,7 +284,7 @@ namespace Vurbiri.Colonization
 
             int count = 0;
             foreach (var link in _links)
-                if (link.owner == playerId)
+                if (link.Owner == playerId)
                     count++;
 
             return count <= 1;
@@ -297,7 +297,7 @@ namespace Vurbiri.Colonization
             {
                 foreach (var l in _links)
                 {
-                    if (l.owner == playerId)
+                    if (l.Owner == playerId)
                     {
                         if (link != null)
                         {
@@ -319,7 +319,7 @@ namespace Vurbiri.Colonization
                 return true;
 
             foreach (var link in _links)
-                if (link.owner == playerId)
+                if (link.Owner == playerId)
                     return true;
 
             return false;

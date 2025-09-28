@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.UI
             }
 
             Setup(crossroad);
-            CombineInteractable(link.owner.Value < 0, _cash >= _cost);
+            CombineInteractable(link.Owner < 0, _cash >= _cost);
 
             _thisGameObject.SetActive(true);
             return true;

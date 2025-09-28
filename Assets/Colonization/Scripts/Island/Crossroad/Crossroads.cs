@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Reactive.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -19,7 +20,7 @@ namespace Vurbiri.Colonization
         private Vector3[] _vertices = new Vector3[HEX_COUNT_VERTICES];
         private Quaternion[] _angles = { Quaternion.Euler(0, 180, 0), Quaternion.identity };
 
-        public Crossroad this[Key key] => _crossroads[key];
+        public Crossroad this[Key key] { [Impl(256)] get => _crossroads[key]; }
 
         public int BreachCount => _breach.Count;
 
@@ -84,6 +85,17 @@ namespace Vurbiri.Colonization
             foreach ( var breach in _breach )
                 if (i-- == 0) return _crossroads[breach];
             return null;
+        }
+
+        [Impl(256)] public void RoadBuilt(Id<LinkId> id, Key start, Key end)
+        {
+            _crossroads[start].RoadBuilt(id);
+            _crossroads[end].RoadBuilt(id);
+        }
+        [Impl(256)] public void RoadRemove(Id<LinkId> id, Key start, Key end)
+        {
+            _crossroads[start].RoadRemove(id);
+            _crossroads[end].RoadRemove(id);
         }
 
         public void BindEdifices(IReadOnlyList<ReadOnlyReactiveList<Crossroad>> edificesReactive, bool instantGetValue)
