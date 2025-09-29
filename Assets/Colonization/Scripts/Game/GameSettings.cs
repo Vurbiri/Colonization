@@ -5,16 +5,15 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization
 {
-    using static SAVE_KEYS;
-
-    public partial class GameSettings : IReactive<GameSettings>
+    public partial class GameSettings : IReactive<GameSettings, bool>
     {
         private bool _isLoad;
         private int _maxScore;
-        private bool _isTutorial;
+        private readonly RBool _hexagonShow;
+        private readonly RBool _trackingCamera;
+        private readonly bool _isTutorial;
 
-        private ProjectStorage _storage;
-        private readonly VAction<GameSettings> _eventChanged = new();
+        private readonly VAction<GameSettings, bool> _eventChanged = new();
 
         public bool IsLoad
         {
@@ -22,45 +21,35 @@ namespace Vurbiri.Colonization
             set { if (!value) Reset(0); else _isLoad = true; }
         }
         public int MaxScore => _maxScore;
-
+        public RBool HexagonShow => _hexagonShow;
+        public RBool TrackingCamera => _trackingCamera;
         public bool IsTutorial => _isTutorial;
 
-        private GameSettings()
-        {
-            _isLoad = false;
-            _isTutorial = true;
-        }
-        private GameSettings(bool isLoad, int maxScore)
+        public GameSettings() : this(false, 0, true, true, true) { }
+        private GameSettings(bool isLoad, int maxScore, bool isHexagonShow, bool trackingCamera, bool isTutorial = false)
         {
             _isLoad = isLoad;
             _maxScore = maxScore;
-            _isTutorial = false;
+            _hexagonShow = new(isHexagonShow);
+            _trackingCamera = new(trackingCamera);
+            _isTutorial = isTutorial;
+
+            _hexagonShow.Subscribe(OnChangedReactiveValue, false);
+            _trackingCamera.Subscribe(OnChangedReactiveValue, false);
         }
 
-        public static void Create(ProjectContent content)
-        {
-            if (!content.projectStorage.TryLoadAndBindGameState(out var instance))
-            {
-                instance = new();
-                content.projectStorage.BindGameState(instance, true);
-            }
-            instance._storage = content.projectStorage;
-
-            content.gameSettings = instance;
-        }
-
-        public Subscription Subscribe(Action<GameSettings> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        public Subscription Subscribe(Action<GameSettings, bool> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this, instantGetValue);
 
         public void Start()
         {
             _isLoad = true;
-            _storage.Set(GAME_STATE, this);
+            _eventChanged.Invoke(this, false);
         }
 
         public void Reset()
         {
             int score = 0;
-            if (_isLoad && _storage.TryGet(SCORE, out int[] scores))
+            if (_isLoad && ProjectContainer.StorageService.TryGet(SAVE_KEYS.SCORE, out int[] scores))
                 score = scores[PlayerId.Person];
 
             Reset(score);
@@ -68,11 +57,11 @@ namespace Vurbiri.Colonization
         public void Reset(int score)
         {
             _isLoad = false;
-            if (score > _maxScore)  _maxScore = score;
+            if (score > _maxScore) _maxScore = score;
 
-            _storage.Clear();
-            _storage.Save(GAME_STATE, this);
+            _eventChanged.Invoke(this, true);
         }
 
+        private void OnChangedReactiveValue(bool value) => _eventChanged.Invoke(this, false);
     }
 }

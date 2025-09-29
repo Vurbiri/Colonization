@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization
             if (GameContainer.Crossroads.BreachCount > 0)
             {
                 Crossroad port = GameContainer.Crossroads.GetRandomPort();
-                yield return GameContainer.CameraController.ToPosition(port.Position, false);
+                yield return GameContainer.CameraController.ToPositionControlled(port);
                 yield return BuildPort(port).signal;
             }
 

@@ -4,7 +4,7 @@ using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    public abstract class AHintButton3D : AHintButton<WorldHint>
+    public abstract class AHintButton3D : AHintButton
     {
         protected GameObject _thisGameObject;
 

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
@@ -8,7 +7,6 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int FindNearest(Vector3 point, List<Actor> actors)
         {
             int output = 0;
@@ -25,7 +23,6 @@ namespace Vurbiri.Colonization
             return output;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void FindActorsOnSurface(List<Actor> actors, int surfaceA, int surfaceB)
         {
             for (int i = 0, surface; i < PlayerId.Count; i++)

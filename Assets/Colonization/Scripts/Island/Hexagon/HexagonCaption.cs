@@ -4,12 +4,9 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using Vurbiri.Colonization.Controllers;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-    using static TAG;
-
     public class HexagonCaption : MonoBehaviour
     {
         private const float ANGLE_X = 90f;
@@ -51,10 +48,10 @@ namespace Vurbiri.Colonization.UI
             _prevColor = GameContainer.UI.Colors.TextDefault;
             _profitColor =  GameContainer.UI.Colors.GetTextColor(id != CONST.GATE_ID);
 
-            StringBuilder sb = new(TAG_SPRITE_LENGTH * CurrencyId.Count);
+            StringBuilder sb = new(TAG.TAG_SPRITE_LENGTH * CurrencyId.Count);
 
             for (int i = 0; i < CurrencyId.Count; i++)
-                if (flags[i]) sb.AppendFormat(SPRITE, i);
+                if (flags[i]) sb.AppendFormat(TAG.SPRITE, i);
 
             _currencyText.text = _defaultCurrencyText = sb.ToString();
 
@@ -63,8 +60,8 @@ namespace Vurbiri.Colonization.UI
 
             SetActive();
 
-            _subscription = GameContainer.CameraTransform.Subscribe(OnChangeCamera);
-            _subscription = GameContainer.EventBus.EventHexagonShow.Add(OnCaptionEnable);
+            _subscription  = GameContainer.CameraTransform.Subscribe(OnChangeCamera);
+            _subscription += GameContainer.GameSettings.HexagonShow.Subscribe(OnCaptionEnable);
         }
 
         public void NewId(int id, Color color, float showTime)
@@ -130,7 +127,7 @@ namespace Vurbiri.Colonization.UI
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Profit(int currency)
         {
-            _currencyText.text = string.Format(SPRITE, currency);
+            _currencyText.text = string.Format(TAG.SPRITE, currency);
             Profit();
         }
         public void ResetProfit()

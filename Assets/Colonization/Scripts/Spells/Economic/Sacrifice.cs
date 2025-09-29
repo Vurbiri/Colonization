@@ -91,7 +91,7 @@ namespace Vurbiri.Colonization
                     {
                         var actor = actors.First;
                         actor.Hexagon.ShowMark(false);
-                        CameraController.ToPosition(actor.Position, true);
+                        CameraController.ToPosition(actor);
                     }
                     else
                     {
@@ -115,11 +115,11 @@ namespace Vurbiri.Colonization
                 var sacrifice = _waitActor.Value;
                 _damage.attack = sacrifice.CurrentHP * s_settings.sacrificeHPPercent / 100;
 
-                CameraController.ToPosition(sacrifice.Position, true);
+                CameraController.ToPosition(sacrifice);
                 yield return SFX.Run(s_settings.sacrificeKnifeSFX, null, sacrifice.Skin);
                 yield return sacrifice.Action.Death().SetWaitState(DeathStage.EndAnimation);
 
-                yield return CameraController.ToPosition(_target.Position, true);
+                yield return CameraController.ToPosition(_target);
                 _damage.Apply(_target); Humans[_currentPlayer].Pay(_cost);
                 yield return SFX.Run(s_settings.sacrificeTargetSFX, null, _target.Skin);
 

@@ -16,7 +16,8 @@ namespace Vurbiri.Colonization.EntryPoint
         public override IEnumerator GetEnumerator()
         {
             _playerVisualSetScriptable.Init(_content);
-            GameSettings.Create(_content);
+
+            _content.gameSettings = _content.projectStorage.LoadGameSettings();
 
             _content.projectStorage.Save();
 

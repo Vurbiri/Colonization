@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.Storage
 
         public void Save(Action<bool> callback = null) => _storage.Save(callback);
 
-        public void Clear() => _storage.Clear(PROFILE, VOLUMES, COLORS, GAME_STATE);
+        public void Clear() => _storage.Clear(PROFILE, VOLUMES, COLORS, GAME_SETTINGS);
 
         public virtual void Dispose()
         {

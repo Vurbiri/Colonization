@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization
 
             _edifice = Object.Instantiate(s_prefabs[EdificeId.Empty], position, rotation, container);
             _states = _edifice.Settings;
-            _edifice.Selectable = this;
+            _edifice.Key = key;
         }
 
         [Impl(256)] public static void Init(IdSet<EdificeId, AEdifice> prefabs)
@@ -240,7 +240,7 @@ namespace Vurbiri.Colonization
 
             var signal = _edifice.Init(_owner, _isWall, _links, oldEdifice, isSFX);
             _states = _edifice.Settings;
-            _states.isBuildWall = _states.isBuildWall && !_isWall;
+            _states.isBuildWall &= !_isWall;
             return signal;
         }
 

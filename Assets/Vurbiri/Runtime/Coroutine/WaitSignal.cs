@@ -8,6 +8,7 @@ namespace Vurbiri
         public bool IsWait => _isWait;
 
         public WaitSignal() => _isWait = true;
+        private WaitSignal(bool isWait) => _isWait = isWait;
 
         public bool MoveNext() => _isWait;
         public void Send() => _isWait = false;

@@ -5,15 +5,15 @@ using UnityEngine.EventSystems;
 
 namespace Vurbiri.UI
 {
-	public abstract class AHintButton<THint> : AVButton where THint : AHint
+	public abstract class AHintButton : AVButton
     {
-        private THint _hint;
+        private AHint _hint;
         private bool _isShowingHint = false;
         private Vector3 _hintOffset;
 
         protected string _hintText;
 
-        protected void InternalInit(THint hint, float heightRatio)
+        protected void InternalInit(AHint hint, float heightRatio)
         {
             _hint = hint;
             if (_thisRectTransform == null)
@@ -22,7 +22,7 @@ namespace Vurbiri.UI
             _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
         }
 
-        protected void InternalInit(THint hint, Action action, float heightRatio)
+        protected void InternalInit(AHint hint, Action action, float heightRatio)
         {
             InternalInit(hint, heightRatio);
             _onClick.Add(action);

@@ -1,18 +1,25 @@
 using System;
 using UnityEngine;
 using Vurbiri.International;
+using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
 {
-    sealed public class HintButton : AHintButton
+    sealed public class HintToggle : AHintToggle<HintToggle>
     {
+        private const float RATIO = 0.5f;
+        
         [SerializeField] private FileIdAndKey _getText;
 
-        public void Init(Action action)
+        public void Init(bool value, Action<bool> action)
         {
-            base.InternalInit(GameContainer.UI.CanvasHint, action, 0.5f);
-
+            base.InternalInit(GameContainer.UI.CanvasHint, value, action, RATIO);
+            Localization.Instance.Subscribe(SetLocalizationText);
+        }
+        public void Init(RBool rBool)
+        {
+            base.InternalInit(GameContainer.UI.CanvasHint, rBool, rBool.GetSetor<bool>(nameof(rBool.Value)), RATIO);
             Localization.Instance.Subscribe(SetLocalizationText);
         }
 

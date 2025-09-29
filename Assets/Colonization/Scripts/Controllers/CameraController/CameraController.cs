@@ -76,6 +76,16 @@ namespace Vurbiri.Colonization.Controllers
         }
         public WaitSignal ToPosition(IPositionable obj) => ToPosition(obj.Position, true);
 
+        public WaitSignal ToPositionControlled(int playerId, Vector3 position)
+        {
+            if (playerId == PlayerId.Person | GameContainer.GameSettings.TrackingCamera)
+                return ToPosition(position, true);
+            return null;
+        }
+        public WaitSignal ToPositionControlled(int playerId, IPositionable obj) => ToPositionControlled(playerId, obj.Position);
+        public WaitSignal ToPositionControlled(Vector3 position) => GameContainer.GameSettings.TrackingCamera ? ToPosition(position, true) : null;
+        public WaitSignal ToPositionControlled(IPositionable obj) => GameContainer.GameSettings.TrackingCamera ? ToPosition(obj.Position, true) : null;
+
         private void OnMove(CallbackContext ctx)
         {
             if (!_machine.IsSet(_moveToTargetState))

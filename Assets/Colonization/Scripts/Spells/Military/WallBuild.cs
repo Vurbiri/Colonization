@@ -42,7 +42,7 @@ namespace Vurbiri.Colonization
                     var colony = _canWall.Rand();
                     Humans[param.playerId].BuyWall(colony, _cost);
 
-                    GameContainer.CameraController.ToPosition(colony);
+                    GameContainer.CameraController.ToPositionControlled(param.playerId, colony);
                     ShowSpellName(param.playerId);
 
                     _canCast = false;

@@ -17,6 +17,7 @@ namespace Vurbiri.Colonization.EntryPoint
         [SerializeField] private OpponentPanels _opponentPanels;
         [SerializeField] private ChaosPanel _chaosPanel;
         [SerializeField] private SatanPanel _satanPanel;
+        [SerializeField] private ButtonsPanel _buttonsPanel;
 
         public string Description => Localization.Instance.GetText(LangFiles.Main, "InitUIStep");
         public float Weight => 0.2f;
@@ -50,6 +51,10 @@ namespace Vurbiri.Colonization.EntryPoint
 
             yield return null;
 
+            _buttonsPanel.Init();
+
+            yield return null;
+
             Destroy(gameObject);
         }
 
@@ -65,6 +70,7 @@ namespace Vurbiri.Colonization.EntryPoint
                 EUtility.SetObject(ref _opponentPanels);
                 EUtility.SetObject(ref _chaosPanel);
                 EUtility.SetObject(ref _satanPanel);
+                EUtility.SetObject(ref _buttonsPanel);
             }
         }
 #endif

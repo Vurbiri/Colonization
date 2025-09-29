@@ -35,8 +35,7 @@ namespace Vurbiri.Colonization
 
         public PlayerNames Init(ProjectStorage storage)
         {
-            bool notLoad = !storage.TryLoadPlayerNames(out _customNames);
-            if (notLoad) 
+            if (!storage.TryLoadPlayerNames(out _customNames)) 
                 _customNames = new string[PlayerId.Count];
 
             _subscription = Localization.Instance.Subscribe(SetNames);

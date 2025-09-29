@@ -13,14 +13,16 @@ namespace Vurbiri.Colonization
                 var data = serializer.Deserialize<int[]>(reader);
 
                 int i = 0;
-                return new GameSettings(data[i++] > 0, data[i]);
+                return new GameSettings(data[i++] > 0, data[i++], data[i++] > 0, data[i++] > 0);
             }
 
-            protected override void WriteJson(JsonWriter writer, GameSettings state, JsonSerializer serializer)
+            protected override void WriteJson(JsonWriter writer, GameSettings settings, JsonSerializer serializer)
             {
                 writer.WriteStartArray();
-                writer.WriteValue(state._isLoad ? 1 : 0);
-                writer.WriteValue(state._maxScore);
+                writer.WriteValue(settings._isLoad ? 1 : 0);
+                writer.WriteValue(settings._maxScore);
+                writer.WriteValue(settings._hexagonShow ? 1 : 0);
+                writer.WriteValue(settings._trackingCamera ? 1 : 0);
                 writer.WriteEndArray();
             }
         }

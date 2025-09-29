@@ -34,19 +34,25 @@ namespace Vurbiri.Colonization.Storage
             _subscription += reactive.Subscribe(names => _storage.Set(NAMES, names.CustomNames), false);
         }
 
-
-        public bool TryLoadAndBindGameState(out GameSettings state)
+        public GameSettings LoadGameSettings()
         {
-            if(_storage.TryGet(GAME_STATE, out state))
-            {
-                BindGameState(state, false);
-                return true;
-            }
-            return false;
+            bool notLoad = !_storage.TryGet(GAME_SETTINGS, out GameSettings settings);
+            if (notLoad) settings = new();
+ 
+            _subscription += settings.Subscribe(BindGameSettings, notLoad);
+            return settings;
         }
-        public void BindGameState(IReactive<GameSettings> reactive, bool instantGetValue)
+        private void BindGameSettings(GameSettings settings, bool isSave)
         {
-            _subscription += reactive.Subscribe(self => _storage.Set(GAME_STATE, self), instantGetValue);
+            if (isSave)
+            {
+                _storage.Clear();
+                _storage.Save(GAME_SETTINGS, settings);
+            }
+            else
+            {
+                _storage.Set(GAME_SETTINGS, settings);
+            }
         }
     }
 }

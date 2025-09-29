@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,13 +13,21 @@ namespace Vurbiri.UI
 
         protected string _hintText;
 
-        protected void Init(AHint hint, float heightRatio)
+        protected void InternalInit(AHint hint, bool value, float heightRatio)
         {
             _hint = hint;
+            SetValue(value, false);
+
             if (_thisRectTransform == null)
                 _thisRectTransform = (RectTransform)transform;
 
             _hintOffset = AHint.GetOffsetHint(_thisRectTransform, heightRatio);
+        }
+
+        protected void InternalInit(AHint hint, bool value, Action<bool> action, float heightRatio)
+        {
+            InternalInit(hint, value, heightRatio);
+            _onValueChanged.Add(action);
         }
 
         sealed public override void OnPointerEnter(PointerEventData eventData)

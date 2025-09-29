@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Vurbiri.Reactive;
 using Vurbiri.UI;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -16,9 +17,9 @@ namespace Vurbiri.Colonization
 
         private int _groundCount = 0;
 
-        public Hexagon this[Key key] => _hexagons[key];
-        public CurrenciesLite FreeResources => _freeResources;
-        public int GroundCount => _groundCount;
+        public Hexagon this[Key key] { [Impl(256)] get => _hexagons[key]; }
+        public CurrenciesLite FreeResources { [Impl(256)] get => _freeResources; }
+        public int GroundCount { [Impl(256)] get => _groundCount; }
 
         public Hexagons(Pool<HexagonMark> poolMarks)
         {

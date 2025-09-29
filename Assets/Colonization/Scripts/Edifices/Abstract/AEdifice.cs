@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -11,17 +12,19 @@ namespace Vurbiri.Colonization
         [SerializeField] protected AEdificeGraphic _graphic;
 
         protected Transform _graphicTransform;
+        private Key _key;
 
-        public Id<EdificeId> Id => _settings.id;
-        public EdificeSettings Settings => _settings;
-        public ISelectable Selectable { get; set; }
+        public Id<EdificeId> Id { [Impl(256)] get => _settings.id; }
+        public EdificeSettings Settings { [Impl(256)] get => _settings; }
+        public ISelectable Selectable { [Impl(256)] get => GameContainer.Crossroads[_key]; }
+        public Key Key { [Impl(256)] set => _key = value; }
 
         public virtual WaitSignal Init(Id<PlayerId> playerId, bool isWall, IReadOnlyList<CrossroadLink> links, AEdifice oldEdifice, bool isSFX)
         {
             _graphicTransform = _graphic.transform;
             Transform thisTransform = transform, oldTransform = oldEdifice.transform;
-            
-            Selectable = oldEdifice.Selectable;
+
+            _key = oldEdifice._key;
             thisTransform.SetParent(oldTransform.parent);
             thisTransform.SetLocalPositionAndRotation(oldTransform.localPosition, oldTransform.localRotation);
 

@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
                     {
                         var actor = actors.First;
                         actor.Hexagon.ShowMark(true);
-                        CameraController.ToPosition(actor.Position, true);
+                        CameraController.ToPosition(actor);
                     }
                     else
                     {
@@ -89,7 +89,7 @@ namespace Vurbiri.Colonization
 
                 var target = _waitActor.Value;
 
-                yield return CameraController.ToPosition(target.Position, true);
+                yield return CameraController.ToPositionControlled(_currentPlayer, target);
 
                 target.ApplyEffect(_addAP); target.ApplyEffect(_move);
                 Humans[_currentPlayer].Pay(_cost);
