@@ -28,6 +28,7 @@ namespace Vurbiri.Colonization.Actors
         private void OnValidate()
         {
             this.SetChildren(ref _box, "Box");
+            SetProfitSFX_Ed("DemonMainProfit", "AdvProfit");
         }
 #endif
     }

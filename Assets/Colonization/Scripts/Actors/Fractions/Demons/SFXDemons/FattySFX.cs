@@ -42,6 +42,8 @@ namespace Vurbiri.Colonization.Actors
             this.SetChildren(ref _mouth, "Mouth");
             if (_cameraShake.Speed <= 0f)
                 _cameraShake.SetSpeed_Ed(10f);
+
+            SetProfitSFX_Ed("DemonMainProfit", "AdvProfit");
         }
 #endif
     }

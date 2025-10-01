@@ -63,8 +63,8 @@ namespace Vurbiri.Colonization.Actors
         public Actions Action => _states;
         public ReactiveEffects Effects => _effects;
         public ReadOnlyAbilities<ActorAbilityId> Abilities => _abilities;
-        public bool IsMainProfit => _profitMain.Next();
-        public bool IsAdvProfit => _profitAdv.Next();
+        public ReturnSignal IsMainProfit => _profitMain.Next() ? _states.Skin.MainProfit(_isPersonTurn) : false;
+        public ReturnSignal IsAdvProfit => _profitAdv.Next() ? _states.Skin.AdvProfit(_isPersonTurn) : false;
         #endregion
 
         #region IInteractable
@@ -149,7 +149,7 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
-        public bool IsUseSkill(SkillCode skillCode) => _effects.Contains(skillCode);
+        public bool IsSkillApplied(SkillCode skillCode) => _effects.Contains(skillCode);
         public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
             return _states.IsAvailable & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
@@ -170,6 +170,7 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         #region Start/End turn
+
         public void StatesUpdate()
         {
             _currentHP.Next();

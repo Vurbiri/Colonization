@@ -28,5 +28,12 @@ namespace Vurbiri.Colonization.Actors
         public void Init(ReadOnlyArray<string> hitSFX) => InitInternal(hitSFX);
 
         public virtual void Block(bool isActive) { }
+
+#if UNITY_EDITOR
+        protected virtual void OnValidate()
+        {
+            SetProfitSFX_Ed("WarriorMainProfit", "AdvProfit");
+        }
+#endif
     }
 }

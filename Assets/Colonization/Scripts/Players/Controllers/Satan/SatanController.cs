@@ -1,3 +1,4 @@
+using System.Collections;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 
@@ -26,21 +27,35 @@ namespace Vurbiri.Colonization
 
         public void OnEndTurn()
         {
-            int countBuffs = 0, balance = 0;
-            foreach (var demon in Actors)
+            OnEndTurn_Cn().Start();
+
+            //Local
+            IEnumerator OnEndTurn_Cn()
             {
-                if (demon.IsMainProfit)
-                    balance++;
-                if (demon.IsAdvProfit)
-                    countBuffs++;
+                int countBuffs = 0, balance = 0;
+                ReturnSignal returnSignal;
 
-                demon.StatesUpdate();
+                foreach (var demon in Actors)
+                {
+                    if (returnSignal = demon.IsMainProfit)
+                    {
+                        balance++;
+                        yield return returnSignal.signal;
+                    }
+                    if (returnSignal = demon.IsAdvProfit)
+                    {
+                        countBuffs++;
+                        yield return returnSignal.signal;
+                    }
+
+                    demon.StatesUpdate();
+                }
+
+                GameContainer.Chaos.ForDemonCurse(balance);
+                _artefact.Next(countBuffs);
+
+                GameContainer.GameLoop.StartTurn();
             }
-
-            GameContainer.Chaos.ForDemonCurse(balance);
-            _artefact.Next(countBuffs);
-
-            GameContainer.GameLoop.StartTurn();
         }
 
         public void OnProfit(Id<PlayerId> id, int hexId)

@@ -81,6 +81,9 @@ namespace Vurbiri.Colonization.Actors
             _stateMachine.SetState(_reactState, true);
         }
 
+        [Impl(256)] public WaitSignal MainProfit(bool isPerson) => _sfx.MainProfit(isPerson, this);
+        [Impl(256)] public WaitSignal AdvProfit(bool isPerson) => _sfx.AdvProfit(isPerson, this);
+
         [Impl(256)] public WaitStateSource<Actor.DeathStage> Death()
         {
             _stateMachine.ForceSetState(_deathState);
@@ -132,14 +135,6 @@ namespace Vurbiri.Colonization.Actors
             Gizmos.DrawWireCube(_bounds.center, _bounds.size);
             Gizmos.DrawSphere(_bounds.center, 0.2f);
         }
-
-        //public void OnDrawGizmos()
-        //{
-        //    Gizmos.matrix = Matrix4x4.identity;
-        //    Gizmos.color = Color.red;
-        //    Gizmos.DrawWireCube(_bounds.center, _bounds.size);
-        //    Gizmos.DrawSphere(_bounds.center, 0.2f);
-        //}
 #endif
     }
 }

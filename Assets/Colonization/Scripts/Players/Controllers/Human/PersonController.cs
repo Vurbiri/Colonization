@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
             _iController.Turn = false;
             _edifices.Interactable = false;
 
-            base.OnEndTurn();
+            OnEndTurn_Cn().Start();
         }
 
         #region Nested InteractableController

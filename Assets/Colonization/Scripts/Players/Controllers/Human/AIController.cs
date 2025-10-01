@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
         {
             _giftRatio = _settings.giftRatio;
 
-            base.OnEndTurn();
+            OnEndTurn_Cn().Start();
         }
 
         private IEnumerator OnInit_Cn()

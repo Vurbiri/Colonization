@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -34,11 +33,11 @@ namespace Vurbiri.Colonization.UI
         protected override void Enable()
         {
             base.Enable();
-            _currentCrossroad.SetCaptionHexagonsActive(true);
+            _currentCrossroad.CaptionHexagonsEnable();
         }
         protected override void Disable()
         {
-            _currentCrossroad.SetCaptionHexagonsActive(false);
+            _currentCrossroad.CaptionHexagonsDisable();
             base.Disable();
 
             if (_endInit)

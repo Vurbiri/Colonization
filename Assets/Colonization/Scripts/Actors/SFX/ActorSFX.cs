@@ -8,6 +8,11 @@ namespace Vurbiri.Colonization.Actors
     [RequireComponent(typeof(AudioSource)), DisallowMultipleComponent]
     public abstract class ActorSFX : MonoBehaviour
     {
+        [SerializeField] private HitSFXName _mainProfitSFX;
+        [SerializeField] private HitSFXName _advProfitSFX;
+
+        private readonly WaitSignal _waitProfit = new();
+
         protected ReadOnlyArray<string> _hitSFX;
         protected AudioSource _audioSource;
 
@@ -21,20 +26,56 @@ namespace Vurbiri.Colonization.Actors
 
         [Impl(256)] public void Play(AudioClip clip) => _audioSource.PlayOneShot(clip);
 
-        [Impl(256)] public IEnumerator Hit(int idSkill, ActorSkin target) => GameContainer.SFX.Run(_hitSFX[idSkill], this, target);
+        [Impl(256)] public Coroutine Hit(int idSkill, ActorSkin target) => StartCoroutine(GameContainer.SFX.Run(_hitSFX[idSkill], this, target));
+
+        [Impl(256)] public WaitSignal MainProfit(bool isPerson, ActorSkin target)
+        {
+            StartCoroutine(Profit_Cn(isPerson, target, _mainProfitSFX));
+            return _waitProfit.Restart();
+        }
+        [Impl(256)] public WaitSignal AdvProfit(bool isPerson, ActorSkin target)
+        {
+            StartCoroutine(Profit_Cn(isPerson, target, _advProfitSFX));
+            return _waitProfit.Restart();
+        }
 
         public virtual void Death() { }
-
-        public IEnumerator Death_Cn(float height)
+        public Coroutine PostDeath(float height)
         {
-            var thisTransform = transform;
-            Vector3 position = thisTransform.localPosition;
-            while (position.y > height)
+            return StartCoroutine(Death_Cn(height));
+
+            //Local
+            IEnumerator Death_Cn(float height)
             {
-                position.y -= 3f * Time.unscaledDeltaTime;
-                thisTransform.localPosition = position;
-                yield return null;
+                var thisTransform = transform;
+                Vector3 position = thisTransform.localPosition;
+                while (position.y > height)
+                {
+                    position.y -= 3f * Time.unscaledDeltaTime;
+                    thisTransform.localPosition = position;
+                    yield return null;
+                }
             }
         }
+
+        private IEnumerator Profit_Cn(bool isPerson, ActorSkin target, string name)
+        {
+            if (isPerson | GameContainer.GameSettings.TrackingCamera)
+                yield return GameContainer.CameraController.ToPosition(transform.position, true);
+
+            yield return GameContainer.SFX.Run(name, this, target);
+
+            _waitProfit.Send();
+        }
+
+#if UNITY_EDITOR
+        protected virtual void SetProfitSFX_Ed(string mainProfitSFX, string advProfitSFX)
+        {
+            if(string.IsNullOrEmpty(_mainProfitSFX?.Value))
+                _mainProfitSFX = new(mainProfitSFX);
+            if (string.IsNullOrEmpty(_advProfitSFX?.Value))
+                _advProfitSFX = new(advProfitSFX);
+        }
+#endif
     }
 }

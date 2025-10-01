@@ -1,4 +1,4 @@
-using System.Collections;
+using UnityEngine;
 using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Actors
@@ -13,6 +13,13 @@ namespace Vurbiri.Colonization.Actors
             _specSFX = specSFX;
         }
 
-        public IEnumerator Spec(ActorSkin target) => GameContainer.SFX.Run(_specSFX, this, target);
+        public Coroutine Spec(ActorSkin target) => StartCoroutine(GameContainer.SFX.Run(_specSFX, this, target));
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            SetProfitSFX_Ed("DemonMainProfit", "AdvProfit");
+        }
+#endif
     }
 }

@@ -195,7 +195,7 @@ namespace Vurbiri.Colonization
         public WaitSignal BuyWall(Crossroad crossroad) => BuyWall(crossroad, GameContainer.Prices.Wall);
         public WaitSignal BuyWall(Crossroad crossroad, CurrenciesLite cost)
         {
-            ReturnSignal returnSignal = crossroad.BuildWall(_id, true);
+            var returnSignal = crossroad.BuildWall(_id, true);
             if (returnSignal)
             {
                 _resources.Remove(cost);
@@ -208,11 +208,15 @@ namespace Vurbiri.Colonization
 
         #region Roads
         public bool CanRoadBuild(Crossroad crossroad) => _abilities.IsGreater(MaxRoad, _roads.Count) && crossroad.CanRoadBuild(_id);
-        public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
+        public WaitSignal BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
         {
-            _resources.Remove(GameContainer.Prices.Road);
-            GameContainer.Score.ForRoad(_id);
-            _roads.BuildAndUnion(crossroad.GetLinkAndSetStart(linkId));
+            var returnSignal = _roads.BuildAndUnion(crossroad.GetLinkAndSetStart(linkId));
+            if (returnSignal)
+            {
+                _resources.Remove(GameContainer.Prices.Road);
+                GameContainer.Score.ForRoad(_id);
+            }
+            return returnSignal.signal;
         }
         #endregion
 

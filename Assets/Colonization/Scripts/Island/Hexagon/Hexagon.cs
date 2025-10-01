@@ -5,6 +5,7 @@ using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.UI;
 using Vurbiri.EntryPoint;
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -119,9 +120,10 @@ namespace Vurbiri.Colonization
 
         public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 
-        public void SetCaptionActive(bool active) => _hexagonCaption.SetActive(active);
+        [Impl(256)] public void CaptionEnable(bool isWater, bool isGate) => _hexagonCaption.SetActive(!(isWater ^ _isWater | isGate));
+        [Impl(256)] public void CaptionDisable() => _hexagonCaption.SetActive(false);
 
-        public void NewId(int id, Color color, float showTime)
+        [Impl(256)] public void NewId(int id, Color color, float showTime)
         {
             _id = id;
             _hexagonCaption.NewId(id, color, showTime);
@@ -153,10 +155,10 @@ namespace Vurbiri.Colonization
             _hexagonCaption.Profit(_profit.Value);
             return false;
         }
-        public void ResetProfit() => _hexagonCaption.ResetProfit();
+        [Impl(256)] public void ResetProfit() => _hexagonCaption.ResetProfit();
 
-        public Id<CurrencyId> GetProfit() => _profit.Value;
-        public bool TryGetProfit(int hexId, bool isPort, out int currencyId)
+        [Impl(256)] public Id<CurrencyId> GetProfit() => _profit.Value;
+        [Impl(256)] public bool TryGetProfit(int hexId, bool isPort, out int currencyId)
         {
             currencyId = _profit.Value;
             return hexId == _id & isPort == _isWater;
@@ -164,13 +166,13 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Actor
-        public void ActorEnter(Actor actor)
+        [Impl(256)] public void ActorEnter(Actor actor)
         {
             _owner = actor;
             _ownerId = actor.Owner;
             _owner.AddWallDefenceEffect(GetMaxDefense());
         }
-        public void ActorExit()
+        [Impl(256)] public void ActorExit()
         {
             _owner.RemoveWallDefenceEffect();
             _owner = null;
@@ -188,26 +190,27 @@ namespace Vurbiri.Colonization
             return max;
         }
 
-        public void BuildWall(Id<PlayerId> playerId)
+        [Impl(256)] public void BuildWall(Id<PlayerId> playerId)
         {
             if (_ownerId == playerId)
                 _owner.AddWallDefenceEffect(GetMaxDefense());
         }
 
-        public bool IsEnemy(Id<PlayerId> id) => _owner != null && GameContainer.Diplomacy.GetRelation(_ownerId, id) == Relation.Enemy;
+        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => _owner != null && GameContainer.Diplomacy.GetRelation(_ownerId, id) == Relation.Enemy;
         #endregion
 
-        public void ShowMark(bool isGreenMark) => _mark ??= s_poolMarks.Get(_thisTransform, false).View(isGreenMark);
-        public void HideMark()
+        [Impl(256)] public void ShowMark(bool isGreenMark) => _mark ??= s_poolMarks.Get(_thisTransform, false).View(isGreenMark);
+        [Impl(256)] public void HideMark()
         {
             if (_mark != null)
             {
-                s_poolMarks.Return(_mark); _mark = null;
+                s_poolMarks.Return(_mark); 
+                _mark = null;
             }
         }
 
         #region Set(Un)Selectable
-        public bool TrySetSelectableFree()
+        [Impl(256)] public bool TrySetSelectableFree()
         {
             if(_isGate | _isWater | _owner != null)
                 return false;
@@ -216,7 +219,7 @@ namespace Vurbiri.Colonization
             _thisCollider.enabled = true;
             return true;
         }
-        public void SetUnselectable()
+        [Impl(256)] public void SetUnselectable()
         {
             if (_mark != null & !_isWater)
             {
@@ -225,7 +228,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
+        [Impl(256)] public bool TrySetOwnerSelectable(Id<PlayerId> id, Relation typeAction)
         {
             if (_isWater | _ownerId == PlayerId.None || !_owner.IsCanApplySkill(id, typeAction, out bool isFriendly))
                 return false;
@@ -234,7 +237,7 @@ namespace Vurbiri.Colonization
             _owner.RaycastTarget = true;
             return true;
         }
-        public void SetOwnerUnselectable()
+        [Impl(256)] public void SetOwnerUnselectable()
         {
             if (_mark != null & !_isWater & _ownerId != PlayerId.None)
             {
@@ -243,20 +246,20 @@ namespace Vurbiri.Colonization
             }
         }
         
-        public void SetSelectableForSwap()
+        [Impl(256)] public void SetSelectableForSwap()
         {
             _mark = s_poolMarks.Get(_thisTransform, false).View(true);
             _thisCollider.enabled = true;
             _hexagonCaption.SetActive(true);
         }
-        public void SetSelectedForSwap(Color color)
+        [Impl(256)] public void SetSelectedForSwap(Color color)
         {
             _mark.View(false);
             _thisCollider.enabled = false;
             _hexagonCaption.SetColor(color);
         }
-        public void ResetCaptionColor() => _hexagonCaption.ResetColor();
-        public void SetUnselectableForSwap()
+        [Impl(256)] public void ResetCaptionColor() => _hexagonCaption.ResetColor();
+        [Impl(256)] public void SetUnselectableForSwap()
         {
             s_poolMarks.Return(_mark);
             _thisCollider.enabled = false;
@@ -265,7 +268,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
+        [Impl(256)] public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
 
 
 #if UNITY_EDITOR

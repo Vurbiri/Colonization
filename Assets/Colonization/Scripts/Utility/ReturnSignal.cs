@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
 			this.signal = null;
 		}
 
-		public static implicit operator bool(ReturnSignal signal) => signal.result;
+        public static implicit operator bool(ReturnSignal signal) => signal.result;
 
         public static implicit operator ReturnSignal(bool result) => new(result);
         public static implicit operator ReturnSignal(WaitSignal signal) => new(signal);

@@ -1,3 +1,4 @@
+using System.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 
@@ -27,28 +28,7 @@ namespace Vurbiri.Colonization
         public virtual void OnLanding() { }
         public virtual void OnEndLanding() { }
 
-        public virtual void OnEndTurn()
-        {
-            int countBuffs = 0;
-            CurrenciesLite profit = new();
-            bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
-            foreach (var warrior in Actors)
-            {
-                if (warrior.IsMainProfit)
-                    profit.IncrementMain(warrior.Hexagon.SurfaceId);
-                if (isArtefact && warrior.IsAdvProfit)
-                    countBuffs++;
-
-                warrior.StatesUpdate();
-                warrior.IsPersonTurn = false;
-                warrior.Interactable = false;
-            }
-
-            _resources.Add(profit);
-            _artefact.Next(countBuffs);
-
-            GameContainer.GameLoop.StartTurn();
-        }
+        public abstract void OnEndTurn();
 
         public void OnProfit(Id<PlayerId> id, int hexId)
         {
@@ -78,5 +58,36 @@ namespace Vurbiri.Colonization
 
         public abstract void OnPlay();
 
+        protected IEnumerator OnEndTurn_Cn()
+        {
+            int countBuffs = 0;
+            int mainProfit = _abilities[HumanAbilityId.WarriorProfit];
+            bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
+            CurrenciesLite profit = new();
+            ReturnSignal returnSignal;
+
+            foreach (var warrior in Actors)
+            {
+                if (returnSignal = warrior.IsMainProfit)
+                {
+                    profit.Add(warrior.Hexagon.GetProfit(), mainProfit);
+                    yield return returnSignal.signal;
+                }
+                if (isArtefact && (returnSignal = warrior.IsAdvProfit))
+                {
+                    countBuffs++;
+                    yield return returnSignal.signal;
+                }
+
+                warrior.StatesUpdate();
+                warrior.IsPersonTurn = false;
+                warrior.Interactable = false;
+            }
+
+            _resources.Add(profit);
+            _artefact.Next(countBuffs);
+
+            GameContainer.GameLoop.StartTurn();
+        }
     }
 }

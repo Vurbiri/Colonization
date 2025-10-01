@@ -33,8 +33,10 @@ namespace Vurbiri.Colonization.Actors
         }
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected override void OnValidate()
         {
+            base.OnValidate();
+            
             this.SetChildren(ref _rightHand, "RightHand");
             this.SetChildren(ref _magicShield);
 

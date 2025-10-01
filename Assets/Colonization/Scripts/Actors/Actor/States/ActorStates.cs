@@ -29,6 +29,7 @@ namespace Vurbiri.Colonization.Actors
             public bool IsDefault { [Impl(256)] get => _stateMachine.IsDefaultState; }
 
             public abstract ActorSkin Skin { get; }
+            public abstract ActorSFX SFX { get; }
             public abstract bool IsAvailable { get; }
 
             [Impl(256)] public void ToDefault() => _stateMachine.ToDefaultState();
@@ -53,6 +54,7 @@ namespace Vurbiri.Colonization.Actors
             protected DeathState _deathState;
 
             sealed public override ActorSkin Skin => _skin;
+            sealed public override ActorSFX SFX => _skin.SFX;
 
             protected AStates(TActor actor, ActorSettings settings)
             {

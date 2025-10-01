@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization.Actors
                 yield return _waitStartAnimation;
                 yield return WaitEndAnimation;
                 waitState.SetState(Actor.DeathStage.EndAnimation);
-                yield return SFX.Death_Cn(-1.1f * Skin._bounds.extents.z);
+                yield return SFX.PostDeath(-1.1f * Skin._bounds.extents.z);
                 waitState.SetState(Actor.DeathStage.End);
             }
 

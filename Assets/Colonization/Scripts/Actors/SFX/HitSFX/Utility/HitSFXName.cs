@@ -8,6 +8,8 @@ namespace Vurbiri.Colonization.Actors
 	{
 		[UnityEngine.SerializeField] private string _value;
 
+        public string Value => _value;
+
         public HitSFXName() { }
         public HitSFXName(string value) => _value = value;
 
@@ -29,16 +31,5 @@ namespace Vurbiri.Colonization.Actors
             }
         }
         #endregion
-
-#if UNITY_EDITOR
-        public bool Update_Ed(string oldValue, string newValue)
-        {
-            bool changed;
-            if (changed = oldValue == _value)
-                _value = newValue;
-
-            return changed;
-        }
-#endif
     }
 }

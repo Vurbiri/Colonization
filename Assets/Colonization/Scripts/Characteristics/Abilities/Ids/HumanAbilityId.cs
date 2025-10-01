@@ -24,8 +24,9 @@ namespace Vurbiri.Colonization.Characteristics
         public const int IsWall                 = 19;
         public const int IsLighthouse           = 20;
         public const int IsCity                 = 21;
-        public const int IsArtefact             = 22;
-
+        public const int WarriorProfit          = 22;
+        public const int IsArtefact             = 23;
+        
         static HumanAbilityId() => ConstructorRun();
     }
 }

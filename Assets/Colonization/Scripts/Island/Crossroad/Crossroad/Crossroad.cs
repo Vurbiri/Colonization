@@ -119,10 +119,15 @@ namespace Vurbiri.Colonization
             return ending = false;
         }
 
-        [Impl(256)]public void SetCaptionHexagonsActive(bool active)
+        [Impl(256)] public void CaptionHexagonsEnable()
         {
             for (int i = 0; i < HEX_COUNT; i++)
-                _hexagons[i].SetCaptionActive(active);
+                _hexagons[i].CaptionEnable(IsBreach, _isGate);
+        }
+        [Impl(256)] public void CaptionHexagonsDisable()
+        {
+            for (int i = 0; i < HEX_COUNT; i++)
+                _hexagons[i].CaptionDisable();
         }
 
         [Impl(256)] public int GetDefense() => _isWall ? _states.wallDefense : 0;
