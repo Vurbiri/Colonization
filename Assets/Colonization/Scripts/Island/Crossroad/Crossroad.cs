@@ -17,12 +17,14 @@ namespace Vurbiri.Colonization
         private static IdSet<EdificeId, AEdifice> s_prefabs;
 
         private readonly Key _key;
+        private int _weight;
         private AEdifice _edifice;
         private EdificeSettings _states;
         private Id<PlayerId> _owner = PlayerId.None;
         private bool _isWall = false;
         private readonly RBool _interactable = new(true);
-                
+        private readonly VAction<Key> _resetedWeight = new();
+
         private readonly List<Hexagon> _hexagons = new(HEX_COUNT);
         private readonly IdSet<LinkId, CrossroadLink> _links = new();
 
@@ -40,6 +42,8 @@ namespace Vurbiri.Colonization
         public Id<EdificeGroupId> GroupId { [Impl(256)] get => _states.groupId; }
         public Id<EdificeId> NextId { [Impl(256)] get => _states.nextId; }
         public Id<EdificeGroupId> NextGroupId { [Impl(256)] get => _states.nextGroupId; }
+        public int Weight { [Impl(256)] get => _weight; }
+        public Event<Key> ResetedWeight { [Impl(256)] get => _resetedWeight; }
         public int WaterCount { [Impl(256)] get => _waterCount; }
         public bool IsGate { [Impl(256)] get => _isGate; }
         public bool IsBreach { [Impl(256)] get => _waterCount > 0; }
@@ -100,23 +104,59 @@ namespace Vurbiri.Colonization
         public bool AddHexagon(Hexagon hexagon, out bool ending)
         {
             _isGate |= hexagon.IsGate;
-            if (hexagon.IsWater)  _waterCount++;
+            if (hexagon.IsWater) 
+                _waterCount++;
 
-            if (_hexagons.Count < (HEX_COUNT - 1) | _waterCount < HEX_COUNT)
+            bool result = _hexagons.Count < (HEX_COUNT - 1) | _waterCount < HEX_COUNT;
+            if (result)
             {
                 _hexagons.Add(hexagon);
+            }
+            else
+            {
+                for (int i = _hexagons.Count - 1; i >= 0; i--)
+                    _hexagons[i].Crossroads.Remove(this);
 
-                if (ending = _hexagons.Count == HEX_COUNT)
-                    _countFreeLink = _waterCount <= 1 ? _isGate ? 1 : 3 : 2;
-
-                return true;
+                Object.Destroy(_edifice.gameObject);
             }
 
-            for(int i = 0; i < _hexagons.Count; i++)
-                _hexagons[i].Crossroads.Remove(this);
-            
-            Object.Destroy(_edifice.gameObject);
-            return ending = false;
+            ending = _hexagons.Count == HEX_COUNT;
+            return result;
+        }
+
+        public void SetWeightAndLinks(ReadOnlyArray<int> hexWeight)
+        {
+            _countFreeLink = 3;
+            if (_isGate)
+            {
+                _countFreeLink = 1;
+                _weight = hexWeight[CONST.GATE_ID];
+            }
+            else if (_waterCount == 0)
+            {
+                for (int i = 0; i < HEX_COUNT; i++)
+                    _weight += hexWeight[_hexagons[i].ID];
+
+                _weight /= HEX_COUNT;
+            }
+            else
+            {
+                Hexagon hexagon;
+                for (int i = 0, count = _waterCount; count > 0; i++)
+                {
+                    hexagon = _hexagons[i];
+                    if (hexagon.IsWater)
+                    {
+                        _weight += hexWeight[hexagon.ID];
+                        count--;
+                    }
+                }
+                if (_waterCount == 2)
+                {
+                    _countFreeLink = 2;
+                    _weight >>= 1;
+                }
+            }
         }
 
         [Impl(256)] public void CaptionHexagonsEnable()
@@ -135,7 +175,7 @@ namespace Vurbiri.Colonization
 
         #region Link
         [Impl(256)] public bool ContainsLink(int id) => _links.ContainsKey(id);
-        public void AddLink(CrossroadLink link)
+        [Impl(256)] public void AddLink(CrossroadLink link)
         {
             _links.Add(link);
 
@@ -194,59 +234,65 @@ namespace Vurbiri.Colonization
         #region Edifice
         public bool CanUpgrade(Id<PlayerId> playerId)
         {
-            return _states.isUpgrade && (_owner == playerId || (_owner == PlayerId.None &&
-            _states.nextGroupId.Value switch
-            {
-                EdificeGroupId.Shrine => IsRoadConnect(playerId),
-                EdificeGroupId.Port   => WaterCheck(),
-                EdificeGroupId.Colony => NeighborCheck(playerId),
-                _ => false
-            }));
-
-            #region Local: WaterCheck(), NeighborCheck()
-            //=================================
-            bool WaterCheck()
-            {
-                if (_countFreeLink == 0 && !IsRoadConnect(playerId))
-                    return false;
-                
-                for (int i = 0; i < HEX_COUNT; i++)
-                    if (_hexagons[i].IsPort)
-                        return false;
-
-                return true;
-            }
-            //=================================
-            bool NeighborCheck(Id<PlayerId> playerId)
-            {
-                Crossroad neighbor;
-                foreach (var link in _links)
-                {
-                    neighbor = link.Other(_key);
-                    if (neighbor._states.groupId == EdificeGroupId.Colony)
-                        return false;
-                }
-                return IsRoadConnect(playerId);
-            }
-            #endregion
+            return _states.isUpgrade && 
+                  (_owner == playerId || (_owner == PlayerId.None & _weight > 0 && (IsRoadConnect(playerId) || (_states.nextGroupId == EdificeGroupId.Port & _countFreeLink > 0))));
         }
         public ReturnSignal BuyUpgrade(Id<PlayerId> playerId)
         {
             if (!_states.isUpgrade | (_states.id != EdificeId.Empty & _owner != playerId))
                 return false;
 
-            return BuildEdifice(playerId, _states.nextId.Value, true); ;
+            return BuildEdifice(playerId, _states.nextId.Value, true);
         }
         public WaitSignal BuildEdifice(Id<PlayerId> playerId, int buildId, bool isSFX)
         {
             var oldEdifice = _edifice;
-            _owner = playerId;
             _edifice = Object.Instantiate(s_prefabs[buildId]);
+
+            _owner = playerId;
+            
+            if (_states.id == EdificeId.Empty)
+            {
+                ResetWeight();
+
+                if (_states.nextGroupId == EdificeGroupId.Colony)
+                    ResetWeightNeighborsForColony();
+                if (_states.nextGroupId == EdificeGroupId.Port)
+                    ResetWeightNeighborsForPorts();
+            }
 
             var signal = _edifice.Init(_owner, _isWall, _links, oldEdifice, isSFX);
             _states = _edifice.Settings;
             _states.isBuildWall &= !_isWall;
             return signal;
+
+            #region Local ResetWeightNeighborsForColony(), ResetWeightNeighborsForPorts()
+            //===================================
+            [Impl(256)] void ResetWeightNeighborsForColony()
+            {
+                Crossroad neighbor;
+                foreach (var link in _links)
+                {
+                    neighbor = link.Other(_key);
+                    if (neighbor._states.nextGroupId == EdificeGroupId.Colony)
+                        neighbor.ResetWeight();
+                }
+            }
+            //===================================
+            [Impl(256)] void ResetWeightNeighborsForPorts()
+            {
+                List<Crossroad> crossroads;
+                for (int i = 0; i < HEX_COUNT; i++)
+                {
+                    if (_hexagons[i].IsWater)
+                    {
+                        crossroads = _hexagons[i].Crossroads;
+                        for (int j = crossroads.Count - 1; j >= 0; j--)
+                            crossroads[j].ResetWeight();
+                    }
+                }
+            }
+            #endregion
         }
 
         public bool CanWallBuild() => _states.isBuildWall & !_isWall;
@@ -271,7 +317,7 @@ namespace Vurbiri.Colonization
 
         #region Road
         [Impl(256)] public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
-        [Impl(256)]public void RoadBuilt(Id<LinkId> id)
+        [Impl(256)] public void RoadBuilt(Id<LinkId> id)
         {
             _countFreeLink--;
             _edifice.AddRoad(id, _isWall);
@@ -368,6 +414,12 @@ namespace Vurbiri.Colonization
         public bool Equals(Crossroad other) => other is not null && other._key == _key;
         public bool Equals(Key key) => key == _key;
         public override int GetHashCode() => _key.GetHashCode();
+
+        [Impl(256)] private void ResetWeight()
+         {
+            _weight = 0;
+            _resetedWeight.InvokeOneShot(_key);
+        }
     }
 }
 

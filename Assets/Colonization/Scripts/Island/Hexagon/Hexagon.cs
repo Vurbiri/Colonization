@@ -49,20 +49,6 @@ namespace Vurbiri.Colonization
         public List<Crossroad> Crossroads => _crossroads;
         public HashSet<Hexagon> Neighbors => _neighbors;
         public HexagonCaption Caption => _hexagonCaption;
-        public bool IsPort
-        {
-            get
-            {
-                if (_isWater)
-                {
-                    for (int i = _crossroads.Count - 1; i >= 0; i--)
-                        if (_crossroads[i].IsPort) 
-                            return true;
-                }
-
-                return false;
-            }
-        }
         #endregion
 
         #region Setup

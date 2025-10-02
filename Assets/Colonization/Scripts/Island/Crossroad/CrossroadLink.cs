@@ -68,13 +68,15 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void RoadBuilt(Id<PlayerId> playerId)
         {
             _owner = playerId;
-            GameContainer.Crossroads.RoadBuilt(_id, _start, _end);
+            GameContainer.Crossroads[_start].RoadBuilt(_id);
+            GameContainer.Crossroads[_end].RoadBuilt(_id);
         }
         [Impl(256)] public void RoadRemove(TypeLink type)
         {
             _type = type;
             _owner = PlayerId.None;
-            GameContainer.Crossroads.RoadRemove(_id, _start, _end);
+            GameContainer.Crossroads[_start].RoadRemove(_id);
+            GameContainer.Crossroads[_end].RoadRemove(_id);
         }
 
         [Impl(256)] public Crossroad Other(Key key) => GameContainer.Crossroads[key == _start ? _end : _start];

@@ -6,6 +6,7 @@ namespace Vurbiri
     using System.Linq;
     using UnityEditor;
     using UnityEngine;
+    using Vurbiri.Collections;
 
     public static class EUtility
     {
@@ -78,6 +79,11 @@ namespace Vurbiri
         {
             if (arr == null || arr.Length != length)
                 arr = new T[length];
+        }
+        public static void SetArray<T>(ref Array<T> arr, int length)
+        {
+            if (arr == null || arr.Count != length)
+                arr = new (length);
         }
 
         public static void SetComponent<T>(this Component self, ref T component) where T : Component

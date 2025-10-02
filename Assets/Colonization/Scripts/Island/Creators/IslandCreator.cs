@@ -16,6 +16,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private Transform _landContainer;
         [SerializeField] private HexagonSpawner _hexagonSpawner;
         [SerializeField] private HexagonMarkFactory _prefabHexMark;
+        [SerializeField] private Array<int> _hexWeight;
         [Header("═════ CROSSROADS ═════")]
         [SerializeField] private Transform _crossroadsContainer;
         [SerializeField] private IdSet<EdificeId, AEdifice> _edificePrefabs;
@@ -33,7 +34,7 @@ namespace Vurbiri.Colonization
             _hexagonSpawner.Init();
 
             hexagons   = _hexagons = new(new Pool<HexagonMark>(_prefabHexMark.Create, _landContainer, HEX.SIDES));
-            crossroads = _crossroads = new(_crossroadsContainer, _edificePrefabs);
+            crossroads = _crossroads = new(_crossroadsContainer, _edificePrefabs, _hexWeight);
 
             var shape = _psFog.shape; shape.radius = _ratioFogSize * MAX_CIRCLES;
 
@@ -110,6 +111,8 @@ namespace Vurbiri.Colonization
             this.SetChildren(ref _psFog);
             this.SetChildren(ref _landContainer, "Land");
             this.SetChildren(ref _crossroadsContainer, "Crossroads");
+
+            EUtility.SetArray(ref _hexWeight, DICE_MAX * 2 + 1);
         }
 #endif
     }

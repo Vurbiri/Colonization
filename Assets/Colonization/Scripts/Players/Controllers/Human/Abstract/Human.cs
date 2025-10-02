@@ -82,8 +82,6 @@ namespace Vurbiri.Colonization
             storage.BindEdifices(_edifices.edifices, instantGetValue);
             storage.BindActors(Actors);
             storage.LoadData = null;
-
-            GameContainer.Crossroads.BindEdifices(_edifices.edifices, instantGetValue);
         }
 
         // TSET !!!!!!!!!!!!!!

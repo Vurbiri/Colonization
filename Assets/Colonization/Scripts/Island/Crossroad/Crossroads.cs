@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -12,9 +11,9 @@ namespace Vurbiri.Colonization
     {
         private readonly Dictionary<Key, Crossroad> _crossroads = new(MAX_CROSSROADS);
 
-        private readonly HashSet<Key> _breach = new(HEX.SIDES * (MAX_CIRCLES + HEX.SIDES));
-        private readonly HashSet<Key> _gate = new(HEX.SIDES);
+        private readonly Breach _breach = new();
 
+        private ReadOnlyArray<int> _hexWeight;
         private Transform _container;
        
         private Vector3[] _vertices = new Vector3[HEX_COUNT_VERTICES];
@@ -24,9 +23,10 @@ namespace Vurbiri.Colonization
 
         public int BreachCount => _breach.Count;
 
-        public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs)
+        public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs, ReadOnlyArray<int> hexWeight)
         {
             _container = container;
+            _hexWeight = hexWeight;
 
             Crossroad.Init(prefabs);
 
@@ -57,10 +57,8 @@ namespace Vurbiri.Colonization
                     hex.Crossroads.Add(cross);
                     if (ending)
                     {
-                        if (cross.IsBreach)
-                            _breach.Add(key);
-                        else if (cross.IsGate)
-                            _gate.Add(key);
+                        cross.SetWeightAndLinks(_hexWeight);
+                        _breach.Add(cross);
                     }
                 }
                 else
@@ -73,52 +71,13 @@ namespace Vurbiri.Colonization
         public void FinishCreate()
         {
             _container = null;
+            _hexWeight = null;
             _vertices = null;
             _angles = null;
 
             _breach.TrimExcess();
         }
 
-        public Crossroad GetRandomPort()
-        {
-            int i = UnityEngine.Random.Range(0, _breach.Count);
-            foreach ( var breach in _breach )
-                if (i-- == 0) return _crossroads[breach];
-            return null;
-        }
-
-        [Impl(256)] public void RoadBuilt(Id<LinkId> id, Key start, Key end)
-        {
-            _crossroads[start].RoadBuilt(id);
-            _crossroads[end].RoadBuilt(id);
-        }
-        [Impl(256)] public void RoadRemove(Id<LinkId> id, Key start, Key end)
-        {
-            _crossroads[start].RoadRemove(id);
-            _crossroads[end].RoadRemove(id);
-        }
-
-        public void BindEdifices(IReadOnlyList<ReadOnlyReactiveList<Crossroad>> edificesReactive, bool instantGetValue)
-        {
-            edificesReactive[EdificeGroupId.Port].Subscribe(OnAddPort, instantGetValue);
-            edificesReactive[EdificeGroupId.Shrine].Subscribe((_, cross, _) => _gate.Remove(cross.Key), instantGetValue);
-        }
-
-        private void OnAddPort(int index, Crossroad crossroad, TypeEvent operation)
-        {
-            if (operation == TypeEvent.Add | operation == TypeEvent.Subscribe)
-            {
-                var hexagons = crossroad.Hexagons;
-                for (int i = 0; i < Crossroad.HEX_COUNT; i++)
-                {
-                    if (hexagons[i].IsWater)
-                    {
-                        var crossroads = hexagons[i].Crossroads;
-                        for(int j = crossroads.Count - 1; j >= 0; j--)
-                            _breach.Remove(crossroads[j].Key);
-                    }
-                }
-            }
-        }
+        public Crossroad GetRandomPort() => _crossroads[_breach.Get()];
     }
 }
