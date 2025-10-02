@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
             gift.MainPlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
 
            
-            GameContainer.Players.Person.Gift(giver, gift, sb.ToString());
+            GameContainer.Players.Person.OnGift(giver, gift, sb.ToString());
         }
 
         private void Spawn()

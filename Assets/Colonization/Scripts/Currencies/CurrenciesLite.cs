@@ -118,16 +118,34 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public void Clear()
+        [Impl(256)] public void Clear()
         {
             for (int i = 0; i < AllCount; i++)
                 _values[i] = 0;
-
             _amount = 0;
         }
 
         [Impl(256)] public void DirtyReset(int index) => _values[index] = 0;
         [Impl(256)] public void ResetAmount() => _amount = 0;
+
+        [Impl(256)] public void Import(ReadOnlyCurrencies other)
+        {
+            for (int i = 0; i < AllCount; i++)
+                _values[i] = other[i];
+            _amount = other.Amount;
+        }
+
+        public int DecrementMaxMain()
+        {
+            int maxId = 0;
+            for (int i = 1; i < MainCount; i++)
+                if (_values[i] > _values[maxId])
+                    maxId = i;
+            
+            _values[maxId]--; _amount--;
+
+            return maxId;
+        }
 
         public void MainToStringBuilder(StringBuilder sb, string hexPlusColor, string hexMinusColor)
         {

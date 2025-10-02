@@ -1,7 +1,7 @@
 {
   "Perks": "Ritual",
   "PerkMaxBlood": "Maximum amount of Demon Blood <b>+{0}</b>",
-  "PerkShrineProfit": "Demon Blood gain if 13 fell,\n<b>+{0}</b> per Magic Flame",
+  "PerkShrineProfit": "Demon Blood gain if 7 fell,\n<b>+{0}</b> per Magic Flame",
   "PerkShrinePassiveProfit": "Demon Blood gain if Demons turn,\n<b>+{0}</b> per Magic Flame",
   "PerkMaxMainResources": "Protected resource reserve <b>+{0}</b>",
   "PerkIsFreeGroundRes": "Revenue from island hexes, which does not belong to anyone, goes to you",

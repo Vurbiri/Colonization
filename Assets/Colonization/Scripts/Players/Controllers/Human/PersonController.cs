@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
             _iController = new(_interactable, _subscription);
         }
 
-        public override WaitResult<bool> Gift(int giver, CurrenciesLite gift, string msg)
+        public override WaitResult<bool> OnGift(int giver, CurrenciesLite gift, string msg)
         {
             Gift_Cn(giver, gift, msg).Start();
             return _waitGift.Restart();

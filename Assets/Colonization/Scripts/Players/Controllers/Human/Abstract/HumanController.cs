@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
             if (type == ActorTypeId.Demon)
             {
                 GameContainer.Score.ForKillingDemon(_id, id);
-                _resources.AddBlood(id);
+                _resources.AddBlood(id + 1);
             }
             else
             {
@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public abstract WaitResult<bool> Gift(int giver, CurrenciesLite gift, string msg);
+        public abstract WaitResult<bool> OnGift(int giver, CurrenciesLite gift, string msg);
 
         public virtual void OnLanding() { }
         public virtual void OnEndLanding() { }

@@ -1,0 +1,14 @@
+{
+  "msg": [
+    "1",
+    "GiftMsg"
+  ],
+  "ratio": [
+    2,
+    9
+  ],
+  "shiftRelation": 3,
+  "shiftMax": 2,
+  "shiftAmount": 3,
+  "minAmount": 7
+}

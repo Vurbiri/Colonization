@@ -23,9 +23,9 @@ namespace Vurbiri.Colonization
 
             _eventGameOver.Add(gameLoop.End_Cn);
 
-            actorsFactory[PlayerId.Satan].Subscribe(OnKillingDemon, false);
+            actorsFactory[PlayerId.Satan].Subscribe(OnDemonDeath, false);
             for (int i = 0; i < PlayerId.HumansCount; i++)
-                actorsFactory[i].Subscribe(OnKillingWarrior, false);
+                actorsFactory[i].Subscribe(OnWarriorDeath, false);
         }
 
         public void ForDemonCurse(int value) => Add(_settings.penaltyPerDemon * value);
@@ -40,22 +40,28 @@ namespace Vurbiri.Colonization
             {
                 _value += value;
 
-                _changeEvent.Invoke(_value);
-
                 if (_value <= 0)
+                {
+                    _value = 0;
                     _eventGameOver.Invoke(Winner.Human);
-                if (_value >= _settings.max)
+                }
+                else if (_value >= _settings.max)
+                {
+                    _value = _settings.max;
                     _eventGameOver.Invoke(Winner.Satan);
+                }
+
+                _changeEvent.Invoke(_value);
             }
         }
 
-        private void OnKillingWarrior(Actor actor, TypeEvent op)
+        private void OnWarriorDeath(Actor actor, TypeEvent op)
         {
             if (op == TypeEvent.Remove)
                 Add(_settings.penaltyPerKillWarrior[actor.Id]);
         }
 
-        private void OnKillingDemon(Actor actor, TypeEvent op)
+        private void OnDemonDeath(Actor actor, TypeEvent op)
         {
             if (op == TypeEvent.Remove)
                 Add(_settings.rewardPerKillDemon[actor.Id]);
