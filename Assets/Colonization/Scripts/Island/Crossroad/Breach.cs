@@ -1,23 +1,21 @@
-using System;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
 	public class Breach
 	{
-        private const int MAX_BREACH = HEX.SIDES * (CONST.MAX_CIRCLES + HEX.SIDES);
-
-        private Weight[] _weights = new Weight[MAX_BREACH];
-        private int _count = 1;
-        private int _max;
-
+        private Weight[] _weights = new Weight[HEX.SIDES * (CONST.MAX_CIRCLES + HEX.SIDES)];
+        private readonly int _min;
+        private int _max, _count = 1;
+        
         public int Count { [Impl(256)] get => _count - 1; }
 
-        public Breach() => _weights[0] = new(Key.Zero, 0);
+        [Impl(256)] public Breach() => _weights[0] = new(Key.Zero, 0);
+        [Impl(256)] public Breach(int min) : this() => _min = min;
 
         public void Add(Crossroad crossroad)
         {
-            if(crossroad.IsBreach)
+            if(crossroad.IsBreach & crossroad.Weight > _min)
             {
                 _max = _weights[_count - 1] + crossroad.Weight;
                 _weights[_count] = new (crossroad.Key, _max);
@@ -29,25 +27,23 @@ namespace Vurbiri.Colonization
 
         public Key Get()
         {
-            return Search(0, _count, UnityEngine.Random.Range(0, _max));
-            
-            // Local
-            Key Search(int min, int max, int weight)
+            int weight = UnityEngine.Random.Range(0, _max);
+            int min = 0, max = _count, current;
+            while (true)
             {
-                int current = min + max >> 1;
-                var value = _weights[current];
-                if (value <= weight)
-                     return Search(current, max, weight);
-                if (_weights[current - 1] > weight)
-                    return Search(min, current, weight);
-
-                return value.key;
+                current = min + max >> 1;
+                if (_weights[current] <= weight)
+                    min = current;
+                else if (_weights[current - 1] > weight)
+                    max = current;
+                else
+                    return _weights[current].key;
             }
         }
 
-        public void TrimExcess()
+        [Impl(256)] public void TrimExcess()
         {
-            Array.Resize(ref _weights, _count);
+            System.Array.Resize(ref _weights, _count); 
         }
 
         private void OnResetedWeight(Key key)
@@ -62,6 +58,19 @@ namespace Vurbiri.Colonization
             for (; index < _count; index++)
                 _weights[index] = _weights[index + 1].Remove(delta);
             _max -= delta;
+        }
+
+        private Key Search(int min, int max, int weight)
+        {
+            int current = min + max >> 1;
+
+            if (_weights[current] <= weight)
+                return Search(current, max, weight);
+            if (_weights[current - 1] > weight)
+                return Search(min, current, weight);
+
+            //UnityEngine.Debug.Log($"{weight} - [{_weights[current - 1]}; {_weights[current]})");
+            return _weights[current].key;
         }
     }
 }

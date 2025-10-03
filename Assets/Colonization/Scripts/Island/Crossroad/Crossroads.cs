@@ -10,8 +10,7 @@ namespace Vurbiri.Colonization
     public class Crossroads
     {
         private readonly Dictionary<Key, Crossroad> _crossroads = new(MAX_CROSSROADS);
-
-        private readonly Breach _breach = new();
+        private readonly Breach _breach;
 
         private ReadOnlyArray<int> _hexWeight;
         private Transform _container;
@@ -21,12 +20,13 @@ namespace Vurbiri.Colonization
 
         public Crossroad this[Key key] { [Impl(256)] get => _crossroads[key]; }
 
-        public int BreachCount => _breach.Count;
+        public int BreachCount  { [Impl(256)] get => _breach.Count; }
 
-        public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs, ReadOnlyArray<int> hexWeight)
+        public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs)
         {
+            _hexWeight = SettingsFile.Load<HexWeight>();
             _container = container;
-            _hexWeight = hexWeight;
+            _breach = new(_hexWeight[^1] << 1);
 
             Crossroad.Init(prefabs);
 
@@ -57,7 +57,7 @@ namespace Vurbiri.Colonization
                     hex.Crossroads.Add(cross);
                     if (ending)
                     {
-                        cross.SetWeightAndLinks(_hexWeight);
+                        cross.Setup(_hexWeight);
                         _breach.Add(cross);
                     }
                 }
@@ -78,6 +78,6 @@ namespace Vurbiri.Colonization
             _breach.TrimExcess();
         }
 
-        public Crossroad GetRandomPort() => _crossroads[_breach.Get()];
+        [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_breach.Get()];
     }
 }

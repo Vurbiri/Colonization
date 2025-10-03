@@ -77,13 +77,17 @@ namespace Vurbiri
 
         public static void SetArray<T>(ref T[] arr, int length)
         {
-            if (arr == null || arr.Length != length)
+            if (arr == null)
                 arr = new T[length];
+            else if (arr.Length != length)
+                System.Array.Resize(ref arr, length);
         }
         public static void SetArray<T>(ref Array<T> arr, int length)
         {
-            if (arr == null || arr.Count != length)
+            if (arr == null)
                 arr = new (length);
+            else if(arr.Count != length)
+                arr.Resize(length);
         }
 
         public static void SetComponent<T>(this Component self, ref T component) where T : Component

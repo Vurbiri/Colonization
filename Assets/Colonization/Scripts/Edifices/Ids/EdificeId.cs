@@ -19,6 +19,7 @@ namespace Vurbiri.Colonization
         
         static EdificeId() => ConstructorRun();
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int ToGroup(int id) => id switch
         {
             Empty                                                => EdificeGroupId.None,
@@ -26,15 +27,6 @@ namespace Vurbiri.Colonization
             PortOne or PortTwo or LighthouseOne or LighthouseTwo => EdificeGroupId.Port,
             Camp or Town or City                                 => EdificeGroupId.Colony,
             _                                                    => Errors.ArgumentOutOfRange("EdificeTypeId", id),
-        };
-
-        public static int GetId(int countWater, bool isGate) => countWater switch
-        {
-            0 when  isGate => Shrine,
-            0 when !isGate => Camp,
-            1              => PortOne,
-            2              => PortTwo,
-            _              => Empty
         };
     }
 

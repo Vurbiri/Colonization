@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Vurbiri.Colonization
@@ -17,10 +18,11 @@ namespace Vurbiri.Colonization
         public bool isBuildWall;
         public int wallDefense;
 
-        public void SetNextId(Id<EdificeId> id)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetNextId(Id<EdificeId> id, Id<EdificeGroupId> groupId)
         {
             nextId = id;
-            nextGroupId = id.ToGroup();
+            nextGroupId = groupId;
         }
     }
 }

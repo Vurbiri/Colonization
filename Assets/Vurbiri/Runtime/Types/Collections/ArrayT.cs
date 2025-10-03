@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Collections
@@ -13,16 +14,26 @@ namespace Vurbiri.Collections
             [Impl(256)] set => _values[index] = value;
         }
 
-        [Impl(256)] public Array(TValue[] values)
-        {
-            _values = values;
-            _count = values.Length;
-        }
-
         [Impl(256)] public Array(int count)
         {
             _values = new TValue[count];
             _count = count;
         }
+        [Impl(256)] public Array(TValue[] values) : base(values) { }
+        [Impl(256), JsonConstructor] public Array(IReadOnlyList<TValue> list) : base(list) { }
+
+        public void Resize(int newSize)
+        {
+            TValue[] newArr = new TValue[newSize];
+            int count = Math.Min(newSize, _count);
+            for (int i = 0; i < count; i++)
+                newArr[i] = _values[i];
+
+            _values = newArr;
+            _count = newSize;
+        }
+
+        [Impl(256)] public static implicit operator Array<TValue>(TValue[] values) => new(values);
+      
     }
 }

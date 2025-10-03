@@ -101,16 +101,17 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void Cancel() => Unselect(null);
         #endregion
 
+        #region Setup
         public bool AddHexagon(Hexagon hexagon, out bool ending)
         {
-            _isGate |= hexagon.IsGate;
             if (hexagon.IsWater) 
                 _waterCount++;
 
-            bool result = _hexagons.Count < (HEX_COUNT - 1) | _waterCount < HEX_COUNT;
+            bool result = _waterCount < HEX_COUNT;
             if (result)
             {
                 _hexagons.Add(hexagon);
+                _isGate |= hexagon.IsGate;
             }
             else
             {
@@ -124,19 +125,20 @@ namespace Vurbiri.Colonization
             return result;
         }
 
-        public void SetWeightAndLinks(ReadOnlyArray<int> hexWeight)
+        public void Setup(ReadOnlyArray<int> hexWeight)
         {
-            _countFreeLink = 3;
             if (_isGate)
             {
                 _countFreeLink = 1;
+                _states.SetNextId(EdificeId.Shrine, EdificeGroupId.Shrine);
                 _weight = hexWeight[CONST.GATE_ID];
             }
             else if (_waterCount == 0)
             {
+                _countFreeLink = 3;
+                _states.SetNextId(EdificeId.Camp, EdificeGroupId.Colony);
                 for (int i = 0; i < HEX_COUNT; i++)
                     _weight += hexWeight[_hexagons[i].ID];
-
                 _weight /= HEX_COUNT;
             }
             else
@@ -147,17 +149,26 @@ namespace Vurbiri.Colonization
                     hexagon = _hexagons[i];
                     if (hexagon.IsWater)
                     {
-                        _weight += hexWeight[hexagon.ID];
-                        count--;
+                        count--; _weight += hexWeight[hexagon.ID];
                     }
                 }
+
+                _states.nextGroupId = EdificeGroupId.Port;
                 if (_waterCount == 2)
                 {
                     _countFreeLink = 2;
+                    _states.nextId = EdificeId.PortTwo;
                     _weight >>= 1;
+                }
+                else
+                {
+                    _countFreeLink = 3;
+                    _states.nextId = EdificeId.PortOne;
+                    _weight <<= 1;
                 }
             }
         }
+        #endregion
 
         [Impl(256)] public void CaptionHexagonsEnable()
         {
@@ -175,16 +186,7 @@ namespace Vurbiri.Colonization
 
         #region Link
         [Impl(256)] public bool ContainsLink(int id) => _links.ContainsKey(id);
-        [Impl(256)] public void AddLink(CrossroadLink link)
-        {
-            _links.Add(link);
-
-            if (_countFreeLink == _links.Fullness)
-            {
-                _states.SetNextId(EdificeId.GetId(_waterCount, _isGate));
-                _edifice.Init(_owner, _isWall, _links, _edifice, false);
-            }
-        }
+        [Impl(256)] public void AddLink(CrossroadLink link) => _links.Add(link);
 
         [Impl(256)] public CrossroadLink GetLink(Id<LinkId> linkId) => _links[linkId];
         [Impl(256)] public CrossroadLink GetLinkAndSetStart(Id<LinkId> linkId) => _links[linkId].SetStart(_key);

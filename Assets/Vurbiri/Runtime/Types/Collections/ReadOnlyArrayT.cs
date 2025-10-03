@@ -13,20 +13,23 @@ namespace Vurbiri.Collections
         [SerializeField] protected TValue[] _values;
         protected int _count;
 
-        public TValue this[int index]
-        {
-            [Impl(256)] get => _values[index];
-        }
+        public TValue this[int index] { [Impl(256)] get => _values[index]; }
 
-        public int Count
-        {
-            [Impl(256)] get => _count;
-        }
+        public int Count { [Impl(256)] get => _count; }
 
-        [Impl(256)] public ReadOnlyArray(TValue[] values)
+        [Impl(256)] 
+        public ReadOnlyArray(TValue[] values)
         {
             _values = values;
             _count = values.Length;
+        }
+        [Impl(256), JsonConstructor]
+        public ReadOnlyArray(IReadOnlyList<TValue> list)
+        {
+            _count = list.Count;
+            _values = new TValue[_count];
+            for (int i = 0; i < _count; i++)
+                _values[i] = list[i];
         }
         protected ReadOnlyArray() { }
 
@@ -44,11 +47,35 @@ namespace Vurbiri.Collections
         [Impl(256)] public static implicit operator ReadOnlyArray<TValue>(TValue[] values) => new(values);
 
         public void OnAfterDeserialize() => _count = _values != null ? _values.Length : -1;
-        public void OnBeforeSerialize() 
+        public void OnBeforeSerialize()
         {
 #if UNITY_EDITOR
             OnAfterDeserialize();
 #endif
         }
     }
+
+    //sealed internal class ArrayGenericConverter : JsonConverter
+    //{
+    //    private readonly Type _type = typeof(ReadOnlyArray<>);
+
+    //    public override bool CanConvert(Type objectType) => objectType != null && (objectType.IsGenericType & objectType.GetGenericTypeDefinition().IsAssignableFrom(_type));
+
+    //    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    //    {
+    //        return Activator.CreateInstance(objectType, serializer.Deserialize(reader, objectType.GenericTypeArguments[0].MakeArrayType()));
+    //    }
+
+    //    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    //    {
+    //        var array = (IEnumerable)value;
+
+    //        writer.WriteStartArray();
+    //        {
+    //            foreach (var item in array)
+    //                writer.WriteValue(item);
+    //        }
+    //        writer.WriteEndArray();
+    //    }
+    //}
 }
