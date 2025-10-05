@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization.UI
 
         public Vector3 LocalPosition { set => _thisRectTransform.localPosition = value; }
 
-        protected void SetTextHint(string caption, ACurrencies cash, ACurrencies cost)
+        protected void SetTextHint(string caption, ReadOnlyCurrencies cash, ReadOnlyMainCurrencies cost)
         {
             StringBuilder sb = new(cost.Amount > 0 ? MAX_SIZE : MIN_SIZE);
             sb.AppendLine(caption);

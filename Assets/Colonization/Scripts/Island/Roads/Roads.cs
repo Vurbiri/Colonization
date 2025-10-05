@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -17,8 +18,8 @@ namespace Vurbiri.Colonization
         private readonly VAction<Roads> _eventChanged = new();
         #endregion
 
-        public int Count => _count.Value;
-        public ReactiveValue<int> CountReactive => _count;
+        public Road this[int index] { [Impl(256)] get => _roadsLists[index]; }
+        public ReactiveValue<int> Count { [Impl(256)] get => _count; }
 
         public Roads(Id<PlayerId> id, RoadFactory factory)
         {
@@ -61,12 +62,30 @@ namespace Vurbiri.Colonization
             return returnSignal;
         }
 
-        public bool ThereDeadEnds()
+        [Impl(256)]public bool ThereDeadEnds()
         {
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
                if(_roadsLists[i].ThereDeadEnds(_id)) return true;
             
             return false;
+        }
+
+        public void SetDeadEnds(List<Crossroad> deadEnds)
+        {
+            for (int i = _roadsLists.Count - 1; i >= 0; i--)
+                TryAddLine(deadEnds, _roadsLists[i]);
+
+            #region Local
+            [Impl(256)] void TryAddLine(List<Crossroad> deadEnds, Road line)
+            {
+                TryAdd(deadEnds, line.StartCrossroad);
+                TryAdd(deadEnds, line.EndCrossroad);
+            }
+            [Impl(256)] void TryAdd(List<Crossroad> deadEnds, Crossroad crossroad)
+            {
+                if(crossroad.IsDeadEnd(_id)) deadEnds.Add(crossroad);
+            }
+            #endregion
         }
 
         public IEnumerator RemoveDeadEnds_Cn()

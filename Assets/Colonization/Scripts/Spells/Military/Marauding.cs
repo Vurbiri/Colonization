@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         sealed private class Marauding : AMsgSpell
         {
-            private readonly CurrenciesLite[] _currencies = new CurrenciesLite[PlayerId.HumansCount];
+            private readonly MainCurrencies[] _currencies = new MainCurrencies[PlayerId.HumansCount];
             private readonly Stack<Occupation> _occupations = new(CONST.DEFAULT_MAX_EDIFICES << 1);
 
             private Marauding(int type, int id) : base(type, id)
@@ -66,7 +66,7 @@ namespace Vurbiri.Colonization
                     if (isPerson)
                     {
                         StringBuilder sb = new(200); 
-                        sb.AppendLine(_strMsg); Occupation.self.MainToStringBuilder(sb);
+                        sb.AppendLine(_strMsg); Occupation.self.ToStringBuilder(sb);
                         int amount = _currencies[PlayerId.Person].Amount;
                         Banner.Open(sb.ToString(), amount == 0 ? MessageTypeId.Warning : amount > 0 ? MessageTypeId.Profit : MessageTypeId.Error, 15f);
                     }
@@ -96,7 +96,7 @@ namespace Vurbiri.Colonization
                 private readonly Actor _actor;
                 private readonly Crossroad _colony;
 
-                public static CurrenciesLite self;
+                public static MainCurrencies self;
 
                 public Occupation(Actor actor, Crossroad colony)
                 {
@@ -104,7 +104,7 @@ namespace Vurbiri.Colonization
                     _colony = colony;
                 }
 
-                public bool Heist(CurrenciesLite[] currencies)
+                public bool Heist(MainCurrencies[] currencies)
                 {
                     int enemyId = _colony.Owner;
                     int currencyId = _actor.Hexagon.GetProfit();
@@ -113,8 +113,8 @@ namespace Vurbiri.Colonization
 
                     if (currency > -enemy[currencyId] && Chance.Rolling(100 - s_settings.reductionFromWall * _colony.GetDefense()))
                     {
-                        enemy.DecrementMain(currencyId);
-                        self.IncrementMain(currencyId);
+                        enemy.Decrement(currencyId);
+                        self.Increment(currencyId);
 
                         GameContainer.Diplomacy.Marauding(enemyId, _actor.Owner);
                     }

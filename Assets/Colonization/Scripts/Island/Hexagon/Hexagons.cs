@@ -13,12 +13,12 @@ namespace Vurbiri.Colonization
         private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
         private readonly List<Key>[] _hexagonsIdForKey = new List<Key>[HEX_IDS[^1] + 1];
         private readonly VAction<Hexagon> _eventChanged = new();
-        private readonly CurrenciesLite _freeResources = new();
+        private readonly MainCurrencies _freeResources = new();
 
         private int _groundCount = 0;
 
         public Hexagon this[Key key] { [Impl(256)] get => _hexagons[key]; }
-        public CurrenciesLite FreeResources { [Impl(256)] get => _freeResources; }
+        public MainCurrencies FreeResources { [Impl(256)] get => _freeResources; }
         public int GroundCount { [Impl(256)] get => _groundCount; }
 
         public Hexagons(Pool<HexagonMark> poolMarks)
@@ -81,7 +81,7 @@ namespace Vurbiri.Colonization
             for (int i = keys.Count - 1; i >= 0; i--)
             {
                 if (_hexagons[keys[i]].SetProfitAndTryGetFreeProfit(out int currencyId))
-                    _freeResources.IncrementMain(currencyId);
+                    _freeResources.Increment(currencyId);
             }
         }
 

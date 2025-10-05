@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     {
         sealed public class Spying : ASpell
         {
-            private readonly CurrenciesLite _add = new();
+            private readonly MainCurrencies _add = new();
 
             private Spying(int type, int id) : base(type, id) => SetManaCost();
             public static void Create() => new Spying(MilitarySpellId.Type, MilitarySpellId.Spying);
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
                                     currencyId = (currencyId + 1) % CurrencyId.MainCount;
 
                                 other.Remove(currencyId, 1);
-                                _add.IncrementMain(currencyId);
+                                _add.Increment(currencyId);
 
                             }
                             if (isPerson)
@@ -58,7 +58,7 @@ namespace Vurbiri.Colonization
                     {
                         self.Add(_add);
                         if (isPerson) 
-                            _add.MainToStringBuilder(sb, GameContainer.UI.Colors.TextPositiveTag, GameContainer.UI.Colors.TextNegativeTag);
+                            _add.ToStringBuilder(sb, GameContainer.UI.Colors.TextPositiveTag, GameContainer.UI.Colors.TextNegativeTag);
                         _add.Clear();
                     }
 

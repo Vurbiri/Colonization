@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Text;
-using Vurbiri.Colonization.Characteristics;
 using Vurbiri.International;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -8,34 +7,26 @@ namespace Vurbiri.Colonization
 {
 	public partial class AIController
 	{
-		private class Gift
-		{
-            private static readonly AIGiftSettings s_settings;
+		sealed private class Diplomat : Counselor
+        {
+            private static readonly DiplomatSettings s_settings;
 
             private readonly WaitResultSource<bool> _waitGift = new();
-            private readonly AIController _parent;
-            private readonly int _relationOffset;
-            private readonly CurrenciesLite _gift = new(), _clone = new();
+            private readonly MainCurrencies _gift = new(), _clone = new();
             public int _ratio;
             private string _msg;
 
-            private int Id { [Impl(256)] get => _parent._id; }
-            private Currencies Resources { [Impl(256)] get => _parent._resources; }
-            private int MaxResources { [Impl(256)] get => _parent._abilities[HumanAbilityId.MaxMainResources]; }
+            static Diplomat() => s_settings = SettingsFile.Load<DiplomatSettings>();
 
-            static Gift() => s_settings = SettingsFile.Load<AIGiftSettings>();
-
-            public Gift(AIController parent)
+            public Diplomat(AIController parent) : base(parent)
 			{
 				parent._subscription += Localization.Instance.Subscribe(SetMsg);
                 _ratio = s_settings.ratio;
-                _parent = parent;
-                _relationOffset = GameContainer.Diplomacy.Max >> s_settings.shiftRelation;
             }
 
             [Impl(256)] public void Update() => _ratio = s_settings.ratio;
 
-            public WaitResult<bool> Receive(int giver, CurrenciesLite gift)
+            public WaitResult<bool> Receive(int giver, MainCurrencies gift)
 			{
                 int amount = gift.Amount * _ratio;
                 if (GameContainer.Diplomacy.IsGreatFriend(Id, giver))
@@ -53,7 +44,7 @@ namespace Vurbiri.Colonization
                 return _waitGift.SetResult(result);
             }
 
-            public IEnumerator TryGive_Cn()
+            public override IEnumerator Appeal_Cn()
             {
                 for(int i = 0; i < PlayerId.HumansCount; i++)
                     yield return TryGive_Cn(i);
@@ -64,19 +55,23 @@ namespace Vurbiri.Colonization
                     int amount = Resources.Amount;
                     if (receiver != Id & amount > s_settings.minAmount)
                     {
-                        if (Chance.Rolling((GameContainer.Diplomacy[receiver, Id] - _relationOffset) + (amount - MaxResources << s_settings.shiftMax)))
+                        if (Chance.Rolling((GameContainer.Diplomacy[receiver, Id] - s_settings.relationOffset) + (amount - MaxResources << s_settings.shiftMax)))
                         {
                             _gift.Clear(); _clone.Import(Resources);
                             int countGift = 1 + UnityEngine.Random.Range(0, amount - s_settings.minAmount >> s_settings.shiftAmount);
-                            for (int i = 0; i < countGift; i++)
-                                _gift.IncrementMain(_clone.DecrementMaxMain());
+                            for (int i = 0, max; i < countGift; i++)
+                            {
+                                max = _clone.MaxMainIndex();
+                                _clone.Decrement(max);
+                                _gift.Increment(max);
+                            }
 
                             string msg = null;
                             if (receiver == PlayerId.Person)
                             {
                                 StringBuilder sb = new(TAG.ALING_CENTER, 256);
                                 sb.Append(GameContainer.UI.PlayerNames[Id]); sb.Append(" "); sb.AppendLine(_msg);
-                                _gift.MainPlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
+                                _gift.PlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
                                 msg = sb.ToString();
                             }
                             var wait = GameContainer.Players.Humans[receiver].OnGift(Id, _gift, msg);

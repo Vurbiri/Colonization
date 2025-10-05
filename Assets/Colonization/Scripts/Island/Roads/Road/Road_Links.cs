@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
     public partial class Road
     {
-		private class Links : IReadOnlyList<Crossroad>
+		private class Links : IReadOnlyList<Key>
 		{
             private const int BASE_CAPACITY = 7;
 
-            private Crossroad[] _values = new Crossroad[BASE_CAPACITY];
+            private Key[] _values = new Key[BASE_CAPACITY];
             private int _capacity = BASE_CAPACITY;
             private int _count;
             private int _start, _end;
@@ -19,24 +20,23 @@ namespace Vurbiri.Colonization
                 _end = _capacity >> 1;
                 _start = _end - 1;
 
-                _values[_start] = start;
-                _values[_end++] = end;
+                _values[_start] = start.Key;
+                _values[_end++] = end.Key;
                 _count = 2;
             }
 
-            public Crossroad this[int index] => _values[index + _start];
+            public Key this[int index] => _values[_start + index];
 
-            public int Count => _count;
-            public Crossroad Start => _values[_start];
-            public Crossroad End => _values[_end - 1];
+            public int Count { [Impl(256)] get => _count; }
+            public Key Start { [Impl(256)] get => _values[_start]; }
+            public Key End { [Impl(256)] get => _values[_end - 1]; }
 
-            
             public void Add(Crossroad crossroad)
             {
                 if (_end == _capacity)
                     GrowArray(_capacity);
 
-                _values[_end++] = crossroad;
+                _values[_end++] = crossroad.Key;
                 _count++;
             }
             public void Insert(Crossroad crossroad)
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
                 if (_start == 0)
                     GrowArray(_capacity);
 
-                _values[--_start] = crossroad;
+                _values[--_start] = crossroad.Key;
                 _count++;
             }
 
@@ -100,13 +100,11 @@ namespace Vurbiri.Colonization
 
             public void Remove()
             {
-                _values[--_end] = null;
-                _count--;
+                _count--; _end--;
             }
             public void Extract()
             {
-                _values[_start++] = null;
-                _count--;
+                _count--; _start++;
             }
 
             private void GrowArray(int count, int startOffset = 0)
@@ -115,7 +113,7 @@ namespace Vurbiri.Colonization
                     _capacity = _capacity << 1 | BASE_CAPACITY;
 
                 int start = ((_capacity - _count) >> 1) + startOffset;
-                Crossroad[] array = new Crossroad[_capacity];
+                var array = new Key[_capacity];
 
                 for (int i = _start, j = start; i < _end; i++, j++)
                     array[j] = _values[i];
@@ -125,7 +123,7 @@ namespace Vurbiri.Colonization
                 _end = _start + _count;
             }
 
-            public IEnumerator<Crossroad> GetEnumerator()
+            public IEnumerator<Key> GetEnumerator()
             {
                 for (int i = _start; i < _end; i++)
                     yield return _values[i];

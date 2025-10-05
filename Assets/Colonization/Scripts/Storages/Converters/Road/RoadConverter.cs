@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
                 int count = value._links.Count;
                 writer.WriteStartArray();
                 for (int i = 0; i < count; i++)
-                    Key.Converter.WriteJsonArray(writer, value._links[i].Key);
+                    Key.Converter.WriteJsonArray(writer, value._links[i]);
                 writer.WriteEndArray();
             }
         }

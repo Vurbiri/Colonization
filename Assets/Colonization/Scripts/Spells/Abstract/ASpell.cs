@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
 
             private Action<string> a_onHint;
 
-            protected readonly CurrenciesLite _cost = new();
+            protected readonly MainCurrencies _cost = new();
             protected readonly string _nameKey, _descKey;
             protected string _strCost, _strName;
             protected bool _canCast;
@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
 
             protected ASpell(int type, int id)
             {
-                _cost.SetMain(CurrencyId.Mana, s_costs[type][id]);
+                _cost.Set(CurrencyId.Mana, s_costs[type][id]);
                 string key = s_keys[type][id];
                 _nameKey = string.Concat(key, "Name");
                 _descKey = string.Concat(key, "Desc");

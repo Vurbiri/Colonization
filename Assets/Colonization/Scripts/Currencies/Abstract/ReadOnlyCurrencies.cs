@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -15,16 +16,17 @@ namespace Vurbiri.Colonization
         protected Ability _maxAmount, _maxBlood;
         protected readonly VAction<ACurrencies> _changeEvent = new();
 
-        sealed public override int Amount => _amount.Value;
-        public ReactiveValue<int> CurrentAmount => _amount;
-        public ReactiveValue<int> MaxAmount => _maxAmount;
-        public ReactiveValue<int> MaxBlood => _maxBlood;
+        sealed public override int Amount { [Impl(256)] get => _amount.Value; }
+        public ReactiveValue<int> CurrentAmount { [Impl(256)] get => _amount; }
+        public ReactiveValue<int> MaxAmount { [Impl(256)] get => _maxAmount; }
+        public ReactiveValue<int> MaxBlood { [Impl(256)] get => _maxBlood; }
+        public int PercentBlood { [Impl(256)] get => _values[Blood] * _values[Blood] * 10 / _maxBlood; }
 
         public bool IsOverResources => _maxAmount.Value < _amount.Value;
         sealed public override bool IsEmpty => _amount == 0 & _values[Blood].Value == 0;
 
-        sealed public override int this[int index] { get => _values[index].Value; }
-        sealed public override int this[Id<CurrencyId> id] { get => _values[id.Value].Value; }
+        sealed public override int this[int index] { [Impl(256)] get => _values[index].Value; }
+        sealed public override int this[Id<CurrencyId> id] { [Impl(256)] get => _values[id.Value].Value; }
 
         #region Constructions
         protected ReadOnlyCurrencies(ACurrencies other, Ability maxMainValue, Ability maxBloodValue)
@@ -45,6 +47,19 @@ namespace Vurbiri.Colonization
 
         public Currency Get(int index) => _values[index];
         public Currency Get(Id<CurrencyId> id) => _values[id.Value];
+
+        public int OverCount(ReadOnlyMainCurrencies value, out int lastIndex)
+        {
+            int count = 0; lastIndex = -1;
+            for (int i = 0; i < MainCount; i++)
+            {
+                if (value[i] > _values[i])
+                {
+                    count++; lastIndex = i;
+                }
+            }
+            return count;
+        }
 
         sealed public override IEnumerator<int> GetEnumerator()
         {
@@ -113,6 +128,8 @@ namespace Vurbiri.Colonization
 
             public static int operator +(ACurrency currency, int value) => currency.Add(value);
             public static int operator -(ACurrency currency, int value) => currency.Remove(value);
+
+            public static int operator *(ACurrency a, ACurrency b) => a._value * b._value;
         }
         #endregion
      }

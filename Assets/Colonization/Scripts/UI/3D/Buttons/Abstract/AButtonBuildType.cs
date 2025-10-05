@@ -1,6 +1,5 @@
 using UnityEngine;
 using Vurbiri.International;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -9,8 +8,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] protected FileIdAndKey _getText;
         [SerializeField] protected Id<T> _id;
 
-        protected ACurrencies _cost;
-        protected ACurrencies _cash;
+        protected ReadOnlyMainCurrencies _cost;
+        protected ReadOnlyCurrencies _cash;
         protected Subscription _subscription;
         protected string _caption;
         protected AWorldMenu _parent;
@@ -18,7 +17,7 @@ namespace Vurbiri.Colonization.UI
 
         public Id<T> Id => _id;
 
-        public virtual void Init(ACurrencies cost, AWorldMenu parent)
+        public virtual void Init(ReadOnlyMainCurrencies cost, AWorldMenu parent)
         {
             base.InternalInit(GameContainer.UI.WorldHint, OnClick, true);
             

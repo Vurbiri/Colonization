@@ -54,22 +54,15 @@ namespace Vurbiri.Colonization
                     CreateEdifices(edifices[i], data[i], parent._id, GameContainer.Crossroads);
             }
 
-            public CurrenciesLite ProfitFromEdifices(int hexId)
+            public MainCurrencies ProfitFromEdifices(int hexId)
             {
-                CurrenciesLite profit = ProfitFromPorts(hexId);
+                MainCurrencies profit = new();
+
+                for (int i = ports.Count - 1; i >= 0; i--)
+                    ports[i].ProfitFromPort(profit, hexId, _portsProfit.Value);
 
                 for (int i = colonies.Count - 1; i >= 0; i--)
                     profit.Add(colonies[i].ProfitFromColony(hexId, _compensationRes.Value));
-
-                return profit;
-            }
-
-            public CurrenciesLite ProfitFromPorts(int hexId)
-            {
-                CurrenciesLite profit = new();
-
-                for (int i = ports.Count - 1; i >= 0; i--)
-                    profit.Add(ports[i].ProfitFromPort(hexId, _portsProfit.Value));
 
                 return profit;
             }

@@ -4,14 +4,14 @@ using static VurbiriEditor.Colonization.CONST_EDITOR;
 
 namespace VurbiriEditor.Colonization
 {
-	public class AIGiftSettingsWindow : ASettingsWindow<AIGiftSettings>
+	public class DiplomatSettingsWindow : ASettingsWindow<DiplomatSettings>
     {
-        private const string NAME = "Gift", MENU = MENU_AI_PATH + NAME;
+        private const string NAME = "Diplomat", MENU = MENU_CR_PATH + NAME;
 
         [MenuItem(MENU, false, MENU_AI_ORDER)]
         private static void ShowWindow()
         {
-            GetWindow<AIGiftSettingsWindow>(true, NAME);
+            GetWindow<DiplomatSettingsWindow>(true, NAME);
         }
     }
 }

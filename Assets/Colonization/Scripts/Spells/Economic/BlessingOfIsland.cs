@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
                 if (_canCast = !s_isCast)
                 {
                     _blessed.Clear();
-                    _cost.SetMain(Gold, param.valueA); _cost.SetMain(Food, param.valueB);
+                    _cost[Gold] = param.valueA; _cost[Food] = param.valueB;
 
                     if (Humans[param.playerId].IsPay(_cost))
                         FindActorsOnSurface(_blessed, SurfaceId.Village, SurfaceId.Field);

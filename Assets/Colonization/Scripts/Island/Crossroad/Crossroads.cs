@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
         {
             _hexWeight = SettingsFile.Load<HexWeight>();
             _container = container;
-            _breach = new(_hexWeight[^1] << 1);
+            _breach = new(_hexWeight[^1] + _hexWeight[^2]);
 
             Crossroad.Init(prefabs);
 
@@ -79,5 +79,7 @@ namespace Vurbiri.Colonization
         }
 
         [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_breach.Get()];
+
+        [Impl(256)] public bool IsDeadEnd(Key start, Key end, Id<PlayerId> playerId) => _crossroads[start].IsDeadEnd(playerId) || _crossroads[end].IsDeadEnd(playerId);
     }
 }

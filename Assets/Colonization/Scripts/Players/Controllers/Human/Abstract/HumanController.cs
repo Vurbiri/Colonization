@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public abstract WaitResult<bool> OnGift(int giver, CurrenciesLite gift, string msg);
+        public abstract WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg);
 
         public virtual void OnLanding() { }
         public virtual void OnEndLanding() { }
@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization
             int countBuffs = 0;
             int mainProfit = _abilities[HumanAbilityId.WarriorProfit];
             bool isArtefact = _abilities.IsTrue(HumanAbilityId.IsArtefact);
-            CurrenciesLite profit = new();
+            MainCurrencies profit = new();
             ReturnSignal returnSignal;
 
             foreach (var warrior in Actors)

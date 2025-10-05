@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
                         StringBuilder sb = new(220); 
                         sb.Append(TAG.ALING_CENTER);
                         sb.AppendLine(_strName);
-                        _cost.MainPlusToStringBuilder(sb);
+                        _cost.PlusToStringBuilder(sb);
                         sb.AppendLine(TAG.ALING_OFF);
                         Banner.Open(sb.ToString(), MessageTypeId.Profit, 15f);
                     }

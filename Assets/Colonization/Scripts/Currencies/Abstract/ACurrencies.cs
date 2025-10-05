@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Vurbiri.Colonization
 {
@@ -7,7 +8,12 @@ namespace Vurbiri.Colonization
 
     public abstract class ACurrencies : IReadOnlyList<int>
     {
-        public int Count => AllCount;
+        public int Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => AllCount;
+        }
+
         public abstract int Amount { get ; }
 
         public abstract bool IsEmpty { get; }

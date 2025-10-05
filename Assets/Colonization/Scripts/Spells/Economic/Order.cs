@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                _cost.SetMain(Mana, param.valueA);
+                _cost[Mana] = param.valueA;
                 return _canCast = !s_isCast && Humans[param.playerId].IsPay(_cost);
             }
 

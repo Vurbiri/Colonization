@@ -34,6 +34,8 @@ namespace Vurbiri.Reactive
         public override int GetHashCode() => _value.GetHashCode();
         public override string ToString() => _value.ToString();
 
+        public static implicit operator T(ReactiveValue<T> self) => self._value;
+
         #region Comparison operator
         public static bool operator ==(ReactiveValue<T> a, ReactiveValue<T> b) => ReferenceEquals(a, b) || ((a is not null & b is not null) && a._value.Equals(b._value));
         public static bool operator !=(ReactiveValue<T> a, ReactiveValue<T> b) => !(a == b);

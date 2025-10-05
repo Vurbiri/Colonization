@@ -21,8 +21,8 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private BankCurrencyWidget[] _bankCurrencies;
         [SerializeField, ReadOnly] private PlayerCurrencyWidget[] _playerCurrencies;
 
-        private readonly CurrenciesLite _bankTrade = new();
-        private readonly CurrenciesLite _price = new(), _pay = new();
+        private readonly MainCurrencies _bankTrade = new();
+        private readonly MainCurrencies _price = new(), _pay = new();
 
         public Switcher Init(HintButton switchButton)
         {
@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization.UI
                 _playerCurrencies[i].Init(resources, OnPlayerChangeCount);
             }
 
-            GameContainer.Players.Person.Exchange.Subscribe(OnChangeRates);
+            GameContainer.Players.Person.ExchangeRate.Subscribe(OnChangeRates);
 
             _containerVisual.Init();
             _containerVisual = null;
@@ -51,8 +51,8 @@ namespace Vurbiri.Colonization.UI
 
         private void OnBankChangeCount(int id, int value, int rateValue)
         {
-            _bankTrade.SetMain(id, value);
-            _price.SetMain(id, rateValue);
+            _bankTrade[id] = value;
+            _price[id] = rateValue;
 
             _playerCurrencies[id].Interactable = value == 0;
 
@@ -61,13 +61,13 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnPlayerChangeCount(int id, int value)
         {
-            _pay.SetMain(id, value);
+            _pay[id] = value;
 
             _playerAmount.text = CONST.NUMBERS_STR[_pay.Amount];
             SetState();
         }
 
-        private void OnChangeRates(ACurrencies rates)
+        private void OnChangeRates(ExchangeRate rates)
         {
             for (int i = 0; i < CurrencyId.MainCount; i++)
                 _bankCurrencies[i].SetRate(rates[i]);

@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
                 if (_canCast = !s_isCast & resources[Mana] >= _mana)
                 {
                     for (int i = 0; i < MainCount - 1; i++)
-                        _cost.SetMain(i, resources[i]);
+                        _cost.Set(i, resources[i]);
 
                     _canCast = (_cost.Amount - _mana) > 0;
                 }

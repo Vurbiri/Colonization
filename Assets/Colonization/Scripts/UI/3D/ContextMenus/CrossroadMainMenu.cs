@@ -23,11 +23,10 @@ namespace Vurbiri.Colonization.UI
 
             _buttonClose.Init(Close);
 
-            var prices = GameContainer.Prices;
-            _buttonUpgrade.Init(prices.Edifices, OnUpgrade);
+            _buttonUpgrade.Init(OnUpgrade);
             _buttonRecruiting.Init(OnHiring);
-            _buttonWall.Init(prices.Wall, OnWall);
-            _buttonRoads.Init(prices.Road, OnRoads);
+            _buttonWall.Init(GameContainer.Prices.Wall, OnWall);
+            _buttonRoads.Init(GameContainer.Prices.Road, OnRoads);
 
             base.CloseInstant();
 
@@ -40,7 +39,7 @@ namespace Vurbiri.Colonization.UI
 
             var person = GameContainer.Players.Person;
             _buttonRecruiting.Setup(person.CanAnyRecruiting(crossroad));
-            _buttonUpgrade.Setup(person.CanEdificeUpgrade(crossroad), person.IsEdificeUnlock(crossroad.NextId), crossroad.NextId.Value);
+            _buttonUpgrade.Setup(person.CanEdificeUpgrade(crossroad), person.IsEdificeUnlock(crossroad.NextId), crossroad.NextId);
             _buttonWall.Setup(person.CanWallBuild(crossroad), person.IsWallUnlock());
             _buttonRoads.Setup(person.CanRoadBuild(crossroad));
 

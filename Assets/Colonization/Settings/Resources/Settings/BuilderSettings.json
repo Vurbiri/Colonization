@@ -1,0 +1,17 @@
+{
+  "minBreach": 4,
+  "minWeight": 16,
+  "resWeight": 128,
+  "edificeWeight": [
+    0,
+    2560,
+    40,
+    160,
+    640,
+    60,
+    60,
+    120,
+    180
+  ],
+  "wallWeight": 256
+}

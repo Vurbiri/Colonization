@@ -13,14 +13,12 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private IdArray<EdificeId, ButtonView> _edificeView;
 
-        private ReadOnlyIdArray<EdificeId, CurrenciesLite> _edificePrices;
-        private ACurrencies _cash;
+        private ReadOnlyCurrencies _cash;
 
-        public void Init(ReadOnlyIdArray<EdificeId, CurrenciesLite> edificePrices, Action action)
+        public void Init(Action action)
         {
-            base.InternalInit(GameContainer.UI.WorldHint, action, true);
-            _edificePrices = edificePrices;
             _cash = GameContainer.Players.Person.Resources;
+            base.InternalInit(GameContainer.UI.WorldHint, action, true);
         }
 
         public void Setup(bool isEnable, bool isUnlock, int edificeId)
@@ -31,8 +29,8 @@ namespace Vurbiri.Colonization.UI
                 return;
             }
 
-            ButtonView view = _edificeView[edificeId];
-            ACurrencies cost = _edificePrices[edificeId];
+            var view = _edificeView[edificeId];
+            var cost = GameContainer.Prices.Edifices[edificeId];
 
             CombineInteractable(isUnlock, _cash >= cost);
             _buttonIcon.sprite = view.sprite;

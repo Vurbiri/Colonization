@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField, ReadOnly] private PlayerCurrencyWidget[] _playerCurrencies;
 
         private readonly string[] _ok = new string[PlayerId.AICount], _cancel = new string[PlayerId.AICount];
-        private readonly CurrenciesLite _gift = new();
+        private readonly MainCurrencies _gift = new();
         private Id<PlayerId> _currentPlayer = PlayerId.None;
 
         public Switcher Init(GiftButton[] giftButtons)
@@ -64,7 +64,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnChangeCount(int id, int value)
         {
-            _gift.SetMain(id, value);
+            _gift[id] = value;
 
             _playerAmount.text = CONST.NUMBERS_STR[_gift.Amount];
             _resetButton.Interactable = _applyButton.Interactable = _gift.Amount > 0;

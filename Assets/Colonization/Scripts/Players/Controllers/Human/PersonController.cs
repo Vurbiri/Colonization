@@ -16,13 +16,13 @@ namespace Vurbiri.Colonization
             _iController = new(_interactable, _subscription);
         }
 
-        public override WaitResult<bool> OnGift(int giver, CurrenciesLite gift, string msg)
+        public override WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg)
         {
             Gift_Cn(giver, gift, msg).Start();
             return _waitGift.Restart();
 
             // Local
-            IEnumerator Gift_Cn(int giver, CurrenciesLite gift, string msg)
+            IEnumerator Gift_Cn(int giver, MainCurrencies gift, string msg)
             {
                 yield return MessageBox.Open(msg, out WaitButton wait, MBButton.OkNo);
 

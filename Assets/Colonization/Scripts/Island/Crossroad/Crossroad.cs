@@ -42,6 +42,7 @@ namespace Vurbiri.Colonization
         public Id<EdificeGroupId> GroupId { [Impl(256)] get => _states.groupId; }
         public Id<EdificeId> NextId { [Impl(256)] get => _states.nextId; }
         public Id<EdificeGroupId> NextGroupId { [Impl(256)] get => _states.nextGroupId; }
+        public int Profit { [Impl(256)] get => _states.profit; }
         public int Weight { [Impl(256)] get => _weight; }
         public Event<Key> ResetedWeight { [Impl(256)] get => _resetedWeight; }
         public int WaterCount { [Impl(256)] get => _waterCount; }
@@ -164,7 +165,6 @@ namespace Vurbiri.Colonization
                 {
                     _countFreeLink = 3;
                     _states.nextId = EdificeId.PortOne;
-                    _weight <<= 1;
                 }
             }
         }
@@ -193,18 +193,15 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Profit
-        public CurrenciesLite ProfitFromPort(int idHex, int shiftProfit)
+        public void ProfitFromPort(MainCurrencies profit, int idHex, int shiftProfit)
         {
-            CurrenciesLite profit = new();
             for (int i = 0; i < HEX_COUNT; i++)
                 if (_hexagons[i].TryGetProfit(idHex, true, out int currencyId))
-                    profit.AddMain(currencyId, _states.profit << shiftProfit);
-
-            return profit;
+                    profit.Add(currencyId, _states.profit << shiftProfit);
         }
-        public CurrenciesLite ProfitFromColony(int idHex, int compensationRes)
+        public MainCurrencies ProfitFromColony(int idHex, int compensationRes)
         {
-            CurrenciesLite profit = new();
+            MainCurrencies profit = new();
             Hexagon hex;
             int countEnemy = 0;
 
@@ -216,18 +213,18 @@ namespace Vurbiri.Colonization
                     countEnemy++;
 
                 if (hex.TryGetProfit(idHex, false, out int currencyId))
-                    profit.IncrementMain(currencyId);
+                    profit.Increment(currencyId);
             }
 
-            if (profit.Amount == 0)
+            if (profit.IsEmpty)
             {
                 if (countEnemy == 0)
-                    profit.RandomAddMain(compensationRes);
+                    profit.AddToRandom(compensationRes);
 
                 return profit;
             }
 
-            profit.MultiplyMain(Mathf.Max(_states.profit - Mathf.Max(countEnemy - _states.wallDefense, 0), 0));
+            profit.Multiply(Mathf.Max(_states.profit - Mathf.Max(countEnemy - _states.wallDefense, 0), 0));
             return profit;
         }
         #endregion

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -36,9 +37,16 @@ namespace Vurbiri.Colonization
         private GradientAlphaKey[] _defaultAlphaKey;
         private GradientAlphaKey[] LineAlphaKeys { set { _gradient.alphaKeys = value; _roadRenderer.colorGradient = _gradient; } }
 
-        public int SortingOrder { set =>  _roadRenderer.sortingOrder = BASE_ORDER - value; }
+        public int Count { [Impl(256)] get => _links.Count; }
+        public Crossroad this[int index] { [Impl(256)] get => GameContainer.Crossroads[_links[index]]; }
 
-        public Road Init(Gradient gradient, int id, Action<Road> onDisable)
+        public int SortingOrder { [Impl(256)] set => _roadRenderer.sortingOrder = BASE_ORDER - value; }
+        public Crossroad StartCrossroad { [Impl(256)] get => GameContainer.Crossroads[_links.Start]; }
+        public Crossroad EndCrossroad { [Impl(256)] get => GameContainer.Crossroads[_links.End]; }
+        public Vector3 StartPosition { [Impl(256)] get => GameContainer.Crossroads[_links.Start].Position; }
+        public Vector3 EndPosition { [Impl(256)] get => GameContainer.Crossroads[_links.End].Position; }
+
+        [Impl(256)] public Road Init(Gradient gradient, int id, Action<Road> onDisable)
         {
             a_onDisable = onDisable;
 
@@ -78,13 +86,13 @@ namespace Vurbiri.Colonization
         {
             bool inverse;
 
-            if (start ==_links.End)
+            if (start.Equals(_links.End))
             {
                 _links.Add(end);
                 _points.Add(start.Position, end.Position);
                 inverse = false;
             }
-            else if (start == _links.Start)
+            else if (start.Equals(_links.Start))
             {
                 _links.Insert(end);
                 _points.Insert(start.Position, end.Position);
@@ -100,18 +108,18 @@ namespace Vurbiri.Colonization
             return isSFX ? StartSFX(inverse) : true;
         }
 
-        public bool ThereDeadEnds(int playerId) => _links.End.IsDeadEnd(playerId) || _links.Start.IsDeadEnd(playerId);
+        [Impl(256)] public bool ThereDeadEnds(int playerId) => GameContainer.Crossroads.IsDeadEnd(_links.Start, _links.End, playerId);
 
         public List<CrossroadLink> GetDeadEnds(int playerId)
         {
             _removeLinks.Clear();
 
-            if (_links.Start.IsDeadEnd(playerId, out CrossroadLink link))
+            if (StartCrossroad.IsDeadEnd(playerId, out CrossroadLink link))
             {
                 link.RoadRemove(TypeLink.Start);
                 _removeLinks.Add(link);
             }
-            if (_links.End.IsDeadEnd(playerId, out link))
+            if (EndCrossroad.IsDeadEnd(playerId, out link))
             {
                 link.RoadRemove(TypeLink.End);
                 _removeLinks.Add(link);
@@ -131,12 +139,12 @@ namespace Vurbiri.Colonization
             if (link.Type == TypeLink.End)
             {
                 _links.Remove();
-                _points.Remove(_links.End.Position);
+                _points.Remove(EndPosition);
             }
             else if (link.Type == TypeLink.Start)
             {
                 _links.Extract();
-                _points.Extract(_links.Start.Position);
+                _points.Extract(StartPosition);
             }
 
             SetTextureScale();
@@ -146,7 +154,7 @@ namespace Vurbiri.Colonization
 
         public Road Union(Road other)
         {
-            Crossroad selfEnd = _links.End, otherStart = other._links.Start;
+            Key selfEnd = _links.End, otherStart = other._links.Start;
             if (selfEnd == otherStart)
             {
                 _links.AddRange(other._links);
@@ -155,7 +163,7 @@ namespace Vurbiri.Colonization
                 return other;
             }
 
-            Crossroad selfStart = _links.Start, otherEnd = other._links.End;
+            Key selfStart = _links.Start, otherEnd = other._links.End;
             if (selfEnd == otherEnd)
             {
                 _links.AddReverseRange(other._links);
@@ -189,7 +197,7 @@ namespace Vurbiri.Colonization
             SetTextureScale();
         }
 
-        private void SetTextureScale()
+        [Impl(256)] private void SetTextureScale()
         {
             _textureScale.x = _textureScaleX * (_links.Count - 1);
             _roadRenderer.textureScale = _textureScale;

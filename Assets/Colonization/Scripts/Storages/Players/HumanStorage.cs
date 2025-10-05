@@ -64,9 +64,9 @@ namespace Vurbiri.Colonization.Storage
             _subscription += reactive.Subscribe(exchange => _storage.Set(_keyResources, exchange), instantGetValue);
         }
 
-        public void BindExchange(IReactive<ACurrencies> reactive, bool instantGetValue)
+        public void BindExchange(ExchangeRate reactive, bool instantGetValue)
         {
-            _subscription += reactive.Subscribe(currencies => _storage.Set(_keyExchange, currencies), instantGetValue);
+            _subscription += reactive.Subscribe(exchange => _storage.Set(_keyExchange, exchange), instantGetValue);
         }
 
         public void BindPerks(IReactive<HashSet<int>[]> reactive, bool instantGetValue)

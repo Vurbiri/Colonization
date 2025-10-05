@@ -49,12 +49,12 @@ namespace Vurbiri.Colonization
             int giver = PlayerId.AI_01;
             string text = Localization.Instance.GetText(giftMsg);
 
-            CurrenciesLite gift = new();
+            MainCurrencies gift = new();
             gift.RandomAddRange(5);
 
             StringBuilder sb = new(TAG.ALING_CENTER, 256);
             sb.Append(GameContainer.UI.PlayerNames[giver]); sb.Append(" "); sb.AppendLine(text);
-            gift.MainPlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
+            gift.PlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
 
            
             GameContainer.Players.Person.OnGift(giver, gift, sb.ToString());

@@ -11,6 +11,8 @@ namespace VurbiriEditor.Colonization
         public const string MENU_UI_PATH = MENU_PATH + "UI/";
         public const string MENU_AC_PATH = MENU_PATH + "Actors/";
 
+        public const string MENU_CR_PATH = MENU_AI_PATH + "Counselors/";
+
         public const string MENU_PERKS_PATH = MENU_CH_PATH + "Perks/";
         public const string MENU_SATAN_PATH = MENU_CH_PATH + "Satan/";
         public const int SPACE_WND = 8;

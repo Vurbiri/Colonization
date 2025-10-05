@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using Vurbiri.International;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -10,12 +9,12 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField, Key(LangFiles.Gameplay)] private string _key;
 
-        private ACurrencies _cost;
-        private ACurrencies _cash;
+        private ReadOnlyMainCurrencies _cost;
+        private ReadOnlyCurrencies _cash;
         private Subscription _subscription;
         private string _caption;
 
-        public void Init(ACurrencies cost, Action action)
+        public void Init(ReadOnlyMainCurrencies cost, Action action)
         {
             base.InternalInit(GameContainer.UI.WorldHint, action, true);
             _cost = cost;

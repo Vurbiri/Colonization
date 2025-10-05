@@ -17,22 +17,22 @@ namespace Vurbiri.Colonization
             return new(resDefault, abilities[HumanAbilityId.MaxMainResources], abilities[HumanAbilityId.MaxBlood]);
         }
 
-        public void Add(ACurrencies other)
+        public void Add(ReadOnlyMainCurrencies other)
         {
             if (!other.IsEmpty)
             {
-                for (int i = 0; i < AllCount; i++)
+                for (int i = 0; i < MainCount; i++)
                     _values[i].Add(other[i]);
 
                 _amount.Add(other.Amount);
                 _changeEvent.Invoke(this);
             }
         }
-        public void Remove(ACurrencies other)
+        public void Remove(ReadOnlyMainCurrencies other)
         {
             if (!other.IsEmpty)
             {
-                for (int i = 0; i < AllCount; i++)
+                for (int i = 0; i < MainCount; i++)
                     _values[i].Remove(other[i]);
 
                 _amount.Remove(other.Amount);
