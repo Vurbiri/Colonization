@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
 
         public void Add(ReadOnlyMainCurrencies other)
         {
-            if (!other.IsEmpty)
+            if (other.IsNotEmpty)
             {
                 for (int i = 0; i < MainCount; i++)
                     _values[i].Add(other[i]);
@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization
         }
         public void Remove(ReadOnlyMainCurrencies other)
         {
-            if (!other.IsEmpty)
+            if (other.IsNotEmpty)
             {
                 for (int i = 0; i < MainCount; i++)
                     _values[i].Remove(other[i]);

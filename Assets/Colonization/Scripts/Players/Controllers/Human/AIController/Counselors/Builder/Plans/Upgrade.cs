@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Vurbiri.Colonization
 {
@@ -6,31 +6,23 @@ namespace Vurbiri.Colonization
     {
         private partial class Builder
         {
-            sealed private class Upgrade : Plan
+            sealed private class Upgrade : ABuild
             {
-                private readonly Crossroad _crossroad;
-                private readonly ReadOnlyMainCurrencies _cost;
-
                 public override bool IsValid => true;
- 
-                public Upgrade(Builder parent, Crossroad crossroad, int weight) : base(parent) 
-                {
-                    int next = crossroad.NextId;
 
-                    _crossroad = crossroad;
-                    _cost = GameContainer.Prices.Edifices[next];
-                    _weight = weight + s_settings.edificeWeight[next];
-                }
+                private Upgrade(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight) : base(parent, crossroad, cost, weight, parent.Human.BuyEdificeUpgrade) { }
 
-                public override IEnumerator Appeal_Cn()
+                public static void Create(Builder parent, List<Plan> plans, Crossroad crossroad)
                 {
-                    if (!_done && Controller.Exchange(_cost))
+                    if (parent.Human.IsEdificeUnlock(crossroad.NextId) & crossroad.IsUpgrade)
                     {
-                        yield return GameContainer.CameraController.ToPositionControlled(_crossroad);
-                        yield return Controller.BuyEdificeUpgrade(_crossroad, _cost);
-                        _done = true;
+                        var cost = GameContainer.Prices.Edifices[crossroad.NextId];
+                        int weight = crossroad.Weight + GetEdificeWeight(crossroad.NextId) + parent.GetCostWeight(cost);
+                        if (crossroad.NextGroupId == EdificeGroupId.Colony)
+                            weight += parent.GetProfitWeight(crossroad.Hexagons);
+                        if (weight > 0)
+                            plans.Add(new Upgrade(parent, crossroad, cost, weight + plans[^1].Weight));
                     }
-                    yield break;
                 }
             }
         }

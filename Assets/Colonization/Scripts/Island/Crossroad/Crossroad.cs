@@ -18,12 +18,13 @@ namespace Vurbiri.Colonization
 
         private readonly Key _key;
         private int _weight;
+        private bool _canBuild = true;
         private AEdifice _edifice;
         private EdificeSettings _states;
         private Id<PlayerId> _owner = PlayerId.None;
         private bool _isWall = false;
         private readonly RBool _interactable = new(true);
-        private readonly VAction<Key> _resetedWeight = new();
+        private readonly VAction<Key> _bannedBuild = new();
 
         private readonly List<Hexagon> _hexagons = new(HEX_COUNT);
         private readonly IdSet<LinkId, CrossroadLink> _links = new();
@@ -44,14 +45,16 @@ namespace Vurbiri.Colonization
         public Id<EdificeGroupId> NextGroupId { [Impl(256)] get => _states.nextGroupId; }
         public int Profit { [Impl(256)] get => _states.profit; }
         public int Weight { [Impl(256)] get => _weight; }
-        public Event<Key> ResetedWeight { [Impl(256)] get => _resetedWeight; }
+        public bool CanBuildOnShore { [Impl(256)] get => _canBuild & _waterCount > 0; }
+        public Event<Key> BannedBuild { [Impl(256)] get => _bannedBuild; }
         public int WaterCount { [Impl(256)] get => _waterCount; }
         public bool IsGate { [Impl(256)] get => _isGate; }
-        public bool IsBreach { [Impl(256)] get => _waterCount > 0; }
+        public bool IsShore { [Impl(256)] get => _waterCount > 0; }
         public bool IsPort { [Impl(256)] get => _states.groupId == EdificeGroupId.Port; }
         public bool IsColony { [Impl(256)] get => _states.groupId == EdificeGroupId.Colony; }
         public bool IsShrine { [Impl(256)] get => _states.groupId == EdificeGroupId.Shrine; }
         public bool IsWall { [Impl(256)] get => _isWall; }
+        public bool IsUpgrade { [Impl(256)] get => _states.isUpgrade; }
         public IdSet<LinkId, CrossroadLink> Links { [Impl(256)] get => _links; }
         public List<Hexagon> Hexagons { [Impl(256)] get => _hexagons; }
         #endregion
@@ -173,7 +176,7 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void CaptionHexagonsEnable()
         {
             for (int i = 0; i < HEX_COUNT; i++)
-                _hexagons[i].CaptionEnable(IsBreach, _isGate);
+                _hexagons[i].CaptionEnable(IsShore, _isGate);
         }
         [Impl(256)] public void CaptionHexagonsDisable()
         {
@@ -215,28 +218,29 @@ namespace Vurbiri.Colonization
                 if (hex.TryGetProfit(idHex, false, out int currencyId))
                     profit.Increment(currencyId);
             }
+            profit.Multiply(Mathf.Max(_states.profit - Mathf.Max(countEnemy - GetDefense(), 0), 0));
 
             if (profit.IsEmpty)
-            {
                 if (countEnemy == 0)
                     profit.AddToRandom(compensationRes);
 
-                return profit;
-            }
-
-            profit.Multiply(Mathf.Max(_states.profit - Mathf.Max(countEnemy - _states.wallDefense, 0), 0));
             return profit;
+        }
+        public void AddNetProfit(MainCurrencies profit)
+        {
+            for (int i = 0; i < HEX_COUNT; i++)
+                profit.Add(_hexagons[i].GetProfit(), _states.profit);
         }
         #endregion
 
         #region Building
         #region Edifice
-        public bool CanUpgrade(Id<PlayerId> playerId)
+        [Impl(256)] public bool CanBuild(Id<PlayerId> playerId) => _states.isUpgrade & _canBuild && (_countFreeLink > 0 || IsRoadConnect(playerId));
+        [Impl(256)] public bool CanUpgrade(Id<PlayerId> playerId)
         {
-            return _states.isUpgrade && 
-                  (_owner == playerId || (_owner == PlayerId.None & _weight > 0 && (IsRoadConnect(playerId) || (_states.nextGroupId == EdificeGroupId.Port & _countFreeLink > 0))));
+            return _states.isUpgrade && (_owner == playerId || (_canBuild && (IsRoadConnect(playerId) || (_states.nextGroupId == EdificeGroupId.Port & _countFreeLink > 0))));
         }
-        public ReturnSignal BuyUpgrade(Id<PlayerId> playerId)
+        [Impl(256)] public ReturnSignal BuyUpgrade(Id<PlayerId> playerId)
         {
             if (!_states.isUpgrade | (_states.id != EdificeId.Empty & _owner != playerId))
                 return false;
@@ -252,7 +256,7 @@ namespace Vurbiri.Colonization
             
             if (_states.id == EdificeId.Empty)
             {
-                ResetWeight();
+                BanBuild();
 
                 if (_states.nextGroupId == EdificeGroupId.Colony)
                     ResetWeightNeighborsForColony();
@@ -274,7 +278,7 @@ namespace Vurbiri.Colonization
                 {
                     neighbor = link.Other(_key);
                     if (neighbor._states.nextGroupId == EdificeGroupId.Colony)
-                        neighbor.ResetWeight();
+                        neighbor.BanBuild();
                 }
             }
             //===================================
@@ -287,7 +291,7 @@ namespace Vurbiri.Colonization
                     {
                         crossroads = _hexagons[i].Crossroads;
                         for (int j = crossroads.Count - 1; j >= 0; j--)
-                            crossroads[j].ResetWeight();
+                            crossroads[j].BanBuild();
                     }
                 }
             }
@@ -414,10 +418,13 @@ namespace Vurbiri.Colonization
         public bool Equals(Key key) => key == _key;
         public override int GetHashCode() => _key.GetHashCode();
 
-        [Impl(256)] private void ResetWeight()
-         {
-            _weight = 0;
-            _resetedWeight.InvokeOneShot(_key);
+        [Impl(256)] private void BanBuild()
+        {
+            if (_canBuild)
+            {
+                _canBuild = false;
+                _bannedBuild.InvokeOneShot(_key);
+            }
         }
     }
 }

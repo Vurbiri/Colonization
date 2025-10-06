@@ -143,7 +143,7 @@ namespace Vurbiri.Colonization
         }
         [Impl(256)] public void ResetProfit() => _hexagonCaption.ResetProfit();
 
-        [Impl(256)] public Id<CurrencyId> GetProfit() => _profit.Value;
+        [Impl(256)] public int GetProfit() => _profit.Value;
         [Impl(256)] public bool TryGetProfit(int hexId, bool isPort, out int currencyId)
         {
             currencyId = _profit.Value;

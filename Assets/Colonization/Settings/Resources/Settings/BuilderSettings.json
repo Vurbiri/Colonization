@@ -1,14 +1,13 @@
 {
-  "minBreach": 4,
-  "minWeight": 16,
-  "resWeight": 128,
+  "profitWeight": 128,
+  "costWeight": 64,
   "edificeWeight": [
     0,
     2560,
     40,
     160,
     640,
-    60,
+    70,
     60,
     120,
     180

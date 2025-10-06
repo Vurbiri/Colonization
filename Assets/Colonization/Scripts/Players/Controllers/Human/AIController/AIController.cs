@@ -51,9 +51,10 @@ namespace Vurbiri.Colonization
             bool result = _resources >= needed;
             if (!result)
             {
-                if (Chance.Rolling(_resources.PercentBlood * 10))
+                int blood = _resources[CurrencyId.Blood] >> (_perks.IsAllLearned ? 0 : 1);
+                if (blood > s_settings.minExchangeBlood && Chance.Rolling(_resources.PercentBlood))
                 {
-                    _spellBook.Cast(MilitarySpellId.Type, MilitarySpellId.BloodTrade, new(_id, Random.Range(1, _resources[CurrencyId.Blood])));
+                    _spellBook.Cast(MilitarySpellId.Type, MilitarySpellId.BloodTrade, new(_id, Random.Range(s_settings.minExchangeBlood, blood)));
                     result = _resources >= needed;
                 }
 

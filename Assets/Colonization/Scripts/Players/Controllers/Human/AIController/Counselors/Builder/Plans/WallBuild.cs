@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Vurbiri.Colonization
 {
@@ -6,28 +6,18 @@ namespace Vurbiri.Colonization
     {
         private partial class Builder
         {
-            sealed private class WallBuild : Plan
+            sealed private class WallBuild : ABuild
             {
-                private readonly Crossroad _crossroad;
-
                 public override bool IsValid => true;
 
-                public WallBuild(Builder parent, Crossroad crossroad, int weight) : base(parent)
-                {
-                    _crossroad = crossroad;
-                    _weight = weight + s_settings.wallWeight;
-                }
+                private WallBuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight) : base(parent, crossroad, cost, weight, parent.Human.BuyWall) { }
 
-                public override IEnumerator Appeal_Cn()
+                public static void Create(Builder parent, List<Plan> plans, Crossroad crossroad)
                 {
                     var cost = GameContainer.Prices.Wall;
-                    if (!_done && Controller.Exchange(cost))
-                    {
-                        yield return GameContainer.CameraController.ToPositionControlled(_crossroad);
-                        yield return Controller.BuyWall(_crossroad, cost);
-                        _done = true;
-                    }
-                    yield break;
+                    int weight = crossroad.Weight + s_settings.wallWeight + parent.GetCostWeight(cost);
+                    if (weight > 0)
+                        plans.Add(new WallBuild(parent, crossroad, cost, weight + plans[^1].Weight));
                 }
             }
         }

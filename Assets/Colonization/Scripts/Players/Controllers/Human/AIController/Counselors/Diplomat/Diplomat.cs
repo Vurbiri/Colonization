@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization
                             int countGift = 1 + UnityEngine.Random.Range(0, amount - s_settings.minAmount >> s_settings.shiftAmount);
                             for (int i = 0, max; i < countGift; i++)
                             {
-                                max = _clone.MaxMainIndex();
+                                max = _clone.MaxIndex();
                                 _clone.Decrement(max);
                                 _gift.Increment(max);
                             }

@@ -19,7 +19,12 @@ namespace Vurbiri.Colonization.Characteristics
         private readonly VAction<HashSet<int>[]> _eventHashSet = new();
 
         public Perk this[int typePerkId, int perkId] { [Impl(256)] get => _perks[typePerkId][perkId]; }
-        
+
+        public bool IsAllLearned 
+        { 
+            [Impl(256)] get => _learnedPerks[EconomicPerksId.Type].Count == EconomicPerksId.Count & _learnedPerks[MilitaryPerksId.Type].Count == MilitaryPerksId.Count; 
+        }
+
         #region Constructors
         private PerkTree(PerksScriptable perks)
         {

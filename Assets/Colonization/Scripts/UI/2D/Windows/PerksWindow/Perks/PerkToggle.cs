@@ -21,16 +21,17 @@ namespace Vurbiri.Colonization.UI
             Perk perk = perkTree[_typePerkId, _perkId];
             _hint.Init(perk);
 
-            if(perkTree.IsPerkLearned(_typePerkId, _perkId))
+            if (perkTree.IsPerkLearned(_typePerkId, _perkId))
             {
                 Learn(colorLearn);
-                return;
             }
+            else
+            {
+                _cost = perk.Cost;
+                _points = perk.Points;
 
-            _cost = perk.Cost;
-            _points = perk.Points;
-
-            _combination = new(perkTree.GetProgress(_typePerkId), blood, OnInteractable);
+                _combination = new(perkTree.GetProgress(_typePerkId), blood, OnInteractable);
+            }
         }
 
         public void BuyPerk(Color colorLearn)

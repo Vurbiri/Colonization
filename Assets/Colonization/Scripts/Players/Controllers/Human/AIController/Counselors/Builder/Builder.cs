@@ -11,16 +11,21 @@ namespace Vurbiri.Colonization
         {
             private static readonly BuilderSettings s_settings;
 
+            private readonly System.Random _random;
             private readonly List<Crossroad> _starts = new();
             private readonly List<Plan> _plans = new();
-            private readonly CurrenciesLite _profitWeight = new();
+            private readonly MainCurrencies _profitWeights = new();
             private Plan _currentPlan = Plan.Empty;
 
-            static Builder() => s_settings = SettingsFile.Load<BuilderSettings>();
+            static Builder()
+            {
+                s_settings = SettingsFile.Load<BuilderSettings>();
+                s_settings.profitWeight = -s_settings.profitWeight;
+            }
 
             public Builder(AIController parent) : base(parent)
             {
-                
+                _random = new((int)System.DateTime.Now.Ticks >> Id);
             }
 
             public override IEnumerator Appeal_Cn()
@@ -35,26 +40,24 @@ namespace Vurbiri.Colonization
             {
                 Crossroad port = GameContainer.Crossroads.GetRandomPort();
                 yield return GameContainer.CameraController.ToPositionControlled(port);
-                yield return _parent.BuildPort(port).signal;
-            }
-
-            public IEnumerator BuildPort_Cn()
-            {
-                if (GameContainer.Crossroads.BreachCount > s_settings.minBreach)
-                {
-                    Crossroad port = GameContainer.Crossroads.GetRandomPort();
-                    yield return GameContainer.CameraController.ToPositionControlled(port);
-                    yield return _parent.BuildPort(port).signal;
-                }
+                yield return Human.BuildPort(port).signal;
             }
 
             private IEnumerator CreatePlan_Cn()
             {
                 List<Plan> plans = new() { Plan.Empty };
 
+                SetProfitWeight();
+                yield return null;
+
                 SetWallBuild(plans);
                 SetUpgrades(plans);
                 yield return null;
+
+                PortBuild.Create(this, plans);
+                yield return null;
+
+                _currentPlan = GetPlan(plans);
 
                 _starts.Clear();
                 Roads.SetDeadEnds(_starts);
@@ -65,48 +68,72 @@ namespace Vurbiri.Colonization
                 }
 
                 yield break;
-            }
 
-            [Impl(256)] private void SetWallBuild(List<Plan> plans)
-            {
-                if (_parent.IsWallUnlock())
+                #region Local
+                // ======================================
+                [Impl(256)] void SetProfitWeight()
                 {
+                    _profitWeights.Clear();
                     var colonies = Colonies;
                     for (int i = 0; i < colonies.Count; i++)
-                        CreatePlan(plans, colonies[i]);
-                }
+                        colonies[i].AddNetProfit(_profitWeights);
 
-                #region Local 
-                //=========================================================================
-                [Impl(256)] void CreatePlan(List<Plan> plans, Crossroad crossroad)
-                {
-                    if (crossroad.CanWallBuild())
-                        plans.Add(new WallBuild(this, crossroad, plans[^1].Weight));
+                    _profitWeights.Normalize(s_settings.profitWeight);
                 }
+                // ======================================
+                [Impl(256)] void SetWallBuild(List<Plan> plans)
+                {
+                    if (Human.IsWallUnlock())
+                    {
+                        var colonies = Colonies;
+                        for (int i = 0; i < colonies.Count; i++)
+                            WallBuild.Create(this, plans, colonies[i]);
+                    }
+                }
+                // ======================================
+                [Impl(256)] void SetUpgrades(List<Plan> plans)
+                {
+                    Create(plans, Ports);
+                    Create(plans, Colonies);
+
+                    // ====== Local ========
+                    [Impl(256)] void Create(List<Plan> plans, ReadOnlyReactiveList<Crossroad> edifice)
+                    {
+                        for (int i = 0; i < edifice.Count; i++)
+                            Upgrade.Create(this, plans, edifice[i]);
+                    }
+                }
+                // ======================================
+                Plan GetPlan(List<Plan> plans)
+                {
+                    if(plans.Count == 1) return plans[0];
+
+                    int weight = _random.Next(plans[^1].Weight);
+                    int min = 0, max = plans.Count, current;
+                    while (true)
+                    {
+                        current = min + max >> 1;
+                        if (plans[current] <= weight)
+                            min = current;
+                        else if (plans[current - 1] > weight)
+                            max = current;
+                        else
+                            return plans[current];
+                    }
+                }
+                // ======================================
                 #endregion
             }
-            [Impl(256)] private void SetUpgrades(List<Plan> plans)
+
+            [Impl(256)] private int GetProfitWeight(List<Hexagon> hexagons)
             {
-                Create(plans, Ports);
-                Create(plans, Colonies);
-
-                #region Local 
-                //=========================================================================
-                [Impl(256)] void Create(List<Plan> plans, ReadOnlyReactiveList<Crossroad> edifice)
-                {
-                    for (int i = 0; i < edifice.Count; i++)
-                        CreatePlan(plans, edifice[i]);
-                }
-                //=========================================================================
-                [Impl(256)] void CreatePlan(List<Plan> plans, Crossroad crossroad)
-                {
-                    var next = crossroad.NextId;
-                    if (next != EdificeId.Empty && _parent.IsEdificeUnlock(next))
-                        plans.Add(new Upgrade(this, crossroad, plans[^1].Weight));
-                }
-                #endregion
+                int weight = 0;
+                for (int i = 0; i < Crossroad.HEX_COUNT; i++)
+                    weight += _profitWeights[hexagons[i].GetProfit()];
+                return weight;
             }
-
+            [Impl(256)] private int GetCostWeight(ReadOnlyMainCurrencies cost) => Resources.Delta(cost) * s_settings.costWeight;
+            [Impl(256)] private static int GetEdificeWeight(int id) => s_settings.edificeWeight[id];
 
             //private class Plan
             //{

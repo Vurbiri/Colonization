@@ -48,17 +48,28 @@ namespace Vurbiri.Colonization
         public Currency Get(int index) => _values[index];
         public Currency Get(Id<CurrencyId> id) => _values[id.Value];
 
-        public int OverCount(ReadOnlyMainCurrencies value, out int lastIndex)
+        public int OverCount(ReadOnlyMainCurrencies values, out int lastIndex)
         {
             int count = 0; lastIndex = -1;
             for (int i = 0; i < MainCount; i++)
             {
-                if (value[i] > _values[i])
+                if (values[i] > _values[i])
                 {
                     count++; lastIndex = i;
                 }
             }
             return count;
+        }
+        public int Delta(ReadOnlyMainCurrencies values)
+        {
+            int delta = 0;
+            for (int i = 0, value; i < MainCount; i++)
+            {
+                value = values[i];
+                if (value != 0)
+                    delta += _values[i] - value;
+            }
+            return delta;
         }
 
         sealed public override IEnumerator<int> GetEnumerator()

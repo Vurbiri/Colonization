@@ -18,8 +18,9 @@ namespace Vurbiri.Colonization
         public int Count { [Impl(256)] get => COUNT; }
         public int Amount { [Impl(256)] get => _amount; }
         public bool IsEmpty { [Impl(256)] get => _amount == 0; }
+        public bool IsNotEmpty { [Impl(256)] get => _amount != 0; }
 
-        public int MinMainIndex()
+        public int MinIndex()
         {
             int minId = 0;
             for (int i = 1; i < COUNT; i++)
@@ -27,14 +28,30 @@ namespace Vurbiri.Colonization
                     minId = i;
             return minId;
         }
-
-        public int MaxMainIndex()
+        public int MaxIndex()
         {
             int maxId = 0;
             for (int i = 1; i < COUNT; i++)
                 if (_values[i] > _values[maxId])
                     maxId = i;
             return maxId;
+        }
+
+        public int MinValue()
+        {
+            int minValue = _values[0];
+            for (int i = 1; i < COUNT; i++)
+                if (_values[i] < minValue)
+                    minValue = _values[i];
+            return minValue;
+        }
+        public int MaxValue()
+        {
+            int maxValue = _values[0];
+            for (int i = 1; i < COUNT; i++)
+                if (_values[i] > maxValue)
+                    maxValue = _values[i];
+            return maxValue;
         }
 
         #region ToText
@@ -164,7 +181,7 @@ namespace Vurbiri.Colonization
         }
 
         public MainCurrencies() { }
-        public MainCurrencies(ACurrencies other)
+        public MainCurrencies(ReadOnlyCurrencies other)
         {
             for (int i = 0; i < COUNT; i++)
                 _values[i] = other[i];
@@ -221,7 +238,7 @@ namespace Vurbiri.Colonization
 
         public void Add(ReadOnlyMainCurrencies other)
         {
-            if (!other.IsEmpty)
+            if (other.IsNotEmpty)
             {
                 for (int i = 0; i < COUNT; i++)
                     _values[i] += other[i];
@@ -259,11 +276,16 @@ namespace Vurbiri.Colonization
             _amount = other.Amount;
         }
 
-        public void NormalizeMain(int ratio)
+        public void Normalize(int ratio)
         {
-            int min = _values[MinMainIndex()];
-            for (int i = 0; i < COUNT; i++)
-                _values[i] = (_values[i] - min) * ratio;
+            if (_amount != 0)
+            {
+                int max = MaxValue();
+                for (int i = 0; i < COUNT; i++)
+                    _values[i] = (_values[i] - max) * ratio;
+
+                _amount = (_amount - max * COUNT) * ratio;
+            }
         }
 
         #region Arithmetic

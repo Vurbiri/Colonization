@@ -11,14 +11,14 @@ namespace Vurbiri.Colonization
         {
             protected readonly AIController _parent;
 
+            protected AIController Human { [Impl(256)] get => _parent; }
             protected int Id { [Impl(256)] get => _parent._id; }
             protected Currencies Resources { [Impl(256)] get => _parent._resources; }
             protected int MaxResources { [Impl(256)] get => _parent._abilities[HumanAbilityId.MaxMainResources]; }
-            protected Prices Prices { [Impl(256)] get => GameContainer.Prices; }
-
             protected ReadOnlyReactiveList<Crossroad> Ports { [Impl(256)] get => _parent._edifices.ports; }
             protected ReadOnlyReactiveList<Crossroad> Colonies { [Impl(256)] get => _parent._edifices.colonies; }
             protected Roads Roads { [Impl(256)] get => _parent._roads; }
+            protected ReadOnlyAbilities<HumanAbilityId> Abilities { [Impl(256)] get => _parent._abilities; }
 
             [Impl(256)] public Counselor(AIController parent) => _parent = parent;
 

@@ -3,6 +3,7 @@ using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -11,7 +12,6 @@ namespace Vurbiri.Colonization
         protected class Edifices
         {
             private readonly ReadOnlyAbilities<HumanAbilityId> _abilities;
-            private readonly Ability _shrinePassiveProfit, _shrineProfit, _portsProfit, _compensationRes;
 
             public readonly IdArray<EdificeGroupId, ReactiveList<Crossroad>> edifices = new();
 
@@ -19,8 +19,8 @@ namespace Vurbiri.Colonization
             public readonly ReactiveList<Crossroad> colonies;
             public readonly ReactiveList<Crossroad> ports;
 
-            public int ShrinePassiveProfit => _shrinePassiveProfit.Value * (shrines.Count + 1);
-            public int ShrineProfit => _shrineProfit.Value * shrines.Count;
+            public int ShrinePassiveProfit { [Impl(256)] get => _abilities[HumanAbilityId.ShrinePassiveProfit].Value * (shrines.Count + 1); }
+            public int ShrineProfit { [Impl(256)] get => _abilities[HumanAbilityId.ShrineProfit].Value * shrines.Count; }
 
             public bool Interactable
             {
@@ -38,10 +38,6 @@ namespace Vurbiri.Colonization
             public Edifices(ReadOnlyAbilities<HumanAbilityId> abilities)
             {
                 _abilities = abilities;
-                _shrinePassiveProfit = _abilities[HumanAbilityId.ShrinePassiveProfit];
-                _shrineProfit = _abilities[HumanAbilityId.ShrineProfit];
-                _portsProfit = _abilities[HumanAbilityId.PortsProfitShift];
-                _compensationRes = _abilities[HumanAbilityId.CompensationRes];
 
                 edifices[EdificeGroupId.Shrine] = shrines = new(CONST.DEFAULT_MAX_EDIFICES);
                 edifices[EdificeGroupId.Colony] = colonies = new(CONST.DEFAULT_MAX_EDIFICES);
@@ -59,32 +55,24 @@ namespace Vurbiri.Colonization
                 MainCurrencies profit = new();
 
                 for (int i = ports.Count - 1; i >= 0; i--)
-                    ports[i].ProfitFromPort(profit, hexId, _portsProfit.Value);
+                    ports[i].ProfitFromPort(profit, hexId, _abilities[HumanAbilityId.PortsProfitShift]);
 
                 for (int i = colonies.Count - 1; i >= 0; i--)
-                    profit.Add(colonies[i].ProfitFromColony(hexId, _compensationRes.Value));
+                    profit.Add(colonies[i].ProfitFromColony(hexId, _abilities[HumanAbilityId.CompensationRes]));
 
                 return profit;
             }
 
-            public bool CanEdificeUpgrade(Crossroad crossroad)
+            [Impl(256)] public bool CanEdificeUpgrade(Crossroad crossroad)
             {
-                Id<EdificeGroupId> nextGroup = crossroad.NextGroupId;
-
-                if (crossroad.GroupId != EdificeGroupId.None)
-                    return nextGroup != EdificeGroupId.None;
-
-                return _abilities.IsGreater(nextGroup.ToState(), edifices[nextGroup].Count);
+                return crossroad.GroupId != EdificeGroupId.None || _abilities.IsGreater(crossroad.NextGroupId.ToState(), edifices[crossroad.NextGroupId].Count);
             }
-            public bool IsEdificeUnlock(Id<EdificeId> id)
+            [Impl(256)] public bool IsEdificeUnlock(Id<EdificeId> id)
             {
-                if ((id == EdificeId.LighthouseOne | id == EdificeId.LighthouseTwo))
-                    return _abilities.IsTrue(HumanAbilityId.IsLighthouse);
+                bool IsLighthouse = (id != EdificeId.LighthouseOne & id != EdificeId.LighthouseTwo) || _abilities.IsTrue(HumanAbilityId.IsLighthouse);
+                bool IsCity = id != EdificeId.City || _abilities.IsTrue(HumanAbilityId.IsCity);
 
-                if (id == EdificeId.City)
-                    return _abilities.IsTrue(HumanAbilityId.IsCity);
-
-                return true;
+                return IsLighthouse & IsCity;
             }
 
             private void CreateEdifices(ReactiveList<Crossroad> values, List<EdificeLoadData> loadData, Id<PlayerId> playerId, Crossroads crossroads)

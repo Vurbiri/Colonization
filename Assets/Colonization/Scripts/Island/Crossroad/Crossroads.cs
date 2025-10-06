@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
     public class Crossroads
     {
         private readonly Dictionary<Key, Crossroad> _crossroads = new(MAX_CROSSROADS);
-        private readonly Breach _breach;
+        private readonly Shore _shore = new();
 
         private ReadOnlyArray<int> _hexWeight;
         private Transform _container;
@@ -20,13 +20,12 @@ namespace Vurbiri.Colonization
 
         public Crossroad this[Key key] { [Impl(256)] get => _crossroads[key]; }
 
-        public int BreachCount  { [Impl(256)] get => _breach.Count; }
+        public int ShoreCount  { [Impl(256)] get => _shore.Count; }
 
         public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs)
         {
             _hexWeight = SettingsFile.Load<HexWeight>();
             _container = container;
-            _breach = new(_hexWeight[^1] + _hexWeight[^2]);
 
             Crossroad.Init(prefabs);
 
@@ -58,7 +57,7 @@ namespace Vurbiri.Colonization
                     if (ending)
                     {
                         cross.Setup(_hexWeight);
-                        _breach.Add(cross);
+                        _shore.Add(cross);
                     }
                 }
                 else
@@ -75,10 +74,10 @@ namespace Vurbiri.Colonization
             _vertices = null;
             _angles = null;
 
-            _breach.TrimExcess();
+            _shore.TrimExcess();
         }
 
-        [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_breach.Get()];
+        [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_shore.Get()];
 
         [Impl(256)] public bool IsDeadEnd(Key start, Key end, Id<PlayerId> playerId) => _crossroads[start].IsDeadEnd(playerId) || _crossroads[end].IsDeadEnd(playerId);
     }
