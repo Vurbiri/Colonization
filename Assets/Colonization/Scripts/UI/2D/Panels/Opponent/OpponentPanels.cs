@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField, HideInInspector] private UnityEngine.UI.Image _mainImage;
 
-        public RectTransform UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors projectColors, PlayerColors playerColors, Vector2 padding)
+        public RectTransform UpdateVisuals_Ed(float pixelsPerUnit, ProjectColors projectColors, Vector2 padding)
         {
             Color color = projectColors.PanelBack.SetAlpha(1f);
 
@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization.UI
 
             Vector2 size = Vector2.zero;
             for (int i = 0; i < PlayerId.AICount; i++)
-                size = _panels[i].UpdateVisuals_Editor(playerColors, _offsetPanel * (i + 1));
+                size = _panels[i].UpdateVisuals_Editor(_offsetPanel * (i + 1));
 
             var thisTransform = (RectTransform)transform;
 

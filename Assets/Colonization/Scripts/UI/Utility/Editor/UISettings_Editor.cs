@@ -46,7 +46,7 @@ namespace VurbiriEditor.Colonization
             _perksWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _projectColors);
             _exchangeWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _projectColors);
 
-            var transform = _opponentPanels.UpdateVisuals_Ed(_panelsPixelsPerUnit, _projectColors, _playerColors, _screenPadding);
+            var transform = _opponentPanels.UpdateVisuals_Ed(_panelsPixelsPerUnit, _projectColors, _screenPadding);
             _giftWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _panelsPixelsPerUnit, _projectColors, transform);
 
             _diceWindow.UpdateVisuals_Ed(_windowsPixelsPerUnit, _projectColors);

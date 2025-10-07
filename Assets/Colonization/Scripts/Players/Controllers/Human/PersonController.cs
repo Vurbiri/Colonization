@@ -14,6 +14,7 @@ namespace Vurbiri.Colonization
         public PersonController(Settings settings) : base(PlayerId.Person, settings)
         {
             _iController = new(_interactable, _subscription);
+            _abilities.ReplaceToDependent(Characteristics.HumanAbilityId.MaxShrine, s_shrinesCount, _edifices.shrines.CountReactive);
         }
 
         public override WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg)

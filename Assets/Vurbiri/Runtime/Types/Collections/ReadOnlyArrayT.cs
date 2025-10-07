@@ -33,6 +33,13 @@ namespace Vurbiri.Collections
         }
         protected ReadOnlyArray() { }
 
+        [Impl(256)] public int IndexOf(TValue item)
+        {
+            int i = _count;
+            while (i --> 0 && !_values[i].Equals(item));
+            return i;
+        }
+
         [Impl(256)] public TValue Rand() => _values[UnityEngine.Random.Range(0, _count)];
 
         [Impl(256)] public TValue Prev(int index) => _values[LeftIndex(index)];

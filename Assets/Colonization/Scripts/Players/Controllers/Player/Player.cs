@@ -9,6 +9,9 @@ namespace Vurbiri.Colonization
 {
 	public abstract class Player : IDisposable
     {
+        protected static RInt s_shrinesCount = new();
+        public static ReactiveValue<int> ShrinesCount => s_shrinesCount;
+
         protected readonly int _id;
         protected readonly bool _isPerson;
         protected readonly RBool _interactable = new(false);
@@ -27,6 +30,11 @@ namespace Vurbiri.Colonization
         public virtual void Dispose()
         {
             _subscription?.Dispose();
+        }
+        public static void Reset()
+        {
+            s_shrinesCount.UnsubscribeAll();
+            s_shrinesCount.Value = 0;
         }
 
         #region Nested: Settings

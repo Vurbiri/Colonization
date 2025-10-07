@@ -16,7 +16,7 @@ namespace VurbiriEditor.UI
         private static readonly GUIContent[] s_nameTransition = new GUIContent[]{ new("None"), new("Color Tint"), new("Sprite Swap") };
         private static readonly int[] s_idTransition = new[] { 0, 1, 2 };
 
-        protected SerializedProperty _interactableIconProperty;
+        protected SerializedProperty _lockIconProperty;
         protected SerializedProperty _targetGraphicsProperty;
         protected SerializedProperty _targetGraphicProperty;
         protected SerializedProperty _script;
@@ -32,13 +32,14 @@ namespace VurbiriEditor.UI
         private ColorBlockDrawer _colorBlockDrawer;
         private ScaleBlockDrawer _scaleBlockDrawer;
 
+        private readonly GUIContent _interactableLabel = new();
         private readonly GUIContent _visualizeNavigation = EditorGUIUtility.TrTextContent("Visualize", "Show navigation flows between selectable UI elements.");
-
+        
         private readonly AnimBool _showColorTint = new();
         private readonly AnimBool _showSpriteTransition = new();
         private readonly AnimBool _showAnimTransition = new();
         private readonly AnimBool _showScaling = new();
-
+        
         private static readonly List<VSelectableEditor> s_editors = new();
 
         private static bool s_showNavigation = false;
@@ -59,7 +60,7 @@ namespace VurbiriEditor.UI
             _vSelectable = target as VSelectable;
             _transition = _vSelectable.transition;
 
-            _interactableIconProperty = serializedObject.FindProperty("_interactableIcon");
+            _lockIconProperty         = serializedObject.FindProperty("_lockIcon");
             _targetGraphicsProperty   = serializedObject.FindProperty("_targetGraphics");
             _targetGraphicProperty    = serializedObject.FindProperty("m_TargetGraphic");
             _script                   = serializedObject.FindProperty("m_Script");
@@ -90,6 +91,7 @@ namespace VurbiriEditor.UI
 
             _transition = (Selectable.Transition)_transitionProperty.enumValueIndex;
 
+            SetLockIcon();
             FindChildrenProperties();
         }
 
@@ -107,7 +109,7 @@ namespace VurbiriEditor.UI
         {
             return new(13)
             {
-                _interactableIconProperty.propertyPath,
+                _lockIconProperty.propertyPath,
                 _targetGraphicsProperty.propertyPath,
                 _isScalingProperty.propertyPath,
                 _scalingTargetProperty.propertyPath,
@@ -183,14 +185,14 @@ namespace VurbiriEditor.UI
         {
             Space(1f);
             EditorGUI.BeginChangeCheck();
-                PropertyField(_interactableProperty);
-                PropertyField(_interactableIconProperty);
+                PropertyField(_interactableProperty, _interactableLabel);
+                PropertyField(_lockIconProperty);
             if (EditorGUI.EndChangeCheck())
             {
-                if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(_vSelectable.gameObject.scene);
+                if (!Application.isPlaying) 
+                    EditorSceneManager.MarkSceneDirty(_vSelectable.gameObject.scene);
 
-                Graphic icon = _interactableIconProperty.objectReferenceValue as Graphic;
-                if (icon != null) icon.canvasRenderer.SetAlpha(_interactableProperty.boolValue ? 0f : 1f);
+                SetLockIcon();
             }
             Space();
         }
@@ -208,8 +210,6 @@ namespace VurbiriEditor.UI
             _showColorTint.target = !_transitionProperty.hasMultipleDifferentValues && colorTintMode;
             _showSpriteTransition.target = !_transitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.SpriteSwap;
             _showAnimTransition.target = !_transitionProperty.hasMultipleDifferentValues && _transition == Selectable.Transition.Animation;
-
-            Space(1f);
 
             // ========= ColorTint =================================
             if (BeginFadeGroup(_showColorTint.faded))
@@ -244,7 +244,7 @@ namespace VurbiriEditor.UI
             }
             EndFadeGroup();
             // ========= Scaling =================================
-            Space();
+            Space(2f);
             PropertyField(_isScalingProperty);
             _showScaling.target = _isScalingProperty.boolValue;
             if (BeginFadeGroup(_showScaling.faded))
@@ -350,6 +350,20 @@ namespace VurbiriEditor.UI
 
             dir = rect.rect.center + Vector2.Scale(rect.rect.size, dir * 0.5f);
             return dir;
+        }
+
+        private void SetLockIcon()
+        {
+            Graphic icon = _lockIconProperty.objectReferenceValue as Graphic;
+            if (icon != null)
+            {
+                icon.canvasRenderer.SetAlpha(_interactableProperty.boolValue ? 0f : 1f);
+                _interactableLabel.text = "Unlock";
+            }
+            else
+            {
+                _interactableLabel.text = "Interactable";
+            }
         }
     }
 }

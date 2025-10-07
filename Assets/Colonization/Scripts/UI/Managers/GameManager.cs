@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
             game.Subscribe(GameModeId.StartTurn, OnStartTurn);
 
             _endTurn.AddListener(game.EndTurn);
-            GameContainer.Players.Person.Interactable.Subscribe(_endTurn.GetSetor<bool>(nameof(_endTurn.Interactable)));
+            GameContainer.Players.Person.Interactable.Subscribe(_endTurn.GetSetor<bool>(nameof(_endTurn.Unlock)));
         }
 
         private void OnLanding(TurnQueue turnQueue, int hexId)

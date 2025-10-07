@@ -4,29 +4,22 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public enum TypeLink
-    {
-        None = 0, End, Start
-    }
-    
     public class CrossroadLink : IValueId<LinkId>
     {
-        private static readonly Key[] s_nearCross = { new(2, -1), new(2, 1), new(0, 2), new(-2, 1), new(-2, -1), new(0, -2) };
-
         private Key _start, _end;
         private readonly Id<LinkId> _id;
         private Id<PlayerId> _owner;
         private readonly bool _isWater;
         private readonly Vector3 _middle;
-        private TypeLink _type;
 
         public Crossroad Start { [Impl(256)] get => GameContainer.Crossroads[_start]; }
         public Crossroad End { [Impl(256)] get => GameContainer.Crossroads[_end]; }
         public Id<LinkId> Id { [Impl(256)] get => _id; }
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
+        public bool IsOwner { [Impl(256)] get => _owner != PlayerId.None; }
+        public bool IsEmpty { [Impl(256)] get => _owner == PlayerId.None; }
         public bool IsWater { [Impl(256)] get => _isWater; }
         public Vector3 Position { [Impl(256)] get => _middle; }
-        public TypeLink Type { [Impl(256)] get => _type; }
         
         private CrossroadLink(Id<LinkId> id, Crossroad start, Crossroad end, bool isWater)
         {
@@ -42,7 +35,7 @@ namespace Vurbiri.Colonization
         public static void Create(List<Crossroad> crossroads, bool isWater)
         {
             Crossroad start = crossroads[0], end = crossroads[1];
-            int id = ToLinkType(end.Key - start.Key);
+            int id = CROSS.NEAR.IndexOf(end.Key - start.Key) % 3;
 
             if (start.ContainsLink(id) && end.ContainsLink(id))
                 return;
@@ -51,17 +44,11 @@ namespace Vurbiri.Colonization
 
             start.AddLink(link);
             end.AddLink(link);
-
-            // Local: ToLinkType(..)
-            //=================================
-            [Impl(256)] static int ToLinkType(Key key) => System.Array.IndexOf(s_nearCross, key) % 3;
         }
 
         [Impl(256)] public CrossroadLink SetStart(Key key)
         {
-            if (_start != key)
-                (_start, _end) = (_end, _start);
-
+            if (_start != key) (_start, _end) = (_end, _start);
             return this;
         }
 
@@ -71,9 +58,9 @@ namespace Vurbiri.Colonization
             GameContainer.Crossroads[_start].RoadBuilt(_id);
             GameContainer.Crossroads[_end].RoadBuilt(_id);
         }
-        [Impl(256)] public void RoadRemove(TypeLink type)
+        
+        [Impl(256)] public void RoadRemove()
         {
-            _type = type;
             _owner = PlayerId.None;
             GameContainer.Crossroads[_start].RoadRemove(_id);
             GameContainer.Crossroads[_end].RoadRemove(_id);

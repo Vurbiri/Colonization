@@ -55,13 +55,13 @@ namespace Vurbiri.Colonization.UI
 
             _hint.Learn();
 
-            Destroy(_interactableIcon.gameObject);
+            Destroy(_lockIcon.gameObject);
             Destroy(this);
         }
 
         private void OnInteractable(int progress, int blood)
         {
-            CombineInteractable(progress >= _points, blood >= _cost);
+            InteractableAndUnlock(blood >= _cost, progress >= _points);
         }
 
         protected override void OnDestroy()

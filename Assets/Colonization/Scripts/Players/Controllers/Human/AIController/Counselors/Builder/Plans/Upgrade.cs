@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Vurbiri.Reactive.Collections;
 
 namespace Vurbiri.Colonization
 {
@@ -12,7 +13,13 @@ namespace Vurbiri.Colonization
 
                 private Upgrade(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight) : base(parent, crossroad, cost, weight, parent.Human.BuyEdificeUpgrade) { }
 
-                public static void Create(Builder parent, List<Plan> plans, Crossroad crossroad)
+                public static void Create(Builder parent, List<Plan> plans, ReadOnlyReactiveList<Crossroad> edifice)
+                {
+                    for (int i = 0; i < edifice.Count; i++)
+                        Upgrade.Create(parent, plans, edifice[i]);
+                }
+
+                private static void Create(Builder parent, List<Plan> plans, Crossroad crossroad)
                 {
                     if (parent.Human.IsEdificeUnlock(crossroad.NextId) & crossroad.IsUpgrade)
                     {

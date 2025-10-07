@@ -39,10 +39,7 @@ namespace Vurbiri.UI
 
         public override readonly bool Equals(object obj)
         {
-            if (obj is ScaleBlock other)
-                return Equals(other);
-
-            return false;
+            return obj is ScaleBlock other && Equals(other);
         }
 
         public static bool operator ==(ScaleBlock block1, ScaleBlock block2) => block1.Equals(block2);

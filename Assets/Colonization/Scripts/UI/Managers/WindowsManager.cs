@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.UI
         private void OnInteractable(bool interactable)
         {
             for (int i = 0; i < BUTTONS_COUNT; i++)
-                _buttons[i].Interactable = interactable;
+                _buttons[i].Unlock = interactable;
 
             for (int i = _giftButtons.Length - 1; i >= 0; i--)
                 _giftButtons[i].interactable = interactable;

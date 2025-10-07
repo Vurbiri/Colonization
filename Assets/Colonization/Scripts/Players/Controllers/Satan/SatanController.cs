@@ -1,17 +1,14 @@
 using System.Collections;
-using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 
 namespace Vurbiri.Colonization
 {
 	sealed public class SatanController : Satan,  IPlayerController
 	{
-        private int _shrinesCount;
-        
-        public SatanController(Settings settings, ReadOnlyArray<HumanController> humans) : base(settings)
+       
+        public SatanController(Settings settings) : base(settings)
         {
-            for (int i = 0; i < PlayerId.HumansCount; i++)
-                humans[i].Shrines.Subscribe((_, _, _) => _shrinesCount++);
+
         }
 
         public void ActorKill(Id<ActorTypeId> type, int id)
@@ -60,7 +57,7 @@ namespace Vurbiri.Colonization
 
         public void OnProfit(Id<PlayerId> id, int hexId)
         {
-            int progress = _parameters.cursePerTurn + _shrinesCount * _parameters.cursePerShrine;
+            int progress = _parameters.cursePerTurn + s_shrinesCount * _parameters.cursePerShrine;
             if (hexId > CONST.GATE_ID)
                 hexId = (CONST.GATE_ID << 1) - hexId;
 

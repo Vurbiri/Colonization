@@ -67,7 +67,7 @@ namespace Vurbiri.Colonization.UI
             _gift[id] = value;
 
             _playerAmount.text = CONST.NUMBERS_STR[_gift.Amount];
-            _resetButton.Interactable = _applyButton.Interactable = _gift.Amount > 0;
+            _resetButton.Unlock = _applyButton.Unlock = _gift.Amount > 0;
         }
 
         private void Apply()
@@ -94,7 +94,7 @@ namespace Vurbiri.Colonization.UI
             _gift.ResetAmount();
 
             _playerAmount.text = CONST.NUMBERS_STR[0];
-            _resetButton.Interactable = _applyButton.Interactable = false;
+            _resetButton.Lock = _applyButton.Lock = true;
         }
 
         private void SetLocalizationText(Localization localization)

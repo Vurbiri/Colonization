@@ -1,6 +1,6 @@
 using UnityEngine;
 using Vurbiri.Collections;
-using Vurbiri.Colonization.Characteristics;
+using static Vurbiri.Colonization.Characteristics.HumanAbilityId;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -9,13 +9,9 @@ namespace Vurbiri.Colonization.UI
         public void Init(IdArray<EdificeId, Sprite> sprites)
         {
             var person = GameContainer.Players.Person;
-            var edifices = person.GetEdifices(_id);
-            var maxEdifices = person.GetAbility(_id.ToState());
-            var activeProfit = person.GetAbility(HumanAbilityId.ShrineProfit);
-            var passiveProfit = person.GetAbility(HumanAbilityId.ShrinePassiveProfit);
 
-            InitEdifice(edifices, sprites);
-            _widget.Init(edifices.CountReactive, maxEdifices, activeProfit, passiveProfit);
+            InitEdifice(person.Shrines, sprites);
+            _widget.Init(person.Shrines.CountReactive, person.GetAbility(MaxShrine), person.GetAbility(ShrineProfit), person.GetAbility(ShrinePassiveProfit));
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using Vurbiri.Colonization.Characteristics;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -9,12 +10,15 @@ namespace Vurbiri.Colonization
         {
             private abstract class Plan
             {
-                protected readonly Builder _parent;
+                private readonly Builder _parent;
                 protected bool _done;
                 protected int _weight;
 
                 protected AIController Human { [Impl(256)] get => _parent._parent; }
                 protected int Id { [Impl(256)] get => _parent._parent._id; }
+                protected Roads Roads { [Impl(256)] get => _parent._parent._roads; }
+                protected ReadOnlyAbilities<HumanAbilityId> Abilities { [Impl(256)] get => _parent._parent._abilities; }
+                protected int FreeRoadCount { [Impl(256)] get => _parent._parent._abilities[HumanAbilityId.MaxRoad] -  _parent._parent._roads.Count; }
 
                 public static Plan Empty { get; } = new Dummy();
 

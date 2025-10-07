@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
 
         public IEnumerator Remove_Cn(CrossroadLink link)
         {
-            _thisTransform.SetLocalPositionAndRotation(link.Position, CONST.LINK_ROTATIONS[link.Id.Value]);
+            _thisTransform.SetLocalPositionAndRotation(link.Position, CROSS.LINK_ROTATIONS[link.Id.Value]);
             _particleSystem.Play(); _audioSource.PlayOneShot(_removeClip);
 
             yield return _whatTime.Restart();

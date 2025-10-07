@@ -48,6 +48,8 @@ namespace Vurbiri.Colonization
             {
                 for (int i = 0; i < EdificeGroupId.Count; i++)
                     CreateEdifices(edifices[i], data[i], parent._id, GameContainer.Crossroads);
+
+                s_shrinesCount.Add(shrines.Count);
             }
 
             public MainCurrencies ProfitFromEdifices(int hexId)

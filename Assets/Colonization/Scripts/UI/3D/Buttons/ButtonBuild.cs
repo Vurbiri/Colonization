@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.UI
                 return;
             }
             
-            Interactable = _cash >= _cost;
+            Unlock = _cash >= _cost;
             SetTextHint(_caption, _cash, _cost);
 
             _thisGameObject.SetActive(true);
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization.UI
                 return;
             }
 
-            CombineInteractable(isUnlock, _cash >= _cost);
+            InteractableAndUnlock(_cash >= _cost, isUnlock);
             SetTextHint(_caption, _cash, _cost);
 
             _thisGameObject.SetActive(true);

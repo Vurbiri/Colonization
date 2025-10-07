@@ -90,7 +90,7 @@ namespace Vurbiri.Colonization
 
         public IEnumerator RemoveDeadEnds_Cn()
         {
-            List<CrossroadLink> removeLinks; CrossroadLink link;
+            List<RemoveLink> removeLinks; RemoveLink removed;
             Road line; int removeCount = 0;
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
             {
@@ -100,12 +100,14 @@ namespace Vurbiri.Colonization
                 for (int j = removeLinks.Count - 1; j >= 0; j--)
                 {
                     removeCount++;
-                    link = removeLinks[j];
+                    removed = removeLinks[j];
 
-                    yield return GameContainer.CameraController.ToPosition(link.Position, true);
+                    yield return GameContainer.CameraController.ToPosition(removed.link.Position, true);
 
-                    if (line.Remove(link)) _roadsLists.RemoveAt(i);
-                    yield return _factory.RoadSFX.Remove_Cn(link);
+                    if (line.Remove(removed.isEnd)) 
+                        _roadsLists.RemoveAt(i);
+
+                    yield return _factory.RoadSFX.Remove_Cn(removed.link);
                 }
             }
 

@@ -10,14 +10,22 @@ namespace Vurbiri.Colonization
             {
                 public override bool IsValid => true;
 
-                private WallBuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight) : base(parent, crossroad, cost, weight, parent.Human.BuyWall) { }
+                private WallBuild(Builder parent, Crossroad crossroad, int weight) : base(parent, crossroad, GameContainer.Prices.Wall, weight, parent.Human.BuyWall) { }
 
-                public static void Create(Builder parent, List<Plan> plans, Crossroad crossroad)
+                public static void Create(Builder parent, List<Plan> plans)
                 {
-                    var cost = GameContainer.Prices.Wall;
-                    int weight = crossroad.Weight + s_settings.wallWeight + parent.GetCostWeight(cost);
-                    if (weight > 0)
-                        plans.Add(new WallBuild(parent, crossroad, cost, weight + plans[^1].Weight));
+                    if (parent.Human.IsWallUnlock())
+                    {
+                        var baseWeight = s_settings.wallWeight + parent.GetCostWeight(GameContainer.Prices.Wall);
+                        var colonies = parent.Colonies;
+
+                        for (int i = 0, weight; i < colonies.Count; i++)
+                        {
+                            weight = baseWeight + colonies[i].Weight;
+                            if (weight > 0)
+                                plans.Add(new WallBuild(parent, colonies[i], weight + plans[^1].Weight));
+                        }
+                    }
                 }
             }
         }

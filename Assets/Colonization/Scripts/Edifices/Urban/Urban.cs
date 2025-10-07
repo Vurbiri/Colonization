@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
                 {
                     if (link.Owner == playerId)
                     {
-                        _graphic.transform.localRotation = CONST.LINK_ROTATIONS[link.Id.Value];
+                        _graphic.transform.localRotation = CROSS.LINK_ROTATIONS[link.Id.Value];
                         break;
                     }
                 }

@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
 
         private void Awake()
         {
-            transform.localRotation = CONST.LINK_ROTATIONS[_id.Value];
+            transform.localRotation = CROSS.LINK_ROTATIONS[_id.Value];
         }
 
         public void Open(bool isOpen)

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Vurbiri.Reactive.Collections;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -12,7 +11,6 @@ namespace Vurbiri.Colonization
             private static readonly BuilderSettings s_settings;
 
             private readonly System.Random _random;
-            private readonly List<Crossroad> _starts = new();
             private readonly List<Plan> _plans = new();
             private readonly MainCurrencies _profitWeights = new();
             private Plan _currentPlan = Plan.Empty;
@@ -50,22 +48,18 @@ namespace Vurbiri.Colonization
                 SetProfitWeight();
                 yield return null;
 
-                SetWallBuild(plans);
-                SetUpgrades(plans);
+                Upgrade.Create(this, plans, Colonies);
+                Upgrade.Create(this, plans, Ports);
                 yield return null;
 
+                WallBuild.Create(this, plans);
                 PortBuild.Create(this, plans);
                 yield return null;
 
-                _currentPlan = GetPlan(plans);
+                LandBuild.Create(this, plans);
+                yield return null;
 
-                _starts.Clear();
-                Roads.SetDeadEnds(_starts);
-                if (_starts.Count == 0)
-                {
-                    _starts.AddRange(Ports);
-                    _starts.AddRange(Colonies);
-                }
+                _currentPlan = GetPlan(plans);
 
                 yield break;
 
@@ -79,29 +73,6 @@ namespace Vurbiri.Colonization
                         colonies[i].AddNetProfit(_profitWeights);
 
                     _profitWeights.Normalize(s_settings.profitWeight);
-                }
-                // ======================================
-                [Impl(256)] void SetWallBuild(List<Plan> plans)
-                {
-                    if (Human.IsWallUnlock())
-                    {
-                        var colonies = Colonies;
-                        for (int i = 0; i < colonies.Count; i++)
-                            WallBuild.Create(this, plans, colonies[i]);
-                    }
-                }
-                // ======================================
-                [Impl(256)] void SetUpgrades(List<Plan> plans)
-                {
-                    Create(plans, Ports);
-                    Create(plans, Colonies);
-
-                    // ====== Local ========
-                    [Impl(256)] void Create(List<Plan> plans, ReadOnlyReactiveList<Crossroad> edifice)
-                    {
-                        for (int i = 0; i < edifice.Count; i++)
-                            Upgrade.Create(this, plans, edifice[i]);
-                    }
                 }
                 // ======================================
                 Plan GetPlan(List<Plan> plans)
@@ -134,46 +105,6 @@ namespace Vurbiri.Colonization
             }
             [Impl(256)] private int GetCostWeight(ReadOnlyMainCurrencies cost) => Resources.Delta(cost) * s_settings.costWeight;
             [Impl(256)] private static int GetEdificeWeight(int id) => s_settings.edificeWeight[id];
-
-            //private class Plan
-            //{
-            //    private readonly Queue<Crossroad> _queue = new();
-            //    private readonly Id<PlayerId> _id;
-
-            //    public bool ready = false;
-
-            //    public bool Done
-            //    {
-            //        get
-            //        {
-            //            bool done = true;
-            //            if(_queue.Count > 0)
-            //            {
-
-            //            }
-            //            return done;
-            //        }
-            //    }
-
-            //    public Plan() { }
-
-            //    private Plan(AIController parent, Crossroad crossroad, bool isReady)
-            //    {
-            //        _id = parent.Id;
-            //        ready = isReady;
-            //        _queue.Enqueue(crossroad);
-            //    }
-
-            //    public static bool TryCreate(AIController parent, Crossroad crossroad, out Plan plan)
-            //    {
-            //        plan = null;
-            //        bool ready = parent.IsEdificeUnlock(crossroad.NextId) && parent.CanEdificeUpgrade(crossroad);
-            //        bool valid = ready || parent.CanRoadBuild(crossroad);
-            //        if (valid)
-            //            plan = new(parent, crossroad, ready);
-            //        return valid;
-            //    }
-            //}
         }
     }
 }

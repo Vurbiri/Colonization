@@ -1,14 +1,12 @@
 using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using Vurbiri.Reactive;
 using static UnityEngine.InputSystem.InputAction;
 
-
 namespace Vurbiri.Colonization.Controllers
 {
     [Serializable]
-    public class InputController : /*IReactive<bool>,*/ IDisposable
+    public class InputController : IDisposable
     {
         private readonly Camera _camera;
         private readonly int _layerMaskRight;
@@ -23,7 +21,6 @@ namespace Vurbiri.Colonization.Controllers
         private bool _spectatorMode;
 
         public InputControlAction.CameraActions CameraActions => _cameraMap;
-
         public RBool IsWindowMode => _windowMode;
 
         public InputController(GameEvents events, Camera camera, Settings settings)
@@ -67,7 +64,6 @@ namespace Vurbiri.Colonization.Controllers
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Select(ISelectable selectObj)
         {
             _selectObj?.Unselect(selectObj);

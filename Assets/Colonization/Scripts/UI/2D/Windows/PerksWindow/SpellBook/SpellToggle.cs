@@ -77,7 +77,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnInteractable(int progress)
         {
-            Interactable = progress >= _points;
+            Unlock = progress >= _points;
         }
 
 #if UNITY_EDITOR

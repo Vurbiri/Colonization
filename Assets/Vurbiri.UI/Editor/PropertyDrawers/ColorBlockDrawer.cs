@@ -13,7 +13,7 @@ namespace VurbiriEditor.UI
 
         private readonly SerializedProperty[] _colorProperties;
         private readonly SerializedProperty _fadeDurationProperty;
-        private readonly SerializedProperty _colorMultiplierProperty;
+        //private readonly SerializedProperty _colorMultiplierProperty;
 
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
@@ -30,8 +30,8 @@ namespace VurbiriEditor.UI
                 colorBlock.FindPropertyRelative("m_DisabledColor"),
             };
 
-            _colorMultiplierProperty = colorBlock.FindPropertyRelative("m_ColorMultiplier");
             _fadeDurationProperty    = colorBlock.FindPropertyRelative("m_FadeDuration");
+            //_colorMultiplierProperty = colorBlock.FindPropertyRelative("m_ColorMultiplier");
         }
 
         public void Draw()
@@ -40,9 +40,13 @@ namespace VurbiriEditor.UI
 
             Rect drawRect = EditorGUILayout.BeginVertical();
             drawRect.height = EditorGUIUtility.singleLineHeight;
+            drawRect.y += EditorGUIUtility.standardVerticalSpacing;
 
             BeginProperty(drawRect, label, _colorBlockProperty);
             {
+                FadeDurationField(drawRect, _fadeDurationProperty);
+                drawRect.y += EditorGUIUtility.singleLineHeight;
+
                 if (_colorBlockProperty.isExpanded = Foldout(drawRect, _colorBlockProperty.isExpanded, label, EditorStyles.foldoutHeader))
                 {
                     indentLevel++;
@@ -52,19 +56,16 @@ namespace VurbiriEditor.UI
                         PropertyField(drawRect, _colorProperties[i], s_names[i]);
                     }
                     indentLevel--;
-
-                    drawRect.y += _height;
-                    PropertyField(drawRect, _colorMultiplierProperty);
-                    drawRect.y += _height;
-                    FadeDurationField(drawRect, _fadeDurationProperty);
                 }
             }
             EndProperty();
 
             EditorGUILayout.EndVertical();
 
-            if (_colorBlockProperty.isExpanded) EditorGUILayout.Space(8f * _height);
-            else EditorGUILayout.Space(_height);
+            EditorGUILayout.Space(2f * _height - EditorGUIUtility.standardVerticalSpacing);
+            if (_colorBlockProperty.isExpanded) 
+                EditorGUILayout.Space(5f * _height);
+            
         }
 
         public void DrawGUILayout()

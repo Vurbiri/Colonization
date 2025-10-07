@@ -104,11 +104,11 @@ namespace Vurbiri
             if (component == null)
                 LogErrorFind<T>("component", null);
         }
-        public static void SetChildren<T>(this Component self, ref T component, string name) where T : Component
+        public static void SetChildren<T>(this Component self, ref T component, string name, bool errorMsg = true) where T : Component
         {
             if (component != null && component.gameObject.name == name) return;
             component = self.GetComponentInChildren<T>(name);
-            if (component == null)
+            if (errorMsg & component == null)
                 LogErrorFind<T>("component", name);
         }
         public static void SetChildrens<T>(this Component self, ref T[] components, int length) where T : Component
@@ -122,6 +122,12 @@ namespace Vurbiri
         // ********************************************
 
         public static T GetComponentInChildren<T>(this Component self, string name) where T : Component
+        {
+            foreach (var component in self.GetComponentsInChildren<T>(true))
+                if (component.gameObject.name == name) return component;
+            return null;
+        }
+        public static T GetComponentInChildren<T>(this GameObject self, string name) where T : Component
         {
             foreach (var component in self.GetComponentsInChildren<T>(true))
                 if (component.gameObject.name == name) return component;

@@ -1,7 +1,6 @@
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using Vurbiri.Reactive;
 using Vurbiri.UI;
 
 namespace Vurbiri.Colonization.UI
@@ -79,10 +78,8 @@ namespace Vurbiri.Colonization.UI
 
 #if UNITY_EDITOR
 
-        public Vector2 UpdateVisuals_Editor(PlayerColors playerColors, float offset)
+        public Vector2 UpdateVisuals_Editor(float offset)
         {
-            _icon.color = playerColors[_id];
-
             var rectTransform = (RectTransform)transform.parent;
             rectTransform.anchoredPosition = new(offset, 0f);
 
@@ -92,7 +89,7 @@ namespace Vurbiri.Colonization.UI
         private void OnValidate()
         {
             if (Application.isPlaying) return;
-            
+
             this.SetChildren(ref _icon, "Icon");
             this.SetChildren(ref _diplomacy, "Relation");
 

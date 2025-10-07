@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
                 _humans[i] = new AIController(i, settings);
 
-            _satan = new(settings, _humans);
+            _satan = new(settings);
 
             game.Subscribe(GameModeId.Landing, (turn, _) => this[turn.currentId.Value].OnLanding());
             game.Subscribe(GameModeId.EndLanding, (turn, _) => this[turn.currentId.Value].OnEndLanding());
@@ -45,6 +45,8 @@ namespace Vurbiri.Colonization
 
         public void Dispose()
         {
+            Player.Reset();
+
             for (int i = 0; i < PlayerId.HumansCount; i++)
                 _humans[i].Dispose();
             _satan.Dispose();

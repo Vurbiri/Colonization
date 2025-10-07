@@ -3,7 +3,7 @@ using Vurbiri.Collections;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    sealed public class SubAbility<TId> : AAbilitySettable<TId> where TId : AbilityId<TId>
+    sealed public class SubAbility<TId> : ASettableAbility<TId> where TId : AbilityId<TId>
     {
         private readonly Ability _restore;
         private readonly IdArray<TypeModifierId, Func<int, int>> _modifiers = new();

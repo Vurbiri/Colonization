@@ -10,7 +10,7 @@ namespace Vurbiri.UI
 #endif
     public partial class VSelectable : Selectable
     {
-        [SerializeField] protected Graphic _interactableIcon;
+        [SerializeField] protected Graphic _lockIcon;
         [SerializeField] protected List<TargetGraphic> _targetGraphics = new();
         [SerializeField] private bool _scaling;
         [SerializeField] private RectTransform _scalingTarget;
@@ -20,7 +20,7 @@ namespace Vurbiri.UI
         protected RectTransform _thisRectTransform;
 
         #region Properties
-        public bool Interactable
+        public bool Unlock
         {
             get => base.interactable;
             set
@@ -28,21 +28,34 @@ namespace Vurbiri.UI
                 if (base.interactable != value)
                 {
                     base.interactable = value;
-                    if (_interactableIcon != null)
-                        _interactableIcon.CrossFadeAlpha(value ? 0f : 1f, colors.fadeDuration, true);
+                    if (_lockIcon != null)
+                        _lockIcon.CrossFadeAlpha(value ? 0f : 1f, colors.fadeDuration, true);
                 }
             }
         }
-        public Graphic InteractableIcon
+        public bool Lock
         {
-            get => _interactableIcon;
+            get => !base.interactable;
             set
             {
-                if (_interactableIcon != value)
+                if (base.interactable == value)
                 {
-                    _interactableIcon = value;
-                    if (_interactableIcon != null)
-                        _interactableIcon.CrossFadeAlpha(base.interactable ? 0f : 1f, colors.fadeDuration, true);
+                    base.interactable = !value;
+                    if (_lockIcon != null)
+                        _lockIcon.CrossFadeAlpha(value ? 1f : 0f, colors.fadeDuration, true);
+                }
+            }
+        }
+        public Graphic LockIcon
+        {
+            get => _lockIcon;
+            set
+            {
+                if (_lockIcon != value)
+                {
+                    _lockIcon = value;
+                    if (_lockIcon != null)
+                        _lockIcon.CrossFadeAlpha(base.interactable ? 0f : 1f, colors.fadeDuration, true);
                 }
             }
         }
@@ -105,11 +118,11 @@ namespace Vurbiri.UI
 
         public Graphic GetTargetGraphic(int index) => _targetGraphics[index].Graphic;
 
-        public void CombineInteractable(bool mainInteractable, bool advInteractable)
+        public void InteractableAndUnlock(bool interactable, bool unlocked)
         {
-            base.interactable = mainInteractable & advInteractable;
-            if (_interactableIcon != null)
-                _interactableIcon.CrossFadeAlpha(mainInteractable ? 0f : 1f, colors.fadeDuration, true);
+            base.interactable = interactable & unlocked;
+            if (_lockIcon != null)
+                _lockIcon.CrossFadeAlpha(unlocked ? 0f : 1f, colors.fadeDuration, true);
         }
 
         protected override void Awake()
@@ -135,8 +148,8 @@ namespace Vurbiri.UI
         {
             base.Start();
 
-            if (_interactableIcon != null)
-                _interactableIcon.canvasRenderer.SetAlpha(base.interactable ? 0f : 1f);
+            if (_lockIcon != null)
+                _lockIcon.canvasRenderer.SetAlpha(base.interactable ? 0f : 1f);
         }
 
         sealed protected override void DoStateTransition(SelectionState state, bool instant)
@@ -194,7 +207,7 @@ namespace Vurbiri.UI
                     StartScaleTween(targetScale, instant ? 0f : _scales.fadeDuration);
                     break;
                 case Transition.ColorTint:
-                    StartColorTween(intState, targetScale, targetColor * colors.colorMultiplier, instant ? 0f : colors.fadeDuration);
+                    StartColorTween(intState, targetScale, targetColor, instant ? 0f : colors.fadeDuration);
                     break;
                 case Transition.SpriteSwap:
                     DoSpriteSwap(targetScale, targetSprite, instant ? 0f : _scales.fadeDuration);
@@ -216,7 +229,6 @@ namespace Vurbiri.UI
 
             for (int i = _targetGraphics.Count - 1; i >= 0; i--)
                 _targetGraphics[i].CrossFadeColor(intState, targetColor, duration);
-
         }
 
         protected virtual void DoSpriteSwap(Vector3 targetScale, Sprite targetSprite, float duration)
@@ -244,7 +256,8 @@ namespace Vurbiri.UI
         {
             if (!Application.isPlaying)
             {
-                this.SetComponent(ref _thisRectTransform);
+                if(_thisRectTransform == null)
+                    _thisRectTransform = (RectTransform)transform;
 
                 if (transition == Transition.ColorTint && _scales.fadeDuration != colors.fadeDuration)
                     _scales.fadeDuration = colors.fadeDuration;

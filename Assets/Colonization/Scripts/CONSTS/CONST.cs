@@ -64,8 +64,7 @@ namespace Vurbiri.Colonization
         
         public static readonly ReadOnlyDictionary<Key, Quaternion> ACTOR_ROTATIONS;
 
-        public static readonly ReadOnlyArray<Quaternion> LINK_ROTATIONS 
-            = new(new Quaternion[] { Quaternion.Euler(0f, 120f, 0f), Quaternion.Euler(0f, -120f, 0f), Quaternion.Euler(0f, 0f, 0f) });
+        
 
         public const int MAX_NUMBERS_STR = 256;
         public static readonly ReadOnlyArray<string> NUMBERS_STR;

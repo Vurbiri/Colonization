@@ -2,11 +2,11 @@ using System;
 
 namespace Vurbiri.Colonization.Characteristics
 {
-    public abstract class AAbilitySettable<TId> : AAbility<TId> where TId : AbilityId<TId>
+    public abstract class ASettableAbility<TId> : AAbility<TId> where TId : AbilityId<TId>
     {
         protected int _maxValue;
 
-        public AAbilitySettable(AAbility<TId> other) :base(other) { }
+        public ASettableAbility(AAbility<TId> other) :base(other) { }
 
         public int Set(int value)
         {

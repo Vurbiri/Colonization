@@ -10,9 +10,10 @@ namespace Vurbiri.FSM
 
         private bool _block;
 
-        public TState CurrentState => _currentState;
-        public TState PrevState => _previousState;
-        public bool IsDefaultState => _currentState.Equals(_defaultState);
+        public TState DefaultState { [Impl(256)] get => _defaultState; }
+        public TState CurrentState { [Impl(256)] get => _currentState; }
+        public TState PrevState { [Impl(256)] get => _previousState; }
+        public bool IsDefaultState { [Impl(256)] get => _currentState.Equals(_defaultState); }
 
         public StateMachine(TState startState)
         {
@@ -27,6 +28,7 @@ namespace Vurbiri.FSM
 
         [Impl(256)] public void Block() => _block = true;
         [Impl(256)] public void Unblock() => _block = false;
+        [Impl(256)] public void SetBlock(bool enable) => _block = enable;
 
         [Impl(256)] public void AssignDefaultState(TState state) => _defaultState = state;
 
@@ -71,6 +73,12 @@ namespace Vurbiri.FSM
             if (!(_block | _currentState.Equals(_defaultState)))
                 SetStateAndSavePrev(_defaultState);
         }
+        [Impl(256)] public void ForceToDefaultState()
+        {
+            if (!_currentState.Equals(_defaultState))
+                SetStateAndSavePrev(_defaultState);
+        }
+
         [Impl(256)] public void ToPrevState()
         {
             if (!(_block | _currentState.Equals(_previousState)))

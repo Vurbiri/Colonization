@@ -26,6 +26,7 @@ namespace Vurbiri.Colonization
                 "Artefact",
                 "Exit",
                 "English",
+                "BayShrine",
             });
             _dropdown.value = 0;
         }
@@ -39,6 +40,7 @@ namespace Vurbiri.Colonization
                 case 2: GameContainer.Players.Person.Artefact.Next(UnityEngine.Random.Range(90, 100)); ; break;
                 case 3: Vurbiri.EntryPoint.Transition.Exit(); break;
                 case 4: Localization.Instance.SwitchLanguage(SystemLanguage.English); break;
+                case 5: GameContainer.Players.Humans[PlayerId.AI_01].BuyEdificeUpgrade(GameContainer.Crossroads[CROSS.NEAR.Rand()]); break;
                 default: return;
             }
         }

@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization.UI
             var view = _edificeView[edificeId];
             var cost = GameContainer.Prices.Edifices[edificeId];
 
-            CombineInteractable(isUnlock, _cash >= cost);
+            InteractableAndUnlock(_cash >= cost, isUnlock);
             _buttonIcon.sprite = view.sprite;
 
             SetTextHint(Localization.Instance.GetText(LangFiles.Gameplay, view.keyName), _cash, cost);

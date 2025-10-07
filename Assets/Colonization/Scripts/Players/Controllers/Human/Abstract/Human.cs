@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
 
         protected readonly SpellBook _spellBook = new();
 
-        protected readonly ReadOnlyAbilities<HumanAbilityId> _abilities;
+        protected readonly AbilitiesSet<HumanAbilityId> _abilities;
         protected readonly Artefact _artefact;
         protected readonly PerkTree _perks;
 
@@ -163,17 +163,18 @@ namespace Vurbiri.Colonization
         #region Edifice
         [Impl(256)] public bool CanEdificeUpgrade(Crossroad crossroad) => _edifices.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
         [Impl(256)] public bool IsEdificeUnlock(Id<EdificeId> id) => _edifices.IsEdificeUnlock(id);
-        [Impl(256)] public WaitSignal BuyEdificeUpgrade(Crossroad crossroad) => BuyEdificeUpgrade(crossroad, GameContainer.Prices.Edifices[crossroad.NextId]);
+        [Impl(256)] public void BuyEdificeUpgrade(Crossroad crossroad) => BuyEdificeUpgrade(crossroad, GameContainer.Prices.Edifices[crossroad.NextId]);
         public WaitSignal BuyEdificeUpgrade(Crossroad crossroad, ReadOnlyMainCurrencies cost)
         {
             ReturnSignal returnSignal = crossroad.BuyUpgrade(_id);
             if (returnSignal)
             {
-                int edificeId = crossroad.Id.Value;
                 _edifices.edifices[crossroad.GroupId].AddOrChange(crossroad);
-
                 _resources.Remove(cost);
-                GameContainer.Score.ForBuilding(_id, edificeId);
+                GameContainer.Score.ForBuilding(_id, crossroad.Id);
+
+                if(crossroad.Id == EdificeId.Shrine)
+                    s_shrinesCount.Increment();
             }
             return returnSignal.signal;
         }
@@ -192,7 +193,7 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public bool CanWallBuild(Crossroad crossroad) => crossroad.CanWallBuild(_id);
         [Impl(256)] public bool IsWallUnlock() => _abilities.IsTrue(IsWall);
-        [Impl(256)] public WaitSignal BuyWall(Crossroad crossroad) => BuyWall(crossroad, GameContainer.Prices.Wall);
+        [Impl(256)] public void BuyWall(Crossroad crossroad) => BuyWall(crossroad, GameContainer.Prices.Wall);
         public WaitSignal BuyWall(Crossroad crossroad, ReadOnlyMainCurrencies cost)
         {
             var returnSignal = crossroad.BuildWall(_id, true);
@@ -208,12 +209,13 @@ namespace Vurbiri.Colonization
 
         #region Roads
         [Impl(256)] public bool CanRoadBuild(Crossroad crossroad) => _abilities.IsGreater(MaxRoad, _roads.Count) && crossroad.CanRoadBuild(_id);
-        public WaitSignal BuyRoad(Crossroad crossroad, Id<LinkId> linkId)
+        [Impl(256)] public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId) => BuyRoad(crossroad.GetLinkAndSetStart(linkId), GameContainer.Prices.Road);
+        public WaitSignal BuyRoad(CrossroadLink link, ReadOnlyMainCurrencies cost)
         {
-            var returnSignal = _roads.BuildAndUnion(crossroad.GetLinkAndSetStart(linkId));
+            var returnSignal = _roads.BuildAndUnion(link);
             if (returnSignal)
             {
-                _resources.Remove(GameContainer.Prices.Road);
+                _resources.Remove(cost);
                 GameContainer.Score.ForRoad(_id);
             }
             return returnSignal.signal;

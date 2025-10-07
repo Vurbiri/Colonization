@@ -52,12 +52,12 @@ namespace Vurbiri.Colonization.UI
         {
             if (toggle != null)
             {
-                _learnButton.Interactable = true;
+                _learnButton.Lock = false;
                 _spellBook.SetAllTogglesOff();
             }
             else
             {
-                _learnButton.Interactable = toggle != null;
+                _learnButton.Lock = true;
             }
         }
         private void OnSpellBookChanged(SpellToggle toggle)

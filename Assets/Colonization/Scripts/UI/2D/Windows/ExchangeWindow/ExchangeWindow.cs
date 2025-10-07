@@ -94,18 +94,18 @@ namespace Vurbiri.Colonization.UI
             _bankAmount.text = _playerAmount.text = CONST.NUMBERS_STR[0];
             _playerAmount.color = _colors.zero;
 
-            _resetButton.Interactable = _applyButton.Interactable = false;
+            _resetButton.Lock = _applyButton.Lock = true;
         }
 
         private void SetState()
         {
-            bool isNotZero = _price.Amount > 0 | _pay.Amount > 0;
-            bool isEquals = _price.Amount == _pay.Amount;
+            bool isZero = _price.Amount == 0 & _pay.Amount == 0;
+            bool isNotEquals = _price.Amount != _pay.Amount;
 
-            _resetButton.Interactable = isNotZero;
-            _applyButton.Interactable = isNotZero & isEquals;
+            _resetButton.Lock = isZero;
+            _applyButton.Lock = isZero | isNotEquals;
 
-            _playerAmount.color = _colors.GetColor(!isNotZero, isEquals);
+            _playerAmount.color = _colors.GetColor(isZero, !isNotEquals);
         }
 
         #region Nested struct Colors

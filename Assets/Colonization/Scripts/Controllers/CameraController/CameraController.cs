@@ -53,6 +53,8 @@ namespace Vurbiri.Colonization.Controllers
 
             eventBus.EventCrossroadSelect.Add(OnMoveToPosition);
             eventBus.EventActorSelect.Add(OnMoveToPosition);
+
+            inputController.IsWindowMode.Subscribe(OnWindowMode, false);
             #endregion
 
             var cameraPosition = _cameraTransform.CameraPosition;
@@ -122,6 +124,12 @@ namespace Vurbiri.Colonization.Controllers
         {
             _machine.SetState(_zoomState);
             _zoomState.InputValue = ctx.ReadValue<float>();
+        }
+
+        private void OnWindowMode(bool enable)
+        {
+            _machine.ForceToDefaultState();
+            _machine.SetBlock(enable);
         }
 
 #if UNITY_EDITOR

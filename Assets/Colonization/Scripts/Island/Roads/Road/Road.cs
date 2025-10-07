@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
         [SerializeField, Range(2f, 6f)] private float _buildingSpeed = 4.3f;
 
         private Action<Road> a_onDisable;
-        private readonly List<CrossroadLink> _removeLinks = new(2);
+        private readonly List<RemoveLink> _removeLinks = new(2);
         private readonly WaitSignal _waitSignal = new();
         private Links _links;
         private Points _points;
@@ -110,25 +110,20 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public bool ThereDeadEnds(int playerId) => GameContainer.Crossroads.IsDeadEnd(_links.Start, _links.End, playerId);
 
-        public List<CrossroadLink> GetDeadEnds(int playerId)
+        public List<RemoveLink> GetDeadEnds(int playerId)
         {
             _removeLinks.Clear();
 
             if (StartCrossroad.IsDeadEnd(playerId, out CrossroadLink link))
-            {
-                link.RoadRemove(TypeLink.Start);
-                _removeLinks.Add(link);
-            }
+                _removeLinks.Add(RemoveLink.Start(link));
+            
             if (EndCrossroad.IsDeadEnd(playerId, out link))
-            {
-                link.RoadRemove(TypeLink.End);
-                _removeLinks.Add(link);
-            }
+                _removeLinks.Add(RemoveLink.End(link));
 
             return _removeLinks;
         }
 
-        public bool Remove(CrossroadLink link)
+        public bool Remove(bool isEnd)
         {
             if (_links.Count <= 2)
             {
@@ -136,12 +131,12 @@ namespace Vurbiri.Colonization
                 return true;
             }
 
-            if (link.Type == TypeLink.End)
+            if (isEnd)
             {
                 _links.Remove();
                 _points.Remove(EndPosition);
             }
-            else if (link.Type == TypeLink.Start)
+            else
             {
                 _links.Extract();
                 _points.Extract(StartPosition);

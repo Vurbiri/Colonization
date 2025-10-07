@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.UI
             for(int i = 0; i < CONST.DICES_COUNT; i++)
                 _dices[i].Init();
 
-            _stopButton.Interactable = false;
+            _stopButton.Lock = true;
             _stopButton.AddListener(_waitPerson.Send);
 
             GameContainer.GameLoop.Subscribe(GameModeId.WaitRoll, Roll);
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization.UI
             for (int i = 0; i < CONST.DICES_COUNT; i++)
                 _dices[i].Run();
 
-            _stopButton.CombineInteractable(isPerson, isPerson);
+            _stopButton.InteractableAndUnlock(isPerson, isPerson);
 
             yield return _canvasSwitcher.Show();
             yield return isPerson ? _waitPerson.Restart() : _waitAI.Restart(_delayAI);

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
+using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Characteristics
@@ -53,6 +54,10 @@ namespace Vurbiri.Colonization.Characteristics
         public SubAbility<TId> ReplaceToSub(Id<TId> id, Id<TId> max, Id<TId> restore)
         {
             return ReplaceTo(id, new SubAbility<TId>(_abilities[id], _abilities[max], _abilities[restore]));
+        }
+        public void ReplaceToDependent(Id<TId> id, ReactiveValue<int> remove, ReactiveValue<int> add)
+        {
+            _abilities[id] = new DependentAbility<TId>(_abilities[id], remove, add);
         }
 
         [Impl(256)] public int AddPerk(IPerk perk) => _abilities[perk.TargetAbility].AddModifier(perk);
