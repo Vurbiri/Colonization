@@ -24,8 +24,7 @@ namespace Vurbiri
 
         public bool MoveNext()
         {
-            _canMoveNext = _cursor < _count;
-            if (_canMoveNext)
+            if (_canMoveNext = _cursor < _count)
                 _current = _values[_cursor++];
 
             return _canMoveNext;

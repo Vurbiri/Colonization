@@ -1,7 +1,6 @@
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
@@ -10,7 +9,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private WorldHintButton _buttonBack;
         [Space]
-        [SerializeField] private IdSet<WarriorId, ButtonRecruiting> _buttons;
+        [SerializeField] private ReadOnlyIdSet<WarriorId, ButtonRecruiting> _buttons;
 
         private CrossroadMainMenu _mainMenu;
 
@@ -59,8 +58,8 @@ namespace Vurbiri.Colonization.UI
         {
             if (_buttonBack == null)
                 _buttonBack = GetComponentInChildren<WorldHintButton>();
-            if (_buttons.Fullness < _buttons.Count)
-                _buttons.ReplaceRange(GetComponentsInChildren<ButtonRecruiting>());
+            if (_buttons == null || _buttons.IsNotFull)
+                _buttons = new(GetComponentsInChildren<ButtonRecruiting>());
         }
 #endif
     }

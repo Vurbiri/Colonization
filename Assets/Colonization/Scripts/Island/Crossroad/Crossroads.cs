@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization
 
         public int ShoreCount  { [Impl(256)] get => _shore.Count; }
 
-        public Crossroads(Transform container, IdSet<EdificeId, AEdifice> prefabs)
+        public Crossroads(Transform container, ReadOnlyIdSet<EdificeId, AEdifice> prefabs)
         {
             _hexWeight = SettingsFile.Load<HexWeight>();
             _container = container;

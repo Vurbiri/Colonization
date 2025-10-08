@@ -9,7 +9,7 @@ namespace Vurbiri.Colonization
     {
         [SerializeField, Range(0, 5)] private int _idMaterial;
         [Space]
-        [SerializeField] private IdSet<LinkId, WallGate> _graphicSides;
+        [SerializeField] private ReadOnlyIdSet<LinkId, WallGate> _graphicSides;
 
         public WaitSignal Init(Id<PlayerId> playerId, IReadOnlyList<CrossroadLink> links, bool isSFX)
         {
@@ -32,8 +32,8 @@ namespace Vurbiri.Colonization
         {
             if (Application.isPlaying) return;
 
-            if (_graphicSides.Fullness < _graphicSides.Count)
-                _graphicSides.ReplaceRange(GetComponentsInChildren<WallGate>());
+            if (_graphicSides == null || _graphicSides.IsNotFull)
+                _graphicSides = new(GetComponentsInChildren<WallGate>());
         }
 #endif
     }

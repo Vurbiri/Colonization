@@ -99,7 +99,7 @@ namespace Vurbiri.Colonization.Actors.UI
             [SerializeField] private HPBarFactory _hpBar;
             [SerializeField] private APBarFactory _apBar;
             [SerializeField] private SpriteRenderer _moveSprite;
-            [SerializeField] private IdSet<ActorAbilityId, ValueBarFactory> _valueBars;
+            [SerializeField] private ReadOnlyIdSet<ActorAbilityId, ValueBarFactory> _valueBars;
             [Space]
             [SerializeField] private PopupWidget3D _popup;
 
@@ -133,9 +133,8 @@ namespace Vurbiri.Colonization.Actors.UI
                 parent.SetChildren(ref _popup);
                 parent.SetChildren(ref _moveSprite, "Move");
 
-                _valueBars ??= new();
-                if (_valueBars.Fullness < 2)
-                    _valueBars.ReplaceRange(parent.GetComponentsInChildren<ValueBarFactory>());
+                if (_valueBars == null || _valueBars.Fullness < 4)
+                    _valueBars = new(parent.GetComponentsInChildren<ValueBarFactory>());
             }
 #endif
         }

@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private HexagonMarkFactory _prefabHexMark;
         [Header("═════ CROSSROADS ═════")]
         [SerializeField] private Transform _crossroadsContainer;
-        [SerializeField] private IdSet<EdificeId, AEdifice> _edificePrefabs;
+        [SerializeField] private ReadOnlyIdSet<EdificeId, AEdifice> _edificePrefabs;
         
         private Hexagons _hexagons;
         private Crossroads _crossroads;
@@ -103,8 +103,8 @@ namespace Vurbiri.Colonization
         {
             _hexagonSpawner.OnValidate();
 
-            if (_edificePrefabs.Fullness < _edificePrefabs.Count)
-                _edificePrefabs.ReplaceRange(EUtility.FindPrefabs<AEdifice>());
+            if (_edificePrefabs.IsNotFull)
+                _edificePrefabs = new(EUtility.FindPrefabs<AEdifice>());
 
             EUtility.SetPrefab(ref _prefabHexMark);
             this.SetChildren(ref _psFog);

@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         #region Fields
         public const int HEX_COUNT = 3;
 
-        private static IdSet<EdificeId, AEdifice> s_prefabs;
+        private static ReadOnlyIdSet<EdificeId, AEdifice> s_prefabs;
 
         private readonly Key _key;
         private int _weight;
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization
         public bool IsShrine { [Impl(256)] get => _states.groupId == EdificeGroupId.Shrine; }
         public bool IsWall { [Impl(256)] get => _isWall; }
         public bool IsUpgrade { [Impl(256)] get => _states.isUpgrade; }
-        public IdSet<LinkId, CrossroadLink> Links { [Impl(256)] get => _links; }
+        public ReadOnlyIdSet<LinkId, CrossroadLink> Links { [Impl(256)] get => _links; }
         public List<Hexagon> Hexagons { [Impl(256)] get => _hexagons; }
         #endregion
 
@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization
             _edifice.Key = key;
         }
 
-        [Impl(256)] public static void Init(IdSet<EdificeId, AEdifice> prefabs)
+        [Impl(256)] public static void Init(ReadOnlyIdSet<EdificeId, AEdifice> prefabs)
         {
             s_prefabs = prefabs;
             Transition.OnExit.Add(() => s_prefabs = null);

@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace VurbiriEditor.Collections
 {
-    [CustomPropertyDrawer(typeof(IdSet<,>))]
+    [CustomPropertyDrawer(typeof(ReadOnlyIdSet<,>), true)]
     internal class IdSetDrawer : AIdCollectionDrawer
     {
         public readonly float BUTTON_RATE_POS = 0.33f, BUTTON_RATE_SIZE = 0.275f, LABEL_SIZE = 100f;
@@ -173,7 +173,7 @@ namespace VurbiriEditor.Collections
                 return list;
             }
             //=================================
-            void SetValues(IReadOnlyList<Object> array)
+            void SetValues(List<Object> array)
             {
                 for (int index = 0; index < array.Count; index++)
                     propertyValues.GetArrayElementAtIndex(index % _count).objectReferenceValue = array[index];

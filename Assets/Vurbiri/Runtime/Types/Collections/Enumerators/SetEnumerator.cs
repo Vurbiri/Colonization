@@ -7,6 +7,7 @@ namespace Vurbiri
 	{
         private readonly T[] _values;
         private readonly int _count;
+        private bool _canMoveNext;
         private int _cursor = 0;
         private T _current;
 
@@ -14,22 +15,18 @@ namespace Vurbiri
 
         object IEnumerator.Current => _current;
 
-        public SetEnumerator(T[] values)
+        public SetEnumerator(T[] values) : this(values, values.Length) { }
+        public SetEnumerator(T[] values, int count)
         {
             _values = values;
-            _count = values.Length;
+            _count = count;
         }
 
         public bool MoveNext()
         {
-            if (_cursor >= _count)
-                return false;
+            while (_canMoveNext = _cursor < _count && (_current = _values[_cursor++]) == null);
 
-            _current = _values[_cursor++];
-            if(_current == null)
-                return MoveNext();
-
-            return true;
+            return _canMoveNext;
         }
 
         public void Reset() => _cursor = 0;
