@@ -58,10 +58,10 @@ namespace Vurbiri.Colonization
         public void OnProfit(Id<PlayerId> id, int hexId)
         {
             int progress = _parameters.cursePerTurn + s_shrinesCount * _parameters.cursePerShrine;
-            if (hexId > CONST.GATE_ID)
-                hexId = (CONST.GATE_ID << 1) - hexId;
+            if (hexId > HEX.GATE)
+                hexId = (HEX.GATE << 1) - hexId;
 
-            _curse += progress * hexId / CONST.GATE_ID << hexId / CONST.GATE_ID;
+            _curse += progress * hexId / HEX.GATE << hexId / HEX.GATE;
 
             if (_curse >= _maxCurse)
                 LevelUp();

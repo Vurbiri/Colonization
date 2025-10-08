@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.CreatingMesh;
-using static Vurbiri.Colonization.CONST;
 
 namespace Vurbiri.Colonization
 {
@@ -26,7 +25,7 @@ namespace Vurbiri.Colonization
 
         private void Start()
         {
-            float size = HEX_RADIUS_IN * _ratioSize;
+            float size = HEX.RADIUS_IN * _ratioSize;
 
             _windmillMeshFilter.sharedMesh = Chance.Select(_meshWindmill01, _meshWindmill02);
             _windmillMeshFilter.transform.localPosition = new(0f, 0f, size - _windmillOffsetDistance);

@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization.Controllers
 
         private readonly Camera _camera;
         private readonly Transform _cameraTransform, _parentTransform;
-        private readonly SphereBounds _bounds = new(CONST.HEX_DIAMETER_IN * CONST.MAX_CIRCLES);
+        private readonly SphereBounds _bounds = new(HEX.DIAMETER_IN * CONST.MAX_CIRCLES);
         private readonly VAction<Transform> _changedTransform = new();
         private Vector3 _velocity = Vector3.zero;
 

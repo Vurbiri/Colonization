@@ -16,6 +16,7 @@ namespace Vurbiri.Colonization
 
         private static ReadOnlyIdSet<EdificeId, AEdifice> s_prefabs;
 
+        private readonly Id<CrossroadId> _type;
         private readonly Key _key;
         private int _weight;
         private bool _canBuild = true;
@@ -37,6 +38,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Property
+        public Id<CrossroadId> Type { [Impl(256)] get => _type; }
         public Key Key { [Impl(256)] get => _key; }
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
         public Id<EdificeId> Id { [Impl(256)] get => _states.id; }
@@ -59,8 +61,9 @@ namespace Vurbiri.Colonization
         public List<Hexagon> Hexagons { [Impl(256)] get => _hexagons; }
         #endregion
 
-        public Crossroad(Key key, Transform container, Vector3 position, Quaternion rotation)
+        public Crossroad(int type, Key key, Transform container, Vector3 position, Quaternion rotation)
         {
+            _type = type;
             _key = key;
             Position = position;
 
@@ -135,7 +138,7 @@ namespace Vurbiri.Colonization
             {
                 _countFreeLink = 1;
                 _states.SetNextId(EdificeId.Shrine, EdificeGroupId.Shrine);
-                _weight = hexWeight[CONST.GATE_ID];
+                _weight = hexWeight[HEX.GATE];
             }
             else if (_waterCount == 0)
             {
@@ -187,13 +190,7 @@ namespace Vurbiri.Colonization
         [Impl(256)] public int GetDefense() => _isWall ? _states.wallDefense : 0;
         [Impl(256)] public int GetDefense(Id<PlayerId> playerId) => (playerId == _owner & _isWall) ? _states.wallDefense : 0;
 
-        #region Link
-        [Impl(256)] public bool ContainsLink(int id) => _links.ContainsKey(id);
         [Impl(256)] public void AddLink(CrossroadLink link) => _links.Add(link);
-
-        [Impl(256)] public CrossroadLink GetLink(Id<LinkId> linkId) => _links[linkId];
-        [Impl(256)] public CrossroadLink GetLinkAndSetStart(Id<LinkId> linkId) => _links[linkId].SetStart(_key);
-        #endregion
 
         #region Profit
         public void ProfitFromPort(MainCurrencies profit, int idHex, int shiftProfit)
@@ -276,7 +273,7 @@ namespace Vurbiri.Colonization
                 Crossroad neighbor;
                 foreach (var link in _links)
                 {
-                    neighbor = link.Other(_key);
+                    neighbor = link.GetOther(_type);
                     if (neighbor._states.nextGroupId == EdificeGroupId.Colony)
                         neighbor.BanBuild();
                 }

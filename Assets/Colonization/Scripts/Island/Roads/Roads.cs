@@ -32,21 +32,22 @@ namespace Vurbiri.Colonization
             _gradient = new() { colorKeys = colors, alphaKeys = alphas };
         }
 
-        public ReturnSignal Build(CrossroadLink link, bool isSFX = false)
+        public ReturnSignal Build(Id<CrossroadId> startType, CrossroadLink link, bool isSFX = false)
         {
             link.RoadBuilt(_id);
             _count.Increment();
 
+            Crossroad start = link.Get(startType), end = link.GetOther(startType);
             ReturnSignal returnSignal = false;
 
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
-                if (returnSignal = _roadsLists[i].TryAdd(link.Start, link.End, isSFX))
+                if (returnSignal = _roadsLists[i].TryAdd(start, end, isSFX))
                     break;
 
             if (!returnSignal)
             {
                 Road road = _factory.Create(_gradient, _roadsLists.Count);
-                returnSignal = road.Create(link.Start, link.End, isSFX);
+                returnSignal = road.Create(start, end, isSFX);
                 _roadsLists.Add(road);
             }
 
@@ -55,9 +56,9 @@ namespace Vurbiri.Colonization
             return returnSignal;
         }
 
-        public ReturnSignal BuildAndUnion(CrossroadLink link)
+        public ReturnSignal BuildAndUnion(Id<CrossroadId> startType, CrossroadLink link)
         {
-            ReturnSignal returnSignal = Build(link, true);
+            ReturnSignal returnSignal = Build(startType, link, true);
             TryUnion_Cn(returnSignal.signal).Start();
             return returnSignal;
         }

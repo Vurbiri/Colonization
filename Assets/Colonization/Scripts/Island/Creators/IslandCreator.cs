@@ -38,11 +38,11 @@ namespace Vurbiri.Colonization
             var shape = _psFog.shape; shape.radius = _ratioFogSize * MAX_CIRCLES;
 
             for (int i = 0; i < HEX.SIDES; i++)
-                _sides[i] = HEX_DIAMETER_IN * SIDE_DIRECTIONS[i];
+                _sides[i] = HEX.DIAMETER_IN * HEX.DIRECTIONS[i];
             for (int i = 0; i < HEX.SIDES; i++)
                 _delta[i] = _sides.Next(i) - _sides[i];
 
-            transform.hierarchyCapacity = (MAX_HEXAGONS + MAX_CROSSROADS + (DEFAULT_MAX_WARRIOR << 5) + 4) << 2;
+            transform.hierarchyCapacity = (HEX.MAX + CROSS.MAX + (DEFAULT_MAX_WARRIOR << 5) + 4) << 2;
 
             return this;
         }

@@ -4,7 +4,7 @@ namespace Vurbiri.Colonization.UI
     {
         public bool Setup(Crossroad crossroad, out CrossroadLink link)
         {
-            link = crossroad.GetLink(_id);
+            link = crossroad.Links[_id];
             if (link == null)
             {
                 _thisGameObject.SetActive(false);

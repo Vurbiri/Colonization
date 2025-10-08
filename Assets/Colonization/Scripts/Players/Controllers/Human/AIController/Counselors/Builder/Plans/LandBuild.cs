@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Characteristics;
-using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -48,7 +47,7 @@ namespace Vurbiri.Colonization
                         {
                             step = _steps[_cursor];
                             yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
-                            yield return Human.BuyRoad(step.GetLinkAndSetStart(), _costRoad);
+                            yield return Human.BuyRoad(step.crossroad.Type, step.link, _costRoad);
                             _steps[_cursor++] = null;
                         }
                         yield return null;
@@ -88,8 +87,6 @@ namespace Vurbiri.Colonization
                         this.link = link;
                     }
                     public Step(Crossroad crossroad) => this.crossroad = crossroad;
-
-                    [Impl(256)] public CrossroadLink GetLinkAndSetStart() => link.SetStart(crossroad.Key);
                 }
             }
         }

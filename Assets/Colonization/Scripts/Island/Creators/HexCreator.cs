@@ -7,7 +7,7 @@ namespace Vurbiri.Colonization
 
     public abstract class HexCreator
 	{
-        private readonly Vector2 _offsetHex = new(HEX_DIAMETER_IN, HEX_DIAMETER_IN * SIN_60);
+        private readonly Vector2 _offsetHex = new(HEX.DIAMETER_IN, HEX.DIAMETER_IN * SIN_60);
 
         protected Hexagons _land;
         protected HexagonSpawner _spawner;
@@ -46,8 +46,8 @@ namespace Vurbiri.Colonization
 
         public HexGenerator(Hexagons land, HexagonSpawner spawner, GameStorage storage) : base(land, spawner, storage)
         {
-            _groundIDs  = new(HEX_IDS); 
-            _waterIDs   = new(HEX_IDS);
+            _groundIDs  = new(HEX.IDS); 
+            _waterIDs   = new(HEX.IDS);
             _surfaceIDs = new(SurfaceId.CountGround);
         }
 
@@ -55,7 +55,7 @@ namespace Vurbiri.Colonization
         {
             get
             {
-                Hexagon hex = Create(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
+                Hexagon hex = Create(Key.Zero, HEX.GATE, SurfaceId.Gate, Vector3.zero);
                 _storage.BindHexagons(_land);
                 return hex;
             }
@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization
     {
         public HexLoader(Hexagons land, HexagonSpawner spawner, GameStorage storage) : base(land, spawner, storage) { }
 
-        public override Hexagon Gate => Create(Key.Zero, GATE_ID, SurfaceId.Gate, Vector3.zero);
+        public override Hexagon Gate => Create(Key.Zero, HEX.GATE, SurfaceId.Gate, Vector3.zero);
 
         public override Hexagon Create(Vector3 position, int circle, bool isNotApex)
         {

@@ -6,12 +6,10 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    using static CONST;
-
     public class Hexagons : IReactive<Hexagon>
     {
-        private readonly Dictionary<Key, Hexagon> _hexagons = new(MAX_HEXAGONS);
-        private readonly List<Key>[] _hexagonsIdForKey = new List<Key>[HEX_IDS[^1] + 1];
+        private readonly Dictionary<Key, Hexagon> _hexagons = new(HEX.MAX);
+        private readonly List<Key>[] _hexagonsIdForKey = new List<Key>[HEX.IDS[^1] + 1];
         private readonly VAction<Hexagon> _eventChanged = new();
         private readonly MainCurrencies _freeResources = new();
 
@@ -23,11 +21,11 @@ namespace Vurbiri.Colonization
 
         public Hexagons(Pool<HexagonMark> poolMarks)
         {
-            int count = HEX_IDS.Length, capacity = MAX_HEXAGONS / count + 1;
+            int count = HEX.IDS.Count, capacity = HEX.MAX / count + 1;
 
             for (int i = 0; i < count; i++)
-                _hexagonsIdForKey[HEX_IDS[i]] = new List<Key>(capacity);
-            _hexagonsIdForKey[GATE_ID] = new List<Key>(1);
+                _hexagonsIdForKey[HEX.IDS[i]] = new List<Key>(capacity);
+            _hexagonsIdForKey[HEX.GATE] = new List<Key>(1);
 
             GameContainer.GameEvents.Subscribe(GameModeId.EndTurn, OnEndTurn);
             GameContainer.GameEvents.Subscribe(GameModeId.Roll, OnRoll);

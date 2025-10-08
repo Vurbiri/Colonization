@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.UI
         {
             _profitTMP.text = string.Format(PROFIT, NUMBERS_STR[active], NUMBERS_STR[passive]);
             _valueTMP.text = string.Format(COUNT, NUMBERS_STR[current], NUMBERS_STR[max]);
-            _hintText = string.Format(_localizedText, NUMBERS_STR[current], NUMBERS_STR[max], NUMBERS_STR[active], NUMBERS_STR[passive], NUMBERS_STR[CONST.GATE_ID]);
+            _hintText = string.Format(_localizedText, NUMBERS_STR[current], NUMBERS_STR[max], NUMBERS_STR[active], NUMBERS_STR[passive], NUMBERS_STR[HEX.GATE]);
         }
 
 

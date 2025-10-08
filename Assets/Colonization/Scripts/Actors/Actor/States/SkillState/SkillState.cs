@@ -31,7 +31,7 @@ namespace Vurbiri.Colonization.Actors
                     }
 
                     Vector3 actorHexPos = CurrentHex.Position, targetHexPos = TargetHex.Position;
-                    float path = 1f - (_rangeSkill + TargetOffset) / HEX_DIAMETER_IN;
+                    float path = 1f - (_rangeSkill + TargetOffset) / HEX.DIAMETER_IN;
 
                     yield return Run_Cn(actorHexPos, targetHexPos, path);
                     yield return ApplySkill_Cn();

@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
             if (id == PlayerId.Satan)
                 _resources.AddBlood(_edifices.ShrinePassiveProfit);
 
-            if (hexId == CONST.GATE_ID)
+            if (hexId == HEX.GATE)
             {
                 _resources.AddBlood(_edifices.ShrineProfit);
                 _resources.ClampMain();

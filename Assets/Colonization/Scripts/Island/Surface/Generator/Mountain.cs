@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
         {
             CustomMesh customMesh = new("MH_Mountain_".Concat(s_id++), Vector2.one, false);
 
-            float size = HEX_RADIUS_IN * _ratioSize;
+            float size = HEX.RADIUS_IN * _ratioSize;
             _rock.Radius = size * (_stepRatioRadius - 1f) / (Mathf.Pow(_stepRatioRadius, _countCircle) - 1f);
 
             float heightRatio = 1f, ratioRadius = 1f;

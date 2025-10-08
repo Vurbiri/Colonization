@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
@@ -40,9 +41,9 @@ namespace Vurbiri
             }
         }
 
-        public RandomSequence(int[] ids)
+        public RandomSequence(IReadOnlyList<int> ids)
         {
-            _count = ids.Length;
+            _count = ids.Count;
             _ids = new int[_count];
 
             _ids[0] = ids[0];
@@ -55,8 +56,6 @@ namespace Vurbiri
             }
         }
 
-
-        [Impl(256)]
         public void Shuffle()
         {
             _cursor = 0;

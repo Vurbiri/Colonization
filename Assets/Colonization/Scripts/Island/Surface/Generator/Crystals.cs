@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
         {
             CustomMesh customMesh = new("MH_CrystalField_".Concat(s_id++), Vector2.one, false);
 
-            float size = HEX_RADIUS_IN * _ratioSize;
+            float size = HEX.RADIUS_IN * _ratioSize;
             FloatMRnd offsetRadius = size * _ratioOffsetXZ;
 
             int i, count;
@@ -35,8 +35,8 @@ namespace Vurbiri.Colonization
             float x, z;
             for (int k = 0; k < COUNT_DRUSE; k++)
             {
-                x = COS_HEX_DIRECT[k] * size + offsetRadius;
-                z = SIN_HEX_DIRECT[k] * size + offsetRadius;
+                x = HEX.COS[k] * size + offsetRadius;
+                z = HEX.SIN[k] * size + offsetRadius;
 
                 druse = _druse.Create(new(x, -_offsetY, z), false);
                 count = druse.Length;

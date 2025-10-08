@@ -5,18 +5,16 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    using static CONST;
-
     public class Crossroads
     {
-        private readonly Dictionary<Key, Crossroad> _crossroads = new(MAX_CROSSROADS);
+        private readonly Dictionary<Key, Crossroad> _crossroads = new(CROSS.MAX);
         private readonly Shore _shore = new();
 
         private ReadOnlyArray<int> _hexWeight;
         private Transform _container;
        
-        private Vector3[] _vertices = new Vector3[HEX_COUNT_VERTICES];
-        private Quaternion[] _angles = { Quaternion.Euler(0, 180, 0), Quaternion.identity };
+        private Vector3[] _vertices = new Vector3[HEX.VERTICES];
+        private Quaternion[] _angles = { Quaternion.Euler(0f, 180f, 0f), Quaternion.identity };
 
         public Crossroad this[Key key] { [Impl(256)] get => _crossroads[key]; }
 
@@ -29,14 +27,14 @@ namespace Vurbiri.Colonization
 
             Crossroad.Init(prefabs);
 
-            for (int i = 0; i < HEX_COUNT_VERTICES; i++)
-                _vertices[i] = HEX_RADIUS_OUT * VERTEX_DIRECTIONS[i];
+            for (int i = 0; i < HEX.VERTICES; i++)
+                _vertices[i] = HEX.RADIUS_OUT * CROSS.DIRECTIONS[i];
         }
 
         public void CrossroadCreate(Vector3 positionHex, Hexagon hex, bool isLastCircle)
         {
             Crossroad cross; Key key; Vector3 position;
-            for (int i = 0; i < HEX.SIDES; i++)
+            for (int i = 0, type; i < HEX.SIDES; i++)
             {
                 position = _vertices[i] + positionHex;
 
@@ -47,7 +45,8 @@ namespace Vurbiri.Colonization
                     if (isLastCircle)
                         continue;
 
-                    cross = new(key, _container, position, _angles[i % 2]);
+                    type = i % 2;
+                    cross = new(type, key, _container, position, _angles[type]);
                     _crossroads.Add(key, cross);
                 }
 

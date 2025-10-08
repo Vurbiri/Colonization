@@ -108,7 +108,7 @@ namespace Vurbiri.Colonization.Actors
 
                     Moving.Off(); Skin.Move();
 
-                    Rotation = CONST.ACTOR_ROTATIONS[_targetHex.Key - currentHex.Key];
+                    Rotation = HEX.ROTATIONS[_targetHex.Key - currentHex.Key];
                     yield return _move.Run(currentHex.Position, _targetHex.Position);
 
                     CurrentHex.ActorEnter(Actor);

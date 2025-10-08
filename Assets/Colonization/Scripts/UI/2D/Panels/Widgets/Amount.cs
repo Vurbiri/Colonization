@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization.UI
             {
                 var color = GameContainer.UI.Colors.TextNegativeTag;
                 _valueTMP.text = string.Format(AMOUNT, color, Mathf.Min(amount, 99), max);
-                _hintText = string.Format(_textNormalHint, color, amount, max).Concat(string.Format(_textOverHint, amount - max, CONST.GATE_ID));
+                _hintText = string.Format(_textNormalHint, color, amount, max).Concat(string.Format(_textOverHint, amount - max, HEX.GATE));
             }
             else 
             {

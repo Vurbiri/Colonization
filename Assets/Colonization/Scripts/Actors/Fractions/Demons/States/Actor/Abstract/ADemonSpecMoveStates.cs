@@ -61,7 +61,7 @@ namespace Vurbiri.Colonization.Actors
                     Pay();
                     yield return Skin.SpecMove();
 
-                    Rotation = CONST.ACTOR_ROTATIONS[direction];
+                    Rotation = HEX.ROTATIONS[direction];
                     yield return _move.Run(currentHex.Position, targetHex.Position, _speed / (currentHex.Key ^ targetHex.Key));
 
                     CurrentHex.ActorEnter(Actor);

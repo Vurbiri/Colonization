@@ -33,10 +33,10 @@ namespace Vurbiri.Colonization.Actors
                     Vector3 actorHexPos = CurrentHex.Position, targetHexPos = TargetHex.Position;
                     float distance = _distanceMove + TargetOffset;
 
-                    if (distance > HEX_DIAMETER_IN)
-                        distance = HEX_DIAMETER_IN;
+                    if (distance > HEX.DIAMETER_IN)
+                        distance = HEX.DIAMETER_IN;
                     else
-                        yield return Run_Cn(actorHexPos, targetHexPos, 1f - distance / HEX_DIAMETER_IN);
+                        yield return Run_Cn(actorHexPos, targetHexPos, 1f - distance / HEX.DIAMETER_IN);
 
                     yield return ApplyMovementSkill_Cn(Position, targetHexPos, distance);
                     yield return Run_Cn(Position, actorHexPos, 1f);

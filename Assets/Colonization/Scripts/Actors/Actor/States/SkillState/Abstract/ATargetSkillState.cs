@@ -140,9 +140,9 @@ namespace Vurbiri.Colonization.Actors
                 [Impl(256)]
                 private void RotateActors()
                 {
-                    Rotation = ACTOR_ROTATIONS[KeyTarget - KeyActor];
+                    Rotation = HEX.ROTATIONS[KeyTarget - KeyActor];
                     if (_relationRealTarget == Relation.Enemy)
-                        _target._thisTransform.localRotation = ACTOR_ROTATIONS[KeyActor - KeyTarget];
+                        _target._thisTransform.localRotation = HEX.ROTATIONS[KeyActor - KeyTarget];
                 }
             }
         }

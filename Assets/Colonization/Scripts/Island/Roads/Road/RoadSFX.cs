@@ -21,7 +21,7 @@ namespace Vurbiri.Colonization
             _whatTime = new(Mathf.Max(_particleSystem.main.duration, _removeClip.length));
 
             var shape = _particleSystem.shape;
-            shape.radius = CONST.HEX_RADIUS_OUT * 0.5f;
+            shape.radius = HEX.RADIUS_OUT * 0.5f;
         }
 
         public void Build(CrossroadLink link)

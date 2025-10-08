@@ -69,8 +69,8 @@ namespace Vurbiri.Colonization
 
                 if (isWater)
                 {
-                    coastPositions[index, 0] ??= CreateCoast(verticesSide[0], isWaterPrev ? SIDE_DIRECTIONS[index] : VERTEX_DIRECTIONS[indexNext]);
-                    coastPositions[index, 1]   = CreateCoast(verticesSide[1], isWaterNext ? SIDE_DIRECTIONS[index] : VERTEX_DIRECTIONS[index]);
+                    coastPositions[index, 0] ??= CreateCoast(verticesSide[0], isWaterPrev ? HEX.DIRECTIONS[index] : CROSS.DIRECTIONS[indexNext]);
+                    coastPositions[index, 1]   = CreateCoast(verticesSide[1], isWaterNext ? HEX.DIRECTIONS[index] : CROSS.DIRECTIONS[index]);
 
                     triangles.AddRange(PolygonChain.Create(colorCoast, coastPositions[index, 0], coastPositions[index, 1]));
                 }
@@ -82,7 +82,7 @@ namespace Vurbiri.Colonization
 
                 if (isWater & isWaterNext)
                 {
-                    coastPositions[indexNext, 0] ??= CreateCoast(verticesSideNext[0], SIDE_DIRECTIONS[indexNext]);
+                    coastPositions[indexNext, 0] ??= CreateCoast(verticesSideNext[0], HEX.DIRECTIONS[indexNext]);
 
                     triangles.AddRange(PolygonChain.Create(colorCoast, coastPositions[index, 1], coastPositions[indexNext, 0]));
                 }
@@ -124,14 +124,14 @@ namespace Vurbiri.Colonization
             public readonly Vector3 NORMAL = Vector3.up;
             public readonly Vector3 DOWN = Vector3.down;
             public readonly int[][] INDEXES = { new int[] { 0, 4, 2 }, new int[] { 0, 5, 4 }, new int[] { 0, 2, 1 }, new int[] { 2, 4, 3 } };
-            public readonly Vector3[] HEX_VERTICES = new Vector3[HEX_COUNT_VERTICES];
+            public readonly Vector3[] HEX_VERTICES = new Vector3[HEX.VERTICES];
 
             public void Init()
             {
-                float borderSizeRate = HEX_RADIUS_OUT - borderHalfSize;
+                float borderSizeRate = HEX.RADIUS_OUT - borderHalfSize;
 
-                for (int i = 0; i < HEX_COUNT_VERTICES; i++)
-                    HEX_VERTICES[i] = borderSizeRate * VERTEX_DIRECTIONS[i];
+                for (int i = 0; i < HEX.VERTICES; i++)
+                    HEX_VERTICES[i] = borderSizeRate * CROSS.DIRECTIONS[i];
             }
         }
         #endregion

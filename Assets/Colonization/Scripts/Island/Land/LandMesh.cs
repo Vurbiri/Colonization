@@ -27,8 +27,8 @@ namespace Vurbiri.Colonization
         public void Init()
         {
             _thisMeshFilter = GetComponent<MeshFilter>();
-            _hexagons = new(MAX_HEXAGONS);
-            _customMesh = new("MH_Land", (2f * MAX_CIRCLES * HEX_DIAMETER_IN) * Vector2.one);
+            _hexagons = new(HEX.MAX);
+            _customMesh = new("MH_Land", (2f * MAX_CIRCLES * HEX.DIAMETER_IN) * Vector2.one);
 
             GetComponent<MeshRenderer>().sharedMaterial.SetTailing(_rateTilingMaterial * MAX_CIRCLES);
 

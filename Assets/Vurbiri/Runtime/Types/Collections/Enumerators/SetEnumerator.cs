@@ -24,8 +24,7 @@ namespace Vurbiri
 
         public bool MoveNext()
         {
-            while (_canMoveNext = _cursor < _count && (_current = _values[_cursor++]) == null);
-
+            while ((_canMoveNext = _cursor < _count) && (_current = _values[_cursor++]) == null);
             return _canMoveNext;
         }
 

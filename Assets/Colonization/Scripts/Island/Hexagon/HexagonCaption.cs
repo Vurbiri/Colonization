@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization.UI
             _thisTransform = transform;
 
             _prevColor = GameContainer.UI.Colors.TextDefault;
-            _profitColor =  GameContainer.UI.Colors.GetTextColor(id != CONST.GATE_ID);
+            _profitColor =  GameContainer.UI.Colors.GetTextColor(id != HEX.GATE);
 
             StringBuilder sb = new(TAG.TAG_SPRITE_LENGTH * CurrencyId.Count);
 

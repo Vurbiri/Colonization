@@ -22,7 +22,7 @@ namespace Vurbiri.Colonization.Controllers
                 _default = controller._default;
                 _zoom = controller._zoom;
 
-                float widthDistance = CONST.HEX_DIAMETER_IN * CONST.MAX_CIRCLES;
+                float widthDistance = HEX.DIAMETER_IN * CONST.MAX_CIRCLES;
                 float heightDistance = _default.height - _zoom.heightZoomMin - _zoom.minDeltaHeight * 0.9f;
                 _maxSqrDistance = heightDistance * heightDistance;
                 _sqrRatioParentDistance = _maxSqrDistance / (widthDistance * widthDistance);

@@ -39,8 +39,8 @@ namespace Vurbiri.Colonization
                         {
                             if (link.Contains(keys[i]))
                             {
-                                _roads.Build(link.SetStart(start.Key));
-                                start = link.End;
+                                _roads.Build(start.Type, link);
+                                start = link.GetOther(start.Type);
                                 break;
                             }
                         }

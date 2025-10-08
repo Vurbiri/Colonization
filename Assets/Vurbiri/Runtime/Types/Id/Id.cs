@@ -55,6 +55,12 @@ namespace Vurbiri
         [Impl(256)] public static bool operator <(Id<T> id, int value) => id._id < value;
         [Impl(256)] public static bool operator >=(Id<T> id, int value) => id._id >= value;
         [Impl(256)] public static bool operator <=(Id<T> id, int value) => id._id <= value;
+
+        [Impl(256)] public static int operator +(Id<T> id, int value) => id._id + value;
+        [Impl(256)] public static int operator +(int value, Id<T> id) => value + id._id;
+
+        [Impl(256)] public static int operator -(Id<T> id, int value) => id._id - value;
+        [Impl(256)] public static int operator -(int value, Id<T> id) => value - id._id;
     }
 
     sealed internal class IdGenericConverter : JsonConverter

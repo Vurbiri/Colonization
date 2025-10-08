@@ -119,7 +119,7 @@ namespace Vurbiri.Colonization.Actors
 
             _zSize = _states.Skin.SetupCollider(_thisCollider);
 
-            _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, CONST.ACTOR_ROTATIONS[GetNearGroundHexOffset(_currentHex)]);
+            _thisTransform.SetLocalPositionAndRotation(_currentHex.Position, HEX.ROTATIONS[GetNearGroundHexOffset(_currentHex)]);
             _currentHex.ActorEnter(this);
             gameObject.SetActive(true);
 

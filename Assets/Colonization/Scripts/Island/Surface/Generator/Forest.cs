@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
         {
             CustomMesh customMesh = new("MH_Forest_".Concat(s_id++), Vector2.one, false);
 
-            float size = HEX_RADIUS_IN * _ratioSize;
+            float size = HEX.RADIUS_IN * _ratioSize;
             float step = _spruce.RadiusAvg * _sparsity, radius = step;
             float angle, angleStep;
             FloatMRnd offsetAngle;
