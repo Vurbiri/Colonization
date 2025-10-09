@@ -27,6 +27,7 @@ namespace Vurbiri.Colonization
                 "Exit",
                 "English",
                 "BayShrine",
+                "GetRoads",
             });
             _dropdown.value = 0;
         }
@@ -41,6 +42,7 @@ namespace Vurbiri.Colonization
                 case 3: Vurbiri.EntryPoint.Transition.Exit(); break;
                 case 4: Localization.Instance.SwitchLanguage(SystemLanguage.English); break;
                 case 5: GameContainer.Players.Humans[PlayerId.AI_01].BuyEdificeUpgrade(GameContainer.Crossroads[CROSS.NEAR.Rand()]); break;
+                case 6: GetRoads(); break;
                 default: return;
             }
         }
@@ -92,6 +94,14 @@ namespace Vurbiri.Colonization
 
             //GameContainer.Players.GetAI(PlayerId.AI_01).SpawnTest(WarriorId.Militia, 2);
             //GameContainer.Players.GetAI(PlayerId.AI_02).SpawnTest(WarriorId.Wizard, 2);
+        }
+
+        private void GetRoads()
+        {
+            print("================================================");
+            foreach (var key in GameContainer.Players.Person.Roads)
+                print(key);
+            print("================================================");
         }
 
         public void ShowKey()

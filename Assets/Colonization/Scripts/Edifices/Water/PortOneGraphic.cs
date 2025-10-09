@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         {
             foreach (var link in links)
             {
-                if (!link.IsWater)
+                if (link.IsNotShore)
                 {
                     transform.localRotation = CROSS.LINK_MIRROR[link.Id.Value];
                     break;

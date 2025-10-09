@@ -210,7 +210,7 @@ namespace Vurbiri.Colonization
         #region Roads
         [Impl(256)] public bool CanRoadBuild(Crossroad crossroad) => _abilities.IsGreater(MaxRoad, _roads.Count) && crossroad.CanRoadBuild(_id);
         [Impl(256)] public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId) => BuyRoad(crossroad.Type, crossroad.Links[linkId], GameContainer.Prices.Road);
-        public WaitSignal BuyRoad(Id<CrossroadId> startType, CrossroadLink link, ReadOnlyMainCurrencies cost)
+        public WaitSignal BuyRoad(Id<CrossroadType> startType, CrossroadLink link, ReadOnlyMainCurrencies cost)
         {
             var returnSignal = _roads.BuildAndUnion(startType, link);
             if (returnSignal)

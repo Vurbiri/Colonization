@@ -26,9 +26,8 @@ namespace Vurbiri.Colonization
             IEnumerator OnLanding_Cn()
             {
                 yield return null;
-                yield return _builder.BuildFirstPort_Cn();
-                //Crossroad port = GameContainer.Crossroads.GetRandomPort();
-                //BuildPort(port);
+                //yield return _builder.BuildFirstPort_Cn();
+                BuildPort(GameContainer.Crossroads.GetRandomPort());
 
                 GameContainer.GameLoop.EndLanding();
             }

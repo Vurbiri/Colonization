@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
                 _count = 2;
             }
 
-            public Key this[int index] => _values[_start + index];
+            public Key this[int index] { [Impl(256)] get => _values[_start + index]; }
 
             public int Count { [Impl(256)] get => _count; }
             public Key Start { [Impl(256)] get => _values[_start]; }

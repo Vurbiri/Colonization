@@ -7,18 +7,18 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-    public partial class Roads : IReactive<Roads>
+    public partial class Roads : IReactive<Roads>, IEnumerable<Key>
     {
         #region Fields
         private readonly int _id;
         private readonly RoadFactory _factory;
         private readonly List<Road> _roadsLists = new();
+        private readonly HashSet<Key> _keys = new();
         private readonly RInt _count = new(0);
         private readonly Gradient _gradient;
         private readonly VAction<Roads> _eventChanged = new();
         #endregion
 
-        public Road this[int index] { [Impl(256)] get => _roadsLists[index]; }
         public ReactiveValue<int> Count { [Impl(256)] get => _count; }
 
         public Roads(Id<PlayerId> id, RoadFactory factory)
@@ -32,10 +32,9 @@ namespace Vurbiri.Colonization
             _gradient = new() { colorKeys = colors, alphaKeys = alphas };
         }
 
-        public ReturnSignal Build(Id<CrossroadId> startType, CrossroadLink link, bool isSFX = false)
+        public ReturnSignal Build(Id<CrossroadType> startType, CrossroadLink link, bool isSFX = false)
         {
-            link.RoadBuilt(_id);
-            _count.Increment();
+            AddLink(link);
 
             Crossroad start = link.Get(startType), end = link.GetOther(startType);
             ReturnSignal returnSignal = false;
@@ -54,16 +53,25 @@ namespace Vurbiri.Colonization
             if(isSFX) _factory.RoadSFX.Build(link);
 
             return returnSignal;
+
+            // == Local ==
+            [Impl(256)] void AddLink(CrossroadLink link)
+            {
+                _keys.Add(link.KeyA); 
+                _keys.Add(link.KeyY);
+                link.RoadBuilt(_id);
+                _count.Increment();
+            }
         }
 
-        public ReturnSignal BuildAndUnion(Id<CrossroadId> startType, CrossroadLink link)
+        [Impl(256)] public ReturnSignal BuildAndUnion(Id<CrossroadType> startType, CrossroadLink link)
         {
             ReturnSignal returnSignal = Build(startType, link, true);
             TryUnion_Cn(returnSignal.signal).Start();
             return returnSignal;
         }
 
-        [Impl(256)]public bool ThereDeadEnds()
+        [Impl(256)] public bool ThereDeadEnds()
         {
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
                if(_roadsLists[i].ThereDeadEnds(_id)) return true;
@@ -105,6 +113,7 @@ namespace Vurbiri.Colonization
 
                     yield return GameContainer.CameraController.ToPosition(removed.link.Position, true);
 
+                    RemoveLink(removed.link);
                     if (line.Remove(removed.isEnd)) 
                         _roadsLists.RemoveAt(i);
 
@@ -116,6 +125,13 @@ namespace Vurbiri.Colonization
             {
                 _eventChanged.Invoke(this);
                 _count.Remove(removeCount);
+            }
+
+            // == Local ==
+            [Impl(256)] void RemoveLink(CrossroadLink link)
+            {
+                _keys.Remove(link.KeyA);
+                _keys.Remove(link.KeyY);
             }
         }
 
@@ -151,5 +167,8 @@ namespace Vurbiri.Colonization
 
             _eventChanged.Invoke(this);
         }
+
+        public IEnumerator<Key> GetEnumerator() => _keys.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _keys.GetEnumerator();
     }
 }

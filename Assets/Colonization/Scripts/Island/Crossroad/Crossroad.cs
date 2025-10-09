@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization
 
         private static ReadOnlyIdSet<EdificeId, AEdifice> s_prefabs;
 
-        private readonly Id<CrossroadId> _type;
+        private readonly Id<CrossroadType> _type;
         private readonly Key _key;
         private int _weight;
         private bool _canBuild = true;
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region Property
-        public Id<CrossroadId> Type { [Impl(256)] get => _type; }
+        public Id<CrossroadType> Type { [Impl(256)] get => _type; }
         public Key Key { [Impl(256)] get => _key; }
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
         public Id<EdificeId> Id { [Impl(256)] get => _states.id; }

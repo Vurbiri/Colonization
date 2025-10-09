@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
         private GradientAlphaKey[] LineAlphaKeys { set { _gradient.alphaKeys = value; _roadRenderer.colorGradient = _gradient; } }
 
         public int Count { [Impl(256)] get => _links.Count; }
-        public Crossroad this[int index] { [Impl(256)] get => GameContainer.Crossroads[_links[index]]; }
+        public Key this[int index] { [Impl(256)] get => _links[index]; }
 
         public int SortingOrder { [Impl(256)] set => _roadRenderer.sortingOrder = BASE_ORDER - value; }
         public Crossroad StartCrossroad { [Impl(256)] get => GameContainer.Crossroads[_links.Start]; }

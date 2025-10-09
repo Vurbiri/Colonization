@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization
                 public static void Create(Builder parent, List<Plan> plans)
                 {
                     bool isColony = parent.Abilities.IsGreater(HumanAbilityId.MaxColony, parent.Colonies.Count);
-                    bool isShrine = s_shrinesCount < HEX.SIDES;
+                    bool isShrine = s_shrinesCount < HEX.VERTICES;
 
                     if (!(isColony | isShrine)) return;
 

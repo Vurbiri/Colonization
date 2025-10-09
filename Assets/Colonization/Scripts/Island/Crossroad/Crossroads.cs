@@ -34,7 +34,7 @@ namespace Vurbiri.Colonization
         public void CrossroadCreate(Vector3 positionHex, Hexagon hex, bool isLastCircle)
         {
             Crossroad cross; Key key; Vector3 position;
-            for (int i = 0, type; i < HEX.SIDES; i++)
+            for (int i = 0, type; i < HEX.VERTICES; i++)
             {
                 position = _vertices[i] + positionHex;
 
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
                     if (isLastCircle)
                         continue;
 
-                    type = i % 2;
+                    type = i % CrossroadType.Count;
                     cross = new(type, key, _container, position, _angles[type]);
                     _crossroads.Add(key, cross);
                 }
