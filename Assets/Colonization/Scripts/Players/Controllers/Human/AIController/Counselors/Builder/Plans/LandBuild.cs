@@ -62,14 +62,15 @@ namespace Vurbiri.Colonization
                     yield break;
                 }
 
-                public static void Create(Builder parent, List<Plan> plans)
+                public static IEnumerator Create(Builder parent, List<Plan> plans)
                 {
                     bool isColony = parent.Abilities.IsGreater(HumanAbilityId.MaxColony, parent.Colonies.Count);
                     bool isShrine = s_shrinesCount < HEX.VERTICES;
 
-                    if (!(isColony | isShrine)) return;
+                    if (!(isColony | isShrine)) 
+                        yield break;
 
-                    List<Crossroad> starts = new();
+                    HashSet<Crossroad> starts = new();
 
                     var crossroad = GameContainer.Crossroads.GetRandomPort();
                     var cost = GameContainer.Prices.Edifices[crossroad.NextId];

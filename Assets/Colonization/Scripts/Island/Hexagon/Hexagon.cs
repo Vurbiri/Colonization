@@ -90,11 +90,18 @@ namespace Vurbiri.Colonization
                     for (int j = neighbor._crossroads.Count - 1; j >= 0; j--)
                     {
                         if (neighbor._crossroads[j] == crossroad)
+                        {
                             link.Add(crossroad);
+                            break;
+                        }
+                    }
+
+                    if (link.Count == 2)
+                    {
+                        CrossroadLink.Create(link, _isWater | neighbor._isWater);
+                        break;
                     }
                 }
-                if (link.Count == 2)
-                    CrossroadLink.Create(link, _isWater | neighbor._isWater);
             }
         }
         #endregion
