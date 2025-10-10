@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Vurbiri;
 
 namespace VurbiriEditor.ReColoringVertex
 {
@@ -41,7 +40,7 @@ namespace VurbiriEditor.ReColoringVertex
         public void Draw(bool isEditName)
         {
             if (_colorsVertexes.Count != _vertexMaterial.Count)
-                _vertexMaterial.Resize(_colorsVertexes.Count);
+                Resize(_vertexMaterial, _colorsVertexes.Count);
 
             for (int i = 0; i < _vertexMaterial.Count; i++)
                 _vertexMaterial[i].Update(_colorsVertexes[i], isEditName, _isEdit);
@@ -56,6 +55,23 @@ namespace VurbiriEditor.ReColoringVertex
 
             if (_colorsVertexes.Count == _property.arraySize)
                 _this.ApplyModifiedProperties();
+
+
+            // Local
+            static void Resize(List<VertexMaterial> self, int size)
+            {
+                int count = self.Count;
+
+                if (size > count)
+                {
+                    if (size > self.Capacity) self.Capacity = size;
+                    while (self.Count != size) self.Add(new());
+                }
+                else if (size < count)
+                {
+                    self.RemoveRange(size, count - size);
+                }
+            }
         }
 
         public void Add(Color colorMesh, int index)

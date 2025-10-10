@@ -91,6 +91,15 @@ namespace Vurbiri.Colonization
             PlusToStringBuilder(sb);
             return sb.ToString();
         }
+        sealed public override string ToString()
+        {
+            StringBuilder sb = new();
+            for (int i = 0; i < COUNT; i++)
+            {
+                sb.Append("["); sb.Append(_values[i]); sb.Append("]");
+            }
+            return sb.ToString();
+        }
         #endregion
 
         public IEnumerator<int> GetEnumerator() => new ArrayEnumerator<int>(_values, COUNT);
@@ -99,11 +108,6 @@ namespace Vurbiri.Colonization
         #region Arithmetic
         public static MainCurrencies operator -(ReadOnlyCurrencies a, ReadOnlyMainCurrencies b)
         {
-            if (a == null | b == null) return null;
-
-            if (a.Amount == 0) return -b;
-            if (b._amount == 0) return new(a);
-
             MainCurrencies diff = new();
             for (int i = 0; i < COUNT; i++)
                 diff._values[i] = a[i] - b._values[i];
@@ -111,17 +115,26 @@ namespace Vurbiri.Colonization
 
             return diff;
         }
-        public static MainCurrencies operator -(ReadOnlyMainCurrencies a)
+        public static ReadOnlyMainCurrencies operator +(ReadOnlyMainCurrencies a, ReadOnlyMainCurrencies b)
         {
-            if (a == null) return null;
-            if (a._amount == 0) return new();
-
-            MainCurrencies neg = new();
+            ReadOnlyMainCurrencies sum = new();
             for (int i = 0; i < COUNT; i++)
-                neg._values[i] = -a._values[i];
-            neg._amount = -a._amount;
+                sum._values[i] = a._values[i] + b._values[i];
+            sum._amount = a._amount + b._amount;
 
-            return neg;
+            return sum;
+        }
+        public static ReadOnlyMainCurrencies operator *(ReadOnlyMainCurrencies currencies, int rate)
+        {
+            ReadOnlyMainCurrencies result = new();
+            if (currencies._amount != 0)
+            {
+                for (int i = 0; i < COUNT; i++)
+                    result._values[i] = currencies._values[i] * rate;
+                result._amount = currencies._amount * rate;
+            }
+
+            return result;
         }
         #endregion
 
@@ -182,6 +195,12 @@ namespace Vurbiri.Colonization
 
         public MainCurrencies() { }
         public MainCurrencies(ReadOnlyCurrencies other)
+        {
+            for (int i = 0; i < COUNT; i++)
+                _values[i] = other[i];
+            _amount = other.Amount;
+        }
+        public MainCurrencies(ReadOnlyMainCurrencies other)
         {
             for (int i = 0; i < COUNT; i++)
                 _values[i] = other[i];
@@ -291,11 +310,6 @@ namespace Vurbiri.Colonization
         #region Arithmetic
         public static MainCurrencies operator +(MainCurrencies a, MainCurrencies b)
         {
-            if (a == null | b == null) return null;
-
-            if (a._amount == 0) return new(b);
-            if (b._amount == 0) return new(a);
-
             MainCurrencies sum = new();
             for (int i = 0; i < COUNT; i++)
                 sum._values[i] = a._values[i] + b._values[i];
@@ -305,11 +319,6 @@ namespace Vurbiri.Colonization
         }
         public static MainCurrencies operator -(MainCurrencies a, MainCurrencies b)
         {
-            if (a == null | b == null) return null;
-
-            if (a._amount == 0) return -b;
-            if (b._amount == 0) return new(a);
-
             MainCurrencies diff = new();
             for (int i = 0; i < COUNT; i++)
                 diff._values[i] = a._values[i] - b._values[i];

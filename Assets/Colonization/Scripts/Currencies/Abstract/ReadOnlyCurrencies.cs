@@ -60,14 +60,14 @@ namespace Vurbiri.Colonization
             }
             return count;
         }
-        public int Delta(ReadOnlyMainCurrencies values)
+        public int Lack(ReadOnlyMainCurrencies values)
         {
             int delta = 0;
-            for (int i = 0, value; i < MainCount; i++)
+            for (int i = 0, cost; i < MainCount; i++)
             {
-                value = values[i];
-                if (value != 0)
-                    delta += _values[i] - value;
+                cost = _values[i] - values[i];
+                if (cost < 0)
+                    delta += cost;
             }
             return delta;
         }
@@ -137,8 +137,10 @@ namespace Vurbiri.Colonization
             public abstract int Add(int value);
             public abstract int Remove(int value);
 
-            public static int operator +(ACurrency currency, int value) => currency.Add(value);
-            public static int operator -(ACurrency currency, int value) => currency.Remove(value);
+            public static int operator +(ACurrency currency, int value) => currency._value + value;
+            public static int operator +(int value, ACurrency currency) => value + currency._value;
+            public static int operator -(ACurrency currency, int value) => currency._value - value;
+            public static int operator -(int value, ACurrency currency) => value - currency._value;
 
             public static int operator *(ACurrency a, ACurrency b) => a._value * b._value;
         }

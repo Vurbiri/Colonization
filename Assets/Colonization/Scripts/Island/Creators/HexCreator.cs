@@ -7,8 +7,6 @@ namespace Vurbiri.Colonization
 
     public abstract class HexCreator
 	{
-        private readonly Vector2 _offsetHex = new(HEX.DIAMETER_IN, HEX.DIAMETER_IN * SIN_60);
-
         protected Hexagons _land;
         protected HexagonSpawner _spawner;
         protected GameStorage _storage;
@@ -29,8 +27,6 @@ namespace Vurbiri.Colonization
         public abstract Hexagon Gate { get; }
         public abstract Hexagon Create(Vector3 position, int circle, bool isNotApex);
 		public abstract void Finish();
-
-        protected Key PositionToKey(Vector3 position) => new(2f * position.x / _offsetHex.x, position.z / _offsetHex.y);
 
         protected Hexagon Create(Key key, int id, int surfaceId, Vector3 position)
         {
@@ -62,7 +58,7 @@ namespace Vurbiri.Colonization
         }
         public override Hexagon Create(Vector3 position, int circle, bool isNotApex)
         {
-            Key keyHex = PositionToKey(position);
+            Key keyHex = KeyConverter.HexPositionToKey(position);
             _isWater = circle == MAX_CIRCLES || (circle == (MAX_CIRCLES - 1) & !_isWater & isNotApex && _chanceWater.Roll);
 
             if (_isWater) return Create(keyHex, _waterIDs.Next,  SurfaceId.Water,  position);
@@ -80,7 +76,7 @@ namespace Vurbiri.Colonization
 
         public override Hexagon Create(Vector3 position, int circle, bool isNotApex)
         {
-            Key keyHex = PositionToKey(position);
+            Key keyHex = KeyConverter.HexPositionToKey(position);
             HexLoadData data = _storage.GetHexData(keyHex);
 
             return Create(keyHex, data.id, data.surfaceId, position);

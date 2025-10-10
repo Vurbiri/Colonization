@@ -8,11 +8,11 @@ namespace Vurbiri.Colonization
 	{
         public const int MAX = HEX.VERTICES * MAX_CIRCLES * MAX_CIRCLES;
 
-        public static readonly Key RightDown = new( 2, -1); // Right + Down
-        public static readonly Key RightUp   = new( 2,  1); // Right + Up
+        public static readonly Key RightDown = new( 1, -1); // Right + Down
+        public static readonly Key RightUp   = new( 1,  1); // Right + Up
         public static readonly Key Up        = new( 0,  2); // Up + Up
-        public static readonly Key LeftUp    = new(-2,  1); // Left  + Up
-        public static readonly Key LeftDown  = new(-2, -1); // Left  + Down
+        public static readonly Key LeftUp    = new(-1,  1); // Left  + Up
+        public static readonly Key LeftDown  = new(-1, -1); // Left  + Down
         public static readonly Key Down      = new( 0, -2); // Down  + Down
 
         public static readonly ReadOnlyArray<Vector3> DIRECTIONS;

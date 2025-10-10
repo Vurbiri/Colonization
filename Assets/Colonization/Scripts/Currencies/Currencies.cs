@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization
         {
             if (value != 0)
             {
-                _amount.Value += _values[currencyId] + value;
+                _amount.Value += _values[currencyId].Add(value);
                 _changeEvent.Invoke(this);
             }
         }
@@ -52,7 +52,7 @@ namespace Vurbiri.Colonization
         {
             if (value != 0)
             {
-                _amount.Value += _values[currencyId] - value;
+                _amount.Value += _values[currencyId].Remove(value);
                 _changeEvent.Invoke(this);
             }
         }

@@ -30,9 +30,11 @@ namespace Vurbiri.Colonization.UI
             GameContainer.GameLoop.Subscribe(GameModeId.WaitRoll, Roll);
 
             _canvasSwitcher.Disable();
+
+            UnityEngine.Debug.LogWarning("[DiceWindow] Uncomment 'turnQueue.IsPerson'");
         }
 
-        public void Roll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(turnQueue.IsPerson));
+        public void Roll(TurnQueue turnQueue, int hexId) => StartCoroutine(Roll_Cn(/*turnQueue.IsPerson*/false));
 
         private IEnumerator Roll_Cn(bool isPerson)
         {

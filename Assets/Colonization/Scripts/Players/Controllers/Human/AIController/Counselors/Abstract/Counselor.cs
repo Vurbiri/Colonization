@@ -18,6 +18,7 @@ namespace Vurbiri.Colonization
             protected ReadOnlyReactiveList<Crossroad> Ports { [Impl(256)] get => _parent._edifices.ports; }
             protected ReadOnlyReactiveList<Crossroad> Colonies { [Impl(256)] get => _parent._edifices.colonies; }
             protected Roads Roads { [Impl(256)] get => _parent._roads; }
+            protected int FreeRoadCount { [Impl(256)] get => _parent._abilities[HumanAbilityId.MaxRoad] - _parent._roads.Count; }
             protected ReadOnlyAbilities<HumanAbilityId> Abilities { [Impl(256)] get => _parent._abilities; }
 
             [Impl(256)] public Counselor(AIController parent) => _parent = parent;

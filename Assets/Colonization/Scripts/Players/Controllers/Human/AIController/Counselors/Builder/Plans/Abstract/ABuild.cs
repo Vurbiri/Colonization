@@ -14,9 +14,9 @@ namespace Vurbiri.Colonization
                 private readonly ReadOnlyMainCurrencies _cost;
                 private readonly Build _build;
 
-                protected ABuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight, Build build) : base(parent)
+                protected ABuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight, Build build) : base(parent, weight)
                 {
-                    _crossroad = crossroad; _cost = cost; _weight = weight; _build = build;
+                    _crossroad = crossroad; _cost = cost; _build = build;
                 }
 
                 sealed public override IEnumerator Appeal_Cn()

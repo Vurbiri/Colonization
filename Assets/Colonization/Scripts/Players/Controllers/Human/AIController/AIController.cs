@@ -35,7 +35,14 @@ namespace Vurbiri.Colonization
 
         public override void OnPlay()
         {
-            GameContainer.GameLoop.EndTurn();
+            OnPlay_Cn().Start();
+
+            IEnumerator OnPlay_Cn()
+            {
+                yield return _builder.Appeal_Cn();
+
+                GameContainer.GameLoop.EndTurn();
+            }
         }
 
         public override void OnEndTurn()
@@ -78,6 +85,7 @@ namespace Vurbiri.Colonization
                             }
                             index = (index + 1) % CurrencyId.MainCount;
                         }
+                        Debug.Log($"Exchange {pay}");
                         _resources.Remove(pay);
                         result = true;
                     }

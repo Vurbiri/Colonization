@@ -4,7 +4,7 @@
   "edificeWeight": [
     0,
     2560,
-    40,
+    80,
     160,
     640,
     70,
@@ -12,5 +12,7 @@
     120,
     180
   ],
-  "wallWeight": 256
+  "wallWeight": 256,
+  "searchDepth": 3,
+  "penaltyPerRoad": 8
 }

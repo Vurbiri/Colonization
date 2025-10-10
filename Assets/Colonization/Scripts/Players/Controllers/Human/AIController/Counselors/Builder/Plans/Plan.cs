@@ -11,8 +11,8 @@ namespace Vurbiri.Colonization
             private abstract class Plan
             {
                 private readonly Builder _parent;
+                private readonly int _weight;
                 protected bool _done;
-                protected int _weight;
 
                 protected AIController Human { [Impl(256)] get => _parent._parent; }
                 protected int Id { [Impl(256)] get => _parent._parent._id; }
@@ -24,21 +24,19 @@ namespace Vurbiri.Colonization
 
                 public int Weight { [Impl(256)] get => _weight; }
                 public bool Done { [Impl(256)] get => _done; }
-                public bool IsWeightValid { [Impl(256)] get => _weight > 0; }
                 public abstract bool IsValid { get; }
                 
-                [Impl(256)] protected Plan(Builder parent)
+                [Impl(256)] protected Plan(Builder parent, int weight)
                 {
                     _parent = parent;
-                }
-                                
-                [Impl(256)] public Plan WeightAdd(int weight)
-                {
-                    _weight += weight;
-                    return this;
-                }
+                    _weight = weight;
 
+                    //Log.Info(this);
+                }
+    
                 public abstract IEnumerator Appeal_Cn();
+
+                public override string ToString() => $"{GetType().Name}: {_weight}";
 
                 public static bool operator >(Plan p, int i) => p._weight > i;
                 public static bool operator <(Plan p, int i) => p._weight < i;
@@ -50,7 +48,7 @@ namespace Vurbiri.Colonization
                 // **********************************************************
                 public class Dummy : Plan
                 {
-                    public Dummy() : base(null) { }
+                    public Dummy() : base(null, 0) { }
 
                     public override bool IsValid => false;
 

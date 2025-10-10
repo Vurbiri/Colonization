@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,6 +41,12 @@ namespace Vurbiri.Colonization
 
         public static readonly ReadOnlyArray<float> COS = new(new float[] { COS_00, COS_60, -COS_60, -COS_00, -COS_60, COS_60 });
         public static readonly ReadOnlyArray<float> SIN = new(new float[] { SIN_00, SIN_60, SIN_60, -SIN_00, -SIN_60, -SIN_60 });
+
+        public static int Distance(Key a, Key b)
+        {
+            int x = Math.Abs(a.x - b.x), y = Math.Abs(a.y - b.y);
+            return (y < x) ? (x + y) >> 1 : y;
+        }
 
         static HEX()
         {

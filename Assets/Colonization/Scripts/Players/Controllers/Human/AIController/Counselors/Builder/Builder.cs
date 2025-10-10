@@ -31,6 +31,8 @@ namespace Vurbiri.Colonization
                 if (!_currentPlan.IsValid || _currentPlan.Done)
                     yield return CreatePlan_Cn();
 
+                Log.Info("======================");
+                Log.Info(_currentPlan);
                 yield return _currentPlan.Appeal_Cn();
             }
 
@@ -48,16 +50,18 @@ namespace Vurbiri.Colonization
                 SetProfitWeight();
                 yield return null;
 
-                Upgrade.Create(this, plans, Colonies);
-                Upgrade.Create(this, plans, Ports);
-                yield return null;
+                if (Colonies.Count > 0)
+                {
+                    Upgrade.Create(this, plans, Colonies);
+                    Upgrade.Create(this, plans, Ports);
+                    yield return null;
 
-                WallBuild.Create(this, plans);
-                PortBuild.Create(this, plans);
-                yield return null;
+                    WallBuild.Create(this, plans);
+                    PortBuild.Create(this, plans);
+                    yield return null;
+                }
 
-                LandBuild.Create(this, plans);
-                yield return null;
+                yield return LandBuild.Create(this, plans);
 
                 _currentPlan = GetPlan(plans);
 
@@ -103,7 +107,7 @@ namespace Vurbiri.Colonization
                     weight += _profitWeights[hexagons[i].GetProfit()];
                 return weight;
             }
-            [Impl(256)] private int GetCostWeight(ReadOnlyMainCurrencies cost) => Resources.Delta(cost) * s_settings.costWeight;
+            [Impl(256)] private int GetCostWeight(ReadOnlyMainCurrencies cost) => Resources.Lack(cost) * s_settings.costWeight;
             [Impl(256)] private static int GetEdificeWeight(int id) => s_settings.edificeWeight[id];
         }
     }

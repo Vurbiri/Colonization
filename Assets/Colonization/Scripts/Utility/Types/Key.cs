@@ -15,18 +15,13 @@ namespace Vurbiri.Colonization
 
         public readonly bool IsZero => x == 0 & y == 0;
 
-        public readonly int Magnitude
-        {
-            get
-            {
-                int ax = Math.Abs(x), ay = Math.Abs(y);
-                return (ay - ax < 0) ? (ax + ay) >> 1 : ay;
-            }
-        }
-
         public Key(int x, int y)
         {
             this.x = x; this.y = y;
+        }
+        public Key(Vector2Int vector)
+        {
+            x = vector.x; y = vector.y;
         }
         public Key(float x, float y)
         {
@@ -50,19 +45,10 @@ namespace Vurbiri.Colonization
         public static Key operator -(Key a, Key b) => new(a.x - b.x, a.y - b.y);
         public static Key operator -(Key a) => new(-a.x, -a.y);
 
-        public static int operator ^(Key a, Key b) // Distance
-        {
-            int x = Math.Abs(a.x - b.x), y = Math.Abs(a.y - b.y);
-            return (y - x < 0) ? (x + y) >> 1 : y;
-        }
-
-        public static Key operator *(Key k, int i) => new(k.x * i, k.y * i);
-        public static Key operator /(int i, Key k) => new(k.x / i, k.y / i);
-
         public static bool operator ==(Key a, Key b) => a.x == b.x & a.y == b.y;
         public static bool operator !=(Key a, Key b) => a.x != b.x | a.y != b.y;
 
-        public override readonly string ToString() => $"{x},{y}";
+        public override readonly string ToString() => $"[{x}, {y}]";
 
         #region Nested: Converter
         //***********************************

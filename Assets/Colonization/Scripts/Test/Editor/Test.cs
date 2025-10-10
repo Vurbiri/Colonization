@@ -11,6 +11,10 @@ namespace Vurbiri.Colonization
 	{
         [Space]
         public FileIdAndKey giftMsg;
+        [Button("Run", false)]
+        public int button;
+        [Button("SelectCross")]
+        public Vector2Int vector;
 
         private TMP_Dropdown _dropdown;
 
@@ -27,9 +31,8 @@ namespace Vurbiri.Colonization
                 "Exit",
                 "English",
                 "BayShrine",
-                "GetRoads",
             });
-            _dropdown.value = 0;
+            _dropdown.value = 5;
         }
 
         public void RunTest()
@@ -41,8 +44,7 @@ namespace Vurbiri.Colonization
                 case 2: GameContainer.Players.Person.Artefact.Next(UnityEngine.Random.Range(90, 100)); ; break;
                 case 3: Vurbiri.EntryPoint.Transition.Exit(); break;
                 case 4: Localization.Instance.SwitchLanguage(SystemLanguage.English); break;
-                case 5: GameContainer.Players.Humans[PlayerId.AI_01].BuyEdificeUpgrade(GameContainer.Crossroads[CROSS.NEAR.Rand()]); break;
-                case 6: GetRoads(); break;
+                case 5: GameContainer.Players.Humans[PlayerId.AI_01].BuyEdificeUpgrade(GameContainer.Crossroads[CROSS.NEAR[0]]); break;
                 default: return;
             }
         }
@@ -96,19 +98,34 @@ namespace Vurbiri.Colonization
             //GameContainer.Players.GetAI(PlayerId.AI_02).SpawnTest(WarriorId.Wizard, 2);
         }
 
-        private void GetRoads()
-        {
-            print("================================================");
-            foreach (var key in GameContainer.Players.Person.Roads)
-                print(key);
-            print("================================================");
-        }
-
         public void ShowKey()
         {
             Dictionary<Key, Hexagon> hexagons = GameContainer.Hexagons;
             foreach (var hex in hexagons.Values)
                 hex.Caption.ShowKey_Ed();
+        }
+
+        public void Run()
+        {
+            Key keyA = CROSS.NEAR[0], keyB;
+            for (int i = 1; i < CROSS.NEAR.Count; i++)
+            {
+                keyB = CROSS.NEAR[i];
+                print($"{keyA} - {keyB} = {keyA - keyB} = {Distance(keyA, keyB)} ({(i > 3 ? 6 - i : i )})");
+            }
+            keyB = new(4, -2);
+            print($"{keyA} - {keyB} = {keyA - keyB} = {Distance(keyA, keyB)}");
+
+            static int Distance(Key a, Key b) // Distance
+            {
+                int x = Mathf.Abs(a.x - b.x), y = Mathf.Abs(a.y - b.y) >> 1;
+                return x + y;
+            }
+        }
+
+        public void SelectCross()
+        {
+            GameContainer.CameraController.ToPosition(GameContainer.Crossroads[new(vector)].Position, true);
         }
     }
 }

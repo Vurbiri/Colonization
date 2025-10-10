@@ -280,7 +280,7 @@ namespace Vurbiri.Colonization.UI
 
         public void SetKey_Ed(Key key)
         {
-            _keyText.text = key.ToString();
+            _keyText.text = $"{key.x},{key.y}";
             _keyText.enabled = false;
         }
         public void ShowKey_Ed()

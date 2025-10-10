@@ -46,9 +46,13 @@ namespace Vurbiri.Colonization
         }
 
         [Impl(256)] public bool Contains(Key key) => key == KeyA || key == KeyY;
+        [Impl(256)] public bool Contains(Crossroad crossroad) => crossroad.Key == _link[crossroad.Type];
 
-        [Impl(256)] public Crossroad Get(Id<CrossroadType> type) => GameContainer.Crossroads[_link[type]];
-        [Impl(256)] public Crossroad GetOther(Id<CrossroadType> type) => GameContainer.Crossroads[_link[CrossroadType.Max - type]];
+        [Impl(256)] public Key Get(Id<CrossroadType> type) => _link[type];
+        [Impl(256)] public Key GetOther(Id<CrossroadType> type) => _link[CrossroadType.Max - type];
+
+        [Impl(256)] public Crossroad GetCrossroad(Id<CrossroadType> type) => GameContainer.Crossroads[_link[type]];
+        [Impl(256)] public Crossroad GetOtherCrossroad(Id<CrossroadType> type) => GameContainer.Crossroads[_link[CrossroadType.Max - type]];
 
         [Impl(256)] public void RoadBuilt(Id<PlayerId> playerId)
         {

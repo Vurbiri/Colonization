@@ -232,7 +232,8 @@ namespace Vurbiri.Colonization
 
         #region Building
         #region Edifice
-        [Impl(256)] public bool CanBuild(Id<PlayerId> playerId) => _states.isUpgrade & _canBuild && (_countFreeLink > 0 || IsRoadConnect(playerId));
+        [Impl(256)] public bool CanBuild() => _canBuild;
+        [Impl(256)] public bool CanBuild(Id<PlayerId> playerId) => _canBuild & (_countFreeLink > 0 || IsRoadConnect(playerId));
         [Impl(256)] public bool CanUpgrade(Id<PlayerId> playerId)
         {
             return _states.isUpgrade && (_owner == playerId || (_canBuild && (IsRoadConnect(playerId) || (_states.nextGroupId == EdificeGroupId.Port & _countFreeLink > 0))));
@@ -273,7 +274,7 @@ namespace Vurbiri.Colonization
                 Crossroad neighbor;
                 foreach (var link in _links)
                 {
-                    neighbor = link.GetOther(_type);
+                    neighbor = link.GetOtherCrossroad(_type);
                     if (neighbor._states.nextGroupId == EdificeGroupId.Colony)
                         neighbor.BanBuild();
                 }
@@ -328,17 +329,28 @@ namespace Vurbiri.Colonization
             _edifice.RemoveRoad(id, _isWall);
         }
 
+        public bool IsRoadConnect(Id<PlayerId> playerId)
+        {
+            bool isRoadConnect = _owner == playerId;
+            if (!isRoadConnect)
+            {
+                foreach (var link in _links)
+                    isRoadConnect |= link.Owner == playerId;
+            }
+            return isRoadConnect;
+        }
+
         public bool IsDeadEnd(Id<PlayerId> playerId)
         {
-            if (_states.id != EdificeId.Empty)
-                return false;
-
             int count = 0;
-            foreach (var link in _links)
-                if (link.Owner == playerId)
-                    count++;
+            if (_owner != playerId)
+            {
+                foreach (var link in _links)
+                    if (link.Owner == playerId)
+                        count++;
+            }
 
-            return count <= 1;
+            return count == 1;
         }
 
         public bool IsDeadEnd(Id<PlayerId> playerId, out CrossroadLink link)
@@ -362,18 +374,6 @@ namespace Vurbiri.Colonization
             }
 
             return link != null;
-        }
-
-        public bool IsRoadConnect(Id<PlayerId> playerId)
-        {
-            if (_owner == playerId)
-                return true;
-
-            foreach (var link in _links)
-                if (link.Owner == playerId)
-                    return true;
-
-            return false;
         }
         #endregion
 

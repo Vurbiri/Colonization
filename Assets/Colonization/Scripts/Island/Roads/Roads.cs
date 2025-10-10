@@ -19,6 +19,7 @@ namespace Vurbiri.Colonization
         #endregion
 
         public ReactiveValue<int> Count { [Impl(256)] get => _count; }
+        public int CrossroadsCount { [Impl(256)] get => _count + _roadsLists.Count; }
 
         public Roads(Id<PlayerId> id, RoadFactory factory)
         {
@@ -36,7 +37,7 @@ namespace Vurbiri.Colonization
             link.RoadBuilt(_id);
             _count.Increment();
 
-            Crossroad start = link.Get(startType), end = link.GetOther(startType);
+            Crossroad start = link.GetCrossroad(startType), end = link.GetOtherCrossroad(startType);
             ReturnSignal returnSignal = false;
 
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
@@ -68,24 +69,6 @@ namespace Vurbiri.Colonization
                if(_roadsLists[i].ThereDeadEnds(_id)) return true;
             
             return false;
-        }
-
-        public void SetDeadEnds(HashSet<Crossroad> deadEnds)
-        {
-            for (int i = _roadsLists.Count - 1; i >= 0; i--)
-                TryAddLine(deadEnds, _roadsLists[i]);
-
-            #region Local
-            [Impl(256)] void TryAddLine(HashSet<Crossroad> deadEnds, Road line)
-            {
-                TryAdd(deadEnds, line.StartCrossroad);
-                TryAdd(deadEnds, line.EndCrossroad);
-            }
-            [Impl(256)] void TryAdd(HashSet<Crossroad> deadEnds, Crossroad crossroad)
-            {
-                if(crossroad.IsDeadEnd(_id)) deadEnds.Add(crossroad);
-            }
-            #endregion
         }
 
         public IEnumerator RemoveDeadEnds_Cn()
@@ -125,6 +108,37 @@ namespace Vurbiri.Colonization
             return _eventChanged.Add(action);
         }
         #endregion
+
+
+        public void SetDeadEnds(HashSet<Crossroad> deadEnds)
+        {
+            for (int i = _roadsLists.Count - 1; i >= 0; i--)
+                TryAddLine(deadEnds, _roadsLists[i]);
+
+            #region Local
+            [Impl(256)] void TryAddLine(HashSet<Crossroad> deadEnds, Road line)
+            {
+                TryAdd(deadEnds, line.StartCrossroad);
+                TryAdd(deadEnds, line.EndCrossroad);
+            }
+            [Impl(256)] void TryAdd(HashSet<Crossroad> deadEnds, Crossroad crossroad)
+            {
+                if (crossroad.IsDeadEnd(_id)) deadEnds.Add(crossroad);
+            }
+            #endregion
+        }
+
+        public void SetCrossroads(HashSet<Crossroad> points)
+        {
+            var crossroads = GameContainer.Crossroads;
+            Road line;
+            for (int i = _roadsLists.Count - 1; i >= 0; i--)
+            {
+                line = _roadsLists[i];
+                for (int r = line.Count - 1; r >= 0; r--)
+                    points.Add(crossroads[line[r]]);
+            }
+        }
 
         private IEnumerator TryUnion_Cn(WaitSignal signal)
         {

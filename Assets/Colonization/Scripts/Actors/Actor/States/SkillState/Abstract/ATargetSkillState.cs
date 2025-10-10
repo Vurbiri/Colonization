@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
-using static Vurbiri.Colonization.CONST;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
@@ -61,7 +60,7 @@ namespace Vurbiri.Colonization.Actors
                     if (_waitActor != null)
                     {
                         _target = newSelectable as Actor;
-                        if (_target != null && ((KeyTarget ^ KeyActor) != 1 || !_target.ToTargetState(Owner, _relationTarget)))
+                        if (_target != null && (HEX.Distance(KeyTarget, KeyActor) != 1 || !_target.ToTargetState(Owner, _relationTarget)))
                             _target = null;
 
                         _waitActor.Send();

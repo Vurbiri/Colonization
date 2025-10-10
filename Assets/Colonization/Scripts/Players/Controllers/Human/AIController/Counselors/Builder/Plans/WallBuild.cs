@@ -18,12 +18,17 @@ namespace Vurbiri.Colonization
                     {
                         var baseWeight = s_settings.wallWeight + parent.GetCostWeight(GameContainer.Prices.Wall);
                         var colonies = parent.Colonies;
+                        Crossroad colony;
 
                         for (int i = 0, weight; i < colonies.Count; i++)
                         {
-                            weight = baseWeight + colonies[i].Weight;
-                            if (weight > 0)
-                                plans.Add(new WallBuild(parent, colonies[i], weight + plans[^1].Weight));
+                            colony = colonies[i];
+                            if (colony.CanWallBuild())
+                            {
+                                weight = baseWeight + colony.Weight;
+                                if (weight > 0)
+                                    plans.Add(new WallBuild(parent, colony, weight + plans[^1].Weight));
+                            }
                         }
                     }
                 }

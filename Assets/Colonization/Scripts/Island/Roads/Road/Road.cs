@@ -41,6 +41,8 @@ namespace Vurbiri.Colonization
         public Key this[int index] { [Impl(256)] get => _links[index]; }
 
         public int SortingOrder { [Impl(256)] set => _roadRenderer.sortingOrder = BASE_ORDER - value; }
+        public Key Start { [Impl(256)] get => _links.Start; }
+        public Key End { [Impl(256)] get => _links.End; }
         public Crossroad StartCrossroad { [Impl(256)] get => GameContainer.Crossroads[_links.Start]; }
         public Crossroad EndCrossroad { [Impl(256)] get => GameContainer.Crossroads[_links.End]; }
         public Vector3 StartPosition { [Impl(256)] get => GameContainer.Crossroads[_links.Start].Position; }

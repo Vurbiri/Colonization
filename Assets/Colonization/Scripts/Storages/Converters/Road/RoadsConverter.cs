@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
                             if (link.Contains(keys[i]))
                             {
                                 _roads.Build(start.Type, link);
-                                start = link.GetOther(start.Type);
+                                start = link.GetOtherCrossroad(start.Type);
                                 break;
                             }
                         }
