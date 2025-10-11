@@ -1,31 +1,36 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
 	public abstract class Player : IDisposable
     {
         protected static RInt s_shrinesCount = new();
-        public static ReactiveValue<int> ShrinesCount => s_shrinesCount;
+        public static ReactiveValue<int> ShrinesCount { [Impl(256)] get => s_shrinesCount; }
 
         protected readonly int _id;
         protected readonly bool _isPerson;
         protected readonly RBool _interactable = new(false);
         protected Subscription _subscription;
 
-        public int Id => _id;
-        public ReadOnlyReactiveSet<Actor> Actors => GameContainer.Actors[_id];
-        public ReactiveValue<bool> Interactable => _interactable;
+        public int Id { [Impl(256)] get => _id; }
+        public ReadOnlyReactiveSet<Actor> Actors { [Impl(256)] get => GameContainer.Actors[_id]; }
+        public ReactiveValue<bool> Interactable { [Impl(256)] get => _interactable; }
 
         protected Player(int playerId)
         {
             _id = playerId;
             _isPerson = playerId == PlayerId.Person;
         }
+
+        [Impl(256)] protected Coroutine StartCoroutine(IEnumerator routine) => GameContainer.Shared.StartCoroutine(routine);
+        [Impl(256)] protected void StopCoroutine(Coroutine coroutine) => GameContainer.Shared.StopCoroutine(coroutine);
 
         public virtual void Dispose()
         {

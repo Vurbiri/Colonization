@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.Storage;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -12,8 +12,8 @@ namespace Vurbiri.Colonization
         private TurnQueue _turnQueue;
         private int _hexId;
          
-        public Id<GameModeId> GameMode => _gameMode;
-        public bool IsPersonTurn => _gameMode == GameModeId.Play & _turnQueue.IsPerson;
+        public Id<GameModeId> GameMode { [Impl(256)] get => _gameMode; }
+        public bool IsPersonTurn { [Impl(256)] get => _gameMode == GameModeId.Play & _turnQueue.IsPerson; }
 
         private GameLoop() : this(GameModeId.Landing, new(PlayerId.Person), -1) { }
         private GameLoop(Id<GameModeId> gameMode, TurnQueue turnQueue, int hexId) : base()
@@ -27,38 +27,37 @@ namespace Vurbiri.Colonization
         {
             if (!storage.TryGetGame(out GameLoop instance))
                 instance = new();
-
             instance._storage = storage;
 
             return instance;
         }
 
-        public void Start() => SetGameMode(_gameMode);
+        [Impl(256)] public void Start() => SetGameMode(_gameMode);
 
-        public void Landing()
+        [Impl(256)] public void Landing()
         {
             _turnQueue.Next();
-            SetGameModeNotSave(GameModeId.Landing);
+            SetGameMode(GameModeId.Landing, false);
         }
-        public void EndLanding() => SetGameModeNotSave(GameModeId.EndLanding);
+        [Impl(256)] public void EndLanding() => SetGameMode(GameModeId.EndLanding, false);
 
-        public void EndTurn() => SetGameMode(GameModeId.EndTurn);
-        public void StartTurn()
+        [Impl(256)] public void EndTurn() => SetGameMode(GameModeId.EndTurn);
+        [Impl(256)] public void StartTurn()
         {
             _turnQueue.Next();
             SetGameMode(GameModeId.StartTurn);
         }
 
-        public void WaitRoll() => SetGameMode(GameModeId.WaitRoll);
-        public void Roll(int newValue)
+        [Impl(256)] public void WaitRoll() => SetGameMode(GameModeId.WaitRoll);
+        [Impl(256)] public void Roll(int newValue)
         {
             _hexId = newValue;
             SetGameMode(GameModeId.Roll);
         }
 
-        public void Profit() => SetGameMode(GameModeId.Profit);
+        [Impl(256)] public void Profit() => SetGameMode(GameModeId.Profit);
 
-        public void Play() => SetGameMode(GameModeId.Play);
+        [Impl(256)] public void Play() => SetGameMode(GameModeId.Play);
 
         public void End_Cn(Winner winner)
         {
@@ -67,33 +66,14 @@ namespace Vurbiri.Colonization
             _storage.SaveGame(this);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetGameMode(Id<GameModeId> gameMode)
+        [Impl(256)] private void SetGameMode(Id<GameModeId> gameMode, bool save = true) => GameContainer.Shared.StartCoroutine(SetGameMode_Cn(gameMode, save));
+        private IEnumerator SetGameMode_Cn(Id<GameModeId> gameMode, bool save)
         {
-            SetGameMode_Cn(gameMode).Start();
+            yield return null;
 
-            IEnumerator SetGameMode_Cn(Id<GameModeId> gameMode)
-            {
-                yield return null;
-
-                _gameMode = gameMode;
-                _changingGameModes[gameMode].Invoke(_turnQueue, _hexId);
-                _storage.SaveGame(this);
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetGameModeNotSave(Id<GameModeId> gameMode)
-        {
-            SetGameMode_Cn(gameMode).Start();
-
-            IEnumerator SetGameMode_Cn(Id<GameModeId> gameMode)
-            {
-                yield return null;
-
-                _gameMode = gameMode;
-                _changingGameModes[gameMode].Invoke(_turnQueue, _hexId);
-            }
+            _gameMode = gameMode;
+            _changingGameModes[gameMode].Invoke(_turnQueue, _hexId);
+            if (save) _storage.SaveGame(this);
         }
     }
 }

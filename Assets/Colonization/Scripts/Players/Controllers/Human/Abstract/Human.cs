@@ -229,7 +229,7 @@ namespace Vurbiri.Colonization
         }
         [Impl(256)] public bool CanRecruiting(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
 
-        [Impl(256)] public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => Recruiting_Cn(id, crossroad).Start();
+        [Impl(256)] public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => StartCoroutine(Recruiting_Cn(id, crossroad));
         [Impl(256)] public void Recruiting(Id<WarriorId> id, Hexagon hexagon) => Recruiting(id, hexagon, GameContainer.Prices.Warriors[id.Value]);
         public void Recruiting(Id<WarriorId> id, Hexagon hexagon, ReadOnlyMainCurrencies cost)
         {

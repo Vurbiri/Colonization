@@ -14,5 +14,6 @@ namespace Vurbiri.Colonization
         [Header("LandBuild")]
         public int searchDepth;
         public int penaltyPerRoad;
+        public int penaltyPerHex;
     }
 }

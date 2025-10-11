@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
 
         public void OnEndTurn()
         {
-            OnEndTurn_Cn().Start();
+            StartCoroutine(OnEndTurn_Cn());
 
             //Local
             IEnumerator OnEndTurn_Cn()

@@ -10,7 +10,6 @@ namespace Vurbiri.Colonization
         {
             private static readonly BuilderSettings s_settings;
 
-            private readonly System.Random _random;
             private readonly List<Plan> _plans = new();
             private readonly MainCurrencies _profitWeights = new();
             private Plan _currentPlan = Plan.Empty;
@@ -21,19 +20,19 @@ namespace Vurbiri.Colonization
                 s_settings.profitWeight = -s_settings.profitWeight;
             }
 
-            public Builder(AIController parent) : base(parent)
+            public Builder(AIController parent) : base(parent) { }
+
+            public override IEnumerator Planning_Cn()
             {
-                _random = new((int)System.DateTime.Now.Ticks >> Id);
+                Log.Info($"===== {PlayerId.PositiveNames_Ed[Id]} ======");
+                if (_currentPlan.Done || !_currentPlan.IsValid)
+                    yield return CreatePlan_Cn();
             }
 
-            public override IEnumerator Appeal_Cn()
+            public override IEnumerator Execution_Cn()
             {
-                if (!_currentPlan.IsValid || _currentPlan.Done)
-                    yield return CreatePlan_Cn();
-
-                Log.Info("======================");
                 Log.Info(_currentPlan);
-                yield return _currentPlan.Appeal_Cn();
+                yield return _currentPlan.Execution_Cn();
             }
 
             public IEnumerator BuildFirstPort_Cn()
@@ -45,6 +44,7 @@ namespace Vurbiri.Colonization
 
             private IEnumerator CreatePlan_Cn()
             {
+                Log.Info("CreatePlan");
                 List<Plan> plans = new() { Plan.Empty };
 
                 SetProfitWeight();
@@ -79,11 +79,11 @@ namespace Vurbiri.Colonization
                     _profitWeights.Normalize(s_settings.profitWeight);
                 }
                 // ======================================
-                Plan GetPlan(List<Plan> plans)
+                [Impl(256)] Plan GetPlan(List<Plan> plans)
                 {
                     if(plans.Count == 1) return plans[0];
 
-                    int weight = _random.Next(plans[^1].Weight);
+                    int weight = UnityEngine.Random.Range(0, plans[^1].Weight);
                     int min = 0, max = plans.Count, current;
                     while (true)
                     {
@@ -100,6 +100,9 @@ namespace Vurbiri.Colonization
                 #endregion
             }
 
+            [Impl(256)] private int GetCostWeight(ReadOnlyMainCurrencies cost) => Resources.Lack(cost) * s_settings.costWeight;
+            [Impl(256)] private static int GetEdificeWeight(int id) => s_settings.edificeWeight[id];
+
             [Impl(256)] private int GetProfitWeight(List<Hexagon> hexagons)
             {
                 int weight = 0;
@@ -107,8 +110,19 @@ namespace Vurbiri.Colonization
                     weight += _profitWeights[hexagons[i].GetProfit()];
                 return weight;
             }
-            [Impl(256)] private int GetCostWeight(ReadOnlyMainCurrencies cost) => Resources.Lack(cost) * s_settings.costWeight;
-            [Impl(256)] private static int GetEdificeWeight(int id) => s_settings.edificeWeight[id];
+            private int GetFirstProfitWeight(List<Hexagon> hexagons)
+            {
+                MainCurrencies profitId = new();
+                int weight = 0, profit;
+                for (int i = 0; i < Crossroad.HEX_COUNT; i++)
+                {
+                    profit = hexagons[i].GetProfit();
+                    profitId.Increment(profit);
+                    weight += _profitWeights[profit];
+                }
+                
+                return weight - s_settings.penaltyPerHex ^ profitId.MaxValue;
+            }
         }
     }
 }

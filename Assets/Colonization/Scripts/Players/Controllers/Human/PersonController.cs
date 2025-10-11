@@ -19,7 +19,7 @@ namespace Vurbiri.Colonization
 
         public override WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg)
         {
-            Gift_Cn(giver, gift, msg).Start();
+            StartCoroutine(Gift_Cn(giver, gift, msg));
             return _waitGift.Restart();
 
             // Local
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
             _iController.Turn = false;
             _edifices.Interactable = false;
 
-            OnEndTurn_Cn().Start();
+            StartCoroutine(OnEndTurn_Cn());
         }
 
         #region Nested InteractableController

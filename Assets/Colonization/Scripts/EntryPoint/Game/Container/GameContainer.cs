@@ -31,12 +31,11 @@ namespace Vurbiri.Colonization
         public static ActorsFactory Actors              { [Impl(256)] get => s_content.actorsFactory; }
 
         public static Players Players                   { [Impl(256)] get => s_content.players; }
-        public static Chaos Chaos                   { [Impl(256)] get => s_content.chaos; }
+        public static Chaos Chaos                       { [Impl(256)] get => s_content.chaos; }
         public static Score Score                       { [Impl(256)] get => s_content.score; }
         public static Diplomacy Diplomacy               { [Impl(256)] get => s_content.diplomacy; }
 
-        public static Transform SharedContainer         { [Impl(256)] get => s_content.sharedContainer; }
-        public static AudioSource SharedAudioSource     { [Impl(256)] get => s_content.sharedAudioSource; }
+        public static SharedMono Shared                 { [Impl(256)] get => s_content.shared; }
 
         public static SFXStorage SFX                    { [Impl(256)] get => s_content.actorSFXs; }
 

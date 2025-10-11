@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization.Actors
             if (_particle.isPlaying)
                 return true;
 
-            _transform.SetParent(GameContainer.SharedContainer, false);
+            _transform.SetParent(GameContainer.Shared.transform, false);
             Disable();
             return false;
         }

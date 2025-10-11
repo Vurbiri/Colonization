@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization
             {
                 private readonly ReadOnlyMainCurrencies _edificeCost, _roadCost;
                 private readonly Step[] _steps;
-                private readonly int _count;
+                private readonly int _roadsCount;
                 private int _cursor;
 
                 private LandBuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight) : base(parent, weight)
@@ -23,9 +23,9 @@ namespace Vurbiri.Colonization
                 }
                 private LandBuild(Builder parent, List<Step> steps, ReadOnlyMainCurrencies edificeCost, ReadOnlyMainCurrencies roadCost, int weight) : base(parent, weight)
                 {
-                    _count = steps.Count - 1;
-                    _steps = new Step[_count + 1];
-                    for(int i = _count, j = 0; i >= 0; i--, j++)
+                    _roadsCount = steps.Count - 1;
+                    _steps = new Step[_roadsCount + 1];
+                    for(int i = _roadsCount, j = 0; i >= 0; i--, j++)
                         _steps[i] = steps[j];
 
                     _edificeCost = edificeCost; _roadCost = roadCost;
@@ -35,34 +35,41 @@ namespace Vurbiri.Colonization
                 {
                     get
                     {
-                        bool isValid = FreeRoadCount >= _count && _steps[_cursor].crossroad.IsRoadConnect(Id); 
-                        for (int i = _cursor; isValid & i < _count; i++ )
+                        bool isValid = FreeRoadCount >= (_roadsCount - _cursor) && _steps[_cursor].crossroad.IsRoadConnect(Id); 
+                        for (int i = _cursor; isValid & i < _roadsCount; i++ )
                             isValid = _steps[i].link.IsEmpty;
 
-                        return isValid && _steps[_count].crossroad.CanBuild(Id);
+                        return isValid && _steps[_roadsCount].crossroad.CanBuild();
                     }
                 }
 
-
-                public override IEnumerator Appeal_Cn()
+                public override IEnumerator Execution_Cn()
                 {
                     if (!_done)
                     {
-                        Step step;
-                        while (_cursor < _count && Human.Exchange(_roadCost))
+                        Step step; bool canRoadBuild = _cursor < _roadsCount;
+                        while (canRoadBuild)
                         {
-                            step = _steps[_cursor];
-                            yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
-                            yield return Human.BuyRoad(step.crossroad.Type, step.link, _roadCost);
-                            _steps[_cursor++] = null;
+                            yield return Human.Exchange(_roadCost);
+                            if (canRoadBuild = CanPlay)
+                            {
+                                step = _steps[_cursor]; _steps[_cursor++] = null;
+                                yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
+                                yield return Human.BuyRoad(step.crossroad.Type, step.link, _roadCost);
+                                canRoadBuild = _cursor < _roadsCount;
+                            }
                         }
-                        yield return null;
-                        if(_cursor == _count && Human.Exchange(_edificeCost))
+                        
+                        if(_cursor == _roadsCount)
                         {
-                            var crossroad = _steps[_cursor].crossroad;
-                            yield return GameContainer.CameraController.ToPositionControlled(crossroad.Position);
-                            yield return Human.BuyEdificeUpgrade(crossroad, _edificeCost);
-                            _done = true;
+                            yield return Human.Exchange(_edificeCost);
+                            if (CanPlay)
+                            {
+                                var crossroad = _steps[_cursor].crossroad;
+                                yield return GameContainer.CameraController.ToPositionControlled(crossroad.Position);
+                                yield return Human.BuyEdificeUpgrade(crossroad, _edificeCost);
+                                _done = true;
+                            }
                         }
                     }
                     yield break;
@@ -71,7 +78,7 @@ namespace Vurbiri.Colonization
                 public static IEnumerator Create(Builder parent, List<Plan> plans)
                 {
                     bool canColony = parent.Abilities.IsGreater(HumanAbilityId.MaxColony, parent.Colonies.Count);
-                    bool canShrine = s_shrinesCount < HEX.VERTICES;
+                    bool canShrine = s_shrinesCount < HEX.VERTICES && parent.Colonies.Count > 0;
 
                     if (canColony | canShrine)
                     {
@@ -113,7 +120,7 @@ namespace Vurbiri.Colonization
                         yield break;
                     }
                     //===============================================
-                    static IEnumerator BuildOnLand(Builder parent, Search search, List<Plan> plans)
+                    static IEnumerator BuildOnLand(Builder parent, Finder finder, List<Plan> plans)
                     {
                         HashSet<Crossroad> starting = new(parent.Roads.CrossroadsCount + parent.Ports.Count);
 
@@ -127,18 +134,18 @@ namespace Vurbiri.Colonization
 
                         yield return null;
 
-                        search.Run(starting);
+                        finder.Run(starting);
 
                         yield return null;
 
                         var prices = GameContainer.Prices.Edifices;
-                        List<Step> steps = new();
-                        int weight, roadCount; 
-                        ReadOnlyMainCurrencies edificeCost, roadCost = GameContainer.Prices.Road, cost;
+                        List<Step> steps = new(); int weight, roadCount;
+                        ReadOnlyMainCurrencies cost, edificeCost, roadCost = GameContainer.Prices.Road;
+                        System.Func<List<Hexagon>, int> GetWeight = parent.Colonies.Count == 0 ? parent.GetFirstProfitWeight : parent.GetProfitWeight;
 
-                        foreach (var crossroad in search.Ending)
+                        foreach (var crossroad in finder.Ending)
                         {
-                            search.CreateSteps(crossroad, steps);
+                            finder.CreateSteps(crossroad, steps);
                             roadCount = steps.Count - 1;
 
                             edificeCost = prices[crossroad.NextId];
@@ -146,8 +153,8 @@ namespace Vurbiri.Colonization
 
                             weight = crossroad.Weight + GetEdificeWeight(crossroad.NextId) + parent.GetCostWeight(cost) - (s_settings.penaltyPerRoad ^ roadCount);
                             if (crossroad.NextGroupId == EdificeGroupId.Colony)
-                                weight += parent.GetProfitWeight(crossroad.Hexagons);
-                            //Log.Info($"RoadCount {roadCount}, Weight {weight}");
+                                weight += GetWeight(crossroad.Hexagons);
+
                             if (weight > 0)
                                 plans.Add(new LandBuild(parent, steps, edificeCost, roadCost, weight + plans[^1].Weight));
 
@@ -167,7 +174,9 @@ namespace Vurbiri.Colonization
                     return crossroad.CanBuild() && ((group == EdificeGroupId.Colony & canColony) | (group == EdificeGroupId.Shrine & canShrine));
                 }
 
-                private class Search
+                #region Nested Finder, Step
+                // *********************************************************************************
+                private class Finder
                 {
                     private readonly Dictionary<Crossroad, CrossroadLink> _links = new();
                     private readonly HashSet<Crossroad> _ending = new();
@@ -176,7 +185,7 @@ namespace Vurbiri.Colonization
 
                     public HashSet<Crossroad> Ending { [Impl(256)] get => _ending;}
 
-                    public Search(int maxDepth, bool canColony, bool canShrine)
+                    public Finder(int maxDepth, bool canColony, bool canShrine)
                     {
                         _maxDepth = maxDepth;
                         _canColony = canColony; _canShrine = canShrine;
@@ -211,13 +220,13 @@ namespace Vurbiri.Colonization
                         // === Local ===
                         bool IsDepth(Crossroad crossroad)
                         {
-                            int searchDepth = 0;
+                            int depth = 0;
                             while (_links.TryGetValue(crossroad, out CrossroadLink link))
                             {
                                 crossroad = link.GetOtherCrossroad(crossroad.Type);
-                                searchDepth++;
+                                depth++;
                             }
-                            return searchDepth < _maxDepth;
+                            return depth < _maxDepth;
                         }
                     }
 
@@ -233,7 +242,7 @@ namespace Vurbiri.Colonization
                         }
                     }
                 }
-
+                // *********************************************************************************
                 private class Step
                 {
                     public readonly Crossroad crossroad;
@@ -246,6 +255,8 @@ namespace Vurbiri.Colonization
                     }
                     public Step(Crossroad crossroad) => this.crossroad = crossroad;
                 }
+                // *********************************************************************************
+                #endregion
             }
         }
     }

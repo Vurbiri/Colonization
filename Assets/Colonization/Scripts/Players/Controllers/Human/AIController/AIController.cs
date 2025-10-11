@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization
     {
         private static readonly AIControllerSettings s_settings;
 
+        private readonly WaitResultSource<bool> _waitExchange = new();
+
         private readonly Diplomat _diplomat;
         private readonly Builder _builder;
 
@@ -21,13 +23,13 @@ namespace Vurbiri.Colonization
 
         public override void OnLanding()
         {
-            OnLanding_Cn().Start();
+            StartCoroutine(OnLanding_Cn());
 
             IEnumerator OnLanding_Cn()
             {
                 yield return null;
-                //yield return _builder.BuildFirstPort_Cn();
-                BuildPort(GameContainer.Crossroads.GetRandomPort());
+                yield return _builder.BuildFirstPort_Cn();
+                //BuildPort(GameContainer.Crossroads.GetRandomPort());
 
                 GameContainer.GameLoop.EndLanding();
             }
@@ -35,11 +37,12 @@ namespace Vurbiri.Colonization
 
         public override void OnPlay()
         {
-            OnPlay_Cn().Start();
+            StartCoroutine(OnPlay_Cn());
 
             IEnumerator OnPlay_Cn()
             {
-                yield return _builder.Appeal_Cn();
+                yield return _builder.Planning_Cn();
+                yield return _builder.Execution_Cn();
 
                 GameContainer.GameLoop.EndTurn();
             }
@@ -49,14 +52,26 @@ namespace Vurbiri.Colonization
         {
             _diplomat.Update();
 
-            OnEndTurn_Cn().Start();
+            StartCoroutine(OnEndTurn_Cn());
         }
 
-        private bool Exchange(ReadOnlyMainCurrencies needed)
+        private WaitResult<bool> Exchange(ReadOnlyMainCurrencies needed)
         {
-            bool result = _resources >= needed;
-            if (!result)
+            if (_resources >= needed)
             {
+                return _waitExchange.SetResult(true);
+            }
+            else
+            {
+                StartCoroutine(Exchange_Cn(needed));
+                return _waitExchange.Restart();
+            }
+
+            // Local
+            IEnumerator Exchange_Cn(ReadOnlyMainCurrencies needed)
+            {
+                bool result = false;
+
                 int blood = _resources[CurrencyId.Blood] >> (_perks.IsAllLearned ? 0 : 1);
                 if (blood > s_settings.minExchangeBlood && Chance.Rolling(_resources.PercentBlood))
                 {
@@ -64,7 +79,9 @@ namespace Vurbiri.Colonization
                     result = _resources >= needed;
                 }
 
-                if(!result && _resources.OverCount(needed, out int exchangeIndex) == 1)
+                yield return null;
+
+                if (!result && _resources.OverCount(needed, out int exchangeIndex) == 1)
                 {
                     int need = needed[exchangeIndex], current = _resources[exchangeIndex], delta = need - current;
                     int exchangeValue = delta * _exchange[exchangeIndex];
@@ -74,25 +91,24 @@ namespace Vurbiri.Colonization
                         pay.Remove(exchangeIndex, delta);
                         diff.Set(exchangeIndex, 0);
 
-                        int index = Random.Range(0, CurrencyId.MainCount);
+                        int index;
                         while (exchangeValue > 0)
                         {
-                            if (diff[index] > 0)
-                            {
-                                diff.Decrement(index);
-                                pay.Increment(index);
-                                exchangeValue--;
-                            }
-                            index = (index + 1) % CurrencyId.MainCount;
+                            index = diff.MaxIndex;
+                            diff.Decrement(index);
+                            pay.Increment(index);
+                            exchangeValue--;
+
+                            yield return null;
                         }
-                        Debug.Log($"Exchange {pay}");
                         _resources.Remove(pay);
                         result = true;
                     }
                 }
-            }
 
-            return result;
+                _waitExchange.SetResult(result);
+                yield break;
+            }
         }
     }
 }

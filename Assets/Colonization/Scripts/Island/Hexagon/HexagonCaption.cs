@@ -22,8 +22,7 @@ namespace Vurbiri.Colonization.UI
 
         private readonly WaitRealtime _timeShowNewId = new(10f);
 
-        private bool _isShow = true, _isEnable = true;
-        private bool _showDistance, _showProfit, _showMode, _showNewId;
+        private Visible _visible = new(true);
         private GameObject _thisGameObject;
         private Color _profitColor, _prevColor;
         private Transform _thisTransform;
@@ -31,12 +30,6 @@ namespace Vurbiri.Colonization.UI
         private string _defaultCurrencyText;
         private Coroutine _fadeCoroutine, _profitCoroutine, _newIdCoroutine;
         private Subscription _subscription;
-
-        private bool IsShow
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => (_showDistance | _showProfit | _showMode | _showNewId) & _isEnable;
-        }
 
         public int Id { set => _idText.text = value.ToString(); }
 
@@ -68,8 +61,8 @@ namespace Vurbiri.Colonization.UI
         {
             StopCoroutine(ref _profitCoroutine);
 
-            _showProfit = false;
-            _showNewId = true;
+            _visible.profit = false;
+            _visible.newId = true;
 
             _idText.text = id.ToString();
             _idText.color = color;
@@ -84,7 +77,7 @@ namespace Vurbiri.Colonization.UI
             IEnumerator NewIdOff_Cn()
             {
                 yield return _timeShowNewId;
-                _showNewId = false;
+                _visible.newId = false;
                 _newIdCoroutine = null;
 
                 SetActive();
@@ -105,8 +98,8 @@ namespace Vurbiri.Colonization.UI
         {
             StopCoroutine(ref _newIdCoroutine);
 
-            _showNewId = false;
-            _showProfit = true;
+            _visible.newId = false;
+            _visible.profit = true;
 
             _idText.color = _profitColor;
             SetActive();
@@ -117,7 +110,7 @@ namespace Vurbiri.Colonization.UI
             IEnumerator ProfitOff_Cn()
             {
                 yield return _timeShowProfit.Restart();
-                _showProfit = false;
+                _visible.profit = false;
                 _profitCoroutine = null;
                 SetActive();
             }
@@ -130,42 +123,44 @@ namespace Vurbiri.Colonization.UI
             _currencyText.text = string.Format(TAG.SPRITE, currency);
             Profit();
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ResetProfit()
         {
-            _showProfit = false;
+            _visible.profit = false;
             _currencyText.text = _defaultCurrencyText;
             _idText.color = GameContainer.UI.Colors.TextDefault;
             SetActive();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetActive(bool isShow)
+        public void SetActive(bool isActive)
         {
-            _showMode = isShow;
+            _visible.mode = isActive;
             SetActive();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetActive()
         {
-            if (IsShow) Show(); else Hide();
+            if (_visible) Show(); else Hide();
         }
 
         private void OnCaptionEnable(bool value)
         {
-            _isEnable = value;
+            _visible.enable = value;
             SetActive();
         }
 
         private void Show()
         {
-            if (_isShow) return;
-            
-            _isShow = true;
-            _thisTransform.localRotation = Quaternion.Euler(ANGLE_X, _lastAngle, 0f);
-            _thisGameObject.SetActive(true);
+            if (!_visible.current)
+            {
+                _visible.current = true;
+                _thisTransform.localRotation = Quaternion.Euler(ANGLE_X, _lastAngle, 0f);
+                _thisGameObject.SetActive(true);
 
-            StartCoroutine(ref _fadeCoroutine, Show_Cn());
+                StartCoroutine(ref _fadeCoroutine, Show_Cn());
+            }
 
             #region Local: Show_Cn()
             //=================================
@@ -188,10 +183,11 @@ namespace Vurbiri.Colonization.UI
 
         private void Hide()
         {
-            if (!_isShow) return;
-
-            _isShow = false;
-            StartCoroutine(ref _fadeCoroutine, Hide_Cn());
+            if (_visible.current)
+            {
+                _visible.current = false;
+                StartCoroutine(ref _fadeCoroutine, Hide_Cn());
+            }
 
             #region Local: Hide_Cn()
             //=================================
@@ -234,27 +230,42 @@ namespace Vurbiri.Colonization.UI
         private void OnChangeCamera(Transform transform)
         {
             bool showDistance = transform.position.y > CameraController.heightShow;
-            if (_showDistance != showDistance)
+            if (_visible.distance != showDistance)
             {
-                _showDistance = showDistance;
+                _visible.distance = showDistance;
                 SetActive();
             }
 
             _lastAngle = transform.eulerAngles.y;
-            if (_isShow && (_idTextRenderer.isVisible & _currencyTextRenderer.isVisible))
+            if (_visible.current && (_idTextRenderer.isVisible & _currencyTextRenderer.isVisible))
                 _thisTransform.localRotation = Quaternion.Euler(ANGLE_X, _lastAngle, 0f);
         }
-
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //private void TextEnable(bool value)
-        //{
-        //    _currencyText.enabled = value;
-        //    _idText.enabled = value;
-        //}
 
         private void OnDestroy()
         {
             _subscription?.Dispose();
+        }
+
+        // Nested
+        private struct Visible
+        {
+            public bool enable;
+
+            public bool mode;
+            public bool profit;
+            public bool distance;
+            public bool newId;
+
+            public bool current;
+
+            public Visible(bool active)
+            {
+                current = enable = active;
+                mode = profit = distance = newId = false;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static implicit operator bool(Visible self) => (self.mode | self.profit | self.distance | self.newId) & self.enable;
         }
 
 #if UNITY_EDITOR

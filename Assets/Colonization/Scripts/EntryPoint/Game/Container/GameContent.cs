@@ -38,8 +38,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public CanvasHint canvasHint;
         public ReadOnlyIdArray<ActorAbilityId, Sprite> abilities;
 
-        public Transform sharedContainer;
-        public AudioSource sharedAudioSource;
+        public SharedMono shared;
 
         public void Init(Camera camera, InputController.Settings input, CameraController controller, ActorsFactory.Settings actorsSettings)
         {

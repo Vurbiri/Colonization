@@ -20,39 +20,53 @@ namespace Vurbiri.Colonization
         public bool IsEmpty { [Impl(256)] get => _amount == 0; }
         public bool IsNotEmpty { [Impl(256)] get => _amount != 0; }
 
-        public int MinIndex()
+        #region Min/Max
+        public int MinIndex
         {
-            int minId = 0;
-            for (int i = 1; i < COUNT; i++)
-                if (_values[i] < _values[minId])
-                    minId = i;
-            return minId;
+            get
+            {
+                int minId = 0;
+                for (int i = 1; i < COUNT; i++)
+                    if (_values[i] < _values[minId])
+                        minId = i;
+                return minId;
+            }
         }
-        public int MaxIndex()
+        public int MaxIndex
         {
-            int maxId = 0;
-            for (int i = 1; i < COUNT; i++)
-                if (_values[i] > _values[maxId])
-                    maxId = i;
-            return maxId;
+            get
+            {
+                int maxId = 0;
+                for (int i = 1; i < COUNT; i++)
+                    if (_values[i] > _values[maxId])
+                        maxId = i;
+                return maxId;
+            }
         }
 
-        public int MinValue()
+        public int MinValue
         {
-            int minValue = _values[0];
-            for (int i = 1; i < COUNT; i++)
-                if (_values[i] < minValue)
-                    minValue = _values[i];
-            return minValue;
+            get
+            {
+                int minValue = _values[0];
+                for (int i = 1; i < COUNT; i++)
+                    if (_values[i] < minValue)
+                        minValue = _values[i];
+                return minValue;
+            }
         }
-        public int MaxValue()
+        public int MaxValue
         {
-            int maxValue = _values[0];
-            for (int i = 1; i < COUNT; i++)
-                if (_values[i] > maxValue)
-                    maxValue = _values[i];
-            return maxValue;
+            get
+            {
+                int maxValue = _values[0];
+                for (int i = 1; i < COUNT; i++)
+                    if (_values[i] > maxValue)
+                        maxValue = _values[i];
+                return maxValue;
+            }
         }
+        #endregion
 
         #region ToText
         public void ToStringBuilder(StringBuilder sb, string hexPlusColor, string hexMinusColor)
@@ -127,7 +141,7 @@ namespace Vurbiri.Colonization
         public static ReadOnlyMainCurrencies operator *(ReadOnlyMainCurrencies currencies, int rate)
         {
             ReadOnlyMainCurrencies result = new();
-            if (currencies._amount != 0)
+            if (currencies._amount != 0 & rate != 0)
             {
                 for (int i = 0; i < COUNT; i++)
                     result._values[i] = currencies._values[i] * rate;
@@ -299,7 +313,7 @@ namespace Vurbiri.Colonization
         {
             if (_amount != 0)
             {
-                int max = MaxValue();
+                int max = MaxValue;
                 for (int i = 0; i < COUNT; i++)
                     _values[i] = (_values[i] - max) * ratio;
 

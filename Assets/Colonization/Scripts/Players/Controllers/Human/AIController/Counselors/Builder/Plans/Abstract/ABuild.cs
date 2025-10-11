@@ -19,13 +19,18 @@ namespace Vurbiri.Colonization
                     _crossroad = crossroad; _cost = cost; _build = build;
                 }
 
-                sealed public override IEnumerator Appeal_Cn()
+                sealed public override IEnumerator Execution_Cn()
                 {
-                    if (!_done && Human.Exchange(_cost))
+                    if (!_done)
                     {
-                        yield return GameContainer.CameraController.ToPositionControlled(_crossroad);
-                        yield return _build(_crossroad, _cost);
-                        _done = true;
+                        yield return Human.Exchange(_cost);
+
+                        if (CanPlay)
+                        {
+                            yield return GameContainer.CameraController.ToPositionControlled(_crossroad);
+                            yield return _build(_crossroad, _cost);
+                            _done = true;
+                        }
                     }
                     yield break;
                 }

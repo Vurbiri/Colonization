@@ -22,6 +22,6 @@ namespace Vurbiri.Colonization.Actors
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private APooledSFX Create() => Object.Instantiate(_prefab, GameContainer.SharedContainer).Create(_pool.Push);
+        private APooledSFX Create() => Object.Instantiate(_prefab, GameContainer.Shared.transform).Create(_pool.Push);
     }
 }
