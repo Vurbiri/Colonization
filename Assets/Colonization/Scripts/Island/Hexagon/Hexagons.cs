@@ -47,7 +47,7 @@ namespace Vurbiri.Colonization
 
         public void SwapId(Hexagon hexA, Hexagon hexB, UnityEngine.Color color, float showTime)
         {
-            int idA = hexA.ID, idB = hexB.ID;
+            int idA = hexA.Id, idB = hexB.Id;
 
             hexA.NewId(idB, color, showTime); hexB.NewId(idA, color, showTime);
 

@@ -9,10 +9,8 @@ namespace Vurbiri.Reactive.Collections
     [JsonArray]
     public abstract class ReadOnlyReactiveList<T> : IReadOnlyList<T> where T : IEquatable<T>
     {
-        protected const int BASE_CAPACITY = 7;
-
         protected T[] _values;
-        protected int _capacity = BASE_CAPACITY;
+        protected int _capacity;
         protected readonly RInt _count = new(0);
 
         protected readonly VAction<int, T, TypeEvent> _changeEvent = new();
@@ -36,7 +34,7 @@ namespace Vurbiri.Reactive.Collections
 
         [Impl(256)] public bool Contains(T item) => IndexOf(item) >= 0;
 
-        [Impl(256)] public int IndexOf(T item)
+        public int IndexOf(T item)
         {
             int i = _count.Value;
             while (i --> 0 && !_values[i].Equals(item));
@@ -52,6 +50,8 @@ namespace Vurbiri.Reactive.Collections
     [JsonArray]
     public class ReactiveList<T> : ReadOnlyReactiveList<T>, IList<T> where T : IEquatable<T>
     {
+        private const int BASE_CAPACITY = 7;
+
         public bool IsReadOnly => false;
 
         public new T this[int index] 
@@ -68,12 +68,8 @@ namespace Vurbiri.Reactive.Collections
         }
 
         #region Constructors
-        public ReactiveList()
-        {
-            _values = new T[_capacity];
-        }
-
-        public ReactiveList(int capacity)
+        [Impl(256)] public ReactiveList() : this(BASE_CAPACITY) {}
+        [Impl(256)] public ReactiveList(int capacity)
         {
             _capacity = capacity;
             _values = new T[_capacity];

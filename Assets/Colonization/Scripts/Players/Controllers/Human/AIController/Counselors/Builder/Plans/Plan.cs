@@ -23,7 +23,6 @@ namespace Vurbiri.Colonization
 
                 public static Plan Empty { get; } = new Dummy();
 
-                public int Weight { [Impl(256)] get => _weight; }
                 public bool Done { [Impl(256)] get => _done; }
                 public abstract bool IsValid { get; }
                 
@@ -31,19 +30,11 @@ namespace Vurbiri.Colonization
                 {
                     _parent = parent;
                     _weight = weight;
-
-                    //Log.Info(this);
                 }
     
                 public abstract IEnumerator Execution_Cn();
 
                 public override string ToString() => $"{GetType().Name}: {_weight}";
-
-                public static bool operator >(Plan p, int i) => p._weight > i;
-                public static bool operator <(Plan p, int i) => p._weight < i;
-
-                public static bool operator >=(Plan p, int i) => p._weight >= i;
-                public static bool operator <=(Plan p, int i) => p._weight <= i;
 
                 #region Nested
                 // **********************************************************

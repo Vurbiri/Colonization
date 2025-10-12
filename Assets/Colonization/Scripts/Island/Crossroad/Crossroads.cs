@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization
             _shore.TrimExcess();
         }
 
-        [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_shore.Get()];
+        [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_shore.Value];
 
         [Impl(256)] public bool IsDeadEnd(Key start, Key end, Id<PlayerId> playerId) => _crossroads[start].IsDeadEnd(playerId) || _crossroads[end].IsDeadEnd(playerId);
     }

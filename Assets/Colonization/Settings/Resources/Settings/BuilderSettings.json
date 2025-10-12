@@ -1,19 +1,19 @@
 {
-  "profitWeight": 200,
-  "costWeight": 100,
+  "profitWeight": 600,
+  "costWeight": 200,
   "edificeWeight": [
     0,
     2600,
-    320,
+    380,
+    900,
+    1500,
+    170,
     160,
-    640,
-    70,
-    60,
-    120,
-    180
+    600,
+    800
   ],
   "wallWeight": 300,
   "searchDepth": 3,
-  "penaltyPerRoad": 9,
-  "penaltyPerHex": 12
+  "penaltyPerRoad": 10,
+  "penaltyPerHex": 1111
 }

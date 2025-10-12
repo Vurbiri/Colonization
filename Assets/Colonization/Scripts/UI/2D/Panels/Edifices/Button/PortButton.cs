@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.UI
             
             for (int i = 0; i < Crossroad.HEX_COUNT; i++)
                 if (hexagons[i].IsWater)
-                    _hexIds[hexCount++].text = hexagons[i].ID.ToString();
+                    _hexIds[hexCount++].text = hexagons[i].Id.ToString();
             
             for (int i = hexCount; i < MAX_HEX; i++)
                 Destroy(_hexIds[i].gameObject);

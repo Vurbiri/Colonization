@@ -60,7 +60,7 @@ namespace Vurbiri.Colonization
             }
             return count;
         }
-        public int Lack(ReadOnlyMainCurrencies values)
+        public int Deficit(ReadOnlyMainCurrencies values)
         {
             int delta = 0;
             for (int i = 0, cost; i < MainCount; i++)

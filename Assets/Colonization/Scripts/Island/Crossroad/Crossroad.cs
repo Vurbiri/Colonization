@@ -19,6 +19,7 @@ namespace Vurbiri.Colonization
         private readonly Id<CrossroadType> _type;
         private readonly Key _key;
         private int _weight;
+        private int _maxRepeatProfit;
         private bool _canBuild = true;
         private AEdifice _edifice;
         private EdificeSettings _states;
@@ -47,6 +48,7 @@ namespace Vurbiri.Colonization
         public Id<EdificeGroupId> NextGroupId { [Impl(256)] get => _states.nextGroupId; }
         public int Profit { [Impl(256)] get => _states.profit; }
         public int Weight { [Impl(256)] get => _weight; }
+        public int MaxRepeatProfit { [Impl(256)] get => _maxRepeatProfit; }
         public bool CanBuildOnShore { [Impl(256)] get => _canBuild & _waterCount > 0; }
         public Event<Key> BannedBuild { [Impl(256)] get => _bannedBuild; }
         public int WaterCount { [Impl(256)] get => _waterCount; }
@@ -134,6 +136,7 @@ namespace Vurbiri.Colonization
 
         public void Setup(ReadOnlyArray<int> hexWeight)
         {
+            Hexagon hexagon;
             if (_isGate)
             {
                 _countFreeLink = 1;
@@ -142,21 +145,26 @@ namespace Vurbiri.Colonization
             }
             else if (_waterCount == 0)
             {
+                MainCurrencies profitId = new();
                 _countFreeLink = 3;
                 _states.SetNextId(EdificeId.Camp, EdificeGroupId.Colony);
                 for (int i = 0; i < HEX_COUNT; i++)
-                    _weight += hexWeight[_hexagons[i].ID];
+                {
+                    hexagon = _hexagons[i];
+                    _weight += hexWeight[hexagon.Id];
+                    profitId.Increment(hexagon.GetProfit());
+                }
                 _weight /= HEX_COUNT;
+                _maxRepeatProfit = profitId.MaxValue - 1;
             }
             else
             {
-                Hexagon hexagon;
                 for (int i = 0, count = _waterCount; count > 0; i++)
                 {
                     hexagon = _hexagons[i];
                     if (hexagon.IsWater)
                     {
-                        count--; _weight += hexWeight[hexagon.ID];
+                        count--; _weight += hexWeight[hexagon.Id];
                     }
                 }
 

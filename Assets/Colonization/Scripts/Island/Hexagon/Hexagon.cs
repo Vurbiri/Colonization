@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
 
         #region Propirties
         public Key Key => _key;
-        public int ID => _id;
+        public int Id => _id;
         public int SurfaceId => _surfaceId;
         public bool IsGate => _isGate;
         public bool IsWater => _isWater;
