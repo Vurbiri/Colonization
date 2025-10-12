@@ -7,8 +7,7 @@ namespace Vurbiri
         private const int BASE_CAPACITY = 7;
 
         private Weight[] _weights;
-        private int _count;
-        private int _capacity, _max;
+        private int _count, _capacity, _max;
 
         public int Count { [Impl(256)] get => _count - 1; }
 
@@ -49,7 +48,7 @@ namespace Vurbiri
         [Impl(256)] public void Add(T value, int weight)
         {
             if (_count == _capacity)
-                GrowArray();
+                ReSize(_capacity << 1 | BASE_CAPACITY);
 
             _max = _weights[_count - 1] + weight;
             _weights[_count++] = new(value, _max);
@@ -70,10 +69,10 @@ namespace Vurbiri
             {
                 _count--;
                 int delta = _weights[index] - _weights[index - 1];
-                _max -= delta;
                 for (; index < _count; index++)
                     _weights[index] = _weights[index + 1].Remove(delta);
                 _weights[_count] = null;
+                _max -= delta;
             }
             return result;
         }
@@ -97,13 +96,11 @@ namespace Vurbiri
 
         [Impl(256)] public void TrimExcess() => ReSize(_count);
 
-        [Impl(256)] private void GrowArray() => ReSize(_capacity << 1 | BASE_CAPACITY);
-
         private void ReSize(int newCapacity)
         {
             _capacity = newCapacity;
 
-            Weight[] array = new Weight[newCapacity];
+            var array = new Weight[newCapacity];
             for (int i = 0; i < _count; i++)
                 array[i] = _weights[i];
             _weights = array;
