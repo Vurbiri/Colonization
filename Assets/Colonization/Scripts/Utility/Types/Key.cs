@@ -1,10 +1,10 @@
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
-
     [JsonConverter(typeof(Converter))]
     public readonly struct Key : IEquatable<Key>
     {
@@ -13,40 +13,40 @@ namespace Vurbiri.Colonization
         private static readonly Key s_zero = new();
         public static Key Zero => s_zero;
 
-        public readonly bool IsZero => x == 0 & y == 0;
-
-        public Key(int x, int y)
+        [Impl(256)] public Key(int x, int y)
         {
             this.x = x; this.y = y;
         }
-        public Key(Vector2Int vector)
+        [Impl(256)] public Key(Vector2Int vector)
         {
             x = vector.x; y = vector.y;
         }
-        public Key(float x, float y)
+        [Impl(256)] public Key(float x, float y)
         {
-            this.x = Mathf.RoundToInt(x);
-            this.y = Mathf.RoundToInt(y);
+            this.x = MathI.RoundToInt(x);
+            this.y = MathI.RoundToInt(y);
         }
-        public Key(int[] arr)
+        [Impl(256)] public Key(int[] arr)
         {
             x = arr[0];
             y = arr[1];
         }
 
-        public readonly string ToSaveKey() => $"{x}{y}";
+        [Impl(256)] public Key Abs() => new(Math.Abs(x), Math.Abs(y));
 
-        public readonly bool Equals(Key other) => x == other.x & y == other.y;
-        public override readonly bool Equals(object obj) => obj is Key key && x == key.x & y == key.y;
+        [Impl(256)] public readonly string ToSaveKey() => $"{x}{y}";
 
-        public override readonly int GetHashCode() => HashCode.Combine(x, y);
+        [Impl(256)] public readonly bool Equals(Key other) => x == other.x & y == other.y;
+        [Impl(256)] public override readonly bool Equals(object obj) => obj is Key key && x == key.x & y == key.y;
 
-        public static Key operator +(Key a, Key b) => new(a.x + b.x, a.y + b.y);
-        public static Key operator -(Key a, Key b) => new(a.x - b.x, a.y - b.y);
-        public static Key operator -(Key a) => new(-a.x, -a.y);
+        [Impl(256)] public override readonly int GetHashCode() => HashCode.Combine(x, y);
 
-        public static bool operator ==(Key a, Key b) => a.x == b.x & a.y == b.y;
-        public static bool operator !=(Key a, Key b) => a.x != b.x | a.y != b.y;
+        [Impl(256)] public static Key operator +(Key a, Key b) => new(a.x + b.x, a.y + b.y);
+        [Impl(256)] public static Key operator -(Key a, Key b) => new(a.x - b.x, a.y - b.y);
+        [Impl(256)] public static Key operator -(Key a) => new(-a.x, -a.y);
+
+        [Impl(256)] public static bool operator ==(Key a, Key b) => a.x == b.x & a.y == b.y;
+        [Impl(256)] public static bool operator !=(Key a, Key b) => a.x != b.x | a.y != b.y;
 
         public override readonly string ToString() => $"[{x}, {y}]";
 
@@ -61,10 +61,10 @@ namespace Vurbiri.Colonization
 
             public override void WriteJson(JsonWriter writer, Key value, JsonSerializer serializer)
             {
-                WriteJsonArray(writer ,value);
+                WriteToArray(writer ,value);
             }
 
-            public static void WriteJsonArray(JsonWriter writer, Key value)
+            [Impl(256)] public static void WriteToArray(JsonWriter writer, Key value)
             {
                 writer.WriteStartArray();
                 writer.WriteValue(value.x);

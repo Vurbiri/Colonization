@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
             {
                 public override bool IsValid => true;
 
-                private Upgrade(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight) : base(parent, crossroad, cost, weight, parent.Human.BuyEdificeUpgrade) { }
+                private Upgrade(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost) : base(parent, crossroad, cost, parent.Human.BuyEdificeUpgrade) { }
 
                 public static void Create(Builder parent, Plans plans, ReadOnlyReactiveList<Crossroad> edifice)
                 {
@@ -27,7 +27,7 @@ namespace Vurbiri.Colonization
                         if (crossroad.NextGroupId == EdificeGroupId.Colony)
                             weight += parent.GetProfitWeight(crossroad.Hexagons);
                         if (weight > 0)
-                            plans.Add(new Upgrade(parent, crossroad, cost, weight), weight);
+                            plans.Add(new Upgrade(parent, crossroad, cost), weight);
                     }
                 }
             }

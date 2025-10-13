@@ -44,6 +44,10 @@ namespace Vurbiri.Colonization
                 return _waitGift.SetResult(result);
             }
 
+            public override IEnumerator Init_Cn()
+            {
+                yield break;
+            }
             public override IEnumerator Planning_Cn()
             {
                 yield break;

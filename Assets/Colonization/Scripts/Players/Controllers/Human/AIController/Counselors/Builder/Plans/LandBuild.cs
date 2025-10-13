@@ -11,24 +11,24 @@ namespace Vurbiri.Colonization
         {
             sealed private class LandBuild : Plan
             {
-                private readonly ReadOnlyMainCurrencies _edificeCost, _roadCost;
+                private readonly ReadOnlyMainCurrencies _allCost, _edificeCost, _roadCost;
                 private readonly Step[] _steps;
                 private readonly int _roadsCount;
                 private int _cursor;
 
-                private LandBuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight) : base(parent, weight)
+                private LandBuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost) : base(parent)
                 {
                     _steps = new Step[] { new(crossroad) };
                     _edificeCost = cost;
                 }
-                private LandBuild(Builder parent, List<Step> steps, ReadOnlyMainCurrencies edificeCost, ReadOnlyMainCurrencies roadCost, int weight) : base(parent, weight)
+                private LandBuild(Builder parent, List<Step> steps, ReadOnlyMainCurrencies edificeCost, ReadOnlyMainCurrencies roadCost, ReadOnlyMainCurrencies allCost) : base(parent)
                 {
                     _roadsCount = steps.Count - 1;
                     _steps = new Step[_roadsCount + 1];
                     for(int i = _roadsCount, j = 0; i >= 0; i--, j++)
                         _steps[i] = steps[j];
 
-                    _edificeCost = edificeCost; _roadCost = roadCost;
+                    _edificeCost = edificeCost; _roadCost = roadCost; _allCost = allCost;
                 }
 
                 public override bool IsValid
@@ -47,16 +47,21 @@ namespace Vurbiri.Colonization
                 {
                     if (!_done)
                     {
-                        Step step; bool canRoadBuild = _cursor < _roadsCount;
-                        while (canRoadBuild)
+                        if (_cursor < _roadsCount)
                         {
-                            yield return Human.Exchange(_roadCost);
-                            if (canRoadBuild = CanPlay)
+                            Step step;
+                            bool canRoadBuild = _cursor > 0 || Resources >= _allCost || s_settings.chanceIncomplete.Roll;
+                            while (canRoadBuild)
                             {
-                                step = _steps[_cursor]; _steps[_cursor++] = null;
-                                yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
-                                yield return Human.BuyRoad(step.crossroad.Type, step.link, _roadCost);
-                                canRoadBuild = _cursor < _roadsCount;
+                                yield return Human.Exchange(_roadCost);
+                                if (canRoadBuild = CanPlay)
+                                {
+                                    step = _steps[_cursor]; _steps[_cursor++] = null;
+                                    yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
+                                    yield return Human.BuyRoad(step.crossroad.Type, step.link, _roadCost);
+                                    yield return s_waitRealtime.Restart();
+                                    canRoadBuild = _cursor < _roadsCount;
+                                }
                             }
                         }
                         
@@ -72,10 +77,10 @@ namespace Vurbiri.Colonization
                             }
                         }
                     }
-                    yield break;
+                    yield return s_waitRealtime.Restart();
                 }
 
-                public static IEnumerator Create(Builder parent, Plans plans)
+                public static IEnumerator Create_Cn(Builder parent, Plans plans)
                 {
                     bool canColony = parent.Abilities.IsGreater(HumanAbilityId.MaxColony, parent.Colonies.Count);
                     bool canShrine = s_shrinesCount < HEX.VERTICES && parent.Colonies.Count > 0;
@@ -113,7 +118,7 @@ namespace Vurbiri.Colonization
                                 if (crossroad.NextGroupId == EdificeGroupId.Colony)
                                     weight += parent.GetProfitWeight(crossroad.Hexagons);
                                 if (weight > 0)
-                                    plans.Add(new LandBuild(parent, crossroad, cost, weight), weight);
+                                    plans.Add(new LandBuild(parent, crossroad, cost), weight);
                             }
                         }
 
@@ -139,8 +144,8 @@ namespace Vurbiri.Colonization
                         yield return null;
 
                         var prices = GameContainer.Prices.Edifices;
-                        List<Step> steps = new(); int weight, roadCount;
-                        ReadOnlyMainCurrencies cost, edificeCost, roadCost = GameContainer.Prices.Road;
+                        List<Step> steps = new(); int weight, roadCount; bool repeat = false;
+                        ReadOnlyMainCurrencies allCost, edificeCost, roadCost = GameContainer.Prices.Road;
                         System.Func<Crossroad, int, int> GetWeight = parent.Colonies.Count == 0 ? parent.GetFirstColonyWeight : parent.GetColonyWeight;
 
                         do
@@ -151,23 +156,34 @@ namespace Vurbiri.Colonization
                                 roadCount = steps.Count - 1;
 
                                 edificeCost = prices[crossroad.NextId];
-                                cost = edificeCost + roadCost * roadCount;
+                                allCost = edificeCost + roadCost * roadCount;
 
-                                weight = crossroad.Weight + GetEdificeWeight(crossroad.NextId) + parent.GetCostWeight(cost);
+                                weight = crossroad.Weight + GetEdificeWeight(crossroad.NextId) + parent.GetCostWeight(allCost);
                                 if (crossroad.NextGroupId == EdificeGroupId.Colony)
                                     weight += GetWeight(crossroad, roadCount);
 
                                 if (weight > 0)
-                                    plans.Add(new LandBuild(parent, steps, edificeCost, roadCost, weight), weight);
+                                    plans.Add(new LandBuild(parent, steps, edificeCost, roadCost, allCost), weight);
 
                                 yield return null;
                             }
 
-                            GetWeight = (_,_) => 0;
+                            if(repeat)
+                            {
+                                repeat = false;
+                                if(plans.Count == 0)
+                                {
+                                    parent.Resources.Add(GameContainer.Prices.Edifices[EdificeId.PortTwo]);
+                                    PortBuild.Create(parent, plans);
+                                }
+                            }
+                            else
+                            {
+                                repeat = plans.Count == 0 & parent.Colonies.Count == 0;
+                                GetWeight = (_, _) => 0;
+                            }
                         }
-                        while (plans.Count == 1 & parent.Colonies.Count == 0);
-
-                        yield break;
+                        while (repeat);
                     }
                     //===============================================
                     #endregion

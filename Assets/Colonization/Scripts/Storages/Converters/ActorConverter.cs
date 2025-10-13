@@ -29,7 +29,7 @@ namespace Vurbiri.Colonization.Actors
             protected override void WriteJson(JsonWriter writer, Actor actor, JsonSerializer serializer)
             {
                 writer.WriteStartArray();
-                Key.Converter.WriteJsonArray(writer, actor._currentHex.Key);
+                Key.Converter.WriteToArray(writer, actor._currentHex.Key);
                 StateWriteJson(writer, actor);
                 for (int i = actor._effects.Count - 1; i >= 0; i--)
                     ReactiveEffect.Converter.WriteJsonArray(writer, actor._effects[i]);

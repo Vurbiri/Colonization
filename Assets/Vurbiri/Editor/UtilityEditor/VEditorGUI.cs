@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using Vurbiri;
 
 namespace VurbiriEditor
 {
@@ -58,8 +59,8 @@ namespace VurbiriEditor
 
             if (minValue > maxValue) (minValue, maxValue) = (maxValue, minValue);
 
-            minProperty.intValue = Mathf.RoundToInt(minValue);
-            maxProperty.intValue = Mathf.RoundToInt(maxValue);
+            minProperty.intValue = MathI.RoundToInt(minValue);
+            maxProperty.intValue = MathI.RoundToInt(maxValue);
 
             return true;
         }

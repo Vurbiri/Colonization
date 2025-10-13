@@ -129,6 +129,15 @@ namespace Vurbiri.Colonization
 
             return diff;
         }
+        public static ReadOnlyMainCurrencies operator -(ReadOnlyMainCurrencies a, ReadOnlyMainCurrencies b)
+        {
+            ReadOnlyMainCurrencies diff = new();
+            for (int i = 0; i < COUNT; i++)
+                diff._values[i] = a._values[i] - b._values[i];
+            diff._amount = a._amount - b._amount;
+
+            return diff;
+        }
         public static ReadOnlyMainCurrencies operator +(ReadOnlyMainCurrencies a, ReadOnlyMainCurrencies b)
         {
             ReadOnlyMainCurrencies sum = new();

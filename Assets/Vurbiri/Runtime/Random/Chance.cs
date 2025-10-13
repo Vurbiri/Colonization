@@ -1,9 +1,10 @@
+using Newtonsoft.Json;
 using UnityEngine;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-    [System.Serializable]
+    [System.Serializable, JsonConverter(typeof(Converter))]
     public struct Chance : System.IEquatable<Chance>
     {
         [SerializeField] private int _value;
@@ -90,6 +91,22 @@ namespace Vurbiri
         public static bool operator >=(int value, Chance chance) => value >= chance._value;
         public static bool operator <(int value, Chance chance) => value < chance._value;
         public static bool operator <=(int value, Chance chance) => value <= chance._value;
+        #endregion
+
+        #region Nested: Converter
+        //***********************************
+        sealed public class Converter : JsonConverter<Chance>
+        {
+            public override Chance ReadJson(JsonReader reader, System.Type objectType, Chance existingValue, bool hasExistingValue, JsonSerializer serializer)
+            {
+                return new(serializer.Deserialize<int>(reader));
+            }
+
+            public override void WriteJson(JsonWriter writer, Chance value, JsonSerializer serializer)
+            {
+                writer.WriteValue(value._value);
+            }
+        }
         #endregion
     }
 }

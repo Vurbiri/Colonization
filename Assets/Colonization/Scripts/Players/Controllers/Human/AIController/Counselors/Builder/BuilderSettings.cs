@@ -15,5 +15,6 @@ namespace Vurbiri.Colonization
         public int searchDepth;
         public int penaltyPerRoad;
         public int penaltyPerHex;
+        public Chance chanceIncomplete;
     }
 }

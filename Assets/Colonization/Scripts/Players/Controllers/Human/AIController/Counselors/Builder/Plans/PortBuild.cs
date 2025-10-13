@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
             {
                 public override bool IsValid => _crossroad.CanBuild(Id);
 
-                private PortBuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight) : base(parent, crossroad, cost, weight, parent.Human.BuyEdificeUpgrade) { }
+                private PortBuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost) : base(parent, crossroad, cost, parent.Human.BuyEdificeUpgrade) { }
 
                 public static void Create(Builder parent, Plans plans)
                 {
@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
                         var cost = GameContainer.Prices.Edifices[crossroad.NextId];
                         int weight = crossroad.Weight + GetEdificeWeight(crossroad.NextId) + parent.GetCostWeight(cost);
                         if (weight > 0)
-                            plans.Add(new PortBuild(parent, crossroad, cost, weight), weight);
+                            plans.Add(new PortBuild(parent, crossroad, cost), weight);
                     }
                 }
             }

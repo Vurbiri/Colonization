@@ -19,7 +19,7 @@ namespace Vurbiri.UI
                 if (!Mathf.Approximately(_normalizedValue, value))
                 {
                     value = _minValue + (_maxValue - _minValue) * value;
-                    Value = Mathf.RoundToInt(value);
+                    Value = MathI.RoundToInt(value);
                 }
             }
         }

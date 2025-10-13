@@ -79,5 +79,35 @@ namespace Vurbiri.Colonization
         [Impl(256)] public Crossroad GetRandomPort() => _crossroads[_shore.Value];
 
         [Impl(256)] public bool IsDeadEnd(Key start, Key end, Id<PlayerId> playerId) => _crossroads[start].IsDeadEnd(playerId) || _crossroads[end].IsDeadEnd(playerId);
+
+
+        #region Nested: Shore
+        //***********************************
+        private class Shore : WeightsList<Key>
+        {
+            public Shore() : base(Key.Zero, HEX.SIDES * (CONST.MAX_CIRCLES + HEX.SIDES)) { }
+
+            public void Add(Crossroad crossroad)
+            {
+                if (crossroad.CanBuildOnShore && HexagonsValid(crossroad.Hexagons))
+                {
+                    base.Add(crossroad.Key, crossroad.Weight);
+                    crossroad.BannedBuild.Add(Remove);
+                }
+            }
+
+            private bool HexagonsValid(List<Hexagon> hexagons)
+            {
+                const int maxX = CONST.MAX_CIRCLES << 1; Key key;
+                for (int i = 0; i < Crossroad.HEX_COUNT; i++)
+                {
+                    key = hexagons[i].Key.Abs();
+                    if(key.x == maxX || (key.x == key.y & key.x == CONST.MAX_CIRCLES))
+                        return false;
+                }
+                return true;
+            }
+        }
+        #endregion
     }
 }

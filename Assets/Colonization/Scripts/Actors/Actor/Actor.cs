@@ -4,6 +4,7 @@ using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 using Vurbiri.Reactive;
 using Vurbiri.Reactive.Collections;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization.Actors
 {
@@ -48,21 +49,21 @@ namespace Vurbiri.Colonization.Actors
         #endregion
 
         #region Propirties
-        public Id<ActorTypeId> TypeId => _typeId;
-        public int Id => _id;
-        public bool IsWarrior => _typeId == ActorTypeId.Warrior;
-        public Id<PlayerId> Owner => _owner;
-        public Hexagon Hexagon => _currentHex;
-        public int ActionPoint => _currentAP.Value;
-        public bool CanMove => _move.IsValue;
-        public bool CanUseSkills => _states.IsDefault & _isPersonTurn;
-        public int CurrentHP => _currentHP.Value;
-        public bool IsWounded => _currentHP.IsNotMax;
-        public bool IsDead => _currentHP.Value <= 0;
-        public ActorSkin Skin => _states.Skin;
-        public Actions Action => _states;
-        public ReactiveEffects Effects => _effects;
-        public ReadOnlyAbilities<ActorAbilityId> Abilities => _abilities;
+        public Id<ActorTypeId> TypeId { [Impl(256)] get => _typeId; }
+        public int Id { [Impl(256)] get => _id; }
+        public bool IsWarrior { [Impl(256)] get => _typeId == ActorTypeId.Warrior; }
+        public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
+        public Hexagon Hexagon { [Impl(256)] get => _currentHex; }
+        public int ActionPoint { [Impl(256)] get => _currentAP.Value; }
+        public bool CanMove { [Impl(256)] get => _move.IsValue; }
+        public bool CanUseSkills { [Impl(256)] get => _states.IsDefault & _isPersonTurn; }
+        public int CurrentHP { [Impl(256)] get => _currentHP.Value; }
+        public bool IsWounded { [Impl(256)] get => _currentHP.IsNotMax; }
+        public bool IsDead { [Impl(256)] get => _currentHP.Value <= 0; }
+        public ActorSkin Skin { [Impl(256)] get => _states.Skin; }
+        public Actions Action { [Impl(256)] get => _states; }
+        public ReactiveEffects Effects { [Impl(256)] get => _effects; }
+        public ReadOnlyAbilities<ActorAbilityId> Abilities { [Impl(256)] get => _abilities; }
         public ReturnSignal IsMainProfit => _profitMain.Next() ? _states.Skin.MainProfit(_isPersonTurn) : false;
         public ReturnSignal IsAdvProfit => _profitAdv.Next() ? _states.Skin.AdvProfit(_isPersonTurn) : false;
         #endregion
@@ -98,8 +99,8 @@ namespace Vurbiri.Colonization.Actors
             #region Abilities
             _abilities = settings.Abilities;
 
-            _currentHP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn);
-            _currentAP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn);
+            _currentHP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentHP, ActorAbilityId.MaxHP, ActorAbilityId.HPPerTurn, true);
+            _currentAP  = _abilities.ReplaceToSub(ActorAbilityId.CurrentAP, ActorAbilityId.MaxAP, ActorAbilityId.APPerTurn, _typeId == ActorTypeId.Demon);
             _move       = _abilities.ReplaceToBoolean(ActorAbilityId.IsMove);
             _profitMain = _abilities.ReplaceToChance(ActorAbilityId.ProfitMain, _currentAP, _move);
             _profitAdv  = _abilities.ReplaceToChance(ActorAbilityId.ProfitAdv, _currentAP, _move);

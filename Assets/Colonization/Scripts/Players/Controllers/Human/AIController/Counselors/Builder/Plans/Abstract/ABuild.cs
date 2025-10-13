@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
                 private readonly ReadOnlyMainCurrencies _cost;
                 private readonly Build _build;
 
-                protected ABuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, int weight, Build build) : base(parent, weight)
+                protected ABuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost, Build build) : base(parent)
                 {
                     _crossroad = crossroad; _cost = cost; _build = build;
                 }
@@ -32,7 +32,7 @@ namespace Vurbiri.Colonization
                             _done = true;
                         }
                     }
-                    yield break;
+                    yield return s_waitRealtime.Restart();
                 }
             }
         }

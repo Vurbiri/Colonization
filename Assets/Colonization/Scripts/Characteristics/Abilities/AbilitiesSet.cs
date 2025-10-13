@@ -51,9 +51,9 @@ namespace Vurbiri.Colonization.Characteristics
         {
             return ReplaceTo(id, new ChanceAbility<TId>(_abilities[id], ratioA, ratioB));
         }
-        public SubAbility<TId> ReplaceToSub(Id<TId> id, Id<TId> max, Id<TId> restore)
+        public SubAbility<TId> ReplaceToSub(Id<TId> id, Id<TId> max, Id<TId> restore, bool valueEqualsMax)
         {
-            return ReplaceTo(id, new SubAbility<TId>(_abilities[id], _abilities[max], _abilities[restore]));
+            return ReplaceTo(id, new SubAbility<TId>(_abilities[id], _abilities[max], _abilities[restore], valueEqualsMax));
         }
         public void ReplaceToDependent(Id<TId> id, ReactiveValue<int> remove, ReactiveValue<int> add)
         {

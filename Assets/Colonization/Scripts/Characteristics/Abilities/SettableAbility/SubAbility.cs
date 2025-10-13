@@ -13,13 +13,15 @@ namespace Vurbiri.Colonization.Characteristics
         public bool IsNotMax => _value < _maxValue;
         public int Percent => _value * 100 / _maxValue;
 
-        public SubAbility(AAbility<TId> self, Ability max, Ability restore) : base(self)
+        public SubAbility(AAbility<TId> self, Ability max, Ability restore, bool valueEqualsMax) : base(self)
         {
             _modifiers[TypeModifierId.BasePercent] = OnBasePercent;
             _modifiers[TypeModifierId.Addition] = OnAddition;
             _modifiers[TypeModifierId.TotalPercent] = OnTotalPercent;
 
-            _value = _maxValue = max.Value;
+            _maxValue = max.Value;
+            if (valueEqualsMax) 
+                _value = _maxValue;
 
             max.Subscribe(OnMaxChange, false);
             _restore = restore;

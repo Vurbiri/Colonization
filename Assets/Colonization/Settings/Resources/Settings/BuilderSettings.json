@@ -3,7 +3,7 @@
   "costWeight": 200,
   "edificeWeight": [
     0,
-    2600,
+    2700,
     380,
     900,
     1500,
@@ -15,5 +15,6 @@
   "wallWeight": 300,
   "searchDepth": 3,
   "penaltyPerRoad": 10,
-  "penaltyPerHex": 1111
+  "penaltyPerHex": 1111,
+  "chanceIncomplete": 40
 }

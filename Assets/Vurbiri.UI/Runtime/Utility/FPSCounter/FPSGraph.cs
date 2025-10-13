@@ -46,7 +46,7 @@ namespace Vurbiri.UI
 
             int count = values.Count;
             float scale = _height / (fpsMax * 1.15f);
-            int x, y, yAvg = Mathf.RoundToInt(fpsAvg * scale), yMax = Mathf.RoundToInt(fpsMax * scale), yMin = Mathf.RoundToInt(fpsMin * scale);
+            int x, y, yAvg = MathI.RoundToInt(fpsAvg * scale), yMax = MathI.RoundToInt(fpsMax * scale), yMin = MathI.RoundToInt(fpsMin * scale);
 
             foreach (int value in values)
             {
@@ -55,7 +55,7 @@ namespace Vurbiri.UI
                 for (int j = 0; j < _height; j++)
                     _texture.SetPixel(x, j, _colorBackground);
 
-                y = Mathf.RoundToInt(value * scale);
+                y = MathI.RoundToInt(value * scale);
                 _texture.SetPixel(x, y, _colorGraph);
                 _texture.SetPixel(x, yAvg, _colorAvg);
                 _texture.SetPixel(x, yMax, _colorMax);

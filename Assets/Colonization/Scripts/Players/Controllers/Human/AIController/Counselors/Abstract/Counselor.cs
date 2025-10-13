@@ -23,6 +23,7 @@ namespace Vurbiri.Colonization
 
             [Impl(256)] public Counselor(AIController parent) => _parent = parent;
 
+            public abstract IEnumerator Init_Cn();
             public abstract IEnumerator Planning_Cn();
             public abstract IEnumerator Execution_Cn();
         }

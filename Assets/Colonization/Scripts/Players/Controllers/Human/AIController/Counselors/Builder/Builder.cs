@@ -9,6 +9,7 @@ namespace Vurbiri.Colonization
         sealed private partial class Builder : Counselor
         {
             private static readonly BuilderSettings s_settings;
+            private static readonly WaitRealtime s_waitRealtime = new(0.5f);
 
             private readonly MainCurrencies _profitWeights = new();
             private Plan _currentPlan = Plan.Empty;
@@ -22,6 +23,14 @@ namespace Vurbiri.Colonization
 
             public Builder(AIController parent) : base(parent) { }
 
+            public override IEnumerator Init_Cn()
+            {
+                var port = GameContainer.Crossroads.GetRandomPort();
+                yield return GameContainer.CameraController.ToPositionControlled(port);
+                yield return Human.BuildPort(port).signal;
+                yield return s_waitRealtime.Restart();
+            }
+
             public override IEnumerator Planning_Cn()
             {
                 Log.Info($"===== {PlayerId.PositiveNames_Ed[Id]} ======");
@@ -33,13 +42,6 @@ namespace Vurbiri.Colonization
             {
                 Log.Info(_currentPlan);
                 yield return _currentPlan.Execution_Cn();
-            }
-
-            public IEnumerator BuildFirstPort_Cn()
-            {
-                Crossroad port = GameContainer.Crossroads.GetRandomPort();
-                yield return GameContainer.CameraController.ToPositionControlled(port);
-                yield return Human.BuildPort(port).signal;
             }
 
             private IEnumerator CreatePlan_Cn()
@@ -61,7 +63,7 @@ namespace Vurbiri.Colonization
                     yield return null;
                 }
 
-                yield return LandBuild.Create(this, plans);
+                yield return LandBuild.Create_Cn(this, plans);
 
                 _currentPlan = plans.Value;
 
@@ -93,7 +95,7 @@ namespace Vurbiri.Colonization
             private int GetColonyWeight(Crossroad crossroad, int roadCount) => GetProfitWeight(crossroad.Hexagons) + GetRoadWeight(roadCount);
             private int GetFirstColonyWeight(Crossroad crossroad, int roadCount) => s_settings.penaltyPerHex * crossroad.MaxRepeatProfit + GetRoadWeight(roadCount);
 
-            [Impl(256)] private static int GetRoadWeight(int roadCount) => -(s_settings.penaltyPerRoad ^ roadCount);
+            [Impl(256)] private static int GetRoadWeight(int roadCount) => -MathI.BinaryPow(s_settings.penaltyPerRoad, roadCount);
 
 
             // Nested Class
