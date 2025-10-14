@@ -5,15 +5,15 @@ using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.UI
 {
-	public class PerkTreeProgressBar : MonoBehaviour, IValueId<TypeOfPerksId>
+	public class PerkTreeProgressBar : MonoBehaviour, IValueId<AbilityTypeId>
     {
-        [SerializeField] private Id<TypeOfPerksId> _id;
+        [SerializeField] private Id<AbilityTypeId> _id;
         [SerializeField] private RectTransform _valueRect;
         [SerializeField] private TextMeshProUGUI _valueTMP;
 
         private readonly float _normalizedPart = 1f / PerkTree.MAX_LEVEL;
 
-        public Id<TypeOfPerksId> Id => _id;
+        public Id<AbilityTypeId> Id => _id;
 
         public void Init(RInt progress)
         {
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization.UI
             }
             else
             {
-                float level = ((int)System.Math.Sqrt(1.0 + (progress << 2)) - 1) >> 1;
+                float level = PerkTree.ProgressToLevel(progress);
                 normalizedValue = _normalizedPart * (progress / (2f * (level  + 1f)) + 0.5f * level);
             }
 
@@ -50,7 +50,7 @@ namespace Vurbiri.Colonization.UI
 
             RectTransform rectTransform = GetComponent<RectTransform>();
             float offset = rectTransform.sizeDelta.x;
-            if(_id == TypeOfPerksId.Military)
+            if(_id == AbilityTypeId.Military)
                 offset *= -1f;
 
             rectTransform.anchoredPosition = new Vector2(offset, 0f);

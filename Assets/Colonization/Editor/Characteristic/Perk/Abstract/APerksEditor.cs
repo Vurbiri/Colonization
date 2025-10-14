@@ -32,7 +32,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 
         protected VisualElement CreateGUI<TId>(string captionText) where TId : APerkId<TId>
         {
-            int typePerks = typeof(TId) == typeof(EconomicPerksId) ? TypeOfPerksId.Economic : TypeOfPerksId.Military;
+            int typePerks = typeof(TId) == typeof(EconomicPerksId) ? AbilityTypeId.Economic : AbilityTypeId.Military;
 
             var root = _treePerksVT.CloneTree();
             root.Q<Label>(U_LABEL).text = captionText;
@@ -88,7 +88,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             DrawEndSet(P_TARGET_AB, ability, _ability[target][ability]);
 
             int mod = DrawModifier();
-            DrawValue(mod, target, ability);
+            DrawValue(mod, target, typePerks, ability);
             Space();
 
             DrawLevel();
@@ -135,7 +135,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 return value;
             }
             //================================================================
-            void DrawValue(int mod, int target, int ability)
+            void DrawValue(int mod, int target, int type, int ability)
             {
                 SerializedProperty property = propertyPerk.FindPropertyRelative(P_VALUE);
                 string name = "Value";
@@ -150,7 +150,7 @@ namespace VurbiriEditor.Colonization.Characteristics
                 }
 
                 int min = -1, max = 10, shift = 0;
-                if (mod == PerkModifierId.Percent)
+                if (mod == PerkModifierId.Percent || (type == EconomicPerksId.Type & ability == HumanAbilityId.ExchangeSaleChance))
                 {
                     name = "Value (%)";
                     min = 0; max = 50;

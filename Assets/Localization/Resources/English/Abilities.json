@@ -31,7 +31,7 @@
   "PerkMaxWarrior": "Maximum number of warriors <b>+{0}</b>",
   "PerkIsArtefact": "You can find fragments of the Artifact of Power",
   "OrderName": "<b>Prayer</b>",
-  "OrderDesc": "Increases order by <b>{0}</b> per Mana Crystal",
+  "OrderDesc": "Reduces Chaos by <b>{0}</b> per Mana Crystal",
   "RandomHealingName": "<b>Random Healing</b>",
   "RandomHealingDesc": "Restores <b>{0}</b>% health to a random unit (including opponents and demons)",
   "BlessingName": "<b>Blessing Of Island</b>",

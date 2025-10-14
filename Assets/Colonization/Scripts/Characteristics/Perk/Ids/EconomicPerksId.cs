@@ -2,7 +2,7 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class EconomicPerksId : APerkId<EconomicPerksId>
     {
-        [NotId] public const int Type = TypeOfPerksId.Economic;
+        [NotId] public const int Type = AbilityTypeId.Economic;
 
         public const int MaxMainResources_1     =  0;
         public const int MaxMainResources_2     =  1;

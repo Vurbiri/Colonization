@@ -8,9 +8,8 @@ namespace Vurbiri.Colonization.Characteristics
 	{
 		private readonly List<Perk> _perks = new();
         private readonly VAction<IPerk> _changeEvent = new();
-        private readonly Subscription _subscription;
 
-        public WarriorPerks(IReactive<Perk> perks) => _subscription = perks.Subscribe(OnPerks);
+        public WarriorPerks(PerkTree perks) => perks.Subscribe(OnPerks);
 
         public Subscription Subscribe(Action<IPerk> action, bool instantGetValue = true)
         {
@@ -20,18 +19,13 @@ namespace Vurbiri.Colonization.Characteristics
             return _changeEvent.Add(action);
         }
 
-        public void Dispose()
-        {
-            _subscription.Dispose();
-        }
-
         private void OnPerks(Perk perk)
 		{
-			if (perk.TargetObject == TargetOfPerkId.Player)
-				return;
-
-			_perks.Add(perk);
-			_changeEvent.Invoke(perk);
+            if (perk.TargetObject == TargetOfPerkId.Warriors)
+            {
+                _perks.Add(perk);
+                _changeEvent.Invoke(perk);
+            }
 		}
     }
 }

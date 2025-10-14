@@ -11,7 +11,7 @@ namespace Vurbiri.Colonization
 {
     sealed public partial class Crossroad : IInteractable, IEquatable<Crossroad>, IEquatable<Key>
     {
-        #region Fields
+        #region ================== Fields ============================
         public const int HEX_COUNT = 3;
 
         private static ReadOnlyIdSet<EdificeId, AEdifice> s_prefabs;
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
         private readonly RBool _canCancel = new();
         #endregion
 
-        #region Property
+        #region ================== Properties ============================
         public Id<CrossroadType> Type { [Impl(256)] get => _type; }
         public Key Key { [Impl(256)] get => _key; }
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
@@ -80,7 +80,7 @@ namespace Vurbiri.Colonization
             Transition.OnExit.Add(() => s_prefabs = null);
         }
 
-        #region IInteractable
+        #region ================== IInteractable ============================
         public Vector3 Position { [Impl(256)] get; }
         public ReactiveValue<bool> InteractableReactive { [Impl(256)] get => _interactable; }
         public bool Interactable { [Impl(256)] get => _interactable.Value; [Impl(256)] set => _interactable.Value = value; }
@@ -110,7 +110,7 @@ namespace Vurbiri.Colonization
         [Impl(256)] public void Cancel() => Unselect(null);
         #endregion
 
-        #region Setup
+        #region ================== Setup ============================
         public bool AddHexagon(Hexagon hexagon, out bool ending)
         {
             if (hexagon.IsWater) 
@@ -200,7 +200,7 @@ namespace Vurbiri.Colonization
 
         [Impl(256)] public void AddLink(CrossroadLink link) => _links.Add(link);
 
-        #region Profit
+        #region ================== Profit ============================
         public void ProfitFromPort(MainCurrencies profit, int idHex, int shiftProfit)
         {
             for (int i = 0; i < HEX_COUNT; i++)
@@ -238,8 +238,8 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        #region Building
-        #region Edifice
+        #region ================== Building ============================
+        #region ------------------ Edifice -----------------------------
         [Impl(256)] public bool CanBuild() => _canBuild;
         [Impl(256)] public bool CanBuild(Id<PlayerId> playerId) => _canBuild & (_countFreeLink > 0 || IsRoadConnect(playerId));
         [Impl(256)] public bool CanUpgrade(Id<PlayerId> playerId)
@@ -303,7 +303,9 @@ namespace Vurbiri.Colonization
             }
             #endregion
         }
+        #endregion
 
+        #region ------------------ Wall -----------------------------
         public bool CanWallBuild() => _states.isBuildWall & !_isWall;
         public bool CanWallBuild(Id<PlayerId> playerId) => _owner == playerId & _states.isBuildWall & !_isWall;
         public ReturnSignal BuildWall(Id<PlayerId> playerId, bool isSFX)
@@ -321,10 +323,9 @@ namespace Vurbiri.Colonization
 
             return returnSignal;
         }
-
         #endregion
 
-        #region Road
+        #region ------------------ Road -----------------------------
         [Impl(256)] public bool CanRoadBuild(Id<PlayerId> playerId) => _countFreeLink > 0 && IsRoadConnect(playerId);
         [Impl(256)] public void RoadBuilt(Id<LinkId> id)
         {
@@ -385,7 +386,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        #region Recruiting
+        #region ------------------ Recruiting -----------------------------
         public bool CanRecruiting(Id<PlayerId> playerId)
         {
             int countUnfit = 0;

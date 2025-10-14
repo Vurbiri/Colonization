@@ -73,7 +73,7 @@ namespace Vurbiri.Colonization
 
                     for (int i = 0; i < PlayerId.HumansCount; i++)
                     {
-                        Humans[i].AddResources(_currencies[i]);
+                        Humans[i].Resources.Add(_currencies[i]);
                         _currencies[i].Clear();
                     }
 

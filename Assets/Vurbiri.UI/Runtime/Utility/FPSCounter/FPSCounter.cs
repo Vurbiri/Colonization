@@ -37,7 +37,7 @@ namespace Vurbiri.UI
             if (_time < _updateInterval)
                 return;
 
-            _fps = MathI.RoundToInt(_frames / _time);
+            _fps = MathI.Round(_frames / _time);
             _time = 0f; _frames = 0;
 
             if (_cache.Count == _cacheMaxSize)

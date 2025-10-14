@@ -16,7 +16,7 @@ namespace Vurbiri
         [Impl(256)] public static string ToHex(this Color32 self) => $"#{self.r:X2}{self.g:X2}{self.b:X2}{self.a:X2}";
         [Impl(256)] public static string ToHex(this Color self)
         {
-            return $"#{MathI.RoundToInt(self.r * 255f):X2}{MathI.RoundToInt(self.g * 255f):X2}{MathI.RoundToInt(self.b * 255f):X2}{MathI.RoundToInt(self.a * 255f):X2}";
+            return $"#{MathI.Round(self.r * 255f):X2}{MathI.Round(self.g * 255f):X2}{MathI.Round(self.b * 255f):X2}{MathI.Round(self.a * 255f):X2}";
         }
 
         [Impl(256)] public static Color SetAlpha(this Color self, float alpha)

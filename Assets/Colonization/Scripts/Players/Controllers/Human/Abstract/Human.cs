@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
 {
     public abstract partial class Human : Player, IDisposable
     {
-        #region Fields
+        #region ================== Fields ============================
         protected readonly Currencies _resources;
         protected readonly ExchangeRate _exchange;
 
@@ -26,6 +26,7 @@ namespace Vurbiri.Colonization
         protected readonly WarriorsSpawner _spawner;
         #endregion
 
+        #region ================== Properties ============================
         public Currencies Resources  { [Impl(256)] get => _resources; }
         public ExchangeRate ExchangeRate { [Impl(256)] get => _exchange; }
 
@@ -40,6 +41,7 @@ namespace Vurbiri.Colonization
         public Artefact Artefact { [Impl(256)] get => _artefact; }
         public PerkTree Perks { [Impl(256)] get => _perks; }
         public SpellBook SpellBook { [Impl(256)] get => _spellBook; }
+        #endregion
 
         public Human(int playerId, Settings settings) : base(playerId)
         {
@@ -52,7 +54,7 @@ namespace Vurbiri.Colonization
             _roads = new(playerId, settings.roadFactory);
 
             _resources = Currencies.Create(_abilities, GameContainer.Prices.HumanDefault, loadData);
-            _exchange = ExchangeRate.Create(_abilities, loadData);
+            _exchange = ExchangeRate.Create(_abilities, _perks, loadData);
             _artefact = Artefact.Create(settings.artefact, loadData);
 
             _spawner = new(new(playerId, new WarriorPerks(_perks), _artefact));
@@ -84,65 +86,24 @@ namespace Vurbiri.Colonization
             storage.BindActors(Actors);
             storage.LoadData = null;
         }
-
-        // TSET !!!!!!!!!!!!!!
-        public void SpawnTest(int id, int count)
-        {
-            UnityEngine.Debug.Log("SpawnTest");
-            Hexagon hexagon;
-            for (int i = 0; i < count; i++)
-            {
-                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
-                Actor actor = _spawner.Create(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
-            }
-        }
-        public void SpawnTest(Id<WarriorId> id, Key key)
-        {
-            UnityEngine.Debug.Log("SpawnTest");
-            Hexagon hexagon;
-            if ((hexagon = GameContainer.Hexagons[key]).CanWarriorEnter)
-            {
-                Actor actor = _spawner.Create(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
-            }
-        }
-        public void SpawnDemonTest(Id<DemonId> id, Key key)
-        {
-            UnityEngine.Debug.Log("SpawnDemonTest");
-            Hexagon hexagon;
-            if ((hexagon = GameContainer.Hexagons[key]).CanDemonEnter)
-            {
-                Actor actor = _spawner.CreateDemon(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
-            }
-        }
-        public void SpawnDemonTest(int id, int count)
-        {
-            UnityEngine.Debug.Log("SpawnDemonTest");
-            Hexagon hexagon;
-            for (int i = 0; i < count; i++)
-            {
-                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanDemonEnter) ;
-                Actor actor = _spawner.CreateDemon(id, hexagon);
-                actor.IsPersonTurn = _isPerson;
-            }
-        }
-
+        
         [Impl(256)] public Ability GetAbility(Id<HumanAbilityId> id) => _abilities[id];
 
         [Impl(256)] public ReadOnlyReactiveList<Crossroad> GetEdifices(Id<EdificeGroupId> id) => _edifices.edifices[id];
 
-        public void BuyPerk(int typePerk, int idPerk)
+        #region ================== Perks ============================
+        [Impl(256)] public bool CanLearnPerk(int typePerk, int idPerk, int cost) => _resources[CurrencyId.Blood] >= cost & !_perks.IsPerkLearned(typePerk, idPerk);
+        [Impl(256)] public void BuyPerk(Perk perk)
         {
-            if (_perks.TryAdd(typePerk, idPerk, out int cost))
-            {
-                _resources.RemoveBlood(cost);
-                 
-                if (typePerk == TypeOfPerksId.Economic | (idPerk >= EconomicPerksId.ExchangeSaleChance_1 & idPerk <= EconomicPerksId.ExchangeRate_1))
-                    _exchange.Update();
-            }
+            _perks.Learn(perk);
+            _resources.RemoveBlood(perk.Cost);
         }
+        [Impl(256)] public void BuyPerk(int typePerk, int idPerk, int cost)
+        {
+            _perks.Learn(typePerk, idPerk);
+            _resources.RemoveBlood(cost);
+        }
+        #endregion
 
         public void AddOrder(int order, ReadOnlyMainCurrencies cost)
         {
@@ -154,13 +115,12 @@ namespace Vurbiri.Colonization
             }
         }
 
-        #region Resources
-        [Impl(256)] public void AddResources(ReadOnlyMainCurrencies value) => _resources.Add(value);
+        #region ================== Resources ============================
         [Impl(256)] public bool IsPay(ReadOnlyMainCurrencies value) => _resources >= value;
         [Impl(256)] public void Pay(ReadOnlyMainCurrencies value) => _resources.Remove(value);
         #endregion
 
-        #region Edifice
+        #region ================== Edifice =============================
         [Impl(256)] public bool CanEdificeUpgrade(Crossroad crossroad) => _edifices.CanEdificeUpgrade(crossroad) && crossroad.CanUpgrade(_id);
         [Impl(256)] public bool IsEdificeUnlock(Id<EdificeId> id) => _edifices.IsEdificeUnlock(id);
         [Impl(256)] public void BuyEdificeUpgrade(Crossroad crossroad) => BuyEdificeUpgrade(crossroad, GameContainer.Prices.Edifices[crossroad.NextId]);
@@ -207,7 +167,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        #region Roads
+        #region ================== Roads ===============================
         [Impl(256)] public bool CanRoadBuild(Crossroad crossroad) => _abilities.IsGreater(MaxRoad, _roads.Count) && crossroad.CanRoadBuild(_id);
         [Impl(256)] public void BuyRoad(Crossroad crossroad, Id<LinkId> linkId) => BuyRoad(crossroad.Type, crossroad.Links[linkId], GameContainer.Prices.Road);
         public WaitSignal BuyRoad(Id<CrossroadType> startType, CrossroadLink link, ReadOnlyMainCurrencies cost)
@@ -222,7 +182,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        #region Warriors
+        #region ================== Warriors ============================
         [Impl(256)] public bool CanAnyRecruiting(Crossroad crossroad)
         {
             return _abilities.IsGreater(MaxWarrior, Actors.Count) && crossroad.CanRecruiting(_id);
@@ -250,10 +210,51 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        sealed public override void Dispose()
+
+        // TSET !!!!!!!!!!!!!!
+        #region ================== SpawnTests ============================
+        public void SpawnTest(int id, int count)
         {
-            base.Dispose();
-            _exchange.Dispose();
+            UnityEngine.Debug.Log("SpawnTest");
+            Hexagon hexagon;
+            for (int i = 0; i < count; i++)
+            {
+                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter) ;
+                Actor actor = _spawner.Create(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
+            }
         }
+        public void SpawnTest(Id<WarriorId> id, Key key)
+        {
+            UnityEngine.Debug.Log("SpawnTest");
+            Hexagon hexagon;
+            if ((hexagon = GameContainer.Hexagons[key]).CanWarriorEnter)
+            {
+                Actor actor = _spawner.Create(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
+            }
+        }
+        public void SpawnDemonTest(Id<DemonId> id, Key key)
+        {
+            UnityEngine.Debug.Log("SpawnDemonTest");
+            Hexagon hexagon;
+            if ((hexagon = GameContainer.Hexagons[key]).CanDemonEnter)
+            {
+                Actor actor = _spawner.CreateDemon(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
+            }
+        }
+        public void SpawnDemonTest(int id, int count)
+        {
+            UnityEngine.Debug.Log("SpawnDemonTest");
+            Hexagon hexagon;
+            for (int i = 0; i < count; i++)
+            {
+                while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanDemonEnter) ;
+                Actor actor = _spawner.CreateDemon(id, hexagon);
+                actor.IsPersonTurn = _isPerson;
+            }
+        }
+        #endregion
     }
 }

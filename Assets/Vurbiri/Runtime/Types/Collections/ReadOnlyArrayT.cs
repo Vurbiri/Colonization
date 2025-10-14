@@ -17,8 +17,12 @@ namespace Vurbiri.Collections
 
         public int Count { [Impl(256)] get => _count; }
 
-        [Impl(256)] 
-        public ReadOnlyArray(TValue[] values)
+        [Impl(256)] public ReadOnlyArray(int count)
+        {
+            _values = new TValue[count];
+            _count = count;
+        }
+        [Impl(256)] public ReadOnlyArray(TValue[] values)
         {
             _values = values;
             _count = values.Length;

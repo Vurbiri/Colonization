@@ -67,8 +67,8 @@ namespace Vurbiri.Colonization.UI
         {
             print("[PerksWindow] Setup");
 
-            SetupPerks_Ed(_economicPerks, TypeOfPerksId.Economic, EconomicPerksId.Count, _economicPerksContainer);
-            SetupPerks_Ed(_militaryPerks, TypeOfPerksId.Military, MilitaryPerksId.Count, _militaryPerksContainer);
+            SetupPerks_Ed(_economicPerks, AbilityTypeId.Economic, EconomicPerksId.Count, _economicPerksContainer);
+            SetupPerks_Ed(_militaryPerks, AbilityTypeId.Military, MilitaryPerksId.Count, _militaryPerksContainer);
 
             float sizeX = _economicPerksContainer.sizeDelta.x + _treeSpace;
             Vector2 mainSize = new(sizeX * 2f, _economicPerksContainer.sizeDelta.y);

@@ -9,6 +9,8 @@ namespace Vurbiri.Colonization
     {
         private abstract class Counselor
         {
+            protected static readonly WaitRealtime s_waitRealtime = new(0.5f);
+
             protected readonly AIController _parent;
 
             protected AIController Human { [Impl(256)] get => _parent; }
@@ -20,6 +22,7 @@ namespace Vurbiri.Colonization
             protected Roads Roads { [Impl(256)] get => _parent._roads; }
             protected int FreeRoadCount { [Impl(256)] get => _parent._abilities[HumanAbilityId.MaxRoad] - _parent._roads.Count; }
             protected ReadOnlyAbilities<HumanAbilityId> Abilities { [Impl(256)] get => _parent._abilities; }
+            protected PerkTree PerkTree { [Impl(256)] get => _parent._perks; }
 
             [Impl(256)] public Counselor(AIController parent) => _parent = parent;
 

@@ -36,8 +36,8 @@ namespace VurbiriEditor
                 EditorGUI.MinMaxSlider(sizeSlider, ref min, ref max, rMin, rMax);
 
                 if (min > max) (min, max) = (max, min);
-                minProperty.intValue = MathI.RoundToInt(min); 
-                maxProperty.intValue = MathI.RoundToInt(max) + 1;
+                minProperty.intValue = MathI.Round(min); 
+                maxProperty.intValue = MathI.Round(max) + 1;
             }
             else
             {

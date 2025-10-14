@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         public const int SwapId         = 5;
         public const int Zeal           = 6;
 
-        [NotId] public const int Type = TypeOfPerksId.Military;
+        [NotId] public const int Type = AbilityTypeId.Military;
 
         static MilitarySpellId() => ConstructorRun();
     }

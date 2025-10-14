@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
@@ -11,10 +12,8 @@ namespace Vurbiri.Colonization
 	{
         [Space]
         public FileIdAndKey giftMsg;
-        [Button("Run", false)]
-        public int button;
-        [Button("SelectCross")]
-        public Vector2Int vector;
+        [Button("Testing"), Range(-10f, 10f)]
+        public float value;
 
         private TMP_Dropdown _dropdown;
 
@@ -31,20 +30,23 @@ namespace Vurbiri.Colonization
                 "Exit",
                 "English",
                 "BayShrine",
+                "AddBlood",
             });
-            _dropdown.value = 5;
+            _dropdown.value = 6;
         }
 
         public void RunTest()
         {
-            switch(_dropdown.value )
+            var person = GameContainer.Players.Person;
+            switch (_dropdown.value )
             {
                 case 0: Spawn(); break;
                 case 1: Gift(); break;
-                case 2: GameContainer.Players.Person.Artefact.Next(UnityEngine.Random.Range(90, 100)); ; break;
+                case 2: person.Artefact.Next(UnityEngine.Random.Range(90, 100)); ; break;
                 case 3: Vurbiri.EntryPoint.Transition.Exit(); break;
                 case 4: Localization.Instance.SwitchLanguage(SystemLanguage.English); break;
                 case 5: GameContainer.Players.Humans[PlayerId.AI_01].BuyEdificeUpgrade(GameContainer.Crossroads[CROSS.NEAR[0]]); break;
+                case 6: person.Resources.AddBlood(13); break;
                 default: return;
             }
         }
@@ -105,27 +107,9 @@ namespace Vurbiri.Colonization
                 hex.Caption.ShowKey_Ed();
         }
 
-        public void Run()
+        public void Testing()
         {
-            Key keyA = CROSS.NEAR[0], keyB;
-            for (int i = 1; i < CROSS.NEAR.Count; i++)
-            {
-                keyB = CROSS.NEAR[i];
-                print($"{keyA} - {keyB} = {keyA - keyB} = {Distance(keyA, keyB)} ({(i > 3 ? 6 - i : i )})");
-            }
-            keyB = new(4, -2);
-            print($"{keyA} - {keyB} = {keyA - keyB} = {Distance(keyA, keyB)}");
 
-            static int Distance(Key a, Key b) // Distance
-            {
-                int x = Mathf.Abs(a.x - b.x), y = Mathf.Abs(a.y - b.y) >> 1;
-                return x + y;
-            }
-        }
-
-        public void SelectCross()
-        {
-            GameContainer.CameraController.ToPosition(GameContainer.Crossroads[new(vector)].Position, true);
         }
     }
 }

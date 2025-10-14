@@ -9,8 +9,7 @@ namespace Vurbiri.Colonization
         sealed private partial class Builder : Counselor
         {
             private static readonly BuilderSettings s_settings;
-            private static readonly WaitRealtime s_waitRealtime = new(0.5f);
-
+            
             private readonly MainCurrencies _profitWeights = new();
             private Plan _currentPlan = Plan.Empty;
 
@@ -95,7 +94,7 @@ namespace Vurbiri.Colonization
             private int GetColonyWeight(Crossroad crossroad, int roadCount) => GetProfitWeight(crossroad.Hexagons) + GetRoadWeight(roadCount);
             private int GetFirstColonyWeight(Crossroad crossroad, int roadCount) => s_settings.penaltyPerHex * crossroad.MaxRepeatProfit + GetRoadWeight(roadCount);
 
-            [Impl(256)] private static int GetRoadWeight(int roadCount) => -MathI.BinaryPow(s_settings.penaltyPerRoad, roadCount);
+            [Impl(256)] private static int GetRoadWeight(int roadCount) => -MathI.Pow(s_settings.penaltyPerRoad, roadCount);
 
 
             // Nested Class

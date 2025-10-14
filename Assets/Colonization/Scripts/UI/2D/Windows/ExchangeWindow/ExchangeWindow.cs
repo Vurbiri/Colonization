@@ -76,7 +76,7 @@ namespace Vurbiri.Colonization.UI
 
         private void Apply()
         {
-            GameContainer.Players.Person.AddResources(_bankTrade - _pay);
+            GameContainer.Players.Person.Resources.Add(_bankTrade - _pay);
             ResetValues();
         }
 

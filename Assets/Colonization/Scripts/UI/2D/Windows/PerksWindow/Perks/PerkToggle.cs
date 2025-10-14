@@ -16,7 +16,7 @@ namespace Vurbiri.Colonization.UI
         private ReactiveCombination<int, int> _combination;
         private int _cost, _points;
 
-        public void Init(PerkTree perkTree, IReactive<int> blood, Color colorLearn)
+        public void Init(PerkTree perkTree, Currency blood, Color colorLearn)
         {
             Perk perk = perkTree[_typePerkId, _perkId];
             _hint.Init(perk);
@@ -36,8 +36,12 @@ namespace Vurbiri.Colonization.UI
 
         public void BuyPerk(Color colorLearn)
         {
-            GameContainer.Players.Person.BuyPerk(_typePerkId, _perkId);
-            Learn(colorLearn);
+            var person = GameContainer.Players.Person;
+            if (person.CanLearnPerk(_typePerkId, _perkId, _cost))
+            {
+                Learn(colorLearn);
+                person.BuyPerk(_typePerkId, _perkId, _cost);
+            }
         }
 
         private void Learn(Color colorLearn)

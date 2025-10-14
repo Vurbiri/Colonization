@@ -41,7 +41,7 @@ namespace Vurbiri.Colonization
                 if (_canCast)
                 {
                     float count = _blessed.Count;
-                    int value = MathI.RoundToInt((s_settings.blessBasa + (param.valueA + param.valueB) * s_settings.blessPerRes) / count);
+                    int value = MathI.Round((s_settings.blessBasa + (param.valueA + param.valueB) * s_settings.blessPerRes) / count);
 
                     s_isCast.True();
 

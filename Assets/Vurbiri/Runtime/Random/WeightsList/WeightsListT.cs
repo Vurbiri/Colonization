@@ -12,7 +12,7 @@ namespace Vurbiri
         public int Count { [Impl(256)] get => _count - 1; }
 
         public T Value { [Impl(256)] get => _weights[Index].value; }
-        public int Index 
+        private int Index
         {
             get 
             {
@@ -37,7 +37,7 @@ namespace Vurbiri
         }
 
         [Impl(256)] public WeightsList(T zero) : this(zero, BASE_CAPACITY) { }
-        [Impl(256)] public WeightsList(T zero, int capacity)
+        public WeightsList(T zero, int capacity)
         {
             _capacity = capacity + 1;
             _weights = new Weight[_capacity];
@@ -45,7 +45,7 @@ namespace Vurbiri
             _count = 1;
         }
 
-        [Impl(256)] public void Add(T value, int weight)
+        public void Add(T value, int weight)
         {
             if (_count == _capacity)
                 ReSize(_capacity << 1 | BASE_CAPACITY);
@@ -62,29 +62,23 @@ namespace Vurbiri
             return result;
         }
 
-        public bool RemoveAt(int index)
+        [Impl(256)] public T Extract()
         {
-            bool result = ++index > 0 & index < _count;
-            if (result)
-            {
-                _count--;
-                int delta = _weights[index] - _weights[index - 1];
-                for (; index < _count; index++)
-                    _weights[index] = _weights[index + 1].Remove(delta);
-                _weights[_count] = null;
-                _max -= delta;
-            }
-            return result;
+            int index = Index;
+            T value = _weights[index].value;
+            if (index > 0)
+                Remove(index);
+
+            return value;
         }
 
-        [Impl(256)] public bool TryRemove<U>(U item) where U : System.IEquatable<T> => RemoveAt(IndexOf(item));
-        [Impl(256)] public void Remove<U>(U item) where U : System.IEquatable<T> => RemoveAt(IndexOf(item));
-
-        [Impl(256)] public int IndexOf<U>(U item) where U : System.IEquatable<T>
+        public void Remove<U>(U item) where U : System.IEquatable<T>
         {
             int index = _count;
-            while (index --> 1 && !item.Equals(_weights[index].value));
-            return index - 1;
+            while (index --> 1 && !item.Equals(_weights[index].value)) ;
+
+            if(index > 0)
+                Remove(index);
         }
 
         public void Clear()
@@ -96,6 +90,17 @@ namespace Vurbiri
 
         [Impl(256)] public void TrimExcess() => ReSize(_count);
 
+        public override string ToString()
+        {
+            System.Text.StringBuilder sb = new();
+            for (int i = 1; i < _count - 1; i++)
+            {
+                sb.Append((_weights[i] - _weights[i-1]).ToString()); sb.Append("-");
+            }
+            sb.Append((_weights[_count - 1] - _weights[_count - 2]).ToString());
+            return sb.ToString();
+        }
+
         private void ReSize(int newCapacity)
         {
             _capacity = newCapacity;
@@ -106,6 +111,15 @@ namespace Vurbiri
             _weights = array;
         }
 
+        private void Remove(int index)
+        {
+            _count--;
+            int delta = _weights[index] - _weights[index - 1];
+            for (; index < _count; index++)
+                _weights[index] = _weights[index + 1].Remove(delta);
+            _weights[_count] = null;
+            _max -= delta;
+        }
 
         private T Search(int min, int max, int weight)
         {
@@ -145,6 +159,7 @@ namespace Vurbiri
                 return this;
             }
 
+            sealed public override string ToString() => _weight.ToString();
 
             public static implicit operator int(Weight self) => self._weight;
 

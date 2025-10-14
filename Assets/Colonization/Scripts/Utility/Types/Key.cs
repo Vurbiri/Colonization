@@ -23,8 +23,8 @@ namespace Vurbiri.Colonization
         }
         [Impl(256)] public Key(float x, float y)
         {
-            this.x = MathI.RoundToInt(x);
-            this.y = MathI.RoundToInt(y);
+            this.x = MathI.Round(x);
+            this.y = MathI.Round(y);
         }
         [Impl(256)] public Key(int[] arr)
         {

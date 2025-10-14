@@ -13,23 +13,18 @@ namespace Vurbiri.Colonization.Characteristics
         public const int MIN_PROGRESS = 0, MAX_PROGRESS = MAX_LEVEL * (MAX_LEVEL + 1);
 
         private readonly ReadOnlyArray<ReadOnlyArray<Perk>> _perks;
-        private readonly RInt[] _progress = new RInt[TypeOfPerksId.Count];
-        private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[TypeOfPerksId.Count];
+        private readonly RInt[] _progress = new RInt[AbilityTypeId.Count];
+        private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[AbilityTypeId.Count];
         private readonly VAction<Perk> _eventPerk = new();
         private readonly VAction<HashSet<int>[]> _eventHashSet = new();
 
         public Perk this[int typePerkId, int perkId] { [Impl(256)] get => _perks[typePerkId][perkId]; }
 
-        public bool IsAllLearned 
-        { 
-            [Impl(256)] get => _learnedPerks[EconomicPerksId.Type].Count == EconomicPerksId.Count & _learnedPerks[MilitaryPerksId.Type].Count == MilitaryPerksId.Count; 
-        }
-
         #region Constructors
         private PerkTree(PerksScriptable perks)
         {
             _perks = perks;
-            for (int t = 0; t < TypeOfPerksId.Count; t++)
+            for (int t = 0; t < AbilityTypeId.Count; t++)
             {
                  _learnedPerks[t] = new(EconomicPerksId.Count);
                 _progress[t] = new(MIN_PROGRESS);
@@ -40,7 +35,7 @@ namespace Vurbiri.Colonization.Characteristics
             _perks = perks;
 
             int[] learned;
-            for (int t = 0, progress = 0; t < TypeOfPerksId.Count; t++, progress = 0)
+            for (int t = 0, progress = 0; t < AbilityTypeId.Count; t++, progress = 0)
             {
                 learned = learnedPerks[t];
                 _learnedPerks[t] = new(learned);
@@ -57,13 +52,21 @@ namespace Vurbiri.Colonization.Characteristics
         }
         #endregion
 
+        [Impl(256)] public static int ProgressToLevel(int progress) => MathI.Sqrt(1 + (progress << 2)) - 1 >> 1;
+
         [Impl(256)] public RInt GetProgress(int typePerkId) => _progress[typePerkId];
+        [Impl(256)] public int GetLevel(int typePerkId) => ProgressToLevel(_progress[typePerkId]);
+        
         [Impl(256)] public bool IsPerkLearned(int typePerkId, int perkId) => _learnedPerks[typePerkId].Contains(perkId);
+        [Impl(256)] public bool IsPerkLearned(Perk perk) => _learnedPerks[perk.Type].Contains(perk.Id);
+
+        [Impl(256)] public bool IsAllTreeLearned(int typePerkId) => _learnedPerks[typePerkId].Count == AbilityTypeId.PerksCount[typePerkId];
+        [Impl(256)] public bool IsAllLearned() => _learnedPerks[EconomicPerksId.Type].Count == EconomicPerksId.Count & _learnedPerks[MilitaryPerksId.Type].Count == MilitaryPerksId.Count;
 
         #region Subscribe
         public Subscription Subscribe(Action<Perk> action, bool instantGetValue = true)
         {
-            for (int type = 0; instantGetValue & type < TypeOfPerksId.Count; type++)
+            for (int type = 0; instantGetValue & type < AbilityTypeId.Count; type++)
                 foreach (int id in _learnedPerks[type]) 
                     action(_perks[type][id]);
 
@@ -75,23 +78,20 @@ namespace Vurbiri.Colonization.Characteristics
         }
         #endregion
 
-        public bool TryAdd(int typePerk, int idPerk, out int cost)
+        public bool GetNotLearned(int typePerk, int idPerk, out Perk perk)
         {
-            if (!_learnedPerks[typePerk].Add(idPerk))
-            {
-                cost = 0; 
-                return false;
-            }
-            
-            Perk perk = _perks[typePerk][idPerk];
-            cost = perk.Cost;
+            perk = _perks[typePerk][idPerk];
+            return !_learnedPerks[typePerk].Contains(idPerk);
+        }
 
-            if(_progress[typePerk] < MAX_PROGRESS)
-                _progress[typePerk].Value = Math.Min(_progress[typePerk] + cost, MAX_PROGRESS);
+        [Impl(256)] public void Learn(int typePerk, int idPerk) => Learn(_perks[typePerk][idPerk]);
+        public void Learn(Perk perk)
+        {
+            _learnedPerks[perk.Type].Add(perk.Id);
+            _progress[perk.Type].Value = Math.Min(_progress[perk.Type] + perk.Cost, MAX_PROGRESS);
 
             _eventPerk.Invoke(perk);
             _eventHashSet.Invoke(_learnedPerks);
-            return true;
         }
     }
 }

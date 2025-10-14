@@ -13,7 +13,7 @@ namespace Vurbiri.Colonization.UI
         [SerializeField] private HintButton _learnButton;
         [SerializeField] private SimpleButton _closeButton;
         [Space]
-        [SerializeField] private IdSet<TypeOfPerksId, PerkTreeProgressBar> _progressBars;
+        [SerializeField] private IdSet<AbilityTypeId, PerkTreeProgressBar> _progressBars;
         [Space]
         [SerializeField] private Color _colorLearn;
 
@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization.UI
 
             _spellBook.Init(perkTree, person.SpellBook, _switcher.Close, OnSpellBookChanged);
 
-            for (int i = 0; i < TypeOfPerksId.Count; i++)
+            for (int i = 0; i < AbilityTypeId.Count; i++)
                 _progressBars[i].Init(perkTree.GetProgress(i));
 
             _onValueChanged.Add(OnValueChanged, _activeToggle);

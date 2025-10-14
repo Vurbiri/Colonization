@@ -2,7 +2,7 @@ namespace Vurbiri.Colonization.Characteristics
 {
     public abstract class MilitaryPerksId : APerkId<MilitaryPerksId>
     {
-        [NotId] public const int Type = TypeOfPerksId.Military;
+        [NotId] public const int Type = AbilityTypeId.Military;
 
         public const int Defense_1        =  0;
         public const int Defense_2        =  1;

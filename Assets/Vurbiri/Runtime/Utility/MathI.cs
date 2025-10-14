@@ -5,10 +5,11 @@ namespace Vurbiri
 {
 	public static class MathI
 	{
-        [Impl(256)] public static int RoundToInt(float num) => (int)MathF.Round(num);
-        [Impl(256)] public static int CeilToInt(float num)  => (int)MathF.Ceiling(num);
-        [Impl(256)] public static int FloorToInt(float num) => (int)MathF.Floor(num);
+        [Impl(256)] public static int Round(float num) => (int)MathF.Round(num);
+        [Impl(256)] public static int Ceil(float num)  => (int)MathF.Ceiling(num);
+        [Impl(256)] public static int Floor(float num) => (int)MathF.Floor(num);
 
+        [Impl(256)] public static int Sqrt(int num) => (int)MathF.Sqrt(num);
 
         public static int Pow(int num, int exp)
         {

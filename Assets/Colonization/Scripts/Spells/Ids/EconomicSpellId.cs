@@ -10,7 +10,7 @@ namespace Vurbiri.Colonization
         public const int Transmutation = 5;
         public const int Sacrifice     = 6;
 
-        [NotId] public const int Type = TypeOfPerksId.Economic;
+        [NotId] public const int Type = AbilityTypeId.Economic;
 
         static EconomicSpellId() => ConstructorRun();
     }

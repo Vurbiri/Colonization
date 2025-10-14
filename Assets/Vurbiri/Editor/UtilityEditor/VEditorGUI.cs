@@ -59,8 +59,8 @@ namespace VurbiriEditor
 
             if (minValue > maxValue) (minValue, maxValue) = (maxValue, minValue);
 
-            minProperty.intValue = MathI.RoundToInt(minValue);
-            maxProperty.intValue = MathI.RoundToInt(maxValue);
+            minProperty.intValue = MathI.Round(minValue);
+            maxProperty.intValue = MathI.Round(maxValue);
 
             return true;
         }
