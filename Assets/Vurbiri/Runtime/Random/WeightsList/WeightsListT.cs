@@ -7,7 +7,8 @@ namespace Vurbiri
         private const int BASE_CAPACITY = 7;
 
         private Weight[] _weights;
-        private int _count, _capacity, _max;
+        private int _count, _capacity;
+        private uint _max;
 
         public int Count { [Impl(256)] get => _count - 1; }
 
@@ -19,7 +20,7 @@ namespace Vurbiri
                 int index = 0;
                 if (_count > 1)
                 {
-                    int weight = UnityEngine.Random.Range(0, _max);
+                    uint weight = SysRandom.Next(_max);
                     int min = 0, max = _count, current;
                     while (index == 0)
                     {
@@ -50,7 +51,7 @@ namespace Vurbiri
             if (_count == _capacity)
                 ReSize(_capacity << 1 | BASE_CAPACITY);
 
-            _max = _weights[_count - 1] + weight;
+            _max = _weights[_count - 1] + (uint)weight;
             _weights[_count++] = new(value, _max);
         }
 
@@ -114,7 +115,7 @@ namespace Vurbiri
         private void Remove(int index)
         {
             _count--;
-            int delta = _weights[index] - _weights[index - 1];
+            uint delta = _weights[index] - _weights[index - 1];
             for (; index < _count; index++)
                 _weights[index] = _weights[index + 1].Remove(delta);
             _weights[_count] = null;
@@ -137,23 +138,23 @@ namespace Vurbiri
         //**********************************************************
         private class Weight
         {
-            private int _weight;
+            private uint _weight;
 
             public readonly T value;
 
-            [Impl(256)] public Weight(T obj, int weight)
+            [Impl(256)] public Weight(T obj, uint weight)
             {
                 value = obj;
                 _weight = weight;
             }
 
-            [Impl(256)] public Weight Add(int delta)
+            [Impl(256)] public Weight Add(uint delta)
             {
                 _weight += delta;
                 return this;
             }
 
-            [Impl(256)] public Weight Remove(int delta)
+            [Impl(256)] public Weight Remove(uint delta)
             {
                 _weight -= delta;
                 return this;
@@ -161,22 +162,22 @@ namespace Vurbiri
 
             sealed public override string ToString() => _weight.ToString();
 
-            public static implicit operator int(Weight self) => self._weight;
+            public static implicit operator uint(Weight self) => self._weight;
 
-            [Impl(256)] public static int operator +(Weight w1, Weight w2) => w1._weight + w2._weight;
-            [Impl(256)] public static int operator +(Weight w, int i) => w._weight + i;
-            [Impl(256)] public static int operator -(Weight w1, Weight w2) => w1._weight - w2._weight;
-            [Impl(256)] public static int operator -(Weight w, int i) => w._weight - i;
+            [Impl(256)] public static uint operator +(Weight w1, Weight w2) => w1._weight + w2._weight;
+            [Impl(256)] public static uint operator +(Weight w, uint i) => w._weight + i;
+            [Impl(256)] public static uint operator -(Weight w1, Weight w2) => w1._weight - w2._weight;
+            [Impl(256)] public static uint operator -(Weight w, uint i) => w._weight - i;
 
-            [Impl(256)] public static bool operator >(Weight w, int i) => w._weight > i;
-            [Impl(256)] public static bool operator <(Weight w, int i) => w._weight < i;
-            [Impl(256)] public static bool operator >=(Weight w, int i) => w._weight >= i;
-            [Impl(256)] public static bool operator <=(Weight w, int i) => w._weight <= i;
+            [Impl(256)] public static bool operator >(Weight w, uint i) => w._weight > i;
+            [Impl(256)] public static bool operator <(Weight w, uint i) => w._weight < i;
+            [Impl(256)] public static bool operator >=(Weight w, uint i) => w._weight >= i;
+            [Impl(256)] public static bool operator <=(Weight w, uint i) => w._weight <= i;
 
-            [Impl(256)] public static bool operator >(int i, Weight w) => i > w._weight;
-            [Impl(256)] public static bool operator <(int i, Weight w) => i < w._weight;
-            [Impl(256)] public static bool operator >=(int i, Weight w) => i >= w._weight;
-            [Impl(256)] public static bool operator <=(int i, Weight w) => i <= w._weight;
+            [Impl(256)] public static bool operator >(uint i, Weight w) => i > w._weight;
+            [Impl(256)] public static bool operator <(uint i, Weight w) => i < w._weight;
+            [Impl(256)] public static bool operator >=(uint i, Weight w) => i >= w._weight;
+            [Impl(256)] public static bool operator <=(uint i, Weight w) => i <= w._weight;
         }
         #endregion
     }

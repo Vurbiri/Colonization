@@ -18,18 +18,16 @@ namespace Vurbiri
         {
             [Impl(256)] get
             {
-                if((_negentropy += _value) <= 0 || (_negentropy < MAX_CHANCE && Random.Range(0, MAX_CHANCE) >= _negentropy)) 
-                    return false;
-
-                _negentropy -= MAX_CHANCE;
-                return true;
+                bool result = (_negentropy += _value) >= MAX_CHANCE | (_negentropy > 0 && Random.Range(0, MAX_CHANCE) < _negentropy);
+                if(result) _negentropy -= MAX_CHANCE;
+                return result;
             }
         }
 
         public Chance(int value)
         {
             _value = Mathf.Clamp(value, 0, MAX_CHANCE);
-            _negentropy = SysRandom.Range(MAX_CHANCE);
+            _negentropy = SysRandom.Next(MAX_CHANCE);
         }
         public Chance(int value, int negentropy)
         {
@@ -95,14 +93,14 @@ namespace Vurbiri
 
         #region Nested: Converter
         //***********************************
-        sealed public class Converter : JsonConverter<Chance>
+        sealed public class Converter : AJsonConverter<Chance>
         {
-            public override Chance ReadJson(JsonReader reader, System.Type objectType, Chance existingValue, bool hasExistingValue, JsonSerializer serializer)
+            public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
             {
-                return new(serializer.Deserialize<int>(reader));
+                return new Chance(serializer.Deserialize<int>(reader));
             }
 
-            public override void WriteJson(JsonWriter writer, Chance value, JsonSerializer serializer)
+            protected override void WriteJson(JsonWriter writer, Chance value, JsonSerializer serializer)
             {
                 writer.WriteValue(value._value);
             }

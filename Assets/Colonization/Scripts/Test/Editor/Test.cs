@@ -70,8 +70,6 @@ namespace Vurbiri.Colonization
 
         private void Spawn()
         {
-            Debug.Log("Удалить Тесты в ArtefactPanel");
-
             //_artefact.Next(UnityEngine.Random.Range(2, 10));
 
             var person = GameContainer.Players.Person;
@@ -109,7 +107,7 @@ namespace Vurbiri.Colonization
 
         public void Testing()
         {
-
+            
         }
     }
 }

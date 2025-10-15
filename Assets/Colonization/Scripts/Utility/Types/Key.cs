@@ -52,16 +52,23 @@ namespace Vurbiri.Colonization
 
         #region Nested: Converter
         //***********************************
-        sealed public class Converter : JsonConverter<Key>
+        sealed public class Converter : JsonConverter
         {
-            public override Key ReadJson(JsonReader reader, Type objectType, Key existingValue, bool hasExistingValue, JsonSerializer serializer)
+            private readonly Type _type = typeof(Key);
+
+            public override bool CanConvert(Type objectType) => _type == objectType;
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
-                return new(serializer.Deserialize<int[]>(reader));
+                return new Key(serializer.Deserialize<int[]>(reader));
             }
 
-            public override void WriteJson(JsonWriter writer, Key value, JsonSerializer serializer)
+            sealed public override void WriteJson(JsonWriter writer, object obj, JsonSerializer serializer)
             {
-                WriteToArray(writer ,value);
+                if (obj is not Key value)
+                    throw Errors.JsonSerialization(_type);
+
+                WriteToArray(writer, value);
             }
 
             [Impl(256)] public static void WriteToArray(JsonWriter writer, Key value)

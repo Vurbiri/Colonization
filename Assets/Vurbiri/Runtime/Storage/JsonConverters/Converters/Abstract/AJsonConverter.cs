@@ -7,8 +7,6 @@ namespace Vurbiri
     {
         protected readonly Type _type = typeof(T);
 
-        public Type Type => _type;
-
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             throw Errors.NotSupportedRead(_type);

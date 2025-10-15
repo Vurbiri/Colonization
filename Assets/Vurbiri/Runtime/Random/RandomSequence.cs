@@ -36,7 +36,7 @@ namespace Vurbiri
             {
                 _ids[i] = i;
 
-                j = SysRandom.Range(0, i);
+                j = SysRandom.Next(i);
                 (_ids[j], _ids[i]) = (_ids[i], _ids[j]);
             }
         }
@@ -51,7 +51,7 @@ namespace Vurbiri
             {
                 _ids[i] = ids[i];
 
-                j = SysRandom.Range(0, i);
+                j = SysRandom.Next(i);
                 (_ids[j], _ids[i]) = (_ids[i], _ids[j]);
             }
         }

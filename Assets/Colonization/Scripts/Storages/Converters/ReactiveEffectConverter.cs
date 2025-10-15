@@ -8,6 +8,8 @@ namespace Vurbiri.Colonization.Characteristics
 	{
         sealed public class Converter : JsonConverter
         {
+            private readonly Type _type = typeof(ReactiveEffect);
+
             public override bool CanRead => true;
             public override bool CanWrite => true;
 
@@ -25,7 +27,7 @@ namespace Vurbiri.Colonization.Characteristics
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
             {
                 if (value is not ReactiveEffect effect)
-                    throw Errors.JsonSerialization(typeof(ReactiveEffect));
+                    throw Errors.JsonSerialization(_type);
 
                 WriteJsonArray(writer, effect);
             }
@@ -42,7 +44,7 @@ namespace Vurbiri.Colonization.Characteristics
                 writer.WriteEndArray();
             }
 
-            public override bool CanConvert(Type objectType) => typeof(ReactiveEffect).IsAssignableFrom(objectType);
+            public override bool CanConvert(Type objectType) => _type.IsAssignableFrom(objectType);
         }
     }
 }
