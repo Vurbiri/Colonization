@@ -5,7 +5,7 @@
   "defaultValue": 5,
   "defaultDelta": 10,
   "personPerRound": [
-    -1,
+    -2,
     2
   ],
   "aiPerRound": [

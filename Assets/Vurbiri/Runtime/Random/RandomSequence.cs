@@ -1,14 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-    public class RandomSequence
+    public class RandomSequence : IEnumerator<int>, IEnumerable<int>
     {
         private readonly int[] _ids;
-        protected readonly int _count;
-        protected int _cursor = 0;
+        private readonly int _count;
+        private int _cursor = 0, _current;
 
         public int this[int index] { [Impl(256)] get => _ids[index]; }
 
@@ -18,23 +19,28 @@ namespace Vurbiri
         {
             get
             {
-                int current = _ids[_cursor++];
+                _current = _ids[_cursor++];
 
                 if (_cursor == _count)
                     Shuffle();
 
-                return current;
+                return _current;
             }
         }
 
-        public RandomSequence(int count)
-        {
-            _count = count;
-            _ids = new int[count];
+        public int Current { [Impl(256)] get => _current; }
+        object IEnumerator.Current { [Impl(256)] get => _current; }
 
-            for (int i = 1, j; i < count; i++)
+        public RandomSequence(int count) : this(0, count) { }
+        public RandomSequence(int min, int max)
+        {
+            _count = max - min;
+            _ids = new int[_count];
+
+            _ids[0] = min;
+            for (int i = 1, j; i < _count; i++)
             {
-                _ids[i] = i;
+                _ids[i] = i + min;
 
                 j = SysRandom.Next(i);
                 (_ids[j], _ids[i]) = (_ids[i], _ids[j]);
@@ -65,5 +71,27 @@ namespace Vurbiri
                 (_ids[j], _ids[i]) = (_ids[i], _ids[j]);
             }
         }
+
+        public bool MoveNext()
+        {
+            if(_cursor < _count)
+            {
+                _current = _ids[_cursor++];
+                return true;
+            }
+            else
+            {
+                Shuffle();
+                return false;
+            }
+        }
+
+        [Impl(256)] public void Reset() => Shuffle();
+
+        public void Dispose() { }
+
+
+        public IEnumerator<int> GetEnumerator() => this;
+        IEnumerator IEnumerable.GetEnumerator() => this;
     }
 }

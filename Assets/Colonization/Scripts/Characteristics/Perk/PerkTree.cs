@@ -11,44 +11,48 @@ namespace Vurbiri.Colonization.Characteristics
     {
         public const int MIN_LEVEL = 0, MAX_LEVEL = 6;
         public const int MIN_PROGRESS = 0, MAX_PROGRESS = MAX_LEVEL * (MAX_LEVEL + 1);
+        
+        private static readonly ReadOnlyArray<ReadOnlyArray<Perk>> s_perks;
 
-        private readonly ReadOnlyArray<ReadOnlyArray<Perk>> _perks;
         private readonly RInt[] _progress = new RInt[AbilityTypeId.Count];
         private readonly HashSet<int>[] _learnedPerks = new HashSet<int>[AbilityTypeId.Count];
         private readonly VAction<Perk> _eventPerk = new();
         private readonly VAction<HashSet<int>[]> _eventHashSet = new();
 
-        public Perk this[int typePerkId, int perkId] { [Impl(256)] get => _perks[typePerkId][perkId]; }
+        public Perk this[int typePerkId, int perkId] { [Impl(256)] get => s_perks[typePerkId][perkId]; }
 
         #region Constructors
-        private PerkTree(PerksScriptable perks)
+        static PerkTree()
         {
-            _perks = perks;
+            var scriptable = UnityEngine.Resources.Load<PerksScriptable>(string.Concat(SettingsFile.FOLDER, PerksScriptable.NAME));
+            s_perks = scriptable; scriptable.Dispose();
+        }
+
+        private PerkTree()
+        {
             for (int t = 0; t < AbilityTypeId.Count; t++)
             {
-                 _learnedPerks[t] = new(EconomicPerksId.Count);
+                 _learnedPerks[t] = new(AbilityTypeId.PerksCount[t]);
                 _progress[t] = new(MIN_PROGRESS);
             }
         }
-        private PerkTree(PerksScriptable perks, int[][] learnedPerks)
+        private PerkTree(int[][] learnedPerks)
         {
-            _perks = perks;
-
             int[] learned;
             for (int t = 0, progress = 0; t < AbilityTypeId.Count; t++, progress = 0)
             {
                 learned = learnedPerks[t];
                 _learnedPerks[t] = new(learned);
                 for (int i = learned.Length - 1; i >= 0; i--)
-                    progress += _perks[t][learned[i]].Cost;
+                    progress += s_perks[t][learned[i]].Cost;
                 _progress[t] = new(Math.Min(progress, MAX_PROGRESS));
             }
         }
         [Impl(256)] public static PerkTree Create(Player.Settings settings, HumanLoadData loadData)
         {
             if (loadData.isLoaded & loadData.perks != null) 
-                return new(settings.perks, loadData.perks);
-            return new(settings.perks);
+                return new(loadData.perks);
+            return new();
         }
         #endregion
 
@@ -60,6 +64,8 @@ namespace Vurbiri.Colonization.Characteristics
         [Impl(256)] public bool IsPerkLearned(int typePerkId, int perkId) => _learnedPerks[typePerkId].Contains(perkId);
         [Impl(256)] public bool IsPerkLearned(Perk perk) => _learnedPerks[perk.Type].Contains(perk.Id);
 
+        [Impl(256)] public int PerkLearned(int typePerkId) => _learnedPerks[typePerkId].Count;
+
         [Impl(256)] public bool IsAllTreeLearned(int typePerkId) => _learnedPerks[typePerkId].Count == AbilityTypeId.PerksCount[typePerkId];
         [Impl(256)] public bool IsAllLearned() => _learnedPerks[EconomicPerksId.Type].Count == EconomicPerksId.Count & _learnedPerks[MilitaryPerksId.Type].Count == MilitaryPerksId.Count;
 
@@ -68,7 +74,7 @@ namespace Vurbiri.Colonization.Characteristics
         {
             for (int type = 0; instantGetValue & type < AbilityTypeId.Count; type++)
                 foreach (int id in _learnedPerks[type]) 
-                    action(_perks[type][id]);
+                    action(s_perks[type][id]);
 
             return _eventPerk.Add(action);
         }
@@ -80,11 +86,11 @@ namespace Vurbiri.Colonization.Characteristics
 
         public bool GetNotLearned(int typePerk, int idPerk, out Perk perk)
         {
-            perk = _perks[typePerk][idPerk];
+            perk = s_perks[typePerk][idPerk];
             return !_learnedPerks[typePerk].Contains(idPerk);
         }
 
-        [Impl(256)] public void Learn(int typePerk, int idPerk) => Learn(_perks[typePerk][idPerk]);
+        [Impl(256)] public void Learn(int typePerk, int idPerk) => Learn(s_perks[typePerk][idPerk]);
         public void Learn(Perk perk)
         {
             _learnedPerks[perk.Type].Add(perk.Id);

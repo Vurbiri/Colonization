@@ -1,10 +1,9 @@
-using Newtonsoft.Json;
 using UnityEngine;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
-    [System.Serializable, JsonConverter(typeof(Converter))]
+    [System.Serializable, Newtonsoft.Json.JsonConverter(typeof(Converter))]
     public struct Chance : System.IEquatable<Chance>
     {
         [SerializeField] private int _value;
@@ -16,7 +15,7 @@ namespace Vurbiri
 
         public bool Roll
         {
-            [Impl(256)] get
+            get
             {
                 bool result = (_negentropy += _value) >= MAX_CHANCE | (_negentropy > 0 && Random.Range(0, MAX_CHANCE) < _negentropy);
                 if(result) _negentropy -= MAX_CHANCE;
@@ -24,12 +23,8 @@ namespace Vurbiri
             }
         }
 
-        public Chance(int value)
-        {
-            _value = Mathf.Clamp(value, 0, MAX_CHANCE);
-            _negentropy = SysRandom.Next(MAX_CHANCE);
-        }
-        public Chance(int value, int negentropy)
+        [Impl(256)] public Chance(int value) : this(value, SysRandom.Next(MAX_CHANCE)) { }
+        [Impl(256)] private Chance(int value, int negentropy)
         {
             _value = Mathf.Clamp(value, 0, MAX_CHANCE);
             _negentropy = negentropy;
@@ -55,15 +50,13 @@ namespace Vurbiri
         public static implicit operator Chance(int value) => new(value);
 
         #region Arithmetic operators
-        public static Chance operator *(int value, Chance chance) => new(chance._value * value, chance._negentropy);
-        public static Chance operator *(Chance chance, int value) => new(chance._value * value, chance._negentropy);
-
         public static Chance operator +(Chance chance1, Chance chance2) => new(chance1._value + chance2._value, (chance1._negentropy + chance1._negentropy) >> 1);
         public static Chance operator +(Chance chance, int value) => new(chance._value + value, chance._negentropy);
 
         public static Chance operator -(Chance chance1, Chance chance2) => new(chance1._value - chance2._value, (chance1._negentropy + chance1._negentropy) >> 1 );
         public static Chance operator -(Chance chance, int value) => new(chance._value - value, chance._negentropy);
 
+        public static Chance operator *(Chance chance, int value) => new(chance._value * value, chance._negentropy);
         public static Chance operator /(Chance chance, int value) => new(chance._value / value, chance._negentropy);
         #endregion
 
@@ -95,12 +88,12 @@ namespace Vurbiri
         //***********************************
         sealed public class Converter : AJsonConverter<Chance>
         {
-            public override object ReadJson(JsonReader reader, System.Type objectType, object existingValue, JsonSerializer serializer)
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, System.Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
             {
                 return new Chance(serializer.Deserialize<int>(reader));
             }
 
-            protected override void WriteJson(JsonWriter writer, Chance value, JsonSerializer serializer)
+            protected override void WriteJson(Newtonsoft.Json.JsonWriter writer, Chance value, Newtonsoft.Json.JsonSerializer serializer)
             {
                 writer.WriteValue(value._value);
             }

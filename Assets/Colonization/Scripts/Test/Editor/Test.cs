@@ -107,7 +107,29 @@ namespace Vurbiri.Colonization
 
         public void Testing()
         {
-            
+            RandomSequence test = new(1, 6);
+
+            foreach (var hex in test)
+                print(hex);
+
+            print("=============================================");
+
+            foreach (var hex in test)
+                print(hex);
+
+            print("=============================================");
+
+            foreach (var hex in new RandomSequence(1, 6))
+                print(hex);
+        }
+
+        public static uint Next1(uint minInclusive, uint maxExclusive, System.Random rnd)
+        {
+            return (uint)(rnd.Next((int)(minInclusive + int.MinValue), (int)(maxExclusive + int.MinValue)) - int.MinValue);
+        }
+        public static uint Next2(uint minInclusive, uint maxExclusive, System.Random rnd)
+        {
+            return (uint)(rnd.Next(int.MinValue, int.MaxValue) - int.MinValue) % (maxExclusive - minInclusive) + minInclusive;
         }
     }
 }

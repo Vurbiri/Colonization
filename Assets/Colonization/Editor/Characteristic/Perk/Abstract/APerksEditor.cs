@@ -46,7 +46,7 @@ namespace VurbiriEditor.Colonization.Characteristics
             {
                 int id = i;
                 SerializedProperty propertyPerk = propertyPerks.GetArrayElementAtIndex(i);
-                string name = APerkId<TId>.GetName_Ed(i);
+                string name = APerkId<TId>.DisplayNames_Ed[i];
 
                 VisualElement element = _treePerkVT.Instantiate(propertyPerk.propertyPath);
                 element.Q<Label>(U_LABEL).text = name;

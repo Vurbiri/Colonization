@@ -26,7 +26,7 @@ namespace Vurbiri
             FieldInfo[] fields = typeId.GetFields(BindingFlags.Public | BindingFlags.Static);
 
             if (fields.Length == 0)
-                Debug.LogError($"Нет public static полей. Класс: {typeId.Name}");
+                Debug.LogError($"<b>[{typeId.Name}]</b> No <b>public static</b> fields.");
 
             _data = new(fields.Length);
 
@@ -39,7 +39,7 @@ namespace Vurbiri
                     continue;
 
                 if (field.FieldType != typeInt | !field.IsLiteral)
-                    Debug.LogError($"Поле {typeId.Name}.{field.Name} не int или не const.");
+                    Debug.LogError($"<b>[{typeId.Name}]</b> The field <b>{field.Name}</b> not <b>int</b> or not <b>const</b>.");
 
                 value = (int)field.GetValue(null);
 
@@ -49,7 +49,7 @@ namespace Vurbiri
                 }
                 else if (value != oldValue + 1)
                 {
-                    Debug.LogError($"Неверное значение поля: {typeId.Name}.{field.Name} = {value} должно быть {oldValue + 1}");
+                    Debug.LogError($"<b>[{typeId.Name}]</b> Invalid field value: <b>{field.Name} = {value}</b> should be <b>{oldValue + 1}</b>.");
                 }
 
                 if (value >= 0)
@@ -60,7 +60,7 @@ namespace Vurbiri
             }
 
             if (Count == 0)
-                Debug.LogError($"Не найдено public const int полей. Класс: {typeId.Name}");
+                Debug.LogError($"<b>[{typeId.Name}]</b> No <b>public const int</b> fields found.");
 
             IdTypesCacheEditor.Add(typeId, Count, Min, _data);
         }

@@ -23,6 +23,7 @@
   "PerkAPPerTurn": "Restoring Action Points <b>+{0}</b>",
   "PerkProfitMain": "Chance to find resources <b>+{0}%</b>",
   "PerkProfitAdv": "Chance to find fragments of the Artifact of Power <b>+{0}%</b>",
+  "PerkWarriorProfit": "Number of resources found <b>+{0}</b>",
   "PerkPierce": "Breaking <b>+{0}%</b>",
   "PerkIsSolder": "You can recruit Soldiers",
   "PerkIsWizard": "You can recruit Wizards",

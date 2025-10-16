@@ -11,7 +11,8 @@ namespace VurbiriEditor.Colonization
 {
     public class ScientistSettingsWindow : EditorWindow
     {
-        private const int COUNT = PerkTree.MAX_LEVEL, MAX = PerkTree.MAX_LEVEL - 1, BASE = 50, EXP = 3, MAX_PERCENT = EXP * 90, HALF_MAX_PERCENT = ((MAX_PERCENT - 100) >> 1) + 100;
+        private const string PATH = "/Colonization/Editor/Players/AI/Utility/";
+        private const int COUNT = PerkTree.MAX_LEVEL, MAX = PerkTree.MAX_LEVEL - 1, PERCENT = 95;
         private const string NAME = "Scientist", MENU = MENU_CR_PATH + NAME;
          
         [SerializeField] private ScientistSettings _settings;
@@ -22,14 +23,18 @@ namespace VurbiriEditor.Colonization
         private readonly Perk[][,] _perkGrid = { new Perk[COUNT, COUNT], new Perk[COUNT, COUNT] };
         private readonly SerializedProperty[] _perksProperty = new SerializedProperty[AbilityTypeId.Count];
         private readonly SerializedProperty[] _specProperty = new SerializedProperty[AbilityTypeId.Count];
-        private readonly GUIContent[] _specName = { new("Economist"), new("Militarist") };
+        private readonly GUIContent[] _specName = { new("Economist:"), new("Militarist:") };
+        private readonly GUIContent _chanceName = new("Chance:"), _baseName = new("Base:"), _expName = new("Exp:");
 
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
         private GUIStyle _normalStyle, _halfStyle, _overStyle;
         private SerializedObject _serializedObject;
-        private SerializedProperty _shiftProperty;
+        private SerializedProperty _chanceProperty;
         private Vector2 _scrollPos;
+               
+        private WeightSettings _currentSettings, _tempSettings;
+        private int _maxPercent, _maxHalfPercent;
 
         [MenuItem(MENU, false, MENU_AI_ORDER)]
         private static void ShowWindow()
@@ -39,9 +44,6 @@ namespace VurbiriEditor.Colonization
 
         private void OnEnable()
         {
-            for (int i = 0; i < COUNT; i++)
-                _weightBase[i] = BASE * MathI.Pow(EXP, i);
-
             _normalStyle = new()
             {
                 name = "WeightStyleA",
@@ -57,28 +59,40 @@ namespace VurbiriEditor.Colonization
 
             EUtility.SetScriptable(ref _perks);
             SettingsFileEditor.Load(ref _settings);
+            SettingsFileEditor.Load(ref _currentSettings, PATH);
             _serializedObject = new(this);
+
+            _tempSettings = _currentSettings;
+            WeightsSetup();
 
             if (CheckArray(_settings.weights[AbilityTypeId.Economic]) || CheckArray(_settings.weights[AbilityTypeId.Military]))
                 _settings.weights = new(new ReadOnlyArray<int>[] { new(EconomicPerksId.Count), new(MilitaryPerksId.Count) });
 
-            var serializedProperty = _serializedObject.FindProperty("_settings");
+            var settingsProperty = _serializedObject.FindProperty(nameof(_settings));
 
-            var weightsProperty = serializedProperty.FindPropertyRelative("weights").FindPropertyRelative("_values");
+            var weightsProperty = settingsProperty.FindPropertyRelative("weights").FindPropertyRelative("_values");
             _perksProperty[AbilityTypeId.Economic] = weightsProperty.GetArrayElementAtIndex(AbilityTypeId.Economic).FindPropertyRelative("_values");
             _perksProperty[AbilityTypeId.Military] = weightsProperty.GetArrayElementAtIndex(AbilityTypeId.Military).FindPropertyRelative("_values");
 
-            var specializationProperty = serializedProperty.FindPropertyRelative("specialization").FindPropertyRelative("_values");
+            var specializationProperty = settingsProperty.FindPropertyRelative("specialization").FindPropertyRelative("_values");
             _specProperty[AbilityTypeId.Economic] = specializationProperty.GetArrayElementAtIndex(AbilityTypeId.Economic);
             _specProperty[AbilityTypeId.Military] = specializationProperty.GetArrayElementAtIndex(AbilityTypeId.Military);
 
-            _shiftProperty = serializedProperty.FindPropertyRelative("shift");
+            _chanceProperty = settingsProperty.FindPropertyRelative("chance");
 
-            Setup(EconomicPerksId.Type);
-            Setup(MilitaryPerksId.Type);
+            PerkSetup(EconomicPerksId.Type);
+            PerkSetup(MilitaryPerksId.Type);
         }
 
-        private void Setup(int type)
+        private void WeightsSetup()
+        {
+            _maxPercent = _currentSettings.exp * PERCENT; _maxHalfPercent = ((_maxPercent - 100) >> 1) + 100;
+
+            for (int i = 0; i < COUNT; i++)
+                _weightBase[i] = _currentSettings.weight * MathI.Pow(_currentSettings.exp, i);
+        }
+
+        private void PerkSetup(int type)
         {
             var perks = _perks[type]; 
             var grid = _perkGrid[type];
@@ -92,9 +106,14 @@ namespace VurbiriEditor.Colonization
 
                 weightProperty = perksProperty.GetArrayElementAtIndex(i);
                 if (weightProperty.intValue == 0)
+                {
                     weightProperty.intValue = _weightBase[perk.Level];
+                    percent[i] = 100;
+                }
                 else
+                {
                     percent[i] = 100 * weightProperty.intValue / _weightBase[perk.Level];
+                }
             }
         }
 
@@ -107,21 +126,44 @@ namespace VurbiriEditor.Colonization
             {
                 Space(10f);
                 LabelField("Scientist Settings", STYLES.H1);
-                Space(20f);
-                Rect pos = BeginVertical();
+                Rect pos = BeginVertical(GUI.skin.box);
                 {
                     float x = pos.x += 10f;
-                    pos.height = EditorGUIUtility.singleLineHeight; pos.width *= 0.45f;
+                    pos.height = EditorGUIUtility.singleLineHeight; pos.width *= 0.24f; pos.x = x + 0.25f * position.width; pos.y += _height * 0.5f;
+
                     DrawSpecialization(pos, AbilityTypeId.Economic);
+                    
                     pos.x = x + 0.5f * position.width;
                     DrawSpecialization(pos, AbilityTypeId.Military);
-                    pos.x = x + 0.26f * position.width; pos.y += _height * 2f;
-                    _shiftProperty.intValue = EditorGUI.IntSlider(pos, _shiftProperty.displayName, _shiftProperty.intValue, 1, 5);
-                    Space(_height * 3f);
+                    
+                    pos.x = x + 0.36f * position.width; pos.y += _height * 2f;
+                    _chanceProperty.intValue = DrawSlider(pos, _chanceName, _chanceProperty.intValue, 5, 50);
+                    
+                    Space(_height * 4f);
                 }
                 EndVertical();
                 Space();
+                pos = BeginVertical(GUI.skin.box);
+                {
+                    float x = pos.x += 10f;
+                    pos.height = EditorGUIUtility.singleLineHeight; pos.width *= 0.35f; pos.x = x + 0.14f * position.width; pos.y += _height * 0.5f;
+                    _tempSettings.weight = DrawSlider(pos, _baseName, _tempSettings.weight, 50, 500);
 
+                    pos.width = 0.24f * position.width; pos.x = x + 0.51f * position.width;
+                    _tempSettings.exp = DrawSlider(pos, _expName, _tempSettings.exp, 2, 5);
+
+                    pos.x = x + 0.36f * position.width; pos.y += _height * 2f;
+                    if (GUI.Button(pos, "Apply"))
+                    {
+                        RePercent(_maxPercent, _tempSettings.exp * PERCENT);
+                        _currentSettings = _tempSettings;
+                        WeightsSetup();
+                    }
+
+                    Space(_height * 4f);
+                }
+                EndVertical();
+                Space();
                 BeginVertical(GUI.skin.box);
                 {
                     _scrollPos = BeginScrollView(_scrollPos);
@@ -138,7 +180,20 @@ namespace VurbiriEditor.Colonization
             _serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawSpecialization(Rect pos, int type) => EditorGUI.PropertyField(pos, _specProperty[type], _specName[type]);
+        private void DrawSpecialization(Rect pos, int type)
+        {
+            const float offset = 70;
+            EditorGUI.PrefixLabel(pos, _specName[type]);
+            pos.x += offset; pos.width -= offset + 20f;
+            EditorGUI.PropertyField(pos, _specProperty[type], GUIContent.none);
+        }
+        private int DrawSlider(Rect pos, GUIContent label, int value, int min, int max)
+        {
+            float offset = label.text.Length * 9f;
+            EditorGUI.PrefixLabel(pos, label);
+            pos.x += offset; pos.width -= offset + 15f;
+            return EditorGUI.IntSlider(pos, value, min, max);
+        }
 
         private void DrawPerks(int type, string[] names, GUILayoutOption[] options)
         {
@@ -163,9 +218,9 @@ namespace VurbiriEditor.Colonization
                         {
                             id = perk.Id;
                             LabelField(names[id], STYLES.H2);
-                            percent[id] = ratio = IntSlider(percent[id], 100, MAX_PERCENT);
+                            percent[id] = ratio = IntSlider(percent[id], 100, _maxPercent);
                             perksProperty.GetArrayElementAtIndex(id).intValue = weight = _weightBase[h] * ratio / 100;
-                            LabelField("WEIGHT", weight.ToString(), ratio == 100 ? _normalStyle : ratio > HALF_MAX_PERCENT ? _overStyle : _halfStyle);
+                            LabelField("WEIGHT", weight.ToString(), ratio == 100 ? _normalStyle : ratio > _maxHalfPercent ? _overStyle : _halfStyle);
                         }
                         else
                         {
@@ -182,11 +237,31 @@ namespace VurbiriEditor.Colonization
             EndVertical();
         }
 
+        private void RePercent(int oldMax,  int newMax)
+        {
+            float ratio = (newMax - 100f) / (oldMax - 100f);
+            for (int t = 0, count; t < AbilityTypeId.Count; t++)
+            {
+                count = AbilityTypeId.PerksCount[t];
+                var percent = _percent[t];
+                for (int p = 0; p < count; p++)
+                    percent[p] = MathI.Round((percent[p] - 100) * ratio) + 100;
+            }    
+        }
+
         private void OnDisable()
         {
             SettingsFileEditor.Save(_settings);
+            SettingsFileEditor.Save(_currentSettings, PATH);
         }
 
         private static bool CheckArray(ReadOnlyArray<int> array) => array == null || array.Count == 0;
+
+        [System.Serializable]
+        private struct WeightSettings
+        {
+            public int weight;
+            public int exp;
+        }
     }
 }

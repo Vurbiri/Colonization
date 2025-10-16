@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Colonization.Characteristics;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
 {
@@ -8,17 +9,17 @@ namespace Vurbiri.Colonization
     {
         sealed private class Scientist : Counselor
         {
-            private const int COUNT = PerkTree.MAX_LEVEL - 1;
             private static readonly ScientistSettings s_settings;
 
-            private readonly Perks _perks = new();
-            private readonly Dictionary<int, List<Perk>>[] _levelingPerks = { new(COUNT), new(COUNT) };
+            private readonly Perks _perks;
+            private readonly Leveling _leveling = new();
             private Perk _perk;
 
             static Scientist() => s_settings = SettingsFile.Load<ScientistSettings>();
 
             public Scientist(AIController parent) : base(parent)
             {
+                _perks = new(Id);
             }
 
             public override IEnumerator Init_Cn()
@@ -28,14 +29,31 @@ namespace Vurbiri.Colonization
                 Create(AbilityTypeId.Military);
                 yield return null;
 
-                Log.Info($"[{PlayerId.PositiveNames_Ed[Id]}]");
-                Log.Info(_perks.ToString());
-                Log.Info("=========================================");
+                // ------ Local ----
+                void Create(int type)
+                {
+                    if (!PerkTree.IsAllTreeLearned(type))
+                    {
+                        int level = PerkTree.GetLevel(type);
+                        int count = AbilityTypeId.PerksCount[type];
+
+                        for (int i = 0; i < count; i++)
+                        {
+                            if (PerkTree.GetNotLearned(type, i, out Perk perk))
+                            {
+                                if (perk.Level > level)
+                                    _leveling.Add(type, perk);
+                                else
+                                    _perks.Add(type, perk);
+                            }
+                        }
+                    }
+                }
             }
 
             public override IEnumerator Planning_Cn()
             {
-                _perk ??= _perks.Extract();
+                _perks.Extract(ref _perk);
                 yield break;
             }
 
@@ -43,75 +61,76 @@ namespace Vurbiri.Colonization
             {
                 if (_perk != null && Resources[CurrencyId.Blood] >= _perk.Cost)
                 {
-                    Log.Info($"[{PlayerId.PositiveNames_Ed[Id]}] -> {AbilityTypeId.Names_Ed[_perk.Type]}.{(_perk.Type == AbilityTypeId.Economic ? EconomicPerksId.Names_Ed : MilitaryPerksId.Names_Ed)[_perk.Id]}");
-                    
                     Human.BuyPerk(_perk);
-                    TryAddPerks(_perk.Type);
+                    Log.Info($"[Scientist] Player {Id} learned a perk [{_perk.Type}].[{_perk.Id}]");
+
+                    int type = _perk.Type, progress = PerkTree.GetProgress(type);
+                    if (progress < PerkTree.MAX_PROGRESS && _leveling.TryGet(type, PerkTree.ProgressToLevel(progress), out List<Perk> perks))
+                    {
+                        for (int i = perks.Count - 1; i >= 0; i--)
+                            _perks.Add(type, perks[i]);
+                    }
                     _perk = null;
                 }
 
                 yield return s_waitRealtime.Restart();
             }
 
-            private void Create(int type)
+            #region Nested: Perks, Leveling
+            // **********************************************************
+            private class Perks
             {
-                if (PerkTree.IsAllTreeLearned(type))
-                    return;
-                
-                var weights = s_settings.weights[type];
-                int shift = s_settings.specialization[type] == Id ? s_settings.shift : 0;
-                var leveling = _levelingPerks[type];
-                int level = PerkTree.GetLevel(type);
+                private readonly WeightsList<Perk>[] _perks = { new(null), new(null) };
+                private Chance _chance;
 
-                Perk perk; List<Perk> perks;
-                for(int i = 0; i < weights.Count; i++)
+                public Perks(Id<PlayerId> playerId)
                 {
-                    if(PerkTree.GetNotLearned(type, i, out perk))
-                    {
-                        if(perk.Level > level)
-                        {
-                            if (!leveling.TryGetValue(perk.Level, out perks))
-                                leveling.Add(perk.Level, perks = new(COUNT));
+                    if (s_settings.specialization[AbilityTypeId.Economic] == playerId)
+                        _chance = Chance.MAX_CHANCE - s_settings.chance;
+                    else if (s_settings.specialization[AbilityTypeId.Military] == playerId)
+                        _chance = s_settings.chance;
+                    else
+                        _chance = 50;
+                }
 
-                            perks.Add(perk);
-                        }
-                        else
-                        {
-                            _perks.Add(perk, weights[i] << shift);
-                        }
+                [Impl(256)] public void Add(int type, Perk perk) => _perks[type].Add(perk, s_settings.weights[type][perk.Id]);
+
+                public void Extract(ref Perk perk)
+                {
+                    if (perk == null)
+                    {
+                        int type = _chance.Select(AbilityTypeId.Economic, AbilityTypeId.Military);
+                        perk = _perks[type].Extract();
+                        perk ??= _perks[AbilityTypeId.Other(type)].Extract();
                     }
                 }
             }
-
-            private void TryAddPerks(int type)
+            // **********************************************************
+            private class Leveling
             {
-                int count = _perks.Count;
-                var leveling = _levelingPerks[type];
-                int level = PerkTree.GetLevel(type);
+                private const int COUNT = PerkTree.MAX_LEVEL, MAX_IN_LINE = 5;
 
-                while (leveling.TryGetValue(level, out List<Perk> perks))
+                private readonly List<Perk>[][] _perks = { new List<Perk>[COUNT], new List<Perk>[COUNT] };
+
+                public void Add(int type, Perk perk)
                 {
-                    var weights = s_settings.weights[type];
-                    int shift = s_settings.specialization[type] == Id ? s_settings.shift : 0;
-                    Perk perk;
+                    var perks = _perks[type][perk.Level];
+                    if (perks == null)
+                        _perks[type][perk.Level] = perks = new(MAX_IN_LINE);
 
-                    leveling.Remove(level);
-                    for (int i = perks.Count - 1; i >= 0; i--)
-                    {
-                        perk = perks[i];
-                        _perks.Add(perk, weights[perk.Id] << shift);
-                    }
-
-                    level--;
+                    perks.Add(perk);
                 }
 
-                Log.Info($"[{PlayerId.PositiveNames_Ed[Id]}] perks {count} -> {_perks.Count}");
-            }
+                public bool TryGet(int type, int level, out List<Perk> perks)
+                {
+                    perks = _perks[type][level];
+                    _perks[type][level] = null;
 
-            private class Perks : WeightsList<Perk>
-            {
-                public Perks() : base(null) { }
+                    return perks != null;
+                }
             }
-        }
+            // **********************************************************
+            #endregion
+            }
     }
 }

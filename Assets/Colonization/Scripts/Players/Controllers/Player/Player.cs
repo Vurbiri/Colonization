@@ -50,14 +50,13 @@ namespace Vurbiri.Colonization
             public BuffsScriptable artefact;
             [Space]
             public HumanAbilitiesScriptable humanAbilities;
-            public PerksScriptable perks;
             public RoadFactory roadFactory;
             [Space]
             public BuffsScriptable satanLeveling;
             public void Dispose()
             {
-                humanAbilities.Dispose(); perks.Dispose(); satanLeveling.Dispose(); artefact.Dispose();
-                humanAbilities = null; perks = null; satanLeveling = null; artefact = null;
+                humanAbilities.Dispose(); satanLeveling.Dispose(); artefact.Dispose();
+                humanAbilities = null; satanLeveling = null; artefact = null;
             }
 
 #if UNITY_EDITOR
@@ -67,7 +66,6 @@ namespace Vurbiri.Colonization
                 roadFactory.OnValidate();
 
                 EUtility.SetScriptable(ref humanAbilities);
-                EUtility.SetScriptable(ref perks);
                 EUtility.SetScriptable(ref satanLeveling, "Satan Leveling");
                 EUtility.SetScriptable(ref artefact, "Artefact");
             }

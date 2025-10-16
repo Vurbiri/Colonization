@@ -11,6 +11,8 @@ namespace Vurbiri.Colonization
         [NotId] public static readonly ReadOnlyArray<int> PerksCount;
         [NotId] public static readonly ReadOnlyArray<int> SpellsCount;
 
+        public static int Other(int type) => 1 - type;
+
         static AbilityTypeId()
         {
             ConstructorRun();

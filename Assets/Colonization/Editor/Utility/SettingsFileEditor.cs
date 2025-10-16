@@ -13,23 +13,25 @@ namespace VurbiriEditor.Colonization
         private const string PATH = "/Colonization/Settings/Resources/" + SettingsFile.FOLDER;
         private const string JSON_EXT = ".json";
 
-        public static void Load<T>(ref T obj)
+        public static void Load<T>(ref T obj) => Load(ref obj, PATH);
+        public static void Load<T>(ref T obj, string path)
         {
             Type type = typeof(T);
             try
             {
-                obj = (T)JsonConvert.DeserializeObject(File.ReadAllText(GetPath(type), CONST_EDITOR.utf8WithoutBom), type);
+                obj = (T)JsonConvert.DeserializeObject(File.ReadAllText(GetPath(path, type), CONST_EDITOR.utf8WithoutBom), type);
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 Debug.LogWarning(ex.Message);
             }
-         }
+        }
 
-        public static void Save<T>(T obj)
+        public static void Save<T>(T obj) => Save(obj, PATH);
+        public static void Save<T>(T obj, string path)
         {
             Type type = typeof(T);
-            FileInfo file = new(GetPath(type));
+            FileInfo file = new(GetPath(path, type));
 
             if (!file.Directory.Exists)
             {
@@ -44,5 +46,6 @@ namespace VurbiriEditor.Colonization
         }
 
         private static string GetPath(Type type) => Application.dataPath.Concat(PATH, type.Name, JSON_EXT);
+        private static string GetPath(string path, Type type) => Application.dataPath.Concat(path, type.Name, JSON_EXT);
     }
 }
