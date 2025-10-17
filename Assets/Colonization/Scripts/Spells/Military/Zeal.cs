@@ -31,14 +31,14 @@ namespace Vurbiri.Colonization
             public override bool Prep(SpellParam param)
             {
                 var human = Humans[param.playerId];
-                return _canCast = !s_isCast && human.IsPay(_cost) & human.Actors.Count > 0 & _coroutine == null;
+                return _canCast = !s_isCasting && human.IsPay(_cost) & human.Actors.Count > 0 & _coroutine == null;
             }
 
             public override void Cast(SpellParam param)
             {
                 if (_canCast)
                 {
-                    s_isCast.True();
+                    StartCasting();
                     _currentPlayer = param.playerId;
                     _coroutine = Cast_Cn().Start();
 
@@ -116,7 +116,7 @@ namespace Vurbiri.Colonization
                 _coroutine = null; _waitButton = null;
                 _currentPlayer = PlayerId.None;
 
-                s_isCast.False();
+                EndCasting();
             }
 
             private void SetActor(Actor actor) => _waitActor.SetResult(actor);

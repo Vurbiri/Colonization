@@ -22,7 +22,7 @@ namespace Vurbiri.Collections
             _values = new TValue[count];
             _count = count;
         }
-        [Impl(256)] public ReadOnlyArray(TValue[] values)
+        [Impl(256)] public ReadOnlyArray(params TValue[] values)
         {
             _values = values;
             _count = values.Length;

@@ -7,6 +7,8 @@ namespace Vurbiri.Colonization
     {
         private static readonly AIControllerSettings s_settings;
 
+        private readonly int _specialization = -1;
+
         private readonly WaitResultSource<bool> _waitExchange = new();
 
         private readonly Diplomat _diplomat;
@@ -17,6 +19,11 @@ namespace Vurbiri.Colonization
 
         public AIController(int playerId, Settings settings) : base(playerId, settings) 
         {
+            if (s_settings.specialization[AbilityTypeId.Economic] == playerId)
+                _specialization = AbilityTypeId.Economic;
+            else if (s_settings.specialization[AbilityTypeId.Military] == playerId)
+                _specialization = AbilityTypeId.Military;
+
             _diplomat = new(this); _builder = new(this); _scientist = new(this);
         }
 
@@ -43,7 +50,6 @@ namespace Vurbiri.Colonization
 
             IEnumerator OnPlay_Cn()
             {
-                yield return _scientist.Planning_Cn();
                 yield return _scientist.Execution_Cn();
 
                 GameContainer.GameLoop.EndTurn();
@@ -69,7 +75,7 @@ namespace Vurbiri.Colonization
                 return _waitExchange.Restart();
             }
 
-            // Local
+            // ==== Local ====
             IEnumerator Exchange_Cn(ReadOnlyMainCurrencies needed)
             {
                 bool result = false;

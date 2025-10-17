@@ -1,6 +1,6 @@
+using System.Collections;
 using Vurbiri.Collections;
 using Vurbiri.EntryPoint;
-using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -8,29 +8,29 @@ namespace Vurbiri.Colonization
     public partial class SpellBook
 	{
         private static readonly SpellsSettings s_settings;
-        private static readonly int[][] s_costs;
-        private static readonly string[][] s_keys;
+        private static readonly ReadOnlyIdArray<AbilityTypeId, ReadOnlyArray<int>>    s_costs;
+        private static readonly ReadOnlyIdArray<AbilityTypeId, ReadOnlyArray<string>> s_keys;
 
-        private static readonly ASpell[][] s_spells = { s_economicSpells = new ASpell[EconomicSpellId.Count], s_militarySpells = new ASpell[MilitarySpellId.Count] };
-        private static readonly ASpell[] s_economicSpells;
-        private static readonly ASpell[] s_militarySpells;
-
-        private static readonly RBool s_isCast = new(false);
+        private static readonly ASpell[][] s_spells = {new ASpell[EconomicSpellId.Count], new ASpell[MilitarySpellId.Count] };
+        private static readonly VAction<bool> s_casting = new();
+        private static bool s_isCasting;
 
         private static ReadOnlyArray<HumanController> Humans { [Impl(256)] get => GameContainer.Players.Humans; }
 
         public ASpell this[int type, int id] { [Impl(256)] get => s_spells[type][id]; }
         public ASpell this[SpellId spellId]  { [Impl(256)] get => s_spells[spellId.type][spellId.id]; }
 
-        public static RBool IsCast => s_isCast;
+        public static bool IsCasting { [Impl(256)] get => s_isCasting; }
+        public static Event<bool> EventCasting { [Impl(256)] get => s_casting; }
+        public static IEnumerator WaitEndCasting { [Impl(256)] get; } = new WaitCasting();
 
         static SpellBook()
         {
             s_settings = SettingsFile.Load<SpellsSettings>();
-            s_costs = new int[][] { s_settings.economicCost.Values, s_settings.militaryCost.Values };
-            s_keys  = new string[][] { s_settings.economicKey.Values, s_settings.militaryKey.Values };
+            s_costs = new (s_settings.economicCost, s_settings.militaryCost);
+            s_keys  = new (s_settings.economicKey , s_settings.militaryKey );
             s_settings.economicCost = null; s_settings.militaryCost = null;
-            s_settings.economicKey = null; s_settings.militaryKey = null;
+            s_settings.economicKey  = null; s_settings.militaryKey  = null;
         }
 
         public void Cast(int type, int id, SpellParam param)
@@ -42,7 +42,18 @@ namespace Vurbiri.Colonization
 
         public void Cancel(int type, int id)
         {
-            if(s_isCast) s_spells[type][id].Cancel();
+            if(s_isCasting) s_spells[type][id].Cancel();
+        }
+
+        private static void StartCasting()
+        {
+            s_isCasting = true;
+            s_casting.Invoke(true);
+        }
+        private static void EndCasting()
+        {
+            s_isCasting = false;
+            s_casting.Invoke(false);
         }
 
         public static void Init()
@@ -55,13 +66,26 @@ namespace Vurbiri.Colonization
 
         private static void Clear()
         {
-            s_isCast.UnsubscribeAll(); s_isCast.SilentValue = false;
+            s_casting.Clear();
+            s_isCasting = false;
 
-            for (int i = 0; i < EconomicSpellId.Count; i++)
+            for (int t = 0, count; t < AbilityTypeId.Count; t++)
             {
-                s_economicSpells[i].Clear(EconomicSpellId.Type, i);
-                s_militarySpells[i].Clear(MilitarySpellId.Type, i);
+                count = AbilityTypeId.SpellsCount[t];
+                for (int i = 0; i < count; i++)
+                {
+                    s_spells[t][i].Clear();
+                    s_spells[t][i] = null;
+                }
             }
+        }
+
+        // **** Nested ****
+        private class WaitCasting : IEnumerator
+        {
+            public object Current => null;
+            public bool MoveNext() => s_isCasting;
+            public void Reset() { }
         }
     }
 

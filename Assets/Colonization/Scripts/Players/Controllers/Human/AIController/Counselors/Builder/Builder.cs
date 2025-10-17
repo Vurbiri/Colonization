@@ -30,22 +30,17 @@ namespace Vurbiri.Colonization
                 yield return s_waitRealtime.Restart();
             }
 
-            public override IEnumerator Planning_Cn()
-            {
-                Log.Info($"===== {PlayerId.PositiveNames_Ed[Id]} ======");
-                if (_currentPlan.Done || !_currentPlan.IsValid)
-                    yield return CreatePlan_Cn();
-            }
-
             public override IEnumerator Execution_Cn()
             {
+                if (_currentPlan.Done || !_currentPlan.IsValid)
+                    yield return CreatePlan_Cn();
+
                 Log.Info(_currentPlan);
                 yield return _currentPlan.Execution_Cn();
             }
 
             private IEnumerator CreatePlan_Cn()
             {
-                Log.Info("CreatePlan");
                 Plans plans = new();
 
                 if (Colonies.Count > 0)

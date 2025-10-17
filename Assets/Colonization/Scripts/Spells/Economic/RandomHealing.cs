@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                if (_canCast = !s_isCast)
+                if (_canCast = !s_isCasting)
                 {
                     _wounded.Clear();
                     if (Humans[param.playerId].IsPay(_cost))
@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    s_isCast.True();
+                    StartCasting();
                     
                     Cast_Cn(_wounded.Rand()).Start();
                     ShowSpellName(param.playerId);
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
                 target.ApplyEffect(_heal);
                 GameContainer.SFX.Run(s_settings.healSFX, null, target.Skin);
 
-                s_isCast.False();
+                EndCasting();
             }
 
             protected override string GetDesc(Localization localization)

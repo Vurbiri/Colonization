@@ -22,8 +22,6 @@ namespace VurbiriEditor.Colonization
         private readonly int[][] _percent = { new int[EconomicPerksId.Count], new int[MilitaryPerksId.Count] };
         private readonly Perk[][,] _perkGrid = { new Perk[COUNT, COUNT], new Perk[COUNT, COUNT] };
         private readonly SerializedProperty[] _perksProperty = new SerializedProperty[AbilityTypeId.Count];
-        private readonly SerializedProperty[] _specProperty = new SerializedProperty[AbilityTypeId.Count];
-        private readonly GUIContent[] _specName = { new("Economist:"), new("Militarist:") };
         private readonly GUIContent _chanceName = new("Chance:"), _baseName = new("Base:"), _expName = new("Exp:");
 
         private readonly float _height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
@@ -74,10 +72,6 @@ namespace VurbiriEditor.Colonization
             _perksProperty[AbilityTypeId.Economic] = weightsProperty.GetArrayElementAtIndex(AbilityTypeId.Economic).FindPropertyRelative("_values");
             _perksProperty[AbilityTypeId.Military] = weightsProperty.GetArrayElementAtIndex(AbilityTypeId.Military).FindPropertyRelative("_values");
 
-            var specializationProperty = settingsProperty.FindPropertyRelative("specialization").FindPropertyRelative("_values");
-            _specProperty[AbilityTypeId.Economic] = specializationProperty.GetArrayElementAtIndex(AbilityTypeId.Economic);
-            _specProperty[AbilityTypeId.Military] = specializationProperty.GetArrayElementAtIndex(AbilityTypeId.Military);
-
             _chanceProperty = settingsProperty.FindPropertyRelative("chance");
 
             PerkSetup(EconomicPerksId.Type);
@@ -112,7 +106,7 @@ namespace VurbiriEditor.Colonization
                 }
                 else
                 {
-                    percent[i] = 100 * weightProperty.intValue / _weightBase[perk.Level];
+                    percent[i] = MathI.Round(100f * weightProperty.intValue / _weightBase[perk.Level]);
                 }
             }
         }
@@ -128,31 +122,23 @@ namespace VurbiriEditor.Colonization
                 LabelField("Scientist Settings", STYLES.H1);
                 Rect pos = BeginVertical(GUI.skin.box);
                 {
-                    float x = pos.x += 10f;
-                    pos.height = EditorGUIUtility.singleLineHeight; pos.width *= 0.24f; pos.x = x + 0.25f * position.width; pos.y += _height * 0.5f;
-
-                    DrawSpecialization(pos, AbilityTypeId.Economic);
-                    
-                    pos.x = x + 0.5f * position.width;
-                    DrawSpecialization(pos, AbilityTypeId.Military);
-                    
-                    pos.x = x + 0.36f * position.width; pos.y += _height * 2f;
+                    pos.height = EditorGUIUtility.singleLineHeight; pos.width *= 0.24f; pos.x += 10f + 0.36f * position.width; pos.y += _height * 0.3f;
                     _chanceProperty.intValue = DrawSlider(pos, _chanceName, _chanceProperty.intValue, 5, 50);
                     
-                    Space(_height * 4f);
+                    Space(_height * 1.25f);
                 }
                 EndVertical();
                 Space();
                 pos = BeginVertical(GUI.skin.box);
                 {
                     float x = pos.x += 10f;
-                    pos.height = EditorGUIUtility.singleLineHeight; pos.width *= 0.35f; pos.x = x + 0.14f * position.width; pos.y += _height * 0.5f;
+                    pos.height = EditorGUIUtility.singleLineHeight; pos.width *= 0.35f; pos.x = x + 0.14f * position.width; pos.y += _height * 0.3f;
                     _tempSettings.weight = DrawSlider(pos, _baseName, _tempSettings.weight, 50, 500);
 
                     pos.width = 0.24f * position.width; pos.x = x + 0.51f * position.width;
                     _tempSettings.exp = DrawSlider(pos, _expName, _tempSettings.exp, 2, 5);
 
-                    pos.x = x + 0.36f * position.width; pos.y += _height * 2f;
+                    pos.x = x + 0.36f * position.width; pos.y += _height * 1.5f;
                     if (GUI.Button(pos, "Apply"))
                     {
                         RePercent(_maxPercent, _tempSettings.exp * PERCENT);
@@ -160,7 +146,7 @@ namespace VurbiriEditor.Colonization
                         WeightsSetup();
                     }
 
-                    Space(_height * 4f);
+                    Space(_height * 3f);
                 }
                 EndVertical();
                 Space();
@@ -180,13 +166,6 @@ namespace VurbiriEditor.Colonization
             _serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawSpecialization(Rect pos, int type)
-        {
-            const float offset = 70;
-            EditorGUI.PrefixLabel(pos, _specName[type]);
-            pos.x += offset; pos.width -= offset + 20f;
-            EditorGUI.PropertyField(pos, _specProperty[type], GUIContent.none);
-        }
         private int DrawSlider(Rect pos, GUIContent label, int value, int min, int max)
         {
             float offset = label.text.Length * 9f;

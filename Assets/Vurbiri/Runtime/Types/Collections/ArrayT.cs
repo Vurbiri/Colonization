@@ -15,7 +15,7 @@ namespace Vurbiri.Collections
         }
 
         [Impl(256)] public Array(int count) : base(count) { }
-        [Impl(256)] public Array(TValue[] values) : base(values) { }
+        [Impl(256)] public Array(params TValue[] values) : base(values) { }
         [Impl(256), JsonConstructor] public Array(IReadOnlyList<TValue> list) : base(list) { }
 
         public void Resize(int newSize)

@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                if (_canCast = !s_isCast)
+                if (_canCast = !s_isCasting)
                 {
                     _blessed.Clear();
                     _cost[Gold] = param.valueA; _cost[Food] = param.valueB;
@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
                     float count = _blessed.Count;
                     int value = MathI.Round((s_settings.blessBasa + (param.valueA + param.valueB) * s_settings.blessPerRes) / count);
 
-                    s_isCast.True();
+                    StartCasting();
 
                     Cast_Cn(param.playerId, value).Start();
                     ShowSpellName(param.playerId, 3f + 2f * count);
@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization
                     _blessed.RemoveAt(index);
                 }
 
-                s_isCast.False();
+                EndCasting();
             }
 
             protected override string GetDesc(Localization localization)

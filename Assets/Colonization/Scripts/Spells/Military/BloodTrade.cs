@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
             public override bool Prep(SpellParam param)
             {
                 _blood = param.valueA - (param.valueA % s_settings.bloodTradePay);
-                return _canCast = !s_isCast & _blood > 0 && Humans[param.playerId].Resources[Blood] >= _blood;
+                return _canCast = !s_isCasting & _blood > 0 && Humans[param.playerId].Resources[Blood] >= _blood;
             }
 
             public override void Cast(SpellParam param)

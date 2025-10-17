@@ -1,4 +1,5 @@
 using UnityEditor;
+using Vurbiri.Collections;
 using Vurbiri.Colonization;
 using static VurbiriEditor.Colonization.CONST_EDITOR;
 
@@ -18,26 +19,18 @@ namespace VurbiriEditor.Colonization
 
         private void OnValidate()
         {
-            if (_settings.economicKey != null)
-            {
-                for (int i = 0; i < EconomicSpellId.Count; i++)
-                    if (string.IsNullOrEmpty(_settings.economicKey[i]))
-                        _settings.economicKey[i] = EconomicSpellId.Names_Ed[i];
-            }
-            else
-            {
+            if (_settings.economicKey == null || !IsValid(_settings.economicKey))
                 _settings.economicKey = new(EconomicSpellId.Names_Ed);
-            }
 
-            if (_settings.militaryKey != null)
-            {
-                for (int i = 0; i < MilitarySpellId.Count; i++)
-                    if (string.IsNullOrEmpty(_settings.militaryKey[i]))
-                        _settings.militaryKey[i] = MilitarySpellId.Names_Ed[i];
-            }
-            else
-            {
+            if (_settings.militaryKey == null || !IsValid(_settings.militaryKey))
                 _settings.militaryKey = new(MilitarySpellId.Names_Ed);
+
+            static bool IsValid(ReadOnlyArray<string> keys)
+            {
+                for (int i = 0; i < keys.Count; i++)
+                    if (string.IsNullOrEmpty(keys[i]))
+                        return false;
+                return true;
             }
         }
 

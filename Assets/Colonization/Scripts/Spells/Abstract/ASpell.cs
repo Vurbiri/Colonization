@@ -38,16 +38,15 @@ namespace Vurbiri.Colonization
                 s_spells[type][id] = this;
             }
 
-            public virtual bool Prep(SpellParam param) => _canCast = !s_isCast && Humans[param.playerId].IsPay(_cost);
+            public virtual bool Prep(SpellParam param) => _canCast = !s_isCasting && Humans[param.playerId].IsPay(_cost);
 
             public abstract void Cast(SpellParam param);
 
             public virtual void Cancel() { }
 
-            public virtual void Clear(int type, int id)
+            public void Clear()
             {
                 Localization.Instance.Unsubscribe(SetHint);
-                s_spells[type][id] = null;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

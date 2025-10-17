@@ -26,7 +26,7 @@ namespace Vurbiri.Colonization
             {
                 _canCast = false;
                 var human = Humans[param.playerId];
-                if (!s_isCast & !human.IsMaxWarriors && human.IsPay(_cost))
+                if (!s_isCasting & !human.IsMaxWarriors && human.IsPay(_cost))
                 {
                     _count = 0;
                     for (int i = 0; i < PlayerId.Count; i++)

@@ -24,7 +24,7 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                if (_canCast = !s_isCast)
+                if (_canCast = !s_isCasting)
                 {
                     _occupations.Clear();
                     var human = Humans[param.playerId];

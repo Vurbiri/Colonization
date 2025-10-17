@@ -40,11 +40,11 @@ namespace Vurbiri.Colonization
         public HitSFXName zealSFX;
         public int zealAddAP;
         [Header("Cost")]
-        public IdArray<EconomicSpellId, int> economicCost;
-        public IdArray<MilitarySpellId, int> militaryCost;
+        public ReadOnlyIdArray<EconomicSpellId, int> economicCost;
+        public ReadOnlyIdArray<MilitarySpellId, int> militaryCost;
         [Header("Hint")]
-        public IdArray<EconomicSpellId, string> economicKey;
-        public IdArray<MilitarySpellId, string> militaryKey;
+        public ReadOnlyIdArray<EconomicSpellId, string> economicKey;
+        public ReadOnlyIdArray<MilitarySpellId, string> militaryKey;
     }
 }
 

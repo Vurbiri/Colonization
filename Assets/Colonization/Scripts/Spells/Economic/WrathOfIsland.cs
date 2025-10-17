@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                if (_canCast = !s_isCast)
+                if (_canCast = !s_isCasting)
                 {
                     _targets.Clear();
                     _cost[Wood] =param.valueA; _cost[Ore] = param.valueB;
@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization
                     _damage.playerId = param.playerId;
                     _damage.attack = ((s_settings.wrathBasa + (param.valueA + param.valueB) * s_settings.wrathPerRes << ActorAbilityId.SHIFT_ABILITY)) / count;
 
-                    s_isCast.True();
+                    StartCasting();
 
                     Cast_Cn().Start();
                     ShowSpellName(param.playerId, 3f + 2f * count);
@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization
                     yield return SFX.Run(s_settings.wrathSFX, null, target.Skin);
                 }
 
-                s_isCast.False();
+                EndCasting();
             }
 
             protected override string GetDesc(Localization localization)

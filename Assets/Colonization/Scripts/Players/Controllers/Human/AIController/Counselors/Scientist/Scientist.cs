@@ -12,24 +12,24 @@ namespace Vurbiri.Colonization
             private static readonly ScientistSettings s_settings;
 
             private readonly Perks _perks;
-            private readonly Leveling _leveling = new();
+            private readonly Leveling _leveling;
             private Perk _perk;
 
             static Scientist() => s_settings = SettingsFile.Load<ScientistSettings>();
 
             public Scientist(AIController parent) : base(parent)
             {
-                _perks = new(Id);
+                _perks = new(parent._specialization);
+                _leveling = new(PerkTree.GetLevel(AbilityTypeId.Economic), PerkTree.GetLevel(AbilityTypeId.Military));
             }
 
             public override IEnumerator Init_Cn()
             {
                 Create(AbilityTypeId.Economic);
-                yield return null;
                 Create(AbilityTypeId.Military);
-                yield return null;
+                yield break;
 
-                // ------ Local ----
+                // === Local ===
                 void Create(int type)
                 {
                     if (!PerkTree.IsAllTreeLearned(type))
@@ -37,39 +37,34 @@ namespace Vurbiri.Colonization
                         int level = PerkTree.GetLevel(type);
                         int count = AbilityTypeId.PerksCount[type];
 
-                        for (int i = 0; i < count; i++)
+                        for (int id = 0; id < count; id++)
                         {
-                            if (PerkTree.GetNotLearned(type, i, out Perk perk))
+                            if (PerkTree.GetNotLearned(type, id, out Perk perk))
                             {
                                 if (perk.Level > level)
-                                    _leveling.Add(type, perk);
+                                    _leveling.Add(perk);
                                 else
-                                    _perks.Add(type, perk);
+                                    _perks.Add(perk);
                             }
                         }
                     }
                 }
             }
 
-            public override IEnumerator Planning_Cn()
-            {
-                _perks.Extract(ref _perk);
-                yield break;
-            }
-
             public override IEnumerator Execution_Cn()
             {
+                _perks.Extract(ref _perk);
+
                 if (_perk != null && Resources[CurrencyId.Blood] >= _perk.Cost)
                 {
                     Human.BuyPerk(_perk);
+
+                    int progress = PerkTree.GetProgress(_perk.Type);
+                    if (progress < PerkTree.MAX_PROGRESS && _leveling.TryGet(_perk.Type, PerkTree.ProgressToLevel(progress), out List<Perk> perks))
+                        _perks.Add(_perk.Type, perks);
+
                     Log.Info($"[Scientist] Player {Id} learned a perk [{_perk.Type}].[{_perk.Id}]");
 
-                    int type = _perk.Type, progress = PerkTree.GetProgress(type);
-                    if (progress < PerkTree.MAX_PROGRESS && _leveling.TryGet(type, PerkTree.ProgressToLevel(progress), out List<Perk> perks))
-                    {
-                        for (int i = perks.Count - 1; i >= 0; i--)
-                            _perks.Add(type, perks[i]);
-                    }
                     _perk = null;
                 }
 
@@ -83,25 +78,35 @@ namespace Vurbiri.Colonization
                 private readonly WeightsList<Perk>[] _perks = { new(null), new(null) };
                 private Chance _chance;
 
-                public Perks(Id<PlayerId> playerId)
+                public Perks(int specialization)
                 {
-                    if (s_settings.specialization[AbilityTypeId.Economic] == playerId)
-                        _chance = Chance.MAX_CHANCE - s_settings.chance;
-                    else if (s_settings.specialization[AbilityTypeId.Military] == playerId)
-                        _chance = s_settings.chance;
-                    else
-                        _chance = 50;
+                    _chance = specialization switch
+                    {
+                        AbilityTypeId.Economic => Chance.MAX_CHANCE - s_settings.chance,
+                        AbilityTypeId.Military => s_settings.chance,
+                        _ => 50
+                    };
                 }
 
-                [Impl(256)] public void Add(int type, Perk perk) => _perks[type].Add(perk, s_settings.weights[type][perk.Id]);
+                [Impl(256)] public void Add(Perk perk) => _perks[perk.Type].Add(perk, s_settings.weights[perk.Type][perk.Id]);
+
+                public void Add(int type, List<Perk> addPerks)
+                {
+                    var perks = _perks[type]; Perk perk;
+                    for (int i = addPerks.Count - 1; i >= 0; i--)
+                    {
+                        perk = addPerks[i];
+                        perks.Add(perk, s_settings.weights[type][perk.Id]);
+                    }
+                        
+                }
 
                 public void Extract(ref Perk perk)
                 {
                     if (perk == null)
                     {
                         int type = _chance.Select(AbilityTypeId.Economic, AbilityTypeId.Military);
-                        perk = _perks[type].Extract();
-                        perk ??= _perks[AbilityTypeId.Other(type)].Extract();
+                        perk = _perks[type].Extract() ?? _perks[AbilityTypeId.Other(type)].Extract();
                     }
                 }
             }
@@ -112,14 +117,20 @@ namespace Vurbiri.Colonization
 
                 private readonly List<Perk>[][] _perks = { new List<Perk>[COUNT], new List<Perk>[COUNT] };
 
-                public void Add(int type, Perk perk)
+                public Leveling(int economicLevel, int militaryLevel)
                 {
-                    var perks = _perks[type][perk.Level];
-                    if (perks == null)
-                        _perks[type][perk.Level] = perks = new(MAX_IN_LINE);
+                    Create(_perks[AbilityTypeId.Economic], economicLevel);
+                    Create(_perks[AbilityTypeId.Military], militaryLevel);
 
-                    perks.Add(perk);
+                    // === Local ===
+                    [Impl(256)] static void Create(List<Perk>[] perks, int level)
+                    {
+                        for (int i = level; i < COUNT; i++) 
+                            perks[i] = new(MAX_IN_LINE);
+                    }
                 }
+
+                [Impl(256)] public void Add(Perk perk) => _perks[perk.Type][perk.Level].Add(perk);
 
                 public bool TryGet(int type, int level, out List<Perk> perks)
                 {
@@ -131,6 +142,6 @@ namespace Vurbiri.Colonization
             }
             // **********************************************************
             #endregion
-            }
+        }
     }
 }

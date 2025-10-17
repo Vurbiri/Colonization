@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
             public override bool Prep(SpellParam param)
             {
                 var resources = Humans[param.playerId].Resources;
-                if (_canCast = !s_isCast & resources[Mana] >= _mana)
+                if (_canCast = !s_isCasting & resources[Mana] >= _mana)
                 {
                     for (int i = 0; i < MainCount - 1; i++)
                         _cost.Set(i, resources[i]);

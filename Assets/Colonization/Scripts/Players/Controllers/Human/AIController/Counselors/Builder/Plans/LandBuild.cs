@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
                 {
                     get
                     {
-                        bool isValid = FreeRoadCount >= (_roadsCount - _cursor) && _steps[_cursor].crossroad.IsRoadConnect(Id); 
+                        bool isValid = FreeRoadCount >= (_roadsCount - _cursor) && _steps[_cursor].crossroad.IsRoadConnect(PlayerId); 
                         for (int i = _cursor; isValid & i < _roadsCount; i++ )
                             isValid = _steps[i].link.IsEmpty;
 

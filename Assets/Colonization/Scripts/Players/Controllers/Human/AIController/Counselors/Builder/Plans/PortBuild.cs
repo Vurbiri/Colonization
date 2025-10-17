@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
         {
             sealed private class PortBuild : ABuild
             {
-                public override bool IsValid => _crossroad.CanBuild(Id);
+                public override bool IsValid => _crossroad.CanBuild(PlayerId);
 
                 private PortBuild(Builder parent, Crossroad crossroad, ReadOnlyMainCurrencies cost) : base(parent, crossroad, cost, parent.Human.BuyEdificeUpgrade) { }
 

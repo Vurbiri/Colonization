@@ -1,0 +1,21 @@
+{
+  "maxMana": 10,
+  "weightsEconomic": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "weightsMilitary": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}

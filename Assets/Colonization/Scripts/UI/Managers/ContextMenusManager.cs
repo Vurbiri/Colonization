@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using Vurbiri.Colonization.Actors;
-using Vurbiri.Reactive;
 using static Vurbiri.Colonization.GameContainer;
 
 namespace Vurbiri.Colonization.UI
 {
     [System.Serializable]
-    public class ContextMenusManager : System.IDisposable
+    public class ContextMenusManager
     {
         [SerializeField] private RectTransform _canvasTransform;
         [SerializeField] private RectTransform _menusTransform;
@@ -20,8 +19,7 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private ButtonCancel _buttonCancel;
 
-        private Subscription _subscription;
-        private bool _enable, _isNotCast, _lookAtEnabled;
+        private bool _enable, _lookAtEnabled;
         private IMenu _currentOpenMenu;
 
         public void Init()
@@ -31,8 +29,6 @@ namespace Vurbiri.Colonization.UI
             _recruitingMenu.Init(_crossroadMenu).Add(OnActiveMenu);
             _roadsMenu     .Init(_crossroadMenu).Add(OnActiveMenu);
             _warriorsMenu  .Init().Add(OnActiveMenu);
-
-            _subscription = SpellBook.IsCast.Subscribe(value => _isNotCast = !value);
 
             CameraTransform.Subscribe(LookAtCamera);
 
@@ -60,7 +56,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnSelectCrossroad(Crossroad crossroad)
         {
-            if (_enable & _isNotCast & crossroad.Interactable & _currentOpenMenu == null)
+            if (_enable & !SpellBook.IsCasting & crossroad.Interactable & _currentOpenMenu == null)
             {
                 CameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
                 _crossroadMenu.Open(crossroad);
@@ -69,7 +65,7 @@ namespace Vurbiri.Colonization.UI
         }
         private void OnInitCrossroad(Crossroad crossroad)
         {
-            if (_enable & _isNotCast & crossroad.Interactable & _currentOpenMenu == null)
+            if (_enable & !SpellBook.IsCasting & crossroad.Interactable & _currentOpenMenu == null)
             {
                 CameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, crossroad.Position);
                 _initMenu.Open(crossroad);
@@ -79,7 +75,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnSelectWarrior(Actor actor)
         {
-            if (_enable & _isNotCast & actor.CanUseSkills & _currentOpenMenu == null)
+            if (_enable & !SpellBook.IsCasting & actor.CanUseSkills & _currentOpenMenu == null)
             {
                 CameraTransform.TransformToLocalPosition(_menusTransform, _canvasTransform, actor.Position);
                 _warriorsMenu.Open(actor);
@@ -137,10 +133,6 @@ namespace Vurbiri.Colonization.UI
                 _currentOpenMenu = null;
                 _lookAtEnabled = false;
             }
-        }
-        public void Dispose()
-        {
-            _subscription?.Dispose();
         }
 
 #if UNITY_EDITOR

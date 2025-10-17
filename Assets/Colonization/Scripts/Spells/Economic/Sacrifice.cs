@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
                 _canCast = false;
                 var allActors = GameContainer.Actors;
                 
-                if (!s_isCast && allActors[param.playerId].Count > 0 && Humans[param.playerId].IsPay(_cost))
+                if (!s_isCasting && allActors[param.playerId].Count > 0 && Humans[param.playerId].IsPay(_cost))
                 {
                     _target = null;
                     var actors = allActors[PlayerId.Satan];
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    s_isCast.True();
+                    StartCasting();
                     _currentPlayer = param.playerId;
                     _coroutine = Cast_Cn().Start();
 
@@ -142,7 +142,7 @@ namespace Vurbiri.Colonization
                 _coroutine = null; _target = null; _waitButton = null;
                 _currentPlayer = PlayerId.None;
 
-                s_isCast.False();
+                EndCasting();
             }
 
             private void SetActor(Actor actor) => _waitActor.SetResult(actor);

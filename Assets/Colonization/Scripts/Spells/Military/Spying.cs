@@ -8,7 +8,7 @@ namespace Vurbiri.Colonization
 {
     public partial class SpellBook
     {
-        sealed public class Spying : ASpell
+        sealed private class Spying : ASpell
         {
             private readonly MainCurrencies _add = new();
 
@@ -74,11 +74,11 @@ namespace Vurbiri.Colonization
 
             private IEnumerator Cast_Cn(string text)
             {
-                s_isCast.True();
+                StartCasting();
 
                 yield return MessageBox.Open(text, MBButton.Ok);
 
-                s_isCast.False();
+                EndCasting();
             }
 
             protected override string GetDesc(Localization localization) => string.Concat(localization.GetText(FILE, _descKey), _strCost);

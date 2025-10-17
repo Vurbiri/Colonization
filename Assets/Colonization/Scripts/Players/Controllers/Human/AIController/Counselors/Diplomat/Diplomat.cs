@@ -48,10 +48,6 @@ namespace Vurbiri.Colonization
             {
                 yield break;
             }
-            public override IEnumerator Planning_Cn()
-            {
-                yield break;
-            }
 
             public override IEnumerator Execution_Cn()
             {

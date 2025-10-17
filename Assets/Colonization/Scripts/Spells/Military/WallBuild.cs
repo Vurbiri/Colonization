@@ -18,7 +18,7 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                if (_canCast = !s_isCast)
+                if (_canCast = !s_isCasting)
                 {
                     _canWall.Clear();
                     if (Humans[param.playerId].IsPay(_cost))

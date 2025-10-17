@@ -1,9 +1,12 @@
+using Vurbiri.Collections;
+
 namespace Vurbiri.Colonization
 {
 	[System.Serializable]
 	public class AIControllerSettings
 	{
-		public int minExchangeBlood; // = 4;
+        public ReadOnlyIdArray<AbilityTypeId, Id<PlayerId>> specialization;
+        public int minExchangeBlood; // = 4;
 
     }
 }
