@@ -1,6 +1,7 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri
 {
@@ -19,19 +20,15 @@ namespace Vurbiri
         protected AWaitTime(float time, Func<float> applicationTime) : this(applicationTime) => _waitTime = time;
         protected AWaitTime(AWaitTime time, Func<float> applicationTime) : this(applicationTime) => _waitTime = time._waitTime;
 
+        [Impl(256)] public IEnumerator Restart() => _timer.Set(_waitTime);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator Restart() => _timer.Set(_waitTime);
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator Restart(float value)
+        [Impl(256)] public IEnumerator Restart(float value)
         {
             _waitTime = value;
             return _timer.Set(value);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator OffsetRestart(float offset) => _timer.Set(_waitTime + offset);
+        [Impl(256)] public IEnumerator OffsetRestart(float offset) => _timer.Set(_waitTime + offset);
 
         sealed public override bool MoveNext()
         {
@@ -50,16 +47,30 @@ namespace Vurbiri
 
             public Timer(Func<float> applicationTime) => _applicationTime = applicationTime;
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public override bool MoveNext() => _waitUntilTime > _applicationTime();
+            [Impl(256)] public override bool MoveNext() => _waitUntilTime > _applicationTime();
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Enumerator Set(float time)
+            [Impl(256)] public Enumerator Set(float time)
             {
                 _waitUntilTime = time + _applicationTime();
                 return this;
             }
         }
+        // *******************************************************
+        public abstract class AConverter : AJsonConverter<AWaitTime>
+        {
+            sealed public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                return TimerCreate(serializer.Deserialize<float>(reader));
+            }
+
+            protected abstract object TimerCreate(float time);
+
+            sealed protected override void WriteJson(JsonWriter writer, AWaitTime value, JsonSerializer serializer)
+            {
+                writer.WriteValue(value._waitTime);
+            }
+        }
+        // *******************************************************
         #endregion
     }
 }

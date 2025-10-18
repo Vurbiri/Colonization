@@ -8,8 +8,8 @@ namespace Vurbiri.Colonization
     public partial class SpellBook
 	{
         private static readonly SpellsSettings s_settings;
-        private static readonly ReadOnlyIdArray<AbilityTypeId, ReadOnlyArray<int>>    s_costs;
-        private static readonly ReadOnlyIdArray<AbilityTypeId, ReadOnlyArray<string>> s_keys;
+        private static readonly Costs s_costs;
+        private static readonly Keys s_keys;
 
         private static readonly ASpell[][] s_spells = {new ASpell[EconomicSpellId.Count], new ASpell[MilitarySpellId.Count] };
         private static readonly VAction<bool> s_casting = new();
@@ -19,6 +19,8 @@ namespace Vurbiri.Colonization
 
         public ASpell this[int type, int id] { [Impl(256)] get => s_spells[type][id]; }
         public ASpell this[SpellId spellId]  { [Impl(256)] get => s_spells[spellId.type][spellId.id]; }
+
+        public static Costs Cost { [Impl(256)] get => s_costs; }
 
         public static bool IsCasting { [Impl(256)] get => s_isCasting; }
         public static Event<bool> EventCasting { [Impl(256)] get => s_casting; }
@@ -78,14 +80,6 @@ namespace Vurbiri.Colonization
                     s_spells[t][i] = null;
                 }
             }
-        }
-
-        // **** Nested ****
-        private class WaitCasting : IEnumerator
-        {
-            public object Current => null;
-            public bool MoveNext() => s_isCasting;
-            public void Reset() { }
         }
     }
 

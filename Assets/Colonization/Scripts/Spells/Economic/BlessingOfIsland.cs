@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization
                     target.AddEffect(new(_defenseEffectCode, ActorAbilityId.Defense, TypeModifierId.TotalPercent, value, s_settings.blessDuration, skip));
 
                     yield return SFX.Run(s_settings.blessSFX, null, target.Skin);
-
+                    
                     _blessed.RemoveAt(index);
                 }
 

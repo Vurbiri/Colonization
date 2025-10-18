@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
                 {
                     get
                     {
-                        bool isValid = FreeRoadCount >= (_roadsCount - _cursor) && _steps[_cursor].crossroad.IsRoadConnect(PlayerId); 
+                        bool isValid = FreeRoadCount >= (_roadsCount - _cursor) && _steps[_cursor].crossroad.IsRoadConnect(HumanId); 
                         for (int i = _cursor; isValid & i < _roadsCount; i++ )
                             isValid = _steps[i].link.IsEmpty;
 
@@ -54,7 +54,7 @@ namespace Vurbiri.Colonization
                             while (canRoadBuild)
                             {
                                 yield return Human.Exchange(_roadCost);
-                                if (canRoadBuild = CanPlay)
+                                if (canRoadBuild = CanPay)
                                 {
                                     step = _steps[_cursor]; _steps[_cursor++] = null;
                                     yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
@@ -68,7 +68,7 @@ namespace Vurbiri.Colonization
                         if(_cursor == _roadsCount)
                         {
                             yield return Human.Exchange(_edificeCost);
-                            if (CanPlay)
+                            if (CanPay)
                             {
                                 var crossroad = _steps[_cursor].crossroad;
                                 yield return GameContainer.CameraController.ToPositionControlled(crossroad.Position);

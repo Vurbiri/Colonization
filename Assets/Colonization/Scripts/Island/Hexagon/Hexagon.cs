@@ -14,7 +14,7 @@ namespace Vurbiri.Colonization
         [SerializeField] private HexagonCaption _hexagonCaption;
         [SerializeField] private Collider _thisCollider;
 
-        #region Fields
+        #region ================== Fields ============================
         private static Pool<HexagonMark> s_poolMarks;
 
         private Key _key;
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
         private readonly HashSet<Hexagon> _neighbors = new(HEX.SIDES);
         #endregion
 
-        #region Propirties
+        #region ================== Properties ========================
         public Key Key => _key;
         public int Id => _id;
         public int SurfaceId => _surfaceId;
@@ -51,7 +51,7 @@ namespace Vurbiri.Colonization
         public HexagonCaption Caption => _hexagonCaption;
         #endregion
 
-        #region Setup
+        #region ================== Setup ============================
         public void Setup(Key key, int id, SurfaceType surface)
         {
             _thisTransform = transform; Position = _thisTransform.localPosition;
@@ -106,13 +106,15 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        #region ISelectable
+        #region ================== ISelectable ============================
         public void Select() => GameContainer.TriggerBus.TriggerHexagonSelect(this);
         public void Unselect(ISelectable newSelectable) { }
+        [Impl(256)] public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         #endregion
 
         public Subscription Subscribe(Action<int> action, bool instantGetValue = true) => _changeID.Add(action, instantGetValue, _id);
 
+        #region ================== Caption ============================
         [Impl(256)] public void CaptionEnable(bool isWater, bool isGate) => _hexagonCaption.SetActive(!(isWater ^ _isWater | isGate));
         [Impl(256)] public void CaptionDisable() => _hexagonCaption.SetActive(false);
 
@@ -122,10 +124,10 @@ namespace Vurbiri.Colonization
             _hexagonCaption.NewId(id, color, showTime);
             _changeID.Invoke(id);
         }
+        #endregion
 
-        #region Profit
-        // true - свободные ресурсы
-        public bool SetProfitAndTryGetFreeProfit(out int currencyId)
+        #region ================== Profit ============================
+        public bool SetProfitAndTryGetFreeProfit(out int currencyId) // true - свободные ресурсы
         {
             currencyId = _profit.Set();
 
@@ -158,7 +160,7 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        #region Actor
+        #region ================== Actor ============================
         [Impl(256)] public void ActorEnter(Actor actor)
         {
             _owner = actor;
@@ -189,9 +191,10 @@ namespace Vurbiri.Colonization
                 _owner.AddWallDefenceEffect(GetMaxDefense());
         }
 
-        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => _owner != null && GameContainer.Diplomacy.GetRelation(_ownerId, id) == Relation.Enemy;
+        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => _owner != null && _owner.IsEnemy(id);
         #endregion
 
+        #region ================== Mark ============================
         [Impl(256)] public void ShowMark(bool isGreenMark) => _mark ??= s_poolMarks.Get(_thisTransform, false).View(isGreenMark);
         [Impl(256)] public void HideMark()
         {
@@ -201,8 +204,9 @@ namespace Vurbiri.Colonization
                 _mark = null;
             }
         }
+        #endregion
 
-        #region Set(Un)Selectable
+        #region ================== Set(Un)Selectable ============================
         [Impl(256)] public bool TrySetSelectableFree()
         {
             if(_isGate | _isWater | _owner != null)
@@ -260,9 +264,6 @@ namespace Vurbiri.Colonization
             _mark = null;
         }
         #endregion
-
-        [Impl(256)] public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
-
 
 #if UNITY_EDITOR
         private void OnValidate()

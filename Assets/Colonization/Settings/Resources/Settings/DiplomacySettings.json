@@ -16,5 +16,5 @@
   "rewardForGift": 5,
   "penaltyForMarauding": -6,
   "penaltyForFireOnEnemy": -3,
-  "penaltyForFriendlyFire": -8
+  "penaltyForFriendlyFire": -25
 }

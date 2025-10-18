@@ -13,7 +13,7 @@
   "sacrificeKnifeSFX": "SacrificeVictim",
   "sacrificeTargetSFX": "SacrificeTarget",
   "sacrificeHPPercent": 125,
-  "sacrificePierce": 10,
+  "sacrificePierce": 15,
   "bloodTradePay": 3,
   "bloodTradeBay": 2,
   "reductionFromWall": 30,

@@ -1,7 +1,5 @@
 {
-  "specialization": [
-    2,
-    1
-  ],
+  "waitPlay": 4.0,
+  "militarist": 1,
   "minExchangeBlood": 3
 }

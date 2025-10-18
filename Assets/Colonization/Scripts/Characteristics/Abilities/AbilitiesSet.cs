@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization.Characteristics
         [Impl(256)] public bool IsLess(Id<TId> stateId, int value) => _abilities[stateId].Value < value;
         [Impl(256)] public bool IsLessOrEqual(Id<TId> stateId, int value) => _abilities[stateId].Value <= value;
 
-        [Impl(256)] public bool IsTrue(Id<TId> stateId) => _abilities[stateId].IsValue;
+        [Impl(256)] public bool IsTrue(Id<TId> stateId) => _abilities[stateId].IsTrue;
 
         public IEnumerator<Ability> GetEnumerator() => _abilities.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => _abilities.GetEnumerator();

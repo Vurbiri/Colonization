@@ -1,4 +1,6 @@
 {
+  "resDivider": 10,
+  "maxUseRes": 6,
   "maxMana": 10,
   "weightsEconomic": [
     0,

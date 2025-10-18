@@ -1,11 +1,11 @@
-using Vurbiri.Collections;
-
 namespace Vurbiri.Colonization
 {
 	[System.Serializable]
 	public class AIControllerSettings
 	{
-        public ReadOnlyIdArray<AbilityTypeId, Id<PlayerId>> specialization;
+        public WaitRealtime waitPlay;
+        [UnityEngine.Space]
+        public Id<PlayerId> militarist;
         public int minExchangeBlood; // = 4;
 
     }

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
@@ -9,20 +8,20 @@ using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 namespace Vurbiri.Colonization.Actors
 {
     [RequireComponent(typeof(BoxCollider))]
-    public abstract partial class Actor : AReactiveItemMono<Actor>, IInteractable, IDisposable
+    public abstract partial class Actor : AReactiveItemMono<Actor>, IInteractable
     {
         public enum DeathStage
         {
             None, Start, EndAnimation, End
         }
 
-        #region Fields
+        #region ================== Fields ============================
         protected Id<ActorTypeId> _typeId;
         protected int _id;
         protected Id<PlayerId> _owner;
         private bool _isPersonTurn;
 
-        #region Abilities
+        #region  --------------- Abilities ---------------
         protected AbilitiesSet<ActorAbilityId> _abilities;
         protected SubAbility<ActorAbilityId> _currentHP;
         protected SubAbility<ActorAbilityId> _currentAP;
@@ -48,14 +47,14 @@ namespace Vurbiri.Colonization.Actors
         private Subscription _subscription;
         #endregion
 
-        #region Propirties
+        #region ================== Properties ========================
         public Id<ActorTypeId> TypeId { [Impl(256)] get => _typeId; }
         public int Id { [Impl(256)] get => _id; }
         public bool IsWarrior { [Impl(256)] get => _typeId == ActorTypeId.Warrior; }
         public Id<PlayerId> Owner { [Impl(256)] get => _owner; }
         public Hexagon Hexagon { [Impl(256)] get => _currentHex; }
         public int ActionPoint { [Impl(256)] get => _currentAP.Value; }
-        public bool CanMove { [Impl(256)] get => _move.IsValue; }
+        public bool CanMove { [Impl(256)] get => _move.IsTrue; }
         public bool CanUseSkills { [Impl(256)] get => _states.IsDefault & _isPersonTurn; }
         public int CurrentHP { [Impl(256)] get => _currentHP.Value; }
         public bool IsWounded { [Impl(256)] get => _currentHP.IsNotMax; }
@@ -68,7 +67,7 @@ namespace Vurbiri.Colonization.Actors
         public ReturnSignal IsAdvProfit => _profitAdv.Next() ? _states.Skin.AdvProfit(_isPersonTurn) : false;
         #endregion
 
-        #region IInteractable
+        #region  ================== IInteractable =====================
         public Vector3 Position => _thisTransform.position;
         public ReactiveValue<bool> CanCancel => _canCancel;
         public ReactiveValue<bool> InteractableReactive => _interactable;
@@ -81,7 +80,7 @@ namespace Vurbiri.Colonization.Actors
         public void Cancel() => _states.Cancel();
         #endregion
 
-        #region Setup
+        #region ================== Setup ============================
         protected abstract AStates StatesCreate(ActorSettings settings);
 
         public void Setup(ActorSettings settings, ActorInitData initData, Hexagon startHex)
@@ -150,27 +149,52 @@ namespace Vurbiri.Colonization.Actors
         }
         #endregion
 
-        public bool IsSkillApplied(SkillCode skillCode) => _effects.Contains(skillCode);
-        public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
+        #region ================== Utilities ============================
+        [Impl(256)] public bool IsSkillApplied(SkillCode skillCode) => _effects.Contains(skillCode);
+        [Impl(256)] public bool IsCanApplySkill(Id<PlayerId> id, Relation typeAction, out bool isFriendly)
         {
             return _states.IsAvailable & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
-        #region Effect
-        public int AddEffect(ReactiveEffect effect) => _effects.Add(effect);
-        public int ApplyEffect(IPerk effect)
+        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.GetRelation(_owner, id) == Relation.Enemy;
+
+        public bool IsInCombat()
+        {
+            foreach (var hex in _currentHex.Neighbors)
+                if (hex.IsEnemy(_owner))
+                    return true;
+            return false;
+        }
+
+        #region ---------------- HexSwap ----------------
+        [Impl(256)] public void SetHexagonSelectable()
+        {
+            _currentHex.SetSelectableForSwap();
+            Interactable = false;
+        }
+        [Impl(256)] public void SetHexagonUnselectable()
+        {
+            _currentHex.SetUnselectableForSwap();
+            Interactable = _states.IsAvailable;
+        }
+        #endregion
+        #endregion
+
+        #region ================== Effect ============================
+        [Impl(256)] public int AddEffect(ReactiveEffect effect) => _effects.Add(effect);
+        [Impl(256)] public int ApplyEffect(IPerk effect)
         {
             int delta = _abilities.AddPerk(effect);
 
-            if(delta != 0 & _currentHP.IsValue)
+            if(delta != 0 & _currentHP.IsTrue)
                 _eventChanged.Invoke(this, TypeEvent.Change);
 
             return delta;
         }
-        public void ClearEffects(int duration, Id<ClearEffectsId> type) => _effects.Degrade(duration, type);
+        [Impl(256)] public void ClearEffects(int duration, Id<ClearEffectsId> type) => _effects.Degrade(duration, type);
         #endregion
 
-        #region Start/End turn
+        #region ================== Start/End turn ========================
 
         public void StatesUpdate()
         {
@@ -188,22 +212,12 @@ namespace Vurbiri.Colonization.Actors
         public void EffectsUpdate() => EffectsUpdate(_currentHex.GetMaxDefense());
         #endregion
 
-        #region WallDefence
-        public void AddWallDefenceEffect(int maxDefense) => _effects.Add(ReactiveEffectsFactory.CreateWallDefenceEffect(maxDefense));
-        public void RemoveWallDefenceEffect() => _effects.Remove(ReactiveEffectsFactory.WallEffectCode);
+        #region ================== WallDefence ============================
+        [Impl(256)] public void AddWallDefenceEffect(int maxDefense) => _effects.Add(ReactiveEffectsFactory.CreateWallDefenceEffect(maxDefense));
+        [Impl(256)] public void RemoveWallDefenceEffect() => _effects.Remove(ReactiveEffectsFactory.WallEffectCode);
         #endregion
 
-        public void SetHexagonSelectable()
-        {
-            _currentHex.SetSelectableForSwap();
-            Interactable = false;
-        }
-        public void SetHexagonUnselectable()
-        {
-            _currentHex.SetUnselectableForSwap();
-            Interactable = _states.IsAvailable;
-        }
-
+        #region ================== ReactiveItem ============================
         public bool Equals(ISelectable other) => System.Object.ReferenceEquals(this, other);
         sealed public override bool Equals(Actor other) => System.Object.ReferenceEquals(this, other);
         sealed public override void Removing()
@@ -219,23 +233,24 @@ namespace Vurbiri.Colonization.Actors
         }
 
         sealed public override void Dispose() { }
+        #endregion
 
-        #region Target
-        private bool ToTargetState(Id<PlayerId> initiator, Relation relation)
+        #region ================== Target ============================
+        public bool ToTargetState(Id<PlayerId> initiator, Relation relation)
         {
             bool isSet = GameContainer.Diplomacy.IsCanActorsInteraction(initiator, _owner, relation, out _) && _states.ToTarget();
             if(isSet)
                 GameContainer.Diplomacy.ActorsInteraction(_owner, initiator, relation);
             return isSet;
         }
-
-        private void FromTargetState()
+        public void FromTargetState()
         {
-            if (_currentHP.IsValue && _states.FromTarget())
+            if (_currentHP.IsTrue && _states.FromTarget())
                 _eventChanged.Invoke(this, TypeEvent.Change);
         }
         #endregion
 
+        #region ================== Private Utilities ============================
         private void OnBuff(IPerk perk)
         {
             if (_abilities.AddPerk(perk) != 0)
@@ -246,5 +261,6 @@ namespace Vurbiri.Colonization.Actors
 
         private void RedirectEvents(ReactiveEffect item, TypeEvent type) => _eventChanged.Invoke(this, TypeEvent.Change);
         private void Signal() => _eventChanged.Invoke(this, TypeEvent.Change);
+        #endregion
     }
 }

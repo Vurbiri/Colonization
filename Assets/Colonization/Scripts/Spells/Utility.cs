@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
 using Vurbiri.Colonization.Characteristics;
 
@@ -36,6 +38,25 @@ namespace Vurbiri.Colonization
             }
         }
 
+        #region Nested WaitCasting, Costs, Keys, SpellDamager
+        // *************************************
+        private class WaitCasting : IEnumerator
+        {
+            public object Current => null;
+            public bool MoveNext() => s_isCasting;
+            public void Reset() { }
+        }
+        // *************************************
+        public class Costs : ReadOnlyIdArray<AbilityTypeId, ReadOnlyArray<int>>
+        {
+            public Costs(params ReadOnlyArray<int>[] values) : base(values) { }
+        }
+        // *************************************
+        private class Keys : ReadOnlyIdArray<AbilityTypeId, ReadOnlyArray<string>>
+        {
+            public Keys(params ReadOnlyArray<string>[] values) : base(values) { }
+        }
+        // *************************************
         sealed private class SpellDamager : Effect
         {
             private readonly AbilityModifierPercent _pierce;
@@ -56,5 +77,7 @@ namespace Vurbiri.Colonization
                     GameContainer.TriggerBus.TriggerActorKill(playerId, target.TypeId, target.Id);
             }
         }
+        // *************************************
+        #endregion
     }
 }
