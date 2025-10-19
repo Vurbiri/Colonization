@@ -1,5 +1,7 @@
 {
-  "waitPlay": 4.0,
+  "waitPlay": 10.0,
   "militarist": 1,
-  "minExchangeBlood": 3
+  "percentBloodOffset": 10,
+  "minExchangeBlood": 3,
+  "exchangeValueOffset": 4
 }

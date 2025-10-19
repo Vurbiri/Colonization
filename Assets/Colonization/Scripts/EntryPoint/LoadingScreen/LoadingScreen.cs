@@ -10,12 +10,13 @@ namespace Vurbiri.Colonization.UI
     [RequireComponent(typeof(CanvasGroup))]
     sealed public class LoadingScreen : AClosedSingleton<LoadingScreen>, ILoadingScreen
     {
-        [SerializeField, Range(0.1f, 2f)] private float _speedSmooth = 0.5f;
+        [SerializeField, Range(0.1f, 2f)] private float _smoothSpeed = 0.5f;
+        [SerializeField, Range(0.1f, 2f)] private float _indicatorSpeed = 0.5f;
         [Space]
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private RectTransform _fillBar;
         [SerializeField] private TextMeshProUGUI _descText;
-        [SerializeField] private Graphic _indicator;
+        [SerializeField] private Image _indicator;
 
         private Graphic[] _graphics;
 
@@ -30,7 +31,6 @@ namespace Vurbiri.Colonization.UI
             if (s_instance == this)
             {
                 _graphics = new Graphic[] { _descText, _indicator, _fillBar.parent.GetComponent<Graphic>() };
-                _indicator = null;
 
                 SetActive(true);
                 _canvasGroup.alpha = 1f;
@@ -44,7 +44,7 @@ namespace Vurbiri.Colonization.UI
             float alpha = _canvasGroup.alpha;
             while (alpha < 1)
             {
-                _canvasGroup.alpha = alpha += Time.unscaledDeltaTime * _speedSmooth;
+                _canvasGroup.alpha = alpha += Time.unscaledDeltaTime * _smoothSpeed;
                 yield return null;
             }
             _canvasGroup.alpha = 1f;
@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization.UI
             float alpha = _canvasGroup.alpha;
             while (alpha > 0f)
             {
-                _canvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _speedSmooth;
+                _canvasGroup.alpha = alpha -= Time.unscaledDeltaTime * _smoothSpeed;
                 yield return null;
             }
 
@@ -81,12 +81,35 @@ namespace Vurbiri.Colonization.UI
             }
         }
 
+        private IEnumerator IndicatorTurn_Cn()
+        {
+            float start = 0f, end = 1f, progress, sign;
+            _indicator.fillClockwise = true;
+
+            while (true)
+            {
+                progress = 0f; sign = end - start;
+
+                while (progress < 1f)
+                {
+                    progress += Time.unscaledDeltaTime * _indicatorSpeed;
+                    _indicator.fillAmount = start + sign * progress;
+                    yield return null;
+                }
+               
+                (start, end) = (end, start);
+                _indicator.fillClockwise = !_indicator.fillClockwise;
+            }
+        }
+
         private void OnEnable()
         {
             _tracker.Add(this, _fillBar, DrivenTransformProperties.Anchors);
 
             _fillBar.anchorMin = Vector2.zero;
             _fillBar.anchorMax = Vector2.one;
+
+            StartCoroutine(IndicatorTurn_Cn());
         }
         private void OnDisable()
         {

@@ -15,16 +15,16 @@ namespace Vurbiri.Colonization
 
                 public override IEnumerator TryCasting_Cn()
                 {
-                    IEnumerator casting = null;
                     int wood = Resources[CurrencyId.Wood], ore = Resources[CurrencyId.Ore];
-                    
-                    if (CanPay && Chance.Rolling((100 * (wood + ore)/(s_settings.resDivider << 1))))
+
+                    yield return CanPay_Cn(OutB.Get(out int key));
+
+                    if (OutB.Result(key) && Chance.Rolling((100 * (wood + ore)/(s_settings.resDivider << 1))))
                     {
                         FindActors(out int friends, out int enemies);
                         if ((friends << 1) < enemies)
-                            casting = Casting_Cn(GetRes(wood), GetRes(ore));
+                            yield return Casting_Cn(GetRes(wood), GetRes(ore));
                     }
-                    return casting;
 
                     #region Local FindActors(..), GetRes(..)
                     //===========================================

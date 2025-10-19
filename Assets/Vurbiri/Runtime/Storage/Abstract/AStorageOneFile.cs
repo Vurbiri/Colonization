@@ -12,6 +12,8 @@ namespace Vurbiri
         protected CoroutinesQueue _cnQueue;
         protected string _key;
         protected bool _modified = false;
+        protected string _outputJson;
+        protected bool _outputResult;
 
         public abstract bool IsValid { get; }
 
@@ -21,23 +23,21 @@ namespace Vurbiri
             _cnQueue = new(monoBehaviour);
         }
         
-        public IEnumerator Load_Cn(Action<bool> callback)
+        public IEnumerator Load_Cn(Out<bool> output)
         {
-            var waitResult = LoadFromFile_Wait();
-            yield return waitResult;
+            yield return LoadFromFile_Cn();
 
-            string json = waitResult.Value;
-            if (!string.IsNullOrEmpty(json))
+            if (!string.IsNullOrEmpty(_outputJson))
             {
-                if (TryDeserialize(json, out _saved))
+                if (TryDeserialize(_outputJson, out _saved))
                 {
-                    callback?.Invoke(true);
+                    output?.Write(true);
                     yield break;
                 }
             }
 
             _saved = new();
-            callback?.Invoke(false);
+            output?.Write(false);
         }
 
         #region Get(..) / TryGet(..)
@@ -117,21 +117,21 @@ namespace Vurbiri
         #endregion
 
         #region Save(..)
-        public void Save(Action<bool> callback)
+        public void Save(Out<bool> output)
         {
-            _cnQueue.Enqueue(SaveToFile_Cn(callback));
+            _cnQueue.Enqueue(Save_Cn(output));
         }
         public void Save<T>(string key, T data, JsonSerializerSettings settings)
         {
             Set(key, data, settings);
             if (_cnQueue.Count == 0)
-                _cnQueue.Enqueue(SaveToFile_Cn());
+                _cnQueue.Enqueue(Save_Cn());
         }
         public void Save<T>(string key, T data, JsonConverter converter)
         {
             Set(key, data, converter);
             if (_cnQueue.Count == 0)
-                _cnQueue.Enqueue(SaveToFile_Cn());
+                _cnQueue.Enqueue(Save_Cn());
         }
         #endregion
 
@@ -142,7 +142,7 @@ namespace Vurbiri
             _modified |= _saved.Remove(key);
 
             if (fromFile & _cnQueue.Count == 0)
-                _cnQueue.Enqueue(SaveToFile_Cn());
+                _cnQueue.Enqueue(Save_Cn());
         }
 
         #region Clear
@@ -152,7 +152,7 @@ namespace Vurbiri
             _saved.Clear();
 
             if (_cnQueue.Count == 0)
-                _cnQueue.Enqueue(SaveToFile_Cn());
+                _cnQueue.Enqueue(Save_Cn());
         }
         public void Clear(string excludeKey)
         {
@@ -168,7 +168,7 @@ namespace Vurbiri
             }
 
             if (_cnQueue.Count == 0)
-                _cnQueue.Enqueue(SaveToFile_Cn());
+                _cnQueue.Enqueue(Save_Cn());
         }
         public void Clear(params string[] excludeKeys)
         {
@@ -189,42 +189,39 @@ namespace Vurbiri
             }
 
             if (_cnQueue.Count == 0)
-                _cnQueue.Enqueue(SaveToFile_Cn());
+                _cnQueue.Enqueue(Save_Cn());
         }
         #endregion
 
         #region SaveToFile_Cn
-        protected IEnumerator SaveToFile_Cn(Action<bool> callback)
+        protected IEnumerator Save_Cn(Out<bool> output)
         {
             if (_modified)
             {
                 _modified = false;
-                var waitResult = SaveToFile_Wait();
-                yield return waitResult;
+                yield return SaveToFile_Cn();
 
-                _modified |= !waitResult.Value;
-                callback?.Invoke(waitResult.Value);
+                _modified |= !_outputResult;
+                output?.Write(_outputResult);
 
                 yield break;
             }
 
-            callback?.Invoke(true);
+            output?.Write(true);
         }
-        protected IEnumerator SaveToFile_Cn()
+        protected IEnumerator Save_Cn()
         {
             if (_modified)
             {
-                _modified = false;
-                var waitResult = SaveToFile_Wait();
-                yield return waitResult;
+                yield return SaveToFile_Cn();
 
-                _modified |= !waitResult.Value;
+                _modified |= !_outputResult;
             }
         }
         #endregion
 
-        protected abstract WaitResult<string> LoadFromFile_Wait();
-        protected abstract WaitResult<bool> SaveToFile_Wait();
+        protected abstract IEnumerator LoadFromFile_Cn();
+        protected abstract IEnumerator SaveToFile_Cn();
 
         #region Serialize / Deserialize / Populate
         protected string Serialize<T>(T obj, JsonSerializerSettings settings = null) => JsonConvert.SerializeObject(obj, typeof(T), settings);

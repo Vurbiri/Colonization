@@ -16,11 +16,12 @@ namespace Vurbiri.Colonization
         protected Ability _maxAmount, _maxBlood;
         protected readonly VAction<ACurrencies> _changeEvent = new();
 
-        sealed public override int Amount { [Impl(256)] get => _amount.Value; }
+        sealed public override int Amount { [Impl(256)] get => _amount; }
         public ReactiveValue<int> CurrentAmount { [Impl(256)] get => _amount; }
         public ReactiveValue<int> MaxAmount { [Impl(256)] get => _maxAmount; }
+        public int PercentAmount { [Impl(256)] get => (100 * _amount) / _maxAmount; }
         public ReactiveValue<int> MaxBlood { [Impl(256)] get => _maxBlood; }
-        public int PercentBlood { [Impl(256)] get => _values[Blood] * _values[Blood] * 10 / _maxBlood; }
+        public int PercentBlood { [Impl(256)] get => (100 * _values[Blood]) / _maxBlood; }
 
         public bool IsOverResources => _maxAmount.Value < _amount.Value;
         sealed public override bool IsEmpty => _amount == 0 & _values[Blood].Value == 0;
@@ -47,6 +48,9 @@ namespace Vurbiri.Colonization
 
         public Currency Get(int index) => _values[index];
         public Currency Get(Id<CurrencyId> id) => _values[id.Value];
+
+        public int PercentCurrency(int currencyId) => 100 *_values[currencyId].Value / _maxAmount;
+        public int PercentAmountExCurrency(int currencyId) => 100 * (_amount.Value - _values[currencyId].Value) / _maxAmount;
 
         public int OverCount(ReadOnlyMainCurrencies values, out int lastIndex)
         {

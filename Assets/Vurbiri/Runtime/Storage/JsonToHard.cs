@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 
@@ -15,23 +17,32 @@ namespace Vurbiri
         public override bool IsValid => Application.platform == RuntimePlatform.WindowsPlayer;
 #endif
 
-        protected override WaitResult<bool> SaveToFile_Wait()
+        protected override IEnumerator SaveToFile_Cn()
         {
-            using StreamWriter sw = new(_path);
-            sw.Write(Serialize(_saved));
+            try
+            {
+                using StreamWriter sw = new(_path);
+                sw.Write(Serialize(_saved));
+                _outputResult = true;
+            }
+            catch (Exception ex)
+            {
+                _outputResult = false;
+                Log.Info(ex.Message);
+            }
 
-            return WaitResult.Instant(true);
+            return null;
         }
 
-        protected override WaitResult<string> LoadFromFile_Wait()
+        protected override IEnumerator LoadFromFile_Cn()
         {
-            string result = string.Empty;
+            _outputJson = string.Empty;
             if (File.Exists(_path))
             {
                 using StreamReader sr = new(_path);
-                result = sr.ReadToEnd();
+                _outputJson = sr.ReadToEnd();
             }
-            return WaitResult.Instant(result);
+            return null;
         }
     }
 }

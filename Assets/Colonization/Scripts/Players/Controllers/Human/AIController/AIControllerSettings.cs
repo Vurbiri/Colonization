@@ -6,7 +6,9 @@ namespace Vurbiri.Colonization
         public WaitRealtime waitPlay;
         [UnityEngine.Space]
         public Id<PlayerId> militarist;
-        public int minExchangeBlood; // = 4;
-
+        [UnityEngine.Space]
+        public int percentBloodOffset;
+        public int minExchangeBlood;
+        public int exchangeValueOffset;
     }
 }

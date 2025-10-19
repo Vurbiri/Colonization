@@ -40,9 +40,8 @@ namespace Vurbiri.Colonization.EntryPoint
         {
             if (Create(out IStorageService storage))
             {
-                bool result = false;
-                yield return storage.Load_Cn((b) => result = b);
-                if (result)
+                yield return storage.Load_Cn(Out<bool>.Get(out int key));
+                if (Out<bool>.Result(key))
                     Log.Info("[StorageService] Save is loaded");
                 else
                     Log.Info("[StorageService] No save found");

@@ -15,14 +15,13 @@ namespace Vurbiri.Colonization
 
                 public override IEnumerator TryCasting_Cn()
                 {
-                    IEnumerator casting = null;
-                    if (CanPay)
+                    yield return CanPay_Cn(OutB.Get(out int key));
+                    if (OutB.Result(key))
                     {
                         FindActors(out int friends, out int enemies);
                         if (friends > enemies)
-                            casting = Casting_Cn(GetRes(CurrencyId.Gold), GetRes(CurrencyId.Food));
+                            yield return Casting_Cn(GetRes(CurrencyId.Gold), GetRes(CurrencyId.Food));
                     }
-                    return casting;
 
                     #region Local FindActors(..), GetRes(..)
                     //===========================================

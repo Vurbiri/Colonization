@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using System;
 using System.Collections;
 
 namespace Vurbiri
@@ -22,7 +21,7 @@ namespace Vurbiri
 
         public bool IsValid { get; }
 
-        public IEnumerator Load_Cn(Action<bool> callback);
+        public IEnumerator Load_Cn(Out<bool> output);
 
         public T Get<T>(string key);
         public T Get<T>(string key, JsonConverter converter);
@@ -35,7 +34,7 @@ namespace Vurbiri
         public bool Set<T>(string key, T data, JsonSerializerSettings settings = null);
         public bool Set<T>(string key, T data, JsonConverter converter);
 
-        public void Save(Action<bool> callback = null);
+        public void Save(Out<bool> output = null);
         public void Save<T>(string key, T data, JsonSerializerSettings settings = null);
         public void Save<T>(string key, T data, JsonConverter converter);
 

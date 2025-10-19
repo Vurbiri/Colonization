@@ -13,6 +13,7 @@ namespace Vurbiri.Colonization
 
             protected readonly AIController _parent;
 
+            #region Parent Properties
             protected AIController Human { [Impl(256)] get => _parent; }
             protected int Id { [Impl(256)] get => _parent._id; }
             protected Currencies Resources { [Impl(256)] get => _parent._resources; }
@@ -23,6 +24,9 @@ namespace Vurbiri.Colonization
             protected int FreeRoadCount { [Impl(256)] get => _parent._abilities[HumanAbilityId.MaxRoad] - _parent._roads.Count; }
             protected ReadOnlyAbilities<HumanAbilityId> Abilities { [Impl(256)] get => _parent._abilities; }
             protected PerkTree PerkTree { [Impl(256)] get => _parent._perks; }
+            protected bool IsEconomist { [Impl(256)] get => _parent._specialization == AbilityTypeId.Economic; }
+            protected bool IsMilitarist { [Impl(256)] get => _parent._specialization == AbilityTypeId.Military; }
+            #endregion
 
             [Impl(256)] public Counselor(AIController parent) => _parent = parent;
 

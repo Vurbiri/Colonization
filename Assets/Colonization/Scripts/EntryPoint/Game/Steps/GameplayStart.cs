@@ -13,6 +13,7 @@ namespace Vurbiri.Colonization.EntryPoint
         public override IEnumerator GetEnumerator()
         {
             yield return null;
+
             GameContainer.GameSettings.Start();
             GameContainer.InputController.Enable();
 

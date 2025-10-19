@@ -6,7 +6,7 @@ namespace Vurbiri.Colonization
     [System.Serializable]
     public class CasterSettings
 	{
-        
+        public int percentAmountOffset;
         [Header("Order & Blessing & Wrath")]
         public int resDivider;
         public int maxUseRes;

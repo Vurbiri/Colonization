@@ -14,14 +14,13 @@ namespace Vurbiri.Colonization
 
                 public override IEnumerator TryCasting_Cn()
                 {
-                    IEnumerator casting = null;
-                    if (CanPay)
+                    yield return CanPay_Cn(OutB.Get(out int key));
+                    if (OutB.Result(key))
                     {
                         FindActors(out int friends, out int enemies);
                         if (friends > (enemies << 1))
-                            casting = Casting_Cn();
+                            yield return Casting_Cn();
                     }
-                    return casting;
 
                     // ====== Local ============
                     [Impl(256)] void FindActors(out int friends, out int enemies)

@@ -68,6 +68,12 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
+        public ReadOnlyMainCurrencies() { }
+        public ReadOnlyMainCurrencies(Id<CurrencyId> id, int value)
+        {
+            _values[id] = value; _amount = value;
+        }
+
         #region ToText
         public void ToStringBuilder(StringBuilder sb, string hexPlusColor, string hexMinusColor)
         {
@@ -205,7 +211,6 @@ namespace Vurbiri.Colonization
         public static bool operator <(ReadOnlyCurrencies left, ReadOnlyMainCurrencies right) => !(left >= right);
         #endregion
     }
-
 
     [System.Serializable]
     public class MainCurrencies : ReadOnlyMainCurrencies

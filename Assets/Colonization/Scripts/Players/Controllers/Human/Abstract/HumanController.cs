@@ -48,7 +48,7 @@ namespace Vurbiri.Colonization
             _resources.Add(_edifices.ProfitFromEdifices(hexId));
         }
 
-        public void OnStartTurn()
+        public virtual void OnStartTurn()
         {
             foreach (var warrior in Actors)
                 warrior.EffectsUpdate();

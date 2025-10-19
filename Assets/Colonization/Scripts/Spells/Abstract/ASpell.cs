@@ -20,6 +20,12 @@ namespace Vurbiri.Colonization
             protected string _strCost, _strName;
             protected bool _canCast;
 
+            public ReadOnlyMainCurrencies Cost
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _cost;
+            }
+
             public event Action<string> OnHint
             {
                 add { a_onHint = value; SetHint(Localization.Instance); }

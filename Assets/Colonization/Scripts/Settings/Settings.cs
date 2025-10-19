@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Vurbiri.Colonization.Storage;
 
@@ -32,11 +31,11 @@ namespace Vurbiri.Colonization
             _mixer.Apply();
         }
 
-        public void ApplyAndSave(Action<bool> callback = null)
+        public void ApplyAndSave(Out<bool> output = null)
         {
             Apply();
 
-            _storage.Save(callback);
+            _storage.Save(output);
         }
 
         public void Cancel()

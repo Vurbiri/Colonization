@@ -9,8 +9,6 @@ namespace Vurbiri.Colonization
 
         private readonly int _specialization = AbilityTypeId.Economic;
 
-        private readonly WaitResultSource<bool> _waitExchange = new();
-
         private readonly Diplomat _diplomat;
         private readonly Builder _builder;
         private readonly Scientist _scientist;
@@ -34,12 +32,19 @@ namespace Vurbiri.Colonization
             IEnumerator OnLanding_Cn()
             {
                 yield return null;
-                //yield return _builder.Init_Cn();
+                yield return _builder.Init_Cn();
                 yield return _scientist.Init_Cn();
                 //BuildPort(GameContainer.Crossroads.GetRandomPort());
 
                 GameContainer.GameLoop.EndLanding();
             }
+        }
+
+        public override void OnStartTurn()
+        {
+            base.OnStartTurn();
+
+            _interactable.True();
         }
 
         public override void OnPlay()
@@ -49,8 +54,11 @@ namespace Vurbiri.Colonization
             IEnumerator OnPlay_Cn()
             {
                 yield return s_settings.waitPlay.Restart();
-
+               
+                yield return _builder.Execution_Cn();
                 yield return _scientist.Execution_Cn();
+
+                _interactable.False();
 
                 GameContainer.GameLoop.EndTurn();
             }
@@ -63,27 +71,16 @@ namespace Vurbiri.Colonization
             StartCoroutine(OnEndTurn_Cn());
         }
 
-        private WaitResult<bool> Exchange(ReadOnlyMainCurrencies needed)
+        private IEnumerator Exchange_Cn(ReadOnlyMainCurrencies needed, Out<bool> output)
         {
-            if (_resources >= needed)
-            {
-                return _waitExchange.SetResult(true);
-            }
-            else
-            {
-                StartCoroutine(Exchange_Cn(needed));
-                return _waitExchange.Restart();
-            }
+            bool result = _resources >= needed;
 
-            // ==== Local ====
-            IEnumerator Exchange_Cn(ReadOnlyMainCurrencies needed)
+            if (!result)
             {
-                bool result = false;
-
-                int blood = _resources[CurrencyId.Blood] >> (_perks.IsAllLearned() ? 0 : 1);
-                if (blood > s_settings.minExchangeBlood && Chance.Rolling(_resources.PercentBlood))
+                int exchangeBlood = _resources[CurrencyId.Blood] >> (_perks.IsAllLearned() ? 0 : 1);
+                if (exchangeBlood > s_settings.minExchangeBlood && Chance.Rolling(_resources.PercentBlood - s_settings.percentBloodOffset))
                 {
-                    _spellBook.Cast(MilitarySpellId.Type, MilitarySpellId.BloodTrade, new(_id, Random.Range(s_settings.minExchangeBlood, blood)));
+                    _spellBook.Cast(MilitarySpellId.Type, MilitarySpellId.BloodTrade, new(_id, Random.Range(s_settings.minExchangeBlood, exchangeBlood + 1)));
                     result = _resources >= needed;
                 }
 
@@ -93,7 +90,7 @@ namespace Vurbiri.Colonization
                 {
                     int need = needed[exchangeIndex], current = _resources[exchangeIndex], delta = need - current;
                     int exchangeValue = delta * _exchange[exchangeIndex];
-                    if (((_resources.Amount - current) - (needed.Amount - need)) >= (exchangeValue + CurrencyId.MainCount))
+                    if (((_resources.Amount - current) - (needed.Amount - need)) >= (exchangeValue + s_settings.exchangeValueOffset))
                     {
                         MainCurrencies pay = new(), diff = _resources - needed;
                         pay.Remove(exchangeIndex, delta);
@@ -113,10 +110,9 @@ namespace Vurbiri.Colonization
                         result = true;
                     }
                 }
-
-                _waitExchange.SetResult(result);
-                yield break;
             }
+            output.Write(result);
+            yield break;
         }
     }
 }

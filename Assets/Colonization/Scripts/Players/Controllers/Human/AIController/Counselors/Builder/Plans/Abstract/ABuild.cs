@@ -23,9 +23,9 @@ namespace Vurbiri.Colonization
                 {
                     if (!_done)
                     {
-                        yield return Human.Exchange(_cost);
+                        yield return Human.Exchange_Cn(_cost, Out<bool>.Get(out int key));
 
-                        if (CanPay)
+                        if (Out<bool>.Result(key))
                         {
                             yield return GameContainer.CameraController.ToPositionControlled(_crossroad);
                             yield return _build(_crossroad, _cost);

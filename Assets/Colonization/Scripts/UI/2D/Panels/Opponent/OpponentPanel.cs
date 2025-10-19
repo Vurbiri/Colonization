@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,10 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Image _icon;
         [SerializeField] private Image _diplomacy;
+        [SerializeField] private Image _indicator;
+        [SerializeField] private Image _indicatorTurn;
+        [SerializeField, Range(0.1f, 2f)] private float _indicatorSpeed;
+        [SerializeField, Range(1f, 8f)] private float _fadeSpeed = 5f;
         [Space]
         [SerializeField] private Sprite _friend;
         [SerializeField] private Sprite _enemy;
@@ -21,6 +26,7 @@ namespace Vurbiri.Colonization.UI
 
         private Subscription _unsub;
         private int _relation, _min, _max;
+        private bool _run;
 
         public void Init(Vector3 offsetPopup, Diplomacy diplomacy)
         {
@@ -34,6 +40,9 @@ namespace Vurbiri.Colonization.UI
 
             _icon.color = GameContainer.UI.PlayerColors[_id]; _icon = null;
             _unsub = GameContainer.UI.PlayerNames.Subscribe(_ => SetRelation(_relation), false);
+
+            _indicator.canvasRenderer.SetAlpha(0f); _indicatorTurn.canvasRenderer.SetAlpha(0f);
+            GameContainer.Players.Humans[_id].Interactable.Subscribe(IndicatorTurn);
         }
 
         private void OnDiplomacy(Diplomacy diplomacy)
@@ -71,6 +80,40 @@ namespace Vurbiri.Colonization.UI
             _hintText = sb.ToString();
         }
 
+        private void IndicatorTurn(bool run)
+        {
+            _run = run;
+            if (run)
+                StartCoroutine(IndicatorTurn_Cn());
+
+            // ===== Local =====
+            IEnumerator IndicatorTurn_Cn()
+            {
+                float start = 0f, end = 1f, progress, sign;
+                _indicator.fillClockwise = true;
+                _indicator.canvasRenderer.SetAlpha(1f);
+                _indicatorTurn.canvasRenderer.SetAlpha(1f);
+
+                while (_run)
+                {
+                    progress = 0f; sign = end - start;
+
+                    do
+                    {
+                        progress += Time.unscaledDeltaTime * _indicatorSpeed;
+                        _indicator.fillAmount = start + sign * progress;
+                        yield return null;
+                    }
+                    while (_run & progress < 1f) ;
+
+                    (start, end) = (end, start);
+                    _indicator.fillClockwise = !_indicator.fillClockwise;
+                }
+                _indicator.canvasRenderer.SetAlpha(0f);
+                _indicatorTurn.canvasRenderer.SetAlpha(0f);
+            }
+        }
+
         private void OnDestroy()
         {
             _unsub?.Dispose();
@@ -92,6 +135,8 @@ namespace Vurbiri.Colonization.UI
 
             this.SetChildren(ref _icon, "Icon");
             this.SetChildren(ref _diplomacy, "Relation");
+            this.SetChildren(ref _indicator, "Indicator");
+            this.SetChildren(ref _indicatorTurn, "IndicatorTurn");
 
             EUtility.SetAsset(ref _friend, "SP_IconFriend");
             EUtility.SetAsset(ref _enemy, "SP_IconEnemy");

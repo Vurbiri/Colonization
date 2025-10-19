@@ -1,5 +1,4 @@
 using System;
-using Vurbiri.Reactive;
 
 namespace Vurbiri.Colonization.Storage
 {
@@ -21,7 +20,7 @@ namespace Vurbiri.Colonization.Storage
         public bool Set<T>(string key, T data) => _storage.Set<T>(key, data);
         public void Save<T>(string key, T data) => _storage.Save<T>(key, data);
 
-        public void Save(Action<bool> callback = null) => _storage.Save(callback);
+        public void Save(Out<bool> output = null) => _storage.Save(output);
 
         public void Clear() => _storage.Clear(PROFILE, VOLUMES, COLORS, GAME_SETTINGS);
 

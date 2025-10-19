@@ -17,7 +17,6 @@ namespace Vurbiri.Colonization
                 protected int HumanId { [Impl(256)] get => _builder._parent._id; }
                 protected Currencies Resources { [Impl(256)] get => _builder._parent._resources; }
                 protected int FreeRoadCount { [Impl(256)] get => _builder.FreeRoadCount; }
-                protected bool CanPay { [Impl(256)] get => _builder._parent._waitExchange.Value; }
                 #endregion
 
                 public static Plan Empty { get; } = new Dummy();

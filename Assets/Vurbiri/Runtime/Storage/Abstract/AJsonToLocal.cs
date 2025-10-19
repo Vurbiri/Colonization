@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Vurbiri
@@ -10,37 +11,34 @@ namespace Vurbiri
         protected abstract string GetStorage();
         protected abstract bool SetStorage();
 
-        sealed protected override WaitResult<string> LoadFromFile_Wait()
+        sealed protected override IEnumerator LoadFromFile_Cn()
         {
-            WaitResultSource<string> waitResult = new();
             try
             {
-                waitResult.SetResult(GetStorage());
+                _outputJson = GetStorage();
             }
             catch (Exception ex)
             {
-                waitResult.SetResult(null);
+                _outputJson = null;
                 Log.Info(ex.Message);
             }
 
-            return waitResult;
+            return null;
         }
 
-        sealed protected override WaitResult<bool> SaveToFile_Wait()
+        sealed protected override IEnumerator SaveToFile_Cn()
         {
-            WaitResultSource<bool> waitResult = new();
-
             try
             {
-                waitResult.SetResult(SetStorage());
+                _outputResult = SetStorage();
             }
             catch (Exception ex)
             {
-                waitResult.SetResult(false);
+                _outputResult = false;
                 Log.Info(ex.Message);
             }
 
-            return waitResult;
+            return null;
         }
     }
 }

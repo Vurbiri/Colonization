@@ -53,8 +53,8 @@ namespace Vurbiri.Colonization
                             bool canRoadBuild = _cursor > 0 || Resources >= _allCost || s_settings.chanceIncomplete.Roll;
                             while (canRoadBuild)
                             {
-                                yield return Human.Exchange(_roadCost);
-                                if (canRoadBuild = CanPay)
+                                yield return Human.Exchange_Cn(_roadCost, Out<bool>.Get(out int key));
+                                if (canRoadBuild = Out<bool>.Result(key))
                                 {
                                     step = _steps[_cursor]; _steps[_cursor++] = null;
                                     yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
@@ -67,8 +67,8 @@ namespace Vurbiri.Colonization
                         
                         if(_cursor == _roadsCount)
                         {
-                            yield return Human.Exchange(_edificeCost);
-                            if (CanPay)
+                            yield return Human.Exchange_Cn(_edificeCost, Out<bool>.Get(out int key));
+                            if (Out<bool>.Result(key))
                             {
                                 var crossroad = _steps[_cursor].crossroad;
                                 yield return GameContainer.CameraController.ToPositionControlled(crossroad.Position);
