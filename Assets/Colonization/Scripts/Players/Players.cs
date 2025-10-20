@@ -17,8 +17,8 @@ namespace Vurbiri.Colonization
         public Players(Player.Settings settings, GameLoop game)
         {
             UnityEngine.Debug.LogWarning("[Players] Uncomment PersonController");
-            _humans[PlayerId.Person] = new AIController(PlayerId.Person, settings);
-            //_humans[PlayerId.Person] = new PersonController(settings);
+            //_humans[PlayerId.Person] = new AIController(PlayerId.Person, settings);
+            _humans[PlayerId.Person] = new PersonController(settings);
             for (int i = PlayerId.AI_01; i < PlayerId.HumansCount; i++)
                 _humans[i] = new AIController(i, settings);
 

@@ -6,12 +6,24 @@ namespace Vurbiri
     public static class CollectionExtensions
     {
         [Impl(256)] public static int LeftIndex<T>(this IReadOnlyCollection<T> self, int index) => (index == 0 ? self.Count : index) - 1;
+        [Impl(256)] public static int LeftIndex<T>(this List<T> self, int index) => (index == 0 ? self.Count : index) - 1;
+        [Impl(256)] public static int LeftIndex<T>(this T[] self, int index) => (index == 0 ? self.Length : index) - 1;
+
         [Impl(256)] public static int RightIndex<T>(this IReadOnlyCollection<T> self, int index) => (index + 1) % self.Count;
+        [Impl(256)] public static int RightIndex<T>(this List<T> self, int index) => (index + 1) % self.Count;
+        [Impl(256)] public static int RightIndex<T>(this T[] self, int index) => (index + 1) % self.Length;
 
         [Impl(256)] public static T Prev<T>(this IReadOnlyList<T> self, int index) => self[(index == 0 ? self.Count : index) - 1];
+        [Impl(256)] public static T Prev<T>(this List<T> self, int index) => self[(index == 0 ? self.Count : index) - 1];
+        [Impl(256)] public static T Prev<T>(this T[] self, int index) => self[(index == 0 ? self.Length : index) - 1];
+
         [Impl(256)] public static T Next<T>(this IReadOnlyList<T> self, int index) => self[(index + 1) % self.Count];
+        [Impl(256)] public static T Next<T>(this List<T> self, int index) => self[(index + 1) % self.Count];
+        [Impl(256)] public static T Next<T>(this T[] self, int index) => self[(index + 1) % self.Length];
 
         [Impl(256)] public static T Rand<T>(this IReadOnlyList<T> self) => self[UnityEngine.Random.Range(0, self.Count)];
+        [Impl(256)] public static T Rand<T>(this List<T> self) => self[UnityEngine.Random.Range(0, self.Count)];
+        [Impl(256)] public static T Rand<T>(this T[] self) => self[UnityEngine.Random.Range(0, self.Length)];
 
         [Impl(256)] public static T[] ToArray<T>(this ICollection<T> self)
         {
@@ -28,7 +40,7 @@ namespace Vurbiri
             return enumerator.Current;
         }
 
-        [Impl(256)] public static void Shuffle<T>(this IList<T> self)
+        [Impl(256)] public static void Shuffle<T>(this List<T> self)
         {
             for (int i = self.Count - 1, j; i > 0; i--)
             {

@@ -74,11 +74,11 @@ namespace Vurbiri.Colonization
 
             private IEnumerator Cast_Cn(string text)
             {
-                StartCasting();
+                s_isCasting.True();
 
                 yield return MessageBox.Open(text, MBButton.Ok);
 
-                EndCasting();
+                s_isCasting.False();
             }
 
             protected override string GetDesc(Localization localization) => string.Concat(localization.GetText(FILE, _descKey), _strCost);

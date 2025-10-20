@@ -17,7 +17,7 @@ namespace Vurbiri.Colonization
                     IEnumerator casting = null;
                     
                     if (Chance.Rolling(100 * mana / s_settings.resDivider))
-                        casting = Casting_Cn(Random.Range(1, Mathf.Min(mana, s_settings.maxUseRes) + 1));
+                        casting = Casting_Cn(Random.Range(1, (int)(mana * s_settings.maxUseRes) + 1));
 
                     return casting;
                 }

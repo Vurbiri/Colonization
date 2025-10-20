@@ -14,15 +14,18 @@ namespace Vurbiri.Colonization.UI
         [Space]
         [SerializeField] private Image _icon;
         [SerializeField] private Image _diplomacy;
+        [Space]
         [SerializeField] private Image _indicator;
         [SerializeField] private Image _indicatorTurn;
         [SerializeField, Range(0.1f, 2f)] private float _indicatorSpeed;
-        [SerializeField, Range(1f, 8f)] private float _fadeSpeed = 5f;
+        [SerializeField] private WaitRealtime _waitStartIndicator;
         [Space]
         [SerializeField] private Sprite _friend;
         [SerializeField] private Sprite _enemy;
         [Space]
         [SerializeField] private PopupTextWidgetUI _popup;
+
+        
 
         private Subscription _unsub;
         private int _relation, _min, _max;
@@ -36,7 +39,7 @@ namespace Vurbiri.Colonization.UI
             _min = diplomacy.Min; _max = diplomacy.Max;
 
             diplomacy.Subscribe(OnDiplomacy, false);
-            SetRelation(diplomacy.GetPersonRelation(_id));
+            SetRelation(diplomacy.GetRelationToPerson(_id));
 
             _icon.color = GameContainer.UI.PlayerColors[_id]; _icon = null;
             _unsub = GameContainer.UI.PlayerNames.Subscribe(_ => SetRelation(_relation), false);
@@ -47,7 +50,7 @@ namespace Vurbiri.Colonization.UI
 
         private void OnDiplomacy(Diplomacy diplomacy)
         {
-            int relation = diplomacy.GetPersonRelation(_id);
+            int relation = diplomacy.GetRelationToPerson(_id);
 
             if (_relation != relation)
             {
@@ -83,18 +86,20 @@ namespace Vurbiri.Colonization.UI
         private void IndicatorTurn(bool run)
         {
             _run = run;
-            if (run)
-                StartCoroutine(IndicatorTurn_Cn());
+            if (run) StartCoroutine(IndicatorTurn_Cn());
 
             // ===== Local =====
             IEnumerator IndicatorTurn_Cn()
             {
                 float start = 0f, end = 1f, progress, sign;
                 _indicator.fillClockwise = true;
+                
+                yield return _waitStartIndicator.Restart();
+
                 _indicator.canvasRenderer.SetAlpha(1f);
                 _indicatorTurn.canvasRenderer.SetAlpha(1f);
 
-                while (_run)
+                while (_run | !_indicator.fillClockwise)
                 {
                     progress = 0f; sign = end - start;
 
@@ -104,11 +109,12 @@ namespace Vurbiri.Colonization.UI
                         _indicator.fillAmount = start + sign * progress;
                         yield return null;
                     }
-                    while (_run & progress < 1f) ;
+                    while (progress < 1f);
 
                     (start, end) = (end, start);
                     _indicator.fillClockwise = !_indicator.fillClockwise;
                 }
+
                 _indicator.canvasRenderer.SetAlpha(0f);
                 _indicatorTurn.canvasRenderer.SetAlpha(0f);
             }

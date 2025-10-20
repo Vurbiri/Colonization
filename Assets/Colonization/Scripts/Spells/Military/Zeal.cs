@@ -38,7 +38,7 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    StartCasting();
+                    s_isCasting.True();
                     _currentPlayer = param.playerId;
                     _coroutine = Cast_Cn().Start();
 
@@ -116,7 +116,7 @@ namespace Vurbiri.Colonization
                 _coroutine = null; _waitButton = null;
                 _currentPlayer = PlayerId.None;
 
-                EndCasting();
+                s_isCasting.False();
             }
 
             private void SetActor(Actor actor) => _waitActor.SetResult(actor);

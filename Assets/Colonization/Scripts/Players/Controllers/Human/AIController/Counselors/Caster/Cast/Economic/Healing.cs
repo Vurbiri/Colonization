@@ -14,16 +14,16 @@ namespace Vurbiri.Colonization
 
                 public override IEnumerator TryCasting_Cn()
                 {
-                    yield return CanPay_Cn(OutB.Get(out int key));
-                    if (OutB.Result(key))
+                    FindActors(HumanId, out int friends, out int enemies);
+                    if (friends > (enemies << 1))
                     {
-                        FindActors(out int friends, out int enemies);
-                        if (friends > (enemies << 1))
+                        yield return CanPayOrExchange_Cn(OutB.Get(out int key));
+                        if (OutB.Result(key))
                             yield return Casting_Cn();
                     }
 
                     // ====== Local ============
-                    [Impl(256)] void FindActors(out int friends, out int enemies)
+                    [Impl(256)] static void FindActors(int playerId, out int friends, out int enemies)
                     {
                         friends = enemies = 0;
 
@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
                             {
                                 if (actor.IsWounded)
                                 {
-                                    if (actor.IsEnemy(HumanId))
+                                    if (actor.IsEnemy(playerId))
                                         enemies++;
                                     else
                                         friends++;

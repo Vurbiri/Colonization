@@ -83,7 +83,6 @@ namespace Vurbiri.Colonization.Actors.UI
         {
             //_isActive = GameContainer.CameraTransform.CameraPosition.y < CameraController.heightShow;
             //_thisGameObject.SetActive(_isActive);
-            _actor.Skin.EventStart -= OnStart;
 
             _subscription += GameContainer.CameraTransform.Subscribe(OnChangeCamera);
             _subscription += _actor.Subscribe(OnRemoveActor, false);

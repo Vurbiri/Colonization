@@ -44,13 +44,16 @@ namespace Vurbiri.Colonization
         }
         #endregion
 
-        public Subscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, this);
+        [Impl(256)] public Subscription Subscribe(Action<ACurrencies> action, bool instantGetValue = true) => _changeEvent.Add(action, instantGetValue, this);
 
-        public Currency Get(int index) => _values[index];
-        public Currency Get(Id<CurrencyId> id) => _values[id.Value];
+        [Impl(256)] public Currency Get(int index) => _values[index];
+        [Impl(256)] public Currency Get(Id<CurrencyId> id) => _values[id.Value];
 
-        public int PercentCurrency(int currencyId) => 100 *_values[currencyId].Value / _maxAmount;
-        public int PercentAmountExCurrency(int currencyId) => 100 * (_amount.Value - _values[currencyId].Value) / _maxAmount;
+        [Impl(256)] public int PercentAmountExCurrency(int currencyId)
+        {
+            int currency = _values[currencyId].Value;
+            return 100 * (_amount - currency) / (_maxAmount - currency);
+        }
 
         public int OverCount(ReadOnlyMainCurrencies values, out int lastIndex)
         {

@@ -9,11 +9,11 @@ namespace Vurbiri
 
         public IEnumerator Load_Cn(Out<bool> output)
         {
-            output?.Write(false);
+            output?.Set(false);
             return null;
         }
 
-        public void Save(Out<bool> output) => output?.Write(false);
+        public void Save(Out<bool> output) => output?.Set(false);
         public void Save<T>(string key, T data, JsonSerializerSettings settings = null) { }
         public void Save<T>(string key, T data, JsonConverter converter) { }
 

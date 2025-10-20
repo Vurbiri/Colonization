@@ -19,7 +19,7 @@ namespace Vurbiri.Reactive
 
         [Impl(256)] protected AReactiveType(T value) => _value = value;
 
-        public void UnsubscribeAll() => _changeEvent.Clear();
-        public void Signal() => _changeEvent.Invoke(_value);
+        [Impl(256)] public void UnsubscribeAll() => _changeEvent.Clear();
+        [Impl(256)] public void Signal() => _changeEvent.Invoke(_value);
     }
 }

@@ -190,23 +190,25 @@ namespace Vurbiri.Colonization
         [Impl(256)] public bool CanRecruiting(Id<WarriorId> id) => _abilities.IsTrue(id.ToState());
 
         [Impl(256)] public void Recruiting(Id<WarriorId> id, Crossroad crossroad) => StartCoroutine(Recruiting_Cn(id, crossroad));
-        [Impl(256)] public void Recruiting(Id<WarriorId> id, Hexagon hexagon) => Recruiting(id, hexagon, GameContainer.Prices.Warriors[id.Value]);
-        public void Recruiting(Id<WarriorId> id, Hexagon hexagon, ReadOnlyMainCurrencies cost)
+        public WaitSignal Recruiting(Id<WarriorId> id, Hexagon hexagon, ReadOnlyMainCurrencies cost)
         {
+            WaitSignal signal = new();
+
             _resources.Remove(cost);
-            Actor actor = _spawner.Create(id, hexagon);
+
+            var actor = _spawner.Create(id, hexagon);
             actor.IsPersonTurn = _isPerson;
+            actor.Skin.EventStart += signal.Send;
+
+            return signal;
         }
 
         protected IEnumerator Recruiting_Cn(Id<WarriorId> id, Crossroad crossroad)
         {
-            WaitResult<Hexagon> result = crossroad.GetHexagonForRecruiting_Wait();
-            yield return result;
-
-            if (result.Value == null)
-                yield break;
-
-            Recruiting(id, result.Value);
+            var hexagon = crossroad.GetHexagonForRecruiting_Wait();
+            yield return hexagon;
+            if (hexagon.IsNotNull)
+                yield return Recruiting(id, hexagon, GameContainer.Prices.Warriors[id]);
         }
         #endregion
 

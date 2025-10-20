@@ -156,7 +156,7 @@ namespace Vurbiri.Colonization.Actors
             return _states.IsAvailable & GameContainer.Diplomacy.IsCanActorsInteraction(id, _owner, typeAction, out isFriendly);
         }
 
-        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.GetRelation(_owner, id) == Relation.Enemy;
+        [Impl(256)] public bool IsEnemy(Id<PlayerId> id) => GameContainer.Diplomacy.IsEnemy(_owner, id);
 
         public bool IsInCombat()
         {

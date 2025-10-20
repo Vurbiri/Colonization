@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
                     float count = _blessed.Count;
                     int value = MathI.Round((s_settings.blessBasa + (param.valueA + param.valueB) * s_settings.blessPerRes) / count);
 
-                    StartCasting();
+                    s_isCasting.True();
 
                     Cast_Cn(param.playerId, value).Start();
                     ShowSpellName(param.playerId, 3f + 2f * count);
@@ -72,7 +72,7 @@ namespace Vurbiri.Colonization
                     _blessed.RemoveAt(index);
                 }
 
-                EndCasting();
+                s_isCasting.False();
             }
 
             protected override string GetDesc(Localization localization)

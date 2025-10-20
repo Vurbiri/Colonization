@@ -11,15 +11,7 @@ namespace Vurbiri.Colonization
             {
                 public Summon(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.SummonWarlock, parent.IsMilitarist) { }
 
-                public override IEnumerator TryCasting_Cn()
-                {
-                    IEnumerator casting = null;
-
-                    if (Abilities[HumanAbilityId.IsWarlock].IsFalse)
-                        casting = Casting_Cn();
-
-                    return casting;
-                }
+                public override IEnumerator TryCasting_Cn() => Abilities[HumanAbilityId.IsWarlock].IsTrue ? null : Casting_Cn();
             }
         }
     }

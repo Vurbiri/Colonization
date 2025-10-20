@@ -60,7 +60,6 @@ namespace Vurbiri.Colonization.Actors
                     int countBuff = 1;
  
                     var colony = _targets.Rand();
-                    //var colony = _targets[0];
                     Transform.LookAt(colony.Position, Vector3.up);
 
                     var wait = Skin.SpecSkill();

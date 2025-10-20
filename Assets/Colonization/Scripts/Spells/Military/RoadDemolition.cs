@@ -25,7 +25,7 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    StartCasting();
+                    s_isCasting.True();
 
                     Humans[param.playerId].Pay(_cost);
                     ShowSpellName(param.playerId);
@@ -40,7 +40,7 @@ namespace Vurbiri.Colonization
                 for (int i = 0; i < PlayerId.HumansCount; i++)
                     yield return Humans[i].Roads.RemoveDeadEnds_Cn();
 
-                EndCasting();
+                s_isCasting.False();
             }
 
             protected override string GetDesc(Localization localization) => string.Concat(localization.GetText(FILE, _descKey), _strCost);

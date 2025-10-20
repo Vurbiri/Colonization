@@ -1,27 +1,26 @@
 using Newtonsoft.Json;
 using System;
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Reactive
 {
     [Serializable, JsonConverter(typeof(Converter))]
     sealed public class RBool : AReactiveType<bool>
     {
-        public RBool() : base(false) { }
-        public RBool(bool value) : base(value) { }
+        [Impl(256)] public RBool() : base(false) { }
+        [Impl(256)] public RBool(bool value) : base(value) { }
 
-        public void True()
+        [Impl(256)] public void True()
         {
-            if (_value != true)
-                _changeEvent.Invoke(_value = true);
+            if (!_value) _changeEvent.Invoke(_value = true);
         }
-        public void False()
+        [Impl(256)] public void False()
         {
-            if (_value != false)
-                _changeEvent.Invoke(_value = false);
+            if (_value)  _changeEvent.Invoke(_value = false);
         }
-        public void Negation() => _changeEvent.Invoke(_value = !_value);
-        
-        public static implicit operator bool(RBool value) => value._value;
+        [Impl(256)] public void Negation() => _changeEvent.Invoke(_value = !_value);
+
+        [Impl(256)] public static implicit operator bool(RBool value) => value._value;
 
         #region Logic operator
         public static bool operator !(RBool r) => !r._value;

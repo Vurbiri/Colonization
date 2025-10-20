@@ -66,6 +66,8 @@ namespace Vurbiri.Colonization
             MainCurrencies profit = new();
             ReturnSignal returnSignal;
 
+            GameContainer.InputController.Unselect();
+
             foreach (var warrior in Actors)
             {
                 if (returnSignal = warrior.IsMainProfit)

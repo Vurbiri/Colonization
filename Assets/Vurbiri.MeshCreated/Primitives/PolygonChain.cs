@@ -9,9 +9,9 @@ namespace Vurbiri.CreatingMesh
 
         private readonly List<Triangle> _triangles;
 
-        public PolygonChain(IReadOnlyList<Vertex> chainA, IReadOnlyList<Vertex> chainB, bool loop = false) => _triangles = Create(chainA, chainB, loop);
+        public PolygonChain(List<Vertex> chainA, List<Vertex> chainB, bool loop = false) => _triangles = Create(chainA, chainB, loop);
 
-        public static List<Triangle> Create(IReadOnlyList<Vertex> chainA, IReadOnlyList<Vertex> chainB, bool loop = false)
+        public static List<Triangle> Create(List<Vertex> chainA, List<Vertex> chainB, bool loop = false)
         {
             int count = chainA.Count - (loop ? 0 : 1);
             List<Triangle> triangles = new(count << 1);
@@ -22,7 +22,7 @@ namespace Vurbiri.CreatingMesh
             return triangles;
         }
 
-        public static List<Triangle> Create(Color32 color, IReadOnlyList<Vector3> chainA, IReadOnlyList<Vector3> chainB, bool loop = false)
+        public static List<Triangle> Create(Color32 color, List<Vector3> chainA, List<Vector3> chainB, bool loop = false)
         {
             int count = chainA.Count - (loop ? 0 : 1);
             List<Triangle> triangles = new(count << 1);
@@ -33,9 +33,9 @@ namespace Vurbiri.CreatingMesh
             return triangles;
         }
 
-        public static List<Triangle> Create(Color32 color, Vector2 uv, IReadOnlyList<Vector3> chainA, IReadOnlyList<Vector3> chainB, bool loop = false)
+        public static List<Triangle> Create(Color32 color, Vector2 uv, Vector3[] chainA, Vector3[] chainB, bool loop = false)
         {
-            int count = chainA.Count - (loop ? 0 : 1);
+            int count = chainA.Length - (loop ? 0 : 1);
             List<Triangle> triangles = new(count << 1);
 
             for (int i = 0; i < count; i++)
@@ -44,9 +44,9 @@ namespace Vurbiri.CreatingMesh
             return triangles;
         }
 
-        public static List<Triangle> CreateBarycentric(byte color, IReadOnlyList<Vector3> chainA, IReadOnlyList<Vector3> chainB, bool loop = false)
+        public static List<Triangle> CreateBarycentric(byte color, Vector3[] chainA, Vector3[] chainB, bool loop = false)
         {
-            int count = chainA.Count - (loop ? 0 : 1);
+            int count = chainA.Length - (loop ? 0 : 1);
             List<Triangle> triangles = new(count << 1);
 
             for (int i = 0; i < count; i++)

@@ -9,6 +9,5 @@ namespace Vurbiri.Colonization
         [UnityEngine.Space]
         public int percentBloodOffset;
         public int minExchangeBlood;
-        public int exchangeValueOffset;
     }
 }

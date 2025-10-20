@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.International;
 
@@ -39,14 +40,19 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    var colony = _canWall.Rand();
-                    Humans[param.playerId].BuyWall(colony, _cost);
-
-                    GameContainer.CameraController.ToPositionControlled(param.playerId, colony);
-                    ShowSpellName(param.playerId);
+                    s_isCasting.True();
+                    Cast_Cn(param.playerId, _canWall.Rand()).Start();
 
                     _canCast = false;
                 }
+            }
+
+            private IEnumerator Cast_Cn(int playerId, Crossroad colony)
+            {
+                yield return GameContainer.CameraController.ToPositionControlled(playerId, colony);
+                ShowSpellName(playerId);
+                yield return Humans[playerId].BuyWall(colony, _cost);
+                s_isCasting.False();
             }
 
             protected override string GetDesc(Localization localization) => string.Concat(localization.GetText(FILE, _descKey), _strCost);

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Vurbiri.Collections;
 
 namespace Vurbiri.CreatingMesh
 {
@@ -7,7 +8,7 @@ namespace Vurbiri.CreatingMesh
     {
         public IReadOnlyList<Triangle> Triangles => _triangles;
 
-        private readonly IReadOnlyList<Triangle> _triangles;
+        private readonly ReadOnlyArray<Triangle> _triangles;
 
         private static readonly Color32[] BARYCENTRIC_COLORS_A = { new(255, 255, 0, 255), new(0, 255, 0, 255), new(0, 255, 255, 255) };
         private static readonly Color32[] BARYCENTRIC_COLORS_B = { new(255, 255, 0, 255), new(0, 255, 255, 255), new(0, 255, 0, 255) };

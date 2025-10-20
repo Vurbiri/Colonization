@@ -31,13 +31,13 @@ namespace Vurbiri
             {
                 if (TryDeserialize(_outputJson, out _saved))
                 {
-                    output?.Write(true);
+                    output?.Set(true);
                     yield break;
                 }
             }
 
             _saved = new();
-            output?.Write(false);
+            output?.Set(false);
         }
 
         #region Get(..) / TryGet(..)
@@ -202,12 +202,12 @@ namespace Vurbiri
                 yield return SaveToFile_Cn();
 
                 _modified |= !_outputResult;
-                output?.Write(_outputResult);
+                output?.Set(_outputResult);
 
                 yield break;
             }
 
-            output?.Write(true);
+            output?.Set(true);
         }
         protected IEnumerator Save_Cn()
         {

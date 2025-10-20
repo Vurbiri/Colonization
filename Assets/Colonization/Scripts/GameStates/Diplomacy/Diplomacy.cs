@@ -56,12 +56,14 @@ namespace Vurbiri.Colonization
             return instance;
         }
 
-        public int GetPersonRelation(int id) => _values[id - 1];
+        [Impl(256)] public int GetRelationToPerson(int id) => _values[id - 1];
 
-        public bool IsFriend(int idA, int idB) => _values[GetIndex(idA, idB)] > 0;
-        public bool IsGreatFriend(int idA, int idB) => _values[GetIndex(idA, idB)] > _settings.great;
-        public bool IsEnemy(int idA, int idB) => _values[GetIndex(idA, idB)] <= 0;
-        public bool IsGreatEnemy(int idA, int idB) => _values[GetIndex(idA, idB)] <= -_settings.great;
+        [Impl(256)] public bool IsHumanFriend(int idA, int idB) => _values[GetIndex(idA, idB)] > 0;
+        [Impl(256)] public bool IsHumanGreatFriend(int idA, int idB) => _values[GetIndex(idA, idB)] > _settings.great;
+        [Impl(256)] public bool IsHumanEnemy(int idA, int idB) => _values[GetIndex(idA, idB)] <= 0;
+        [Impl(256)] public bool IsHumanGreatEnemy(int idA, int idB) => _values[GetIndex(idA, idB)] <= -_settings.great;
+        
+        [Impl(256)] public bool IsEnemy(int idA, int idB) => idA != idB & idA == PlayerId.Satan | idB == PlayerId.Satan || _values[GetIndex(idA, idB)] <= 0;
 
         public Relation GetRelation(Id<PlayerId> idA, Id<PlayerId> idB)
         {
@@ -115,7 +117,7 @@ namespace Vurbiri.Colonization
             }
         }
 
-        public Subscription Subscribe(Action<Diplomacy> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
+        [Impl(256)] public Subscription Subscribe(Action<Diplomacy> action, bool instantGetValue = true) => _eventChanged.Add(action, instantGetValue, this);
 
         private void OnGamePlay(TurnQueue turnQueue, int dice)
         {
@@ -130,6 +132,7 @@ namespace Vurbiri.Colonization
             }
         }
 
+        [Impl(256)]
         private void Set(int idA, int idB, int value)
         {
             int index = GetIndex(idA, idB);

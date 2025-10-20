@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEngine;
 
 namespace Vurbiri.Colonization
 {
@@ -13,13 +12,21 @@ namespace Vurbiri.Colonization
 
                 public override IEnumerator TryCasting_Cn()
                 {
-                    int mana = Mana;
-                    IEnumerator casting = null;
+                    return CanPay && CheckResources(Resources) ? Casting_Cn() : null;
 
-                    if (Chance.Rolling(100 * mana / s_settings.resDivider))
-                        casting = Casting_Cn(Random.Range(1, Mathf.Min(mana, s_settings.maxUseRes) + 1));
+                    // ====== Local ======
+                    static bool CheckResources(Currencies resources)
+                    {
+                        int count = 0, currency; bool isMin = false;
+                        for (int i = 0; i < CurrencyId.MainCount - 1; i++)
+                        {
+                            currency = resources[i];
+                            count += 100 * currency;
+                            isMin |= currency <= s_settings.minRes;
+                        }
 
-                    return casting;
+                        return isMin && Chance.Rolling(count / resources.MaxAmount);
+                    }
                 }
             }
         }

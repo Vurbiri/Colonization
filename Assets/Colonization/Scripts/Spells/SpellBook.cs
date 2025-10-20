@@ -1,6 +1,7 @@
 using System.Collections;
 using Vurbiri.Collections;
 using Vurbiri.EntryPoint;
+using Vurbiri.Reactive;
 using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
 
 namespace Vurbiri.Colonization
@@ -12,8 +13,7 @@ namespace Vurbiri.Colonization
         private static readonly Keys s_keys;
 
         private static readonly ASpell[][] s_spells = {new ASpell[EconomicSpellId.Count], new ASpell[MilitarySpellId.Count] };
-        private static readonly VAction<bool> s_casting = new();
-        private static bool s_isCasting;
+        private static readonly RBool s_isCasting = new();
 
         private static ReadOnlyArray<HumanController> Humans { [Impl(256)] get => GameContainer.Players.Humans; }
 
@@ -22,8 +22,9 @@ namespace Vurbiri.Colonization
 
         public static Costs Cost { [Impl(256)] get => s_costs; }
 
-        public static bool IsCasting { [Impl(256)] get => s_isCasting; }
-        public static Event<bool> EventCasting { [Impl(256)] get => s_casting; }
+        public static int BloodTradeCost { [Impl(256)] get => s_settings.bloodTradeBay; }
+
+        public static RBool IsCasting { [Impl(256)] get => s_isCasting; }
         public static IEnumerator WaitEndCasting { [Impl(256)] get; } = new WaitCasting();
 
         static SpellBook()
@@ -47,17 +48,6 @@ namespace Vurbiri.Colonization
             if(s_isCasting) s_spells[type][id].Cancel();
         }
 
-        private static void StartCasting()
-        {
-            s_isCasting = true;
-            s_casting.Invoke(true);
-        }
-        private static void EndCasting()
-        {
-            s_isCasting = false;
-            s_casting.Invoke(false);
-        }
-
         public static void Init()
         {
             Order.Create(); RandomHealing.Create(); BlessingOfIsland.Create(); WrathOfIsland.Create(); SummonWarlock.Create(); Transmutation.Create(); Sacrifice.Create();
@@ -68,8 +58,7 @@ namespace Vurbiri.Colonization
 
         private static void Clear()
         {
-            s_casting.Clear();
-            s_isCasting = false;
+            s_isCasting.UnsubscribeAll(); s_isCasting.False();
 
             for (int t = 0, count; t < AbilityTypeId.Count; t++)
             {

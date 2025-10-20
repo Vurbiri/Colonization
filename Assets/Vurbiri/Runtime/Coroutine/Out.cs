@@ -23,9 +23,14 @@ namespace Vurbiri
         }
         [Impl(256)] public static T Result(int key) => s_pool.Push(key);
 
-        [Impl(256)] public void Write(T value) => _value = value;
+        [Impl(256)] public void Set(T value) => _value = value;
 
         [Impl(256)] public static implicit operator T(Out<T> self) => self._value;
+        [Impl(256)] public static Out<T> operator +(Out<T> self, T value)
+        {
+            self._value = value;
+            return self;
+        }
 
         // ************ Nested ******************
         private class Pool

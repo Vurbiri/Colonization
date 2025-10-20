@@ -15,20 +15,22 @@ namespace Vurbiri.Colonization
 
                 public override IEnumerator TryCasting_Cn()
                 {
-                    int wood = Resources[CurrencyId.Wood], ore = Resources[CurrencyId.Ore];
-
-                    yield return CanPay_Cn(OutB.Get(out int key));
-
-                    if (OutB.Result(key) && Chance.Rolling((100 * (wood + ore)/(s_settings.resDivider << 1))))
+                    IEnumerator casting = null;
+                    if (CanPay)
                     {
-                        FindActors(out int friends, out int enemies);
-                        if ((friends << 1) < enemies)
-                            yield return Casting_Cn(GetRes(wood), GetRes(ore));
+                        int wood = Resources[CurrencyId.Wood], ore = Resources[CurrencyId.Ore];
+                        if (Chance.Rolling((100 * (wood + ore) / (s_settings.resDivider << 1))))
+                        {
+                            FindActors(HumanId, out int friends, out int enemies);
+                            if ((friends << 1) < enemies)
+                                casting = Casting_Cn(GetRes(wood), GetRes(ore));
+                        }
                     }
+                    return casting;
 
                     #region Local FindActors(..), GetRes(..)
                     //===========================================
-                    [Impl(256)] void FindActors(out int friends, out int enemies)
+                    [Impl(256)] static void FindActors(int playerId, out int friends, out int enemies)
                     {
                         friends = enemies = 0;
 
@@ -39,7 +41,7 @@ namespace Vurbiri.Colonization
                                 surface = actor.Hexagon.SurfaceId;
                                 if (surface == SurfaceId.Forest | surface == SurfaceId.Mountain)
                                 {
-                                    if (actor.IsEnemy(HumanId))
+                                    if (actor.IsEnemy(playerId))
                                         enemies++;
                                     else
                                         friends++;
@@ -52,7 +54,7 @@ namespace Vurbiri.Colonization
                     {
                         int result = 0;
                         if(res > 0)
-                            Random.Range(1, Mathf.Min(res, s_settings.maxUseRes) + 1);
+                            Random.Range(1, (int)(res * s_settings.maxUseRes) + 1);
                         return result;
                     }
                     #endregion

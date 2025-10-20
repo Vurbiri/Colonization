@@ -30,12 +30,11 @@ namespace Vurbiri.Colonization
 
             public override bool Prep(SpellParam param)
             {
-                _canCast = false;
                 var allActors = GameContainer.Actors;
-                
+
+                _target = null;
                 if (!s_isCasting && allActors[param.playerId].Count > 0 && Humans[param.playerId].IsPay(_cost))
                 {
-                    _target = null;
                     var actors = allActors[PlayerId.Satan];
                     if (actors.Count > 0)
                     {
@@ -46,23 +45,22 @@ namespace Vurbiri.Colonization
                         for (int playerId = 0; playerId < PlayerId.HumansCount; playerId++)
                         {
                             actors = allActors[playerId];
-                            if (actors.Count > 0 & GameContainer.Diplomacy.GetRelation(param.playerId, playerId) == Relation.Enemy)
+                            if (actors.Count > 0 & GameContainer.Diplomacy.IsEnemy(param.playerId, playerId))
                             {
                                 if(_target == null || Chance.Rolling())
                                     _target = actors.Random;
                             }
                         }
                     }
-                    _canCast = _target != null;
                 }
-                return _canCast;
+                return _canCast = _target != null; ;
             }
 
             public override void Cast(SpellParam param)
             {
                 if (_canCast)
                 {
-                    StartCasting();
+                    s_isCasting.True();
                     _currentPlayer = param.playerId;
                     _coroutine = Cast_Cn().Start();
 
@@ -114,7 +112,7 @@ namespace Vurbiri.Colonization
                 var sacrifice = _waitActor.Value;
                 _damage.attack = sacrifice.CurrentHP * s_settings.sacrificeHPPercent / 100;
 
-                CameraController.ToPosition(sacrifice);
+                yield return CameraController.ToPosition(sacrifice);
                 yield return SFX.Run(s_settings.sacrificeKnifeSFX, null, sacrifice.Skin);
                 yield return sacrifice.Action.Death().SetWaitState(DeathStage.EndAnimation);
 
@@ -129,6 +127,8 @@ namespace Vurbiri.Colonization
             private void EndSelect()
             {
                 EventBus.EventActorSelect.Remove(SetActor);
+                GameContainer.InputController.Unselect();
+
                 if (_currentPlayer == PlayerId.Person)
                 {
                     _waitButton.Reset();
@@ -142,7 +142,7 @@ namespace Vurbiri.Colonization
                 _coroutine = null; _target = null; _waitButton = null;
                 _currentPlayer = PlayerId.None;
 
-                EndCasting();
+                s_isCasting.False();
             }
 
             private void SetActor(Actor actor) => _waitActor.SetResult(actor);

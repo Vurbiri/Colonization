@@ -12,7 +12,7 @@ namespace Vurbiri.Colonization
             {
                 private readonly Caster _caster;
                 private readonly int _type, _id, _weight;
-                private SpellParam _param;
+                protected SpellParam _param;
 
                 #region Parent Properties
                 protected AIController Human { [Impl(256)] get => _caster._parent; }
@@ -20,7 +20,9 @@ namespace Vurbiri.Colonization
                 protected SpellBook SpellBook { [Impl(256)] get => _caster._parent._spellBook; }
                 protected SpellBook.ASpell Spell { [Impl(256)] get => _caster._parent._spellBook[_type, _id]; }
                 protected Currencies Resources { [Impl(256)] get => _caster._parent._resources; }
+                protected PerkTree PerkTree { [Impl(256)] get => _caster.PerkTree; }
                 protected int Mana { [Impl(256)] get => _caster._parent._resources[CurrencyId.Mana]; }
+                protected bool CanPay { [Impl(256)] get => _caster._parent._resources[CurrencyId.Mana] >= SpellBook.Cost[_type][_id]; }
 
                 protected ReadOnlyAbilities<HumanAbilityId> Abilities { [Impl(256)] get => _caster._parent._abilities; }
                 #endregion
@@ -31,7 +33,7 @@ namespace Vurbiri.Colonization
 
                 protected Cast(Caster parent, int type, int id, bool lowWeight) : this(parent, type, id)
                 {
-                    if (lowWeight) _weight >>= 2;
+                    if (lowWeight) _weight >>= 3;
                 }
                 protected Cast(Caster parent, int type, int id)
                 {
@@ -52,10 +54,10 @@ namespace Vurbiri.Colonization
                     yield return SpellBook.WaitEndCasting;
                 }
 
-                [Impl(256)] protected IEnumerator CanPay_Cn(Out<bool> output)
+                [Impl(256)] protected IEnumerator CanPayOrExchange_Cn(Out<bool> output)
                 {
-                    output.Write(Resources[CurrencyId.Mana] >= SpellBook.Cost[_type][_id]);
-                    if(!output && Chance.Rolling(Resources.PercentAmountExCurrency(CurrencyId.Mana) - s_settings.percentAmountOffset))
+                    output.Set(CanPay);
+                    if (!output && Chance.Rolling(Resources.PercentAmountExCurrency(CurrencyId.Mana) - s_settings.percentAmountOffset))
                         yield return Human.Exchange_Cn(Spell.Cost, output);
                 }
             }

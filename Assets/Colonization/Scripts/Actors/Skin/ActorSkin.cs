@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Characteristics;
@@ -23,6 +22,8 @@ namespace Vurbiri.Colonization.Actors
         private static readonly int s_idReact = Animator.StringToHash("tReact");
         #endregion
 
+        private readonly VAction _start = new();
+
         protected Transform _thisTransform;
         protected ActorSFX _sfx;
 
@@ -32,7 +33,7 @@ namespace Vurbiri.Colonization.Actors
         private DeathState _deathState;
         private ReactState _reactState;
 
-        public event Action EventStart;
+        public event System.Action EventStart { [Impl(256)] add { _start.Action += value; } [Impl(256)] remove { _start.Action -= value; } }
 
         public ActorSFX SFX { [Impl(256)] get => _sfx; }
         public Vector3 Size { [Impl(256)] get => _bounds.size; }
@@ -44,7 +45,7 @@ namespace Vurbiri.Colonization.Actors
             _reactState = new(this);
             _deathState = new(this);
 
-            _animator.GetBehaviour<SpawnBehaviour>().EventExit += EventStart;
+            _animator.GetBehaviour<SpawnBehaviour>().EventExit += _start.InvokeOneShot;
         }
 
         public abstract void Init(Id<PlayerId> owner, Skills skills);

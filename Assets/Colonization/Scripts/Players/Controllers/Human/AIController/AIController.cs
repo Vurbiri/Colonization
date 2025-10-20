@@ -89,8 +89,8 @@ namespace Vurbiri.Colonization
                 if (!result && _resources.OverCount(needed, out int exchangeIndex) == 1)
                 {
                     int need = needed[exchangeIndex], current = _resources[exchangeIndex], delta = need - current;
-                    int exchangeValue = delta * _exchange[exchangeIndex];
-                    if (((_resources.Amount - current) - (needed.Amount - need)) >= (exchangeValue + s_settings.exchangeValueOffset))
+                    int exchange = _exchange[exchangeIndex], exchangeValue = delta * exchange;
+                    if (((_resources.Amount - current) - (needed.Amount - need)) >= exchangeValue && Chance.Rolling((int)(6.251f * (20 - exchange * exchange))))
                     {
                         MainCurrencies pay = new(), diff = _resources - needed;
                         pay.Remove(exchangeIndex, delta);
@@ -111,7 +111,7 @@ namespace Vurbiri.Colonization
                     }
                 }
             }
-            output.Write(result);
+            output.Set(result);
             yield break;
         }
     }

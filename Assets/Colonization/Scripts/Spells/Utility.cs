@@ -43,7 +43,7 @@ namespace Vurbiri.Colonization
         private class WaitCasting : IEnumerator
         {
             public object Current => null;
-            public bool MoveNext() => s_isCasting;
+            public bool MoveNext() => s_isCasting.Value;
             public void Reset() { }
         }
         // *************************************

@@ -91,7 +91,7 @@ namespace Vurbiri.Colonization
 
                 UnityEngine.Debug.LogWarning("[PersonController.InteractableController] Uncomment");
                 //_isTurn = GameContainer.GameLoop.IsPersonTurn;
-                subscriptions += SpellBook.EventCasting.Add(BindSpells);
+                subscriptions += SpellBook.IsCasting.Subscribe(BindSpells);
                 subscriptions += GameContainer.Actors[PlayerId.Person].Subscribe(BindActors);
             }
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Vurbiri.Collections;
 using Vurbiri.Colonization.Actors;
@@ -41,34 +42,43 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    Hexagon hexagon;
-                    if (_count <= _half)
-                    {
-                        while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter);
-                    }
-                    else
-                    {
-                        List<Hexagon> free = new(_max - _count);
-                        ReadOnlyArray<Key> keys;
-                        for (int i = 0; i < HEX.NEARS.Count; i++)
-                        {
-                            keys = HEX.NEARS[i];
-                            for (int j = 0; j < keys.Count; j++)
-                            {
-                                hexagon = GameContainer.Hexagons[keys[j]];
-                                if (hexagon.CanWarriorEnter)
-                                    free.Add(hexagon);
-                            }
-                        }
-                        hexagon = free.Rand();
-                    }
+                    s_isCasting.True();
+                    Cast_Cn(param.playerId).Start();
 
-                    ShowSpellName(param.playerId);
-                    Humans[param.playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
                     _canCast = false;
-
-                    GameContainer.CameraController.ToPositionControlled(param.playerId, hexagon);
                 }
+            }
+
+            private IEnumerator Cast_Cn(int playerId)
+            {
+                Hexagon hexagon;
+                if (_count <= _half)
+                {
+                    while (!(hexagon = GameContainer.Hexagons[HEX.NEARS.Random]).CanWarriorEnter);
+                }
+                else
+                {
+                    List<Hexagon> free = new(_max - _count); ReadOnlyArray<Key> keys;
+                    for (int i = 0; i < HEX.NEARS.Count; i++)
+                    {
+                        keys = HEX.NEARS[i];
+                        for (int j = 0; j < keys.Count; j++)
+                        {
+                            hexagon = GameContainer.Hexagons[keys[j]];
+                            if (hexagon.CanWarriorEnter)
+                                free.Add(hexagon);
+                        }
+                    }
+                    hexagon = free.Rand();
+                }
+
+                yield return null;
+
+                GameContainer.CameraController.ToPositionControlled(playerId, hexagon);
+                ShowSpellName(playerId);
+                yield return Humans[playerId].Recruiting(WarriorId.Warlock, hexagon, _cost);
+
+                s_isCasting.False();
             }
 
             protected override string GetDesc(Localization localization) => string.Concat(localization.GetText(FILE, _descKey), _strCost);

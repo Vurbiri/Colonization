@@ -15,17 +15,19 @@ namespace Vurbiri.Colonization
 
                 public override IEnumerator TryCasting_Cn()
                 {
-                    yield return CanPay_Cn(OutB.Get(out int key));
-                    if (OutB.Result(key))
-                    {
-                        FindActors(out int friends, out int enemies);
+                    IEnumerator casting = null;
+                    if (CanPay)
+                    { 
+                        FindActors(HumanId, out int friends, out int enemies);
                         if (friends > enemies)
-                            yield return Casting_Cn(GetRes(CurrencyId.Gold), GetRes(CurrencyId.Food));
+                            casting = Casting_Cn(GetRes(CurrencyId.Gold), GetRes(CurrencyId.Food));
                     }
+
+                    return casting;
 
                     #region Local FindActors(..), GetRes(..)
                     //===========================================
-                    [Impl(256)] void FindActors(out int friends, out int enemies)
+                    [Impl(256)] static void FindActors(int playerId, out int friends, out int enemies)
                     {
                         friends = enemies = 0;
 
@@ -36,7 +38,7 @@ namespace Vurbiri.Colonization
                                 surface = actor.Hexagon.SurfaceId;
                                 if (surface == SurfaceId.Village | surface == SurfaceId.Field)
                                 {
-                                    if (actor.IsEnemy(HumanId))
+                                    if (actor.IsEnemy(playerId))
                                         enemies++;
                                     else if (actor.IsInCombat())
                                         friends++;
@@ -45,7 +47,7 @@ namespace Vurbiri.Colonization
                         }
                     }
                     //===========================================
-                    [Impl(256)] int GetRes(int id) => Random.Range(0, Mathf.Min(Resources[id], s_settings.maxUseRes) + 1);
+                    [Impl(256)] int GetRes(int id) => Random.Range(0, (int)(Resources[id] * s_settings.maxUseRes) + 1);
                     #endregion
                 }
             }

@@ -1,23 +1,26 @@
 {
   "percentAmountOffset": 10,
   "resDivider": 10,
-  "maxUseRes": 6,
+  "maxUseRes": 0.75,
+  "minRes": 1,
+  "skillId": 3,
+  "waitBeforeSelecting": 0.4,
   "weightsEconomic": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    200,
+    120,
+    190,
+    190,
+    90,
+    40,
+    120
   ],
   "weightsMilitary": [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    300,
+    20,
+    90,
+    260,
+    130,
+    60,
+    280
   ]
 }

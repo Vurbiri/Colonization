@@ -1,8 +1,10 @@
+using Impl = System.Runtime.CompilerServices.MethodImplAttribute;
+
 namespace Vurbiri
 {
     public static class WaitResult
     {
-        public static WaitResult<T> Instant<T>(T result) => new WaitResultSource<T>(false, result);
+        [Impl(256)] public static WaitResult<T> Instant<T>(T result) => new WaitResultSource<T>(false, result);
     }
 
     public abstract class WaitResult<T> : Enumerator
@@ -10,11 +12,15 @@ namespace Vurbiri
         protected bool _isWait = true;
         protected T _value;
 
-        public T Value => _value;
+        public bool IsWait { [Impl(256)] get => _isWait; }
+
+        public T Value { [Impl(256)] get => _value; }
+        public bool IsNull { [Impl(256)] get => _value == null; }
+        public bool IsNotNull { [Impl(256)] get => _value != null; }
 
         sealed public override bool MoveNext() => _isWait;
 
-        public static implicit operator T(WaitResult<T> wait) => wait._value;
+        [Impl(256)] public static implicit operator T(WaitResult<T> wait) => wait._value;
     }
 
     sealed public class WaitResultSource<T> : WaitResult<T>
@@ -31,13 +37,18 @@ namespace Vurbiri
             _isWait = true;
             _default = defaultValue;
         }
-        internal WaitResultSource(bool isWait, T value)
+        public WaitResultSource(bool isWait)
         {
             _isWait = isWait;
-            _value = value;
+            _default = _value = default;
+        }
+        public WaitResultSource(bool isWait, T value)
+        {
+            _isWait = isWait;
+            _default = _value = value;
         }
 
-        public WaitResult<T> SetResult(T result)
+        [Impl(256)] public WaitResult<T> SetResult(T result)
         {
             _isWait = false;
             _value = result;
@@ -45,7 +56,7 @@ namespace Vurbiri
             return this;
         }
 
-        public WaitResultSource<T> Recreate()
+        [Impl(256)] public WaitResultSource<T> Recreate()
         {
             _isWait = false;
             _value = _default;
@@ -53,7 +64,7 @@ namespace Vurbiri
             return new(_default);
         }
 
-        public WaitResult<T> Restart()
+        [Impl(256)] public WaitResult<T> Restart()
         {
             _isWait = true;
             _value = _default;
@@ -61,7 +72,7 @@ namespace Vurbiri
             return this;
         }
 
-        public WaitResult<T> Cancel()
+        [Impl(256)] public WaitResult<T> Cancel()
         {
             _isWait = false;
             _value = _default;
@@ -69,7 +80,7 @@ namespace Vurbiri
             return this;
         }
 
-        public new void Reset()
+        [Impl(256)] public new void Reset()
         {
             _isWait = true;
             _value = _default;

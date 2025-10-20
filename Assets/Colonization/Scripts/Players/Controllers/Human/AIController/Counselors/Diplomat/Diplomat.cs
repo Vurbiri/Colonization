@@ -29,9 +29,9 @@ namespace Vurbiri.Colonization
             public WaitResult<bool> Receive(int giver, MainCurrencies gift)
 			{
                 int amount = gift.Amount * _ratio;
-                if (GameContainer.Diplomacy.IsGreatFriend(Id, giver))
+                if (GameContainer.Diplomacy.IsHumanGreatFriend(Id, giver))
                     amount <<= 1;
-                else if (GameContainer.Diplomacy.IsGreatEnemy(Id, giver))
+                else if (GameContainer.Diplomacy.IsHumanGreatEnemy(Id, giver))
                     amount >>= 1;
 
                 bool result = amount > Resources.Amount;

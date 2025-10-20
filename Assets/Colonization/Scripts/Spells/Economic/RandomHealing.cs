@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization
             {
                 if (_canCast)
                 {
-                    StartCasting();
+                    s_isCasting.True();
                     
                     Cast_Cn(_wounded.Rand()).Start();
                     ShowSpellName(param.playerId);
@@ -62,7 +62,7 @@ namespace Vurbiri.Colonization
                 target.ApplyEffect(_heal);
                 GameContainer.SFX.Run(s_settings.healSFX, null, target.Skin);
 
-                EndCasting();
+                s_isCasting.False();
             }
 
             protected override string GetDesc(Localization localization)

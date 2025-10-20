@@ -46,7 +46,7 @@ namespace Vurbiri.Colonization
                     _damage.playerId = param.playerId;
                     _damage.attack = ((s_settings.wrathBasa + (param.valueA + param.valueB) * s_settings.wrathPerRes << ActorAbilityId.SHIFT_ABILITY)) / count;
 
-                    StartCasting();
+                    s_isCasting.True();
 
                     Cast_Cn().Start();
                     ShowSpellName(param.playerId, 3f + 2f * count);
@@ -69,7 +69,7 @@ namespace Vurbiri.Colonization
                     yield return SFX.Run(s_settings.wrathSFX, null, target.Skin);
                 }
 
-                EndCasting();
+                s_isCasting.False();
             }
 
             protected override string GetDesc(Localization localization)

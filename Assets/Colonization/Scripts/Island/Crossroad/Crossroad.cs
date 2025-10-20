@@ -27,13 +27,13 @@ namespace Vurbiri.Colonization
         private bool _isWall = false;
         private readonly RBool _interactable = new(true);
         private readonly VAction<Key> _bannedBuild = new();
+        private readonly WaitResultSource<Hexagon> _waitHexagon = new(false);
 
         private readonly List<Hexagon> _hexagons = new(HEX_COUNT);
         private readonly IdSet<LinkId, CrossroadLink> _links = new();
 
         private int _countFreeLink = 0, _waterCount = 0;
         private bool _isGate = false;
-        private WaitResultSource<Hexagon> _waitHexagon;
 
         private readonly RBool _canCancel = new();
         #endregion
@@ -96,15 +96,13 @@ namespace Vurbiri.Colonization
 
             GameContainer.TriggerBus.TriggerUnselect(Equals(newSelectable));
 
-            if (_waitHexagon != null)
+            if (_waitHexagon.IsWait)
             {
                 _canCancel.False();
 
                 _waitHexagon.SetResult(newSelectable as Hexagon);
                 for (int i = 0; i < HEX_COUNT; i++)
                     _hexagons[i].SetUnselectable();
-
-                _waitHexagon = null;
             }
         }
         [Impl(256)] public void Cancel() => Unselect(null);
@@ -397,9 +395,9 @@ namespace Vurbiri.Colonization
             return countUnfit < HEX_COUNT & _owner == playerId & _states.groupId == EdificeGroupId.Port;
         }
 
-        public WaitResult<Hexagon> GetHexagonForRecruiting_Wait(bool isNotDemon = true)
+        public WaitResult<Hexagon> GetHexagonForRecruiting_Wait()
         {
-            _waitHexagon = new();
+            _waitHexagon.Reset();
             List<Hexagon> empty = new(2);
 
             for (int i = 0; i < HEX_COUNT; i++)

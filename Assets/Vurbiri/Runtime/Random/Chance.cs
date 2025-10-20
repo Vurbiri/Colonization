@@ -31,12 +31,11 @@ namespace Vurbiri
         }
 
         [Impl(256)] public T Select<T>(T trueValue, T falseValue) => Roll ? trueValue : falseValue;
-
         [Impl(256)] public T Select<T>(T trueValue) => Roll ? trueValue : default;
 
         #region Static methods
         [Impl(256)] public static bool Rolling(int value = 50) => value > 0 & (value >= MAX_CHANCE || Random.Range(0, MAX_CHANCE) < value);
-        
+
         [Impl(256)] public static T Select<T>(T trueValue, T falseValue, int value = 50)
         {
             return (value > 0 && (value >= MAX_CHANCE || Random.Range(0, MAX_CHANCE) < value)) ? trueValue : falseValue;
