@@ -28,7 +28,7 @@ namespace Vurbiri.Colonization
 
                 public abstract IEnumerator Execution_Cn();
 
-                public override string ToString() => GetType().Name;
+                sealed public override string ToString() => GetType().Name;
 
                 #region Nested
                 // **********************************************************

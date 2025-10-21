@@ -33,7 +33,7 @@ namespace Vurbiri.Colonization
                         List<Hexagon> hexagons;
                         for (int playerId = 0; playerId < PlayerId.HumansCount; playerId++)
                         {
-                            if (GameContainer.Diplomacy.GetRelation(param.playerId, playerId) == Relation.Enemy)
+                            if (GameContainer.Diplomacy.IsHumanEnemy(param.playerId, playerId))
                             {
                                 var colonies = Humans[playerId].GetEdifices(EdificeGroupId.Colony);
                                 for (int c = colonies.Count - 1; c >= 0; c--)

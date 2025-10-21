@@ -9,7 +9,8 @@ namespace Vurbiri.Colonization
         {
             sealed private class Summon : Cast
             {
-                public Summon(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.SummonWarlock, parent.IsMilitarist) { }
+                private Summon(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.SummonWarlock, parent.IsMilitarist) { }
+                public static void Create(Caster parent) => new Summon(parent);
 
                 public override IEnumerator TryCasting_Cn() => Abilities[HumanAbilityId.IsWarlock].IsTrue ? null : Casting_Cn();
             }

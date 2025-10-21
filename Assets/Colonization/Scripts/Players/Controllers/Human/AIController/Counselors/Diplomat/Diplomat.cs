@@ -79,7 +79,7 @@ namespace Vurbiri.Colonization
                                 _gift.PlusToStringBuilder(sb); sb.Append(TAG.ALING_OFF);
                                 msg = sb.ToString();
                             }
-                            var wait = GameContainer.Players.Humans[receiver].OnGift(Id, _gift, msg);
+                            var wait = GameContainer.Humans[receiver].OnGift(Id, _gift, msg);
                             yield return wait;
                             if (wait) Resources.Remove(_gift);
                         }

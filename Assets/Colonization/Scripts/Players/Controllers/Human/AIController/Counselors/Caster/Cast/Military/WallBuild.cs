@@ -6,7 +6,8 @@ namespace Vurbiri.Colonization
         {
             sealed private class WallBuild : Cast
             {
-                public WallBuild(Caster parent) : base(parent, MilitarySpellId.Type, MilitarySpellId.WallBuild, parent.IsEconomist) { }
+                private WallBuild(Caster parent) : base(parent, MilitarySpellId.Type, MilitarySpellId.WallBuild, parent.IsEconomist) { }
+                public static void Create(Caster parent) => new WallBuild(parent);
 
                 public override System.Collections.IEnumerator TryCasting_Cn() => Abilities[Characteristics.HumanAbilityId.IsWall].IsTrue ? null : Casting_Cn();
             }

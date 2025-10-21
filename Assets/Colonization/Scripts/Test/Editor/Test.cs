@@ -45,12 +45,17 @@ namespace Vurbiri.Colonization
                 case 2: person.Artefact.Next(UnityEngine.Random.Range(90, 100)); ; break;
                 case 3: Vurbiri.EntryPoint.Transition.Exit(); break;
                 case 4: Localization.Instance.SwitchLanguage(SystemLanguage.English); break;
-                case 5: GameContainer.Players.Humans[PlayerId.AI_01].BuyEdificeUpgrade(GameContainer.Crossroads[CROSS.NEAR[0]]); break;
-                case 6: person.Resources.AddBlood(13); break;
+                case 5: GameContainer.Humans[PlayerId.AI_01].BuyEdificeUpgrade(GameContainer.Crossroads[CROSS.NEAR[0]]); break;
+                case 6: AddBlood(13); break;
                 default: return;
             }
         }
 
+        private void AddBlood(int value)
+        {
+            for (int i = 0; i < PlayerId.HumansCount; i++)
+                GameContainer.Humans[i].Resources.AddBlood(value);
+        }
 
         private void Gift()
         {

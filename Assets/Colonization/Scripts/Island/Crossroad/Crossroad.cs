@@ -74,12 +74,6 @@ namespace Vurbiri.Colonization
             _edifice.Key = key;
         }
 
-        [Impl(256)] public static void Init(ReadOnlyIdSet<EdificeId, AEdifice> prefabs)
-        {
-            s_prefabs = prefabs;
-            Transition.OnExit.Add(() => s_prefabs = null);
-        }
-
         #region ================== IInteractable ============================
         public Vector3 Position { [Impl(256)] get; }
         public ReactiveValue<bool> InteractableReactive { [Impl(256)] get => _interactable; }
@@ -87,6 +81,7 @@ namespace Vurbiri.Colonization
         public ReactiveValue<bool> CanCancel { [Impl(256)] get => _canCancel; }
         [Impl(256)] public void Select()
         {
+            //Debug.Log(_key);
             if (_interactable.Value)
                 GameContainer.TriggerBus.TriggerCrossroadSelect(this);
         }
@@ -109,6 +104,12 @@ namespace Vurbiri.Colonization
         #endregion
 
         #region ================== Setup ============================
+        [Impl(256)] public static void Init(ReadOnlyIdSet<EdificeId, AEdifice> prefabs)
+        {
+            s_prefabs = prefabs;
+            Transition.OnExit.Add(() => s_prefabs = null);
+        }
+
         public bool AddHexagon(Hexagon hexagon, out bool ending)
         {
             if (hexagon.IsWater) 
@@ -193,8 +194,11 @@ namespace Vurbiri.Colonization
                 _hexagons[i].CaptionDisable();
         }
 
+        [Impl(256)] public bool IsOwnedColony(int playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Colony;
+        [Impl(256)] public bool IsOwnedPort(int playerId) => _owner == playerId & _states.groupId == EdificeGroupId.Port;
+
         [Impl(256)] public int GetDefense() => _isWall ? _states.wallDefense : 0;
-        [Impl(256)] public int GetDefense(Id<PlayerId> playerId) => (playerId == _owner & _isWall) ? _states.wallDefense : 0;
+        [Impl(256)] public int GetDefense(Id<PlayerId> playerId) => (_owner == playerId & _isWall) ? _states.wallDefense : 0;
 
         [Impl(256)] public void AddLink(CrossroadLink link) => _links.Add(link);
 

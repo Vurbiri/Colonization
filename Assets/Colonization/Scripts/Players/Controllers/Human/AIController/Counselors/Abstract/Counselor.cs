@@ -23,7 +23,7 @@ namespace Vurbiri.Colonization
             protected Roads Roads { [Impl(256)] get => _parent._roads; }
             protected int FreeRoadCount { [Impl(256)] get => _parent._abilities[HumanAbilityId.MaxRoad] - _parent._roads.Count; }
             protected ReadOnlyAbilities<HumanAbilityId> Abilities { [Impl(256)] get => _parent._abilities; }
-            protected PerkTree PerkTree { [Impl(256)] get => _parent._perks; }
+            protected PerkTree PerkTrees { [Impl(256)] get => _parent._perks; }
             protected bool IsEconomist { [Impl(256)] get => _parent._specialization == AbilityTypeId.Economic; }
             protected bool IsMilitarist { [Impl(256)] get => _parent._specialization == AbilityTypeId.Military; }
             #endregion

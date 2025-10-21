@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
                 protected SpellBook SpellBook { [Impl(256)] get => _caster._parent._spellBook; }
                 protected SpellBook.ASpell Spell { [Impl(256)] get => _caster._parent._spellBook[_type, _id]; }
                 protected Currencies Resources { [Impl(256)] get => _caster._parent._resources; }
-                protected PerkTree PerkTree { [Impl(256)] get => _caster.PerkTree; }
+                protected PerkTree PerkTree { [Impl(256)] get => _caster.PerkTrees; }
                 protected int Mana { [Impl(256)] get => _caster._parent._resources[CurrencyId.Mana]; }
                 protected bool CanPay { [Impl(256)] get => _caster._parent._resources[CurrencyId.Mana] >= SpellBook.Cost[_type][_id]; }
 
@@ -31,20 +31,22 @@ namespace Vurbiri.Colonization
                 public int Id { [Impl(256)] get => _id; }
                 public int Weight { [Impl(256)] get => _weight; }
 
-                protected Cast(Caster parent, int type, int id, bool lowWeight) : this(parent, type, id)
-                {
-                    if (lowWeight) _weight >>= 3;
-                }
-                protected Cast(Caster parent, int type, int id)
+                [Impl(256)] protected Cast(Caster parent, int type, int id, bool lowWeight) : this(parent, type, id, s_weights[type][id] >> (lowWeight ? 3 : 0)) { }
+                [Impl(256)] protected Cast(Caster parent, int type, int id) : this(parent, type, id, s_weights[type][id]) { }
+                private Cast(Caster parent, int type, int id, int weights)
                 {
                     _caster = parent;
-                    _type = type; _id = id;
-                    _weight = s_weights[type][id];
-
                     _param.playerId = parent._parent._id;
+
+                    _type = type; _id = id;
+                    _weight = weights;
+
+                    parent._leveling.Add(this);
                 }
 
                 public abstract IEnumerator TryCasting_Cn();
+
+                sealed public override string ToString() => GetType().Name;
 
                 [Impl(256)] protected IEnumerator Casting_Cn(int valueA = 0, int valueB = 0)
                 {

@@ -1,21 +1,21 @@
 {
   "max": 666,
-  "penaltyPerDemon": 3,
-  "penaltyPerSatanLevelUp": 2,
+  "penaltyPerDemon": 5,
+  "penaltyPerSatanLevelUp": 10,
   "penaltyPerBlood": 1,
   "penaltyPerKillWarrior": [
-    1,
-    1,
-    2,
-    2,
-    3
+    4,
+    8,
+    12,
+    16,
+    20
   ],
-  "rewardPerShrine": -15,
+  "rewardPerShrine": -50,
   "rewardPerKillDemon": [
-    -1,
-    -2,
-    -3,
-    -4,
-    -5
+    -5,
+    -10,
+    -15,
+    -20,
+    -25
   ]
 }

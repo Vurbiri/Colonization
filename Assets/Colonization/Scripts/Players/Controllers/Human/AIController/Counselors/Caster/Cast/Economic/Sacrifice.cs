@@ -13,7 +13,8 @@ namespace Vurbiri.Colonization
             {
                 private static readonly List<Actor> s_militias = new(CONST.DEFAULT_MAX_WARRIOR);
 
-                public Sacrifice(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Sacrifice, parent.IsMilitarist) { }
+                private Sacrifice(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Sacrifice, parent.IsMilitarist) { }
+                public static void Create(Caster parent) => new Sacrifice(parent);
 
                 public override IEnumerator TryCasting_Cn()
                 {

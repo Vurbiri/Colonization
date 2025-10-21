@@ -11,7 +11,8 @@ namespace Vurbiri.Colonization
         {
             sealed private class Blessing : Cast
             {
-                public Blessing(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Blessing) { }
+                private Blessing(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Blessing) { }
+                public static void Create(Caster parent) => new Blessing(parent);
 
                 public override IEnumerator TryCasting_Cn()
                 {

@@ -30,7 +30,7 @@ namespace Vurbiri.Colonization.Actors
                             for (int i = 0; i < HEX.SIDES; i++)
                             {
                                 crossroad = crossroads[i];
-                                if (crossroad.IsColony && GameContainer.Players.Humans[crossroad.Owner].Resources.Amount > 0)
+                                if (crossroad.IsColony && GameContainer.Humans[crossroad.Owner].Resources.Amount > 0)
                                     _targets.Add(crossroad);
                             }
                         }
@@ -65,7 +65,7 @@ namespace Vurbiri.Colonization.Actors
                     var wait = Skin.SpecSkill();
 
                     yield return wait; wait.Reset();
-                    var resources = GameContainer.Players.Humans[colony.Owner].Resources;
+                    var resources = GameContainer.Humans[colony.Owner].Resources;
                     resources.RandomDecrement();
                     if (!colony.IsWall & resources.Amount > 0)
                     {

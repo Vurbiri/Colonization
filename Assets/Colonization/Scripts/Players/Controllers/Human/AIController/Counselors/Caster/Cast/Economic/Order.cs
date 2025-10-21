@@ -9,13 +9,14 @@ namespace Vurbiri.Colonization
         {
             sealed private class Order : Cast
             {
-                public Order(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Order) { }
+                private Order(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Order) { }
+                public static void Create(Caster parent) => new Order(parent);
 
                 public override IEnumerator TryCasting_Cn()
                 {
                     int mana = Mana;
                     IEnumerator casting = null;
-                    
+                    Log.Info($"Order: {100 * mana / s_settings.resDivider}");
                     if (Chance.Rolling(100 * mana / s_settings.resDivider))
                         casting = Casting_Cn(Random.Range(1, (int)(mana * s_settings.maxUseRes) + 1));
 

@@ -6,7 +6,8 @@ namespace Vurbiri.Colonization
         {
             sealed private class Marauding : Cast
             {
-                public Marauding(Caster parent) : base(parent, MilitarySpellId.Type, MilitarySpellId.Marauding) { }
+                private Marauding(Caster parent) : base(parent, MilitarySpellId.Type, MilitarySpellId.Marauding) { }
+                public static void Create(Caster parent) => new Marauding(parent);
 
                 public override System.Collections.IEnumerator TryCasting_Cn() => Casting_Cn();
             }

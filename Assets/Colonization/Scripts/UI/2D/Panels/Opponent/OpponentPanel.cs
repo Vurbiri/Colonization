@@ -45,7 +45,7 @@ namespace Vurbiri.Colonization.UI
             _unsub = GameContainer.UI.PlayerNames.Subscribe(_ => SetRelation(_relation), false);
 
             _indicator.canvasRenderer.SetAlpha(0f); _indicatorTurn.canvasRenderer.SetAlpha(0f);
-            GameContainer.Players.Humans[_id].Interactable.Subscribe(IndicatorTurn);
+            GameContainer.Humans[_id].Interactable.Subscribe(IndicatorTurn);
         }
 
         private void OnDiplomacy(Diplomacy diplomacy)

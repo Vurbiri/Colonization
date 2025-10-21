@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
                 if (!s_isCasting && Humans[param.playerId].IsPay(_cost))
                 {
                     for (int i = 0; i < PlayerId.HumansCount; i++)
-                        if (Humans[i].Roads.ThereDeadEnds())
+                        if (Humans[i].Roads.ThereAreDeadEnds())
                             return _canCast = true;
                 }
                 return _canCast = false;

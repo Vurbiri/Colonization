@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Runtime.CompilerServices;
 using Vurbiri.Colonization.Characteristics;
 using Vurbiri.Colonization.Storage;
 
@@ -36,20 +37,23 @@ namespace Vurbiri.Colonization.Actors
                 writer.WriteEndArray();
             }
 
-            private void StateWriteJson(JsonWriter writer, Actor actor)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static void StateWriteJson(JsonWriter writer, Actor actor)
             {
                 writer.WriteStartArray();
                 writer.WriteValue(actor._id);
                 writer.WriteValue(actor._currentHP.Value);
                 writer.WriteValue(actor._currentAP.Value);
                 writer.WriteValue(actor._move.Value);
+                writer.WriteValue(actor.ZealCharge ? 1 : 0);
                 writer.WriteEndArray();
             }
 
-            private ActorState StateReadFromArray(int[] array)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static ActorState StateReadFromArray(int[] array)
             {
                 int i = 0;
-                return new(array[i++], array[i++], array[i++], array[i]);
+                return new(array[i++], array[i++], array[i++], array[i++], array[i++] > 0);
             }
         }
     }

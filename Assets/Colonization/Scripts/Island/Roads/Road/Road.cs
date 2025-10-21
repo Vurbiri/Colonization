@@ -110,7 +110,8 @@ namespace Vurbiri.Colonization
             return isSFX ? StartSFX(inverse) : true;
         }
 
-        [Impl(256)] public bool ThereDeadEnds(int playerId) => GameContainer.Crossroads.IsDeadEnd(_links.Start, _links.End, playerId);
+        [Impl(256)] public bool ThereAreDeadEnds(int playerId) => GameContainer.Crossroads.IsDeadEnd(_links.Start, _links.End, playerId);
+        [Impl(256)] public int DeadEndCount(int playerId) => GameContainer.Crossroads.DeadEndCount(_links.Start, _links.End, playerId);
 
         public List<RemoveLink> GetDeadEnds(int playerId)
         {
@@ -211,7 +212,7 @@ namespace Vurbiri.Colonization
             return _waitSignal.Restart();
         }
 
-        private void StopSFX()
+        [Impl(256)] private void StopSFX()
         {
             LineAlphaKeys = _defaultAlphaKey;
             _waitSignal.Send();

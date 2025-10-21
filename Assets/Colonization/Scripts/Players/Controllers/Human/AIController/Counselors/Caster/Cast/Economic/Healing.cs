@@ -10,7 +10,8 @@ namespace Vurbiri.Colonization
         {
             sealed private class Healing : Cast
             {
-                public Healing(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.RandomHealing) { }
+                private Healing(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.RandomHealing) { }
+                public static void Create(Caster parent) => new Healing(parent);
 
                 public override IEnumerator TryCasting_Cn()
                 {

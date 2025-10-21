@@ -53,8 +53,8 @@ namespace Vurbiri.Colonization
                             bool canRoadBuild = _cursor > 0 || Resources >= _allCost || s_settings.chanceIncomplete.Roll;
                             while (canRoadBuild)
                             {
-                                yield return Human.Exchange_Cn(_roadCost, Out<bool>.Get(out int key));
-                                if (canRoadBuild = Out<bool>.Result(key))
+                                yield return Human.Exchange_Cn(_roadCost, OutB.Get(out int key));
+                                if (canRoadBuild = OutB.Result(key))
                                 {
                                     step = _steps[_cursor]; _steps[_cursor++] = null;
                                     yield return GameContainer.CameraController.ToPositionControlled(step.link.Position);
@@ -102,9 +102,9 @@ namespace Vurbiri.Colonization
                         var prices = GameContainer.Prices.Edifices;
                         HashSet<Crossroad> crossroads = new(parent.Roads.CrossroadsCount);
                         if (canColony)
-                            parent.Roads.SetCrossroads(crossroads);
+                            parent.Roads.GetCrossroads(crossroads);
                         else
-                            parent.Roads.SetDeadEnds(crossroads);
+                            parent.Roads.GetDeadEnds(crossroads);
 
                         yield return null;
 
@@ -129,12 +129,12 @@ namespace Vurbiri.Colonization
                     {
                         HashSet<Crossroad> starting = new(parent.Roads.CrossroadsCount + parent.Ports.Count);
 
-                        parent.Roads.SetDeadEnds(starting);
+                        parent.Roads.GetDeadEnds(starting);
 
                         if (starting.Count == 0)
                         {
                             starting.UnionWith(parent.Ports);
-                            parent.Roads.SetCrossroads(starting);
+                            parent.Roads.GetCrossroads(starting);
                         }
 
                         yield return null;

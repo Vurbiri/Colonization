@@ -35,7 +35,7 @@ namespace Vurbiri.Colonization
                 if (_currentPlan.Done || !_currentPlan.IsValid)
                     yield return CreatePlan_Cn();
 
-                Log.Info(_currentPlan);
+                Log.Info($"[Builder] Player {Id} current plan [{_currentPlan}]");
                 yield return _currentPlan.Execution_Cn();
             }
 
@@ -63,7 +63,7 @@ namespace Vurbiri.Colonization
 
                 yield break;
 
-                // Local
+                // ==== Local ====
                 [Impl(256)] void SetProfitWeight()
                 {
                     _profitWeights.Clear();

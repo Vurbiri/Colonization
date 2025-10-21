@@ -15,7 +15,7 @@ namespace Vurbiri.Colonization
         private static readonly ASpell[][] s_spells = {new ASpell[EconomicSpellId.Count], new ASpell[MilitarySpellId.Count] };
         private static readonly RBool s_isCasting = new();
 
-        private static ReadOnlyArray<HumanController> Humans { [Impl(256)] get => GameContainer.Players.Humans; }
+        private static ReadOnlyArray<HumanController> Humans { [Impl(256)] get => GameContainer.Humans; }
 
         public ASpell this[int type, int id] { [Impl(256)] get => s_spells[type][id]; }
         public ASpell this[SpellId spellId]  { [Impl(256)] get => s_spells[spellId.type][spellId.id]; }

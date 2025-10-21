@@ -63,12 +63,22 @@ namespace Vurbiri.Colonization
             return returnSignal;
         }
 
-        [Impl(256)] public bool ThereDeadEnds()
+        [Impl(256)] public bool ThereAreDeadEnds()
         {
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
-               if(_roadsLists[i].ThereDeadEnds(_id)) return true;
+               if(_roadsLists[i].ThereAreDeadEnds(_id)) 
+                    return true;
             
             return false;
+        }
+        
+        public int DeadEndCount()
+        {
+            int count = 0;
+            for (int i = _roadsLists.Count - 1; i >= 0; i--)
+                count += _roadsLists[i].DeadEndCount(_id);
+
+            return count;
         }
 
         public IEnumerator RemoveDeadEnds_Cn()
@@ -110,7 +120,7 @@ namespace Vurbiri.Colonization
         #endregion
 
 
-        public void SetDeadEnds(HashSet<Crossroad> deadEnds)
+        public void GetDeadEnds(HashSet<Crossroad> deadEnds)
         {
             for (int i = _roadsLists.Count - 1; i >= 0; i--)
                 TryAddLine(deadEnds, _roadsLists[i]);
@@ -128,7 +138,7 @@ namespace Vurbiri.Colonization
             #endregion
         }
 
-        public void SetCrossroads(HashSet<Crossroad> points)
+        public void GetCrossroads(HashSet<Crossroad> points)
         {
             var crossroads = GameContainer.Crossroads;
             Road line;

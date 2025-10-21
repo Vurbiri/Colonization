@@ -9,7 +9,8 @@ namespace Vurbiri.Colonization
         {
             sealed private class BloodTrade : Cast
             {
-                public BloodTrade(Caster parent) : base(parent, MilitarySpellId.Type, MilitarySpellId.BloodTrade) { }
+                private BloodTrade(Caster parent) : base(parent, MilitarySpellId.Type, MilitarySpellId.BloodTrade) { }
+                public static void Create(Caster parent) => new BloodTrade(parent);
 
                 public override IEnumerator TryCasting_Cn()
                 {

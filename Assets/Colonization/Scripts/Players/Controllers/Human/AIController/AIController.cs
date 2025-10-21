@@ -12,6 +12,7 @@ namespace Vurbiri.Colonization
         private readonly Diplomat _diplomat;
         private readonly Builder _builder;
         private readonly Scientist _scientist;
+        private readonly Caster _caster;
 
         static AIController() => s_settings = SettingsFile.Load<AIControllerSettings>();
 
@@ -20,7 +21,7 @@ namespace Vurbiri.Colonization
             if (s_settings.militarist == playerId)
                 _specialization = AbilityTypeId.Military;
 
-            _diplomat = new(this); _builder = new(this); _scientist = new(this);
+            _diplomat = new(this); _builder = new(this); _scientist = new(this); _caster = new(this);
         }
 
         public override WaitResult<bool> OnGift(int giver, MainCurrencies gift, string msg) => _diplomat.Receive(giver, gift);
@@ -34,6 +35,7 @@ namespace Vurbiri.Colonization
                 yield return null;
                 yield return _builder.Init_Cn();
                 yield return _scientist.Init_Cn();
+                yield return _caster.Init_Cn();
                 //BuildPort(GameContainer.Crossroads.GetRandomPort());
 
                 GameContainer.GameLoop.EndLanding();
@@ -57,6 +59,7 @@ namespace Vurbiri.Colonization
                
                 yield return _builder.Execution_Cn();
                 yield return _scientist.Execution_Cn();
+                yield return _caster.Execution_Cn();
 
                 _interactable.False();
 
@@ -111,7 +114,7 @@ namespace Vurbiri.Colonization
                     }
                 }
             }
-            output.Set(result);
+            output?.Set(result);
             yield break;
         }
     }

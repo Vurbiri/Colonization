@@ -7,7 +7,6 @@ namespace Vurbiri.Colonization.Actors
 {
     public partial class Demon
     {
-
         public abstract class ADemonSpecMoveStates : ADemonStates<DemonSpecMoveSkin>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

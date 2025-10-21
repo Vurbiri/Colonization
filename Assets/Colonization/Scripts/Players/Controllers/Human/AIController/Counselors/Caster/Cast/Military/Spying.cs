@@ -6,7 +6,8 @@ namespace Vurbiri.Colonization
         {
             sealed private class Spying : Cast
             {
-                public Spying(Caster parent) : base(parent, MilitarySpellId.Type, MilitarySpellId.Spying) { }
+                private Spying(Caster parent) : base(parent, MilitarySpellId.Type, MilitarySpellId.Spying) { }
+                public static void Create(Caster parent) => new Spying(parent);
 
                 public override System.Collections.IEnumerator TryCasting_Cn() => Casting_Cn();
             }

@@ -8,7 +8,8 @@ namespace Vurbiri.Colonization
         {
             sealed private class Transmutation : Cast
             {
-                public Transmutation(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Transmutation) { }
+                private Transmutation(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Transmutation) { }
+                public static void Create(Caster parent) => new Transmutation(parent);
 
                 public override IEnumerator TryCasting_Cn()
                 {

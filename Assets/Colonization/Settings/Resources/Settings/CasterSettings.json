@@ -1,10 +1,23 @@
 {
+  "spellDivider": 3,
   "percentAmountOffset": 10,
+  "waitBeforeSelecting": 0.4,
   "resDivider": 10,
   "maxUseRes": 0.75,
   "minRes": 1,
   "skillId": 3,
-  "waitBeforeSelecting": 0.4,
+  "goodIds": [
+    5,
+    6,
+    8,
+    9
+  ],
+  "badIds": [
+    2,
+    3,
+    11,
+    12
+  ],
   "weightsEconomic": [
     200,
     120,

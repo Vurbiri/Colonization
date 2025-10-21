@@ -20,7 +20,7 @@ namespace Vurbiri.Colonization
             public Scientist(AIController parent) : base(parent)
             {
                 _perks = new(parent._specialization);
-                _leveling = new(PerkTree.GetLevel(AbilityTypeId.Economic), PerkTree.GetLevel(AbilityTypeId.Military));
+                _leveling = new(PerkTrees.GetLevel(AbilityTypeId.Economic), PerkTrees.GetLevel(AbilityTypeId.Military));
             }
 
             public override IEnumerator Init_Cn()
@@ -32,14 +32,14 @@ namespace Vurbiri.Colonization
                 // === Local ===
                 void Create(int type)
                 {
-                    if (!PerkTree.IsAllTreeLearned(type))
+                    if (!PerkTrees.IsAllTreeLearned(type))
                     {
-                        int level = PerkTree.GetLevel(type);
+                        int level = PerkTrees.GetLevel(type);
                         int count = AbilityTypeId.PerksCount[type];
 
                         for (int id = 0; id < count; id++)
                         {
-                            if (PerkTree.GetNotLearned(type, id, out Perk perk))
+                            if (PerkTrees.GetNotLearned(type, id, out Perk perk))
                             {
                                 if (perk.Level > level)
                                     _leveling.Add(perk);
@@ -59,7 +59,7 @@ namespace Vurbiri.Colonization
                 {
                     Human.BuyPerk(_perk);
 
-                    int progress = PerkTree.GetProgress(_perk.Type);
+                    int progress = PerkTrees.GetProgress(_perk.Type);
                     if (progress < PerkTree.MAX_PROGRESS && _leveling.TryGet(_perk.Type, PerkTree.ProgressToLevel(progress), out List<Perk> perks))
                         _perks.Add(_perk.Type, perks);
 

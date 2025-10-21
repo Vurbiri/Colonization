@@ -16,28 +16,26 @@ namespace Vurbiri.Colonization.Actors
         }
 
         #region ================== Fields ============================
-        protected Id<ActorTypeId> _typeId;
         protected int _id;
-        protected Id<PlayerId> _owner;
+        protected Transform _thisTransform;
+
+        private Id<ActorTypeId> _typeId;
+        private Id<PlayerId> _owner;
         private bool _isPersonTurn;
 
         #region  --------------- Abilities ---------------
-        protected AbilitiesSet<ActorAbilityId> _abilities;
-        protected SubAbility<ActorAbilityId> _currentHP;
-        protected SubAbility<ActorAbilityId> _currentAP;
-        protected BooleanAbility<ActorAbilityId> _move;
-        protected ChanceAbility<ActorAbilityId> _profitMain;
-        protected ChanceAbility<ActorAbilityId> _profitAdv;
+        private AbilitiesSet<ActorAbilityId> _abilities;
+        private SubAbility<ActorAbilityId> _currentHP;
+        private SubAbility<ActorAbilityId> _currentAP;
+        private BooleanAbility<ActorAbilityId> _move;
+        private ChanceAbility<ActorAbilityId> _profitMain;
+        private ChanceAbility<ActorAbilityId> _profitAdv;
         #endregion
 
-        protected Hexagon _currentHex;
-
-        protected Transform _thisTransform;
-        protected BoxCollider _thisCollider;
-
-        protected EffectsSet _effects;
-
-        protected AStates _states;
+        private Hexagon _currentHex;
+        private BoxCollider _thisCollider;
+        private EffectsSet _effects;
+        private AStates _states;
 
         private float _zSize;
 
@@ -59,6 +57,7 @@ namespace Vurbiri.Colonization.Actors
         public int CurrentHP { [Impl(256)] get => _currentHP.Value; }
         public bool IsWounded { [Impl(256)] get => _currentHP.IsNotMax; }
         public bool IsDead { [Impl(256)] get => _currentHP.Value <= 0; }
+        public bool ZealCharge { [Impl(256)] get; [Impl(256)] set; }
         public ActorSkin Skin { [Impl(256)] get => _states.Skin; }
         public Actions Action { [Impl(256)] get => _states; }
         public ReactiveEffects Effects { [Impl(256)] get => _effects; }
@@ -141,6 +140,8 @@ namespace Vurbiri.Colonization.Actors
             _currentHP.Set(data.state.currentHP);
             _currentAP.Set(data.state.currentAP);
             _move.Set(data.state.move);
+
+            ZealCharge = data.state.zealCharge;
 
             for (int i = data.effects.Length - 1; i >= 0; i--)
                 _effects.Add(data.effects[i]);

@@ -11,7 +11,8 @@ namespace Vurbiri.Colonization
         {
             sealed private class Wrath : Cast
             {
-                public Wrath(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Wrath) { }
+                private Wrath(Caster parent) : base(parent, EconomicSpellId.Type, EconomicSpellId.Wrath) { }
+                public static void Create(Caster parent) => new Wrath(parent);
 
                 public override IEnumerator TryCasting_Cn()
                 {

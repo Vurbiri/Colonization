@@ -177,7 +177,7 @@ namespace Vurbiri
 
             sealed public override string ToString() => _weight.ToString();
 
-            public static implicit operator int(Weight self) => self._weight;
+            [Impl(256)] public static implicit operator int(Weight self) => self._weight;
 
             [Impl(256)] public static int operator +(Weight w1, Weight w2) => w1._weight + w2._weight;
             [Impl(256)] public static int operator +(Weight w, int i) => w._weight + i;

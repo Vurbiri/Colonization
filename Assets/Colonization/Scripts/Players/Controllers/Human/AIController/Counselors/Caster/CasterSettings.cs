@@ -6,7 +6,9 @@ namespace Vurbiri.Colonization
     [System.Serializable]
     public class CasterSettings
 	{
+        public int spellDivider;
         public int percentAmountOffset;
+        public WaitRealtime waitBeforeSelecting;
         [Header("Order & Blessing & Wrath")]
         public int resDivider;
         public float maxUseRes;
@@ -14,7 +16,9 @@ namespace Vurbiri.Colonization
         public int minRes;
         [Header("Sacrifice")]
         public int skillId;
-        public WaitRealtime waitBeforeSelecting;
+        [Header("SwapId")]
+        public ReadOnlyArray<int> goodIds;
+        public ReadOnlyArray<int> badIds;
         [Header("Weights")]
         public ReadOnlyIdArray<EconomicSpellId, int> weightsEconomic;
         public ReadOnlyIdArray<MilitarySpellId, int> weightsMilitary;
